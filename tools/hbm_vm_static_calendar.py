@@ -165,13 +165,16 @@ def emit_wrappers(abi):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--abi', type=Path, default=ROOT / 'results/arch/hbm_vm_static_1014/quadrant_abi.json')
     parser.add_argument('--emit-wrappers', action='store_true')
     parser.add_argument('--quadrant', choices=['SW', 'SE', 'NW', 'NE'])
     parser.add_argument('--schedule', type=Path)
     parser.add_argument('--out', type=Path)
     args = parser.parse_args()
-    abi = json.loads((ROOT / 'results/arch/hbm_vm_static_1014/quadrant_abi.json').read_text())
+    abi = json.loads(args.abi.read_text())
     if args.emit_wrappers:
+        if abi.get('profile'):
+            parser.error('Versioned profile wrappers are explicit source masters; do not overwrite canonical wrappers')
         emit_wrappers(abi)
     if args.schedule:
         if not args.quadrant or not args.out:

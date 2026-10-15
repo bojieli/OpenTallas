@@ -3,7 +3,7 @@
 // Native group-count successors: RG7/WG3(NW/NE), RG5/WG1(SW/SE).
 // Real eight-bank SRAM vehicle; no bank or response substitute.
 module tb_hbm_vm_physical_banks_static;
-    parameter integer RG=7,WG=3;
+    parameter integer RG=7,WG=3,SID=2;
     parameter integer MUT=0; //1: wrong response-group wiring at actual bank output
     localparam RB=$clog2(RG+1),WB=$clog2(WG+5);
     reg clk=0;always #5 clk=~clk;
@@ -24,7 +24,7 @@ module tb_hbm_vm_physical_banks_static;
                 .clk(clk),
                 .rst_n(rst_n),
                 .bid(3'(b)),
-                .sid(2'd2),
+                .sid(2'(SID)),
                 .rslot_v(rslot_v[b]),
                 .rslot(rslot[b*RB+:RB]),
                 .wslot_v(wslot_v[b]),
@@ -63,12 +63,52 @@ module tb_hbm_vm_physical_banks_static;
                 .wq_done2()
             );
         end
+        else if (RG==6 && WG==2) begin:literal_shape_6
+            hfd_vms_bank_static_rg6wg2 memory(
+                .clk(clk),
+                .rst_n(rst_n),
+                .bid(3'(b)),
+                .sid(2'(SID)),
+                .rslot_v(rslot_v[b]),
+                .rslot(rslot[b*RB+:RB]),
+                .wslot_v(wslot_v[b]),
+                .wslot(wslot[b*WB+:WB]),
+                .dq(dq[b*281+:281]),
+                .dq_done(dq_done[b]),
+                .kq(281'd0),
+                .kq_done(),
+                .xq(276'd0),
+                .xq_done(),
+                .xq2(276'd0),
+                .xq2_done(),
+                .eg(),
+                .pq(pq[b*285+:285]),
+                .pr(pr[b*266+:266]),
+                .status(status[b*18+:18]),
+                .rq0(rq[(b*RG+0)*17+:17]),
+                .rr0(actual_rr[(b*RG+0)*257+:257]),
+                .rq1(rq[(b*RG+1)*17+:17]),
+                .rr1(actual_rr[(b*RG+1)*257+:257]),
+                .rq2(rq[(b*RG+2)*17+:17]),
+                .rr2(actual_rr[(b*RG+2)*257+:257]),
+                .rq3(rq[(b*RG+3)*17+:17]),
+                .rr3(actual_rr[(b*RG+3)*257+:257]),
+                .rq4(rq[(b*RG+4)*17+:17]),
+                .rr4(actual_rr[(b*RG+4)*257+:257]),
+                .rq5(rq[(b*RG+5)*17+:17]),
+                .rr5(actual_rr[(b*RG+5)*257+:257]),
+                .wq0(281'd0),
+                .wq_done0(),
+                .wq1(281'd0),
+                .wq_done1()
+            );
+        end
         else if (RG==5 && WG==1) begin:literal_shape_5
             hfd_vms_bank_static_rg5wg1 memory(
                 .clk(clk),
                 .rst_n(rst_n),
                 .bid(3'(b)),
-                .sid(2'd2),
+                .sid(2'(SID)),
                 .rslot_v(rslot_v[b]),
                 .rslot(rslot[b*RB+:RB]),
                 .wslot_v(wslot_v[b]),
@@ -169,7 +209,7 @@ module tb_hbm_vm_physical_banks_static;
             clear_inputs();wslot_v=8'hff;
             for(integer b=0;b<8;b=b+1)begin
                 wslot[b*WB+:WB]=WB'(WG+4);
-                dq[b*281+:281]={1'b1,1'b0,2'd2,10'(row),3'(b),payload(b,row),8'hff};
+                dq[b*281+:281]={1'b1,1'b0,2'(SID),10'(row),3'(b),payload(b,row),8'hff};
             end
             tick();
         end
@@ -182,7 +222,7 @@ module tb_hbm_vm_physical_banks_static;
             for(integer b=0;b<8;b=b+1)begin
                 group_id=(t+b)%RG;row=(t/RG+b*3)%128;
                 rslot[b*RB+:RB]=RB'(group_id);
-                rq[(b*RG+group_id)*17+:17]={1'b1,1'b0,2'd2,10'(row),3'(b)};
+                rq[(b*RG+group_id)*17+:17]={1'b1,1'b0,2'(SID),10'(row),3'(b)};
             end
             tick();
         end
@@ -203,8 +243,8 @@ module tb_hbm_vm_physical_banks_static;
         fault_expected=1;rslot_v=8'hff;
         for(integer b=0;b<8;b=b+1)begin
             rslot[b*RB+:RB]=0;
-            rq[(b*RG+0)*17+:17]={1'b1,1'b0,2'd2,10'd7,3'(b)};
-            rq[(b*RG+1)*17+:17]={1'b1,1'b0,2'd2,10'd33,3'(b)};
+            rq[(b*RG+0)*17+:17]={1'b1,1'b0,2'(SID),10'd7,3'(b)};
+            rq[(b*RG+1)*17+:17]={1'b1,1'b0,2'(SID),10'd33,3'(b)};
         end
         tick();clear_inputs();repeat(12)tick();
         for(integer b=0;b<8;b=b+1)if(status[b*18+17]!==1)$fatal(1,"unselected secondgroup didnotfault");

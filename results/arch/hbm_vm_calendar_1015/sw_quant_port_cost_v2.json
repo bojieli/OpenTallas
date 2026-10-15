@@ -1,0 +1,34 @@
+{
+  "schema": "opentallas.hbm.sw-quant-port-cost.v2",
+  "source_profile": "quadrant_abi_sw_quant_v2.json",
+  "bank_core": "ot_vms_bank_static latestSHA7b2e2f unchanged parameterengine",
+  "old": {
+    "RG": 5,
+    "WG": 1,
+    "quadrant_scalar_pins": 31246,
+    "bank_scalar_pins": 3630
+  },
+  "candidate": {
+    "RG": 6,
+    "WG": 2,
+    "quadrant_scalar_pins": 35694,
+    "bank_scalar_pins": 4186
+  },
+  "added": {
+    "quadrant_pins": 4448,
+    "rq_bits": 136,
+    "rr_bits": 2056,
+    "wq_bits": 2248,
+    "wq_done_bits": 8,
+    "bank_pins_each": 556,
+    "bank_RR_payload_state_bits_each": 256,
+    "bank_RR_payload_state_bits_quadrant": 2048,
+    "physical_SRAM_ports": 0,
+    "data_SRAM_macros": 0
+  },
+  "physical_scope": "NewliteralRG6WG2 prototypephysicalgate required, noinheritedRG7physicalqualification. Existing32banks\u00d73SRAM unchanged; incrementalselectionmux/valid/clockcost mustbemeasured. Target125datapath5roots/.2140204mm2 reportedowner; actualsourcegatepending",
+  "dataflow_evidence": "ds_rank0_program.json L0records14norm/15rope\u219216QDQ\u219217DMA; L1records77..80, nativeSID0; avoids2x64sectorcopies/layer, nofabricatedglobalcycles",
+  "read_group": 5,
+  "write_group": 1,
+  "target": 125
+}
