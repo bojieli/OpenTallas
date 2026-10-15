@@ -1,0 +1,86 @@
+{
+  "schema": "opentallas.qwen-su-base-cut-model.v1",
+  "source_commit": "685dad9b5",
+  "source_netlist_sha256": "5ec62a5b50578e5ca09d4cc431805430a3cd22c2fcdc757d15d3d3c0a9241db7",
+  "qualification": "prebuild sizing; no candidate RTL/hardview/area/route claim",
+  "original": {
+    "ff_bits": 13305,
+    "clock_roots": 347,
+    "boundary_input_unique_nets": 20889,
+    "boundary_output_unique_nets": 21649,
+    "offset_adders": 256,
+    "offset_bits": 24
+  },
+  "exact_disjoint_state": {
+    "crom_is": 4096,
+    "crom_kv_os": 5248,
+    "reducer_input": 2076,
+    "broadcast_merged": 244,
+    "remaining_control": 1641
+  },
+  "dataflow": {
+    "macs_per_cycle_added": 0,
+    "memory_bytes_per_cycle_added": 0,
+    "latency_edges_added": 0,
+    "serial_period_ps": 1111.111,
+    "existing_crom_response_edges": [
+      5,
+      8
+    ],
+    "existing_vm_response_edges": 15,
+    "existing_IS": 1,
+    "existing_OS": 1
+  },
+  "standalone_candidate": {
+    "octet_replicas": 8,
+    "per_octet": {
+      "crom_IS_bits": 512,
+      "crom_KV_OS_bits": 656,
+      "broadcast_declared_bits": 504,
+      "declared_FF_upper": 1672,
+      "logical_data_input_bits": 1671,
+      "logical_data_output_bits": 1671,
+      "clock_reset_pins": 2,
+      "total_logical_pins": 3344,
+      "independent_group_FF_lower_bound": 244,
+      "independent_group_FF_upper_bound": 248
+    },
+    "reducer_input_tile": {
+      "replicas": 1,
+      "FF_bits": 2076,
+      "data_in_bits": 2076,
+      "data_out_bits": 2076,
+      "clock_reset_pins": 2,
+      "total_pins": 4154
+    },
+    "remaining_control_FF_bits": 1641,
+    "clock_roots": 356,
+    "FF_total_lower_bound": 15013,
+    "FF_total_upper_bound": 15045,
+    "added_FF_lower_bound": 1708,
+    "added_FF_upper_bound": 1740,
+    "area_um2": null,
+    "outline_um": null,
+    "routing_tracks": null,
+    "channel_capacity": null,
+    "replication_cost": "eight real broadcast copies replace synthesis-merged state; mapped synthesis required to resolve four gb output inversions/sharing percopy"
+  },
+  "existing_root_candidate": {
+    "clock_roots": 347,
+    "crom_IS_local_bits_per_align_root": 256,
+    "reducer_input_data_bits_per_region_root": 256,
+    "reducer_metadata_bits": 28,
+    "requirement": "replacement real align/reducer hardviews; do not reuse old hardview as proof",
+    "output_station_and_broadcast_ownership": "OPEN; still must be physically implemented/priced"
+  },
+  "admission_before_route": [
+    "actual die slot and signal/PG stack grant",
+    "source-preserving extracted caller and direct edge/reset equivalence gate",
+    "mapped synthesis for real area and group sharing",
+    "pin/OBS legality plus octet wire reach",
+    "updated explicit real clockports and census",
+    "source-pinned TT/FF views and actual boundary phi/RC"
+  ],
+  "clock_policy": "standalone added roots need actual ports and domain census; root reassignment requires real source changes and edge-phase proof; no clock-pin count metadata substitute",
+  "acceptance": "Owner OptionB TTsetup>=0 FFhold>=0 DRC0 per parent current directive; actual flow constraints and phase/RC coverage still required"
+}
