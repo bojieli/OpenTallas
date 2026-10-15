@@ -1,0 +1,15 @@
+{
+  "source_commit": "e74a2e646eb8831a0df455b76e4300ee1e617982",
+  "scope": "current RF36 compiler images; no hand-made or reduced fixture",
+  "prepared_root": "/home/ubuntu/artifacts/hbm-su-multirate-1417/prepare/vec",
+  "generated_inputs": {
+    "phase/serial_prog.mem": "ef51677866608d14c080d0aef73939220f5e18230a566a015d511c0f07daff2a",
+    "phase/stream_cal.mem": "fcba67807bbf4d3be28ae2f3fcd063b547f09248ef095d22c06fd3bac098363d",
+    "serial/config.mem": "f30f688a5e438f3e878ad087a5be66a67482e1dffa377de0a535073b69d5a5fb",
+    "stream/config.mem": "7d3d316c62d5fcaa9bfe21c90a1e34c415851b1659d32527702a4d5a8358ac76",
+    "serial/expected.mem": "ef51677866608d14c080d0aef73939220f5e18230a566a015d511c0f07daff2a",
+    "stream/expected.mem": "fcba67807bbf4d3be28ae2f3fcd063b547f09248ef095d22c06fd3bac098363d"
+  },
+  "byte_identical_relower": true,
+  "frozen_lowerer_sha256": "560d29691d486c1923217c4206d78a582d9c3eec8dc092f4233dd3cbf9310f21"
+}
