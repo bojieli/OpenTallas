@@ -1,0 +1,49 @@
+{
+  "owner": "Codex /root/h_elements_a/static_sm_feed",
+  "root_assignment": "end-to-end actualSMphysicalintake",
+  "first_master": "ot_smh_static_stage256",
+  "first_stage_instance": "g_slice[0].u_w0",
+  "source_sha256": "2d6321a43b40b8a8c23c2151391954c128d68fc34d21807734151c30d6ec83b4",
+  "geometry_contract": "first_cluster_contract.json",
+  "qualification_cluster_only": true,
+  "canonical_full_SM_home_assigned": false,
+  "next_job": "read-only originalCTSODB nativeIO+pinpreview, thenroute ifPASS; paired128S2sourcevariantproof beforeparentadoption",
+  "known_master_clock": {
+    "sinks": 256,
+    "TTmax_ps": 80.8,
+    "spread_ps": 1.5
+  },
+  "route_closed": false,
+  "families": [
+    {
+      "family": "stage256",
+      "ready": "source/exactbench+CTS",
+      "next": "nativepinpreview\u2192realpin/PGreadback\u2192route",
+      "blocker": "nativeIO notyetmeasured; pairedsourcevariantproof pending"
+    },
+    {
+      "family": "north ctrl15/ctrl21/decode21/row818",
+      "ready": "exactoriginalnorth sourceproof",
+      "next": "per-master slot/nativekit/gate",
+      "blocker": "no physicalmasterviews"
+    },
+    {
+      "family": "83feed +programme/read34",
+      "ready": "actualnumericcomponent",
+      "next": "explicitphysicalroot/portpartition andslots",
+      "blocker": "no leafkit"
+    },
+    {
+      "family": "XR/XL/T/B staticfront",
+      "ready": "reusesactualoldRTL; perview nativeauditneeded",
+      "next": "source/parameter/viewbinding thenactualpin/nativeaudit",
+      "blocker": "currentfullfrontjointslot/sourcepinsnotadmitted"
+    },
+    {
+      "family": "6re-cuttransport/16computeparents/SUbackend",
+      "ready": "recoveringactualclosedleaf/sourcebindings; no familycoverageclaim",
+      "next": "exactsource inventory+closedviews nativeaudit, selectunclosedparentkit",
+      "blocker": "parentinactive; concretefreshmasterinventorypending"
+    }
+  ]
+}
