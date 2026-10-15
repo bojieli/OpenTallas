@@ -43,7 +43,8 @@
  "children": [],
  "recipe": 2,
  "sdc_extra": [
-  "physical/hbm_native_bounded_cdc_1014/related_domains.sdc"
+  "physical/hbm_native_bounded_cdc_1014/related_domains.sdc",
+  "physical/hbm_native_bounded_cdc_1014/cdc_arcs.sdc"
  ],
  "boundary_tcl": [
   "physical/hbm_native_bounded_cdc_1014/physical_boundary.tcl"

@@ -18,4 +18,30 @@ foreach {ot_from ot_to} {core_clk vm_clk vm_clk core_clk} {
  set_clock_uncertainty -setup 210 -from [get_clocks $ot_from] -to [get_clocks $ot_to]
  set_clock_uncertainty -hold 100 -from [get_clocks $ot_from] -to [get_clocks $ot_to]
 }
+# ---- sdc_extra physical/hbm_native_bounded_cdc_1014/cdc_arcs.sdc
+# Native CDC crossing arcs (A4 HBM group A 2026-10-14; pattern of the accepted dsfd_vm_fcn/fcc B8 constraint).
+# Routed npin1 w1/w16: FF hold -88/-93 on 548 reg->reg endpoints, ALL two-domain crossings core_clk <-> vm_clk:
+# slots -> landed_slots (400) and the first synchroniser flops of the epoch rails / Gray ack / Gray publish counts (148).
+# Structure (ot_hbm_native_{bounded,sram}_cdc): ack / pub are Gray counts (and their complement rails) sampled by two
+# flops; the 32-bit epochs change only while both sides are drained and are checked rail-against-rail after two flops (an
+# incoherent sample is a transient mismatch that blocks, never a value); a landed slot is selected by the consumer only
+# after its publication crossed two synchroniser edges, and the source does not rewrite it before the consumer's Gray
+# release crossed back.  Constraint of those arcs, and of nothing else (by DESTINATION, the D of a first synchroniser /
+# landing flop has no other source than the crossing):
+#   source register -> first synchroniser flop : max datapath 0.5 x min period (Gray bus-skew bound), no hold relation
+#   slots -> landed_slots                       : max datapath 1.0 x min period - 60 ps, no hold relation
+# (OpenSTA has no -datapath_only / set_bus_skew: -ignore_clock_latency + false-path -hold is the same check.)
+proc ot_ncdc_arcs {} {
+  set t [expr {min([get_property [get_clocks core_clk] period],[get_property [get_clocks vm_clk] period])}]
+  set sy {}; set ld {}
+  foreach c [all_registers -cells] {
+    set n [get_full_name $c]
+    if {[regexp {^(ack1|ackn1|re1|ren1|pub1|pubn1|we1|wen1)\[[0-9]+\]} $n]} { lappend sy $c } \
+    elseif {[regexp {^landed_slots\[} $n]} { lappend ld $c }
+  }
+  if {[llength $sy]} { set_max_delay -ignore_clock_latency [expr {0.5*$t}] -to $sy; set_false_path -hold -to $sy }
+  if {[llength $ld]} { set_max_delay -ignore_clock_latency [expr {$t-60.0}] -to $ld; set_false_path -hold -to $ld }
+  puts [format "NATIVE_CDC arcs: %d first synchroniser flops (max datapath %.1f ps, no hold), %d landing flops (max datapath %.1f ps, no hold)" [llength $sy] [expr {0.5*$t}] [llength $ld] [expr {$t-60.0}]]
+}
+ot_ncdc_arcs
 set_input_transition 150 [all_inputs -no_clocks]
