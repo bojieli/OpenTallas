@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // External fixture -> real SU preload -> MIX4 -> real VM128SRAM -> SU readback.
 // All reference arrays below are testbench stimuli/scoreboards; none drive a DUT response.
-module tb_s81_engram_mix4_native_vm #(parameter MUT=0, WSCATTER_PIPE=1, WRITE_COMMIT_LAT=12);
+module tb_s81_engram_mix4_native_vm #(parameter MUT=0, WSCATTER_PIPE=1, WRITE_COMMIT_LAT=12, WRITE_INPUT_PIPE=0);
  localparam READ_PIPE=4, RL=16, MAXC=40000;
  // VM latency convention (S-ELEM-C 10-15, 7beb fault at cy961 = 'lost descriptor reply': dtag[VM_LAT+1] arrived one
  // edge before the registered return). RL counts from the edge that SAMPLES the request pin to the edge after which the
@@ -40,6 +40,140 @@ module tb_s81_engram_mix4_native_vm #(parameter MUT=0, WSCATTER_PIPE=1, WRITE_CO
         assign clm[16*cl +: 16] = cvm[551*cl+15 +: 16];
         assign cld[512*cl +: 512] = cvm[551*cl+31 +: 512];
     end endgenerate
+ wire [15:0] svc_su_wqv;
+ wire [223:0] svc_su_wq;
+ wire [255:0] svc_su_wqm;
+ wire [8191:0] svc_su_wqd;
+ wire [7:0] svc_hc_wqv;
+ wire [111:0] svc_hc_wq;
+ wire [127:0] svc_hc_wqm;
+ wire [4095:0] svc_hc_wqd;
+ wire [3:0] svc_mx_wqv;
+ wire [55:0] svc_mx_wq;
+ wire [63:0] svc_mx_wqm;
+ wire [2047:0] svc_mx_wqd;
+ wire [3:0] svc_l_v;
+ wire [2047:0] svc_l_d;
+ wire [15:0] svc_cp_v;
+ wire [223:0] svc_cp_row;
+ wire [255:0] svc_cp_m;
+ wire [8191:0] svc_cp_d;
+ wire [31:0] svc_cl_t;
+ wire [3:0] svc_cl_v;
+ wire [55:0] svc_cl_row;
+ wire [63:0] svc_cl_m;
+ wire [2047:0] svc_cl_d;
+ wire [0:0] svc_wf_v;
+ wire [13:0] svc_wf_row;
+ wire [511:0] svc_wf_d;
+ // Service-price adapter only: fixed2edge input pipeline on all53 logical writes. Actual A2 hardware is separate.
+ generate if(WRITE_INPUT_PIPE==2)begin:service_price2
+  reg [15:0] p0_su_wqv,p1_su_wqv;
+  always @(posedge ck)begin if(!rss)begin p0_su_wqv<=0;p1_su_wqv<=0;end else begin p0_su_wqv<=su_wqv;p1_su_wqv<=p0_su_wqv;end end
+  assign svc_su_wqv=p1_su_wqv;
+  reg [223:0] p0_su_wq,p1_su_wq;
+  always @(posedge ck)begin begin p0_su_wq<=su_wq;p1_su_wq<=p0_su_wq;end end
+  assign svc_su_wq=p1_su_wq;
+  reg [255:0] p0_su_wqm,p1_su_wqm;
+  always @(posedge ck)begin begin p0_su_wqm<=su_wqm;p1_su_wqm<=p0_su_wqm;end end
+  assign svc_su_wqm=p1_su_wqm;
+  reg [8191:0] p0_su_wqd,p1_su_wqd;
+  always @(posedge ck)begin begin p0_su_wqd<=su_wqd;p1_su_wqd<=p0_su_wqd;end end
+  assign svc_su_wqd=p1_su_wqd;
+  reg [7:0] p0_hc_wqv,p1_hc_wqv;
+  always @(posedge ck)begin if(!rss)begin p0_hc_wqv<=0;p1_hc_wqv<=0;end else begin p0_hc_wqv<=hc_wqv;p1_hc_wqv<=p0_hc_wqv;end end
+  assign svc_hc_wqv=p1_hc_wqv;
+  reg [111:0] p0_hc_wq,p1_hc_wq;
+  always @(posedge ck)begin begin p0_hc_wq<=hc_wq;p1_hc_wq<=p0_hc_wq;end end
+  assign svc_hc_wq=p1_hc_wq;
+  reg [127:0] p0_hc_wqm,p1_hc_wqm;
+  always @(posedge ck)begin begin p0_hc_wqm<=hc_wqm;p1_hc_wqm<=p0_hc_wqm;end end
+  assign svc_hc_wqm=p1_hc_wqm;
+  reg [4095:0] p0_hc_wqd,p1_hc_wqd;
+  always @(posedge ck)begin begin p0_hc_wqd<=hc_wqd;p1_hc_wqd<=p0_hc_wqd;end end
+  assign svc_hc_wqd=p1_hc_wqd;
+  reg [3:0] p0_mx_wqv,p1_mx_wqv;
+  always @(posedge ck)begin if(!rss)begin p0_mx_wqv<=0;p1_mx_wqv<=0;end else begin p0_mx_wqv<=mx_wqv;p1_mx_wqv<=p0_mx_wqv;end end
+  assign svc_mx_wqv=p1_mx_wqv;
+  reg [55:0] p0_mx_wq,p1_mx_wq;
+  always @(posedge ck)begin begin p0_mx_wq<=mx_wq;p1_mx_wq<=p0_mx_wq;end end
+  assign svc_mx_wq=p1_mx_wq;
+  reg [63:0] p0_mx_wqm,p1_mx_wqm;
+  always @(posedge ck)begin begin p0_mx_wqm<=mx_wqm;p1_mx_wqm<=p0_mx_wqm;end end
+  assign svc_mx_wqm=p1_mx_wqm;
+  reg [2047:0] p0_mx_wqd,p1_mx_wqd;
+  always @(posedge ck)begin begin p0_mx_wqd<=mx_wqd;p1_mx_wqd<=p0_mx_wqd;end end
+  assign svc_mx_wqd=p1_mx_wqd;
+  reg [3:0] p0_l_v,p1_l_v;
+  always @(posedge ck)begin if(!rss)begin p0_l_v<=0;p1_l_v<=0;end else begin p0_l_v<=l_v;p1_l_v<=p0_l_v;end end
+  assign svc_l_v=p1_l_v;
+  reg [2047:0] p0_l_d,p1_l_d;
+  always @(posedge ck)begin begin p0_l_d<=l_d;p1_l_d<=p0_l_d;end end
+  assign svc_l_d=p1_l_d;
+  reg [15:0] p0_cp_v,p1_cp_v;
+  always @(posedge ck)begin if(!rss)begin p0_cp_v<=0;p1_cp_v<=0;end else begin p0_cp_v<=16'd0;p1_cp_v<=p0_cp_v;end end
+  assign svc_cp_v=p1_cp_v;
+  reg [223:0] p0_cp_row,p1_cp_row;
+  always @(posedge ck)begin begin p0_cp_row<=224'd0;p1_cp_row<=p0_cp_row;end end
+  assign svc_cp_row=p1_cp_row;
+  reg [255:0] p0_cp_m,p1_cp_m;
+  always @(posedge ck)begin begin p0_cp_m<=256'd0;p1_cp_m<=p0_cp_m;end end
+  assign svc_cp_m=p1_cp_m;
+  reg [8191:0] p0_cp_d,p1_cp_d;
+  always @(posedge ck)begin begin p0_cp_d<=8192'd0;p1_cp_d<=p0_cp_d;end end
+  assign svc_cp_d=p1_cp_d;
+  reg [31:0] p0_cl_t,p1_cl_t;
+  always @(posedge ck)begin begin p0_cl_t<=clt;p1_cl_t<=p0_cl_t;end end
+  assign svc_cl_t=p1_cl_t;
+  reg [3:0] p0_cl_v,p1_cl_v;
+  always @(posedge ck)begin if(!rss)begin p0_cl_v<=0;p1_cl_v<=0;end else begin p0_cl_v<=clv;p1_cl_v<=p0_cl_v;end end
+  assign svc_cl_v=p1_cl_v;
+  reg [55:0] p0_cl_row,p1_cl_row;
+  always @(posedge ck)begin begin p0_cl_row<=clr;p1_cl_row<=p0_cl_row;end end
+  assign svc_cl_row=p1_cl_row;
+  reg [63:0] p0_cl_m,p1_cl_m;
+  always @(posedge ck)begin begin p0_cl_m<=clm;p1_cl_m<=p0_cl_m;end end
+  assign svc_cl_m=p1_cl_m;
+  reg [2047:0] p0_cl_d,p1_cl_d;
+  always @(posedge ck)begin begin p0_cl_d<=cld;p1_cl_d<=p0_cl_d;end end
+  assign svc_cl_d=p1_cl_d;
+  reg [0:0] p0_wf_v,p1_wf_v;
+  always @(posedge ck)begin if(!rss)begin p0_wf_v<=0;p1_wf_v<=0;end else begin p0_wf_v<=1'b0;p1_wf_v<=p0_wf_v;end end
+  assign svc_wf_v=p1_wf_v;
+  reg [13:0] p0_wf_row,p1_wf_row;
+  always @(posedge ck)begin begin p0_wf_row<=14'd0;p1_wf_row<=p0_wf_row;end end
+  assign svc_wf_row=p1_wf_row;
+  reg [511:0] p0_wf_d,p1_wf_d;
+  always @(posedge ck)begin begin p0_wf_d<=512'd0;p1_wf_d<=p0_wf_d;end end
+  assign svc_wf_d=p1_wf_d;
+ end else begin:service_price0
+  assign svc_su_wqv=su_wqv;
+  assign svc_su_wq=su_wq;
+  assign svc_su_wqm=su_wqm;
+  assign svc_su_wqd=su_wqd;
+  assign svc_hc_wqv=hc_wqv;
+  assign svc_hc_wq=hc_wq;
+  assign svc_hc_wqm=hc_wqm;
+  assign svc_hc_wqd=hc_wqd;
+  assign svc_mx_wqv=mx_wqv;
+  assign svc_mx_wq=mx_wq;
+  assign svc_mx_wqm=mx_wqm;
+  assign svc_mx_wqd=mx_wqd;
+  assign svc_l_v=l_v;
+  assign svc_l_d=l_d;
+  assign svc_cp_v=16'd0;
+  assign svc_cp_row=224'd0;
+  assign svc_cp_m=256'd0;
+  assign svc_cp_d=8192'd0;
+  assign svc_cl_t=clt;
+  assign svc_cl_v=clv;
+  assign svc_cl_row=clr;
+  assign svc_cl_m=clm;
+  assign svc_cl_d=cld;
+  assign svc_wf_v=1'b0;
+  assign svc_wf_row=14'd0;
+  assign svc_wf_d=512'd0;
+ end endgenerate
     wire vm_fault;
     dsfd_vm_static_core #(.READ_PIPE(READ_PIPE),.WSCATTER_PIPE(WSCATTER_PIPE)) dut (.cks(ck), .rss(rss),
         .ck_read_data({64{ck}}), .ck_read_valid({8{ck}}), .rst_read_data_n({64{rss}}), .rst_read_valid_n({8{rss}}),
@@ -54,12 +188,12 @@ module tb_s81_engram_mix4_native_vm #(parameter MUT=0, WSCATTER_PIPE=1, WRITE_CO
         .rst_mem_wcapture_n({128{rss}}), .rst_mem_wscatter_n({16{rss}}), .rst_mem_relay_n({48{rss}}),
         .rst_write_control_n(rss), .rst_write_header_n(rss), .rst_write_payload_n({4{rss}}),
         .rst_write_dispatch_n({16{rss}}), .rst_write_stage_n({128{rss}}), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st), .t_inp_su(t_inp_su),
-        .t_inp_hc(t_inp_hc), .f_su_rqv(su_rqv), .f_su_rq(su_rq), .t_su_rsv(su_rsv), .t_su_rs(su_rs), .f_su_wqv(su_wqv),
-        .f_su_wq(su_wq), .f_su_wqm(su_wqm), .f_su_wqd(su_wqd), .f_hc_rqv(hc_rqv), .f_hc_rq(hc_rq), .t_hc_rsv(hc_rsv),
-        .t_hc_rs(hc_rs), .f_hc_wqv(hc_wqv), .f_hc_wq(hc_wq), .f_hc_wqm(hc_wqm), .f_hc_wqd(hc_wqd), .f_pqx(pqx), .t_pqx(pq_o), .x_av({4'd0, (crq[0] ? (4'b1 << crq[2:1]) : 4'd0)}), .x_ar({56'd0, {4{crq[14:1]}}}), .x_rv(xv), .x_rd(xd), .nf_v(), .nf_d(),
+        .t_inp_hc(t_inp_hc), .f_su_rqv(su_rqv), .f_su_rq(su_rq), .t_su_rsv(su_rsv), .t_su_rs(su_rs), .f_su_wqv(svc_su_wqv),
+        .f_su_wq(svc_su_wq), .f_su_wqm(svc_su_wqm), .f_su_wqd(svc_su_wqd), .f_hc_rqv(hc_rqv), .f_hc_rq(hc_rq), .t_hc_rsv(hc_rsv),
+        .t_hc_rs(hc_rs), .f_hc_wqv(svc_hc_wqv), .f_hc_wq(svc_hc_wq), .f_hc_wqm(svc_hc_wqm), .f_hc_wqd(svc_hc_wqd), .f_pqx(pqx), .t_pqx(pq_o), .x_av({4'd0, (crq[0] ? (4'b1 << crq[2:1]) : 4'd0)}), .x_ar({56'd0, {4{crq[14:1]}}}), .x_rv(xv), .x_rd(xd), .nf_v(), .nf_d(),
         .f_mx_rqv(mx_rqv), .f_mx_rq(mx_rq), .t_mx_rsv(mx_rsv), .t_mx_rs(mx_rs),
-        .f_mx_wqv(mx_wqv), .f_mx_wq(mx_wq), .f_mx_wqm(mx_wqm), .f_mx_wqd(mx_wqd),
-        .l_v(l_v), .l_d(l_d), .cp_v(16'd0), .cp_row(224'd0), .cp_m(256'd0), .cp_d(8192'd0), .cl_t(clt), .cl_v(clv), .cl_row(clr), .cl_m(clm), .cl_d(cld), .wf_v(1'b0), .wf_row(14'd0), .wf_d(512'd0), .x_al(3'd0), .x_hdr(9'd0), .edge_f(3'd0), .vm_fault(vm_fault));
+        .f_mx_wqv(svc_mx_wqv), .f_mx_wq(svc_mx_wq), .f_mx_wqm(svc_mx_wqm), .f_mx_wqd(svc_mx_wqd),
+        .l_v(svc_l_v), .l_d(svc_l_d), .cp_v(svc_cp_v), .cp_row(svc_cp_row), .cp_m(svc_cp_m), .cp_d(svc_cp_d), .cl_t(svc_cl_t), .cl_v(svc_cl_v), .cl_row(svc_cl_row), .cl_m(svc_cl_m), .cl_d(svc_cl_d), .wf_v(svc_wf_v), .wf_row(svc_wf_row), .wf_d(svc_wf_d), .x_al(3'd0), .x_hdr(9'd0), .edge_f(3'd0), .vm_fault(vm_fault));
 
 
  dsfd_engram_mix4_c #(.MUT(MUT),.HLAYOUT(1),.VM_LAT(MIX_VM_LAT),.WRITE_COMMIT_LAT(WRITE_COMMIT_LAT),.RS(5)) mix(
@@ -96,7 +230,7 @@ module tb_s81_engram_mix4_native_vm #(parameter MUT=0, WSCATTER_PIPE=1, WRITE_CO
    // Baseline PIPE0 source pin P -> macro write-enable P+9 -> relayed cm_v P+11.
    for(integer k=0;k<128;k=k+1)if(raw_v[k])begin
     raw_slice=k/32;raw_row=(integer'(raw_a[9*k+:9])<<5)|((k%32)^((raw_a[9*k+:9]&7)<<2));
-    if(wc[raw_row]<0 || cy-(wc[raw_row]-WRITE_COMMIT_LAT)!=(9+WSCATTER_PIPE) || raw_slices[raw_row][raw_slice] ||
+    if(wc[raw_row]<0 || cy-(wc[raw_row]-WRITE_COMMIT_LAT)!=(9+WSCATTER_PIPE+WRITE_INPUT_PIPE) || raw_slices[raw_row][raw_slice] ||
        raw_m[4*k+:4]!==4'hf || raw_t[8*k+:8]!==wt[raw_row])
      $fatal(1,"raw SRAM write timing/mask/tag mismatch row=%0d cy=%0d source=%0d",raw_row,cy,wc[raw_row]-WRITE_COMMIT_LAT);
     raw_slices[raw_row][raw_slice]=1;rawcommits=rawcommits+1;
@@ -187,6 +321,6 @@ module tb_s81_engram_mix4_native_vm #(parameter MUT=0, WSCATTER_PIPE=1, WRITE_CO
   for(i=0;i<640;i=i+1)begin @(negedge ck);#0.01;su_rqv=1;su_rq[0+:14]=256+i;end
   @(negedge ck);#0.01;su_rqv=0;repeat(50)@(negedge ck);
   if(writes!=640||readbacks!=640)$fatal(1,"repeat/readback count");
-  $display("PASS MIX4_NATIVE_VM128 RL16 raw_write10 commit_return12 RS5 exact20480 writes640 reads4161 preloads3521 readbacks640 rawcommits=%0d returnedcommits=%0d write_span=%0d..%0d cycles=%0d",rawcommits,commits,first_w-start,last_w-start,elapsed);$finish;
+  $display("PASS MIX4_NATIVE_VM128 RL16 raw_write%0d commit_return%0d input_adapter%0d RS5 exact20480 writes640 reads4161 preloads3521 readbacks640 rawcommits=%0d returnedcommits=%0d write_span=%0d..%0d cycles=%0d",9+WSCATTER_PIPE+WRITE_INPUT_PIPE,WRITE_COMMIT_LAT,WRITE_INPUT_PIPE,rawcommits,commits,first_w-start,last_w-start,elapsed);$finish;
  end
 endmodule
