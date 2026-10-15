@@ -13,7 +13,7 @@ module ot_qwen_static_slot_ctl #(
     input wire clk,
     input wire rst_n, epoch_begin,
     input wire [7:0] epoch,
-    input wire wr_v,
+    input wire wr_v, wr_observed_v,
     input wire [5:0] wr_slot,
     input wire [FW-1:0] q_data,
     input wire rd_v,
@@ -28,7 +28,7 @@ module ot_qwen_static_slot_ctl #(
     output reg rx_v,
     output reg [FW-1:0] rx_flit,
     output reg epoch_abort,
-    output reg [6:0] fault_cause
+    output reg [7:0] fault_cause
 );
     reg [63:0] written;
     reg v1,v2,v3;
@@ -52,7 +52,7 @@ module ot_qwen_static_slot_ctl #(
     wire write_collision=wr_v && ((v1 && wr_slot==s1)||(v2 && wr_slot==s2)||(v3 && wr_slot==s3)||
         (written[wr_slot] && !(rd_v && rd_slot==wr_slot)));
     wire unread_slot=rd_v && !written[rd_slot] && !(wr_v && wr_slot==rd_slot);
-    wire [6:0] new_fault={write_collision,unread_slot,v3 && !p_tx_up,
+    wire [7:0] new_fault={wr_v && (wr_observed_v!==1'b1),write_collision,unread_slot,v3 && !p_tx_up,
                           rv && !ev,ev && !rv,slot_bad,crc_bad};
     // Payload registers have no reset/epoch enable. Validity controls their
     // observation; clocked pin registers stay real while reset fanout is small.
@@ -110,7 +110,7 @@ module ot_qwen_static_slot_link #(
     input wire [4:0] ck,
     input wire rst_n, epoch_begin,
     input wire [7:0] epoch,
-    input wire wr_v,
+    input wire wr_v, wr_observed_v,
     input wire [5:0] wr_slot,
     input wire [FW-1:0] wr_flit,
     input wire rd_v,
@@ -125,7 +125,7 @@ module ot_qwen_static_slot_link #(
     output wire rx_v,
     output wire [FW-1:0] rx_flit,
     output wire epoch_abort,
-    output wire [6:0] fault_cause
+    output wire [7:0] fault_cause
 );
     // Canonical physical store width is137 for548/546/514-bit payloads.
     // The smaller board words pad unused high bits, sharing the same leaf view.
@@ -140,5 +140,5 @@ module ot_qwen_static_slot_link #(
     end
     ot_qwen_static_slot_ctl #(.FW(FW),.CW(CW),.PW(PW)) u_ctl (
         .clk(ck[0]),.q_data(rd[FW-1:0]),
-        .rst_n(rst_n), .epoch_begin(epoch_begin), .epoch(epoch), .wr_v(wr_v), .wr_slot(wr_slot), .rd_v(rd_v), .rd_slot(rd_slot), .rx_expect_v(rx_expect_v), .rx_expect_slot(rx_expect_slot), .p_tx_up(p_tx_up), .p_tx_v(p_tx_v), .p_tx_flit(p_tx_flit), .p_rx_v(p_rx_v), .p_rx_flit(p_rx_flit), .rx_v(rx_v), .rx_flit(rx_flit), .epoch_abort(epoch_abort), .fault_cause(fault_cause));
+        .rst_n(rst_n), .epoch_begin(epoch_begin), .epoch(epoch), .wr_v(wr_v), .wr_observed_v(wr_observed_v), .wr_slot(wr_slot), .rd_v(rd_v), .rd_slot(rd_slot), .rx_expect_v(rx_expect_v), .rx_expect_slot(rx_expect_slot), .p_tx_up(p_tx_up), .p_tx_v(p_tx_v), .p_tx_flit(p_tx_flit), .p_rx_v(p_rx_v), .p_rx_flit(p_rx_flit), .rx_v(rx_v), .rx_flit(rx_flit), .epoch_abort(epoch_abort), .fault_cause(fault_cause));
 endmodule
