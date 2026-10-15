@@ -106,6 +106,35 @@
     "requests_per_wave": 4,
     "first_wave_edge": 22,
     "wave_interval": 4,
-    "status": "gate running after test SID returnmux correction; no arithmetic nativejoin claim"
+    "status": "PASS actual32banks96SRAM12taps,640waves/20480sectors, positionmutantfails, receiptf0c388a99"
+  },
+  "actual_programme_arithmetic_join": {
+    "status": "PASS6/8",
+    "source": "259e7039b",
+    "receipt": "37dbcf164",
+    "actual_SRAMs": 82,
+    "exact_projection_words": [
+      144,
+      192
+    ],
+    "exact_tail_words": [
+      144,
+      192
+    ],
+    "programme_PC_mutant": "failsinstruction1024",
+    "cycles_with_reconfiguration": [
+      59145,
+      76785
+    ],
+    "production_rate_claim": false
+  },
+  "repeated_programme_native_VM_join": {
+    "source": "ed6259de3",
+    "status": "RUNNING",
+    "actual_SRAMs": 178,
+    "programme_rows_repeated": 24,
+    "per_row_reconfiguration": false,
+    "weight_input": "externalaperture boundary, 20GiBnativeprefetch stillrequired",
+    "result_native_VM_write": "sourceonlyadapterf4b6f279f notcovered"
   }
 }
