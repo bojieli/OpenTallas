@@ -39,5 +39,34 @@
   "orientation_scope": "R0/FS/MY preserve gross face capacity; no orientation can repair this lower bound.",
   "verdict": "INFEASIBLE_BEFORE_PG",
   "qualification": "Necessary lower bound only; no generated pin candidate, RTL change, latency claim, physical route or parent qualification.",
-  "next": "Die lead selects additional layer, split across faces with registered seams, or wider parent. Recompute every incident edge and total compiler-visible loop cycles before adoption."
+  "next": "Die lead selects additional layer, split across faces with registered seams, or wider parent. Recompute every incident edge and total compiler-visible loop cycles before adoption.",
+  "coherent_alternatives": [
+    {
+      "name": "wide1296",
+      "width_um": 1296,
+      "total_south_bits": 13062,
+      "gross_two_track_cut": 0.5528888888888889,
+      "maximum_fraction_tracks_blocked_at_cut_0p60": 0.07851851851851854,
+      "die_width_delta_um": 518.4,
+      "die_area_estimate_mm2": 854.16,
+      "physical_gate": "Needs actual PG and legal phase in all orientations, all six siblings fitting, every incident peer pin and register hop; no width grant yet."
+    },
+    {
+      "name": "split_north_south",
+      "width_um": 1036.8,
+      "south_ports": [
+        "ty4096",
+        "tw4096"
+      ],
+      "north_ports": [
+        "rq4425",
+        "tc341",
+        "tf104"
+      ],
+      "south_gross_cut": 0.43343915343915346,
+      "north_gross_cut": 0.25767195767195766,
+      "physical_gate": "Needs coherent movement of the TT return/control peer group to the north seam, actual north clock/reset occupancy and physical per-bit relay placement. Existing W-peer placement does not qualify this split.",
+      "cycle_cost": "Unmeasured; all producer/consumer path ages and pipeline drains must be modelled before a parent grant."
+    }
+  ]
 }
