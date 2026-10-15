@@ -15,6 +15,8 @@ def model(npt=3,solo=True):
       'qslots':{'sources':ns,'sinks':nd,'capture_root_register_estimate':ns*546+1,
                  'output_root_register_estimate':output_root},
       'writer_declared_register_bound':7944,
+      'protocol_declared_register_bound':7207+8*npt,
+      'registered_address_word_to_consumer_edges':1,
       'native_link_macros_64x512':4*npt,
       'ring_state_roots':8,'ring_arithmetic_roots':8,
       'timing_edges':{'su_inject_fixed_response':12,'qslots_source_to_output':2,

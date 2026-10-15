@@ -14,6 +14,6 @@ src=("$p/ot_hfd_coll_q_static.sv" "$p/ot_hgi_coll_static_issuer.sv"
  physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v
  physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v)
 for n in 3 2;do
- "$V" --lint-only --timing -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-TIMESCALEMOD \
+ "$V" --lint-only --hierarchical "$p/qtkm_hier.vlt" --timing -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-TIMESCALEMOD \
    --top-module "ot_hfd_coll_q${n}_static" "${src[@]}"
 done
