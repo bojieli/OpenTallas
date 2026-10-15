@@ -111,9 +111,10 @@
  "merge_target": null,
  "structural_change": "Native5 structural repair of the measured native4 CTS miss (release_group[0] input -> 12 logic levels -> completion/valid/fault state, TT -79.8 ps at 770 route period; lanes 1-3 -15..-22 ps placement): the E10 release state update, peer-token group check and o_group use the leaf's own REGISTERED copy of the stage9 prepare descriptor (same compiled descriptor one edge early, already a leaf input). release_* pins feed only a shallow equality check (mismatch = sticky fault + suppressed release). Zero added cycles, same ports/pins/outline/clock; +4 FF per leaf. Native6 (measured native5 CTS: lanes 0/1 +26.7/+1.7 ps, lanes 2/3 -20.1/-38.0 ps, worst = the 8-source slot-collision cone i_tag -> bad -> fault): the schedule-fault check is registered once before the sticky flag (fault +1 stream edge, diagnostic only; data/valid/completion unchanged), +1 FF per leaf. L16h (S-ELEM-A 2026-10-15): routed l16 FF -11.22 is ONLY output-port hold (corner_sta: reg->reg +22.91, input->reg +42.71, output -11.22; post-route ECO twice left -9.2/-10.2 with 2,768 cells). The sender-minimum rule needs flop->pin >= L_ref_min + 75 ps; the fixed HB1 output stage gives ~60-65 ps. The fixed output stage is sized up to HB2 (about +15-20 ps FF) using the launch headroom measured on the closed sibling lanes (launch 151.5-151.9 vs 220). Same RTL/pins/outline/clock entry (now its own die clock entry: ck_mem_return_t bit 4*slice+2), zero cycles.",
  "reroute_reason": {
-  "kind": "kit_change",
+  "kind": "evidence_gap",
   "cell": "dsfd_vm_static_return_bank8_l2_p",
   "source": "loop job dsfd_vm_static_return_bank8_l2_p_native_1015_l16-l16-ceea362ab NEEDS_RTL TT +61.93 / FF -11.22 (worst_output_port_slack -11.22, reg->reg +22.91, in->reg +42.71)",
-  "fix": "fixed output hold stage HB1 -> HB2 sized to the L_ref_min+75 ps sender minimum, launch headroom 68 ps; not an ECO retry"
+  "fix": "fixed output hold stage HB1 -> HB2 sized to the L_ref_min+75 ps sender minimum, launch headroom 68 ps; not an ECO retry",
+  "why_route": "no CLOSED l2_p L16 view exists (l16 route NEEDS_RTL FF -11.22); new kit with the sized HB2 output stage"
  }
 }

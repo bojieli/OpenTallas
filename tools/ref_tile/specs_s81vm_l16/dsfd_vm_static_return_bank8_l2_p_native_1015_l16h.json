@@ -131,9 +131,10 @@
   "out": 0.55
  },
  "reroute_reason": {
-  "kind": "kit_change",
+  "kind": "evidence_gap",
   "cell": "dsfd_vm_static_return_bank8_l2_p",
   "source": "loop job dsfd_vm_static_return_bank8_l2_p_native_1015_l16-l16-ceea362ab NEEDS_RTL TT +61.93 / FF -11.22 (worst_output_port_slack -11.22, reg->reg +22.91, in->reg +42.71)",
-  "fix": "fixed output hold stage HB1 -> HB2 sized to the L_ref_min+75 ps sender minimum, launch headroom 68 ps; not an ECO retry"
+  "fix": "fixed output hold stage HB1 -> HB2 sized to the L_ref_min+75 ps sender minimum, launch headroom 68 ps; not an ECO retry",
+  "why_route": "no CLOSED l2_p L16 view exists (l16 route NEEDS_RTL FF -11.22); new kit with the sized HB2 output stage"
  }
 }
