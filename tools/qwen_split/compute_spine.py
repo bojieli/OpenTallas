@@ -52,7 +52,12 @@ CHILD_CK = {'qfd_tt_up4': ['ck_pin', 'ck_l0', 'ck_l1', 'ck_l2', 'ck_l3'],     # 
 # ---- C10 (compute lead r3): the link words at their REAL RTL widths (die-bus audit, link rows; owner no-stub rule):
 # qfd_d2d_rom = ot_qfd_split_romlink + ot_qkvd_d2d_llr (rtl/qwen_split/qfd_link_slots.sv).  Bundles pack LSB first in
 # the listed order, the same order at both ends (the SU / VM wrappers take the same packing).
-LINK_BITS = dict(x3=524, attn_ret=520, d2d_fdi=1169, o4_kvd=44)
+LINK_BITS = dict(x3=524, attn_ret=520, d2d_fdi=1169, o4_kvd=44,
+                 # C11 (lead answers 17:5x to the compute elements): the RTL is the width truth -- tt_ctlm c 341 / f 104,
+                 # band_lanes lc 26 = {tv_e 13, sel_e 13}; SU issue si 482 (+ cb_stage 6, travels with each crom request);
+                 # SU status sd 108 (no weight-ROM fields: the split SU issues no WROM reads)
+                 tt_c0=341, tt_c1=341, tt_c2=341, tt_f0=104, tt_f1=104, tt_f2=104, tt_lc0=26, tt_lc1=26, tt_lc2=26,
+                 o4_su_iss=482, o4_su_st=108)
 LINK_SPLIT = {
     'qfd_d2d_rom': dict(
         x3=[('x3_d', 512), ('x3_tag', 11), ('x3_v', 1)],
