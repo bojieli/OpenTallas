@@ -48,3 +48,18 @@ response order and variable response gaps: NR16 PASS128groups0errors, NR2
 PASS128groups0errors. MUT_EARLY=1 reproduces ungrouped response timing and FAILS
 with1080errors. Logs in read_group/. Reproduction script
 `tools/s81_vm/vm_read_group_gate.sh SRC OUT` (fleet host, wrapped in ot-run).
+
+Field recovery found a newer duplicate AGIdock job touching the same L4..L16
+work directories after the initial no-live-job audit. Its concurrent per-region
+rmtree corrupted L4 outputs (missing images/directories). Stopped only that
+newer duplicate scope oth-ubuntu-3279797-1792028759, verified inactive/dead;
+original resumed batch and separate missing-six-rank batch continue. Added
+nonblocking per-work flock in dsrom_1m_field.py run: duplicate commands now
+fail FIELD_RUN_BUSY before launching workers, preventing destructive races.
+L4 damaged regions must be re-run before full-field qualification.
+
+field_sweep.py observes every named layer's four real rank checks and runs
+production tree combine when all four pass; pending/failure never becomes
+PASS. Current seven complete-layer combines L0/L1/L2/L3/L20/L21/L28 pass;
+L28 has one sequential-association mismatch, confirming why the checker must
+require the RTL's pairwise tree rather than accepting any matching order.

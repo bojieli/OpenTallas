@@ -759,6 +759,19 @@ def run_one(args):
 
 
 def cmd_run(a):
+    # run_one rebuilds per-region scratch directories. A second command using
+    # the same work directory would delete images under the first simulator.
+    import fcntl
+    work = a.work.resolve()
+    with (work / ".field_run.lock").open("a") as run_lock:
+        try:
+            fcntl.flock(run_lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            raise SystemExit(f"FIELD_RUN_BUSY: another run owns {work}; no work launched")
+        return _cmd_run_locked(a)
+
+
+def _cmd_run_locked(a):
     work = a.work.resolve()
     plan = json.loads((work / "plan.json").read_text())
     rb, bfs = plan["region_bounds"], set(plan["bf_sites"])
