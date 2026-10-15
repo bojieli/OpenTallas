@@ -2,6 +2,7 @@
 `default_nettype none
 module tb_hbm_vm_lg_static_split;
     parameter integer MUT=0;
+    parameter integer TERMINAL=0;
     reg clk=0;always #5 clk=~clk;
     reg rst_n=0;
     reg [135:0] local_rq[0:2];
@@ -47,11 +48,20 @@ module tb_hbm_vm_lg_static_split;
         end
         wire [7:0] bank_fault;
         assign tap_fault[s]=|bank_fault;
-        ot_hbm_vm_lg_static_split #(.READ_RETURN(10+4*s),.WRITE_RETURN(7+4*s),.MUT(MUT)) tap(
+        if(s==2&&TERMINAL)begin:terminal_tap
+            assign far_rr[s]=0;assign far_done[s]=0;
+            ot_hbm_vm_lg_static_split_term #(.READ_RETURN(18),.WRITE_RETURN(15),.MUT(MUT)) tap(
+                .clk({8{clk}}),.rst_n(rst_n),.local_rq(local_rq[s]),.local_wq(local_wq[s]),
+                .local_read(local_read[s]),.local_write(local_write[s]),.near_rq(near_rq[s]),
+                .near_wq(near_wq[s]),.near_rr(nrr),.near_w_done(ndone),.local_rr(local_rr[s]),
+                .local_w_done(local_done[s]),.bank_fault(bank_fault));
+        end else begin:through_tap
+        ot_hbm_vm_lg_static_split #(.READ_RETURN(10+4*s),.WRITE_RETURN(7+4*s),.MUT(TERMINAL?0:MUT)) tap(
             .clk({8{clk}}),.rst_n(rst_n),.local_rq(local_rq[s]),.far_rq(frq),
             .local_wq(local_wq[s]),.far_wq(fwq),.local_read(local_read[s]),.local_write(local_write[s]),
             .near_rq(near_rq[s]),.near_wq(near_wq[s]),.near_rr(nrr),.near_w_done(ndone),
             .local_rr(local_rr[s]),.far_rr(far_rr[s]),.local_w_done(local_done[s]),.far_w_done(far_done[s]),.bank_fault(bank_fault));
+        end
     end
     function automatic [255:0] payload(input integer station_id,row,bank_id);
         for(integer w=0;w<8;w=w+1)payload[w*32+:32]=32'h9e3779b9^32'(station_id<<28)^32'(row<<10)^32'(bank_id<<5)^32'(w);
