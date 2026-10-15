@@ -3922,5 +3922,1759 @@
     "Outer4157.976frame includes productiongearbox/faces/relays but has no source-current hardchild home map; internalouterincidentcontinuity cannot be qualified from outerpins alone.",
     "Baseline cutanalysis is coarse existing sourcegraph, not exact proposedleafbitgraph; PG/OBS-aware fullproposed cuts remainrequired.",
     "SourceFF counts differ actualexistingmapped census; candidatecontroller200 is onlymodel allowance, not qualifiedmapped bound."
+  ],
+  "actual_closed_view_signal_phase": {
+    "origin_um": [
+      13633.92,
+      324
+    ],
+    "scope": "ALL17existingchildLEF M4/M5signalrectcenters includingclocks,actualMYtransform;PG/otherlayersnotincluded",
+    "counts": {
+      "M5": 16,
+      "M4": 11637
+    },
+    "bad": [],
+    "pass": true
+  },
+  "candidate_inner_origin_request": {
+    "offset_in_outer_um": [
+      1641.6,
+      302.4
+    ],
+    "absolute_um": [
+      13633.92,
+      324.0
+    ],
+    "source": "compute lead explicit candidate request; not grantedadoption",
+    "orientation": "R0",
+    "phase_preserves_048um_tracks": true
+  },
+  "global_clock_entry_requests": [
+    {
+      "root": "clk_local[0]",
+      "inst": "input",
+      "xy_um": [
+        345.696,
+        939.6119999999999
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        13979.616,
+        1263.6119999999999
+      ]
+    },
+    {
+      "root": "clk_local[12]",
+      "inst": "outq0",
+      "xy_um": [
+        43.296,
+        918.012
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        13677.216,
+        1242.012
+      ]
+    },
+    {
+      "root": "clk_local[34]",
+      "inst": "outq1",
+      "xy_um": [
+        194.496,
+        918.012
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        13828.416,
+        1242.012
+      ]
+    },
+    {
+      "root": "clk_local[35]",
+      "inst": "outq2",
+      "xy_um": [
+        529.296,
+        918.012
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        14163.216,
+        1242.012
+      ]
+    },
+    {
+      "root": "clk_local[36]",
+      "inst": "outq3",
+      "xy_um": [
+        680.496,
+        918.012
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        14314.416,
+        1242.012
+      ]
+    },
+    {
+      "root": "clk_local[6]",
+      "inst": "srr0",
+      "xy_um": [
+        820.896,
+        108.012
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        14454.816,
+        432.012
+      ]
+    },
+    {
+      "root": "clk_local[3]",
+      "inst": "sx0",
+      "xy_um": [
+        820.896,
+        248.412
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        14454.816,
+        572.412
+      ]
+    },
+    {
+      "root": "clk_local[11]",
+      "inst": "drr",
+      "xy_um": [
+        820.896,
+        388.812
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        14454.816,
+        712.812
+      ]
+    },
+    {
+      "root": "clk_local[10]",
+      "inst": "ur",
+      "xy_um": [
+        820.896,
+        529.212
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        14454.816,
+        853.212
+      ]
+    },
+    {
+      "root": "clk_local[2]",
+      "inst": "dpr",
+      "xy_um": [
+        820.896,
+        669.6119999999999
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        14454.816,
+        993.6119999999999
+      ]
+    },
+    {
+      "root": "clk_local[1]",
+      "inst": "up",
+      "xy_um": [
+        820.896,
+        810.012
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        14454.816,
+        1134.012
+      ]
+    },
+    {
+      "root": "clk_local[8]",
+      "inst": "srr2",
+      "xy_um": [
+        21.696,
+        259.212
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        13655.616,
+        583.212
+      ]
+    },
+    {
+      "root": "clk_local[5]",
+      "inst": "sx2",
+      "xy_um": [
+        21.696,
+        399.612
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        13655.616,
+        723.6120000000001
+      ]
+    },
+    {
+      "root": "clk_local[7]",
+      "inst": "srr1",
+      "xy_um": [
+        21.696,
+        540.012
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        13655.616,
+        864.012
+      ]
+    },
+    {
+      "root": "clk_local[4]",
+      "inst": "sx1",
+      "xy_um": [
+        21.696,
+        680.412
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        13655.616,
+        1004.412
+      ]
+    },
+    {
+      "root": "clk_local[13]",
+      "inst": "lohi0",
+      "xy_um": [
+        540.096,
+        108.012
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        14174.016,
+        432.012
+      ]
+    },
+    {
+      "root": "clk_local[14]",
+      "inst": "lohi1",
+      "xy_um": [
+        540.096,
+        324.01200000000006
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        14174.016,
+        648.0120000000001
+      ]
+    },
+    {
+      "root": "clk_local[15]",
+      "inst": "lohi2",
+      "xy_um": [
+        540.096,
+        540.0120000000001
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        14174.016,
+        864.0120000000001
+      ]
+    },
+    {
+      "root": "clk_local[16]",
+      "inst": "lohi3",
+      "xy_um": [
+        540.096,
+        756.012
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        14174.016,
+        1080.012
+      ]
+    },
+    {
+      "root": "clk_local[17]",
+      "inst": "pf0",
+      "xy_um": [
+        540.096,
+        172.81199999999998
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        14174.016,
+        496.812
+      ]
+    },
+    {
+      "root": "clk_local[18]",
+      "inst": "pf1",
+      "xy_um": [
+        540.096,
+        388.812
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        14174.016,
+        712.812
+      ]
+    },
+    {
+      "root": "clk_local[19]",
+      "inst": "pf2",
+      "xy_um": [
+        540.096,
+        604.812
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        14174.016,
+        928.812
+      ]
+    },
+    {
+      "root": "clk_local[20]",
+      "inst": "pf3",
+      "xy_um": [
+        540.096,
+        820.812
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        14174.016,
+        1144.812
+      ]
+    },
+    {
+      "root": "clk_local[9]",
+      "inst": "xr",
+      "xy_um": [
+        291.696,
+        464.41200000000003
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        13925.616,
+        788.412
+      ]
+    },
+    {
+      "root": "clk_local[21]",
+      "inst": "tbc0",
+      "xy_um": [
+        291.696,
+        108.012
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        13925.616,
+        432.012
+      ]
+    },
+    {
+      "root": "clk_local[22]",
+      "inst": "tbc1",
+      "xy_um": [
+        291.696,
+        324.01200000000006
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        13925.616,
+        648.0120000000001
+      ]
+    },
+    {
+      "root": "clk_local[23]",
+      "inst": "tbc2",
+      "xy_um": [
+        291.696,
+        648.012
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        13925.616,
+        972.012
+      ]
+    },
+    {
+      "root": "clk_local[24]",
+      "inst": "tbc3",
+      "xy_um": [
+        291.696,
+        788.4119999999999
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        13925.616,
+        1112.4119999999998
+      ]
+    },
+    {
+      "root": "clk_local[25]",
+      "inst": "tab",
+      "xy_um": [
+        540.096,
+        253.812
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        14174.016,
+        577.812
+      ]
+    },
+    {
+      "root": "clk_local[27]",
+      "inst": "tef",
+      "xy_um": [
+        540.096,
+        464.388
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        14174.016,
+        788.3879999999999
+      ]
+    },
+    {
+      "root": "clk_local[26]",
+      "inst": "tde",
+      "xy_um": [
+        540.096,
+        669.588
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        14174.016,
+        993.588
+      ]
+    },
+    {
+      "root": "clk",
+      "inst": "controller",
+      "xy_um": [
+        291.696,
+        577.7879999999999
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        13925.616,
+        901.7879999999999
+      ]
+    },
+    {
+      "root": "clk_local[28]",
+      "inst": "xfselect0",
+      "xy_um": [
+        54.096,
+        133.93200000000002
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        13688.016,
+        457.932
+      ]
+    },
+    {
+      "root": "clk_local[29]",
+      "inst": "xfselect1",
+      "xy_um": [
+        54.096,
+        349.932
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        13688.016,
+        673.932
+      ]
+    },
+    {
+      "root": "clk_local[30]",
+      "inst": "xfselect2",
+      "xy_um": [
+        54.096,
+        565.932
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        13688.016,
+        889.932
+      ]
+    },
+    {
+      "root": "clk_local[31]",
+      "inst": "xfselect3",
+      "xy_um": [
+        54.096,
+        781.932
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        13688.016,
+        1105.932
+      ]
+    },
+    {
+      "root": "clk_local[32]",
+      "inst": "pringselector",
+      "xy_um": [
+        540.096,
+        210.61200000000002
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        14174.016,
+        534.6120000000001
+      ]
+    },
+    {
+      "root": "clk_local[33]",
+      "inst": "rringselector",
+      "xy_um": [
+        540.096,
+        712.8119999999999
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null,
+      "global_xy_um": [
+        14174.016,
+        1036.812
+      ]
+    },
+    {
+      "root": "*g_xf?0?*u_fs_ck",
+      "inst": "*g_xf?0?*u_fs",
+      "xy_um": [
+        185.14800000000002,
+        224.598
+      ],
+      "face": "N",
+      "status": "existingclosedLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "existingviewinsertion_tobind",
+      "global_xy_um": [
+        13819.068,
+        548.598
+      ]
+    },
+    {
+      "root": "*g_xf?1?*u_fs_ck",
+      "inst": "*g_xf?1?*u_fs",
+      "xy_um": [
+        185.14800000000002,
+        440.59799999999996
+      ],
+      "face": "N",
+      "status": "existingclosedLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "existingviewinsertion_tobind",
+      "global_xy_um": [
+        13819.068,
+        764.598
+      ]
+    },
+    {
+      "root": "*g_xf?2?*u_fs_ck",
+      "inst": "*g_xf?2?*u_fs",
+      "xy_um": [
+        185.14800000000002,
+        656.598
+      ],
+      "face": "N",
+      "status": "existingclosedLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "existingviewinsertion_tobind",
+      "global_xy_um": [
+        13819.068,
+        980.598
+      ]
+    },
+    {
+      "root": "*g_xf?3?*u_fs_ck",
+      "inst": "*g_xf?3?*u_fs",
+      "xy_um": [
+        185.14800000000002,
+        872.5980000000001
+      ],
+      "face": "N",
+      "status": "existingclosedLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "existingviewinsertion_tobind",
+      "global_xy_um": [
+        13819.068,
+        1196.598
+      ]
+    },
+    {
+      "root": "*g_pf?0?*u_fs_ck",
+      "inst": "*g_pf?0?*u_fs",
+      "xy_um": [
+        683.148,
+        224.598
+      ],
+      "face": "N",
+      "status": "existingclosedLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "existingviewinsertion_tobind",
+      "global_xy_um": [
+        14317.068,
+        548.598
+      ]
+    },
+    {
+      "root": "*g_pf?1?*u_fs_ck",
+      "inst": "*g_pf?1?*u_fs",
+      "xy_um": [
+        683.148,
+        440.59799999999996
+      ],
+      "face": "N",
+      "status": "existingclosedLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "existingviewinsertion_tobind",
+      "global_xy_um": [
+        14317.068,
+        764.598
+      ]
+    },
+    {
+      "root": "*g_pf?2?*u_fs_ck",
+      "inst": "*g_pf?2?*u_fs",
+      "xy_um": [
+        683.148,
+        656.598
+      ],
+      "face": "N",
+      "status": "existingclosedLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "existingviewinsertion_tobind",
+      "global_xy_um": [
+        14317.068,
+        980.598
+      ]
+    },
+    {
+      "root": "*g_pf?3?*u_fs_ck",
+      "inst": "*g_pf?3?*u_fs",
+      "xy_um": [
+        683.148,
+        872.5980000000001
+      ],
+      "face": "N",
+      "status": "existingclosedLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "existingviewinsertion_tobind",
+      "global_xy_um": [
+        14317.068,
+        1196.598
+      ]
+    },
+    {
+      "root": "*g_sring?0?*u_m_ck",
+      "inst": "*g_sring?0?*u_m",
+      "xy_um": [
+        345.612,
+        65.58
+      ],
+      "face": "W",
+      "status": "actualSRAMLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "rawLibertyreference",
+      "global_xy_um": [
+        13979.532,
+        389.58
+      ]
+    },
+    {
+      "root": "*g_sring?1?*u_m_ck",
+      "inst": "*g_sring?1?*u_m",
+      "xy_um": [
+        345.612,
+        238.38
+      ],
+      "face": "W",
+      "status": "actualSRAMLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "rawLibertyreference",
+      "global_xy_um": [
+        13979.532,
+        562.38
+      ]
+    },
+    {
+      "root": "*g_sring?2?*u_m_ck",
+      "inst": "*g_sring?2?*u_m",
+      "xy_um": [
+        345.612,
+        454.38
+      ],
+      "face": "W",
+      "status": "actualSRAMLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "rawLibertyreference",
+      "global_xy_um": [
+        13979.532,
+        778.38
+      ]
+    },
+    {
+      "root": "*g_sring?3?*u_m_ck",
+      "inst": "*g_sring?3?*u_m",
+      "xy_um": [
+        345.612,
+        691.98
+      ],
+      "face": "W",
+      "status": "actualSRAMLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "rawLibertyreference",
+      "global_xy_um": [
+        13979.532,
+        1015.98
+      ]
+    },
+    {
+      "root": "*g_sring?4?*u_m_ck",
+      "inst": "*g_sring?4?*u_m",
+      "xy_um": [
+        345.612,
+        864.78
+      ],
+      "face": "W",
+      "status": "actualSRAMLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "rawLibertyreference",
+      "global_xy_um": [
+        13979.532,
+        1188.78
+      ]
+    },
+    {
+      "root": "*u_pring*g_b?0?*u_m_ck",
+      "inst": "*u_pring*g_b?0?*u_m",
+      "xy_um": [
+        345.612,
+        121.74
+      ],
+      "face": "W",
+      "status": "actualSRAMLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "rawLibertyreference",
+      "global_xy_um": [
+        13979.532,
+        445.74
+      ]
+    },
+    {
+      "root": "*u_pring*g_b?1?*u_m_ck",
+      "inst": "*u_pring*g_b?1?*u_m",
+      "xy_um": [
+        345.612,
+        303.17999999999995
+      ],
+      "face": "W",
+      "status": "actualSRAMLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "rawLibertyreference",
+      "global_xy_um": [
+        13979.532,
+        627.18
+      ]
+    },
+    {
+      "root": "*u_rring*g_b?0?*u_m_ck",
+      "inst": "*u_rring*g_b?0?*u_m",
+      "xy_um": [
+        345.612,
+        519.18
+      ],
+      "face": "W",
+      "status": "actualSRAMLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "rawLibertyreference",
+      "global_xy_um": [
+        13979.532,
+        843.18
+      ]
+    },
+    {
+      "root": "*u_rring*g_b?1?*u_m_ck",
+      "inst": "*u_rring*g_b?1?*u_m",
+      "xy_um": [
+        345.612,
+        756.78
+      ],
+      "face": "W",
+      "status": "actualSRAMLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "rawLibertyreference",
+      "global_xy_um": [
+        13979.532,
+        1080.78
+      ]
+    }
+  ],
+  "global_child_home_requests": [
+    {
+      "name": "*g_xf?0?*u_fs",
+      "kind": "fold",
+      "x": 86.4,
+      "y": 43.2,
+      "w": 181.44,
+      "h": 181.44,
+      "orient": "R0",
+      "global_at_um": [
+        13720.32,
+        367.2
+      ]
+    },
+    {
+      "name": "*g_xf?1?*u_fs",
+      "kind": "fold",
+      "x": 86.4,
+      "y": 259.2,
+      "w": 181.44,
+      "h": 181.44,
+      "orient": "R0",
+      "global_at_um": [
+        13720.32,
+        583.2
+      ]
+    },
+    {
+      "name": "*g_xf?2?*u_fs",
+      "kind": "fold",
+      "x": 86.4,
+      "y": 475.2,
+      "w": 181.44,
+      "h": 181.44,
+      "orient": "R0",
+      "global_at_um": [
+        13720.32,
+        799.2
+      ]
+    },
+    {
+      "name": "*g_xf?3?*u_fs",
+      "kind": "fold",
+      "x": 86.4,
+      "y": 691.2,
+      "w": 181.44,
+      "h": 181.44,
+      "orient": "R0",
+      "global_at_um": [
+        13720.32,
+        1015.2
+      ]
+    },
+    {
+      "name": "*g_pf?0?*u_fs",
+      "kind": "fold",
+      "x": 600.456,
+      "y": 43.2,
+      "w": 181.44,
+      "h": 181.44,
+      "orient": "MY",
+      "global_at_um": [
+        14234.376,
+        367.2
+      ]
+    },
+    {
+      "name": "*g_pf?1?*u_fs",
+      "kind": "fold",
+      "x": 600.456,
+      "y": 259.2,
+      "w": 181.44,
+      "h": 181.44,
+      "orient": "MY",
+      "global_at_um": [
+        14234.376,
+        583.2
+      ]
+    },
+    {
+      "name": "*g_pf?2?*u_fs",
+      "kind": "fold",
+      "x": 600.456,
+      "y": 475.2,
+      "w": 181.44,
+      "h": 181.44,
+      "orient": "MY",
+      "global_at_um": [
+        14234.376,
+        799.2
+      ]
+    },
+    {
+      "name": "*g_pf?3?*u_fs",
+      "kind": "fold",
+      "x": 600.456,
+      "y": 691.2,
+      "w": 181.44,
+      "h": 181.44,
+      "orient": "MY",
+      "global_at_um": [
+        14234.376,
+        1015.2
+      ]
+    },
+    {
+      "name": "*g_sring?0?*u_m",
+      "kind": "sram",
+      "x": 345.6,
+      "y": 64.8,
+      "w": 174.096,
+      "h": 29.7,
+      "orient": "R0",
+      "global_at_um": [
+        13979.52,
+        388.8
+      ]
+    },
+    {
+      "name": "*g_sring?1?*u_m",
+      "kind": "sram",
+      "x": 345.6,
+      "y": 237.6,
+      "w": 174.096,
+      "h": 29.7,
+      "orient": "R0",
+      "global_at_um": [
+        13979.52,
+        561.6
+      ]
+    },
+    {
+      "name": "*g_sring?2?*u_m",
+      "kind": "sram",
+      "x": 345.6,
+      "y": 453.6,
+      "w": 174.096,
+      "h": 29.7,
+      "orient": "R0",
+      "global_at_um": [
+        13979.52,
+        777.6
+      ]
+    },
+    {
+      "name": "*g_sring?3?*u_m",
+      "kind": "sram",
+      "x": 345.6,
+      "y": 691.2,
+      "w": 174.096,
+      "h": 29.7,
+      "orient": "R0",
+      "global_at_um": [
+        13979.52,
+        1015.2
+      ]
+    },
+    {
+      "name": "*g_sring?4?*u_m",
+      "kind": "sram",
+      "x": 345.6,
+      "y": 864.0,
+      "w": 174.096,
+      "h": 29.7,
+      "orient": "R0",
+      "global_at_um": [
+        13979.52,
+        1188.0
+      ]
+    },
+    {
+      "name": "*u_pring*g_b?0?*u_m",
+      "kind": "sram",
+      "x": 345.6,
+      "y": 120.96,
+      "w": 177.768,
+      "h": 81.0,
+      "orient": "R0",
+      "global_at_um": [
+        13979.52,
+        444.96
+      ]
+    },
+    {
+      "name": "*u_pring*g_b?1?*u_m",
+      "kind": "sram",
+      "x": 345.6,
+      "y": 302.4,
+      "w": 177.768,
+      "h": 81.0,
+      "orient": "R0",
+      "global_at_um": [
+        13979.52,
+        626.4
+      ]
+    },
+    {
+      "name": "*u_rring*g_b?0?*u_m",
+      "kind": "sram",
+      "x": 345.6,
+      "y": 518.4,
+      "w": 177.768,
+      "h": 81.0,
+      "orient": "R0",
+      "global_at_um": [
+        13979.52,
+        842.4
+      ]
+    },
+    {
+      "name": "*u_rring*g_b?1?*u_m",
+      "kind": "sram",
+      "x": 345.6,
+      "y": 756.0,
+      "w": 177.768,
+      "h": 81.0,
+      "orient": "R0",
+      "global_at_um": [
+        13979.52,
+        1080.0
+      ]
+    },
+    {
+      "name": "input",
+      "ff": 547,
+      "x": 345.6,
+      "y": 928.8,
+      "w": 129.6,
+      "h": 21.6,
+      "data_face": "SN",
+      "conservative_two_track_pin_cut": 0.44202020202020204,
+      "root": "clk_local[0]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        13979.52,
+        1252.8
+      ]
+    },
+    {
+      "name": "outq0",
+      "ff": 138,
+      "x": 43.2,
+      "y": 885.6,
+      "w": 129.6,
+      "h": 64.8,
+      "data_face": "W/E/S inputs,N output",
+      "conservative_two_track_pin_cut": 0.45511111111111113,
+      "root": "clk_local[12]",
+      "extra_data_edges": 0,
+      "abi": "phase3localoutput128 complete6wayreduce/gatherdatamux,PK/tfv/tfoFF,outputcapture;metadataquarter0only;exactfinalsourceABIrequired",
+      "data_input_bits": 768,
+      "data_output_bits": 128,
+      "control_input_allowance": 20,
+      "input_face_bits": {
+        "W": 256,
+        "E": 256,
+        "S": 256
+      },
+      "global_at_um": [
+        13677.12,
+        1209.6
+      ]
+    },
+    {
+      "name": "outq1",
+      "ff": 132,
+      "x": 194.4,
+      "y": 885.6,
+      "w": 129.6,
+      "h": 64.8,
+      "data_face": "W/E/S inputs,N output",
+      "conservative_two_track_pin_cut": 0.45511111111111113,
+      "root": "clk_local[34]",
+      "extra_data_edges": 0,
+      "abi": "phase3localoutput128 complete6wayreduce/gatherdatamux,PK/tfv/tfoFF,outputcapture;metadataquarter0only;exactfinalsourceABIrequired",
+      "data_input_bits": 768,
+      "data_output_bits": 128,
+      "control_input_allowance": 20,
+      "input_face_bits": {
+        "W": 256,
+        "E": 256,
+        "S": 256
+      },
+      "global_at_um": [
+        13828.32,
+        1209.6
+      ]
+    },
+    {
+      "name": "outq2",
+      "ff": 132,
+      "x": 529.2,
+      "y": 885.6,
+      "w": 129.6,
+      "h": 64.8,
+      "data_face": "W/E/S inputs,N output",
+      "conservative_two_track_pin_cut": 0.45511111111111113,
+      "root": "clk_local[35]",
+      "extra_data_edges": 0,
+      "abi": "phase3localoutput128 complete6wayreduce/gatherdatamux,PK/tfv/tfoFF,outputcapture;metadataquarter0only;exactfinalsourceABIrequired",
+      "data_input_bits": 768,
+      "data_output_bits": 128,
+      "control_input_allowance": 20,
+      "input_face_bits": {
+        "W": 256,
+        "E": 256,
+        "S": 256
+      },
+      "global_at_um": [
+        14163.12,
+        1209.6
+      ]
+    },
+    {
+      "name": "outq3",
+      "ff": 132,
+      "x": 680.4,
+      "y": 885.6,
+      "w": 129.6,
+      "h": 64.8,
+      "data_face": "W/E/S inputs,N output",
+      "conservative_two_track_pin_cut": 0.45511111111111113,
+      "root": "clk_local[36]",
+      "extra_data_edges": 0,
+      "abi": "phase3localoutput128 complete6wayreduce/gatherdatamux,PK/tfv/tfoFF,outputcapture;metadataquarter0only;exactfinalsourceABIrequired",
+      "data_input_bits": 768,
+      "data_output_bits": 128,
+      "control_input_allowance": 20,
+      "input_face_bits": {
+        "W": 256,
+        "E": 256,
+        "S": 256
+      },
+      "global_at_um": [
+        14314.32,
+        1209.6
+      ]
+    },
+    {
+      "name": "srr0",
+      "ff": 547,
+      "x": 820.8,
+      "y": 43.2,
+      "w": 21.6,
+      "h": 129.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.44202020202020204,
+      "root": "clk_local[6]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        14454.72,
+        367.2
+      ]
+    },
+    {
+      "name": "sx0",
+      "ff": 547,
+      "x": 820.8,
+      "y": 183.6,
+      "w": 21.6,
+      "h": 129.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.44202020202020204,
+      "root": "clk_local[3]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        14454.72,
+        507.6
+      ]
+    },
+    {
+      "name": "drr",
+      "ff": 515,
+      "x": 820.8,
+      "y": 324,
+      "w": 21.6,
+      "h": 129.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.4161616161616162,
+      "root": "clk_local[11]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        14454.72,
+        648.0
+      ]
+    },
+    {
+      "name": "ur",
+      "ff": 515,
+      "x": 820.8,
+      "y": 464.4,
+      "w": 21.6,
+      "h": 129.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.4161616161616162,
+      "root": "clk_local[10]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        14454.72,
+        788.4
+      ]
+    },
+    {
+      "name": "dpr",
+      "ff": 547,
+      "x": 820.8,
+      "y": 604.8,
+      "w": 21.6,
+      "h": 129.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.44202020202020204,
+      "root": "clk_local[2]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        14454.72,
+        928.8
+      ]
+    },
+    {
+      "name": "up",
+      "ff": 547,
+      "x": 820.8,
+      "y": 745.2,
+      "w": 21.6,
+      "h": 129.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.44202020202020204,
+      "root": "clk_local[1]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        14454.72,
+        1069.2
+      ]
+    },
+    {
+      "name": "srr2",
+      "ff": 547,
+      "x": 21.6,
+      "y": 194.4,
+      "w": 21.6,
+      "h": 129.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.44202020202020204,
+      "root": "clk_local[8]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        13655.52,
+        518.4
+      ]
+    },
+    {
+      "name": "sx2",
+      "ff": 547,
+      "x": 21.6,
+      "y": 334.8,
+      "w": 21.6,
+      "h": 129.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.44202020202020204,
+      "root": "clk_local[5]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        13655.52,
+        658.8
+      ]
+    },
+    {
+      "name": "srr1",
+      "ff": 547,
+      "x": 21.6,
+      "y": 475.2,
+      "w": 21.6,
+      "h": 129.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.44202020202020204,
+      "root": "clk_local[7]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        13655.52,
+        799.2
+      ]
+    },
+    {
+      "name": "sx1",
+      "ff": 547,
+      "x": 21.6,
+      "y": 615.6,
+      "w": 21.6,
+      "h": 129.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.44202020202020204,
+      "root": "clk_local[4]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        13655.52,
+        939.6
+      ]
+    },
+    {
+      "name": "lohi0",
+      "ff": 258,
+      "x": 540,
+      "y": 75.6,
+      "w": 43.2,
+      "h": 64.8,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.45866666666666667,
+      "root": "clk_local[13]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        14173.92,
+        399.6
+      ]
+    },
+    {
+      "name": "lohi1",
+      "ff": 258,
+      "x": 540,
+      "y": 291.6,
+      "w": 43.2,
+      "h": 64.8,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.45866666666666667,
+      "root": "clk_local[14]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        14173.92,
+        615.6
+      ]
+    },
+    {
+      "name": "lohi2",
+      "ff": 258,
+      "x": 540,
+      "y": 507.6,
+      "w": 43.2,
+      "h": 64.8,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.45866666666666667,
+      "root": "clk_local[15]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        14173.92,
+        831.6
+      ]
+    },
+    {
+      "name": "lohi3",
+      "ff": 258,
+      "x": 540,
+      "y": 723.6,
+      "w": 43.2,
+      "h": 64.8,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.45866666666666667,
+      "root": "clk_local[16]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        14173.92,
+        1047.6
+      ]
+    },
+    {
+      "name": "pf0",
+      "ff": 130,
+      "x": 540,
+      "y": 151.2,
+      "w": 32.4,
+      "h": 43.2,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.38518518518518513,
+      "root": "clk_local[17]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        14173.92,
+        475.2
+      ]
+    },
+    {
+      "name": "pf1",
+      "ff": 130,
+      "x": 540,
+      "y": 367.2,
+      "w": 32.4,
+      "h": 43.2,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.38518518518518513,
+      "root": "clk_local[18]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        14173.92,
+        691.2
+      ]
+    },
+    {
+      "name": "pf2",
+      "ff": 130,
+      "x": 540,
+      "y": 583.2,
+      "w": 32.4,
+      "h": 43.2,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.38518518518518513,
+      "root": "clk_local[19]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        14173.92,
+        907.2
+      ]
+    },
+    {
+      "name": "pf3",
+      "ff": 130,
+      "x": 540,
+      "y": 799.2,
+      "w": 32.4,
+      "h": 43.2,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.38518518518518513,
+      "root": "clk_local[20]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        14173.92,
+        1123.2
+      ]
+    },
+    {
+      "name": "xr",
+      "ff": 512,
+      "x": 291.6,
+      "y": 399.6,
+      "w": 21.6,
+      "h": 129.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.41373737373737374,
+      "root": "clk_local[9]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        13925.52,
+        723.6
+      ]
+    },
+    {
+      "name": "tbc0",
+      "ff": 219,
+      "x": 291.6,
+      "y": 75.6,
+      "w": 43.2,
+      "h": 64.8,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.38933333333333336,
+      "root": "clk_local[21]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        13925.52,
+        399.6
+      ]
+    },
+    {
+      "name": "tbc1",
+      "ff": 219,
+      "x": 291.6,
+      "y": 291.6,
+      "w": 43.2,
+      "h": 64.8,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.38933333333333336,
+      "root": "clk_local[22]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        13925.52,
+        615.6
+      ]
+    },
+    {
+      "name": "tbc2",
+      "ff": 219,
+      "x": 291.6,
+      "y": 615.6,
+      "w": 43.2,
+      "h": 64.8,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.38933333333333336,
+      "root": "clk_local[23]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        13925.52,
+        939.6
+      ]
+    },
+    {
+      "name": "tbc3",
+      "ff": 218,
+      "x": 291.6,
+      "y": 756,
+      "w": 43.2,
+      "h": 64.8,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.3875555555555556,
+      "root": "clk_local[24]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        13925.52,
+        1080.0
+      ]
+    },
+    {
+      "name": "tab",
+      "ff": 220,
+      "x": 540,
+      "y": 221.4,
+      "w": 43.2,
+      "h": 64.8,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.39111111111111113,
+      "root": "clk_local[25]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        14173.92,
+        545.4
+      ]
+    },
+    {
+      "name": "tef",
+      "ff": 165,
+      "x": 540,
+      "y": 437.4,
+      "w": 43.2,
+      "h": 54,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.36666666666666664,
+      "root": "clk_local[27]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        14173.92,
+        761.4
+      ]
+    },
+    {
+      "name": "tde",
+      "ff": 72,
+      "x": 540,
+      "y": 653.4,
+      "w": 32.4,
+      "h": 32.4,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.32,
+      "root": "clk_local[26]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        14173.92,
+        977.4
+      ]
+    },
+    {
+      "name": "controller",
+      "ff": 200,
+      "x": 291.6,
+      "y": 550.8,
+      "w": 43.2,
+      "h": 54,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.4444444444444444,
+      "root": "clk",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        13925.52,
+        874.8
+      ]
+    },
+    {
+      "name": "xfselect0",
+      "ff": 16,
+      "x": 54,
+      "y": 43.2,
+      "w": 21.6,
+      "h": 21.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.14222222222222222,
+      "root": "clk_local[28]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        13687.92,
+        367.2
+      ]
+    },
+    {
+      "name": "xfselect1",
+      "ff": 16,
+      "x": 54,
+      "y": 259.2,
+      "w": 21.6,
+      "h": 21.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.14222222222222222,
+      "root": "clk_local[29]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        13687.92,
+        583.2
+      ]
+    },
+    {
+      "name": "xfselect2",
+      "ff": 16,
+      "x": 54,
+      "y": 475.2,
+      "w": 21.6,
+      "h": 21.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.14222222222222222,
+      "root": "clk_local[30]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        13687.92,
+        799.2
+      ]
+    },
+    {
+      "name": "xfselect3",
+      "ff": 16,
+      "x": 54,
+      "y": 691.2,
+      "w": 21.6,
+      "h": 21.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.14222222222222222,
+      "root": "clk_local[31]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        13687.92,
+        1015.2
+      ]
+    },
+    {
+      "name": "pringselector",
+      "ff": 20,
+      "x": 540,
+      "y": 199.8,
+      "w": 21.6,
+      "h": 21.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.17777777777777776,
+      "root": "clk_local[32]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        14173.92,
+        523.8
+      ]
+    },
+    {
+      "name": "rringselector",
+      "ff": 20,
+      "x": 540,
+      "y": 702,
+      "w": 21.6,
+      "h": 21.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.17777777777777776,
+      "root": "clk_local[33]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required",
+      "global_at_um": [
+        14173.92,
+        1026.0
+      ]
+    }
   ]
 }
