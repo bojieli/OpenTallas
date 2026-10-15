@@ -751,10 +751,10 @@ def hgi_collective_endpoint_model():
     return endpoint_model()
 
 
-def hgi_collective_offdie_rx_model(**kwargs):
+def hgi_collective_offdie_rx_model(pingpong=False, **kwargs):
     """0az complete elastic block admission then fixed native RX slots."""
-    from uarch_model_hcoll_offdie_rx import model
-    return model(**kwargs)
+    from uarch_model_hcoll_offdie_rx import model, pingpong_model
+    return (pingpong_model if pingpong else model)(**kwargs)
 
 
 def hgi_collective_capture_endpoint_model():
