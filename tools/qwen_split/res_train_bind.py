@@ -16,6 +16,8 @@ ISSUE_SOURCE = 'rtl/qwen_split/qfd_res_train_issue.sv'
 ISSUE_MASTER = 'qfd_res_train_issue'
 ISSUE = 'res_train_issue'
 ISSUE_WH = (129.6, 129.6)
+VM_MASTER = 'qfd_sp_vector_memory_par'
+VM_SOURCE = 'rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory_par.sv'
 TT_SOURCE = 'rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_static_s.sv'
 TAPS = {'me_go': ('ib', 0, 0), 'me_tiles': ('ib', 19, 36),
         'me_ts': ('ib', 80, 103), 'me_split': ('ib', 251, 254),
@@ -233,8 +235,19 @@ def apply(model):
         out.append((bus, c, nb, es))
     model['buses'] = out
     issue = _issue(model)
-    vm_master = by['sp_vector_memory'].master
-    model.setdefault('master_params', {}).setdefault(vm_master, {})['PAR_RB'] = 1
+    vm = by['sp_vector_memory']
+    old_vm = vm.master
+    if old_vm != 'qfd_sp_vector_memory':
+        raise ValueError(f'res train bind needs actual legacy VM source master, got {old_vm}')
+    vm_ports = rtl_ports(ROOT / VM_SOURCE, VM_MASTER)
+    old_ports = rtl_ports(ROOT / 'rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory.sv', old_vm)
+    if vm_ports != old_ports:
+        raise ValueError('parallel VM wrapper differs from actual VM numeric ABI')
+    aliases = model.setdefault('port_join', {})
+    if VM_MASTER in aliases:
+        raise ValueError('parallel VM alias namespace already present')
+    aliases[VM_MASTER] = aliases.pop(old_vm, {})
+    vm.master = VM_MASTER
     conn = {}
     for bus, c, nb, es in model['buses']:
         for i, p in es:
@@ -252,8 +265,9 @@ def apply(model):
                core='rtl/qwen_split/qfd_res_train_par.sv',
                core_sha256=hashlib.sha256((ROOT / 'rtl/qwen_split/qfd_res_train_par.sv').read_bytes()).hexdigest(),
                decision='Q-VMWB parallel-band writeback join961w', issue=issue,
-               vm_contract=dict(master=by['sp_vector_memory'].master, PAR_RB=1,
-                                status='actual source parameter assigned through master_params; physical qualification OPEN'),
+               vm_contract=dict(master=VM_MASTER, source=VM_SOURCE, PAR_RB=1,
+                                source_sha256=hashlib.sha256((ROOT / VM_SOURCE).read_bytes()).hexdigest(),
+                                status='actual specialized source fixes PAR_RB=1; NEW unclosed physical master'),
                retired=dict(master=LEGACY, buses=retired),
                open_inputs={n: sorted(p for p, (w, d) in ports[b].items() if d == 'input' and p not in conn[n])
                             for n, b in sers.items()},
