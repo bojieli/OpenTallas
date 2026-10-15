@@ -18,6 +18,8 @@ validate_case() {
   python3 "$H/case_status.py" --log "$C/$log" --stage "$stage" --process-exit "$(cat "$C/$log.exit" 2>/dev/null || echo 1)"
 }
 say() { echo "$(date '+%F %T %Z') $*" >> $R/STATUS.log; }
+# q-compute-die 2026-10-15: OT_PDN_GB / OT_GRT_GB override the PDN / GRT container memory (C19s r22k PDN with 9 real
+# masters was OOM-killed at RSS 198.8 GB under the fixed 190 GB cap after 1 h 35 at "Inserting grid: core")
 case $DIE in kv) P1=20; P2=80; P3=60; P4=40;; r22k) P1=40; P2=130; P3=160; P4=110;; *) echo bad die; exit 2;; esac
 say "chain start die=$DIE src=$(cat $C/SOURCE_COMMIT 2>/dev/null) from=${OT_FROM:-case}"
 # Owner no-stubs rule: audit the actual die.v against this run's real RTL at
@@ -57,13 +59,13 @@ if [ "${OT_PDN:-run}" = skip ]; then
   ln -f $C/floorplan.odb $C/floorplan_pdn.odb
   say "PDN SKIPPED (OT_PDN=skip): GRT without die straps -- DIAGNOSTIC ONLY"
 else
-$ADMIT $P2 -- $H/run_case.sh $C run_pdn.tcl run_pdn.log 8 $((P2+60)) || { say "PDN process/status failed"; exit 1; }
+$ADMIT $P2 -- $H/run_case.sh $C run_pdn.tcl run_pdn.log 8 ${OT_PDN_GB:-$((P2+60))} || { say "PDN process/status failed"; exit 1; }
 validate_case run_pdn.log run_pdn.tcl || { say "PDN FAIL ($C/run_pdn.log)"; exit 1; }
 say "PDN PASS $(grep -m2 OT_PGCHECK $C/run_pdn.log | tr '\n' ' ')"
 fi
 fi
 mkdir -p $G; cp $H/grt.tcl $G/; ln -f $C/floorplan_pdn.odb $G/floorplan_pdn.odb
-$ADMIT $P3 -- $H/dietop_run.sh $G grt.tcl 16 $((P3+80)) OT_ITERS=${OT_ITERS:-30} OT_TILE_UM=4.8 OT_ROUTE_RESET=${OT_ROUTE_RESET:-0}
+$ADMIT $P3 -- $H/dietop_run.sh $G grt.tcl 16 ${OT_GRT_GB:-$((P3+80))} OT_ITERS=${OT_ITERS:-30} OT_TILE_UM=4.8 OT_ROUTE_RESET=${OT_ROUTE_RESET:-0}
 OV=$(awk '/Final congestion report/{f=1} f && /^Total/{print $NF; exit}' $G/grt.log)
 say "full-die GRT exit=$(cat $G/run.exit) overflow=${OV:-none} ($(grep -m1 'Total wirelength' $G/grt.log))"
 [ "${OT_STOP:-}" = grt ] && { say "stop after GRT (OT_STOP=grt)"; exit 0; }
