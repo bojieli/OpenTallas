@@ -132,17 +132,42 @@ endmodule
 // Copy index CL is fixed by placement; lanes: 0 H, 1-2 K (REDUCE) / V (ADD, vtag), 3-4 W.
 module ot_s81_engram_mixq #(parameter integer CL=0, MUT=0, VM_LAT=3, WRITE_COMMIT_LAT=1)(
  input wire [32:0] ck,input wire rst,input wire start,input wire [223:0] desc,
+ output wire [4:0] rq_v,output wire [69:0] rq_row,output wire vtag,
+ input wire [4:0] rs_v,input wire [2559:0] rs_d,
+ output wire wq_v,output wire [13:0] wq_row,output wire [15:0] wq_mask,output wire [511:0] wq_d,
+ output wire done,output wire fault);
+ // Wires-only composition: shell owns ck[0] state; arithmetic keeps ck[1:32].
+ wire go,iv,phase,gv,ov,mf;wire [1:0] copy,gc,oc;
+ wire [1023:0] h,kv,w,result;wire [31:0] eps,scale,gate,hh,kk,dd;
+ ot_s81_engram_mixq_shell #(.CL(CL),.MUT(MUT),.VM_LAT(VM_LAT),.WRITE_COMMIT_LAT(WRITE_COMMIT_LAT)) shell(
+  .ck(ck[0]),.rst(rst),.start(start),.desc(desc),
+  .rq_v(rq_v),.rq_row(rq_row),.vtag(vtag),.rs_v(rs_v),.rs_d(rs_d),
+  .wq_v(wq_v),.wq_row(wq_row),.wq_mask(wq_mask),.wq_d(wq_d),.done(done),.fault(fault),
+  .go(go),.iv(iv),.phase(phase),.copy(copy),.h(h),.kv(kv),.w(w),.eps(eps),.scale(scale),
+  .gv(gv),.gc(gc),.ov(ov),.oc(oc),.result(result),.mf(mf));
+ ot_s81_engram_mix #(.MUT(MUT==1?1:0)) mix(ck[1],rst,go,phase,iv,copy,h,kv,w,kv,eps,scale,
+  gv,gc,gate,hh,kk,dd,ov,oc,result,mf,ck[32:2]);
+endmodule
+
+// Actual FSM/data-register boundary. No pipeline stage is added or removed.
+// Arithmetic-facing outputs are the original registers/wires, and returns land
+// at the original shell consumers. The arithmetic source and clock ABI stand.
+module ot_s81_engram_mixq_shell #(parameter integer CL=0, MUT=0, VM_LAT=3, WRITE_COMMIT_LAT=1)(
+ input wire [0:0] ck,input wire rst,input wire start,input wire [223:0] desc,
  output reg [4:0] rq_v,output reg [69:0] rq_row,output reg vtag,
  input wire [4:0] rs_v,input wire [2559:0] rs_d,
  output reg wq_v,output reg [13:0] wq_row,output reg [15:0] wq_mask,output reg [511:0] wq_d,
- output reg done,output reg fault);
+ output reg done,output reg fault,
+ output reg go,iv,phase,output wire [1:0] copy,
+ output reg [1023:0] h,kv,w,output wire [31:0] eps,scale,
+ input wire gv,ov,mf,input wire [1:0] gc,oc,input wire [1023:0] result);
  reg [1:0] reset_sync;
  always @(posedge ck[0] or negedge rst)if(!rst)reset_sync<=0;else reset_sync<={reset_sync[0],1'b1};
  wire rn=reset_sync[1];
  localparam [1:0] COPY=CL;
- reg go,iv,phase;reg [1023:0] h,kv,w;wire gv,ov,mf;wire [1:0] gc,oc;wire [1023:0] result;wire [31:0] gate,hh,kk,dd;
+ assign copy=COPY;
  reg [223:0] dsc;
- wire [31:0] eps=dsc[160+:32],scale=dsc[192+:32];
+ assign eps=dsc[160+:32];assign scale=dsc[192+:32];
  wire [13:0] hb=dsc[0+:14],kb=dsc[32+:14],wb=dsc[64+:14],vb=dsc[96+:14],ob=dsc[128+:14];
  wire [13:0] hrow_base=(MUT==2&&CL==3)?hb+14'd320:hb+14'd160*CL;
  reg [4:0] expected[0:VM_LAT];integer k;
@@ -208,6 +233,4 @@ module ot_s81_engram_mixq #(parameter integer CL=0, MUT=0, VM_LAT=3, WRITE_COMMI
    if(written==159)begin state<=FINISH;commit_left<=WRITE_COMMIT_LAT;end
   end
  end
- ot_s81_engram_mix #(.MUT(MUT==1?1:0)) mix(ck[1],rst,go,phase,iv,COPY,h,kv,w,kv,eps,scale,
-  gv,gc,gate,hh,kk,dd,ov,oc,result,mf,ck[32:2]);
 endmodule
