@@ -11,7 +11,7 @@ module qfd_tt_ctlm_static_s #(parameter integer XPF_TRANSPORT_EDGES=-1) (
     output wire [5:0] command_stage,
     output wire [379:0] ib,
     input wire [15:0] su_observe,output wire [71:0] xpf,
-    output wire mer0,mer1,mer2,mer3,mer4,mer5,
+    output wire mer0,mer1,mer2,
     input wire rf0,rf1,rf2,xflt,
     input wire ck_head,
     input wire ck_tree,
