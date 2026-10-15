@@ -26,8 +26,7 @@
 // entry's turn (registered macro output), written at the turn.
 //
 // Tag layout (TAGW >= 6): [TAGW-1] pv, [TAGW-2] run_first, [TAGW-3] run_last, low bits = caller's tag (slot id ...).
-// Mutants: MUT 1 = merge adds (v, stack) in swapped order (non-commutative only through rounding: caught by exact
-// compare); MUT 2 = flush skips the +0 fold (drops the top-level node of a padded run).
+// Mutants: MUT 1 = the stack is read one level too high (a carry adds the wrong partial: not the pairwise tree); MUT 2 = the flush's top fold level drops the carried node (R := +0 at level LV-1 when its bit is clear).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hbm_sm_tcpv_col #(
     parameter integer L    = 16,
@@ -122,7 +121,7 @@ module ot_hbm_sm_tcpv_col #(
     wire        ev  = ll[LL] && pvd;
     // stack read for entry nb, landing at its turn (next cycle)
     wire [KW:0] rk = e_busy[nb] ? e_k[nb] : {(KW+1){1'b0}};
-    wire [5:0]  sr_a = {nb, rk[2:0]};
+    wire [5:0]  sr_a = {nb, rk[2:0] + ((MUT == 1) ? 3'd1 : 3'd0)};
     wire [L*32-1:0] st_rd;
     reg         sw_ce;
     reg  [5:0]  sw_a;
@@ -150,16 +149,15 @@ module ot_hbm_sm_tcpv_col #(
         mv = 1'b0; ma = {L*32{1'b0}}; mb = {L*32{1'b0}};
         sw_ce = 1'b0; sw_a = {r, 3'd0}; sw_d = sum;
         if (ev) begin
-            if (ev_c[0]) begin mv = 1'b1; if (MUT == 1) begin ma = sum; mb = st_rd; end else begin ma = st_rd; mb = sum; end end
+            if (ev_c[0]) begin mv = 1'b1; ma = st_rd; mb = sum; end
             else begin sw_ce = 1'b1; sw_a = {r, 3'd0}; sw_d = sum; end
         end else if (e_busy[r] && !e_fl[r]) begin
-            if (e_c[r][e_k[r][2:0]]) begin mv = 1'b1; if (MUT == 1) begin ma = vreg; mb = st_rd; end else begin ma = st_rd; mb = vreg; end end
+            if (e_c[r][e_k[r][2:0]]) begin mv = 1'b1; ma = st_rd; mb = vreg; end
             else begin sw_ce = 1'b1; sw_a = {r, e_k[r][2:0]}; sw_d = vreg; end
         end else if (e_busy[r] && e_fl[r] && e_k[r] < LV) begin
             mv = 1'b1;
             if (e_n[r][e_k[r][2:0]]) begin ma = st_rd; mb = (e_k[r] == 0) ? {L*32{1'b0}} : vreg; end
-            else begin ma = (e_k[r] == 0) ? {L*32{1'b0}} : vreg; mb = {L*32{1'b0}};
-                       if (MUT == 2 && e_k[r] == LV - 1) mv = 1'b0; end
+            else begin ma = (e_k[r] == 0 || (MUT == 2 && e_k[r] == LV - 1)) ? {L*32{1'b0}} : vreg; mb = {L*32{1'b0}}; end
         end
     end
     integer i;

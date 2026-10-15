@@ -28,8 +28,8 @@
 //
 // Faults (sticky, fail closed where the golden value would not be a normal number): KV8 NaN code (S.1111.111), e = 255,
 // a non-zero dequantised value outside the BF16 normal range; KV4 negative or NaN scale; a beat requested while idle.
-// Mutants (bench negative controls): MUT 1 = KV8 lane j uses block j/2 (wrong scale); MUT 2 = QK emits row-major (wrong
-// slot/step order); MUT 3 = KV4 E2M1 subnormal code read as normal.
+// Mutants (bench negative controls): MUT 1 = KV8 lane j uses block j/2 (wrong scale); MUT 2 = wrong beat half (beat t reads
+// the codes of beat t ^ 1); MUT 3 = KV4 E2M1 subnormal code read as normal.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hbm_sm_kv_line #(
     parameter integer MUT = 0
@@ -143,10 +143,10 @@ module ot_hbm_sm_kv_line #(
             if (cfg_v && !act) begin rb <= 1'b0; rs <= 3'd0; rt <= 3'd0; op_drain <= 1'b0; end
             else if (can_rd) begin
                 if (op_done_rd) op_drain <= 1'b1;
-                if (qk && MUT != 2) begin                 // t-major: step outer, slot inner
+                if (qk) begin                             // t-major: step outer, slot inner
                     if ({1'b0, rs} == rn - 4'd1) begin rs <= 3'd0; rt <= rt + 3'd1; end
                     else rs <= rs + 3'd1;
-                end else begin                            // row-major: row outer, beat inner (PV; MUT 2 for QK)
+                end else begin                            // row-major: row outer, beat inner (PV)
                     if (rt == 3'd7) begin rt <= 3'd0; rs <= rs + 3'd1; end
                     else rt <= rt + 3'd1;
                 end
@@ -157,7 +157,7 @@ module ot_hbm_sm_kv_line #(
     always @(posedge clk) begin
         if (can_rd) raddr <= {rb, rs, rt[2:1]};
         // fields of the beat whose macro read lands next edge
-        p1_h <= rt[0]; p1_s <= rs; p1_t <= rt; p1_n <= rn; p1_last <= op_done_rd; p1_sc <= sc[{rb, rs}];
+        p1_h <= (MUT == 2) ? ~rt[0] : rt[0]; p1_s <= rs; p1_t <= rt; p1_n <= rn; p1_last <= op_done_rd; p1_sc <= sc[{rb, rs}];
     end
     // R1 -> R2: the macro output appears one edge after the read; align the fields one more edge
     reg       p2_v, p2_h, p2_last;
