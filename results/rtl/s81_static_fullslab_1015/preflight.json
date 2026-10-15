@@ -1,0 +1,115 @@
+{
+  "scope": "SOURCE_NATIVE_CANDIDATE_UNQUALIFIED",
+  "physical_instances": {
+    "tp4_core": 1,
+    "tp4_lanes": 3,
+    "pass_adapter": 1,
+    "pass_lanes": 5,
+    "hc_scalar_trees": 16,
+    "hc_scalar_assembly": 16,
+    "hc_metadata": 1,
+    "raw_vm_buffers": 1,
+    "command_controller": 1,
+    "clock_source": 1,
+    "control_rom_4096x266": 3
+  },
+  "independent_delivered_stream_roots": {
+    "control": 1,
+    "transport_lanes": 8,
+    "hc_lanes": 16
+  },
+  "known_flop_bounds": {
+    "tp4_core_before_dynamic_rank": 8380,
+    "tp4_core_dynamic_estimate": 8433,
+    "peer_lane": [
+      4547,
+      4547,
+      4548
+    ],
+    "hc_per_scalar_arithmetic": 2086,
+    "hc_per_scalar_assembly": 1024,
+    "raw_vm_payload_metadata_bits": 553,
+    "vm_output_pin_bits": 2204
+  },
+  "control_storage": {
+    "row_bits": 564,
+    "maximum_page_cycles": 4096,
+    "physical_roms": 3,
+    "physical_capacity_bits": 3268608,
+    "useful_capacity_bits": 2310144,
+    "macro_area_um2": 22991.84352,
+    "native_macro_mapping": "implementation in progress; must pin final macro model and image"
+  },
+  "physical_lane_map": {
+    "W0": "rank XOR1 package",
+    "W1": "rank XOR2 board",
+    "W2": "rank XOR3 board",
+    "W3": "pass0 board",
+    "E0": "pass1 package",
+    "E1": "pass2 board",
+    "E2": "pass3 board",
+    "E3": "pass4 board"
+  },
+  "static_wire": {
+    "phy_bits_per_lane": 512,
+    "beat_period_cycles": 4,
+    "physical_bits_per_cycle_per_lane": 128,
+    "useful_bits_per_cycle_per_lane": 96,
+    "source_cadence_cycles": [
+      4,
+      4,
+      8
+    ],
+    "tx_beat_valid_required": true
+  },
+  "native_memory_services": {
+    "read_request_bits": 15,
+    "read_response_bits": 513,
+    "output_write_bits": 2204,
+    "write_sources": [
+      44,
+      45,
+      46,
+      47
+    ],
+    "read_control_to_consumer_edges": 14,
+    "raw_frame_bits": 553,
+    "raw_source_rows": 2,
+    "raw_destination_rows": 2,
+    "raw_meta_mask": 3,
+    "raw_payload_mask": 65535
+  },
+  "composed_edges": {
+    "controller_command_register": 1,
+    "controller_control_register": 1,
+    "tp4_source_to_gather": 11,
+    "gather_to_vm_pin": 1,
+    "hc_gather_to_reducer_sample": 1,
+    "hc_sample_to_word": 17,
+    "hc_sample_to_vm_pin": 18,
+    "hc_sample_to_earliest_row_emit": 19,
+    "raw_channel_source_to_adapter_output": 11,
+    "raw_adapter_output_to_vm_pin": 1,
+    "status_collection_register": 1
+  },
+  "production_stage_shapes": {
+    "max_a_records_per_rank": 44,
+    "max_a_fp32_per_destination": 2816,
+    "router_records_per_rank": 6,
+    "hc_hidden_fp32": 5120,
+    "hc_records_per_rank": 320,
+    "hc_rows_8192bits": 20
+  },
+  "exact_reduction": "RN(RN(rank0+rank1)+RN(rank2+rank3))",
+  "immutable_price": "unchanged; production calendar and measured cycles must be compared before acceptance",
+  "slot": "new actual leaf outlines and pin/clock insertion are unmeasured; historical slot only a reservation",
+  "open_gates": [
+    "actual full-slab 128-SRAM composition bench and observed mutant",
+    "actual compiler production page images and source/resource bindings",
+    "FIELD global tags/capture buffers, HCP six-value gather consumer and static HC POST consumer",
+    "host static producer ABI, actual PHY sparse-beat-valid binding",
+    "real die clock delivery/phi-R/reset epoch and nonzero PHY flight",
+    "synthesis area, root sink census, outline/cut/pin reach and TT/FF/DRC0",
+    "measured stage/whole-layer latency against immutable model price"
+  ]
+}
