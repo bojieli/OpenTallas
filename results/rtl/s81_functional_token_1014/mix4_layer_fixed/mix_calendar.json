@@ -1,0 +1,84 @@
+{
+  "calendar": {
+    "length": 2,
+    "stage": 0,
+    "start_phase": 3,
+    "rows": [
+      {
+        "engine": 10,
+        "arg": 11880,
+        "issue": 656,
+        "done": 1428
+      },
+      {
+        "engine": 15,
+        "arg": 0,
+        "issue": 1432,
+        "done": 0
+      }
+    ],
+    "writes": [
+      {
+        "address": 0,
+        "data": 201328000,
+        "word": 201328000
+      },
+      {
+        "address": 0,
+        "data": 33566312,
+        "word": 33566312
+      },
+      {
+        "address": 0,
+        "data": 67111490,
+        "word": 67111490
+      },
+      {
+        "address": 0,
+        "data": 134219156,
+        "word": 134219156
+      },
+      {
+        "address": 1,
+        "data": 50331648,
+        "word": 318767104
+      },
+      {
+        "address": 1,
+        "data": 67114595,
+        "word": 335550051
+      },
+      {
+        "address": 1,
+        "data": 134217728,
+        "word": 402653184
+      },
+      {
+        "address": 0,
+        "data": 234882432,
+        "word": 234882432
+      }
+    ],
+    "command_abi": "opentallas.s81.cmd84.v1",
+    "pw_abi": "opentallas.s81.fixed-pw36.v1",
+    "pin_origin": "one stream clock after sampled job_v",
+    "seal_to_arm_stream_cycles": 3,
+    "qualified": false,
+    "hardware_nops": 2
+  },
+  "op_base": 2,
+  "reset_stream_cycle": 1000,
+  "job_stream_cycle": 1250,
+  "header_stream_cycle": 1250,
+  "landing_last_write_pin": 1892,
+  "real_vm_commit_bound": 1903,
+  "actual_vm_scope": "ideal row write consumption in this component vehicle",
+  "physical_clock_phase_qualified": false,
+  "full_native_qualified": false,
+  "source_context": {
+    "user": 0,
+    "pos": 0,
+    "tok": 1000,
+    "token_header_bits": "146:126"
+  }
+}

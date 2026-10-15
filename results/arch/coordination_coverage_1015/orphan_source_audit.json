@@ -232,5 +232,16 @@
       "source_comparisons": []
     }
   ],
-  "ownership_changes_are_completion": false
+  "ownership_changes_are_completion": false,
+  "followup_as_of": "2026-10-15T07:35:45.069550+00:00",
+  "followup_note": "Original comparisons above are an immutable dated source-orphan snapshot; follow-up ownership does not prove goal completion.",
+  "followup_ownership": {
+    "q_dense": "q_control_host actual current HOST/sequence/dense consumer, source published, outer static sequencer still being repaired",
+    "q_embedding": "gateway/controller dependency closure published2dd60186a; native_embedding current real source/calendar/profile work active",
+    "s81_mtp": "s_mtp explicitly owns first-release native MTP, W/E/K256/cache components published419f74804; complete actual head recursion/accept/reject calendar remains open",
+    "hbm_attention": "h_attention_quant explicitly resumed actual fixed-calendar controller rewrite; static_quant_engine active component source published87e0acece",
+    "hbm_idx": "h_idx actual fixed-pass selector component source published50f6b0b7f; full actual INDEX/VM path qualification remains open",
+    "hbm_hostphy": "root FEC/digital recovery candidate published, actual HOST clock/slot/geometry remains unqualified",
+    "s81_field": "q_native_compute assigned actual released canonical FIELD production composition;1792-pathfinding results do not qualify2417-pair target"
+  }
 }

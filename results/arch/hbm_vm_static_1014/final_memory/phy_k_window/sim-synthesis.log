@@ -1,0 +1,7 @@
+PHY_K_WINDOW_CASE PASS base=0000000000000000 accepts2 trueACK1 readback1 rejected3 noalias1
+PHY_K_WINDOW_CASE PASS base=0000000028800000 accepts2 trueACK1 readback1 rejected3 noalias1
+PHY_K_WINDOW PASS default and actualCOLB full30bit address+hash, below/above/crossing invalid blocked before model modulo
+- tb_phy_k_window.sv:48: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 173ns; walltime 0.003 s; speed 50.459 us/s
+- Verilator: cpu 0.003 s on 1 threads; alloced 1022 MB

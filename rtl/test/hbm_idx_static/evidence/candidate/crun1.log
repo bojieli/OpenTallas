@@ -1,0 +1,5 @@
+CAND_BAD expectedfff1ffe0dfe00ffc3dbfd1dfd0cfdc0fe8f97fb1bfc0cfdf8fb9b53f919fb0cffc0fff31 gotfff1ffe0d001cffc3dbfd1dfd0cfdc0fe8f97fb1bfc0cfdf8fb9b53f919fb0cffc0fff31
+CAND_BAD expectedfff1ffe0dfe03fe02dbfd1dfd0ffe03fe0097fb1bfc0ffe03fe0053f919fb0ffe03fe001 gotfff1ffe0ffe03fe00dbfd1dfd0ffe03fe0097fb1bfc0ffe03fe0053f919fb0ffe03fe001
+IDX_CANDIDATE_STATIC MUT1 beats513 errors3
+FATAL: rtl/test/hbm_idx_static/tb_candidate_static.sv:21: exact blockmax/newest candidate mismatch
+       Time: 5220000  Scope: tb_candidate_static

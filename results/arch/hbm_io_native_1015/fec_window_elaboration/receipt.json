@@ -1,0 +1,31 @@
+{
+  "scope": "actual rooted KP4 encoder/decoder + finite raw-word CDC source composition, Verilator lint/elaboration only",
+  "source_sha256": {
+    "rtl/hbm_accel/io_static_20261015/hfd_serdes487_static_window.sv": "98749b360c86041a02ff88c42e048bbee34ea1f4bede7f37a61198f864d601aa",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_word_cdc.sv": "ad94b9faac315ceab60a97cfbc6c3242ab0872031b252132bb7f72b769182d0e",
+    "tools/hbm_io/lint_static_fec_window.sh": "cb8a80a6a319fd5efcc38edfdb317b84da4c6570674467cdcdab3c27ec339395",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_enc_rooted.sv": "f6c0ab6832cadd0f5caf3de18164fdec6335cdbd513107231a8ba1d4000588fa",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv": "15923b429259c028375c48d617189468528b3089047ecab648208c5c0cbd4d10",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_encode52_map.sv": "401ecc4c70ebfc04a624faee5540fc625c4c7bddc8a3f4c6bc48ba30d22b81a3",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_syndrome55_map.sv": "ade2e0bbf131d65d979f693ea4347c6431f9d7cfb420d9273c04849a57fbc27c",
+    "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv": "467abe1090a24cffad29443edd4dce5ab33eeebff98bf2bc98de7d9d19556c41",
+    "rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh": "0c1d1e94f6a2a360da1f1b23b1cd7847958450c3b642b9978b0c13faead4b855"
+  },
+  "run": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-3719106-1792051573",
+    "exit": 0,
+    "mem_gb": 16,
+    "threads": 1
+  },
+  "open": [
+    "Numerical actual FEC stream through compiled capture/read window",
+    "Source matched absolute window epochs and framing/firstword identity",
+    "Actual measured 12-clock family phases/drift",
+    "Pin registration/storage mapping/TT/FF/DRC",
+    "Full actual replay endpoint and613gearbox production composition and throughput"
+  ],
+  "functional_pass_claimed": false,
+  "native_qualified": false,
+  "physical_qualified": false
+}

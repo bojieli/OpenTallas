@@ -35,6 +35,64 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 
 
+def qwen_native_head_packet_stage_model(width=519, copies=1, orientation="H"):
+    """Physical ECTL/head staging; 2026-10-15 q_kv_die slot contract.
+
+    One fixed-cycle register per destination, with independent compensated
+    branch roots. Geometry must separately prove every actual bit hop.
+    """
+    if width < 1 or width > 519 or copies not in (1, 2):
+        raise ValueError('head stage supports 1..519 bits and one/two branches')
+    if width > 263 or copies > 1:
+        widths = ([263,256] if width == 519 else [256,width-256]) if width > 263 else [width]
+        children = [qwen_native_head_packet_stage_model(w,1,orientation) for w in widths]
+        return dict(schema='opentallas.qwen-native-head-packet-banks.v1',
+            packet_bits=width, copies=copies, bank_bits=widths,
+            macs_per_cycle=0, memory_bytes_per_cycle=0, memory_macros=0,
+            input_bits_per_cycle=width, output_bits_per_cycle=width*copies,
+            packets_per_cycle_per_branch=1, added_fixed_data_edges=1,
+            reset_release_edges=3, first_data_capture_edge_after_reset=4,
+            clock_roots=len(children)*copies,
+            register_bits=sum(x['register_bits'] for x in children)*copies,
+            leaf_area_sum_um2=sum(x['outline_area_um2'] for x in children)*copies,
+            physical_children=children, physical_child_copies=copies,
+            outline_um=None, global_homes=None,
+            measured_failure='unbanked H519 recipe2 posthooks fixed669.382um2 > core653.184um2; totalfixed+movable755.735um2; explicit263+256 parallelbanking preserves fullQ519 at one edge',
+            qualification='actual source banked packet proof; leaf CTS/route, global per-bit geometry and composed F/S layer cost remain open')
+    if orientation not in ('H', 'V'):
+        raise ValueError('orientation must be H or V')
+    if width <= 112:
+        outline = [21.6, 21.6]
+        face_span = 21.6
+    elif copies == 2:
+        outline = [129.6, 15.12] if orientation == 'H' else [15.12, 129.6]
+        face_span = 129.6
+    else:
+        outline = [64.8, 15.12] if orientation == 'H' else [15.12, 64.8]
+        face_span = 64.8
+    area = outline[0]*outline[1]
+    regions = (width + 127) // 128
+    data_bits = width * copies
+    reset_bits = copies * (2 + regions)
+    tracks_per_h_layer = face_span / .048
+    return dict(schema='opentallas.qwen-native-head-packet-stage.v1',
+        macs_per_cycle=0, memory_bytes_per_cycle=0, memory_macros=0,
+        input_bits_per_cycle=width, output_bits_per_cycle=width*copies,
+        packets_per_cycle_per_branch=1, added_fixed_data_edges=1,
+        reset_release_edges=3, first_data_capture_edge_after_reset=4,
+        clock_roots=copies, register_bits=data_bits+reset_bits,
+        max_reset_loads_per_region=128, mux_demux_cost='none; registered copy only',
+        outline_um=outline, outline_area_um2=area,
+        face_payload_um=width*.096*(copies if width > 112 else 1), face_available_um=face_span-10.8,
+        estimated_worst_cut_tracks=width*copies,
+        estimated_available_cut_tracks=2*tracks_per_h_layer,
+        estimated_cut_ratio=width*copies/(2*tracks_per_h_layer),
+        max_mapped_area_for_65pct_util_um2=.65*area,
+        mapped_area_um2=None, actual_pin_to_pin_reach_um=None,
+        latency_price='F feed stages + S score return stages per head; no repricing; measure composed layer cost',
+        qualification='prebuild sizing only; real mapped area, native pins, CTS, route and actual global per-bit path ages unqualified')
+
+
 def hbm_static_quant_model():
     """Fixed RG4/WG2 native QDQ successor; bare-bank proof before placement."""
     beats = 6*16 + 2*4

@@ -25,17 +25,26 @@ def main():
     ap.add_argument('--route-commit', required=True, help='explicit candidate source commit, never inferred from HEAD')
     ap.add_argument('--frozen-helper-recovery', action='store_true',
                     help='verify committed original helpers and actual staged bytes; recover original evidence only')
+    ap.add_argument('--staged-remeasurement', action='store_true', help='verify persisted NEW measurements on original CTS artifacts; original archive stdout remains unavailable')
     ap.add_argument('--cts', action='store_true')
     ap.add_argument('--synth-cap', type=int, default=1800)
     a = ap.parse_args()
     kd = a.kit.resolve()
     log = a.log.read_bytes()
     module = Path(SB.__file__).read_text()
-    code = ('exec(' + repr(module) + ')\n'
-            'binding=json.loads(Path(' + repr(a.run + '.source_snapshot.json') + ').read_text())\n'
-            'recovered=recover_verified_snapshot(binding,Path(' + repr(a.run + '/src') + '),'
-            + repr(log) + ',Path(' + repr(a.script) + ').read_bytes())\n'
-            'print(json.dumps(recovered))\n')
+    if a.staged_remeasurement and a.frozen_helper_recovery:
+        ap.error('staged remeasurement requires current route/overlay matching, not frozen-helper recovery')
+    if a.staged_remeasurement:
+        code = ('exec(' + repr(module) + ')\n'
+                'binding=json.loads(Path(' + repr(a.run + '.source_snapshot.json') + ').read_text())\n'
+                'recovered=recover_staged_remeasurement(binding,Path(' + repr(a.run) + '),'
+                + repr(a.script) + ',' + repr(log) + ')\nprint(json.dumps(recovered))\n')
+    else:
+        code = ('exec(' + repr(module) + ')\n'
+                'binding=json.loads(Path(' + repr(a.run + '.source_snapshot.json') + ').read_text())\n'
+                'recovered=recover_verified_snapshot(binding,Path(' + repr(a.run + '/src') + '),'
+                + repr(log) + ',Path(' + repr(a.script) + ').read_bytes())\n'
+                'print(json.dumps(recovered))\n')
     remote = subprocess.run(['ssh', a.host, 'python3 -'], input=code, capture_output=True, text=True)
     if remote.returncode:
         ap.exit(1, 'Original snapshot verification failed: ' + remote.stderr[-1500:] + '\n')

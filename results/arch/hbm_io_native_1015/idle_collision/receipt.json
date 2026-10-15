@@ -1,0 +1,23 @@
+{
+  "scope": "actual legacy rate matcher counterexample for proposed raw packed gearbox connection, not a fault in its declared legacy marker protocol",
+  "confirmed": "packed payload2 is dropped with fill6, full0 and fault0",
+  "root_cause": "arbitrary bits [1:0]=10 collide with legacy idle convention; existing rate matcher may insert/drop idle words, losing fixed packed stream alignment",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv": "467abe1090a24cffad29443edd4dce5ab33eeebff98bf2bc98de7d9d19556c41",
+    "rtl/hbm_accel/io_static_20261015/tb_legacy_idle_collision.sv": "10c707418b2f9e1d036d7234e397dc864a2192e11c803ea7f5af4a4762f8dbe6",
+    "tools/hbm_io/run_legacy_idle_collision.sh": "1f8287b87fe9c5c3bde61557cdfcecba06d4325d0b45d8a4303412c30e05977a"
+  },
+  "run": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-3708035-1792050718",
+    "exit": 0
+  },
+  "fixture_correction": "first fixture released reset before the slow read clock had any reset edge; preserved failure; corrected fixture resets both clock domains for three slow edges",
+  "required_repair": [
+    "Explicit transport framing or strict raw-word CDC with a compiled read/write window",
+    "No payload-dependent drops/inserts in a packed data stream",
+    "Explicit measured local/recovered clock phase/frequency/drift budget",
+    "Actual FEC and endpoint composition at immutable throughput"
+  ],
+  "qualified": false
+}

@@ -52,8 +52,12 @@ module ot_hbm_idx_hslice_ready_native #(
 `ifdef OT_HBM_IDX_READY_MUT_LAX
     always @* online=rst_n;
 `else
-    always @(posedge clk or negedge rst_n)
-      if (!rst_n) online<=1'b0; else online<=rs && rn_p;
+    // ready2 (B5 10-14): online is cleared by the relay output rs, not by the port, so the rst_n port drives only the
+    // relay (3 flops at the N face).  Assert stays asynchronous (rs is cleared asynchronously by the port), release was
+    // already gated by rs && rn_p: cycle-identical.  The port -> online clear crossed the tile to the S face (native
+    // audit capture 215.5 ps on rst_n, > 190).
+    always @(posedge clk or negedge rs)
+      if (!rs) online<=1'b0; else online<=rs && rn_p;
 `endif
     // ---- pin flops
     reg rn_p; reg [7:0] hid_p; reg first_p;

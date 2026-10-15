@@ -16,7 +16,7 @@ for master,data in manifest['masters'].items():
  children=[];hard={}
  for port,ch in data['children'].items():
   view=a.lsl_view if port.startswith('ck_lsl') else ch['view']
-  legacy=next(x for x in base['children'] if x['inst']=='u_tile.'+ch['child_instance'].removeprefix('u_tile.u_tile.'))
+  legacy=next(x for x in base['children'] if x['inst']=='u_tile.'+ch['child_instance'].replace('.genblk4.','.').removeprefix('u_tile.u_tile.'))
   children.append(dict(view=view,count=1,inst=ch['child_instance'],at=ch['origin'],orient=legacy['orient']))
   hard[port]=ch['child_instance']+'/clk'
  sources=[x for x in base['sources'] if 'hard/ot_qwen_tile_lsl/' not in x]

@@ -1,0 +1,32 @@
+{
+  "outline": [
+    881.28,
+    1131.84
+  ],
+  "copies": 16,
+  "child": [
+    259.2,
+    151.2
+  ],
+  "child_area_um2": 627056.6399999999,
+  "glue_and_routing_reserve_um2": 370411.31519999995,
+  "retained_native_pin_flops": 10278,
+  "scalar_roots": 17,
+  "largest_new_glue_root_expected_sinks": 10278,
+  "child_roots_expected_sinks": 8038,
+  "ordered_beat_bits": {
+    "tw": 4096,
+    "ty": 4096,
+    "tt": 1538,
+    "pw": 513,
+    "controls": 26
+  },
+  "extra_edges": {
+    "TW_PW": 2,
+    "TW_roundtrip_TY": 4,
+    "TT_TY": 2,
+    "uppercontrol": 2
+  },
+  "qualified_cost": false,
+  "status": "Modelbeforephysicalbuild; area fromactualCLOSEDLEF. Gate willmeasuregluearea/sinks/reach/clockphase/routing. ImmutablepriceOPEN."
+}

@@ -37,3 +37,23 @@ def model(k=256, vocab=129280, sk=11,pinreg=0):
 if __name__=='__main__':
     import json
     print(json.dumps(model(),indent=2))
+
+
+def static_native_model():
+    """Measured fixed-calendar K256 successor; no rate or final-signoff credit."""
+    m = model(k=256, pinreg=1)
+    m['schema'] = 'opentallas.dsrom.markov-static.v1'
+    m['static_schedule'] = dict(command_edge=0, first_operand_edge=1,
+        last_operand_edge=16, result_edge=177, measured_command_to_done_cycles=178,
+        minimum_command_interval_cycles=179, input_beats=16,
+        ready_or_credit=False, head='held internally from command until join',
+        invalid_payload='unconditionally captured; poison-gap exactness bench',
+        arithmetic_leaf_cycles_added=0,
+        source='rtl/experimental/dsrom_markov_20261008/ot_s81_markov_k256_static.sv',
+        measurement='tools/s81/markov_static_bench.py, released K256 48 rows',
+        scope='unit calendar; descriptor-ROM provider, full MTP x5 composition, finalSS/FF and die adoption remain open')
+    m['latency'].update(minimum_transaction_II_upper=179,
+                        command_to_done_cycles=178, words_per_row=16)
+    m['open'] += ['static ctl physical closure', 'canonical cmd85 endpoint and ROM provider',
+                  'full MTP five-sweep composition']
+    return m

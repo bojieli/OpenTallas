@@ -386,6 +386,19 @@ def main():
         vm_boot[db] = HG.pack([H_BASE, kb, wb, vb, H_BASE,
                               int(HG.u32([es['eps']])[0]), int(HG.u32([es['scale']])[0])], 32)
         boot_ok.append(db)
+        sys.path.insert(0, str(ROOT/'tools/s81_static_control'))
+        from program import encode_program
+        mc = encode_program([dict(engine=10,arg=db,issue=656,done=1428),
+                             dict(engine=15,arg=0,issue=1432,done=0)],stage=0,phase=3)
+        mc['hardware_nops']=2
+        mc['seal_to_arm_stream_cycles']=3
+        (a.out/'mix_program.mem').write_text(''.join(f"{w['word']:09x}\n" for w in mc['writes']))
+        (a.out/'mix_calendar.json').write_text(json.dumps(dict(calendar=mc,op_base=2,
+            reset_stream_cycle=1000,job_stream_cycle=1250,header_stream_cycle=1250,
+            source_context=dict(user=0,pos=0,tok=1000,token_header_bits='146:126'),
+            landing_last_write_pin=1892,real_vm_commit_bound=1903,
+            actual_vm_scope='ideal row write consumption in this component vehicle',
+            physical_clock_phase_qualified=False,full_native_qualified=False),indent=2)+'\n')
         mix_meta = dict(native_qualified=False, master='dsfd_engram_mix4_c', descriptor=db,
                         operand_sha256=HG.sha(a.mix_snap), golden_output_injection=False,
                         scope='actual arithmetic endpoint; ideal VM and fixture producers remain')

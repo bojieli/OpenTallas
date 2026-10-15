@@ -27,6 +27,7 @@ Exit 0 only when every count is zero (OUTPUT_OPEN excepted).  JSON record with -
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import re
@@ -799,6 +800,7 @@ def main(argv=None):
     pj = a.params or (a.die_v + '.params.json' if Path(a.die_v + '.params.json').exists() else None)
     mparams = json.loads(Path(pj).read_text()).get('masters', {}) if pj else {}
     rec = check(a.die_v, a.top, idx, amb, set(a.allow_model), mparams, straps=frozenset(straps))
+    rec['die_sha256'] = hashlib.sha256(Path(a.die_v).read_bytes()).hexdigest()
     rec['straps_declared'] = sorted(':'.join(s) for s in straps)
     rec['params_file'] = pj
     if a.elab_out:
