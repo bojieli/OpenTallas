@@ -127,7 +127,10 @@ endmodule
         job = self.job({'READ_PIPE': 4, 'CAP_PIPE': 2}, commit=commit, top='dsfd_sp_vm', sources=[source])
         result = V.compare_variants(actual, job, repo=repo)
         self.assertEqual(result['verdict'], 'FAIL', result)
-        self.assertEqual(result['actual_parameters'], {'READ_PIPE': 0, 'CAP_PIPE': 0})
+        # main's wrapper now also carries WSCATTER_PIPE (default 0); the guard reports every actual parameter
+        self.assertEqual({k: v for k, v in result['actual_parameters'].items() if k in ('READ_PIPE', 'CAP_PIPE')},
+                         {'READ_PIPE': 0, 'CAP_PIPE': 0})
+        self.assertEqual(result['actual_parameters'].get('WSCATTER_PIPE', 0), 0)
         self.assertEqual(result['bound_parameters'], {'READ_PIPE': 4, 'CAP_PIPE': 2})
         self.assertIn('effective_parameters mismatch', ' '.join(result['errors']))
 
