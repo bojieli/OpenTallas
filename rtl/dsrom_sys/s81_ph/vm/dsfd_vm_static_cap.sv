@@ -13,10 +13,8 @@
 // row[3:0] = G), so the write service's lane rule is met at full rate; any other overlap is a write-service fault.
 // Faults (sticky, OR -> fault): lane faults (range, alignment, alias, duplicate, two rows due), capture status fault
 // (st[3]), x34 epoch / phase assertions.  No ready, credit, queue or timeout.
-// Exact measured age, P=zero-based physical f_capture PIN SAMPLE edge: legacy lane row at P+1,
-// CAP_PIPE=1 lane row at P+2; x34 samples that row at q=P+2+CAP_PIPE. Its stream output
-// is registered at edge 4*floor(q/3)+2+(q%3). The bench's one-based tk adds1 only for reporting.
-// +1 serial stage moves first stream visibility by [1,1,2] edges over the three phases; II remains1.
+// Latency (fixed): element at the f_capture pin, serial edge P -> lane row registered P + 3 (pin, merge, out) -> x34
+// stream output at the fixed epoch slot of that serial edge (+2..4 stream edges, x34 header) -> write source.
 // ---------------------------------------------------------------------------------------------------------------
 module dsfd_vm_static_cap #(parameter integer E = 8, parameter integer CAP_PIPE = 0) (
     // Actual source categories. All serial/stream roots share the 3:4 PLL
@@ -32,30 +30,11 @@ module dsfd_vm_static_cap #(parameter integer E = 8, parameter integer CAP_PIPE 
     output wire [8191:0]   w_d,
     output wire            fault                // serial-domain sticky level (lanes + status) | stream x34 faults
 );
-    reg [1:0] rq;
-    always @(posedge ck_control_s or negedge rst_control_s) if (!rst_control_s) rq <= 2'b00; else rq <= {rq[0], 1'b1};
-    // Preserve the existing two-edge synchronized release to the capture
-    // lanes. Its physical registered reset-distribution tree/epoch arrival
-    // remains a native integration gate; replacing rn with raw reset or a
-    // new synchronizer here would change the fixed capture startup age.
-    wire rn = rq[1];
-    // CAP_PIPE selects only the source-owned capture implementation; default0
-    // preserves the existing lane age. Selecting1 requires the compiler
-    // programme and leaf owner's fixed +1serial capture contract.
-    // Status pin register; each hard lane owns its 832-bit data pin register.
-    reg [63:0] status_q;
-    always @(posedge ck_control_s) status_q <= rn ? f_capture[13312 +: 64] : 64'd0;
-    wire [63:0] st = status_q;
-    reg dr_q, armed, s_flt;
-    wire flush = st[2] && !dr_q && armed && !st[0];
-    always @(posedge ck_control_s)
-        if (!rn) begin dr_q <= 1'b0; armed <= 1'b0; s_flt <= 1'b0; end
-        else begin
-            dr_q <= st[2];
-            if (st[3]) s_flt <= 1'b1;
-            if (st[0]) armed <= 1'b1;
-            if (flush) armed <= 1'b0;
-        end
+    // Control root (ck_control_s) = hard leaf dsfd_vm_static_cap_ctl (claude S81 VM F2 2026-10-15): the same
+    // flops (two-edge reset release, status pin register, drained edge, armed, sticky status fault) moved, no edge.
+    wire rn, flush, s_flt;
+    dsfd_vm_static_cap_ctl u_ctl (.ck(ck_control_s), .rst_n(rst_control_s), .st_live(f_capture[13312]),
+        .st_drn(f_capture[13314]), .st_flt(f_capture[13315]), .rn(rn), .flush(flush), .s_flt(s_flt));
     wire [15:0] lv; wire [16*542-1:0] ld; wire [79:0] lf; wire [15:0] xf;
     genvar g;
     generate for (g = 0; g < 16; g = g + 1) begin : lane
@@ -71,5 +50,35 @@ module dsfd_vm_static_cap #(parameter integer E = 8, parameter integer CAP_PIPE 
         assign w_d[512*g +: 512] = xd[541:30];
     end endgenerate
     assign fault = |lf | s_flt | |xf;
+endmodule
+
+// dsfd_vm_static_cap_ctl: the capture face's control root.  rn = two-edge synchronized release of rst_n (the lanes'
+// fixed startup age); status pin register of the three used status bits (live [0], drained [2], fault [3]); flush =
+// drained rising after live armed, one cycle, combinational from flops (as before); s_flt sticky status fault.
+module dsfd_vm_static_cap_ctl (
+    input  wire ck, rst_n,
+    input  wire st_live, st_drn, st_flt,
+    output wire rn, flush,
+    output reg  s_flt
+);
+    reg [1:0] rq;
+    always @(posedge ck or negedge rst_n) if (!rst_n) rq <= 2'b00; else rq <= {rq[0], 1'b1};
+    assign rn = rq[1];
+    reg q_live, q_drn, q_flt;
+    always @(posedge ck) begin q_live <= rn & st_live; q_drn <= rn & st_drn; q_flt <= rn & st_flt; end
+    reg dr_q, armed;
+`ifdef OT_VM_CAP_CTL_MUT_FLUSH
+    assign flush = q_drn && !dr_q && armed && q_live;     // MUTANT: live term inverted (phase flush lost)
+`else
+    assign flush = q_drn && !dr_q && armed && !q_live;
+`endif
+    always @(posedge ck)
+        if (!rn) begin dr_q <= 1'b0; armed <= 1'b0; s_flt <= 1'b0; end
+        else begin
+            dr_q <= q_drn;
+            if (q_flt) s_flt <= 1'b1;
+            if (q_live) armed <= 1'b1;
+            if (flush) armed <= 1'b0;
+        end
 endmodule
 `default_nettype wire

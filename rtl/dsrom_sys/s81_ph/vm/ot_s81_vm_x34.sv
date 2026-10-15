@@ -16,17 +16,34 @@
 // sampled high by stream edge 2 and low by stream edges 0 / 1 / 3: any sub-epoch misalignment -> sticky fault
 // (never a re-timed transfer).
 // ---------------------------------------------------------------------------------------------------------------
+// PHYSICAL SPLIT (claude S81 VM F2 2026-10-15): the serial bank writer ot_s81_vm_x34_s and the stream reader
+// ot_s81_vm_x34_t are separate hard leaves, one per clock root (ABI categories ck_*_x34_s / ck_*_x34_t); the flow's
+// multiple_cts_roots leaf admits only same-frequency roots, and the 3:4 related arcs (bank / parity / marker flops ->
+// stream capture, >= 1.111 ns by construction) are parent-level related-clock paths.  ot_s81_vm_x34 is the wrapper
+// of the two: the same flops, the same logic, bit-identical behaviour (tb_ot_s81_vm_x34 unchanged).
 module ot_s81_vm_x34 #(parameter integer W = 512) (
     input  wire         s_ck, s_rst_n,
     input  wire         s_v, input wire [W-1:0] s_d,
     input  wire         t_ck, t_rst_n,
-    output reg          o_v, output reg [W-1:0] o_d,
-    output reg          fault
+    output wire         o_v, output wire [W-1:0] o_d,
+    output wire         fault
 );
-    // ---- serial side
+    wire [W:0] b0, b1, b2; wire [2:0] bp; wire mark;
+    ot_s81_vm_x34_s #(.W(W)) u_s (.s_ck(s_ck), .s_rst_n(s_rst_n), .s_v(s_v), .s_d(s_d), .b0(b0), .b1(b1), .b2(b2),
+        .bpar(bp), .s_mark(mark));
+    ot_s81_vm_x34_t #(.W(W)) u_t (.t_ck(t_ck), .t_rst_n(t_rst_n), .b0(b0), .b1(b1), .b2(b2), .bpar(bp), .s_mark(mark),
+        .o_v(o_v), .o_d(o_d), .fault(fault));
+endmodule
+
+// serial side: phase counter, epoch parity, phase marker and the three banks (every output a flop)
+module ot_s81_vm_x34_s #(parameter integer W = 512) (
+    input  wire         s_ck, s_rst_n,
+    input  wire         s_v, input wire [W-1:0] s_d,
+    output reg  [W:0]   b0, b1, b2,
+    output reg  [2:0]   bpar,
+    output reg          s_mark
+);
     reg [1:0] sp; reg se;               // phase of the cycle that FOLLOWS the last edge; epoch parity
-    reg [W:0] bank0, bank1, bank2; reg [2:0] bpar;
-    reg s_mark;                         // phase marker: high exactly in serial cycle 1 of every epoch ([1.111, 2.222) ns)
     always @(posedge s_ck or negedge s_rst_n)
         if (!s_rst_n) begin sp <= 2'd2; se <= 1'b0; bpar <= 3'b000; s_mark <= 1'b0; end   // first edge after release = epoch edge 0
         else begin
@@ -42,12 +59,26 @@ module ot_s81_vm_x34 #(parameter integer W = 512) (
     // data banks (no reset: the parity and v bit gate their use)
     always @(posedge s_ck) begin
         case (sp)
-            2'd2: bank0 <= {s_v, s_d};
-            2'd0: bank1 <= {s_v, s_d};
-            default: bank2 <= {s_v, s_d};
+            2'd2: b0 <= {s_v, s_d};
+`ifdef OT_VM_X34_MUT_SBANK
+            2'd0: b2 <= {s_v, s_d};         // MUTANT: serial phase-1 word written into bank 2
+`else
+            2'd0: b1 <= {s_v, s_d};
+`endif
+            default: b2 <= {s_v, s_d};
         endcase
     end
-    // ---- stream side
+endmodule
+
+// stream side: fixed-edge bank reads, epoch-parity and phase-marker assertions
+module ot_s81_vm_x34_t #(parameter integer W = 512) (
+    input  wire         t_ck, t_rst_n,
+    input  wire [W:0]   b0, b1, b2,
+    input  wire [2:0]   bpar,
+    input  wire         s_mark,
+    output reg          o_v, output reg [W-1:0] o_d,
+    output reg          fault
+);
     reg [1:0] tp; reg te; reg warm; reg mk;    // tp = index of the last stream edge (3 at reset: the next edge is epoch edge 0)
     always @(posedge t_ck or negedge t_rst_n)
         if (!t_rst_n) begin tp <= 2'd3; te <= 1'b0; warm <= 1'b0; o_v <= 1'b0; fault <= 1'b0; mk <= 1'b0; end
@@ -60,24 +91,24 @@ module ot_s81_vm_x34 #(parameter integer W = 512) (
             if (tp == 2'd3) begin te <= ~te; warm <= 1'b1; end
             case (tp)
 `ifdef OT_VM_X34_MUT_PHASE
-                2'd0: begin o_v <= bank0[W]; if (warm && bpar[0] != te) fault <= 1'b1; end     // MUTANT: one stream edge early
+                2'd0: begin o_v <= b0[W]; if (warm && bpar[0] != te) fault <= 1'b1; end     // MUTANT: one stream edge early
 `else
-                2'd1: begin o_v <= bank0[W]; if (warm && bpar[0] != te) fault <= 1'b1; end
+                2'd1: begin o_v <= b0[W]; if (warm && bpar[0] != te) fault <= 1'b1; end
 `endif
-                2'd2: begin o_v <= bank1[W]; if (warm && bpar[1] != te) fault <= 1'b1; end
-                2'd3: begin o_v <= bank2[W]; if (warm && bpar[2] != te) fault <= 1'b1; end
+                2'd2: begin o_v <= b1[W]; if (warm && bpar[1] != te) fault <= 1'b1; end
+                2'd3: begin o_v <= b2[W]; if (warm && bpar[2] != te) fault <= 1'b1; end
                 default: o_v <= 1'b0;
             endcase
         end
     always @(posedge t_ck)
         case (tp)
 `ifdef OT_VM_X34_MUT_PHASE
-            2'd0: o_d <= bank0[W-1:0];
+            2'd0: o_d <= b0[W-1:0];
 `else
-            2'd1: o_d <= bank0[W-1:0];
+            2'd1: o_d <= b0[W-1:0];
 `endif
-            2'd2: o_d <= bank1[W-1:0];
-            2'd3: o_d <= bank2[W-1:0];
+            2'd2: o_d <= b1[W-1:0];
+            2'd3: o_d <= b2[W-1:0];
             default: ;
         endcase
 endmodule

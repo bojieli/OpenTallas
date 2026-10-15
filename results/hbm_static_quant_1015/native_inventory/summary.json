@@ -1,0 +1,3503 @@
+{
+  "schema": "opentallas.hbm-quant-native-record-inventory.v1",
+  "source_ref_commit": "e9bfa084898a753f74690597bdbd212970120f9c",
+  "issue_timestamps_invented": false,
+  "source_profiles": [
+    {
+      "profile": "full_rank0_released_listing",
+      "path": "results/arch/hgi_programs_20261010/inputs/ds_rank0_program.json",
+      "git_commit": "e9bfa084898a753f74690597bdbd212970120f9c",
+      "source_sha256": "e888a21dddef6881120d1c232174a67a0c2c53a205873f33000d989577376bef",
+      "source_bytes": 3218361,
+      "streams": [
+        {
+          "rank": 0,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 1,
+          "total_records": 154,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 2,
+          "total_records": 130,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 3,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 4,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 5,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 6,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 7,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 8,
+          "total_records": 130,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 9,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 10,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 11,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 12,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 13,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 14,
+          "total_records": 193,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 15,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 16,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 17,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 18,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 19,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 21,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 22,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 23,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 24,
+          "total_records": 100,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 25,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 26,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 27,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 28,
+          "total_records": 100,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 29,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 30,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 31,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 32,
+          "total_records": 100,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 33,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 34,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 35,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 36,
+          "total_records": 100,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 37,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 38,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 39,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": "head",
+          "total_records": 4,
+          "quant_records": 0
+        }
+      ],
+      "quant_records": 40,
+      "quant_ops": {
+        "QDQ_FP8": 40
+      },
+      "shape_supported": 40,
+      "shape_unsupported": 0,
+      "original_sid_counts": {
+        "[0]": 40
+      },
+      "original_residency_matches_actual_NW": 0,
+      "requires_actual_staging_or_allocator_relocation": 40,
+      "fused_nonqdq_ops": {
+        "HC_PRE_NORM": 81,
+        "HC_POST": 80
+      }
+    },
+    {
+      "profile": "full_rank0_g24",
+      "path": "results/arch/hgi_sim_20261010/g24_proof/ds_rank0_program.json",
+      "git_commit": "e9bfa084898a753f74690597bdbd212970120f9c",
+      "source_sha256": "0cb6cbf62877eae030e78aa825d5c62c81c0fd9976f2cf7cc3c9d216aebda07c",
+      "source_bytes": 3361955,
+      "streams": [
+        {
+          "rank": 0,
+          "layer": 0,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 1,
+          "total_records": 158,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 2,
+          "total_records": 160,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 3,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 4,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 5,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 6,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 7,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 8,
+          "total_records": 160,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 9,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 10,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 11,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 12,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 13,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 14,
+          "total_records": 223,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 15,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 16,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 17,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 18,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 19,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 20,
+          "total_records": 150,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 21,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 22,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 23,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 24,
+          "total_records": 130,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 25,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 26,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 27,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 28,
+          "total_records": 130,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 29,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 30,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 31,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 32,
+          "total_records": 130,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 33,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 34,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 35,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 36,
+          "total_records": 130,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 37,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 38,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 39,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": "head",
+          "total_records": 4,
+          "quant_records": 0
+        }
+      ],
+      "quant_records": 40,
+      "quant_ops": {
+        "QDQ_FP8": 40
+      },
+      "shape_supported": 40,
+      "shape_unsupported": 0,
+      "original_sid_counts": {
+        "[0]": 40
+      },
+      "original_residency_matches_actual_NW": 0,
+      "requires_actual_staging_or_allocator_relocation": 40,
+      "fused_nonqdq_ops": {
+        "HC_PRE_NORM": 81,
+        "HC_POST": 80
+      }
+    },
+    {
+      "profile": "full_rank0_g25",
+      "path": "results/arch/hgi_sim_20261010/g25_proof/ds_rank0_program.json",
+      "git_commit": "e9bfa084898a753f74690597bdbd212970120f9c",
+      "source_sha256": "43c1652f3c2348fd711c770c4769e041caa51a63209c34670c9993ccbbbe4d1d",
+      "source_bytes": 3256667,
+      "streams": [
+        {
+          "rank": 0,
+          "layer": 0,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 1,
+          "total_records": 158,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 2,
+          "total_records": 135,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 3,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 4,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 5,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 6,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 7,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 8,
+          "total_records": 135,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 9,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 10,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 11,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 12,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 13,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 14,
+          "total_records": 198,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 15,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 16,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 17,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 18,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 19,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 20,
+          "total_records": 125,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 21,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 22,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 23,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 24,
+          "total_records": 105,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 25,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 26,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 27,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 28,
+          "total_records": 105,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 29,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 30,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 31,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 32,
+          "total_records": 105,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 33,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 34,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 35,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 36,
+          "total_records": 105,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 37,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 38,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 39,
+          "total_records": 95,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": "head",
+          "total_records": 4,
+          "quant_records": 0
+        }
+      ],
+      "quant_records": 40,
+      "quant_ops": {
+        "QDQ_FP8": 40
+      },
+      "shape_supported": 40,
+      "shape_unsupported": 0,
+      "original_sid_counts": {
+        "[0]": 40
+      },
+      "original_residency_matches_actual_NW": 0,
+      "requires_actual_staging_or_allocator_relocation": 40,
+      "fused_nonqdq_ops": {
+        "HC_PRE_NORM": 81,
+        "HC_POST": 80
+      }
+    },
+    {
+      "profile": "full_rank0_fused",
+      "path": "results/rtl/hbm_forks_20261009/ds_fused_rank0_program.json",
+      "git_commit": "e9bfa084898a753f74690597bdbd212970120f9c",
+      "source_sha256": "f873431f2f69299f6012e4e702db8e0443df0e11e01fcdc050704a00a4855c12",
+      "source_bytes": 3213137,
+      "streams": [
+        {
+          "rank": 0,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 1,
+          "total_records": 154,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 2,
+          "total_records": 130,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 3,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 4,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 5,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 6,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 7,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 8,
+          "total_records": 130,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 9,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 10,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 11,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 12,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 13,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 14,
+          "total_records": 193,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 15,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 16,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 17,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 18,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 19,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 20,
+          "total_records": 122,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 21,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 22,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 23,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 24,
+          "total_records": 101,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 25,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 26,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 27,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 28,
+          "total_records": 101,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 29,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 30,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 31,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 32,
+          "total_records": 101,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 33,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 34,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 35,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 36,
+          "total_records": 101,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 37,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 38,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": 39,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 0,
+          "layer": "head",
+          "total_records": 4,
+          "quant_records": 0
+        }
+      ],
+      "quant_records": 40,
+      "quant_ops": {
+        "QDQ_FP8": 40
+      },
+      "shape_supported": 40,
+      "shape_unsupported": 0,
+      "original_sid_counts": {
+        "[0]": 40
+      },
+      "original_residency_matches_actual_NW": 0,
+      "requires_actual_staging_or_allocator_relocation": 40,
+      "fused_nonqdq_ops": {
+        "HC_PRE_NORM": 81,
+        "HC_POST": 80
+      }
+    },
+    {
+      "profile": "allrank_layer00",
+      "path": "results/arch/hgi_sim_20261009/programs/ds_v41_1M_L00_per_die.json",
+      "git_commit": "e9bfa084898a753f74690597bdbd212970120f9c",
+      "source_sha256": "12eee7bad73e4911bb8933f3989209228a4fa9cfd1c8382dd3fadc4299680bd6",
+      "source_bytes": 3302179,
+      "streams": [
+        {
+          "rank": 0,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 1,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 2,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 3,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 4,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 5,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 6,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 7,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 8,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 9,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 10,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 11,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 12,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 13,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 14,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 15,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 16,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 17,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 18,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 19,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 20,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 21,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 22,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 23,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 24,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 25,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 26,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 27,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 28,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 29,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 30,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 31,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 32,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 33,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 34,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 35,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 36,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 37,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 38,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 39,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 40,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 41,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 42,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 43,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 44,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 45,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 46,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 47,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 48,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 49,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 50,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 51,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 52,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 53,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 54,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 55,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 56,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 57,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 58,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 59,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 60,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 61,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 62,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 63,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 64,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 65,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 66,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 67,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 68,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 69,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 70,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 71,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 72,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 73,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 74,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 75,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 76,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 77,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 78,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 79,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 80,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 81,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 82,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 83,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 84,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 85,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 86,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 87,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 88,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 89,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 90,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 91,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 92,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 93,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 94,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        },
+        {
+          "rank": 95,
+          "layer": 0,
+          "total_records": 91,
+          "quant_records": 1
+        }
+      ],
+      "quant_records": 96,
+      "quant_ops": {
+        "QDQ_FP8": 96
+      },
+      "shape_supported": 96,
+      "shape_unsupported": 0,
+      "original_sid_counts": {
+        "[0]": 96
+      },
+      "original_residency_matches_actual_NW": 0,
+      "requires_actual_staging_or_allocator_relocation": 96,
+      "fused_nonqdq_ops": {
+        "HC_PRE_NORM": 192,
+        "HC_POST": 192
+      }
+    },
+    {
+      "profile": "allrank_layer20",
+      "path": "results/arch/hgi_sim_20261009/programs/ds_v41_1M_L20_per_die.json",
+      "git_commit": "e9bfa084898a753f74690597bdbd212970120f9c",
+      "source_sha256": "74734e131ced87de91c20147748046fd6224da905b3759aee99b5b6ef5394442",
+      "source_bytes": 3808542,
+      "streams": [
+        {
+          "rank": 0,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 1,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 2,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 3,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 4,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 5,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 6,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 7,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 8,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 9,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 10,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 11,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 12,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 13,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 14,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 15,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 16,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 17,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 18,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 19,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 20,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 21,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 22,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 23,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 24,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 25,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 26,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 27,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 28,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 29,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 30,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 31,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 3
+        },
+        {
+          "rank": 32,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 33,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 34,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 35,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 36,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 37,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 38,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 39,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 40,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 41,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 42,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 43,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 44,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 45,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 46,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 47,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 48,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 49,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 50,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 51,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 52,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 53,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 54,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 55,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 56,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 57,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 58,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 59,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 60,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 61,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 62,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 63,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 64,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 65,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 66,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 67,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 68,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 69,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 70,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 71,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 72,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 73,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 74,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 75,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 76,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 77,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 78,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 79,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 80,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 81,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 82,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 83,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 84,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 85,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 86,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 87,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 88,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 89,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 90,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 91,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 92,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 93,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 94,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        },
+        {
+          "rank": 95,
+          "layer": 20,
+          "total_records": 120,
+          "quant_records": 1
+        }
+      ],
+      "quant_records": 98,
+      "quant_ops": {
+        "QDQ_FP8": 96,
+        "QDQ_FP4_E8M0": 1,
+        "QDQ_FP4_E4M3": 1
+      },
+      "shape_supported": 98,
+      "shape_unsupported": 0,
+      "original_sid_counts": {
+        "[0]": 96,
+        "[2]": 2
+      },
+      "original_residency_matches_actual_NW": 2,
+      "requires_actual_staging_or_allocator_relocation": 96,
+      "fused_nonqdq_ops": {
+        "HC_PRE_NORM": 192,
+        "HC_POST": 192
+      }
+    },
+    {
+      "profile": "stacked_layer00",
+      "path": "results/rtl/tput_map_1011/hbm_smmv_xp/compiler_stacked_1013/images/ds_v41_1M_L00_per_die.json",
+      "git_commit": "e9bfa084898a753f74690597bdbd212970120f9c",
+      "source_sha256": "e290d3ce7336abd3926c1827195efb7d4a2b044f8931f487c39b17a307f6baaf",
+      "source_bytes": 3112980,
+      "streams": [
+        {
+          "rank": 0,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 1,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 2,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 3,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 4,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 5,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 6,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 7,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 8,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 9,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 10,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 11,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 12,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 13,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 14,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 15,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 16,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 17,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 18,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 19,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 20,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 21,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 22,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 23,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 24,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 25,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 26,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 27,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 28,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 29,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 30,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 31,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 32,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 33,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 34,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 35,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 36,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 37,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 38,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 39,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 40,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 41,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 42,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 43,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 44,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 45,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 46,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 47,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 48,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 49,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 50,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 51,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 52,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 53,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 54,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 55,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 56,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 57,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 58,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 59,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 60,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 61,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 62,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 63,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 64,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 65,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 66,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 67,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 68,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 69,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 70,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 71,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 72,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 73,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 74,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 75,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 76,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 77,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 78,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 79,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 80,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 81,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 82,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 83,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 84,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 85,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 86,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 87,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 88,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 89,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 90,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 91,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 92,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 93,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 94,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        },
+        {
+          "rank": 95,
+          "layer": 0,
+          "total_records": 92,
+          "quant_records": 1
+        }
+      ],
+      "quant_records": 96,
+      "quant_ops": {
+        "QDQ_FP8": 96
+      },
+      "shape_supported": 96,
+      "shape_unsupported": 0,
+      "original_sid_counts": {
+        "[0]": 96
+      },
+      "original_residency_matches_actual_NW": 0,
+      "requires_actual_staging_or_allocator_relocation": 96,
+      "fused_nonqdq_ops": {
+        "HC_PRE_NORM": 192,
+        "HC_POST": 192
+      }
+    },
+    {
+      "profile": "stacked_layer01",
+      "path": "results/rtl/tput_map_1011/hbm_smmv_xp/compiler_stacked_1013/images/ds_v41_1M_L01_per_die.json",
+      "git_commit": "e9bfa084898a753f74690597bdbd212970120f9c",
+      "source_sha256": "2c7a8c7181538de6d46600b18e57559cdbc511b1ae4cd0db1a26429c39adeb18",
+      "source_bytes": 3754280,
+      "streams": [
+        {
+          "rank": 0,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 1,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 2,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 3,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 4,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 5,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 6,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 7,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 8,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 9,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 10,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 11,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 12,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 13,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 14,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 15,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 16,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 17,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 18,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 19,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 20,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 21,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 22,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 23,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 24,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 25,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 26,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 27,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 28,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 29,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 30,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 31,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 32,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 33,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 34,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 35,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 36,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 37,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 38,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 39,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 40,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 41,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 42,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 43,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 44,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 45,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 46,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 47,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 48,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 49,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 50,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 51,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 52,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 53,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 54,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 55,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 56,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 57,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 58,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 59,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 60,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 61,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 62,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 63,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 64,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 65,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 66,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 67,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 68,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 69,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 70,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 71,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 72,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 73,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 74,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 75,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 76,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 77,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 78,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 79,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 80,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 81,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 82,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 83,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 84,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 85,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 86,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 87,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 88,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 89,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 90,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 91,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 92,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 93,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 94,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        },
+        {
+          "rank": 95,
+          "layer": 1,
+          "total_records": 114,
+          "quant_records": 1
+        }
+      ],
+      "quant_records": 96,
+      "quant_ops": {
+        "QDQ_FP8": 96
+      },
+      "shape_supported": 96,
+      "shape_unsupported": 0,
+      "original_sid_counts": {
+        "[0]": 96
+      },
+      "original_residency_matches_actual_NW": 0,
+      "requires_actual_staging_or_allocator_relocation": 96,
+      "fused_nonqdq_ops": {
+        "HC_PRE_NORM": 192,
+        "HC_POST": 192
+      }
+    }
+  ],
+  "total_export_records_including_distinct_historical_profiles": 546,
+  "source_record_hashes_distinct": 5,
+  "full_token_rank_coverage": [
+    0
+  ],
+  "full_allrank_token_export_found": false,
+  "native_NW_sid_authority": "h_vm confirmation SW0 SE1 NW2 NE3; actual native NW sid2",
+  "native_global_timestamp_authority_available": false,
+  "whole_token_paged_VM_calendar_implemented": false,
+  "full_token_scope": "40backbone layers+head only; complete all-rank and MTP continuation exports not present in enumerated sources",
+  "production_qualified_records": 0,
+  "PAY_status": "Static QDQ removes its private legacy transport dependency for supported class only. FUSED non-QDQ and native predecessor/consumer PAY stores remain separate required elements; no system-level PAY retirement proven.",
+  "gate": "Inventory only. No simulation, arithmetic golden result injection, route or completed gate was rerun."
+}

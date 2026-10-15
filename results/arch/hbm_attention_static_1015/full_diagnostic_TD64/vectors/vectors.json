@@ -1,0 +1,38 @@
+{
+  "counts": {
+    "NJOB": 2,
+    "NKV": 768,
+    "NP": 192,
+    "NSC": 768,
+    "NPV": 1024
+  },
+  "stats": {
+    "scores": 12288,
+    "pv": 16384,
+    "score_faults": 0,
+    "pv_faults": 0,
+    "macs": 12582912
+  },
+  "H": 16,
+  "D": 512,
+  "TD": 64,
+  "NL": 4,
+  "T": [
+    128,
+    640
+  ],
+  "seed": 20261015,
+  "golden": "hdc_golden_v41 chunk8; exact FP8/FP4 stored codes and golden rounding",
+  "sha256": {
+    "qk128.hex": "79424c0d11e808919343a5bc436a1de3f8ba2d8ffd2b82edc386a0875b7cb540",
+    "q.hex": "bd848f7993fdf2e7402a05ba4bbdee51f2be17c4016048f307fb04cff0f652ce",
+    "qk640.hex": "35e9ddfd4dbbd133fba8860b891a996d88538c86fae58506d49b7853fcf8e4a6",
+    "p.hex": "8f875a467da5421e1c539903ff81f1e292f99c0fc1bacdaabf23bca47afb4780",
+    "kv.hex": "195c13697247be3ee1c2c0f0cadb1bc42fee21cc388f6deef290f1273501163d",
+    "pv.hex": "c0db0ae539e4dfe8d2ae128285f85782e6f84b17ab7df632ab5a76c039212b95",
+    "pv640.hex": "ce6a83981b0c68785202ceba2a260a4262337ad12145d75aa1f210620f87321c",
+    "sc.hex": "89a20b47ab2e3f8b9ddf62feef9b663232963eb4835ff82d51611bf64b1221f9",
+    "jobs.hex": "b0556b8ba4925a8f049c77a5997af4580480e4f7de37171bbe1e1ee7cea0a481",
+    "pv128.hex": "1070f4ef082fea466da394013c292588e35dfeb840c2a27bca35e640d7b1fe39"
+  }
+}

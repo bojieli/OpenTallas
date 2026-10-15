@@ -1,0 +1,200 @@
+{
+  "schema": "opentallas.hbm_attention.reach_repair.v1",
+  "baseline_component_commit": "69fd7386188163d3bd44d796aa3a4bd794648828",
+  "baseline_direct_manifest_sha256": "f86d07aa4715dfb39c0191e80dd3f03757066de34eba45881961f15fe824a443",
+  "source_component_sha256": "0090bb4de86122a4c408818e88fdd31a9952852e2c5dbcc9d12cd5bad0055fd8",
+  "outline_um": [
+    1778.52,
+    689.04
+  ],
+  "structural_change": "Move every terminal result/chain bank to the central merge; distribute corresponding packet chunks vertically with their matching quad row banks. Preserve existing exact register count, 54 real child views and all ports.",
+  "placement_overrides_um": {
+    "g_y1.g_x[0].u_res.gn.g_s[3].g_c[0].g_sn.u_b": [
+      200.016,
+      77.76
+    ],
+    "g_y1.g_x[0].u_res.gn.g_s[4].g_c[0].g_sn.u_b": [
+      350.352,
+      69.12
+    ],
+    "g_y1.g_x[0].u_res.gn.g_s[5].g_c[0].g_sn.u_b": [
+      500.256,
+      69.12
+    ],
+    "g_y1.g_x[0].u_res.gn.g_s[6].g_c[0].g_sn.u_b": [
+      650.16,
+      69.12
+    ],
+    "g_y1.g_x[0].u_res.gn.g_s[7].g_c[0].g_sn.u_b": [
+      800.064,
+      69.12
+    ],
+    "g_y1.g_x[0].u_xr.gn.g_s[1].g_c[0].g_sn.u_b": [
+      300.24,
+      19.44
+    ],
+    "g_y1.g_x[0].u_xr.gn.g_s[2].g_c[0].g_sn.u_b": [
+      550.3679999999999,
+      19.44
+    ],
+    "g_y1.g_x[0].u_xr.gn.g_s[3].g_c[0].g_sn.u_b": [
+      750.384,
+      19.44
+    ],
+    "g_y1.g_x[0].u_xr.gn.g_s[4].g_c[0].g_sn.u_b": [
+      800.064,
+      19.44
+    ],
+    "g_y1.g_x[1].u_res.gn.g_s[2].g_c[0].g_sn.u_b": [
+      1703.376,
+      302.40000000000003
+    ],
+    "g_y1.g_x[1].u_res.gn.g_s[3].g_c[0].g_sn.u_b": [
+      1703.376,
+      108.0
+    ],
+    "g_y1.g_x[1].u_res.gn.g_s[4].g_c[0].g_sn.u_b": [
+      1450.224,
+      86.4
+    ],
+    "g_y1.g_x[1].u_res.gn.g_s[5].g_c[0].g_sn.u_b": [
+      1200.096,
+      86.4
+    ],
+    "g_y1.g_x[1].u_res.gn.g_s[6].g_c[0].g_sn.u_b": [
+      1050.192,
+      86.4
+    ],
+    "g_y1.g_x[1].u_res.gn.g_s[7].g_c[0].g_sn.u_b": [
+      950.4,
+      86.4
+    ],
+    "g_y1.g_x[1].u_xr.gn.g_s[0].g_c[0].g_sn.u_b": [
+      1718.4959999999999,
+      36.72
+    ],
+    "g_y1.g_x[1].u_xr.gn.g_s[1].g_c[0].g_sn.u_b": [
+      1470.096,
+      36.72
+    ],
+    "g_y1.g_x[1].u_xr.gn.g_s[2].g_c[0].g_sn.u_b": [
+      1230.336,
+      36.72
+    ],
+    "g_y1.g_x[1].u_xr.gn.g_s[3].g_c[0].g_sn.u_b": [
+      1000.08,
+      36.72
+    ],
+    "g_y1.g_x[1].u_xr.gn.g_s[4].g_c[0].g_sn.u_b": [
+      950.4,
+      36.72
+    ],
+    "g_y1.u_mid.gn.g_s[0].g_c[0].g_sn.u_b": [
+      804.816,
+      270.0
+    ],
+    "g_y1.u_mid.gn.g_s[0].g_c[1].g_sn.u_b": [
+      809.136,
+      380.16
+    ],
+    "g_y1.u_mid.gn.g_s[0].g_c[2].g_sn.u_b": [
+      809.136,
+      490.32000000000005
+    ],
+    "u_fc.gn.g_s[0].g_c[0].g_sn.u_b": [
+      895.104,
+      291.6
+    ],
+    "u_fc.gn.g_s[0].g_c[1].g_sn.u_b": [
+      895.104,
+      401.76
+    ],
+    "u_fc.gn.g_s[0].g_c[2].g_sn.u_b": [
+      895.104,
+      516.24
+    ],
+    "u_fc.gn.g_s[1].g_c[0].g_sn.u_b": [
+      809.136,
+      313.20000000000005
+    ],
+    "u_fc.gn.g_s[1].g_c[1].g_sn.u_b": [
+      809.136,
+      423.36
+    ],
+    "u_fc.gn.g_s[1].g_c[2].g_sn.u_b": [
+      809.136,
+      533.52
+    ],
+    "u_pi.gn.g_s[3].g_c[0].g_sn.u_b": [
+      682.128,
+      38.88
+    ],
+    "u_pi.gn.g_s[4].g_c[0].g_sn.u_b": [
+      800.064,
+      38.88
+    ],
+    "u_pi.gn.g_s[5].g_c[0].g_sn.u_b": [
+      857.088,
+      54.0
+    ],
+    "u_pi.gn.g_s[6].g_c[0].g_sn.u_b": [
+      800.064,
+      86.4
+    ],
+    "u_xin.gn.g_s[0].g_c[0].g_sn.u_b": [
+      680.4,
+      270.0
+    ],
+    "u_xin.gn.g_s[0].g_c[1].g_sn.u_b": [
+      680.4,
+      380.16
+    ],
+    "u_xin.gn.g_s[0].g_c[2].g_sn.u_b": [
+      680.4,
+      490.32000000000005
+    ],
+    "g_y1.g_x[0].u_q": [
+      108.432,
+      105.84
+    ],
+    "g_y1.g_x[0].u_res.gn.g_s[2].g_c[0].g_sn.u_b": [
+      66.096,
+      90.72
+    ],
+    "g_y1.g_x[1].u_q": [
+      1152.576,
+      105.84
+    ]
+  },
+  "fixed_clock_period_ps": 833.333,
+  "added_register_edges": 0,
+  "added_memory_bits": 0,
+  "added_relay_bits": 0,
+  "throughput_price_unchanged_by_placement": true,
+  "signal_route_layers": [
+    "M7",
+    "M8"
+  ],
+  "qualification": {
+    "closed": false,
+    "unresolved": [
+      "Actual obstruction-aware cut and channel capacity with PG",
+      "Native fixed-cycle producer/PS/VM source binding",
+      "Assigned die instance placement and external pins",
+      "Actual per-child clock roots/phi-R insertion and STA",
+      "Global/detailed route and DRC0",
+      "M6 clock strap track alignment and exact macro pin access"
+    ]
+  },
+  "geometry_optimization": {
+    "source_commits": [
+      "92ac10133",
+      "5e7c8582f"
+    ],
+    "internal_data_bit_wirelength_um_before": 3488973.666,
+    "internal_data_bit_wirelength_um_after": 3199090.842,
+    "improvement_pct": 8.3085,
+    "external_data_pin_children_fixed": true,
+    "orientation_changes": 0
+  }
+}

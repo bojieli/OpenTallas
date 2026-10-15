@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // Independent inverse address/data oracle, not a copy of sec_of forward logic.
 module tb_qkd_kv_static_writer_native;
- parameter integer MUT=0, BAD=0;
+ parameter integer MUT=0, BAD=0, STRICT=0; // STRICT=1: a mutant is judged as a production run (must FAIL)
  reg ck=0,rst_n=0;always #1 ck=~ck;
  reg v=0,slot=0;reg[10:0]tag;reg[511:0]data;
  reg[58:0]id,cid;reg[1:0]gen,cgen,ix;
@@ -59,17 +59,20 @@ module tb_qkd_kv_static_writer_native;
  initial begin
  tag=0;data=0;id=0;cid=0;gen=0;cgen=0;ix=0;
  repeat(3)step();rst_n=1;
+ // Physical master releases reset through ot_rst_relay (2 sync + 1 tree = 3 edges): the compiled boot
+ // schedule issues the first word slot no earlier than that (idle edges are still face-compared above).
+ repeat(3)step();
  // All36 stages and all8192 positions exercise every stack, bank, col, lane.
  for(layer=0;layer<36;layer=layer+1)for(pos=0;pos<8192;pos=pos+1)begin
   cid={16'(layer+9),6'(layer+1),18'(pos+13),13'(pos),6'd0};cgen=(pos+layer)%4;
   for(i=0;i<4;i=i+1)begin
-   ix=i;slot=1;v=!(BAD==1&&i==1);id=cid ^ ((BAD==2&&i==1)?59'd1:59'd0);gen=cgen;
+   ix=i;slot=1;v=!(BAD==1&&i==1);id=cid ^ (((BAD==2&&i==1)||(BAD==3&&i==0))?59'd1:59'd0);gen=cgen;
    tag={3'b010,5'd0,1'(i/2),1'b0,1'(i%2)};
    for(e=0;e<64;e=e+1)data[e*8+:8]=bytecode(layer,pos,i/2,(i%2)*64+e);
    step();
   end
   slot=0;v=0;repeat(3)step();cases=cases+1;
-  if(MUT!=0||BAD!=0)begin
+  if((MUT!=0||BAD!=0)&&!STRICT)begin
    if((MUT!=0&&errors==0)||(BAD!=0&&(!fault||errors==0)))$fatal(1,"FAIL mutant escaped errors%0d fault%0d",errors,fault);
    $display("OBSERVED_FAIL MUT%0d BAD%0d errors%0d fault%0d",MUT,BAD,errors,fault);$finish;
   end

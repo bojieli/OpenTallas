@@ -1,0 +1,62 @@
+{
+  "name": "s81hc_ctfxnt_ref-v5-ck-split-a31110236",
+  "status": "NEEDS_HUMAN",
+  "reason": "route crashed twice (rc=1 ok-check failed;; first error: s81hc_ctfxnt_ref_v5_ck_split_a31110236/flow.log: [ERROR DPL-0033] detailed placement checks failed during check placement. [step do-4_1_cts]; resource=False)",
+  "host": "ot-epyc1tb",
+  "commit_full": "a311102368b10b1415e6dfcdfbacaeea4af3737d",
+  "events": [
+    "2026-10-14T23:30:25-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/s81hc_ctfxnt_ref-v5-ck-split-a31110236.json",
+    "2026-10-14T23:30:25-07:00 STRUCTURE-REPEAT: 2 failed routes of ot_s81_hc_ctfx_nt since its last CLOSED; structural_change: Native capture repair: (1) per-cluster clock net split before CTS (lanes vs data rows; one H-tree over both left level-3/4 buffers in the empty gap, leaf nets 70-85 um, TT spread 66 ps); (2) rule-based BUFx2->BUFx4f on fd_in crossing-wire drivers (>20 um nets) after hold repair; (3) local-epoch rese",
+    "2026-10-14T23:30:26-07:00 CLOSED-STANDS PASS: ot_s81_hc_ctfx_nt is CLOSED with a published view (s81hc_ctfxnt_ref-v2-native-86b6ec42b @ 86b6ec42b and 1 more); reroute_reason rtl_change: 2 of 31 RTL source file(s) differ from 86b6ec42b: rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv, rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ntree.sv (verified)",
+    "2026-10-14T23:30:26-07:00 MACRO_GRID WARN (refuse): MACRO_GRID WARN: macro placement ['physical/ref_tile/s81hc_ctfxnt_ref/pre_gpl.tcl'] but no macro LEF resolved from the commands",
+    "2026-10-14T23:30:29-07:00 CLOCK-RULE at submit: 2,849 sinks on the largest root <= 15,000; measured TT insertion 308.4 ps, leaf spread 24.5 ps",
+    "2026-10-14T23:30:29-07:00 ref gate PASS: pre-route gate PASS",
+    "2026-10-14T23:30:39-07:00 benches run in parallel with calibrate/route (3 benches; spec bench_first opts out)",
+    "2026-10-14T23:31:02-07:00 git-mirror sync a311102368b1 via upstream in 2s + extract 14s; 3535 views / 6.1 GB hard-linked from the host view store",
+    "2026-10-14T23:31:06-07:00 source a311102368b1 synced to ot-epyc1tb:/srv/opentallas/claude/closure-loop/s81hc_ctfxnt_ref-v5-ck-split-a31110236/src",
+    "2026-10-14T23:31:09-07:00 bench track: launched bench_lint (bench_lint.a1b1) beside None",
+    "2026-10-14T23:31:22-07:00 launched route (attempt 1) on ot-epyc1tb",
+    "2026-10-14T23:31:34-07:00 bench track: bench_lint PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+    "2026-10-14T23:31:38-07:00 bench track: launched bench_hc_ntree_tmut_ot_s81_hc_ctfx_nt (bench_hc_ntree_tmut_ot_s81_hc_ctfx_nt.a1b1) beside route",
+    "2026-10-14T23:42:30-07:00 TEXTBOOK-LINT route.a1: WARN ot_s81_hc_ctfx_nt cells 6,400 flops 2,849 depth 146.7 ps util 0.1346 reach 54.8 um (0.2 s) || INFO clock_roots max_root_sinks=2849 root=port:clk rule=PASS: 2,849 sinks on the largest root <= 15,000; measured TT insertion 308.4 ps, leaf spread 24.5 ps || WARN util_channel: utilisation 13.5% outside 45%-65% (std 1664 + macro 0 um2 in 12364 um2): shrink the outline (long wires / sparse placement)",
+    "2026-10-14T23:52:32-07:00 bench track: bench_hc_ntree_tmut_ot_s81_hc_ctfx_nt FAIL as expected (rc=1) ",
+    "2026-10-14T23:52:37-07:00 bench track: launched bench_owned_nt_exact_ng256_pipe1 (bench_owned_nt_exact_ng256_pipe1.a1b1) beside route",
+    "2026-10-15T00:01:32-07:00 bench track: bench_owned_nt_exact_ng256_pipe1 PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+    "2026-10-15T00:20:34-07:00 route crashed (rc=1 ok-check failed;; first error: s81hc_ctfxnt_ref_v5_ck_split_a31110236/flow.log: [ERROR DPL-0033] detailed placement checks failed during check placement. [step do-4_1_cts]) -> retry once on the same host",
+    "2026-10-15T00:21:42-07:00 launched route (attempt 2) on ot-epyc1tb",
+    "2026-10-15T00:33:31-07:00 TEXTBOOK-LINT route.a2: WARN ot_s81_hc_ctfx_nt cells 6,400 flops 2,849 depth 146.7 ps util 0.1346 reach 54.8 um (0.1 s) || INFO clock_roots max_root_sinks=2849 root=port:clk rule=PASS: 2,849 sinks on the largest root <= 15,000; measured TT insertion 308.4 ps, leaf spread 24.5 ps || WARN util_channel: utilisation 13.5% outside 45%-65% (std 1664 + macro 0 um2 in 12364 um2): shrink the outline (long wires / sparse placement)",
+    "2026-10-15T01:00:44-07:00 NEEDS_HUMAN: route crashed twice (rc=1 ok-check failed;; first error: s81hc_ctfxnt_ref_v5_ck_split_a31110236/flow.log: [ERROR DPL-0033] detailed placement checks failed during check placement. [step do-4_1_cts]; resource=False)",
+    "2026-10-15T01:01:30-07:00 auto-react: block ot_s81_hc_ctfx_nt has a live or closed sibling job; no action"
+  ],
+  "btrack": {
+    "bench_lint": {
+      "state": "done",
+      "tag": "bench_lint.a1b1",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas/claude/closure-loop/s81hc_ctfxnt_ref-v5-ck-split-a31110236",
+      "n": 1,
+      "started": "2026-10-14T23:31:09-07:00",
+      "stage_source": "/srv/opentallas/claude/closure-loop/s81hc_ctfxnt_ref-v5-ck-split-a31110236/bench_src_a1"
+    },
+    "bench_hc_ntree_tmut_ot_s81_hc_ctfx_nt": {
+      "state": "done",
+      "tag": "bench_hc_ntree_tmut_ot_s81_hc_ctfx_nt.a1b1",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas/claude/closure-loop/s81hc_ctfxnt_ref-v5-ck-split-a31110236",
+      "n": 1,
+      "started": "2026-10-14T23:31:38-07:00",
+      "stage_source": "/srv/opentallas/claude/closure-loop/s81hc_ctfxnt_ref-v5-ck-split-a31110236/bench_src_a1",
+      "wd_checked": 1792045945.158204
+    },
+    "bench_owned_nt_exact_ng256_pipe1": {
+      "state": "done",
+      "tag": "bench_owned_nt_exact_ng256_pipe1.a1b1",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas/claude/closure-loop/s81hc_ctfxnt_ref-v5-ck-split-a31110236",
+      "n": 1,
+      "started": "2026-10-14T23:52:37-07:00",
+      "stage_source": "/srv/opentallas/claude/closure-loop/s81hc_ctfxnt_ref-v5-ck-split-a31110236/bench_src_a1",
+      "wd_checked": 1792047206.1594365
+    }
+  }
+}

@@ -90,5 +90,5 @@ def main():
    except Exception as secondary:
     (w/'partial_pin_export_failure.txt').write_text(repr(secondary))
   status={'status':'GEN_FAIL','error':repr(ex),'traceback':traceback.format_exc(),'native_qualified':False};traceback.print_exc()
- sources=['tools/dsrom_s81_fulldie.py','tools/s81/canonical_layout.py','tools/s81/canonical_screen.py'];status['source_sha256']={x:hashlib.sha256((R/x).read_bytes()).hexdigest()for x in sources};status['capacity_sha256']=G.CANONICAL_LAYOUT['sha256'];status['source_binding']=bound;(w/'status.json').write_text(json.dumps(status,indent=1,default=list));return 0 if status['status']=='GEN_COMPLETE' else 1
+ sources=['tools/dsrom_s81_fulldie.py','tools/s81/canonical_layout.py','tools/s81/canonical_screen.py'];status['source_sha256']={x:hashlib.sha256((R/x).read_bytes()).hexdigest()for x in sources};status['capacity_sha256']=G.CANONICAL_LAYOUT['sha256'];status['pin_overrides_applied']=[dict(master=k[0],port=k[1],**v) for k,v in sorted(G.PIN_OVERRIDES_APPLIED.items())];status['source_binding']=bound;(w/'status.json').write_text(json.dumps(status,indent=1,default=list));return 0 if status['status']=='GEN_COMPLETE' else 1
 if __name__=='__main__':sys.exit(main())

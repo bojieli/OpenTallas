@@ -1,0 +1,14 @@
+{
+  "schema": "opentallas.quant.clock_gate_review.v1",
+  "source_commit": "c1f7f68c7",
+  "raw_gate_verdict": "PASS",
+  "review_verdict": "FAIL",
+  "clock_tt_max_ps": 328.8,
+  "clock_tt_spread_ps": 117.3,
+  "limits_ps": [
+    300,
+    80
+  ],
+  "route_admitted": false,
+  "reason": "boundedcluster variant stillfails actualnativeclock; explicitplannedclockdistribution required; preserve no blindroute"
+}

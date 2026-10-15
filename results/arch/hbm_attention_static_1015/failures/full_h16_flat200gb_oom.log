@@ -1,0 +1,8 @@
+Oct 15 00:35:26 regular-crane kernel: verilator_bin invoked oom-killer: gfp_mask=0xcc0(GFP_KERNEL), order=0, oom_score_adj=0
+Oct 15 00:35:26 regular-crane kernel: CPU: 75 UID: 1000 PID: 1182644 Comm: verilator_bin Not tainted 7.0.0-38-generic #38-Ubuntu PREEMPT(lazy) 
+Oct 15 00:35:26 regular-crane kernel: Memory cgroup stats for /user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-1182567-1792048885.scope:
+Oct 15 00:35:26 regular-crane kernel: [1182567]  1000 1182567     1986      953       70      883         0    57344        0             0 bash
+Oct 15 00:35:26 regular-crane kernel: [1182644]  1000 1182644 52373771 52327895 52324233     3662         0 419856384        0             0 verilator_bin
+Oct 15 00:35:26 regular-crane kernel: oom-kill:constraint=CONSTRAINT_MEMCG,nodemask=(null),cpuset=user.slice,mems_allowed=0,oom_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-1182567-1792048885.scope,task_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-1182567-1792048885.scope,task=verilator_bin,pid=1182644,uid=1000
+Oct 15 00:35:26 regular-crane kernel: Memory cgroup out of memory: Killed process 1182644 (verilator_bin) total-vm:209495084kB, anon-rss:209296932kB, file-rss:14648kB, shmem-rss:0kB, UID:1000 pgtables:410016kB oom_score_adj:0
+Oct 15 00:35:36 regular-crane kernel: oom_reaper: reaped process 1182644 (verilator_bin), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB

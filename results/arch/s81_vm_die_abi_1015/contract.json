@@ -363,10 +363,19 @@
    "dir": "input",
    "bits": 1,
    "domain": "serial",
-   "master": null,
-   "child_pin": null,
-   "routed_R": null,
-   "delivery": "OPEN: no closed native view; parent leaf/CTS root pending"
+   "master": "dsfd_vm_static_cap_ctl",
+   "child_pin": "ck",
+   "routed_R": [
+    {
+     "kit": "dsfd_vm_static_cap_ctl_1015_r1",
+     "R_tt_ps": 47.0,
+     "min": 46.4,
+     "max": 47.6,
+     "n": 9,
+     "native_pin_audit": "PASS"
+    }
+   ],
+   "delivery": "phi - wire - R per root (R from the bound routed view)"
   },
   "ck_cap_lane_s": {
    "dir": "input",
