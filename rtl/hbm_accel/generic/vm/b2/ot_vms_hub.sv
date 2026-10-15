@@ -26,6 +26,7 @@
 // tile edge); every input is pin-flopped, every output is a flop.
 // Bank tag = {client 4, entry 4}.  status = {range fault, mask fault, proto fault}.
 module ot_vms_hub #(
+    parameter integer PHYSICAL_RING = 0, // 1: global SID order SW0,SE1,NE3,NW2 on physical perimeter
     parameter integer NC  = 4,
     parameter integer PQ  = 4,      // bank packet credits (= ot_vms_bank PQ)
     parameter integer CWI = 4,      // CW inject credits (= the CW stop's hub FIFO depth)
@@ -49,6 +50,14 @@ module ot_vms_hub #(
     output reg  [2:0]              status
 );
     localparam integer N = NC + 1;
+    // Binary ring rank is separate from the unchanged global address SID.
+    wire [1:0] me_rank={me[1],me[1]^me[0]};
+    wire [1:0] next_rank=me_rank+2'd1,opp_rank=me_rank+2'd2,prev_rank=me_rank+2'd3;
+    wire [1:0] next_sid={next_rank[1],next_rank[1]^next_rank[0]};
+    wire [1:0] opp_sid={opp_rank[1],opp_rank[1]^opp_rank[0]};
+    wire [3:0] cw_mask=(4'd1<<next_sid)|(4'd1<<opp_sid);
+    wire [3:0] ccw_mask=4'd1<<{prev_rank[1],prev_rank[1]^prev_rank[0]};
+    wire [1:0] prev_sid=PHYSICAL_RING?{prev_rank[1],prev_rank[1]^prev_rank[0]}:me+2'd3;
     // ------------------------------------------------------------------ pin flops (payload: no reset)
     // Reset only on control (valids, pointers, counters, credits, entry state); payload flops have no reset.
     reg [N*338-1:0] cq_d; reg [N-1:0] cq_v; reg [8*266-1:0] pr_d; reg [7:0] pr_v; reg [262:0] cc0_d, cc1_d; reg cc0_v, cc1_v;
@@ -132,11 +141,11 @@ module ot_vms_hub #(
     reg [255:0]  e_d    [0:N-1][0:3];    // write data until dispatched, then read data
     reg [15:0]   e_tag  [0:N-1][0:3];
     reg          e_nl   [0:N-1][0:3];    // needs the local bank
-    reg [1:0]    e_nr   [0:N-1][0:3];    // ring part: 0 none, 1 CW, 2 CCW
+    reg [1:0]    e_nr   [0:N-1][0:3];    // ring parts: bit0 CW, bit1 CCW (native mirror write needs both)
     reg [3:0]    e_dm   [0:N-1][0:3];    // CW dest mask / CCW dst in [1:0]
     reg [2:0]    e_cnt  [0:N-1][0:3];    // responses still to come
     reg          e_sl   [0:N-1][0:3];    // local part sent
-    reg          e_sr   [0:N-1][0:3];    // ring part sent
+    reg [1:0]    e_sr   [0:N-1][0:3];    // independently sent ring parts
     reg [1:0] dp [0:N-1], hp [0:N-1]; reg [3:0] h1 [0:N-1];   // h1 = one-hot hp
     reg [2:0] pqc [0:7]; reg [2:0] cwic, ccic;
     reg [2:0] rot;                                       // rotating client priority
@@ -146,8 +155,8 @@ module ot_vms_hub #(
     always @* for (integer c = 0; c < N; c = c + 1) begin
         cb[c]   = e_bank[c][dp[c]];
         wl[c]   = e_v[c][dp[c]] && e_nl[c][dp[c]] && !e_sl[c][dp[c]];
-        wcw[c]  = e_v[c][dp[c]] && e_nr[c][dp[c]] == 2'd1 && !e_sr[c][dp[c]];
-        wccw[c] = e_v[c][dp[c]] && e_nr[c][dp[c]] == 2'd2 && !e_sr[c][dp[c]];
+        wcw[c]  = e_v[c][dp[c]] && e_nr[c][dp[c]][0] && !e_sr[c][dp[c]][0];
+        wccw[c] = e_v[c][dp[c]] && e_nr[c][dp[c]][1] && !e_sr[c][dp[c]][1];
     end
     // grants: per bank (ring client first, then rotating), CW and CCW (rotating)
     reg [N-1:0] gl, gcw, gccw;
@@ -186,9 +195,9 @@ module ot_vms_hub #(
     reg [N-1:0] dadv, dlv;
     always @* for (integer c = 0; c < N; c = c + 1) begin : da
         reg [1:0] e; e = dp[c];
-        dadv[c] = e_v[c][e] && (e_sl[c][e] || gl[c] || !e_nl[c][e]) && (e_sr[c][e] || gcw[c] || gccw[c] || e_nr[c][e] == 2'd0);
+        dadv[c] = e_v[c][e] && (e_sl[c][e] || gl[c] || !e_nl[c][e]) && (((e_sr[c][e] | {gccw[c],gcw[c]}) & e_nr[c][e]) == e_nr[c][e]);
         dlv[c]  = e_v[c][hp[c]] && e_cnt[c][hp[c]] == 3'd0 && (e_sl[c][hp[c]] || !e_nl[c][hp[c]]) &&
-                  (e_sr[c][hp[c]] || e_nr[c][hp[c]] == 2'd0);
+                  ((e_sr[c][hp[c]] & e_nr[c][hp[c]]) == e_nr[c][hp[c]]);
     end
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
@@ -198,7 +207,7 @@ module ot_vms_hub #(
             for (integer b = 0; b < 8; b = b + 1) pqc[b] <= 3'(PQ);
             for (integer c = 0; c < N; c = c + 1) begin
                 tp[c] <= 2'd0; dp[c] <= 2'd0; hp[c] <= 2'd0; h1[c] <= 4'd1;
-                for (integer e = 0; e < 4; e = e + 1) begin e_v[c][e] <= 1'b0; e_cnt[c][e] <= 3'd0; e_sl[c][e] <= 1'b0; e_sr[c][e] <= 1'b0; end
+                for (integer e = 0; e < 4; e = e + 1) begin e_v[c][e] <= 1'b0; e_cnt[c][e] <= 3'd0; e_sl[c][e] <= 1'b0; e_sr[c][e] <= 2'b0; end
             end
         end else begin : seq
             reg [7:0] pqd; reg [N-1:0] gb [0:7];
@@ -214,7 +223,7 @@ module ot_vms_hub #(
                     for (integer k = 0; k < 8; k = k + 1) begin wm[k] = &q[16 + 4*k +: 4]; bx[4*k +: 4] = {4{wm[k]}}; end
                     if (|(q[47:16] & ~bx) && q[336]) mflt <= 1'b1;
                     if (e_v[c][tp[c]]) proto <= 1'b1;
-                    e_v[c][tp[c]] <= 1'b1; e_sl[c][tp[c]] <= 1'b0; e_sr[c][tp[c]] <= 1'b0;
+                    e_v[c][tp[c]] <= 1'b1; e_sl[c][tp[c]] <= 1'b0; e_sr[c][tp[c]] <= 2'b0;
                     if (m) begin if (s[14:13] != 2'd0) rflt <= 1'b1; end
                     else if (d != me && c == NC) rflt <= 1'b1;   // the ring client only replays local sectors
                     tp[c] <= tp[c] + 2'd1;
@@ -222,7 +231,7 @@ module ot_vms_hub #(
                 // ---- dispatch entry dp[c]
                 e = dp[c];
                 if (gl[c]) begin pqd[cb[c]] = 1'b1; gb[cb[c]][c] = 1'b1; e_sl[c][e] <= 1'b1; end
-                if (gcw[c] || gccw[c]) e_sr[c][e] <= 1'b1;
+                if (gcw[c] || gccw[c]) e_sr[c][e] <= PHYSICAL_RING ? (e_sr[c][e] | {gccw[c],gcw[c]}) : 2'b11;
                 if (dadv[c]) dp[c] <= dp[c] + 2'd1;
                 // ---- response counts
                 for (integer k = 0; k < 4; k = k + 1) e_cnt[c][k] <= e_cnt[c][k] - dec[c][k];
@@ -251,13 +260,13 @@ module ot_vms_hub #(
                 e_row[c][a] <= {m, s[12:3]}; e_wm[c][a] <= wm; e_d[c][a] <= q[303:48]; e_tag[c][a] <= q[15:0];
                 if (m) begin
                     e_nl[c][a] <= 1'b1;
-                    if (q[336] && c != NC) begin e_nr[c][a] <= 2'd1; e_dm[c][a] <= 4'hf & ~(4'd1 << me); end
+                    if (q[336] && c != NC) begin e_nr[c][a] <= PHYSICAL_RING?2'd3:2'd1; e_dm[c][a] <= 4'hf & ~(4'd1 << me); end
                     else e_nr[c][a] <= 2'd0;
                 end else if (d == me || c == NC) begin
                     e_nl[c][a] <= 1'b1; e_nr[c][a] <= 2'd0;
                 end else begin
                     e_nl[c][a] <= 1'b0; e_dm[c][a] <= 4'd1 << d;
-                    e_nr[c][a] <= (d == me + 2'd3) ? 2'd2 : 2'd1;
+                    e_nr[c][a] <= (d == prev_sid) ? 2'd2 : 2'd1;
                 end
             end
             // ---- responses
@@ -336,7 +345,7 @@ module ot_vms_hub #(
                 reg [288:0] v; reg [284:0] x; v = '0;
                 for (integer c = 0; c < N; c = c + 1) begin
                     x = rg[c];
-                    v = v | ({289{g2[c]}} & {x[284:281], 4'(c), x[280:0]});
+                    v = v | ({289{g2[c]}} & {(PHYSICAL_RING ? (x[284:281] & ((gk==0)?cw_mask:ccw_mask)) : x[284:281]), 4'(c), x[280:0]});
                 end
                 if (|g2) o <= v[LO +: WS];
             end

@@ -7981,8 +7981,8 @@ def r25gq_v14():
         central hb_coll and the separate hb_tkm slot are gone.
       * every COLL die net is ONE RTL port of the master (no invented width): own SU quarter (inject, delivery,
         RED_CARRY), own lk_ep rail (the 1,120-b f_lk bundle of hfd_lk_ep split per direction: llk_t 571 b / llk_r 549 b),
-        the command processor record (968 + 554 + 40 to every engine, ret 3 from SW only), the RGX lanes (SW: loader x
-        lanes, SW slice VM queue + W2 lane client), the TOPK_MERGE writes (SW slice).
+        the command processor record (968 + 40 to every engine, recx 554 and ret 3 SW only), the RGX lanes (SW: loader x
+        lanes, SW slice VM queue + the 2,213-b ROW_GATHER write stream to the slice master's receive leaves), the TOPK_MERGE writes (SW slice).
       * 2 x 2 registered peer ring between the engines (280 b a direction, pr_cw / pr_ccw); the SU <-> SU 8 x 1,024 b
         cross links are REMOVED (RED_CARRY rides the ring, B2 sec 4).
       * VM8 union (25 closed tiles, cross buses abutted) moves into the centre spine void.
@@ -8011,7 +8011,10 @@ def r25gq_v14():
     # write lanes to the SW slice (t_rgx_c / f_rgx_c) left its E face into the 218-um COLL | SU_SW gap and ran down it;
     # on the S face they drop into the open column E of ep_S1 and run E under SU_SW (window PathFinder round 2: PASS
     # 0 / 0 / 0, worst 0.876).  Die-assigned pins (hfd_coll_q3 is a new master: top-down pin assignment).
-    v['face_force'] = {**(v.get('face_force') or {}), ('hfd_coll_q3', 't_rgx_c'): 'S', ('hfd_coll_q3', 'f_rgx_c'): 'S'}
+    # H-COLL 10-14 night: the 8,961-b W2 client bus is replaced by the registered ROW_GATHER write stream t_rgx_t
+    # (2,213 b) / f_rgx_t (5 b): the receive leaves and the VM / HBM write clients sit inside the SW slice master
+    # (ot_vms_slice_coll_sw).  Same S face.
+    v['face_force'] = {**(v.get('face_force') or {}), ('hfd_coll_q3', 't_rgx_t'): 'S', ('hfd_coll_q3', 'f_rgx_t'): 'S'}
     for kv_ in filter(None, os.environ.get('OT_HBMDIE_FACE_FORCE', '').split(',')):    # iteration override: m|p=F
         k_, f_ = kv_.split('=')
         v['face_force'] = {**(v.get('face_force') or {}), tuple(k_.split('|')): f_}
@@ -8069,23 +8072,26 @@ def r25gq_v14():
                  (f'coll_rc_{q}', 'hub', RC_BITS, (su_, 't_rc'), (c_, 'f_rc')),
                  (f'coll_rr_{q}', 'hub', RR_BITS, (c_, 't_rr'), (su_, 'f_rr')),
                  (f'coll_rec_{q}', 'hub', 968, ('hb_cmdproc', f't_coll_rec_{q}'), (c_, 'f_hgi_rec')),
-                 (f'coll_recx_{q}', 'hub', 554, ('hb_cmdproc', f't_coll_recx_{q}'), (c_, 'f_hgi_recx')),
                  (f'coll_cfg_{q}', 'hub', 40, ('hb_cmdproc', f't_coll_cfg_{q}'), (c_, 'f_hgi_cfg'))]
     nets.append(('coll_ret', 'hub', 3, ('hb_coll_SW', 't_hgi_ret'), ('hb_cmdproc', 'f_coll_ret')))
+    # the TOPK record extension reaches the SW (QSOLO) engine only: ot_hfd_coll_q2 has no hgi_recx port
+    nets.append(('coll_recx_SW', 'hub', 554, ('hb_cmdproc', 't_coll_recx_SW'), ('hb_coll_SW', 'f_hgi_recx')))
     for a_, b_ in P2P_RING:     # cw a -> b, ccw b -> a
         nets += [(f'pr_cw_{a_}_{b_}', 'hub', PR_BITS, (f'hb_coll_{a_}', 't_pr_cw'), (f'hb_coll_{b_}', 'f_pr_cw')),
                  (f'pr_ccw_{b_}_{a_}', 'hub', PR_BITS, (f'hb_coll_{b_}', 't_pr_ccw'), (f'hb_coll_{a_}', 'f_pr_ccw'))]
     # SW only (QSOLO): TOPK_MERGE writes and the RGX lanes
+    # (ports of hfd_coll_q3 / ot_hfd_coll_q3 and of the SW slice master ot_vms_slice_coll_sw; the ROW_GATHER HBM write
+    # lanes xw / xwa now leave the slice master, where the HBM write clients sit beside the receive leaves)
     nets += [('coll_tkw', 'hub', 569, ('hb_coll_SW', 't_tkw'), ('hb_vms_SW', 'f_coll_tkw')),
-             ('coll_tkw_rdy', 'hub', 1, ('hb_vms_SW', 't_coll_tkw_rdy'), ('hb_coll_SW', 'f_tkw_rdy')),
+             ('coll_tkw_cr', 'hub', 1, ('hb_vms_SW', 't_coll_tkw_cr'), ('hb_coll_SW', 'f_tkw_cr')),
              ('coll_rgx_xq', 'hub', 76, ('hb_coll_SW', 't_rgx_xq'), ('hb_loader', 'f_coll_rgx_xq')),
              ('coll_rgx_xr', 'hub', 514, ('hb_loader', 't_coll_rgx_xr'), ('hb_coll_SW', 'f_rgx_xr')),
-             ('coll_rgx_xw', 'hub', 652, ('hb_coll_SW', 't_rgx_xw'), ('hb_loader', 'f_coll_rgx_xw')),
-             ('coll_rgx_xwa', 'hub', 2, ('hb_loader', 't_coll_rgx_xwa'), ('hb_coll_SW', 'f_rgx_xwa')),
+             ('coll_rgx_xw', 'hub', 652, ('hb_vms_SW', 't_coll_rgx_xw'), ('hb_loader', 'f_coll_rgx_xw')),
+             ('coll_rgx_xwa', 'hub', 2, ('hb_loader', 't_coll_rgx_xwa'), ('hb_vms_SW', 'f_coll_rgx_xwa')),
              ('coll_rgx_vmq', 'hub', 338, ('hb_coll_SW', 't_rgx_vmq'), ('hb_vms_SW', 'f_hgi_coll')),
              ('coll_rgx_vmr', 'hub', 274, ('hb_vms_SW', 't_hgi_coll'), ('hb_coll_SW', 'f_rgx_vmr')),
-             ('coll_rgx_c', 'hub', 8961, ('hb_coll_SW', 't_rgx_c'), ('hb_vms_SW', 'f_coll_rgx_c')),
-             ('coll_rgx_cr', 'hub', 65, ('hb_vms_SW', 't_coll_rgx_c'), ('hb_coll_SW', 'f_rgx_c'))]
+             ('coll_rgx_t', 'hub', 2213, ('hb_coll_SW', 't_rgx_t'), ('hb_vms_SW', 'f_coll_rgx_t')),
+             ('coll_rgx_f', 'hub', 5, ('hb_vms_SW', 't_coll_rgx_f'), ('hb_coll_SW', 'f_rgx_t'))]
     v['die_slots'], v['die_slot_nets'] = tuple(ds), tuple(nets)
     v['die_straps'] = {f'hb_coll_{q}': dict(qid=i) for i, q in enumerate(('SW', 'SE', 'NW', 'NE'))}
     v['dense_face_masters'] = tuple(m_ for m_ in v['dense_face_masters'] if m_ != 'hfd_coll') + ('hfd_coll_q3', 'hfd_coll_q2')
