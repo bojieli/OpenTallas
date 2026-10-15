@@ -3177,7 +3177,7 @@ def real_ports_r8():
         qp.update(gt=_bus('go_tag', 2), ef=['sh_free', 'bank_free'])
     assert len(qp['x0']) == X0B and len(qp['x1']) == X1B and len(qp['r0']) == LEAF
     assert len(set(qp['r0'] + qp['r1'])) == 2 * LEAF == RET
-    cfg = dict(ck=['clk'], ce=['ce_in'], a=_bus('addr_in', 12), rd=_bus('rd_out', 48))
+    cfg = dict(ck=['clk'], ce=['ce_in'], a=_bus('addr_in', 12), rd=_bus('rd_out', 72))   # a bus binds bits [:width]
     phy = real_lef(PHY_LEF)
     dfi = sorted(phy['pins'], key=lambda p: (phy['pins'][p][1][0], p))
     sd = dict(tx=_bus('tx', 512), rx=_bus('rx', 512), ck=['clk'])
@@ -4007,7 +4007,7 @@ def build_r8(variant=None):
             rc_ = real_lef(CFG_LEF)
             romc = up(rc_['w'] + 2 * 8.64, GX)
             wc_ = dn(cw - romc, GX)
-            slab('pq', PQ_CORE_H * wc_ / 1e6, x_sp, yy, wc_)
+            slab('pq', PQ_CORE_H * wc_ / 1e6, x_sp, yy, wc_, master=PQ_RTL_MASTER if RTL_BIND else None)
             for j in range(PQ_ROMS):
                 insts.append(Inst(f'pqrom{j}', rc_['name'], x_sp + wc_ + 8.64, yy + 8.64 + j * up(rc_['h'] + 17.28, GY),
                                   rc_['w'], rc_['h'], 'R0', kind='pqrom', region='spine', domain='stream_1p2'))
@@ -4708,7 +4708,8 @@ def buses_r8(m):
                                  ('capture', 'vm', 512, 't_vm', 'f_capture'), ('collective', 'vm', 512, 't_vm', 'f_collective'),
                                  ('su_s', 'hc_s', 512, 't_hc', 'f_su_s'), ('su_n', 'hc_n', 512, 't_hc', 'f_su_n'),
                                  ('hc_s', 'hc_n', 1024, 't_n', 'f_s'), ('hc_n', 'hc_s', 1024, 't_s', 'f_n')) + \
-            ((('vm', 'pq', PQ_VMR, 't_pq', 'f_vm'),) if PQ_PLACE else ()) + \
+            (((('pq', 'vm', 20, 't_vm', 'f_pqx'), ('vm', 'pq', 2049, 't_pqx', 'f_vm')) if RTL_BIND else
+              (('vm', 'pq', PQ_VMR, 't_pq', 'f_vm'),)) if PQ_PLACE else ()) + \
             ((('pq', 'gather', PQ_CFG, 't_gather', 'f_pq'),
               ('gather', 'pq', PQ_RCNT, 't_pq', 'f_gather')) if PQ_ROOTS else ()) + \
             (WFC_BUSES if 'wfc' in hub and hub['wfc'].master == 'dsfd_wfc' else ()) + \
@@ -4785,7 +4786,7 @@ def buses_r8(m):
         for j in range(PQ_ROMS):
             bus(f'pqra_{j}', 'rom_a', 12, [(hub['pq'].name, f'ra{j}'), (f'pqrom{j}', 'a')])
             bus(f'pqrc_{j}', 'rom_ce', 1, [(hub['pq'].name, f'rc{j}'), (f'pqrom{j}', 'ce')])
-            bus(f'pqrq_{j}', 'rom_q', 48, [(f'pqrom{j}', 'rd'), (hub['pq'].name, f'rq{j}')])
+            bus(f'pqrq_{j}', 'rom_q', (64 if j < 2 else 48) if RTL_BIND else 48, [(f'pqrom{j}', 'rd'), (hub['pq'].name, f'rq{j}')])
     if HOP_FIX and HOP_PLAN:
         _hop_fix(m, P)
     if RELAY_PROGRESS:
@@ -4815,6 +4816,10 @@ def buses_r8(m):
             # ckv / rsv (gather, capture: the VM-side crossing; stage_seq_c: kit / program / status side)
             dom['stream'].append((it.name, 'ck')); rst['stream'].append((it.name, 'rst'))
             dom['serial'].append((it.name, 'ckv')); rst['serial'].append((it.name, 'rsv'))
+        elif RTL_BIND and it.master == PQ_RTL_MASTER:
+            # s81-die-rtl-bind r3: the PQ cluster's per-child clock entries (stream; the die delivers phi - R at each pin)
+            dom['stream'] += [(it.name, p_) for p_ in pq_rtl_clock_ports()]
+            rst['stream'].append((it.name, 'rst'))
         elif RTL_BIND and it.master == CTRL_SVC_JOIN:          # F8: the svc join endpoint runs on the stream clock
             dom['stream'].append((it.name, 'ck')); rst['stream'].append((it.name, 'rst'))
         elif it.master in ('dsfd_wfc_src', 'dsfd_wfc_stg', 'dsfd_wfc_cr2'):   # mtp-wfc: the kit's vmx slow side is the serial domain
@@ -4849,8 +4854,10 @@ def buses_r8(m):
         elif it.kind == 'hend':
             spec = G[it.master]
             if spec['kind'] == 'l2r':
-                dom['serial'].append((it.name, 'ck'))
-                rst['serial'].append((it.name, 'rs'))
+                # --rtl-bind + --pq-place: the x-lane start blocks hx_W / hx_E are written by the PQ core (stream), not the VM
+                wd_ = 'stream' if (RTL_BIND and PQ_PLACE and it.name in ('hx_W', 'hx_E')) else 'serial'
+                dom[wd_].append((it.name, 'ck'))
+                rst[wd_].append((it.name, 'rs'))
                 dom['stream'].append((it.name, 'cks'))
                 rst['stream'].append((it.name, 'rss'))
             else:
@@ -5062,6 +5069,22 @@ RTL_HUB_BITS = {('gather', 'capture'): 6947, ('capture', 'vm'): 13376, ('collect
 RTL_ABUT_GAP = 21.6             # um between the abutting wide pairs (pin flops on both faces; no logic between)
 RTL_HUB_EXTRA = (('vm', 'collective', 592, 't_collective', 'f_vm'), ('vm', 'collective', 3, 'tcs', 'ts'))
 RTL_BIND = False                # --rtl-bind (s81-die-rtl-bind 2026-10-14)
+PQ_RTL_MASTER = 'dsfd_sp_pq_n'  # --rtl-bind PQ slot: rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv (native core cluster + ROM / lane leaves)
+
+
+def pq_rtl_clock_ports(manifest='physical/s81_die_rtl/layer1.f'):
+    """clock-entry ports of dsfd_sp_pq_n under the die RTL manifest's OT_PQ_* defines (one source of truth), bit-sliced"""
+    defs = set(re.findall(r'^\+define\+(\w+)', (ROOT / manifest).read_text(), re.M))
+    vec = [('ck_aq', 2), ('ck_ix', 4), ('ck_bc', 16 if 'OT_PQ_BC_SLICED' in defs else 4)]
+    if 'OT_PQ_QB_PHYS_SPLIT' in defs:
+        vec.append(('ck_qb_aux', 4))
+    if 'OT_PQ_AQ_PHYS_SPLIT' in defs:
+        vec.append(('ck_aq_aux', 16))
+    if 'OT_PQ_IX_PHYS_SPLIT' in defs:
+        vec.append(('ck_ix_read', 32 if 'OT_PQ_IX_BANK_SPLIT' in defs else 16))
+    return ['ck_ctl', 'ck_qb', 'ck_fault', 'ck_rom', 'ck_lane'] + [f'{n}[{i}:{i}]' for n, w in vec for i in range(w)]
+
+
 DUAL_CLOCK_MASTERS = ('dsfd_sp_gather_c', 'dsfd_sp_capture_c', 'dsfd_stage_seq_c', 'dsfd_stage_seq_c8', 'dsfd_host_c')
 CTRL_SVC_MASTER = 'dsfd_svc_c'        # svc_<st> under --ctrl-adapters: j / jd job pins from dsfd_svc_join (engine 4)
 CTRL_SVC_JOIN = 'dsfd_svc_join'
