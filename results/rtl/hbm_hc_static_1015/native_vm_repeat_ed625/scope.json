@@ -1,0 +1,31 @@
+{
+  "status": "ACTUAL_NATIVE_VM_TO_REPEATED_PROGRAMME_TO_HC_COMPONENT_PASS",
+  "actual_SRAMS": {
+    "VM": 96,
+    "HC_operand": 80,
+    "HC_programme": 2,
+    "total": 178
+  },
+  "native_LG_taps": 12,
+  "npos6": {
+    "exact_projection_words": 144,
+    "exact_tail_words": 144,
+    "row_period": 1080,
+    "total_with_VMstaging_and_initial_programme_configuration": 37312
+  },
+  "npos8": {
+    "exact_projection_words": 192,
+    "exact_tail_words": 192,
+    "row_period": 1400,
+    "total_with_VMstaging_and_initial_programme_configuration": 48617
+  },
+  "row_programme": "one preloadedbody repeats24,nohostreconfigurationbetweenrows",
+  "negative": "realVMsourcepayloadcorruption fails atfirstactualHCprojection row0pos0age269",
+  "scope_limits": [
+    "weightaperture fills externally driven; actual20GiBHBMprefetch/landing producer join pending",
+    "external input payloads synthetic fullshape, not released checkpoint claim",
+    "result\u2192VM producer separately proven9bce828d3, not yetjoinedhere",
+    "canonicalwholelayerprogrammeVMbase/timestamps, physicalclockphase/placement/routing and immutabledataflowprice remainopen",
+    "not fullnativechip qualification"
+  ]
+}
