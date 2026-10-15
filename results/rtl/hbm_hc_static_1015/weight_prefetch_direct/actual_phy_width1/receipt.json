@@ -1,0 +1,33 @@
+{
+  "schema": "opentallas.hc.realweight.refresh-aware-sensitivity.v1",
+  "status": "WIDTH1_ACTUAL_PHY_1080_FAIL_1400_PASS",
+  "source_sha256": {
+    "tb_hgi_hc_prefetch_direct_phy_static.sv": "dbd1290264e7b4270771b180f63067cb2e92bdec612d43844d964e3cb6b5ebb9",
+    "ot_hgi_hc_aperture_static.sv": "7e14e88870dd131e8f558970dc7929175d1a76fd0317bfd24e0a71587d7419ae",
+    "ot_hdc_v41x_idx_hbm.sv": "c757ae39d767291db3fd37565ce6c5ff6eec9ed119cc97ee06432f301d87ecf4",
+    "ot_async_fifo.sv": "e091268202e1c6bcc18c8eb83304730c5a29bc10e0a6c52a4dcfc19c177e882e",
+    "ot_hbm_svc_prefetch_block_cdc.sv": "8760ea770345bb8cfa317dc447377e0ab0b9afc50d5e7299b7d2fae6bb6bfb14",
+    "ot_hbm_loader_kport_address.sv": "b6eea0ffce657114439b555d6d4eee5ee6ad7efa4c6d226e94aa8697d539898b",
+    "tb_hgi_hc_prefetch_direct_static.sv": "b4770d9e3a1571ab223fc75828c3f8eb7d954fbf71c1048d17a23b94b6807ed8",
+    "ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
+    "ot_hgi_hc_prefetch_direct_static.sv": "006e60503b61a7bff3174c63dbdf17940fd77b26ad2f55e4790fc7c9f07f33b7",
+    "ot_chip_v41x_hbm3e_phy.sv": "6cda2575be0adfb73e8ff45893b86689ad7f5a823a4b66f04823d4446841b1cb",
+    "ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+  },
+  "model": "ot_chip_v41x_hbm3e_phy/ot_hdc_v41x_idx_hbm refresh-aware at1024ps;20GiBwindow61440sectors",
+  "actual_released_shape": [
+    24,
+    20480
+  ],
+  "row1080_result": "FAIL row4half1 compilerdeadline cycle5989,ready0",
+  "row1400_result": "PASS24rows61440sectors actualSRAMreadback",
+  "cause": "oneissue/HBMedge/stack leaves insufficientrefresh/bankmargin under1080calendar",
+  "next_structural_fix": "PHY-localfour-sector issue per HBMedge withdistinctPCs/prefix acceptance; no onchipcalendar extension",
+  "runtime": {
+    "session": 92104,
+    "scope": "oth-ubuntu-869723-1792059167",
+    "host": "ot-epyc1tb",
+    "remote": "/srv/opentallas-scratch/claude/codex-hc-prefetch-actualphy-v2-1015"
+  }
+}

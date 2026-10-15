@@ -3,7 +3,7 @@
 // Variable waits are entirely on the HBM side. Delivery begins only after a
 // whole block is resident and then emits ceil(total/8) fixed stream cycles.
 // Performance, routing, and physical CDC timing remain unqualified.
-module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0, parameter integer DELIVERY_II=1, parameter integer ISSUE_INTERLEAVE=0, parameter integer MAX_OUTSTANDING=1)(
+module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0, parameter integer DELIVERY_II=1, parameter integer ISSUE_INTERLEAVE=0, parameter integer MAX_OUTSTANDING=1, parameter integer ISSUE_WIDTH=1)(
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
  input wire reserve_v,output wire reserve_ready,input wire [31:0] reserve_base,
  input wire [11:0] reserve_total,input wire reserve_bank,input wire [15:0] reserve_epoch,
@@ -19,6 +19,7 @@ module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0, parameter intege
  input wire [31:0] kr_v,output reg [31:0] kr_rdy,input wire [543:0] kr_tag,
  input wire [127:0] kr_beat,input wire [8191:0] kr_data
 );
+ initial if(ISSUE_WIDTH<1||ISSUE_WIDTH>4||(ISSUE_WIDTH>1&&!ISSUE_INTERLEAVE))$fatal(1,"widePHYissue requiresinterleave andwidth1..4");
  initial if(MAX_OUTSTANDING<1||MAX_OUTSTANDING>16)$fatal(1,"MAX_OUTSTANDING must be1..16");
  initial if(DELIVERY_II<1)$fatal(1,"DELIVERY_II must be positive");
  wire reset_both=stream_rst_n&&hbm_rst_n;
@@ -29,7 +30,7 @@ module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0, parameter intege
   pc_of=s[6:2]^s[11:7]^s[16:12];
  endfunction
  wire [32:0] reserve_end={3'b0,reserve_base[29:0]}+reserve_total;
- wire descriptor_ok=(!ISSUE_INTERLEAVE || reserve_total[5:0]==0)&&reserve_total!=0&&reserve_total<=2048&&reserve_base[31:30]==STACK&&reserve_end<=33'h040000000;
+ wire descriptor_ok=(ISSUE_WIDTH==1||reserve_base[5:0]==0)&&(!ISSUE_INTERLEAVE || reserve_total[5:0]==0)&&reserve_total!=0&&reserve_total<=2048&&reserve_base[31:30]==STACK&&reserve_end<=33'h040000000;
  reg [1:0] allocated,ready_q,announced;
  reg [15:0] bank_epoch[0:1];reg [11:0] bank_total[0:1],received[0:1];
  reg [2047:0] seen[0:1];reg stream_fault,hbm_fault;
@@ -53,24 +54,30 @@ module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0, parameter intege
  reg [15:0] owner_epoch[0:31][0:MAX_OUTSTANDING-1];
  reg owner_bank[0:31][0:MAX_OUTSTANDING-1];
  reg [16:0] next_tag;
- integer request_slot;reg tag_collision;
+ integer request_slot[0:ISSUE_WIDTH-1];reg tag_collision[0:ISSUE_WIDTH-1];
+ reg [11:0] request_sequence[0:ISSUE_WIDTH-1],request_ordinal[0:ISSUE_WIDTH-1];
+ reg [29:0] request_sector[0:ISSUE_WIDTH-1];reg [4:0] request_pc[0:ISSUE_WIDTH-1];
+ reg [16:0] request_tag[0:ISSUE_WIDTH-1];
+ reg [543:0] request_tags;integer issue_count;reg issue_prefix;
  integer response_slot[0:31];
  assign desc_rd_ready=!h_active&&!hbm_fault&&hrst&&desc_rd_valid;
  // Reorder requests only within the variable-latency PHY boundary. A tile of
  //64 sectors visits16 distinct PCs before revisiting any PC, rather than
  //four requests to one PC. Owner ordinals remain true source-relative offsets.
- wire [11:0] issue_ordinal=ISSUE_INTERLEAVE?{h_next[11:6],h_next[3:0],h_next[5:4]}:h_next;
- wire [29:0] issue_sector=h_base+issue_ordinal;
- wire [4:0] issue_pc=pc_of(issue_sector);
- wire [16:0] request_tag=MAX_OUTSTANDING==1?{h_bank,h_epoch}:next_tag;
  always @*begin
-  request_slot=-1;tag_collision=0;
-  for(integer os=0;os<MAX_OUTSTANDING;os=os+1)begin
-   if(!outstanding[issue_pc][os]&&request_slot<0)request_slot=os;
-   if(outstanding[issue_pc][os]&&owner_tag[issue_pc][os]==request_tag)tag_collision=1;
+  for(integer rq=0;rq<ISSUE_WIDTH;rq=rq+1)begin
+   request_sequence[rq]=h_next+12'(rq);
+   request_ordinal[rq]=ISSUE_INTERLEAVE?{request_sequence[rq][11:6],request_sequence[rq][3:0],request_sequence[rq][5:4]}:request_sequence[rq];
+   request_sector[rq]=h_base+request_ordinal[rq];request_pc[rq]=pc_of(request_sector[rq]);
+   request_tag[rq]=MAX_OUTSTANDING==1?{h_bank,h_epoch}:next_tag+17'(rq);
+   request_slot[rq]=-1;tag_collision[rq]=0;
+   for(integer os=0;os<MAX_OUTSTANDING;os=os+1)begin
+    if(!outstanding[request_pc[rq]][os]&&request_slot[rq]<0)request_slot[rq]=os;
+    if(outstanding[request_pc[rq]][os]&&owner_tag[request_pc[rq]][os]==request_tag[rq])tag_collision[rq]=1;
+   end
   end
  end
- assign k_len={32{4'd1}};assign k_tag={32{request_tag}};
+ assign k_len={32{4'd1}};assign k_tag=request_tags;
  assign k_we=0;assign k_wdata=0;assign k_wstrb=0;
  wire [7:0] fifo_wr_ready,fifo_rd_valid,fifo_rd_ready,fifo_ov,fifo_un;
  reg [7:0] fifo_wr_valid;reg [283:0] fifo_wr_data[0:7];
@@ -78,9 +85,15 @@ module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0, parameter intege
  reg [31:0] response_accepted;integer h_take;
  integer p,l;
  always @*begin
-  k_v=0;k_addr=0;
-  if(h_active&&h_next<h_total&&request_slot>=0&&!tag_collision&&!hbm_fault)begin
-   k_v[issue_pc]=1;k_addr[30*issue_pc+:30]=issue_sector;
+  k_v=0;k_addr=0;request_tags=0;issue_count=0;issue_prefix=1;
+  // Only a contiguous accepted prefix advances h_next. All candidates have
+  //distinctPCs under the64-sector transpose. Variable k_rdy is PHY-local only.
+  for(integer rq=0;rq<ISSUE_WIDTH;rq=rq+1)begin
+   if(h_active&&request_sequence[rq]<h_total&&request_slot[rq]>=0&&!tag_collision[rq]&&!hbm_fault&&issue_prefix)begin
+    k_v[request_pc[rq]]=1;k_addr[30*request_pc[rq]+:30]=request_sector[rq];
+    request_tags[17*request_pc[rq]+:17]=request_tag[rq];
+    if(k_rdy[request_pc[rq]])issue_count=issue_count+1;else issue_prefix=0;
+   end else issue_prefix=0;
   end
   kr_rdy=0;fifo_wr_valid=0;response_accepted=0;h_take=0;
   for(p=0;p<32;p=p+1)begin
@@ -127,10 +140,14 @@ module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0, parameter intege
     end
    end
    if(h_active)begin
-    if(k_v[issue_pc]&&k_rdy[issue_pc])begin
-     outstanding[issue_pc][request_slot]<=1;owner_ordinal[issue_pc][request_slot]<=issue_ordinal[10:0];
-     owner_tag[issue_pc][request_slot]<=request_tag;owner_epoch[issue_pc][request_slot]<=h_epoch;owner_bank[issue_pc][request_slot]<=h_bank;
-     next_tag<=next_tag+1'b1;h_next<=h_next+1'b1;
+    if(issue_count>0)begin
+     h_next<=h_next+12'(issue_count);next_tag<=next_tag+17'(issue_count);
+     for(integer rq=0;rq<ISSUE_WIDTH;rq=rq+1)if(rq<issue_count)begin
+      outstanding[request_pc[rq]][request_slot[rq]]<=1;
+      owner_ordinal[request_pc[rq]][request_slot[rq]]<=request_ordinal[rq][10:0];
+      owner_tag[request_pc[rq]][request_slot[rq]]<=request_tag[rq];
+      owner_epoch[request_pc[rq]][request_slot[rq]]<=h_epoch;owner_bank[request_pc[rq]][request_slot[rq]]<=h_bank;
+     end
     end
     for(hp=0;hp<32;hp=hp+1)begin
      if(kr_v[hp]&&(response_slot[hp]<0||owner_epoch[hp][response_slot[hp]]!=h_epoch||owner_bank[hp][response_slot[hp]]!=h_bank||kr_beat[4*hp+:4]!=0))hbm_fault<=1;

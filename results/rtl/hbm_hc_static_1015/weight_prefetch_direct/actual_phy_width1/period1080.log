@@ -1,0 +1,7 @@
+HC_DIRECT_ROW row=0 fixed_start=1339 last_actual_store_age=655 next_ready=00
+HC_DIRECT_ROW row=1 fixed_start=2419 last_actual_store_age=655 next_ready=00
+HC_DIRECT_ROW row=2 fixed_start=3499 last_actual_store_age=655 next_ready=00
+HC_DIRECT_ROW row=3 fixed_start=4579 last_actual_store_age=655 next_ready=00
+[4990825000] %Fatal: tb_hgi_hc_prefetch_direct_phy_static.sv:70: Assertion failed in tb_hgi_hc_prefetch_direct_phy_static.configure_drain: compiler deadline missed row4 half1 cycle5989 ready00000000
+%Error: tb_hgi_hc_prefetch_direct_phy_static.sv:70: Verilog $stop
+Aborting...
