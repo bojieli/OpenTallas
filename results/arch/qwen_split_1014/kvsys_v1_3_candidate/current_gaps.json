@@ -1,7 +1,7 @@
 {
   "schema": "qwen-kvsys-current-gaps-v1",
-  "recorded_at": "2026-10-14T19:38:04.843864-07:00",
-  "source_commit": "bb56cc450",
+  "recorded_at": "2026-10-14T19:47:38.076083-07:00",
+  "source_commit": "5eb71cb6d",
   "status": "BLOCKED_NATIVE_INTEGRATION",
   "published_contract": {
     "revision": "v1.2",
@@ -22,15 +22,15 @@
       "owner": "q_link_replay + q_compile_schedule + Q-KVSYS-DIE",
       "source": "cd708c730",
       "state": "OPEN",
-      "detail": "Replace naked548 adapter with actual static ctl plus four SRAM leaves and actual583 FDI. Assigned pins bb56cc450 exist. Actual compiler metadata producers and fixed calendar remain required; native gate/routes pending."
+      "detail": "Actual ctl/four SRAM leaves cd708c730 successor under link owner native gates. Official wr_observed_v S38..39/cause8 assignment284543fb0; final nativeTX3/RX1. Actual compiler metadata producers/calendar and naked548 adapter replacement remain open. Record capture leaf fits sixth slot within same777.6x518.4 outline; no full parent native qualification."
     },
     {
       "rank": 2,
       "id": "native_command",
       "owner": "q_control_transport + Q-KVSYS-DIE + q_host_bind",
-      "source": "rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_native_services_frontend_native59.sv",
+      "source": "06a1ed7ff + 34cfa0d07",
       "state": "OPEN",
-      "detail": "Preserve accepted380 descriptor and actual HOST token epoch/context. Separate compute-local QKV/QVM/VM-commit interfaces from KV arithmetic transport; no duplicate frontend, inferred epoch, fabricated ready or completion. Raw fused descriptor versus packed command mismatch under audit. Endpoint physical slot and routes missing."
+      "detail": "Full380 descriptor/context guard06a1ed7ff component verified against generated command ABI, all380bits/59tagbits + observed mutants. Root confirmed compute-local real native59 QKV/Qreader/VMcommit and KV arithmetic service only. Fixed-slot record codec34cfa0d07 and physical slot assigned, both-role component verified. Actual compiler/service/link binding, clock crossings and physical qualification remain required."
     },
     {
       "rank": 3,
@@ -38,7 +38,7 @@
       "owner": "q_host_bind + Q-KVSYS-DIE",
       "source": "6113443f4:results/arch/qwen_split_1014/host_bind_request_1014/die_wiring.json",
       "state": "OPEN",
-      "detail": "147 mandatory actual HOST ports, per-child clocks and reset mapping not yet adopted. Missing RTL collectors/terminal identity ACK/rearm/POST barrier, participant transport, wrap/recovery, production pr143 loader and boot-vs-normal controller completion-owner demux remain explicit. C++ glue does not qualify hardware."
+      "detail": "147 mandatory actual HOST ports, per-child clocks and reset mapping not yet adopted. Missing RTL collectors/terminal identity ACK/rearm/POST barrier, participant transport, wrap/recovery, production pr143 loader and boot-vs-normal controller completion-owner demux remain explicit. C++ glue does not qualify hardware. Lifecycle RTL66b0f75b9 exists and official216square childslot/all60ports assigned5eb71cb6d; mappedarea/physical/transport integration open. q_host_program_loader owns new actual observer completion demux and program-loader source; final commit/binding pending."
     },
     {
       "rank": 4,
@@ -52,9 +52,9 @@
       "rank": 5,
       "id": "native_attention",
       "owner": "q_native_attention + q_compile_schedule + Q-KVSYS-DIE",
-      "source": "7e9ff562c",
+      "source": "7e9ff562c + 0bd393231 + 34cfa0d07",
       "state": "OPEN",
-      "detail": "Fixed K transport implemented in source; full native arithmetic build and V fixed-slot reassembly/QK-PV phase calendar remain open. Do not substitute C++ arithmetic or latency-only digital service."
+      "detail": "Actual staticK/V service branches component verified by arithmetic owner; overallresult/QK-PV calendar and native fullcomposition remain open. Actual record ABI agreed: CMD epoch16/layer6/pos18/cap1; Q32x512/results typed543within548. Service needs80bootedges, QsamplesR+2..R+33, noQatR+1. Codec capture1TX/1RX; actual clock crossing/physicalrelay offsets must enter compiler. No C++ arithmetic or latency-only substitute."
     },
     {
       "rank": 6,
