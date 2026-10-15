@@ -18,11 +18,17 @@ def source_fingerprint(model):
                   o=i.orient) for i in model['insts']]
     buses = [dict(b=b, c=c, n=n, e=[list(x) for x in es])
              for b, c, n, es in model['buses']]
-    payload = dict(die=model['die'], insts=sorted(insts, key=lambda i: i['n']),
+    root = Path(__file__).resolve().parents[2]
+    generators = sorted(p for p in (root / 'tools/qwen_split').glob('*.py') if not p.name.startswith('test_'))
+    generators += [root / ('tools/' + p) for p in
+        ('qwen_rom_fulldie.py', 'qwen_rom_fulldie_b3r2.py', 'qwen_kv_die/tp8b_v5.py')]
+    source_bytes = {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in generators}
+    payload = dict(generator_sha256=source_bytes, die=model['die'], insts=sorted(insts, key=lambda i: i['n']),
                    buses=sorted(buses, key=lambda b: b['b']),
                    port_join=model.get('port_join', {}),
                    port_split=model.get('port_split', {}),
                    ties=model.get('ties', []),
+                   master_params=model.get('master_params', {}),
                    source_bindings={k: model[k] for k in
                        ('native_control_contract', 'native_graph_bind', 'static_link_bind',
                         'res_train_bind', 'native_static_io_bind') if k in model})

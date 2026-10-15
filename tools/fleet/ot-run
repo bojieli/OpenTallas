@@ -24,6 +24,8 @@ ot-heavy directly) are not held.  OT_RUN_NO_LOAD_HOLD=1 disables the hold.  --ma
 Immediate eligibility uses admit_gb (the actual atomic ot-heavy admission capacity), not free_gb after subtracting
 unstarted waiters. When no host can admit now, planned free_gb still chooses the memory queue; waiting jobs do not
 reserve physical RAM or prevent a smaller job using otherwise idle capacity. ot-heavy rechecks admission atomically.
+Queue candidates must have enough total physical RAM after mandatory headroom for the request; an idle small host
+cannot take an impossible request or release a capable host's CPU hold. Older probes without a total retain legacy eligibility.
 The CPU hold considers memory-admissible hosts first; if none admits the request, it considers the hosts eligible
 for a memory queue. An underloaded host without enough memory cannot release a hold on memory-admissible hosts.
 --max-wait SEC: give up (exit 75, NOT RUN) when the host has not admitted the command after SEC seconds.
@@ -62,9 +64,19 @@ def ratio(r, threads):
     return (r.get("load1", 0) + THREADS * r.get("fresh", 0) + threads) / r["ncpu"]
 
 
+def physically_capable(row, mem):
+    """Do not queue a request on a host that cannot admit it even when idle.
+
+    Unknown totals retain compatibility with older probes; remote admission
+    remains authoritative. Both existing headroom rules still apply.
+    """
+    total = row.get("total_gb")
+    return total is None or mem <= total - max(row.get("headroom_gb", 0), row.get("floor_gb", 0))
+
+
 def choose(res, mem, threads=THREADS):
     """res: host -> --free row (hosts that qualify by disk/dir only).  Returns (host, will_queue)."""
-    ok = {h: r for h, r in res.items() if r and not r.get("error") and r.get("ncpu")}
+    ok = {h: r for h, r in res.items() if r and not r.get("error") and r.get("ncpu") and physically_capable(r, mem)}
     if not ok:
         return None, False
     fits = [h for h in ok if ok[h].get("admit_gb", ok[h]["free_gb"]) >= mem]
@@ -109,8 +121,19 @@ def status(hosts):
         out.append(f"{h} admits {r.get('admit_gb', r['free_gb'])} GB (avail {r['avail_gb']}, growth {r['growth_gb']}) load "
                    f"{r.get('load1', 0):.0f}/{r.get('ncpu', 0)}" + (f" waiters {r['waiting']}:{r['waiting_gb']} GB" if r["waiting"] else "")
                    + f" run {r['running']}")
-    best, queue = choose(res, 32)
-    print("ot-run status: " + " | ".join(out) + (f" | next 16-thread 32 GB job -> {best}" + (" (would queue)" if queue else "") if best else ""))
+    live = {h: r for h, r in res.items() if r and not r.get("error") and r.get("ncpu")
+            and r["disk_gb"] >= 20 and physically_capable(r, 32)}
+    fits = {h: r for h, r in live.items() if r.get("admit_gb", r["free_gb"]) >= 32}
+    qualifying = fits or live
+    under = {h: r for h, r in qualifying.items() if r.get("load1", 0) <= LOAD_HOLD * r["ncpu"]}
+    bypass = os.environ.get("OT_RUN_NO_LOAD_HOLD") == "1"
+    if qualifying and not under and not bypass:
+        next_job = " | next 16-thread 32 GB job: load held"
+    else:
+        eligible = {h: r for h, r in live.items() if bypass or h in under or h not in qualifying}
+        best, queue = choose(eligible, 32)
+        next_job = (f" | next 16-thread 32 GB job -> {best}" + (" (would queue)" if queue else "")) if best else ""
+    print("ot-run status: " + " | ".join(out) + next_job)
 
 
 def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False):
@@ -212,7 +235,7 @@ def main():
     while True:
         with cf.ThreadPoolExecutor(len(hosts)) as ex:
             res = dict(ex.map(lambda h: probe(h, d), hosts))
-        live = {h: r for h, r in res.items() if r and not r.get("error") and r.get("ncpu") and r["disk_gb"] >= disk}
+        live = {h: r for h, r in res.items() if r and not r.get("error") and r.get("ncpu") and r["disk_gb"] >= disk and physically_capable(r, mem)}
         # A host that cannot admit this request cannot release the CPU hold:
         # otherwise an idle, memory-full EPYC filters out a loaded PVE that
         # actually has memory, then choose() queues on the full EPYC forever.
@@ -241,6 +264,8 @@ def main():
     ok = {}
     for h, r in res.items():
         note = "no " + str(d) if r is None else r.get("error") or ("disk %d GB < %d" % (r["disk_gb"], disk) if r["disk_gb"] < disk else "")
+        if r and not r.get("error") and not physically_capable(r, mem):
+            note = "request %d GB exceeds physical RAM after mandatory headroom" % mem
         if r and not r.get("error"):
             print(f"ot-run: {h:14s} admits {r.get('admit_gb', r['free_gb']):5d} GB (avail {r['avail_gb']}, growth {r['growth_gb']}, headroom "
                   f"{r['headroom_gb']}, waiters {r['waiting']}/{r['waiting_gb']} GB) load {r.get('load1', 0):.0f}/{r.get('ncpu', 0)} "

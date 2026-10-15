@@ -1,0 +1,76 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas/claude/closure-loop/dsfd_vm_static_landing_lane0_native_1417-split1-f9a86f102/record/views/dsfd_vm_static_landing_lane0/dsfd_vm_static_landing_lane0.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [
+  "(f) face-pin access: 1039 of 1064 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. i_d[0] M5 (4.320,92.821), i_d[100] M5 (4.320,92.821), i_d[101] M5 (4.320,92.821))"
+ ],
+ "summary": "dsfd_vm_static_landing_lane0 95.04 x 95.04: PG M5 VDD 17 stripes (91% spread, 100% cov) / VSS 17 stripes (91% spread, 100% cov); strap M6; face pins 1064 blocked-above 0 blocked-same 0; clock ck insertion 189 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "dsfd_vm_static_landing_lane0",
+  "W": 95.04,
+  "H": 95.04,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 17,
+     "dir": "V",
+     "spread": 0.909,
+     "coverage": 1.0,
+     "shapes_on_top": 17
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 17,
+     "dir": "V",
+     "spread": 0.909,
+     "coverage": 1.0,
+     "shapes_on_top": 17
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 1064,
+   "blocked_above": 0,
+   "covered_below": 1,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 1039,
+   "band_examples": [
+    "i_d[0] M5 (4.320,92.821)",
+    "i_d[100] M5 (4.320,92.821)",
+    "i_d[101] M5 (4.320,92.821)",
+    "i_d[102] M5 (4.320,92.821)",
+    "i_d[103] M5 (4.320,92.821)",
+    "i_d[104] M5 (4.320,92.821)"
+   ]
+  },
+  "clock_insertion": {
+   "ck": {
+    "max_ps": 188.89,
+    "min_ps": 142.2
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 158
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

@@ -19,6 +19,7 @@ All cycles are stream edges (VM stream clock).  Every number is fixed: equality,
 from __future__ import annotations
 
 import hashlib
+import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -36,6 +37,20 @@ PROFILES = {
         read_raw=7, read_return=16, write_raw=9, write_return=11, max_lane=2,
         receipts=['results/rtl/s81_vm_master_current_scatter_20261015/record.json']),
 }
+# These measurements are immutable evidence, rather than caller-provided
+# claims about the current checkout. A changed measurement needs a reviewed
+# new profile; evidence_for() cannot create a new measurement by rehashing RTL.
+MEASURED_MANIFEST = 'results/rtl/s81_vm_master_current_scatter_20261015/source_manifest.json'
+MEASURED_ARTIFACT_SHA256 = {'results/rtl/s81_vm_master_current_scatter_20261015/source_manifest.json': '62c13808cdc88702a8d0349150bc3fd9ccc7c552f5257f0bea23bcd4736ef0ac', 'results/rtl/s81_vm_raw_read_calendar_20261015/record.json': 'aa3e5047b8261c0a0b87142f19fbc5634029fab94ad60ddd7b0b131c747c7b51', 'results/rtl/s81_vm_scatter_pipe1_raw_20261015/record.json': '6f4e4b93032c35ab6f9d9a34de018bd5acd8bbbb8531d979ba3ed3e11a66f057', 'results/rtl/s81_vm_master_current_scatter_20261015/record.json': '5dab5cf5e2b5d2901f66c4df7af450aa21d7e24d7ea5f1a4c8338d9b63821ce1'}
+# The profile starts at read pins / core write-source pins. The serial CDC
+# adapter's reset implementation lies outside that boundary; its own fixed
+# phase, startup and physical proof remain separate. The testbench is evidence
+# machinery, never an implementation of the measured core data path.
+OUTSIDE_PROFILE_BOUNDARY = {
+    'rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x34.sv': 'Serial-to-stream CDC upstream of the core source-pin boundary; separately qualified',
+    'rtl/dsrom_sys/s81_ph/test/tb_dsfd_sp_vm_static.sv': 'Testbench, not instantiated production RTL',
+}
+
 # RTL whose bytes define the calendar; the contract must pin every one (stale source -> invalid profile)
 RTL_SOURCES = [
     'rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv',
@@ -76,7 +91,7 @@ def resolve(contract: dict, source_root: Path | None = None):
         if not isinstance(item, dict) or 'path' not in item or 'sha256' not in item:
             bad.append('invalid_vm_service_profile_evidence'); continue
         pinned[item['path']] = item['sha256']
-    for path in prof['receipts'] + RTL_SOURCES:
+    for path in prof['receipts'] + [MEASURED_MANIFEST] + RTL_SOURCES:
         if path not in pinned:
             bad.append(f'vm_service_profile_unpinned:{path}'); continue
         p = (root / path).resolve()
@@ -85,6 +100,24 @@ def resolve(contract: dict, source_root: Path | None = None):
                 bad.append(f'vm_service_profile_stale:{path}')
         except OSError:
             bad.append(f'vm_service_profile_missing:{path}')
+    for path in prof['receipts'] + [MEASURED_MANIFEST]:
+        try:
+            if sha(root / path) != MEASURED_ARTIFACT_SHA256[path]:
+                bad.append(f'vm_service_profile_unmeasured_artifact:{path}')
+        except OSError:
+            bad.append(f'vm_service_profile_missing_measurement:{path}')
+    try:
+        manifest_path = root / MEASURED_MANIFEST
+        if sha(manifest_path) == MEASURED_ARTIFACT_SHA256[MEASURED_MANIFEST]:
+            measured = json.loads(manifest_path.read_text())
+            for path, expected in measured.items():
+                if path in OUTSIDE_PROFILE_BOUNDARY:
+                    continue
+                source = (root / path).resolve()
+                if not source.is_relative_to(root) or sha(source) != expected:
+                    bad.append(f'vm_service_profile_unmeasured_source:{path}')
+    except (OSError, ValueError, TypeError):
+        bad.append('vm_service_profile_invalid_measured_manifest')
     if req.get('measured_native_bounds_override') is not None:
         bad.append('vm_service_profile_forbids_caller_bounds_override')
     return (prof if not bad else None), bad
@@ -93,7 +126,7 @@ def resolve(contract: dict, source_root: Path | None = None):
 def evidence_for(name: str, source_root: Path | None = None) -> list:
     """the evidence list a compiler emits for the CURRENT source (helper for producers and tests)."""
     root = (source_root or ROOT)
-    return [dict(path=p, sha256=sha(root / p)) for p in PROFILES[name]['receipts'] + RTL_SOURCES]
+    return [dict(path=p, sha256=sha(root / p)) for p in PROFILES[name]['receipts'] + [MEASURED_MANIFEST] + RTL_SOURCES]
 
 
 def check_event(prof: dict, event: dict) -> list:
