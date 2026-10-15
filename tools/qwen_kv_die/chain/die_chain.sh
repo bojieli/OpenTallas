@@ -47,7 +47,12 @@ if [ -s $G/die_grt.spef ] && head -n 30 $G/die_grt.spef | awk '/^\*PORTS$/{p=1;n
   say "SPEF: empty *PORTS section dropped (STA-1670)"
 fi
 sta_failed=0
-for c in ${OT_CORNERS:-tt ff}; do D=$R/sta_${DIE}_$c; mkdir -p $D/libs
+corners=${OT_CORNERS-tt ff}
+[ -n "${corners//[[:space:]]/}" ] || { say "STA FAIL: empty corner list"; exit 1; }
+for c in $corners; do
+  case "$c" in tt|ff|ss) ;; *) say "STA FAIL: unsupported corner $c"; exit 1;; esac
+done
+for c in $corners; do D=$R/sta_${DIE}_$c; mkdir -p $D/libs
   [ -s $G/die_grt.spef ] || { say "STA $c: no die_grt.spef (GRT parasitics), not run"; sta_failed=1; continue; }
   ln -f $G/ckpt_grt.odb $G/route.guide $G/die_grt.spef $D/
   cp $R/libs/qfd_elements_$c.lib $D/libs/; [ -f $R/libs/qfd_etm_$c.lib ] && cp $R/libs/qfd_etm_$c.lib $R/libs/views.json $D/libs/; for f in $R/libs/qfd_etm_*_$c.lib; do [ -f "$f" ] && cp "$f" $D/libs/; done; [ -f $R/libs/views.json ] && cp $R/libs/views.json $D/libs/; [ -f $R/libs/ot_hbm3e_phy_$c.lib ] && cp $R/libs/ot_hbm3e_phy_$c.lib $D/libs/

@@ -1,0 +1,18 @@
+{
+ "status":"actual storage backend candidate, not complete SU local-memory replacement",
+ "logical_target":{"N":512,"M":128,"LWB":18,"quarters":4,"local_N":128,"local_M":32,"local_LWB":16,"frames":4},
+ "address_decomposition":"global word[17:16] frame, [15:14] quarter, [13:7] row-within-frame, [6:0] bank; local bank row={frame,row-within-frame}, 9 bits",
+ "read_classes":["gather index","operand A","operand B","operand C","operand D","drain"],
+ "compiler_obligation":"one scheduled row per physical bank per read class per edge, one scheduled write per bank per edge; broadcast consumers may share same bank result; no runtime arbitration, retry, credits, lease or ready",
+ "data_coherence":"every admitted canonical word write is broadcast to all six real SRAM replicas of its bank",
+ "logical_shared_data_bytes":1048576,
+ "bank_count":512,"words_per_bank":512,"word_bits":32,"replicas_per_bank":6,
+ "macro":"ot_sram_1r1w_128x256_m1_r2c2","used_rows_per_macro":64,"macros":3072,
+ "physical_storage_MiB":12,"macro_area_um2":3891.57696,"total_macro_area_mm2":11.95592441856,
+ "clock_roots":512,"macro_clock_sinks_per_root":6,"read_select_flops_per_root":18,
+ "write_bytes_per_edge":2048,"read_bytes_per_edge":12288,"read_latency_edges":1,
+ "write_fanout_per_word":6,"word_mux_per_read":"8-way 32b within bank; macro word-mask32 of256 bits",
+ "cross_boundary_per_bank_bits":{"read_request":60,"read_response":192,"write_request":42},
+ "open":["actual producer to bank dispatch/gather/off-column network","actual RF data paths","compiler-issued output masks and four-frame lifetime proof","static F2 arithmetic/reduction composition","measured immutable2912/1548 cycles","slot/native pin/TT-FF-DRC gates"],
+ "no_epoch_metadata_alias":"metadata is not represented by this data backend; compiler proof or real metadata hardware still mandatory"
+}

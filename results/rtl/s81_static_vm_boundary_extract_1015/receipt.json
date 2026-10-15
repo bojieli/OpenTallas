@@ -1,0 +1,46 @@
+{
+  "source_commit": "22b80d3c9",
+  "scope": "EXTRACTED_LEAF_COMBINED_COMPONENT_ONLY",
+  "native_execution": false,
+  "canonical_production": false,
+  "top": "s81_static_collective_slab",
+  "extracted_leaf": "s81_static_vm_boundary",
+  "leaf_source_sha256": "ce6385c2372da04cc9203cd75ffe4712094b50dc7fbf3a37118ce8293f6077df",
+  "measured": {
+    "base_host": "ot-epyc4",
+    "base_unit": "oth-ubuntu-1311418-1792052647",
+    "base_exit": 0,
+    "mutant_unit": "oth-ubuntu-1320188-1792052745",
+    "mutant_gate_exit": 0,
+    "rows": 498,
+    "hc_rows": 20,
+    "done": 2,
+    "WFC": 1,
+    "host": 1,
+    "actual_roms": 3,
+    "actual_vm_srams": 128
+  },
+  "mutant": {
+    "change": "invert actual reduced VM payload bit0 within extracted leaf final packer",
+    "expected": "FAIL reduce VM pins item0 edge432",
+    "log": "mutant.log"
+  },
+  "preserved_objects": "/srv/opentallas-scratch/codex/s81-fullslab-extracted-1015/{obj,obj_mutant}",
+  "latency_change_edges": 0,
+  "clock_owner": "ck_control[2]",
+  "ports": 33,
+  "port_bits": 6614,
+  "physical": {
+    "status": "NO_PHYSICAL_QUALIFICATION",
+    "slot_request": "physical/s81_static_collective_proposal_1014/vm_boundary_slot_request.json",
+    "mapped_area": "UNMEASURED",
+    "timing": "UNMEASURED"
+  },
+  "remaining": [
+    "actual81stage/2417pair/BF519/PHW10 FIELDcapture/VMrow schedule",
+    "source-bound currentstaticVM/WFCproduction composition",
+    "actualstaticHCPOSTconsumer from s_func",
+    "mappedarea/actualoutline/pinreach/layers/TTFFDRC0",
+    "price and page capacity"
+  ]
+}

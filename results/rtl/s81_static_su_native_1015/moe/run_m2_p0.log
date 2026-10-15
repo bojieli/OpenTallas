@@ -1,0 +1,4 @@
+STATIC_MOE rows=80 errors=160 fault=0 first=133 last=212 span=80
+[3820000] %Fatal: tb_s81_su_moe_sum_static.sv:59: Assertion failed in tb_s81_su_moe_sum_static: STATIC_MOE FAIL
+%Error: /srv/opentallas-scratch/claude/s81-static-su-native-1015/moe-v1/rtl/dsrom_sys/s81_suhc/test/tb_s81_su_moe_sum_static.sv:59: Verilog $stop
+Aborting...

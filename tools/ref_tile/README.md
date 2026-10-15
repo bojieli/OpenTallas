@@ -183,7 +183,9 @@ EARLY_FAIL_*, or a NEEDS_HUMAN route crash) takes a new job only when the spec c
 
 See /home/ubuntu/claude-takeover-20261007/ref-flow-1011.log (cases, numbers, job names).
 
-For a fleet-selected synthesis or CTS gate, use `--remote auto`. The gate asks `ot-run --pick` for a host with measured headroom, ships the inputs there, then runs through `ot-run --hosts <chosen>` with one resource reservation. An explicit host keeps the existing `ot-heavy` path.
+For a fleet-selected synthesis or CTS gate, use `--remote auto`. The gate asks `ot-run --pick` for a host with measured headroom, ships the inputs there, then runs through `ot-run --hosts <chosen>` with one resource reservation. An explicit host uses the same admission checks restricted to that host.
+
+The default work/output disk reserve is 20 GiB. Set a positive finite `gate_disk_gb` in the tile spec, or override it with `--disk GB`. Host selection checks the scratch filesystem and adds the measured compressed snapshot size, its estimated unpacked allocation, and 1 GiB for metadata and rounding. Runtime admission checks again after upload, adding extraction space to the work/output reserve. Both integer GiB thresholds and snapshot sizes are recorded in `source_binding.disk_admission`. These checks do not reserve disk against concurrent jobs; a runtime refusal preserves the uploaded snapshot and does not start synthesis.
 
 CTS gates measure every external clock from the actual CTS SDC. The measured clock exception uses the insertion and spread of the largest synthesized root's own source port. A secondary root cannot use the primary clock's measurement; an unmatched root has no measured exception.
 
@@ -220,3 +222,87 @@ An optional tile `signal_max_layer` may tighten the existing signal ceiling, for
 This opt-in profile runs a net-type audit after DRT and again while exporting each final routed corner, including any hold ECO. It checks signal and clock wire/via geometry against the signal ceiling, PG special-wire geometry against the PG ceiling, and actual signal pins. The exact exported LEF must have no signal pin above the lower ceiling; higher OBS must remain within the PG ceiling and have actual PG metal evidence in the same final ODB. Hard-macro OBS above the requested signal limit are unsupported without separate net-type evidence. Reports and helper hashes are carried in `abstract.json`. An old route report cannot qualify a later ECO.
 
 A held geometry probe never relaxes the 20 um requirement for a production closure candidate. Removing `job.hold_merge` restores the original FAIL; measured access, timing, DRC and eventual die acceptance remain separate requirements.
+
+### Independent CTS roots inside a leaf tile
+
+Opt in with `"clock":"multiple_cts_roots"`, `"kind":"tile"`,
+`"clock_ports":["ck_req","ck_rsp"]`, and `"clock_port":"ck_req"`.
+Every listed port owns a real standard-cell CTS tree; no hard children or
+fabricated child insertion records are used. Explicit `clock_entry_domains`
+are required, with one `[1,1]` clock root per domain, the primary root in
+`core`, and literal base input/output names covering every IO once (including
+reset). The supported relationship is related samefrequency clocks with zero
+nominal phase; asynchronous groups, ratio changes, or unassigned IO are refused.
+Shared asynchronous resets get one IO reference; actual data-pin paths (including
+synchronous resets) must obey their declared domain like other data inputs.
+
+Each root is measured in the actual loaded corner. Its boundary register
+population determines its own R; delivery compensates each source to phi−R.
+Generated CTS, route, fill, and signoff hooks replay the complete domain
+boundary. Actual timing-graph ownership checks reject cross-domain datapaths,
+wrong input/output assignments, and unowned registers. This mode deliberately
+does not apply the legacy single-clock IO shim. The pre-route gate requires
+`--cts`, exact per-source measurement coverage, and the clock rule on each
+actual root separately. `ck_insertion.py --all-clocks --raw-source` and exported
+multi-clock insertion records preserve the physical per-pin references.
+
+`tests/test_multiple_cts_roots.py` exercises two actual OpenROAD CTS trees,
+differing insertion references, source compensation, generated hooks, and
+wrong-domain/unknown-port/crossing mutants. These are flow fixtures; production
+leaf placement, routed TT/FF timing, DRC, and native boundary closure remain
+required.
+
+### Direct raw SRAM clock entries
+
+An `entries` or `hybrid_entries` cluster may expose a raw SRAM clock on its own
+face, alongside independently clocked routed children and local CTS roots.
+Annotate each individual `macros` item with
+`"clock_entry":{"port":"clk_mem0","pin":"clk","reference":"raw_liberty_clock_pin"}`
+and an exact `inst` pattern and `count:1`. The port must be a declared hard entry,
+not a local CTS root. The generator binds the actual LEF clock pin and all three
+raw SRAM Liberty files, requiring memory semantics and real setup, hold and
+clock-to-Q arcs. Routed-child ETM insertion records remain a separate reference.
+
+Runtime checks prove the exact linked instance, library corner, sole source and
+clock pin. Only the actual propagated source-to-SRAM wire is compensated; no
+SRAM internal insertion is invented and its Liberty arcs stay unchanged. Pure
+raw-macro clusters are supported as well. The direct-macro probe checks all
+three corners, source/corner mutants, unchanged real clock-to-Q timing and the
+complete generated entry SDC. Its nonzero-RC SPEF is a test fixture, not routed
+layout qualification.
+
+A leaf that actually transfers registered data between these roots must opt in
+separately with `"clock_data_paths":"related_same_frequency"` and
+`"clock_relationship":{"kind":"same_pll_fixed_phase","ratio":[1,1],"phase_ps":0}`.
+The independent profile remains the default and refuses such transfers. The
+related profile permits transfers only between registers owned by the declared
+roots; direct input capture and output launch still obey each port's domain.
+Every detected domain pair must retain finite actual max and min STA paths.
+The normal clock-pair setup/hold uncertainty and measured phi−R compensation
+remain in force. A false-path mutant is rejected because its required crossing
+has no timed path. The declaration expresses the leaf's required clock contract;
+production integration must prove that actual parent clock delivery supplies it.
+It is not a CDC waiver or evidence that the PLL/clock distribution is closed.
+
+Multi-root ownership classifies asynchronous clear/preset pins using OpenSTA's
+`all_registers -async_pins` on the actual loaded Liberty. OpenSTA also includes
+these controls in `-data_pins`; they are excluded only from the data-domain
+ownership walk and from synchronous crossing witnesses. Recovery/removal timing
+stays enabled. Names and `reset_ports` never exempt a real D path. The regression
+uses actual DFFASRHQN cells with a shared reset and rejects a mutant connecting
+that same reset port to the other domain's D input.
+
+Leaf corner inference uses the actual sequential clock-sink cells. Physical-only
+LEF taps and endcaps have no Liberty association and cannot identify a timing
+corner. Missing or unknown Liberty associations on actual sequential cells still
+fail. The physical regression includes a real LEF-only ASAP7 tap and replays the
+complete generated CTS and later boundary hooks.
+
+Multi-root route jobs and their formal CTS gates use the same physical clock
+fixes (`cg_pushdown.tcl` and `clk_net_protect.tcl`). They do not install the
+legacy single-boundary `link_budget_hook.tcl`: the generated domain constraints
+already own every input/output max/min delay and each root's phi−R reference.
+Combining the two models created extra route-period virtual clocks that survived
+into 833.333 ps signoff. The strict clock inventory guard remains unchanged;
+unexpected virtual clocks and aliases still fail. Other clock modes retain the
+legacy hook and their existing job command bytes.

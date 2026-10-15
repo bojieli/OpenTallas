@@ -1,0 +1,12 @@
+FIRST FAULT cy 5: wsched own 00 dflt 0000 sflt 00000000000000000000000000000000 | mem 0000 | land 000 pq 1 out 0 op 0 rsched 0 | seq flt 00000000000
+PQ RV MISMATCH cy 17
+TB_VMCORE FAULT mode 3 vm_fault 1 c_st 11 own_source 1
+TB_VMCORE PASS mode 3
+- /srv/opentallas-scratch/codex-s81-vm-lane-scatter-1015/flat_core2/tb_dsfd_vm_static_core.sv:286: Verilog $finish
+TB_VMCORE RESULT mode 3 cycles 35 commits 0 K -1 reads 0 pq 0 mix_reads 0 mix_writes 0 rows_checked 0 dones 0 cmds 0 bad 0
+COMMIT COUNT 0
+TB_VMCORE FAIL mode 3
+- /srv/opentallas-scratch/codex-s81-vm-lane-scatter-1015/flat_core2/tb_dsfd_vm_static_core.sv:296: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 32ns; walltime 0.169 s; speed 187.128 ns/s
+- Verilator: cpu 0.169 s on 1 threads; allocated 53 MB

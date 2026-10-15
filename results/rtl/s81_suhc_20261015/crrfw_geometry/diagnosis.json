@@ -1,0 +1,36 @@
+{
+  "schema": "opentallas.s81.crrfw_physical_diagnosis.v1",
+  "source_commit": "262d5e14ad5d89265d00d86ad0c6c11b04155403",
+  "failed_run": "ot-epyc1tb:/srv/opentallas/claude/closure-loop/s81hc_crrfw_ref-v6-056c994dd",
+  "failed_source": "056c994dd58df69111f09d1945458fe8b2e258a2",
+  "evidence_sha256": "abcda33357281abd0c63d042406112b2f7b5698add3bf6f1b4cae97224c0aa45",
+  "rtl_identity": "C0 and C2 both LC11/YS2816/FDD2816; O_D104; p_y[i] feeds ch_fd[104+i] via real POST mux, no bit permutation in RTL",
+  "placement": {
+    "core_um2": 92882.765,
+    "fixed_instances": 23653,
+    "movable_instances": 18999,
+    "fixed_area_um2": 5397.399,
+    "movable_original_area_um2": 2275.502,
+    "routability_artificial_inflation_percent": 103.9,
+    "terminal_overflow_approx": 0.137,
+    "failure": "GPL-0305 invalid gradient step after 15090 iterations"
+  },
+  "pin_incidence": {
+    "w": {
+      "pairs": 2816,
+      "horizontal_total_um": 369131.214,
+      "manhattan_total_um": 1342340.814,
+      "horizontal_max_um": 261.633,
+      "inverted_pairs": 3669353
+    },
+    "e": {
+      "pairs": 2816,
+      "horizontal_total_um": 108450.468,
+      "manhattan_total_um": 1081660.068,
+      "horizontal_max_um": 81.936,
+      "inverted_pairs": 296691
+    }
+  },
+  "qualification": "Geometric evidence and failure diagnosis only; reversed bus is a physical risk and candidate repair target, not yet a controlled proof of sole GPL cause. Same W v6 earlier CTS gate did converge; timing/routability trajectory is numerically sensitive. No signoff qualification inferred.",
+  "constraints": "No clock/IO/hold/TT/FF/DRC changes. Must retain exact RTL arithmetic, bit indices, production widths and epochs. New pin placement requires peer-rebound parent and fresh physical signoff; do not reuse old W view."
+}

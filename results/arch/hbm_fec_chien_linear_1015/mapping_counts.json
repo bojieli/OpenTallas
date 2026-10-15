@@ -1,0 +1,25 @@
+{
+  "chien_map.json": {
+    "sha256": "99c5280b2a57a1ec3053cb25a9529286e5075efbf20fa264f72a7b0c5aa4fe0f",
+    "cells": {
+      "$xor": 29876
+    },
+    "port_bits": {
+      "x": 470,
+      "y": 2200,
+      "step": 470
+    }
+  },
+  "chien_map_gates.json": {
+    "sha256": "c83716b6be0ca29d5b4ad8caa7deea53f7b37c5e074a49df2088d841f4f8fa34",
+    "cells": {
+      "$_NOT_": 692,
+      "$_XOR_": 49211
+    },
+    "port_bits": {
+      "x": 470,
+      "y": 2200,
+      "step": 470
+    }
+  }
+}

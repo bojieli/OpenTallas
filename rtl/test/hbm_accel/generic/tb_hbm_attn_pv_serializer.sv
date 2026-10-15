@@ -9,7 +9,7 @@ module tb_hbm_attn_pv_serializer;
  .write_v(wv),.write_data(out),.write_flags(of),.write_base_sector(sector),.fault(fault));
  function automatic[31:0]word_(input integer seq,h,dim);word_=32'h9e3779b9^32'(seq*99991+h*777+dim*37037);endfunction
  function automatic flag_(input integer seq,h,dim);flag_=((seq*7+h*11+dim*13)%17)==3;endfunction
- integer seq=0,mut=0,c,t,h,k,d,checked=0;reg active=0;
+ integer seq=0,mut=0,overlap=0,c,t,h,k,d,checked=0;reg active=0;
  always @(posedge clk)begin
   #1;
   if(active&&fault)$fatal(1,"PV_SERIALIZER phase fault");
@@ -23,9 +23,9 @@ module tb_hbm_attn_pv_serializer;
   end
  end
  initial begin
-  void'($value$plusargs("MUT=%d",mut));repeat(5)@(negedge clk);rst_n=1;active=1;
+  void'($value$plusargs("MUT=%d",mut));void'($value$plusargs("OVERLAP=%d",overlap));repeat(5)@(negedge clk);rst_n=1;active=1;
   for(seq=0;seq<3;seq=seq+1)begin
-   for(c=0;c<16;c=c+1)begin
+   if(!overlap||seq==0)for(c=0;c<16;c=c+1)begin
     @(negedge clk);cv=1;ce=1'(seq%2);cd=4'(c);data=0;flags=0;
     for(t=0;t<32;t=t+1)for(h=0;h<16;h=h+1)begin
      data[(t*16+h)*32+:32]=word_(seq,h,t*16+c);flags[t*16+h]=flag_(seq,h,t*16+c);
@@ -37,10 +37,17 @@ module tb_hbm_attn_pv_serializer;
    @(negedge clk);cv=0;dv=0;repeat(2)@(negedge clk);
    for(h=0;h<16;h=h+1)for(k=0;k<8;k=k+1)begin
     @(negedge clk);dv=1;de=1'(seq%2);dh=4'(h);db=3'(k);base=16'(seq*2048);
+    if(overlap)begin
+     cv=(seq<2&&h*8+k<16);ce=1'((seq+1)%2);cd=4'(h*8+k);
+     if(cv)for(t=0;t<32;t=t+1)for(integer hh=0;hh<16;hh=hh+1)begin
+      data[(t*16+hh)*32+:32]=word_(seq+1,hh,t*16+h*8+k);
+      flags[t*16+hh]=flag_(seq+1,hh,t*16+h*8+k);
+     end
+    end
    end
    @(negedge clk);dv=0;repeat(3)@(negedge clk);
   end
   if(checked!=24576)$fatal(1,"PV_SERIALIZER accounting%0d",checked);
-  $display("PASS PV_SERIALIZER actual_H16_D512 records3 words24576 flags24576 readbeats384 actual_SRAM128 epochs2");$finish;
+  $display("PASS PV_SERIALIZER actual_H16_D512 records3 words24576 flags24576 readbeats384 actual_SRAM128 epochs2 overlap%0d",overlap);$finish;
  end
 endmodule

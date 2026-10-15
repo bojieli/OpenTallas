@@ -510,5 +510,5 @@ place_pin -pin_name {q[252]} -layer M4 -location {15.024000 58.764000}
 place_pin -pin_name {q[253]} -layer M4 -location {15.024000 58.956000}
 place_pin -pin_name {q[254]} -layer M4 -location {15.024000 59.196000}
 place_pin -pin_name {q[255]} -layer M4 -location {15.024000 59.388000}
-place_pin -pin_name {clk} -layer M5 -location {5.388000 0.096000}
+place_pin -pin_name {clk} -layer M4 -location {0.096000 1.308000}
 place_pin -pin_name {rst_n} -layer M5 -location {9.708000 0.096000}

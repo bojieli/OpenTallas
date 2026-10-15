@@ -1,0 +1,72 @@
+{
+  "result": "PASS",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128_b8.sv": "907e24fe89386104b6831611223779bdd540e62292077ef5efe6308f837824a3",
+    "rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_static_core.sv": "1f90a6b96aea7cd592c7e11b5350bc8ba88b0677e563032378c8a5df30741518",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wsched.sv": "42ac434cd3e7e807e7c61a7b509d71cd3622f195799c251a8abd7801ac74eae9",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wfc.sv": "8073a98252cfe34f2b6a67c981b7222963e1f066f50ecec35183b5c1f84af475",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_landing.sv": "ab60f5b07f1770627e867562d8851e3d2125ef49df895d18a850d67899709af7",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128.sv": "28b404bc01d8722b2cac8aadf058d48edb4c99d6128f7b8872f971f8dda940d8",
+    "tools/s81_vm/static_core_gate.sh": "c90bee060dc63159b5fd44af658d2d8a52cf4b897079dd720582566e75d06ec3",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_return.sv": "5201f61b7992c9c330197c82cf84d6a059c13732fd908a804339f90b456022e2",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv": "b6c23720c6dd34c3ec7296dfb44d41848abea4fe18f260ab75a7839660dba538",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_slice128_suhc.sv": "b380ae8fa7507e373e1c657cb3e04e820970062211218d14e6e42b4e864c2a9d",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_scatter.sv": "fbb1ada30aecb7c33a4f84ec7358806a97863ca5556188cb6475c0232dee7c0f",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv": "389a09f45fb0543854f96d4d950fd329cb556c88430c1e5fea82147c56034f1e",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_core.sv": "aba57ef85d24d97b480eeee7edea64f7ff9c7ebc7eee568de21e368485793242",
+    "rtl/dsrom_sys/s81_ph/test/tb_dsfd_sp_vm_static.sv": "54118456f7cef93cbdae0e49e442aa20ad1cc17f8e07750551c98e1bb23cb216",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128_b4.sv": "ee7b3813da68aad059991350d8624f961500168fc8168d3d7aa3db3eb747f9a4",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_rsched.sv": "67f8701be2d9c7e44ba2c007f9ac04f3de9845797e5ddc04ac0ffd25950f171d",
+    "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x34.sv": "c95f6eb78b68bed81746829e0194ad86accc45f9a70f764ff81bcc1f575e22f3",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_suhc_fsr.sv": "9b457c76fd5d9af3a3c43789af900948d1a82b7b4234824147026c77baab0896",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv": "09122b0ecf087ec719ca698c1349a2b79d4181bca8f551b9411a9867390e9eb3",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wstage128.sv": "effa6053cf176b39cc7e237045c8505c4ee8343ea979cd22ef3bc542cd989457",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_suhc_return_map.sv": "495a7572c4627e34c6e1c84ffdf8807f694e7f75b65fc34c6b06551b6bacad75",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap.sv": "1de4a5a9cd15e56572c368f60399c7ba0596a843a3625315ab9f0813a71f20ec",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap_leaf.sv": "192752ca88c4a93c661bfeeb7bb2a2aa152b5b6490330e096f7c05eeb0e50ecf",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static512_suhc.sv": "d1461f45d4193d544e5bab28b18fcea001e4f6724d3c9274dc227a8c35a7130b",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "6f87b48e0860f3645178d2973638322af7867280a6884809be5e2024b2d91828",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_xio.sv": "377c62b7593c495145d25cde015723cd9af3fe0656e73a51b0299e21d3ae6271",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wdispatch128.sv": "28bd561ffe0bf79ccd9de80b657f5ac04c1f2678741233eb6f19240c4d82ea81",
+    "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x43.sv": "7056c742b154593afc92dd4a6709454f23e371b432c33614d1572f19adff7253",
+    "tools/s81_vm/static_master_gate.sh": "a9e9bfb0514a962698a2f9cdbb1ddbd30075e9ba20e23b1bc4c19202b7352694",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_seq_static.sv": "de3f8c011bdf9e9eeb4bcdbd80e5eac3c2888c156c5cba38c428da77081a19af"
+  },
+  "scope": "actual128SRAM master/core numerical and fixed-age proof; no native physical clock/pin closure",
+  "structural_change": "per32bank slice4x8bankbridges+8x4bankquarters replaces2x16bankbridges+4x8bankquarters; same2stages eachdirection",
+  "array": {
+    "bank_macros": 128,
+    "quarters_b4": 32,
+    "bridges_b8": 16,
+    "read_fsr": 4,
+    "write_scatter": 4,
+    "return32": 4,
+    "total_core_children": 188,
+    "request_clock_roots": 48,
+    "response_clock_roots": 48
+  },
+  "master_gate": {
+    "seeds": 2,
+    "fault_witnesses": 8,
+    "mutants_killed": 3,
+    "cmd_done_pin_latency": 6
+  },
+  "core_gate": {
+    "seeds": 2,
+    "read_calendars": 1000,
+    "fault_witnesses": 6,
+    "mutants_killed": 5,
+    "row_read_pin_latency": 12,
+    "commit_observation_pin_age_lane0": 11,
+    "commit_note": "K11 is returned commit observation after response relay stages, not direct SRAM w_ce edge; physical phase and actual macrovisibility require separate event witness"
+  },
+  "host": "ot-agidock128",
+  "remote_root": "/srv/opentallas-scratch/codex-s81-vm-small-groups-1015",
+  "jobs": {
+    "core": "oth-ubuntu-3781148-1792053927",
+    "base": "oth-ubuntu-3781200-1792053927",
+    "capword": "oth-ubuntu-3781147-1792053927",
+    "wfcpair": "oth-ubuntu-3781201-1792053927",
+    "x43phase": "oth-ubuntu-3781146-1792053927"
+  }
+}

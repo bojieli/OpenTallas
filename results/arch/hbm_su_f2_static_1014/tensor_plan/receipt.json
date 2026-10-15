@@ -1,0 +1,22 @@
+{
+  "status": "PASS actual source/slot/allocation mask checks, not executed nativeprogramme",
+  "source_sha256": "322902cc7a0456a36155b06b8817a8cbfca96e817caaf3456e4c7d7fd109f39c",
+  "plans": {
+    "qwen.json.gz": {
+      "records": 12,
+      "source_words": 250258,
+      "cross_quarter_staging_words": 203793,
+      "stage_transport_minimum_edges": 3051,
+      "sha256": "82b435e205dcaec751c1a94ec347a4e7a5014c378bf5fa23a0610417bc3b8543"
+    },
+    "deepseek.json.gz": {
+      "records": 33,
+      "source_words": 49294,
+      "cross_quarter_staging_words": 15573,
+      "stage_transport_minimum_edges": 796,
+      "sha256": "6e0e167469cfb20836b971982c886a73a00fc9771c080c296d3df0df661ed22c"
+    }
+  },
+  "fullprogramme_qualification": false,
+  "warning": "Direct identity allocation needs actual cross-quarter staging routes; no silent SID source reassignment; stage lowerbound omits arithmetic and SRAM network service"
+}

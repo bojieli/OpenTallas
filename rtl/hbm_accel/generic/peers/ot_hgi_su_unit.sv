@@ -529,6 +529,16 @@ module ot_hgi_su_lbank #(
             .w_ce_in(we), .w_addr_in(wa[RB-1:3]), .wd_in({8{wd}}), .w_mask_in(wm), .rr_en(2'b00),
             .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
         assign rd = ro[{ks, 5'd0} +: 32];
+    end else if (MACRO && RB == 9) begin : g_m9
+        // 512 words occupy the lower 64 rows; the upper 64 physical rows are unused.
+        wire [255:0] ro;
+        ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(clk), .r_ce_in(re), .r_addr_in({1'b0, ra[RB-1:3]}), .rd_out(ro),
+            .w_ce_in(we), .w_addr_in({1'b0, wa[RB-1:3]}), .wd_in({8{wd}}), .w_mask_in(wm), .rr_en(2'b00),
+            .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+        assign rd = ro[{ks, 5'd0} +: 32];
+    end else if (MACRO) begin : g_unsupported_macro
+        initial $fatal(1, "ot_hgi_su_lbank: unsupported MACRO=1 RB=%0d", RB);
+        assign rd = 32'd0;
     end else begin : g_b
         reg [31:0] m [0:(1 << RB) - 1];
         reg [31:0] q, q2;

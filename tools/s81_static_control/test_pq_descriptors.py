@@ -8,6 +8,13 @@ class NativePQImageTest(unittest.TestCase):
   w=encode_descriptors([fields]);self.assertEqual(len(w),7)
   native=sum((x&0xffffff)<<(24*p)for p,x in enumerate(w[1:6]))
   self.assertEqual(native>>90,12345);self.assertEqual(native&511,511);self.assertEqual((native>>9)&7,0)
+ def test_canonical_phw10_preserves_high_phase_and_tag(self):
+  fields=dict(ph=1023,np=7,xbase=524287,xps=5120,obase=4096,ops=320,fmt=2,observed_end_edges=12345,native_tag=3)
+  words=encode_descriptors([fields],phase_width=10)
+  value=sum((x&0xffffff)<<(24*p) for p,x in enumerate(words[1:6]))
+  self.assertEqual(value&1023,1023);self.assertEqual((value>>10)&7,7)
+  self.assertEqual((value>>91)&0xffffff,12345);self.assertEqual(value>>115,3)
+  with self.assertRaises(ValueError):encode_descriptors([fields])
  def test_missing_duration_and_out_of_range_refuse(self):
   with self.assertRaises(ValueError):encode_descriptors([{}])
  def test_real_issuer_to_native_GO_calendar_edges(self):
@@ -16,6 +23,10 @@ class NativePQImageTest(unittest.TestCase):
   rows=compile_events(events,cmd);self.assertEqual(rows[0],(4<<72)|2)
   events[0]['timestamp']=3
   with self.assertRaisesRegex(ValueError,'align'):compile_events(events,cmd)
+ def test_canonical_calendar_action75_bank_and_end(self):
+  rows=compile_events([dict(timestamp=1,action=dict(stream_addr=16383,launch=1)),dict(timestamp=9,action=dict(phase_end=1))],[dict(engine=0,issue=0,done=20,native_tag=0)],action_bits=75)
+  self.assertEqual((rows[0]>>40)&16383,16383);self.assertEqual((rows[0]>>65)&1,1)
+  self.assertEqual(rows[1],(9<<75)|(1<<72))
  def test_real_macro_via_bit_order(self):
   rows=viamap([1,1<<71]);first=int(rows.splitlines()[0],16)
   self.assertEqual(first,1|(1<<(71*8+1)));self.assertEqual(len(rows.splitlines()),512)

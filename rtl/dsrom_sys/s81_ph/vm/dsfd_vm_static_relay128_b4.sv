@@ -1,0 +1,53 @@
+`timescale 1ns/1ps
+// Physical named wrapper, unchanged actual fixed duplex relay implementation.
+module dsfd_vm_static_relay128_b4(
+ input wire ck_req,ck_rsp,rst_n,
+ input wire [3:0] i_rv,i_wv,input wire [35:0] i_ra,i_wa,
+ input wire [31:0] i_rt,i_wt,input wire [15:0] i_wm,
+ input wire [511:0] i_wd,
+ output wire [3:0] o_rv,o_wv,output wire [35:0] o_ra,o_wa,
+ output wire [31:0] o_rt,o_wt,output wire [15:0] o_wm,
+ output wire [511:0] o_wd,
+ input wire [3:0] i_sv,i_cv,input wire [511:0] i_sd,
+ input wire [31:0] i_st,i_ct,input wire [35:0] i_ca,
+ input wire [15:0] i_cm,
+ output wire [3:0] o_sv,o_cv,output wire [511:0] o_sd,
+ output wire [31:0] o_st,o_ct,output wire [35:0] o_ca,
+ output wire [15:0] o_cm
+);
+ dsfd_vm_static_relay128 #(.NBANK(4)) u_relay(
+ .ck_req(ck_req),
+ .ck_rsp(ck_rsp),
+ .rst_n(rst_n),
+ .i_rv(i_rv),
+ .i_wv(i_wv),
+ .i_ra(i_ra),
+ .i_wa(i_wa),
+ .i_rt(i_rt),
+ .i_wt(i_wt),
+ .i_wm(i_wm),
+ .i_wd(i_wd),
+ .o_rv(o_rv),
+ .o_wv(o_wv),
+ .o_ra(o_ra),
+ .o_wa(o_wa),
+ .o_rt(o_rt),
+ .o_wt(o_wt),
+ .o_wm(o_wm),
+ .o_wd(o_wd),
+ .i_sv(i_sv),
+ .i_cv(i_cv),
+ .i_sd(i_sd),
+ .i_st(i_st),
+ .i_ct(i_ct),
+ .i_ca(i_ca),
+ .i_cm(i_cm),
+ .o_sv(o_sv),
+ .o_cv(o_cv),
+ .o_sd(o_sd),
+ .o_st(o_st),
+ .o_ct(o_ct),
+ .o_ca(o_ca),
+ .o_cm(o_cm)
+ );
+endmodule

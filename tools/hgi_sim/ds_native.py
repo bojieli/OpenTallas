@@ -143,16 +143,16 @@ HC_R = -(-(HC_K // 8) // HC_W)       # words a bank (80)
 HC_RS = HC_R * (HC_W // 8)           # sectors a bank (320)
 HC_ROW_SECT = 8 * HC_RS              # sectors of one fn row (2,560 = 81,920 B = 20,480 words)
 HC_SET_BYTES = (4 + 24 * HC_ROW_SECT) * 32
-HC_STRIPE_LOC = 30 << 30             # STRIPE4 HC rows: stack-local base (24 GiB) of the striped row region (4 stacks)
+HC_STRIPE_LOC = 20 << 30             # HC rows in source-owned first256MiB of DATA_WIN on all4 stacks
 HC_STRIPE = {}                       # stack-local row base -> (layer, which, row o)
 # Physical stack capacity: the die's loader / DMA engines refuse a stack-local byte address >= STACK_BYTES
 # (rtl ot_hbm_loader_service_join / ot_hgi_dma_back STACK_BYTES = 22,500,000,000 = 20.95 GiB; stack = address [36:35]).
 STACK_BYTES = 22_500_000_000
 # DATA WINDOW (2026-10-13): stack-local [DATA_WIN, DATA_WIN + DATA_WIN_BYTES) is reserved ON EVERY STACK for data rows
 # that live on all four stacks (the MTP column slots: ds_mtp_kernels.COLB).  Inside the physical capacity; the weight
-# manifest (stack 2 upwards) skips it (Manifest.place), a fixed-base extent in it is refused.  NOT yet moved into it
-# (their owners regenerate vectors): the HC stripe rows -- HC_STRIPE_LOC = stack-local 30 GiB is ABOVE STACK_BYTES, so
-# the real die's loader address check refuses every HC row prefetch; the first 256 MiB of the window is kept for them.
+# manifest (stack2 upwards) skips it (Manifest.place), and a fixed-base weight extent in it is refused.
+# HC stripe rows now use the first256MiB of this window. The predecessor30GiB base exceeded physical capacity;
+# its failure remains in the allocator historical book. MTP column slots start at +256MiB and remain unchanged.
 DATA_WIN = 20 << 30
 DATA_WIN_BYTES = 512 << 20
 assert DATA_WIN + DATA_WIN_BYTES <= STACK_BYTES
@@ -170,7 +170,7 @@ def data_window_hit(base, size):
 EG_HOMES = [list(h) for h in EG.HOMES]
 EG_ROWB = 288
 EG_TBASE = 96 << 30                  # the home die's table (stack 3), < 2^37
-EG_STG = 2 << 30                     # per Engram layer: the home die's 24-row staging store, then every die's list store
+EG_STG = (19 << 30) + (128 << 20)                     # per Engram layer: the home die's 24-row staging store, then every die's list store
 EG_LIST = EG_STG + (64 << 10)
 EG_LSPAN = 128 << 10
 CUR_LAYER = [0]                      # the layer the per-die machine runs now (E-HOME unit model)
@@ -304,7 +304,8 @@ def hc_row_from_words(w):
 
 SM_LB = 136                          # SM weight line bytes (DS 1,088-b line); groups of Gk K-elements = 8 lines
 SM_GK = {"bf16": 512, "fp8": 1024, "fp4": 2048}
-KBASE = 1 << 32                      # IKS (opt-in --iks): per-source index-key regions, 1 MiB aligned, stack bits [36:35] 0
+KBASE = (18 << 30) + (512 << 20)      # IKS fixed512MiB region; separate from full MTP embedding and native weights
+K_LIMIT = KBASE + (512 << 20)
 KALIGN = 1 << 20
 IKS = [False]                        # --iks: IDX.INDEX carries operand I = the layer's key region (IKS issuer, main 4d2d33086)
 
@@ -418,7 +419,7 @@ class Lower:
         if key not in self.ent:
             span = -(-CK_CAP[1] * 128 // KALIGN) * KALIGN
             base = KBASE + SOURCES.index(src) * span
-            assert base % KALIGN == 0 and (base >> 35) == 0 and base + span <= CKBASE
+            assert base % KALIGN == 0 and (base >> 35) == 0 and base + span <= K_LIMIT
             self.ent[key] = self.man.place_at(key, base, CK_CAP[1], 128, "fp8")
         return self.ent[key]
 
@@ -1509,7 +1510,7 @@ def ds_units(m, man, golib):
                 raise MC.Fault(3, f"STRIPE4 store {o.base:#x} into an HC weight row")
             return base_store(M, r, L)
         if o.space == "HBM" and ((o.base >= WBASE and man.holds(o.base)) or
-                                 (IKS[0] and KBASE <= o.base < CKBASE)):                     # index key -> key store (G16)
+                                 (IKS[0] and KBASE <= o.base < K_LIMIT)):                     # index key -> key store (G16)
             e, _, grp, _ = man.find(o.base)
             for die in M.dies:
                 golib.st.ik[int(e["key"][7:])][grp] = M.read(r.desc["A"], die, L)

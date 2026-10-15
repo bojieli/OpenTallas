@@ -23,7 +23,7 @@ module tb_hgi_sfu_programmed_engine;
  .rst_lane_n({16{rst_n}}),.rst_map_n({16{rst_n}}),.cfg_we(cfg_we),.cfg_stripe(cfg_stripe),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
  .start_v(start_v),.start_base(11'd0),.start_limit(12'(NINST)),.start_loops(16'd1),
  .vi_q(512'd0),.side_y(512'd0),
- .stage_v(stage_v),.stage_group(stage_group),.stage_addr(stage_addr),.stage_mask(64'hffffffffffffffff),.stage_data(stage_data),
+ .scalar_load(4'd0),.scalar_enable(4'd0),.scalar_addr(96'd0),.scalar_data(128'd0),.stage_v(stage_v),.stage_group(stage_group),.stage_addr(stage_addr),.stage_mask(64'hffffffffffffffff),.stage_data(stage_data),
  .drain_v(drain_v),.drain_addr(drain_addr),.drain_data(drain_data),.drain_result_v(drain_rv),.fault(fault));
  initial begin
   $readmemh(`SFU_IMAGE,controls);

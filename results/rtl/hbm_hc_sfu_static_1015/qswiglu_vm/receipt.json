@@ -1,0 +1,32 @@
+{
+  "source_commit": "5fadf773c",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_programmed_engine.sv": "1556b27d4e85de9d29529e9ed5cfd2fcb143a1978f616777a50b34e5236fffa0",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv": "86205841c6e0d84995cdb1c1d824055b213ad66ddf569b37cf04330f1a213522",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programmed_engine.sv": "3ac18f43a440a0b8ea6ff89a59d4668ff045f40cadfe75e9e111e046beff9cab",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_engine.sv": "33a0546fc89d8141568eabf87f2cf857aa8763a632db7038b819cf286722982e",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv": "16d38219117e35990fbea969776490d27832f2d7643cd1dd66233547bdf88160",
+    "rtl/test/hbm_accel/generic/tb_hgi_sfu_qswiglu_vm_static.sv": "df2e8f3c102893ba02d3ea1e552d9a1ecf7409d334b4aba9de7d1c3d78cfb95f",
+    "tools/hbm_static/make_qswiglu_gate.py": "7b36c6dab7e372d225663bd553cac4235ccbf63a5a497025f1d8cf8aeb643960"
+  },
+  "gate": "PASS",
+  "native_target_qualified": false,
+  "physical_qualified": false,
+  "whole_layer_qualified": false,
+  "operation": "canonical actual Qwen SFU.GLU",
+  "VM_protected_SRAMs": 24,
+  "operand_SRAMs": 80,
+  "programme_SRAMs": 16,
+  "actual_C12_lanes": 16,
+  "exact_VM_committed_words": 3072,
+  "actual_scalar_source": "route read from protectedVM sector2052 through14edge SFUtap and captured in real address-tagged FP32 register",
+  "fixture": "qswiglu/su_vmi.mem and qswiglu/su_vme.mem, same canonical exact inputs/expected values",
+  "VM_map": "G sectors0..383,U1026..1409,route2052,O4096..4479,diagnosticSID0; native allocator binding remains open",
+  "MB_or_SE_ideal_preload": false,
+  "mutant": "first actual programme issue suppressed in loaded SRAM; actual committed output FAIL VM_QSWIGLU_WORD",
+  "read_return": 14,
+  "store_capture": 15,
+  "write_return": 11,
+  "price_qualified": false,
+  "price_note": "120cycle immutable canonical price retained; this 16lane diagnostic costs192prefetch+17stagingdrain+368programme+5consumer+192drain+18commit plus setup/readback, not production qualification"
+}

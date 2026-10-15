@@ -1,0 +1,2 @@
+NATIVE_READ_PIPELINE PASS native_RD2048 exact_burst_beats2048 requests512 actual_response_SRAMs32 RL23 first_request13 last_response280 elapsed_HBM_cycles267 max_reserved32 max_pending24 max_response32 stalls1
+rtl/hbm_accel/loader/service_native/tb_hbm_svc_native_sector_pipeline.sv:64: $finish called at 290305000 (1fs)
