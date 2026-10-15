@@ -1,0 +1,104 @@
+{
+  "schema": "opentallas.qwen-tp8.delivery-lifetime-candidate.v1",
+  "status": "DEFAULT_OFF_COMPONENT_NOT_ADOPTED",
+  "qualified": false,
+  "production_composition": false,
+  "assigned_pins": false,
+  "rtl_sha256": "04200e6ce445014a3e1ea64ac44740a674b28bdbd1173dc4f62e0e125fae096b",
+  "logical_topology": {
+    "tiles": 768,
+    "quad_recipients_per_tile": null,
+    "recipient_id": "tile_id",
+    "tile_id": "16*column+row",
+    "recipient_binding": "One128-bit response/event per full96-bit packed four-address tile query (tile owner source c58d1436e); all768 native field straps/events still require full composition",
+    "banks": 16,
+    "recipients_per_bank": 48,
+    "bank_id": "tile_id//48",
+    "local_id": "tile_id%48",
+    "clock_entries": "one unpaused coherent base clock per bank and one controller; physical phi-R delivery unassigned",
+    "cache_recipients_per_tile": 1
+  },
+  "state": {
+    "controller_Q_bits": 1985,
+    "bank_Q_bits": 4322,
+    "total_Q_bits": 71137,
+    "basis": "actual admitted Yosys0.52 proc/opt/memory_map production-parameter census; not mapped area or CTS",
+    "parallel_bank_Q_bits": 4370,
+    "parallel_total_Q_bits": 71905,
+    "superseded_3072_quad_estimate": "119521bits at16x192; incorrect actual transaction granularity, retained only historical component receipt"
+  },
+  "operation_scope": {
+    "acquire": "reserve one actual accepted operation VM version after qualified native commit pipeline drain",
+    "held_descriptor": "IB379/mode1/context16/version32; incoming offer cannot overwrite",
+    "actual_acceptance": "actual tile rst_n&&go_i&&u_me.ready event, with post-IREG acceptedIB; paused levels must be deduplicated",
+    "write_reservation": "held through matching global release; private512 response is only per-query retention",
+    "release": "every real recipient sealed, every issued query retired, source output/replay drained",
+    "reset_and_token_wrap": "transport/replay/cache invalidation fence acknowledged before allocation reopens",
+    "writer_admission": "Production SU/other writers post strobes without ready. Block new/queued writer commands and prove no-future-strobes, capture every posted write, then drain actual commit pipeline/buffers/ACKs before reservation. Never suppress a posted we strobe with native_write_allowed.",
+    "mode_binding": "Immutable accepted IB and registered pre-update query mode must agree with canonical source decoder. Fill mode comes from retained descriptor/query record. External offer_mode alone is not a production source binding."
+  },
+  "event_payload_bits": {
+    "controller_accept": 438,
+    "bank_issue": 95,
+    "bank_retire": 95,
+    "bank_seal": 55,
+    "dispatch_common": 428,
+    "query": 210,
+    "query_including_toggle_credit_fault": 213,
+    "cache_event_tuple": 247,
+    "fill_data_plus_provenance": 375
+  },
+  "ordered_retire": {
+    "sequence_bits": 40,
+    "max_outstanding_per_recipient": 127,
+    "sequence_exhaustion": "physical40-bit space exceeds source-bound legal-operation maximum2^39; no mid-operation rollover fence or silent wrap",
+    "out_of_order_or_duplicate": "sticky fault; requires ordered retirement or separately proven reorder adapter"
+  },
+  "cost_limits": {
+    "native_cost_measured": false,
+    "cost_adopted": false,
+    "minimum_serial_acceptance_edges_768_tiles": 768,
+    "parallel_acceptance_reduction": "required before production topology; current serial port is component interface",
+    "pipeline_bubbles": "source acquire/all acceptance/full drain/release and fences; full native effect unmeasured"
+  },
+  "binding_owners": {
+    "actual_tile_acceptance": "/root/qwen_tile:709403507; actual arithmetic/held-GO/pause proof ef32163ac/a422adeab",
+    "cache_event_toggles": "/root/qwen_tile:b646b9303 current queryseq40; exact native arithmetic join pending",
+    "consumer_node_replay_seal": "/root/qwen_tile, pending actual trace/drain predicate and node context sideband",
+    "operation_vm_snapshot": "/root/qwen_vm/region_pilot:9110bda97 actual ROW lease/provenance16; distinct40 parameterization pending",
+    "full_actual_composition": "/root/qwen_die/x_delivery: f75de6ca1 actual selectedtile767 issue binding8queries/0retire/0seals; actual output identity0c81 and live numeric queue join pending",
+    "SU_writer_quiescence": "/root/qwen_small:64e16e88d IS1 no-future-strobes certificate, pending actual admission/posted-memory-drain composition"
+  },
+  "pending_physical": [
+    "registered admission and ready/status faces",
+    "actual toggle/event transport and replay latency",
+    "local ordered-retire topology and buffering",
+    "constructive subslots, clock/PG and assigned pins",
+    "native throughput and whole-token cost",
+    "queued/pipelined event delivery instead of one-unACKed hit round-trip stalls",
+    "measured whole-field outstanding peak including actual registered event/ACK transport",
+    "spatial actual tagged acceptance reduction instead of768 serial callback edges"
+  ],
+  "parallel_alternative": {
+    "module": "ot_qwen_xdelivery_ack_vector",
+    "enabled_by_default": false,
+    "capacity": "all48 recipients issue and retire simultaneously each live base edge",
+    "actual_burst_gate": "PASS48 requests/edge plus49 outstanding requests per recipient, full40-bit identity; one stale-version, scalar-capacity, highbit-truncation and insufficient-counter-capacity mutants FAIL",
+    "pins_total_per_bank": 11094,
+    "physical_capacity": "NOT_ASSIGNED_OR_QUALIFIED: actual48 independent tuple transport/wide-face delivery and registered admission needed",
+    "full_field_events": "not synthesized from selected tile"
+  },
+  "sequence_bound": {
+    "commit": "b646b9303",
+    "path": "results/rtl/qwen_query_sequence40_1014/bound_and_interface.json",
+    "sha256": "af9f88c4d561dd7df01edc05059f991dcfe901e64cf064551451b35b3e3c370b",
+    "max_queries": 549755813888,
+    "query_rate": "actual x_re nonzero every active coherent edge, max1/tile/step",
+    "local_outstanding": "Actual final TOREG46 coherent steps after last issue; clear47. Declared local drain49 is conservative two additional steps. Actual query-output peak46 excludes transport; full event/ACK peak and buffering still require trace."
+  },
+  "identity_domains": {
+    "operation_context16": "Internal next_context in component is an accepted-operation namespace only; it must not replace HOST/dispatch whole-token epoch allocation.",
+    "shared_token16": "Full TAG59 sole shared allocator ownership remains HOST/dispatch. Real shared-token binding to held descriptor, VM query/event records and output/drain provenance is pending. No second whole-token allocator implemented or adopted.",
+    "production_missing_seam": "Current component held descriptor lacks actual shared-token input/storage; future source-bound composition must bind or add it and measure extra seam/state/cycles before adoption."
+  }
+}

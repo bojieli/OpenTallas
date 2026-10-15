@@ -586,16 +586,18 @@ module ot_hgi_idx_topk_hw #(
    assign h_root[h] = lt_root[53 * h +: 53];
    // merge leaf: the tile sends (mv, md) on a credit; entries land straight in this FIFO (its entry flops are the pin
    // flops); exhaustion (me) leaves the tile one edge after its last item and is registered again here (mle)
-   reg men, mle, mcr; reg [53:0] mq [0:MQD-1]; reg [2:0] mqw, mqr, mqn;
-   wire mpush = men && lt_mv[h], mpop = l_pop[h];
-   always @(posedge clk) if (mpush) mq[mqw] <= lt_md[54 * h +: 54];
+   // j2 (native pin audit): mv / md / me land in pin registers first (lt_mv fanned out to 324 entry enables, 446 ps);
+   // the credit round trip grows 5 -> 6 edges, the tile's MQD = 6 credits still bound pin stage + FIFO (full rate).
+   reg men, mle, mcr, mv_p, me_p; reg [53:0] md_p; reg [53:0] mq [0:MQD-1]; reg [2:0] mqw, mqr, mqn;
+   wire mpush = men && mv_p, mpop = l_pop[h];
+   always @(posedge clk) begin md_p <= lt_md[54 * h +: 54]; if (mpush) mq[mqw] <= md_p; end
    always @(posedge clk or negedge rr[h])
-    if (!rr[h]) begin men <= 1'b0; mle <= 1'b0; mcr <= 1'b0; mqw <= 0; mqr <= 0; mqn <= 0; end
+    if (!rr[h]) begin men <= 1'b0; mle <= 1'b0; mcr <= 1'b0; mqw <= 0; mqr <= 0; mqn <= 0; mv_p <= 1'b0; me_p <= 1'b0; end
     else begin
-     men <= st == MERGE;
+     men <= st == MERGE; mv_p <= lt_mv[h]; me_p <= lt_me[h];
      if (!men) begin mle <= 1'b0; mcr <= 1'b0; mqw <= 0; mqr <= 0; mqn <= 0; end
      else begin
-      mle <= lt_me[h]; mcr <= mpop;
+      mle <= me_p; mcr <= mpop;
       if (mpush) mqw <= (mqw == MQD - 1) ? 3'd0 : mqw + 3'd1;
       if (mpop) mqr <= (mqr == MQD - 1) ? 3'd0 : mqr + 3'd1;
       mqn <= mqn + mpush - mpop;

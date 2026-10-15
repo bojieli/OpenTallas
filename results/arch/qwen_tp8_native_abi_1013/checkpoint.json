@@ -1,0 +1,139 @@
+{
+  "schema": "opentallas.qwen-tp8.native-abi-checkpoint.v1",
+  "qualified": false,
+  "adopted": false,
+  "baseline_source_sha256": {
+    "tools/qwen_kv_die/tp8b_v5.py": "ccee7e8eec078656e6d527535a263350fc1bb7c7f03c7d9becfff0f2931b6f5b",
+    "rtl/physical/ot_qwen_kv_centre_slots.sv": "1d1dabd80175f390b1daced1b2509c0b9f52503fe113670dc4a0486088bb4c1b",
+    "tools/ref_tile/specs_qkvcentre/qkd_seq_core.json": "70bd97359de8dbe9388f8934ec60455cfbaf348b70b3f9cf49ea844e4628a005",
+    "tools/ref_tile/specs_qkvcentre/qkd_seq_xs.json": "f4a976a249e472f6a0f107d9271a0b2b8fa984df9966c02695ebf2118ac46609"
+  },
+  "baseline": {
+    "master": "qkd_seq",
+    "wrapper": "rtl/physical/ot_qwen_kv_centre_slots.sv",
+    "core_params": {
+      "XS": 40,
+      "KD": 8,
+      "KWC": 4,
+      "OCR_AR": 64
+    },
+    "store_params": {
+      "DW": 128,
+      "XS": 40,
+      "KD": 8
+    },
+    "incoming": {
+      "r_x3_d": 524,
+      "r_x3_cr": 1
+    },
+    "warning": "Existing closed master remains TP4 behavior; its geometry or view cannot qualify native TP8 merely by renaming."
+  },
+  "required_tp8": {
+    "params": {
+      "HEADS": 1,
+      "Q_FP32": 1
+    },
+    "native_words": {
+      "KVN": 4,
+      "Q_FP32": 32,
+      "RES": 32
+    },
+    "KVN_tags_low3": [
+      0,
+      1,
+      4,
+      5
+    ],
+    "credit_capacity": 40,
+    "actual_incoming_words": 36,
+    "termination": "Native counts, masks and tags must terminate correctly; unused credit capacity does not authorize dummy words.",
+    "proposed_distinct_masters": [
+      "qkd_seq_tp8",
+      "qkd_seq_core_tp8",
+      "qkd_seq_xs_tp8"
+    ],
+    "master_names_status": "Requests only; new source, census, timing views and placement remain required.",
+    "candidate_source_branch": "codex/kv-seq-tp8-clocks-1013",
+    "candidate_checkpoint": "4b66ce3a4",
+    "physical_clock_entries_required": {
+      "core": 1,
+      "xs": 4,
+      "fan": 4,
+      "total": 9,
+      "status": "Implemented on native candidate: clk_core,clk_xs0..3,clk_fan0..3 each directly drives one child. Functional proof ties all nine synchronously; actual coordinates, corner references and physical delivery remain pending."
+    },
+    "candidate_parent_outline_um": [
+      604.8,
+      475.2
+    ],
+    "candidate_parent_outline_status": "Copied historical outline, not a measured native fit or closure"
+  },
+  "formatter_request": {
+    "owner": "qwen_su_kv_formatter",
+    "candidate_source": "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_native_posted.sv",
+    "source_bound_candidate_commit": "e7720a19d",
+    "registered_inputs": {
+      "kv_we": 64,
+      "kv_waddr": 1536,
+      "kv_wdata": 2048,
+      "epoch_begin": 1,
+      "pos": 18,
+      "issue_v": 1,
+      "kind": 2,
+      "nout": 18,
+      "nin": 18
+    },
+    "registered_input_bits": 3706,
+    "registered_output": {
+      "word_v": 1,
+      "word_tag": 11,
+      "word_data": 512
+    },
+    "registered_output_bits": 524,
+    "pin_spacing_um": 0.096,
+    "one_face_input_minimum_um": 355.776,
+    "one_face_output_minimum_um": 50.304,
+    "status": "No measured outline, clock census, physical pin assignment or CTS; values exclude face margins. Producer placement may require multiple capture leaves.",
+    "credit_sender": {
+      "capacity": 40,
+      "output_bits": 524,
+      "return_credit_bits": 1,
+      "fault_bits": 1,
+      "status": "Separate local ready/valid leaf; coherent clock or exact CDC required.",
+      "census_measured": true,
+      "measured_q_bits": 532
+    },
+    "candidate_source_sha256": "dea18a2fc95179cb4aa17c7474b7e3b097f4d19d4e12f47568d39d01c1d9ee8c",
+    "census": {
+      "method": "Yosys proc;opt;stat;write_json, ENABLE1/HEADS1",
+      "state_q_bits": 6555,
+      "total_input_bits": 3709,
+      "total_output_bits": 535,
+      "tool_version": "Yosys0.52 fee39a3284c90249e1d9684cf6944ffbbcbb8f90",
+      "unit": "oth-ubuntu-462164-1791951677",
+      "exit_code": 0,
+      "receipt": "results/arch/qwen_su_kv_formatter_1013/receipt.json on codex/qwen-su-kv-format-1013",
+      "mapping_status": "Unmapped; arbitrary-lane-address scatter contains 130shiftx/194shift and1951genericmux cells. No physical area, CTS or SS proof."
+    },
+    "source_bound_candidate_checkpoint": "c8d25629c"
+  },
+  "open_gates": [
+    "Named native wrapper parameter forwarding and exact control/store proof",
+    "Native single-head attention and golden FP32-to-BF16 conversion",
+    "Formatter mask/address checking, finite queue, credit backpressure, reset and mutants",
+    "Registered status/ready interface or explicit local combinational containment",
+    "Actual formatter capture/queue clock census and measured outlines",
+    "Current die slot revision with actual source-consumer faces and clock roots",
+    "Native end-to-end cycle cost without waived bubbles or first-startup cost",
+    "Real die window congestion and three-corner timing on the assigned views"
+  ],
+  "host_inventory_request": {
+    "branch": "codex/qwen-host-integrate-1013",
+    "commit": "818e86975",
+    "path": "physical/qkd_host_integration/pin_inventory.json",
+    "masters": 19,
+    "connectivity_records": 2494,
+    "status": "UNVERIFIED outlines, no parent fit; registered prompt request237.6x129.6 source818e86975, actual72clock sinks; own physical owner edge_coverage_2240. Commit-order prefix root4639FF and ORDERED mapper4457FF; current PHY adapter eight-leaf candidate237.6wide/842.4high before margins, distribution/cost unclosed. Dedicated two host CDC90.72x129.6; no free-PC-pocket assumption.",
+    "sha256": "91910eadfbc3f45fd59da185a6b3dd375abbfe01ed9f01079ca735eb09b96d02"
+  }
+}

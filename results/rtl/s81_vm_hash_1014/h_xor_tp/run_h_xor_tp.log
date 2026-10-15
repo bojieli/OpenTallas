@@ -1,0 +1,9 @@
+RESULT cyc=588 checked=462 mismatches_or_fails=0 phases=0 arm=0 p2rd=1 done=13 rows_ready=1 starts=0 p2_words=128 ctrl_reads=32 el=7168/7168 cap_ops=448 max_occ=3 mirror_max=2 lat p0=47 p1=47 p2=-1 p4=-1 p6=-1 p7=-1
+THROUGHPUT mode=1 rows_per_root=56 positions=1 elements=7168 emit_cycles=44 (first 231 last 274) cap_ops=448 cap_write_span=43 landing_tail=23 (last element at the pins -> done) arm_to_done=97 p2_done=327 wfc_23pairs=136 x_ctrl=187 (serial cycles from t0 200)
+PASS
+- /srv/opentallas-scratch/claude/s81grpA6/src/rtl/dsrom_sys/s81_ph/test/tb_dsfd_sp_vm.sv:820: Verilog $finish
+LOCKSTEP cycles=554 mismatches=0 pre=0 ports=ffff0fb rd=462 wr=526 drain=0 cap=448 cts_low=0 cts_tog=1 cw_stall=0 rdy=300 dv=9 ks=0 fe_flt=0000/0000
+LOCKSTEP_OK
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.528 s; speed 4.462 us/s
+- Verilator: cpu 0.528 s on 1 threads; allocated 30 MB

@@ -1,0 +1,13 @@
+{
+  "unit": "oth-ubuntu-3227390-1791979924",
+  "host": "ot-epyc1tb",
+  "request_GB": 1,
+  "threads": 1,
+  "exit": 0,
+  "scope": "LOGICAL16x48_INITIALIZATION_COMPONENT_ONLY",
+  "staging": "/srv/opentallas-scratch/codex/qwen-init-field-v2-1014",
+  "positives": 4,
+  "observed_mutants": 8,
+  "actual_native_certificates": false,
+  "physical_binding": false
+}
