@@ -26,14 +26,14 @@ python3 "$ROOT/tools/hgi_unitrate/su_prod_vec.py" --out "$OUT/ds_g25" --unit bot
 python3 "$ROOT/tools/hbm_static/su_f2_spread.py" --vectors "$OUT/ds_g25" --design deepseek --ds-program "$G25" \
     --out "$RES/spread_deepseek_g25.json" --map "$RES/address_map_deepseek_g25.json" >"$RES/compile_deepseek_g25.log"
 iverilog -g2012 -s tb_hbm_su_static_spread_vehicle -o "$OUT/sim/m0.vvp" "${SRC[@]}"
-for m in PG LG; do iverilog -g2012 -s tb_hbm_su_static_spread_vehicle -Ptb_hbm_su_static_spread_vehicle.MUT_$m=1 -o "$OUT/sim/mut_$m.vvp" "${SRC[@]}"; done
+for m in PG LG CAL; do iverilog -g2012 -s tb_hbm_su_static_spread_vehicle -Ptb_hbm_su_static_spread_vehicle.MUT_$m=1 -o "$OUT/sim/mut_$m.vvp" "${SRC[@]}"; done
 pids=()
-for d in qwen deepseek; do for b in m0 mut_PG mut_LG; do
+for d in qwen deepseek; do for b in m0 mut_PG mut_LG mut_CAL; do
     ( set +e; vvp "$OUT/sim/$b.vvp" +stem="$OUT/veh_$d" 2>&1 | grep -v WARNING >"$RES/${b}_$d.log"; echo "exit=${PIPESTATUS[0]}" >>"$RES/${b}_$d.log" ) & pids+=($!)
 done; done
 wait "${pids[@]}"
 for d in qwen deepseek; do
     grep -q '^SU_SPREAD_VEHICLE PASS' "$RES/m0_$d.log"
-    for m in PG LG; do grep -q 'SU_SPREAD_VEHICLE FAIL' "$RES/mut_${m}_$d.log"; done
+    for m in PG LG CAL; do grep -q 'SU_SPREAD_VEHICLE FAIL' "$RES/mut_${m}_$d.log"; done
 done
 echo SPREAD_VEHICLE_GATE PASS

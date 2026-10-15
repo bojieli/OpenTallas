@@ -1,0 +1,607 @@
+{
+ "schema": "opentallas.qwen_kv_host_bind_census.v1",
+ "master": "qkd_host_root_pt (+128 qkd_host_pc_slice)",
+ "inputs": [
+  {
+   "port": "ck_phy",
+   "width": 8,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_pad",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_phy_rx_w",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_phy_rx_r",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_phy_tx_w",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_phy_tx_r",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_peer",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_program_rx",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_program_loader",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_host",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_csr",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_rst",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_ctl",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_prompt",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_rx",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_tx",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_axi",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_ctrl",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_hc",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_qm_queue",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_qm_ing_w",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_qm_ing_r",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_qm_credit",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_qm_done_w",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_qm_done_r",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_qm_core",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_qm_host",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_qm_ingest",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_qm_bank",
+   "width": 2,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_qm_out",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_map",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_sum",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_order",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_dispatch",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_retire",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_bootbarrier",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_fence_core",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_fence_host",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_guard",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_native",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "abort_drained",
+   "width": 4,
+   "cls": "MISSING",
+   "producer": "{KV,VM,collective,HOST} genuine drain bits: KV-die drain reduction (die lead + q_kv elements) + compute-die VM/collective via link records (Q-FUNC/Q-COLL)"
+  },
+  {
+   "port": "native_kv_drained",
+   "width": 1,
+   "cls": "MISSING",
+   "producer": "KV queue/controller/landing drain reduction: no leaf exports idle today (Q-KVSYS-ELEM leaves + die lead collector)"
+  },
+  {
+   "port": "native_vm_drained",
+   "width": 1,
+   "cls": "MISSING",
+   "producer": "compute-die VM drain via link record (Q-DVM/Q-FUNC + static link calendar)"
+  },
+  {
+   "port": "native_collective_drained",
+   "width": 1,
+   "cls": "MISSING",
+   "producer": "compute-die collective drain via link record (Q-COLL)"
+  },
+  {
+   "port": "native_host_drained",
+   "width": 1,
+   "cls": "MISSING",
+   "producer": "HOST transport/descriptor/CQ drain reduction (HOST RTL owner)"
+  },
+  {
+   "port": "native_collective_busy",
+   "width": 1,
+   "cls": "MISSING",
+   "producer": "compute-die collective busy via link record (Q-COLL)"
+  },
+  {
+   "port": "native_kv_flush",
+   "width": 1,
+   "cls": "MISSING",
+   "producer": "KV flush/controller state: same as native_kv_drained"
+  },
+  {
+   "port": "die_id",
+   "width": 3,
+   "cls": "STRAP",
+   "producer": "die tie cells (role=2*PKG+DIE)"
+  },
+  {
+   "port": "por_n",
+   "width": 1,
+   "cls": "DIE_PIN",
+   "producer": "package POR pad"
+  },
+  {
+   "port": "pll_locked",
+   "width": 1,
+   "cls": "REAL",
+   "producer": "qkd_pll_analog_model.locked (allowed analog model)"
+  },
+  {
+   "port": "phy_up",
+   "width": 1,
+   "cls": "REAL",
+   "producer": "ot_qfd_serdes_112g_x12_phy.tx_up (native ports)"
+  },
+  {
+   "port": "phy_rx_v",
+   "width": 1,
+   "cls": "REAL",
+   "producer": "serdes.rx_v"
+  },
+  {
+   "port": "phy_rx_flit",
+   "width": 1043,
+   "cls": "REAL",
+   "producer": "serdes.rx_flit 1043"
+  },
+  {
+   "port": "link_up",
+   "width": 6,
+   "cls": "MISSING",
+   "producer": "6 link train-status bits by package topology: UCIe tx_up + SerDes tx_up exist, 4 others need named endpoints (HOST owner + die lead)"
+  },
+  {
+   "port": "transport_fault",
+   "width": 8,
+   "cls": "MISSING",
+   "producer": "typed sticky transport fault collector (lnk.flt, static link fault_cause, SerDes adapter) (die lead after HOST ABI semantics)"
+  },
+  {
+   "port": "physical_fault",
+   "width": 8,
+   "cls": "MISSING",
+   "producer": "typed sticky PHY/HBM fault collector (controller/PHY faults) (die lead after semantics)"
+  },
+  {
+   "port": "crom_fault",
+   "width": 1,
+   "cls": "MISSING",
+   "producer": "ROM fault from compute die via link record (Q-COMPUTE)"
+  },
+  {
+   "port": "local_tk",
+   "width": 93,
+   "cls": "REAL",
+   "producer": "qkd_seq tk 93"
+  },
+  {
+   "port": "local_kst",
+   "width": 10,
+   "cls": "REAL",
+   "producer": "qkd_seq kst 10"
+  },
+  {
+   "port": "ck_records",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "record_send_kind",
+   "width": 2,
+   "cls": "MISSING",
+   "producer": "KV static link calendar (compiler slot table -> RTL calendar) (die link lead + q_compile_schedule)"
+  },
+  {
+   "port": "record_witness_slot",
+   "width": 1,
+   "cls": "MISSING",
+   "producer": "static link calendar"
+  },
+  {
+   "port": "record_rx_v",
+   "width": 1,
+   "cls": "MISSING",
+   "producer": "ot_qwen_static_slot_link rx (needs calendar + 583 PHY)"
+  },
+  {
+   "port": "record_rx",
+   "width": 548,
+   "cls": "MISSING",
+   "producer": "static slot link rx_flit 548"
+  },
+  {
+   "port": "execution_active",
+   "width": 1,
+   "cls": "MISSING",
+   "producer": "native execution activity from KV seq/compute (Q-FUNC)"
+  },
+  {
+   "port": "hb_cr",
+   "width": 1,
+   "cls": "REAL",
+   "producer": "qkd_embgw hb_cr"
+  },
+  {
+   "port": "est",
+   "width": 13,
+   "cls": "REAL",
+   "producer": "qkd_embgw est 13"
+  },
+  {
+   "port": "chain_c",
+   "width": 128,
+   "cls": "REAL",
+   "producer": "qkd_host_pc_slice chain (this partition)"
+  },
+  {
+   "port": "chain_a",
+   "width": 128,
+   "cls": "REAL",
+   "producer": "qkd_host_pc_slice chain"
+  },
+  {
+   "port": "chain_fault_i",
+   "width": 4,
+   "cls": "REAL",
+   "producer": "qkd_host_pc_slice chain"
+  },
+  {
+   "port": "slice_ack",
+   "width": 128,
+   "cls": "REAL",
+   "producer": "qkd_host_pc_slice.all_ack x128"
+  },
+  {
+   "port": "slice_boot_done",
+   "width": 128,
+   "cls": "REAL",
+   "producer": "slice.boot_done x128"
+  },
+  {
+   "port": "slice_boot_ok",
+   "width": 128,
+   "cls": "REAL",
+   "producer": "slice.boot_ok x128"
+  },
+  {
+   "port": "slice_boot_fault",
+   "width": 128,
+   "cls": "REAL",
+   "producer": "slice.boot_fault x128"
+  },
+  {
+   "port": "ctrl_completion_fault",
+   "width": 128,
+   "cls": "MISSING",
+   "producer": "controller completion observer: qkd_ctrl_pc_host_static (root_macro_tools owner) not yet the die controller leaf"
+  },
+  {
+   "port": "native_admit_ready",
+   "width": 1,
+   "cls": "MISSING",
+   "producer": "native admission from compute die (Q-FUNC)"
+  },
+  {
+   "port": "native_links_drained",
+   "width": 1,
+   "cls": "MISSING",
+   "producer": "recovery: link drain witness (static link + compute)"
+  },
+  {
+   "port": "native_link_reset_seen",
+   "width": 1,
+   "cls": "MISSING",
+   "producer": "recovery: link reset witness (fresh-episode PHY reset)"
+  },
+  {
+   "port": "native_retrained",
+   "width": 1,
+   "cls": "MISSING",
+   "producer": "recovery: retraining witness"
+  },
+  {
+   "port": "ck_root_mux",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_coordinator_codec",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_coordinator_lifecycle",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "ck_coordinator_post",
+   "width": 1,
+   "cls": "CLOCK",
+   "producer": "qkd_pll_analog_model trunk by family (PHY1043/core833/host1000/ingest600)"
+  },
+  {
+   "port": "engine_admit_ready",
+   "width": 1,
+   "cls": "MISSING",
+   "producer": "8-rank engine admission (TP8 coordinator inputs; peer ranks via board links)"
+  },
+  {
+   "port": "engine_result_v",
+   "width": 1,
+   "cls": "MISSING",
+   "producer": "terminal engine-result collector (stage37 result transport from compute die; Q-FUNC)"
+  },
+  {
+   "port": "engine_result_tag",
+   "width": 59,
+   "cls": "MISSING",
+   "producer": "terminal engine-result collector (stage37 result transport from compute die; Q-FUNC)"
+  },
+  {
+   "port": "engine_result_gen",
+   "width": 2,
+   "cls": "MISSING",
+   "producer": "terminal engine-result collector (stage37 result transport from compute die; Q-FUNC)"
+  },
+  {
+   "port": "engine_result_done",
+   "width": 1,
+   "cls": "MISSING",
+   "producer": "terminal engine-result collector (stage37 result transport from compute die; Q-FUNC)"
+  },
+  {
+   "port": "engine_result_fault",
+   "width": 1,
+   "cls": "MISSING",
+   "producer": "terminal engine-result collector (stage37 result transport from compute die; Q-FUNC)"
+  },
+  {
+   "port": "engine_result_cause",
+   "width": 4,
+   "cls": "MISSING",
+   "producer": "terminal engine-result collector (stage37 result transport from compute die; Q-FUNC)"
+  },
+  {
+   "port": "engine_result_token",
+   "width": 18,
+   "cls": "MISSING",
+   "producer": "terminal engine-result collector (stage37 result transport from compute die; Q-FUNC)"
+  },
+  {
+   "port": "engine_result_value",
+   "width": 32,
+   "cls": "MISSING",
+   "producer": "terminal engine-result collector (stage37 result transport from compute die; Q-FUNC)"
+  },
+  {
+   "port": "engine_result_cycles",
+   "width": 32,
+   "cls": "MISSING",
+   "producer": "terminal engine-result collector (stage37 result transport from compute die; Q-FUNC)"
+  }
+ ],
+ "missing_root_inputs": [
+  "abort_drained",
+  "native_kv_drained",
+  "native_vm_drained",
+  "native_collective_drained",
+  "native_host_drained",
+  "native_collective_busy",
+  "native_kv_flush",
+  "link_up",
+  "transport_fault",
+  "physical_fault",
+  "crom_fault",
+  "record_send_kind",
+  "record_witness_slot",
+  "record_rx_v",
+  "record_rx",
+  "execution_active",
+  "ctrl_completion_fault",
+  "native_admit_ready",
+  "native_links_drained",
+  "native_link_reset_seen",
+  "native_retrained",
+  "engine_admit_ready",
+  "engine_result_v",
+  "engine_result_tag",
+  "engine_result_gen",
+  "engine_result_done",
+  "engine_result_fault",
+  "engine_result_cause",
+  "engine_result_token",
+  "engine_result_value",
+  "engine_result_cycles"
+ ],
+ "missing_root_input_bits": 869,
+ "slice_missing_inputs": {
+  "ctrl_completion_v/we": "x128 from the controller completion observer (qkd_ctrl_pc_host_static); current die leaf qkd_ctrl_pc has none"
+ },
+ "other_blockers": {
+  "B3_ucie": "die FDI 548 vs native 583 static slot link frame: needs ot_qwen_static_slot_link + KV link calendar on BOTH dies; qkd_d2d/qkd_lnk are credit-based (historical under 0ah)",
+  "pll": "qkd_pll_analog_model binds once resets come from root_pt host/link/hbm/die_rst_n (no second sequencer)",
+  "serdes": "native ports bind to root_pt phy_* (kv_native_phy.py) once host binds",
+  "geometry": "128 slices need a slot beside each controller/landing pair: CDC column is full (cdc 183.72 + wleaf 183.6 per 378 pitch); plan = 129.6-um slice column per side between CDC column and landing channel: +259.2 um die width (~+6.4 mm2)"
+ }
+}
