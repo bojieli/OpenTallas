@@ -88,6 +88,27 @@ module qfd_sp_band_lanes (
     output wire [4095:0] ty,
     output wire          f
 );
+    (* keep *) reg reset_q,b0_q;
+    (* keep *) reg [5:0] lnk_q;
+    (* keep *) reg [4095:0] tw_q;
+    (* keep *) reg [25:0] c_q;
+    (* keep *) reg [1537:0] tt_q;
+    always @(posedge ck) begin
+        reset_q<=rst_n;b0_q<=b0;lnk_q<=lnk;
+        tw_q<=tw;c_q<=c;tt_q<=tt;
+    end
+    // The parent contributes one output and one return-input edge to the
+    // band/upper round trip: two edges, represented by one LNK unit.
+    wire [5:0] leaf_lnk=lnk_q+6'd1;
+    wire [512:0] pw_i;
+    wire [4095:0] ty_i;
+    (* keep *) reg [512:0] pw_q;
+    (* keep *) reg [4095:0] ty_q;
+    always @(posedge ck) begin
+        pw_q[511:0]<=pw_i[511:0];pw_q[512]<=reset_q & pw_i[512];
+        ty_q<=ty_i;
+    end
+    assign pw=pw_q;assign ty=ty_q;
     wire [15:0] leaf_ck = {ck_l15, ck_l14, ck_l13, ck_l12, ck_l11, ck_l10, ck_l9, ck_l8, ck_l7, ck_l6, ck_l5, ck_l4, ck_l3, ck_l2, ck_l1, ck_l0};
     wire [15:0] lf, lpv;
     genvar l, k;
@@ -96,29 +117,29 @@ module qfd_sp_band_lanes (
         wire [97:0]  ltt;
         wire [32:0]  lpw;
         for (k = 0; k < 8; k = k + 1) begin : g_k
-            assign ltw[32*k +: 32] = tw[32*(16*k + l) +: 32];
-            assign ty[32*(16*k + l) +: 32] = lty[32*k +: 32];
+            assign ltw[32*k +: 32] = tw_q[32*(16*k + l) +: 32];
+            assign ty_i[32*(16*k + l) +: 32] = lty[32*k +: 32];
         end
         for (k = 0; k < 3; k = k + 1) begin : g_t
-            assign ltt[32*k +: 32] = tt[32*(16*k + l) +: 32];
+            assign ltt[32*k +: 32] = tt_q[32*(16*k + l) +: 32];
         end
-        assign ltt[97:96] = tt[1537:1536];
-        assign pw[32*l +: 32] = lpw[31:0];
+        assign ltt[97:96] = tt_q[1537:1536];
+        assign pw_i[32*l +: 32] = lpw[31:0];
         assign lpv[l] = lpw[32];
 `ifdef OT_QFD_BL_MUT
         if (l == 5) begin : g_mut
-            qfd_bl_lane_mut u_lane (.ck(leaf_ck[l]), .rst_n(rst_n), .b0(b0), .lnk(lnk), .tw(ltw), .c(c), .tt(ltt), .pw(lpw), .ty(lty), .f(lf[l]));
+            qfd_bl_lane_mut u_lane (.ck(leaf_ck[l]), .rst_n(reset_q), .b0(b0_q), .lnk(leaf_lnk), .tw(ltw), .c(c_q), .tt(ltt), .pw(lpw), .ty(lty), .f(lf[l]));
         end else begin : g_ok
-            qfd_bl_lane u_lane (.ck(leaf_ck[l]), .rst_n(rst_n), .b0(b0), .lnk(lnk), .tw(ltw), .c(c), .tt(ltt), .pw(lpw), .ty(lty), .f(lf[l]));
+            qfd_bl_lane u_lane (.ck(leaf_ck[l]), .rst_n(reset_q), .b0(b0_q), .lnk(leaf_lnk), .tw(ltw), .c(c_q), .tt(ltt), .pw(lpw), .ty(lty), .f(lf[l]));
         end
 `else
-        qfd_bl_lane u_lane (.ck(leaf_ck[l]), .rst_n(rst_n), .b0(b0), .lnk(lnk), .tw(ltw), .c(c), .tt(ltt), .pw(lpw), .ty(lty), .f(lf[l]));
+        qfd_bl_lane u_lane (.ck(leaf_ck[l]), .rst_n(reset_q), .b0(b0_q), .lnk(leaf_lnk), .tw(ltw), .c(c_q), .tt(ltt), .pw(lpw), .ty(lty), .f(lf[l]));
 `endif
     end endgenerate
-    assign pw[512] = lpv[0];        // every lane carries the same valid copy
+    assign pw_i[512] = lpv[0];        // every lane carries the same valid copy
     (* keep *) reg f_q;
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) f_q <= 1'b0;
-        else f_q <= |lf | (|(lpv ^ {16{lpv[0]}}));
+    always @(posedge ck)
+        if (!reset_q) f_q <= 1'b0;
+        else f_q <= (&lnk_q) | |lf | (|(lpv ^ {16{lpv[0]}}));
     assign f = f_q;
 endmodule

@@ -24,7 +24,7 @@ module tb_qfd_band_lanes;
     parameter integer CDLY = 2;              // CL=1: leaf c-tap delay of the cluster (1 = the hardened leaf, selects one edge late)
     parameter integer CL = 0;                // el1013-qwen-small-masters: 1 = the tree top is the die CLUSTER cell qfd_tt_up4 (NL 16, NBP 3, LNK 1:
                                              // its two pin stages ARE the one link relay stage; no u_l1..u_l4 delay on its links, sel undelayed)
-    localparam integer NB = NBP, LG = $clog2(NB * 1024), LAT_L = 41, LAT_B = 46 + 2 * LNK - 8 * (13 - LG);   // qwen-tp8/spine: the upper has LG-11 levels
+    localparam integer NB = NBP, LG = $clog2(NB * 1024), LAT_L = 41, LAT_B = ((BL != 0) ? 4 : 0) + 46 + 2 * LNK - 8 * (13 - LG);   // qwen-tp8/spine: the upper has LG-11 levels
     reg clk = 0, rst_n = 0;
     always #5 clk = ~clk;
     // ---- stimulus -----------------------------------------------------------------------------------------------
@@ -42,6 +42,13 @@ module tb_qfd_band_lanes;
         end
         ot_qwen_spine_lane #(.TREE_LAT(7), .OSTN(0)) u_lane (clk, rst_n, ti, sel, tv, yo, rf[l]);
     end endgenerate
+    reg [LG:0] upper_sel0,upper_sel1,upper_tv0,upper_tv1;
+    always @(posedge clk) begin
+        upper_sel0<=sel[LG:0];upper_sel1<=upper_sel0;
+        upper_tv0<=rst_n ? tv[LG:0] : 0;upper_tv1<=rst_n ? upper_tv0 : 0;
+    end
+    wire [LG:0] upper_sel=(BL!=0) ? upper_sel1 : sel[LG:0];
+    wire [LG:0] upper_tv=(BL!=0) ? upper_tv1 : tv[LG:0];
     // ---- DUT: 6 band blocks + upper, LNK relays on each link ---------------------------------------------------------
     wire [NB*NL*32-1:0] pw, pw_r;
     wire [NB-1:0] pv, pv_r, bf, bf_r;
@@ -72,7 +79,7 @@ module tb_qfd_band_lanes;
         ot_hdc_delay #(.W(3*NL*32), .D(LNK)) u_l3 (.clk(clk), .rst_n(rst_n), .d(tt), .q(tt_r));
         ot_hdc_delay #(.W(2), .D(LNK), .RESET(1)) u_l4 (.clk(clk), .rst_n(rst_n), .d({tu, tvv}), .q({tu_r, tv_r2}));
         ot_qfd_band_upper #(.NL(NL), .NB(NB), .LNK(LNK), .MUT((MUT == 2 || MUT == 3 || MUT == 4) ? MUT : 0), .LG(LG)) u_up (
-            .clk(clk), .rst_n(rst_n), .pw(pw_r), .pw_v(pv_r), .lf(bf_r), .sel_e(sel[LG:0]), .tv_e(tv[LG:0]),
+            .clk(clk), .rst_n(rst_n), .pw(pw_r), .pw_v(pv_r), .lf(bf_r), .sel_e(upper_sel), .tv_e(upper_tv),
             .tt_ty(tt), .tt_use(tu), .tt_v(tvv), .fault(uf));
     end else if (CL == 2) begin : g_w
         // the slot without a parent: 4 leaves through the wires-only wrapper qfd_tt_up4_w, the die's fan-out of the
