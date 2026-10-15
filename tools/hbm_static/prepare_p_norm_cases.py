@@ -8,6 +8,7 @@ from pathlib import Path
 import numpy as np
 from make_p_machine_fixture import generate,Machine,Die,u_su_vop,MDesc,Rec,sut_decode,I
 from make_p_producer_calendar import compile_head,IO,packed
+from hgi_sim import lib as A
 
 def words(p):return np.array([int(x,16) for x in p.read_text().split()],dtype=np.uint32)
 def write_words(p,w):p.write_text(''.join(f'{int(x):08x}\n' for x in w))
@@ -32,7 +33,7 @@ def main():
     rng=np.random.default_rng(15101572)
     for rows in (128,640):
         case=a.out/f't{rows}_h16';compile_head(rows,0,a.sfu_tools,case,normalize=True)
-        raw=[];pv=[];sink=[];mb=[];se=[];eb=[];den=[];norm=[]
+        raw=[];pv=[];sink=[];mb=[];se=[];eb=[];den=[];norm=[];tie_counts={'even':0,'odd':0}
         for h in range(16):
             o=oracle/f't{rows}_h{h:02d}';raw.extend(words(o/'raw_sc.hex'));mb.extend(words(o/'expected_mb.hex'));se.extend(words(o/'expected_se.hex'));eb.extend(words(o/'expected_eb.hex'))
             d=Die(0,None);m=Machine([d]);V=lambda base,n,**kw:MDesc(base=base,n=n,**kw)
@@ -46,12 +47,28 @@ def main():
             def run(tag,desc,**fields):
                 sut=sut_decode(0);sut.update(fields);u_su_vop(m,Rec('SU','VOP',sut=sut,desc=desc,tag=tag),0)
             run('attend.den',{'A':V(0,1),'B':V(1,1,ibcast=1),'C':V(2,1,ibcast=1),'O':V(3,1)},ad=I.AD_NEGB,sfu=I.SFU_EXP,e1=I.E1_ADDC,dst=I.DST_VM)
+            if not a.canonical_pv:
+                # Choose external PV words whose actual canonical division
+                # lands exactly on BF16 halfways, with even and odd low bits.
+                denominator=d.vm[3:4].view(np.float32)[0]
+                for parity in (0,1):
+                    for upper in range(0x3f80+parity,0x3fa0,2):
+                        target=np.uint32((upper<<16)|0x8000)
+                        with np.errstate(over='ignore'):
+                            centre=np.float32(target.view(np.float32)*denominator).view(np.uint32)
+                        candidates=np.arange(int(centre)-128,int(centre)+129,dtype=np.uint32)
+                        q=A.div(candidates.view(np.float32),denominator).view(np.uint32)
+                        hits=np.flatnonzero(q==target)
+                        if len(hits):
+                            d.vm[514+parity]=candidates[hits[0]]
+                            tie_counts['odd' if parity else 'even']+=1
+                            break
             run('attend.norm',{'A':V(512,512),'B':V(3,512,ibcast=1),'O':V(2048,512)},m1=I.M1_DIVB,rnd=1,dst=I.DST_VM)
             sink.append(d.vm[0]);pv.extend(d.vm[512:1024]);den.append(d.vm[3]);norm.extend(d.vm[2048:2560])
         sectors(case/'raw_sc_sectors.hex',raw);sectors(case/'raw_pv_sectors.hex',pv);sectors(case/'sink_sectors.hex',sink)
         for name,data in [('mb',mb),('se',se),('eb',eb),('den',den),('norm',norm)]:write_words(case/f'expected_{name}.hex',data)
         for src,dst in [('expected_scaled_sc','expected_scaled'),('expected_e','expected_e')]:shutil.copyfile(oracle/f't{rows}_h15'/f'{src}.hex',case/f'{dst}.hex')
-        model=json.loads((case/'calendar.json').read_text());model.update(heads=16,external_starts=1,rawPV_actual_producer_bound=False,dut_initialization_only=['rawSC','rawPV','SINK']);(case/'model.json').write_text(json.dumps(model,indent=2)+'\n')
+        model=json.loads((case/'calendar.json').read_text());model.update(heads=16,external_starts=1,rawPV_actual_producer_bound=False,actual_division_BF16_ties=tie_counts,dut_initialization_only=['rawSC','rawPV','SINK']);(case/'model.json').write_text(json.dumps(model,indent=2)+'\n')
     for mutant in ('omit_se','bypass_div','disable_rne'):
         src=a.out/'t640_h16';dst=a.out/f'mutant_{mutant}';shutil.copytree(src,dst,dirs_exist_ok=True)
         # Mutate real arithmetic programme fields by re-encoding literal rows.
