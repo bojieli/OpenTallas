@@ -183,7 +183,8 @@ def main() -> int:
                 'views_to': f'physical/ref_tile/{name}/views',
                 'record_to': f'results/rtl/ref_tile/{name}',
                 'extra_paths': ['rtl/common', RTL_DIR, 'tools/s81_station_native', PIN_DIR,
-                                'physical/hbm_accel_die_views/stations/bench'],
+                                'physical/hbm_accel_die_views/stations/bench']
+                               + (['physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl'] if fwd else []),
                 'benches': [
                     {'name': 'phase_words', 'cmd': f'bash {bench} pass {mst} {wb} {{RUN}}/bench_p', 'expect': 'pass',
                      'pass_regex': f'STATION PASS 20000 words {wb} bits {edge}', 'threads': 2, 'peak_ram_gb': 4},
