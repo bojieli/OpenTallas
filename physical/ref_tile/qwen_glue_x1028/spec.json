@@ -1,0 +1,177 @@
+{
+ "name": "qwen_glue_x1028",
+ "top": "qwen_glue_x1028",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/head_staging_20261015/ot_qkh_packet_stage.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/qwen_sys/tile_glue_banks_20261015/qwen_glue_x1028.sv"
+ ],
+ "params": {},
+ "clock_port": "clk_o",
+ "reset_ports": [
+  "rst_o_n",
+  "rst_i_n"
+ ],
+ "outline": {
+  "w": 32.4,
+  "h": 110.16
+ },
+ "pins": {
+  "W": [
+   "oq",
+   "id",
+   "clk_o",
+   "clk_i"
+  ],
+  "E": [
+   "od",
+   "iq"
+  ],
+  "S": [
+   "rst_o_n",
+   "rst_i_n"
+  ]
+ },
+ "inter": [],
+ "refglob": "*",
+ "layer_cap": "M5",
+ "recipe": 2,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "inhold": true,
+ "outhold": true,
+ "io_flop_at_pins": {
+  "cols": 4
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "m5_pg_pitch": 2.7,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "New PM-H-S paired W-face master: the two qwen_glue_v514 face captures of a facing tree-word pair in one straight-wired body with bit-interleaved M4 pins (0.096 um apart); two independent 514-sink roots, zero added edges.",
+ "job": {
+  "owner": "Claude:q15_compute_elem",
+  "branch": "claude/q15-nl-banked",
+  "tag": "pm1",
+  "purpose": "PM-H-S straight-wired interleaved W-face master",
+  "extra_paths": [
+   "physical/qwen_tile_glue_banks_1015",
+   "rtl/test/qwen_head_staging"
+  ],
+  "benches": [
+   {
+    "name": "x1028_m0",
+    "cmd": "bash physical/qwen_tile_glue_banks_1015/bench_pair.sh {RUN}/bench/x1028_0 x1028 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^PASS qwen_glue_x1028"
+   },
+   {
+    "name": "x1028_m1",
+    "cmd": "bash physical/qwen_tile_glue_banks_1015/bench_pair.sh {RUN}/bench/x1028_1 x1028 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "^FAIL qwen_glue_x1028"
+   },
+   {
+    "name": "x1028_m2",
+    "cmd": "bash physical/qwen_tile_glue_banks_1015/bench_pair.sh {RUN}/bench/x1028_2 x1028 2",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "^FAIL qwen_glue_x1028"
+   }
+  ],
+  "views_to": "physical/ref_tile/qwen_glue_x1028/views",
+  "record_to": "results/rtl/ref_tile/qwen_glue_x1028"
+ },
+ "io_tcl": "physical/ref_tile/qwen_glue_x1028/assigned_pins.tcl",
+ "pin_ranges": {
+  "oq": [
+   5.292,
+   103.788
+  ],
+  "id": [
+   5.388,
+   103.884
+  ],
+  "od": [
+   5.292,
+   103.788
+  ],
+  "iq": [
+   5.388,
+   103.884
+  ]
+ },
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "clk_o",
+  "clk_i"
+ ],
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_o"
+   ],
+   "inputs": [
+    "od",
+    "rst_o_n"
+   ],
+   "outputs": [
+    "oq"
+   ]
+  },
+  "inner": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_i"
+   ],
+   "inputs": [
+    "id",
+    "rst_i_n"
+   ],
+   "outputs": [
+    "iq"
+   ]
+  }
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "source": "rtl/qwen_sys/tile_glue_banks_20261015/qwen_glue_x1028.sv",
+  "cell": "qwen_glue_x1028",
+  "why": "new master, no prior route"
+ },
+ "macros": [],
+ "children": [],
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

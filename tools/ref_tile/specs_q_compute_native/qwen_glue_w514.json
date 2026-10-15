@@ -1,0 +1,119 @@
+{
+  "name": "qwen_glue_w514",
+  "top": "qwen_glue_w514",
+  "kind": "tile",
+  "sources": [
+    "rtl/qwen_sys/head_staging_20261015/ot_qkh_packet_stage.sv",
+    "rtl/lib/ot_rst_relay.sv",
+    "rtl/qwen_sys/tile_glue_banks_20261015/qwen_glue_w514.sv"
+  ],
+  "params": {},
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 21.6,
+    "h": 110.16
+  },
+  "pins": {
+    "W": [
+      "q",
+      "clk"
+    ],
+    "E": [
+      "d"
+    ],
+    "S": [
+      "rst_n"
+    ]
+  },
+  "inter": [],
+  "refglob": "*",
+  "layer_cap": "M5",
+  "recipe": 2,
+  "keep_pin_regs": true,
+  "pin_reg_split": true,
+  "inhold": true,
+  "outhold": true,
+  "io_flop_at_pins": {
+    "cols": 4
+  },
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "hold_margin_ns": 0.03,
+    "pin_balance": {
+      "group_max": 1,
+      "h": "M4",
+      "v": "M5"
+    },
+    "m5_pg_pitch": 2.7
+  },
+  "structural_change": "New PM-H-S NL t_out face master: qwen_glue_v514 RTL with pins on the even interleaved TB slots (0.192 um pitch, W=q); zero added edges.",
+  "job": {
+    "owner": "Claude:q15_compute_elem",
+    "branch": "claude/q15-nl-banked",
+    "tag": "pm1",
+    "purpose": "PM-H-S straight-wired interleaved W-face master",
+    "extra_paths": [
+      "physical/qwen_tile_glue_banks_1015",
+      "rtl/test/qwen_head_staging"
+    ],
+    "benches": [
+      {
+        "name": "w514_m0",
+        "cmd": "bash physical/qwen_tile_glue_banks_1015/bench_pair.sh {RUN}/bench/w514_0 w514 0",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ],
+        "pass_regex": "^PASS qkh_packet_stage W=514"
+      },
+      {
+        "name": "w514_m1",
+        "cmd": "bash physical/qwen_tile_glue_banks_1015/bench_pair.sh {RUN}/bench/w514_1 w514 1",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "^FAIL qkh_packet_stage W=514"
+      },
+      {
+        "name": "w514_m2",
+        "cmd": "bash physical/qwen_tile_glue_banks_1015/bench_pair.sh {RUN}/bench/w514_2 w514 2",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "^FAIL qkh_packet_stage W=514"
+      }
+    ],
+    "views_to": "physical/ref_tile/qwen_glue_w514/views",
+    "record_to": "results/rtl/ref_tile/qwen_glue_w514"
+  },
+  "io_tcl": "physical/ref_tile/qwen_glue_w514/assigned_pins.tcl",
+  "pin_ranges": {
+    "q": [
+      5.292,
+      103.788
+    ],
+    "d": [
+      5.292,
+      103.788
+    ]
+  },
+  "reroute_reason": {
+    "kind": "rtl_change",
+    "source": "rtl/qwen_sys/tile_glue_banks_20261015/qwen_glue_w514.sv",
+    "cell": "qwen_glue_w514",
+    "why": "new master, no prior route"
+  }
+}

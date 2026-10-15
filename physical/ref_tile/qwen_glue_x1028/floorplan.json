@@ -1,0 +1,92 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "qwen_glue_x1028",
+ "top": "qwen_glue_x1028",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  32.4,
+  110.16
+ ],
+ "core": [
+  2.16,
+  2.16,
+  30.24,
+  108.0
+ ],
+ "why": "spec outline",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "W": [
+   "oq",
+   "id",
+   "clk_o",
+   "clk_i"
+  ],
+  "E": [
+   "od",
+   "iq"
+  ],
+  "S": [
+   "rst_o_n",
+   "rst_i_n"
+  ]
+ },
+ "clock_port": "clk_o",
+ "clock_ports": [
+  "clk_o",
+  "clk_i"
+ ],
+ "blocks": [],
+ "findings": [],
+ "referenced": [
+  "rtl/qwen_sys/head_staging_20261015/ot_qkh_packet_stage.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/qwen_sys/tile_glue_banks_20261015/qwen_glue_x1028.sv",
+  "physical/ref_tile/qwen_glue_x1028/kit.env",
+  "physical/ref_tile/qwen_glue_x1028/clock.sdc",
+  "physical/ref_tile/qwen_glue_x1028/signoff.sdc",
+  "physical/ref_tile/qwen_glue_x1028/pdn.tcl",
+  "physical/ref_tile/qwen_glue_x1028/pre_cts.tcl",
+  "physical/ref_tile/qwen_glue_x1028/post_cts.tcl",
+  "physical/ref_tile/qwen_glue_x1028/post_grt.tcl",
+  "physical/ref_tile/qwen_glue_x1028/pre_drt.tcl",
+  "physical/ref_tile/qwen_glue_x1028/pre_fill.tcl",
+  "physical/ref_tile/qwen_glue_x1028/post_fill.tcl",
+  "physical/ref_tile/qwen_glue_x1028/pre_grt.tcl",
+  "physical/ref_tile/qwen_glue_x1028/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/ref_tile/qwen_glue_x1028/assigned_pins.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/qwen_glue_x1028/pre_gpl.tcl",
+  "physical/ref_tile/qwen_glue_x1028/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl",
+  "physical/common_flow/clock_entries.tcl",
+  "physical/ref_tile/qwen_glue_x1028/clock_entry.sdc"
+ ]
+}
