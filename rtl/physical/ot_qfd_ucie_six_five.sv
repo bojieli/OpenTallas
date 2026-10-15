@@ -98,6 +98,10 @@ module qfd_ucie_six_five #(parameter integer MUT=0)(
    3:rxv[5]<=phy_rx_frame[458];
    default:begin end
   endcase
+ // padding check registered in the capture root that owns phy_rx_frame; the
+ // FDI fault flop samples it one FDI edge later (fault-only, no schedule effect)
+ reg padbad;
+ always @(posedge fdi_rx_ck or negedge rf_n)if(!rf_n)padbad<=0;else padbad<=rx_go && tp==3 && (|phy_rx_frame[1042:459]);
  // ---- RX block register (blk_rx_ck root)
  (* keep *)reg[3587:0]rxblk;reg[5:0]rxblk_v;
  always @(posedge blk_rx_ck)rxblk<=rxb;
@@ -105,8 +109,19 @@ module qfd_ucie_six_five #(parameter integer MUT=0)(
  // ---- core output: word j of the block captured at B(m) leaves at C(6m+1+j)
  wire[2:0]rp0=cp==0?3'd5:cp-1'b1;
  wire[2:0]rp=(MUT==2)?(rp0==5?3'd0:rp0+1'b1):rp0;
- wire[596:0]rword=rxblk[rp*598+:597];
- always @(posedge core_ck or negedge rc_n)if(!rc_n)rx_valid<=0;else rx_valid<=rxblk_v[rp];
+ // decoded constant-index word select (no runtime part-select)
+ reg[596:0]rword;reg rvalid;
+ always @*begin
+  case(rp)
+   3'd0:begin rword=rxblk[0*598+:597];rvalid=rxblk_v[0];end
+   3'd1:begin rword=rxblk[1*598+:597];rvalid=rxblk_v[1];end
+   3'd2:begin rword=rxblk[2*598+:597];rvalid=rxblk_v[2];end
+   3'd3:begin rword=rxblk[3*598+:597];rvalid=rxblk_v[3];end
+   3'd4:begin rword=rxblk[4*598+:597];rvalid=rxblk_v[4];end
+   default:begin rword=rxblk[5*598+:597];rvalid=rxblk_v[5];end
+  endcase
+ end
+ always @(posedge core_ck or negedge rc_n)if(!rc_n)rx_valid<=0;else rx_valid<=rvalid;
  always @(posedge core_ck)rx_frame<=rword;
  // ---- checks: sticky faults only
  always @(posedge core_ck or negedge rst_n)
@@ -121,7 +136,7 @@ module qfd_ucie_six_five #(parameter integer MUT=0)(
   else if(rf_n)begin
    if((bt^fs)!=(tp==0))fdi_fault<=1;              // FDI frame not aligned to the block clock
    if(phy_rx_valid!==(rx_go && tp<4))fdi_fault<=1;
-   if(rx_go && tp==3 && |phy_rx_frame[1042:459])fdi_fault<=1;
+   if(padbad)fdi_fault<=1;
    if(tp>4)fdi_fault<=1;
   end
 endmodule
