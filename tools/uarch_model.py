@@ -16744,3 +16744,9 @@ def hbm_idx_static_selector_model():
         routing='four quarterhist/compact roots and separate registered macro roots; cut/slot UNASSIGNED',
         schedule='compiler opcode+address slots only; no request queues, credits, readiness or data-dependent scan length',
         qualification='OPEN exact fullshape golden/mutants, physical closure and native productionrate')
+
+
+def s81_static_vm_small_transport_model():
+    """Actual small-group VM replica, pin, clock and state sizing; native gates remain open."""
+    from s81_vm.static_transport_model import model
+    return model()
