@@ -1,6 +1,7 @@
 """Synthetic minimum controller mechanism tests; no production calendar claim."""
 import copy
 import hashlib
+import os
 from pathlib import Path
 import subprocess
 import tempfile
@@ -85,5 +86,11 @@ endmodule
             subprocess.run(['iverilog','-g2012','-s','tb','-o',str(p/'mut'),str(p/'mut.sv'),str(p/'tb.sv')],check=True,capture_output=True)
             result=subprocess.run(['vvp',str(p/'mut')],capture_output=True,text=True)
             self.assertNotEqual(result.returncode,0);self.assertIn('slot shifted 15',result.stdout)
+            if os.environ.get('S81_CONTROLLER_EVIDENCE'):
+                dest=Path(os.environ['S81_CONTROLLER_EVIDENCE']);dest.mkdir(parents=True,exist_ok=True)
+                (dest/'synthetic_calendar.mem').write_bytes((p/'calendar.mem').read_bytes())
+                (dest/'synthetic_calendar.json').write_text(json.dumps(fixture(),indent=2)+'\n')
+                (dest/'nominal.log').write_text(output)
+                (dest/'mutant_suppressed_issue.log').write_text(result.stdout+result.stderr)
 
 if __name__=='__main__':unittest.main()
