@@ -1,0 +1,247 @@
+
+-- Running command `read_verilog -sv rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv rtl/qwen_sys/tile_glue_banks_20261015/ot_qwen_tx198.sv physical/qwen_tx_rne_retime_1015/prove_tx_rnep.sv; chparam -set MUT 3 prove_tx_rnep; hierarchy -top prove_tx_rnep; proc; flatten; opt; sat -verify -prove exact 1 -show-inputs' --
+
+1. Executing Verilog-2005 frontend: rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv' to AST representation.
+Generating RTLIL representation for module `\qwen_tx_rnep_r0_out'.
+Generating RTLIL representation for module `\qwen_tx_rnep_r1_in'.
+Generating RTLIL representation for module `\qwen_tx_rnep_r1_out'.
+Generating RTLIL representation for module `\qwen_tx_rnep_r0'.
+Generating RTLIL representation for module `\qwen_tx_rnep_r1'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/qwen_sys/tile_glue_banks_20261015/ot_qwen_tx198.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/tile_glue_banks_20261015/ot_qwen_tx198.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qwen_tx198_codec'.
+Generating RTLIL representation for module `\ot_qwen_tx198'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: physical/qwen_tx_rne_retime_1015/prove_tx_rnep.sv
+Parsing SystemVerilog input from `physical/qwen_tx_rne_retime_1015/prove_tx_rnep.sv' to AST representation.
+Generating RTLIL representation for module `\prove_tx_rnep'.
+Successfully finished Verilog frontend.
+
+4. Executing AST frontend in derive mode using pre-parsed AST for module `\prove_tx_rnep'.
+Parameter \MUT = 3
+Generating RTLIL representation for module `$paramod\prove_tx_rnep\MUT=3'.
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1. Analyzing design hierarchy..
+Top module:  \prove_tx_rnep
+Used module:     \qwen_tx_rnep_r0_out
+Used module:     \qwen_tx_rnep_r1_in
+Used module:     \qwen_tx_rnep_r1_out
+Used module:     \ot_qwen_tx198_codec
+
+5.2. Executing AST frontend in derive mode using pre-parsed AST for module `\qwen_tx_rnep_r0_out'.
+Parameter \MUT = 3
+Generating RTLIL representation for module `$paramod\qwen_tx_rnep_r0_out\MUT=3'.
+
+5.3. Executing AST frontend in derive mode using pre-parsed AST for module `\qwen_tx_rnep_r1_in'.
+Parameter \MUT = 3
+Generating RTLIL representation for module `$paramod\qwen_tx_rnep_r1_in\MUT=3'.
+
+5.4. Executing AST frontend in derive mode using pre-parsed AST for module `\qwen_tx_rnep_r1_out'.
+Parameter \MUT = 3
+Generating RTLIL representation for module `$paramod\qwen_tx_rnep_r1_out\MUT=3'.
+
+5.5. Analyzing design hierarchy..
+Top module:  \prove_tx_rnep
+Used module:     $paramod\qwen_tx_rnep_r0_out\MUT=3
+Used module:     $paramod\qwen_tx_rnep_r1_in\MUT=3
+Used module:     $paramod\qwen_tx_rnep_r1_out\MUT=3
+Used module:     \ot_qwen_tx198_codec
+
+5.6. Analyzing design hierarchy..
+Top module:  \prove_tx_rnep
+Used module:     $paramod\qwen_tx_rnep_r0_out\MUT=3
+Used module:     $paramod\qwen_tx_rnep_r1_in\MUT=3
+Used module:     $paramod\qwen_tx_rnep_r1_out\MUT=3
+Used module:     \ot_qwen_tx198_codec
+Removing unused module `\ot_qwen_tx198'.
+Removing unused module `\qwen_tx_rnep_r1'.
+Removing unused module `\qwen_tx_rnep_r0'.
+Removing unused module `\qwen_tx_rnep_r1_out'.
+Removing unused module `\qwen_tx_rnep_r1_in'.
+Removing unused module `\qwen_tx_rnep_r0_out'.
+Removed 6 unused modules.
+
+6. Executing PROC pass (convert processes to netlists).
+
+6.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+6.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+6.3. Executing PROC_INIT pass (extract init attributes).
+
+6.4. Executing PROC_ARST pass (detect async resets in processes).
+
+6.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+6.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+6.7. Executing PROC_DFF pass (convert process syncs to FFs).
+
+6.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+7. Executing FLATTEN pass (flatten design).
+Using template ot_qwen_tx198_codec for cells of type ot_qwen_tx198_codec.
+Using template $paramod\qwen_tx_rnep_r0_out\MUT=3 for cells of type $paramod\qwen_tx_rnep_r0_out\MUT=3.
+Using template $paramod\qwen_tx_rnep_r1_in\MUT=3 for cells of type $paramod\qwen_tx_rnep_r1_in\MUT=3.
+Using template $paramod\qwen_tx_rnep_r1_out\MUT=3 for cells of type $paramod\qwen_tx_rnep_r1_out\MUT=3.
+<suppressed ~4 debug messages>
+No more expansions possible.
+Deleting now unused module $paramod\qwen_tx_rnep_r1_in\MUT=3.
+Deleting now unused module $paramod\qwen_tx_rnep_r0_out\MUT=3.
+Deleting now unused module $paramod\qwen_tx_rnep_r1_out\MUT=3.
+Deleting now unused module ot_qwen_tx198_codec.
+
+8. Executing OPT pass (performing simple optimizations).
+
+8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module prove_tx_rnep.
+<suppressed ~24 debug messages>
+
+8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\prove_tx_rnep'.
+<suppressed ~12 debug messages>
+Removed a total of 4 cells.
+
+8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \prove_tx_rnep..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~4 debug messages>
+
+8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \prove_tx_rnep.
+    New input vector for $reduce_or cell $techmap\r0o.$reduce_or$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:17$288: { \x [0] \x [1] \x [2] \x [3] \x [4] \x [5] \x [6] \x [7] \x [8] \x [9] \x [10] \x [11] \x [12] \x [13] }
+    New input vector for $reduce_or cell $techmap\r0o.$reduce_or$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:17$369: { \x [96] \x [97] \x [98] \x [99] \x [100] \x [101] \x [102] \x [103] \x [104] \x [105] \x [106] \x [107] \x [108] \x [109] \x [110] }
+    New input vector for $reduce_or cell $techmap\r0o.$reduce_or$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:17$366: { \x [96] \x [97] \x [98] \x [99] \x [100] \x [101] \x [102] \x [103] \x [104] \x [105] \x [106] \x [107] \x [108] \x [109] }
+    New input vector for $reduce_or cell $techmap\r0o.$reduce_or$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:17$343: { \x [64] \x [65] \x [66] \x [67] \x [68] \x [69] \x [70] \x [71] \x [72] \x [73] \x [74] \x [75] \x [76] \x [77] \x [78] }
+    New input vector for $reduce_or cell $techmap\r0o.$reduce_or$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:17$340: { \x [64] \x [65] \x [66] \x [67] \x [68] \x [69] \x [70] \x [71] \x [72] \x [73] \x [74] \x [75] \x [76] \x [77] }
+    New input vector for $reduce_or cell $techmap\r0o.$reduce_or$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:17$317: { \x [32] \x [33] \x [34] \x [35] \x [36] \x [37] \x [38] \x [39] \x [40] \x [41] \x [42] \x [43] \x [44] \x [45] \x [46] }
+    New input vector for $reduce_or cell $techmap\r0o.$reduce_or$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:17$314: { \x [32] \x [33] \x [34] \x [35] \x [36] \x [37] \x [38] \x [39] \x [40] \x [41] \x [42] \x [43] \x [44] \x [45] }
+    New input vector for $reduce_or cell $techmap\r0o.$reduce_or$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:17$291: { \x [0] \x [1] \x [2] \x [3] \x [4] \x [5] \x [6] \x [7] \x [8] \x [9] \x [10] \x [11] \x [12] \x [13] \x [14] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$391: { \x [112] \x [113] \x [114] \x [115] \x [116] \x [117] \x [118] \x [119] \x [120] \x [121] \x [122] \x [123] \x [124] \x [125] \x [126] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$390: { \x [112] \x [113] \x [114] \x [115] \x [116] \x [117] \x [118] \x [119] \x [120] \x [121] \x [122] \x [123] \x [124] \x [125] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$389: { \x [112] \x [113] \x [114] \x [115] \x [116] \x [117] \x [118] \x [119] \x [120] \x [121] \x [122] \x [123] \x [124] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$388: { \x [112] \x [113] \x [114] \x [115] \x [116] \x [117] \x [118] \x [119] \x [120] \x [121] \x [122] \x [123] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$387: { \x [112] \x [113] \x [114] \x [115] \x [116] \x [117] \x [118] \x [119] \x [120] \x [121] \x [122] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$386: { \x [112] \x [113] \x [114] \x [115] \x [116] \x [117] \x [118] \x [119] \x [120] \x [121] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$385: { \x [112] \x [113] \x [114] \x [115] \x [116] \x [117] \x [118] \x [119] \x [120] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$384: { \x [112] \x [113] \x [114] \x [115] \x [116] \x [117] \x [118] \x [119] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$383: { \x [112] \x [113] \x [114] \x [115] \x [116] \x [117] \x [118] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$382: { \x [112] \x [113] \x [114] \x [115] \x [116] \x [117] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$381: { \x [112] \x [113] \x [114] \x [115] \x [116] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$380: { \x [112] \x [113] \x [114] \x [115] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$379: { \x [112] \x [113] \x [114] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$378: { \x [112] \x [113] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$365: { \x [80] \x [81] \x [82] \x [83] \x [84] \x [85] \x [86] \x [87] \x [88] \x [89] \x [90] \x [91] \x [92] \x [93] \x [94] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$364: { \x [80] \x [81] \x [82] \x [83] \x [84] \x [85] \x [86] \x [87] \x [88] \x [89] \x [90] \x [91] \x [92] \x [93] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$363: { \x [80] \x [81] \x [82] \x [83] \x [84] \x [85] \x [86] \x [87] \x [88] \x [89] \x [90] \x [91] \x [92] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$362: { \x [80] \x [81] \x [82] \x [83] \x [84] \x [85] \x [86] \x [87] \x [88] \x [89] \x [90] \x [91] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$361: { \x [80] \x [81] \x [82] \x [83] \x [84] \x [85] \x [86] \x [87] \x [88] \x [89] \x [90] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$360: { \x [80] \x [81] \x [82] \x [83] \x [84] \x [85] \x [86] \x [87] \x [88] \x [89] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$359: { \x [80] \x [81] \x [82] \x [83] \x [84] \x [85] \x [86] \x [87] \x [88] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$358: { \x [80] \x [81] \x [82] \x [83] \x [84] \x [85] \x [86] \x [87] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$357: { \x [80] \x [81] \x [82] \x [83] \x [84] \x [85] \x [86] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$356: { \x [80] \x [81] \x [82] \x [83] \x [84] \x [85] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$355: { \x [80] \x [81] \x [82] \x [83] \x [84] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$354: { \x [80] \x [81] \x [82] \x [83] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$353: { \x [80] \x [81] \x [82] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$352: { \x [80] \x [81] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$339: { \x [48] \x [49] \x [50] \x [51] \x [52] \x [53] \x [54] \x [55] \x [56] \x [57] \x [58] \x [59] \x [60] \x [61] \x [62] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$338: { \x [48] \x [49] \x [50] \x [51] \x [52] \x [53] \x [54] \x [55] \x [56] \x [57] \x [58] \x [59] \x [60] \x [61] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$337: { \x [48] \x [49] \x [50] \x [51] \x [52] \x [53] \x [54] \x [55] \x [56] \x [57] \x [58] \x [59] \x [60] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$336: { \x [48] \x [49] \x [50] \x [51] \x [52] \x [53] \x [54] \x [55] \x [56] \x [57] \x [58] \x [59] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$335: { \x [48] \x [49] \x [50] \x [51] \x [52] \x [53] \x [54] \x [55] \x [56] \x [57] \x [58] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$334: { \x [48] \x [49] \x [50] \x [51] \x [52] \x [53] \x [54] \x [55] \x [56] \x [57] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$333: { \x [48] \x [49] \x [50] \x [51] \x [52] \x [53] \x [54] \x [55] \x [56] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$332: { \x [48] \x [49] \x [50] \x [51] \x [52] \x [53] \x [54] \x [55] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$331: { \x [48] \x [49] \x [50] \x [51] \x [52] \x [53] \x [54] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$330: { \x [48] \x [49] \x [50] \x [51] \x [52] \x [53] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$329: { \x [48] \x [49] \x [50] \x [51] \x [52] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$328: { \x [48] \x [49] \x [50] \x [51] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$327: { \x [48] \x [49] \x [50] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$326: { \x [48] \x [49] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$313: { \x [16] \x [17] \x [18] \x [19] \x [20] \x [21] \x [22] \x [23] \x [24] \x [25] \x [26] \x [27] \x [28] \x [29] \x [30] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$312: { \x [16] \x [17] \x [18] \x [19] \x [20] \x [21] \x [22] \x [23] \x [24] \x [25] \x [26] \x [27] \x [28] \x [29] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$311: { \x [16] \x [17] \x [18] \x [19] \x [20] \x [21] \x [22] \x [23] \x [24] \x [25] \x [26] \x [27] \x [28] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$310: { \x [16] \x [17] \x [18] \x [19] \x [20] \x [21] \x [22] \x [23] \x [24] \x [25] \x [26] \x [27] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$309: { \x [16] \x [17] \x [18] \x [19] \x [20] \x [21] \x [22] \x [23] \x [24] \x [25] \x [26] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$308: { \x [16] \x [17] \x [18] \x [19] \x [20] \x [21] \x [22] \x [23] \x [24] \x [25] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$307: { \x [16] \x [17] \x [18] \x [19] \x [20] \x [21] \x [22] \x [23] \x [24] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$306: { \x [16] \x [17] \x [18] \x [19] \x [20] \x [21] \x [22] \x [23] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$305: { \x [16] \x [17] \x [18] \x [19] \x [20] \x [21] \x [22] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$304: { \x [16] \x [17] \x [18] \x [19] \x [20] \x [21] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$303: { \x [16] \x [17] \x [18] \x [19] \x [20] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$302: { \x [16] \x [17] \x [18] \x [19] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$301: { \x [16] \x [17] \x [18] }
+    New input vector for $reduce_and cell $techmap\r0o.$reduce_and$rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv:23$300: { \x [16] \x [17] }
+  Optimizing cells in module \prove_tx_rnep.
+Performed a total of 64 changes.
+
+8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\prove_tx_rnep'.
+Removed a total of 0 cells.
+
+8.6. Executing OPT_RMDFF pass (remove dff with constant values).
+
+8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \prove_tx_rnep..
+Removed 20 unused cells and 181 unused wires.
+<suppressed ~21 debug messages>
+
+8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module prove_tx_rnep.
+
+8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \prove_tx_rnep..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~4 debug messages>
+
+8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \prove_tx_rnep.
+Performed a total of 0 changes.
+
+8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\prove_tx_rnep'.
+Removed a total of 0 cells.
+
+8.13. Executing OPT_RMDFF pass (remove dff with constant values).
+
+8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \prove_tx_rnep..
+
+8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module prove_tx_rnep.
+
+8.16. Finished OPT passes. (There is nothing left to do.)
+
+9. Executing SAT pass (solving SAT problems in the circuit).
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 217 cells to SAT database.
+Import proof-constraint: \exact = 1'1
+Final proof equation: \exact = 1'1
+Import show expression: \ctrl
+Import show expression: \gm
+Import show expression: \round
+Import show expression: \wupper
+Import show expression: \x
+
+Solving problem with 6284 variables and 16853 clauses..
+ERROR: Called with -verify and proof did fail!

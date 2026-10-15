@@ -1,0 +1,196 @@
+{
+  "name": "qwen_tx_rnep_r0",
+  "top": "qwen_tx_rnep_r0",
+  "kind": "tile",
+  "sources": [
+    "rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rnep.sv",
+    "rtl/qwen_sys/head_staging_20261015/ot_qkh_packet_stage.sv",
+    "rtl/lib/ot_rst_relay.sv"
+  ],
+  "params": {},
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 15.12,
+    "h": 64.8
+  },
+  "pins": {
+    "W": [
+      "x",
+      "wupper",
+      "ctrl",
+      "gm",
+      "round",
+      "clk"
+    ],
+    "E": [
+      "q"
+    ],
+    "S": [
+      "rst_n"
+    ]
+  },
+  "inter": [],
+  "refglob": "*",
+  "layer_cap": "M5",
+  "recipe": 2,
+  "keep_pin_regs": true,
+  "pin_reg_split": true,
+  "inhold": true,
+  "outhold": true,
+  "io_flop_at_pins": {
+    "cols": 4
+  },
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "hold_margin_ns": 0.03,
+    "pin_balance": {
+      "group_max": 1,
+      "h": "M4",
+      "v": "M5"
+    },
+    "m5_pg_pitch": 2.7,
+    "macro_halo_um": 5.4
+  },
+  "structural_change": "NATIVE-BOUNDARY successor #2 (CLOSED qwen_tx_rnen_r1 FAILS native TT capture 228.2 > 190 on d[*]: 16-bit +inc before the flop; rnen_r0 PASS launch 197.3): R0 also forms per-group prefix AND pre[59:0] after its pin flop in parallel with the carry tree (+60 R0->R1 bits), R1 input = one AND+XOR per bit, mask after the R1 flop; same two TX edges: R0 exact low16RNEcarry then207real kept data bits. Not a CLOSEDmaster reroute; parent unintegrated. Packetpipe reset3 retained. Actual native timing and recipe2 posthook area unmeasured; no waiver.",
+  "job": {
+    "owner": "Claude:q15_compute_elem",
+    "branch": "claude/q15-rne-native",
+    "tag": "p1",
+    "purpose": "Standalone proven TX RNE native candidate; parent unqualified",
+    "extra_paths": [
+      "physical/qwen_tx_rne_retime_1015",
+      "results/rtl/qwen_compute_native_glue_1014/tx_rne207_1015"
+    ],
+    "benches": [
+      {
+        "name": "rnep267to198_m0",
+        "cmd": "bash physical/qwen_tx_rne_retime_1015/bench_one_rnep.sh {RUN}/bench/rnep_m0 0",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ],
+        "pass_regex": "PASS RNEprefix267to198"
+      },
+      {
+        "name": "rnep267to198_m1",
+        "cmd": "bash physical/qwen_tx_rne_retime_1015/bench_one_rnep.sh {RUN}/bench/rnep_m1 1",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "FAIL RNE"
+      },
+      {
+        "name": "rnep267to198_m2",
+        "cmd": "bash physical/qwen_tx_rne_retime_1015/bench_one_rnep.sh {RUN}/bench/rnep_m2 2",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "FAIL RNE"
+      },
+      {
+        "name": "rnep267to198_m3",
+        "cmd": "bash physical/qwen_tx_rne_retime_1015/bench_one_rnep.sh {RUN}/bench/rnep_m3 3",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "FAIL RNE"
+      },
+      {
+        "name": "rnep267to198_m4",
+        "cmd": "bash physical/qwen_tx_rne_retime_1015/bench_one_rnep.sh {RUN}/bench/rnep_m4 4",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "FAIL RNE"
+      },
+      {
+        "name": "rnep267to198_m5",
+        "cmd": "bash physical/qwen_tx_rne_retime_1015/bench_one_rnep.sh {RUN}/bench/rnep_m5 5",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "FAIL RNE"
+      },
+      {
+        "name": "rnep267to198_m6",
+        "cmd": "bash physical/qwen_tx_rne_retime_1015/bench_one_rnep.sh {RUN}/bench/rnep_m6 6",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "FAIL RNE"
+      },
+      {
+        "name": "rnep267to198_m7",
+        "cmd": "bash physical/qwen_tx_rne_retime_1015/bench_one_rnep.sh {RUN}/bench/rnep_m7 7",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "FAIL RNE"
+      }
+    ],
+    "views_to": "physical/ref_tile/qwen_tx_rnep_r0/views",
+    "record_to": "results/rtl/ref_tile/qwen_tx_rnep_r0",
+    "cycles_added": 0,
+    "hold_merge": "Standalone leaf only; parent integration and wholeparent proof pending"
+  },
+  "io_tcl": "physical/ref_tile/qwen_tx_rnep_r0/assigned_pins.tcl",
+  "pin_ranges": {
+    "x": [
+      5.436,
+      31.164
+    ],
+    "wupper": [
+      31.404,
+      57.18
+    ],
+    "ctrl": [
+      57.372,
+      58.38
+    ],
+    "gm": [
+      58.572,
+      59.196
+    ],
+    "round": [
+      59.388,
+      59.388
+    ],
+    "q": [
+      5.436,
+      59.388
+    ]
+  },
+  "macros": [],
+  "children": [],
+  "hold_pad": {
+    "cell": "HB2xp67_ASAP7_75t_R"
+  }
+}
