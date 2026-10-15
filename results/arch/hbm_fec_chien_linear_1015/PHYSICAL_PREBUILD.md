@@ -40,13 +40,13 @@ fails at phase 0/vector 0. Full actual FEC passes 2,048 words with unchanged age
 102 and 2,376 decoded words checked; actual Forney MUT2 fails at cycle 302.
 Proof logs are under `static_correction_proof/`.
 
-The new full census completed with status0, unit `oth-ubuntu-1799123-1792060811`.
-It proves identical86,152 FF bits and all12 exact per-root counts, max13,790.
-Generic synthesis/check uses451.66 seconds and3727.70MB peak versus683.82seconds
-and5229.71MB before. `static_correction_census/` preserves exact source/receipt
+The new full census completed with status 0, unit `oth-ubuntu-1799123-1792060811`.
+It proves identical 86,152 FF bits and all 12 exact per-root counts, maximum 13,790.
+Generic synthesis/check uses 451.66 seconds and 3,727.70 MB peak versus 683.82 seconds
+and 5,229.71 MB before. `static_correction_census/` preserves exact source/receipt
 and losslessly compressed log. The new generic model reduces conservative scalar
-expansion15.648M→2.405M units (84.6%), shifts114→4 and shiftx57→2.
-A distinct static-source bit mapper is live as unit1830755, output
+expansion 15.648M→2.405M units (84.6%), shifts 114→4 and shiftx 57→2.
+A distinct static-source bit mapper is live as unit 1830755, output
 `/srv/opentallas-scratch/codex/fec-chien-linear-1015/static_correction_bit_mapper_0`.
 Exact scalar gates and paths remain unproven until this completes.
 
@@ -83,15 +83,53 @@ clock phase, and joined endpoint roots remain separate mandatory checks.
 
 ## Actual current 512-pin system scope
 
-The historical standalone mechanism above uses544-bit PMA and102-cycle age.
+The historical standalone mechanism above uses 544-bit PMA and 102-cycle age.
 The current actual source is `ot_hbm_core_fec_frame_static_correction_link`,
-helper commit96c91fc64 with source-pinned receipts f72e2454d. Its actual512-bit
-PMA, core1.2GHz/FEC16:17 families and151-FEC-edge calendar pass234payloads/66idle,
-2048decoded/internalCDC words, all four runtime mutants, and actual ForneyMUT2.
-It has23 named clock inputs (core +16FEC +6PHY); native TX6/RX2 endpoints remain
+helper commit 96c91fc64 with source-pinned receipts f72e2454d. Its actual 512-bit
+PMA, core 1.2 GHz / FEC 16:17 families and 151-FEC-edge calendar pass 234 payloads / 66 idle slots,
+2,048 decoded / internal CDC words, all four runtime mutants, and actual ForneyMUT2.
+It has 23 named clock inputs (core + 16 FEC + 6 PHY); native TX6/RX2 endpoints remain
 caller-owned. No standalone count transfers to that larger hierarchy.
 
 Geometry/H-DIE owners confirm no current authoritative FEC slot or face/track
-capacity grant. Their68-node v15 contract has zeroHOST/SerDes/FEC instances.
-Historical864um E-strip and old HOST/HS slabs cannot constrain or price the new
+capacity grant. Their 68-node v15 contract has zero HOST/SerDes/FEC instances.
+Historical 864 um E-strip and old HOST/HS slabs cannot constrain or price the new
 actual hierarchy. `physical_prebuild/geometry_boundary.json` records this gap.
+
+
+## Completed scalar expansion and critical-path bound
+
+The distinct static-source bit mapper completed in 200.25 seconds, with
+6,466.73 MB peak memory. `static_correction_bit_mapper/` preserves the exact
+source binding, receipt, script and compressed log. The cached remote scalar
+netlist has 1,113,044 cells: 85,638 FF bits and 1,027,397 combinational gates
+(excluding nine scope records). The bit optimizer removes 514 redundant FF bits:
+512 from collect and one each from control and emit; no state was added.
+
+The actual scalar graph has maximum D-path lengths of 90 generic gates for each
+BM unit, 87 for Chien/emit, 58 for capture and 49 for collect. These are exact
+structural depth bounds, not sensitizable-path proofs or library delays. Maximum
+registered-Q fanout reaches 6,929 in control, 5,903 in Chien and 2,887 in emit.
+290,825 combinational cells feed more than one sink clock root. Candidate root
+boundaries and registered source-bit counts are recorded in
+`physical_prebuild/candidate_registered_boundary_inventory.json`; this explicitly
+is not yet implemented hard-leaf source or a pin/clock/route grant.
+
+The final-slice correction cone feeds both Chien and emit. A promising banked
+partition keeps corresponding Chien and emit bit slices together while retaining
+two distinct clock ports per leaf. This keeps shared correction wiring local,
+while preserving both measured clock delivery obligations. Isolating the roots
+blindly would require large combinational seams or priced logic replication.
+Actual BM physical connectivity also includes 300 source-Q bits from every other
+BM unit; the global syndrome array with a dynamic index is a structural scope
+issue worth eliminating with unit-local storage. It is not assumed away as a
+false path in the physical model.
+
+An actual ASAP7 RVT TT library map is now running from the cached scalar graph,
+without retiming. Its clock target is the actual current FEC period (conservative
+885 ps ABC target for 885.416 ps). Area and delay remain unproven until collected.
+A first tooling attempt was stopped after a small one-FF probe demonstrated that
+missing imported liberty cell declarations would produce a false undriven-net
+check. The corrected flow imports all five real RVT TT libraries and caches the
+mapped JSON before final checks. This was a flow correction; no source hardware
+or timing requirement changed.

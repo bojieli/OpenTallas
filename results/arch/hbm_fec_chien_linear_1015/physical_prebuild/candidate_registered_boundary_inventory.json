@@ -1,0 +1,331 @@
+{
+  "scope": "CANDIDATE_REGISTERED_BOUNDARY_SIZING_NOT_IMPLEMENTED_HARDLEAVES",
+  "exact_source_graph_sha256": "994afbf9b813a631d54df11cc878be7d020a8eb7da4183dee85f78bd1f7f00d5",
+  "regions": [
+    {
+      "candidate_region": "clk",
+      "actual_RTL_clock_port": "clk",
+      "post_bit_flop_bits": 3756,
+      "max_D_logic_levels": 28,
+      "max_Q_fanout": 6929,
+      "registered_input_bits_by_source_root": {
+        "rclk_emit": 7800,
+        "clk_codeword": 5403,
+        "pma_rck": 1
+      },
+      "registered_input_bits_total": 13204,
+      "registered_output_bits_by_sink_root": {
+        "clk_encode": 502,
+        "clk_codeword": 7,
+        "clk_collect": 493,
+        "rclk_emit": 5
+      },
+      "registered_output_unique_bits_lower_bound": 502,
+      "registered_output_unique_bits_upper_bound": 1007,
+      "registered_output_bit_fanout_sum": 1007,
+      "physical_outline": null,
+      "actual_pin_faces": null,
+      "routable_track_capacity": null,
+      "library_area": null,
+      "physical_qualified": false
+    },
+    {
+      "candidate_region": "clk_collect",
+      "actual_RTL_clock_port": "clk_collect",
+      "post_bit_flop_bits": 4608,
+      "max_D_logic_levels": 49,
+      "max_Q_fanout": 1,
+      "registered_input_bits_by_source_root": {
+        "clk": 493
+      },
+      "registered_input_bits_total": 493,
+      "registered_output_bits_by_sink_root": {
+        "clk_encode": 4608
+      },
+      "registered_output_unique_bits_lower_bound": 4608,
+      "registered_output_unique_bits_upper_bound": 4608,
+      "registered_output_bit_fanout_sum": 4608,
+      "physical_outline": null,
+      "actual_pin_faces": null,
+      "routable_track_capacity": null,
+      "library_area": null,
+      "physical_qualified": false
+    },
+    {
+      "candidate_region": "clk_encode",
+      "actual_RTL_clock_port": "clk_encode",
+      "post_bit_flop_bits": 5403,
+      "max_D_logic_levels": 22,
+      "max_Q_fanout": 25,
+      "registered_input_bits_by_source_root": {
+        "clk": 502,
+        "clk_collect": 4608
+      },
+      "registered_input_bits_total": 5110,
+      "registered_output_bits_by_sink_root": {
+        "clk_codeword": 5403
+      },
+      "registered_output_unique_bits_lower_bound": 5403,
+      "registered_output_unique_bits_upper_bound": 5403,
+      "registered_output_bit_fanout_sum": 5403,
+      "physical_outline": null,
+      "actual_pin_faces": null,
+      "routable_track_capacity": null,
+      "library_area": null,
+      "physical_qualified": false
+    },
+    {
+      "candidate_region": "clk_codeword",
+      "actual_RTL_clock_port": "clk_codeword",
+      "post_bit_flop_bits": 5403,
+      "max_D_logic_levels": 20,
+      "max_Q_fanout": 2,
+      "registered_input_bits_by_source_root": {
+        "clk_encode": 5403,
+        "clk": 7
+      },
+      "registered_input_bits_total": 5410,
+      "registered_output_bits_by_sink_root": {
+        "clk": 5403
+      },
+      "registered_output_unique_bits_lower_bound": 5403,
+      "registered_output_unique_bits_upper_bound": 5403,
+      "registered_output_bit_fanout_sum": 5403,
+      "physical_outline": null,
+      "actual_pin_faces": null,
+      "routable_track_capacity": null,
+      "library_area": null,
+      "physical_qualified": false
+    },
+    {
+      "candidate_region": "pma_rck",
+      "actual_RTL_clock_port": "pma_rck",
+      "post_bit_flop_bits": 7627,
+      "max_D_logic_levels": 58,
+      "max_Q_fanout": 1133,
+      "registered_input_bits_by_source_root": {},
+      "registered_input_bits_total": 0,
+      "registered_output_bits_by_sink_root": {
+        "rclk_syndrome": 5442,
+        "clk": 1,
+        "rclk_bm0": 1,
+        "rclk_bm1": 1,
+        "rclk_bm2": 1,
+        "rclk_bm3": 1,
+        "rclk_chien": 1,
+        "rclk_emit": 1
+      },
+      "registered_output_unique_bits_lower_bound": 5442,
+      "registered_output_unique_bits_upper_bound": 5449,
+      "registered_output_bit_fanout_sum": 5449,
+      "physical_outline": null,
+      "actual_pin_faces": null,
+      "routable_track_capacity": null,
+      "library_area": null,
+      "physical_qualified": false
+    },
+    {
+      "candidate_region": "rclk_syndrome",
+      "actual_RTL_clock_port": "rclk_syndrome",
+      "post_bit_flop_bits": 5747,
+      "max_D_logic_levels": 21,
+      "max_Q_fanout": 307,
+      "registered_input_bits_by_source_root": {
+        "pma_rck": 5442
+      },
+      "registered_input_bits_total": 5442,
+      "registered_output_bits_by_sink_root": {
+        "rclk_bm0": 5747,
+        "rclk_bm1": 5747,
+        "rclk_bm2": 5747,
+        "rclk_bm3": 5747,
+        "rclk_chien": 7
+      },
+      "registered_output_unique_bits_lower_bound": 5747,
+      "registered_output_unique_bits_upper_bound": 5747,
+      "registered_output_bit_fanout_sum": 22995,
+      "physical_outline": null,
+      "actual_pin_faces": null,
+      "routable_track_capacity": null,
+      "library_area": null,
+      "physical_qualified": false
+    },
+    {
+      "candidate_region": "rclk_bm0",
+      "actual_RTL_clock_port": "rclk_bm0",
+      "post_bit_flop_bits": 6984,
+      "max_D_logic_levels": 90,
+      "max_Q_fanout": 637,
+      "registered_input_bits_by_source_root": {
+        "rclk_syndrome": 5747,
+        "rclk_bm3": 300,
+        "rclk_bm1": 300,
+        "rclk_bm2": 300,
+        "pma_rck": 1
+      },
+      "registered_input_bits_total": 6648,
+      "registered_output_bits_by_sink_root": {
+        "rclk_chien": 6064,
+        "rclk_bm1": 300,
+        "rclk_bm2": 300,
+        "rclk_bm3": 300
+      },
+      "registered_output_unique_bits_lower_bound": 6064,
+      "registered_output_unique_bits_upper_bound": 6964,
+      "registered_output_bit_fanout_sum": 6964,
+      "physical_outline": null,
+      "actual_pin_faces": null,
+      "routable_track_capacity": null,
+      "library_area": null,
+      "physical_qualified": false
+    },
+    {
+      "candidate_region": "rclk_bm1",
+      "actual_RTL_clock_port": "rclk_bm1",
+      "post_bit_flop_bits": 6984,
+      "max_D_logic_levels": 90,
+      "max_Q_fanout": 637,
+      "registered_input_bits_by_source_root": {
+        "rclk_syndrome": 5747,
+        "rclk_bm3": 300,
+        "rclk_bm0": 300,
+        "rclk_bm2": 300,
+        "pma_rck": 1
+      },
+      "registered_input_bits_total": 6648,
+      "registered_output_bits_by_sink_root": {
+        "rclk_chien": 6064,
+        "rclk_bm0": 300,
+        "rclk_bm2": 300,
+        "rclk_bm3": 300
+      },
+      "registered_output_unique_bits_lower_bound": 6064,
+      "registered_output_unique_bits_upper_bound": 6964,
+      "registered_output_bit_fanout_sum": 6964,
+      "physical_outline": null,
+      "actual_pin_faces": null,
+      "routable_track_capacity": null,
+      "library_area": null,
+      "physical_qualified": false
+    },
+    {
+      "candidate_region": "rclk_bm2",
+      "actual_RTL_clock_port": "rclk_bm2",
+      "post_bit_flop_bits": 6984,
+      "max_D_logic_levels": 90,
+      "max_Q_fanout": 637,
+      "registered_input_bits_by_source_root": {
+        "rclk_syndrome": 5747,
+        "rclk_bm3": 300,
+        "rclk_bm1": 300,
+        "rclk_bm0": 300,
+        "pma_rck": 1
+      },
+      "registered_input_bits_total": 6648,
+      "registered_output_bits_by_sink_root": {
+        "rclk_chien": 6064,
+        "rclk_bm0": 300,
+        "rclk_bm1": 300,
+        "rclk_bm3": 300
+      },
+      "registered_output_unique_bits_lower_bound": 6064,
+      "registered_output_unique_bits_upper_bound": 6964,
+      "registered_output_bit_fanout_sum": 6964,
+      "physical_outline": null,
+      "actual_pin_faces": null,
+      "routable_track_capacity": null,
+      "library_area": null,
+      "physical_qualified": false
+    },
+    {
+      "candidate_region": "rclk_bm3",
+      "actual_RTL_clock_port": "rclk_bm3",
+      "post_bit_flop_bits": 6984,
+      "max_D_logic_levels": 90,
+      "max_Q_fanout": 637,
+      "registered_input_bits_by_source_root": {
+        "rclk_syndrome": 5747,
+        "rclk_bm1": 300,
+        "rclk_bm0": 300,
+        "rclk_bm2": 300,
+        "pma_rck": 1
+      },
+      "registered_input_bits_total": 6648,
+      "registered_output_bits_by_sink_root": {
+        "rclk_chien": 6064,
+        "rclk_bm0": 300,
+        "rclk_bm1": 300,
+        "rclk_bm2": 300
+      },
+      "registered_output_unique_bits_lower_bound": 6064,
+      "registered_output_unique_bits_upper_bound": 6964,
+      "registered_output_bit_fanout_sum": 6964,
+      "physical_outline": null,
+      "actual_pin_faces": null,
+      "routable_track_capacity": null,
+      "library_area": null,
+      "physical_qualified": false
+    },
+    {
+      "candidate_region": "rclk_chien",
+      "actual_RTL_clock_port": "rclk_chien",
+      "post_bit_flop_bits": 11369,
+      "max_D_logic_levels": 87,
+      "max_Q_fanout": 5903,
+      "registered_input_bits_by_source_root": {
+        "rclk_syndrome": 7,
+        "rclk_bm1": 6064,
+        "rclk_bm3": 6064,
+        "rclk_bm2": 6064,
+        "rclk_bm0": 6064,
+        "pma_rck": 1
+      },
+      "registered_input_bits_total": 24264,
+      "registered_output_bits_by_sink_root": {
+        "rclk_emit": 11369
+      },
+      "registered_output_unique_bits_lower_bound": 11369,
+      "registered_output_unique_bits_upper_bound": 11369,
+      "registered_output_bit_fanout_sum": 11369,
+      "physical_outline": null,
+      "actual_pin_faces": null,
+      "routable_track_capacity": null,
+      "library_area": null,
+      "physical_qualified": false
+    },
+    {
+      "candidate_region": "rclk_emit",
+      "actual_RTL_clock_port": "rclk_emit",
+      "post_bit_flop_bits": 13789,
+      "max_D_logic_levels": 87,
+      "max_Q_fanout": 2887,
+      "registered_input_bits_by_source_root": {
+        "rclk_chien": 11369,
+        "clk": 5,
+        "pma_rck": 1
+      },
+      "registered_input_bits_total": 11375,
+      "registered_output_bits_by_sink_root": {
+        "clk": 7800
+      },
+      "registered_output_unique_bits_lower_bound": 7800,
+      "registered_output_unique_bits_upper_bound": 7800,
+      "registered_output_bit_fanout_sum": 7800,
+      "physical_outline": null,
+      "actual_pin_faces": null,
+      "routable_track_capacity": null,
+      "library_area": null,
+      "physical_qualified": false
+    }
+  ],
+  "shared_combinational_cells": 290825,
+  "shared_logic_policy": "UNDECIDED: co-locate Chien+emit with two actual clock ports, or explicitly price replication; never silently allocate shared cells twice",
+  "scope_excludes": [
+    "asynchronous reset/clock distribution pin budget",
+    "current512PMA and externalCDC/gearbox hierarchy",
+    "callerTX6/RX2 endpoints"
+  ],
+  "hard_leaf_source_interfaces_implemented": false,
+  "physical_slot_grant": false,
+  "route_ready": false
+}

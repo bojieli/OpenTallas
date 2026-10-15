@@ -20,6 +20,12 @@ def main():
    gates.append((tuple(set(ins)),outs[0],typ))
  pi={p:tuple(b for b in v['bits'] if isinstance(b,int)) for p,v in m['ports'].items() if v['direction']=='input'}
  po={p:tuple(b for b in v['bits'] if isinstance(b,int)) for p,v in m['ports'].items() if v['direction']=='output'}
+ qbits={q for n,r,q,d,e in ff};aliases=collections.defaultdict(list)
+ for name,v in m.get('netnames',{}).items():
+  if v.get('hide_name',0):continue
+  for offset,bit in enumerate(v['bits']):
+   if bit in qbits:aliases[bit].append(f'{name}[{offset+v.get("offset",0)}]')
+ ffq={n:q for n,r,q,d,e in ff}
  del m
  size=maximum+1;driver=array.array('i',[-1])*size;srcmask=array.array('H',[0])*size;dstmask=array.array('H',[0])*size;depth=array.array('I',[0])*size;uses=array.array('I',[0])*size;ffcounts=collections.Counter()
  for _,root,q,d,enable in ff:
@@ -55,7 +61,7 @@ def main():
   for n,r,q,d,e in rows:
    for dest in range(12):
     if dstmask[q]&(1<<dest):outgoing[CLOCKS[dest]]+=1
-  roots[root]={'flop_bits':len(rows),'max_D_logic_levels':max((d for d,_,_ in data),default=0),'max_enable_or_sync_reset_logic_levels':max((d for d,_,_ in enable),default=0),'top_D_paths':[{'levels':d,'sink_cell':n,'source_roots':[CLOCKS[k] if k<12 else 'external_input' for k in range(13) if mask&(1<<k)]} for d,n,mask in sorted(data,reverse=True)[:8]],'registered_source_Q_bits_exact':dict(incoming),'registered_destination_roots_Q_bits_exact':dict(outgoing),'max_Q_fanout':max((uses[q] for n,r,q,d,e in rows),default=0),'D_distinct_net_bits':len({d for n,r,q,d,e in rows if isinstance(d,int)})}
+  roots[root]={'flop_bits':len(rows),'max_D_logic_levels':max((d for d,_,_ in data),default=0),'max_enable_or_sync_reset_logic_levels':max((d for d,_,_ in enable),default=0),'top_D_paths':[{'levels':d,'sink_cell':n,'sink_register_aliases':sorted(aliases[ffq[n]])[:6],'source_roots':[CLOCKS[k] if k<12 else 'external_input' for k in range(13) if mask&(1<<k)]} for d,n,mask in sorted(data,reverse=True)[:8]],'registered_source_Q_bits_exact':dict(incoming),'registered_destination_roots_Q_bits_exact':dict(outgoing),'max_Q_fanout':max((uses[q] for n,r,q,d,e in rows),default=0),'D_distinct_net_bits':len({d for n,r,q,d,e in rows if isinstance(d,int)})}
   for target,bits in outgoing.items():
    if target!=root:cross.append({'source_root':root,'sink_root':target,'distinct_registered_source_bits':bits})
  unique=collections.Counter();shared=collections.Counter();orphan=0
@@ -64,6 +70,6 @@ def main():
   if not mask:orphan+=1
   elif mask&(mask-1):shared[typ]+=1
   else:unique[CLOCKS[mask.bit_length()-1]]+=1
- res={'scope':'ACTUAL_SCALAR_NETLIST_CONNECTIVITY_AND_LOGIC_DEPTH_NO_PHYSICAL_TIMING','input_sha256':digest,'tool_sha256':hashlib.sha256(pathlib.Path(__file__).read_bytes()).hexdigest(),'total_flop_bits':len(ff),'clock_roots':roots,'scalar_cells_by_type':dict(types),'combinational_scalar_cells':len(gates),'unique_sink_root_comb_cells':dict(unique),'multi_sink_root_shared_comb_cells_by_type':dict(shared),'no_registered_sink_comb_cells':orphan,'cross_root_registered_relations':cross,'external_ports':{p:{'width':len(v),'registered_sink_roots':{CLOCKS[k]:sum(bool(dstmask[b]&(1<<k)) for b in v) for k in range(12) if any(dstmask[b]&(1<<k) for b in v)}} for p,v in pi.items() if p not in CLOCKS},'external_output_logic_levels':{p:max((depth[b] for b in v),default=0) for p,v in po.items()},'limits':['Scalar generic logic levels are not library delay','Edges count distinct source bits, not wire length or physical pins','All D, clock-enable and synchronous-reset cones counted; asynchronous reset delivery is separate','Shared combinational cells require explicit owner or priced replication','Standalone scope excludes joined endpoint and gearbox'],'physical_qualified':False,'elapsed_seconds':time.monotonic()-started}
+ res={'scope':'ACTUAL_SCALAR_NETLIST_CONNECTIVITY_AND_LOGIC_DEPTH_NO_PHYSICAL_TIMING','input_sha256':digest,'tool_sha256':hashlib.sha256(pathlib.Path(__file__).read_bytes()).hexdigest(),'total_flop_bits':len(ff),'clock_roots':roots,'scalar_cells_by_type':dict(types),'combinational_scalar_cells':len(gates),'comb_cells_requiring_each_sink_root':{CLOCKS[i]:sum(bool(dstmask[out]&(1<<i)) for ins,out,typ in gates) for i in range(12)},'unique_sink_root_comb_cells':dict(unique),'multi_sink_root_shared_comb_cells_by_type':dict(shared),'no_registered_sink_comb_cells':orphan,'cross_root_registered_relations':cross,'external_ports':{p:{'width':len(v),'registered_sink_roots':{CLOCKS[k]:sum(bool(dstmask[b]&(1<<k)) for b in v) for k in range(12) if any(dstmask[b]&(1<<k) for b in v)}} for p,v in pi.items() if p not in CLOCKS},'external_output_logic_levels':{p:max((depth[b] for b in v),default=0) for p,v in po.items()},'limits':['Scalar generic logic levels are not library delay','Edges count distinct source bits, not wire length or physical pins','All D, clock-enable and synchronous-reset cones counted; asynchronous reset delivery is separate','Shared combinational cells require explicit owner or priced replication','Standalone scope excludes joined endpoint and gearbox'],'physical_qualified':False,'elapsed_seconds':time.monotonic()-started}
  a.out.parent.mkdir(parents=True,exist_ok=True);a.out.write_text(json.dumps(res,indent=2)+'\n');print(json.dumps({'flops':len(ff),'comb_gates':len(gates),'depths':{r:x['max_D_logic_levels'] for r,x in roots.items()},'elapsed':res['elapsed_seconds']}))
 if __name__=='__main__':main()

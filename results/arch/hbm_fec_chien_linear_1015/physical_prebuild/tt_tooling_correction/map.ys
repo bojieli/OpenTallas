@@ -1,0 +1,9 @@
+read_json /srv/opentallas-scratch/codex/fec-chien-linear-1015/static_correction_bit_mapper_0/bit_netlist.json
+hierarchy -check -top hfd_serdes487_static_correction_window
+dfflibmap -liberty /srv/opentallas-scratch/codex/fec-chien-linear-1015/tt_libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+abc -liberty /srv/opentallas-scratch/codex/fec-chien-linear-1015/tt_libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /srv/opentallas-scratch/codex/fec-chien-linear-1015/tt_libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /srv/opentallas-scratch/codex/fec-chien-linear-1015/tt_libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /srv/opentallas-scratch/codex/fec-chien-linear-1015/tt_libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /srv/opentallas-scratch/codex/fec-chien-linear-1015/tt_libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib -D 885
+clean
+check -assert
+stat -liberty /srv/opentallas-scratch/codex/fec-chien-linear-1015/tt_libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /srv/opentallas-scratch/codex/fec-chien-linear-1015/tt_libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /srv/opentallas-scratch/codex/fec-chien-linear-1015/tt_libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /srv/opentallas-scratch/codex/fec-chien-linear-1015/tt_libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /srv/opentallas-scratch/codex/fec-chien-linear-1015/tt_libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+write_verilog -noattr -noexpr /srv/opentallas-scratch/codex/fec-chien-linear-1015/static_correction_tt_map_0/mapped.v
+write_json /srv/opentallas-scratch/codex/fec-chien-linear-1015/static_correction_tt_map_0/mapped.json
