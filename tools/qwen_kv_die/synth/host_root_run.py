@@ -98,8 +98,9 @@ def main():
     ap.add_argument("--execute",action="store_true");ap.add_argument("--inside-container",action="store_true")
     ap.add_argument("--resume-from-run",type=Path,help="reuse source-manifest-matched generic.json and successful frontend/guard receipts")
     a=ap.parse_args();plan=a.plan.resolve();out=a.out.resolve()
+    owner0=json.loads(a.coordinator_lock.read_text())["owner"] if a.coordinator_lock else None
     def guard():
-        if a.coordinator_lock and json.loads(a.coordinator_lock.read_text())["owner"]!="codex":raise RuntimeError("COORD changed")
+        if a.coordinator_lock and json.loads(a.coordinator_lock.read_text())["owner"]!=owner0:raise RuntimeError("COORD changed")
     def write(path,text):
         guard();path.parent.mkdir(parents=True,exist_ok=True);guard();path.write_text(text)
     def run(cmd,log,cwd=None):
