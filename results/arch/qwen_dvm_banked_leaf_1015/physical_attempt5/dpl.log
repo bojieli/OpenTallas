@@ -1,0 +1,95 @@
+Negotiation phase 2 converged at iteration 0.
+[INFO DPL-0500] Runtime: 18.50s
+Placement Analysis
+---------------------------------
+total displacement      55620.5 u
+average displacement        1.4 u
+max displacement           14.6 u
+original HPWL          549857.7 u
+legalized HPWL         571360.8 u
+delta HPWL                    4 %
+
+Took 19 seconds: detailed_placement
+improve_placement -max_displacement "5 1"
+Detailed placement improvement.
+[INFO DPL-0401] Setting random seed to 1.
+[INFO DPL-0402] Setting maximum displacement 5 1 to 1350 270 units.
+[INFO DPL-0320] Collected 4049 fixed cells.
+[INFO DPL-0318] Collected 39492 single height cells.
+[INFO DPL-0321] Collected 0 wide cells.
+[INFO DPL-0322] Image (2160, 2160) - (62640, 146880)
+[INFO DPL-0310] Assigned 39492 cells into segments.  Movement in X-direction is 16362.000000, movement in Y-direction is 270.000000.
+[WARNING DPL-0200] Unexpected displacement during legalization.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 20 site alignment problems.
+[INFO DPL-0311] Found 10 overlaps between adjacent cells.
+Violation in _43684_
+Violation in _38192_
+Violation in _39926_
+Violation in _39810_
+Violation in _39818_
+Violation in _39816_
+Violation in _38899_
+Violation in place7413
+Violation in place7412
+Violation in _32735_
+Violation in _41203_
+Violation in _44246_
+Violation in _36222_
+[INFO DPL-0312] Found 13 edge spacing violations and 0 padding violations.
+[WARNING DPL-0201] Placement check failure during legalization.
+[INFO DPL-0303] Running algorithm for independent set matching.
+[INFO DPL-0300] Set matching objective is wirelength.
+[INFO DPL-0301] Pass   1 of matching; objective is 5.711567e+08.
+[INFO DPL-0302] End of matching; objective is 5.695316e+08, improvement is 0.28 percent.
+[INFO DPL-0303] Running algorithm for global swaps.
+[INFO DPL-0306] Pass   1 of global swaps; hpwl is 5.647470e+08.
+[INFO DPL-0307] End of global swaps; objective is 5.647470e+08, improvement is 0.84 percent.
+[INFO DPL-0303] Running algorithm for vertical swaps.
+[INFO DPL-0308] Pass   1 of vertical swaps; hpwl is 5.637770e+08.
+[INFO DPL-0309] End of vertical swaps; objective is 5.637770e+08, improvement is 0.17 percent.
+[INFO DPL-0303] Running algorithm for reordering.
+[INFO DPL-0304] Pass   1 of reordering; objective is 5.619804e+08.
+[INFO DPL-0305] End of reordering; objective is 5.619804e+08, improvement is 0.32 percent.
+[INFO DPL-0303] Running algorithm for random improvement.
+[INFO DPL-0324] Random improver is using random generator.
+[INFO DPL-0325] Random improver is using hpwl objective.
+[INFO DPL-0326] Random improver cost string is (a).
+[INFO DPL-0332] End of pass, Generator random called 789840 times.
+[INFO DPL-0335] Generator random, Cumulative attempts 789840, swaps 111839, moves 152040 since last reset.
+[INFO DPL-0333] End of pass, Objective hpwl, Initial cost 5.617834e+08, Scratch cost 5.563213e+08, Incremental cost 5.563213e+08, Mismatch? N
+[INFO DPL-0338] End of pass, Total cost is 5.563213e+08.
+[INFO DPL-0327] Pass   1 of random improver; improvement in cost is 0.97 percent.
+[INFO DPL-0328] End of random improver; improvement is 0.972272 percent.
+[INFO DPL-0380] Cell flipping.
+[INFO DPL-0382] Changed 0 cell orientations for row compatibility.
+[INFO DPL-0383] Performed 15299 cell flips.
+[INFO DPL-0384] End of flipping; objective is 5.528497e+08, improvement is 0.66 percent.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 3 site alignment problems.
+[INFO DPL-0311] Found 3 overlaps between adjacent cells.
+[INFO DPL-0312] Found 0 edge spacing violations and 0 padding violations.
+Detailed Improvement Results
+------------------------------------------
+Original HPWL           571360.8 u (  119573.8,   451787.0)
+Final HPWL              552668.8 u (  105788.2,   446880.6)
+Delta HPWL                  -3.3 % (     -11.5,       -1.1)
+
+Took 7 seconds: improve_placement -max_displacement "5 1"
+optimize_mirroring
+[INFO DPL-0020] Mirrored 3760 instances
+[INFO DPL-0021] HPWL before          552668.8 u
+[INFO DPL-0022] HPWL after           552534.8 u
+[INFO DPL-0023] HPWL delta               -0.0 %
+[WARNING DPL-0006] Site aligned check failed (3).
+ _39934_
+ _41443_
+ _43684_
+[ERROR DPL-0033] detailed placement checks failed during check placement.
+write_db /work/results/asap7/opentallas_ot_qfd_xs_leaf_asap7_ref_gate/base/3_5_place_dp-failed.odb
+Error: detail_place.tcl, 39 DPL-0033
+Elapsed time: 0:28.47[h:]min:sec. CPU time: user 28.33 sys 0.14 (99%). Peak memory: 422880KB.
+make[1]: *** [Makefile:511: do-3_5_place_dp] Error 1
+make: *** [Makefile:511: /work/results/asap7/opentallas_ot_qfd_xs_leaf_asap7_ref_gate/base/3_5_place_dp.odb] Error 2
