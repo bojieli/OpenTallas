@@ -1,0 +1,17 @@
+{
+  "base": "d25e2a2b1924d646ef2d8547a5affdbdde775eaa",
+  "recovery_commit": "085dd7cc9",
+  "prerequisites": [
+    "f568444c7",
+    "4bf62695d",
+    "c1a006ea6 RTL only"
+  ],
+  "excluded": [
+    "accepted_cost_ledger_1013.json proposed row",
+    "kv_service_check.py and its model result"
+  ],
+  "dirty_front_sha256": "7588d970ebe1dea748373b9216dcf7a992e2b20ad87636af0e51b290ccc70b27",
+  "dirty_leaf_sha256": "eff74553f322dd20cf38d3f33b454bb2575e88d06204941f9ac4830fdba86764",
+  "scope": "exact original dirty two-file delta and prerequisite committed implementation source; no numerical/fullSM/physical adoption claimed by recovery",
+  "inherited_jobs": "ot-pve1 old 4bf62695d elem1/smoke2 preserved without restart, each pinned to its own source; these jobs do not cover newly recovered folded publication delta"
+}

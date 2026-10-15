@@ -56,12 +56,12 @@ module tb_hbm_sm_folded_leaf;
     end
     @(posedge clk);#0.01;
     if(frontfault||schedulefault||gf)begin
-     if(mutant!=0)begin $display("FOLDED_LEAF MUTANT REJECTED mutant=%0d fault=1 cycle=%0d",mutant,c);$finish;disable run_gate;end
+     if(mutant!=0)begin $fatal(1,"FOLDED_LEAF EXPECTED_REJECTION mutant=%0d fault=1 cycle=%0d",mutant,c);end
      $fatal(1,"FOLDED_LEAF fault col%0d row%0d cyc%0d front%0d sched%0d leaf%0d",col,lr,c,frontfault,schedulefault,gf);
     end
     if(gv)begin
      if(gy!==golden(col%2,seen)||gt!==16'((((col%2)*64+lr*16+seen)<<4)|8))begin
-      if(mutant!=0)begin $display("FOLDED_LEAF MUTANT REJECTED mutant=%0d fault=0",mutant);$finish;disable run_gate;end
+      if(mutant!=0)begin $fatal(1,"FOLDED_LEAF EXPECTED_REJECTION mutant=%0d fault=0",mutant);end
       $fatal(1,"FOLDED_LEAF mismatch col%0d row%0d cyc%0d word%0d data%h want%h tag%h",col,lr,c,seen,gy,golden(col%2,seen),gt);
      end
      if(seen==0)first_seen=c;

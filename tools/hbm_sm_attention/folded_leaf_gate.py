@@ -35,8 +35,12 @@ for mutant in range(3):
  output=result.stdout+result.stderr
  (work/("run"+str(mutant)+".log")).write_text(output)
  print(output,end="")
- expect="FOLDED_LEAF PASS" if mutant==0 else "FOLDED_LEAF MUTANT REJECTED"
- if result.returncode or expect not in output or "%Fatal" in output:raise SystemExit("gate failed mutant="+str(mutant))
+ if mutant==0:
+  if result.returncode or "FOLDED_LEAF PASS" not in output or "%Fatal" in output:
+   raise SystemExit("positive gate failed")
+ else:
+  if result.returncode==0 or "FOLDED_LEAF EXPECTED_REJECTION" not in output or "FOLDED_LEAF PASS" in output:
+   raise SystemExit("negative gate failed mutant="+str(mutant))
  results.append(dict(mutant=mutant,verdict="PASS" if mutant==0 else "REJECTED",returncode=result.returncode))
 receipt=dict(verdict="PASS",scope="one actual leaf, all 8 column straps and 4 row straps; declared BF16 row boundary seeds real native arithmetic and stack; actual frontend command124/fold131:125 -> XS -> fold -> scalar publication",full_SM_qualification=False,physical_qualification=False,calendar=metadata,results=results,source_sha256={s:hashlib.sha256((E.ROOT/s).read_bytes()).hexdigest() for s in src},compiler_sha256=hashlib.sha256(Path(E.__file__).read_bytes()).hexdigest(),binary_sha256=hashlib.sha256((obj/"Vtb_hbm_sm_folded_leaf").read_bytes()).hexdigest())
 (work/"receipt.json").write_text(json.dumps(receipt,indent=2)+"\n")
