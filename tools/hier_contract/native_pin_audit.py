@@ -145,20 +145,20 @@ def audit_one(arg):
             nout += 1
             nl += m["out"] > LAUNCH_PS
             if wl is None or m["out"] > wl[1]:
-                wl = (name, round(m["out"], 1))
+                wl = (name, m["out"])
         elif m["dir"] == "input" and m["inp"] is not None:
             nin += 1
             nc += m["inp"] > CAPTURE_PS
             if wc is None or m["inp"] > wc[1]:
-                wc = (name, round(m["inp"], 1))
-    rec.update(outputs=nout, inputs=nin, launch_ps=wl[1] if wl else None, launch_pin=wl[0] if wl else None,
-               capture_ps=wc[1] if wc else None, capture_pin=wc[0] if wc else None, launch_over=nl, capture_over=nc,
+                wc = (name, m["inp"])
+    rec.update(outputs=nout, inputs=nin, launch_ps=round(wl[1], 1) if wl else None, launch_pin=wl[0] if wl else None,
+               capture_ps=round(wc[1], 1) if wc else None, capture_pin=wc[0] if wc else None, launch_over=nl, capture_over=nc,
                comb_pins=len(comb), comb_first=sorted(comb)[:3])
     why = []
     if wl and wl[1] > LAUNCH_PS:
-        why.append(f"launch {wl[1]} > {LAUNCH_PS:.0f} ({nl} pins)")
+        why.append(f"launch {wl[1]:.9g} > {LAUNCH_PS:.0f} ({nl} pins)")
     if wc and wc[1] > CAPTURE_PS:
-        why.append(f"capture {wc[1]} > {CAPTURE_PS:.0f} ({nc} pins)")
+        why.append(f"capture {wc[1]:.9g} > {CAPTURE_PS:.0f} ({nc} pins)")
     if comb:
         why.append(f"{len(comb)} combinational pins")
     rec["pass"] = not why
