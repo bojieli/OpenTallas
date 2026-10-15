@@ -2,27 +2,27 @@
  "cell": "dsfd_su_t_rxc",
  "view": "ot_su_rxc",
  "lib_cell": "dsfd_su_t_rxc",
- "insertion": false,
+ "insertion": true,
  "ref_src": [
-  "lib midrange"
+  "insertion.json boundary mean"
  ],
- "R_ps": 368.7,
- "spread_ps": 81.2,
+ "R_ps": 368.1,
+ "spread_ps": 67.2,
  "outputs": 3681,
  "inputs": 4661,
- "launch_ps": 264.9,
+ "launch_ps": 265.5,
  "launch_pin": "xq_x[723]",
- "capture_ps": 201.9,
+ "capture_ps": 201.3,
  "capture_pin": "xa_r[498]",
  "launch_over": 1,
- "capture_over": 58,
+ "capture_over": 52,
  "comb_pins": 0,
  "comb_first": [],
  "pass": false,
- "fail_why": "launch 264.9 > 220 (1 pins); capture 201.9 > 190 (58 pins)",
+ "fail_why": "launch 265.5 > 220 (1 pins); capture 201.3 > 190 (52 pins)",
  "job": "s81su_rxc_ref-g4-0950-0664b086d",
  "TT_ps": 4.45,
  "FF_ps": 12.82,
  "DRC": 0,
- "scope": "Read-only independent native audit of retained original g4 route; original route/helpers unchanged and adoption hold retained."
+ "scope": "Read-only exact routed boundary insertion and ETM audit; original route/helpers unchanged, native FAIL so adoption hold retained."
 }
