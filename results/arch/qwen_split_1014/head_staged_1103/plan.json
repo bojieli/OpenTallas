@@ -50,7 +50,26 @@
     "input_bits_per_head": 1575,
     "score_bits_per_head": 34,
     "added_registered_bits_per_head": 3184,
-    "stage_W_face_track_fraction": 0.583704
+    "stage_W_face_track_fraction": 0.583704,
+    "widen54_necessary_capacity": {
+      "assumption": "Normalized track demand at0.096um/bit and55percent occupancy; necessary layer count only, actual metal directions and obstructions require backend admission.",
+      "ectl_to_paired_T1": {
+        "unique_driver_nets": 1591,
+        "width_um": 1133.976,
+        "one_layer_fraction": 0.134691
+      },
+      "paired_T1_to_T2": {
+        "distinct_registered_nets": 3150,
+        "maximum_available_height_um": 492.456,
+        "one_layer_fraction_lower_bound": 0.614065,
+        "eligible_horizontal_layers_required_at55": 2
+      },
+      "T2_to_either_front_column": {
+        "unique_driver_nets": 1063,
+        "height_um": 259.2,
+        "one_layer_fraction": 0.393704
+      }
+    }
   },
   "alternatives": {
     "inside_head": {
