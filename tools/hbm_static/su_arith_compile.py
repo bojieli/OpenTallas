@@ -26,6 +26,11 @@ def pack(d):
     return v
 
 
+def physical_word(q,row,bank=0):
+    """Actual F2 frame/quarter/bank mapping, not row*128 across frame cuts."""
+    return ((row>>7)<<16)|(q<<14)|((row&127)<<7)|bank
+
+
 def main():
     out=Path(sys.argv[1]);out.mkdir(parents=True,exist_ok=True)
     lane=np.arange(512,dtype=np.float32)
@@ -60,10 +65,11 @@ def main():
     for ctl in controls:
         for cycle in range(176):
             combined=0
+            vector=max(0,min(63,cycle-8))
             for q in range(4):
                 fields=dict(ctl,ld=int(cycle==0),ld_c=terms,emit=int(8<=cycle<72),
-                            i_v=max(0,cycle-8)*128,
-                            vb=sum(((q<<14)+(((s*64 if s<4 else 256)>>7)<<16)+(((s*64 if s<4 else 256)&127)<<7))<<(s*24)for s in range(5)))
+                            i_v=vector*128,
+                            vb=sum(physical_word(q,(s*64 if s<4 else 256)+vector)<<(s*24)for s in range(5)))
                 combined|=pack(fields)<<(q*1742)
             images.append(combined)
     (out/'control.mem').write_text('\n'.join(f'{x:01742x}'for x in images)+'\n')

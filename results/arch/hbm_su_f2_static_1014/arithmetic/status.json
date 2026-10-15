@@ -49,7 +49,7 @@
       "session": 7067,
       "source": "/tmp/hbm-su-arithmetic-1015/source",
       "result": "/tmp/hbm-su-arithmetic-1015/run",
-      "status": "live original predecessor; knownsingleclock/F2fixturedefects; preserveuntilterminal"
+      "status": "terminalFAIL preserved predecessor_failure/base.log: compiler advancedi_v butkeptvbstatic, framealias alsofixedsuccessor"
     },
     {
       "host": "ot-epyc1tb",
@@ -57,7 +57,7 @@
       "session": 89793,
       "source": "/tmp/hbm-su-arithmetic-stageclk-1015/source",
       "result": "/tmp/hbm-su-arithmetic-stageclk-1015/run",
-      "status": "live stageclock successor withcorrected F2frameaddressing"
+      "status": "buildterminal772.48sec; originalbadfixturebaselinestilllive, correctedparallelgatesseparatevectors"
     },
     {
       "host": "ot-epyc1tb",
@@ -65,6 +65,13 @@
       "session": 20602,
       "result": "/tmp/hbm-su-arithmetic-stageclk-1015/census_v2",
       "status": "terminalPASS nativeclockregistercensus; oldextractorsupersededactualsourceinventorybug"
+    },
+    {
+      "host": "ot-epyc1tb",
+      "unit": "oth-ubuntu-842157-1792058620",
+      "session": 39088,
+      "result": "/tmp/hbm-su-arithmetic-stageclk-1015/validate_v2",
+      "status": "live4parallel correctedvbperissue vectors actualfullN512 base/mutants; buildbinaryfixedstageclock"
     }
   ],
   "open": [
