@@ -1,0 +1,12 @@
+no 4_1_cts.odb / SDC under /srv/opentallas-scratch/claude/ref_gate/s81_hstnh_1024_native-20261015-083852/routes/gate/work/orfs/results/asap7/opentallas_dsfd_hstnh_1024_asap7_ref_gate/base
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/ref_gate/s81_hstnh_1024_native-20261015-083852/src/tools/closure_loop/ck_insertion.py", line 359, in <module>
+    main()
+    ~~~~^^
+  File "/srv/opentallas-scratch/claude/ref_gate/s81_hstnh_1024_native-20261015-083852/src/tools/closure_loop/ck_insertion.py", line 298, in main
+    subprocess.run(cmd, check=True)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['/usr/bin/python3', '/srv/opentallas-scratch/claude/ref_gate/s81_hstnh_1024_native-20261015-083852/src/tools/closure_loop/ck_insertion.py', '--base', '/srv/opentallas-scratch/claude/ref_gate/s81_hstnh_1024_native-20261015-083852/routes/gate/work/orfs/results/asap7/opentallas_dsfd_hstnh_1024_asap7_ref_gate/base', '--clock', 'core_clk', '--image', 'openroad/orfs:latest', '--route-corner', '', '--output', '/tmp/tmp4u47qs29/clock_0.json', '--raw-source']' returned non-zero exit status 1.

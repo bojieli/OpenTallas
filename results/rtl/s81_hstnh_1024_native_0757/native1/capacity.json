@@ -1,0 +1,23 @@
+{
+ "scope": "ACTUAL_IO_ODB_PLUS_LOGGED_RECIPE2_INSERTIONS",
+ "original_odb_sha256": "047bcec40c723829fadcd991bdc61406c099d4327c00077dc1eea474997741eb",
+ "existing_std_area_um2": 354.13361999999677,
+ "row_site_area_um2": 637.685459999999,
+ "additional_hold_cells": {
+  "HB2xp67_ASAP7_75t_R": {
+   "count": 2048,
+   "unit_area_um2": 0.0729,
+   "area_um2": 149.2992
+  },
+  "BUFx4f_ASAP7_75t_R": {
+   "count": 3072,
+   "unit_area_um2": 0.11664,
+   "area_um2": 358.31808
+  }
+ },
+ "projected_total_std_area_um2": 861.7508999999968,
+ "minimum_row_area_ratio": 1.3513729793995901,
+ "minimum_extra_row_area_um2": 224.0654399999978,
+ "qualification": "Area lower bound only; whitespace, clock/PG/routing and timing add further requirements",
+ "no_fit": true
+}

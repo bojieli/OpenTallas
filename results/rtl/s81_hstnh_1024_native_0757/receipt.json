@@ -19,5 +19,6 @@
   "payload_bit0": "FAIL payload n=0"
  },
  "qualification": "COMPONENT FUNCTIONAL ONLY; exact physical gate/native TT FF DRC and die clock delivery OPEN",
- "native_gate": "s81die-hstnh1024-native2-0837.service active; prior local launcher failed missing PATH ot-run before any fleet admission"
+ "native_gate": "TERMINAL FAIL at pre-placement absolute row capacity; no CTS reached",
+ "native_evidence": "native1/README.md"
 }
