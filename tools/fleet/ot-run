@@ -121,8 +121,19 @@ def status(hosts):
         out.append(f"{h} admits {r.get('admit_gb', r['free_gb'])} GB (avail {r['avail_gb']}, growth {r['growth_gb']}) load "
                    f"{r.get('load1', 0):.0f}/{r.get('ncpu', 0)}" + (f" waiters {r['waiting']}:{r['waiting_gb']} GB" if r["waiting"] else "")
                    + f" run {r['running']}")
-    best, queue = choose(res, 32)
-    print("ot-run status: " + " | ".join(out) + (f" | next 16-thread 32 GB job -> {best}" + (" (would queue)" if queue else "") if best else ""))
+    live = {h: r for h, r in res.items() if r and not r.get("error") and r.get("ncpu")
+            and r["disk_gb"] >= 20 and physically_capable(r, 32)}
+    fits = {h: r for h, r in live.items() if r.get("admit_gb", r["free_gb"]) >= 32}
+    qualifying = fits or live
+    under = {h: r for h, r in qualifying.items() if r.get("load1", 0) <= LOAD_HOLD * r["ncpu"]}
+    bypass = os.environ.get("OT_RUN_NO_LOAD_HOLD") == "1"
+    if qualifying and not under and not bypass:
+        next_job = " | next 16-thread 32 GB job: load held"
+    else:
+        eligible = {h: r for h, r in live.items() if bypass or h in under or h not in qualifying}
+        best, queue = choose(eligible, 32)
+        next_job = (f" | next 16-thread 32 GB job -> {best}" + (" (would queue)" if queue else "")) if best else ""
+    print("ot-run status: " + " | ".join(out) + next_job)
 
 
 def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False):

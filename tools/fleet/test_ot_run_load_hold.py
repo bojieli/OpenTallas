@@ -80,6 +80,16 @@ class LoadHold(unittest.TestCase):
 
 
 class PickEligibility(unittest.TestCase):
+    def test_status_does_not_advertise_cpu_held_only_memory_fit_host(self):
+        module = load(Path(__file__).with_name('ot-run'))
+        rows = dict(epyc=row(20, 70, 128), pve=row(104, 43, 28))
+        output = io.StringIO()
+        with patch.object(module, 'probe', side_effect=lambda h,d: (h,rows[h])), \
+             patch.dict(os.environ, {}, clear=True), contextlib.redirect_stdout(output):
+            module.status(list(rows))
+        self.assertIn('next 16-thread 32 GB job: load held', output.getvalue())
+        self.assertNotIn('-> pve', output.getvalue())
+
     def test_large_request_never_queues_on_physically_incapable_idle_host(self):
         module = load(Path(__file__).with_name('ot-run'))
         rows = dict(epyc={**row(-40, 90, 128), 'total_gb': 1008, 'floor_gb': 202},
