@@ -1,0 +1,399 @@
+{
+  "schema": "opentallas.actual-checkpoint-mapped4-hardware.v1",
+  "status": "ACTUAL_RELEASED_BYTES_PHY_STAGING_FORMATTER_PASS_NATIVE_EXECUTION_PRICE_UNQUALIFIED",
+  "fleet": "ot-agidock128:oth-ubuntu-3776883-1792053653 exit0",
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_mapped4_cdc.sv": "048341f538f73834034b52512a039cfcbc21e62abce57bc1ec70340ef943d128",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_mapped4_owner.sv": "908f6d6f72db0db49874094e43db6ab227e20ccead9e6c904013b44c57fcd9ab",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv": "05ea0bddc5a9ea27f0e3ca7d3882ee5f61748c43539f1569994f7ebcb85eaa87",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_burst_bank.sv": "d2f90481dbc9953481195d63630a25a19ff3e64b16dcec87382ad9e33e713b77",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv": "e83b7120ff9c6b00eb1a7892bdfd0d4a8e9717fdf055f975f96fa879bb6c91b8",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_prefetch_mapped4_checkpoint.sv": "52d8a05d2b48a0e31fcdbbbe54f0c5a81eda7d29b0bdc09d507d9ad3fe255f7e",
+    "rtl/hbm_accel/loader/service_native/run_mapped4_checkpoint_bench.sh": "ce97ecef8fc27fe4190d30f2bddc0afde9cb2c563f70473dc2b1f450a73ce7c2",
+    "tools/hbm_svc_mapped4_checkpoint_prepare.py": "2df88964e011c5f20c5cf0fa54641f7972388d17a8ec989bba77e074b7adb246",
+    "tools/hbm_svc_mapped4_model.py": "df5b7b5d18cc1bafc34de49ff0881e40904e7d55d03eedcbd9522bb41b2bfacc",
+    "tools/hbm_svc_packed136_image.py": "cb4542a28de27913557f5f9425e2f82aabf62a155c87684559d685418b4889c4",
+    "rtl/chip/ot_chip_v41x_hbm3e_phy.sv": "6cda2575be0adfb73e8ff45893b86689ad7f5a823a4b66f04823d4446841b1cb",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "c757ae39d767291db3fd37565ce6c5ff6eec9ed119cc97ee06432f301d87ecf4",
+    "rtl/hdc/kv/ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+  },
+  "headers": {
+    "ot_hbm_svc_prefetch_mapped4_cdc": {
+      "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_mapped4_cdc.sv",
+      "sha256": "048341f538f73834034b52512a039cfcbc21e62abce57bc1ec70340ef943d128",
+      "ports": {
+        "stream_clk": [
+          "input",
+          1
+        ],
+        "stream_rst_n": [
+          "input",
+          1
+        ],
+        "hbm_clk": [
+          "input",
+          1
+        ],
+        "hbm_rst_n": [
+          "input",
+          1
+        ],
+        "stream_bank_clk": [
+          "input",
+          4
+        ],
+        "hbm_fifo_clk": [
+          "input",
+          8
+        ],
+        "hbm_pc_clk": [
+          "input",
+          32
+        ],
+        "reserve_pcs": [
+          "input",
+          20
+        ],
+        "reserve_row_base": [
+          "input",
+          15
+        ],
+        "reserve_v": [
+          "input",
+          1
+        ],
+        "reserve_ready": [
+          "output",
+          1
+        ],
+        "reserve_base": [
+          "input",
+          32
+        ],
+        "reserve_total": [
+          "input",
+          12
+        ],
+        "reserve_bank": [
+          "input",
+          1
+        ],
+        "reserve_epoch": [
+          "input",
+          16
+        ],
+        "block_ready": [
+          "output",
+          2
+        ],
+        "block_ready_v": [
+          "output",
+          1
+        ],
+        "block_ready_bank": [
+          "output",
+          1
+        ],
+        "block_ready_epoch": [
+          "output",
+          16
+        ],
+        "start_v": [
+          "input",
+          1
+        ],
+        "start_bank": [
+          "input",
+          1
+        ],
+        "start_epoch": [
+          "input",
+          16
+        ],
+        "out_v": [
+          "output",
+          1
+        ],
+        "out_mask": [
+          "output",
+          4
+        ],
+        "out_data": [
+          "output",
+          1024
+        ],
+        "out_ordinal": [
+          "output",
+          11
+        ],
+        "out_bank": [
+          "output",
+          1
+        ],
+        "out_epoch": [
+          "output",
+          16
+        ],
+        "out_last": [
+          "output",
+          1
+        ],
+        "fault": [
+          "output",
+          1
+        ],
+        "k_v": [
+          "output",
+          32
+        ],
+        "k_rdy": [
+          "input",
+          32
+        ],
+        "k_addr": [
+          "output",
+          960
+        ],
+        "k_len": [
+          "output",
+          128
+        ],
+        "k_tag": [
+          "output",
+          544
+        ],
+        "k_we": [
+          "output",
+          32
+        ],
+        "k_wdata": [
+          "output",
+          8192
+        ],
+        "k_wstrb": [
+          "output",
+          1024
+        ],
+        "k_wr_done": [
+          "input",
+          32
+        ],
+        "kr_v": [
+          "input",
+          32
+        ],
+        "kr_rdy": [
+          "output",
+          32
+        ],
+        "kr_tag": [
+          "input",
+          544
+        ],
+        "kr_beat": [
+          "input",
+          128
+        ],
+        "kr_data": [
+          "input",
+          8192
+        ]
+      }
+    },
+    "ot_hbm_svc_prefetch_mapped4_owner": {
+      "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_mapped4_owner.sv",
+      "sha256": "908f6d6f72db0db49874094e43db6ab227e20ccead9e6c904013b44c57fcd9ab",
+      "ports": {
+        "clk": [
+          "input",
+          1
+        ],
+        "rst_n": [
+          "input",
+          1
+        ],
+        "descriptor_v": [
+          "input",
+          1
+        ],
+        "descriptor_base": [
+          "input",
+          30
+        ],
+        "descriptor_pcs": [
+          "input",
+          20
+        ],
+        "descriptor_row_base": [
+          "input",
+          15
+        ],
+        "descriptor_total": [
+          "input",
+          12
+        ],
+        "descriptor_bank": [
+          "input",
+          1
+        ],
+        "descriptor_epoch": [
+          "input",
+          16
+        ],
+        "block_active": [
+          "input",
+          1
+        ],
+        "block_base": [
+          "input",
+          30
+        ],
+        "block_pcs": [
+          "input",
+          20
+        ],
+        "block_row_base": [
+          "input",
+          15
+        ],
+        "block_total": [
+          "input",
+          12
+        ],
+        "block_bank": [
+          "input",
+          1
+        ],
+        "block_epoch": [
+          "input",
+          16
+        ],
+        "stop": [
+          "input",
+          1
+        ],
+        "k_ready": [
+          "input",
+          1
+        ],
+        "kr_v": [
+          "input",
+          1
+        ],
+        "kr_tag": [
+          "input",
+          17
+        ],
+        "kr_beat": [
+          "input",
+          4
+        ],
+        "response_take": [
+          "input",
+          1
+        ],
+        "k_v": [
+          "output",
+          1
+        ],
+        "k_addr": [
+          "output",
+          30
+        ],
+        "k_len": [
+          "output",
+          4
+        ],
+        "k_tag": [
+          "output",
+          17
+        ],
+        "response_ok": [
+          "output",
+          1
+        ],
+        "response_ordinal": [
+          "output",
+          11
+        ],
+        "response_epoch": [
+          "output",
+          16
+        ],
+        "response_bank": [
+          "output",
+          1
+        ],
+        "fault": [
+          "output",
+          1
+        ]
+      }
+    }
+  },
+  "checkpoint": {
+    "snapshot": "dba1be0a40aa45a94ad051997016db3960a90277",
+    "tensor": "layers.0.attn.wq_a.weight",
+    "scale": "layers.0.attn.wq_a.scale",
+    "activeSMs": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "idleSMs": [
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31
+    ],
+    "rank": 0,
+    "TP": 96,
+    "records": 520,
+    "actual_sectors": 2236,
+    "record_bytes": 136,
+    "final_line_padding_only": true
+  },
+  "allocation": "safe current rank0SM0..12 row20738 PCs4*(SM%8)..+3 stackSM//8",
+  "actual_path": "sparse checkpoint image in actual offchip PHY RAM -> inverse-mapped four-PC bursts -> epoch/tag/beat owner -> actual CDC ->32actualSRAM ->fixed4,4,4,4,1 sector slots -> original-bitpacked staticformatter ->5actualrowSRAM ->1099packet",
+  "clock_periods_ps": {
+    "stream": 833.3333333333334,
+    "hbm": 1024
+  },
+  "cold_prefetch_ps_per40records": 102916.625,
+  "full_price_qualified": false,
+  "packet_tags": "actual programme plan tag_base including 10bit wrap; actual tag/epoch/scale/weights compared",
+  "mutant": "drop actual DRAM rowLow2 burst permutation: actual checkpoint sector mismatch rejected",
+  "remaining": [
+    "Actual native83 programme issuer/readslot and numerical SM execution must consume this producer path",
+    "Immutable1.374315789streamcy/row requires measured production prefetch overlap/cold first-use; present cold proof not performance pass",
+    "Full34physicalservicebands/clock CTS/native timing/registered hops unqualified",
+    "All32SM/all96ranks not claimed; Engram blocks rank0SM24..31 allocation"
+  ]
+}

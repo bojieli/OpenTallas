@@ -1,0 +1,826 @@
+{
+  "schema": "opentallas.actual-packed136-mapped4-prepared.v1",
+  "rank": 0,
+  "payload_manifest_sha256": "a2b78734832b40070602e6f441ac389d1985a8a078e7d7a990b37733508aacc3",
+  "programme_manifest_sha256": "b28dded90f914b22ff76abe353a04c28e7708971227bcb60ad586662c09b0db3",
+  "allocation_book_sha256": "e39286069d40bdf866931704ab609c4955f77c6143090c32953eafa45c845f04",
+  "active": [
+    {
+      "sm": 0,
+      "rank": 0,
+      "stack": 0,
+      "pcs": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "row_base": 20738,
+      "rows": 40,
+      "sectors": 172,
+      "tag_base": 1000,
+      "payload_source_sha256": "0af87b4cc48df8a6b671e89be2f9d4db24e2a47ee91cdd48bb031831ae7e9798",
+      "allocation_sha256": "29c3e29dfb3f3f2471fd19050e8316993f1b59d7dc50103383342ba4d166481f",
+      "programme_plan": {
+        "sm": 0,
+        "active": true,
+        "programme_slots": 72,
+        "real_packets": 40,
+        "command_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_programme/sm00/command256.hex",
+        "read_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_programme/sm00/read256.hex",
+        "line_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_rank0_verified/sm00.lines.hex",
+        "source_sha256": "0af87b4cc48df8a6b671e89be2f9d4db24e2a47ee91cdd48bb031831ae7e9798",
+        "tag_base": 1000,
+        "cache_epoch": 17767,
+        "launch_relation": "readprogramme1edgebeforecommandprogramme",
+        "first_original_S1_hop_after_command_start": 6,
+        "prefetch": {
+          "useful_bytes": 5440,
+          "sectors": 172,
+          "pulses": [
+            4,
+            4,
+            4,
+            4,
+            1
+          ]
+        },
+        "compiler_ops": [
+          {
+            "rows": 1,
+            "c": 8,
+            "groups": 5,
+            "fmt": 1,
+            "gs": true,
+            "x_base": 0,
+            "base_tag": 1000,
+            "launch_cycle": 1,
+            "first_issue": 8,
+            "last_advance": 71,
+            "last_real_issue": 68,
+            "real_lines": 40,
+            "padded_advances": 24
+          }
+        ],
+        "physical_PC_image_bound": false,
+        "VM_xwrite_bound": false
+      }
+    },
+    {
+      "sm": 1,
+      "rank": 0,
+      "stack": 0,
+      "pcs": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "row_base": 20738,
+      "rows": 40,
+      "sectors": 172,
+      "tag_base": 1000,
+      "payload_source_sha256": "a5cb5ef3fb13e31762873cefb4821de8329b4446adbd605cf821411fe31d7597",
+      "allocation_sha256": "ae0a13fa808942d33d554734f38c6254f126e33c1d9c74a2daed7af3791b5e25",
+      "programme_plan": {
+        "sm": 1,
+        "active": true,
+        "programme_slots": 72,
+        "real_packets": 40,
+        "command_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_programme/sm01/command256.hex",
+        "read_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_programme/sm01/read256.hex",
+        "line_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_rank0_verified/sm01.lines.hex",
+        "source_sha256": "a5cb5ef3fb13e31762873cefb4821de8329b4446adbd605cf821411fe31d7597",
+        "tag_base": 1000,
+        "cache_epoch": 17767,
+        "launch_relation": "readprogramme1edgebeforecommandprogramme",
+        "first_original_S1_hop_after_command_start": 6,
+        "prefetch": {
+          "useful_bytes": 5440,
+          "sectors": 172,
+          "pulses": [
+            4,
+            4,
+            4,
+            4,
+            1
+          ]
+        },
+        "compiler_ops": [
+          {
+            "rows": 1,
+            "c": 8,
+            "groups": 5,
+            "fmt": 1,
+            "gs": true,
+            "x_base": 0,
+            "base_tag": 1000,
+            "launch_cycle": 1,
+            "first_issue": 8,
+            "last_advance": 71,
+            "last_real_issue": 68,
+            "real_lines": 40,
+            "padded_advances": 24
+          }
+        ],
+        "physical_PC_image_bound": false,
+        "VM_xwrite_bound": false
+      }
+    },
+    {
+      "sm": 2,
+      "rank": 0,
+      "stack": 0,
+      "pcs": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "row_base": 20738,
+      "rows": 40,
+      "sectors": 172,
+      "tag_base": 1000,
+      "payload_source_sha256": "bb6c147cbd3452de3a7a4b343fd67415e623d74674fa730412e09331f8038111",
+      "allocation_sha256": "4083eba539a4100c761b65b6a8617c7c18fd81535f86741b6ec9f3a497d132c3",
+      "programme_plan": {
+        "sm": 2,
+        "active": true,
+        "programme_slots": 72,
+        "real_packets": 40,
+        "command_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_programme/sm02/command256.hex",
+        "read_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_programme/sm02/read256.hex",
+        "line_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_rank0_verified/sm02.lines.hex",
+        "source_sha256": "bb6c147cbd3452de3a7a4b343fd67415e623d74674fa730412e09331f8038111",
+        "tag_base": 1000,
+        "cache_epoch": 17767,
+        "launch_relation": "readprogramme1edgebeforecommandprogramme",
+        "first_original_S1_hop_after_command_start": 6,
+        "prefetch": {
+          "useful_bytes": 5440,
+          "sectors": 172,
+          "pulses": [
+            4,
+            4,
+            4,
+            4,
+            1
+          ]
+        },
+        "compiler_ops": [
+          {
+            "rows": 1,
+            "c": 8,
+            "groups": 5,
+            "fmt": 1,
+            "gs": true,
+            "x_base": 0,
+            "base_tag": 1000,
+            "launch_cycle": 1,
+            "first_issue": 8,
+            "last_advance": 71,
+            "last_real_issue": 68,
+            "real_lines": 40,
+            "padded_advances": 24
+          }
+        ],
+        "physical_PC_image_bound": false,
+        "VM_xwrite_bound": false
+      }
+    },
+    {
+      "sm": 3,
+      "rank": 0,
+      "stack": 0,
+      "pcs": [
+        12,
+        13,
+        14,
+        15
+      ],
+      "row_base": 20738,
+      "rows": 40,
+      "sectors": 172,
+      "tag_base": 1000,
+      "payload_source_sha256": "d9c255cdcf95807ee9d1f4378ada7c7db3d485e55bea5fcc04de1f8d3bddd5f1",
+      "allocation_sha256": "21b42fec01a3da8920a0e1bac853f0b414f29c64f01a0b54d4fa96ad1424079f",
+      "programme_plan": {
+        "sm": 3,
+        "active": true,
+        "programme_slots": 72,
+        "real_packets": 40,
+        "command_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_programme/sm03/command256.hex",
+        "read_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_programme/sm03/read256.hex",
+        "line_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_rank0_verified/sm03.lines.hex",
+        "source_sha256": "d9c255cdcf95807ee9d1f4378ada7c7db3d485e55bea5fcc04de1f8d3bddd5f1",
+        "tag_base": 1000,
+        "cache_epoch": 17767,
+        "launch_relation": "readprogramme1edgebeforecommandprogramme",
+        "first_original_S1_hop_after_command_start": 6,
+        "prefetch": {
+          "useful_bytes": 5440,
+          "sectors": 172,
+          "pulses": [
+            4,
+            4,
+            4,
+            4,
+            1
+          ]
+        },
+        "compiler_ops": [
+          {
+            "rows": 1,
+            "c": 8,
+            "groups": 5,
+            "fmt": 1,
+            "gs": true,
+            "x_base": 0,
+            "base_tag": 1000,
+            "launch_cycle": 1,
+            "first_issue": 8,
+            "last_advance": 71,
+            "last_real_issue": 68,
+            "real_lines": 40,
+            "padded_advances": 24
+          }
+        ],
+        "physical_PC_image_bound": false,
+        "VM_xwrite_bound": false
+      }
+    },
+    {
+      "sm": 4,
+      "rank": 0,
+      "stack": 0,
+      "pcs": [
+        16,
+        17,
+        18,
+        19
+      ],
+      "row_base": 20738,
+      "rows": 40,
+      "sectors": 172,
+      "tag_base": 1000,
+      "payload_source_sha256": "bdedd7615b150518ef4a14c57272dd54e5af8b02a43ef5b713294beb2bb75e99",
+      "allocation_sha256": "26c2105493bd47a58f911267a28497e7377b8e653c508fbfad54ef56b55194e5",
+      "programme_plan": {
+        "sm": 4,
+        "active": true,
+        "programme_slots": 72,
+        "real_packets": 40,
+        "command_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_programme/sm04/command256.hex",
+        "read_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_programme/sm04/read256.hex",
+        "line_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_rank0_verified/sm04.lines.hex",
+        "source_sha256": "bdedd7615b150518ef4a14c57272dd54e5af8b02a43ef5b713294beb2bb75e99",
+        "tag_base": 1000,
+        "cache_epoch": 17767,
+        "launch_relation": "readprogramme1edgebeforecommandprogramme",
+        "first_original_S1_hop_after_command_start": 6,
+        "prefetch": {
+          "useful_bytes": 5440,
+          "sectors": 172,
+          "pulses": [
+            4,
+            4,
+            4,
+            4,
+            1
+          ]
+        },
+        "compiler_ops": [
+          {
+            "rows": 1,
+            "c": 8,
+            "groups": 5,
+            "fmt": 1,
+            "gs": true,
+            "x_base": 0,
+            "base_tag": 1000,
+            "launch_cycle": 1,
+            "first_issue": 8,
+            "last_advance": 71,
+            "last_real_issue": 68,
+            "real_lines": 40,
+            "padded_advances": 24
+          }
+        ],
+        "physical_PC_image_bound": false,
+        "VM_xwrite_bound": false
+      }
+    },
+    {
+      "sm": 5,
+      "rank": 0,
+      "stack": 0,
+      "pcs": [
+        20,
+        21,
+        22,
+        23
+      ],
+      "row_base": 20738,
+      "rows": 40,
+      "sectors": 172,
+      "tag_base": 1000,
+      "payload_source_sha256": "9e9e2ec82aaaa253596f10298ca445dccece3e3f4ebeef0549b632c6bfc78651",
+      "allocation_sha256": "ab91575d0e8569eb8160aa6cf15704be24feb8d1b6d03b3a947b1f130de8b6d1",
+      "programme_plan": {
+        "sm": 5,
+        "active": true,
+        "programme_slots": 72,
+        "real_packets": 40,
+        "command_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_programme/sm05/command256.hex",
+        "read_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_programme/sm05/read256.hex",
+        "line_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_rank0_verified/sm05.lines.hex",
+        "source_sha256": "9e9e2ec82aaaa253596f10298ca445dccece3e3f4ebeef0549b632c6bfc78651",
+        "tag_base": 1000,
+        "cache_epoch": 17767,
+        "launch_relation": "readprogramme1edgebeforecommandprogramme",
+        "first_original_S1_hop_after_command_start": 6,
+        "prefetch": {
+          "useful_bytes": 5440,
+          "sectors": 172,
+          "pulses": [
+            4,
+            4,
+            4,
+            4,
+            1
+          ]
+        },
+        "compiler_ops": [
+          {
+            "rows": 1,
+            "c": 8,
+            "groups": 5,
+            "fmt": 1,
+            "gs": true,
+            "x_base": 0,
+            "base_tag": 1000,
+            "launch_cycle": 1,
+            "first_issue": 8,
+            "last_advance": 71,
+            "last_real_issue": 68,
+            "real_lines": 40,
+            "padded_advances": 24
+          }
+        ],
+        "physical_PC_image_bound": false,
+        "VM_xwrite_bound": false
+      }
+    },
+    {
+      "sm": 6,
+      "rank": 0,
+      "stack": 0,
+      "pcs": [
+        24,
+        25,
+        26,
+        27
+      ],
+      "row_base": 20738,
+      "rows": 40,
+      "sectors": 172,
+      "tag_base": 1000,
+      "payload_source_sha256": "e38f1830c686b031b7b5538cacffc23e72df39441f483c5294a5187f702f4d80",
+      "allocation_sha256": "b34546d7fc1b618c52474693bb233d11da12509a8207b702f46bd01a647f14f1",
+      "programme_plan": {
+        "sm": 6,
+        "active": true,
+        "programme_slots": 72,
+        "real_packets": 40,
+        "command_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_programme/sm06/command256.hex",
+        "read_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_programme/sm06/read256.hex",
+        "line_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_rank0_verified/sm06.lines.hex",
+        "source_sha256": "e38f1830c686b031b7b5538cacffc23e72df39441f483c5294a5187f702f4d80",
+        "tag_base": 1000,
+        "cache_epoch": 17767,
+        "launch_relation": "readprogramme1edgebeforecommandprogramme",
+        "first_original_S1_hop_after_command_start": 6,
+        "prefetch": {
+          "useful_bytes": 5440,
+          "sectors": 172,
+          "pulses": [
+            4,
+            4,
+            4,
+            4,
+            1
+          ]
+        },
+        "compiler_ops": [
+          {
+            "rows": 1,
+            "c": 8,
+            "groups": 5,
+            "fmt": 1,
+            "gs": true,
+            "x_base": 0,
+            "base_tag": 1000,
+            "launch_cycle": 1,
+            "first_issue": 8,
+            "last_advance": 71,
+            "last_real_issue": 68,
+            "real_lines": 40,
+            "padded_advances": 24
+          }
+        ],
+        "physical_PC_image_bound": false,
+        "VM_xwrite_bound": false
+      }
+    },
+    {
+      "sm": 7,
+      "rank": 0,
+      "stack": 0,
+      "pcs": [
+        28,
+        29,
+        30,
+        31
+      ],
+      "row_base": 20738,
+      "rows": 40,
+      "sectors": 172,
+      "tag_base": 1000,
+      "payload_source_sha256": "1106d6ab8d2b2d7e6c67595375b7644c1d68ad71527d83a73e33fffbe9595be8",
+      "allocation_sha256": "9add78f80917a367a7fae92bc48ac34627e11c1aaed173ffed8ba859b41dff37",
+      "programme_plan": {
+        "sm": 7,
+        "active": true,
+        "programme_slots": 72,
+        "real_packets": 40,
+        "command_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_programme/sm07/command256.hex",
+        "read_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_programme/sm07/read256.hex",
+        "line_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_rank0_verified/sm07.lines.hex",
+        "source_sha256": "1106d6ab8d2b2d7e6c67595375b7644c1d68ad71527d83a73e33fffbe9595be8",
+        "tag_base": 1000,
+        "cache_epoch": 17767,
+        "launch_relation": "readprogramme1edgebeforecommandprogramme",
+        "first_original_S1_hop_after_command_start": 6,
+        "prefetch": {
+          "useful_bytes": 5440,
+          "sectors": 172,
+          "pulses": [
+            4,
+            4,
+            4,
+            4,
+            1
+          ]
+        },
+        "compiler_ops": [
+          {
+            "rows": 1,
+            "c": 8,
+            "groups": 5,
+            "fmt": 1,
+            "gs": true,
+            "x_base": 0,
+            "base_tag": 1000,
+            "launch_cycle": 1,
+            "first_issue": 8,
+            "last_advance": 71,
+            "last_real_issue": 68,
+            "real_lines": 40,
+            "padded_advances": 24
+          }
+        ],
+        "physical_PC_image_bound": false,
+        "VM_xwrite_bound": false
+      }
+    },
+    {
+      "sm": 8,
+      "rank": 0,
+      "stack": 1,
+      "pcs": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "row_base": 20738,
+      "rows": 40,
+      "sectors": 172,
+      "tag_base": 1000,
+      "payload_source_sha256": "fc01e612d672def09bd2df5cb0055e5bb9afa920b3a84378f969f244ea5368ca",
+      "allocation_sha256": "a5c3e41f573acd693a812be473d5508b6ebccc24a471ab7e7ca6ddf3755a5fd4",
+      "programme_plan": {
+        "sm": 8,
+        "active": true,
+        "programme_slots": 72,
+        "real_packets": 40,
+        "command_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_programme/sm08/command256.hex",
+        "read_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_programme/sm08/read256.hex",
+        "line_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_rank0_verified/sm08.lines.hex",
+        "source_sha256": "fc01e612d672def09bd2df5cb0055e5bb9afa920b3a84378f969f244ea5368ca",
+        "tag_base": 1000,
+        "cache_epoch": 17767,
+        "launch_relation": "readprogramme1edgebeforecommandprogramme",
+        "first_original_S1_hop_after_command_start": 6,
+        "prefetch": {
+          "useful_bytes": 5440,
+          "sectors": 172,
+          "pulses": [
+            4,
+            4,
+            4,
+            4,
+            1
+          ]
+        },
+        "compiler_ops": [
+          {
+            "rows": 1,
+            "c": 8,
+            "groups": 5,
+            "fmt": 1,
+            "gs": true,
+            "x_base": 0,
+            "base_tag": 1000,
+            "launch_cycle": 1,
+            "first_issue": 8,
+            "last_advance": 71,
+            "last_real_issue": 68,
+            "real_lines": 40,
+            "padded_advances": 24
+          }
+        ],
+        "physical_PC_image_bound": false,
+        "VM_xwrite_bound": false
+      }
+    },
+    {
+      "sm": 9,
+      "rank": 0,
+      "stack": 1,
+      "pcs": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "row_base": 20738,
+      "rows": 40,
+      "sectors": 172,
+      "tag_base": 1000,
+      "payload_source_sha256": "4f0778c1388f0411c78d15a7e2b8c6b6557500efe844516bee69a3c8a16762ba",
+      "allocation_sha256": "f00a266e010b08122710bb002d447bd67835bf96a676726ec6a453dcb608bda0",
+      "programme_plan": {
+        "sm": 9,
+        "active": true,
+        "programme_slots": 72,
+        "real_packets": 40,
+        "command_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_programme/sm09/command256.hex",
+        "read_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_programme/sm09/read256.hex",
+        "line_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_rank0_verified/sm09.lines.hex",
+        "source_sha256": "4f0778c1388f0411c78d15a7e2b8c6b6557500efe844516bee69a3c8a16762ba",
+        "tag_base": 1000,
+        "cache_epoch": 17767,
+        "launch_relation": "readprogramme1edgebeforecommandprogramme",
+        "first_original_S1_hop_after_command_start": 6,
+        "prefetch": {
+          "useful_bytes": 5440,
+          "sectors": 172,
+          "pulses": [
+            4,
+            4,
+            4,
+            4,
+            1
+          ]
+        },
+        "compiler_ops": [
+          {
+            "rows": 1,
+            "c": 8,
+            "groups": 5,
+            "fmt": 1,
+            "gs": true,
+            "x_base": 0,
+            "base_tag": 1000,
+            "launch_cycle": 1,
+            "first_issue": 8,
+            "last_advance": 71,
+            "last_real_issue": 68,
+            "real_lines": 40,
+            "padded_advances": 24
+          }
+        ],
+        "physical_PC_image_bound": false,
+        "VM_xwrite_bound": false
+      }
+    },
+    {
+      "sm": 10,
+      "rank": 0,
+      "stack": 1,
+      "pcs": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "row_base": 20738,
+      "rows": 40,
+      "sectors": 172,
+      "tag_base": 1000,
+      "payload_source_sha256": "a61e2c31188ecde5fe9ece8a94c94374e322753d956795511a1dd92a7dbc9b65",
+      "allocation_sha256": "ca91c9bc7d396d9eb87a735a7705270662520d2820bf1f5f710ac67b63bab34e",
+      "programme_plan": {
+        "sm": 10,
+        "active": true,
+        "programme_slots": 72,
+        "real_packets": 40,
+        "command_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_programme/sm10/command256.hex",
+        "read_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_programme/sm10/read256.hex",
+        "line_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_rank0_verified/sm10.lines.hex",
+        "source_sha256": "a61e2c31188ecde5fe9ece8a94c94374e322753d956795511a1dd92a7dbc9b65",
+        "tag_base": 1000,
+        "cache_epoch": 17767,
+        "launch_relation": "readprogramme1edgebeforecommandprogramme",
+        "first_original_S1_hop_after_command_start": 6,
+        "prefetch": {
+          "useful_bytes": 5440,
+          "sectors": 172,
+          "pulses": [
+            4,
+            4,
+            4,
+            4,
+            1
+          ]
+        },
+        "compiler_ops": [
+          {
+            "rows": 1,
+            "c": 8,
+            "groups": 5,
+            "fmt": 1,
+            "gs": true,
+            "x_base": 0,
+            "base_tag": 1000,
+            "launch_cycle": 1,
+            "first_issue": 8,
+            "last_advance": 71,
+            "last_real_issue": 68,
+            "real_lines": 40,
+            "padded_advances": 24
+          }
+        ],
+        "physical_PC_image_bound": false,
+        "VM_xwrite_bound": false
+      }
+    },
+    {
+      "sm": 11,
+      "rank": 0,
+      "stack": 1,
+      "pcs": [
+        12,
+        13,
+        14,
+        15
+      ],
+      "row_base": 20738,
+      "rows": 40,
+      "sectors": 172,
+      "tag_base": 1000,
+      "payload_source_sha256": "3ffb20824ac228abbe273dd4e479d61c9c1be97d2dbdafe031ffff8996afc18d",
+      "allocation_sha256": "58e8056685ec365d55d7482eac06b9016b806990c79ad657460263de789e7fd6",
+      "programme_plan": {
+        "sm": 11,
+        "active": true,
+        "programme_slots": 72,
+        "real_packets": 40,
+        "command_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_programme/sm11/command256.hex",
+        "read_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_programme/sm11/read256.hex",
+        "line_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_rank0_verified/sm11.lines.hex",
+        "source_sha256": "3ffb20824ac228abbe273dd4e479d61c9c1be97d2dbdafe031ffff8996afc18d",
+        "tag_base": 1000,
+        "cache_epoch": 17767,
+        "launch_relation": "readprogramme1edgebeforecommandprogramme",
+        "first_original_S1_hop_after_command_start": 6,
+        "prefetch": {
+          "useful_bytes": 5440,
+          "sectors": 172,
+          "pulses": [
+            4,
+            4,
+            4,
+            4,
+            1
+          ]
+        },
+        "compiler_ops": [
+          {
+            "rows": 1,
+            "c": 8,
+            "groups": 5,
+            "fmt": 1,
+            "gs": true,
+            "x_base": 0,
+            "base_tag": 1000,
+            "launch_cycle": 1,
+            "first_issue": 8,
+            "last_advance": 71,
+            "last_real_issue": 68,
+            "real_lines": 40,
+            "padded_advances": 24
+          }
+        ],
+        "physical_PC_image_bound": false,
+        "VM_xwrite_bound": false
+      }
+    },
+    {
+      "sm": 12,
+      "rank": 0,
+      "stack": 1,
+      "pcs": [
+        16,
+        17,
+        18,
+        19
+      ],
+      "row_base": 20738,
+      "rows": 40,
+      "sectors": 172,
+      "tag_base": 1000,
+      "payload_source_sha256": "dc8f49d6cb835549ea99ff684b89215559baff617598b1fa72d7c41802fd9230",
+      "allocation_sha256": "3b0ad4aea11acc2be841cc97a8f67964d6ec9da55f23d972cce959ddb78a8e9c",
+      "programme_plan": {
+        "sm": 12,
+        "active": true,
+        "programme_slots": 72,
+        "real_packets": 40,
+        "command_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_programme/sm12/command256.hex",
+        "read_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_programme/sm12/read256.hex",
+        "line_file": "/home/ubuntu/wt/hbm-sm-static-feed-1014/results/rtl/hbm_smh_static_feed_1014/checkpoint_wqa_rank0_verified/sm12.lines.hex",
+        "source_sha256": "dc8f49d6cb835549ea99ff684b89215559baff617598b1fa72d7c41802fd9230",
+        "tag_base": 1000,
+        "cache_epoch": 17767,
+        "launch_relation": "readprogramme1edgebeforecommandprogramme",
+        "first_original_S1_hop_after_command_start": 6,
+        "prefetch": {
+          "useful_bytes": 5440,
+          "sectors": 172,
+          "pulses": [
+            4,
+            4,
+            4,
+            4,
+            1
+          ]
+        },
+        "compiler_ops": [
+          {
+            "rows": 1,
+            "c": 8,
+            "groups": 5,
+            "fmt": 1,
+            "gs": true,
+            "x_base": 0,
+            "base_tag": 1000,
+            "launch_cycle": 1,
+            "first_issue": 8,
+            "last_advance": 71,
+            "last_real_issue": 68,
+            "real_lines": 40,
+            "padded_advances": 24
+          }
+        ],
+        "physical_PC_image_bound": false,
+        "VM_xwrite_bound": false
+      }
+    }
+  ],
+  "idle_SMs": [
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31
+  ],
+  "real_records": 520,
+  "real_sectors": 2236,
+  "scope": "Actual released checkpoint input image and hardware programme source binding; hardware installation/final decode not qualified"
+}
