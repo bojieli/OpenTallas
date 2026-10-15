@@ -1,0 +1,50 @@
+{
+ "schema": "opentallas.s81.r2l-group-model.v1",
+ "source": "f8139a4c7 actual HCOL/HSEL TT paths",
+ "failure": {
+  "TT_ps": -46.69,
+  "FF_ps": 26.72,
+  "DRC": 0,
+  "violating_D_pins": 4031,
+  "path": "falling marker dq0[0] -> enabled bank[6][464] rising next halfcycle",
+  "cause": "one source epoch marker enables all 8x513 data-bank flops through high-fanout buffer tree"
+ },
+ "function": {
+  "payload_bits": 512,
+  "source_words_per_hyperperiod": 4,
+  "destination_words_per_hyperperiod": 3,
+  "hyperperiod_VCO_ticks": 12,
+  "source_period_ps": 833.333,
+  "destination_period_ps": 1111.111,
+  "compile_bubble_source_phase": 3,
+  "normal_edges_added": 0,
+  "latency_map": "same static_ratio_cross src=4*h+p, no data/return stage changes"
+ },
+ "partition": {
+  "data_leaves": 8,
+  "payload_bits_per_leaf": 64,
+  "bank_payload_FF_per_leaf": 520,
+  "marker_fanout_estimate_max": 600,
+  "status_leaf": 1,
+  "clock_entries": {
+   "read": 9,
+   "forwarded_source": 8,
+   "total": 17,
+   "old_total": 2
+  },
+  "no_parent_logic": "wires-only parent; status OR/AND/consensus is in one real hardened leaf"
+ },
+ "resources": {
+  "SRAM": 0,
+  "ROM": 0,
+  "bank_payload_FF_old": 4104,
+  "bank_payload_FF_new": 4160,
+  "bank_payload_FF_added": 56,
+  "counter_tag_overhead": "7 additional copies of the same fixed phase/identity counters; synthesis census required",
+  "model_area": "provisional data43.2x38.88 each, status43.2x21.6; 4x2 data rows and 10.8um channels ->205.2x120.96 parent bounding box; requires actual CTS/mapped fit and die grant",
+  "boundary_bits": "each data leaf66 input/64 output+3 raw status; parent514 input/515 output preserved",
+  "face_capacity": "maximum data face66bits over minimum21.6um usable edge ->3.06bits/um; legal M3/M5 occupancy requires exact pin generator audit"
+ },
+ "physical_status": "PROPOSAL only; no leaf pins or slot grant, no inherited 2-clock view; per-entry phase-R required",
+ "clock_source_semantics": "each read entry shares logical serial phase but owns independent measured R_i; eight forwarded entries derive from actual source forwarded tree with independent routes/phase/R_i; never blanket ties"
+}
