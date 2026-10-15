@@ -57,7 +57,7 @@ STRAP_PORTS = frozenset([('qfd_tile_nk', 'tile_id'), ('qfd_tile_nl', 'tile_id'),
                          ('qfd_xcol_e', 'tids'), ('qfd_xcol_w', 'tids'), ('qfd_su_cbuf_g', 'grp'), ('qfd_su_cbuf_g', 'f_lat'),
                          ('qfd_crom_g', 'crom_lb'), ('qfd_sp_band_lanes', 'b0'), ('qfd_sp_band_lanes', 'lnk'),
                          ('qfd_sp_band_lanes', 'tt')])
-_ts = os.environ.get('OT_SPLIT_TIE_SELF', '').strip()
+_ts = os.environ.get('OT_SPLIT_TIE_SELF', 'qfd_tile_nk,qfd_tile_nl').strip()   # tile RTL has tie_hi / tie_lo (q-tile r10)
 TIE_SELF = frozenset(TIE_STRAP_MASTERS if _ts == 'all' else [s for s in _ts.split(',') if s])
 assert TIE_SELF <= set(TIE_STRAP_MASTERS), f'OT_SPLIT_TIE_SELF: unknown masters {sorted(TIE_SELF - set(TIE_STRAP_MASTERS))}'
 
@@ -87,6 +87,11 @@ CHILD_CK = {'qfd_tt_up4': ['ck_pin', 'ck_l0', 'ck_l1', 'ck_l2', 'ck_l3'],     # 
             'qfd_tile_nk': ['ck'] + [f'ck_rp{k}' for k in range(5)] + [f'ck_lsl{k}' for k in range(8)] + ['ck_node'],
             'qfd_tile_nl': ['ck'] + [f'ck_rp{k}' for k in range(5)] + [f'ck_lsl{k}' for k in range(8)],
             'qfd_sp_band_lanes': ['ck'] + [f'ck_l{k}' for k in range(16)]}
+# v1.3 (compute lead r4): the static slab masters (rtl/qwen_split/qfd_port_tiles.sv @10c74d529) take 49 entries each
+_SLAB_CK = (['ck'] + [f'ck_bw{k}' for k in range(8)] + [f'ck_pair{k}' for k in range(4)] + [f'ck_col{k}' for k in range(16)]
+            + [f'ck_mul{k}' for k in range(16)] + [f'ck_group{k}' for k in range(4)])
+for _b in range(3):
+    CHILD_CK[f'qfd_port_tiles_{_b}'] = CHILD_CK[f'qfd_port_tiles_{_b}_f1'] = list(_SLAB_CK)
 
 
 
@@ -171,6 +176,24 @@ def _child_clocks(m, rec):
         nb.append((b, c, n, e))
     m['buses'] = nb
     rec['child_clocks'] = {k: list(v) for k, v in CHILD_CK.items()}
+
+
+def _slab_links(m, rec):
+    """v1.3: the static slab pair of each band (qfd_port_tiles_<b> W half, _f1 E half, RTL 10c74d529) exchange five
+    registered words: W tc_e 341 -> f1 tc, W tye 2,048 -> f1 ty, f1 rq 2,213 -> W rqe, f1 am 52 -> W ame (f1 cw0 2,050
+    -> W cf1 is the existing pfrag bus).  No ready / credit: fixed stages, priced by the compiler."""
+    have = {b_ for b_, *_ in m['buses']}
+    nb = []
+    for b in range(3):
+        w, e = f'sp_port_tiles_{b}', f'sp_port_tiles_{b}_f1'
+        for name, cls, n, src, dst in ((f'slab_tc_{b}', 'tree_spine', 341, (w, 'tc_e'), (e, 'tc')),
+                                       (f'slab_ty_{b}', 'tree_spine', 2048, (w, 'tye'), (e, 'ty')),
+                                       (f'slab_rq_{b}', 'tree_spine', 2213, (e, 'rq'), (w, 'rqe')),
+                                       (f'slab_am_{b}', 'tree_spine', 52, (e, 'am'), (w, 'ame'))):
+            if name not in have:
+                nb.append((name, cls, n, [src, dst]))
+    m['buses'] += nb
+    rec['slab_links'] = [x[0] for x in nb]
 
 
 def morton(c, r):
@@ -367,6 +390,12 @@ def place(v, m, G):
     # _f1 in the W sub-area: 24 x 512 b across the spine); only the band's one 512-b pfrag word crosses.
     xa = x0 + CHE
     xf = x1 - CHE - PORT_WH[0]
+    # v1.3 (owner 21:35 adjacency): the slab pair of a band exchanges 6,704 b (tc_e, tye, rq, am, cw0, RTL 10c74d529)
+    # vs 8 x 514 = 4,112 b of E-field block words; with _f1 abutted E of its W half in the W column only the block words
+    # cross the spine (C16 with _f1 on the E edge: worst cut 1.551).  The E slab column disappears.
+    F1W = STACK == 'seamw' and os.environ.get('OT_SPLIT_F1_WEST', '1') != '0'
+    if F1W:
+        xf = x1 - CHE + CH
     dl = (PORT_WH[0] - LANES_WH[0]) / 2
     dr = (PORT_WH[0] - RES_WH[0]) / 2
     bands = getattr(v, 'BAND_BLOCKS', None) or {}
@@ -396,6 +425,12 @@ def place(v, m, G):
             put(f'sp_band_lanes_{b}', xa + dl, y0, LANES_WH)
             put(f'sp_port_tiles_{b}', xa, y0 + LANES_WH[1] + 4.32, PORT_WH)
             put(f'sp_res_ser_{b}', xa + dr, y0 + LANES_WH[1] + PORT_WH[1] + 8.64, RES_WH)
+        if F1W:
+            pt_ = by[f'sp_port_tiles_{b}']
+            put(f'sp_port_tiles_{b}_f1', pt_.x + PORT_WH[0] + 4.32, pt_.y, PORT_WH)
+            rec.setdefault('band_centroid_y', []).append(round(cents[b], 1))
+            lo = y0 + gh + CH
+            continue
         yf = max(lo_f, cents[b] - PORT_WH[1] / 2)
         yf = min(yf, top - PORT_WH[1])
         if STACK in ('seam', 'seamw') and yf < head_y + HROW and yf + PORT_WH[1] > head_y - HROW:
@@ -406,7 +441,7 @@ def place(v, m, G):
         rec.setdefault('band_centroid_y', []).append(round(cents[b], 1))
         lo = y0 + gh + CH
         lo_f = yf + PORT_WH[1] + CH
-    xw_end = xa + PORT_WH[0] + CH
+    xw_end = xa + PORT_WH[0] + CH + ((PORT_WH[0] + 4.32) if F1W else 0.0)
     # ---- E sub-area (between the W slab column and the E slab column)
     xe = xw_end
     we = xf - CH - xe
@@ -426,6 +461,28 @@ def place(v, m, G):
     if os.environ.get('OT_SPLIT_LINK_MX', '1') != '0':
         ph.orient = ad.orient = 'MX'
         rec['link_orient'] = 'MX'
+    # v1.3 (compute lead r4, elements r11): the CLOSED + native-PASS static x3 mux (kit qfd_x3_mux_nativer, RTL
+    # ot_qfd_x3_mux_native, 129.6 x 129.6) between the SU q word and the adapter's x3 word, right under the adapter's
+    # word face.  Its kvn / slot inputs have no die producer yet (Q-control: KVN sender + compiler slot issuer): left
+    # unconnected so the port-bind names them, never tied.
+    if os.environ.get('OT_SPLIT_X3MUX', '1') != '0':
+        mx = v.Inst('x3_mux', 'ot_qfd_x3_mux_native', 0.0, 0.0, 129.6, 129.6, kind='spine', region='hub', domain=ad.domain)
+        m['insts'].append(mx)
+        by['x3_mux'] = mx
+        put('x3_mux', ad.x + ad.w / 2 - 64.8, ad.y - CH - 129.6)
+        nb_ = []
+        for b_, c_, n_, e_ in m['buses']:
+            if b_ == 'x3':
+                nb_.append((b_, c_, n_, [x for x in e_ if x[0] != 'd2d_rom'] + [('x3_mux', 'q')]))
+                nb_.append(('x3m', c_, n_, [('x3_mux', 'x3'), ('d2d_rom', 'x3')]))
+                continue
+            if c_ == 'clock_trunk' and ('d2d_rom', 'ck') in [tuple(x) for x in e_]:
+                e_ = list(e_) + [('x3_mux', 'ck')]
+            if b_ == 'rst_spine':
+                e_ = list(e_) + [('x3_mux', 'rst_n')]
+            nb_.append((b_, c_, n_, e_))
+        m['buses'] = nb_
+        rec['x3_mux'] = list(rec['slots']['x3_mux'])
     put('rs_bump', ph.x - 4.32 - by['rs_bump'].w - 4.32, ph.y - by['rs_bump'].h / 2)
     put('ckb_rom', ph.x - 4.32 - by['ckb_rom'].w - 4.32, ph.y + 30.0)
     # SU slot below the link, constant group E of it
@@ -479,6 +536,7 @@ def place(v, m, G):
     if os.environ.get('OT_SPLIT_TREE_HOSTS', 'baseline') == 'dp':
         from qwen_split.tree_hosts import apply as tree_hosts_apply
         rec['tree_hosts'] = tree_hosts_apply(v, m, pitch=490.0)
+    _slab_links(m, rec)
     _child_clocks(m, rec)
     m['tie_self'] = sorted(TIE_SELF)
     rec['tie_self'] = sorted(TIE_SELF)
