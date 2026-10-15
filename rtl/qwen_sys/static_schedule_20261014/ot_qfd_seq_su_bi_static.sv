@@ -411,7 +411,7 @@ module ot_qfd_seq_su_bi_static #(
         .d_su_inflight(q_pi_su_rt_inflight), .d_su_progress(q_pi_su_progress), .d_su_rows(q_pi_su_progress_rows),
         .c_me_ready(), .c_me_idle(), .c_me_progress(),
         .c_su_ready(s_su_ready), .c_su_idle(s_su_idle), .c_su_progress(s_su_progress), .c_su_rows(s_su_progress_rows));
-    wire image_ready_w,segment_image_ready;
+    wire image_ready_w,segment_image_ready,segment_requires_cbuf;
     wire fixed_issue,fixed_end,schedule_fault,candidate_v,candidate_available,candidate_end_ok,stage_fault;
     wire [11:0] candidate_pc,fixed_pc;wire[1:0]candidate_unit,fixed_unit;
     ot_qwen_fixed_issue_pw #(.OWN(2),.DENSE_IMAGE(1))u_fixed_issue(
@@ -689,11 +689,11 @@ module ot_qfd_seq_su_bi_static #(
     ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_cbr (.clk(clk), .rst_n(rsv[6]), .d(cb_st_rdy), .q(q_cb_st_rdy));
     wire sg_go, sg_tok; wire [NW-1:0] sg_token, sg_pos; wire [5:0] sg_stage;
     ot_qfd_stage_gate_static #(.SW_(6), .NW(NW)) u_sgate (.clk(clk), .rst_n(rsv[7]), .h_start(q_h_start), .stage(q_stage_in),
-        .token(q_tp_token), .pos(q_tp_pos), .st_rdy(q_cb_st_rdy), .st_rdy_stage(q_cb_st_rdy_stage), .go(sg_go),
+        .token(q_tp_token), .pos(q_tp_pos), .requires_cbuf(segment_requires_cbuf),.st_rdy(q_cb_st_rdy), .st_rdy_stage(q_cb_st_rdy_stage), .go(sg_go),
         .go_token(sg_token), .go_pos(sg_pos), .cur_stage(sg_stage), .tok_start(sg_tok),.fault(stage_fault));
     ot_hdc_delay #(.W(6 + 1 + NW), .D(OS)) u_o_cb (.clk(clk), .rst_n(rsv[6]), .d({sg_stage, sg_tok, q_tp_pos}), .q({cb_stage, cb_tok_start, cb_tpos}));
     ot_qwen_tp_seq_calendar #(.VRL(IS + OS + ROW_LAT + 2 * RLY), .N((TPMUT == 2) ? 4 : D), .NW(NW), .PAW(PAW), .VWA(VWA), .DAW(6), .FW(512), .RB(3)) u_seq (
-        .clk(clk), .stage(sg_stage),.pw_v(q_pw_v),.pw_addr(q_pw_addr),.pw_data(q_pw_data),.image_ready(segment_image_ready),
+        .clk(clk), .stage(sg_stage),.pw_v(q_pw_v),.pw_addr(q_pw_addr),.pw_data(q_pw_data),.image_ready(segment_image_ready),.requires_cbuf(segment_requires_cbuf),
         .rst_n(rsv[0]), .rst_nw(rsv[1]), .start(sg_go), .token(sg_token), .pos(sg_pos), .done(b_s_done),
         .next_token(b_seq_ntok), .next_val(b_seq_nval), .fault(b_s_fault), .coll_busy(b_coll_busy),
         .core_start(core_start), .core_token(core_tokw), .core_pos(core_pos), .core_done(core_done),
@@ -716,7 +716,7 @@ endmodule
 // postpone the start; the compiler must prefetch the real cache early enough.
 module ot_qfd_stage_gate_static #(parameter integer SW_=6,NW=18)(
  input wire clk,rst_n,h_start,input wire[SW_-1:0]stage,input wire[NW-1:0]token,pos,
- input wire st_rdy,input wire[SW_-1:0]st_rdy_stage,
+ input wire requires_cbuf,st_rdy,input wire[SW_-1:0]st_rdy_stage,
  output wire go,output reg[NW-1:0]go_token,go_pos,output reg[SW_-1:0]cur_stage,
  output wire tok_start,output reg fault
 );
@@ -731,7 +731,7 @@ module ot_qfd_stage_gate_static #(parameter integer SW_=6,NW=18)(
     pend<=1;cur_stage<=stage;go_token<=token;go_pos<=pos;
    end else if(pend)begin
     pend<=0;
-    if(!st_rdy||st_rdy_stage!=cur_stage)fault<=1;
+    if(requires_cbuf&&(!st_rdy||st_rdy_stage!=cur_stage))fault<=1;
    end
   end
  end
