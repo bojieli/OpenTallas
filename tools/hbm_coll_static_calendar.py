@@ -23,7 +23,7 @@ class Transfer:
 def compile_calendar(transfers: list[Transfer], npt: int) -> dict:
     if npt not in (2, 3):
         raise ValueError('NPT must be 2 or 3')
-    ns, nd = 2+npt+4+1, npt+3*4+2
+    ns, nd = 2+npt+4+1, npt+3*4+1
     sw = (ns-1).bit_length()
     captures: dict[tuple[int,int], str] = {}
     sinks: dict[tuple[int,int], Transfer] = {}

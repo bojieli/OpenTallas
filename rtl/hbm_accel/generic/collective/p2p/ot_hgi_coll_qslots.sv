@@ -2,7 +2,7 @@
 `default_nettype none
 // Compiler-reserved quadrant transport successor (HANDOFF 0an).
 // Sources: SU[INJ], rail[NPT], VM[DEL], ring-result[1].
-// Sinks: rail[NPT], SU[DEL], RGX[DEL], TKM[DEL], TKW[1], ring-partial[1].
+// Sinks: rail[NPT], SU[DEL], RGX[DEL], TKM[DEL], ring-partial[1].
 // A source sampled at edge C is available to a sink instruction at C+1;
 // that instruction produces its registered pin output immediately after C+1.
 // Each instruction is consumed at its edge even on a schedule fault. Nothing
@@ -13,7 +13,7 @@
 module ot_hgi_coll_qslots #(
     parameter integer NPT=3, INJ=2, DEL=4, PWT=545,
     parameter integer NS=INJ+NPT+DEL+1,
-    parameter integer ND=NPT+3*DEL+2,
+    parameter integer ND=NPT+3*DEL+1,
     parameter integer SELW=$clog2(NS),
     parameter integer MUT_SELECT=0, MUT_PIN_LATENCY=0
 )(

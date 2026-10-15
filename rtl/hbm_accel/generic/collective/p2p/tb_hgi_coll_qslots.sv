@@ -7,7 +7,7 @@ module tb_hgi_coll_qslots;
     integer cyc=0, checked=0;
     wire [3:0] fault;
     for(genvar q=0;q<4;q=q+1) begin:gq
-        localparam integer NP=(q==0)?3:2, NS=2+NP+4+1, ND=NP+3*4+2, SW=$clog2(NS);
+        localparam integer NP=(q==0)?3:2, NS=2+NP+4+1, ND=NP+3*4+1, SW=$clog2(NS);
         localparam integer CW=NS+ND+ND*SW;
         reg [CW-1:0] program_words[0:G*(PF/4)+3];
         initial if(CALENDAR!=0) begin
