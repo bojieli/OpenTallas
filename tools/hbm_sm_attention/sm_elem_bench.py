@@ -176,6 +176,10 @@ def cmd_word(**f):
     put(135, 1, f.get("run_last", 0))
     put(134, 1, f.get("publish", 0))
     put(132, 2, f.get("pubsel", 0))
+    put(131, 1, f.get("fold", 0))
+    put(128, 3, f.get("fold_a", 0))
+    put(125, 3, f.get("fold_b", 0))
+    put(124, 1, f.get("folded_publish", 0))
     put(115, 1, f.get("dload", 0))
     put(109, 2, f.get("be_mode", 0))
     put(108, 1, f.get("be_clear", 0))
@@ -361,6 +365,22 @@ def compile_op(rec, op, lat, mode_pv, t0=8):
         d.setdefault("be_mode", be_mode)
     exp["end"] = end
     return cal, exp
+
+
+def compile_folded_publication(start, mode=6, pubsel=3):
+    """Fixed Qwen stream tree followed by one folded-node publication.
+
+    Slots 0/1 become the two 64-dimension halves; consumed source slots
+    cannot be published. Caller supplies a quiescent node-ready boundary.
+    This controls existing adders and stack; no alternate arithmetic path.
+    """
+    cal = Calendar()
+    for delta, a, b in ((0, 0, 2), (2, 4, 6), (4, 1, 3), (6, 5, 7), (12, 0, 4), (16, 1, 5)):
+        cal.set(start + delta, mode=mode, h128=1, fold=1, fold_a=a, fold_b=b)
+    publish = start + 40
+    cal.set(publish, mode=mode, h128=1, publish=1, pubsel=pubsel, folded_publish=1)
+    return cal, dict(first_fold=start, last_fold=start+16, publish=publish,
+                     residual_slots=[0, 1], selection="column parity", node_ready_is_external=True)
 
 
 # ---------------------------------------------------------------- build / run / check -----------------------------------
