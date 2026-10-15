@@ -4,7 +4,7 @@ TOREG edge that NK keeps inside the CLOSED node leaf), 11 V16 reset roots, 13 un
 Compiler edges: t_out age identical to NK banked (TOREG -> node_stage_t_out +1 -> face_t_out); ROM return +1, xdelay9,
 TX198 shared unchanged with NK (same matvec source). No n_* ports.
 Reference: qfd_tile_nl_staged_reference = original qfd_tile_nl + the same priced edges as NK's staged reference.
-Verilator 5.032 on EPYC4 (/srv/opentallas-scratch/claude/q15-nl-banked-bench2), real RTL + 10 real ROM via masks:
+Verilator 5.032 on EPYC4 (/srv/opentallas-scratch/claude/q15-nl-banked-bench4, rerun after the to_reg mutant moved off a hard-child parameter override), real RTL + 10 real ROM via masks:
  m0 PASS 3499 full 514-bit words/264 outputs; allbanks PASS 5959/448, reads 64 120 96 104 64;
  FAULT (split 5 < SMIN 7 every third instruction) PASS 3499 (2712 fault words) and 5959 (5176);
  mutants TX m1/m2/m3 and to_reg bypass m4 all FAIL.
