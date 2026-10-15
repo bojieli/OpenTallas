@@ -1,0 +1,130 @@
+{
+  "scope": "Actual logical HEADS1 component futureE epochlease; diagnostic nativeVM transport, canonical layout/physical binding stillopen",
+  "status": "Canonical+directed bothshapes PASS; real roundedEB\u2192liveE alias rejected",
+  "profiles": [
+    128,
+    640
+  ],
+  "logical_heads": 1,
+  "external_starts": 1,
+  "actual_internal_programme_starts": 1,
+  "VM_checks": {
+    "T128": 1032,
+    "T640": 2568
+  },
+  "OUT_words": 512,
+  "EB_words": {
+    "T128": 128,
+    "T640": 640
+  },
+  "actual_MB_SE_scalar_results": 2,
+  "actual_DEN_results": 1,
+  "IO_edges": {
+    "T128": 1215,
+    "T640": 2639
+  },
+  "scaledSC_storage": "E actualVM buffer Epoch0; rawE replacesit Epoch1 onlyafteractualMAX sourcecapture",
+  "extra_live_VM_range": false,
+  "directed_quotient_BF16_ties_per_profile": {
+    "even": 1,
+    "odd": 1
+  },
+  "actual_alias_mutant": {
+    "only_IO_field_changed": [
+      "drain_vm_sector"
+    ],
+    "changed_IO_rows": 40,
+    "arithmetic_aux_and_numerical_inputs_unchanged": true,
+    "result": "REJECTED actualSE43e73194 vs43e73544"
+  },
+  "SC_VM_alias_diagnostic": "PASS, safe becauseactualrawSC residesinAoperand SRAM; excluded fromnegatives",
+  "pin_observer": {
+    "T128": "PASS74events0errors",
+    "T640": "PASS74events0errors"
+  },
+  "A_operand_macro_capture_census": "live75956/84962, required HVM lease source pin addition",
+  "DUT_initialization_only": [
+    "rawSC",
+    "rawPV",
+    "SINK"
+  ],
+  "native_whole_kernel_qualified": false,
+  "physical_qualified": false,
+  "production_throughput_qualified": false,
+  "frozen_source_manifest_commit": "5c1bb65fd",
+  "lease_mutant_source": "a0e99c866",
+  "sha256": {
+    "canonical/t640_h1.log": "92d5d45bd11925f40445cda4ff16a1a8e0966d9a936d9bd91f586f6452c53a7c",
+    "canonical/t128_h1.log": "59d79adb07ab3be3027d583d1aad61f4012d17131613c0bcbe9607b1cc916746",
+    "directed_ties/t640_h1.log": "d9b933899c9635c29802c0803e59d04b9d1602e20d805264bef73cf3f2f6ef3b",
+    "directed_ties/t128_h1.log": "7722df4a704a010ddb78313b1aca0132f71102362d47da4b08b36037cdf98333",
+    "mutants/mutant_live_E_rounded_alias.log": "154e5ce9a0f1fa0ca473ac697ae143f3b58097c384c97d2b0dca4707410fc973",
+    "diagnostic/SC_alias_pass.log": "37779c7b281c95277d553bac6d298b4358560abb00df7c76c6ee6f056a2ad47d"
+  },
+  "lease_pins": {
+    "128": {
+      "MAX_reducer_operand_capture": {
+        "first": 162,
+        "last": 289,
+        "count": 128,
+        "FP32_words": 128
+      },
+      "MAX_source_SRAM_word_capture": {
+        "first": 161,
+        "last": 288,
+        "count": 128,
+        "FP32_words": 128
+      },
+      "raw_E_VM_WQ_pin": {
+        "first": 536,
+        "last": 543,
+        "count": 16,
+        "FP32_words": 128
+      },
+      "raw_E_capture_into_source_SRAM": {
+        "first": 573,
+        "last": 574,
+        "count": 2,
+        "FP32_words": 128
+      },
+      "scaled_SC_capture_into_source_SRAM": {
+        "first": 149,
+        "last": 150,
+        "count": 2,
+        "FP32_words": 128
+      }
+    },
+    "640": {
+      "MAX_reducer_operand_capture": {
+        "first": 266,
+        "last": 905,
+        "count": 640,
+        "FP32_words": 640
+      },
+      "MAX_source_SRAM_word_capture": {
+        "first": 265,
+        "last": 904,
+        "count": 640,
+        "FP32_words": 640
+      },
+      "raw_E_VM_WQ_pin": {
+        "first": 1184,
+        "last": 1223,
+        "count": 80,
+        "FP32_words": 640
+      },
+      "raw_E_capture_into_source_SRAM": {
+        "first": 1253,
+        "last": 1262,
+        "count": 10,
+        "FP32_words": 640
+      },
+      "scaled_SC_capture_into_source_SRAM": {
+        "first": 245,
+        "last": 254,
+        "count": 10,
+        "FP32_words": 640
+      }
+    }
+  }
+}
