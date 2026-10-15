@@ -425,9 +425,9 @@
     {
       "element": "actual A operand gateway",
       "owner": "/root/q_compute_integration",
-      "state": "ACTIVE_PHYSICAL_PREFLIGHT_PREPARATION",
-      "evidence": "466FF exact extraction d8f/evidence1680;clock variants fee778245",
-      "next": "Real reference-kit synth/CTS/pin timing; possible removal of proven dead VMpass branch before physical source freeze"
+      "state": "TERMINAL_PHYSICAL_DIAGNOSTIC_FAILED_STRUCTURAL_REDESIGN_ACTIVE",
+      "evidence": "b26 exact source/kit; terminal CTS gate FAIL 2026-10-15T04:17:53-0700, TT in/out WNS -1527.5ps; native_cts terminal receipt",
+      "next": "q_control source proof of unused VM passthrough/compiler aligned index and existing embedding-stage retiming; q_compute owns revised physical cut/clock/pin integration"
     },
     {
       "element": "actual SU347 parents/base/copy/relay/alignment",
@@ -535,5 +535,14 @@
     "concrete_active_work": "New9root actual bank with exact+2mutants passed; control35FF route READY qvm_bank_ctrl_native-np1-c9bb6b00d and data256 pin-plan repair gate65384 live.",
     "remaining_module_source_equivalence_ref": "2f9adbb2d",
     "all_eight_existing_module_families_source_bound": true
+  },
+  "tile_hierarchy_update": {
+    "owner": "/root/q_elements",
+    "state": "NK_HARDPARENT_HELD_DIAGNOSTIC_ONLY",
+    "preferred_successor": "Actual83 closed hardchildren plus source-bound residual hardleaf under logical tile grouping; exact residual cut/native gate required",
+    "mapped_residual_ff": 954,
+    "mapped_residual_std_um2": 3684,
+    "raw_source_residual_ff": 2278,
+    "external_dvm_placement_rule": "No external GW in holes within retained NK hardabstract bbox. Flatten legal real descendants or new source-owned co-pack ABI."
   }
 }

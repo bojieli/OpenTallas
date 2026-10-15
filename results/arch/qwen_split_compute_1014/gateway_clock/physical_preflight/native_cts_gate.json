@@ -1,0 +1,131 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "sources",
+   "message": "13 referenced file(s) do not exist at HEAD: ['physical/ref_tile/qwen_a_gateway_v1/clock.sdc', 'physical/ref_tile/qwen_a_gateway_v1/kit.env', 'physical/ref_tile/qwen_a_gateway_v1/pdn.tcl', 'physical/ref_tile/qwen_a_gateway_v1/post_cts.tcl', 'physical/ref_tile/qwen_a_gateway_v1/post_drt.tcl', 'physical/ref_tile/qwen_a_gateway_v1/post_fill.tcl']",
+   "fix": "commit them / fix the path"
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_qwen_a_gateway_v1_20261015-035037.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_qwen_a_gateway_v1_20261015-035037.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/qwen_a_gateway_v1-20261015-035037",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc4 in 283 s (gate total 1603 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 12183 um2 + macros 0 in core 90531: util 13%",
+   "fix": "set \"std_area_um2\": 12183 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "REFUSE ot_qwen_a_operand_gateway_v1 cells 120,008 flops 466 depth 490.1 ps util 0.1354 reach 556.4 um (2.7 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.boundary",
+   "message": "3756 output bit(s) combinational from input ports (e.g. embed_code_q[90]->embed_faults[9] 32 lv, embed_code_q[90]->a_q[319] 32 lv, embed_code_q[90]->a_q[318] 32 lv): register the boundary (pin flops / registered outputs)",
+   "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.boundary",
+   "message": "1537 register->output bit(s) > 3 levels (worst embed_lanes[96]$_DFF_P_->a_q[534] 32 lv, embed_lanes[96]$_DFF_P_->a_q[530] 32 lv, embed_lanes[90]$_DFF_P_->a_q[510] 32 lv): register the boundary (pin flops / registered outputs)",
+   "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+  },
+  {
+   "severity": "FAIL",
+   "check": "textbook.wire_reach",
+   "message": "95152 stage(s) beyond 500 um reach: insert relay flops",
+   "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+  },
+  {
+   "severity": "FAIL",
+   "check": "textbook.wire_reach",
+   "message": "combinational path pin vm_q[2015] -> pin a_q[2015]: up to 556 um with no register (> 500 um)",
+   "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+  },
+  {
+   "severity": "FAIL",
+   "check": "textbook.wire_reach",
+   "message": "combinational path pin vm_q[1984] -> pin a_q[1984]: up to 556 um with no register (> 500 um)",
+   "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+  },
+  {
+   "severity": "FAIL",
+   "check": "textbook.wire_reach",
+   "message": "combinational path pin vm_q[2015] -> pin a_q[2015]: up to 556 um with no register (> 500 um)",
+   "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 13.5% outside 45%-65% (std 12259 + macro 0 um2 in 90531 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 386.3..449.0 ps (spread 62.7), boundary mean 406.7; tt insertion all 302.9..362.4 ps (spread 59.5), boundary mean 323.1; ff insertion all 250.1..307.2 ps (spread 57.1), boundary mean 269.9; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/qwen_a_gateway_v1/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->out       300 paths, worst slack -1527.5 ps (e.g. embed_faults[14])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg        66 paths, worst slack 63.4 ps (e.g. embed_scale_pending$_DFF_PN0_/RESETN)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS -1.5275196663111501e-9 hold WNS 3.04442859810905e-11",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:clk: 466 sinks on the largest root <= 15,000; measured TT insertion 362.4 ps, leaf spread 59.5 ps",
+   "fix": ""
+  }
+ ]
+}
