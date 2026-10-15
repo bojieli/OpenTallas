@@ -1,0 +1,103 @@
+{
+  "schema": "opentallas.hc.resident-region-lookahead-model.v1",
+  "status": "MODEL_BEFORE_RTL_NOT_QUALIFIED",
+  "measured_trigger": {
+    "full_native_source": "bc677",
+    "minimal_replay_session": 17158,
+    "sampled_first_reserves": [
+      3877,
+      3878
+    ],
+    "first_drains": [
+      5201,
+      5531
+    ],
+    "second_row_drains": [
+      7470,
+      7800
+    ],
+    "failed_row": 2,
+    "failed_half": 1,
+    "fixed_deadline_edge": 8880,
+    "actual_ready_edge": 9012,
+    "lateness_stream_cycles": 132,
+    "fetched_ready": "22"
+  },
+  "alternatives": [
+    {
+      "name": "reserve648",
+      "additional_lookahead_cycles": 12,
+      "verdict": "insufficient_for_measured132cycle_miss"
+    },
+    {
+      "name": "dual_half_drain",
+      "additional_lookahead_cycles": 330,
+      "extra_source_SRAMs": 0,
+      "additional_capture_FFbits": 8192,
+      "AP_lanes": 8,
+      "open": "new dual-bank read controls, double capture and physical interface activity"
+    },
+    {
+      "name": "eight512sector_regions_four_rows",
+      "additional_lookahead_cycles_6pos": 3240,
+      "extra_source_SRAMs": 0,
+      "additional_capture_FFbits": 0,
+      "AP_lanes": 4,
+      "selected": true
+    }
+  ],
+  "selected_geometry": {
+    "stacks": 4,
+    "SRAMs_per_stack": 32,
+    "source_SRAMs": 128,
+    "source_bytes": 524288,
+    "regions_per_stack": 8,
+    "region_sectors": 512,
+    "actual_sectors_per_half": 320,
+    "physical_sectors_per_stack": 4096,
+    "actual_payload_bytes_four_rows_per_stack": 81920,
+    "region_storage_address": "region*512+ordinal; chip=sector[11:10], row=sector[9:3], lane=ordinal[2:0]",
+    "same_macro_read_write_ports": true,
+    "shared_serializer_lanes": 4,
+    "row_store_complete_age": 655
+  },
+  "ownership": {
+    "region_bits_before": 1,
+    "region_bits_after": 3,
+    "owner_entries_all_stacks": 1024,
+    "additional_HBM_owner_bits": 2048,
+    "epoch_bits_retained": 16,
+    "returned_tag_bits_retained": 17,
+    "unique_tag_owner_match_retained": true,
+    "response_FIFO_additional_bits": 256,
+    "descriptor_FIFO_additional_bits": 32,
+    "seen_bits_before_and_after": 16384,
+    "epoch_table_additional_bits": 384,
+    "total_received_table_additional_bits": 576,
+    "allocated_ready_announced_additional_bits": 72,
+    "control_and_mux_delta_requires_actual_census": true
+  },
+  "calendar": {
+    "steady_row_periods": [
+      1080,
+      1400
+    ],
+    "drain_half0_age": 0,
+    "drain_half1_age": 330,
+    "reserve_row_plus4_half0_age": 330,
+    "reserve_row_plus4_half1_age": 660,
+    "initialization": "prefetch all four actual rows in explicit cold prologue; wait only before fixed production block; record actual additional cold cycles",
+    "no_runtime_drain_wait": true,
+    "no_period_extension": true,
+    "no_repricing": true
+  },
+  "required_proofs": [
+    "actual a7 owned controllers/strict23 command-only fixture exact failurephase first",
+    "all24 released rows bothperiods/fixeddrains actualHCstore readback",
+    "region wrap rows4..23/full16epoch provenance and wrongtag/staleowner/payload mutants",
+    "full parent SYS1 nativeVM programme arithmetic composition",
+    "physical owner census/pinreg/clock roots and assigned slot"
+  ],
+  "hardware_install_ACK": false,
+  "full_native_qualified": false
+}

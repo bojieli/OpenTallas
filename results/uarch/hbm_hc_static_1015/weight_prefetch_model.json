@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.hc.prefetch.resource-bandwidth-model.v1",
-  "scope": "source-pinnednativeHCweightrefillcomponent; noimmutablepricechange/noareaqualification",
+  "scope": "Request-level PHY component evidence only; full actual-controller 434-SRAM 6-position join FAILS different refresh phase; no production qualification",
   "source_commit": "0f8c8b224",
   "evidence": "results/rtl/hbm_hc_static_1015/weight_prefetch_wide4/receipt.json",
   "workload": {
@@ -83,5 +83,13 @@
     "Physicalslot/clockroots/TTsetup/FFhold/DRC0",
     "Fullendtoendmodelandtokenratewithoutrepricing"
   ],
-  "full_native_qualified": false
+  "full_native_qualified": false,
+  "actual_controller_phase_gap": {
+    "source": "bc677",
+    "scope": "actual434native fulljoin",
+    "6pos": "FAIL row2 half1 age330 fetched_ready22",
+    "8pos": "PASS192 projection/tail/VMwords45725cycles; actualDRAMpayloadmutantFAIL269",
+    "owner": "hc_weight_prefetch",
+    "diagnostic": "minimal320exactabsoluteedge replay active"
+  }
 }

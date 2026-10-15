@@ -1,0 +1,13 @@
+PHASE_EDGE edge=3876 cycle=3876 state=4 age=0 row=0 reserve=1 rrow=0 half=0 drain=0 drow=1
+PHASE_EDGE edge=3877 cycle=3877 state=4 age=1 row=0 reserve=1 rrow=0 half=1 drain=0 drow=1
+PHASE_EDGE edge=5200 cycle=5200 state=2 age=0 row=0 reserve=0 rrow=1 half=0 drain=1 drow=0
+PHASE_EDGE edge=5530 cycle=5530 state=2 age=330 row=0 reserve=1 rrow=1 half=0 drain=1 drow=0
+PHASE_EDGE edge=5860 cycle=5860 state=2 age=660 row=0 reserve=1 rrow=1 half=1 drain=0 drow=0
+PHASE_EDGE edge=7469 cycle=7469 state=3 age=0 row=0 reserve=0 rrow=2 half=0 drain=1 drow=1
+PHASE_EDGE edge=7799 cycle=7799 state=3 age=330 row=0 reserve=1 rrow=2 half=0 drain=1 drow=1
+PHASE_EDGE edge=8129 cycle=8129 state=3 age=660 row=0 reserve=1 rrow=2 half=1 drain=0 drow=1
+PHASE_EDGE edge=8549 cycle=8549 state=3 age=0 row=1 reserve=0 rrow=3 half=0 drain=1 drow=2
+PHASE_EDGE edge=8879 cycle=8879 state=3 age=330 row=1 reserve=1 rrow=3 half=0 drain=1 drow=2
+[0] %Fatal: tb_hgi_hc_checkpoint_native_mtp_static.sv:224: Assertion failed in TOP.tb_hgi_hc_checkpoint_native_mtp_static: checkpoint drain deadline row2 age330 ready22
+%Error: /srv/opentallas-scratch/claude/codex-hc-command-native-1015/rtl/test/tb_hgi_hc_checkpoint_native_mtp_static.sv:224: Verilog $stop
+Aborting...
