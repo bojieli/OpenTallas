@@ -1014,7 +1014,15 @@ def dirs_hbm_base(bid, cls, bits, eps, j, port, V):
     if cls in ('weight_req', 'control_leaf', 'phy_dfi'):
         if any(CUR_M['_by'][i].master in CUR_M['_real'] for i, _ in eps):
             return 'complement'
+        if cls == 'control_leaf' and V.get('sm_native_abi') and bits == 110:
+            return flow(j, 110, 106)     # H-DIE 10-14: record ABI leaf, 106 down from the cdist side, 4 SM returns up
         return [(0, bits, 'out' if j == 0 else 'in')]       # r15 rq_chain: station -> station, SM side upstream
+    if cls == 'control' and V.get('sm_native_abi'):
+        # H-DIE 10-14: per SM 110 b = the record ABI (ot_hgi_sm_record sm_cmd 106 down, sm_ret 4 up)
+        seg = []
+        for s_ in range(bits // 110):
+            seg += [(a + s_ * 110, b + s_ * 110, d) for a, b, d in flow(j, 110, 106)]
+        return seg
     if cls == 'control':
         w = H.W_CTL + (H.W_DESC if V.get('sm_desc') else 0)
         seg = []
