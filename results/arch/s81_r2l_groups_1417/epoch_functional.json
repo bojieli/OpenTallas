@@ -1,0 +1,212 @@
+{
+  "scope": "functional RTL only; exact PLL tick ratios; independent production clock entries idealized by testbench sources",
+  "files": {
+    "rtl/dsrom_sys/s81_static_net/test/tb_r2l_epoch64.sv": "8c63c809a73c4cfe8e8364d5aadaf446cf93993a78f97de4bfc423e52f5387f7",
+    "rtl/dsrom_sys/s81_static_net/ot_s81_r2l_epoch64.sv": "c099069a6df28ecbbf311e90bf36501aed8f915e3b340a96230a92dc4386b2af",
+    "rtl/dsrom_sys/s81_static_net/ot_s81_r2l_groups64.sv": "ac6edd298425e0e44525ac68a8280a8d91ca5001c593cbc9658efb15828eeeff",
+    "rtl/dsrom_sys/s81_static_net/ot_s81_static_ratio_cross.sv": "903dc08ddfcd60522b33cc6a090d94dba8a39e6f79c492b413c67a614964da4a",
+    "rtl/dsrom_sys/s81_static_net/gen/dsfd_r2l_vr_512x1__hcol.sv": "aabe2b83710c1f6503b2d1fb78f4adf320666cf73a910cefc81eac2206e8946a"
+  },
+  "cases": [
+    {
+      "case": "phase_0_0",
+      "parameters": {
+        "WPH": 0,
+        "RPH": 0
+      },
+      "expected_pass": true,
+      "returncode": 0,
+      "accepted": true,
+      "stdout": "R2L_EPOCH_PASS WPH0 RPH0 checks1536 frames256 first140 oldfirst128 addedVCO12 last3208 throughput3per12=1\n",
+      "stderr": ""
+    },
+    {
+      "case": "phase_0_1",
+      "parameters": {
+        "WPH": 0,
+        "RPH": 1
+      },
+      "expected_pass": true,
+      "returncode": 0,
+      "accepted": true,
+      "stdout": "R2L_EPOCH_PASS WPH0 RPH1 checks1536 frames256 first137 oldfirst129 addedVCO8 last3205 throughput3per12=1\n",
+      "stderr": ""
+    },
+    {
+      "case": "phase_0_2",
+      "parameters": {
+        "WPH": 0,
+        "RPH": 2
+      },
+      "expected_pass": true,
+      "returncode": 0,
+      "accepted": true,
+      "stdout": "R2L_EPOCH_PASS WPH0 RPH2 checks1536 frames256 first138 oldfirst130 addedVCO8 last3206 throughput3per12=1\n",
+      "stderr": ""
+    },
+    {
+      "case": "phase_0_3",
+      "parameters": {
+        "WPH": 0,
+        "RPH": 3
+      },
+      "expected_pass": true,
+      "returncode": 0,
+      "accepted": true,
+      "stdout": "R2L_EPOCH_PASS WPH0 RPH3 checks1536 frames256 first139 oldfirst131 addedVCO8 last3207 throughput3per12=1\n",
+      "stderr": ""
+    },
+    {
+      "case": "phase_1_0",
+      "parameters": {
+        "WPH": 1,
+        "RPH": 0
+      },
+      "expected_pass": true,
+      "returncode": 0,
+      "accepted": true,
+      "stdout": "R2L_EPOCH_PASS WPH1 RPH0 checks1536 frames256 first140 oldfirst132 addedVCO8 last3208 throughput3per12=1\n",
+      "stderr": ""
+    },
+    {
+      "case": "phase_1_1",
+      "parameters": {
+        "WPH": 1,
+        "RPH": 1
+      },
+      "expected_pass": true,
+      "returncode": 0,
+      "accepted": true,
+      "stdout": "R2L_EPOCH_PASS WPH1 RPH1 checks1536 frames256 first137 oldfirst129 addedVCO8 last3205 throughput3per12=1\n",
+      "stderr": ""
+    },
+    {
+      "case": "phase_1_2",
+      "parameters": {
+        "WPH": 1,
+        "RPH": 2
+      },
+      "expected_pass": true,
+      "returncode": 0,
+      "accepted": true,
+      "stdout": "R2L_EPOCH_PASS WPH1 RPH2 checks1536 frames256 first138 oldfirst130 addedVCO8 last3206 throughput3per12=1\n",
+      "stderr": ""
+    },
+    {
+      "case": "phase_1_3",
+      "parameters": {
+        "WPH": 1,
+        "RPH": 3
+      },
+      "expected_pass": true,
+      "returncode": 0,
+      "accepted": true,
+      "stdout": "R2L_EPOCH_PASS WPH1 RPH3 checks1536 frames256 first139 oldfirst131 addedVCO8 last3207 throughput3per12=1\n",
+      "stderr": ""
+    },
+    {
+      "case": "phase_2_0",
+      "parameters": {
+        "WPH": 2,
+        "RPH": 0
+      },
+      "expected_pass": true,
+      "returncode": 0,
+      "accepted": true,
+      "stdout": "R2L_EPOCH_PASS WPH2 RPH0 checks1536 frames256 first140 oldfirst132 addedVCO8 last3208 throughput3per12=1\n",
+      "stderr": ""
+    },
+    {
+      "case": "phase_2_1",
+      "parameters": {
+        "WPH": 2,
+        "RPH": 1
+      },
+      "expected_pass": true,
+      "returncode": 0,
+      "accepted": true,
+      "stdout": "R2L_EPOCH_PASS WPH2 RPH1 checks1536 frames256 first137 oldfirst133 addedVCO4 last3205 throughput3per12=1\n",
+      "stderr": ""
+    },
+    {
+      "case": "phase_2_2",
+      "parameters": {
+        "WPH": 2,
+        "RPH": 2
+      },
+      "expected_pass": true,
+      "returncode": 0,
+      "accepted": true,
+      "stdout": "R2L_EPOCH_PASS WPH2 RPH2 checks1536 frames256 first138 oldfirst130 addedVCO8 last3206 throughput3per12=1\n",
+      "stderr": ""
+    },
+    {
+      "case": "phase_2_3",
+      "parameters": {
+        "WPH": 2,
+        "RPH": 3
+      },
+      "expected_pass": true,
+      "returncode": 0,
+      "accepted": true,
+      "stdout": "R2L_EPOCH_PASS WPH2 RPH3 checks1536 frames256 first139 oldfirst131 addedVCO8 last3207 throughput3per12=1\n",
+      "stderr": ""
+    },
+    {
+      "case": "first_last_one",
+      "parameters": {
+        "NFRAME": 1
+      },
+      "expected_pass": true,
+      "returncode": 0,
+      "accepted": true,
+      "stdout": "R2L_EPOCH_PASS WPH0 RPH0 checks6 frames1 first140 oldfirst128 addedVCO12 last148 throughput3per12=1\n",
+      "stderr": ""
+    },
+    {
+      "case": "first_last_two",
+      "parameters": {
+        "NFRAME": 2
+      },
+      "expected_pass": true,
+      "returncode": 0,
+      "accepted": true,
+      "stdout": "R2L_EPOCH_PASS WPH0 RPH0 checks12 frames2 first140 oldfirst128 addedVCO12 last160 throughput3per12=1\n",
+      "stderr": ""
+    },
+    {
+      "case": "wrong_payload_group7",
+      "parameters": {
+        "MUT": 1
+      },
+      "expected_pass": false,
+      "returncode": 1,
+      "accepted": true,
+      "stdout": "EPOCH_MISMATCH w0 r0 idx1 time146 flags1\nEPOCH_MISMATCH w0 r0 idx4 time158 flags1\nFATAL: /home/ubuntu/wt/s81-r2l-groups-1417/rtl/dsrom_sys/s81_static_net/test/tb_r2l_epoch64.sv:50: R2L_EPOCH_FAIL WPH0 RPH0 actual768 flat768 checks1536 errors256\n       Time: 39264 Scope: tb_r2l_epoch64\n",
+      "stderr": ""
+    },
+    {
+      "case": "wrong_epoch_group7",
+      "parameters": {
+        "MUT": 2
+      },
+      "expected_pass": false,
+      "returncode": 1,
+      "accepted": true,
+      "stdout": "EPOCH_MISMATCH w0 r0 idx0 time142 flags3\nEPOCH_MISMATCH w0 r0 idx1 time146 flags3\nFATAL: /home/ubuntu/wt/s81-r2l-groups-1417/rtl/dsrom_sys/s81_static_net/test/tb_r2l_epoch64.sv:50: R2L_EPOCH_FAIL WPH0 RPH0 actual768 flat768 checks1536 errors768\n       Time: 39264 Scope: tb_r2l_epoch64\n",
+      "stderr": ""
+    },
+    {
+      "case": "lost_epoch_group7",
+      "parameters": {
+        "STOP": 1
+      },
+      "expected_pass": false,
+      "returncode": 1,
+      "accepted": true,
+      "stdout": "EPOCH_MISMATCH w0 r0 idx93 time514 flags1\nEPOCH_MISMATCH w0 r0 idx94 time518 flags1\nFATAL: /home/ubuntu/wt/s81-r2l-groups-1417/rtl/dsrom_sys/s81_static_net/test/tb_r2l_epoch64.sv:50: R2L_EPOCH_FAIL WPH0 RPH0 actual768 flat768 checks1536 errors675\n       Time: 39264 Scope: tb_r2l_epoch64\n",
+      "stderr": ""
+    }
+  ],
+  "passed": true
+}
