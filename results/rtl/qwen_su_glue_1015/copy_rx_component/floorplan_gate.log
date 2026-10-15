@@ -1,0 +1,17 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO oflop: E face 10.5 pins/um (wr_data0, wr_data1): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (derived in the flow)
+GATE INFO oflop: N face 10.5 pins/um (ck, rst_n, cp): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 21 columns (derived in the flow)
+GATE INFO oflop: S face 10.5 pins/um (vq2, vq3, cp_active): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 21 columns (derived in the flow)
+GATE INFO oflop: W face 10.5 pins/um (wr_data2, wr_data3): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-epyc4 for 8 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qsu_copy_core_rx_20261015-033515.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qsu_copy_core_rx_20261015-033515.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/qsu_copy_core_rx-20261015-033515
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc4 in 21 s (gate total 49 s)
+GATE WARN util: synthesized std area 1396 um2 + macros 0 in core 16796: util 8%  -> FIX: set "std_area_um2": 1396 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN ot_qfd_su_copy_core cells 11,087 flops 2,572 depth 340.1 ps util 0.0833 reach 118.1 um (0.1 s)
+GATE WARN textbook.high_fanout: reset port rst_n: 5,052 loads (92 flops, e.g. cp_done$_DFF_PN0_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE WARN textbook.boundary: 57 input->register endpoint(s) > 3 levels (worst cp[19]->src[9]$_DFFE_PN0P_/D 9 lv, cp[19]->src[8]$_DFFE_PN0P_/D 9 lv, cp[19]->src[7]$_DFFE_PN0P_/D 9 lv): register the boundary (pin flops / registered outputs)  -> FIX: register every boundary: pin flop in, flop out; never an ICG enable from a port
+GATE WARN textbook.util_channel: utilisation 8.3% outside 45%-65% (std 1400 + macro 0 um2 in 16796 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO clock_rule: root port:ck: 2,572 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+PRE_ROUTE_GATE: WARN (0 fail, 4 warn)
+GATE: qsu_copy_core_rx/gate_result.json written (exact staged source binding; commit it with the kit)

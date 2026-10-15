@@ -1,0 +1,25 @@
+{
+  "schema": "opentallas.qwen-copy-vq-station-prebuild.v1",
+  "source_rtl": "1fc7ce85c exact ot_qfd_su_copy_core, unchanged",
+  "reason": "originalphysicalcopy NOT_MET17 input VQ slew violations, worst297.01ps limit260ps; VQ mux DFFE paths skipped existing input pin holds",
+  "replicas": 1,
+  "macs_per_cycle": 0,
+  "memory_bytes_per_cycle_added": 0,
+  "logical_ff": 2572,
+  "actual_routed_ff_baseline": 4671,
+  "pin_clones_same_edge": 2099,
+  "added_ff": 0,
+  "added_cycles": 0,
+  "added_real_buffer_cells": 2048,
+  "buffer_type": "BUFx4f_ASAP7_75t_R",
+  "boundaries": "same2105input/2101output bits; no new pins or protocol",
+  "area": "baseline actual finish3981.24um2; add2048 realBUFFcells, actual routed area mustbe collected",
+  "outline_um": [
+    133.92,
+    133.92
+  ],
+  "routing": "one real input receiver beside each actualVQ facepin; protect short port net, strongcell drives original downstream net. Actual pin-to-station reach mustbe checked<=100um afterroute",
+  "clock": "same4671 actualrouted sinks expected, rawR/slew/hold fromnewroute required",
+  "fanout": "original sinksets preserved, one strongreceiver perVQbit; no scopechange inreset/data hold",
+  "qualification": "model before Tcl structuralcandidate; originalRTL source/mutants unchanged, finalDRC/STA/slew/physicalreach gatesrequired"
+}

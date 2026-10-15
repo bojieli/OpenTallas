@@ -1,0 +1,123 @@
+{
+ "name": "qsu_copy_core_rx",
+ "top": "ot_qfd_su_copy_core",
+ "kind": "tile",
+ "sources": [
+  "rtl/physical/ot_qfd_su_copy_core.sv"
+ ],
+ "params": {
+  "READ_EDGES": 15,
+  "DATA_MUT": 0,
+  "LATENCY_MUT": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "ck",
+   "rst_n",
+   "cp",
+   "su_conflict",
+   "vq0",
+   "vq1"
+  ],
+  "E": [
+   "wr_data0",
+   "wr_data1"
+  ],
+  "S": [
+   "vq2",
+   "vq3",
+   "cp_active",
+   "cp_done",
+   "fault",
+   "rd_v",
+   "rd_src",
+   "wr_v",
+   "wr_dst"
+  ],
+  "W": [
+   "wr_data2",
+   "wr_data3"
+  ]
+ },
+ "outline": {
+  "w": 132,
+  "h": 132
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "inter": [
+  "cp",
+  "su_conflict",
+  "vq0",
+  "vq1",
+  "wr_data0",
+  "wr_data1",
+  "vq2",
+  "vq3",
+  "cp_active",
+  "cp_done",
+  "fault",
+  "rd_v",
+  "rd_src",
+  "wr_v",
+  "wr_dst",
+  "wr_data2",
+  "wr_data3"
+ ],
+ "route": {
+  "pd": 0.55,
+  "period_ps": 770,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "io_budget": {
+  "in": 0.2,
+  "out": 0.2
+ },
+ "job": {
+  "owner": "Codex:su-glue-physical-1015",
+  "branch": "codex/su-glue-physical-1015",
+  "tag": "rxv1",
+  "purpose": "Repair actual17 VQ receiver slew violations with2048 real strongface-pin stations. RTL/reset/clockededges byte-identical; measure shortportsegment andzeroDRV.",
+  "cycles_added": 0,
+  "benches": [
+   {
+    "name": "copy_source_and_mutants",
+    "cmd": "bash tools/qwen_su_glue_1015/copy_gate.sh {RUN}/bench",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "PASS copy actual-source"
+   }
+  ],
+  "extra_paths": [
+   "rtl/test/qwen_su_glue_1015",
+   "tools/qwen_su_glue_1015"
+  ]
+ },
+ "pin_hook_before_flops": [
+  "physical/qwen_su_glue_1015/copy_vq_pin_stations.tcl"
+ ],
+ "macros": [],
+ "children": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

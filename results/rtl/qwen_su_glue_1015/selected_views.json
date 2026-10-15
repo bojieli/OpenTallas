@@ -36,7 +36,27 @@
         "ot_qfd_su_lane_relay_native_ss.lib": "8364bff8823edbf8d176e47f565c75e6b92111a8f35687825fd34488226a236f",
         "ot_qfd_su_lane_relay_native_tt.lib": "45acaa75e19315514ef87b3b58b8aefaa6d3f31ebc9ecdfbde49c4324a650efc",
         "ot_qfd_su_lane_relay_native.lef": "fde7fbb18df209a6d1d40e934dc49d5464a3f8503a2cd71ce9b3370fa21d7d25"
-      }
+      },
+      "physical_flow_status": "pass",
+      "physical_checks": {
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0,
+        "drc_errors": 0.0,
+        "hold_violations": 0.0,
+        "hold_wns_ns": 0.0224637,
+        "max_cap_violations": 0.0,
+        "max_fanout_violations": 0.0,
+        "max_slew_violations": 0.0,
+        "met": true,
+        "physically_clean": true,
+        "scope": "post-route, extracted parasitics",
+        "setup_violations": 0.0,
+        "setup_wns_ns": 0.116577,
+        "signal_integrity_clean": true,
+        "stage": "place_and_route",
+        "timing_met": true
+      },
+      "routed_clock_sinks": 1621
     },
     "qsu_align_mc6_hold": {
       "view": "physical/ref_tile/qsu_align_mc6_hold/views",
@@ -71,7 +91,27 @@
         "insertion.json": "bef5a5ebbbd442a0afdc7f80f0d2368fbab1111a74db9dca9fd26352800a49e0",
         "ot_qfd_su_align_group4_hold_ff.lib": "0dea44258da8ae615b4a1b48450066a01f4e48433deb5a49f0e44d1d2e2d076f",
         "ot_qfd_su_align_group4_hold_tt.lib": "74eaee01c6e481f8194704c29c8795cf075e3b1af4a9265cff29da0673f083f1"
-      }
+      },
+      "physical_flow_status": "pass",
+      "physical_checks": {
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0,
+        "drc_errors": 0.0,
+        "hold_violations": 0.0,
+        "hold_wns_ns": 0.0139553,
+        "max_cap_violations": 0.0,
+        "max_fanout_violations": 0.0,
+        "max_slew_violations": 0.0,
+        "met": true,
+        "physically_clean": true,
+        "scope": "post-route, extracted parasitics",
+        "setup_violations": 0.0,
+        "setup_wns_ns": 0.142808,
+        "signal_integrity_clean": true,
+        "stage": "place_and_route",
+        "timing_met": true
+      },
+      "routed_clock_sinks": 5232
     },
     "qsu_align_mc9": {
       "view": "physical/ref_tile/qsu_align_mc9/views",
@@ -106,7 +146,27 @@
         "ot_qfd_su_align_group4_ff.lib": "c9fcb74a96cd0528a07c81ca995aa0059d0cde8f972e2b870252f05c31e16757",
         "ot_qfd_su_align_group4_tt.lib": "3bf7561979f547bd791350d85c046a8bdfbc6fbac969fd9033dc31f86a4ee7c0",
         "ot_qfd_su_align_group4_ss.lib": "6a7112c31f354292f4c8d1058ff7d2cee5f379455c9c6e51cf4359782ef85e08"
-      }
+      },
+      "physical_flow_status": "pass",
+      "physical_checks": {
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0,
+        "drc_errors": 0.0,
+        "hold_violations": 0.0,
+        "hold_wns_ns": 0.0151404,
+        "max_cap_violations": 0.0,
+        "max_fanout_violations": 0.0,
+        "max_slew_violations": 0.0,
+        "met": true,
+        "physically_clean": true,
+        "scope": "post-route, extracted parasitics",
+        "setup_violations": 0.0,
+        "setup_wns_ns": 0.139247,
+        "signal_integrity_clean": true,
+        "stage": "place_and_route",
+        "timing_met": true
+      },
+      "routed_clock_sinks": 4464
     },
     "qsu_copy_core": {
       "view": "physical/ref_tile/qsu_copy_core/views",
@@ -141,8 +201,28 @@
         "ot_qfd_su_copy_core.lef": "1a41bb790984a66bcf65fdf1b1021c259b9b8e4f08dd825385a9a046a5a6b8db",
         "insertion.json": "8f05b82476937f9f6f54b7b823db8791aac8f485b45cdb56c97e832fac521e79",
         "ot_qfd_su_copy_core_tt.lib": "9c496902dd1c75736cfefc16e9a8e37842af3c4282dd734eb8acaef7326d28a9"
-      }
+      },
+      "physical_flow_status": "not_met",
+      "physical_checks": {
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0,
+        "drc_errors": 0.0,
+        "hold_violations": 0.0,
+        "hold_wns_ns": 0.026287500000000002,
+        "max_cap_violations": 0.0,
+        "max_fanout_violations": 0.0,
+        "max_slew_violations": 17.0,
+        "met": false,
+        "physically_clean": false,
+        "scope": "post-route, extracted parasitics",
+        "setup_violations": 0.0,
+        "setup_wns_ns": 0.111531,
+        "signal_integrity_clean": false,
+        "stage": "place_and_route",
+        "timing_met": true
+      },
+      "routed_clock_sinks": 4671
     }
   },
-  "scope": "real leaf views only;347-root parent actual base/clockentry routes, phi-R, pinpair reach/hold and fullarithmetic throughput are unqualified"
+  "scope": "real leaf models only; copy original has17 slew violations despite positive STA, receiver-station repair pending. Fullbase/phi-R/wire/pinpair/production-throughput unqualified."
 }

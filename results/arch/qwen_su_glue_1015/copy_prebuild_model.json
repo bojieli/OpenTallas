@@ -38,5 +38,9 @@
     "pin_fit": "four512bit input/output slices across fourfaces; no added registers"
   },
   "outer_parent_commit": "96f30a6a0",
-  "registered_cp_active_status": "Existing FF1 export retained on baseck; rawcopy occupancy remains local. Copyclock split adds no edge."
+  "registered_cp_active_status": "Existing FF1 export retained on baseck; rawcopy occupancy remains local. Copyclock split adds no edge.",
+  "actual_routed_clock_sinks": 4671,
+  "same_edge_pin_clones": 2099,
+  "routed_stdcell_area_um2": 3981.24,
+  "physical_flow_status": "NOT_MET17VQinput-slewviolations; TT10.99/FF26.29/DRC0, no passing-leaf fullphysicalclaim"
 }
