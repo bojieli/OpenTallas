@@ -16218,3 +16218,46 @@ def hbm_qdq_dedicated_face_ff_model():
             "clock_sink_estimate":823,"replicas":4,"shape_um":[129.6,71.28],
             "launch_bits_per_cycle":190,"MACs_per_cycle":0,"memory_bytes_per_cycle":0,
             "default_off":True,"actual_pin_requirement":"P190/Q220 and per-pairL-H100"}
+
+
+def hbm_smh_static_int8_model():
+    """Actual PIPE=1 INT8 converter under a compiler calendar, before RTL.
+
+    This is a separate opt-in front adapter, not an adoption or a new price.
+    Scales remain SU post-reduction state; fmt3 converter sidecars are zero.
+    """
+    width, height, guard, pitch = 216.0, 181.44, 8.0, .048
+    pins, register_upper = 1099, 2721
+    return dict(
+        schema="opentallas.smh.static-int8-model.v1",
+        actual_source="rtl/hbm_accel/sm/ot_hbm_accel_int8_line.sv",
+        actual_module="ot_hbm_accel_int8_line", actual_parameters={"PIPE": 1},
+        workload_coverage={"Qwen3-8B_HBM": "fmt3 proposal", "DeepSeek-V4.1_HBM": "fmt3 if compiler selects; default bypass",
+                           "Qwen3-8B_ROM": "not instantiated", "DeepSeek-V4.1_ROM": "not instantiated"},
+        replicas=32, macs_per_cycle=0, conversion_lanes_per_cycle=64,
+        input_bytes_per_cycle_average=64, input_code_bytes_per_packed_slot=128,
+        output_useful_bytes_per_cycle=128, input_boundary_bits=1099,
+        output_boundary_bits=1099, command_boundary_bits=83,
+        command_unchanged=True, scales="zero converter sidecars; actual row scales applied by SU after FP32 sum",
+        calendar="compiler issues packed input no more than once per two edges; low then high output, no ready-controlled issue",
+        input_edge_to_low_output_edges=1, input_edge_to_high_output_edges=2,
+        converter_pipeline_register_stages=2,
+        tag_rule="same 10-bit input tag on both output halves",
+        consumer_ready_constant=1, producer_ready="observation/assertion only, absent from external ABI",
+        register_bits_upper_bound=register_upper,
+        estimated_ff_area_um2_upper=register_upper*.37908,
+        mux_cost="64 lane 2:1 low/high byte selectors; actual source classify/encode logic unchanged",
+        control_fanout=64, clock_roots_per_replica=1,
+        proposed_outline_um=[width,height], proposed_area_mm2_per_replica=width*height/1e6,
+        provisional_faces={"W": "1099-bit input", "E": "1099-bit output", "N": "clock/reset"},
+        face_tracks_available=(height-2*guard)/pitch,
+        face_cut_ratio=pins/((height-2*guard)/pitch),
+        proposed_pin_pitch_um=.144, proposed_pin_span_um=(pins-1)*.144,
+        fixed_hold_and_cts_area="unmeasured; FF floor is not a placement proof",
+        full_sm_placement="UNASSIGNED; no global fit claimed",
+        actual_pin_reach="UNMEASURED; <=500um required",
+        added_token_latency="must compose compiler operation calendar before adoption; no immutable price changed",
+        required_gates=["all signed byte values, both halves, bubbles/reset and repeated tags",
+                        "actual arithmetic sign mutant must fail", "calendar overlap must fail",
+                        "actual full-shape throughput and native pin timing", "complete 32-SM geometry"],
+        status="MODEL_ONLY_NOT_PHYSICALLY_ADMITTED", default_off=True)
