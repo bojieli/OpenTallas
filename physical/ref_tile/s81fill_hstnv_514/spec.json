@@ -38,7 +38,7 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "First hardening of the GEN18r generated common-clock station dsfd_hstnv_514 (4 die instances): one top ck root, kept INV + negedge stage (= top posedge), 514 b, no reset, 0 cycles; RTL byte-identical to the case glue (module sha256 2bec54c150cd743a, glue 81730f1679e7bc00); pins at the generator centres. Slot 30.216 x 17.256 holds 335 um2 of core vs 439 um2 recipe-2 content (input hold + output min delay cells a bit) -> depth grown to 30.216 x 35.208 (data-pin coordinates unchanged).",
+ "structural_change": "First hardening of the GEN18r common-clock station dsfd_hstnv_514 (4 die instances) in the --hstn-posedge form: plain posedge flops on ck (the glue INV + negedge stage is the same function but its inverted sinks failed the IO reference in every gate, OT_LINK_BUDGET no latency for core_clk), 514 b, no reset, 0 cycles; RTL = the generator --hstn-posedge emission of the case glue header (module sha256 a90cd312a6a9a648, glue 81730f1679e7bc00); pins at the generator centres. Slot 30.216 x 17.256 holds 335 um2 of core vs 439 um2 recipe-2 content (input hold + output min delay cells a bit) -> depth grown to 30.216 x 35.208 (data-pin coordinates unchanged).",
  "job": {
   "owner": "Claude:fill-s81",
   "branch": "claude/el1015-fill-1015",

@@ -38,7 +38,7 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "First hardening of the GEN18r generated common-clock station dsfd_hstnh_36 (7 die instances): one top ck root, kept INV + negedge stage (= top posedge), 36 b, no reset, 0 cycles; RTL byte-identical to the case glue (module sha256 3c2231d8499dc3d9, glue 81730f1679e7bc00); pins at the generator centres. Generator slot kept.",
+ "structural_change": "First hardening of the GEN18r common-clock station dsfd_hstnh_36 (7 die instances) in the --hstn-posedge form: plain posedge flops on ck (the glue INV + negedge stage is the same function but its inverted sinks failed the IO reference in every gate, OT_LINK_BUDGET no latency for core_clk), 36 b, no reset, 0 cycles; RTL = the generator --hstn-posedge emission of the case glue header (module sha256 0a4e25c154b4eb0a, glue 81730f1679e7bc00); pins at the generator centres. Generator slot kept.",
  "job": {
   "owner": "Claude:fill-s81",
   "branch": "claude/el1015-fill-1015",

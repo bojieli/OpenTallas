@@ -111,6 +111,11 @@ def main() -> int:
             assert '.fclk_i(fi0[0])' in txt and '.fclk_o(fo0[0])' in txt and 'fi1' not in txt, mst
         else:
             assert 'ot_fwd_clk_inv u_ck (.a(ck[0])' in txt, mst      # common-clock form (kept INV, negedge stage)
+            # harden the --hstn-posedge form (tools/dsrom_s81_fulldie.py, same header, body = plain posedge flops on ck):
+            # the INV + negedge sinks defeat the tile IO reference (gate 722a9747a: OT_LINK_BUDGET no latency for core_clk)
+            head = txt[:txt.index('    wire fck;')]
+            txt = (head + f'    reg [{wb - 1}:0] q;   // common-clock station: every di bit captured at the rising edge of ck\n'
+                   '    always @(posedge ck[0]) q <= di;\n    assign dq = q;\nendmodule\n')
         mac = macs[mst]
         dw, dh, grown = size(mst, wb, mac)
         sha = hashlib.sha256(txt.encode()).hexdigest()
@@ -167,10 +172,12 @@ def main() -> int:
             'structural_change': ((f'First hardening of the GEN18r generated forwarded-clock station {mst} ({n} die instances): '
                                    f'capture on the falling edge of the forwarded fi0, fo0 = kept forwarding INV, {wb} b, no reset, 0 cycles; ')
                                   if fwd else
-                                  (f'First hardening of the GEN18r generated common-clock station {mst} ({n} die instances): '
-                                   f'one top ck root, kept INV + negedge stage (= top posedge), {wb} b, no reset, 0 cycles; '))
+                                  (f'First hardening of the GEN18r common-clock station {mst} ({n} die instances) in the '
+                                   f'--hstn-posedge form: plain posedge flops on ck (the glue INV + negedge stage is the same '
+                                   f'function but its inverted sinks failed the IO reference in every gate, OT_LINK_BUDGET no '
+                                   f'latency for core_clk), {wb} b, no reset, 0 cycles; '))
                                   + (
-                                  f'RTL byte-identical to the case glue (module sha256 {sha[:16]}, glue {glue_sha[:16]}); '
+                                  f'RTL = ' + ('the case glue module byte-identical' if fwd else 'the generator --hstn-posedge emission of the case glue header') + f' (module sha256 {sha[:16]}, glue {glue_sha[:16]}); '
                                   'pins at the generator centres. '
                                   + (f'Slot {mac["w"]} x {mac["h"]} holds {face_area(mac, horiz):.0f} um2 of core vs '
                                      f'{AREA_BIT * wb + AREA_FIX:.0f} um2 recipe-2 content (input hold + output min delay '

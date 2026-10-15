@@ -14,7 +14,13 @@ from pathlib import Path
 import re, sys
 root, out, mode, m = Path(sys.argv[1]), Path(sys.argv[2]), sys.argv[3], sys.argv[4]
 s = (root / f'rtl/dsrom_sys/s81_station_native/gen18r/{m}.sv').read_text()
-if mode == 'clock_mutant':
+posedge = 'always @(posedge ck[0]) q <= di;' in s      # --hstn-posedge form (plain flops); else INV + negedge stage
+if mode == 'clock_mutant' and posedge:
+    s = s.replace('always @(posedge ck[0]) q <= di;', 'always @(negedge ck[0]) q <= di;')
+elif mode == 'data_mutant' and posedge:
+    w = int(re.search(r'reg \[(\d+):0\] q;', s).group(1)) + 1
+    s = s.replace('q <= di;', f"q <= di ^ {w}'d1;")
+elif mode == 'clock_mutant':
     assert s.count('.a(ck[0])') == 1; s = s.replace('.a(ck[0])', '.a(~ck[0])')
 elif mode == 'data_mutant':
     k = re.search(r'\.i_d\(di\[(\d+):0\]\)', s)
