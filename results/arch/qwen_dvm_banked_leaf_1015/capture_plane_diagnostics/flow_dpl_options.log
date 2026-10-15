@@ -1,0 +1,7 @@
+ot-run: ot-epyc4       admits   662 GB (avail 888, growth 77, headroom 48, waiters 0/0 GB) load 22/128 running 16 disk 458 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1787462-1792060519 after 0 s
+/OpenROAD-flow-scripts/flow/scripts/detail_place.tcl:19:  log_cmd detailed_placement {*}$dpl_args
+/OpenROAD-flow-scripts/flow/scripts/cts.tcl:49:set result [catch { log_cmd detailed_placement } msg]
+/OpenROAD-flow-scripts/flow/scripts/cts.tcl:74:  set result [catch { log_cmd detailed_placement } msg]
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1787462-1792060519): exit 0

@@ -1,0 +1,5 @@
+SU_TOP ERROR cyc=1800 write data q3 p0 sec 7fd8 got 0000000000000000000000000000000000000000000000000000000000000000 want 00000000000000000000000000000000000000000000000040d7590142a4cd15
+[71570000] %Fatal: tb_hbm_su_static_top.sv:126: Assertion failed in tb_hbm_su_static_top.unnamedblk2: SU_TOP FAIL errors=1 reads=32768 writes=135184 scalars=9
+%Error: rtl/hbm_accel/generic/adapters/static_su/top/tb_hbm_su_static_top.sv:126: Verilog $stop
+Aborting...
+exit=1

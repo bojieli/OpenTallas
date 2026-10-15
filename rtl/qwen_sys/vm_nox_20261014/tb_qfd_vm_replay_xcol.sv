@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_qfd_vm_replay_xcol;
-parameter integer OBS_MUT=0,PACK_MUT=0,MEM=0,CONFLICT_MUT=0,DATA_MUT=0,LATENCY_MUT=0,TAP_MUT=0,HEAD_MUT=0;
+parameter integer OBS_MUT=0,PACK_MUT=0,MEM=0,CONFLICT_MUT=0,DATA_MUT=0,LATENCY_MUT=0,TAP_MUT=0,HEAD_MUT=0,REQ_PIPE=0;
 wire [2366:0] sa;
 wire [6143:0] vq;
 wire [2136:0] xsw;
@@ -552,7 +552,7 @@ genvar tid;
 generate for(tid=0;tid<16;tid=tid+1)assign tids[16*tid+:16]=16'(tid);endgenerate
 qfd_xs_tap #(.MUT(TAP_MUT)) u_native_tap(.ck(clk),.rst_n(rst_n),.sw(xsw),.aw(553'd0),.xpf(xpf),.gi({ib,native_go}),
 .hw_d(hw),.he_d(he),.hw_f(col_fault),.he_f(1'b0),.fault(tap_fault));
-qfd_xcol_e #(.HEAD_MUT(HEAD_MUT)) u_native_col(.ck0(clk),.ck1(clk),.ck2(clk),.ck3(clk),.ck4(clk),.ck5(clk),.ck6(clk),.ck7(clk),.ck8(clk),
+qfd_xcol_e #(.HEAD_MUT(HEAD_MUT),.REQ_PIPE(REQ_PIPE)) u_native_col(.ck0(clk),.ck1(clk),.ck2(clk),.ck3(clk),.ck4(clk),.ck5(clk),.ck6(clk),.ck7(clk),.ck8(clk),
 .rst_n(rst_n),.tids(tids),.fault_i(1'b0),.fault(col_fault),.w_d(hw),.e_d(hout),.n_d(nd),.s_d(sd),.tie_hi(),.tie_lo());
 function automatic [15:0] bf(input [31:0] value);
  begin bf=value[31:16]+16'((value[15:0]>16'h8000)||(value[15:0]==16'h8000&&value[16]));end

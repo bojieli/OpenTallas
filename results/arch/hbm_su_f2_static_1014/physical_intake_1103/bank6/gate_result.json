@@ -1,0 +1,127 @@
+{
+  "schema": "opentallas.ref_tile.gate_result.v2",
+  "kit": "hbm_su_static_bank6_1015",
+  "verdict": "WARN",
+  "generated": "2026-10-15T10:06:50-0700",
+  "host": "ot-agidock128",
+  "cts": true,
+  "commit": null,
+  "clock": {
+    "max_root_sinks": 330,
+    "root": "port:clk",
+    "cts": true,
+    "tt_insertion_ps": 316.9,
+    "tt_spread_ps": 92.5,
+    "declared_clock": null,
+    "limits": {
+      "sinks": 15000,
+      "insertion_ps": 300.0,
+      "spread_ps": 80.0
+    },
+    "clock_measurements": [
+      {
+        "source": "clk",
+        "clock": "core_clk",
+        "tt": {
+          "boundary": {
+            "n": 306,
+            "mean": 273.9,
+            "min": 261.3,
+            "max": 299.5
+          },
+          "all": {
+            "n": 330,
+            "mean": 273.9,
+            "min": 224.4,
+            "max": 316.9
+          },
+          "errors": [],
+          "macros": {
+            "n": 6,
+            "nets": 4,
+            "max_per_net": 2,
+            "reg_mean": 273.9,
+            "max_slew": 229.8,
+            "max_late": 43.0,
+            "pins": [
+              {
+                "pin": "u_data.g_read[0].u_bank.genblk1.genblk1.genblk1.genblk1.g_m9.u_m/clk",
+                "arr": 281.3,
+                "slew": 205.6,
+                "late": 7.4,
+                "net": "clknet_2_0_0_clk"
+              },
+              {
+                "pin": "u_data.g_read[1].u_bank.genblk1.genblk1.genblk1.genblk1.g_m9.u_m/clk",
+                "arr": 275.0,
+                "slew": 104.8,
+                "late": 1.1,
+                "net": "net3276"
+              },
+              {
+                "pin": "u_data.g_read[2].u_bank.genblk1.genblk1.genblk1.genblk1.g_m9.u_m/clk",
+                "arr": 316.9,
+                "slew": 229.8,
+                "late": 43.0,
+                "net": "net3276"
+              },
+              {
+                "pin": "u_data.g_read[3].u_bank.genblk1.genblk1.genblk1.genblk1.g_m9.u_m/clk",
+                "arr": 246.9,
+                "slew": 101.4,
+                "late": -27.0,
+                "net": "clknet_2_1_0_clk"
+              },
+              {
+                "pin": "u_data.g_read[4].u_bank.genblk1.genblk1.genblk1.genblk1.g_m9.u_m/clk",
+                "arr": 224.4,
+                "slew": 32.2,
+                "late": -49.5,
+                "net": "clknet_2_0_0_clk"
+              },
+              {
+                "pin": "u_data.g_read[5].u_bank.genblk1.genblk1.genblk1.genblk1.g_m9.u_m/clk",
+                "arr": 287.1,
+                "slew": 211.5,
+                "late": 13.2,
+                "net": "clknet_2_3_0_clk"
+              }
+            ]
+          },
+          "macro_libs": 1
+        }
+      }
+    ],
+    "measured_clock": "core_clk",
+    "verdict": "PASS",
+    "text": "330 sinks on the largest root <= 15,000; measured TT insertion 316.9 ps, leaf spread 92.5 ps"
+  },
+  "items": [
+    {
+      "severity": "WARN",
+      "check": "util",
+      "message": "synthesized std area 358 um2 + macros 23349 in core 53617: util 44%",
+      "fix": "set \"std_area_um2\": 358 and drop 'outline' (gen sizes to util 0.52)"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.util_channel",
+      "message": "utilisation 44.2% outside 45%-65% (std 368 + macro 23349 um2 in 53617 um2): shrink the outline (long wires / sparse placement)",
+      "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+    }
+  ],
+  "full_gate_sha256": "7186a96585810f17a7ad59a2df00f682254ce3543f719b75ad3359b680058d72",
+  "source_binding_summary": {
+    "remote_host": "ot-agidock128",
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_su_static_bank6_1015-20261015-100325",
+    "remote_script_sha256": "7969425d24b0f78607e13032aea22bd99ed9694451dc05d5a3efad030d3e0f77",
+    "captured": "2026-10-15T10:03:49-0700",
+    "source_commit": null,
+    "digest": null,
+    "route_hold_context": {
+      "HM": "0.03",
+      "OT_ROUTE_HOLD_CORNERS": "mm",
+      "OT_MM_FF_SDC": "physical/ref_tile/hbm_su_static_bank6_1015/signoff.sdc"
+    }
+  }
+}

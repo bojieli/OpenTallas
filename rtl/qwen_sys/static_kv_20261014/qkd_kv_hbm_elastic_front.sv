@@ -13,7 +13,7 @@
 // places a release slot blk_go (pll_hbm domain) no earlier than the block's
 // nominal corrected landing + the PHY latency window. At blk_go the front
 // checks ONE ready for that block and re-emits its BLK sectors on fixed edges
-// (first put 2 edges after blk_go, then one every STRIDE edges; a pending
+// (first put 3 edges after blk_go at the pin, then one every STRIDE edges; a pending
 // next block starts on the previous block's last take edge, back to back) as a
 // controller-format co word + compiled_hbm_put strobe, which drive the fixed
 // dual-clock return ring (qkd_static_kv_return_slots) unchanged.
@@ -47,7 +47,7 @@ module qkd_kv_hbm_elastic_front #(
     output reg blk_freed,
     output reg hold,
     output reg [15:0] stall_edges,
-    output wire [$clog2(NBLK*BLK):0] occupancy,
+    output reg [$clog2(NBLK*BLK):0] occupancy,   // registered
     output reg idle,                        // registered: nothing landed-unreleased, no release pending/emitting (KV drain)
     output reg fault_overflow, fault_go
 );
@@ -77,10 +77,12 @@ module qkd_kv_hbm_elastic_front #(
     reg [AW:0] wp, rp, bs;          // write, emit read, next block start (entries, wrap bit)
     wire [AW:0] filled = wp - bs;   // landed entries of the next block to release and beyond
     wire ready = (MUT == 3) ? 1'b1 : (MUT == 2) ? (filled >= C_BLK1) : (filled >= C_BLK);
-    assign occupancy = wp - rp;
     always @(posedge pll_hbm) if (land_v) mem[wp[AW-1:0]] <= land_d;
 
     // ---- release side: compiled blk_go, one ready check per block --------------------------------------------
+    // blk_go is captured at its pin (first put 3 edges after blk_go at the pin)
+    (* keep *) reg go_q;
+    always @(posedge pll_hbm or negedge hr) if (!hr) go_q <= 1'b0; else go_q <= blk_go;
     reg [PW-1:0] pending;
     reg emitting;
     reg [BW-1:0] cnt;
@@ -91,20 +93,29 @@ module qkd_kv_hbm_elastic_front #(
     wire take = emitting && sc == C_S1;
     reg put_q;
     reg [296:0] out_q;
-    wire [AW-1:0] ra = (MUT == 1) ? rp[AW-1:0] + 1'b1 : rp[AW-1:0];
-    always @(posedge pll_hbm or negedge hr)
+    // gate r1 (7.7k-load rp bits on the 32:1 read mux): the read address is REPLICATED once per <= 19-bit slice of the
+    // 297-b word (16 keep_hierarchy pointer copies advancing on take exactly as rp), ~300 mux loads a copy
+    localparam integer NG = 16, SLW = (297 + NG - 1) / NG;
+    wire [AW*NG-1:0] ra_c;
+    genvar gr;
+    generate for (gr = 0; gr < NG; gr = gr + 1) begin : g_ra
+        (* keep_hierarchy *) qkd_kvef_rp #(.AW(AW), .INIT(MUT == 1 ? 1 : 0)) u_rp (.clk(pll_hbm), .rst_n(hr), .adv(take),
+            .q(ra_c[AW*gr +: AW]));
+    end endgenerate    always @(posedge pll_hbm or negedge hr)
         if (!hr) begin
             wp <= 0; rp <= 0; bs <= 0; pending <= 0; emitting <= 0; cnt <= 0; sc <= 0;
             put_q <= 0; blk_freed <= 0; hold <= 0; stall_edges <= 0; fault_overflow <= 0; fault_go <= 0; idle <= 1'b1;
+            occupancy <= 0;
         end else begin
             put_q <= 0; blk_freed <= 0;
+            occupancy <= wp - rp;
             idle <= wp == rp && !land_v && pending == 0 && !emitting;
             if (land_v) begin
                 wp <= wp + 1'b1;
                 if (wp - rp == C_DEPTH) fault_overflow <= 1'b1;
             end
-            pending <= pending + (blk_go ? C_P1 : C_P0) - (start ? C_P1 : C_P0);
-            if (blk_go && pending == C_NBLK) fault_go <= 1'b1;
+            pending <= pending + (go_q ? C_P1 : C_P0) - (start ? C_P1 : C_P0);
+            if (go_q && pending == C_NBLK) fault_go <= 1'b1;
             hold <= pending != 0 && idle_next && !ready;
             if (pending != 0 && idle_next && !ready && stall_edges != 16'hffff) stall_edges <= stall_edges + 1'b1;
             if (emitting) begin
@@ -116,13 +127,25 @@ module qkd_kv_hbm_elastic_front #(
             end
             if (start) begin emitting <= 1'b1; cnt <= 0; sc <= C_S1; bs <= bs + C_BLK; end
         end
-    always @(posedge pll_hbm) if (take) out_q <= mem[ra];
+    generate for (gr = 0; gr < NG; gr = gr + 1) begin : g_rd
+        localparam integer LO = gr * SLW, WD = (LO + SLW > 297) ? 297 - LO : SLW;
+        if (WD > 0) begin : g_s
+            always @(posedge pll_hbm) if (take) out_q[LO +: WD] <= mem[ra_c[AW*gr +: AW]][LO +: WD];
+        end
+    end endgenerate
 
     // ---- controller-format output (drives qkd_static_kv_return_slots) ----------------------------------------
-    // Pass-through fields are re-timed by the same two edges as the release word.
+    // Pass-through fields (write completion / hand, not part of the read return) re-timed by two edges.
     reg [11:0] pass_q, pass_q2;
     always @(posedge pll_hbm) begin pass_q <= co_in[293:282]; pass_q2 <= pass_q; end
     assign co_out = {pass_q2, out_q[280:0], put_q};
     assign epoch_out = out_q[296:281];
     assign compiled_hbm_put = put_q;
+endmodule
+
+// read-pointer copy of the elastic front: advances on take exactly as the front's own rp (keep_hierarchy: never merged)
+module qkd_kvef_rp #(parameter integer AW = 5, parameter integer INIT = 0) (input wire clk, input wire rst_n, input wire adv,
+                                                                          output reg [AW-1:0] q);
+    localparam [AW-1:0] C_INIT = INIT;
+    always @(posedge clk or negedge rst_n) if (!rst_n) q <= C_INIT; else if (adv) q <= q + 1'b1;
 endmodule
