@@ -4,7 +4,7 @@
   "native_execution": false,
   "rtl_gate": {
     "host": "ot-epyc4",
-    "unit": "oth-ubuntu-32634-1792036794",
+    "unit": "oth-ubuntu-44517-1792037014",
     "exit_code": 0,
     "core_commands": 252,
     "contexts": 2,
@@ -39,7 +39,7 @@
     },
     {
       "path": "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv",
-      "sha256": "f89a01b355736e30f5bbfc991ac4c378cbf769cbc650f08f3bae1fdb4fbdf48b"
+      "sha256": "ebad78e6abcfa4a9433f36177f1480851374c0246d4bd2fb71178257d5ec04cc"
     },
     {
       "path": "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv",
@@ -77,5 +77,21 @@
   "regression_tests": {
     "native_calendar": 48,
     "static_vm_checker": 29
+  },
+  "generic_synthesis": {
+    "status": "PASS",
+    "unit": "oth-ubuntu-44517-1792037014",
+    "host": "ot-epyc4",
+    "exit_code": 0,
+    "tool": "Yosys",
+    "top": "dsfd_stage_seq_static_c",
+    "passes": "read_verilog -sv; hierarchy; proc; opt; memory; opt; stat",
+    "generic_cells": 51085,
+    "wire_bits": 442341,
+    "processes": 0,
+    "memories": 0,
+    "mapped_standard_cell_area": null,
+    "physical_timing_qualified": false,
+    "note": "Generic cells are multibit RTL cells, not standard cells or flipflop-bit counts. No floorplan/CTS/frequency/physical-phase claim."
   }
 }
