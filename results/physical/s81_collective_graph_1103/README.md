@@ -2,6 +2,8 @@
 
 The audited native parent is `dsfd_sp_collective_static_c` at `2eb33e9a8e8046d4f579fc1395e0ac6038a11341`. Its slab still instantiates **one-clock** `s81_static_calendar_controller`. The separate calendar7 candidate is not integrated into this parent. The delivered slab has 29 clock roots: five control, eight transport, and sixteen HC roots. This is a clock ownership decomposition, not evidence of 29 hardened, placed constituents.
 
+The seven-root calendar candidate declares `clk` plus `clk_rom[2:0]` and `clk_outputs[2:0]`. Integrating it in place of the current one-clock calendar requires **six additional actual delivered parent clock inputs**, making **35 candidate roots** for the collective. Those six clock pins, their die delivery/phase/reset bindings, and revised parent root ownership remain open. The 29-root baseline must not be presented as the integrated candidate's clock inventory. `graph.json.calendar7_candidate` records this distinction explicitly.
+
 `graph.json` contains SHA256 values for the inspected source files, exact ANSI module port declarations, parsed module instance connections, the 112 signal hyperedges at the slab boundary, and all 29 ownership entries. Expressions preserve RTL slices. Reproduce it with:
 
 ```sh
