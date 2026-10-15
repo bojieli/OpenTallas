@@ -302,8 +302,11 @@ module ot_s81_engram_mixq_shctl #(parameter integer MUT=0, VM_LAT=3, WRITE_COMMI
   // Native capture fix (S-ELEM-C 10-15, shctl audit: start capture 246.4 > 190 ps, start was the load enable of the
   // 224 descriptor flops): in IDLE dsc samples desc every edge, so the enable comes from the local state register and
   // the start pin only steers ns/fault. dsc holds the descriptor present at the start edge exactly as before; 0 cycles.
-  IDLE:begin dsc<=desc;if(start)begin ns=BEGIN;if(desc[18]&&((HLAYOUT==0)||desc[45:32]!=desc[77:64]||desc[36:32]!=0||desc[100:96]!=0||desc[1:0]!=desc[17:16]))fault<=1;end end
-  BEGIN:begin go<=1;phase<=0;req<=0;received<=0;written<=0;ns=REDUCE;end
+  IDLE:begin dsc<=desc;if(start)ns=BEGIN;end
+  BEGIN:begin go<=1;phase<=0;req<=0;received<=0;written<=0;ns=REDUCE;
+   // Validate the captured descriptor locally; no combinational descriptor-pin path to fault.
+   if(dsc[18]&&((HLAYOUT==0)||dsc[45:32]!=dsc[77:64]||dsc[36:32]!=0||dsc[100:96]!=0||dsc[1:0]!=dsc[17:16]))fault<=1;
+  end
   REDUCE:begin
    if(req<160)begin
     rq_v<=5'b11111;rq_row[0+:14]<=hrow_base+hstep*req;
