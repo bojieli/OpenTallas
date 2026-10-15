@@ -197,7 +197,8 @@ def static_cycle_table(stage_schedule, trace, arm_transport_edges):
         split = (descriptor_bits >> 49) & 15
         nk = (descriptor_bits >> 53) & ((1 << 18)-1)
         required = {xb+c*xc+k*xk for c in range(1 << split) for k in range(nk)}
-        writes = [w for w in trace['writes'] if w['pc'] in record['producer_pcs']]
+        writes = [w for w in trace['writes'] if w['pc'] in record['producer_pcs']
+                  and w['unit'] == record['producer_unit']]
         covered = set()
         first_write = None
         for write in writes:

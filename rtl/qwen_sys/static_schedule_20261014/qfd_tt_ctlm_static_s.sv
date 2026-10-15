@@ -173,7 +173,7 @@ module qfd_tt_ctlm_static_s #(parameter integer XPF_TRANSPORT_EDGES=0) (
       (.clk(ck_xpf),.rst_n(monitor_rs),.cfg_clear(cfg_clear),.cfg_v(cfg_v),.cfg_seal(cfg_seal),
        .cfg_index(cfg_index[1:0]),.cfg_data(cfg_data),.cfg_count(cfg_count[2:0]),
        .start(dvm_stage_start),.stop(xpf_active&&xpf_cycle==stop_cycle),.stage(xpf_stage),
-       .me_issue(xpf_me_event),.me_pc(xpf_me_pc),.su_issue(monitor_su[15]),.su_pc(monitor_su[11:0]),
+       .cp_issue(monitor_me[15]&&monitor_me[13:12]==3),.cp_pc(xpf_me_pc),.me_issue(xpf_me_event&&monitor_me[13:12]==1),.me_pc(xpf_me_pc),.su_issue(monitor_su[15]),.su_pc(monitor_su[11:0]),
        .xpf(xpf),.fault(xpf_schedule_fault),.active(xpf_active),.cycle(xpf_cycle));
     ot_qfd_tt_ctlm_static_parent u_body (
         .ck_me_sched(ck_me_sched),

@@ -32,5 +32,6 @@ s=s[:a]+'''    wire [15:0] actual_me_observe,monitor_me;
 s=s.replace('|me_map_fault','')
 s=s.replace('ot_qfd_tt_ctlm_split_hard u_body (','ot_qfd_tt_ctlm_static_parent u_body (\n        .ck_me_sched(ck_me_sched),\n        .native_cmd(native_cmd),.native_ret(native_ret),.command_stage(command_stage),\n        .me_observe(actual_me_observe),')
 s=s.replace('.dvm_cmd(ib)', '.rom_cmd(ib)')
+s=s.replace(".cp_issue(1'b0),.cp_pc(12'd0),.me_issue(xpf_me_event)",".cp_issue(monitor_me[15]&&monitor_me[13:12]==3),.cp_pc(xpf_me_pc),.me_issue(xpf_me_event&&monitor_me[13:12]==1)")
 for name in ['x_rdy','x_dv','x_dc','x_dcs','x_dsp']:s=re.sub(r'^\s*\.'+name+r'\([^\n]*\),\n','',s,flags=re.M)
 (root/'rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_static_s.sv').write_text('// New native static slot master; fresh physical qualification required.\n// Existing c341/f104/lc26 packing retained; obsolete VM xd/xr removed.\n'+s)
