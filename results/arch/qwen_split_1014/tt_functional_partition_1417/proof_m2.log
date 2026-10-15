@@ -1,0 +1,10 @@
+MISMATCH 1464 scale_re
+MISMATCH 1464 scale_gre
+MISMATCH 1464 scale_addr
+MISMATCH 1465 scale_addr
+MISMATCH 1466 scale_addr
+MISMATCH 1467 scale_addr
+MISMATCH 1468 scale_addr
+[25027000] %Fatal: tb_tt_tree_partition.sv:69: Assertion failed in tb_tt_tree_partition: TT_SPLIT_FAIL MUT=2 errors=619 checks=29199 scale=384 valid_scale_errors=384
+%Error: rtl/qwen_sys/tt_tree_partition_20261015/tb_tt_tree_partition.sv:69: Verilog $stop
+Aborting...

@@ -1,0 +1,39 @@
+{
+  "schema": "opentallas.tt_real_functional_partition_exact.v1",
+  "source_commit": "0462d6893",
+  "tool": "Verilator 5.050 2026-07-01 rev v5.050",
+  "root": "/srv/opentallas-scratch/codex/qwen-tt-functional-1417/r5",
+  "host": "ot-agidock128",
+  "exact": {
+    "MUT": 0,
+    "PROD": 1,
+    "hardware_G": 3072,
+    "operation_nout": 4096,
+    "operation_k": 4096,
+    "operation_tiles": 2,
+    "split": 7,
+    "compared_edges": 89199,
+    "valid_scale_events": 16,
+    "result": "PASS"
+  },
+  "negative_controls": {
+    "MUT1_tag_payload_base_bit": {
+      "observed_valid_scale_errors": 384,
+      "result": "FAIL expected"
+    },
+    "MUT2_missing_final_output_station": {
+      "observed_valid_scale_errors": 384,
+      "result": "FAIL expected"
+    }
+  },
+  "registered_seam_bits": 93,
+  "data_cycles_added": 0,
+  "physical_status": "unqualified: fresh CTS gates running; TTsetup/FFhold/DRC/native220/190/spread80 pending",
+  "all_onchip": "same real target RTL plus actual 128x256 SRAM functional models; no reference-produced onchip results",
+  "logs_sha256": {
+    "m0": "731fe8e646ff2ff509fd586fac3bfd35e5d264b5762c21eeaa95189f475dbaf7",
+    "m1": "92c206b5e5084efafad5d4464ed369a39a50b2a49a16e6d1a0d9e7fccc7e471e",
+    "m2": "93efd5bb019f76afe478b5da78cb1e9ed033f88ef285f78e3d12ba27e6972619"
+  },
+  "old_tool_failure": "Default hostVerilator5.032 scheduler didnotconverge; preserved separate logs; production exact proof usesexplicit5.050, unchanged RTL/driver sources"
+}

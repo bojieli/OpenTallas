@@ -1,0 +1,5 @@
+TT_SPLIT_PASS MUT=0 PROD=1 checks=89199 scale=16
+- rtl/qwen_sys/tt_tree_partition_20261015/tb_tt_tree_partition.sv:70: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 75us; walltime 1.702 s; speed 44.113 us/s
+- Verilator: cpu 1.700 s on 1 threads; allocated 8 MB
