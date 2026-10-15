@@ -1,0 +1,5 @@
+S81_HCX_VM_BRIDGE PASS four outstanding, stalls, halfrows, commit, invalid-mask cycle=60
+- tb_s81_hcx_vm_bridge.sv:38: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 605ns; walltime 0.012 s; speed 109.561 us/s
+- Verilator: cpu 0.006 s on 1 threads; alloced 1017 MB
