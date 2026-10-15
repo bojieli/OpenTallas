@@ -22018,7 +22018,7 @@
  ],
  "service_access_provenance": {
   "source_capacity_sha256": "b7c9c87f9f4b16b600cc3788f1e41feef45d57593307de26a4f8a2af90325c3e",
-  "generator_sha256": "8fe025a525f481975505dc1fc8f7265ebfce5d5c609b19dcb898128ffa95ddd7",
+  "generator_sha256": "e0fa614d44c12b486e4d5ff82534376b0340cf04ea5d8a7372097466c81e96cc",
   "moved_roots": [
    15,
    16,
@@ -22043,7 +22043,7 @@
   "isolated_q514_plus_a1026_cut_diagnostic": 0.31425364758698004,
   "all_q_a_ix_co_bits": 2568,
   "all_q_a_ix_co_cut_diagnostic": 0.5240281603917953,
-  "warning": "Single-bus cut is not aggregate proof. If q514 and a1026 share this cut simultaneously combined demand is above0.60; route on distinct windows/channels/layers with actual capacities or widen further. Existing S14/clock stations need full generator overlap/reach checks.",
+  "warning": "These are necessary wire-count screens only. All q/a/ix/co traffic must share actual routing windows with clock/reset/control and real PG/obstructions; full generator occupancy, native pin reach and aggregate cuts remain required. Narrow73.44um comparison fails q+a combined0.60; broad155.52um carries declared2568bits at0.524 before extra traffic.",
   "coarse_collisions": []
  }
 }
