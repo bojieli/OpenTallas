@@ -16301,3 +16301,9 @@ def hbm_vm_static_ring_model():
 def hbm_vm_static_bank_model():
     """Return the pre-RTL inventory for the actual static B2 bank successor."""
     return json.loads((ROOT / 'rtl/hbm_accel/generic/vm/static/bank_static_model.json').read_text())
+
+
+def s81_static_vm_face_model(entries=8):
+    """Static capture/WFC/outbound sizing; physical slots remain unqualified."""
+    from s81_vm.static_face_model import model
+    return model(entries)
