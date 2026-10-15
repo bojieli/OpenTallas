@@ -158,6 +158,447 @@
    "bytes": 16732787
   },
   {
+   "id": "hbm_gfp_C200_nogap_s2",
+   "file": "hbm_gfp_C200_nogap_s2.links.json.gz",
+   "label": "Compact 20.0 mm outline",
+   "design": "hbm",
+   "token_designs": [
+    "hbm_gen_qwen",
+    "hbm_gen_ds"
+   ],
+   "revision": "v15-globalfp-noatt",
+   "role": "candidate",
+   "candidate": {
+    "of": "hbm_v15_compact",
+    "agent": "GLOBAL-FP-H",
+    "name": "Compact 20.0 mm outline",
+    "note": "660 mm2 die (-197 mm2), cut 0.574, fr 0. Whole-design change: owner decision, not adopted.",
+    "log": "/home/ubuntu/claude-takeover-20261007/el1015-globalfp-hbm.log"
+   },
+   "scope": "GLOBAL-FP-H block-level global floorplan candidate (193-node die graph, attention on SM engines, no ATT tiles)",
+   "coverage": {
+    "links": 715,
+    "placed": 715,
+    "unplaced": 0,
+    "width_known": 715,
+    "directed": 715,
+    "pin_ends": 0,
+    "box_ends": 1430,
+    "unplaced_ends": 0,
+    "stages_known": 0,
+    "bypass": 0,
+    "blocks": 193,
+    "bits_total": 366916,
+    "bit_um_total": 956266621,
+    "metrics": {
+     "sum_width_length_bit_um": 956266659,
+     "sum_bit_um_hops": 956266621,
+     "sum_traffic_length": 36499165716771,
+     "traffic_links": 715,
+     "over_reach_bits": 199445,
+     "relays": null,
+     "relay_bit_stages": null,
+     "needed_relay_bit_stages_lower_bound": 1756327,
+     "worst_cut": 1.4871,
+     "cut_windows_over_limit": 205
+    }
+   },
+   "inputs": [
+    {
+     "path": "graph_sm.json",
+     "sha256": "b05237024c6bb07a6de03b4d1cd00b90a8579783beacd355acd930d6bee18e07"
+    },
+    {
+     "path": "/home/ubuntu/scratch-globalfp-hbm/v2/b2/C200_nogap_s2.P.json",
+     "sha256": "636efa41fc8e2486a229e1dfe6ff1153eebd1b0814a75f466991a692120518af"
+    },
+    {
+     "path": "recs/hbm_gfp_C200_nogap_s2.json",
+     "sha256": "c65016d79742f0945ec1b274abbaf94a1d8d658862909f83194cd39a5775cde9"
+    }
+   ],
+   "generated": "2026-10-15T16:19:09+00:00",
+   "bytes": 250097
+  },
+  {
+   "id": "hbm_gfp_T_band0__hc_quad_s2",
+   "file": "hbm_gfp_T_band0__hc_quad_s2.links.json.gz",
+   "label": "VM band at the PHY edge",
+   "design": "hbm",
+   "token_designs": [
+    "hbm_gen_qwen",
+    "hbm_gen_ds"
+   ],
+   "revision": "v15-globalfp-noatt",
+   "role": "candidate",
+   "candidate": {
+    "of": "hbm_v15_compact",
+    "agent": "GLOBAL-FP-H",
+    "name": "VM band at the PHY edge",
+    "note": "VM band between the PC row and SM row 0 (HBM->VM shortest); HC engine per quadrant. Qwen traffic-length +21%.",
+    "log": "/home/ubuntu/claude-takeover-20261007/el1015-globalfp-hbm.log"
+   },
+   "scope": "GLOBAL-FP-H block-level global floorplan candidate (196-node die graph, attention on SM engines, no ATT tiles)",
+   "coverage": {
+    "links": 715,
+    "placed": 715,
+    "unplaced": 0,
+    "width_known": 715,
+    "directed": 715,
+    "pin_ends": 0,
+    "box_ends": 1430,
+    "unplaced_ends": 0,
+    "stages_known": 0,
+    "bypass": 0,
+    "blocks": 196,
+    "bits_total": 366916,
+    "bit_um_total": 1040177679,
+    "metrics": {
+     "sum_width_length_bit_um": 1040177401,
+     "sum_bit_um_hops": 1040177679,
+     "sum_traffic_length": 52485600368214,
+     "traffic_links": 715,
+     "over_reach_bits": 190728,
+     "relays": null,
+     "relay_bit_stages": null,
+     "needed_relay_bit_stages_lower_bound": 1939036,
+     "worst_cut": 1.4361,
+     "cut_windows_over_limit": 274
+    }
+   },
+   "inputs": [
+    {
+     "path": "graph_sm.json",
+     "sha256": "b05237024c6bb07a6de03b4d1cd00b90a8579783beacd355acd930d6bee18e07"
+    },
+    {
+     "path": "/home/ubuntu/scratch-globalfp-hbm/v2/b2/T_band0__hc_quad_s2.P.json",
+     "sha256": "f2af44432756367bf7c952eac9bcec00a3c1b9fc3a5ce8471e2ff55014e440d9"
+    },
+    {
+     "path": "recs/hbm_gfp_T_band0__hc_quad_s2.json",
+     "sha256": "95945c31d95d0adba92c3e1699b85d96826ec55b915e90c9c3134e06b19ace63"
+    }
+   ],
+   "generated": "2026-10-15T16:19:08+00:00",
+   "bytes": 250306
+  },
+  {
+   "id": "hbm_gfp_T_band2__npg4_s5",
+   "file": "hbm_gfp_T_band2__npg4_s5.links.json.gz",
+   "label": "Mid-block VM band, NPG4 (recommended)",
+   "design": "hbm",
+   "token_designs": [
+    "hbm_gen_qwen",
+    "hbm_gen_ds"
+   ],
+   "revision": "v15-globalfp-noatt",
+   "role": "candidate",
+   "candidate": {
+    "of": "hbm_v15_compact",
+    "agent": "GLOBAL-FP-H",
+    "name": "Mid-block VM band, NPG4 (recommended)",
+    "note": "Mid-block VM band + SW/SE engines at 4 bank-pair port groups (BANK_GROUP 0x33221100). Only v15-outline candidate with fr 0 and cut <= 0.60 at low traffic-length.",
+    "log": "/home/ubuntu/claude-takeover-20261007/el1015-globalfp-hbm.log"
+   },
+   "scope": "GLOBAL-FP-H block-level global floorplan candidate (187-node die graph, attention on SM engines, no ATT tiles)",
+   "coverage": {
+    "links": 709,
+    "placed": 709,
+    "unplaced": 0,
+    "width_known": 709,
+    "directed": 709,
+    "pin_ends": 0,
+    "box_ends": 1418,
+    "unplaced_ends": 0,
+    "stages_known": 0,
+    "bypass": 0,
+    "blocks": 187,
+    "bits_total": 365380,
+    "bit_um_total": 992142059,
+    "metrics": {
+     "sum_width_length_bit_um": 992142447,
+     "sum_bit_um_hops": 992142059,
+     "sum_traffic_length": 41739447849939,
+     "traffic_links": 709,
+     "over_reach_bits": 199589,
+     "relays": null,
+     "relay_bit_stages": null,
+     "needed_relay_bit_stages_lower_bound": 1831922,
+     "worst_cut": 1.0729,
+     "cut_windows_over_limit": 214
+    }
+   },
+   "inputs": [
+    {
+     "path": "graph_sm.json",
+     "sha256": "b05237024c6bb07a6de03b4d1cd00b90a8579783beacd355acd930d6bee18e07"
+    },
+    {
+     "path": "/home/ubuntu/scratch-globalfp-hbm/v2/b2/T_band2__npg4_s5.P.json",
+     "sha256": "08965c7d56926c9829368b07df9df5762c2afd1ed14541fb81c3a1e4141885cb"
+    },
+    {
+     "path": "recs/hbm_gfp_T_band2__npg4_s5.json",
+     "sha256": "6f04742a921041c72d55f21d489c049353919b2b3f7a8abef36e919f147b89f0"
+    }
+   ],
+   "generated": "2026-10-15T16:19:09+00:00",
+   "bytes": 248108
+  },
+  {
+   "id": "hbm_gfp_T_nogap__none_s9",
+   "file": "hbm_gfp_T_nogap__none_s9.links.json.gz",
+   "label": "Edge block, engines free",
+   "design": "hbm",
+   "token_designs": [
+    "hbm_gen_qwen",
+    "hbm_gen_ds"
+   ],
+   "revision": "v15-globalfp-noatt",
+   "role": "candidate",
+   "candidate": {
+    "of": "hbm_v15_compact",
+    "agent": "GLOBAL-FP-H",
+    "name": "Edge block, engines free",
+    "note": "2x4 SM block at the die edge, no column gap; VM slice, engines, hub and COLL annealed into the free centre.",
+    "log": "/home/ubuntu/claude-takeover-20261007/el1015-globalfp-hbm.log"
+   },
+   "scope": "GLOBAL-FP-H block-level global floorplan candidate (193-node die graph, attention on SM engines, no ATT tiles)",
+   "coverage": {
+    "links": 715,
+    "placed": 715,
+    "unplaced": 0,
+    "width_known": 715,
+    "directed": 715,
+    "pin_ends": 0,
+    "box_ends": 1430,
+    "unplaced_ends": 0,
+    "stages_known": 0,
+    "bypass": 0,
+    "blocks": 193,
+    "bits_total": 366916,
+    "bit_um_total": 999902400,
+    "metrics": {
+     "sum_width_length_bit_um": 999902087,
+     "sum_bit_um_hops": 999902400,
+     "sum_traffic_length": 36290114179181,
+     "traffic_links": 715,
+     "over_reach_bits": 195679,
+     "relays": null,
+     "relay_bit_stages": null,
+     "needed_relay_bit_stages_lower_bound": 1839173,
+     "worst_cut": 1.4405,
+     "cut_windows_over_limit": 245
+    }
+   },
+   "inputs": [
+    {
+     "path": "graph_sm.json",
+     "sha256": "b05237024c6bb07a6de03b4d1cd00b90a8579783beacd355acd930d6bee18e07"
+    },
+    {
+     "path": "/home/ubuntu/scratch-globalfp-hbm/v2/b2/T_nogap__none_s9.P.json",
+     "sha256": "27fdda52e3ca964536f52da46b9feb151ef32d31831c6833b9274dd9661d6e5b"
+    },
+    {
+     "path": "recs/hbm_gfp_T_nogap__none_s9.json",
+     "sha256": "11eecc3dd5ae360a33d8761d085e7eb86d1d199c77c280788620a3fa616accc8"
+    }
+   ],
+   "generated": "2026-10-15T16:19:00+00:00",
+   "bytes": 250129
+  },
+  {
+   "id": "hbm_gfp_base_v15_noatt",
+   "file": "hbm_gfp_base_v15_noatt.links.json.gz",
+   "label": "v15/D boxes minus ATT",
+   "design": "hbm",
+   "token_designs": [
+    "hbm_gen_qwen",
+    "hbm_gen_ds"
+   ],
+   "revision": "v15-globalfp-noatt",
+   "role": "candidate",
+   "candidate": {
+    "of": "hbm_v15_compact",
+    "agent": "GLOBAL-FP-H",
+    "name": "v15/D boxes minus ATT",
+    "note": "Current v15.1 + D layout with every ATT block removed; the 150-odd blocks without a v15 box placed by the shared greedy rule. J reference = 3.00 + penalties.",
+    "log": "/home/ubuntu/claude-takeover-20261007/el1015-globalfp-hbm.log"
+   },
+   "scope": "GLOBAL-FP-H block-level global floorplan candidate (193-node die graph, attention on SM engines, no ATT tiles)",
+   "coverage": {
+    "links": 715,
+    "placed": 715,
+    "unplaced": 0,
+    "width_known": 715,
+    "directed": 715,
+    "pin_ends": 0,
+    "box_ends": 1430,
+    "unplaced_ends": 0,
+    "stages_known": 0,
+    "bypass": 57,
+    "blocks": 193,
+    "bits_total": 366916,
+    "bit_um_total": 1465654183,
+    "metrics": {
+     "sum_width_length_bit_um": 1465654267,
+     "sum_bit_um_hops": 1465654183,
+     "sum_traffic_length": 56442585335457,
+     "traffic_links": 715,
+     "over_reach_bits": 235008,
+     "relays": null,
+     "relay_bit_stages": null,
+     "needed_relay_bit_stages_lower_bound": 2761294,
+     "worst_cut": 1.6396,
+     "cut_windows_over_limit": 477
+    }
+   },
+   "inputs": [
+    {
+     "path": "graph_sm.json",
+     "sha256": "b05237024c6bb07a6de03b4d1cd00b90a8579783beacd355acd930d6bee18e07"
+    },
+    {
+     "path": "/home/ubuntu/scratch-globalfp-hbm/v2/b2/base_v15_noatt.P.json",
+     "sha256": "6718987f24c81e44ef3969306522edf7a476431c0d291b539a2fee642a979875"
+    },
+    {
+     "path": "recs/hbm_gfp_base_v15_noatt.json",
+     "sha256": "55381094c58f898f5dc00fb8ef793ac7f0d9a971f0cd2823140c689d5fef1ec6"
+    }
+   ],
+   "generated": "2026-10-15T16:18:58+00:00",
+   "bytes": 251982
+  },
+  {
+   "id": "hbm_gfp_rtlmp_width_raw",
+   "file": "hbm_gfp_rtlmp_width_raw.links.json.gz",
+   "label": "OpenROAD RTL-MP (width)",
+   "design": "hbm",
+   "token_designs": [
+    "hbm_gen_qwen",
+    "hbm_gen_ds"
+   ],
+   "revision": "v15-globalfp-noatt",
+   "role": "candidate",
+   "candidate": {
+    "of": "hbm_v15_compact",
+    "agent": "GLOBAL-FP-H",
+    "name": "OpenROAD RTL-MP (width)",
+    "note": "rtl_macro_placer dataflow clustering on the die graph, legalized. Ignores the stack/quadrant structure: SMs leave their stacks, cut 38.",
+    "log": "/home/ubuntu/claude-takeover-20261007/el1015-globalfp-hbm.log"
+   },
+   "scope": "GLOBAL-FP-H block-level global floorplan candidate (193-node die graph, attention on SM engines, no ATT tiles)",
+   "coverage": {
+    "links": 715,
+    "placed": 715,
+    "unplaced": 0,
+    "width_known": 715,
+    "directed": 715,
+    "pin_ends": 0,
+    "box_ends": 1430,
+    "unplaced_ends": 0,
+    "stages_known": 0,
+    "bypass": 514,
+    "blocks": 193,
+    "bits_total": 366916,
+    "bit_um_total": 3250957301,
+    "metrics": {
+     "sum_width_length_bit_um": 3250957188,
+     "sum_bit_um_hops": 3250957301,
+     "sum_traffic_length": 170254242914576,
+     "traffic_links": 715,
+     "over_reach_bits": 342598,
+     "relays": null,
+     "relay_bit_stages": null,
+     "needed_relay_bit_stages_lower_bound": 6321006,
+     "worst_cut": 4.4563,
+     "cut_windows_over_limit": 1184
+    }
+   },
+   "inputs": [
+    {
+     "path": "graph_sm.json",
+     "sha256": "b05237024c6bb07a6de03b4d1cd00b90a8579783beacd355acd930d6bee18e07"
+    },
+    {
+     "path": "/home/ubuntu/scratch-globalfp-hbm/v2/b2/rtlmp_width_raw.P.json",
+     "sha256": "6c647b5c57fd6bbe59292b37a1270b3bd6124233713bcb98b54570f1036b8ffc"
+    },
+    {
+     "path": "recs/hbm_gfp_rtlmp_width_raw.json",
+     "sha256": "e81fb71955e692221aa68d50d262564fe1b7a3617b261d716359df61816ea118"
+    }
+   ],
+   "generated": "2026-10-15T16:18:59+00:00",
+   "bytes": 256590
+  },
+  {
+   "id": "hbm_gfp_sa_free_s1",
+   "file": "hbm_gfp_sa_free_s1.links.json.gz",
+   "label": "Free annealer",
+   "design": "hbm",
+   "token_designs": [
+    "hbm_gen_qwen",
+    "hbm_gen_ds"
+   ],
+   "revision": "v15-globalfp-noatt",
+   "role": "candidate",
+   "candidate": {
+    "of": "hbm_v15_compact",
+    "agent": "GLOBAL-FP-H",
+    "name": "Free annealer",
+    "note": "All movable blocks annealed from the v15 start (PHY + SerDes fixed). Shortest wires but cut 0.83 and 2 LG fixed-return violations.",
+    "log": "/home/ubuntu/claude-takeover-20261007/el1015-globalfp-hbm.log"
+   },
+   "scope": "GLOBAL-FP-H block-level global floorplan candidate (193-node die graph, attention on SM engines, no ATT tiles)",
+   "coverage": {
+    "links": 715,
+    "placed": 715,
+    "unplaced": 0,
+    "width_known": 715,
+    "directed": 715,
+    "pin_ends": 0,
+    "box_ends": 1430,
+    "unplaced_ends": 0,
+    "stages_known": 0,
+    "bypass": 0,
+    "blocks": 193,
+    "bits_total": 366916,
+    "bit_um_total": 855824153,
+    "metrics": {
+     "sum_width_length_bit_um": 855824581,
+     "sum_bit_um_hops": 855824153,
+     "sum_traffic_length": 34671009911176,
+     "traffic_links": 715,
+     "over_reach_bits": 206619,
+     "relays": null,
+     "relay_bit_stages": null,
+     "needed_relay_bit_stages_lower_bound": 1523998,
+     "worst_cut": 1.3754,
+     "cut_windows_over_limit": 215
+    }
+   },
+   "inputs": [
+    {
+     "path": "graph_sm.json",
+     "sha256": "b05237024c6bb07a6de03b4d1cd00b90a8579783beacd355acd930d6bee18e07"
+    },
+    {
+     "path": "/home/ubuntu/scratch-globalfp-hbm/v2/b2/sa_free_s1.P.json",
+     "sha256": "3f46f0c7f2991b28963f3b8b009574e97eea6ded43f56764813b252fcb09b47e"
+    },
+    {
+     "path": "recs/hbm_gfp_sa_free_s1.json",
+     "sha256": "f425ea8a33b3d1e28fd7b2448df5f61a505b69c537b36726a9ab857131648acb"
+    }
+   ],
+   "generated": "2026-10-15T16:18:59+00:00",
+   "bytes": 250218
+  },
+  {
    "id": "hbm_r25gph",
    "file": "hbm_r25gph.links.json.gz",
    "label": "HBM generic die R25GP / HGI-1 (token-path die)",
