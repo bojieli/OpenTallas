@@ -8,6 +8,13 @@ class NativePQImageTest(unittest.TestCase):
   w=encode_descriptors([fields]);self.assertEqual(len(w),7)
   native=sum((x&0xffffff)<<(24*p)for p,x in enumerate(w[1:6]))
   self.assertEqual(native>>90,12345);self.assertEqual(native&511,511);self.assertEqual((native>>9)&7,0)
+ def test_canonical_phw10_preserves_high_phase_and_tag(self):
+  fields=dict(ph=1023,np=7,xbase=524287,xps=5120,obase=4096,ops=320,fmt=2,observed_end_edges=12345,native_tag=3)
+  words=encode_descriptors([fields],phase_width=10)
+  value=sum((x&0xffffff)<<(24*p) for p,x in enumerate(words[1:6]))
+  self.assertEqual(value&1023,1023);self.assertEqual((value>>10)&7,7)
+  self.assertEqual((value>>91)&0xffffff,12345);self.assertEqual(value>>115,3)
+  with self.assertRaises(ValueError):encode_descriptors([fields])
  def test_missing_duration_and_out_of_range_refuse(self):
   with self.assertRaises(ValueError):encode_descriptors([{}])
  def test_real_issuer_to_native_GO_calendar_edges(self):
