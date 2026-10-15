@@ -6352,11 +6352,6 @@ def case_pdn(v, m, work, bump_um, rev='r4'):
     pg_f = PG.F
     if rev == 'r5':
         PG.F = v
-    # split compute C20s: the powered rewrite must emit the SAME pin names as die.v (split bundles and port_join
-    # aliases renamed to the real RTL bits, as case_real does); without it every alias / split master had LEF pins
-    # the netlist never names
-    emit0 = getattr(v, 'EMIT_SPLIT', False)
-    v.EMIT_SPLIT = True
     try:
         for name, mst in M.items():
             wm_ = {q: pw.get((name, q), 0) for q in mst.order}
@@ -6369,7 +6364,6 @@ def case_pdn(v, m, work, bump_um, rev='r4'):
             parts.append(text)
     finally:
         PG.F = pg_f
-        v.EMIT_SPLIT = emit0
     (work / 'elements.lef').write_text('VERSION 5.8 ;\nBUSBITCHARS "[]" ;\nDIVIDERCHAR "/" ;\n' + '\n'.join(parts) +
                                        'END LIBRARY\n')
     _gate_track_lattice(work / 'elements.lef', m)

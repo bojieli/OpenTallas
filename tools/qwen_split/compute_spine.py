@@ -647,9 +647,6 @@ def place(v, m, G):
     if 'native_static_io_bind' in m and os.environ.get('OT_SPLIT_NATIVE_GRAPH', '1') != '0':
         from qwen_split.native_graph_bind import apply as native_graph_apply
         rec['native_graph_bind'] = native_graph_apply(m)
-        if os.environ.get('OT_SPLIT_STATIC_LINK', '1') != '0':
-            from qwen_split.static_link_bind import apply as static_link_apply
-            rec['static_link_bind'] = static_link_apply(m)
     if os.environ.get('OT_SPLIT_DUMP'):
         ins = [dict(n=i.name, m=i.master, x=i.x, y=i.y, w=i.w, h=i.h, o=i.orient) for i in m['insts']]
         bus = [dict(b=b_, c=c_, n=n_, e=[list(x) for x in e_]) for b_, c_, n_, e_ in m.get('buses', [])]

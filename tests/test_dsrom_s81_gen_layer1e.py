@@ -70,6 +70,21 @@ def test_hop_path_candidates():
     assert F._corr_frac(z, list(cor.values())) > F._corr_frac(ps[0], list(cor.values()))
 
 
+def test_hop_path_candidates_reject_far_detours():
+    # a 140-um hop must not try a corridor 13.6 mm away (GEN18p/c18 hop stage ran for hours)
+    a, b = (14244.492, 17141.856), (14369.224, 17120.16)
+    cor = dict(far=(27800.0, 0.0, 27930.0, 26000.0), near=(14500.0, 0.0, 14600.0, 26000.0),
+               hfar=(0.0, 9000.0, 33000.0, 9100.0))
+    ps = F._hop_paths(a, b, cor)
+    xs = {p[1][0] for p in ps if len(p) == 4}
+    assert 14550.0 in xs and not any(x > 20000 for x in xs)
+    assert not any(len(p) == 4 and p[1][1] == 9050.0 for p in ps)
+    # a long nearly-horizontal hop keeps a corridor a few mm off its line (the 20.2 mm host chain case)
+    a2, b2 = (2000.0, 14724.7), (22200.0, 14800.0)
+    ps2 = F._hop_paths(a2, b2, dict(h=(0.0, 16400.0, 33000.0, 16500.0)))
+    assert any(len(p) == 4 and p[1][1] == 16450.0 for p in ps2)
+
+
 def test_engram_bus_widths_match_rtl():
     lk = _ports('rtl/dsrom_sys/engram/dsfd_engram_lkp.sv', 'dsfd_engram_lkp')
     sk = _ports('rtl/dsrom_sys/engram/dsfd_engram_sink.sv', 'dsfd_engram_sink')
