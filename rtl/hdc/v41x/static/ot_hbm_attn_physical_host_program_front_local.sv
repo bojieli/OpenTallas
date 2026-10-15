@@ -2,7 +2,7 @@
 `default_nettype none
 // Real native target49 -> mapped outer programme -> actual mapped event/query
 // producer. Host transport is external configuration only; no on-chip ready.
-module ot_hbm_attn_physical_host_program_front_local(
+module ot_hbm_attn_physical_host_program_front_local #(parameter integer LG=0,LGMUT=0)(
  input wire clk,rst_n,input wire[3:0]bank_clk,input wire cfg_v,input wire[7:0]cfg_target,
  input wire[11:0]cfg_addr,input wire[255:0]cfg_data,
  input wire desc_v,input wire[11:0]desc_base,input wire[12:0]desc_limit,input wire[15:0]desc_loops,
@@ -20,7 +20,7 @@ module ot_hbm_attn_physical_host_program_front_local(
  .program_start_v(sv),.program_start_base(base),.program_start_limit(limit),.program_start_loops(loops),.configured(configured),.fault(tf));
  ot_vms_calendar_static #(.W(223))u_outer(.clk(clk),.rst_n(rst_n),.cfg_we(we),.cfg_addr(addr),.cfg_data(data),
  .start_v(sv),.start_base(base),.start_limit(limit),.start_loops(loops),.calendar(instruction),.calendar_v(iv),.ordinal(ordinal),.active(active),.done(done),.fault(cf));
- ot_hbm_attn_physical_program_query_front_local u_front(.clk(clk),.bank_clk(bank_clk),.rst_n(rst_n),.instruction_v(iv),.instruction(instruction),
+ ot_hbm_attn_physical_program_query_front_local #(.LG(LG),.LGMUT(LGMUT))u_front(.clk(clk),.bank_clk(bank_clk),.lg_clk({4{clk}}),.rst_n(rst_n),.instruction_v(iv),.instruction(instruction),
  .query_rq(query_rq),.query_rr(query_rr),.events(events),.phase(phase),.event_valid(event_valid),.rows(rows),.pv_only(pv_only),.q_words(q_words),.q_present(q_present),.q_fields(q_fields),.p_fields(p_fields),.p_words(p_words),.p_present(p_present),.fault(ff));
  assign fault=tf|cf|ff;
 endmodule

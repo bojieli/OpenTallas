@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-module tb_hbm_attn_QP_local_host_front;
+module tb_hbm_attn_QP_local_host_front #(parameter integer LG=0,LGMUT=0);
  localparam integer VM_SID=3,VM_BASE=VM_SID*8192;
  reg clk=0;always #5 clk=~clk;reg rst_n=0,iv=0;reg[222:0]instruction=0;wire[135:0]rq;wire[2055:0]rr;
  wire[8191:0]qfields;wire[4095:0]pfields;wire[1023:0]pwords;wire ppresent;wire[6:0]events;wire[9:0]phase;wire valid,pv,qv,fault;wire[15:0]rows;wire[8191:0]q;
@@ -69,7 +69,7 @@ module tb_hbm_attn_QP_local_host_front;
       end
     end endgenerate
     wire att_active,att_done;
-    ot_hbm_attn_physical_host_program_front_local dut(.clk(clk),.bank_clk({4{clk}}),.rst_n(rst_n),
+    ot_hbm_attn_physical_host_program_front_local #(.LG(LG),.LGMUT(LGMUT))dut(.clk(clk),.bank_clk({4{clk}}),.rst_n(rst_n),
       .cfg_v(ext_cfg_v),.cfg_target(ext_target),.cfg_addr(ext_cfg_addr),.cfg_data(ext_cfg_data),
       .desc_v(ext_desc_v),.desc_base(ext_base),.desc_limit(ext_limit),.desc_loops(ext_loops),.launch_v(ext_launch_v),
       .active(att_active),.done(att_done),.fault(fault),.query_rq(rq),.query_rr(rr),.events(events),.phase(phase),.event_valid(valid),

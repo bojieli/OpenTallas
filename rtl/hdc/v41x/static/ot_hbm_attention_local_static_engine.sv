@@ -15,7 +15,7 @@ module ot_hbm_attention_local_static_engine(
 );
  wire[6:0]events;wire[9:0]phase;wire ev,pv_only,pf,cf,qv,pp;
  wire[15:0]rows;wire[8191:0]qf;wire[4095:0]pw;
- ot_hbm_attn_physical_program_query_front_local u_front(.clk(clk),.rst_n(rst_n),.bank_clk(bank_clk),
+ ot_hbm_attn_physical_program_query_front_local u_front(.clk(clk),.rst_n(rst_n),.bank_clk(bank_clk),.lg_clk({4{clk}}),
   .instruction_v(instruction_v),.instruction(instruction),.query_rq(query_rq),.query_rr(query_rr),
   .events(events),.phase(phase),.event_valid(ev),.rows(rows),.pv_only(pv_only),
   .q_words(),.q_fields(qf),.q_present(qv),.p_words(),.p_fields(pw),.p_present(pp),.fault(pf));
