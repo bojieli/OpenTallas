@@ -1,0 +1,10 @@
+ot-run: ot-epyc1tb     skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-epyc4       admits   643 GB (avail 870, growth 106, headroom 48, waiters 0/0 GB) load 38/128 running 23 disk 431 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  skipped: load hold: load1 > 1.5 x cores
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2033563-1792063048 after 0 s
+NATIVE_PRUNE_INPUTS {'rtl/qwen_sys/tile_parent_banked_20261015/ot_qwen_w12_matvec_part_banked_v1.sv': 'da38cb707f0e44f601f304277cb4b525c6bb6ca8c4c8915dde2189897439589d', 'rtl/qwen_sys/tile_parent_banked_20261015/ot_qce_banked_v1_prunable_arith.sv': '138367d833e55e3ab4c2ce9cb2e49d2765dabc7e67cb09b35f0adb5120aa20ac'}
+sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29
+NATIVE_SYNTH_COMPLETE
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2033563-1792063048): exit 0

@@ -1,0 +1,29 @@
+{
+  "source_commit": "899bc79954f3af15bc3e5908faf81c474ecc0008",
+  "actual_bitmapped_FF_count": 943,
+  "original_FF_count": 2278,
+  "reduction": 1335,
+  "cell_types": {
+    "$_DFF_PN0_": 70,
+    "$_DFF_P_": 457,
+    "$_DFFE_PN0P_": 6,
+    "$_DFFE_PP_": 254,
+    "$_SDFF_PP0_": 108,
+    "$_SDFF_PN0_": 48,
+    "$_NOT_": 209,
+    "$_OR_": 5316,
+    "$_AND_": 2469,
+    "$_MUX_": 3443,
+    "$_XOR_": 889,
+    "qwen_glue_v514": 10,
+    "qwen_glue_v508": 1,
+    "qkh_packet_h256": 18,
+    "qkh_packet_v256": 28,
+    "qkh_packet_v16": 12,
+    "$scopeinfo": 101,
+    "ot_qwen_tile_rpair": 5,
+    "ot_qwen_tile_node": 1,
+    "ot_qwen_tile_lsl_fp1": 8
+  },
+  "netlist_sha256": "897c8e387694aeda1fa0a9506ea260193caebf7ccf19da0f9082c74a48001e2c"
+}

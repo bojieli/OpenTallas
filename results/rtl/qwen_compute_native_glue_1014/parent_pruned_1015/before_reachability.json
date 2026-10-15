@@ -1,0 +1,33 @@
+{
+  "top": "qfd_tile_nk_banked_v1",
+  "source_sha256": "b9289d24e87bd38de1da752f5e8b2b4b4179f86946daed565a8373b0818bd4fe",
+  "root_definition": "All top output pins and all actual instantiated hardmacro input pins (including realbank D/reset/clock). Backwardthroughprimitivecombinationalcells andallDFFinputs D/E/R/C; keptnets arenot usefulroots.",
+  "actual_DFF_bits": 2278,
+  "useful_DFF_bits": 937,
+  "not_useful_DFF_bits": 1341,
+  "kv_addr_DFF_bits": 734,
+  "kv_addr_useful_DFF_bits": 24,
+  "artificial_keep_only_DFF_bits": 1341,
+  "DFFs_not_reachable_even_with_keep": 0,
+  "hardmacro_instances": 83,
+  "keep_net_count": 465,
+  "keep_bits_unique": 9149,
+  "notuseful_by_alias_prefix": {
+    "u_logic.u_me.genblk2.g_kv_addr_prep": 586,
+    "u_logic.u_me.g_issue_fast": 136,
+    "u_logic.u_me": 321,
+    "u_logic.u_me.genblk2.g_kv_addr_prep.q_p[0]": 12,
+    "u_logic.u_me.genblk2.g_kv_addr_prep.off[0]": 24,
+    "u_logic.u_me.genblk2.g_kv_addr_prep.q_p[1]": 1,
+    "u_logic.u_me.genblk2.g_kv_addr_prep.off[1]": 24,
+    "u_logic.u_me.genblk2.g_kv_addr_prep.q_p[2]": 2,
+    "u_logic.u_me.genblk2.g_kv_addr_prep.off[2]": 24,
+    "u_logic.u_me.genblk2.g_kv_addr_prep.q_p[3]": 1,
+    "u_logic.u_me.genblk2.g_kv_addr_prep.c_p[1]": 1,
+    "u_logic.u_me.genblk2.g_kv_addr_prep.c_p[2]": 1,
+    "u_logic.u_me.genblk2.g_kv_addr_prep.c_p[0]": 10,
+    "u_logic.u_me.genblk2.g_kv_addr_prep.off[3]": 24,
+    "u_logic.u_me.g_hier.g_sl[0].g_hd": 1,
+    "u_logic": 173
+  }
+}

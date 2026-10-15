@@ -1184,16 +1184,17 @@
   },
   "refglob": "*",
   "inter": [],
-  "structural_change": "Actual oldNK15037sink longdata/reset/setup failures replaced by58 independent existing-edge data banks,11 actual three-edge reset tree roots,14unchangedCLOSED children. TX390\u2192198 AFTER RNE, fulls2_x128 separate, tag167\u21924usedsplitbits. Balanced return+1/xdelay9, nodein+1/out+1. Original residual2278realFFs retained as actual stdcells in freearea; freshCTS measures actual clock/RNE/fanout, no invented residual macro. Complete3499word oldparent reference+3mutants PASS; source31507pin dependencies checked. Compiler candidate unselected until physical gates.",
+  "structural_change": "Actual oldNK15037sink longdata/reset/setup failures are partitioned into58 existing-edge data banks,11 three-edge reset tree roots and14 unchangedCLOSED children. Candidate-private combinationalCSA/KSA helpers remove artificial keep roots without changing arithmetic, sequential statements, bank assignments or cycle ages. Measured bitmapped residual943FF vs2278baseline:937useful plus6intentionalkeeps. TX390 to198 AFTER RNE, fulls2_x128 separate, tag167 to4usedsplitbits; balanced return+1/xdelay9 and nodein+1/out+1 remain unchanged. Fresh3499completeword oracle+3mutants,3559boot16checks,5959allbankchecks and31504actualpin dependencies PASS. Actualclock/RNE/fanout and productionchannel/PG/native qualification remainOPEN; no oldparent closure credit.",
   "job": {
     "owner": "Codex:q_compute_elem",
-    "branch": "codex/q-compute-native-parents-1014",
-    "tag": "bp58a",
-    "purpose": "Actual58bank/84root successor nativeCTS: real fullRNE+2278residualFFs, exact83CLOSED masters/pins; no oldparent qualification",
+    "branch": "codex/q-parent-prune-1015",
+    "tag": "bp58p",
+    "purpose": "Actual58bank/84root pruned successor: fullRNE+943measuredresidualFFs, exact83CLOSED masters/pins; freshphysicalqualificationOPEN",
     "extra_paths": [
       "physical/qwen_tile_glue_banks_1015",
       "rtl/qwen_sys/tile_parent_banked_20261015",
-      "results/rtl/qwen_compute_native_glue_1014/parent_banked_v1"
+      "results/rtl/qwen_compute_native_glue_1014/parent_banked_v1",
+      "results/rtl/qwen_compute_native_glue_1014/parent_pruned_1015"
     ],
     "views_to": "physical/ref_tile/qfd_tile_nk_banked_v1/views",
     "record_to": "results/rtl/ref_tile/qfd_tile_nk_banked_v1",
@@ -1214,8 +1215,8 @@
         "expect": "pass",
         "threads": 1,
         "peak_ram_gb": 1,
-        "cmd": "python3 physical/qwen_tile_glue_banks_1015/verify_parent_receipt.py",
-        "pass_regex": "^PASS exact real-parent numerical receipt44"
+        "cmd": "python3 physical/qwen_tile_glue_banks_1015/verify_parent_prune_receipt.py",
+        "pass_regex": "^PASS exact pruned-parent receipt:"
       }
     ],
     "hold_merge": "HELD diagnostic dense-channel measurement; production20um channel/pin/PG proof and actual native gates remain required"

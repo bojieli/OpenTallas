@@ -1,0 +1,12 @@
+ot-run: ot-epyc1tb     admits   388 GB (avail 615, growth 115, headroom 64, waiters 0/0 GB) load 55/128 running 12 disk 651 GB 
+ot-run: ot-epyc4       admits   646 GB (avail 873, growth 82, headroom 48, waiters 0/0 GB) load 41/128 running 20 disk 437 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits    41 GB (avail 70, growth 17, headroom 24, waiters 0/0 GB) load 13/64 running 5 disk 26 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3970577-1792062584 after 0 s
+VERIFIED_PINNED_INPUTS 899bc79954f3af15bc3e5908faf81c474ecc0008
+physical/qwen_tile_glue_banks_1015/run_parent_bench.sh: line 6: 3975597 Aborted                    (core dumped) "$out/obj/Vtb_parent_banked" +OT_ROM_DIR=masks > "$out/run.log" 2>&1
+[5550000] %Fatal: tb_parent_banked.sv:22: Assertion failed in tb_parent_banked: FAIL parent tile complete word c535 got1c230710042ed0680c315b4c042fdce004303ecc0c2a72b00424ffa00431ed4c0c34612c0c31792c0421984004356d3c042185700c2b90180430b3e40c3875ba0 want1c231bb0042ee3680c31687c042ff720043049f40c2a8450042517e00431fa740c3472fc0c3188ec0421a1400435814c042196700c2ba2d80430c0e40c38815e0
+%Error: physical/qwen_tile_glue_banks_1015/tb_parent_banked.sv:22: Verilog $stop
+Aborting...
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3970577-1792062584): exit 0

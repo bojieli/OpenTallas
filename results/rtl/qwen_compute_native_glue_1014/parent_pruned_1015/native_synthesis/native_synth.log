@@ -1,0 +1,785 @@
+mkdir -p /work/results/asap7/opentallas_qfd_tile_nk_banked_v1_asap7_ref_gate/base/
+echo 770.000000000 > /work/results/asap7/opentallas_qfd_tile_nk_banked_v1_asap7_ref_gate/base/clock_period.txt
+/OpenROAD-flow-scripts/flow/scripts/synth.sh /OpenROAD-flow-scripts/flow/scripts/synth_canonicalize.tcl /work/logs/asap7/opentallas_qfd_tile_nk_banked_v1_asap7_ref_gate/base/1_1_yosys_canonicalize.log
+Using ABC speed script.
+Extracting clock period from SDC file: /work/results/asap7/opentallas_qfd_tile_nk_banked_v1_asap7_ref_gate/base/clock_period.txt
+Setting clock period to 770.000000000
+1. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+2. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+3. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+4. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+6. Executing Liberty frontend: /src/physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node/ot_qwen_tile_node_tt.lib
+7. Executing Liberty frontend: /src/physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_tt.lib
+8. Executing Liberty frontend: /src/physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1/ot_qwen_tile_lsl_fp1_tt.lib
+9. Executing Liberty frontend: /src/physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256/qkh_packet_h256_tt.lib
+10. Executing Liberty frontend: /src/physical/ref_tile/qkh_packet_v16/views/qkh_packet_v16/qkh_packet_v16_tt.lib
+11. Executing Liberty frontend: /src/physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256/qkh_packet_v256_tt.lib
+12. Executing Liberty frontend: /src/physical/ref_tile/qwen_glue_v508/views/qwen_glue_v508/qwen_glue_v508_tt.lib
+13. Executing Liberty frontend: /src/physical/ref_tile/qwen_glue_v514/views/qwen_glue_v514/qwen_glue_v514_tt.lib
+14. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+15. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+16. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+17. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+18. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+19. Executing Liberty frontend: /src/physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node/ot_qwen_tile_node_tt.lib
+20. Executing Liberty frontend: /src/physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_tt.lib
+21. Executing Liberty frontend: /src/physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1/ot_qwen_tile_lsl_fp1_tt.lib
+22. Executing Liberty frontend: /src/physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256/qkh_packet_h256_tt.lib
+23. Executing Liberty frontend: /src/physical/ref_tile/qkh_packet_v16/views/qkh_packet_v16/qkh_packet_v16_tt.lib
+24. Executing Liberty frontend: /src/physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256/qkh_packet_v256_tt.lib
+25. Executing Liberty frontend: /src/physical/ref_tile/qwen_glue_v508/views/qwen_glue_v508/qwen_glue_v508_tt.lib
+26. Executing Liberty frontend: /src/physical/ref_tile/qwen_glue_v514/views/qwen_glue_v514/qwen_glue_v514_tt.lib
+27. Executing Verilog-2005 frontend: /src/rtl/physical/ot_qwen_rom_tile_die.sv
+28. Executing Verilog-2005 frontend: /src/rtl/hdc/kv/ot_qwen_kv_land_merge.sv
+29. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_fpu.sv
+30. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv
+31. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_fastfp.sv
+32. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_delay.sv
+33. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_sfu.sv
+34. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_matvec.sv
+35. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_qwen_me_array_w12.sv
+36. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_qwen_rom_tile_w12.sv
+37. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_fp32_add_lat.sv
+38. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_fp32_mul_lat.sv
+39. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_prefix.sv
+40. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_qwen_w12_matvec.sv
+41. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_qwen_w12_arith.sv
+42. Executing Verilog-2005 frontend: /src/rtl/proto/ot_fp32_add_rne_pipe.sv
+43. Executing Verilog-2005 frontend: /src/rtl/hdc/ot_hdc_fp32_add_lat_nr.sv
+44. Executing Verilog-2005 frontend: /src/rtl/physical/ot_qwen_rom_tile_nk.sv
+45. Executing Verilog-2005 frontend: /src/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v
+46. Executing Verilog-2005 frontend: /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v
+47. Executing Verilog-2005 frontend: /src/rtl/physical/bb/ot_qwen_tile_rpair_bb.v
+48. Executing Verilog-2005 frontend: /src/rtl/physical/bb/ot_qwen_tile_node_bb.v
+49. Executing Verilog-2005 frontend: /src/rtl/physical/bb/ot_qwen_tile_lsl_fp1_bb.v
+50. Executing Verilog-2005 frontend: /src/rtl/qwen_sys/tile_parent_banked_20261015/ot_qwen_w12_matvec_part_banked_v1.sv
+51. Executing Verilog-2005 frontend: /src/rtl/qwen_sys/tile_parent_banked_20261015/ot_qwen_rom_tile_logic_banked_v1.sv
+52. Executing Verilog-2005 frontend: /src/rtl/qwen_sys/tile_parent_banked_20261015/qfd_tile_nk_banked_v1.sv
+53. Executing Verilog-2005 frontend: /src/rtl/qwen_sys/tile_glue_banks_20261015/ot_qwen_tx198.sv
+54. Executing Verilog-2005 frontend: /src/physical/qwen_tile_glue_banks_1015/parent_banks_bb.v
+55. Executing Verilog-2005 frontend: /src/rtl/qwen_sys/tile_parent_banked_20261015/ot_qce_banked_v1_prunable_arith.sv
+56. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_clkgate_R.v
+57. Executing HIERARCHY pass (managing design hierarchy).
+58. Executing AST frontend in derive mode using pre-parsed AST for module `\qfd_tile_nk_banked_v1'.
+58.1. Analyzing design hierarchy..
+58.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qwen_rom_tile_logic_banked_v1'.
+Warning: Replacing memory \g_rom_pipe.rq_ad_n with list of registers. See /src/rtl/qwen_sys/tile_parent_banked_20261015/ot_qwen_rom_tile_logic_banked_v1.sv:371
+Warning: Replacing memory \g_rom_pipe.rq_ad_s with list of registers. See /src/rtl/qwen_sys/tile_parent_banked_20261015/ot_qwen_rom_tile_logic_banked_v1.sv:370
+Warning: Replacing memory \g_rom_pipe.rq_ce_n with list of registers. See /src/rtl/qwen_sys/tile_parent_banked_20261015/ot_qwen_rom_tile_logic_banked_v1.sv:362
+Warning: Replacing memory \g_rom_pipe.rq_ce_s with list of registers. See /src/rtl/qwen_sys/tile_parent_banked_20261015/ot_qwen_rom_tile_logic_banked_v1.sv:362
+58.3. Analyzing design hierarchy..
+58.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+58.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+58.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_vline'.
+58.7. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qwen_arpb_reg'.
+58.8. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qwen_w12_matvec_part_banked_v1'.
+Warning: reg '\scale_re' is assigned in a continuous assignment at /src/rtl/qwen_sys/tile_parent_banked_20261015/ot_qwen_w12_matvec_part_banked_v1.sv:1098.16-1098.31.
+Warning: reg '\scale_gre' is assigned in a continuous assignment at /src/rtl/qwen_sys/tile_parent_banked_20261015/ot_qwen_w12_matvec_part_banked_v1.sv:1099.16-1099.29.
+Warning: reg '\scale_addr' is assigned in a continuous assignment at /src/rtl/qwen_sys/tile_parent_banked_20261015/ot_qwen_w12_matvec_part_banked_v1.sv:1100.16-1100.30.
+Warning: Replacing memory \g_gm_fast.klim with list of registers. See /src/rtl/qwen_sys/tile_parent_banked_20261015/ot_qwen_w12_matvec_part_banked_v1.sv:536
+Warning: Replacing memory \g_gm_fast.kdif with list of registers. See /src/rtl/qwen_sys/tile_parent_banked_20261015/ot_qwen_w12_matvec_part_banked_v1.sv:535
+Warning: Replacing memory \genblk2.g_kv_addr_prep.off with list of registers. See /src/rtl/qwen_sys/tile_parent_banked_20261015/ot_qwen_w12_matvec_part_banked_v1.sv:490
+Warning: Replacing memory \genblk2.g_kv_addr_prep.c_p with list of registers. See /src/rtl/qwen_sys/tile_parent_banked_20261015/ot_qwen_w12_matvec_part_banked_v1.sv:488
+Warning: Replacing memory \genblk2.g_kv_addr_prep.q_p with list of registers. See /src/rtl/qwen_sys/tile_parent_banked_20261015/ot_qwen_w12_matvec_part_banked_v1.sv:487
+Warning: Replacing memory \g_issue_fast.osh with list of registers. See /src/rtl/qwen_sys/tile_parent_banked_20261015/ot_qwen_w12_matvec_part_banked_v1.sv:320
+Warning: Replacing memory \g_issue_fast.tsh with list of registers. See /src/rtl/qwen_sys/tile_parent_banked_20261015/ot_qwen_w12_matvec_part_banked_v1.sv:319
+Warning: Replacing memory \rk with list of registers. See /src/rtl/qwen_sys/tile_parent_banked_20261015/ot_qwen_w12_matvec_part_banked_v1.sv:1287
+58.9. Analyzing design hierarchy..
+58.10. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qwen_tx198_codec'.
+58.11. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qwen_lrst_ff'.
+58.12. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qce_banked_v1_prunable_kadd'.
+58.13. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qce_banked_v1_prunable_kadd'.
+58.14. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qce_banked_v1_prunable_csa_tree'.
+58.15. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qce_banked_v1_prunable_csa_tree'.
+58.16. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qce_banked_v1_prunable_kadd'.
+58.17. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qce_banked_v1_prunable_kadd'.
+58.18. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qce_banked_v1_prunable_ksum'.
+58.19. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+58.20. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_vline'.
+58.21. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+58.22. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_vline'.
+58.23. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_vline'.
+58.24. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+58.25. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_vline'.
+58.26. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+58.27. Analyzing design hierarchy..
+58.28. Analyzing design hierarchy..
+58.29. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qce_banked_v1_prunable_ksa'.
+58.30. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qce_banked_v1_prunable_ksa'.
+58.31. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qce_banked_v1_prunable_ksa'.
+58.32. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qce_banked_v1_prunable_ksa'.
+58.33. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qce_banked_v1_prunable_kadd'.
+58.34. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qce_banked_v1_prunable_csa_tree'.
+58.35. Analyzing design hierarchy..
+58.36. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qce_banked_v1_prunable_ksa'.
+58.37. Analyzing design hierarchy..
+58.38. Analyzing design hierarchy..
+Warning: Selection "ot_qwen_tile_node" did not match any module.
+Warning: Selection "ot_qwen_tile_rpair" did not match any module.
+Warning: Selection "ot_qwen_tile_lsl_fp1" did not match any module.
+Warning: Selection "qkh_packet_h256" did not match any module.
+Warning: Selection "qkh_packet_v16" did not match any module.
+Warning: Selection "qkh_packet_v256" did not match any module.
+Warning: Selection "qwen_glue_v508" did not match any module.
+Warning: Selection "qwen_glue_v514" did not match any module.
+59. Executing HIERARCHY pass (managing design hierarchy).
+59.1. Analyzing design hierarchy..
+59.2. Analyzing design hierarchy..
+source /src/physical/common_flow/ot_keep_regs.tcl
+60. Executing PROC pass (convert processes to netlists).
+60.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+60.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+60.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+60.4. Executing PROC_INIT pass (extract init attributes).
+60.5. Executing PROC_ARST pass (detect async resets in processes).
+60.6. Executing PROC_ROM pass (convert switches to ROMs).
+60.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+60.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+60.9. Executing PROC_DFF pass (convert process syncs to FFs).
+60.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+60.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+60.12. Executing OPT_EXPR pass (perform const folding).
+61. Executing OPT_CLEAN pass (remove unused cells and wires).
+62. Executing TECHMAP pass (map to technology primitives).
+62.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+62.2. Continuing TECHMAP pass.
+OT_KEEP_PIN_REGS: 0 top-level pin register cells kept
+OT_KEEP_REGS: keep set on 68 register cells driving keep wires
+63. Executing OPT_CLEAN pass (remove unused cells and wires).
+64. Executing RTLIL backend.
+Warnings: 23 unique messages, 34 total
+End of script. Logfile hash: fb775e6214, time: 2.34s, user: 2.24s, system: 0.09s, MEM: 117.93 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 36% 2x opt_clean (0 sec), 25% 28x read_liberty (0 sec), ...
+Elapsed time: 0:02.37[h:]min:sec. CPU time: user 2.27 sys 0.10 (100%). Peak memory: 120764KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_1_yosys_canonicalize    .rtlil          2            117 5d31fa571ccf1d6a025c
+/OpenROAD-flow-scripts/flow/scripts/synth.sh /OpenROAD-flow-scripts/flow/scripts/synth.tcl /work/logs/asap7/opentallas_qfd_tile_nk_banked_v1_asap7_ref_gate/base/1_2_yosys.log
+Using ABC speed script.
+Extracting clock period from SDC file: /work/results/asap7/opentallas_qfd_tile_nk_banked_v1_asap7_ref_gate/base/clock_period.txt
+Setting clock period to 770.000000000
+1. Executing RTLIL frontend.
+Warning: Selection "ot_qwen_tile_node" did not match any module.
+Warning: Selection "ot_qwen_tile_rpair" did not match any module.
+Warning: Selection "ot_qwen_tile_lsl_fp1" did not match any module.
+Warning: Selection "qkh_packet_h256" did not match any module.
+Warning: Selection "qkh_packet_v16" did not match any module.
+Warning: Selection "qkh_packet_v256" did not match any module.
+Warning: Selection "qwen_glue_v508" did not match any module.
+Warning: Selection "qwen_glue_v514" did not match any module.
+2. Executing HIERARCHY pass (managing design hierarchy).
+2.1. Analyzing design hierarchy..
+2.2. Analyzing design hierarchy..
+3. Executing SYNTH pass.
+3.1. Executing HIERARCHY pass (managing design hierarchy).
+3.1.1. Analyzing design hierarchy..
+3.1.2. Analyzing design hierarchy..
+3.2. Executing PROC pass (convert processes to netlists).
+3.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+3.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+3.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+3.2.4. Executing PROC_INIT pass (extract init attributes).
+3.2.5. Executing PROC_ARST pass (detect async resets in processes).
+3.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+3.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+3.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+3.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+3.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+3.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+3.2.12. Executing OPT_EXPR pass (perform const folding).
+3.3. Executing CHECK pass (checking for obvious problems).
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [95] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [94] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [93] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [92] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [91] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [90] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [89] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [88] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [87] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [86] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [85] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [84] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [83] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [82] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [81] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [80] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [79] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [78] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [77] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [76] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [75] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [74] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [73] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [72] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [71] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [70] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [69] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [68] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [67] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [66] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [65] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [64] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [63] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [62] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [61] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [60] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [59] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [58] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [57] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [56] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [55] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [54] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [53] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [52] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [51] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [50] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [49] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [48] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [47] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [46] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [45] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [44] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [43] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [42] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [41] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [40] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [39] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [38] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [37] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [36] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [35] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [34] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [33] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [32] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [31] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [30] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [29] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [28] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [27] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [26] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [25] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [24] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [23] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [22] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [21] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [20] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [19] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [18] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [17] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [16] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [15] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [14] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [13] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [12] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [11] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [10] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [9] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [8] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [7] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [6] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [5] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [4] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [3] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [2] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [1] is used but has no driver.
+Warning: Wire $paramod$ddcf5f7babe99f1e3cb841e5235828e73ad75432\ot_qwen_w12_matvec_part_banked_v1.\x_addr [0] is used but has no driver.
+3.4. Executing FLATTEN pass (flatten design).
+3.5. Executing OPT_EXPR pass (perform const folding).
+3.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.7. Executing CHECK pass (checking for obvious problems).
+3.8. Executing OPT pass (performing simple optimizations).
+3.8.1. Executing OPT_EXPR pass (perform const folding).
+3.8.2. Executing OPT_MERGE pass (detect identical cells).
+3.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.5. Executing OPT_MERGE pass (detect identical cells).
+3.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.8. Executing OPT_EXPR pass (perform const folding).
+3.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.12. Executing OPT_MERGE pass (detect identical cells).
+3.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.15. Executing OPT_EXPR pass (perform const folding).
+3.8.16. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.19. Executing OPT_MERGE pass (detect identical cells).
+3.8.20. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.22. Executing OPT_EXPR pass (perform const folding).
+3.8.23. Finished fast OPT passes. (There is nothing left to do.)
+3.9. Executing FSM pass (extract and optimize FSM).
+3.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+3.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+3.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+3.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+3.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+3.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+3.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+3.10. Executing OPT pass (performing simple optimizations).
+3.10.1. Executing OPT_EXPR pass (perform const folding).
+3.10.2. Executing OPT_MERGE pass (detect identical cells).
+3.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.5. Executing OPT_MERGE pass (detect identical cells).
+3.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.8. Executing OPT_EXPR pass (perform const folding).
+3.10.9. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.12. Executing OPT_MERGE pass (detect identical cells).
+3.10.13. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.15. Executing OPT_EXPR pass (perform const folding).
+3.10.16. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.19. Executing OPT_MERGE pass (detect identical cells).
+3.10.20. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.22. Executing OPT_EXPR pass (perform const folding).
+3.10.23. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.24. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.25. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.26. Executing OPT_MERGE pass (detect identical cells).
+3.10.27. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.28. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.29. Executing OPT_EXPR pass (perform const folding).
+3.10.30. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.31. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.32. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.33. Executing OPT_MERGE pass (detect identical cells).
+3.10.34. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.35. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.36. Executing OPT_EXPR pass (perform const folding).
+3.10.37. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.38. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.39. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.40. Executing OPT_MERGE pass (detect identical cells).
+3.10.41. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.42. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.43. Executing OPT_EXPR pass (perform const folding).
+3.10.44. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.45. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.46. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.47. Executing OPT_MERGE pass (detect identical cells).
+3.10.48. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.49. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.50. Executing OPT_EXPR pass (perform const folding).
+3.10.51. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.52. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.53. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.54. Executing OPT_MERGE pass (detect identical cells).
+3.10.55. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.56. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.57. Executing OPT_EXPR pass (perform const folding).
+3.10.58. Finished fast OPT passes. (There is nothing left to do.)
+3.11. Executing WREDUCE pass (reducing word size of cells).
+3.12. Executing PEEPOPT pass (run peephole optimizers).
+3.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.14. Executing ALUMACC pass (create $alu and $macc cells).
+3.15. Executing SHARE pass (SAT-based resource sharing).
+3.16. Executing OPT pass (performing simple optimizations).
+3.16.1. Executing OPT_EXPR pass (perform const folding).
+3.16.2. Executing OPT_MERGE pass (detect identical cells).
+3.16.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.16.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.16.5. Executing OPT_MERGE pass (detect identical cells).
+3.16.6. Executing OPT_DFF pass (perform DFF optimizations).
+3.16.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.16.8. Executing OPT_EXPR pass (perform const folding).
+3.16.9. Rerunning OPT passes. (Maybe there is more to do..)
+3.16.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.16.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.16.12. Executing OPT_MERGE pass (detect identical cells).
+3.16.13. Executing OPT_DFF pass (perform DFF optimizations).
+3.16.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.16.15. Executing OPT_EXPR pass (perform const folding).
+3.16.16. Finished fast OPT passes. (There is nothing left to do.)
+3.17. Executing MEMORY pass.
+3.17.1. Executing OPT_MEM pass (optimize memories).
+3.17.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+3.17.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+3.17.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+3.17.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+3.17.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.17.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+3.17.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+3.17.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.17.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+3.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+4. Executing SYNTH pass.
+4.1. Executing OPT pass (performing simple optimizations).
+4.1.1. Executing OPT_EXPR pass (perform const folding).
+4.1.2. Executing OPT_MERGE pass (detect identical cells).
+4.1.3. Executing OPT_DFF pass (perform DFF optimizations).
+4.1.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.1.5. Rerunning OPT passes. (Removed registers in this run.)
+4.1.6. Executing OPT_EXPR pass (perform const folding).
+4.1.7. Executing OPT_MERGE pass (detect identical cells).
+4.1.8. Executing OPT_DFF pass (perform DFF optimizations).
+4.1.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.1.10. Rerunning OPT passes. (Removed registers in this run.)
+4.1.11. Executing OPT_EXPR pass (perform const folding).
+4.1.12. Executing OPT_MERGE pass (detect identical cells).
+4.1.13. Executing OPT_DFF pass (perform DFF optimizations).
+4.1.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.1.15. Finished fast OPT passes.
+4.2. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+4.3. Executing OPT pass (performing simple optimizations).
+4.3.1. Executing OPT_EXPR pass (perform const folding).
+4.3.2. Executing OPT_MERGE pass (detect identical cells).
+4.3.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.3.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+4.3.5. Executing OPT_MERGE pass (detect identical cells).
+4.3.6. Executing OPT_SHARE pass.
+4.3.7. Executing OPT_DFF pass (perform DFF optimizations).
+4.3.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.3.9. Executing OPT_EXPR pass (perform const folding).
+4.3.10. Rerunning OPT passes. (Maybe there is more to do..)
+4.3.11. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.3.12. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+4.3.13. Executing OPT_MERGE pass (detect identical cells).
+4.3.14. Executing OPT_SHARE pass.
+4.3.15. Executing OPT_DFF pass (perform DFF optimizations).
+4.3.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.3.17. Executing OPT_EXPR pass (perform const folding).
+4.3.18. Rerunning OPT passes. (Maybe there is more to do..)
+4.3.19. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.3.20. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+4.3.21. Executing OPT_MERGE pass (detect identical cells).
+4.3.22. Executing OPT_SHARE pass.
+4.3.23. Executing OPT_DFF pass (perform DFF optimizations).
+4.3.24. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.3.25. Executing OPT_EXPR pass (perform const folding).
+4.3.26. Finished fast OPT passes. (There is nothing left to do.)
+4.4. Executing TECHMAP pass (map to technology primitives).
+4.4.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+4.4.2. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/common/lcu_kogge_stone.v
+4.4.3. Continuing TECHMAP pass.
+4.4.39. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.4.40. Executing OPT_EXPR pass (perform const folding).
+4.4.43. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+4.4.44. Executing OPT_EXPR pass (perform const folding).
+4.5. Executing OPT pass (performing simple optimizations).
+4.5.1. Executing OPT_EXPR pass (perform const folding).
+4.5.2. Executing OPT_MERGE pass (detect identical cells).
+4.5.3. Executing OPT_DFF pass (perform DFF optimizations).
+4.5.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.5.5. Rerunning OPT passes. (Removed registers in this run.)
+4.5.6. Executing OPT_EXPR pass (perform const folding).
+4.5.7. Executing OPT_MERGE pass (detect identical cells).
+4.5.8. Executing OPT_DFF pass (perform DFF optimizations).
+4.5.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.5.10. Rerunning OPT passes. (Removed registers in this run.)
+4.5.11. Executing OPT_EXPR pass (perform const folding).
+4.5.12. Executing OPT_MERGE pass (detect identical cells).
+4.5.13. Executing OPT_DFF pass (perform DFF optimizations).
+4.5.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+4.5.15. Finished fast OPT passes.
+4.6. Executing HIERARCHY pass (managing design hierarchy).
+4.6.1. Analyzing design hierarchy..
+4.6.2. Analyzing design hierarchy..
+4.7. Printing statistics.
+4.8. Executing CHECK pass (checking for obvious problems).
+5. Executing OPT pass (performing simple optimizations).
+5.1. Executing OPT_EXPR pass (perform const folding).
+5.2. Executing OPT_MERGE pass (detect identical cells).
+5.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+5.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+5.5. Executing OPT_MERGE pass (detect identical cells).
+5.6. Executing OPT_DFF pass (perform DFF optimizations).
+5.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+5.8. Executing OPT_EXPR pass (perform const folding).
+5.9. Rerunning OPT passes. (Maybe there is more to do..)
+5.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+5.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+5.12. Executing OPT_MERGE pass (detect identical cells).
+5.13. Executing OPT_DFF pass (perform DFF optimizations).
+5.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+5.15. Executing OPT_EXPR pass (perform const folding).
+5.16. Finished fast OPT passes. (There is nothing left to do.)
+6. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+7. Executing TECHMAP pass (map to technology primitives).
+7.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_latch_R.v
+7.2. Continuing TECHMAP pass.
+8. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+8.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+9. Executing OPT pass (performing simple optimizations).
+9.1. Executing OPT_EXPR pass (perform const folding).
+9.2. Executing OPT_MERGE pass (detect identical cells).
+9.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+9.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+9.5. Executing OPT_MERGE pass (detect identical cells).
+9.6. Executing OPT_DFF pass (perform DFF optimizations).
+9.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+9.8. Executing OPT_EXPR pass (perform const folding).
+9.9. Rerunning OPT passes. (Maybe there is more to do..)
+9.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+9.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+9.12. Executing OPT_MERGE pass (detect identical cells).
+9.13. Executing OPT_DFF pass (perform DFF optimizations).
+9.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+9.15. Executing OPT_EXPR pass (perform const folding).
+9.16. Finished fast OPT passes. (There is nothing left to do.)
+10. Executing SETUNDEF pass (replace undef values with defined constants).
+abc -script /OpenROAD-flow-scripts/flow/scripts/abc_speed.script -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz -liberty /src/physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node/ot_qwen_tile_node_tt.lib -liberty /src/physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_tt.lib -liberty /src/physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1/ot_qwen_tile_lsl_fp1_tt.lib -liberty /src/physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256/qkh_packet_h256_tt.lib -liberty /src/physical/ref_tile/qkh_packet_v16/views/qkh_packet_v16/qkh_packet_v16_tt.lib -liberty /src/physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256/qkh_packet_v256_tt.lib -liberty /src/physical/ref_tile/qwen_glue_v508/views/qwen_glue_v508/qwen_glue_v508_tt.lib -liberty /src/physical/ref_tile/qwen_glue_v514/views/qwen_glue_v514/qwen_glue_v514_tt.lib -dont_use *x1p*_ASAP7* -dont_use *xp*_ASAP7* -dont_use SDF* -dont_use ICG* -constr /work/objects/asap7/opentallas_qfd_tile_nk_banked_v1_asap7_ref_gate/base/abc.constr -D 770.0
+11. Executing ABC pass (technology mapping using ABC).
+11.1. Extracting gate netlist of module `\qfd_tile_nk_banked_v1' to `<abc-temp-dir>/input.blif'..
+11.1.1. Executed ABC.
+11.1.2. Re-integrating ABC results.
+Took 5 seconds: abc -script /OpenROAD-flow-scripts/flow/scripts/abc_speed.script -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz -liberty /src/physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node/ot_qwen_tile_node_tt.lib -liberty /src/physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_tt.lib -liberty /src/physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1/ot_qwen_tile_lsl_fp1_tt.lib -liberty /src/physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256/qkh_packet_h256_tt.lib -liberty /src/physical/ref_tile/qkh_packet_v16/views/qkh_packet_v16/qkh_packet_v16_tt.lib -liberty /src/physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256/qkh_packet_v256_tt.lib -liberty /src/physical/ref_tile/qwen_glue_v508/views/qwen_glue_v508/qwen_glue_v508_tt.lib -liberty /src/physical/ref_tile/qwen_glue_v514/views/qwen_glue_v514/qwen_glue_v514_tt.lib -dont_use *x1p*_ASAP7* -dont_use *xp*_ASAP7* -dont_use SDF* -dont_use ICG* -constr /work/objects/asap7/opentallas_qfd_tile_nk_banked_v1_asap7_ref_gate/base/abc.constr -D 770.0
+12. Executing SPLITNETS pass (splitting up multi-bit signals).
+13. Executing OPT_CLEAN pass (remove unused cells and wires).
+14. Executing HILOMAP pass (mapping to constant drivers).
+15. Executing INSBUF pass (insert buffer cells for connected wires).
+16. Executing CHECK pass (checking for obvious problems).
+17. Printing statistics.
+18. Executing CHECK pass (checking for obvious problems).
+19. Executing Verilog backend.
+19.1. Executing BMUXMAP pass.
+19.2. Executing DEMUXMAP pass.
+Warnings: 104 unique messages, 104 total
+End of script. Logfile hash: b20c16d695, time: 14.45s, user: 9.88s, system: 0.48s, MEM: 256.01 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 31% 1x abc (4 sec), 24% 42x opt_clean (3 sec), ...
+Elapsed time: 0:14.50[h:]min:sec. CPU time: user 14.39 sys 0.55 (103%). Peak memory: 263176KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_2_yosys                 .v             14            257 a12eb74ff2d78ab23b43
+cp /src/physical/ref_tile/qfd_tile_nk_banked_v1/clock.sdc /work/results/asap7/opentallas_qfd_tile_nk_banked_v1_asap7_ref_gate/base/1_2_yosys.sdc
+touch -r /src/physical/ref_tile/qfd_tile_nk_banked_v1/clock.sdc /work/results/asap7/opentallas_qfd_tile_nk_banked_v1_asap7_ref_gate/base/1_2_yosys.sdc
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+mkdir -p /work/objects/asap7/opentallas_qfd_tile_nk_banked_v1_asap7_ref_gate/base
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 1_synth synth_odb
+Running synth_odb.tcl, stage 1_synth
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /src/physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node/ot_qwen_tile_node_tt.lib
+read_liberty -corner WC /src/physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_tt.lib
+read_liberty -corner WC /src/physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1/ot_qwen_tile_lsl_fp1_tt.lib
+read_liberty -corner WC /src/physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256/qkh_packet_h256_tt.lib
+read_liberty -corner WC /src/physical/ref_tile/qkh_packet_v16/views/qkh_packet_v16/qkh_packet_v16_tt.lib
+read_liberty -corner WC /src/physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256/qkh_packet_v256_tt.lib
+read_liberty -corner WC /src/physical/ref_tile/qwen_glue_v508/views/qwen_glue_v508/qwen_glue_v508_tt.lib
+read_liberty -corner WC /src/physical/ref_tile/qwen_glue_v514/views/qwen_glue_v514/qwen_glue_v514_tt.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /src/physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node/ot_qwen_tile_node_ff.lib
+read_liberty -corner BC /src/physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair_ff.lib
+read_liberty -corner BC /src/physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1/ot_qwen_tile_lsl_fp1_ff.lib
+read_liberty -corner BC /src/physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256/qkh_packet_h256_ff.lib
+read_liberty -corner BC /src/physical/ref_tile/qkh_packet_v16/views/qkh_packet_v16/qkh_packet_v16_ff.lib
+read_liberty -corner BC /src/physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256/qkh_packet_v256_ff.lib
+read_liberty -corner BC /src/physical/ref_tile/qwen_glue_v508/views/qwen_glue_v508/qwen_glue_v508_ff.lib
+read_liberty -corner BC /src/physical/ref_tile/qwen_glue_v514/views/qwen_glue_v514/qwen_glue_v514_ff.lib
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /src/physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node/ot_qwen_tile_node.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1/ot_qwen_tile_lsl_fp1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256/qkh_packet_h256.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/ref_tile/qkh_packet_v16/views/qkh_packet_v16/qkh_packet_v16.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256/qkh_packet_v256.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/ref_tile/qwen_glue_v508/views/qwen_glue_v508/qwen_glue_v508.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /src/physical/ref_tile/qwen_glue_v514/views/qwen_glue_v514/qwen_glue_v514.lef, created 1 library cells
+link_design qfd_tile_nk_banked_v1
+read_sdc /work/results/asap7/opentallas_qfd_tile_nk_banked_v1_asap7_ref_gate/base/1_2_yosys.sdc
+OT_HYBRID CTS_MEASURE tt ck sinks=972 reference_scope=all_internal_only boundary_sinks=972 min=0.0 mean=0.0 max=0.0 all_mean=0.0
+OT_ENTRIES LEVEL ck_bank[37] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[37] -> face_n_a/clk wire=0.0 R=83.7 latency=225.40000000000003 phi=309.1
+OT_ENTRIES LEVEL ck_bank[38] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[38] -> face_n_b/clk wire=0.0 R=83.7 latency=225.40000000000003 phi=309.1
+OT_ENTRIES LEVEL ck_bank[39] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[39] -> face_n_y/clk wire=0.0 R=83.7 latency=225.40000000000003 phi=309.1
+OT_ENTRIES LEVEL ck_bank[40] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[40] -> face_t_out/clk wire=0.0 R=83.7 latency=225.40000000000003 phi=309.1
+OT_ENTRIES LEVEL ck_bank[41] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[41] -> face_tap/clk wire=0.0 R=83.2 latency=225.90000000000003 phi=309.1
+OT_ENTRIES LEVEL ck_bank[9] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[9] -> mq_wrom_0/clk wire=0.0 R=76.0 latency=233.10000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[10] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[10] -> mq_wrom_1/clk wire=0.0 R=73.5 latency=235.60000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[11] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[11] -> mq_wrom_2/clk wire=0.0 R=73.5 latency=235.60000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[12] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[12] -> mq_wrom_3/clk wire=0.0 R=73.5 latency=235.60000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[44] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[44] -> node_stage_n_a/clk wire=0.0 R=83.7 latency=225.40000000000003 phi=309.1
+OT_ENTRIES LEVEL ck_bank[45] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[45] -> node_stage_n_b/clk wire=0.0 R=83.7 latency=225.40000000000003 phi=309.1
+OT_ENTRIES LEVEL ck_bank[46] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[46] -> node_stage_n_y/clk wire=0.0 R=83.7 latency=225.40000000000003 phi=309.1
+OT_ENTRIES LEVEL ck_bank[47] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[47] -> node_stage_t_out/clk wire=0.0 R=83.7 latency=225.40000000000003 phi=309.1
+OT_ENTRIES LEVEL ck_reset[10] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_reset[10] -> reset_branch_e_high/clk wire=0.0 R=52.4 latency=256.70000000000005 phi=309.1
+OT_ENTRIES LEVEL ck_reset[8] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_reset[8] -> reset_branch_e_low/clk wire=0.0 R=52.4 latency=256.70000000000005 phi=309.1
+OT_ENTRIES LEVEL ck_reset[9] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_reset[9] -> reset_branch_e_mid/clk wire=0.0 R=52.4 latency=256.70000000000005 phi=309.1
+OT_ENTRIES LEVEL ck_reset[6] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_reset[6] -> reset_branch_w_high0/clk wire=0.0 R=52.4 latency=256.70000000000005 phi=309.1
+OT_ENTRIES LEVEL ck_reset[7] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_reset[7] -> reset_branch_w_high1/clk wire=0.0 R=52.4 latency=256.70000000000005 phi=309.1
+OT_ENTRIES LEVEL ck_reset[4] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_reset[4] -> reset_branch_w_low/clk wire=0.0 R=52.4 latency=256.70000000000005 phi=309.1
+OT_ENTRIES LEVEL ck_reset[5] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_reset[5] -> reset_branch_w_mid/clk wire=0.0 R=52.4 latency=256.70000000000005 phi=309.1
+OT_ENTRIES LEVEL ck_reset[2] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_reset[2] -> reset_mid_e/clk wire=0.0 R=52.4 latency=256.70000000000005 phi=309.1
+OT_ENTRIES LEVEL ck_reset[3] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_reset[3] -> reset_mid_high/clk wire=0.0 R=52.4 latency=256.70000000000005 phi=309.1
+OT_ENTRIES LEVEL ck_reset[1] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_reset[1] -> reset_mid_w/clk wire=0.0 R=52.4 latency=256.70000000000005 phi=309.1
+OT_ENTRIES LEVEL ck_reset[0] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_reset[0] -> reset_root/clk wire=0.0 R=52.4 latency=256.70000000000005 phi=309.1
+OT_ENTRIES LEVEL ck_bank[52] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[52] -> return_north_0/clk wire=0.0 R=73.5 latency=235.60000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[53] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[53] -> return_north_1/clk wire=0.0 R=73.5 latency=235.60000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[54] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[54] -> return_north_2/clk wire=0.0 R=73.5 latency=235.60000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[55] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[55] -> return_north_3/clk wire=0.0 R=73.5 latency=235.60000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[48] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[48] -> return_south_0/clk wire=0.0 R=76.0 latency=233.10000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[49] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[49] -> return_south_1/clk wire=0.0 R=76.0 latency=233.10000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[50] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[50] -> return_south_2/clk wire=0.0 R=76.0 latency=233.10000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[51] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[51] -> return_south_3/clk wire=0.0 R=76.0 latency=233.10000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[5] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[5] -> rqr_north_0/clk wire=0.0 R=76.0 latency=233.10000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[6] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[6] -> rqr_north_1/clk wire=0.0 R=76.0 latency=233.10000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[7] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[7] -> rqr_north_2/clk wire=0.0 R=76.0 latency=233.10000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[8] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[8] -> rqr_north_3/clk wire=0.0 R=76.0 latency=233.10000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[1] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[1] -> rqr_south_0/clk wire=0.0 R=76.0 latency=233.10000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[2] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[2] -> rqr_south_1/clk wire=0.0 R=76.0 latency=233.10000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[3] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[3] -> rqr_south_2/clk wire=0.0 R=76.0 latency=233.10000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[4] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[4] -> rqr_south_3/clk wire=0.0 R=76.0 latency=233.10000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[42] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[42] -> s2_word_0/clk wire=0.0 R=83.7 latency=225.40000000000003 phi=309.1
+OT_ENTRIES LEVEL ck_bank[43] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[43] -> s2_word_1/clk wire=0.0 R=83.7 latency=225.40000000000003 phi=309.1
+OT_ENTRIES LEVEL ck_bank[57] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[57] -> s2_x_full/clk wire=0.0 R=73.5 latency=235.60000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[0] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[0] -> strap/clk wire=0.0 R=52.4 latency=256.70000000000005 phi=309.1
+OT_ENTRIES LEVEL ck_bank[21] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[21] -> tx0_r0_lo/clk wire=0.0 R=73.5 latency=235.60000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[22] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[22] -> tx0_r1_lo/clk wire=0.0 R=73.5 latency=235.60000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[23] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[23] -> tx1_r0_lo/clk wire=0.0 R=73.5 latency=235.60000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[24] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[24] -> tx1_r1_lo/clk wire=0.0 R=73.5 latency=235.60000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[25] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[25] -> tx2_r0_lo/clk wire=0.0 R=73.5 latency=235.60000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[26] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[26] -> tx2_r1_lo/clk wire=0.0 R=73.5 latency=235.60000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[27] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[27] -> tx3_r0_lo/clk wire=0.0 R=73.5 latency=235.60000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[28] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[28] -> tx3_r1_lo/clk wire=0.0 R=73.5 latency=235.60000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[29] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[29] -> tx4_r0_lo/clk wire=0.0 R=73.5 latency=235.60000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[30] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[30] -> tx4_r1_lo/clk wire=0.0 R=73.5 latency=235.60000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[31] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[31] -> tx5_r0_lo/clk wire=0.0 R=73.5 latency=235.60000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[32] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[32] -> tx5_r1_lo/clk wire=0.0 R=73.5 latency=235.60000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[33] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[33] -> tx6_r0_lo/clk wire=0.0 R=73.5 latency=235.60000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[34] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[34] -> tx6_r1_lo/clk wire=0.0 R=73.5 latency=235.60000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[35] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[35] -> tx7_r0_lo/clk wire=0.0 R=73.5 latency=235.60000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[36] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[36] -> tx7_r1_lo/clk wire=0.0 R=73.5 latency=235.60000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_child[0] deep=1 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_child[0] -> u_logic.g_rom_pipe.g_rph.g_rb[0].g_hd.u_rp/clk wire=0.0 R=309.1 latency=0.0 phi=309.1
+OT_ENTRIES LEVEL ck_child[1] deep=1 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_child[1] -> u_logic.g_rom_pipe.g_rph.g_rb[1].g_hd.u_rp/clk wire=0.0 R=309.1 latency=0.0 phi=309.1
+OT_ENTRIES LEVEL ck_child[2] deep=1 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_child[2] -> u_logic.g_rom_pipe.g_rph.g_rb[2].g_hd.u_rp/clk wire=0.0 R=309.1 latency=0.0 phi=309.1
+OT_ENTRIES LEVEL ck_child[3] deep=1 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_child[3] -> u_logic.g_rom_pipe.g_rph.g_rb[3].g_hd.u_rp/clk wire=0.0 R=309.1 latency=0.0 phi=309.1
+OT_ENTRIES LEVEL ck_child[4] deep=1 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_child[4] -> u_logic.g_rom_pipe.g_rph.g_rb[4].g_hd.u_rp/clk wire=0.0 R=309.1 latency=0.0 phi=309.1
+OT_ENTRIES LEVEL ck_child[13] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_child[13] -> u_logic.genblk4.g_ndh.u_node/clk wire=0.0 R=246.6 latency=62.50000000000003 phi=309.1
+OT_ENTRIES LEVEL ck_child[5] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_child[5] -> u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh/clk wire=0.0 R=165.7 latency=143.40000000000003 phi=309.1
+OT_ENTRIES LEVEL ck_child[6] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_child[6] -> u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh/clk wire=0.0 R=165.7 latency=143.40000000000003 phi=309.1
+OT_ENTRIES LEVEL ck_child[7] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_child[7] -> u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh/clk wire=0.0 R=165.7 latency=143.40000000000003 phi=309.1
+OT_ENTRIES LEVEL ck_child[8] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_child[8] -> u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh/clk wire=0.0 R=165.7 latency=143.40000000000003 phi=309.1
+OT_ENTRIES LEVEL ck_child[9] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_child[9] -> u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh/clk wire=0.0 R=165.7 latency=143.40000000000003 phi=309.1
+OT_ENTRIES LEVEL ck_child[10] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_child[10] -> u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh/clk wire=0.0 R=165.7 latency=143.40000000000003 phi=309.1
+OT_ENTRIES LEVEL ck_child[11] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_child[11] -> u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh/clk wire=0.0 R=165.7 latency=143.40000000000003 phi=309.1
+OT_ENTRIES LEVEL ck_child[12] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_child[12] -> u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh/clk wire=0.0 R=165.7 latency=143.40000000000003 phi=309.1
+OT_ENTRIES LEVEL ck_bank[13] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[13] -> xdelay_0/clk wire=0.0 R=73.5 latency=235.60000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[14] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[14] -> xdelay_1/clk wire=0.0 R=76.0 latency=233.10000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[15] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[15] -> xdelay_2/clk wire=0.0 R=76.0 latency=233.10000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[16] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[16] -> xdelay_3/clk wire=0.0 R=73.5 latency=235.60000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[17] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[17] -> xdelay_4/clk wire=0.0 R=76.0 latency=233.10000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[18] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[18] -> xdelay_5/clk wire=0.0 R=76.0 latency=233.10000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[19] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[19] -> xdelay_6/clk wire=0.0 R=76.0 latency=233.10000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[20] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[20] -> xdelay_7/clk wire=0.0 R=73.5 latency=235.60000000000002 phi=309.1
+OT_ENTRIES LEVEL ck_bank[56] deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck_bank[56] -> xdelay_extra/clk wire=0.0 R=73.5 latency=235.60000000000002 phi=309.1
+OT_ENTRIES LEVEL ck deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt ck -> fy$_DFF_PN0_/CLK wire=0 R=0.0 latency=309.1 phi=309.1
+OT_ENTRIES DOMAIN core 770.000000ps IO1553/1030 boundary=288.30000000000007..346.30000000000007
+OT_ENTRIES COMP DONE tt 84 entries phi=309.1 boundary=288.30000000000007..346.30000000000007
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+eliminate_dead_logic
+Removed 99 unused instances and 99 unused nets.
+Design area 403913 um^2 100% utilization.
+write_db /work/results/asap7/opentallas_qfd_tile_nk_banked_v1_asap7_ref_gate/base/1_synth.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_qfd_tile_nk_banked_v1_asap7_ref_gate/base/1_synth.sdc
+Elapsed time: 0:04.93[h:]min:sec. CPU time: user 5.96 sys 0.83 (137%). Peak memory: 496000KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_synth                   .odb            4            484 7e63b8dc0fbfdc9e3821
+1_synth                   .sdc                             0272826c8e7f21201a1e

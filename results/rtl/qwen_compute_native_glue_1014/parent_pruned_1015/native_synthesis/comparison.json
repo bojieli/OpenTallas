@@ -1,0 +1,41 @@
+{
+  "source_commit": "899bc79954f3af15bc3e5908faf81c474ecc0008",
+  "baseline_source_commit": "85b373696",
+  "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-2033563-1792063048",
+  "exit": 0,
+  "stage": "synthesis_only_no_placement_or_route",
+  "baseline": {
+    "yosys_stat_dff": 2308,
+    "yosys_stat_cells": 35919,
+    "yosys_stat_area": 196822.94316,
+    "handoff_odb_dff": 954,
+    "handoff_odb_instances": 11232
+  },
+  "candidate": {
+    "yosys_stat_dff": 972,
+    "yosys_stat_cells": 10057,
+    "yosys_stat_area": 194264.6343,
+    "handoff_odb_dff": 954,
+    "handoff_odb_instances": 9958
+  },
+  "handoff_dff_histogram_each": {
+    "DFFASRHQNx1_ASAP7_75t_R": 75,
+    "DFFHQNx1_ASAP7_75t_R": 879
+  },
+  "residual_clock_sink_reduction": 0,
+  "physical_area_timing_qualification": "OPEN; no placement/CTS/route run for candidate",
+  "odb_artifacts": [
+    {
+      "label": "baseline",
+      "path": "/srv/opentallas-scratch/claude/ref_gate/qfd_tile_nk_banked_v1-20261015-035551/routes/gate/work/orfs/results/asap7/opentallas_qfd_tile_nk_banked_v1_asap7_ref_gate/base/1_synth.odb",
+      "sha256": "aab5ff658270c08efa1212ba6e47a86df01badd1ad34cb9819d5877e56454b4d"
+    },
+    {
+      "label": "candidate",
+      "path": "/srv/opentallas-scratch/claude/qce-parent-prune-native899/work/results/asap7/opentallas_qfd_tile_nk_banked_v1_asap7_ref_gate/base/1_synth.odb",
+      "sha256": "a18df2d3d961d619341849e2b35937a8bd45564d283cc0839831fe9882cc85c3"
+    }
+  ]
+}

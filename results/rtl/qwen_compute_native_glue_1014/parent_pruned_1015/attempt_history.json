@@ -1,0 +1,9 @@
+{
+  "dependency_initial_attempt": {
+    "host": "ot-epyc4",
+    "exit_code": 2,
+    "qualifying": false,
+    "reason": "Artifact only existed on AGI while common source dir existed on all hosts; corrected by qualifying hosts using measure subdirectory."
+  },
+  "qualifying_retry": "jobs.json dependency field; PASS31504/0unmatched"
+}

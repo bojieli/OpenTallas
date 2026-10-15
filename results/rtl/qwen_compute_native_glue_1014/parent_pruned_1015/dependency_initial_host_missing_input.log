@@ -1,0 +1,8 @@
+ot-run: ot-epyc1tb     admits   391 GB (avail 618, growth 123, headroom 64, waiters 0/0 GB) load 49/128 running 13 disk 651 GB 
+ot-run: ot-epyc4       admits   649 GB (avail 876, growth 78, headroom 48, waiters 0/0 GB) load 39/128 running 18 disk 436 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits   -10 GB (avail 46, growth 32, headroom 24, waiters 0/0 GB) load 16/64 running 10 disk 26 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1998156-1792062642 after 0 s
+/usr/bin/python3: can't open file '/srv/opentallas-scratch/claude/qce-parent-prune-899bc7995/audit_parent_dependencies.py': [Errno 2] No such file or directory
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1998156-1792062642): exit 2
