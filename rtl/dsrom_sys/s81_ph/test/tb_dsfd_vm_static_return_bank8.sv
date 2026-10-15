@@ -46,7 +46,7 @@ module tb_dsfd_vm_static_return_bank8;
   // At each edge release the previous group while accepting/preparing the next.
   for(g=0;g<1000;g=g+1)begin
    @(negedge ck);rv=(g!=0);rg=3'(g-1);rm=pm;
-   pv=1;pg=3'(g);issuedmask=(g%4==0)?32'hffffffff:$urandom;
+   pv=1;pg=3'(g);issuedmask=(mode==1 || g%4==0)?32'hffffffff:$urandom;
    pm=issuedmask;iv=issuedmask;
    for(s=0;s<32;s=s+1)begin
     // Permute8 bank indices within each lane each edge; lane/tag invariant holds.
