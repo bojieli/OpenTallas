@@ -1,17 +1,14 @@
 {
- "name": "qfd_su_cbuf_g_m5-nl2-COMMIT",
+ "name": "qfd_su_cbuf_g_m5-nl2-ad5a17b36",
  "block": "ot_qfd_su_cbuf_g",
  "ref_tile": true,
  "owner": "Claude:q14-compute-elements r9",
  "purpose": "native launch re-kit of CLOSED qfd_su_cbuf_g_m5-q13b-b9eec9a3e (ot_qfd_su_cbuf_g: TT launch 251.5 ps > 220 on 188 outputs at phi - R, results/arch/native_pin_audit_1014/qwen.json); same RTL, outline and pin faces; recipe-2 output stage",
- "hosts": [
-  "ot-epyc1tb"
- ],
  "threads": 8,
  "peak_ram_gb": 12,
  "source": {
-  "branch": "main",
-  "commit": "COMMIT"
+  "branch": "claude/q14-r8-rekit",
+  "commit": "ad5a17b36"
  },
  "stages": {
   "bench": [
@@ -100,7 +97,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_su_cbuf_g_m5/qfd_su_cbuf_g_m5-nl2-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_su_cbuf_g_m5/qfd_su_cbuf_g_m5-nl2-ad5a17b36"
   }
  ],
  "cycles_added": 0,

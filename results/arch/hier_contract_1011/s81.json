@@ -15034,6 +15034,10 @@
    "parent_source_sha256": "6a0c1133557d594905354f24a1905c26417ad6ef272507de17a58400d41ae22c",
    "open_seams_source": "results/rtl/s81_suhc_20261013/native_comb_seam_screen_1013.json",
    "status": "CANDIDATE CHILD ROWS ONLY; closed reference rows retained, new CCF and pad require routed successor views; 23 old failing seams remain open"
+  },
+  "dsfd_svc_c_native_ingress": {
+   "source": "physical/s81_die_pins/v20_svc_native/ingress_layout.json",
+   "qualification": "OPEN native full parent, slots reserved for actual masters"
   }
  },
  "layer_cap_grants": {
