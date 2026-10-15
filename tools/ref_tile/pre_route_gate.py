@@ -775,7 +775,10 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
             return
         g.add("INFO", "source_binding", "NEW staged remeasurement: all original staged bytes, script and CTS artifacts rehashed; original archive stdout unavailable")
         # This is new measurement evidence, never historical archive verification.
-        kv["GATE_FLOW_RC"] = "0"
+        if errs or kv.get("GATE_FLOW_RC") not in (None, "0"):
+            g.add("FAIL", "floorplan_run", "new measurement reports a flow failure: " + "; ".join(errs[:4]), "preserve failed evidence")
+            return
+        kv["GATE_FLOW_RC"] = "0"  # verified existing artifacts, no new floorplan execution
         kv["GATE_FLOW_S"] = "reused_original_floorplan"
     elif kv.get("GATE_SOURCE_ARCHIVE_SHA256") != binding["archive_sha256"]:
         g.add("FAIL", "source_binding", "remote did not verify the staged source archive", "preserve log; rerun gate")
@@ -795,7 +798,10 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
               "decoded constant-index slices instead of runtime part-selects; replicate instead of wide shifters"
               if stall else "read the first [ERROR] above (PDN-0217/0233/0006, PPL-0061, MPL, ...) and fix the kit/RTL")
         return
-    g.add("INFO", "remote", f"synth + floorplan + PDN OK on {host} in {kv.get('GATE_FLOW_S')} s (gate total {secs} s)")
+    if binding.get("staged_remeasurement"):
+        g.add("INFO", "remote", f"reused verified original netlist, floorplan and CTS state on {host}; only measurement commands executed anew")
+    else:
+        g.add("INFO", "remote", f"synth + floorplan + PDN OK on {host} in {kv.get('GATE_FLOW_S')} s (gate total {secs} s)")
     if kv.get("GATE_IOP_RC") not in (None, "0"):
         g.add("FAIL", "io_place", "IO placement failed: " + "; ".join(errs[:3]),
               PF.FIX_TEXT if any("PPL-0093" in e for e in errs) else "fix the pin plan / pin layers")
