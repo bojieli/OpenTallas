@@ -3757,6 +3757,25 @@ def build_r8(variant=None):
     frames, slot_of = {}, {}
     order = [(h, t, c) for h in 'WE' for t in range(TIERS) for c in range(TIER_COLS8[t])]
     assert len(order) == ROOTS
+    if RETURN_TREES:
+        # --return-trees (S-DIE r12 10-15, GLOBAL-FP-S SA_2x2_RP): the 12 gather return trees keep their (half, tier)
+        # identity and member COUNT; members re-partitioned by locality.  Logical col = order inside the tree list
+        # (compiler-visible gather lane map changes; the stage map / pair ids per root are untouched).
+        sizes0 = {}
+        for h_, t_, _c in order:
+            sizes0[(h_, t_)] = sizes0.get((h_, t_), 0) + 1
+        new_, orig_ = {}, list(order)
+        for tr in RETURN_TREES['trees']:
+            key_ = (tr['half'], int(tr['tier']))
+            assert len(tr['roots']) == sizes0[key_], ('--return-trees: tree size changed', key_, len(tr['roots']), sizes0[key_])
+            for c_, r_ in enumerate(tr['roots']):
+                assert r_ not in new_, ('--return-trees: root in two trees', r_)
+                new_[r_] = (key_[0], key_[1], c_)
+        assert sorted(new_) == list(range(ROOTS)), '--return-trees: every root exactly once'
+        order = [new_[r_] for r_ in range(ROOTS)]
+        notes.append('--return-trees: %d roots re-partitioned over %d trees (%s)' % (
+            sum(1 for r_ in range(ROOTS) if order[r_][:2] != orig_[r_][:2]), len(RETURN_TREES['trees']),
+            RETURN_TREES.get('source', '?')))
     rng, hbf = frame_plan_r8()
     canonical_frames = None
     if CANONICAL_LAYOUT is not None:
@@ -4200,7 +4219,67 @@ def build_r8(variant=None):
         put(n, x_spe, ye, ECOL_W)
         ye += up(centre_area[n] * 1e6 / ECOL_W, GY) + SPINE_GAP
         notes.append('--ecol-slabs: %s in the E-column sub-column (x %.2f, %.2f um wide)' % (n, x_spe, ECOL_W))
-    regions.append(dict(name='hc_corridor', kind='channel', rect=[x_spe, c0, x_fe, c1]))
+    if HUB_LAYOUT:
+        # --hub-layout (S-DIE r12 10-15): coordinator-adopted GLOBAL-FP-S block floorplan.  Every named hub block moves to
+        # its layout origin; outlines stay the generator/contract ones except where the layout carries a new shape
+        # (sp_vm = the compact 2x2 VM composite).  Attached instances (PQ ROM column, --pq-cnt seam leaves) move with
+        # their parent.  The E-column stack below the corridor is re-packed bottom-up from the layout's lowest block
+        # with the generator's own abut/seam gaps, so the real (taller) contract outlines stay disjoint.
+        lay_ = HUB_LAYOUT['blocks']
+        moved_ = {}
+        for name_, it in list(hub.items()):
+            box_ = lay_.get(it.name)
+            if box_ is None:
+                continue
+            nx_, ny_ = up(box_[0], GX), up(box_[1], GY)
+            if box_[4] if len(box_) > 4 else False:      # reshape flag
+                it.w, it.h = dn(box_[2], GX) - SHAVE, dn(box_[3], GY) - SHAVE
+            moved_[it.name] = (nx_ - it.x, ny_ - it.y)
+            it.x, it.y = nx_, ny_
+        for it in insts:
+            if it.kind == 'pqrom' and 'sp_pq' in moved_:
+                it.x, it.y = it.x + moved_['sp_pq'][0], it.y + moved_['sp_pq'][1]
+        stack_ = HUB_LAYOUT.get('e_stack')
+        if stack_:
+            # bottom-up: names in order, start y = first block's layout y; gaps from the generator rules
+            names_ = [n_ for n_ in stack_['order'] if n_ in {it.name for it in hub.values()}]
+            byn_ = {it.name: it for it in hub.values()}
+            gaps_ = [PQ_CNT_SEAM if (PQ_CNT and {a2_, b2_} == {'sp_capture', 'sp_gather'}) else RTL_ABUT_GAP
+                     for a2_, b2_ in zip(names_, names_[1:])]
+            tot_ = sum(byn_[n_].h + SHAVE for n_ in names_) + sum(gaps_) + RTL_ABUT_GAP
+            yy_ = dn(min(lay_[names_[0]][1], HUB_LAYOUT['corridor'][1] - tot_), GY)
+            for i_, n_ in enumerate(names_):
+                it = byn_[n_]
+                d_ = yy_ - it.y
+                it.y = yy_
+                if n_ == 'sp_pq':
+                    for j_ in insts:
+                        if j_.kind == 'pqrom':
+                            j_.y += d_
+                nx2_ = names_[i_ + 1] if i_ + 1 < len(names_) else None
+                gap2_ = RTL_ABUT_GAP
+                if PQ_CNT and {n_, nx2_} == {'sp_capture', 'sp_gather'}:
+                    gap2_ = PQ_CNT_SEAM
+                yy_ = up(it.y + it.h + SHAVE + gap2_, GY)
+            top_ = yy_ - gap2_
+            assert top_ <= HUB_LAYOUT['corridor'][1] + 1e-6, ('--hub-layout: E stack overruns the corridor', top_)
+        if PQ_CNT:
+            g2_, c2_ = hub['gather'], hub['capture']
+            for it in insts:
+                if it.kind == 'pqcnt':
+                    sl2_ = next(s_ for s_ in PQ_CNT['slots'] if s_['slot'] == it.name)
+                    it.x = up(g2_.x + (sl2_['at_die'][0] - PQ_CNT['geometry']['gather_slot'][0]), GX)
+                    it.y = dn(g2_.y - 2.16 - it.h, GY)
+                    assert it.y >= c2_.y + c2_.h + 2.16 - 1e-6, ('--hub-layout: pq-cnt leaf below the seam', it.name)
+        cx0_, cy0_, cw_, ch2_ = HUB_LAYOUT['corridor']
+        c0, c1 = dn(cy0_, GY), up(cy0_ + ch2_, GY)
+        regions.append(dict(name='hc_corridor', kind='channel', rect=[up(cx0_, GX), c0, dn(cx0_ + cw_, GX), c1]))
+        notes.append('--hub-layout %s: %d hub blocks placed, corridor y %.1f..%.1f' % (
+            HUB_LAYOUT.get('source', '?'), len(moved_), c0, c1))
+        variant['hub_layout'] = dict(source=HUB_LAYOUT.get('source'), sha256=HUB_LAYOUT.get('sha256'),
+                                     placed={k_: [round(v_, 3) for v_ in d_] for k_, d_ in moved_.items()})
+    else:
+        regions.append(dict(name='hc_corridor', kind='channel', rect=[x_spe, c0, x_fe, c1]))
     for it in insts:
         if it.region == 'spine':
             # A south-grown SU uses the centre of the south band, while PHY,
@@ -5313,6 +5392,8 @@ def _apply_pin_overrides(Mx, it):
         PIN_OVERRIDES_APPLIED[(Mx.name, port)] = dict(inst=it.name, cand=r['cand'], face=f2, old=round(c, 3), new=round(c2, 3))
 
 
+HUB_LAYOUT = None               # --hub-layout FILE: block-level hub floorplan (GLOBAL-FP-S SA_2x2_RP adoption, S-DIE r12)
+RETURN_TREES = None             # --return-trees FILE: frame -> logical return tree (half, tier) re-partition (same sizes)
 MIX4_SLOT = None                # --mix4-slot X,Y,W,H: Engram MIX4 home reservation (screen; real master pins pending sizing)
 RTL_BIND = False                # --rtl-bind (s81-die-rtl-bind 2026-10-14)
 # S-BIND 2026-10-15: with --static-collective the rest of the static collective's die ABI is bound too: per-leaf clock
@@ -9616,6 +9697,8 @@ def die_options(ap):
     ap.add_argument('--static-seams', action='store_true', help='S-DIE r11 2026-10-15: static VM<->collective seam (t_vm 2204, t_crq 15, t_crs 513), drop vm.t_collective/tcs credit and hc_s.y_rdy, add collective.t_hc_tag -> hc_s.y_tag')
     ap.add_argument('--static-collective', action='store_true', help='swap the hub collective to dsfd_sp_collective_static_c (needs its RTL in the tree)')
     ap.add_argument('--mix4-slot', help='X,Y,W,H um: Engram MIX4 home reservation (screen)')
+    ap.add_argument('--hub-layout', help='JSON: block-level hub floorplan (blocks{name:[x,y,w,h,reshape]}, corridor, e_stack)')
+    ap.add_argument('--return-trees', help='JSON: return-tree re-partition (trees[{half,tier,roots}])')
     ap.add_argument('--pin-overrides', help='S-DIE r11: JSON (opentallas.s81.pin_overrides.v1) of adopted die pin re-assignments '
                     '(GEO-S C1..C7 / D*): per inst or master, port centre shifted along its face (or set absolute); '
                     'applied to the generated masters before any station search, refused when a pin leaves its face')
@@ -9652,6 +9735,14 @@ def apply_options(a):
     BF_X2_STATIC = bool(getattr(a, 'bf_x2_static', False))
     LSW = X0B + X1B + CCB + (X2B if BF_X2_STATIC else 0)
     MIX4_SLOT = tuple(float(v) for v in a.mix4_slot.split(',')) if getattr(a, 'mix4_slot', None) else None
+    global HUB_LAYOUT, RETURN_TREES
+    HUB_LAYOUT = RETURN_TREES = None
+    for opt_, nm_ in (('hub_layout', 'HUB_LAYOUT'), ('return_trees', 'RETURN_TREES')):
+        if getattr(a, opt_, None):
+            p_ = Path(getattr(a, opt_)); p_ = p_ if p_.is_absolute() else ROOT / p_
+            d_ = json.loads(p_.read_text())
+            d_['sha256'] = hashlib.sha256(p_.read_bytes()).hexdigest()
+            globals()[nm_] = d_
     global PIN_OVERRIDES
     PIN_OVERRIDES = load_pin_overrides(a.pin_overrides) if getattr(a, 'pin_overrides', None) else None
     if STATIC_COLLECTIVE and not STATIC_SEAMS:
