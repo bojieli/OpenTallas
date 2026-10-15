@@ -1149,6 +1149,14 @@ def _wrap(v, m, G, peers):
                 q.ports['hw_f'] = ('pins', 1, 'E', 'M4', [V4.snap(6.0)], 1)
                 q.ports['he_f'] = ('pins', 1, 'E', 'M4', [V4.snap(8.0)], 1)
                 q.order += ['fault', 'rst_n', 'hw_f', 'he_f']
+                # Real native216 tap: all S-face groups need disjoint ranges,
+                # and the replacement master must retain its actual clock pin.
+                # aw was previously packed as a data/ready pair before removal,
+                # overlapping gi after its width changed; assign exact windows.
+                q.ports['aw'] = ('face', _CS.TAP_AW, 'S', 'M5', 50.0, 2)
+                q.ports['gi'] = ('face', _CS.TAP_GI, 'S', 'M5', 111.0, 2)
+                q.ports['xpf'] = ('face', _CS.TAP_PF, 'S', 'M5', 155.0, 2)
+                q.face('ck', 1, 'N', 'M5', 12.96, 1)
                 M['qfd_xs_tap'] = q
         t = M.get('qfd_tile_nk')
         if t is not None:

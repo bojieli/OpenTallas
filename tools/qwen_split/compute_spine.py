@@ -246,7 +246,7 @@ def _dvm(v, m, put, rec, vm, su, xt, ty=None):
         for k, r in enumerate(order):
             val |= ref_tile_id(c, r, nr) << (16 * k)
         ties.append((h.name, 'tids', 16 * nr, val))
-    tap = v.Inst('xs_tap', 'qfd_xs_tap', 0.0, 0.0, TAP_WH[0] - S, TAP_WH[1] - S, kind='spine', region='hub',
+    tap = v.Inst('xs_tap', 'qfd_xs_tap', 0.0, 0.0, TAP_WH[0], TAP_WH[1], kind='spine', region='hub',
                  domain=vm.domain)
     m['insts'].append(tap)
     tap.x, tap.y = _snap(v, xt, v.GX), _snap(v, su.y if ty is None else ty, v.GY)
