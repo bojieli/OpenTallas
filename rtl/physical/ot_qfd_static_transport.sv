@@ -28,7 +28,7 @@ module qfd_static_ch546 (
   else begin
    wp<=w_slot;wv<=w_version;
    if(wp) begin published[wa]<=wv;seen[wa]<=1;end
-   w_fault<=w_fault | (w_slot && !i_valid);
+   w_fault<=w_fault | (w_slot && (i_valid !== 1'b1));
   end
  end
  always @(posedge wck) begin wa<=w_addr;wd<=i_data;end
@@ -42,7 +42,7 @@ module qfd_static_ch546 (
    o_valid<=read_pipe[2];
 `endif
    pub_meta<=published;pub_sync<=pub_meta;seen_meta<=seen;seen_sync<=seen_meta;
-   r_fault<=r_fault | (rp && (!seen_sync[ra] || pub_sync[ra] != rv));
+   r_fault<=r_fault | (rp && (seen_sync[ra] !== 1'b1 || pub_sync[ra] !== rv));
   end
  end
  always @(posedge rck) begin ra<=r_addr;rd_stage<=memory_data;o_data<=rd_stage;end
