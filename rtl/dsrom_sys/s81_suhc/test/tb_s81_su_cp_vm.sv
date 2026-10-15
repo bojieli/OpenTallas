@@ -5,12 +5,16 @@ module tb_s81_su_cp_vm;
     reg rst_n=0,start=0;reg[511:0] desc=0;
     wire[1:0]rqv;wire[27:0]rqa;wire[1:0]rsv;wire[1023:0]rsd;
     wire wv,dn,flt;wire[13:0]wa;wire[511:0]wd;wire[15:0]wm,sch;
-    ot_s81_su_cp_vm #(.MUT(MUT)) dut(clk,rst_n,start,desc,rqv,rqa,rsv,rsd,wv,wa,wd,wm,dn,flt,sch);
+    ot_s81_su_cp_vm #(.MUT(MUT)) dut(
+        .clk(clk),.ck_cp_ctl(clk),.ck_cp_mem({2{clk}}),.ck_cp_lane({4{clk}}),
+        .rst_n(rst_n),.start(start),.descriptor(desc),.rq_v(rqv),.rq_row(rqa),.rs_v(rsv),.rs_d(rsd),
+        .wq_v(wv),.wq_row(wa),.wq_d(wd),.wq_mask(wm),.done(dn),.fault(flt),.scheduled_cycles(sch));
     reg[255:0]inp[0:255];reg[127:0]exp[0:127];
     reg[511:0]mem[0:1023];
-    localparam integer LAT=10+LATE;
+    localparam integer LAT=11;
+    integer late=LATE;
     reg[1:0]vpipe[0:LAT-1];reg[1023:0]dpipe[0:LAT-1];integer p;
-    assign rsv=vpipe[LAT-1];assign rsd=dpipe[LAT-1];
+    assign rsv=vpipe[late?10:9];assign rsd=dpipe[late?10:9];
     always @(posedge clk)begin
         vpipe[0]<=rst_n?rqv:0;
         dpipe[0]<={mem[rqa[14+:14]],mem[rqa[0+:14]]};
@@ -20,6 +24,7 @@ module tb_s81_su_cp_vm;
     string dir;
     initial begin
         if(!$value$plusargs("DIR=%s",dir))$fatal(1,"DIR required");
+        if($value$plusargs("LATE=%d",late))begin end
         $readmemh({dir,"/in.mem"},inp);$readmemh({dir,"/expected.mem"},exp);
         for(j=0;j<1024;j=j+1)mem[j]=0;
         for(slot=0;slot<2;slot=slot+1)
