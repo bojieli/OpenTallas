@@ -7,16 +7,16 @@ def rect(b): return [b.xMin(),b.yMin(),b.xMax(),b.yMax()]
 def ov(a,b): return a[0]<b[2] and b[0]<a[2] and a[1]<b[3] and b[1]<a[3]
 def sha(p): return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 args=sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else sys.argv[1:]
-p=argparse.ArgumentParser();p.add_argument('--odb',required=True);p.add_argument('--out',required=True);a=p.parse_args(args)
+p=argparse.ArgumentParser();p.add_argument('--odb',required=True);p.add_argument('--out',required=True);p.add_argument('--pin',action='append');a=p.parse_args(args)
 before=sha(a.odb);db=odb.dbDatabase.create();odb.read_db(db,a.odb);block=db.getChip().getBlock();dbu=block.getDbUnitsPerMicron()
 queries=[]
-for name in ['dout[128]','dout[129]','dout[130]']:
+for name in (a.pin or ['dout[128]','dout[129]','dout[130]']):
  bt=block.findBTerm(name)
  if not bt:raise ValueError('Missing actual BTerm '+name)
  for bp in bt.getBPins():
   for box in bp.getBoxes():
    if box.getTechLayer().getName()=='M5':queries.append({'pin':name,'net':bt.getNet().getName(),'pin_box_dbu':rect(box),'above_layer':'M6','hits':[]})
-if len(queries)!=3:raise ValueError('Expected exact3M5 facepins')
+if len(queries)!=len(a.pin or [0,1,2]):raise ValueError('Missing expected M5 facepin')
 
 def check(net,layer,box,kind,centerline=None):
  if layer!='M6':return

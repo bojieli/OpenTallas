@@ -1,0 +1,18 @@
+{
+  "cell": "ot_hgi_coll_static_pinreg_store",
+  "native_corner_sha256": "b56cf9e5e41eebbb8db00330b0788b1b3086e5c69c293b777a141940a59140e5",
+  "odb_sha256": "c9804f1974881264e206911bba8a830dfdce93f510f6fa120e9ce1b5837022fd",
+  "spef_sha256": "69a537b29c6c0be90282580e842cb5cfb5165198a350164a90923a1d93770721",
+  "native_macro_directory": "/srv/opentallas-scratch2/claude/closure-loop/hcoll-pinreg-store141-south-f4fad1626-tc/src/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+  "TT_setup_ps": 241.08,
+  "FF_hold_ps": -0.6,
+  "SS_sensitivity_ps": -18.98,
+  "raw_export": "/srv/opentallas-scratch2/claude/closure-loop/hcoll-pinreg-store141-south-f4fad1626-tc/native_views/c9804f1974881264/raw",
+  "processed_view": "/srv/opentallas-scratch2/claude/closure-loop/hcoll-pinreg-store141-south-f4fad1626-tc/native_views/c9804f1974881264/processed",
+  "raw_LEF_sha256": "8071e491382fd278c730479902d912b8728443cf9a9eb1d3c054c1eeecf72c3c",
+  "processed_LEF_sha256": "2ad5aac9c732f6e123ee80355614b1e2a23e40bd2e3d27791fe2b0596dbc60d5",
+  "postprocessor_sha256": "252e63041ed47cd5b4bdca41532c89f8f859b8e783a99487cb308d89e916aec5",
+  "child_lint": "FAIL",
+  "timing_pass": false,
+  "scope": "Single nativeW141 hardleaf; final routed DRC and whole endpoint qualification remain separate verdict obligations."
+}

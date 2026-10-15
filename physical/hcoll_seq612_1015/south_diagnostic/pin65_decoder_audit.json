@@ -1,0 +1,25 @@
+{
+  "audit_source_sha256": "3c0d949836ec7e16a824171621f2984cc5b7b24a1b9a1e671ba85dcd0c73af4e",
+  "schema": "opentallas.hcoll.above-pin-geometry.v1",
+  "source_odb": "/data/routes/hcoll_pinreg_store141_south_f4fad1626_tc/work/orfs/results/asap7/opentallas_ot_hgi_coll_static_pinreg_store_asap7_qdm_hcoll_pinreg_store141_south_f4fad1626_tc/base/6_final.odb",
+  "odb_sha256": "c9804f1974881264e206911bba8a830dfdce93f510f6fa120e9ce1b5837022fd",
+  "read_only": true,
+  "native_dbu_per_um": 1000,
+  "queries": [
+    {
+      "pin": "din[65]",
+      "net": "din[65]",
+      "pin_box_dbu": [
+        88800,
+        0,
+        88824,
+        84
+      ],
+      "above_layer": "M6",
+      "hits": [],
+      "foreign_actual_centerline_hits": [],
+      "classification": "no_actual_above_metal"
+    }
+  ],
+  "qualification": "Geometry ownership audit only; does not change LEF, routing, timing, or imply parent via DRC."
+}

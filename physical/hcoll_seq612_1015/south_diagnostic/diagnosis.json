@@ -1,0 +1,24 @@
+{
+  "job": "hcoll-pinreg-store141-south-f4fad1626-tc",
+  "status": "NEEDS_RTL",
+  "source_commit": "f4fad16268278e8889b4d2ab4a3063e6dc2ca46e",
+  "TT_setup_ps": 241.08,
+  "FF_hold_ps": -0.6,
+  "SS_sensitivity_ps": -18.98,
+  "DRC": 0,
+  "child_access": "FAIL one above-blocked din65 M5 pin",
+  "pin_rect_um": [
+    88.8,
+    0,
+    88.824,
+    0.084
+  ],
+  "M6_abstract_OBS_um": [
+    88.117,
+    0.064,
+    89.579,
+    0.096
+  ],
+  "metal_diagnosis": "Read-only native wire decoder found no M6 hit at original pin box; exact abstract versus final ODB ownership unresolved. Do not erase OBS or waive access. Old north-pin foreign-wire diagnosis remains separate and unchanged.",
+  "scope": "Actual native hardleaf candidate failed strict gate; no adoption or whole endpoint closure."
+}
