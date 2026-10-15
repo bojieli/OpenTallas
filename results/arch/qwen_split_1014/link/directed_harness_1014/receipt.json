@@ -1,0 +1,43 @@
+{
+  "source_commit": "3bd3e2cd6",
+  "scope": "EXACT_LINK_TRAFFIC_HARNESS_VALIDATION_ONLY; sample directional numbers are not the final die contract or accepted cost",
+  "symmetric": {
+    "C_ST": 8,
+    "K_ST": 1,
+    "KVE_SPL": 1,
+    "ENG": 849,
+    "result": "PASS",
+    "step": 42793,
+    "att_mean": 1030
+  },
+  "legacy_before_directed_patch": {
+    "bench_commit": "e1826e703",
+    "PHY_model": "3bd3e2cd6 parameterized FW",
+    "result": "PASS",
+    "step": 42793,
+    "att_mean": 1030,
+    "parity": "EXACT"
+  },
+  "directed_sample": {
+    "C_X3": 1,
+    "C_X3_CR": 1,
+    "C_AR": 12,
+    "C_AR_CR": 12,
+    "C_SD": 9,
+    "C_DS": 9,
+    "C_KVD": 11,
+    "C_PW": 30,
+    "K_ST": 1,
+    "KVE_SPL": 1,
+    "ENG": 849,
+    "result": "PASS",
+    "step": 43121,
+    "att_mean": 1037
+  },
+  "observed_mutant": {
+    "MUT": 2,
+    "result": "FAIL",
+    "errors": 72
+  },
+  "scratch_cleanup": "Verified exact sessions terminal:9511exit2,51187exit0,59420exit0; deleted staged/failed/completed scratch onEPYC1/EPYC4/agidock, retained logs only"
+}
