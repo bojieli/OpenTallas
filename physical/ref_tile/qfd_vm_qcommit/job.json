@@ -11,7 +11,12 @@
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/qwen_sys/vm_nox_20261014",
-   "rtl/hdc"
+   "rtl/qwen_sys/vm_me_20261008",
+   "rtl/hdc",
+   "rtl/lib",
+   "tools/qwen_tp8",
+   "physical/asap7_memory_macros",
+   "rtl/qwen_split/ot_qfd_vm_q_export.sv"
   ]
  },
  "stages": {
@@ -22,6 +27,17 @@
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "actual_macro_consumption_and_eight_fault_mutants",
+    "cmd": "bash tools/qwen_tp8/vm_attention_commit_gate.sh {RUN}/bench/raw_commit",
+    "expect": "pass",
+    "pass_regex": "^PASS vm_die_static",
+    "threads": 8,
+    "peak_ram_gb": 8,
     "needs": [
      "verilator"
     ]
