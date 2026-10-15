@@ -69,6 +69,10 @@ module dsfd_sp_pq_n (
     input  wire          ck_lane,
     input  wire          rst,
     input  wire [91:0]   f_iss,
+`ifdef OT_PQ_CTL_STATIC
+    input wire calendar_v,input wire[71:0] calendar_action,
+    output wire stream_end_v,output wire[1:0] stream_end_tag,
+`endif
     output wire [38:0]   t_iss,
     output wire [19:0]   t_vm,
     input  wire [2048:0] f_vm,
@@ -109,6 +113,10 @@ module dsfd_sp_pq_n (
         .ck_ix_read(ck_ix_read),
 `endif
         .ck_bc(ck_bc),
+`ifdef OT_PQ_CTL_STATIC
+        .calendar_v(calendar_v),.calendar_action(calendar_action),
+        .stream_end_v(stream_end_v),.stream_end_tag(stream_end_tag),
+`endif
         .rst_n(rst), .go(f_iss[0]), .i_ph(f_iss[9:1]), .i_np(f_iss[12:10]), .i_xbase(f_iss[31:13]),
         .i_xps(f_iss[50:32]), .i_obase(f_iss[69:51]), .i_ops(f_iss[88:70]), .i_fmt(f_iss[90:89]),
         .ready(t_iss[0]), .idle(t_iss[1]), .x_re(t_vm[0]), .x_addr(t_vm[19:1]), .x_rv(f_vm[0]), .x_q(f_vm[2048:1]),
