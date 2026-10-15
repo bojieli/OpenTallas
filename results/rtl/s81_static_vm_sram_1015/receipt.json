@@ -1,0 +1,52 @@
+{
+  "scope": "actual SRAM to static collective and native SRAM readback component; not complete chip execution",
+  "verdict": "PASS_COMPONENT_ACTUAL_SRAM",
+  "vm_source": "owner flat snapshot /tmp/s81-static-master-20261015; exact hashes in source_manifest.json",
+  "native_chip": false,
+  "actual_vm_instances": 1,
+  "actual_vm_bank_instances": 128,
+  "memory_model": "ot_sram_1r1w_512x128_m4_r2c2",
+  "transport_rank_instances": 4,
+  "records_per_rank": 28,
+  "actual_rank0_vm_source_rows": 28,
+  "native_readback_rows": 112,
+  "checked_fp32": 1792,
+  "endpoint_fault": 0,
+  "expected_payload_source": "independent external boundary stimuli; rank0 payloads pass through actual VM SRAM and service before transport",
+  "read_control_to_endpoint_issue_edges": 14,
+  "read_breakdown": {
+    "request_register": 1,
+    "vm_pin_to_output": 12,
+    "endpoint_consumer": 1
+  },
+  "transport_issue_to_gather_edges": 11,
+  "gather_to_vm_source_register_edges": 1,
+  "mutant": {
+    "change": "invert physical VM collective landing write bit0 for rows>=4096; retain source rows64..91",
+    "source": "dsfd_vm_static_xio.sv",
+    "mutant_source_sha256": "5e7c66e86b76a9601b4d29d596b9c7775e0b124f49526f24dfc84c7a958adac8",
+    "expected": "SRAM readback data mismatch",
+    "observed": "SRAM readback data rank0 item0 got3f000001 expected3f000000",
+    "log": "mutant.log"
+  },
+  "execution": {
+    "base_host": "ot-agidock128",
+    "base_unit": "oth-ubuntu-2589067-1792046307",
+    "base_exit": 0,
+    "mutant_unit": "oth-ubuntu-2666230-1792046532",
+    "mutant_gate_exit": 0,
+    "measured_build_memory_mb": 2710.203,
+    "simulation_memory_mb": 65
+  },
+  "prior_bench_failure": {
+    "log": "bench_quiescence_fail.log",
+    "cause": "bench stopped receive calendar before final registered PHY beat arrived",
+    "fix": "retain final RX slot for in-flight beat before quiescing"
+  },
+  "open_gates": [
+    "actual FIELD global ROM source/capture reservation",
+    "remaining production gather shapes and full compiler job calendar",
+    "nonzero PHY flight, per-tile clocks/reset epoch, actual placement/pins/TT/FF/DRC",
+    "static HC/channel/slab integration and die/source binding"
+  ]
+}
