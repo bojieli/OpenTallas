@@ -40,10 +40,14 @@
       "declared_FF_upper": 1672,
       "logical_data_input_bits": 1671,
       "logical_data_output_bits": 1671,
-      "clock_reset_pins": 2,
-      "total_logical_pins": 3344,
+      "clock_reset_pins": 3,
+      "total_logical_pins": 3345,
       "independent_group_FF_lower_bound": 244,
-      "independent_group_FF_upper_bound": 248
+      "independent_group_FF_upper_bound": 248,
+      "reset_epochs": [
+        "outer rst_n for OSvalid",
+        "actual engine rs for broadcast rg"
+      ]
     },
     "reducer_input_tile": {
       "replicas": 1,
@@ -82,5 +86,19 @@
     "source-pinned TT/FF views and actual boundary phi/RC"
   ],
   "clock_policy": "standalone added roots need actual ports and domain census; root reassignment requires real source changes and edge-phase proof; no clock-pin count metadata substitute",
-  "acceptance": "Owner OptionB TTsetup>=0 FFhold>=0 DRC0 per parent current directive; actual flow constraints and phase/RC coverage still required"
+  "acceptance": "Owner OptionB TTsetup>=0 FFhold>=0 DRC0 per parent current directive; actual flow constraints and phase/RC coverage still required",
+  "source_candidate": "qfd_sp_su64_sfu_station_candidate.STATION_CUT=1; default0 retains original path",
+  "candidate_clock_ports_added": [
+    "ck_octet0",
+    "ck_octet1",
+    "ck_octet2",
+    "ck_octet3",
+    "ck_octet4",
+    "ck_octet5",
+    "ck_octet6",
+    "ck_octet7",
+    "ck_red_input"
+  ],
+  "clock_roots_candidate": 356,
+  "root_count_derivation": "347 retained roots, including baseck and ck_copy, plus8octet (CROMIS+OS+broadcast share one root each), plus1reducer input; no separate OSroot"
 }

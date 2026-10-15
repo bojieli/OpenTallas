@@ -1,0 +1,72 @@
+{
+  "schema": "opentallas.qwen-su-station-component-gate.v1",
+  "reference": "exact original group/reducer always blocks extracted from immutable source; actual original delay helper used",
+  "source_hashes": {
+    "rtl/physical/ot_qfd_su_octet_station_candidate.sv": "78a8eb1ef2e51c99490dc8ca8c3aff0915c8fd476b5dfce7cd9721bec6061cad",
+    "tools/qwen_su_glue_1015/base_inventory/tb_station_candidate.sv": "6bc9e15b70007fc0991e1256c7265a7b6a9f4702996e4c9475680112556a489e",
+    "station_gate_build/reference.sv": "1b4c486db47b0da6ac1629066422791e99b6381ce4cb443dbbf5bad8a695b9fe",
+    "tools/qwen_su_glue_1015/base_inventory/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/physical/ot_qfd_sp_su64_station_candidate.sv": "8691788ddcf87bd78c2b578f97fb42621de771c038e12c2ba1ca57aa49cd0868",
+    "rtl/physical/ot_hdc_vstream_station_candidate.sv": "c87eba324e0a07aad1653a0b0546eaf77724fabd5032d7439ddb80b73be4bc3f",
+    "tools/qwen_su_glue_1015/base_inventory/leaf_boundaries.sv": "bfab4af3bbdeec3d38bd89512ed418ac8d19ace40b26199b2da87dbafa0df050",
+    "tools/qwen_su_glue_1015/base_inventory/native_relay_boundary.sv": "08f0d2784d2d533b3d3b4740537bba8781b0ae9a6483c382adf6b6b1c1a26088",
+    "tools/qwen_su_glue_1015/base_inventory/reset.sv": "83a55ea712927b5b060f44103facae06bfcc0b6a5be63f82b4fc2aba3b69418d",
+    "tools/qwen_su_glue_1015/base_inventory/ot_hdc_vred_pending_guard.sv": "969d2ddc01fda268092aded65b5e41101f55fc691169023c5e1390b412921abc",
+    "tools/qwen_su_glue_1015/base_inventory/tb_station_caller.sv": "cf0d1c28b32c65b0cfb753fe5b6949384017333b5d1d713eaebdd5e36cb28199",
+    "rtl/physical/qfd_sp_su64_sfu_station_candidate.sv": "81b17d0ae4f919e87811f9d3a82eb4985dabd3d59f7da16f9e8538c453d35fb5",
+    "rtl/physical/qfd_su_static_copy_entries.sv": "4e3c0615f6cd3b2ad0c3ea940ff78f72baca749f10a73cc840a11d809d9b8736",
+    "tools/qwen_su_glue_1015/base_inventory/qfd_su_vm_pack.sv": "89cfe22baa32e68ec0b1231857d6a09ca52a239ced43b1feaed70078c8863886",
+    "tools/qwen_su_glue_1015/base_inventory/copy_core_boundary.sv": "a15d30c56c6717f9afd01ac3c7248135eddb0b08e792a4d990532cd4d0725384"
+  },
+  "cases": [
+    {
+      "name": "baseline",
+      "exit": 0,
+      "expected_failure": false,
+      "log": "PASS station checked=500 inactive_SUM_MAX_reset_clock_edges"
+    },
+    {
+      "name": "octet_data",
+      "exit": 1,
+      "expected_failure": true,
+      "log": "FAIL station cycle=0 octet=1 group_reset=0 reducer=0\nFATAL: /home/ubuntu/wt/su-base-cut-1015/tools/qwen_su_glue_1015/base_inventory/tb_station_candidate.sv:35: station mismatch\n       Time: 16000 Scope: tb_station_candidate"
+    },
+    {
+      "name": "group_reset",
+      "exit": 1,
+      "expected_failure": true,
+      "log": "FAIL station cycle=1 octet=0 group_reset=1 reducer=0\nFATAL: /home/ubuntu/wt/su-base-cut-1015/tools/qwen_su_glue_1015/base_inventory/tb_station_candidate.sv:35: station mismatch\n       Time: 26000 Scope: tb_station_candidate"
+    },
+    {
+      "name": "reducer_data",
+      "exit": 1,
+      "expected_failure": true,
+      "log": "FAIL station cycle=0 octet=0 group_reset=0 reducer=1\nFATAL: /home/ubuntu/wt/su-base-cut-1015/tools/qwen_su_glue_1015/base_inventory/tb_station_candidate.sv:35: station mismatch\n       Time: 16000 Scope: tb_station_candidate"
+    },
+    {
+      "name": "clock_connection",
+      "exit": 1,
+      "expected_failure": true,
+      "log": "FAIL station cycle=0 octet=1 group_reset=0 reducer=0\nFATAL: /home/ubuntu/wt/su-base-cut-1015/tools/qwen_su_glue_1015/base_inventory/tb_station_candidate.sv:35: station mismatch\n       Time: 16000 Scope: tb_station_candidate"
+    },
+    {
+      "name": "actual_caller_binding",
+      "exit": 0,
+      "log": "PASS caller checked=128 octets=8 native_slices_two_resets_reducer",
+      "scope": "actual native caller with explicit component-boundary stimuli replacing arithmetic outputs; no arithmetic claim"
+    },
+    {
+      "name": "strict_native_top_elaboration_cut0",
+      "exit": 0,
+      "log": "/home/ubuntu/wt/su-base-cut-1015/rtl/physical/qfd_sp_su64_sfu_station_candidate.sv:436: warning: output port cp_active is coerced to inout.",
+      "scope": "no missing-module ignore; exact source boundaries are blackboxes, not functional arithmetic"
+    },
+    {
+      "name": "strict_native_top_elaboration_cut1",
+      "exit": 0,
+      "log": "/home/ubuntu/wt/su-base-cut-1015/rtl/physical/qfd_sp_su64_sfu_station_candidate.sv:436: warning: output port cp_active is coerced to inout.",
+      "scope": "no missing-module ignore; exact source boundaries are blackboxes, not functional arithmetic"
+    }
+  ],
+  "scope": "station edge/reset/data/clock wiring only; no arithmetic, production caller or physical qualification"
+}
