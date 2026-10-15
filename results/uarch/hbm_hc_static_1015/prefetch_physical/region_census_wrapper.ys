@@ -1,0 +1,15 @@
+read_liberty -lib macro.lib
+read_verilog -sv -D SYNTHESIS reset.sv fifo.sv
+read_verilog -sv -D SYNTHESIS -defer region.sv
+read_verilog -sv -D SYNTHESIS census_root.sv
+hierarchy -check -top hc_prefetch_region_census_root
+proc
+opt
+memory_map
+opt
+stat
+write_json census.json
+techmap t:$*dff*
+opt_clean
+stat
+write_json sequential_bitmapped.json

@@ -31,6 +31,38 @@
   },
   "dependencies_match_29272fdde": true,
   "run": {
+    "session": 71662,
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-3998700-1792063700.scope",
+    "PID": 3998718,
+    "remote": "/srv/opentallas-scratch/claude/codex-hc-prefetch-region-census-1015",
+    "command": "ot-run --mem 8 --threads 1 --dir /srv/opentallas-scratch/claude/codex-hc-prefetch-region-census-1015 -- bash run_wrapper.sh",
+    "stages": [
+      "read_liberty -lib legacy macro only",
+      "read_verilog -defer unchanged actual sources",
+      "hierarchy actualMAX8/WIDTH4/II8/interleave1",
+      "proc/opt/memory_map/opt",
+      "genericJSON",
+      "sequentialprimitive bitmapping ONLY",
+      "bitmappedJSON"
+    ],
+    "no_CTS_or_route": true,
+    "elaboration": "Purewiremirrorportwrapper hc_prefetch_region_census_root instantiates actualfrozenhelperMAX8/WIDTH4/II8/interleave1; reset/FIFOreadnormal, actualhelperreaddeferred. No DUTfileedit oraddedstate.",
+    "log": "yosys_wrapper.log"
+  },
+  "initial_terminal_failure": {
+    "session": 10835,
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-2040857-1792063162",
+    "exit": 1,
+    "reason": "read_verilog initially elaborated forbidden defaultMAX_OUTSTANDING1 before override; source initialfatal correctlyrefused",
+    "fix": "Use deferredVerilogAST and hierarchy -chparam actualMAX8 beforeelaboration; source unchanged",
+    "preserved_log": "ot-epyc4:/srv/opentallas-scratch/claude/codex-hc-prefetch-region-census-1015/yosys.log",
+    "preserved_script": "census.ys/run.sh",
+    "not_an_observation_timeout_restart": true
+  },
+  "limits": "Helper standalone production parameters with frozen dependencies. Wrapper hash pinned and4instances sourceaudited but wrapper notsynthesized. No LIBmapped/CTS/physicalqualification claim.",
+  "deferred_top_internal_failure": {
     "session": 4669,
     "host": "ot-agidock128",
     "unit": "oth-ubuntu-3984672-1792063191.scope",
@@ -46,18 +78,10 @@
       "sequentialprimitive bitmapping ONLY",
       "bitmappedJSON"
     ],
-    "no_CTS_or_route": true
-  },
-  "initial_terminal_failure": {
-    "session": 10835,
-    "host": "ot-epyc4",
-    "unit": "oth-ubuntu-2040857-1792063162",
+    "no_CTS_or_route": true,
+    "state": "TERMINAL",
     "exit": 1,
-    "reason": "read_verilog initially elaborated forbidden defaultMAX_OUTSTANDING1 before override; source initialfatal correctlyrefused",
-    "fix": "Use deferredVerilogAST and hierarchy -chparam actualMAX8 beforeelaboration; source unchanged",
-    "preserved_log": "ot-epyc4:/srv/opentallas-scratch/claude/codex-hc-prefetch-region-census-1015/yosys.log",
-    "preserved_script": "census.ys/run.sh",
-    "not_an_observation_timeout_restart": true
-  },
-  "limits": "Helper standalone production parameters with frozen dependencies. Wrapper hash pinned and4instances sourceaudited but wrapper notsynthesized. No LIBmapped/CTS/physicalqualification claim."
+    "reason": "Yosys0.68internalassert modules_.count(module->name)==0 duringtopreprocessing afterFIFOwidthderivedmodulesavailable",
+    "preserved_log": "ot-agidock128:/srv/opentallas-scratch/claude/codex-hc-prefetch-region-census-1015/yosys_deferred.log"
+  }
 }

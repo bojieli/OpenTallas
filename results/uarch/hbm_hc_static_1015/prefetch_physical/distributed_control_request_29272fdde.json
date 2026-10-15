@@ -1,0 +1,76 @@
+{
+  "schema": "opentallas.hc.prefetch.distributed-physical-request.v1",
+  "status": "REQUESTED_NOT_IMPLEMENTED_OR_GRANTED",
+  "source_commit": "29272fdde",
+  "functional_owner": "/root/h_hc_sfu/hc_static_engine/hc_weight_prefetch",
+  "physical_owner": "/root/h_hc_sfu/hc_static_engine/hc_weight_prefetch/prefetch_physical",
+  "geometry_owner": "/root/geometry_hbm_system",
+  "actual_geometry_from_owner": {
+    "PCs": 32,
+    "columns": 16,
+    "rows": 2,
+    "frame_um": [
+      4471.2,
+      712.8
+    ],
+    "PC_outline_um": [
+      259.2,
+      345.6
+    ],
+    "uniform_channel_um_consistent_with_frame": 21.6,
+    "derived_center_pitch_um": [
+      280.8,
+      367.2
+    ],
+    "limits": "Owner suppliedframe/rowcount/outline; no literalPCcoordinates or newcombinedsourcegrant inspected yet"
+  },
+  "physical_failure": {
+    "onepoint_parameter_control_to32PCmax_horizontal_um_atleast": 2235.6,
+    "central_to_extreme_PCcenter_um": 2106,
+    "minimum_500um_hops_from_center_to_far_face": 5,
+    "minimum_hops_from_end_to_opposite_end": 9,
+    "global_fields_bits": {
+      "h_base": 30,
+      "h_next": 12,
+      "next_tag": 17,
+      "h_epoch": 16,
+      "h_bank": 3
+    },
+    "return_arbitration": "32PCs to8lanes withowner/tag/epoch/regionchecks andprioritymux iscurrently combinational; FIFOroot splitalone doesnotregisterthispath"
+  },
+  "required_successor": [
+    "Explicitstaticdistributedparameters/start delivery withregisteredboundedhops",
+    "Registeredregionalreturnownerlookup/merging withactualphases/collisionbehavior",
+    "Actual addedHBMedges/streamcycles and exactcriticalabsolutephase/nativepayloadmutantreceipt",
+    "Full16epoch/17tag identity andrealSRAM source bindingpreserved",
+    "No freeclockphase, no inferredslotgrant, no relaxation ofreach/root/insertionrules"
+  ],
+  "PC_sink_budget_candidate": {
+    "native_PC_source_FF": 13649,
+    "owner_FF": 384,
+    "SRAM_clock_pin": 1,
+    "subtotal_before_other_state": 14034,
+    "remaining_to15000": 966,
+    "parameter_and_start_register_candidate_bits": 79,
+    "registered_owned_return_candidate_bits": 287,
+    "candidate_total": 14400,
+    "candidate_remaining": 600,
+    "limits": "BudgetONLY:79=78requestoperandbits+start;287=11ordinal+3region+16epoch+256data+valid. No RTL/proof/outline/grant, notassertionthisaloneimplementscorrectpipeline. Additionalstate/fanout/mappedcountmustbemeasured."
+  },
+  "FIFO_leaves": {
+    "count_per_stack": 8,
+    "payload_bits": 1144,
+    "pointer_online_sync_reset_source_bits": 18,
+    "total_source_FF_per_lane_estimate": 1162,
+    "keep_separate_from_native_PC_root": true
+  },
+  "scope": {
+    "candidate_positions": [
+      6,
+      8
+    ],
+    "canonical_P1_qualified": false,
+    "P1_reason": "4AP640cycles exceeds~355cyclecanonicalP1budget; distributedlookahead cannotcreateAPbandwidth"
+  },
+  "next_action": "Functional owner to supplysource-exactdistributed successor/latency proof; currentresidenthelpercensus stillrunswithoutsourcechanges orroutes."
+}
