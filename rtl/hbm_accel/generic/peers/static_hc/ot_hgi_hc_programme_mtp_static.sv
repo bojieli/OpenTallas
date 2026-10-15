@@ -19,14 +19,27 @@ module ot_hgi_hc_programme_mtp_static #(parameter integer ROW_LOOP=0)(
     wire [50:0] raw;
     wire v;
     wire [31:0] ordinal;
-    wire [31:0] row_iteration=(raw[47:44]==6)?ordinal/1080:ordinal/1400;
+    // A launch is the compiler's first instruction of each fixed row body.
+    // Track that identity directly instead of deriving it with division from
+    // the programme ordinal. The combinational first-word value anticipates
+    // the launch edge; following words use the registered current row.
+    reg [4:0] current_row;
+    reg row_seen;
+    wire [4:0] row_iteration=current_row+5'(v&&raw[1]&&row_seen);
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n)begin current_row<=0;row_seen<=0;end
+        else if(start_v)begin current_row<=0;row_seen<=0;end
+        else if(v&&raw[1])begin
+            if(row_seen)current_row<=current_row+5'd1;
+            row_seen<=1;
+        end
     wire [50:0] c=v?raw:51'd0;
     ot_hgi_sfu_program_stripe_static #(.PAGE_AW(1),.W(51)) program_(
         .clk(clk),.rst_n(rst_n),.cfg_we(cfg_we),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
         .start_v(start_v),.start_base(start_base),.start_limit(start_limit),.start_loops(start_loops),
         .calendar(raw),.calendar_v(v),.ordinal(ordinal),.active(active),.done(done),.fault(fault));
-    assign clear=c[0]&&(!ROW_LOOP||row_iteration==0);assign row_launch=c[1];assign row_raw_read=c[2];assign row_weight_slot=c[3]^(ROW_LOOP&&row_iteration[0]);
-    assign row_id=c[8:4]+(ROW_LOOP?5'(row_iteration):5'd0);assign tail_launch=c[9];assign sink_launch=c[10];assign sink_capture=c[11];assign norm_eps=c[43:12];
+    assign clear=c[0]&&(!ROW_LOOP||row_iteration==0);assign row_launch=c[1];assign row_raw_read=c[2];assign row_weight_slot=c[3]^(ROW_LOOP&&v&&row_iteration[0]);
+    assign row_id=c[8:4]+(ROW_LOOP&&v?row_iteration:5'd0);assign tail_launch=c[9];assign sink_launch=c[10];assign sink_capture=c[11];assign norm_eps=c[43:12];
     assign row_npos=c[47:44];assign tail_position=c[50:48];
 endmodule
 `default_nettype wire
