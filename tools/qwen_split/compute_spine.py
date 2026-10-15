@@ -32,14 +32,25 @@ VM_WH = (4708.8, 2203.2)        # TRIMMED central VM (owner 08:20 PT 10-14: dist
 CTLM_WH = (777.6, 1814.4)
 UP4_WH = (345.6, 388.8)
 CLKRX_WH = (412.488, 412.488)
+# ---- C12 (compute lead r3, 2026-10-14 ~19:00, coordinator question B: relay stages on the token path 12 % of tok/s):
+# the per-ME-op loop tt_ctlm -> tap -> head roots -> head row -> corridors -> tiles -> tree -> block words -> slabs ->
+# res_ser -> VM -> tt_ctlm crossed 217 times a token, and C8 placed the whole controller stack (tap, tt_ctlm, seq_su,
+# VM) 7 mm N of the head row (tap -> W root 25 stages, tt_ib 13, ctlm <-> seq_su 19 / 20, band 0 <-> top 31-38).
+# STACK 'seam' puts the SU / VM seam just above the head row: SU above, VM below, preserving the existing 24-nm
+# registered SU / VM abutment and zero added transport edges. Die M8/M9 over the M7-capped VM carry the two
+# head-root words W / E at the head row; the x tap sits at the seam E of the constant group, tt_ctlm / tt_up4 / seq_su
+# stacked above it in one E column (tt_ib, me_snap / su_snap / me_start adjacent), clock receiver under the VM; the
+# band slab stacks that would straddle the head-row channel move below it (res_ser_1 lands beside the VM).
+STACK = os.environ.get('OT_SPLIT_STACK', 'n')    # 'n' = C4..C11 (stack under the N-edge link), 'seam' = C12
+HROW = 216.0                    # head-row channel half height kept free of slab stacks (1,567-b root relay 80 um + 2 channels)
 # ---- C4 (2026-10-14, compute-die lead r2): owner-adopted distributed x slices (HANDOFF 0aa, el1014-qwen-dvm-build.log)
 DVM = os.environ.get('OT_SPLIT_DVM', '1') != '0'
 XCOL_WH = (64.8, 1313.28)       # qfd_xcol_e/w: xhead + 8 x qfd_xs_leaf (two write chains N / S), in the column corridor,
                                 # centred on the head row; 604.8 N + 103.68 head + 604.8 S (contract v1 slice slots)
 TAP_WH = (345.6, 345.6)         # qfd_xs_tap at the VM N face, E of the constant group (SU write tap + attention write tap)
 XCOR_D = 516                    # corridor word {go 1, ib 379, xl 128, tag 8} (qfd_xcst / qfd_xcol n_d / s_d)
-XHEAD_D = 1567                  # head-row word {go 1, ib 379, desc 73, fill 1114} (qfd_xcol w_d / e_d)
-TAP_SW, TAP_AW, TAP_PF, TAP_GI = 1 + 24 + 64 + 2048, 1 + 24 + 16 + 512, 74, 380
+XHEAD_D = 1568                  # head-row word {go 1, ib 379, desc 73, fill 1114} (qfd_xcol w_d / e_d)
+TAP_SW, TAP_AW, TAP_PF, TAP_GI = 1 + 24 + 64 + 2048, 1 + 24 + 16 + 512, 72, 380
 
 
 # C5: masters whose hardened children each take their own die clock entry (delivered at phi - R of that child):
@@ -156,7 +167,7 @@ def _tree_widths(m, rec):
     rec['tree_widths'] = dict(leg_a=TREE_A, leg_b=TREE_B, bword=BWORD, buses=dict(n_))
 
 
-def _dvm(v, m, put, rec, vm, su, xt):
+def _dvm(v, m, put, rec, vm, su, xt, ty=None):
     """Distributed x slices in the die (C4): stations -> qfd_xcst_n/s (516-b corridor word), column heads ->
     qfd_xcol_e/w (one cluster slot per column in the corridor, centred on the head row), the x tap qfd_xs_tap at the VM
     N face.  The two head roots take ONE word each from the tap (hw / he = {go, ib, desc, fill}); the tree top's go / ib
@@ -214,7 +225,7 @@ def _dvm(v, m, put, rec, vm, su, xt):
     tap = v.Inst('xs_tap', 'qfd_xs_tap', 0.0, 0.0, TAP_WH[0] - S, TAP_WH[1] - S, kind='spine', region='hub',
                  domain=vm.domain)
     m['insts'].append(tap)
-    tap.x, tap.y = _snap(v, xt, v.GX), _snap(v, su.y, v.GY)
+    tap.x, tap.y = _snap(v, xt, v.GX), _snap(v, su.y if ty is None else ty, v.GY)
     rec['slots']['xs_tap'] = [tap.x, tap.y, round(tap.w, 3), round(tap.h, 3)]
     roots = {}
     nb = []
@@ -276,6 +287,7 @@ def place(v, m, G):
     xs = sorted({round(i.x, 4) for i in tiles})
     ys = sorted({round(i.y, 4) for i in tiles})
     th = tiles[0].h
+    head_y = (ys[7] + th + ys[8]) / 2
     half = len(xs) // 2
     pitch = xs[1] - xs[0]
     x0 = round(xs[half - 1] + pitch, 4)          # W field end (its last station column + gap)
@@ -313,11 +325,19 @@ def place(v, m, G):
     for b in range(3):
         y0 = max(lo, cents[b] - gh / 2)
         y0 = min(y0, top - gh) if b == 2 else y0
+        if STACK == 'seam' and y0 < head_y + HROW and y0 + gh > head_y - HROW:
+            y0 = head_y - HROW - gh
+            if y0 < lo:
+                raise SystemExit('split compute seam: slab stack cannot clear the head-row channel')
         put(f'sp_band_lanes_{b}', xa + dl, y0, LANES_WH)
         put(f'sp_port_tiles_{b}', xa, y0 + LANES_WH[1] + 4.32, PORT_WH)
         put(f'sp_res_ser_{b}', xa + dr, y0 + LANES_WH[1] + PORT_WH[1] + 8.64, RES_WH)
         yf = max(lo_f, cents[b] - PORT_WH[1] / 2)
         yf = min(yf, top - PORT_WH[1])
+        if STACK == 'seam' and yf < head_y + HROW and yf + PORT_WH[1] > head_y - HROW:
+            yf = head_y - HROW - PORT_WH[1]
+            if yf < lo_f:
+                raise SystemExit('split compute seam: east slab cannot clear the head-row channel')
         put(f'sp_port_tiles_{b}_f1', xf, yf, PORT_WH)
         rec.setdefault('band_centroid_y', []).append(round(cents[b], 1))
         lo = y0 + gh + CH
@@ -345,7 +365,9 @@ def place(v, m, G):
     put('rs_bump', ph.x - 4.32 - by['rs_bump'].w - 4.32, ph.y - by['rs_bump'].h / 2)
     put('ckb_rom', ph.x - 4.32 - by['ckb_rom'].w - 4.32, ph.y + 30.0)
     # SU slot below the link, constant group E of it
-    su, vm = _place_su_vm(put, cx, ad.y - CH - SU_WH[1])
+    su_y = head_y + HROW if STACK == 'seam' else ad.y - CH - SU_WH[1]
+    su, vm = _place_su_vm(put, cx, su_y)
+    rec['stack'] = dict(mode=STACK, head_y=round(head_y, 3), su_vm_gap=round(su.y - vm.y - vm.h, 4))
     gx = su.x + SU_WH[0] + CH
     cb = sorted((i for i in m['insts'] if i.master == 'qfd_su_cbuf_g'), key=lambda i: int(i.name.rsplit('_', 1)[1]))
     cr = sorted((i for i in m['insts'] if i.master == 'qfd_crom_g'), key=lambda i: int(i.name.rsplit('_', 1)[1]))
@@ -364,10 +386,17 @@ def place(v, m, G):
     # The VM was placed with the SU above: S(SU) and N(VM) are abutted,
     # matching the existing zero-relay registered seam and its latency.
     # tree top below the VM, clock receiver + reset leaf at the die centre
-    ct = put('tt_ctlm', cx - CTLM_WH[0] - 2.16, vm.y - CH - CTLM_WH[1], CTLM_WH)
-    put('tt_up4_0', ct.x + CTLM_WH[0] + 4.32, ct.y + CTLM_WH[1] - UP4_WH[1], UP4_WH)
+    xt = gx + max(2 * (cr[0].w + 4.32), sq.w if sq is not None else 0.0) + CH
+    if STACK == 'seam':
+        # The tap sits beside the SU, above the VM's abutted face. The controls form
+        # one column above it rather than sending every ME command around the VM.
+        ct = put('tt_ctlm', xf - CH - CTLM_WH[0], su.y + TAP_WH[1] + CH, CTLM_WH)
+        put('tt_up4_0', ct.x, ct.y + CTLM_WH[1] + CH, UP4_WH)
+    else:
+        ct = put('tt_ctlm', cx - CTLM_WH[0] - 2.16, vm.y - CH - CTLM_WH[1], CTLM_WH)
+        put('tt_up4_0', ct.x + CTLM_WH[0] + 4.32, ct.y + CTLM_WH[1] - UP4_WH[1], UP4_WH)
     if DVM:
-        _dvm(v, m, put, rec, vm, su, gx + max(2 * (cr[0].w + 4.32), sq.w if sq is not None else 0.0) + CH)
+        _dvm(v, m, put, rec, vm, su, xt)
     ymid = (io_top + top) / 2
     ck = put('clk_rx', cx - CLKRX_WH[0] / 2, min(ymid - CLKRX_WH[1] / 2, ct.y - CH - CLKRX_WH[1]))
     put('rstseq_rom', ck.x + ck.w + 4.32, ck.y)
