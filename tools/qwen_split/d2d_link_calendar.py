@@ -109,10 +109,12 @@ def layer_msgs(seg, base, w, txl, phy):
     return m, dict(q_send=q0, attn_end=a_end, result_send=[r0, r_last])
 
 
-def program_profile(txl, phy, tp_path, emb_window=None):
+def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None):
     """Full 36-layer decode-token program from the priced token path (layer-relative op windows).
     Segment 0 = L1..L35 (identical windows: the KV fill of layer n+1 is hidden behind layer n); segment 1 = the token
     run = terminal RESULT + embedding row + L0 (its KV fill is exposed: attn_kv 2,038 vs 1,816 cycles)."""
+    if host_stages is not None and (type(host_stages) is not int or host_stages < 0):
+        raise ValueError("host_stages must be a measured nonnegative integer or None (pending)")
     d = json.load(open(tp_path))
     nodes = {n["id"]: n for n in d["nodes"]}
     groups = [g for g in d["groups"] if g["kind"] == "layer"]
@@ -133,7 +135,11 @@ def program_profile(txl, phy, tp_path, emb_window=None):
                   embed=dict(start=0, cycles=emb), windows=dict(L0=dict(zip(ops, map(int, win[lay[0]]))),
                   L1_35=dict(zip(ops, map(int, win[lay[1]])))), layer=l1, token_run_L0=l0,
                   emb_send=[e_last - 63, e_last],
-                  hbm_embedding_budget=dict(result_at_kv_host=2 + 1 + txl + phy + 2 + 1, first_emb_send=e_last - 63,
+                  host_relay_stages=dict(value=host_stages, status="measured (KV die lead)" if host_stages is not None else
+                      "PENDING: KV die lead re-measure after the HOST core moves next to the D2D end (coordinator: the "
+                      "54-57-stage HOST<->D2D relay figure is a floorplan defect, not a calendar input); compiled with 0"),
+                  hbm_embedding_budget=dict(result_at_kv_host=2 + 1 + txl + phy + 2 + 1 + (host_stages or 0),
+                      first_emb_send=e_last - 63,
                       note="the KV-die embedding provider must hold the staged row (one ready per buffer block at the HBM "
                            "boundary) by first_emb_send; a late row is a schedule fault, never a stretched timeline"))
     return m0 + m1 + ml0, layout
@@ -197,13 +203,18 @@ def main():
     ap.add_argument("--spec", help="message list JSON (default: bench layer profile)")
     ap.add_argument("--profile", default="bench", choices=["bench", "dies", "dies_token", "program"])
     ap.add_argument("--token-path", default="results/arch/token_path_20261009/qwen_rom.json")
+    ap.add_argument("--host-stages", type=int, default=None,
+                    help="KV die HOST core <-> qkd_d2d_static relay stages (each way), from the KV die lead's measured "
+                         "die plan; added to the KV HOST-record TX codec latency (port 1) and the token-id budget")
     a = ap.parse_args()
     txd = {"C": [int(x) for x in a.txd_c.split(",")], "K": [int(x) for x in a.txd_k.split(",")]}
     layout = None
     if a.spec:
         msgs = json.load(open(a.spec))
     elif a.profile == "program":
-        msgs, layout = program_profile(a.txl, a.phy, a.token_path)
+        msgs, layout = program_profile(a.txl, a.phy, a.token_path, host_stages=a.host_stages)
+        if a.host_stages:
+            txd["K"][1] += a.host_stages   # HOST record words reach the end's capture edge host_stages later
     elif a.profile == "dies_token":
         msgs = dies_layer() + token_run()
     else:
