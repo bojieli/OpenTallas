@@ -96,6 +96,12 @@ module ot_hgi_idx_ix2_wp #(
         .flush(fl_go), .rdy(pk_rdy[3]), .e_v(pk_ev[3]), .e_sec(pk_sec[45 +: 15]), .e_d(pk_d[768 +: 256]), .e_m(pk_m[24 +: 8]),
         .e_take(e_take[3]), .empty(pk_empty[3]));
     // ---------------------------------------------------------------- write lanes
+    // r5 (Claude group-B4 10-14; native audit of the CLOSED r3 view: launch 271.7 ps > 220 on 1,393 outputs; the r4pin
+    // gate with every output on its own pin flop measured reg->reg -27.8 ps = the 15-level packer select cone had to reach
+    // the pin flops): the lane payload is registered once INSIDE (wwq_s, next to the packers) and the output register wwq
+    // is a pure flop -> wire -> flop copy at the pins.  +1 edge on every write lane (credits are spent at selection,
+    // unchanged; the receiver sees each sector one edge later).
+    reg [8*280-1:0] wwq_s;
     reg [CB-1:0] wcred [0:7]; reg [11:0] w_out; reg [7:0] w_used; reg [1:0] w_src [0:7]; reg [2:0] e_ln; reg [3:0] wdn_cnt;
     always @* begin
         w_used = 8'd0; e_take = 4'd0;
@@ -112,14 +118,17 @@ module ot_hgi_idx_ix2_wp #(
     always @(posedge clk) begin
         if (tv_q) tq[tqw] <= ti;
         if (dv_q) dq[dqw] <= di;
-        for (l = 0; l < 8; l = l + 1) if (w_used[l])
-            wwq[l*280 +: 279] <= {pk_sec[w_src[l]*15 +: 15], pk_d[w_src[l]*256 +: 256], pk_m[w_src[l]*8 +: 8]};
+        for (l = 0; l < 8; l = l + 1) begin
+            if (w_used[l])
+                wwq_s[l*280 +: 279] <= {pk_sec[w_src[l]*15 +: 15], pk_d[w_src[l]*256 +: 256], pk_m[w_src[l]*8 +: 8]};
+            wwq[l*280 +: 279] <= wwq_s[l*280 +: 279];
+        end
     end
     always @(posedge clk or negedge rn)
         if (!rn) begin
             tqw <= 2'd0; tqr <= 2'd0; tqn <= 3'd0; dqw <= 4'd0; dqr <= 4'd0; dqn <= 5'd0; dc_pending <= 3'd0; t_cr <= 1'b0; d_cr <= 1'b0;
             fl_pend <= 1'b0; fl_done <= 1'b0; wg_req <= 1'b0; wp_idle <= 1'b0; w_out <= 12'd0;
-            for (l = 0; l < 8; l = l + 1) begin wcred[l] <= CB'(LQ); wwq[l*280 + 279] <= 1'b0; end
+            for (l = 0; l < 8; l = l + 1) begin wcred[l] <= CB'(LQ); wwq[l*280 + 279] <= 1'b0; wwq_s[l*280 + 279] <= 1'b0; end
         end else begin
             t_cr <= t_go; d_cr <= dc_ack;
             dc_pending <= dc_available;
@@ -131,7 +140,7 @@ module ot_hgi_idx_ix2_wp #(
             dqn <= dqn + 5'(dv_q) - 5'(d_go);
             for (l = 0; l < 8; l = l + 1) begin
                 wcred[l] <= wcred[l] + CB'(wcr_q[l]) - CB'(w_used[l]);
-                wwq[l*280 + 279] <= w_used[l];
+                wwq_s[l*280 + 279] <= w_used[l]; wwq[l*280 + 279] <= wwq_s[l*280 + 279];
             end
             w_out <= w_out + 12'(e_take[0]) + 12'(e_take[1]) + 12'(e_take[2]) + 12'(e_take[3]) - {8'd0, wdn_cnt};
             if (fl_q) fl_pend <= 1'b1; else if (fl_go) fl_pend <= 1'b0;
