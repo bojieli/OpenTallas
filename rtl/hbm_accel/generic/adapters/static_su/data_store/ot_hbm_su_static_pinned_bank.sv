@@ -7,6 +7,7 @@ module ot_hbm_su_static_pinned_bank #(
  parameter integer READERS=6,RB=9,MUT_COHERENCE=0,MUT_RETURN=0
 )(
  input wire clk,rst_n,
+ input wire[READERS-1:0]clk_macro, // six distinct physical roots; phase-compensated to clk
  input wire[READERS-1:0]read_v,input wire[READERS*RB-1:0]read_addr,
  output reg[READERS*32-1:0]read_data,output wire[READERS-1:0]read_return,
  input wire write_v,input wire[RB-1:0]write_addr,input wire[31:0]write_data
@@ -24,7 +25,7 @@ module ot_hbm_su_static_pinned_bank #(
  end
  assign read_return=MUT_RETURN!=0?r_late:r_return;
  ot_hbm_su_static_replicated_bank #(.READERS(READERS),.RB(RB),.MUT_COHERENCE(MUT_COHERENCE))u_data(
-  .clk(clk),.read_v(r_pin),.read_addr(a_pin),.read_data(raw_data),
+  .clk(clk),.clk_macro(clk_macro),.read_v(r_pin),.read_addr(a_pin),.read_data(raw_data),
   .write_v(w_pin),.write_addr(wa_pin),.write_data(wd_pin));
 endmodule
 `default_nettype wire

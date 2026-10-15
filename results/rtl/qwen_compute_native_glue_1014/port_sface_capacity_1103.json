@@ -1,0 +1,72 @@
+{
+  "schema": "opentallas.qwen-port-sface-capacity.v1",
+  "source_commit": "4704eaf6854586d1b31626536e15535e00b59897",
+  "sources": {
+    "tools/qwen_split/source_pin_plan.py": "2abf20ed6e5610d98ba88ee8756e0e9bd0effd9e4633abc8389cb6b3bb11205f",
+    "tools/pin_fit.py": "b790caa2756ed4201266163b6a0c2af90a27a0f602058b77d48bc3cd99d31c17",
+    "rtl/qwen_split/qfd_port_tiles.sv": "dd5dc40038a35fb5d087085c284f60830bc99cb892fb17fedc0a42e46f6c54bf"
+  },
+  "candidate": "Move rq/tc/tf to S alongside ty/tw on M5+M7",
+  "width_um": 1036.8,
+  "ports": {
+    "ty": 4096,
+    "tw": 4096,
+    "rq": 4425,
+    "tc": 341,
+    "tf": 104
+  },
+  "signal_bits": 13062,
+  "layers": {
+    "M5": {
+      "track_pitch_um": 0.048,
+      "pin_tracks": 2,
+      "min_pin_pitch_um": 0.096
+    },
+    "M7": {
+      "track_pitch_um": 0.064,
+      "pin_tracks": 2,
+      "min_pin_pitch_um": 0.128,
+      "min_width_um": 0.032
+    }
+  },
+  "gross_available_tracks": 37800,
+  "gross_two_track_cut": 0.6911111111111111,
+  "maximum_cut": 0.6,
+  "gross_maximum_bits_at_cut": 11340,
+  "excess_bits": 1722,
+  "gross_minimum_width_um": 1194.24,
+  "deratings": "None: PG blockages, face endpoints/corners, clock/reset pins, groups and legal phase all reduce capacity further.",
+  "orientation_scope": "R0/FS/MY preserve gross face capacity; no orientation can repair this lower bound.",
+  "verdict": "INFEASIBLE_BEFORE_PG",
+  "qualification": "Necessary lower bound only; no generated pin candidate, RTL change, latency claim, physical route or parent qualification.",
+  "next": "Die lead selects additional layer, split across faces with registered seams, or wider parent. Recompute every incident edge and total compiler-visible loop cycles before adoption.",
+  "coherent_alternatives": [
+    {
+      "name": "wide1296",
+      "width_um": 1296,
+      "total_south_bits": 13062,
+      "gross_two_track_cut": 0.5528888888888889,
+      "maximum_fraction_tracks_blocked_at_cut_0p60": 0.07851851851851854,
+      "die_width_delta_um": 518.4,
+      "die_area_estimate_mm2": 854.16,
+      "physical_gate": "Needs actual PG and legal phase in all orientations, all six siblings fitting, every incident peer pin and register hop; no width grant yet."
+    },
+    {
+      "name": "split_north_south",
+      "width_um": 1036.8,
+      "south_ports": [
+        "ty4096",
+        "tw4096"
+      ],
+      "north_ports": [
+        "rq4425",
+        "tc341",
+        "tf104"
+      ],
+      "south_gross_cut": 0.43343915343915346,
+      "north_gross_cut": 0.25767195767195766,
+      "physical_gate": "Needs coherent movement of the TT return/control peer group to the north seam, actual north clock/reset occupancy and physical per-bit relay placement. Existing W-peer placement does not qualify this split.",
+      "cycle_cost": "Unmeasured; all producer/consumer path ages and pipeline drains must be modelled before a parent grant."
+    }
+  ]
+}

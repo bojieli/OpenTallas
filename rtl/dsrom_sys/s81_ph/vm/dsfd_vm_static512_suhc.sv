@@ -4,7 +4,7 @@
 // Compiler assigns every request and release edge; no ready/credits or waits.
 // Per-slice valids and commit observations remain separate: this parent does
 // not hide a late physical slice by pretending that a logical row is complete.
-module dsfd_vm_static512_suhc #(parameter integer RET_PINREG=0)(
+module dsfd_vm_static512_suhc #(parameter integer RET_PINREG=0, parameter integer WSCATTER_PIPE=0)(
  input wire [15:0] ck_rscatter,input wire [15:0] ck_return,input wire [15:0] ck_wscatter,
  input wire [127:0] ck_wcapture,ck_bank,
  input wire [47:0] ck_relay_req,ck_relay_rsp,
@@ -34,7 +34,7 @@ module dsfd_vm_static512_suhc #(parameter integer RET_PINREG=0)(
    assign wd[128*q+:128]=wq_data[512*q+128*s+:128];
    assign wm[4*q+:4]=wq_mask[16*q+4*s+:4];
   end
-  dsfd_vm_static_slice128_suhc u_slice(.ck_rscatter(ck_rscatter[4*s+:4]),.ck_wcapture(ck_wcapture[32*s+:32]),.ck_wscatter(ck_wscatter[4*s+:4]),
+  dsfd_vm_static_slice128_suhc #(.WSCATTER_PIPE(WSCATTER_PIPE)) u_slice(.ck_rscatter(ck_rscatter[4*s+:4]),.ck_wcapture(ck_wcapture[32*s+:32]),.ck_wscatter(ck_wscatter[4*s+:4]),
    .ck_bank(ck_bank[32*s+:32]),
    .rst_rscatter_n(rst_rscatter_n[4*s+:4]),.rst_wcapture_n(rst_wcapture_n[32*s+:32]),.rst_wscatter_n(rst_wscatter_n[4*s+:4]),
    .rst_bank_n(rst_bank_n[32*s+:32]),.rst_relay_n(rst_relay_n[12*s+:12]),.ck_relay_req(ck_relay_req[12*s+:12]),.ck_relay_rsp(ck_relay_rsp[12*s+:12]),.native_rq_v(native_rq_v),.native_rq_row(native_rq_row),.native_rq_slot(native_rq_slot),

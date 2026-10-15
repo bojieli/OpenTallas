@@ -1,0 +1,179 @@
+original_sha256 ff57379af1ce5c3da09327a5fe8740e87108db88f59a26aebcc180368074cc39
+OT_ENTRIES entry clk_macro0 -> u_bank.u_data.g_read\[0\].u_m/clk (ot_sram_1r1w_128x256_m1_r2c2) wire 240.9 um LONG
+OT_ENTRIES entry clk_macro1 -> u_bank.u_data.g_read\[1\].u_m/clk (ot_sram_1r1w_128x256_m1_r2c2) wire 127.2 um LONG
+OT_ENTRIES entry clk_macro2 -> u_bank.u_data.g_read\[2\].u_m/clk (ot_sram_1r1w_128x256_m1_r2c2) wire 242.0 um LONG
+OT_ENTRIES entry clk_macro3 -> u_bank.u_data.g_read\[3\].u_m/clk (ot_sram_1r1w_128x256_m1_r2c2) wire 178.5 um LONG
+OT_ENTRIES entry clk_macro4 -> u_bank.u_data.g_read\[4\].u_m/clk (ot_sram_1r1w_128x256_m1_r2c2) wire 64.3 um LONG
+OT_ENTRIES entry clk_macro5 -> u_bank.u_data.g_read\[5\].u_m/clk (ot_sram_1r1w_128x256_m1_r2c2) wire 179.2 um LONG
+OT_HYBRID excluded hard entries: global -repair_clock_nets disabled; selected-root CTS retained
+OT_HYBRID CTS roots clk; hard-child entries excluded
+OT_ENTRIES done: 6 independent hard entries, 1 glue CTS roots, 6 entry wires over 60.0 um
+OT_DIRECT_MACRO ACCESSOR source_sha256=61aaf3f8c874867d13acbca9ef2f8d861a8217793d5b3605318886f8fd9f5777 executable_sha256=21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846 module_sha256=b3221367ae6d71774163a505c69426a7ccd4b817b5c989460e5860b145a6dfe9 compiler=g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt clk_macro0 -> u_bank.u_data.g_read[0].u_m/clk wire=130.71349610532894 library=ot_sram_1r1w_128x256_m1_r2c2_tt/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt clk_macro1 -> u_bank.u_data.g_read[1].u_m/clk wire=47.007894292889844 library=ot_sram_1r1w_128x256_m1_r2c2_tt/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt clk_macro2 -> u_bank.u_data.g_read[2].u_m/clk wire=131.70299625776778 library=ot_sram_1r1w_128x256_m1_r2c2_tt/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt clk_macro3 -> u_bank.u_data.g_read[3].u_m/clk wire=79.88744420153498 library=ot_sram_1r1w_128x256_m1_r2c2_tt/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt clk_macro4 -> u_bank.u_data.g_read[4].u_m/clk wire=17.7020135369147 library=ot_sram_1r1w_128x256_m1_r2c2_tt/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt clk_macro5 -> u_bank.u_data.g_read[5].u_m/clk wire=80.35826203258418 library=ot_sram_1r1w_128x256_m1_r2c2_tt/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_HYBRID CTS_MEASURE tt clk sinks=324 reference_scope=boundary boundary_sinks=306 min=223.7948862953809 mean=230.3942164273729 max=262.8215156018862 all_mean=230.9510370816793
+OT_ENTRIES LEVEL clk_macro0 deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_macro0 -> u_bank.u_data.g_read[0].u_m/clk wire=130.71349610532894 R=0 latency=99.68072032204395 phi=230.3942164273729
+OT_ENTRIES LEVEL clk_macro1 deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_macro1 -> u_bank.u_data.g_read[1].u_m/clk wire=47.007894292889844 R=0 latency=183.38632213448307 phi=230.3942164273729
+OT_ENTRIES LEVEL clk_macro2 deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_macro2 -> u_bank.u_data.g_read[2].u_m/clk wire=131.70299625776778 R=0 latency=98.69122016960512 phi=230.3942164273729
+OT_ENTRIES LEVEL clk_macro3 deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_macro3 -> u_bank.u_data.g_read[3].u_m/clk wire=79.88744420153498 R=0 latency=150.50677222583792 phi=230.3942164273729
+OT_ENTRIES LEVEL clk_macro4 deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_macro4 -> u_bank.u_data.g_read[4].u_m/clk wire=17.7020135369147 R=0 latency=212.6922028904582 phi=230.3942164273729
+OT_ENTRIES LEVEL clk_macro5 deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_macro5 -> u_bank.u_data.g_read[5].u_m/clk wire=80.35826203258418 R=0 latency=150.03595439478872 phi=230.3942164273729
+OT_ENTRIES LEVEL clk deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk -> u_bank.a_pin[0]$_DFF_P_/CLK wire=0 R=230.3942164273729 latency=0.0 phi=230.3942164273729
+OT_ENTRIES DOMAIN macro0 1111.111084ps IO0/0 boundary=230.3942164273729..230.3942164273729
+OT_ENTRIES DOMAIN macro1 1111.111084ps IO0/0 boundary=230.3942164273729..230.3942164273729
+OT_ENTRIES DOMAIN macro2 1111.111084ps IO0/0 boundary=230.3942164273729..230.3942164273729
+OT_ENTRIES DOMAIN macro3 1111.111084ps IO0/0 boundary=230.3942164273729..230.3942164273729
+OT_ENTRIES DOMAIN macro4 1111.111084ps IO0/0 boundary=230.3942164273729..230.3942164273729
+OT_ENTRIES DOMAIN macro5 1111.111084ps IO0/0 boundary=230.3942164273729..230.3942164273729
+OT_ENTRIES DOMAIN core 1111.111084ps IO103/198 boundary=223.79488629538088..262.8215156018862
+OT_MULTI_ROOT RELATED_PATH macro0 -> core max slack=131.551666 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro0 -> core min slack=407.077820 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro3 -> core max slack=165.728210 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro3 -> core min slack=323.563080 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro4 -> core max slack=333.361450 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro4 -> core min slack=151.664322 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro5 -> core max slack=374.359711 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro5 -> core min slack=190.032440 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro1 -> core max slack=311.895233 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro1 -> core min slack=202.069885 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro2 -> core max slack=336.470642 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro2 -> core min slack=281.621674 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro0 max slack=670.808472 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro0 min slack=-55.790871 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro1 max slack=550.653931 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro1 min slack=120.992691 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro2 max slack=472.550232 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro2 min slack=59.989876 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro3 max slack=662.451599 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro3 min slack=15.886140 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro4 max slack=557.908020 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro4 min slack=154.145172 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro5 max slack=497.487274 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro5 min slack=136.204575 (ordinary synchronous timing retained)
+OT_MULTI_ROOT OWNERSHIP PASS roots=1 registers=330 inputs=103 outputs=198 async_control_pins=38
+OT_ENTRIES COMP DONE tt 7 entries phi=230.3942164273729 boundary=223.79488629538088..262.8215156018862
+TOPOLOGY_SOURCE clk_macro0 net=clk_macro0 bterms=clk_macro0 iterms={u_bank.u_data.g_read\[0\].u_m/clk}
+TOPOLOGY_SOURCE clk_macro1 net=clk_macro1 bterms=clk_macro1 iterms={u_bank.u_data.g_read\[1\].u_m/clk}
+TOPOLOGY_SOURCE clk_macro2 net=clk_macro2 bterms=clk_macro2 iterms={u_bank.u_data.g_read\[2\].u_m/clk}
+TOPOLOGY_SOURCE clk_macro3 net=clk_macro3 bterms=clk_macro3 iterms={u_bank.u_data.g_read\[3\].u_m/clk}
+TOPOLOGY_SOURCE clk_macro4 net=clk_macro4 bterms=clk_macro4 iterms={u_bank.u_data.g_read\[4\].u_m/clk}
+TOPOLOGY_SOURCE clk_macro5 net=clk_macro5 bterms=clk_macro5 iterms={u_bank.u_data.g_read\[5\].u_m/clk}
+OT_DIRECT_MACRO RAW_LIBERTY_PIN ff clk_macro0 -> u_bank.u_data.g_read[0].u_m/clk wire=135.2940681564183 library=ot_sram_1r1w_128x256_m1_r2c2_ff/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN ff clk_macro1 -> u_bank.u_data.g_read[1].u_m/clk wire=49.43619838818167 library=ot_sram_1r1w_128x256_m1_r2c2_ff/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN ff clk_macro2 -> u_bank.u_data.g_read[2].u_m/clk wire=136.3041213126826 library=ot_sram_1r1w_128x256_m1_r2c2_ff/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN ff clk_macro3 -> u_bank.u_data.g_read[3].u_m/clk wire=83.28693323873308 library=ot_sram_1r1w_128x256_m1_r2c2_ff/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN ff clk_macro4 -> u_bank.u_data.g_read[4].u_m/clk wire=18.94105886654035 library=ot_sram_1r1w_128x256_m1_r2c2_ff/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN ff clk_macro5 -> u_bank.u_data.g_read[5].u_m/clk wire=83.7701231176624 library=ot_sram_1r1w_128x256_m1_r2c2_ff/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_HYBRID CTS_MEASURE ff clk sinks=324 reference_scope=boundary boundary_sinks=306 min=187.87900477179062 mean=192.83950439528337 max=223.387573221594 all_mean=193.33582711612985
+OT_ENTRIES LEVEL clk_macro0 deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff clk_macro0 -> u_bank.u_data.g_read[0].u_m/clk wire=135.2940681564183 R=0 latency=57.54543623886508 phi=192.83950439528337
+OT_ENTRIES LEVEL clk_macro1 deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff clk_macro1 -> u_bank.u_data.g_read[1].u_m/clk wire=49.43619838818167 R=0 latency=143.4033060071017 phi=192.83950439528337
+OT_ENTRIES LEVEL clk_macro2 deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff clk_macro2 -> u_bank.u_data.g_read[2].u_m/clk wire=136.3041213126826 R=0 latency=56.53538308260076 phi=192.83950439528337
+OT_ENTRIES LEVEL clk_macro3 deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff clk_macro3 -> u_bank.u_data.g_read[3].u_m/clk wire=83.28693323873308 R=0 latency=109.55257115655029 phi=192.83950439528337
+OT_ENTRIES LEVEL clk_macro4 deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff clk_macro4 -> u_bank.u_data.g_read[4].u_m/clk wire=18.94105886654035 R=0 latency=173.89844552874303 phi=192.83950439528337
+OT_ENTRIES LEVEL clk_macro5 deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff clk_macro5 -> u_bank.u_data.g_read[5].u_m/clk wire=83.7701231176624 R=0 latency=109.06938127762098 phi=192.83950439528337
+OT_ENTRIES LEVEL clk deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
+OT_ENTRIES COMP ff clk -> u_bank.a_pin[0]$_DFF_P_/CLK wire=0 R=192.83950439528337 latency=0.0 phi=192.83950439528337
+OT_ENTRIES DOMAIN macro0 1111.111084ps IO0/0 boundary=192.83950439528337..192.83950439528337
+OT_ENTRIES DOMAIN macro1 1111.111084ps IO0/0 boundary=192.83950439528337..192.83950439528337
+OT_ENTRIES DOMAIN macro2 1111.111084ps IO0/0 boundary=192.83950439528337..192.83950439528337
+OT_ENTRIES DOMAIN macro3 1111.111084ps IO0/0 boundary=192.83950439528337..192.83950439528337
+OT_ENTRIES DOMAIN macro4 1111.111084ps IO0/0 boundary=192.83950439528337..192.83950439528337
+OT_ENTRIES DOMAIN macro5 1111.111084ps IO0/0 boundary=192.83950439528337..192.83950439528337
+OT_ENTRIES DOMAIN core 1111.111084ps IO103/198 boundary=187.87900477179062..223.38757322159404
+OT_MULTI_ROOT RELATED_PATH macro0 -> core max slack=131.113785 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro0 -> core min slack=464.702881 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro3 -> core max slack=164.251053 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro3 -> core min slack=435.178558 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro4 -> core max slack=330.552582 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro4 -> core min slack=327.457886 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro5 -> core max slack=371.811310 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro5 -> core min slack=301.190094 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro1 -> core max slack=311.087708 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro1 -> core min slack=345.587677 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro2 -> core max slack=335.904694 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro2 -> core min slack=338.043304 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro0 max slack=672.871277 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro0 min slack=-113.937363 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro1 max slack=553.043091 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro1 min slack=-23.336332 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro2 max slack=475.624481 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro2 min slack=2.814637 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro3 max slack=664.484253 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro3 min slack=-96.111122 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro4 max slack=560.404480 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro4 min slack=-22.143314 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro5 max slack=499.908905 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro5 min slack=25.012409 (ordinary synchronous timing retained)
+OT_MULTI_ROOT OWNERSHIP PASS roots=1 registers=330 inputs=103 outputs=198 async_control_pins=38
+OT_ENTRIES COMP DONE ff 7 entries phi=192.83950439528337 boundary=187.87900477179062..223.38757322159404
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt clk_macro0 -> u_bank.u_data.g_read[0].u_m/clk wire=130.71349610532894 library=ot_sram_1r1w_128x256_m1_r2c2_tt/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt clk_macro1 -> u_bank.u_data.g_read[1].u_m/clk wire=47.007894292889844 library=ot_sram_1r1w_128x256_m1_r2c2_tt/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt clk_macro2 -> u_bank.u_data.g_read[2].u_m/clk wire=131.70299625776778 library=ot_sram_1r1w_128x256_m1_r2c2_tt/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt clk_macro3 -> u_bank.u_data.g_read[3].u_m/clk wire=79.88744420153498 library=ot_sram_1r1w_128x256_m1_r2c2_tt/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt clk_macro4 -> u_bank.u_data.g_read[4].u_m/clk wire=17.7020135369147 library=ot_sram_1r1w_128x256_m1_r2c2_tt/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt clk_macro5 -> u_bank.u_data.g_read[5].u_m/clk wire=80.35826203258418 library=ot_sram_1r1w_128x256_m1_r2c2_tt/ot_sram_1r1w_128x256_m1_r2c2 (internal arcs retained)
+OT_HYBRID CTS_MEASURE tt clk sinks=324 reference_scope=boundary boundary_sinks=306 min=223.70461128533034 mean=229.02116537538768 max=260.28576620351 all_mean=229.59105160666914
+OT_ENTRIES LEVEL clk_macro0 deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_macro0 -> u_bank.u_data.g_read[0].u_m/clk wire=130.71349610532894 R=0 latency=98.30766927005874 phi=229.02116537538768
+OT_ENTRIES LEVEL clk_macro1 deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_macro1 -> u_bank.u_data.g_read[1].u_m/clk wire=47.007894292889844 R=0 latency=182.01327108249785 phi=229.02116537538768
+OT_ENTRIES LEVEL clk_macro2 deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_macro2 -> u_bank.u_data.g_read[2].u_m/clk wire=131.70299625776778 R=0 latency=97.3181691176199 phi=229.02116537538768
+OT_ENTRIES LEVEL clk_macro3 deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_macro3 -> u_bank.u_data.g_read[3].u_m/clk wire=79.88744420153498 R=0 latency=149.1337211738527 phi=229.02116537538768
+OT_ENTRIES LEVEL clk_macro4 deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_macro4 -> u_bank.u_data.g_read[4].u_m/clk wire=17.7020135369147 R=0 latency=211.31915183847298 phi=229.02116537538768
+OT_ENTRIES LEVEL clk_macro5 deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_macro5 -> u_bank.u_data.g_read[5].u_m/clk wire=80.35826203258418 R=0 latency=148.6629033428035 phi=229.02116537538768
+OT_ENTRIES LEVEL clk deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk -> u_bank.a_pin[0]$_DFF_P_/CLK wire=0 R=229.02116537538768 latency=0.0 phi=229.02116537538768
+OT_ENTRIES DOMAIN macro0 1111.111084ps IO0/0 boundary=229.02116537538768..229.02116537538768
+OT_ENTRIES DOMAIN macro1 1111.111084ps IO0/0 boundary=229.02116537538768..229.02116537538768
+OT_ENTRIES DOMAIN macro2 1111.111084ps IO0/0 boundary=229.02116537538768..229.02116537538768
+OT_ENTRIES DOMAIN macro3 1111.111084ps IO0/0 boundary=229.02116537538768..229.02116537538768
+OT_ENTRIES DOMAIN macro4 1111.111084ps IO0/0 boundary=229.02116537538768..229.02116537538768
+OT_ENTRIES DOMAIN macro5 1111.111084ps IO0/0 boundary=229.02116537538768..229.02116537538768
+OT_ENTRIES DOMAIN core 1111.111084ps IO103/198 boundary=223.70461128533032..260.28576620351
+OT_MULTI_ROOT RELATED_PATH macro0 -> core max slack=132.324814 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro0 -> core min slack=464.517456 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro3 -> core max slack=165.471970 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro3 -> core min slack=435.154358 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro4 -> core max slack=332.003204 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro4 -> core min slack=327.444946 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro5 -> core max slack=373.255096 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro5 -> core min slack=300.900879 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro1 -> core max slack=313.534302 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro1 -> core min slack=345.587677 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro2 -> core max slack=337.280487 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH macro2 -> core min slack=338.048737 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro0 max slack=560.039429 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro0 min slack=31.034786 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro1 max slack=440.668610 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro1 min slack=40.619343 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro2 max slack=382.682617 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro2 min slack=31.730452 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro3 max slack=552.940735 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro3 min slack=31.329050 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro4 max slack=478.469330 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro4 min slack=32.699177 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro5 max slack=381.030640 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> macro5 min slack=31.736891 (ordinary synchronous timing retained)
+OT_MULTI_ROOT OWNERSHIP PASS roots=1 registers=330 inputs=103 outputs=198 async_control_pins=38
+OT_ENTRIES COMP DONE tt 7 entries phi=229.02116537538768 boundary=223.70461128533032..260.28576620351

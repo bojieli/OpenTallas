@@ -58,7 +58,9 @@ def render(die, rtl, groups, dirs, params, extra_params, note):
     decl = []
     for port, pins in groups.items():
         w = len(pins)
-        decl.append(f'    {"input " if dirs[port] == "in" else "output"} wire [{w - 1}:0] {port}')
+        scalar = die == "dsfd_bf_front_static" and w == 1
+        shape = "" if scalar else f"[{w - 1}:0] "
+        decl.append(f'    {"input " if dirs[port] == "in" else "output"} wire {shape}{port}')
     if die == 'dsfd_bf_front_static':
         decl.append('    input wire [37:0] f_prog')
         decl.append('    input wire io_clk')
@@ -80,10 +82,12 @@ def render(die, rtl, groups, dirs, params, extra_params, note):
                     L.append('`ifdef DSFD_BF_DIE_MUT_SWAP')
                     L.append(f'    assign {sig} = {port}[{mut[(port, i)]}];')
                     L.append('`else')
-                    L.append(f'    assign {sig} = {port}[{i}];')
+                    pin = port if die == 'dsfd_bf_front_static' and len(pins) == 1 else f'{port}[{i}]'
+                    L.append(f'    assign {sig} = {pin};')
                     L.append('`endif')
                 else:
-                    L.append(f'    assign {sig} = {port}[{i}];')
+                    pin = port if die == 'dsfd_bf_front_static' and len(pins) == 1 else f'{port}[{i}]'
+                    L.append(f'    assign {sig} = {pin};')
             else:
                 L.append(f'    assign {port}[{i}] = {sig};')
     ps = ', '.join(f'.{k}({v})' for k, v in list(params.items()) + [(n, n) for n in pnames])

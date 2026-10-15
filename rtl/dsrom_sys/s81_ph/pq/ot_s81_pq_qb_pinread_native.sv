@@ -106,6 +106,14 @@ module ot_s81_pq_qb_headpc_native (
         assign rd1_b[gb] = {written[gb][r1c[3]], meta[gb][r1c[3]][14:12], meta[gb][r1c[2]][11:8],
                             meta[gb][r1c[1]][7:4], meta[gb][r1c[0]][3:0]};
     end endgenerate
+    // P7 (10-15, P6 route TT -90.64: r0c/r1c -> per-bank 96:1 metadata read -> 4:1 bank select (i0/i1 bank bits) ->
+    // m0/m1[0] enable flop in one edge). The per-bank read results are registered first (mb*_q, 2 x 4 x 16 FF) and the
+    // 4:1 bank select moves into the next stage, which REPLACES the first stage of the m0/m1 alignment delay line
+    // (m*[0] -> m*[1] was a pure delay): the metadata reaches m*[3] on the same edge as before, 0 added cycles.
+    // m*[0]'s hold-when-idle enable is dropped: m* are consumed only under valid[3].
+    reg [15:0] mb0_q [0:3], mb1_q [0:3];
+    integer gq;
+    always @(posedge clk) for (gq = 0; gq < 4; gq = gq + 1) begin mb0_q[gq] <= rd0_b[gq]; mb1_q[gq] <= rd1_b[gq]; end
     always @(posedge clk or negedge rst_l[0]) begin
       if(!rst_l[0]) begin
         sticky<=0;check0<=0;check1<=0;
@@ -113,11 +121,11 @@ module ot_s81_pq_qb_headpc_native (
       end else begin
         selected0[0]<=bank0; selected1[0]<=bank1;
         valid[0]<=gates & {2{consume_1}};
-        if(consume_1&&gates[0]) m0[0]<=rd0_b[bank0];
-        if(consume_1&&gates[1]) m1[0]<=rd1_b[bank1];
+        m0[1]<=mb0_q[selected0[0]]; m1[1]<=mb1_q[selected1[0]];
         for(j=1;j<4;j=j+1) begin
           selected0[j]<=selected0[j-1];selected1[j]<=selected1[j-1];
-          valid[j]<=valid[j-1];m0[j]<=m0[j-1];m1[j]<=m1[j-1];
+          valid[j]<=valid[j-1];
+          if(j>1) begin m0[j]<=m0[j-1];m1[j]<=m1[j-1]; end
         end
         check0<=valid[3][0];check1<=valid[3][1];
         expected0<=m0[3][14:10];expected1<=m1[3][14:10];

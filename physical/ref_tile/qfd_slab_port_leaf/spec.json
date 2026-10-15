@@ -26,8 +26,8 @@
   }
  },
  "outline": {
-  "w": 414.72,
-  "h": 172.8
+  "w": 241.92,
+  "h": 211.68
  },
  "children": [
   {
@@ -45,7 +45,7 @@
    "count": 1,
    "inst": "u_port.g_hard_mul.g_mul[1].u_ln",
    "at": [
-    125.28,
+    138.24,
     22.68
    ],
    "orient": "R0"
@@ -55,20 +55,20 @@
    "count": 1,
    "inst": "u_port.g_hard_mul.g_mul[2].u_ln",
    "at": [
-    218.16,
-    22.68
+    32.4,
+    115.56
    ],
-   "orient": "R0"
+   "orient": "R180"
   },
   {
    "view": "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes",
    "count": 1,
    "inst": "u_port.g_hard_mul.g_mul[3].u_ln",
    "at": [
-    311.04,
-    22.68
+    138.24,
+    115.56
    ],
-   "orient": "R0"
+   "orient": "R180"
   }
  ],
  "sources": [
@@ -112,10 +112,12 @@
   "S": [
    "ck_mul0",
    "ck_mul1",
-   "ck_mul2",
-   "ck_mul3",
    "ck",
    "rst_n"
+  ],
+  "N": [
+   "ck_mul2",
+   "ck_mul3"
   ]
  },
  "route": {
@@ -132,11 +134,11 @@
   "OT_CHANNEL_BLOCK_UM": "20",
   "OT_ROW_MIN_UM": "6"
  },
- "structural_change": "q15 port-tiles: new leaf. Each TP8 slab result port (group scale merge + ot_qwen_me_spport_w12 HARD_MUL, 10,455 sinks on ck_group<g>) was inline in qfd_slab_result_half inside the 2.46 mm port_tiles parent; now its own hardened cluster on its die clock entry with the four CLOSED slab_pg_lanes children on ck_mul entries (structure-only, hierarchy-equivalence bench fc0e16f69). pl3: lanes in one row with clock pins 22.7 um from scalar S-face entry pins ck_mul0-3 (pl2 gate: a 4-bit ck_mul bus pin far from the upper-row lanes was buffered by CTS repair_clock_nets -> OT_ENTRIES no direct port).",
+ "structural_change": "q15 port-tiles: new leaf. Each TP8 slab result port (group scale merge + ot_qwen_me_spport_w12 HARD_MUL, 10,455 sinks on ck_group<g>) was inline in qfd_slab_result_half inside the 2.46 mm port_tiles parent; now its own hardened cluster on its die clock entry with the four CLOSED slab_pg_lanes children on ck_mul entries (structure-only, hierarchy-equivalence bench fc0e16f69). pl3: lanes in one row with clock pins 22.7 um from scalar S-face entry pins ck_mul0-3 (pl2 gate: a 4-bit ck_mul bus pin far from the upper-row lanes was buffered by CTS repair_clock_nets -> OT_ENTRIES no direct port). pl4: pl3 CTS gate measured in->reg -567.8 ps (pt_id strap now a port: the 16-row (q0+g)*ots multiply and qg frame no longer constant-fold) and ck insertion 471.8/spread 132.8 on the 414.7-um row; fix = 5-bit strap captured at a pin flop + QOTS_SMALL exact decomposition (5 partial products) + compact 2x2 lanes (upper row R180, scalar ck_mul2/3 entries on N at their clock pins), util ~0.54.",
  "job": {
   "owner": "Claude:q15_compute_elem",
   "branch": "claude/q15-port-tiles",
-  "tag": "pl3",
+  "tag": "pl4",
   "purpose": "port_tiles result-port leaf (x4 per result half)",
   "extra_paths": [
    "physical/qwen_port_tiles_1015",
@@ -155,7 +157,7 @@
     "needs": [
      "verilator"
     ],
-    "pass_regex": "^EQUIV MUT=0 .* PASS$"
+    "pass_regex": "^EQUIV .*MUT=0 .* PASS$"
    },
    {
     "name": "equiv_m1",
@@ -166,7 +168,7 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "^EQUIV MUT=1 .* FAIL$"
+    "fail_regex": "^EQUIV .*MUT=1 .* FAIL$"
    },
    {
     "name": "equiv_m2",
@@ -177,7 +179,7 @@
     "needs": [
      "verilator"
     ],
-    "fail_regex": "^EQUIV MUT=2 .* FAIL$"
+    "fail_regex": "^EQUIV .*MUT=2 .* FAIL$"
    }
   ]
  },
@@ -201,16 +203,16 @@
    55.9
   ],
   "ck_mul1": [
-   147.78,
-   148.78
+   160.74,
+   161.74
   ],
   "ck_mul2": [
-   240.66,
-   241.66
+   80.18,
+   81.18
   ],
   "ck_mul3": [
-   333.54,
-   334.54
+   186.02,
+   187.02
   ],
   "ck": [
    100.0,
