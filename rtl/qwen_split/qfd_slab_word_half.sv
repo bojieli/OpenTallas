@@ -21,9 +21,11 @@ module qfd_slab_word_half #(
     genvar i,p,l;
     generate for(i=0;i<8;i=i+1) begin:g_root
         (* keep *) reg [513:0] q;
+        (* keep *) reg reset_q;
+        always @(posedge bw_ck[i]) reset_q <= rst_n;
         always @(posedge bw_ck[i]) begin
             q[511:0] <= bw[514*i +: 512];
-            q[513:512] <= rst_n ? bw[514*i+512 +: 2] : 2'b0;
+            q[513:512] <= reset_q ? bw[514*i+512 +: 2] : 2'b0;
         end
         assign captured[514*i +: 514] = q;
     end endgenerate
@@ -32,18 +34,20 @@ module qfd_slab_word_half #(
     generate for(p=0;p<4;p=p+1) begin:g_pair
         localparam integer IA = MUTANT ? p : 2*p;
         localparam integer IB = MUTANT ? p+4 : 2*p+1;
+        (* keep *) reg reset_q;
+        always @(posedge pair_ck[p]) reset_q <= rst_n;
         wire valid_in = captured[514*IA+512] & captured[514*IB+512];
         wire [15:0] lv;
         wire [31:0] le;
         for(l=0;l<16;l=l+1) begin:g_lane
             ot_hdc_fp32_add_lat #(.LAT(ADD_LAT),.DRST(0)) u_add (
-                .clk(pair_ck[p]), .rst_n(rst_n), .valid_in(valid_in),
+                .clk(pair_ck[p]), .rst_n(reset_q), .valid_in(valid_in),
                 .a(captured[514*IA+32*l +: 32]), .b(captured[514*IB+32*l +: 32]),
                 .y(summed[512*p+32*l +: 32]), .err(le[2*l +: 2]), .valid_out(lv[l]));
         end
         reg mismatch;
         always @(posedge pair_ck[p])
-            if(!rst_n) mismatch <= 1'b0;
+            if(!reset_q) mismatch <= 1'b0;
             else mismatch <= mismatch | (captured[514*IA+512] ^ captured[514*IB+512])
                 | captured[514*IA+513] | captured[514*IB+513];
         assign pv[p] = lv[0];
