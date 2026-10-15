@@ -1,0 +1,16 @@
+BAD front release edge c119 put0
+BAD front release edge c120 put0
+BAD front release edge c121 put0
+BAD front release edge c122 put0
+BAD front release edge c123 put0
+BAD front release edge c124 put0
+BAD front release edge c125 put0
+BAD front release edge c126 put0
+BAD front release edge c151 put1
+BAD front release edge c152 put1
+BAD front release edge c153 put1
+BAD front release edge c154 put1
+MEASURE mode4 phase137 jit16 reads8 lands8 puts8 returns8 frees1 stall32 maxocc8 errors16 corefirst220
+[564224000] %Fatal: tb_qkd_kv_replay_boundary.sv:141: Assertion failed in tb_qkd_kv_replay_boundary: BOUNDARY_FAIL
+%Error: /srv/opentallas-scratch/codex/kv-calendar-join-1417-r3/source/rtl/test/qwen_static_kv/tb_qkd_kv_replay_boundary.sv:141: Verilog $stop
+Aborting...

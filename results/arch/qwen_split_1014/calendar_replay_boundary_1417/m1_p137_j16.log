@@ -1,0 +1,14 @@
+BAD PHY command edge c65 expected64
+BAD PHY command edge c66 expected65
+BAD PHY command edge c67 expected66
+BAD PHY command edge c68 expected67
+BAD PHY command edge c69 expected68
+BAD PHY command edge c70 expected69
+BAD PHY command edge c71 expected70
+BAD PHY command edge c72 expected71
+BAD front release edge c119 put0
+BAD front release edge c127 put1
+MEASURE mode1 phase137 jit16 reads8 lands8 puts8 returns8 frees1 stall1 maxocc8 errors10 corefirst220
+[564224000] %Fatal: tb_qkd_kv_replay_boundary.sv:141: Assertion failed in tb_qkd_kv_replay_boundary: BOUNDARY_FAIL
+%Error: /srv/opentallas-scratch/codex/kv-calendar-join-1417-r3/source/rtl/test/qwen_static_kv/tb_qkd_kv_replay_boundary.sv:141: Verilog $stop
+Aborting...

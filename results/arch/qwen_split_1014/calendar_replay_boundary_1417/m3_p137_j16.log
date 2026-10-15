@@ -1,0 +1,16 @@
+BAD CORE ring fault
+BAD CORE ring fault
+BAD CORE ring fault
+BAD CORE ring fault
+BAD CORE ring fault
+BAD CORE ring fault
+BAD CORE ring fault
+BAD CORE ring fault
+BAD CORE ring fault
+BAD CORE ring fault
+BAD CORE ring fault
+BAD CORE ring fault
+MEASURE mode3 phase137 jit16 reads8 lands8 puts8 returns8 frees1 stall0 maxocc8 errors354 corefirst220
+[564224000] %Fatal: tb_qkd_kv_replay_boundary.sv:141: Assertion failed in tb_qkd_kv_replay_boundary: BOUNDARY_FAIL
+%Error: /srv/opentallas-scratch/codex/kv-calendar-join-1417-r3/source/rtl/test/qwen_static_kv/tb_qkd_kv_replay_boundary.sv:141: Verilog $stop
+Aborting...

@@ -1,0 +1,26 @@
+{
+  "status": "PASS_COMPONENT_ONLY",
+  "actual_worker": "ot-epyc1tb",
+  "unit": "oth-ubuntu-2627317-1792099877",
+  "memory_gb": 4,
+  "threads": 2,
+  "remote": "/srv/opentallas-scratch/codex/kv-calendar-join-1417-r3",
+  "source_manifest_current_tree_verified": true,
+  "gate_current_tree_verified": true,
+  "no_live_owned_jobs": true,
+  "no_die_binding_or_physical_slot_grant": true,
+  "corrected_fixture_defects": [
+    "CORE boot first change now aligns to its own negative edge",
+    "PO checked after launch NBA: RL23 response becomes visible after edge+23, PI captures at edge+24"
+  ],
+  "preserved_failures": [
+    "initial_boot_alignment_failure.log",
+    "initial_phy_alignment_failure.log"
+  ],
+  "superseded_runs": [
+    "E1 oth-ubuntu-2606318-1792099680 initial boot defect",
+    "AGI oth-ubuntu-1585282-1792099718 stale first snapshot selected before r2 allhost source pinning; same boot defect, no qualification",
+    "E1 oth-ubuntu-2614567-1792099753 r2 jitter16 passed but zerojitter exposed PHY fixture bug",
+    "E1 oth-ubuntu-2626211-1792099821 r2 zerojitter early PHY return rejected"
+  ]
+}

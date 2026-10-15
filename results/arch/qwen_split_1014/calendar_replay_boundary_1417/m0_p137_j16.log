@@ -1,0 +1,6 @@
+MEASURE mode0 phase137 jit16 reads8 lands8 puts8 returns8 frees1 stall0 maxocc8 errors0 corefirst220
+PASS actual replay/controller/front/ring component one8-sector block; no production schedule/physical claim
+- /srv/opentallas-scratch/codex/kv-calendar-join-1417-r3/source/rtl/test/qwen_static_kv/tb_qkd_kv_replay_boundary.sv:142: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 564ns; walltime 0.007 s; speed 71.118 us/s
+- Verilator: cpu 0.008 s on 1 threads; alloced 1017 MB
