@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import re
 from pathlib import Path
 import subprocess
 
@@ -49,8 +50,23 @@ def main():
             assert run.returncode == 0 and "STATIC_PC_BOUNDARY PASS" in log, log
         records.append({"name": name, "result": "rejected" if target else "PASS", "returncode": run.returncode, "log": str(out / (name + ".log"))})
         print(name, records[-1]["result"], log.strip().splitlines()[0])
-    sources = [mem, core, boundary, tb, Path(__file__).resolve()]
-    receipt = {"qualification": "component only; no native physical or whole-token qualification", "read_added_cycles": 2, "kr_accept_to_published_status_added_cycles": 2, "write_ack_to_published_status_added_cycles": 2, "declared_boundary_register_bits": 1313, "constant_request_bits_before_mapping": 36, "cases": records, "sources": {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}}
+    cost_tb = d / "tb_hbm_svc_pc_boundary_cost.sv"
+    costs = {}
+    for name, defines in [("baseline_cost", []), ("boundary_cost", ["-DBOUNDARY"])]:
+        exe = out / (name + ".vvp")
+        subprocess.run(["iverilog", "-g2012", *defines, "-s", "tb_hbm_svc_pc_boundary_cost", "-o", str(exe), str(mem), str(core), str(boundary), str(cost_tb)], check=True)
+        run = subprocess.run(["vvp", str(exe)], text=True, capture_output=True, timeout=30)
+        log = run.stdout + run.stderr
+        (out / (name + ".log")).write_text(log)
+        assert run.returncode == 0, log
+        match = re.search(r"LATENCY_COST sectors=64 prefetch_elapsed=(\d+) writeback_elapsed=(\d+)", log)
+        assert match, log
+        costs[name] = {"prefetch_cycles": int(match[1]), "writeback_cycles": int(match[2])}
+        print(name, costs[name])
+    for field in ("prefetch_cycles", "writeback_cycles"):
+        assert costs["boundary_cost"][field] - costs["baseline_cost"][field] == 130, costs
+    sources = [mem, core, boundary, tb, cost_tb, Path(__file__).resolve()]
+    receipt = {"measured_equal_phy_provider_64_sector_cost": costs, "qualification": "component only; no native physical or whole-token qualification", "read_added_cycles": 2, "kr_accept_to_published_status_added_cycles": 2, "write_ack_to_published_status_added_cycles": 2, "declared_boundary_register_bits": 1313, "constant_request_bits_before_mapping": 36, "cases": records, "sources": {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}}
     (out / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
 
 

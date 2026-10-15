@@ -1,0 +1,37 @@
+{
+  "status": "candidate_only_not_adopted_or_throughput_qualified",
+  "actual_band_instances": 34,
+  "actual_PC_instances": 128,
+  "declared_register_bits_added_per_pc": 1313,
+  "declared_register_bits_added_total": 168064,
+  "estimated_nonconstant_register_bits_added_total": 163456,
+  "SRAM_added": 0,
+  "fixed_read_II": 1,
+  "scheduled_read_added_cycles": 2,
+  "scheduled_block_issue_slots_unchanged": 256,
+  "actual_equal_provider_64_sector_prefetch_cycles": {
+    "baseline": 128,
+    "candidate": 258,
+    "delta": 130
+  },
+  "actual_equal_provider_64_sector_writeback_cycles": {
+    "baseline": 256,
+    "candidate": 386,
+    "delta": 130
+  },
+  "calendar_bound": false,
+  "production_token_loss_measured": false,
+  "source_sha256": {
+    "physical/hbm_accel_die_views/svc/v15/contract.json": "5cfb252f56578179ce596de63432f63ee941c544e9e43f8d943fe0bbba74f644",
+    "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s0.sv": "0a473b1752b06da44388404c78fec7e5a32a5eaf9069f244c50535c8f46b5b6b",
+    "tools/hbm_svc_v15_contract.py": "fd573c87a1ddad31c8b3d3d97748939bab29bd64944ba7d8dfef26428ef7d9fd",
+    "tools/hbm_svc_v15_pc_model.py": "81cdf7da2501b58c99970f978dcc01f75c6268b48ff661092735d941153d2f41"
+  },
+  "required_updates": [
+    "successor contract/generator module identity",
+    "independent per-PC boundary/core clock pins and compensated die delivery",
+    "actual slot/pin grant for boundary FF leaf",
+    "actual service/CP compiler calendar accounting",
+    "actual PHY/provider and whole-token throughput measurement"
+  ]
+}
