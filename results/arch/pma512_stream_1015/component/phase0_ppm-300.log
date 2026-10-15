@@ -1,0 +1,5 @@
+PASS STREAM PMA544->512->544 exact4096 words, all544 bits, 16/17 ratio phase0.000000 ppm-300.000000
+- rtl/hbm_accel/io_static_20261015/tb_pma_stream.sv:35: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 70us; walltime 0.013 s; speed 5.174 ms/s
+- Verilator: cpu 0.014 s on 1 threads; alloced 1017 MB

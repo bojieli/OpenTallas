@@ -1,0 +1,14 @@
+{
+  "slot_count_each_direction": 16,
+  "tx_slot_bits": 544,
+  "rx_slot_bits": 512,
+  "storage_bits": 16896,
+  "output_bits": 1056,
+  "max_slot_storage_sinks_per_root": 8704,
+  "read_mux_slots": 2,
+  "phase_step_bits": 32,
+  "clock_ratio_fec_to_phy": "16/17",
+  "proposed_test_latency_fec_edges": 13,
+  "physical_qualified": false,
+  "mechanism": "write full source words; read one or two immutable occupied slots; synchronized per-slot completion/release toggles observe ownership only; fixed epochs issue every clock edge"
+}
