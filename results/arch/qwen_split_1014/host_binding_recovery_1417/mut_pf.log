@@ -1,0 +1,5 @@
+ACTIVITY ctrl_es_cycles=0 land_er_cycles=2970 boot_done_cycles=0 hc_hb_cycles=0
+FAIL host partition bench: moved per-PC logic idle (no evidence)
+FATAL: /tmp/claude-1000/kvbind/tb_host_partition_equiv.sv:232: 
+       Time: 3000000 Scope: tb_host_partition_equiv
+rc=1

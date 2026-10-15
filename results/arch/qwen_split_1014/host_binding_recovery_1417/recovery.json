@@ -1,0 +1,35 @@
+{
+  "schema": "opentallas.qwen_host_bind_recovery.v1",
+  "time": "2026-10-15T14:20:52.292579-07:00",
+  "source_origin": "/home/ubuntu/wt/qwen-split-kvsys",
+  "original_branch": "claude/kvsys-bind-1015",
+  "original_files_preserved": true,
+  "source_sha256": {
+    "rtl/qwen_sys/host_integrated_20261014/qkd_host_root_integrated.sv": "39710fca6f91428ecc7dafd9e61d52a024426c9779ae3f36314a5851f59c1561",
+    "rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv": "b7a1a282eb02f00dd0b7e70a7a633f59aec7fdcf3f1c961b0e6eeb560b1291f2",
+    "rtl/test/qwen_split/qkd_host_root_composed.sv": "c991a1a7c41fc4fb9e7f67401d6aa67a376fcae48760951da41302f362aa579a",
+    "tools/qwen_kv_die/kv_die.py": "9db827814596317f3fc11ad3d2178b329a1e3af0a50ef7ec6763bdd8ed26cbc7"
+  },
+  "generator_reproduction": {
+    "root": "BYTE_IDENTICAL",
+    "composed": "BYTE_IDENTICAL"
+  },
+  "simulation": {
+    "positive": "FAIL_ACTIVITY",
+    "physical_fault_mutant": "FAIL_SAME_ACTIVITY",
+    "admission_mutant": "FAIL_SAME_ACTIVITY",
+    "activity": {
+      "ctrl_es_cycles": 0,
+      "land_er_cycles": 2970,
+      "boot_done_cycles": 0,
+      "hc_hb_cycles": 0
+    }
+  },
+  "qualification": "OPEN",
+  "scope": "Recovered source draft; generator identity only. No successful active HOST root proof, no mutant discrimination, no native/physical adoption.",
+  "next": [
+    "Build valid HOST/boot/program stimulus at real declared boundary; retain current idle activity failure gate.",
+    "Observe actual physical-fault diagnostic and admission-dependent dispatch plus failing typed-fault/admission mutants.",
+    "Regenerate source-current die pin/bind audit and physical successor after functional qualification."
+  ]
+}
