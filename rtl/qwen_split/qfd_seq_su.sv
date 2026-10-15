@@ -42,6 +42,9 @@ module qfd_seq_su (
     output wire [55:0]   dc,
     output wire [43:0]   kvd,
     output wire [546:0]  cd_d,
+    // Fixed collective command calendar, PW944..960, same source edge as payload.
+    output wire [49:0]   coll_cmd,
+    input wire          coll_cmd_free,
     input  wire          cd_cr,
     input  wire [517:0]  cc,
     input  wire [91:0]   xm,
@@ -144,7 +147,10 @@ module qfd_seq_su (
     // rom_fault leaves from a flop: the body's rom_fault OR the constant-buffer groups' sticky fault (+1 edge, flag only)
     reg rom_fault_q;
     always @(posedge ck or negedge rsi) if (!rsi) rom_fault_q <= 1'b0; else rom_fault_q <= rom_fault | cb_flt_q;
-    assign dc   = {rom_fault_q, kv_write_flush, coll_busy, core_fault, s_fault, s_done, seq_ntok, seq_nval};
+    wire coll_issue_fault;
+    qfd_seq_su_collective_calendar u_coll_calendar(.ck(ck),.rsi(rsi),.dh(dh),
+      .cmd_free(coll_cmd_free),.cmd(coll_cmd),.fault(coll_issue_fault));
+    assign dc   = {rom_fault_q | coll_issue_fault, kv_write_flush, coll_busy, core_fault, s_fault, s_done, seq_ntok, seq_nval};
     assign kvd  = {kvd_v, kvd_kindk, kvd_pos, kvd_wbase};
     assign cd_d = {c_valid, c_tag, c_mode, c_last, c_data};
     assign xs   = {su_acc_o, su_idle_o, su_prog_o, su_rows_o};

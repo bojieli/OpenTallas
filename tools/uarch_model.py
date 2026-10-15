@@ -60,6 +60,34 @@ def qwen_xpf_static_control_model(entries=4, program_words=64):
                 qualification='mechanism bench only; actual producer trace/calendar, native pin/reset/clock, area and measured layer cost remain unqualified')
 
 
+def qwen_host_typed_record_model():
+    """Exact declared control-storage census before physical record leaf sizing."""
+    return dict(schema='opentallas.qwen-host-typed-record.v1',replicas=1,
+        context_tx_ff=630,auth_tx_ff=664,witness_rx_ff=84,shared_pin_ff=550,
+        declared_ff=1928,clock_roots_added=1,clock_period_fs=833334,
+        payload_bits_per_cycle=548,max_records_per_cycle=1,MACs_per_cycle=0,
+        SRAM_macros_added=0,added_boundary_bits=548*2+8,
+        removed_external_fabricated_commit_bits=1+1+16+64,
+        fixed_edges=dict(tx_codec=1,tx_shared_pin=1,rx_witness=1),
+        slot_fit='distributed HOST root/peer leaf, actual area/pins/CTS/native timing unmeasured',
+        latency='record send/receive slots must include actual digital link/relay phases; no ready-based issue',
+        price_policy='immutable model price unchanged; actual end-to-end token cost still unmeasured')
+
+
+def qwen_seq_collective_calendar_model():
+    """Production TP8 command source reservation; area/physical gates remain open."""
+    return dict(schema='opentallas.qwen-seq-collective-calendar.v1',replicas=1,
+        command_bits_per_cycle=50,command_fault_return_bits=1,
+        pw_config_words=17,pw_first=944,pw_last=960,max_program_instructions=59,
+        calendar_rows=8,command_rows_max=7,descriptor_state_bits=8*(32+16+1+1+32),
+        arithmetic_macs=0,memory_macros_added=0,pw_bytes_per_cycle=8,
+        latency='command pin edge=start+row_cycle+1+D_seq; D_seq actual physical relay count required',
+        source='qfd_seq_su dh[42]/PW118/117:108/107:44; ot_coll_cmd_issue owns fixed issue',
+        track_bits=51,slot_fit='inside sequencer; source ABI changed, area/pin/CTS contract unmeasured',
+        replica_fanout='one issuer; one50bit destination command bus; no data mux/ready launch gate',
+        price_policy='no repricing; actual per-layer command times/shape and throughput still required')
+
+
 def qwen_static_native_parent_model():
     """Prephysical census for the actual fixed ME controller successor."""
     xpf = qwen_xpf_static_control_model()
