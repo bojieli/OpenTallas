@@ -85,6 +85,20 @@ module tb_qkd_host_native_token_endpoint_cancel;
  @(negedge ck);cancel_release_v=1;cancel_release_tag={16'd90,6'd37,18'd1000,13'd82,6'd0};cancel_release_gen=1;
  tick(1);@(negedge ck);cancel_release_v=0;kv_drained=1;vm_drained=1;collective_drained=1;host_drained=1;tick(6);
  check(protocol_fault&&releases==1,"stale cancellation cannot release live context");
+ // Installed-image revocation prevents creation of an execution request.
+ reset_host();image_ready=0;tick(3);j=nreq;
+ @(negedge ck);shared_epoch_valid=1;shared_epoch=92;hc[38]=1;hc[35:18]=1001;hc[17:0]=83;
+ tick(1);@(negedge ck);hc[38]=0;shared_epoch_valid=0;tick(8);
+ check(protocol_fault&&nreq==j,"uninstalled image created native context");image_ready=1;
+ // Even an empty-context certificate retains the terminal identity. An old
+ // HC START arriving after that certificate cannot resurrect the retired job.
+ reset_host();launch(93,1002,84,1);recycle_credit();response({16'd93,6'd37,18'd1002,13'd84,6'd0},1,1,0);
+ @(negedge ck);kv_drained=1;vm_drained=1;collective_drained=1;host_drained=1;tick(5);
+ @(negedge ck);cancel_release_v=1;cancel_release_tag={16'd93,6'd37,18'd1002,13'd84,6'd0};cancel_release_gen=1;
+ tick(1);@(negedge ck);cancel_release_v=0;tick(5);j=nreq;
+ @(negedge ck);shared_epoch_valid=1;shared_epoch=93;hc[38]=1;hc[37:36]=1;hc[35:18]=1002;hc[17:0]=84;
+ tick(1);@(negedge ck);hc[38]=0;shared_epoch_valid=0;tick(8);
+ check(protocol_fault&&nreq==j,"retired empty context resurrected by late HC");
  $display("PASS HOST_NATIVE_CANCEL checks=%0d requests=%0d credits=%0d",checks,nreq,ncr);$finish;
  end
  initial begin #10000;$fatal(1,"endpoint timeout");end

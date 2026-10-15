@@ -1,7 +1,7 @@
 {
   "qkd_host_root_integrated": {
     "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_root_integrated.sv",
-    "sha256": "ee5e942a011069009fd0c77a7e2171780436c91e4e92c1b10fab24ed86ee6239",
+    "sha256": "0a3c3a4c67e31b9e1b80ef296d473007c9108c0f54db8f6796647a629973196e",
     "ports": [
       {
         "name": "ck_phy",
@@ -1071,6 +1071,11 @@
         "width": 10
       },
       {
+        "name": "program_installed_valid",
+        "direction": "input",
+        "width": 1
+      },
+      {
         "name": "execution_active",
         "direction": "input",
         "width": 1
@@ -1461,7 +1466,7 @@
   },
   "qkd_host_rank_integrated": {
     "source": "rtl/qwen_sys/host_integrated_20261014/qkd_host_rank_integrated.sv",
-    "sha256": "aa3482ee71f98d5d6bcb373a4871a84ff1a7c9a148e3ee884a150b6702919d9d",
+    "sha256": "65000d7cb410a066a2037def02c51187ab35892e35f796da3382e72cc4c839bd",
     "ports": [
       {
         "name": "ck_phy",
@@ -2644,6 +2649,11 @@
         "name": "local_kst",
         "direction": "input",
         "width": 10
+      },
+      {
+        "name": "program_installed_valid",
+        "direction": "input",
+        "width": 1
       },
       {
         "name": "execution_active",

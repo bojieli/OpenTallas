@@ -57,7 +57,7 @@ module qkd_host_rank_services #(
  output wire phy_tx_v,output wire[1042:0]phy_tx_flit,
  input wire[5:0]link_up,input wire[7:0]transport_fault,physical_fault,input wire crom_fault,
  input wire[92:0]local_tk,input wire[9:0]local_kst,
- input wire execution_active,program_commit_v,input wire[15:0]program_commit_epoch,input wire[63:0]program_commit_digest,
+ input wire program_installed_valid,input wire execution_active,program_commit_v,input wire[15:0]program_commit_epoch,input wire[63:0]program_commit_digest,
  output wire program_ready,output wire[15:0]program_epoch,output wire[63:0]program_digest,
  output wire program_authorized_footer_v,output wire[63:0]program_authorized_footer64,
  output wire program_begin_v,program_auth_v,output wire[10:0]program_expected_pw,output wire[3:0]program_expected_dw,output wire[15:0]program_auth_epoch,output wire[63:0]program_auth_digest,
@@ -97,14 +97,14 @@ module qkd_host_rank_services #(
  always @(posedge ck_program_loader or negedge host_rst_n)begin
   if(!host_rst_n)begin committed<=0;commit_fault<=0;end
   else begin
-   if(begin_image)committed<=0;
+   if(begin_image||!program_installed_valid)committed<=0;
    else if(program_commit_v)begin
     if(!replay_done||program_commit_epoch!=program_epoch||program_commit_digest!=program_digest)commit_fault<=1;
     else committed<=1;
    end
   end
  end
- assign program_ready=replay_done&&committed&&!program_fault&&!commit_fault&&!begin_image;
+ assign program_ready=program_installed_valid&&replay_done&&committed&&!program_fault&&!commit_fault&&!begin_image;
  qkd_host_program_loader u_program(.ck(ck_program_loader),.rst_n(host_rst_n),.begin_image(begin_image),.image_epoch(image_epoch),.pw_count(pw_count),.dw_count(dw_count),
  .word_v(word_v),.word_desc(word_desc),.word_addr(word_addr),.word_data(word_data),.seal(seal),.auth_v(auth_v),.auth_epoch(auth_epoch),.auth_digest(auth_digest),
  .execution_active(execution_active),.pr(pr),.program_ready(replay_done),.fault(program_fault),.digest(program_digest),.program_epoch(program_epoch),.authorized_footer_valid(program_authorized_footer_v),.authorized_footer(program_authorized_footer64));

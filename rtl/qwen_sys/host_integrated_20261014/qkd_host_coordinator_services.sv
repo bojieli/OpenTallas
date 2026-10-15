@@ -54,14 +54,6 @@ module qkd_host_coordinator_services #(parameter [15:0] INITIAL_EPOCH = 16'd0) (
  input wire result_transport_idle,host_observer_fault,output wire post_fault
 );
  wire[58:0]expected_terminal={grant_tag[58:43],6'd37,grant_tag[36:0]};
- reg done_seen;
- always @(posedge clk or negedge por_n)begin
-  if(!por_n)done_seen<=0;
-  else begin
-   if(request_valid&&request_ready)done_seen<=0;
-   if(result_valid&&result_done&&result_tag==expected_terminal&&result_generation==grant_generation)done_seen<=1;
-  end
- end
  qkd_host_lifecycle_collected #(.INITIAL_EPOCH(INITIAL_EPOCH))u_lifecycle(
  .clk(clk),
  .por_n(por_n),
@@ -127,7 +119,7 @@ module qkd_host_coordinator_services #(parameter [15:0] INITIAL_EPOCH = 16'd0) (
  .step_issue_v(step_issue_v),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),
  .step_retire_v(step_retire_v),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),
  .cq_commit_v(cq_commit_v),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),
- .terminal_accepted(terminal_accepted),.terminal_tag(expected_terminal),.terminal_gen(grant_generation),.cancellation_only(!(done_seen||(result_valid&&result_done&&result_tag==expected_terminal&&result_generation==grant_generation))),
+ .terminal_accepted(terminal_accepted),.terminal_tag(expected_terminal),.terminal_gen(grant_generation),
  .cancel_released(cancel_released),.cancel_release_required(cancel_release_required),.result_transport_idle(result_transport_idle),
  .kv_drained(kv_drained),.vm_drained(vm_drained),.collective_drained(collective_drained),.host_drained(host_drained),.source_fault(host_observer_fault),
  .post_retired(post_retired),.post_tag(post_tag),.post_gen(post_generation),.fault(post_fault));

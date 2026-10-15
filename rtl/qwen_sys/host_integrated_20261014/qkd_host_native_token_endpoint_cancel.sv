@@ -37,13 +37,15 @@ module qkd_host_native_token_endpoint_cancel #(parameter integer ENABLE_NATIVE=0
  end
  reg active,pending,issued,credit,seen,done_q,fault_q;
  assign context_owned=active||pending;
+ reg released_valid;reg[58:0]released_tag;reg[1:0]released_gen;
+ wire previously_retired=released_valid&&released_tag=={epoch_q,6'd37,hc_q[35:18],hc_q[12:0],6'd0}&&released_gen==hc_q[37:36];
  reg release_pending;reg[58:0]release_tag;reg[1:0]release_gen;
  wire release_matches=release_tag==terminal_tag&&release_gen==gen_q;
  wire release_fire=release_pending&&active&&release_matches&&(MUT==4||(kq&&vq&&cq&&hq))&&credit;
  reg[31:0]trace_counter,job_trace,cycles_q,value_q;reg[15:0]job_epoch;
  reg[1:0]gen_q;reg[17:0]token_q,pos_q,next_q;reg[3:0]cause_q;
  wire start=ENABLE_NATIVE&&hc_q[38]&&!protocol_fault&&!fault_q;
- wire accept=start&&image_ready_q&&!active&&!pending&&epoch_valid_q&&hc_q[17:13]==0;
+ wire accept=start&&(image_ready_q||MUT==5)&&(MUT==6||!previously_retired)&&!active&&!pending&&epoch_valid_q&&hc_q[17:13]==0;
  wire issue=ENABLE_NATIVE&&pending&&(credit||MUT==3)&&!protocol_fault&&!fault_q&&!release_pending&&!cancel_release_v;
  wire[58:0]terminal_tag={job_epoch,6'd37,token_q,pos_q[12:0],6'd0};
  wire result_ok=rv&&active&&issued&&!seen&&(MUT==2||(rtag==terminal_tag&&rg==gen_q));
@@ -54,12 +56,12 @@ module qkd_host_native_token_endpoint_cancel #(parameter integer ENABLE_NATIVE=0
  active<=0;pending<=0;issued<=0;credit<=1;seen<=0;done_q<=0;fault_q<=0;
  job_epoch<=0;job_trace<=0;cycles_q<=0;value_q<=0;gen_q<=0;token_q<=0;pos_q<=0;next_q<=0;cause_q<=0;
  request_v<=0;request_tag<=0;request_trace<=0;request_gen<=0;request_token<=0;request_pos<=0;
- native_pr<=0;result_cr<=0;local_tk<=0;protocol_fault<=0;release_pending<=0;release_tag<=0;release_gen<=0;cancel_released<=0;
+ native_pr<=0;result_cr<=0;local_tk<=0;protocol_fault<=0;released_valid<=0;released_tag<=0;released_gen<=0;release_pending<=0;release_tag<=0;release_gen<=0;cancel_released<=0;
  end else begin
  native_pr<=hc_q[181:39];request_v<=0;result_cr<=0;cancel_released<=0;
  if(recovery_clear)begin
   if(active||pending||release_pending||!credit||!kq||!vq||!cq||!hq)protocol_fault<=1;
-  else begin protocol_fault<=0;fault_q<=0;seen<=0;done_q<=0;cause_q<=0;end
+  else begin released_valid<=0;protocol_fault<=0;fault_q<=0;seen<=0;done_q<=0;cause_q<=0;end
  end
  if(cancel_release_v)begin
   if(release_pending||(active&&(cancel_release_tag!=terminal_tag||cancel_release_gen!=gen_q)))protocol_fault<=1;
@@ -94,10 +96,10 @@ module qkd_host_native_token_endpoint_cancel #(parameter integer ENABLE_NATIVE=0
   // all true drains and the original request reservation has been returned.
   // A fault-only alert already returned its own result slot at receipt.
   if(release_fire)begin
-   active<=0;pending<=0;issued<=0;release_pending<=0;cancel_released<=1;
+   active<=0;pending<=0;issued<=0;release_pending<=0;cancel_released<=1;released_valid<=1;released_tag<=release_tag;released_gen<=release_gen;
    if(seen&&done_q&&!retire)result_cr<=1;
   end
-  if(release_pending&&!active&&!pending&&credit&&kq&&vq&&cq&&hq&&!start&&!hc_q[38]&&!request_v)begin release_pending<=0;cancel_released<=1;end
+  if(release_pending&&!active&&!pending&&credit&&kq&&vq&&cq&&hq&&!start&&!hc_q[38]&&!hc[38]&&!request_v)begin release_pending<=0;cancel_released<=1;released_valid<=1;released_tag<=release_tag;released_gen<=release_gen;end
  end
  end
 endmodule
