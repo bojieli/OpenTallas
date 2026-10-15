@@ -2,12 +2,12 @@
  "name": "qkd_hslice-v142-COMMIT",
  "block": "qkd_host_pc_slice_die",
  "ref_tile": true,
- "owner": "Codex:qwen_elements_1103",
- "purpose": "Source-exact HOST per-PC slice physical proof; full parent remains unqualified",
+ "owner": "Claude:el1015-fill-qwen",
+ "purpose": "Source-exact HOST per-PC slice physical proof; full parent remains unqualified (FILL-Q 10-15: Codex aa0c50c21 boot-pin capture candidate, v1.4.2 pins 233825580)",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "codex/qwen-elements-1103",
+  "branch": "claude/el1015-fillq-1015",
   "commit": "COMMIT",
   "extra_paths": [
    "tools/qwen_kv_die/run_host_slice_leaf_bench.sh",

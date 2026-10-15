@@ -182,11 +182,11 @@
  "structural_change": "Exact v1.4.2 per-bit reach-safe pitch6 W/E grant (all571596 stack-local bits <=498.696um), M5 pitch4 chain pins. Capture static lpc at station entry before boot status consumers: one strap initialization edge, no normal data/control latency. Four synchronous CORE833.334 roots; no clock exceptions. Boot pin captured once before related test-root consumers; uniform+1 boot-start edge accepted, existing1edge bgo chain unchanged.",
  "slot_change_request": "results/arch/qwen_split_1014/kvsys_v1_4_2/pins/qkd_hslice_dn.json",
  "job": {
-  "owner": "Codex:qwen_elements_1103",
-  "branch": "codex/qwen-elements-1103",
+  "owner": "Claude:el1015-fill-qwen",
+  "branch": "claude/el1015-fillq-1015",
   "tag": "v142",
   "cycles_added": 0,
-  "purpose": "Source-exact HOST per-PC slice physical proof; full parent remains unqualified",
+  "purpose": "Source-exact HOST per-PC slice physical proof; full parent remains unqualified (FILL-Q 10-15: Codex aa0c50c21 boot-pin capture candidate, v1.4.2 pins 233825580)",
   "extra_paths": [
    "tools/qwen_kv_die/run_host_slice_leaf_bench.sh",
    "rtl/test/qwen_split/tb_host_pc_slice_die_pin_capture.sv",
