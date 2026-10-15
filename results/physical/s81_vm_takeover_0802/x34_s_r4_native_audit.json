@@ -1,0 +1,40 @@
+{
+ "cell": "ot_s81_vm_x34_s",
+ "view": "physical/ref_tile/ot_s81_vm_x34_s_w542_1015_r4/views/ot_s81_vm_x34_s",
+ "lib_cell": "ot_s81_vm_x34_s",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 248.1,
+ "spread_ps": 24.5,
+ "outputs": 1633,
+ "inputs": 544,
+ "launch_ps": 198.9,
+ "launch_pin": "bpar[1]",
+ "capture_ps": 154.1,
+ "capture_pin": "s_d[489]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "job": "ot_s81_vm_x34_s_w542_1015_r4-localbanks4-53f13fa44",
+ "view_commit": "ff9ef9a93eed3d98c60059d353178e9508a8dba5",
+ "input_sha256": {
+  "physical/ref_tile/ot_s81_vm_x34_s_w542_1015_r4/views/ot_s81_vm_x34_s/ot_s81_vm_x34_s_tt.lib": "0a1e778b039a1dd6d215a58f8b454e12e7fa657279135e366657e9adbb437856",
+  "physical/ref_tile/ot_s81_vm_x34_s_w542_1015_r4/views/ot_s81_vm_x34_s/insertion.json": "49c5dee73e93c7ea1ae74abc52bca1b4303beb304c7bfd66f4d1fecf4b3c0037"
+ },
+ "route_tt_ps": 303.38,
+ "route_ff_ps": 5.6,
+ "drc": 0,
+ "actual_routed_pin_geometry": {
+  "lef_sha256": "65c0cb058bd8ca1d1b0a4d737f06e335afcbf10e8c7149195e26483e10e7788e",
+  "source_bit_fanout_legs": 1626,
+  "max_L1_um": 43.2,
+  "mean_L1_um": 43.136,
+  "old_max_L1_um": 151.788,
+  "old_mean_L1_um": 77.82383763837582
+ }
+}
