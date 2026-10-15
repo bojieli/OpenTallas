@@ -17,6 +17,8 @@ Output (<state>/explorer/geom/<die>.json.gz, schema opentallas.explorer.die_geom
   python3 explorer_geom.py export --die qwen_r21b --repo /home/ubuntu/OpenTallas --state ~/.local/state/fleet-viz
   python3 explorer_geom.py status                 # recipe commit vs cached commit for every die
 """
+from explorer_dataflow import model_connections
+
 import argparse, builtins, datetime, gzip, hashlib, io, json, os, pathlib, re, subprocess, sys, tarfile, threading, time
 
 HERE = pathlib.Path(__file__).resolve().parent
@@ -332,7 +334,7 @@ def serialise(d, commit, m, W, H, extra):
                key=recipe_key(d, commit), generated=datetime.datetime.now().astimezone().isoformat(timespec='seconds'),
                W=round(W, 3), H=round(H, 3), masters=masters, kinds=kinds, regions_names=regs, orients=ors, domains=doms,
                inst=cols, bus_classes=cls, buses=buses, buses_skipped=skipped, regions=regions, relays=len(relay),
-               model_keys=keys)
+               model_keys=keys, dataflow_connections=model_connections(m))
     if extra:
         out.update({k: v for k, v in extra.items() if v is not None})
     return out
