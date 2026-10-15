@@ -1,7 +1,7 @@
 {
-  "updated_utc": "2026-10-15T10:49:43.018773+00:00",
+  "updated_utc": "2026-10-15T11:40:53.271885+00:00",
   "accountable_owner": "/root/s_vm",
-  "status": "ALL_CURRENT_VM_FAMILIES_HAVE_ACTIVE_PARENT_ACCOUNTABILITY; delegated implementation capacity gaps explicit",
+  "status": "ALL_VM_FAMILIES_HAVE_ACTIVE_END_TO_END_OWNERS; native/global/calendar gates remain open",
   "families": [
     {
       "family": "128 actual SRAM banks",
@@ -20,37 +20,37 @@
     {
       "family": "16 cap_leaf + capl",
       "active_owner": "/root/s_vm/bank_fix",
-      "state": "New5702FF source/mapped/exact gates PASS; nativeCTS admitted, preliminary resetfanout/logicdepth refusal",
+      "state": "PIPE1 +1serial candidate exact24k equivalence+cap16+combinedmaster PASS. Native3 diagnosticTTsetup\u2212321.3ps terminal (notFFsignoff); native4 balancedsameage source3684 activeEPYC4unit2115439",
       "blocked_dependency_owner": "none; child owns source repair after collecting terminal nativeCTS",
-      "runnable_next": "Collect EPYC1 unit929593-1792060913; remove invalid payload reset enable with equivalence; parallel first-key selection then one changed-source gate"
+      "runnable_next": "bank_fix collect native4; preserve native1/2/3 failures; no negative-setup route"
     },
     {
       "family": "128 write_capture +16 b8_out",
-      "active_owner": "/root/s_vm",
-      "state": "Actual bank-local two stages functional PASS; exact pins available; native leaf gates not yet run",
+      "active_owner": "/root/s_vm/xio_static",
+      "state": "NativecaptureE/scatterB0 gatesPASS, once-submittednativepin1-1e8aaa355 routes; other4actualprofiles separatelyowned",
       "blocked_dependency_owner": "/root/geometry_s81: assigned q8 cuts/pins available a600/eaca; parent owns gate kit",
-      "runnable_next": "Construct source-bound native capture and output gate specs from30421 pins; exact direct-scatter bench/mutant"
+      "runnable_next": "Collect two exactnative routes; independently source/gate captureW/scatterB8/B16/B24 without inheritedviewclaims"
     },
     {
       "family": "4 W0payload +1header +1control +16dispatch +128wstage",
       "active_owner": "/root/s_vm",
       "state": "150leaf/150root actual source and mapped proof PASS; native gating OPEN; xio_static child is completed, not a live owner",
       "blocked_dependency_owner": "/root/geometry_s81: q8 placement and storage SOUTH pin update",
-      "runnable_next": "Pin exact leaf shapes to mapped source and generate one admitted native gate per distinct master; parent executes serially pending capacity"
+      "runnable_next": "Parent build native W0/header/control/dispatch/storage gates after actualq8 pin contract; no native routes submitted for these families"
     },
     {
-      "family": "FSR4 +return4 and parent readmux/output registers",
-      "active_owner": "/root/s_vm",
-      "state": "OPEN actual source implementation: 64stripeddata+8localvalid L13 proposal ONLY; currentL12 unmodified",
-      "blocked_dependency_owner": "/root/geometry_s81 pin/placement contract; SU/compiler/x43 uniform age consumer owners",
-      "runnable_next": "Implement independently clocked bounded read-router/FSR leaves and exact legal profile+mutants; vm_bench reactivation failed thread limit, no live child owner"
+      "family": "FSR16 +boundedread64data/8valid +oldreturn32store4",
+      "active_owner": "/root/s_vm/vm_bench (FSR/read); /root/s_vm/return_store (returnstorage); /root/s_vm (integration)",
+      "state": "ActualFSR16/read72source integrated4305;core/masterL13proof3a602PASS, all682clock/618resetpinsPASS; oldreturn32storage remainsnativeOPEN",
+      "blocked_dependency_owner": "/root/geometry_s81 actualpins/globaldistribution; parentrsched ahead-release integration",
+      "runnable_next": "vm_bench collect4nativeCTS q0/q1/v0/b0; return_store implement4lane bankmod4 partition with registeredlookaheadcompletion preservingatomicrelease; parent integratesonlyafterexactproof"
     },
     {
       "family": "outer clock/reset/control delivery",
       "active_owner": "/root/s_vm",
-      "state": "OPEN scalar ck/cks ties;598internalendpoints not outer ABI;25category contract available",
-      "blocked_dependency_owner": "/root/s_bind contract389375087+ae69b82dd; sharedflow owner supports only known related roots",
-      "runnable_next": "Implement category clock arrays through actual hierarchy, local reset/fault/valid trees; per-root nativeCTS/phi-R/epoch proof; no frozen flat648bus"
+      "state": "Actualmandatorycategoryportsimplementedthroughallproductionhierarchy; profileREAD_PIPE1/CAP_PIPE1 has682clocks618rawresetpins connection+mutantPASS; physicaldeliveryOPEN",
+      "blocked_dependency_owner": "/root/s_bind androotcanonicalgenerator actualclock/resetdelivery; /root/flow_tile_clock_roots nativephi-R/3:4support",
+      "runnable_next": "Nativegenerator explicitREAD_PIPE1/CAP_PIPE1 plusallcategoryinputs; construct actualboundedreset/clock/faulttrees andnativephaseproof; caprn16rq2deliverystillgap"
     },
     {
       "family": "20 x34 /3 x43 incl16 cap CDC",
@@ -76,13 +76,15 @@
     {
       "family": "whole B compact2x2 VM boundary/cuts and canonical integration",
       "active_owner": "/root/s_vm + /root/geometry_s81",
-      "state": "470/478 known memory/write leaves placed,8read blocks unplaced; cap/CDC/control additional and open",
+      "state": "Currentrequired562memory/write/readleaves610roots beforeadditionalcap/CDC/control; old470/478placementincompleteandsupersededcount",
       "blocked_dependency_owner": "/root/s_die/mix4_sizing canonical generator; /root/s_bind binding",
-      "runnable_next": "Update source-exact placement after read repair; actual per-bit global cuts/clock delivery then full2417/BF519/PHW10 programme throughput"
+      "runnable_next": "GeometryplaceactualsourceFSR/read/return successorsandcap+CDCpairs; explicitallperbitglobalcuts/clockdelivery thenfullcanonicalprogramme"
     }
   ],
   "delegation_gaps": [
-    "vm_bench and xio_static completed; parent remains active implementation owner; followup vm_bench returned agent thread limit reached",
-    "Sparse production SU dependency needs root-confirmed current active owner; historical su_static_scheduler message is not current live evidence"
-  ]
+    "No VM family lacks accountable active owner; SU productionprogramme remains external current-owner confirmation dependency",
+    "Native W0/header/control/dispatch/storage andtrue3:4CDC families execute under parent ownership after current structural gates; no physicalqualification by scope assignment"
+  ],
+  "current_tested_source": "4305ce06f",
+  "current_proof": "3a6025831"
 }
