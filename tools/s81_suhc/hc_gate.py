@@ -120,6 +120,7 @@ TILES.update({
     "ot_s81_hc_cntree":   dict(src=_H + "ot_s81_hc_cntree.sv", routed=[_H2], mut=("ss <= nv_[1];", "ss <= nv_[1] ^ 32'h00800000;")),
     "ot_s81_hc_ctfn":     dict(src=_CTH, routed=[{}], mut=("fd <= fd_in;", "fd <= fd_in ^ " + _BIT("FDW", "O_D + 15") + ";")),
     "ot_s81_hc_ctfx":     dict(src=_CTH, routed=[{}], mut=("fdx <= fd_in;", "fdx <= fd_in ^ " + _BIT("FXW", "O_D + 15") + ";")),
+    "ot_s81_hc_ctfx_cap": dict(src=_CTH, routed=[{}], mut=("fdx_local <= fdx;", "fdx_local <= fdx ^ " + _BIT("FXW", "O_D + 15") + ";")),
     "ot_s81_hc_ctfs":     dict(src=_CTH, routed=[{}], mut=("fd_out <= fdm_d;", "fd_out <= fdm_d ^ " + _BIT("FDW", "O_D + 15") + ";")),
     "ot_s81_hc_ctpl":     dict(src=_CTH, routed=[dict(PIN_STAGE=1)], mut=("x_d <= b_d;", "x_d <= b_d ^ 160'h00800000;")),
     "ot_s81_hc_ctrn":     dict(src=_CTH, routed=[{}], mut=("rd_out <= rd_out_d;", "rd_out <= rd_out_d ^ " + _BIT("RDW", "123") + ";")),
