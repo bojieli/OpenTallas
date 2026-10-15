@@ -1,0 +1,7 @@
+ot-run: ot-epyc4       admits   668 GB (avail 895, growth 84, headroom 48, waiters 0/0 GB) load 40/128 running 18 disk 401 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2657077-1792068433 after 0 s
+MISMATCH band 0 cycle 747: pw 0 pwv 0/0 f 0/1 f_up 0/1 ty 0
+PASS qfd_band_lanes ops=859 groups=6398 words=102368 NL=16 NB=3 LG=12 LNK=1 latency=+3 faults(finite 0/0, NaN 1/1)
+BAND_RELAY_EQUIV FAIL MUT=3 mismatching_cycles=1 compared=2682 valid_cycles=584 fault_cycles=0
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2657077-1792068433): exit 1
