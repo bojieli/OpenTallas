@@ -8,7 +8,7 @@ Per attention record (batch 1, serial with the matvecs: ATT idle_true_dep domina
   fa      = hbm.first_access + SM.overhead (measured constants of tools/hgi_sim timing: 104 + 155); prefetch variant drops
             the 104 (KV rows are known from the window ring / IDX top-k before q is ready)
   comp    = the busiest SM's measured span (first KV line -> last result) of its ops in the record:
-            QK T640: qk8 (4 window rows) + qk4 (16 compressed rows), measured as two serial ops (conservative)
+            QK T640: one op a SM over its 4 window (SM-KV8) + 16 top-k (SM-KV4) rows (older runs: two serial ops)
             PV T640: one aligned run of 4 chunks (32 tokens) on 20 SMs;  T128: QK 4 rows, PV 1 chunk on 16 SMs
   publish = MODEL: 512 FP32 PV node words leave the SM at 8 words / cycle (64 cycles)
   merge   = MODEL: pairwise cross-SM node merge on SU (fixed-slot 4-quadrant reduce-scatter, H-ELEM-B/H-COLL):
@@ -50,8 +50,12 @@ def main():
     def span(d, prefix):
         return max(o["cycles"]["span"] for o in d["ops"] if o["name"].startswith(prefix))
 
-    comp = {640: dict(qk=span(d640, "qk8") + span(d640, "qk4"), pv=span(d640, "pv")),
-            128: dict(qk=span(d128, "qk8"), pv=span(d128, "pv"))}
+    def qk(d):          # one mixed-format QK op a SM (qk_sm*), or the older split qk8 + qk4 runs (serial)
+        if any(o["name"].startswith("qk_sm") for o in d["ops"]):
+            return span(d, "qk_sm")
+        return sum(span(d, p) for p in ("qk8", "qk4") if any(o["name"].startswith(p) for o in d["ops"]))
+
+    comp = {640: dict(qk=qk(d640), pv=span(d640, "pv")), 128: dict(qk=qk(d128), pv=span(d128, "pv"))}
     nodes = {640: sum(1 for o in d640["ops"] if o["kind"] == "pv"), 128: sum(1 for o in d128["ops"] if o["kind"] == "pv")}
     PUB = 64
     out = dict(measured_comp=comp, pv_nodes=nodes, model_terms=dict(fa=FA, first_access=FIRST, publish=PUB,

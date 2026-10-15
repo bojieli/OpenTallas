@@ -158,12 +158,8 @@ def plan(rec, shape):
     T8, T4 = len(rec["rows8"]), len(rec["rows4"])
     ops = []
     for s in range(NSM):
-        a8 = T8 // NSM
-        if a8:
-            ops.append((f"qk8_sm{s}", "qk", 0, list(range(a8 * s, a8 * s + a8)), 0))
-        a4 = T4 // NSM
-        if a4:
-            ops.append((f"qk4_sm{s}", "qk", 1, list(range(T8 + a4 * s, T8 + a4 * s + a4)), 0))
+        a8, a4 = T8 // NSM, T4 // NSM        # one QK op a SM: its window rows (SM-KV8) then its top-k rows (SM-KV4)
+        ops.append((f"qk_sm{s}", "qk", 0, list(range(a8 * s, a8 * s + a8)) + list(range(T8 + a4 * s, T8 + a4 * s + a4)), 0))
     T = T8 + T4
     nch = -(-T // 8)
     nrun = 1
@@ -178,33 +174,107 @@ def plan(rec, shape):
 
 
 def op_vectors(rec, op, d):
-    name, kind, kv4, rows, nrun = op
+    name, kind, kv4, rows, nrun = op[:5]
+    if rec.get("qwen"):
+        return qwen_vectors(rec, op, d)
     T8 = len(rec["rows8"])
     lines = []
     for r in rows:
         codes, sc, _ = rec["rows4"][r - T8] if r >= T8 else rec["rows8"][r]
-        lines += pack_lines(codes, sc, kv4)
+        lines += pack_lines(codes, sc, 1 if r >= T8 else 0)
     if kind == "qk":
         qb = bf16b(rec["q"])
         xs = [sum(int(qb[8 * j + t]) << (16 * j) for j in range(64)) for t in range(8)]
     else:
         pb = bf16b(rec["p"])
         xs = [int(pb[r]) for r in rows]
+    return write_vec(d, name, lines, xs, 1)
+
+
+def write_vec(d, name, lines, xs, ncol):
     lf, xf = d / f"{name}.lines.hex", d / f"{name}.x.hex"
     lf.write_text("".join(f"{w:0272x}\n" for w in lines))
-    xf.write_text("".join(f"{w:0256x}\n" for w in xs))
+    xf.write_text("".join(f"{w:0{256 * ncol}x}\n" for w in xs))
     return lf, xf, len(lines), len(xs)
 
 
-def build(work, kvmut, pvmut):
-    obj = work / f"obj_kv{kvmut}_pv{pvmut}"
+# ---------------- Qwen3-8B TP4 on HBM: head dim 128, 2 KV heads x 4 q heads a die, T 8192, FP8 KV ----------------
+QW_KVH, QW_G, QW_HD, QW_T = 2, 4, 128, 8192
+
+
+def make_qwen(seed):
+    rng = np.random.default_rng(seed)
+    codes = rng.integers(0, 256, size=(QW_KVH, 2, QW_T, QW_HD))
+    codes = np.where((codes & 0x7F) == 0x7F, codes ^ 1, codes)              # no NaN codes
+    tab = np.array([_dec8(c) for c in range(256)], dtype=np.float64)
+    vals = (tab[codes] * 2.0 ** -4).astype(F)                              # E4M3 x 2^-4: UE8M0 byte 123 in every row
+    q = V.to_bf16(rng.standard_normal((QW_KVH, QW_G, QW_HD)).astype(F) * F(0.8))
+    sc, p, pv = np.zeros((QW_KVH, QW_G, QW_T), F), np.zeros((QW_KVH, QW_G, QW_T), F), np.zeros((QW_KVH, QW_G, QW_HD), F)
+    for h in range(QW_KVH):
+        for c in range(QW_G):
+            sc[h, c] = A.att_qk(q[h, c], vals[h, 0])
+            e, Z, m = A.softmax_e_z(sc[h, c], F(1.0 / np.sqrt(QW_HD)))
+            p[h, c] = V.to_bf16(e)
+            pv[h, c] = A.att_pv(p[h, c], vals[h, 1])
+    return dict(qwen=True, codes=codes, vals=vals, q=q, s=sc, p=p, pv=pv, ue=123)
+
+
+def qwen_plan(rec):
+    ops = []
+    per = QW_T // NSM
+    for h in range(QW_KVH):
+        for s in range(NSM):
+            ops.append((f"qk_h{h}_sm{s}", "qk", 0, list(range(per * s, per * s + per)), 0, h))
+            for o in range(per // 128):
+                base = per * s + 128 * o
+                ops.append((f"pv_h{h}_sm{s}_o{o}", "pv", 0, list(range(base, base + 128)), 4, h))
+    return ops, 4
+
+
+def qwen_line(codes_row, ue):
+    w = 0
+    for t in range(8):
+        for j in range(16):
+            w |= int(codes_row[8 * j + t]) << (8 * (16 * t + j))
+    for b in range(4):
+        w |= ue << (1024 + 8 * b)
+    return w
+
+
+def qwen_vectors(rec, op, d):
+    name, kind, _, rows, _, h = op
+    if kind == "qk":
+        lines = [qwen_line(rec["codes"][h, 0, r], rec["ue"]) for r in rows]
+        xs = []
+        for t in range(8):
+            w = 0
+            for c in range(QW_G):
+                qb = bf16b(rec["q"][h, c])
+                for lane in range(64):
+                    w |= int(qb[8 * (lane % 16) + t]) << (1024 * c + 16 * lane)
+            xs.append(w)
+    else:
+        base, n = rows[0], len(rows)
+        order = [base + (n // 4) * u + k for k in range(n // 4) for u in range(4)]   # streams round-robin
+        lines = [qwen_line(rec["codes"][h, 1, r], rec["ue"]) for r in order]
+        xs = []
+        for i in range(n):
+            w = 0
+            for c in range(QW_G):
+                w |= int(bf16b(rec["p"][h, c, base + i : base + i + 1])[0]) << (1024 * c)
+            xs.append(w)
+    return write_vec(d, name, lines, xs, QW_G)
+
+
+def build(work, kvmut, pvmut, ncol=1):
+    obj = work / f"obj_kv{kvmut}_pv{pvmut}_c{ncol}"
     exe = obj / "Vtb_hbm_sm_attn"
     if exe.exists():
         return exe
     vl = os.environ.get("VERILATOR") or next((c for c in (os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator"),) if os.path.exists(c)), "verilator")
     cmd = [vl, "--binary", "-j", "8", "-O3", "--x-assign", "fast", "-Wno-fatal", "-Wno-lint", "-Wno-style",
            "-Wno-TIMESCALEMOD", "-Wno-MULTIDRIVEN", "--unroll-count", "128", "--top-module", "tb_hbm_sm_attn",
-           f"-GKVMUT={kvmut}", f"-GPVMUT={pvmut}", "--Mdir", str(obj)] + [str(ROOT / s) for s in SRC]
+           f"-GKVMUT={kvmut}", f"-GPVMUT={pvmut}", f"-GNCOL={ncol}", "--Mdir", str(obj)] + [str(ROOT / s) for s in SRC]
     r = subprocess.run(cmd, capture_output=True, text=True)
     (work / f"build_kv{kvmut}_pv{pvmut}.log").write_text(r.stdout + r.stderr)
     if r.returncode != 0:
@@ -212,12 +282,29 @@ def build(work, kvmut, pvmut):
     return exe
 
 
+def parse(out):
+    sc, pvl = {}, []
+    for ln in out.splitlines():
+        if ln.startswith("SC "):
+            _, c, i, hx = ln.split()
+            sc[(int(c), int(i))] = int(hx, 16)
+        elif ln.startswith("PV "):
+            _, c, b, k, hx = ln.split()
+            pvl.append((int(c), int(b), int(k), int(hx, 16)))
+    return sc, pvl
+
+
 def run_op(exe, rec, op, d):
-    name, kind, kv4, rows, nrun = op
+    name, kind, kv4, rows, nrun = op[:5]
+    qw = bool(rec.get("qwen"))
+    ncol = QW_G if qw else 1
     lf, xf, nl, nx = op_vectors(rec, op, d)
+    want = len(rows) * ncol if kind == "qk" else 8 * ncol
     args = [str(exe), f"+LINES={lf}", f"+X={xf}", f"+NL={nl}", f"+NX={nx}", f"+ROWS={len(rows)}",
-            f"+QK={1 if kind == 'qk' else 0}", f"+KV4={kv4}"]
-    r = subprocess.run(args, capture_output=True, text=True, timeout=1800)
+            f"+QK={1 if kind == 'qk' else 0}", f"+KV4={kv4}", f"+H128={1 if qw else 0}", f"+WANT={want}"]
+    if not qw:
+        args.append(f"+N8={sum(1 for r in rows if r < len(rec['rows8']))}")
+    r = subprocess.run(args, capture_output=True, text=True, timeout=3600)
     out = r.stdout + r.stderr
     (d / f"{name}.log").write_text(out)
     res = dict(name=name, kind=kind, kv4=kv4, rows=len(rows), rc=r.returncode, fault="FAULT" in out)
@@ -225,32 +312,42 @@ def run_op(exe, rec, op, d):
     if cyc:
         kv = dict(t.split("=") for t in cyc[0].split()[1:])
         res["cycles"] = {k: int(v) for k, v in kv.items()}
-    mism = 0
+    sc, pvl = parse(out)
+    mism, nodes = 0, None
     if kind == "qk":
-        got = {}
-        for ln in out.splitlines():
-            if ln.startswith("SC "):
-                _, i, h = ln.split()
-                got[int(i)] = int(h, 16)
-        want = bits32(rec["s"][rows])
-        for i in range(len(rows)):
-            if got.get(i) != int(want[i]):
-                mism += 1
-        res.update(results=len(got), expected=len(rows))
-    else:
+        for c in range(ncol):
+            want_s = bits32(rec["s"][op[5], c][rows]) if qw else bits32(rec["s"][rows])
+            for i in range(len(rows)):
+                if sc.get((c, i)) != int(want_s[i]):
+                    mism += 1
+        res.update(results=len(sc), expected=len(rows) * ncol)
+    elif not qw:
         cs = chunk_sums(rec["p"][rows], rec["K"][rows])
         node = A.pairwise([cs[i] for i in range(cs.shape[0])] + [np.zeros_like(cs[0])] * (nrun - cs.shape[0]))
         got = np.full(512, -1, dtype=np.int64)
-        for ln in out.splitlines():
-            if ln.startswith("PV "):
-                _, b, k, h = ln.split()
-                v = int(h, 16)
-                for l in range(16):
-                    got[8 * (16 * int(k) + l) + int(b)] = (v >> (32 * l)) & 0xFFFFFFFF
-        want = bits32(node).astype(np.int64)
-        mism = int(np.sum(got != want))
-        res.update(node=got.astype(np.uint32).view(F).tolist() if mism == 0 else None, results=int(np.sum(got >= 0)),
-                   expected=512)
+        for c, b, k, v in pvl:
+            for l in range(16):
+                got[8 * (16 * k + l) + b] = (v >> (32 * l)) & 0xFFFFFFFF
+        mism = int(np.sum(got != bits32(node).astype(np.int64)))
+        nodes = got.astype(np.uint32).view(F).tolist() if mism == 0 else None
+        res.update(results=int(np.sum(got >= 0)), expected=512)
+    else:
+        h, n = op[5], len(rows)
+        got = np.full((ncol, 4, QW_HD), -1, dtype=np.int64)
+        for c, slot, k, v in pvl:
+            u, half = slot >> 1, slot & 1
+            for l in range(16):
+                got[c, u, 8 * l + 4 * half + k] = (v >> (32 * l)) & 0xFFFFFFFF
+        want_n = np.zeros((ncol, 4, QW_HD), dtype=np.int64)
+        for c in range(ncol):
+            for u in range(4):
+                tk = list(range(rows[0] + (n // 4) * u, rows[0] + (n // 4) * (u + 1)))
+                cs = chunk_sums(rec["p"][h, c][tk], rec["vals"][h, 1][tk])
+                want_n[c, u] = bits32(A.pairwise([cs[i] for i in range(cs.shape[0])])).astype(np.int64)
+        mism = int(np.sum(got != want_n))
+        nodes = got.astype(np.uint32).view(F).tolist() if mism == 0 else None
+        res.update(results=int(np.sum(got >= 0)), expected=ncol * 4 * QW_HD)
+    res["node"] = nodes
     res["mismatches"] = mism
     res["pass"] = r.returncode == 0 and not res["fault"] and mism == 0 and res["results"] == res["expected"]
     return res
@@ -260,7 +357,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("run")
-    p.add_argument("--shape", choices=["ds640", "ds128"], default="ds640")
+    p.add_argument("--shape", choices=["ds640", "ds128", "qwen8192"], default="ds640")
     p.add_argument("--seed", type=int, default=1015)
     p.add_argument("--mut", default="")
     p.add_argument("--work", required=True)
@@ -270,15 +367,20 @@ def main(argv=None):
     a = ap.parse_args(argv)
     work = Path(a.work).resolve()
     work.mkdir(parents=True, exist_ok=True)
-    T8, T4 = (128, 512) if a.shape == "ds640" else (128, 0)
     t0 = time.time()
-    rec = make_record(T8, T4, a.seed)
-    ops, nrun = plan(rec, a.shape)
+    if a.shape == "qwen8192":
+        T8, T4 = 0, 0
+        rec = make_qwen(a.seed)
+        ops, nrun = qwen_plan(rec)
+    else:
+        T8, T4 = (128, 512) if a.shape == "ds640" else (128, 0)
+        rec = make_record(T8, T4, a.seed)
+        ops, nrun = plan(rec, a.shape)
     if a.only:
         ops = [o for o in ops if any(o[0].startswith(x) for x in a.only.split(","))]
     kvm = int(a.mut[2:]) if a.mut.startswith("kv") else 0
     pvm = int(a.mut[2:]) if a.mut.startswith("pv") else 0
-    exe = build(work, kvm, pvm)
+    exe = build(work, kvm, pvm, QW_G if a.shape == "qwen8192" else 1)
     vec = work / f"vec_{a.shape}_{a.mut or 'm0'}"
     vec.mkdir(exist_ok=True)
     with cf.ThreadPoolExecutor(a.jobs) as ex:
@@ -287,9 +389,16 @@ def main(argv=None):
                    ops=len(res), passed=sum(r["pass"] for r in res), wall_s=round(time.time() - t0, 1))
     pv = [r for r in res if r["kind"] == "pv"]
     if pv and all(r["pass"] for r in pv) and not a.only:
-        nodes = [np.asarray(r["node"], dtype=F) for r in pv]
-        merged = A.pairwise(nodes)
-        summary["pv_cross_sm_merge_equals_att_pv"] = bool(np.array_equal(bits32(merged), bits32(rec["pv"])))
+        if a.shape == "qwen8192":
+            ok = True
+            for h in range(QW_KVH):
+                for c in range(QW_G):
+                    nodes = [np.asarray(r["node"], dtype=F)[c, u] for r in pv if r["name"].startswith(f"pv_h{h}_") for u in range(4)]
+                    ok &= bool(np.array_equal(bits32(A.pairwise(nodes)), bits32(rec["pv"][h, c])))
+            summary["pv_cross_sm_merge_equals_att_pv"] = ok
+        else:
+            nodes = [np.asarray(r["node"], dtype=F) for r in pv]
+            summary["pv_cross_sm_merge_equals_att_pv"] = bool(np.array_equal(bits32(A.pairwise(nodes)), bits32(rec["pv"])))
     if not a.only:
         summary["qk_scores_checked"] = sum(r["results"] for r in res if r["kind"] == "qk" and r["pass"])
     for kind in ("qk", "pv"):
