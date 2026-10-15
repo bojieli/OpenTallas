@@ -80,15 +80,33 @@ module qfd_d2d_rom #(
     assign fault_cause = {fc_llr, fc_rl};
 endmodule
 
-// forwarded clock + reset bump receiver: the bumps are die top ports (fwd_ck / fwd_rst_n)
-module qfd_ckbump (
-    input  wire bump_ck,
-    input  wire bump_rst_n,
-    output wire pll_ck,
-    output wire rs
+// forwarded clock + reset bump receiver = HARD-MACRO MODEL (analog bump pair + receiver; port-bind --allow-model
+// qfd_ckbump): the package-side forwarded clock / reset are not nets of this die.  Simulation behaviour: the 1.2 GHz
+// forwarded clock and a reset that releases after RST_NS.
+module qfd_ckbump #(parameter real HALF_NS = 0.41667, parameter real RST_NS = 20.0) (
+    output reg pll_ck,
+    output reg rs
 );
-    assign pll_ck = bump_ck;            // clock receiver buffer (the clock tree is built by CTS from pll_ck)
-    assign rs     = bump_rst_n;         // asynchronous reset level, synchronised by qfd_rstsync
+    initial begin pll_ck = 1'b0; rs = 1'b0; #(RST_NS) rs = 1'b1; end
+    always #(HALF_NS) pll_ck = ~pll_ck;
+endmodule
+
+// UCIe-A x64 PHY = HARD-MACRO MODEL (port-bind --allow-model ot_qkvd_ucie_x64_phy): exactly the abstract's die ports
+// (clk, rst_n, FDI); the far die is not on this die's netlist, so the lanes end in the model (no received flits).
+// PW = the 583-b llr PHY flit (kvsys LINK v1b).
+module ot_qkvd_ucie_x64_phy #(parameter integer PW = 583) (
+    input  wire          clk,
+    input  wire          rst_n,
+    output wire          tx_up,
+    input  wire          tx_v,
+    input  wire [PW-1:0] tx_flit,
+    output wire          rx_v,
+    output wire [PW-1:0] rx_flit
+);
+    wire          lv;
+    wire [PW-1:0] lf;
+    ot_qkvd_ucie_x64_phy_model #(.FW(PW)) u_m (.clk(clk), .rst_n(rst_n), .tx_up(tx_up), .tx_v(tx_v), .tx_flit(tx_flit),
+        .rx_v(rx_v), .rx_flit(rx_flit), .link_v(lv), .link_flit(lf), .far_v(1'b0), .far_flit({PW{1'b0}}));
 endmodule
 
 module qfd_rstsync (
