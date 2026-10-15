@@ -1,0 +1,17 @@
+T_SRQ MISMATCH sk 216 got v11 exp v11
+T_SRQ MISMATCH sk 217 got v11 exp v11
+T_SRQ MISMATCH sk 218 got v11 exp v11
+T_SRQ MISMATCH sk 219 got v11 exp v11
+T_SRQ MISMATCH sk 220 got v11 exp v11
+T_SRQ MISMATCH sk 221 got v11 exp v11
+T_SRQ MISMATCH sk 222 got v11 exp v11
+T_SRQ MISMATCH sk 223 got v11 exp v11
+T_SRQ MISMATCH sk 224 got v11 exp v11
+T_SRQ MISMATCH sk 225 got v11 exp v11
+T_SRQ MISMATCH sk 226 got v11 exp v11
+TB_SPVM RESULT mode 0 records 32 qSW 20 gather 4 wfc_rd 32 su_rd 245 cl_rows 101 dones 5 bad 32
+TB_SPVM FAIL mode 0
+- /srv/opentallas-scratch/codex/capl-f9483e59b/flat/tb_dsfd_sp_vm_static.sv:269: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 14.299 s; speed 140.908 ns/s
+- Verilator: cpu 14.299 s on 1 threads; allocated 55 MB
