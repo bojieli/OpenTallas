@@ -1,0 +1,8 @@
+ENGINE_TAIL_MISMATCH word0 got=3dc0df99 exp=3dc0e01f
+ENGINE_TAIL_MISMATCH word1 got=3e4fa3e5 exp=3e4fa428
+ENGINE_TAIL_MISMATCH word2 got=3e664136 exp=3e664179
+ENGINE_TAIL_MISMATCH word3 got=3f28df84 exp=3f28df95
+HC_ENGINE_DONE rows=24 tail=1 errors=4 cycles=9554
+[0] %Fatal: tb_hgi_hc_engine_static.sv:78: Assertion failed in TOP.tb_hgi_hc_engine_static: engine tail mismatch
+%Error: /srv/opentallas-scratch/claude/codex-hc-engine-967-overlap-1015/rtl/test/tb_hgi_hc_engine_static.sv:78: Verilog $stop
+Aborting...

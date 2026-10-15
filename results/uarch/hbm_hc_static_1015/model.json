@@ -46,12 +46,14 @@
     "tail_core_ready_cycle": 197,
     "tail_sink_edges_after_accept": 41,
     "tail_bench_core_to_sink_divisor": 7,
-    "tail_bench_result_cycle": 507
+    "tail_bench_result_cycle": 507,
+    "row_period_with_double_buffer_prefetch": 356,
+    "complete_projection_tail_overlap_cycles": 9554
   },
   "possible_overlap_not_yet_measured": {
-    "next_weight_slot_refill_cycles": 320,
-    "current_row_reserved_active_cycles": 356,
-    "proposed_steady_state_row_period": 356
+    "status": "now measured actual RTL PASS with mutant",
+    "steady_state_row_period": 356,
+    "source": "967e4b895"
   },
   "physical": {
     "clock_roots": "UNMEASURED for static composition",
@@ -66,7 +68,7 @@
     "actual_RTL_projection_exact": true,
     "actual_RTL_tail_exact": true,
     "mutants_detected": true,
-    "full_actual_composition": "RUNNING source60fc5fa94",
+    "full_actual_composition": "PASS source60fc plus47, exact24rows and24tailwords, epsilonmutant4",
     "throughput_against_immutable_price": "UNMEASURED",
     "physical_closure": false,
     "full_native_qualified": false

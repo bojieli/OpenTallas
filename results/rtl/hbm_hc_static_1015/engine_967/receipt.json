@@ -1,0 +1,52 @@
+{
+  "scope": "actual80SRAM projection to tail composition, not physical or native whole-chip qualification",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_engine_static.sv": "4db888c013ea49e5bb216b1fd54cd1583ef04853dcb44b03355020f6daf853ee",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_static.sv": "2c46f5896bf69561d0b3c4d3e08dd8c7a67bdaf03297559a9de17be7e5984c69",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_projection_static.sv": "fee6286cf1ae6e3485608fe66d0ffcb6046f813f9cfdc30d357621cc5defad4f",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_aperture_static.sv": "7e14e88870dd131e8f558970dc7929175d1a76fd0317bfd24e0a71587d7419ae",
+    "rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv": "af5e2377cfbf5bd0ac524f58bb6597cb853eed7f41e097e419354eb931728762",
+    "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "rtl/hdc/ot_hdc_fastfp_lat.sv": "e09be17358e95ebcfe64c2ecc01090410ec81542e737fc96207244cc134f5cbc",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv": "a719521c87012ec5117e6b92f2089ade75b1a6faf727193543b758cf3ee8989f",
+    "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b",
+    "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+    "rtl/hdc/v41/ot_hdc_sinkhorn.sv": "ba413bc2e2295ad66de4f187bf8b8476242bda002e9199f073783fd2432dfd90",
+    "rtl/hdc/v41/ot_hdc_sk_arith.sv": "aa99d671592f8f3896f09e368d544a6e3f380e184e7b0cde994bb809c32642a3",
+    "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv": "8a25d38991d44354c6701683019adfcdbf1e520874b72a40810b2aecde876142",
+    "rtl/test/tb_hgi_hc_engine_static.sv": "71d453521b02877f573fa113cb8e75b95f8109e2142f4d585675feb60128b93a",
+    "rtl/test/hgi_hc_engine_static_harness.cpp": "38a0ad5e941bf6155069b606aadf125fb560c04336c40b8e5296ae5537059d9c",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_golden_v41.py": "1bf8f3dd95228cabb0b717ea96d0b2ec903c88d0c85c5834a56c5fc8466373d4",
+    "tools/rtl_hgi_hc_engine_static_gate.py": "2ea9f59063878f29d0b754c0b77444b377f31ef99bff34058ef96bb99716cd7b",
+    "tools/rtl_hdc_v41x_hcp_campaign.py": "99606af2292c827d5ebe935cdd4f2ddc1e06bf5744b95d555985af6853585b41"
+  },
+  "fixture_sha256": {
+    "hc_static_w.mem": "fee4ae2ebc607a73508c18934d4abac57134f68dbd7f1ada25d8b4aae7a3ad5f",
+    "hc_static_exp.mem": "0da4190a146bdbcf6d115395619830f8d1f7bcafefb3aa459ff9c0c13528e807",
+    "hc_static_x.mem": "5c4dd4a1133d164420b0bba4ee86eb65448dc4fcdd4af8a0fe02ce69574c81d5",
+    "engine_scale.mem": "a381537781dfdedd02704e085c57aa582fa001b99c73d7bbba3f50aa38d3da51",
+    "engine_tail_exp.mem": "381b185c3c39e8b631a3616bf6cbe3b2a994c5b52f28948fc5a98a3fcd79bad4",
+    "engine_base.mem": "61ebd7cc44f1d6428305083180008ca671387fc59e5a084178b4a55cc82363da"
+  },
+  "cases": 1,
+  "K": 20480,
+  "projection_rows": 24,
+  "tail_words": 24,
+  "sink_clock_divisor": 7,
+  "row_result_age": 345,
+  "exact_serial": {
+    "exit_code": 0,
+    "log_sha256": "a49db0b1fae210ed6912f2ac0e54ba3f680174d47ce5130e3119899d6eb34661"
+  },
+  "exact_overlap": {
+    "exit_code": 0,
+    "log_sha256": "df11af5cd3c8e16ab0d31f0cd51ef73fd6a9968861acfac00d8213e6c1ccec29"
+  },
+  "mutant_overlap": {
+    "exit_code": -6,
+    "log_sha256": "c31c3a95b537e3592b8d7ca7d00f12ec4d868161f6aeac138d2b04fb664bc78e"
+  }
+}
