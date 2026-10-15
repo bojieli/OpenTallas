@@ -21,8 +21,9 @@ def sites(n):
 
 
 def main():
- ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--source',type=Path,required=True);ap.add_argument('--out',type=Path,required=True);a=ap.parse_args()
- module=next(m for m in D.parse_modules(a.source.read_text(),str(a.source)) if m.name=='dsfd_vm_static_scatter_lane');env=module.env({'DW':128,'LANE':0})
+ global H
+ ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--source',type=Path,required=True);ap.add_argument('--out',type=Path,required=True);ap.add_argument('--master',choices=['dsfd_vm_static_scatter_lane','dsfd_vm_static_scatter_b8_out'],default='dsfd_vm_static_scatter_lane');ap.add_argument('--height',type=float,default=172.8);a=ap.parse_args();H=a.height
+ module=next(m for m in D.parse_modules(a.source.read_text(),str(a.source)) if m.name==a.master);env=module.env({'DW':128,'LANE':0})
  widths={n:dict(direction=d,bits=module.width(n,env)) for n,(d,_) in module.ports.items()}
  expected={n:dict(direction='input',bits=w*8) for n,w in FIELDS_IN};expected.update({n:dict(direction='output',bits=w*8) for n,w in FIELDS_OUT});expected.update(ck=dict(direction='input',bits=1),rst_n=dict(direction='input',bits=1),fault=dict(direction='output',bits=1))
  assert widths==expected,(widths,expected)
@@ -31,7 +32,9 @@ def main():
   ordered=[(name,w*k+i) for k in range(8) for name,w in fields for i in range(w)]
   for (name,bit),x in zip(ordered,sites(len(ordered))):
    pins[name].append((bit,face,'M5',x));table.append((name,bit,face,'M5',x))
- for name,y in [('ck',85.5),('rst_n',86.412),('fault',87.324)]:pins[name].append((0,'W','M4',y));table.append((name,None,'W','M4',y))
+ for name,delta in [('ck',-.9),('rst_n',0),('fault',.9)]:
+  y=round(.012+.048*round((H/2+delta-.012)/.048),3)
+  pins[name].append((0,'W','M4',y));table.append((name,None,'W','M4',y))
  ports={n:dict(bits=widths[n]['bits'],direction=widths[n]['direction'],uniform=False,per_bit=[[face,L,pos,.192] for _,face,L,pos in sorted(pp)]) for n,pp in pins.items()}
  for n,pp in pins.items():assert sorted(q[0] for q in pp)==list(range(widths[n]['bits'])),n
  txt=['# SOURCE-BOUND scatter lane pin option:172.8square; native route/clock proof still required']
@@ -45,9 +48,9 @@ def main():
   vv=sorted(q[4] for q in table if q[2]==face);span=vv[-1]-vv[0]
   assert min(b-a for a,b in zip(vv,vv[1:]))>=.096-1e-6
   checks[face]=dict(bits=len(vv),span_um=span,min_spacing_um=min(b-a for a,b in zip(vv,vv[1:])),one_layer_raw_wire_track_share=len(vv)/(W/.048),native_096_slot_share=len(vv)/(W/.096))
- a.out.mkdir(parents=True,exist_ok=True);(a.out/'dsfd_vm_static_scatter_lane.tcl').write_text('\n'.join(txt)+'\n')
- report=dict(schema='opentallas.s81.assigned_pins.v1',master=module.name,case='actual_source_lane_split_unadopted',outline_um=[W,H],ports=ports,clock_entries={'stream':['ck']},reset_entries=['rst_n'],source_sha256=hashlib.sha256(a.source.read_bytes()).hexdigest(),source=str(a.source),port_bits=sum(q['bits'] for q in widths.values()),checks=checks,
-  mapping='LANE=l:inputrecord k is oldglobal input8*l+k; outputrecord k is oldglobalbankl+4*k',
+ a.out.mkdir(parents=True,exist_ok=True);(a.out/(a.master+'.tcl')).write_text('\n'.join(txt)+'\n')
+ report=dict(schema='opentallas.s81.assigned_pins.v1',master=module.name,case='actual_source_registered_scatter_option_unadopted',outline_um=[W,H],ports=ports,clock_entries={'stream':['ck']},reset_entries=['rst_n'],source_sha256=hashlib.sha256(a.source.read_bytes()).hexdigest(),source=str(a.source),port_bits=sum(q['bits'] for q in widths.values()),checks=checks,
+  mapping=('LANE=l:inputrecord k is oldglobal input8*l+k; outputrecord k is oldglobalbankl+4*k' if a.master.endswith('_lane') else 'BANK_BASE=8*g:recordk is bankBANK_BASE+k; separate actual156bitcaptureleaf owns first existingstage, thisleaf owns secondstage'),
   scope='EXACT_SOURCE_PORT_PINS_AND_LOCAL_FACE_CAPACITY_ONLY',open=['Actualflop-to-pin CTS/TT/FF/DRC/nativeviews','Distribution to all four bridge groups requires uniform registered hops and compiler cycle accounting','Global clock/reset phi-R source delivery and sourceprogramfunctional/mutant proofs','Pair/bundle cut capacity including all throughtraffic; localraw trackshare is not aggregatecut proof'])
- (a.out/'dsfd_vm_static_scatter_lane.json').write_text(json.dumps(report,indent=1)+'\n');print(json.dumps(dict(port_bits=report['port_bits'],checks=checks,source_sha256=report['source_sha256'])))
+ (a.out/(a.master+'.json')).write_text(json.dumps(report,indent=1)+'\n');print(json.dumps(dict(port_bits=report['port_bits'],checks=checks,source_sha256=report['source_sha256'])))
 if __name__=='__main__':main()
