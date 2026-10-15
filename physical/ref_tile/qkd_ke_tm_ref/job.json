@@ -1,5 +1,5 @@
 {
- "name": "qkd_ke_tm_ref-q16c-COMMIT",
+ "name": "qkd_ke_tm_ref-q16c-8cdf9bb93",
  "block": "ot_qkvd_ke_tm",
  "ref_tile": true,
  "owner": "Claude:q13-kvleaves",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/q13b-kvend",
-  "commit": "COMMIT",
+  "commit": "8cdf9bb93",
   "extra_paths": [
    "rtl/test/qwen_kv_die",
    "rtl/lib",
@@ -100,7 +100,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_ke_tm_ref/qkd_ke_tm_ref-q16c-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_ke_tm_ref/qkd_ke_tm_ref-q16c-8cdf9bb93"
   }
  ],
  "cycles_added": 0,

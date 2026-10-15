@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch2/claude/closure-loop/qkd_seq_fan-kc4-0f9a940a0/record/views/qkd_seq_fan/qkd_seq_fan.lef",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/qkd_seq_fan-kc6-38dc967cd/record/views/qkd_seq_fan/qkd_seq_fan.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [
   "(f) face-pin access: 3246 of 3248 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. af M4 (0.060,54.048), kc[0] M4 (0.060,54.048), kc[10] M4 (0.060,54.048))"
  ],
- "summary": "qkd_seq_fan 51.84 x 162.0: PG M5 VDD 9 stripes (83% spread, 100% cov) / VSS 9 stripes (83% spread, 100% cov); strap M6; face pins 3248 blocked-above 0 blocked-same 0; clock ck insertion 170 ps; pockets M5 0 (closed)",
+ "summary": "qkd_seq_fan 51.84 x 162.0: PG M5 VDD 9 stripes (83% spread, 100% cov) / VSS 9 stripes (83% spread, 100% cov); strap M6; face pins 3248 blocked-above 0 blocked-same 0; clock ck insertion 163 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "qkd_seq_fan",
   "W": 51.84,
@@ -40,7 +40,7 @@
   "face": {
    "face_pins": 3248,
    "blocked_above": 0,
-   "covered_below": 57,
+   "covered_below": 21,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
@@ -56,8 +56,8 @@
   },
   "clock_insertion": {
    "ck": {
-    "max_ps": 169.73,
-    "min_ps": 125.12
+    "max_ps": 162.9,
+    "min_ps": 124.78
    }
   },
   "pockets": {
@@ -66,7 +66,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 216
+    "added": 300
    },
    "count": 0,
    "area_um2": 0,
