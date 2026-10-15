@@ -133,3 +133,20 @@ missing imported liberty cell declarations would produce a false undriven-net
 check. The corrected flow imports all five real RVT TT libraries and caches the
 mapped JSON before final checks. This was a flow correction; no source hardware
 or timing requirement changed.
+
+
+## Measured current 23-root join
+
+The exact current PHY512/core487/stepped613 hierarchy completed the admitted full
+generic census with **177,666 FF bits across 23 distinct clock inputs**. Maximum
+is **13,790**; every root is below the 15,000 source-count limit. The core root
+owns 12,287 bits, FEC control 12,152, capture 8,219, and all eight physical gearbox
+storage-bank roots own 8,704 each. Full Yosys synthesis/check used 475.53 seconds
+and 5,349.46 MB peak. Unit `oth-ubuntu-1976184-1792062281` completed with exit 0.
+
+`joined23_census/` preserves the exact source, script, receipt and compressed
+log. `reviewed_summary.json` distinguishes the terminal measured result from the
+raw receipt's retained input-manifest prepared-only wording. Caller TX6/RX2
+endpoint state and SRAM remain excluded. No standalone area, timing or clock
+phase is inherited. Geometry/H-DIE and the numeric join owner have the measured
+current root inventory; no qualified current slot or track-capacity grant exists.
