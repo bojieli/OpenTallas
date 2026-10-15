@@ -1,0 +1,33 @@
+ot-run: ot-epyc4       admits   564 GB (avail 791, growth 86, headroom 48, waiters 0/0 GB) load 40/128 running 19 disk 466 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1694712-1792059116 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+u_leaf.g_t[0].g_banked.g_bank[0].u_bank/g_lv[0].g_c[0].f$_DFF_P_ [('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0550_')]
+u_leaf.g_t[0].g_banked.g_bank[0].u_bank/g_lv[0].g_c[1].f$_DFF_P_ [('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0549_')]
+u_leaf.g_t[0].g_banked.g_bank[0].u_bank/g_lv[1].g_c[0].f$_DFF_P_ [('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0548_')]
+u_leaf.g_t[0].g_banked.g_bank[0].u_bank/g_lv[2].g_c[0].f$_DFF_P_ [('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0547_')]
+u_leaf.g_t[0].g_banked.g_bank[0].u_bank/g_lv[3].g_c[0].f$_DFF_P_ [('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0546_')]
+u_leaf.g_t[0].g_banked.g_bank[0].u_bank/g_lv[4].g_c[0].f$_DFF_P_ [('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0545_')]
+u_leaf.g_t[0].g_banked.g_bank[0].u_bank/q[0]$_DFF_P_ [('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0551_')]
+u_leaf.g_t[0].g_banked.g_bank[0].u_bank/q[10]$_DFF_P_ [('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0561_')]
+u_leaf.g_t[0].g_banked.g_bank[0].u_bank/q[11]$_DFF_P_ [('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0562_')]
+u_leaf.g_t[0].g_banked.g_bank[0].u_bank/q[12]$_DFF_P_ [('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0563_')]
+u_leaf.g_t[0].g_banked.g_bank[0].u_bank/q[13]$_DFF_P_ [('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0564_')]
+u_leaf.g_t[0].g_banked.g_bank[0].u_bank/q[14]$_DFF_P_ [('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0565_')]
+u_leaf.g_t[0].g_banked.g_bank[0].u_bank/q[15]$_DFF_P_ [('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0566_')]
+u_leaf.g_t[0].g_banked.g_bank[0].u_bank/q[16]$_DFF_P_ [('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0064_')]
+u_leaf.g_t[0].g_banked.g_bank[0].u_bank/q[1]$_DFF_P_ [('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0552_')]
+u_leaf.g_t[0].g_banked.g_bank[0].u_bank/q[2]$_DFF_P_ [('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0553_')]
+u_leaf.g_t[0].g_banked.g_bank[0].u_bank/q[3]$_DFF_P_ [('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0554_')]
+u_leaf.g_t[0].g_banked.g_bank[0].u_bank/q[4]$_DFF_P_ [('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0555_')]
+u_leaf.g_t[0].g_banked.g_bank[0].u_bank/q[5]$_DFF_P_ [('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0556_')]
+u_leaf.g_t[0].g_banked.g_bank[0].u_bank/q[6]$_DFF_P_ [('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0557_')]
+u_leaf.g_t[0].g_banked.g_bank[0].u_bank/q[7]$_DFF_P_ [('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0558_')]
+u_leaf.g_t[0].g_banked.g_bank[0].u_bank/q[8]$_DFF_P_ [('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0559_')]
+u_leaf.g_t[0].g_banked.g_bank[0].u_bank/q[9]$_DFF_P_ [('QN', 'u_leaf.g_t\\[0\\].g_banked.g_bank\\[0\\].u_bank/_0560_')]
+RESULTNETS 0
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1694712-1792059116): exit 0

@@ -1,0 +1,19 @@
+ot-run: ot-agidock128  admits    39 GB (avail 74, growth 18, headroom 24, waiters 0/0 GB) load 5/64 running 11 disk 23 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3892506-1792058840 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+BANK_LOCALITY bank=0 cells=3432 flops=567 area_um2=418.5334800000209 util=0.6229600694444757 box_um=6.48,24.84,58.32,37.8 roots=17 unique_write_added=1675 shared_write_global=563
+BANK_LOCALITY bank=1 cells=3371 flops=567 area_um2=416.8130400000205 util=0.620399305555586 box_um=6.48,38.879999999999995,58.32,51.839999999999996 roots=17 unique_write_added=1615 shared_write_global=563
+BANK_LOCALITY bank=2 cells=3401 flops=567 area_um2=419.20416000002086 util=0.6239583333333647 box_um=6.48,52.92,58.32,65.88 roots=17 unique_write_added=1645 shared_write_global=563
+BANK_LOCALITY bank=3 cells=3380 flops=567 area_um2=416.20068000001976 util=0.6194878472222519 box_um=6.48,66.96,58.32,79.91999999999999 roots=17 unique_write_added=1625 shared_write_global=563
+BANK_LOCALITY bank=4 cells=3432 flops=567 area_um2=418.5334800000209 util=0.6229600694444759 box_um=6.48,81.0,58.32,93.96 roots=17 unique_write_added=1675 shared_write_global=563
+BANK_LOCALITY bank=5 cells=3371 flops=567 area_um2=416.8130400000205 util=0.6203993055555864 box_um=6.48,95.03999999999999,58.32,107.99999999999999 roots=17 unique_write_added=1615 shared_write_global=563
+BANK_LOCALITY bank=6 cells=3401 flops=567 area_um2=419.20416000002086 util=0.6239583333333647 box_um=6.48,109.08,58.32,122.03999999999999 roots=17 unique_write_added=1645 shared_write_global=563
+BANK_LOCALITY bank=7 cells=3380 flops=567 area_um2=416.20068000001976 util=0.6194878472222526 box_um=6.48,123.12,58.32,136.07999999999998 roots=17 unique_write_added=1625 shared_write_global=563
+BANK_LOCALITY PASS banks=8 cells=27168 locality_groups_bound=1 physical_route_admitted=0
+FILL_RESTORE PASS capture_bits=1024 restore_cells=1024 area_um2=44.7897599999997 S_band_um=2.16,14.04,62.64,23.76 route_admitted=0
+ACTUAL_ROOT_STORAGE_AND_RESTORE_CHECK_PASS route_admitted=0
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3892506-1792058840): exit 0

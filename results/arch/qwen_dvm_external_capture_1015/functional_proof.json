@@ -1,0 +1,29 @@
+{
+  "source_sha256": {
+    "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv": "2df8def007626c13a530d63203734b64d330a7b8c226484d7401380992873275",
+    "rtl/qwen_sys/dvm_extcap_20261015/qfd_xs_leaf_capture.sv": "732cbf2ae54c6ce54d208006843e9b0ba07e9a7dde34483b2b39622a874cbed6",
+    "rtl/qwen_sys/dvm_extcap_20261015/tb_qfd_xs_leaf_capture.sv": "b539c74336bc86d2a6cbeb770d22ae88377ad3c591f71dbc9a40af3a277c7880",
+    "rtl/qwen_sys/head_staging_20261015/ot_qkh_packet_stage.sv": "36c2283ba650704e94e7c17815f88d9c65b69e03f94d2803cffdb9ab55d8e8b1",
+    "rtl/qwen_sys/tile_glue_banks_20261015/qwen_glue_face_masters.sv": "9c2dd4afab4ded9943b3bb9f72b78cae5605f404d12b66862c1da685c4eb8d0c",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+  },
+  "positive_exec": 24109,
+  "positive": "PASS",
+  "read_checks": 129,
+  "good": 128,
+  "invalid": 1,
+  "consecutive_full_fill_words": 128,
+  "unique_BF16_per_fill": 64,
+  "payload_bytes_per_edge": 128,
+  "fill_II": 1,
+  "forward_age": "2edges sameasreference",
+  "read_age": "sameasbankedcandidate;1edgeafterflat",
+  "early_fill_reset_window": "observedstickyfaultPASS",
+  "bypass_capture_mutant_exec": 51293,
+  "bypass_capture_mutant": "FAIL forwardingage/bits check2",
+  "clock_semantics": "three distinct sourceclock ports in same compiler cycle family; benchsameedge functionalonly",
+  "native_parent_phase_qualified": false,
+  "physical_core_qualified": false,
+  "geometry_homes_qualified": false,
+  "ledger_changed": false
+}

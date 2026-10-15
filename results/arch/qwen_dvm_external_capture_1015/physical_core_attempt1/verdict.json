@@ -1,0 +1,14 @@
+{
+  "source": "c6c1102e0",
+  "gate_exec": 47965,
+  "CTS": "LEGAL",
+  "source_FF": 6090,
+  "postCTS_area_um2": 4862.47374,
+  "TT_placement_setup_ps": 151.051,
+  "hold_replay_ps": 27.59698,
+  "native_diagnostic": "FAIL O292.6/C352.8",
+  "actual_pin_overlap_pairs": 185,
+  "reason": "Custom io_tcl fullyoverridesgenericPPL; partialWDplan leftotherportsunconstrained. ClockW156.06, WO/metadatawrongfaces. No nativeplan proof.",
+  "next": "All2444ports explicit, integrate5monitorFF, same rate/ages",
+  "routed_qualified": false
+}

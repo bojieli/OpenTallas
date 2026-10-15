@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81_pq_ctl_state_calcap-c3k-340f17556/record/views/ot_s81_pq_ctl_state_phw10/ot_s81_pq_ctl_state_phw10.lef",
+ "lef": "/srv/opentallas/claude/closure-loop/s81_pq_ctl_state_calcap-c4direct-ac647b77b/record/views/ot_s81_pq_ctl_state_phw10/ot_s81_pq_ctl_state_phw10.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [
   "(f) face-pin access: 1591 of 1824 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. aq_vin M5 (4.752,0.144), aqf[1] M5 (4.752,0.144), aqi_o[1] M5 (4.752,0.144))"
  ],
- "summary": "ot_s81_pq_ctl_state_phw10 432.0 x 86.4: PG M5 VDD 80 stripes (99% spread, 100% cov) / VSS 80 stripes (99% spread, 100% cov); strap M6; face pins 1824 blocked-above 0 blocked-same 0; clock clk insertion 274 ps; pockets M5 0 (closed)",
+ "summary": "ot_s81_pq_ctl_state_phw10 432.0 x 86.4: PG M5 VDD 80 stripes (99% spread, 100% cov) / VSS 80 stripes (99% spread, 100% cov); strap M6; face pins 1824 blocked-above 0 blocked-same 0; clock clk insertion 255 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "ot_s81_pq_ctl_state_phw10",
   "W": 432.0,
@@ -40,7 +40,7 @@
   "face": {
    "face_pins": 1824,
    "blocked_above": 0,
-   "covered_below": 1,
+   "covered_below": 6,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
@@ -56,8 +56,8 @@
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 274.3,
-    "min_ps": 208.83
+    "max_ps": 254.97,
+    "min_ps": 191.26
    }
   },
   "pockets": {
@@ -66,7 +66,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 753
+    "added": 798
    },
    "count": 0,
    "area_um2": 0,
