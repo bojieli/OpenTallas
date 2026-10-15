@@ -12,7 +12,13 @@
 // KVD_QK_ONLY=1,KVD_ECTL3. Common-clock adapter is functional evidence only;
 // it is not a routed clock contract or a qualified HBM timing model.
 // Requires the explicitly source-bound fused program capability. Does not commit VM.
-module ot_qwen_tp8_attention_service (
+module ot_qwen_tp8_attention_service #(
+ // Historical arbitrary-stall transport remains diagnostic only. Static K
+ // mode requires its implemented return geometry in the compiler calendar;
+ // V transport and phase scheduling must also qualify before native adoption.
+ parameter integer STATIC_K_TRANSPORT=0,
+ parameter integer K_RETURN_LATENCY=16
+) (
  input wire clk,rst_n,
  input wire request_valid,output wire request_ready,
  input wire [15:0] request_epoch,input wire [5:0] request_layer,
@@ -109,11 +115,19 @@ module ot_qwen_tp8_attention_service (
    .native_e_read(eread[s]),.native_e_addr(eaddr[11*s+:11]),.native_e_data(edata[64*s+:64]),.native_exp_done(edone[16*s+:16]),.native_score_done(scdone[s]));
   for(e=0;e<8;e=e+1)begin:ge
    localparam I=s*8+e;
+   if(STATIC_K_TRANSPORT)begin:gstatic
+   ot_qwen_tp8_k_request_static #(.RETURN_LATENCY(K_RETURN_LATENCY)) u_req(.clk(clk),.rst_n(rst_n),.start(start_qk),.epoch(ep),.layer(layer),
+    .raw_valid(raw_req[I]),.raw_t(raw_t[13*I+:13]),.raw_wrong_type(raw_v[I]|raw_g[I]),
+    .req_valid(k_req_valid[I]),.req_ready(k_req_ready[I]),.req_t(k_req_t[13*I+:13]),
+    .rsp_valid(k_rsp_valid[I]),.rsp_t(k_rsp_t[13*I+:13]),.rsp_epoch(k_rsp_epoch[16*I+:16]),.rsp_layer(k_rsp_layer[6*I+:6]),
+    .checked_rsp(checked_rsp[I]),.fault(kbad[I]),.accepted(kc[I]));
+   end else begin:ghistorical
    ot_qwen_tp8_k_request_adapter u_req(.clk(clk),.rst_n(rst_n),.start(start_qk),.epoch(ep),.layer(layer),
     .raw_valid(raw_req[I]),.raw_t(raw_t[13*I+:13]),.raw_wrong_type(raw_v[I]|raw_g[I]),
     .req_valid(k_req_valid[I]),.req_ready(k_req_ready[I]),.req_t(k_req_t[13*I+:13]),
     .rsp_valid(k_rsp_valid[I]),.rsp_t(k_rsp_t[13*I+:13]),.rsp_epoch(k_rsp_epoch[16*I+:16]),.rsp_layer(k_rsp_layer[6*I+:6]),
     .checked_rsp(checked_rsp[I]),.fault(kbad[I]),.accepted(kc[I]));
+   end
   end
  end endgenerate
  ot_qwen_nearhbm_attn_hub_p #(.HEADS(1)) u_hub(.clk(clk),.rst_n(rst_n),.start(start_qk),
