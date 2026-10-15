@@ -70,6 +70,18 @@ module tb_hbm_su_native_multirate_top;
    assign lw[q][g*32+:32]=dut.g_q[q].u_quarter.g_slice[g].u_slice.vm_we|dut.g_q[q].u_quarter.g_slice[g].u_slice.kv_we;
   end
  end
+ wire[31:0]bridge_read_present,bridge_ack_present;
+ for(genvar q=0;q<4;q=q+1)begin:g_brq
+  for(genvar g=0;g<4;g=g+1)begin:g_brg
+   for(genvar h=0;h<2;h=h+1)begin:g_brh
+    assign bridge_read_present[q*8+g*2+h]=dut.g_q[q].u_quarter.g_slice[g].u_slice.g_leaf[h].g_multirate.u_bridge.serial_rr[256];
+    assign bridge_ack_present[q*8+g*2+h]=dut.g_q[q].u_quarter.g_slice[g].u_slice.g_leaf[h].g_multirate.u_bridge.serial_done;
+   end
+  end
+ end
+ integer last_read_issue=-1,last_read_return=-1,last_write_issue=-1,last_lg_ack=-1;
+ integer last_bridge_read=-1,last_bridge_ack=-1,last_lane=-1,last_scalar=-1;
+ integer bridge_reads=0,bridge_acks=0;
  reg[31:0]seed[0:262143];reg[319:0]expw[0:NW-1];reg[127:0]exps[0:NS-1];reg[31:0]explw[0:NE-1];
  reg pend_v[0:31][0:31],pend_w[0:31][0:31];
  integer errors=0,ew=0,es=0,reads=0,writes=0,scalars=0;
@@ -80,10 +92,11 @@ module tb_hbm_su_native_multirate_top;
   if((half_tick-epoch_half)%8!=0)fail("serial clock phase");
   if(n<NE)begin
    if(!serial_valid||serial_edge!==n||serial_fault)fail($sformatf("serial programme edge %0d got %0d valid %b",n,serial_edge,serial_valid));
+   for(integer q=0;q<4;q=q+1)if(|lw[q])last_lane=n;
    for(integer q=0;q<4;q=q+1)if($countones(lw[q])!==explw[n][q*8+:8])fail($sformatf("lane writes serial%0d q%0d",n,q));
   end else if(serial_valid||serial_busy)fail("serial programme tail");
   for(integer q=0;q<4;q=q+1)if(dut.red_sv[q])begin
-   scalars=scalars+1;
+   scalars=scalars+1;last_scalar=n;
    if(es>=NS)fail("extra scalar");
    else if(exps[es][127:96]!==n||exps[es][95:64]!==q||exps[es][63:32]!==dut.red_tag[q*32+:32]||exps[es][31:0]!==dut.red_x[q*32+:32])
     fail($sformatf("scalar serial%0d q%0d got%h want%h",n,q,dut.red_x[q*32+:32],exps[es]));
@@ -99,10 +112,10 @@ module tb_hbm_su_native_multirate_top;
    if(!stream_valid||stream_edge!==p||stream_fault)fail($sformatf("stream programme edge%0d got%0d",p,stream_edge));
   end else if(stream_valid||stream_busy)fail("stream programme tail");
   for(integer b=0;b<32;b=b+1)begin
-   if(lg_rq[b*17+16])pend_v[(p+10)%32][b]=1;
+   if(lg_rq[b*17+16])begin pend_v[(p+10)%32][b]=1;last_read_issue=p;end
    if(lg_wq[b*281+280])begin
     reg[319:0]x;reg[255:0]got,want,mask;
-    pend_w[(p+7)%32][b]=1;writes=writes+1;
+    pend_w[(p+7)%32][b]=1;writes=writes+1;last_write_issue=p;
     if(ew>=NW)fail("extra VM write");
     else begin
      x=expw[ew];ew=ew+1;got=lg_wq[b*281+8+:256];want=x[255:0];
@@ -120,9 +133,17 @@ module tb_hbm_su_native_multirate_top;
   for(integer b=0;b<32;b=b+1)begin
    if(lg_rr[b*257+256]!==pend_v[p%32][b])fail($sformatf("read return stream%0d bank%0d",p,b));
    if(lg_w_done[b]!==pend_w[p%32][b])fail($sformatf("write done stream%0d bank%0d",p,b));
-   if(lg_rr[b*257+256])reads=reads+1;
+   if(lg_rr[b*257+256])begin reads=reads+1;last_read_return=p;end
+   if(lg_w_done[b])last_lg_ack=p;
    pend_v[p%32][b]=0;pend_w[p%32][b]=0;
   end
+ end
+ always @(posedge serial_clk)if(rst_n&&epoch_half>=0&&half_tick>=epoch_half)begin
+  integer n;
+  n=(half_tick-epoch_half)/8;
+  #1;
+  if(|bridge_read_present)begin last_bridge_read=n;bridge_reads=bridge_reads+$countones(bridge_read_present);end
+  if(|bridge_ack_present)begin last_bridge_ack=n;bridge_acks=bridge_acks+$countones(bridge_ack_present);end
  end
  initial begin
   string dir;reg[255:0]data;reg[15:0]sec;
@@ -170,8 +191,10 @@ module tb_hbm_su_native_multirate_top;
   if(mut_epoch)bridge_rst_n=1;
   wait(half_tick==epoch_half-1);bridge_rst_n=1;
   wait(half_tick>=epoch_half+8*(NE+40));#2;
-  if(ew!=NW||es!=NS||reads!=32768||writes!=NW)fail($sformatf("counts reads%0d writes%0d/%0d scalars%0d/%0d",reads,writes,NW,es,NS));
+  if(ew!=NW||es!=NS||reads!=32768||writes!=NW||bridge_reads!=32768||bridge_acks!=NW)fail($sformatf("counts reads%0d writes%0d/%0d scalars%0d/%0d",reads,writes,NW,es,NS));
   if(serial_fault||stream_fault||(|fault)||(|lg_fault)||bank_status!==0)fail("final faults");
+  $display("SU_NATIVE_MULTIRATE_ENDPOINTS {\"last_read_issue_stream\":%0d,\"last_read_return_stream\":%0d,\"last_write_issue_stream\":%0d,\"last_lg_ack_stream\":%0d,\"last_bridge_read_serial\":%0d,\"last_bridge_ack_serial\":%0d,\"last_lane_write_serial\":%0d,\"last_scalar_serial\":%0d,\"config_serial_transactions\":%0d,\"config_stream_transactions\":%0d,\"serial_prime_edges\":4,\"stream_prime_edges\":4,\"serial_programme_edges\":%0d,\"stream_calendar_edges\":%0d,\"checker_tail_serial_edges\":40}",
+   last_read_issue,last_read_return,last_write_issue,last_lg_ack,last_bridge_read,last_bridge_ack,last_lane,last_scalar,SERIAL_WRITES,STREAM_WRITES,NE,PE);
   if(errors)$fatal(1,"SU_NATIVE_MULTIRATE_TOP FAIL errors=%0d",errors);
   $display("SU_NATIVE_MULTIRATE_TOP PASS lanes512 storeSRAM3072 nativeVMbanks32 VM_SRAM96 programmeSRAM%0d serial_edges%0d stream_edges%0d reads%0d writes%0d scalars%0d",SERIAL_MACROS+STREAM_MACROS,NE,PE,reads,writes,scalars);
   $finish;

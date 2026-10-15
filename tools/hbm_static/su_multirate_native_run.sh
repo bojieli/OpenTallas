@@ -41,7 +41,12 @@ from pathlib import Path
 p=Path('rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_top.sv').read_text()
 assert 'MULTIRATE' in p and 'bridge_rst_n' in p, 'multirate top integration is absent'
 PY
-sha256sum "${sources[@]}" tools/hbm_static/su_programme_compile.py tools/hbm_static/su_multirate_compile.py "$0" > "$out/sources.sha256"
+sha256sum "${sources[@]}" tools/hbm_static/su_programme_compile.py tools/hbm_static/su_multirate_compile.py "$0" > "$out/sources.new.sha256"
+printf '%s\n' "NE=$NE PE=$PE NW=$NW NS=$NS MLAT=$mlat ALAT=$alat LEAF=$leaf RELAY=$relay" >> "$out/sources.new.sha256"
+if [ -x "$out/obj/Vtb_hbm_su_native_multirate_top" ] && ! cmp -s "$out/sources.sha256" "$out/sources.new.sha256"; then
+ echo 'Cached binary source/configuration mismatch; use a fresh output directory.' >&2;exit 1
+fi
+mv "$out/sources.new.sha256" "$out/sources.sha256"
 vl=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 obj="$out/obj"
 if [ ! -x "$obj/Vtb_hbm_su_native_multirate_top" ]; then
@@ -53,6 +58,14 @@ if [ "$mode" = build ];then echo SU_MULTIRATE_BUILD_COMPLETE;exit 0;fi
 bin="$obj/Vtb_hbm_su_native_multirate_top"
 "$bin" +DIR="$out/vec" > "$out/positive.log" 2>&1
 grep -q 'SU_NATIVE_MULTIRATE_TOP PASS' "$out/positive.log"
+python3 - "$out/positive.log" "$out/endpoints.json" <<'PY'
+import json,sys
+from pathlib import Path
+line=next(x for x in Path(sys.argv[1]).read_text().splitlines() if x.startswith('SU_NATIVE_MULTIRATE_ENDPOINTS '))
+d=json.loads(line.split(' ',1)[1]);d['max_observed_completion_tick']=max(3*d['last_lg_ack_stream'],3*d['last_read_return_stream'],4*d['last_bridge_read_serial'],4*d['last_bridge_ack_serial'],4*d['last_lane_write_serial'],4*d['last_scalar_serial'])
+d['quantum_ps']='2500/9';d['physical_clock_epoch_qualified']=False;d['throughput_qualified']=False
+Path(sys.argv[2]).write_text(json.dumps(d,indent=2)+'\n')
+PY
 for mut in DATA ADDR RF RED CAL EPOCH;do
  set +e
  "$bin" +DIR="$out/vec" +MUT_$mut > "$out/mut_$mut.log" 2>&1
