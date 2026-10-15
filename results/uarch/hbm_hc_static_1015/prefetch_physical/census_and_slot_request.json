@@ -143,5 +143,96 @@
     "Direct serializer capture8192+AP2224 =10416 source bits, suitable separate stream leaf subject mapped count/pin/slot",
     "Four helper stream seen maps4096 each plus control and SRAM clock pins imply a monolithic shared stream root exceeds15000; harden each helper stream engine separately",
     "Do not use the same root merely by declaring hierarchy; each hardened leaf needs an actual boundary clock pin and insertion measurement"
-  ]
+  ],
+  "master_physical_owners": [
+    {
+      "master": "ot_hbm_svc_prefetch_block_cdc",
+      "instances": 4,
+      "owner": "/root/h_hc_sfu/hc_static_engine/hc_weight_prefetch/prefetch_physical",
+      "state": "ACTIVE source exact synth/root census; split/slot required before CTS",
+      "functional_successor_owner": "/root/h_hc_sfu/hc_static_engine/hc_weight_prefetch"
+    },
+    {
+      "master": "ot_hgi_hc_prefetch_direct_static",
+      "instances": 1,
+      "owner": "/root/h_hc_sfu/hc_static_engine/hc_weight_prefetch/prefetch_physical",
+      "state": "ACTIVE source boundary/pin and structural partition audit; no route slot"
+    },
+    {
+      "master": "ot_hgi_hc_aperture_static",
+      "instances": 1,
+      "owner": "/root/geometry_hbm_system",
+      "state": "Arithmetic bank weight-store physical stream; SAME64 existing bank inventory",
+      "coordination": "Prefetch AP2224 registered output and aperture ap_d input register require shared boundary contract, no extra store allocation"
+    }
+  ],
+  "structural_successor_proposal": {
+    "status": "REQUESTED_NOT_IMPLEMENTED",
+    "purpose": "Meet real root sink budgets and registered intertile boundary without changing static cycle calendar",
+    "HBM_owner_groups": {
+      "per_stack": 4,
+      "PCs_per_group": 8,
+      "source_owner_state_bits_each": 2944,
+      "function": "Existing perPC owner arrays partition by PC; preserve request bundle/response matching and MAX8 exact behavior"
+    },
+    "HBM_response_FIFO_write_leaves": {
+      "per_stack": 8,
+      "payload_storage_bits_each": 1136,
+      "function": "Existing284x4 asyncFIFO perlane; own HBM boundary root and stream-side pointer synchronizer placement; no extra cycles"
+    },
+    "stream_landing_capture_serializer_leaf": {
+      "per_stack": 1,
+      "source_SRAMs": 32,
+      "source_seen_bits": 4096,
+      "direct_capture_bits": 2048,
+      "AP_output_bits_for_two_bank_halves": 556,
+      "rationale": "Keep SRAM-Q mux and current direct capture inside one hardened leaf; expose existing AP register at face. Avoid exporting unregistered2048bit SRAM mux across a tile boundary. Existing position/sub/half controls replicate or stay within bounded local register distribution only with exact successor proof",
+      "output": "AP lanes s and s+4, two278bit records, each emitted only for corresponding half"
+    },
+    "shared_controls": {
+      "state": "Small common descriptor/fault/position coordinator still needs own exact master/root/registered-pin contract; no timing bypass waiver"
+    },
+    "latency_policy": "No new cycles promised by source partition alone. Any actual registered crossing changing age655 drain/store calendar requires compiler/function proof and endtoend immutable price measurement before adoption",
+    "route_prerequisites": [
+      "Mapped source root census complete",
+      "Actual die outline and macro placement slot granted",
+      "Exact master ports and pin faces",
+      "Actual clock root ports with phi-R/insertion budgets",
+      "Source-exact behavioral proof and mutant for changed partition",
+      "<=15k actual mapped sinks/root or measuredCTS<=300ps/spread<=80ps",
+      "Pin-to-flop and <=500um hop proof using actual placement"
+    ]
+  },
+  "native_boundary_per_stack": {
+    "request_dynamic_bits": {
+      "k_v": 32,
+      "k_addr": 960,
+      "k_tag": 544
+    },
+    "request_constant_bits": {
+      "k_len": 128,
+      "k_we": 32,
+      "k_wdata": 8192,
+      "k_wstrb": 1024
+    },
+    "request_feedback_bits": {
+      "k_rdy": 32,
+      "k_wr_done": 32
+    },
+    "response_input_bits": {
+      "kr_v": 32,
+      "kr_tag": 544,
+      "kr_beat": 128,
+      "kr_data": 8192
+    },
+    "response_feedback_bits": {
+      "kr_rdy": 32
+    },
+    "physical_status": "Logical port widths from source, NOT pin count/route capacity; constants must be audited in actual mapped contract",
+    "defects": [
+      "k_v/k_addr/k_tag are combinational source owner mux outputs at helper boundary",
+      "kr_rdy is combinational response owner match/FIFO availability output",
+      "Controller inputs/outputs may be co-hardened with owner leaf or need registered source-exact successor; no pinreg waiver from functional bench"
+    ]
+  }
 }
