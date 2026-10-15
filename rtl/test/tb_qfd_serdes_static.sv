@@ -8,7 +8,7 @@ module tb_qfd_serdes_static;
  wire atv,btv,arv,brv,aa,ba;
  wire [PW-1:0] atf,btf;
  wire [FW-1:0] ard,brd;
- wire [6:0] ac,bc;
+ wire [7:0] ac,bc;
  wire [FW-1:0] aw, bw;
  reg [LAT-1:0] avpipe=0,bvpipe=0;
  reg [LAT*PW-1:0] afpipe=0,bfpipe=0;
@@ -18,7 +18,8 @@ module tb_qfd_serdes_static;
     for(k=0;k<FW;k=k+1)word[k]=((k*13+slot*17+endpoint*29)^(slot>>(k%13)))&1;
    end
  endfunction
- assign aw=word(0,cyc-8);assign bw=word(1,cyc-8);
+ wire missing_producer=MUT==5 && cyc==8+64+7;
+ assign aw=word(0,missing_producer?7:cyc-8);assign bw=word(1,cyc-8);
  wire corrupt= MUT==1 && atv && atf[FW+5:FW]==6'd7;
  always @(posedge clk)begin
    // The digital PHY pipeline has the same explicit reset as its endpoints.
@@ -33,13 +34,13 @@ module tb_qfd_serdes_static;
  end
  qfd_io_serdes_static #(.MUT(MUT==3?3:0)) a(
   .ck(clk),.ckb0(clk),.ckb1(clk),.ckb2(clk),.ckb3(clk),.rst_n(rst_n),.epoch_begin(epoch_begin),.epoch(8'h3a),
-  .wr_v(wr_v),.wr_slot(ws),.wr_word(aw),.rd_v(rd_v),.rd_slot(rs),
+  .wr_v(wr_v),.wr_observed_v(wr_v && !missing_producer),.wr_slot(ws),.wr_word(aw),.rd_v(rd_v),.rd_slot(rs),
   .rx_expect_v(ev),.rx_expect_slot(MUT==2?es^6'd1:es),.phy_up(1'b1),
   .phy_tx_v(atv),.phy_tx(atf),.phy_rx_v(bvpipe[LAT-1]),.phy_rx(bfpipe[LAT*PW-1-:PW]),
   .rx_v(arv),.rx_word(ard),.epoch_abort(aa),.fault_cause(ac));
  qfd_io_serdes_static b(
   .ck(clk),.ckb0(clk),.ckb1(clk),.ckb2(clk),.ckb3(clk),.rst_n(rst_n),.epoch_begin(epoch_begin),.epoch(8'h3a),
-  .wr_v(wr_v),.wr_slot(ws),.wr_word(bw),.rd_v(rd_v),.rd_slot(rs),
+  .wr_v(wr_v),.wr_observed_v(wr_v),.wr_slot(ws),.wr_word(bw),.rd_v(rd_v),.rd_slot(rs),
   .rx_expect_v(ev),.rx_expect_slot(es),.phy_up(1'b1),
   .phy_tx_v(btv),.phy_tx(btf),.phy_rx_v(avpipe[LAT-1]),.phy_rx(afpipe[LAT*PW-1-:PW]),
   .rx_v(brv),.rx_word(brd),.epoch_abort(ba),.fault_cause(bc));
@@ -52,7 +53,7 @@ module tb_qfd_serdes_static;
    #5;clk=1;#1;
    if(rst_n)begin
     if(aa||ba)aborts=aborts+1;
-    if(MUT==0 && (aa!==1'b0 || ba!==1'b0 || ac!==7'b0 || bc!==7'b0))begin errors=errors+1;if(errors<10)$display("BAD_FAULT cycle%0d abort%h/%h causes%h/%h",cyc,aa,ba,ac,bc);end
+    if(MUT==0 && (aa!==1'b0 || ba!==1'b0 || ac!==8'b0 || bc!==8'b0))begin errors=errors+1;if(errors<10)$display("BAD_FAULT cycle%0d abort%h/%h causes%h/%h",cyc,aa,ba,ac,bc);end
     // These are compiler constants, not observed-output driven expectations.
     if(MUT==0 && (atv!==(cyc>=RS+3&&cyc<RS+3+N)||btv!==(cyc>=RS+3&&cyc<RS+3+N)))errors=errors+1;
     if(cyc>=OUT&&cyc<OUT+N)begin
@@ -63,6 +64,7 @@ module tb_qfd_serdes_static;
    end
    #4;clk=0;
   end
+  if(MUT==5 && ac!==8'h80) $display("WRONG_MISSING_PRODUCER_CAUSE actual%h expected80",ac);
   if(errors==0 && aborts==0)$display("STATIC_BOARD_PASS FW%0d CW%0d checks%0d TX3 RX1 PHY339",FW,CW,checks);
   else $display("STATIC_BOARD_FAIL FW%0d CW%0d checks%0d errors%0d abort_cycles%0d causes%h/%h MUT%0d",FW,CW,checks,errors,aborts,ac,bc,MUT);
   $finish;

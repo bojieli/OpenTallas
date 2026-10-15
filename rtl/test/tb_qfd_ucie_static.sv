@@ -15,14 +15,14 @@ module tb_qfd_ucie_static;
  wire a_p_tv,b_p_tv,a_p_rv,b_p_rv,a_p_abort,b_p_abort;
  wire [596:0] a_p_tf,b_p_tf;
  wire [545:0] a_p_word,b_p_word;
- wire [6:0] a_p_cause,b_p_cause;
+ wire [7:0] a_p_cause,b_p_cause;
  reg [LAT-1:0] a_p_vp=0,b_p_vp=0;
  reg [LAT*597-1:0] a_p_fp=0,b_p_fp=0;
  always @(posedge clk)begin
  if(!rst_n)begin a_p_vp<=0;b_p_vp<=0;a_p_fp<=0;b_p_fp<=0;end
  else begin
  a_p_vp<={a_p_vp,a_p_tv};b_p_vp<={b_p_vp,b_p_tv};
- a_p_fp<={a_p_fp,a_p_tf ^ ((MUT==1 && a_p_tv)?597'b1:597'b0)};
+ a_p_fp<={a_p_fp,a_p_tf ^ ((MUT==1 && a_p_tv)?597'b1:598'b0)};
  b_p_fp<={b_p_fp,b_p_tf};
  end end
  reg r_wr=0,r_rd=0,r_ev=0;
@@ -30,7 +30,7 @@ module tb_qfd_ucie_static;
  wire a_r_tv,b_r_tv,a_r_rv,b_r_rv,a_r_abort,b_r_abort;
  wire [564:0] a_r_tf,b_r_tf;
  wire [513:0] a_r_word,b_r_word;
- wire [6:0] a_r_cause,b_r_cause;
+ wire [7:0] a_r_cause,b_r_cause;
  reg [LAT-1:0] a_r_vp=0,b_r_vp=0;
  reg [LAT*565-1:0] a_r_fp=0,b_r_fp=0;
  always @(posedge clk)begin
@@ -49,8 +49,9 @@ module tb_qfd_ucie_static;
 .p_ckb2(clk),
 .p_ckb3(clk),
 .p_wr_v(p_wr),
+.p_wr_observed_v(p_wr && !(MUT==5 && cyc==8+64+7)),
 .p_wr_slot(p_ws),
-.p_wr_word(pw(0,cyc-8-0)),
+.p_wr_word(pw(0,(MUT==5 && cyc==8+64+7)?7:cyc-8)),
 .p_rd_v(p_rd),
 .p_rd_slot(p_rs),
 .p_rx_expect_v(p_ev),
@@ -70,8 +71,9 @@ module tb_qfd_ucie_static;
 .r_ckb2(clk),
 .r_ckb3(clk),
 .r_wr_v(r_wr),
+.r_wr_observed_v(r_wr && !(MUT==5 && cyc==8+PHASE+64+7)),
 .r_wr_slot(r_ws),
-.r_wr_word(rw(0,cyc-8-PHASE)),
+.r_wr_word(rw(0,(MUT==5 && cyc==8+PHASE+64+7)?7:cyc-8-PHASE)),
 .r_rd_v(r_rd),
 .r_rd_slot(r_rs),
 .r_rx_expect_v(r_ev),
@@ -94,6 +96,7 @@ module tb_qfd_ucie_static;
 .p_ckb2(clk),
 .p_ckb3(clk),
 .p_wr_v(p_wr),
+.p_wr_observed_v(p_wr),
 .p_wr_slot(p_ws),
 .p_wr_word(pw(1,cyc-8-0)),
 .p_rd_v(p_rd),
@@ -115,6 +118,7 @@ module tb_qfd_ucie_static;
 .r_ckb2(clk),
 .r_ckb3(clk),
 .r_wr_v(r_wr),
+.r_wr_observed_v(r_wr),
 .r_wr_slot(r_ws),
 .r_wr_word(rw(1,cyc-8-PHASE)),
 .r_rd_v(r_rd),
@@ -156,6 +160,7 @@ initial begin
  end
  #4;clk=0;
  end
+ if(MUT==5 && (a_p_cause!==8'h80 || a_r_cause!==8'h80)) $display("WRONG_MISSING_PRODUCER_CAUSE P%h R%h expected80",a_p_cause,a_r_cause);
  if(bad==0 && aborts==0)$display("STATIC_UCIE_PASS checks%0d words_per_channel512 TX3 RX1 PHY14 zero_simultaneous_subchannel_slots",checks);
  else $display("STATIC_UCIE_FAIL checks%0d errors%0d abort_cycles%0d MUT%0d",checks,bad,aborts,MUT);
  $finish;
