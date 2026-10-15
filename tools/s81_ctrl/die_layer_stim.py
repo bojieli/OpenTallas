@@ -521,7 +521,8 @@ def main():
                        aliased=su_alias, behavioural_sux=sux, exp_rows=len(sub['exp']), vm_rows=len(sub['vm']),
                        T=sub['T'], softmax_fits=sub['softmax_fits'], qb_fits=sub['qb_fits'],
                        router_fits=sub['router_fits'], checks=sub['checks'],
-                       sw_fit=sub['sw_fit'], footprints=sub['footprints'], native_allocation=False, jexp={k: list(v) for k, v in sub['jexp'].items()})
+                       sw_fit=sub['sw_fit'], footprints=sub['footprints'], compressor_outputs=sub['compressor_outputs'],
+                       native_allocation=False, jexp={k: list(v) for k, v in sub['jexp'].items()})
         print(f"{L}: REAL SU {len(real)} jobs ({len(sub['exp'])} expected rows), behavioural su.x {sux}")
     (a.out / 'boot_ok.txt').write_text(''.join(f'{r}\n' for r in boot_ok))
     (a.out / 'payload.mem').write_text(''.join(f'{v:0128x}\n' for v in payload))

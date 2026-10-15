@@ -23,8 +23,10 @@ the job, as the HC NORM absorbs attn.quant / ffn.norm.scale / ffn.quant):
   ffn.quant2            SW  routed (+ ffn.swiglu, ffn.route_w)          6 experts x the die's 576 rows, weight each
   ffn.weights           RW  (r3, F11)                                   route weights -> the SW job's descriptor words
   boot: <L>.su.gain_q / gain_k  GQ (set 1) / GK (set 2): q_norm / kv_norm weights (layer constants)
-NOT an SU job kind (stay behavioural at program duration, listed in the result): attn.cmp.* (compressor norm / row FP4 QDQ / index-key norm + RoPE at
-head dim 128), attn.idx.newkey, attn.cand.final, and any op not in the table.
+  attn.cmp.row_qdq      CN  (+ compressor norm chain)                 norm512 -> RoPE -> FP4/16; also preserves pre-RoPE norm
+  attn.cmp.k_rope_qdq   IK  (+ index-key norm chain)                  norm128 -> RoPE -> FP4/32
+NOT an SU job kind (stay behavioural at program duration, listed in the result): compressor pooling, attn.idx.newkey,
+attn.cand.final, and any op not in the table. All operands here remain fixture inputs, not native producer bindings.
 
 SW lane fit: the slab's SW vector is SW_W = 1,024 lanes with ONE routing weight; an expert's die slice is 576 rows, so
 each expert takes one vector padded with zero lanes (silu(0) * 0 = 0: the padded FP8 blocks are zero and the real
@@ -55,6 +57,8 @@ JOBS = {"attn.q_quant": ("QN", ["attn.q_norm.sumsq"]),
         "attn.exp": ("SE", ["attn.max", "attn.den", "attn.sink"]),
         "attn.normalize": ("SO", []),
         "attn.z_quant": ("QB", []),
+        "attn.cmp.row_qdq": ("CN", ["attn.cmp.norm.sumsq", "attn.cmp.norm.rsqrt", "attn.cmp.norm.scale"]),
+        "attn.cmp.k_rope_qdq": ("IK", ["attn.cmp.k_norm.sumsq", "attn.cmp.k_norm.rsqrt", "attn.cmp.k_norm.scale"]),
         "ffn.softplus_sqrt": ("RA", []),
         "ffn.bias": ("RB", []),
         "ffn.shared_swiglu": ("SWS", ["ffn.shared_quant"]),
@@ -145,6 +149,22 @@ def build(snap_path, layer, check_layer=True):
     qx = np.asarray(s["q_rope"]["x"], F)
     chk["QR rope == golden q_rope out"] = same(V.rope_tail(qx, (qc, qs)), s["q_rope"]["out"])
     job(f"{L}.attn.q_rope", r.qr, qx, qc, qs)
+    # Compressor outputs must retain both raw FP4 formats and the pre-RoPE
+    # normalized row consumed by the real cmp.wk field operation.
+    compressor_outputs = {}
+    if s.get("cmp"):
+        cm = s["cmp"]
+        for key, rope_key, tail, gain_name, method in (
+                ("norm", "row_rope", "row_qdq", "gain_c", r.cn),
+                ("k_norm", "k_rope", "k_rope_qdq", "gain_i", r.ik)):
+            x = np.asarray(cm[key]["x"], F).reshape(-1)
+            w = np.asarray(cm[key]["w"], F).reshape(-1)
+            cc, ss = (np.asarray(v, F) for v in cm[rope_key]["cs"])
+            norm = V.rmsnorm_bf16(x, w, eps)
+            chk[f"{key} native norm reference == snapshot"] = same(norm, np.asarray(cm[key]["out"], F).reshape(-1))
+            chk[f"{key} native rope reference == snapshot"] = same(V.rope_tail(norm, (cc, ss)), np.asarray(cm[rope_key]["out"], F).reshape(-1))
+            compressor_outputs[tail] = job([f"{L}.su.{gain_name}", f"{L}.attn.cmp.{tail}"],
+                                           method, x, w, eps, cc, ss, n=2)
     # ---- SE + SO
     at = s["hc"]["attend"]
     T = int(at["T"])
@@ -214,6 +234,7 @@ def build(snap_path, layer, check_layer=True):
         if f"{L}.{tail}" in su.arg:
             for x in al:
                 alias[f"{L}.{x}"] = f"{L}.{tail}"
-    return dict(run=r, arg=su.arg, alias=alias, footprints=footprints, vm=dict(r.vm), exp=dict(r.exp), jexp=jexp, checks=chk, T=T,
+    return dict(run=r, arg=su.arg, alias=alias, footprints=footprints, compressor_outputs=compressor_outputs,
+                vm=dict(r.vm), exp=dict(r.exp), jexp=jexp, checks=chk, T=T,
                 softmax_fits=sm_ok, qb_fits=qb_ok, router_fits=router_fits, rw=rw_fits, top=r.top,
                 sw_fit=dict(lanes=W, rows_per_expert=ROWS_DIE, lane_ratio=round(W / ROWS_DIE, 3)))

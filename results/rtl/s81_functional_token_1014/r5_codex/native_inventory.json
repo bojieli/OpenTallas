@@ -61,19 +61,19 @@
   {
    "item": "remaining_SU",
    "source": "tools/s81_ftok/su_layer.py",
-   "line": 26,
-   "source_sha256": "e8bb0c0a3623b3d1755052bfb7d7fbb3171d36ba54bfc9274f620e3b53a35492",
-   "evidence_excerpt": "NOT an SU job kind (stay behavioural at program duration, listed in the result): attn.cmp.* (compressor norm / row FP4 QDQ / index-key norm + RoPE at",
+   "line": 28,
+   "source_sha256": "8eec57ca9e5f28e78c1a790694fce1f583fd7424f3a454ba37a45f627be0cc88",
+   "evidence_excerpt": "NOT an SU job kind (stay behavioural at program duration, listed in the result): compressor pooling, attn.idx.newkey,",
    "owner": "S-ELEM-B + S-FUNC",
    "native_qualified": false,
-   "defect": "compressor CN/IK/CP and candidate/indexkey ops remain behavioural; DSpark T133 SE/SO tail unsupported",
-   "progress": "F11RW actualmath proven; remaining kinds lack layer native execution"
+   "defect": "Compressor pooling, batch index-query RoPE/FP4, candidate selector and newkey producer paths lack continuous native layer execution",
+   "progress": "CN/IK shared RTL implemented with separate actual arithmetic evidence; snapshot lowering checks pass L0/L2/L14/L20, updated full layer replay and native allocation pending"
   },
   {
    "item": "SU_operand_producers",
    "source": "tools/s81_ctrl/die_layer_stim.py",
    "line": 511,
-   "source_sha256": "a76a932b8af120f22bd97619cf1a54531f8113b5df633a0c90b909eddef4e100",
+   "source_sha256": "647b1b053ff1d5e3546b1918b61a273470cb5e9a43a7f6e258ea62398d9e62a4",
    "evidence_excerpt": "for r in sorted(sub['vm']):",
    "owner": "S-FUNC + S-BIND",
    "native_qualified": false,
@@ -167,6 +167,17 @@
    "native_qualified": false,
    "defect": "DSpark final hc_pre/norm calculated in Python before draft head; no on-chip native endpoint in continuous chain",
    "progress": "fixed static/hardware coverage remains unqualified"
+  },
+  {
+   "item": "index_query_rope_fp4",
+   "source": "rtl/dsrom_sys/s81_ph/svc/q/ot_s81_svcq_idx.sv",
+   "line": 25,
+   "source_sha256": "2b39d44f76e04155199c0f8c18eef89033f7b1590c53b5b47ee74ef34153a8a0",
+   "evidence_excerpt": "// Keys stream into the scorer only after all 32 heads are loaded; the HBM scan starts at the header (overlap).",
+   "owner": "S-SU-MISSING-OPS + S-NATIVE-SVC + S-FUNC",
+   "native_qualified": false,
+   "defect": "Service accepts precomputed32-head FP4/UE8M0/BF16 query frames; no shared batch RoPE/quantizer or actual frame producer is bound",
+   "progress": "Native service owner confirmed prepared-query boundary; shared IK single128-key unit cannot implement batch query; standalone16-head ownership must be reconciled"
   }
  ]
 }
