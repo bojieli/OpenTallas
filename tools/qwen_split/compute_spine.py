@@ -57,7 +57,12 @@ TAP_SW, TAP_AW, TAP_PF, TAP_GI = 1 + 24 + 64 + 2048, 1 + 24 + 16 + 512, 72, 380
 # die ports ck0 .. ck<n-1> = RTL clock port bits ck[n-1:0] (qfd_tt_up4: 5 = 4 leaves + cluster pin flops, r5 10-14;
 # qfd_xcol_e/w: 9 = xhead + 8 leaves, ot_qfd_xslice_slots.sv)
 CHILD_CK = {'qfd_tt_up4': ['ck_pin', 'ck_l0', 'ck_l1', 'ck_l2', 'ck_l3'],     # rtl/physical/ot_qwen_tt_up4_cluster.sv (+define OT_QFD_UP4_CK_ENTRIES)
-            'qfd_xcol_e': [f'ck{k}' for k in range(9)], 'qfd_xcol_w': [f'ck{k}' for k in range(9)]}   # DIE REQUEST: scalar ck0..ck8
+            'qfd_xcol_e': [f'ck{k}' for k in range(9)], 'qfd_xcol_w': [f'ck{k}' for k in range(9)],
+            'qfd_sp_vector_memory': ['ck'] + [f'ck_r{r}_{k}' for r in range(8) for k in range(56)],
+            'qfd_io_collective': ['clk'] + [f'clk_colr{k}' for k in range(4)] + [f'clk_ecol{k}' for k in range(5)]
+                                + [f'clk_pfold{k}' for k in range(4)] + [f'clk_efold{k}' for k in range(4)],
+            'qfd_d2d_rom': ['ck', 'mux_ck'] + [f'llr_ck{k}' for k in range(5)]}
+
 
 
 # ---- C10 (compute lead r3): the link words at their REAL RTL widths (die-bus audit, link rows; owner no-stub rule):
@@ -104,6 +109,11 @@ def _link_words(m, rec):
         if b == 'rst_spine' or any(i == 'sp_res_ser_0' and p == 'rst_n' for i, p in e) and c == 'reset':
             e = list(e) + [(x, 'rst_n') for x in bands + ['sp_su64_sfu', 'sp_vector_memory'] if (x, 'rst_n') not in e]
         nb.append((b, c, n, e))
+    # Real full-address sequencer row service; old 8-bit shells cannot address
+    # the native VM rows (e.g. Q at 13696 and attention return at 50672).
+    nb = [(b, c, 21 if any(i == 'seq_su' and p == 'vrd' for i, p in e) else
+                  533 if any(i == 'seq_su' and p == 'vwr' for i, p in e) else n, e)
+          for b, c, n, e in nb]
     m['buses'] = nb
     ties = m.setdefault('ties', [])
     have_tt = {i for b, c, n, e in m['buses'] for i, p in e if p == 'tt'}
@@ -119,10 +129,19 @@ def _child_clocks(m, rec):
     n_of = {i.name: CHILD_CK[i.master] for i in m['insts'] if i.master in CHILD_CK}
     nb = []
     for b, c, n, e in m['buses']:
-        if c == 'clock_trunk' and any(i in n_of and p == 'ck' for i, p in e):
+        if c == 'clock_trunk':
+            # The collective is digital RTL with clock inputs, never a PLL.
+            # All delivered IO roots originate at the actual forwarded-clock
+            # receiver. Their frequency/phase qualification remains required.
+            e = [('clk_rx', p) if i == 'io_collective' and p.startswith('pll_') else (i, p) for i, p in e]
             e2 = []
             for i, p in e:
-                e2 += [(i, q) for q in n_of[i]] if (i in n_of and p == 'ck') else [(i, p)]
+                if i in n_of and p in ('ck', 'clk'):
+                    e2 += [(i, q) for q in n_of[i]]
+                elif i in n_of and p == 'ckx' and i == 'sp_vector_memory':
+                    continue  # obsolete common transport root; native child clocks above
+                else:
+                    e2.append((i, p))
             e = e2
         nb.append((b, c, n, e))
     m['buses'] = nb
