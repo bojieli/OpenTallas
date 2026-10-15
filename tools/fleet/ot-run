@@ -15,7 +15,8 @@ where --dir does not exist), and among the hosts that can admit --mem takes the 
 than 8 threads (--threads, default 16) while a larger host that can admit it still has cores.  Then it runs
 ssh <host> "cd DIR && ot-heavy --mem GB -- <command>".
 It syncs nothing: the inputs must already be on the host (name them with --dir so only hosts that have them qualify).
---pick prints the chosen host and the table and runs nothing.  stdin/stdout/exit status are the remote command's.
+--pick prints an eligible host and the table and runs nothing. It applies the same load hold as a run;
+if all qualifying hosts are load-held it returns 75 immediately with no host on stdout (never sleeps).  stdin/stdout/exit status are the remote command's.
 Load hold (v5, owner 2026-10-14 ~18:40 "1.5 times cores is fine ... there needs to be a queue of tasks"): a hand-run
 job is held on THIS side (re-probing every 60 s) while every host that qualifies has load1 > 1.5 x cores, then goes to
 a host under that line.  Memory remains the only admission limit on the hosts; closure-loop routes (which call
@@ -215,7 +216,7 @@ def main():
         fits = {h: r for h, r in live.items() if r["free_gb"] >= mem}
         qualifying = fits or live
         under = {h: r for h, r in qualifying.items() if r.get("load1", 0) <= LOAD_HOLD * r["ncpu"]}
-        bypass = pick or os.environ.get("OT_RUN_NO_LOAD_HOLD") == "1"
+        bypass = os.environ.get("OT_RUN_NO_LOAD_HOLD") == "1"
         if bypass or not live or under:
             if held:
                 print(f"ot-run: load hold released after {time.time() - t0:.0f} s", file=sys.stderr)
@@ -223,6 +224,9 @@ def main():
                 res = {h: (r if h in under or h not in qualifying else {"error": "load hold: load1 > %.1f x cores" % LOAD_HOLD})
                        for h, r in res.items()}
             break
+        if pick:
+            sys.exit(print("ot-run: NOT RUN: load hold: every qualifying host above %.1f x cores; --pick is read-only, retry later" %
+                           LOAD_HOLD, file=sys.stderr) or 75)
         if max_wait is not None and time.time() - t0 > max_wait:
             sys.exit(print("ot-run: NOT RUN: load hold: every qualifying host above %.1f x cores for %d s" %
                            (LOAD_HOLD, time.time() - t0), file=sys.stderr) or 75)
