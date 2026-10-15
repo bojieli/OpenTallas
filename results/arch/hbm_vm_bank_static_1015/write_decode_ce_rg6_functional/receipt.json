@@ -1,0 +1,17 @@
+{
+  "source_commit": "51d310621",
+  "source_sha256": "a2ae0425aef1698c5833664e5694a2c257faf5f02806d84cbe3a6a72702f7ccd",
+  "unit": "oth-ubuntu-1827367-1792061284",
+  "host": "ot-epyc4",
+  "exit_code": 0,
+  "shape": {
+    "RG": 6,
+    "WG": 2,
+    "banks": 8,
+    "SRAMs": 24
+  },
+  "positive": "PASS allowners and6144wide/8packet reads after1024DMAwrites",
+  "negative": "DMA address, CE word7 population, read-owner and actual SRAM address mutants killed",
+  "latency": "commit+3/read+6/egress+1 unchanged",
+  "qualification": "Functional only; no physical qualification"
+}
