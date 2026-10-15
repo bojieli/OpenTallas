@@ -1,0 +1,11 @@
+{
+ "schema": "opentallas.qfunc-native-crom-released.v1",
+ "status": "COMPONENT_PASS_RELEASED_IMAGES_NOT_INTEGRATED",
+ "host": "ot-epyc4", "run_dir": "/srv/opentallas-scratch/claude/qfunc-crom-1015/r1", "ot_run_unit": "oth-ubuntu-2912030-1792069782",
+ "canonical_masks": "/srv/opentallas-scratch/claude/qfunc-crom-1015/r1/masks (48 viamaps, sha in manifest.json; keep)",
+ "dut": "8 x ot_qfd_crom_gr TP=8 (same tiles as ot_qwen_native_memory_cluster far CROM), 48 ot_rom_4096x266_m8 functional models, strobe->q exactly 8 edges",
+ "positive": "PASS 13332 back-to-back 64-lane reads: every stored narrow row of all 36 stages (QK 10 + OSC 64 + DSC 64) + all 8192 ROPE rows rotated over stages + head final norm 64 rows + QSCALE/ZERO probes per stage; 0 faults",
+ "mutants": {"rtl_MUT1_lane_bit": "FAIL 106656 errors", "one_mask_bit_layer0_QK_row0_lane0": "FAIL 1 error"},
+ "exporter_checks": "ranks identical per stage (8 sha), ZERO regions all 0, QSCALE == 0x3db504f300000000, ROPE identical in 36 stages, narrow high words 0, head words >= 4096 zero, no store conflicts",
+ "scope": "Stage images are exactly those of the PASSing whole-token runs. Not yet the CBUF path (local E5) nor bound to the core: the LV6 core lanes run ML=0 (1-edge memories); integration needs the lane latency ML of the native SU (cluster comment ML=7) and the compiler's 138-row CBUF prefetch windows."
+}

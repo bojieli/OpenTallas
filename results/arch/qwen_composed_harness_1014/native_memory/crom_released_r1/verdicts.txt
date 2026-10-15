@@ -1,0 +1,13 @@
+== export.log
+stage 35 ok
+PASS masks 48 tests 13332 narrow_rows 5032 wide_rows 8192
+== positive.log
+PASS crom_released_tp8 tests=13332 lanes=64 macros=48 latency=8 back-to-back
+== mutant_rtl.log
+MISMATCH test=0 stage=0 base=4096 lane=0 got=000000003fa60001 exp=000000003fa60000
+MISMATCH test=0 stage=0 base=4096 lane=8 got=000000003ff20001 exp=000000003ff20000
+MISMATCH test=0 stage=0 base=4096 lane=16 got=000000003fe80001 exp=000000003fe80000
+MISMATCH test=0 stage=0 base=4096 lane=24 got=000000003ffb0001 exp=000000003ffb0000
+== mutant_mask.log
+MISMATCH test=0 stage=0 base=4096 lane=0 got=000000003fa60008 exp=000000003fa60000
+FAIL crom_released_tp8 errors=1 tests=13332
