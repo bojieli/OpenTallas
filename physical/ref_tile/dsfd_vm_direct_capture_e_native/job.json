@@ -1,5 +1,5 @@
 {
- "name": "dsfd_vm_direct_capture_e_native-nativepin1-COMMIT",
+ "name": "dsfd_vm_direct_capture_e_native-nativepin1-1e8aaa355",
  "block": "dsfd_vm_static_write_capture128",
  "ref_tile": true,
  "owner": "Codex:S_VM directwrite native",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "codex/s81-direct-write-native-1015",
-  "commit": "COMMIT",
+  "commit": "1e8aaa355e3c07f18f9bd7a6b7a04190ad6c4983",
   "extra_paths": [
    "rtl/dsrom_sys/s81_ph/vm",
    "rtl/dsrom_sys/s81_ph/test",
@@ -126,7 +126,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_vm_direct_capture_e_native/dsfd_vm_direct_capture_e_native-nativepin1-COMMIT"
+   "to": "results/rtl/ref_tile/dsfd_vm_direct_capture_e_native/dsfd_vm_direct_capture_e_native-nativepin1-1e8aaa355"
   }
  ],
  "cycles_added": 0,
