@@ -6,7 +6,7 @@
 // Static slots are generated from go; actual head validity only checks them.
 // Shared E ROM preloads four independent real-FF vectors once per token.
 module ot_s81_markov_static_bundle #(
- parameter integer GLOBAL_ROW0=0,ID_W=60,parameter INSTANCE="h"
+ parameter integer GLOBAL_ROW0=0,ID_W=60,parameter string INSTANCE="h"
 )(input wire clk,rst_n,go,input wire[3:0]clk_A,input wire[151:0]clk_leaf,
  input wire[252:0]clk_E_pair,input wire[15:0]clk_E_group,
  input wire[255:0]xa,xb,input wire[16:0]token,input wire[ID_W-1:0]identity,

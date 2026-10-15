@@ -14,8 +14,12 @@ def run(out,inputs,embed_root):
  out.mkdir(parents=True,exist_ok=False);images=out/'images';images.mkdir()
  head_rec=json.loads((inputs/'head128_record.json').read_text());main_rec=json.loads((inputs/'mtp-actual-main-record.json').read_text())
  if not head_rec['native_xf_chained']or head_rec['bad']or head_rec['xf_sha256']!=main_rec['xf_sha256']:raise ValueError('actual matching HC input/head proof required')
- for p in(inputs/'head128').glob('*.viamap.hex'):(images/p.name).symlink_to(p.resolve())
- for p in(embed_root/'evidence/images').glob('macro*.viamap.hex'):(images/p.name).symlink_to(p.resolve())
+ head_images=list((inputs/'head128').glob('*.viamap.hex'))
+ if len(head_images)!=10 or any(not (inputs/'head128'/n).is_file() for n in('xa.hex','xb.hex')):raise ValueError('all10 real head mask images and actual HC xa/xb inputs required before build')
+ for p in head_images:(images/p.name).symlink_to(p.resolve())
+ e_images=list((embed_root/'evidence/images').glob('macro*.viamap.hex'))
+ if len(e_images)!=506:raise ValueError('all506 actual E masks required')
+ for p in e_images:(images/p.name).symlink_to(p.resolve())
  W=[]
  for q in range(4):
   wdir=inputs/f'bundle_w{q}';meta=json.loads((wdir/'manifest.json').read_text())
