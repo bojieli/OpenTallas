@@ -449,17 +449,26 @@
   "minimum_core_macro_channel_um": 20,
   "bank": {
     "status": "independent prototype; die/core-edge adjustment mandatory if necessary",
-    "outline_requested_um": [
-      364.472,
-      142.08
-    ],
     "macros": 6,
     "macro_size_um": [
       94.824,
       41.04
     ],
     "clock_sinks": 336,
-    "literal_pins": 302
+    "literal_pins": 302,
+    "original_request_um": [
+      364.472,
+      142.08
+    ],
+    "outline_requested_um": [
+      368.792,
+      146.4
+    ],
+    "all_macro_origin_translation_um": [
+      2.16,
+      2.16
+    ],
+    "reason": "Original 20um from die edge is17.84um from2.16um-inset core. Enlarge4.32 both dimensions and translate2.16 to preserve true20um core clearance."
   },
   "acceptance": [
     "actual PG-projection and pin-track readback",
