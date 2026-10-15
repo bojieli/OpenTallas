@@ -35,7 +35,7 @@
    "view": "physical/s81_ph_views/macros/ot_sram_1r1w_128x66_m1_r2c2",
    "count": 1,
    "at": [
-    130.464,
+    120.096,
     22.8
    ],
    "at_exact": true,
@@ -56,7 +56,7 @@
    "view": "physical/s81_ph_views/macros/ot_sram_1r1w_128x66_m1_r2c2",
    "count": 1,
    "at": [
-    130.464,
+    120.096,
     50.928
    ],
    "at_exact": true,
@@ -77,7 +77,7 @@
    "view": "physical/s81_ph_views/macros/ot_sram_1r1w_128x66_m1_r2c2",
    "count": 1,
    "at": [
-    130.464,
+    120.096,
     79.056
    ],
    "at_exact": true,
@@ -98,7 +98,7 @@
    "view": "physical/s81_ph_views/macros/ot_sram_1r1w_128x66_m1_r2c2",
    "count": 1,
    "at": [
-    130.464,
+    120.096,
     107.184
    ],
    "at_exact": true,
@@ -132,9 +132,9 @@
  "job": {
   "owner": "Claude:S-GATHER",
   "branch": "claude/s81-gather-r3-1014",
-  "tag": "g8",
+  "tag": "g9",
   "purpose": "S81 gather v4 DIRECT leaf (E half) of the gather cluster dsfd_sp_gather_c: 4 roots ot_s81ph_ret_root_s (step B, S = 8 open rows = 2 x the measured real bound 4), queue 128 x 66 + pairing store 256 x 34 arrays per root; the leaf takes only its own 4 lanes and returns only its own 4 results + {busy, fault}; the parent delivers / collects through relay tiles in the channels (no lane or chain passes through a leaf).  Every port a flop at the pin.",
-  "structural_change": "Banks face each other across ONE central logic channel (r4 2026-10-14): pairing-store bank 256x34 MY at the W band, queue bank 128x66 R0 at the E band (its secondary wd_in-hi face toward the li pins); main pin faces (rd_out / wd_in-lo / addr / ce / clk) of both banks open onto a 69.3-um channel that holds the root logic, co pins (x 72-110) and the N clock entry.  g7 (both banks R0, main faces W) split each root between two regions separated by a 116-um macro wall (rw: 347 channel<->W-logic nets + 411 queue-face nets in a 21.8-um channel; re: queue main faces on the 20-um W edge band, two walls from the logic) -> GRT-0183 boxed nets and CTS hold stalls (re g4/g5). Same outline, RTL, v19 assigned pins, S = 8.",
+  "structural_change": "Banks face each other across ONE central logic channel (r4 2026-10-14): pairing-store bank 256x34 MY at the W band, queue bank 128x66 R0 at x 120.096 (E li band widened 20.1 -> 30.5 um) (its secondary wd_in-hi face toward the li pins); main pin faces (rd_out / wd_in-lo / addr / ce / clk) of both banks open onto a 69.3-um channel that holds the root logic, co pins (x 72-110) and the N clock entry.  g7 (both banks R0, main faces W) split each root between two regions separated by a 116-um macro wall (rw: 347 channel<->W-logic nets + 411 queue-face nets in a 21.8-um channel; re: queue main faces on the 20-um W edge band, two walls from the logic) -> GRT-0183 boxed nets and CTS hold stalls (re g4/g5). Same outline, RTL, v19 assigned pins, S = 8. g9: g8 re crashed GRT-0183 twice in the incremental (repair_design) re-route of a li-derived net (NOR2 at the E pin band 185.1,60.1 -> p_v flop 120.1,33.3): every li-derived net must detour round the queue-bank wall end and the 20-um E band also holds 276 li pin flops + hold stages + 4x98 queue back-face ties; g9 widens that band by 10.4 um (channel 69.3 -> 59.0 um). Initial g8 GRT had zero overflow (usage 17.0%, WL 339.5 mm vs g7 478 mm). rw g8 (same topology, 20-um band) passed GRT.",
   "benches": [
    {
     "name": "root_s_lockstep",
