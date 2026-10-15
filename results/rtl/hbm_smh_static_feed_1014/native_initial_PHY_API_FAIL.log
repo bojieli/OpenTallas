@@ -1,0 +1,15 @@
+%Warning-SIDEEFFECT: rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv:366:32: Expression side effect may be mishandled
+                                                               : ... Suggest use a temporary variable in place of this expression
+  366 |                         ref_cnt[bank_of(q_addr[p][(q_rp[p] + bi) % QD])] += 1;
+      |                                ^
+                     ... For warning description see https://verilator.org/warn/SIDEEFFECT?v=5.032
+                     ... Use "/* verilator lint_off SIDEEFFECT */" and lint_on around source to disable this message.
+%Warning-SIDEEFFECT: rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv:366:33: Expression side effect may be mishandled
+                                                               : ... Suggest use a temporary variable in place of this expression
+  366 |                         ref_cnt[bank_of(q_addr[p][(q_rp[p] + bi) % QD])] += 1;
+      |                                 ^~~~~~~
+%Error-PINNOTFOUND: rtl/test/tb_smh_mapped_checkpoint_native.sv:21:63: Parameter not found: 'K_BASE'
+   21 |  ot_chip_v41x_hbm3e_phy #(.K_AW(30),.KTAGW(17),.K_MEM(65536),.K_BASE(64'h28810000),.CLK_PS(1024)) phy(
+      |                                                               ^~~~~~
+%Error: Exiting due to 1 error(s)
+        ... See the manual at https://verilator.org/verilator_doc.html for more assistance.
