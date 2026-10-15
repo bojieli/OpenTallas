@@ -1,0 +1,27 @@
+[
+ {
+  "cell": "dsfd_su_t_rxsf",
+  "view": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf",
+  "lib_cell": "dsfd_su_t_rxsf",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 197.4,
+  "spread_ps": 27.3,
+  "outputs": 96,
+  "inputs": 34,
+  "launch_ps": 193.0,
+  "launch_pin": "o_mx[24]",
+  "capture_ps": 148.1,
+  "capture_pin": "i_x[8]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "record_ref": "origin/codex/closure-record-s81su_rxsf_ref-observable-0854-09489ff41",
+  "tool": "tools/hier_contract/native_pin_audit.py audit_one (origin/main), TT, launch<=220 capture<=190"
+ }
+]
