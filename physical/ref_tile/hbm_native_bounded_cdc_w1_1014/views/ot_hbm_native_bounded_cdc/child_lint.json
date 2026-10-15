@@ -1,0 +1,80 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/hbm_native_bounded_cdc_w1_1014-npin2-92f25f099/record/views/ot_hbm_native_bounded_cdc/ot_hbm_native_bounded_cdc.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [
+  "(f) face-pin access: 79 of 79 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. empty M4 (63.853,51.408), r_fault M4 (63.853,51.408), rclk M4 (63.853,51.408))"
+ ],
+ "summary": "ot_hbm_native_bounded_cdc 64.8 x 64.8: PG M5 VDD 12 stripes (92% spread, 100% cov) / VSS 12 stripes (92% spread, 100% cov); strap M6; face pins 79 blocked-above 0 blocked-same 0; clock rclk insertion 103 ps; clock wclk insertion 142 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "ot_hbm_native_bounded_cdc",
+  "W": 64.8,
+  "H": 64.8,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 12,
+     "dir": "V",
+     "spread": 0.917,
+     "coverage": 1.0,
+     "shapes_on_top": 12
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 12,
+     "dir": "V",
+     "spread": 0.917,
+     "coverage": 1.0,
+     "shapes_on_top": 12
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 79,
+   "blocked_above": 0,
+   "covered_below": 0,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 79,
+   "band_examples": [
+    "empty M4 (63.853,51.408)",
+    "r_fault M4 (63.853,51.408)",
+    "rclk M4 (63.853,51.408)",
+    "rdata[0] M4 (63.853,51.408)",
+    "re M4 (63.853,51.408)",
+    "repoch[0] M4 (63.853,51.408)"
+   ]
+  },
+  "clock_insertion": {
+   "rclk": {
+    "max_ps": 102.82,
+    "min_ps": 81.19
+   },
+   "wclk": {
+    "max_ps": 141.69,
+    "min_ps": 105.36
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 353
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}
