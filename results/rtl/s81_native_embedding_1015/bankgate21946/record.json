@@ -1,0 +1,32 @@
+{
+  "sources": {
+    "rtl/dsrom_sys/s81_embedding/tb_s81_embed_expand.sv": "a5390f6c4aa0ebff47f0b9c99112db7bd35e66c9faeb99fd7be5ffdba420d0ca",
+    "rtl/dsrom_sys/s81_embedding/ot_s81_embed_expand.sv": "6d20e16735ae3c7db6adadd9c2a0ac4975eb64a0a7181ac83382b6fb2ffb62d1",
+    "rtl/dsrom_sys/s81_embedding/ot_s81_embedding_bank.sv": "6e2cd8feaa22a4296600cc7a761698c07a599555b2bf52845df9efc4df83697f",
+    "rtl/dsrom_sys/ot_dsrom_embed_row_reader.sv": "8b6249e4d07db15d11b8918e232fd2103642766c2cf0625e84e0d0702ff1297c",
+    "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8.v": "47659841275cfe94391679cc4d83f5af1c85aa5298f66a280b231dd86100387d",
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59"
+  },
+  "runs": {
+    "0": {
+      "returncode": 0,
+      "stdout": "EMBED_NATIVE rows=640 hop=641 fault=0 errors=0 cycles=1365\nEMBED_NATIVE PASS\n- /srv/opentallas-scratch/codex/s-native-embedding-1015/rtl/dsrom_sys/s81_embedding/tb_s81_embed_expand.sv:46: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 1us; walltime 0.048 s; speed 28.810 us/s\n- Verilator: cpu 0.048 s on 1 threads; allocated 7 MB\n"
+    },
+    "1": {
+      "returncode": 1,
+      "stdout": "EMBED_NATIVE rows=640 hop=641 fault=0 errors=1280 cycles=1365\n[1374000] %Fatal: tb_s81_embed_expand.sv:45: Assertion failed in tb_s81_embed_expand: EMBED_NATIVE FAIL\n%Error: /srv/opentallas-scratch/codex/s-native-embedding-1015/rtl/dsrom_sys/s81_embedding/tb_s81_embed_expand.sv:45: Verilog $stop\nAborting...\n"
+    }
+  },
+  "fixture": {
+    "token": 21946,
+    "base": 2176,
+    "owner": 0,
+    "bank": 1714,
+    "input_sha": "418b5d98783910a64fcf8d447aaaa35aaf13de42f5e190f05a95bf9c53a50d1f",
+    "rom_sha": "bd8205d5afebe81cdb563852f80cd762bc20c79d2ccec04fb7a7d75579297f38",
+    "expected_sha": "f49b02a4eb5fcb2253620a9d89436d89f811d1c9d6e1545032613968f790cf60"
+  },
+  "hin_sha256": "463bc533bf5588c6312297907b63ee5bf5603f247e4549ff922569509cc402d3",
+  "scope": "ROM reader + mapped SRAM transpose + RTL expansion/VM port/hop framing; NOT whole die qualification",
+  "pass": true
+}

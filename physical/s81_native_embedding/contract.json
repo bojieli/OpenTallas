@@ -1,0 +1,16 @@
+{
+  "top": "ot_s81_embed_expand",
+  "status": "contract_reserved_not_routed",
+  "slot": {"x": 15120.0, "y": 22770.0, "width": 216, "height": 216},
+  "clock": {"domain": "S81", "period_ps": 833.333, "roots": 1},
+  "macros": [{"master": "ot_sram_1r1w_512x128_m4_r2c2", "instances": 2,
+    "width_um": 174.096, "height_um": 29.7, "physical_bits": 131072, "live_bits": 81920}],
+  "flop_storage_bits": {"transpose": 2048, "vm_output": 512, "hop_output": 512, "header": 512},
+  "ports": {
+    "inputs": {"clk": 1,"rst_n": 1,"start": 1,"header": 512,"vm_base": 14,"rom_v": 1,"rom_idx": 9,"rom_d": 512},
+    "outputs": {"busy": 1,"done": 1,"fault": 1,"vm_v": 1,"vm_row": 14,"vm_d": 512,"hop_v": 1,"hop_last": 1,"hop_d": 512}
+  },
+  "calendar": {"rom_capture_first": 3,"rom_capture_last": 322,"hop_header": 325,
+    "payload_cycle": "336+26*(q//16)+(q%16), q=0..639", "done": 1365},
+  "pending": ["source die role binding", "assigned pin file", "actual VM and hop flight schedule", "TT setup / FF hold / DRC0", "full-table bank selection including crossing rows"]
+}
