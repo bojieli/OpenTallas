@@ -160,49 +160,73 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
    else:G._add_tap(m,last,0,(cf.name,'xf','xd'))
    count=flight[n]+len(sts);m.setdefault('x_stages',{})[r]=count
    calendar[r]={'root':r,'x_stations':count,'x_path_um':G._poly_len(prefix)+dist[n]+G._poly_len(path),'physical_half':side,'logical_gather':[f['logical_half'],f['logical_tier'],f['logical_col']]}
- for half in 'WE':
+ for logical in 'WE':
   for t in range(G.TIERS):
-   roots=sorted((r for r,f in m['frames'].items() if f['logical_half']==half and f['logical_tier']==t),key=lambda r:m['frames'][r]['logical_col'],reverse=True)
+   roots=sorted((r for r,f in m['frames'].items() if f['logical_half']==logical and f['logical_tier']==t),key=lambda r:m['frames'][r]['logical_col'],reverse=True)
    n=len(roots);gy=ga.y+ga.h*(.15+.7*t/(G.TIERS-1));nm,w,h=end_spec('m2l',[G.CRET]*n,'vr')
-   endb=hub_block(f'hr_{half}{t}',nm,'hend',w,h,ga.x if half=='W' else ga.x+ga.w,gy,half,[cor['s14W'] if half=='W' else cor['vch']])
-   for lane,r in enumerate(roots):
-    f=m['frames'][r];cf=next(i for i in m['insts'] if i.name==f'cf{r}');src=(cf.x+cf.w/2,f['street'][1]+28.64)
-    anchor=(G.s14_x(m,f['half'],f'r{t}'),endb.y+endb.h/2)
-    path=list(reversed(road.to_root(f['half'],anchor,r,'r')));path=G._dedup([src,(path[0][0],src[1])]+path)
-    dst=(endb.x+endb.w/2,endb.y+endb.h/2)
-    if f['half']=='E':
-     # Every physical E return must traverse the actual HC corridor,
-     # including those whose logical gather group is also E.
-     cy=G.corr_y(m,f'r{t}');vx=G.vch_x(m,f'r{t}')
-     path +=[(path[-1][0],cy),(vx,cy)]
-    if f['half']!=half:
-     # Crossing the W hub column needs an actual free gap between its
-     # hard slabs. Derive it from all placed boxes; never cross the VM,
-     # capture or gather outline at the return endpoint's y.
-     wx=G.s14_x(m,'W',f'r{t}');vx=G.vch_x(m,f'r{t}');xx0,xx1=sorted((wx,vx))
-     free=[(max(cor['s14W'][1],cor['vch'][1]),min(cor['s14W'][3],cor['vch'][3]))];margin=.432
-     for obj in m['insts']:
-      if obj.x>=xx1 or obj.x+obj.w<=xx0:continue
-      cut=(obj.y-margin,obj.y+obj.h+margin);nfree=[]
-      for lo,hi in free:
-       if cut[1]<=lo or cut[0]>=hi:nfree.append((lo,hi));continue
-       if cut[0]>lo:nfree.append((lo,cut[0]))
-       if cut[1]<hi:nfree.append((cut[1],hi))
-      free=nfree
-     gaps=[(lo,hi) for lo,hi in free if hi-lo>=17.28+2*margin]
-     assert gaps,('canonical W crossing has no real gap',r)
-     lo,hi=min(gaps,key=lambda ab:abs((ab[0]+ab[1])/2-dst[1]));yy=(lo+hi)/2
-     bypass=(xx0-20,lo,xx1+20,hi);allowed.append(bypass)
-     endx=wx if half=='W' else vx
-     path +=[(path[-1][0],yy),(endx,yy)]
-     m.setdefault('canonical_w_crossings',[]).append(dict(root=r,logical_half=half,gap_um=[lo,hi],crossing_y_um=yy,unqualified_cut=True))
-    path=G._dedup(path+[(path[-1][0],dst[1]),dst])
-    sts=CH.run(f'cr{r}',[G.CRET+2],path,allowed,src)
-    G.chain_nets(CH,f'cr{r}',(cf.name,'rf','rd'),[i for i,_,_ in sts],[G.CRET+2]);last=(sts[-1][0].name,'fo0','do0') if sts else (cf.name,'rf','rd')
-    bus(f'cr{r}_fe','fclk',1,[(last[0],last[1]),(endb.name,f'fi{lane}')]);bus(f'cr{r}_de','lane',G.CRET+2,[(last[0],last[2]),(endb.name,f'di{lane}')])
-    m.setdefault('r_stages',{})[r]=len(sts);calendar[r].update(return_stations=len(sts),return_path_um=G._poly_len(path),gather_input_lane=lane)
-   G._local_chain(m,CH,[cor['s14W'] if half=='W' else cor['vch']],endb,'o',ga,f'r{half}{t}',n*(G.CRET+1)+2,f'hr_{half}{t}_o','stream_1p2')
+   endb=hub_block(f'hr_{logical}{t}',nm,'hend',w,h,ga.x if logical=='W' else ga.x+ga.w,gy,logical,[cor['s14W'] if logical=='W' else cor['vch']])
+   for side in 'WE':
+    members=[(lane,r) for lane,r in enumerate(roots) if m['frames'][r]['half']==side]
+    # Actual bundled pin-grid sizing: six70-bit vertical lanes are41.016um;
+    # seven47.496um leave no legal clearance in the47.52um RSC lane.
+    for batch in range(0,len(members),6):
+     group=members[batch:batch+6];prefix=f'cr{logical}{t}_{side}{batch//6}'
+     entry=min(road.entry[side],key=lambda n:abs(n[1]-gy))
+     dist={entry:0};parent={entry:None};q=[(0,entry)]
+     while q:
+      cost,node=heapq.heappop(q)
+      if cost!=dist[node]:continue
+      for nxt,wgt in road.graph[node].items():
+       nc=cost+wgt
+       if nc<dist.get(nxt,float('inf')):dist[nxt]=nc;parent[nxt]=node;heapq.heappush(q,(nc,nxt))
+     needed=set();flows={};flights={r:0 for _,r in group}
+     def advance(name,path,active):
+      ordered=sorted(active);positions=[byname[active[j][0]] for j in ordered]
+      src=(sum(i.x+i.w/2 for i in positions)/len(positions),sum(i.y+i.h/2 for i in positions)/len(positions))
+      path=G._dedup([src,(path[0][0],src[1])]+path)
+      stages=CH.run(name,[G.CRET+2]*len(ordered),path,allowed,src,forced=[G._poly_len(path)])
+      for k,(obj,_s,_hop) in enumerate(stages):
+       byname[obj.name]=obj
+       for j,lane in enumerate(ordered):
+        old=active[lane];bus(f'{name}_f{k}_{j}','fclk',1,[(old[0],old[1]),(obj.name,f'fi{j}')]);bus(f'{name}_d{k}_{j}','lane',G.CRET+2,[(old[0],old[2]),(obj.name,f'di{j}')])
+        active[lane]=(obj.name,f'fo{j}',f'do{j}',old[3]);flights[old[3]]+=1
+      return active
+     byname={i.name:i for i in m['insts']}
+     for lane,r in group:
+      f=m['frames'][r];cf=byname[f'cf{r}'];node=road.rootnode[(r,'r')]
+      spur=[(cf.x+cf.w/2,node[1]),node]
+      active=advance(f'{prefix}_tap{r}',spur,{lane:(cf.name,'rf','rd',r)})
+      flows.setdefault(node,{}).update(active)
+      while node is not None:needed.add(node);node=parent[node]
+     for k,node in enumerate(sorted(needed-{entry},key=lambda node:dist[node],reverse=True)):
+      active=flows.pop(node);par=parent[node]
+      active=advance(f'{prefix}_edge{k}',[node,par],active);flows.setdefault(par,{}).update(active)
+     active=flows[entry];dst=(endb.x+endb.w/2,endb.y+endb.h/2);path=[entry]
+     if side=='E':
+      cy=G.corr_y(m,f'r{t}');vx=G.vch_x(m,f'r{t}');path +=[(entry[0],cy),(vx,cy)]
+     if side!=logical:
+      wx=G.s14_x(m,'W',f'r{t}');vx=G.vch_x(m,f'r{t}');xx0,xx1=sorted((wx,vx));margin=.432
+      free=[(max(cor['s14W'][1],cor['vch'][1]),min(cor['s14W'][3],cor['vch'][3]))]
+      for obj in m['insts']:
+       if obj.x>=xx1 or obj.x+obj.w<=xx0:continue
+       cut=(obj.y-margin,obj.y+obj.h+margin);nfree=[]
+       for lo,hi in free:
+        if cut[1]<=lo or cut[0]>=hi:nfree.append((lo,hi));continue
+        if cut[0]>lo:nfree.append((lo,cut[0]))
+        if cut[1]<hi:nfree.append((cut[1],hi))
+       free=nfree
+      need=G.stn_dims([G.CRET+2]*len(active),True)[1]+2*margin
+      gaps=[(lo,hi) for lo,hi in free if hi-lo>=need];assert gaps,('canonical W bundled crossing has no real gap',prefix,need)
+      lo,hi=min(gaps,key=lambda ab:abs((ab[0]+ab[1])/2-dst[1]));yy=(lo+hi)/2
+      allowed.append((xx0-20,lo,xx1+20,hi));endx=wx if logical=='W' else vx;path +=[(path[-1][0],yy),(endx,yy)]
+      m.setdefault('canonical_w_crossings',[]).append(dict(bundle=prefix,roots=[r for _,r in group],gap_um=[lo,hi],crossing_y_um=yy,unqualified_cut=True))
+     path=G._dedup(path+[(path[-1][0],dst[1]),dst]);active=advance(f'{prefix}_hub',path,active)
+     for lane,r in group:
+      tail=active[lane];bus(f'{prefix}_fe{lane}','fclk',1,[(tail[0],tail[1]),(endb.name,f'fi{lane}')]);bus(f'{prefix}_de{lane}','lane',G.CRET+2,[(tail[0],tail[2]),(endb.name,f'di{lane}')])
+      m.setdefault('r_stages',{})[r]=flights[r];calendar[r].update(return_stations=flights[r],gather_input_lane=lane,return_bundle=prefix)
+   G._local_chain(m,CH,[cor['s14W'] if logical=='W' else cor['vch']],endb,'o',ga,f'r{logical}{t}',n*(G.CRET+1)+2,f'hr_{logical}{t}_o','stream_1p2')
  m['canonical_calendar']=[calendar[r] for r in sorted(calendar)]
+
 
 def trace_calendar(G,m):
  """Count actual emitted transport registers after hop fixes, by immutable root.
