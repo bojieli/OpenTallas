@@ -1,0 +1,98 @@
+{
+  "schema": "opentallas.wb-pipeline-cdc-evidence.v1",
+  "status": "component_actual_SRAM_CDC_PASS_joint_PHY_and_physical_unqualified",
+  "sources": {
+    "ot_hbm_svc_wb_pipeline_cdc.sv": "abf5662f2ff12c7305e01811206877219614d74b8bd870fc2b855deda4fb854c",
+    "tb_hbm_svc_wb_pipeline_cdc.sv": "7545c79c3d0621c7b06afb6936e491ed6104253a85b0869e3a31a611b8127606",
+    "run_wb_pipeline_cdc_bench.sh": "94dc7e0e3a06b3a3f012c4b7497b4bc81cf4e4508ad953773d63e2abc4e0c5ed",
+    "wb_pipeline_cdc_model.py": "3e5d038ce20cae2e62fdb7bb883b46d37e6dcd22c7573ade3252cf581c69dfda"
+  },
+  "frozen_predecessor_sha256": "9571d70cbc5a127d5bfea05a11805009bdc8bf544f2d6031c53fb5b63cb90dca",
+  "run_command": "bash rtl/hbm_accel/loader/service_native/run_wb_pipeline_cdc_bench.sh /tmp/wb-pipeline-cdc-final",
+  "evidence_directory": "/tmp/wb-pipeline-cdc-final",
+  "logs": {
+    "positive.log": "5030bb7fa4b1d591c1bf6d10a057101278fdbaef55a0e2a1a7089a92bce7bea7",
+    "fast.log": "bfbf0dc5cf3ed3e812c31df2633c4b7c1652c23a617c6bbf8fda2db85806305e",
+    "depth.log": "bc87d5cf724156c4172fd8a06f90526feae8cefb389ffeeb7a002c345378b63c",
+    "tail.log": "61ab40f78a0eadfb05171c932dd9f22a5631654f4226a0b28ba4c1a8c66df6e4",
+    "faults.log": "b3d224e745e5370b155000f92ba466bc858e8b1a6c67de759a17fb2d85526e55",
+    "resets.log": "2b2be662130d0ab33a771b901bdd1f0892557e4def781fe0d2521264aab4408e",
+    "mutant.log": "f235070b3502f61eb960f0b795d05343163faa08b8cfec1d2473085a13606fad",
+    "yosys.log": "ed685b4ef6a24d9ea75bd2a5985aec9ddd6e0fae69148c597f037659ca93f60f"
+  },
+  "receipts": {
+    "positive.log": [
+      "WB_FILL bank=0 sectors=640 fixed_edges=80 begin_ps=7917.663 end_ps=74584.303 elapsed_ps=66666.640",
+      "WB_FILL bank=1 sectors=2048 fixed_edges=256 begin_ps=77084.302 end_ps=290417.550 elapsed_ps=213333.248",
+      "WB_TIMING bank=0 first_accept_ps=79533.000 last_accept_ps=129709.000 last_real_ack_ps=307885.000 returned_ack_ps=312083.208",
+      "WB_TIMING bank=1 first_accept_ps=316077.000 last_accept_ps=481965.000 last_real_ack_ps=955053.000 returned_ack_ps=958749.616",
+      "WB_PIPELINE_CDC PASS production640_fixedcycles=80 max2048_fixedcycles=256 sectors=2688 real_acks=2688 input_cycles=336 blocks=2 stream_period_ps=833.333 hbm_period_ps=1024 hbm_phase_ps=173",
+      "WB_PIPELINE_OUTSTANDING max=55 simultaneous_done_accept=297",
+      "WB_COPY reads=2688 max_parallel=32 overlapped_read_enqueue=2624",
+      "WB_CLOCK_EDGES stream=1146 hbm=932 finish_ps=959583.949 fifo_full_stream_edges=240"
+    ],
+    "fast.log": [
+      "WB_FILL bank=0 sectors=640 fixed_edges=80 begin_ps=7917.663 end_ps=74584.303 elapsed_ps=66666.640",
+      "WB_TIMING bank=0 first_accept_ps=79533.000 last_accept_ps=113325.000 last_real_ack_ps=114349.000 returned_ack_ps=117916.619",
+      "WB_FILL bank=1 sectors=2048 fixed_edges=256 begin_ps=77084.302 end_ps=290417.550 elapsed_ps=213333.248",
+      "WB_TIMING bank=1 first_accept_ps=295597.000 last_accept_ps=424621.000 last_real_ack_ps=425645.000 returned_ack_ps=429583.161",
+      "WB_PIPELINE_CDC PASS production640_fixedcycles=80 max2048_fixedcycles=256 sectors=2688 real_acks=2688 input_cycles=336 blocks=2 stream_period_ps=833.333 hbm_period_ps=1024 hbm_phase_ps=173",
+      "WB_PIPELINE_OUTSTANDING max=1 simultaneous_done_accept=1931",
+      "WB_COPY reads=2688 max_parallel=32 overlapped_read_enqueue=2624",
+      "WB_CLOCK_EDGES stream=511 hbm=415 finish_ps=430417.494 fifo_full_stream_edges=171"
+    ],
+    "depth.log": [
+      "WB_FILL bank=0 sectors=640 fixed_edges=80 begin_ps=7917.663 end_ps=74584.303 elapsed_ps=66666.640",
+      "WB_FILL bank=1 sectors=2048 fixed_edges=256 begin_ps=77084.302 end_ps=290417.550 elapsed_ps=213333.248",
+      "WB_TIMING bank=0 first_accept_ps=79533.000 last_accept_ps=129709.000 last_real_ack_ps=4609709.000 returned_ack_ps=4613748.154",
+      "WB_TIMING bank=1 first_accept_ps=4617901.000 last_accept_ps=5450413.000 last_real_ack_ps=18615981.000 returned_ack_ps=18619575.885",
+      "WB_PIPELINE_CDC PASS production640_fixedcycles=80 max2048_fixedcycles=256 sectors=2688 real_acks=2688 input_cycles=336 blocks=2 stream_period_ps=833.333 hbm_period_ps=1024 hbm_phase_ps=173",
+      "WB_PIPELINE_OUTSTANDING max=64 simultaneous_done_accept=14",
+      "WB_COPY reads=2688 max_parallel=32 overlapped_read_enqueue=2624",
+      "WB_CLOCK_EDGES stream=22339 hbm=18179 finish_ps=18620410.218 fifo_full_stream_edges=1049"
+    ],
+    "tail.log": [
+      "WB_FILL bank=0 sectors=13 fixed_edges=2 begin_ps=7917.663 end_ps=9584.329 elapsed_ps=1666.666",
+      "WB_TIMING bank=0 first_accept_ps=15021.000 last_accept_ps=20141.000 last_real_ack_ps=65197.000 returned_ack_ps=68749.972",
+      "WB_PIPELINE_CDC_TAIL PASS sectors=13 fixed_edges=2 real_acks=13"
+    ],
+    "faults.log": [
+      "WB_PIPELINE_CDC_FAULTS PASS cases=7"
+    ],
+    "resets.log": [
+      "WB_PIPELINE_CDC_RESETS PASS independent_assertions=2 domain_local_release_edges=2 live_requests_flushed=2"
+    ],
+    "mutant.log": [
+      "WB_FILL bank=0 sectors=640 fixed_edges=80 begin_ps=7917.663 end_ps=74584.303 elapsed_ps=66666.640",
+      "FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_pipeline_cdc.sv:49: XOR PC mismatch sector=00015360 actualpc=0 expectedpc=11",
+      "       Time: 79533000 Scope: tb_hbm_svc_wb_pipeline_cdc"
+    ]
+  },
+  "structural_check": {
+    "command": "Yosys read actual RTL + SRAM/FIFO interface blackboxes; hierarchy -check; proc; check; stat",
+    "problems": 0,
+    "SRAM_macros": 32,
+    "CDC_FIFOs": 34,
+    "reset_synchronizers": 6,
+    "FIFO_implementation": "actual RTL used in simulation; blackbox only for Yosys structural check due installed frontend rejecting existing integer loop declaration"
+  },
+  "ABI_change": {
+    "added_input": "stream_fifo_clk[3:0]",
+    "contract": "Four separate actual clock root ports at identical stream_clk frequency and phase, each clocks eight SRAMs and eight payload FIFO write endpoints and has local reset synchronizer. Physical CTS/routing remains unqualified."
+  },
+  "limits": [
+    "Actual PHY joint timing proof pending parent owner.",
+    "Clock partition source ports do not prove physical placement/CTS.",
+    "Synthetic fast/deferred completion performance is mechanism evidence only.",
+    "Compact production baseline diagnostics do not qualify canonical full-native-address COLB/PRE timing."
+  ],
+  "committed_component_logs": {
+    "results/arch/hbm_die_v15/wb_pipeline_cdc/positive.log": "5030bb7fa4b1d591c1bf6d10a057101278fdbaef55a0e2a1a7089a92bce7bea7",
+    "results/arch/hbm_die_v15/wb_pipeline_cdc/mutant.log": "f235070b3502f61eb960f0b795d05343163faa08b8cfec1d2473085a13606fad",
+    "results/arch/hbm_die_v15/wb_pipeline_cdc/resets.log": "2b2be662130d0ab33a771b901bdd1f0892557e4def781fe0d2521264aab4408e",
+    "results/arch/hbm_die_v15/wb_pipeline_cdc/tail.log": "61ab40f78a0eadfb05171c932dd9f22a5631654f4226a0b28ba4c1a8c66df6e4",
+    "results/arch/hbm_die_v15/wb_pipeline_cdc/faults.log": "b3d224e745e5370b155000f92ba466bc858e8b1a6c67de759a17fb2d85526e55",
+    "results/arch/hbm_die_v15/wb_pipeline_cdc/fast.log": "bfbf0dc5cf3ed3e812c31df2633c4b7c1652c23a617c6bbf8fda2db85806305e",
+    "results/arch/hbm_die_v15/wb_pipeline_cdc/depth.log": "bc87d5cf724156c4172fd8a06f90526feae8cefb389ffeeb7a002c345378b63c"
+  }
+}

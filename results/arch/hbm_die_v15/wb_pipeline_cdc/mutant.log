@@ -1,0 +1,3 @@
+WB_FILL bank=0 sectors=640 fixed_edges=80 begin_ps=7917.663 end_ps=74584.303 elapsed_ps=66666.640
+FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_pipeline_cdc.sv:49: XOR PC mismatch sector=00015360 actualpc=0 expectedpc=11
+       Time: 79533000 Scope: tb_hbm_svc_wb_pipeline_cdc
