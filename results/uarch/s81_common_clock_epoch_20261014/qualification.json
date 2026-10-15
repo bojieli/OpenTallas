@@ -1,0 +1,11 @@
+{
+  "digital_fixture": "PASS",
+  "lint": "PASS verilator --lint-only -Wall",
+  "test": "python3 tools/qwen_tp8/s81_common_clock_phase.py --test",
+  "coverage": "337 running master edges, 159 phase-valid edges, sub-master lock glitch, relock, reset at twelve distinct phases",
+  "negative_controls": ["duty", "phase", "epoch", "lock", "fault"],
+  "physical_native": "FAIL",
+  "physical_missing": ["actual raw 3.6GHz clock source macro RTL and timed views", "mapped SS/FF digital divider timing", "CTS and waveform distortion at all consumers", "clock/reset recovery/removal and metastability qualification", "all macro minpulse arcs and inverted-clock compatibility", "actual die floorplan/slot and routed area"],
+  "behavioral_master": "single test clock only; not evidence of physical analog implementation",
+  "adoption": "candidate only; preserve all existing legacy waveform views and contracts"
+}

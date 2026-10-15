@@ -1,0 +1,41 @@
+{
+  "scope": "candidate digital clock divider; not integrated or physically qualified",
+  "master_ghz": 3.6,
+  "master_period_ns": "5/18",
+  "common_epoch_master_cycles": 12,
+  "stream": {
+    "divide": 3,
+    "high_master_cycles": 1,
+    "low_master_cycles": 2
+  },
+  "serial": {
+    "divide": 4,
+    "high_master_cycles": 2,
+    "low_master_cycles": 2
+  },
+  "state_estimate_flops": 18,
+  "replicas": 1,
+  "macs_per_cycle": 0,
+  "memory_bytes_per_cycle": 0,
+  "boundary_data_bits_per_cycle": 0,
+  "clock_boundary": "three clock wires plus phase-valid, epoch-window and sticky-fault; CTS/fanout unmeasured",
+  "initialization": "two master-edge lock and reset-release synchronizers, then start; phase-valid waits one full twelve-edge frame",
+  "stop": "invalidate immediately; finish current frame before parking low; master must continue for at least twelve edges after source-lock loss",
+  "min_high_ns": {
+    "stream": "5/18",
+    "serial": "5/9"
+  },
+  "min_low_ns": {
+    "stream": "5/9",
+    "serial": "5/9"
+  },
+  "physical_adoption": "FAIL: raw 3.6GHz macro output absent; digital SS/FF closure, minpulse, CTS, wire budgets, slot-fit and area unmeasured",
+  "existing_views": "legacy 50-percent /3 views are not candidate evidence",
+  "latency": "production issues permitted only after phase-valid plus consumer local epoch arming; compiler prices each consumer initialization",
+  "reset": "outputs park on next master edge; serial high pulse may shorten to one master tick; phase-valid drops immediately",
+  "min_high_ns_including_reset": {
+    "stream": "5/18",
+    "serial": "5/18"
+  },
+  "epoch_window": "first registered window E23..E25; phase-valid first E12; no combinational phase decode on window"
+}

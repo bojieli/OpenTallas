@@ -1,0 +1,240 @@
+{
+  "status": "CANDIDATE_NOT_PHYSICALLY_QUALIFIED",
+  "rtl_sha256": "df1cfcfba4dbcae3d991712fde910e7e5df5c75bc1e6e35557d8cb1e13c7a14a",
+  "master_period_ns": [
+    5,
+    18
+  ],
+  "common_epoch_master_cycles": 12,
+  "phase_rows": [
+    [
+      1,
+      1,
+      1
+    ],
+    [
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      0
+    ],
+    [
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      1,
+      0
+    ],
+    [
+      1,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      1,
+      0
+    ],
+    [
+      1,
+      1,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      1
+    ]
+  ],
+  "clocks": {
+    "stream": {
+      "divide": 3,
+      "duty": [
+        1,
+        3
+      ],
+      "rising_master_edges": [
+        0,
+        3,
+        6,
+        9
+      ],
+      "falling_master_edges": [
+        1,
+        4,
+        7,
+        10
+      ]
+    },
+    "serial": {
+      "divide": 4,
+      "duty": [
+        2,
+        4
+      ],
+      "rising_master_edges": [
+        0,
+        4,
+        8
+      ],
+      "falling_master_edges": [
+        2,
+        6,
+        10
+      ]
+    }
+  },
+  "related_windows": {
+    "stream_rising_to_serial_rising": [
+      {
+        "launch": 0,
+        "next_capture_delta_master_cycles": 0
+      },
+      {
+        "launch": 3,
+        "next_capture_delta_master_cycles": 1
+      },
+      {
+        "launch": 6,
+        "next_capture_delta_master_cycles": 2
+      },
+      {
+        "launch": 9,
+        "next_capture_delta_master_cycles": 3
+      }
+    ],
+    "stream_rising_to_serial_falling": [
+      {
+        "launch": 0,
+        "next_capture_delta_master_cycles": 2
+      },
+      {
+        "launch": 3,
+        "next_capture_delta_master_cycles": 3
+      },
+      {
+        "launch": 6,
+        "next_capture_delta_master_cycles": 0
+      },
+      {
+        "launch": 9,
+        "next_capture_delta_master_cycles": 1
+      }
+    ],
+    "stream_falling_to_serial_rising": [
+      {
+        "launch": 1,
+        "next_capture_delta_master_cycles": 3
+      },
+      {
+        "launch": 4,
+        "next_capture_delta_master_cycles": 0
+      },
+      {
+        "launch": 7,
+        "next_capture_delta_master_cycles": 1
+      },
+      {
+        "launch": 10,
+        "next_capture_delta_master_cycles": 2
+      }
+    ],
+    "stream_falling_to_serial_falling": [
+      {
+        "launch": 1,
+        "next_capture_delta_master_cycles": 1
+      },
+      {
+        "launch": 4,
+        "next_capture_delta_master_cycles": 2
+      },
+      {
+        "launch": 7,
+        "next_capture_delta_master_cycles": 3
+      },
+      {
+        "launch": 10,
+        "next_capture_delta_master_cycles": 0
+      }
+    ],
+    "serial_rising_to_stream_rising": [
+      {
+        "launch": 0,
+        "next_capture_delta_master_cycles": 0
+      },
+      {
+        "launch": 4,
+        "next_capture_delta_master_cycles": 2
+      },
+      {
+        "launch": 8,
+        "next_capture_delta_master_cycles": 1
+      }
+    ],
+    "serial_rising_to_stream_falling": [
+      {
+        "launch": 0,
+        "next_capture_delta_master_cycles": 1
+      },
+      {
+        "launch": 4,
+        "next_capture_delta_master_cycles": 0
+      },
+      {
+        "launch": 8,
+        "next_capture_delta_master_cycles": 2
+      }
+    ],
+    "serial_falling_to_stream_rising": [
+      {
+        "launch": 2,
+        "next_capture_delta_master_cycles": 1
+      },
+      {
+        "launch": 6,
+        "next_capture_delta_master_cycles": 0
+      },
+      {
+        "launch": 10,
+        "next_capture_delta_master_cycles": 2
+      }
+    ],
+    "serial_falling_to_stream_falling": [
+      {
+        "launch": 2,
+        "next_capture_delta_master_cycles": 2
+      },
+      {
+        "launch": 6,
+        "next_capture_delta_master_cycles": 1
+      },
+      {
+        "launch": 10,
+        "next_capture_delta_master_cycles": 0
+      }
+    ]
+  },
+  "caveat": "Coincident edges have zero forward separation; timing must use real launch/capture constraints. No false paths or ideal phase grants. Reset serial pulses may be one master tick."
+}
