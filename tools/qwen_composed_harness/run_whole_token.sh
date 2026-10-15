@@ -16,6 +16,11 @@ kernel=$d/qwen-composed-harness-f460-1014/kernel
 # C++ as archive 54a3930e) is linked as a PIC shared library to keep the
 # executable text under the 2 GB small-code-model limit.
 kso=${KERNEL_SO_DIR:-$stage/kernel_pic}
+# Opt-in during migration: fail closed when a supposedly RTL attention kernel
+# still links host arithmetic. Other components are audited independently.
+if [[ "${ATTN_RTL_ONLY:-0}" == 1 ]]; then
+ python3 "$(dirname "$0")/attention_rtl_library_check.py" "$kso"
+fi
 helper=$d/qwen-full-layer-sequence-1014/native59_helper/obj
 collector=$d/qwen-full-layer-sequence-1014/libnative59.so
 probe=${PROBE_OBJ:-$d/qwen-full-layer-sequence-1014/core_instruction_probe.o}
