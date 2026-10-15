@@ -1,10 +1,20 @@
 // Canvas floorplan of one die revision with its data-flow links. Blocks to scale (DEF µm, y up), links pin to pin
-// (or along their register hops), width ∝ log2(bits), colour = reach verdict, dashed = bypasses unrelated blocks.
-// Zoomed out, links are aggregated into spatial bundles (one stroke per pair of screen bins) so 100k+ links stay smooth.
-import { STATUS, BYPASS_COLOR, widthPx, segmentGrid, blockAt, fmtBits } from './model.js';
+// (or along their register hops), width ∝ log2(bits) (capped, user scale), colour = reach verdict, dashed = bypasses.
+// Level of detail is geometry preserving: every stroke follows a real hop segment. When many links are in view,
+// segments whose ends snap to the same pair of 6 px screen cells are merged into one stroke whose ends are the
+// bit-weighted means of the members' real ends (so a bundle is never longer than its longest member). Segments shorter
+// than a cell, and links shorter than the reach when zoomed out ('auto' local mode), are shown as a local density fill
+// instead of strokes.
+import { STATUS, BYPASS_COLOR, segmentGrid, blockAt, fmtBits, fmtUm } from './model.js';
 
 const DPR = () => Math.min(2, window.devicePixelRatio || 1);
 const RANK = [0, 1, 2, -1];   // worst-status ordering for bundles (unknown lowest)
+const CELL_PX = 6;            // bundle snap / density cell, screen px
+const SUB_PX = 3;             // segments shorter than this on screen go to the density fill
+const LOCAL_PX = 40;          // 'auto': links shorter than the reach become density while reach < LOCAL_PX on screen
+const DENS_COLOR = '#7aa7ff';
+/** stroke width (px) of a link or bundle of `bits`: log, capped, times the user scale */
+export const strokePx = (bits, scale = 1) => scale * Math.min(5, 0.45 + 0.32 * Math.log2(Math.max(1, Number.isFinite(bits) ? bits : 1)));
 
 export class Floor {
   constructor(el, { onPick = () => {}, onHover = () => {}, onPaint = () => {} } = {}) {
@@ -17,7 +27,7 @@ export class Floor {
     this.base = document.createElement('canvas');   // blocks, re-rendered when the view settles
     this.m = null; this.view = { s: 1, ox: 0, oy: 0 }; this.baseView = null; this.baseDirty = true;
     this.st = { mode: 'all', active: null, trail: [], highlight: null, lit: null, litColor: null, selBlock: -1,
-      manhattan: false, cut: null, bypassOnly: false, filter: null, flow: false, phase: 0, minBits: 0 };
+      manhattan: false, cut: null, bypassOnly: false, filter: null, flow: false, phase: 0, minBits: 0, minLen: 'auto', wscale: 0.7 };
     this._bind(); this._ro = new ResizeObserver(() => this.resize()); this._ro.observe(el);
   }
   destroy() { this._ro.disconnect(); cancelAnimationFrame(this._raf); this.el.replaceChildren(); }
@@ -25,7 +35,7 @@ export class Floor {
   set(patch) {
     Object.assign(this.st, patch);
     if ('lit' in patch || 'selBlock' in patch) this._litDirty = true;
-    if ('active' in patch || 'filter' in patch || 'bypassOnly' in patch || 'minBits' in patch || 'mode' in patch) this._bundleCache = null;
+    if (['active', 'filter', 'bypassOnly', 'minBits', 'minLen', 'mode'].some((k) => k in patch)) this._bundleCache = null;
     this.draw();
   }
   resize() {
@@ -104,41 +114,70 @@ export class Floor {
     this._interact();
   }
   _interact() {   // cheap frames while moving; full base re-render once settled
-    this._moving = true; this._bundleCache = null; this.draw();
-    clearTimeout(this._settle); this._settle = setTimeout(() => { this._moving = false; this.baseDirty = true; this.draw(); }, 140);
+    this._moving = true; this.draw();   // keep the cached level of detail (µm coordinates) while moving
+    clearTimeout(this._settle); this._settle = setTimeout(() => { this._moving = false; this.baseDirty = true; this._bundleCache = null; this.draw(); }, 140);
   }
 
   // -------------------------------------------------------------------------------------------- visible link set
   visibleLinks() {
     const m = this.m, st = this.st;
     let list = st.mode === 'replay' ? (st.active || new Int32Array(0)) : null;
-    const [vx0, vy1] = this.inv(0, 0), [vx1, vy0] = this.inv(this.cw, this.ch), bb = m.bbox;
+    let [vx0, vy1] = this.inv(0, 0), [vx1, vy0] = this.inv(this.cw, this.ch); const bb = m.bbox;
+    const px = (vx1 - vx0) * 0.25, py = (vy1 - vy0) * 0.25; vx0 -= px; vx1 += px; vy0 -= py; vy1 += py;   // pan margin
+    const minLen = typeof st.minLen === 'number' ? st.minLen : 0;
     const inView = (i) => !(bb[i * 4] > vx1 || bb[i * 4 + 2] < vx0 || bb[i * 4 + 1] > vy1 || bb[i * 4 + 3] < vy0);
-    const keep = (i) => inView(i) && (!st.bypassOnly || m.cross[i] > 0) && (!st.minBits || m.bits[i] >= st.minBits) && (!st.filter || st.filter(i));
+    const keep = (i) => inView(i) && (!st.bypassOnly || m.cross[i] > 0) && (!st.minBits || m.bits[i] >= st.minBits)
+      && (!minLen || !(m.len[i] < minLen)) && (!st.filter || st.filter(i));
     if (!list) { const a = []; for (let i = 0; i < m.nl; i++) if (m.segStart[i + 1] > m.segStart[i] && keep(i)) a.push(i); return a; }
     return Array.from(list).filter(keep);
   }
   _segCount(list) { let n = 0; for (const i of list) n += this.m.segStart[i + 1] - this.m.segStart[i]; return n; }
 
-  bundles(list) {
-    const bin = 34 / this.view.s, m = this.m, S = m.fseg, map = new Map();
+  /** 'auto' local mode is on: links shorter than the reach collapse into the density fill at this zoom */
+  localMode() { return this.st.minLen === 'auto' && this.m.reach * this.view.s < LOCAL_PX; }
+
+  /** Level of detail for `list` at the current zoom: direct links, merged bundles and the local density fill. */
+  lodFor(list) {
+    const m = this.m, S = m.seg, s = this.view.s, cell = CELL_PX / s, sub = SUB_PX / s, local = this.localMode();
+    const dens = new Map(), strokeLinks = [];
+    const addDens = (x, y, i, bits) => {
+      const key = Math.floor(x / cell) + ',' + Math.floor(y / cell);
+      let d = dens.get(key); if (!d) dens.set(key, d = { gx: Math.floor(x / cell), gy: Math.floor(y / cell), n: 0, bits: 0, links: [], last: -1, maxL: 0 });
+      if (d.last !== i) { d.n++; d.bits += bits; d.last = i; if (d.links.length < 400) d.links.push(i); if (m.len[i] > d.maxL) d.maxL = m.len[i]; }
+    };
+    let nseg = 0;
     for (const i of list) {
-      for (let s = m.fStart[i]; s < m.fStart[i + 1]; s++) {
-        const ax = Math.floor(S[s * 5] / bin), ay = Math.floor(S[s * 5 + 1] / bin), bx = Math.floor(S[s * 5 + 2] / bin), by = Math.floor(S[s * 5 + 3] / bin);
-        if (ax === bx && ay === by) continue;
-        const key = ax + ',' + ay + '>' + bx + ',' + by;
+      const bits = m.bits[i] || 1, a = m.segStart[i], z = m.segStart[i + 1];
+      const diag = Math.max(m.bbox[i * 4 + 2] - m.bbox[i * 4], m.bbox[i * 4 + 3] - m.bbox[i * 4 + 1]);
+      if ((local && m.len[i] < m.reach) || diag < sub) { addDens((m.bbox[i * 4] + m.bbox[i * 4 + 2]) / 2, (m.bbox[i * 4 + 1] + m.bbox[i * 4 + 3]) / 2, i, bits); continue; }
+      strokeLinks.push(i); nseg += z - a;
+    }
+    const out = { s, cell, dens: [...dens.values()], links: null, bundles: null, nLocal: 0, list };
+    for (const d of out.dens) out.nLocal += d.n;
+    if (strokeLinks.length <= 2500 && nseg <= 24000) { out.links = strokeLinks; return out; }
+    // merge parallel segments that snap to the same pair of screen cells
+    const map = new Map();
+    for (const i of strokeLinks) {
+      const bitsL = m.bits[i] || 1;
+      for (let k = m.segStart[i]; k < m.segStart[i + 1]; k++) {
+        const x1 = S[k * 5], y1 = S[k * 5 + 1], x2 = S[k * 5 + 2], y2 = S[k * 5 + 3], bt = S[k * 5 + 4] || bitsL;
+        if (Math.abs(x2 - x1) + Math.abs(y2 - y1) < sub) continue;   // sub-pixel piece of a longer chain: its neighbours carry the shape
+        const key = Math.floor(x1 / cell) + ',' + Math.floor(y1 / cell) + '>' + Math.floor(x2 / cell) + ',' + Math.floor(y2 / cell);
         let b = map.get(key);
-        if (!b) map.set(key, b = { x1: 0, y1: 0, x2: 0, y2: 0, w: 0, bits: 0, n: 0, links: [], st: 3, by: 0 });
-        const bt = S[s * 5 + 4] || m.bits[i] || 1;
-        b.x1 += S[s * 5] * bt; b.y1 += S[s * 5 + 1] * bt; b.x2 += S[s * 5 + 2] * bt; b.y2 += S[s * 5 + 3] * bt; b.w += bt;
-        b.bits += bt; b.n++; if (b.links.length < 400) b.links.push(i);
-        if (RANK[m.status[i]] > RANK[b.st]) b.st = m.status[i];
-        if (m.cross[i] > 0) b.by++;
+        if (!b) map.set(key, b = { x1: 0, y1: 0, x2: 0, y2: 0, w: 0, bits: 0, n: 0, links: [], st: 3, by: 0, maxSeg: 0, last: -1 });
+        b.x1 += x1 * bt; b.y1 += y1 * bt; b.x2 += x2 * bt; b.y2 += y2 * bt; b.w += bt;
+        b.maxSeg = Math.max(b.maxSeg, Math.abs(x2 - x1) + Math.abs(y2 - y1));
+        if (b.last !== i) {   // count each link once per bundle (a link contributes one segment per cell pair)
+          b.last = i; b.bits += bt; b.n++; if (b.links.length < 400) b.links.push(i);
+          if (RANK[m.status[i]] > RANK[b.st]) b.st = m.status[i];
+          if (m.cross[i] > 0) b.by++;
+        }
       }
     }
-    const out = [];
-    for (const b of map.values()) { b.x1 /= b.w; b.y1 /= b.w; b.x2 /= b.w; b.y2 /= b.w; out.push(b); }
-    out.sort((a, b) => a.bits - b.bits);
+    const bundles = [];
+    for (const b of map.values()) { b.x1 /= b.w; b.y1 /= b.w; b.x2 /= b.w; b.y2 /= b.w; bundles.push(b); }
+    bundles.sort((p, q) => p.bits - q.bits);
+    out.bundles = bundles;
     return out;
   }
 
@@ -205,21 +244,18 @@ export class Floor {
       for (const [list, alpha] of st.trail) { c.globalAlpha = alpha * (hl ? 0.4 : 1); this._paintLinks(c, list, { thin: true }); }
       c.globalAlpha = 1;
     }
-    const list = this._bundleCache?.list || this.visibleLinks();
-    const segs = this._segCount(list);
-    this.visibleCount = list.length; this.visibleSegs = segs;
+    if (!this._bundleCache || (!this._moving && this._bundleCache.s !== this.view.s)) this._bundleCache = this.lodFor(this.visibleLinks());
+    const L = this._bundleCache;
+    this.visibleCount = L.list.length; this.localCount = L.nLocal;
     c.globalAlpha = hl ? 0.28 : 1;
-    if (list.length > 2500 || segs > 24000) {
-      if (!this._bundleCache || this._bundleCache.s !== this.view.s) this._bundleCache = { s: this.view.s, list, b: this.bundles(list) };
-      this._paintBundles(c, this._bundleCache.b); this.lod = 'bundled';
-    } else {
-      this._bundleCache = { s: this.view.s, list, b: null };
-      this._paintLinks(c, list, { arrows: segs < 2500, flow: st.flow && segs < 4000 }); this.lod = 'links';
-    }
+    this._paintDensity(c, L);
+    if (L.bundles) { this._paintBundles(c, L.bundles); this.lod = 'bundled'; this.bundleCount = L.bundles.length; }
+    else { const segs = this._segCount(L.links); this._paintLinks(c, L.links, { arrows: segs < 2500, flow: st.flow && segs < 4000 }); this.lod = 'links'; this.bundleCount = 0; }
     c.globalAlpha = 1;
     if (hl) this._paintLinks(c, [...hl], { arrows: true, halo: true, flow: st.flow });
     if (this._hoverLink != null && this._hoverLink >= 0) this._paintLinks(c, [this._hoverLink], { arrows: true, halo: true });
-    if (this._hoverBundle) this._paintBundles(c, [this._hoverBundle], true);
+    if (this._hoverBundle && this._hoverBundle.dens) this._paintDensity(c, { cell: this._bundleCache.cell, dens: [this._hoverBundle] }, true);
+    else if (this._hoverBundle) this._paintBundles(c, [this._hoverBundle], true);
     // scale bar
     const um = [100, 200, 500, 1000, 2000, 5000, 10000].find((u) => u * this.view.s > 70) || 10000;
     c.fillStyle = '#8a97b8'; c.fillRect(this.cw - 16 - um * this.view.s, this.ch - 14, um * this.view.s, 2);
@@ -237,7 +273,7 @@ export class Floor {
   _paintLinks(c, list, { arrows = false, halo = false, thin = false, flow = false } = {}) {
     const m = this.m, S = m.seg, groups = new Map();
     for (const i of list) {
-      const bits = m.bits[i], w = thin ? Math.max(0.6, widthPx(bits) * 0.5) : widthPx(bits);
+      const bits = m.bits[i], w = thin ? Math.max(0.6, strokePx(bits, this.st.wscale) * 0.5) : Math.max(0.6, strokePx(bits, this.st.wscale));
       const key = m.status[i] + '|' + (m.cross[i] > 0 ? 1 : 0) + '|' + (Math.round(w * 2) / 2);
       let g = groups.get(key); if (!g) groups.set(key, g = []); g.push(i);
     }
@@ -273,20 +309,38 @@ export class Floor {
 
   _paintBundles(c, bundles, hover = false) {
     c.lineCap = 'round';
-    const groups = new Map();
+    const groups = new Map(), ws = this.st.wscale;
     for (const b of bundles) {
-      const w = hover ? 0 : Math.min(14, widthPx(b.bits) * (b.n > 1 ? 1.08 : 1));
-      const key = b.st + '|' + (b.by ? 1 : 0) + '|' + Math.round(w * 2) / 2;
+      const w = Math.max(0.6, strokePx(b.bits, ws));
+      const key = b.st + '|' + (b.by * 2 > b.n ? 1 : 0) + '|' + Math.round(w * 2) / 2;
       let g = groups.get(key); if (!g) groups.set(key, g = []); g.push(b);
     }
     for (const [key, bs] of groups) {
       const [stv, byp, w] = key.split('|');
-      if (hover) { c.strokeStyle = '#ffffff'; c.lineWidth = Math.min(16, widthPx(bs[0].bits)) + 3; }
+      if (hover) { c.strokeStyle = '#ffffff'; c.lineWidth = +w + 3; }
       else { c.strokeStyle = STATUS[+stv].color; c.lineWidth = +w; }
       c.setLineDash(byp === '1' && !hover ? [6, 4] : []);
       c.beginPath(); for (const b of bs) this._path(c, b.x1, b.y1, b.x2, b.y2); c.stroke();
+      if (hover) { c.strokeStyle = STATUS[+stv].color; c.lineWidth = +w; c.beginPath(); for (const b of bs) this._path(c, b.x1, b.y1, b.x2, b.y2); c.stroke(); }
     }
     c.setLineDash([]);
+  }
+
+  /** local links as a density fill: one translucent cell per CELL_PX screen cell, alpha ∝ log2 of the bits in it */
+  _paintDensity(c, L, hover = false) {
+    if (!L.dens || !L.dens.length) return;
+    const cell = L.cell, s = this.view.s, px = cell * s, levels = new Map();
+    for (const d of L.dens) {
+      const a = hover ? 1 : Math.min(0.55, 0.08 + 0.04 * Math.log2(1 + d.bits));
+      const q = Math.round(a * 20) / 20; let g = levels.get(q); if (!g) levels.set(q, g = []); g.push(d);
+    }
+    const ga = c.globalAlpha;
+    for (const [a, ds] of levels) {
+      c.globalAlpha = ga * a; c.fillStyle = hover ? '#ffffff' : DENS_COLOR; c.beginPath();
+      for (const d of ds) c.rect(this.X(d.gx * cell), this.Y((d.gy + 1) * cell), px, px);
+      c.fill();
+    }
+    c.globalAlpha = ga;
   }
 
   _paintCut(c, cm) {
@@ -318,12 +372,13 @@ export class Floor {
       const seg = (x1, y1, x2, y2) => { const dx = x2 - x1, dy = y2 - y1, v = dx * dx + dy * dy, t = v ? Math.max(0, Math.min(1, ((px - x1) * dx + (py - y1) * dy) / v)) : 0; return Math.hypot(px - x1 - t * dx, py - y1 - t * dy); };
       return this.st.manhattan ? Math.min(seg(this.X(ax), this.Y(ay), this.X(bx), this.Y(ay)), seg(this.X(bx), this.Y(ay), this.X(bx), this.Y(by))) : seg(this.X(ax), this.Y(ay), this.X(bx), this.Y(by));
     };
-    if (this.lod === 'bundled' && this._bundleCache?.b) {
+    const L = this._bundleCache;
+    if (L?.bundles) {
       let best = null, bd = tol;
-      for (const b of this._bundleCache.b) { const d = dist(b.x1, b.y1, b.x2, b.y2); if (d < bd) { bd = d; best = b; } }
-      if (best) return { bundle: best };
+      for (const b of L.bundles) { const d = dist(b.x1, b.y1, b.x2, b.y2); if (d <= bd) { bd = d; best = b; } }
+      if (best) return best.n === 1 ? { link: best.links[0] } : { bundle: best };
     } else {
-      const vis = new Set(this._bundleCache?.list || this.visibleLinks());
+      const vis = new Set(L?.links || this.visibleLinks());
       if (this.st.highlight) for (const i of this.st.highlight) vis.add(i);
       const g = segmentGrid(m), S = m.seg, r = Math.ceil((tol / this.view.s) / g.cell);
       let best = -1, bd = tol;
@@ -335,6 +390,11 @@ export class Floor {
         }
       }
       if (best >= 0) return { link: best };
+    }
+    if (L?.dens?.length) {
+      const gx = Math.floor(x / L.cell), gy = Math.floor(y / L.cell);
+      const d = L.dens.find((q) => q.gx === gx && q.gy === gy);
+      if (d) return d.n === 1 ? { link: d.links[0] } : { bundle: Object.assign(d, { dens: true }) };
     }
     const b = blockAt(m, x, y);
     return b >= 0 ? { block: b } : null;
@@ -349,6 +409,15 @@ export class Floor {
   _click(px, py) { this.onPick(this._pickAt(px, py)); }
 }
 
+/** top driver master / link class of a member list, e.g. 'ot_x_w10 cfg ×512' */
+export function membersSummary(m, ids, k = 3) {
+  const c = new Map();
+  for (const i of ids) { const d = m.ends[i][0], key = `${d >= 0 ? (m.bmaster[d] || m.bname[d]) : '?'} ${m.rec.links[i].c}`; c.set(key, (c.get(key) || 0) + 1); }
+  return [...c.entries()].sort((a, b) => b[1] - a[1]).slice(0, k).map(([t, n]) => `${t} ×${n}`).join(', ');
+}
+
 export function bundleText(m, b) {
-  return `${b.n.toLocaleString()} link${b.n === 1 ? '' : 's'} bundled at this zoom (driver → sink flight lines) · ${fmtBits(b.bits)} total${b.by ? ` · ${b.by} bypass` : ''}`;
+  const head = b.dens ? `${b.n.toLocaleString()} local link${b.n === 1 ? '' : 's'} in this cell (density fill, not drawn as strokes)`
+    : `bundle of ${b.n.toLocaleString()} parallel link${b.n === 1 ? '' : 's'} (ends = bit-weighted mean of the members' real ends; longest member hop ${fmtUm(b.maxSeg)})`;
+  return `${head} · ${fmtBits(b.bits)} total${b.by ? ` · ${b.by} bypass` : ''}${b.dens ? ` · longest ${fmtUm(b.maxL)}` : ''} · ${membersSummary(m, b.links)}${b.links.length < b.n ? ` (of first ${b.links.length})` : ''}`;
 }

@@ -12,8 +12,9 @@
 // calendar events), never from the SU ports. MUT_CAL=1: the calendar omits one SU read slot (quarter 1) -> FAIL.
 module tb_hbm_su_static_spread_vehicle;
  parameter integer MUT_PG=0,MUT_LG=0,MUT_CAL=0,MAXPRE=32768,MAXEV=32768,MAXREC=64;
- // SW/SE (QID 0/1) carry the fifth port group; its bank map is the die lead's (BANK_GROUP); this test map gives bank 7 its own group
- parameter [31:0] SWSE_BANK_GROUP=32'h4322_1100;
+ // SW/SE (QID 0/1) carry the fifth port group: GEO-H geometry map (LG_local_engine_reach_current/_B, all plans, SW+SE:
+ // groups [0],[1,2],[3,4],[5,6],[7], each <= 500 um from its pin cluster) = BANK_GROUP 0x43322110 (was provisional 0x43221100)
+ parameter [31:0] SWSE_BANK_GROUP=32'h4332_2110;
  localparam integer RR=10,WR=7;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0;
