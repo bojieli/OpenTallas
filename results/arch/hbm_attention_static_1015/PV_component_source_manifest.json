@@ -1,0 +1,74 @@
+{
+  "schema": "opentallas.hbm_attn.PV_native_component_source_manifest.v1",
+  "qualified_scope": "ActualH16/D512 PVserialize\u2192WG1 NE actualbankcommit/RG3readback component and actualtwoepochoverlap",
+  "full_native_qualified": false,
+  "physical_qualified": false,
+  "protocol": {
+    "WG": 1,
+    "RG": 3,
+    "WGtotal": 3,
+    "RGtotal": 7,
+    "quadrant": "NE",
+    "wq_bits_per_bank": 281,
+    "rq_bits_per_bank": 17,
+    "rr_bits_per_bank": 257,
+    "write_commit_edges": 3,
+    "output": "FP32 head-major[h][dim]",
+    "flags": "perwordretained\u2192stickyunitfault\u2192faultretire; actualCP binding unproven"
+  },
+  "dependencies": [
+    {
+      "path": "rtl/hdc/v41x/static/ot_hbm_attn_pv_serializer.sv",
+      "source_commit": "current branch ed4415cb2 ancestry",
+      "sha256": "8ce7807fa3449449c14f91484c57ce21e11b10bf0879f0121036f500f91ef437",
+      "type": "RTL_source"
+    },
+    {
+      "path": "rtl/hdc/v41x/static/ot_hbm_attn_pv_native_output.sv",
+      "source_commit": "current branch ed4415cb2 ancestry",
+      "sha256": "59ee5b3701b05de8afc99189647d7ca05f6738e238ad6863538d10d4b5f1abec",
+      "type": "RTL_source"
+    },
+    {
+      "path": "rtl/test/hbm_accel/generic/tb_hbm_attn_pv_serializer.sv",
+      "source_commit": "current branch ed4415cb2 ancestry",
+      "sha256": "332588c082e4d098a151ee3cc4da5676d416b27c60bde4628ce97a9da7350c6f",
+      "type": "fullshape_testbench"
+    },
+    {
+      "path": "rtl/test/hbm_accel/generic/tb_hbm_attn_pv_native_output.sv",
+      "source_commit": "current branch ed4415cb2 ancestry",
+      "sha256": "1bebce2a262b8393571d19b3472706707482eb81c29cbc21b7f1a217167aff68",
+      "type": "fullshape_testbench"
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+      "source_commit": "current branch ed4415cb2 ancestry",
+      "sha256": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+      "type": "real_sram_simulation_model"
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+      "source_commit": "current branch ed4415cb2 ancestry",
+      "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+      "type": "real_sram_simulation_model"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv",
+      "source_commit": "619da76cd",
+      "sha256": "ab58e6eb465390f2e67c4a82496211e69138dab0bda96a11c098d79fa0516776",
+      "type": "actual_static_VM_bank"
+    }
+  ],
+  "receipts": [
+    "results/arch/hbm_attention_static_1015/pv_serializer_gate/receipt.json",
+    "results/arch/hbm_attention_static_1015/pv_native_bank_gate/receipt.json",
+    "results/arch/hbm_attention_static_1015/pv_serializer_overlap_gate/receipt.json"
+  ],
+  "remaining": [
+    "ActualCPfault/NaN/Infpath",
+    "FullactualHG1arithmetic+PS/P/fullprogramme",
+    "Whole-systemgeometry/cellcount/clock/cut/route",
+    "Immutablethroughput"
+  ]
+}
