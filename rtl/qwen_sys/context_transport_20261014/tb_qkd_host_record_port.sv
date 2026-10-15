@@ -27,13 +27,20 @@ module tb_qkd_host_record_port;
  wire rb,rauth,rf;wire[15:0]re,rae;wire[10:0]rnp;wire[3:0]rnd;wire[63:0]rad;
  reg receive_slot=0;always @(posedge ck)receive_slot<=send_kind==1||send_kind==2;
  reg decode_slot=0;always @(posedge ck)decode_slot<=receive_slot;
- qfd_program_auth_rx rx(.ck(ck),.rst_n(rst_n),.receive_slot(decode_slot),.rx_v(tv),
- .rx_record(tx^(mut==5&&tx[1:0]==2?(548'd1<<2):548'd0)),
- .begin_v(rb),.begin_epoch(re),.expected_pw(rnp),.expected_dw(rnd),.auth_v(rauth),.auth_epoch(rae),.auth_digest(rad),.fault(rf));
  reg send_witness=0;
- qfd_program_witness_tx witness(.ck(ck),.rst_n(rst_n),.send_slot(send_witness),
- .commit_v(mut==7?1'b0:cv),.program_ready(ready),.installed_fusedcap(cap),.program_fault(fault),
- .program_epoch(epoch),.program_digest(digest),.tx_v(wvout),.tx_observed_v(wo),.tx_record(wr),.fault(wf));
+ wire ready2,fault2,cap2,cv2;wire[15:0]epoch2;wire[63:0]digest2;
+ reg[151:0]actual_program_obs=0;reg[137:0]actual_descriptor_obs=0;
+ always @(posedge ck)begin actual_program_obs<={pv2,pfull2,pa2,pd2,pv,pfull,pa,pd};actual_descriptor_obs<={dv2,1'b1,da2,dd2,dv,1'b1,da,dd};end
+ wire joined_ready,joined_cap,joined_commit,jhev;wire[15:0]joined_epoch,jhe;wire[63:0]joined_digest;wire[58:0]jht;wire[1:0]jhg;
+ qfd_program_record_port rx(.ck(ck),.rst_n(rst_n),.auth_slot(decode_slot),.context_slot(1'b0),.witness_slot(send_witness),
+ .rx_v(tv),.rx_record(tx^(mut==5&&tx[1:0]==2?(548'd1<<2):548'd0)),
+ .execution_active(1'b0),.cfg_image_ready(2'b11),
+ .program_obs2(actual_program_obs),.descriptor_obs2(actual_descriptor_obs),
+ .head_context_v(1'b0),.head_stage(6'd0),.head_token(18'd0),.head_position(18'd0),
+ .begin_v(rb),.begin_epoch(re),.expected_pw(rnp),.expected_dw(rnd),.auth_v(rauth),.auth_epoch(rae),.auth_digest(rad),
+ .program_ready(joined_ready),.installed_fusedcap(joined_cap),.commit_v(joined_commit),.program_epoch(joined_epoch),.program_digest(joined_digest),
+ .host_epoch_valid(jhev),.host_epoch(jhe),.host_tag(jht),.host_gen(jhg),.tx_v(wvout),.tx_observed_v(wo),.tx_record(wr),.fault(rf));
+ assign wf=rf;
  // Actual related-clock relay flops delay data by four edges; no modeled memory.
  reg[142:0]p0=0,p1=0,p2=0,p3=0;
  always @(posedge ck)begin p0<=pr;p1<=p0;p2<=p1;p3<=p2;end
@@ -64,6 +71,28 @@ module tb_qkd_host_record_port;
    .w_ce_in(ce[b]),.w_addr_in(row[6*b+:6]),.wd_in(md[512*b+:512]),.w_mask_in(mask[512*b+:512]),
    .rr_en(2'b0),.rr_addr(12'd0),.cr_en(2'b0),.cr_sel(18'd0));
  end
+ // Second real TT/SU program copy: independent consumed-macro pins and ledger.
+ reg[1:0]ce2=0;reg[11:0]row2=0;reg[1023:0]md2=0,mask2=0;
+ reg dv2=0;reg[2:0]da2=0;reg[63:0]dd2=0;
+ always @(posedge ck)begin
+ if(!rst_n)begin ce2<=0;dv2<=0;end else begin
+ ce2<=(p3[74]&&!(mut==7&&p3[73:64]==53))?(2'b1<<p3[67]):0;
+ row2<={p3[73:68],p3[73:68]};md2<={16{p3[63:0]}};
+ mask2<=({960'd0,64'hffffffffffffffff}<<(64*p3[66:64]+512*p3[67]));
+ dv2<=p3[142];da2<=p3[141:139];dd2<=p3[138:75];end
+ end
+ wire pv2,pfull2;wire[9:0]pa2;wire[63:0]pd2;
+ qkd_program_pw_observer observe2(ce2,row2,md2,mask2,pv2,pa2,pd2,pfull2);
+ qkd_program_commit ledger2(.ck(ck),.rst_n(rst_n),.execution_active(1'b0),.control_stores_ready(1'b1),
+ .begin_v(rb),.begin_epoch(re),.expected_pw(rnp),.expected_dw(rnd),.auth_v(rauth),.auth_epoch(rae),.auth_digest(rad),
+ .pw_v(pv2),.pw_addr(pa2),.pw_data(pd2),.pw_full_word(pfull2),.dw_v(dv2),.dw_addr(da2),.dw_data(dd2),.dw_full_word(1'b1),
+ .commit_v(cv2),.ready(ready2),.fault(fault2),.installed_fusedcap(cap2),.commit_epoch(epoch2),.commit_digest(digest2));
+ wire[1023:0]rd2;reg[63:0]dm2[0:7];always @(posedge ck)if(dv2)dm2[da2]<=dd2;
+ for(genvar b2=0;b2<2;b2=b2+1)begin:g_memory_copy2
+ ot_sram_1r1w_64x512_m1_r2c2 mem(.clk(ck),.r_ce_in(rce),.r_addr_in(ra),.rd_out(rd2[512*b2+:512]),
+ .w_ce_in(ce2[b2]),.w_addr_in(row2[6*b2+:6]),.wd_in(md2[512*b2+:512]),.w_mask_in(mask2[512*b2+:512]),
+ .rr_en(2'b0),.rr_addr(12'd0),.cr_en(2'b0),.cr_sel(18'd0));
+ end
  always @(negedge ck)if(cv)commits=commits+1;
  function automatic[63:0]word(input integer i);
   word=i==1023?64'h5850463100001006:64'hbd51a94f3862ec70^(64'(i)*64'h81d07934baf16705);
@@ -90,9 +119,9 @@ module tb_qkd_host_record_port;
    if(!installed||!icap||ceh!=le||cdh!=ld||tf||wf||rf)$fatal(1,"HOST typed mismatch installed%0b cap%0b hostep%h/%h digest%h/%h tf%0b wf%0b rf%0b ready%0b fault%0b cv%0b footer%0b/%h",installed,icap,ceh,le,cdh,ld,tf,wf,rf,ready,fault,cv,footer_v,footer);
    if(!ready||fault||!cap||commits!=1||epoch!=16'h42a1||digest!=expected_digest)$fatal(1,"actual producer/sink witness mismatch");
    rce=1;for(n=0;n<64;n=n+1)begin ra=6'(n);@(negedge ck);@(negedge ck);
-    for(s=0;s<16;s=s+1)if(rd[64*s+:64]!==word(16*n+s))$fatal(1,"real loader -> actual SRAM readback mismatch");end
-   for(n=0;n<8;n=n+1)if(dm[n]!==word(1024+n))$fatal(1,"actual DW write mismatch");
-   $display("PASS real_HOST_loader_kind13_actual_macro_kind14_HOST_commit 1024PW8DW readback cap_epoch_digest");
+    for(s=0;s<16;s=s+1)if(rd[64*s+:64]!==word(16*n+s)||rd2[64*s+:64]!==word(16*n+s))$fatal(1,"real loader -> actual SRAM readback mismatch");end
+   for(n=0;n<8;n=n+1)if(dm[n]!==word(1024+n)||dm2[n]!==word(1024+n))$fatal(1,"actual DW write mismatch");
+   $display("PASS real_HOST_loader_kind13_actual_macro_kind14_HOST_commit 2x1024PW8DW actual4SRAM_readback cap_epoch_digest");
   end else begin
    if(ready||cap||commits)$fatal(1,"actual sink mutant accepted%0d",mut);
    if(mut!=4&&!fault)$fatal(1,"actual sink mutant missedfault%0d",mut);

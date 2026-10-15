@@ -3,7 +3,7 @@
 from pathlib import Path
 import hashlib,json,subprocess,tempfile
 ROOT=Path(__file__).resolve().parents[2]
-SOURCES=['rtl/qwen_sys/context_transport_20261014/tb_qkd_host_record_port.sv','rtl/qwen_sys/context_transport_20261014/qkd_host_record_port.sv','rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv','rtl/qwen_sys/host_20261013/qkd_host_program_loader.sv','rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv']
+SOURCES=['rtl/qwen_sys/context_transport_20261014/tb_qkd_host_record_port.sv','rtl/qwen_sys/context_transport_20261014/qkd_host_record_port.sv','rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv','rtl/qwen_sys/host_20261013/qkd_host_program_loader.sv','rtl/qwen_sys/context_transport_20261014/qfd_program_record_port.sv','rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv']
 def main():
  out=ROOT/'results/rtl/qwen_q_export_1014/host_record_port';out.mkdir(parents=True,exist_ok=True)
  macro='physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v'
@@ -25,6 +25,6 @@ def main():
   subprocess.run(['iverilog','-g2012','-s','tb_qkd_program_join_revoke','-o',str(exe),revoke,str(mutant)],cwd=ROOT,check=True)
   r=subprocess.run(['vvp',str(exe)],cwd=ROOT,capture_output=True,text=True);(out/'stale_copy_receipt_mutant.log').write_text(r.stdout+r.stderr)
   if not r.returncode or 'FATAL:'not in r.stdout:raise RuntimeError('stale copy receipt mutation escaped')
- status=dict(scope='real HOST loader -> typed kind13 -> observed 1024PW8DW actual SRAM inputs/readback -> typed kind14 -> trusted actual PW1023 footer HOST witness; parent lint separately required; no native complete-token/physical/phase qualification',sources={p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest()for p in SOURCES+['rtl/qwen_sys/program_receiver_20261014/tb_qkd_program_join_revoke.sv']},macro_source=macro,macro_sha256=hashlib.sha256(data).hexdigest(),fixed_edges={'HOST_record_TX':2,'metadata_RX':1,'bench_actual_data_relay':4,'bench_macro_pin_register':1,'witness_TX':1,'HOST_witness_RX':1},negative_controls=['auth_digest_rejected','capability_rejected','missing_actual_commit_rejected'])
+ status=dict(scope='real HOST loader -> typed kind13 -> two independent observed1024PW8DW actual4SRAM inputs/readback -> typed kind14 -> trusted actual PW1023 footer HOST witness; parent lint separately required; no native complete-token/physical/phase qualification',sources={p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest()for p in SOURCES+['rtl/qwen_sys/program_receiver_20261014/tb_qkd_program_join_revoke.sv']},macro_source=macro,macro_sha256=hashlib.sha256(data).hexdigest(),fixed_edges={'HOST_record_TX':2,'metadata_RX':1,'bench_actual_data_relay':4,'bench_macro_pin_register':1,'actual_write_observer_register':1,'witness_TX':1,'HOST_witness_RX':1},negative_controls=['auth_digest_rejected','capability_rejected','missing_actual_commit_rejected'])
  (out/'status.json').write_text(json.dumps(status,indent=2)+'\n');print('PASS actual HOST typed metadata/SRAM readback/commit witness and 3 rejection controls')
 if __name__=='__main__':main()
