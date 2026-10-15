@@ -19,7 +19,11 @@ module qfd_slab_result_half #(
         localparam integer REQ = 4*HALF+g;
         wire [1023:0] colq;
         for(c=0;c<4;c=c+1) begin:g_col
+            `ifdef SYNTHESIS
             ot_qwen_slab_pg_col u_col (.clk(ck_col[4*g+c]),
+`else
+            ot_qwen_slab_pg_col #(.ROM_INSTANCE($sformatf("qslab_b%0d_h%0d_g%0d_c%0d",BAND,HALF,g,c))) u_col (.clk(ck_col[4*g+c]),
+`endif
                 .gre1(tc[140] & tc[141+REQ]),
                 .addr1(tc[149+24*REQ +: 24]), .cid(4'(c)),
                 .m5(colq[256*c +: 256]));
