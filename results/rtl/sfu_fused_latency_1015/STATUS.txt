@@ -1,0 +1,14 @@
+Opt-in exact frozen SwiGLU structural candidate, source only until physical gates.
+Actual single leaf: all3072 canonical FP32-input outputs exactly match golden;
+109edge latency, II1; actual second-FMUL exponent operand mutant failsword0.
+Actual96x128x256 physicalSRAM mechanism: 3072 actualleaf outputs committed/read
+back plus256 untouchedneighbor words;3328checks; actual loadedG SRAM mutant fails.
+Unflattened actual256leaf/96SRAM hierarchy proc/check passes. Fullflat Verilator
+lint was killed at8GiB cgroup limit; immutablejournal andwarninglog retained.
+No full256 throughput claim, actualclockpartition, route/timing or slotfit.
+No programme SRAM or native VM binding. Existing4QWG0 routes all allocated;
+4SID tensor requires newcompiler/SMconsumer lowering and physicaltraffic proof.
+All arithmetic23 frozen source hashes match immutableae5899467 exactly.
+Oneport VM lowerbound156+tap11 excludes localread/programme/face/capture.
+Fourport model134 conservative;nearSU130 excludesprogramme/Ostore/drain;
+both unallocated and receive zero token-rate credit. Immutableprice120 retained.

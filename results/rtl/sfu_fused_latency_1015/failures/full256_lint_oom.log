@@ -1,0 +1,4 @@
+Oct 15 03:01:59 regular-crane systemd[3813]: Started oth-ubuntu-1664497-1792058519.scope - [systemd-run] /usr/bin/bash -lc "cd /srv/opentallas-scratch/codex/sfu-fused-latency-1015 && OUT=\$PWD/array_lint DATA=\$PWD/data bash tools/hgi_unit_tput/lint_sfu_fused_array.sh".
+Oct 15 03:02:26 regular-crane systemd[3813]: oth-ubuntu-1664497-1792058519.scope: The kernel OOM killer killed some processes in this unit.
+Oct 15 03:02:26 regular-crane systemd[3813]: oth-ubuntu-1664497-1792058519.scope: Failed with result 'oom-kill'.
+Oct 15 03:02:26 regular-crane systemd[3813]: oth-ubuntu-1664497-1792058519.scope: Consumed 26.840s CPU time over 26.833s wall clock time, 8G memory peak.

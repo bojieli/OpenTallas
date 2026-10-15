@@ -1,0 +1,42 @@
+%Warning-WIDTHEXPAND: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv:486:32: Operator VAR 'TWO' expects 32 bits on the Initial value, but Initial value's LTS generates 1 bits.
+                                                                                                    : ... note: In instance 'ot_hgi_sfu_fused_glu_array.lanes[255].leaf.u_div'
+  486 |             localparam integer TWO = (2 * j + 1 < QB);
+      |                                ^~~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_f12.sv:58:23: Operator VAR 'CUTS' expects 32 bits on the Initial value, but Initial value's CONST '6'h2a' generates 6 bits.
+   58 |     parameter integer CUTS = 6'b101010
+      |                       ^~~~
+%Warning-WIDTHEXPAND: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_f12.sv:247:23: Operator VAR 'CUTS' expects 32 bits on the Initial value, but Initial value's CONST '8'h6a' generates 8 bits.
+  247 |     parameter integer CUTS = 8'b01101010
+      |                       ^~~~
+%Warning-WIDTHTRUNC: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_f12.sv:43:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'CUT' generates 32 bits.
+                                                                                             : ... note: In instance 'ot_hgi_sfu_fused_glu_array.lanes[255].leaf.u_exp.g_h[6].u_a..g_keep4.u.u.u_g0'
+   43 |     generate if (CUT) begin : g_r
+      |              ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv:394:79: Input port connection 'b' expects 32 bits on the pin connection, but pin connection's REPLICATE generates 46 bits.
+                                                                                                       : ... note: In instance 'ot_hgi_sfu_fused_glu_array.lanes[255].leaf.u_exp'
+  394 |     ot_hdc_kadd #(.W(32), .K((LM != 3 || LA != 3) ? 1 : 0)) u_yn (.a(pa[6]), .b({{14{nint_d[8]}}, nint_d, 23'd0}), .cin(1'b0),
+      |                                                                               ^
+%Warning-WIDTHEXPAND: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv:408:47: Operator SUB expects 10 bits on the LHS, but LHS's VARREF 'e' generates 8 bits.
+                                                                                                    : ... note: In instance 'ot_hgi_sfu_fused_glu_array.lanes[255].leaf.u_div'
+  408 |             if (e != 8'd0) norm = {1'b1, f, e - 10'sd127};
+      |                                               ^
+%Warning-WIDTHEXPAND: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv:441:48: Operator SUB expects 10 bits on the LHS, but LHS's VARREF 'e' generates 8 bits.
+                                                                                                    : ... note: In instance 'ot_hgi_sfu_fused_glu_array.lanes[255].leaf.u_div'
+  441 |             if (e != 8'd0) normp = {1'b1, f, e - 10'sd127};
+      |                                                ^
+%Warning-WIDTHTRUNC: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv:491:37: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TWO' generates 32 bits.
+                                                                                                   : ... note: In instance 'ot_hgi_sfu_fused_glu_array.lanes[255].leaf.u_div'
+  491 |                                 TWO ? {r_rem[j-1][24:0], 2'b0} : {1'b0, r_rem[j-1][24:0], 1'b0};
+      |                                     ^
+%Warning-WIDTHTRUNC: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv:502:34: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TWO' generates 32 bits.
+                                                                                                   : ... note: In instance 'ot_hgi_sfu_fused_glu_array.lanes[255].leaf.u_div'
+  502 |                 r_q[j]    <= TWO ? {qin[QB-3:0], q} : {qin[QB-2:0], q[0]};
+      |                                  ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/generic/peers/ot_hgi_sfu_fused_glu_store.sv:38:56: Operator EQ expects 32 or 2 bits on the LHS, but LHS's SEL generates 1 bits.
+                                                                                     : ... note: In instance 'ot_hgi_sfu_fused_glu_array.store'
+   38 |      for(p=0;p<8;p=p+1) if(stage_v[p] && stage_group[p]==g && stage_bank[p*5+:5]==b) begin
+      |                                                        ^~

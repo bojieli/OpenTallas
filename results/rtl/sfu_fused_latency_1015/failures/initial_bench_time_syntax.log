@@ -1,0 +1,8 @@
+%Error: rtl/test/hbm_accel/generic/tb_hgi_sfu_fused_glu.sv:3:20: syntax error, unexpected '.'
+    3 |  reg clk=0;always #.4166665 clk=~clk;
+      |                    ^
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: rtl/test/hbm_accel/generic/tb_hgi_sfu_fused_glu.sv:22:4: syntax error, unexpected '.'
+   22 |   #.01;
+      |    ^
+%Error: Exiting due to 2 error(s)
