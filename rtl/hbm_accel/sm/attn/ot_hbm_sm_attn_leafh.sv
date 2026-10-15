@@ -80,7 +80,8 @@ module ot_hbm_sm_attn_leafh #(
         .i_run_first(frfirst),.i_run_last(frlast),.i_tag(ftag),.i_w(fw),.i_x(fx),
         .ov(fov),.y(fy),.otag(ft),.pv_v(pv_v),.pv_y(pv_y),.pv_tag(pv_tag),.fault(ffault),
         .pub_start(pc[3]),.pub_slot(selected_slot),.pub_v(ps_v),.pub_data(ps_data),
-        .pub_word(ps_word),.pub_out_slot(ps_slot),.pub_tag(ps_tag));
+        .pub_word(ps_word),.pub_out_slot(ps_slot),.pub_tag(ps_tag),
+        .fold_start(1'b0),.fold_a(3'd0),.fold_b(3'd0));
     wire [11:0] scalar_row=published_h128?{4'd0,ps_slot[1:0],attn_row,ps_word}:{6'd0,attn_row,ps_word};
     reg gv_q,gf_q;
     reg [31:0] gy_q;

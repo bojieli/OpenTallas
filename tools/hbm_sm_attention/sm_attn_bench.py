@@ -197,11 +197,13 @@ QW_KVH, QW_G, QW_HD, QW_T = 2, 4, 128, 8192
 
 
 def make_qwen(seed):
+    """Qwen KV = plain FP8 E4M3 rows (tools/hgi_sim/qwen_compiler.py kv_append: fp8_encode, no scale): the STANDARD
+    128-B row (r2; the r3..r6 runs used a 136-B one-row line with an UE8M0 byte)."""
     rng = np.random.default_rng(seed)
     codes = rng.integers(0, 256, size=(QW_KVH, 2, QW_T, QW_HD))
     codes = np.where((codes & 0x7F) == 0x7F, codes ^ 1, codes)              # no NaN codes
     tab = np.array([_dec8(c) for c in range(256)], dtype=np.float64)
-    vals = (tab[codes] * 2.0 ** -4).astype(F)                              # E4M3 x 2^-4: UE8M0 byte 123 in every row
+    vals = tab[codes].astype(F)
     q = V.to_bf16(rng.standard_normal((QW_KVH, QW_G, QW_HD)).astype(F) * F(0.8))
     sc, p, pv = np.zeros((QW_KVH, QW_G, QW_T), F), np.zeros((QW_KVH, QW_G, QW_T), F), np.zeros((QW_KVH, QW_G, QW_HD), F)
     for h in range(QW_KVH):
@@ -210,35 +212,49 @@ def make_qwen(seed):
             e, Z, m = A.softmax_e_z(sc[h, c], F(1.0 / np.sqrt(QW_HD)))
             p[h, c] = V.to_bf16(e)
             pv[h, c] = A.att_pv(p[h, c], vals[h, 1])
-    return dict(qwen=True, codes=codes, vals=vals, q=q, s=sc, p=p, pv=pv, ue=123)
+    return dict(qwen=True, codes=codes, vals=vals, q=q, s=sc, p=p, pv=pv)
+
+
+def qwen_block_home(k):
+    """128-row block k -> (quadrant, SM in quadrant, slot): the SU softmax slice rule (position i lives in slice
+    (i mod 512) // 128, H-ELEM-B 09:21) puts block k on quadrant k % 4; within the quadrant the 16 blocks go two to a SM
+    (SM (k // 4) // 2, slot (k // 4) % 2).  Pairwise levels over the 64 block nodes are then: L1, L2 = the 4-quadrant
+    reduce-scatter (quadrant bits), L3 = the SM's own two blocks, L4..L6 = SM index in the quadrant."""
+    return k % 4, (k // 4) // 2, (k // 4) % 2
+
+
+def qwen_stored(block):
+    """Stored row order of a 128-row block in the SM's own stack: stored row 4k + u = token 32u + k (the DMA append
+    address rotates POS[6:0] left by 2), so the PV converter reads the 4 token streams round-robin from a contiguous run."""
+    base = 128 * block
+    return [base + 32 * u + k for k in range(32) for u in range(4)]
 
 
 def qwen_plan(rec):
     ops = []
-    per = QW_T // NSM
+    nb = QW_T // 128
+    homes = {}
+    for k in range(nb):
+        q, j, sl = qwen_block_home(k)
+        homes.setdefault(8 * q + j, []).append((sl, k))
     for h in range(QW_KVH):
-        for s in range(NSM):
-            ops.append((f"qk_h{h}_sm{s}", "qk", 0, list(range(per * s, per * s + per)), 0, h))
-            for o in range(per // 128):
-                base = per * s + 128 * o
-                ops.append((f"pv_h{h}_sm{s}_o{o}", "pv", 0, list(range(base, base + 128)), 4, h))
+        for sm in range(NSM):
+            blocks = [k for _, k in sorted(homes[sm])]
+            ops.append((f"qk_h{h}_sm{sm}", "qk", 0, sum((qwen_stored(k) for k in blocks), []), 0, h))
+            for sl, k in sorted(homes[sm]):
+                ops.append((f"pv_h{h}_sm{sm}_b{k}", "pv", 0, qwen_stored(k), 4, h, k))
     return ops, 4
 
 
-def qwen_line(codes_row, ue):
-    w = 0
-    for t in range(8):
-        for j in range(16):
-            w |= int(codes_row[8 * j + t]) << (8 * (16 * t + j))
-    for b in range(4):
-        w |= ue << (1024 + 8 * b)
-    return w
+def qwen_lines(codes, rows):
+    """Standard 128-B rows (dim-order E4M3 codes) back to back in stored order -> 136-B lines."""
+    return stream_lines(b"".join(bytes(np.asarray(codes[r], dtype=np.uint8)) for r in rows))
 
 
 def qwen_vectors(rec, op, d):
-    name, kind, _, rows, _, h = op
+    name, kind, _, rows, _, h = op[:6]
     if kind == "qk":
-        lines = [qwen_line(rec["codes"][h, 0, r], rec["ue"]) for r in rows]
+        lines = qwen_lines(rec["codes"][h, 0], rows)
         xs = []
         for t in range(8):
             w = 0
@@ -248,9 +264,8 @@ def qwen_vectors(rec, op, d):
                     w |= int(qb[8 * (lane % 16) + t]) << (1024 * c + 16 * lane)
             xs.append(w)
     else:
-        base, n = rows[0], len(rows)
-        order = [base + (n // 4) * u + k for k in range(n // 4) for u in range(4)]   # streams round-robin
-        lines = [qwen_line(rec["codes"][h, 1, r], rec["ue"]) for r in order]
+        base, n = min(rows), len(rows)
+        lines = qwen_lines(rec["codes"][h, 1], rows)       # stored order = the 4 token streams round-robin
         xs = []
         for i in range(n):
             w = 0
@@ -280,9 +295,12 @@ def build(work, kvmut, pvmut, ncol=1, native=False):
     return exe
 
 
-def parse(out):
+def parse(out, pb=None):
     sc, pvl = {}, []
     for ln in out.splitlines():
+        if pb is not None and ln.startswith("PB "):
+            _, c, q, sl, wd, hx = ln.split()
+            pb.append((int(c), int(q), int(sl), int(wd), int(hx, 16)))
         if ln.startswith("SC "):
             _, c, i, hx = ln.split()
             sc[(int(c), int(i))] = int(hx, 16)
@@ -302,6 +320,8 @@ def run_op(exe, rec, op, d):
             f"+QK={1 if kind == 'qk' else 0}", f"+KV4={kv4}", f"+H128={1 if qw else 0}", f"+WANT={want}"]
     if not qw:
         args.append(f"+N8={sum(1 for r in rows if r < len(rec['rows8']))}")
+    elif kind == "pv":
+        args.append("+FOLD=1")
     r = subprocess.run(args, capture_output=True, text=True, timeout=3600)
     out = r.stdout + r.stderr
     (d / f"{name}.log").write_text(out)
@@ -310,7 +330,12 @@ def run_op(exe, rec, op, d):
     if cyc:
         kv = dict(t.split("=") for t in cyc[0].split()[1:])
         res["cycles"] = {k: int(v) for k, v in kv.items()}
-    sc, pvl = parse(out)
+    fl = [ln for ln in out.splitlines() if ln.startswith("FOLD ")]
+    if fl:
+        kv = dict(t.split("=") for t in fl[0].split()[1:])
+        res["fold_cycles"] = {k: int(v) for k, v in kv.items()}
+    pb = []
+    sc, pvl = parse(out, pb)
     mism, nodes = 0, None
     if kind == "qk":
         for c in range(ncol):
@@ -330,21 +355,24 @@ def run_op(exe, rec, op, d):
         nodes = got.astype(np.uint32).view(F).tolist() if mism == 0 else None
         res.update(results=int(np.sum(got >= 0)), expected=512)
     else:
-        h, n = op[5], len(rows)
-        got = np.full((ncol, 4, QW_HD), -1, dtype=np.int64)
-        for c, slot, k, v in pvl:
-            u, half = slot >> 1, slot & 1
-            for l in range(16):
-                got[c, u, 8 * l + 4 * half + k] = (v >> (32 * l)) & 0xFFFFFFFF
-        want_n = np.zeros((ncol, 4, QW_HD), dtype=np.int64)
+        # r2: the 4 stream nodes are folded inside the SM ((s0+s1)+(s2+s3), ot_hbm_sm_pv_merge FOLD) and only entries 0 / 1
+        # (dim halves) are published: leaf k word l of entry h = dim 8 l + 4 h + k of the block's node, a q head a column
+        h, base = op[5], min(rows)
+        got = np.full((ncol, QW_HD), -1, dtype=np.int64)
+        extra = 0
+        for c, k, sl, wd, v in pb:
+            if sl > 1 or got[c, 8 * wd + 4 * sl + k] >= 0:
+                extra += 1
+            else:
+                got[c, 8 * wd + 4 * sl + k] = v
+        want_n = np.zeros((ncol, QW_HD), dtype=np.int64)
         for c in range(ncol):
-            for u in range(4):
-                tk = list(range(rows[0] + (n // 4) * u, rows[0] + (n // 4) * (u + 1)))
-                cs = chunk_sums(rec["p"][h, c][tk], rec["vals"][h, 1][tk])
-                want_n[c, u] = bits32(A.pairwise([cs[i] for i in range(cs.shape[0])])).astype(np.int64)
-        mism = int(np.sum(got != want_n))
+            tk = list(range(base, base + 128))
+            cs = chunk_sums(rec["p"][h, c][tk], rec["vals"][h, 1][tk])
+            want_n[c] = bits32(A.pairwise([cs[i] for i in range(cs.shape[0])])).astype(np.int64)
+        mism = int(np.sum(got != want_n)) + extra
         nodes = got.astype(np.uint32).view(F).tolist() if mism == 0 else None
-        res.update(results=int(np.sum(got >= 0)), expected=ncol * 4 * QW_HD)
+        res.update(results=int(np.sum(got >= 0)), expected=ncol * QW_HD, published_words=len(pb))
     res["node"] = nodes
     res["mismatches"] = mism
     res["pass"] = r.returncode == 0 and not res["fault"] and mism == 0 and res["results"] == res["expected"]
@@ -391,12 +419,17 @@ def main(argv=None):
     pv = [r for r in res if r["kind"] == "pv"]
     if pv and all(r["pass"] for r in pv) and not a.only:
         if a.shape == "qwen8192":
+            # cross-SM reduce in the COLL order: block nodes sorted by block index k (bits: quadrant, quadrant, slot, SM x3)
+            # == pairwise levels L1-L2 4-quadrant reduce-scatter, L3 in-SM pair, L4-L6 SM index in the quadrant
             ok = True
             for h in range(QW_KVH):
+                blk = sorted((o[6], r) for o, r in zip([o for o in ops if o[1] == "pv"], pv) if o[5] == h)
+                assert [k for k, _ in blk] == list(range(QW_T // 128))
                 for c in range(QW_G):
-                    nodes = [np.asarray(r["node"], dtype=F)[c, u] for r in pv if r["name"].startswith(f"pv_h{h}_") for u in range(4)]
+                    nodes = [np.asarray(r["node"], dtype=F)[c] for _, r in blk]
                     ok &= bool(np.array_equal(bits32(A.pairwise(nodes)), bits32(rec["pv"][h, c])))
             summary["pv_cross_sm_merge_equals_att_pv"] = ok
+            summary["qwen_placement"] = "block k -> quadrant k%4, SM (k//4)//2, slot (k//4)%2; stored rows rotated (4k+u = token 32u+k)"
         else:
             nodes = [np.asarray(r["node"], dtype=F) for r in pv]
             summary["pv_cross_sm_merge_equals_att_pv"] = bool(np.array_equal(bits32(A.pairwise(nodes)), bits32(rec["pv"])))
