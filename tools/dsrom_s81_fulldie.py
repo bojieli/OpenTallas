@@ -1392,8 +1392,19 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
                 parts.append(f'.{port}({net})')
         for base, pcs in sliced.items():
             pcs.sort()
-            assert all(pcs[i][0] + pcs[i][2] == pcs[i + 1][0] for i in range(len(pcs) - 1)) and pcs[0][0] == 0, \
-                (it.name, base, pcs)
+            assert all(pcs[i][0] + pcs[i][2] <= pcs[i + 1][0] for i in range(len(pcs) - 1)), (it.name, base, pcs)
+            if any(pcs[i][0] + pcs[i][2] < pcs[i + 1][0] for i in range(len(pcs) - 1)) or pcs[0][0] != 0:
+                # S-BIND 2026-10-15: a port bound by disjoint slices (e.g. --pq-cnt taps PQ t_cnt[455:452] only): each gap
+                # gets its own net with no other endpoint, so the connection keeps its order and the die port-bind check
+                # sees the gap (an input gap = an UNDRIVEN net, an output gap = an unread net); never a constant
+                full_, lo_ = [], 0
+                for (o_, net_, n_) in pcs:
+                    if o_ > lo_:
+                        gn_ = f'n_gap_{it.name}_{base}_{lo_}'
+                        V.append(f'  wire [{o_ - lo_ - 1}:0] {gn_};')
+                        full_.append((lo_, gn_, o_ - lo_))
+                    full_.append((o_, net_, n_)); lo_ = o_ + n_
+                pcs = full_
             parts.append(f'.{base}({{' + ', '.join(net for _, net, _ in reversed(pcs)) + '})')
         for base, bits_ in bus_bits.items():
             hi = max(bits_)
@@ -4814,7 +4825,8 @@ def buses_r8(m):
         if SUHC_V2 and ((a_, b_) in (('vm', 'su_s'), ('vm', 'su_n'), ('vm', 'hc_s'), ('hc_n', 'vm'), ('su_s', 'hc_s'),
                                      ('su_n', 'hc_n'), ('hc_s', 'hc_n'), ('hc_n', 'hc_s')) and pa in ('t_su_s', 't_su_n', 't_hc', 't_vm', 't_n', 't_s')):
             continue          # su_hc v2 retired these (the VM row slots / y bus replace them)
-        if RTL_HUB_WIDTHS:
+        if RTL_HUB_WIDTHS and not (STATIC_COLL and (a_, b_) == ('collective', 'vm') and pa != 't_vm'):
+            # (static collective: the (collective, vm) width entry is the t_vm row-write bus only, not t_crq)
             bits = RTL_HUB_BITS.get((a_, b_), bits)
         if STATIC_COLL:
             if (a_, b_, pa) == ('collective', 'vm', 't_vm'):
