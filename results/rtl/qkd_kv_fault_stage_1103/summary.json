@@ -7,7 +7,7 @@
   ],
   "fault_observation_edges": 1,
   "normal_payload_edges": 0,
-  "physical_status": "KIT_PREPARED_NOT_ROUTED",
+  "physical_status": "PRE_ROUTE_CTS_GATE_WARN_0_FAIL_NOT_ROUTED",
   "parent_status": "OPEN",
   "source_sha256": {
     "rtl/physical/qkd_kv_fault_stage.sv": "d3766611254a08f65eaafce5098afe5e009782df8bf9b19a93ed52e036f61068",
@@ -15,5 +15,55 @@
     "tools/qwen_kv_die/run_fault_stage_bench.py": "8865f0f647360348b02a27325591ab3b424a321230ebe617d894b876c016f1fc",
     "physical/ref_tile/qkd_kv_fault_stage/spec.json": "963d05a86b4a9626722bfeac641b230770750b41be05e5e1ed61253e3e5ec93d",
     "physical/ref_tile/qkd_kv_fault_stage/io_pins.tcl": "4d67468655688b2d94b085b5e029922823b0b39beda580a8cc2e66b3b30b2ff8"
-  }
+  },
+  "cts_gate": {
+    "verdict": "WARN",
+    "cts": true,
+    "host": "ot-epyc1tb",
+    "clock": {
+      "max_root_sinks": 1,
+      "root": "port:ck",
+      "cts": true,
+      "tt_insertion_ps": 0.0,
+      "tt_spread_ps": 0.0,
+      "declared_clock": null,
+      "limits": {
+        "sinks": 15000,
+        "insertion_ps": 300.0,
+        "spread_ps": 80.0
+      },
+      "clock_measurements": [
+        {
+          "source": "ck",
+          "clock": "core_clk",
+          "tt": {
+            "boundary": {
+              "n": 1,
+              "mean": 0.0,
+              "min": 0.0,
+              "max": 0.0
+            },
+            "all": {
+              "n": 1,
+              "mean": 0.0,
+              "min": 0.0,
+              "max": 0.0
+            },
+            "errors": [],
+            "macros": null,
+            "macro_libs": 0
+          }
+        }
+      ],
+      "measured_clock": "core_clk",
+      "verdict": "PASS",
+      "text": "1 sinks on the largest root <= 15,000; measured TT insertion 0.0 ps, leaf spread 0.0 ps"
+    },
+    "archive_sha256": "1838edcd6692ebaaf23b02c9058abee692c5424b064c33914b0f0ef3f21b8495"
+  },
+  "remaining": [
+    "Root reviews source/kit/gate before any closure-loop submission",
+    "Actual routed TT/FF/DRC and native launch/capture audit",
+    "Current die parent all-signal-pin physical binding and reach audit"
+  ]
 }
