@@ -41,7 +41,7 @@ def main():
  for slab in d['slots']:
   if slab.get('name')=='sp_hc_s':slab['outline']['h']=8633.52
   if slab.get('name')=='sp_hc_t':slab['outline']['h']=9020.16
- d['slots']=[s for s in d['slots'] if s.get('name')!=mix['name'] and not s.get('name','').startswith('sp_hcx_') or s.get('name')=='sp_hcx_ctl']+[mix]+hc
+ d['slots']=[s for s in d['slots'] if s.get('name')!=mix['name'] and s.get('name') not in {'sp_hcx_south0','sp_hcx_south1','sp_hcx_middle0','sp_hcx_middle1','sp_hcx_north0','sp_hcx_north1','sp_hcx_west0','sp_hcx_west1'}]+[mix]+hc
  d.setdefault('changelog',[]).append('Codex S-DIE: reserve real Engram MIX and six HCP homes in measured voids; six fullresident1.493mm2 leaf homes clear of measured old instances; physical fit OPEN; no production adoption without static calendar/native checks.')
  p.write_text(json.dumps(d,indent=1)+'\n');print('FUNCTIONAL_HOMES 1 MIX+6 fullresident HCP; all6 reserved rectangles clear')
 if __name__=='__main__':main()

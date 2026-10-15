@@ -15379,8 +15379,9 @@
    "qualification": "OPEN native full parent, slots reserved for actual masters"
   },
   "sp_vm_static_v3_banks": {
-   "source": "physical/s81_die_pins/v20_vm_static/bank_slots.json",
-   "qualification": "128actual1R1Wbankslotsassigned; wholeparenttransport remainsOPEN"
+   "source": "physical/s81_die_pins/v20_vm_static_standard/layout_candidate.json",
+   "bank_pin_file": "physical/s81_die_pins/v20_vm_static_standard/dsfd_vm_static_bank128.tcl",
+   "qualification": "128standard20um banks assigned;2x2slice parent candidate0overlap, realfrontend/transport cuts/staticphase remainOPEN;47.52probe diagnosticonly"
   }
  },
  "layer_cap_grants": {
