@@ -1199,7 +1199,15 @@ def cts_sink_env(r: dict) -> list:
     extra = str(cs.get("extra", "")).strip()
     if extra and not re.fullmatch(r"(-[a-z_]+( [0-9.]+)?)( -[a-z_]+( [0-9.]+)?)*", extra):
         raise SpecError(f"spec: route.cts_sink.extra {extra!r}: '-option [number]' items only")
-    return [f"CTSA={shq('-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75 -sink_clustering_size ' + str(int(cs['size'])) + ' -sink_clustering_max_diameter ' + str(int(cs['diameter_um'])) + (' ' + extra if extra else ''))}"]
+    # size / diameter_um are optional (s81 gather leaf 10-14: {"extra": "-no_obstruction_aware"} alone keeps the tool's
+    # max-cap register clustering and only drops the H-tree detour around the abutted SRAM stacks)
+    if ("size" in cs) != ("diameter_um" in cs):
+        raise SpecError("spec: route.cts_sink: give both size and diameter_um, or neither (extra only)")
+    sz = (f" -sink_clustering_size {int(cs['size'])} -sink_clustering_max_diameter {int(cs['diameter_um'])}"
+          if "size" in cs else "")
+    if not sz and not extra:
+        raise SpecError("spec: route.cts_sink: empty (no size / diameter_um and no extra)")
+    return [f"CTSA={shq('-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75' + sz + (' ' + extra if extra else ''))}"]
 
 
 def pin_balance_env(r: dict, lc: dict | None = None) -> list:
