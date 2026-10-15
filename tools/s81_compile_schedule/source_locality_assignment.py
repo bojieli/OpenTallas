@@ -153,7 +153,32 @@ def optimise(variables,edges,unary,candidates):
         global_optimum_proven=False,unanchored_operations=unbound)
 
 
-def assign(demand,homes):
+def private_su_groups(nodes,edges):
+    """Conservative colocation constraints, not native fusion equivalence.
+
+    Only same-tag SU producers/consumers with a private symbolic version may
+    be co-located. Actual FIELD/ME/collective readers prevent this grouping.
+    A group may contain multiple kernels; it never claims fewer kernels/area.
+    """
+    parent={n:n for n in nodes}
+    def find(n):
+        while parent[n]!=n:parent[n]=parent[parent[n]];n=parent[n]
+        return n
+    uses=defaultdict(set)
+    for e in edges:uses[(e['producer'],e['tensor'])].add(e['consumer'])
+    for (producer,_),consumers in uses.items():
+        ins=nodes[producer]['instruction'];tag=ins.get('_tag')
+        if ins['unit']!=2 or not tag:continue
+        if all(nodes[c]['instruction']['unit']==2 and nodes[c]['instruction'].get('_tag')==tag for c in consumers):
+            for consumer in consumers:
+                a,b=find(producer),find(consumer)
+                if a!=b:parent[max(a,b)]=min(a,b)
+    groups=defaultdict(list)
+    for n in nodes:groups[find(n)].append(n)
+    return {n:find(n) for n in nodes},[sorted(v) for v in groups.values() if len(v)>1]
+
+
+def assign(demand,homes,group_private_su=False):
     nodes,edges,external=literal_graph(demand)
     fixed={}
     for ident,h in homes.items():
@@ -163,19 +188,23 @@ def assign(demand,homes):
         if not choices or any(not c or any(type(s)!=int or not 0<=s<81 for s in c) for c in choices):
             raise ValueError('missing actual FIELD choice/stage')
         fixed[ident]=choices
-    variables=set(nodes)-set(fixed);candidates=sorted({s for choices in fixed.values() for c in choices for s in c})
+    variables=set(nodes)-set(fixed)
+    variable_map,colocation_groups=private_su_groups(nodes,edges) if group_private_su else ({n:n for n in nodes},[])
+    candidates=sorted({s for choices in fixed.values() for c in choices for s in c})
     if not candidates:raise ValueError('no actual FIELD anchors')
     unary=defaultdict(lambda:Counter({s:0 for s in candidates}));free_edges=[]
     for e in edges:
         a,b=e['producer'],e['consumer']
-        if a in variables and b in variables:free_edges.append((a,b))
+        if a in variables and b in variables:
+            if variable_map[a]!=variable_map[b]:free_edges.append((variable_map[a],variable_map[b]))
         elif (a in variables)!=(b in variables):
             variable,field=(a,b) if a in variables else (b,a)
             for s in candidates:
                 # A FIELD operation can span multiple real stages, and runtime
                 # expert choices stay alternatives. Never assume one expert.
-                unary[variable][s]+=max(sum(t!=s for t in choice) for choice in fixed[field])
-    labels,objective=optimise(variables,free_edges,unary,candidates)
+                unary[variable_map[variable]][s]+=max(sum(t!=s for t in choice) for choice in fixed[field])
+    labels,objective=optimise({variable_map[n] for n in variables},free_edges,unary,candidates)
+    labels={n:labels[variable_map[n]] for n in variables if variable_map[n] in labels}
     records=[]
     for ident in sorted(variables):
         n=nodes[ident];stage=labels.get(ident)
@@ -188,6 +217,8 @@ def assign(demand,homes):
     return dict(schema='opentallas.s81.source-locality-candidate.v1',qualified=False,dispatch_eligible=False,
         native_instance_inventory=False,native_kernel_boundary_constraints_bound=False,
         MTP_continuation_bound=False,source_operation_homes=records,
+        source_private_SU_colocation_groups=colocation_groups,
+        source_colocation_constraints_applied=group_private_su,
         source_instruction_count=len(nodes),source_SU_instruction_count=sum(n['instruction']['unit']==2 for n in nodes.values()),
         actual_FIELD_anchor_operations=len(fixed),literal_dependency_edges=edges,unbound_symbolic_inputs=external,
         objective=objective,source_order_preserved=True,
@@ -202,10 +233,10 @@ def assign(demand,homes):
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--demand',type=Path,required=True);ap.add_argument('--field-homes',type=Path,required=True)
-    ap.add_argument('--out',type=Path,required=True);args=ap.parse_args()
-    result=assign(read(args.demand),field_rows(args.field_homes))
+    ap.add_argument('--out',type=Path,required=True);ap.add_argument('--group-private-su',action='store_true');args=ap.parse_args()
+    result=assign(read(args.demand),field_rows(args.field_homes),args.group_private_su)
     result['source_sha256']={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in (args.demand,args.field_homes)}
     raw=(json.dumps(result,separators=(',',':'))+'\n').encode()
     args.out.write_bytes(gzip.compress(raw,mtime=0) if args.out.suffix=='.gz' else raw)
-    print(json.dumps({k:v for k,v in result.items() if k not in ('source_operation_homes','literal_dependency_edges','unbound_symbolic_inputs')}))
+    print(json.dumps({k:v for k,v in result.items() if k not in ('source_operation_homes','literal_dependency_edges','unbound_symbolic_inputs','source_private_SU_colocation_groups')}))
 if __name__=='__main__':main()

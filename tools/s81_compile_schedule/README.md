@@ -130,3 +130,19 @@ programme, epoch or cycle. Native fusion/replication/capacity constraints and
 explicit no-op programmes on unused stages still need implementation; the raw
 candidate may split existing fused kernels and must not be adopted as-is.
 MTP auxiliary programme coverage remains separate and unbound.
+
+`--group-private-su` adds conservative same-tag colocation constraints along
+private symbolic SU dependencies. This keeps the source MOE six-add chain and
+QN/KV norm chains together. Groups may contain several implemented kernels;
+colocation does not establish fusion equivalence or remove hardware/area.
+The source replay in `locality_grouped0` constrains448 groups covering2010 SU
+operations. All2654 SU operations still receive TP4 candidate assignments across
+42 stages, with symbolic objective2391 instead of the unconstrained2282. This
+is the stronger source planning candidate. Actual native kernel boundaries,
+physical homes and programme/calendar gates remain open.
+
+`verify_locality_candidate.py` independently checks literal template/rank
+coverage, groups and the objective against the original source graph and FIELD
+alternatives. The full candidate passes; changed templates, missing source-rank
+operations, a fabricated objective improvement and a split colocation group all
+fail. These are source design proofs; they do not establish native execution.

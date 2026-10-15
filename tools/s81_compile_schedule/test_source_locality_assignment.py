@@ -52,6 +52,22 @@ class LocalityTests(unittest.TestCase):
         d=dict(nodes=[node('field',3,[],['X']),node('su',2,['X'],[])])
         r=assign(d,{'field':anchor('field',[0],[1])})
         self.assertEqual(r['objective']['final'],1)
+    def test_private_same_tag_moe_chain_is_colocated(self):
+        d=dict(nodes=[node('f0',3,[],['E0']),node('f1',3,[],['E1']),
+            node('add0',2,['E0'],['Y']),node('add1',2,['Y','E1'],['Y']),node('out',6,['Y'],[])])
+        for n in d['nodes']:
+            if n['instruction']['unit']==2:n['instruction']['_tag']='actual.moe_sum'
+        r=assign(d,{'f0':anchor('f0',[0]),'f1':anchor('f1',[1])},True)
+        self.assertIn(['add0','add1'],r['source_private_SU_colocation_groups'])
+        self.assertEqual(len({x['stage'] for x in r['source_operation_homes'] if x['unit']==2}),1)
+        self.assertFalse(r['native_kernel_boundary_constraints_bound'])
+    def test_actual_field_reader_prevents_private_su_group(self):
+        d=dict(nodes=[node('f',3,[],['A']),node('a',2,['A'],['X']),
+                      node('b',2,['X'],['Y']),node('consumer_field',3,['X'],['Z'])])
+        for n in d['nodes']:
+            if n['instruction']['unit']==2:n['instruction']['_tag']='tag'
+        r=assign(d,{'f':anchor('f',[0]),'consumer_field':anchor('consumer_field',[1])},True)
+        self.assertEqual(r['source_private_SU_colocation_groups'],[])
     def test_changed_field_anchor_moves_candidate_without_provider_rule(self):
         d=dict(nodes=[node('field',3,[],['X']),node('su',2,['X'],[])])
         a=assign(d,{'field':anchor('field',[3])});b=assign(d,{'field':anchor('field',[17])})
