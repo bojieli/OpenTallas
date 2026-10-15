@@ -1,0 +1,17 @@
+ot-run: ot-epyc1tb     admits   464 GB (avail 727, growth 211, headroom 64, waiters 0/0 GB) load 85/128 running 21 disk 618 GB 
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/astk-er-1014
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/astk-er-1014
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/astk-er-1014
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1000176-1792034159 after 0 s
+FAIL native_er response=0 addr=0 cycle=275 expected_cycle=276 got=0000000000000000 expected=8008800780028001
+FAIL native_er response=1 addr=1 cycle=276 expected_cycle=277 got=8008800780028001 expected=801b801680158010
+FAIL native_er response=2 addr=2 cycle=277 expected_cycle=278 got=801b801680158010 expected=802a802980248023
+FAIL native_er response=3 addr=3 cycle=278 expected_cycle=279 got=802a802980248023 expected=803d803880378032
+FAIL native_er response=4 addr=4 cycle=279 expected_cycle=280 got=803d803880378032 expected=804c804b80468045
+FAIL native_er errors=2048
+- rtl/test/qwen_kv_die/tb_qkd_astk_native_er.sv:59: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.060 s; speed 77.510 us/s
+- Verilator: cpu 0.060 s on 1 threads; allocated 8 MB
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1000176-1792034159): exit 1

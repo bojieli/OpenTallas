@@ -119,6 +119,19 @@ class Lint(unittest.TestCase):
                   "pins": [[f"k{i}", 150, 160, "INPUT", None] for i in range(20)]}
         self.assertIn("bank_distance", self.checks(dump(bterms=ins, macros=[far_in], masters=masters)))
 
+    def test_channel_signal_cap_m4_uses_m3(self):
+        # RLAYERS M2..M4: vertical crossings ride M3 (no vertical layer >= channel_min_layer under the cap)
+        masters = {"SRAM": {"n": 1, "w": 174.12, "h": 29.736, "type": "BLOCK", "block": True, "top_layer": 4}}
+        m = {"name": "u_sram", "master": "SRAM", "bbox": [23.3, 22.5, 197.4, 52.2],
+             "pins": [["ck", 100.0, 22.6, "INPUT", None], ["rst_n", 101.0, 22.6, "INPUT", None]]}
+        bt = [["ck", "ck", "SIGNAL", "INPUT", [["M4", [100.0, 199.976, 100.024, 200.0]]]],
+              ["rst_n", "rst_n", "SIGNAL", "INPUT", [["M4", [101.0, 199.976, 101.024, 200.0]]]]]
+        d = dump(macros=[m], masters=masters, bterms=bt, env_MIN_ROUTING_LAYER="M2", env_MAX_ROUTING_LAYER="M4")
+        self.assertNotIn("channel", self.checks(d))
+        # mutant: no vertical layer at all under the cap (M2 only) still fails closed
+        d2 = dump(macros=[m], masters=masters, bterms=bt, env_MIN_ROUTING_LAYER="M2", env_MAX_ROUTING_LAYER="M2")
+        self.assertIn("channel", self.checks(d2))
+
     def test_channel(self):
         masters = dict(dump()["masters"], B={"n": 2, "w": 90, "h": 200, "type": "BLOCK", "block": True, "top_layer": 7})
         a = {"name": "a", "master": "B", "bbox": [0, 0, 90, 200], "status": "FIRM", "halo": None,

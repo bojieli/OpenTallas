@@ -1,0 +1,40 @@
+{
+  "status": 2,
+  "message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)",
+  "qualified": false,
+  "assumptions": {
+    "outline": [
+      362.88,
+      1425.6
+    ],
+    "between_children": 20.088,
+    "outer_margin": 20.088,
+    "ctl": [
+      47.52,
+      324
+    ],
+    "cache_unmeasured": [
+      47.52,
+      216
+    ]
+  },
+  "rects": [],
+  "scope": "Exact finite MILP infeasibility for stated dimensions, gap, outer margins and allowed dimension-preserving orientations only; not a general tile impossibility proof.",
+  "cache_status": "Unmeasured placeholder; no physical source or view binding.",
+  "control_source": "56bd132d3 narrow sizing kit, fast source20bd; CTS live, no closed view.",
+  "orientations": [
+    "R0",
+    "MX",
+    "MY",
+    "R180"
+  ],
+  "forbidden_unproved": [
+    "R90",
+    "R270"
+  ],
+  "solver": "scipy.optimize.milp/HiGHS, integer coordinates on0.216um lattice, continuous/discrete disjunctions; status2 infeasible, not timeout",
+  "geometry_sources": {
+    "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair/ot_qwen_tile_rpair.lef": "c7d0328cf80fc23bb5e116af454a07061a0d6bf9d1c649eb68b60b5d4ae83bbb",
+    "physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node/ot_qwen_tile_node.lef": "a35f635ec1a4ca0a6fc678e260e5f8982353e7d16b1c87368b815ee561cce69e"
+  }
+}

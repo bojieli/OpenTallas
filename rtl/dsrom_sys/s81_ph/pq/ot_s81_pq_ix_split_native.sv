@@ -21,7 +21,8 @@ module ot_s81_pq_ix_ba_native (
 endmodule
 
 module ot_s81_pq_ix_rg_native (
-    input wire clk, rst_n, consume, par, ba_v,
+    input wire clk, rst_n, consume,
+    input wire ba_wv,                // stage A write enable of THIS tile's block parity (registered in the controller)
     input wire [7:0] ba_blk,
     input wire [511:0] ba_hi,
     input wire [31:0] ba_inc,
@@ -45,9 +46,9 @@ module ot_s81_pq_ix_rg_native (
     reg write_valid, consume_1, consume_2;
     always @(posedge clk or negedge rst_l[0]) begin
         if(!rst_l[0]) begin write_blk<=0;write_valid<=0;consume_1<=0;consume_2<=0;end
-        else begin write_blk<=ba_blk;write_valid<=ba_v;consume_1<=consume;consume_2<=consume_1;end
+        else begin write_blk<=ba_blk;write_valid<=ba_wv;consume_1<=consume;consume_2<=consume_1;end
     end
-    wire we=write_valid&&(write_blk[0]==par);
+    wire we=write_valid;             // the parity compare is done in the controller (ba_wv): no per-instance constant input
     wire [6:0] wa=write_blk[7:1];
     genvar gp,gl;
     generate for(gp=0;gp<2;gp=gp+1) begin:g_bank
@@ -110,7 +111,8 @@ endmodule
 
 // One original bank owns its SRAM, row/parity state, metadata, selector and final capture.
 module ot_s81_pq_ix_rb_native (
-    input wire clk, rst_n, consume, par, ba_v,
+    input wire clk, rst_n, consume,
+    input wire ba_wv,                // stage A write enable of THIS tile's block parity (registered in the controller)
     input wire [7:0] ba_blk,
     input wire [255:0] ba_hi,
     input wire [15:0] ba_inc,
@@ -134,9 +136,9 @@ module ot_s81_pq_ix_rb_native (
     reg write_valid, consume_1, consume_2;
     always @(posedge clk or negedge rst_l[0]) begin
         if(!rst_l[0]) begin write_blk<=0;write_valid<=0;consume_1<=0;consume_2<=0;end
-        else begin write_blk<=ba_blk;write_valid<=ba_v;consume_1<=consume;consume_2<=consume_1;end
+        else begin write_blk<=ba_blk;write_valid<=ba_wv;consume_1<=consume;consume_2<=consume_1;end
     end
-    wire we=write_valid&&(write_blk[0]==par);
+    wire we=write_valid;             // the parity compare is done in the controller (ba_wv): no per-instance constant input
     wire [6:0] wa=write_blk[7:1];
     genvar gp,gl;
     generate for(gp=0;gp<1;gp=gp+1) begin:g_bank
@@ -198,14 +200,14 @@ module ot_s81_pq_ix_rb_native (
 endmodule
 
 module ot_s81_pq_ix_split_native (
-    input wire clk, rst_n, consume, par,
+    input wire clk, rst_n, consume,
 `ifdef OT_PQ_IX_BANK_SPLIT
     input wire [7:0] clk_read,
 `else
     input wire [3:0] clk_read,
 `endif
     input wire [1023:0] xw,
-    input wire ba_v,
+    input wire ba_wv,
     input wire [7:0] ba_blk,
     input wire [35:0] h_hi,
     input wire [6:0] hw7,
@@ -222,14 +224,14 @@ module ot_s81_pq_ix_split_native (
 `ifdef OT_PQ_IX_BANK_SPLIT
         for(genvar gb=0;gb<2;gb=gb+1) begin:g_bankpart
             ot_s81_pq_ix_rb_native u_rb
-                (.clk(clk_read[2*gu+gb]),.rst_n(rst_n),.consume(consume),.par(par),.ba_v(ba_v),.ba_blk(ba_blk),
+                (.clk(clk_read[2*gu+gb]),.rst_n(rst_n),.consume(consume),.ba_wv(ba_wv),.ba_blk(ba_blk),
                  .ba_hi(ba_hi[256*gb +: 256]),.ba_inc(ba_inc[16*gb +: 16]),
                  .h_hi(h_hi[9*gu +: 9]),.hw_low(hw7[2:0]),.hw_gate(hw7[3+gu]),
                  .bt_d(bt_d[64*gu+32*gb +: 32]),.bank_fault(bank_fault[2*gu+gb +: 1]));
         end
 `else
         ot_s81_pq_ix_rg_native u_rg
-            (.clk(clk_read[gu]),.rst_n(rst_n),.consume(consume),.par(par),.ba_v(ba_v),.ba_blk(ba_blk),
+            (.clk(clk_read[gu]),.rst_n(rst_n),.consume(consume),.ba_wv(ba_wv),.ba_blk(ba_blk),
              .ba_hi(ba_hi),.ba_inc(ba_inc),.h_hi(h_hi[9*gu +: 9]),.hw_low(hw7[2:0]),.hw_gate(hw7[3+gu]),
              .bt_d(bt_d[64*gu +: 64]),.bank_fault(bank_fault[2*gu +: 2]));
 `endif

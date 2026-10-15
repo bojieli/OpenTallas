@@ -735,13 +735,30 @@ module ot_hgi_sv_head #(
     // registered at take, so stage 1 is a 3:1 select and the 8 x 24 products only
     reg [15:0] no_m1, ni_m1, nih_m1;
     reg [27:0] pn [0:5][0:7];                           // nibble x 24 partial products (a nibbles 0-3, c nibbles 4-7)
+    reg [27:0] pnl [0:5][0:7]; reg [27:0] pnh [0:5][0:7]; // B4: the two pair sums of each nibble product (one adder an edge)
     reg [31:0] pq0 [0:5]; reg [31:0] pq1 [0:5]; reg [31:0] pq2 [0:5]; reg [31:0] pq3 [0:5]; reg [39:0] pacc [0:5];
+    reg [15:0] rm_a [0:5]; reg [15:0] rm_c [0:5]; reg [23:0] rso [0:5]; reg [23:0] rsi [0:5]; reg [39:0] s01 [0:5]; reg [39:0] s23 [0:5];
     reg [15:0] m_a [0:5]; reg [15:0] m_c [0:5]; reg [18:0] mhi [0:5]; reg [5:0] m_badv;
     always @* for (integer k = 0; k < 6; k = k + 1) begin
         m_a[k] = (k == 5 && (redwhole || redtree)) ? 16'd0 : no_m1;
         m_c[k] = (k == 5) ? 16'd0 : (bhalf && (k == 1 || k == 3)) ? nih_m1 : ni_m1;
         mhi[k] = {1'b0, c_base[k][17:0]} + {1'b0, pacc[k][17:0]};
         m_badv[k] = c_used[k] && (c_base[k][23:18] != 6'd0 || pacc[k][39:18] != 22'd0 || mhi[k][18]);
+    end
+    // SPAN multiply pipeline (B4): free-running, no reset, no state enable (see D_MUL); 6 edges operand -> pacc.
+    always @(posedge clk) for (integer k = 0; k < 6; k = k + 1) begin
+        rm_a[k] <= m_a[k]; rm_c[k] <= m_c[k]; rso[k] <= c_so[k]; rsi[k] <= c_si[k];
+        for (integer h = 0; h < 4; h = h + 1) begin
+            pnl[k][h]     <= ({28{rm_a[k][4*h]}}     & {4'd0, rso[k]}) + ({28{rm_a[k][4*h + 1]}} & {3'd0, rso[k], 1'd0});
+            pnh[k][h]     <= ({28{rm_a[k][4*h + 2]}} & {2'd0, rso[k], 2'd0}) + ({28{rm_a[k][4*h + 3]}} & {1'd0, rso[k], 3'd0});
+            pnl[k][4 + h] <= ({28{rm_c[k][4*h]}}     & {4'd0, rsi[k]}) + ({28{rm_c[k][4*h + 1]}} & {3'd0, rsi[k], 1'd0});
+            pnh[k][4 + h] <= ({28{rm_c[k][4*h + 2]}} & {2'd0, rsi[k], 2'd0}) + ({28{rm_c[k][4*h + 3]}} & {1'd0, rsi[k], 3'd0});
+        end
+        for (integer h = 0; h < 8; h = h + 1) pn[k][h] <= pnl[k][h] + pnh[k][h];
+        pq0[k] <= {4'd0, pn[k][0]} + {pn[k][1], 4'd0}; pq1[k] <= {4'd0, pn[k][2]} + {pn[k][3], 4'd0};
+        pq2[k] <= {4'd0, pn[k][4]} + {pn[k][5], 4'd0}; pq3[k] <= {4'd0, pn[k][6]} + {pn[k][7], 4'd0};
+        s01[k] <= {8'd0, pq0[k]} + {pq1[k], 8'd0}; s23[k] <= {8'd0, pq2[k]} + {pq3[k], 8'd0};
+        pacc[k] <= s01[k] + s23[k];
     end
     reg [17:0] lo [0:5]; reg [17:0] hi [0:5]; reg [5:0] rv;
     // Parallel with the existing classification edges: no allocation-side subtract/add chain.
@@ -770,18 +787,39 @@ module ot_hgi_sv_head #(
     wire st_aa = dstt == D_AA, st_ab = dstt == D_AB;
     wire        is_src = !rk[2];
     wire [1:0]  aq = rk[1:0];
-    wire        cur_used = rv[rk];
-    wire [17:0] cur_lo = lo[rk], cur_hi = hi[rk];
-    wire [17:0] span = alloc_span[rk];
-    wire        a_large = span[17:15] != 3'd0;                                   // > 32,767 words: a dedicated frame
+    // B3 (Claude group-B3 10-14, preoffset CTS gate reg->reg -118.9 ps: rk -> tb_lb 22 levels = rk-indexed operands, the
+    // 17-bit bump fit add / compare, ra_ok, aa_go and the victim decode in one D_AA edge): every rk-indexed operand of the
+    // region and the bump-fit arithmetic are REGISTERED, loaded on the edge that sets rk (SK1 -> region 4, an AA skip, the
+    // AB step) or that resets bp (frame turnover in AA), from registers that are stable from SK1 on.  D_AA selects only
+    // registered terms.  Same edges, same decisions: no cycle added.
+    reg [17:0] pr_lo, pr_hi, pr_span; reg [18:0] pr_ext; reg pr_used, pr_fhit, pr_large, pr_two, pr_toobig, pr_fits;
+    reg [2:0] pr_fe; reg [16:0] pr_lbk, pr_bpn;
+    task automatic pre(input [2:0] k, input [16:0] b);
+        reg [16:0] lk;
+        begin
+            lk = {b[16:8] + 9'(lo[k][7:0] < b[7:0]), lo[k][7:0]};               // lb == lo (mod 256 words)
+            pr_lo <= lo[k]; pr_hi <= hi[k]; pr_span <= alloc_span[k]; pr_ext <= alloc_ext[k]; pr_used <= rv[k];
+            pr_fe <= f_e[k[1:0]]; pr_fhit <= f_hit[k[1:0]];
+            pr_large <= alloc_span[k][17:15] != 3'd0;
+            pr_two <= alloc_span[k][17:15] != 3'd0 && alloc_ext[k] > 19'd65535;
+            pr_toobig <= alloc_ext[k] > 19'd131071;
+            pr_lbk <= lk;
+            pr_fits <= ({2'b00, lk} + {1'b0, alloc_span[k]}) <= 19'd65535;
+            pr_bpn <= lk + alloc_span[k][16:0] + 17'd9;                            // + 1 + an 8-word gap: no shared sector
+        end
+    endtask
+    wire        cur_used = pr_used;
+    wire [17:0] cur_lo = pr_lo, cur_hi = pr_hi;
+    wire [17:0] span = pr_span;
+    wire        a_large = pr_large;                                               // > 32,767 words: a dedicated frame
     // a region placed at its lo[7:0] offset in a dedicated frame: past 65,535 it runs on into the NEXT frame (the
     // local address space is contiguous): frames f and f + 1 are taken together, f + 1 as the TAIL of f (same epoch,
     // freed with f, no pins or table entries of its own).  More than two frames does not fit (capacity gap).
-    wire [18:0] ext = alloc_ext[rk];
-    wire        a_two = a_large && ext > 19'd65535;
-    wire        too_big = ext > 19'd131071;
-    wire [2:0]  fe = f_e[aq];
-    wire        fw_ok = is_src && f_hit[aq] && tb_v[fe];                          // forward (entry still alive)
+    wire [18:0] ext = pr_ext;
+    wire        a_two = pr_two;
+    wire        too_big = pr_toobig;
+    wire [2:0]  fe = pr_fe;
+    wire        fw_ok = is_src && pr_fhit && tb_v[fe];                             // forward (entry still alive)
     wire        fw_rs = tb_kind[fe] == K_RS;
     wire        ipnow = (rk == 3'd4) && ip_on && tb_v[ip_e];
     // table victim: an invalid entry, else one that is not sink_live, not forwarded by this record, not the in-place one
@@ -801,10 +839,9 @@ module ot_hgi_sv_head #(
     wire [3:0] ep_two = ((fr_ep[ffr2[1:0]] > fr_ep[ffr2[1:0] + 2'd1]) ? fr_ep[ffr2[1:0]] : fr_ep[ffr2[1:0] + 2'd1]) + 4'd1;
     // The old bp + ((lo - bp) mod 256) was an 8-bit subtract followed by a 17-bit add.
     // Same modulo-2^17 address: preserve the requested low byte and advance one page on wrap.
-    wire [8:0] lb_page = bp[16:8] + 9'(cur_lo[7:0] < bp[7:0]);
-    wire [16:0] lbk = {lb_page, cur_lo[7:0]};                                    // lb == lo (mod 256 words)
-    wire        fits = ({2'b00, lbk} + {1'b0, span}) <= 19'd65535;
-    wire [16:0] bp_n = lbk + span[16:0] + 17'd9;                                  // + 1 + an 8-word gap: no shared sector
+    wire [16:0] lbk = pr_lbk;                                                     // registered (pre)
+    wire        fits = pr_fits;
+    wire [16:0] bp_n = pr_bpn;
     wire        ra_ok = a_large ? ffr[2] : (open_v && fits);
     wire [1:0]  ra_f = a_large ? ffr[1:0] : opf;
     wire [18:0] ra_lb = a_large ? {1'b0, ffr[1:0], 8'd0, cur_lo[7:0]} : {1'b0, opf, lbk[15:0]};
@@ -930,16 +967,13 @@ module ot_hgi_sv_head #(
                 // SPAN: (nr - 1) so + (ni - 1) si, all 6 regions at once: 4 x 24 nibble products, byte products, sum,
                 // extent (4 edges; 10-13: the 8 x 24 product in one edge was a 27-level stage, ~995 ps)
                 D_MUL: begin
-                    for (integer k = 0; k < 6; k = k + 1) begin
-                        for (integer h = 0; h < 4; h = h + 1) begin
-                            pn[k][h]     <= nib24(m_a[k][4*h +: 4], c_so[k]);
-                            pn[k][4 + h] <= nib24(m_c[k][4*h +: 4], c_si[k]);
-                        end
-                        pq0[k] <= {4'd0, pn[k][0]} + {pn[k][1], 4'd0}; pq1[k] <= {4'd0, pn[k][2]} + {pn[k][3], 4'd0};
-                        pq2[k] <= {4'd0, pn[k][4]} + {pn[k][5], 4'd0}; pq3[k] <= {4'd0, pn[k][6]} + {pn[k][7], 4'd0};
-                        pacc[k] <= {8'd0, pq0[k]} + {pq1[k], 8'd0} + {8'd0, pq2[k]} + {pq3[k], 8'd0};
-                    end
-                    if (mph == 4'd3) begin
+                    // B3 (head gate r4-pre: m_a -> pn 21 levels, pq -> pacc 4-input 40-b add -64 ps): operand selects
+                    // registered first (rm_*), the 4-input sum split into two pair sums (s01 / s23) and their add.
+                    // B4 (head gate r4-pre2: rm_a -> pn 21 levels -38 ps; one OR2 enable net with 3,008 loads = the D_MUL
+                    // decode enabling every pipeline register): the pipeline below is FREE-RUNNING (no state enable; its
+                    // operands are registers that hold still from take through D_MUL, so mph == 6 sees the same values)
+                    // and each nibble product is two registered pair sums plus their add.  MUL 7 edges a record (mph 0..6).
+                    if (mph == 4'd6) begin
                         for (integer k = 0; k < 6; k = k + 1) begin lo[k] <= c_base[k][17:0]; hi[k] <= mhi[k][17:0]; end
                         if (cpair) begin lo[0] <= c_base[0][17:0] & ~18'd1; hi[0] <= mhi[0][17:0] | 18'd1; end
                         if (m_badv != 6'd0) begin dfault <= 1'b1; dstt <= D_FAULT; end   // an operand word >= 2^18
@@ -993,12 +1027,13 @@ module ot_hgi_sv_head #(
                     for (integer e = 0; e < 8; e = e + 1)
                         if ((s_ov[0][e] || s_ov[1][e]) && !(ip_on_n && ip_e == 3'(e))) tb_fok[e] <= 1'b0;
                     sl_lvw[dslot] <= c_lvw;                    // EVERY record (the EXT stream credit needs it without an O sink)
-                    rk <= 3'd4; dstt <= D_AA;
+                    rk <= 3'd4; dstt <= D_AA; pre(3'd4, bp);
                 end
                 // ALLOC edge A (region rk, order O R A B C D): decide forward / in place / allocate, pin
                 D_AA: begin
                     if (!cur_used) begin
-                        if (rk == 3'd3) dstt <= D_HOLD; else rk <= (rk == 3'd5) ? 3'd0 : rk + 3'd1;
+                        if (rk == 3'd3) dstt <= D_HOLD;
+                        else begin rk <= (rk == 3'd5) ? 3'd0 : rk + 3'd1; pre((rk == 3'd5) ? 3'd0 : rk + 3'd1, bp); end
                     end else if (aa_fault) begin dfault <= 1'b1; dstt <= D_FAULT; end
                     else if (aa_go) begin
                         dstt <= D_AB; stallc <= 4'd0;
@@ -1052,7 +1087,7 @@ module ot_hgi_sv_head #(
                             if (open_v) begin fr_st[opf] <= F_HELD; open_v <= 1'b0; end
                             else if (ffr1[2]) begin
                                 fr_st[ffr1[1:0]] <= F_OPEN; fr_ep[ffr1[1:0]] <= fr_ep[ffr1[1:0]] + 4'd1; opf <= ffr1[1:0];
-                                open_v <= 1'b1; bp <= 17'd0;
+                                open_v <= 1'b1; bp <= 17'd0; pre(rk, 17'd0);
                             end
                         end else if (ra_req && a_large && !ra_ok && open_v && fr_pin[opf] == 6'd0 && !d_pin_v) begin
                             fr_st[opf] <= F_HELD; open_v <= 1'b0;          // an empty bump frame gives way to a large region
@@ -1092,7 +1127,8 @@ module ot_hgi_sv_head #(
                             tb_lb[vic] <= a_lb; tb_own[vic] <= dslot;
                         end
                     end
-                    if (rk == 3'd3) dstt <= D_HOLD; else begin rk <= (rk == 3'd5) ? 3'd0 : rk + 3'd1; dstt <= D_AA; end
+                    if (rk == 3'd3) dstt <= D_HOLD;
+                    else begin rk <= (rk == 3'd5) ? 3'd0 : rk + 3'd1; dstt <= D_AA; pre((rk == 3'd5) ? 3'd0 : rk + 3'd1, bp); end
                 end
                 D_HOLD: if (push_take) dstt <= D_IDLE;                              // the word moved into the FIFO
                 default: ;                                                          // D_FAULT: sticky

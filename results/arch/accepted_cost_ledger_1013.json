@@ -69,36 +69,47 @@
   },
   {
    "design": "qwen_rom",
-   "unit": "VM.XREAD (TP8 bit-plane VM x transport, +16 edges per x read: XPR 12 / XQR 2 / RO 1)",
+   "unit": "VM.XREAD DVM (owner-adopted distributed x slices, TP8: x read = central priced XVM 1 -> 13 edges: tap 3 + head/leaf DX 10)",
    "group": "VM.XREAD",
-   "measured": 38.0,
-   "price": 22.0,
+   "measured": 13.0,
+   "price": 1.0,
    "unit_of_measure": "cycles",
-   "unit_ratio": 1.7273,
-   "e2e_loss_pct": 1.367,
+   "unit_ratio": 13.0,
+   "e2e_loss_pct": 1.028,
    "binding_workload": "ar",
    "per_workload": {
     "ar": {
      "model": "token-path longest path",
      "base_cycles": 249431.0,
-     "cycles": 252887.0,
-     "added_cycles": 3456.0,
+     "cycles": 252023.0,
+     "added_cycles": 2592.0,
      "runs_per_token": 36,
      "critical_runs": 36,
      "overlapped_runs": 0,
      "other_price_nodes_skipped": 0,
-     "naive_added_cycles": 3456.0,
+     "naive_added_cycles": 2592.0,
      "wave_positions": 0,
      "wave_added_cycles_per_position": 0.0,
-     "e2e_loss_pct": 1.367
+     "e2e_loss_pct": 1.028
     }
    },
    "within_unit_limit": true,
-   "evidence": "results/rtl/qwen_layer_tput_1013/xvm17_bd57/record.json",
+   "evidence": "results/rtl/qwen_dvm_priced_latency_1014/record.json",
    "evidence_grade": "committed_bench",
-   "date": "2026-10-13",
+   "date": "2026-10-14",
    "status": "proposed",
-   "note": "per-layer TP4 vehicle with QROM_XVM 17 / QROM_BD 57 (40 wire stages kept): L0 / L1 / L2 6,231 / 5,576 / 5,576 against 6,151 / 5,480 / 5,480, exact, compensation mutant fails; +96 cycles a layer (+80 on L0, +16 head bound) = 3,456 cycles a token. unit = the VM x-read latency on r21 (XVM 22 -> 38). +14 (XPR 10) measures 1.198 %, +10 0.859 %. Coordinator 10-13 12:25: acceptable; PROPOSED at the plan's upper value until the VM stream posts the placed XPR / XQR (asked in el1013-qwen-vm.log). TP4 reference composition, not a native TP8 run | VM4 10-13 18:50: XPR 12 is now a TILE-LEVEL placed number (results/arch/qwen_tp8_1012/vm_bay_tiles_claude.json: 4,096 / 4,096 lanes at depth 12 in whole closed tiles, 771 of 960 slots). XQR is NOT placed and cannot be in the v2 rectangle: the x output side as built (x_q 65,536 b, element-major, through 64 face leaves to ot_qfd_vm_xroot) needs 128 tile slots a stage and the band has 114 free, and die contract v5 holds no consumer for the 65,536 b (only the two 508-b head-root words). The row stays PROPOSED at +16 = the upper value while XQR <= 2; a plane-major x output without the face stage would be +13 / +14 (measured figure 1.198 % at +14). Open with the die lead (el1011-qwen-tp8.log VM4)"
+   "note": "MEASURED TP8 per-layer vehicle qD_dvm_r3x12 (XVM 13 / BD 89, source 67683b2ea, exact 12/12 X + 12/12 KV, writeback drained, no faults): L1 = L2 = 6,868 against the immutable price qD_all_ml15 6,796 = +72 cycles a layer (6 cycles an edge, +12 edges); charged +72 on each of the 36 layers (L0 7,224 in the vehicle; head not included). The current native source (affine 656e5d834, head compare 619c60641, stage-D integrity c549942dd) keeps DX 10 and the measured first-result delta +1 edge over XVMR 12 (tb_qfd_xdvm_prod), i.e. the x-read latency the vehicle priced; physical phi-R relay stages of the column/tap are not yet in the figure. The DVM replaces the TP8 bit-plane VM x read (owner 10-14 08:20); this row supersedes the VM.XREAD bit-plane row for the TP8 design (Q-DVM r4, 10-14).",
+   "supersedes": {
+    "unit": "VM.XREAD (TP8 bit-plane VM x transport, +16 edges per x read: XPR 12 / XQR 2 / RO 1)",
+    "measured": 38.0,
+    "price": 22.0,
+    "unit_ratio": 1.7273,
+    "e2e_loss_pct": 1.367,
+    "status": "proposed",
+    "evidence": "results/rtl/qwen_layer_tput_1013/xvm17_bd57/record.json",
+    "date": "2026-10-13",
+    "by": "owner 2026-10-14 ~08:20 PT adopted the distributed VM (HANDOFF 0aa): the bit-plane central x read is no longer the TP8 design"
+   }
   },
   {
    "design": "s81",
@@ -993,8 +1004,8 @@
  "totals": {
   "qwen_rom": {
    "accepted_pct": 0,
-   "proposed_pct": 3.968,
-   "accepted_plus_proposed_pct": 3.968,
+   "proposed_pct": 3.629,
+   "accepted_plus_proposed_pct": 3.629,
    "limit_pct": 15.0,
    "accepted_rows": 0,
    "proposed_rows": 3,

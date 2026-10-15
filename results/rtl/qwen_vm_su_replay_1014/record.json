@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.qwen-native-vm-replay-proof.v1",
+  "status": "FUNCTIONAL_MACRO_COMPOSITION_PASS_PHYSICAL_UNQUALIFIED",
+  "source_snapshot": "ot-epyc1tb:/srv/opentallas-scratch/codex/dvm4-replay",
+  "copy_component_commit": "e19fe53a8",
+  "native_VM": "qfd_sp_vector_memory USE_MACRO1,481explicit clock pins,OT_QFD_VM_NOX",
+  "positive": "PASS3H8192->H8192 replays,192actualSUreads+192writes,12288raw32bitwords,256finalrealrowreadchecks,fixed read-face->write-face16edges",
+  "data_mutant": "EXPECTED FAIL192errors",
+  "latency_mutant": "EXPECTED FAIL6499errors,observedlatency15instead16",
+  "special_raw_values": [
+    "negativezero",
+    "signalingNaN",
+    "negativeinfinity",
+    "subnormal"
+  ],
+  "static_schedule": "Three102-cycle reserved command windows. Completion observed only; no ready/credit/backpressure waiting. Real VM final read check begins at fixed edge after replay windows.",
+  "limits": [
+    "All leaf clocks normalized together; native phi-R/hops not modeled.",
+    "VM live-in fixture initializes actual SRAM via256SVWwrites.",
+    "This test checks actual SRAM->SUcopy->VM/XSwritefaces; no XScache/MEGO in this composition. Separate native tap+xcol composition is in progress.",
+    "No arithmetic whole-token or throughput qualification."
+  ]
+}

@@ -512,4 +512,4 @@ place_pin -pin_name {q[253]} -layer M5 -location {163.056 8.598} -force_to_die_b
 place_pin -pin_name {q[254]} -layer M5 -location {163.696 8.598} -force_to_die_boundary
 place_pin -pin_name {q[255]} -layer M5 -location {164.336 8.598} -force_to_die_boundary
 place_pin -pin_name {ck} -layer M4 -location {0.042 4.032} -force_to_die_boundary
-place_pin -pin_name {rst_n} -layer M4 -location {0.042 4.608} -force_to_die_boundary
+place_pin -pin_name {rst} -layer M4 -location {0.042 4.608} -force_to_die_boundary

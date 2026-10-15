@@ -1,0 +1,297 @@
+{
+  "schema": "ot.qwen.io.native_bundle.v1",
+  "qualification": "RTL FUNCTIONAL ONLY; revised credit channel physical views and parent distribution still pending",
+  "source": "rtl/physical/ot_qfd_io_xfifo.sv",
+  "channels": [
+    {
+      "channel": "up",
+      "record_bits": 546,
+      "sender_initial_credits": 32,
+      "receiver_initial_credits": 4,
+      "clocks": [
+        "up_wck",
+        "up_rck"
+      ],
+      "collective_record_port": "up_rec",
+      "collective_record_slice": [
+        545,
+        0
+      ],
+      "collective_valid_port": "up_valid",
+      "collective_valid_bit": null,
+      "collective_credit_port": "up_cr_in",
+      "collective_xfifo_record_port": "up_i_d",
+      "phy_master": "io_ucie",
+      "phy_record_port": "c_d",
+      "phy_record_slice": [
+        545,
+        0
+      ],
+      "phy_padding_bits": 478,
+      "phy_xfifo_record_port": "up_o_d",
+      "phy_ucie_channel": "p"
+    },
+    {
+      "channel": "dp",
+      "record_bits": 546,
+      "sender_initial_credits": 4,
+      "receiver_initial_credits": 64,
+      "clocks": [
+        "dp_wck",
+        "dp_rck"
+      ],
+      "collective_record_port": "dp_rec",
+      "collective_record_slice": [
+        545,
+        0
+      ],
+      "collective_valid_port": "dp_valid",
+      "collective_valid_bit": null,
+      "collective_credit_port": "dp_cr_out",
+      "collective_xfifo_record_port": "dp_o_d",
+      "phy_master": "io_ucie",
+      "phy_record_port": "r_d",
+      "phy_record_slice": [
+        545,
+        0
+      ],
+      "phy_padding_bits": 478,
+      "phy_xfifo_record_port": "dp_i_d",
+      "phy_ucie_channel": "p"
+    },
+    {
+      "channel": "ur",
+      "record_bits": 514,
+      "sender_initial_credits": 32,
+      "receiver_initial_credits": 4,
+      "clocks": [
+        "ur_wck",
+        "ur_rck"
+      ],
+      "collective_record_port": "ur_rec",
+      "collective_record_slice": [
+        513,
+        0
+      ],
+      "collective_valid_port": "ur_valid",
+      "collective_valid_bit": null,
+      "collective_credit_port": "ur_cr_in",
+      "collective_xfifo_record_port": "ur_i_d",
+      "phy_master": "io_ucie",
+      "phy_record_port": "c_d",
+      "phy_record_slice": [
+        513,
+        0
+      ],
+      "phy_padding_bits": 510,
+      "phy_xfifo_record_port": "ur_o_d",
+      "phy_ucie_channel": "r"
+    },
+    {
+      "channel": "dr",
+      "record_bits": 514,
+      "sender_initial_credits": 4,
+      "receiver_initial_credits": 32,
+      "clocks": [
+        "dr_wck",
+        "dr_rck"
+      ],
+      "collective_record_port": "dr_rec",
+      "collective_record_slice": [
+        513,
+        0
+      ],
+      "collective_valid_port": "dr_valid",
+      "collective_valid_bit": null,
+      "collective_credit_port": "dr_cr_out",
+      "collective_xfifo_record_port": "dr_o_d",
+      "phy_master": "io_ucie",
+      "phy_record_port": "r_d",
+      "phy_record_slice": [
+        513,
+        0
+      ],
+      "phy_padding_bits": 510,
+      "phy_xfifo_record_port": "dr_i_d",
+      "phy_ucie_channel": "r"
+    },
+    {
+      "channel": "sx0",
+      "record_bits": 546,
+      "sender_initial_credits": 64,
+      "receiver_initial_credits": 4,
+      "clocks": [
+        "sx0_wck",
+        "sx0_rck"
+      ],
+      "collective_record_port": "sx_rec",
+      "collective_record_slice": [
+        545,
+        0
+      ],
+      "collective_valid_port": "sx_valid",
+      "collective_valid_bit": 0,
+      "collective_credit_port": "sx_cr_in",
+      "collective_xfifo_record_port": "sx0_i_d",
+      "phy_master": "io_serdes",
+      "phy_record_port": "c_d",
+      "phy_record_slice": [
+        545,
+        0
+      ],
+      "phy_padding_bits": 478,
+      "phy_xfifo_record_port": "sx0_o_d",
+      "phy_ucie_channel": null
+    },
+    {
+      "channel": "sx1",
+      "record_bits": 546,
+      "sender_initial_credits": 64,
+      "receiver_initial_credits": 4,
+      "clocks": [
+        "sx1_wck",
+        "sx1_rck"
+      ],
+      "collective_record_port": "sx_rec",
+      "collective_record_slice": [
+        1091,
+        546
+      ],
+      "collective_valid_port": "sx_valid",
+      "collective_valid_bit": 1,
+      "collective_credit_port": "sx_cr_in",
+      "collective_xfifo_record_port": "sx1_i_d",
+      "phy_master": "io_serdes_1",
+      "phy_record_port": "c_d",
+      "phy_record_slice": [
+        545,
+        0
+      ],
+      "phy_padding_bits": 478,
+      "phy_xfifo_record_port": "sx1_o_d",
+      "phy_ucie_channel": null
+    },
+    {
+      "channel": "sx2",
+      "record_bits": 546,
+      "sender_initial_credits": 64,
+      "receiver_initial_credits": 4,
+      "clocks": [
+        "sx2_wck",
+        "sx2_rck"
+      ],
+      "collective_record_port": "sx_rec",
+      "collective_record_slice": [
+        1637,
+        1092
+      ],
+      "collective_valid_port": "sx_valid",
+      "collective_valid_bit": 2,
+      "collective_credit_port": "sx_cr_in",
+      "collective_xfifo_record_port": "sx2_i_d",
+      "phy_master": "io_serdes_2",
+      "phy_record_port": "c_d",
+      "phy_record_slice": [
+        545,
+        0
+      ],
+      "phy_padding_bits": 478,
+      "phy_xfifo_record_port": "sx2_o_d",
+      "phy_ucie_channel": null
+    },
+    {
+      "channel": "sr0",
+      "record_bits": 546,
+      "sender_initial_credits": 4,
+      "receiver_initial_credits": 64,
+      "clocks": [
+        "sr0_wck",
+        "sr0_rck"
+      ],
+      "collective_record_port": "sr_rec",
+      "collective_record_slice": [
+        545,
+        0
+      ],
+      "collective_valid_port": "sr_valid",
+      "collective_valid_bit": 0,
+      "collective_credit_port": "sr_cr_out",
+      "collective_xfifo_record_port": "sr0_o_d",
+      "phy_master": "io_serdes",
+      "phy_record_port": "r_d",
+      "phy_record_slice": [
+        545,
+        0
+      ],
+      "phy_padding_bits": 478,
+      "phy_xfifo_record_port": "sr0_i_d",
+      "phy_ucie_channel": null
+    },
+    {
+      "channel": "sr1",
+      "record_bits": 546,
+      "sender_initial_credits": 4,
+      "receiver_initial_credits": 64,
+      "clocks": [
+        "sr1_wck",
+        "sr1_rck"
+      ],
+      "collective_record_port": "sr_rec",
+      "collective_record_slice": [
+        1091,
+        546
+      ],
+      "collective_valid_port": "sr_valid",
+      "collective_valid_bit": 1,
+      "collective_credit_port": "sr_cr_out",
+      "collective_xfifo_record_port": "sr1_o_d",
+      "phy_master": "io_serdes_1",
+      "phy_record_port": "r_d",
+      "phy_record_slice": [
+        545,
+        0
+      ],
+      "phy_padding_bits": 478,
+      "phy_xfifo_record_port": "sr1_i_d",
+      "phy_ucie_channel": null
+    },
+    {
+      "channel": "sr2",
+      "record_bits": 546,
+      "sender_initial_credits": 4,
+      "receiver_initial_credits": 64,
+      "clocks": [
+        "sr2_wck",
+        "sr2_rck"
+      ],
+      "collective_record_port": "sr_rec",
+      "collective_record_slice": [
+        1637,
+        1092
+      ],
+      "collective_valid_port": "sr_valid",
+      "collective_valid_bit": 2,
+      "collective_credit_port": "sr_cr_out",
+      "collective_xfifo_record_port": "sr2_o_d",
+      "phy_master": "io_serdes_2",
+      "phy_record_port": "r_d",
+      "phy_record_slice": [
+        545,
+        0
+      ],
+      "phy_padding_bits": 478,
+      "phy_xfifo_record_port": "sr2_i_d",
+      "phy_ucie_channel": null
+    }
+  ],
+  "local": {
+    "input_record": "{in_tag,in_mode,in_last,in_data}",
+    "input_bits": 546,
+    "output_record": "{out_err,out_rank,out_last,out_data}",
+    "output_bits": 517,
+    "xfifo": "u_local",
+    "posted_return": true
+  },
+  "link_source": "rtl/physical/ot_qfd_io_links.sv",
+  "link_analog_boundary": "tx_v/tx_flit/rx_v/rx_flit; functional FDI boundary, licensed analog PMA remains separately bound"
+}

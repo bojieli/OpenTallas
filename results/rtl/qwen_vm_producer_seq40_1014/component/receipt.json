@@ -1,0 +1,64 @@
+{
+  "scope": "LEASE_COMPONENT_ONLY_NOT_NATIVE_WRITER_COMPOSITION",
+  "sources": {
+    "ot_qfd_vm_producer_lease_seq40.sv": "09342e3e812a693a026c9bf5abcf09ec71e3ab8f9de82e9465e7062c6c012ca3",
+    "tb_qfd_vm_producer_lease_seq40.sv": "37a54d06fa0136a161ccbcc9ff9381475850efd11fab5519729ac77e3a4a545b"
+  },
+  "cases": [
+    {
+      "mutant": 0,
+      "exit": 0,
+      "observed": "PASS lease 32 operations all512bits/full40seq/canonicalIBmode, write reservation across two queries, both modes, 4bit phases; blocked=801 leased=672\n/srv/opentallas-scratch/codex/qwen-producer40-1014-v2/tb_qfd_vm_producer_lease_seq40.sv:53: $finish called at 8040000 (1ps)"
+    },
+    {
+      "mutant": 1,
+      "exit": 1,
+      "observed": "FATAL: /srv/opentallas-scratch/codex/qwen-producer40-1014-v2/tb_qfd_vm_producer_lease_seq40.sv:23: FAIL drained ready\n       Time: 71000  Scope: tb_qfd_vm_producer_lease_seq40.ck"
+    },
+    {
+      "mutant": 2,
+      "exit": 1,
+      "observed": "FATAL: /srv/opentallas-scratch/codex/qwen-producer40-1014-v2/tb_qfd_vm_producer_lease_seq40.sv:23: FAIL immutable descriptor and accepted mode\n       Time: 120000  Scope: tb_qfd_vm_producer_lease_seq40.ck"
+    },
+    {
+      "mutant": 3,
+      "exit": 1,
+      "observed": "FATAL: /srv/opentallas-scratch/codex/qwen-producer40-1014-v2/tb_qfd_vm_producer_lease_seq40.sv:23: FAIL output consumed exactly once\n       Time: 220000  Scope: tb_qfd_vm_producer_lease_seq40.ck"
+    },
+    {
+      "mutant": 4,
+      "exit": 1,
+      "observed": "FATAL: /srv/opentallas-scratch/codex/qwen-producer40-1014-v2/tb_qfd_vm_producer_lease_seq40.sv:23: FAIL real recipient retirement fence\n       Time: 271000  Scope: tb_qfd_vm_producer_lease_seq40.ck"
+    },
+    {
+      "mutant": 5,
+      "exit": 1,
+      "observed": "FATAL: /srv/opentallas-scratch/codex/qwen-producer40-1014-v2/tb_qfd_vm_producer_lease_seq40.sv:23: FAIL retained payload after consumption\n       Time: 230000  Scope: tb_qfd_vm_producer_lease_seq40.ck"
+    },
+    {
+      "mutant": 6,
+      "exit": 1,
+      "observed": "FATAL: /srv/opentallas-scratch/codex/qwen-producer40-1014-v2/tb_qfd_vm_producer_lease_seq40.sv:23: FAIL second address same version\n       Time: 260000  Scope: tb_qfd_vm_producer_lease_seq40.ck"
+    },
+    {
+      "mutant": 7,
+      "exit": 1,
+      "observed": "FATAL: /srv/opentallas-scratch/codex/qwen-producer40-1014-v2/tb_qfd_vm_producer_lease_seq40.sv:23: FAIL registered request mode mismatch rejected\n       Time: 91000  Scope: tb_qfd_vm_producer_lease_seq40.ck"
+    },
+    {
+      "mutant": 8,
+      "exit": 1,
+      "observed": "FATAL: /srv/opentallas-scratch/codex/qwen-producer40-1014-v2/tb_qfd_vm_producer_lease_seq40.sv:23: FAIL immutable descriptor and accepted mode\n       Time: 120000  Scope: tb_qfd_vm_producer_lease_seq40.ck"
+    },
+    {
+      "mutant": 9,
+      "exit": 1,
+      "observed": "FATAL: /srv/opentallas-scratch/codex/qwen-producer40-1014-v2/tb_qfd_vm_producer_lease_seq40.sv:23: FAIL payload provenance\n       Time: 140000  Scope: tb_qfd_vm_producer_lease_seq40.ck"
+    },
+    {
+      "mutant": 10,
+      "exit": 1,
+      "observed": "FATAL: /srv/opentallas-scratch/codex/qwen-producer40-1014-v2/tb_qfd_vm_producer_lease_seq40.sv:23: FAIL offered mode disagrees with canonical accepted IB\n       Time: 61000  Scope: tb_qfd_vm_producer_lease_seq40.ck"
+    }
+  ]
+}
