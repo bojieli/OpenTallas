@@ -26,6 +26,22 @@ def check(schedule: dict, contract: dict) -> dict:
     if missing:
         return dict(status='incomplete', violations=[dict(kind='missing_contract', fields=missing)],
                     qualified=False, events=0)
+    positive = ['stream_period_ps', 'vm_period_ps', 'banks', 'bank_ops_per_cycle',
+                'read_ingress_per_cycle', 'write_ingress_per_cycle']
+    try:
+        invalid = [x for x in positive if Fraction(str(contract[x])) <= 0]
+        invalid += [x for x in ('request_min_ps', 'read_min_ps', 'commit_min_ps')
+                    if Fraction(str(contract[x])) < 0]
+        for kind in ('slot_capacity', 'client_capacity'):
+            if not isinstance(contract[kind], dict) or any(type(v) is not int or v <= 0 for v in contract[kind].values()):
+                invalid.append(kind)
+        if any(type(contract[x]) is not int for x in ('banks', 'bank_ops_per_cycle',
+                  'read_ingress_per_cycle', 'write_ingress_per_cycle')):
+            invalid.append('integer_resource_capacity')
+    except (ValueError, TypeError, ZeroDivisionError):
+        invalid = ['invalid_numeric_contract']
+    if invalid:
+        return dict(status='fail', violations=[dict(kind='invalid_contract', fields=invalid)], qualified=False, events=0)
     def when(cycle, domain):
         return Fraction(str(contract[f'{domain}_phase_ps'])) + cycle * Fraction(str(contract[f'{domain}_period_ps']))
     bank_use, ingress_use = defaultdict(list), defaultdict(list)
@@ -46,8 +62,10 @@ def check(schedule: dict, contract: dict) -> dict:
             error('missing_reservation', event=eid, fields=absent); continue
         cycle_keys = ['issue_cycle', 'ingress_cycle', 'service_cycle', 'deadline_cycle',
                       'response_cycle' if kind == 'read' else 'commit_cycle']
-        if any(not isinstance(event[x], int) or event[x] < 0 for x in cycle_keys):
+        if any(type(event[x]) is not int or event[x] < 0 for x in cycle_keys):
             error('invalid_cycle', event=eid); continue
+        if type(event['tag']) not in (str, int) or type(event['client']) is not str or type(event['slot']) is not int or event['slot'] < 0:
+            error('invalid_identity', event=eid); continue
         if not isinstance(event['row'], int) or not 0 <= event['row'] < 16384:
             error('invalid_row', event=eid, row=event['row']); continue
         issue = when(event['issue_cycle'], 'stream')
@@ -63,6 +81,8 @@ def check(schedule: dict, contract: dict) -> dict:
         minimum = Fraction(str(contract['read_min_ps' if kind == 'read' else 'commit_min_ps']))
         if retire < service + minimum:
             error('retire_before_physical_path', event=eid)
+        if retire <= issue:
+            error('retire_before_issue', event=eid)
         if retire > deadline:
             error('missed_fixed_deadline', event=eid, actual=retire_cycle, deadline=event['deadline_cycle'])
         bank_use[(event['service_cycle'], event['row'] % contract['banks'])].append(eid)
@@ -117,6 +137,11 @@ def check(schedule: dict, contract: dict) -> dict:
         done = when(job['done_cycle'], 'stream')
         late = [eid for retire, eid in job_writes[(job['client'], job['tag'])] if retire > done]
         if late: error('done_before_commit', client=job['client'], tag=job['tag'], events=late)
+    bounded_jobs = {(x['client'], x['tag']) for x in schedule.get('jobs', [])
+                    if 'client' in x and 'tag' in x}
+    for key, writes in job_writes.items():
+        if key not in bounded_jobs:
+            error('missing_producer_done', client=key[0], tag=key[1], events=[eid for _, eid in writes])
     # Explicit data-dependency edges, including cross-client consumers and partial-row writes.
     for dependency in schedule.get('dependencies', []):
         producer, consumer = dependency.get('producer'), dependency.get('consumer')

@@ -10,7 +10,7 @@
   "deadline_stream_cycles": 10,
   "favourable_max_serial_edges": 8,
   "minimum_path_latency_ps": 0,
-  "witness": "16 reads issued together cannot enter a one-row-per-serial-edge FE within 10 stream cycles: even a favourable phase permits at most8 serial ingress edges. Bank parallelism cannot remove this FE ingress bottleneck.",
+  "witness": "16 reads issued together cannot enter a one-row-per-serial-edge FE within 10 stream cycles: even a favourable phase permits at most 8 serial ingress edges. Bank parallelism cannot remove this FE ingress bottleneck.",
   "implications": [
     "Need a statically provisioned wider native FE path or truthful different measured response deadline.",
     "Do not insert hidden credit stalls or accept the fixed-LVM bench as native VM composition evidence."
