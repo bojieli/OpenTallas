@@ -1,5 +1,5 @@
 {
- "name": "qkd_land_grp_epoch-ep3-COMMIT",
+ "name": "qkd_land_grp_epoch-ep3-607620a7a",
  "block": "qkd_land_grp_epoch",
  "ref_tile": true,
  "owner": "Claude:Q-KVSYS-ELEM",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/qwen-kvsys-el-r3-1014",
-  "commit": "COMMIT",
+  "commit": "607620a7a",
   "extra_paths": [
    "rtl/test/qwen_split",
    "rtl/test/qwen_kv_die",
@@ -113,7 +113,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_land_grp_epoch/qkd_land_grp_epoch-ep3-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_land_grp_epoch/qkd_land_grp_epoch-ep3-607620a7a"
   }
  ],
  "cycles_added": 0,
