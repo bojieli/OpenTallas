@@ -1,0 +1,9 @@
+ATT_STATIC_CASE T=128 mode=0 actual_H=16 actual_D=512 last_issue=48 launch_to_last_result=99 scores=2048 pv=0
+ATT_STATIC_CASE T=128 mode=1 actual_H=16 actual_D=512 last_issue=50 launch_to_last_result=102 scores=0 pv=8192
+ATT_STATIC_CASE T=640 mode=0 actual_H=16 actual_D=512 last_issue=176 launch_to_last_result=227 scores=10240 pv=0
+ATT_STATIC_CASE T=640 mode=1 actual_H=16 actual_D=512 last_issue=181 launch_to_last_result=233 scores=0 pv=8192
+PASS ATT_CALENDAR_FULL heads=16 dim=512 rows=128,640 scores=12288 pv=16384 staging_macros=68 programme_macros=1 real_RTL_FP=1
+- rtl/test/hbm_accel/generic/tb_hbm_attn_calendar.sv:74: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 180.978 s; speed 28.247 ns/s
+- Verilator: cpu 180.970 s on 1 threads; allocated 139 MB
