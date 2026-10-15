@@ -1,0 +1,39 @@
+{
+  "schema": "opentallas.hbm.dma-wb-pipeline-composition.v1",
+  "stage": "BEFORE_SELECTED_WRAPPER_RTL",
+  "created": "2026-10-15T00:28:27.021765",
+  "parent": "dma_wb_phy_model.json",
+  "WB_module": "ot_hbm_svc_wb_pipeline_cdc",
+  "WB_selected_by": "static WB_PIPELINE parameter, default0 until qualified",
+  "resources": {
+    "VM_SRAM": 96,
+    "DMA_landing_SRAM": 32,
+    "WB_SRAM": 128,
+    "WB_payload_CDC_FIFOs": 128,
+    "WB_payload_FF_per_quadrant": 36864,
+    "WB_payload_FF_added_die": 110592,
+    "WB_clock_groups_per_quadrant": 4,
+    "FF_per_group": 9216
+  },
+  "boundaries_unchanged": true,
+  "macs_per_cycle": 0,
+  "memory_bytes_per_cycle": {
+    "onchipVM": 1024,
+    "onchipWD": 1024,
+    "WB_SRAm_to_CDC_peak": 4096
+  },
+  "routing": "sameexternalWD and32PCports;128actualWBmacros unchanged,4xinternalpayloadFIFOgroups need physicalviews",
+  "area_fit": "Additional110592payloadFFdie plus PCcounts; actualslotfit and clockroot/CTS evidence pending; no physicalqualification",
+  "production_addresses": {
+    "COLB_byte": "0x510000000",
+    "h_localSector": "0x28800000+2*q+4096*slot",
+    "h_sectors": 640,
+    "PRE_localSector": "0x28800a00+4096*slot",
+    "PRE_sectors": 1
+  },
+  "source_timeline": "same fixed DMA WD hT0+28..107,PRET0+129; no clock/calendar/price change",
+  "immutable_price_cycles": 248,
+  "gate_limit_cycles": 272,
+  "prediction": "PerPCcredit64 and copyII1 remove frozenWB serialization; must measure actual joined cold/warm fence, not infer PASS from directPHY/component gate",
+  "qualification": "Fullactual32VMbank/DMA/WB/PHYactualmutableHBM readback,TRUEwa and negativeprematureACK,sourcepinned exact addresses and real1024ps timing"
+}
