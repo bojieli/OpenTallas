@@ -63,22 +63,17 @@
   "threads": 8,
   "peak_ram_gb": 24,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4,
-  "cts_sink": {
-   "size": 16,
-   "diameter_um": 20,
-   "extra": "-sink_clustering_levels 2 -distance_between_buffers 40"
-  }
+  "macro_halo_um": 5.4
  },
  "job": {
   "owner": "Codex:S-NORM",
   "branch": "claude/s81-norm-tree-1014",
-  "tag": "v2-owned-local-clock",
+  "tag": "v2-owned-pads",
   "purpose": "Production serial HC owns every local broadcast register in its physical strip; no region-wrapper flops.",
   "no_bench_reason": "bit-exactness is gated on the HC slab composition bench (tools/s81_suhc/hc_gate.py NG256 HIER=2 m0 PASS + m1 FAIL, NG64 m0 PASS + m3 FAIL) at the kit commit; the tile alone has no golden",
   "views_to": "physical/ref_tile/s81hc_ctfxcap_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_ctfxcap_ref",
-  "structural_change": "Complete multi-D configured input pad before data fanout plus explicit two-level16-sink20um clock clustering and40um clock-buffer spacing. Measured previous CTS placed reset/output clone on225/164um return clock branches (99.4/86.4ps spread); build physical balanced local branches. Same RTL, clocks/reset epochs, pin plan, outline and SDC budgets.",
+  "structural_change": "Complete multi-D configured input pad before data fanout and native capture anchoring. Physical ownership includes every local epoch register. Reset pin/clock topology still needs die-owned measured repair before final-source gate and route. Same arithmetic/cycles, outline and SDC budgets.",
   "benches": [
    {
     "name": "owned_serial_exact",
