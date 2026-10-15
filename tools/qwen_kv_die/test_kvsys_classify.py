@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
-from kvsys_classify import main, pin_world
+from kvsys_classify import main, pin_world, placed_def
 
 
 class ClassificationGeometry(unittest.TestCase):
@@ -32,6 +32,19 @@ END leaf
             row = json.loads(out.read_text())['corners']['tt']['rows'][0]
             self.assertEqual(row['named_pin_manhattan_um'], 200)
             self.assertEqual(row['nearest_pin_um'], 100)
+            (c/'floorplan_placed.def').write_text('''VERSION 5.8 ;
+UNITS DISTANCE MICRONS 1000 ;
+COMPONENTS 2 ;
+- a leaf + FIXED ( 0 0 ) N ;
+- b leaf + FIXED ( 200000 0 ) FN ;
+END COMPONENTS
+END DESIGN
+''')
+            self.assertEqual(placed_def(c/'floorplan_placed.def')['b'], (200, 0, 'FN'))
+            main(['--run', str(p), '--out', str(out)])
+            actual = json.loads(out.read_text())
+            self.assertEqual(actual['placement']['scope'], 'REALIZED_DEF_ORIGINS')
+            self.assertEqual(actual['corners']['tt']['rows'][0]['named_pin_manhattan_um'], 300)
 
     def test_mirrors_and_unrecognized_orientation(self):
         self.assertEqual(pin_world((2, 3), (100, 200), (10, 20), 'MX'), (102, 217))

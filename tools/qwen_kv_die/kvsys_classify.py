@@ -17,6 +17,7 @@ reported as a sensitivity only (owner option B).
 """
 import argparse
 import collections
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -69,6 +70,23 @@ def pin_world(point, origin, size, orient):
     return origin[0]+x, origin[1]+y
 
 
+def placed_def(path):
+    """Realized macro origins after track snapping, in microns."""
+    text = path.read_text()
+    units = re.search(r'UNITS\s+DISTANCE\s+MICRONS\s+(\d+)\s*;', text)
+    section = re.search(r'(?ms)^COMPONENTS\s+\d+\s*;(.*?)^END COMPONENTS', text)
+    if not units or not section:
+        raise ValueError(f'{path}: missing DEF units/components')
+    dbu = int(units.group(1))
+    out = {}
+    for m in re.finditer(r'-\s+(\S+)\s+(\S+)(.*?);', section.group(1), re.S):
+        pos = re.search(r'\+\s+(?:PLACED|FIXED|COVER)\s+\(\s*(-?\d+)\s+(-?\d+)\s*\)\s+(\w+)', m.group(3))
+        if pos:
+            x, y, orient = pos.groups()
+            out[m.group(1)] = (float(x)/dbu, float(y)/dbu, orient)
+    return out
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument('--run', type=Path, required=True)
@@ -84,7 +102,10 @@ def main(argv=None):
     views = json.loads((a.run / 'libs/views.json').read_text())['views']
     real = {m for m, r in views.items() if r.get('bound')}
     pins, size = lef_pins([c / 'elements.lef'] + list(c.glob('phy*.lef')))
-    plc = place(c / 'place.tcl')
+    actual_def = c / 'floorplan_placed.def'
+    position_file = actual_def if actual_def.exists() else c / 'place.tcl'
+    plc = placed_def(actual_def) if actual_def.exists() else place(position_file)
+    position_scope = 'REALIZED_DEF_ORIGINS' if actual_def.exists() else 'REQUESTED_TCL_ORIGINS_ONLY'
 
     def kind(inst):
         m = master.get(inst, '?')
@@ -163,7 +184,7 @@ def main(argv=None):
             actual = round(abs(p_s[0]-p_e[0])+abs(p_s[1]-p_e[1]), 3) if p_s is not None and p_e is not None else None
             rows.append(dict(cause=cause, launch=sm, capture=ec, nearest_pin_um=a_,
                              named_pin_manhattan_um=actual,
-                             named_pin_geometry='LEF first RECT centres; geometric diagnostic, not routed length'
+                             named_pin_geometry=position_scope + '; LEF first RECT centres; geometric diagnostic, not routed length'
                              if actual is not None else 'UNMEASURED: named timing pin absent from LEF or placement', **r))
         causes = collections.defaultdict(lambda: dict(endpoints=0, violators=0, worst_ps=1e9))
         for r in rows:
@@ -174,6 +195,8 @@ def main(argv=None):
         res[corner] = dict(endpoints=n, causes=dict(sorted(causes.items(), key=lambda kv: kv[1]['worst_ps'])),
                            rows=rows[:a.top], rows_total=len(rows))
     out = dict(schema='opentallas.qwen_kvsys_sta_classes.v1', run=str(a.run), real_views=sorted(real),
+               placement=dict(scope=position_scope, file=str(position_file),
+                              sha256=hashlib.sha256(position_file.read_bytes()).hexdigest()),
                rule='TT setup + FF hold decide; SS sensitivity only. real = closed view (own ETM, phi - R clock); frame / relay = '
                     'ASSUMED single-flop placeholders (ideal clock)', corners=res)
     a.out.write_text(json.dumps(out, indent=1) + '\n')
