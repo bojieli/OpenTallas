@@ -1,5 +1,5 @@
 {
- "name": "qfd_x3_mux_static-p1-COMMIT",
+ "name": "qfd_x3_mux_static-p1-afd4b7b77",
  "block": "ot_qfd_x3_mux",
  "ref_tile": true,
  "owner": "Codex:qwen_x3_physical",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "codex/q-x3-physical-1014",
-  "commit": "COMMIT",
+  "commit": "afd4b7b77",
   "extra_paths": [
    "tools/qwen_split",
    "rtl/test/qwen_split",
@@ -99,7 +99,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_x3_mux_static/qfd_x3_mux_static-p1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_x3_mux_static/qfd_x3_mux_static-p1-afd4b7b77"
   }
  ],
  "cycles_added": 0,
