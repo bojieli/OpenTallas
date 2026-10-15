@@ -1,0 +1,183 @@
+{
+  "schema": "opentallas.hc.actual-phy-prefetch.production-bandwidth.v1",
+  "status": "ACTUAL_REFRESH_PHY24ROWS_BOTH_IMMUTABLE_BUDGETS_PASS_NATIVE_FULL_JOIN_OPEN",
+  "source_commit": "0f8c8b224",
+  "actual_compiled_source_sha256": {
+    "tb_hgi_hc_prefetch_direct_phy_static.sv": "dbd1290264e7b4270771b180f63067cb2e92bdec612d43844d964e3cb6b5ebb9",
+    "ot_hgi_hc_aperture_static.sv": "7e14e88870dd131e8f558970dc7929175d1a76fd0317bfd24e0a71587d7419ae",
+    "ot_hdc_v41x_idx_hbm.sv": "c757ae39d767291db3fd37565ce6c5ff6eec9ed119cc97ee06432f301d87ecf4",
+    "ot_async_fifo.sv": "e091268202e1c6bcc18c8eb83304730c5a29bc10e0a6c52a4dcfc19c177e882e",
+    "ot_hbm_svc_prefetch_block_cdc.sv": "4c5d6dd620e17a11d36e9217bdcba492cd2e2fe4d595343f2fd957d9fc6376fb",
+    "ot_hbm_loader_kport_address.sv": "b6eea0ffce657114439b555d6d4eee5ee6ad7efa4c6d226e94aa8697d539898b",
+    "tb_hgi_hc_prefetch_direct_static.sv": "48578c465958f4cda2df93d53eab8a3bcbe6b9a72502a8609e59ea7d257b88c5",
+    "ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
+    "ot_hgi_hc_prefetch_direct_static.sv": "c5245b01bcb5c3df19d283ec6c1ffa3e92f1c1383ff82aabc642d1469df134c4",
+    "ot_chip_v41x_hbm3e_phy.sv": "6cda2575be0adfb73e8ff45893b86689ad7f5a823a4b66f04823d4446841b1cb",
+    "tb_hbm_svc_prefetch_block_cdc.sv": "763c51afedbece0251b420d43b95c066fd998bf6b3f05e697a57d834c41e6f87",
+    "ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+  },
+  "actual_compiled_source_paths": {
+    "tb_hgi_hc_prefetch_direct_phy_static.sv": "rtl/hbm_accel/generic/peers/hc_prefetch_static/tb_hgi_hc_prefetch_direct_phy_static.sv",
+    "ot_hgi_hc_aperture_static.sv": "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_aperture_static.sv",
+    "ot_hdc_v41x_idx_hbm.sv": "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
+    "ot_async_fifo.sv": "rtl/lib/ot_async_fifo.sv",
+    "ot_hbm_svc_prefetch_block_cdc.sv": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_block_cdc.sv",
+    "ot_hbm_loader_kport_address.sv": "rtl/hbm_accel/ingest/ot_hbm_loader_kport_address.sv",
+    "tb_hgi_hc_prefetch_direct_static.sv": "rtl/hbm_accel/generic/peers/hc_prefetch_static/tb_hgi_hc_prefetch_direct_static.sv",
+    "ot_reset_sync.sv": "rtl/lib/ot_reset_sync.sv",
+    "ot_hdc_hbm_model.sv": "rtl/hdc/kv/ot_hdc_hbm_model.sv",
+    "ot_hgi_hc_prefetch_direct_static.sv": "rtl/hbm_accel/generic/peers/hc_prefetch_static/ot_hgi_hc_prefetch_direct_static.sv",
+    "ot_chip_v41x_hbm3e_phy.sv": "rtl/chip/ot_chip_v41x_hbm3e_phy.sv",
+    "tb_hbm_svc_prefetch_block_cdc.sv": "rtl/hbm_accel/loader/service_native/tb_hbm_svc_prefetch_block_cdc.sv",
+    "ot_sram_1r1w_128x256_m1_r2c2.v": "/home/ubuntu/wt-bf-hier-1011/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
+  },
+  "verified_compiled_sources": 13,
+  "canonical_source_selection": "excludes historical rtl/test/*/pinned copies",
+  "released_weights": {
+    "tensor": "layers.0.hc_attn_fn",
+    "shape": [
+      24,
+      20480
+    ],
+    "dtype": "F32",
+    "original_bytes": 1966080,
+    "raw_sha256": "11c9abd39f35e3364aad812c3f2dcb9c5fa5cf71e0f837a1af684112a00f930c",
+    "local_base_bytes": 21474836480,
+    "row_bytes": 81920,
+    "segment_bytes": 10240,
+    "bank_stack": "bank%4",
+    "exported_rows": 24,
+    "full43layer2064row_image_exported": false,
+    "hardware_image_installed": false
+  },
+  "actual_PHY": {
+    "module": "ot_chip_v41x_hbm3e_phy",
+    "source_commit": "942124cb2",
+    "K_AW": 30,
+    "KTAGW": 17,
+    "K_BASE": 671088640,
+    "K_MEM": 61440,
+    "CLK_PS": 1024,
+    "memory_preload": "u_phy.u_k.mem[(671088640+a)%61440]=image[a]",
+    "timing": "publishedrefreshawareot_hdc_v41x_idx_hbm; logPHYlatency80 is unusedsharedfixtureparameter, NOT actualmodeldelay"
+  },
+  "passing_cases": [
+    {
+      "model": "published_refresh_PHY",
+      "row_period": 1080,
+      "rows": 24,
+      "exact_PHYrequests": 61440,
+      "exact_PHYresponses": 61440,
+      "actual_SRAM_readback_sectors": 61440,
+      "fixed_production_cycles": 25920,
+      "last_actual_HC_store_age_each_row": 655
+    },
+    {
+      "model": "published_refresh_PHY",
+      "row_period": 1400,
+      "rows": 24,
+      "exact_PHYrequests": 61440,
+      "exact_PHYresponses": 61440,
+      "actual_SRAM_readback_sectors": 61440,
+      "fixed_production_cycles": 33600,
+      "last_actual_HC_store_age_each_row": 655
+    },
+    {
+      "model": "external80to92HBMedges",
+      "row_period": 1080,
+      "rows": 24,
+      "exact_PHYrequests": 61440,
+      "exact_PHYresponses": 61440,
+      "actual_SRAM_readback_sectors": 61440,
+      "fixed_production_cycles": 25920,
+      "last_actual_HC_store_age_each_row": 655
+    },
+    {
+      "model": "external80to92HBMedges",
+      "row_period": 1400,
+      "rows": 24,
+      "exact_PHYrequests": 61440,
+      "exact_PHYresponses": 61440,
+      "actual_SRAM_readback_sectors": 61440,
+      "fixed_production_cycles": 33600,
+      "last_actual_HC_store_age_each_row": 655
+    },
+    {
+      "model": "external80to92HBMedges_with_perPC_request_stalls",
+      "row_period": 1080,
+      "rows": 24,
+      "exact_PHYrequests": 61440,
+      "exact_PHYresponses": 61440,
+      "actual_SRAM_readback_sectors": 61440,
+      "fixed_production_cycles": 25920,
+      "last_actual_HC_store_age_each_row": 655
+    },
+    {
+      "model": "external80to92HBMedges_with_perPC_request_stalls",
+      "row_period": 1400,
+      "rows": 24,
+      "exact_PHYrequests": 61440,
+      "exact_PHYresponses": 61440,
+      "actual_SRAM_readback_sectors": 61440,
+      "fixed_production_cycles": 33600,
+      "last_actual_HC_store_age_each_row": 655
+    }
+  ],
+  "implementation": {
+    "source_SRAMs": 128,
+    "HC_SRAMs": 64,
+    "total_actual_SRAMs": 192,
+    "SRAMbytes": 786432,
+    "parent_native_join_expected_SRAMs": 306,
+    "owner_entries": 1024,
+    "owner_state_bits": 47104,
+    "tagallocator_bits": 68,
+    "acceptedbundle_mask_bits": 16,
+    "capture_bits": 8192,
+    "PC_issue_width": 4,
+    "perPC_outstanding": 8,
+    "AP_lanes_per_cycle": 4,
+    "payload_cycles_per_row": 640,
+    "drain_half1_edge": 330,
+    "nextrow_half0_reserve": 330,
+    "nextrow_half1_reserve": 660,
+    "store_complete_age": 655,
+    "initial_published_PHY_start": 575,
+    "unused_HC_rows_not_written": [
+      80,
+      128
+    ],
+    "zero_padding_writes": 0,
+    "dynamic_flowcontrol": "PHYboundaryonly; no onchipready/credits/backpressure"
+  },
+  "gates": {
+    "payload_mutant": "FAILactualSRAMreadbackrow0bank5position319",
+    "wrong_unissued_tag": "REFUSED",
+    "stale_priorblock_tag": "REFUSED",
+    "late_unowned_duplicate": "REFUSED",
+    "legacy_one_outstanding_comparison": "FAILstaticrow1half0deadlinecycle5002",
+    "defaultMAX1_WIDTH1_II1": "PASSactualPHYphases137/7732693vectors337fixedcyclespluswrong_epochrefusal",
+    "all5_compile_UNOPTFLAT_LATCH_MULTIDRIVEN": 0
+  },
+  "preserved_failures": {
+    "width1_actualrefresh": "../weight_prefetch_direct/actual_phy_width1/receipt.json:1080row4half1FAIL,1400PASS",
+    "without_PCduplicate_guard": "legacyinitialtimeout; guardeduniquecandidatebundlesfix",
+    "ready_dependent_requestconstruction": "UNOPTFLAT; registeredacceptedmaskandseparateacceptanceblockfix",
+    "firstactualPHYfixture": "backingarraypreloadindexmissingnativeoffset; correctedfulladdressmodulopreload"
+  },
+  "runtime": {
+    "session": 33401,
+    "scope": "oth-ubuntu-900632-1792059865",
+    "host": "ot-epyc1tb",
+    "remote": "/srv/opentallas-scratch/claude/codex-hc-prefetch-wide4-mask-v2-1015",
+    "exit": 0
+  },
+  "limitations": [
+    "Actualproducerplus306SRAMarithmetic/nativeVMjoinownedparent",
+    "Externalcomponentreserve/draincontrol; nativecompilercontrollerjoinrequired",
+    "Onlyfirstreleasedtensor24rowsverified,notall2064rows",
+    "Physicalslot/clock/TTsetup/FFhold/DRC0open",
+    "Fullchipnativequalificationandendtoendtokenratefalse"
+  ]
+}
