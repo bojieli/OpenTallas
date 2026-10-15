@@ -1,5 +1,5 @@
 {
- "name": "hbm_hc_weight_quarter_static-native2-COMMIT",
+ "name": "hbm_hc_weight_quarter_static-native2-899befe48",
  "block": "ot_hgi_hc_weight_quarter_static",
  "ref_tile": true,
  "owner": "Codex:/root/h_hc_physical",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "codex/hc-physical-1015",
-  "commit": "COMMIT",
+  "commit": "899befe482abecccb91f909108dbb52dfc1730d8",
   "extra_paths": [
    "physical/hbm_hc",
    "rtl/test/tb_hgi_hc_weight_quarter_static.sv",
@@ -104,7 +104,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hbm_hc_weight_quarter_static/hbm_hc_weight_quarter_static-native2-COMMIT"
+   "to": "results/rtl/ref_tile/hbm_hc_weight_quarter_static/hbm_hc_weight_quarter_static-native2-899befe48"
   }
  ],
  "cycles_added": 0,
