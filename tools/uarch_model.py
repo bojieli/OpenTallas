@@ -761,6 +761,33 @@ def hgi_generic_topk_heap_model(n=49152, k=2048, rows=1, iw=1, heaps=2):
                          "VM sector a cycle (item: TOPK 4.3x)")
 
 
+def hbm_coll_static_quadrant_model(npt=3, inject=2, deliver=4, flit_bits=545, period_ps=833.3):
+    """0an successor transport: compiler reserves every pin sample and output edge.
+
+    One source capture bank, one output-leaf pin capture bank and one registered output bank, no elastic storage.
+    This sizes the transport before RTL; reduction, TOPK and VM service are
+    separately scheduled engines and their latency is not hidden in this row.
+    """
+    if npt not in (2, 3):
+        raise ValueError("production quadrant has two or three rail links")
+    sources = inject + npt + deliver + 1  # SU, rail, VM, ring result
+    sinks = npt + 3 * deliver + 1  # rail, SU, RGX, TKM, ring partial
+    select_bits = (sources - 1).bit_length()
+    controls = sources + sinks * (select_bits + 1)
+    return dict(source_lanes=sources, sink_lanes=sinks, flit_bits=flit_bits,
+                capture_edges=2, output_edges=1, latency_edges=2,
+                bits_per_cycle_in=sources * flit_bits,
+                bits_per_cycle_out=sinks * flit_bits,
+                payload_flops=(2 * sources + sinks) * flit_bits,
+                control_flops=controls, clock_roots_required=2,
+                largest_root_sinks=(sources + sinks) * flit_bits + 2 * controls,
+                select_cost_bits=sinks * sources * flit_bits,
+                period_ps=period_ps, elastic_entries=0,
+                compiler_rule="sink instruction at C+1 selects a source captured C; output pin changes C+2",
+                routing_rule="sources may multicast; distinct sources cannot own the same sink edge",
+                status="SIZED transport only; no physical closure or complete collective price")
+
+
 def hgi_coll_topk_merge_model(G=96, n=512, k=512, kmax=2048, deliver_lanes=4, ser_cycles_per_flit_rank=23.75):
     """HGI COLL.TOPK_MERGE (unit 6 op 2) in hardware (hgi-1010/k 2026-10-10, rtl/hbm_accel/generic/collective/tkm/
     ot_hgi_coll_tkm.sv, ot_hgi_coll_ep TKM = 1): a merge sink on the collective's exact gather bypass.
@@ -16384,3 +16411,32 @@ def hbm_vm_static_calendar_host_model():
       clocks='hostconfigurationclock mustsharedefinedcompilerphase atlaunch or getexplicitstaticcrossing',
       physical='newnativeproducer requiresdiepin/slot/clock qualification; no closedloaderalias',
       qualification='realexistingloaderCP→LCPdoorbell→real4programmeSRAMs composition test required')
+def hgi_coll_tkm_static_calendar(G=96, n=512, k=2048, kmax=2048, has_r=True):
+    """Fixed production TKM calendar; no data-dependent survivor pruning or admission.
+
+    Four lanes each deliver eight pairs every eight edges. Every pair, including
+    padding, owns an insertion slot; four comparators' inputs enter per edge.
+    Two passes reuse the actual 64-position hardened tile arithmetic and SRAM
+    pass buffer. All phase lengths depend only on configuration. The immutable
+    prior price is retained for comparison, never replaced by this schedule.
+    """
+    assert 1 <= G <= 96 and 1 <= n <= 2048 and 1 <= k <= kmax <= 2048
+    flits = G * ((n + 7) // 8)
+    groups = (flits + 3) // 4
+    cells = (min(k, G*n) + 3) // 4
+    tiles = (kmax + 63) // 64
+    settle = 3*tiles + 8  # three registered insertion edges per tile, plus root pipeline
+    ingress = groups*8
+    # Initial clear, ingress, settle, first conveyor+capture, second clear,
+    # SRAM read+insert, settle, final conveyor+pack/drain.
+    cycles = 8 + ingress + settle + cells + 5 + 5 + cells + 6 + settle + cells + 8 + 1
+    return dict(flits=flits, groups=groups, ingress_cycles=ingress,
+                pairs_per_cycle=4, lane_beat_period=8, tile_count=tiles,
+                tile_positions=64, insertion_settle_cycles=settle,
+                selected_cells=cells, pass_buffer_bytes=1024*512//8,
+                ingress_register_bits=4*545, chain_bits_per_cycle=340,
+                root_sink_plan='sequencer, ingress, buffer, packer and each tile own clock roots; phi-R per root',
+                record_cycles=cycles, exact_done_cycle=cycles,
+                output_lines=(min(k,G*n)+15)//16*(2 if has_r else 1),
+                schedule='fixed all-element insertion; fixed value conveyor; fixed SRAM reinsertion; fixed id conveyor',
+                price_comparison='historical estimate retained separately; static throughput remains unqualified until measured')
