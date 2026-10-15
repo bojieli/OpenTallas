@@ -14,7 +14,7 @@
  ],
  "macro_area_um2": 13319.35488,
  "raw_macro_total_mm2": 0.85243871232,
- "allocation": "UNALLOCATED requirement; H-DIE reviewing reuse of 13 service SRAM/SM. No extra anonymous cache adopted.",
+ "allocation": "DEDICATED PRIMARY: H-DIE reuse audit finds no service SRAM ports; typedphysicalslot pending",
  "capacity_per_bank_bytes": 4096,
  "bank_tensor_shape": [
   2,
