@@ -1,0 +1,30 @@
+{
+  "schema": "opentallas.qkd.native_writer_face.v1",
+  "shape": {
+    "inputs": 649,
+    "outputs": 1360,
+    "stages": 36,
+    "positions": 8192,
+    "identities": 294912,
+    "sectors": 2359296
+  },
+  "positive_unit": "oth-ubuntu-902745-1792045778",
+  "mutant_unit": "oth-ubuntu-910179-1792045856",
+  "positive": "PASS full production inverse oracle and exact1360bit wrapper equality",
+  "mutants": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "omitted_semantics": "native_kv reconstructed from expected_valid; fullmask allones only when consumed; MUT3 fails omittedmask assertion",
+  "source_sha256": {
+    "rtl/physical/ot_qkd_kv_static_writer_native.sv": "002a38026a12ad8f1fe0398ca44b03aed760ea3dc8e1b415c65bd1c1e4125a79",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "f95a1c95f5b2f81e71847e97594171bdbde0568e92b5b197b65ae2e537106bc7",
+    "rtl/test/qwen_static_kv/tb_qkd_kv_static_writer_native.sv": "2f852bf3aa665fc46ec2198c5fef52fb8d89be5e8ca9cc299b7aed5b4ddfbe10"
+  },
+  "physical_qualified": false,
+  "native_die_qualified": false
+}
