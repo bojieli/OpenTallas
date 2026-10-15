@@ -33,9 +33,7 @@
    "r_v",
    "r_tag",
    "r_e",
-   "g_flt",
-   "ga",
-   "q2f"
+   "g_flt"
   ],
   "E": [
    "live"
@@ -44,6 +42,8 @@
    "live_o"
   ],
   "S": [
+   "ga",
+   "q2f",
    "clk",
    "rst_n"
   ]
@@ -77,6 +77,7 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/s81_die_pins/v20/ot_s81_pq_rwbc2.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/dsrom_window_source/leaf_iohold.tcl",

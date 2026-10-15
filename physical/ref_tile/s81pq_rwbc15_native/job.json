@@ -3,7 +3,7 @@
  "block": "ot_s81_pq_rwbc15",
  "ref_tile": true,
  "owner": "Codex:s81-elemB",
- "purpose": "S81 PQ count-only return leaf (topology G, die D3) NR=15: slot pq_count_slots.json 142.56 x 19.44; provisional faces (N root-word taps + ga/q2f corridor, E live in, W live_o chain, S clk/rst); die assigns exact pins by --rtl-bind",
+ "purpose": "S81 topology G NR15 count leaf, die assigned v20 pins and 142.56x19.44 seam; live forwarded E to W",
  "threads": 16,
  "peak_ram_gb": 32,
  "source": {

@@ -21,9 +21,7 @@
    "r_v",
    "r_tag",
    "r_e",
-   "g_flt",
-   "ga",
-   "q2f"
+   "g_flt"
   ],
   "E": [
    "live"
@@ -32,6 +30,8 @@
    "live_o"
   ],
   "S": [
+   "ga",
+   "q2f",
    "clk",
    "rst_n"
   ]
@@ -50,7 +50,7 @@
   "owner": "Codex:s81-elemB",
   "branch": "claude/s81-elemB5-1014",
   "tag": "c1",
-  "purpose": "S81 PQ count-only return leaf (topology G, die D3) NR=15: slot pq_count_slots.json 142.56 x 19.44; provisional faces (N root-word taps + ga/q2f corridor, E live in, W live_o chain, S clk/rst); die assigns exact pins by --rtl-bind",
+  "purpose": "S81 topology G NR15 count leaf, die assigned v20 pins and 142.56x19.44 seam; live forwarded E to W",
   "benches": [
    {
     "name": "rwbc_exact",
@@ -93,5 +93,6 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "slot_change_request": "S81 die lead takeover request: shrink count seam leaf height to 19.44, preserve 17.28 relay row"
+ "slot_change_request": "S81 die lead takeover request: shrink count seam leaf height to 19.44, preserve 17.28 relay row",
+ "io_tcl": "physical/s81_die_pins/v20/ot_s81_pq_rwbc15.tcl"
 }
