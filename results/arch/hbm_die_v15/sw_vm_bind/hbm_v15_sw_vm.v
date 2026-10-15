@@ -204,9 +204,7 @@ module hbm_v15_sw_vm (pll_stream, rst_n, x_hb_vms_SW__cq_0_2366, x_hb_vms_SW__rq
   wire [7:0] hb_su_SW__su_w_done;
   wire [135:0] hb_su_SW__lg_rq;
   wire [2247:0] hb_su_SW__lg_wq;
-  wire [7:0] hb_su_SW__lg_read;
-  wire [7:0] hb_su_SW__lg_write;
-  wire [3:0] hb_su_SW__fault;
+  wire [4:0] hb_su_SW__fault;
   wire [135:0] hb_idx__vm_rq;
   wire [0:0] hb_idx__key_slot;
   wire [7:0] hb_idx__key_index;
@@ -492,8 +490,8 @@ module hbm_v15_sw_vm (pll_stream, rst_n, x_hb_vms_SW__cq_0_2366, x_hb_vms_SW__rq
     .wd(hb_dbk_SW__wd),
     .wa(x_hb_dbk_SW__wa_0_12)
   );
-  ot_hbm_su_static_vm_ports #(.QID(0), .READ_RETURN(10), .WRITE_RETURN(7)) hb_su_SW (
-    .pg_clk({4{pll_stream}}),
+  ot_hbm_su_static_vm_ports #(.QID(0), .READ_RETURN(10), .WRITE_RETURN(7), .NPG(5), .BANK_GROUP(1126306048)) hb_su_SW (
+    .pg_clk({5{pll_stream}}),
     .rst_n(rst_n),
     .su_rq(x_hb_su_SW__su_rq_0_136),
     .su_wq(x_hb_su_SW__su_wq_0_2248),
@@ -501,8 +499,6 @@ module hbm_v15_sw_vm (pll_stream, rst_n, x_hb_vms_SW__cq_0_2366, x_hb_vms_SW__rq
     .su_w_done(hb_su_SW__su_w_done),
     .lg_rq(hb_su_SW__lg_rq),
     .lg_wq(hb_su_SW__lg_wq),
-    .lg_read(hb_su_SW__lg_read),
-    .lg_write(hb_su_SW__lg_write),
     .lg_rr(lg_SW_0__local_rr[2055:0]),
     .lg_w_done(lg_SW_0__local_w_done[7:0]),
     .fault(hb_su_SW__fault)
