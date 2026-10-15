@@ -1,0 +1,123 @@
+{
+  "status": "SOURCE_BOUND_INDEPENDENT_PROTOTYPE_ONLY_DOMAIN_AUDIT_BLOCKS_CTS",
+  "qualified": false,
+  "module": "ot_hbm_su_static_side_native6",
+  "outline_um": [
+    864,
+    648
+  ],
+  "orientation": "R0",
+  "sources": [
+    {
+      "path": "/home/ubuntu/wt/hbm-hard-physical-1015/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side.sv",
+      "sha256": "2e6c4f37354ca789ae7178eac57dc6b5c1abdf7a12858812200e10fb93f04a44"
+    },
+    {
+      "path": "/home/ubuntu/wt/hbm-hard-physical-1015/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side_native6.sv",
+      "sha256": "6e26a39f7cdc0da705b62d023d3659ef72c5ecc8b4b64d48909ffa0ceed3249d"
+    }
+  ],
+  "pins": {
+    "W": [
+      "v",
+      "fn",
+      "x",
+      "fn_out"
+    ],
+    "E": [
+      "y",
+      "fault"
+    ],
+    "S": [
+      "ck0",
+      "ck1",
+      "ck2",
+      "ck3",
+      "ck4",
+      "ck5",
+      "rst_n"
+    ]
+  },
+  "actual_literal_ports": {
+    "ck0": {
+      "direction": "input",
+      "bits": 1
+    },
+    "ck1": {
+      "direction": "input",
+      "bits": 1
+    },
+    "ck2": {
+      "direction": "input",
+      "bits": 1
+    },
+    "ck3": {
+      "direction": "input",
+      "bits": 1
+    },
+    "ck4": {
+      "direction": "input",
+      "bits": 1
+    },
+    "ck5": {
+      "direction": "input",
+      "bits": 1
+    },
+    "rst_n": {
+      "direction": "input",
+      "bits": 1
+    },
+    "v": {
+      "direction": "input",
+      "bits": 1
+    },
+    "fn": {
+      "direction": "input",
+      "bits": 3
+    },
+    "fn_out": {
+      "direction": "input",
+      "bits": 3
+    },
+    "x": {
+      "direction": "input",
+      "bits": 32
+    },
+    "y": {
+      "direction": "output",
+      "bits": 32
+    },
+    "fault": {
+      "direction": "output",
+      "bits": 1
+    }
+  },
+  "face_bits": {
+    "W": 39,
+    "E": 33,
+    "S": 7
+  },
+  "literal_bits": 79,
+  "clock_ports": [
+    "ck0",
+    "ck1",
+    "ck2",
+    "ck3",
+    "ck4",
+    "ck5"
+  ],
+  "roots": 6,
+  "root_FF_census": null,
+  "macro_count": 0,
+  "excludes": [
+    "19rootfullKIND2head",
+    "separate6SRAMbank"
+  ],
+  "current_blocker": "strict postmap input-domain check: sharedx assignedck0 feedsck5",
+  "required_resolution": [
+    "real source-grounded relatedsamePLL sharedIO accounting constraining allcapturepaths",
+    "or sourceproved registeredfunctioninputfaces with actuallatencyprice"
+  ],
+  "forbidden": "no asyncfalsepaths, renamed aliases or timing waiver",
+  "native_clock_phase_and_global_home": "must source-bind actualphase and upstreamSUo/phi-R before parent placement; wholeconsumer home unassigned"
+}

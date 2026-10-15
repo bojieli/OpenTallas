@@ -1,0 +1,668 @@
+{
+ "schema": "opentallas.qwen.tile-tree-face-search.v1",
+ "input_sha256": "c6bb77d8e1a3b111999ecfe969449d54550b4c959c4162e8a55709a061b49f05",
+ "source_commit": "f6842ce4a",
+ "baseline": {
+  "bit_um": 1742154039.204,
+  "worst_pair_um": 21281.04,
+  "relay_bit_stages": 2841990,
+  "max_bus_relay_stages": 42,
+  "over_tile_bit_crossings": 1867362,
+  "family_bit_um": {
+   "corridor": 482966489.1,
+   "tap": 1496982.5,
+   "head_chain": 46127485.6,
+   "tree_block": 750385162.4,
+   "spine_local": 19054954.8,
+   "io": 37781157.8,
+   "tree_spine": 341120049.8,
+   "sequencer": 22277912.3,
+   "d2d_fdi": 5330.6,
+   "crom": 40938514.2
+  }
+ },
+ "all_W_window_model_check": {
+  "faces": {
+   "n_a": "W",
+   "n_b": "W",
+   "n_y": "W",
+   "t_out": "W"
+  },
+  "bit_um": 1742153266.148,
+  "delta_bit_um": -773.1,
+  "delta_pct": -0.0,
+  "worst_pair_um": 21281.036,
+  "relay_bit_stages": 2841990,
+  "delta_relay_bit_stages": 0,
+  "family_delta_bit_um": {
+   "tree_block": -789.5,
+   "tree_spine": 16.4
+  },
+  "intra_tile_shift_um_per_bit": {
+   "n_a": 0.0,
+   "n_b": 0.0,
+   "n_y": 0.0,
+   "t_out": 0.0
+  },
+  "intra_tile_bound_bit_um": 0.0,
+  "over_tile_bit_crossings": 1867362
+ },
+ "ranked": [
+  {
+   "faces": {
+    "n_a": "W",
+    "n_b": "E",
+    "n_y": "E",
+    "t_out": "W"
+   },
+   "bit_um": 1643533821.412,
+   "delta_bit_um": -98620217.8,
+   "delta_pct": -5.661,
+   "worst_pair_um": 21667.564,
+   "relay_bit_stages": 2549010,
+   "delta_relay_bit_stages": -292980,
+   "family_delta_bit_um": {
+    "tree_block": -98877481.0,
+    "tree_spine": 257263.2
+   },
+   "intra_tile_shift_um_per_bit": {
+    "n_a": 0.0,
+    "n_b": 526.5,
+    "n_y": 511.7,
+    "t_out": 0.0
+   },
+   "intra_tile_bound_bit_um": 409831526.4,
+   "over_tile_bit_crossings": 1645314
+  },
+  {
+   "faces": {
+    "n_a": "W",
+    "n_b": "W",
+    "n_y": "E",
+    "t_out": "W"
+   },
+   "bit_um": 1683648519.652,
+   "delta_bit_um": -58505519.6,
+   "delta_pct": -3.358,
+   "worst_pair_um": 21667.564,
+   "relay_bit_stages": 2687790,
+   "delta_relay_bit_stages": -154200,
+   "family_delta_bit_um": {
+    "tree_block": -58762782.7,
+    "tree_spine": 257263.2
+   },
+   "intra_tile_shift_um_per_bit": {
+    "n_a": 0.0,
+    "n_b": 0.0,
+    "n_y": 511.7,
+    "t_out": 0.0
+   },
+   "intra_tile_bound_bit_um": 201994598.4,
+   "over_tile_bit_crossings": 1694658
+  },
+  {
+   "faces": {
+    "n_a": "W",
+    "n_b": "E",
+    "n_y": "W",
+    "t_out": "W"
+   },
+   "bit_um": 1702038567.908,
+   "delta_bit_um": -40115471.3,
+   "delta_pct": -2.303,
+   "worst_pair_um": 21281.036,
+   "relay_bit_stages": 2703210,
+   "delta_relay_bit_stages": -138780,
+   "family_delta_bit_um": {
+    "tree_block": -40115487.7,
+    "tree_spine": 16.4
+   },
+   "intra_tile_shift_um_per_bit": {
+    "n_a": 0.0,
+    "n_b": 526.5,
+    "n_y": 0.0,
+    "t_out": 0.0
+   },
+   "intra_tile_bound_bit_um": 207836928.0,
+   "over_tile_bit_crossings": 1818018
+  },
+  {
+   "faces": {
+    "n_a": "S",
+    "n_b": "S",
+    "n_y": "S",
+    "t_out": "S"
+   },
+   "bit_um": 1714632756.276,
+   "delta_bit_um": -27521282.9,
+   "delta_pct": -1.58,
+   "worst_pair_um": 22332.172,
+   "relay_bit_stages": 2713490,
+   "delta_relay_bit_stages": -128500,
+   "family_delta_bit_um": {
+    "tree_block": -26251797.5,
+    "tree_spine": -1269485.4
+   },
+   "intra_tile_shift_um_per_bit": {
+    "n_a": 777.9,
+    "n_b": 889.9,
+    "n_y": 1001.9,
+    "t_out": 1113.9
+   },
+   "intra_tile_bound_bit_um": 1493583667.2,
+   "over_tile_bit_crossings": 1791804
+  },
+  {
+   "faces": {
+    "n_a": "W",
+    "n_b": "E",
+    "n_y": "S",
+    "t_out": "W"
+   },
+   "bit_um": 1728190908.468,
+   "delta_bit_um": -13963130.7,
+   "delta_pct": -0.801,
+   "worst_pair_um": 22332.172,
+   "relay_bit_stages": 2694986,
+   "delta_relay_bit_stages": -147004,
+   "family_delta_bit_um": {
+    "tree_block": -12693645.3,
+    "tree_spine": -1269485.4
+   },
+   "intra_tile_shift_um_per_bit": {
+    "n_a": 0.0,
+    "n_b": 526.5,
+    "n_y": 1001.9,
+    "t_out": 0.0
+   },
+   "intra_tile_bound_bit_um": 603338956.8,
+   "over_tile_bit_crossings": 1643772
+  },
+  {
+   "faces": {
+    "n_a": "W",
+    "n_b": "E",
+    "n_y": "N",
+    "t_out": "W"
+   },
+   "bit_um": 1742003527.668,
+   "delta_bit_um": -150511.5,
+   "delta_pct": -0.009,
+   "worst_pair_um": 20969.844,
+   "relay_bit_stages": 2866148,
+   "delta_relay_bit_stages": 24158,
+   "family_delta_bit_um": {
+    "tree_block": -3865016.8,
+    "tree_spine": 3714505.3
+   },
+   "intra_tile_shift_um_per_bit": {
+    "n_a": 0.0,
+    "n_b": 526.5,
+    "n_y": 1026.3,
+    "t_out": 0.0
+   },
+   "intra_tile_bound_bit_um": 612970905.6,
+   "over_tile_bit_crossings": 1894604
+  },
+  {
+   "faces": {
+    "n_a": "W",
+    "n_b": "W",
+    "n_y": "W",
+    "t_out": "W"
+   },
+   "bit_um": 1742153266.148,
+   "delta_bit_um": -773.1,
+   "delta_pct": -0.0,
+   "worst_pair_um": 21281.036,
+   "relay_bit_stages": 2841990,
+   "delta_relay_bit_stages": 0,
+   "family_delta_bit_um": {
+    "tree_block": -789.5,
+    "tree_spine": 16.4
+   },
+   "intra_tile_shift_um_per_bit": {
+    "n_a": 0.0,
+    "n_b": 0.0,
+    "n_y": 0.0,
+    "t_out": 0.0
+   },
+   "intra_tile_bound_bit_um": 0.0,
+   "over_tile_bit_crossings": 1867362
+  },
+  {
+   "faces": {
+    "n_a": "N",
+    "n_b": "E",
+    "n_y": "N",
+    "t_out": "W"
+   },
+   "bit_um": 1751550999.54,
+   "delta_bit_um": 9396960.3,
+   "delta_pct": 0.539,
+   "worst_pair_um": 20969.844,
+   "relay_bit_stages": 2792132,
+   "delta_relay_bit_stages": -49858,
+   "family_delta_bit_um": {
+    "tree_block": 5682455.0,
+    "tree_spine": 3714505.3
+   },
+   "intra_tile_shift_um_per_bit": {
+    "n_a": 865.3,
+    "n_b": 526.5,
+    "n_y": 1026.3,
+    "t_out": 0.0
+   },
+   "intra_tile_bound_bit_um": 954549811.2,
+   "over_tile_bit_crossings": 1647884
+  },
+  {
+   "faces": {
+    "n_a": "N",
+    "n_b": "N",
+    "n_y": "N",
+    "t_out": "N"
+   },
+   "bit_um": 1759338666.996,
+   "delta_bit_um": 17184627.8,
+   "delta_pct": 0.986,
+   "worst_pair_um": 20969.844,
+   "relay_bit_stages": 2693444,
+   "delta_relay_bit_stages": -148546,
+   "family_delta_bit_um": {
+    "tree_block": 13470122.5,
+    "tree_spine": 3714505.3
+   },
+   "intra_tile_shift_um_per_bit": {
+    "n_a": 865.3,
+    "n_b": 865.3,
+    "n_y": 1026.3,
+    "t_out": 1026.3
+   },
+   "intra_tile_bound_bit_um": 1493425766.4
+  },
+  {
+   "faces": {
+    "n_a": "W",
+    "n_b": "W",
+    "n_y": "S",
+    "t_out": "W"
+   },
+   "bit_um": 1768305606.708,
+   "delta_bit_um": 26151567.5,
+   "delta_pct": 1.501,
+   "worst_pair_um": 22332.172,
+   "relay_bit_stages": 2852270,
+   "delta_relay_bit_stages": 10280,
+   "family_delta_bit_um": {
+    "tree_block": 27421052.9,
+    "tree_spine": -1269485.4
+   },
+   "intra_tile_shift_um_per_bit": {
+    "n_a": 0.0,
+    "n_b": 0.0,
+    "n_y": 1001.9,
+    "t_out": 0.0
+   },
+   "intra_tile_bound_bit_um": 395502028.8
+  },
+  {
+   "faces": {
+    "n_a": "W",
+    "n_b": "N",
+    "n_y": "E",
+    "t_out": "W"
+   },
+   "bit_um": 1773040899.556,
+   "delta_bit_um": 30886860.4,
+   "delta_pct": 1.773,
+   "worst_pair_um": 21667.564,
+   "relay_bit_stages": 2931426,
+   "delta_relay_bit_stages": 89436,
+   "family_delta_bit_um": {
+    "tree_block": 30629597.2,
+    "tree_spine": 257263.2
+   },
+   "intra_tile_shift_um_per_bit": {
+    "n_a": 0.0,
+    "n_b": 865.3,
+    "n_y": 511.7,
+    "t_out": 0.0
+   },
+   "intra_tile_bound_bit_um": 543573504.0
+  },
+  {
+   "faces": {
+    "n_a": "W",
+    "n_b": "W",
+    "n_y": "N",
+    "t_out": "W"
+   },
+   "bit_um": 1782118225.908,
+   "delta_bit_um": 39964186.7,
+   "delta_pct": 2.294,
+   "worst_pair_um": 20969.844,
+   "relay_bit_stages": 2958668,
+   "delta_relay_bit_stages": 116678,
+   "family_delta_bit_um": {
+    "tree_block": 36249681.4,
+    "tree_spine": 3714505.3
+   },
+   "intra_tile_shift_um_per_bit": {
+    "n_a": 0.0,
+    "n_b": 0.0,
+    "n_y": 1026.3,
+    "t_out": 0.0
+   },
+   "intra_tile_bound_bit_um": 405133977.6
+  },
+  {
+   "faces": {
+    "n_a": "S",
+    "n_b": "S",
+    "n_y": "E",
+    "t_out": "S"
+   },
+   "bit_um": 1787221180.9,
+   "delta_bit_um": 45067141.7,
+   "delta_pct": 2.587,
+   "worst_pair_um": 21667.564,
+   "relay_bit_stages": 2996190,
+   "delta_relay_bit_stages": 154200,
+   "family_delta_bit_um": {
+    "tree_block": 44809878.5,
+    "tree_spine": 257263.2
+   },
+   "intra_tile_shift_um_per_bit": {
+    "n_a": 777.9,
+    "n_b": 889.9,
+    "n_y": 511.7,
+    "t_out": 1113.9
+   },
+   "intra_tile_bound_bit_um": 1300076236.8
+  },
+  {
+   "faces": {
+    "n_a": "E",
+    "n_b": "E",
+    "n_y": "E",
+    "t_out": "W"
+   },
+   "bit_um": 1790250507.748,
+   "delta_bit_um": 48096468.5,
+   "delta_pct": 2.761,
+   "worst_pair_um": 21667.564,
+   "relay_bit_stages": 2820402,
+   "delta_relay_bit_stages": -21588,
+   "family_delta_bit_um": {
+    "tree_block": 47839205.4,
+    "tree_spine": 257263.2
+   },
+   "intra_tile_shift_um_per_bit": {
+    "n_a": 526.5,
+    "n_b": 526.5,
+    "n_y": 511.7,
+    "t_out": 0.0
+   },
+   "intra_tile_bound_bit_um": 617668454.4
+  },
+  {
+   "faces": {
+    "n_a": "N",
+    "n_b": "W",
+    "n_y": "N",
+    "t_out": "W"
+   },
+   "bit_um": 1791665697.78,
+   "delta_bit_um": 49511658.6,
+   "delta_pct": 2.842,
+   "worst_pair_um": 20969.844,
+   "relay_bit_stages": 2884652,
+   "delta_relay_bit_stages": 42662,
+   "family_delta_bit_um": {
+    "tree_block": 45797153.3,
+    "tree_spine": 3714505.3
+   },
+   "intra_tile_shift_um_per_bit": {
+    "n_a": 865.3,
+    "n_b": 0.0,
+    "n_y": 1026.3,
+    "t_out": 0.0
+   },
+   "intra_tile_bound_bit_um": 746712883.2
+  },
+  {
+   "faces": {
+    "n_a": "W",
+    "n_b": "S",
+    "n_y": "E",
+    "t_out": "W"
+   },
+   "bit_um": 1796252317.156,
+   "delta_bit_um": 54098278.0,
+   "delta_pct": 3.105,
+   "worst_pair_um": 21667.564,
+   "relay_bit_stages": 2946846,
+   "delta_relay_bit_stages": 104856,
+   "family_delta_bit_um": {
+    "tree_block": 53841014.8,
+    "tree_spine": 257263.2
+   },
+   "intra_tile_shift_um_per_bit": {
+    "n_a": 0.0,
+    "n_b": 889.9,
+    "n_y": 511.7,
+    "t_out": 0.0
+   },
+   "intra_tile_bound_bit_um": 553284403.2
+  },
+  {
+   "faces": {
+    "n_a": "S",
+    "n_b": "E",
+    "n_y": "S",
+    "t_out": "S"
+   },
+   "bit_um": 1805043596.34,
+   "delta_bit_um": 62889557.1,
+   "delta_pct": 3.61,
+   "worst_pair_um": 22332.172,
+   "relay_bit_stages": 2960210,
+   "delta_relay_bit_stages": 118220,
+   "family_delta_bit_um": {
+    "tree_block": 64159042.6,
+    "tree_spine": -1269485.4
+   },
+   "intra_tile_shift_um_per_bit": {
+    "n_a": 777.9,
+    "n_b": 526.5,
+    "n_y": 1001.9,
+    "t_out": 1113.9
+   },
+   "intra_tile_bound_bit_um": 1350130790.4
+  },
+  {
+   "faces": {
+    "n_a": "N",
+    "n_b": "E",
+    "n_y": "E",
+    "t_out": "W"
+   },
+   "bit_um": 1808708321.764,
+   "delta_bit_um": 66554282.6,
+   "delta_pct": 3.82,
+   "worst_pair_um": 21667.564,
+   "relay_bit_stages": 2869746,
+   "delta_relay_bit_stages": 27756,
+   "family_delta_bit_um": {
+    "tree_block": 66297019.4,
+    "tree_spine": 257263.2
+   },
+   "intra_tile_shift_um_per_bit": {
+    "n_a": 865.3,
+    "n_b": 526.5,
+    "n_y": 511.7,
+    "t_out": 0.0
+   },
+   "intra_tile_bound_bit_um": 751410432.0
+  },
+  {
+   "faces": {
+    "n_a": "S",
+    "n_b": "E",
+    "n_y": "S",
+    "t_out": "W"
+   },
+   "bit_um": 1813507079.22,
+   "delta_bit_um": 71353040.0,
+   "delta_pct": 4.096,
+   "worst_pair_um": 22332.172,
+   "relay_bit_stages": 2762834,
+   "delta_relay_bit_stages": -79156,
+   "family_delta_bit_um": {
+    "tree_block": 72622525.4,
+    "tree_spine": -1269485.4
+   },
+   "intra_tile_shift_um_per_bit": {
+    "n_a": 777.9,
+    "n_b": 526.5,
+    "n_y": 1001.9,
+    "t_out": 0.0
+   },
+   "intra_tile_bound_bit_um": 910416537.6
+  },
+  {
+   "faces": {
+    "n_a": "E",
+    "n_b": "E",
+    "n_y": "E",
+    "t_out": "E"
+   },
+   "bit_um": 1814946192.868,
+   "delta_bit_um": 72792153.7,
+   "delta_pct": 4.178,
+   "worst_pair_um": 21667.564,
+   "relay_bit_stages": 2820402,
+   "delta_relay_bit_stages": -21588,
+   "family_delta_bit_um": {
+    "tree_block": 72534890.5,
+    "tree_spine": 257263.2
+   },
+   "intra_tile_shift_um_per_bit": {
+    "n_a": 526.5,
+    "n_b": 526.5,
+    "n_y": 511.7,
+    "t_out": 511.7
+   },
+   "intra_tile_bound_bit_um": 819663052.8
+  },
+  {
+   "faces": {
+    "n_a": "N",
+    "n_b": "N",
+    "n_y": "E",
+    "t_out": "N"
+   },
+   "bit_um": 1816495989.22,
+   "delta_bit_um": 74341950.0,
+   "delta_pct": 4.267,
+   "worst_pair_um": 21667.564,
+   "relay_bit_stages": 2857410,
+   "delta_relay_bit_stages": 15420,
+   "family_delta_bit_um": {
+    "tree_block": 74084686.8,
+    "tree_spine": 257263.2
+   },
+   "intra_tile_shift_um_per_bit": {
+    "n_a": 865.3,
+    "n_b": 865.3,
+    "n_y": 511.7,
+    "t_out": 1026.3
+   },
+   "intra_tile_bound_bit_um": 1290286387.2
+  },
+  {
+   "faces": {
+    "n_a": "E",
+    "n_b": "W",
+    "n_y": "E",
+    "t_out": "W"
+   },
+   "bit_um": 1830365205.988,
+   "delta_bit_um": 88211166.8,
+   "delta_pct": 5.063,
+   "worst_pair_um": 21667.564,
+   "relay_bit_stages": 2959182,
+   "delta_relay_bit_stages": 117192,
+   "family_delta_bit_um": {
+    "tree_block": 87953903.6,
+    "tree_spine": 257263.2
+   },
+   "intra_tile_shift_um_per_bit": {
+    "n_a": 526.5,
+    "n_b": 0.0,
+    "n_y": 511.7,
+    "t_out": 0.0
+   },
+   "intra_tile_bound_bit_um": 409831526.4
+  },
+  {
+   "faces": {
+    "n_a": "W",
+    "n_b": "N",
+    "n_y": "W",
+    "t_out": "W"
+   },
+   "bit_um": 1831545646.052,
+   "delta_bit_um": 89391606.8,
+   "delta_pct": 5.131,
+   "worst_pair_um": 21281.036,
+   "relay_bit_stages": 3033198,
+   "delta_relay_bit_stages": 191208,
+   "family_delta_bit_um": {
+    "tree_block": 89391590.4,
+    "tree_spine": 16.4
+   },
+   "intra_tile_shift_um_per_bit": {
+    "n_a": 0.0,
+    "n_b": 865.3,
+    "n_y": 0.0,
+    "t_out": 0.0
+   },
+   "intra_tile_bound_bit_um": 341578905.6
+  },
+  {
+   "faces": {
+    "n_a": "W",
+    "n_b": "E",
+    "n_y": "E",
+    "t_out": "E"
+   },
+   "bit_um": 1845507892.708,
+   "delta_bit_um": 103353853.5,
+   "delta_pct": 5.933,
+   "worst_pair_um": 21667.564,
+   "relay_bit_stages": 2943762,
+   "delta_relay_bit_stages": 101772,
+   "family_delta_bit_um": {
+    "tree_block": 103096590.3,
+    "tree_spine": 257263.2
+   },
+   "intra_tile_shift_um_per_bit": {
+    "n_a": 0.0,
+    "n_b": 526.5,
+    "n_y": 511.7,
+    "t_out": 511.7
+   },
+   "intra_tile_bound_bit_um": 611826124.8
+  }
+ ],
+ "combos": 256,
+ "qualification": false,
+ "unknowns": [
+  "Intra-tile wire from moved pin to node/leaf logic: bounded by intra_tile_shift (logic not yet placed for the new tile).",
+  "E/N face windows chosen clear of tap/rst/tie/tile_id/ck; actual M4/M5 access/OBS not checked.",
+  "Over-tile crossings sampled every 64th bit; M8/M9 track supply not modelled.",
+  "Tile compression successor (481.68x1400.22, TX198) changes outline; re-run on its LEF when frozen."
+ ]
+}

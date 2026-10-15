@@ -27,6 +27,14 @@ module ot_hgi_sv_lmem #(parameter integer N = 16, LWB = 18, AW = 24, NR = N / 8,
   input wire [31:0] ldr_v, input wire [32*15-1:0] ldr_sec, output wire [31:0] ldr_rv, output wire [32*256-1:0] ldr_d, output wire [32*12-1:0] ldr_em,
   input wire [3:0] rf_clr, input wire rf_rv, input wire [4:0] rf_rsec, output wire rf_rrv, output wire [255:0] rf_rd, output wire [7:0] rf_rm,
   output reg bank_err);
+`ifndef SYNTHESIS
+`ifdef SV_PORT_CENSUS
+    ot_hbm_su_port_census #(.N(N),.LWB(LWB),.AW(AW),.NR(NR)) u_port_census(
+      .clk(clk),.rst_n(rst_n),.vi_re(vi_re),.vi_addr(vi_addr),.rd_re(rd_re),.rd_addr(rd_addr),
+      .vm_we(vm_we),.vm_waddr(vm_waddr),.res_we(res_we),.res_addr(res_addr),
+      .lsw_v(lsw_v),.lsw_sec(lsw_sec),.ldr_v(ldr_v),.ldr_sec(ldr_sec));
+`endif
+`endif
     localparam integer LW = 1 << LWB, LS = 15, NSEC = LW / 8;
     /* verilator lint_off BLKSEQ */
     reg [31:0] lm [0:LW-1];
@@ -629,13 +637,16 @@ module ot_hgi_sv_head #(
     wire           st_err = hst[NSJ+32];
 
     // ================================================================================================= input sync
-    reg ready_q, idle_q, vfault_q, rg_q, wg_q, vr_ack, lm_err_q;
+    // r5 (native pin audit of CLOSED mul7: capture 229.9 ps on vmr[256] / vmr[273] = the AND in front of vr_ack): both
+    // bits land in their own pin flops and vr_ack is their AND (same cycle as the registered AND).
+    reg ready_q, idle_q, vfault_q, rg_q, wg_q, vr_v, vr_l, lm_err_q;
+    wire vr_ack = vr_v && vr_l;
     always @(posedge clk or negedge rr_hd[2]) begin
         if (!rr_hd[2]) begin
-            ready_q <= 1'b0; idle_q <= 1'b0; vfault_q <= 1'b0; rg_q <= 1'b0; wg_q <= 1'b0; vr_ack <= 1'b0; lm_err_q <= 1'b0;
+            ready_q <= 1'b0; idle_q <= 1'b0; vfault_q <= 1'b0; rg_q <= 1'b0; wg_q <= 1'b0; vr_v <= 1'b0; vr_l <= 1'b0; lm_err_q <= 1'b0;
         end else begin
             ready_q <= ready; idle_q <= idle; vfault_q <= vfault; rg_q <= rg_gnt && rg_req; wg_q <= wg_gnt && wg_req;
-            vr_ack <= vmr[273] && vmr[256]; lm_err_q <= lm_err;
+            vr_v <= vmr[273]; vr_l <= vmr[256]; lm_err_q <= lm_err;
         end
     end
     assign am_stream = 523'd0;
@@ -645,7 +656,7 @@ module ot_hgi_sv_head #(
     // su_ret is the echo (ignored); any other adapter rec_done is a nop record (ring entry, retires in order).
     wire op_v; wire [669:0] op_w; wire [1:0] strm; reg op_rdy_r, su_ret, ret_echo, su_fault_r;
     wire ad_done, ad_fault, ad_halted, ad_drained, ad_lg_rdy;      // (the last two are unused: LEGACY = 0)
-    ot_hgi_su_record #(.LEGACY(0), .GLU(GLU), .STREAM_OK(0), .PAYLOAD_RESET(PAYLOAD_RESET), .PIPED(1)) u_rec (
+    ot_hgi_su_record #(.LEGACY(0), .GLU(GLU), .STREAM_OK(0), .PAYLOAD_RESET(PAYLOAD_RESET), .PIPED(1), .RDY_REG(1)) u_rec (
         .clk(clk), .rst_n(rr_hd[7]), .hgi_en(1'b1), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(rec_hdr), .rec_sut(rec_sut), .rec_a(rec_a), .rec_b(rec_b), .rec_c(rec_c), .rec_d(rec_d), .rec_o(rec_o),
         .rec_r(rec_r), .rec_i(rec_i), .rec_n_a(rec_n_a), .rec_done(ad_done), .rec_fault(ad_fault), .halted(ad_halted),

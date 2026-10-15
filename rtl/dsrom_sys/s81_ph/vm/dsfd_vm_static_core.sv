@@ -23,7 +23,7 @@
 // 6 LARM (groups 0 / 5 / 6 here); legacy collective ops 5/7/group7 fault. Done = the seq's fixed DLAT.
 // Every service fault is ORed onto the engine's legacy-fault input (seq flt[10] -> c_st[0]).
 // ---------------------------------------------------------------------------------------------------------------
-module dsfd_vm_static_core #(parameter integer READ_PIPE=0) (
+module dsfd_vm_static_core #(parameter integer READ_PIPE=0) (  // READ_PIPE 0 legacy L12 | 1 router L13 | 2 pin-registered router L14
     // cks owns this core's bounded local control registers. Every child root is an explicit
     // independently deliverable clock pin; tying these pins is a TESTBENCH decision only.
     input  wire          cks, rss,
@@ -202,6 +202,9 @@ module dsfd_vm_static_core #(parameter integer READ_PIPE=0) (
 
     end else begin : bounded_read
         wire [7:0] read_fault;
+        // READ_PIPE 1: R0/R1 leaves (L13).  READ_PIPE 2: the same leaves with every input pin-registered
+        // (dsfd_vm_static_read_router_p, L14; native capture audit 2026-10-15).
+        if (READ_PIPE == 1) begin : l13
         dsfd_vm_static_read_router u_read (
             .ck_data(ck_read_data), .ck_valid(ck_read_valid),
             .rst_data_n(rst_read_data_n), .rst_valid_n(rst_read_valid_n),
@@ -210,6 +213,16 @@ module dsfd_vm_static_core #(parameter integer READ_PIPE=0) (
             .n_data({t_hc_rs,t_su_rs}), .n_valid({t_hc_rsv,t_su_rsv}),
             .pq_data(t_pqx[2048:1]), .pq_valid(t_pqx[0]), .x_data(x_rd), .x_valid(x_rv),
             .mx_data(t_mx_rs), .mx_valid(t_mx_rsv), .fault(read_fault));
+        end else begin : l14
+        dsfd_vm_static_read_router_p u_read (
+            .ck_data(ck_read_data), .ck_valid(ck_read_valid),
+            .rst_data_n(rst_read_data_n), .rst_valid_n(rst_read_valid_n),
+            .slot_data(grp_d), .slot_valid(grp_v), .n_expected(exp_v), .n_slot(rel_s),
+            .aux_expected(aux_exp), .mx_expected(mx_exp), .mx_slot(mx_sl),
+            .n_data({t_hc_rs,t_su_rs}), .n_valid({t_hc_rsv,t_su_rsv}),
+            .pq_data(t_pqx[2048:1]), .pq_valid(t_pqx[0]), .x_data(x_rd), .x_valid(x_rv),
+            .mx_data(t_mx_rs), .mx_valid(t_mx_rsv), .fault(read_fault));
+        end
         // This diagnostic reduction belongs to the existing explicit core-control root.
         // One additional observation edge; it never gates data or extends a schedule.
         reg fault_q;

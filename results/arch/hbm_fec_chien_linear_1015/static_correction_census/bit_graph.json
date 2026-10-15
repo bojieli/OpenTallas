@@ -1,0 +1,1310 @@
+{
+  "scope": "ACTUAL_SCALAR_NETLIST_CONNECTIVITY_AND_LOGIC_DEPTH_NO_PHYSICAL_TIMING",
+  "input_sha256": "ee637cd3b23f06c6a7c2c65aa64b024fbd333211a2c163506d50be4931303b1c",
+  "tool_sha256": "3622f559546a0962a57148892a1395e42c5f77a1f5d4e95c1822536fbf7cd3e1",
+  "total_flop_bits": 85638,
+  "clock_roots": {
+    "clk": {
+      "flop_bits": 3756,
+      "max_D_logic_levels": 28,
+      "max_enable_or_sync_reset_logic_levels": 23,
+      "top_D_paths": [
+        {
+          "levels": 28,
+          "sink_cell": "$auto$ff.cc:337:slice$1342788",
+          "source_roots": [
+            "clk",
+            "clk_codeword"
+          ]
+        },
+        {
+          "levels": 28,
+          "sink_cell": "$auto$ff.cc:337:slice$1342787",
+          "source_roots": [
+            "clk",
+            "clk_codeword"
+          ]
+        },
+        {
+          "levels": 28,
+          "sink_cell": "$auto$ff.cc:337:slice$1342786",
+          "source_roots": [
+            "clk",
+            "clk_codeword"
+          ]
+        },
+        {
+          "levels": 28,
+          "sink_cell": "$auto$ff.cc:337:slice$1342785",
+          "source_roots": [
+            "clk",
+            "clk_codeword"
+          ]
+        },
+        {
+          "levels": 28,
+          "sink_cell": "$auto$ff.cc:337:slice$1342784",
+          "source_roots": [
+            "clk",
+            "clk_codeword"
+          ]
+        },
+        {
+          "levels": 28,
+          "sink_cell": "$auto$ff.cc:337:slice$1342783",
+          "source_roots": [
+            "clk",
+            "clk_codeword"
+          ]
+        },
+        {
+          "levels": 28,
+          "sink_cell": "$auto$ff.cc:337:slice$1342782",
+          "source_roots": [
+            "clk",
+            "clk_codeword"
+          ]
+        },
+        {
+          "levels": 28,
+          "sink_cell": "$auto$ff.cc:337:slice$1342781",
+          "source_roots": [
+            "clk",
+            "clk_codeword"
+          ]
+        }
+      ],
+      "registered_source_Q_bits_exact": {
+        "clk": 2232,
+        "rclk_emit": 7800,
+        "clk_codeword": 5403,
+        "pma_rck": 1
+      },
+      "registered_destination_roots_Q_bits_exact": {
+        "clk": 2232,
+        "clk_encode": 502,
+        "clk_codeword": 7,
+        "clk_collect": 493,
+        "rclk_emit": 5
+      },
+      "max_Q_fanout": 6929,
+      "D_distinct_net_bits": 3751
+    },
+    "clk_collect": {
+      "flop_bits": 4608,
+      "max_D_logic_levels": 49,
+      "max_enable_or_sync_reset_logic_levels": 2,
+      "top_D_paths": [
+        {
+          "levels": 49,
+          "sink_cell": "$auto$ff.cc:337:slice$2701981",
+          "source_roots": [
+            "clk",
+            "clk_collect"
+          ]
+        },
+        {
+          "levels": 49,
+          "sink_cell": "$auto$ff.cc:337:slice$2701980",
+          "source_roots": [
+            "clk",
+            "clk_collect"
+          ]
+        },
+        {
+          "levels": 49,
+          "sink_cell": "$auto$ff.cc:337:slice$2701979",
+          "source_roots": [
+            "clk",
+            "clk_collect"
+          ]
+        },
+        {
+          "levels": 49,
+          "sink_cell": "$auto$ff.cc:337:slice$2701978",
+          "source_roots": [
+            "clk",
+            "clk_collect"
+          ]
+        },
+        {
+          "levels": 49,
+          "sink_cell": "$auto$ff.cc:337:slice$2701977",
+          "source_roots": [
+            "clk",
+            "clk_collect"
+          ]
+        },
+        {
+          "levels": 49,
+          "sink_cell": "$auto$ff.cc:337:slice$2701976",
+          "source_roots": [
+            "clk",
+            "clk_collect"
+          ]
+        },
+        {
+          "levels": 49,
+          "sink_cell": "$auto$ff.cc:337:slice$2701975",
+          "source_roots": [
+            "clk",
+            "clk_collect"
+          ]
+        },
+        {
+          "levels": 49,
+          "sink_cell": "$auto$ff.cc:337:slice$2701974",
+          "source_roots": [
+            "clk",
+            "clk_collect"
+          ]
+        }
+      ],
+      "registered_source_Q_bits_exact": {
+        "clk_collect": 4608,
+        "clk": 493
+      },
+      "registered_destination_roots_Q_bits_exact": {
+        "clk_collect": 4608,
+        "clk_encode": 4608
+      },
+      "max_Q_fanout": 1,
+      "D_distinct_net_bits": 4608
+    },
+    "clk_encode": {
+      "flop_bits": 5403,
+      "max_D_logic_levels": 22,
+      "max_enable_or_sync_reset_logic_levels": 6,
+      "top_D_paths": [
+        {
+          "levels": 22,
+          "sink_cell": "$auto$ff.cc:337:slice$2740058",
+          "source_roots": [
+            "clk",
+            "clk_encode"
+          ]
+        },
+        {
+          "levels": 22,
+          "sink_cell": "$auto$ff.cc:337:slice$2740057",
+          "source_roots": [
+            "clk",
+            "clk_encode"
+          ]
+        },
+        {
+          "levels": 22,
+          "sink_cell": "$auto$ff.cc:337:slice$2740056",
+          "source_roots": [
+            "clk",
+            "clk_encode"
+          ]
+        },
+        {
+          "levels": 22,
+          "sink_cell": "$auto$ff.cc:337:slice$2740055",
+          "source_roots": [
+            "clk",
+            "clk_encode"
+          ]
+        },
+        {
+          "levels": 22,
+          "sink_cell": "$auto$ff.cc:337:slice$2740054",
+          "source_roots": [
+            "clk",
+            "clk_encode"
+          ]
+        },
+        {
+          "levels": 22,
+          "sink_cell": "$auto$ff.cc:337:slice$2740053",
+          "source_roots": [
+            "clk",
+            "clk_encode"
+          ]
+        },
+        {
+          "levels": 22,
+          "sink_cell": "$auto$ff.cc:337:slice$2740052",
+          "source_roots": [
+            "clk",
+            "clk_encode"
+          ]
+        },
+        {
+          "levels": 22,
+          "sink_cell": "$auto$ff.cc:337:slice$2740051",
+          "source_roots": [
+            "clk",
+            "clk_encode"
+          ]
+        }
+      ],
+      "registered_source_Q_bits_exact": {
+        "clk_encode": 5403,
+        "clk": 502,
+        "clk_collect": 4608
+      },
+      "registered_destination_roots_Q_bits_exact": {
+        "clk_encode": 5403,
+        "clk_codeword": 5403
+      },
+      "max_Q_fanout": 25,
+      "D_distinct_net_bits": 5403
+    },
+    "clk_codeword": {
+      "flop_bits": 5403,
+      "max_D_logic_levels": 20,
+      "max_enable_or_sync_reset_logic_levels": 7,
+      "top_D_paths": [
+        {
+          "levels": 20,
+          "sink_cell": "$auto$ff.cc:337:slice$2660415",
+          "source_roots": [
+            "clk",
+            "clk_encode"
+          ]
+        },
+        {
+          "levels": 20,
+          "sink_cell": "$auto$ff.cc:337:slice$2660414",
+          "source_roots": [
+            "clk",
+            "clk_encode"
+          ]
+        },
+        {
+          "levels": 20,
+          "sink_cell": "$auto$ff.cc:337:slice$2660413",
+          "source_roots": [
+            "clk",
+            "clk_encode"
+          ]
+        },
+        {
+          "levels": 20,
+          "sink_cell": "$auto$ff.cc:337:slice$2660412",
+          "source_roots": [
+            "clk",
+            "clk_encode"
+          ]
+        },
+        {
+          "levels": 20,
+          "sink_cell": "$auto$ff.cc:337:slice$2660411",
+          "source_roots": [
+            "clk",
+            "clk_encode"
+          ]
+        },
+        {
+          "levels": 20,
+          "sink_cell": "$auto$ff.cc:337:slice$2660410",
+          "source_roots": [
+            "clk",
+            "clk_encode"
+          ]
+        },
+        {
+          "levels": 20,
+          "sink_cell": "$auto$ff.cc:337:slice$2660409",
+          "source_roots": [
+            "clk",
+            "clk_encode"
+          ]
+        },
+        {
+          "levels": 20,
+          "sink_cell": "$auto$ff.cc:337:slice$2660408",
+          "source_roots": [
+            "clk",
+            "clk_encode"
+          ]
+        }
+      ],
+      "registered_source_Q_bits_exact": {
+        "clk_encode": 5403,
+        "clk": 7
+      },
+      "registered_destination_roots_Q_bits_exact": {
+        "clk": 5403
+      },
+      "max_Q_fanout": 2,
+      "D_distinct_net_bits": 5403
+    },
+    "pma_rck": {
+      "flop_bits": 7627,
+      "max_D_logic_levels": 58,
+      "max_enable_or_sync_reset_logic_levels": 26,
+      "top_D_paths": [
+        {
+          "levels": 58,
+          "sink_cell": "$auto$ff.cc:337:slice$2671165",
+          "source_roots": [
+            "pma_rck"
+          ]
+        },
+        {
+          "levels": 58,
+          "sink_cell": "$auto$ff.cc:337:slice$2671164",
+          "source_roots": [
+            "pma_rck"
+          ]
+        },
+        {
+          "levels": 58,
+          "sink_cell": "$auto$ff.cc:337:slice$2671163",
+          "source_roots": [
+            "pma_rck"
+          ]
+        },
+        {
+          "levels": 58,
+          "sink_cell": "$auto$ff.cc:337:slice$2671162",
+          "source_roots": [
+            "pma_rck"
+          ]
+        },
+        {
+          "levels": 58,
+          "sink_cell": "$auto$ff.cc:337:slice$2671161",
+          "source_roots": [
+            "pma_rck"
+          ]
+        },
+        {
+          "levels": 58,
+          "sink_cell": "$auto$ff.cc:337:slice$2671160",
+          "source_roots": [
+            "pma_rck"
+          ]
+        },
+        {
+          "levels": 58,
+          "sink_cell": "$auto$ff.cc:337:slice$2671159",
+          "source_roots": [
+            "pma_rck"
+          ]
+        },
+        {
+          "levels": 58,
+          "sink_cell": "$auto$ff.cc:337:slice$2671158",
+          "source_roots": [
+            "pma_rck"
+          ]
+        }
+      ],
+      "registered_source_Q_bits_exact": {
+        "pma_rck": 7626
+      },
+      "registered_destination_roots_Q_bits_exact": {
+        "pma_rck": 7626,
+        "rclk_syndrome": 5442,
+        "clk": 1,
+        "rclk_bm0": 1,
+        "rclk_bm1": 1,
+        "rclk_bm2": 1,
+        "rclk_bm3": 1,
+        "rclk_chien": 1,
+        "rclk_emit": 1
+      },
+      "max_Q_fanout": 1133,
+      "D_distinct_net_bits": 7626
+    },
+    "rclk_syndrome": {
+      "flop_bits": 5747,
+      "max_D_logic_levels": 21,
+      "max_enable_or_sync_reset_logic_levels": 5,
+      "top_D_paths": [
+        {
+          "levels": 21,
+          "sink_cell": "$auto$ff.cc:337:slice$2739924",
+          "source_roots": [
+            "rclk_syndrome"
+          ]
+        },
+        {
+          "levels": 21,
+          "sink_cell": "$auto$ff.cc:337:slice$2739923",
+          "source_roots": [
+            "rclk_syndrome"
+          ]
+        },
+        {
+          "levels": 21,
+          "sink_cell": "$auto$ff.cc:337:slice$2739922",
+          "source_roots": [
+            "rclk_syndrome"
+          ]
+        },
+        {
+          "levels": 21,
+          "sink_cell": "$auto$ff.cc:337:slice$2739921",
+          "source_roots": [
+            "rclk_syndrome"
+          ]
+        },
+        {
+          "levels": 21,
+          "sink_cell": "$auto$ff.cc:337:slice$2739920",
+          "source_roots": [
+            "rclk_syndrome"
+          ]
+        },
+        {
+          "levels": 21,
+          "sink_cell": "$auto$ff.cc:337:slice$2739919",
+          "source_roots": [
+            "rclk_syndrome"
+          ]
+        },
+        {
+          "levels": 21,
+          "sink_cell": "$auto$ff.cc:337:slice$2739918",
+          "source_roots": [
+            "rclk_syndrome"
+          ]
+        },
+        {
+          "levels": 21,
+          "sink_cell": "$auto$ff.cc:337:slice$2739917",
+          "source_roots": [
+            "rclk_syndrome"
+          ]
+        }
+      ],
+      "registered_source_Q_bits_exact": {
+        "pma_rck": 5442,
+        "rclk_syndrome": 5747
+      },
+      "registered_destination_roots_Q_bits_exact": {
+        "rclk_syndrome": 5747,
+        "rclk_bm0": 5747,
+        "rclk_bm1": 5747,
+        "rclk_bm2": 5747,
+        "rclk_bm3": 5747,
+        "rclk_chien": 7
+      },
+      "max_Q_fanout": 307,
+      "D_distinct_net_bits": 5747
+    },
+    "rclk_bm0": {
+      "flop_bits": 6984,
+      "max_D_logic_levels": 90,
+      "max_enable_or_sync_reset_logic_levels": 56,
+      "top_D_paths": [
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2739734",
+          "source_roots": [
+            "rclk_bm0"
+          ]
+        },
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2739733",
+          "source_roots": [
+            "rclk_bm0"
+          ]
+        },
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2739732",
+          "source_roots": [
+            "rclk_bm0"
+          ]
+        },
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2739731",
+          "source_roots": [
+            "rclk_bm0"
+          ]
+        },
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2739730",
+          "source_roots": [
+            "rclk_bm0"
+          ]
+        },
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2739729",
+          "source_roots": [
+            "rclk_bm0"
+          ]
+        },
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2739728",
+          "source_roots": [
+            "rclk_bm0"
+          ]
+        },
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2739727",
+          "source_roots": [
+            "rclk_bm0"
+          ]
+        }
+      ],
+      "registered_source_Q_bits_exact": {
+        "rclk_syndrome": 5747,
+        "rclk_bm3": 300,
+        "rclk_bm1": 300,
+        "rclk_bm0": 1243,
+        "rclk_bm2": 300,
+        "pma_rck": 1
+      },
+      "registered_destination_roots_Q_bits_exact": {
+        "rclk_bm0": 1243,
+        "rclk_chien": 6064,
+        "rclk_bm1": 300,
+        "rclk_bm2": 300,
+        "rclk_bm3": 300
+      },
+      "max_Q_fanout": 637,
+      "D_distinct_net_bits": 6983
+    },
+    "rclk_bm1": {
+      "flop_bits": 6984,
+      "max_D_logic_levels": 90,
+      "max_enable_or_sync_reset_logic_levels": 56,
+      "top_D_paths": [
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2732036",
+          "source_roots": [
+            "rclk_bm1"
+          ]
+        },
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2732035",
+          "source_roots": [
+            "rclk_bm1"
+          ]
+        },
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2732034",
+          "source_roots": [
+            "rclk_bm1"
+          ]
+        },
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2732033",
+          "source_roots": [
+            "rclk_bm1"
+          ]
+        },
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2732032",
+          "source_roots": [
+            "rclk_bm1"
+          ]
+        },
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2732031",
+          "source_roots": [
+            "rclk_bm1"
+          ]
+        },
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2732030",
+          "source_roots": [
+            "rclk_bm1"
+          ]
+        },
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2732029",
+          "source_roots": [
+            "rclk_bm1"
+          ]
+        }
+      ],
+      "registered_source_Q_bits_exact": {
+        "rclk_syndrome": 5747,
+        "rclk_bm3": 300,
+        "rclk_bm1": 1243,
+        "rclk_bm0": 300,
+        "rclk_bm2": 300,
+        "pma_rck": 1
+      },
+      "registered_destination_roots_Q_bits_exact": {
+        "rclk_chien": 6064,
+        "rclk_bm0": 300,
+        "rclk_bm1": 1243,
+        "rclk_bm2": 300,
+        "rclk_bm3": 300
+      },
+      "max_Q_fanout": 637,
+      "D_distinct_net_bits": 6983
+    },
+    "rclk_bm2": {
+      "flop_bits": 6984,
+      "max_D_logic_levels": 90,
+      "max_enable_or_sync_reset_logic_levels": 56,
+      "top_D_paths": [
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2740128",
+          "source_roots": [
+            "rclk_bm2"
+          ]
+        },
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2740127",
+          "source_roots": [
+            "rclk_bm2"
+          ]
+        },
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2740126",
+          "source_roots": [
+            "rclk_bm2"
+          ]
+        },
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2740125",
+          "source_roots": [
+            "rclk_bm2"
+          ]
+        },
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2740124",
+          "source_roots": [
+            "rclk_bm2"
+          ]
+        },
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2740123",
+          "source_roots": [
+            "rclk_bm2"
+          ]
+        },
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2740122",
+          "source_roots": [
+            "rclk_bm2"
+          ]
+        },
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2740121",
+          "source_roots": [
+            "rclk_bm2"
+          ]
+        }
+      ],
+      "registered_source_Q_bits_exact": {
+        "rclk_syndrome": 5747,
+        "rclk_bm3": 300,
+        "rclk_bm1": 300,
+        "rclk_bm2": 1243,
+        "rclk_bm0": 300,
+        "pma_rck": 1
+      },
+      "registered_destination_roots_Q_bits_exact": {
+        "rclk_bm2": 1243,
+        "rclk_chien": 6064,
+        "rclk_bm0": 300,
+        "rclk_bm1": 300,
+        "rclk_bm3": 300
+      },
+      "max_Q_fanout": 637,
+      "D_distinct_net_bits": 6983
+    },
+    "rclk_bm3": {
+      "flop_bits": 6984,
+      "max_D_logic_levels": 90,
+      "max_enable_or_sync_reset_logic_levels": 56,
+      "top_D_paths": [
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2739804",
+          "source_roots": [
+            "rclk_bm3"
+          ]
+        },
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2739803",
+          "source_roots": [
+            "rclk_bm3"
+          ]
+        },
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2739802",
+          "source_roots": [
+            "rclk_bm3"
+          ]
+        },
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2739801",
+          "source_roots": [
+            "rclk_bm3"
+          ]
+        },
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2739800",
+          "source_roots": [
+            "rclk_bm3"
+          ]
+        },
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2739799",
+          "source_roots": [
+            "rclk_bm3"
+          ]
+        },
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2739798",
+          "source_roots": [
+            "rclk_bm3"
+          ]
+        },
+        {
+          "levels": 90,
+          "sink_cell": "$auto$ff.cc:337:slice$2739797",
+          "source_roots": [
+            "rclk_bm3"
+          ]
+        }
+      ],
+      "registered_source_Q_bits_exact": {
+        "rclk_syndrome": 5747,
+        "rclk_bm3": 1243,
+        "rclk_bm1": 300,
+        "rclk_bm0": 300,
+        "rclk_bm2": 300,
+        "pma_rck": 1
+      },
+      "registered_destination_roots_Q_bits_exact": {
+        "rclk_chien": 6064,
+        "rclk_bm0": 300,
+        "rclk_bm1": 300,
+        "rclk_bm2": 300,
+        "rclk_bm3": 1243
+      },
+      "max_Q_fanout": 637,
+      "D_distinct_net_bits": 6983
+    },
+    "rclk_chien": {
+      "flop_bits": 11369,
+      "max_D_logic_levels": 87,
+      "max_enable_or_sync_reset_logic_levels": 15,
+      "top_D_paths": [
+        {
+          "levels": 87,
+          "sink_cell": "$auto$ff.cc:337:slice$2718949",
+          "source_roots": [
+            "rclk_syndrome",
+            "rclk_bm0",
+            "rclk_bm1",
+            "rclk_bm2",
+            "rclk_bm3",
+            "rclk_chien"
+          ]
+        },
+        {
+          "levels": 87,
+          "sink_cell": "$auto$ff.cc:337:slice$2718948",
+          "source_roots": [
+            "rclk_syndrome",
+            "rclk_bm0",
+            "rclk_bm1",
+            "rclk_bm2",
+            "rclk_bm3",
+            "rclk_chien"
+          ]
+        },
+        {
+          "levels": 87,
+          "sink_cell": "$auto$ff.cc:337:slice$2718947",
+          "source_roots": [
+            "rclk_syndrome",
+            "rclk_bm0",
+            "rclk_bm1",
+            "rclk_bm2",
+            "rclk_bm3",
+            "rclk_chien"
+          ]
+        },
+        {
+          "levels": 87,
+          "sink_cell": "$auto$ff.cc:337:slice$2718946",
+          "source_roots": [
+            "rclk_syndrome",
+            "rclk_bm0",
+            "rclk_bm1",
+            "rclk_bm2",
+            "rclk_bm3",
+            "rclk_chien"
+          ]
+        },
+        {
+          "levels": 87,
+          "sink_cell": "$auto$ff.cc:337:slice$2718945",
+          "source_roots": [
+            "rclk_syndrome",
+            "rclk_bm0",
+            "rclk_bm1",
+            "rclk_bm2",
+            "rclk_bm3",
+            "rclk_chien"
+          ]
+        },
+        {
+          "levels": 87,
+          "sink_cell": "$auto$ff.cc:337:slice$2718944",
+          "source_roots": [
+            "rclk_syndrome",
+            "rclk_bm0",
+            "rclk_bm1",
+            "rclk_bm2",
+            "rclk_bm3",
+            "rclk_chien"
+          ]
+        },
+        {
+          "levels": 87,
+          "sink_cell": "$auto$ff.cc:337:slice$2718943",
+          "source_roots": [
+            "rclk_syndrome",
+            "rclk_bm0",
+            "rclk_bm1",
+            "rclk_bm2",
+            "rclk_bm3",
+            "rclk_chien"
+          ]
+        },
+        {
+          "levels": 87,
+          "sink_cell": "$auto$ff.cc:337:slice$2718942",
+          "source_roots": [
+            "rclk_syndrome",
+            "rclk_bm0",
+            "rclk_bm1",
+            "rclk_bm2",
+            "rclk_bm3",
+            "rclk_chien"
+          ]
+        }
+      ],
+      "registered_source_Q_bits_exact": {
+        "rclk_syndrome": 7,
+        "rclk_chien": 5921,
+        "rclk_bm1": 6064,
+        "rclk_bm3": 6064,
+        "rclk_bm2": 6064,
+        "rclk_bm0": 6064,
+        "pma_rck": 1
+      },
+      "registered_destination_roots_Q_bits_exact": {
+        "rclk_chien": 5921,
+        "rclk_emit": 11369
+      },
+      "max_Q_fanout": 5903,
+      "D_distinct_net_bits": 11369
+    },
+    "rclk_emit": {
+      "flop_bits": 13789,
+      "max_D_logic_levels": 87,
+      "max_enable_or_sync_reset_logic_levels": 6,
+      "top_D_paths": [
+        {
+          "levels": 87,
+          "sink_cell": "$auto$ff.cc:337:slice$2707938",
+          "source_roots": [
+            "rclk_chien"
+          ]
+        },
+        {
+          "levels": 87,
+          "sink_cell": "$auto$ff.cc:337:slice$2707937",
+          "source_roots": [
+            "rclk_chien"
+          ]
+        },
+        {
+          "levels": 87,
+          "sink_cell": "$auto$ff.cc:337:slice$2707936",
+          "source_roots": [
+            "rclk_chien"
+          ]
+        },
+        {
+          "levels": 87,
+          "sink_cell": "$auto$ff.cc:337:slice$2707935",
+          "source_roots": [
+            "rclk_chien"
+          ]
+        },
+        {
+          "levels": 87,
+          "sink_cell": "$auto$ff.cc:337:slice$2707934",
+          "source_roots": [
+            "rclk_chien"
+          ]
+        },
+        {
+          "levels": 87,
+          "sink_cell": "$auto$ff.cc:337:slice$2707933",
+          "source_roots": [
+            "rclk_chien"
+          ]
+        },
+        {
+          "levels": 87,
+          "sink_cell": "$auto$ff.cc:337:slice$2707932",
+          "source_roots": [
+            "rclk_chien"
+          ]
+        },
+        {
+          "levels": 87,
+          "sink_cell": "$auto$ff.cc:337:slice$2707931",
+          "source_roots": [
+            "rclk_chien"
+          ]
+        }
+      ],
+      "registered_source_Q_bits_exact": {
+        "rclk_emit": 5991,
+        "rclk_chien": 11369,
+        "clk": 5,
+        "pma_rck": 1
+      },
+      "registered_destination_roots_Q_bits_exact": {
+        "rclk_emit": 5991,
+        "clk": 7800
+      },
+      "max_Q_fanout": 2887,
+      "D_distinct_net_bits": 6482
+    }
+  },
+  "scalar_cells_by_type": {
+    "$_DFF_PN0_": 586,
+    "$_DFF_P_": 4295,
+    "$_DFFE_PP_": 75291,
+    "$_SDFFCE_PP0P_": 4001,
+    "$_DFFE_PN1P_": 20,
+    "$_DFFE_PN0P_": 888,
+    "$_SDFFCE_PP1P_": 13,
+    "$_SDFF_PN0_": 544,
+    "$_NOT_": 4304,
+    "$_XOR_": 369110,
+    "$_OR_": 94282,
+    "$_AND_": 93821,
+    "$_MUX_": 465880,
+    "$scopeinfo": 9
+  },
+  "combinational_scalar_cells": 1027397,
+  "unique_sink_root_comb_cells": {
+    "rclk_bm1": 111753,
+    "rclk_bm2": 111749,
+    "rclk_bm3": 111750,
+    "rclk_chien": 141312,
+    "rclk_bm0": 111732,
+    "pma_rck": 42486,
+    "rclk_emit": 24028,
+    "clk": 55016,
+    "clk_collect": 25824,
+    "rclk_syndrome": 320,
+    "clk_encode": 601,
+    "clk_codeword": 1
+  },
+  "multi_sink_root_shared_comb_cells_by_type": {
+    "$_NOT_": 261,
+    "$_XOR_": 157649,
+    "$_OR_": 10412,
+    "$_AND_": 10734,
+    "$_MUX_": 111769
+  },
+  "no_registered_sink_comb_cells": 0,
+  "cross_root_registered_relations": [
+    {
+      "source_root": "clk",
+      "sink_root": "clk_encode",
+      "distinct_registered_source_bits": 502
+    },
+    {
+      "source_root": "clk",
+      "sink_root": "clk_codeword",
+      "distinct_registered_source_bits": 7
+    },
+    {
+      "source_root": "clk",
+      "sink_root": "clk_collect",
+      "distinct_registered_source_bits": 493
+    },
+    {
+      "source_root": "clk",
+      "sink_root": "rclk_emit",
+      "distinct_registered_source_bits": 5
+    },
+    {
+      "source_root": "clk_collect",
+      "sink_root": "clk_encode",
+      "distinct_registered_source_bits": 4608
+    },
+    {
+      "source_root": "clk_encode",
+      "sink_root": "clk_codeword",
+      "distinct_registered_source_bits": 5403
+    },
+    {
+      "source_root": "clk_codeword",
+      "sink_root": "clk",
+      "distinct_registered_source_bits": 5403
+    },
+    {
+      "source_root": "pma_rck",
+      "sink_root": "rclk_syndrome",
+      "distinct_registered_source_bits": 5442
+    },
+    {
+      "source_root": "pma_rck",
+      "sink_root": "clk",
+      "distinct_registered_source_bits": 1
+    },
+    {
+      "source_root": "pma_rck",
+      "sink_root": "rclk_bm0",
+      "distinct_registered_source_bits": 1
+    },
+    {
+      "source_root": "pma_rck",
+      "sink_root": "rclk_bm1",
+      "distinct_registered_source_bits": 1
+    },
+    {
+      "source_root": "pma_rck",
+      "sink_root": "rclk_bm2",
+      "distinct_registered_source_bits": 1
+    },
+    {
+      "source_root": "pma_rck",
+      "sink_root": "rclk_bm3",
+      "distinct_registered_source_bits": 1
+    },
+    {
+      "source_root": "pma_rck",
+      "sink_root": "rclk_chien",
+      "distinct_registered_source_bits": 1
+    },
+    {
+      "source_root": "pma_rck",
+      "sink_root": "rclk_emit",
+      "distinct_registered_source_bits": 1
+    },
+    {
+      "source_root": "rclk_syndrome",
+      "sink_root": "rclk_bm0",
+      "distinct_registered_source_bits": 5747
+    },
+    {
+      "source_root": "rclk_syndrome",
+      "sink_root": "rclk_bm1",
+      "distinct_registered_source_bits": 5747
+    },
+    {
+      "source_root": "rclk_syndrome",
+      "sink_root": "rclk_bm2",
+      "distinct_registered_source_bits": 5747
+    },
+    {
+      "source_root": "rclk_syndrome",
+      "sink_root": "rclk_bm3",
+      "distinct_registered_source_bits": 5747
+    },
+    {
+      "source_root": "rclk_syndrome",
+      "sink_root": "rclk_chien",
+      "distinct_registered_source_bits": 7
+    },
+    {
+      "source_root": "rclk_bm0",
+      "sink_root": "rclk_chien",
+      "distinct_registered_source_bits": 6064
+    },
+    {
+      "source_root": "rclk_bm0",
+      "sink_root": "rclk_bm1",
+      "distinct_registered_source_bits": 300
+    },
+    {
+      "source_root": "rclk_bm0",
+      "sink_root": "rclk_bm2",
+      "distinct_registered_source_bits": 300
+    },
+    {
+      "source_root": "rclk_bm0",
+      "sink_root": "rclk_bm3",
+      "distinct_registered_source_bits": 300
+    },
+    {
+      "source_root": "rclk_bm1",
+      "sink_root": "rclk_chien",
+      "distinct_registered_source_bits": 6064
+    },
+    {
+      "source_root": "rclk_bm1",
+      "sink_root": "rclk_bm0",
+      "distinct_registered_source_bits": 300
+    },
+    {
+      "source_root": "rclk_bm1",
+      "sink_root": "rclk_bm2",
+      "distinct_registered_source_bits": 300
+    },
+    {
+      "source_root": "rclk_bm1",
+      "sink_root": "rclk_bm3",
+      "distinct_registered_source_bits": 300
+    },
+    {
+      "source_root": "rclk_bm2",
+      "sink_root": "rclk_chien",
+      "distinct_registered_source_bits": 6064
+    },
+    {
+      "source_root": "rclk_bm2",
+      "sink_root": "rclk_bm0",
+      "distinct_registered_source_bits": 300
+    },
+    {
+      "source_root": "rclk_bm2",
+      "sink_root": "rclk_bm1",
+      "distinct_registered_source_bits": 300
+    },
+    {
+      "source_root": "rclk_bm2",
+      "sink_root": "rclk_bm3",
+      "distinct_registered_source_bits": 300
+    },
+    {
+      "source_root": "rclk_bm3",
+      "sink_root": "rclk_chien",
+      "distinct_registered_source_bits": 6064
+    },
+    {
+      "source_root": "rclk_bm3",
+      "sink_root": "rclk_bm0",
+      "distinct_registered_source_bits": 300
+    },
+    {
+      "source_root": "rclk_bm3",
+      "sink_root": "rclk_bm1",
+      "distinct_registered_source_bits": 300
+    },
+    {
+      "source_root": "rclk_bm3",
+      "sink_root": "rclk_bm2",
+      "distinct_registered_source_bits": 300
+    },
+    {
+      "source_root": "rclk_chien",
+      "sink_root": "rclk_emit",
+      "distinct_registered_source_bits": 11369
+    },
+    {
+      "source_root": "rclk_emit",
+      "sink_root": "clk",
+      "distinct_registered_source_bits": 7800
+    }
+  ],
+  "external_ports": {
+    "rst_n": {
+      "width": 1,
+      "registered_sink_roots": {
+        "rclk_emit": 1
+      }
+    },
+    "tx": {
+      "width": 487,
+      "registered_sink_roots": {
+        "clk": 487
+      }
+    },
+    "capture_start": {
+      "width": 1,
+      "registered_sink_roots": {
+        "rclk_emit": 1
+      }
+    },
+    "capture_take": {
+      "width": 1,
+      "registered_sink_roots": {
+        "rclk_emit": 1
+      }
+    },
+    "capture_last": {
+      "width": 1,
+      "registered_sink_roots": {
+        "rclk_emit": 1
+      }
+    },
+    "read_start": {
+      "width": 1,
+      "registered_sink_roots": {
+        "clk": 1
+      }
+    },
+    "read_take": {
+      "width": 1,
+      "registered_sink_roots": {
+        "clk": 1
+      }
+    },
+    "read_last": {
+      "width": 1,
+      "registered_sink_roots": {
+        "clk": 1
+      }
+    },
+    "pma_rx": {
+      "width": 544,
+      "registered_sink_roots": {
+        "pma_rck": 544
+      }
+    }
+  },
+  "external_output_logic_levels": {
+    "rx": 0,
+    "rx_v": 0,
+    "st": 0,
+    "padding_fault": 0,
+    "pma_tx": 0,
+    "pma_tck": 0
+  },
+  "limits": [
+    "Scalar generic logic levels are not library delay",
+    "Edges count distinct source bits, not wire length or physical pins",
+    "All D, clock-enable and synchronous-reset cones counted; asynchronous reset delivery is separate",
+    "Shared combinational cells require explicit owner or priced replication",
+    "Standalone scope excludes joined endpoint and gearbox"
+  ],
+  "physical_qualified": false,
+  "elapsed_seconds": 7.850499285035767
+}

@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "allocations": 128,
+  "frame_reuses": 124,
+  "frames_used": 4,
+  "write_events": 163840,
+  "write_words": 1003520,
+  "drain_events": 81920,
+  "checked_mask_bits": 655360,
+  "qualification": "supplied fixed-cycle calendar proof only; no actual program/native/throughput qualification",
+  "synthetic_calendar": true,
+  "row_words": 5120,
+  "tests_run": 13,
+  "mutants_rejected": 12,
+  "source_sha256": {
+    "tools/hbm_static/su_lifetime_calendar.py": "19b42d5a7f4e62889d3f4f4428f33104c6f0d98ad13f2899730ac180ac0cc675",
+    "results/arch/hbm_su_f2_static_1014/lifetime/test_calendar.py": "037ed0746c2d93405099161dcf909a91e2ce303b5de2485b5e36798b0695530e"
+  },
+  "fixture_sha256": "d163cbc174b900848eb2934d55f1267510c39f81793765629cc2e6c3e1da853a"
+}

@@ -1,0 +1,479 @@
+{
+  "status": "SOURCE_BOUND_INDEPENDENT_PROTOTYPE_ONLY",
+  "qualified": false,
+  "source": "/home/ubuntu/wt/hbm-group-b6-1014/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv",
+  "source_sha256": "f8c024bf58bcad379ec3345fb80f4362ce83a11c5537801a64b84437eb1f3557",
+  "interface_source": "/home/ubuntu/wt/hbm-group-b6-1014/results/arch/hbm_su_f2_static_1014/arithmetic/physical/admission_model.json",
+  "interface_sha256": "f31e134795024701c0b9ae8b4d2cee390092ce4bbe30e629013efd25f5616eda",
+  "ports": [
+    {
+      "name": "clk_stage",
+      "direction": "input",
+      "bits": 8
+    },
+    {
+      "name": "clk_insert",
+      "direction": "input",
+      "bits": 4
+    },
+    {
+      "name": "rst_n",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "lane_id",
+      "direction": "input",
+      "bits": 11
+    },
+    {
+      "name": "ld",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "ld_bank",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "ld_c",
+      "direction": "input",
+      "bits": 840
+    },
+    {
+      "name": "emit",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "bank",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "o_v",
+      "direction": "input",
+      "bits": 24
+    },
+    {
+      "name": "i_v",
+      "direction": "input",
+      "bits": 24
+    },
+    {
+      "name": "no",
+      "direction": "input",
+      "bits": 24
+    },
+    {
+      "name": "ni",
+      "direction": "input",
+      "bits": 24
+    },
+    {
+      "name": "ls",
+      "direction": "input",
+      "bits": 4
+    },
+    {
+      "name": "lvw",
+      "direction": "input",
+      "bits": 4
+    },
+    {
+      "name": "vb",
+      "direction": "input",
+      "bits": 120
+    },
+    {
+      "name": "krow",
+      "direction": "input",
+      "bits": 24
+    },
+    {
+      "name": "obase",
+      "direction": "input",
+      "bits": 24
+    },
+    {
+      "name": "aibase",
+      "direction": "input",
+      "bits": 24
+    },
+    {
+      "name": "aind",
+      "direction": "input",
+      "bits": 2
+    },
+    {
+      "name": "gsh",
+      "direction": "input",
+      "bits": 5
+    },
+    {
+      "name": "cpair",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "dst",
+      "direction": "input",
+      "bits": 2
+    },
+    {
+      "name": "srcs",
+      "direction": "input",
+      "bits": 8
+    },
+    {
+      "name": "vi_re",
+      "direction": "output",
+      "bits": 1
+    },
+    {
+      "name": "vi_addr",
+      "direction": "output",
+      "bits": 24
+    },
+    {
+      "name": "vi_q",
+      "direction": "input",
+      "bits": 32
+    },
+    {
+      "name": "rd_addr",
+      "direction": "output",
+      "bits": 96
+    },
+    {
+      "name": "rd_re",
+      "direction": "output",
+      "bits": 4
+    },
+    {
+      "name": "rd_src",
+      "direction": "output",
+      "bits": 8
+    },
+    {
+      "name": "rd_q",
+      "direction": "input",
+      "bits": 128
+    },
+    {
+      "name": "cx_srcs",
+      "direction": "input",
+      "bits": 8
+    },
+    {
+      "name": "cx_arnd",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "cx_arelu",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "cx_amin",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "cx_cclip",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "cx_imm3",
+      "direction": "input",
+      "bits": 32
+    },
+    {
+      "name": "cp_m1",
+      "direction": "input",
+      "bits": 3
+    },
+    {
+      "name": "cp_imm1",
+      "direction": "input",
+      "bits": 32
+    },
+    {
+      "name": "cm_m1",
+      "direction": "input",
+      "bits": 3
+    },
+    {
+      "name": "cm_m2",
+      "direction": "input",
+      "bits": 2
+    },
+    {
+      "name": "cm_qm",
+      "direction": "input",
+      "bits": 3
+    },
+    {
+      "name": "cm_imm1",
+      "direction": "input",
+      "bits": 32
+    },
+    {
+      "name": "ca_ad",
+      "direction": "input",
+      "bits": 3
+    },
+    {
+      "name": "ca_imm2",
+      "direction": "input",
+      "bits": 32
+    },
+    {
+      "name": "ci_sfu",
+      "direction": "input",
+      "bits": 3
+    },
+    {
+      "name": "cs_sfu",
+      "direction": "input",
+      "bits": 3
+    },
+    {
+      "name": "cs_e1",
+      "direction": "input",
+      "bits": 3
+    },
+    {
+      "name": "cs_imm2",
+      "direction": "input",
+      "bits": 32
+    },
+    {
+      "name": "ce_e2",
+      "direction": "input",
+      "bits": 2
+    },
+    {
+      "name": "ce_imm1",
+      "direction": "input",
+      "bits": 32
+    },
+    {
+      "name": "co_rnd",
+      "direction": "input",
+      "bits": 1
+    },
+    {
+      "name": "co_dst",
+      "direction": "input",
+      "bits": 2
+    },
+    {
+      "name": "side_v",
+      "direction": "output",
+      "bits": 1
+    },
+    {
+      "name": "side_x",
+      "direction": "output",
+      "bits": 32
+    },
+    {
+      "name": "side_y",
+      "direction": "input",
+      "bits": 32
+    },
+    {
+      "name": "vm_we",
+      "direction": "output",
+      "bits": 1
+    },
+    {
+      "name": "vm_waddr",
+      "direction": "output",
+      "bits": 24
+    },
+    {
+      "name": "vm_wdata",
+      "direction": "output",
+      "bits": 32
+    },
+    {
+      "name": "kv_we",
+      "direction": "output",
+      "bits": 1
+    },
+    {
+      "name": "kv_waddr",
+      "direction": "output",
+      "bits": 24
+    },
+    {
+      "name": "kv_wdata",
+      "direction": "output",
+      "bits": 32
+    },
+    {
+      "name": "ro_v",
+      "direction": "output",
+      "bits": 1
+    },
+    {
+      "name": "ro_x",
+      "direction": "output",
+      "bits": 32
+    },
+    {
+      "name": "fault",
+      "direction": "output",
+      "bits": 1
+    },
+    {
+      "name": "coll",
+      "direction": "output",
+      "bits": 1
+    }
+  ],
+  "port_faces": {
+    "clk_stage": "N",
+    "clk_insert": "N",
+    "rst_n": "S",
+    "lane_id": "S",
+    "ld": "S",
+    "ld_bank": "S",
+    "ld_c": "N",
+    "emit": "S",
+    "bank": "S",
+    "o_v": "S",
+    "i_v": "S",
+    "no": "S",
+    "ni": "S",
+    "ls": "S",
+    "lvw": "S",
+    "vb": "S",
+    "krow": "S",
+    "obase": "S",
+    "aibase": "S",
+    "aind": "S",
+    "gsh": "S",
+    "cpair": "S",
+    "dst": "S",
+    "srcs": "S",
+    "vi_re": "E",
+    "vi_addr": "E",
+    "vi_q": "W",
+    "rd_addr": "E",
+    "rd_re": "E",
+    "rd_src": "E",
+    "rd_q": "W",
+    "cx_srcs": "S",
+    "cx_arnd": "S",
+    "cx_arelu": "S",
+    "cx_amin": "S",
+    "cx_cclip": "S",
+    "cx_imm3": "S",
+    "cp_m1": "S",
+    "cp_imm1": "S",
+    "cm_m1": "S",
+    "cm_m2": "S",
+    "cm_qm": "S",
+    "cm_imm1": "S",
+    "ca_ad": "S",
+    "ca_imm2": "S",
+    "ci_sfu": "S",
+    "cs_sfu": "S",
+    "cs_e1": "S",
+    "cs_imm2": "S",
+    "ce_e2": "S",
+    "ce_imm1": "S",
+    "co_rnd": "S",
+    "co_dst": "S",
+    "side_v": "E",
+    "side_x": "E",
+    "side_y": "W",
+    "vm_we": "E",
+    "vm_waddr": "E",
+    "vm_wdata": "E",
+    "kv_we": "E",
+    "kv_waddr": "E",
+    "kv_wdata": "E",
+    "ro_v": "E",
+    "ro_x": "E",
+    "fault": "E",
+    "coll": "E"
+  },
+  "face_bits": {
+    "N": 852,
+    "W": 192,
+    "E": 315,
+    "S": 562
+  },
+  "clock_period_ps": 1111.111111,
+  "clock_ports": {
+    "clk_stage": 8,
+    "clk_insert": 4
+  },
+  "clock_policy": "actual serial source profile, all phase0; actual CTS phi-R/insertion unqualified",
+  "prototypes": [
+    {
+      "KIND": 0,
+      "outline_um": [
+        216,
+        216
+      ],
+      "mapped_ff": 5823,
+      "mapped_std_area_um2": 5539.457
+    },
+    {
+      "KIND": 1,
+      "outline_um": [
+        302.4,
+        302.4
+      ],
+      "mapped_ff": 27959,
+      "mapped_std_area_um2": 18429.8
+    },
+    {
+      "KIND": 2,
+      "outline_um": [
+        302.4,
+        302.4
+      ],
+      "mapped_ff": 38970,
+      "mapped_std_area_um2": 22171.489
+    }
+  ],
+  "minimum_core_macro_channel_um": 20,
+  "bank": {
+    "status": "independent prototype; die/core-edge adjustment mandatory if necessary",
+    "macros": 6,
+    "macro_size_um": [
+      94.824,
+      41.04
+    ],
+    "clock_sinks": 336,
+    "literal_pins": 302,
+    "original_request_um": [
+      364.472,
+      142.08
+    ],
+    "outline_requested_um": [
+      368.792,
+      146.4
+    ],
+    "all_macro_origin_translation_um": [
+      2.16,
+      2.16
+    ],
+    "reason": "Original 20um from die edge is17.84um from2.16um-inset core. Enlarge4.32 both dimensions and translate2.16 to preserve true20um core clearance."
+  },
+  "acceptance": [
+    "actual PG-projection and pin-track readback",
+    "<=.60 actual face occupancy after PG and spacing",
+    "actual phase roots <=15000 each and native spread/slew",
+    "TTsetup>=0 FFhold>=0, route DRC0; no global placement qualification"
+  ]
+}

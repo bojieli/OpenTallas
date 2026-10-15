@@ -3,7 +3,7 @@ from pathlib import Path
 import sys
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools/s81_compile_schedule'))
-from compile_calendar import compile_program,validate_evidence
+from compile_calendar import compile_program,validate_evidence,issuer_done_row,ISSUE_TO_CMD_PIN_EDGES
 
 
 def encode_program(rows,stage,phase):
@@ -22,6 +22,10 @@ def encode_program(rows,stage,phase):
         if r['engine'] not in list(range(13))+[14,15] or r['arg']>=1<<24 or max(r['issue'],r['done'])>=1<<24:
             raise ValueError('calendar field exceeds actual native width')
         if r['engine']<13:
+            # Rows may carry the owner's measured command-pin -> done-pin latency;
+            # the done row must then be exactly issue + 1 + latency (every engine).
+            if 'pin_to_pin' in r and r['done']!=issuer_done_row(r['issue'],r['pin_to_pin']):
+                raise ValueError('done row must equal issue + 1 + command-pin -> done-pin latency')
             if r['done']<=r['issue'] or r['done']>=end[0]['issue']:
                 raise ValueError('native completion must precede fixed END')
             for target,key in [(slots,(r['engine'],r['issue'])),(done_slots,(r['engine'],r['done']))]:
@@ -94,7 +98,11 @@ def emit_native(program,binding,contract,stage,phase,root=ROOT):
             arg=owner['arg']
             if type(arg)is not int or not 0<=arg<1<<24:raise ValueError('actual owned native arg24 missing')
             validate_evidence(owner.get('evidence'),root)
-            rows.append(dict(id=op['id'],engine=op['port'],arg=arg,issue=op['start'],done=op['end']))
+            latency=owner['duration_cycles']
+            if op['end']!=issuer_done_row(op['start'],latency):
+                raise ValueError('scheduled done row is not issue + 1 + measured pin-to-pin latency')
+            rows.append(dict(id=op['id'],engine=op['port'],arg=arg,issue=op['start'],
+                             done=issuer_done_row(op['start'],latency),pin_to_pin=latency))
         except (ValueError,KeyError,TypeError,OSError)as exc:rejected.append(op['id']+': '+str(exc))
     for name,tensor in binding.get('tensors',{}).items():
         if tensor.get('source')=='resident_constant' and tensor.get('native_boot_bound')is not True:

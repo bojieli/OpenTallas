@@ -37,12 +37,10 @@
    "bad_chunk",
    "bad_tree",
    "jv",
-   "jd",
    "je"
   ],
   "N": [
    "out_valid",
-   "out_bits",
    "fault",
    "mul_fire",
    "mul_weight",
@@ -55,7 +53,10 @@
    "rst_n",
    "start"
   ],
-  "E": []
+  "E": [
+   "jd",
+   "out_bits"
+  ]
  },
  "clock_port": "clk",
  "blocks": [],

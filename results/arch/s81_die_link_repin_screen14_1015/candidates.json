@@ -1,0 +1,99 @@
+{
+ "schema": "opentallas.s81.die_link_repin_candidates.v1",
+ "scope": "SCREEN_ONLY_NOT_ADOPTED_NOT_NATIVE; partner side (stations/relays/field/IP) fixed",
+ "STALE_CONTRACT": "screen14/GEN16 construction is on the stale v18 contract (no MIX home, HCX slots, sp_sseq, collective D6, new HC heights; S81 die lead 2026-10-15). Numbers are method/ranking evidence only; re-measure on GEN17 (v19 + v20 HC south anchor) with the same command.",
+ "not_measurable_on_screen14": [
+  "Engram MIX4 20R/4W home and its links (no instance/bus in the plan)",
+  "VM service slots of the 328+150 successor (plan carries the superseded single sp_vm)",
+  "collective D6 children (plan carries one sp_collective hub)",
+  "6 HCX projection homes (unbound_supplemental_reservations, no buses)",
+  "ctrl_SW.st -> svc_SW.hs (pin st[0] absent in LEF)"
+ ],
+ "candidates": {
+  "D1_cfifo": {
+   "file": "D1_cfifo_master_repin.json",
+   "totals": {
+    "edges": 896,
+    "before": {
+     "sum_bit_um": 25649985.719999984,
+     "over500": 0.0,
+     "over215": 75620.0,
+     "fail": 0,
+     "max": 380.392
+    },
+    "after": {
+     "sum_bit_um": 17158287.84599988,
+     "over500": 0.0,
+     "over215": 9281.0,
+     "fail": 0,
+     "max": 311.6
+    }
+   },
+   "worsened_edges": 22,
+   "worst_single_edge_increase_um": 0.912,
+   "source_sha256": {
+    "construction_pass0_plan.json.gz": "049b9b25858e6c973032871bdc4481f23ef479005f120f7783c268858cd9f6e0",
+    "construction_pass0_pins.lef.gz": "c51a96573f2b3f4c57df4cc753f52a33d4970fbb2fc357c07b89f078e0e27181"
+   },
+   "what": "dsfd_cfifo (128 instances, ONE master pin plan): ri -214.75 um, xd +93.12 um along their faces (master frame); st/rd/cc < 1.5 um",
+   "cost": "0 area/0 cycles; cfifo is the legacy t_cts room-based crossing, void as production under the 18:59 static-schedule rule -> carry the pin plan into its static successor; stations are partners held fixed, the generator re-aligns stations to cfifo pins (r7), so part of the gain may also be reachable by station placement"
+  },
+  "D2_hend_svc_band": {
+   "file": "D2_hend_svc_band_reorder.json",
+   "totals": {
+    "edges": 246,
+    "before": {
+     "sum_bit_um": 5535398.495999996,
+     "over500": 0.0,
+     "over215": 7768.0,
+     "fail": 1,
+     "max": 419.016
+    },
+    "after": {
+     "sum_bit_um": 5205156.894,
+     "over500": 0.0,
+     "over215": 6449.0,
+     "fail": 0,
+     "max": 417.144
+    }
+   },
+   "worsened_edges": 32,
+   "worst_single_edge_increase_um": 19.251,
+   "source_sha256": {
+    "construction_pass0_plan.json.gz": "049b9b25858e6c973032871bdc4481f23ef479005f120f7783c268858cd9f6e0",
+    "construction_pass0_pins.lef.gz": "c51a96573f2b3f4c57df4cc753f52a33d4970fbb2fc357c07b89f078e0e27181"
+   },
+   "what": "51 hub-end relays (hend) + svc/svcj/bk_selector/bk_collector/xstg/ctrl/lkck faces re-packed with slice permutation",
+   "cost": "0 area/0 cycles; small: -0.33 M bit-um, >215 7768->6449, FAIL 1->0 (hl_E1)"
+  },
+  "D0_combined": {
+   "file": "D0_all_die_level_reorder.json",
+   "totals": {
+    "edges": 1351,
+    "before": {
+     "sum_bit_um": 66301323.27600005,
+     "over500": 26624.0,
+     "over215": 130283.0,
+     "fail": 11,
+     "max": 2026.2
+    },
+    "after": {
+     "sum_bit_um": 37956392.95700004,
+     "over500": 2551.0,
+     "over215": 35893.0,
+     "fail": 5,
+     "max": 931.224
+    }
+   },
+   "worsened_edges": 81,
+   "worst_single_edge_increase_um": 180.372,
+   "source_sha256": {
+    "construction_pass0_plan.json.gz": "049b9b25858e6c973032871bdc4481f23ef479005f120f7783c268858cd9f6e0",
+    "construction_pass0_pins.lef.gz": "c51a96573f2b3f4c57df4cc753f52a33d4970fbb2fc357c07b89f078e0e27181"
+   },
+   "what": "every die-level non-fixed kind incl. the 11 hubs (C1..C2 of the hub search) re-packed together with slice permutation",
+   "cost": "0 area/0 cycles; HC parent internal cost of C1 unknown"
+  }
+ },
+ "command": "python3 tools/s81/die_link_repin_search.py --plan <construction_pass0_plan.json.gz> --lef <construction_pass0_pins.lef.gz> --out X.json [--reorder] [--masters M] [--kinds K]"
+}

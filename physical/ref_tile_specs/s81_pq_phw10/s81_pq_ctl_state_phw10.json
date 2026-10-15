@@ -1,0 +1,190 @@
+{
+  "name": "s81_pq_ctl_state_phw10",
+  "top": "ot_s81_pq_ctl_state_phw10",
+  "kind": "tile",
+  "sources": [
+    "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_static_native.sv",
+    "physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv",
+    "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_delay.sv",
+    "physical/s81_pq_hier/pinned/rtl/v41die/ot_v41_pqc_tiles.sv",
+    "rtl/v41rom/ot_v41_kreg.sv",
+    "rtl/common/ot_prefix.sv",
+    "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_state_phw10.sv"
+  ],
+  "params": {},
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 432,
+    "h": 259.2
+  },
+  "pins": {
+    "N": [
+      "rom_pq0",
+      "rom_pq1",
+      "rom_sq"
+    ],
+    "S": [
+      "clk",
+      "rst_n",
+      "q_consume",
+      "b_consume",
+      "aq_vin",
+      "aqf",
+      "aqi_o",
+      "ba_v_o",
+      "ba_wv_o",
+      "ba_blk_o",
+      "hw_o",
+      "h_hi_o",
+      "h_b0_o",
+      "h_b1_o",
+      "mdr_o",
+      "q2f_i",
+      "ga_i",
+      "bc_hr_o",
+      "x_re",
+      "x_addr",
+      "x_rv",
+      "f_fault"
+    ],
+    "E": [
+      "calendar_v",
+      "calendar_action",
+      "go",
+      "i_ph",
+      "i_np",
+      "i_xbase",
+      "i_xps",
+      "i_obase",
+      "i_ops",
+      "i_fmt",
+      "ready",
+      "idle",
+      "fault",
+      "phase_cycles",
+      "ev_go",
+      "ev_end",
+      "stream_end_v",
+      "stream_end_tag",
+      "ev_tag"
+    ],
+    "W": []
+  },
+  "layer_cap": "M5",
+  "recipe": 2,
+  "route": {
+    "pd": 0.5,
+    "threads": 16,
+    "peak_ram_gb": 16
+  },
+  "structural_change": "Actual explicit producer/reader inputcapture, fixed +1 calendar and +1 command capture, external command completion35 versus33 baseline. Controllerstate leaf removes35 purecombin ROMaddress bypasses; direct realregisteredproducer wires ownphase/stream ROMaddresses. No timingchecks weakened. Larger slots are independent nativeCTS grants only, not adopted fullparent geometry.",
+  "slot_change_request": {
+    "name": "s81-expanded-native-PQ-row-1015",
+    "owner": "/root/s_die/mix4_sizing",
+    "outline": [
+      432,
+      259.2
+    ],
+    "pin_faces": {
+      "N": [
+        "rom_pq0",
+        "rom_pq1",
+        "rom_sq"
+      ],
+      "S": [
+        "clk",
+        "rst_n",
+        "q_consume",
+        "b_consume",
+        "aq_vin",
+        "aqf",
+        "aqi_o",
+        "ba_v_o",
+        "ba_wv_o",
+        "ba_blk_o",
+        "hw_o",
+        "h_hi_o",
+        "h_b0_o",
+        "h_b1_o",
+        "mdr_o",
+        "q2f_i",
+        "ga_i",
+        "bc_hr_o",
+        "x_re",
+        "x_addr",
+        "x_rv",
+        "f_fault"
+      ],
+      "E": [
+        "calendar_v",
+        "calendar_action",
+        "go",
+        "i_ph",
+        "i_np",
+        "i_xbase",
+        "i_xps",
+        "i_obase",
+        "i_ops",
+        "i_fmt",
+        "ready",
+        "idle",
+        "fault",
+        "phase_cycles",
+        "ev_go",
+        "ev_end",
+        "stream_end_v",
+        "stream_end_tag",
+        "ev_tag"
+      ],
+      "W": []
+    },
+    "basis": "Independent native CTS dimensions and producer/consumer facing pins granted in live coordinator stream; full parent/hub placement remains unadopted."
+  },
+  "job": {
+    "peak_ram_gb": 16,
+    "views_to": "physical/ref_tile/s81_pq_ctl_state_phw10/views",
+    "record_to": "results/rtl/ref_tile/s81_pq_ctl_state_phw10",
+    "extra_paths": [
+      "rtl/dsrom_sys/s81_static_control",
+      "rtl/dsrom_sys/s81_die_bind",
+      "rtl/dsrom_sys/s81_ph/pq",
+      "rtl/test/dsrom_sys",
+      "physical/s81_pq_hier/pinned",
+      "tools/s81",
+      "tools/s81_static_control",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8"
+    ],
+    "benches": [
+      {
+        "name": "actual_produced_component",
+        "cmd": "python3 tools/s81/pq_canonical_pins_gate.py --produced --work {RUN}/produced_exact",
+        "expect": "pass",
+        "threads": 8,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ],
+        "pass_regex": "PRODUCED PASS"
+      },
+      {
+        "name": "actual_phase_source_mutant",
+        "cmd": "python3 tools/s81/pq_canonical_pins_gate.py --produced --mut PHW --work {RUN}/produced_mutant && {RUN}/produced_mutant/obj/Vtb_s81_pq_produced_pins +OT_ROM_DIR={RUN}/produced_mutant",
+        "expect": "fail",
+        "threads": 8,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ],
+        "fail_regex": "PRODUCED FAIL"
+      }
+    ]
+  },
+  "defines": [
+    "OT_PQ_ROM_PORTS"
+  ],
+  "macros": []
+}

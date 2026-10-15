@@ -42,6 +42,27 @@ class Schema(unittest.TestCase):
             m=copy.deepcopy(s);m.update(clock_data_paths='related_same_frequency',clock_relationship=relationship)
             with self.assertRaises(ValueError):CE.domains(m)
 
+    def test_related_pll_ratio_admits_only_a_noncore_four_thirds_domain(self):
+        s=spec();s['clock_entry_domains']['response']['ratio']=[4,3]
+        s.update(clock_data_paths='related_pll_ratio',clock_relationship=dict(kind='same_pll_fixed_phase',ratio=[4,3],phase_ps=0))
+        self.assertEqual(CE.domains(s)['response']['ratio'],[4,3])
+        clocks=CE.clocks(s,833.333)
+        self.assertIn('create_clock -name ot_entry_1 -period 1111.110666667',clocks)
+        self.assertIn('create_clock -name ot_io_response -period 1111.110666667',clocks)
+        text=CE.generate(s,ROOT)
+        self.assertIn('set ::ot_ce_related_data 1',text);self.assertIn('io_budget_ps 222.222',text)
+        self.assertNotIn('set_false_path',text);self.assertNotIn('set_clock_groups',text)
+        for mutate in [lambda x:x['clock_entry_domains']['core'].update(ratio=[4,3]),
+                       lambda x:x['clock_entry_domains']['response'].update(ratio=[3,4]),
+                       lambda x:x['clock_entry_domains']['response'].update(ratio=[1,1]),
+                       lambda x:x.update(clock_relationship=dict(kind='same_pll_fixed_phase',ratio=[1,1],phase_ps=0)),
+                       lambda x:x.update(clock_relationship=dict(kind='same_pll_fixed_phase',ratio=[4,3],phase_ps=10)),
+                       lambda x:x.update(clock_data_paths='related_same_frequency'),
+                       lambda x:x.update(clock_data_paths='independent',clock_relationship=None)]:
+            m=copy.deepcopy(s);mutate(m)
+            if m.get('clock_relationship') is None:m.pop('clock_relationship',None)
+            with self.assertRaises(ValueError):CE.domains(m)
+
     def test_explicit_leaf_signoff_period_and_budget(self):
         s=spec();s['route']={'period_ps':1111.111,'signoff_period_ps':1111.111}
         self.assertEqual(CE.signoff_period(s),1111.111)
@@ -111,6 +132,9 @@ class Physical(unittest.TestCase):
             kd='tools/ref_tile/tests'
             if mutant in ('related','related_wrong_input','related_cut'):
                 s.update(clock_data_paths='related_same_frequency',clock_relationship=dict(kind='same_pll_fixed_phase',ratio=[1,1],phase_ps=0))
+            if mutant in ('related_pll','related_pll_cut'):
+                s['clock_entry_domains']['response']['ratio']=[4,3]
+                s.update(clock_data_paths='related_pll_ratio',clock_relationship=dict(kind='same_pll_fixed_phase',ratio=[4,3],phase_ps=0))
             if mutant=='related_wrong_input':
                 s['clock_entry_domains']['core']['inputs']=['rsp'];s['clock_entry_domains']['response']['inputs']=['req']
             if mutant in ('async_reset','async_reset_data'):
@@ -121,6 +145,7 @@ class Physical(unittest.TestCase):
             if mutant=='wrong_output':
                 s['clock_entry_domains']['core']['outputs']=['zo'];s['clock_entry_domains']['response']['outputs']=['qo']
             if mutant=='unknown_port':s['clock_entry_domains']['core']['inputs']=['req','missing']
+            if mutant.startswith('tie'):s['clock_entry_domains']['core']['outputs'].append('th')
             if generated:
                 for name,text in RT.gen_hooks(s,kd).items():(w/name).write_text(text)
                 (w/'signoff.sdc').write_text(RT.gen_signoff(s,'*','none_*'))
@@ -132,7 +157,22 @@ class Physical(unittest.TestCase):
                 cells=cells.replace('DFFHQNx1_ASAP7_75t_R s0 (.CLK(ck_rsp),.D(rsp),.QN(z0));',
                     'DFFASRHQNx1_ASAP7_75t_R s0 (.CLK(ck_rsp),.D('+('rst_n' if mutant=='async_reset_data' else 'rsp')+'),.RESETN(rst_n),.SETN(1\'b1),.QN(z0));')
             extra=',rst_n' if mutant in ('async_reset','async_reset_data') else ''
-            (w/'t.v').write_text('module top(input ck_req,ck_rsp,req,rsp'+extra+',output qo,zo);\n'+cells+'\nassign qo=q0;assign zo=z0;endmodule\n')
+            src={'tie':'tc','tie_port':'req','tie_reg':'z1'}.get(mutant)
+            tie=(',th','\nwire tc;TIEHIx1_ASAP7_75t_R t0 (.H(tc));BUFx2_ASAP7_75t_R b0 (.A('+src+'),.Y(th));') if src else ('','')
+            # Multi-input gate of constants is constant; one live input is not.
+            gate={'tie_gate':'tl','tie_gate_port':'req'}.get(mutant)
+            if gate:tie=(',th','\nwire tc,tl;TIEHIx1_ASAP7_75t_R t0 (.H(tc));TIELOx1_ASAP7_75t_R t1 (.L(tl));NAND2xp33_ASAP7_75t_R g0 (.A(tc),.B('+gate+'),.Y(th));')
+            # Input-side constant: a register D fed by a buffered tie (Engram/K0 style).
+            if mutant=='constant_data':
+                cells=cells.replace('DFFHQNx1_ASAP7_75t_R s3 (.CLK(ck_rsp),.D(rsp),.QN(z3));',
+                    'wire kl,kd;TIELOx1_ASAP7_75t_R t2 (.L(kl));BUFx2_ASAP7_75t_R b2 (.A(kl),.Y(kd));DFFHQNx1_ASAP7_75t_R s3 (.CLK(ck_rsp),.D(kd),.QN(z3));')
+                assert '.D(kd)' in cells
+            constant_case=mutant in ('constant','constant_nonconstant','constant_case_analysis')
+            if constant_case:
+                source='req' if mutant!='constant' else 'tie_zero'
+                cells+='\nTIELOx1_ASAP7_75t_R arbitrary_name(.L(tie_zero));\n'
+                cells+=f'BUFx2_ASAP7_75t_R preserved_buffer(.A({source}),.Y(zo));\n'
+            (w/'t.v').write_text('module top(input ck_req,ck_rsp,req,rsp'+extra+',output qo,zo'+tie[0]+');\n'+cells+tie[1]+'\nassign qo=q0;'+('' if constant_case else 'assign zo=z0;')+'endmodule\n')
             (w/'clocks.tcl').write_text(CE.clocks(s,s['route'].get('period_ps',833.333)))
             (w/'entry.tcl').write_text('set ::ot_ce_require_wire 1\n'+CE.generate(s,ROOT))
             flow=r'''
@@ -186,8 +226,11 @@ if {"NULL" ni [get_lib_cells -of_objects [get_cells physical_tap]]} {error "fixt
 '''+f'source /src/{kd}/pre_cts.tcl',1)
             if mutant=='extra_alias':
                 flow=flow.replace('source /w/entry.tcl','create_clock -name unexpected_alias -period 833.333\nsource /w/entry.tcl',1)
-            if mutant=='related_cut':
+            if mutant in ('related_cut','related_pll_cut'):
                 flow=flow.replace('source /w/entry.tcl','set_false_path -from [get_clocks ot_entry_0] -to [get_clocks ot_entry_1]\nsource /w/entry.tcl',1)
+            if mutant=='constant_case_analysis':
+                flow=flow.replace('source /w/entry.tcl','set_case_analysis 0 [get_ports req]\nsource /w/entry.tcl',1)
+            flow='try {\n'+flow+'\n} on error {message options} {puts stderr [dict get $options -errorinfo];exit 1}\n'
             (w/'run.tcl').write_text(flow)
             p=subprocess.run(['docker','run','--rm','-v',f'{w}:/w','-v',f'{ROOT}:/src:ro','-v',f'{w}:/src/{kd}:ro',IMAGE,OR,'-no_init','-exit','/w/run.tcl'],capture_output=True,text=True,timeout=60)
             output=p.stdout+p.stderr
@@ -203,7 +246,7 @@ if {"NULL" ni [get_lib_cells -of_objects [get_cells physical_tap]]} {error "fixt
                     values=re.findall(r'set_'+direction+r'_delay ([\d.eE+-]+) -clock \[get_clocks \{'+clock+r'\}\] -(min|max) -add_delay \[get_ports \{'+port+r'\}\]',final)
                     self.assertEqual(len(values),2,final)
                     actual={kind:float(value) for value,kind in values}
-                    budget=round(CE.signoff_period(s)*0.2,3)
+                    r=s['clock_entry_domains'][domain]['ratio'];budget=round(CE.signoff_period(s)*r[0]/r[1]*0.2,3)
                     expected={'min':lo,'max':budget+hi+90} if direction=='input' else {'min':-lo-50,'max':budget-hi+90}
                     for kind in ['min','max']:self.assertAlmostEqual(actual[kind],expected[kind],places=2)
             if p.returncode==0 and mutant=='serial':
@@ -226,6 +269,31 @@ if {"NULL" ni [get_lib_cells -of_objects [get_cells physical_tap]]} {error "fixt
         for a,b in zip(refs[:2],refs[2:]):
             self.assertEqual(a[0],b[0])
             for x,y in zip(a[1:],b[1:]):self.assertAlmostEqual(float(x),float(y),places=8)
+    def test_die_strap_tie_output_is_constant_not_a_domain(self):
+        rc,out=self.run_flow('tie');self.assertEqual(rc,0,out[-8000:])
+        self.assertIn('OT_MULTI_ROOT LIBERTY_CONSTANT th -> th',out)
+        # A buffered port passthrough still fails closed; a buffered other-domain register is refused by name.
+        rc,out=self.run_flow('tie_port');self.assertNotEqual(rc,0,out[-8000:])
+        rc,out=self.run_flow('tie_reg');self.assertNotEqual(rc,0,out[-8000:])
+        self.assertIn('output th has wrong or unregistered source domain',out)
+
+    def test_liberty_function_gate_of_constants_and_live_input(self):
+        rc,out=self.run_flow('tie_gate');self.assertEqual(rc,0,out[-8000:])
+        self.assertIn('LIBERTY_CONSTANT',out)
+        rc,out=self.run_flow('tie_gate_port');self.assertNotEqual(rc,0,out[-8000:])
+        self.assertIn('output th has wrong or unregistered source domain',out)
+
+    def test_input_side_constant_register_data(self):
+        rc,out=self.run_flow('constant_data');self.assertEqual(rc,0,out[-8000:])
+        self.assertIn('OWNERSHIP PASS',out)
+
+    def test_actual_liberty_constant_output_and_nonconstant_mutants(self):
+        rc,out=self.run_flow('constant',generated=True);self.assertEqual(rc,0,out[-8000:])
+        self.assertIn('LIBERTY_CONSTANT',out)
+        for mutant in ('constant_nonconstant','constant_case_analysis'):
+            rc,out=self.run_flow(mutant);self.assertNotEqual(rc,0,out[-5000:])
+            self.assertIn('wrong or unregistered source domain',out)
+
     def test_generated_hooks_with_actual_lef_only_tap(self):
         rc,out=self.run_flow('physical_tap',generated=True);self.assertEqual(rc,0,out[-8000:])
         self.assertIn('MULTI_ROOT_RESULT PASS',out)
@@ -243,6 +311,14 @@ if {"NULL" ni [get_lib_cells -of_objects [get_cells physical_tap]]} {error "fixt
             self.assertIn('RELATED_PATH '+pair+' min slack=',out)
         for mutant in ['related_wrong_input','related_cut']:
             rc,out=self.run_flow(mutant);self.assertNotEqual(rc,0,out[-8000:]);self.assertIn('OT_MULTI_ROOT',out)
+
+    def test_related_pll_ratio_crossings_keep_both_sta_directions(self):
+        rc,out=self.run_flow('related_pll',generated=True);self.assertEqual(rc,0,out[-8000:])
+        self.assertIn('OT_ENTRIES DOMAIN response 1111.11',out)
+        for pair in ['core -> response','response -> core']:
+            self.assertIn('RELATED_PATH '+pair+' max slack=',out)
+            self.assertIn('RELATED_PATH '+pair+' min slack=',out)
+        rc,out=self.run_flow('related_pll_cut');self.assertNotEqual(rc,0,out[-8000:]);self.assertIn('OT_MULTI_ROOT',out)
 
     def test_reset_declaration_does_not_waive_or_reclassify_data(self):
         rc,out=self.run_flow('declared_reset');self.assertEqual(rc,0,out[-7000:])

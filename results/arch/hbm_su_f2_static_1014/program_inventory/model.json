@@ -1,0 +1,140 @@
+{
+  "qwen": {
+    "record_count": 18,
+    "production_record_count": 11,
+    "price": 1548.0,
+    "gathers": 0,
+    "golden_mask_sectors": 5173,
+    "broadcast_roles": [
+      {
+        "index": 0,
+        "tag": "embedding.dequant",
+        "role": "B",
+        "inner": true,
+        "row": false
+      },
+      {
+        "index": 2,
+        "tag": "rope",
+        "role": "B",
+        "inner": false,
+        "row": true
+      },
+      {
+        "index": 2,
+        "tag": "rope",
+        "role": "D",
+        "inner": false,
+        "row": true
+      },
+      {
+        "index": 5,
+        "tag": "softmax.exp_sum",
+        "role": "B",
+        "inner": true,
+        "row": false
+      },
+      {
+        "index": 7,
+        "tag": "pv_normalize",
+        "role": "B",
+        "inner": true,
+        "row": false
+      }
+    ],
+    "reduction_records": [
+      4,
+      5
+    ],
+    "maximum_sum_separate_role_span_words": 32784,
+    "geometry_qualification": "N/M are target datapath parameters; record dimensions are decoded verbatim. Frozen s4 vectors do not prove unscaled production dimensions.",
+    "calendar_emitted": false,
+    "missing_calendar_attributes": [
+      "actual datapath issue/commit/capture latencies for each operation",
+      "compiler-selected local frame/bump allocation and source replication mapping",
+      "fixed drain completion and frame-release edges",
+      "fixed native bank port assignment and operand gather/broadcast schedule"
+    ]
+  },
+  "deepseek": {
+    "record_count": 34,
+    "production_record_count": 27,
+    "price": 2912.0,
+    "gathers": 0,
+    "golden_mask_sectors": 3429,
+    "broadcast_roles": [
+      {
+        "index": 0,
+        "tag": "q_norm.ss",
+        "role": "R",
+        "inner": false,
+        "row": true
+      },
+      {
+        "index": 2,
+        "tag": "q_norm.y",
+        "role": "B",
+        "inner": true,
+        "row": false
+      },
+      {
+        "index": 3,
+        "tag": "kv_norm.ss",
+        "role": "R",
+        "inner": false,
+        "row": true
+      },
+      {
+        "index": 5,
+        "tag": "kv_norm.y",
+        "role": "B",
+        "inner": true,
+        "row": false
+      },
+      {
+        "index": 9,
+        "tag": "attend.exp_sum",
+        "role": "B",
+        "inner": true,
+        "row": false
+      },
+      {
+        "index": 12,
+        "tag": "attend.norm",
+        "role": "B",
+        "inner": true,
+        "row": false
+      },
+      {
+        "index": 19,
+        "tag": "route.weights",
+        "role": "B",
+        "inner": true,
+        "row": false
+      },
+      {
+        "index": 20,
+        "tag": "swiglu",
+        "role": "B",
+        "inner": true,
+        "row": false
+      }
+    ],
+    "reduction_records": [
+      0,
+      3,
+      8,
+      9,
+      17
+    ],
+    "maximum_sum_separate_role_span_words": 21840,
+    "geometry_qualification": "N/M are target datapath parameters; record dimensions are decoded verbatim. Frozen s4 vectors do not prove unscaled production dimensions.",
+    "calendar_emitted": false,
+    "missing_calendar_attributes": [
+      "actual datapath issue/commit/capture latencies for each operation",
+      "compiler-selected local frame/bump allocation and source replication mapping",
+      "fixed drain completion and frame-release edges",
+      "fixed native bank port assignment and operand gather/broadcast schedule"
+    ]
+  }
+}
