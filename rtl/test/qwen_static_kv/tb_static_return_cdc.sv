@@ -55,7 +55,7 @@ module tb_static_return_cdc;
  end
  always @(posedge ck)begin
   automatic reg ev=prev;automatic integer es=prevsector;
-  prev=put;prevsector=sec;
+  prev=ci<=1800?wanted[ci]:0;prevsector=ci<=1800?sector[ci]:0;
   #0.000001;
   if(rst)begin
    if(av!==ev)errors++;
