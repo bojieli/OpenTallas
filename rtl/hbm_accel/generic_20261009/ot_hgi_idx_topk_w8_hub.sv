@@ -90,36 +90,30 @@ module ot_hgi_idx_topk_w8_cluster #(parameter integer MUT_BYP=0, parameter integ
  // 2-entry FIFO whose ready is a function of its own count only (no out_ready -> in_ready pass-through), so no port
  // reaches more than one flop and no core path starts or ends at a pin (was out_ready -> b_r 7 levels, in_valid/in_ready
  // registers >= 641-767 um from their pins).  done/error are registered (they follow the registered out stream).
- wire hc_v, hc_r, hi_v, hi_r, ho_v, ho_r, h_done; wire [3:0] h_err;
+ // rt_j (Claude group-B4 10-14): the engine glue is the hardened HUB TILE ot_hgi_topk_hub_tile (centre channel); the
+ // three boundary FIFOs stay at the cluster faces (pin flops at the pins) and talk to the hub over register -> wire ->
+ // register links: command valid / registered-ready, scores and results as CREDIT links (no ready crosses the cluster).
+ wire hc_v, hc_r, hi_v, hi_cr, ho_v, ho_cr;
  wire [3:0] hc_unit; wire [5:0] hc_op; wire [24:0] hc_param; wire [31:0] hc_n, hc_m; wire hc_values;
- wire [255:0] hi_score; wire [3:0] hi_nw; wire [31:0] ho_id, ho_score, ho_row; wire ho_last, ho_vv;
+ wire [259:0] hi_d; wire [97:0] ho_d;
  ot_hgi_w8_bfifo #(.W(100)) u_bc (.clk(clk), .rst_n(rr[8]), .i_v(cmd_valid), .i_r(cmd_ready),
   .i_d({cmd_unit, cmd_op, cmd_param, cmd_n, cmd_m, cmd_values}), .o_v(hc_v), .o_r(hc_r),
-  .o_d({hc_unit, hc_op, hc_param, hc_n, hc_m, hc_values}));
- ot_hgi_w8_bfifo #(.W(260)) u_bi (.clk(clk), .rst_n(rr[8]), .i_v(in_valid), .i_r(in_ready), .i_d({in_score, in_nw}),
-  .o_v(hi_v), .o_r(hi_r), .o_d({hi_score, hi_nw}));
- ot_hgi_w8_bfifo #(.W(98), .RIR(1)) u_bo (.clk(clk), .rst_n(rr[9]), .i_v(ho_v), .i_r(ho_r),
-  .i_d({ho_id, ho_score, ho_row, ho_last, ho_vv}), .o_v(out_valid), .o_r(out_ready),
-  .o_d({out_id, out_score, out_row, out_last, out_values_valid}));
- // done is the core's one-cycle completion pulse: hold it pending until the registered out FIFO has drained, so the
- // pulse still follows the last delivered beat (as it did at the unbuffered boundary).
- reg done_q, done_p; reg [3:0] err_q;
- always @(posedge clk or negedge rr[9]) if (!rr[9]) begin done_q <= 1'b0; done_p <= 1'b0; err_q <= 4'd0; end
-  else begin
-   err_q <= h_err;
-   done_q <= done_p && !out_valid && !ho_v;
-   if (h_done) done_p <= 1'b1; else if (done_p && !out_valid && !ho_v) done_p <= 1'b0;
-  end
- assign done = done_q; assign error = err_q;
- ot_hgi_idx_topk_wreg #(.ENABLE(1'b1), .MAX_K(2048), .IW(8), .W(8), .HUB(1'b1), .LANE(1'b1)) u_hub (.clk(clk), .rst_n(rr[10]),
+  .o_d({hc_unit, hc_op, hc_param, hc_n, hc_m, hc_values}), .o_cr(1'b0), .i_cr());
+ ot_hgi_w8_bfifo #(.W(260), .OCR(6)) u_bi (.clk(clk), .rst_n(rr[8]), .i_v(in_valid), .i_r(in_ready), .i_d({in_score, in_nw}),
+  .o_v(hi_v), .o_r(1'b1), .o_d(hi_d), .o_cr(hi_cr), .i_cr());
+ ot_hgi_w8_bfifo #(.W(98), .ICR(1), .D(8)) u_bo (.clk(clk), .rst_n(rr[9]), .i_v(ho_v), .i_r(),
+  .i_d(ho_d), .o_v(out_valid), .o_r(out_ready),
+  .o_d({out_id, out_score, out_row, out_last, out_values_valid}), .o_cr(1'b0), .i_cr(ho_cr));
+ ot_hgi_topk_hub_tile #(.NCI(6), .NCO(7), .MUT_BYP(MUT_BYP)) u_hub (.clk(clk), .rst_n(rr[10]),
   .cmd_valid(hc_v), .cmd_ready(hc_r), .cmd_unit(hc_unit), .cmd_op(hc_op), .cmd_param(hc_param), .cmd_n(hc_n), .cmd_m(hc_m),
-  .cmd_values(hc_values), .in_valid(hi_v), .in_ready(hi_r), .in_score(hi_score), .in_nw(hi_nw),
-  .out_valid(ho_v), .out_ready(ho_r), .out_id(ho_id), .out_score(ho_score), .out_row(ho_row), .out_last(ho_last),
-  .out_values_valid(ho_vv), .done(h_done), .error(h_err),
-  .t_k(), .t_op_v(), .t_op_ext(), .t_clr_go(), .t_op_x(), .t_op_cr(8'd0), .t_ext_v(8'd0), .t_idle_i(8'd0), .t_ext_d(432'd0),
-  .t_root_key(424'd0),
-  .lt_ph(l_ph), .lt_k(l_k), .lt_clr(l_clr), .lt_pv(l_pv), .lt_mcr(l_mcr), .lt_pd(l_pd), .lt_q(l_q), .lt_x(l_x), .lt_ok(l_ok),
-  .lt_mv(l_mv), .lt_me(l_me), .lt_root(l_root), .lt_md(l_md));
+  .cmd_values(hc_values), .in_v(hi_v), .in_d(hi_d), .in_cr(hi_cr), .out_v(ho_v), .out_d(ho_d), .out_cr(ho_cr),
+  .done(done), .error(error),
+  .lt_ph_a(l_ph[11:0]), .lt_ph_b(l_ph[23:12]), .lt_k_a(l_k[47:0]), .lt_k_b(l_k[95:48]),
+  .lt_clr_a(l_clr[3:0]), .lt_clr_b(l_clr[7:4]), .lt_pv_a(l_pv[3:0]), .lt_pv_b(l_pv[7:4]),
+  .lt_mcr_a(l_mcr[3:0]), .lt_mcr_b(l_mcr[7:4]), .lt_pd_a(l_pd[215:0]), .lt_pd_b(l_pd[431:216]),
+  .lt_q_a(l_q[3:0]), .lt_q_b(l_q[7:4]), .lt_x_a(l_x[3:0]), .lt_x_b(l_x[7:4]), .lt_ok_a(l_ok[3:0]), .lt_ok_b(l_ok[7:4]),
+  .lt_mv_a(l_mv[3:0]), .lt_mv_b(l_mv[7:4]), .lt_me_a(l_me[3:0]), .lt_me_b(l_me[7:4]),
+  .lt_root_a(l_root[211:0]), .lt_root_b(l_root[423:212]), .lt_md_a(l_md[215:0]), .lt_md_b(l_md[431:216]));
  wire [11:0] k0; wire v0, e0, c0, cr0, xv0, id0; wire [53:0] x0, xd0; wire [52:0] rk0;
  ot_hgi_topk_lane_tile u_l0 (.clk(clk), .rst_n(rr[0]), .ph(l_ph[2:0]), .kin(l_k[11:0]), .clr(l_clr[0]),
   .pv(l_pv[0]), .pd(l_pd[53:0]), .mcr(l_mcr[0]), .q(l_q[0]), .x(l_x[0]), .ok(l_ok[0]),
@@ -190,37 +184,55 @@ endmodule
 // The pending input beat counts against capacity, so registered ingress never
 // overwrites an entry during a downstream stall. Sustained service stays one
 // beat/cycle; the input register adds one edge compared with the two-bank FIFO.
-module ot_hgi_w8_bfifo #(parameter integer W=32, parameter integer RIR=0) (
+module ot_hgi_w8_bfifo #(parameter integer W=32, parameter integer RIR=0,
+ // rt_j credit modes (hub tile links): OCR=N: the output side is a CREDIT link (N credits; o_v = a beat sent this edge,
+ // no o_r; o_cr returns one credit).  ICR=1: the input side is a credit link (every i_v beat is taken, i_cr returns one
+ // credit per beat delivered at o_v && o_r); i_r is then constant 1 and unused.
+ parameter integer OCR=0, parameter integer ICR=0,
+ parameter integer D=4) (                            // entries (power of two; rt_j: the E-face result FIFO holds 8)
  input wire clk, rst_n,
  input wire i_v, output wire i_r, input wire [W-1:0] i_d,
- output wire o_v, input wire o_r, output wire [W-1:0] o_d
+ output wire o_v, input wire o_r, output wire [W-1:0] o_d,
+ input wire o_cr, output reg i_cr
 );
  reg [W-1:0] pin_d;
  reg [W-1:0] head_d;
  reg pin_v, up;
- reg [W-1:0] mem [0:3];
- reg [1:0] wp, rp;
- reg [2:0] cnt;
- wire push = i_v && i_r, pop = o_v && o_r;
- wire [3:0] occupied = {1'b0, cnt} + {3'b0, pin_v};
+ localparam integer DA = $clog2(D);
+ reg [W-1:0] mem [0:D-1];
+ reg [DA-1:0] wp, rp;
+ reg [DA:0] cnt;
+ wire push = (ICR != 0) ? i_v : (i_v && i_r);
+ wire pop;
+ wire [DA+1:0] occupied = {1'b0, cnt} + (DA+2)'(pin_v);
  // rt_i RIR=1 (rt_h gate 'u_bo.pin_v -> u_hub.active / c_valid / b_r' -67..-38 ps): i_r is a REGISTER holding the same
  // value (up && cnt + pin_v < 4 of this edge), loaded from the next state; the o_r pin only picks between the two
  // registered-state candidates (pop / no pop).
- generate if (RIR != 0) begin : g_rir
+ generate if (ICR != 0) begin : g_icr
+  assign i_r = 1'b1;
+ end else if (RIR != 0) begin : g_rir
   reg ir_q;
-  wire [3:0] occ_np = {1'b0, cnt} + {3'b0, pin_v} + {3'b0, push};     // next cnt + next pin_v without a pop
-  wire ir_np = occ_np < 4, ir_p = occ_np - 4'd1 < 4;
+  wire [DA+1:0] occ_np = {1'b0, cnt} + (DA+2)'(pin_v) + (DA+2)'(push);     // next cnt + next pin_v without a pop
+  wire ir_np = occ_np < D, ir_p = occ_np - 1'b1 < D;
   always @(posedge clk or negedge rst_n) if (!rst_n) ir_q <= 1'b0; else ir_q <= pop ? ir_p : ir_np;
   assign i_r = ir_q;
  end else begin : g_cir
-  assign i_r = up && occupied < 4;
+  assign i_r = up && occupied < D;
  end endgenerate
- assign o_v = cnt != 0;
+ localparam integer CRW = (OCR > 0) ? $clog2(OCR + 1) : 1;
+ reg [CRW-1:0] ocr;
+ generate if (OCR != 0) begin : g_ocr
+  assign o_v = cnt != 0 && ocr != 0;                  // a beat is SENT this edge (the receiver always takes it)
+  assign pop = o_v;
+ end else begin : g_ov
+  assign o_v = cnt != 0;
+  assign pop = o_v && o_r;
+ end endgenerate
  assign o_d = head_d;
 `ifdef OT_TOPK_FIFO_HEAD_MUT
- wire [1:0] next_rp = (W == 98) ? rp : rp + 1'b1; // stale output head; command/ingress protocol unchanged
+ wire [DA-1:0] next_rp = (W == 98) ? rp : rp + 1'b1; // stale output head; command/ingress protocol unchanged
 `else
- wire [1:0] next_rp = rp + 1'b1;
+ wire [DA-1:0] next_rp = rp + 1'b1;
 `endif
  (* keep *) wire [W-1:0] h_pop = (cnt > 1) ? mem[next_rp] : (pin_v ? pin_d : head_d);
  (* keep *) wire [W-1:0] h_hold = (cnt == 0 && pin_v) ? pin_d : head_d;
@@ -238,12 +250,14 @@ module ot_hgi_w8_bfifo #(parameter integer W=32, parameter integer RIR=0) (
   head_d <= pop ? h_pop : h_hold;
  end
  always @(posedge clk or negedge rst_n)
-  if (!rst_n) begin wp <= 0; rp <= 0; up <= 0; pin_v <= 0; cnt <= 0; end
+  if (!rst_n) begin wp <= 0; rp <= 0; up <= 0; pin_v <= 0; cnt <= 0; ocr <= CRW'(OCR); i_cr <= 1'b0; end
   else begin
+   if (OCR != 0) ocr <= ocr - CRW'(pop) + CRW'(o_cr);
+   i_cr <= (ICR != 0) && pop;
    up <= 1;
    pin_v <= push;
    if (pin_v) wp <= wp + 1'b1;
    if (pop) rp <= rp + 1'b1;
-   cnt <= cnt + {2'b0, pin_v} - {2'b0, pop};
+   cnt <= cnt + (DA+1)'(pin_v) - (DA+1)'(pop);
   end
 endmodule
