@@ -81,9 +81,9 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Claude:hbm-group-B4-1014",
-  "branch": "claude/hbm-topk-rti-1014",
-  "tag": "j1",
+  "owner": "Claude:hbm-group-B6-1014",
+  "branch": "claude/hbm-topk-hub-pin-1014",
+  "tag": "j2",
   "purpose": "TOPK w8 cluster HUB TILE (rt_j): the engine glue (wreg LANE=1 core, front end, status AND tree, max-root tournament, merge credit FIFOs, merge tree, result skid) hardened as its own tile for the cluster centre channel; command valid/registered-ready, scores and results as credit links to the face FIFOs; lane links split S (lanes 0-3) / N (lanes 4-7). Benched through the cluster tb (exact short/full + 4 mutants).",
   "benches": [
    {
@@ -169,10 +169,18 @@
   "views_to": "physical/ref_tile/hgi_topk_hub_rt_j/views",
   "record_to": "results/rtl/ref_tile/hgi_topk_hub_rt_j"
  },
- "structural_change": "rt_j hub tile (Claude group-B4 10-14): nine cluster routes / gates (rt_a..rt_i) left ~12k engine-glue flops as cluster glue; the rt_i gate re-timed shows the glue smeared over the 1,292 x 1,248 um outline (u_hub.out_valid -> u_bo.i_r -233 ps 30 pts, rz -> rem -120, k -> lt_k -61). The glue becomes this hardened tile (centre channel y 505-734, 388.8 x 64.8 um), every hub <-> face-FIFO link register -> wire -> register (command registered ready; scores / results credit links, NCI 6 / NCO 7, E-face FIFO 8 entries); lane hops <= ~430 um. Benches: cluster short 11 + full 16 PASS (big-k cases within +-0.1% of rt_i cycles; small cases -43..+2.5%), BYP / CLR / REV / FIFO-head mutants FAIL.",
+ "structural_change": "j2 (Claude group-B6 10-14): native pin audit of CLOSED j1-b19f38969 (TT +45.16 / FF +1.71): capture 473.5 ps (cmd_valid -> 108-bit command enable tree; cmd_* 267-310 through the enable mux and long wires; lt_mv 446 -> 324 merge-FIFO entry enables; lt_md 225; rst_n 402 raw async) and launch 244.9 (lt_pd). RTL: command = pin registers + 2-entry landing skid with registered ready (acceptance +1 edge); merge leaf mv/md/me pin registers (credit round trip 5 -> 6 with 6 credits, still full rate); rst_n port drives only ot_rst_relay copies. Cluster short 11 + full 16 PASS (big-k within +0.11 %, small cases +2..+3 cycles), BYP/CLR/head/REV mutants FAIL.",
  "inhold": true,
  "children": [],
  "inter": [],
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "source": "results/arch/hbm_group_b6_1014/native_audit_b6.json",
+  "cell": "ot_hgi_topk_hub_tile",
+  "launch_ps": 244.9,
+  "capture_ps": 473.5,
+  "fix": "inputs land in pin registers (command skid, merge leaf), rst_n relay"
+ },
  "io_flop_at_pins": {
   "cols": 4,
   "allow_none": true

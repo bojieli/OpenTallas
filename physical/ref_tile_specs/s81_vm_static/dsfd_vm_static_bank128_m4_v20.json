@@ -1,0 +1,101 @@
+{
+  "name": "dsfd_vm_static_bank128_m4_v20",
+  "top": "dsfd_vm_static_bank128",
+  "kind": "tile",
+  "sources": [
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128.sv",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v"
+  ],
+  "clock_port": "ck",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 220.32,
+    "h": 75.6,
+    "exact": true
+  },
+  "layer_cap": "M5",
+  "signal_max_layer": "M4",
+  "pins": {
+    "W": [
+      "i_rv",
+      "i_ra",
+      "i_rt",
+      "i_wv",
+      "i_wa",
+      "i_wd",
+      "i_wm",
+      "i_wt"
+    ],
+    "E": [
+      "o_rv",
+      "o_rd",
+      "o_rt",
+      "o_commit",
+      "o_ca",
+      "o_cm",
+      "o_ct"
+    ],
+    "N": [
+      "ck",
+      "rst_n"
+    ],
+    "S": []
+  },
+  "io_tcl": "physical/s81_die_pins/v20_vm_static_standard/dsfd_vm_static_bank128.tcl",
+  "macros": [
+    {
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+      "count": 1,
+      "at": [
+        23.328,
+        22.464
+      ],
+      "orient": "R0",
+      "inst": "*u_sram",
+      "at_exact": true
+    }
+  ],
+  "recipe": 2,
+  "sdc_extra": [
+    "physical/ref_tile_specs/s81_vm_static/stream_div3_waveform.sdc"
+  ],
+  "route": {
+    "pd": 0.45,
+    "period_ps": 770,
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "pin_h": "M4",
+    "pin_v": "M3",
+    "macro_halo_um": 5.4
+  },
+  "assigned_bank_grant": {
+    "source": "physical/s81_die_pins/v20_vm_static_standard/dsfd_vm_static_bank128.json",
+    "sha256": "070b6de79180aa8f4ef52072cdb4715d408bb1d876cc0eca6153ca3279150d28",
+    "commit": "e45111389",
+    "PG": "M5",
+    "parent_strap": "M6",
+    "signal_cap": "M4"
+  },
+  "structural_change": "New actual one-bank real1R1W native VM leaf replaces old queuedserialbankprofile; independent1read+1maskedwrite eachstreamedge. Officialstandard220.32x75.6 bank usesactual20um channels, real macro, exact assigned pins, explicitM4signals/M5PG, recipe2pinflops and finaltypedmetal audit. Legacyclosedbanks remain unchanged.",
+  "open_points": [
+    "ParentVMtransport/serial3:4commonepochactualclocksource andfullnativecalendar remain unqualified",
+    "NativebankCTS/TTsetup/FFhold/DRC0/LEFpinaccess and minpulse propagation mustpass; /3waveform is conditionalonclockowner actual sourcecontract"
+  ],
+  "job": {
+    "owner": "Codex:S-VM",
+    "branch": "claude/s81-grpA-r6-1014",
+    "tag": "v20std1",
+    "purpose": "Officialstandardbank220.32x75.6 M4signal/PGM5 nativeCTS+TT/FF/DRC candidate; parentproductionqualifiedfalse",
+    "benches": [
+      {
+        "name": "static_source_receipt",
+        "cmd": "python3 tools/s81_vm/check_static_receipts.py --gate native512rel2 --require-source rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128.sv",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 1
+      }
+    ]
+  }
+}

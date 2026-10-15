@@ -1,0 +1,11 @@
+data mismatch frame0 write0 lane6 gotb54cda56 expecteda483fa56
+data mismatch frame0 write0 lane7 got5384540f expected42bb740f
+data mismatch frame0 write0 lane14 gota708a81e expected963fc81e
+counts/timing 64 64 latency15
+REPLAY frame0 reads64 writes64 response_plus_copy15 complete_after_start81
+counts/timing 64 64 latency15
+REPLAY frame1 reads64 writes64 response_plus_copy15 complete_after_start81
+counts/timing 64 64 latency15
+REPLAY frame2 reads64 writes64 response_plus_copy15 complete_after_start81
+FATAL: /srv/opentallas-scratch/codex/qwen-su-static-copy-1014/rtl/test/qwen_split/tb_qfd_su_static_copy.sv:61: FAIL exact static replay errors3075
+       Time: 524000  Scope: tb_qfd_su_static_copy

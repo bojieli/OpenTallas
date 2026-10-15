@@ -1,0 +1,6 @@
+RESULT requests3857 restored3857 bad81416 actual_SRAMs128 native_chip_qualified0
+FAIL
+- static_leaf/tb_dsfd_vm_static512_suhc.sv:59: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 84us; walltime 0.426 s; speed 197.360 us/s
+- Verilator: cpu 0.425 s on 1 threads; allocated 11 MB

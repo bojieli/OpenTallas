@@ -5,7 +5,7 @@ CAP_MODE v3: bits per cut vs usable tracks, relay pin faces included as hop endp
 
 usage (repo root): python3 tools/qwen_tp8/relay_data_run.py OUTDIR   -> OUTDIR/relay_run.json, OUTDIR/rom_tp8b.json
 Set OT_RELAY_DUMP=FILE for the allocator's per-chain dump, OT_RELAY_GATE=warn to record misses instead of raising."""
-import json, sys, time
+import json, os, sys, time
 from pathlib import Path
 sys.path.insert(0, 'tools'); sys.path.insert(0, 'results/arch/qwen_tp8_1012')
 import die_top_lint as D, cuts as C
@@ -28,7 +28,7 @@ except Exception as e:   # noqa: BLE001
     import traceback
     cost = dict(error=repr(e), trace=traceback.format_exc()[-1500:])
 r = dict(m.get('r21_relays') or {})
-rec = dict(schema='opentallas.qwen-tp8.relay-data-run.v1', recipe='tp8b', die=m['die'], build_s=round(time.time() - t),
+rec = dict(schema='opentallas.qwen-tp8.relay-data-run.v1', recipe='tp8b' + ('+split_compute' if os.environ.get('OT_TP8_SPLIT') else ''), split_compute=m.get('split_compute'), die=m['die'], build_s=round(time.time() - t),
            relays={k: r.get(k) for k in ('pitch_um', 'max_um', 'relays', 'masters', 'classes', 'clock_nets_missing', 'repaired',
                                          'unrepaired', 'cut_over', 'off_plan', 'rip_up', 'gap_tier', 'wall_avoid', 'retry', 'jog_fix', 'pair_check', 'relay_flop_bits', 'relay_area_mm2', 'reach_um',
                                          'max_pin_to_pin_um', 'over_reach')},
@@ -47,6 +47,14 @@ rst.sort(reverse=True)
 rec['reset'] = dict(reset_tree=m.get('tp8_reset_tree'), reset_named_nets=len(rst),
                     reset_named_over_500=[q for q in rst if q[0] > 500.0], reset_named_worst=rst[:12])
 rec['instances'] = len(m['insts'])
+if m.get('native_static_io_contract'):
+    (out / 'native_static_io_contract.json').write_text(json.dumps(m['native_static_io_contract'], indent=1) + '\n')
+    rec['native_static_io_contract'] = m['native_static_io_contract']
+rec['tree_host_manifest'] = m.get('tree_host_manifest')
+if m.get('tree_host_manifest'):
+    (out / 'tree_host_manifest.json').write_text(json.dumps(m['tree_host_manifest'], indent=1) + '\n')
+rec['inline_pads'] = m.get('tp8_inline_pads')     # split compute C5: node-leg / block-word arrival pads
+rec['tp8_tree_pads'] = m.get('tp8_tree_pads')
 rec['tp8b_v5'] = {k: (m.get('tp8b_v5') or {}).get(k) for k in ('views', 'pin_align', 'pin_align_die', 'io', 'torn_kv_chains', 'torn_kv_chains_over_reach', 'n_overlaps')}
 # r9 (coordinator 2026-10-13): pin alignment of every die bundle on the generator's own pin rectangles (0 FAIL to pass)
 try:
@@ -71,12 +79,21 @@ if '--case' in sys.argv:
     # views of the die STA (tools/qwen_tp8/die_sta_libs.py); a split bundle's 1-b _cr / _r part runs against its word
     byi = {i.name: i for i in m['insts']}
     split = m.get('port_split') or {}
+    join = m.get('port_join') or {}
+
+    def real_ports(master, port):
+        if port in join.get(master, {}):
+            return [join[master][port][0]]
+        return [pn for pn, nb in split.get(master, {}).get(port, ())] or [port]
+
     dirs = {}
     for bid, cl, bits, eps in m['buses']:
         for k, (inst, port) in enumerate(eps):
             mst, port = getattr(byi[inst], 'master', ''), port.lstrip('*')
             d = 'output' if k == 0 else 'input'
             dirs.setdefault(mst, {}).setdefault(port, d)
+            if port in join.get(mst, {}):
+                dirs[mst].setdefault(join[mst][port][0], d)
             for sub, nb in (split.get(mst, {}).get(port) or []):
                 rev = nb == 1 and sub.endswith(('_cr', '_r'))
                 dirs[mst].setdefault(sub, ('input' if d == 'output' else 'output') if rev else d)
@@ -94,11 +111,21 @@ if '--case' in sys.argv:
             continue
         (ia, pa), (ib, pb) = eps
         ma, mb = getattr(byi[ia], 'master', ''), getattr(byi[ib], 'master', '')
-        peer.setdefault((ma, pa.lstrip('*')), f'{mb}.{pb.lstrip("*")}')
-        peer.setdefault((mb, pb.lstrip('*')), f'{ma}.{pa.lstrip("*")}')
+        for mn, p, other, op in ((ma, pa, mb, pb), (mb, pb, ma, pa)):
+            for pn in real_ports(mn, p.lstrip('*')):
+                target = '|'.join(f'{other}.{q}' for q in real_ports(other, op.lstrip('*')))
+                key = (mn, pn)
+                if key in peer and target not in peer[key].split(';'):
+                    peer[key] += ';' + target
+                else:
+                    peer.setdefault(key, target)
     pdir = out / 'pins'
     pdir.mkdir(exist_ok=True)
     index = {}
+    # Pin assignments use the same exact RTL names emitted by the case, including
+    # cbuf/crom split bundles and the three-source joined head ti bus.
+    emit_saved = getattr(v, 'EMIT_SPLIT', False)
+    v.EMIT_SPLIT = True
     for name, mst in sorted(M.items()):
         if re.match(r'^(q[fk]d_rly|qfd_rst_rep)', name) or not any(getattr(i, 'master', '') == name for i in m['insts']):
             continue
@@ -108,7 +135,8 @@ if '--case' in sys.argv:
             cx, cy = (r[0] + r[2]) / 2, (r[1] + r[3]) / 2
             d = dict(W=cx, E=mst.w - cx, S=cy, N=mst.h - cy)
             f = min(d, key=d.get)
-            q = g.setdefault(base, dict(face=f, layer=layer, pos=[], interior=d[f] > 1.0))
+            q = g.setdefault(base, dict(face=f, layer=layer, pos=[], xy=[], interior=d[f] > 1.0))
+            q['xy'].append((int(idx[:-1]) if idx else 0, round(cx,4), round(cy,4)))
             q['pos'].append((int(idx[:-1]) if idx else 0, round(cy if f in 'EW' else cx, 4)))
         faces, rng, ports = {}, {}, {}
         for base, q in g.items():
@@ -117,7 +145,7 @@ if '--case' in sys.argv:
             ports[base] = dict(face=q['face'], layer=q['layer'], bits=len(q['pos']), range_um=[lo, hi],
                                bit0_at='lo' if q['pos'][0][1] <= q['pos'][-1][1] else 'hi',
                                direction=dirs.get(name, {}).get(base, 'input'), peer=peer.get((name, base)),
-                               **({'interior': True} if q['interior'] else {}))
+                               **({'interior': True, 'positions_xy_um': [[x,y] for _,x,y in sorted(q['xy'])]} if q['interior'] else {}))
             if not q['interior']:
                 faces.setdefault(q['face'], []).append((lo, base))
                 rng[base] = [lo, hi]
@@ -128,7 +156,9 @@ if '--case' in sys.argv:
                          'lists its view pins')
         (pdir / f'{name}.json').write_text(json.dumps(rec_, indent=1) + '\n')
         index[name] = dict(instances=rec_['instances'], ports=len(ports), bits=sum(q_['bits'] for q_ in ports.values()))
+    v.EMIT_SPLIT = emit_saved
     (pdir / 'INDEX.json').write_text(json.dumps(index, indent=1) + '\n')
+r = rec['relays']  # pin rectangle iteration above uses its own local r value
 print(json.dumps(dict(relays=r.get('relays'), max_pin_to_pin_um=r.get('max_pin_to_pin_um'), over_reach=len(r.get('over_reach') or []),
                       unrepaired=len(r.get('unrepaired') or []), worst_cut=rec['cuts']['worst'], build_s=rec['build_s'],
                       reset_over_500=len(rec['reset']['reset_named_over_500']), instances=rec['instances'],

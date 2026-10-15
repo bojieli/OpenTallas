@@ -1,122 +1,111 @@
 {
- "name": "s81hc_cnrsq_ref-v2-owned-ngo-1c29a9eed",
- "block": "ot_s81_hc_cnrsq",
- "ref_tile": true,
- "owner": "Codex:S-NORM",
- "purpose": "el1014-s81-norm-tree (owner 10-14 ~06:55: NORM tree = PARALLEL default-off variant with NEW master names; replaces the serial-chain HC NORM only when all variant tiles close and the composition is exact): ot_s81_hc_cnrsq: the norm's scalar end at the far end of the chains",
- "threads": 8,
- "peak_ram_gb": 32,
- "source": {
-  "branch": "claude/s81-norm-tree-1014",
-  "commit": "1c29a9eed"
- },
- "stages": {
-  "bench": [
-   {
-    "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81_hc_cnrsq u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ntree.sv rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_stree.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv rtl/dsrom_sys/s81_suhc/ot_s81_hc_core.sv rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv rtl/lib/ot_skid_buffer.sv rtl/hdc/v41x/ot_dsrom_su_hcpost.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv rtl/hdc/v41x/ot_dsrom_su_norm.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/v41/ot_hdc_fsqrt.sv rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/v41/ot_hdc_softplus.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/v41/ot_hdc_actquant.sv rtl/hdc/v41x/ot_dsrom_aq12.sv rtl/hdc/v41x/ot_dsrom_divc.sv && echo lint-ok",
-    "expect": "pass",
-    "threads": 1,
-    "peak_ram_gb": 4,
-    "needs": [
-     "verilator"
-    ]
-   },
-   {
-    "name": "hc_ntree_tmut_ot_s81_hc_cnrsq",
-    "cmd": "bash tools/s81_suhc/hc_ntree_bench.sh {RUN}/bench/nt_tm 0 ot_s81_hc_cnrsq",
-    "expect": "fail",
-    "fail_regex": "^RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_nt67_tm-ot_s81_hc_cnrsq fail$",
-    "threads": 16,
-    "peak_ram_gb": 40,
-    "needs": [
-     "verilator"
-    ]
-   },
-   {
-    "name": "hc_ntree_exact_ng256",
-    "cmd": "bash tools/s81_suhc/hc_ntree_bench.sh {RUN}/bench/nt_m0 0",
-    "expect": "pass",
-    "pass_regex": "^RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_nt67 pass$",
-    "threads": 16,
-    "peak_ram_gb": 40,
-    "needs": [
-     "verilator"
-    ]
-   },
-   {
-    "name": "hc_ntree_neg_m3",
-    "cmd": "bash tools/s81_suhc/hc_ntree_bench.sh {RUN}/bench/nt_m3 3",
-    "expect": "fail",
-    "fail_regex": "^RUN ng256_dpi_m3_a0_hier3tail_cp1_cs6_ls1_nt67 fail$",
-    "threads": 16,
-    "peak_ram_gb": 40,
-    "needs": [
-     "verilator"
-    ]
-   }
+  "name": "s81hc_cnrsq_ref-v2-owned-ngo-d03943162",
+  "block": "ot_s81_hc_cnrsq",
+  "ref_tile": true,
+  "owner": "Codex:S-NORM",
+  "purpose": "el1014-s81-norm-tree (owner 10-14 ~06:55: NORM tree = PARALLEL default-off variant with NEW master names; replaces the serial-chain HC NORM only when all variant tiles close and the composition is exact): ot_s81_hc_cnrsq: the norm's scalar end at the far end of the chains",
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "source": {
+    "branch": "claude/s81-norm-tree-1014",
+    "commit": "d03943162"
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "lint",
+        "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81_hc_cnrsq u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ntree.sv rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_stree.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv rtl/dsrom_sys/s81_suhc/ot_s81_hc_core.sv rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv rtl/lib/ot_skid_buffer.sv rtl/hdc/v41x/ot_dsrom_su_hcpost.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv rtl/hdc/v41x/ot_dsrom_su_norm.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/v41/ot_hdc_fsqrt.sv rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/v41/ot_hdc_softplus.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/v41/ot_hdc_actquant.sv rtl/hdc/v41x/ot_dsrom_aq12.sv rtl/hdc/v41x/ot_dsrom_divc.sv && echo lint-ok",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "owned_nt_exact_ng256_pipe1",
+        "cmd": "bash tools/s81_suhc/hc_owned_bench.sh {RUN}/bench/owned_nt_exact 1",
+        "expect": "pass",
+        "pass_regex": "^RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_pipe40_nt67 pass$",
+        "threads": 16,
+        "peak_ram_gb": 40,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "owned_cnrsq_ngo_mut_pipe1",
+        "cmd": "bash tools/s81_suhc/hc_owned_bench.sh {RUN}/bench/owned_ngo_mut 1 ot_s81_hc_cnrsq",
+        "expect": "fail",
+        "fail_regex": "^RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_pipe40_nt67_tm-ot_s81_hc_cnrsq fail$",
+        "threads": 16,
+        "peak_ram_gb": 40,
+        "needs": [
+          "verilator"
+        ]
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+    },
+    "route": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81hc_cnrsq_ref/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81hc_cnrsq_ref/kit.env {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ],
+      "threads": 8,
+      "peak_ram_gb": 32
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81hc_cnrsq_ref --out {RUN}/record/views/ot_s81_hc_cnrsq  > {RUN}/record/route/export.log 2>&1"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "ttb_routed_at_TC",
+        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      }
+    ],
+    "post_sdc": [
+      "physical/ref_tile/s81hc_cnrsq_ref/signoff.sdc",
+      "physical/common_flow/link_budget_consistent.sdc"
+    ],
+    "macros": []
+  },
+  "hold_eco": {
+    "enabled": true,
+    "session": "mm",
+    "reason": "ref_tile: corrected FF hold flow"
+  },
+  "budget": {
+    "enabled": false,
+    "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record/views",
+      "to": "physical/ref_tile/s81hc_cnrsq_ref/views"
+    },
+    {
+      "from": "{RUN}/record/route",
+      "to": "results/rtl/ref_tile/s81hc_cnrsq_ref/s81hc_cnrsq_ref-v2-owned-ngo-d03943162"
+    }
   ],
-  "calibrate": {
-   "enabled": false,
-   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
-  },
-  "route": {
-   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81hc_cnrsq_ref/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81hc_cnrsq_ref/kit.env {LABEL} {RUN}/routes",
-   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
-   "logs": [
-    "{RUN}/routes/{LABEL}/flow.log"
-   ],
-   "threads": 8,
-   "peak_ram_gb": 32
-  },
-  "collect": {
-   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81hc_cnrsq_ref --out {RUN}/record/views/ot_s81_hc_cnrsq  > {RUN}/record/route/export.log 2>&1"
+  "cycles_added": 0,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.03,
+  "route_corner": "TC",
+  "notes": "generated by tools/ref_tile/ref_tile.py; job-bound behavior uses current PIPE1/PD40 production tuple; immutable physical spec kept unchanged for exact gate binding.",
+  "merge_target": null,
+  "structural_change": "Wires-only cnbot loses hidden state; cnrsq owns ngo pin register driven by same f_fv and reset epoch. Die-assigned ngo pin pending.",
+  "no_bench_reason": "bit-exactness is gated on the HC slab composition with dsfd_sp_hc NTREE 1 (tools/s81_suhc/hc_ntree_bench.sh: NG 256 production shape exact PASS + mutant 3 FAIL; tools/s81_suhc/hc_gate.py --ntree 1 NG 256 exact 0/1940 x3 + per-tile mutants); the tile alone has no golden",
+  "reroute_reason": {
+    "kind": "rtl_change",
+    "fix": "Move the unplaced cnbot ngo/reset registers into the scalar physical leaf, sharing its identical reset chain; preserve cycle semantics."
   }
- },
- "verdict": {
-  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
-  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
-  "checks": [
-   {
-    "name": "ttb_routed_at_TC",
-    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
-   }
-  ],
-  "post_sdc": [
-   "physical/ref_tile/s81hc_cnrsq_ref/signoff.sdc",
-   "physical/common_flow/link_budget_consistent.sdc"
-  ],
-  "macros": []
- },
- "hold_eco": {
-  "enabled": true,
-  "session": "mm",
-  "reason": "ref_tile: corrected FF hold flow"
- },
- "budget": {
-  "enabled": false,
-  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
- },
- "record": [
-  {
-   "from": "{RUN}/record/views",
-   "to": "physical/ref_tile/s81hc_cnrsq_ref/views"
-  },
-  {
-   "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_cnrsq_ref/s81hc_cnrsq_ref-v2-owned-ngo-1c29a9eed"
-  }
- ],
- "cycles_added": 0,
- "route_hold_corners": "mm",
- "route_hold_margin_ns": 0.03,
- "route_corner": "TC",
- "notes": "generated by tools/ref_tile/ref_tile.py",
- "merge_target": null,
- "structural_change": "Wires-only cnbot loses hidden state; cnrsq owns ngo pin register driven by same f_fv and reset epoch. Die-assigned ngo pin pending.",
- "no_bench_reason": "bit-exactness is gated on the HC slab composition with dsfd_sp_hc NTREE 1 (tools/s81_suhc/hc_ntree_bench.sh: NG 256 production shape exact PASS + mutant 3 FAIL; tools/s81_suhc/hc_gate.py --ntree 1 NG 256 exact 0/1940 x3 + per-tile mutants); the tile alone has no golden",
- "reroute_reason": {
-  "kind": "rtl_change",
-  "fix": "Move the unplaced cnbot ngo/reset registers into the scalar physical leaf, sharing its identical reset chain; preserve cycle semantics."
- }
 }

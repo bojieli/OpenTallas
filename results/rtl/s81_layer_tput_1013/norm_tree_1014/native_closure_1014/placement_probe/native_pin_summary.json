@@ -1,0 +1,50 @@
+[
+  {
+    "cell": "ot_s81_hc_ctfx_cap",
+    "view": "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/placement_probe/serial",
+    "lib_cell": "ot_s81_hc_ctfx_cap",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 248.9,
+    "spread_ps": 14.9,
+    "outputs": 2270,
+    "inputs": 1136,
+    "launch_ps": 190.0,
+    "launch_pin": "fdx_local[1113]",
+    "capture_ps": 244.7,
+    "capture_pin": "rst_in",
+    "launch_over": 0,
+    "capture_over": 1,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": false,
+    "fail_why": "capture 244.7 > 190 (1 pins)",
+    "qualification_status": "UNQUALIFIED_PLACEMENT_ONLY"
+  },
+  {
+    "cell": "ot_s81_hc_ctfx_nt",
+    "view": "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/placement_probe/nt",
+    "lib_cell": "ot_s81_hc_ctfx_nt",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 270.4,
+    "spread_ps": 60.9,
+    "outputs": 2578,
+    "inputs": 1577,
+    "launch_ps": 208.9,
+    "launch_pin": "fdx[809]",
+    "capture_ps": 252.3,
+    "capture_pin": "rst_in",
+    "launch_over": 0,
+    "capture_over": 26,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": false,
+    "fail_why": "capture 252.3 > 190 (26 pins)",
+    "qualification_status": "UNQUALIFIED_PLACEMENT_ONLY"
+  }
+]

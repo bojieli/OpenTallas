@@ -1,0 +1,27 @@
+{
+  "status": "necessary lower bound under stated geometry assumptions, not unconditional die impossibility",
+  "outline": [
+    362.88,
+    1425.6
+  ],
+  "allowed_dimension_preserving_orientations": [
+    "R0",
+    "MX",
+    "MY",
+    "R180"
+  ],
+  "gap_um": 20.088,
+  "outer_margin_um": 20.088,
+  "inner_width_um": 322.704,
+  "wide_leaf_count": 7,
+  "wide_width_um": 311.04,
+  "smallest_other_leaf_width_um": 25.92,
+  "wide_plus_smallest_with_gap_um": 357.04800000000006,
+  "three_lanes_with_gaps_um": 339.55199999999996,
+  "wide_exclusive_height_um": 811.7280000000001,
+  "eight_lane_min_height_um": 621.864,
+  "necessary_total_height_um": 1493.856,
+  "excess_over_target_um": 68.25600000000009,
+  "method": "Every bank/RQR is vertically exclusive from all other leaves because width311.04 plus smallestother25.92 plusgap20.088 exceeds inner322.704. At most two lanes overlap in y, since threelanes+gaps339.552 exceedinner. Seven wide leaves require811.728 tall plus gap to lanecluster; eight lanes require621.864 tall even omitting node/control/cache/TX/response. These disjoint vertical occupancies plus outer margins require1493.856 height.",
+  "request": "RQR aspect must change or a different channel/slot contract must be proved; narrowcontrol alone cannot repair statedheight bound. No gate/margin relaxation granted."
+}

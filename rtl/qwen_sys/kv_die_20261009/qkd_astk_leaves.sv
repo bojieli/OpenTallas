@@ -512,7 +512,11 @@ endmodule
 // The e read: address flop at the pin, SRAM, one of 8 slots, output flop at the pin = 3 cycles (the engine is built with
 // KVD_ERL 3; the golden's contract is 1): every port is a flop at the pin.  A slice starts its pass 6 cycles after the token of the
 // slice below, so the partial sum of a chunk meets this slice's e on the same edge whatever the wire between them.
-module qkd_astk_ep (
+module qkd_astk_ep #(
+    parameter integer STATIC_SCHEDULE=0,
+    parameter integer EXP_START_AGE=0,
+    parameter integer HEADS=`KVD_HEADS
+) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire [4:0]    sq,
@@ -567,6 +571,14 @@ module qkd_astk_ep (
     end
     wire         start = qq[0];
     wire [13:0]  T = qq[14:1];
+    // Compiler ages are measured in edges AFTER the local start edge.
+    reg [15:0] schedule_age;
+    reg schedule_active;
+    always @(posedge ck or negedge rn_q)
+        if (!rn_q) begin schedule_age<=0; schedule_active<=0; end
+        else if (start) begin schedule_age<=0; schedule_active<=1; end
+        else if (schedule_active && schedule_age!=16'hffff) schedule_age<=schedule_age+1'b1;
+
     wire [1:0]   kdone = qq[535:534];
     wire         mv = qq[536], mg = qq[537];
     wire [1:0]   mh = qq[539:538];
@@ -590,7 +602,10 @@ module qkd_astk_ep (
     // check, no e-row write, no token, no pass start) -- a start may follow another one at any distance.
     reg  [7:0]   stl;
     wire         quiet = stl == 8'd0;
-    wire         trig = quiet && ((Q == 3'd0) ? (!a_busy && go[a_sg] && !gone[a_sg]) : tokd[5]);
+    wire static_trigger = schedule_active && schedule_age == EXP_START_AGE-1;
+    wire trig = STATIC_SCHEDULE ? static_trigger : (quiet && ((Q == 3'd0) ? (!a_busy && go[a_sg] && !gone[a_sg]) : tokd[5]));
+    initial if (STATIC_SCHEDULE && (HEADS != 1 || EXP_START_AGE <= DT+16))
+        $fatal(1,"invalid static ASTK EXP profile");
     reg  [DT-1:0] tb_sr;
     always @(posedge ck or negedge rn_q) if (!rn_q) tb_sr <= {DT{1'b0}}; else tb_sr <= start ? {DT{1'b0}} : {tb_sr[DT-2:0], trig};
     wire         trig_b = tb_sr[DT-1];
@@ -685,7 +700,9 @@ module qkd_astk_ep (
             if (stl != 8'd0) stl <= stl - 8'd1;
             tok1 <= trig; zo[1] <= tok1; zo[0] <= sv_[0];
             if (trig && first) gone[a_sg] <= 1'b1;
-            if (j_bad || (|se) || (trig && a_busy)) f <= 1'b1;
+            if (j_bad || (|se) || (trig && a_busy) ||
+                (STATIC_SCHEDULE && trig && (!quiet || !go[0] || a_sg)) ||
+                (STATIC_SCHEDULE && !first && (tokd[5] != static_trigger))) f <= 1'b1;
             if (mv) begin if (mg) mc1 <= mc1 + 3'd1; else mc0 <= mc0 + 3'd1; end
             if (r_me && rq[5:2] == rkb[12:9]) xd[{rq[1], rq[9]}] <= 1'b1;
             if (start) begin mc0 <= 3'd0; mc1 <= 3'd0; xd <= 4'd0; gone <= 2'b00; tokd <= 6'd0; f <= 1'b0; stl <= 8'(DT + 16); tok1 <= 1'b0; zo[1] <= 1'b0; end
@@ -827,7 +844,11 @@ endmodule
 // px / py [262:0] in  the two P.V lanes;  zi [137:0] in  the Z tree's block sums {sum 128, slot 4, k 4, g, v};
 // fx / fy / fz in: tree and Z faults
 module qkd_astk_ctl #(
-    parameter integer HEADS = `KVD_HEADS   // kvsys-elements r2: the die profile as a parameter (native TP8 = 1)
+    parameter integer HEADS = `KVD_HEADS,  // native TP8 = 1
+    parameter integer STATIC_SCHEDULE=0,
+    parameter integer LMAX_START_AGE=0,
+    parameter integer Z_START_AGE=0,
+    parameter integer Z_STRIDE=4
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -867,6 +888,14 @@ module qkd_astk_ctl #(
                    zq[0] <= zi[0]; fx_q <= fx; fy_q <= fy; fz_q <= fz; end
     wire         start = aq_q[0];
     wire [13:0]  T = aq_q[14:1];
+    // Compiler ages are measured in edges AFTER the local start edge.
+    reg [15:0] schedule_age;
+    reg schedule_active;
+    always @(posedge ck or negedge rn_q)
+        if (!rn_q) begin schedule_age<=0; schedule_active<=0; end
+        else if (start) begin schedule_age<=0; schedule_active<=1; end
+        else if (schedule_active && schedule_age!=16'hffff) schedule_age<=schedule_age+1'b1;
+
     // ---- stack geometry (the golden's expressions) ---------------------------------------------------------------------
     wire [13:0]  base_s = {5'd0, st_q, 7'd0};
     wire         any_s = T > base_s;
@@ -893,10 +922,21 @@ module qkd_astk_ctl #(
     wire         z_ne = zfw != zfr;
     wire [132:0] z_hd = zf_m[zfr[3:0]];
     always @(posedge ck) if (zq[0] && stl == 7'd0) zf_m[zfw[3:0]] <= {zq[137:10], zq[5:2], zq[1]};
-    wire         l_pend = (kdone[0] && !lsent[0]) || (HEADS == 2 && kdone[1] && lsent[0] && !lsent[1]);
+    wire         legacy_l_pend = (kdone[0] && !lsent[0]) || (HEADS == 2 && kdone[1] && lsent[0] && !lsent[1]);
     wire         lg = lsent[0];
-    wire         zd0 = !zsent[0] && qgo[0] && zn0 == nblk && !z_ne;
-    wire         zd1 = (HEADS == 2) && !zsent[1] && zsent[0] && qgo[1] && zn1 == nblk && !z_ne;
+    wire         legacy_zd0 = !zsent[0] && qgo[0] && zn0 == nblk && !z_ne;
+    wire         legacy_zd1 = (HEADS == 2) && !zsent[1] && zsent[0] && qgo[1] && zn1 == nblk && !z_ne;
+    wire l_slot = schedule_active && schedule_age >= LMAX_START_AGE-1 && schedule_age < LMAX_START_AGE+3;
+    wire [15:0] z_age = schedule_age - (Z_START_AGE-1);
+    wire z_window = schedule_active && schedule_age >= Z_START_AGE-1;
+    wire z_slot = z_window && (z_age / Z_STRIDE < nblk) && (z_age % Z_STRIDE < 4);
+    wire z_done_slot = z_window && z_age == nblk * Z_STRIDE;
+    wire l_pend = STATIC_SCHEDULE ? l_slot : legacy_l_pend;
+    wire z_emit = STATIC_SCHEDULE ? z_slot : z_ne;
+    wire zd0 = STATIC_SCHEDULE ? z_done_slot : legacy_zd0;
+    wire zd1 = STATIC_SCHEDULE ? 1'b0 : legacy_zd1;
+    initial if (STATIC_SCHEDULE && (HEADS != 1 || LMAX_START_AGE < 1 ||
+        Z_START_AGE < LMAX_START_AGE+4 || Z_STRIDE < 4)) $fatal(1,"invalid static ASTK CTL profile");
     // ---- P.V: the two lanes carry the two halves of a beat on the same edge ---------------------------------------------
     reg  [6:0]   stl;                                  // restart: 96 cycles in which the lanes and the Z nodes drain
     wire         quiet = stl == 7'd0;
@@ -925,7 +965,10 @@ module qkd_astk_ctl #(
             lt[0] <= start; qo[0] <= start; qo[15] <= aq_q[21]; qo[535:534] <= kdone; qo[536] <= am_q[0]; co[0] <= start;
             ap[0] <= 1'b0; ap[45] <= pv_v; ap[44:43] <= pvd;
             af <= f | (quiet && (xq[0] | fx_q | fy_q | fz_q)) | zovf;
-            if (pv_bad) f <= 1'b1;
+            if (pv_bad || (STATIC_SCHEDULE &&
+                ((l_slot && !kdone[0]) || (z_slot && !z_ne) ||
+                 (z_slot && (z_hd[0] || z_hd[4:1] != z_age / Z_STRIDE)) ||
+                 (z_done_slot && (!qgo[0] || zn0 != nblk || z_ne))))) f <= 1'b1;
             if (pv_v && pxq[5:1] == 5'd31) pvd[pxq[6]] <= 1'b1;
             sc0 <= sc0 + {8'd0, xq[4:1]}; sc1 <= sc1 + {8'd0, xq[8:5]};
             if (sc0 == n_s) kdone[0] <= 1'b1;
@@ -937,7 +980,7 @@ module qkd_astk_ctl #(
             if (l_pend) begin
                 ap[0] <= 1'b1;
                 if (lh == 3'd3) begin lh <= 3'd0; lsent[lg] <= 1'b1; end else lh <= lh + 3'd1;
-            end else if (z_ne) begin
+            end else if (z_emit) begin
                 ap[0] <= 1'b1;
                 if (zh == 2'd3) begin
                     zh <= 2'd0; zfr <= zfr + 5'd1;
@@ -960,7 +1003,7 @@ module qkd_astk_ctl #(
         // {so_data 32, so_any, so_k 4, so_hh 2, so_g, so_type 2}
         // a stack without a position has no maximum (the return chain may still hold the last layer's)
         if (l_pend) ap[42:1] <= {lm_s, xq[9 + lg] && n_s != 12'd0, 4'd0, lh[1:0], lg, 2'd0};
-        else if (z_ne) ap[42:1] <= {z_s, 1'b1, z_hd[4:1], zh, z_hd[0], 2'd1};
+        else if (z_emit) ap[42:1] <= {z_s, 1'b1, z_hd[4:1], zh, z_hd[0], 2'd1};
         else ap[42:1] <= {32'd0, 1'b1, 4'd0, 2'd0, zd1, 2'd2};
     end
 `ifdef KVD_AKDBG
@@ -975,7 +1018,12 @@ endmodule
 
 // kvsys-elements r2 2026-10-14: native TP8 master of the aggregator control leaf (HEADS 1 fixed in RTL, like
 // qkd_ectl_a/b/c_tp8): the historical qkd_astk_ctl view is the HEADS 2 build and is not a native view.
-module qkd_astk_ctl_tp8 (
+module qkd_astk_ctl_tp8 #(
+    parameter integer STATIC_SCHEDULE=0,
+    parameter integer LMAX_START_AGE=0,
+    parameter integer Z_START_AGE=0,
+    parameter integer Z_STRIDE=4
+) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire [1:0]    st,
@@ -994,6 +1042,7 @@ module qkd_astk_ctl_tp8 (
     input  wire          fy,
     input  wire          fz
 );
-    qkd_astk_ctl #(.HEADS(1)) u (.ck(ck), .rst_n(rst_n), .st(st), .aq(aq), .lt(lt), .am(am), .ap(ap), .af(af), .qo(qo), .xi(xi),
+    qkd_astk_ctl #(.HEADS(1), .STATIC_SCHEDULE(STATIC_SCHEDULE), .LMAX_START_AGE(LMAX_START_AGE),
+        .Z_START_AGE(Z_START_AGE), .Z_STRIDE(Z_STRIDE)) u (.ck(ck), .rst_n(rst_n), .st(st), .aq(aq), .lt(lt), .am(am), .ap(ap), .af(af), .qo(qo), .xi(xi),
         .co(co), .px(px), .py(py), .zi(zi), .fx(fx), .fy(fy), .fz(fz));
 endmodule

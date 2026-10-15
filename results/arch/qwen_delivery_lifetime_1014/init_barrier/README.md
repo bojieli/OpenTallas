@@ -1,0 +1,15 @@
+# Initialization barrier candidate
+
+The historical lifetime controller begins dispatch immediately after pulsing bank BEGIN. A spatial BEGIN delivery delay could let a tile query reach an uninitialized ledger. The existing begin/event collision fault does not supply a barrier or a replay path.
+
+The distinct default-off `ot_qwen_xdelivery_lifetime_init_ctrl` waits for all bank initialization receipts before exposing dispatch. Each receipt must match the retained accepted-operation context, acquired VM version, and that bank's participant mask. Wrong receipts fault; missing receipts keep dispatch blocked. Reset retains the existing explicit transport-flush fence.
+
+The distinct `ot_qwen_xdelivery_ack_vector_init` wraps the unchanged vector bank. Its receipt becomes valid after the actual bank BEGIN edge, retains context/version/participants until acknowledgement, and is suppressed by an actual bank fault. BEGIN/event overlap therefore cannot certify initialization. The wrapper permits another BEGIN only after the old bank is genuinely drained and its receipt consumed. Posted query, retirement and seal strobes are not masked.
+
+The admitted final gate ran on EPYC4 as `oth-ubuntu-2403436-1791978670`, 1 GB / one thread, exit 0. It contains three positive cases (disabled controller, controller barrier, actual vector-bank receipt) and seven observed rejected mutants: barrier bypass, stale context, stale version, wrong participant cohort, receipt before actual BEGIN, receipt despite bank fault, and dropping an unacknowledged receipt. Controller receipts are independently stimulated; this is not a full field controller/bank transport composition.
+
+The earlier identity-only version passed eight cases in unit3063594 on EPYC1; v2 added participant-mask validation and passed nine cases in unit2401603 on EPYC4. Their frozen staging directories remain separate. Final v3 adds the explicit default-off positive without changing the v2 production body.
+
+For the intended 16 banks of 48 tiles, each bank receipt is 96 metadata bits (context16 + version32 + participant48), plus valid and acknowledgement. The wrapper adds 98 declared state bits per bank (metadata96 + initialized + pending); the controller adds a 16-bit received mask. This is an analytical 1,584-bit increment before synthesis, not a mapped or measured physical census. Held initialization receipts are consumed on the live ledger/control clock family; a stopped coherent tile clock must not own acknowledgement recovery.
+
+Actual spatial BEGIN and receipt delivery, reset fencing, per-child insertion/clock phases, pin assignment, registered transport, mapped outlines, and propagation cost remain unbound. No actual peer acknowledgement is invented, no old master/view is aliased, and the candidate is not adopted in production. A physical request must bind real BEGIN acceptance and matching mask receipts before any actual tile GO. Waiting may add admission cycles; no free latency or native throughput qualification is claimed.

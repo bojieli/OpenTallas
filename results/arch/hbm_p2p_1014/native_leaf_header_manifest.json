@@ -1,0 +1,739 @@
+{
+  "status": "pin assignment input; probe gates only, not routed closure",
+  "leaves": [
+    {
+      "name": "hgi_coll_rgx_rx_n2",
+      "top": "ot_hgi_coll_rx_native",
+      "sources": [
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_crl.sv"
+      ],
+      "params": {
+        "W": 552,
+        "CRD": 16
+      },
+      "pins": {
+        "S": [
+          "t_v",
+          "t_d"
+        ],
+        "N": [
+          "out_v",
+          "out_d",
+          "out_rdy",
+          "epoch",
+          "fault"
+        ],
+        "W": [
+          "clk",
+          "rst_n"
+        ]
+      },
+      "kit": "physical/ref_tile/hgi_coll_rgx_rx_n2",
+      "spec": "results/arch/hbm_p2p_1014/hgi_coll_rgx_rx_n2.json"
+    },
+    {
+      "name": "hgi_coll_tkw_rx_n3",
+      "top": "ot_hgi_coll_rx_native",
+      "sources": [
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_crl.sv"
+      ],
+      "params": {
+        "W": 568,
+        "CRD": 8
+      },
+      "pins": {
+        "S": [
+          "t_v",
+          "t_d"
+        ],
+        "N": [
+          "out_v",
+          "out_d",
+          "out_rdy",
+          "epoch",
+          "fault"
+        ],
+        "W": [
+          "clk",
+          "rst_n"
+        ]
+      },
+      "kit": "physical/ref_tile/hgi_coll_tkw_rx_n3",
+      "spec": "results/arch/hbm_p2p_1014/hgi_coll_tkw_rx_n3.json"
+    },
+    {
+      "name": "hgi_coll_ring_state_n2",
+      "top": "ot_hgi_coll_pring_state",
+      "sources": [
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring.sv"
+      ],
+      "params": {},
+      "pins": {
+        "S": [
+          "lp_wr",
+          "tree_wr",
+          "carry_wr0",
+          "carry_wr1",
+          "lp_data",
+          "tree_data"
+        ],
+        "N": [
+          "lp",
+          "tree"
+        ],
+        "E": [
+          "carry_data",
+          "c0"
+        ],
+        "W": [
+          "c1",
+          "c2",
+          "c3",
+          "clk"
+        ]
+      },
+      "kit": "physical/ref_tile/hgi_coll_ring_state_n2",
+      "spec": "results/arch/hbm_p2p_1014/hgi_coll_ring_state_n2.json"
+    },
+    {
+      "name": "hgi_coll_ring_add_n2",
+      "top": "ot_hgi_coll_pring_add_lane",
+      "sources": [
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring.sv",
+        "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+        "rtl/hdc/ot_hdc_prefix.sv",
+        "rtl/hdc/ot_hdc_fastfp.sv"
+      ],
+      "params": {
+        "LAT": 8
+      },
+      "pins": {
+        "S": [
+          "valid_in",
+          "a",
+          "b"
+        ],
+        "N": [
+          "y",
+          "valid_out"
+        ],
+        "W": [
+          "clk",
+          "rst_n"
+        ]
+      },
+      "kit": "physical/ref_tile/hgi_coll_ring_add_n2",
+      "spec": "results/arch/hbm_p2p_1014/hgi_coll_ring_add_n2.json"
+    }
+  ],
+  "topk": {
+    "parent": "ot_hfd_coll_q3",
+    "enable": "TKM=1, TKM_NATIVE=1, TKM_KMAX=2048",
+    "rtl": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_tkm_native.sv",
+    "source_extraction_commit": "59d7ee8b1",
+    "clock_count": 39,
+    "clocks": [
+      {
+        "parent_port": "tkm_clk_tile[31:0]",
+        "child": "u_q.u_ep.g_tkm.g_native.u_tkm.g_t[i].u_t.clk",
+        "count": 32
+      },
+      {
+        "parent_port": "tkm_clk_lane[3:0]",
+        "child": "u_q.u_ep.g_tkm.g_native.u_tkm.u_seq.g_lane[i].u_lane.clk",
+        "count": 4
+      },
+      {
+        "parent_port": "tkm_clk_core",
+        "child": "u_q.u_ep.g_tkm.g_native.u_tkm.u_seq.u_core.clk",
+        "count": 1
+      },
+      {
+        "parent_port": "tkm_clk_buffer",
+        "child": "u_q.u_ep.g_tkm.g_native.u_tkm.u_seq.u_buffer.clk",
+        "count": 1
+      },
+      {
+        "parent_port": "tkm_clk_packer",
+        "child": "u_q.u_ep.g_tkm.g_native.u_tkm.u_seq.g_legacy_output.u_packer.clk",
+        "count": 1
+      }
+    ],
+    "limitations": [
+      "Native extraction K64 Verilator lint PASS (5.13 GB allocated); full K2048 benchmark pending on this integration.",
+      "TOPK broadcast/return physical stations and native output boundary qualification remain required.",
+      "All clock port vectors are separate roots; do not alias buffer/packer to core without measuring child phases."
+    ]
+  },
+  "assigned_pin_commit": "e079fc550 (published locally at 314205dde)",
+  "route_candidates": {
+    "rgx_rx": {
+      "spec": "results/arch/hbm_p2p_1014/hgi_coll_rgx_rx_r2.json",
+      "kit": "physical/ref_tile/hgi_coll_rgx_rx_r2",
+      "gate": "PASS zero warnings,10018 sinks; route job hgi_coll_rgx_rx_r2-r2-51de2332d submitted"
+    },
+    "tkw_rx": {
+      "spec": "results/arch/hbm_p2p_1014/hgi_coll_tkw_rx_r2.json",
+      "kit": "physical/ref_tile/hgi_coll_tkw_rx_r2",
+      "gate": "PASS zero warnings,5743 sinks; route job hgi_coll_tkw_rx_r2-r2-51de2332d submitted"
+    },
+    "ring_state": {
+      "spec": "results/arch/hbm_p2p_1014/hgi_coll_ring_state_r1.json",
+      "kit": "physical/ref_tile/hgi_coll_ring_state_r1",
+      "gate": "CLOSED native pin audit PASS, official-pin coordinates exact",
+      "view": "physical/ref_tile/hgi_coll_ring_state_r1/views/ot_hgi_coll_pring_state",
+      "native_audit": {
+        "pass": true,
+        "launch_ps": 195.9,
+        "capture_ps": 183.9,
+        "TT_R_ps": 151.0,
+        "TT_boundary_spread_ps": 18.8,
+        "clock_entry": "phi-151.0ps at TT; FF/SS references in insertion.json",
+        "assigned_scalar_pins": 2571,
+        "routed_pin_mismatches": 0,
+        "TT_setup_ps": 313.86,
+        "FF_hold_ps": 21.36,
+        "DRC": 0,
+        "SS_sensitivity_ps": 176.42,
+        "reset": "Datapath leaf has no reset; parent owns resettable validity/landed flags and must not consume uninitialized state.",
+        "parent_integration": "phi-R delivery and parent timing still required"
+      }
+    },
+    "ring_add": {
+      "spec": "results/arch/hbm_p2p_1014/hgi_coll_ring_add_r1.json",
+      "kit": "physical/ref_tile/hgi_coll_ring_add_r1",
+      "gate": "TT +270.0ps setup / +25.6ps hold,655 sinks; route job hgi_coll_ring_add_r1-r1-d5597fc42 running benches",
+      "view": "physical/ref_tile/hgi_coll_ring_add_r1/views/ot_hgi_coll_pring_add_lane",
+      "native_audit": {
+        "pass": true,
+        "launch_ps": 172.0,
+        "capture_ps": 125.8,
+        "TT_R_ps": 97.6,
+        "TT_boundary_spread_ps": 4.2,
+        "clock_entry": "phi-97.6ps at TT; FF/SS references in insertion.json",
+        "assigned_scalar_pins": 100,
+        "routed_pin_mismatches": 0,
+        "TT_setup_ps": 257.13,
+        "FF_hold_ps": 25.23,
+        "DRC": 0,
+        "SS_sensitivity_ps": 8.09,
+        "reset": "valid/control only, FP DRST0 payload",
+        "parent_integration": "phi-R delivery and parent timing still required"
+      }
+    }
+  },
+  "vm_parent": {
+    "top": "ot_vms_slice_coll_sw",
+    "rtl": "rtl/hbm_accel/generic/collective/p2p/ot_vms_slice_coll_sw.sv",
+    "external_params": {
+      "NC": 1,
+      "RG": 2,
+      "WG": 2,
+      "RRS": [
+        3,
+        3
+      ],
+      "WRS": [
+        3,
+        3
+      ]
+    },
+    "internal_params": {
+      "NC": 6,
+      "RG": 2,
+      "WG": 3,
+      "WRS": [
+        3,
+        3,
+        3
+      ]
+    },
+    "clock_roots": {
+      "clk": "COLL adapter own flops",
+      "clk_coll_rx[3:0]": "RGX receiver lanes",
+      "clk_coll_rx[4]": "TOPK receiver",
+      "clk_vm_child[0]": "u_slice.u_hub",
+      "clk_vm_child[8:1]": "u_slice.g_bank[b].u_bank (b+1)",
+      "clk_vm_child[9]": "u_slice.u_cw",
+      "clk_vm_child[10]": "u_slice.u_ccw",
+      "clk_vm_child[11]": "u_slice.u_rcl",
+      "clk_vm_child[12]": "u_slice.u_star"
+    },
+    "packed_widths": {
+      "cq": 338,
+      "cr": 274,
+      "rq": 272,
+      "rq_cr": 16,
+      "rr": 4112,
+      "wq": 4496,
+      "wq_cr": 16,
+      "wq_done": 16,
+      "dq": 2248,
+      "dq_done": 8,
+      "vcb": 2130,
+      "vcb_cr": 1,
+      "kq_done": 8,
+      "cw_in": 2224,
+      "cw_in_cr": 2,
+      "cw_out": 2224,
+      "cw_out_cr": 2,
+      "ccw_in": 2224,
+      "ccw_in_cr": 2,
+      "ccw_out": 2224,
+      "ccw_out_cr": 2,
+      "bank_status": 144,
+      "hub_status": 3,
+      "mirror_busy": 2,
+      "rgx_t_v": 4,
+      "rgx_t_addr": 160,
+      "rgx_t_data": 2048,
+      "rgx_t_vm": 1,
+      "rgx_f_cr": 4,
+      "tkw_t_v": 1,
+      "tkw_t_d": 568,
+      "tkw_f_cr": 1,
+      "coll_fault": 1,
+      "coll_xw": 652,
+      "coll_xwa": 2
+    },
+    "warning": "Native B2 buses differ from legacy die B2_CHAIN8 buses. Do not alias incompatible widths.",
+    "scalar_client_map": {
+      "SW": {
+        "NC": 1,
+        "clients": [
+          "COLL list read (q3.rgx_vmq / rgx_vmr)"
+        ]
+      },
+      "NW": {
+        "NC": 2,
+        "clients": [
+          "cmdproc cp",
+          "quant q"
+        ]
+      },
+      "NE": {
+        "NC": 2,
+        "clients": [
+          "cmdproc att",
+          "HC engine hce"
+        ]
+      },
+      "SE": {
+        "NC": 0,
+        "clients": []
+      }
+    },
+    "internal_client_map": {
+      "0": "external COLL list read",
+      "1": "RGX write0",
+      "2": "RGX write1",
+      "3": "RGX write2",
+      "4": "RGX write3",
+      "5": "TOPK write",
+      "6": "hub ring replay (not part of NC)"
+    },
+    "functional_evidence": {
+      "source": "c6c58c60d",
+      "RLY": 20,
+      "ring_order": [
+        0,
+        1,
+        3,
+        2
+      ],
+      "global_SID_map": {
+        "SW": 0,
+        "SE": 1,
+        "NW": 2,
+        "NE": 3
+      },
+      "positive": "PASS 768 COLL flits,2442 native-wide readbacks including all mirrors,1536 SW scalar CQ readbacks; nonzero seed via SW and three no-CQ peers",
+      "mutants": {
+        "credit": "FAIL premature credit drain lane4",
+        "old_arithmetic_directions": "FAIL physical hop bound CCW sid0"
+      },
+      "write_cycles_excluding_seed": 29294,
+      "previous_physical_topology_arithmetic_direction_cycles": 36635,
+      "unit_price_status": "UNQUALIFIED: synthetic transport workload is not production unit-price workload. No repricing.",
+      "hop_counts_after_seed": {
+        "CW": [
+          1546,
+          926,
+          922,
+          0
+        ],
+        "CCW": [
+          922,
+          1848,
+          0,
+          926
+        ]
+      },
+      "credit_returns_after_seed": {
+        "CW": [
+          1546,
+          926,
+          922,
+          0
+        ],
+        "CCW": [
+          922,
+          1850,
+          0,
+          926
+        ]
+      },
+      "counter_scope": "Phase>=1 counters include scalar-read phase. Two seed-tail CCW credits cross initial phase boundary; full protocol and all final readbacks pass."
+    }
+  },
+  "ring_parent": {
+    "required_parameter": "PR_SPLIT_CLOCKS=1",
+    "clock_roots": "Per quadrant: adapter clk + pr_clk_state[7:0] + pr_clk_add[7:0]",
+    "state_sinks_each": 2600,
+    "fp_sinks_each": 655,
+    "qualification": "Own parent clock sink count and native parent timing remain to be measured."
+  },
+  "production_quadrants": {
+    "SW": {
+      "top": "ot_vms_slice_coll_sw",
+      "source": "rtl/hbm_accel/generic/collective/p2p/ot_vms_slice_coll_sw.sv",
+      "params": {
+        "NC": 1,
+        "RG": 2,
+        "WG": 2,
+        "RRS": [
+          3,
+          3
+        ],
+        "WRS": [
+          3,
+          3
+        ],
+        "PHYSICAL_RING": 1
+      },
+      "clocks": [
+        "clk",
+        "clk_coll_rx[4:0]",
+        "clk_vm_child[12:0]"
+      ],
+      "packed_widths": {
+        "cq": 338,
+        "cr": 274,
+        "rq": 272,
+        "rq_cr": 16,
+        "rr": 4112,
+        "wq": 4496,
+        "wq_cr": 16,
+        "wq_done": 16,
+        "dq": 2248,
+        "dq_done": 8,
+        "vcb": 2130,
+        "vcb_cr": 1,
+        "kq_done": 8,
+        "cw_in": 2224,
+        "cw_in_cr": 2,
+        "cw_out": 2224,
+        "cw_out_cr": 2,
+        "ccw_in": 2224,
+        "ccw_in_cr": 2,
+        "ccw_out": 2224,
+        "ccw_out_cr": 2,
+        "bank_status": 144,
+        "hub_status": 3,
+        "mirror_busy": 2,
+        "rgx_t_v": 4,
+        "rgx_t_addr": 160,
+        "rgx_t_data": 2048,
+        "rgx_t_vm": 1,
+        "rgx_f_cr": 4,
+        "tkw_t_v": 1,
+        "tkw_t_d": 568,
+        "tkw_f_cr": 1,
+        "coll_fault": 1,
+        "coll_xw": 652,
+        "coll_xwa": 2
+      },
+      "hub_params": {
+        "NC": 6,
+        "total_clients_including_ring": 7,
+        "PHYSICAL_RING": 1
+      },
+      "bank_params": {
+        "RG": 2,
+        "WG": 3,
+        "RRS": [
+          3,
+          3
+        ],
+        "WRS": [
+          3,
+          3,
+          3
+        ]
+      },
+      "hard_views": "Required new hub specializations and SW WG3 bank; H-ELEM-A owns hardening. Do not alias closed default parameter views.",
+      "ring_stop_params": {
+        "PHYSICAL_RING": 1,
+        "HF": 2,
+        "EGC": 1,
+        "D": 3,
+        "VC_count": 2,
+        "injection_min_credit": 2,
+        "forward_min_credit": 1
+      }
+    },
+    "NW": {
+      "top": "ot_vms_slice_clocked",
+      "source": "rtl/hbm_accel/generic/collective/p2p/ot_vms_slice_clocked.sv",
+      "params": {
+        "NC": 2,
+        "RG": 2,
+        "WG": 2,
+        "RRS": [
+          3,
+          3
+        ],
+        "WRS": [
+          3,
+          3
+        ],
+        "PHYSICAL_RING": 1
+      },
+      "clocks": [
+        "child_clk[12:0]"
+      ],
+      "packed_widths": {
+        "rq": 272,
+        "rq_cr": 16,
+        "rr": 4112,
+        "wq": 4496,
+        "wq_cr": 16,
+        "wq_done": 16,
+        "dq": 2248,
+        "dq_done": 8,
+        "vcb": 2130,
+        "vcb_cr": 1,
+        "kq_done": 8,
+        "cw_in": 2224,
+        "cw_in_cr": 2,
+        "cw_out": 2224,
+        "cw_out_cr": 2,
+        "ccw_in": 2224,
+        "ccw_in_cr": 2,
+        "ccw_out": 2224,
+        "ccw_out_cr": 2,
+        "bank_status": 144,
+        "hub_status": 3,
+        "mirror_busy": 2,
+        "cq": 676,
+        "cr": 548
+      },
+      "hub_params": {
+        "NC": 2,
+        "total_clients_including_ring": 3,
+        "PHYSICAL_RING": 1
+      },
+      "bank_params": {
+        "RG": 2,
+        "WG": 2,
+        "RRS": [
+          3,
+          3
+        ],
+        "WRS": [
+          3,
+          3
+        ]
+      },
+      "hard_views": "Required new hub specializations and SW WG3 bank; H-ELEM-A owns hardening. Do not alias closed default parameter views.",
+      "ring_stop_params": {
+        "PHYSICAL_RING": 1,
+        "HF": 2,
+        "EGC": 1,
+        "D": 3,
+        "VC_count": 2,
+        "injection_min_credit": 2,
+        "forward_min_credit": 1
+      }
+    },
+    "NE": {
+      "top": "ot_vms_slice_clocked",
+      "source": "rtl/hbm_accel/generic/collective/p2p/ot_vms_slice_clocked.sv",
+      "params": {
+        "NC": 2,
+        "RG": 2,
+        "WG": 2,
+        "RRS": [
+          3,
+          3
+        ],
+        "WRS": [
+          3,
+          3
+        ],
+        "PHYSICAL_RING": 1
+      },
+      "clocks": [
+        "child_clk[12:0]"
+      ],
+      "packed_widths": {
+        "rq": 272,
+        "rq_cr": 16,
+        "rr": 4112,
+        "wq": 4496,
+        "wq_cr": 16,
+        "wq_done": 16,
+        "dq": 2248,
+        "dq_done": 8,
+        "vcb": 2130,
+        "vcb_cr": 1,
+        "kq_done": 8,
+        "cw_in": 2224,
+        "cw_in_cr": 2,
+        "cw_out": 2224,
+        "cw_out_cr": 2,
+        "ccw_in": 2224,
+        "ccw_in_cr": 2,
+        "ccw_out": 2224,
+        "ccw_out_cr": 2,
+        "bank_status": 144,
+        "hub_status": 3,
+        "mirror_busy": 2,
+        "cq": 676,
+        "cr": 548
+      },
+      "hub_params": {
+        "NC": 2,
+        "total_clients_including_ring": 3,
+        "PHYSICAL_RING": 1
+      },
+      "bank_params": {
+        "RG": 2,
+        "WG": 2,
+        "RRS": [
+          3,
+          3
+        ],
+        "WRS": [
+          3,
+          3
+        ]
+      },
+      "hard_views": "Required new hub specializations and SW WG3 bank; H-ELEM-A owns hardening. Do not alias closed default parameter views.",
+      "ring_stop_params": {
+        "PHYSICAL_RING": 1,
+        "HF": 2,
+        "EGC": 1,
+        "D": 3,
+        "VC_count": 2,
+        "injection_min_credit": 2,
+        "forward_min_credit": 1
+      }
+    },
+    "SE": {
+      "top": "ot_vms_slice_no_cq",
+      "source": "rtl/hbm_accel/generic/collective/p2p/ot_vms_slice_no_cq.sv",
+      "params": {
+        "RG": 2,
+        "WG": 2,
+        "RRS": [
+          3,
+          3
+        ],
+        "WRS": [
+          3,
+          3
+        ],
+        "PHYSICAL_RING": 1
+      },
+      "clocks": [
+        "child_clk[12:0]"
+      ],
+      "packed_widths": {
+        "rq": 272,
+        "rq_cr": 16,
+        "rr": 4112,
+        "wq": 4496,
+        "wq_cr": 16,
+        "wq_done": 16,
+        "dq": 2248,
+        "dq_done": 8,
+        "vcb": 2130,
+        "vcb_cr": 1,
+        "kq_done": 8,
+        "cw_in": 2224,
+        "cw_in_cr": 2,
+        "cw_out": 2224,
+        "cw_out_cr": 2,
+        "ccw_in": 2224,
+        "ccw_in_cr": 2,
+        "ccw_out": 2224,
+        "ccw_out_cr": 2,
+        "bank_status": 144,
+        "hub_status": 3,
+        "mirror_busy": 2
+      },
+      "hub_params": {
+        "NC": 0,
+        "total_clients_including_ring": 1,
+        "PHYSICAL_RING": 1
+      },
+      "bank_params": {
+        "RG": 2,
+        "WG": 2,
+        "RRS": [
+          3,
+          3
+        ],
+        "WRS": [
+          3,
+          3
+        ]
+      },
+      "hard_views": "Required new hub specializations and SW WG3 bank; H-ELEM-A owns hardening. Do not alias closed default parameter views.",
+      "ring_stop_params": {
+        "PHYSICAL_RING": 1,
+        "HF": 2,
+        "EGC": 1,
+        "D": 3,
+        "VC_count": 2,
+        "injection_min_credit": 2,
+        "forward_min_credit": 1
+      }
+    }
+  },
+  "production_quadrant_note": "NW/NE NC2 are real production producers, SE NC0. Bench with three no-CQ peers is adapter/ring isolation; it does not replace the production client map. Wide RG/WG allocations remain subject to H-ELEM owner confirmation.",
+  "native_pair_timing": {
+    "corner": "TT",
+    "period_ps": 833.333,
+    "setup_uncertainty_ps": 60,
+    "compensated_die_skew_ps": 90,
+    "wire_ps_per_um": 0.76,
+    "pair_reach_um": {
+      "FP_to_FP": 507.3,
+      "state_to_state": 399.4,
+      "FP_to_state": 430.8,
+      "state_to_FP": 475.8
+    },
+    "FF_min_delay_self_ps": {
+      "FP": 170.7,
+      "state": 168.8
+    },
+    "FF_required_min_delay_ps": 100,
+    "required_clock_entry_offset_ps": {
+      "FP": {
+        "TT": -97.6,
+        "FF": -74.1
+      },
+      "state": {
+        "TT": -151.0,
+        "FF": -122.4
+      }
+    },
+    "full_pinreg_defect_flags": {
+      "FP": [],
+      "state": []
+    },
+    "placement_note": "State self reach is399.4um; place a relay within actual pair reach. Each exact parent pair still needs its own ETM timing check."
+  }
+}

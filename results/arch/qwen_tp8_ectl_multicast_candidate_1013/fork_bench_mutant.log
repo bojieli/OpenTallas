@@ -1,0 +1,3 @@
+ECTL_FORK_MUTANT_DETECTED cycle=0 MUT=1
+FATAL: rtl/test/qwen_kv_die/tb_qfd_ectl_word_fork_candidate.sv:32: FORK_EDGE_MISMATCH
+       Time: 16000 Scope: tb_qfd_ectl_word_fork_candidate

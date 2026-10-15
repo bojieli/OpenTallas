@@ -1,0 +1,145 @@
+// GENERATED from rtl/test/tb_qfd_link_adapter.sv by sed (physical/qwen_romio_slots/bench.sh header): the same bench, the DUT is
+// the slot cell qfd_link_adp512 through its own ports (compile with -P RXD=512 SRAM=1 PINREG=1: the cell fixes them).
+`timescale 1ns/1ps
+// qwen-missing 2026-10-07: two ot_qfd_link_adapter instances back to back through a PHY model (fixed LAT-cycle FDI
+// pipe each way, the link up after UP cycles), random die-bus traffic both ways with the die-bus credit protocol and
+// random receiver back-pressure.  PASS: both streams arrive complete, in order, bit-exact, with no fault.  MUT = 1
+// (one extra link credit on side A) with long receiver stalls must FAIL (receive-buffer overrun detected or a word lost).
+// gaps-design 2026-10-08: RATE = 1 is the line-rate sweep point: both senders offer a word every cycle they hold a
+// credit and both receivers return every credit at once; the bench prints the sustained B-side receive rate (words a
+// cycle between the 1st and the last word) and FAILs below MINRATE (per mille).  SRAM = 1 builds the receive buffer
+// from the ot_sram_1r1w_512x128_m4_r2c2 behavioural model (compile it and rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv).
+module tb_qfd_io_ucie;
+    parameter integer W = 1024, RXD = 32, LAT = 4, UP = 20, N = 3000, MUT = 0, SEED = 11, STALL = 0, SRAM = 0, RATE = 0, MINRATE = 0, SW = 200, PINREG = 0;
+    localparam integer CRW = $clog2(RXD + 1), FW = W + CRW + 9;
+    reg clk = 0, rst_n = 0;
+    always #0.5 clk = ~clk;
+    reg a_cv, b_cv; reg [W-1:0] a_cd, b_cd; wire a_ccr, b_ccr;
+    wire a_rv, b_rv; wire [W-1:0] a_rd, b_rd; reg a_rcr, b_rcr;
+    wire a_tv, b_tv; wire [FW-1:0] a_tf, b_tf; wire a_f, b_f;
+    reg [LAT*(FW+1)-1:0] ab, ba;     // PHY pipes
+    always @(posedge clk) if (!rst_n) begin ab <= 0; ba <= 0; end else begin ab <= {ab, a_tv, a_tf}; ba <= {ba, b_tv, b_tf}; end
+    wire ab_v = ab[LAT*(FW+1)-1]; wire [FW-1:0] ab_f = ab[(LAT-1)*(FW+1) +: FW];
+    wire ba_v = ba[LAT*(FW+1)-1]; wire [FW-1:0] ba_f = ba[(LAT-1)*(FW+1) +: FW];
+    integer cyc = 0;
+    always @(posedge clk) cyc <= cyc + 1;
+    wire up = cyc > UP;
+    qfd_io_ucie_probe #(.MUT(MUT)) A (.ck0(clk), .ck1(clk), .ck2(clk), .ck3(clk), .ck4(clk), .ck5(clk), .ck6(clk), .ck7(clk), .rst_n(rst_n), .c_v(a_cv), .c_d(a_cd), .c_cr(a_ccr),
+        .r_v(a_rv), .r_d(a_rd), .r_cr(a_rcr), .tx_up(up), .tx_v(a_tv), .tx_flit(a_tf), .rx_v(ba_v), .rx_flit(ba_f), .fault(a_f));
+    qfd_io_ucie_probe B (.ck0(clk), .ck1(clk), .ck2(clk), .ck3(clk), .ck4(clk), .ck5(clk), .ck6(clk), .ck7(clk), .rst_n(rst_n), .c_v(b_cv), .c_d(b_cd), .c_cr(b_ccr),
+        .r_v(b_rv), .r_d(b_rd), .r_cr(b_rcr), .tx_up(up), .tx_v(b_tv), .tx_flit(b_tf), .rx_v(ab_v), .rx_flit(ab_f), .fault(b_f));
+    wire ac,ar,at,af,bc,br,bt,bf; wire [1023:0] ard,brd; wire [1042:0] atf,btf;
+    qfd_link_adp512 #(.MUT(MUT)) RA (.ck(clk),.rst_n(rst_n),.c_v(a_cv),.c_d(a_cd),.c_cr(ac),.r_v(ar),.r_d(ard),.r_cr(a_rcr),.tx_up(up),.tx_v(at),.tx_flit(atf),.rx_v(ba_v),.rx_flit(ba_f),.fault(af));
+    qfd_link_adp512 RB (.ck(clk),.rst_n(rst_n),.c_v(b_cv),.c_d(b_cd),.c_cr(bc),.r_v(br),.r_d(brd),.r_cr(b_rcr),.tx_up(up),.tx_v(bt),.tx_flit(btf),.rx_v(ab_v),.rx_flit(ab_f),.fault(bf));
+    integer paired=0; integer header_g;
+    always @(negedge clk) if(rst_n && cyc>5 && MUT==0) begin
+      paired=paired+1;
+      if ({ac,ar,at,af,bc,br,bt,bf} !== {a_ccr,a_rv,a_tv,a_f,b_ccr,b_rv,b_tv,b_f} ||
+         (ar && ard!==a_rd) || (br && brd!==b_rd) ||
+         (at && atf!==a_tf) || (bt && btf!==b_tf))
+        $fatal(1,"FAIL split cycle equivalence cycle=%0d",cyc);
+      for(header_g=0;header_g<8;header_g=header_g+1) begin
+        if((at && A.u_link.u_p.u_adapter.headers[header_g] !== {atf[1042],atf[17:0]}) ||
+           (bt && B.u_link.u_p.u_adapter.headers[header_g] !== {btf[1042],btf[17:0]}))
+          $fatal(1,"FAIL split header replica cycle=%0d slice=%0d",cyc,header_g);
+      end
+      if (A.u_link.u_p.u_adapter.cc !== {8{ac}} || A.u_link.u_p.u_adapter.rv !== {8{ar}} || A.u_link.u_p.u_adapter.tv !== {8{at}} || A.u_link.u_p.u_adapter.ff !== {8{af}} ||
+          B.u_link.u_p.u_adapter.cc !== {8{bc}} || B.u_link.u_p.u_adapter.rv !== {8{br}} || B.u_link.u_p.u_adapter.tv !== {8{bt}} || B.u_link.u_p.u_adapter.ff !== {8{bf}})
+        $fatal(1,"FAIL split control replicas cycle=%0d",cyc);
+    end
+    final $display("PAIR split checked_cycles=%0d",paired);
+    // senders (IBUF = 4 credits each) and receivers (credit back a word some cycles after it arrives)
+    integer t_first, t_last, rate_pm;
+    integer seed, a_sent, b_sent, a_got, b_got, a_cr, b_cr, bad, i, a_pend, b_pend;
+    function [W-1:0] word(input integer side, input integer k);
+        integer j; reg [W-1:0] x;
+        begin for (j = 0; j < W / 32; j = j + 1) x[j*32 +: 32] = (side * 32'h9E3779B9) ^ (k * 32'h85EBCA6B) ^ (j * 32'hC2B2AE35); word = x; end
+    endfunction
+    initial begin
+        seed = SEED; t_first = -1; t_last = 0; a_sent = 0; b_sent = 0; a_got = 0; b_got = 0; a_cr = 4; b_cr = 4; bad = 0; a_pend = 0; b_pend = 0;
+        a_cv = 0; b_cv = 0; a_rcr = 0; b_rcr = 0; ab = 0; ba = 0;
+        repeat (3) @(negedge clk); rst_n = 1; repeat (4) @(negedge clk);   // no die-bus traffic within the reset-copy window
+        while ((a_got < N || b_got < N) && cyc < 40 * N) begin
+            @(negedge clk);
+            if (a_ccr) a_cr = a_cr + 1;
+            if (b_ccr) b_cr = b_cr + 1;
+            // receive and check
+            if (b_rv) begin if (b_rd !== word(0, b_got)) begin if (bad < 3) $display("B mismatch got=%0d at cyc %0d data=%h", b_got, cyc, b_rd[31:0]); bad = bad + 1; end if (t_first < 0) t_first = cyc; t_last = cyc; b_got = b_got + 1; b_pend = b_pend + 1; end
+            if (a_rv) begin if (a_rd !== word(1, a_got)) bad = bad + 1; a_got = a_got + 1; a_pend = a_pend + 1; end
+            // receivers return credits (stalls: none for STALL = 0, long windows otherwise)
+            b_rcr = 0; a_rcr = 0;
+            if (b_pend > 0 && ((RATE != 0) ? 1 : (STALL == 0 ? (($random(seed) & 3) != 0) : ((cyc / SW) % 3 == 2)))) begin b_rcr = 1; b_pend = b_pend - 1; end
+            if (a_pend > 0 && (RATE != 0 || ($random(seed) & 3) != 0)) begin a_rcr = 1; a_pend = a_pend - 1; end
+            // senders
+            a_cv = 0; b_cv = 0;
+            if (a_sent < N && a_cr > 0 && (RATE != 0 || ($random(seed) & 1))) begin a_cv = 1; a_cd = word(0, a_sent); a_sent = a_sent + 1; a_cr = a_cr - 1; end
+            if (b_sent < N && b_cr > 0 && (RATE != 0 || ($random(seed) & 1))) begin b_cv = 1; b_cd = word(1, b_sent); b_sent = b_sent + 1; b_cr = b_cr - 1; end
+            if (a_f || b_f) bad = bad + 1;
+        end
+        rate_pm = (t_last > t_first) ? ((N - 1) * 1000) / (t_last - t_first) : 0;
+        $display("RATE qfd_link_adp512 RXD=%0d LAT=%0d SRAM=%0d rate=%0d/1000 words-per-cycle (min %0d)", RXD, LAT, SRAM, rate_pm, MINRATE);
+        if (bad == 0 && a_got == N && b_got == N && !a_f && !b_f && rate_pm >= MINRATE)
+            $display("PASS qfd_link_adp512 W=%0d RXD=%0d LAT=%0d words=%0d each way cycles=%0d", W, RXD, LAT, N, cyc);
+        else
+            $display("FAIL qfd_link_adp512 bad=%0d a_got=%0d b_got=%0d fault=%0d/%0d cycles=%0d", bad, a_got, b_got, a_f, b_f, cyc);
+        $finish;
+    end
+endmodule
+
+// Both production UCIe queues are exercised with distinct payloads. Their
+// flow-control state is equal for this paired traffic; R carries bitwise
+// complements of P so a P/R bundle swap is detected at the real parent.
+module qfd_io_ucie_probe #(parameter MUT=0) (
+ input wire ck0,ck1,ck2,ck3,ck4,ck5,ck6,ck7,rst_n,c_v,
+ input wire [1023:0] c_d,output wire c_cr,r_v,output wire [1023:0] r_d,
+ input wire r_cr,tx_up,output wire tx_v,output wire [1042:0] tx_flit,
+ input wire rx_v,input wire [1042:0] rx_flit,output wire fault);
+ wire rr_v,rt_v,rr_cr,rf;wire [1023:0] rr_d;wire [1042:0] rt_f;
+ qfd_io_ucie #(.MUT(MUT)) u_link (
+ .rst_n(rst_n),
+.p_ck0(ck0),
+.p_ck1(ck1),
+.p_ck2(ck2),
+.p_ck3(ck3),
+.p_ck4(ck4),
+.p_ck5(ck5),
+.p_ck6(ck6),
+.p_ck7(ck7),
+.p_c_v(c_v),
+.p_c_d(c_d),
+.p_c_cr(c_cr),
+.p_r_v(r_v),
+.p_r_d(r_d),
+.p_r_cr(r_cr),
+.p_tx_up(tx_up),
+.p_tx_v(tx_v),
+.p_tx_flit(tx_flit),
+.p_rx_v(rx_v),
+.p_rx_flit(rx_flit),
+.p_fault(fault),
+.r_ck0(ck0),
+.r_ck1(ck1),
+.r_ck2(ck2),
+.r_ck3(ck3),
+.r_ck4(ck4),
+.r_ck5(ck5),
+.r_ck6(ck6),
+.r_ck7(ck7),
+.r_c_v(c_v),
+.r_c_d(~c_d),
+.r_c_cr(rr_cr),
+.r_r_v(rr_v),
+.r_r_d(rr_d),
+.r_r_cr(r_cr),
+.r_tx_up(tx_up),
+.r_tx_v(rt_v),
+.r_tx_flit(rt_f),
+.r_rx_v(rx_v),
+.r_rx_flit({rx_flit[1042],~rx_flit[1041:18],rx_flit[17:0]}),
+.r_fault(rf));
+ always @(negedge ck0) if(rst_n && MUT==0) begin
+ if({rr_cr,rr_v,rt_v,rf} !== {c_cr,r_v,tx_v,fault}) $fatal(1,"FAIL UCIe P/R control mismatch");
+ if(r_v && rr_d !== ~r_d) $fatal(1,"FAIL UCIe P/R receive payload mix");
+ if(tx_v && rt_f !== {tx_flit[1042],~tx_flit[1041:18],tx_flit[17:0]}) $fatal(1,"FAIL UCIe P/R send payload mix");
+ end
+endmodule

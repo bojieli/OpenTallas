@@ -1,0 +1,28 @@
+ot-run: ot-epyc1tb     admits   195 GB (avail 421, growth 139, headroom 64, waiters 0/0 GB) load 44/128 running 14 disk 789 GB 
+ot-run: ot-epyc4       admits   237 GB (avail 464, growth 175, headroom 48, waiters 0/0 GB) load 113/128 running 31 disk 553 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  skipped: load hold: load1 > 1.5 x cores
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-3667852-1792039597 after 0 s
+FAIL cyc=662 x_fault
+FAIL cyc=663 x_fault
+FAIL cyc=664 x_fault
+FAIL cyc=665 x_fault
+FAIL cyc=666 x_fault
+FAIL cyc=666 tile 6 element 3 ref c0389ec7 (operand c039) dvm 40fb0000
+FAIL cyc=666 tile 14 element 3 ref 3fcbaec2 (operand 3fcc) dvm 40340000
+FAIL cyc=666 tile 22 element 3 ref 40856f8f (operand 4085) dvm 3eba0000
+FAIL cyc=666 tile 30 element 3 ref be1ce747 (operand be1d) dvm be250000
+FAIL cyc=666 tile 38 element 3 ref c0389ec7 (operand c039) dvm c0ce0000
+FAIL cyc=666 tile 46 element 3 ref 3fcbaec2 (operand 3fcc) dvm 3f160000
+FAIL cyc=666 tile 54 element 3 ref 40856f8f (operand 4085) dvm 3e650000
+FAIL cyc=666 tile 62 element 3 ref be1ce747 (operand be1d) dvm bffa0000
+FAIL cyc=667 x_fault
+FAIL cyc=667 tile 6 element 3 ref c0389ec7 (operand c039) dvm 40fb0000
+FAIL cyc=667 tile 14 element 3 ref 3fcbaec2 (operand 3fcc) dvm 40340000
+FAIL cyc=667 tile 22 element 3 ref 40856f8f (operand 4085) dvm 3eba0000
+FAIL cyc=667 tile 30 element 3 ref be1ce747 (operand be1d) dvm be250000
+FAIL cyc=667 tile 38 element 3 ref c0389ec7 (operand c039) dvm c0ce0000
+FAIL cyc=667 tile 46 element 3 ref 3fcbaec2 (operand 3fcc) dvm 3f160000
+FAIL errors=2073 checks=159744
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-3667852-1792039597): exit 0
