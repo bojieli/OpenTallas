@@ -1,0 +1,106 @@
+{
+  "schema": "opentallas.die_assigned_leaf_pins.v1",
+  "master": "qkd_llr_replay_leaf",
+  "contract": "Qwen KV/system v1.3 candidate",
+  "outline": {
+    "w": 172.8,
+    "h": 172.8
+  },
+  "pins": {
+    "W": [
+      "din",
+      "dout",
+      "we",
+      "wa",
+      "ra"
+    ],
+    "S": [
+      "ck"
+    ]
+  },
+  "pin_ranges": {
+    "din": [
+      8,
+      76
+    ],
+    "dout": [
+      84,
+      162
+    ],
+    "we": [
+      3,
+      4
+    ],
+    "wa": [
+      166,
+      167
+    ],
+    "ra": [
+      169,
+      170
+    ],
+    "ck": [
+      84,
+      86
+    ]
+  },
+  "port_widths": {
+    "din": 137,
+    "dout": 137,
+    "we": 1,
+    "wa": 6,
+    "ra": 6,
+    "ck": 1
+  },
+  "source": "KV/system die lead 2026-10-14: centrally placed split CRC/retry replay banks",
+  "placement": {
+    "banks": [
+      {
+        "bank": 0,
+        "xy": [
+          0,
+          0
+        ],
+        "orient": "MY"
+      },
+      {
+        "bank": 1,
+        "xy": [
+          0,
+          194.4
+        ],
+        "orient": "MY"
+      },
+      {
+        "bank": 2,
+        "xy": [
+          432,
+          0
+        ],
+        "orient": "R0"
+      },
+      {
+        "bank": 3,
+        "xy": [
+          432,
+          194.4
+        ],
+        "orient": "R0"
+      }
+    ],
+    "control_xy": [
+      194.4,
+      97.2
+    ],
+    "control_outline_um": [
+      216,
+      172.8
+    ],
+    "frame_outline_um": [
+      604.8,
+      367.2
+    ]
+  },
+  "qualification": "ASSIGNED_PINS_ONLY; mapped area, exact replay/CRC mutants, native pin/clock/reset and TT/FF/DRC are required",
+  "rationale": "One common W-face replay master mirrored for left pair; compact control-between-bank-columns topology avoids through-tile routing and long pin-to-flop output muxes."
+}
