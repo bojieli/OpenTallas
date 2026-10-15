@@ -42,7 +42,12 @@ module ot_coll_cmd_issue #(
     reg        mde  [0:DEPTH-1];
     reg        endr [0:DEPTH-1];
     reg [TAGW-1:0] tg [0:DEPTH-1];
-    reg [DEPTH-1:0] loaded;
+    reg [DEPTH-1:0] header_loaded, tag_loaded;
+    `ifdef OT_COLL_ISSUE_MUT_HALF_LOADED
+    wire [DEPTH-1:0] loaded = header_loaded | tag_loaded;
+`else
+    wire [DEPTH-1:0] loaded = header_loaded & tag_loaded;
+`endif
     reg [31:0] stop_q; reg [5:0] count_q; reg sealed, cfg_fault;
     wire in_rows = pw_v && pw_addr >= BASE && pw_addr < BASE + 2 * DEPTH;
     wire [9:0] off = pw_addr - 10'(BASE);
@@ -55,9 +60,12 @@ module ot_coll_cmd_issue #(
     end
     wire run;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin loaded <= 0; sealed <= 1'b0; stop_q <= 0; count_q <= 0; cfg_fault <= 1'b0; end
+        if (!rst_n) begin header_loaded <= 0; tag_loaded <= 0; sealed <= 1'b0; stop_q <= 0; count_q <= 0; cfg_fault <= 1'b0; end
         else begin
-            if (in_rows) begin loaded[ri] <= 1'b1; if (sealed || run) cfg_fault <= 1'b1; end
+            if (in_rows) begin
+                if (off[0]) tag_loaded[ri] <= 1'b1; else header_loaded[ri] <= 1'b1;
+                if (sealed || run) cfg_fault <= 1'b1;
+            end
             if (seal_w) begin
                 sealed <= 1'b1; stop_q <= pw_data[31:0]; count_q <= pw_data[37:32];
                 if (pw_data[63:48] != 16'h434c || pw_data[47:38] != 0 || pw_data[37:32] == 0 ||
