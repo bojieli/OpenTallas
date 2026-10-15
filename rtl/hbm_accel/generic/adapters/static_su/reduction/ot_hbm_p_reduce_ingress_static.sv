@@ -25,7 +25,7 @@ module ot_hbm_p_reduce_ingress_static (
    .r_addr_in({3'b0,source_word[9:6]}),.rd_out(q[b]),
    .w_ce_in(fill_slot),.w_addr_in({3'b0,fill_burst}),
    .wd_in(vm_rr[257*b+:256]),.w_mask_in({256{1'b1}}),
-   .rr_en(2'b0),.rr_addr(12'b0),.cr_en(2'b0),.cr_sel(16'b0));
+   .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
  end endgenerate
  always @(posedge clk) begin
   if(!rst_n)begin source_valid<=0;bank_q<=0;word_q<=0;fault<=0;end
