@@ -1,0 +1,249 @@
+{
+ "name": "s81coll_calendar",
+ "top": "s81_static_calendar_controller",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv"
+ ],
+ "params": {
+  "CYCLES": 4096
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 237.6,
+  "h": 291.6
+ },
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n",
+   "c_cmd",
+   "c_done",
+   "c_st",
+   "datapath_fault",
+   "busy"
+  ],
+  "E": [
+   "read_slot",
+   "read_row",
+   "issue_slot",
+   "tag",
+   "seq",
+   "last",
+   "rankmask",
+   "commit_slot",
+   "commit_tag",
+   "commit_seq",
+   "commit_last",
+   "commit_rankmask",
+   "commit_rows",
+   "tx_beat_slot",
+   "tx_phase",
+   "tx_frame_slot",
+   "rx_beat_slot",
+   "rx_phase",
+   "rx_frame_slot",
+   "channel_tx_slot",
+   "channel_tx_kind",
+   "channel_tx_seq",
+   "channel_tx_last",
+   "channel_rx_slot",
+   "channel_rx_kind",
+   "channel_rx_seq",
+   "channel_rx_last",
+   "channel_tx_beat_slot",
+   "channel_tx_frame_slot",
+   "channel_tx_phase",
+   "channel_rx_beat_slot",
+   "channel_rx_frame_slot",
+   "channel_rx_phase",
+   "hc_reduce_slot",
+   "hc_write_slot",
+   "hc_word_index",
+   "hc_expect_seq",
+   "hc_expect_last",
+   "hc_emit_slot",
+   "hc_emit_tag",
+   "commit_gather",
+   "raw_capture_payload_slot",
+   "raw_capture_meta_slot",
+   "raw_rx_write_slot",
+   "raw_rx_payload_row",
+   "raw_rx_meta_row",
+   "raw_rx_tag",
+   "hc_assemble_slot"
+  ],
+  "N": [],
+  "S": []
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "count": 1,
+   "inst": "*ROM_BANK?0?*u_rom",
+   "at": [
+    43.2,
+    24.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "count": 1,
+   "inst": "*ROM_BANK?1?*u_rom",
+   "at": [
+    43.2,
+    111.24000000000001
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "count": 1,
+   "inst": "*ROM_BANK?2?*u_rom",
+   "at": [
+    43.2,
+    197.64000000000001
+   ],
+   "orient": "R0"
+  }
+ ],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "10-15 S-ELEM-B: first hardening of the static collective calendar controller (slab ck_control[0] root): three real ot_rom_4096x266_m8 control-page macros (798 b/row, 564 used) stacked on the W side, command/status on the W face, the ~470 pin-registered control outputs on the E face toward the slab leaves. CYCLES=4096 (max image). Source unchanged except a negative-control define (OT_S81_COLL_CAL_MUT_ROW).",
+ "slot_change_request": {
+  "name": "s81coll_calendar-1015",
+  "outline": [
+   237.6,
+   291.6
+  ],
+  "pin_faces": {
+   "W": [
+    "clk",
+    "rst_n",
+    "c_cmd",
+    "c_done",
+    "c_st",
+    "datapath_fault",
+    "busy"
+   ],
+   "E": [
+    "read_slot",
+    "read_row",
+    "issue_slot",
+    "tag",
+    "seq",
+    "last",
+    "rankmask",
+    "commit_slot",
+    "commit_tag",
+    "commit_seq",
+    "commit_last",
+    "commit_rankmask",
+    "commit_rows",
+    "tx_beat_slot",
+    "tx_phase",
+    "tx_frame_slot",
+    "rx_beat_slot",
+    "rx_phase",
+    "rx_frame_slot",
+    "channel_tx_slot",
+    "channel_tx_kind",
+    "channel_tx_seq",
+    "channel_tx_last",
+    "channel_rx_slot",
+    "channel_rx_kind",
+    "channel_rx_seq",
+    "channel_rx_last",
+    "channel_tx_beat_slot",
+    "channel_tx_frame_slot",
+    "channel_tx_phase",
+    "channel_rx_beat_slot",
+    "channel_rx_frame_slot",
+    "channel_rx_phase",
+    "hc_reduce_slot",
+    "hc_write_slot",
+    "hc_word_index",
+    "hc_expect_seq",
+    "hc_expect_last",
+    "hc_emit_slot",
+    "hc_emit_tag",
+    "commit_gather",
+    "raw_capture_payload_slot",
+    "raw_capture_meta_slot",
+    "raw_rx_write_slot",
+    "raw_rx_payload_row",
+    "raw_rx_meta_row",
+    "raw_rx_tag",
+    "hc_assemble_slot"
+   ]
+  },
+  "reason": "new static collective leaf (die grant die_grants_1015 kit_allowed, sp_collective)"
+ },
+ "job": {
+  "owner": "Claude:s81-elemB-1015",
+  "branch": "claude/s81-elemB-coll-1015",
+  "tag": "c1",
+  "purpose": "S81 static collective calendar controller leaf",
+  "benches": [
+   {
+    "name": "slab_exact",
+    "cmd": "bash tools/s81_static_collective/run_slab_gate.sh {RUN}/slab_exact 0 1",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "SLAB_GATE PASS",
+    "min_count_regex": "rows=(\\d+)"
+   },
+   {
+    "name": "slab_calendar_row_mutant",
+    "cmd": "bash tools/s81_static_collective/run_slab_gate.sh {RUN}/slab_mutant 2 1",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "SLAB_GATE MUTANT FAIL"
+   }
+  ],
+  "views_to": "physical/ref_tile/s81coll_calendar/views",
+  "record_to": "results/rtl/ref_tile/s81coll_calendar",
+  "extra_paths": [
+   "rtl/dsrom_sys",
+   "rtl/hdc",
+   "rtl/link",
+   "tools/s81_static_collective",
+   "tools/s81_vm",
+   "tools/s81_static_control",
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "physical/s81_static_collective_proposal_1014"
+  ]
+ }
+}

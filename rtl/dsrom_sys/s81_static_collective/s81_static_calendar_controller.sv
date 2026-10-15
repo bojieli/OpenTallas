@@ -72,7 +72,7 @@ module s81_static_calendar_controller #(
  // the previous macro read while fetching the next statically named row.
  localparam bit CONFIGURED=(ROM_FILE!="") && CYCLES>=1 && CYCLES<=4096;
  wire [797:0] macro_data;
- wire [11:0] macro_addr;
+ wire [11:0] macro_addr,macro_addr_n;
  wire macro_enable=rst_n && CONFIGURED;
  genvar bank;
  generate for(bank=0;bank<3;bank=bank+1)begin:ROM_BANK
@@ -102,7 +102,13 @@ module s81_static_calendar_controller #(
  // Fetch progression depends only on the fixed calendar cursor/final bit;
  // command/data mismatches fault the controller without retiming a read.
  wire [AW-1:0] current_row=active ? cursor:{AW{1'b0}};
- assign macro_addr=running && !entry[RW-2] && int'(current_row)<CYCLES-1 ?
+ // OT_S81_COLL_CAL_MUT_ROW (negative control): the macro reads the row after the named one.
+`ifdef OT_S81_COLL_CAL_MUT_ROW
+ assign macro_addr=macro_addr_n+12'd1;
+`else
+ assign macro_addr=macro_addr_n;
+`endif
+ assign macro_addr_n=running && !entry[RW-2] && int'(current_row)<CYCLES-1 ?
                    12'(int'(current_row)+1):12'd0;
  wire enabled=rst_n && running && !fault && !datapath_fault && !row_bad;
  assign busy=active;

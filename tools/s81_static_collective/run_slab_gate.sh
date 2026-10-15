@@ -3,9 +3,10 @@
 # s81_static_vm_boundary leaf + one real dsfd_sp_vm with its 128 SRAM macros). Reproduces the 10-15
 # results/rtl/s81_static_vm_boundary_extract_1015 base/mutant runs from the current source.
 #   run_slab_gate.sh WORK [MUT [PINCAP]]   MUT=1: vm_boundary flips t_vm bit 31 on HC writes (must FAIL);
+#   MUT=2: calendar controller reads the next ROM row (must FAIL)
 #   PINCAP (default 1) = native VM boundary write-path pin capture (+1 edge on t_vm)
 set -euo pipefail
-ROOT=$(cd "$(dirname "$0")/../.." && pwd); W=$(mkdir -p "$1" && cd "$1" && pwd); MUT=${2:-0}; PINCAP=${3:-1}
+ROOT=$(cd "$(dirname "$0")/../.." && pwd); W=$(mkdir -p "$1" && cd "$1" && pwd); MUT=${2:-0}; PINCAP=${3:-1}; DEFS=(); [ "$MUT" = 2 ] && { DEFS=(+define+OT_S81_COLL_CAL_MUT_ROW); MUT=0; MUTANT=1; }
 V=${OT_VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 cd "$W"; python3 "$ROOT/tools/s81_static_collective/build_slab_fixture.py" --out "$W" > fixture.json
 S=$ROOT/rtl/dsrom_sys
@@ -29,10 +30,10 @@ SRC=("$ROOT/rtl/ot_fp32_rne_pkg.sv" "$ROOT/rtl/hdc/ot_hdc_prefix.sv" "$ROOT/rtl/
  "$ROOT/tools/s81_static_collective/tb_s81_static_collective_slab.sv")
 for f in "${SRC[@]}"; do [ -f "$f" ] || { echo "SLAB_GATE missing $f"; exit 2; }; done
 sha256sum "${SRC[@]}" > sources.sha256
-"$V" --binary --timing -j 16 -Wno-fatal -Wno-lint -Wno-style --top-module tb_s81_static_collective_slab -GMUT="$MUT" -GVMB_PINCAP="$PINCAP" --Mdir obj "${SRC[@]}" > build.log 2>&1
+"$V" --binary --timing -j 16 -Wno-fatal -Wno-lint -Wno-style --top-module tb_s81_static_collective_slab -GMUT="$MUT" -GVMB_PINCAP="$PINCAP" "${DEFS[@]}" --Mdir obj "${SRC[@]}" > build.log 2>&1
 set +e; ./obj/Vtb_s81_static_collective_slab > run.log 2>&1; rc=$?; set -e
 tail -n 3 run.log
-if [ "$MUT" != 0 ]; then
+if [ "$MUT" != 0 ] || [ -n "${MUTANT:-}" ]; then
   if [ $rc -ne 0 ] || grep -q 'Assertion failed' run.log; then echo "SLAB_GATE MUTANT FAIL (detected)"; exit 1; fi
   echo "SLAB_GATE MUTANT UNDETECTED"; exit 0
 fi
