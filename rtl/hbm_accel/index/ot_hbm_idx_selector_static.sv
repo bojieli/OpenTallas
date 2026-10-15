@@ -1,9 +1,9 @@
 `default_nettype none
-// Fixed compiler-issued radix schedule, Q4xW16 production shape. No ready,
+// Fixed compiler-issued5/5/6bit radix schedule, Q4xW16 production shape. No ready,
 // replay, queue, credit or variable-length scan. Owns 12 real 256x256 SRAMs.
 // Opcodes: 0idle,1clear frame,2ingest,3hist clear,4hist scan,5choose bin,
 // 6compact scan,7flush partial,8emit line. Every phase includes its fixed
-// memory drain edges. Bins are scanned15..0, passes0..3 (MS nibble first).
+// memory drain edges. Bins scanned31..0,31..0,63..0 for passes0..2. Ingest fuses pass0 histogram.
 module ot_hbm_idx_selector_static #(parameter integer MUT=0)(
  input wire clk_ctl,input wire [3:0] clk_q,input wire [11:0] clk_mem,
  input wire rst_n,input wire [3:0] op,input wire [1:0] pass,
@@ -21,13 +21,15 @@ module ot_hbm_idx_selector_static #(parameter integer MUT=0)(
  reg [15:0] threshold;
  reg [13:0] rank_left;
  reg found;
- reg [13:0] hist[0:3][0:15];
+ reg [13:0] hist[0:3][0:63];
  reg [13:0] ties[0:3];
  wire [13:0] ntie[0:3];
  reg [13:0] selected[0:3];
  reg [3:0] qfault;
  assign threshold_observe=threshold;
- wire [15:0] prior_mask=(pass==0)?16'd0:(16'hffff << (16-4*int'(pass)));
+ wire [15:0] prior_mask=(pass==0)?16'd0:((pass==1)?16'hf800:16'hffc0);
+ wire [3:0] shift=(pass==0)?4'd11:((pass==1)?4'd6:4'd0);
+ wire [15:0] binmask=(pass==2)?16'd63:16'd31;
  integer allcount,remain;
  always @(posedge clk_ctl or negedge rst_n)begin
   if(!rst_n)begin threshold<=0;rank_left<=0;found<=0;fault<=0;for(integer q=0;q<4;q=q+1)ties[q]<=0;end
@@ -36,15 +38,15 @@ module ot_hbm_idx_selector_static #(parameter integer MUT=0)(
    if(op==1)begin threshold<=0;rank_left<={4'b0,k};found<=0;if(k>512||k==0)fault<=1;end
    if(op==3)found<=0;
    if(op==5&&!found)begin
-    allcount=0;for(integer q=0;q<4;q=q+1)allcount=allcount+int'(hist[q][addr[3:0]]);
+    allcount=0;for(integer q=0;q<4;q=q+1)allcount=allcount+int'(hist[q][addr[5:0]]);
     if(int'(rank_left)>allcount)rank_left<=rank_left-14'(allcount);
     else begin
-     threshold[(3-int'(pass))*4+:4]<=addr[3:0];found<=1;
-     if(pass==3)begin
+     threshold <= (threshold & prior_mask) | (16'(addr[5:0]) << shift);found<=1;
+     if(pass==2)begin
       remain=int'(rank_left);
       for(integer q=0;q<4;q=q+1)begin
-       ties[q]<=14'((remain>int'(hist[q][addr[3:0]]))?int'(hist[q][addr[3:0]]):remain);
-       remain=remain-int'(hist[q][addr[3:0]]);if(remain<0)remain=0;
+       ties[q]<=14'((remain>int'(hist[q][addr[5:0]]))?int'(hist[q][addr[5:0]]):remain);
+       remain=remain-int'(hist[q][addr[5:0]]);if(remain<0)remain=0;
       end
      end
     end
@@ -98,17 +100,19 @@ module ot_hbm_idx_selector_static #(parameter integer MUT=0)(
   always @(posedge clk_q[q] or negedge rst_n)begin
    if(!rst_n)begin
     rv<=0;buf_q<=0;fill<=0;wp<=0;tie_rem<=0;comp_started<=0;selected[q]<=0;qfault[q]<=0;out_v[q]<=0;last_id<=0;
-    for(integer b=0;b<16;b=b+1)hist[q][b]<=0;
+    for(integer b=0;b<64;b=b+1)hist[q][b]<=0;
    end else begin
     rv<=re;rop<=op;rpass<=pass;raddr<=addr;out_v[q]<=emit;
     if(op==1)begin buf_q<=0;fill<=0;wp<=0;tie_rem<=0;comp_started<=0;selected[q]<=0;last_id<=0;end
-    if(op==3)for(integer b=0;b<16;b=b+1)hist[q][b]<=0;
-    if(rv&&rop==4)begin
-     for(integer b=0;b<16;b=b+1)begin
+    if(op==3)for(integer b=0;b<64;b=b+1)hist[q][b]<=0;
+    if((rv&&rop==4)||op==2)begin
+     for(integer b=0;b<64;b=b+1)begin
       count=0;
       for(integer l=0;l<W;l=l+1)begin
-       if(raw[l*EW]&&((orderkey(raw[l*EW+1+:16])&prior_mask)==(threshold&prior_mask))&&
-         ((orderkey(raw[l*EW+1+:16]) >> ((3-int'(rpass))*4))&16'hf)==16'(b))count=count+1;
+       if(op==2)begin
+        if(in_line[q*LW+l*EW]&&(orderkey(in_line[q*LW+l*EW+1+:16])>>11)==16'(b))count=count+1;
+       end else if(raw[l*EW]&&((orderkey(raw[l*EW+1+:16])&prior_mask)==(threshold&prior_mask))&&
+         ((orderkey(raw[l*EW+1+:16]) >> shift)&binmask)==16'(b))count=count+1;
       end
       hist[q][b]<=hist[q][b]+14'(count);
      end
