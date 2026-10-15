@@ -208,12 +208,13 @@ def internal_edges():
     return edges
 
 
-def repack_fronts(plan,leafs,inside_stage=False,widen=False):
+def repack_fronts(plan,leafs,inside_stage=False,widen=False,t2_orient='MX'):
     proposed=json.loads(json.dumps(plan));children=proposed['children']
     for q in range(4):children[f'front{q}']=[388.8+(167.4 if inside_stage else 135)*(q%2),5.4+48.6*(q//2),129.6,43.2]
     children['ktree']=[351.0 if inside_stage else 388.8,102.6,151.2,97.2]
     children['score']=[604.8 if inside_stage else 550.8,151.2,43.2,43.2]
-    if inside_stage:children['u_t2']=[529.2,0.,21.6,259.2]
+    if inside_stage:
+        children['u_t2']=[529.2,0.,21.6,259.2]
     keepouts={}
     if widen:
         extra=54. if widen is True else float(widen)
@@ -289,18 +290,71 @@ def repack_fronts(plan,leafs,inside_stage=False,widen=False):
     result['slot_outline_um']=proposed['slot_outline_um']
     result['placement_keepouts']=keepouts
     if inside_stage:
-        pairs=front_connections(leafs['front'][1],leafs['tstage'][1],proposed,'MX')
-        result['stage2']=dict(cell='u_t2',master='qkh_head_tstage',xy=children['u_t2'][:2],orient='MX',
+        pairs=front_connections(leafs['front'][1],leafs['tstage'][1],proposed,t2_orient)
+        result['stage2']=dict(cell='u_t2',master='qkh_head_tstage',xy=children['u_t2'][:2],orient=t2_orient,
                               worst=witness(pairs,children['u_t2'][:2]),
-                              clock_rectangles=xf(leafs['tstage'][1]['ck'],children['u_t2'][:2],(21.6,259.2),'MX'))
+                              clock_rectangles=xf(leafs['tstage'][1]['ck'],children['u_t2'][:2],(21.6,259.2),t2_orient))
         result['admitted'] &= result['stage2']['worst']['um']<=480
-        result['child_orientations']={n:'MX'if n=='u_t2'else'R0'for n in children}
+        result['child_orientations']={n:t2_orient if n=='u_t2'else'R0'for n in children}
         result['clock_pin_rectangles_local_um']={}
         for n,box in children.items():
             k='tstage'if n=='u_t2'else kind(n)
             pin='ck'if k=='tstage'else'clk'
             result['clock_pin_rectangles_local_um'][n]=xf(leafs[k][1][pin],box[:2],box[2:],result['child_orientations'][n])
     return result
+
+
+def joint_gather_bound(origins,head,repacked,leafs,reach,t2_box):
+    """Necessary native T1/T2 LP, then minimum T2 movement at the fixed budget.
+
+    Ignores obstacles and clock origin lattices. Returned moves are requests to
+    repack the connected cluster, never accepted sites or a physical grant.
+    """
+    tstage=leafs['tstage'];front=leafs['front'];size=tstage[0]
+    front_pairs=front_connections(front[1],tstage[1],repacked,'R0')
+    results=[]
+    for o1,o2 in itertools.product(FLIPS,repeat=2):
+        aa=[(pin,xf(tstage[1][pin],size=size,orient=o1),pts,cap)for pin,pts,cap in origins]
+        bb=[]
+        for pin,_,_ in origins:
+            source=pin.replace('_a[','_b[')
+            bb.append((source,xf(tstage[1][source],size=size,orient=o1),
+                xf(tstage[1][pin],size=size,orient=o2),reach('tstage',source,'tstage',pin)))
+        cc=[]
+        for label,_,fixed in front_pairs:
+            source,target=label.split('->');target=target.split('.',1)[1]
+            fixed=xf(fixed,(head['x'],head['y']),(head['w'],head['h']),head['orient'])
+            cc.append((label,xf(tstage[1][source],size=size,orient=o2),fixed,
+                       reach('tstage',source,'front',target)))
+        matrix=np.vstack((np.column_stack((SIGNS,np.zeros((4,2)),-np.ones(4))),
+                          np.column_stack((SIGNS,-SIGNS,-np.ones(4))),
+                          np.column_stack((np.zeros((4,2)),SIGNS,-np.ones(4)))))
+        rhs=-np.concatenate((coefficients(aa),coefficients(bb),coefficients(cc)))
+        bounds=[(None,None),(None,None),(head['x'],head['x']+head['w']-size[0]),
+                (head['y'],head['y']+head['h']-size[1]),(0,None)]
+        optimum=linprog([0,0,0,0,1],A_ub=matrix,b_ub=rhs,bounds=bounds,method='highs')
+        if not optimum.success:continue
+        rec=dict(t1_orient=o1,t2_orient=o2,continuous_min_effective_um=float(optimum.fun))
+        if optimum.fun<=LIMIT+1e-6:
+            extended=np.column_stack((matrix,np.zeros((12,2))))
+            shifts=np.array([[0,0,1,0,0,-1,0],[0,0,-1,0,0,-1,0],
+                             [0,0,0,1,0,0,-1],[0,0,0,-1,0,0,-1]])
+            nearest=linprog([0,0,0,0,0,1,1],A_ub=np.vstack((extended,shifts)),
+                b_ub=np.r_[rhs,t2_box[0],-t2_box[0],t2_box[1],-t2_box[1]],
+                bounds=bounds[:4]+[(0,LIMIT),(0,None),(0,None)],method='highs')
+            if nearest.success:
+                x,y=nearest.x[2:4];fx,fy=FLIPS[head['orient']];f1,f2=FLIPS[o2]
+                local=[head['w']-(x-head['x'])-size[0]if fx else x-head['x'],
+                       head['h']-(y-head['y'])-size[1]if fy else y-head['y']]
+                local_o=next(o for o,v in FLIPS.items()if v==(fx!=f1,fy!=f2))
+                rec.update(minimum_T2_shift_um=float(nearest.fun),t1_xy=nearest.x[:2].tolist(),
+                    t2_xy=[float(x),float(y)],t2_local_xy=local,t2_local_orient=local_o)
+        results.append(rec)
+    legal=[r for r in results if 'minimum_T2_shift_um'in r]
+    return dict(qualified=False,obstacles_ignored=True,origin_lattice_ignored=True,
+        minimum_continuous_effective_um=min((r['continuous_min_effective_um']for r in results),default=None),
+        least_T2_movement=min(legal,key=lambda r:r['minimum_T2_shift_um'])if legal else None,
+        alternatives=results,obligation='Connected children, T1/S1, actual clock pins and all native incident paths must be repacked and checked; LP is not adoption')
 
 
 def global_stages(insts,repacked,leafs,ectl_leafs,channel_lanes=False,timing=None,n3=False,head_limit=None,chunk_homes=None):
@@ -459,6 +513,8 @@ def global_stages(insts,repacked,leafs,ectl_leafs,channel_lanes=False,timing=Non
                 st=t0['site'];st['clock_pin_corners_um']=xf(leafs['tstage'][1]['ck'],st['xy'],st['size_um'],st['orient'])
                 st['clock_insertion_source']='physical/ref_tile/qkh_head_tstage/views/qkh_head_tstage/insertion.json'
         else:t=solve_site(t_pairs,leafs['tstage'][0],**kwargs)
+        if chunk_homes and not t['site']:
+            t['joint_T1_T2_necessary_bound']=joint_gather_bound(origins,head,repacked,leafs,reach,byname[hname+'/u_t2'][0])
         if t['site']:
             st=t['site'];st['clock_pin_corners_um']=xf(leafs['tstage'][1]['ck'],st['xy'],st['size_um'],st['orient'])
             st['clock_insertion_source']='physical/ref_tile/qkh_head_tstage/views/qkh_head_tstage/insertion.json'
@@ -527,6 +583,7 @@ def main():
     ap.add_argument('--global-stages',action='store_true',help='Solve actual T1/S1 in the current whole-die grant; requires --insts')
     ap.add_argument('--head-limit',type=int,help='Diagnostic constructive search only: evaluate firstNheads while retaining all128heads as obstacles; never a complete die grant')
     ap.add_argument('--n3',action='store_true',help='Structural candidate: three real input stages,20um budget margin; bounded constructive T0/T1 search, +1 compiler-visible cycle versusN2')
+    ap.add_argument('--t2-orient',choices=list(FLIPS),default='MX',help='Actual T2 orientation candidate inside unchanged body, paired native constraints are rechecked')
     ap.add_argument('--abc-request',type=Path,help='Actual source-band allocation/request containing384common535 homes; requires --n3 and actual --chunk-lef')
     ap.add_argument('--chunk-lef',type=Path,help='Actual routed common535 LEF with matching TT lib and insertion.json')
     ap.add_argument('--native-timing',action='store_true',help='Constrain every matched bit by actual TT ETM launch/capture and compensated clock-level reach, capped at500um')
@@ -578,7 +635,7 @@ def main():
     repack_conflicts=[(a,b) for (a,aa),(b,bb) in pairs if overlap(aa,bb)]
     repack_lb=continuous_bound(repack,tstage,front,dict(below=(-129.6,w+108,-280.8,-264.6)))
     repacked=repack_fronts(plan,{k:lef(paths[k])for k in ('front','score','stin','stk','nb','lane','ktree')})
-    repacked_inside=repack_fronts(plan,{k:lef(paths[k])for k in ('front','score','stin','stk','nb','lane','ktree','tstage')},True)
+    repacked_inside=repack_fronts(plan,{k:lef(paths[k])for k in ('front','score','stin','stk','nb','lane','ktree','tstage')},True,t2_orient=args.t2_orient)
     widened=repack_fronts(plan,{k:lef(paths[k])for k in ('front','score','stin','stk','nb','lane','ktree','tstage')},True,108. if args.widen108 else True)if args.widen54 else None
     if 'children'in repacked:
         repacked['stage2_continuous_lower_bound']=continuous_bound(
@@ -696,10 +753,10 @@ def main():
                 refs=PA.clock_refs(lib,ins,'tt')
                 assert refs,'Missing native compensated clock reference: '+key
                 timing[key]=dict(pins=PA.pin_metrics(lib,refs),R=max(v['rise']for v in refs.values()),spread=max(v['bmax']-v['bmin']for v in refs.values()))
-        global_result=global_stages(insts,chosen,{k:lef(paths[k])for k in (('tstage','sstage','score','chunk')if chunk_homes else ('tstage','sstage','score'))},ectl_leafs,args.widen54,timing,args.n3,args.head_limit,chunk_homes)
+        global_result=global_stages(insts,chosen,{k:lef(paths[k])for k in (('tstage','sstage','score','chunk','front')if chunk_homes else ('tstage','sstage','score'))},ectl_leafs,args.widen54,timing,args.n3,args.head_limit,chunk_homes)
         global_result['stage2_native_timing']=None
         if timing:
-            pairs=front_connections(lef(paths['front'])[1],tstage[1],chosen,'MX')
+            pairs=front_connections(lef(paths['front'])[1],tstage[1],chosen,chosen['child_orientations']['u_t2'])
             stage2_pairs=[]
             for label,a,b in pairs:
                 source,target=label.split('->');target=target.split('.',1)[1]
