@@ -13,14 +13,18 @@ import numpy as np
 p=argparse.ArgumentParser();p.add_argument('build',type=Path);p.add_argument('vectors',type=Path);a=p.parse_args()
 root=Path(__file__).resolve().parents[2];obj=a.build/'obj'
 header=(obj/'Vtb_qwen_embedding_stage___024root.h').read_text()
-pattern=r'\b(\w*u_control_vm\w*u_vm\w*g_t__BRA__7__KET__\w*u_t\w*g_b__BRA__2__KET__\w*u_bt\w*u_b\w*g_mac\w*u_lo\w*arr)\b'
+pattern=r'\b(\w+)\*\s+(\w*u_control_vm\w*u_vm\w*g_t__BRA__7__KET__\w*u_t\w*g_b__BRA__2__KET__\w*u_bt);'
 fields=set(re.findall(pattern,header))
 if len(fields)!=1:raise RuntimeError('cannot uniquely bind actual RMS SRAM bank58; found '+repr(fields))
-field=fields.pop()
+bank_type,bank_pointer=fields.pop()
+bank_header=(obj/(bank_type+'.h')).read_text()
+array='u_b__DOT__g_mac__DOT__u_lo__DOT__arr'
+if not re.search(r'\b'+array+r'\b',bank_header):raise RuntimeError('selected bank does not expose actual mapped SRAM storage')
+field=bank_pointer+'->'+array
 bits=np.array([int(x,16)for x in(a.vectors/'expected.hex').read_text().split()],dtype=np.uint32)
 expected=G.reduce_chunked([G.mul(v,v)for v in bits.view(np.float32)])
 expected_bits=int(np.array([expected],dtype=np.float32).view(np.uint32)[0])
-source=(root/'tools/qwen_split/embedding_stage_main.cpp').read_text().replace('#include <verilated.h>','#include <verilated.h>\n#include <cstdio>\n#include "Vtb_qwen_embedding_stage___024root.h"')
+source=(root/'tools/qwen_split/embedding_stage_main.cpp').read_text().replace('#include <verilated.h>','#include <verilated.h>\n#include <cstdio>\n#include "Vtb_qwen_embedding_stage___024root.h"\n#include "'+bank_type+'.h"')
 check=f'''    // RMS scalar14240 -> row890 -> bank58,line13,lane0.
     uint32_t actual=0;
     for(unsigned b=0;b<32;++b){{unsigned c=2*b+1;actual|=((top.rootp->{field}[6][c/32]>>(c%32))&1U)<<b;}}
