@@ -38,7 +38,7 @@ SRC = [ROOT / p for p in (
     "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv", "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
     "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
     "rtl/physical/ot_qfd_static_transport.sv", "rtl/physical/ot_qfd_io_xfifo_static.sv",
-    "rtl/physical/ot_qfd_io_links_static.sv", "rtl/physical/ot_qfd_coll_static_face.sv", "rtl/physical/ot_qfd_ucie_static_share.sv", "rtl/physical/ot_qfd_ucie_six_five.sv", "rtl/physical/ot_qfd_collective_static_io.sv",
+    "rtl/physical/ot_qfd_io_links_static.sv", "rtl/physical/ot_qfd_coll_static_face.sv", "rtl/physical/ot_qfd_ucie_static_share.sv", "rtl/physical/ot_qfd_ucie_six_five.sv", "rtl/physical/ot_qfd_collective_static_io.sv", "rtl/physical/ot_qfd_collective_static_io_production.sv",
     "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv",
     "rtl/rom/ot_coll_tp8_static.sv", "rtl/physical/ot_qfd_io_collective_static.sv",
     "rtl/rom/ot_coll_static_linkcal.sv", "rtl/rom/ot_coll_cmd_issue.sv",
@@ -102,6 +102,7 @@ def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False, parent=False, 
            f"-GLATU={lu}", f"-GLATS={ls}", f"-GPU={PU}", f"-GPS={PS}", f"-GKC={KC}", f"-GKW={KW}", f"-GXU={xu}",
            f"-GXS={xs}", "-Mdir", str(obj)] + ([f"+define+{define}"] if define else []) + [str(s) for s in SRC] + \
           [str(h), "-CFLAGS", "-O1", "-j", "16"]
+    if six_five:cmd += ["+define+OT_TP8S_PRODUCTION_WRAPPER"]
     if parent:
         cmd += [f"-GSHARED={int(shared)}",f"-GSIXFIVE={int(six_five)}", "+define+OT_TP8S_PARENT"] + [f"-G{p}={v}" for p,v in zip(("RU","RS0","RS1","RS2"),relays)]
     if qfd:

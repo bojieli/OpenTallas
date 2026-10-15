@@ -10,7 +10,7 @@
 // transport edges). Three RXbanks protect the whole block through its last use.
 // Storage is explicit kept flop banks; no behavioural SRAM or handshake FIFO.
 module qfd_ucie_six_five #(parameter integer MUT=0)(
- input wire core_ck,fdi_ck,rst_n,
+ input wire core_ck,fdi_ck,rst_n,input wire[2:0]fdi_rx_ck,
  input wire tx_valid,input wire[596:0]tx_frame,
  output reg phy_tx_valid,output reg[1042:0]phy_tx_frame,
  input wire phy_rx_valid,input wire[1042:0]phy_rx_frame,
@@ -30,7 +30,7 @@ module qfd_ucie_six_five #(parameter integer MUT=0)(
  end
  for(genvar b=0;b<3;b=b+1)begin:g_rx
    (* keep *)reg[3587:0]bits;
-   always @(posedge fdi_ck)if(rx_go && fb==b)case(fp)
+   always @(posedge fdi_rx_ck[b])if(rx_go && fb==b)case(fp)
      0:bits[0+:1043]<=phy_rx_frame;
      1:bits[1043+:1043]<=phy_rx_frame;
      2:bits[2086+:1043]<=phy_rx_frame;

@@ -1,0 +1,107 @@
+{
+  "schema": "opentallas.qwen.collective.production_boundary.v1",
+  "top": "qfd_collective_static_io_production",
+  "source": "rtl/physical/ot_qfd_collective_static_io_production.sv",
+  "source_closure": [
+    "rtl/physical/ot_qfd_collective_static_io_production.sv",
+    "rtl/physical/ot_qfd_collective_static_io.sv",
+    "rtl/physical/ot_qfd_coll_static_face.sv",
+    "rtl/physical/ot_qfd_ucie_static_share.sv",
+    "rtl/physical/ot_qfd_ucie_six_five.sv",
+    "rtl/physical/ot_qfd_io_collective_static.sv",
+    "rtl/rom/ot_coll_tp8_static.sv",
+    "rtl/rom/ot_coll_static_linkcal.sv"
+  ],
+  "defaults": {
+    "PU": 25,
+    "PS": 339,
+    "LU": 58,
+    "LS": 376,
+    "RU": 5,
+    "RS0": 0,
+    "RS1": 0,
+    "RS2": 5
+  },
+  "compile_defines": [
+    "OT_QFDS_LU=58",
+    "OT_QFDS_LS=376"
+  ],
+  "physical_boundary": {
+    "UCIe": {
+      "TX": "shared_tx[1042:0]",
+      "TXvalid": "shared_tx_valid",
+      "RX": "shared_rx[1042:0]",
+      "RXvalid": "shared_rx_valid",
+      "UP": "ucie_up",
+      "clock": "fdi_ck",
+      "selected_PHY": "physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy",
+      "port_map": {
+        "shared_tx": "tx_flit",
+        "shared_tx_valid": "tx_v",
+        "shared_rx": "rx_flit",
+        "shared_rx_valid": "rx_v",
+        "ucie_up": "tx_up",
+        "fdi_ck": "clk"
+      }
+    },
+    "SerDes": {
+      "count": 3,
+      "frame_bits": 597,
+      "TX": "serdes_tx[1790:0]",
+      "RX": "serdes_rx[1790:0]",
+      "TXvalid": "serdes_tx_valid[2:0]",
+      "RXvalid": "serdes_rx_valid[2:0]",
+      "UP": "serdes_up[2:0]"
+    }
+  },
+  "clock_roots": {
+    "total": 108,
+    "collective": 18,
+    "faces": 55,
+    "relay": 30,
+    "gearbox_core_ck": {
+      "period_ps": 833.3333333333334,
+      "scope": "2TXbanks7176FF+coreoutput598FF+controls"
+    },
+    "fdi_ck": {
+      "period_ps": 1000,
+      "scope": "TXphysicalpins1043FF+FDIphasecounter/faultcontrols"
+    },
+    "fdi_rx_ck[2:0]": {
+      "period_ps": 1000,
+      "scope": "threeRXbank3588FFeach",
+      "relationship": "sameFDIphase; actualnativeclockinsertion/pinproofrequired"
+    }
+  },
+  "rational_clock_relationship": "core/FDI6:5fromcommonPLL; reset-firstedgeswithinonecoreperiod; sourcePLLphase/nativeCTS bindingOPEN",
+  "steady_state_transport": {
+    "captured_input_to_output_core_edges": 24,
+    "registered_codec_launch_to_receiver_pin_core_edges": 25,
+    "PHY_FDI_cycles": 4,
+    "six_core_words_bits": 3588,
+    "FDI_beats_per5cycles": 4,
+    "FDI_bits": 1043
+  },
+  "fault": "fault aggregatescollective+sharedgearbox+20CDC+5abort, fault_code retainscollectiveclass; faultsneverchangecompiledschedule",
+  "baseline_production_cycles": {
+    "AR256": 805,
+    "two_AR256": 1548,
+    "argmax": 449,
+    "two_AR256_argmax": 1556
+  },
+  "physical_homes": null,
+  "bench_status": "actualproductionwrapper4productionPASS; final6phase+6unit+unsafe-calendar matrixRUNNING",
+  "physical_qualified": false,
+  "native_system_qualified": false,
+  "PHY_license_qualified": false,
+  "source_sha256": {
+    "rtl/physical/ot_qfd_collective_static_io_production.sv": "e454695b2e10bf176ce1705dd3d571e2939242857aa10f9453418956405e391b",
+    "rtl/physical/ot_qfd_collective_static_io.sv": "52900a6d139bdb68d3bcfd0ed27fa3b235214e93d81d36a02e4c3581706a0ca0",
+    "rtl/physical/ot_qfd_coll_static_face.sv": "09ac11db5f0810a6e5c0de9a33df7aaf655fbb75ce742d3120881ccef61819c4",
+    "rtl/physical/ot_qfd_ucie_static_share.sv": "fd8d3b0c901a6810674ad209036977903a138c67d9dfe96137bbdd509fec027b",
+    "rtl/physical/ot_qfd_ucie_six_five.sv": "9a478c048fc7b838f0945545a9e7f08ce4bc38e3388abd9b04501c2537ec521c",
+    "rtl/physical/ot_qfd_io_collective_static.sv": "32e51fe1aa7ba1120e7cefc33d3345095350e9c9c1e0b24a570e8cb89d604447",
+    "rtl/rom/ot_coll_tp8_static.sv": "8b32e6a42e3e68d8ba46ca1f9df8163da197faac898027c12548b5f618a0bcba",
+    "rtl/rom/ot_coll_static_linkcal.sv": "504a41b54f540f7275e90b60411ec9e73661ce9522c449101df4a645a2ae2fff"
+  }
+}

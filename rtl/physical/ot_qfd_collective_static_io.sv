@@ -52,7 +52,7 @@ module qfd_collective_static_io #(
  input wire[4:0]phy_up,phy_rx_valid,input wire[5*597-1:0]phy_rx,
  output wire[4:0]phy_tx_valid,output wire[5*597-1:0]phy_tx,
  output wire[19:0]transport_cdc_fault,output wire[4:0]transport_abort,
- input wire fdi_ck,input wire shared_rx_valid,input wire[1042:0]shared_rx,
+ input wire gearbox_core_ck,fdi_ck,input wire[2:0]fdi_rx_ck,input wire shared_rx_valid,input wire[1042:0]shared_rx,
  output wire shared_tx_valid,output wire[1042:0]shared_tx,output wire shared_fault,
  output wire[39:0]transport_fault_cause
 );
@@ -151,7 +151,7 @@ module qfd_collective_static_io #(
  wire gb_core_fault,gb_fdi_fault;
  if(SIX_FIVE)begin:g_six_five
  wire[596:0]core_rx;
- qfd_ucie_six_five u_gearbox(.core_ck(face_ck[6]),.fdi_ck(fdi_ck),.rst_n(rst_n),
+ qfd_ucie_six_five u_gearbox(.core_ck(gearbox_core_ck),.fdi_ck(fdi_ck),.fdi_rx_ck(fdi_rx_ck),.rst_n(rst_n),
  .tx_valid(mux_txv),.tx_frame(mux_tx[596:0]),.phy_tx_valid(shared_tx_valid),.phy_tx_frame(shared_tx),
  .phy_rx_valid(shared_rx_valid),.phy_rx_frame(shared_rx),.rx_valid(mux_rxv),.rx_frame(core_rx),
  .core_fault(gb_core_fault),.fdi_fault(gb_fdi_fault));
