@@ -59,6 +59,18 @@ class ActualGraphLoweringTest(unittest.TestCase):
         self.assertIn('unplaced_hops',self.result['unresolved_external_producers'])
         self.assertTrue(self.result['external_producer_edges'])
 
+    def test_index_query_preparation_does_not_replace_field_projection(self):
+        projected=[j for j in self.jobs.values() if j['id'].endswith('.attn.idx.q')]
+        self.assertEqual(len(projected),8)
+        for field in projected:
+            layer=field['id'].split('.')[0]
+            query=f'{layer}.attn.idx.query_prepare'
+            self.assertIn(query,self.jobs[f'{layer}.attn.idx.score']['preds'])
+            self.assertIn(field['id'],self.jobs[query]['preds'])
+            self.assertIn(f'{layer}.attn.a_proj',self.jobs[query]['preds'])
+            self.assertIsNone(self.jobs[query]['native_binding'])
+            self.assertIsNone(self.jobs[query]['duration_cycles'])
+
     def test_missing_native_fusion_target_rejected(self):
         programs=copy.deepcopy(self.programs)
         p=next(p for p in programs if any(o['id']=='L0.attn.q_quant' for o in p['ops']))

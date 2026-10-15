@@ -2,7 +2,7 @@
   "schema": "opentallas.s81.native-graph-lowering.v1",
   "status": "NATIVE_CALENDAR_INCOMPLETE",
   "raw_operations": 2367,
-  "native_jobs": 1783,
+  "native_jobs": 1791,
   "fused_operations": 704,
   "input_program_sha256": {
     "S000": "db004fa0285defb0f68d2a82b0470d3c60143a55a803561ec4389b21872cc5c0",
@@ -2554,7 +2554,15 @@
     "L38.attn.hc.h_store_for_hcx",
     "L39.attn.hc.raw_allgather",
     "L39.ffn.hc.raw_allgather",
-    "L39.attn.hc.h_store_for_hcx"
+    "L39.attn.hc.h_store_for_hcx",
+    "L2.attn.idx.query_prepare",
+    "L8.attn.idx.query_prepare",
+    "L14.attn.idx.query_prepare",
+    "L20.attn.idx.query_prepare",
+    "L24.attn.idx.query_prepare",
+    "L28.attn.idx.query_prepare",
+    "L32.attn.idx.query_prepare",
+    "L36.attn.idx.query_prepare"
   ],
   "jobs": [
     {
@@ -4984,6 +4992,24 @@
       "requires_opcode_body_proof": false
     },
     {
+      "id": "L2.attn.idx.query_prepare",
+      "source_ids": [],
+      "source_stages": [
+        "S002"
+      ],
+      "preds": [
+        "L2.attn.idx.q",
+        "L2.attn.a_proj"
+      ],
+      "native_binding": null,
+      "duration_cycles": null,
+      "fixed_service_contract": null,
+      "dispatch_eligible": false,
+      "required_owner": "s_su_missing_ops",
+      "proposed_opcode": 15,
+      "required": "native D128 RoPE64/FP4UE8M0, projected weight scaling, actual SVC type4 frame; no512padding"
+    },
+    {
       "id": "L2.attn.idx.score",
       "source_ids": [
         "L2.attn.idx.score"
@@ -4993,7 +5019,8 @@
       ],
       "preds": [
         "L2.attn.a_allgather",
-        "L2.attn.idx.q"
+        "L2.attn.idx.q",
+        "L2.attn.idx.query_prepare"
       ],
       "native_binding": null,
       "duration_cycles": null,
@@ -11129,6 +11156,24 @@
       "requires_opcode_body_proof": false
     },
     {
+      "id": "L8.attn.idx.query_prepare",
+      "source_ids": [],
+      "source_stages": [
+        "S011"
+      ],
+      "preds": [
+        "L8.attn.idx.q",
+        "L8.attn.a_proj"
+      ],
+      "native_binding": null,
+      "duration_cycles": null,
+      "fixed_service_contract": null,
+      "dispatch_eligible": false,
+      "required_owner": "s_su_missing_ops",
+      "proposed_opcode": 15,
+      "required": "native D128 RoPE64/FP4UE8M0, projected weight scaling, actual SVC type4 frame; no512padding"
+    },
+    {
       "id": "L8.attn.idx.score",
       "source_ids": [
         "L8.attn.idx.score"
@@ -11138,7 +11183,8 @@
       ],
       "preds": [
         "L8.attn.a_allgather",
-        "L8.attn.idx.q"
+        "L8.attn.idx.q",
+        "L8.attn.idx.query_prepare"
       ],
       "native_binding": null,
       "duration_cycles": null,
@@ -17351,6 +17397,24 @@
       "requires_opcode_body_proof": false
     },
     {
+      "id": "L14.attn.idx.query_prepare",
+      "source_ids": [],
+      "source_stages": [
+        "S020"
+      ],
+      "preds": [
+        "L14.attn.idx.q",
+        "L14.attn.a_proj"
+      ],
+      "native_binding": null,
+      "duration_cycles": null,
+      "fixed_service_contract": null,
+      "dispatch_eligible": false,
+      "required_owner": "s_su_missing_ops",
+      "proposed_opcode": 15,
+      "required": "native D128 RoPE64/FP4UE8M0, projected weight scaling, actual SVC type4 frame; no512padding"
+    },
+    {
       "id": "L14.attn.idx.score",
       "source_ids": [
         "L14.attn.idx.score"
@@ -17360,7 +17424,8 @@
       ],
       "preds": [
         "L14.attn.a_allgather",
-        "L14.attn.idx.q"
+        "L14.attn.idx.q",
+        "L14.attn.idx.query_prepare"
       ],
       "native_binding": null,
       "duration_cycles": null,
@@ -23465,6 +23530,24 @@
       "requires_opcode_body_proof": false
     },
     {
+      "id": "L20.attn.idx.query_prepare",
+      "source_ids": [],
+      "source_stages": [
+        "S029"
+      ],
+      "preds": [
+        "L20.attn.idx.q",
+        "L20.attn.a_proj"
+      ],
+      "native_binding": null,
+      "duration_cycles": null,
+      "fixed_service_contract": null,
+      "dispatch_eligible": false,
+      "required_owner": "s_su_missing_ops",
+      "proposed_opcode": 15,
+      "required": "native D128 RoPE64/FP4UE8M0, projected weight scaling, actual SVC type4 frame; no512padding"
+    },
+    {
       "id": "L20.attn.idx.score",
       "source_ids": [
         "L20.attn.idx.score"
@@ -23474,7 +23557,8 @@
       ],
       "preds": [
         "L20.attn.a_allgather",
-        "L20.attn.idx.q"
+        "L20.attn.idx.q",
+        "L20.attn.idx.query_prepare"
       ],
       "native_binding": null,
       "duration_cycles": null,
@@ -27557,6 +27641,24 @@
       "requires_opcode_body_proof": false
     },
     {
+      "id": "L24.attn.idx.query_prepare",
+      "source_ids": [],
+      "source_stages": [
+        "S034"
+      ],
+      "preds": [
+        "L24.attn.idx.q",
+        "L24.attn.a_proj"
+      ],
+      "native_binding": null,
+      "duration_cycles": null,
+      "fixed_service_contract": null,
+      "dispatch_eligible": false,
+      "required_owner": "s_su_missing_ops",
+      "proposed_opcode": 15,
+      "required": "native D128 RoPE64/FP4UE8M0, projected weight scaling, actual SVC type4 frame; no512padding"
+    },
+    {
       "id": "L24.attn.idx.score",
       "source_ids": [
         "L24.attn.idx.score"
@@ -27566,7 +27668,8 @@
       ],
       "preds": [
         "L24.attn.a_allgather",
-        "L24.attn.idx.q"
+        "L24.attn.idx.q",
+        "L24.attn.idx.query_prepare"
       ],
       "native_binding": null,
       "duration_cycles": null,
@@ -31598,6 +31701,24 @@
       "requires_opcode_body_proof": false
     },
     {
+      "id": "L28.attn.idx.query_prepare",
+      "source_ids": [],
+      "source_stages": [
+        "S040"
+      ],
+      "preds": [
+        "L28.attn.idx.q",
+        "L28.attn.a_proj"
+      ],
+      "native_binding": null,
+      "duration_cycles": null,
+      "fixed_service_contract": null,
+      "dispatch_eligible": false,
+      "required_owner": "s_su_missing_ops",
+      "proposed_opcode": 15,
+      "required": "native D128 RoPE64/FP4UE8M0, projected weight scaling, actual SVC type4 frame; no512padding"
+    },
+    {
       "id": "L28.attn.idx.score",
       "source_ids": [
         "L28.attn.idx.score"
@@ -31607,7 +31728,8 @@
       ],
       "preds": [
         "L28.attn.a_allgather",
-        "L28.attn.idx.q"
+        "L28.attn.idx.q",
+        "L28.attn.idx.query_prepare"
       ],
       "native_binding": null,
       "duration_cycles": null,
@@ -35639,6 +35761,24 @@
       "requires_opcode_body_proof": false
     },
     {
+      "id": "L32.attn.idx.query_prepare",
+      "source_ids": [],
+      "source_stages": [
+        "S046"
+      ],
+      "preds": [
+        "L32.attn.idx.q",
+        "L32.attn.a_proj"
+      ],
+      "native_binding": null,
+      "duration_cycles": null,
+      "fixed_service_contract": null,
+      "dispatch_eligible": false,
+      "required_owner": "s_su_missing_ops",
+      "proposed_opcode": 15,
+      "required": "native D128 RoPE64/FP4UE8M0, projected weight scaling, actual SVC type4 frame; no512padding"
+    },
+    {
       "id": "L32.attn.idx.score",
       "source_ids": [
         "L32.attn.idx.score"
@@ -35648,7 +35788,8 @@
       ],
       "preds": [
         "L32.attn.a_allgather",
-        "L32.attn.idx.q"
+        "L32.attn.idx.q",
+        "L32.attn.idx.query_prepare"
       ],
       "native_binding": null,
       "duration_cycles": null,
@@ -39680,6 +39821,24 @@
       "requires_opcode_body_proof": false
     },
     {
+      "id": "L36.attn.idx.query_prepare",
+      "source_ids": [],
+      "source_stages": [
+        "S052"
+      ],
+      "preds": [
+        "L36.attn.idx.q",
+        "L36.attn.a_proj"
+      ],
+      "native_binding": null,
+      "duration_cycles": null,
+      "fixed_service_contract": null,
+      "dispatch_eligible": false,
+      "required_owner": "s_su_missing_ops",
+      "proposed_opcode": 15,
+      "required": "native D128 RoPE64/FP4UE8M0, projected weight scaling, actual SVC type4 frame; no512padding"
+    },
+    {
       "id": "L36.attn.idx.score",
       "source_ids": [
         "L36.attn.idx.score"
@@ -39689,7 +39848,8 @@
       ],
       "preds": [
         "L36.attn.a_allgather",
-        "L36.attn.idx.q"
+        "L36.attn.idx.q",
+        "L36.attn.idx.query_prepare"
       ],
       "native_binding": null,
       "duration_cycles": null,
@@ -44527,7 +44687,15 @@
     "L38.attn.hc.raw_allgather",
     "L38.ffn.hc.raw_allgather",
     "L39.attn.hc.raw_allgather",
-    "L39.ffn.hc.raw_allgather"
+    "L39.ffn.hc.raw_allgather",
+    "L2.attn.idx.query_prepare",
+    "L8.attn.idx.query_prepare",
+    "L14.attn.idx.query_prepare",
+    "L20.attn.idx.query_prepare",
+    "L24.attn.idx.query_prepare",
+    "L28.attn.idx.query_prepare",
+    "L32.attn.idx.query_prepare",
+    "L36.attn.idx.query_prepare"
   ],
   "dispatch_eligible": false,
   "qualified": false,
