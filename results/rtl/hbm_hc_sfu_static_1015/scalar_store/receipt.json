@@ -1,0 +1,18 @@
+{
+  "source_commit": "465592b49",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv": "16d38219117e35990fbea969776490d27832f2d7643cd1dd66233547bdf88160",
+    "rtl/test/hbm_accel/generic/tb_hgi_sfu_static_operand_store.sv": "908a2094cc9d0aad48f75b25377774d1e6c1cfc315c9f018855a91dd0c13717c",
+    "tools/hgi_unit_tput/run_sfu_static_operand_store.sh": "3a606937d6db055038334f9c8362cda09972f1c1f88f103aedc4aec49fbce3a3"
+  },
+  "gate": "PASS",
+  "actual_SRAMs": 80,
+  "checked_words": 143360,
+  "scalar_broadcast_lanes": 16,
+  "scalar_read_edges": 1,
+  "address_identity_bits": 24,
+  "actual_bank_mutant": "FAIL STORE_WORD",
+  "actual_scalar_address_mutant": "FAIL SCALAR_IDENTITY",
+  "Qswiglu_arithmetic_join": false,
+  "native_qualification": false
+}

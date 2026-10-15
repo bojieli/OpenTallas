@@ -1,0 +1,263 @@
+{
+  "schema": "opentallas.qwen.native-controller-graph-proof.v1",
+  "qualified": false,
+  "instances": 1637,
+  "buses": 3406,
+  "scope": "Generated physical-plan consistency only; does not prove actual whole-die RTL binding or native qualification",
+  "geometry_errors": [],
+  "nonclock_reset_endpoint_bit_mismatches": [],
+  "source_ports": 50,
+  "geometry_sha256": "c6bb77d8e1a3b111999ecfe969449d54550b4c959c4162e8a55709a061b49f05",
+  "audit_tool_commit": "f83842635",
+  "native_control_contract": {
+    "master": "qfd_tt_ctlm_static_s",
+    "source": "rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_static_s.sv",
+    "source_sha256": "6fd2bbf9d3f4ed0af371f7f34406bb96bbd777db566beaabbca7ac24322f79fe",
+    "retired_master": "qfd_tt_ctlm",
+    "removed_obsolete_buses": [
+      "tt_xd",
+      "tt_xr"
+    ],
+    "source_ports": {
+      "ck_xpf": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "ck_me_sched": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "cp_active": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "cp": {
+        "bits": 56,
+        "direction": "output"
+      },
+      "su_image_ready": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "control_stores_ready": {
+        "bits": 1,
+        "direction": "output"
+      },
+      "program_obs": {
+        "bits": 76,
+        "direction": "output"
+      },
+      "layer_context_v": {
+        "bits": 1,
+        "direction": "output"
+      },
+      "native_tok": {
+        "bits": 18,
+        "direction": "output"
+      },
+      "native_pos": {
+        "bits": 18,
+        "direction": "output"
+      },
+      "native_cmd": {
+        "bits": 380,
+        "direction": "output"
+      },
+      "native_ret": {
+        "bits": 95,
+        "direction": "input"
+      },
+      "command_stage": {
+        "bits": 6,
+        "direction": "output"
+      },
+      "ib": {
+        "bits": 380,
+        "direction": "output"
+      },
+      "su_observe": {
+        "bits": 16,
+        "direction": "input"
+      },
+      "xpf": {
+        "bits": 72,
+        "direction": "output"
+      },
+      "mer0": {
+        "bits": 1,
+        "direction": "output"
+      },
+      "mer1": {
+        "bits": 1,
+        "direction": "output"
+      },
+      "mer2": {
+        "bits": 1,
+        "direction": "output"
+      },
+      "rf0": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "rf1": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "rf2": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "xflt": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "ck_head": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "ck_tree": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "c0": {
+        "bits": 341,
+        "direction": "output"
+      },
+      "f0": {
+        "bits": 104,
+        "direction": "input"
+      },
+      "lc0": {
+        "bits": 26,
+        "direction": "output"
+      },
+      "c1": {
+        "bits": 341,
+        "direction": "output"
+      },
+      "f1": {
+        "bits": 104,
+        "direction": "input"
+      },
+      "lc1": {
+        "bits": 26,
+        "direction": "output"
+      },
+      "c2": {
+        "bits": 341,
+        "direction": "output"
+      },
+      "f2": {
+        "bits": 104,
+        "direction": "input"
+      },
+      "lc2": {
+        "bits": 26,
+        "direction": "output"
+      },
+      "ld": {
+        "bits": 16,
+        "direction": "input"
+      },
+      "mee": {
+        "bits": 8,
+        "direction": "output"
+      },
+      "meok": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "mx": {
+        "bits": 553,
+        "direction": "output"
+      },
+      "pw": {
+        "bits": 75,
+        "direction": "input"
+      },
+      "rsi": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "sel": {
+        "bits": 26,
+        "direction": "output"
+      },
+      "st": {
+        "bits": 49,
+        "direction": "input"
+      },
+      "uf": {
+        "bits": 4,
+        "direction": "input"
+      },
+      "xm": {
+        "bits": 92,
+        "direction": "output"
+      },
+      "xs": {
+        "bits": 57,
+        "direction": "input"
+      },
+      "kok": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "kwd": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "fab": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "cf": {
+        "bits": 1,
+        "direction": "output"
+      },
+      "ovf": {
+        "bits": 1,
+        "direction": "output"
+      }
+    },
+    "clocks": [
+      "ck_head",
+      "ck_tree",
+      "ck_xpf",
+      "ck_me_sched"
+    ],
+    "missing_input_endpoints": [
+      "cp_active",
+      "fab",
+      "kok",
+      "kwd",
+      "native_ret",
+      "su_image_ready",
+      "su_observe"
+    ],
+    "unread_outputs": [
+      "cf",
+      "command_stage",
+      "control_stores_ready",
+      "cp",
+      "layer_context_v",
+      "native_cmd",
+      "native_pos",
+      "native_tok",
+      "ovf",
+      "program_obs"
+    ],
+    "XPF_TRANSPORT_EDGES": null,
+    "physical_evidence": "NEW assigned parent pins only; no routed view, child roots, insertion or compensated phase inherited",
+    "qualified": false
+  },
+  "staged_run": {
+    "unit": "oth-ubuntu-1481884-1792055030",
+    "exit_code": 0,
+    "remote": "/srv/opentallas-scratch/codex/q-system-pins-1015/src",
+    "kind": "metadata-only OT_RELAY_SKIP",
+    "source": "currentf6842ce4a tools/actualstaticcontroller plus exactcurrent sourcepin header/clockmanifest overlay; retained frozen oldphysicalviews remain unqualified"
+  },
+  "historical_STA_rootcause": "C16s qfd_xcst_s has no ck physical LEF pin; get_pins ck and ck[0] both absent. Current source fixes real M3 clock location, but no route qualification inherited.",
+  "source_generator": "Canonical complete source template adoptedf6842ce4a; static_slot.py --check byte-identical SHA6fd2bbf9d3f4ed0af371f7f34406bb96bbd777db566beaabbca7ac24322f79fe"
+}

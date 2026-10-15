@@ -1,0 +1,24 @@
+{
+  "stage": "BEFORE_NATIVE_COMPOSITION_RTL",
+  "controller_commit": "aec541364",
+  "workload": "unchangedtrueCOLBh20480words+PRE8, MAIN/MIRROR2561sectors",
+  "resources": {
+    "VMmacros": 96,
+    "landingmacros": 32,
+    "WBmacros": 128,
+    "nativePCcontrollers": 128,
+    "queuedPCdepth": 32,
+    "samephasepcroots": 128
+  },
+  "selection": "cutthroughWB2 sameABI, actualqueuednativecontroller replacesbehavioralcontrollerscheduler",
+  "offchip": "command-onlymutableDRAM; inversefullnativePC/bank/row/col sector, boundedK_BASE28800000 window65536; ACT/PRE/REFpb/RCD/RAS/RP/WRR/CCDL/ACTspacing verified; noDRAMrequestqueue/scheduler",
+  "price": 248,
+  "limit": 272,
+  "clocks_ps": {
+    "stream": 833.333,
+    "HBM": 1024,
+    "phase": 173
+  },
+  "qualification": "positiveactualcolumns+ACK+fullmemorydata; earlycompletionnegative. Physical/protectedcontrol/globalEngram stillunqualified",
+  "verification_read_latency": "ceil((CL12500+burst1024+response10000)/HBM1024)=23edges; not inSTOREfence; warmhistoryincludesnativeverificationreads"
+}

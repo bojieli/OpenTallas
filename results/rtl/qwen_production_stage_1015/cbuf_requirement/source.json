@@ -1,0 +1,31 @@
+{
+  "status": "PASS_COMPONENT_ONLY",
+  "scope": "Real static launch gate; source-derived CROM requirement only affects fault, never launch. No physical/profile qualification.",
+  "tests": [
+    {
+      "case": "embedding_cold",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "case": "requires_cold_fault",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "case": "unconditional_fault_mutant",
+      "exit_code": 1,
+      "status": "REJECTED"
+    },
+    {
+      "case": "ready_gates_start_mutant",
+      "exit_code": 1,
+      "status": "REJECTED"
+    }
+  ],
+  "source_sha256": {
+    "rtl/qwen_sys/static_schedule_20261014/ot_qfd_seq_su_bi_static.sv": "f8c409895d094a8deb288375147533132c2d264852a89768ed630a3bd8a64a6a",
+    "rtl/qwen_sys/static_schedule_20261014/tb_qwen_stage_resource_gate.sv": "2dbd3ab6f1e686db3a398c095f150c70db162702f9a68f18f62290ab0962cb62",
+    "tools/qwen_static_schedule/segments.py": "f22f1c681b2f006e7ffe37f7aa7827ab21283c15cae7894a7d206749495f2fec"
+  }
+}

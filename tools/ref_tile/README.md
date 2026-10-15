@@ -289,3 +289,18 @@ ownership walk and from synchronous crossing witnesses. Recovery/removal timing
 stays enabled. Names and `reset_ports` never exempt a real D path. The regression
 uses actual DFFASRHQN cells with a shared reset and rejects a mutant connecting
 that same reset port to the other domain's D input.
+
+Leaf corner inference uses the actual sequential clock-sink cells. Physical-only
+LEF taps and endcaps have no Liberty association and cannot identify a timing
+corner. Missing or unknown Liberty associations on actual sequential cells still
+fail. The physical regression includes a real LEF-only ASAP7 tap and replays the
+complete generated CTS and later boundary hooks.
+
+Multi-root route jobs and their formal CTS gates use the same physical clock
+fixes (`cg_pushdown.tcl` and `clk_net_protect.tcl`). They do not install the
+legacy single-boundary `link_budget_hook.tcl`: the generated domain constraints
+already own every input/output max/min delay and each root's phi−R reference.
+Combining the two models created extra route-period virtual clocks that survived
+into 833.333 ps signoff. The strict clock inventory guard remains unchanged;
+unexpected virtual clocks and aliases still fail. Other clock modes retain the
+legacy hook and their existing job command bytes.

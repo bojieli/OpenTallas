@@ -1,0 +1,14 @@
+{
+  "status": "PASS_GENERATOR_REPRODUCTION_ONLY",
+  "serializers": 3,
+  "source_ports": "mer0..2 / rf0..2; no undriven inherited mer3..5",
+  "tests": [
+    "canonical byte-identical regeneration",
+    "nonexistent fault endpoint/template mutation rejected"
+  ],
+  "source_sha256": {
+    "tools/qwen_split/static_slot.py": "5205c7d332ef6ca701cd89ae231c6677330be255a5bbae9e97953dd13a0cfb5d",
+    "rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_static_s.sv.in": "5495e2f2df1a7a893f15c757babaa32d6f392d8d451472ddf1ad87aa33d3cf83",
+    "rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_static_s.sv": "6fd2bbf9d3f4ed0af371f7f34406bb96bbd777db566beaabbca7ac24322f79fe"
+  }
+}

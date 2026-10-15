@@ -1,0 +1,48 @@
+{
+  "source_commit": "655f63e8d",
+  "unit": "oth-ubuntu-1590702-1792057217",
+  "host": "ot-epyc4",
+  "exit_status": 0,
+  "qualification": false,
+  "physical_qualified": false,
+  "full_native_qualified": false,
+  "H": 16,
+  "D": 512,
+  "macro_count": 2048,
+  "macro": "ot_sram_1r1w_32x128_m1",
+  "records_per_case": 3,
+  "cases": [
+    "sequential capture/drain",
+    "concurrent nextrecord capture + priorrecord drain, epoch0reuse"
+  ],
+  "payload_and_flags_checked_per_case": 24576,
+  "drain_edges_per_record": 128,
+  "exact_flags_storage_FF": 16384,
+  "flag_read_pipeline_FF": 8192,
+  "tile_head_selector_FF": 128,
+  "clock_ports": [
+    "clk",
+    "bank_clk[0]",
+    "bank_clk[1]",
+    "bank_clk[2]",
+    "bank_clk[3]"
+  ],
+  "nominal_bankroot_endpoints": 6688,
+  "clock_scope": "Four roots tile%4 each512macroclock pins+4096statusFF+2048readflagFF+32selectorFF; samephase test clocks. Mapped census/CTS/buffering/skew unqualified.",
+  "negative_cases": [
+    "payload corruption",
+    "early drain beforecompletecapture",
+    "perword flag corruption"
+  ],
+  "remaining": [
+    "actual native producer",
+    "mapped completeoverhead",
+    "systemgeometry/cut/clock/route",
+    "fullnative immutable price"
+  ],
+  "source_sha256": {
+    "rtl/hdc/v41x/static/ot_hbm_attn_pv_serializer_local.sv": "1acef905baf503c6488107b4465c393a519245a809718c4b9039cf37ec789918",
+    "rtl/test/hbm_accel/generic/tb_hbm_attn_pv_serializer_local.sv": "a11e4fef5dc55e06537e5d9ae0ffca32c8c213a299b1897b6b1169004b0d053d",
+    "tools/hbm_static_attention/run_pv_serializer_local.sh": "77d8e1e476bc7c780d6c5dae051833d564fbc766586743b5dd42e8f87a6ad8b3"
+  }
+}
