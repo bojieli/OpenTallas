@@ -48,7 +48,9 @@
    "fvm",
    "fdm",
    "dl_in",
-   "ul_out"
+   "ul_out",
+   "clk",
+   "rst_in"
   ],
   "S": [
    "fv_out",
@@ -56,10 +58,6 @@
    "rst_out",
    "dl_out",
    "ul_in"
-  ],
-  "W": [
-   "clk",
-   "rst_in"
   ]
  },
  "refglob": "*",
@@ -74,8 +72,8 @@
   "benches_from": "tools/s81_suhc/hc_ntree_benches.json",
   "owner": "Claude:el1014-s81-norm-tree",
   "branch": "claude/s81-norm-tree-1014",
-  "tag": "v4-straight",
-  "structural_change": "v23 straight chain (S-NORM 2026-10-15, 220c62a71): one fd/fv bit order for producer + all consumers - ctfs_nt fdm/fd_out at the same x (relay cut 0; v3 1,974 -> GRT 229,288), ctfn fd_in/fdm at the same x (+128-slot y-shift cut 600), every chain seam vertical <= 416.88 um (v22 728.88). 0 cycles, 0 area, RTL unchanged. Recipe = the native-PASS v1 kit (HB2 pads, single clock root).",
+  "tag": "v5-spread",
+  "structural_change": "v24 SPREAD (S-NORM): v4 straight relay GRT-0116 1,175 overflow (M3 807 / M5 311 over x 225-575) = 9.8 bits/um of stacked N->S relays in the 115-um ctfxs window; one even pitch 0.197 um (5.6 bits/um) over the whole usable width for ctfs/ctfn (bits 0..1127 in the central block, ctfs->ctfxs seam <= 410.4 um), clk + rst_in at the N-face centre (x 286.04, was the W corner), no fixed output hold pad, HB1 inputs, K4 clock clusters. 0 cycles, same RTL.",
   "no_bench_reason": "bit-exactness is gated on the HC slab composition with dsfd_sp_hc NTREE 1 (tools/s81_suhc/hc_ntree_bench.sh: NG 256 production shape exact PASS + mutant 3 FAIL; tools/s81_suhc/hc_gate.py --ntree 1 NG 256 exact 0/1940 x3 + per-tile mutants); the tile alone has no golden",
   "purpose": "el1014-s81-norm-tree (owner 10-14 ~06:55: NORM tree = PARALLEL default-off variant with NEW master names; replaces the serial-chain HC NORM only when all variant tiles close and the composition is exact): ot_s81_hc_ctfs_nt: the forward relay/out strip + the partial lane relay",
   "views_to": "physical/ref_tile/s81hc_ctfsnt_ref/views",
@@ -99,9 +97,9 @@
    "grt_overflow": 2450,
    "source": "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/fdm_span_1015/ctfn_np2_grt_window.json",
    "evidence": [
-    "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/v23_straight/request.json (v22 seam ctfs->ctfn 728.88 um > 500, ctfs v3 internal cut 1,974 bits -> GRT 229,288)"
+    "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/v24_spread/request.json"
    ],
-   "fix": "v23 straight chain (S-NORM 2026-10-15, 220c62a71): one fd/fv bit order for producer + all consumers - ctfs_nt fdm/fd_out at the same x (relay cut 0; v3 1,974 -> GRT 229,288), ctfn fd_in/fdm at the same x (+128-slot y-shift cut 600), every chain seam vertical <= 416.88 um (v22 728.88). 0 cycles, 0 area, RTL unchanged. Recipe = the native-PASS v1 kit (HB2 pads, single clock root)."
+   "fix": "v24 SPREAD (S-NORM): v4 straight relay GRT-0116 1,175 overflow (M3 807 / M5 311 over x 225-575) = 9.8 bits/um of stacked N->S relays in the 115-um ctfxs window; one even pitch 0.197 um (5.6 bits/um) over the whole usable width for ctfs/ctfn (bits 0..1127 in the central block, ctfs->ctfxs seam <= 410.4 um), clk + rst_in at the N-face centre (x 286.04, was the W corner), no fixed output hold pad, HB1 inputs, K4 clock clusters. 0 cycles, same RTL."
   }
  },
  "params": {},
@@ -114,17 +112,24 @@
   "allow_none": true
  },
  "inhold": true,
- "outhold": true,
+ "outhold": false,
  "keep_pin_regs": true,
  "pin_reg_split": true,
  "hold_pad": {
-  "cell": "HB2xp67_ASAP7_75t_R"
+  "cell": "HB1xp67_ASAP7_75t_R",
+  "basis": "no fixed output pad, HB1 input pads (native launch/capture; S-ELEM-B shared fix)"
  },
- "io_tcl": "physical/s81_die_pins/v23_hc_norm_straight_candidate/ot_s81_hc_ctfs_nt.tcl",
+ "io_tcl": "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfs_nt.tcl",
  "assigned_pins": {
-  "file": "physical/s81_die_pins/v23_hc_norm_straight_candidate/ot_s81_hc_ctfs_nt.json",
-  "source": "S-NORM v23 candidate 220c62a71 (tools/s81/hc_norm_straight_pins.py)",
-  "layout": "physical/s81_die_pins/v23_hc_norm_straight_candidate/report.json"
+  "file": "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfs_nt.json",
+  "source": "S-NORM v24 candidate",
+  "layout": "physical/s81_die_pins/v24_hc_norm_spread_candidate/report.json"
  },
- "slot_change_request": "S-NORM v23 straight fd/fv chain candidate 220c62a71 (tools/s81/hc_norm_straight_pins.py), request posted to S-DIE el1011-s81die.log 2026-10-15"
+ "slot_change_request": "S-NORM v24 spread candidate (tools/s81/hc_norm_straight_pins.py --spread): even fd pitch 0.197 um (5.6 b/um), clk/reset at the N-face centre; request posted to S-DIE el1011-s81die.log 2026-10-15",
+ "pre_cts_extra": [
+  "physical/common_flow/clock_split_x.tcl"
+ ],
+ "orfs_vars": {
+  "OT_CKS_K": "4"
+ }
 }

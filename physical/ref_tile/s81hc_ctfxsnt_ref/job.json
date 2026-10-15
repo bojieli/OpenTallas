@@ -105,8 +105,11 @@
  "structural_change": "TWO CTS ROOTS + straight feed-through (S-NORM 2026-10-15): s1 routed native FAIL (R 271.9, spread 65.7; capture cs 283 / dl_in 226 / ul_in 227 / fd_in 219, launch fdx 236.5): one root over two disjoint sink clusters (NORM lanes x 40-86, data rows x 227-342) gives every single-flop feed-through the whole-tile spread. clk_l now clocks the lane registers (rr, ul_out, dl_out, farq/oct, ctq replica), clk the data rows (fv, fdx); each root has its own boundary R (phi - R per entry). fd_in / fv_in re-pinned at the fdx / fv x of the same bit (v23: internal cut 129 -> 0, max lateral 83.8 -> 0). Same registers and cycles (RTL: clock ports only); crossing hooks (clock_split, local_clock_tap, capture_driver_size) dropped.",
  "no_bench_reason": "bit-exactness is gated on the HC slab composition with dsfd_sp_hc NTREE 1 (tools/s81_suhc/hc_ntree_bench.sh: NG 256 production shape exact PASS + mutant 3 FAIL; tools/s81_suhc/hc_gate.py --ntree 1 NG 256 exact 0/1940 x3 + per-tile mutants); the tile alone has no golden",
  "reroute_reason": {
-  "kind": "rtl_change",
-  "fix": "TWO CTS ROOTS + straight feed-through (S-NORM 2026-10-15): s1 routed native FAIL (R 271.9, spread 65.7; capture cs 283 / dl_in 226 / ul_in 227 / fd_in 219, launch fdx 236.5): one root over two disjoint sink clusters (NORM lanes x 40-86, data rows x 227-342) gives every single-flop feed-through the whole-tile spread. clk_l now clocks the lane registers (rr, ul_out, dl_out, farq/oct, ctq replica), clk the data rows (fv, fdx); each root has its own boundary R (phi - R per entry). fd_in / fv_in re-pinned at the fdx / fv x of the same bit (v23: internal cut 129 -> 0, max lateral 83.8 -> 0). Same registers and cycles (RTL: clock ports only); crossing hooks (clock_split, local_clock_tap, capture_driver_size) dropped.",
-  "source": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ntree.sv"
+  "kind": "pin_register",
+  "source": "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/v24_spread/ctfxs_s1_native_audit.json",
+  "cell": "ot_s81_hc_ctfxs_nt",
+  "launch_ps": 236.5,
+  "capture_ps": 283.3,
+  "fix": "TWO CTS ROOTS + straight feed-through (S-NORM 2026-10-15): s1 routed native FAIL (R 271.9, spread 65.7; capture cs 283 / dl_in 226 / ul_in 227 / fd_in 219, launch fdx 236.5): one root over two disjoint sink clusters (NORM lanes x 40-86, data rows x 227-342) gives every single-flop feed-through the whole-tile spread. clk_l now clocks the lane registers (rr, ul_out, dl_out, farq/oct, ctq replica), clk the data rows (fv, fdx); each root has its own boundary R (phi - R per entry). fd_in / fv_in re-pinned at the fdx / fv x of the same bit (v23: internal cut 129 -> 0, max lateral 83.8 -> 0). Same registers and cycles (RTL: clock ports only); crossing hooks (clock_split, local_clock_tap, capture_driver_size) dropped. clk at the N-face centre x 286.04, clk_l at the lanes x 68.2 (M3)."
  }
 }
