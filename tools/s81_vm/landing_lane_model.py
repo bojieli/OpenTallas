@@ -9,14 +9,14 @@ def model():
     lanes = []
     for lane in range(4):
         # Every crossing is a local pin register; two payload stages, 14-bit row counter/output.
-        # Count intentionally includes unmapped upper bound on startup/control registers.
+        # RTL bit count; mapped bound also reserves118 clones for pin-register splitting.
         flops = 1024 + 19 + 1 + 1 + 15 + 14 + 3 + 5
         # One crossing per data bit; M2+M4 horizontal or M3+M5 vertical at .048um tracks.
         # Conservative 50% track reserve for clocks/PG/local routing.
         capacity = 2 * (side - 8.64) / .048 * .5
         demand = 512 + 23
         lanes.append(dict(lane=lane, outline_um=[side, side], area_mm2=side*side/1e6,
-            clock_roots=1, flop_upper_bound=flops, payload_bits_per_edge=512,
+            clock_roots=1, rtl_register_bits=flops, mapped_flop_upper_bound=1200, payload_bits_per_edge=512,
             control_bits_per_edge=23, output_bits_per_edge=530, boundary_bits_per_edge=1065,
             memory_bytes_per_edge=0, macs_per_edge=0, route_cut_demand=demand,
             route_cut_capacity=capacity, route_cut_ratio=demand/capacity,
