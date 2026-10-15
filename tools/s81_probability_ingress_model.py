@@ -78,7 +78,7 @@ def completion_model(terminal_frames):
 
     Each entry carries source, header_cycle, payload_cycles and length. The
     compiler supplies all slots; this model validates rather than invents them.
-    The physical job tile observes taps one edge behind their accepted pins.
+    The physical job tile observes taps two edges after their accepted pins (tap plus event stage).
     """
     sources=set();ends=[];headers=[]
     for f in terminal_frames:
@@ -95,11 +95,11 @@ def completion_model(terminal_frames):
     if not ends: raise ValueError('actual nonempty terminal source set required')
     return dict(source='rtl/dsrom_sys/s81_ctrl/ot_s81_svc_job.sv',
                 rule='observational done after final valid payload; no issue/ready scheduling',
-                retained_metadata_FF_bits=48, new_memory_ports=0,new_clock_roots=0,
+                retained_metadata_FF_bits=96, new_memory_ports=0,new_clock_roots=0,
                 fixed_tap_bits_per_cycle=4*26,new_global_pin_bits=0,
-                MACs_per_cycle=0,registered_observation_cycles=1,
-                scheduled_terminal_done_cycle=max(ends)+1,
+                MACs_per_cycle=0,registered_observation_cycles=2,
+                scheduled_terminal_done_cycle=max(ends)+2,
                 old_early_header_done_cycle=max(headers)+1,
-                previously_missing_visibility_cycles=max(ends)-max(headers),
+                previously_missing_visibility_cycles=max(ends)-max(headers)+1,
                 native_token_qualified=False,physical_successor_qualified=False,
                 token_loss=None,token_loss_requires='actual compiled service/calendar composition')

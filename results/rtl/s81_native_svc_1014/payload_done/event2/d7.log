@@ -1,0 +1,5 @@
+EARLY_OR_LATE_DONE cycle=30 expected=-1 all_payload=0
+EARLY_OR_LATE_DONE cycle=79 expected=80 all_payload=1
+SVC_PAYLOAD_DONE jobs=2 errors=2 verdict=FAIL
+FATAL: rtl/dsrom_sys/s81_ph/svc/test/tb_svc_payload_done.sv:57: service completion precedes actual payload
+       Time: 857000  Scope: tb_svc_payload_done

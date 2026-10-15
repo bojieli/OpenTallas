@@ -41,7 +41,7 @@ module tb_svc_payload_done;
             if(r<5)x=26'd1;
             if(r%4!=0&&sent<16)begin
                 a0=26'd1;sent=sent+1;
-                if(sent==16)begin all_payload=1;expected_done=cyc+2;end
+                if(sent==16)begin all_payload=1;expected_done=cyc+3;end
             end
             tick();
         end
@@ -51,7 +51,7 @@ module tb_svc_payload_done;
         all_payload=0;expected_done=-1;
         @(negedge clk);j={1'b1,9'd0,8'd1,2'd0,5'b00001,8'h21};tick();idle(8);
         @(negedge clk);q=query(8'h21);tick();idle(8);
-        @(negedge clk);a0=header(8'h21,0,0);all_payload=1;expected_done=cyc+2;tick();idle(8);
+        @(negedge clk);a0=header(8'h21,0,0);all_payload=1;expected_done=cyc+3;tick();idle(8);
         if(done_count!=2||jd[1])errors=errors+1;
         $display("SVC_PAYLOAD_DONE jobs=%0d errors=%0d verdict=%s",done_count,errors,errors==0?"PASS":"FAIL");
         if(errors)$fatal(1,"service completion precedes actual payload");$finish;

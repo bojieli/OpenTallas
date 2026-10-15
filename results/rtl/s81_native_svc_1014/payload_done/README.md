@@ -40,3 +40,23 @@ S-DIE confirmed at 20:23 PDT: select the explicit v20 legacy q/q_o
 rectangles as the new payload-correct job target, with scalar ck/rst; preserve
 the current scalar CLOSED view as a separate predecessor. The successor kit
 is `s81_svc_payload_job_ref`. This is a new routed result, not a view alias.
+
+
+## Final timing structure: fixed event stage
+
+The first payload-correct version's placement CTS test measured TT setup
+-33.4ps on the completion cone. `pre_route_gate.json` preserves that result.
+The final structure registers decoded terminal events before queue bookkeeping.
+This adds 48 event bits (96 total new metadata bits), one fixed completion
+observer edge, no q/result transport stage and no new memory/clock/IO ports.
+The physical tile now reports done two edges after accepting the final output
+pin tap; a zero-length END follows the same fixed two-edge observer path.
+The compiler must price that extra edge plus downstream VM write visibility.
+
+Final source unit evidence is in `event2/`: two jobs PASS with exact fixed done
+cycles; authentic header and first-source mutants FAIL. Four-slab long64
+integration passes40 jobs,620 frames,0early/0fault in4,315cycles. That harness
+uses a historical credit issuer and behavioural arithmetic stimuli, so its
+elapsed cycles are safety evidence only, not production static token throughput.
+The actual job and IO RTL is instantiated. The fixed unit calendar has no
+credit issuer or output-dependent scheduling. The complete job safety suite also passes seven positive and nine expected-negative cases (`event2/suite.log`). Final successor CTS is pending.

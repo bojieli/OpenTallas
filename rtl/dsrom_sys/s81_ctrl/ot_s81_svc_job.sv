@@ -13,7 +13,7 @@
 //     issue head advances when the job's last q frame has passed.  Same cycle (no register: the q pin flop is the core's).
 //   result side: observes the core's output pins ad (a0 / a1), xd and od (no added cycle); a result frame whose
 //     header has END marks its source done only after the frame's last valid payload beat (or at a zero-length
-//     header); the head job is done (j_dn[0] pulse, in
+//     header), through one fixed registered event stage; the head job is done (j_dn[0] pulse, in
 //     order) when every source of arg[4:0] (bit i = source i) has sent its END.  An END for a tag that is not pending,
 //     a duplicate END, or an END from a source not in the job's set is a fault.
 //   arg[6:5], arg[23:15] reserved (0); arg[14:7] = 0 or arg[4:0] = 0 is a wrong descriptor (fault).
@@ -57,21 +57,39 @@ module ot_s81_svc_job #(parameter integer JQ = 8, MUT = 0) (
     reg [2:0] pending_src [0:3];
     wire [511:0] ow [0:3];
     assign ow[0]=o0; assign ow[1]=o1; assign ow[2]=o2; assign ow[3]=o3;
-    reg  [3:0] endv; reg [7:0] endt [0:3]; reg [2:0] ends [0:3];
+    reg  [3:0] endv_dec; reg [7:0] endt_dec [0:3]; reg [2:0] ends_dec [0:3];
     integer k, m, nend;
     always @* begin
         for (k = 0; k < 4; k = k + 1) begin
-            endv[k] = 1'b0; endt[k] = 8'd0; ends[k] = 3'd0;
+            endv_dec[k] = 1'b0; endt_dec[k] = 8'd0; ends_dec[k] = 3'd0;
         end
         for (k=0;k<4;k=k+1) if(ov[k]) begin
             // MUT7 restores the old early-header completion defect.
             if(!oin[k] && ow[k][507] && (ow[k][491:480]==0 || MUT==7)) begin
-                endv[k]=1'b1;endt[k]=ow[k][502:495];ends[k]=ow[k][505:503];
+                endv_dec[k]=1'b1;endt_dec[k]=ow[k][502:495];ends_dec[k]=ow[k][505:503];
             end else if(oin[k] && orem[k]==1 && pending_end[k] && MUT!=7) begin
-                endv[k]=1'b1;endt[k]=pending_tag[k];ends[k]=pending_src[k];
+                endv_dec[k]=1'b1;endt_dec[k]=pending_tag[k];ends_dec[k]=pending_src[k];
             end
         end
     end
+    // Fixed observational stage isolates terminal-length decode from job
+    // bookkeeping. No result/issue data waits for this observer.
+    reg [3:0] endv_q;
+    reg [7:0] endt_q [0:3];
+    reg [2:0] ends_q [0:3];
+    wire [3:0] endv = (MUT==7) ? endv_dec : endv_q;
+    wire [7:0] endt [0:3];
+    wire [2:0] ends [0:3];
+    genvar ei;
+    generate for(ei=0;ei<4;ei=ei+1)begin:g_end_event
+        assign endt[ei]=(MUT==7)?endt_dec[ei]:endt_q[ei];
+        assign ends[ei]=(MUT==7)?ends_dec[ei]:ends_q[ei];
+        always @(posedge ck)begin
+            endt_q[ei]<=endt_dec[ei];ends_q[ei]<=ends_dec[ei];
+        end
+    end endgenerate
+    always @(posedge ck or negedge rs_n)
+        if(!rs_n)endv_q<=0;else endv_q<=endv_dec;
     reg [4:0] sn_n [0:JQ-1]; reg fl_n; reg [AW:0] slot;
     wire [AW-1:0] dpn = dp;
     always @* begin
