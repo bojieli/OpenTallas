@@ -17,20 +17,22 @@ module tb_hgi_coll_b2_vmport;
     end
     reg [337:0] readq[0:3]; wire [273:0] readr[0:3];
     wire [2223:0] co[0:3],ci[0:3],no[0:3],ni[0:3]; wire [1:0] coc[0:3],cic[0:3],noc[0:3],nic[0:3];
+    reg [271:0] verify_rq[0:3]; wire [4111:0] verify_rr[0:3];
     wire [143:0] bs[0:3]; wire [2:0] hs[0:3]; wire [1:0] mb[0:3];
     for(genvar s=0;s<4;s=s+1) begin:g_slice
-        wire [1095:0] rsp;
+        wire [273:0] rsp;
         if(s==0)begin:g_sw
             ot_vms_slice_coll_sw #(.MUT(MUT)) u(.clk(clk),.rst_n(rst_n),.clk_coll_rx({5{clk}}),.clk_vm_child({13{clk}}),
                 .rgx_t_v(fr[RLY-1][2208 +:4]),.rgx_t_addr(fr[RLY-1][2048 +:160]),.rgx_t_data(fr[RLY-1][0 +:2048]),
                 .rgx_t_vm(fr[RLY-1][2212]),.rgx_f_cr(fc),.tkw_t_v(fr[RLY-1][2781]),.tkw_t_d(fr[RLY-1][2213 +:568]),
                 .tkw_f_cr(kfc),.coll_fault(ff),.coll_xw(),.coll_xwa(2'b0),
-                .cq({1014'd0,readq[s]}),.cr(rsp),.rq('0),.rq_cr(),.rr(),.wq('0),.wq_cr(),.wq_done(),.dq('0),.dq_done(),
+                .cq(readq[s]),.cr(rsp),.rq(verify_rq[s]),.rq_cr(),.rr(verify_rr[s]),.wq('0),.wq_cr(),.wq_done(),.dq('0),.dq_done(),
                 .vcb('0),.vcb_cr(),.kq_done(),.cw_in(ci[s]),.cw_in_cr(cic[s]),.cw_out(co[s]),.cw_out_cr(coc[s]),
                 .ccw_in(ni[s]),.ccw_in_cr(nic[s]),.ccw_out(no[s]),.ccw_out_cr(noc[s]),.bank_status(bs[s]),.hub_status(hs[s]),.mirror_busy(mb[s]));
         end else begin:g_peer
-            ot_vms_slice u(.clk(clk),.rst_n(rst_n),.sid(2'(s)),.cq({1014'd0,readq[s]}),.cr(rsp),
-                .rq('0),.rq_cr(),.rr(),.wq('0),.wq_cr(),.wq_done(),.dq('0),.dq_done(),.vcb('0),.vcb_cr(),.kq_done(),
+            assign rsp='0;
+            ot_vms_slice_no_cq u(.child_clk({13{clk}}),.rst_n(rst_n),.sid(2'(s)),
+                .rq(verify_rq[s]),.rq_cr(),.rr(verify_rr[s]),.wq('0),.wq_cr(),.wq_done(),.dq('0),.dq_done(),.vcb('0),.vcb_cr(),.kq_done(),
                 .cw_in(ci[s]),.cw_in_cr(cic[s]),.cw_out(co[s]),.cw_out_cr(coc[s]),
                 .ccw_in(ni[s]),.ccw_in_cr(nic[s]),.ccw_out(no[s]),.ccw_out_cr(noc[s]),.bank_status(bs[s]),.hub_status(hs[s]),.mirror_busy(mb[s]));
         end
@@ -59,7 +61,7 @@ module tb_hgi_coll_b2_vmport;
     integer sent[0:3], ks=0, cycles=0, write_start=0, phase=0, ri=0, copies=0, checking=0, read_sid=0, checked=0, returned=0;
     reg [255:0] expected; reg [15:0] rtag=0;
     integer seed_i=0,seed_pending[0:3],seed_done=0;
-    initial begin for(integer l=0;l<4;l=l+1)sent[l]=0;for(integer s=0;s<4;s=s+1)begin readq[s]=0;seed_pending[s]=0;end
+    initial begin for(integer l=0;l<4;l=l+1)sent[l]=0;for(integer s=0;s<4;s=s+1)begin readq[s]=0;verify_rq[s]=0;seed_pending[s]=0;end
         // Seed every touched sector with nonzero data so TOPK masks must preserve real prior words.
         for(integer l=0;l<5;l=l+1)for(integer i=0;i<(l==4?KLINES:N);i=i+1)begin
             integer key;key=int'(addr(l,i)>>3);
@@ -80,18 +82,18 @@ module tb_hgi_coll_b2_vmport;
             for(integer l=0;l<4;l=l+1)if(iv[l]&&ir[l])begin record_write(ia[l*40+:40],id[l*512+:512],16'hffff);sent[l]=sent[l]+1;end
             if(kv&&kr)begin record_write(kd[567:528],kd[511:0],kd[527:512]);ks=ks+1;end
         end
-        if(phase==2&&checking&&readr[read_sid][273])begin
-            if(readr[read_sid][272:257]!=rtag||readr[read_sid][256]||readr[read_sid][255:0]!==expected)$fatal(1,"readback mismatch key%0d copy%0d",keys[ri],copies);
+        if(phase==2&&checking&&verify_rr[read_sid][257*(keys[ri]%8)+256])begin
+            if(verify_rr[read_sid][257*(keys[ri]%8)+:256]!==expected)$fatal(1,"readback mismatch key%0d copy%0d",keys[ri],copies);
             checked=checked+1;checking=0;
             if(keys[ri]>=32768&&copies<3)copies=copies+1;else begin ri=ri+1;copies=0;end
         end
         if(cycles>300000)$fatal(1,"B2 writer did not drain sent%0d/%0d/%0d/%0d tk%0d checked%0d",sent[0],sent[1],sent[2],sent[3],ks,checked);
     end
     always @(negedge clk)if(rst_n)begin
-        iv=0;kv=0;for(integer s=0;s<4;s=s+1)readq[s]=0;
+        iv=0;kv=0;for(integer s=0;s<4;s=s+1)begin readq[s]=0;verify_rq[s]=0;end
         if(phase==0)begin
             if(seed_i<keys.size())begin
-                integer dest,key;key=keys[seed_i];dest=key>=32768?0:(key>>13);
+                integer dest,key;key=keys[seed_i];dest=0; // all seed requests use the one real SW scalar client and route remotely
                 if(seed_pending[dest]<4)begin
                     readq[dest]={1'b1,1'b1,11'd0,16'(key),5'd0,golden[key],32'hffffffff,16'(seed_i)};
                     seed_pending[dest]=seed_pending[dest]+1;seed_i=seed_i+1;
@@ -110,7 +112,7 @@ module tb_hgi_coll_b2_vmport;
         end else if(phase==2&&!checking)begin
             if(ri==keys.size())begin $display("B2_COLL_VMPORT PASS flits=%0d checked=%0d",4*N+KLINES,checked);$finish;end
             read_sid=keys[ri]>=32768?copies:(keys[ri]>>13);expected=golden[keys[ri]];rtag=16'(checked);
-            readq[read_sid]={1'b1,1'b0,11'd0,16'(keys[ri]),5'd0,256'd0,32'd0,rtag};checking=1;
+            verify_rq[read_sid][17*(keys[ri]%8)+:17]={1'b1,16'(keys[ri])};checking=1;
         end
     end
 endmodule

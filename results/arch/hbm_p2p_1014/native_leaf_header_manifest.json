@@ -164,5 +164,146 @@
       "TOPK broadcast/return physical stations and native output boundary qualification remain required.",
       "All clock port vectors are separate roots; do not alias buffer/packer to core without measuring child phases."
     ]
+  },
+  "assigned_pin_commit": "e079fc550 (published locally at 314205dde)",
+  "route_candidates": {
+    "rgx_rx": {
+      "spec": "results/arch/hbm_p2p_1014/hgi_coll_rgx_rx_r1.json",
+      "kit": "physical/ref_tile/hgi_coll_rgx_rx_r1",
+      "gate": "running; no routed view yet"
+    },
+    "tkw_rx": {
+      "spec": "results/arch/hbm_p2p_1014/hgi_coll_tkw_rx_r1.json",
+      "kit": "physical/ref_tile/hgi_coll_tkw_rx_r1",
+      "gate": "running; no routed view yet"
+    },
+    "ring_state": {
+      "spec": "results/arch/hbm_p2p_1014/hgi_coll_ring_state_r1.json",
+      "kit": "physical/ref_tile/hgi_coll_ring_state_r1",
+      "gate": "running; no routed view yet"
+    },
+    "ring_add": {
+      "spec": "results/arch/hbm_p2p_1014/hgi_coll_ring_add_r1.json",
+      "kit": "physical/ref_tile/hgi_coll_ring_add_r1",
+      "gate": "running; no routed view yet"
+    }
+  },
+  "vm_parent": {
+    "top": "ot_vms_slice_coll_sw",
+    "rtl": "rtl/hbm_accel/generic/collective/p2p/ot_vms_slice_coll_sw.sv",
+    "external_params": {
+      "NC": 1,
+      "RG": 2,
+      "WG": 2,
+      "RRS": [
+        3,
+        3
+      ],
+      "WRS": [
+        3,
+        3
+      ]
+    },
+    "internal_params": {
+      "NC": 6,
+      "RG": 2,
+      "WG": 3,
+      "WRS": [
+        3,
+        3,
+        3
+      ]
+    },
+    "clock_roots": {
+      "clk": "COLL adapter own flops",
+      "clk_coll_rx[3:0]": "RGX receiver lanes",
+      "clk_coll_rx[4]": "TOPK receiver",
+      "clk_vm_child[0]": "u_slice.u_hub",
+      "clk_vm_child[8:1]": "u_slice.g_bank[b].u_bank (b+1)",
+      "clk_vm_child[9]": "u_slice.u_cw",
+      "clk_vm_child[10]": "u_slice.u_ccw",
+      "clk_vm_child[11]": "u_slice.u_rcl",
+      "clk_vm_child[12]": "u_slice.u_star"
+    },
+    "packed_widths": {
+      "cq": 338,
+      "cr": 274,
+      "rq": 272,
+      "rq_cr": 16,
+      "rr": 4112,
+      "wq": 4496,
+      "wq_cr": 16,
+      "wq_done": 16,
+      "dq": 2248,
+      "dq_done": 8,
+      "vcb": 2130,
+      "vcb_cr": 1,
+      "kq_done": 8,
+      "cw_in": 2224,
+      "cw_in_cr": 2,
+      "cw_out": 2224,
+      "cw_out_cr": 2,
+      "ccw_in": 2224,
+      "ccw_in_cr": 2,
+      "ccw_out": 2224,
+      "ccw_out_cr": 2,
+      "bank_status": 144,
+      "hub_status": 3,
+      "mirror_busy": 2,
+      "rgx_t_v": 4,
+      "rgx_t_addr": 160,
+      "rgx_t_data": 2048,
+      "rgx_t_vm": 1,
+      "rgx_f_cr": 4,
+      "tkw_t_v": 1,
+      "tkw_t_d": 568,
+      "tkw_f_cr": 1,
+      "coll_fault": 1,
+      "coll_xw": 652,
+      "coll_xwa": 2
+    },
+    "warning": "Native B2 buses differ from legacy die B2_CHAIN8 buses. Do not alias incompatible widths.",
+    "scalar_client_map": {
+      "SW": {
+        "NC": 1,
+        "clients": [
+          "COLL list read (q3.rgx_vmq / rgx_vmr)"
+        ]
+      },
+      "NW": {
+        "NC": 2,
+        "clients": [
+          "cmdproc cp",
+          "quant q"
+        ]
+      },
+      "NE": {
+        "NC": 2,
+        "clients": [
+          "cmdproc att",
+          "HC engine hce"
+        ]
+      },
+      "SE": {
+        "NC": 0,
+        "clients": []
+      }
+    },
+    "internal_client_map": {
+      "0": "external COLL list read",
+      "1": "RGX write0",
+      "2": "RGX write1",
+      "3": "RGX write2",
+      "4": "RGX write3",
+      "5": "TOPK write",
+      "6": "hub ring replay (not part of NC)"
+    }
+  },
+  "ring_parent": {
+    "required_parameter": "PR_SPLIT_CLOCKS=1",
+    "clock_roots": "Per quadrant: adapter clk + pr_clk_state[7:0] + pr_clk_add[7:0]",
+    "state_sinks_each": 2600,
+    "fp_sinks_each": 655,
+    "qualification": "Own parent clock sink count and native parent timing remain to be measured."
   }
 }

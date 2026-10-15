@@ -129,34 +129,58 @@ module ot_hgi_coll_rx_native #(parameter integer W=552, CRD=16)(
     input wire clk,rst_n,t_v,
     input wire [W-1:0] t_d,
     output reg out_v,
-    output reg [W-1:0] out_d,
+    output wire [W-1:0] out_d,
     input wire out_rdy,
     output reg epoch,
     output reg fault
 );
     localparam integer AW=(CRD>1)?$clog2(CRD):1;
     reg v_pin,pop_pin;reg[W-1:0]d_pin;
-    reg[W-1:0]q[0:CRD-1];reg[AW-1:0]hd,tl;reg[AW:0]n;
+    reg[AW:0]n;
     wire pop=out_v&&pop_pin;
-    // Payload state has no reset gate: only validity and pointers require reset.
-    // Keeping reset out of these enables avoids distributing it to every FIFO word.
-    always @(posedge clk)begin
-        d_pin<=t_d;
-        if(v_pin)q[tl]<=d_pin;
-        if((n==0&&v_pin)||(n==1&&pop&&v_pin))out_d<=d_pin;
-        else if(pop&&n>1)out_d<=q[(hd==AW'(CRD-1))?'0:hd+1'b1];
+    wire load_new=(n==0&&v_pin)||(n==1&&pop&&v_pin);
+    wire load_next=pop&&n>1;
+    always @(posedge clk)d_pin<=t_d;
+    // Each region owns its read/write pointer copies. A single binary head pointer
+    // otherwise drives thousands of mux inputs even though the payload has no reset.
+    for(genvar r=0;r<(W+63)/64;r=r+1)begin:g_region
+        localparam integer RW=(W-64*r<64)?W-64*r:64;
+        ot_hgi_coll_rx_region #(.W(RW),.CRD(CRD)) u_region(
+            .clk(clk),.rst_n(rst_n),.push(v_pin),.pop(pop),.d(d_pin[64*r+:RW]),
+            .load_new(load_new),.load_next(load_next),.head(out_d[64*r+:RW]));
     end
     always @(posedge clk or negedge rst_n)
-        if(!rst_n)begin v_pin<=0;pop_pin<=0;hd<=0;tl<=0;n<=0;out_v<=0;epoch<=0;fault<=0;end
+        if(!rst_n)begin v_pin<=0;pop_pin<=0;n<=0;out_v<=0;epoch<=0;fault<=0;end
         else begin
             v_pin<=t_v;pop_pin<=out_rdy;
-            if(v_pin)begin
-                if(n==(AW+1)'(CRD)&&!pop)fault<=1;
-                tl<=(tl==AW'(CRD-1))?'0:tl+1'b1;
-            end
-            if(pop)begin hd<=(hd==AW'(CRD-1))?'0:hd+1'b1;epoch<=!epoch;end
+            if(v_pin&&n==(AW+1)'(CRD)&&!pop)fault<=1;
+            if(pop)epoch<=!epoch;
             n<=n+(AW+1)'(v_pin)-(AW+1)'(pop);
             out_v<=(n+(AW+1)'(v_pin)-(AW+1)'(pop))!='0;
+        end
+endmodule
+
+// Local payload region, sharing the leaf clock. Payload state has no reset gate;
+// retained pointer copies bound each select network to at most 64 payload bits.
+(* keep_hierarchy = "yes" *)
+module ot_hgi_coll_rx_region #(parameter integer W=64,CRD=16)(
+    input wire clk,rst_n,push,pop,load_new,load_next,
+    input wire [W-1:0]d,
+    output reg [W-1:0]head
+);
+    localparam integer AW=(CRD>1)?$clog2(CRD):1;
+    (* keep=1 *) reg[AW-1:0]hd,tl;
+    reg[W-1:0]q[0:CRD-1];
+    always @(posedge clk)begin
+        if(push)q[tl]<=d;
+        if(load_new)head<=d;
+        else if(load_next)head<=q[(hd==AW'(CRD-1))?'0:hd+1'b1];
+    end
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n)begin hd<=0;tl<=0;end
+        else begin
+            if(push)tl<=(tl==AW'(CRD-1))?'0:tl+1'b1;
+            if(pop)hd<=(hd==AW'(CRD-1))?'0:hd+1'b1;
         end
 endmodule
 `default_nettype wire

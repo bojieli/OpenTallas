@@ -17,8 +17,8 @@ module ot_vms_slice_clocked #(
     input  wire [12:0]          child_clk,
     input  wire                 rst_n,
     input  wire [1:0]           sid,
-    input  wire [NC*338-1:0]    cq,
-    output wire [NC*274-1:0]    cr,
+    input  wire [((NC>0)?NC*338:1)-1:0] cq,
+    output wire [((NC>0)?NC*274:1)-1:0] cr,
     input  wire [RG*8*17-1:0]   rq,
     output wire [RG*8-1:0]      rq_cr,
     output wire [RG*8*257-1:0]  rr,
@@ -44,7 +44,14 @@ module ot_vms_slice_clocked #(
 );
     wire [(NC+1)*338-1:0] hcq; wire [(NC+1)*274-1:0] hcr;
     wire [337:0] hq; wire [273:0] hr;
-    assign hcq = {hq, cq}; assign cr = hcr[NC*274-1:0]; assign hr = hcr[NC*274 +: 274];
+    if(NC>0)begin:g_local_clients
+        assign hcq={hq,cq};assign cr=hcr[NC*274-1:0];
+    end else begin:g_no_local_clients
+        // The one-bit empty-interface placeholder carries no functional request.
+        // The ring replay client remains real and active at hub client zero.
+        assign hcq=hq;assign cr=1'b0;
+    end
+    assign hr=hcr[NC*274+:274];
     wire [8*285-1:0] pq; wire [7:0] pq_cr; wire [8*266-1:0] pr;
     wire [289:0] cwi, cci; wire cwi_cr, cci_cr; wire [263:0] cco0, cco1;
     wire [8*276-1:0] eg, xq0, xq1; wire [7:0] egc0, egc1, xqc0, xqc1, xqd0, xqd1;

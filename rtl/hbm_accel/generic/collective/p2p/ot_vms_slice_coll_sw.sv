@@ -3,7 +3,7 @@
 // Real SW VM slice composition. The COLL adapter's extra packet clients and write group stay
 // inside this parent; the die sees narrow credit streams and the exact native B2 slice interface.
 module ot_vms_slice_coll_sw #(
-    parameter integer NC = 4, RG = 2, WG = 2,
+    parameter integer NC = 1, RG = 2, WG = 2,
     parameter [RG*4-1:0] RRS = {RG{4'd3}}, parameter [WG*4-1:0] WRS = {WG{4'd3}},
     parameter integer CRD = 16, TCRD = 8, COLL_WRS = 3, MUT = 0,
     parameter integer BMUT = 0, HMUT = 0, CMUT = 0
