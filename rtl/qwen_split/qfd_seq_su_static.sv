@@ -176,7 +176,10 @@ module qfd_seq_su_static (
     reg rom_fault_q;
     always @(posedge ck or negedge rsi) if (!rsi) rom_fault_q <= 1'b0; else rom_fault_q <= rom_fault | cb_flt_q;
     wire coll_issue_fault,coll_cfg_ready,body_cfg_ready;
-    assign cfg_image_ready=body_cfg_ready&&coll_cfg_ready;
+    // The joint seal is a configuration fact, exported from a source pin FF.
+    // Its loss still revokes the downstream installation; no timeline gates.
+    ot_hdc_delay #(.W(1),.D(1),.RESET(1))u_image_ready_pin
+      (.clk(ck),.rst_n(rsi),.d(body_cfg_ready&&coll_cfg_ready),.q(cfg_image_ready));
     qfd_seq_su_collective_calendar u_coll_calendar(.ck(ck_sched),.rsi(rsi),.dh(dh),
       .cmd_free(coll_cmd_free),.cmd(coll_cmd),.cfg_ready(coll_cfg_ready),.fault(coll_issue_fault));
     assign dc   = {rom_fault_q | coll_issue_fault, kv_write_flush, coll_busy, core_fault, s_fault, s_done, seq_ntok, seq_nval};
