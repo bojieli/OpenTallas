@@ -38,6 +38,9 @@ class Schema(unittest.TestCase):
         text=CE.generate(s,ROOT)
         self.assertNotIn('set_false_path',text);self.assertNotIn('set_clock_groups',text)
         self.assertIn('ot_ce_leaf_ownership',text)
+        for relationship in [None,dict(kind='asynchronous'),dict(kind='same_pll_fixed_phase',ratio=[4,3],phase_ps=0)]:
+            m=copy.deepcopy(s);m.update(clock_data_paths='related_same_frequency',clock_relationship=relationship)
+            with self.assertRaises(ValueError):CE.domains(m)
 
     def test_load_spec_and_generated_stage_coverage(self):
         s=spec()
@@ -74,17 +77,21 @@ class Physical(unittest.TestCase):
             w=Path(d);s=spec();s.update(params={},route={},macros=[])
             # Mount the fixture on an existing source directory beneath the read-only repo.
             kd='tools/ref_tile/tests'
-            if generated:
-                for name,text in RT.gen_hooks(s,kd).items():(w/name).write_text(text)
-                (w/'signoff.sdc').write_text(RT.gen_signoff(s,'*','none_*'))
+            if mutant in ('related','related_wrong_input','related_cut'):
+                s.update(clock_data_paths='related_same_frequency',clock_relationship=dict(kind='same_pll_fixed_phase',ratio=[1,1],phase_ps=0))
+            if mutant=='related_wrong_input':
+                s['clock_entry_domains']['core']['inputs']=['rsp'];s['clock_entry_domains']['response']['inputs']=['req']
             if mutant=='declared_reset':s['reset_ports']=['req']
             if mutant=='wrong_input':
                 s['clock_entry_domains']['core']['inputs']=['rsp'];s['clock_entry_domains']['response']['inputs']=['req']
             if mutant=='wrong_output':
                 s['clock_entry_domains']['core']['outputs']=['zo'];s['clock_entry_domains']['response']['outputs']=['qo']
             if mutant=='unknown_port':s['clock_entry_domains']['core']['inputs']=['req','missing']
-            cells='\n'.join(f'DFFHQNx1_ASAP7_75t_R r{i} (.CLK(ck_req),.D(req),.QN(q{i}));' for i in range(16))
-            cells+='\n'+'\n'.join(f'DFFHQNx1_ASAP7_75t_R s{i} (.CLK(ck_rsp),.D({"q0" if mutant=="cross_data" else "rsp"}),.QN(z{i}));' for i in range(4))
+            if generated:
+                for name,text in RT.gen_hooks(s,kd).items():(w/name).write_text(text)
+                (w/'signoff.sdc').write_text(RT.gen_signoff(s,'*','none_*'))
+            cells='\n'.join(f'DFFHQNx1_ASAP7_75t_R r{i} (.CLK(ck_req),.D({"z0" if mutant.startswith("related") and i==1 else "req"}),.QN(q{i}));' for i in range(16))
+            cells+='\n'+'\n'.join(f'DFFHQNx1_ASAP7_75t_R s{i} (.CLK(ck_rsp),.D({"q0" if mutant=="cross_data" or mutant.startswith("related") and i==0 else "rsp"}),.QN(z{i}));' for i in range(4))
             (w/'t.v').write_text('module top(input ck_req,ck_rsp,req,rsp,output qo,zo);\n'+cells+'\nassign qo=q0;assign zo=z0;endmodule\n')
             (w/'clocks.tcl').write_text(CE.clocks(s,833.333))
             (w/'entry.tcl').write_text('set ::ot_ce_require_wire 1\n'+CE.generate(s,ROOT))
@@ -125,6 +132,8 @@ puts "MULTI_ROOT_RESULT PASS"
                 flow=flow.replace('source /w/entry.tcl\n# A repeated stage replays measured references, not the previous compensation.\nsource /w/entry.tcl',
                     'set ::env(MAX_ROUTING_LAYER) M5\n'+'\n'.join(f'source /src/{kd}/{n}' for n in
                     ['post_cts.tcl','pre_grt.tcl','post_grt.tcl','pre_drt.tcl','post_drt.tcl','pre_fill.tcl','post_fill.tcl','signoff.sdc']))
+            if mutant=='related_cut':
+                flow=flow.replace('source /w/entry.tcl','set_false_path -from [get_clocks ot_entry_0] -to [get_clocks ot_entry_1]\nsource /w/entry.tcl',1)
             (w/'run.tcl').write_text(flow)
             p=subprocess.run(['docker','run','--rm','-v',f'{w}:/w','-v',f'{ROOT}:/src:ro','-v',f'{w}:/src/{kd}:ro',IMAGE,OR,'-no_init','-exit','/w/run.tcl'],capture_output=True,text=True,timeout=60)
             return p.returncode,p.stdout+p.stderr
@@ -139,6 +148,14 @@ puts "MULTI_ROOT_RESULT PASS"
         for a,b in zip(refs[:2],refs[2:]):
             self.assertEqual(a[0],b[0])
             for x,y in zip(a[1:],b[1:]):self.assertAlmostEqual(float(x),float(y),places=8)
+    def test_explicit_related_crossings_keep_both_sta_directions(self):
+        rc,out=self.run_flow('related',generated=True);self.assertEqual(rc,0,out[-8000:])
+        for pair in ['core -> response','response -> core']:
+            self.assertIn('RELATED_PATH '+pair+' max slack=',out)
+            self.assertIn('RELATED_PATH '+pair+' min slack=',out)
+        for mutant in ['related_wrong_input','related_cut']:
+            rc,out=self.run_flow(mutant);self.assertNotEqual(rc,0,out[-8000:]);self.assertIn('OT_MULTI_ROOT',out)
+
     def test_reset_declaration_does_not_waive_or_reclassify_data(self):
         rc,out=self.run_flow('declared_reset');self.assertEqual(rc,0,out[-7000:])
         self.assertIn('OWNERSHIP PASS',out)
