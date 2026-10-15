@@ -55,8 +55,6 @@
    "fault"
   ],
   "S": [
-   "fr",
-   "fa",
    "go",
    "iv",
    "phase",
@@ -87,11 +85,11 @@
   "macro_halo_um": 5.4
  },
  "why_floorplan": "shell control leaf (419 ports, ~0.4k FF), mid-row between payload columns 1 and 2; one clock root per leaf (<=11,519 sinks); 1 per cluster x 4 clusters",
- "structural_change": "Native capture fix (S-ELEM-C 10-15): start no longer enables the 224-bit descriptor register (IDLE samples desc each edge). 0 cycles, 0 FF. | Shell split (S-ELEM-C 2026-10-15): the flat shell (6,472 FF, one root over 742 um, native insertion 534.1 / spread 93.3 ps FAIL) becomes control leaf + 4 payload column leaves with the same registers and cycles (808-cycle MIX4 calendar, 0 added edges); each leaf has a local root.",
+ "structural_change": "Native capture fix 2 (S-ELEM-C 10-15): CLOSED views fail the native pin audit: shcol (shspread-d65a8522f TT +188.64) fr/fa capture 322.9 > 190 ps (1,025-load enables from pins); shctl (shsplit-0955 TT +194.2) start capture 246.4. RTL: shcol loads decode the registered return-valid vector only (fr/fa ports removed from shctl and shcol); shctl descriptor samples desc every IDLE edge. 0 cycles. | Native capture fix (S-ELEM-C 10-15): start no longer enables the 224-bit descriptor register (IDLE samples desc each edge). 0 cycles, 0 FF. | Shell split (S-ELEM-C 2026-10-15): the flat shell (6,472 FF, one root over 742 um, native insertion 534.1 / spread 93.3 ps FAIL) becomes control leaf + 4 payload column leaves with the same registers and cycles (808-cycle MIX4 calendar, 0 added edges); each leaf has a local root.",
  "job": {
   "owner": "Claude:s81-surx-engram-1015",
   "branch": "claude/s81-engram-c810-1015",
-  "tag": "c810nat",
+  "tag": "c810nat2",
   "purpose": "S81 Engram MIX4 split-shell leaf ot_s81_engram_mixq_shctl (control + 4 payload columns)",
   "benches": [
    {
@@ -167,6 +165,6 @@
  },
  "reroute_reason": {
   "kind": "rtl_change",
-  "reason": "CLOSED shsplit-0955 view (TT +194.2/FF +22.8) FAILS the native pin audit: start capture 246.4 > 190 ps (start was the load enable of 224 descriptor flops). RTL: dsc samples desc every IDLE edge, start only steers ns/fault; 0 cycles."
+  "reason": "CLOSED views fail the native pin audit: shcol (shspread-d65a8522f TT +188.64) fr/fa capture 322.9 > 190 ps (1,025-load enables from pins); shctl (shsplit-0955 TT +194.2) start capture 246.4. RTL: shcol loads decode the registered return-valid vector only (fr/fa ports removed from shctl and shcol); shctl descriptor samples desc every IDLE edge. 0 cycles."
  }
 }

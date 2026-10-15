@@ -772,8 +772,6 @@ place_pin -pin_name {wq_d[124]} -layer M5 -location {79.776 53.958} -force_to_di
 place_pin -pin_name {wq_d[125]} -layer M5 -location {79.872 53.958} -force_to_die_boundary
 place_pin -pin_name {wq_d[126]} -layer M5 -location {79.968 53.958} -force_to_die_boundary
 place_pin -pin_name {wq_d[127]} -layer M5 -location {80.064 53.958} -force_to_die_boundary
-place_pin -pin_name {fr} -layer M5 -location {4.032 0.042} -force_to_die_boundary
-place_pin -pin_name {fa} -layer M5 -location {5.088 0.042} -force_to_die_boundary
 place_pin -pin_name {ov} -layer M5 -location {6.144 0.042} -force_to_die_boundary
 place_pin -pin_name {h[0]} -layer M5 -location {7.200 0.042} -force_to_die_boundary
 place_pin -pin_name {h[1]} -layer M5 -location {7.296 0.042} -force_to_die_boundary

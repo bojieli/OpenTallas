@@ -204,15 +204,14 @@ module ot_s81_engram_mixq_shell #(parameter integer MUT=0, VM_LAT=3, WRITE_COMMI
  output wire go,iv,phase,output wire [1:0] copy,
  output wire [1023:0] h,kv,w,output wire [31:0] eps,scale,
  input wire gv,ov,mf,input wire [1:0] gc,oc,input wire [1023:0] result);
- wire fr,fa;
  ot_s81_engram_mixq_shctl #(.MUT(MUT),.VM_LAT(VM_LAT),.WRITE_COMMIT_LAT(WRITE_COMMIT_LAT)) ctl(
   .ck(ck),.rst(rst),.start(start),.desc(desc),.rq_v(rq_v),.rq_row(rq_row),.vtag(vtag),.rs_v(rs_v),
   .wq_v(wq_v),.wq_row(wq_row),.wq_mask(wq_mask),.done(done),.fault(fault),
-  .go(go),.iv(iv),.phase(phase),.copy(copy),.eps(eps),.scale(scale),.gv(gv),.ov(ov),.mf(mf),.gc(gc),.oc(oc),.fr(fr),.fa(fa));
+  .go(go),.iv(iv),.phase(phase),.copy(copy),.eps(eps),.scale(scale),.gv(gv),.ov(ov),.mf(mf),.gc(gc),.oc(oc));
  genvar c;
  generate for(c=0;c<4;c=c+1)begin:col
   ot_s81_engram_mixq_shcol #(.MUT(MUT)) u(.ck(ck),.rst(rst),.rs_v(rs_v),
-   .rs_d({rs_d[1536+256*c+:256],rs_d[512+256*c+:256],rs_d[128*c+:128]}),.fr(fr),.fa(fa),.ov(ov),.result(result[256*c+:256]),
+   .rs_d({rs_d[1536+256*c+:256],rs_d[512+256*c+:256],rs_d[128*c+:128]}),.ov(ov),.result(result[256*c+:256]),
    .h(h[256*c+:256]),.kv(kv[256*c+:256]),.w(w[256*c+:256]),.wq_d(wq_d[128*c+:128]));
  end endgenerate
 endmodule
@@ -228,8 +227,7 @@ module ot_s81_engram_mixq_shctl #(parameter integer MUT=0, VM_LAT=3, WRITE_COMMI
  output reg done,output reg fault,
  output reg go,iv,phase,output wire [1:0] copy,
  output wire [31:0] eps,scale,
- input wire gv,ov,mf,input wire [1:0] gc,oc,
- output reg fr,fa);
+ input wire gv,ov,mf,input wire [1:0] gc,oc);
  reg [1:0] reset_sync;
  always @(posedge ck or negedge rst)if(!rst)reset_sync<=0;else reset_sync<={reset_sync[0],1'b1};
  wire rn=reset_sync[1];
@@ -256,7 +254,7 @@ module ot_s81_engram_mixq_shctl #(parameter integer MUT=0, VM_LAT=3, WRITE_COMMI
  reg [8:0] req,received,written;reg [15:0] commit_left;integer lane;
  always @(posedge ck or negedge rn)if(!rn)begin
   state<=IDLE;rq_v<=0;rq_row<=0;vtag<=0;wq_v<=0;wq_row<=0;wq_mask<=0;done<=0;fault<=0;go<=0;iv<=0;phase<=0;
-  req<=0;received<=0;written<=0;commit_left<=0;dsc<=0;fr<=0;fa<=0;
+  req<=0;received<=0;written<=0;commit_left<=0;dsc<=0;
  end else begin
   ns=state;
   rq_v<=0;vtag<=0;wq_v<=0;done<=0;go<=0;iv<=0;
@@ -308,7 +306,7 @@ module ot_s81_engram_mixq_shctl #(parameter integer MUT=0, VM_LAT=3, WRITE_COMMI
    written<=written+1;
    if(written==159)begin ns=FINISH;commit_left<=WRITE_COMMIT_LAT;end
   end
-  state<=ns;fr<=(ns==REDUCE);fa<=(ns==ADD);
+  state<=ns;
  end
 endmodule
 
@@ -317,7 +315,7 @@ endmodule
 // received count is always < 160, so the control's acceptance equals this pattern check). Payload registers carry no
 // reset, as in the flat shell; rvq / ov_q are reset, so nothing loads during reset.
 module ot_s81_engram_mixq_shcol #(parameter integer MUT=0)(
- input wire ck,input wire rst,input wire [4:0] rs_v,input wire [639:0] rs_d,input wire fr,fa,ov,
+ input wire ck,input wire rst,input wire [4:0] rs_v,input wire [639:0] rs_d,input wire ov,
  input wire [255:0] result,
  output reg [255:0] h,kv,w,output reg [127:0] wq_d);
  reg [1:0] reset_sync;
@@ -328,7 +326,11 @@ module ot_s81_engram_mixq_shcol #(parameter integer MUT=0)(
  reg [639:0] rdq;reg [127:0] result_q;integer lane;
  always @(posedge ck)rdq<=rs_d;
  always @(posedge ck)for(lane=0;lane<8;lane=lane+1)result_q[16*lane+:16]<=result[32*lane+16+:16];
- wire ld_r=fr&&rvq==5'b11111,ld_a=fa&&rvq==5'b00111;
+ // Native capture fix (S-ELEM-C 10-15, shcol audit: fr/fa capture 322.9 > 190 ps, each a 1,025-load enable from a
+ // pin): the registered return-valid vector alone identifies the phase -- REDUCE requests (and so returns) are
+ // 5'b11111, ADD requests 5'b00111, and each phase ends only after its 160th return, so no return of one phase
+ // arrives in the other (the control leaf still faults on any rvq != expected). fr/fa ports removed; 0 cycles.
+ wire ld_r=rvq==5'b11111,ld_a=rvq==5'b00111;
  wire ov_use=(MUT==21)?(ov&&rn):ov_q;
  always @(posedge ck)begin
   if(ld_r||ld_a)begin

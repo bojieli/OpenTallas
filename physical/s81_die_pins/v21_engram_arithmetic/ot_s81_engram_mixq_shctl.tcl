@@ -338,8 +338,6 @@ place_pin -pin_name {wq_mask[14]} -layer M5 -location {43.872 53.958} -force_to_
 place_pin -pin_name {wq_mask[15]} -layer M5 -location {43.968 53.958} -force_to_die_boundary
 place_pin -pin_name {done} -layer M5 -location {45.024 53.958} -force_to_die_boundary
 place_pin -pin_name {fault} -layer M5 -location {46.080 53.958} -force_to_die_boundary
-place_pin -pin_name {fr} -layer M5 -location {4.032 0.042} -force_to_die_boundary
-place_pin -pin_name {fa} -layer M5 -location {5.088 0.042} -force_to_die_boundary
 place_pin -pin_name {go} -layer M5 -location {6.144 0.042} -force_to_die_boundary
 place_pin -pin_name {iv} -layer M5 -location {7.200 0.042} -force_to_die_boundary
 place_pin -pin_name {phase} -layer M5 -location {8.256 0.042} -force_to_die_boundary
