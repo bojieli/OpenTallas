@@ -14,7 +14,7 @@ printf '%s\n' \
 bases=("$c"/results/asap7/*/base)
 test "${#bases[@]}" -eq 1
 test -s "${bases[0]}/4_1_cts.odb"
-sha256sum "$c/config.mk" "$src/$kit/signoff.sdc" "$r/source_snapshot.json" 2>/dev/null > "$r/continue_inputs.sha256" || sha256sum "$c/config.mk" "$src/$kit/signoff.sdc" > "$r/continue_inputs.sha256"
+sha256sum "$c/config.mk" "$src/$kit/signoff.sdc" "$r.source_snapshot.json" > "$r/continue_inputs.sha256"
 docker image inspect --format '{{.Id}}' "$image" > "$r/continue_image_id.txt"
 docker run --rm -e LEC_CHECK=0 -v "$src:/src:ro" -v "$c:/work" -w /OpenROAD-flow-scripts/flow "$image" bash -lc \
  'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts && python3 /src/tools/orfs_allcorner_spef.py /OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=8 finish metadata-generate' > "$r/route_continue.log" 2>&1
