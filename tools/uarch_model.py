@@ -35,6 +35,46 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 
 
+def qwen_central_vm_native_bank_model():
+    """Preserve four bank edges, isolate actual input/capture/output clock roots."""
+    return dict(schema='opentallas.qwen-central-vm-native-bank.v1', opt_in_default=False,
+        parameters=dict(DEPTH=174, LAW=8), replicas=64, macs_per_cycle=0,
+        memory_macros_per_bank=2, memory_read_bytes_per_cycle=64,
+        memory_write_bytes_per_cycle=64, mask_bits=16, input_bits_per_cycle=546,
+        output_bits_per_cycle=512, internal_boundary_bits=[546,512,512],
+        hard_register_leaves=[547,512,512], raw_macro_clock_entries=2,
+        clock_roots_per_bank=5, root_increase_per_bank=4,
+        fixed_edges=4, added_fixed_edges=0, token_latency_change_edges=0,
+        input_leaf_outline_um=[43.2,69.12], input_leaf_area_um2=43.2*69.12,
+        input_face_tracks=547, estimated_face_tracks=2*(69.12-10.8)/.096,
+        estimated_face_cut_ratio=547/(2*(69.12-10.8)/.096),
+        mux_demux_cost='existing16word write mask replicated32bits, no new data mux',
+        original_clock_failure='TT boundary293.9..430.9ps, spread137ps, reference319.3ps',
+        placement='input at SRAM write/read faces, capture at SRAM readout, output beside return relay',
+        capture_output_views='reuse actual512-bit delay1 leaf only after source/native audit',
+        parent_own_flops=0, memory_contents='same actual two256x256 SRAMs; no behavioral replacement',
+        qualification='sizing/proposal; fullbank exact+mutant, leaf/native clocks/routes and parent composition open')
+
+
+def qwen_central_vm_control_leaf_model(observer=False):
+    """Selected 488-root VM, actual LAW8 control leaves before native CTS/route."""
+    bits_in, bits_out, registers, copies = (27,25,51,39) if observer else (35,35,70,64)
+    w,h=12.96,(15.12 if observer else 17.28)
+    return dict(schema='opentallas.qwen-central-vm-control-leaf.v1',
+        master='qfd_vm_qcommit' if observer else 'ot_qfd_vm_bctl_nx',
+        parameters=dict(LAW=8, **({} if observer else dict(NRI=2))),
+        macs_per_cycle=0, memory_bytes_per_cycle=0, memory_macros=0,
+        input_bits_per_cycle=bits_in, output_bits_per_cycle=bits_out,
+        commands_per_cycle=1, fixed_data_edges=2, added_fixed_data_edges=0,
+        register_bits=registers, replicas=copies, clock_roots_per_replica=1,
+        outline_um=[w,h], outline_area_um2=w*h, total_area_um2=w*h*copies,
+        worst_face_tracks=max(bits_in,bits_out), estimated_face_tracks=(h-10.8)/.096,
+        estimated_face_cut_ratio=max(bits_in,bits_out)/((h-10.8)/.096),
+        mux_demux_cost='observer 16-bit write mask gating; bank controller registered direct relay',
+        memory_bandwidth_bytes_per_cycle=0, placement='beside actual bank; homes pending geometry lead',
+        token_latency_change_edges=0, qualification='sizing only; actual mapped area/CTS/route/native pins pending')
+
+
 def qwen_native_head_packet_stage_model(width=519, copies=1, orientation="H"):
     """Physical ECTL/head staging; 2026-10-15 q_kv_die slot contract.
 
@@ -16592,10 +16632,10 @@ def hbm_vm_static_bank_model():
     return json.loads((ROOT / 'rtl/hbm_accel/generic/vm/static/bank_static_model.json').read_text())
 
 
-def s81_static_vm_face_model(entries=8):
+def s81_static_vm_face_model(entries=8, cap_pipeline=0, read_pipeline=0):
     """Static capture/WFC/outbound sizing; physical slots remain unqualified."""
     from s81_vm.static_face_model import model
-    return model(entries)
+    return model(entries, cap_pipeline, read_pipeline)
 
 
 def s81_static_channels_1014_model():
@@ -16752,3 +16792,9 @@ def hbm_idx_static_selector_model():
         routing='four quarterhist/compact roots and separate registered macro roots; cut/slot UNASSIGNED',
         schedule='compiler opcode+address slots only; no request queues, credits, readiness or data-dependent scan length',
         qualification='OPEN exact fullshape golden/mutants, physical closure and native productionrate')
+
+
+def s81_static_vm_small_transport_model():
+    """Actual small-group VM replica, pin, clock and state sizing; native gates remain open."""
+    from s81_vm.static_transport_model import model
+    return model()

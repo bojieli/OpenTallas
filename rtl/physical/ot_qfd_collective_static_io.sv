@@ -5,7 +5,7 @@
 // PHY frame boundary is external. Normal operation is fixed-cycle; abort is
 // exceptional and requires explicit reset/drain before reuse.
 module qfd_collective_static_io #(
- parameter integer PU=14,PS=339,LU=47,LS=376,RU=5,RS0=0,RS1=0,RS2=5
+ parameter integer PU=14,PS=339,LU=47,LS=376,RU=5,RS0=0,RS1=0,RS2=5,SHARED_UCIE=0,SIX_FIVE=0
 )(
  input wire  clk,
  input wire  clk_pfold0,
@@ -52,6 +52,8 @@ module qfd_collective_static_io #(
  input wire[4:0]phy_up,phy_rx_valid,input wire[5*597-1:0]phy_rx,
  output wire[4:0]phy_tx_valid,output wire[5*597-1:0]phy_tx,
  output wire[19:0]transport_cdc_fault,output wire[4:0]transport_abort,
+ input wire gearbox_core_ck,fdi_ck,input wire[2:0]fdi_rx_ck,input wire shared_rx_valid,input wire[1042:0]shared_rx,
+ output wire shared_tx_valid,output wire[1042:0]shared_tx,output wire shared_fault,
  output wire[39:0]transport_fault_cause
 );
  wire  up_valid;
@@ -143,6 +145,28 @@ module qfd_collective_static_io #(
  .sx1_peer_slot(sx1_peer_slot),
  .sx2_peer_slot(sx2_peer_slot),
  .cmd_free(cmd_free));
+ wire[4:0]expected_tx,expected_rx;
+ wire[1:0]shared_rv;wire[1161:0]shared_rd;
+ wire mux_txv,mux_rxv,mux_fault;wire[1042:0]mux_tx,mux_rx;
+ wire gb_core_fault,gb_fdi_fault;
+ if(SIX_FIVE)begin:g_six_five
+ wire[596:0]core_rx;
+ qfd_ucie_six_five u_gearbox(.core_ck(gearbox_core_ck),.fdi_ck(fdi_ck),.fdi_rx_ck(fdi_rx_ck),.rst_n(rst_n),
+ .tx_valid(mux_txv),.tx_frame(mux_tx[596:0]),.phy_tx_valid(shared_tx_valid),.phy_tx_frame(shared_tx),
+ .phy_rx_valid(shared_rx_valid),.phy_rx_frame(shared_rx),.rx_valid(mux_rxv),.rx_frame(core_rx),
+ .core_fault(gb_core_fault),.fdi_fault(gb_fdi_fault));
+ assign mux_rx={446'b0,core_rx};
+ end else begin:g_same_clock_diagnostic
+ assign {shared_tx_valid,shared_tx}={mux_txv,mux_tx};
+ assign {mux_rxv,mux_rx}={shared_rx_valid,shared_rx};
+ assign gb_core_fault=0;assign gb_fdi_fault=0;
+ end
+ assign shared_fault=mux_fault|gb_core_fault|gb_fdi_fault;
+ qfd_ucie_static_share u_shared(.clk(face_ck[6]),.rst_n(rst_n),
+ .tx_slot(expected_tx[1:0]),.tx_valid(phy_tx_valid[1:0]),
+ .p_frame(phy_tx[0+:597]),.r_frame(phy_tx[597+:565]),
+ .rx_slot(expected_rx[1:0]),.phy_rx_valid(mux_rxv),.phy_rx(mux_rx),
+ .phy_tx_valid(mux_txv),.phy_tx(mux_tx),.rx_valid(shared_rv),.rx_frames(shared_rd),.fault(mux_fault));
  genvar f;
  generate for(f=0;f<5;f=f+1)begin:g_face
  localparam integer W=f==1?514:546;
@@ -175,17 +199,23 @@ module qfd_collective_static_io #(
  qfd_coll_static_relay #(.W(W+1),.N(R))u_rxrelay(.ck(relay_ck[BASE+R+:R]),.rst_n(rst_n),.d({frd,frv}),.q({rd,rv}));
  end
  wire[PW-1:0]pt;
+ wire pv=(SHARED_UCIE && f<2)?shared_rv[f]:phy_rx_valid[f];
+ wire[PW-1:0]pr;
+ if(SHARED_UCIE && f<2)begin:g_shared_rx
+ if(f==0)assign pr=shared_rd[0+:597];else assign pr=shared_rd[597+:565];
+ end else assign pr=phy_rx[f*597+:PW];
  assign phy_tx[f*597+:PW]=pt;
  if(PW<597)assign phy_tx[f*597+PW+:(597-PW)]=0; // declared frame padding only
  qfd_coll_static_face #(.FW(W),.PHY(f<2?PU:PS),.L(f<2?LU:LS),.R(R),.PEER_R(PR))u_face(
  .cal_ck(face_ck[f*11]),.cal_lck(face_ck[f*11+1]),
  .tx_wck(face_ck[f*11+2]),.tx_rck(face_ck[f*11+3]),.rx_wck(face_ck[f*11+4]),.rx_rck(face_ck[f*11+5]),
  .codec_ck(face_ck[f*11+6+:5]),.rst_n(rst_n),.tx_slot(fts),.peer_slot(fps),.tx_valid(ftv),.tx_data(ftd),
- .rx_valid(frv),.rx_data(frd),.phy_up(phy_up[f]),.phy_rx_valid(phy_rx_valid[f]),.phy_rx(phy_rx[f*597+:PW]),
- .phy_tx_valid(phy_tx_valid[f]),.phy_tx(pt),.cdc_fault(transport_cdc_fault[f*4+:4]),
+ .rx_valid(frv),.rx_data(frd),.phy_up(phy_up[f]),.phy_rx_valid(pv),.phy_rx(pr),
+ .phy_tx_valid(phy_tx_valid[f]),.phy_tx(pt),.phy_tx_slot(expected_tx[f]),.phy_rx_slot(expected_rx[f]),.cdc_fault(transport_cdc_fault[f*4+:4]),
  .epoch_abort(transport_abort[f]),.fault_cause(transport_fault_cause[f*8+:8]));
  end endgenerate
  // The fixed die-name collective LU/LS defines and this parent must agree.
+ initial if(SIX_FIVE && (PU!=25 || !SHARED_UCIE))$error("six_five requires actual25coreedge registered-pin PHYcalendar and single1043boundary");
  initial if(LU!=`OT_QFDS_LU || LS!=`OT_QFDS_LS)$error("collective/link calendar latency profile mismatch");
 endmodule
 

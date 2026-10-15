@@ -1,0 +1,2608 @@
+{
+ "schema": "opentallas.s81.static-vm-small-groups-option.v1",
+ "status": "LOCAL_BANK_QUARTER_BRIDGE_SIGNAL_GEOMETRY_PASS_GLOBAL_ENDPOINTS_AND_CLOCK_OPEN",
+ "source": "cd1242953",
+ "parent_outline_um": [
+  1944,
+  6480
+ ],
+ "core_slice_outline_um": [
+  1944,
+  1468.8
+ ],
+ "nodes": [
+  {
+   "name": "vm_s0_bank0",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    43.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 0
+  },
+  {
+   "name": "vm_s0_bank1",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    172.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 1
+  },
+  {
+   "name": "vm_s0_bank2",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    43.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 2
+  },
+  {
+   "name": "vm_s0_bank3",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    172.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 3
+  },
+  {
+   "name": "vm_s0_quarter0",
+   "slice": 0,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    345.6,
+    86.4
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s0_bank4",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    432.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 4
+  },
+  {
+   "name": "vm_s0_bank5",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    561.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 5
+  },
+  {
+   "name": "vm_s0_bank6",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    432.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 6
+  },
+  {
+   "name": "vm_s0_bank7",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    561.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 7
+  },
+  {
+   "name": "vm_s0_quarter1",
+   "slice": 0,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    345.6,
+    475.2
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s0_bank8",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    43.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 8
+  },
+  {
+   "name": "vm_s0_bank9",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    172.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 9
+  },
+  {
+   "name": "vm_s0_bank10",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    43.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 10
+  },
+  {
+   "name": "vm_s0_bank11",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    172.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 11
+  },
+  {
+   "name": "vm_s0_quarter2",
+   "slice": 0,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    1468.8,
+    86.4
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s0_bank12",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    432.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 12
+  },
+  {
+   "name": "vm_s0_bank13",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    561.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 13
+  },
+  {
+   "name": "vm_s0_bank14",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    432.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 14
+  },
+  {
+   "name": "vm_s0_bank15",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    561.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 15
+  },
+  {
+   "name": "vm_s0_quarter3",
+   "slice": 0,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    1468.8,
+    475.2
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s0_bank16",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    820.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 16
+  },
+  {
+   "name": "vm_s0_bank17",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    950.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 17
+  },
+  {
+   "name": "vm_s0_bank18",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    820.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 18
+  },
+  {
+   "name": "vm_s0_bank19",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    950.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 19
+  },
+  {
+   "name": "vm_s0_quarter4",
+   "slice": 0,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    345.6,
+    864.0
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s0_bank20",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    1209.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 20
+  },
+  {
+   "name": "vm_s0_bank21",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    1339.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 21
+  },
+  {
+   "name": "vm_s0_bank22",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    1209.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 22
+  },
+  {
+   "name": "vm_s0_bank23",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    1339.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 23
+  },
+  {
+   "name": "vm_s0_quarter5",
+   "slice": 0,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    345.6,
+    1252.8
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s0_bank24",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    820.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 24
+  },
+  {
+   "name": "vm_s0_bank25",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    950.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 25
+  },
+  {
+   "name": "vm_s0_bank26",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    820.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 26
+  },
+  {
+   "name": "vm_s0_bank27",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    950.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 27
+  },
+  {
+   "name": "vm_s0_quarter6",
+   "slice": 0,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    1468.8,
+    864.0
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s0_bank28",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    1209.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 28
+  },
+  {
+   "name": "vm_s0_bank29",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    1339.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 29
+  },
+  {
+   "name": "vm_s0_bank30",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    1209.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 30
+  },
+  {
+   "name": "vm_s0_bank31",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    1339.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 31
+  },
+  {
+   "name": "vm_s0_quarter7",
+   "slice": 0,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    1468.8,
+    1252.8
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s0_bridge0",
+   "slice": 0,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    302.4,
+    259.2
+   ],
+   "outline_um": [
+    172.8,
+    172.8
+   ]
+  },
+  {
+   "name": "vm_s0_bridge1",
+   "slice": 0,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    1425.6,
+    259.2
+   ],
+   "outline_um": [
+    172.8,
+    172.8
+   ]
+  },
+  {
+   "name": "vm_s0_bridge2",
+   "slice": 0,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    302.4,
+    1036.8
+   ],
+   "outline_um": [
+    172.8,
+    172.8
+   ]
+  },
+  {
+   "name": "vm_s0_bridge3",
+   "slice": 0,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    1425.6,
+    1036.8
+   ],
+   "outline_um": [
+    172.8,
+    172.8
+   ]
+  },
+  {
+   "name": "vm_s0_wscatter",
+   "slice": 0,
+   "master": "dsfd_vm_static_scatter",
+   "xy_um": [
+    777.6,
+    432.0
+   ],
+   "outline_um": [
+    345.6,
+    103.68
+   ]
+  },
+  {
+   "name": "vm_s0_read_frontend",
+   "slice": 0,
+   "master": "dsfd_vm_static_suhc_fsr",
+   "xy_um": [
+    777.6,
+    604.8
+   ],
+   "outline_um": [
+    345.6,
+    51.84
+   ]
+  },
+  {
+   "name": "vm_s0_return32",
+   "slice": 0,
+   "master": "dsfd_vm_static_return",
+   "xy_um": [
+    777.6,
+    734.4
+   ],
+   "outline_um": [
+    345.6,
+    207.36
+   ],
+   "NROW": 32
+  },
+  {
+   "name": "vm_s1_bank0",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    1512.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 0
+  },
+  {
+   "name": "vm_s1_bank1",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    1641.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 1
+  },
+  {
+   "name": "vm_s1_bank2",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    1512.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 2
+  },
+  {
+   "name": "vm_s1_bank3",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    1641.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 3
+  },
+  {
+   "name": "vm_s1_quarter0",
+   "slice": 1,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    345.6,
+    1555.2
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s1_bank4",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    1900.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 4
+  },
+  {
+   "name": "vm_s1_bank5",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    2030.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 5
+  },
+  {
+   "name": "vm_s1_bank6",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    1900.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 6
+  },
+  {
+   "name": "vm_s1_bank7",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    2030.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 7
+  },
+  {
+   "name": "vm_s1_quarter1",
+   "slice": 1,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    345.6,
+    1944.0
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s1_bank8",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    1512.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 8
+  },
+  {
+   "name": "vm_s1_bank9",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    1641.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 9
+  },
+  {
+   "name": "vm_s1_bank10",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    1512.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 10
+  },
+  {
+   "name": "vm_s1_bank11",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    1641.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 11
+  },
+  {
+   "name": "vm_s1_quarter2",
+   "slice": 1,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    1468.8,
+    1555.2
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s1_bank12",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    1900.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 12
+  },
+  {
+   "name": "vm_s1_bank13",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    2030.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 13
+  },
+  {
+   "name": "vm_s1_bank14",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    1900.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 14
+  },
+  {
+   "name": "vm_s1_bank15",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    2030.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 15
+  },
+  {
+   "name": "vm_s1_quarter3",
+   "slice": 1,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    1468.8,
+    1944.0
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s1_bank16",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    2289.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 16
+  },
+  {
+   "name": "vm_s1_bank17",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    2419.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 17
+  },
+  {
+   "name": "vm_s1_bank18",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    2289.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 18
+  },
+  {
+   "name": "vm_s1_bank19",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    2419.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 19
+  },
+  {
+   "name": "vm_s1_quarter4",
+   "slice": 1,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    345.6,
+    2332.8
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s1_bank20",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    2678.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 20
+  },
+  {
+   "name": "vm_s1_bank21",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    2808.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 21
+  },
+  {
+   "name": "vm_s1_bank22",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    2678.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 22
+  },
+  {
+   "name": "vm_s1_bank23",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    2808.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 23
+  },
+  {
+   "name": "vm_s1_quarter5",
+   "slice": 1,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    345.6,
+    2721.6
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s1_bank24",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    2289.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 24
+  },
+  {
+   "name": "vm_s1_bank25",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    2419.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 25
+  },
+  {
+   "name": "vm_s1_bank26",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    2289.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 26
+  },
+  {
+   "name": "vm_s1_bank27",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    2419.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 27
+  },
+  {
+   "name": "vm_s1_quarter6",
+   "slice": 1,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    1468.8,
+    2332.8
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s1_bank28",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    2678.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 28
+  },
+  {
+   "name": "vm_s1_bank29",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    2808.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 29
+  },
+  {
+   "name": "vm_s1_bank30",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    2678.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 30
+  },
+  {
+   "name": "vm_s1_bank31",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    2808.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 31
+  },
+  {
+   "name": "vm_s1_quarter7",
+   "slice": 1,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    1468.8,
+    2721.6
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s1_bridge0",
+   "slice": 1,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    302.4,
+    1728.0
+   ],
+   "outline_um": [
+    172.8,
+    172.8
+   ]
+  },
+  {
+   "name": "vm_s1_bridge1",
+   "slice": 1,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    1425.6,
+    1728.0
+   ],
+   "outline_um": [
+    172.8,
+    172.8
+   ]
+  },
+  {
+   "name": "vm_s1_bridge2",
+   "slice": 1,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    302.4,
+    2505.6
+   ],
+   "outline_um": [
+    172.8,
+    172.8
+   ]
+  },
+  {
+   "name": "vm_s1_bridge3",
+   "slice": 1,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    1425.6,
+    2505.6
+   ],
+   "outline_um": [
+    172.8,
+    172.8
+   ]
+  },
+  {
+   "name": "vm_s1_wscatter",
+   "slice": 1,
+   "master": "dsfd_vm_static_scatter",
+   "xy_um": [
+    777.6,
+    1900.8
+   ],
+   "outline_um": [
+    345.6,
+    103.68
+   ]
+  },
+  {
+   "name": "vm_s1_read_frontend",
+   "slice": 1,
+   "master": "dsfd_vm_static_suhc_fsr",
+   "xy_um": [
+    777.6,
+    2073.6
+   ],
+   "outline_um": [
+    345.6,
+    51.84
+   ]
+  },
+  {
+   "name": "vm_s1_return32",
+   "slice": 1,
+   "master": "dsfd_vm_static_return",
+   "xy_um": [
+    777.6,
+    2203.2
+   ],
+   "outline_um": [
+    345.6,
+    207.36
+   ],
+   "NROW": 32
+  },
+  {
+   "name": "vm_s2_bank0",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    2980.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 0
+  },
+  {
+   "name": "vm_s2_bank1",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    3110.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 1
+  },
+  {
+   "name": "vm_s2_bank2",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    2980.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 2
+  },
+  {
+   "name": "vm_s2_bank3",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    3110.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 3
+  },
+  {
+   "name": "vm_s2_quarter0",
+   "slice": 2,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    345.6,
+    3024.0
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s2_bank4",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    3369.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 4
+  },
+  {
+   "name": "vm_s2_bank5",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    3499.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 5
+  },
+  {
+   "name": "vm_s2_bank6",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    3369.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 6
+  },
+  {
+   "name": "vm_s2_bank7",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    3499.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 7
+  },
+  {
+   "name": "vm_s2_quarter1",
+   "slice": 2,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    345.6,
+    3412.8
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s2_bank8",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    2980.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 8
+  },
+  {
+   "name": "vm_s2_bank9",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    3110.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 9
+  },
+  {
+   "name": "vm_s2_bank10",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    2980.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 10
+  },
+  {
+   "name": "vm_s2_bank11",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    3110.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 11
+  },
+  {
+   "name": "vm_s2_quarter2",
+   "slice": 2,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    1468.8,
+    3024.0
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s2_bank12",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    3369.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 12
+  },
+  {
+   "name": "vm_s2_bank13",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    3499.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 13
+  },
+  {
+   "name": "vm_s2_bank14",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    3369.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 14
+  },
+  {
+   "name": "vm_s2_bank15",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    3499.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 15
+  },
+  {
+   "name": "vm_s2_quarter3",
+   "slice": 2,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    1468.8,
+    3412.8
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s2_bank16",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    3758.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 16
+  },
+  {
+   "name": "vm_s2_bank17",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    3888.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 17
+  },
+  {
+   "name": "vm_s2_bank18",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    3758.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 18
+  },
+  {
+   "name": "vm_s2_bank19",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    3888.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 19
+  },
+  {
+   "name": "vm_s2_quarter4",
+   "slice": 2,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    345.6,
+    3801.6
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s2_bank20",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    4147.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 20
+  },
+  {
+   "name": "vm_s2_bank21",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    4276.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 21
+  },
+  {
+   "name": "vm_s2_bank22",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    4147.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 22
+  },
+  {
+   "name": "vm_s2_bank23",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    4276.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 23
+  },
+  {
+   "name": "vm_s2_quarter5",
+   "slice": 2,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    345.6,
+    4190.4
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s2_bank24",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    3758.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 24
+  },
+  {
+   "name": "vm_s2_bank25",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    3888.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 25
+  },
+  {
+   "name": "vm_s2_bank26",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    3758.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 26
+  },
+  {
+   "name": "vm_s2_bank27",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    3888.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 27
+  },
+  {
+   "name": "vm_s2_quarter6",
+   "slice": 2,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    1468.8,
+    3801.6
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s2_bank28",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    4147.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 28
+  },
+  {
+   "name": "vm_s2_bank29",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    4276.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 29
+  },
+  {
+   "name": "vm_s2_bank30",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    4147.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 30
+  },
+  {
+   "name": "vm_s2_bank31",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    4276.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 31
+  },
+  {
+   "name": "vm_s2_quarter7",
+   "slice": 2,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    1468.8,
+    4190.4
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s2_bridge0",
+   "slice": 2,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    302.4,
+    3196.8
+   ],
+   "outline_um": [
+    172.8,
+    172.8
+   ]
+  },
+  {
+   "name": "vm_s2_bridge1",
+   "slice": 2,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    1425.6,
+    3196.8
+   ],
+   "outline_um": [
+    172.8,
+    172.8
+   ]
+  },
+  {
+   "name": "vm_s2_bridge2",
+   "slice": 2,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    302.4,
+    3974.4
+   ],
+   "outline_um": [
+    172.8,
+    172.8
+   ]
+  },
+  {
+   "name": "vm_s2_bridge3",
+   "slice": 2,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    1425.6,
+    3974.4
+   ],
+   "outline_um": [
+    172.8,
+    172.8
+   ]
+  },
+  {
+   "name": "vm_s2_wscatter",
+   "slice": 2,
+   "master": "dsfd_vm_static_scatter",
+   "xy_um": [
+    777.6,
+    3369.6
+   ],
+   "outline_um": [
+    345.6,
+    103.68
+   ]
+  },
+  {
+   "name": "vm_s2_read_frontend",
+   "slice": 2,
+   "master": "dsfd_vm_static_suhc_fsr",
+   "xy_um": [
+    777.6,
+    3542.4
+   ],
+   "outline_um": [
+    345.6,
+    51.84
+   ]
+  },
+  {
+   "name": "vm_s2_return32",
+   "slice": 2,
+   "master": "dsfd_vm_static_return",
+   "xy_um": [
+    777.6,
+    3672.0
+   ],
+   "outline_um": [
+    345.6,
+    207.36
+   ],
+   "NROW": 32
+  },
+  {
+   "name": "vm_s3_bank0",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    4449.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 0
+  },
+  {
+   "name": "vm_s3_bank1",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    4579.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 1
+  },
+  {
+   "name": "vm_s3_bank2",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    4449.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 2
+  },
+  {
+   "name": "vm_s3_bank3",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    4579.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 3
+  },
+  {
+   "name": "vm_s3_quarter0",
+   "slice": 3,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    345.6,
+    4492.8
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s3_bank4",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    4838.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 4
+  },
+  {
+   "name": "vm_s3_bank5",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    4968.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 5
+  },
+  {
+   "name": "vm_s3_bank6",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    4838.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 6
+  },
+  {
+   "name": "vm_s3_bank7",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    4968.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 7
+  },
+  {
+   "name": "vm_s3_quarter1",
+   "slice": 3,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    345.6,
+    4881.6
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s3_bank8",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    4449.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 8
+  },
+  {
+   "name": "vm_s3_bank9",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    4579.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 9
+  },
+  {
+   "name": "vm_s3_bank10",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    4449.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 10
+  },
+  {
+   "name": "vm_s3_bank11",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    4579.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 11
+  },
+  {
+   "name": "vm_s3_quarter2",
+   "slice": 3,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    1468.8,
+    4492.8
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s3_bank12",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    4838.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 12
+  },
+  {
+   "name": "vm_s3_bank13",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    4968.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 13
+  },
+  {
+   "name": "vm_s3_bank14",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    4838.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 14
+  },
+  {
+   "name": "vm_s3_bank15",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    4968.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 15
+  },
+  {
+   "name": "vm_s3_quarter3",
+   "slice": 3,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    1468.8,
+    4881.6
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s3_bank16",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    5227.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 16
+  },
+  {
+   "name": "vm_s3_bank17",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    5356.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 17
+  },
+  {
+   "name": "vm_s3_bank18",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    5227.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 18
+  },
+  {
+   "name": "vm_s3_bank19",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    5356.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 19
+  },
+  {
+   "name": "vm_s3_quarter4",
+   "slice": 3,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    345.6,
+    5270.4
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s3_bank20",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    5616.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 20
+  },
+  {
+   "name": "vm_s3_bank21",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    5745.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 21
+  },
+  {
+   "name": "vm_s3_bank22",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    5616.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 22
+  },
+  {
+   "name": "vm_s3_bank23",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    518.4,
+    5745.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 23
+  },
+  {
+   "name": "vm_s3_quarter5",
+   "slice": 3,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    345.6,
+    5659.2
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s3_bank24",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    5227.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 24
+  },
+  {
+   "name": "vm_s3_bank25",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    5356.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 25
+  },
+  {
+   "name": "vm_s3_bank26",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    5227.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 26
+  },
+  {
+   "name": "vm_s3_bank27",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    5356.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 27
+  },
+  {
+   "name": "vm_s3_quarter6",
+   "slice": 3,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    1468.8,
+    5270.4
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s3_bank28",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    5616.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 28
+  },
+  {
+   "name": "vm_s3_bank29",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1166.4,
+    5745.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 29
+  },
+  {
+   "name": "vm_s3_bank30",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    5616.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 30
+  },
+  {
+   "name": "vm_s3_bank31",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1641.6,
+    5745.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 31
+  },
+  {
+   "name": "vm_s3_quarter7",
+   "slice": 3,
+   "master": "dsfd_vm_static_relay128_b4",
+   "xy_um": [
+    1468.8,
+    5659.2
+   ],
+   "outline_um": [
+    129.6,
+    129.6
+   ]
+  },
+  {
+   "name": "vm_s3_bridge0",
+   "slice": 3,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    302.4,
+    4665.6
+   ],
+   "outline_um": [
+    172.8,
+    172.8
+   ]
+  },
+  {
+   "name": "vm_s3_bridge1",
+   "slice": 3,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    1425.6,
+    4665.6
+   ],
+   "outline_um": [
+    172.8,
+    172.8
+   ]
+  },
+  {
+   "name": "vm_s3_bridge2",
+   "slice": 3,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    302.4,
+    5443.2
+   ],
+   "outline_um": [
+    172.8,
+    172.8
+   ]
+  },
+  {
+   "name": "vm_s3_bridge3",
+   "slice": 3,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    1425.6,
+    5443.2
+   ],
+   "outline_um": [
+    172.8,
+    172.8
+   ]
+  },
+  {
+   "name": "vm_s3_wscatter",
+   "slice": 3,
+   "master": "dsfd_vm_static_scatter",
+   "xy_um": [
+    777.6,
+    4838.4
+   ],
+   "outline_um": [
+    345.6,
+    103.68
+   ]
+  },
+  {
+   "name": "vm_s3_read_frontend",
+   "slice": 3,
+   "master": "dsfd_vm_static_suhc_fsr",
+   "xy_um": [
+    777.6,
+    5011.2
+   ],
+   "outline_um": [
+    345.6,
+    51.84
+   ]
+  },
+  {
+   "name": "vm_s3_return32",
+   "slice": 3,
+   "master": "dsfd_vm_static_return",
+   "xy_um": [
+    777.6,
+    5140.8
+   ],
+   "outline_um": [
+    345.6,
+    207.36
+   ],
+   "NROW": 32
+  }
+ ],
+ "hard_children": 188,
+ "checks": [],
+ "edge_service_reserved_band_xywh_um": [
+  43.2,
+  5875.2,
+  1857.6,
+  561.6
+ ],
+ "new_parent_mm2": 12.59712,
+ "actual_registered_stages_each_direction": 2,
+ "requirements": [
+  "exact assigned signal-bit reach with actual bank and b4/b8pins",
+  "global FSR/scatter/return distribution uniform registered hops and actual compiler ages",
+  "realmapped child dimensions and native clocks/PG/cuts",
+  "cap16/CDC/53writer+edge packing and fullcanonicaldiejoin"
+ ],
+ "signal_pin_reach_receipt": "results/physical/s81_vm_static_ownership_1015/small_group_pin_reach.json"
+}

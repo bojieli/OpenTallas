@@ -1,0 +1,33 @@
+{
+  "status": "PASS component functional gate; physical and whole SU unqualified",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv": "e494c109a829a081eae4d4f96a0e1e1ee68f08e87f9ac977f3460250ef77db85",
+    "rtl/hbm_accel/generic/adapters/static_su/lbank_native/tb_lbank_native.sv": "33e3ef9fea8d4458a17ae7a3718ca0b688a2864011b405699323b62d2e8fd0a9",
+    "rtl/hbm_accel/generic/adapters/static_su/lbank_native/run.sh": "bef1aef194109e762a2b9c428a321691cc7a50bb11f5732ad6ccafca3e3051a0",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
+  },
+  "runner": {
+    "host": "ot-epyc4",
+    "admission_GiB": 1,
+    "threads": 1,
+    "unit": "oth-ubuntu-1133200-1792048438",
+    "exit": 0
+  },
+  "tests": {
+    "exact_checks": 2560,
+    "address_bit8_alias_mutant_exit": 134,
+    "unsupported_RB8_exit": 134,
+    "scope": [
+      "all512 word addresses",
+      "32bit wordmask preserves seven neighboring columns",
+      "sameedge readwrite observes preedge state",
+      "independent readwrite addresses"
+    ]
+  },
+  "limitation": "One actual provider SRAM model, no array, controller, whole-SU, physical, or production-throughput qualification; immutable2912/1548 prices unchanged and unproven by this gate",
+  "historical_attempt": {
+    "status": "runner failed after exact and mutant because remote rg unavailable",
+    "remote_output": "/tmp/su-lbank-native-1015/output",
+    "exit": 1
+  }
+}

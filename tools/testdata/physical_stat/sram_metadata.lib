@@ -1,0 +1,12 @@
+// Metadata excerpt of physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1_tt.lib
+// Original blob SHA256 af25cfc64d41d47eccb96cb81babb49c17310f4113f87ceff10a973b10df4a0c
+library (fixture) {
+  cell (ot_sram_1r1w2c_16x546_m1) {
+    area : 14329.2240;
+    memory () {
+      type : ram;
+      address_width : 4;
+      word_width : 546;
+    }
+  }
+}

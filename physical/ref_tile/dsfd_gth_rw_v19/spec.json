@@ -132,9 +132,9 @@
  "job": {
   "owner": "Claude:S-GATHER",
   "branch": "claude/s81-gather-r3-1014",
-  "tag": "g8",
+  "tag": "g9native",
   "purpose": "S81 gather v4 DIRECT leaf (W half) of the gather cluster dsfd_sp_gather_c: 4 roots ot_s81ph_ret_root_s (step B, S = 8 open rows = 2 x the measured real bound 4), queue 128 x 66 + pairing store 256 x 34 arrays per root; the leaf takes only its own 4 lanes and returns only its own 4 results + {busy, fault}; the parent delivers / collects through relay tiles in the channels (no lane or chain passes through a leaf).  Every port a flop at the pin.",
-  "structural_change": "Banks face each other across ONE central logic channel (r4 2026-10-14): queue bank 128x66 MY at the W band (its secondary wd_in-hi face toward the li pins), pairing-store bank 256x34 R0 at the E band; main pin faces (rd_out / wd_in-lo / addr / ce / clk) of both banks open onto a 69.3-um channel that holds the root logic, co pins (x 72-110) and the N clock entry.  g7 (both banks R0, main faces W) split each root between two regions separated by a 116-um macro wall (rw: 347 channel<->W-logic nets + 411 queue-face nets in a 21.8-um channel; re: queue main faces on the 20-um W edge band, two walls from the logic) -> GRT-0183 boxed nets and CTS hold stalls (re g4/g5). Same outline, RTL, v19 assigned pins, S = 8.",
+  "structural_change": "Banks face each other across ONE central logic channel (r4 2026-10-14): queue bank 128x66 MY at the W band (its secondary wd_in-hi face toward the li pins), pairing-store bank 256x34 R0 at the E band; main pin faces (rd_out / wd_in-lo / addr / ce / clk) of both banks open onto a 69.3-um channel that holds the root logic, co pins (x 72-110) and the N clock entry.  g7 (both banks R0, main faces W) split each root between two regions separated by a 116-um macro wall (rw: 347 channel<->W-logic nets + 411 queue-face nets in a 21.8-um channel; re: queue main faces on the 20-um W edge band, two walls from the logic) -> GRT-0183 boxed nets and CTS hold stalls (re g4/g5). Same outline, RTL, v19 assigned pins, S = 8. g9native: native g8 co178 q_lb221.0>220ps is a dedicated pinflop followed by a seven-cell hold/output chain, not missing pinregister. Actual routed output FF slack+95.071ps; local finalclockleaf only3.402um from ot_prs_00083_ff. Connect that dedicated output register clock to the genuine existing upstream clock net (bypass one localleaf buffer) to remove measured37.5psTT launch excess while preserving all output hold cells, exact RTL cycles and every clock/uncertainty/SDC constraint. Refuse nonlocal retaps (>20um). Fullroute setup+hold+DRC/native audits decide qualification.",
   "benches": [
    {
     "name": "root_s_lockstep",
@@ -228,8 +228,11 @@
   "views_to": "physical/ref_tile/dsfd_gth_rw/views",
   "record_to": "results/rtl/ref_tile/dsfd_gth_rw",
   "reroute_reason": {
-   "kind": "slot_change",
-   "contract": "physical/s81_die_pins/v19/dsfd_gth_rw.json (v19_gather_v4 die-assigned pins, S-DIE lead r6, main 3b23f86ee): li 276 b registered to the closed lane-relay o-pin pattern on W, co 212 b at the capture x pattern on S; closed g5 used face-region pins"
+   "kind": "native_launch",
+   "cell": "dsfd_gth_rw",
+   "source": "results/rtl/s81_ph_20261006/gather/v19_1015/rw_g8_native.json",
+   "launch_ps": 241.1,
+   "fix": "Retap measured dedicated co178 launch flop onto its existing upstream local clock net; preserve output hold cells, RTL cycles, outline and assigned pins. Actual routed FF output slack95.071ps; native q_lb221ps."
   }
  },
  "floorplan_why": "gather v4 direct leaf, 190.08 x 164.16 (slot grid unchanged).  The leaf carries ONLY its own traffic: li 276 b (4 lanes) on the W face, co 212 + st 2 + rso on S, ck + rs on N (494 signal pins; v3 3,423).  8 arrays as two abutted N-S stacks (pins W / E only) at y 22.8..138.5, pushed to the face WITHOUT pins so a 67.8-um band behind the li face is free of macros: the 276 lane bits reach the 4 roots without crossing an array (v3: 1,932 W-E crossings through 44 um of M2/M4 beside 116-um macro walls -> GRT-0116 on g2 and g3).  Cut: li 276 b over the 164-um face = 1.7 b/um vs ~25 M2+M4 tracks/um; results 214 b leave S over 190 um.  Std ~8.4k um2 + arrays 8.7k um2 in 29.7k um2 core = 0.575.",
@@ -241,7 +244,8 @@
  "inter": [],
  "recipe": 2,
  "pre_cts_extra": [
-  "physical/s81_ph_views/gather/clock_leaf_candidate/per_macro.tcl"
+  "physical/s81_ph_views/gather/clock_leaf_candidate/per_macro.tcl",
+  "physical/s81_ph_views/gather/clock_leaf_candidate/co178_local_retap.tcl"
  ],
  "io_flop_at_pins": {
   "cols": 4,

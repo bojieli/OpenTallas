@@ -33,9 +33,9 @@ module tb_coll_tp8_static_links #(
     parameter integer LATU = 37, LATS = 362,     // collective LU / LS (compiled, = the calendar's)
     parameter integer PU = 14, PS = 339,         // PHY latencies the calendar compiles
     parameter integer KC = 4, KW = 2,
-    parameter integer RU=0,RS0=0,RS1=0,RS2=0,
+    parameter integer RU=0,RS0=0,RS1=0,RS2=0,SHARED=0,SIXFIVE=0,
     parameter integer XU = 0, XS = 0             // extra PHY cycles vs compiled (negative control)
-) (input wire clk, input wire lck);
+) (input wire clk, input wire lck,input wire fdi_ck);
     localparam integer ND = 8, LANES = 16, FW = 512, TAGW = 32, PW = FW + 2 + TAGW, RW = FW + 2, MAXW = 1 << 16;
     localparam integer FP = 546 + 19 + 32, FR = 514 + 19 + 32;       // codec frames 597 / 565
     reg [FW-1:0] part [0:MAXW-1];
@@ -75,6 +75,7 @@ module tb_coll_tp8_static_links #(
     wire [ND-1:0] ptxv, rtxv; wire [ND*FP-1:0] ptx; wire [ND*FR-1:0] rtx;
     wire [ND-1:0] prxv, rrxv; wire [ND*FP-1:0] prx; wire [ND*FR-1:0] rrx;
     wire [ND*3-1:0] stxv, srxv; wire [ND*3*FP-1:0] stx, srx;
+    wire[ND-1:0]shareflt;wire[ND-1:0]sharetxv,sharerxv;wire[ND*1043-1:0]sharetx,sharerx;
     wire [ND*20-1:0] xflt;            // 10 CDC channels x {w, r}
     wire [ND*5-1:0]  cabort;          // codec aborts: P, R, S0, S1, S2
     wire [ND*40-1:0] ccause;
@@ -103,7 +104,13 @@ module tb_coll_tp8_static_links #(
             assign {stxv[g*3+:3],rtxv[g],ptxv[g]}=ptv;
             assign stx[g*3*FP+:3*FP]=ptpack[2*597+:3*597];
             assign rtx[g*FR+:FR]=ptpack[597+:FR];assign ptx[g*FP+:FP]=ptpack[0+:FP];
-            qfd_collective_static_io #(.PU(PU),.PS(PS),.LU(LATU),.LS(LATS),.RU(RU),.RS0(RS0),.RS1(RS1),.RS2(RS2))u_parent(
+`ifdef OT_TP8S_PRODUCTION_WRAPPER
+            assign ptv[1:0]=u_parent.u_io.phy_tx_valid[1:0];
+            assign ptpack[0+:1194]=u_parent.u_io.phy_tx[0+:1194];
+            qfd_collective_static_io_production #(.PU(PU),.PS(PS),.LU(LATU),.LS(LATS),.RU(RU),.RS0(RS0),.RS1(RS1),.RS2(RS2))u_parent(
+`else
+            qfd_collective_static_io #(.PU(PU),.PS(PS),.LU(LATU),.LS(LATS),.RU(RU),.RS0(RS0),.RS1(RS1),.RS2(RS2),.SHARED_UCIE(SHARED),.SIX_FIVE(SIXFIVE))u_parent(
+`endif
               .clk(clk),.clk_pfold0(clk),.clk_pfold1(clk),.clk_pfold2(clk),.clk_pfold3(clk),
               .clk_xfold0(clk),.clk_xfold1(clk),.clk_xfold2(clk),.clk_xfold3(clk),
               .clk_pring0(clk),.clk_pring1(clk),.clk_sring0(clk),.clk_sring1(clk),.clk_sring2(clk),.clk_sring3(clk),.clk_sring4(clk),.clk_rring0(clk),.clk_rring1(clk),
@@ -112,13 +119,27 @@ module tb_coll_tp8_static_links #(
               .in_valid(iv[g]),.in_data(id[g*FW+:FW]),.in_last(il[g]),.in_mode(im[g]),.in_tag(it[g*TAGW+:TAGW]),
               .out_valid(ov[g]),.out_data(od[g*FW+:FW]),.out_last(ol[g]),.out_rank(orank[g*3+:3]),.out_err(oe[g]),
               .fault(flt[g]),.fault_code(fc[g*5+:5]),.cmd_free(cfree[g]),
-              .face_ck(fck),.relay_ck({((2*(2*RU+RS0+RS1+RS2)>0)?2*(2*RU+RS0+RS1+RS2):1){clk}}),.phy_up(5'b11111),.phy_rx_valid(prv),.phy_rx(prpack),.phy_tx_valid(ptv),.phy_tx(ptpack),
+              .face_ck(fck),.relay_ck({((2*(2*RU+RS0+RS1+RS2)>0)?2*(2*RU+RS0+RS1+RS2):1){clk}}),
+`ifdef OT_TP8S_PRODUCTION_WRAPPER
+              .ucie_up(1'b1),.serdes_up(3'b111),.serdes_rx_valid(prv[4:2]),.serdes_rx(prpack[2*597+:3*597]),
+              .serdes_tx_valid(ptv[4:2]),.serdes_tx(ptpack[2*597+:3*597]),
+`else
+              .phy_up(5'b11111),.phy_rx_valid(prv),.phy_rx(prpack),.phy_tx_valid(ptv),.phy_tx(ptpack),
+`endif
+              .gearbox_core_ck(clk),.fdi_rx_ck({3{fdi_ck}}),.fdi_ck(fdi_ck),.shared_rx_valid(sharerxv[g]),.shared_rx(sharerx[g*1043+:1043]),.shared_tx_valid(sharetxv[g]),.shared_tx(sharetx[g*1043+:1043]),.shared_fault(shareflt[g]),
               .transport_cdc_fault(xflt[g*20+:20]),.transport_abort(cabort[g*5+:5]),.transport_fault_cause(ccause[g*40+:40]));
             // Read-only source observations used by the existing latency meter.
+`ifdef OT_TP8S_PRODUCTION_WRAPPER
+            assign upv[g]=u_parent.u_io.up_valid;assign dpv[g]=u_parent.u_io.dp_valid;
+            assign sxv[g*3+:3]={u_parent.u_io.sx2_valid,u_parent.u_io.sx1_valid,u_parent.u_io.sx0_valid};
+            assign srv[g*3+:3]={u_parent.u_io.sr2_valid,u_parent.u_io.sr1_valid,u_parent.u_io.sr0_valid};
+`else
             assign upv[g]=u_parent.up_valid;assign dpv[g]=u_parent.dp_valid;
             assign sxv[g*3+:3]={u_parent.sx2_valid,u_parent.sx1_valid,u_parent.sx0_valid};
             assign srv[g*3+:3]={u_parent.sr2_valid,u_parent.sr1_valid,u_parent.sr0_valid};
+`endif
 `else
+            assign shareflt[g]=0;
             // ---------------- collective ----------------
 `ifdef OT_TP8S_QFD
             qfd_io_collective_static u_die (       // the die-name master (LU / LS by +define)
@@ -183,10 +204,15 @@ module tb_coll_tp8_static_links #(
             end
 `endif
             // ---------------- PHY models (link domain, fixed latency) ----------------
+            if(SHARED)begin:g_one_ucie
+            tb_phy_pipe #(.W(1043),.L((SIXFIVE?4:PU)+XU))u_phy(.clk(SIXFIVE?fdi_ck:lck),.rst_n(rst_n),.v_in(sharetxv[g]),.d_in(sharetx[g*1043+:1043]),.flip(1'b0),.v_out(sharerxv[g^1]),.d_out(sharerx[(g^1)*1043+:1043]));
+            assign prxv[g]=0;assign rrxv[g]=0;assign prx[g*FP+:FP]=0;assign rrx[g*FR+:FR]=0;
+            end else begin:g_dual_diagnostic
             tb_phy_pipe #(.W(FP), .L(PU + XU)) u_pp (.clk(lck), .rst_n(rst_n), .v_in(ptxv[g]), .d_in(ptx[g*FP +: FP]),
                 .flip(1'b0), .v_out(prxv[g ^ 1]), .d_out(prx[(g ^ 1)*FP +: FP]));
             tb_phy_pipe #(.W(FR), .L(PU + XU)) u_rp (.clk(lck), .rst_n(rst_n), .v_in(rtxv[g]), .d_in(rtx[g*FR +: FR]),
                 .flip(1'b0), .v_out(rrxv[g ^ 1]), .d_out(rrx[(g ^ 1)*FR +: FR]));
+            end
             for (j = 0; j < 3; j = j + 1) begin : g_sp
                 localparam integer Q = (P + 1 + j) % 4, R2 = 2 * Q + D, J2 = (P - Q + 7) % 4;
                 // CORRUPT: flip one bit of die 6's port-0 frame number CORRUPT (a CRC must catch it)
@@ -288,7 +314,7 @@ module tb_coll_tp8_static_links #(
     always @(posedge clk) begin
         if (rst_n && cyc == endc) begin
             for (t = 0; t < ND; t = t + 1)
-                dief[t] = flt[t] | ifl[t] | (|xflt[t*20 +: 20]) | (|cabort[t*5 +: 5]);
+                dief[t] = (SHARED && shareflt[t]) | flt[t] | ifl[t] | (|xflt[t*20 +: 20]) | (|cabort[t*5 +: 5]);
             $display("TP8SL dies=8 latu=%0d lats=%0d pu=%0d ps=%0d xu=%0d xs=%0d msgs=%0d drop=%0d corrupt=%0d mismatches=%0d extra=%0d out_err=%0d cmd_bad=%0d coll_fault=%b issuer_fault=%b die_fault=%b words_out=%0d meas_lu=%0d meas_ls=%0d pr_overlap=%0d issuer_done=%b",
                      LATU, LATS, PU, PS, XU, XS, NMSG, DROP, CORRUPT, bad, extra, errs, cmd_bad, flt, ifl, dief, words_out,
                      first_dp - first_up, first_sr - first_sx, pr_overlap, idone);

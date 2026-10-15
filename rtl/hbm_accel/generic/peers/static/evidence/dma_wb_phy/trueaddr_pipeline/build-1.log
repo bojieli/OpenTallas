@@ -1,0 +1,537 @@
+%Warning-SIDEEFFECT: ot_hdc_v41x_idx_hbm.sv:366:32: Expression side effect may be mishandled
+                                                  : ... Suggest use a temporary variable in place of this expression
+  366 |                         ref_cnt[bank_of(q_addr[p][(q_rp[p] + bi) % QD])] += 1;
+      |                                ^
+                     ... For warning description see https://verilator.org/warn/SIDEEFFECT?v=5.032
+                     ... Use "/* verilator lint_off SIDEEFFECT */" and lint_on around source to disable this message.
+%Warning-SIDEEFFECT: ot_hdc_v41x_idx_hbm.sv:366:33: Expression side effect may be mishandled
+                                                  : ... Suggest use a temporary variable in place of this expression
+  366 |                         ref_cnt[bank_of(q_addr[p][(q_rp[p] + bi) % QD])] += 1;
+      |                                 ^~~~~~~
+%Warning-WIDTHEXPAND: ot_chip_v41x_hbm3e_phy.sv:33:22: Operator VAR 'K_BASE' expects 64 bits on the Initial value, but Initial value's CONST '32'h28800000' generates 32 bits.
+                                                     : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model'
+   33 |     parameter [63:0] K_BASE     = 64'd0,        
+      |                      ^~~~~~
+%Warning-WIDTHTRUNC: ot_chip_v41x_hbm3e_phy.sv:111:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'W_PORT' generates 32 bits.
+                                                     : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model'
+  111 |     generate if (W_PORT) begin : g_w
+      |              ^~
+%Warning-WIDTHEXPAND: ot_hbm_accel_cdc_fifo.sv:21:46: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                    : ... note: In instance 'tb_dma_wb_phy_static.dut.Q[3].PIPELINED_WB.wb.g_root[3].g_lane[7].u_fifo'
+   21 |   wire [AW:0] wbin_n = wbin + ((we && !full) ? 1'b1 : 1'b0);
+      |                                              ^
+%Warning-WIDTHEXPAND: ot_hbm_accel_cdc_fifo.sv:21:46: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                    : ... note: In instance 'tb_dma_wb_phy_static.dut.Q[3].PIPELINED_WB.wb.g_root[3].g_lane[7].u_fifo'
+   21 |   wire [AW:0] wbin_n = wbin + ((we && !full) ? 1'b1 : 1'b0);
+      |                                              ^
+%Warning-WIDTHEXPAND: ot_hbm_accel_cdc_fifo.sv:22:47: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                    : ... note: In instance 'tb_dma_wb_phy_static.dut.Q[3].PIPELINED_WB.wb.g_root[3].g_lane[7].u_fifo'
+   22 |   wire [AW:0] rbin_n = rbin + ((re && !empty) ? 1'b1 : 1'b0);
+      |                                               ^
+%Warning-WIDTHEXPAND: ot_hbm_accel_cdc_fifo.sv:22:47: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                    : ... note: In instance 'tb_dma_wb_phy_static.dut.Q[3].PIPELINED_WB.wb.g_root[3].g_lane[7].u_fifo'
+   22 |   wire [AW:0] rbin_n = rbin + ((re && !empty) ? 1'b1 : 1'b0);
+      |                                               ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:218:34: Operator SHIFTR expects 32 bits on the LHS, but LHS's VARREF 's' generates 30 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  218 |         pc_of = (NPC > 1) ? (((s >> 2) ^ (s >> (2 + LPC)) ^ (s >> (2 + 2 * LPC))) & (NPC - 1)) : 0;
+      |                                  ^~
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:218:45: Operator SHIFTR expects 32 bits on the LHS, but LHS's VARREF 's' generates 30 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  218 |         pc_of = (NPC > 1) ? (((s >> 2) ^ (s >> (2 + LPC)) ^ (s >> (2 + 2 * LPC))) & (NPC - 1)) : 0;
+      |                                             ^~
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:218:64: Operator SHIFTR expects 32 bits on the LHS, but LHS's VARREF 's' generates 30 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  218 |         pc_of = (NPC > 1) ? (((s >> 2) ^ (s >> (2 + LPC)) ^ (s >> (2 + 2 * LPC))) & (NPC - 1)) : 0;
+      |                                                                ^~
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:221:20: Operator SHIFTR expects 64 bits on the LHS, but LHS's VARREF 's' generates 30 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  221 |         row_of = s >> ROW_SHIFT;
+      |                    ^~
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:226:21: Operator SHIFTR expects 64 bits on the LHS, but LHS's VARREF 's' generates 30 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  226 |             row = s >> ROW_SHIFT;
+      |                     ^~
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:227:29: Operator SHIFTR expects 64 bits on the LHS, but LHS's VARREF 's' generates 30 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  227 |             bank_of = ((((s >> (2 + LPC + 5)) ^ (row >> 2)) & 7) << 2) | ((s ^ row) & 3);
+      |                             ^~
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:227:78: Operator XOR expects 64 bits on the LHS, but LHS's VARREF 's' generates 30 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  227 |             bank_of = ((((s >> (2 + LPC + 5)) ^ (row >> 2)) & 7) << 2) | ((s ^ row) & 3);
+      |                                                                              ^
+%Warning-WIDTHTRUNC: ot_hdc_v41x_idx_hbm.sv:227:21: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's OR generates 64 bits.
+                                                  : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  227 |             bank_of = ((((s >> (2 + LPC + 5)) ^ (row >> 2)) & 7) << 2) | ((s ^ row) & 3);
+      |                     ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:261:103: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RREFD_PS' generates 32 bits.
+                                                    : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  261 |                 if (t > ref_hist[p][h] - RRDL_PS && t < ref_hist[p][h] + RREFD_PS) t = ref_hist[p][h] + RREFD_PS;
+      |                                                                                                       ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:261:40: Operator SUB expects 64 bits on the RHS, but RHS's VARREF 'RRDL_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  261 |                 if (t > ref_hist[p][h] - RRDL_PS && t < ref_hist[p][h] + RREFD_PS) t = ref_hist[p][h] + RREFD_PS;
+      |                                        ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:261:72: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RREFD_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  261 |                 if (t > ref_hist[p][h] - RRDL_PS && t < ref_hist[p][h] + RREFD_PS) t = ref_hist[p][h] + RREFD_PS;
+      |                                                                        ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:271:40: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RREFD_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  271 |             t = max2(t, ref_hist[p][3] + RREFD_PS);
+      |                                        ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:272:66: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RRDL_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  272 |             if (faw[p][0] > t - RRDL_PS) t = max2(t, last_act[p] + RRDL_PS);
+      |                                                                  ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:275:92: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RRDL_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  275 |                     if (faw[p][h] > t - RRDL_PS && faw[p][h] < t + RREFD_PS) t = faw[p][h] + RRDL_PS;
+      |                                                                                            ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:275:39: Operator SUB expects 64 bits on the RHS, but RHS's VARREF 'RRDL_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  275 |                     if (faw[p][h] > t - RRDL_PS && faw[p][h] < t + RREFD_PS) t = faw[p][h] + RRDL_PS;
+      |                                       ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:275:66: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RREFD_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  275 |                     if (faw[p][h] > t - RRDL_PS && faw[p][h] < t + RREFD_PS) t = faw[p][h] + RRDL_PS;
+      |                                                                  ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:272:31: Operator SUB expects 64 bits on the RHS, but RHS's VARREF 'RRDL_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  272 |             if (faw[p][0] > t - RRDL_PS) t = max2(t, last_act[p] + RRDL_PS);
+      |                               ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:302:61: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RP_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  302 |             if (b_open[p][b2]) tr = max2(tr, b_preok[p][b2] + RP_PS);
+      |                                                             ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:305:54: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RFCPB_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  305 |             b_actok[p][b2] = max2(b_actok[p][b2], tr + RFCPB_PS);
+      |                                                      ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:306:34: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RFCPB_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  306 |             b_refend[p][b2] = tr + RFCPB_PS;
+      |                                  ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:310:49: Operator DIVS expects 64 bits on the RHS, but RHS's VARREF 'NB' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  310 |             next_ref[p] = next_ref[p] + REFI_PS / NB;
+      |                                                 ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:323:29: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'REQ_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  323 |             tmin = max2(arr + REQ_PS, tnow);
+      |                             ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:327:49: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'REQ_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  327 |                 tact = b_open[p][bk] ? max2(arr + REQ_PS, b_preok[p][bk]) + RP_PS : arr + REQ_PS;
+      |                                                 ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:327:75: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RP_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  327 |                 tact = b_open[p][bk] ? max2(arr + REQ_PS, b_preok[p][bk]) + RP_PS : arr + REQ_PS;
+      |                                                                           ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:327:89: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'REQ_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  327 |                 tact = b_open[p][bk] ? max2(arr + REQ_PS, b_preok[p][bk]) + RP_PS : arr + REQ_PS;
+      |                                                                                         ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:329:47: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RRDS_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  329 |                 tact = max2(tact, last_act[p] + RRDS_PS);
+      |                                               ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:330:54: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RRDL_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  330 |                 tact = max2(tact, last_act_bg[p][bg] + RRDL_PS);
+      |                                                      ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:331:45: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'FAW_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  331 |                 tact = max2(tact, faw[p][0] + FAW_PS);
+      |                                             ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:334:42: Operator COND expects 64 bits on the Conditional True, but Conditional True's VARREF 'RCDWR_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  334 |             tcol = max2(tmin, tact + (we ? RCDWR_PS : RCDRD_PS));
+      |                                          ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:334:42: Operator COND expects 64 bits on the Conditional False, but Conditional False's VARREF 'RCDRD_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  334 |             tcol = max2(tmin, tact + (we ? RCDWR_PS : RCDRD_PS));
+      |                                          ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:335:43: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'BURST_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  335 |             tcol = max2(tcol, last_col[p] + BURST_PS);
+      |                                           ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:336:50: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'TCCDL_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  336 |             tcol = max2(tcol, last_col_bg[p][bg] + TCCDL_PS);
+      |                                                  ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:349:24: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'REQ_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  349 |             tmin = arr + REQ_PS;
+      |                        ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:385:69: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RP_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  385 |                     if (b_open[p][b2]) tr = max2(tr, b_preok[p][b2] + RP_PS);
+      |                                                                     ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:388:70: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RP_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  388 |                     if (b_open[p][b2]) tr = max2(tr, b_preok[p][b2]) + RP_PS;
+      |                                                                      ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:391:58: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RFCPB_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  391 |                 b_actok[p][b2] = max2(b_actok[p][b2], tr + RFCPB_PS);
+      |                                                          ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:392:38: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RFCPB_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  392 |                 b_refend[p][b2] = tr + RFCPB_PS;
+      |                                      ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:396:53: Operator DIVS expects 64 bits on the RHS, but RHS's VARREF 'NB' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  396 |                 next_ref[p] = next_ref[p] + REFI_PS / NB;
+      |                                                     ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:405:43: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'BURST_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  405 |                 tr = max2(tr, last_col[p] + BURST_PS);
+      |                                           ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:406:39: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RP_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  406 |                 if (any_open) tr = tr + RP_PS;
+      |                                       ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:409:62: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RFC_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  409 |                     b_actok[p][b2] = max2(b_actok[p][b2], tr + RFC_PS);
+      |                                                              ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:420:55: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RP_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  420 |                     tact = max2(tmin, b_preok[p][bk]) + RP_PS;       
+      |                                                       ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:423:47: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RRDS_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  423 |                 tact = max2(tact, last_act[p] + RRDS_PS);
+      |                                               ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:424:54: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RRDL_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  424 |                 tact = max2(tact, last_act_bg[p][bg] + RRDL_PS);
+      |                                                      ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:425:45: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'FAW_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  425 |                 tact = max2(tact, faw[p][0] + FAW_PS);
+      |                                             ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:430:39: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RAS_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  430 |                 b_actok[p][bk] = tact + RAS_PS + RP_PS;
+      |                                       ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:430:48: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RP_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  430 |                 b_actok[p][bk] = tact + RAS_PS + RP_PS;
+      |                                                ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:431:39: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RAS_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  431 |                 b_preok[p][bk] = tact + RAS_PS;
+      |                                       ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:435:54: Operator COND expects 64 bits on the Conditional True, but Conditional True's VARREF 'RCDWR_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  435 |             tcol = max2(max2(tmin, tnow), tact + (we ? RCDWR_PS : RCDRD_PS));
+      |                                                      ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:435:54: Operator COND expects 64 bits on the Conditional False, but Conditional False's VARREF 'RCDRD_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  435 |             tcol = max2(max2(tmin, tnow), tact + (we ? RCDWR_PS : RCDRD_PS));
+      |                                                      ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:436:43: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'BURST_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  436 |             tcol = max2(tcol, last_col[p] + BURST_PS);
+      |                                           ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:437:50: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'TCCDL_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  437 |             tcol = max2(tcol, last_col_bg[p][bg] + TCCDL_PS);
+      |                                                  ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:440:74: Operator EQ expects 32 bits on the LHS, but LHS's ARRAYSEL generates 2 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  440 |                                   ((last_wr_bg_valid[p] && last_wr_bg[p] == bg) ? WTRL_PS : WTRS_PS));
+      |                                                                          ^~
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:439:46: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'CWL_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  439 |                 tcol = max2(tcol, last_wr[p] + CWL_PS + BURST_PS +
+      |                                              ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:439:55: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'BURST_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  439 |                 tcol = max2(tcol, last_wr[p] + CWL_PS + BURST_PS +
+      |                                                       ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:440:81: Operator COND expects 64 bits on the Conditional True, but Conditional True's VARREF 'WTRL_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  440 |                                   ((last_wr_bg_valid[p] && last_wr_bg[p] == bg) ? WTRL_PS : WTRS_PS));
+      |                                                                                 ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:440:81: Operator COND expects 64 bits on the Conditional False, but Conditional False's VARREF 'WTRS_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  440 |                                   ((last_wr_bg_valid[p] && last_wr_bg[p] == bg) ? WTRL_PS : WTRS_PS));
+      |                                                                                 ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:441:69: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RTW_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  441 |             if (we && last_rd[p] >= 0) tcol = max2(tcol, last_rd[p] + RTW_PS);
+      |                                                                     ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:445:60: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'CWL_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  445 |                 b_preok[p][bk] = max2(b_preok[p][bk], tcol + CWL_PS + BURST_PS + WR_PS);
+      |                                                            ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:445:69: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'BURST_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  445 |                 b_preok[p][bk] = max2(b_preok[p][bk], tcol + CWL_PS + BURST_PS + WR_PS);
+      |                                                                     ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:445:80: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'WR_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  445 |                 b_preok[p][bk] = max2(b_preok[p][bk], tcol + CWL_PS + BURST_PS + WR_PS);
+      |                                                                                ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:448:60: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RTP_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  448 |                 b_preok[p][bk] = max2(b_preok[p][bk], tcol + RTP_PS);
+      |                                                            ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:470:54: Operator DIVS expects 64 bits on the RHS, but RHS's VARREF 'NB' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  470 |                 next_ref[p] = (REFPB != 0) ? REFI_PS / NB + (longint'(REFI_PS) * p) / (NPC * NB)
+      |                                                      ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:471:80: Operator DIVS expects 64 bits on the RHS, but RHS's VARREF 'NPC' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  471 |                                            : REFI_PS + (longint'(REFI_PS) * p) / NPC;
+      |                                                                                ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:494:82: Operator DIVS expects 64 bits on the RHS, but RHS's VARREF 'NB' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  494 |                             if (next_ref[p] <= now + longint'(PULLIN) * (REFI_PS / NB)) void'(pull_ref(p, now));
+      |                                                                                  ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:496:86: Operator SUB expects 64 bits on the LHS, but LHS's VARREF 'PULLIN' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  496 |                             if (!pi_batch[p] && next_ref[p] <= now + longint'(PULLIN - PULLIN_BATCH) * (REFI_PS / NB))
+      |                                                                                      ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:496:86: Operator SUB expects 64 bits on the RHS, but RHS's VARREF 'PULLIN_BATCH' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  496 |                             if (!pi_batch[p] && next_ref[p] <= now + longint'(PULLIN - PULLIN_BATCH) * (REFI_PS / NB))
+      |                                                                                      ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:496:113: Operator DIVS expects 64 bits on the RHS, but RHS's VARREF 'NB' generates 32 bits.
+                                                    : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  496 |                             if (!pi_batch[p] && next_ref[p] <= now + longint'(PULLIN - PULLIN_BATCH) * (REFI_PS / NB))
+      |                                                                                                                 ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:499:86: Operator DIVS expects 64 bits on the RHS, but RHS's VARREF 'NB' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  499 |                                 if (next_ref[p] <= now + longint'(PULLIN) * (REFI_PS / NB)) void'(pull_ref(p, now));
+      |                                                                                      ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:492:55: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RREFD_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  492 |                     if (q_n[p] == 0 && ref_hist[p][3] + RREFD_PS <= now) begin    
+      |                                                       ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:514:56: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 30 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  514 |                         p = pc_of(req_addr[j*AW +: AW] + i);
+      |                                                        ^
+%Warning-WIDTHTRUNC: ot_hdc_v41x_idx_hbm.sv:514:29: Operator FUNCREF 'pc_of' expects 30 bits on the Function Argument, but Function Argument's ADD generates 32 bits.
+                                                  : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  514 |                         p = pc_of(req_addr[j*AW +: AW] + i);
+      |                             ^~~~~
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:517:62: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 30 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  517 |                                      j, req_addr[j*AW +: AW] + i, p);
+      |                                                              ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:522:64: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 30 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  522 |                         q_addr[p][slot] = req_addr[j*AW +: AW] + i;
+      |                                                                ^
+%Warning-WIDTHTRUNC: ot_hdc_v41x_idx_hbm.sv:522:41: Operator ASSIGN expects 30 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                  : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  522 |                         q_addr[p][slot] = req_addr[j*AW +: AW] + i;
+      |                                         ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:603:61: Operator MODDIV expects 32 bits on the LHS, but LHS's ARRAYSEL generates 30 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  603 |                                         mem[q_addr[p][slot] % MEM_WORDS][8*byte_i +: 8] =
+      |                                                             ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:609:55: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'CL_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  609 |                                 r_t[p][k] = h_tcol[p] + CL_PS + BURST_PS + RSP_PS;
+      |                                                       ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:609:63: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'BURST_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  609 |                                 r_t[p][k] = h_tcol[p] + CL_PS + BURST_PS + RSP_PS;
+      |                                                               ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:609:74: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RSP_PS' generates 32 bits.
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  609 |                                 r_t[p][k] = h_tcol[p] + CL_PS + BURST_PS + RSP_PS;
+      |                                                                          ^
+%Warning-WIDTHEXPAND: ot_hdc_v41x_idx_hbm.sv:611:109: Operator MODDIV expects 32 bits on the LHS, but LHS's ARRAYSEL generates 30 bits.
+                                                    : ... note: In instance 'tb_dma_wb_phy_static.PHY[3].model.u_k'
+  611 |                                 r_data[p][k] = (MEM_MODE != 0) ? pat(q_addr[p][slot]) : mem[q_addr[p][slot] % MEM_WORDS];
+      |                                                                                                             ^
+%Warning-WIDTHEXPAND: ot_hbm_svc_wb_pipeline_cdc.sv:34:51: Operator ADD expects 33 bits on the RHS, but RHS's VARREF 'reserve_total' generates 12 bits.
+                                                         : ... note: In instance 'tb_dma_wb_phy_static.dut.Q[3].PIPELINED_WB.wb'
+   34 |  wire [32:0] reserve_end={3'b0,reserve_base[29:0]}+reserve_total;
+      |                                                   ^
+%Warning-WIDTHEXPAND: ot_hbm_svc_wb_pipeline_cdc.sv:64:37: Operator ADD expects 32 bits on the RHS, but RHS's REPLICATE generates 11 bits.
+                                                         : ... note: In instance 'tb_dma_wb_phy_static.dut.Q[3].PIPELINED_WB.wb'
+   64 |   wire [31:0] sector=base[copy_bank]+{pending_row[lane],5'b0}+lane;
+      |                                     ^
+%Warning-WIDTHEXPAND: ot_hbm_svc_wb_pipeline_cdc.sv:73:37: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'ordinal' generates 12 bits.
+                                                         : ... note: In instance 'tb_dma_wb_phy_static.dut.Q[3].PIPELINED_WB.wb'
+   73 |    .w_ce_in(filling&&!fault&&ordinal+(lane%8)<total[fill_bank]&&ordinal[4:3]==(lane/8)&&wd[(lane%8)*289+288]),
+      |                                     ^
+%Warning-WIDTHEXPAND: ot_hbm_svc_wb_pipeline_cdc.sv:73:77: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 2 bits.
+                                                         : ... note: In instance 'tb_dma_wb_phy_static.dut.Q[3].PIPELINED_WB.wb'
+   73 |    .w_ce_in(filling&&!fault&&ordinal+(lane%8)<total[fill_bank]&&ordinal[4:3]==(lane/8)&&wd[(lane%8)*289+288]),
+      |                                                                             ^~
+%Warning-WIDTHEXPAND: ot_hbm_svc_wb_pipeline_cdc.sv:98:61: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'ordinal' generates 12 bits.
+                                                         : ... note: In instance 'tb_dma_wb_phy_static.dut.Q[3].PIPELINED_WB.wb'
+   98 |       if(!wd[289*s+288]||wd[289*s+256+:32]!=(base[fill_bank]+ordinal+s))stream_sticky<=1;
+      |                                                             ^
+%Warning-WIDTHEXPAND: ot_hbm_svc_wb_pipeline_cdc.sv:97:16: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'ordinal' generates 12 bits.
+                                                         : ... note: In instance 'tb_dma_wb_phy_static.dut.Q[3].PIPELINED_WB.wb'
+   97 |      if(ordinal+s<total[fill_bank])begin
+      |                ^
+%Warning-WIDTHTRUNC: ot_hbm_svc_wb_pipeline_cdc.sv:127:102: Operator ASSIGN expects 5 bits on the Assign RHS, but Assign RHS's VARREF 'l' generates 32 bits.
+                                                          : ... note: In instance 'tb_dma_wb_phy_static.dut.Q[3].PIPELINED_WB.wb'
+  127 |    for(l=0;l<32;l=l+1)if(!pick_v[pc]&&!fifo_empty[l]&&fifo_pc[l]==pc)begin pick_v[pc]=1;pick_lane[pc]=l;end
+      |                                                                                                      ^
+%Warning-WIDTHEXPAND: ot_hbm_svc_wb_pipeline_cdc.sv:127:65: Operator EQ expects 32 bits on the LHS, but LHS's ARRAYSEL generates 5 bits.
+                                                          : ... note: In instance 'tb_dma_wb_phy_static.dut.Q[3].PIPELINED_WB.wb'
+  127 |    for(l=0;l<32;l=l+1)if(!pick_v[pc]&&!fifo_empty[l]&&fifo_pc[l]==pc)begin pick_v[pc]=1;pick_lane[pc]=l;end
+      |                                                                 ^~
+%Warning-WIDTHEXPAND: ot_hbm_svc_wb_pipeline_cdc.sv:157:26: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'ack_count' generates 12 bits.
+                                                          : ... note: In instance 'tb_dma_wb_phy_static.dut.Q[3].PIPELINED_WB.wb'
+  157 |      ack_count<=ack_count+acks;
+      |                          ^
+%Warning-WIDTHTRUNC: ot_hbm_svc_wb_pipeline_cdc.sv:157:15: Operator ASSIGNDLY expects 12 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                         : ... note: In instance 'tb_dma_wb_phy_static.dut.Q[3].PIPELINED_WB.wb'
+  157 |      ack_count<=ack_count+acks;
+      |               ^~
+%Warning-WIDTHEXPAND: ot_hbm_svc_wb_pipeline_cdc.sv:158:18: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'ack_count' generates 12 bits.
+                                                          : ... note: In instance 'tb_dma_wb_phy_static.dut.Q[3].PIPELINED_WB.wb'
+  158 |      if(ack_count+acks>meta_q[11:0])hbm_sticky<=1;
+      |                  ^
+%Warning-WIDTHEXPAND: ot_hbm_svc_wb_pipeline_cdc.sv:159:18: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'ack_count' generates 12 bits.
+                                                          : ... note: In instance 'tb_dma_wb_phy_static.dut.Q[3].PIPELINED_WB.wb'
+  159 |      if(ack_count+acks==meta_q[11:0])ack_pending<=1;
+      |                  ^
+%Warning-WIDTHEXPAND: ot_hbm_svc_wb_pipeline_cdc.sv:159:23: Operator EQ expects 32 bits on the RHS, but RHS's SEL generates 12 bits.
+                                                          : ... note: In instance 'tb_dma_wb_phy_static.dut.Q[3].PIPELINED_WB.wb'
+  159 |      if(ack_count+acks==meta_q[11:0])ack_pending<=1;
+      |                       ^~
+%Warning-UNOPTFLAT: ot_hbm_svc_phy_mux.sv:17:8: Signal unoptimizable: Circular combinational logic: 'tb_dma_wb_phy_static.PHY[0].mux.pc[31].choose_wb'
+                                              : ... note: In instance 'tb_dma_wb_phy_static.PHY[0].mux'
+   17 |   wire choose_wb=held[p]?held_wb[p]:(wb_v[p]&&(!rd_v[p]||prefer_wb[p]));
+      |        ^~~~~~~~~
+                    ot_hbm_svc_phy_mux.sv:17:8:      Example path: tb_dma_wb_phy_static.PHY[0].mux.pc[31].choose_wb
+                    ot_hbm_svc_phy_mux.sv:20:29:      Example path: ASSIGNW
+                    ot_hbm_svc_phy_mux.sv:8:44:      Example path: tb_dma_wb_phy_static.PHY[0].mux.wb_rdy
+                    ot_hbm_svc_wb_pipeline_cdc.sv:123:2:      Example path: ALWAYS
+                    ot_hbm_svc_wb_pipeline_cdc.sv:12:20:      Example path: tb_dma_wb_phy_static.dut.__Vcellout__Q[0].PIPELINED_WB.wb__k_v
+                    ot_hbm_svc_phy_mux.sv:17:17:      Example path: ASSIGNW
+                    ot_hbm_svc_phy_mux.sv:17:8:      Example path: tb_dma_wb_phy_static.PHY[0].mux.pc[0].choose_wb
+                    ot_hbm_svc_phy_mux.sv:20:29:      Example path: ASSIGNW
+%Warning-UNOPTFLAT: ot_chip_v41x_hbm3e_phy.sv:89:55: Signal unoptimizable: Circular combinational logic: 'tb_dma_wb_phy_static.PHY[0].model.__VdfgRegularize_h4e25f343_0_32'
+                                                   : ... note: In instance 'tb_dma_wb_phy_static.PHY[0].model'
+   89 |         assign k_range_ok[kp] = k_len[kp*4 +: 4] != 0 &&
+      |                                                       ^~
+                    ot_chip_v41x_hbm3e_phy.sv:89:55:      Example path: tb_dma_wb_phy_static.PHY[0].model.__VdfgRegularize_h4e25f343_0_32
+                    ot_chip_v41x_hbm3e_phy.sv:91:46:      Example path: ASSIGNW
+                    ot_chip_v41x_hbm3e_phy.sv:46:33:      Example path: tb_dma_wb_phy_static.PHY[0].model.k_rdy
+                    ot_hbm_svc_phy_mux.sv:20:29:      Example path: ASSIGNW
+                    ot_hbm_svc_phy_mux.sv:8:44:      Example path: tb_dma_wb_phy_static.PHY[0].mux.wb_rdy
+                    ot_hbm_svc_wb_pipeline_cdc.sv:123:2:      Example path: ALWAYS
+                    ot_hbm_svc_wb_pipeline_cdc.sv:12:20:      Example path: tb_dma_wb_phy_static.dut.__Vcellout__Q[0].PIPELINED_WB.wb__k_v
+                    ot_hbm_svc_phy_mux.sv:17:17:      Example path: ASSIGNW
+                    ot_hbm_svc_phy_mux.sv:17:8:      Example path: tb_dma_wb_phy_static.PHY[0].mux.pc[0].choose_wb
+                    ot_hbm_svc_phy_mux.sv:20:29:      Example path: ASSIGNW
+make: Entering directory '/tmp/hbm-dma-wb-phy-pipeline-trueaddr-run2/obj-1'
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /usr/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /usr/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /usr/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_dma_wb_phy_static__pch.h -o Vtb_dma_wb_phy_static__pch.h.fast.gch
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_dma_wb_phy_static__pch.h -o Vtb_dma_wb_phy_static__pch.h.slow.gch
+echo "" > Vtb_dma_wb_phy_static__ALL.verilator_deplist.tmp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static.o Vtb_dma_wb_phy_static.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static___024root__DepSet_h42a1ce33__0.o Vtb_dma_wb_phy_static___024root__DepSet_h42a1ce33__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static___024root__DepSet_h42a1ce33__1.o Vtb_dma_wb_phy_static___024root__DepSet_h42a1ce33__1.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static___024root__DepSet_h42a1ce33__2.o Vtb_dma_wb_phy_static___024root__DepSet_h42a1ce33__2.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static___024root__DepSet_h42a1ce33__3.o Vtb_dma_wb_phy_static___024root__DepSet_h42a1ce33__3.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static___024root__DepSet_h42a1ce33__4.o Vtb_dma_wb_phy_static___024root__DepSet_h42a1ce33__4.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static___024root__DepSet_h42a1ce33__5.o Vtb_dma_wb_phy_static___024root__DepSet_h42a1ce33__5.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static___024root__DepSet_h42a1ce33__6.o Vtb_dma_wb_phy_static___024root__DepSet_h42a1ce33__6.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static___024root__DepSet_h9aa1df0f__0.o Vtb_dma_wb_phy_static___024root__DepSet_h9aa1df0f__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static___024root__DepSet_h9aa1df0f__1.o Vtb_dma_wb_phy_static___024root__DepSet_h9aa1df0f__1.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static___024root__DepSet_h9aa1df0f__2.o Vtb_dma_wb_phy_static___024root__DepSet_h9aa1df0f__2.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static___024root__DepSet_h9aa1df0f__3.o Vtb_dma_wb_phy_static___024root__DepSet_h9aa1df0f__3.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static___024root__DepSet_h9aa1df0f__4.o Vtb_dma_wb_phy_static___024root__DepSet_h9aa1df0f__4.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__0.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__1.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__1.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__2.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__2.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__3.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__3.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__4.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__4.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__5.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__5.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__6.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__6.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__7.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__7.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__8.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__8.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__9.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__9.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__10.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__10.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__11.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__11.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__12.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__12.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__13.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__13.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__14.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__14.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__15.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__15.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__16.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h15ccd71c__16.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__0.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__1.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__1.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__2.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__2.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__3.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__3.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__4.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__4.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_hbm_svc_phy_mux__DepSet_h7455e7f3__0.o Vtb_dma_wb_phy_static_ot_hbm_svc_phy_mux__DepSet_h7455e7f3__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_hbm_svc_phy_mux__DepSet_h7455e7f3__1.o Vtb_dma_wb_phy_static_ot_hbm_svc_phy_mux__DepSet_h7455e7f3__1.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_hbm_svc_phy_mux__DepSet_h7455e7f3__2.o Vtb_dma_wb_phy_static_ot_hbm_svc_phy_mux__DepSet_h7455e7f3__2.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_hbm_svc_phy_mux__DepSet_h7455e7f3__3.o Vtb_dma_wb_phy_static_ot_hbm_svc_phy_mux__DepSet_h7455e7f3__3.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_hbm_svc_phy_mux__DepSet_hd135c84f__0.o Vtb_dma_wb_phy_static_ot_hbm_svc_phy_mux__DepSet_hd135c84f__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_chip_v41x_hbm3e_phy__pi2__DepSet_h709b4a47__0.o Vtb_dma_wb_phy_static_ot_chip_v41x_hbm3e_phy__pi2__DepSet_h709b4a47__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_chip_v41x_hbm3e_phy__pi2__DepSet_h709b4a47__1.o Vtb_dma_wb_phy_static_ot_chip_v41x_hbm3e_phy__pi2__DepSet_h709b4a47__1.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_chip_v41x_hbm3e_phy__pi2__DepSet_h709b4a47__2.o Vtb_dma_wb_phy_static_ot_chip_v41x_hbm3e_phy__pi2__DepSet_h709b4a47__2.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_chip_v41x_hbm3e_phy__pi2__DepSet_h709b4a47__3.o Vtb_dma_wb_phy_static_ot_chip_v41x_hbm3e_phy__pi2__DepSet_h709b4a47__3.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_chip_v41x_hbm3e_phy__pi2__DepSet_h709b4a47__4.o Vtb_dma_wb_phy_static_ot_chip_v41x_hbm3e_phy__pi2__DepSet_h709b4a47__4.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_chip_v41x_hbm3e_phy__pi2__DepSet_hcc7862bb__0.o Vtb_dma_wb_phy_static_ot_chip_v41x_hbm3e_phy__pi2__DepSet_hcc7862bb__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_h6465f388__0.o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_h6465f388__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_h6465f388__1.o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_h6465f388__1.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_h6465f388__2.o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_h6465f388__2.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_h6465f388__3.o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_h6465f388__3.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_h6465f388__4.o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_h6465f388__4.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_h6465f388__5.o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_h6465f388__5.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_h6465f388__6.o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_h6465f388__6.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_h6465f388__7.o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_h6465f388__7.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_h6465f388__8.o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_h6465f388__8.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_h6465f388__9.o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_h6465f388__9.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_h6465f388__10.o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_h6465f388__10.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_h6465f388__11.o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_h6465f388__11.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_h6465f388__12.o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_h6465f388__12.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_h6465f388__13.o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_h6465f388__13.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_hc165dc8a__0.o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_hc165dc8a__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.fast -c -o Vtb_dma_wb_phy_static__main.o Vtb_dma_wb_phy_static__main.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static__ConstPool_0.o Vtb_dma_wb_phy_static__ConstPool_0.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static___024root__Slow.o Vtb_dma_wb_phy_static___024root__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static___024root__DepSet_h42a1ce33__0__Slow.o Vtb_dma_wb_phy_static___024root__DepSet_h42a1ce33__0__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static___024root__DepSet_h42a1ce33__1__Slow.o Vtb_dma_wb_phy_static___024root__DepSet_h42a1ce33__1__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static___024root__DepSet_h9aa1df0f__0__Slow.o Vtb_dma_wb_phy_static___024root__DepSet_h9aa1df0f__0__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__Slow.o Vtb_dma_wb_phy_static_ot_vms_bank_static__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__0__Slow.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__0__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__1__Slow.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__1__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__2__Slow.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__2__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__3__Slow.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__3__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__4__Slow.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__4__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__5__Slow.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__5__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__6__Slow.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__6__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__7__Slow.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__7__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__8__Slow.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__8__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__9__Slow.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__9__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__10__Slow.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__10__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__11__Slow.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__11__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__12__Slow.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__12__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__13__Slow.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__13__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__14__Slow.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__14__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__15__Slow.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__15__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__16__Slow.o Vtb_dma_wb_phy_static_ot_vms_bank_static__DepSet_h71cef7f6__16__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static_ot_hbm_svc_phy_mux__Slow.o Vtb_dma_wb_phy_static_ot_hbm_svc_phy_mux__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static_ot_hbm_svc_phy_mux__DepSet_hd135c84f__0__Slow.o Vtb_dma_wb_phy_static_ot_hbm_svc_phy_mux__DepSet_hd135c84f__0__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static_ot_chip_v41x_hbm3e_phy__pi2__Slow.o Vtb_dma_wb_phy_static_ot_chip_v41x_hbm3e_phy__pi2__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static_ot_chip_v41x_hbm3e_phy__pi2__DepSet_hcc7862bb__0__Slow.o Vtb_dma_wb_phy_static_ot_chip_v41x_hbm3e_phy__pi2__DepSet_hcc7862bb__0__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__Slow.o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_hc165dc8a__0__Slow.o Vtb_dma_wb_phy_static_ot_sram_1r1w_128x256_m1_r2c2__DepSet_hc165dc8a__0__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_dma_wb_phy_static__pch.h.slow -c -o Vtb_dma_wb_phy_static__Syms.o Vtb_dma_wb_phy_static__Syms.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb_dma_wb_phy_static__ALL.a    -pthread -lpthread -latomic   -o gate
+rm Vtb_dma_wb_phy_static__ALL.verilator_deplist.tmp
+make: Leaving directory '/tmp/hbm-dma-wb-phy-pipeline-trueaddr-run2/obj-1'
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 1.102 MB sources in 18 modules, into 57.629 MB in 92 C++ files needing 0.415 MB
+- Verilator: Walltime 44.322 s (elab=0.106, cvt=8.744, bld=34.975); cpu 10.627 s on 4 threads; alloced 538.977 MB

@@ -1,0 +1,2 @@
+SU_RF PASS banks=64 logical_words=256 replicas=6 checks=49666 read_latency=2 write_commit=1 reset_retains_data
+tb_hbm_su_static_rf.sv:30: $finish called at 1450000 (1ps)

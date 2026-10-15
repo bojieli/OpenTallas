@@ -1,0 +1,24 @@
+{
+  "schema": "opentallas.hbm.dma-back-static-model-delta.v1",
+  "parent": "dma_back_static_model.json",
+  "command_bits": 309,
+  "wb_bank_bits": 1,
+  "wb_epoch_bits": 16,
+  "posted_ack_bits_per_quadrant": 12,
+  "posted_ack_rationale": "True whole-block HBM completion can acknowledge640/1024sectors on one edge; never serialize false lane acknowledgments.",
+  "destination_eligibility": "Dense whole-sector HBM rows only, m>1 destinationstride=nwords*4bytes",
+  "actual_phy_mapping": "HBM Kaddr30 is full local sector, PC=s[6:2]^s[11:7]^s[16:12]; no engine PC inference or address rewrite",
+  "source_result_scope": "Engine proof ends at declared wd boundary; actual eight-lane WB staging/PHY mapped-drain proof owned by H-DIE/service_native",
+  "serialized_reference_measurement": {
+    "first_command_to_fence_cycles": 253,
+    "immutable_price_cycles": 248,
+    "ratio": 1.0201612903225807,
+    "gate_limit_cycles": 272
+  },
+  "selected_overlap_measurement": {
+    "first_command_to_fence_cycles": 173,
+    "immutable_price_cycles": 248,
+    "ratio": 0.6975806451612904,
+    "gate_limit_cycles": 272
+  }
+}

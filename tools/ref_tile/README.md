@@ -183,7 +183,9 @@ EARLY_FAIL_*, or a NEEDS_HUMAN route crash) takes a new job only when the spec c
 
 See /home/ubuntu/claude-takeover-20261007/ref-flow-1011.log (cases, numbers, job names).
 
-For a fleet-selected synthesis or CTS gate, use `--remote auto`. The gate asks `ot-run --pick` for a host with measured headroom, ships the inputs there, then runs through `ot-run --hosts <chosen>` with one resource reservation. An explicit host keeps the existing `ot-heavy` path.
+For a fleet-selected synthesis or CTS gate, use `--remote auto`. The gate asks `ot-run --pick` for a host with measured headroom, ships the inputs there, then runs through `ot-run --hosts <chosen>` with one resource reservation. An explicit host uses the same admission checks restricted to that host.
+
+The default work/output disk reserve is 20 GiB. Set a positive finite `gate_disk_gb` in the tile spec, or override it with `--disk GB`. Host selection checks the scratch filesystem and adds the measured compressed snapshot size, its estimated unpacked allocation, and 1 GiB for metadata and rounding. Runtime admission checks again after upload, adding extraction space to the work/output reserve. Both integer GiB thresholds and snapshot sizes are recorded in `source_binding.disk_admission`. These checks do not reserve disk against concurrent jobs; a runtime refusal preserves the uploaded snapshot and does not start synthesis.
 
 CTS gates measure every external clock from the actual CTS SDC. The measured clock exception uses the insertion and spread of the largest synthesized root's own source port. A secondary root cannot use the primary clock's measurement; an unmatched root has no measured exception.
 
@@ -295,3 +297,12 @@ LEF taps and endcaps have no Liberty association and cannot identify a timing
 corner. Missing or unknown Liberty associations on actual sequential cells still
 fail. The physical regression includes a real LEF-only ASAP7 tap and replays the
 complete generated CTS and later boundary hooks.
+
+Multi-root route jobs and their formal CTS gates use the same physical clock
+fixes (`cg_pushdown.tcl` and `clk_net_protect.tcl`). They do not install the
+legacy single-boundary `link_budget_hook.tcl`: the generated domain constraints
+already own every input/output max/min delay and each root's phi−R reference.
+Combining the two models created extra route-period virtual clocks that survived
+into 833.333 ps signoff. The strict clock inventory guard remains unchanged;
+unexpected virtual clocks and aliases still fail. Other clock modes retain the
+legacy hook and their existing job command bytes.

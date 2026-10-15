@@ -7,9 +7,10 @@ module tb_dsfd_vm_static512_suhc;
  reg [31:0] wv=0;reg [447:0] wr=0;reg [511:0] wm=0;reg [16383:0] wd=0;reg [255:0] wt=0;
  reg release_v=0;reg [2:0] release_group=0;reg [31:0] release_mask=0;
  reg [17:0] expected=0;reg [89:0] release_slot=0;
- wire [71:0] nv;wire [9215:0] nd;wire [15:0] fault;wire [127:0] gv;wire [11:0] gid;
- dsfd_vm_static512_suhc mem(.ck_rscatter({4{ck}}),.ck_wscatter({4{ck}}),.ck_return({4{ck}}),
- .ck_bank({128{ck}}),.ck_relay_req({48{ck}}),.ck_relay_rsp({48{ck}}),.rst_n(rn),
+ wire [71:0] nv;wire [9215:0] nd;wire [27:0] fault;wire [127:0] gv;wire [11:0] gid;
+ dsfd_vm_static512_suhc mem(.ck_rscatter({16{ck}}),.ck_wcapture({128{ck}}),.ck_wscatter({16{ck}}),.ck_return({4{ck}}),
+ .ck_bank({128{ck}}),.ck_relay_req({48{ck}}),.ck_relay_rsp({48{ck}}),
+ .rst_rscatter_n({16{rn}}),.rst_return_n({4{rn}}),.rst_wcapture_n({128{rn}}),.rst_wscatter_n({16{rn}}),.rst_bank_n({128{rn}}),.rst_relay_n({48{rn}}),
  .native_rq_v(iv),.native_rq_row(ir),.native_rq_slot(islot),.native_rq_group(ig),
  .aux_rq_v(12'd0),.aux_rq_row(168'd0),.wq_v(wv),.wq_row(wr),.wq_mask(wm),.wq_data(wd),.wq_tag(wt),
  .release_v(release_v),.release_group(release_group),.release_mask(release_mask),
@@ -32,7 +33,7 @@ module tb_dsfd_vm_static512_suhc;
    if(c<512)begin
     wv='1;wm='1;
     for(integer k=0;k<32;k=k+1)begin
-     j=8*(k%4)+k/4;row=32*c+k;wr[14*j+:14]=row;wt[8*j+:8]=k;
+     row=32*c+k;j=8*(k%4)+((k/4)^(c%8));wr[14*j+:14]=row;wt[8*j+:8]=k;
      for(integer word=0;word<16;word=word+1)wd[512*j+32*word+:32]=value(row,word);
     end
    end

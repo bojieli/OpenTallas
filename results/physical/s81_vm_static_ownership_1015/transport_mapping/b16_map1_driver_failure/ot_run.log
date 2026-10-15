@@ -1,0 +1,7 @@
+ot-run: ot-epyc1tb     admits   324 GB (avail 550, growth 144, headroom 64, waiters 0/0 GB) load 51/128 running 16 disk 713 GB 
+ot-run: ot-epyc4       admits   605 GB (avail 832, growth 84, headroom 48, waiters 0/0 GB) load 45/128 running 20 disk 515 GB 
+ot-run: ot-pve1        admits   158 GB (avail 205, growth 6, headroom 32, waiters 0/0 GB) load 37/28 running 2 disk 1310 GB 
+ot-run: ot-agidock128  admits    35 GB (avail 76, growth 29, headroom 24, waiters 0/0 GB) load 10/64 running 5 disk 43 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3766615-1792053376 after 0 s
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3766615-1792053376): exit 1

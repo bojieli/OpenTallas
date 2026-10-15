@@ -42,6 +42,24 @@ class Schema(unittest.TestCase):
             m=copy.deepcopy(s);m.update(clock_data_paths='related_same_frequency',clock_relationship=relationship)
             with self.assertRaises(ValueError):CE.domains(m)
 
+    def test_explicit_leaf_signoff_period_and_budget(self):
+        s=spec();s['route']={'period_ps':1111.111,'signoff_period_ps':1111.111}
+        self.assertEqual(CE.signoff_period(s),1111.111)
+        self.assertIn('io_budget_ps 222.222',CE.generate(s,ROOT))
+        route=RT.gen_sdc(s,1111.111);signoff=RT.gen_signoff(s,'*','none_*')
+        for text in (route,signoff):
+            self.assertIn('-period 1111.111000000',text)
+            self.assertIn('set_clock_uncertainty -setup 60',text)
+            self.assertIn('set_clock_uncertainty -hold 25',text)
+        self.assertIn('set_input_delay 222.222',route)
+        for value in (0,-1,float('nan'),float('inf'),True,'1111.111'):
+            m=copy.deepcopy(s);m['route']['signoff_period_ps']=value
+            with self.assertRaises(ValueError):CE.signoff_period(m)
+        m=copy.deepcopy(s);m['route']['period_ps']=1200
+        with self.assertRaises(ValueError):CE.signoff_period(m)
+        m=copy.deepcopy(s);m['clock']='cts'
+        with self.assertRaises(ValueError):CE.signoff_period(m)
+
     def test_load_spec_and_generated_stage_coverage(self):
         s=spec()
         with tempfile.NamedTemporaryFile(mode='w',suffix='.json') as f:
@@ -54,6 +72,19 @@ class Schema(unittest.TestCase):
             self.assertNotIn('post_plain.tcl',hooks[name])
         self.assertIn('clock_entry.sdc',hooks['pre_cts.tcl'])
         self.assertNotIn('pre_cts_skew.tcl',hooks['pre_cts.tcl'])
+
+    def test_route_and_formal_cts_use_the_same_single_boundary_owner(self):
+        import pre_route_gate as G
+        s=spec();s.update(params={},route={},macros=[])
+        cmd=RT.gen_job(s,'physical/generated_two_roots','deadbeef',[])['stages']['route']['cmd']
+        self.assertIn("OT_CTS_FIX_HOOKS='"+RT.clock_fix_hooks(s)+"'",cmd)
+        self.assertNotIn('link_budget_hook.tcl',cmd)
+        gate=G.gate_route_clock_hooks('export OT_ORFS_CORNER_OVERRIDE=TC\n',s)
+        self.assertIn("OT_CTS_FIX_HOOKS='"+RT.clock_fix_hooks(s)+"'",gate)
+        s['clock']='cts'
+        self.assertEqual(G.gate_route_clock_hooks('unchanged',s),'unchanged')
+        self.assertEqual(RT.route_prefix(s),RT.ROUTE_PREFIX)
+        self.assertIn('link_budget_hook.tcl',RT.route_prefix(s))
 
     def test_each_actual_root_clock_rule_and_missing_census(self):
         import pre_route_gate as G
@@ -75,6 +106,7 @@ class Physical(unittest.TestCase):
     def run_flow(self,mutant='',generated=False):
         with tempfile.TemporaryDirectory() as d:
             w=Path(d);s=spec();s.update(params={},route={},macros=[])
+            if mutant=='serial':s['route']={'period_ps':1111.111,'signoff_period_ps':1111.111}
             # Mount the fixture on an existing source directory beneath the read-only repo.
             kd='tools/ref_tile/tests'
             if mutant in ('related','related_wrong_input','related_cut'):
@@ -101,7 +133,7 @@ class Physical(unittest.TestCase):
                     'DFFASRHQNx1_ASAP7_75t_R s0 (.CLK(ck_rsp),.D('+('rst_n' if mutant=='async_reset_data' else 'rsp')+'),.RESETN(rst_n),.SETN(1\'b1),.QN(z0));')
             extra=',rst_n' if mutant in ('async_reset','async_reset_data') else ''
             (w/'t.v').write_text('module top(input ck_req,ck_rsp,req,rsp'+extra+',output qo,zo);\n'+cells+'\nassign qo=q0;assign zo=z0;endmodule\n')
-            (w/'clocks.tcl').write_text(CE.clocks(s,833.333))
+            (w/'clocks.tcl').write_text(CE.clocks(s,s['route'].get('period_ps',833.333)))
             (w/'entry.tcl').write_text('set ::ot_ce_require_wire 1\n'+CE.generate(s,ROOT))
             flow=r'''
 set_thread_count 2
@@ -132,11 +164,12 @@ estimate_parasitics -placement
 source /w/entry.tcl
 # A repeated stage replays measured references, not the previous compensation.
 source /w/entry.tcl
+write_sdc -no_timestamp /w/final.sdc
 puts "MULTI_ROOT_RESULT PASS"
 '''
             if generated:
                 flow=flow.replace('set ::ot_ce_cts_roots {ck_req ck_rsp}\nsource /src/physical/common_flow/clock_entries.tcl',
-                                  f'source /src/{kd}/pre_cts.tcl')
+                                  f'source /src/{kd}/pre_cts.tcl\n'+'\n'.join('source /src/'+h for h in RT.clock_fix_hooks(s).split()))
                 flow=flow.replace('source /w/entry.tcl\n# A repeated stage replays measured references, not the previous compensation.\nsource /w/entry.tcl',
                     'set ::env(MAX_ROUTING_LAYER) M5\n'+'\n'.join(f'source /src/{kd}/{n}' for n in
                     ['post_cts.tcl','pre_grt.tcl','post_grt.tcl','pre_drt.tcl','post_drt.tcl','pre_fill.tcl','post_fill.tcl','signoff.sdc']))
@@ -151,11 +184,37 @@ $tap setLocation 10000 90000
 $tap setPlacementStatus FIRM
 if {"NULL" ni [get_lib_cells -of_objects [get_cells physical_tap]]} {error "fixture missing actual LEF-only cell"}
 '''+f'source /src/{kd}/pre_cts.tcl',1)
+            if mutant=='extra_alias':
+                flow=flow.replace('source /w/entry.tcl','create_clock -name unexpected_alias -period 833.333\nsource /w/entry.tcl',1)
             if mutant=='related_cut':
                 flow=flow.replace('source /w/entry.tcl','set_false_path -from [get_clocks ot_entry_0] -to [get_clocks ot_entry_1]\nsource /w/entry.tcl',1)
             (w/'run.tcl').write_text(flow)
             p=subprocess.run(['docker','run','--rm','-v',f'{w}:/w','-v',f'{ROOT}:/src:ro','-v',f'{w}:/src/{kd}:ro',IMAGE,OR,'-no_init','-exit','/w/run.tcl'],capture_output=True,text=True,timeout=60)
-            return p.returncode,p.stdout+p.stderr
+            output=p.stdout+p.stderr
+            if p.returncode==0 and generated:
+                # Assert every max/min budget after the actual route hook stack
+                # and repeated signoff, so excluding the legacy overlay cannot
+                # silently remove or change the explicit domain constraints.
+                refs={d:(float(lo),float(hi)) for d,lo,hi in re.findall(
+                    r'OT_ENTRIES DOMAIN (\w+) [^\n]*boundary=([\d.eE+-]+)\.\.([\d.eE+-]+)',output)}
+                final=(w/'final.sdc').read_text()
+                for port,domain,direction in [('req','core','input'),('rsp','response','input'),('qo','core','output'),('zo','response','output')]:
+                    lo,hi=refs[domain];clock=CE.virtual_clock(domain)
+                    values=re.findall(r'set_'+direction+r'_delay ([\d.eE+-]+) -clock \[get_clocks \{'+clock+r'\}\] -(min|max) -add_delay \[get_ports \{'+port+r'\}\]',final)
+                    self.assertEqual(len(values),2,final)
+                    actual={kind:float(value) for value,kind in values}
+                    budget=round(CE.signoff_period(s)*0.2,3)
+                    expected={'min':lo,'max':budget+hi+90} if direction=='input' else {'min':-lo-50,'max':budget-hi+90}
+                    for kind in ['min','max']:self.assertAlmostEqual(actual[kind],expected[kind],places=2)
+            if p.returncode==0 and mutant=='serial':
+                periods=[float(x) for x in re.findall(r'create_clock -name \S+ -period ([\d.]+)',(w/'final.sdc').read_text())]
+                self.assertEqual(len(periods),4)
+                for period in periods:self.assertAlmostEqual(period,1111.111,places=3)
+            return p.returncode,output
+    def test_actual_serial_profile_hooks_and_numeric_io(self):
+        rc,out=self.run_flow('serial',generated=True);self.assertEqual(rc,0,out[-8000:])
+        self.assertIn('OWNERSHIP PASS roots=2 registers=20',out)
+
     def test_actual_roots_and_distinct_references(self):
         rc,out=self.run_flow();self.assertEqual(rc,0,out[-7000:])
         self.assertIn('ck_req sinks=16',out);self.assertIn('ck_rsp sinks=4',out)
@@ -195,7 +254,7 @@ if {"NULL" ni [get_lib_cells -of_objects [get_cells physical_tap]]} {error "fixt
         self.assertIn('MULTI_ROOT_RESULT PASS',out)
 
     def test_bad_graph_and_io_declarations_rejected(self):
-        for mutant in ['wrong_input','wrong_output','unknown_port','cross_data']:
+        for mutant in ['wrong_input','wrong_output','unknown_port','cross_data','extra_alias']:
             with self.subTest(mutant=mutant):
                 rc,out=self.run_flow(mutant);self.assertNotEqual(rc,0,out[-6000:]);self.assertIn('OT_MULTI_ROOT',out)
 

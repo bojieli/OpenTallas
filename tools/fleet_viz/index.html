@@ -671,6 +671,12 @@ let es = null;
 function connect() {
   const get = FV ? FV.getJSON('/api/fleet' + Q, 8000) : fetch('/api/fleet' + Q).then(r => r.ok ? r.json() : null);
   get.then(d => d && !d.warming && onData(d)).catch(() => {})   /* counted by the stream's onerror that follows */.finally(() => {
+    // Quick Tunnels buffer SSE. Keep live snapshots moving over ordinary
+    // uncached requests instead of waiting forever for the first stream event.
+    if (location.hostname.endsWith('.trycloudflare.com')) {
+      setTimeout(connect, Math.max(1000, ((D && D.poll) || 5) * 1000));
+      return;
+    }
     es = new EventSource('/api/stream' + Q);
     es.onmessage = e => { try { onData(JSON.parse(e.data)); } catch (x) { console.error(x); } };
     es.onerror = () => { es.close(); if (FV) FV.fail('feed-conn', 'live feed: connection to the fleet server lost (retrying)', fleetT); setTimeout(connect, 4000); };

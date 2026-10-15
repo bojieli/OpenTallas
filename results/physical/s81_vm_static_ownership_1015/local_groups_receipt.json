@@ -1,0 +1,31 @@
+{
+  "status": "GEOMETRY_AND_NECESSARY_REACH_PASS_ONLY",
+  "source_sha256": {
+    "tools/s81/vm_static_local_groups.py": "413e41b965e3777819bd0fc3c379cf189cf212d35e7717ada9f651c012f9f6c6",
+    "tools/s81/vm_static_transport_pins.py": "01ae09efc86fb443f20fae3db3c3cd4926295ceafc63cffcaa0da5a4d3503c4e",
+    "tools/ref_tile/ref_tile.py": "57fd157f3fafc7a68f1754437aa3275fa81cc7c28fe5ede9d7a0d57568b79b87",
+    "physical/s81_die_pins/v20_vm_static_local_groups/layout_option.json": "f691becc6b969d1e7e4a4d1da47c498e5ef90581ce00eed146a142e5a553036b"
+  },
+  "mandatory_missing": [
+    "actual worst-bit face-pin Manhattan and phi-R setup/launch budget",
+    "real registered endpoint hardening vs provisional dimensions",
+    "164core+16capture+16x34+otheredge/staging packing",
+    "parent layer cut/clock/layer contract",
+    "native physical TTFFDRC and actual compiler calendar/production rate"
+  ],
+  "no_added_cycles_claimed": true,
+  "relay_pin_validation": [
+    {
+      "master": "dsfd_vm_static_relay128_b8",
+      "checked_bits": 5235,
+      "minimum_pin_pitch_um": 0.096,
+      "face_layer_track_and_spacing": "PASS"
+    },
+    {
+      "master": "dsfd_vm_static_relay128_b16",
+      "checked_bits": 10467,
+      "minimum_pin_pitch_um": 0.096,
+      "face_layer_track_and_spacing": "PASS"
+    }
+  ]
+}

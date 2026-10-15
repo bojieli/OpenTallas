@@ -1,0 +1,17 @@
+{
+  "result": "PASS core geometry only",
+  "source_sha256": {
+    "tools/s81/vm_static_native_repack.py": "39f5ebdb9474555feaaf227a5b3a9ca50b43b96e373df5f4749c337b87a24799",
+    "tools/ref_tile/ref_tile.py": "57fd157f3fafc7a68f1754437aa3275fa81cc7c28fe5ede9d7a0d57568b79b87",
+    "physical/s81_die_pins/v20_vm_static_standard/layout_candidate.json": "6a311fa5f0f41d88a8bee1212e14ffed9bf5ed768085dffb9c49ef3402d1b961",
+    "physical/s81_die_pins/v20_vm_static_native/layout_candidate.json": "ef5a8d62879d7d0bc46393e865edc21b090738047274f23e712e5617c8e4f114"
+  },
+  "predecessor_failures": {
+    "channel": 232,
+    "macro_outside": 4,
+    "macro_edge": 4,
+    "off_lattice_warn": 164
+  },
+  "current_checks": [],
+  "rerouted_closed_blocks": 0
+}

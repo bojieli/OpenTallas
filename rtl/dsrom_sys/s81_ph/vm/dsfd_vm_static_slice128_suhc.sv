@@ -5,24 +5,42 @@
 // Compiler owns incoming32-record packet and bank reservations. Serial clients
 // need explicit fixed-ratio ingress, not a credit adapter hidden in this parent.
 module dsfd_vm_static_slice128_suhc(
- input wire ck_rscatter,ck_wscatter,input wire [31:0] ck_bank,input wire rst_n,
+ input wire [3:0] ck_rscatter,input wire [31:0] ck_wcapture,input wire [3:0] ck_wscatter,input wire [31:0] ck_bank,
  input wire [11:0] ck_relay_req,ck_relay_rsp,
+ input wire [3:0] rst_rscatter_n,input wire [31:0] rst_wcapture_n,rst_bank_n,
+ input wire [3:0] rst_wscatter_n,input wire [11:0] rst_relay_n,
  input wire [17:0] native_rq_v,input wire [251:0] native_rq_row,input wire [89:0] native_rq_slot,
  input wire [2:0] native_rq_group,input wire [11:0] aux_rq_v,input wire [167:0] aux_rq_row,
  input wire [31:0] wq_v,input wire [447:0] wq_row,input wire [127:0] wq_mask,
  input wire [4095:0] wq_data,input wire [255:0] wq_tag,
  output wire [31:0] rs_v,output wire [4095:0] rs_data,output wire [255:0] rs_tag,
  output wire [31:0] commit_v,output wire [287:0] commit_addr,
- output wire [127:0] commit_mask,output wire [255:0] commit_tag,output wire [1:0] fault
+ output wire [127:0] commit_mask,output wire [255:0] commit_tag,output wire [4:0] fault
 );
  wire [31:0] rv,wv,we;wire [287:0] ra,wa;wire [255:0] rt,wt;
  wire [127:0] wm;wire [4095:0] wd;
- dsfd_vm_static_suhc_fsr u_r(.ck(ck_rscatter),.rst_n(rst_n),.i_v(native_rq_v),.i_row(native_rq_row),
+ dsfd_vm_static_suhc_fsr_split u_r(.ck(ck_rscatter),.rst_n(rst_rscatter_n),.i_v(native_rq_v),.i_row(native_rq_row),
  .i_slot(native_rq_slot),.i_group(native_rq_group),.i_aux_v(aux_rq_v),.i_aux_row(aux_rq_row),
- .o_v(rv),.o_addr(ra),.o_tag(rt),.fault(fault[0]));
- dsfd_vm_static_scatter u_w(.ck(ck_wscatter),.rst_n(rst_n),.i_v(wq_v),.i_we(wq_v),
- .i_row(wq_row),.i_mask(wq_mask),.i_data(wq_data),.i_tag(wq_tag),
- .o_v(wv),.o_we(we),.o_addr(wa),.o_mask(wm),.o_data(wd),.o_tag(wt),.fault(fault[1]));
+ .o_v(rv),.o_addr(ra),.o_tag(rt),.fault(fault[3:0]));
+ wire [31:0] cap_v,cap_we;wire [447:0] cap_row;wire [127:0] cap_mask;
+ wire [4095:0] cap_data;wire [255:0] cap_tag;wire [3:0] wfault;
+ assign fault[4]=|wfault;
+ genvar l,k;
+ generate for(l=0;l<4;l=l+1)begin:write_group
+  for(k=0;k<8;k=k+1)begin:capture
+   localparam integer B=8*l+k,J=8*(B%4)+B/4;
+   dsfd_vm_static_write_capture128 u_capture(.ck(ck_wcapture[B]),.rst_n(rst_wcapture_n[B]),
+    .i_v(wq_v[J]),.i_we(wq_v[J]),.i_row(wq_row[14*J+:14]),.i_mask(wq_mask[4*J+:4]),
+    .i_data(wq_data[128*J+:128]),.i_tag(wq_tag[8*J+:8]),
+    .o_v(cap_v[B]),.o_we(cap_we[B]),.o_row(cap_row[14*B+:14]),.o_mask(cap_mask[4*B+:4]),
+    .o_data(cap_data[128*B+:128]),.o_tag(cap_tag[8*B+:8]));
+  end
+  dsfd_vm_static_scatter_b8_out #(.BANK_BASE(8*l)) u_w(.ck(ck_wscatter[l]),.rst_n(rst_wscatter_n[l]),
+   .i_v(cap_v[8*l+:8]),.i_we(cap_we[8*l+:8]),.i_row(cap_row[112*l+:112]),
+   .i_mask(cap_mask[32*l+:32]),.i_data(cap_data[1024*l+:1024]),.i_tag(cap_tag[64*l+:64]),
+   .o_v(wv[8*l+:8]),.o_we(we[8*l+:8]),.o_addr(wa[72*l+:72]),.o_mask(wm[32*l+:32]),
+   .o_data(wd[1024*l+:1024]),.o_tag(wt[64*l+:64]),.fault(wfault[l]));
+ end endgenerate
  wire [31:0] ar,aw,br,bw,sv,cv,asv,acv;
  wire [287:0] ara,awa,bra,bwa,ca,aca;
  wire [255:0] art,awt,brt,bwt,st,ct,ast,act;
@@ -30,7 +48,7 @@ module dsfd_vm_static_slice128_suhc(
  genvar g;
  generate
  for(g=0;g<4;g=g+1)begin:bridge
- dsfd_vm_static_relay128_b8 u_hop(.ck_req(ck_relay_req[g+0]),.ck_rsp(ck_relay_rsp[g+0]),.rst_n(rst_n)
+ dsfd_vm_static_relay128_b8 u_hop(.ck_req(ck_relay_req[g+0]),.ck_rsp(ck_relay_rsp[g+0]),.rst_n(rst_relay_n[g+0])
  ,.i_rv(rv[8*g+:8])
  ,.i_wv(wv[8*g+:8])
  ,.i_ra(ra[72*g+:72])
@@ -63,7 +81,7 @@ module dsfd_vm_static_slice128_suhc(
  ,.o_cm(commit_mask[32*g+:32]));
  end
  for(g=0;g<8;g=g+1)begin:quarter
- dsfd_vm_static_relay128_b4 u_hop(.ck_req(ck_relay_req[g+4]),.ck_rsp(ck_relay_rsp[g+4]),.rst_n(rst_n)
+ dsfd_vm_static_relay128_b4 u_hop(.ck_req(ck_relay_req[g+4]),.ck_rsp(ck_relay_rsp[g+4]),.rst_n(rst_relay_n[g+4])
  ,.i_rv(ar[4*g+:4])
  ,.i_wv(aw[4*g+:4])
  ,.i_ra(ara[36*g+:36])
@@ -97,7 +115,7 @@ module dsfd_vm_static_slice128_suhc(
  end
  endgenerate
  genvar b;generate for(b=0;b<32;b=b+1)begin:bank
-  dsfd_vm_static_bank128 u_bank(.ck(ck_bank[b]),.rst_n(rst_n),
+  dsfd_vm_static_bank128 u_bank(.ck(ck_bank[b]),.rst_n(rst_bank_n[b]),
   .i_rv(br[b]),.i_ra(bra[9*b+:9]),.i_rt(brt[8*b+:8]),
   .i_wv(bw[b]),.i_wa(bwa[9*b+:9]),.i_wd(bwd[128*b+:128]),.i_wm(bwm[4*b+:4]),.i_wt(bwt[8*b+:8]),
   .o_rv(sv[b]),.o_rd(sd[128*b+:128]),.o_rt(st[8*b+:8]),
