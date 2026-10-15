@@ -76,6 +76,7 @@
  "findings": [],
  "referenced": [
   "rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv",
+  "rtl/lib/ot_rst_relay.sv",
   "physical/ref_tile/s81coll_vm_boundary/kit.env",
   "physical/ref_tile/s81coll_vm_boundary/clock.sdc",
   "physical/ref_tile/s81coll_vm_boundary/signoff.sdc",

@@ -4,7 +4,7 @@
 // This extraction preserves every edge of the combined 29-root component gate.
 module s81_static_vm_boundary #(parameter integer MUT=0,parameter integer PINCAP=0)(
  input wire clk,rst_n,read_slot,input wire[13:0]read_row,
- output reg[14:0]t_crq,output wire[2203:0]t_vm,
+ output wire[14:0]t_crq,output wire[2203:0]t_vm,
  input wire commit_gather,hc_reduce_slot,
  input wire[3:0]gather_we,input wire[59:0]gather_rows,input wire[2047:0]gather_data,input wire[31:0]gather_tag,
  input wire hc_write_slot,reduced_valid,reduced_error,reduced_last,
@@ -35,6 +35,13 @@ module s81_static_vm_boundary #(parameter integer MUT=0,parameter integer PINCAP
  assign {c_commit_gather,c_hc_reduce_slot,c_hc_write_slot,c_reduced_valid,c_reduced_error,c_reduced_last,c_hc_expect_last,
   c_gather_we,c_gather_rows,c_gather_data,c_gather_tag,c_reduced_seq,c_hc_expect_seq,c_reduced_data,c_reduced_tag,c_raw_sources,
   c_phy_rx_fault,c_phy_rx_valid,c_phy_rx_live,c_issue_slot,c_raw_capture,c_raw_capture_payload_slot,c_raw_capture_meta_slot,c_raw_tx_count,c_host_rx}=cq;
+ // b7 (native audit of the CLOSED b6: rst_n capture 271.3 > 190 = the raw reset pin as recovery input of the reset
+ // flops; t_crq launches up to 249.4 > 220 = DFFASRHQNx1 async-reset output registers): a registered local reset relay
+ // (initialization +3 edges, never in a normal schedule) and plain output registers for the t_crq row bits.
+ wire rst_l;
+ generate if(PINCAP)begin:g_rr
+  ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rst_l));
+ end else begin:g_norr assign rst_l=rst_n; end endgenerate
  reg gather_mode_q;reg[13:0]reduce_row[0:17];integer p;
  always @(posedge clk)begin
   gather_mode_q<=c_commit_gather;reduce_row[0]<=c_gather_rows[13:0];
@@ -43,7 +50,7 @@ module s81_static_vm_boundary #(parameter integer MUT=0,parameter integer PINCAP
  reg[2203:0]next_vm;reg pack_bad;reg[3:0]occupied;
  reg[550:0]word;integer k;
  reg pack_bad_q;
- always @(posedge clk or negedge rst_n) if(!rst_n) pack_bad_q<=1'b0; else pack_bad_q<=pack_bad;
+ always @(posedge clk or negedge rst_l) if(!rst_l) pack_bad_q<=1'b0; else pack_bad_q<=pack_bad;
  assign pack_bad_out=PINCAP ? pack_bad_q : pack_bad;
  always @*begin
   next_vm=0;pack_bad=0;occupied=0;word=0;
@@ -75,11 +82,14 @@ module s81_static_vm_boundary #(parameter integer MUT=0,parameter integer PINCAP
  end else begin:g_full
   assign t_vm=vm_full;
  end endgenerate
- always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)begin t_crq<=0;fault<=0;
+ reg crq_v;reg[13:0]crq_row_r,crq_row_p;
+ always @(posedge clk)crq_row_p<=read_row;
+ assign t_crq={PINCAP ? crq_row_p : crq_row_r,crq_v};
+ always @(posedge clk or negedge rst_l)begin
+  if(!rst_l)begin crq_v<=0;crq_row_r<=0;fault<=0;
    vm_v<=0;vm_full<=0;end
   else begin
-   t_crq<={read_row,read_slot};
+   crq_v<=read_slot;crq_row_r<=read_row;
    for(integer j=0;j<4;j=j+1)vm_v[j]<=next_vm[j*551];
    vm_full<=next_vm;
    if(pack_bad||(|c_phy_rx_fault)||(c_issue_slot&&c_raw_capture)||

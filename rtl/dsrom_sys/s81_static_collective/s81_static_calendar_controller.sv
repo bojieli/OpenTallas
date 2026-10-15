@@ -117,7 +117,14 @@ module s81_static_calendar_controller #(
  wire command_bad=(c_cmd_q[84]!=expected[84]) ||
                   (c_cmd_q[84] && c_cmd_q[83:0]!=expected[83:0]);
  // A final row0 (single-row page) is never emitted by the compiler (completion follows the start edge); refuse it.
- wire row_bad=!CONFIGURED || !rom_valid_q || !entry[RW-1] || descriptor_bad || command_bad || (!active && entry[RW-2]);
+ // Row checks split by depth (calendar7 c2 gate: c_cmd_q -> 85-bit compare -> enable -> 468 output gates = -44 ps at
+ // 833 across the tile). Fast checks (register bits) gate the outputs on the same edge; the 85-bit command and
+ // descriptor compares are registered and fail-stop ONE EDGE LATER (fault diagnosis +1 edge, exceptional mode only):
+ // the row on which a bad pulse is detected may still emit its own compiled controls, and the image compiler admits
+ // only read requests on the start row, so a wrongly started program cannot change state before the fault.
+ wire row_bad=!CONFIGURED || !rom_valid_q || !entry[RW-1] || (!active && entry[RW-2]);
+ wire row_slow_bad=descriptor_bad || command_bad;
+ reg slow_bad_q;
  // Fetch progression depends only on the fixed calendar cursor/final bit;
  // command/data mismatches fault the controller without retiming a read.
  // OT_S81_COLL_CAL_MUT_ROW (negative control): the macro reads the row after the named one.
@@ -135,7 +142,10 @@ module s81_static_calendar_controller #(
   else if(macro_enable && init_q==2'd0)rom_addr_q<=CYCLES>1 ? 12'd1:12'd0;
   else if(rom_valid_q)rom_addr_q<=macro_addr_n;
  end
- wire enabled=rst_n && running && !fault && !datapath_fault && !row_bad;
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)slow_bad_q<=0;else slow_bad_q<=running && !fault && row_slow_bad;
+ end
+ wire enabled=rst_n && running && !fault && !datapath_fault && !row_bad && !slow_bad_q;
  assign busy=active;
  assign c_st={online,fault};
  always @(posedge clk or negedge rst_n) begin
@@ -192,7 +202,8 @@ module s81_static_calendar_controller #(
    online<=CONFIGURED && rom_valid_q && entry[RW-1];
    c_done<=0;
    if(datapath_fault)fault<=1;
-   if(running && !fault) begin
+   if(slow_bad_q)begin fault<=1;active<=0;end
+   else if(running && !fault) begin
     if(row_bad || datapath_fault)begin fault<=1;active<=0;end
     else begin
      c_done<=entry[CB+85+:9];

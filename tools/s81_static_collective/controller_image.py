@@ -68,6 +68,11 @@ def compile_image(request,root):
     cycles=request['cycles']
     if len(cycles)>4096: raise ValueError('actual control ROM has one4096cycle page; larger calendars require real page implementation')
     if not cycles or not cycles[0]['cmd_valid']: raise ValueError('first edge must name start command')
+    # v3 fail-stop: the 85-bit command compare faults one edge after the row it checks, so the start row may emit its
+    # own controls before a mismatching start is refused: no action slot other than a VM read request is admitted
+    # there (value fields such as phases/rows/tags act only under their own slot bit).
+    if any(v for n,v in cycles[0]['controls'].items() if (n.endswith('_slot') or n=='commit_gather') and n!='read_slot'):
+        raise ValueError('start row may carry only read requests (command compare faults one edge later)')
     controls=[]
     for edge,c in enumerate(cycles):
         if c['edge']!=edge: raise ValueError('calendar must be contiguous')

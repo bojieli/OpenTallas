@@ -72,7 +72,8 @@ def fixture_page():
 class Check(unittest.TestCase):
     def test_image_and_rejections(self):
         request=fixture(raw=True);self.assertEqual(len(compile_image(request,ROOT)),30)
-        mutations=[lambda r:r['cycles'][14]['controls'].update(seq=1024),
+        mutations=[lambda r:r['cycles'][0]['controls'].update(tx_beat_slot=1),
+                   lambda r:r['cycles'][14]['controls'].update(seq=1024),
                    lambda r:r['cycles'][0].update(cmd84=(1<<83)|(1025<<7)|5),
                    lambda r:r['cycles'][0]['controls'].update(read_slot=0),
                    lambda r:r['cycles'][25]['controls'].update(commit_seq=1),
@@ -160,9 +161,12 @@ module tb;
   @(negedge clk);
  end
  reset();c_cmd=word^85'd1;@(posedge clk);#1;@(negedge clk);c_cmd=0;@(posedge clk);#1;
- if(!st[0] || observed || done)$fatal(1,"bad descriptor not refused");
- reset();c_cmd=word;@(posedge clk);#1;@(negedge clk);c_cmd=word;@(posedge clk);#1;@(negedge clk);c_cmd=0;@(posedge clk);#1;
- if(!st[0] || done)$fatal(1,"unexpected pulse not refused");
+ if(st[0])$fatal(1,"command compare bypassed its fault-diagnosis register");
+ if(observed!==plan[0][0+:CB])$fatal(1,"start row controls differ under late detection");
+ @(posedge clk);#1;
+ if(!st[0] || observed || done)$fatal(1,"bad descriptor not refused on the next edge");
+ reset();c_cmd=word;@(posedge clk);#1;@(negedge clk);c_cmd=word;@(posedge clk);#1;@(negedge clk);c_cmd=0;@(posedge clk);#1;@(posedge clk);#1;
+ if(!st[0] || done || observed)$fatal(1,"unexpected pulse not refused");
  $display("PASS v3 controller all468registered controls actual3ROM twopage-replays fixededge done descriptor/calendar/missingimage/oversize fault");$finish;
  end
 endmodule
