@@ -1,0 +1,28 @@
+{
+  "scope": "Actual production decoder+PW FF issuer internal mechanism, explicit engine-response stimuli; not native end-to-end qualification",
+  "source_sha256": {
+    "rtl/hdc/ot_hdc_dyn_ttiles.sv": "574b918154da9bc8e1fde75f8c9d3bfd10374c5e1979c26588d5c00f133c5f93",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv": "c277e4b35e2c03f4938ce3b187314e75b395339bc23edec00c255fc6140e556c",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv": "f90afd9ba757a963cb754b6813a0e434eab56ffe8285d9c69fe85de3e7eaa63b",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv": "1ac754793355f0a1d0c7838c91355e3c981da9bc153dcefbbcf92e798f175f2c",
+    "rtl/qwen_sys/static_schedule_20261014/tb_qfd_static_internal_issue.sv": "d255e8752b9f101e5a862cdc97217f1c7a31eff5dfa64893ce393e6915d3fc62",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qfd_native_cmd_route.sv": "ab0df810d1ca8cec89ca9ec07224195158a9e25326d7f0c0eaca807cbd1504b3",
+    "rtl/qwen_sys/static_schedule_20261014/tb_qfd_native_cmd_route.sv": "341adf4f13edd306b6ff63cd0cc52eae368a8a313349d3b84605290c923afcf5"
+  },
+  "program_source": "results/arch/qwen_tp8_native_dispatch_1014/token_source_plan/head_program_rank7.hex",
+  "program_sha256": "08c4c30c2c41cc3473280e33bf84dba3c0bca9180a21f233aad4682b5558a6a9",
+  "fixed_issue_cycles": [
+    40,
+    60,
+    80,
+    100
+  ],
+  "fixed_END_cycle": 120,
+  "clock_enable": "normal1; mem_ok0 leaves clocks unchanged",
+  "row18_boundary_variant": "Actual ISA bit898 set1 in four head ME words",
+  "remaining": [
+    "actual endpoint/status and parent composition",
+    "physical phase/reset/pin/cost qualification",
+    "real fullstage compiler calendar"
+  ]
+}
