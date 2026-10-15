@@ -2072,6 +2072,52 @@
     "upper16_y0_um": 1272.24,
     "last_bank_end_um": 2064.96,
     "hop_requirement": "central-to-far banks exceed0.60mm; fixed intermediate request/response relays must be assigned and priced; no zero-relay die qualification",
-    "not_yet_changed": "original proposed_instances await die owner decision on final pins and relay footprint"
+    "not_yet_changed": "original proposed_instances await die owner decision on final pins and relay footprint",
+    "relay_proposal": {
+      "status": "RTL_IDEAL_GATED_PENDING_DIE_PINS_AND_CUTS",
+      "source": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv",
+      "NBANK16": {
+        "per_column": 2,
+        "outline_um": [
+          64.8,
+          207.36
+        ],
+        "request_sinks": 2656,
+        "response_sinks": 2544,
+        "proposed_x_offset_um": 0,
+        "proposed_y_um": [
+          520.56,
+          1501.2
+        ]
+      },
+      "NBANK8": {
+        "per_column": 4,
+        "outline_um": [
+          64.8,
+          103.68
+        ],
+        "request_sinks": 1328,
+        "response_sinks": 1272,
+        "proposed_x_offset_um": 280.8,
+        "proposed_y_um": [
+          250.56,
+          699.84,
+          1350,
+          1848.96
+        ]
+      },
+      "uniform_stage_count": {
+        "request": 2,
+        "response": 2
+      },
+      "ideal_edges": {
+        "bank_capture": 4,
+        "actual_SRAM_commit": 5,
+        "commit_observation": 7,
+        "return_store": 9,
+        "fixed_release": 10
+      },
+      "note": "All coordinates proposals only, assigned pinlayer/order/face plus actualcut/clock audit stillrequired; no heavyphysicaljob launched"
+    }
   }
 }
