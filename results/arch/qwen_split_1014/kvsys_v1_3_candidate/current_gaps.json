@@ -1,0 +1,84 @@
+{
+  "schema": "qwen-kvsys-current-gaps-v1",
+  "recorded_at": "2026-10-14T19:38:04.843864-07:00",
+  "source_commit": "bb56cc450",
+  "status": "BLOCKED_NATIVE_INTEGRATION",
+  "published_contract": {
+    "revision": "v1.2",
+    "path": "results/arch/qwen_split_1014/kvsys_v1_2",
+    "native_qualified": false
+  },
+  "candidate": {
+    "revision": "v1.3_candidate",
+    "master_authority": "tools/qwen_kv_die/kv_die.py + tools/qwen_kv_die/kv_expand.py",
+    "pin_authority": "results/arch/qwen_split_1014/kvsys_v1_3_candidate/pins",
+    "qualified": false
+  },
+  "normal_execution_rule": "Compiler reserved cycles; no ready/credit/backpressure scheduling. All on-chip execution uses actual RTL/macros. Only PHY and off-chip signals may be modeled.",
+  "gaps": [
+    {
+      "rank": 1,
+      "id": "static_d2d",
+      "owner": "q_link_replay + q_compile_schedule + Q-KVSYS-DIE",
+      "source": "cd708c730",
+      "state": "OPEN",
+      "detail": "Replace naked548 adapter with actual static ctl plus four SRAM leaves and actual583 FDI. Assigned pins bb56cc450 exist. Actual compiler metadata producers and fixed calendar remain required; native gate/routes pending."
+    },
+    {
+      "rank": 2,
+      "id": "native_command",
+      "owner": "q_control_transport + Q-KVSYS-DIE + q_host_bind",
+      "source": "rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_native_services_frontend_native59.sv",
+      "state": "OPEN",
+      "detail": "Preserve accepted380 descriptor and actual HOST token epoch/context. Separate compute-local QKV/QVM/VM-commit interfaces from KV arithmetic transport; no duplicate frontend, inferred epoch, fabricated ready or completion. Raw fused descriptor versus packed command mismatch under audit. Endpoint physical slot and routes missing."
+    },
+    {
+      "rank": 3,
+      "id": "host_boot",
+      "owner": "q_host_bind + Q-KVSYS-DIE",
+      "source": "6113443f4:results/arch/qwen_split_1014/host_bind_request_1014/die_wiring.json",
+      "state": "OPEN",
+      "detail": "147 mandatory actual HOST ports, per-child clocks and reset mapping not yet adopted. Missing RTL collectors/terminal identity ACK/rearm/POST barrier, participant transport, wrap/recovery, production pr143 loader and boot-vs-normal controller completion-owner demux remain explicit. C++ glue does not qualify hardware."
+    },
+    {
+      "rank": 4,
+      "id": "host_phy",
+      "owner": "Q-KVSYS-DIE",
+      "source": "d75f23f34",
+      "state": "OPEN",
+      "detail": "Actual SerDes FDI1043/RXD512 source, period1043ps. Native footprint2320.056x1563.57 regenerated; candidate geometry only. Native hard-macro binder exists but cannot run until matching real digital link endpoint is bound."
+    },
+    {
+      "rank": 5,
+      "id": "native_attention",
+      "owner": "q_native_attention + q_compile_schedule + Q-KVSYS-DIE",
+      "source": "7e9ff562c",
+      "state": "OPEN",
+      "detail": "Fixed K transport implemented in source; full native arithmetic build and V fixed-slot reassembly/QK-PV phase calendar remain open. Do not substitute C++ arithmetic or latency-only digital service."
+    },
+    {
+      "rank": 6,
+      "id": "epoch_landing",
+      "owner": "q_kvsys_elem",
+      "source": "f2cf210f4 + 6190a39c7 + baa9d873e",
+      "state": "OPEN",
+      "detail": "rq17 producer/consumer and DQ128 source bound in candidate; fresh native A/group physical views required. Fullcredit128 group internal setup failure prompted ep2; no old32-credit view substitution."
+    },
+    {
+      "rank": 7,
+      "id": "native_leaves",
+      "owner": "q_kvsys_elem",
+      "source": "bfb2996c8 + a593d7d0f",
+      "state": "OPEN",
+      "detail": "B dr3 closed/nativePASS; C dr2, CDC hpin successor and ASTK epoch successor remain under owner gates/routes. Old views retain old master names only."
+    },
+    {
+      "rank": 8,
+      "id": "die_sta_cost",
+      "owner": "Q-KVSYS-DIE + q_compute_die + q_compile_schedule",
+      "source": "results/arch/qwen_split_1014/link/directed_harness_1014",
+      "state": "OPEN",
+      "detail": "No v1.3 native die GRT/three-corner classified table yet. Directional harness parity PASS is historical diagnostic; actual geometry LX3/LR2 and compute directional stages need source-pinned compiled event offsets and whole-layer measured cost. Old+65 ledger cannot qualify candidate."
+    }
+  ]
+}
