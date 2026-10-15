@@ -1,0 +1,29 @@
+{
+  "scope": "Actual RTL HC head-preparation, main L39 only; VM pin boundary modeled",
+  "full_native_token": false,
+  "baseline": {
+    "handle": 3501682,
+    "state": "terminal",
+    "gate": "HCG PASS",
+    "jobs": 4,
+    "rows": 160,
+    "errors": 0,
+    "cycles": 2670
+  },
+  "arithmetic_mutant": {
+    "handle": 3504922,
+    "state": "terminal",
+    "gate": "HCG FAIL",
+    "observed_errors": 160,
+    "cycles": 1979,
+    "failure_kind": "actual normalization arithmetic mutation, not execution abort"
+  },
+  "actual_xf_producer": "dsfd_sp_hc HIER=1 HALF=1 CSPLIT=1 TAIL_SPLIT=2 K_NORM YOUT",
+  "artifacts_sha256": {
+    "xf.mem": "1ea74f41e3e94ca1924eda538fb832d621347f3ec301ba942f863521a861f7c8",
+    "xf.provenance.json": "34e8b880a183165a00e00ec4b36aec2c178d77130c6f72086ba702953adb2860",
+    "xf.npy": "4d9d6d3369acbbc2c0275cb0decdc17672a1036520b0e261b827a878680bba67",
+    "run_m3.log": "737b5b19dd2c52dbd66f29da5c38fdd2e22b11df36fa231ffcb24263cf4c7806",
+    "run_m0.log": "76ef5b25df49ed5c0f7ca9766a27b286386875698798426c4b984a95ced171e8"
+  }
+}

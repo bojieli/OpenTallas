@@ -1,0 +1,54 @@
+NTRACE op=3 event=accept cyc=1763
+NTRACE op=3 event=sum_return cyc=2102
+NTRACE op=3 event=rsqrt_ready cyc=2176
+NTRACE op=3 event=return_row cyc=2414
+NTRACE op=3 event=return_row cyc=2415
+NTRACE op=3 event=return_row cyc=2416
+NTRACE op=3 event=return_row cyc=2417
+NTRACE op=3 event=return_row cyc=2418
+NTRACE op=3 event=return_row cyc=2419
+NTRACE op=3 event=return_row cyc=2420
+NTRACE op=3 event=return_row cyc=2421
+NTRACE op=3 event=return_row cyc=2422
+NTRACE op=3 event=return_row cyc=2423
+NTRACE op=3 event=return_row cyc=2424
+NTRACE op=3 event=return_row cyc=2425
+NTRACE op=3 event=return_row cyc=2426
+NTRACE op=3 event=return_row cyc=2427
+NTRACE op=3 event=return_row cyc=2428
+NTRACE op=3 event=return_row cyc=2429
+NTRACE op=3 event=return_row cyc=2430
+NTRACE op=3 event=return_row cyc=2431
+NTRACE op=3 event=return_row cyc=2432
+NTRACE op=3 event=return_row cyc=2433
+NTRACE op=3 event=return_row cyc=2434
+NTRACE op=3 event=return_row cyc=2435
+NTRACE op=3 event=return_row cyc=2436
+NTRACE op=3 event=return_row cyc=2437
+NTRACE op=3 event=return_row cyc=2438
+NTRACE op=3 event=return_row cyc=2439
+NTRACE op=3 event=return_row cyc=2440
+NTRACE op=3 event=return_row cyc=2441
+NTRACE op=3 event=return_row cyc=2442
+NTRACE op=3 event=return_row cyc=2443
+NTRACE op=3 event=return_row cyc=2444
+NTRACE op=3 event=return_row cyc=2445
+NTRACE op=3 event=return_row cyc=2446
+NTRACE op=3 event=return_row cyc=2447
+NTRACE op=3 event=return_row cyc=2448
+NTRACE op=3 event=return_row cyc=2449
+NTRACE op=3 event=return_row cyc=2450
+NTRACE op=3 event=return_row cyc=2451
+NTRACE op=3 event=return_row cyc=2452
+NTRACE op=3 event=return_row cyc=2453
+NTRACE op=3 event=writer_done cyc=2455
+HCJ op=0 kind=5 start=71 done=261
+HCJ op=1 kind=0 start=510 done=860
+HCJ op=2 kind=2 start=1512 done=1543
+HCJ op=3 kind=4 start=1763 done=2470
+HCG jobs=4 done=4 err=0 rows=160 fault=0 code=0 cyc=2670 bad_tag=0
+HCG PASS
+- /srv/opentallas-scratch/codex/s81-native-head-glue-1014/src_coarse/rtl/dsrom_sys/s81_native_head_connect/test/tb_s81_head_prep.sv:126: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 503.950 s; speed 4.520 ns/s
+- Verilator: cpu 503.738 s on 5 threads; allocated 312 MB

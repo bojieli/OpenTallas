@@ -1,0 +1,16 @@
+NTRACE op=3 event=accept cyc=1763
+mismatch row 3072 got 0000000000000000 want be01bd87bd8a3e29
+mismatch row 3073 got 0000000000000000 want 3e22bd393d023c0c
+mismatch row 3074 got 0000000000000000 want 3ee53ea5bc05be9f
+mismatch row 3075 got 0000000000000000 want be5fbef13e0d3d84
+mismatch row 3076 got 0000000000000000 want bd333eefbf8e3ebc
+HCJ op=0 kind=5 start=71 done=261
+HCJ op=1 kind=0 start=510 done=860
+HCJ op=2 kind=2 start=1512 done=1543
+HCJ op=3 kind=4 start=1763 done=1779
+HCG jobs=4 done=4 err=160 rows=160 fault=0 code=0 cyc=1979 bad_tag=0
+HCG FAIL
+- /srv/opentallas-scratch/codex/s81-native-head-glue-1014/src_coarse/rtl/dsrom_sys/s81_native_head_connect/test/tb_s81_head_prep.sv:126: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 365.527 s; speed 4.621 ns/s
+- Verilator: cpu 365.289 s on 5 threads; allocated 312 MB
