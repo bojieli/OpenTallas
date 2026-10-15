@@ -155,7 +155,7 @@ def apply_recipe(s: dict, recipe: int) -> dict:
 
 
 def hold_pad_vars(s: dict) -> list:
-    """spec "hold_pad" {"cell", "strong_ports", "strong_cell", "basis"} -> --orfs-var items for leaf_inhold / leaf_iohold"""
+    """spec "hold_pad" {"cell", "out_cell", "strong_ports", "strong_cell", "basis"} -> --orfs-var items for leaf_inhold / leaf_iohold"""
     hp = s.get("hold_pad")
     if not hp or not (s.get("inhold") or s.get("outhold")):
         return []
@@ -169,6 +169,16 @@ def hold_pad_vars(s: dict) -> list:
     if "OT_INHOLD_MASTER" in ov:
         raise SpecError("spec: hold_pad and orfs_vars OT_INHOLD_MASTER both set the pin pad; keep hold_pad only")
     out.append(f"--orfs-var OT_INHOLD_MASTER={cell}")
+    # "out_cell" (S81 VM F6 2026-10-15): the OUTPUT pad (leaf_iohold BUF -> pad -> BUF) may differ from the input pad: a
+    # light HB1 gives the flop -> pin path a fixed sender-min hold delay (~38 ps FF) at a launch cost (~55 ps TT) that a
+    # 220 ps native launch budget can carry, where the input pad stays HB2.  Default: the input pad (kits unchanged).
+    oc = hp.get("out_cell")
+    if oc is not None:
+        if not s.get("outhold"):
+            raise SpecError("spec: hold_pad.out_cell needs outhold")
+        if not re.fullmatch(r"HB[1-4]xp67_ASAP7_75t_[RLS]L?", str(oc)):
+            raise SpecError(f"spec: hold_pad.out_cell {oc!r} is not an ASAP7 HB hold cell")
+        out.append(f"--orfs-var OT_OUTHOLD_MASTER={oc}")
     sp = hp.get("strong_ports")
     if sp:
         try:

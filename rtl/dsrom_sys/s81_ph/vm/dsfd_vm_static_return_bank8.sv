@@ -133,7 +133,12 @@ module dsfd_vm_static_return_bank8 #(parameter integer DW=128, parameter integer
   always @(posedge ck or negedge rr[1])if(!rr[1])begin q_v<=0;q_rv<=0;q_pv<=0;q_pt<=0;end
    else begin q_v<=i_v;q_rv<=release_v;q_pv<=prepare_v;q_pt<=peer_token;end
   always @(posedge ck)begin q_t<=i_tag;q_d<=i_data;q_rg<=release_group;q_rm<=release_mask;q_pg<=prepare_group;q_pm<=prepare_mask;end
-  assign v=q_v;assign t=q_t;assign d=q_d;assign rv=q_rv;assign rg=q_rg;assign rm=q_rm;assign pv=q_pv;assign pg=q_pg;assign pm=q_pm;assign pt=q_pt;
+`ifdef OT_VM_RETURN_BANK8_MUT_PINSKEW
+  assign v=q_v;assign t=q_t;assign d=q_d;assign rv=release_v;   // DUT mutant: release bypasses its pin register
+`else
+  assign v=q_v;assign t=q_t;assign d=q_d;assign rv=q_rv;
+`endif
+ assign rg=q_rg;assign rm=q_rm;assign pv=q_pv;assign pg=q_pg;assign pm=q_pm;assign pt=q_pt;
  end else begin:g_nopin
   assign v=i_v;assign t=i_tag;assign d=i_data;assign rv=release_v;assign rg=release_group;assign rm=release_mask;
   assign pv=prepare_v;assign pg=prepare_group;assign pm=prepare_mask;assign pt=peer_token;

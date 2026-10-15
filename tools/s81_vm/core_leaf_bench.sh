@@ -11,7 +11,7 @@ cp rtl/dsrom_sys/s81_ph/vm/*.sv rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_static_core
 cp physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v "$O/src/"
 FILES=$(sed -n '/^FILES="/,/"$/p' tools/s81_vm/static_core_gate.sh | tr -d '"' | sed 's/^FILES=//')
 F=""; for f in $FILES; do F="$F $O/src/$f"; done
-D=""; [ -n "$M" ] && D="+define+$M"
+D=""; for m in $M; do D="$D +define+$m"; done   # MUTANT_DEFINE may list several defines (e.g. "OT_VM_NATIVE_READ_L16 OT_VM_RSCHED_MUT_SLOT")
 "$V" --binary --timing -O1 -Wno-fatal -j 2 -MAKEFLAGS "OPT_FAST=-O0 OPT_SLOW=-O0 OPT_GLOBAL=-O0" --top-module tb_dsfd_vm_static_core \
   --Mdir "$O/obj" -o tb $D $F > "$O/build.log" 2>&1 || { tail -20 "$O/build.log"; echo "CORE_LEAF FAIL $L build"; exit 1; }
 "$O/obj/tb" +mode=0 +seed=1 +reads=$READS > "$O/run.log" 2>&1
