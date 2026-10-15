@@ -1,0 +1,521 @@
+{
+  "verdict": "COMPLETE35_FOLDED_GEOMETRY_PASS_RETIME_UNBUILT",
+  "children": [
+    {
+      "name": "g_c[0].g_be_e.u_be",
+      "cell": "ot_hbm_accel_smh_be_eg",
+      "x": 723.44,
+      "y": 10,
+      "orient": "R0",
+      "outline_um": [
+        319.68,
+        77.76
+      ],
+      "status": "CLOSED_TT_FF_PHYSICAL_NATIVE_ADOPTION_PENDING",
+      "view_job": "smn_be_eg_ref-r2-b9a29ac93"
+    },
+    {
+      "name": "g_c[0].g_p[0].g_tw.u_t",
+      "cell": "ot_hbm_accel_smh_tile_wg",
+      "x": 723.44,
+      "y": 107.76,
+      "orient": "MY",
+      "outline_um": [
+        693.44,
+        609.92
+      ],
+      "status": "NEW_TILE_HARDENING_REQUIRED",
+      "view_job": null
+    },
+    {
+      "name": "g_c[0].g_p[1].g_tw.u_t",
+      "cell": "ot_hbm_accel_smh_tile_wg",
+      "x": 723.44,
+      "y": 737.68,
+      "orient": "MY",
+      "outline_um": [
+        693.44,
+        609.92
+      ],
+      "status": "NEW_TILE_HARDENING_REQUIRED",
+      "view_job": null
+    },
+    {
+      "name": "g_c[1].g_be_e.u_be",
+      "cell": "ot_hbm_accel_smh_be_eg",
+      "x": 10.0,
+      "y": 10,
+      "orient": "R0",
+      "outline_um": [
+        319.68,
+        77.76
+      ],
+      "status": "CLOSED_TT_FF_PHYSICAL_NATIVE_ADOPTION_PENDING",
+      "view_job": "smn_be_eg_ref-r2-b9a29ac93"
+    },
+    {
+      "name": "g_c[1].g_p[0].g_tw.u_t",
+      "cell": "ot_hbm_accel_smh_tile_wg",
+      "x": 10.0,
+      "y": 107.76,
+      "orient": "MY",
+      "outline_um": [
+        693.44,
+        609.92
+      ],
+      "status": "NEW_TILE_HARDENING_REQUIRED",
+      "view_job": null
+    },
+    {
+      "name": "g_c[1].g_p[1].g_tw.u_t",
+      "cell": "ot_hbm_accel_smh_tile_wg",
+      "x": 10.0,
+      "y": 737.68,
+      "orient": "MY",
+      "outline_um": [
+        693.44,
+        609.92
+      ],
+      "status": "NEW_TILE_HARDENING_REQUIRED",
+      "view_job": null
+    },
+    {
+      "name": "g_c[2].g_be_e.u_be",
+      "cell": "ot_hbm_accel_smh_be_eg",
+      "x": 349.68,
+      "y": 10,
+      "orient": "R0",
+      "outline_um": [
+        319.68,
+        77.76
+      ],
+      "status": "CLOSED_TT_FF_PHYSICAL_NATIVE_ADOPTION_PENDING",
+      "view_job": "smn_be_eg_ref-r2-b9a29ac93"
+    },
+    {
+      "name": "g_c[2].g_p[0].g_tw.u_t",
+      "cell": "ot_hbm_accel_smh_tile_wg",
+      "x": 10.0,
+      "y": 1367.6,
+      "orient": "R0",
+      "outline_um": [
+        693.44,
+        609.92
+      ],
+      "status": "NEW_TILE_HARDENING_REQUIRED",
+      "view_job": null
+    },
+    {
+      "name": "g_c[2].g_p[1].g_tw.u_t",
+      "cell": "ot_hbm_accel_smh_tile_wg",
+      "x": 10.0,
+      "y": 1997.5199999999998,
+      "orient": "R0",
+      "outline_um": [
+        693.44,
+        609.92
+      ],
+      "status": "NEW_TILE_HARDENING_REQUIRED",
+      "view_job": null
+    },
+    {
+      "name": "g_c[3].g_be_e.u_be",
+      "cell": "ot_hbm_accel_smh_be_eg",
+      "x": 1063.1200000000001,
+      "y": 10,
+      "orient": "R0",
+      "outline_um": [
+        319.68,
+        77.76
+      ],
+      "status": "CLOSED_TT_FF_PHYSICAL_NATIVE_ADOPTION_PENDING",
+      "view_job": "smn_be_eg_ref-r2-b9a29ac93"
+    },
+    {
+      "name": "g_c[3].g_p[0].g_tw.u_t",
+      "cell": "ot_hbm_accel_smh_tile_wg",
+      "x": 723.44,
+      "y": 1367.6,
+      "orient": "R0",
+      "outline_um": [
+        693.44,
+        609.92
+      ],
+      "status": "NEW_TILE_HARDENING_REQUIRED",
+      "view_job": null
+    },
+    {
+      "name": "g_c[3].g_p[1].g_tw.u_t",
+      "cell": "ot_hbm_accel_smh_tile_wg",
+      "x": 723.44,
+      "y": 1997.5199999999998,
+      "orient": "R0",
+      "outline_um": [
+        693.44,
+        609.92
+      ],
+      "status": "NEW_TILE_HARDENING_REQUIRED",
+      "view_job": null
+    },
+    {
+      "name": "g_c[4].g_be_w.u_be",
+      "cell": "ot_hbm_accel_smh_be_wg",
+      "x": 1776.5600000000002,
+      "y": 10,
+      "orient": "R0",
+      "outline_um": [
+        319.68,
+        77.76
+      ],
+      "status": "HISTORICAL_CLOSED_VIEW_NATIVE_CHILD_LINT_TT_EXPORT_OPEN",
+      "view_job": "hbm_smh_be_wg_cg-80412d770-tc-np-r2-tcfix-cl"
+    },
+    {
+      "name": "g_c[4].g_p[0].g_te.u_t",
+      "cell": "ot_hbm_accel_smh_tile_eg",
+      "x": 1436.88,
+      "y": 1367.6,
+      "orient": "R0",
+      "outline_um": [
+        693.44,
+        609.92
+      ],
+      "status": "NEW_TILE_HARDENING_REQUIRED",
+      "view_job": null
+    },
+    {
+      "name": "g_c[4].g_p[1].g_te.u_t",
+      "cell": "ot_hbm_accel_smh_tile_eg",
+      "x": 1436.88,
+      "y": 1997.5199999999998,
+      "orient": "R0",
+      "outline_um": [
+        693.44,
+        609.92
+      ],
+      "status": "NEW_TILE_HARDENING_REQUIRED",
+      "view_job": null
+    },
+    {
+      "name": "g_c[5].g_be_w.u_be",
+      "cell": "ot_hbm_accel_smh_be_wg",
+      "x": 2490.0,
+      "y": 10,
+      "orient": "R0",
+      "outline_um": [
+        319.68,
+        77.76
+      ],
+      "status": "HISTORICAL_CLOSED_VIEW_NATIVE_CHILD_LINT_TT_EXPORT_OPEN",
+      "view_job": "hbm_smh_be_wg_cg-80412d770-tc-np-r2-tcfix-cl"
+    },
+    {
+      "name": "g_c[5].g_p[0].g_te.u_t",
+      "cell": "ot_hbm_accel_smh_tile_eg",
+      "x": 2150.32,
+      "y": 1367.6,
+      "orient": "R0",
+      "outline_um": [
+        693.44,
+        609.92
+      ],
+      "status": "NEW_TILE_HARDENING_REQUIRED",
+      "view_job": null
+    },
+    {
+      "name": "g_c[5].g_p[1].g_te.u_t",
+      "cell": "ot_hbm_accel_smh_tile_eg",
+      "x": 2150.32,
+      "y": 1997.5199999999998,
+      "orient": "R0",
+      "outline_um": [
+        693.44,
+        609.92
+      ],
+      "status": "NEW_TILE_HARDENING_REQUIRED",
+      "view_job": null
+    },
+    {
+      "name": "g_c[6].g_be_w.u_be",
+      "cell": "ot_hbm_accel_smh_be_wg",
+      "x": 2150.32,
+      "y": 10,
+      "orient": "R0",
+      "outline_um": [
+        319.68,
+        77.76
+      ],
+      "status": "HISTORICAL_CLOSED_VIEW_NATIVE_CHILD_LINT_TT_EXPORT_OPEN",
+      "view_job": "hbm_smh_be_wg_cg-80412d770-tc-np-r2-tcfix-cl"
+    },
+    {
+      "name": "g_c[6].g_p[0].g_te.u_t",
+      "cell": "ot_hbm_accel_smh_tile_eg",
+      "x": 2150.32,
+      "y": 107.76,
+      "orient": "MY",
+      "outline_um": [
+        693.44,
+        609.92
+      ],
+      "status": "NEW_TILE_HARDENING_REQUIRED",
+      "view_job": null
+    },
+    {
+      "name": "g_c[6].g_p[1].g_te.u_t",
+      "cell": "ot_hbm_accel_smh_tile_eg",
+      "x": 2150.32,
+      "y": 737.68,
+      "orient": "MY",
+      "outline_um": [
+        693.44,
+        609.92
+      ],
+      "status": "NEW_TILE_HARDENING_REQUIRED",
+      "view_job": null
+    },
+    {
+      "name": "g_c[7].g_be_w.u_be",
+      "cell": "ot_hbm_accel_smh_be_wg",
+      "x": 1436.88,
+      "y": 10,
+      "orient": "R0",
+      "outline_um": [
+        319.68,
+        77.76
+      ],
+      "status": "HISTORICAL_CLOSED_VIEW_NATIVE_CHILD_LINT_TT_EXPORT_OPEN",
+      "view_job": "hbm_smh_be_wg_cg-80412d770-tc-np-r2-tcfix-cl"
+    },
+    {
+      "name": "g_c[7].g_p[0].g_te.u_t",
+      "cell": "ot_hbm_accel_smh_tile_eg",
+      "x": 1436.88,
+      "y": 107.76,
+      "orient": "MY",
+      "outline_um": [
+        693.44,
+        609.92
+      ],
+      "status": "NEW_TILE_HARDENING_REQUIRED",
+      "view_job": null
+    },
+    {
+      "name": "g_c[7].g_p[1].g_te.u_t",
+      "cell": "ot_hbm_accel_smh_tile_eg",
+      "x": 1436.88,
+      "y": 737.68,
+      "orient": "MY",
+      "outline_um": [
+        693.44,
+        609.92
+      ],
+      "status": "NEW_TILE_HARDENING_REQUIRED",
+      "view_job": null
+    },
+    {
+      "name": "g_fd.u_fc.u_bc",
+      "cell": "ot_hbm_accel_smh_fc_bc",
+      "x": 3114.32,
+      "y": 264.88,
+      "orient": "R0",
+      "outline_um": [
+        388.8,
+        479.52
+      ],
+      "status": "INHERITED_CLOSED_VIEW_NATIVE_SEAMS_OPEN",
+      "view_job": "smh_fcbc_ref_p40-r1-a9afd2404-lf"
+    },
+    {
+      "name": "g_fd.u_fc.u_be",
+      "cell": "ot_hbm_accel_smh_fc_b",
+      "x": 3537.68,
+      "y": 260.56,
+      "orient": "MY",
+      "outline_um": [
+        218.16,
+        302.4
+      ],
+      "status": "INHERITED_CLOSED_VIEW_NATIVE_SEAMS_OPEN",
+      "view_job": "smh_fcb_ref_p45-r1-a9afd2404-lf"
+    },
+    {
+      "name": "g_fd.u_fc.u_bw",
+      "cell": "ot_hbm_accel_smh_fc_b",
+      "x": 2863.76,
+      "y": 260.56,
+      "orient": "R0",
+      "outline_um": [
+        218.16,
+        302.4
+      ],
+      "status": "INHERITED_CLOSED_VIEW_NATIVE_SEAMS_OPEN",
+      "view_job": "smh_fcb_ref_p45-r1-a9afd2404-lf"
+    },
+    {
+      "name": "g_fd.u_fc.u_is",
+      "cell": "ot_hbm_accel_smh_fc_is",
+      "x": 3114.32,
+      "y": 755.2,
+      "orient": "R0",
+      "outline_um": [
+        388.8,
+        280.8
+      ],
+      "status": "INHERITED_CLOSED_VIEW_NATIVE_SEAMS_OPEN",
+      "view_job": "smh_fcis_ref_p45-r1-a9afd2404-lf"
+    },
+    {
+      "name": "g_fd.u_fc.u_re",
+      "cell": "ot_hbm_accel_smh_fc_xr",
+      "x": 3537.68,
+      "y": 778.96,
+      "orient": "MY",
+      "outline_um": [
+        218.16,
+        151.2
+      ],
+      "status": "INHERITED_CLOSED_VIEW_NATIVE_SEAMS_OPEN",
+      "view_job": "smh_fcxr_ref_p35-r1-a9afd2404-lf"
+    },
+    {
+      "name": "g_fd.u_fc.u_rw",
+      "cell": "ot_hbm_accel_smh_fc_xr",
+      "x": 2863.76,
+      "y": 778.96,
+      "orient": "R0",
+      "outline_um": [
+        218.16,
+        151.2
+      ],
+      "status": "INHERITED_CLOSED_VIEW_NATIVE_SEAMS_OPEN",
+      "view_job": "smh_fcxr_ref_p35-r1-a9afd2404-lf"
+    },
+    {
+      "name": "g_fd.u_fc.u_te",
+      "cell": "ot_hbm_accel_smh_fc_t",
+      "x": 3537.68,
+      "y": 1133.2,
+      "orient": "MY",
+      "outline_um": [
+        218.16,
+        216.0
+      ],
+      "status": "INHERITED_CLOSED_VIEW_NATIVE_SEAMS_OPEN",
+      "view_job": "smh_fct_ref_p45-r1-a9afd2404-lf"
+    },
+    {
+      "name": "g_fd.u_fc.u_tw",
+      "cell": "ot_hbm_accel_smh_fc_t",
+      "x": 2863.76,
+      "y": 1133.2,
+      "orient": "R0",
+      "outline_um": [
+        218.16,
+        216.0
+      ],
+      "status": "INHERITED_CLOSED_VIEW_NATIVE_SEAMS_OPEN",
+      "view_job": "smh_fct_ref_p45-r1-a9afd2404-lf"
+    },
+    {
+      "name": "g_fd.u_fc.u_xl",
+      "cell": "ot_hbm_accel_smh_fc_xl",
+      "x": 3157.52,
+      "y": 1046.8,
+      "orient": "R0",
+      "outline_um": [
+        302.4,
+        298.08
+      ],
+      "status": "INHERITED_CLOSED_VIEW_NATIVE_SEAMS_OPEN",
+      "view_job": "smh_fcxl_ref_p45-r1-a9afd2404-lf"
+    },
+    {
+      "name": "g_fd.u_fn",
+      "cell": "ot_hbm_accel_smh_front_n",
+      "x": 3092.72,
+      "y": 1357.84,
+      "orient": "R0",
+      "outline_um": [
+        432.0,
+        354.24
+      ],
+      "status": "HISTORICAL_CLOSED_VIEW_NATIVE_CHILD_LINT_TT_EXPORT_OPEN",
+      "view_job": "hbm_smh_front_n_tt_f170efb96"
+    },
+    {
+      "name": "g_fd.u_fs",
+      "cell": "ot_hbm_accel_smh_front_s",
+      "x": 3092.72,
+      "y": 10,
+      "orient": "R0",
+      "outline_um": [
+        432.0,
+        241.92
+      ],
+      "status": "HISTORICAL_CLOSED_VIEW_NATIVE_CHILD_LINT_TT_EXPORT_OPEN",
+      "view_job": "hbm_smh_front_s_vq-933923316-tc-hm010-cl"
+    }
+  ],
+  "frame_outline_um": [
+    3765.8399999999997,
+    2617.4399999999996
+  ],
+  "frame_area_mm2": 9.856860249599997,
+  "all32_frame_mm2": 315.4195279871999,
+  "source_sha256": "f1372a9634e8f37c71c7b3ff5e6bf56804fe40aab79907c673eadd142ccb711c",
+  "logical_arms": [
+    [
+      3,
+      2,
+      1,
+      0
+    ],
+    [
+      4,
+      5,
+      6,
+      7
+    ]
+  ],
+  "folds": {
+    "column_pairs": [
+      [
+        2,
+        1
+      ],
+      [
+        5,
+        6
+      ]
+    ],
+    "bands_per_arm": 2,
+    "payload_bits_per_band": 3705,
+    "external_fold_vertical_um": 1259.84,
+    "added_registered_edges_minimum_per_stream": 2,
+    "added_payload_FF": 29640,
+    "upper_gather200bit_BE_retime_FF_lowerbound": 1600,
+    "payload256_master_outlines_minimum": 120,
+    "payload256_outline_area_lowerbound_um2": 134369.28,
+    "candidate_outside_fold_corridor_each_arm_um": 249.6,
+    "frame_with_twooutsidecorridors_mm2": 11.163486297599997
+  },
+  "cycles": {
+    "base_tile_transit": 4,
+    "base_tile_landing": 1,
+    "additional_fold_payload_cycles": 2,
+    "required_calendar_updates": [
+      "postfoldlogicalcolumns0/1/6/7 launch/use move+2fixedcycles",
+      "newgatherreturnretimes andBEcollector alignment must becomposed",
+      "front-to-tilepaths newgeometry must bechecked; lowerbound doesnotincludeallfrontretimes"
+    ]
+  },
+  "limits": [
+    "All35sourcechildren retained; actuallegacyfrontdynamiccredit stillmustbereplaced.",
+    "FoldFFcount is notcompletephysicalarea: all120retimeleafoutlines/gaps/PG/clockroots stillneedplacement.",
+    "Empty20um fieldchannels cannotcontain25.92um wide retimehardleaves with20umhalos.",
+    "Simpleexternal250umcorridors perarm raisebbox~11.16mm2, largelyerasefoldbenefit.",
+    "Absorbretimecells insideunhardenedtileparent freearea orpartitioncompilercalendar roots beforeadoption; nooverlappinghardframes.",
+    "Allfront-to-tile andBEactualpinseams unqualified; nohiddenzero-stageroute assumption."
+  ]
+}
