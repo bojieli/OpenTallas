@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // External fixture -> real SU preload -> MIX4 -> real VM128SRAM -> SU readback.
 // All reference arrays below are testbench stimuli/scoreboards; none drive a DUT response.
-module tb_s81_engram_mix4_native_vm #(parameter MUT=0, WRITE_COMMIT_LAT=11);
+module tb_s81_engram_mix4_native_vm #(parameter MUT=0, WRITE_COMMIT_LAT=11, EXPECTED_CYCLES=865);
  localparam READ_PIPE=4, RL=16, MAXC=40000;
  reg ck=0; always #0.4167 ck=~ck;
  reg rss=0; reg [84:0] c_cmd=0; wire [8:0] c_done; wire [1:0] c_st; wire t_inp_su,t_inp_hc;
@@ -59,7 +59,9 @@ module tb_s81_engram_mix4_native_vm #(parameter MUT=0, WRITE_COMMIT_LAT=11);
  reg [511:0] image[0:16383], expected_y[0:639]; reg used[0:16383];
  reg [19:0] ev[0:MAXC-1]; reg [10239:0] ed[0:MAXC-1];
  reg sev[0:MAXC-1]; reg [511:0] sed[0:MAXC-1];
- integer wc[0:16383]; reg [3:0] slices[0:16383]; reg [7:0] wt[0:16383];
+ integer wc[0:16383]; reg [3:0] slices[0:16383],raw_slices[0:16383]; reg [7:0] wt[0:16383];
+ wire [127:0] raw_v; wire [1151:0] raw_a; wire [511:0] raw_m; wire [1023:0] raw_t;
+ integer raw_row,raw_slice;
  integer cy=0,reads=0,writes=0,commits=0,preloads=0,readbacks=0,answers=0,rawcommits=0;
  integer i,j,q,b,r,n,p,s,a,start,elapsed,first_w=-1,last_w=-1; string dir;
  function integer bank(input integer row); bank=(row&31)^(((row>>5)&7)<<2); endfunction
@@ -76,18 +78,28 @@ module tb_s81_engram_mix4_native_vm #(parameter MUT=0, WRITE_COMMIT_LAT=11);
   cy=cy+1;
   if(cy>=MAXC)$fatal(1,"timeout");
   if(rss)begin
+   // Sample the actual SRAM w_ce address/mask/tag before this edge's NBA updates.
+   // Baseline PIPE0 source pin P -> macro write-enable P+9 -> relayed cm_v P+11.
+   for(integer k=0;k<128;k=k+1)if(raw_v[k])begin
+    raw_slice=k/32;raw_row=(integer'(raw_a[9*k+:9])<<5)|((k%32)^((raw_a[9*k+:9]&7)<<2));
+    if(wc[raw_row]<0 || cy-(wc[raw_row]-WRITE_COMMIT_LAT)!=9 || raw_slices[raw_row][raw_slice] ||
+       raw_m[4*k+:4]!==4'hf || raw_t[8*k+:8]!==wt[raw_row])
+     $fatal(1,"raw SRAM write timing/mask/tag mismatch row=%0d cy=%0d source=%0d",raw_row,cy,wc[raw_row]-WRITE_COMMIT_LAT);
+    raw_slices[raw_row][raw_slice]=1;rawcommits=rawcommits+1;
+   end
+   if(mx_wqv!=0 && mx_wqv!==4'b1111)$fatal(1,"four writes required per active edge");
    for(integer l=0;l<20;l=l+1)if(mx_rqv[l])begin
     ev[cy+RL][l]=1;ed[cy+RL][512*l+:512]=image[mx_rq[14*l+:14]];reads=reads+1;
    end
    if(su_rqv[0])begin sev[cy+RL]=1;sed[cy+RL]=image[su_rq[0+:14]];end
    for(integer l=0;l<16;l=l+1)if(su_wqv[l])begin
-    wt[su_wq[14*l+:14]]=l;wc[su_wq[14*l+:14]]=cy+WRITE_COMMIT_LAT;slices[su_wq[14*l+:14]]=0;
+    wt[su_wq[14*l+:14]]=l;wc[su_wq[14*l+:14]]=cy+WRITE_COMMIT_LAT;slices[su_wq[14*l+:14]]=0;raw_slices[su_wq[14*l+:14]]=0;
    end
    for(integer l=0;l<4;l=l+1)if(mx_wqv[l])begin
     r=mx_wq[14*l+:14];
     if(r<256||r>=896||mx_wqm[16*l+:16]!==16'hffff)$fatal(1,"invalid output row/mask");
     if(mx_wqd[512*l+:512]!==expected_y[r-256])$fatal(1,"numerical mismatch row=%0d",r);
-    wt[r]=28+l;image[r]=expected_y[r-256];wc[r]=cy+WRITE_COMMIT_LAT;slices[r]=0;
+    wt[r]=28+l;image[r]=expected_y[r-256];wc[r]=cy+WRITE_COMMIT_LAT;slices[r]=0;raw_slices[r]=0;
     writes=writes+1;answers=answers+32;if(first_w<0)first_w=cy;last_w=cy;
    end
   end
@@ -107,12 +119,14 @@ module tb_s81_engram_mix4_native_vm #(parameter MUT=0, WRITE_COMMIT_LAT=11);
  // Observe actual macro write-enable sampling, separately from relayed cm_v.
  genvar gs,gb;generate for(gs=0;gs<4;gs=gs+1)begin:obs_slice
   for(gb=0;gb<32;gb=gb+1)begin:obs_bank
-   always @(posedge ck)if(rss && dut.u_mem.slice[gs].u_slice.bank[gb].u_bank.wvq)
-    rawcommits=rawcommits+1;
+   assign raw_v[32*gs+gb]=dut.u_mem.slice[gs].u_slice.bank[gb].u_bank.wvq;
+   assign raw_a[9*(32*gs+gb)+:9]=dut.u_mem.slice[gs].u_slice.bank[gb].u_bank.waq;
+   assign raw_m[4*(32*gs+gb)+:4]=dut.u_mem.slice[gs].u_slice.bank[gb].u_bank.wmq;
+   assign raw_t[8*(32*gs+gb)+:8]=dut.u_mem.slice[gs].u_slice.bank[gb].u_bank.wtq;
   end
  end endgenerate
  initial begin
-  for(i=0;i<16384;i=i+1)begin used[i]=0;image[i]=0;wc[i]=-1;slices[i]=0;end
+  for(i=0;i<16384;i=i+1)begin used[i]=0;image[i]=0;wc[i]=-1;slices[i]=0;raw_slices[i]=0;end
   for(i=0;i<MAXC;i=i+1)begin ev[i]=0;ed[i]=0;sev[i]=0;sed[i]=0;end
   if(!$value$plusargs("dir=%s",dir))$fatal(1,"dir required");
   $readmemh({dir,"/cfg.mem"},cfg);$readmemh({dir,"/h.mem"},hm);$readmemh({dir,"/k.mem"},km);
@@ -144,11 +158,15 @@ module tb_s81_engram_mix4_native_vm #(parameter MUT=0, WRITE_COMMIT_LAT=11);
   wait(mix_st[1]);@(negedge ck);#0.01;start=cy;mix_cmd={1'b1,84'd0};mix_cmd[6:0]=53;mix_cmd[7+:14]=64;
   @(negedge ck);#0.01;mix_cmd=0;wait(mix_done[8]);@(negedge ck);#0.01;elapsed=cy-start;
   if(mix_done[7:0]!=53||writes!=640||reads!=4161||answers!=20480)$fatal(1,"completion/count mismatch writes=%0d reads=%0d answers=%0d",writes,reads,answers);
+  // Compiler calendar hypothesis: 810 + descriptor/REDUCE/ADD 3*(16-1) + (11-1) = 865.
+  // Fail explicitly on a timing-convention disagreement; never infer or retime the price.
+  if(elapsed!=EXPECTED_CYCLES || first_w-start!=684 || last_w-start!=843 || last_w-first_w!=159)
+   $fatal(1,"fixed calendar mismatch cycles=%0d expected=%0d write_span=%0d..%0d",elapsed,EXPECTED_CYCLES,first_w-start,last_w-start);
   repeat(32)@(negedge ck);
   if(commits!=4*(3521+640)||rawcommits!=4*(3521+640))$fatal(1,"final commit count");
   for(i=0;i<640;i=i+1)begin @(negedge ck);#0.01;su_rqv=1;su_rq[0+:14]=256+i;end
   @(negedge ck);#0.01;su_rqv=0;repeat(50)@(negedge ck);
   if(writes!=640||readbacks!=640)$fatal(1,"repeat/readback count");
-  $display("PASS MIX4_NATIVE_VM128 RL16 commit_return11 RS5 exact20480 writes640 reads4161 preloads3521 readbacks640 rawcommits=%0d returnedcommits=%0d write_span=%0d..%0d cycles=%0d",rawcommits,commits,first_w-start,last_w-start,elapsed);$finish;
+  $display("PASS MIX4_NATIVE_VM128 RL16 raw_write9 commit_return11 RS5 exact20480 writes640 reads4161 preloads3521 readbacks640 rawcommits=%0d returnedcommits=%0d write_span=%0d..%0d cycles=%0d",rawcommits,commits,first_w-start,last_w-start,elapsed);$finish;
  end
 endmodule
