@@ -36,22 +36,25 @@ for width in [263,256]:
     tcl.append(f'place_pin -pin_name {{{port}[{b}]}} -layer {layer} -location {{{x:.6f} {y:.6f}}}')
    positions[port]=dict(layer=layer,xy_um=entries)
   for port,z in [('clk',snap(5.4) if orient=='H' else 4.968),('rst_n',snap(9.7))]:
-   x,y=(.096,z) if orient=='H' else (z,.096);layer='M4' if orient=='H' else 'M5'
+   if orient=='H': x,y,layer=.096,z,'M4'
+   elif port=='clk': x,y,layer=.096,1.308,'M4'
+   else: x,y,layer=z,.096,'M5'
    positions[port]=dict(layer=layer,xy_um=[[x,y]])
    tcl.append(f'place_pin -pin_name {{{port}}} -layer {layer} -location {{{x:.6f} {y:.6f}}}')
   (kit/'assigned_pins.tcl').write_text('\n'.join(tcl)+'\n')
   (kit/'assigned_pins.json').write_text(json.dumps(dict(schema='opentallas.qkh-packet-bank-pins.v1',name=name,width_bits=width,outline_um=outline,positions=positions,pg_rule='H M5 coordinates exclude 0.12um around actual PG stripe centers2.46/2.652 mod5.4; V M4 pins are below M5PG; all bit centers use0.012+0.048k grid, >=0.096pitch'),indent=2)+'\n')
   s=json.load(open(r/'physical/qwen_head_bank_pins_1015/packet_template.json'));s['name']=name;s['top']=name;s['params']={};s['sources'].append('rtl/qwen_sys/head_staging_20261015/qkh_packet_masters.sv');s['outline']=dict(zip(['w','h'],outline));s['pins']={'S':['d'],'N':['q'],'W':['clk','rst_n']} if orient=='H' else {'W':['d'],'E':['q'],'S':['clk','rst_n']}
+  if orient=='V': s['pins']={'W':['d','clk'],'E':['q'],'S':['rst_n']}
   s['io_tcl']=f'physical/ref_tile/{name}/assigned_pins.tcl';s['pin_ranges']={'d':[points[0],points[-1]],'q':[points[0],points[-1]]}
   if orient=='V': s['route']['m5_pg_pitch']=2.7
-  s['job']['tag']='bp1' if orient=='H' else 'pg2';s['job']['views_to']=f'physical/ref_tile/{name}/views';s['job']['record_to']=f'results/rtl/ref_tile/{name}'
+  s['job']['tag']='bp1' if orient=='H' else 'pg3';s['job']['views_to']=f'physical/ref_tile/{name}/views';s['job']['record_to']=f'results/rtl/ref_tile/{name}'
   # Use only the original primitive bench, retaining exact full-width transfer and mutants.
   for b in s['job']['benches']:
    b['cmd']=b['cmd'].replace(' 256 ',' '+str(width)+' ')+ ' '+name
    for k in ['pass_regex','fail_regex']:
     if k in b:b[k]=b[k].replace('W=256 ','W='+str(width)+' ')
   s['structural_change']='Actual Q519 split into263b metadata+lowerQ and256b upperQ banks at SAMEfixededge, eachrealownclockroot. LiteralspreadM4/M5pins+PGavoidance frozen beforeCTS. H519failedrecipe2posthookarea755.7>core653.2; bitbanking preservesallQbits/throughput, no density or timing waiver.'
-  if orient=='V': s['structural_change']+=' Actual bp2 export failed child_lint PG spread36percent: double M5 stripe density to2.7um pitch, moving clk pin5.388to4.968um away from newstripe5.352; all data pins/outline/RTL/data edges unchanged. Expected PG span53.6percent must be measured in exported actual LEF; no waiver.'
+  if orient=='V': s['structural_change']+=' Actual bp2 export failed child_lint PG spread36percent: double M5 stripe density to2.7um pitch, moving clk pin5.388to4.968um away from newstripe5.352; all data pins/outline/RTL/data edges unchanged. PG2 actualroutes failed DRT-0255 at S-M5clk access. Moveclk to W-M4(.096,1.308), belowfirstdata5.436 andbelowPG; all d/q/rst remain unchanged. Coordinatescheckedon.012+.048k tracks. Expected PG span53.6percent must be measured in exported actual LEF; no waiver.'
   out=r/'tools/ref_tile/specs_q_compute_native'/(name+'.json');out.write_text(json.dumps(s,indent=2)+'\n');print(name,points[0],points[-1])
 
 for width in [34,16]:

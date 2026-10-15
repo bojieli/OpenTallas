@@ -4,21 +4,23 @@
 module ot_qwen_tile_glue_word #(
     parameter integer W=514,
     parameter integer HORIZONTAL=0,
-    parameter integer MUT=0
+    parameter integer MUT=0,
+    parameter integer SPLIT_RESET=0
 ) (
-    input wire ck_lo, ck_hi, rst_n,
+    input wire ck_lo, ck_hi, rst_n, rst_hi_n,
     input wire [W-1:0] d,
     output wire [W-1:0] q
 );
     wire [518:0] padded={{(519-W){1'b0}},d};
     wire [518:0] captured;
     wire hi_clock=(MUT==3) ? ck_lo : ck_hi;
+    wire hi_reset=SPLIT_RESET ? rst_hi_n : rst_n;
     generate if (HORIZONTAL != 0) begin : g_h
         qkh_packet_h263 lo(.clk(ck_lo),.rst_n(rst_n),.d(padded[262:0]),.q(captured[262:0]));
-        qkh_packet_h256 hi(.clk(hi_clock),.rst_n(rst_n),.d(padded[518:263]),.q(captured[518:263]));
+        qkh_packet_h256 hi(.clk(hi_clock),.rst_n(hi_reset),.d(padded[518:263]),.q(captured[518:263]));
     end else begin : g_v
         qkh_packet_v263 lo(.clk(ck_lo),.rst_n(rst_n),.d(padded[262:0]),.q(captured[262:0]));
-        qkh_packet_v256 hi(.clk(hi_clock),.rst_n(rst_n),.d(padded[518:263]),.q(captured[518:263]));
+        qkh_packet_v256 hi(.clk(hi_clock),.rst_n(hi_reset),.d(padded[518:263]),.q(captured[518:263]));
     end endgenerate
     // Mutants exercise a missing capture edge and corruption of the upper bank.
     wire [518:0] observed=(MUT==1) ? {captured[518:263],padded[262:0]} : captured;
