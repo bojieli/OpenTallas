@@ -138,8 +138,8 @@ module ot_s81_engram_mix_control_core #(parameter integer N=32, D=5120, LM=5, LA
   if(gate_v)gate_ready<=1;
   if(avalid[0])begin if(add_copy!={4{copy}})protocol_fault<=1; nout<=nout+1;if(nout==NV-1)epoch<=0;end
  end
- wire [2*LM+2+RLY:0] mv;
- ot_hdc_vline #(.D(2*LM+2+RLY)) u_mv(clk,rst_n,in_v&&!phase,mv);
+ wire [2*LM+4+RLY:0] mv;
+ ot_hdc_vline #(.D(2*LM+4+RLY)) u_mv(clk,rst_n,in_v&&!phase,mv);
  wire [31:0] rn[0:1];assign rn[0]=norm_rstd[0+:32];assign rn[1]=norm_rstd[32+:32];
  reg [31:0] d_hold; reg [1:0] copy_hold;
  always @(posedge clk) begin if(go) copy_hold<=copy; if(rv[2]) d_hold<=rdd; end
@@ -161,7 +161,7 @@ module ot_s81_engram_mix_control_core #(parameter integer N=32, D=5120, LM=5, LA
   gate_v<=eg_valid;
   if(eg_valid) begin gate<=gy;gate_copy<=copy_hold;end
   if(rv[0]) hh<=rhh;if(rv[1]) kk<=rkk;if(rv[2]) dd<=rdd;
-  if(mvalid!={8{mv[2*LM+2+RLY]}}||avalid!={4{av_expected[AD]}}||eg_valid!=gv_expected[GD+3]||nv[0]!=nv[1]||(rv!=0&&rv!=7)||protocol_fault||(|mfault)||(|rf)||(|nf)||(|gf)||(|g_fault)||(|af)) fault<=1;
+  if(mvalid!={8{mv[2*LM+4+RLY]}}||avalid!={4{av_expected[AD]}}||eg_valid!=gv_expected[GD+3]||nv[0]!=nv[1]||(rv!=0&&rv!=7)||protocol_fault||(|mfault)||(|rf)||(|nf)||(|gf)||(|g_fault)||(|af)) fault<=1;
  end
 
  assign a_gate=gate_hold;
@@ -245,11 +245,16 @@ module ot_s81_engram_mul4 #(parameter integer LM=5,MUT=0)(
  input wire clk,arst_n,v,phase,input wire [127:0] h,k,w,
  output wire vo,output wire [127:0] hh,kk,dot,output reg fault);
  wire rn;ot_s81_engram_reset reset_leaf(clk,arst_n,rn);
+ // Real ingress and result boundary stages repair native phase257ps capture
+ // and kk299ps launch. +771 FF/master, +2 edges; unchanged four lanes/LM.
+ reg [127:0] hp,kp,wp;reg vp_in,phase_in;
+ always @(posedge clk or negedge rn)if(!rn)begin vp_in<=0;phase_in<=0;end else begin vp_in<=v;phase_in<=phase;end
+ always @(posedge clk)begin hp<=h;kp<=k;wp<=w;end
  reg [127:0] hr,kr,wr;reg vr;
- always @(posedge clk or negedge rn)if(!rn)vr<=0;else vr<=v&&!phase;
- always @(posedge clk)begin hr<=h;kr<=k;wr<=w;end
+ always @(posedge clk or negedge rn)if(!rn)vr<=0;else vr<=vp_in&&!phase_in;
+ always @(posedge clk)begin hr<=hp;kr<=kp;wr<=wp;end
  wire [2*LM:0] vp;ot_hdc_vline #(.D(2*LM)) valid_line(clk,rn,vr,vp);
- wire [127:0] hs,ks,hw;wire [15:0] f;
+ wire [127:0] hs,ks,hw,dot_mid;wire [15:0] f;
  genvar l;
  generate for(l=0;l<4;l=l+1)begin:lane
   wire [31:0] kd;
@@ -259,14 +264,17 @@ module ot_s81_engram_mul4 #(parameter integer LM=5,MUT=0)(
   ot_hdc_delay #(.W(32),.D(LM)) key_line(clk,rn,kr[32*l+:32],kd);
   wire [31:0] dr;
   ot_hdc_qmul_lat #(LM) md(clk,rn,vp[LM],hw[32*l+:32],(MUT==1)?32'h3f800000:kd,dr,f[4*l+3]);
-  reg [31:0] dout;always @(posedge clk)dout<=dr;assign dot[32*l+:32]=dout;
+  reg [31:0] dout;always @(posedge clk)dout<=dr;assign dot_mid[32*l+:32]=dout;
  end endgenerate
  wire [127:0] hmid,kmid;
  ot_hdc_delay #(.W(128),.D(LM+1)) hline(clk,rn,hs,hmid);
  ot_hdc_delay #(.W(128),.D(LM+1)) kline(clk,rn,ks,kmid);
- assign hh=hmid;assign kk=kmid;
+ reg [127:0] hh_pin,kk_pin,dot_pin;
+ always @(posedge clk)begin hh_pin<=hmid;kk_pin<=kmid;dot_pin<=dot_mid;end
+ assign hh=hh_pin;assign kk=kk_pin;assign dot=dot_pin;
  reg valid;always @(posedge clk or negedge rn)if(!rn)valid<=0;else valid<=vp[2*LM];
- assign vo=valid;wire raw_fault=|f;
+ reg valid_pin;always @(posedge clk or negedge rn)if(!rn)valid_pin<=0;else valid_pin<=valid;
+ assign vo=(MUT==22)?valid:valid_pin;wire raw_fault=|f;
  always @(posedge clk or negedge rn)if(!rn)fault<=0;else if(raw_fault)fault<=1;
 endmodule
 

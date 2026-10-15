@@ -180,7 +180,7 @@ module ot_s81_engram_mixq #(parameter integer MUT=0, VM_LAT=3, WRITE_COMMIT_LAT=
   .wq_v(wq_v),.wq_row(wq_row),.wq_mask(wq_mask),.wq_d(wq_d),.done(done),.fault(fault),
   .go(go),.iv(iv),.phase(phase),.copy(copy),.h(h),.kv(kv),.w(w),.eps(eps),.scale(scale),
   .gv(gv),.gc(gc),.ov(ov),.oc(oc),.result(result),.mf(mf));
- ot_s81_engram_mix #(.MUT(MUT==1?1:0)) mix(ck[1],rst,go,phase,iv,copy,h,kv,w,kv,eps,scale,
+ ot_s81_engram_mix #(.MUT(MUT==1?1:MUT==22?22:0)) mix(ck[1],rst,go,phase,iv,copy,h,kv,w,kv,eps,scale,
   gv,gc,gate,hh,kk,dd,ov,oc,result,mf,ck[32:2]);
 endmodule
 
