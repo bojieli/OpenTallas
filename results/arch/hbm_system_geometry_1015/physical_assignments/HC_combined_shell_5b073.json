@@ -167,5 +167,143 @@
     "native CTS root count, spread and slew",
     "TT setup >=0 and FF hold >=0",
     "actual route DRC/access/reach; no inherited timing grant"
-  ]
+  ],
+  "contingent_FF_band_geometry": {
+    "status": "ONLY_IF_LIVE_GATE_TERMINAL_FAILS; no blind restart",
+    "source_and_outline_unchanged": true,
+    "reason": "Actual pin-registered output FF band may exceed20.736um east space in current layout; generous overall utilization does not prove local fit.",
+    "macros": [
+      {
+        "kind": "weight_128x256",
+        "origin_um": [
+          23.76,
+          23.76
+        ],
+        "orientation": "MY",
+        "size_um": [
+          94.824,
+          41.04
+        ]
+      },
+      {
+        "kind": "weight_128x256",
+        "origin_um": [
+          23.76,
+          108.0
+        ],
+        "orientation": "MY",
+        "size_um": [
+          94.824,
+          41.04
+        ]
+      },
+      {
+        "kind": "weight_128x256",
+        "origin_um": [
+          23.76,
+          192.23999999999998
+        ],
+        "orientation": "MY",
+        "size_um": [
+          94.824,
+          41.04
+        ]
+      },
+      {
+        "kind": "weight_128x256",
+        "origin_um": [
+          23.76,
+          276.47999999999996
+        ],
+        "orientation": "MY",
+        "size_um": [
+          94.824,
+          41.04
+        ]
+      },
+      {
+        "kind": "weight_128x256",
+        "origin_um": [
+          144.288,
+          23.76
+        ],
+        "orientation": "MY",
+        "size_um": [
+          94.824,
+          41.04
+        ]
+      },
+      {
+        "kind": "weight_128x256",
+        "origin_um": [
+          144.288,
+          108.0
+        ],
+        "orientation": "MY",
+        "size_um": [
+          94.824,
+          41.04
+        ]
+      },
+      {
+        "kind": "weight_128x256",
+        "origin_um": [
+          144.288,
+          192.23999999999998
+        ],
+        "orientation": "MY",
+        "size_um": [
+          94.824,
+          41.04
+        ]
+      },
+      {
+        "kind": "weight_128x256",
+        "origin_um": [
+          144.288,
+          276.47999999999996
+        ],
+        "orientation": "MY",
+        "size_um": [
+          94.824,
+          41.04
+        ]
+      },
+      {
+        "kind": "residual_1024x256",
+        "origin_um": [
+          261.36,
+          43.2
+        ],
+        "orientation": "MY",
+        "size_um": [
+          174.744,
+          70.47
+        ]
+      },
+      {
+        "kind": "residual_1024x256",
+        "origin_um": [
+          261.36,
+          203.04
+        ],
+        "orientation": "MY",
+        "size_um": [
+          174.744,
+          70.47
+        ]
+      }
+    ],
+    "clearance_um": {
+      "weight_columns": 25.704,
+      "weight_to_residual": 22.248,
+      "residual_to_core_E": 61.776
+    },
+    "required_checks": [
+      "actual fixed FF rectangles and macro halo readback",
+      "bit-proportional bus pin ranges",
+      "real PG/cut and CTS/route"
+    ],
+    "live_gate": "E1unit1293263; PG+IO pass, GPL nonterminal overflow0.64 at1300iterations when variant prepared"
+  }
 }
