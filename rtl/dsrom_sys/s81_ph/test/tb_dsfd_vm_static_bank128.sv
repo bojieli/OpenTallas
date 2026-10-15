@@ -1,10 +1,13 @@
 `timescale 1ns/1ps
+`ifndef OT_BANK_DUT
+`define OT_BANK_DUT dsfd_vm_static_bank128
+`endif
 module tb_dsfd_vm_static_bank128;
  reg ck=0;always #2 ck=~ck;reg rn=0;
  reg rv=0,wv=0;reg [8:0] ra=0,wa=0;reg [7:0] rt=0,wt=0;
  reg [127:0] wd=0;reg [3:0] wm=0;
  wire orv,cv;wire [127:0] rd;wire [7:0] ort,ct;wire [8:0] ca;wire [3:0] cm;
- dsfd_vm_static_bank128 u(.ck(ck),.rst_n(rn),.i_rv(rv),.i_ra(ra),.i_rt(rt),.i_wv(wv),.i_wa(wa),
+ `OT_BANK_DUT u(.ck(ck),.rst_n(rn),.i_rv(rv),.i_ra(ra),.i_rt(rt),.i_wv(wv),.i_wa(wa),
  .i_wd(wd),.i_wm(wm),.i_wt(wt),.o_rv(orv),.o_rd(rd),.o_rt(ort),.o_commit(cv),.o_ca(ca),.o_cm(cm),.o_ct(ct));
  reg [127:0] gold[0:511];
  reg [127:0] expected[0:2];reg [7:0] tags[0:2];reg [2:0] vq=0;

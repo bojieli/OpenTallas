@@ -1,0 +1,108 @@
+{
+ "name": "dsfd_vm_static_bank128_e_m4_v20-bke1-COMMIT",
+ "block": "dsfd_vm_static_bank128_E",
+ "ref_tile": true,
+ "owner": "Claude:S81 VM owner r11",
+ "purpose": "Left-column E-input bank profile (signal-face mirror) native CTS+TT/FF/DRC; exact bank bench through the profile + mask mutant",
+ "threads": 8,
+ "peak_ram_gb": 16,
+ "source": {
+  "branch": "claude/s81-vm-r10-relay-1015",
+  "commit": "COMMIT"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_vm_static_bank128_E u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128.sv rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128_profiles.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "exact_bank_E",
+    "cmd": "mkdir -p {RUN}/exact_bank_E && verilator --binary --timing -O1 -Wno-fatal -j 2 --top-module tb_dsfd_vm_static_bank128 --Mdir {RUN}/exact_bank_E/obj -o tb +define+OT_BANK_DUT=dsfd_vm_static_bank128_E rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128.sv rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128_profiles.sv rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_static_bank128.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v > {RUN}/exact_bank_E/build.log 2>&1 && {RUN}/exact_bank_E/obj/tb",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS$"
+   },
+   {
+    "name": "neg_mask_E",
+    "cmd": "mkdir -p {RUN}/neg_mask_E && verilator --binary --timing -O1 -Wno-fatal -j 2 --top-module tb_dsfd_vm_static_bank128 --Mdir {RUN}/neg_mask_E/obj -o tb +define+OT_BANK_DUT=dsfd_vm_static_bank128_E +define+OT_VM_BANK_MUT_MASK rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128.sv rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128_profiles.sv rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_static_bank128.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v > {RUN}/neg_mask_E/build.log 2>&1 && {RUN}/neg_mask_E/obj/tb",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL$"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/dsfd_vm_static_bank128_e_m4_v20/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/dsfd_vm_static_bank128_e_m4_v20/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 16
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/dsfd_vm_static_bank128_e_m4_v20 --out {RUN}/record/views/dsfd_vm_static_bank128_E --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/dsfd_vm_static_bank128_e_m4_v20/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/dsfd_vm_static_bank128_e_m4_v20/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/dsfd_vm_static_bank128_e_m4_v20/dsfd_vm_static_bank128_e_m4_v20-bke1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "Left-column bank profile: the S81 VM composed-hop table (native_cb relay views) fails q2bank only at the bank column LEFT of each quarter, whose W-face request pins face away from the quarter (463 um). Signal-face mirror of the closed standard bank (E-face requests, W-face return/commit, same y tracks, N M3 ck/rst unchanged; MY instance flip rejected: M3 ck/rst and M5 PG land half a track off). Same RTL leaf (transparent wrapper), outline 220.32x75.6, SRAM placement, M4 cap, PG M5, 833.333 sign-off/770 route; zero cycles."
+}
