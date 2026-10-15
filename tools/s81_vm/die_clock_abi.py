@@ -32,8 +32,8 @@ WIDTH_CHANGED = {'f_collective': (2100, 'four static compiler rows {tag8,data512
 # category port -> (hardened master, its clock pin, closed kit dir) ; None = no closed native view yet
 VIEWS = {
     'ck_mem_bank_t': ('dsfd_vm_static_bank128', 'ck', 'dsfd_vm_static_bank128_m4_v20'),
-    'ck_mem_relay_req_t': ('dsfd_vm_static_relay128_b4|b8', 'ck_req', 'dsfd_vm_static_relay128_b4_native_option|dsfd_vm_static_relay128_b8_native_option'),
-    'ck_mem_relay_rsp_t': ('dsfd_vm_static_relay128_b4|b8', 'ck_rsp', 'dsfd_vm_static_relay128_b4_native_option|dsfd_vm_static_relay128_b8_native_option'),
+    'ck_mem_relay_req_t': ('dsfd_vm_static_relay128_b4|b8', 'ck_req', 'dsfd_vm_static_relay128_b4_native_cb|dsfd_vm_static_relay128_b8_native_cb'),
+    'ck_mem_relay_rsp_t': ('dsfd_vm_static_relay128_b4|b8', 'ck_rsp', 'dsfd_vm_static_relay128_b4_native_cb|dsfd_vm_static_relay128_b8_native_cb'),
     'ck_mem_wcapture_t': ('dsfd_vm_static_write_capture128(E|W)', 'ck', 'dsfd_vm_direct_capture_e_native|dsfd_vm_direct_capture_w_native'),
     'ck_mem_wscatter_t': ('dsfd_vm_static_scatter_b8_out(B0|B8|B16|B24)', 'ck', 'dsfd_vm_direct_scatter_b0_native|dsfd_vm_direct_scatter_b8_native|dsfd_vm_direct_scatter_b16_native|dsfd_vm_direct_scatter_b24_native'),
     'ck_mem_fsr_t': ('dsfd_vm_static_fsr_b0', 'ck', 'dsfd_vm_static_fsr_b0_native_1015_r1'),
