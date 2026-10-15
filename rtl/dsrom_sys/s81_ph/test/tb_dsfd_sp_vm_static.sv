@@ -31,7 +31,13 @@ module tb_dsfd_sp_vm_static;
     localparam integer CAP_PIPE=0;
 `endif
 
-    reg s_ck = 1, t_ck = 1, rst = 0, rss = 0;
+`ifdef OT_VM_NATIVE_WSCATTER
+    localparam integer WSCATTER_PIPE=1;
+`else
+    localparam integer WSCATTER_PIPE=0;
+`endif
+    reg s_ck = 1, t_ck = 1, rst = 1, rss = 1;
+    reg bench_active = 0;
     always #556 s_ck = ~s_ck;
     always #417 t_ck = ~t_ck;
     // ---------------------------------------------------------------- DUT
@@ -43,7 +49,7 @@ module tb_dsfd_sp_vm_static;
     reg [2203:0] fcol = 0; reg [14:0] crq = 0; wire [512:0] crs;
     reg [514:0] sel = 0, col = 0; reg [1026:0] asw = 0;
     wire [511:0] tgat; reg [10:0] xgo = 0; wire [512:0] qsw; reg [2:0] qsws = 3'b011;
-    dsfd_sp_vm #(.CAP_PIPE(CAP_PIPE), .READ_PIPE(READ_PIPE)) dut (
+    dsfd_sp_vm #(.CAP_PIPE(CAP_PIPE), .READ_PIPE(READ_PIPE), .WSCATTER_PIPE(WSCATTER_PIPE)) dut (
         .ck_read_data_t({64{t_ck}}), .ck_read_valid_t({8{t_ck}}), .rss_read_data_t({64{rss}}), .rss_read_valid_t({8{rss}}),
         .ck_core_t(t_ck), .ck_rsched_t(t_ck), .ck_seq_t(t_ck), .ck_landing_t(t_ck),
         .ck_mem_fsr_t({16{t_ck}}), .ck_mem_return_t({16{t_ck}}), .ck_mem_bank_t({128{t_ck}}),
@@ -121,7 +127,7 @@ module tb_dsfd_sp_vm_static;
     // ---------------------------------------------------------------- stream program
     integer cl_next = 2048, cl_beats = 0, gph = 0, xgo_at [0:7], cap_on = 0;
     reg [9:0] gphase [0:3];
-    always @(posedge t_ck) if (rss) begin : prog integer k, r, b; reg [3:0] m; reg [2047:0] dd;
+    always @(posedge t_ck) if (rss && bench_active) begin : prog integer k, r, b; reg [3:0] m; reg [2047:0] dd;
         tk = tk + 1;
         #10;
         c_cmd = 0; su_wqv = 0; su_rqv = 0; fcol = 0; crq = 0; xgo = 0;
@@ -202,7 +208,7 @@ module tb_dsfd_sp_vm_static;
     end
     // ---------------------------------------------------------------- serial program (WFC kit, capture)
     integer wfc_w = 0, wfc_r = 0;
-    always @(posedge s_ck) if (rst) begin : sprog integer r, k, j, el, w; reg [50:0] e;
+    always @(posedge s_ck) if (rst && bench_active) begin : sprog integer r, k, j, el, w; reg [50:0] e;
         sk = sk + 1;
         #10;
         fwfc = 0; fcap = 0; sel = 0; col = 0; asw = 0;
@@ -249,7 +255,7 @@ module tb_dsfd_sp_vm_static;
     end
     // ---------------------------------------------------------------- checks
     integer done_seen = 0, fault_at = -1;
-    always @(posedge t_ck) if (rss) begin : tchk integer p, r;
+    always @(posedge t_ck) if (rss && bench_active) begin : tchk integer p, r;
         #20;
         if (tk >= 0 && tk < MT) begin
             if (c_done !== e_dn[tk]) begin bad = bad + 1; if (bad < 12) $display("DONE MISMATCH tk %0d got %h exp %h", tk, c_done, e_dn[tk]); end
@@ -266,7 +272,7 @@ module tb_dsfd_sp_vm_static;
         if (hc_rsv !== 0 || pq_o[0] !== 0) begin bad = bad + 1; if (bad < 12) $display("UNEXPECTED IDLE RETURN tk %0d", tk); end
         if (c_st[0] && fault_at < 0) fault_at = tk;
     end
-    always @(posedge s_ck) if (rst) begin : schk
+    always @(posedge s_ck) if (rst && bench_active) begin : schk
         #20;
         if (sk >= 0 && sk < MS) begin
             if (mode == 0 && (qsw[0] !== e_q[sk][0] || (qsw[0] && qsw !== e_q[sk]))) begin bad = bad + 1; if (bad < 12) $display("QSW MISMATCH sk %0d got v%b exp v%b", sk, qsw[0], e_q[sk][0]); end
@@ -282,7 +288,11 @@ module tb_dsfd_sp_vm_static;
     initial begin
         if (!$value$plusargs("mode=%d", mode)) mode = 0;
         if (!$value$plusargs("seed=%d", seed)) seed = 1;
-        #(3336 * 4 - 100); rst = 1; rss = 1;
+        // Exercise a real reset edge after the native BAL clock gate has opened.
+        // A time-zero low reset alone leaves the gated core without a clock or
+        // falling reset edge in a two-state simulator. Keep the release epoch.
+        #3337; rst = 0; rss = 0;
+        #(3336 * 3 - 101); rst = 1; rss = 1; bench_active = 1;
         #(3336 * 600);
         if (mode == 0) begin
             if (c_st[0] || twfc[1028]) begin bad = bad + 1; $display("UNEXPECTED FAULT c_st %b t_err %b xio %b wfc %b cap %b", c_st, twfc[1028], dut.xio_f, dut.u_wfc.fault, dut.u_cap.fault); end

@@ -10,9 +10,9 @@ BAD release not compile-time determined t1547 model1 actual0
 BAD release not compile-time determined t1548 model1 actual0
 BAD release not compile-time determined t1549 model1 actual0
 BAD release not compile-time determined t1550 model1 actual0
-MEASURE jit16 godly17 blk8 nblk4 maxocc63 stall576 go64 freed48 put384 first_go358 ctrlfault1 corefault1 errors1484
+MEASURE jit16 godly16 blk8 nblk4 maxocc63 stall576 go64 freed48 put384 first_go357 ctrlfault1 corefault1 errors1484
 FRONT ordinal384 bad85
 OBSERVED_FAIL controller PHY window mode6 elastic1
-[5358000000] %Fatal: tb_kv_hbm_elastic_boundary.sv:252: Assertion failed in tb_kv_hbm_elastic_boundary
-%Error: /srv/opentallas-scratch/claude/qwen-kvsys/kvel-82a445f8a/source/rtl/test/qwen_static_kv/tb_kv_hbm_elastic_boundary.sv:252: Verilog $stop
+[5358000000] %Fatal: tb_kv_hbm_elastic_boundary.sv:254: Assertion failed in tb_kv_hbm_elastic_boundary
+%Error: /srv/opentallas-scratch/claude/qwen-kvsys/kvel-abaf82956/source/rtl/test/qwen_static_kv/tb_kv_hbm_elastic_boundary.sv:254: Verilog $stop
 Aborting...

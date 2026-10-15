@@ -1,0 +1,5 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO oflop: E face 10.5 pins/um (b0, b2, b3): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (derived in the flow)
+GATE INFO oflop: W face 10.5 pins/um (s_d, s_v): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 6 columns (derived in the flow)
+GATE FAIL sources: 1 committed input(s) absent from the working-tree archive: ['physical/s81_vm_cdc_leaves_1015/ot_s81_vm_x43_t_w1026_1015_f4.tcl']  -> FIX: materialize the referenced files in the sparse checkout before rerunning the gate
+PRE_ROUTE_GATE: FAIL (1 fail, 0 warn)

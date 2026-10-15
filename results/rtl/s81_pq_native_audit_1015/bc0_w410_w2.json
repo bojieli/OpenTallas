@@ -1,0 +1,23 @@
+{
+ "cell": "ot_s81_pq_bc_slice0",
+ "view": "physical/ref_tile/s81pq_bc0_w410/views/ot_s81_pq_bc_slice0",
+ "lib_cell": "ot_s81_pq_bc_slice0",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 90.4,
+ "spread_ps": 6.7,
+ "outputs": 410,
+ "inputs": 411,
+ "launch_ps": 181.0,
+ "launch_pin": "q[266]",
+ "capture_ps": 128.7,
+ "capture_pin": "d[88]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": ""
+}

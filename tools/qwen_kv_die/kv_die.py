@@ -396,7 +396,9 @@ def d2ds_binding():
                 ports=dict(ck0=['ck'], rst_n=['rst_n'], fdi=['fdi_tx_up', 'fdi_tx_v', 'fdi_tx_flit', 'fdi_rx_v', 'fdi_rx_flit'],
                            phy_rst_n=['phy_rst_n'], svc=list(D2DS_SVC), lup=['link_up'], rec_tx=list(D2DS_REC_TX),
                            rec_rx=list(D2DS_REC_RX), lrc=['host_link_reset_req', 'host_recovery_clear'],
-                           fwd_epoch=['fwd_epoch'], fwd_link_rst_n=['fwd_link_rst_n'], serdes_up=['serdes_up']),
+                           fwd_epoch=['fwd_epoch'], fwd_link_rst_n=['fwd_link_rst_n'], serdes_up=['serdes_up'],
+                           status_epoch16=['status_epoch16'], host_drained_local=['host_drained_local'],
+                           host_boot_begin=['host_boot_begin']),
                 sliced={},
                 classed={'por_n': 'by_design: package POR pad (off-chip signal)'})
 
@@ -1198,7 +1200,8 @@ def _host_v14_buses(m):
     # latency is chain position p (+1) cycles, p = 31 - k on the N stacks, recorded in the contract's compiler stages.
     orders = {st: (list(range(31, -1, -1)) if (HOST_V14.get('north') and st[1] == 'N') else list(range(32))) for st in STACKS}
     m['geo']['slice_chain_order'] = {st: o[0] for st, o in orders.items()}
-    add(('hboot', 'reset', 1, [('host', 'boot_go')] + [(sl(st, orders[st][0]), 'bgi') for st in STACKS]))
+    add(('hboot', 'reset', 1, [('host', 'boot_go')] + [(sl(st, orders[st][0]), 'bgi') for st in STACKS] +
+         [('d2d_kv', 'host_boot_begin')]))
     add(('pll_lock', 'spine_local', 1, [('pll', 'locked'), ('host', 'pll_locked')]))
     fam = dict(HOST_CLK_FAMILY, **HOST_CLK_INFERRED)
     for i_, (bid, cl, bits, eps) in enumerate(B):
@@ -1264,6 +1267,10 @@ def _d2ds_swap(m):
     add(('hrec_tx', 'spine_local', 1 + 548, [('host', 'rec_tx'), ('d2d_kv', 'rec_tx')]))
     add(('hrec_rx', 'spine_local', 2 + 1 + 1 + 548, [('d2d_kv', 'rec_rx'), ('host', 'rec_rx')]))
     add(('hlrc', 'spine_local', 2, [('host', 'lrc'), ('d2d_kv', 'lrc')]))
+    # v1.4.1 (Q-LINK r3 answers 09:17): status_epoch16 <- root token_epoch (TAG59 epoch16), host_drained_local <- root
+    # host_drained_local (exported host interface idle); host_boot_begin rides the root boot_go tree (hboot, below)
+    add(('hsep', 'spine_local', 16, [('host', 'token_epoch'), ('d2d_kv', 'status_epoch16')]))
+    add(('hhdl', 'spine_local', 1, [('host', 'host_drained_local'), ('d2d_kv', 'host_drained_local')]))
     by = {i.name: i for i in m['insts']}
     ck_ = by['ckb_kv']
     for j, (n_, p_) in enumerate((('fwb_ep', 'fwd_epoch'), ('fwb_rs', 'fwd_link_rst_n'))):
@@ -1412,6 +1419,14 @@ def _relays(m):
             except ValueError:
                 path = None
 
+        if path is None and bid == 'host_fdi' and HOST_V14.get('north'):
+            # v1.4.1 HOST-north (kvs7 window: coarse H 1.11 -> 1.27 / V 0.94 -> 1.15 where the 2,089-b FDI left the root
+            # westward into the kvn_WN / krs_WN corridor): the FDI goes down the EAST centre channel
+            try:
+                hb_ = by['host']
+                path = route_via(a, b, pa, pb, hb_.y - 2 * CHAN, lane_x=hb_.x + hb_.w + CHAN)
+            except ValueError:
+                path = None
         if path is None:
             path = route(a, b, pa, pb)
         L = (len(path) + 1) * G            # + the cell from each frame edge to the ring

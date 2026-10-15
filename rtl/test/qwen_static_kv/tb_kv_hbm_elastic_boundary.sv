@@ -35,10 +35,10 @@ module tb_kv_hbm_elastic_boundary;
  integer core_fault_seen=0,front_ordinal=0,front_bad=0;
  wire expect_fail=(mode==2||mode==3||mode==5||mode==6||CTRL_ELASTIC==0||FRONT_MUT!=0);
  reg model_put=0;reg model_arr[0:CYCLES+400];reg go_arr[0:CYCLES+400];reg blk_go=0;
- wire[293:0] f_co;wire[15:0] f_epoch;wire f_put,f_freed,f_hold,f_ovf,f_gofault;wire[15:0] f_stall;wire[$clog2(NBLK*BLK):0] f_occ;
+ wire f_idle;wire[293:0] f_co;wire[15:0] f_epoch;wire f_put,f_freed,f_hold,f_ovf,f_gofault;wire[15:0] f_stall;wire[$clog2(NBLK*BLK):0] f_occ;
  qkd_kv_hbm_elastic_front #(.NBLK(NBLK),.BLK(BLK),.STRIDE(1),.MUT(FRONT_MUT)) u_front(.pll_hbm(ck),.hrst(rst[1]),
   .co_in(co[1]),.epoch_in(out_epoch[1]),.blk_go(blk_go),.co_out(f_co),.epoch_out(f_epoch),.compiled_hbm_put(f_put),
-  .blk_freed(f_freed),.hold(f_hold),.stall_edges(f_stall),.occupancy(f_occ),.fault_overflow(f_ovf),.fault_go(f_gofault));
+  .blk_freed(f_freed),.idle(f_idle),.hold(f_hold),.stall_edges(f_stall),.occupancy(f_occ),.fault_overflow(f_ovf),.fault_go(f_gofault));
  qkd_static_kv_return_slots u_return(.pll_hbm(ck),.hrst(rst[1]),.ck(core),.rsi(rst[1]),
  .controller_co(mode==3?co[1]:f_co),.controller_epoch(mode==3?out_epoch[1]:f_epoch),.compiled_hbm_put(mode==3?predicted_corrected:f_put),
  .expected_put(expected_core_put),.expected_sector(expected_core_sector),.expected_epoch(16'd7),.expected_layer(6'd3),
@@ -130,7 +130,9 @@ module tb_kv_hbm_elastic_boundary;
  initial begin
   void'($value$plusargs("faultmode=%d",mode));void'($value$plusargs("jit=%d",JIT));void'($value$plusargs("seed=%d",seed));
   void'($value$plusargs("late=%d",late_sector));void'($value$plusargs("lateby=%d",lateby));
-  GO_DLY=JIT+1;void'($value$plusargs("godly=%d",GO_DLY));
+  // blk_go pin flop: start edge = go + 2 >= block-ready edge (last nominal landing + window + 2); the bench
+  // schedules blk_go at least one edge after the nominal landing it is compiled from
+  GO_DLY=JIT>0?JIT:1;void'($value$plusargs("godly=%d",GO_DLY));
   void'($urandom(seed));for(integer i=0;i<64;i++)jit_hist[i]=0;
   for(integer phase=0;phase<2;phase++)begin
    rst=0;owner=0;cmd=0;reserved=0;es=0;pi=0;
@@ -198,7 +200,7 @@ module tb_kv_hbm_elastic_boundary;
        automatic integer tg=t+GO_DLY;
        go_arr[tg]=1;
        // compiled release model: start = max(go+1, previous block's last take)
-       begin automatic integer st=(tg+1>model_free)?tg+1:model_free;
+       begin automatic integer st=(tg+2>model_free)?tg+2:model_free;   // blk_go pin flop + start edge
         for(integer i=0;i<BLK;i++)model_arr[st+1+i]=1;model_free=st+BLK;end
        if(first_go<0)first_go=tg;
       end
@@ -261,6 +263,7 @@ module tb_kv_hbm_elastic_boundary;
    $display("OBSERVED_HOLD late block held %0d edges, 512 sectors emitted exact in order, corefault%0d (sequencer block pause required)",f_stall,core_fault_seen);$fatal(1);
   end
   if(front_bad)begin $display("FAIL front output bad%0d",front_bad);$fatal(1);end
+  if(!f_idle)begin $display("FAIL front not idle after the full programme (KV drain signal)");$fatal(1);end
   if(returned_count!=512)$fatal(1,"FAIL dual-clock return count%0d",returned_count);
   if(f_stall!=0||blocks_go!=512/BLK||blocks_freed!=512/BLK||putcount!=512)$fatal(1,"FAIL production stall%0d go%0d freed%0d put%0d",f_stall,blocks_go,blocks_freed,putcount);
   if(errors)begin $display("FAIL elastic KV boundary errors%0d mode%0d",errors,mode);$fatal(1);end

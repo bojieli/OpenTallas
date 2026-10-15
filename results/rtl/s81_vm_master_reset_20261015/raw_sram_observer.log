@@ -1,0 +1,20 @@
+RAW time=17097 cy=17 row=0 slice=0 bank=0 source_label=8 delta=9 mask=15
+RAW time=17097 cy=17 row=1 slice=0 bank=1 source_label=8 delta=9 mask=15
+RAW time=17097 cy=17 row=2 slice=0 bank=2 source_label=8 delta=9 mask=15
+RAW time=17097 cy=17 row=3 slice=0 bank=3 source_label=8 delta=9 mask=15
+RAW time=17097 cy=17 row=4 slice=0 bank=4 source_label=8 delta=9 mask=15
+RAW time=17097 cy=17 row=5 slice=0 bank=5 source_label=8 delta=9 mask=15
+RAW time=17097 cy=17 row=6 slice=0 bank=6 source_label=8 delta=9 mask=15
+RAW time=17097 cy=17 row=7 slice=0 bank=7 source_label=8 delta=9 mask=15
+RAW time=17097 cy=17 row=8 slice=0 bank=8 source_label=8 delta=9 mask=15
+RAW time=17097 cy=17 row=9 slice=0 bank=9 source_label=8 delta=9 mask=15
+RAW time=17097 cy=17 row=10 slice=0 bank=10 source_label=8 delta=9 mask=15
+RAW time=17097 cy=17 row=11 slice=0 bank=11 source_label=8 delta=9 mask=15
+TB_VMCORE RESULT mode 0 cycles 3210 commits 69696 K 11 reads 19745 pq 514 mix_reads 4010 mix_writes 1000 rows_checked 25811 dones 4 cmds 4 bad 0
+TB_VMCORE PASS mode 0
+- out/seqcore/src/tb_dsfd_vm_static_core.sv:333: Verilog $finish
+RAW_HIST source_label_delta=9 count=69696
+RAW_TOTAL 69696
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 10.959 s; speed 244.509 ns/s
+- Verilator: cpu 10.958 s on 1 threads; allocated 54 MB

@@ -1,0 +1,28 @@
+{
+  "cell": "dsfd_vm_static_scatter_b8_out_B24",
+  "view": "physical/ref_tile/dsfd_vm_direct_scatter_b24_native_cb4b/views/dsfd_vm_static_scatter_b8_out_B24",
+  "lib_cell": "dsfd_vm_static_scatter_b8_out_B24",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 221.7,
+  "spread_ps": 30.0,
+  "outputs": 1209,
+  "inputs": 1249,
+  "launch_ps": 148.9,
+  "launch_pin": "o_data[557]",
+  "capture_ps": 152.4,
+  "capture_pin": "i_data[104]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "record_commit": "c162dcc3ebe21979eff8e1bd0e9b0caf0a0663a0",
+  "sha256": {
+    "dsfd_vm_static_scatter_b8_out_B24_tt.lib": "046c7e8839d003aa45950ac1f1d23ccc70db0b28de9dbd20cbc53c56bd9ad749",
+    "insertion.json": "b70f3432d8d80f1fc937c637b94fb341b52ff83428227c6c87f192caba11c496"
+  }
+}

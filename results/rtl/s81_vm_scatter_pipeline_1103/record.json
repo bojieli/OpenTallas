@@ -1,0 +1,51 @@
+{
+  "source_manifest": "source_manifest.json",
+  "actual_admission": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-927695-1792088292",
+    "mem_GB": 16,
+    "threads": 2,
+    "ot_run_exit": 0
+  },
+  "verdict": "PASS",
+  "baseline": {
+    "WSCATTER_PIPE": 0,
+    "READ_PIPE": 4,
+    "fixed_returned_commit_edges": 11,
+    "commits": 69696,
+    "reads": 19745,
+    "MIX_reads": 4010,
+    "MIX_writes": 1000,
+    "rows_checked": 25811,
+    "bad": 0
+  },
+  "staged": {
+    "WSCATTER_PIPE": 1,
+    "READ_PIPE": 4,
+    "fixed_returned_commit_edges": 12,
+    "commits": 69696,
+    "reads": 19745,
+    "MIX_reads": 4010,
+    "MIX_writes": 1000,
+    "rows_checked": 25811,
+    "bad": 0
+  },
+  "actual_DUT_mutant": {
+    "define": "OT_VM_BANK_MUT_EARLY_COMMIT",
+    "WSCATTER_PIPE": 1,
+    "bad": 61474,
+    "expected_fixed_K": 12,
+    "verdict": "rejected"
+  },
+  "memory_shape": "4slices x32actual ot_sram_1r1w_512x128_m4_r2c2",
+  "raw_visibility_receipts": [
+    "results/rtl/s81_vm_master_reset_20261015/record.json",
+    "results/rtl/s81_vm_scatter_pipe1_raw_20261015/record.json"
+  ],
+  "qualification_limits": [
+    "Actual full-core endpoint and fixedcommit calendar only; no whole-token or parent physical routing claim.",
+    "CAP2/fullmaster sourcecurrent PIPE0/1 proof separate and active.",
+    "Die generator still defaults READ0/CAP0; native READ4/CAP2/PIPE1 is not implicitly adopted.",
+    "Write-front P+6 successor has not been joined; these ages belong to declared source snapshot."
+  ]
+}

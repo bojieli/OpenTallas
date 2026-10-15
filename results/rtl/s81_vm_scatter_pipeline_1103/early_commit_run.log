@@ -1,0 +1,17 @@
+COMMIT MISMATCH cy 19 row 0 slice 0 exp_c 8 K 12
+COMMIT MISMATCH cy 19 row 1 slice 0 exp_c 8 K 12
+COMMIT MISMATCH cy 19 row 2 slice 0 exp_c 8 K 12
+COMMIT MISMATCH cy 19 row 3 slice 0 exp_c 8 K 12
+COMMIT MISMATCH cy 19 row 4 slice 0 exp_c 8 K 12
+COMMIT MISMATCH cy 19 row 5 slice 0 exp_c 8 K 12
+COMMIT MISMATCH cy 19 row 6 slice 0 exp_c 8 K 12
+COMMIT MISMATCH cy 19 row 7 slice 0 exp_c 8 K 12
+COMMIT MISMATCH cy 19 row 8 slice 0 exp_c 8 K 12
+CHECK did not verify: inp 0 st 11
+UNEXPECTED FAULT vm_fault 0 c_st 11: wsched own 000 dflt 0000 sflt 00000000000000000000000000000000 | mem 0000000000 | land 000 pq 0 out 0 op 0 rsched 0 | seq flt 00000000001
+TB_VMCORE RESULT mode 0 cycles 3210 commits 69696 K 12 reads 19745 pq 514 mix_reads 4010 mix_writes 1000 rows_checked 25811 dones 4 cmds 4 bad 61474
+TB_VMCORE FAIL mode 0
+- /srv/opentallas-scratch/codex/s81-vm-scatter-pipe-1103/out/early_commit/src/tb_dsfd_vm_static_core.sv:338: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 8.593 s; speed 311.833 ns/s
+- Verilator: cpu 8.591 s on 1 threads; allocated 54 MB

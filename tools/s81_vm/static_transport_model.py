@@ -31,3 +31,27 @@ def model():
 if __name__=='__main__':
     import json
     print(json.dumps(model(),indent=2))
+
+
+def write_scatter_pin_stage_model(write_pipeline=0):
+    """Explicit source-pin calendar for the opt-in cb4 scatter input stage.
+
+    Current production write-front version remains separately source-bound. These
+    ages apply to its existing full-core P+11 commit observation; they do not
+    adopt the independently developed P+6 write-front successor.
+    """
+    if write_pipeline not in (0, 1):
+        raise ValueError("WSCATTER_PIPE must be 0 or 1")
+    return dict(write_scatter_pipeline=write_pipeline,
+                source_pin_to_returned_commit_edges=11+write_pipeline,
+                source_pin_to_actual_SRAM_write_edges=9+write_pipeline,
+                actual_SRAM_write_to_returned_commit_edges=2,
+                added_write_visibility_edges=write_pipeline,
+                write_ii_edges=1, replicas=16,
+                source_added_pin_flops_per_scatter=1248*write_pipeline,
+                source_added_pin_flops_total=16*1248*write_pipeline,
+                measured_gate_sinks_baseline=1219, measured_gate_sinks_staged=2467,
+                visibility_proofs=["results/rtl/s81_vm_master_reset_20261015/record.json",
+                                   "results/rtl/s81_vm_scatter_pipe1_raw_20261015/record.json"],
+                whole_token_cost=None,
+                qualification="opt-in candidate; real128SRAM exact edges/mutants and current producer/compiler/physical joins required")
