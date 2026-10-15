@@ -438,6 +438,12 @@ def hgi_collective_endpoint_model():
     return endpoint_model()
 
 
+def hgi_collective_native_transport_model():
+    """Real SRAM/CRC endpoint plus 613/487 registered transport calendar."""
+    from uarch_model_hcoll_native_transport import model
+    return model()
+
+
 def hgi_collective_static_reduction_model():
     """16 real native FP32 lanes and fixed-calendar collective publication."""
     from uarch_model_hcoll_reduce_static import model
