@@ -1,0 +1,60 @@
+{
+  "schema": "hbm.su.static.arithmetic.v1",
+  "qualified": false,
+  "shape": {
+    "quarters": 4,
+    "lanes_per_quarter": 128,
+    "sfu_per_quarter": 32,
+    "full_lanes": 1,
+    "sfu_only_lanes": 127,
+    "light_lanes": 384
+  },
+  "replica_policy": "KIND2 only global lane0; local lane0 in quarters1..3 is KIND1",
+  "clock_roots": {
+    "lane_stage_entries": 4096,
+    "insertion_entries": 2048,
+    "broadcast": 64,
+    "external_scalar": 1,
+    "broadcast_registered_bits_per_root": 13936,
+    "insertion_max_flops_per_root": 5808,
+    "lane_sink_census": "stage roots split; actual synthesized count and CTS remain unverified"
+  },
+  "memory": {
+    "read_ports": 2048,
+    "index_read_ports": 512,
+    "word_bits": 32,
+    "read_bytes_per_cycle": 8192,
+    "index_bytes_per_cycle": 2048,
+    "write_bytes_per_cycle": 2048,
+    "response_offsets": [
+      0,
+      1,
+      2
+    ],
+    "backing_sram_macros": 3072,
+    "backing_sram_bound": false
+  },
+  "communication": {
+    "control_per_quarter_bits": 1742,
+    "broadcast_edges": 1,
+    "operand_boundary_bits_per_cycle": 65536,
+    "output_boundary_bits_per_cycle": 16384,
+    "routing_tracks": "requires actual pin/geometry allocation"
+  },
+  "arithmetic": {
+    "fp32_multiplier_pipelines": 2560,
+    "fp32_adder_pipelines": 1024,
+    "divider_lanes": 128,
+    "exp_lanes": 128,
+    "max_vector_result_words_per_cycle": 512
+  },
+  "latency": {
+    "normal_extra_fetch_edges": 2,
+    "gather_extra_fetch_edges": 4,
+    "nominal_light_emit_to_write_edges": 23,
+    "note": "broadcast1 + native20 + fetch2; actual bench required"
+  },
+  "area": "unmeasured full native datapath; no physical fit claimed",
+  "model_status": "sizing candidate; not throughput/physical qualification",
+  "native_lane_sha256": "c20e8a11e2c939b80945cc7d4e2058a696c51275314b2ccfdb92f125be7e2c72"
+}

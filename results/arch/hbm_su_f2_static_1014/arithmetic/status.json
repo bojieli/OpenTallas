@@ -1,0 +1,79 @@
+{
+  "qualified": false,
+  "native_exact_pass": false,
+  "physical_pass": false,
+  "production_price_pass": false,
+  "source": "Full4xN128/M32 realnativearithmetic candidate; not historical16 frozenlaneSFU grid",
+  "actual_shape": {
+    "lanes": 512,
+    "FULL": 1,
+    "SFU": 127,
+    "LIGHT": 384,
+    "scalar_SIDE_external": true,
+    "readers": 6,
+    "SRAM_macros": 3072
+  },
+  "controls": {
+    "bits_per_quarter": 1742,
+    "quarter_images": 4,
+    "local_lane_id": "0..127; compilerquarterbases explicit",
+    "affine_lowering": "84/104 fixture records including repeatedprofiles; 20 unsupported records explicit",
+    "canonical_profile_counts": "inputs/deepseek_full34 and qwen_full18; notclaimed33/12 canonical",
+    "fixed_issue": "64issues/op,32768words/op,12ops,393216total; no dynamicissue"
+  },
+  "stage_clocks": {
+    "entries_per_lane": 8,
+    "insertion_clock_entries_per_lane": 4,
+    "insertion_stage_max": 48,
+    "insertion_max_register_bits_per_root": 5808,
+    "broadcast_roots": 64,
+    "broadcast_bits_per_root": 13936,
+    "related": "1:1 phase0; real CTS and registercensus remainpending"
+  },
+  "SRAM_contract": {
+    "request_sample": "n",
+    "macro": "n+1",
+    "read_data": "n+2 NBA",
+    "nativecapture": "n+3",
+    "fetch_extra_edges": 2,
+    "gather_extra_edges": 4,
+    "write_commit_extra_edges": 1
+  },
+  "live": [
+    {
+      "host": "ot-epyc4",
+      "unit": "oth-ubuntu-1597217-1792057372",
+      "session": 7067,
+      "source": "/tmp/hbm-su-arithmetic-1015/source",
+      "result": "/tmp/hbm-su-arithmetic-1015/run",
+      "status": "live original predecessor; knownsingleclock/F2fixturedefects; preserveuntilterminal"
+    },
+    {
+      "host": "ot-epyc1tb",
+      "unit": "oth-ubuntu-790210-1792057796",
+      "session": 89793,
+      "source": "/tmp/hbm-su-arithmetic-stageclk-1015/source",
+      "result": "/tmp/hbm-su-arithmetic-stageclk-1015/run",
+      "status": "live stageclock successor withcorrected F2frameaddressing"
+    },
+    {
+      "host": "ot-epyc1tb",
+      "unit": "oth-ubuntu-793760-1792057884",
+      "session": 1911,
+      "result": "/tmp/hbm-su-arithmetic-stageclk-1015/census",
+      "status": "live nativeperKINDclockcensus"
+    }
+  ],
+  "open": [
+    "actualfullgridbaseandthreefailingmutants",
+    "actualperrootclockcensus/CTS",
+    "nativecanonicalfullprogramme",
+    "M128SFU/divider/scalarcalendars",
+    "sixindexedcalendarjoins",
+    "nativebankaddressnetwork/RFjoins",
+    "goldenorderedreducerjoin",
+    "kv_norm.rs actualscalarSIDE thenkv_norm.y/kv_rope.tail sourceandVMcommitepochs",
+    "productionendtoendprice",
+    "TTsetup/FFhold/DRC0"
+  ]
+}
