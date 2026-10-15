@@ -1789,7 +1789,8 @@ def top_pins(m, k=1):
             for pin in ([bid] if bits == 1 else [f'{bid}[{b}]' for b in range(bits)])]
     if not tops:
         return ''
-    pitch = 4.32
+    pitch = min(4.32, dn((DIE[1] - 2.0) / max(1, len(tops) - 1), TRK['M4'][1]))
+    assert pitch >= TRK['M4'][1], ('die pad track capacity', len(tops), DIE[1])
     span = pitch * (len(tops) - 1)
     assert span + 2.0 <= DIE[1], ('die pad capacity', len(tops), DIE[1])
     y0 = dn(min(m['hub']['collective'].y + m['hub']['collective'].h / 2, DIE[1] - span - 1.0), GY)
