@@ -1,5 +1,5 @@
 {
- "name": "hgi_xp_rdc-pinreg2-COMMIT",
+ "name": "hgi_xp_rdc-pinreg2-d2d899781",
  "block": "ot_hgi_xp_rdc",
  "ref_tile": true,
  "owner": "Claude:H-ELEM-A",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/hbm-groupA-1014",
-  "commit": "COMMIT",
+  "commit": "d2d899781",
   "extra_paths": [
    "results/arch/hgi_sim_20261010/g25_proof",
    "results/rtl/dshbm_1m_allmeasured_20261004",
@@ -111,7 +111,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_xp_rdc/hgi_xp_rdc-pinreg2-COMMIT"
+   "to": "results/rtl/ref_tile/hgi_xp_rdc/hgi_xp_rdc-pinreg2-d2d899781"
   }
  ],
  "cycles_added": 0,
