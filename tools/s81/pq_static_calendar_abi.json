@@ -115,7 +115,9 @@
     "VM_response_to_AQI_metadata_pin": 26,
     "retire_to_ev_end_pin": 0,
     "GA_input_sample_to_last_count_available_for_retire": 4,
-    "fault_cause_input_to_fault_pin": 2
+    "fault_cause_input_to_fault_pin": 2,
+    "root_pin_to_last_consumed_count_edges": 9,
+    "reset_release_to_first_boot_pw_edges": 3
   },
   "boundary_note": "Output pins after edge N are consumed by downstream flops at edge N+1; QB_PIPE adds two further edges beyond bc_hr alignment. All delays require matching actual macro/pipeline composition.",
   "physical_read_program": {
@@ -135,5 +137,6 @@
     "BF_count": 519,
     "max_phases": 642
   },
-  "incap_note": "OT_PQ_CTL_INCAP (canonical produced profile, 10-15): ga_i and every fault-cause input are pin-captured; count chain 3 -> 4 edges (root->retire 8 -> 9, compiler retained minimum 11 still holds), fault diagnosis +1 edge (never gates events). Requires OT_PQ_AQ_PIN_LAUNCH in ctl and AQ leaves. Reader/endpoint PINREG reset relay: release 3 edges after the port; the boot/PW writer starts >= 3 edges after reset release (initialization only)."
+  "incap_note": "OT_PQ_CTL_INCAP (canonical produced profile, 10-15): ga_i and every fault-cause input are pin-captured; count chain 3 -> 4 edges (root->retire 8 -> 9, compiler retained minimum 11 still holds), fault diagnosis +1 edge (never gates events). Requires OT_PQ_AQ_PIN_LAUNCH in ctl and AQ leaves. Reader/endpoint PINREG reset relay: release 3 edges after the port; the boot/PW writer starts >= 3 edges after reset release (initialization only).",
+  "compiler_minima_note": "OT_PQ_CTL_INCAP (S-ELEM-B 10-15): root pin -> last consumed count 8 -> 9 edges (GA input capture +1); pq_calendar.validate_tag_lifetimes rejects any source profile drain below this. Fault diagnosis +1 edge (fault_cause_input_to_fault_pin 2) is detection only and never moves an event. Reader/endpoint reset relay: the boot/PW writer starts >= 3 edges after reset release (initialization only, validate_boot_start). aq_vin is registered (OT_PQ_AQ_PIN_LAUNCH) in ctl and AQ leaves alike: no AQ calendar offset change."
 }

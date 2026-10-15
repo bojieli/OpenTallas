@@ -77,7 +77,18 @@
         ],
         "role": "New systemgeometry physicalcandidate; v1functionalRTL to v2physical port/source equivalence pending"
       }
-    ]
+    ],
+    "successor_packing": {
+      "source_commit": "fff63f04e",
+      "source": "rtl/hdc/v41x/static/ot_hbm_attn_staging_grouped.sv",
+      "same_macro_count": 34,
+      "per_lane": "16codebanks\u00d7256bits+one144bitmetadata",
+      "code_bits": "originalgroup[255:0], includesFP4scale128..143 whenfmt1",
+      "metadata_bits": "originalgroup[264:256] scale8+format1",
+      "external_ABI": "unchanged interleaved265\u00d716\u00d72=8480bits",
+      "read_edges": 1,
+      "qualification": "Groupedsource componentproof supplied geometryowner; fulltarget source/profile/physical qualification remainsOPEN"
+    }
   },
   "headgroup_source_inventory": {
     "functional_full_tile_count": 32,
@@ -152,5 +163,29 @@
     "candidate_bbox": null,
     "qualification": false
   },
-  "system_geometry_direction": "User requests whole-system grouping/rearrangement; historical54child translations onlylocalbaseline. Newowner /root/geometry_hbm_system"
+  "system_geometry_direction": "User requests whole-system grouping/rearrangement; historical54child translations onlylocalbaseline. Newowner /root/geometry_hbm_system",
+  "transpose_state": {
+    "source": "rtl/hdc/v41x/ot_hdc_v41x_attn.sv:899 ot_hdc_v41x_attn_tr",
+    "state_kind": "Current source inferredpayload registerarray; sourceexact explicitpercellFF successor required before nativequalification",
+    "per_tile_bits": 18432,
+    "tile_count": 32,
+    "total_payload_bits": 589824,
+    "per_tile_write_values_per_edge": 32,
+    "per_tile_read_values_per_edge": 32,
+    "per_tile_write_data_bits_per_edge": 576,
+    "per_tile_read_data_bits_per_edge": 576,
+    "source_packed_group_input_bits_per_edge": 530,
+    "minimum_clockroots_15k_payload_sinks": 40,
+    "candidate_clockroots": 64,
+    "candidate_roots_per_tile": 2,
+    "mapped_area_um2": null,
+    "qualification": false
+  },
+  "KV8_internal_format": {
+    "source_bytes_per_row": 544,
+    "numeric_code_scale_bytes": 528,
+    "format_flag_bits": 16,
+    "packed_bits": 4240,
+    "packed_bytes": 530
+  }
 }

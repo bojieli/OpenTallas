@@ -1,4 +1,6 @@
 `timescale 1ns/1ps
+// HISTORICAL (OWNER 2026-10-14T23:16 HANDOFF 0an): credit/ready flow control on an on-chip HBM path. Diagnostic/component
+// evidence only; NOT the production schedule. Being replaced by compiler-assigned fixed transfer slots (H-COLL plan, el1014-hbm-p2p-coll.log).
 `default_nettype none
 // ot_hgi_coll_crl_tx / ot_hgi_coll_crl_rx (HBM peer-to-peer step 1, 2026-10-14): a valid/ready stream carried across the
 // die by CREDIT flow, so that any number of relay registers is legal (a valid/ready pair through relays duplicates or drops
@@ -158,6 +160,34 @@ module ot_hgi_coll_rx_native #(parameter integer W=552, CRD=16)(
             n<=n+(AW+1)'(v_pin)-(AW+1)'(pop);
             out_v<=(n+(AW+1)'(v_pin)-(AW+1)'(pop))!='0;
         end
+endmodule
+
+// Hardened masters of ot_hgi_coll_rx_native, one module name per closed parameter set, so a parent or die binds each
+// LEF/Liberty view unambiguously: _w552 = RGX receive (CLOSED hgi_coll_rgx_rx_r2, W 552 / CRD 16), _w568 = TOPK-write
+// receive (CLOSED hgi_coll_tkw_rx_r2, W 568 / CRD 8).  Ports identical to the generic leaf; the bodies are the generic leaf.
+module ot_hgi_coll_rx_native_w552(
+    input wire clk,rst_n,t_v,
+    input wire [551:0] t_d,
+    output wire out_v,
+    output wire [551:0] out_d,
+    input wire out_rdy,
+    output wire epoch,
+    output wire fault
+);
+    ot_hgi_coll_rx_native #(.W(552),.CRD(16)) u(.clk(clk),.rst_n(rst_n),.t_v(t_v),.t_d(t_d),.out_v(out_v),.out_d(out_d),
+        .out_rdy(out_rdy),.epoch(epoch),.fault(fault));
+endmodule
+module ot_hgi_coll_rx_native_w568(
+    input wire clk,rst_n,t_v,
+    input wire [567:0] t_d,
+    output wire out_v,
+    output wire [567:0] out_d,
+    input wire out_rdy,
+    output wire epoch,
+    output wire fault
+);
+    ot_hgi_coll_rx_native #(.W(568),.CRD(8)) u(.clk(clk),.rst_n(rst_n),.t_v(t_v),.t_d(t_d),.out_v(out_v),.out_d(out_d),
+        .out_rdy(out_rdy),.epoch(epoch),.fault(fault));
 endmodule
 
 // Local payload region, sharing the leaf clock. Payload state has no reset gate;

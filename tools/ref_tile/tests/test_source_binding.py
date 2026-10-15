@@ -97,7 +97,10 @@ class SourceBindingTest(unittest.TestCase):
                     return real_run(cmd, **kw)
                 if cmd[0] == 'ssh' and '.tgz' in cmd[-1]:
                     staged['archive'] = kw['input']
-                if cmd[0] == 'ssh' and 'ot-heavy' in cmd[-1]:
+                if cmd[0] == 'ot-run' and '--pick' in cmd:
+                    # Disk/memory admission (ea71c5c16) picks the host before upload (text mode).
+                    return subprocess.CompletedProcess(cmd, 0, 'test-host\n', '')
+                if (cmd[0] == 'ssh' and 'ot-heavy' in cmd[-1]) or (cmd[0] == 'ot-run' and '--' in cmd):
                     out = ('GATE_SOURCE_ARCHIVE_SHA256=' + hashlib.sha256(staged['archive']).hexdigest() + '\n'
                            'GATE_FLOW_RC=0 GATE_FLOW_S=1\nGATE_IOP_RC=0\nGATE_CTS_RC=0\n'
                            'GATE_CK_RC=0\nGATE_DONE\n'

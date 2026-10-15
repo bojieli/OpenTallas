@@ -1,5 +1,5 @@
 BAD host native read data
 FAIL persistent staticKV host controller errors1 mode4
-[4948000000] %Fatal: tb_static_return_controller_calendar.sv:170: Assertion failed in tb_static_return_controller_calendar
-%Error: rtl/test/qwen_static_kv/tb_static_return_controller_calendar.sv:170: Verilog $stop
+[4948000000] %Fatal: tb_static_return_controller_calendar.sv:172: Assertion failed in tb_static_return_controller_calendar
+%Error: rtl/test/qwen_static_kv/tb_static_return_controller_calendar.sv:172: Verilog $stop
 Aborting...

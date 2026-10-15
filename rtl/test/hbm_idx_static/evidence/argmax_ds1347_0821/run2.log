@@ -1,0 +1,18 @@
+WARNING: rtl/test/hbm_idx_static/tb_argmax_static.sv:80: $readmemh(cal.mem): Not enough words in the file for the requested range [0:16383].
+WARNING: rtl/test/hbm_idx_static/tb_argmax_static.sv:80: $readmemh(stream.mem): Not enough words in the file for the requested range [0:16383].
+WARNING: rtl/test/hbm_idx_static/tb_argmax_static.sv:80: $readmemh(pre.mem): Not enough words in the file for the requested range [0:4095].
+WARNING: rtl/test/hbm_idx_static/tb_argmax_static.sv:80: $readmemh(chk.mem): Not enough words in the file for the requested range [0:1023].
+SLICE STATUS edge 286 bank 000000000000000000000000000000000000 hub 001 share 0
+SLICE STATUS edge 287 bank 000000000000000000000000000000000000 hub 001 share 0
+SLICE STATUS edge 288 bank 000000000000000000000000000000000000 hub 001 share 0
+SLICE STATUS edge 289 bank 000000000000000000000000000000000000 hub 001 share 0
+SLICE STATUS edge 290 bank 000000000000000000000000000000000000 hub 001 share 0
+SLICE STATUS edge 291 bank 000000000000000000000000000000000000 hub 001 share 0
+SLICE STATUS edge 292 bank 000000000000000000000000000000000000 hub 001 share 0
+SLICE STATUS edge 293 bank 000000000000000000000000000000000000 hub 001 share 0
+SLICE STATUS edge 294 bank 000000000000000000000000000000000000 hub 001 share 0
+NAN FLAG edge 1580
+NAN FLAG edge 1617
+ARGMAX_STATIC MUT2 records30 dones20 faults10 sectors_checked44 errors2268 schedule_edges2198
+FATAL: rtl/test/hbm_idx_static/tb_argmax_static.sv:126: static ARGMAX on actual SW slice mismatch
+       Time: 26140000  Scope: tb_argmax_static

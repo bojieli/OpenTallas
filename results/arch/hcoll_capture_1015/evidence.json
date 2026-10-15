@@ -1,0 +1,177 @@
+{
+  "source_sha256": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_capture_ctl.sv": "6a419f79c71a5d4d556411ba392262c79dd112bcf0863af4cd8fc0c4eacf8cb8",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_link_capture.sv": "f50bc60bfb5d3da810fc50007154aa9ceb90f86e60c757031c0bb7293c855c76",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv": "d24045a84d64fdd69ab9f15ad9ccc3f8d6b5ccad712da8df51ac2d67db001326",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv": "21a88e901f304638f66eaf743dfa4ef8555670db66bbe44ba2c489983b719c89",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv": "d5e879e1e76a0b5f4145279c55a53154401b5b3e3a47aa16b33f82612933937a",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_static_link_capture.sv": "c51e24350661008bcb75b0073edc6a45ae95afddd3fa7c8757f2318c702be085",
+    "rtl/hbm_accel/io_static_20261015/tb_static_capture_endpoint_transport.sv": "ed7cc76f05c587c96c35530035b6d482fdecd9f5b2bde9f43d02045913265b36",
+    "tools/hbm_coll_static/check_pinreg_faces.py": "97f3a98d5e543a38204886a71f7526333eb06ca8321ce1522cc8dcfbaccf9d29",
+    "tools/uarch_model_hcoll_capture.py": "f4e5ec56d8b197dd12215a5d19a95ca117eebbdcef2c928ab984f2b9127b2169"
+  },
+  "model": {
+    "payload_bits": 545,
+    "sequence_bits": 16,
+    "wire_bits": 612,
+    "transport_frame_bits": 613,
+    "storage_banks": 4,
+    "storage_leaf_bits": 141,
+    "native_sram_bits": 32768,
+    "state_capture_flops_per_bank": 154,
+    "controller_launch_flops": 577,
+    "controller_command_delay_edges": 2,
+    "read_to_tx_edges": 6,
+    "rx_edges": 2,
+    "read_edge": "n pin capture; n+1 launch; n+2 storecapture; n+3macroread; n+4dout; n+5q_pin; n+6TX",
+    "sram_write_edge": "n+4 from raw reservation; native bypass retained",
+    "transport_acceptance": "A(j)=19+floor613j/487; readA-7/writeA-11; TXstart18/RXstart22",
+    "transport_receive": "capture25+lastwordindex; publish27+lastwordindex",
+    "bits_per_cycle_per_store_boundary": 154,
+    "channel_capacity_tracks": null,
+    "logical_flit_face_peak_bytes_per_cycle": 68.125,
+    "actual_transport_application_bytes_per_cycle": 50.84502446982056,
+    "actual_transport_including_metadata_bytes_per_cycle": 54.12214518760196,
+    "macs_per_cycle": 0,
+    "replicas": 4,
+    "controller_clock_sinks_upper_bound": 6000,
+    "state_clock_sinks_upper_bound": 1000,
+    "area_slot_fit": "native64x512 unchanged; leaf outline/physical path proof pending",
+    "slot_reuse": "samephysical64 slots; nativeownershipguard delayed2 withcommands",
+    "status": "SIZED: all external control/data/epoch/PHY inputs first captured; stored input directly q_pin capture; TX6/RX2",
+    "input_capture_registers": 1220
+  },
+  "native": {
+    "checks": 2048,
+    "frames_per_direction": 1024,
+    "TX": 6,
+    "RX": 2,
+    "flight": 96,
+    "mutants_rejected": 11
+  },
+  "transport": {
+    "slots": 300,
+    "payloads": 234,
+    "idle": 66,
+    "wire": 613,
+    "word": 487,
+    "mutants": 4
+  },
+  "mapped": {
+    "status": "PASS",
+    "top": "ot_hgi_coll_static_link_capture",
+    "all_controller_inputs_first_capture": {
+      "epoch_begin": {
+        "port_bits": 1,
+        "first_capture_D_loads": 1
+      },
+      "epoch": {
+        "port_bits": 8,
+        "first_capture_D_loads": 8
+      },
+      "wr_v": {
+        "port_bits": 1,
+        "first_capture_D_loads": 1
+      },
+      "wr_observed_v": {
+        "port_bits": 1,
+        "first_capture_D_loads": 1
+      },
+      "wr_seq": {
+        "port_bits": 16,
+        "first_capture_D_loads": 16
+      },
+      "wr_flit": {
+        "port_bits": 545,
+        "first_capture_D_loads": 545
+      },
+      "rd_v": {
+        "port_bits": 1,
+        "first_capture_D_loads": 1
+      },
+      "rd_seq": {
+        "port_bits": 16,
+        "first_capture_D_loads": 16
+      },
+      "rx_expect_v": {
+        "port_bits": 1,
+        "first_capture_D_loads": 1
+      },
+      "rx_expect_seq": {
+        "port_bits": 16,
+        "first_capture_D_loads": 16
+      },
+      "phy_up": {
+        "port_bits": 1,
+        "first_capture_D_loads": 1
+      },
+      "rx_pin_v": {
+        "port_bits": 1,
+        "first_capture_D_loads": 1
+      },
+      "rx_pin_flit": {
+        "port_bits": 612,
+        "first_capture_D_loads": 612
+      }
+    },
+    "checks": {
+      "output.tx_pin_v": 1,
+      "output.tx_pin_flit": 607,
+      "output.rx_v": 1,
+      "output.rx_flit": 545,
+      "output.epoch_abort": 1,
+      "output.retry_requested": 1,
+      "output.fault_cause": 11,
+      "bank_we": 1,
+      "bank_wa": 6,
+      "bank_ra": 6,
+      "bank_data": 561,
+      "bank0.dout": 141,
+      "g_bank[0].u_store.we_pin": 1,
+      "g_bank[0].u_store.wa_pin": 6,
+      "g_bank[0].u_store.ra_pin": 6,
+      "g_bank[0].u_store.din_pin": 141,
+      "bank1.dout": 141,
+      "g_bank[1].u_store.we_pin": 1,
+      "g_bank[1].u_store.wa_pin": 6,
+      "g_bank[1].u_store.ra_pin": 6,
+      "g_bank[1].u_store.din_pin": 141,
+      "bank2.dout": 141,
+      "g_bank[2].u_store.we_pin": 1,
+      "g_bank[2].u_store.wa_pin": 6,
+      "g_bank[2].u_store.ra_pin": 6,
+      "g_bank[2].u_store.din_pin": 141,
+      "bank3.dout": 138,
+      "g_bank[3].u_store.we_pin": 1,
+      "g_bank[3].u_store.wa_pin": 6,
+      "g_bank[3].u_store.ra_pin": 6,
+      "g_bank[3].u_store.din_pin": 138,
+      "g_bank[0].u_store.u_native.u_sram.r_addr_in": 6,
+      "g_bank[0].u_store.u_native.u_sram.w_addr_in": 6,
+      "g_bank[0].u_store.u_native.u_sram.w_ce_in": 1,
+      "g_bank[0].u_store.u_native.u_sram.wd_in": 141,
+      "g_bank[1].u_store.u_native.u_sram.r_addr_in": 6,
+      "g_bank[1].u_store.u_native.u_sram.w_addr_in": 6,
+      "g_bank[1].u_store.u_native.u_sram.w_ce_in": 1,
+      "g_bank[1].u_store.u_native.u_sram.wd_in": 141,
+      "g_bank[2].u_store.u_native.u_sram.r_addr_in": 6,
+      "g_bank[2].u_store.u_native.u_sram.w_addr_in": 6,
+      "g_bank[2].u_store.u_native.u_sram.w_ce_in": 1,
+      "g_bank[2].u_store.u_native.u_sram.wd_in": 141,
+      "g_bank[3].u_store.u_native.u_sram.r_addr_in": 6,
+      "g_bank[3].u_store.u_native.u_sram.w_addr_in": 6,
+      "g_bank[3].u_store.u_native.u_sram.w_ce_in": 1,
+      "g_bank[3].u_store.u_native.u_sram.wd_in": 138
+    },
+    "register_bits_per_root": [
+      4421,
+      597,
+      597,
+      597,
+      567
+    ],
+    "actual_macro_count": 4,
+    "scope": "mapped generic gate FF-Q launch/capture and all macro input faces; no route or TT/FF timing claim"
+  },
+  "qualification": "actualnativeSRAM/CRC behavior and genericmapped allinputfirstcapture+outputFFQ/childFFfaces; no physical timing/FEC/rate claim"
+}

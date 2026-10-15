@@ -1,0 +1,15 @@
+token run: embedding words 64, terminal results 1
+layer 0 start cyc 191 epoch 1/1
+layer 1 start cyc 291 epoch 1/1
+layer 2 start cyc 391 epoch 1/1
+layer 3 start cyc 491 epoch 1/1
+layer 4 start cyc 591 epoch 1/1
+abort at cyc 690
+drained 690
+reset seen 692
+retrained 725
+RECOVERY abort->epoch_begin KV 116 cycles, compute 0 cycles; HOST-visible 50 cycles
+layer 4 start cyc 741 epoch 2/2
+layer 5 start cyc 841 epoch 2/2
+frames C->S 198 S->C 198 kvn 24 results 6 host-checks 6 normal-epoch faults 0 errors 0
+D2D_DIES_PASS

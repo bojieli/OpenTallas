@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OpenTallas Data Flow</title>
+<link rel="stylesheet" href="/explorer/dataflow/dataflow.css">
+<style>
+  :root { color-scheme:dark; }
+  * { box-sizing:border-box; }
+  html,body { margin:0;background:#05070d;color:#e8eefc; }
+  body { font:14px Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased; }
+  header { display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;padding:10px 16px;border-bottom:1px solid #1b2540;background:#070b16; }
+  header h1 { font-size:18px;margin:0;font-weight:800;letter-spacing:-.02em; } header h1 span { color:#5ee7ff; }
+  header p { margin:0;color:#8a97b8;font-size:12px;flex:1 1 260px; }
+  header a { color:#8a97b8;text-decoration:none;font:600 12px ui-monospace,Menlo,monospace;border:1px solid #1b2540;border-radius:999px;padding:5px 10px;white-space:nowrap; }
+  header a:hover { color:#5ee7ff;border-color:#4a5678; }
+  nav.designs { display:flex;flex-wrap:wrap;gap:6px;padding:10px 16px 0; }
+  nav.designs button { font:600 12px ui-monospace,Menlo,monospace;background:#0b1020;color:#c8d2ec;border:1px solid #2a3558;border-radius:999px;padding:6px 12px;cursor:pointer;min-height:32px; }
+  nav.designs button[aria-pressed=true] { border-color:#5ee7ff;color:#fff;background:#16305a; }
+  main { padding:10px 16px 24px; }
+  #err { color:#e66767;font:13px ui-monospace,Menlo,monospace;white-space:pre-wrap; } #err:empty { display:none; }
+  @media(max-width:760px) { header { padding:8px 16px; } header p { display:none; } header h1 { font-size:16px;flex:1 1 100%; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>OpenTallas <span>Data Flow</span></h1>
+  <p>Which links carry the token, how wide and how long they are, where they bypass blocks and where cuts congest</p>
+  <a href="/explorer/token/">Token Explorer</a> <a href="/explorer">Chip Explorer</a>
+</header>
+<nav class="designs" aria-label="Design"></nav>
+<main><div id="app"></div><div id="err"></div></main>
+<script type="module">
+import { mountDataflow } from './dataflow.js';
+import { Clock } from '/explorer/token/core.js';
+const DESIGNS = [['qwen_rom', 'Qwen ROM'], ['ds_rom', 'DeepSeek ROM (S81)'], ['hbm_gen_qwen', 'HBM die · Qwen3-8B'], ['hbm_gen_ds', 'HBM die · DeepSeek']];
+const nav = document.querySelector('nav.designs'), app = document.getElementById('app'), err = document.getElementById('err');
+const parse = () => Object.fromEntries(location.hash.slice(1).split('&').filter(Boolean).map((kv) => kv.split('=').map(decodeURIComponent)));
+let api = null, serial = 0;
+async function show() {
+  const q = parse(), design = DESIGNS.some(([d]) => d === q.design) ? q.design : 'ds_rom', my = ++serial;
+  nav.replaceChildren(...DESIGNS.map(([d, l]) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = l; b.setAttribute('aria-pressed', String(d === design)); b.onclick = () => { location.hash = 'design=' + d; }; return b; }));
+  api && api.destroy(); api = null; err.textContent = '';
+  try {
+    const r = await fetch('/explorer/token/data/' + design + '.json', { cache: 'no-store' });
+    if (!r.ok) throw new Error('token record HTTP ' + r.status);
+    const data = await r.json(); if (my !== serial) return;
+    const clock = new Clock({ t0: 0, t1: data.totals.cycles, seconds: 60 });
+    const t = Number(q.t); if (Number.isFinite(t)) clock.seek(t);
+    api = await mountDataflow(app, { data, clock, design, record: q.die || null,
+      onRecord: (id) => history.replaceState(null, '', '#design=' + design + '&die=' + id) });
+    window.dataflow = api;
+  } catch (e) { err.textContent = 'data flow: ' + e.message; }
+}
+window.addEventListener('hashchange', show);
+show();
+</script>
+</body>
+</html>

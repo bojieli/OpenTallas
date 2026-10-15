@@ -10,13 +10,13 @@ module hfd_hgi_vm_calendar_SW (
     input wire [15:0] start_loops,
     output wire calendar_v,active,done,fault,
     output wire [31:0] ordinal,
-    output wire [15:0] client_seq,
-    output wire [7:0] response_enable,
-    output wire [15:0] response_seq,
+    output wire [7:0] client_seq,
+    output wire [3:0] response_enable,
+    output wire [7:0] response_seq,
     output wire [7:0] bank_enable,
-    output wire [23:0] bank_client,
+    output wire [15:0] bank_client,
     output wire [1:0] hub_ring_enable,
-    output wire [5:0] hub_ring_client,
+    output wire [3:0] hub_ring_client,
     output wire [7:0] rslot_v,
     output wire [7:0] wslot_v,
     output wire [23:0] rslot,
@@ -28,28 +28,28 @@ module hfd_hgi_vm_calendar_SW (
     output wire [23:0] lg_local_read,
     output wire [23:0] lg_local_write
 );
-    wire [201:0] calendar;
-    ot_vms_calendar_static #(.W(202)) u_programme (
+    wire [171:0] calendar;
+    ot_vms_calendar_static #(.W(172)) u_programme (
         .clk(clk),.rst_n(rst_n),.cfg_we(cfg_we),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
         .start_v(start_v),.start_base(start_base),.start_limit(start_limit),.start_loops(start_loops),
         .calendar(calendar),.calendar_v(calendar_v),.ordinal(ordinal),.active(active),.done(done),.fault(fault));
-    assign client_seq=calendar[0+:16];
-    assign response_enable=calendar[16+:8];
-    assign response_seq=calendar[24+:16];
-    assign bank_enable=calendar[40+:8];
-    assign bank_client=calendar[48+:24];
-    assign hub_ring_enable=calendar[72+:2];
-    assign hub_ring_client=calendar[74+:6];
-    assign rslot_v=calendar[80+:8];
-    assign wslot_v=calendar[88+:8];
-    assign rslot=calendar[96+:24];
-    assign wslot=calendar[120+:24];
-    assign ring_tx_enable=calendar[144+:2];
-    assign ring_tx_source=calendar[146+:6];
-    assign replay_enable=calendar[152+:1];
-    assign replay_source=calendar[153+:1];
-    assign lg_local_read=calendar[154+:24];
-    assign lg_local_write=calendar[178+:24];
+    assign client_seq=calendar[0+:8];
+    assign response_enable=calendar[8+:4];
+    assign response_seq=calendar[12+:8];
+    assign bank_enable=calendar[20+:8];
+    assign bank_client=calendar[28+:16];
+    assign hub_ring_enable=calendar[44+:2];
+    assign hub_ring_client=calendar[46+:4];
+    assign rslot_v=calendar[50+:8];
+    assign wslot_v=calendar[58+:8];
+    assign rslot=calendar[66+:24];
+    assign wslot=calendar[90+:24];
+    assign ring_tx_enable=calendar[114+:2];
+    assign ring_tx_source=calendar[116+:6];
+    assign replay_enable=calendar[122+:1];
+    assign replay_source=calendar[123+:1];
+    assign lg_local_read=calendar[124+:24];
+    assign lg_local_write=calendar[148+:24];
 endmodule
 module hfd_hgi_vm_calendar_SE (
     input wire clk,rst_n,cfg_we,

@@ -20,6 +20,7 @@ PY
  CAP="$O/capture_actual_mut.sv"
 elif [ "$LEAF" = scatter ] && [ "$CASE" = mutant ];then define=-DOT_VM_DIRECT_SCATTER_MUT_DATA
 elif [ "$LEAF" = scatter ] && [ "$CASE" = address ];then define=-DOT_VM_DIRECT_SCATTER_MUT_ADDR
+elif [ "$LEAF" = scatter ] && [ "$CASE" = valid ];then define=-DOT_VM_DIRECT_SCATTER_MUT_VALID
 elif [ "$CASE" != base ];then echo 'unknown actualDUT mutation';exit 2
 fi
 iverilog -g2012 $define -s tb_dsfd_vm_static_direct_scatter -o "$O/tb" "$S/vm/dsfd_vm_static_scatter.sv" "$CAP" "$SCAT" "$S/test/tb_dsfd_vm_static_direct_scatter.sv" > "$O/build.log" 2>&1

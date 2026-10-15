@@ -1,0 +1,132 @@
+{
+  "status": "PASS components only",
+  "units": [
+    "oth-ubuntu-2018900-1792062847 (prefetch PASS, initial writer harness rejected expected capture-fault indication)",
+    "oth-ubuntu-2031510-1792062994 (corrected exact fault expectations, writers PASS)",
+    "oth-ubuntu-2033088-1792063030 (three actual prefetch RTL mutants caught)"
+  ],
+  "native_source_profile": "G25 opcode parameter369 logicalH1. ActualH16 hardware retained; exclusive SID0 RG0/WG0 on current SW RG6/WG2 actualbank for components only. No shared-slot grant or NEtransport qualification.",
+  "descriptors_words": {
+    "Q": 53376,
+    "SC": 53888,
+    "EB": 55296,
+    "PV": 56128
+  },
+  "descriptors_sectors": {
+    "Q": 6672,
+    "SC": 6736,
+    "EB": 6912,
+    "PV": 7016
+  },
+  "actual_macro_inventory": {
+    "query": 64,
+    "P_four_fields": 512,
+    "VMbanks": 24,
+    "QKserializer": 256,
+    "PVserializer": 2048
+  },
+  "proofs": {
+    "prefetch": "196608 data/zero/field checks \u00d72 random power-up seeds; OT_MEM_NO_INIT. H16/T128640/epochs0,1,0. Exact8activeQ and2/10activePrequests; inactive realzero SRAM writes, noinactiveVMrequest.",
+    "writers": "QK2304 FP32 words/36commits; PV1536words/24commits; inactiveflags poisoned1, active flags observed, actualn+3retire, epochs0/1/0; data/owner/SID negative cases +capturephasefault cases.",
+    "DUT_mutants": [
+      "unwanted inactivequeryVMrequest",
+      "missingqueryzeroSRAMwrites",
+      "missingPzeroSRAMwrites"
+    ]
+  },
+  "schedule_price": {
+    "Q_total_fill_slots": 128,
+    "Q_active_VM_bursts": 8,
+    "Q_real_zero_fill_slots": 120,
+    "P_total_fill_slots": [
+      32,
+      160
+    ],
+    "P_active_VM_bursts": [
+      2,
+      10
+    ],
+    "P_real_zero_fill_slots": [
+      30,
+      150
+    ],
+    "SC_aggregate_commits": [
+      2,
+      10
+    ],
+    "PV_aggregate_commits": 8,
+    "PV_nextrecord_capture_min_edges": 16,
+    "PV_drain_edges": 8
+  },
+  "not_qualified": [
+    "H1 full actualarithmetic replay",
+    "actualQK\u2192SFU\u2192EB\u2192PV\u2192DEN complete producer join",
+    "SID0\u2192physicalNE transport and actual sharedLG calendar",
+    "physical/controller/wholekernel immutable throughput",
+    "Wholekernel globalprogramme binding remains open; independentactualhost frontend proof recordedseparately"
+  ],
+  "bank_sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+  "evidence_sha256": {
+    "mutants/q_zero.log": "feb3236202d549da28542cc640117ab215c1dadc70c520408a19caaa8e2b6414",
+    "mutants/q_rq.log": "9d2bd94e095872c5f623987cf3de19568a30008ef59e573af2f1d2c30eed7bc9",
+    "mutants/p_zero.log": "7ef087b0a60ceef26e12639f091392a409b6068654868ece0ca7934cc4f3807d",
+    "mutants/gate": "b47702e408b51ea54f97d477d7fe7e0e530270bd4edcfc941ea9a02b9e782404",
+    "prefetch/seed73.log": "a31b9da550504c5151bb97ad9f8879e7e45fda619f17b7379a2985d68648c57c",
+    "prefetch/grid_mutant.log": "cc692afc46fe683ca7ce8b14e092f6efab4937a98b3494aa9f8605e7447b62c7",
+    "prefetch/seed41.log": "d235ce3194caefc6ea062d5a4577088755731e832994e0e285bf063bdfeca977",
+    "prefetch/gate": "38361e0d0e5c0732d43e4bc9d3b7f628bb38025ad37a0ff0723aa020bee069cc",
+    "writers/qk_m4.log": "3a8a594497e0e3cac255d03fb0ec6e29df747255406d36c24d55dae8201ae185",
+    "writers/qk_m6.rc": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "writers/pv_m4.log": "513e2c62395584474073dce1493ea96778643c88cf9de155045594eccd527ca8",
+    "writers/qk_m5.log": "6178abfca52b4ed715b3f162acced163cf2d266be88d5791157f40b7cf9d55d7",
+    "writers/pv_m0.log": "5c81a4c04add3cf7448c295b91084dedd41781b76d729e4061dd2bdb3b88b6d2",
+    "writers/qk_m0.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "writers/qk_m2.log": "7584ee33f5621f5d7288d3f26a1a2f53168e070e15ff48e1c55594e8a268c706",
+    "writers/pv_m1.rc": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "writers/pv_m3.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "writers/qk_m5.rc": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "writers/pv_m0.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "writers/pv_m3.log": "eb333afe120dd5b90b5e5baae97ea119d59e9be995cae5931c5200540750abb8",
+    "writers/qk_m0.log": "79a2d8a5f1d043e9c38e80837b1eb83128e1068c6fa9139a9e38e1bdb23d9dd4",
+    "writers/qk_m2.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "writers/qk_m1.log": "393523b9745931441a883a318ab3c8d0503b5cc635d5914d59ef141379291fcd",
+    "writers/pv_m4.rc": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "writers/pv_m2.log": "513e2c62395584474073dce1493ea96778643c88cf9de155045594eccd527ca8",
+    "writers/qk_m1.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "writers/pv_m2.rc": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "writers/pv_m1.log": "22f291e3025145427a5bd4ea637ed2c1b66253227fcfd23e8a5a385beed11fb1",
+    "writers/qk_m6.log": "6178abfca52b4ed715b3f162acced163cf2d266be88d5791157f40b7cf9d55d7",
+    "writers/gate": "827b3634baa9f6e90625f78827af094cd8862eefbbe5d6b9f37942b69d251d28",
+    "writers/qk_m3.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "writers/qk_m3.log": "518c5ce9bba6e2be39ce5970fea1ec454d998801be3403ff7146cfb179da9240",
+    "writers/qk_m4.rc": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+  },
+  "tested_RTL_source_sha256": {
+    "rtl/hdc/v41x/static/ot_hbm_attn_p_prefetch_h1.sv": "ebbebbe08b1c15500ddb4c9a4fa6de9aef42840733b404b87847fd63cd1be0c4",
+    "rtl/hdc/v41x/static/ot_hbm_attn_pv_native_output_h1.sv": "6ce54997c776a57af3c9fb910c95b16f1b12291c6db30ec3ecff0a9fb568e473",
+    "rtl/hdc/v41x/static/ot_hbm_attn_qk_native_output_h1.sv": "8bc3f9799f747c28f4852c301f811d1be0552952afe342cd7c3200b629e5ebd2",
+    "rtl/hdc/v41x/static/ot_hbm_attn_query_prefetch_h1.sv": "1c391c8e386f3315d967a1b2c180c3b413c74ae36af717af05b076df049f18ee",
+    "rtl/test/hbm_accel/generic/tb_hbm_attn_qk_native_output_h1.sv": "c036430805d8bf8a97e7abd01caafc620a0d788d6f684e77057f3cce6e0fdff3",
+    "rtl/test/hbm_accel/generic/tb_hbm_attn_pv_native_output_h1.sv": "1e34f90b4b099aab780faae97b5ff6d74f95278c12f8c63b9e89d8ab1b510ecf",
+    "rtl/test/hbm_accel/generic/tb_hbm_attn_h1_prefetch.sv": "8ef57333ad89b492e24c80757dfbbed3f46ef1cbca754a26cabfd59b5ef7ef7b",
+    "tools/hbm_static_attention/run_h1_native_writers.sh": "5bfdf9d79fa6da4e530cd4c781976cfce28c74f7cecd901fee0b1c057911caf8",
+    "tools/hbm_static_attention/run_h1_math_replay.sh": "e9804870f383af459a0a4127ff7b37d3c33a058a6825c85f0ad5821fd27e0c72",
+    "tools/hbm_static_attention/run_h1_prefetch.sh": "971de612e83286d8ef133d2b3915e131db08405f73a27c8a402d734e149d633f",
+    "tools/hbm_static_attention/run_h1_prefetch_DUT_mutants.sh": "b1a0172fd91aa14639dce4b88451594242d45d57af78b1b9e9a6b6700752bbc9"
+  },
+  "unqualified_frontend_source_sha256": {
+    "rtl/hdc/v41x/static/ot_hbm_attn_physical_host_program_front_h1.sv": "3d7f32c424306b5f8b57ee575a93082b0afaba7a1a3467056eec3e88f702e728",
+    "rtl/hdc/v41x/static/ot_hbm_attn_physical_program_query_front_h1.sv": "880725120f784028eeca24a722befe1db66bf7945a9f84d9c697c1b4b54745eb"
+  },
+  "native_source_records": {
+    "T128": [
+      22,
+      26
+    ],
+    "T640": [
+      316,
+      322
+    ],
+    "source_sha256": "43c1652f3c2348fd711c770c4769e041caa51a63209c34670c9993ccbbbe4d1d"
+  }
+}

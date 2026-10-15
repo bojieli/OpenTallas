@@ -1,0 +1,26 @@
+{
+  "schema": "opentallas.quant.transport_boundary_model.v1",
+  "before_RTL": true,
+  "baseline_failure": "9b71a952b",
+  "opt_in": "IO_REGS=1 default0",
+  "actual_boundary_registers": {
+    "rr_bits": 2056,
+    "decoder_y_bits": 512,
+    "decoder_result_valid_fault_bits": 3,
+    "local_read_selector_bits": 96,
+    "local_write_selector_bits": 24
+  },
+  "operation_edges_added": 2,
+  "source_bank_return_edge_change": "+1 registeredbankresponses beforeconstant-index lane selection",
+  "decoder_result_write_edge_change": "+1 registeredy/valid beforeconstant-index bankpack",
+  "VM_read_slot_shift": 0,
+  "VM_write_slot_shift": 2,
+  "SW_component_predicted_cycles": 183,
+  "SW_immutable_price": 192,
+  "NW_component_predicted_cycles": 159,
+  "NW_immutable_price": 168,
+  "historical_wq3_price": 184,
+  "native_epoch_authority": false,
+  "ports_and_SRAMs_unchanged": true,
+  "clock_locality": "samephysicalslot must be remeasured; no route admitted from oldCTS"
+}

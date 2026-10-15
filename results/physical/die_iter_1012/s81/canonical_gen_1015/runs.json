@@ -1,0 +1,121 @@
+{
+  "status": "SCREEN13_BASELINE_AND_SCREEN14_REROOT_LIVE",
+  "source_commit": "e5e33df8d",
+  "host": "ot-epyc4",
+  "pid": 1799112,
+  "unit": "oth-ubuntu-1799095-1792060810",
+  "local_systemd_unit": "canonical-gen-1015-screen14.service",
+  "local_log": "/home/ubuntu/canonical-gen-1015-screen14.log",
+  "remote_source": "/srv/opentallas-scratch/codex-canonical-gen-1015/src",
+  "output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen14",
+  "scope": "Actual full2417 typed generator. No native timing or placement success claim while active. All sourcepairIDs2417/BF519 andPHW10 metadata preserved.",
+  "first_failure": "Historical slot_geometry required uniform BF_PER_REGION; canonical exactperframe slot inventory now replaces only canonical restriction. Failed screen1 remains immutable.",
+  "artifacts_expected": {
+    "field_before_trunks.json.gz": "Actual fully populated canonical child boxes before transport; incomplete nets",
+    "canonical_partial.json.gz": "Exact current instances+buses on failure; explicitly partial",
+    "canonical_plan.json.gz": "Complete actual generator instances,buses,frames and calendar on success",
+    "exact_pins.lef.gz": "Generated and actual native abstract LEFs, only after success"
+  },
+  "open": [
+    "actual RSC occupancy and <=500um per-bit flights/cuts",
+    "all realnative abstracts/TTsetup/FFhold/DRC0",
+    "actual PHW10 source bindings from compute stream",
+    "static schedule through actual physical clock phases"
+  ],
+  "screen2": {
+    "status": "GEN_FAIL",
+    "error": "cx2 no station at2075um: direct eastsource exit crossed realHC slab",
+    "field_legality": {
+      "instances": 32969,
+      "overlaps": 0,
+      "outside": 0
+    },
+    "original_pid": 1259604,
+    "original_unit": "oth-ubuntu-1259588-1792051134",
+    "partial_output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen2"
+  },
+  "fix": "East start reaches physical S14 through actual HC crossing corridor; samehopgates/occupancy. Failed partial now also exports actual pins when finalize succeeds.",
+  "prior_screen3_checkpoint": {
+    "status": "SCREEN2_TERMINAL_FAIL_SCREEN3_LIVE",
+    "source_commit": "c1005b4e1",
+    "unit": "oth-ubuntu-1265934-1792051399",
+    "local_systemd_unit": "canonical-gen-1015-screen3.service",
+    "output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen3"
+  },
+  "updated_utc": "2026-10-15T10:42:07.381196+00:00",
+  "screen7": {
+    "status": "GEN_FAIL",
+    "exit_code": 1,
+    "former_pid": 1329839,
+    "error": "chain crW5_W0_edge39: no station spot near s=2650 of3973 (11018,13437)",
+    "structural_change_measured": "Shared return trees with up to six independent forwarded-clock 70-bit lanes per physical station. Actual occupied RSC now blocks this edge.",
+    "partial_artifacts": [
+      "canonical_partial_finalized.json.gz",
+      "partial_exact_pins.lef.gz",
+      "partial_pin_exclusions.json"
+    ],
+    "next": "Measure existing RSC occupancy and implement structural lane packing or alternate legal street route before next full screen."
+  },
+  "screen8": {
+    "status": "GEN_FAIL",
+    "source": "3161f2115",
+    "structural_change": "Actual RSC-contained field-return relays packed west, unchanged stages/IDs/clocks/ports; max4 return lanes28.056um beside17.256um relays, east-offset roadmap. Each move checked against occupied rectangles.",
+    "reach_scope": "Construction only: inherited recipe final hop-gate0; independent sourceexact per-pin audit required, no closure claim.",
+    "error": "FAIL crE4_E0_edge29 at(20726,9142); reached all W and E0..3. Repack658candidates/105moved, no field overlap/outside."
+  },
+  "screen9": {
+    "status": "GEN_FAIL",
+    "source": "5a87a8279",
+    "structural_change": "Connect actual S14 entry-to-entry vertical spine edges omitted from return graph; penalize narrow fieldRSC vertical travel2x for route choice only. Physical length/reach/register counts still actual. Retains screen8 fourlane packing.",
+    "scope": "Inherited geometry recipe has final --hop-gate0. Construction success does not qualify exact per-pin reach; source-bound graph audit and all physical gates remain mandatory.",
+    "error": "All128 broadcast trees and128 root return paths construct; then legacy service qSW no station (11879,3323), fictional symmetric shorestrip crosses actual canonical CFG/ROM boxes."
+  },
+  "screen10": {
+    "status": "GEN_FAIL",
+    "source": "0f8e49102",
+    "capacity_sha256": "2d1fa10aa7e3136a4fece04b2b9b1d094a99391dcd5c7a6726991061ff540995",
+    "capacity_source": "geometry_s81 6ef8ed3a5",
+    "structural_change": "Coherent whole physicalW column10 +146.88um; six immutable roots/realchildren preserved. Actual servicegap155.52um with roadmap edges only in realgap/localstreets. Actual q/a access uses graph; ordinary1026 N/S-face station fits broadgap.",
+    "cut_scope": "q/a/ix/co2568bits isolated diagnostic0.524028, not aggregate actualtraffic/PG/signoff; remains mandatory actual cut gate.",
+    "error": "All128 root broadcast paths (two shared trees), all128 root return paths, qSW514 and aSW1026 construct; ixSW fails legacyshorestrip at(12718,3433). Movedactual32969childboxes0overlap/outside."
+  },
+  "screen11": {
+    "status": "GEN_FAIL",
+    "source": "20e23fe66",
+    "capacity_sha256": "2d1fa10aa7e3136a4fece04b2b9b1d094a99391dcd5c7a6726991061ff540995",
+    "structural_change": "Allfour q/a/ix/co service paths use actual irregularstreet/gap graph; externalS14spine placed outside movedinnercolumn outline; actual per-chain polylines/stationboxes and broadcasttree injectors/parents exported for system optimizer.",
+    "error": "NameError in moved-column spine lookup; fixed local cols[i] reference. No physical verdict inferred. Undefined-name lint and py_compile pass."
+  },
+  "screen12": {
+    "status": "GEN_FAIL",
+    "source": "ae2651806",
+    "capacity_sha256": "2d1fa10aa7e3136a4fece04b2b9b1d094a99391dcd5c7a6726991061ff540995",
+    "structural_change": "Allfour q/a/ix/co service paths use actual irregularstreet/gap graph; externalS14spine placed outside movedinnercolumn outline; actual per-chain polylines/stationboxes and broadcasttree injectors/parents exported for system optimizer.",
+    "fix": "Use actual cols[i] for moved-column lookup; previous local name was undefined.",
+    "error": "All 128 root broadcast/return paths and q/a/ix/co service flows construct; control s4_svcj fails the remaining legacy shoreline assumption."
+  },
+  "screen13": {
+    "screen": 13,
+    "source": "3c15dadc6",
+    "host": "ot-epyc4",
+    "pid": 1780381,
+    "unit": "oth-ubuntu-1780361-1792060276",
+    "source_tree": "/srv/opentallas-scratch/codex-canonical-gen-1015/src",
+    "output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen13",
+    "local_service": "canonical-gen-1015-screen13.service",
+    "verified_elapsed_seconds": 590,
+    "scope": "Baseline broad service gap, full construction reached actual hop-finalization/rebuild. Thirteen alignment bundles refused, no waiver."
+  },
+  "screen14": {
+    "screen": 14,
+    "source": "e5e33df8d",
+    "host": "ot-epyc4",
+    "pid": 1799112,
+    "unit": "oth-ubuntu-1799095-1792060810",
+    "source_tree": "/srv/opentallas-scratch/codex-canonical-gen-1015/e_reroot/src",
+    "output": "/srv/opentallas-scratch/codex-canonical-gen-1015/screen14",
+    "local_service": "canonical-gen-1015-screen14.service",
+    "capacity_sha256": "ef91a10712e3a585ed51124db7733fb81aa4a3e936ab5def312b516dd585ea6d",
+    "scope": "Distinct actual E broadcast reroot at existing S14 node [19116.55,11919.32], same source/HC route; independent frozen source, all IDs retained."
+  }
+}

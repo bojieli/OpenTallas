@@ -1,0 +1,31 @@
+{
+  "schema": "opentallas.quant.programme_command_r4_model.v1",
+  "before_build": true,
+  "basis": "actualbaseline4d4ac803c routedODBd074f694 andSPEFaa685491; programme_clock_geometry/full_summary.json",
+  "registered_boundary_option": "PIN_BOUNDARY1, source3e0c10191",
+  "restore_original_pin_columns": 4,
+  "arithmetic_operation_edges_added": 0,
+  "diagnostic_fault_visibility_edge": 1,
+  "boot_reset_release_edges": 3,
+  "baselineCTSactualsinks": 1584,
+  "R2CTSactualsinks": 1589,
+  "extraFF_reason": "4resetrelayFF+1registeredfault; same67physicalpincloneFF inboth",
+  "clock_sink_evidence": {
+    "command_clone_x_delta_um_max_sampled": 2,
+    "command_bit8_clk_ps_before_after": [
+      252.682648,
+      277.646545
+    ],
+    "captured241FFmean_clk_before_after": [
+      258.35581026970954,
+      305.0821483651452
+    ]
+  },
+  "targeted_ports": "command1..17 only",
+  "actual_routed_target_min_FF_hold_ps": 60.574074,
+  "measured_trio_FF_delay_ps_example_bit8": 45.45,
+  "conservative_hold_remaining_ps": 15.124074,
+  "pads_removed": 51,
+  "thresholds_unchanged": true,
+  "admit_route_only_after": "actual300ps insertion/80ps spread, separateFFhold, actualnativepinlaunch/capture budgets; actualfreshroute signoff required"
+}

@@ -1,0 +1,121 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "s81hc_ctfn_native_ref",
+ "top": "ot_s81_hc_ctfn",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  576.72,
+  25.92
+ ],
+ "core": [
+  2.16,
+  2.16,
+  574.5600000000001,
+  23.76
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": 2469,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "N": [
+   "fv_in",
+   "fd_in"
+  ],
+  "S": [
+   "fvm",
+   "fdm"
+  ],
+  "W": [
+   "clk",
+   "rst_in",
+   "rst_c"
+  ]
+ },
+ "clock_port": "clk",
+ "blocks": [],
+ "findings": [
+  [
+   "WARN",
+   "util",
+   "utilisation 20% outside 45%-60% (std 2469 + macro 0 in core 12364 um2)",
+   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  ]
+ ],
+ "referenced": [
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_hc_core.sv",
+  "rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/lib/ot_skid_buffer.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "rtl/hdc/v41/ot_hdc_softplus.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/hdc/v41/ot_hdc_actquant.sv",
+  "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv",
+  "physical/common_flow/hold_pad_hb4.tcl",
+  "physical/common_flow/clock_split_x.tcl",
+  "physical/ref_tile/s81hc_ctfn_native_ref/kit.env",
+  "physical/ref_tile/s81hc_ctfn_native_ref/clock.sdc",
+  "physical/ref_tile/s81hc_ctfn_native_ref/signoff.sdc",
+  "physical/ref_tile/s81hc_ctfn_native_ref/pdn.tcl",
+  "physical/ref_tile/s81hc_ctfn_native_ref/pre_cts.tcl",
+  "physical/ref_tile/s81hc_ctfn_native_ref/post_cts.tcl",
+  "physical/ref_tile/s81hc_ctfn_native_ref/post_grt.tcl",
+  "physical/ref_tile/s81hc_ctfn_native_ref/pre_drt.tcl",
+  "physical/ref_tile/s81hc_ctfn_native_ref/pre_fill.tcl",
+  "physical/ref_tile/s81hc_ctfn_native_ref/post_fill.tcl",
+  "physical/ref_tile/s81hc_ctfn_native_ref/pre_grt.tcl",
+  "physical/ref_tile/s81hc_ctfn_native_ref/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/s81_die_pins/v22_hc_local_split/ot_s81_hc_ctfn.tcl",
+  "tools/s81_suhc/inherited_exact_iop.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/s81hc_ctfn_native_ref/pre_gpl.tcl",
+  "physical/ref_tile/s81hc_ctfn_native_ref/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
+ ]
+}

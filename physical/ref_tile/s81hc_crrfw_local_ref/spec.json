@@ -1,0 +1,101 @@
+{
+ "name": "s81hc_crrfw_local_ref",
+ "top": "ot_s81_hc_crootr_f",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_crootr.sv",
+  "rtl/hdc/ot_hdc_delay.sv"
+ ],
+ "params": {
+  "C": 0
+ },
+ "clock_port": "sk",
+ "reset_ports": [
+  "srs"
+ ],
+ "outline": {
+  "w": 276.48,
+  "h": 345.6
+ },
+ "util": 0.52,
+ "macros": [],
+ "pins": {
+  "N": [
+   "p_req",
+   "p_y"
+  ],
+  "E": [
+   "f_fv",
+   "f_fd"
+  ],
+  "S": [
+   "ch_fv",
+   "ch_fd",
+   "ch_rst"
+  ],
+  "W": [
+   "sk",
+   "srs"
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 16,
+  "peak_ram_gb": 40,
+  "hold_margin_ns": 0.03,
+  "pin_min_tracks": 1,
+  "pin_v": "M3 M5",
+  "pin_h": "M4",
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "benches_from": "tools/s81_suhc/hc_tile_benches_crrfw.json",
+  "owner": "Codex:S-NORM-returns",
+  "branch": "codex/s81-returns-1015",
+  "tag": "v7-y-order",
+  "purpose": "Repair actual C0 reversed N-y to S-chain bus while preserving exact RTL bit identity, epochs and production dimensions.",
+  "views_to": "physical/ref_tile/s81hc_crrfw_local_ref/views",
+  "record_to": "results/rtl/ref_tile/s81hc_crrfw_local_ref",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_suhc/test",
+   "rtl/link",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
+  ],
+  "hold_merge": "New C0 chain-output physical bit placement: actual downstream peer binding + parent geometry + full native TT/FF/DRC signoff required before adoption"
+ },
+ "inhold": true,
+ "io_tcl": "physical/s81_hc_pinplan/crrf_w_y_order_candidate.tcl",
+ "recipe": 2,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 24,
+  "allow_none": true
+ },
+ "reroute_reason": {
+  "kind": "native_launch",
+  "why": "C0 exact realRTL unchanged: physical S ch_fd[104+i] reassigned among sameexisting tracklocations to orderby actualN p_y[i] x. Reversedbus3,669,353 pair inversions->0; horizontal bitwire369131.214->51303.666um. Failedv6GPL0305 immutable. Allclock/SDC/inputhold/IO budgets preserved; downstreampeerrebind remains open."
+ },
+ "structural_change": "C0 exact realRTL unchanged: physical S ch_fd[104+i] reassigned among sameexisting tracklocations to orderby actualN p_y[i] x. Reversedbus3,669,353 pair inversions->0; horizontal bitwire369131.214->51303.666um. Failedv6GPL0305 immutable. Allclock/SDC/inputhold/IO budgets preserved; downstreampeerrebind remains open.",
+ "why_floorplan": "v6: tile = bottom 345.6 um of the 276.48 x 598.32 slot sp_hc_s/crootr_c*/f (origin unchanged, S face unchanged on the chain); N pins at the abutment x of the 11 y slice leaves (crr_pinplan crrf_n_plan), y crosses 252.7 um of die channel straight down; f face on the T_tree overlap (tile-local 150 .. 343.4); slot_change_request to the die lead",
+ "clock": "cts",
+ "children": [],
+ "inter": [],
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "slot_change_request": {
+  "name": "s81hc_crrfw_ref",
+  "reason": "v6: tile occupies the bottom 345.6 um of the unchanged slot; the top 252.72 um becomes die channel for the y slice / p_req wires (straight under the leaves)",
+  "outline": [
+   276.48,
+   345.6
+  ],
+  "origin_in_slot": [
+   0.0,
+   0.0
+  ]
+ }
+}

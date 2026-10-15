@@ -53,7 +53,7 @@ class HybridSpec(unittest.TestCase):
 
 @unittest.skipUnless(available(), 'real OpenROAD ORFS image required')
 class HybridOpenroad(unittest.TestCase):
-    def run_flow(self, mutant='', entries_only=False, second_root=False, mixed_internal=False, internal_root=False):
+    def run_flow(self, mutant='', entries_only=False, second_root=False, mixed_internal=False, internal_root=False, bus_roots=False):
         with tempfile.TemporaryDirectory() as d:
             w=Path(d);view(w)
             # 16 actual flop clock sinks suffice to exercise TritonCTS, not a hardened child build.
@@ -68,6 +68,10 @@ class HybridOpenroad(unittest.TestCase):
             if mutant=='escaped_names':net=net.replace(' r0 (', ' \\c_q[0]$_DFF_P_ (')
             if mutant=='child_on_cts':net=net.replace('.CLK(child)', '.CLK(ck)')
             if mutant=='glue_on_entry':net=net.replace('.CLK(ck)', '.CLK(child)',1)
+            if bus_roots:
+                # bus-bit CTS roots (s81coll_calendar7 clk_outputs[0..3]): -clk_nets must carry plain net names
+                net=net.replace('input ck,ck2,child','input [1:0] ckb,input child').replace('.CLK(ck2)','.CLK(ckb[1])').replace('.CLK(ck)','.CLK(ckb[0])')
+                spec.update(clock_port='ckb[0]',clock_ports=['ckb[0]','ckb[1]','child'],clock_cts_roots=['ckb[0]','ckb[1]'])
             (w/'t.v').write_text(net)
             (w/'hard.lef').write_text('''VERSION 5.8 ; BUSBITCHARS "[]" ; DIVIDERCHAR "/" ;
 MACRO hard CLASS BLOCK ; ORIGIN 0 0 ; SIZE 10 BY 10 ; SYMMETRY X Y ;
@@ -79,6 +83,7 @@ END hard END LIBRARY\n''')
             (w/'entries.tcl').write_text('set ::ot_ce_require_wire 1\n'+CE.generate(spec,w))
             old_hash=hashlib.sha256((w/'hard/hard_tt.lib').read_bytes()).hexdigest()
             roots='' if entries_only else ('set ::ot_ce_cts_roots {ck ck2}' if second_root else 'set ::ot_ce_cts_roots {ck}')
+            if bus_roots:roots='set ::ot_ce_cts_roots {{ckb[0]} {ckb[1]}}'
             flow=r'''
 set_thread_count 2
 set P /OpenROAD-flow-scripts/flow/platforms/asap7
@@ -141,6 +146,12 @@ puts "HYBRID_RESULT PASS"
         self.assertIn('CTS_MEASURE tt ck sinks=16',out)
         self.assertIn('CTS_MEASURE tt ck2 sinks=4',out)
         self.assertIn('CTS roots ck ck2;',out)
+
+    def test_bus_bit_roots_reach_tritoncts(self):
+        rc,out=self.run_flow(second_root=True,bus_roots=True);self.assertEqual(rc,0,out[-5000:])
+        self.assertNotIn('CTS-0056',out)
+        self.assertIn('CTS roots ckb[0] ckb[1];',out)
+        self.assertIn('HYBRID_RESULT PASS',out)
 
     def test_escaped_register_instance_maps_to_actual_db_object(self):
         rc,out=self.run_flow('escaped_names');self.assertEqual(rc,0,out[-5000:])

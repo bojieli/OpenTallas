@@ -1,0 +1,154 @@
+{
+ "name": "dsfd_vm_static_rsched_p_native_1015_l16",
+ "top": "dsfd_vm_static_rsched_p",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_rsched.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 117.72,
+  "h": 117.72,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "ck",
+   "rst_n",
+   "su_v",
+   "su_row",
+   "hc_v",
+   "hc_row",
+   "aux_v",
+   "aux_row",
+   "mx_v",
+   "mx_row"
+  ],
+  "E": [
+   "n_v",
+   "n_row",
+   "n_slot",
+   "n_group",
+   "a_v",
+   "a_row"
+  ],
+  "S": [
+   "release_v",
+   "release_group",
+   "release_mask",
+   "prepare_v",
+   "prepare_group",
+   "prepare_mask",
+   "expected_v",
+   "release_slot",
+   "aux_expected",
+   "mx_expected",
+   "mx_rslot"
+  ],
+  "N": [
+   "obs_row",
+   "sched_fault"
+  ]
+ },
+ "io_tcl": "physical/s81_vm_ctl_native_1015/dsfd_vm_static_rsched.tcl",
+ "macros": [],
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "period_ps": 770,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "size": 24,
+   "diameter_um": 30,
+   "extra": "-distance_between_buffers 15"
+  }
+ },
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "structural_change": "dsfd_vm_static_rsched hardened as its own independently clocked leaf on the rsched die clock category (previously an unhardened core child with no view): actual RTL, full per-bit functional pins, static schedule unchanged, zero added cycles; 833.333 sign-off / 770 route.",
+ "slot_change_request": {
+  "contract": "S81 VM native control-leaf geometry candidate",
+  "version": "f3-1015",
+  "why": "new hardened leaf; die/parent pin grant required before parent adoption"
+ },
+ "job": {
+  "owner": "claude:S81 VM owner r11",
+  "branch": "claude/s81-vm-r10-relay-1015",
+  "tag": "l16",
+  "extra_paths": [
+   "tools/s81_vm",
+   "rtl/dsrom_sys/s81_ph/vm",
+   "rtl/dsrom_sys/s81_ph/test",
+   "physical/s81_vm_ctl_native_1015",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
+  ],
+  "purpose": "READ_PIPE 4 pin-registered rsched: full-core production bench at L16 + observed DUT mutants, native CTS, one route.",
+  "benches": [
+   {
+    "name": "rsched_p_positive",
+    "cmd": "bash tools/s81_vm/core_leaf_bench.sh {RUN}/bench/rsched_l16 rsched_l16 'OT_VM_NATIVE_READ_L16'",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "CORE_LEAF PASS rsched_l16"
+   },
+   {
+    "name": "rsched_p_mutant_slot",
+    "cmd": "bash tools/s81_vm/core_leaf_bench.sh {RUN}/bench/rsched_l16_mslot rsched_l16_mslot 'OT_VM_NATIVE_READ_L16 OT_VM_RSCHED_MUT_SLOT'",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CORE_LEAF FAIL rsched_l16_mslot"
+   },
+   {
+    "name": "rsched_p_mutant_prepare",
+    "cmd": "bash tools/s81_vm/core_leaf_bench.sh {RUN}/bench/rsched_l16_mprep rsched_l16_mprep 'OT_VM_NATIVE_READ_L16 OT_VM_RSCHED_MUT_PREPARE'",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "CORE_LEAF FAIL rsched_l16_mprep"
+   }
+  ],
+  "cycles_added": 1
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_budget": {
+  "in": 0.55,
+  "out": 0.55
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "cell": "dsfd_vm_static_rsched",
+  "capture_ps": 389.7,
+  "launch_ps": 264.7,
+  "source": "results/physical/s81_vm_ctl_native_1015/f8_native_audit.json",
+  "fix": "native audit FAIL on the CLOSED r1 view (TT +131.13): capture 389.7 on 529 request pins (merge on the pin side), launch 264.7/238.1 (release_v/prepare_v ORs after flops). STRUCTURAL: dsfd_vm_static_rsched_p = PINREG=1: every input pin-registered (+1 edge, uniform), release/prepare ORs registered (same edge), expected/slot outputs registered (+1, aligned with the pin-registered return lanes); READ_PIPE 4 = L16; recipe: outhold HB1 out pad, io_budget 0.55/0.55, clustered CTS (F6 cb3)."
+ }
+}

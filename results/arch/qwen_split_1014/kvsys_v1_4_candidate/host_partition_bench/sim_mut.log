@@ -1,0 +1,16 @@
+MISMATCH cyc11 n
+MISMATCH cyc24 n
+MISMATCH cyc25 n
+MISMATCH cyc25 n
+MISMATCH cyc26 n
+MISMATCH cyc26 n
+MISMATCH cyc27 n
+MISMATCH cyc28 n
+MISMATCH cyc29 n
+MISMATCH cyc30 n
+MISMATCH cyc31 n
+ACTIVITY ctrl_es=19982 land_er=19989 all_acks=0 boot_done=19983 ing_cr=1 issued_nonzero=19990
+FAIL host chain partition: 12 mismatching output samples, first cycle 11
+[20000000] %Fatal: tb_host_chain_partition_equiv.sv:86: Assertion failed in tb_host_chain_partition_equiv
+%Error: src/rtl/test/qwen_split/tb_host_chain_partition_equiv.sv:86: Verilog $stop
+Aborting...

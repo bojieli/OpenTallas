@@ -1,0 +1,32 @@
+ot-run: ot-epyc1tb     admits   297 GB (avail 523, growth 42, headroom 64, waiters 0/0 GB) load 37/128 running 14 disk 107 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-3460770-1792036413 after 0 s
+golden_L0_L2 20 jobs 1940 rows checks 8 [{'src': 'L0', 'attn_to_ffn_consistent': True}, {'src': 'L2', 'attn_to_ffn_consistent': True}]
+stress_0 20 jobs 1940 rows checks 0 [{'src': 'stress0', 'attn_to_ffn_consistent': None}, {'src': 'stress1', 'attn_to_ffn_consistent': None}]
+stress_1 20 jobs 1940 rows checks 0 [{'src': 'stress2', 'attn_to_ffn_consistent': None}, {'src': 'stress3', 'attn_to_ffn_consistent': None}]
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/snorm-return-59b4/tools/s81_suhc/hc_gate.py", line 599, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/srv/opentallas-scratch/codex/snorm-return-59b4/tools/s81_suhc/hc_gate.py", line 595, in main
+    return dict(prep=cmd_prep, run=cmd_run)[a.cmd](a)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/srv/opentallas-scratch/codex/snorm-return-59b4/tools/s81_suhc/hc_gate.py", line 537, in cmd_run
+    r = subprocess.run([str(exe)], cwd=d, capture_output=True, text=True)
+  File "/usr/lib/python3.14/subprocess.py", line 555, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 1039, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        pass_fds, cwd, env,
+                        ^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+                        gid, gids, uid, umask,
+                        ^^^^^^^^^^^^^^^^^^^^^^
+                        start_new_session, process_group)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 1990, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'cols_c1_mut_bit5/build_ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_pipe40_probe_tm-ot_s81_hc_ctra/Vtb_s81_hc_master'
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-3460770-1792036413): exit 1

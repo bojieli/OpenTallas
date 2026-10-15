@@ -17,7 +17,11 @@
 //   native_expected_v / native_release_slot = that edge's SU/HC requests and slots, aux_expected = its aux requests.
 //   A row missing at its release edge is a fault of the return leaf (never waited for).
 // ---------------------------------------------------------------------------------------------------------------
-module dsfd_vm_static_rsched (
+// PINREG=1 (READ_PIPE 4, L16; native pin audit 2026-10-15, rsched r1 view capture 389.7 / launch 264.7): every input is a
+// pin register (+1 edge on every output, uniform), release_v / prepare_v are registered ORs of the chain (same edge), and
+// expected_v / release_slot / aux_expected / mx_expected / mx_rslot are registered (+1 more: they align with the
+// pin-registered return lanes, whose o_v is one edge later).  The hard master is dsfd_vm_static_rsched_p.
+module dsfd_vm_static_rsched #(parameter integer PINREG=0) (
     input  wire          ck, rst_n,
     input  wire [15:0]   su_v,  input wire [223:0] su_row,
     input  wire [1:0]    hc_v,  input wire [27:0]  hc_row,
@@ -33,6 +37,9 @@ module dsfd_vm_static_rsched (
     output reg  [17:0]   n_v,   output reg [251:0] n_row, output reg [89:0] n_slot, output reg [2:0] n_group,
     output reg  [11:0]   a_v,   output reg [167:0] a_row,
     output wire          release_v, output wire [2:0] release_group, output wire [31:0] release_mask,
+    // Same compiled descriptor one edge early: return lanes register completion
+    // after accepting the E9 records and consume all four tokens at E10 release.
+    output wire          prepare_v, output wire [2:0] prepare_group, output wire [31:0] prepare_mask,
     output wire [17:0]   expected_v, output wire [89:0] release_slot, output wire [11:0] aux_expected,
     output wire [14*30-1:0] obs_row       // logical rows of the FSR-sampled requests (engine early-read assertion)
 );
@@ -50,44 +57,70 @@ module dsfd_vm_static_rsched (
             qms[5*i +: 5] = {(i < 16) ? 3'(i >> 2) : 3'd5, qmr[14*i +: 2]};
 `endif
     end
-    always @(posedge ck) begin
-        if (!rn) begin qv <= 18'd0; qav <= 12'd0; grp <= 3'd0; qmv <= 20'd0; end
-        else begin qv <= {hc_v, su_v}; qav <= aux_v; grp <= grp + 3'd1; qmv <= mx_v; end
-        qr <= {hc_row, su_row}; qar <= aux_row; qmr <= mx_row;
-    end
-    // MIX merge onto the 30 logical ports (fixed function of the compiled slots)
-    reg [17:0] pv; reg [251:0] pr; reg [11:0] pav; reg [167:0] par; reg [29:0] mo; reg m_bad;
-    always @* begin : p_merge integer i; reg [4:0] s; integer port; reg hc0;
-        pv = qv; pr = qr; pav = qav; par = qar; mo = 30'd0; m_bad = 1'b0; hc0 = 1'b0;
-        for (i = 0; i < 20; i = i + 1) if (qmv[i]) begin
+    // Native1b: the request merge/slot logic now runs on the PIN side and its results are the registered stage
+    // (same edge the q registers used to capture): every die output n_* / a_* is a flop (measured reg->out -10.1/-5.2 ps
+    // through the merge after the q registers).  Zero cycles; the descriptor chain and faults keep their edges.
+    always @(posedge ck) if (!rn) grp <= 3'd0; else grp <= grp + 3'd1;
+    generate if (PINREG != 0) begin : g_pin
+        reg [17:0] iv; reg [251:0] ir; reg [11:0] iav; reg [167:0] iar; reg [19:0] imv; reg [279:0] imr;
+        always @(posedge ck) begin
+            if (!rn) begin iv <= 18'd0; iav <= 12'd0; imv <= 20'd0; end
+            else begin iv <= {hc_v, su_v}; iav <= aux_v; imv <= mx_v; end
+            ir <= {hc_row, su_row}; iar <= aux_row; imr <= mx_row;
+        end
+        always @* begin qv = iv; qav = iav; qmv = imv; qr = ir; qar = iar; qmr = imr; end
+    end else begin : g_nopin
+        always @* begin qv = {hc_v, su_v}; qav = aux_v; qmv = mx_v; qr = {hc_row, su_row}; qar = aux_row; qmr = mx_row; end
+    end endgenerate
+    // MIX merge onto the 30 logical ports (fixed function of the compiled slots).
+    // Native1 structural repair (measured rsched CTS: reg->out n_row -10.1 ps TT placement at 770; the 20-deep
+    // last-writer-wins chain of runtime-indexed writes sat between the q registers and the die pins): each MIX lane's
+    // target port is decoded in parallel and every port takes a one-hot AND-OR of its lanes.  Identical for every legal
+    // compiled schedule; a collision (two writers on one port, or a writer on an occupied port) is the unchanged sticky
+    // m_bad fault and its row value is then the OR of the writers (a fault, never a production value).  Zero cycles.
+    reg [17:0] pv_n; reg [251:0] pr_n; reg [11:0] pav_n; reg [167:0] par_n; reg [29:0] mo_n; reg m_bad;
+    reg [4:0] mport [0:19];
+    always @* begin : p_port integer i; reg [4:0] s; reg hc0;
+        hc0 = 1'b0;
+        for (i = 0; i < 20; i = i + 1) begin
             s = qms[5*i +: 5];
-            if (s < 5'd16) port = s;
-            else if (s < 5'd20) begin port = hc0 ? 17 : 16; hc0 = 1'b1; end
-            else port = 18 + (s - 20);
-            if (s[1:0] != qmr[14*i +: 2]) m_bad = 1'b1;              // slot lane = row[1:0] (FSR lane rule)
-            if (port < 18) begin
-                if (pv[port] || mo[port]) m_bad = 1'b1;
-                pv[port] = 1'b1; pr[14*port +: 14] = qmr[14*i +: 14];
-            end else begin
-                if (pav[port-18] || mo[port]) m_bad = 1'b1;
-                pav[port-18] = 1'b1; par[14*(port-18) +: 14] = qmr[14*i +: 14];
-            end
-            mo[port] = 1'b1;
+            if (s < 5'd16) mport[i] = s;
+            else if (s < 5'd20) begin mport[i] = (qmv[i] && hc0) ? 5'd17 : 5'd16; if (qmv[i]) hc0 = 1'b1; end
+            else mport[i] = 5'd18 + (s - 5'd20);
         end
     end
+    always @* begin : p_merge integer i, port; reg [13:0] row; reg any; reg [29:0] hits;
+        m_bad = 1'b0; mo_n = 30'd0;
+        for (port = 0; port < 30; port = port + 1) begin
+            any = 1'b0; row = 14'd0; hits[port] = 1'b0;
+            for (i = 0; i < 20; i = i + 1) if (qmv[i] && mport[i] == port[4:0]) begin
+                if (any) m_bad = 1'b1;
+                any = 1'b1; row = row | qmr[14*i +: 14];
+            end
+            mo_n[port] = any;
+            if (port < 18) begin
+                if (any && qv[port]) m_bad = 1'b1;
+                pv_n[port] = qv[port] | any; pr_n[14*port +: 14] = any ? row : qr[14*port +: 14];
+            end else begin
+                if (any && qav[port-18]) m_bad = 1'b1;
+                pav_n[port-18] = qav[port-18] | any; par_n[14*(port-18) +: 14] = any ? row : qar[14*(port-18) +: 14];
+            end
+        end
+        for (i = 0; i < 20; i = i + 1) if (qmv[i] && qms[5*i +: 2] != qmr[14*i +: 2]) m_bad = 1'b1;  // slot lane = row[1:0]
+    end
 
-    reg [89:0] slot;
+    reg [89:0] slot_n;
     always @* begin : p_slot integer p; reg [1:0] l0, l1;
-        for (p = 2; p < 16; p = p + 1) slot[5*p +: 5] = p[4:0];
-        l0 = pr[0 +: 2]; l1 = pr[14 +: 2];
-        slot[0 +: 5] = {3'd0, l0};
+        for (p = 2; p < 16; p = p + 1) slot_n[5*p +: 5] = p[4:0];
+        l0 = pr_n[0 +: 2]; l1 = pr_n[14 +: 2];
+        slot_n[0 +: 5] = {3'd0, l0};
 `ifdef OT_VM_RSCHED_MUT_SLOT
-        slot[5 +: 5] = {3'd0, l1};                      // MUTANT: SU1 never moves off a taken slot
+        slot_n[5 +: 5] = {3'd0, l1};                      // MUTANT: SU1 never moves off a taken slot
 `else
-        slot[5 +: 5] = ((pv[0] && l0 == l1) || (pv[2] && l1 == 2'd2) || (pv[3] && l1 == 2'd3)) ? {3'd1, l1} : {3'd0, l1};
+        slot_n[5 +: 5] = ((pv_n[0] && l0 == l1) || (pv_n[2] && l1 == 2'd2) || (pv_n[3] && l1 == 2'd3)) ? {3'd1, l1} : {3'd0, l1};
 `endif
-        slot[80 +: 5] = {3'd4, pr[14*16 +: 2]};
-        slot[85 +: 5] = {3'd4, pr[14*17 +: 2]};
+        slot_n[80 +: 5] = {3'd4, pr_n[14*16 +: 2]};
+        slot_n[85 +: 5] = {3'd4, pr_n[14*17 +: 2]};
     end
     // every MIX request must land on exactly its compiler slot (SU0 / SU1 / HC slot functions included)
     reg s_bad;
@@ -96,10 +129,18 @@ module dsfd_vm_static_rsched (
         for (i = 0; i < 20; i = i + 1) if (qmv[i]) begin
             s = qms[5*i +: 5];
             if (s < 5'd16) port = s; else if (s < 5'd20) begin port = hc0 ? 17 : 16; hc0 = 1'b1; end else port = 18 + (s - 20);
-            if (port < 18 && slot[5*port +: 5] != s) s_bad = 1'b1;
+            if (port < 18 && slot_n[5*port +: 5] != s) s_bad = 1'b1;
         end
     end
-    always @(posedge ck) if (!rn) sched_fault <= 1'b0; else if (m_bad || s_bad) sched_fault <= 1'b1;
+    // registered request stage (the die pin registers of n_* / a_*)
+    reg [17:0] pv; reg [251:0] pr; reg [11:0] pav; reg [167:0] par; reg [29:0] mo; reg [89:0] slot;
+    reg [19:0] qmv_r; reg [99:0] qms_r; reg bad0;
+    always @(posedge ck) begin
+        if (!rn) begin pv <= 18'd0; pav <= 12'd0; mo <= 30'd0; qmv_r <= 20'd0; bad0 <= 1'b0; end
+        else begin pv <= pv_n; pav <= pav_n; mo <= mo_n; qmv_r <= qmv; bad0 <= m_bad || s_bad; end
+        pr <= pr_n; par <= par_n; slot <= slot_n; qms_r <= qms;
+    end
+    always @(posedge ck) if (!rn) sched_fault <= 1'b0; else if (bad0) sched_fault <= 1'b1;
 
     // FSR pin feed (registered: the FSR's own pin stage samples these at P+1 -- this stage is the die pin register)
     always @* begin n_v = pv; n_row = pr; n_slot = slot; n_group = grp; a_v = pav; a_row = par; end
@@ -109,31 +150,80 @@ module dsfd_vm_static_rsched (
     // (the static512 template: request E0, bank E4..E6, response relays E7/E8, return store E9, fixed release E10)
     reg [17:0] dv [1:11]; reg [89:0] ds [1:11]; reg [2:0] dg [1:10]; reg [11:0] da [1:11]; reg [29:0] dm [1:11];
     reg [19:0] dxv [1:11]; reg [99:0] dxs [1:11];
+    reg [31:0] masks [1:10]; reg [31:0] pin_mask;
+    always @* begin : p_pin_mask integer p;
+        pin_mask=32'd0;
+        for(p=0;p<18;p=p+1)if(pv[p])pin_mask[slot[5*p+:5]]=1'b1;
+        for(p=0;p<12;p=p+1)if(pav[p])pin_mask[20+p]=1'b1;
+    end
+    // Registered masks move with the already registered descriptor. This adds
+    // 320 control FF and no data/request/release edge; output pins are registers.
+    always @(posedge ck) begin : p_masks integer k;
+        if(!rn)for(k=1;k<=10;k=k+1)masks[k]<=32'd0;
+        else begin masks[1]<=pin_mask;for(k=2;k<=10;k=k+1)masks[k]<=masks[k-1];end
+    end
     always @(posedge ck) begin : p_chain integer k;
         if (!rn) for (k = 1; k <= 11; k = k + 1) begin dv[k] <= 18'd0; da[k] <= 12'd0; dm[k] <= 30'd0; dxv[k] <= 20'd0; end
         else begin
-            dv[1] <= pv; ds[1] <= slot; dg[1] <= grp; da[1] <= pav; dm[1] <= mo; dxv[1] <= qmv; dxs[1] <= qms;
+            dv[1] <= pv; ds[1] <= slot; dg[1] <= grp; da[1] <= pav; dm[1] <= mo; dxv[1] <= qmv_r; dxs[1] <= qms_r;
             for (k = 2; k <= 10; k = k + 1) begin dv[k] <= dv[k-1]; ds[k] <= ds[k-1]; dg[k] <= dg[k-1]; da[k] <= da[k-1]; end
             for (k = 2; k <= 11; k = k + 1) begin dm[k] <= dm[k-1]; dxv[k] <= dxv[k-1]; dxs[k] <= dxs[k-1]; end
             dv[11] <= dv[10]; ds[11] <= ds[10]; da[11] <= da[10];
         end
     end
-    reg [31:0] rm;
-    always @* begin : p_mask integer p;
-        rm = 32'd0;
-        for (p = 0; p < 18; p = p + 1) if (dv[10][p]) rm[ds[10][5*p +: 5]] = 1'b1;
-        for (p = 0; p < 12; p = p + 1) if (da[10][p]) rm[20 + p] = 1'b1;
-    end
-    assign release_v = |dv[10] | |da[10];
+    generate if (PINREG != 0) begin : g_pout
+        reg rel_v_q, pre_v_q; reg [17:0] ev_q; reg [89:0] es_q; reg [11:0] ea_q; reg [19:0] mxe_q; reg [99:0] mxs_q;
+        always @(posedge ck) begin
+            if (!rn) begin rel_v_q <= 1'b0; pre_v_q <= 1'b0; ev_q <= 18'd0; ea_q <= 12'd0; mxe_q <= 20'd0; end
+            else begin
+                rel_v_q <= |dv[9] | |da[9];                  // = |dv[10] | |da[10] at the same edge
+                pre_v_q <= |dv[8] | |da[8];                  // = |dv[9]  | |da[9]
+                ev_q <= dv[11] & ~dm[11][17:0]; ea_q <= da[11] & ~dm[11][29:18]; mxe_q <= dxv[11];
+            end
+            es_q <= ds[11]; mxs_q <= dxs[11];
+        end
+        assign release_v = rel_v_q; assign prepare_v = pre_v_q;
+        assign expected_v = ev_q; assign release_slot = es_q; assign aux_expected = ea_q;
+        assign mx_expected = mxe_q; assign mx_rslot = mxs_q;
+    end else begin : g_nopout
+        assign release_v = |dv[10] | |da[10];
+        assign prepare_v = |dv[9] | |da[9];
+        assign expected_v = dv[11] & ~dm[11][17:0];
+        assign release_slot = ds[11];
+        assign aux_expected = da[11] & ~dm[11][29:18];
+        assign mx_expected = dxv[11];
+        assign mx_rslot = dxs[11];
+    end endgenerate
     assign release_group = dg[10];
-    assign release_mask = rm;
-    // the return leaves' o_v is registered AT the release edge: the native map's expected/slot selectors and the aux
-    // expectation are the same requests one stage later (held through the cycle that follows the release edge)
-    // MIX-owned ports are released with the group but are not native SU/HC / aux returns
-    assign expected_v = dv[11] & ~dm[11][17:0];
-    assign release_slot = ds[11];
-    assign aux_expected = da[11] & ~dm[11][29:18];
-    assign mx_expected = dxv[11];
-    assign mx_rslot = dxs[11];
+    assign release_mask = masks[10];
+    assign prepare_group = dg[9];
+`ifdef OT_VM_RSCHED_MUT_PREPARE
+    assign prepare_mask = masks[8]; // DUT mutant: stale completion descriptor.
+`else
+    assign prepare_mask = masks[9];
+`endif
+endmodule
+// Hard master of the READ_PIPE 4 (L16) native read: every input pin-registered, every output a flop.
+module dsfd_vm_static_rsched_p (
+    input  wire          ck, rst_n,
+    input  wire [15:0]   su_v,  input wire [223:0] su_row,
+    input  wire [1:0]    hc_v,  input wire [27:0]  hc_row,
+    input  wire [11:0]   aux_v, input wire [167:0] aux_row,
+    input  wire [19:0]   mx_v,  input wire [279:0] mx_row,
+    output wire [19:0]   mx_expected, output wire [99:0] mx_rslot,
+    output wire          sched_fault,
+    output wire [17:0]   n_v,   output wire [251:0] n_row, output wire [89:0] n_slot, output wire [2:0] n_group,
+    output wire [11:0]   a_v,   output wire [167:0] a_row,
+    output wire          release_v, output wire [2:0] release_group, output wire [31:0] release_mask,
+    output wire          prepare_v, output wire [2:0] prepare_group, output wire [31:0] prepare_mask,
+    output wire [17:0]   expected_v, output wire [89:0] release_slot, output wire [11:0] aux_expected,
+    output wire [14*30-1:0] obs_row
+);
+    dsfd_vm_static_rsched #(.PINREG(1)) u (.ck(ck), .rst_n(rst_n), .su_v(su_v), .su_row(su_row), .hc_v(hc_v), .hc_row(hc_row),
+        .aux_v(aux_v), .aux_row(aux_row), .mx_v(mx_v), .mx_row(mx_row), .mx_expected(mx_expected), .mx_rslot(mx_rslot),
+        .sched_fault(sched_fault), .n_v(n_v), .n_row(n_row), .n_slot(n_slot), .n_group(n_group), .a_v(a_v), .a_row(a_row),
+        .release_v(release_v), .release_group(release_group), .release_mask(release_mask),
+        .prepare_v(prepare_v), .prepare_group(prepare_group), .prepare_mask(prepare_mask),
+        .expected_v(expected_v), .release_slot(release_slot), .aux_expected(aux_expected), .obs_row(obs_row));
 endmodule
 `default_nettype wire
