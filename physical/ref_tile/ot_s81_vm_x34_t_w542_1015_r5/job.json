@@ -1,5 +1,5 @@
 {
- "name": "ot_s81_vm_x34_t_w542_1015_r5-localreader5-COMMIT",
+ "name": "ot_s81_vm_x34_t_w542_1015_r5-localreader5-ef7472050",
  "block": "ot_s81_vm_x34_t",
  "ref_tile": true,
  "owner": "claude:S81 VM F2 capture",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "codex/takeover-s81-vm-0802",
-  "commit": "COMMIT"
+  "commit": "ef7472050501cb0d8c70419b5847b092f4bcaf65"
  },
  "stages": {
   "bench": [
@@ -95,7 +95,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/ot_s81_vm_x34_t_w542_1015_r5/ot_s81_vm_x34_t_w542_1015_r5-localreader5-COMMIT"
+   "to": "results/rtl/ref_tile/ot_s81_vm_x34_t_w542_1015_r5/ot_s81_vm_x34_t_w542_1015_r5-localreader5-ef7472050"
   }
  ],
  "cycles_added": 0,
@@ -108,6 +108,7 @@
  "reroute_reason": {
   "kind": "slot_change",
   "source": "physical/ref_tile/ot_s81_vm_x34_t_w542_1015_r4/gate_result.json",
-  "why": "Measured narrow-slot placement divergence; double width and explicit facing bank-bit/output pin groups, not unchanged retry"
+  "why": "Measured narrow-slot placement divergence; double width and explicit facing bank-bit/output pin groups, not unchanged retry",
+  "contract": "physical/ref_tile/ot_s81_vm_x34_t_w542_1015_r5/spec.json slot_change_request version r5-local-reader; native reader candidate, die adoption pending"
  }
 }
