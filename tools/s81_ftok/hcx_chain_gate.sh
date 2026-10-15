@@ -20,8 +20,8 @@ src,out,layer,i0,i1,do=sys.argv[1],Path(sys.argv[2]),*map(int,sys.argv[3:])
 sys.path.insert(0,src+'/tools/s81_static_control')
 from program import encode_program, issuer_done_row
 pin_to_pin=do+1      # chain samples the command pin one edge after it rises; c_done set DONE_OFF edges later
-rows=[dict(engine=9,arg=(layer<<15)|(0<<1)|0,issue=i0,done=issuer_done_row(i0,pin_to_pin),pin_to_pin=pin_to_pin),
-      dict(engine=9,arg=(layer<<15)|(640<<1)|1,issue=i1,done=issuer_done_row(i1,pin_to_pin),pin_to_pin=pin_to_pin)]
+rows=[dict(engine=11,arg=(layer<<15)|(0<<1)|0,issue=i0,done=issuer_done_row(i0,pin_to_pin),pin_to_pin=pin_to_pin),
+      dict(engine=11,arg=(layer<<15)|(640<<1)|1,issue=i1,done=issuer_done_row(i1,pin_to_pin),pin_to_pin=pin_to_pin)]
 rows.append(dict(engine=15,arg=0,issue=rows[-1]['done']+4,done=0))
 mc=encode_program(rows,stage=0,phase=3)
 (out/'program.mem').write_text(''.join(f"{w['word']:09x}\n" for w in mc['writes']))

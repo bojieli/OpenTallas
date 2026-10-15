@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-// HC COEFFICIENT CHAIN on real RTL, one layer, both blocks, driven by the ACTUAL fixed issuer (engine 9) from a compiled
+// HC COEFFICIENT CHAIN on real RTL, one layer, both blocks, driven by the ACTUAL fixed issuer (engine 11) from a compiled
 // calendar (done = issue + 1 + pin-to-pin). Real: ot_s81_fixed_issue, ot_s81_hcx_chain_seq, 4 x dsfd_sp_hcx_projection
 // (ranks 0..3: controller + prefetch + [HLAYOUT transpose] + 6 resident-ROM HCP leaves each = the 24 mix rows),
 // ot_s81_hcx_gatherpack, ot_s81_hcx_post_gain_native (post mode; 4 real parameter ROMs). The H rows are the layer's
@@ -22,13 +22,13 @@ module tb_s81_hcx_chain #(parameter integer HLAYOUT=1,MUT_POST=0,CAL=0,FAST=0,
  reg pv=0;reg[6:0]pa=0;reg[27:0]pd=0;reg[34:0]pm[0:15];
  wire[12:0]cv;wire[1091:0]cd;wire is_fault;wire[3:0]is_code;wire[1:0]is_phase;
  wire[8:0]x_done;wire[1:0]x_st;
- ot_s81_fixed_issue #(.NOPS(3),.NENG(13),.STAGE(0),.OP_BASE(2),.ENG_PRESENT(13'h200))iss(
+ ot_s81_fixed_issue #(.NOPS(3),.NENG(13),.STAGE(0),.OP_BASE(2),.ENG_PRESENT(13'h800))iss(
   .clk(ck),.rst_n(rst_n),.pw_v(pv),.pw_a(pa),.pw_d(pd),.prog_len(8'd3),
   .job_v(cyc==1250),.job_user(10'd0),.job_pos(21'd0),.job_tok(21'd1000),
   .job_rdy(),.busy(),.job_done(),.job_kdone(),.done_slot(),.kit_tok(),.cmd_v(cv),.cmd_d(cd),
-  .engine_available({3'b0,x_st[1],9'b0}),.dn_v({3'b0,x_done[8],9'b0}),.dn_tag({32'b0,x_done[7:0],72'b0}),
+  .engine_available({1'b0,x_st[1],11'b0}),.dn_v({1'b0,x_done[8],11'b0}),.dn_tag({8'b0,x_done[7:0],88'b0}),
   .fault(is_fault),.fault_code(is_code),.st_jobs(),.st_cmds(),.phase(is_phase));
- wire[84:0]c9={cv[9],cd[84*9+:84]};
+ wire[84:0]c9={cv[11],cd[84*11+:84]};   // engine 11 = HC projection chain (static sequencer ABI)
  // ---------------- chain sequencer (port 9)
  wire[84:0]p_cmd;wire[8:0]p_done[0:3];wire[1:0]p_st[0:3];
  wire g_start,g_done,g_fault,s_start,s_ffn,s_done,s_fault;wire[13:0]g_raw,s_raw,s_coef;wire[5:0]s_layer;

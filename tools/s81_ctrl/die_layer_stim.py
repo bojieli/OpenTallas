@@ -531,7 +531,7 @@ def main():
         assert 0 <= hset < 43, hset
         sys.path.insert(0, str(ROOT/'tools/s81_static_control'))
         from program import issuer_done_row
-        fixed_rows.extend(dict(engine=9, arg=(hset << 15) | (hl_base << 1) | b, issue=iss[b],
+        fixed_rows.extend(dict(engine=11, arg=(hset << 15) | (hl_base << 1) | b, issue=iss[b],
                                done=issuer_done_row(iss[b], a.hcx_p2p), pin_to_pin=a.hcx_p2p) for b in range(2))
         hcx_meta = dict(members=hcx_members, rom_set=hset, issue=iss, pin_to_pin=a.hcx_p2p, h_base=hl_base,
                         coef_rows=[C_BASE, C_BASE + 1, C_BASE + COEF_STRIDE, C_BASE + COEF_STRIDE + 1],

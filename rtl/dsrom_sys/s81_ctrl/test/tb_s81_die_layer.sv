@@ -135,7 +135,8 @@ module tb_s81_die_layer;
     reg pw_v = 0; reg [6:0] pw_a = 0; reg [27:0] pw_d = 0; reg [7:0] plen = 0;
     reg i_v = 0; wire i_r; reg [511:0] i_d = 0; reg i_l = 0;
     wire [84:0] legacy_mix_c, legacy_hcx_c;
-    wire [8:0] ctl_d9 = HCXR ? 9'd0 : d[9];   // TB_HCX_REAL: port 9 runs only on the fixed calendar
+    wire [8:0] ctl_d9 = HCXR ? 9'd0 : d[9];   // TB_HCX_REAL: the chain runs only on the fixed calendar (engine 11)
+    wire [84:0] hx_c; wire [8:0] hx_d; wire [1:0] hx_st;
     wire [84:0] c [0:11]; wire [8:0] d [0:11]; wire [1:0] est [0:11];
 `ifdef TB_SEQC
     // decision A: dsfd_stage_seq_c (kit start / done + program write on the serial clock); the kit (bench) writes the
@@ -403,11 +404,12 @@ module tb_s81_die_layer;
     // ONE fixed issuer (ot_s81_fixed_issue, OP_BASE 2) for every engine moved onto the compiled calendar:
     // engine 10 = MIX4 (TB_MIX4_REAL), engine 9 = the HC coefficient chain (TB_HCX_REAL). Program: fixed_program.mem,
     // {rows, PW words}: fixed_meta.mem (die_layer_stim.py; done = issue + 1 + pin-to-pin for every row).
-    localparam [12:0] FX_PRESENT = (MXR ? 13'h400 : 13'h0) | (HCXR ? 13'h200 : 13'h0);
+    localparam [12:0] FX_PRESENT = (MXR ? 13'h400 : 13'h0) | (HCXR ? 13'h800 : 13'h0);
     wire [12:0] mx_cv; wire [1091:0] mx_cd;
-    wire [12:0] mx_av = {2'b0, MXR ? est[10][1] : 1'b0, HCXR ? est[9][1] : 1'b0, 9'b0};
-    wire [12:0] mx_dv = {2'b0, MXR ? d[10][8] : 1'b0, HCXR ? d[9][8] : 1'b0, 9'b0};
-    wire [103:0] mx_dt = {16'b0, MXR ? d[10][7:0] : 8'b0, HCXR ? d[9][7:0] : 8'b0, 72'b0};
+    // engine 11 = the HC projection/coefficient chain (die static sequencer ABI, lower_native_graph port 11)
+    wire [12:0] mx_av = {1'b0, HCXR ? hx_st[1] : 1'b0, MXR ? est[10][1] : 1'b0, 10'b0};
+    wire [12:0] mx_dv = {1'b0, HCXR ? hx_d[8] : 1'b0, MXR ? d[10][8] : 1'b0, 10'b0};
+    wire [103:0] mx_dt = {8'b0, HCXR ? hx_d[7:0] : 8'b0, MXR ? d[10][7:0] : 8'b0, 80'b0};
     // Reset release is a compiler startup edge, driven on the opposite phase;
     // do not derive async reset from an NBA-updated stream counter expression.
     reg mx_rst_n=0;
@@ -479,13 +481,14 @@ module tb_s81_die_layer;
     // Offsets = the measured chain (tb_s81_hcx_chain, same clocks and reset edges). DECLARED: bench VM (RL/WL 4), the TP4
     // raw gather is bench transport (collective glue), ranks 1..3 read die 0's H rows and receive rank 0's command.
     parameter integer HX_FAST = 0, HX_PROJ_DONE = 1, HX_G_OFF = 1, HX_POST_TOG = 1, HX_POST_SEEN = 1, HX_DONE_OFF = 2, HXMUT = 0;
-    assign c[9] = {mx_cv[9], mx_cd[84*9+:84]};
+    assign c[9] = legacy_hcx_c; assign d[9] = 9'd0; assign est[9] = 2'b10;   // no port-9 op remains
+    assign hx_c = {mx_cv[11], mx_cd[84*11+:84]};
     reg hx_srst_n = 0; initial begin while(cyc<1000) @(negedge ck); @(negedge ckv); hx_srst_n = 1; end
     wire [84:0] hx_pcmd; wire [8:0] hx_pd [0:3]; wire [1:0] hx_pst [0:3];
     wire hx_gs, hx_gd, hx_gf, hx_ss, hx_sffn, hx_sd, hx_sf; wire [13:0] hx_graw, hx_sraw, hx_scoef; wire [5:0] hx_slayer;
     ot_s81_hcx_chain_seq #(.PROJ_DONE(HX_PROJ_DONE),.G_OFF(HX_G_OFF),.POST_TOG(HX_POST_TOG),.POST_SEEN(HX_POST_SEEN),
         .DONE_OFF(HX_DONE_OFF),.RAW_BASE(14'd2624),.COEF_BASE(C_BASE),.COEF_STRIDE(14'd2)) u_hcx (
-        .ck(ck),.rst_n(mx_rst_n),.skv(ckv),.srst_n(hx_srst_n),.c_cmd(c[9]),.c_done(d[9]),.c_st(est[9]),
+        .ck(ck),.rst_n(mx_rst_n),.skv(ckv),.srst_n(hx_srst_n),.c_cmd(hx_c),.c_done(hx_d),.c_st(hx_st),
         .p_cmd(hx_pcmd),.p_done(hx_pd[0]),.p_st(hx_pst[0]),.g_start(hx_gs),.g_raw_base(hx_graw),.g_done(hx_gd),.g_fault(hx_gf),
         .s_start(hx_ss),.s_ffn(hx_sffn),.s_layer(hx_slayer),.s_raw_base(hx_sraw),.s_coef_base(hx_scoef),.s_done(hx_sd),.s_fault(hx_sf));
     wire [7:0] hx_rq [0:3]; wire [111:0] hx_rr [0:3]; reg [7:0] hx_rv [0:3][0:3]; reg [4095:0] hx_rd [0:3][0:3];
@@ -535,7 +538,7 @@ module tb_s81_die_layer;
         hx_gc <= {hx_gc[2:0], hx_gwv}; hx_ga[0] <= hx_gwa; hx_gdp[0] <= hx_gwd;
         for (int i = 1; i < 4; i++) begin hx_ga[i] <= hx_ga[i-1]; hx_gdp[i] <= hx_gdp[i-1]; end
         if (hx_gc[3]) begin vm[hx_ga[3]] = hx_gdp[3]; mark(hx_ga[3]); end
-        if (c[9][84]) begin if (hx_cmds < 2) hx_cmd_cyc[hx_cmds] = cyc; hx_cmds++; end
+        if (hx_c[84]) begin if (hx_cmds < 2) hx_cmd_cyc[hx_cmds] = cyc; hx_cmds++; end
     end
     wire hx_srv, hx_swv; wire [13:0] hx_sra, hx_swa; wire [15:0] hx_swm; wire [511:0] hx_swd;
     reg [3:0] hx_sv = 0, hx_sc = 0; reg [511:0] hx_sdp [0:3]; reg [13:0] hx_sap [0:3]; reg [15:0] hx_smp [0:3]; reg [511:0] hx_swp [0:3];
@@ -553,7 +556,7 @@ module tb_s81_die_layer;
             mark(hx_sap[3]); hx_writes++;
         end
     end
-    always @(posedge ck) if (rst && est[9][0]) $fatal(1, "HCX chain fault cycle=%0d cfault=%0d post=%0d gather=%0d proj_st=%b ctl_c=%0d ctl_s=%0d",
+    always @(posedge ck) if (rst && hx_st[0]) $fatal(1, "HCX chain fault cycle=%0d cfault=%0d post=%0d gather=%0d proj_st=%b ctl_c=%0d ctl_s=%0d",
         cyc, u_hcx.cfault, hx_sf, hx_gf, hx_pst[0], g_hx[0].u_p.controller.cfault, g_hx[0].u_p.controller.sfault);
 `else
     assign c[9] = legacy_hcx_c;
