@@ -123,8 +123,8 @@
   "slot_change_request": "Compute die lead approved native credits 2026-10-14 18:22: TX IBUF64/32, RX OCRED64/32, adapter-side4. Old IBUF4 view incompatible. TX leaves request259.2x237.6 and RX90.72x129.6, ten channel region replan pending die assigned child pins.",
   "job": {
     "owner": "Codex:qwen-coll-io-1014",
-    "branch": "claude/el1013-qwen-r3b-io",
-    "tag": "nc1",
+    "branch": "claude/qwen-coll-io-1014",
+    "tag": "nc2",
     "purpose": "Native TP8 W546 credit CDC leaf for10-channel IO partition; die-approved UCIeP/R split",
     "extra_paths": [
       "physical/qwen_romio_slots",
