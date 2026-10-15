@@ -3,12 +3,12 @@
 // Actual control leaf. Owns prefix lane logic, fixed drain calendar,
 // fault observations and reset release on one native clock root. No arbitration,
 // ready, runtime scheduling or stage addition. The parent is wires only.
-// LANE AT THE SOURCE EDGE (claude S81 VM F1, 2026-10-15, structural): the lane function reads the SOURCE pins
-// (src_v, row bits [7:0] = the bank hash inputs) and is registered at edge P, the same edge the W0 header registers
-// pv/pr, so lane/lv leave this leaf from flops and the dispatch samples them at P+1 exactly as before (zero cycles).
-// Measured cause: lane computed combinationally from the header outputs pv/pr made a 34-level in->out path through
-// this leaf (TT -1119 ps at the native IO budget, CTS gate 2026-10-15); now in->reg with a balanced saturating
-// (0,1,2,3+) count tree instead of a 52-deep serial increment chain.
+// LANE OVER ONE FULL CYCLE (claude S81 VM F1, 2026-10-15, structural, zero cycles): the leaf registers the SOURCE
+// pins (src_v, row bits [7:0] = the bank-hash inputs) at edge P beside the W0 header, computes the lane function
+// register-to-register with a balanced saturating (0,1,2,3+) count tree, and drives lane/lv from flops at P+1.  The
+// dispatch leaves use lane/lv at P+1 directly (no second input register), so dispatch outputs stay at P+2, storage P+3.
+// Measured cause: lane from the header outputs was a 34-level in->out path (TT -1119 ps); lane from the source pins
+// into a P register was 16 levels in->reg (TT -204 ps at the 0.2 T input budget, CTS gate 2026-10-15).
 module dsfd_vm_static_wcontrol #(parameter integer NSRC=53)(
  input wire ck_control,rst_n,
  input wire [NSRC-1:0] src_v,input wire [8*NSRC-1:0] src_bank,
@@ -30,16 +30,21 @@ module dsfd_vm_static_wcontrol #(parameter integer NSRC=53)(
         reg [2:0] t; begin t = a + b; sat3 = t[2] ? 2'd3 : t[1:0]; end
     endfunction
     localparam integer NP = 64;                            // tree width >= NSRC
+    reg [NSRC-1:0] s_v; reg [8*NSRC-1:0] s_bank;            // source pin registers, edge P
+    always @(posedge ck_control) begin
+        s_bank <= src_bank;
+        if (!rn) s_v <= {NSRC{1'b0}}; else s_v <= src_v;
+    end
     reg [NSRC-1:0] lane_v_d; reg [2*NSRC-1:0] lane_d; reg lane_bad_d;
     always @* begin : p_lane integer c, d, w, k; reg [4:0] bc, bd; reg [1:0] t [0:NP-1]; reg [1:0] n;
         lane_bad_d = 1'b0;
         for (c = 0; c < NSRC; c = c + 1) begin
-            bc = src_bank[8*c +: 5] ^ {src_bank[8*c+5 +: 3], 2'b00};
+            bc = s_bank[8*c +: 5] ^ {s_bank[8*c+5 +: 3], 2'b00};
             for (d = 0; d < NP; d = d + 1) begin
                 t[d] = 2'd0;
                 if (d < c) begin
-                    bd = src_bank[8*d +: 5] ^ {src_bank[8*d+5 +: 3], 2'b00};
-                    t[d] = {1'b0, src_v[d] && bd == bc};
+                    bd = s_bank[8*d +: 5] ^ {s_bank[8*d+5 +: 3], 2'b00};
+                    t[d] = {1'b0, s_v[d] && bd == bc};
                 end
             end
             for (w = NP / 2; w >= 1; w = w / 2)              // balanced tree, log2(NP) levels
@@ -50,15 +55,15 @@ module dsfd_vm_static_wcontrol #(parameter integer NSRC=53)(
 `else
             lane_d[2*c +: 2] = n;
 `endif
-            lane_v_d[c] = src_v[c] && n != 2'd3;
-            if (src_v[c] && n == 2'd3) lane_bad_d = 1'b1;
+            lane_v_d[c] = s_v[c] && n != 2'd3;
+            if (s_v[c] && n == 2'd3) lane_bad_d = 1'b1;
         end
     end
-    reg lane_bad;                                          // lane fault of the records registered at P (owned at P+1)
+    reg lane_bad;                                          // lane fault of the source records sampled at P (owned at P+1)
     always @(posedge ck_control) begin
         lane <= lane_d;
         if (!rn) begin lv <= {NSRC{1'b0}}; lane_bad <= 1'b0; end
-        else begin lv <= lane_v_d; lane_bad <= lane_bad_d; end
+        else begin lv <= lane_v_d; lane_bad <= lane_bad_d; end   // lane/lv at P+1
     end
 
     // ---------------------------------------------------------------- fixed drain rule (from slice 0's captures)

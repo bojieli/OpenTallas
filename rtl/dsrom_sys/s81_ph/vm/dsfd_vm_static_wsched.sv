@@ -8,7 +8,8 @@
 //   P    source pin register (row 14, mask 16 words, data 512, tag 8, valid) sampled at edge P.
 //        capture LANE of source c = number of valid sources c' < c whose row hashes to the same bank this edge
 //        (bank = row[4:0] ^ {row[7:5], 2'b00}); lane >= 3 is a schedule fault (the record is dropped, fail closed).
-//   P+1  dsfd_vm_static_wdispatch128 pin register (4 quarters x 4 slices; storage slot = lane); P+2 records registered
+//   P+1  dsfd_vm_static_wdispatch128 data pin register + control lane/lv flops (4 quarters x 4 slices; storage slot =
+//        lane); P+2 records registered
 //   P+3  dsfd_vm_static_wstage128 (DEPTH 3) captures
 //   DRAIN RULE (fixed): lane c of a bank is drained into the scatter sample at edge P+4+c.  Two lanes of one bank due on
 //        one edge (a lane-c capture at edge E and a lane-c' capture at E + c - c') is a schedule fault: the lower lane
@@ -60,7 +61,8 @@ module dsfd_vm_static_wsched #(parameter integer NSRC = 48) (
             .ck(ck_payload[ps]), .rst_n(rst_payload_n[ps]), .i_mask(mi), .i_data(di),
             .o_mask(mo), .o_data(dout), .o_epoch(payload_epoch[3*ps +: 3]));
     end endgenerate
-    // control samples the source pins' bank bits at P beside the header (lane/lv registered at P, used at P+1)
+    // control registers the source pins' bank bits at P beside the header; lane/lv leave its flops at P+1 and the
+    // dispatch uses them directly in its P+1 -> P+2 record select (no dispatch input register for lane/valid)
     wire [8*NSRC-1:0] src_bank;
     genvar sb;
     generate for (sb = 0; sb < NSRC; sb = sb + 1) begin : srcbank
