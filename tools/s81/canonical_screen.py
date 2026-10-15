@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Run the real canonical die generator; retain exact partial evidence on failure."""
-import argparse,gzip,hashlib,json,pickle,sys,traceback
+import argparse,gzip,hashlib,json,sys,traceback
+try:
+ import cloudpickle as pickle
+except ImportError:
+ import pickle
 from pathlib import Path
 R=Path(__file__).resolve().parents[2];sys.path.insert(0,str(R/'tools'));import dsrom_s81_fulldie as G
 
@@ -22,7 +26,11 @@ def main():
  def finalize_capture(m):
   # Retain the full model before any costly final alignment. Public plan JSON
   # omits glue/pdir/spread metadata and cannot safely recreate emitted RTL.
-  with (w/f'model_before_finalize{checkpoint[0]}.pickle').open('wb') as f:pickle.dump(m,f,protocol=5)
+  cp=w/f'model_before_finalize{checkpoint[0]}.pickle'
+  try:
+   raw=pickle.dumps(m,protocol=5);cp.write_bytes(raw)
+  except Exception as exc:
+   cp.with_suffix('.failure.json').write_text(json.dumps(dict(error=repr(exc),serializer=pickle.__name__,generation_continues=True)))
   checkpoint[0]+=1
   result=old_finalize(m)
   if m.get('canonical_buses_complete') and not m.get('_canonical_snapshot_done'):
