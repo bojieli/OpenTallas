@@ -25,7 +25,8 @@
   "full_parent": {
     "first_attempt": "8GB cgroup OOM (verified journal)",
     "live_successor": "ot-epyc4 unit oth-ubuntu-1349436-1792053311",
-    "request_gb": 160
+    "request_gb": 160,
+    "source_commit": "24b453de9 (before MOE additions; does not cover new MOE head join)"
   },
   "remaining": [
     "actual canonical full operand allocation and every operation profile",
@@ -62,6 +63,33 @@
   "historical_source_override": {
     "rtl/dsrom_sys/s81_suhc/test/tb_s81_su_static_rx.sv": "historical/tb_rx_external_calendar.sv.txt"
   },
-  "compiler_tests": 9,
-  "canonical_note": "81 physical weight stages do not imply81SU instruction programs; full SU allocation remains absent"
+  "compiler_tests": 10,
+  "canonical_note": "81 physical weight stages do not imply81SU instruction programs; full SU allocation remains absent",
+  "moe_sum": {
+    "component_native_pass": true,
+    "source_nodes": [
+      "L0.I101",
+      "L0.I102",
+      "L0.I103",
+      "L0.I104",
+      "L0.I105",
+      "L0.I106"
+    ],
+    "rank_words": 1280,
+    "input_row_count": 560,
+    "output_rows": 80,
+    "sequential_fp32_adds": 6,
+    "final_bf16_only": true,
+    "nominal_pipeline_edges": 42,
+    "output_cycle_span": [
+      133,
+      212
+    ],
+    "actual_sram_macros": 21,
+    "arithmetic_reassociation_mutant_rc": -6,
+    "early_bf16_mutant_rc": -6,
+    "missing_operand_rc": -6,
+    "mutant_output_cycles_identical": true,
+    "whole_parent_and_vm_join_qualified": false
+  }
 }

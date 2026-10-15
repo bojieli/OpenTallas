@@ -16,7 +16,7 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools/s81_suhc'))
 import su_gate
 NEW=['rtl/dsrom_sys/s81_suhc/hier/'+p for p in (
-    'ot_s81_su_calendar_ctl.sv','ot_s81_su_calendar_store.sv',
+    'ot_s81_su_calendar_ctl.sv','ot_s81_su_calendar_store.sv','ot_s81_su_moe_sum_static.sv',
     'dsfd_sp_su_static.sv','dsfd_sp_su_static_programmed.sv')]
 TB='rtl/dsrom_sys/s81_suhc/test/tb_s81_su_static_rx.sv'
 
