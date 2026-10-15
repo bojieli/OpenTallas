@@ -1,0 +1,9 @@
+ot-run: ot-epyc4       admits   610 GB (avail 836, growth 86, headroom 48, waiters 0/0 GB) load 144/128 running 19 disk 597 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-573281-1792042372 after 1 s
+case qwen_ar_256w kind=pos latu=37 lats=362 phi=1 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=2048 meas_lu=37 meas_ls=362 pr_overlap=0 compiled_span=749
+case qwen_layer_2x256w kind=pos latu=37 lats=362 phi=1 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=4096 meas_lu=37 meas_ls=362 pr_overlap=240 compiled_span=1005
+case qwen_argmax_1w kind=pos latu=37 lats=362 phi=1 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=64 meas_lu=37 meas_ls=362 pr_overlap=0 compiled_span=414
+case qwen_layer_2x256w_argmax kind=pos latu=37 lats=362 phi=1 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=00000000 issuer_fault=00000000 die_fault=00000000 words_out=4160 meas_lu=37 meas_ls=362 pr_overlap=244 compiled_span=1013
+COLL_TP8SL PASS cases=4 latu=37 lats=362
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-573281-1792042372): exit 0
