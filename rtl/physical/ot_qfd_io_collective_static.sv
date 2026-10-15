@@ -53,7 +53,7 @@ module qfd_io_collective_static (
     output wire          cmd_free               // -> collective command issuer (fault check only)
 );
 `ifndef OT_QFDS_LU
-`define OT_QFDS_LU 47
+`define OT_QFDS_LU 53
 `endif
 `ifndef OT_QFDS_LS
 `define OT_QFDS_LS 376

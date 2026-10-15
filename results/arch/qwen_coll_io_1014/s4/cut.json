@@ -1,0 +1,318 @@
+{
+ "spec": "tools/ref_tile/specs_qcollio/qfd_io_collective_s4.json",
+ "outline": [
+  864.0,
+  950.4
+ ],
+ "worst": {
+  "kind": "vertical",
+  "pos": 691.176,
+  "demand": 4236,
+  "tracks": 7713,
+  "util": 0.549
+ },
+ "verdict": "PASS",
+ "cuts": [
+  {
+   "kind": "vertical",
+   "pos": 177.12,
+   "demand": 2790,
+   "tracks": 7713,
+   "util": 0.362
+  },
+  {
+   "kind": "vertical",
+   "pos": 306.72,
+   "demand": 2840,
+   "tracks": 32630,
+   "util": 0.087
+  },
+  {
+   "kind": "vertical",
+   "pos": 432.65,
+   "demand": 5062,
+   "tracks": 22787,
+   "util": 0.222
+  },
+  {
+   "kind": "vertical",
+   "pos": 432.65,
+   "demand": 5062,
+   "tracks": 22787,
+   "util": 0.222
+  },
+  {
+   "kind": "vertical",
+   "pos": 434.48,
+   "demand": 5062,
+   "tracks": 22787,
+   "util": 0.222
+  },
+  {
+   "kind": "vertical",
+   "pos": 521.54,
+   "demand": 5030,
+   "tracks": 25880,
+   "util": 0.194
+  },
+  {
+   "kind": "vertical",
+   "pos": 561.91,
+   "demand": 4868,
+   "tracks": 32630,
+   "util": 0.149
+  },
+  {
+   "kind": "vertical",
+   "pos": 691.18,
+   "demand": 4236,
+   "tracks": 7713,
+   "util": 0.549
+  },
+  {
+   "kind": "vertical",
+   "pos": 691.18,
+   "demand": 4236,
+   "tracks": 7713,
+   "util": 0.549
+  },
+  {
+   "kind": "horizontal",
+   "pos": 54.0,
+   "demand": 0,
+   "tracks": 17400,
+   "util": 0.0
+  },
+  {
+   "kind": "horizontal",
+   "pos": 79.65,
+   "demand": 0,
+   "tracks": 14982,
+   "util": 0.0
+  },
+  {
+   "kind": "horizontal",
+   "pos": 79.65,
+   "demand": 0,
+   "tracks": 14982,
+   "util": 0.0
+  },
+  {
+   "kind": "horizontal",
+   "pos": 107.73,
+   "demand": 546,
+   "tracks": 17400,
+   "util": 0.031
+  },
+  {
+   "kind": "horizontal",
+   "pos": 133.92,
+   "demand": 546,
+   "tracks": 14931,
+   "util": 0.037
+  },
+  {
+   "kind": "horizontal",
+   "pos": 161.46,
+   "demand": 546,
+   "tracks": 14931,
+   "util": 0.037
+  },
+  {
+   "kind": "horizontal",
+   "pos": 161.46,
+   "demand": 546,
+   "tracks": 14931,
+   "util": 0.037
+  },
+  {
+   "kind": "horizontal",
+   "pos": 213.3,
+   "demand": 546,
+   "tracks": 17400,
+   "util": 0.031
+  },
+  {
+   "kind": "horizontal",
+   "pos": 231.12,
+   "demand": 546,
+   "tracks": 30000,
+   "util": 0.018
+  },
+  {
+   "kind": "horizontal",
+   "pos": 248.4,
+   "demand": 546,
+   "tracks": 27582,
+   "util": 0.02
+  },
+  {
+   "kind": "horizontal",
+   "pos": 252.45,
+   "demand": 546,
+   "tracks": 27582,
+   "util": 0.02
+  },
+  {
+   "kind": "horizontal",
+   "pos": 263.25,
+   "demand": 1638,
+   "tracks": 14982,
+   "util": 0.109
+  },
+  {
+   "kind": "horizontal",
+   "pos": 284.85,
+   "demand": 2730,
+   "tracks": 17400,
+   "util": 0.157
+  },
+  {
+   "kind": "horizontal",
+   "pos": 342.9,
+   "demand": 2730,
+   "tracks": 14931,
+   "util": 0.183
+  },
+  {
+   "kind": "horizontal",
+   "pos": 349.92,
+   "demand": 2730,
+   "tracks": 14931,
+   "util": 0.183
+  },
+  {
+   "kind": "horizontal",
+   "pos": 412.02,
+   "demand": 3790,
+   "tracks": 17400,
+   "util": 0.218
+  },
+  {
+   "kind": "horizontal",
+   "pos": 447.12,
+   "demand": 3790,
+   "tracks": 30000,
+   "util": 0.126
+  },
+  {
+   "kind": "horizontal",
+   "pos": 464.4,
+   "demand": 3790,
+   "tracks": 27582,
+   "util": 0.137
+  },
+  {
+   "kind": "horizontal",
+   "pos": 468.45,
+   "demand": 3790,
+   "tracks": 27582,
+   "util": 0.137
+  },
+  {
+   "kind": "horizontal",
+   "pos": 479.25,
+   "demand": 4270,
+   "tracks": 14982,
+   "util": 0.285
+  },
+  {
+   "kind": "horizontal",
+   "pos": 500.85,
+   "demand": 3210,
+   "tracks": 17400,
+   "util": 0.184
+  },
+  {
+   "kind": "horizontal",
+   "pos": 558.9,
+   "demand": 3210,
+   "tracks": 14931,
+   "util": 0.215
+  },
+  {
+   "kind": "horizontal",
+   "pos": 565.92,
+   "demand": 3210,
+   "tracks": 14931,
+   "util": 0.215
+  },
+  {
+   "kind": "horizontal",
+   "pos": 628.02,
+   "demand": 2118,
+   "tracks": 17400,
+   "util": 0.122
+  },
+  {
+   "kind": "horizontal",
+   "pos": 673.92,
+   "demand": 2118,
+   "tracks": 30000,
+   "util": 0.071
+  },
+  {
+   "kind": "horizontal",
+   "pos": 706.05,
+   "demand": 2664,
+   "tracks": 14982,
+   "util": 0.178
+  },
+  {
+   "kind": "horizontal",
+   "pos": 706.05,
+   "demand": 2664,
+   "tracks": 14982,
+   "util": 0.178
+  },
+  {
+   "kind": "horizontal",
+   "pos": 738.45,
+   "demand": 2632,
+   "tracks": 17400,
+   "util": 0.151
+  },
+  {
+   "kind": "horizontal",
+   "pos": 781.92,
+   "demand": 2632,
+   "tracks": 14931,
+   "util": 0.176
+  },
+  {
+   "kind": "horizontal",
+   "pos": 796.5,
+   "demand": 2632,
+   "tracks": 14931,
+   "util": 0.176
+  },
+  {
+   "kind": "horizontal",
+   "pos": 850.5,
+   "demand": 2632,
+   "tracks": 17400,
+   "util": 0.151
+  },
+  {
+   "kind": "horizontal",
+   "pos": 868.32,
+   "demand": 2632,
+   "tracks": 14982,
+   "util": 0.176
+  },
+  {
+   "kind": "horizontal",
+   "pos": 878.85,
+   "demand": 2632,
+   "tracks": 27582,
+   "util": 0.095
+  },
+  {
+   "kind": "horizontal",
+   "pos": 883.17,
+   "demand": 2632,
+   "tracks": 27582,
+   "util": 0.095
+  }
+ ]
+}
