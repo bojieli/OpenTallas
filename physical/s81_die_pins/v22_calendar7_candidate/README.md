@@ -1,6 +1,6 @@
 # Calendar7 bounded clock pin assignment
 
-This candidate preserves the actual 237.6 x 291.6 um outline and all **568 existing signal pin coordinates**, including the state clock and reset, from the retained `3_2_place_iop.odb` of `s81coll_calendar-c1-3a76e8f46`. Six new clock pins are added without moving an existing pin or changing a data stage. The source is the separate `s81_static_calendar_controller7` successor, proven at `19de810c6`; the existing master and its admitted route remain untouched.
+This candidate preserves the actual 237.6 x 291.6 um outline and all **568 existing signal pin coordinates**, including the state clock and reset, from the retained `3_2_place_iop.odb` of `s81coll_calendar-c1-3a76e8f46`. Six new clock pins are added without moving an existing pin or changing a data stage. Four real local reset relays add three initialization-release edges; the fixed normal calendar is unchanged. The source is the separate `s81_static_calendar_controller7` successor, proven at `c62f4ee8c`; the existing master and its admitted route remain untouched.
 
 The three ROM clock entries use the W face near the actual macro clock coordinates. The three registered-output clock entries use free E-face tracks nearest the actual owned output-pin median. All original pin coordinates, all574 source port bits, face bounds and pitch are checked. A stale source-census hash is refused. Input hashes and exact old ODB hash are in the assignment and receipt.
 
