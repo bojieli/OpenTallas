@@ -727,7 +727,7 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_spine_cts_orig] eq
       }
       if {![llength $rest]} { puts "OT_SPINE rest: no other clock net, TritonCTS not run"; return }
       puts "OT_SPINE rest: TritonCTS on -clk_nets {$rest} (spine clock nets excluded)"
-      return [ot_spine_cts_orig {*}$args -clk_nets $rest]
+      return [ot_spine_cts_orig {*}$args -clk_nets [join $rest " "]]
     }
   }
 }

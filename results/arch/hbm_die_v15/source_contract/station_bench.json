@@ -14,7 +14,7 @@
   {
    "name": "hfd_stn_v15_cc2224",
    "exit": 1,
-   "log": "FATAL: /home/ubuntu/wt/hbm-die-feas-1014/rtl/test/tb_hbm_v15_station.sv:19: station mismatch cycle=0\n       Time: 1251001 Scope: tb\n",
+   "log": "FATAL: /home/ubuntu/wt/hdie-v15-1015b/rtl/test/tb_hbm_v15_station.sv:19: station mismatch cycle=0\n       Time: 1251001 Scope: tb\n",
    "source_sha256": {
     "hfd_stn_v15_cc2224_mutant.sv": "7cdb979486e2b3724cd44100f1061231ed8ec7913eb5af9b90555bd8fe0e8a71",
     "hfd_stn_v15_cc2248.sv": "828d6e85263057b770ad21c0a7bc0fb988f8f3b5752bbe7acfdc3e135975f994"
@@ -23,7 +23,7 @@
   {
    "name": "hfd_stn_v15_cc2248",
    "exit": 1,
-   "log": "FATAL: /home/ubuntu/wt/hbm-die-feas-1014/rtl/test/tb_hbm_v15_station.sv:19: station mismatch cycle=0\n       Time: 1251001 Scope: tb\n",
+   "log": "FATAL: /home/ubuntu/wt/hdie-v15-1015b/rtl/test/tb_hbm_v15_station.sv:19: station mismatch cycle=0\n       Time: 1251001 Scope: tb\n",
    "source_sha256": {
     "hfd_stn_v15_cc2224.sv": "4ef706cfb1b8863b68e27d12a86233ddacd6d9a3aaaf26b445f46e0f2de0b99e",
     "hfd_stn_v15_cc2248_mutant.sv": "bb30c1db29f0e5008c579a76bd2a7fe9eab506fbe9bd2f73bcdb88d68fd9b27e"

@@ -1,0 +1,23 @@
+# dsfd_stnv_10x1: die generator pin centres (GEN18r construction_pass0 (EPYC4 s81-die-r10/gen18r), pins.lef); outline 17.256 x 17.256 (= generator slot)
+place_pin -pin_name {fi0} -layer M5 -location {8.316000 0.144000} -force_to_die_boundary
+place_pin -pin_name {di0[0]} -layer M5 -location {8.508000 0.144000} -force_to_die_boundary
+place_pin -pin_name {di0[1]} -layer M5 -location {8.556000 0.144000} -force_to_die_boundary
+place_pin -pin_name {di0[2]} -layer M5 -location {8.604000 0.144000} -force_to_die_boundary
+place_pin -pin_name {di0[3]} -layer M5 -location {8.652000 0.144000} -force_to_die_boundary
+place_pin -pin_name {di0[4]} -layer M5 -location {8.700000 0.144000} -force_to_die_boundary
+place_pin -pin_name {di0[5]} -layer M5 -location {8.748000 0.144000} -force_to_die_boundary
+place_pin -pin_name {di0[6]} -layer M5 -location {8.796000 0.144000} -force_to_die_boundary
+place_pin -pin_name {di0[7]} -layer M5 -location {8.844000 0.144000} -force_to_die_boundary
+place_pin -pin_name {di0[8]} -layer M5 -location {8.892000 0.144000} -force_to_die_boundary
+place_pin -pin_name {di0[9]} -layer M5 -location {8.940000 0.144000} -force_to_die_boundary
+place_pin -pin_name {fo0} -layer M5 -location {8.316000 17.112000} -force_to_die_boundary
+place_pin -pin_name {do0[0]} -layer M5 -location {8.508000 17.112000} -force_to_die_boundary
+place_pin -pin_name {do0[1]} -layer M5 -location {8.556000 17.112000} -force_to_die_boundary
+place_pin -pin_name {do0[2]} -layer M5 -location {8.604000 17.112000} -force_to_die_boundary
+place_pin -pin_name {do0[3]} -layer M5 -location {8.652000 17.112000} -force_to_die_boundary
+place_pin -pin_name {do0[4]} -layer M5 -location {8.700000 17.112000} -force_to_die_boundary
+place_pin -pin_name {do0[5]} -layer M5 -location {8.748000 17.112000} -force_to_die_boundary
+place_pin -pin_name {do0[6]} -layer M5 -location {8.796000 17.112000} -force_to_die_boundary
+place_pin -pin_name {do0[7]} -layer M5 -location {8.844000 17.112000} -force_to_die_boundary
+place_pin -pin_name {do0[8]} -layer M5 -location {8.892000 17.112000} -force_to_die_boundary
+place_pin -pin_name {do0[9]} -layer M5 -location {8.940000 17.112000} -force_to_die_boundary
