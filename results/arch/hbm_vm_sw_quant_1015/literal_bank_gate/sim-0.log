@@ -1,0 +1,2 @@
+VM_RG6_QUANT_STATIC PASS RG=6 WG=2 banks=8 SRAMs=24 DMAwrites=1024 exactwide_reads=6144 eachgroup_reads=1024 packet_reads=8 sectors_per_cycle=8 return_edges=6 conflict_fault_no_arbitration=1 WG1writes=1024 WG1readbacks=1024 all7writeowners=PASS SID0=1
+/tmp/hbm-vm-rg6-quant-input/tb_vms_rg6_quant_static.sv:220: $finish called at 13450000 (1ps)
