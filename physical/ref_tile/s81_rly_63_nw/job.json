@@ -1,5 +1,5 @@
 {
- "name": "s81_rly_63_nw-g18-COMMIT",
+ "name": "s81_rly_63_nw-g18-8a9388ce8",
  "block": "dsfd_rly_63_NW",
  "ref_tile": true,
  "owner": "Claude:fill-s81",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/el1015-fill-1015",
-  "commit": "COMMIT"
+  "commit": "8a9388ce8"
  },
  "stages": {
   "bench": [
@@ -87,7 +87,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81_rly_63_nw/s81_rly_63_nw-g18-COMMIT"
+   "to": "results/rtl/ref_tile/s81_rly_63_nw/s81_rly_63_nw-g18-8a9388ce8"
   }
  ],
  "cycles_added": 0,

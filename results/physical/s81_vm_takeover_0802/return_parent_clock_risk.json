@@ -1,0 +1,46 @@
+{
+ "source": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static512_suhc.sv",
+ "source_sha256": "358cbc857d3336c95adf2bd3824ca03509ea41802192caa865f430ef6f8b70ac",
+ "actual_source_tie": ".ck({4{ck_return[s]}})",
+ "lanes": [
+  {
+   "job": "dsfd_vm_static_return_bank8_l1_p_native_1015_l16-l16-ceea362ab",
+   "status": "CLOSED",
+   "clocked_registers": 5380,
+   "registers": 5380,
+   "tt_ps": 43.21,
+   "ff_ps": 4.11,
+   "drc": 0
+  },
+  {
+   "job": "dsfd_vm_static_return_bank8_l2_p_native_1015_l16-l16-ceea362ab",
+   "status": "SUMMARY",
+   "clocked_registers": 5380,
+   "registers": 5380,
+   "tt_ps": 61.93,
+   "ff_ps": -11.22,
+   "drc": 0
+  },
+  {
+   "job": "dsfd_vm_static_return_bank8_l3_p_native_1015_l16-l16-ceea362ab",
+   "status": "CLOSED",
+   "clocked_registers": 5380,
+   "registers": 5380,
+   "tt_ps": 63.95,
+   "ff_ps": 1.83,
+   "drc": 0
+  },
+  {
+   "job": "dsfd_vm_static_return_bank8_l0_p_native_1015_l16-l16-ceea362ab",
+   "status": "CLOSED",
+   "clocked_registers": 5380,
+   "registers": 5380,
+   "tt_ps": 65.75,
+   "ff_ps": 6.8,
+   "drc": 0
+  }
+ ],
+ "downstream_clocked_registers_per_shared_root": 21520,
+ "qualification": "OPEN: above15000; needs measured300ps/80ps parentexception or16independentreturnentries; no metadata waiver",
+ "root_revision_cost_if_selected": "+12externalclockbits; actual reset/phase/pin contract and compiler integration required"
+}

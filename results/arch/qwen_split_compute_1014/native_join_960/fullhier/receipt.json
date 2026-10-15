@@ -1,0 +1,42 @@
+{
+  "status": "ELABORATION_PASS_WITH_WARNINGS",
+  "qualified": false,
+  "top": "qfd_native_compute_join_960",
+  "unit": "oth-ubuntu-352077-1792081421 (EPYC4)",
+  "command_exit": 0,
+  "actual_clock_roots": {
+    "tt": 4,
+    "seq": 3,
+    "su": 347,
+    "vm": 488,
+    "native": 6,
+    "io": 108,
+    "embed": 1,
+    "crom": 16,
+    "pt0": 49,
+    "pt0f": 49,
+    "pt1": 49,
+    "pt1f": 49,
+    "pt2": 49,
+    "pt2f": 49
+  },
+  "clock_root_total": 1267,
+  "source_entries": 132,
+  "warnings": {
+    "PINMISSING": 54,
+    "WIDTHTRUNC": 148,
+    "WIDTHEXPAND": 211,
+    "WIDTHCONCAT": 14,
+    "SELRANGE": 3,
+    "ALWNEVER": 2,
+    "CMPCONST": 2
+  },
+  "errors": 0,
+  "log_sha256": "2f007c5b72e1219d92d1c389c30781ebc9d8b2c71761b635c3ec8adabd39d53e",
+  "maximum_rss_kbytes": 43512608,
+  "elapsed": "8:28.44",
+  "verilator": "5.050 (~/.local/opentallas-tools)",
+  "sram_model": "join959 bound ot_sram_1r1w_128x256_m1_r2c2 to the simulation-only rtl/model/hbm_pc40_native_sim_20261003 model (first declaration wins; MODDUP); join960 r2 binds the memory-compiler functional model physical/asap7_memory_macros_v2 (sram_gen.py v1.0+aligned-v2) only",
+  "r1_note": "r1 (same sources + the simulation-only SRAM model listed first) also exit 0 but with MODDUP: Verilator bound the sim model; r2 binds only the memory-compiler functional model.",
+  "scope": "Full actual hierarchy Verilator lint only; no simulation, physical phase, placement/routing, compiler calendar or whole-token qualification."
+}

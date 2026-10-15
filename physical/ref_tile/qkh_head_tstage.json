@@ -1,0 +1,107 @@
+{
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/split_20261014/qkh_head_stages.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [],
+ "macros": [],
+ "outhold": true,
+ "recipe": 1,
+ "layer_cap": "M5",
+ "children": [],
+ "inter": [],
+ "name": "qkh_head_tstage",
+ "top": "qkh_head_tstage",
+ "outline": {
+  "w": 21.6,
+  "h": 259.2,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "ti_a",
+   "e_a"
+  ],
+  "E": [
+   "ti_b",
+   "e_b"
+  ],
+  "S": [
+   "ck"
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "m5_pg_pitch": 2.7,
+  "pin_balance": {
+   "group_max": 1
+  }
+ },
+ "why_floorplan": "Pin-density-sized die relay leaf (1,575 b: head t word 1,559 + e 16), one flop a bit, straight-through. hs1 (21.6 x 166.32, PPL 32-bit groups) EARLY_FAIL_CONGESTION: GRT-0116 vertical overflow M3 2,341 / M5 1,204 in y 67-99 um; nets ti_a[179]/[1041]/[1297] share one gcell = the W and E groups were placed independently in different orders, so bits crossed vertically in a 17-um-wide core (840 vertical tracks per cut); pin slots 2 x 1,575 = 3,150 of 3,465 M4 face tracks (0.91). hs2: height from pin density = 2-track slots <= 0.60 of M4 face tracks -> 259.2 um (5,310 usable tracks, occupancy 0.593, 0.297 bits/track, both faces), exact io_tcl pins: bit k on the SAME M4 track W (in) and E (out), index order, >= 3-track pitch, so every bit is one horizontal route and vertical demand is only the clock. Fits the 43.2-um head-column gaps (head slot 492.48 tall).",
+ "structural_change": "NEW (v1.4 queue rank 1, kvsys lead r7 07:02): ECTL -> head per-head registered copy, N = 2 stages uniform (two instances a head; stage 1 at the ECTL C face removes the 1-flop -> 8 front-leaf fan-out over ~1 mm, -1388 ps), +2 cycles on every ECTL->head issue, compiler-scheduled; no valid/ready/credit. hs2: outline 21.6 x 166.32 -> 21.6 x 259.2 (+56 % leaf area, +194 um2 per instance, 2 a head) sized from face pin density, and exact straight-through pin order replacing per-face PPL groups; RTL, cycles and benches unchanged.",
+ "job": {
+  "owner": "Claude:el1014-qwen-kvsys-elements",
+  "branch": "claude/qwen-kvsys-el-r5-1015",
+  "tag": "hs2",
+  "purpose": "Qwen KV/system die v1.4 head stage leaf qkh_head_tstage: one register stage of the ECTL -> head t + e word per head (contract compiler_stages.head_stages, N = 2).",
+  "benches": [
+   {
+    "name": "stage_words_exact",
+    "cmd": "bash rtl/test/qwen_split/run_qkh_head_stages.sh {RUN}/bench/w0 0 0",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "QKH_STAGE_BENCH PASS W=1575 0 errors in 20000 words"
+   },
+   {
+    "name": "stage_words_mut",
+    "cmd": "bash rtl/test/qwen_split/run_qkh_head_stages.sh {RUN}/bench/w1 0 1",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "QKH_STAGE_BENCH FAIL"
+   },
+   {
+    "name": "head_r4_staged_exact",
+    "cmd": "HEAD_STAGED=1 JOBS=8 bash rtl/test/qwen_split/run_qkh_head_native.sh {RUN}/bench/hs0 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "HEAD_NATIVE_PASS checks=3515",
+    "note": "r4 head behind 2 t/e stages + 1 score stage vs the reference head +3 (score) / +2 (nb): exact"
+   },
+   {
+    "name": "head_r4_staged_mut21",
+    "cmd": "HEAD_STAGED=1 JOBS=8 bash rtl/test/qwen_split/run_qkh_head_native.sh {RUN}/bench/hs21 21",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "HEAD_NATIVE_FAIL checks=3515 errors=[1-9]",
+    "note": "lt rides one stage (lt/q race)"
+   }
+  ],
+  "extra_paths": [
+   "rtl/test/qwen_split",
+   "rtl/qwen_sys/split_20261014",
+   "rtl/hdc",
+   "rtl/lib"
+  ]
+ },
+ "io_tcl": "physical/ref_tile/qkh_head_tstage/io_pins.tcl"
+}
