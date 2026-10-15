@@ -1,0 +1,13 @@
+Landing fence race successor (RTL proof; physical qualification pending)
+
+The native ECTL emits 17-bit rq: bit16 is alternating layer parity; bits15:0 retain {t13,g,v,valid}. The first start after reset is even; 36 layers preserve parity at the token wrap. The landing group captures requests in a 128-entry ingress queue, matching the ECTL's actual 128 outstanding-row credits, and releases only when the layer context agrees. The queue adds no response credit, so 128 outstanding requests bound its occupancy. Existing default-off EPOCH=0 interfaces stay compatible with their closed masters.
+
+Production delayed-context bench: KD=12, KL=12, DQ=128 PASS, 2,471 exact responses, eight posted-row replacements, 16,384 landed words, four layers 34/35/0/1 across wrap. Removing the parity wait (GM=4) produces an observed sticky fault FAIL. Native ECTL request producer PASS 36 layers, 9,170 request rows and 35,121 cycles vs the existing exact reference; inverted producer parity fails 1,005 comparisons over four layers.
+
+Same-input RTL cost comparison at KL=0: legacy 9,596 cycles vs epoch 9,597 (+1, 0.0104% for this vehicle). Delayed-context production successor KL=12 takes 9,616 cycles. This is local measured cost, not whole-layer throughput or an accepted-cost ledger row. Sequential steady state remains one request per clock; ingress capture/queue add two pipeline stages before the unchanged merge. The immutable whole-layer price remains unchanged.
+
+Native successor masters: qkd_ectl_a_tp8_epoch_direct (rq17), qkd_land_grp_epoch (rq17, DQ128); parent qkd_ectl3_epoch_direct_s (rq17). B/C direct masters keep their ports and consume recovered r3 direct-seam RTL (C x2 to A/B, B x1 captures stage3). The die generator must change request routes and landing strip instances to these masters and assign bit16. No old 16-bit view is valid for the new 17-bit masters.
+
+Existing ECTL dr1 audits: A PASS 183.0/159.1ps launch/capture; B FAIL launch225.6; C FAIL capture223.2. Recovered r3 B/C gate jobs qkd_ectl_b_tp8_direct-dr3-97a28cc59 / qkd_ectl_c_tp8_direct-dr2-97a28cc59 validated source binding and were submitted. Their views/native audits remain outstanding.
+
+Named native successor composition proof on abf84515f reproduces all prior numeric verdicts exactly (native-*.log), with qkd_land_grp_epoch and qkd_ectl3_epoch_direct_s instantiated directly. Both mutants exit1; both positives exit0.

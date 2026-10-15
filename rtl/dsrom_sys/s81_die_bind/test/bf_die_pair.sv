@@ -37,4 +37,19 @@ module bf_die_pair #(parameter INSTANCE = "") (
     assign hph = 1'b1;                               // HALF 0 (the front's hph has no die reader)
     assign {ppos[2:0], perr[0], pnseg[4:0], pseg[4:0], prow[15:0], pval[31:0], pv[0]} = rw;
     assign {ppos[5:3], perr[1], pnseg[9:5], pseg[9:5], prow[31:16], pval[63:32], pv[1]} = re;
+`ifndef SYNTHESIS
+    // BF16 x-beat adjacency at the pair's pins (the serial-BF-lane question): beats, back-to-back pairs, min gap
+    integer n_xb = 0, n_b2b = 0, n_xs = 0, n_xs_b2b = 0, gap_min = 1 << 30, cyc = 0, last_xb = -1000000, last_xs = -1000000;
+    always @(posedge clk) if (rst_n) begin
+        cyc <= cyc + 1;
+        if (xb_v) begin
+            n_xb <= n_xb + 1; if (cyc - last_xb == 1) n_b2b <= n_b2b + 1;
+            if (last_xb > -1000000 && cyc - last_xb < gap_min) gap_min <= cyc - last_xb;
+            last_xb <= cyc;
+        end
+        if (xs_v) begin n_xs <= n_xs + 1; if (cyc - last_xs == 1) n_xs_b2b <= n_xs_b2b + 1; last_xs <= cyc; end
+    end
+    final $display("BF_PIN_BEAT_ADJACENCY xb_beats=%0d xb_back_to_back=%0d xb_min_gap=%0d xs_beats=%0d xs_back_to_back=%0d",
+                   n_xb, n_b2b, gap_min, n_xs, n_xs_b2b);
+`endif
 endmodule

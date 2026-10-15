@@ -35,12 +35,21 @@ static HelperSequenceResult run_actual_helper_layers(
  qwen_native_host::Inputs&inputs,const ActualHostStartup&startup,
  const ActualHostDrain&host_drain,const fs::path&out,
  const std::string&head_image={},const std::string&head_program={},
- EmbeddingOwner*embedding=nullptr,const std::string&embedding_bank={},SequenceClock*clock_state=nullptr){
+ EmbeddingOwner*embedding=nullptr,const std::string&embedding_bank={},SequenceClock*clock_state=nullptr,bool head_first=false){
  if(!startup||!host_drain)throw std::runtime_error("actual HOST producer/drain binding required");
  if(layers.empty())throw std::runtime_error("missing actual layers");
  if(layers.size()==36&&!head_image.empty()&&!embedding)throw std::runtime_error("full38-stage token requires actual embedding after HOST dispatch");
  if(embedding&&embedding_bank.empty())throw std::runtime_error("actual embedding code/scale bank required");
- link.banks(layers.front().program);size_t layer_index=0;unsigned segment=0;bool begun=false,running=false,head=false;
+ link.banks(layers.front().program);size_t layer_index=0;bool begun=false,head=false;
+ // Per-rank core state: each actual helper starts its own core when its own
+ // all-reduce return completes, so ranks legitimately start a segment on
+ // different edges (collector delivery skew). One aggregate flag threw on that.
+ std::array<bool,8> rank_running{};std::array<unsigned,8> rank_segment{};bool head_saved=false;
+ auto any_running=[&]{for(bool b:rank_running)if(b)return true;return false;};
+ if(head_first){
+  if(head_image.empty()||head_program.empty()||layers.size()!=1)throw std::runtime_error("head-first run needs one plan layer plus head banks");
+  for(auto&x:r)x->prepare_head_first(head_image,head_program);link.banks(head_program);head=true;
+ }
  SequenceClock local_clock;SequenceClock&clock=clock_state?*clock_state:local_clock;
  uint64_t&cn=clock.cn,&hn=clock.hn;bool&ch=clock.ch,&hh=clock.hh;HelperSequenceResult result;
  bool grant_saved=false,embedding_started=false,embedding_complete=!embedding;uint64_t layer_helper_begin=0;
@@ -77,34 +86,40 @@ static HelperSequenceResult run_actual_helper_layers(
   }
   if(embedding)embedding->low(r,reset);
   link.low(r,reset,can_begin,host.epoch(),head?37:layers[layer_index].number+1,host.token(),host.position());
-  bool launch=false;std::array<bool,8> starts{};
+  std::array<bool,8> starts{};
   for(unsigned rank=0;rank<8;rank++){
    auto&h=link.rank(rank);bool start=h.core_start;
    if(start&&!host.dispatch())throw std::runtime_error("actual helper core start without actual eight-endpoint cohort dispatch");
-   if(start){r[rank]->vm.segment_base=h.prog_base;launch=true;}
+   if(start){if(rank_running[rank])throw std::runtime_error("helper relaunched busy core (rank "+std::to_string(rank)+")");r[rank]->vm.segment_base=h.prog_base;}
    starts[rank]=start;
   }
   rank_pool().run([&](unsigned k){r[k]->low(starts[k]);});
   // Both read snapshots and inter-model pins are now frozen. Advance every
   // actual model, then apply its captured addressed writes without rewiring.
   rank_pool().run([&](unsigned k){r[k]->rise();});link.rise(r);if(embedding)embedding->rise(r);host.rise();
-  if(host.core_edges%500==0){static const auto wall0=std::chrono::steady_clock::now();
-   std::cerr<<"PROGRESS core_edges "<<host.core_edges<<" layer_index "<<layer_index<<" head "<<head<<" dispatch "<<host.dispatch()<<" begun "<<begun<<" running "<<running<<" core_evals "<<r[0]->core_evals<<" skipped "<<r[0]->core_evals_skipped
+  static const auto wall0=std::chrono::steady_clock::now();
+  if(host.core_edges%500==0){
+   std::cerr<<"PROGRESS core_edges "<<host.core_edges<<" layer_index "<<layer_index<<" head "<<head<<" dispatch "<<host.dispatch()<<" begun "<<begun<<" running "<<std::count(rank_running.begin(),rank_running.end(),true)<<" core_evals "<<r[0]->core_evals<<" skipped "<<r[0]->core_evals_skipped<<" memo_hits "<<r[0]->memo_hits<<" memo_verified "<<r[0]->memo_verified<<" memo_records "<<r[0]->memo_records
     <<" wall_s "<<std::chrono::duration<double>(std::chrono::steady_clock::now()-wall0).count()<<std::endl;}
   if(embedding&&!embedding_complete&&embedding_started&&embedding->done()){
    embedding_complete=true;fs::create_directories(out/"embedding");std::ofstream f(out/"embedding"/"actual_commits.txt");for(auto&w:embedding->commits)f<<w.address<<" "<<std::hex<<std::setw(8)<<std::setfill('0')<<w.value<<" "<<w.tag<<std::dec<<" "<<w.generation<<" "<<w.edge<<"\n";
    std::ofstream words(out/"embedding"/"actual_accepted_words.txt");for(auto&w:embedding->raw_events){words<<w.pc<<" "<<w.edge<<" ";for(unsigned j=0;j<32;j++)words<<std::hex<<std::setw(8)<<std::setfill('0')<<w.bits[31-j];words<<std::dec<<"\n";}
    std::ofstream cycles(out/"embedding"/"functional_cycles.json");cycles<<"{\"actual_cycles\":"<<embedding->cycles()<<",\"after_actual_HOST_cohort_dispatch\":true,\"physical_rate_qualified\":false}\n";embedding->retire();
   }
-  if(can_begin){begun=true;layer_helper_begin=link.cycles();}if(launch){if(running)throw std::runtime_error("helper relaunched busy core");running=true;}
-  bool cores_done=running;for(auto&x:r)cores_done&=x->core.done;
-  if(cores_done){
-   auto dir=layer_output(layers[layer_index],out,layers.size());fs::create_directories(dir);
-   if(head)save_head(r,out/"head");
-   else for(unsigned rank=0;rank<8;rank++){std::ofstream f(dir/("rank"+std::to_string(rank)+"_segment"+std::to_string(segment)+"_VM.hex"));for(auto value:r[rank]->vm.vm)f<<std::hex<<std::setfill('0')<<std::setw(8)<<value<<"\n";}
-   running=false;++segment;
+  if(can_begin){begun=true;layer_helper_begin=link.cycles();}
+  for(unsigned rank=0;rank<8;rank++)if(starts[rank])rank_running[rank]=true;
+  // A rank's core segment ends when its own core reports done; its VM cannot
+  // change before every rank has contributed to the following all-reduce.
+  for(unsigned rank=0;rank<8;rank++){
+   if(!rank_running[rank]||!r[rank]->core.done)continue;
+   if(!head){
+    auto dir=layer_output(layers[layer_index],out,layers.size());fs::create_directories(dir);
+    std::ofstream f(dir/("rank"+std::to_string(rank)+"_segment"+std::to_string(rank_segment[rank])+"_VM.hex"));for(auto value:r[rank]->vm.vm)f<<std::hex<<std::setfill('0')<<std::setw(8)<<value<<"\n";
+   }
+   rank_running[rank]=false;++rank_segment[rank];
   }
-  bool helpers_done=begun&&!running&&link.drained();for(unsigned rank=0;rank<8;rank++)helpers_done&=link.rank(rank).done;
+  if(head&&!head_saved&&!any_running()&&*std::min_element(rank_segment.begin(),rank_segment.end())>=1){save_head(r,out/"head");head_saved=true;}
+  bool helpers_done=begun&&!any_running()&&link.drained();for(unsigned rank=0;rank<8;rank++)helpers_done&=link.rank(rank).done;
   if(!helpers_done)continue;
   if(head){
    unsigned tok=link.rank(0).next_token,value=link.rank(0).next_val;
@@ -127,7 +142,7 @@ static HelperSequenceResult run_actual_helper_layers(
    if(head_program.empty())throw std::runtime_error("missing actual head descriptor/program bank");
    for(auto&x:r)x->switch_head(head_image,head_program);link.banks(head_program);head=true;--layer_index;
   }else{for(auto&x:r)x->switch_layer(layers[layer_index]);link.banks(layers[layer_index].program);}
-  begun=false;segment=0;
+  begun=false;rank_segment={};head_saved=false;
  }
  throw std::runtime_error("actual helper-driven layer sequence timeout");
 }
