@@ -56,6 +56,22 @@ def qwen_central_vm_native_bank_model():
         qualification='sizing/proposal; fullbank exact+mutant, leaf/native clocks/routes and parent composition open')
 
 
+def qwen_central_vm_banked_native_model():
+    """Structural half-width leaves after full-width pin-strip placement divergence."""
+    return dict(schema='opentallas.qwen-central-vm-nine-root-bank.v1',opt_in_default=False,
+        macs_per_cycle=0, memory_read_bytes_per_cycle=64,memory_write_bytes_per_cycle=64,
+        replicas=64,memory_macros_per_bank=2,clock_roots_per_bank=9,
+        data_leaf_bits=256,data_leaf_copies_per_bank=6,control_leaf_bits=35,
+        data_leaf_outline_um=[25.92,43.2],control_leaf_outline_um=[17.28,21.6],
+        data_leaf_area_um2=25.92*43.2,estimated_face_cut_ratio=256/(2*(43.2-10.8)/.096),
+        input_bits_per_cycle=546,output_bits_per_cycle=512,fixed_edges=4,added_fixed_edges=0,
+        parent_own_flops=0,total_register_bits_per_bank=1571,
+        mux_demux_cost='same16word mask expansion; wires-only low/high256-bit partition',
+        actual_parent_homes=None,actual_parent_area_um2=None,
+        prior_failure='full512/547-bit strips: GPL artificial inflation900pct and Inf/NaN; immutable failures preserved',
+        qualification='model then actual9root miter+mutants and native leafCTS/route; no physical adoption')
+
+
 def qwen_central_vm_control_leaf_model(observer=False):
     """Selected 488-root VM, actual LAW8 control leaves before native CTS/route."""
     bits_in, bits_out, registers, copies = (27,25,51,39) if observer else (35,35,70,64)
