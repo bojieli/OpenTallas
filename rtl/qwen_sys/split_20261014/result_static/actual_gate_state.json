@@ -1,0 +1,27 @@
+{
+  "scope": "component source binding + actual arithmetic-to-record, common phase only",
+  "tested_revision": "639e12289",
+  "source_ancestor": "385bc2d8b",
+  "hardware_guard_successor": "1d273bc4c",
+  "initial_attempt": {
+    "unit": "oth-ubuntu-984071-1792046815",
+    "host": "ot-epyc4",
+    "exit": 255,
+    "state": "terminal_failed_build_script_dependencies",
+    "error": "ot_hdc_lzc32 referenced1536 and ot_hdc_mul24_rows referenced512 missing; add actual ot_hdc_fastfp.sv dependency, no DUT substitution"
+  },
+  "corrected_attempt": {
+    "unit": "oth-ubuntu-984693-1792046835",
+    "host": "ot-epyc4",
+    "session": 14537,
+    "pid": 984718,
+    "state": "live_compile_last_verified",
+    "peak_bytes_last_observed": 1626943488,
+    "output_root": "/srv/opentallas-scratch/codex/q-result-collect-1015",
+    "script": "rtl/qwen_sys/split_20261014/result_static/run_actual.sh",
+    "receipt_pending": true
+  },
+  "physical_qualified": false,
+  "whole_native_service_qualified": false,
+  "compiler_actual_service_calendar_qualified": false
+}
