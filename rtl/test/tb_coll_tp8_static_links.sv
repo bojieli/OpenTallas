@@ -169,7 +169,9 @@ module tb_coll_tp8_static_links #(
 `ifdef OT_TP8S_QFD
 `ifdef OT_TP8S_LOCAL_ROOTS
             qfd_io_collective_local_roots u_die (
-                .clk_region({60{clk}}),
+                .clk_region({68{clk}}),
+                .clk_pq1_b0(clk),.clk_pq1_b1(clk),.clk_pq2_b0(clk),.clk_pq2_b1(clk),.clk_pq3_b0(clk),.clk_pq3_b1(clk),.clk_pq4_b0(clk),.clk_pq4_b1(clk),
+                .clk_rq1_b0(clk),.clk_rq1_b1(clk),.clk_rq2_b0(clk),.clk_rq2_b1(clk),.clk_rq3_b0(clk),.clk_rq3_b1(clk),.clk_rq4_b0(clk),.clk_rq4_b1(clk),
 `else
             qfd_io_collective_static u_die (       // the die-name master (LU / LS by +define)
 `endif

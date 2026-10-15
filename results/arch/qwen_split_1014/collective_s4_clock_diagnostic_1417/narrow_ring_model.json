@@ -1,0 +1,56 @@
+{
+  "schema": "opentallas.qwen.quarter_local_ring_model.v1",
+  "scope": "Source/model candidate only; exact macro profile not yet physically granted or native qualified.",
+  "immutable_profile": {
+    "LU": 53,
+    "P_RING_OFF": 55,
+    "R_RING_OFF": 55,
+    "useful_record_bits": 546,
+    "depth": 64,
+    "normal_data_cycle_delta": 0
+  },
+  "old": {
+    "macro": "ot_sram_1r1w_32x546_m1",
+    "count": 4,
+    "width_um": 177.768,
+    "height_um": 81.0,
+    "total_macro_area_um2": 57596.832,
+    "storage_bits": 69888
+  },
+  "candidate": {
+    "macro": "ot_sram_1r1w_32x128_m1",
+    "count": 20,
+    "quarters_per_ring": 5,
+    "banks_per_quarter": 2,
+    "data_quarters": 4,
+    "metadata_quarter_useful_bits": 34,
+    "metadata_padding_bits_per_word": 94,
+    "width_um": 51.408,
+    "height_um": 20.79,
+    "total_macro_area_um2": 21375.4464,
+    "storage_bits": 81920,
+    "region_clock_roots": 68,
+    "total_master_clock_ports": 102
+  },
+  "cost": {
+    "extra_capacity_bits": 12032,
+    "capacity_increase_percent": 17.216117216117222,
+    "macro_area_delta_um2": -36221.3856,
+    "macro_area_reduction_percent": 62.887808829485614
+  },
+  "functional_obligations": [
+    "Original546-bit ring versus packed quarter macro read at all cycles after initialization, all legal offsets and mid-run reset.",
+    "Actual wrong bank/offset/mask or metadata mutant observed numerically.",
+    "Full8die reduce/gather/mixed source-current bench at unchanged compiled latency."
+  ],
+  "physical_obligations": [
+    "Source-pinned new102-clock-entry and actual25-macro (20P/R+5S) graph; no inherited9-macro floorplan.",
+    "Coherent2x2 quarter connected-group homes/pins/cuts vs current4row graph, enough area/corridor/clock margin.",
+    "Explicit physical PHY/gearbox/FDI relay sites and compiler ages; currentRU/RS counts are not placements.",
+    "Source controller ownership extracted into hardleaf; no residual parent standard-cell CTS root."
+  ],
+  "sha256": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.json": "8ed66a3140f21a1733cc6eafd4e961c84fb6e6f94c722294b13668e3265f22a2",
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.json": "d4fcd75754cbc71d2ce1ca9d700b779ec91af72ca48f635e79ee9186f3a3ebbc"
+  }
+}

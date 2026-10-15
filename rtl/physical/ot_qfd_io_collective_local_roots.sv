@@ -12,10 +12,11 @@
 // Successor of qfd_io_collective (credit design, historical/diagnostic under 0ah).
 module qfd_io_collective_local_roots (
     input  wire          clk,                   // controller root
-    input wire [59:0] clk_region,
+    input wire [67:0] clk_region,
     input  wire          clk_pfold0, clk_pfold1, clk_pfold2, clk_pfold3,
     input  wire          clk_xfold0, clk_xfold1, clk_xfold2, clk_xfold3,
     input wire clk_pring0,clk_pring1,clk_sring0,clk_sring1,clk_sring2,clk_sring3,clk_sring4,clk_rring0,clk_rring1,
+    input wire clk_pq1_b0,clk_pq1_b1,clk_pq2_b0,clk_pq2_b1,clk_pq3_b0,clk_pq3_b1,clk_pq4_b0,clk_pq4_b1,clk_rq1_b0,clk_rq1_b1,clk_rq2_b0,clk_rq2_b1,clk_rq3_b0,clk_rq3_b1,clk_rq4_b0,clk_rq4_b1,
     input  wire          rst_n,
     input  wire [1:0]    pkg_s,
     input  wire          die_ps,
@@ -69,7 +70,7 @@ module qfd_io_collective_local_roots (
     always @(posedge clk)begin cm_pin<=cmd_mode;cw_pin<=cmd_words;ct_pin<=cmd_tag;end
     always @(posedge clk or negedge rst_n)if(!rst_n)cv_pin<=0;else cv_pin<=cmd_v;
     ot_coll_tp8_local_roots #(.LANES(16), .TAGW(32), .ADD_LAT(7), .LU(`OT_QFDS_LU), .LS(`OT_QFDS_LS), .GC(8), .CCLK(1)) u_coll (
-        .clk_mem({clk_rring1,clk_rring0,clk_sring4,clk_sring3,clk_sring2,clk_sring1,clk_sring0,clk_pring1,clk_pring0}),
+        .clk_mem({clk_rq4_b1,clk_rq4_b0,clk_rq3_b1,clk_rq3_b0,clk_rq2_b1,clk_rq2_b0,clk_rq1_b1,clk_rq1_b0,clk_rring1,clk_rring0,clk_sring4,clk_sring3,clk_sring2,clk_sring1,clk_sring0,clk_pq4_b1,clk_pq4_b0,clk_pq3_b1,clk_pq3_b0,clk_pq2_b1,clk_pq2_b0,clk_pq1_b1,clk_pq1_b0,clk_pring1,clk_pring0}),
         .clk_region(clk_region),.clk(clk), .clk_pfold({clk_pfold3, clk_pfold2, clk_pfold1, clk_pfold0}),
         .clk_xfold({clk_xfold3, clk_xfold2, clk_xfold1, clk_xfold0}),
         .rst_n(rst_n), .pkg_s(pkg_s), .die_ps(die_ps),

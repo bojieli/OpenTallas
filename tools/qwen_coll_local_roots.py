@@ -25,7 +25,9 @@ def derive(root=ROOT):
         text = text.replace(old, new)
 
     change("module ot_coll_tp8_static #(", "module ot_coll_tp8_local_roots #(")
-    change("    input  wire              clk,", "    input  wire              clk,\n    input wire [59:0] clk_region, // same compiled edge; independent physical roots")
+    change("    input  wire              clk,", "    input  wire              clk,\n    input wire [67:0] clk_region, // same compiled edge; independent physical roots")
+    change("    input wire [8:0] clk_mem, // CCLK1: P0/P1,S0..S4,R0/R1 direct macro entries",
+           "    input wire [24:0] clk_mem, // P five quarters x two banks; S five; R five quarters x two banks")
     # Keep all helper names disjoint so the legacy and candidate elaborate together.
     text = text.replace("ot_coll_static_ring", "ot_coll_local_ring")
     text = text.replace("ot_coll_static_sx_reg", "ot_coll_local_sx_reg")
@@ -195,8 +197,28 @@ def derive(root=ROOT):
     text = text.replace(".ID(32 + gq*NS + gr), .RST(0)) u_sel (.clk(clk)", ".ID(32 + gq*NS + gr), .RST(0)) u_sel (.clk(clk_region[28+gr])")
     text = text.replace(".ID(48 + gr), .RST(1)) u_tfv (.clk(clk)", ".ID(48 + gr), .RST(1)) u_tfv (.clk(clk_region[12])")
     text = text.replace(".ID(52 + gr), .RST(1)) u_tfo (.clk(clk)", ".ID(52 + gr), .RST(1)) u_tfo (.clk(clk_region[12])")
-    change("u_pring (.clk(clk),", "u_pring (.clk(clk_region[32]),")
-    change("u_rring (.clk(clk),", "u_rring (.clk(clk_region[33]),")
+    # Real existing narrow SRAM macros let every payload quarter stay local.
+    # Metadata uses the fifth quarter; padding is declared physical capacity,
+    # not an unbounded array or a reference-code memory substitution.
+    change("    ot_coll_local_ring #(.OFF(LU + 2)) u_pring (.clk(clk), .mem_ck(CCLK ? {clk_mem[1:0],clk_mem[1:0]} : {4{clk}}), .rs_n(rs_p), .wd(ir_q), .rd(pr_rd));", """    genvar gpq;
+    generate for(gpq=0;gpq<5;gpq=gpq+1)begin:g_pring_quarter
+      localparam integer RID=(gpq==0)?32:59+gpq;
+      if(gpq==4)begin:g_meta
+        ot_coll_local_ring_quarter #(.OFF(LU+2),.W(34),.ID(RID)) u_region(.ctl_ck(clk_region[RID]),.mem_ck(CCLK?clk_mem[2*gpq +:2]:{2{clk}}),.rs_n(rs_p),.wd(ir_q[512 +:34]),.rd(pr_rd[512 +:34]));
+      end else begin:g_data
+        ot_coll_local_ring_quarter #(.OFF(LU+2),.W(128),.ID(RID)) u_region(.ctl_ck(clk_region[RID]),.mem_ck(CCLK?clk_mem[2*gpq +:2]:{2{clk}}),.rs_n(rs_p),.wd(ir_q[128*gpq +:128]),.rd(pr_rd[128*gpq +:128]));
+      end
+    end endgenerate""")
+    change("    ot_coll_local_ring #(.OFF(ROFF)) u_rring (.clk(clk), .mem_ck(CCLK ? {clk_mem[8:7],clk_mem[8:7]} : {4{clk}}), .rs_n(rs_r), .wd({{(PW-RW){1'b0}}, xe_q, te_l, xr_q}), .rd(rr_rd));", """    wire[545:0]rr_wd={{(PW-RW){1'b0}},xe_q,te_l,xr_q};
+    generate for(gpq=0;gpq<5;gpq=gpq+1)begin:g_rring_quarter
+      localparam integer RID=(gpq==0)?33:63+gpq;
+      if(gpq==4)begin:g_meta
+        ot_coll_local_ring_quarter #(.OFF(ROFF),.W(34),.ID(RID)) u_region(.ctl_ck(clk_region[RID]),.mem_ck(CCLK?clk_mem[15+2*gpq +:2]:{2{clk}}),.rs_n(rs_r),.wd(rr_wd[512 +:34]),.rd(rr_rd[512 +:34]));
+      end else begin:g_data
+        ot_coll_local_ring_quarter #(.OFF(ROFF),.W(128),.ID(RID)) u_region(.ctl_ck(clk_region[RID]),.mem_ck(CCLK?clk_mem[15+2*gpq +:2]:{2{clk}}),.rs_n(rs_r),.wd(rr_wd[128*gpq +:128]),.rd(rr_rd[128*gpq +:128]));
+      end
+    end endgenerate""")
+    text=text.replace("clk_mem[2+gm]","clk_mem[10+gm]").replace("clk_mem[6]:clk","clk_mem[14]:clk")
     text += """
 // These leaves keep the original edge/reset/enable semantics. Data are never
 // reset where the original datapath did not reset them.
@@ -288,6 +310,33 @@ endmodule
  ot_sram_1r1w_512x128_m4_r2c2 u_m(.clk(mem_ck),.r_ce_in(1'b1),.r_addr_in(cc-9'(LS+1)),.rd_out(rd),
   .w_ce_in(1'b1),.w_addr_in(cc),.wd_in(wd),.w_mask_in({128{1'b1}}),.rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(14'b0));
 endmodule
+(* keep_hierarchy = 1 *) module ot_coll_local_ring_quarter #(parameter integer OFF=55,W=128,ID=0)(
+ input wire ctl_ck,input wire[1:0]mem_ck,input wire rs_n,input wire[W-1:0]wd,output wire[W-1:0]rd);
+ localparam integer B=(OFF<=32)?1:2,AW=5+$clog2(B);
+ initial if(OFF<2||OFF>64||W<1||W>128)$error("local quarter ring: OFF2..64,W1..128");
+ reg[AW-1:0]wa;
+ always @(posedge ctl_ck or negedge rs_n)if(!rs_n)wa<=0;else wa<=wa+1'b1;
+ wire[AW-1:0]ra=wa-AW'(OFF-1);
+ wire[127:0]wdata={{(128-W){1'b0}},wd};wire[128*B-1:0]rdata;
+ genvar b;
+ generate for(b=0;b<B;b=b+1)begin:g_bank
+  wire we;
+  if(B==1)begin:g_one assign we=1'b1;end else begin:g_two assign we=wa[5]==b;end
+  ot_sram_1r1w_32x128_m1 u_m(.clk(mem_ck[b]),.r_ce_in(1'b1),.r_addr_in(ra[4:0]),.rd_out(rdata[128*b +:128]),
+   .w_ce_in(we),.w_addr_in(wa[4:0]),.wd_in(wdata),.w_mask_in({128{1'b1}}));
+ end
+ if(B==1)begin:g_one assign rd=rdata[0 +:W];end else begin:g_two
+  // Two private one-hot copies bound fanout to64bits per bank. They have the
+  // same unreset registered read-bank timing as the legacy546-bit ring.
+  wire[1:0]sel0,sel1;
+  ot_coll_local_rep_reg #(.W(2),.ID(128+ID*2),.RST(0)) u_sel0(.clk(ctl_ck),.rst_n(1'b1),.d(ra[5]?2'b10:2'b01),.q(sel0));
+  ot_coll_local_rep_reg #(.W(2),.ID(129+ID*2),.RST(0)) u_sel1(.clk(ctl_ck),.rst_n(1'b1),.d(ra[5]?2'b10:2'b01),.q(sel1));
+  for(genvar k=0;k<W;k=k+1)begin:g_bit
+   wire[1:0]sel=(k<64)?sel0:sel1;
+   assign rd[k]=(rdata[k]&sel[0])|(rdata[128+k]&sel[1]);
+  end
+ end endgenerate
+endmodule
 """
     return text, hashlib.sha256(original.encode()).hexdigest()
 
@@ -301,13 +350,22 @@ def main():
         out.write_text(text)
     wrapper=(ROOT/"rtl/physical/ot_qfd_io_collective_static.sv").read_text()
     wrapper=wrapper.replace("module qfd_io_collective_static (","module qfd_io_collective_local_roots (")
-    wrapper=wrapper.replace("input  wire          clk,                   // parent root","input  wire          clk,                   // controller root\n    input wire [59:0] clk_region,")
+    wrapper=wrapper.replace("input  wire          clk,                   // parent root","input  wire          clk,                   // controller root\n    input wire [67:0] clk_region,")
+    marker="    input wire clk_pring0,clk_pring1,clk_sring0,clk_sring1,clk_sring2,clk_sring3,clk_sring4,clk_rring0,clk_rring1,"
+    extra=[f"clk_{family}q{q}_b{b}" for family in ('p','r') for q in range(1,5) for b in range(2)]
+    assert marker in wrapper
+    wrapper=wrapper.replace(marker,marker+"\n    input wire "+",".join(extra)+",")
+    pclk=["clk_pring0","clk_pring1"]+[f"clk_pq{q}_b{b}" for q in range(1,5) for b in range(2)]
+    rclk=["clk_rring0","clk_rring1"]+[f"clk_rq{q}_b{b}" for q in range(1,5) for b in range(2)]
+    old="{clk_rring1,clk_rring0,clk_sring4,clk_sring3,clk_sring2,clk_sring1,clk_sring0,clk_pring1,clk_pring0}"
+    new="{"+",".join(reversed(pclk+[f"clk_sring{k}" for k in range(5)]+rclk))+"}"
+    assert old in wrapper;wrapper=wrapper.replace(old,new)
     wrapper=wrapper.replace("ot_coll_tp8_static #(","ot_coll_tp8_local_roots #(")
     wrapper=wrapper.replace(".clk(clk), .clk_pfold(",".clk_region(clk_region),.clk(clk), .clk_pfold(")
     wp=ROOT/"rtl/physical/ot_qfd_io_collective_local_roots.sv"
     if a.check:assert wp.read_text()==wrapper,"derived regional wrapper differs"
     else:wp.write_text(wrapper)
-    print(json.dumps({"original_sha256":sha,"derived_sha256":hashlib.sha256(text.encode()).hexdigest(),"region_roots":60,"cycle_delta":0,"physical_qualification":False}))
+    print(json.dumps({"original_sha256":sha,"derived_sha256":hashlib.sha256(text.encode()).hexdigest(),"region_roots":68,"cycle_delta":0,"physical_qualification":False}))
 
 
 if __name__=="__main__":main()

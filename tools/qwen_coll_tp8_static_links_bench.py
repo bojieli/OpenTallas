@@ -160,7 +160,7 @@ def main():
     if a.parent:a.qfd=True
     if a.local_roots:
         assert a.qfd and not a.parent,"regional source candidate requires --qfd and has no qualified production-parent binding"
-        SRC.extend([ROOT/"rtl/rom/ot_coll_tp8_local_roots.sv",ROOT/"rtl/physical/ot_qfd_io_collective_local_roots.sv",ROOT/"rtl/rom/ot_coll_local_xfold.sv"])
+        SRC.extend([ROOT/"rtl/rom/ot_coll_tp8_local_roots.sv",ROOT/"rtl/physical/ot_qfd_io_collective_local_roots.sv",ROOT/"rtl/rom/ot_coll_local_xfold.sv",ROOT/"physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v"])
     a.out = a.out.resolve()
     a.out.mkdir(parents=True, exist_ok=True)
     cases = PRODUCTION if a.production else UNIT
