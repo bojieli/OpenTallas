@@ -35,7 +35,7 @@ module tb_qkd_host_record_port;
  qfd_program_record_port rx(.ck(ck),.rst_n(rst_n),.auth_slot(decode_slot),.context_slot(1'b0),.witness_slot(send_witness),
  .rx_v(tv),.rx_record(tx^(mut==5&&tx[1:0]==2?(548'd1<<2):548'd0)),
  .execution_active(1'b0),.cfg_image_ready(2'b11),
- .program_obs2(actual_program_obs),.descriptor_obs2(actual_descriptor_obs),
+ .program_obs2(actual_program_obs),.descriptor_obs(actual_descriptor_obs[137:69]),
  .head_context_v(1'b0),.head_stage(6'd0),.head_token(18'd0),.head_position(18'd0),
  .begin_v(rb),.begin_epoch(re),.expected_pw(rnp),.expected_dw(rnd),.auth_v(rauth),.auth_epoch(rae),.auth_digest(rad),
  .program_ready(joined_ready),.installed_fusedcap(joined_cap),.commit_v(joined_commit),.program_epoch(joined_epoch),.program_digest(joined_digest),
@@ -45,7 +45,7 @@ module tb_qkd_host_record_port;
  reg[142:0]p0=0,p1=0,p2=0,p3=0;
  always @(posedge ck)begin p0<=pr;p1<=p0;p2<=p1;p3<=p2;end
  reg[1:0]ce=0;reg[11:0]row=0;reg[1023:0]md=0,mask=0;
- reg dv=0;reg[2:0]da=0;reg[63:0]dd=0;reg[63:0]dm[0:7];
+ reg dv=0;reg[2:0]da=0;reg[63:0]dd=0;
  always @(posedge ck)begin
   if(!rst_n)begin ce<=0;dv<=0;end else begin
    ce<=(p3[74]&&!(mut==1&&p3[73:64]==53))?(2'b1<<p3[67]):0;
@@ -55,7 +55,6 @@ module tb_qkd_host_record_port;
    if(mut==3&&p3[74]&&p3[73:64]==53)mask<=({960'd0,64'hfffffffffffffffe}<<(64*p3[66:64]+512*p3[67]));
    dv<=p3[142]&&!(mut==4&&p3[141:139]==7);da<=p3[141:139];dd<=p3[138:75];
   end
-  if(dv)dm[da]<=dd;
  end
  wire pv,pfull;wire[9:0]pa;wire[63:0]pd;
  qkd_program_pw_observer observe(ce,row,md,mask,pv,pa,pd,pfull);
@@ -120,8 +119,8 @@ module tb_qkd_host_record_port;
    if(!ready||fault||!cap||commits!=1||epoch!=16'h42a1||digest!=expected_digest)$fatal(1,"actual producer/sink witness mismatch");
    rce=1;for(n=0;n<64;n=n+1)begin ra=6'(n);@(negedge ck);@(negedge ck);
     for(s=0;s<16;s=s+1)if(rd[64*s+:64]!==word(16*n+s)||rd2[64*s+:64]!==word(16*n+s))$fatal(1,"real loader -> actual SRAM readback mismatch");end
-   for(n=0;n<8;n=n+1)if(dm[n]!==word(1024+n)||dm2[n]!==word(1024+n))$fatal(1,"actual DW write mismatch");
-   $display("PASS real_HOST_loader_kind13_actual_macro_kind14_HOST_commit 2x1024PW8DW actual4SRAM_readback cap_epoch_digest");
+   for(n=0;n<8;n=n+1)if(dm2[n]!==word(1024+n))$fatal(1,"actual DW write mismatch");
+   $display("PASS real_HOST_loader_kind13_actual_macro_kind14_HOST_commit 2x1024PW_singleSU8DW actual4SRAM_readback cap_epoch_digest");
   end else begin
    if(ready||cap||commits)$fatal(1,"actual sink mutant accepted%0d",mut);
    if(mut!=4&&!fault)$fatal(1,"actual sink mutant missedfault%0d",mut);

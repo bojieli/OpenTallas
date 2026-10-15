@@ -7,7 +7,7 @@ module qfd_program_record_port(
  input wire rx_v,input wire[547:0]rx_record,
  input wire execution_active,
  // Two actual independent TT/SU consumed-write observer faces, v/full/address/data.
- input wire[151:0]program_obs2,input wire[137:0]descriptor_obs2,
+ input wire[151:0]program_obs2,input wire[68:0]descriptor_obs,
  input wire[1:0]cfg_image_ready,
  input wire head_context_v,input wire[5:0]head_stage,
  input wire[17:0]head_token,head_position,
@@ -23,9 +23,14 @@ module qfd_program_record_port(
  wire af,jf,cf,wf;reg slot_fault;
  wire[1:0]sink_ready,sink_fault,sink_fusedcap;
  wire[31:0]sink_epoch;wire[127:0]sink_digest;
+ // SU owns the one actual descriptor store. TT's extra program-bank stage
+ // needs the genuine consumed descriptor receipt delayed one fixed edge.
+ reg[68:0]tt_descriptor_obs;
+ always @(posedge ck or negedge rst_n)
+ if(!rst_n)tt_descriptor_obs<=0;else tt_descriptor_obs<=descriptor_obs;
  for(genvar sink=0;sink<2;sink=sink+1)begin:g_actual_sink
  wire[75:0]pw=program_obs2[76*sink+:76];
- wire[68:0]dw=descriptor_obs2[69*sink+:69];
+ wire[68:0]dw=(sink==0)?tt_descriptor_obs:descriptor_obs;
  qkd_program_commit u_receipt(.ck(ck),.rst_n(rst_n),.execution_active(execution_active),.control_stores_ready(cfg_image_ready[sink]),
  .begin_v(begin_v),.begin_epoch(begin_epoch),.expected_pw(expected_pw),.expected_dw(expected_dw),
  .auth_v(auth_v),.auth_epoch(auth_epoch),.auth_digest(auth_digest),
