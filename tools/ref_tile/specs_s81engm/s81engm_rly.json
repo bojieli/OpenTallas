@@ -69,31 +69,42 @@
  "structural_change": "Engram MIX4 physical hierarchy (S-ELEM-C 2026-10-15): every arithmetic root of ot_s81_engram_mix is a hardened leaf master, hardened once and replicated; inputs registered at the S pins, outputs launched from registers at the N pins (no added cycle: the leaves are the unchanged exact arithmetic RTL).",
  "job": {
   "owner": "Codex:s81-engram-0810",
-  "branch": "codex/s81-engram-0810",
-  "tag": "native2-0810",
+  "branch": "codex/s81-engram-rly-0822",
+  "tag": "component-0822",
   "purpose": "S81 Engram MIX4 arithmetic leaf ot_s81_engram_rly on v21 die-tool pins",
   "benches": [
    {
-    "name": "mix4_exact_L01",
-    "cmd": "python3 tools/s81_engram_mix/gate.py --mix4 --fp rtl --snap results/rtl/s81_engram_mix_1014/fixtures/engram_L01.pkl --out {RUN}/mix4_m0",
+    "name": "relay_exact",
+    "cmd": "python3 tools/s81_engram_mix/relay_gate.py --mut 0 --out {RUN}/relay_m0",
     "expect": "pass",
-    "threads": 16,
-    "peak_ram_gb": 48,
+    "threads": 2,
+    "peak_ram_gb": 8,
     "needs": [
      "verilator"
     ],
-    "pass_regex": "PASS native Engram MIX4"
+    "pass_regex": "PASS Engram relay actual105bits vectors4096 checks860160 resets4 exact1edge"
    },
    {
-    "name": "mix4_mut1_key",
-    "cmd": "python3 tools/s81_engram_mix/gate.py --mix4 --fp rtl --snap results/rtl/s81_engram_mix_1014/fixtures/engram_L01.pkl --mut 1 --out {RUN}/mix4_m1",
+    "name": "relay_mut1",
+    "cmd": "python3 tools/s81_engram_mix/relay_gate.py --mut 1 --out {RUN}/relay_m1",
     "expect": "fail",
-    "threads": 16,
-    "peak_ram_gb": 48,
+    "threads": 2,
+    "peak_ram_gb": 8,
     "needs": [
      "verilator"
     ],
-    "fail_regex": "FAIL [0-9]+ words"
+    "fail_regex": "RELAY_FAIL edge"
+   },
+   {
+    "name": "relay_mut2",
+    "cmd": "python3 tools/s81_engram_mix/relay_gate.py --mut 2 --out {RUN}/relay_m2",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "RELAY_FAIL edge"
    }
   ],
   "views_to": "physical/ref_tile/s81engm_rly/views",
