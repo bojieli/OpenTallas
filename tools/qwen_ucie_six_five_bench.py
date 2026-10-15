@@ -7,11 +7,12 @@ CPP=r'''#include "Vtb_qfd_ucie_six_five.h"
 #include "verilated.h"
 #include <cstdint>
 #include <cstdio>
+#include <initializer_list>
 uint32_t word(int c,int j){return uint32_t(c*0x9e3779b9u)^uint32_t(j*0x85ebca6bu)^0xdeadbeefu;}
 int main(int argc,char**argv){Verilated::commandArgs(argc,argv);int bad=0,checks=0,faults=0;
- for(int phi=0;phi<6;phi++){auto*t=new Vtb_qfd_ucie_six_five;t->rst_n=0;t->core_ck=0;t->fdi_ck=0;t->eval();
+ for(int base: {0,5})for(int phi=0;phi<6;phi++){auto*t=new Vtb_qfd_ucie_six_five;t->rst_n=0;t->core_ck=0;t->fdi_ck=0;t->eval();
  t->core_ck=1;t->fdi_ck=1;t->eval();t->core_ck=0;t->fdi_ck=0;t->eval();t->rst_n=1;t->eval();int c=0,local=0;
- for(int tick=0;tick<6000;tick++){bool ce=tick%5==0,fe=tick%6==phi;
+ for(int tick=0;tick<6000;tick++){bool ce=tick%5==0 && tick>=base,fe=tick%6==phi;
  if(ce){t->tx_valid=(c%11<8);for(int j=0;j<19;j++)t->tx_frame[j]=word(c,j);t->tx_frame[18]&=0x1fffff;}
  t->core_ck=ce;t->fdi_ck=fe;t->eval();
  if(ce){if(c>=24){int x=c-24;checks++;if(t->rx_valid!=(x%11<8))local++;
@@ -19,13 +20,13 @@ int main(int argc,char**argv){Verilated::commandArgs(argc,argv);int bad=0,checks
  else if(t->rx_valid)local++;c++;}
  t->core_ck=0;t->fdi_ck=0;t->eval();}
  int fault=t->core_fault||t->fdi_fault;faults+=fault;bad+=local;
- printf("phase=%d corecycles=%d mismatches=%d corefault=%d fdifault=%d\n",phi,c,local,int(t->core_fault),int(t->fdi_fault));delete t;}
+ printf("base=%d phase=%d corecycles=%d mismatches=%d corefault=%d fdifault=%d\n",base,phi,c,local,int(t->core_fault),int(t->fdi_fault));delete t;}
  printf("checks=%d mismatches=%d faults=%d\n",checks,bad,faults);return (bad||faults)?1:0;}
 '''
 def main():
  a=argparse.ArgumentParser();a.add_argument('--out',type=Path,required=True);x=a.parse_args();out=x.out.resolve();out.mkdir(parents=True,exist_ok=True)
  src=[ROOT/'rtl/physical/ot_qfd_ucie_six_five.sv',ROOT/'rtl/test/tb_qfd_ucie_six_five.sv'];h=out/'harness.cpp';h.write_text(CPP);rows=[]
- for mut in [0,1,2]:
+ for mut in [0,1,2,3]:
   obj=out/f'obj{mut}';cmd=['verilator','--cc','--exe','--build','-Wno-fatal','-Wno-WIDTH','-Wno-TIMESCALEMOD','-Wno-MULTIDRIVEN','--top-module','tb_qfd_ucie_six_five',f'-GMUT={mut}','--Mdir',str(obj),*[str(p) for p in src],str(h),'-j','4']
   b=subprocess.run(cmd,capture_output=True,text=True);(out/f'mut{mut}.build.log').write_text(b.stdout+b.stderr)
   if b.returncode:raise SystemExit('buildFAIL '+str(mut))
