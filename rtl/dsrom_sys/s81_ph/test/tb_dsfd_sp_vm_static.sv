@@ -11,7 +11,7 @@
 // Every command completes at its pin edge +6. Checks cover every output valid edge
 // and numerical payload when valid; HC/PQ/MIX full traffic is the companion core gate.
 // Fault witnesses: 1 invalid STREAM dest, 2 gather phase mismatch, 3 scan status,
-// 4 obsolete CPUSH, 5 aux lane collision, 6 WFC range, 7 WFC pair lane,
+// 4 unsupported LARM7, 5 aux lane collision, 6 WFC range, 7 WFC pair lane,
 // 8 capture alignment. Each requires its named sticky fault AND top-level c_st[0].
 module tb_dsfd_sp_vm_static;
     reg s_ck = 1, t_ck = 1, rst = 0, rss = 0;
@@ -125,8 +125,8 @@ module tb_dsfd_sp_vm_static;
         end
         // Invalid STREAM destination is a schedule-fault witness.
         if (mode == 1 && tk == 360) issue(3'd4, {2'd2, 14'd1024, 5'd0});
-        // Unsupported legacy CPUSH must fault rather than silently preserve credits.
-        if (mode == 4 && tk == 380) issue(3'd5, 21'd0);
+        // Unsupported collective LARM7 must fault rather than silently preserve credits.
+        if (mode == 4 && tk == 380) issue(3'd6, {4'd7, 17'd0});
         if (tk == 100) issue(3'd6, {4'd5, 3'd0, 14'd7000});
         if (tk == 110) issue(3'd6, {4'd6, 3'd0, 14'd7200});
         if (tk == 120) issue(3'd6, {4'd0, 3'd0, 14'd7400});
