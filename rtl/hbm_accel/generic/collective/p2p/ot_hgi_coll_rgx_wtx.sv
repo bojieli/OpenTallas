@@ -63,6 +63,43 @@ endmodule
 
 // The slice-side master: pin capture, CRD-deep FIFO a lane, the unchanged sink ot_hgi_coll_rgx_snk (VM W2 group client +
 // the two HBM write clients), one credit back a flit the sink takes.
+// One physical receive-lane leaf. The FIFO and pin capture match the original monolithic RGX receiver edge for edge.
+module ot_hgi_coll_rgx_rx_lane #(
+    parameter integer FW = 512, CRD = 16, MUT = 0
+) (
+    input wire clk, rst_n,
+    input wire t_v,
+    input wire [39:0] t_addr,
+    input wire [FW-1:0] t_data,
+    output reg f_cr,
+    output wire w_v,
+    output wire [39:0] w_addr,
+    output wire [FW-1:0] w_data,
+    input wire w_rdy,
+    output reg fault
+);
+    localparam integer AW = (CRD > 1) ? $clog2(CRD) : 1;
+    reg v_q; reg [39:0] a_q; reg [FW-1:0] d_q;
+    reg [40+FW-1:0] fq [0:CRD-1];
+    reg [AW-1:0] hd, tl; reg [AW:0] n;
+    assign w_v = (n != '0);
+    assign w_addr = fq[hd][40+FW-1 -: 40];
+    assign w_data = fq[hd][FW-1:0];
+    wire pop = w_v && w_rdy;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin v_q <= 1'b0; hd <= '0; tl <= '0; n <= '0; f_cr <= 1'b0; fault <= 1'b0; end
+        else begin
+            v_q <= t_v; a_q <= t_addr; d_q <= t_data;
+            if (v_q) begin
+                if (n == (AW+1)'(CRD) && !pop) fault <= 1'b1;
+                fq[tl] <= {a_q, d_q}; tl <= (tl == AW'(CRD - 1)) ? '0 : tl + 1'b1;
+            end
+            if (pop) hd <= (hd == AW'(CRD - 1)) ? '0 : hd + 1'b1;
+            n <= n + (AW+1)'(v_q) - (AW+1)'(pop);
+            f_cr <= pop || (MUT == 1 && v_q);
+        end
+endmodule
+
 module ot_hgi_coll_rgx_snkm #(
     parameter integer DEL = 4,
     parameter integer FW  = 512,
@@ -77,7 +114,7 @@ module ot_hgi_coll_rgx_snkm #(
     input  wire [DEL*40-1:0]  t_addr,
     input  wire [DEL*FW-1:0]  t_data,
     input  wire               t_vm,
-    output reg  [DEL-1:0]     f_cr,
+    output wire [DEL-1:0]     f_cr,
     output reg                f_fault,
     // VM W2 group client (ot_hgi_vm_lanearb c_*), at the arbiter
     output wire               c_req,
@@ -89,42 +126,26 @@ module ot_hgi_coll_rgx_snkm #(
     output wire [2*326-1:0]   xw,
     input  wire [1:0]         xwa
 );
-    localparam integer AW = $clog2(CRD);
-    reg [DEL-1:0] v_q; reg [DEL*40-1:0] a_q; reg [DEL*FW-1:0] d_q; reg vm_q, vm_run;
-    reg [40+FW-1:0] fq [0:DEL-1][0:CRD-1];
-    reg [AW-1:0] hd [0:DEL-1], tl [0:DEL-1]; reg [AW:0] n [0:DEL-1];
-    reg ovf;
-    wire [DEL-1:0] w_v, w_rdy; wire [DEL*40-1:0] w_a; wire [DEL*FW-1:0] w_d; wire sfault;
+    // Each receive queue is a hardenable leaf (< 15k payload sinks at CRD16, FW512).
+    // Keep the VM-space strap outside the leaves: a record retires only after every credit is home.
+    reg [DEL-1:0] v_q; reg vm_q, vm_run;
+    wire [DEL-1:0] w_v, w_rdy, lane_fault;
+    wire [DEL*40-1:0] w_a; wire [DEL*FW-1:0] w_d; wire sfault;
     for (genvar l = 0; l < DEL; l = l + 1) begin : g_h
-        assign w_v[l] = (n[l] != '0);
-        assign w_a[l*40 +: 40] = fq[l][hd[l]][40+FW-1 -: 40];
-        assign w_d[l*FW +: FW] = fq[l][hd[l]][FW-1:0];
+        ot_hgi_coll_rgx_rx_lane #(.FW(FW), .CRD(CRD), .MUT((MUT == 1 && l == 0) ? 1 : 0)) u_rx (
+            .clk(clk), .rst_n(rst_n), .t_v(t_v[l]), .t_addr(t_addr[l*40 +: 40]), .t_data(t_data[l*FW +: FW]),
+            .f_cr(f_cr[l]), .w_v(w_v[l]), .w_addr(w_a[l*40 +: 40]), .w_data(w_d[l*FW +: FW]),
+            .w_rdy(w_rdy[l]), .fault(lane_fault[l]));
     end
     ot_hgi_coll_rgx_snk #(.DEL(DEL), .FW(FW), .LQ(LQ), .MUT(SMUT)) u_s (.clk(clk), .rst_n(rst_n), .rg_w_v(w_v), .rg_w_addr(w_a),
         .rg_w_vm(vm_run), .rg_w_data(w_d), .rg_w_rdy(w_rdy), .c_req(c_req), .c_gnt(c_gnt), .c_q(c_q), .c_cr(c_cr), .c_rsp(c_rsp),
         .xw(xw), .xwa(xwa), .fault(sfault));
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin
-            v_q <= '0; vm_q <= 1'b0; vm_run <= 1'b0; f_cr <= '0; f_fault <= 1'b0; ovf <= 1'b0;
-            for (integer l = 0; l < DEL; l = l + 1) begin hd[l] <= '0; tl[l] <= '0; n[l] <= '0; end
-        end else begin
-            v_q <= t_v; a_q <= t_addr; d_q <= t_data; vm_q <= t_vm;
-            // a run's flits all carry its O space; a run retires only drained (every credit home), so the FIFOs hold
-            // one run at a time
+        if (!rst_n) begin v_q <= '0; vm_q <= 1'b0; vm_run <= 1'b0; f_fault <= 1'b0; end
+        else begin
+            v_q <= t_v; vm_q <= t_vm;
             if (|v_q) vm_run <= vm_q;
-            for (integer l = 0; l < DEL; l = l + 1) begin : ln
-                reg push, pop;
-                push = v_q[l]; pop = w_v[l] && w_rdy[l];
-                if (push) begin
-                    if (n[l] == (AW+1)'(CRD) && !pop) ovf <= 1'b1;
-                    fq[l][tl[l]] <= {a_q[l*40 +: 40], d_q[l*FW +: FW]};
-                    tl[l] <= (tl[l] == AW'(CRD - 1)) ? '0 : tl[l] + 1'b1;
-                end
-                if (pop) hd[l] <= (hd[l] == AW'(CRD - 1)) ? '0 : hd[l] + 1'b1;
-                n[l] <= n[l] + (AW+1)'(push) - (AW+1)'(pop);
-                f_cr[l] <= pop || (MUT == 1 && l == 0 && push);
-            end
-            f_fault <= sfault | ovf;
+            f_fault <= sfault | (|lane_fault);
         end
 endmodule
 `default_nettype wire
