@@ -1,0 +1,47 @@
+{
+  "scope": "COMPLETE_CONSTRUCTION_BEFORE_HOP_SIGNOFF_NOT_NATIVE",
+  "native_qualified": false,
+  "sha256": {
+    "/srv/opentallas-scratch/codex-canonical-bind-1015/input/construction_pass0_die.v": "2aeaa7c14b162670af961a6348af86acb726ed80687139a0f6f3618957196934",
+    "/srv/opentallas-scratch/codex-canonical-bind-1015/input/construction_pass0_plan.json.gz": "049b9b25858e6c973032871bdc4481f23ef479005f120f7783c268858cd9f6e0",
+    "/srv/opentallas-scratch/codex-canonical-bind-1015/input/construction_pass0_die.v.params.json": "d1a354baf045ee90cbf9ab369868672110c7f8dc2f9b626c16b62e67271ee993",
+    "/srv/opentallas-scratch/codex-canonical-bind-1015/input/construction_pass0_die_glue.sv": "011609569934b3cd6d8eb49d4c5a452e861f32dec86bdac33552f3f53a1280ac",
+    "/srv/opentallas-scratch/codex-canonical-bind-1015/src/physical/s81_die_rtl/layer1.f": "7c769052075fa263fc1c3aa9152ad208ee5c082611d3b64c03c7ef97ddce5b58",
+    "/srv/opentallas-scratch/codex-canonical-bind-1015/src/tools/die_port_bind.py": "ebe16ba46ea5c968ae9c0c336578a180a98bbd6996eba5a9dde6ec2f02e06a7a",
+    "/srv/opentallas-scratch/codex-canonical-bind-1015/src/tools/s81/actual_hardware_ledger.py": "8e47b998f74f64f6967532349c6ed4a6c209bde0b60c7fb3b357af145e501415",
+    "/srv/opentallas-scratch/codex-canonical-bind-1015/src/physical/s81_die_rtl/required_operations.json": "e775f56a10f92917df026588dede9388ebdd9b85fa864c7d04745b20c11a47e0"
+  },
+  "gates": {
+    "port_bind": {
+      "command": [
+        "/usr/bin/python3",
+        "tools/die_port_bind.py",
+        "/srv/opentallas-scratch/codex-canonical-bind-1015/input/construction_pass0_die.v",
+        "--rtl-file",
+        "/srv/opentallas-scratch/codex-canonical-bind-1015/input/construction_pass0_die_glue.sv",
+        "-f",
+        "/srv/opentallas-scratch/codex-canonical-bind-1015/src/physical/s81_die_rtl/layer1.f",
+        "--out",
+        "/srv/opentallas-scratch/codex-canonical-bind-1015/out/port_bind.json"
+      ],
+      "exit_code": 1
+    },
+    "hardware_ledger": {
+      "command": [
+        "/usr/bin/python3",
+        "tools/s81/actual_hardware_ledger.py",
+        "--manifest",
+        "/srv/opentallas-scratch/codex-canonical-bind-1015/src/physical/s81_die_rtl/layer1.f",
+        "--die",
+        "/srv/opentallas-scratch/codex-canonical-bind-1015/input/construction_pass0_die.v",
+        "--port-bind",
+        "/srv/opentallas-scratch/codex-canonical-bind-1015/out/port_bind.json",
+        "--shape",
+        "/srv/opentallas-scratch/codex-canonical-bind-1015/out/shape.json",
+        "--out",
+        "/srv/opentallas-scratch/codex-canonical-bind-1015/out/hardware_ledger.json"
+      ],
+      "exit_code": 1
+    }
+  }
+}

@@ -1,0 +1,91 @@
+{
+ "name": "qwen_a_gateway_v1",
+ "top": "ot_qwen_a_operand_gateway_v1",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_a_operand_gateway_v1.sv",
+  "rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv"
+ ],
+ "params": {
+  "SW": 64,
+  "AW": 24,
+  "NW": 18,
+  "HID": 4096,
+  "EMB_CODE_LANES": 64,
+  "EMB_ADDR_BASE": 0,
+  "INT8_EMBED": 1,
+  "QWEN_FULLSHAPE": 1
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 216,
+  "h": 432
+ },
+ "layer_cap": "M5",
+ "recipe": 1,
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": false,
+ "pin_reg_split": false,
+ "pins": {
+  "W": [
+   "a_re",
+   "a_addr",
+   "a_q"
+  ],
+  "E": [
+   "vm_re",
+   "vm_addr",
+   "vm_q"
+  ],
+  "N": [
+   "embed_code_re",
+   "embed_code_addr",
+   "embed_code_q",
+   "embed_scale_re",
+   "embed_scale_addr",
+   "embed_scale_q"
+  ],
+  "S": [
+   "clk",
+   "rst_n",
+   "start_idle",
+   "su_go",
+   "a_src",
+   "token",
+   "tok_r",
+   "embed_faults"
+  ]
+ },
+ "inter": [
+  "*"
+ ],
+ "refglob": "*",
+ "route": {
+  "pd": 0.5,
+  "period_ps": 770,
+  "threads": 4,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "m5_pg_pitch": 2.7,
+  "pin_v": "M3 M5"
+ },
+ "job": {
+  "owner": "Codex:q_compute_integration",
+  "branch": "claude/qwen-split-compute-1014",
+  "tag": "source466",
+  "purpose": "Actual source466FF gateway physical diagnostic; measure true mux/decode/feedthrough timing before claiming native face or fit. No pin register split, added FF, phase tie, or arithmetic/data edge. Source component equivalence1680c684e retained. Initial216x216 failed exact W/E pin fit (3648pins/2235slots);216x432 is an explicit doubled-area diagnostic room, not a die placement or adoption.",
+  "no_bench_reason": "Reference-only physical preflight of exact component already proven by1680c684e; no closure-loop submission or qualification claim.",
+  "views_to": "physical/ref_tile/qwen_a_gateway_v1/views",
+  "record_to": "results/rtl/ref_tile/qwen_a_gateway_v1",
+  "extra_paths": [
+   "rtl/qwen_sys/static_schedule_20261014",
+   "rtl/hdc"
+  ]
+ },
+ "macros": [],
+ "children": []
+}

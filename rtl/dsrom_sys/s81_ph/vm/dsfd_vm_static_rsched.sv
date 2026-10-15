@@ -33,6 +33,9 @@ module dsfd_vm_static_rsched (
     output reg  [17:0]   n_v,   output reg [251:0] n_row, output reg [89:0] n_slot, output reg [2:0] n_group,
     output reg  [11:0]   a_v,   output reg [167:0] a_row,
     output wire          release_v, output wire [2:0] release_group, output wire [31:0] release_mask,
+    // Same compiled descriptor one edge early: return lanes register completion
+    // after accepting the E9 records and consume all four tokens at E10 release.
+    output wire          prepare_v, output wire [2:0] prepare_group, output wire [31:0] prepare_mask,
     output wire [17:0]   expected_v, output wire [89:0] release_slot, output wire [11:0] aux_expected,
     output wire [14*30-1:0] obs_row       // logical rows of the FSR-sampled requests (engine early-read assertion)
 );
@@ -109,6 +112,18 @@ module dsfd_vm_static_rsched (
     // (the static512 template: request E0, bank E4..E6, response relays E7/E8, return store E9, fixed release E10)
     reg [17:0] dv [1:11]; reg [89:0] ds [1:11]; reg [2:0] dg [1:10]; reg [11:0] da [1:11]; reg [29:0] dm [1:11];
     reg [19:0] dxv [1:11]; reg [99:0] dxs [1:11];
+    reg [31:0] masks [1:10]; reg [31:0] pin_mask;
+    always @* begin : p_pin_mask integer p;
+        pin_mask=32'd0;
+        for(p=0;p<18;p=p+1)if(pv[p])pin_mask[slot[5*p+:5]]=1'b1;
+        for(p=0;p<12;p=p+1)if(pav[p])pin_mask[20+p]=1'b1;
+    end
+    // Registered masks move with the already registered descriptor. This adds
+    // 320 control FF and no data/request/release edge; output pins are registers.
+    always @(posedge ck) begin : p_masks integer k;
+        if(!rn)for(k=1;k<=10;k=k+1)masks[k]<=32'd0;
+        else begin masks[1]<=pin_mask;for(k=2;k<=10;k=k+1)masks[k]<=masks[k-1];end
+    end
     always @(posedge ck) begin : p_chain integer k;
         if (!rn) for (k = 1; k <= 11; k = k + 1) begin dv[k] <= 18'd0; da[k] <= 12'd0; dm[k] <= 30'd0; dxv[k] <= 20'd0; end
         else begin
@@ -118,15 +133,16 @@ module dsfd_vm_static_rsched (
             dv[11] <= dv[10]; ds[11] <= ds[10]; da[11] <= da[10];
         end
     end
-    reg [31:0] rm;
-    always @* begin : p_mask integer p;
-        rm = 32'd0;
-        for (p = 0; p < 18; p = p + 1) if (dv[10][p]) rm[ds[10][5*p +: 5]] = 1'b1;
-        for (p = 0; p < 12; p = p + 1) if (da[10][p]) rm[20 + p] = 1'b1;
-    end
     assign release_v = |dv[10] | |da[10];
     assign release_group = dg[10];
-    assign release_mask = rm;
+    assign release_mask = masks[10];
+    assign prepare_v = |dv[9] | |da[9];
+    assign prepare_group = dg[9];
+`ifdef OT_VM_RSCHED_MUT_PREPARE
+    assign prepare_mask = masks[8]; // DUT mutant: stale completion descriptor.
+`else
+    assign prepare_mask = masks[9];
+`endif
     // the return leaves' o_v is registered AT the release edge: the native map's expected/slot selectors and the aux
     // expectation are the same requests one stage later (held through the cycle that follows the release edge)
     // MIX-owned ports are released with the group but are not native SU/HC / aux returns

@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // Physical source split: one scalar tree per independent lane clock pin, and
 // one metadata/control clock pin. Pins/phase/CTS/slot remain unqualified.
-module s81_static_hc_reduce_clocked #(parameter integer MUT=0)(
+module s81_static_hc_reduce_clocked #(parameter integer MUT=0,parameter integer LOCAL_RESET_SYNC=0)(
  input wire [15:0] clk_lane, input wire clk_control,rst_n,slot,
  input wire [3:0] rank_valid,
  input wire [2047:0] rank_data,
@@ -33,7 +33,14 @@ module s81_static_hc_reduce_clocked #(parameter integer MUT=0)(
  end
  genvar g;
  generate for(g=0;g<16;g=g+1)begin:L
-  s81_static_hc_scalar_reduce #(.MUT(MUT)) leaf(.clk(clk_lane[g]),.rst_n(rst_n),
+  wire lane_rst_n;
+  if(LOCAL_RESET_SYNC)begin:reset_lane
+   reg[1:0]rr;
+   always @(posedge clk_lane[g] or negedge rst_n)if(!rst_n)rr<=0;else rr<={rr[0],1'b1};
+   assign lane_rst_n=rr[1];
+  end else begin:reset_compat assign lane_rst_n=rst_n;end
+
+  s81_static_hc_scalar_reduce #(.MUT(MUT)) leaf(.clk(clk_lane[g]),.rst_n(lane_rst_n),
    .slot(slot && (&rank_valid)),
    .rank_data({rank_data[1536+g*32+:32],rank_data[1024+g*32+:32],rank_data[512+g*32+:32],rank_data[g*32+:32]}),
    .word_data(word_data[g*32+:32]),.word_valid(lv[g]),.word_error(le[g]));

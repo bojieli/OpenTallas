@@ -6,7 +6,10 @@ module tb_s81_pq_command_endpoint;
 `ifndef ENDPOINT_PHW
 `define ENDPOINT_PHW 9
 `endif
- localparam PHW=`ENDPOINT_PHW,NATIVE_BITS=81+PHW;
+`ifndef ENDPOINT_PINREG
+`define ENDPOINT_PINREG 0
+`endif
+ localparam PHW=`ENDPOINT_PHW,NATIVE_BITS=81+PHW,PINREG=`ENDPOINT_PINREG;
  reg ck=0,rst_n=0;always #5 ck=~ck;
  reg pw_v=0,job_v=0;reg[6:0]pw_a=0;reg[27:0]pw_d=0;reg[35:0]desc_pw=0;
  wire[12:0]cv;wire[1091:0]cd;wire[8:0]done;wire[1:0]st;
@@ -17,7 +20,7 @@ module tb_s81_pq_command_endpoint;
  .job_v(job_v),.job_user(10'd37),.job_pos(21'd1048575),.job_tok(21'd21946),
  .busy(busy),.job_done(jdone),.cmd_v(cv),.cmd_d(cd),.engine_available({12'd0,st[1]}),
  .dn_v(dv),.dn_tag(dt),.fault(fault),.phase(phase));
- ot_s81_pq_command_endpoint #(.MUT(`ENDPOINT_MUT),.PHW(PHW))endpoint(
+ ot_s81_pq_command_endpoint #(.MUT(`ENDPOINT_MUT),.PHW(PHW),.PINREG(PINREG))endpoint(
  .ck(ck),.rst_n(rst_n),.c_cmd({cv[0],cd[83:0]}),.f_desc_pw(desc_pw),.t_iss(t_iss),
  .f_iss(f_iss),.c_done(done),.c_st(st),.image_sealed(sealed));
  reg[34:0]program_words[0:385];reg[35:0]descs[0:21];
@@ -45,7 +48,7 @@ module tb_s81_pq_command_endpoint;
   repeat(600)@(negedge ck);
   if(commands!=252||gos!=252||completions!=252||ends!=2)$fatal(1,"lost hardware commands %0d/%0d/%0d/%0d",commands,gos,completions,ends);
   if((mode==0&&(fault||st[0]))||(mode!=0&&(!fault||!st[0])))$fatal(1,"fault expectation mode%0d",mode);
-  $display("PASS actual PW issuer->PQ endpoint mode%0d commands%0d GO%0d done%0d END%0d fixedGO1 fixedDone12 fourtags",mode,commands,gos,completions,ends);$finish;
+  $display("PASS actual PW issuer->PQ endpoint mode%0d commands%0d GO%0d done%0d END%0d fixedGO%0d fixedCompletion%0d fourtags",mode,commands,gos,completions,ends,1+PINREG,13+2*PINREG);$finish;
  end
  reg[NATIVE_BITS-1:0]expected_fields_mem[0:0];
  // Declared PQ status boundary model, not arithmetic/core timing evidence.
@@ -68,7 +71,7 @@ module tb_s81_pq_command_endpoint;
   if((fault||st[0])&&!fault_seen)begin $display("firstfault tick%0d issuer%0d code%0d endpoint%0d age%0d status%h",tick,fault,issuer.fault_code,st[0],endpoint.age[0],t_iss);fault_seen=1;end
   if(cv[0])begin
    if(cmd_tick>=0&&tick-cmd_tick!=4&&commands!=126)$fatal(1,"command cadence moved");
-   cmd_tick=tick;expected_go=tick+1;expected_done=tick+13;expected_tag={cd[83],cd[6:0]};due_valid[expected_done]=1;due_tags[expected_done]=expected_tag;commands=commands+1;
+   cmd_tick=tick;expected_go=tick+1+PINREG;expected_done=tick+13+2*PINREG;expected_tag={cd[83],cd[6:0]};due_valid[expected_done]=1;due_tags[expected_done]=expected_tag;commands=commands+1;
   end
   if(f_iss[0])begin
    if(tick!=expected_go||f_iss[NATIVE_BITS:1]!=expected_fields)$fatal(1,"actual descriptor/GO mismatch");gos=gos+1;

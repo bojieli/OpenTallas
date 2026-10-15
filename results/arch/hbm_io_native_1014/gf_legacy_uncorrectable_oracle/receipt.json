@@ -1,0 +1,7 @@
+{
+  "source_commit": "9ea665708",
+  "bench_sha256": "e7c808159c324f2f0b0cd8e76e6770d58827f95ee741452a19701f6feac873f0",
+  "verdict": "LEGACY_REFERENCE_ORACLE_FAIL; BITWISE_RTL_EQUIVALENCE_NO_MISMATCH3076EDGES",
+  "cause": "Frame23 has18symbolerrors andexplicitq_unc1; q_seq153 is invalid metadata, oldoracle expects23 regardless. Both legacy andcandidate outputidentical, no arithmetic/clock changes.",
+  "scope": "UnchangedlegacyS81bench retained. Newcandidatebench validates sequenceonlywhen q_unc0 and still comparesALLcandidate/legacyoutputbits andflags EVERYedge."
+}
