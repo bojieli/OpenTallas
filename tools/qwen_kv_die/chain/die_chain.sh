@@ -16,6 +16,17 @@ ADMIT=/srv/opentallas-scratch/admit.sh
 say() { echo "$(date '+%F %T %Z') $*" >> $R/STATUS.log; }
 case $DIE in kv) P1=20; P2=80; P3=60; P4=40;; r22k) P1=40; P2=130; P3=160; P4=110;; *) echo bad die; exit 2;; esac
 say "chain start die=$DIE src=$(cat $C/SOURCE_COMMIT 2>/dev/null) from=${OT_FROM:-case}"
+# Owner no-stubs rule: audit the actual die.v against this run's real RTL at
+# every launch, including preserved-case resumes. HARD_PHY still needs real ports.
+if [ "$DIE" = kv ]; then
+  BIND_ARGS=("$C/die.v" --split --out "$R/port_bind_launch.json" --strict)
+  [ -f "$C/qkd_kv_relays.sv" ] && BIND_ARGS+=(--relay-rtl "$C/qkd_kv_relays.sv")
+  [ -f "$R/expand.json" ] && BIND_ARGS+=(--expanded "$R/expand.json")
+  python3 "$SRC/tools/qwen_kv_die/die_port_bind_kv.py" "${BIND_ARGS[@]}" > "$R/bind_launch.log" 2>&1 || {
+    say "NATIVE PORT BIND FAIL ($R/bind_launch.log): no die job launched"
+    exit 1
+  }
+fi
 # OT_FROM=grt resumes on a case whose real case + PDN already passed (floorplan_pdn.odb present; logs re-checked)
 if [ "${OT_FROM:-case}" = grt ]; then
   grep -q OT_LEGAL $C/run.log && grep -q "OT_PDN PASS" $C/run_pdn.log && [ -f $C/floorplan_pdn.odb ] || { say "OT_FROM=grt: case/PDN not passed"; exit 1; }
