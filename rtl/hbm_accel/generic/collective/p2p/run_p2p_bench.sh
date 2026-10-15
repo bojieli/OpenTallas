@@ -21,7 +21,7 @@ mkdir -p "$OUT"; cd "$ROOT"
 st=0
 for c in ${CASES:-qwen}; do
   "$OUT/obj_$TAG/Vtb_hgi_coll_p2p" +CASE=$c "$@" > "$OUT/run_${TAG}_$c.log" 2>&1; rc=$?
-  echo "== $c rc=$rc"; grep -E "^(REC|SEQ|IMAGES|RED_CARRY|PASS|FAIL|FAULT|TIMEOUT|RC_|WDIFF|WCOUNT|GEXP|REXP|MIRROR)" "$OUT/run_${TAG}_$c.log" | head -40
+  echo "== $c rc=$rc"; grep -E "^(REC|SEQ|IMAGES|RED_CARRY|PASS|FAIL|FAULT|TIMEOUT|STALL|DUMP|RC_|WDIFF|WCOUNT|WEXTRA|GEXP|REXP|MIRROR|\[)" "$OUT/run_${TAG}_$c.log" | head -60
   grep -q "^PASS HGI_COLL_P2P" "$OUT/run_${TAG}_$c.log" || st=1
 done
 exit $st
