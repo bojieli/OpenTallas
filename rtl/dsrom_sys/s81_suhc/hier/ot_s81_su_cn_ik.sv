@@ -41,7 +41,8 @@ module ot_s81_su_cn_ik #(
     genvar e,h,q;
     generate for(e=0;e<NE;e=e+1) begin:g_norm
         localparam integer ROTATE=(e>=NE-8);
-        wire [127:0] cc,ss;
+        wire [127:0] cc,ss,unused_norm;
+        wire unused_norm_v;
         if(ROTATE) begin:g_cs
             assign cc=cos_t[128*(e-(NE-8))+:128];
             assign ss=MUT_NO_ROPE?128'd0:sin_t[128*(e-(NE-8))+:128];
@@ -53,7 +54,7 @@ module ot_s81_su_cn_ik #(
             .i_x(gain_v?gain[256*e+:256]:x[256*e+:256]),
             .i_gk(gain_v),.i_gr(2'd0),.i_gw(2'd0),.i_cos(cc),.i_sin(ss),
             .r_v(rv),.r_d(rd),.p_v(pv[e]),.p_d(pd[32*e+:32]),
-            .y_v(nv[e]),.y(norm[256*e+:256]),.o_f(nf[e]));
+            .y_v(nv[e]),.y(norm[256*e+:256]),.norm_v(unused_norm_v),.norm_y(unused_norm),.o_f(nf[e]));
         // Non-RoPE chunks wait exactly the additional RoPE latency. Padding is
         // an owned physical leaf, never flops hidden in this parent.
         ot_s81_su_cn_align #(.DEPTH(ROTATE?0:RP_EXTRA)) u_align(
@@ -126,11 +127,11 @@ module ot_s81_su_ik_reduce(
     wire [1:0] hv,hp,hf;wire [63:0] hd;wire rf;
     genvar h;
     generate for(h=0;h<2;h=h+1)begin:g_half
-        ot_s81_su_qnh #(.NE(8)) u_half(.clk(ck_half[h]),.rst_in(rs_half[h]),.i_go(go),
+        dsfd_su_t_ikh u_half(.ck(ck_half[h]),.rst(rs_half[h]),.i_go(go),
             .p_v(p_v[8*h+:8]),.p_p(8'd0),.p_d(p_d[256*h+:256]),
             .s_v(hv[h]),.s_p(hp[h]),.s_d(hd[32*h+:32]),.o_f(hf[h]));
     end endgenerate
-    ot_s81_su_qnr #(.NE(2),.NV(1),.D(128)) u_reduce(.clk(ck_reduce),.rst_in(rs_reduce),
+    dsfd_su_t_ikr u_reduce(.ck(ck_reduce),.rst(rs_reduce),
         .i_go(go),.i_eps(eps),.p_v(hv),.p_p(hp),.p_d(hd),.p_f(hf),
         .r_v(r_v),.r_d(r_d),.o_f(rf));
     assign fault=rf||(|hf);

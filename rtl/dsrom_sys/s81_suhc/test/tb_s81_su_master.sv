@@ -46,7 +46,12 @@ module tb_s81_su_master;
 `ifdef SU_HIER
     dsfd_sp_su_h #(.QN_N(QN_N), .KV_N(KV_N), .QB_NB(QB_NB), .SW_W(SW_W), .SM_H(SM_H), .SM_LPH(SM_LPH), .SM_NVMAX(SM_NVMAX),
         .S_RD(S_RD), .S_WR(S_WR), .MUT(MUT), .AMUT(AMUT), .XMUT(XMUT)) dut (
-        .cck(cck), .crs(crs), .sk(sk), .srs(srs), .c_cmd_v(c_cmd_v), .c_cmd_d(c_cmd_d), .c_done_v(c_done_v),
+        .cck(cck), .crs(crs), .sk(sk), .srs(srs),
+`ifdef OT_S81_NATIVE_LEAF_CLOCKS
+        .ck_cn({20{sk}}),.rs_cn({20{srs}}),.ck_cnnw({16{sk}}),.rs_cnnw({16{srs}}),
+        .ck_ikh({2{sk}}),.rs_ikh({2{srs}}),.ck_ikr(sk),.rs_ikr(srs),
+`endif
+        .c_cmd_v(c_cmd_v), .c_cmd_d(c_cmd_d), .c_done_v(c_done_v),
         .c_done_tag(c_done_tag), .inp(inp), .rq_v(rq_v), .rq_row(rq_row),
         .rs_v(rs_v), .rs_d(rs_d), .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d), .flt(flt),
         .online(online), .fcode(fcode));

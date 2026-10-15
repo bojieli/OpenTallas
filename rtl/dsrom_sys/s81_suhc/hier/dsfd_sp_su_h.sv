@@ -62,6 +62,12 @@ module dsfd_sp_su_h #(
 ) (
     input  wire                cck, crs,
     input  wire                sk, srs,
+`ifdef OT_S81_NATIVE_LEAF_CLOCKS
+    input wire [19:0] ck_cn, rs_cn,
+    input wire [15:0] ck_cnnw, rs_cnnw,
+    input wire [1:0] ck_ikh, rs_ikh,
+    input wire ck_ikr, rs_ikr,
+`endif
     input  wire                c_cmd_v,
     input  wire [83:0]         c_cmd_d,
     output wire                c_done_v,
@@ -239,6 +245,24 @@ module dsfd_sp_su_h #(
     end endgenerate
 
 
+    wire [19:0] leaf_ck_cn,leaf_rs_cn;
+    wire [15:0] leaf_ck_cnnw,leaf_rs_cnnw;
+    wire [1:0] leaf_ck_ikh,leaf_rs_ikh;
+    wire leaf_ck_ikr,leaf_rs_ikr;
+`ifdef OT_S81_NATIVE_LEAF_CLOCKS
+    assign leaf_ck_cn=ck_cn;assign leaf_rs_cn=rs_cn;
+    assign leaf_ck_cnnw=ck_cnnw;assign leaf_rs_cnnw=rs_cnnw;
+    assign leaf_ck_ikh=ck_ikh;assign leaf_rs_ikh=rs_ikh;
+    assign leaf_ck_ikr=ck_ikr;assign leaf_rs_ikr=rs_ikr;
+`else
+    // Historical diagnostic clocking only; native die binding must enable the
+    // explicit leaf entries and supply measured phi-R for every physical root.
+    assign leaf_ck_cn={20{sk}};assign leaf_rs_cn={20{rst[0]}};
+    assign leaf_ck_cnnw={16{sk}};assign leaf_rs_cnnw={16{rst[0]}};
+    assign leaf_ck_ikh={2{sk}};assign leaf_rs_ikh={2{rst[0]}};
+    assign leaf_ck_ikr=sk;assign leaf_rs_ikr=rst[0];
+`endif
+
     // ------------------------------------------------------------------ KV: norm engines + reduce + quant (off the spine)
     localparam integer KL = KV_N / 16;                 // KV tap positions (rows a vector)
     localparam integer NRP = 64 / 8;                   // RoPE engines (RD 64)
@@ -262,8 +286,8 @@ module dsfd_sp_su_h #(
     wire [20*14-1:0] cn_a;wire [20*16-1:0] cn_m;wire [20*512-1:0] cn_d;
     // IK's logical chunk order 0..15 maps to physical KVE48..63. The
     // zero prefix is not included in either tree or the divisor.
-    ot_s81_su_ik_reduce u_ik_reduce(.ck_half({2{sk}}),.rs_half({2{rst[0]}}),
-        .ck_reduce(sk),.rs_reduce(rst[0]),.go(kt_go),.eps(kt_eps),
+    ot_s81_su_ik_reduce u_ik_reduce(.ck_half(leaf_ck_ikh),.rs_half(leaf_rs_ikh),
+        .ck_reduce(leaf_ck_ikr),.rs_reduce(leaf_rs_ikr),.go(kt_go),.eps(kt_eps),
         .p_v(kp_v[NKE-16+:16] & {16{kt_mode==2}}),.p_d(kp_d[32*(NKE-16)+:512]),
         .r_v(ikr_v),.r_d(ikr_d),.fault(ikr_fault));
     wire [NKQ-1:0]      kq_v, kq_fu, kq_fo, kq_al, kq_de, kq_ev;
@@ -334,17 +358,17 @@ module dsfd_sp_su_h #(
             assign gv = 8'd0; assign ge = 80'd0;
         end
         wire [3:0] CB = kb;
-        ot_s81_su_cn_norm_write u_cn_norm_write(.clk(sk),.rst_in(rst[0]),
+        dsfd_su_t_cnnw u_cn_norm_write(.ck(leaf_ck_cnnw[kb]),.rst(leaf_rs_cnnw[kb]),
             .i_v(kn_v[4*kb] && kt_mode==1),.i_x(kn_d[512*kb+:512]),
             .i_ob(kt_nb),.i_block(CB),.o_v(cnn_v[kb]),.o_a(cnn_a[14*kb+:14]),.o_d(cnn_d[512*kb+:512]));
-        ot_s81_su_cn_write #(.E4M3(1)) u_cn_write(.clk(sk),.rst_in(rst[0]),
+        dsfd_su_t_cn8 u_cn_write(.ck(leaf_ck_cn[kb]),.rst(leaf_rs_cn[kb]),
             .i_v(rv && kt_mode==1),.i_x(ry),.i_ob(rob),.i_block(CB),
             .o_v(cn_v[kb]),.o_a(cn_a[14*kb+:14]),.o_m(cn_m[16*kb+:16]),
             .o_d(cn_d[512*kb+:512]),.o_fault(cn_fault[kb]));
         if(kb>=NKQ-4) begin:g_ik_write
             localparam integer IB=kb-(NKQ-4), IS=16+IB;
             wire [3:0] IBC=IB;
-            ot_s81_su_cn_write #(.E4M3(0)) u_ik_write(.clk(sk),.rst_in(rst[0]),
+            dsfd_su_t_cn4 u_ik_write(.ck(leaf_ck_cn[IS]),.rst(leaf_rs_cn[IS]),
                 .i_v(rv && kt_mode==2),.i_x(ry),.i_ob(rob),.i_block(IBC),
                 .o_v(cn_v[IS]),.o_a(cn_a[14*IS+:14]),.o_m(cn_m[16*IS+:16]),
                 .o_d(cn_d[512*IS+:512]),.o_fault(cn_fault[IS]));
