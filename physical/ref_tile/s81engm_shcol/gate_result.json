@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "s81engm_shcol",
  "verdict": "WARN",
- "generated": "2026-10-15T11:35:25-0700",
- "host": "ot-epyc1tb",
+ "generated": "2026-10-15T12:36:20-0700",
+ "host": "ot-pve1",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "e5f7d5d7d10a36d41c7d7fa1fe77fa0cbf40fc7c",
+  "start_commit": "336b0bd516d456389340b62e2b77b09d8e11d015",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "b8b57dda4d209c5c0e6f37898ff97b3cc32235f9841f3e2d119552869363f2d0",
-  "manifest_sha256": "ab821e5d9717b6df45977f8338a9c2c92ce45716cec0635bde2a9719aea3dd64",
+  "archive_sha256": "e477ada06e0f5b77578ab205efb78a9591978d41031414f44937fec76afdaccc",
+  "manifest_sha256": "87c90d9366f6859ec18acef10c74098eed9201ea6978743940c9f782a822321d",
   "files": [
    {
     "path": "physical/common_flow/anchor_row_packing.tcl",
@@ -17219,8 +17219,8 @@
    {
     "path": "physical/ref_tile/s81engm_shcol/job.json",
     "kind": "file",
-    "sha256": "b0a8759b63d0702163e6d4a0f785fb786339920aeaeb0eb051449be1232a29f7",
-    "git_blob": "16d87ac92bddab9b8be93c9d79a9bedc941b3476",
+    "sha256": "cf52c872404a4b68807a04b712da552f0c25bdda404fd8154d2abf7133bd969a",
+    "git_blob": "0dfb8c67adbd952949a8bc8ba1ded51608bb6c0a",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17331,8 +17331,8 @@
    {
     "path": "physical/ref_tile/s81engm_shcol/spec.json",
     "kind": "file",
-    "sha256": "f9254f186cbafc41774bfca7b25bffe8569e912f6da233d5c0935f6e8bf35b51",
-    "git_blob": "402256d8f1af0274b1e0b83557b5cb14f371c509",
+    "sha256": "fb94f605475116aeab2d9758a49a3c5e1135bb5e2793b34827cc64334c89daa2",
+    "git_blob": "b5a09881f310da7b2426711dc514f6746834ee42",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -20123,8 +20123,8 @@
    {
     "path": "rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv",
     "kind": "file",
-    "sha256": "a4dadb02c28627c75517e776952694a48f69c8add9a69e53e561213c2e74e780",
-    "git_blob": "c4adf97ed79ac3ba217894ab5e0a4ab04e84dd47",
+    "sha256": "1cc8e624783900fcdf2978231e38e993b921a179006554aac3eaaf4260875ed2",
+    "git_blob": "dae1d1b429c2d031764b622fa810a21d82781418",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -20187,8 +20187,8 @@
    {
     "path": "rtl/dsrom_sys/engram/mix/tb_s81_engram_mix4_native_vm.sv",
     "kind": "file",
-    "sha256": "0c0fe3bde206a16a36b0ea34c69bdf41c39294b58551e78db8faa44992addfd9",
-    "git_blob": "6b5a194bdd9e4ce856cd984bd4c4be03c548a324",
+    "sha256": "3b715d8f815e68d7fde2bd1b33aed80af7de414ad3745674fd3b92ce9f8adcb5",
+    "git_blob": "11cbdc0fdb2ae7870194b5dda16e34175277f57c",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -26465,6 +26465,14 @@
     "matches_provenance_commit": true
    },
    {
+    "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_calendar_ctl_p.sv",
+    "kind": "file",
+    "sha256": "bea24fbc84161bcdf051d627fbf58ad78ab2b650e91a1b713fc9049b86ef0766",
+    "git_blob": "b0580918bb98bd9ba22de645b45b5349a69d909b",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
     "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_calendar_store.sv",
     "kind": "file",
     "sha256": "5a461f769106ca90365395a1fa2ac7a2dc21854cd8cd62914a7601d8516a103b",
@@ -26653,6 +26661,14 @@
     "kind": "file",
     "sha256": "34945e203114d25a629702c0bf7840cbcc701cf5dffc039bd19392cfcba80691",
     "git_blob": "363f211caaa1a76f8ffee1da0996c08beeb579a0",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_suhc/test/tb_s81_su_calendar_store_full.sv",
+    "kind": "file",
+    "sha256": "ba5e66fee00e0b7af6f016ad16f49f9cf6410156ce0ad7abd061d0ed363f1488",
+    "git_blob": "49407d5f14227a3256b9a0d7edcd2824fdae17b0",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -124131,8 +124147,8 @@
    {
     "path": "tools/s81_engram_mix/native_vm_gate.py",
     "kind": "file",
-    "sha256": "d562aa1c6fffc85f74c120a8d5c25cb6a1af614d08d21510ddbb23de81b00e06",
-    "git_blob": "e302fa7228067add7131c42a793835a657446bee",
+    "sha256": "53504113be6fc3f3aaa4b91b9cc798f92557871c86dd1e26857d0d292f8248ec",
+    "git_blob": "1ea8ef25c87b0720387b69af40585c87326fef35",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -125821,6 +125837,14 @@
     "kind": "file",
     "sha256": "00219ef5cdc9d2c43d7ab4f3c72035cf1171f928cf1314b762b8845564288d41",
     "git_blob": "283d15b65f55a4a01fb8f42d24fcacc302da8867",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "tools/s81_suhc/static_calendar_store_full_gate.py",
+    "kind": "file",
+    "sha256": "e39f1e5125334eb149cf3c741cc992884ad6f0cc50223d80275fb9d3960cd679",
+    "git_blob": "365053a9c15189022c1c88c7e6ee160427f1dbf5",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -138867,14 +138891,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 130916322,
-   "unpacked_bytes": 782553088,
+   "archive_bytes": 130917714,
+   "unpacked_bytes": 782581760,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "0ffb00f25baf46751dd1854e76a20064c866221c",
+   "origin_main": "7701b3c16b67d113a82d4aaade93726140a84378",
    "content_sha256": "ac489445748c6a07709a60f41cc1894a149e9db96a457d7e852c9b51e8e7c3e9",
    "files": [
     {
@@ -139250,7 +139274,7 @@
   "consumed": {
    "schema": "opentallas.ref_tile.gate_consumed.v1",
    "basis": "staged archive closure at gate time",
-   "count": 1645,
+   "count": 1648,
    "paths": [
     "physical/common_flow/anchor_row_packing.tcl",
     "physical/common_flow/edge_sliver_block.tcl",
@@ -140169,6 +140193,7 @@
     "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_pad_split.sv",
     "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_stree.sv",
     "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_calendar_ctl.sv",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_calendar_ctl_p.sv",
     "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_calendar_store.sv",
     "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_cn_ik.sv",
     "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_ctl.sv",
@@ -140193,6 +140218,7 @@
     "rtl/dsrom_sys/s81_suhc/test/tb_s81_hc_master.sv",
     "rtl/dsrom_sys/s81_suhc/test/tb_s81_owned_capture.sv",
     "rtl/dsrom_sys/s81_suhc/test/tb_s81_su_calendar_store.sv",
+    "rtl/dsrom_sys/s81_suhc/test/tb_s81_su_calendar_store_full.sv",
     "rtl/dsrom_sys/s81_suhc/test/tb_s81_su_cn_ik.sv",
     "rtl/dsrom_sys/s81_suhc/test/tb_s81_su_master.sv",
     "rtl/dsrom_sys/s81_suhc/test/tb_s81_su_moe_sum_static.sv",
@@ -140872,6 +140898,7 @@
     "tools/s81_suhc/rxh_eq_gate.sh",
     "tools/s81_suhc/rxh_mutant_source.py",
     "tools/s81_suhc/softmax_tail_gate.py",
+    "tools/s81_suhc/static_calendar_store_full_gate.py",
     "tools/s81_suhc/static_calendar_store_gate.sh",
     "tools/s81_suhc/static_moe_gate.py",
     "tools/s81_suhc/static_su_calendar.py",
@@ -140932,7 +140959,7 @@
     "physical/ref_tile/s81engm_shcol/pre_gpl.tcl": "aeda535cf274e16611dae02cf9e3a64394b16f4c848e317201429691e6ca3599",
     "physical/ref_tile/s81engm_shcol/pre_grt.tcl": "7a4a8cb6aef83160c9b8e910ab2c5b5d2d00ccdbd315290c0b54bc0723fdd169",
     "physical/ref_tile/s81engm_shcol/signoff.sdc": "502a1587cb53d675640638bbb82d886585a6229acc714e05b086d43e4729cdb5",
-    "physical/ref_tile/s81engm_shcol/spec.json": "f9254f186cbafc41774bfca7b25bffe8569e912f6da233d5c0935f6e8bf35b51",
+    "physical/ref_tile/s81engm_shcol/spec.json": "fb94f605475116aeab2d9758a49a3c5e1135bb5e2793b34827cc64334c89daa2",
     "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_add8.json": "581a45494e11689c373f4f823c37c1ed47fbe1c25bfb6f02dcedc49e067a68a5",
     "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_add8.tcl": "da21d303cda5603272844eed07f004e890fba80e5299cff60454000eee11ca0d",
     "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_chunk8.json": "b9637f5a83c53ab0b21d330c09169ae6576239682a8733f64994cbb734783748",
@@ -141023,7 +141050,7 @@
     "rtl/dsrom_sys/engram/dsfd_engram_c_cfg.sv": "86a869d5f12bab9758b8de9cb4a14d89e4fc076e3b6a39294051635fd72677f0",
     "rtl/dsrom_sys/engram/dsfd_engram_lkp.sv": "0a7390bfae1e161def62f335e8ebdda9812a8bc572394fdbe5c619edd72969be",
     "rtl/dsrom_sys/engram/dsfd_engram_sink.sv": "d16851d7fd67fe0baba783a50774ba7f296f2d84f6b1b64ee6226155a181d1dd",
-    "rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv": "a4dadb02c28627c75517e776952694a48f69c8add9a69e53e561213c2e74e780",
+    "rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv": "1cc8e624783900fcdf2978231e38e993b921a179006554aac3eaaf4260875ed2",
     "rtl/dsrom_sys/engram/mix/dsfd_engram_mix_c.sv": "866a6e65d64c9fd25c0f1f9b4d6a431a586d05c65a6f9409983769d7beb75672",
     "rtl/dsrom_sys/engram/mix/ot_s81_engram_dispatch.sv": "3391c891d61fc770edf865f4e66b4d0354b6709630c1b8d400fce57c1b5e8ed1",
     "rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv": "893b7f7aedb186ccb2fb9a1b215fc128b1ebb601943b7e24aaec68745d40a17e",
@@ -141031,7 +141058,7 @@
     "rtl/dsrom_sys/engram/mix/tb_s81_engram_mix.sv": "6513945db91be0971c4da1e6b8c3d08a7ffa558584ab004047274cb2ff285d96",
     "rtl/dsrom_sys/engram/mix/tb_s81_engram_mix4_c.sv": "3c377eecb7d634a6e1bec019f94d6a87aff3061c967489aaf35c285269a1174b",
     "rtl/dsrom_sys/engram/mix/tb_s81_engram_mix4_fixed.sv": "9efe9548d68ec2b3260db188f4226d6a92d36da9bc9df3fe8fe60e4f9edf0dce",
-    "rtl/dsrom_sys/engram/mix/tb_s81_engram_mix4_native_vm.sv": "0c0fe3bde206a16a36b0ea34c69bdf41c39294b58551e78db8faa44992addfd9",
+    "rtl/dsrom_sys/engram/mix/tb_s81_engram_mix4_native_vm.sv": "3b715d8f815e68d7fde2bd1b33aed80af7de414ad3745674fd3b92ce9f8adcb5",
     "rtl/dsrom_sys/engram/mix/tb_s81_engram_mix_c.sv": "862ae9d3411a9a65bfdf52eec90143b5c8c16430f2edfcb0e20443a1b016450b",
     "rtl/dsrom_sys/engram/ot_dsrom_engram_boot_ctrl_map.sv": "ab65abfc0426b3ddec2d09b45d2f0e8494d7cbc0001cc6da9fe2a651d26987c8",
     "rtl/dsrom_sys/engram/ot_dsrom_engram_boot_dispatch.sv": "06ee59aa5a7b3a822166b3f3686091434e1f42e3d906e28a462a75de5e35ca31",
@@ -141816,6 +141843,7 @@
     "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_pad_split.sv": "046421309e9687cf2304e916786c6986de741e4cfb4b9c3a0c1d451af22b18a2",
     "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_stree.sv": "46ac12fc2932d5dd4a50593d5c26a8683fbbd76e1d62c975b9b4609f614e8e27",
     "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_calendar_ctl.sv": "ee79596b363a1d757689ba2806dfe7085c331d83591905a8c124bc388c4b96c0",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_calendar_ctl_p.sv": "bea24fbc84161bcdf051d627fbf58ad78ab2b650e91a1b713fc9049b86ef0766",
     "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_calendar_store.sv": "5a461f769106ca90365395a1fa2ac7a2dc21854cd8cd62914a7601d8516a103b",
     "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_cn_ik.sv": "e13011d0e89dd9b558ec376605b35bc497c36413f1a5c0d090aa560c0ef85f63",
     "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_ctl.sv": "05704171f0698698cb9caf52a2da70feaa2315047185141c59793f7781254279",
@@ -141840,6 +141868,7 @@
     "rtl/dsrom_sys/s81_suhc/test/tb_s81_hc_master.sv": "170845d536ca15fe150a2fb7075c44c4915ab71312ca4377a273c94e637b9971",
     "rtl/dsrom_sys/s81_suhc/test/tb_s81_owned_capture.sv": "65026d48ec062b647ecff73518cbaa06443f77730bcfc8cee44ca71921f67ebe",
     "rtl/dsrom_sys/s81_suhc/test/tb_s81_su_calendar_store.sv": "34945e203114d25a629702c0bf7840cbcc701cf5dffc039bd19392cfcba80691",
+    "rtl/dsrom_sys/s81_suhc/test/tb_s81_su_calendar_store_full.sv": "ba5e66fee00e0b7af6f016ad16f49f9cf6410156ce0ad7abd061d0ed363f1488",
     "rtl/dsrom_sys/s81_suhc/test/tb_s81_su_cn_ik.sv": "82c610c06fd936d65c15955a0b98e3f6ca2df79d50030a331b7a452ece2dd93a",
     "rtl/dsrom_sys/s81_suhc/test/tb_s81_su_master.sv": "65ffa36a807fcd06d444f0bfd3a5ff5bbae9f8faece6ec436dfc6d670207f817",
     "rtl/dsrom_sys/s81_suhc/test/tb_s81_su_moe_sum_static.sv": "42fa89e32dbfaa79a13b7706370e285c293ed8606bcea0791e347583a199cee6",
@@ -142472,7 +142501,7 @@
     "tools/s81_engram_mix/dispatch_gate.py": "bac48913807dd8631d6d1044449f1249a438efdb6ae2cd17ec3a77229a61993a",
     "tools/s81_engram_mix/gate.py": "f3e96b9e46d6a166b3b96d8b70d031dd43e9f8db86d790552f5f432565322aa9",
     "tools/s81_engram_mix/layout.py": "d07442d8fb9dd990ee1cfe62b8ab1e421660a09dbca38698d547813ff2827105",
-    "tools/s81_engram_mix/native_vm_gate.py": "d562aa1c6fffc85f74c120a8d5c25cb6a1af614d08d21510ddbb23de81b00e06",
+    "tools/s81_engram_mix/native_vm_gate.py": "53504113be6fc3f3aaa4b91b9cc798f92557871c86dd1e26857d0d292f8248ec",
     "tools/s81_engram_mix/phys_plan.py": "bc1e072b52be9378b9d3d8a91a36ae2ecc0334a5be8d595775037bb62e961938",
     "tools/s81_engram_mix/phys_plan_slot.py": "8946fc3561356546e5a8f74227a7f88b32c27c2bca30bc8ab3beaf8600dd6fe0",
     "tools/s81_engram_mix/root_graph.py": "b821a656e86fc10e3c1dbe3b252d3973afdb87265a6af7f299c83137f6187efe",
@@ -142519,6 +142548,7 @@
     "tools/s81_suhc/rxh_eq_gate.sh": "3df63b74c5cdbeb2fd43aa6d7ad04a664ea0ee6085b89c7464894c3c5bf85e40",
     "tools/s81_suhc/rxh_mutant_source.py": "5f26bdf5bdef79e6b5f73db8719bf1b5ca153e46c3d55ca438a60230fb01098e",
     "tools/s81_suhc/softmax_tail_gate.py": "00219ef5cdc9d2c43d7ab4f3c72035cf1171f928cf1314b762b8845564288d41",
+    "tools/s81_suhc/static_calendar_store_full_gate.py": "e39f1e5125334eb149cf3c741cc992884ad6f0cc50223d80275fb9d3960cd679",
     "tools/s81_suhc/static_calendar_store_gate.sh": "adbcd679e2860350d3c7d9e176d5a552467122a80ee5eeb83af596ce33114a4d",
     "tools/s81_suhc/static_moe_gate.py": "a0c42f61ada4595dea7d92637eb43120ea08a72cb552dda6d32a0e4a199cb532",
     "tools/s81_suhc/static_su_calendar.py": "d3e22394593d49f2f25c49292fa9c6838dab4ce6d50272beb7f7a04538048952",
@@ -142545,18 +142575,18 @@
     "tools/w18/corner_sta.py": "7801f467617d68c7e8a3f906e5415c8913de77188a6af30dbfe835fc28b05fd1",
     "tools/w18/corner_sta_ref.py": "bd70080bbbd23db830914e4b52682c086b4de5cc9adc6873a026c260099419fa"
    },
-   "digest": "6673473af0ef46cfcd1daa1c622c27be65f082384eb8932c091250c7d77b9efe"
+   "digest": "fb4b22390f0679480e064e746883e05f03b8c472f2a37587e9ba4a3cd3e862a2"
   },
-  "captured": "2026-10-15T11:31:34-0700",
+  "captured": "2026-10-15T12:16:45-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/s81engm_shcol/signoff.sdc"
   },
-  "remote_script_sha256": "f579b30625c99091f54aa29a3228c5e8a0c18a9b82db705ebe38f567cfb23607",
+  "remote_script_sha256": "dbb7bd4672f6604fd7890d52a04928f68c75fcb771815e9126f39e5c08b21522",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc1tb",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81engm_shcol-20261015-113103",
+  "remote_host": "ot-pve1",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81engm_shcol-20261015-121610",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
