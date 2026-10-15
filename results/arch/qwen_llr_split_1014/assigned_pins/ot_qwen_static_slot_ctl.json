@@ -23,6 +23,7 @@
       "rd_slot",
       "rx_expect_v",
       "rx_expect_slot",
+      "wr_observed_v",
       "rx_v",
       "rx_flit",
       "epoch_abort",
@@ -108,6 +109,10 @@
     "epoch_abort": [
       190,
       191
+    ],
+    "wr_observed_v": [
+      38,
+      39
     ]
   },
   "split_ports": {
@@ -176,5 +181,13 @@
   "qualification": "ASSIGNED_PINS_ONLY; actual mapped fit, native pin/clock/reset and TT/FF/DRC required",
   "source_commit": "cd708c730",
   "source_file": "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
-  "new_protocol_note": "Compiled epoch/write/read/expected-RX calendar ports require real die producers. No metadata tieoffs; root owns calendar and adoption. Assignment does not qualify new transport or measured cost."
+  "new_protocol_note": "Compiled epoch/write/read/expected-RX calendar ports require real die producers. No metadata tieoffs; root owns calendar and adoption. Assignment does not qualify new transport or measured cost.",
+  "observation_contract": {
+    "wr_observed_v": "actual source write event; compiler expectation is fault check only, never normal issue gating",
+    "fault_cause_bits": 8,
+    "normal_latency_edges": {
+      "tx": 3,
+      "rx": 1
+    }
+  }
 }

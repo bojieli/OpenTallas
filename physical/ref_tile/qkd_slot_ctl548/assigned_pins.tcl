@@ -1748,13 +1748,6 @@ place_pin -pin_name {rx_flit[545]} -layer M5 -location {179.424 0.000} -pin_size
 place_pin -pin_name {rx_flit[546]} -layer M5 -location {179.664 0.000} -pin_size {.024 .144}
 place_pin -pin_name {rx_flit[547]} -layer M5 -location {179.904 0.000} -pin_size {.024 .144}
 place_pin -pin_name {epoch_abort} -layer M5 -location {190.512 0.000} -pin_size {.024 .144}
-place_pin -pin_name {fault_cause[0]} -layer M5 -location {194.304 0.000} -pin_size {.024 .144}
-place_pin -pin_name {fault_cause[1]} -layer M5 -location {194.880 0.000} -pin_size {.024 .144}
-place_pin -pin_name {fault_cause[2]} -layer M5 -location {195.408 0.000} -pin_size {.024 .144}
-place_pin -pin_name {fault_cause[3]} -layer M5 -location {195.984 0.000} -pin_size {.024 .144}
-place_pin -pin_name {fault_cause[4]} -layer M5 -location {196.560 0.000} -pin_size {.024 .144}
-place_pin -pin_name {fault_cause[5]} -layer M5 -location {197.136 0.000} -pin_size {.024 .144}
-place_pin -pin_name {fault_cause[6]} -layer M5 -location {197.712 0.000} -pin_size {.024 .144}
 place_pin -pin_name {clk} -layer M5 -location {206.016 0.000} -pin_size {.024 .144}
 place_pin -pin_name {rst_n} -layer M5 -location {202.512 0.000} -pin_size {.024 .144}
 place_pin -pin_name {q_data[0]} -layer M4 -location {0.000 8.256} -pin_size {.144 .024}
@@ -2305,3 +2298,12 @@ place_pin -pin_name {q_data[544]} -layer M4 -location {216.000 162.240} -pin_siz
 place_pin -pin_name {q_data[545]} -layer M4 -location {216.000 162.768} -pin_size {.144 .024}
 place_pin -pin_name {q_data[546]} -layer M4 -location {216.000 163.248} -pin_size {.144 .024}
 place_pin -pin_name {q_data[547]} -layer M4 -location {216.000 163.728} -pin_size {.144 .024}
+place_pin -pin_name {fault_cause[0]} -layer M5 -location {194.256 0.000} -pin_size {.024 .144}
+place_pin -pin_name {fault_cause[1]} -layer M5 -location {194.736 0.000} -pin_size {.024 .144}
+place_pin -pin_name {fault_cause[2]} -layer M5 -location {195.264 0.000} -pin_size {.024 .144}
+place_pin -pin_name {fault_cause[3]} -layer M5 -location {195.744 0.000} -pin_size {.024 .144}
+place_pin -pin_name {fault_cause[4]} -layer M5 -location {196.272 0.000} -pin_size {.024 .144}
+place_pin -pin_name {fault_cause[5]} -layer M5 -location {196.752 0.000} -pin_size {.024 .144}
+place_pin -pin_name {fault_cause[6]} -layer M5 -location {197.232 0.000} -pin_size {.024 .144}
+place_pin -pin_name {fault_cause[7]} -layer M5 -location {197.760 0.000} -pin_size {.024 .144}
+place_pin -pin_name {wr_observed_v} -layer M5 -location {38.496 0.000} -pin_size {.024 .144}

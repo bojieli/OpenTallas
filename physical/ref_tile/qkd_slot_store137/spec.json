@@ -69,11 +69,11 @@
  "recipe": 2,
  "keep_pin_regs": true,
  "pin_reg_split": true,
- "structural_change": "Replace64-word flop mux (~-900ps placedsetup) with real64x512 macro + registered write/read faces (431 wrapperFF); independent bank clock. Two collision-age bypasses preserve synchronous SRAM read-before-write. Static compiler ownswr/rdslot/epoch; fixedTX2/RX1 codec, no runtimeACK/credit/backpressure. Root assigned216x172.8 slot within691.2x367.2 fourbank/control cluster.",
+ "structural_change": "Replace64-word flop mux (~-900ps placedsetup) with real64x512 macro + registered write/read faces (431 wrapperFF); independent bank clock. Two collision-age bypasses preserve synchronous SRAM read-before-write. Static compiler ownswr/rdslot/epoch; fixedTX2/RX1 codec, no runtimeACK/credit/backpressure. Root assigned216x172.8 slot within691.2x367.2 fourbank/control cluster. s2 removes impossible late-write bypass from rawinputpins; nativewritesarecaptured, unread/pendingreadreusefaults. SRAMMX movesaddress/readfaces nearWupperwindows, unchangedmacroorigin andassignedports. ExactproductionTX3 fixture.",
  "job": {
   "owner": "Codex:q-link-replay",
   "branch": "codex/q-link-replay-1014",
-  "tag": "s1",
+  "tag": "s2",
   "purpose": "Real fixed-slot SRAM store, independently clocked read/write pin registers, native clock and pin validation",
   "benches": [
    {
@@ -120,7 +120,8 @@
    "at": [
     22.464,
     43.2
-   ]
+   ],
+   "orient": "MX"
   }
  ],
  "children": [],

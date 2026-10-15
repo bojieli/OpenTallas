@@ -7,7 +7,7 @@ module tb_qwen_static_slot_link;
  wire atv,btv,arv,brv,aa,ba;
  wire [PW-1:0] atf,btf;
  wire [FW-1:0] ard,brd;
- wire [6:0] ac,bc;
+ wire [7:0] ac,bc;
  wire [FW-1:0] aw, bw;
  reg [LAT-1:0] avpipe=0,bvpipe=0;
  reg [LAT*PW-1:0] afpipe=0,bfpipe=0;
@@ -17,7 +17,7 @@ module tb_qwen_static_slot_link;
     for(k=0;k<FW;k=k+1)word[k]=((k*13+slot*17+endpoint*29+gen*33)^(slot>>(k%6)))&1;
    end
  endfunction
- assign aw=word(0,ws,cyc>=200);assign bw=word(1,ws,cyc>=200);
+ assign aw=word(0,MUT==7 && cyc==207?6:ws,cyc>=200);assign bw=word(1,ws,cyc>=200);
  wire corrupt= MUT==1 && atv && atf[FW+5:FW]==6'd7;
  always @(posedge clk)if(!rst_n)begin
    avpipe<=0;bvpipe<=0;afpipe<=0;bfpipe<=0;
@@ -28,13 +28,13 @@ module tb_qwen_static_slot_link;
  end
  ot_qwen_static_slot_link #(.FW(FW),.CW(CW),.MUT(MUT==3?3:0)) a(
   .ck({5{clk}}),.rst_n(rst_n),.epoch_begin(epoch_begin),.epoch(8'h3a),
-  .wr_v(wr_v),.wr_slot(ws),.wr_flit(aw),.rd_v(rd_v),.rd_slot(rs),
+  .wr_v(wr_v),.wr_observed_v(wr_v && !(MUT==7 && cyc==207)),.wr_slot(ws),.wr_flit(aw),.rd_v(rd_v),.rd_slot(rs),
   .rx_expect_v(ev),.rx_expect_slot(MUT==2?es^6'd1:es),.p_tx_up(1'b1),
   .p_tx_v(atv),.p_tx_flit(atf),.p_rx_v(bvpipe[LAT-1]),.p_rx_flit(bfpipe[LAT*PW-1-:PW]),
   .rx_v(arv),.rx_flit(ard),.epoch_abort(aa),.fault_cause(ac));
  ot_qwen_static_slot_link #(.FW(FW),.CW(CW)) b(
   .ck({5{clk}}),.rst_n(rst_n),.epoch_begin(epoch_begin),.epoch(8'h3a),
-  .wr_v(wr_v),.wr_slot(ws),.wr_flit(bw),.rd_v(rd_v),.rd_slot(rs),
+  .wr_v(wr_v),.wr_observed_v(wr_v),.wr_slot(ws),.wr_flit(bw),.rd_v(rd_v),.rd_slot(rs),
   .rx_expect_v(ev),.rx_expect_slot(es),.p_tx_up(1'b1),
   .p_tx_v(btv),.p_tx_flit(btf),.p_rx_v(avpipe[LAT-1]),.p_rx_flit(afpipe[LAT*PW-1-:PW]),
   .rx_v(brv),.rx_flit(brd),.epoch_abort(ba),.fault_cause(bc));
@@ -44,6 +44,7 @@ module tb_qwen_static_slot_link;
    wr_v=(cyc>=8&&cyc<72)||(cyc>=200&&cyc<264);
    if(MUT==5 && cyc==207)wr_v=0;
    ws=6'(cyc>=200?cyc-200:cyc-8);
+   if(MUT==6 && cyc==108)begin wr_v=1;ws=7;end
    rd_v=(cyc>=100&&cyc<164)||(cyc>=292&&cyc<356);
    rs=6'(cyc>=292?cyc-292:cyc-100);
    ev=(cyc>=109&&cyc<173)||(cyc>=301&&cyc<365);
@@ -51,7 +52,7 @@ module tb_qwen_static_slot_link;
    #5;clk=1;#1;
    if(rst_n)begin
     if(aa||ba)aborts=aborts+1;
-    if(MUT==0 && (aa!==1'b0 || ba!==1'b0 || ac!==7'd0 || bc!==7'd0))begin errors=errors+1;$display("ABORT cycle%0d a%h b%h",cyc,ac,bc);end
+    if(MUT==0 && (aa!==1'b0 || ba!==1'b0 || ac!==8'd0 || bc!==8'd0))begin errors=errors+1;$display("ABORT cycle%0d a%h b%h",cyc,ac,bc);end
     // These are compiler constants, not observed-output driven expectations.
     if(MUT==0 && (atv!==((cyc>=103&&cyc<167)||(cyc>=295&&cyc<359))||btv!==((cyc>=103&&cyc<167)||(cyc>=295&&cyc<359))))errors=errors+1;
     if((cyc>=110&&cyc<174)||(cyc>=302&&cyc<366))begin

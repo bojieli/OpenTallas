@@ -38,7 +38,8 @@
    "epoch_abort",
    "fault_cause",
    "clk",
-   "rst_n"
+   "rst_n",
+   "wr_observed_v"
   ],
   "W": [
    "q_data"
@@ -125,6 +126,10 @@
   "q_data": [
    8,
    164
+  ],
+  "wr_observed_v": [
+   38,
+   39
   ]
  },
  "route": {
@@ -144,11 +149,11 @@
  "recipe": 2,
  "keep_pin_regs": true,
  "pin_reg_split": true,
- "structural_change": "True static normal link controller: compiler-issuedwr/rdslots with fixedTX2/RX1, CRC16 epoch+slot check, no credits/ACK/upselectnormalissue. Any slot/writeownership/timeline/CRC/PHYup error abortsepoch; explicitcompilerdrain/restart. Separate control root and four SRAM store roots; no parent-local payload flops. s2 consumes exact official assignmentbb56cc450 (clkS205..207) and freezes first epoch fault, ignoring only already-invalid idle/aborted payload. Parallel GF2 CRC matrix replaces87-level serial recurrence; dataFF have no reset/epochfanout. FixedTX2/RX1 unchanged.",
+ "structural_change": "True static normal link controller: compiler-issuedwr/rdslots with fixedTX2/RX1, CRC16 epoch+slot check, no credits/ACK/upselectnormalissue. Any slot/writeownership/timeline/CRC/PHYup error abortsepoch; explicitcompilerdrain/restart. Separate control root and four SRAM store roots; no parent-local payload flops. s2 consumes exact official assignmentbb56cc450 (clkS205..207) and freezes first epoch fault, ignoring only already-invalid idle/aborted payload. Parallel GF2 CRC matrix replaces87-level serial recurrence; dataFF have no reset/epochfanout. FixedTX2/RX1 unchanged. Observed producer valid is fault-only input: missing actual data at a compiled write sets causebit7, no new root or pipeline edge.",
  "job": {
   "owner": "Codex:q-link-replay",
   "branch": "codex/q-link-replay-1014",
-  "tag": "s2",
+  "tag": "s3",
   "purpose": "Real native Qwen CRC/retry replay leaf with independent clock and registered read pin face",
   "benches": [
    {

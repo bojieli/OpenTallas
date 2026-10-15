@@ -179,8 +179,10 @@ module ot_qkvd_llr_replay_sram_leaf #(
         .w_mask_in({{(512-W){1'b0}},{W{1'b1}}}),
         .rr_en(2'd0), .rr_addr(12'd0), .cr_en(2'd0), .cr_sel(18'd0));
     always @(posedge ck)
-        dout <= (we && wa == rq ? din :
-                 wq && aq == rq ? dq :
+        // A write arriving after this read reservation is forbidden by the
+        // compiler ownership check. Bypass only the two captured write ages;
+        // raw write pins must not feed the read-output D cones.
+        dout <= (wq && aq == rq ? dq :
                  wqq && aqq == rq ? dqq : mr[W-1:0]) ^
             (MUT != 0 ? {{(W-1){1'b0}}, 1'b1} : {W{1'b0}});
 
