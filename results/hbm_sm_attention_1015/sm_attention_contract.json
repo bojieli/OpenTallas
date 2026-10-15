@@ -9,7 +9,18 @@
   "SM-KV8": "window rows: byte [64h+j] = E4M3 code; line0 bytes 128..135 = UE8M0 blocks 0..7, line1 = blocks 8..15 (block = 32 dims); lines 2,3 spare = 0",
   "SM-KV4": "compressed rows: nibble [64h+j] = E2M1 code (sign bit 3); bits 512..767 = 32 E4M3 scales (block = 16 dims) in every line",
   "writer_obligation": "the KV writer (QUANT / compressor DMA.STORE path) emits this permutation and the scale bytes; DMA ROW_GATHER copies whole rows",
-  "SM-KV8-128": "Qwen HD128: one136-byte line/row; byte16*t+j is E4M3 code of dimension8*j+t (t0..7,j0..15); bytes128..131 are fourUE8M0 scales, one per32dimensions; bytes132..135 reserved. Actual Qwen per-elementFP8 can useUE8M0=127; component proof uses123."
+  "SM-KV8-128": "Qwen HD128: one136-byte line/row; byte16*t+j is E4M3 code of dimension8*j+t (t0..7,j0..15); bytes128..131 are fourUE8M0 scales, one per32dimensions; bytes132..135 reserved. Actual Qwen per-elementFP8 can useUE8M0=127; component proof uses123.",
+  "KV4_byte_expansion_obligation": {
+   "canonical_payload_bytes": 288,
+   "current_fetched_bytes": 544,
+   "source": "pack_lines creates4x136B lines with all32scale bytes repeated eachline",
+   "ds640_extra_bytes_per_pass": 131072,
+   "ds640_extra_bytes_qk_plus_pv": 262144,
+   "ds_token_38long_layers_extra_read_bytes": 9961472,
+   "replica_comp_write_delta_if_writer544_bytes_per_token": 30720,
+   "critical_path_cycles": null,
+   "status": "UNPRICED; actual writer permutation, cache layout, own-stack PC service and line cadence must join before any throughput adoption. Component RN8/RD11 is not aggregate32SM bandwidth evidence."
+  }
  },
  "sm_modes": {
   "QK": "HD512: mixed-format op with cfg_n8 window rows then KV4 rows; eight rows/wave, eight steps/row. HD128:32rows/wave, four rows per beat (one per16-lane leaf); eight ring slots x eight steps; bypass four-leaf combine to return four scores/beat. NCOL independent query images share K beats (Qwen NCOL4).",
@@ -31,7 +42,7 @@
   "Normal execution must use compiler fixed slots, actual SRAM/descriptor/issue/result latency, no dynamic credits or ready-based scheduling. Existing ready-paced component stimulus is numerical evidence only.",
   "Cross-SM and cross-stream pairwise reduction must instantiate COLL RTL and land final words in owning VM slice before SU calendar read. Software A.pairwise in component checker is an expected-value check, not integrated hardware."
  ],
- "measured_status": "Recovered source3facdd750 r3: Qwen8192 all192ops exact,65536scores and all8PVfinals exact; DS640 mixedop52ops exact; DS12848ops exact. Baseline source8f5cdf11f adds mutant4 branch and model only; r5 same-source positive/semantic-mutant gates pending. No native SM integration, physical closure or production static calendar qualification.",
+ "measured_status": "Recovered source3facdd750 r3: Qwen8192 all192ops exact,65536scores and all8PVfinals exact; DS640 mixedop52ops exact; DS12848ops exact. Baseline source8f5cdf11f adds mutant4 branch and model only; r5 same-source full Qwen positive and all4semantic-mutant gates PASS. No native SM integration, physical closure or production static calendar qualification.",
  "qwen_component_mapping": {
   "shape": {
    "context": 8192,
@@ -58,12 +69,9 @@
   "source_r4_r5": "8f5cdf11f",
   "native_qualification": false,
   "physical_qualification": false,
-  "pending_semantic_gates": [
-   "qwen_kv2",
-   "qwen_kv4",
-   "qwen_pv1",
-   "qwen_pv2"
-  ]
+  "pending_semantic_gates": [],
+  "r5": "results/hbm_sm_attention_1015/recovered_r5/",
+  "r5_verdict": "full Qwen positive and kv2/kv4/pv1/pv2 semantic negative controls passed on source8f5cdf11f"
  },
  "pin_descriptor_contract": {
   "status": "required logical fields only; no published physical pin assignment or allocated64bit descriptor encoding",

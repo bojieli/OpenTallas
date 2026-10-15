@@ -107,6 +107,14 @@ def main():
     out = dict(scope="component spans measured; first access, dispatch, publish and cross-SM merge modeled",
                native_sm_integration_qualified=False, physical_closure_qualified=False, measured_comp=comp, pv_nodes=nodes, model_terms=dict(fa=FA, first_access=FIRST, publish=PUB,
                merge={T: merge_cycles(nodes[T]) for T in nodes}))
+    out["throughput_qualified"] = False
+    out["rate_scope"] = "conditional computation estimate at component8/11 line cadence; actual32SM PC service and KV4 byte expansion not priced"
+    out["unpriced_kv4_layout"] = dict(canonical_row_bytes=288, implemented_row_bytes=544,
+        extra_read_bytes_per_ds640_pass=512*(544-288), extra_read_bytes_per_ds640_qk_pv=2*512*(544-288),
+        extra_read_bytes_per_token=38*2*512*(544-288),
+        extra_replica_write_bytes_per_token_if_writer_uses544=3*40*(544-288),
+        critical_path_cycles=None, actual_PC_cadence_qualified=False,
+        reason="Current KV4 packs4x136B with all32scales repeated in everyline. Actual writer/home/cache/PC schedule must match this layout; no token-rate penalty inferred from byte ratio.")
     for pf in (False, True):
         delta = 0.0
         rec = {}
