@@ -1,0 +1,7 @@
+{
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-3231294-1792048282",
+  "result": "RAN exit 0",
+  "core_sha256": "ab58e6eb465390f2e67c4a82496211e69138dab0bda96a11c098d79fa0516776",
+  "all_owner_evidence": "Existing unchanged tb_bank_static:220 reads,240 writes,34 mirror egress,352 cycles; exact memory,masks,ECC,owner/read+6/commit+3; wrong-owner mutant killed. Full literal wrappers RG7/WG3 andRG5/WG1 each passed all groups and routing mutants."
+}
