@@ -1,0 +1,97 @@
+{
+  "name": "hcoll_ring_state_static_v1",
+  "top": "ot_hgi_coll_pring_static_state_lane",
+  "kind": "tile",
+  "sources": [
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [],
+  "outline": {
+    "w": 51.84,
+    "h": 51.84,
+    "exact": true
+  },
+  "std_area_um2": 1058.95998,
+  "pins": {
+    "W": [
+      "lp_we",
+      "lp_tag",
+      "lp_data",
+      "acc_we",
+      "acc_tag",
+      "acc_data",
+      "carry_we",
+      "carry0_tag",
+      "carry1_tag",
+      "carry0_src",
+      "carry1_src",
+      "carry0_data",
+      "carry1_data",
+      "read_add",
+      "read_tx",
+      "read_rr",
+      "read_rhs_acc",
+      "read_tx_acc",
+      "add_tag",
+      "tx_tag",
+      "rr_tag",
+      "add_src"
+    ],
+    "E": [
+      "rhs_add",
+      "carry_add",
+      "tx_data",
+      "acc_rr"
+    ],
+    "N": [
+      "clk"
+    ],
+    "S": []
+  },
+  "layer_cap": "M5",
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "period_ps": 833.333333,
+    "hold_margin_ns": 0.03,
+    "pin_min_tracks": 2,
+    "pin_group_max": 32
+  },
+  "job": {
+    "owner": "Codex:coll_physical",
+    "branch": "codex/hcoll-physical-1103",
+    "tag": "v1",
+    "purpose": "Actual current V1 ring state lane,1664FF,293pins, native264checks plus hardware-wiring mutant; typedslotpending",
+    "extra_paths": [
+      "tools/hbm_coll_static",
+      "rtl/hbm_accel/generic/collective/p2p"
+    ],
+    "benches": [
+      {
+        "name": "state_exact",
+        "cmd": "bash tools/hbm_coll_static/run_state_lane_gate.sh 0 {RUN}/bench/state_exact",
+        "expect": "pass",
+        "threads": 2,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ],
+        "min_count_regex": "checked=264"
+      },
+      {
+        "name": "state_carry_source_mutant",
+        "cmd": "bash tools/hbm_coll_static/run_state_lane_gate.sh 1 {RUN}/bench/state_mutant",
+        "expect": "fail",
+        "threads": 2,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ]
+      }
+    ],
+    "views_to": "physical/ref_tile/hcoll_ring_state_static_v1/views",
+    "record_to": "results/arch/hcoll_physical_1103/state"
+  }
+}

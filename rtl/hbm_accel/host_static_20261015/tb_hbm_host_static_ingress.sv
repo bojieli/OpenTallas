@@ -45,7 +45,10 @@ module tb_hbm_host_static_ingress;
    wv=1;do @(posedge clk);while(!wr);@(negedge clk);wv=0;
    repeat(2)@(negedge clk);av=1;do @(posedge clk);while(!awr);@(negedge clk);av=0;
   end else begin
-   av=1;wv=1;@(posedge clk);if(!awr||!wr)$fatal(1,"HOST_STATIC unexpected notready");@(negedge clk);av=0;wv=0;
+   fork
+    begin av=1;do @(posedge clk);while(!awr);@(negedge clk);av=0;end
+    begin wv=1;do @(posedge clk);while(!wr);@(negedge clk);wv=0;end
+   join
   end
   while(!bv)@(negedge clk);
   if(bres!==(bad?2'b10:2'b00))$fatal(1,"HOST_STATIC wrong AXI response %h a=%h",bres,a);
@@ -72,7 +75,16 @@ module tb_hbm_host_static_ingress;
   // A host service response can wait without changing or replaying a write.
   br=0;write32(12'hf28,ROWS<<12,2,0);
   repeat(4)begin @(negedge clk);if(!bv||bres!=0)$fatal(1,"HOST_STATIC unstable held response");end
-  br=1;repeat(2)@(negedge clk);
+  // New AW/W are already asserted on the edge accepting the old B response.
+  // Registered ready must retain them until each channel actually handshakes.
+  aa=12'hf28;wd=ROWS<<12;br=1;
+  fork
+   begin av=1;do @(posedge clk);while(!awr);@(negedge clk);av=0;end
+   begin wv=1;do @(posedge clk);while(!wr);@(negedge clk);wv=0;end
+  join
+  while(!bv)@(negedge clk);
+  if(bres!=0)$fatal(1,"HOST_STATIC response-turnover request dropped");
+  @(negedge clk);
   // Partial assembly and bad strobe are refused independently of target ready.
   measure=0;
   write32(12'hf24,32'h12345678,2,0);write32(12'hf30,1,2,1);
@@ -84,7 +96,7 @@ module tb_hbm_host_static_ingress;
   reset_dut();write32(12'hf20,48,2,0);write32(12'hf28,0,2,1);if(!hf)$fatal(1,"HOST_STATIC empty range escaped");
   reset_dut();write32(12'hf20,48,2,0);write32(12'hf28,2<<12,2,0);write32(12'hf2c,1,2,0);
   repeat(10)@(negedge clk);if(ready_validated||!ready_fault)$fatal(1,"HOST_STATIC unloaded range falsely ready");
-  $display("HBM_HOST_STATIC_PASS real_macro=1024x256 target=48 gapless=1 AXI_orderings=3 held_response=1 negatives=7 rows=%0d loops=%0d exact_calendar_beats=%0d",ROWS,LOOPS,seen);$finish;
+  $display("HBM_HOST_STATIC_PASS real_macro=1024x256 target=48 gapless=1 AXI_orderings=3 held_response=1 response_turnover=1 negatives=7 rows=%0d loops=%0d exact_calendar_beats=%0d",ROWS,LOOPS,seen);$finish;
  end
  initial begin #2000000;$fatal(1,"HOST_STATIC watchdog");end
 endmodule

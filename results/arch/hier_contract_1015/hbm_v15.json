@@ -95023,8 +95023,8 @@
    "name": "sucore_SW_reducer",
    "cell": "ot_hbm_su_reduce_static",
    "source": "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static.sv",
-   "source_sha256": "aca19b5b853a5d27109bf4bd08fa035b097a4b089dc37bdf8a1a85a32fb76472",
-   "source_prerequisite": "0987612f8",
+   "source_sha256": "75b38ab7103ca40f4784e47559f70e659851f7184a18a05e43653336b03d0a32",
+   "source_prerequisite": "5223681bb",
    "params": {
     "AW": 10
    },
@@ -95221,7 +95221,7 @@
    "version": 1,
    "grant": "diagnostic_component_child",
    "assigned_pin_file": "results/arch/hbm_die_v15/reducer_leaf_pins_1319.json",
-   "assigned_pin_file_sha256": "3b97089fb79c30d365ccbeb52c5e8c4190f859d8fecf24bf58bb48d462baa605",
+   "assigned_pin_file_sha256": "ad1f369da067c6a077704c8168e95f6ecfe96ef6d3e66648e34ae926dd92c047",
    "su_reducer_child_grant_1319": true,
    "macros": [
     {
@@ -95235,8 +95235,8 @@
    "name": "sucore_SE_reducer",
    "cell": "ot_hbm_su_reduce_static",
    "source": "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static.sv",
-   "source_sha256": "aca19b5b853a5d27109bf4bd08fa035b097a4b089dc37bdf8a1a85a32fb76472",
-   "source_prerequisite": "0987612f8",
+   "source_sha256": "75b38ab7103ca40f4784e47559f70e659851f7184a18a05e43653336b03d0a32",
+   "source_prerequisite": "5223681bb",
    "params": {
     "AW": 10
    },
@@ -95433,7 +95433,7 @@
    "version": 1,
    "grant": "diagnostic_component_child",
    "assigned_pin_file": "results/arch/hbm_die_v15/reducer_leaf_pins_1319.json",
-   "assigned_pin_file_sha256": "3b97089fb79c30d365ccbeb52c5e8c4190f859d8fecf24bf58bb48d462baa605",
+   "assigned_pin_file_sha256": "ad1f369da067c6a077704c8168e95f6ecfe96ef6d3e66648e34ae926dd92c047",
    "su_reducer_child_grant_1319": true,
    "macros": [
     {
@@ -95447,8 +95447,8 @@
    "name": "sucore_NW_reducer",
    "cell": "ot_hbm_su_reduce_static",
    "source": "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static.sv",
-   "source_sha256": "aca19b5b853a5d27109bf4bd08fa035b097a4b089dc37bdf8a1a85a32fb76472",
-   "source_prerequisite": "0987612f8",
+   "source_sha256": "75b38ab7103ca40f4784e47559f70e659851f7184a18a05e43653336b03d0a32",
+   "source_prerequisite": "5223681bb",
    "params": {
     "AW": 10
    },
@@ -95645,7 +95645,7 @@
    "version": 1,
    "grant": "diagnostic_component_child",
    "assigned_pin_file": "results/arch/hbm_die_v15/reducer_leaf_pins_1319.json",
-   "assigned_pin_file_sha256": "3b97089fb79c30d365ccbeb52c5e8c4190f859d8fecf24bf58bb48d462baa605",
+   "assigned_pin_file_sha256": "ad1f369da067c6a077704c8168e95f6ecfe96ef6d3e66648e34ae926dd92c047",
    "su_reducer_child_grant_1319": true,
    "macros": [
     {
@@ -95659,8 +95659,8 @@
    "name": "sucore_NE_reducer",
    "cell": "ot_hbm_su_reduce_static",
    "source": "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static.sv",
-   "source_sha256": "aca19b5b853a5d27109bf4bd08fa035b097a4b089dc37bdf8a1a85a32fb76472",
-   "source_prerequisite": "0987612f8",
+   "source_sha256": "75b38ab7103ca40f4784e47559f70e659851f7184a18a05e43653336b03d0a32",
+   "source_prerequisite": "5223681bb",
    "params": {
     "AW": 10
    },
@@ -95857,7 +95857,7 @@
    "version": 1,
    "grant": "diagnostic_component_child",
    "assigned_pin_file": "results/arch/hbm_die_v15/reducer_leaf_pins_1319.json",
-   "assigned_pin_file_sha256": "3b97089fb79c30d365ccbeb52c5e8c4190f859d8fecf24bf58bb48d462baa605",
+   "assigned_pin_file_sha256": "ad1f369da067c6a077704c8168e95f6ecfe96ef6d3e66648e34ae926dd92c047",
    "su_reducer_child_grant_1319": true,
    "macros": [
     {
@@ -95866,6 +95866,396 @@
     }
    ],
    "qualification_scope": "independent actual reducer leaf only; complete qcore placement, RF capacity, related clocks and fixed-cycle parent integration OPEN"
+  },
+  {
+   "name": "host_cp_ingress",
+   "cell": "ot_hbm_host_static_ingress",
+   "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv",
+   "source_sha256": "dd598f908d8bd8248aff70b82e1012217f9c4a4f8e9a910a9435c48a06133e8e",
+   "source_prerequisite": "b69e85b0e",
+   "params": {},
+   "kind": "tile",
+   "parent": "host_cp",
+   "instance_pending": "hostingress front component; host packet bridge and programme target adapters not yet joined",
+   "outline": {
+    "w": 216.0,
+    "h": 216.0
+   },
+   "origin": {
+    "x": 21.6,
+    "y": 21.6,
+    "orient": "R0"
+   },
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "offset": 107.808,
+     "span_um": [
+      107.76,
+      107.856
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "offset": 107.904,
+     "span_um": [
+      107.856,
+      107.952
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "block_ready",
+     "face": "N",
+     "layer": "M5",
+     "offset": 108.0,
+     "span_um": [
+      107.952,
+      108.048
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "program_active",
+     "face": "N",
+     "layer": "M5",
+     "offset": 108.096,
+     "span_um": [
+      108.048,
+      108.144
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "program_fault",
+     "face": "N",
+     "layer": "M5",
+     "offset": 108.192,
+     "span_um": [
+      108.144,
+      108.24
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "s_awvalid",
+     "face": "W",
+     "layer": "M4",
+     "offset": 103.056,
+     "span_um": [
+      103.008,
+      103.104
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "s_awready",
+     "face": "W",
+     "layer": "M4",
+     "offset": 103.152,
+     "span_um": [
+      103.104,
+      103.2
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "s_awaddr[11:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 103.776,
+     "span_um": [
+      103.2,
+      104.352
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "s_wvalid",
+     "face": "W",
+     "layer": "M4",
+     "offset": 104.4,
+     "span_um": [
+      104.352,
+      104.448
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "s_wready",
+     "face": "W",
+     "layer": "M4",
+     "offset": 104.496,
+     "span_um": [
+      104.448,
+      104.544
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "s_wdata[31:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 106.08,
+     "span_um": [
+      104.544,
+      107.616
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "s_wstrb[3:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 107.808,
+     "span_um": [
+      107.616,
+      108.0
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "s_bvalid",
+     "face": "W",
+     "layer": "M4",
+     "offset": 108.048,
+     "span_um": [
+      108.0,
+      108.096
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "s_bready",
+     "face": "W",
+     "layer": "M4",
+     "offset": 108.144,
+     "span_um": [
+      108.096,
+      108.192
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "s_bresp[1:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 108.288,
+     "span_um": [
+      108.192,
+      108.384
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "s_arvalid",
+     "face": "W",
+     "layer": "M4",
+     "offset": 108.432,
+     "span_um": [
+      108.384,
+      108.48
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "s_arready",
+     "face": "W",
+     "layer": "M4",
+     "offset": 108.528,
+     "span_um": [
+      108.48,
+      108.576
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "s_araddr[11:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 109.152,
+     "span_um": [
+      108.576,
+      109.728
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "s_rvalid",
+     "face": "W",
+     "layer": "M4",
+     "offset": 109.776,
+     "span_um": [
+      109.728,
+      109.824
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "s_rready",
+     "face": "W",
+     "layer": "M4",
+     "offset": 109.872,
+     "span_um": [
+      109.824,
+      109.92
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "s_rdata[31:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 111.456,
+     "span_um": [
+      109.92,
+      112.992
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "cfg_v",
+     "face": "S",
+     "layer": "M5",
+     "offset": 92.64,
+     "span_um": [
+      92.592,
+      92.688
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "cfg_target[7:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 93.072,
+     "span_um": [
+      92.688,
+      93.456
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "cfg_addr[11:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 94.032,
+     "span_um": [
+      93.456,
+      94.608
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "cfg_data[255:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 106.896,
+     "span_um": [
+      94.608,
+      119.184
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "desc_v",
+     "face": "S",
+     "layer": "M5",
+     "offset": 119.232,
+     "span_um": [
+      119.184,
+      119.28
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "desc_base[11:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 119.856,
+     "span_um": [
+      119.28,
+      120.432
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "desc_limit[12:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 121.056,
+     "span_um": [
+      120.432,
+      121.68
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "desc_loops[15:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 122.448,
+     "span_um": [
+      121.68,
+      123.216
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "launch_v",
+     "face": "S",
+     "layer": "M5",
+     "offset": 123.264,
+     "span_um": [
+      123.216,
+      123.312
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "fault",
+     "face": "S",
+     "layer": "M5",
+     "offset": 123.36,
+     "span_um": [
+      123.312,
+      123.408
+     ],
+     "offset_pending_view": true
+    }
+   ],
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 107.808
+   },
+   "clock_domain": "stream",
+   "clock_period_ps": 833.333333,
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile",
+   "version": 1,
+   "grant": "diagnostic_component_child",
+   "assigned_pin_file": "results/arch/hbm_die_v15/host_ingress_pins_1319.json",
+   "assigned_pin_file_sha256": "aa7697ccc93eb7e3f79dba8a581d72748de2b0c501e1d8e92bed470cbf730714",
+   "measured_std_um2": 354.52728,
+   "supported_targets": [
+    48
+   ],
+   "supported_target_scope": "default target-mask VM calendar only; actual local full-row readiness validation required",
+   "qualification_scope": "independent pin-registered ingress only; local readiness validator is separate hardware; host PHY/landing/packet bridge, heterogeneous target adapters, programme fanout and full host_cp binding remain OPEN"
   }
  ],
  "sub_layouts": {
@@ -99338,8 +99728,14 @@
  },
  "su_reducer_child_grants_1319": {
   "count": 4,
-  "source_ref": "0987612f8",
+  "source_ref": "5223681bb",
   "outline_area_mm2": 0.1306368,
   "whole_su_or_die_qualified": false
+ },
+ "host_ingress_child_grant_1319": {
+  "source_ref": "b69e85b0e",
+  "area_mm2": 0.046656,
+  "whole_host_cp_or_die_qualified": false,
+  "local_readiness_validator_granted": false
  }
 }

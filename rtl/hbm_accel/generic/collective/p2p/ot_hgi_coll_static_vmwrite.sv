@@ -48,19 +48,25 @@ module ot_hgi_coll_static_vmwrite #(
     reg [3:0] owner;
     always @* begin
         next_kq = '0; used = '0; schedule_bad = 1'b0;
-        for (h = 0; h < 2; h = h + 1) begin
+        // Constant destination slices avoid a 2,248-bit dynamic scatter
+        // network. Each physical bank has ten decoded contributors; valid
+        // programmes select at most one. Conflicts remain visible as OR data
+        // plus the same sticky schedule fault, without changing the calendar.
+        for (b = 0; b < 8; b = b + 1) begin
+          for (h = 0; h < 2; h = h + 1) begin
             for (l = 0; l < 5; l = l + 1) begin
                 present = h == 0 ? v0[l] : v1[l];
                 sector = h == 0 ? a0[l*40+3 +: 16] : a1[l*40+3 +: 16] + 16'd1;
                 payload = h == 0 ? d0[l*512 +: 256] : d1[l*512+256 +: 256];
                 mask = h == 0 ? m0[l*16 +: 8] : m1[l*16+8 +: 8];
-                b = int'(sector[2:0]); owner = 4'(l + 5*h);
-                if (present) begin
+                owner = 4'(l + 5*h);
+                if (present && sector[2:0] == 3'(b)) begin
                     if (used[b] || !slot_valid[b] || slot_owner[b*4 +: 4] != owner) schedule_bad = 1'b1;
                     used[b] = 1'b1;
                     next_kq[b*281 +: 281] = next_kq[b*281 +: 281] | {1'b1,sector,payload,mask};
                 end
             end
+          end
         end
         if (used != slot_valid) schedule_bad = 1'b1;
     end

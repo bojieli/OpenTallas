@@ -1,0 +1,284 @@
+
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2019  Clifford Wolf <clifford@clifford.at>           |
+ |                                                                            |
+ |  Permission to use, copy, modify, and/or distribute this software for any  |
+ |  purpose with or without fee is hereby granted, provided that the above    |
+ |  copyright notice and this permission notice appear in all copies.         |
+ |                                                                            |
+ |  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  |
+ |  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF          |
+ |  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR   |
+ |  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES    |
+ |  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN     |
+ |  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF   |
+ |  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.            |
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.9 (git sha1 1979e0b)
+
+
+-- Running command `read_verilog -sv /home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv; prep -top miter; flatten; sat -verify -prove ok 1 -show-inputs' --
+
+1. Executing Verilog-2005 frontend: /home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv
+Parsing SystemVerilog input from `/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv' to AST representation.
+Generating RTLIL representation for module `\miter'.
+Successfully finished Verilog frontend.
+
+2. Executing PREP pass.
+
+2.1. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1.1. Analyzing design hierarchy..
+Top module:  \miter
+
+2.1.2. Analyzing design hierarchy..
+Top module:  \miter
+Removed 0 unused modules.
+
+2.2. Executing PROC pass (convert processes to netlists).
+
+2.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+2.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+2.2.3. Executing PROC_INIT pass (extract init attributes).
+
+2.2.4. Executing PROC_ARST pass (detect async resets in processes).
+
+2.2.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\miter.$proc$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:2$140'.
+     1/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$1$\add_total_sub_ack[31:0]$141
+     2/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\add_total_sub_ack[31:0]$142
+     3/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\carry_in[31:0]$154
+     4/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\step[31:0]$155
+     5/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\pref_g[31:0]$151
+     6/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\pref_p[31:0]$150
+     7/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\bit_index[31:0]$156
+     8/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_p[31:0]$152 [31]
+     9/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_g[31:0]$153 [31]
+    10/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_p[31:0]$152 [30]
+    11/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_g[31:0]$153 [30]
+    12/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_p[31:0]$152 [29]
+    13/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_g[31:0]$153 [29]
+    14/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_p[31:0]$152 [28]
+    15/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_g[31:0]$153 [28]
+    16/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_p[31:0]$152 [27]
+    17/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_g[31:0]$153 [27]
+    18/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_p[31:0]$152 [26]
+    19/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_g[31:0]$153 [26]
+    20/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_p[31:0]$152 [25]
+    21/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_g[31:0]$153 [25]
+    22/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_p[31:0]$152 [24]
+    23/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_g[31:0]$153 [24]
+    24/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_p[31:0]$152 [23]
+    25/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_g[31:0]$153 [23]
+    26/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_p[31:0]$152 [22]
+    27/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_g[31:0]$153 [22]
+    28/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_p[31:0]$152 [21]
+    29/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_g[31:0]$153 [21]
+    30/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_p[31:0]$152 [20]
+    31/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_g[31:0]$153 [20]
+    32/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_p[31:0]$152 [19]
+    33/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_g[31:0]$153 [19]
+    34/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_p[31:0]$152 [18]
+    35/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_g[31:0]$153 [18]
+    36/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_p[31:0]$152 [17]
+    37/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_g[31:0]$153 [17]
+    38/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_p[31:0]$152 [16]
+    39/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_g[31:0]$153 [16]
+    40/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_g[31:0]$153 [15:0]
+    41/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_p[31:0]$152 [15:0]
+    42/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\prop_bits[31:0]$149
+    43/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\carry_bits[31:0]$148
+    44/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\sum_bits[31:0]$147
+    45/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\inv_c[31:0]$146
+    46/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\subtrahend[31:0]$145
+    47/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\b[31:0]$144
+    48/48: $0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\a[31:0]$143
+
+2.2.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\miter.$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$1$\add_total_sub_ack' from process `\miter.$proc$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:2$140'.
+No latch inferred for signal `\miter.$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\add_total_sub_ack' from process `\miter.$proc$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:2$140'.
+No latch inferred for signal `\miter.$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\a' from process `\miter.$proc$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:2$140'.
+No latch inferred for signal `\miter.$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\b' from process `\miter.$proc$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:2$140'.
+No latch inferred for signal `\miter.$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\subtrahend' from process `\miter.$proc$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:2$140'.
+No latch inferred for signal `\miter.$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\inv_c' from process `\miter.$proc$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:2$140'.
+No latch inferred for signal `\miter.$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\sum_bits' from process `\miter.$proc$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:2$140'.
+No latch inferred for signal `\miter.$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\carry_bits' from process `\miter.$proc$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:2$140'.
+No latch inferred for signal `\miter.$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\prop_bits' from process `\miter.$proc$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:2$140'.
+No latch inferred for signal `\miter.$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\pref_p' from process `\miter.$proc$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:2$140'.
+No latch inferred for signal `\miter.$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\pref_g' from process `\miter.$proc$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:2$140'.
+No latch inferred for signal `\miter.$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_p' from process `\miter.$proc$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:2$140'.
+No latch inferred for signal `\miter.$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_g' from process `\miter.$proc$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:2$140'.
+No latch inferred for signal `\miter.$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\carry_in' from process `\miter.$proc$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:2$140'.
+No latch inferred for signal `\miter.$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\step' from process `\miter.$proc$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:2$140'.
+No latch inferred for signal `\miter.$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\bit_index' from process `\miter.$proc$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:2$140'.
+
+2.2.7. Executing PROC_DFF pass (convert process syncs to FFs).
+
+2.2.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `miter.$proc$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:2$140'.
+Cleaned up 0 empty switches.
+
+2.3. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+<suppressed ~2 debug messages>
+
+2.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+Removed 0 unused cells and 94 unused wires.
+<suppressed ~1 debug messages>
+
+2.5. Executing CHECK pass (checking for obvious problems).
+checking module miter..
+found and reported 0 problems.
+
+2.6. Executing OPT pass (performing simple optimizations).
+
+2.6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+2.6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Removed a total of 0 cells.
+
+2.6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \miter..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+2.6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \miter.
+Performed a total of 0 changes.
+
+2.6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Removed a total of 0 cells.
+
+2.6.6. Executing OPT_RMDFF pass (remove dff with constant values).
+
+2.6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+
+2.6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+2.6.9. Finished OPT passes. (There is nothing left to do.)
+
+2.7. Executing WREDUCE pass (reducing word size of cells).
+Removed top 1 bits (of 32) from port Y of cell miter.$or$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:10$164 ($or).
+Removed top 1 bits (of 32) from port A of cell miter.$or$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:10$164 ($or).
+Removed top 1 bits (of 32) from port B of cell miter.$or$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:10$164 ($or).
+Removed top 1 bits (of 32) from port Y of cell miter.$or$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:24$555 ($or).
+Removed top 1 bits (of 32) from port A of cell miter.$or$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:24$555 ($or).
+Removed top 1 bits (of 32) from port B of cell miter.$or$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:24$555 ($or).
+Removed top 31 bits (of 32) from port B of cell miter.$or$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:24$557 ($or).
+Removed top 1 bits (of 32) from port Y of cell miter.$or$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:10$162 ($or).
+Removed top 1 bits (of 32) from port A of cell miter.$or$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:10$162 ($or).
+Removed top 1 bits (of 32) from port B of cell miter.$or$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:10$162 ($or).
+Removed top 1 bits (of 32) from port Y of cell miter.$and$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:10$163 ($and).
+Removed top 1 bits (of 32) from port A of cell miter.$and$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:10$163 ($and).
+Removed top 1 bits (of 32) from port B of cell miter.$and$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:10$163 ($and).
+Removed cell miter.$or$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:18$553 ($or).
+Removed cell miter.$and$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:19$554 ($and).
+Removed top 1 bits (of 32) from port Y of cell miter.$and$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:10$160 ($and).
+Removed top 1 bits (of 32) from port A of cell miter.$and$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:10$160 ($and).
+Removed top 1 bits (of 32) from port B of cell miter.$and$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:10$160 ($and).
+Removed top 1 bits (of 32) from port Y of cell miter.$and$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:10$161 ($and).
+Removed top 1 bits (of 32) from port A of cell miter.$and$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:10$161 ($and).
+Removed top 1 bits (of 32) from port B of cell miter.$and$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:10$161 ($and).
+Removed top 1 bits (of 32) from wire miter.$0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_g[31:0]$153.
+Removed top 1 bits (of 32) from wire miter.$0$func$\add_total_sub_ack$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:28$2$\next_p[31:0]$152.
+Removed top 1 bits (of 32) from wire miter.$and$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:10$160_Y.
+Removed top 1 bits (of 32) from wire miter.$and$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:10$161_Y.
+Removed top 1 bits (of 32) from wire miter.$or$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:10$164_Y.
+Removed top 1 bits (of 32) from wire miter.$or$/home/ubuntu/artifacts/hbm-dbk-prefix-1319/formal.sv:24$555_Y.
+
+2.8. Executing MEMORY_DFF pass (merging $dff cells to $memrd and $memwr).
+
+2.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+Removed 13 unused cells and 20 unused wires.
+<suppressed ~14 debug messages>
+
+2.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+2.11. Executing OPT pass (performing simple optimizations).
+
+2.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+2.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Removed a total of 0 cells.
+
+2.11.3. Executing OPT_RMDFF pass (remove dff with constant values).
+
+2.11.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+
+2.11.5. Finished fast OPT passes.
+
+2.12. Printing statistics.
+
+=== miter ===
+
+   Number of wires:                333
+   Number of wire bits:            949
+   Number of public wires:           4
+   Number of public wire bits:      97
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                388
+     $add                            1
+     $and                          252
+     $eq                             1
+     $not                            1
+     $or                           128
+     $sub                            1
+     $xor                            4
+
+2.13. Executing CHECK pass (checking for obvious problems).
+checking module miter..
+found and reported 0 problems.
+
+3. Executing FLATTEN pass (flatten design).
+No more expansions possible.
+
+4. Executing SAT pass (solving SAT problems in the circuit).
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 388 cells to SAT database.
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+Import show expression: \a
+Import show expression: \b
+Import show expression: \c
+
+Solving problem with 4991 variables and 13019 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+End of script. Logfile hash: 38e9e41a95
+CPU: user 0.43s system 0.00s, MEM: 22.37 MB total, 16.96 MB resident
+Yosys 0.9 (git sha1 1979e0b)
+Time spent: 57% 1x sat (0 sec), 7% 2x read_verilog (0 sec), ...

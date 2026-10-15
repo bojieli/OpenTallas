@@ -69,6 +69,138 @@
   },
   {
    "design": "qwen_rom",
+   "unit": "VM.RESULT_WB attn_kv (PC11: 3 parallel band lanes + row-compressed slots, last landing after go)",
+   "group": "VM.RESULT_WB",
+   "measured": 1333.0,
+   "price": 1284.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.0382,
+   "e2e_loss_pct": 0.702,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 249431.0,
+     "cycles": 251195.0,
+     "added_cycles": 1764.0,
+     "runs_per_token": 36,
+     "critical_runs": 36,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 1764.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.702
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/qwen_split_compute_1014/vmwb_1015/receipt.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-15",
+   "status": "proposed",
+   "note": "Q-VMWB 2026-10-15: successor of train24 (+1,445 cyc/layer, 15.6%); price = Q-ATTN r3 unconstrained-face reference (last capture + D + 25); measured = tb_vmwb actual ctl + 24 ports + qfd_res_train_issue + 3 x qfd_res_train_par + real VM PAR_RB=1 (bench edge -1 for the rq register); PC1 qkv lands 11 cycles before the reference (no credit taken). PC11 charged to attn_kv (conservative)."
+  },
+  {
+   "design": "qwen_rom",
+   "unit": "VM.RESULT_WB down (PC20: 3 parallel band lanes + row-compressed slots, last landing after go)",
+   "group": "VM.RESULT_WB",
+   "measured": 410.0,
+   "price": 401.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.0224,
+   "e2e_loss_pct": 0.13,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 249431.0,
+     "cycles": 249755.0,
+     "added_cycles": 324.0,
+     "runs_per_token": 36,
+     "critical_runs": 36,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 324.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.13
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/qwen_split_compute_1014/vmwb_1015/receipt.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-15",
+   "status": "proposed",
+   "note": "Q-VMWB 2026-10-15: successor of train24 (+1,445 cyc/layer, 15.6%); price = Q-ATTN r3 unconstrained-face reference (last capture + D + 25); measured = tb_vmwb actual ctl + 24 ports + qfd_res_train_issue + 3 x qfd_res_train_par + real VM PAR_RB=1 (bench edge -1 for the rq register); PC1 qkv lands 11 cycles before the reference (no credit taken). PC11 charged to attn_kv (conservative)."
+  },
+  {
+   "design": "qwen_rom",
+   "unit": "VM.RESULT_WB gate_up (PC16: 3 parallel band lanes + row-compressed slots, last landing after go)",
+   "group": "VM.RESULT_WB",
+   "measured": 562.0,
+   "price": 513.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.0955,
+   "e2e_loss_pct": 0.702,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 249431.0,
+     "cycles": 251195.0,
+     "added_cycles": 1764.0,
+     "runs_per_token": 36,
+     "critical_runs": 36,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 1764.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.702
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/qwen_split_compute_1014/vmwb_1015/receipt.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-15",
+   "status": "proposed",
+   "note": "Q-VMWB 2026-10-15: successor of train24 (+1,445 cyc/layer, 15.6%); price = Q-ATTN r3 unconstrained-face reference (last capture + D + 25); measured = tb_vmwb actual ctl + 24 ports + qfd_res_train_issue + 3 x qfd_res_train_par + real VM PAR_RB=1 (bench edge -1 for the rq register); PC1 qkv lands 11 cycles before the reference (no credit taken). PC11 charged to attn_kv (conservative)."
+  },
+  {
+   "design": "qwen_rom",
+   "unit": "VM.RESULT_WB o_proj (PC12: 3 parallel band lanes + row-compressed slots, last landing after go)",
+   "group": "VM.RESULT_WB",
+   "measured": 346.0,
+   "price": 305.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.1344,
+   "e2e_loss_pct": 0.588,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 249431.0,
+     "cycles": 250907.0,
+     "added_cycles": 1476.0,
+     "runs_per_token": 36,
+     "critical_runs": 36,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 1476.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.588
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/qwen_split_compute_1014/vmwb_1015/receipt.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-15",
+   "status": "proposed",
+   "note": "Q-VMWB 2026-10-15: successor of train24 (+1,445 cyc/layer, 15.6%); price = Q-ATTN r3 unconstrained-face reference (last capture + D + 25); measured = tb_vmwb actual ctl + 24 ports + qfd_res_train_issue + 3 x qfd_res_train_par + real VM PAR_RB=1 (bench edge -1 for the rq register); PC1 qkv lands 11 cycles before the reference (no credit taken). PC11 charged to attn_kv (conservative)."
+  },
+  {
+   "design": "qwen_rom",
    "unit": "VM.XREAD DVM (owner-adopted distributed x slices, TP8: x read = central priced XVM 1 -> 13 edges: tap 3 + head/leaf DX 10)",
    "group": "VM.XREAD",
    "measured": 13.0,
@@ -1066,11 +1198,11 @@
  "totals": {
   "qwen_rom": {
    "accepted_pct": 0,
-   "proposed_pct": 3.629,
-   "accepted_plus_proposed_pct": 3.629,
+   "proposed_pct": 4.331,
+   "accepted_plus_proposed_pct": 4.331,
    "limit_pct": 15.0,
    "accepted_rows": 0,
-   "proposed_rows": 3,
+   "proposed_rows": 7,
    "headroom_pct": 15.0,
    "owner_exception_rows": 0,
    "over_limit_by_owner_exception": false
@@ -1092,7 +1224,7 @@
    "accepted_plus_proposed_pct": 107.972,
    "limit_pct": 15.0,
    "accepted_rows": 0,
-   "proposed_rows": 15,
+   "proposed_rows": 16,
    "headroom_pct": 15.0,
    "owner_exception_rows": 0,
    "over_limit_by_owner_exception": false

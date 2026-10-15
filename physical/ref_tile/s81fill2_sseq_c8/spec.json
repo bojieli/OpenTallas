@@ -1,0 +1,162 @@
+{
+ "name": "s81fill2_sseq_c8",
+ "top": "dsfd_stage_seq_static_c8",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv",
+  "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv",
+  "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c.sv",
+  "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c8.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst",
+  "ckv",
+  "rsv"
+ ],
+ "outline": {
+  "w": 302.4,
+  "h": 64.8,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "E": [
+   "c0",
+   "c1",
+   "c12",
+   "c2",
+   "c6",
+   "d0",
+   "d1",
+   "d12",
+   "d2",
+   "d3",
+   "d6",
+   "f_plen",
+   "f_pw",
+   "s1",
+   "s12",
+   "s2",
+   "s3",
+   "s6",
+   "s7",
+   "t_kd",
+   "t_st"
+  ],
+  "N": [
+   "c3",
+   "c4",
+   "d4",
+   "s4"
+  ],
+  "S": [
+   "c5",
+   "c7",
+   "ck",
+   "ckv",
+   "d5",
+   "d7",
+   "f_ks",
+   "rst",
+   "rsv",
+   "s0",
+   "s5"
+  ]
+ },
+ "io_tcl": "physical/s81_die_pins/fill2_gen19b/dsfd_stage_seq_static_c8.tcl",
+ "recipe": 2,
+ "outhold": false,
+ "sdc_extra": [
+  "physical/s81_fill2/sseq_ser_ref.sdc"
+ ],
+ "boundary_tcl": [
+  "physical/s81_fill2/sseq_ser_ref.tcl"
+ ],
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "slot_change_request": {
+  "reason": "outline from pin density (<= 10.0 b/um/layer, face cut <= 0.6) and content (~9000 um2 std + recipe-2 cells at util ~0.5) instead of the generator slot 1727.976 x 88.536",
+  "outline": [
+   302.4,
+   64.8
+  ],
+  "generator_slot": [
+   1727.976,
+   88.536
+  ]
+ },
+ "structural_change": "First hardening of the S81 die master dsfd_stage_seq_static_c8 (1 die instances, static stage sequencer (128 x 76 compiled calendar rows, 2 contexts, engines 0..7 + VM 12, START/PW/KIT fixed mailboxes on the 3:4 serial clock ckv; no credit/ready). The generator reservation 1727.976 x 88.536 has every data pin within 12 um of its EAST end (clocks spread 848..1624 um along S): a 1.7-mm strip would need a > 600-um clock root for no reason, so the block is compact at that end (slot change request)); real RTL rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv (exact lockstep gate rtl/v41die/test/tb_ot_s81_cfg7_seq.sv); 0 cycles; pins = GEN19b construction_pass2 (EPYC4 s81-die-r10/gen19b, pins.lef) order with the shared fixes: even per-face spread (generator packed W-face M4 pins at 0.048 um = 20.8 b/um/layer > 12), clock at face centre, no output hold pads; outline 1727.976x88.536 -> 302.4x64.8 (2.16 lattice). Face report {\"E\": {\"pins\": 595, \"pitch_um\": 0.1016, \"b_per_um\": 9.84, \"cut\": 0.472}, \"S\": {\"pins\": 249, \"pitch_um\": 1.2167, \"b_per_um\": 0.84, \"cut\": 0.04}, \"N\": {\"pins\": 181, \"pitch_um\": 1.6469, \"b_per_um\": 0.61, \"cut\": 0.029}}.",
+ "job": {
+  "owner": "Claude:fill-s81-2",
+  "branch": "claude/el1015-fill-s2-1015",
+  "tag": "g1",
+  "purpose": "S81 FILL-S2: die master dsfd_stage_seq_static_c8 (1 replicas, hardened once): exact lockstep bench + failing mutant; recipe 2, M5 cap, GEN19b pins evenly spread",
+  "views_to": "physical/ref_tile/s81fill2_sseq_c8/views",
+  "record_to": "results/rtl/ref_tile/s81fill2_sseq_c8",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_static_control",
+   "tools/s81_static_control",
+   "tools/s81/fill2_c8_bench.sh",
+   "physical/s81_fill2",
+   "physical/s81_die_pins/fill2_gen19b"
+  ],
+  "benches": [
+   {
+    "name": "c8_wrapper_and_128row_issuer",
+    "cmd": "bash tools/s81/fill2_c8_bench.sh pass {RUN}/bench_pass",
+    "expect": "pass",
+    "pass_regex": "C8 BENCH PASS",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vm_absent_mutant",
+    "cmd": "bash tools/s81/fill2_c8_bench.sh mut_vm_absent {RUN}/bench_mut_vm_absent",
+    "expect": "fail",
+    "fail_regex": "C8 BENCH FAIL mut_vm_absent",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "issuer_timing_mutant",
+    "cmd": "bash tools/s81/fill2_c8_bench.sh mut_issuer {RUN}/bench_mut_issuer",
+    "expect": "fail",
+    "fail_regex": "C8 BENCH FAIL mut_issuer",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
