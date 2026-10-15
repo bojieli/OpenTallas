@@ -135,6 +135,8 @@ module ot_qfd_xs_tap #(
     reg              ep_nx;
     reg  [1:0]       arm;
     reg  [AW-1:0]    lo [0:1];
+    reg [AW-1:0] lo_minus64 [0:1];
+    reg [1:0] lo_below64;
     reg  [AW:0]      hi [0:1];
     reg  [1:0]       rnd;
     reg  [DESC-1:0]  d_o [0:1];
@@ -150,6 +152,8 @@ module ot_qfd_xs_tap #(
                 if (MUT == 5) arm[ep_nx] <= 1'b1;
                 else arm <= ep_nx ? 2'b10 : 2'b01;
                 lo[ep_nx] <= q_xb;
+                lo_minus64[ep_nx] <= q_xb - 64;
+                lo_below64[ep_nx] <= (q_xb < 64);
                 hi[ep_nx] <= {1'b0, q_xb} + q_s1 + q_s2 + 1'b1;
                 rnd[ep_nx] <= q_rnd;
                 ep_nx <= ~ep_nx;
@@ -185,10 +189,11 @@ module ot_qfd_xs_tap #(
         end
     end
     wire [AW:0] wa_lo = {1'b0, w_a};
-    wire [AW:0] wa_hi = {1'b0, w_a} + 7'd64;
+// Range overlap: w_a+64>lo iff lo<64 or w_a>lo-64. Precompute the immutable lower threshold
+    // at descriptor claim; remove the addition before the fill-stage comparator without changing any edge.
     wire [1:0]  hit;
-    assign hit[0] = arm[0] && (wa_lo < hi[0]) && (wa_hi > {1'b0, lo[0]});
-    assign hit[1] = arm[1] && (wa_lo < hi[1]) && (wa_hi > {1'b0, lo[1]});
+    assign hit[0] = arm[0] && (wa_lo < hi[0]) && (lo_below64[0] || w_a > lo_minus64[0]);
+    assign hit[1] = arm[1] && (wa_lo < hi[1]) && (lo_below64[1] || w_a > lo_minus64[1]);
     wire        hep = hit[1];
     wire        hrd = rnd[hep];
     wire [5:0]  off = w_a[5:0];
