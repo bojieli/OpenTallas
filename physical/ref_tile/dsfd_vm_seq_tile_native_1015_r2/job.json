@@ -1,14 +1,14 @@
 {
- "name": "dsfd_vm_seq_tile_native_1015_r2-localcopy2-COMMIT",
+ "name": "dsfd_vm_seq_tile_native_1015_r2-localcopy2-cde668833",
  "block": "dsfd_vm_seq_tile",
  "ref_tile": true,
- "owner": "codex:S81 VM takeover",
+ "owner": "claude:S-ELEM-A S81 VM owner",
  "purpose": "Native hardened VM control leaf: exact production-shape bench + observed DUT mutant, native CTS, one route.",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
   "branch": "codex/takeover-s81-vm-seq-0830",
-  "commit": "COMMIT",
+  "commit": "cde668833",
   "extra_paths": [
    "tools/s81_vm",
    "rtl/dsrom_sys/s81_ph/vm",
@@ -111,7 +111,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_vm_seq_tile_native_1015_r2/dsfd_vm_seq_tile_native_1015_r2-localcopy2-COMMIT"
+   "to": "results/rtl/ref_tile/dsfd_vm_seq_tile_native_1015_r2/dsfd_vm_seq_tile_native_1015_r2-localcopy2-cde668833"
   }
  ],
  "cycles_added": 1,
