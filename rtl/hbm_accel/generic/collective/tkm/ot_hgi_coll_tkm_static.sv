@@ -132,7 +132,7 @@ module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0)(
      end
      if(!del_flit[545*l+544]||del_flit[545*l+528+:8]<gb||del_flit[545*l+528+:8]>=gb+g)fault<=1;
     end
-    if(conv_pipe[2]&&tick<clear2)begin
+    if(conv_pipe[1]&&tick<clear2)begin
      buf_wv<=1;buf_wa<=10'(cap1);cap1<=cap1+1;
      for(integer s=0;s<4;s=s+1)begin:tag
       reg[84:0]e;e=tinv(up[0][85*s+:85]);
@@ -140,7 +140,7 @@ module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0)(
      end
     end
     if(pending_r)begin w_v<=1;w_data<=rline;w_addr<=raddr;w_mask<=rmask;pending_r<=0;end
-    if(conv_pipe[2]&&tick>=second)begin:output_cell
+    if(conv_pipe[1]&&tick>=second)begin:output_cell
      reg[84:0]e;reg[511:0]oline,rl;reg[15:0]mask_;integer ix;integer count_;
      cap2<=cap2+1;oline=0;rl=0;
      for(integer i=0;i<16;i=i+1)begin oline[32*i+:32]=ids[i];rl[32*i+:32]=values[i];end
