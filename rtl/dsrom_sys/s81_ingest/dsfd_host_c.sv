@@ -50,6 +50,9 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
     output wire [80:0]         t_collective,
 `endif
     output reg  [35:0]         t_sseq_pw,
+`ifdef DSFD_HOST_PQ_BOOT
+    output reg [35:0] t_pq_pw, // CSR 0x12: same PW36 packing, routed to fixed PQ boot mailbox
+`endif
     output reg  [7:0]          t_sseq_plen,
     input  wire [5:0]          f_sseq_st,
     input  wire [3:0]          f_wfc_ft,
@@ -74,11 +77,18 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
     wire [1:0]  hcl = fi[514:513];
     wire csr_p = hv && hcl == 2'd0 && hd[7:0] == 8'h10;
     wire csr_l = hv && hcl == 2'd0 && hd[7:0] == 8'h11;
-    wire to_ing = hv && !csr_p && !csr_l;
+    `ifdef DSFD_HOST_PQ_BOOT
+    wire csr_pq = hv && hcl == 2'd0 && hd[7:0] == 8'h12;
+    localparam PWW=36;
+`else
+    wire csr_pq = 1'b0;
+    localparam PWW=35;
+`endif
+    wire to_ing = hv && !csr_p && !csr_l && !csr_pq;
     // ---------------- ingest (single stream clock on a layer die: clk_h = clk_i = ck)
     wire [4:0] crn; wire t_v; wire [63:0] t_d;
     wire ov, owe, ocr, hf, sf; wire [31:0] oa; wire [255:0] od; wire [7:0] ack;
-    wire pw_wr, pw_v, pw_ovf, pw_unf, pw_take; wire [34:0] pw_d;
+    wire pw_wr, pw_v, pw_ovf, pw_unf, pw_take; wire [PWW-1:0] pw_d;
     reg [1:0] pace;
     dsfd_host_native #(.ENABLE(1), .FPIPE(2), .ENG_TRIM(1), .APIPE(2)) u_h (.rst_n(rn), .clk_h(ck[0]), .h_v(to_ing), .h_cls(hcl),
         .h_d(hd), .h_crn(crn), .t_v(t_v), .t_d(t_d), .t_cr(tcr), .clk_i(ck[0]), .ck(ck[0]), .o_v(ov), .o_we(owe), .o_addr(oa),
@@ -96,14 +106,27 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
         if (!rn) crn_x <= 0;
         else crn_x <= crn_x + ((csr_l && (MUT != 2)) ? 7'd1 : 7'd0) + (((pop_s[2] ^ pop_s[1]) && (MUT != 2)) ? 7'd1 : 7'd0)
                       - ((crn_x != 0 && crn_sum <= 6'd31) ? 7'd1 : 7'd0);
-    ot_async_fifo #(.WIDTH(35), .DEPTH(PWD)) u_pw (.wr_clk(ck[0]), .wr_rst_n(rn), .wr_valid(csr_p && (MUT != 1)), .wr_ready(pw_wr),
-        .wr_data({hd[102:96], hd[59:32]}), .wr_overflow(pw_ovf), .rd_clk(ckv[0]), .rd_rst_n(rvn), .rd_valid(pw_v),
+    ot_async_fifo #(.WIDTH(PWW), .DEPTH(PWD)) u_pw (.wr_clk(ck[0]), .wr_rst_n(rn), .wr_valid((csr_p || csr_pq) && (MUT != 1)), .wr_ready(pw_wr),
+        `ifdef DSFD_HOST_PQ_BOOT
+        .wr_data({csr_pq, hd[102:96], hd[59:32]}),
+`else
+        .wr_data({hd[102:96], hd[59:32]}),
+`endif .wr_overflow(pw_ovf), .rd_clk(ckv[0]), .rd_rst_n(rvn), .rd_valid(pw_v),
         .rd_ready(pw_take), .rd_data(pw_d), .rd_underflow(pw_unf));
     assign pw_take = pw_v && pace == 2'd0;
     always @(posedge ckv[0] or negedge rvn)
-        if (!rvn) begin pace <= 0; t_sseq_pw <= 36'd0; pop_t <= 1'b0; end
+        if (!rvn) begin pace <= 0; t_sseq_pw <= 36'd0;
+`ifdef DSFD_HOST_PQ_BOOT
+            t_pq_pw <= 36'd0;
+`endif
+            pop_t <= 1'b0; end
         else begin
+            `ifdef DSFD_HOST_PQ_BOOT
+            t_pq_pw <= pw_take && pw_d[35] ? {1'b1,pw_d[34:0]} : 36'd0;
+            t_sseq_pw <= pw_take && !pw_d[35] ? {1'b1,pw_d[34:0]} : 36'd0;
+`else
             t_sseq_pw <= pw_take ? {1'b1, pw_d} : 36'd0;
+`endif
             if (pw_take) pop_t <= ~pop_t;
             pace <= pw_take ? 2'd3 : (pace != 0 ? pace - 1'b1 : 2'd0);
         end
@@ -115,7 +138,7 @@ module dsfd_host_c #(parameter integer NS = 1, KVS = 1, ENG = -1, MUT = 0, PWD =
     reg [5:0] ss1, ss2; reg [3:0] wf;
     always @(posedge ck[0]) begin ss1 <= f_sseq_st; ss2 <= ss1; wf <= f_wfc_ft; end
     reg xf;
-    always @(posedge ck[0] or negedge rn) if (!rn) xf <= 1'b0; else if (pw_ovf || (csr_p && !pw_wr) || crn_x == 7'd127) xf <= 1'b1;
+    always @(posedge ck[0] or negedge rn) if (!rn) xf <= 1'b0; else if (pw_ovf || ((csr_p || csr_pq) && !pw_wr) || crn_x == 7'd127) xf <= 1'b1;
 `ifdef DSFD_HOST_C_STATIC
     // lane faults (odd bits of f_lf), pin-registered
     reg lf_q; integer li;

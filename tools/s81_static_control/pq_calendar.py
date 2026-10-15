@@ -27,7 +27,7 @@ def action_word(fields, action_bits=72):
     return word
 
 
-def compile_events(events,commands,action_bits=72):
+def compile_events(events,commands,action_bits=72,pq_engine=0):
     """Commands are real emitted issuer rows, not an independently timed GO list.
 
     Issuer rowissue R -> cmdpin R+1 -> endpointGOpin R+2. Calendar timestamp
@@ -45,7 +45,7 @@ def compile_events(events,commands,action_bits=72):
     if ends!=[prev]:raise ValueError('exactly one final phase_end required')
     occupied=set()
     for c in commands:
-        if c['engine']!=0:raise ValueError('actual PQ engine0 issuer rows required')
+        if c['engine']!=pq_engine:raise ValueError('actual PQ engine%d issuer rows required'%pq_engine)
         t=c['issue']+1
         if t in occupied:raise ValueError('colliding actual PQ GO')
         occupied.add(t)
