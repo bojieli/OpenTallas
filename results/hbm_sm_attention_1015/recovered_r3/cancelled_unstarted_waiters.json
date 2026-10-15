@@ -1,0 +1,20 @@
+[
+  {
+    "pid": 1050993,
+    "command": "python3 /home/ubuntu/bin/ot-run --mem 8 --threads 16 --dir /srv/opentallas-scratch/claude/smatt-1015/src-8f5cdf11f -- bash -c cd /srv/opentallas-scratch/claude/smatt-1015/src-8f5cdf11f && python3 tools/hbm_sm_attention/sm_attn_bench.py run --work /srv/opentallas-scratch/claude/smatt-1015/r4/w-qwen_kv2 --out /srv/opentallas-scratch/claude/smatt-1015/r4/qwen_kv2.json --jobs 16 --shape qwen8192 --mut kv2 --only pv_h0_sm0_o0 ",
+    "prior_state": "ot-heavy waiter and inactive scope; no admitted/start line",
+    "reason": "Qwen same source measured11.8GiB peak; two sibling8GiB requests OOM-killed. Replace unstarted waiters with16GiB sequential admission."
+  },
+  {
+    "pid": 1050994,
+    "command": "python3 /home/ubuntu/bin/ot-run --mem 8 --threads 16 --dir /srv/opentallas-scratch/claude/smatt-1015/src-8f5cdf11f -- bash -c cd /srv/opentallas-scratch/claude/smatt-1015/src-8f5cdf11f && python3 tools/hbm_sm_attention/sm_attn_bench.py run --work /srv/opentallas-scratch/claude/smatt-1015/r4/w-qwen_kv4 --out /srv/opentallas-scratch/claude/smatt-1015/r4/qwen_kv4.json --jobs 16 --shape qwen8192 --mut kv4 --only qk_h0_sm0 ",
+    "prior_state": "ot-heavy waiter and inactive scope; no admitted/start line",
+    "reason": "Qwen same source measured11.8GiB peak; two sibling8GiB requests OOM-killed. Replace unstarted waiters with16GiB sequential admission."
+  },
+  {
+    "pid": 1050995,
+    "command": "python3 /home/ubuntu/bin/ot-run --mem 8 --threads 16 --dir /srv/opentallas-scratch/claude/smatt-1015/src-8f5cdf11f -- bash -c cd /srv/opentallas-scratch/claude/smatt-1015/src-8f5cdf11f && python3 tools/hbm_sm_attention/sm_attn_bench.py run --work /srv/opentallas-scratch/claude/smatt-1015/r4/w-qwen_pv1 --out /srv/opentallas-scratch/claude/smatt-1015/r4/qwen_pv1.json --jobs 16 --shape qwen8192 --mut pv1 --only pv_h0_sm0_o0 ",
+    "prior_state": "ot-heavy waiter and inactive scope; no admitted/start line",
+    "reason": "Qwen same source measured11.8GiB peak; two sibling8GiB requests OOM-killed. Replace unstarted waiters with16GiB sequential admission."
+  }
+]

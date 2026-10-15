@@ -18,10 +18,11 @@ class StationEnvelope(unittest.TestCase):
         x, y = 103.68, 103.68
         tile = G.Inst('station', f'dsfd_stn{hv}_70x{lanes}', x, y, w, h, kind='stn')
         # Occupied neighboring street starts just beyond the RESERVED envelope.
+        # along-flow groups (S-DIE r12): the guard sits just beyond the envelope in the FLOW direction
         if horiz:
-            guard = G.Inst('guard', 'hard', x-10, y+h+.864, w+20, 100, kind='hard')
-        else:
             guard = G.Inst('guard', 'hard', x+w+.864, y-10, 100, h+20, kind='hard')
+        else:
+            guard = G.Inst('guard', 'hard', x-10, y+h+.864, w+20, 100, kind='hard')
         buses = [(f'lane{k}', 'lane', 70, [('station', f'do{k}'), ('sink', f'i{k}')]) for k in range(lanes)]
         return dict(insts=[tile, guard], buses=buses), tile
 
@@ -55,7 +56,8 @@ class StationEnvelope(unittest.TestCase):
         old_group = G.stn_dims([70] * 4, True)
         G.STN70_SPLIT = True
         self.assertEqual(G.stn_dims([70], True), old_single)
-        self.assertGreater(G.stn_dims([70] * 4, True)[1], old_group[1])
+        self.assertGreater(G.stn_dims([70] * 4, True)[0], old_group[0])
+        self.assertAlmostEqual(G.stn_dims([70] * 4, True)[1], old_single[1] + G.SHAVE)   # along-flow: one-lane cross-section
 
 
 if __name__ == '__main__':

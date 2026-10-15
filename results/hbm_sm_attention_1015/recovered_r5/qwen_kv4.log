@@ -1,0 +1,1 @@
+FAIL HBM_SM_ATTENTION {"shape": "qwen8192", "seed": 1015, "mut": "kv4", "T_window": 0, "T_compressed": 0, "pv_run_chunks": 4, "ops": 1, "passed": 0, "wall_s": 338.2, "qk_span_max": 608, "qk_lines_max": 256, "verdict": "FAIL"}

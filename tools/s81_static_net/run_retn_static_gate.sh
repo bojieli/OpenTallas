@@ -6,7 +6,7 @@
 set -eu
 cd "$(dirname "$0")/../.."
 mode=${1:?mode}; out=${2:?out}; win=${3:-2}; mkdir -p "$out"
-src=(rtl/v41rom/ot_v41_ret.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_delay.sv
+src=(rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_delay.sv
      rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv rtl/dsrom_sys/s81_static_net/test/tb_s81_retn_static.sv)
 mut=0; case $mode in pass) mut=0;; mut_window) mut=1;; mut_fwd) mut=2;; mut_fault) mut=3;; *) echo bad mode; exit 2;; esac
 fails=0; runs=0

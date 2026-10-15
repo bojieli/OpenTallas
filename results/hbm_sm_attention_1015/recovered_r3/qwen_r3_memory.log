@@ -1,0 +1,2 @@
+Oct 15 10:28:20 ot-epyc1tb systemd[3547158]: Started oth-ubuntu-593525-1792085300.scope - [systemd-run] /usr/bin/bash -c "cd /srv/opentallas-scratch/claude/smatt-1015/src-3facdd750 && python3 tools/hbm_sm_attention/sm_attn_bench.py run --work /srv/opentallas-scratch/claude/smatt-1015/r3/w-qwen_m0 --out /srv/opentallas-scratch/claude/smatt-1015/r3/qwen_m0.json --jobs 16 --shape qwen8192".
+Oct 15 10:32:31 ot-epyc1tb systemd[3547158]: oth-ubuntu-593525-1792085300.scope: Consumed 19min 16.354s CPU time over 4min 10.976s wall clock time, 11.8G memory peak.

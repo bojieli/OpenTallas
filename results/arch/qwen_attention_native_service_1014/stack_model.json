@@ -1,0 +1,17 @@
+{
+  "scope": "PRE_RTL_NATIVE_STACK_COMPOSITION_MODEL",
+  "stacks": 4,
+  "row_engines_per_stack": 8,
+  "query_heads_per_engine": 4,
+  "nativehead_root_count": 86,
+  "stack_clocks": {
+    "ASTK": 46,
+    "ECTL": 24,
+    "HEAD": 2752,
+    "total": 2822
+  },
+  "logical_join": "actual ECTL SO/SI to mapped ASTK EP/EX/Z; actual nativehead score fields to ECTL; explicit request layer parity from actual command; actual e SRAM fixed3 read service",
+  "schedule": "sealed explicit source-profile ECTL return/consume ages and ASTK EXP/LMAX/Z ages; no normal readiness dependency",
+  "physical_binding_qualified": false,
+  "full_native_attention_qualified": false
+}

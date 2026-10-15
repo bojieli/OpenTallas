@@ -1,14 +1,59 @@
 {
  "schema": "opentallas.hier_contract.v1",
  "die": "hbm_v15",
- "version": 2,
+ "version": 4,
  "owner": "H-DIE (Codex)",
  "updated": null,
  "clock_period_ps": 833.333,
  "floorplan": {
-  "file": "results/arch/hbm_globalfp_1015/noatt/pins/T_band2__npg4_s5.pins.json",
-  "candidate": "T_band2__npg4_s5",
-  "adopted": "coordinator 2026-10-15 ~09:25 (main 952c5933c)"
+  "file": "results/arch/hbm_die_v15/compact660_v5/compact.P.json",
+  "candidate": "compact660_v5",
+  "adopted": "owner 2026-10-15 12:05 (660 mm2 compact); H-DIE r2 cut fix (tall hub, 2.0 mm band, 0.6 mm channels, scorer relay rows)",
+  "die_um": [
+   31018.4,
+   21277.693
+  ],
+  "metrics": {
+   "sum_bits_mm": 1176417.3923499037,
+   "traffic_mm_qwen": 9201110765.902325,
+   "traffic_mm_ds": 3277067954.65512,
+   "relay_flops": 2234230.0,
+   "bits_over_500": 216258.0,
+   "fixed_return_violation_bits": 0,
+   "fixed_return_violations": 0,
+   "overlaps": 0,
+   "outside": 0,
+   "J": 4.820982160147498,
+   "n_long_returns": 435
+  },
+  "previous": {
+   "file": "results/arch/hbm_die_v15/compact660/compact.P.json",
+   "candidate": "compact660",
+   "adopted": "owner 2026-10-15 12:05 (660 mm2 compact)",
+   "die_um": [
+    31678.4,
+    20834.386
+   ],
+   "metrics": {
+    "sum_bits_mm": 1164222.170556827,
+    "traffic_mm_qwen": 8987925457.397568,
+    "traffic_mm_ds": 3212003559.97057,
+    "relay_flops": 2200900.0,
+    "bits_over_500": 217594.0,
+    "fixed_return_violation_bits": 0,
+    "fixed_return_violations": 0,
+    "overlaps": 0,
+    "outside": 0,
+    "J": 3.231777261020137,
+    "n_long_returns": 435
+   },
+   "previous": {
+    "file": "results/arch/hbm_globalfp_1015/noatt/pins/T_band2__npg4_s5.pins.json",
+    "candidate": "T_band2__npg4_s5",
+    "adopted": "coordinator 2026-10-15 ~09:25 (main 952c5933c)"
+   },
+   "pins": "results/arch/hbm_die_v15/compact660/pins/compact660.pins.json"
+  }
  },
  "source_contract": {
   "file": "results/arch/hbm_die_v15/source_contract/contract.json",
@@ -35,8 +80,8 @@
    "kind": "die",
    "parent": null,
    "outline": {
-    "w": 32984.288,
-    "h": 25980.528
+    "w": 31018.4,
+    "h": 21277.693
    },
    "origin": {
     "x": 0.0,
@@ -51,7 +96,8 @@
    "pg_layer": "M9",
    "strap_layer": "M9",
    "signal_max_layer": "M9",
-   "version": 1
+   "version": 1,
+   "notes": "compact die (owner 2026-10-15 12:05, 660 mm2); grow only on measured GRT congestion / area misfit"
   },
   {
    "name": "coll_SW",
@@ -63,8 +109,8 @@
     "h": 721.44
    },
    "origin": {
-    "x": 12631.68,
-    "y": 5445.36,
+    "x": 11895.84,
+    "y": 5122.56,
     "orient": "R0"
    },
    "io_budget": {
@@ -609,7 +655,12 @@
     "done",
     "stat_cycles"
    ],
-   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN"
+   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN",
+   "placed_footprint": {
+    "w": 671.76,
+    "h": 721.44
+   },
+   "plan_block": "coll_SW"
   },
   {
    "name": "coll_SE",
@@ -621,8 +672,8 @@
     "h": 721.44
    },
    "origin": {
-    "x": 19807.2,
-    "y": 6058.8,
+    "x": 18159.2,
+    "y": 5122.56,
     "orient": "R0"
    },
    "io_budget": {
@@ -1167,7 +1218,12 @@
     "orient": "R0",
     "own_face_match_bits": 1.0
    },
-   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN"
+   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN",
+   "placed_footprint": {
+    "w": 963.36,
+    "h": 721.44
+   },
+   "plan_block": "coll_SE"
   },
   {
    "name": "coll_NW",
@@ -1179,8 +1235,8 @@
     "h": 721.44
    },
    "origin": {
-    "x": 12102.48,
-    "y": 19494.0,
+    "x": 11895.84,
+    "y": 15433.693,
     "orient": "R180"
    },
    "io_budget": {
@@ -1735,7 +1791,8 @@
     "orient": "R180",
     "own_face_match_bits": 0.947
    },
-   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN"
+   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN",
+   "plan_block": "coll_NW"
   },
   {
    "name": "coll_NE",
@@ -1747,8 +1804,8 @@
     "h": 721.44
    },
    "origin": {
-    "x": 19243.44,
-    "y": 19215.36,
+    "x": 18159.2,
+    "y": 15433.693,
     "orient": "MX"
    },
    "io_budget": {
@@ -2303,2310 +2360,8 @@
     "orient": "MX",
     "own_face_match_bits": 0.855
    },
-   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN"
-  },
-  {
-   "name": "hb_sfu_SW",
-   "cell": "ot_hgi_sfu_scheduled_engine",
-   "kind": "cluster",
-   "parent": "die",
-   "outline": {
-    "w": 552.96,
-    "h": 723.6
-   },
-   "origin": {
-    "x": 10203.84,
-    "y": 5274.72,
-    "orient": "MX"
-   },
-   "io_budget": {
-    "in_delay_frac": 0.2,
-    "out_delay_frac": 0.2
-   },
-   "clock_entry": {
-    "pin": "clk",
-    "face": "N",
-    "layer": "M5",
-    "offset": 240.288
-   },
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
-   "layer_cap": "M5",
-   "version": 1,
-   "pins": [
-    {
-     "name": "local_rq[135:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 11.528,
-     "span_um": [
-      5.0,
-      18.056
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "local_rr[2055:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 116.744,
-     "span_um": [
-      18.056,
-      215.432
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "local_wq[2247:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 323.336,
-     "span_um": [
-      215.432,
-      431.24
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "local_w_done[7:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 431.624,
-     "span_um": [
-      431.24,
-      432.008
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "vi_re[15:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 5.768,
-     "span_um": [
-      5.0,
-      6.536
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "vi_addr[383:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 24.968,
-     "span_um": [
-      6.536,
-      43.4
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "vi_q[511:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 67.976,
-     "span_um": [
-      43.4,
-      92.552
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "side_y[511:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 117.128,
-     "span_um": [
-      92.552,
-      141.704
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "ro_v[15:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 142.472,
-     "span_um": [
-      141.704,
-      143.24
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "side_v[15:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 144.008,
-     "span_um": [
-      143.24,
-      144.776
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "kv_we[15:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 145.544,
-     "span_um": [
-      144.776,
-      146.312
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "ro_x[511:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 170.888,
-     "span_um": [
-      146.312,
-      195.464
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "side_x[511:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 220.04,
-     "span_um": [
-      195.464,
-      244.616
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "kv_wdata[511:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 269.192,
-     "span_um": [
-      244.616,
-      293.768
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "kv_waddr[383:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 312.2,
-     "span_um": [
-      293.768,
-      330.632
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "clk",
-     "face": "N",
-     "layer": "M5",
-     "offset": 240.288,
-     "span_um": [
-      240.24,
-      240.336
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "rst_n",
-     "face": "N",
-     "layer": "M5",
-     "offset": 240.384,
-     "span_um": [
-      240.336,
-      240.432
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "clk_lane[15:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 241.2,
-     "span_um": [
-      240.432,
-      241.968
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "clk_map[15:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 242.736,
-     "span_um": [
-      241.968,
-      243.504
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "rst_lane_n[15:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 244.272,
-     "span_um": [
-      243.504,
-      245.04
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "rst_map_n[15:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 245.808,
-     "span_um": [
-      245.04,
-      246.576
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "cfg_we",
-     "face": "N",
-     "layer": "M5",
-     "offset": 246.624,
-     "span_um": [
-      246.576,
-      246.672
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "cfg_stripe[2:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 246.816,
-     "span_um": [
-      246.672,
-      246.96
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "cfg_addr[10:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 247.488,
-     "span_um": [
-      246.96,
-      248.016
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "cfg_data[255:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 260.304,
-     "span_um": [
-      248.016,
-      272.592
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "start_base[10:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 273.12,
-     "span_um": [
-      272.592,
-      273.648
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "start_limit[11:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 274.224,
-     "span_um": [
-      273.648,
-      274.8
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "start_loops[15:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 275.568,
-     "span_um": [
-      274.8,
-      276.336
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "programme_active",
-     "face": "N",
-     "layer": "M5",
-     "offset": 276.384,
-     "span_um": [
-      276.336,
-      276.432
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "programme_done",
-     "face": "N",
-     "layer": "M5",
-     "offset": 276.48,
-     "span_um": [
-      276.432,
-      276.528
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "programme_ordinal[31:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 278.064,
-     "span_um": [
-      276.528,
-      279.6
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_cfg_we",
-     "face": "N",
-     "layer": "M5",
-     "offset": 279.648,
-     "span_um": [
-      279.6,
-      279.696
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_cfg_stripe[1:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 279.792,
-     "span_um": [
-      279.696,
-      279.888
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_cfg_addr[10:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 280.416,
-     "span_um": [
-      279.888,
-      280.944
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_cfg_data[255:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 293.232,
-     "span_um": [
-      280.944,
-      305.52
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_start_v",
-     "face": "N",
-     "layer": "M5",
-     "offset": 305.568,
-     "span_um": [
-      305.52,
-      305.616
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_start_base[10:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 306.144,
-     "span_um": [
-      305.616,
-      306.672
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_start_limit[11:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 307.248,
-     "span_um": [
-      306.672,
-      307.824
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_start_loops[15:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 308.592,
-     "span_um": [
-      307.824,
-      309.36
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_active",
-     "face": "N",
-     "layer": "M5",
-     "offset": 309.408,
-     "span_um": [
-      309.36,
-      309.456
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_done",
-     "face": "N",
-     "layer": "M5",
-     "offset": 309.504,
-     "span_um": [
-      309.456,
-      309.552
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_ordinal[31:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 311.088,
-     "span_um": [
-      309.552,
-      312.624
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "fault",
-     "face": "N",
-     "layer": "M5",
-     "offset": 312.672,
-     "span_um": [
-      312.624,
-      312.72
-     ],
-     "pins_per_um": 10.417
-    }
-   ],
-   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv",
-   "params": {
-    "PAGE_AW": 1,
-    "AW": 11,
-    "LWB": 15
-   },
-   "layer_rule": "tile",
-   "instance": "hb_sfu_SW",
-   "synth": null,
-   "need_um2": 0,
-   "control_face": "S",
-   "floorplan_block": "sfu_SW0",
-   "structural_note": "adopted floorplan has 4 SFU port groups per quadrant (sfu_<q>0..3, LG_SFU 556 b each on different banks); the v15 RTL engine has ONE LG port (lg_<q>_1). Grant = the engine at group 0; groups 1..3 are REQUEST slots until the SFU owner splits the LG face into 4 bank-pair groups (H-ELEM-B)",
-   "pins_on_unbound_ports": [
-    "clk",
-    "rst_n",
-    "clk_lane",
-    "clk_map",
-    "rst_lane_n",
-    "rst_map_n",
-    "cfg_we",
-    "cfg_stripe",
-    "cfg_addr",
-    "cfg_data",
-    "start_base",
-    "start_limit",
-    "start_loops",
-    "programme_active",
-    "programme_done",
-    "programme_ordinal",
-    "io_cfg_we",
-    "io_cfg_stripe",
-    "io_cfg_addr",
-    "io_cfg_data",
-    "io_start_v",
-    "io_start_base",
-    "io_start_limit",
-    "io_start_loops",
-    "io_active",
-    "io_done",
-    "io_ordinal",
-    "vi_re",
-    "vi_addr",
-    "vi_q",
-    "side_y",
-    "ro_v",
-    "side_v",
-    "kv_we",
-    "ro_x",
-    "side_x",
-    "kv_wdata",
-    "kv_waddr",
-    "fault"
-   ],
-   "own_plan_faces": {
-    "E": 0.59,
-    "W": 0.45,
-    "S": 0.193
-   },
-   "face_utilisation": {
-    "E": 0.59,
-    "S": 0.589,
-    "N": 0.131
-   },
-   "placed_footprint": {
-    "w": 552.96,
-    "h": 723.6
-   },
-   "shared_plan": {
-    "reference": "hb_sfu_SE",
-    "orient": "MX",
-    "own_face_match_bits": 0.605
-   }
-  },
-  {
-   "name": "hb_sfu_SE",
-   "cell": "ot_hgi_sfu_scheduled_engine",
-   "kind": "cluster",
-   "parent": "die",
-   "outline": {
-    "w": 552.96,
-    "h": 723.6
-   },
-   "origin": {
-    "x": 26585.28,
-    "y": 5724.0,
-    "orient": "R0"
-   },
-   "io_budget": {
-    "in_delay_frac": 0.2,
-    "out_delay_frac": 0.2
-   },
-   "clock_entry": {
-    "pin": "clk",
-    "face": "N",
-    "layer": "M5",
-    "offset": 240.288
-   },
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
-   "layer_cap": "M5",
-   "version": 1,
-   "pins": [
-    {
-     "name": "local_rq[135:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 11.528,
-     "span_um": [
-      5.0,
-      18.056
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "local_rr[2055:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 116.744,
-     "span_um": [
-      18.056,
-      215.432
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "local_wq[2247:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 323.336,
-     "span_um": [
-      215.432,
-      431.24
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "local_w_done[7:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 431.624,
-     "span_um": [
-      431.24,
-      432.008
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "vi_re[15:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 5.768,
-     "span_um": [
-      5.0,
-      6.536
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "vi_addr[383:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 24.968,
-     "span_um": [
-      6.536,
-      43.4
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "vi_q[511:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 67.976,
-     "span_um": [
-      43.4,
-      92.552
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "side_y[511:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 117.128,
-     "span_um": [
-      92.552,
-      141.704
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "ro_v[15:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 142.472,
-     "span_um": [
-      141.704,
-      143.24
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "side_v[15:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 144.008,
-     "span_um": [
-      143.24,
-      144.776
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "kv_we[15:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 145.544,
-     "span_um": [
-      144.776,
-      146.312
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "ro_x[511:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 170.888,
-     "span_um": [
-      146.312,
-      195.464
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "side_x[511:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 220.04,
-     "span_um": [
-      195.464,
-      244.616
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "kv_wdata[511:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 269.192,
-     "span_um": [
-      244.616,
-      293.768
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "kv_waddr[383:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 312.2,
-     "span_um": [
-      293.768,
-      330.632
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "clk",
-     "face": "N",
-     "layer": "M5",
-     "offset": 240.288,
-     "span_um": [
-      240.24,
-      240.336
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "rst_n",
-     "face": "N",
-     "layer": "M5",
-     "offset": 240.384,
-     "span_um": [
-      240.336,
-      240.432
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "clk_lane[15:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 241.2,
-     "span_um": [
-      240.432,
-      241.968
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "clk_map[15:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 242.736,
-     "span_um": [
-      241.968,
-      243.504
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "rst_lane_n[15:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 244.272,
-     "span_um": [
-      243.504,
-      245.04
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "rst_map_n[15:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 245.808,
-     "span_um": [
-      245.04,
-      246.576
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "cfg_we",
-     "face": "N",
-     "layer": "M5",
-     "offset": 246.624,
-     "span_um": [
-      246.576,
-      246.672
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "cfg_stripe[2:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 246.816,
-     "span_um": [
-      246.672,
-      246.96
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "cfg_addr[10:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 247.488,
-     "span_um": [
-      246.96,
-      248.016
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "cfg_data[255:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 260.304,
-     "span_um": [
-      248.016,
-      272.592
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "start_base[10:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 273.12,
-     "span_um": [
-      272.592,
-      273.648
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "start_limit[11:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 274.224,
-     "span_um": [
-      273.648,
-      274.8
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "start_loops[15:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 275.568,
-     "span_um": [
-      274.8,
-      276.336
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "programme_active",
-     "face": "N",
-     "layer": "M5",
-     "offset": 276.384,
-     "span_um": [
-      276.336,
-      276.432
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "programme_done",
-     "face": "N",
-     "layer": "M5",
-     "offset": 276.48,
-     "span_um": [
-      276.432,
-      276.528
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "programme_ordinal[31:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 278.064,
-     "span_um": [
-      276.528,
-      279.6
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_cfg_we",
-     "face": "N",
-     "layer": "M5",
-     "offset": 279.648,
-     "span_um": [
-      279.6,
-      279.696
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_cfg_stripe[1:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 279.792,
-     "span_um": [
-      279.696,
-      279.888
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_cfg_addr[10:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 280.416,
-     "span_um": [
-      279.888,
-      280.944
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_cfg_data[255:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 293.232,
-     "span_um": [
-      280.944,
-      305.52
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_start_v",
-     "face": "N",
-     "layer": "M5",
-     "offset": 305.568,
-     "span_um": [
-      305.52,
-      305.616
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_start_base[10:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 306.144,
-     "span_um": [
-      305.616,
-      306.672
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_start_limit[11:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 307.248,
-     "span_um": [
-      306.672,
-      307.824
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_start_loops[15:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 308.592,
-     "span_um": [
-      307.824,
-      309.36
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_active",
-     "face": "N",
-     "layer": "M5",
-     "offset": 309.408,
-     "span_um": [
-      309.36,
-      309.456
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_done",
-     "face": "N",
-     "layer": "M5",
-     "offset": 309.504,
-     "span_um": [
-      309.456,
-      309.552
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_ordinal[31:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 311.088,
-     "span_um": [
-      309.552,
-      312.624
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "fault",
-     "face": "N",
-     "layer": "M5",
-     "offset": 312.672,
-     "span_um": [
-      312.624,
-      312.72
-     ],
-     "pins_per_um": 10.417
-    }
-   ],
-   "face_utilisation": {
-    "E": 0.59,
-    "S": 0.589,
-    "N": 0.131
-   },
-   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv",
-   "params": {
-    "PAGE_AW": 1,
-    "AW": 11,
-    "LWB": 15
-   },
-   "layer_rule": "tile",
-   "instance": "hb_sfu_SE",
-   "synth": null,
-   "need_um2": 0,
-   "control_face": "N",
-   "floorplan_block": "sfu_SE0",
-   "structural_note": "adopted floorplan has 4 SFU port groups per quadrant (sfu_<q>0..3, LG_SFU 556 b each on different banks); the v15 RTL engine has ONE LG port (lg_<q>_1). Grant = the engine at group 0; groups 1..3 are REQUEST slots until the SFU owner splits the LG face into 4 bank-pair groups (H-ELEM-B)",
-   "pins_on_unbound_ports": [
-    "clk",
-    "rst_n",
-    "clk_lane",
-    "clk_map",
-    "rst_lane_n",
-    "rst_map_n",
-    "cfg_we",
-    "cfg_stripe",
-    "cfg_addr",
-    "cfg_data",
-    "start_base",
-    "start_limit",
-    "start_loops",
-    "programme_active",
-    "programme_done",
-    "programme_ordinal",
-    "io_cfg_we",
-    "io_cfg_stripe",
-    "io_cfg_addr",
-    "io_cfg_data",
-    "io_start_v",
-    "io_start_base",
-    "io_start_limit",
-    "io_start_loops",
-    "io_active",
-    "io_done",
-    "io_ordinal",
-    "vi_re",
-    "vi_addr",
-    "vi_q",
-    "side_y",
-    "ro_v",
-    "side_v",
-    "kv_we",
-    "ro_x",
-    "side_x",
-    "kv_wdata",
-    "kv_waddr",
-    "fault"
-   ],
-   "shared_plan": {
-    "reference": "hb_sfu_SE",
-    "orient": "R0",
-    "own_face_match_bits": 1.0
-   }
-  },
-  {
-   "name": "hb_sfu_NW",
-   "cell": "ot_hgi_sfu_scheduled_engine",
-   "kind": "cluster",
-   "parent": "die",
-   "outline": {
-    "w": 552.96,
-    "h": 723.6
-   },
-   "origin": {
-    "x": 8110.8,
-    "y": 19861.2,
-    "orient": "R270"
-   },
-   "io_budget": {
-    "in_delay_frac": 0.2,
-    "out_delay_frac": 0.2
-   },
-   "clock_entry": {
-    "pin": "clk",
-    "face": "N",
-    "layer": "M5",
-    "offset": 240.288
-   },
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
-   "layer_cap": "M5",
-   "version": 1,
-   "pins": [
-    {
-     "name": "local_rq[135:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 11.528,
-     "span_um": [
-      5.0,
-      18.056
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "local_rr[2055:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 116.744,
-     "span_um": [
-      18.056,
-      215.432
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "local_wq[2247:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 323.336,
-     "span_um": [
-      215.432,
-      431.24
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "local_w_done[7:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 431.624,
-     "span_um": [
-      431.24,
-      432.008
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "vi_re[15:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 5.768,
-     "span_um": [
-      5.0,
-      6.536
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "vi_addr[383:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 24.968,
-     "span_um": [
-      6.536,
-      43.4
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "vi_q[511:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 67.976,
-     "span_um": [
-      43.4,
-      92.552
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "side_y[511:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 117.128,
-     "span_um": [
-      92.552,
-      141.704
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "ro_v[15:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 142.472,
-     "span_um": [
-      141.704,
-      143.24
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "side_v[15:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 144.008,
-     "span_um": [
-      143.24,
-      144.776
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "kv_we[15:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 145.544,
-     "span_um": [
-      144.776,
-      146.312
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "ro_x[511:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 170.888,
-     "span_um": [
-      146.312,
-      195.464
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "side_x[511:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 220.04,
-     "span_um": [
-      195.464,
-      244.616
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "kv_wdata[511:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 269.192,
-     "span_um": [
-      244.616,
-      293.768
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "kv_waddr[383:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 312.2,
-     "span_um": [
-      293.768,
-      330.632
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "clk",
-     "face": "N",
-     "layer": "M5",
-     "offset": 240.288,
-     "span_um": [
-      240.24,
-      240.336
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "rst_n",
-     "face": "N",
-     "layer": "M5",
-     "offset": 240.384,
-     "span_um": [
-      240.336,
-      240.432
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "clk_lane[15:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 241.2,
-     "span_um": [
-      240.432,
-      241.968
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "clk_map[15:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 242.736,
-     "span_um": [
-      241.968,
-      243.504
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "rst_lane_n[15:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 244.272,
-     "span_um": [
-      243.504,
-      245.04
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "rst_map_n[15:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 245.808,
-     "span_um": [
-      245.04,
-      246.576
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "cfg_we",
-     "face": "N",
-     "layer": "M5",
-     "offset": 246.624,
-     "span_um": [
-      246.576,
-      246.672
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "cfg_stripe[2:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 246.816,
-     "span_um": [
-      246.672,
-      246.96
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "cfg_addr[10:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 247.488,
-     "span_um": [
-      246.96,
-      248.016
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "cfg_data[255:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 260.304,
-     "span_um": [
-      248.016,
-      272.592
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "start_base[10:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 273.12,
-     "span_um": [
-      272.592,
-      273.648
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "start_limit[11:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 274.224,
-     "span_um": [
-      273.648,
-      274.8
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "start_loops[15:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 275.568,
-     "span_um": [
-      274.8,
-      276.336
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "programme_active",
-     "face": "N",
-     "layer": "M5",
-     "offset": 276.384,
-     "span_um": [
-      276.336,
-      276.432
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "programme_done",
-     "face": "N",
-     "layer": "M5",
-     "offset": 276.48,
-     "span_um": [
-      276.432,
-      276.528
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "programme_ordinal[31:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 278.064,
-     "span_um": [
-      276.528,
-      279.6
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_cfg_we",
-     "face": "N",
-     "layer": "M5",
-     "offset": 279.648,
-     "span_um": [
-      279.6,
-      279.696
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_cfg_stripe[1:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 279.792,
-     "span_um": [
-      279.696,
-      279.888
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_cfg_addr[10:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 280.416,
-     "span_um": [
-      279.888,
-      280.944
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_cfg_data[255:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 293.232,
-     "span_um": [
-      280.944,
-      305.52
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_start_v",
-     "face": "N",
-     "layer": "M5",
-     "offset": 305.568,
-     "span_um": [
-      305.52,
-      305.616
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_start_base[10:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 306.144,
-     "span_um": [
-      305.616,
-      306.672
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_start_limit[11:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 307.248,
-     "span_um": [
-      306.672,
-      307.824
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_start_loops[15:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 308.592,
-     "span_um": [
-      307.824,
-      309.36
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_active",
-     "face": "N",
-     "layer": "M5",
-     "offset": 309.408,
-     "span_um": [
-      309.36,
-      309.456
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_done",
-     "face": "N",
-     "layer": "M5",
-     "offset": 309.504,
-     "span_um": [
-      309.456,
-      309.552
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_ordinal[31:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 311.088,
-     "span_um": [
-      309.552,
-      312.624
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "fault",
-     "face": "N",
-     "layer": "M5",
-     "offset": 312.672,
-     "span_um": [
-      312.624,
-      312.72
-     ],
-     "pins_per_um": 10.417
-    }
-   ],
-   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv",
-   "params": {
-    "PAGE_AW": 1,
-    "AW": 11,
-    "LWB": 15
-   },
-   "layer_rule": "tile",
-   "instance": "hb_sfu_NW",
-   "synth": null,
-   "need_um2": 0,
-   "control_face": "N",
-   "floorplan_block": "sfu_NW0",
-   "structural_note": "adopted floorplan has 4 SFU port groups per quadrant (sfu_<q>0..3, LG_SFU 556 b each on different banks); the v15 RTL engine has ONE LG port (lg_<q>_1). Grant = the engine at group 0; groups 1..3 are REQUEST slots until the SFU owner splits the LG face into 4 bank-pair groups (H-ELEM-B)",
-   "pins_on_unbound_ports": [
-    "clk",
-    "rst_n",
-    "clk_lane",
-    "clk_map",
-    "rst_lane_n",
-    "rst_map_n",
-    "cfg_we",
-    "cfg_stripe",
-    "cfg_addr",
-    "cfg_data",
-    "start_base",
-    "start_limit",
-    "start_loops",
-    "programme_active",
-    "programme_done",
-    "programme_ordinal",
-    "io_cfg_we",
-    "io_cfg_stripe",
-    "io_cfg_addr",
-    "io_cfg_data",
-    "io_start_v",
-    "io_start_base",
-    "io_start_limit",
-    "io_start_loops",
-    "io_active",
-    "io_done",
-    "io_ordinal",
-    "vi_re",
-    "vi_addr",
-    "vi_q",
-    "side_y",
-    "ro_v",
-    "side_v",
-    "kv_we",
-    "ro_x",
-    "side_x",
-    "kv_wdata",
-    "kv_waddr",
-    "fault"
-   ],
-   "own_plan_faces": {
-    "S": 0.59,
-    "W": 0.589,
-    "N": 0.1
-   },
-   "face_utilisation": {
-    "E": 0.59,
-    "S": 0.589,
-    "N": 0.131
-   },
-   "placed_footprint": {
-    "w": 723.6,
-    "h": 552.96
-   },
-   "shared_plan": {
-    "reference": "hb_sfu_SE",
-    "orient": "R270",
-    "own_face_match_bits": 0.912
-   }
-  },
-  {
-   "name": "hb_sfu_NE",
-   "cell": "ot_hgi_sfu_scheduled_engine",
-   "kind": "cluster",
-   "parent": "die",
-   "outline": {
-    "w": 552.96,
-    "h": 723.6
-   },
-   "origin": {
-    "x": 22656.24,
-    "y": 19848.24,
-    "orient": "MX"
-   },
-   "io_budget": {
-    "in_delay_frac": 0.2,
-    "out_delay_frac": 0.2
-   },
-   "clock_entry": {
-    "pin": "clk",
-    "face": "N",
-    "layer": "M5",
-    "offset": 240.288
-   },
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
-   "layer_cap": "M5",
-   "version": 1,
-   "pins": [
-    {
-     "name": "local_rq[135:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 11.528,
-     "span_um": [
-      5.0,
-      18.056
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "local_rr[2055:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 116.744,
-     "span_um": [
-      18.056,
-      215.432
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "local_wq[2247:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 323.336,
-     "span_um": [
-      215.432,
-      431.24
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "local_w_done[7:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 431.624,
-     "span_um": [
-      431.24,
-      432.008
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "vi_re[15:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 5.768,
-     "span_um": [
-      5.0,
-      6.536
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "vi_addr[383:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 24.968,
-     "span_um": [
-      6.536,
-      43.4
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "vi_q[511:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 67.976,
-     "span_um": [
-      43.4,
-      92.552
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "side_y[511:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 117.128,
-     "span_um": [
-      92.552,
-      141.704
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "ro_v[15:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 142.472,
-     "span_um": [
-      141.704,
-      143.24
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "side_v[15:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 144.008,
-     "span_um": [
-      143.24,
-      144.776
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "kv_we[15:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 145.544,
-     "span_um": [
-      144.776,
-      146.312
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "ro_x[511:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 170.888,
-     "span_um": [
-      146.312,
-      195.464
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "side_x[511:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 220.04,
-     "span_um": [
-      195.464,
-      244.616
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "kv_wdata[511:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 269.192,
-     "span_um": [
-      244.616,
-      293.768
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "kv_waddr[383:0]",
-     "face": "S",
-     "layer": "M5",
-     "offset": 312.2,
-     "span_um": [
-      293.768,
-      330.632
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "clk",
-     "face": "N",
-     "layer": "M5",
-     "offset": 240.288,
-     "span_um": [
-      240.24,
-      240.336
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "rst_n",
-     "face": "N",
-     "layer": "M5",
-     "offset": 240.384,
-     "span_um": [
-      240.336,
-      240.432
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "clk_lane[15:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 241.2,
-     "span_um": [
-      240.432,
-      241.968
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "clk_map[15:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 242.736,
-     "span_um": [
-      241.968,
-      243.504
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "rst_lane_n[15:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 244.272,
-     "span_um": [
-      243.504,
-      245.04
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "rst_map_n[15:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 245.808,
-     "span_um": [
-      245.04,
-      246.576
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "cfg_we",
-     "face": "N",
-     "layer": "M5",
-     "offset": 246.624,
-     "span_um": [
-      246.576,
-      246.672
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "cfg_stripe[2:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 246.816,
-     "span_um": [
-      246.672,
-      246.96
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "cfg_addr[10:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 247.488,
-     "span_um": [
-      246.96,
-      248.016
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "cfg_data[255:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 260.304,
-     "span_um": [
-      248.016,
-      272.592
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "start_base[10:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 273.12,
-     "span_um": [
-      272.592,
-      273.648
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "start_limit[11:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 274.224,
-     "span_um": [
-      273.648,
-      274.8
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "start_loops[15:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 275.568,
-     "span_um": [
-      274.8,
-      276.336
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "programme_active",
-     "face": "N",
-     "layer": "M5",
-     "offset": 276.384,
-     "span_um": [
-      276.336,
-      276.432
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "programme_done",
-     "face": "N",
-     "layer": "M5",
-     "offset": 276.48,
-     "span_um": [
-      276.432,
-      276.528
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "programme_ordinal[31:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 278.064,
-     "span_um": [
-      276.528,
-      279.6
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_cfg_we",
-     "face": "N",
-     "layer": "M5",
-     "offset": 279.648,
-     "span_um": [
-      279.6,
-      279.696
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_cfg_stripe[1:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 279.792,
-     "span_um": [
-      279.696,
-      279.888
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_cfg_addr[10:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 280.416,
-     "span_um": [
-      279.888,
-      280.944
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_cfg_data[255:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 293.232,
-     "span_um": [
-      280.944,
-      305.52
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_start_v",
-     "face": "N",
-     "layer": "M5",
-     "offset": 305.568,
-     "span_um": [
-      305.52,
-      305.616
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_start_base[10:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 306.144,
-     "span_um": [
-      305.616,
-      306.672
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_start_limit[11:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 307.248,
-     "span_um": [
-      306.672,
-      307.824
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_start_loops[15:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 308.592,
-     "span_um": [
-      307.824,
-      309.36
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_active",
-     "face": "N",
-     "layer": "M5",
-     "offset": 309.408,
-     "span_um": [
-      309.36,
-      309.456
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_done",
-     "face": "N",
-     "layer": "M5",
-     "offset": 309.504,
-     "span_um": [
-      309.456,
-      309.552
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "io_ordinal[31:0]",
-     "face": "N",
-     "layer": "M5",
-     "offset": 311.088,
-     "span_um": [
-      309.552,
-      312.624
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "fault",
-     "face": "N",
-     "layer": "M5",
-     "offset": 312.672,
-     "span_um": [
-      312.624,
-      312.72
-     ],
-     "pins_per_um": 10.417
-    }
-   ],
-   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv",
-   "params": {
-    "PAGE_AW": 1,
-    "AW": 11,
-    "LWB": 15
-   },
-   "layer_rule": "tile",
-   "instance": "hb_sfu_NE",
-   "synth": null,
-   "need_um2": 0,
-   "control_face": "S",
-   "floorplan_block": "sfu_NE0",
-   "structural_note": "adopted floorplan has 4 SFU port groups per quadrant (sfu_<q>0..3, LG_SFU 556 b each on different banks); the v15 RTL engine has ONE LG port (lg_<q>_1). Grant = the engine at group 0; groups 1..3 are REQUEST slots until the SFU owner splits the LG face into 4 bank-pair groups (H-ELEM-B)",
-   "pins_on_unbound_ports": [
-    "clk",
-    "rst_n",
-    "clk_lane",
-    "clk_map",
-    "rst_lane_n",
-    "rst_map_n",
-    "cfg_we",
-    "cfg_stripe",
-    "cfg_addr",
-    "cfg_data",
-    "start_base",
-    "start_limit",
-    "start_loops",
-    "programme_active",
-    "programme_done",
-    "programme_ordinal",
-    "io_cfg_we",
-    "io_cfg_stripe",
-    "io_cfg_addr",
-    "io_cfg_data",
-    "io_start_v",
-    "io_start_base",
-    "io_start_limit",
-    "io_start_loops",
-    "io_active",
-    "io_done",
-    "io_ordinal",
-    "vi_re",
-    "vi_addr",
-    "vi_q",
-    "side_y",
-    "ro_v",
-    "side_v",
-    "kv_we",
-    "ro_x",
-    "side_x",
-    "kv_wdata",
-    "kv_waddr",
-    "fault"
-   ],
-   "own_plan_faces": {
-    "E": 0.59,
-    "W": 0.45,
-    "S": 0.193
-   },
-   "face_utilisation": {
-    "E": 0.59,
-    "S": 0.589,
-    "N": 0.131
-   },
-   "placed_footprint": {
-    "w": 552.96,
-    "h": 723.6
-   },
-   "shared_plan": {
-    "reference": "hb_sfu_SE",
-    "orient": "MX",
-    "own_face_match_bits": 0.605
-   }
+   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN",
+   "plan_block": "coll_NE"
   },
   {
    "name": "hb_dbk_SW",
@@ -4618,8 +2373,8 @@
     "h": 360.72
    },
    "origin": {
-    "x": 9305.28,
-    "y": 6462.72,
+    "x": 11895.84,
+    "y": 5864.0,
     "orient": "MY"
    },
    "io_budget": {
@@ -4998,7 +2753,8 @@
     "reference": "hb_dbk_NE",
     "orient": "MY",
     "own_face_match_bits": 0.557
-   }
+   },
+   "plan_block": "dbk_SW"
   },
   {
    "name": "hb_dbk_SE",
@@ -5010,8 +2766,8 @@
     "h": 360.72
    },
    "origin": {
-    "x": 26317.44,
-    "y": 5311.44,
+    "x": 18690.56,
+    "y": 5864.0,
     "orient": "R180"
    },
    "io_budget": {
@@ -5390,7 +3146,8 @@
     "reference": "hb_dbk_NE",
     "orient": "R180",
     "own_face_match_bits": 0.557
-   }
+   },
+   "plan_block": "dbk_SE"
   },
   {
    "name": "hb_dbk_NW",
@@ -5402,8 +3159,8 @@
     "h": 360.72
    },
    "origin": {
-    "x": 8052.48,
-    "y": 20444.4,
+    "x": 11895.84,
+    "y": 15052.973,
     "orient": "MY"
    },
    "io_budget": {
@@ -5782,7 +3539,8 @@
     "reference": "hb_dbk_NE",
     "orient": "MY",
     "own_face_match_bits": 0.557
-   }
+   },
+   "plan_block": "dbk_NW"
   },
   {
    "name": "hb_dbk_NE",
@@ -5794,8 +3552,8 @@
     "h": 360.72
    },
    "origin": {
-    "x": 23304.24,
-    "y": 19182.96,
+    "x": 18690.56,
+    "y": 15052.973,
     "orient": "R0"
    },
    "io_budget": {
@@ -6165,7 +3923,12 @@
     "reference": "hb_dbk_NE",
     "orient": "R0",
     "own_face_match_bits": 1.0
-   }
+   },
+   "placed_footprint": {
+    "w": 432.0,
+    "h": 360.72
+   },
+   "plan_block": "dbk_NE"
   },
   {
    "name": "svc_SW_s0",
@@ -6177,8 +3940,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 2516.4,
-    "y": 1220.4,
+    "x": 1457.8,
+    "y": 1218.8,
     "orient": "R0"
    },
    "io_budget": {
@@ -8104,7 +5867,12 @@
    "geometric_max_wire_um": 384.918,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "placed_footprint": {
+    "w": 1036.8,
+    "h": 399.6
+   },
+   "plan_block": "pc_SW0"
   },
   {
    "name": "svc_SW_s1",
@@ -8116,8 +5884,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 8860.32,
-    "y": 1220.4,
+    "x": 2514.6,
+    "y": 1218.8,
     "orient": "R0"
    },
    "io_budget": {
@@ -10509,7 +8277,12 @@
    "geometric_max_wire_um": 454.482,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "placed_footprint": {
+    "w": 1036.8,
+    "h": 399.6
+   },
+   "plan_block": "pc_SW1"
   },
   {
    "name": "svc_SW_s2",
@@ -10521,8 +8294,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 7801.92,
-    "y": 1220.4,
+    "x": 3571.4,
+    "y": 1218.8,
     "orient": "R0"
    },
    "io_budget": {
@@ -12448,7 +10221,12 @@
    "geometric_max_wire_um": 384.918,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "placed_footprint": {
+    "w": 1036.8,
+    "h": 399.6
+   },
+   "plan_block": "pc_SW2"
   },
   {
    "name": "svc_SW_s3",
@@ -12460,8 +10238,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 6745.68,
-    "y": 1220.4,
+    "x": 4628.2,
+    "y": 1218.8,
     "orient": "R0"
    },
    "io_budget": {
@@ -14387,7 +12165,12 @@
    "geometric_max_wire_um": 384.918,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "placed_footprint": {
+    "w": 1036.8,
+    "h": 399.6
+   },
+   "plan_block": "pc_SW3"
   },
   {
    "name": "svc_SW_s4",
@@ -14399,8 +12182,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 3572.64,
-    "y": 1220.4,
+    "x": 5685.0,
+    "y": 1218.8,
     "orient": "R0"
    },
    "io_budget": {
@@ -15860,7 +13643,12 @@
    "geometric_max_wire_um": 317.466,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "placed_footprint": {
+    "w": 1036.8,
+    "h": 399.6
+   },
+   "plan_block": "pc_SW4"
   },
   {
    "name": "svc_SW_s5",
@@ -15872,8 +13660,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 5687.28,
-    "y": 1220.4,
+    "x": 6741.8,
+    "y": 1218.8,
     "orient": "R0"
    },
    "io_budget": {
@@ -17799,7 +15587,12 @@
    "geometric_max_wire_um": 384.918,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "placed_footprint": {
+    "w": 1036.8,
+    "h": 399.6
+   },
+   "plan_block": "pc_SW5"
   },
   {
    "name": "svc_SW_s6",
@@ -17811,8 +15604,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 1458.0,
-    "y": 1220.4,
+    "x": 7798.6,
+    "y": 1218.8,
     "orient": "R0"
    },
    "io_budget": {
@@ -19738,7 +17531,12 @@
    "geometric_max_wire_um": 384.918,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "placed_footprint": {
+    "w": 1036.8,
+    "h": 399.6
+   },
+   "plan_block": "pc_SW6"
   },
   {
    "name": "svc_SW_s7",
@@ -19750,8 +17548,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 4631.04,
-    "y": 1220.4,
+    "x": 8855.4,
+    "y": 1218.8,
     "orient": "R0"
    },
    "io_budget": {
@@ -21677,7 +19475,12 @@
    "geometric_max_wire_um": 384.918,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "placed_footprint": {
+    "w": 1036.8,
+    "h": 399.6
+   },
+   "plan_block": "pc_SW7"
   },
   {
    "name": "svc_NW_s0",
@@ -21689,8 +19492,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 2516.4,
-    "y": 24362.64,
+    "x": 1457.8,
+    "y": 19659.293,
     "orient": "MX"
    },
    "io_budget": {
@@ -23624,7 +21427,8 @@
    "geometric_max_wire_um": 384.918,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "plan_block": "pc_NW0"
   },
   {
    "name": "svc_NW_s1",
@@ -23636,8 +21440,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 1458.0,
-    "y": 24362.64,
+    "x": 2514.6,
+    "y": 19659.293,
     "orient": "MX"
    },
    "io_budget": {
@@ -26037,7 +23841,8 @@
    "geometric_max_wire_um": 454.482,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "plan_block": "pc_NW1"
   },
   {
    "name": "svc_NW_s2",
@@ -26049,8 +23854,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 7801.92,
-    "y": 24362.64,
+    "x": 3571.4,
+    "y": 19659.293,
     "orient": "MX"
    },
    "io_budget": {
@@ -27984,7 +25789,8 @@
    "geometric_max_wire_um": 384.918,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "plan_block": "pc_NW2"
   },
   {
    "name": "svc_NW_s3",
@@ -27996,8 +25802,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 4631.04,
-    "y": 24362.64,
+    "x": 4628.2,
+    "y": 19659.293,
     "orient": "MX"
    },
    "io_budget": {
@@ -29931,7 +27737,8 @@
    "geometric_max_wire_um": 384.918,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "plan_block": "pc_NW3"
   },
   {
    "name": "svc_NW_s4",
@@ -29943,8 +27750,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 5687.28,
-    "y": 24362.64,
+    "x": 5685.0,
+    "y": 19659.293,
     "orient": "MX"
    },
    "io_budget": {
@@ -31412,7 +29219,8 @@
    "geometric_max_wire_um": 317.466,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "plan_block": "pc_NW4"
   },
   {
    "name": "svc_NW_s5",
@@ -31424,8 +29232,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 3572.64,
-    "y": 24362.64,
+    "x": 6741.8,
+    "y": 19659.293,
     "orient": "MX"
    },
    "io_budget": {
@@ -33359,7 +31167,8 @@
    "geometric_max_wire_um": 384.918,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "plan_block": "pc_NW5"
   },
   {
    "name": "svc_NW_s6",
@@ -33371,8 +31180,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 8860.32,
-    "y": 24362.64,
+    "x": 7798.6,
+    "y": 19659.293,
     "orient": "MX"
    },
    "io_budget": {
@@ -35306,7 +33115,8 @@
    "geometric_max_wire_um": 384.918,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "plan_block": "pc_NW6"
   },
   {
    "name": "svc_NW_s7",
@@ -35318,8 +33128,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 6745.68,
-    "y": 24362.64,
+    "x": 8855.4,
+    "y": 19659.293,
     "orient": "MX"
    },
    "io_budget": {
@@ -37253,7 +35063,8 @@
    "geometric_max_wire_um": 384.918,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "plan_block": "pc_NW7"
   },
   {
    "name": "svc_SE_s0",
@@ -37265,8 +35076,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 29434.32,
-    "y": 1220.4,
+    "x": 28523.8,
+    "y": 1218.8,
     "orient": "R0"
    },
    "io_budget": {
@@ -39192,7 +37003,12 @@
    "geometric_max_wire_um": 384.918,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "placed_footprint": {
+    "w": 1036.8,
+    "h": 399.6
+   },
+   "plan_block": "pc_SE0"
   },
   {
    "name": "svc_SE_s1",
@@ -39204,8 +37020,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 27319.68,
-    "y": 1220.4,
+    "x": 27467.0,
+    "y": 1218.8,
     "orient": "R0"
    },
    "io_budget": {
@@ -41597,7 +39413,12 @@
    "geometric_max_wire_um": 454.482,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "placed_footprint": {
+    "w": 1036.8,
+    "h": 399.6
+   },
+   "plan_block": "pc_SE1"
   },
   {
    "name": "svc_SE_s2",
@@ -41609,8 +39430,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 24146.64,
-    "y": 1220.4,
+    "x": 26410.2,
+    "y": 1218.8,
     "orient": "R0"
    },
    "io_budget": {
@@ -43536,7 +41357,12 @@
    "geometric_max_wire_um": 384.918,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "placed_footprint": {
+    "w": 1036.8,
+    "h": 399.6
+   },
+   "plan_block": "pc_SE2"
   },
   {
    "name": "svc_SE_s3",
@@ -43548,8 +41374,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 28375.92,
-    "y": 1220.4,
+    "x": 25353.4,
+    "y": 1218.8,
     "orient": "R0"
    },
    "io_budget": {
@@ -45941,7 +43767,12 @@
    "geometric_max_wire_um": 454.482,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "placed_footprint": {
+    "w": 1036.8,
+    "h": 399.6
+   },
+   "plan_block": "pc_SE3"
   },
   {
    "name": "svc_SE_s4",
@@ -45953,8 +43784,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 30490.56,
-    "y": 1220.4,
+    "x": 24296.6,
+    "y": 1218.8,
     "orient": "R0"
    },
    "io_budget": {
@@ -47880,7 +45711,12 @@
    "geometric_max_wire_um": 384.918,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "placed_footprint": {
+    "w": 1036.8,
+    "h": 399.6
+   },
+   "plan_block": "pc_SE4"
   },
   {
    "name": "svc_SE_s5",
@@ -47892,8 +45728,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 23090.4,
-    "y": 1220.4,
+    "x": 23239.8,
+    "y": 1218.8,
     "orient": "R0"
    },
    "io_budget": {
@@ -49819,7 +47655,12 @@
    "geometric_max_wire_um": 384.918,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "placed_footprint": {
+    "w": 1036.8,
+    "h": 399.6
+   },
+   "plan_block": "pc_SE5"
   },
   {
    "name": "svc_SE_s6",
@@ -49831,8 +47672,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 25205.04,
-    "y": 1220.4,
+    "x": 22183.0,
+    "y": 1218.8,
     "orient": "R0"
    },
    "io_budget": {
@@ -51292,7 +49133,12 @@
    "geometric_max_wire_um": 317.466,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "placed_footprint": {
+    "w": 1036.8,
+    "h": 399.6
+   },
+   "plan_block": "pc_SE6"
   },
   {
    "name": "svc_SE_s7",
@@ -51304,8 +49150,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 26261.28,
-    "y": 1220.4,
+    "x": 21126.2,
+    "y": 1218.8,
     "orient": "R0"
    },
    "io_budget": {
@@ -52299,7 +50145,12 @@
    "geometric_max_wire_um": 317.466,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "placed_footprint": {
+    "w": 1036.8,
+    "h": 399.6
+   },
+   "plan_block": "pc_SE7"
   },
   {
    "name": "svc_SE_s8",
@@ -52311,8 +50162,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 30708.72,
-    "y": 660.96,
+    "x": 20069.4,
+    "y": 1218.8,
     "orient": "R0"
    },
    "io_budget": {
@@ -52840,7 +50691,12 @@
    "geometric_max_wire_um": 317.466,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "placed_footprint": {
+    "w": 1036.8,
+    "h": 399.6
+   },
+   "plan_block": null
   },
   {
    "name": "svc_NE_s0",
@@ -52852,8 +50708,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 27319.68,
-    "y": 24362.64,
+    "x": 28523.8,
+    "y": 19659.293,
     "orient": "MX"
    },
    "io_budget": {
@@ -54787,7 +52643,8 @@
    "geometric_max_wire_um": 384.918,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "plan_block": "pc_NE0"
   },
   {
    "name": "svc_NE_s1",
@@ -54799,8 +52656,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 24146.64,
-    "y": 24362.64,
+    "x": 27467.0,
+    "y": 19659.293,
     "orient": "MX"
    },
    "io_budget": {
@@ -57200,7 +55057,8 @@
    "geometric_max_wire_um": 454.482,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "plan_block": "pc_NE1"
   },
   {
    "name": "svc_NE_s2",
@@ -57212,8 +55070,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 23090.4,
-    "y": 24362.64,
+    "x": 26410.2,
+    "y": 19659.293,
     "orient": "MX"
    },
    "io_budget": {
@@ -59147,7 +57005,8 @@
    "geometric_max_wire_um": 384.918,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "plan_block": "pc_NE2"
   },
   {
    "name": "svc_NE_s3",
@@ -59159,8 +57018,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 25205.04,
-    "y": 24362.64,
+    "x": 25353.4,
+    "y": 19659.293,
     "orient": "MX"
    },
    "io_budget": {
@@ -61560,7 +59419,8 @@
    "geometric_max_wire_um": 454.482,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "plan_block": "pc_NE3"
   },
   {
    "name": "svc_NE_s4",
@@ -61572,8 +59432,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 26261.28,
-    "y": 24362.64,
+    "x": 24296.6,
+    "y": 19659.293,
     "orient": "MX"
    },
    "io_budget": {
@@ -63507,7 +61367,8 @@
    "geometric_max_wire_um": 384.918,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "plan_block": "pc_NE4"
   },
   {
    "name": "svc_NE_s5",
@@ -63519,8 +61380,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 30490.56,
-    "y": 24362.64,
+    "x": 23239.8,
+    "y": 19659.293,
     "orient": "MX"
    },
    "io_budget": {
@@ -65454,7 +63315,8 @@
    "geometric_max_wire_um": 384.918,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "plan_block": "pc_NE5"
   },
   {
    "name": "svc_NE_s6",
@@ -65466,8 +63328,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 29434.32,
-    "y": 24362.64,
+    "x": 22183.0,
+    "y": 19659.293,
     "orient": "MX"
    },
    "io_budget": {
@@ -66935,7 +64797,8 @@
    "geometric_max_wire_um": 317.466,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "plan_block": "pc_NE6"
   },
   {
    "name": "svc_NE_s7",
@@ -66947,8 +64810,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 28375.92,
-    "y": 24362.64,
+    "x": 21126.2,
+    "y": 19659.293,
     "orient": "MX"
    },
    "io_budget": {
@@ -67950,7 +65813,8 @@
    "geometric_max_wire_um": 317.466,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "plan_block": "pc_NE7"
   },
   {
    "name": "svc_NE_s8",
@@ -67962,8 +65826,8 @@
     "h": 399.6
    },
    "origin": {
-    "x": 30728.16,
-    "y": 24788.16,
+    "x": 20004.68,
+    "y": 19706.32,
     "orient": "MX"
    },
    "io_budget": {
@@ -68499,7 +66363,8 @@
    "geometric_max_wire_um": 317.466,
    "clock_domain": "hbm",
    "clock_period_ps": 1024.0,
-   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required"
+   "clock_compensation_status": "OPEN: per-PC measured insertion and phase homes required",
+   "plan_block": null
   },
   {
    "name": "idx_s0",
@@ -68511,9 +66376,9 @@
     "h": 3008.88
    },
    "origin": {
-    "x": 11560.32,
-    "y": 11486.88,
-    "orient": "R180"
+    "x": 14004.76,
+    "y": 2290.216,
+    "orient": "MYR90"
    },
    "io_budget": {
     "in_delay_frac": 0.2,
@@ -68821,15 +66686,16 @@
     "N": 0.22
    },
    "placed_footprint": {
-    "w": 3840.48,
-    "h": 3008.88
+    "w": 3008.88,
+    "h": 3840.48
    },
    "shared_plan": {
     "reference": "idx_s3",
     "orient": "R180",
     "own_face_match_bits": 1.0
    },
-   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN"
+   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN",
+   "plan_block": "idx_s0"
   },
   {
    "name": "idx_s1",
@@ -68841,9 +66707,9 @@
     "h": 3008.88
    },
    "origin": {
-    "x": 20453.04,
-    "y": 11486.88,
-    "orient": "R180"
+    "x": 14004.76,
+    "y": 6230.696,
+    "orient": "R270"
    },
    "io_budget": {
     "in_delay_frac": 0.2,
@@ -69151,15 +67017,16 @@
     "N": 0.22
    },
    "placed_footprint": {
-    "w": 3840.48,
-    "h": 3008.88
+    "w": 3008.88,
+    "h": 3840.48
    },
    "shared_plan": {
     "reference": "idx_s3",
     "orient": "R180",
     "own_face_match_bits": 1.0
    },
-   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN"
+   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN",
+   "plan_block": "idx_s1"
   },
   {
    "name": "idx_s2",
@@ -69171,9 +67038,9 @@
     "h": 3008.88
    },
    "origin": {
-    "x": 15461.28,
-    "y": 11486.88,
-    "orient": "R0"
+    "x": 14004.76,
+    "y": 14500.936,
+    "orient": "R90"
    },
    "io_budget": {
     "in_delay_frac": 0.2,
@@ -69481,15 +67348,16 @@
     "N": 0.22
    },
    "placed_footprint": {
-    "w": 3840.48,
-    "h": 3008.88
+    "w": 3008.88,
+    "h": 3840.48
    },
    "shared_plan": {
     "reference": "idx_s3",
     "orient": "R0",
     "own_face_match_bits": 1.0
    },
-   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN"
+   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN",
+   "plan_block": "idx_s2"
   },
   {
    "name": "idx_s3",
@@ -69501,9 +67369,9 @@
     "h": 3008.88
    },
    "origin": {
-    "x": 24351.84,
-    "y": 11486.88,
-    "orient": "R0"
+    "x": 14004.76,
+    "y": 10560.456,
+    "orient": "MXR90"
    },
    "io_budget": {
     "in_delay_frac": 0.2,
@@ -69810,7 +67678,12 @@
     "orient": "R0",
     "own_face_match_bits": 1.0
    },
-   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN"
+   "hierarchy_status": "child leaf grants present; complete child placement/registered seams/clock/pin/cut proof OPEN",
+   "placed_footprint": {
+    "w": 3008.88,
+    "h": 3840.48
+   },
+   "plan_block": "idx_s3"
   },
   {
    "name": "idx_sel",
@@ -69822,9 +67695,9 @@
     "h": 1164.24
    },
    "origin": {
-    "x": 19722.96,
-    "y": 13018.32,
-    "orient": "R0"
+    "x": 14428.480000000001,
+    "y": 10091.176,
+    "orient": "R90"
    },
    "io_budget": {
     "in_delay_frac": 0.2,
@@ -70027,7 +67900,12 @@
    "params": {},
    "layer_rule": "tile",
    "synth": null,
-   "need_um2": 0
+   "need_um2": 0,
+   "placed_footprint": {
+    "w": 1164.24,
+    "h": 317.52
+   },
+   "plan_block": "idx_sel"
   },
   {
    "name": "idx_link",
@@ -70039,9 +67917,9 @@
     "h": 745.2
    },
    "origin": {
-    "x": 19377.36,
-    "y": 13668.48,
-    "orient": "R0"
+    "x": 15612.720000000001,
+    "y": 10091.176,
+    "orient": "R90"
    },
    "io_budget": {
     "in_delay_frac": 0.2,
@@ -70233,7 +68111,12 @@
    "params": {},
    "layer_rule": "tile",
    "synth": null,
-   "need_um2": 0
+   "need_um2": 0,
+   "placed_footprint": {
+    "w": 745.2,
+    "h": 317.52
+   },
+   "plan_block": "idx_link"
   },
   {
    "name": "idx_q",
@@ -70245,8 +68128,8 @@
     "h": 449.28
    },
    "origin": {
-    "x": 19731.6,
-    "y": 14247.36,
+    "x": 13959.2,
+    "y": 10091.176,
     "orient": "R0"
    },
    "io_budget": {
@@ -70489,7 +68372,12 @@
     "stat": "/home/ubuntu/scratch-hdie-v15c/synth/idx_qbank/idx_qbank.stat",
     "note": "4 x query bank"
    },
-   "need_um2": 16840
+   "need_um2": 16840,
+   "placed_footprint": {
+    "w": 449.28,
+    "h": 449.28
+   },
+   "plan_block": "idx_q"
   },
   {
    "name": "idx_op",
@@ -70501,8 +68389,8 @@
     "h": 317.52
    },
    "origin": {
-    "x": 8203.68,
-    "y": 11413.44,
+    "x": 12347.84,
+    "y": 5864.0,
     "orient": "R0"
    },
    "io_budget": {
@@ -70712,7 +68600,12 @@
     "ff": 0,
     "stat": "/home/ubuntu/scratch-hdie-v15c/synth/idx_vmquery/idx_vmquery.stat"
    },
-   "need_um2": 6135
+   "need_um2": 6135,
+   "placed_footprint": {
+    "w": 360.72,
+    "h": 317.52
+   },
+   "plan_block": "idx_op"
   },
   {
    "name": "vm_status4",
@@ -70727,8 +68620,8 @@
     "h": 19.44
    },
    "origin": {
-    "x": 16066.08,
-    "y": 11437.2,
+    "x": 15465.42,
+    "y": 10514.39,
     "orient": "R0"
    },
    "version": 2,
@@ -71721,7 +69614,12 @@
    "view_source_ref": "67e4e876b",
    "source_sha256": "6ddcdcd4f3c56c56b27130cc0fa25a636fa1de1dc194c0732e537e77ad0d85a5",
    "lef_sha256": "2067d355f80a1552435f49ddfd890312c087674c86466d4d7fd5e0efb2298b2e",
-   "qualification_scope": "unchanged CLOSED component; native die transport and CP consumer OPEN"
+   "qualification_scope": "unchanged CLOSED component; native die transport and CP consumer OPEN",
+   "placed_footprint": {
+    "w": 17.28,
+    "h": 19.44
+   },
+   "plan_block": null
   },
   {
    "name": "coll_SW_writer0",
@@ -88907,12 +86805,12 @@
     {
      "name": "su_SW0",
      "origin": {
-      "x": 9763.2,
-      "y": 6050.16
+      "x": 1472.808,
+      "y": 5102.56
      },
      "outline": {
-      "w": 267.84,
-      "h": 267.84
+      "w": 1250.0,
+      "h": 1780.0
      },
      "links": [
       {
@@ -88955,12 +86853,12 @@
     {
      "name": "su_SW1",
      "origin": {
-      "x": 6825.6,
-      "y": 6132.24
+      "x": 4095.616,
+      "y": 5102.56
      },
      "outline": {
-      "w": 267.84,
-      "h": 267.84
+      "w": 1250.0,
+      "h": 1780.0
      },
      "links": [
       {
@@ -88989,12 +86887,12 @@
     {
      "name": "su_SW2",
      "origin": {
-      "x": 6441.12,
-      "y": 6603.12
+      "x": 6718.424,
+      "y": 5102.56
      },
      "outline": {
-      "w": 267.84,
-      "h": 267.84
+      "w": 1250.0,
+      "h": 1780.0
      },
      "links": [
       {
@@ -89023,12 +86921,12 @@
     {
      "name": "su_SW3",
      "origin": {
-      "x": 7788.96,
-      "y": 6171.12
+      "x": 9341.232,
+      "y": 5102.56
      },
      "outline": {
-      "w": 267.84,
-      "h": 267.84
+      "w": 1250.0,
+      "h": 1780.0
      },
      "links": [
       {
@@ -89055,7 +86953,18 @@
      ]
     }
    ],
-   "compute_reservation": null
+   "compute_reservation": null,
+   "core": {
+    "name": "sucore_SW",
+    "origin": {
+     "x": 10611.232,
+     "y": 5102.56
+    },
+    "outline": {
+     "w": 250.0,
+     "h": 1780.0
+    }
+   }
   },
   {
    "name": "hb_su_SE_top",
@@ -89065,12 +86974,12 @@
     {
      "name": "su_SE0",
      "origin": {
-      "x": 25604.64,
-      "y": 6611.76
+      "x": 28295.592,
+      "y": 5102.56
      },
      "outline": {
-      "w": 267.84,
-      "h": 267.84
+      "w": 1250.0,
+      "h": 1780.0
      },
      "links": [
       {
@@ -89113,12 +87022,12 @@
     {
      "name": "su_SE1",
      "origin": {
-      "x": 25168.32,
-      "y": 5739.12
+      "x": 25672.784,
+      "y": 5102.56
      },
      "outline": {
-      "w": 267.84,
-      "h": 267.84
+      "w": 1250.0,
+      "h": 1780.0
      },
      "links": [
       {
@@ -89147,12 +87056,12 @@
     {
      "name": "su_SE2",
      "origin": {
-      "x": 25505.28,
-      "y": 10376.64
+      "x": 23049.976,
+      "y": 5102.56
      },
      "outline": {
-      "w": 267.84,
-      "h": 267.84
+      "w": 1250.0,
+      "h": 1780.0
      },
      "links": [
       {
@@ -89181,12 +87090,12 @@
     {
      "name": "su_SE3",
      "origin": {
-      "x": 23770.8,
-      "y": 6132.24
+      "x": 20427.168,
+      "y": 5102.56
      },
      "outline": {
-      "w": 267.84,
-      "h": 267.84
+      "w": 1250.0,
+      "h": 1780.0
      },
      "links": [
       {
@@ -89213,7 +87122,18 @@
      ]
     }
    ],
-   "compute_reservation": null
+   "compute_reservation": null,
+   "core": {
+    "name": "sucore_SE",
+    "origin": {
+     "x": 20157.168,
+     "y": 5102.56
+    },
+    "outline": {
+     "w": 250.0,
+     "h": 1780.0
+    }
+   }
   },
   {
    "name": "hb_su_NW_top",
@@ -89223,12 +87143,12 @@
     {
      "name": "su_NW0",
      "origin": {
-      "x": 8914.32,
-      "y": 19191.6
+      "x": 1509.528,
+      "y": 14395.133
      },
      "outline": {
-      "w": 267.84,
-      "h": 267.84
+      "w": 1250.0,
+      "h": 1780.0
      },
      "links": [
       {
@@ -89271,12 +87191,12 @@
     {
      "name": "su_NW1",
      "origin": {
-      "x": 6572.88,
-      "y": 19571.76
+      "x": 4169.056,
+      "y": 14395.133
      },
      "outline": {
-      "w": 267.84,
-      "h": 267.84
+      "w": 1250.0,
+      "h": 1780.0
      },
      "links": [
       {
@@ -89305,12 +87225,12 @@
     {
      "name": "su_NW2",
      "origin": {
-      "x": 7743.6,
-      "y": 19386.0
+      "x": 6828.584,
+      "y": 14395.133
      },
      "outline": {
-      "w": 267.84,
-      "h": 267.84
+      "w": 1250.0,
+      "h": 1780.0
      },
      "links": [
       {
@@ -89339,12 +87259,12 @@
     {
      "name": "su_NW3",
      "origin": {
-      "x": 9469.44,
-      "y": 19271.52
+      "x": 9488.112,
+      "y": 14395.133
      },
      "outline": {
-      "w": 267.84,
-      "h": 267.84
+      "w": 1250.0,
+      "h": 1780.0
      },
      "links": [
       {
@@ -89371,7 +87291,18 @@
      ]
     }
    ],
-   "compute_reservation": null
+   "compute_reservation": null,
+   "core": {
+    "name": "sucore_NW",
+    "origin": {
+     "x": 10758.112,
+     "y": 14395.133
+    },
+    "outline": {
+     "w": 250.0,
+     "h": 1780.0
+    }
+   }
   },
   {
    "name": "hb_su_NE_top",
@@ -89381,12 +87312,12 @@
     {
      "name": "su_NE0",
      "origin": {
-      "x": 22349.52,
-      "y": 19830.96
+      "x": 28258.872,
+      "y": 14395.133
      },
      "outline": {
-      "w": 267.84,
-      "h": 267.84
+      "w": 1250.0,
+      "h": 1780.0
      },
      "links": [
       {
@@ -89429,12 +87360,12 @@
     {
      "name": "su_NE1",
      "origin": {
-      "x": 24978.24,
-      "y": 19591.2
+      "x": 25599.344,
+      "y": 14395.133
      },
      "outline": {
-      "w": 267.84,
-      "h": 267.84
+      "w": 1250.0,
+      "h": 1780.0
      },
      "links": [
       {
@@ -89463,12 +87394,12 @@
     {
      "name": "su_NE2",
      "origin": {
-      "x": 21697.2,
-      "y": 19515.6
+      "x": 22939.816,
+      "y": 14395.133
      },
      "outline": {
-      "w": 267.84,
-      "h": 267.84
+      "w": 1250.0,
+      "h": 1780.0
      },
      "links": [
       {
@@ -89497,12 +87428,12 @@
     {
      "name": "su_NE3",
      "origin": {
-      "x": 18986.4,
-      "y": 18517.68
+      "x": 20280.288,
+      "y": 14395.133
      },
      "outline": {
-      "w": 267.84,
-      "h": 267.84
+      "w": 1250.0,
+      "h": 1780.0
      },
      "links": [
       {
@@ -89529,7 +87460,250 @@
      ]
     }
    ],
-   "compute_reservation": null
+   "compute_reservation": null,
+   "core": {
+    "name": "sucore_NE",
+    "origin": {
+     "x": 20010.288,
+     "y": 14395.133
+    },
+    "outline": {
+     "w": 250.0,
+     "h": 1780.0
+    }
+   }
+  },
+  {
+   "name": "hb_sfu_SW",
+   "cell": "ot_hgi_sfu_scheduled_engine",
+   "rtl_pending": "SFU as 4 bank-pair port-group leaves sfu_SW0..3 (0.40 mm2 each, compact boxes 500 x 800 left of each bank pair; fixed-return LG_SFU <= 500 um to both banks) + engine core; the 4 LG roots exist in source on codex/hbm-die-takeover-1103 f94fb79fd/80d1f4413 -> physical leaf partition = H-ELEM-B / hbm_su_sm",
+   "groups": [
+    {
+     "name": "sfu_SW0",
+     "origin": {
+      "x": 120.0,
+      "y": 5622.56
+     },
+     "outline": {
+      "w": 500.0,
+      "h": 800.0
+     }
+    },
+    {
+     "name": "sfu_SW1",
+     "origin": {
+      "x": 2742.808,
+      "y": 5622.56
+     },
+     "outline": {
+      "w": 500.0,
+      "h": 800.0
+     }
+    },
+    {
+     "name": "sfu_SW2",
+     "origin": {
+      "x": 5365.616,
+      "y": 5622.56
+     },
+     "outline": {
+      "w": 500.0,
+      "h": 800.0
+     }
+    },
+    {
+     "name": "sfu_SW3",
+     "origin": {
+      "x": 7988.424,
+      "y": 5622.56
+     },
+     "outline": {
+      "w": 500.0,
+      "h": 800.0
+     }
+    }
+   ],
+   "previous_grant": {
+    "outline": {
+     "w": 552.96,
+     "h": 723.6
+    },
+    "pins": 43
+   }
+  },
+  {
+   "name": "hb_sfu_SE",
+   "cell": "ot_hgi_sfu_scheduled_engine",
+   "rtl_pending": "SFU as 4 bank-pair port-group leaves sfu_SE0..3 (0.40 mm2 each, compact boxes 500 x 800 left of each bank pair; fixed-return LG_SFU <= 500 um to both banks) + engine core; the 4 LG roots exist in source on codex/hbm-die-takeover-1103 f94fb79fd/80d1f4413 -> physical leaf partition = H-ELEM-B / hbm_su_sm",
+   "groups": [
+    {
+     "name": "sfu_SE0",
+     "origin": {
+      "x": 30398.4,
+      "y": 5622.56
+     },
+     "outline": {
+      "w": 500.0,
+      "h": 800.0
+     }
+    },
+    {
+     "name": "sfu_SE1",
+     "origin": {
+      "x": 27775.592,
+      "y": 5622.56
+     },
+     "outline": {
+      "w": 500.0,
+      "h": 800.0
+     }
+    },
+    {
+     "name": "sfu_SE2",
+     "origin": {
+      "x": 25152.784,
+      "y": 5622.56
+     },
+     "outline": {
+      "w": 500.0,
+      "h": 800.0
+     }
+    },
+    {
+     "name": "sfu_SE3",
+     "origin": {
+      "x": 22529.976,
+      "y": 5622.56
+     },
+     "outline": {
+      "w": 500.0,
+      "h": 800.0
+     }
+    }
+   ],
+   "previous_grant": {
+    "outline": {
+     "w": 552.96,
+     "h": 723.6
+    },
+    "pins": 43
+   }
+  },
+  {
+   "name": "hb_sfu_NW",
+   "cell": "ot_hgi_sfu_scheduled_engine",
+   "rtl_pending": "SFU as 4 bank-pair port-group leaves sfu_NW0..3 (0.40 mm2 each, compact boxes 500 x 800 left of each bank pair; fixed-return LG_SFU <= 500 um to both banks) + engine core; the 4 LG roots exist in source on codex/hbm-die-takeover-1103 f94fb79fd/80d1f4413 -> physical leaf partition = H-ELEM-B / hbm_su_sm",
+   "groups": [
+    {
+     "name": "sfu_NW0",
+     "origin": {
+      "x": 120.0,
+      "y": 14590.133
+     },
+     "outline": {
+      "w": 500.0,
+      "h": 800.0
+     }
+    },
+    {
+     "name": "sfu_NW1",
+     "origin": {
+      "x": 2779.528,
+      "y": 14590.133
+     },
+     "outline": {
+      "w": 500.0,
+      "h": 800.0
+     }
+    },
+    {
+     "name": "sfu_NW2",
+     "origin": {
+      "x": 5439.056,
+      "y": 14590.133
+     },
+     "outline": {
+      "w": 500.0,
+      "h": 800.0
+     }
+    },
+    {
+     "name": "sfu_NW3",
+     "origin": {
+      "x": 8098.584,
+      "y": 14590.133
+     },
+     "outline": {
+      "w": 500.0,
+      "h": 800.0
+     }
+    }
+   ],
+   "previous_grant": {
+    "outline": {
+     "w": 552.96,
+     "h": 723.6
+    },
+    "pins": 43
+   }
+  },
+  {
+   "name": "hb_sfu_NE",
+   "cell": "ot_hgi_sfu_scheduled_engine",
+   "rtl_pending": "SFU as 4 bank-pair port-group leaves sfu_NE0..3 (0.40 mm2 each, compact boxes 500 x 800 left of each bank pair; fixed-return LG_SFU <= 500 um to both banks) + engine core; the 4 LG roots exist in source on codex/hbm-die-takeover-1103 f94fb79fd/80d1f4413 -> physical leaf partition = H-ELEM-B / hbm_su_sm",
+   "groups": [
+    {
+     "name": "sfu_NE0",
+     "origin": {
+      "x": 30398.4,
+      "y": 14855.133
+     },
+     "outline": {
+      "w": 500.0,
+      "h": 800.0
+     }
+    },
+    {
+     "name": "sfu_NE1",
+     "origin": {
+      "x": 27738.872,
+      "y": 14855.133
+     },
+     "outline": {
+      "w": 500.0,
+      "h": 800.0
+     }
+    },
+    {
+     "name": "sfu_NE2",
+     "origin": {
+      "x": 25079.344,
+      "y": 14855.133
+     },
+     "outline": {
+      "w": 500.0,
+      "h": 800.0
+     }
+    },
+    {
+     "name": "sfu_NE3",
+     "origin": {
+      "x": 22419.816,
+      "y": 14855.133
+     },
+     "outline": {
+      "w": 500.0,
+      "h": 800.0
+     }
+    }
+   ],
+   "previous_grant": {
+    "outline": {
+     "w": 552.96,
+     "h": 723.6
+    },
+    "pins": 43
+   }
   }
  ],
  "shared_master_plans": {
@@ -89833,5 +88007,23 @@
    "meta": "d374c9e7c0d0a4a95c6a5b192d7b283d5b942c333de9d5d8bc45ef48ac712e81",
    "writer": "ec2cc4de9173c2bc059fbc23aa9d0136e89ab0952ff22cdd8cdda6d98b54897c"
   }
+ },
+ "rehome_compact": {
+  "moved": [
+   {
+    "slot": "svc_SE_s8",
+    "note": "no plan block: nearest free home (20069.4, 1218.8)"
+   },
+   {
+    "slot": "svc_NE_s8",
+    "note": "no plan block: nearest free home (20004.68, 19706.32)"
+   },
+   {
+    "slot": "vm_status4",
+    "note": "no plan block: nearest free home (15465.42, 10514.39)"
+   }
+  ],
+  "overlaps": [],
+  "sfu_to_request": []
  }
 }
