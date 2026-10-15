@@ -174,6 +174,8 @@ def main():
     # up to 83.8 um lateral): fd_in / fv_in at the fdx / fv x of the same bit; fdx (CLOSED ctnl / ctfl consumers) and
     # the NORM lanes unchanged.  The ctfs_nt(k-1).fd_out -> ctfxs_nt(k).fd_in die seam takes the jog (<= 365.04 + 84).
     px = {p: [list(b) for b in v['per_bit']] for p, v in fx['ports'].items()}
+    # second CTS root for the NORM lanes (dl / ul / cs / tid / reset capture, x 40-86): clk_l on the W face 12 um above clk
+    px['clk_l'] = [['W', 'M4', round(fx['ports']['clk']['per_bit'][0][2] + 12.0, 3), fx['ports']['clk']['per_bit'][0][3]]]
     for port, src in (('fd_in', 'fdx'), ('fv_in', 'fv')):
         px[port] = [['N', 'M5', b[2], a[3]] for a, b in zip(fx['ports'][port]['per_bit'], fx['ports'][src]['per_bit'])]
     rep['ctfxs_nt'] = dict(rule='fd_in / fv_in at the fdx / fv x (straight feed-through); fdx, lanes unchanged',
@@ -181,7 +183,7 @@ def main():
                            internal_v22=cut(list(zip(xs(fx, 'fd_in') + xs(fx, 'fv_in'), xs(fx, 'fdx') + xs(fx, 'fv')))),
                            seam_ctfs_to_ctfxs_max_um=round(max(seam(xmap[:NX] + xfv, [q[2] for q in px['fd_in'] + px['fv_in']],
                                                                     gap_xs)), 3))
-    write('ot_s81_hc_ctfxs_nt', px, extra := dict(rule='S-NORM candidate 2026-10-15: one fd/fv bit order for producer + '
+    write('ot_s81_hc_ctfxs_nt', px, extra := dict(clock_entries={'stream': ['clk', 'clk_l']}, rule='S-NORM candidate 2026-10-15: one fd/fv bit order for producer + '
                                                         'all consumers (see report.json)'))
     rep['cost'] = dict(cycles=0, area_um2=0, rtl='unchanged', masters_repinned=['ot_s81_hc_ctfn', 'ot_s81_hc_ctfs_nt',
                        'ot_s81_hc_ctfl_nt', 'ot_s81_hc_ctfxs_nt (fd_in / fv_in only)'])

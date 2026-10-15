@@ -8,7 +8,8 @@
  ],
  "clock_entries": {
   "stream": [
-   "clk"
+   "clk",
+   "clk_l"
   ]
  },
  "source": "tools/s81/hc_norm_straight_pins.py",
@@ -18231,6 +18232,18 @@
      "N",
      "M3",
      45.804,
+     0.084
+    ]
+   ]
+  },
+  "clk_l": {
+   "bits": 1,
+   "uniform": false,
+   "per_bit": [
+    [
+     "W",
+     "M4",
+     18.108,
      0.084
     ]
    ]

@@ -45,7 +45,8 @@
  "macros": [],
  "pins": {
   "W": [
-   "clk"
+   "clk",
+   "clk_l"
   ],
   "N": [
    "fd_in",
@@ -76,8 +77,8 @@
   "benches_from": "tools/s81_suhc/hc_owned_nt_benches.json",
   "owner": "Claude:S-NORM",
   "branch": "claude/s81-norm-tree-1014",
-  "tag": "s1-split",
-  "structural_change": "LOCAL SPLIT (S-NORM 10-15, RTL e5c3f968d): ctfx_nt routes failed GRT in the S pin span every time (v5 BUFx2 pads 26,013 overflow, v6 HB4 pads 6,874, all gcells x 227-343/y 0-11) because the S face carried TWO 1,128-bit registered buses (fdx M5 + fdx_local M3) plus their hold pads. The fdx_local re-register moves to its own strip ot_s81_hc_ctfl_nt; this master keeps fd_in (N) / fdx (S): one bus per face, like the N face that always routed. 0 cycles (same registers), HB4 hold pads kept.",
+  "tag": "s2-2root",
+  "structural_change": "TWO CTS ROOTS + straight feed-through (S-NORM 2026-10-15): s1 routed native FAIL (R 271.9, spread 65.7; capture cs 283 / dl_in 226 / ul_in 227 / fd_in 219, launch fdx 236.5): one root over two disjoint sink clusters (NORM lanes x 40-86, data rows x 227-342) gives every single-flop feed-through the whole-tile spread. clk_l now clocks the lane registers (rr, ul_out, dl_out, farq/oct, ctq replica), clk the data rows (fv, fdx); each root has its own boundary R (phi - R per entry). fd_in / fv_in re-pinned at the fdx / fv x of the same bit (v23: internal cut 129 -> 0, max lateral 83.8 -> 0). Same registers and cycles (RTL: clock ports only); crossing hooks (clock_split, local_clock_tap, capture_driver_size) dropped.",
   "no_bench_reason": "bit-exactness is gated on the HC slab composition with dsfd_sp_hc NTREE 1 (tools/s81_suhc/hc_ntree_bench.sh: NG 256 production shape exact PASS + mutant 3 FAIL; tools/s81_suhc/hc_gate.py --ntree 1 NG 256 exact 0/1940 x3 + per-tile mutants); the tile alone has no golden",
   "purpose": "el1014-s81-norm-tree: ctfx_nt broadcast source without the local re-register (LOCAL_SPLIT 1)",
   "views_to": "physical/ref_tile/s81hc_ctfxsnt_ref/views",
@@ -97,7 +98,8 @@
   ],
   "reroute_reason": {
    "kind": "rtl_change",
-   "fix": "LOCAL SPLIT (S-NORM 10-15, RTL e5c3f968d): ctfx_nt routes failed GRT in the S pin span every time (v5 BUFx2 pads 26,013 overflow, v6 HB4 pads 6,874, all gcells x 227-343/y 0-11) because the S face carried TWO 1,128-bit registered buses (fdx M5 + fdx_local M3) plus their hold pads. The fdx_local re-r"
+   "fix": "TWO CTS ROOTS + straight feed-through (S-NORM 2026-10-15): s1 routed native FAIL (R 271.9, spread 65.7; capture cs 283 / dl_in 226 / ul_in 227 / fd_in 219, launch fdx 236.5): one root over two disjoint sink clusters (NORM lanes x 40-86, data rows x 227-342) gives every single-flop feed-through the whole-tile spread. clk_l now clocks the lane registers (rr, ul_out, dl_out, farq/oct, ctq replica), clk the data rows (fv, fdx); each root has its own boundary R (phi - R per entry). fd_in / fv_in re-pinned at the fdx / fv x of the same bit (v23: internal cut 129 -> 0, max lateral 83.8 -> 0). Same registers and cycles (RTL: clock ports only); crossing hooks (clock_split, local_clock_tap, capture_driver_size) dropped.",
+   "source": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ntree.sv"
   }
  },
  "params": {
@@ -118,20 +120,56 @@
   "cell": "HB1xp67_ASAP7_75t_R",
   "basis": "Native routed phi-R audit: output lead/HB2/buffer plus capture pad exceed 220/190ps; remove the fixed output pad and use HB1 at input pins, retaining all MIN constraints and automatic hold repair."
  },
- "io_tcl": "physical/s81_die_pins/v22_hc_local_split/ot_s81_hc_ctfxs_nt.tcl",
+ "io_tcl": "physical/s81_die_pins/v23_hc_norm_straight_candidate/ot_s81_hc_ctfxs_nt.tcl",
  "assigned_pins": {
-  "file": "physical/s81_die_pins/v22_hc_local_split/ot_s81_hc_ctfxs_nt.json",
-  "source": "subset of the S-DIE-granted v20_hc_capture ctfx_nt pins (fdx_local/fv_local removed); adoption pending S-DIE",
-  "layout": "physical/s81_die_pins/v19_ntree/layout.json"
+  "file": "physical/s81_die_pins/v23_hc_norm_straight_candidate/ot_s81_hc_ctfxs_nt.json",
+  "source": "S-NORM v23 candidate (tools/s81/hc_norm_straight_pins.py)",
+  "layout": "physical/s81_die_pins/v23_hc_norm_straight_candidate/report.json"
  },
- "slot_change_request": "S81 die lead 2495f77a6 accepted serial/NTREE captured strip 576.72x25.92; enclosing cth751.68, rowshifts12.96",
- "boundary_tcl": [
-  "physical/common_flow/hold_pad_hb4.tcl",
-  "physical/ref_tile/s81hc_ctfxsnt_ref/local_clock_tap.tcl",
-  "physical/ref_tile/s81hc_ctfxsnt_ref/capture_driver_size.tcl"
+ "slot_change_request": "S-NORM v23 straight candidate + second clock entry clk_l (W M4 y 18.108) for the NORM lanes; request posted to S-DIE el1011-s81die.log 2026-10-15",
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "clk",
+  "clk_l"
  ],
- "native_capture_repair": "(1) clock net split per sink cluster before CTS (clock_split.tcl: NORM lanes x 40-176 / data rows x 178-343, one BUFx24 each; spread 75 -> 19.5 ps on the gate placement); (2) every BUFx2 driving a >20 um net in an fd_in capture cone -> BUFx4f after CTS hold repair (160 fd_in/fdx crossing pairs). Same RTL, pins, clocks, SDC, budgets.",
- "pre_cts_extra": [
-  "physical/ref_tile/s81hc_ctfxsnt_ref/clock_split.tcl"
- ]
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [
+    "fd_in",
+    "fv_in"
+   ],
+   "outputs": [
+    "fdx",
+    "fv"
+   ]
+  },
+  "lane": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_l"
+   ],
+   "inputs": [
+    "rst_in",
+    "tid",
+    "dl_in",
+    "ul_in",
+    "cs_n",
+    "cs_s"
+   ],
+   "outputs": [
+    "dl_out",
+    "ul_out"
+   ]
+  }
+ }
 }

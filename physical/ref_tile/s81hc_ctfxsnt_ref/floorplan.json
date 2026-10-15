@@ -30,7 +30,8 @@
  },
  "pins": {
   "W": [
-   "clk"
+   "clk",
+   "clk_l"
   ],
   "N": [
    "fd_in",
@@ -50,6 +51,10 @@
   ]
  },
  "clock_port": "clk",
+ "clock_ports": [
+  "clk",
+  "clk_l"
+ ],
  "blocks": [],
  "findings": [],
  "referenced": [
@@ -84,10 +89,6 @@
   "rtl/hdc/v41/ot_hdc_actquant.sv",
   "rtl/hdc/v41x/ot_dsrom_aq12.sv",
   "rtl/hdc/v41x/ot_dsrom_divc.sv",
-  "physical/common_flow/hold_pad_hb4.tcl",
-  "physical/ref_tile/s81hc_ctfxsnt_ref/local_clock_tap.tcl",
-  "physical/ref_tile/s81hc_ctfxsnt_ref/capture_driver_size.tcl",
-  "physical/ref_tile/s81hc_ctfxsnt_ref/clock_split.tcl",
   "physical/ref_tile/s81hc_ctfxsnt_ref/kit.env",
   "physical/ref_tile/s81hc_ctfxsnt_ref/clock.sdc",
   "physical/ref_tile/s81hc_ctfxsnt_ref/signoff.sdc",
@@ -109,13 +110,15 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
-  "physical/s81_die_pins/v22_hc_local_split/ot_s81_hc_ctfxs_nt.tcl",
+  "physical/s81_die_pins/v23_hc_norm_straight_candidate/ot_s81_hc_ctfxs_nt.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/dsrom_window_source/leaf_inhold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/ref_tile/s81hc_ctfxsnt_ref/pre_gpl.tcl",
   "physical/ref_tile/s81hc_ctfxsnt_ref/pre_dpl.tcl",
-  "physical/common_flow/pin_reg_split.tcl"
+  "physical/common_flow/pin_reg_split.tcl",
+  "physical/common_flow/clock_entries.tcl",
+  "physical/ref_tile/s81hc_ctfxsnt_ref/clock_entry.sdc"
  ]
 }

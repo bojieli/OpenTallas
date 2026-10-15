@@ -3022,3 +3022,4 @@ place_pin -pin_name {tid[4]} -layer M3 -location {45.516 25.878} -force_to_die_b
 place_pin -pin_name {tid[5]} -layer M3 -location {45.612 25.878} -force_to_die_boundary
 place_pin -pin_name {tid[6]} -layer M3 -location {45.708 25.878} -force_to_die_boundary
 place_pin -pin_name {tid[7]} -layer M3 -location {45.804 25.878} -force_to_die_boundary
+place_pin -pin_name {clk_l} -layer M4 -location {0.042 18.108} -force_to_die_boundary
