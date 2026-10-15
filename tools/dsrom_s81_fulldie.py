@@ -4288,6 +4288,9 @@ def build_r8(variant=None):
         for k_, ms_ in CTRL_C_MASTERS.items():
             if k_ in hub:
                 hub[k_].master = ms_
+        if STATIC_COLLECTIVE and 'collective' in hub:
+            assert (ROOT / STATIC_COLLECTIVE_RTL).is_file(), 'static collective RTL not in this source tree (main-first)'
+            hub['collective'].master = STATIC_COLLECTIVE_MASTER
         if 'sseq' in hub:   # s81die-1011/ctrl: per-engine c/d/s pins on the stream clock (kit / program faces cross)
             # F4 (--rtl-bind): a layer1 die has engines 0..7 only (stage programs); its master has no pins for 8..11
             # S-BIND (owner 2026-10-14 18:59, static cycle schedule): --rtl-bind binds the STATIC issuer (calendar-fixed
@@ -4308,6 +4311,15 @@ def build_r8(variant=None):
         for home in CANONICAL_LAYOUT['hcp_homes']:
             xx, yy = home['at_um']; oo = home['outline']
             RSV_RECTS.append((xx, yy, xx + oo['w'], yy + oo['h'], 'canonical_hcp_home'))
+    if MIX4_SLOT:
+        xx, yy, ww, hh = MIX4_SLOT
+        RSV_RECTS.append((xx, yy, xx + ww, yy + hh, 'mix4_home'))
+        variant['mix4_slot'] = dict(at_um=[xx, yy], outline=dict(w=ww, h=hh), master='dsfd_engram_mix4_c',
+                                    status='RESERVATION_SCREEN_NOT_BOUND (cluster footprint from S-FUNC sizing pending)')
+    if STATIC_SEAMS:
+        variant['static_seams'] = dict(vm_collective=[list(b) for b in RTL_HUB_EXTRA_STATIC] + [['collective', 'vm', 2204, 't_vm', 'f_collective']],
+                                       dropped=['vm.t_collective[592]', 'vm.tcs[3]', 'hc_s.y_rdy'], hc_tag=list(STATIC_HC_TAG),
+                                       collective_master=hub['collective'].master if 'collective' in hub else None)
     m['buses'] = []
     buses_r8(m)
     if RTL_HUB_WIDTHS and 'wfc' in hub and hub['wfc'].master in WFC_FIELD_SPLIT:
@@ -4799,15 +4811,20 @@ def buses_r8(m):
             ((('collective', 'host', HOST_CF_BITS, 't_host', 'f_collective'),
               ('host', 'collective', HOST_TC_BITS, 't_collective', 'f_host')) if HOST_SLAB else ()) + \
             (ctrl_adapter_buses(hb) if CTRL_ADAPTERS else ()) + \
-            (RTL_HUB_EXTRA if RTL_HUB_WIDTHS else ()) + \
+            ((RTL_HUB_EXTRA_STATIC if STATIC_SEAMS else RTL_HUB_EXTRA) if RTL_HUB_WIDTHS else ()) + \
+            ((STATIC_HC_TAG,) if STATIC_SEAMS and SUHC_V2 else ()) + \
             (tuple(b_ for k in range(HC_T_COLS) for b_ in (('hc_s', 'hc_t', HC_T_FWD, f't_tf{k}', f'f_sf{k}'),
                                                             ('hc_t', 'hc_s', HC_T_RET, f't_sr{k}', f'f_tr{k}')))
              if 'hc_t' in hub else ()):
         if SUHC_V2 and ((a_, b_) in (('vm', 'su_s'), ('vm', 'su_n'), ('vm', 'hc_s'), ('hc_n', 'vm'), ('su_s', 'hc_s'),
                                      ('su_n', 'hc_n'), ('hc_s', 'hc_n'), ('hc_n', 'hc_s')) and pa in ('t_su_s', 't_su_n', 't_hc', 't_vm', 't_n', 't_s')):
             continue          # su_hc v2 retired these (the VM row slots / y bus replace them)
+        if STATIC_SEAMS and (a_, b_, pa, pb) == ('hc_s', 'collective', 'y_rdy', 'f_hc_yr'):
+            continue          # static schedule: no consumer ready on the HC y bus
         if RTL_HUB_WIDTHS:
             bits = RTL_HUB_BITS.get((a_, b_), bits)
+            if STATIC_SEAMS and (a_, b_) == ('collective', 'vm'):
+                bits = 2204
         if m.get('pq_cnt') and (a_, b_, pa, pb) == ('gather', 'capture', 't_capture', 'f_gather'):
             _pq_cnt_buses(m, CH8, cor, bits)
             continue
@@ -5149,6 +5166,18 @@ RTL_HUB_WIDTHS = False          # --rtl-hub-widths (s81die-1011/ctrl, die lead d
 RTL_HUB_BITS = {('gather', 'capture'): 6947, ('capture', 'vm'): 13376, ('collective', 'vm'): 2100}
 RTL_ABUT_GAP = 21.6             # um between the abutting wide pairs (pin flops on both faces; no logic between)
 RTL_HUB_EXTRA = (('vm', 'collective', 592, 't_collective', 'f_vm'), ('vm', 'collective', 3, 'tcs', 'ts'))
+# --static-seams (S-DIE r11 2026-10-15, owner static-cycle rule 10-14 18:59): the VM <-> collective seam of the static
+# masters (rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv: f_collective 2204, f_crq 15, t_crs 513; static collective
+# dsfd_sp_collective_static_c: t_vm 2204, t_crq 15, f_crs 513).  The credit push vm.t_collective[592] and the 'room'
+# back-pressure vm.tcs[3] are dropped; the HC y bus loses its ready (hc_s.y_rdy -> collective.f_hc_yr) and gains the
+# registered row identity collective.t_hc_tag[32] -> hc_s.y_tag (the static HC POST consumer's slot, owner s_func).
+STATIC_SEAMS = False
+RTL_HUB_EXTRA_STATIC = (('collective', 'vm', 15, 't_crq', 'f_crq'), ('vm', 'collective', 513, 't_crs', 'f_crs'))
+STATIC_HC_TAG = ('collective', 'hc_s', 32, 't_hc_tag', 'y_tag')
+STATIC_COLLECTIVE_MASTER = 'dsfd_sp_collective_static_c'
+STATIC_COLLECTIVE_RTL = 'rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv'
+STATIC_COLLECTIVE = False       # --static-collective: swap the hub collective master (RTL must be on the source tree)
+MIX4_SLOT = None                # --mix4-slot X,Y,W,H: Engram MIX4 home reservation (screen; real master pins pending sizing)
 RTL_BIND = False                # --rtl-bind (s81-die-rtl-bind 2026-10-14)
 PQ_RTL_MASTER = 'dsfd_sp_pq_n'  # --rtl-bind PQ slot: rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv (native core cluster + ROM / lane leaves)
 
@@ -8082,7 +8111,9 @@ def _assigned_record(master):
     if not ASSIGNED_PINS_DIR:
         return None
     if master not in _ASSIGNED_PIN_CACHE:
-        path = ROOT / ASSIGNED_PINS_DIR / (master + '.json')
+        # ':'-separated overlay (S-DIE r11): the first directory holding the master's record wins
+        path = next((ROOT / d_ / (master + '.json') for d_ in ASSIGNED_PINS_DIR.split(':')
+                     if (ROOT / d_ / (master + '.json')).exists()), ROOT / ASSIGNED_PINS_DIR.split(':')[-1] / (master + '.json'))
         rec = json.loads(path.read_text()) if path.exists() else None
         if rec:
             assert rec['master'] == master and rec['schema'] == 'opentallas.s81.assigned_pins.v1', path
@@ -9263,6 +9294,9 @@ def die_options(ap):
                     'are allocated with non-overlapping pin spans; the 8 t_hc_y slices follow the slices of the one port')
     ap.add_argument('--peer-span-centre', action='store_true', help='s81-die-iter: with --rtl-hub-widths, centre each '
                     'face-to-face wide group on the die span shared with its peers (both ends of an abutting pair line up)')
+    ap.add_argument('--static-seams', action='store_true', help='S-DIE r11 2026-10-15: static VM<->collective seam (t_vm 2204, t_crq 15, t_crs 513), drop vm.t_collective/tcs credit and hc_s.y_rdy, add collective.t_hc_tag -> hc_s.y_tag')
+    ap.add_argument('--static-collective', action='store_true', help='swap the hub collective to dsfd_sp_collective_static_c (needs its RTL in the tree)')
+    ap.add_argument('--mix4-slot', help='X,Y,W,H um: Engram MIX4 home reservation (screen)')
     ap.add_argument('--rtl-hub-widths', action='store_true', help='s81die-1011 (die lead decision): W hub column gather -> '
                     'capture -> VM (capture directly above gather) and the hub buses at the RTL widths: gather t_capture 6,947 '
                     '(12 root lanes), capture t_vm 13,376, collective t_vm 2,100, VM -> collective f_vm 592 + ts 3')
@@ -9287,6 +9321,12 @@ def apply_options(a):
     CTRL_ROLE = getattr(a, 'ctrl_role', 'layer')
     CTRL_BINDINGS = None
     global CTRL_ADAPTERS, RTL_HUB_WIDTHS
+    global STATIC_SEAMS, STATIC_COLLECTIVE, MIX4_SLOT
+    STATIC_SEAMS = bool(getattr(a, 'static_seams', False))
+    STATIC_COLLECTIVE = bool(getattr(a, 'static_collective', False))
+    MIX4_SLOT = tuple(float(v) for v in a.mix4_slot.split(',')) if getattr(a, 'mix4_slot', None) else None
+    if STATIC_COLLECTIVE and not STATIC_SEAMS:
+        raise ValueError('--static-collective needs --static-seams (its ports are the static seam)')
     CTRL_ADAPTERS = bool(getattr(a, 'ctrl_adapters', False))
     RTL_HUB_WIDTHS = bool(getattr(a, 'rtl_hub_widths', False))
     global PEER_SPAN_CENTRE, LANE_PINS

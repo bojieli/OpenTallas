@@ -1,0 +1,3212 @@
+{
+  "schema": "opentallas.qwen.compressed-native-tile.v1",
+  "status": "RECTANGLE_CANDIDATE_REQUIRES_ACTUAL_PIN_TIMING",
+  "source": "/tmp/qce-tile-glue-packing/compression_inventory.json",
+  "source_sha256": "592fa0ad69c6500cf6058a1f1d026d1d3913508cc88f3d6441333b99295dc3cb",
+  "outline_um": [
+    481.68,
+    1400.22
+  ],
+  "expected_placed_bodies": 98,
+  "placed_bodies": 98,
+  "body_5p4_clearance_errors": [],
+  "search_nodes": 531,
+  "displaced_conflicting_instances": [
+    "tx0_r0_lo",
+    "tx0_r0_hi",
+    "xdelay_extra",
+    "xdelay_3",
+    "tx6_r0_hi",
+    "reset_branch_w_mid",
+    "reset_mid_e",
+    "mq_wrom_0",
+    "mq_wrom_1",
+    "mq_wrom_2",
+    "mq_wrom_3",
+    "xdelay_1",
+    "xdelay_2",
+    "xdelay_5",
+    "xdelay_6",
+    "xdelay_0",
+    "xdelay_7"
+  ],
+  "candidate_pool_sizes": {
+    "tx0_r0_lo": 331,
+    "tx0_r0_hi": 331,
+    "xdelay_extra": 331,
+    "xdelay_3": 357,
+    "tx6_r0_hi": 368,
+    "reset_branch_w_mid": 454,
+    "reset_mid_e": 477,
+    "mq_wrom_0": 522,
+    "mq_wrom_1": 522,
+    "mq_wrom_2": 522,
+    "mq_wrom_3": 522,
+    "xdelay_1": 522,
+    "xdelay_2": 522,
+    "xdelay_5": 522,
+    "xdelay_6": 522,
+    "xdelay_0": 524,
+    "xdelay_7": 524
+  },
+  "children": [
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+      "master": "ot_qwen_tile_rpair",
+      "inst": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_hd.u_rp",
+      "idx": 0,
+      "x": 22.464,
+      "y": 23.76,
+      "w": 311.04,
+      "h": 129.6,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+      "master": "ot_qwen_tile_rpair",
+      "inst": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_hd.u_rp",
+      "idx": 0,
+      "x": 22.464,
+      "y": 174.96,
+      "w": 311.04,
+      "h": 129.6,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+      "master": "ot_qwen_tile_rpair",
+      "inst": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_hd.u_rp",
+      "idx": 0,
+      "x": 22.464,
+      "y": 952.83,
+      "w": 311.04,
+      "h": 129.6,
+      "orient": "MX",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+      "master": "ot_qwen_tile_rpair",
+      "inst": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_hd.u_rp",
+      "idx": 0,
+      "x": 22.464,
+      "y": 1108.35,
+      "w": 311.04,
+      "h": 129.6,
+      "orient": "MX",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+      "master": "ot_qwen_tile_rpair",
+      "inst": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_hd.u_rp",
+      "idx": 0,
+      "x": 22.464,
+      "y": 1259.55,
+      "w": 311.04,
+      "h": 129.6,
+      "orient": "MX",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node",
+      "master": "ot_qwen_tile_node",
+      "inst": "u_tile.u_tile.u_logic.genblk4.g_ndh.u_node",
+      "idx": 0,
+      "x": 372.59999999999997,
+      "y": 410.4,
+      "w": 47.52,
+      "h": 432.0,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "master": "ot_qwen_tile_lsl_fp1",
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh",
+      "idx": 0,
+      "x": 103.68,
+      "y": 330.48,
+      "w": 99.792,
+      "h": 140.4,
+      "orient": "MY",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "master": "ot_qwen_tile_lsl_fp1",
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh",
+      "idx": 0,
+      "x": 265.68,
+      "y": 330.48,
+      "w": 99.792,
+      "h": 140.4,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "master": "ot_qwen_tile_lsl_fp1",
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh",
+      "idx": 0,
+      "x": 103.68,
+      "y": 482.49,
+      "w": 99.792,
+      "h": 140.4,
+      "orient": "MY",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "master": "ot_qwen_tile_lsl_fp1",
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
+      "idx": 0,
+      "x": 265.68,
+      "y": 482.49,
+      "w": 99.792,
+      "h": 140.4,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "master": "ot_qwen_tile_lsl_fp1",
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh",
+      "idx": 0,
+      "x": 103.68,
+      "y": 634.5,
+      "w": 99.792,
+      "h": 140.4,
+      "orient": "MY",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "master": "ot_qwen_tile_lsl_fp1",
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh",
+      "idx": 0,
+      "x": 265.68,
+      "y": 634.5,
+      "w": 99.792,
+      "h": 140.4,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "master": "ot_qwen_tile_lsl_fp1",
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh",
+      "idx": 0,
+      "x": 103.68,
+      "y": 786.51,
+      "w": 99.792,
+      "h": 140.4,
+      "orient": "MY",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "master": "ot_qwen_tile_lsl_fp1",
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh",
+      "idx": 0,
+      "x": 265.68,
+      "y": 786.51,
+      "w": 99.792,
+      "h": 140.4,
+      "orient": "R0",
+      "offtrack": 0
+    }
+  ],
+  "banks": [
+    {
+      "inst": "strap",
+      "master": "qkh_packet_v16",
+      "x": 425.52,
+      "y": 1017.63,
+      "w": 21.6,
+      "h": 21.6,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing tile_id register replacement"
+    },
+    {
+      "inst": "rqr_south_0",
+      "master": "qkh_packet_h256",
+      "x": 25.92,
+      "y": 1087.83,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing 1024-bit RQR collector"
+    },
+    {
+      "inst": "rqr_south_1",
+      "master": "qkh_packet_h256",
+      "x": 96.12,
+      "y": 1087.83,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing 1024-bit RQR collector"
+    },
+    {
+      "inst": "rqr_south_2",
+      "master": "qkh_packet_h256",
+      "x": 166.32,
+      "y": 1087.83,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing 1024-bit RQR collector"
+    },
+    {
+      "inst": "rqr_south_3",
+      "master": "qkh_packet_h256",
+      "x": 236.52000000000004,
+      "y": 1087.83,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing 1024-bit RQR collector"
+    },
+    {
+      "inst": "rqr_north_0",
+      "master": "qkh_packet_h256",
+      "x": 25.92,
+      "y": 309.96,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing 1024-bit RQR collector"
+    },
+    {
+      "inst": "rqr_north_1",
+      "master": "qkh_packet_h256",
+      "x": 96.12,
+      "y": 309.96,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing 1024-bit RQR collector"
+    },
+    {
+      "inst": "rqr_north_2",
+      "master": "qkh_packet_h256",
+      "x": 166.32,
+      "y": 309.96,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing 1024-bit RQR collector"
+    },
+    {
+      "inst": "rqr_north_3",
+      "master": "qkh_packet_h256",
+      "x": 236.52000000000004,
+      "y": 309.96,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing 1024-bit RQR collector"
+    },
+    {
+      "inst": "mq_wrom_0",
+      "master": "qkh_packet_v256",
+      "x": 208.872,
+      "y": 715.5,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing unreset mq_wrom 256-bit lane capture"
+    },
+    {
+      "inst": "mq_wrom_1",
+      "master": "qkh_packet_v256",
+      "x": 229.608,
+      "y": 715.5,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing unreset mq_wrom 256-bit lane capture"
+    },
+    {
+      "inst": "mq_wrom_2",
+      "master": "qkh_packet_v256",
+      "x": 38.88,
+      "y": 810.81,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing unreset mq_wrom 256-bit lane capture"
+    },
+    {
+      "inst": "mq_wrom_3",
+      "master": "qkh_packet_h256",
+      "x": 306.72,
+      "y": 932.31,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing unreset mq_wrom 256-bit lane capture"
+    },
+    {
+      "inst": "xdelay_0",
+      "master": "qkh_packet_v256",
+      "x": 425.52,
+      "y": 926.91,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "used_bits": 128,
+      "purpose": "existing 128-bit x delay rung",
+      "spare_payload": "xl_q[127:0] in bank[255:128]; IREG1"
+    },
+    {
+      "inst": "xdelay_1",
+      "master": "qkh_packet_v256",
+      "x": 367.2,
+      "y": 952.83,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "used_bits": 128,
+      "purpose": "existing 128-bit x delay rung"
+    },
+    {
+      "inst": "xdelay_2",
+      "master": "qkh_packet_v256",
+      "x": 338.904,
+      "y": 984.15,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "used_bits": 128,
+      "purpose": "existing 128-bit x delay rung"
+    },
+    {
+      "inst": "xdelay_3",
+      "master": "qkh_packet_v256",
+      "x": 399.6,
+      "y": 847.8,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "used_bits": 128,
+      "purpose": "existing 128-bit x delay rung"
+    },
+    {
+      "inst": "xdelay_4",
+      "master": "qkh_packet_h256",
+      "x": 25.92,
+      "y": 476.28,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "used_bits": 128,
+      "purpose": "existing 128-bit x delay rung"
+    },
+    {
+      "inst": "xdelay_5",
+      "master": "qkh_packet_v256",
+      "x": 38.88,
+      "y": 330.48,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "used_bits": 128,
+      "purpose": "existing 128-bit x delay rung"
+    },
+    {
+      "inst": "xdelay_6",
+      "master": "qkh_packet_h256",
+      "x": 306.72,
+      "y": 309.96,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "used_bits": 128,
+      "purpose": "existing 128-bit x delay rung",
+      "spare_payload": "mq_x[127:0] in bank[255:128]"
+    },
+    {
+      "inst": "xdelay_7",
+      "master": "qkh_packet_v256",
+      "x": 399.6,
+      "y": 340.2,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "used_bits": 128,
+      "purpose": "existing 128-bit x delay rung"
+    },
+    {
+      "inst": "tx0_r0_lo",
+      "master": "qkh_packet_v263",
+      "x": 38.88,
+      "y": 496.8,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing first TX rung"
+    },
+    {
+      "inst": "tx0_r0_hi",
+      "master": "qkh_packet_v256",
+      "x": 5.4,
+      "y": 444.69,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing first TX rung"
+    },
+    {
+      "inst": "tx0_r1_lo",
+      "master": "qkh_packet_v263",
+      "x": 59.4,
+      "y": 330.48,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing second TX rung"
+    },
+    {
+      "inst": "tx0_r1_hi",
+      "master": "qkh_packet_v256",
+      "x": 79.92,
+      "y": 330.48,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing second TX rung"
+    },
+    {
+      "inst": "tx1_r0_lo",
+      "master": "qkh_packet_v263",
+      "x": 59.4,
+      "y": 552.69,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing first TX rung"
+    },
+    {
+      "inst": "tx1_r0_hi",
+      "master": "qkh_packet_v256",
+      "x": 79.92,
+      "y": 552.69,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing first TX rung",
+      "spare_payload": "s2_x[127:0] in bank[255:128]; TXr0 high payload occupies[126:0]"
+    },
+    {
+      "inst": "tx1_r1_lo",
+      "master": "qkh_packet_v263",
+      "x": 59.4,
+      "y": 400.68,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing second TX rung"
+    },
+    {
+      "inst": "tx1_r1_hi",
+      "master": "qkh_packet_v256",
+      "x": 79.92,
+      "y": 400.68,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing second TX rung"
+    },
+    {
+      "inst": "tx2_r0_lo",
+      "master": "qkh_packet_v263",
+      "x": 59.4,
+      "y": 634.5,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing first TX rung"
+    },
+    {
+      "inst": "tx2_r0_hi",
+      "master": "qkh_packet_v256",
+      "x": 79.92,
+      "y": 634.5,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing first TX rung"
+    },
+    {
+      "inst": "tx2_r1_lo",
+      "master": "qkh_packet_v263",
+      "x": 59.4,
+      "y": 786.51,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing second TX rung"
+    },
+    {
+      "inst": "tx2_r1_hi",
+      "master": "qkh_packet_v256",
+      "x": 79.92,
+      "y": 786.51,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing second TX rung"
+    },
+    {
+      "inst": "tx3_r0_lo",
+      "master": "qkh_packet_v263",
+      "x": 59.4,
+      "y": 704.7,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing first TX rung"
+    },
+    {
+      "inst": "tx3_r0_hi",
+      "master": "qkh_packet_v256",
+      "x": 79.92,
+      "y": 704.7,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing first TX rung"
+    },
+    {
+      "inst": "tx3_r1_lo",
+      "master": "qkh_packet_v263",
+      "x": 59.4,
+      "y": 856.71,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing second TX rung"
+    },
+    {
+      "inst": "tx3_r1_hi",
+      "master": "qkh_packet_v256",
+      "x": 79.92,
+      "y": 856.71,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing second TX rung"
+    },
+    {
+      "inst": "tx4_r0_lo",
+      "master": "qkh_packet_v263",
+      "x": 425.52,
+      "y": 482.49,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing first TX rung"
+    },
+    {
+      "inst": "tx4_r0_hi",
+      "master": "qkh_packet_v256",
+      "x": 446.03999999999996,
+      "y": 482.49,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing first TX rung"
+    },
+    {
+      "inst": "tx4_r1_lo",
+      "master": "qkh_packet_v263",
+      "x": 425.52,
+      "y": 330.48,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing second TX rung"
+    },
+    {
+      "inst": "tx4_r1_hi",
+      "master": "qkh_packet_v256",
+      "x": 446.03999999999996,
+      "y": 330.48,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing second TX rung"
+    },
+    {
+      "inst": "tx5_r0_lo",
+      "master": "qkh_packet_v263",
+      "x": 425.52,
+      "y": 552.69,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing first TX rung"
+    },
+    {
+      "inst": "tx5_r0_hi",
+      "master": "qkh_packet_v256",
+      "x": 446.03999999999996,
+      "y": 552.69,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing first TX rung"
+    },
+    {
+      "inst": "tx5_r1_lo",
+      "master": "qkh_packet_v263",
+      "x": 425.52,
+      "y": 400.68,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing second TX rung"
+    },
+    {
+      "inst": "tx5_r1_hi",
+      "master": "qkh_packet_v256",
+      "x": 446.03999999999996,
+      "y": 400.68,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing second TX rung"
+    },
+    {
+      "inst": "tx6_r0_lo",
+      "master": "qkh_packet_v263",
+      "x": 209.088,
+      "y": 786.51,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing first TX rung"
+    },
+    {
+      "inst": "tx6_r0_hi",
+      "master": "qkh_packet_v256",
+      "x": 399.6,
+      "y": 924.21,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing first TX rung"
+    },
+    {
+      "inst": "tx6_r1_lo",
+      "master": "qkh_packet_v263",
+      "x": 425.52,
+      "y": 786.51,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing second TX rung"
+    },
+    {
+      "inst": "tx6_r1_hi",
+      "master": "qkh_packet_v256",
+      "x": 446.03999999999996,
+      "y": 786.51,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing second TX rung"
+    },
+    {
+      "inst": "tx7_r0_lo",
+      "master": "qkh_packet_v263",
+      "x": 425.52,
+      "y": 704.7,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing first TX rung"
+    },
+    {
+      "inst": "tx7_r0_hi",
+      "master": "qkh_packet_v256",
+      "x": 209.088,
+      "y": 856.71,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing first TX rung"
+    },
+    {
+      "inst": "tx7_r1_lo",
+      "master": "qkh_packet_v263",
+      "x": 425.52,
+      "y": 856.71,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing second TX rung"
+    },
+    {
+      "inst": "tx7_r1_hi",
+      "master": "qkh_packet_v256",
+      "x": 446.03999999999996,
+      "y": 856.71,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing second TX rung"
+    },
+    {
+      "inst": "face_n_a",
+      "master": "qwen_glue_v514",
+      "x": 5.4,
+      "y": 585.306,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "SPECULATIVE fullword face ABI pending actual build"
+    },
+    {
+      "inst": "face_n_b",
+      "master": "qwen_glue_v514",
+      "x": 32.4,
+      "y": 641.322,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "SPECULATIVE fullword face ABI pending actual build"
+    },
+    {
+      "inst": "face_n_y",
+      "master": "qwen_glue_v514",
+      "x": 5.4,
+      "y": 671.22,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "MY",
+      "kind": "proposed_bank",
+      "purpose": "SPECULATIVE fullword face ABI pending actual build"
+    },
+    {
+      "inst": "face_t_out",
+      "master": "qwen_glue_v514",
+      "x": 5.4,
+      "y": 752.244,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "MY",
+      "kind": "proposed_bank",
+      "purpose": "SPECULATIVE fullword face ABI pending actual build"
+    },
+    {
+      "inst": "face_tap",
+      "master": "qwen_glue_v508",
+      "x": 454.67999999999995,
+      "y": 654.996,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "MY",
+      "kind": "proposed_bank",
+      "purpose": "SPECULATIVE fullword face ABI pending actual build"
+    },
+    {
+      "inst": "s2_word_0",
+      "master": "qwen_glue_v514",
+      "x": 209.088,
+      "y": 485.73,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "same-edge512variablebit S2capture"
+    },
+    {
+      "inst": "s2_word_1",
+      "master": "qwen_glue_v514",
+      "x": 236.088,
+      "y": 485.73,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "same-edge512variablebit S2capture"
+    },
+    {
+      "inst": "node_stage_n_a",
+      "master": "qwen_glue_v514",
+      "x": 209.088,
+      "y": 394.2,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "EXTRA balanced input/output full514packet capture"
+    },
+    {
+      "inst": "node_stage_n_b",
+      "master": "qwen_glue_v514",
+      "x": 236.088,
+      "y": 634.5,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "EXTRA balanced input/output full514packet capture"
+    },
+    {
+      "inst": "node_stage_n_y",
+      "master": "qwen_glue_v514",
+      "x": 209.088,
+      "y": 634.5,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "EXTRA balanced input/output full514packet capture"
+    },
+    {
+      "inst": "node_stage_t_out",
+      "master": "qwen_glue_v514",
+      "x": 236.088,
+      "y": 786.51,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "EXTRA balanced input/output full514packet capture"
+    },
+    {
+      "inst": "return_south_0",
+      "master": "qkh_packet_h256",
+      "x": 25.92,
+      "y": 932.31,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "EXTRA balanced group-return capture"
+    },
+    {
+      "inst": "return_south_1",
+      "master": "qkh_packet_h256",
+      "x": 96.12,
+      "y": 932.31,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "EXTRA balanced group-return capture"
+    },
+    {
+      "inst": "return_south_2",
+      "master": "qkh_packet_h256",
+      "x": 166.32,
+      "y": 932.31,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "EXTRA balanced group-return capture"
+    },
+    {
+      "inst": "return_south_3",
+      "master": "qkh_packet_h256",
+      "x": 236.52000000000004,
+      "y": 932.31,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "EXTRA balanced group-return capture"
+    },
+    {
+      "inst": "return_north_0",
+      "master": "qkh_packet_v256",
+      "x": 5.4,
+      "y": 514.89,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "EXTRA balanced group-return capture"
+    },
+    {
+      "inst": "return_north_1",
+      "master": "qkh_packet_v256",
+      "x": 32.4,
+      "y": 400.68,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "EXTRA balanced group-return capture"
+    },
+    {
+      "inst": "return_north_2",
+      "master": "qkh_packet_v256",
+      "x": 236.52,
+      "y": 330.48,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "EXTRA balanced group-return capture"
+    },
+    {
+      "inst": "return_north_3",
+      "master": "qkh_packet_v256",
+      "x": 236.52,
+      "y": 400.68,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "EXTRA balanced group-return capture"
+    },
+    {
+      "inst": "xdelay_extra",
+      "master": "qkh_packet_v256",
+      "x": 32.4,
+      "y": 722.52,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "used_bits": 128,
+      "purpose": "EXTRA balanced ROMreturn/Xdata age+1"
+    }
+  ],
+  "reset_nodes": [
+    {
+      "inst": "reset_root",
+      "master": "qkh_packet_v16",
+      "x": 425.52,
+      "y": 642.06,
+      "w": 21.6,
+      "h": 21.6,
+      "orient": "R0",
+      "level": 1,
+      "clock_xy_um": [
+        430.90799999999996,
+        670.722
+      ],
+      "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+    },
+    {
+      "inst": "reset_mid_w",
+      "master": "qkh_packet_v16",
+      "x": 32.4,
+      "y": 605.69,
+      "w": 21.6,
+      "h": 21.6,
+      "orient": "R0",
+      "level": 2,
+      "clock_xy_um": [
+        37.788,
+        620.042
+      ],
+      "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+    },
+    {
+      "inst": "reset_mid_e",
+      "master": "qkh_packet_v16",
+      "x": 452.52,
+      "y": 622.89,
+      "w": 21.6,
+      "h": 21.6,
+      "orient": "R0",
+      "level": 2,
+      "clock_xy_um": [
+        430.90799999999996,
+        637.2420000000001
+      ],
+      "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+    },
+    {
+      "inst": "reset_mid_high",
+      "master": "qkh_packet_v16",
+      "x": 340.2,
+      "y": 957.15,
+      "w": 21.6,
+      "h": 21.6,
+      "orient": "R0",
+      "level": 2,
+      "clock_xy_um": [
+        345.58799999999997,
+        1000.1220000000001
+      ],
+      "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+    },
+    {
+      "inst": "reset_branch_w_low",
+      "master": "qkh_packet_v16",
+      "x": 5.4,
+      "y": 400.68,
+      "w": 21.6,
+      "h": 21.6,
+      "orient": "R0",
+      "level": 3,
+      "clock_xy_um": [
+        10.788,
+        400.722
+      ],
+      "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+    },
+    {
+      "inst": "reset_branch_w_mid",
+      "master": "qkh_packet_v16",
+      "x": 59.4,
+      "y": 496.8,
+      "w": 21.6,
+      "h": 21.6,
+      "orient": "R0",
+      "level": 3,
+      "clock_xy_um": [
+        10.788,
+        496.842
+      ],
+      "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+    },
+    {
+      "inst": "reset_branch_w_high0",
+      "master": "qkh_packet_v16",
+      "x": 5.4,
+      "y": 837.27,
+      "w": 21.6,
+      "h": 21.6,
+      "orient": "R0",
+      "level": 3,
+      "clock_xy_um": [
+        10.788,
+        880.2420000000001
+      ],
+      "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+    },
+    {
+      "inst": "reset_branch_w_high1",
+      "master": "qkh_packet_v16",
+      "x": 5.4,
+      "y": 897.21,
+      "w": 21.6,
+      "h": 21.6,
+      "orient": "R0",
+      "level": 3,
+      "clock_xy_um": [
+        10.788,
+        940.182
+      ],
+      "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+    },
+    {
+      "inst": "reset_branch_e_low",
+      "master": "qkh_packet_v16",
+      "x": 372.6,
+      "y": 383.4,
+      "w": 21.6,
+      "h": 21.6,
+      "orient": "R0",
+      "level": 3,
+      "clock_xy_um": [
+        377.988,
+        383.44199999999995
+      ],
+      "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+    },
+    {
+      "inst": "reset_branch_e_high",
+      "master": "qkh_packet_v16",
+      "x": 340.2,
+      "y": 1297.35,
+      "w": 21.6,
+      "h": 21.6,
+      "orient": "R0",
+      "level": 3,
+      "clock_xy_um": [
+        345.58799999999997,
+        1340.322
+      ],
+      "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+    },
+    {
+      "inst": "reset_branch_e_mid",
+      "master": "qkh_packet_v16",
+      "x": 372.6,
+      "y": 880.83,
+      "w": 21.6,
+      "h": 21.6,
+      "orient": "R0",
+      "level": 3,
+      "clock_xy_um": [
+        377.988,
+        923.802
+      ],
+      "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+    }
+  ],
+  "changes": [
+    {
+      "inst": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_hd.u_rp",
+      "before": {
+        "kind": "child",
+        "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+        "master": "ot_qwen_tile_rpair",
+        "inst": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_hd.u_rp",
+        "idx": 0,
+        "x": 22.464,
+        "y": 995.76,
+        "w": 311.04,
+        "h": 129.6,
+        "orient": "MX",
+        "offtrack": 0
+      },
+      "after": {
+        "kind": "child",
+        "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+        "master": "ot_qwen_tile_rpair",
+        "inst": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_hd.u_rp",
+        "idx": 0,
+        "x": 22.464,
+        "y": 952.83,
+        "w": 311.04,
+        "h": 129.6,
+        "orient": "MX",
+        "offtrack": 0
+      }
+    },
+    {
+      "inst": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_hd.u_rp",
+      "before": {
+        "kind": "child",
+        "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+        "master": "ot_qwen_tile_rpair",
+        "inst": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_hd.u_rp",
+        "idx": 0,
+        "x": 22.464,
+        "y": 1151.2799999999997,
+        "w": 311.04,
+        "h": 129.6,
+        "orient": "MX",
+        "offtrack": 0
+      },
+      "after": {
+        "kind": "child",
+        "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+        "master": "ot_qwen_tile_rpair",
+        "inst": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_hd.u_rp",
+        "idx": 0,
+        "x": 22.464,
+        "y": 1108.35,
+        "w": 311.04,
+        "h": 129.6,
+        "orient": "MX",
+        "offtrack": 0
+      }
+    },
+    {
+      "inst": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_hd.u_rp",
+      "before": {
+        "kind": "child",
+        "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+        "master": "ot_qwen_tile_rpair",
+        "inst": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_hd.u_rp",
+        "idx": 0,
+        "x": 22.464,
+        "y": 1302.4799999999998,
+        "w": 311.04,
+        "h": 129.6,
+        "orient": "MX",
+        "offtrack": 0
+      },
+      "after": {
+        "kind": "child",
+        "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+        "master": "ot_qwen_tile_rpair",
+        "inst": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_hd.u_rp",
+        "idx": 0,
+        "x": 22.464,
+        "y": 1259.55,
+        "w": 311.04,
+        "h": 129.6,
+        "orient": "MX",
+        "offtrack": 0
+      }
+    },
+    {
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh",
+      "before": {
+        "kind": "child",
+        "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+        "master": "ot_qwen_tile_lsl_fp1",
+        "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh",
+        "idx": 0,
+        "x": 103.68,
+        "y": 496.8,
+        "w": 99.792,
+        "h": 140.4,
+        "orient": "MY",
+        "offtrack": 0
+      },
+      "after": {
+        "kind": "child",
+        "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+        "master": "ot_qwen_tile_lsl_fp1",
+        "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh",
+        "idx": 0,
+        "x": 103.68,
+        "y": 482.49,
+        "w": 99.792,
+        "h": 140.4,
+        "orient": "MY",
+        "offtrack": 0
+      }
+    },
+    {
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
+      "before": {
+        "kind": "child",
+        "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+        "master": "ot_qwen_tile_lsl_fp1",
+        "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
+        "idx": 0,
+        "x": 265.68,
+        "y": 496.8,
+        "w": 99.792,
+        "h": 140.4,
+        "orient": "R0",
+        "offtrack": 0
+      },
+      "after": {
+        "kind": "child",
+        "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+        "master": "ot_qwen_tile_lsl_fp1",
+        "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
+        "idx": 0,
+        "x": 265.68,
+        "y": 482.49,
+        "w": 99.792,
+        "h": 140.4,
+        "orient": "R0",
+        "offtrack": 0
+      }
+    },
+    {
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh",
+      "before": {
+        "kind": "child",
+        "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+        "master": "ot_qwen_tile_lsl_fp1",
+        "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh",
+        "idx": 0,
+        "x": 103.68,
+        "y": 663.12,
+        "w": 99.792,
+        "h": 140.4,
+        "orient": "MY",
+        "offtrack": 0
+      },
+      "after": {
+        "kind": "child",
+        "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+        "master": "ot_qwen_tile_lsl_fp1",
+        "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh",
+        "idx": 0,
+        "x": 103.68,
+        "y": 634.5,
+        "w": 99.792,
+        "h": 140.4,
+        "orient": "MY",
+        "offtrack": 0
+      }
+    },
+    {
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh",
+      "before": {
+        "kind": "child",
+        "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+        "master": "ot_qwen_tile_lsl_fp1",
+        "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh",
+        "idx": 0,
+        "x": 265.68,
+        "y": 663.12,
+        "w": 99.792,
+        "h": 140.4,
+        "orient": "R0",
+        "offtrack": 0
+      },
+      "after": {
+        "kind": "child",
+        "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+        "master": "ot_qwen_tile_lsl_fp1",
+        "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh",
+        "idx": 0,
+        "x": 265.68,
+        "y": 634.5,
+        "w": 99.792,
+        "h": 140.4,
+        "orient": "R0",
+        "offtrack": 0
+      }
+    },
+    {
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh",
+      "before": {
+        "kind": "child",
+        "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+        "master": "ot_qwen_tile_lsl_fp1",
+        "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh",
+        "idx": 0,
+        "x": 103.68,
+        "y": 829.44,
+        "w": 99.792,
+        "h": 140.4,
+        "orient": "MY",
+        "offtrack": 0
+      },
+      "after": {
+        "kind": "child",
+        "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+        "master": "ot_qwen_tile_lsl_fp1",
+        "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh",
+        "idx": 0,
+        "x": 103.68,
+        "y": 786.51,
+        "w": 99.792,
+        "h": 140.4,
+        "orient": "MY",
+        "offtrack": 0
+      }
+    },
+    {
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh",
+      "before": {
+        "kind": "child",
+        "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+        "master": "ot_qwen_tile_lsl_fp1",
+        "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh",
+        "idx": 0,
+        "x": 265.68,
+        "y": 829.44,
+        "w": 99.792,
+        "h": 140.4,
+        "orient": "R0",
+        "offtrack": 0
+      },
+      "after": {
+        "kind": "child",
+        "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+        "master": "ot_qwen_tile_lsl_fp1",
+        "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh",
+        "idx": 0,
+        "x": 265.68,
+        "y": 786.51,
+        "w": 99.792,
+        "h": 140.4,
+        "orient": "R0",
+        "offtrack": 0
+      }
+    },
+    {
+      "inst": "strap",
+      "before": {
+        "inst": "strap",
+        "master": "qkh_packet_v16",
+        "x": 425.52,
+        "y": 1060.56,
+        "w": 21.6,
+        "h": 21.6,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing tile_id register replacement"
+      },
+      "after": {
+        "inst": "strap",
+        "master": "qkh_packet_v16",
+        "x": 425.52,
+        "y": 1017.63,
+        "w": 21.6,
+        "h": 21.6,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing tile_id register replacement"
+      }
+    },
+    {
+      "inst": "rqr_south_0",
+      "before": {
+        "inst": "rqr_south_0",
+        "master": "qkh_packet_h256",
+        "x": 25.92,
+        "y": 1130.76,
+        "w": 64.8,
+        "h": 15.12,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing 1024-bit RQR collector"
+      },
+      "after": {
+        "inst": "rqr_south_0",
+        "master": "qkh_packet_h256",
+        "x": 25.92,
+        "y": 1087.83,
+        "w": 64.8,
+        "h": 15.12,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing 1024-bit RQR collector"
+      }
+    },
+    {
+      "inst": "rqr_south_1",
+      "before": {
+        "inst": "rqr_south_1",
+        "master": "qkh_packet_h256",
+        "x": 96.12,
+        "y": 1130.76,
+        "w": 64.8,
+        "h": 15.12,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing 1024-bit RQR collector"
+      },
+      "after": {
+        "inst": "rqr_south_1",
+        "master": "qkh_packet_h256",
+        "x": 96.12,
+        "y": 1087.83,
+        "w": 64.8,
+        "h": 15.12,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing 1024-bit RQR collector"
+      }
+    },
+    {
+      "inst": "rqr_south_2",
+      "before": {
+        "inst": "rqr_south_2",
+        "master": "qkh_packet_h256",
+        "x": 166.32,
+        "y": 1130.76,
+        "w": 64.8,
+        "h": 15.12,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing 1024-bit RQR collector"
+      },
+      "after": {
+        "inst": "rqr_south_2",
+        "master": "qkh_packet_h256",
+        "x": 166.32,
+        "y": 1087.83,
+        "w": 64.8,
+        "h": 15.12,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing 1024-bit RQR collector"
+      }
+    },
+    {
+      "inst": "rqr_south_3",
+      "before": {
+        "inst": "rqr_south_3",
+        "master": "qkh_packet_h256",
+        "x": 236.52000000000004,
+        "y": 1130.76,
+        "w": 64.8,
+        "h": 15.12,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing 1024-bit RQR collector"
+      },
+      "after": {
+        "inst": "rqr_south_3",
+        "master": "qkh_packet_h256",
+        "x": 236.52000000000004,
+        "y": 1087.83,
+        "w": 64.8,
+        "h": 15.12,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing 1024-bit RQR collector"
+      }
+    },
+    {
+      "inst": "tx1_r0_lo",
+      "before": {
+        "inst": "tx1_r0_lo",
+        "master": "qkh_packet_v263",
+        "x": 59.4,
+        "y": 567.0,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      },
+      "after": {
+        "inst": "tx1_r0_lo",
+        "master": "qkh_packet_v263",
+        "x": 59.4,
+        "y": 552.69,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      }
+    },
+    {
+      "inst": "tx1_r0_hi",
+      "before": {
+        "inst": "tx1_r0_hi",
+        "master": "qkh_packet_v256",
+        "x": 79.92,
+        "y": 567.0,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung",
+        "spare_payload": "s2_x[127:0] in bank[255:128]; TXr0 high payload occupies[126:0]"
+      },
+      "after": {
+        "inst": "tx1_r0_hi",
+        "master": "qkh_packet_v256",
+        "x": 79.92,
+        "y": 552.69,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung",
+        "spare_payload": "s2_x[127:0] in bank[255:128]; TXr0 high payload occupies[126:0]"
+      }
+    },
+    {
+      "inst": "tx2_r0_lo",
+      "before": {
+        "inst": "tx2_r0_lo",
+        "master": "qkh_packet_v263",
+        "x": 59.4,
+        "y": 663.12,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      },
+      "after": {
+        "inst": "tx2_r0_lo",
+        "master": "qkh_packet_v263",
+        "x": 59.4,
+        "y": 634.5,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      }
+    },
+    {
+      "inst": "tx2_r0_hi",
+      "before": {
+        "inst": "tx2_r0_hi",
+        "master": "qkh_packet_v256",
+        "x": 79.92,
+        "y": 663.12,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      },
+      "after": {
+        "inst": "tx2_r0_hi",
+        "master": "qkh_packet_v256",
+        "x": 79.92,
+        "y": 634.5,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      }
+    },
+    {
+      "inst": "tx2_r1_lo",
+      "before": {
+        "inst": "tx2_r1_lo",
+        "master": "qkh_packet_v263",
+        "x": 59.4,
+        "y": 829.44,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing second TX rung"
+      },
+      "after": {
+        "inst": "tx2_r1_lo",
+        "master": "qkh_packet_v263",
+        "x": 59.4,
+        "y": 786.51,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing second TX rung"
+      }
+    },
+    {
+      "inst": "tx2_r1_hi",
+      "before": {
+        "inst": "tx2_r1_hi",
+        "master": "qkh_packet_v256",
+        "x": 79.92,
+        "y": 829.44,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing second TX rung"
+      },
+      "after": {
+        "inst": "tx2_r1_hi",
+        "master": "qkh_packet_v256",
+        "x": 79.92,
+        "y": 786.51,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing second TX rung"
+      }
+    },
+    {
+      "inst": "tx3_r0_lo",
+      "before": {
+        "inst": "tx3_r0_lo",
+        "master": "qkh_packet_v263",
+        "x": 59.4,
+        "y": 733.32,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      },
+      "after": {
+        "inst": "tx3_r0_lo",
+        "master": "qkh_packet_v263",
+        "x": 59.4,
+        "y": 704.7,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      }
+    },
+    {
+      "inst": "tx3_r0_hi",
+      "before": {
+        "inst": "tx3_r0_hi",
+        "master": "qkh_packet_v256",
+        "x": 79.92,
+        "y": 733.32,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      },
+      "after": {
+        "inst": "tx3_r0_hi",
+        "master": "qkh_packet_v256",
+        "x": 79.92,
+        "y": 704.7,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      }
+    },
+    {
+      "inst": "tx3_r1_lo",
+      "before": {
+        "inst": "tx3_r1_lo",
+        "master": "qkh_packet_v263",
+        "x": 59.4,
+        "y": 899.64,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing second TX rung"
+      },
+      "after": {
+        "inst": "tx3_r1_lo",
+        "master": "qkh_packet_v263",
+        "x": 59.4,
+        "y": 856.71,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing second TX rung"
+      }
+    },
+    {
+      "inst": "tx3_r1_hi",
+      "before": {
+        "inst": "tx3_r1_hi",
+        "master": "qkh_packet_v256",
+        "x": 79.92,
+        "y": 899.64,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing second TX rung"
+      },
+      "after": {
+        "inst": "tx3_r1_hi",
+        "master": "qkh_packet_v256",
+        "x": 79.92,
+        "y": 856.71,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing second TX rung"
+      }
+    },
+    {
+      "inst": "tx4_r0_lo",
+      "before": {
+        "inst": "tx4_r0_lo",
+        "master": "qkh_packet_v263",
+        "x": 425.52,
+        "y": 496.8,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      },
+      "after": {
+        "inst": "tx4_r0_lo",
+        "master": "qkh_packet_v263",
+        "x": 425.52,
+        "y": 482.49,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      }
+    },
+    {
+      "inst": "tx4_r0_hi",
+      "before": {
+        "inst": "tx4_r0_hi",
+        "master": "qkh_packet_v256",
+        "x": 446.03999999999996,
+        "y": 496.8,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      },
+      "after": {
+        "inst": "tx4_r0_hi",
+        "master": "qkh_packet_v256",
+        "x": 446.03999999999996,
+        "y": 482.49,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      }
+    },
+    {
+      "inst": "tx5_r0_lo",
+      "before": {
+        "inst": "tx5_r0_lo",
+        "master": "qkh_packet_v263",
+        "x": 425.52,
+        "y": 567.0,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      },
+      "after": {
+        "inst": "tx5_r0_lo",
+        "master": "qkh_packet_v263",
+        "x": 425.52,
+        "y": 552.69,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      }
+    },
+    {
+      "inst": "tx5_r0_hi",
+      "before": {
+        "inst": "tx5_r0_hi",
+        "master": "qkh_packet_v256",
+        "x": 446.03999999999996,
+        "y": 567.0,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      },
+      "after": {
+        "inst": "tx5_r0_hi",
+        "master": "qkh_packet_v256",
+        "x": 446.03999999999996,
+        "y": 552.69,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      }
+    },
+    {
+      "inst": "tx6_r0_lo",
+      "before": {
+        "inst": "tx6_r0_lo",
+        "master": "qkh_packet_v263",
+        "x": 209.088,
+        "y": 829.44,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      },
+      "after": {
+        "inst": "tx6_r0_lo",
+        "master": "qkh_packet_v263",
+        "x": 209.088,
+        "y": 786.51,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      }
+    },
+    {
+      "inst": "tx6_r1_lo",
+      "before": {
+        "inst": "tx6_r1_lo",
+        "master": "qkh_packet_v263",
+        "x": 425.52,
+        "y": 829.44,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing second TX rung"
+      },
+      "after": {
+        "inst": "tx6_r1_lo",
+        "master": "qkh_packet_v263",
+        "x": 425.52,
+        "y": 786.51,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing second TX rung"
+      }
+    },
+    {
+      "inst": "tx6_r1_hi",
+      "before": {
+        "inst": "tx6_r1_hi",
+        "master": "qkh_packet_v256",
+        "x": 446.03999999999996,
+        "y": 829.44,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing second TX rung"
+      },
+      "after": {
+        "inst": "tx6_r1_hi",
+        "master": "qkh_packet_v256",
+        "x": 446.03999999999996,
+        "y": 786.51,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing second TX rung"
+      }
+    },
+    {
+      "inst": "tx7_r0_lo",
+      "before": {
+        "inst": "tx7_r0_lo",
+        "master": "qkh_packet_v263",
+        "x": 425.52,
+        "y": 733.32,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      },
+      "after": {
+        "inst": "tx7_r0_lo",
+        "master": "qkh_packet_v263",
+        "x": 425.52,
+        "y": 704.7,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      }
+    },
+    {
+      "inst": "tx7_r0_hi",
+      "before": {
+        "inst": "tx7_r0_hi",
+        "master": "qkh_packet_v256",
+        "x": 209.088,
+        "y": 899.64,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      },
+      "after": {
+        "inst": "tx7_r0_hi",
+        "master": "qkh_packet_v256",
+        "x": 209.088,
+        "y": 856.71,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      }
+    },
+    {
+      "inst": "tx7_r1_lo",
+      "before": {
+        "inst": "tx7_r1_lo",
+        "master": "qkh_packet_v263",
+        "x": 425.52,
+        "y": 899.64,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing second TX rung"
+      },
+      "after": {
+        "inst": "tx7_r1_lo",
+        "master": "qkh_packet_v263",
+        "x": 425.52,
+        "y": 856.71,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing second TX rung"
+      }
+    },
+    {
+      "inst": "tx7_r1_hi",
+      "before": {
+        "inst": "tx7_r1_hi",
+        "master": "qkh_packet_v256",
+        "x": 446.03999999999996,
+        "y": 899.64,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing second TX rung"
+      },
+      "after": {
+        "inst": "tx7_r1_hi",
+        "master": "qkh_packet_v256",
+        "x": 446.03999999999996,
+        "y": 856.71,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing second TX rung"
+      }
+    },
+    {
+      "inst": "face_n_a",
+      "before": {
+        "inst": "face_n_a",
+        "master": "qwen_glue_v514",
+        "x": 5.4,
+        "y": 599.616,
+        "w": 21.6,
+        "h": 75.6,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "SPECULATIVE fullword face ABI pending actual build"
+      },
+      "after": {
+        "inst": "face_n_a",
+        "master": "qwen_glue_v514",
+        "x": 5.4,
+        "y": 585.306,
+        "w": 21.6,
+        "h": 75.6,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "SPECULATIVE fullword face ABI pending actual build"
+      }
+    },
+    {
+      "inst": "face_n_b",
+      "before": {
+        "inst": "face_n_b",
+        "master": "qwen_glue_v514",
+        "x": 32.4,
+        "y": 655.6320000000001,
+        "w": 21.6,
+        "h": 75.6,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "SPECULATIVE fullword face ABI pending actual build"
+      },
+      "after": {
+        "inst": "face_n_b",
+        "master": "qwen_glue_v514",
+        "x": 32.4,
+        "y": 641.322,
+        "w": 21.6,
+        "h": 75.6,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "SPECULATIVE fullword face ABI pending actual build"
+      }
+    },
+    {
+      "inst": "face_n_y",
+      "before": {
+        "inst": "face_n_y",
+        "master": "qwen_glue_v514",
+        "x": 5.4,
+        "y": 699.84,
+        "w": 21.6,
+        "h": 75.6,
+        "orient": "MY",
+        "kind": "proposed_bank",
+        "purpose": "SPECULATIVE fullword face ABI pending actual build"
+      },
+      "after": {
+        "inst": "face_n_y",
+        "master": "qwen_glue_v514",
+        "x": 5.4,
+        "y": 671.22,
+        "w": 21.6,
+        "h": 75.6,
+        "orient": "MY",
+        "kind": "proposed_bank",
+        "purpose": "SPECULATIVE fullword face ABI pending actual build"
+      }
+    },
+    {
+      "inst": "face_t_out",
+      "before": {
+        "inst": "face_t_out",
+        "master": "qwen_glue_v514",
+        "x": 5.4,
+        "y": 780.864,
+        "w": 21.6,
+        "h": 75.6,
+        "orient": "MY",
+        "kind": "proposed_bank",
+        "purpose": "SPECULATIVE fullword face ABI pending actual build"
+      },
+      "after": {
+        "inst": "face_t_out",
+        "master": "qwen_glue_v514",
+        "x": 5.4,
+        "y": 752.244,
+        "w": 21.6,
+        "h": 75.6,
+        "orient": "MY",
+        "kind": "proposed_bank",
+        "purpose": "SPECULATIVE fullword face ABI pending actual build"
+      }
+    },
+    {
+      "inst": "face_tap",
+      "before": {
+        "inst": "face_tap",
+        "master": "qwen_glue_v508",
+        "x": 454.67999999999995,
+        "y": 683.616,
+        "w": 21.6,
+        "h": 75.6,
+        "orient": "MY",
+        "kind": "proposed_bank",
+        "purpose": "SPECULATIVE fullword face ABI pending actual build"
+      },
+      "after": {
+        "inst": "face_tap",
+        "master": "qwen_glue_v508",
+        "x": 454.67999999999995,
+        "y": 654.996,
+        "w": 21.6,
+        "h": 75.6,
+        "orient": "MY",
+        "kind": "proposed_bank",
+        "purpose": "SPECULATIVE fullword face ABI pending actual build"
+      }
+    },
+    {
+      "inst": "s2_word_0",
+      "before": {
+        "inst": "s2_word_0",
+        "master": "qwen_glue_v514",
+        "x": 209.088,
+        "y": 500.04,
+        "w": 21.6,
+        "h": 75.6,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "same-edge512variablebit S2capture"
+      },
+      "after": {
+        "inst": "s2_word_0",
+        "master": "qwen_glue_v514",
+        "x": 209.088,
+        "y": 485.73,
+        "w": 21.6,
+        "h": 75.6,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "same-edge512variablebit S2capture"
+      }
+    },
+    {
+      "inst": "s2_word_1",
+      "before": {
+        "inst": "s2_word_1",
+        "master": "qwen_glue_v514",
+        "x": 236.088,
+        "y": 500.04,
+        "w": 21.6,
+        "h": 75.6,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "same-edge512variablebit S2capture"
+      },
+      "after": {
+        "inst": "s2_word_1",
+        "master": "qwen_glue_v514",
+        "x": 236.088,
+        "y": 485.73,
+        "w": 21.6,
+        "h": 75.6,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "same-edge512variablebit S2capture"
+      }
+    },
+    {
+      "inst": "node_stage_n_b",
+      "before": {
+        "inst": "node_stage_n_b",
+        "master": "qwen_glue_v514",
+        "x": 236.088,
+        "y": 663.12,
+        "w": 21.6,
+        "h": 75.6,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "EXTRA balanced input/output full514packet capture"
+      },
+      "after": {
+        "inst": "node_stage_n_b",
+        "master": "qwen_glue_v514",
+        "x": 236.088,
+        "y": 634.5,
+        "w": 21.6,
+        "h": 75.6,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "EXTRA balanced input/output full514packet capture"
+      }
+    },
+    {
+      "inst": "node_stage_n_y",
+      "before": {
+        "inst": "node_stage_n_y",
+        "master": "qwen_glue_v514",
+        "x": 209.088,
+        "y": 663.12,
+        "w": 21.6,
+        "h": 75.6,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "EXTRA balanced input/output full514packet capture"
+      },
+      "after": {
+        "inst": "node_stage_n_y",
+        "master": "qwen_glue_v514",
+        "x": 209.088,
+        "y": 634.5,
+        "w": 21.6,
+        "h": 75.6,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "EXTRA balanced input/output full514packet capture"
+      }
+    },
+    {
+      "inst": "node_stage_t_out",
+      "before": {
+        "inst": "node_stage_t_out",
+        "master": "qwen_glue_v514",
+        "x": 236.088,
+        "y": 829.44,
+        "w": 21.6,
+        "h": 75.6,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "EXTRA balanced input/output full514packet capture"
+      },
+      "after": {
+        "inst": "node_stage_t_out",
+        "master": "qwen_glue_v514",
+        "x": 236.088,
+        "y": 786.51,
+        "w": 21.6,
+        "h": 75.6,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "EXTRA balanced input/output full514packet capture"
+      }
+    },
+    {
+      "inst": "return_south_0",
+      "before": {
+        "inst": "return_south_0",
+        "master": "qkh_packet_h256",
+        "x": 25.92,
+        "y": 975.24,
+        "w": 64.8,
+        "h": 15.12,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "EXTRA balanced group-return capture"
+      },
+      "after": {
+        "inst": "return_south_0",
+        "master": "qkh_packet_h256",
+        "x": 25.92,
+        "y": 932.31,
+        "w": 64.8,
+        "h": 15.12,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "EXTRA balanced group-return capture"
+      }
+    },
+    {
+      "inst": "return_south_1",
+      "before": {
+        "inst": "return_south_1",
+        "master": "qkh_packet_h256",
+        "x": 96.12,
+        "y": 975.24,
+        "w": 64.8,
+        "h": 15.12,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "EXTRA balanced group-return capture"
+      },
+      "after": {
+        "inst": "return_south_1",
+        "master": "qkh_packet_h256",
+        "x": 96.12,
+        "y": 932.31,
+        "w": 64.8,
+        "h": 15.12,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "EXTRA balanced group-return capture"
+      }
+    },
+    {
+      "inst": "return_south_2",
+      "before": {
+        "inst": "return_south_2",
+        "master": "qkh_packet_h256",
+        "x": 166.32,
+        "y": 975.24,
+        "w": 64.8,
+        "h": 15.12,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "EXTRA balanced group-return capture"
+      },
+      "after": {
+        "inst": "return_south_2",
+        "master": "qkh_packet_h256",
+        "x": 166.32,
+        "y": 932.31,
+        "w": 64.8,
+        "h": 15.12,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "EXTRA balanced group-return capture"
+      }
+    },
+    {
+      "inst": "return_south_3",
+      "before": {
+        "inst": "return_south_3",
+        "master": "qkh_packet_h256",
+        "x": 236.52000000000004,
+        "y": 975.24,
+        "w": 64.8,
+        "h": 15.12,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "EXTRA balanced group-return capture"
+      },
+      "after": {
+        "inst": "return_south_3",
+        "master": "qkh_packet_h256",
+        "x": 236.52000000000004,
+        "y": 932.31,
+        "w": 64.8,
+        "h": 15.12,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "EXTRA balanced group-return capture"
+      }
+    },
+    {
+      "inst": "return_north_0",
+      "before": {
+        "inst": "return_north_0",
+        "master": "qkh_packet_v256",
+        "x": 5.4,
+        "y": 529.2,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "EXTRA balanced group-return capture"
+      },
+      "after": {
+        "inst": "return_north_0",
+        "master": "qkh_packet_v256",
+        "x": 5.4,
+        "y": 514.89,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "EXTRA balanced group-return capture"
+      }
+    },
+    {
+      "inst": "reset_root",
+      "before": {
+        "inst": "reset_root",
+        "master": "qkh_packet_v16",
+        "x": 425.52,
+        "y": 670.68,
+        "w": 21.6,
+        "h": 21.6,
+        "orient": "R0",
+        "level": 1,
+        "clock_xy_um": [
+          430.90799999999996,
+          670.722
+        ],
+        "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+      },
+      "after": {
+        "inst": "reset_root",
+        "master": "qkh_packet_v16",
+        "x": 425.52,
+        "y": 642.06,
+        "w": 21.6,
+        "h": 21.6,
+        "orient": "R0",
+        "level": 1,
+        "clock_xy_um": [
+          430.90799999999996,
+          670.722
+        ],
+        "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+      }
+    },
+    {
+      "inst": "reset_mid_w",
+      "before": {
+        "inst": "reset_mid_w",
+        "master": "qkh_packet_v16",
+        "x": 32.4,
+        "y": 620.0,
+        "w": 21.6,
+        "h": 21.6,
+        "orient": "R0",
+        "level": 2,
+        "clock_xy_um": [
+          37.788,
+          620.042
+        ],
+        "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+      },
+      "after": {
+        "inst": "reset_mid_w",
+        "master": "qkh_packet_v16",
+        "x": 32.4,
+        "y": 605.69,
+        "w": 21.6,
+        "h": 21.6,
+        "orient": "R0",
+        "level": 2,
+        "clock_xy_um": [
+          37.788,
+          620.042
+        ],
+        "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+      }
+    },
+    {
+      "inst": "reset_mid_high",
+      "before": {
+        "inst": "reset_mid_high",
+        "master": "qkh_packet_v16",
+        "x": 340.2,
+        "y": 1000.08,
+        "w": 21.6,
+        "h": 21.6,
+        "orient": "R0",
+        "level": 2,
+        "clock_xy_um": [
+          345.58799999999997,
+          1000.1220000000001
+        ],
+        "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+      },
+      "after": {
+        "inst": "reset_mid_high",
+        "master": "qkh_packet_v16",
+        "x": 340.2,
+        "y": 957.15,
+        "w": 21.6,
+        "h": 21.6,
+        "orient": "R0",
+        "level": 2,
+        "clock_xy_um": [
+          345.58799999999997,
+          1000.1220000000001
+        ],
+        "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+      }
+    },
+    {
+      "inst": "reset_branch_w_high0",
+      "before": {
+        "inst": "reset_branch_w_high0",
+        "master": "qkh_packet_v16",
+        "x": 5.4,
+        "y": 880.2,
+        "w": 21.6,
+        "h": 21.6,
+        "orient": "R0",
+        "level": 3,
+        "clock_xy_um": [
+          10.788,
+          880.2420000000001
+        ],
+        "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+      },
+      "after": {
+        "inst": "reset_branch_w_high0",
+        "master": "qkh_packet_v16",
+        "x": 5.4,
+        "y": 837.27,
+        "w": 21.6,
+        "h": 21.6,
+        "orient": "R0",
+        "level": 3,
+        "clock_xy_um": [
+          10.788,
+          880.2420000000001
+        ],
+        "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+      }
+    },
+    {
+      "inst": "reset_branch_w_high1",
+      "before": {
+        "inst": "reset_branch_w_high1",
+        "master": "qkh_packet_v16",
+        "x": 5.4,
+        "y": 940.14,
+        "w": 21.6,
+        "h": 21.6,
+        "orient": "R0",
+        "level": 3,
+        "clock_xy_um": [
+          10.788,
+          940.182
+        ],
+        "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+      },
+      "after": {
+        "inst": "reset_branch_w_high1",
+        "master": "qkh_packet_v16",
+        "x": 5.4,
+        "y": 897.21,
+        "w": 21.6,
+        "h": 21.6,
+        "orient": "R0",
+        "level": 3,
+        "clock_xy_um": [
+          10.788,
+          940.182
+        ],
+        "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+      }
+    },
+    {
+      "inst": "reset_branch_e_high",
+      "before": {
+        "inst": "reset_branch_e_high",
+        "master": "qkh_packet_v16",
+        "x": 340.2,
+        "y": 1340.28,
+        "w": 21.6,
+        "h": 21.6,
+        "orient": "R0",
+        "level": 3,
+        "clock_xy_um": [
+          345.58799999999997,
+          1340.322
+        ],
+        "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+      },
+      "after": {
+        "inst": "reset_branch_e_high",
+        "master": "qkh_packet_v16",
+        "x": 340.2,
+        "y": 1297.35,
+        "w": 21.6,
+        "h": 21.6,
+        "orient": "R0",
+        "level": 3,
+        "clock_xy_um": [
+          345.58799999999997,
+          1340.322
+        ],
+        "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+      }
+    },
+    {
+      "inst": "reset_branch_e_mid",
+      "before": {
+        "inst": "reset_branch_e_mid",
+        "master": "qkh_packet_v16",
+        "x": 372.6,
+        "y": 923.76,
+        "w": 21.6,
+        "h": 21.6,
+        "orient": "R0",
+        "level": 3,
+        "clock_xy_um": [
+          377.988,
+          923.802
+        ],
+        "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+      },
+      "after": {
+        "inst": "reset_branch_e_mid",
+        "master": "qkh_packet_v16",
+        "x": 372.6,
+        "y": 880.83,
+        "w": 21.6,
+        "h": 21.6,
+        "orient": "R0",
+        "level": 3,
+        "clock_xy_um": [
+          377.988,
+          923.802
+        ],
+        "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+      }
+    },
+    {
+      "inst": "tx0_r0_lo",
+      "before": {
+        "inst": "tx0_r0_lo",
+        "master": "qkh_packet_v263",
+        "x": 59.4,
+        "y": 496.8,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      },
+      "after": {
+        "inst": "tx0_r0_lo",
+        "master": "qkh_packet_v263",
+        "x": 38.88,
+        "y": 496.8,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      }
+    },
+    {
+      "inst": "tx0_r0_hi",
+      "before": {
+        "inst": "tx0_r0_hi",
+        "master": "qkh_packet_v256",
+        "x": 79.92,
+        "y": 496.8,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      },
+      "after": {
+        "inst": "tx0_r0_hi",
+        "master": "qkh_packet_v256",
+        "x": 5.4,
+        "y": 444.69,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      }
+    },
+    {
+      "inst": "xdelay_extra",
+      "before": {
+        "inst": "xdelay_extra",
+        "master": "qkh_packet_v256",
+        "x": 32.4,
+        "y": 740.88,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "used_bits": 128,
+        "purpose": "EXTRA balanced ROMreturn/Xdata age+1"
+      },
+      "after": {
+        "inst": "xdelay_extra",
+        "master": "qkh_packet_v256",
+        "x": 32.4,
+        "y": 722.52,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "used_bits": 128,
+        "purpose": "EXTRA balanced ROMreturn/Xdata age+1"
+      }
+    },
+    {
+      "inst": "xdelay_3",
+      "before": {
+        "inst": "xdelay_3",
+        "master": "qkh_packet_v256",
+        "x": 373.248,
+        "y": 850.04,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "used_bits": 128,
+        "purpose": "existing 128-bit x delay rung"
+      },
+      "after": {
+        "inst": "xdelay_3",
+        "master": "qkh_packet_v256",
+        "x": 399.6,
+        "y": 847.8,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "used_bits": 128,
+        "purpose": "existing 128-bit x delay rung"
+      }
+    },
+    {
+      "inst": "tx6_r0_hi",
+      "before": {
+        "inst": "tx6_r0_hi",
+        "master": "qkh_packet_v256",
+        "x": 399.59999999999997,
+        "y": 847.8,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      },
+      "after": {
+        "inst": "tx6_r0_hi",
+        "master": "qkh_packet_v256",
+        "x": 399.6,
+        "y": 924.21,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing first TX rung"
+      }
+    },
+    {
+      "inst": "reset_branch_w_mid",
+      "before": {
+        "inst": "reset_branch_w_mid",
+        "master": "qkh_packet_v16",
+        "x": 5.4,
+        "y": 496.8,
+        "w": 21.6,
+        "h": 21.6,
+        "orient": "R0",
+        "level": 3,
+        "clock_xy_um": [
+          10.788,
+          496.842
+        ],
+        "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+      },
+      "after": {
+        "inst": "reset_branch_w_mid",
+        "master": "qkh_packet_v16",
+        "x": 59.4,
+        "y": 496.8,
+        "w": 21.6,
+        "h": 21.6,
+        "orient": "R0",
+        "level": 3,
+        "clock_xy_um": [
+          10.788,
+          496.842
+        ],
+        "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+      }
+    },
+    {
+      "inst": "reset_mid_e",
+      "before": {
+        "inst": "reset_mid_e",
+        "master": "qkh_packet_v16",
+        "x": 425.52,
+        "y": 637.2,
+        "w": 21.6,
+        "h": 21.6,
+        "orient": "R0",
+        "level": 2,
+        "clock_xy_um": [
+          430.90799999999996,
+          637.2420000000001
+        ],
+        "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+      },
+      "after": {
+        "inst": "reset_mid_e",
+        "master": "qkh_packet_v16",
+        "x": 452.52,
+        "y": 622.89,
+        "w": 21.6,
+        "h": 21.6,
+        "orient": "R0",
+        "level": 2,
+        "clock_xy_um": [
+          430.90799999999996,
+          637.2420000000001
+        ],
+        "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+      }
+    },
+    {
+      "inst": "mq_wrom_0",
+      "before": {
+        "inst": "mq_wrom_0",
+        "master": "qkh_packet_h256",
+        "x": 59.4,
+        "y": 642.6,
+        "w": 64.8,
+        "h": 15.12,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing unreset mq_wrom 256-bit lane capture"
+      },
+      "after": {
+        "inst": "mq_wrom_0",
+        "master": "qkh_packet_v256",
+        "x": 208.872,
+        "y": 715.5,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing unreset mq_wrom 256-bit lane capture"
+      }
+    },
+    {
+      "inst": "mq_wrom_1",
+      "before": {
+        "inst": "mq_wrom_1",
+        "master": "qkh_packet_h256",
+        "x": 129.6,
+        "y": 642.6,
+        "w": 64.8,
+        "h": 15.12,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing unreset mq_wrom 256-bit lane capture"
+      },
+      "after": {
+        "inst": "mq_wrom_1",
+        "master": "qkh_packet_v256",
+        "x": 229.608,
+        "y": 715.5,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing unreset mq_wrom 256-bit lane capture"
+      }
+    },
+    {
+      "inst": "mq_wrom_2",
+      "before": {
+        "inst": "mq_wrom_2",
+        "master": "qkh_packet_h256",
+        "x": 199.8,
+        "y": 642.6,
+        "w": 64.8,
+        "h": 15.12,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing unreset mq_wrom 256-bit lane capture"
+      },
+      "after": {
+        "inst": "mq_wrom_2",
+        "master": "qkh_packet_v256",
+        "x": 38.88,
+        "y": 810.81,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing unreset mq_wrom 256-bit lane capture"
+      }
+    },
+    {
+      "inst": "mq_wrom_3",
+      "before": {
+        "inst": "mq_wrom_3",
+        "master": "qkh_packet_h256",
+        "x": 270.0,
+        "y": 642.6,
+        "w": 64.8,
+        "h": 15.12,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing unreset mq_wrom 256-bit lane capture"
+      },
+      "after": {
+        "inst": "mq_wrom_3",
+        "master": "qkh_packet_h256",
+        "x": 306.72,
+        "y": 932.31,
+        "w": 64.8,
+        "h": 15.12,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "purpose": "existing unreset mq_wrom 256-bit lane capture"
+      }
+    },
+    {
+      "inst": "xdelay_1",
+      "before": {
+        "inst": "xdelay_1",
+        "master": "qkh_packet_h256",
+        "x": 166.32,
+        "y": 808.92,
+        "w": 64.8,
+        "h": 15.12,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "used_bits": 128,
+        "purpose": "existing 128-bit x delay rung"
+      },
+      "after": {
+        "inst": "xdelay_1",
+        "master": "qkh_packet_v256",
+        "x": 367.2,
+        "y": 952.83,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "used_bits": 128,
+        "purpose": "existing 128-bit x delay rung"
+      }
+    },
+    {
+      "inst": "xdelay_2",
+      "before": {
+        "inst": "xdelay_2",
+        "master": "qkh_packet_h256",
+        "x": 96.12,
+        "y": 808.92,
+        "w": 64.8,
+        "h": 15.12,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "used_bits": 128,
+        "purpose": "existing 128-bit x delay rung"
+      },
+      "after": {
+        "inst": "xdelay_2",
+        "master": "qkh_packet_v256",
+        "x": 338.904,
+        "y": 984.15,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "used_bits": 128,
+        "purpose": "existing 128-bit x delay rung"
+      }
+    },
+    {
+      "inst": "xdelay_5",
+      "before": {
+        "inst": "xdelay_5",
+        "master": "qkh_packet_h256",
+        "x": 96.12,
+        "y": 476.28,
+        "w": 64.8,
+        "h": 15.12,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "used_bits": 128,
+        "purpose": "existing 128-bit x delay rung"
+      },
+      "after": {
+        "inst": "xdelay_5",
+        "master": "qkh_packet_v256",
+        "x": 38.88,
+        "y": 330.48,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "used_bits": 128,
+        "purpose": "existing 128-bit x delay rung"
+      }
+    },
+    {
+      "inst": "xdelay_6",
+      "before": {
+        "inst": "xdelay_6",
+        "master": "qkh_packet_h256",
+        "x": 166.32,
+        "y": 476.28,
+        "w": 64.8,
+        "h": 15.12,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "used_bits": 128,
+        "purpose": "existing 128-bit x delay rung",
+        "spare_payload": "mq_x[127:0] in bank[255:128]"
+      },
+      "after": {
+        "inst": "xdelay_6",
+        "master": "qkh_packet_h256",
+        "x": 306.72,
+        "y": 309.96,
+        "w": 64.8,
+        "h": 15.12,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "used_bits": 128,
+        "purpose": "existing 128-bit x delay rung",
+        "spare_payload": "mq_x[127:0] in bank[255:128]"
+      }
+    },
+    {
+      "inst": "xdelay_0",
+      "before": {
+        "inst": "xdelay_0",
+        "master": "qkh_packet_h256",
+        "x": 236.52000000000004,
+        "y": 808.92,
+        "w": 64.8,
+        "h": 15.12,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "used_bits": 128,
+        "purpose": "existing 128-bit x delay rung",
+        "spare_payload": "xl_q[127:0] in bank[255:128]; IREG1"
+      },
+      "after": {
+        "inst": "xdelay_0",
+        "master": "qkh_packet_v256",
+        "x": 425.52,
+        "y": 926.91,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "used_bits": 128,
+        "purpose": "existing 128-bit x delay rung",
+        "spare_payload": "xl_q[127:0] in bank[255:128]; IREG1"
+      }
+    },
+    {
+      "inst": "xdelay_7",
+      "before": {
+        "inst": "xdelay_7",
+        "master": "qkh_packet_h256",
+        "x": 236.52000000000004,
+        "y": 476.28,
+        "w": 64.8,
+        "h": 15.12,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "used_bits": 128,
+        "purpose": "existing 128-bit x delay rung"
+      },
+      "after": {
+        "inst": "xdelay_7",
+        "master": "qkh_packet_v256",
+        "x": 399.6,
+        "y": 340.2,
+        "w": 15.12,
+        "h": 64.8,
+        "orient": "R0",
+        "kind": "proposed_bank",
+        "used_bits": 128,
+        "purpose": "existing 128-bit x delay rung"
+      }
+    }
+  ],
+  "qualification": false,
+  "remaining_gates": [
+    "All actual per-bit d/q pins including H\u2192V source-master substitution",
+    "Native launch/capture/extrema and compensated phase",
+    "Reset source/target reassignment and parent pin ABI",
+    "Actual control/combinational logic homes and timing",
+    "Full source equivalence, fixed programme ages, all clock roots",
+    "Parent route TT/FF/DRC, pin escape and cut capacity",
+    "Whole-die DVM strip/head and current actualSU/IO/KV inventory"
+  ]
+}
