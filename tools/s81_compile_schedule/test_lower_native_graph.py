@@ -51,6 +51,14 @@ class ActualGraphLoweringTest(unittest.TestCase):
             self.assertEqual(self.jobs[store]['preds'],[f'L{L}.attn.hc_post'])
             self.assertEqual(self.jobs[store]['native_binding']['opcode'],1)
 
+    def test_cross_stage_previous_pre_coefficient_producer_preserved(self):
+        self.assertIsNotNone(self.result['global_dependency_graph_evidence'])
+        self.assertIn('L0.attn.hc.sinkhorn',self.jobs['L0.ffn.hc_pre']['preds'])
+        self.assertIn('L0.substage_hop0',self.jobs['L0.ffn.hc_pre']['preds'])
+        self.assertIn('L0.ffn.hc.sinkhorn',self.jobs['L1.attn.hc_pre']['preds'])
+        self.assertIn('unplaced_hops',self.result['unresolved_external_producers'])
+        self.assertTrue(self.result['external_producer_edges'])
+
     def test_missing_native_fusion_target_rejected(self):
         programs=copy.deepcopy(self.programs)
         p=next(p for p in programs if any(o['id']=='L0.attn.q_quant' for o in p['ops']))

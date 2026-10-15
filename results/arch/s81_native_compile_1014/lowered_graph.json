@@ -3104,7 +3104,10 @@
       "source_stages": [
         "S001"
       ],
-      "preds": [],
+      "preds": [
+        "L0.attn.hc.sinkhorn",
+        "L0.substage_hop0"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -3159,7 +3162,8 @@
         "S001"
       ],
       "preds": [
-        "L0.attn.hc.h_store_for_hcx"
+        "L0.attn.hc.h_store_for_hcx",
+        "L0.substage_hop0"
       ],
       "native_binding": {
         "engine": "hcx",
@@ -3521,7 +3525,8 @@
       ],
       "preds": [
         "L0.ffn.combine_allreduce",
-        "L0.ffn.hc.sinkhorn"
+        "L0.ffn.hc.sinkhorn",
+        "L0.substage_hop0"
       ],
       "native_binding": {
         "engine": "hc",
@@ -4141,7 +4146,10 @@
       "source_stages": [
         "S002"
       ],
-      "preds": [],
+      "preds": [
+        "L1.attn.hc.sinkhorn",
+        "L1.substage_hop0"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -4196,7 +4204,8 @@
         "S002"
       ],
       "preds": [
-        "L1.attn.hc.h_store_for_hcx"
+        "L1.attn.hc.h_store_for_hcx",
+        "L1.substage_hop0"
       ],
       "native_binding": {
         "engine": "hcx",
@@ -4558,7 +4567,8 @@
       ],
       "preds": [
         "L1.ffn.combine_allreduce",
-        "L1.ffn.hc.sinkhorn"
+        "L1.ffn.hc.sinkhorn",
+        "L1.substage_hop0"
       ],
       "native_binding": {
         "engine": "hc",
@@ -5343,7 +5353,9 @@
       "source_stages": [
         "S003"
       ],
-      "preds": [],
+      "preds": [
+        "L2.substage_hop0"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -5357,7 +5369,9 @@
       "source_stages": [
         "S004"
       ],
-      "preds": [],
+      "preds": [
+        "L2.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -5373,7 +5387,10 @@
       "source_stages": [
         "S004"
       ],
-      "preds": [],
+      "preds": [
+        "L2.attn.hc.sinkhorn",
+        "L2.substage_hop1"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -5428,7 +5445,8 @@
         "S004"
       ],
       "preds": [
-        "L2.attn.hc.h_store_for_hcx"
+        "L2.attn.hc.h_store_for_hcx",
+        "L2.substage_hop1"
       ],
       "native_binding": {
         "engine": "hcx",
@@ -5790,7 +5808,8 @@
       ],
       "preds": [
         "L2.ffn.combine_allreduce",
-        "L2.ffn.hc.sinkhorn"
+        "L2.ffn.hc.sinkhorn",
+        "L2.substage_hop1"
       ],
       "native_binding": {
         "engine": "hc",
@@ -6327,7 +6346,9 @@
       "source_stages": [
         "S005"
       ],
-      "preds": [],
+      "preds": [
+        "L2.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -6343,7 +6364,10 @@
       "source_stages": [
         "S005"
       ],
-      "preds": [],
+      "preds": [
+        "L3.attn.hc.sinkhorn",
+        "L3.substage_hop0"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -6398,7 +6422,8 @@
         "S005"
       ],
       "preds": [
-        "L3.attn.hc.h_store_for_hcx"
+        "L3.attn.hc.h_store_for_hcx",
+        "L3.substage_hop0"
       ],
       "native_binding": {
         "engine": "hcx",
@@ -6760,7 +6785,8 @@
       ],
       "preds": [
         "L3.ffn.combine_allreduce",
-        "L3.ffn.hc.sinkhorn"
+        "L3.ffn.hc.sinkhorn",
+        "L3.substage_hop0"
       ],
       "native_binding": {
         "engine": "hc",
@@ -7297,7 +7323,9 @@
       "source_stages": [
         "S006"
       ],
-      "preds": [],
+      "preds": [
+        "L4.substage_hop0"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -7311,7 +7339,9 @@
       "source_stages": [
         "S007"
       ],
-      "preds": [],
+      "preds": [
+        "L2.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -7327,7 +7357,10 @@
       "source_stages": [
         "S007"
       ],
-      "preds": [],
+      "preds": [
+        "L4.attn.hc.sinkhorn",
+        "L4.substage_hop1"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -7382,7 +7415,8 @@
         "S007"
       ],
       "preds": [
-        "L4.attn.hc.h_store_for_hcx"
+        "L4.attn.hc.h_store_for_hcx",
+        "L4.substage_hop1"
       ],
       "native_binding": {
         "engine": "hcx",
@@ -7744,7 +7778,8 @@
       ],
       "preds": [
         "L4.ffn.combine_allreduce",
-        "L4.ffn.hc.sinkhorn"
+        "L4.ffn.hc.sinkhorn",
+        "L4.substage_hop1"
       ],
       "native_binding": {
         "engine": "hc",
@@ -8336,7 +8371,9 @@
       "source_stages": [
         "S008"
       ],
-      "preds": [],
+      "preds": [
+        "L2.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -8352,7 +8389,10 @@
       "source_stages": [
         "S008"
       ],
-      "preds": [],
+      "preds": [
+        "L5.attn.hc.sinkhorn",
+        "L5.substage_hop0"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -8718,7 +8758,8 @@
       ],
       "preds": [
         "L5.ffn.combine_allreduce",
-        "L5.ffn.hc.sinkhorn"
+        "L5.ffn.hc.sinkhorn",
+        "L5.substage_hop0"
       ],
       "native_binding": {
         "engine": "hc",
@@ -9255,7 +9296,9 @@
       "source_stages": [
         "S009"
       ],
-      "preds": [],
+      "preds": [
+        "L6.substage_hop0"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -9269,7 +9312,9 @@
       "source_stages": [
         "S010"
       ],
-      "preds": [],
+      "preds": [
+        "L2.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -9285,7 +9330,10 @@
       "source_stages": [
         "S010"
       ],
-      "preds": [],
+      "preds": [
+        "L6.attn.hc.sinkhorn",
+        "L6.substage_hop1"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -9340,7 +9388,8 @@
         "S010"
       ],
       "preds": [
-        "L6.attn.hc.h_store_for_hcx"
+        "L6.attn.hc.h_store_for_hcx",
+        "L6.substage_hop1"
       ],
       "native_binding": {
         "engine": "hcx",
@@ -9702,7 +9751,8 @@
       ],
       "preds": [
         "L6.ffn.combine_allreduce",
-        "L6.ffn.hc.sinkhorn"
+        "L6.ffn.hc.sinkhorn",
+        "L6.substage_hop1"
       ],
       "native_binding": {
         "engine": "hc",
@@ -10241,7 +10291,10 @@
       "source_stages": [
         "S011"
       ],
-      "preds": [],
+      "preds": [
+        "L7.attn.hc.sinkhorn",
+        "L7.substage_hop0"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -10296,7 +10349,8 @@
         "S011"
       ],
       "preds": [
-        "L7.attn.hc.h_store_for_hcx"
+        "L7.attn.hc.h_store_for_hcx",
+        "L7.substage_hop0"
       ],
       "native_binding": {
         "engine": "hcx",
@@ -10658,7 +10712,8 @@
       ],
       "preds": [
         "L7.ffn.combine_allreduce",
-        "L7.ffn.hc.sinkhorn"
+        "L7.ffn.hc.sinkhorn",
+        "L7.substage_hop0"
       ],
       "native_binding": {
         "engine": "hc",
@@ -11443,7 +11498,9 @@
       "source_stages": [
         "S012"
       ],
-      "preds": [],
+      "preds": [
+        "L8.substage_hop0"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -11512,7 +11569,9 @@
       "source_stages": [
         "S013"
       ],
-      "preds": [],
+      "preds": [
+        "L8.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -11528,7 +11587,10 @@
       "source_stages": [
         "S013"
       ],
-      "preds": [],
+      "preds": [
+        "L8.attn.hc.sinkhorn",
+        "L8.substage_hop1"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -11894,7 +11956,8 @@
       ],
       "preds": [
         "L8.ffn.combine_allreduce",
-        "L8.ffn.hc.sinkhorn"
+        "L8.ffn.hc.sinkhorn",
+        "L8.substage_hop1"
       ],
       "native_binding": {
         "engine": "hc",
@@ -12486,7 +12549,9 @@
       "source_stages": [
         "S014"
       ],
-      "preds": [],
+      "preds": [
+        "L8.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -12502,7 +12567,10 @@
       "source_stages": [
         "S014"
       ],
-      "preds": [],
+      "preds": [
+        "L9.attn.hc.sinkhorn",
+        "L9.substage_hop0"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -12868,7 +12936,8 @@
       ],
       "preds": [
         "L9.ffn.combine_allreduce",
-        "L9.ffn.hc.sinkhorn"
+        "L9.ffn.hc.sinkhorn",
+        "L9.substage_hop0"
       ],
       "native_binding": {
         "engine": "hc",
@@ -13460,7 +13529,9 @@
       "source_stages": [
         "S015"
       ],
-      "preds": [],
+      "preds": [
+        "L8.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -13476,7 +13547,10 @@
       "source_stages": [
         "S015"
       ],
-      "preds": [],
+      "preds": [
+        "L10.attn.hc.sinkhorn",
+        "L10.substage_hop0"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -13842,7 +13916,8 @@
       ],
       "preds": [
         "L10.ffn.combine_allreduce",
-        "L10.ffn.hc.sinkhorn"
+        "L10.ffn.hc.sinkhorn",
+        "L10.substage_hop0"
       ],
       "native_binding": {
         "engine": "hc",
@@ -14379,7 +14454,9 @@
       "source_stages": [
         "S016"
       ],
-      "preds": [],
+      "preds": [
+        "L11.substage_hop0"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -14393,7 +14470,9 @@
       "source_stages": [
         "S017"
       ],
-      "preds": [],
+      "preds": [
+        "L8.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -14409,7 +14488,10 @@
       "source_stages": [
         "S017"
       ],
-      "preds": [],
+      "preds": [
+        "L11.attn.hc.sinkhorn",
+        "L11.substage_hop1"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -14464,7 +14546,8 @@
         "S017"
       ],
       "preds": [
-        "L11.attn.hc.h_store_for_hcx"
+        "L11.attn.hc.h_store_for_hcx",
+        "L11.substage_hop1"
       ],
       "native_binding": {
         "engine": "hcx",
@@ -14826,7 +14909,8 @@
       ],
       "preds": [
         "L11.ffn.combine_allreduce",
-        "L11.ffn.hc.sinkhorn"
+        "L11.ffn.hc.sinkhorn",
+        "L11.substage_hop1"
       ],
       "native_binding": {
         "engine": "hc",
@@ -15418,7 +15502,9 @@
       "source_stages": [
         "S018"
       ],
-      "preds": [],
+      "preds": [
+        "L8.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -15434,7 +15520,10 @@
       "source_stages": [
         "S018"
       ],
-      "preds": [],
+      "preds": [
+        "L12.attn.hc.sinkhorn",
+        "L12.substage_hop0"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -15800,7 +15889,8 @@
       ],
       "preds": [
         "L12.ffn.combine_allreduce",
-        "L12.ffn.hc.sinkhorn"
+        "L12.ffn.hc.sinkhorn",
+        "L12.substage_hop0"
       ],
       "native_binding": {
         "engine": "hc",
@@ -16337,7 +16427,9 @@
       "source_stages": [
         "S019"
       ],
-      "preds": [],
+      "preds": [
+        "L13.substage_hop0"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -16408,7 +16500,10 @@
       "source_stages": [
         "S020"
       ],
-      "preds": [],
+      "preds": [
+        "L13.attn.hc.sinkhorn",
+        "L13.substage_hop1"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -16774,7 +16869,8 @@
       ],
       "preds": [
         "L13.ffn.combine_allreduce",
-        "L13.ffn.hc.sinkhorn"
+        "L13.ffn.hc.sinkhorn",
+        "L13.substage_hop1"
       ],
       "native_binding": {
         "engine": "hc",
@@ -17624,7 +17720,9 @@
       "source_stages": [
         "S021"
       ],
-      "preds": [],
+      "preds": [
+        "L14.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -17640,7 +17738,10 @@
       "source_stages": [
         "S021"
       ],
-      "preds": [],
+      "preds": [
+        "L14.attn.hc.sinkhorn",
+        "L14.substage_hop0"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -17695,7 +17796,8 @@
         "S021"
       ],
       "preds": [
-        "L14.attn.hc.h_store_for_hcx"
+        "L14.attn.hc.h_store_for_hcx",
+        "L14.substage_hop0"
       ],
       "native_binding": {
         "engine": "hcx",
@@ -18057,7 +18159,8 @@
       ],
       "preds": [
         "L14.ffn.combine_allreduce",
-        "L14.ffn.hc.sinkhorn"
+        "L14.ffn.hc.sinkhorn",
+        "L14.substage_hop0"
       ],
       "native_binding": {
         "engine": "hc",
@@ -18594,7 +18697,9 @@
       "source_stages": [
         "S022"
       ],
-      "preds": [],
+      "preds": [
+        "L15.substage_hop0"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -18608,7 +18713,9 @@
       "source_stages": [
         "S023"
       ],
-      "preds": [],
+      "preds": [
+        "L14.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -18624,7 +18731,10 @@
       "source_stages": [
         "S023"
       ],
-      "preds": [],
+      "preds": [
+        "L15.attn.hc.sinkhorn",
+        "L15.substage_hop1"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -18679,7 +18789,8 @@
         "S023"
       ],
       "preds": [
-        "L15.attn.hc.h_store_for_hcx"
+        "L15.attn.hc.h_store_for_hcx",
+        "L15.substage_hop1"
       ],
       "native_binding": {
         "engine": "hcx",
@@ -19041,7 +19152,8 @@
       ],
       "preds": [
         "L15.ffn.combine_allreduce",
-        "L15.ffn.hc.sinkhorn"
+        "L15.ffn.hc.sinkhorn",
+        "L15.substage_hop1"
       ],
       "native_binding": {
         "engine": "hc",
@@ -19578,7 +19690,9 @@
       "source_stages": [
         "S024"
       ],
-      "preds": [],
+      "preds": [
+        "L14.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -19594,7 +19708,10 @@
       "source_stages": [
         "S024"
       ],
-      "preds": [],
+      "preds": [
+        "L16.attn.hc.sinkhorn",
+        "L16.substage_hop0"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -19649,7 +19766,8 @@
         "S024"
       ],
       "preds": [
-        "L16.attn.hc.h_store_for_hcx"
+        "L16.attn.hc.h_store_for_hcx",
+        "L16.substage_hop0"
       ],
       "native_binding": {
         "engine": "hcx",
@@ -20011,7 +20129,8 @@
       ],
       "preds": [
         "L16.ffn.combine_allreduce",
-        "L16.ffn.hc.sinkhorn"
+        "L16.ffn.hc.sinkhorn",
+        "L16.substage_hop0"
       ],
       "native_binding": {
         "engine": "hc",
@@ -20548,7 +20667,9 @@
       "source_stages": [
         "S025"
       ],
-      "preds": [],
+      "preds": [
+        "L17.substage_hop0"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -20617,7 +20738,9 @@
       "source_stages": [
         "S026"
       ],
-      "preds": [],
+      "preds": [
+        "L14.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -20633,7 +20756,10 @@
       "source_stages": [
         "S026"
       ],
-      "preds": [],
+      "preds": [
+        "L17.attn.hc.sinkhorn",
+        "L17.substage_hop1"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -20999,7 +21125,8 @@
       ],
       "preds": [
         "L17.ffn.combine_allreduce",
-        "L17.ffn.hc.sinkhorn"
+        "L17.ffn.hc.sinkhorn",
+        "L17.substage_hop1"
       ],
       "native_binding": {
         "engine": "hc",
@@ -21536,7 +21663,9 @@
       "source_stages": [
         "S027"
       ],
-      "preds": [],
+      "preds": [
+        "L14.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -21552,7 +21681,10 @@
       "source_stages": [
         "S027"
       ],
-      "preds": [],
+      "preds": [
+        "L18.attn.hc.sinkhorn",
+        "L18.substage_hop0"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -21607,7 +21739,8 @@
         "S027"
       ],
       "preds": [
-        "L18.attn.hc.h_store_for_hcx"
+        "L18.attn.hc.h_store_for_hcx",
+        "L18.substage_hop0"
       ],
       "native_binding": {
         "engine": "hcx",
@@ -21969,7 +22102,8 @@
       ],
       "preds": [
         "L18.ffn.combine_allreduce",
-        "L18.ffn.hc.sinkhorn"
+        "L18.ffn.hc.sinkhorn",
+        "L18.substage_hop0"
       ],
       "native_binding": {
         "engine": "hc",
@@ -22506,7 +22640,9 @@
       "source_stages": [
         "S028"
       ],
-      "preds": [],
+      "preds": [
+        "L19.substage_hop0"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -22522,7 +22658,10 @@
       "source_stages": [
         "S029"
       ],
-      "preds": [],
+      "preds": [
+        "L19.attn.hc.sinkhorn",
+        "L19.substage_hop1"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -22577,7 +22716,8 @@
         "S029"
       ],
       "preds": [
-        "L19.attn.hc.h_store_for_hcx"
+        "L19.attn.hc.h_store_for_hcx",
+        "L19.substage_hop1"
       ],
       "native_binding": {
         "engine": "hcx",
@@ -22939,7 +23079,8 @@
       ],
       "preds": [
         "L19.ffn.combine_allreduce",
-        "L19.ffn.hc.sinkhorn"
+        "L19.ffn.hc.sinkhorn",
+        "L19.substage_hop1"
       ],
       "native_binding": {
         "engine": "hc",
@@ -23725,7 +23866,9 @@
       "source_stages": [
         "S030"
       ],
-      "preds": [],
+      "preds": [
+        "L20.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -23741,7 +23884,10 @@
       "source_stages": [
         "S030"
       ],
-      "preds": [],
+      "preds": [
+        "L20.attn.hc.sinkhorn",
+        "L20.substage_hop0"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -23796,7 +23942,8 @@
         "S030"
       ],
       "preds": [
-        "L20.attn.hc.h_store_for_hcx"
+        "L20.attn.hc.h_store_for_hcx",
+        "L20.substage_hop0"
       ],
       "native_binding": {
         "engine": "hcx",
@@ -23821,7 +23968,9 @@
       "source_stages": [
         "S030"
       ],
-      "preds": [],
+      "preds": [
+        "L20.attn.cand.merge"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -24172,7 +24321,8 @@
       ],
       "preds": [
         "L20.ffn.combine_allreduce",
-        "L20.ffn.hc.sinkhorn"
+        "L20.ffn.hc.sinkhorn",
+        "L20.substage_hop0"
       ],
       "native_binding": {
         "engine": "hc",
@@ -24764,7 +24914,9 @@
       "source_stages": [
         "S031"
       ],
-      "preds": [],
+      "preds": [
+        "L20.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -24780,7 +24932,10 @@
       "source_stages": [
         "S031"
       ],
-      "preds": [],
+      "preds": [
+        "L21.attn.hc.sinkhorn",
+        "L21.substage_hop0"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -25146,7 +25301,8 @@
       ],
       "preds": [
         "L21.ffn.combine_allreduce",
-        "L21.ffn.hc.sinkhorn"
+        "L21.ffn.hc.sinkhorn",
+        "L21.substage_hop0"
       ],
       "native_binding": {
         "engine": "hc",
@@ -25683,7 +25839,9 @@
       "source_stages": [
         "S032"
       ],
-      "preds": [],
+      "preds": [
+        "L22.substage_hop0"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -25697,7 +25855,9 @@
       "source_stages": [
         "S033"
       ],
-      "preds": [],
+      "preds": [
+        "L20.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -25713,7 +25873,10 @@
       "source_stages": [
         "S033"
       ],
-      "preds": [],
+      "preds": [
+        "L22.attn.hc.sinkhorn",
+        "L22.substage_hop1"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -25768,7 +25931,8 @@
         "S033"
       ],
       "preds": [
-        "L22.attn.hc.h_store_for_hcx"
+        "L22.attn.hc.h_store_for_hcx",
+        "L22.substage_hop1"
       ],
       "native_binding": {
         "engine": "hcx",
@@ -26130,7 +26294,8 @@
       ],
       "preds": [
         "L22.ffn.combine_allreduce",
-        "L22.ffn.hc.sinkhorn"
+        "L22.ffn.hc.sinkhorn",
+        "L22.substage_hop1"
       ],
       "native_binding": {
         "engine": "hc",
@@ -26669,7 +26834,10 @@
       "source_stages": [
         "S034"
       ],
-      "preds": [],
+      "preds": [
+        "L23.attn.hc.sinkhorn",
+        "L23.substage_hop0"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -26724,7 +26892,8 @@
         "S034"
       ],
       "preds": [
-        "L23.attn.hc.h_store_for_hcx"
+        "L23.attn.hc.h_store_for_hcx",
+        "L23.substage_hop0"
       ],
       "native_binding": {
         "engine": "hcx",
@@ -27086,7 +27255,8 @@
       ],
       "preds": [
         "L23.ffn.combine_allreduce",
-        "L23.ffn.hc.sinkhorn"
+        "L23.ffn.hc.sinkhorn",
+        "L23.substage_hop0"
       ],
       "native_binding": {
         "engine": "hc",
@@ -27737,7 +27907,9 @@
       "source_stages": [
         "S035"
       ],
-      "preds": [],
+      "preds": [
+        "L24.substage_hop0"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -27751,7 +27923,9 @@
       "source_stages": [
         "S036"
       ],
-      "preds": [],
+      "preds": [
+        "L24.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -27767,7 +27941,10 @@
       "source_stages": [
         "S036"
       ],
-      "preds": [],
+      "preds": [
+        "L24.attn.hc.sinkhorn",
+        "L24.substage_hop1"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -27822,7 +27999,8 @@
         "S036"
       ],
       "preds": [
-        "L24.attn.hc.h_store_for_hcx"
+        "L24.attn.hc.h_store_for_hcx",
+        "L24.substage_hop1"
       ],
       "native_binding": {
         "engine": "hcx",
@@ -28184,7 +28362,8 @@
       ],
       "preds": [
         "L24.ffn.combine_allreduce",
-        "L24.ffn.hc.sinkhorn"
+        "L24.ffn.hc.sinkhorn",
+        "L24.substage_hop1"
       ],
       "native_binding": {
         "engine": "hc",
@@ -28776,7 +28955,9 @@
       "source_stages": [
         "S037"
       ],
-      "preds": [],
+      "preds": [
+        "L24.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -28792,7 +28973,10 @@
       "source_stages": [
         "S037"
       ],
-      "preds": [],
+      "preds": [
+        "L25.attn.hc.sinkhorn",
+        "L25.substage_hop0"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -29158,7 +29342,8 @@
       ],
       "preds": [
         "L25.ffn.combine_allreduce",
-        "L25.ffn.hc.sinkhorn"
+        "L25.ffn.hc.sinkhorn",
+        "L25.substage_hop0"
       ],
       "native_binding": {
         "engine": "hc",
@@ -29695,7 +29880,9 @@
       "source_stages": [
         "S038"
       ],
-      "preds": [],
+      "preds": [
+        "L26.substage_hop0"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -29709,7 +29896,9 @@
       "source_stages": [
         "S039"
       ],
-      "preds": [],
+      "preds": [
+        "L24.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -29725,7 +29914,10 @@
       "source_stages": [
         "S039"
       ],
-      "preds": [],
+      "preds": [
+        "L26.attn.hc.sinkhorn",
+        "L26.substage_hop1"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -29780,7 +29972,8 @@
         "S039"
       ],
       "preds": [
-        "L26.attn.hc.h_store_for_hcx"
+        "L26.attn.hc.h_store_for_hcx",
+        "L26.substage_hop1"
       ],
       "native_binding": {
         "engine": "hcx",
@@ -30142,7 +30335,8 @@
       ],
       "preds": [
         "L26.ffn.combine_allreduce",
-        "L26.ffn.hc.sinkhorn"
+        "L26.ffn.hc.sinkhorn",
+        "L26.substage_hop1"
       ],
       "native_binding": {
         "engine": "hc",
@@ -30681,7 +30875,10 @@
       "source_stages": [
         "S040"
       ],
-      "preds": [],
+      "preds": [
+        "L27.attn.hc.sinkhorn",
+        "L27.substage_hop0"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -30736,7 +30933,8 @@
         "S040"
       ],
       "preds": [
-        "L27.attn.hc.h_store_for_hcx"
+        "L27.attn.hc.h_store_for_hcx",
+        "L27.substage_hop0"
       ],
       "native_binding": {
         "engine": "hcx",
@@ -31098,7 +31296,8 @@
       ],
       "preds": [
         "L27.ffn.combine_allreduce",
-        "L27.ffn.hc.sinkhorn"
+        "L27.ffn.hc.sinkhorn",
+        "L27.substage_hop0"
       ],
       "native_binding": {
         "engine": "hc",
@@ -31749,7 +31948,9 @@
       "source_stages": [
         "S041"
       ],
-      "preds": [],
+      "preds": [
+        "L28.substage_hop0"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -31818,7 +32019,9 @@
       "source_stages": [
         "S042"
       ],
-      "preds": [],
+      "preds": [
+        "L28.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -31834,7 +32037,10 @@
       "source_stages": [
         "S042"
       ],
-      "preds": [],
+      "preds": [
+        "L28.attn.hc.sinkhorn",
+        "L28.substage_hop1"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -32200,7 +32406,8 @@
       ],
       "preds": [
         "L28.ffn.combine_allreduce",
-        "L28.ffn.hc.sinkhorn"
+        "L28.ffn.hc.sinkhorn",
+        "L28.substage_hop1"
       ],
       "native_binding": {
         "engine": "hc",
@@ -32737,7 +32944,9 @@
       "source_stages": [
         "S043"
       ],
-      "preds": [],
+      "preds": [
+        "L28.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -32753,7 +32962,10 @@
       "source_stages": [
         "S043"
       ],
-      "preds": [],
+      "preds": [
+        "L29.attn.hc.sinkhorn",
+        "L29.substage_hop0"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -32808,7 +33020,8 @@
         "S043"
       ],
       "preds": [
-        "L29.attn.hc.h_store_for_hcx"
+        "L29.attn.hc.h_store_for_hcx",
+        "L29.substage_hop0"
       ],
       "native_binding": {
         "engine": "hcx",
@@ -33170,7 +33383,8 @@
       ],
       "preds": [
         "L29.ffn.combine_allreduce",
-        "L29.ffn.hc.sinkhorn"
+        "L29.ffn.hc.sinkhorn",
+        "L29.substage_hop0"
       ],
       "native_binding": {
         "engine": "hc",
@@ -33707,7 +33921,9 @@
       "source_stages": [
         "S044"
       ],
-      "preds": [],
+      "preds": [
+        "L28.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -33723,7 +33939,10 @@
       "source_stages": [
         "S044"
       ],
-      "preds": [],
+      "preds": [
+        "L30.attn.hc.sinkhorn",
+        "L30.substage_hop0"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -33778,7 +33997,8 @@
         "S044"
       ],
       "preds": [
-        "L30.attn.hc.h_store_for_hcx"
+        "L30.attn.hc.h_store_for_hcx",
+        "L30.substage_hop0"
       ],
       "native_binding": {
         "engine": "hcx",
@@ -34140,7 +34360,8 @@
       ],
       "preds": [
         "L30.ffn.combine_allreduce",
-        "L30.ffn.hc.sinkhorn"
+        "L30.ffn.hc.sinkhorn",
+        "L30.substage_hop0"
       ],
       "native_binding": {
         "engine": "hc",
@@ -34677,7 +34898,9 @@
       "source_stages": [
         "S045"
       ],
-      "preds": [],
+      "preds": [
+        "L31.substage_hop0"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -34693,7 +34916,10 @@
       "source_stages": [
         "S046"
       ],
-      "preds": [],
+      "preds": [
+        "L31.attn.hc.sinkhorn",
+        "L31.substage_hop1"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -34748,7 +34974,8 @@
         "S046"
       ],
       "preds": [
-        "L31.attn.hc.h_store_for_hcx"
+        "L31.attn.hc.h_store_for_hcx",
+        "L31.substage_hop1"
       ],
       "native_binding": {
         "engine": "hcx",
@@ -35110,7 +35337,8 @@
       ],
       "preds": [
         "L31.ffn.combine_allreduce",
-        "L31.ffn.hc.sinkhorn"
+        "L31.ffn.hc.sinkhorn",
+        "L31.substage_hop1"
       ],
       "native_binding": {
         "engine": "hc",
@@ -35816,7 +36044,9 @@
       "source_stages": [
         "S047"
       ],
-      "preds": [],
+      "preds": [
+        "L32.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -35832,7 +36062,10 @@
       "source_stages": [
         "S047"
       ],
-      "preds": [],
+      "preds": [
+        "L32.attn.hc.sinkhorn",
+        "L32.substage_hop0"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -36198,7 +36431,8 @@
       ],
       "preds": [
         "L32.ffn.combine_allreduce",
-        "L32.ffn.hc.sinkhorn"
+        "L32.ffn.hc.sinkhorn",
+        "L32.substage_hop0"
       ],
       "native_binding": {
         "engine": "hc",
@@ -36735,7 +36969,9 @@
       "source_stages": [
         "S048"
       ],
-      "preds": [],
+      "preds": [
+        "L33.substage_hop0"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -36749,7 +36985,9 @@
       "source_stages": [
         "S049"
       ],
-      "preds": [],
+      "preds": [
+        "L32.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -36765,7 +37003,10 @@
       "source_stages": [
         "S049"
       ],
-      "preds": [],
+      "preds": [
+        "L33.attn.hc.sinkhorn",
+        "L33.substage_hop1"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -36820,7 +37061,8 @@
         "S049"
       ],
       "preds": [
-        "L33.attn.hc.h_store_for_hcx"
+        "L33.attn.hc.h_store_for_hcx",
+        "L33.substage_hop1"
       ],
       "native_binding": {
         "engine": "hcx",
@@ -37182,7 +37424,8 @@
       ],
       "preds": [
         "L33.ffn.combine_allreduce",
-        "L33.ffn.hc.sinkhorn"
+        "L33.ffn.hc.sinkhorn",
+        "L33.substage_hop1"
       ],
       "native_binding": {
         "engine": "hc",
@@ -37719,7 +37962,9 @@
       "source_stages": [
         "S050"
       ],
-      "preds": [],
+      "preds": [
+        "L32.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -37735,7 +37980,10 @@
       "source_stages": [
         "S050"
       ],
-      "preds": [],
+      "preds": [
+        "L34.attn.hc.sinkhorn",
+        "L34.substage_hop0"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -37790,7 +38038,8 @@
         "S050"
       ],
       "preds": [
-        "L34.attn.hc.h_store_for_hcx"
+        "L34.attn.hc.h_store_for_hcx",
+        "L34.substage_hop0"
       ],
       "native_binding": {
         "engine": "hcx",
@@ -38152,7 +38401,8 @@
       ],
       "preds": [
         "L34.ffn.combine_allreduce",
-        "L34.ffn.hc.sinkhorn"
+        "L34.ffn.hc.sinkhorn",
+        "L34.substage_hop0"
       ],
       "native_binding": {
         "engine": "hc",
@@ -38689,7 +38939,9 @@
       "source_stages": [
         "S051"
       ],
-      "preds": [],
+      "preds": [
+        "L35.substage_hop0"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -38705,7 +38957,10 @@
       "source_stages": [
         "S052"
       ],
-      "preds": [],
+      "preds": [
+        "L35.attn.hc.sinkhorn",
+        "L35.substage_hop1"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -38760,7 +39015,8 @@
         "S052"
       ],
       "preds": [
-        "L35.attn.hc.h_store_for_hcx"
+        "L35.attn.hc.h_store_for_hcx",
+        "L35.substage_hop1"
       ],
       "native_binding": {
         "engine": "hcx",
@@ -39122,7 +39378,8 @@
       ],
       "preds": [
         "L35.ffn.combine_allreduce",
-        "L35.ffn.hc.sinkhorn"
+        "L35.ffn.hc.sinkhorn",
+        "L35.substage_hop1"
       ],
       "native_binding": {
         "engine": "hc",
@@ -39828,7 +40085,9 @@
       "source_stages": [
         "S053"
       ],
-      "preds": [],
+      "preds": [
+        "L36.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -39844,7 +40103,10 @@
       "source_stages": [
         "S053"
       ],
-      "preds": [],
+      "preds": [
+        "L36.attn.hc.sinkhorn",
+        "L36.substage_hop0"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -40210,7 +40472,8 @@
       ],
       "preds": [
         "L36.ffn.combine_allreduce",
-        "L36.ffn.hc.sinkhorn"
+        "L36.ffn.hc.sinkhorn",
+        "L36.substage_hop0"
       ],
       "native_binding": {
         "engine": "hc",
@@ -40747,7 +41010,9 @@
       "source_stages": [
         "S054"
       ],
-      "preds": [],
+      "preds": [
+        "L37.substage_hop0"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -40761,7 +41026,9 @@
       "source_stages": [
         "S055"
       ],
-      "preds": [],
+      "preds": [
+        "L36.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -40777,7 +41044,10 @@
       "source_stages": [
         "S055"
       ],
-      "preds": [],
+      "preds": [
+        "L37.attn.hc.sinkhorn",
+        "L37.substage_hop1"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -40832,7 +41102,8 @@
         "S055"
       ],
       "preds": [
-        "L37.attn.hc.h_store_for_hcx"
+        "L37.attn.hc.h_store_for_hcx",
+        "L37.substage_hop1"
       ],
       "native_binding": {
         "engine": "hcx",
@@ -41194,7 +41465,8 @@
       ],
       "preds": [
         "L37.ffn.combine_allreduce",
-        "L37.ffn.hc.sinkhorn"
+        "L37.ffn.hc.sinkhorn",
+        "L37.substage_hop1"
       ],
       "native_binding": {
         "engine": "hc",
@@ -41731,7 +42003,9 @@
       "source_stages": [
         "S056"
       ],
-      "preds": [],
+      "preds": [
+        "L36.attn.idx.topk_final"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -41747,7 +42021,10 @@
       "source_stages": [
         "S056"
       ],
-      "preds": [],
+      "preds": [
+        "L38.attn.hc.sinkhorn",
+        "L38.substage_hop0"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -41802,7 +42079,8 @@
         "S056"
       ],
       "preds": [
-        "L38.attn.hc.h_store_for_hcx"
+        "L38.attn.hc.h_store_for_hcx",
+        "L38.substage_hop0"
       ],
       "native_binding": {
         "engine": "hcx",
@@ -42164,7 +42442,8 @@
       ],
       "preds": [
         "L38.ffn.combine_allreduce",
-        "L38.ffn.hc.sinkhorn"
+        "L38.ffn.hc.sinkhorn",
+        "L38.substage_hop0"
       ],
       "native_binding": {
         "engine": "hc",
@@ -42758,7 +43037,10 @@
       "source_stages": [
         "S057"
       ],
-      "preds": [],
+      "preds": [
+        "L39.attn.hc.sinkhorn",
+        "L39.substage_hop0"
+      ],
       "native_binding": {
         "engine": "hc",
         "port": 2,
@@ -43124,7 +43406,8 @@
       ],
       "preds": [
         "L39.ffn.combine_allreduce",
-        "L39.ffn.hc.sinkhorn"
+        "L39.ffn.hc.sinkhorn",
+        "L39.substage_hop0"
       ],
       "native_binding": {
         "engine": "hc",
@@ -43169,7 +43452,10 @@
       "source_stages": [
         "S058"
       ],
-      "preds": [],
+      "preds": [
+        "L39.ffn.hc.sinkhorn",
+        "head.hop"
+      ],
       "native_binding": null,
       "duration_cycles": null,
       "fixed_service_contract": null,
@@ -43255,6 +43541,19 @@
       "fixed_service_contract": null,
       "dispatch_eligible": false
     }
+  ],
+  "global_dependency_graph_evidence": {
+    "path": "results/arch/token_path_20261008/ds_rom.json",
+    "sha256": "e17293741b16419d959ceaa4c68f4892dc147fb67ef7b00a550bb70890b58b27"
+  },
+  "unresolved_external_producers": [
+    "unplaced_hops"
+  ],
+  "external_producer_edges": [
+    [
+      "unplaced_hops",
+      "head.hop"
+    ]
   ],
   "unowned_endpoint_jobs": [
     "embed",

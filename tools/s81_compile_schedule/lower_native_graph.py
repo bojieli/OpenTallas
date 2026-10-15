@@ -18,6 +18,7 @@ SU_SOURCE = 'rtl/dsrom_sys/s81_suhc/hier/dsfd_sp_su_h.sv'
 HC_SOURCE = 'rtl/dsrom_sys/s81_suhc/ot_s81_hc_core.sv'
 HCP_SOURCE = 'rtl/dsrom_sys/s81_hcx/dsfd_sp_hcx_projection.sv'
 HCT_SOURCE = 'rtl/dsrom_sys/s81_hcx/ot_s81_hcx_post_native.sv'
+GLOBAL_GRAPH='results/arch/token_path_20261008/ds_rom.json'
 # Exactly the actual fused SU chains, not a heuristic based on graph adjacency.
 ALIASES = {
  'attn.quant':'attn.hc_pre', 'ffn.norm.scale':'ffn.hc_pre', 'ffn.quant':'ffn.hc_pre',
@@ -80,6 +81,37 @@ def lower(programs, root=ROOT):
             if op['id'] in raw:
                 raise ValueError('duplicate source operation '+op['id'])
             raw[op['id']]=dict(op,stage=program['stage'],pred_ids=[local[p] for p in op['preds']])
+    # Stage programs retain only local predecessor indexes. Recover the real
+    # cross-stage dependencies from their source graph, bridging zero-cycle
+    # fused markers without dropping the producer's identity.
+    graph_path=root/GLOBAL_GRAPH
+    external=[]
+    external_edges=[]
+    if graph_path.exists():
+        graph=json.loads(graph_path.read_text())
+        allnodes={n['id']:n for n in graph['nodes']}
+        incoming={}
+        for edge in graph['edges']:
+            incoming.setdefault(edge['dst'],set()).add(edge['src'])
+        def ancestors(ident,active,consumer):
+            if ident in raw:
+                return {ident}
+            if ident in active:
+                raise ValueError('source graph zero-cycle dependency cycle '+ident)
+            node=allnodes.get(ident)
+            if node is None or node['cycles']>0:
+                external.append(ident)
+                external_edges.append(dict(producer=ident,consumer=consumer))
+                return set()
+            result=set()
+            for parent in incoming.get(ident,()):
+                result |= ancestors(parent,active|{ident},consumer)
+            return result
+        for ident,op in raw.items():
+            parents=set(op['pred_ids'])
+            for parent in incoming.get(ident,()):
+                parents |= ancestors(parent,set(),ident)
+            op['pred_ids']=sorted(parents)
     aliases={ident:representative(ident) for ident in raw}
     missing=[(a,b) for a,b in aliases.items() if b not in raw]
     if missing:
@@ -147,6 +179,9 @@ def lower(programs, root=ROOT):
                 raw_operations=len(raw),native_jobs=len(jobs),fused_operations=len(raw)-len(members),
                 input_program_sha256={p['stage']:hashlib.sha256(json.dumps(p,sort_keys=True,separators=(',',':')).encode()).hexdigest() for p in programs},
                 aliases=aliases,inserted_jobs=inserted,jobs=[jobs[i] for i in ordered],
+                global_dependency_graph_evidence=dict(path=GLOBAL_GRAPH,sha256=hashlib.sha256(graph_path.read_bytes()).hexdigest()) if graph_path.exists() else None,
+                unresolved_external_producers=sorted(set(external)),
+                external_producer_edges=sorted({(e['producer'],e['consumer']) for e in external_edges}),
                 unowned_endpoint_jobs=unowned,dispatch_eligible=False,qualified=False,
                 note='Source structural lowering only; native producer allocation, fixed service and timing still required.')
 
