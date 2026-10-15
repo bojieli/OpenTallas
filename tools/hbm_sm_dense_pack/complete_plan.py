@@ -55,8 +55,9 @@ tile['max_operand_first_um']=max(r['first_um']for r in operand);tile['max_operan
 tile['limits'].append('ExistingXREL stations at y327.68 are sourcepin Manhattan proofs; exactDFF packing, M7/M9 verticalovermacro routes andcontrol/reset nets stillrequire placement/routing.')
 # Complete canonical boundary allocation, allsourcebits retained once.
 boundary=[]
+beat_output_slots=sorted([(19+.096*i,'M4') for i in range(1261)]+[(19+.128*i,'M6')for i in range(946)])[:2069]
 for bit in range(2069):
- sy=19+(121-.1)*bit/2068
+ sy,source_layer=beat_output_slots[bit]
  ty=10+.16*bit
  boundary.append(dict(bus='bout',bit=bit,source=[681.56,sy],destination=[W,ty],layer='M8',manhattan=W-681.56+abs(ty-sy)))
 for row,sx,sy,off in [(1,591.5,599.92,2069),(0,391.5,589.92,2887)]:
@@ -69,9 +70,10 @@ for row,lo,dx in [(0,80,10),(1,19,497.4)]:
  slots=sorted([(lo+.128*i,'M6')for i in range(500)]+[(lo+.16*i,'M8')for i in range(500)])[:818]
  for bit,(y,layer)in enumerate(slots):
   inputpairs.append(dict(bus='rin',row=row,bit=bit,source_registered_Q=[5,y],destination_PORT=[dx,y],PORT_layer=layer,manhattan=dx-5))
+beat_input_slots=sorted([(10+.096*i,'M4') for i in range(1354)]+[(10+.128*i,'M6')for i in range(1016)])[:2069]
 for bit in range(2069):
- sy=140+.16*bit;dy=10+129.9*bit/2068
- inputpairs.append(dict(bus='bin',bit=bit,source_registered_Q=[5,sy],destination_PORT=[116.4,dy],PORT_layer='M4/M6',manhattan=111.4+abs(sy-dy)))
+ sy=140+.16*bit;dy,source_layer=beat_input_slots[bit]
+ inputpairs.append(dict(bus='bin',bit=bit,source_registered_Q=[5,sy],destination_PORT=[116.4,dy],PORT_layer=source_layer,manhattan=111.4+abs(sy-dy)))
 assert len(inputpairs)==3705 and max(r['manhattan']for r in inputpairs)<500
 assert len(set((r['destination'][1],r['layer'])for r in boundary))==3705
 tile['output_boundary_pairs']=boundary;tile['input_receiver_pairs']=inputpairs
