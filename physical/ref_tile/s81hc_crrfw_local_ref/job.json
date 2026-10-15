@@ -1,5 +1,5 @@
 {
- "name": "s81hc_crrfw_local_ref-v7-y-order-COMMIT",
+ "name": "s81hc_crrfw_local_ref-v7-y-order-532b3221d",
  "block": "ot_s81_hc_crootr_f",
  "ref_tile": true,
  "owner": "Codex:S-NORM-returns",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 40,
  "source": {
   "branch": "codex/s81-returns-1015",
-  "commit": "COMMIT",
+  "commit": "532b3221d",
   "extra_paths": [
    "rtl/dsrom_sys/s81_suhc/test",
    "rtl/link",
@@ -144,7 +144,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_crrfw_local_ref/s81hc_crrfw_local_ref-v7-y-order-COMMIT"
+   "to": "results/rtl/ref_tile/s81hc_crrfw_local_ref/s81hc_crrfw_local_ref-v7-y-order-532b3221d"
   }
  ],
  "cycles_added": 0,
