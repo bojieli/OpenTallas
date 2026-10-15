@@ -3,15 +3,16 @@
   "source": "a31110236",
   "serial": "539178932",
   "state": "diagnostic_in_flight",
-  "cause": "Default negotiation detailed legalizer fails after FF hold repair; cap5044illegalcells at22.5%util after1399iterations. Initial pin placement legal. Actual positive+observable mutant benches pass both targets.",
-  "next": "Evaluate same-input diamond legalization complete placement and routed native budgets; no qualification from gate alone.",
+  "cause": "Actual post-hold ODB four24um xbins240..336um contain604..632um\u00b2 each vs24x21.6=518.4um\u00b2 capacity,117-122%local raw utilization beforepadding. Global29.1% masks local saturation. x360..576empty. Fixedpin cluster, not globalarea shortage.",
+  "next": "Structural realheightgrowth or pinspread/peer co-design, not legalization tuning. Requested25.92->43.2um with exactpin x kept,new Nface; S-DIE checks actualparentroom. Split localcapture/holdbanks if not feasible.",
   "diagnostic": {
     "host": "ot-epyc1tb",
     "unit": "oth-ubuntu-530505-1792052600",
     "session": 44646,
     "remote": "/srv/opentallas-scratch/codex/snorm-legalizer-1015",
     "initial_input": "/srv/opentallas-scratch/claude/ref_gate/s81hc_ctfxnt_ref-20261014-232510",
-    "changed": "Only detailed placement algorithm; all actual FFhold timing repair/constraints kept. Full FFholdMM reinstated for gate replay."
+    "changed": "Only detailed placement algorithm; all actual FFhold timing repair/constraints kept. Full FFholdMM reinstated for gate replay.",
+    "purpose": "Observation only, never productionfix per owner newmargin directive."
   },
   "qualification": "unqualified diagnostic; fullsourceCTS,TT/FF/DRC0,native/reset/phi audit required"
 }
