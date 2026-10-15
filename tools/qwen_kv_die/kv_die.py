@@ -930,10 +930,10 @@ def _buses(m, T, r):
                 if (ctl_, 'ck') in eps_:
                     eps_ = [e for e in eps_ if e != (ctl_, 'ck')] + [(ctl_, c_) for c_ in KS.CTRL_CLK]
                 if bid_ == f'clk_hbm_{st}':
-                    eps_ = [('pll', f'hbm_{st}')] + [e for e in eps_ if e != (ctl_, 'pll_hbm')] + \
+                    eps_ = [('pll', f'pll_hbm_{st}')] + [e for e in eps_ if e != (ctl_, 'pll_hbm')] + \
                            [(ctl_, c_) for c_ in KS.CTRL_HCLK]
                 if bid_ == f'rst_hbm_{st}':
-                    eps_ = [('pll', f'hro_{st}')] + list(eps_)
+                    eps_ = [('pll', f'rso_hbm_{st}')] + list(eps_)
                 B[i_] = (bid_, cl_, bits_, eps_)
             for k_ in range(32):
                 add((f'dpo_{st}_{k_}', 'phy_dfi', KS.W_PO, [(ctl_, f'po{k_}'), (f'phy_{st}', f'po{k_}')]))
