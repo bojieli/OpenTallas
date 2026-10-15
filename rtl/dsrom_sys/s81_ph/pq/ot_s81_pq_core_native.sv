@@ -87,7 +87,20 @@ module ot_s81_pq_core_native (
     // group region census is external: each tier/half has 10 or 11 regions,
     // not eleven equal groups and a seven-region tail.
 `ifdef OT_PQ_CTL_STATIC
+`ifdef OT_PQ_CTL_STATE_PINS
+    // Wire-only parent owns the direct registered-producer ROM addresses.
+`ifdef OT_S81_PQ_PRODUCER_MUT_PHW
+    assign rom_pa0={1'b0,i_ph[8:0],1'b0};
+    assign rom_pa1={1'b0,i_ph[8:0],1'b1};
+`else
+    assign rom_pa0={i_ph,1'b0};
+    assign rom_pa1={i_ph,1'b1};
+`endif
+    assign rom_sa=calendar_action[53:40];
+    ot_s81_pq_ctl_state_phw10 u_ctl (
+`else
     ot_s81_pq_ctl_static_native u_ctl (
+`endif
         .calendar_v(calendar_v),.calendar_action(calendar_action),
         .stream_end_v(stream_end_v),.stream_end_tag(stream_end_tag),
 `elsif OT_PQ_CTL_FIXED
@@ -103,8 +116,10 @@ module ot_s81_pq_core_native (
         .aq_vin(aq_vin), .aqf(aqf), .q_consume(q_consume), .b_consume(b_consume), .aqi_o(aqi), .ba_v_o(ba_v), .ba_wv_o(ba_wv), .ba_blk_o(ba_blk),
         .hw_o(hw), .h_hi_o(h_hi), .h_b0_o(h_b0), .h_b1_o(h_b1), .mdr_o(mdr_o),
         .q2f_i(q2f_i), .ga_i(ga_i), .bc_hr_o(bc_hr),
-        .rom_pa0(rom_pa0), .rom_pa1(rom_pa1), .rom_pq0(rom_pq0), .rom_pq1(rom_pq1),
-        .rom_sa(rom_sa), .rom_sq(rom_sq));
+`ifndef OT_PQ_CTL_STATE_PINS
+        .rom_pa0(rom_pa0), .rom_pa1(rom_pa1), .rom_sa(rom_sa),
+`endif
+        .rom_pq0(rom_pq0), .rom_pq1(rom_pq1), .rom_sq(rom_sq));
 `ifdef OT_PQ_BENCH_TELEMETRY
     assign read_consumed = {b_consume, q_consume};
 `ifdef OT_PQ_CTL_STATIC
