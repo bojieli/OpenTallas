@@ -1,0 +1,75 @@
+{
+  "source_profile": "ot_vms_bank_static_wdecode_ce",
+  "core_sha256": "a2ae0425aef1698c5833664e5694a2c257faf5f02806d84cbe3a6a72702f7ccd",
+  "sources_sha256": {
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_wdecode_ce.sv": "a2ae0425aef1698c5833664e5694a2c257faf5f02806d84cbe3a6a72702f7ccd",
+    "rtl/hbm_accel/generic/vm/static/wdecode_ce/run_ce_arithmetic.sh": "ab11707ffd2afd5e3f1949cbcee110fdf9e4c8f1444b2579e4dfeedd3fdc1126",
+    "rtl/hbm_accel/generic/vm/static/wdecode_ce/run_wdecode_ce.sh": "07a2c527758a705886b392987dbba032d6d23126341320f930363387ed86d03b",
+    "rtl/hbm_accel/generic/vm/static/wdecode_ce/run_wdecode_ce_allowners.sh": "ef3e99bee8da2a1d1bdef8774c3dfeffccc8c1c5959bb984547c0ab2b5dfec51",
+    "rtl/hbm_accel/generic/vm/static/wdecode_ce/tb_bank_ce_population.sv": "a21905bea8f61be4dfce2f03569c49248ce20cd5578da3c59a991a2b11d93c52",
+    "rtl/hbm_accel/generic/vm/static/wdecode_ce/tb_bank_ce_prefix_wdecode.sv": "9934bfd9eda9f2e26851e2ac8544b1d2adfb61f52d43058f1889e419eb32bc8d",
+    "rtl/hbm_accel/generic/vm/static/wdecode_ce/tb_bank_wdecode_ce.sv": "b00438de411292d6066ea0e6690a5146392ef27498f3c8e0e5eaa77f5d128efc",
+    "rtl/hbm_accel/generic/vm/static/wdecode_ce/tb_bank_wdecode_ce_allowners.sv": "653cecaef472031dbf640b9d8690226b4f109cc01c5d791333fc657ef92f3bdf",
+    "rtl/hbm_accel/generic/vm/static/wdecode_ce/tb_hbm_vm_allgroups_wdecode_ce.sv": "b8b6c0320c1966abd8811751e168b49f9cbf873ded89ea79985257fbb2209706",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "25ca11845381ce089cc5f2fbab82a90672d8704fe6c66f4445814b33b4b7d51e"
+  },
+  "host": "ot-epyc4",
+  "units": [
+    "oth-ubuntu-1799924-1792060872",
+    "oth-ubuntu-1804237-1792060981"
+  ],
+  "execution_scope": "First unit completed component and full-group tests then stopped at a test-runner relative path; invocation fixed, second unit completed all remaining owner/arithmetic tests without repeating already completed gates. RTL source identical across both units.",
+  "changes": "Registered compiler write onehot/balanced payload mux, plus explicit balanced8-word CE population tree. No extra edges.",
+  "prior_frozen_profile_preserved": "f6919329f / ot_vms_bank_static_wdecode SHA623a425557d7bd2106c51c638461e75e5bcdfaec45bf5cebd630df85f09a2679",
+  "all_owner_shapes": {
+    "RG2WG2": {
+      "reads": 221,
+      "writes": 240,
+      "egress": 34,
+      "cycles": 362
+    },
+    "RG7WG3": {
+      "reads": 231,
+      "writes": 244,
+      "egress": 33,
+      "cycles": 366
+    },
+    "RG5WG1": {
+      "reads": 227,
+      "writes": 236,
+      "egress": 2,
+      "cycles": 364
+    }
+  },
+  "all_group_readbacks": {
+    "RG7WG3": 7168,
+    "RG5WG1": 5120,
+    "SRAM_macros_each": 24,
+    "banks_each": 8
+  },
+  "CE_arithmetic": {
+    "population_masks": 256,
+    "seeds_per_mask": 4,
+    "syndrome_codes": 128,
+    "word_positions": 8,
+    "total_response_cases": 2048,
+    "scope": "Force-only decoder/counter arithmetic; separate actual macro fault gate verifies integration",
+    "saturation_exhaustive_states": 65536,
+    "saturation_increments": 16,
+    "saturation_cases": 1048576,
+    "sat_function_byte_identical_prior": true
+  },
+  "actual_SRAM_CE_faults": "word0 and logical word7 bit224 (physical interleaved column448); CE population mutant killed on real array fault",
+  "mutants": {
+    "read_owner": "KILLED",
+    "response_group_permutation": "KILLED",
+    "DMA_sector_permutation": "KILLED by actual SRAM readback",
+    "upper_four_word_CE_population_drop": "KILLED by actual word7 macro fault and arithmetic truth-table"
+  },
+  "fixed_cycles": {
+    "commit": 3,
+    "read_response": 6,
+    "egress": 1
+  },
+  "qualification": "FUNCTIONAL only; distinct source frozen for review/reproof. Physical source-exact native clock/timing gate not yet run."
+}

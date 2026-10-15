@@ -30,4 +30,4 @@ for shape in 7:3 5:1; do
  done
 done
 
-bash "$(dirname "$0")/run_wdecode_allowners.sh" "$OUT"
+bash ./run_wdecode_allowners.sh "$OUT"

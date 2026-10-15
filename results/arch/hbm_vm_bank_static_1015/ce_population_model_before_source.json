@@ -1,0 +1,28 @@
+{
+  "prior_frozen_source_profile": "ot_vms_bank_static_wdecode SHA623a425557d7bd2106c51c638461e75e5bcdfaec45bf5cebd630df85f09a2679",
+  "new_distinct_module": "ot_vms_bank_static_wdecode_ce",
+  "measured_trigger": "SW6 actual d_syn[14] -> CE[4] path -37.2ps, source path includes syndrome-hit detection, serial population accumulation, saturated add.",
+  "change": "Replace serial 8-word increment accumulation with explicit 4pair/2quad/1octet population tree; syndrome decode, correction and bounded-prefix saturation function unchanged.",
+  "cost": {
+    "new_FF": 0,
+    "new_edges": 0,
+    "write_commit_edges": 3,
+    "read_response_edges": 6,
+    "balanced_popcount_adders": {
+      "1bit": 4,
+      "2bit": 2,
+      "3bit": 1
+    },
+    "balanced_max_adder_levels": 3,
+    "approximate_full_adder_bits": 11,
+    "serial_upper_bound_adder_bits": 28
+  },
+  "proof_plan": [
+    "All256 combinations of eight correctable-word flags versus independent integer population count",
+    "All128 syndrome values in each of8 positions versus fixed SECDED correctable-code truth table",
+    "Saturation at65535, nibble/high-carry states and increments0..8",
+    "Reuse byte-identical saturated prefix function exhaustive1048576cases, verify function bytes match frozen prior",
+    "Actual SRAM all-owner CE/UE/partial-mask/mirror proofs and wrong-read/write mutants on new distinct source"
+  ],
+  "scope": "Model before source; no current source profile or running gate inputs modified. Physical clock fix remains separately modeled and unqualified."
+}
