@@ -1,0 +1,9 @@
+#!/usr/bin/env python3
+"""Bounded static VM reader model before RTL; fixed far-HC consumer latency."""
+import json
+from pathlib import Path
+R={'scope':'Actual768b register landing and fixed serializer, not SRAM fallback/physical qualification','canonical':{'word_address':145088,'sector':145088//8,'SID':(145088//8)>>13,'bank':(145088//8)&7},'ports':{'input':{'clk':1,'rst_n':1,'launch':1,'npos':4,'base_sector':16,'position_stride_sector':16,'local_rr':2056},'output':{'local_rq':136,'local_read':8,'gathered_mix_v':1,'gathered_mix_row':5,'gathered_mix_pos':3,'gathered_mix_data':32,'done':1,'fault':1}},'storage_FF':{'landing':768,'two_sector_cursors':32,'stride':16,'npos':4,'request_count':4,'response_count':4,'phase':5,'serializer_row':5,'serializer_pos':3,'active_streaming':2,'registered_outputs_data_row_pos_valid_done_fault':43,'upper_bound':886},'schedule':{'far_HC_tap_request_sample':1,'far_HC_return_output':19,'reader_registered_word0':20,'engine_capture_word0':21,'request_interval':24,'output_words_per_position':24,'last_output':'launch+19+24*npos','done':'same registered edge as last output'},'throughput':{'output_FP32_words_per_cycle':1,'VM_sectors_per_request':3,'request_period_cycles':24,'average_VM_sectors_per_cycle':.125,'extra_SRAMs':0},'bounds':'npos1..8; sector bit15=0 and final sector within initialSID aperture; arithmetic computedwide before bounds check','faults':['overlapping launch','missing or unsolicited response valid','illegal launch/address bounds'],'qualification':False}
+assert R['canonical']=={'word_address':145088,'sector':18136,'SID':2,'bank':0}
+assert sum(v for k,v in R['storage_FF'].items() if k!='upper_bound')<=886
+p=Path('results/rtl/hbm_hc_static_1015/gathered_mix_reader/model.json');p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(R,indent=2)+'\n')
+if __name__=='__main__':print('VM→mix model: first registered word+20, engine+21,1word/edge,768b landing,0extraSRAM')
