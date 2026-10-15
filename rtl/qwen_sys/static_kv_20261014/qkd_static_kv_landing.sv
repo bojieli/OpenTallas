@@ -6,9 +6,10 @@
 // names the consumer ordinal, not the physical HBM order. V permutes its ordinal
 // so its low/high-64-row alternation has the same bounded ring lifetime as K.
 module qkd_static_kv_landing_pc #(
-    parameter integer STACK=0, GROUP=0, QUARTER=0, MUT=0
+    parameter integer MUT=0
 )(
     input wire ck, rst_n,
+    input wire [1:0] cfg_stack,input wire [2:0] cfg_group,
     input wire arm,
     input wire [15:0] epoch,
     input wire [5:0] layer,
@@ -32,6 +33,9 @@ module qkd_static_kv_landing_pc #(
     output reg [5:0] out_layer,
     output reg fault
 );
+    (* keep *) reg [1:0] stack_q;
+    (* keep *) reg [2:0] group_q;
+    always @(posedge ck)begin stack_q<=cfg_stack;group_q<=cfg_group;end
     (* keep *) reg rn;
     always @(posedge ck) rn <= rst_n;
     (* keep *) reg arm_q, put_q, actual_q, get_q;
@@ -93,7 +97,7 @@ module qkd_static_kv_landing_pc #(
         end
         if(get_q)begin
           if(!armed||!valid[ra]||ticket[ra]!=get_ticket||ge_q!=active_epoch||gl_q!=active_layer||
-             gt_q[13]||gt_q[2:0]!=3'(GROUP)||gt_q[8:7]!=2'(STACK))fault<=1;
+             gt_q[13]||gt_q[2:0]!=group_q||gt_q[8:7]!=stack_q)fault<=1;
           if(!(put_q&&wa==ra))valid[ra]<=0;
         end
       end
@@ -170,8 +174,8 @@ module qkd_static_kv_landing_grp #(
       .rsp_valid(rsp_valid),.rsp_data(rsp_data),.rsp_t(rsp_t),.rsp_v(rsp_v),.rsp_epoch(rsp_epoch),.rsp_layer(rsp_layer),.fault(fault));
     genvar q;
     generate for(q=0;q<4;q=q+1)begin:g_pc
-      qkd_static_kv_landing_pc #(.STACK(STACK),.GROUP(GROUP),.QUARTER(q),.MUT(MUT))u_pc(
-       .ck(ck_pc[q]),.rst_n(rst_n),.arm(arm),.epoch(epoch),.layer(layer),
+      qkd_static_kv_landing_pc #(.MUT(MUT))u_pc(
+       .ck(ck_pc[q]),.rst_n(rst_n),.cfg_stack(2'(STACK)),.cfg_group(3'(GROUP)),.arm(arm),.epoch(epoch),.layer(layer),
        .expected_put(expected_put[q]),.expected_sector(expected_sector[10*q+:10]),
        .actual_valid(actual_valid[q]),.actual_sector(actual_sector[10*q+:10]),
        .actual_epoch(actual_epoch[16*q+:16]),.actual_layer(actual_layer[6*q+:6]),.actual_data(actual_data[256*q+:256]),
