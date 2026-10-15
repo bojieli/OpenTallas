@@ -268,10 +268,10 @@ module hfd_hgi_vms_static_NE (
     input wire [7:0] wslot_v,
     input wire [23:0] rslot,
     input wire [23:0] wslot,
-    input wire [815:0] rq,
-    output wire [12335:0] rr,
-    input wire [6743:0] wq,
-    output wire [23:0] wq_done,
+    input wire [679:0] rq,
+    output wire [10279:0] rr,
+    input wire [4495:0] wq,
+    output wire [15:0] wq_done,
     input wire [2247:0] dq,
     input wire [2247:0] kq,
     output wire [7:0] dq_done,
@@ -291,7 +291,7 @@ module hfd_hgi_vms_static_NE (
     output wire [2:0] ring_fault
 );
     wire [273:0] vacant_cr; // NC=0: no local clients exist.
-    ot_vms_slice_static #(.NC(0),.RG(6),.WG(3)) u_slice (
+    ot_vms_slice_static #(.NC(0),.RG(5),.WG(2)) u_slice (
         .clk_bank(clk_bank),
         .clk_hub(clk_hub),
         .clk_ring(clk_ring),

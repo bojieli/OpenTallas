@@ -1,0 +1,77 @@
+{
+  "schema": "opentallas.hbm.noatt-ne-abi.v1",
+  "base": "0ffb00f25baf46751dd1854e76a20064c866221c",
+  "source_sha256": {
+    "tools/gen_hbm_static_vm_wrappers.py": "9ed4302b194f498a252e2466d0ab8b5cfd1f179f67574b2a0ffb8191fb9420d5",
+    "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv": "91ea157771d591b0f60f7e17a65689d69f8c21017c233dc1a12d167d4447c061",
+    "results/arch/hbm_vm_static_1014/quadrant_abi.json": "814a6c4fbf948e7d6fcca8d4382b58c2605ca1ff9efb69804346bb5c04086757",
+    "results/arch/hbm_vm_calendar_1015/native_layouts.json": "6d7f487d54b5778a8c3e3ec0275e4eaa95645bb8e1d15453f250f48325552c77",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv": "876f0d732dec5a9d1edb5844d49f168cc9b744d6eadc7b943e62f7273bebb293",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53"
+  },
+  "changes": {
+    "NE_old_RG_WG": [
+      6,
+      3
+    ],
+    "NE_new_RG_WG": [
+      5,
+      2
+    ],
+    "removed_read": "attention index3",
+    "removed_write": "attention index1",
+    "HC_read": [
+      4,
+      3
+    ],
+    "HC_write": [
+      2,
+      1
+    ],
+    "COLL_read": [
+      5,
+      4
+    ],
+    "packet_read": [
+      6,
+      5
+    ],
+    "nonNE": "byte-identical"
+  },
+  "calendar": {
+    "fields_and_bit_offsets": "byte-identical",
+    "owner_values_repacked": "New encoding valid and obsolete owners rejected; existing production images must regenerate from current ABI; no full compiler programme claim.",
+    "stale_read6_write7_rejected": [
+      "read owner exceeds actual bank port count",
+      "write owner exceeds actual bank port count"
+    ],
+    "latencies": "unchanged; bank read n+6/commit n+3; LG 10/7,14/11,18/15"
+  },
+  "physical": "No inherited bank/hub closure. Actual source still original bank, ft distinct unadopted candidate.",
+  "qualification": {
+    "source_abi": true,
+    "calendar": true,
+    "SRAM_functional": {
+      "status": "PASS",
+      "banks": 8,
+      "real_SRAMs": 24,
+      "DMAwrites": 1024,
+      "wide_reads": 5120,
+      "per_group_reads": 1024,
+      "packet_reads": 8,
+      "sectors_per_edge": 8,
+      "read_return_edges": 6,
+      "wrong_return_group_mutant": "FAIL cycle145",
+      "host": "ot-agidock128",
+      "unit": "oth-ubuntu-968327-1792089305",
+      "source_sha256": {
+        "ot_sram_1r1w_1024x256_m2_r2c2.v": "25ca11845381ce089cc5f2fbab82a90672d8704fe6c66f4445814b33b4b7d51e",
+        "tb_hbm_vm_allgroups_static.sv": "380cd3e4df1f21f0d7bffcd3f9f0ca36b34b6f6aa09ceba08768be3b3041b51f",
+        "ot_vms_bank_static.sv": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+        "run.sh": "f636da85cb4b1cf4a4f585a2f0eb4e8183f84a2f62354687880f246da0350005"
+      }
+    },
+    "physical": false,
+    "native_token": false
+  }
+}

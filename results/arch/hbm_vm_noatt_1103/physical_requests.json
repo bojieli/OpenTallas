@@ -1,0 +1,1662 @@
+{
+  "schema": "opentallas.hbm.source-current-vm-physical.v1",
+  "scope": "VM/bank/LG/hub only; calendars/status/delivery/DMA belong to hardener",
+  "source_base": "0ffb00f25baf46751dd1854e76a20064c866221c",
+  "period_ps": 833.333,
+  "signoff": "TT setup >=0, actual FF hold >=0, DRC0; SS sensitivity only",
+  "quadrants": {
+    "SW": {
+      "actual_master": "hfd_hgi_vms_static_SW",
+      "params": {
+        "NC": 3,
+        "RG": 5,
+        "WG": 1,
+        "CW": 2,
+        "RB": 3,
+        "WB": 3
+      },
+      "actual_bank_source": "ot_vms_bank_static (not ft)",
+      "actual_hub_source": "ot_vms_hub_static",
+      "hub_params": {
+        "NC": 3,
+        "CW": 2
+      },
+      "hub_ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "sid": {
+          "direction": "input",
+          "bits": 2
+        },
+        "cq": {
+          "direction": "input",
+          "bits": 1352
+        },
+        "client_seq": {
+          "direction": "input",
+          "bits": 8
+        },
+        "bank_enable": {
+          "direction": "input",
+          "bits": 8
+        },
+        "bank_client": {
+          "direction": "input",
+          "bits": 16
+        },
+        "cw_enable": {
+          "direction": "input",
+          "bits": 1
+        },
+        "cw_client": {
+          "direction": "input",
+          "bits": 2
+        },
+        "ccw_enable": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ccw_client": {
+          "direction": "input",
+          "bits": 2
+        },
+        "cr": {
+          "direction": "output",
+          "bits": 1096
+        },
+        "pq": {
+          "direction": "output",
+          "bits": 2280
+        },
+        "pr": {
+          "direction": "input",
+          "bits": 2128
+        },
+        "cwi": {
+          "direction": "output",
+          "bits": 290
+        },
+        "cci": {
+          "direction": "output",
+          "bits": 290
+        },
+        "cco0": {
+          "direction": "input",
+          "bits": 264
+        },
+        "cco1": {
+          "direction": "input",
+          "bits": 264
+        },
+        "response_enable": {
+          "direction": "input",
+          "bits": 4
+        },
+        "response_seq": {
+          "direction": "input",
+          "bits": 8
+        },
+        "status": {
+          "direction": "output",
+          "bits": 3
+        }
+      },
+      "hub_scalar_pins": 8021,
+      "source_clock_roots": {
+        "bank": 8,
+        "hub": 1,
+        "ring": 2,
+        "replay": 1
+      },
+      "LG_roots": 24,
+      "home": null,
+      "bank_status": "OPEN no exact source-current CLOSED view; ft is distinct unadopted candidate"
+    },
+    "SE": {
+      "actual_master": "hfd_hgi_vms_static_SE",
+      "params": {
+        "NC": 0,
+        "RG": 4,
+        "WG": 1,
+        "CW": 1,
+        "RB": 3,
+        "WB": 3
+      },
+      "actual_bank_source": "ot_vms_bank_static (not ft)",
+      "actual_hub_source": "ot_vms_hub_static",
+      "hub_params": {
+        "NC": 0,
+        "CW": 1
+      },
+      "hub_ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "sid": {
+          "direction": "input",
+          "bits": 2
+        },
+        "cq": {
+          "direction": "input",
+          "bits": 338
+        },
+        "client_seq": {
+          "direction": "input",
+          "bits": 2
+        },
+        "bank_enable": {
+          "direction": "input",
+          "bits": 8
+        },
+        "bank_client": {
+          "direction": "input",
+          "bits": 8
+        },
+        "cw_enable": {
+          "direction": "input",
+          "bits": 1
+        },
+        "cw_client": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ccw_enable": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ccw_client": {
+          "direction": "input",
+          "bits": 1
+        },
+        "cr": {
+          "direction": "output",
+          "bits": 274
+        },
+        "pq": {
+          "direction": "output",
+          "bits": 2280
+        },
+        "pr": {
+          "direction": "input",
+          "bits": 2128
+        },
+        "cwi": {
+          "direction": "output",
+          "bits": 290
+        },
+        "cci": {
+          "direction": "output",
+          "bits": 290
+        },
+        "cco0": {
+          "direction": "input",
+          "bits": 264
+        },
+        "cco1": {
+          "direction": "input",
+          "bits": 264
+        },
+        "response_enable": {
+          "direction": "input",
+          "bits": 1
+        },
+        "response_seq": {
+          "direction": "input",
+          "bits": 2
+        },
+        "status": {
+          "direction": "output",
+          "bits": 3
+        }
+      },
+      "hub_scalar_pins": 6160,
+      "source_clock_roots": {
+        "bank": 8,
+        "hub": 1,
+        "ring": 2,
+        "replay": 1
+      },
+      "LG_roots": 24,
+      "home": null,
+      "bank_status": "OPEN no exact source-current CLOSED view; ft is distinct unadopted candidate"
+    },
+    "NW": {
+      "actual_master": "hfd_hgi_vms_static_NW",
+      "params": {
+        "NC": 4,
+        "RG": 6,
+        "WG": 3,
+        "CW": 3,
+        "RB": 3,
+        "WB": 3
+      },
+      "actual_bank_source": "ot_vms_bank_static (not ft)",
+      "actual_hub_source": "ot_vms_hub_static",
+      "hub_params": {
+        "NC": 4,
+        "CW": 3
+      },
+      "hub_ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "sid": {
+          "direction": "input",
+          "bits": 2
+        },
+        "cq": {
+          "direction": "input",
+          "bits": 1690
+        },
+        "client_seq": {
+          "direction": "input",
+          "bits": 10
+        },
+        "bank_enable": {
+          "direction": "input",
+          "bits": 8
+        },
+        "bank_client": {
+          "direction": "input",
+          "bits": 24
+        },
+        "cw_enable": {
+          "direction": "input",
+          "bits": 1
+        },
+        "cw_client": {
+          "direction": "input",
+          "bits": 3
+        },
+        "ccw_enable": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ccw_client": {
+          "direction": "input",
+          "bits": 3
+        },
+        "cr": {
+          "direction": "output",
+          "bits": 1370
+        },
+        "pq": {
+          "direction": "output",
+          "bits": 2280
+        },
+        "pr": {
+          "direction": "input",
+          "bits": 2128
+        },
+        "cwi": {
+          "direction": "output",
+          "bits": 290
+        },
+        "cci": {
+          "direction": "output",
+          "bits": 290
+        },
+        "cco0": {
+          "direction": "input",
+          "bits": 264
+        },
+        "cco1": {
+          "direction": "input",
+          "bits": 264
+        },
+        "response_enable": {
+          "direction": "input",
+          "bits": 5
+        },
+        "response_seq": {
+          "direction": "input",
+          "bits": 10
+        },
+        "status": {
+          "direction": "output",
+          "bits": 3
+        }
+      },
+      "hub_scalar_pins": 8648,
+      "source_clock_roots": {
+        "bank": 8,
+        "hub": 1,
+        "ring": 2,
+        "replay": 1
+      },
+      "LG_roots": 24,
+      "home": null,
+      "bank_status": "OPEN no exact source-current CLOSED view; ft is distinct unadopted candidate"
+    },
+    "NE": {
+      "actual_master": "hfd_hgi_vms_static_NE",
+      "params": {
+        "NC": 0,
+        "RG": 5,
+        "WG": 2,
+        "CW": 1,
+        "RB": 3,
+        "WB": 3
+      },
+      "actual_bank_source": "ot_vms_bank_static (not ft)",
+      "actual_hub_source": "ot_vms_hub_static",
+      "hub_params": {
+        "NC": 0,
+        "CW": 1
+      },
+      "hub_ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "sid": {
+          "direction": "input",
+          "bits": 2
+        },
+        "cq": {
+          "direction": "input",
+          "bits": 338
+        },
+        "client_seq": {
+          "direction": "input",
+          "bits": 2
+        },
+        "bank_enable": {
+          "direction": "input",
+          "bits": 8
+        },
+        "bank_client": {
+          "direction": "input",
+          "bits": 8
+        },
+        "cw_enable": {
+          "direction": "input",
+          "bits": 1
+        },
+        "cw_client": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ccw_enable": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ccw_client": {
+          "direction": "input",
+          "bits": 1
+        },
+        "cr": {
+          "direction": "output",
+          "bits": 274
+        },
+        "pq": {
+          "direction": "output",
+          "bits": 2280
+        },
+        "pr": {
+          "direction": "input",
+          "bits": 2128
+        },
+        "cwi": {
+          "direction": "output",
+          "bits": 290
+        },
+        "cci": {
+          "direction": "output",
+          "bits": 290
+        },
+        "cco0": {
+          "direction": "input",
+          "bits": 264
+        },
+        "cco1": {
+          "direction": "input",
+          "bits": 264
+        },
+        "response_enable": {
+          "direction": "input",
+          "bits": 1
+        },
+        "response_seq": {
+          "direction": "input",
+          "bits": 2
+        },
+        "status": {
+          "direction": "output",
+          "bits": 3
+        }
+      },
+      "hub_scalar_pins": 6160,
+      "source_clock_roots": {
+        "bank": 8,
+        "hub": 1,
+        "ring": 2,
+        "replay": 1
+      },
+      "LG_roots": 24,
+      "home": null,
+      "bank_status": "OPEN no exact source-current CLOSED view; ft is distinct unadopted candidate"
+    }
+  },
+  "requests": [
+    {
+      "instance": "hb_vms_SW",
+      "master": "hfd_hgi_vms_static_SW",
+      "kind": "cluster",
+      "required": "actual complete source composition with eight banks, hub, two ring stops, replay and status; do not manufacture a pure-pin parent",
+      "outline_requirement": {
+        "min_hub_face_um": 1100,
+        "VM_band_height_um": 1800
+      },
+      "clock_entries": [
+        "clk_bank[0]",
+        "clk_bank[1]",
+        "clk_bank[2]",
+        "clk_bank[3]",
+        "clk_bank[4]",
+        "clk_bank[5]",
+        "clk_bank[6]",
+        "clk_bank[7]",
+        "clk_hub",
+        "clk_ring[0]",
+        "clk_ring[1]",
+        "clk_replay"
+      ],
+      "pins": [
+        {
+          "name": "clk_bank",
+          "direction": "input",
+          "bits": 8
+        },
+        {
+          "name": "clk_hub",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "clk_ring",
+          "direction": "input",
+          "bits": 2
+        },
+        {
+          "name": "clk_replay",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "cq",
+          "direction": "input",
+          "bits": 1014
+        },
+        {
+          "name": "cr",
+          "direction": "output",
+          "bits": 822
+        },
+        {
+          "name": "client_seq",
+          "direction": "input",
+          "bits": 8
+        },
+        {
+          "name": "response_enable",
+          "direction": "input",
+          "bits": 4
+        },
+        {
+          "name": "response_seq",
+          "direction": "input",
+          "bits": 8
+        },
+        {
+          "name": "bank_enable",
+          "direction": "input",
+          "bits": 8
+        },
+        {
+          "name": "bank_client",
+          "direction": "input",
+          "bits": 16
+        },
+        {
+          "name": "hub_ring_enable",
+          "direction": "input",
+          "bits": 2
+        },
+        {
+          "name": "hub_ring_client",
+          "direction": "input",
+          "bits": 4
+        },
+        {
+          "name": "rslot_v",
+          "direction": "input",
+          "bits": 8
+        },
+        {
+          "name": "wslot_v",
+          "direction": "input",
+          "bits": 8
+        },
+        {
+          "name": "rslot",
+          "direction": "input",
+          "bits": 24
+        },
+        {
+          "name": "wslot",
+          "direction": "input",
+          "bits": 24
+        },
+        {
+          "name": "rq",
+          "direction": "input",
+          "bits": 680
+        },
+        {
+          "name": "rr",
+          "direction": "output",
+          "bits": 10280
+        },
+        {
+          "name": "wq",
+          "direction": "input",
+          "bits": 2248
+        },
+        {
+          "name": "wq_done",
+          "direction": "output",
+          "bits": 8
+        },
+        {
+          "name": "dq",
+          "direction": "input",
+          "bits": 2248
+        },
+        {
+          "name": "kq",
+          "direction": "input",
+          "bits": 2248
+        },
+        {
+          "name": "dq_done",
+          "direction": "output",
+          "bits": 8
+        },
+        {
+          "name": "kq_done",
+          "direction": "output",
+          "bits": 8
+        },
+        {
+          "name": "cw_in",
+          "direction": "input",
+          "bits": 2224
+        },
+        {
+          "name": "ccw_in",
+          "direction": "input",
+          "bits": 2224
+        },
+        {
+          "name": "cw_out",
+          "direction": "output",
+          "bits": 2224
+        },
+        {
+          "name": "ccw_out",
+          "direction": "output",
+          "bits": 2224
+        },
+        {
+          "name": "ring_tx_enable",
+          "direction": "input",
+          "bits": 2
+        },
+        {
+          "name": "ring_tx_source",
+          "direction": "input",
+          "bits": 6
+        },
+        {
+          "name": "replay_enable",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "replay_source",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "bank_status",
+          "direction": "output",
+          "bits": 144
+        },
+        {
+          "name": "hub_status",
+          "direction": "output",
+          "bits": 3
+        },
+        {
+          "name": "mirror_busy",
+          "direction": "output",
+          "bits": 2
+        },
+        {
+          "name": "vmstat",
+          "direction": "output",
+          "bits": 19
+        },
+        {
+          "name": "ring_fault",
+          "direction": "output",
+          "bits": 3
+        }
+      ],
+      "missing": "Root assigns actual outline/origin/orientation/per-child homes/pin windows and real channel cuts <=0.60; all reg-reg hops <=500um. KV_DESC has no current source producer port; remains OPEN."
+    },
+    {
+      "instance": "hb_vms_SE",
+      "master": "hfd_hgi_vms_static_SE",
+      "kind": "cluster",
+      "required": "actual complete source composition with eight banks, hub, two ring stops, replay and status; do not manufacture a pure-pin parent",
+      "outline_requirement": {
+        "min_hub_face_um": 1100,
+        "VM_band_height_um": 1800
+      },
+      "clock_entries": [
+        "clk_bank[0]",
+        "clk_bank[1]",
+        "clk_bank[2]",
+        "clk_bank[3]",
+        "clk_bank[4]",
+        "clk_bank[5]",
+        "clk_bank[6]",
+        "clk_bank[7]",
+        "clk_hub",
+        "clk_ring[0]",
+        "clk_ring[1]",
+        "clk_replay"
+      ],
+      "pins": [
+        {
+          "name": "clk_bank",
+          "direction": "input",
+          "bits": 8
+        },
+        {
+          "name": "clk_hub",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "clk_ring",
+          "direction": "input",
+          "bits": 2
+        },
+        {
+          "name": "clk_replay",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "client_seq",
+          "direction": "input",
+          "bits": 2
+        },
+        {
+          "name": "response_enable",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "response_seq",
+          "direction": "input",
+          "bits": 2
+        },
+        {
+          "name": "bank_enable",
+          "direction": "input",
+          "bits": 8
+        },
+        {
+          "name": "bank_client",
+          "direction": "input",
+          "bits": 8
+        },
+        {
+          "name": "hub_ring_enable",
+          "direction": "input",
+          "bits": 2
+        },
+        {
+          "name": "hub_ring_client",
+          "direction": "input",
+          "bits": 2
+        },
+        {
+          "name": "rslot_v",
+          "direction": "input",
+          "bits": 8
+        },
+        {
+          "name": "wslot_v",
+          "direction": "input",
+          "bits": 8
+        },
+        {
+          "name": "rslot",
+          "direction": "input",
+          "bits": 24
+        },
+        {
+          "name": "wslot",
+          "direction": "input",
+          "bits": 24
+        },
+        {
+          "name": "rq",
+          "direction": "input",
+          "bits": 544
+        },
+        {
+          "name": "rr",
+          "direction": "output",
+          "bits": 8224
+        },
+        {
+          "name": "wq",
+          "direction": "input",
+          "bits": 2248
+        },
+        {
+          "name": "wq_done",
+          "direction": "output",
+          "bits": 8
+        },
+        {
+          "name": "dq",
+          "direction": "input",
+          "bits": 2248
+        },
+        {
+          "name": "kq",
+          "direction": "input",
+          "bits": 2248
+        },
+        {
+          "name": "dq_done",
+          "direction": "output",
+          "bits": 8
+        },
+        {
+          "name": "kq_done",
+          "direction": "output",
+          "bits": 8
+        },
+        {
+          "name": "cw_in",
+          "direction": "input",
+          "bits": 2224
+        },
+        {
+          "name": "ccw_in",
+          "direction": "input",
+          "bits": 2224
+        },
+        {
+          "name": "cw_out",
+          "direction": "output",
+          "bits": 2224
+        },
+        {
+          "name": "ccw_out",
+          "direction": "output",
+          "bits": 2224
+        },
+        {
+          "name": "ring_tx_enable",
+          "direction": "input",
+          "bits": 2
+        },
+        {
+          "name": "ring_tx_source",
+          "direction": "input",
+          "bits": 6
+        },
+        {
+          "name": "replay_enable",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "replay_source",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "bank_status",
+          "direction": "output",
+          "bits": 144
+        },
+        {
+          "name": "hub_status",
+          "direction": "output",
+          "bits": 3
+        },
+        {
+          "name": "mirror_busy",
+          "direction": "output",
+          "bits": 2
+        },
+        {
+          "name": "vmstat",
+          "direction": "output",
+          "bits": 19
+        },
+        {
+          "name": "ring_fault",
+          "direction": "output",
+          "bits": 3
+        }
+      ],
+      "missing": "Root assigns actual outline/origin/orientation/per-child homes/pin windows and real channel cuts <=0.60; all reg-reg hops <=500um. KV_DESC has no current source producer port; remains OPEN."
+    },
+    {
+      "instance": "hb_vms_NW",
+      "master": "hfd_hgi_vms_static_NW",
+      "kind": "cluster",
+      "required": "actual complete source composition with eight banks, hub, two ring stops, replay and status; do not manufacture a pure-pin parent",
+      "outline_requirement": {
+        "min_hub_face_um": 1100,
+        "VM_band_height_um": 1800
+      },
+      "clock_entries": [
+        "clk_bank[0]",
+        "clk_bank[1]",
+        "clk_bank[2]",
+        "clk_bank[3]",
+        "clk_bank[4]",
+        "clk_bank[5]",
+        "clk_bank[6]",
+        "clk_bank[7]",
+        "clk_hub",
+        "clk_ring[0]",
+        "clk_ring[1]",
+        "clk_replay"
+      ],
+      "pins": [
+        {
+          "name": "clk_bank",
+          "direction": "input",
+          "bits": 8
+        },
+        {
+          "name": "clk_hub",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "clk_ring",
+          "direction": "input",
+          "bits": 2
+        },
+        {
+          "name": "clk_replay",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "cq",
+          "direction": "input",
+          "bits": 1352
+        },
+        {
+          "name": "cr",
+          "direction": "output",
+          "bits": 1096
+        },
+        {
+          "name": "client_seq",
+          "direction": "input",
+          "bits": 10
+        },
+        {
+          "name": "response_enable",
+          "direction": "input",
+          "bits": 5
+        },
+        {
+          "name": "response_seq",
+          "direction": "input",
+          "bits": 10
+        },
+        {
+          "name": "bank_enable",
+          "direction": "input",
+          "bits": 8
+        },
+        {
+          "name": "bank_client",
+          "direction": "input",
+          "bits": 24
+        },
+        {
+          "name": "hub_ring_enable",
+          "direction": "input",
+          "bits": 2
+        },
+        {
+          "name": "hub_ring_client",
+          "direction": "input",
+          "bits": 6
+        },
+        {
+          "name": "rslot_v",
+          "direction": "input",
+          "bits": 8
+        },
+        {
+          "name": "wslot_v",
+          "direction": "input",
+          "bits": 8
+        },
+        {
+          "name": "rslot",
+          "direction": "input",
+          "bits": 24
+        },
+        {
+          "name": "wslot",
+          "direction": "input",
+          "bits": 24
+        },
+        {
+          "name": "rq",
+          "direction": "input",
+          "bits": 816
+        },
+        {
+          "name": "rr",
+          "direction": "output",
+          "bits": 12336
+        },
+        {
+          "name": "wq",
+          "direction": "input",
+          "bits": 6744
+        },
+        {
+          "name": "wq_done",
+          "direction": "output",
+          "bits": 24
+        },
+        {
+          "name": "dq",
+          "direction": "input",
+          "bits": 2248
+        },
+        {
+          "name": "kq",
+          "direction": "input",
+          "bits": 2248
+        },
+        {
+          "name": "dq_done",
+          "direction": "output",
+          "bits": 8
+        },
+        {
+          "name": "kq_done",
+          "direction": "output",
+          "bits": 8
+        },
+        {
+          "name": "cw_in",
+          "direction": "input",
+          "bits": 2224
+        },
+        {
+          "name": "ccw_in",
+          "direction": "input",
+          "bits": 2224
+        },
+        {
+          "name": "cw_out",
+          "direction": "output",
+          "bits": 2224
+        },
+        {
+          "name": "ccw_out",
+          "direction": "output",
+          "bits": 2224
+        },
+        {
+          "name": "ring_tx_enable",
+          "direction": "input",
+          "bits": 2
+        },
+        {
+          "name": "ring_tx_source",
+          "direction": "input",
+          "bits": 6
+        },
+        {
+          "name": "replay_enable",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "replay_source",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "bank_status",
+          "direction": "output",
+          "bits": 144
+        },
+        {
+          "name": "hub_status",
+          "direction": "output",
+          "bits": 3
+        },
+        {
+          "name": "mirror_busy",
+          "direction": "output",
+          "bits": 2
+        },
+        {
+          "name": "vmstat",
+          "direction": "output",
+          "bits": 19
+        },
+        {
+          "name": "ring_fault",
+          "direction": "output",
+          "bits": 3
+        }
+      ],
+      "missing": "Root assigns actual outline/origin/orientation/per-child homes/pin windows and real channel cuts <=0.60; all reg-reg hops <=500um. KV_DESC has no current source producer port; remains OPEN."
+    },
+    {
+      "instance": "hb_vms_NE",
+      "master": "hfd_hgi_vms_static_NE",
+      "kind": "cluster",
+      "required": "actual complete source composition with eight banks, hub, two ring stops, replay and status; do not manufacture a pure-pin parent",
+      "outline_requirement": {
+        "min_hub_face_um": 1100,
+        "VM_band_height_um": 1800
+      },
+      "clock_entries": [
+        "clk_bank[0]",
+        "clk_bank[1]",
+        "clk_bank[2]",
+        "clk_bank[3]",
+        "clk_bank[4]",
+        "clk_bank[5]",
+        "clk_bank[6]",
+        "clk_bank[7]",
+        "clk_hub",
+        "clk_ring[0]",
+        "clk_ring[1]",
+        "clk_replay"
+      ],
+      "pins": [
+        {
+          "name": "clk_bank",
+          "direction": "input",
+          "bits": 8
+        },
+        {
+          "name": "clk_hub",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "clk_ring",
+          "direction": "input",
+          "bits": 2
+        },
+        {
+          "name": "clk_replay",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "client_seq",
+          "direction": "input",
+          "bits": 2
+        },
+        {
+          "name": "response_enable",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "response_seq",
+          "direction": "input",
+          "bits": 2
+        },
+        {
+          "name": "bank_enable",
+          "direction": "input",
+          "bits": 8
+        },
+        {
+          "name": "bank_client",
+          "direction": "input",
+          "bits": 8
+        },
+        {
+          "name": "hub_ring_enable",
+          "direction": "input",
+          "bits": 2
+        },
+        {
+          "name": "hub_ring_client",
+          "direction": "input",
+          "bits": 2
+        },
+        {
+          "name": "rslot_v",
+          "direction": "input",
+          "bits": 8
+        },
+        {
+          "name": "wslot_v",
+          "direction": "input",
+          "bits": 8
+        },
+        {
+          "name": "rslot",
+          "direction": "input",
+          "bits": 24
+        },
+        {
+          "name": "wslot",
+          "direction": "input",
+          "bits": 24
+        },
+        {
+          "name": "rq",
+          "direction": "input",
+          "bits": 680
+        },
+        {
+          "name": "rr",
+          "direction": "output",
+          "bits": 10280
+        },
+        {
+          "name": "wq",
+          "direction": "input",
+          "bits": 4496
+        },
+        {
+          "name": "wq_done",
+          "direction": "output",
+          "bits": 16
+        },
+        {
+          "name": "dq",
+          "direction": "input",
+          "bits": 2248
+        },
+        {
+          "name": "kq",
+          "direction": "input",
+          "bits": 2248
+        },
+        {
+          "name": "dq_done",
+          "direction": "output",
+          "bits": 8
+        },
+        {
+          "name": "kq_done",
+          "direction": "output",
+          "bits": 8
+        },
+        {
+          "name": "cw_in",
+          "direction": "input",
+          "bits": 2224
+        },
+        {
+          "name": "ccw_in",
+          "direction": "input",
+          "bits": 2224
+        },
+        {
+          "name": "cw_out",
+          "direction": "output",
+          "bits": 2224
+        },
+        {
+          "name": "ccw_out",
+          "direction": "output",
+          "bits": 2224
+        },
+        {
+          "name": "ring_tx_enable",
+          "direction": "input",
+          "bits": 2
+        },
+        {
+          "name": "ring_tx_source",
+          "direction": "input",
+          "bits": 6
+        },
+        {
+          "name": "replay_enable",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "replay_source",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "bank_status",
+          "direction": "output",
+          "bits": 144
+        },
+        {
+          "name": "hub_status",
+          "direction": "output",
+          "bits": 3
+        },
+        {
+          "name": "mirror_busy",
+          "direction": "output",
+          "bits": 2
+        },
+        {
+          "name": "vmstat",
+          "direction": "output",
+          "bits": 19
+        },
+        {
+          "name": "ring_fault",
+          "direction": "output",
+          "bits": 3
+        }
+      ],
+      "missing": "Root assigns actual outline/origin/orientation/per-child homes/pin windows and real channel cuts <=0.60; all reg-reg hops <=500um. KV_DESC has no current source producer port; remains OPEN."
+    },
+    {
+      "instance_pattern": "lg_<q>_0.g_bank[<b>].leaf",
+      "replicas": 32,
+      "master": "ot_hbm_vm_lg_static_bank",
+      "params": {
+        "READ_RETURN": 10,
+        "WRITE_RETURN": 7
+      },
+      "kind": "tile",
+      "outline_um": [
+        150.336,
+        151.2
+      ],
+      "orientation": "R0 only",
+      "signal_max_layer": "M5",
+      "clock_entry": "clk",
+      "same_edge_phase": true,
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "local_rq": {
+          "direction": "input",
+          "bits": 17
+        },
+        "far_rq": {
+          "direction": "input",
+          "bits": 17
+        },
+        "local_wq": {
+          "direction": "input",
+          "bits": 281
+        },
+        "far_wq": {
+          "direction": "input",
+          "bits": 281
+        },
+        "local_read": {
+          "direction": "input",
+          "bits": 1
+        },
+        "local_write": {
+          "direction": "input",
+          "bits": 1
+        },
+        "near_rq": {
+          "direction": "output",
+          "bits": 17
+        },
+        "near_wq": {
+          "direction": "output",
+          "bits": 281
+        },
+        "near_rr": {
+          "direction": "input",
+          "bits": 257
+        },
+        "near_w_done": {
+          "direction": "input",
+          "bits": 1
+        },
+        "local_rr": {
+          "direction": "output",
+          "bits": 257
+        },
+        "far_rr": {
+          "direction": "output",
+          "bits": 257
+        },
+        "local_w_done": {
+          "direction": "output",
+          "bits": 1
+        },
+        "far_w_done": {
+          "direction": "output",
+          "bits": 1
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "pin_plan": {
+        "E": "near 556",
+        "W": "far 556",
+        "S": "local 556",
+        "N": "select/clock/reset/fault 5"
+      },
+      "missing": "Exact typedslot/origin, peer-facing connection, PG/pin access and clock target from die lead; prototype leaf view not 96-leaf composition."
+    },
+    {
+      "instance_pattern": "lg_<q>_1.g_bank[<b>].leaf",
+      "replicas": 32,
+      "master": "ot_hbm_vm_lg_static_bank",
+      "params": {
+        "READ_RETURN": 14,
+        "WRITE_RETURN": 11
+      },
+      "kind": "tile",
+      "outline_um": [
+        150.336,
+        151.2
+      ],
+      "orientation": "R0 only",
+      "signal_max_layer": "M5",
+      "clock_entry": "clk",
+      "same_edge_phase": true,
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "local_rq": {
+          "direction": "input",
+          "bits": 17
+        },
+        "far_rq": {
+          "direction": "input",
+          "bits": 17
+        },
+        "local_wq": {
+          "direction": "input",
+          "bits": 281
+        },
+        "far_wq": {
+          "direction": "input",
+          "bits": 281
+        },
+        "local_read": {
+          "direction": "input",
+          "bits": 1
+        },
+        "local_write": {
+          "direction": "input",
+          "bits": 1
+        },
+        "near_rq": {
+          "direction": "output",
+          "bits": 17
+        },
+        "near_wq": {
+          "direction": "output",
+          "bits": 281
+        },
+        "near_rr": {
+          "direction": "input",
+          "bits": 257
+        },
+        "near_w_done": {
+          "direction": "input",
+          "bits": 1
+        },
+        "local_rr": {
+          "direction": "output",
+          "bits": 257
+        },
+        "far_rr": {
+          "direction": "output",
+          "bits": 257
+        },
+        "local_w_done": {
+          "direction": "output",
+          "bits": 1
+        },
+        "far_w_done": {
+          "direction": "output",
+          "bits": 1
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "pin_plan": {
+        "E": "near 556",
+        "W": "far 556",
+        "S": "local 556",
+        "N": "select/clock/reset/fault 5"
+      },
+      "missing": "Exact typedslot/origin, peer-facing connection, PG/pin access and clock target from die lead; prototype leaf view not 96-leaf composition."
+    },
+    {
+      "instance_pattern": "lg_<q>_2.g_bank[<b>].leaf",
+      "replicas": 32,
+      "master": "ot_hbm_vm_lg_static_bank",
+      "params": {
+        "READ_RETURN": 18,
+        "WRITE_RETURN": 15
+      },
+      "kind": "tile",
+      "outline_um": [
+        150.336,
+        151.2
+      ],
+      "orientation": "R0 only",
+      "signal_max_layer": "M5",
+      "clock_entry": "clk",
+      "same_edge_phase": true,
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "local_rq": {
+          "direction": "input",
+          "bits": 17
+        },
+        "far_rq": {
+          "direction": "input",
+          "bits": 17
+        },
+        "local_wq": {
+          "direction": "input",
+          "bits": 281
+        },
+        "far_wq": {
+          "direction": "input",
+          "bits": 281
+        },
+        "local_read": {
+          "direction": "input",
+          "bits": 1
+        },
+        "local_write": {
+          "direction": "input",
+          "bits": 1
+        },
+        "near_rq": {
+          "direction": "output",
+          "bits": 17
+        },
+        "near_wq": {
+          "direction": "output",
+          "bits": 281
+        },
+        "near_rr": {
+          "direction": "input",
+          "bits": 257
+        },
+        "near_w_done": {
+          "direction": "input",
+          "bits": 1
+        },
+        "local_rr": {
+          "direction": "output",
+          "bits": 257
+        },
+        "far_rr": {
+          "direction": "output",
+          "bits": 257
+        },
+        "local_w_done": {
+          "direction": "output",
+          "bits": 1
+        },
+        "far_w_done": {
+          "direction": "output",
+          "bits": 1
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "pin_plan": {
+        "E": "near 556",
+        "W": "far 556",
+        "S": "local 556",
+        "N": "select/clock/reset/fault 5"
+      },
+      "missing": "Exact typedslot/origin, peer-facing connection, PG/pin access and clock target from die lead; prototype leaf view not 96-leaf composition."
+    }
+  ],
+  "clock_homes": "No VM/LG/hub typed slots in current committed hbm_v15.json. Root must place actual source children; no fabricated pin-only parent.",
+  "qualification": false,
+  "closed_LG_prototype": {
+    "params": {
+      "READ_RETURN": 18,
+      "WRITE_RETURN": 15
+    },
+    "TTsetup_ps": 276.32,
+    "FFhold_ps": 24.95,
+    "SSsetup_sensitivity_ps": 80.03,
+    "DRC": 0,
+    "clock_TT_max_ps": 213.8,
+    "clock_TT_spread_ps": 42.6,
+    "scope": "Single HC leaf view. CLOSED stands if exact source/params/pins; no reroute without typedslot or RTL change."
+  },
+  "inherited_jobs": [
+    {
+      "shape": "RG4/WG1",
+      "local_launcher": 521364,
+      "remote_OpenROAD": 1369505,
+      "host": "ot-pve1",
+      "run": "/srv/opentallas-scratch/claude/ref_gate/vms_bank_ft_rg4wg1_1015-20261015-092124",
+      "stage": "GPL iteration8010 overflow0.6715; live",
+      "source": "exact candidate snapshot c1e17f31d, not current bank source"
+    },
+    {
+      "shape": "RG6/WG3",
+      "local_launcher": 521522,
+      "remote_OpenROAD": 1370515,
+      "host": "ot-pve1",
+      "run": "/srv/opentallas-scratch/claude/ref_gate/vms_bank_ft_rg6wg3_1015-20261015-092126",
+      "stage": "GPL iteration7340 overflow0.7002; live",
+      "source": "exact candidate snapshot c1e17f31d, not current bank source"
+    }
+  ],
+  "clock_defects": [
+    "Older ft RG4 gate09:37 was AGI, not current PVE1 run: TT insertion694.1ps exceeds300 even though gate WARN0fail.",
+    "Older spine2 RG5/7 insertion850.5/749.3ps exceeds300. RG7 setup\u22122.65ps; none is native closure.",
+    "LG native HC213.8ps/max42.6spread is valid singleleaf clock evidence, other full parent roots not established.",
+    "Reset distribution and serial1111\u2192LG833 fixed-phase delivery remain explicit other-stream gaps."
+  ],
+  "next_physical_job": {
+    "ready": false,
+    "reason": "No exact typed VM/hub/LG slot grant exists; preserved currentcandidate GPL jobs must collect before bank successor. No source-current bank candidate can reuse ft view.",
+    "dependency": "Root grant96actual LG homes/pins/clock targets; parent complete source contract regenerate after NE noATT patch; import ft candidate sources only with source-exact functional/compiler adoption proof."
+  }
+}

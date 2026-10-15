@@ -1,0 +1,7 @@
+ot-run: ot-epyc1tb     skipped: no /srv/opentallas-scratch/codex/hbm-vm-noatt-1103
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/hbm-vm-noatt-1103
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/hbm-vm-noatt-1103
+ot-run: ot-agidock128  admits    -7 GB (avail 77, growth 60, headroom 24, waiters 0/0 GB) load 20/64 running 9 disk 104 GB 
+ot-run: -> ot-agidock128 (will queue: admits -7 GB < 4 GB)
+ot-heavy: waiting for memory on vm-xry57mhfyn: need 4 GB, admissible -8 GB: available 76 GB, growth charged 60 GB, young 46 GB, headroom 24 GB, real floor 25 GB
+ot-run: interrupted (signal 15) while waiting for memory on ot-agidock128; waiter cancelled: NOT RUN

@@ -622,8 +622,8 @@
       "master": "hfd_hgi_vms_static_NE",
       "params": {
         "NC": 0,
-        "RG": 6,
-        "WG": 3,
+        "RG": 5,
+        "WG": 2,
         "CW": 1,
         "RB": 3,
         "WB": 3
@@ -713,22 +713,22 @@
         {
           "name": "rq",
           "direction": "input",
-          "bits": 816
+          "bits": 680
         },
         {
           "name": "rr",
           "direction": "output",
-          "bits": 12336
+          "bits": 10280
         },
         {
           "name": "wq",
           "direction": "input",
-          "bits": 6744
+          "bits": 4496
         },
         {
           "name": "wq_done",
           "direction": "output",
-          "bits": 24
+          "bits": 16
         },
         {
           "name": "dq",
@@ -893,13 +893,11 @@
         "SU/SFU/HC group",
         "DMA back",
         "SM xload",
-        "attention",
         "HC engine",
         "COLL"
       ],
       "write": [
         "SU/SFU/HC group",
-        "attention",
         "HC engine"
       ],
       "records": []

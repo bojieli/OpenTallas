@@ -9,8 +9,10 @@ DIR = ROOT / 'rtl/hbm_accel/generic/vm/static'
 # v15 VM ABI change (H-IDX 40e9f801e via H-DIE, applied by H-ELEM-A 2026-10-15): SW record clients 7 -> 3
 # (argmax, dma, idx; su/sfu/coll use LG taps/RG3, hc dead), IDX read group only on SW (SE 5->4, NW/NE 7->6;
 # condition met: SU route.scores_bias lands in SW, main 9505d6569). IDX was the last read group: no index shift.
+# No-ATT adopted 2026-10-15: NE drops only attention RG3/WG1; HC and COLL
+# shift to RG3/WG1 and RG4 respectively. Attention arithmetic stays on SMs.
 PARAMS = {'SW': (3, 5, 1, 0), 'SE': (0, 4, 1, 1),
-          'NW': (4, 6, 3, 2), 'NE': (0, 6, 3, 3)}
+          'NW': (4, 6, 3, 2), 'NE': (0, 5, 2, 3)}
 
 
 def render():
@@ -47,8 +49,8 @@ def render():
                        'SE': {'read': ['SU/SFU/HC group', 'DMA back', 'SM xload', 'COLL'], 'write': ['SU/SFU/HC group'], 'records': []},
                        'NW': {'read': ['SU/SFU/HC group', 'DMA back', 'SM xload', 'CP', 'quant', 'COLL'],
                               'write': ['SU/SFU/HC group', 'CP', 'quant'], 'records': ['cp', 'fmv', 'fused', 'quant']},
-                       'NE': {'read': ['SU/SFU/HC group', 'DMA back', 'SM xload', 'attention', 'HC engine', 'COLL'],
-                              'write': ['SU/SFU/HC group', 'attention', 'HC engine'], 'records': []}},
+                       'NE': {'read': ['SU/SFU/HC group', 'DMA back', 'SM xload', 'HC engine', 'COLL'],
+                              'write': ['SU/SFU/HC group', 'HC engine'], 'records': []}},
            'client_status': 'Declared allocation; each real client source migration must be proved separately. SU F2 native path is at owner.',
            'qualification': 'Actual RTL composition; unit gates do not establish physical closure or full native token execution.'}
     modules = ['`timescale 1ns/1ps', '`default_nettype none']

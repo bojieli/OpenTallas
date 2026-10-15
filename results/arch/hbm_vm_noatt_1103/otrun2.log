@@ -1,0 +1,11 @@
+ot-run: ot-epyc1tb     skipped: no /srv/opentallas-scratch/codex/hbm-vm-noatt-1103
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/hbm-vm-noatt-1103
+ot-run: ot-pve1        admits   109 GB (avail 165, growth 51, headroom 32, waiters 0/0 GB) load 42/28 running 13 disk 1265 GB 
+ot-run: ot-agidock128  admits    23 GB (avail 62, growth 34, headroom 24, waiters 0/0 GB) load 18/64 running 7 disk 102 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-968327-1792089305 after 0 s
+VM_ALLGROUPS_STATIC PASS RG=5 WG=2 banks=8 SRAMs=24 DMAwrites=1024 exactwide_reads=5120 eachgroup_reads=1024 packet_reads=8 sectors_per_cycle=8 return_edges=6 conflict_fault_no_arbitration=1
+tb_hbm_vm_allgroups_static.sv:140: $finish called at 8110000 (1ps)
+FATAL: tb_hbm_vm_allgroups_static.sv:74: actual bank response group mismatch RG=5 cycle=145 bank=0 group=0
+       Time: 1457000  Scope: tb_hbm_vm_allgroups_static.tick
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-968327-1792089305): exit 0
