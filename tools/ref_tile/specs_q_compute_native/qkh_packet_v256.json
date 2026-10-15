@@ -48,13 +48,14 @@
       "group_max": 1,
       "h": "M4",
       "v": "M5"
-    }
+    },
+    "m5_pg_pitch": 2.7
   },
-  "structural_change": "Actual Q519 split into263b metadata+lowerQ and256b upperQ banks at SAMEfixededge, eachrealownclockroot. LiteralspreadM4/M5pins+PGavoidance frozen beforeCTS. H519failedrecipe2posthookarea755.7>core653.2; bitbanking preservesallQbits/throughput, no density or timing waiver.",
+  "structural_change": "Actual Q519 split into263b metadata+lowerQ and256b upperQ banks at SAMEfixededge, eachrealownclockroot. LiteralspreadM4/M5pins+PGavoidance frozen beforeCTS. H519failedrecipe2posthookarea755.7>core653.2; bitbanking preservesallQbits/throughput, no density or timing waiver. Actual bp2 export failed child_lint PG spread36percent: double M5 stripe density to2.7um pitch, moving clk pin5.388to4.968um away from newstripe5.352; all data pins/outline/RTL/data edges unchanged. Expected PG span53.6percent must be measured in exported actual LEF; no waiver.",
   "job": {
     "owner": "Codex:q_compute_elem_head_stage",
     "branch": "codex/q-compute-native-parents-1014",
-    "tag": "bp1",
+    "tag": "pg2",
     "purpose": "Native actual packet staging for classified ECTL/head die timing failure",
     "extra_paths": [
       "physical/qwen_head_staging_1015",
