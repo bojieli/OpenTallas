@@ -1,5 +1,5 @@
 {
- "name": "dsfd_gth_re_v19-g9-COMMIT",
+ "name": "dsfd_gth_re_v19-g9-0f7620385",
  "block": "dsfd_gth_re",
  "ref_tile": true,
  "owner": "Claude:S-GATHER",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/s81-gather-r3-1014",
-  "commit": "COMMIT",
+  "commit": "0f7620385",
   "extra_paths": [
    "rtl/dsrom_sys/s81_ph",
    "rtl/dsrom_sys/s81_ctrl",
@@ -162,7 +162,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_gth_re/dsfd_gth_re_v19-g9-COMMIT"
+   "to": "results/rtl/ref_tile/dsfd_gth_re/dsfd_gth_re_v19-g9-0f7620385"
   }
  ],
  "cycles_added": 0,
