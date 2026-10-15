@@ -284,14 +284,18 @@ def cmd_check(a):
 # ---------------------------------------------------------------------------------------------------------- combine
 def cmd_combine(a):
     """K-split tensors (wo_b): the four ranks' FP32 partial rows reduced in the die's collective order == the model's
-    output.  Orders tried: sequential r0+r1+r2+r3 and the pairwise tree (r0+r1)+(r2+r3); the matching one is named."""
+    output. The production ot_s81ph_coll_core implements (r0+r1)+(r2+r3).
+    Sequential reduction is diagnostic only and can never qualify the check."""
     import hdc_golden_v41 as V
     works = [Path(w) for w in a.works.split(",")]
     plans = [json.loads((w / "plan.json").read_text()) for w in works]
     L = plans[0]["layers"][0]
-    assert sorted(p["rank"] for p in plans) == [0, 1, 2, 3]
+    assert len(plans) == 4 and sorted(p["rank"] for p in plans) == [0, 1, 2, 3]
+    assert all(p["layers"] == plans[0]["layers"] for p in plans), "mixed layer combine"
     cap = np.load(Path(plans[0]["gold"]) / f"fld_L{L:02d}.npz")
     parts = {p["rank"]: np.load(w / "ksplit_partials.npz") for p, w in zip(plans, works)}
+    tensor_keys = {k for k in parts[0].files if not k.endswith("|rows")}
+    assert tensor_keys and all({k for k in parts[r].files if not k.endswith("|rows")} == tensor_keys for r in range(4)), "missing K-split tensors"
     res = {}
     for k in parts[0].files:
         if k.endswith("|rows"):
@@ -306,8 +310,10 @@ def cmd_combine(a):
                       tree=V.add(V.add(pv[0], pv[1]), V.add(pv[2], pv[3])))
         res[k] = {o: int(np.sum(bits(V.to_bf16(v)) != g)) for o, v in orders.items()}
         res[k]["rows"] = int(len(rows))
-    ok = all(min(v["seq"], v["tree"]) == 0 for v in res.values())
-    rec = dict(schema="opentallas.s81.field_all.combine.v1", layer=L, tensors=res, verdict="PASS" if ok else "FAIL")
+    ok = bool(res) and all(v["tree"] == 0 for v in res.values())
+    rec = dict(schema="opentallas.s81.field_all.combine.v1", layer=L, tensors=res, required_order="tree",
+               order_source="rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv (pairwise rank fold)",
+               verdict="PASS" if ok else "FAIL")
     out = Path(a.out or works[0].parent / f"combine_L{L:02d}.json")
     out.write_text(json.dumps(rec, indent=1) + "\n")
     print(rec["verdict"], f"combine L{L}", res, flush=True)
