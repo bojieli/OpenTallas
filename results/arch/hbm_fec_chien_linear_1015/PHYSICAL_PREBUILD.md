@@ -1,4 +1,4 @@
-# FEC physical prebuild: actual large steering is a structural blocker
+# FEC physical prebuild: bounded steering is proven; physical closure remains open
 
 Scope is the exact standalone full wrapper counted by `full_census/receipt.json`.
 The joined endpoint, 613/487 gearbox, production calendar and delivered clock
@@ -46,9 +46,8 @@ Generic synthesis/check uses 451.66 seconds and 3,727.70 MB peak versus 683.82 s
 and 5,229.71 MB before. `static_correction_census/` preserves exact source/receipt
 and losslessly compressed log. The new generic model reduces conservative scalar
 expansion 15.648M→2.405M units (84.6%), shifts 114→4 and shiftx 57→2.
-A distinct static-source bit mapper is live as unit 1830755, output
-`/srv/opentallas-scratch/codex/fec-chien-linear-1015/static_correction_bit_mapper_0`.
-Exact scalar gates and paths remain unproven until this completes.
+The distinct static-source bit mapper completed; exact scalar counts and paths
+are recorded in the completed-expansion section below.
 
 ## Placement and partition alternatives to measure
 
@@ -150,3 +149,38 @@ raw receipt's retained input-manifest prepared-only wording. Caller TX6/RX2
 endpoint state and SRAM remain excluded. No standalone area, timing or clock
 phase is inherited. Geometry/H-DIE and the numeric join owner have the measured
 current root inventory; no qualified current slot or track-capacity grant exists.
+
+
+## Actual joined scalar graph completed
+
+`joined23_bit_mapper/` binds the successful full-current scalar map and graph to
+the measured 23-root source receipt. The mapper completes in 480.95 seconds,
+12,384.73 MB peak, with strict netlist check PASS. It retains 176,662 FF bits and
+1,543,463 combinational gates. Relative to the generic census, bit optimization
+removes 1,004 redundant FF bits: core 488, FEC control 3, collect 512, emit 1.
+No root is absent. The 1.135 GB source-bound scalar JSON remains cached remotely.
+
+The full joined graph confirms maximum structural depths of 90 for each BM,
+87 for Chien/emit, 58 for receive capture, 47 for each serializer bank and 34 for
+each deserializer bank. Each of eight gearbox banks retains 8,704 FF bits.
+Capture control reaches 9,223 registered-Q fanout; TX PHY control reaches 8,708.
+These are real scalar dependencies and gate levels, not mapped delay or physical
+pins. Every receive-capture root structurally sees all four deserializer banks,
+and each TX PHY root sees all four serializer banks. Bank selection and control
+must therefore be included in the physical home, not priced as isolated storage.
+
+373,573 gates feed multiple sink roots. Summing independent per-root cones gives
+2,213,570 gates, a 43.4% increase over the actual shared implementation. The
+proposed matching Chien/emit storage banks preserve two actual clock obligations
+and avoid blindly duplicating their shared correction cone. No hard-leaf source
+partition or physical placement is implemented by this graph report.
+
+The separate actual RVT TT mapper remains in ABC, with its authoritative child
+process live at 100% CPU. Its original source/graph hashes remain unchanged.
+A source-bound OpenSTA characterization runner is prepared and its real-library
+one-FF tool probe passes. That probe validates the tool script only; it is not a
+FEC timing result. Planned full characterization uses the actual 885.4167 ps
+period with explicit ideal-wire/common-phase assumptions, no CTS/SPEF, no
+qualified external driver/load, and no reset recovery/removal signoff. Geometry
+outline, real face pins, track capacity, delivered phases, mapped total area and
+whole-joined physical qualification all remain open.
