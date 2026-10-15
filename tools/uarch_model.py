@@ -34,6 +34,33 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 
+def s81_cn_ik_shared_kv_model(s_rd=16, s_wr=16):
+    """F11 functional successor: share the existing512-lane KV norm bank.
+
+    Incremental operators are FP4 quantisers and the128-dim mean/reduction;
+    allocation/route qualification remains blocked until S-DIE assigns outlines
+    and pins. Existing immutable stage prices are retained, never overwritten.
+    """
+    return dict(schema="opentallas.s81.cn-ik.shared-kv.v1", macs_per_cycle=0,
+        existing_norm_chunks_reused=64, norm_lanes_per_chunk=8,
+        static_epochs=dict(KV=dict(gain_set=2,dim=512),
+            CN=dict(gain_set=3,dim=512),IK=dict(gain_set=0,dim=128,physical_first_lane=384)),
+        new_replicas=dict(cn_quant_e4m3=16,ik_quant_ue8m0=4,
+            ik_half_reduce=2,ik_root_reduce=1,cn_norm_write=16),
+        memory_bytes_per_cycle=dict(read=64*s_rd,write=64*s_wr),
+        jobs=dict(CN=dict(parameter_rows=5,operand_rows=32,qdq_rows=16,raw_rows=16,norm_rows=16,
+                result_writes=48,immutable_priced_cycles=186.7+197.3+74.7+156.0),
+            IK=dict(parameter_rows=5,operand_rows=32,zero_prefix_rows=24,qdq_rows=4,raw_rows=4,
+                result_writes=8,immutable_priced_cycles=185.6+197.3+74.7+146.7)),
+        quant_boundary_bits_per_cycle=dict(input=1024,qdq_output=512,original_codes_and_scales=144),
+        norm_export_bits_per_chunk=128,
+        physical=dict(area="derive from assigned KV/QN children and new quant routes",
+            outlines="S-DIE assignment pending",routing_tracks="derive from assigned pins/channel capacity",
+            route_admissible=False),
+        latency="measure source-pinned full-shape descriptor gate; compose producer visibility and static epoch contention",
+        finite_buffers="existing KV gain sets plus fixed pipeline registers; no demand arbitration or backpressure")
+
+
 def qwen_seq_su_boundary_model(nw=18, is_stages=1, os_stages=1, relay_stages=15):
     """Option-4 boundary successor, sized before RTL; no new rate claim."""
     start_bits = 1 + 2 * nw + 12
@@ -581,6 +608,12 @@ def qwen_stream4_mutable_interface_model():
     """Selected protected STREAM4 rings/owner/control, sized before RTL."""
     from qwen_stream4_protected_model import model
     return model()
+
+
+def s81_probability_ingress_model(rows=640, **kwargs):
+    """Native SVC candidate transport/storage and fixed pipeline cost, no adoption."""
+    from s81_probability_ingress_model import model
+    return model(rows, **kwargs)
 
 
 def hbm_write_merge_contract_model():
