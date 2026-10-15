@@ -1,0 +1,448 @@
+{
+  "schema": "qwen.compute.parent_nl_banked_v1",
+  "banks": [
+    {
+      "index": 0,
+      "inst": "strap",
+      "master": "qkh_packet_v16",
+      "clock_port": "ck_bank[0]",
+      "nk_slot": 0,
+      "reset_target": "r_reset_branch_e_mid[15]"
+    },
+    {
+      "index": 1,
+      "inst": "rqr_south_0",
+      "master": "qkh_packet_h256",
+      "clock_port": "ck_bank[1]",
+      "nk_slot": 1,
+      "reset_target": "r_reset_branch_w_high1[12]"
+    },
+    {
+      "index": 2,
+      "inst": "rqr_south_1",
+      "master": "qkh_packet_h256",
+      "clock_port": "ck_bank[2]",
+      "nk_slot": 2,
+      "reset_target": "r_reset_branch_w_high1[9]"
+    },
+    {
+      "index": 3,
+      "inst": "rqr_south_2",
+      "master": "qkh_packet_h256",
+      "clock_port": "ck_bank[3]",
+      "nk_slot": 3,
+      "reset_target": "r_reset_branch_w_high1[10]"
+    },
+    {
+      "index": 4,
+      "inst": "rqr_south_3",
+      "master": "qkh_packet_h256",
+      "clock_port": "ck_bank[4]",
+      "nk_slot": 4,
+      "reset_target": "r_reset_branch_e_high[0]"
+    },
+    {
+      "index": 5,
+      "inst": "rqr_north_0",
+      "master": "qkh_packet_h256",
+      "clock_port": "ck_bank[5]",
+      "nk_slot": 5,
+      "reset_target": "r_reset_branch_w_low[8]"
+    },
+    {
+      "index": 6,
+      "inst": "rqr_north_1",
+      "master": "qkh_packet_h256",
+      "clock_port": "ck_bank[6]",
+      "nk_slot": 6,
+      "reset_target": "r_reset_branch_w_low[7]"
+    },
+    {
+      "index": 7,
+      "inst": "rqr_north_2",
+      "master": "qkh_packet_h256",
+      "clock_port": "ck_bank[7]",
+      "nk_slot": 7,
+      "reset_target": "r_reset_branch_w_low[6]"
+    },
+    {
+      "index": 8,
+      "inst": "rqr_north_3",
+      "master": "qkh_packet_h256",
+      "clock_port": "ck_bank[8]",
+      "nk_slot": 8,
+      "reset_target": "r_reset_branch_e_low[2]"
+    },
+    {
+      "index": 9,
+      "inst": "mq_wrom_0",
+      "master": "qkh_packet_h256",
+      "clock_port": "ck_bank[9]",
+      "nk_slot": 9,
+      "reset_target": "r_reset_branch_w_mid[1]"
+    },
+    {
+      "index": 10,
+      "inst": "mq_wrom_1",
+      "master": "qkh_packet_v256",
+      "clock_port": "ck_bank[10]",
+      "nk_slot": 10,
+      "reset_target": "r_reset_branch_w_high0[0]"
+    },
+    {
+      "index": 11,
+      "inst": "mq_wrom_2",
+      "master": "qkh_packet_v256",
+      "clock_port": "ck_bank[11]",
+      "nk_slot": 11,
+      "reset_target": "r_reset_branch_e_mid[1]"
+    },
+    {
+      "index": 12,
+      "inst": "mq_wrom_3",
+      "master": "qkh_packet_v256",
+      "clock_port": "ck_bank[12]",
+      "nk_slot": 12,
+      "reset_target": "r_reset_branch_w_high0[3]"
+    },
+    {
+      "index": 13,
+      "inst": "xdelay_0",
+      "master": "qkh_packet_v256",
+      "clock_port": "ck_bank[13]",
+      "nk_slot": 13,
+      "reset_target": "r_reset_branch_e_low[0]"
+    },
+    {
+      "index": 14,
+      "inst": "xdelay_1",
+      "master": "qkh_packet_h256",
+      "clock_port": "ck_bank[14]",
+      "nk_slot": 14,
+      "reset_target": "r_reset_branch_e_low[1]"
+    },
+    {
+      "index": 15,
+      "inst": "xdelay_2",
+      "master": "qkh_packet_h256",
+      "clock_port": "ck_bank[15]",
+      "nk_slot": 15,
+      "reset_target": "r_reset_branch_e_low[4]"
+    },
+    {
+      "index": 16,
+      "inst": "xdelay_3",
+      "master": "qkh_packet_v256",
+      "clock_port": "ck_bank[16]",
+      "nk_slot": 16,
+      "reset_target": "r_reset_branch_e_low[5]"
+    },
+    {
+      "index": 17,
+      "inst": "xdelay_4",
+      "master": "qkh_packet_h256",
+      "clock_port": "ck_bank[17]",
+      "nk_slot": 17,
+      "reset_target": "r_reset_branch_w_low[14]"
+    },
+    {
+      "index": 18,
+      "inst": "xdelay_5",
+      "master": "qkh_packet_h256",
+      "clock_port": "ck_bank[18]",
+      "nk_slot": 18,
+      "reset_target": "r_reset_branch_e_low[3]"
+    },
+    {
+      "index": 19,
+      "inst": "xdelay_6",
+      "master": "qkh_packet_h256",
+      "clock_port": "ck_bank[19]",
+      "nk_slot": 19,
+      "reset_target": "r_reset_branch_w_mid[5]"
+    },
+    {
+      "index": 20,
+      "inst": "xdelay_7",
+      "master": "qkh_packet_v256",
+      "clock_port": "ck_bank[20]",
+      "nk_slot": 20,
+      "reset_target": "r_reset_branch_w_low[10]"
+    },
+    {
+      "index": 21,
+      "inst": "tx0_r0_lo",
+      "master": "qkh_packet_v256",
+      "clock_port": "ck_bank[21]",
+      "nk_slot": 21,
+      "reset_target": "r_reset_branch_w_low[15]"
+    },
+    {
+      "index": 22,
+      "inst": "tx0_r1_lo",
+      "master": "qkh_packet_v256",
+      "clock_port": "ck_bank[22]",
+      "nk_slot": 22,
+      "reset_target": "r_reset_branch_w_low[4]"
+    },
+    {
+      "index": 23,
+      "inst": "tx1_r0_lo",
+      "master": "qkh_packet_v256",
+      "clock_port": "ck_bank[23]",
+      "nk_slot": 23,
+      "reset_target": "r_reset_branch_w_mid[6]"
+    },
+    {
+      "index": 24,
+      "inst": "tx1_r1_lo",
+      "master": "qkh_packet_v256",
+      "clock_port": "ck_bank[24]",
+      "nk_slot": 24,
+      "reset_target": "r_reset_branch_w_low[5]"
+    },
+    {
+      "index": 25,
+      "inst": "tx2_r0_lo",
+      "master": "qkh_packet_v256",
+      "clock_port": "ck_bank[25]",
+      "nk_slot": 25,
+      "reset_target": "r_reset_branch_w_mid[11]"
+    },
+    {
+      "index": 26,
+      "inst": "tx2_r1_lo",
+      "master": "qkh_packet_v256",
+      "clock_port": "ck_bank[26]",
+      "nk_slot": 26,
+      "reset_target": "r_reset_branch_w_high0[2]"
+    },
+    {
+      "index": 27,
+      "inst": "tx3_r0_lo",
+      "master": "qkh_packet_v256",
+      "clock_port": "ck_bank[27]",
+      "nk_slot": 27,
+      "reset_target": "r_reset_branch_w_mid[14]"
+    },
+    {
+      "index": 28,
+      "inst": "tx3_r1_lo",
+      "master": "qkh_packet_v256",
+      "clock_port": "ck_bank[28]",
+      "nk_slot": 28,
+      "reset_target": "r_reset_branch_w_high0[14]"
+    },
+    {
+      "index": 29,
+      "inst": "tx4_r0_lo",
+      "master": "qkh_packet_v256",
+      "clock_port": "ck_bank[29]",
+      "nk_slot": 29,
+      "reset_target": "r_reset_branch_e_low[15]"
+    },
+    {
+      "index": 30,
+      "inst": "tx4_r1_lo",
+      "master": "qkh_packet_v256",
+      "clock_port": "ck_bank[30]",
+      "nk_slot": 30,
+      "reset_target": "r_reset_branch_e_low[6]"
+    },
+    {
+      "index": 31,
+      "inst": "tx5_r0_lo",
+      "master": "qkh_packet_v256",
+      "clock_port": "ck_bank[31]",
+      "nk_slot": 31,
+      "reset_target": "r_reset_branch_e_low[10]"
+    },
+    {
+      "index": 32,
+      "inst": "tx5_r1_lo",
+      "master": "qkh_packet_v256",
+      "clock_port": "ck_bank[32]",
+      "nk_slot": 32,
+      "reset_target": "r_reset_branch_e_low[11]"
+    },
+    {
+      "index": 33,
+      "inst": "tx6_r0_lo",
+      "master": "qkh_packet_v256",
+      "clock_port": "ck_bank[33]",
+      "nk_slot": 33,
+      "reset_target": "r_reset_branch_w_high0[1]"
+    },
+    {
+      "index": 34,
+      "inst": "tx6_r1_lo",
+      "master": "qkh_packet_v256",
+      "clock_port": "ck_bank[34]",
+      "nk_slot": 34,
+      "reset_target": "r_reset_branch_e_mid[5]"
+    },
+    {
+      "index": 35,
+      "inst": "tx7_r0_lo",
+      "master": "qkh_packet_v256",
+      "clock_port": "ck_bank[35]",
+      "nk_slot": 35,
+      "reset_target": "r_reset_branch_e_mid[2]"
+    },
+    {
+      "index": 36,
+      "inst": "tx7_r1_lo",
+      "master": "qkh_packet_v256",
+      "clock_port": "ck_bank[36]",
+      "nk_slot": 36,
+      "reset_target": "r_reset_branch_e_mid[6]"
+    },
+    {
+      "index": 37,
+      "inst": "to_reg",
+      "master": "qwen_glue_v514",
+      "clock_port": "ck_bank[37]",
+      "nk_slot": 37,
+      "reset_target": "r_reset_branch_e_low[14]"
+    },
+    {
+      "index": 38,
+      "inst": "face_t_out",
+      "master": "qwen_glue_v514",
+      "clock_port": "ck_bank[38]",
+      "nk_slot": 40,
+      "reset_target": "r_reset_branch_w_high0[4]"
+    },
+    {
+      "index": 39,
+      "inst": "face_tap",
+      "master": "qwen_glue_v508",
+      "clock_port": "ck_bank[39]",
+      "nk_slot": 41,
+      "reset_target": "r_reset_branch_e_mid[7]"
+    },
+    {
+      "index": 40,
+      "inst": "s2_word_0",
+      "master": "qwen_glue_v514",
+      "clock_port": "ck_bank[40]",
+      "nk_slot": 42,
+      "reset_target": "r_reset_branch_w_mid[3]"
+    },
+    {
+      "index": 41,
+      "inst": "s2_word_1",
+      "master": "qwen_glue_v514",
+      "clock_port": "ck_bank[41]",
+      "nk_slot": 43,
+      "reset_target": "r_reset_branch_w_mid[2]"
+    },
+    {
+      "index": 42,
+      "inst": "node_stage_t_out",
+      "master": "qwen_glue_v514",
+      "clock_port": "ck_bank[42]",
+      "nk_slot": 47,
+      "reset_target": "r_reset_branch_e_mid[4]"
+    },
+    {
+      "index": 43,
+      "inst": "return_south_0",
+      "master": "qkh_packet_h256",
+      "clock_port": "ck_bank[43]",
+      "nk_slot": 48,
+      "reset_target": "r_reset_branch_w_high1[13]"
+    },
+    {
+      "index": 44,
+      "inst": "return_south_1",
+      "master": "qkh_packet_h256",
+      "clock_port": "ck_bank[44]",
+      "nk_slot": 49,
+      "reset_target": "r_reset_branch_w_high1[11]"
+    },
+    {
+      "index": 45,
+      "inst": "return_south_2",
+      "master": "qkh_packet_h256",
+      "clock_port": "ck_bank[45]",
+      "nk_slot": 50,
+      "reset_target": "r_reset_branch_w_high1[15]"
+    },
+    {
+      "index": 46,
+      "inst": "return_south_3",
+      "master": "qkh_packet_h256",
+      "clock_port": "ck_bank[46]",
+      "nk_slot": 51,
+      "reset_target": "r_reset_branch_e_mid[14]"
+    },
+    {
+      "index": 47,
+      "inst": "return_north_0",
+      "master": "qkh_packet_v256",
+      "clock_port": "ck_bank[47]",
+      "nk_slot": 52,
+      "reset_target": "r_reset_branch_w_mid[0]"
+    },
+    {
+      "index": 48,
+      "inst": "return_north_1",
+      "master": "qkh_packet_v256",
+      "clock_port": "ck_bank[48]",
+      "nk_slot": 53,
+      "reset_target": "r_reset_branch_w_low[0]"
+    },
+    {
+      "index": 49,
+      "inst": "return_north_2",
+      "master": "qkh_packet_v256",
+      "clock_port": "ck_bank[49]",
+      "nk_slot": 54,
+      "reset_target": "r_reset_branch_e_low[7]"
+    },
+    {
+      "index": 50,
+      "inst": "return_north_3",
+      "master": "qkh_packet_v256",
+      "clock_port": "ck_bank[50]",
+      "nk_slot": 55,
+      "reset_target": "r_reset_branch_e_low[12]"
+    },
+    {
+      "index": 51,
+      "inst": "xdelay_extra",
+      "master": "qkh_packet_v256",
+      "clock_port": "ck_bank[51]",
+      "nk_slot": 56,
+      "reset_target": "r_reset_branch_w_low[9]"
+    },
+    {
+      "index": 52,
+      "inst": "s2_x_full",
+      "master": "qkh_packet_v256",
+      "clock_port": "ck_bank[52]",
+      "nk_slot": 57,
+      "reset_target": "r_reset_branch_w_mid[7]"
+    }
+  ],
+  "roots": {
+    "data": 53,
+    "child": 13,
+    "reset": 11,
+    "residual": 1
+  },
+  "removed_vs_nk": [
+    "face_n_b",
+    "face_n_y",
+    "node_stage_n_a",
+    "node_stage_n_b",
+    "node_stage_n_y",
+    "u_node (CLOSED ot_qwen_tile_node)"
+  ],
+  "added_vs_nk": {
+    "to_reg": "qwen_glue_v514 at the node TOREG edge (NK: inside the node leaf); same edge"
+  },
+  "compiler_edges": "identical t_out age to NK banked; no n_* ports; ROM return +1, xdelay9, TX198 shared with NK",
+  "status": "SOURCE_ASSEMBLY_NOT_PHYSICAL_QUALIFICATION"
+}

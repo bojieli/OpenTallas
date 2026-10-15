@@ -1,0 +1,50 @@
+{
+  "schema": "qwen.compute.banked_parent.compiler_candidate.v1",
+  "profile": "nk-banked-tx198-v1",
+  "selected": false,
+  "activation_requires": "full source-specific physical parent qualification and actual compiler/full join update",
+  "top": "qfd_tile_nk_banked_v1",
+  "source_sha256": {
+    "rtl/qwen_sys/tile_parent_banked_20261015/qfd_tile_nk_banked_v1.sv": "21de13fda16cfc4845654b978fb2d976494871313db3dadb0ecbc6a5aefe2941",
+    "rtl/qwen_sys/tile_parent_banked_20261015/ot_qwen_rom_tile_logic_banked_v1.sv": "ad7e16a0eb69355cc2471a9b313a2b1e33d02ffdf4a200b4218692c2aa452cb9",
+    "rtl/qwen_sys/tile_parent_banked_20261015/ot_qwen_w12_matvec_part_banked_v1.sv": "1bed213967ef6215be2063f1d1134baacbaf8edbd9c82e2fa5f119293feee020"
+  },
+  "clock_roots": {
+    "ck": 1,
+    "ck_bank": 58,
+    "ck_reset": 11,
+    "ck_child": 14,
+    "total": 84
+  },
+  "operational_edges": {
+    "XTX": 2,
+    "x_delay": 9,
+    "ROM_return_group_captures": 2,
+    "extra_node_input": 1,
+    "extra_node_output": 1
+  },
+  "delta_from_old_native_parent": {
+    "TX198_compression": 0,
+    "ROM_return": 1,
+    "x_delay": 1,
+    "node_hop": 2,
+    "tile_ME_output": 1,
+    "complete_ME_return_with_tile_output": 2
+  },
+  "reset_boot_contract": {
+    "asserted_edges": 16,
+    "released_no_valid_edges": 16,
+    "scope": "conservative explicit candidate boot window; not original selected profile",
+    "all_clock_entries": "same fixed cycle family; no enables/credits"
+  },
+  "qualification": {
+    "functional_parent": true,
+    "geometry_represented_payload_dependencies": true,
+    "parent_native_clock": false,
+    "residual_root_placed": false,
+    "comb_delays": false,
+    "PG_cut_pin_access": false,
+    "route": false
+  },
+  "claim_boundary": "Unselected successor only. Current native950/TT50 unchanged. No old-parent physical receipt inheritance."
+}

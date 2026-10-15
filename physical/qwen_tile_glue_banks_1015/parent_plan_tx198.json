@@ -1,0 +1,6647 @@
+{
+  "candidate_sha256": "6089e1bf7dc044cf8868627e138dddf8e0e28057378ca941bc058fe2a81db175",
+  "outline_um": [
+    481.68,
+    1400.22
+  ],
+  "bodies": [
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+      "master": "ot_qwen_tile_rpair",
+      "inst": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_hd.u_rp",
+      "idx": 0,
+      "x": 22.464,
+      "y": 23.76,
+      "w": 311.04,
+      "h": 129.6,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+      "master": "ot_qwen_tile_rpair",
+      "inst": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_hd.u_rp",
+      "idx": 0,
+      "x": 22.464,
+      "y": 174.96,
+      "w": 311.04,
+      "h": 129.6,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+      "master": "ot_qwen_tile_rpair",
+      "inst": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_hd.u_rp",
+      "idx": 0,
+      "x": 22.464,
+      "y": 952.83,
+      "w": 311.04,
+      "h": 129.6,
+      "orient": "MX",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+      "master": "ot_qwen_tile_rpair",
+      "inst": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_hd.u_rp",
+      "idx": 0,
+      "x": 22.464,
+      "y": 1108.35,
+      "w": 311.04,
+      "h": 129.6,
+      "orient": "MX",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+      "master": "ot_qwen_tile_rpair",
+      "inst": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_hd.u_rp",
+      "idx": 0,
+      "x": 22.464,
+      "y": 1259.55,
+      "w": 311.04,
+      "h": 129.6,
+      "orient": "MX",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node",
+      "master": "ot_qwen_tile_node",
+      "inst": "u_tile.u_tile.u_logic.genblk4.g_ndh.u_node",
+      "idx": 0,
+      "x": 372.59999999999997,
+      "y": 410.4,
+      "w": 47.52,
+      "h": 432.0,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "master": "ot_qwen_tile_lsl_fp1",
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh",
+      "idx": 0,
+      "x": 103.68,
+      "y": 330.48,
+      "w": 99.792,
+      "h": 140.4,
+      "orient": "MY",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "master": "ot_qwen_tile_lsl_fp1",
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh",
+      "idx": 0,
+      "x": 265.68,
+      "y": 330.48,
+      "w": 99.792,
+      "h": 140.4,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "master": "ot_qwen_tile_lsl_fp1",
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh",
+      "idx": 0,
+      "x": 103.68,
+      "y": 482.49,
+      "w": 99.792,
+      "h": 140.4,
+      "orient": "MY",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "master": "ot_qwen_tile_lsl_fp1",
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
+      "idx": 0,
+      "x": 265.68,
+      "y": 482.49,
+      "w": 99.792,
+      "h": 140.4,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "master": "ot_qwen_tile_lsl_fp1",
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh",
+      "idx": 0,
+      "x": 103.68,
+      "y": 634.5,
+      "w": 99.792,
+      "h": 140.4,
+      "orient": "MY",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "master": "ot_qwen_tile_lsl_fp1",
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh",
+      "idx": 0,
+      "x": 265.68,
+      "y": 634.5,
+      "w": 99.792,
+      "h": 140.4,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "master": "ot_qwen_tile_lsl_fp1",
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh",
+      "idx": 0,
+      "x": 103.68,
+      "y": 786.51,
+      "w": 99.792,
+      "h": 140.4,
+      "orient": "MY",
+      "offtrack": 0
+    },
+    {
+      "kind": "child",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "master": "ot_qwen_tile_lsl_fp1",
+      "inst": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh",
+      "idx": 0,
+      "x": 265.68,
+      "y": 786.51,
+      "w": 99.792,
+      "h": 140.4,
+      "orient": "R0",
+      "offtrack": 0
+    },
+    {
+      "inst": "strap",
+      "master": "qkh_packet_v16",
+      "x": 425.52,
+      "y": 1017.63,
+      "w": 21.6,
+      "h": 21.6,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing tile_id register replacement"
+    },
+    {
+      "inst": "rqr_south_0",
+      "master": "qkh_packet_h256",
+      "x": 25.92,
+      "y": 1087.83,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing 1024-bit RQR collector"
+    },
+    {
+      "inst": "rqr_south_1",
+      "master": "qkh_packet_h256",
+      "x": 96.12,
+      "y": 1087.83,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing 1024-bit RQR collector"
+    },
+    {
+      "inst": "rqr_south_2",
+      "master": "qkh_packet_h256",
+      "x": 166.32,
+      "y": 1087.83,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing 1024-bit RQR collector"
+    },
+    {
+      "inst": "rqr_south_3",
+      "master": "qkh_packet_h256",
+      "x": 236.52000000000004,
+      "y": 1087.83,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing 1024-bit RQR collector"
+    },
+    {
+      "inst": "rqr_north_0",
+      "master": "qkh_packet_h256",
+      "x": 25.92,
+      "y": 309.96,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing 1024-bit RQR collector"
+    },
+    {
+      "inst": "rqr_north_1",
+      "master": "qkh_packet_h256",
+      "x": 96.12,
+      "y": 309.96,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing 1024-bit RQR collector"
+    },
+    {
+      "inst": "rqr_north_2",
+      "master": "qkh_packet_h256",
+      "x": 166.32,
+      "y": 309.96,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing 1024-bit RQR collector"
+    },
+    {
+      "inst": "rqr_north_3",
+      "master": "qkh_packet_h256",
+      "x": 236.52000000000004,
+      "y": 309.96,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing 1024-bit RQR collector"
+    },
+    {
+      "inst": "mq_wrom_0",
+      "master": "qkh_packet_h256",
+      "x": 33.48,
+      "y": 532.17,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing unreset mq_wrom 256-bit lane capture"
+    },
+    {
+      "inst": "mq_wrom_1",
+      "master": "qkh_packet_v256",
+      "x": 38.88,
+      "y": 827.01,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing unreset mq_wrom 256-bit lane capture"
+    },
+    {
+      "inst": "mq_wrom_2",
+      "master": "qkh_packet_v256",
+      "x": 229.608,
+      "y": 715.5,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing unreset mq_wrom 256-bit lane capture"
+    },
+    {
+      "inst": "mq_wrom_3",
+      "master": "qkh_packet_v256",
+      "x": 208.872,
+      "y": 715.5,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing unreset mq_wrom 256-bit lane capture"
+    },
+    {
+      "inst": "xdelay_0",
+      "master": "qkh_packet_v256",
+      "x": 461.16,
+      "y": 260.28,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "used_bits": 128,
+      "purpose": "existing 128-bit x delay rung",
+      "spare_payload": "xl_q[127:0] in bank[255:128]; IREG1"
+    },
+    {
+      "inst": "xdelay_1",
+      "master": "qkh_packet_h256",
+      "x": 384.48,
+      "y": 309.96,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "used_bits": 128,
+      "purpose": "existing 128-bit x delay rung"
+    },
+    {
+      "inst": "xdelay_2",
+      "master": "qkh_packet_h256",
+      "x": 338.904,
+      "y": 289.44,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "used_bits": 128,
+      "purpose": "existing 128-bit x delay rung"
+    },
+    {
+      "inst": "xdelay_3",
+      "master": "qkh_packet_v256",
+      "x": 425.52,
+      "y": 239.76,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "used_bits": 128,
+      "purpose": "existing 128-bit x delay rung"
+    },
+    {
+      "inst": "xdelay_4",
+      "master": "qkh_packet_h256",
+      "x": 25.92,
+      "y": 476.28,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "used_bits": 128,
+      "purpose": "existing 128-bit x delay rung"
+    },
+    {
+      "inst": "xdelay_5",
+      "master": "qkh_packet_h256",
+      "x": 306.72,
+      "y": 309.96,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "used_bits": 128,
+      "purpose": "existing 128-bit x delay rung"
+    },
+    {
+      "inst": "xdelay_6",
+      "master": "qkh_packet_h256",
+      "x": 33.48,
+      "y": 496.8,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "used_bits": 128,
+      "purpose": "existing 128-bit x delay rung",
+      "spare_payload": "mq_x[127:0] in bank[255:128]"
+    },
+    {
+      "inst": "xdelay_7",
+      "master": "qkh_packet_v256",
+      "x": 11.88,
+      "y": 330.48,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "used_bits": 128,
+      "purpose": "existing 128-bit x delay rung"
+    },
+    {
+      "inst": "tx0_r0_lo",
+      "master": "qkh_packet_v256",
+      "x": 5.4,
+      "y": 444.69,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing first TX rung",
+      "meaningful_payload_bits": 198,
+      "source_bitmap": {
+        "x_group_upper16": "packed[16*g +:16],g0..3",
+        "w_lane_upper16": "packed[64+16*lane +:16],lane0..7",
+        "split": "packed[195:192]",
+        "first": 196,
+        "valid": 197,
+        "unused": "physical[255:198]=0"
+      }
+    },
+    {
+      "inst": "tx0_r1_lo",
+      "master": "qkh_packet_v256",
+      "x": 59.4,
+      "y": 330.48,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing second TX rung",
+      "meaningful_payload_bits": 198,
+      "source_bitmap": {
+        "x_group_upper16": "packed[16*g +:16],g0..3",
+        "w_lane_upper16": "packed[64+16*lane +:16],lane0..7",
+        "split": "packed[195:192]",
+        "first": 196,
+        "valid": 197,
+        "unused": "physical[255:198]=0"
+      }
+    },
+    {
+      "inst": "tx1_r0_lo",
+      "master": "qkh_packet_v256",
+      "x": 59.4,
+      "y": 552.69,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing first TX rung",
+      "meaningful_payload_bits": 198,
+      "source_bitmap": {
+        "x_group_upper16": "packed[16*g +:16],g0..3",
+        "w_lane_upper16": "packed[64+16*lane +:16],lane0..7",
+        "split": "packed[195:192]",
+        "first": 196,
+        "valid": 197,
+        "unused": "physical[255:198]=0"
+      }
+    },
+    {
+      "inst": "tx1_r1_lo",
+      "master": "qkh_packet_v256",
+      "x": 59.4,
+      "y": 400.68,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing second TX rung",
+      "meaningful_payload_bits": 198,
+      "source_bitmap": {
+        "x_group_upper16": "packed[16*g +:16],g0..3",
+        "w_lane_upper16": "packed[64+16*lane +:16],lane0..7",
+        "split": "packed[195:192]",
+        "first": 196,
+        "valid": 197,
+        "unused": "physical[255:198]=0"
+      }
+    },
+    {
+      "inst": "tx2_r0_lo",
+      "master": "qkh_packet_v256",
+      "x": 59.4,
+      "y": 634.5,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing first TX rung",
+      "meaningful_payload_bits": 198,
+      "source_bitmap": {
+        "x_group_upper16": "packed[16*g +:16],g0..3",
+        "w_lane_upper16": "packed[64+16*lane +:16],lane0..7",
+        "split": "packed[195:192]",
+        "first": 196,
+        "valid": 197,
+        "unused": "physical[255:198]=0"
+      }
+    },
+    {
+      "inst": "tx2_r1_lo",
+      "master": "qkh_packet_v256",
+      "x": 59.4,
+      "y": 786.51,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing second TX rung",
+      "meaningful_payload_bits": 198,
+      "source_bitmap": {
+        "x_group_upper16": "packed[16*g +:16],g0..3",
+        "w_lane_upper16": "packed[64+16*lane +:16],lane0..7",
+        "split": "packed[195:192]",
+        "first": 196,
+        "valid": 197,
+        "unused": "physical[255:198]=0"
+      }
+    },
+    {
+      "inst": "tx3_r0_lo",
+      "master": "qkh_packet_v256",
+      "x": 59.4,
+      "y": 704.7,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing first TX rung",
+      "meaningful_payload_bits": 198,
+      "source_bitmap": {
+        "x_group_upper16": "packed[16*g +:16],g0..3",
+        "w_lane_upper16": "packed[64+16*lane +:16],lane0..7",
+        "split": "packed[195:192]",
+        "first": 196,
+        "valid": 197,
+        "unused": "physical[255:198]=0"
+      }
+    },
+    {
+      "inst": "tx3_r1_lo",
+      "master": "qkh_packet_v256",
+      "x": 59.4,
+      "y": 856.71,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing second TX rung",
+      "meaningful_payload_bits": 198,
+      "source_bitmap": {
+        "x_group_upper16": "packed[16*g +:16],g0..3",
+        "w_lane_upper16": "packed[64+16*lane +:16],lane0..7",
+        "split": "packed[195:192]",
+        "first": 196,
+        "valid": 197,
+        "unused": "physical[255:198]=0"
+      }
+    },
+    {
+      "inst": "tx4_r0_lo",
+      "master": "qkh_packet_v256",
+      "x": 425.52,
+      "y": 482.49,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing first TX rung",
+      "meaningful_payload_bits": 198,
+      "source_bitmap": {
+        "x_group_upper16": "packed[16*g +:16],g0..3",
+        "w_lane_upper16": "packed[64+16*lane +:16],lane0..7",
+        "split": "packed[195:192]",
+        "first": 196,
+        "valid": 197,
+        "unused": "physical[255:198]=0"
+      }
+    },
+    {
+      "inst": "tx4_r1_lo",
+      "master": "qkh_packet_v256",
+      "x": 425.52,
+      "y": 330.48,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing second TX rung",
+      "meaningful_payload_bits": 198,
+      "source_bitmap": {
+        "x_group_upper16": "packed[16*g +:16],g0..3",
+        "w_lane_upper16": "packed[64+16*lane +:16],lane0..7",
+        "split": "packed[195:192]",
+        "first": 196,
+        "valid": 197,
+        "unused": "physical[255:198]=0"
+      }
+    },
+    {
+      "inst": "tx5_r0_lo",
+      "master": "qkh_packet_v256",
+      "x": 425.52,
+      "y": 552.69,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing first TX rung",
+      "meaningful_payload_bits": 198,
+      "source_bitmap": {
+        "x_group_upper16": "packed[16*g +:16],g0..3",
+        "w_lane_upper16": "packed[64+16*lane +:16],lane0..7",
+        "split": "packed[195:192]",
+        "first": 196,
+        "valid": 197,
+        "unused": "physical[255:198]=0"
+      }
+    },
+    {
+      "inst": "tx5_r1_lo",
+      "master": "qkh_packet_v256",
+      "x": 425.52,
+      "y": 400.68,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing second TX rung",
+      "meaningful_payload_bits": 198,
+      "source_bitmap": {
+        "x_group_upper16": "packed[16*g +:16],g0..3",
+        "w_lane_upper16": "packed[64+16*lane +:16],lane0..7",
+        "split": "packed[195:192]",
+        "first": 196,
+        "valid": 197,
+        "unused": "physical[255:198]=0"
+      }
+    },
+    {
+      "inst": "tx6_r0_lo",
+      "master": "qkh_packet_v256",
+      "x": 209.088,
+      "y": 786.51,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing first TX rung",
+      "meaningful_payload_bits": 198,
+      "source_bitmap": {
+        "x_group_upper16": "packed[16*g +:16],g0..3",
+        "w_lane_upper16": "packed[64+16*lane +:16],lane0..7",
+        "split": "packed[195:192]",
+        "first": 196,
+        "valid": 197,
+        "unused": "physical[255:198]=0"
+      }
+    },
+    {
+      "inst": "tx6_r1_lo",
+      "master": "qkh_packet_v256",
+      "x": 425.52,
+      "y": 786.51,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing second TX rung",
+      "meaningful_payload_bits": 198,
+      "source_bitmap": {
+        "x_group_upper16": "packed[16*g +:16],g0..3",
+        "w_lane_upper16": "packed[64+16*lane +:16],lane0..7",
+        "split": "packed[195:192]",
+        "first": 196,
+        "valid": 197,
+        "unused": "physical[255:198]=0"
+      }
+    },
+    {
+      "inst": "tx7_r0_lo",
+      "master": "qkh_packet_v256",
+      "x": 425.52,
+      "y": 704.7,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing first TX rung",
+      "meaningful_payload_bits": 198,
+      "source_bitmap": {
+        "x_group_upper16": "packed[16*g +:16],g0..3",
+        "w_lane_upper16": "packed[64+16*lane +:16],lane0..7",
+        "split": "packed[195:192]",
+        "first": 196,
+        "valid": 197,
+        "unused": "physical[255:198]=0"
+      }
+    },
+    {
+      "inst": "tx7_r1_lo",
+      "master": "qkh_packet_v256",
+      "x": 425.52,
+      "y": 856.71,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "existing second TX rung",
+      "meaningful_payload_bits": 198,
+      "source_bitmap": {
+        "x_group_upper16": "packed[16*g +:16],g0..3",
+        "w_lane_upper16": "packed[64+16*lane +:16],lane0..7",
+        "split": "packed[195:192]",
+        "first": 196,
+        "valid": 197,
+        "unused": "physical[255:198]=0"
+      }
+    },
+    {
+      "inst": "face_n_a",
+      "master": "qwen_glue_v514",
+      "x": 5.4,
+      "y": 585.306,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "SPECULATIVE fullword face ABI pending actual build"
+    },
+    {
+      "inst": "face_n_b",
+      "master": "qwen_glue_v514",
+      "x": 32.4,
+      "y": 641.322,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "SPECULATIVE fullword face ABI pending actual build"
+    },
+    {
+      "inst": "face_n_y",
+      "master": "qwen_glue_v514",
+      "x": 5.4,
+      "y": 671.22,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "MY",
+      "kind": "proposed_bank",
+      "purpose": "SPECULATIVE fullword face ABI pending actual build"
+    },
+    {
+      "inst": "face_t_out",
+      "master": "qwen_glue_v514",
+      "x": 5.4,
+      "y": 752.244,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "MY",
+      "kind": "proposed_bank",
+      "purpose": "SPECULATIVE fullword face ABI pending actual build"
+    },
+    {
+      "inst": "face_tap",
+      "master": "qwen_glue_v508",
+      "x": 454.67999999999995,
+      "y": 654.996,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "MY",
+      "kind": "proposed_bank",
+      "purpose": "SPECULATIVE fullword face ABI pending actual build"
+    },
+    {
+      "inst": "s2_word_0",
+      "master": "qwen_glue_v514",
+      "x": 209.088,
+      "y": 485.73,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "same-edge512variablebit S2capture"
+    },
+    {
+      "inst": "s2_word_1",
+      "master": "qwen_glue_v514",
+      "x": 236.088,
+      "y": 485.73,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "same-edge512variablebit S2capture"
+    },
+    {
+      "inst": "node_stage_n_a",
+      "master": "qwen_glue_v514",
+      "x": 209.088,
+      "y": 394.2,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "EXTRA balanced input/output full514packet capture"
+    },
+    {
+      "inst": "node_stage_n_b",
+      "master": "qwen_glue_v514",
+      "x": 236.088,
+      "y": 634.5,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "EXTRA balanced input/output full514packet capture"
+    },
+    {
+      "inst": "node_stage_n_y",
+      "master": "qwen_glue_v514",
+      "x": 209.088,
+      "y": 634.5,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "EXTRA balanced input/output full514packet capture"
+    },
+    {
+      "inst": "node_stage_t_out",
+      "master": "qwen_glue_v514",
+      "x": 236.088,
+      "y": 786.51,
+      "w": 21.6,
+      "h": 75.6,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "EXTRA balanced input/output full514packet capture"
+    },
+    {
+      "inst": "return_south_0",
+      "master": "qkh_packet_h256",
+      "x": 25.92,
+      "y": 932.31,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "EXTRA balanced group-return capture"
+    },
+    {
+      "inst": "return_south_1",
+      "master": "qkh_packet_h256",
+      "x": 96.12,
+      "y": 932.31,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "EXTRA balanced group-return capture"
+    },
+    {
+      "inst": "return_south_2",
+      "master": "qkh_packet_h256",
+      "x": 166.32,
+      "y": 932.31,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "EXTRA balanced group-return capture"
+    },
+    {
+      "inst": "return_south_3",
+      "master": "qkh_packet_h256",
+      "x": 236.52000000000004,
+      "y": 932.31,
+      "w": 64.8,
+      "h": 15.12,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "EXTRA balanced group-return capture"
+    },
+    {
+      "inst": "return_north_0",
+      "master": "qkh_packet_v256",
+      "x": 5.4,
+      "y": 514.89,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "EXTRA balanced group-return capture"
+    },
+    {
+      "inst": "return_north_1",
+      "master": "qkh_packet_v256",
+      "x": 32.4,
+      "y": 400.68,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "EXTRA balanced group-return capture"
+    },
+    {
+      "inst": "return_north_2",
+      "master": "qkh_packet_v256",
+      "x": 236.52,
+      "y": 330.48,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "EXTRA balanced group-return capture"
+    },
+    {
+      "inst": "return_north_3",
+      "master": "qkh_packet_v256",
+      "x": 236.52,
+      "y": 400.68,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "EXTRA balanced group-return capture"
+    },
+    {
+      "inst": "xdelay_extra",
+      "master": "qkh_packet_v256",
+      "x": 32.4,
+      "y": 330.48,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "used_bits": 128,
+      "purpose": "EXTRA balanced ROMreturn/Xdata age+1"
+    },
+    {
+      "inst": "s2_x_full",
+      "master": "qkh_packet_v256",
+      "x": 79.92,
+      "y": 552.69,
+      "w": 15.12,
+      "h": 64.8,
+      "orient": "R0",
+      "kind": "proposed_bank",
+      "purpose": "full existing s2_x128 pre-RNE capture; no lost edge",
+      "spare_payload": "s2_x[127:0] in bank[255:128]; TXr0 high payload occupies[126:0]",
+      "meaningful_payload_bits": 128
+    },
+    {
+      "inst": "reset_root",
+      "master": "qkh_packet_v16",
+      "x": 425.52,
+      "y": 642.06,
+      "w": 21.6,
+      "h": 21.6,
+      "orient": "R0",
+      "level": 1,
+      "clock_xy_um": [
+        430.90799999999996,
+        670.722
+      ],
+      "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+    },
+    {
+      "inst": "reset_mid_w",
+      "master": "qkh_packet_v16",
+      "x": 32.4,
+      "y": 605.69,
+      "w": 21.6,
+      "h": 21.6,
+      "orient": "R0",
+      "level": 2,
+      "clock_xy_um": [
+        37.788,
+        620.042
+      ],
+      "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+    },
+    {
+      "inst": "reset_mid_e",
+      "master": "qkh_packet_v16",
+      "x": 452.52,
+      "y": 622.89,
+      "w": 21.6,
+      "h": 21.6,
+      "orient": "R0",
+      "level": 2,
+      "clock_xy_um": [
+        430.90799999999996,
+        637.2420000000001
+      ],
+      "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+    },
+    {
+      "inst": "reset_mid_high",
+      "master": "qkh_packet_v16",
+      "x": 340.2,
+      "y": 957.15,
+      "w": 21.6,
+      "h": 21.6,
+      "orient": "R0",
+      "level": 2,
+      "clock_xy_um": [
+        345.58799999999997,
+        1000.1220000000001
+      ],
+      "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+    },
+    {
+      "inst": "reset_branch_w_low",
+      "master": "qkh_packet_v16",
+      "x": 5.4,
+      "y": 400.68,
+      "w": 21.6,
+      "h": 21.6,
+      "orient": "R0",
+      "level": 3,
+      "clock_xy_um": [
+        10.788,
+        400.722
+      ],
+      "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+    },
+    {
+      "inst": "reset_branch_w_mid",
+      "master": "qkh_packet_v16",
+      "x": 25.92,
+      "y": 552.69,
+      "w": 21.6,
+      "h": 21.6,
+      "orient": "R0",
+      "level": 3,
+      "clock_xy_um": [
+        10.788,
+        496.842
+      ],
+      "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+    },
+    {
+      "inst": "reset_branch_w_high0",
+      "master": "qkh_packet_v16",
+      "x": 5.4,
+      "y": 837.27,
+      "w": 21.6,
+      "h": 21.6,
+      "orient": "R0",
+      "level": 3,
+      "clock_xy_um": [
+        10.788,
+        880.2420000000001
+      ],
+      "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+    },
+    {
+      "inst": "reset_branch_w_high1",
+      "master": "qkh_packet_v16",
+      "x": 5.4,
+      "y": 897.21,
+      "w": 21.6,
+      "h": 21.6,
+      "orient": "R0",
+      "level": 3,
+      "clock_xy_um": [
+        10.788,
+        940.182
+      ],
+      "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+    },
+    {
+      "inst": "reset_branch_e_low",
+      "master": "qkh_packet_v16",
+      "x": 372.6,
+      "y": 383.4,
+      "w": 21.6,
+      "h": 21.6,
+      "orient": "R0",
+      "level": 3,
+      "clock_xy_um": [
+        377.988,
+        383.44199999999995
+      ],
+      "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+    },
+    {
+      "inst": "reset_branch_e_high",
+      "master": "qkh_packet_v16",
+      "x": 340.2,
+      "y": 1297.35,
+      "w": 21.6,
+      "h": 21.6,
+      "orient": "R0",
+      "level": 3,
+      "clock_xy_um": [
+        345.58799999999997,
+        1340.322
+      ],
+      "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+    },
+    {
+      "inst": "reset_branch_e_mid",
+      "master": "qkh_packet_v16",
+      "x": 372.6,
+      "y": 880.83,
+      "w": 21.6,
+      "h": 21.6,
+      "orient": "R0",
+      "level": 3,
+      "clock_xy_um": [
+        377.988,
+        923.802
+      ],
+      "self_reset": "local tie1; compiler16-edge reset initializes by D=0 capture, no self reset loop"
+    }
+  ],
+  "clock_roots": [
+    {
+      "instance": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_hd.u_rp",
+      "master": "ot_qwen_tile_rpair",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        22.506,
+        53.388
+      ],
+      "R_TT_ps": 309.1,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_hd.u_rp",
+      "master": "ot_qwen_tile_rpair",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        22.506,
+        204.588
+      ],
+      "R_TT_ps": 309.1,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_hd.u_rp",
+      "master": "ot_qwen_tile_rpair",
+      "orientation": "MX",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        22.506,
+        1052.802
+      ],
+      "R_TT_ps": 309.1,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_hd.u_rp",
+      "master": "ot_qwen_tile_rpair",
+      "orientation": "MX",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        22.506,
+        1208.322
+      ],
+      "R_TT_ps": 309.1,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_hd.u_rp",
+      "master": "ot_qwen_tile_rpair",
+      "orientation": "MX",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        22.506,
+        1359.522
+      ],
+      "R_TT_ps": 309.1,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "u_tile.u_tile.u_logic.genblk4.g_ndh.u_node",
+      "master": "ot_qwen_tile_node",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        420.078,
+        614.412
+      ],
+      "R_TT_ps": 246.6,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh",
+      "master": "ot_qwen_tile_lsl_fp1",
+      "orientation": "MY",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        103.722,
+        393.468
+      ],
+      "R_TT_ps": 165.7,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh",
+      "master": "ot_qwen_tile_lsl_fp1",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        365.43,
+        393.468
+      ],
+      "R_TT_ps": 165.7,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh",
+      "master": "ot_qwen_tile_lsl_fp1",
+      "orientation": "MY",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        103.722,
+        545.478
+      ],
+      "R_TT_ps": 165.7,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
+      "master": "ot_qwen_tile_lsl_fp1",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        365.43,
+        545.478
+      ],
+      "R_TT_ps": 165.7,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh",
+      "master": "ot_qwen_tile_lsl_fp1",
+      "orientation": "MY",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        103.722,
+        697.488
+      ],
+      "R_TT_ps": 165.7,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh",
+      "master": "ot_qwen_tile_lsl_fp1",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        365.43,
+        697.488
+      ],
+      "R_TT_ps": 165.7,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh",
+      "master": "ot_qwen_tile_lsl_fp1",
+      "orientation": "MY",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        103.722,
+        849.498
+      ],
+      "R_TT_ps": 165.7,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh",
+      "master": "ot_qwen_tile_lsl_fp1",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        365.43,
+        849.498
+      ],
+      "R_TT_ps": 165.7,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "strap",
+      "master": "qkh_packet_v16",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        430.908,
+        1017.672
+      ],
+      "R_TT_ps": 52.4,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "rqr_south_0",
+      "master": "qkh_packet_h256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        26.016,
+        1093.218
+      ],
+      "R_TT_ps": 76.0,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "rqr_south_1",
+      "master": "qkh_packet_h256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        96.216,
+        1093.218
+      ],
+      "R_TT_ps": 76.0,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "rqr_south_2",
+      "master": "qkh_packet_h256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        166.416,
+        1093.218
+      ],
+      "R_TT_ps": 76.0,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "rqr_south_3",
+      "master": "qkh_packet_h256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        236.616,
+        1093.218
+      ],
+      "R_TT_ps": 76.0,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "rqr_north_0",
+      "master": "qkh_packet_h256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        26.016,
+        315.348
+      ],
+      "R_TT_ps": 76.0,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "rqr_north_1",
+      "master": "qkh_packet_h256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        96.216,
+        315.348
+      ],
+      "R_TT_ps": 76.0,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "rqr_north_2",
+      "master": "qkh_packet_h256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        166.416,
+        315.348
+      ],
+      "R_TT_ps": 76.0,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "rqr_north_3",
+      "master": "qkh_packet_h256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        236.616,
+        315.348
+      ],
+      "R_TT_ps": 76.0,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "mq_wrom_0",
+      "master": "qkh_packet_h256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        33.576,
+        537.558
+      ],
+      "R_TT_ps": 76.0,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "mq_wrom_1",
+      "master": "qkh_packet_v256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        38.976,
+        828.318
+      ],
+      "R_TT_ps": 73.5,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "mq_wrom_2",
+      "master": "qkh_packet_v256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        229.704,
+        716.808
+      ],
+      "R_TT_ps": 73.5,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "mq_wrom_3",
+      "master": "qkh_packet_v256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        208.968,
+        716.808
+      ],
+      "R_TT_ps": 73.5,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "xdelay_0",
+      "master": "qkh_packet_v256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        461.256,
+        261.588
+      ],
+      "R_TT_ps": 73.5,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "xdelay_1",
+      "master": "qkh_packet_h256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        384.576,
+        315.348
+      ],
+      "R_TT_ps": 76.0,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "xdelay_2",
+      "master": "qkh_packet_h256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        339.0,
+        294.828
+      ],
+      "R_TT_ps": 76.0,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "xdelay_3",
+      "master": "qkh_packet_v256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        425.616,
+        241.068
+      ],
+      "R_TT_ps": 73.5,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "xdelay_4",
+      "master": "qkh_packet_h256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        26.016,
+        481.668
+      ],
+      "R_TT_ps": 76.0,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "xdelay_5",
+      "master": "qkh_packet_h256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        306.816,
+        315.348
+      ],
+      "R_TT_ps": 76.0,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "xdelay_6",
+      "master": "qkh_packet_h256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        33.576,
+        502.188
+      ],
+      "R_TT_ps": 76.0,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "xdelay_7",
+      "master": "qkh_packet_v256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        11.976,
+        331.788
+      ],
+      "R_TT_ps": 73.5,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "tx0_r0_lo",
+      "master": "qkh_packet_v256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        5.496,
+        445.998
+      ],
+      "R_TT_ps": 73.5,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "tx0_r1_lo",
+      "master": "qkh_packet_v256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        59.496,
+        331.788
+      ],
+      "R_TT_ps": 73.5,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "tx1_r0_lo",
+      "master": "qkh_packet_v256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        59.496,
+        553.998
+      ],
+      "R_TT_ps": 73.5,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "tx1_r1_lo",
+      "master": "qkh_packet_v256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        59.496,
+        401.988
+      ],
+      "R_TT_ps": 73.5,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "tx2_r0_lo",
+      "master": "qkh_packet_v256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        59.496,
+        635.808
+      ],
+      "R_TT_ps": 73.5,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "tx2_r1_lo",
+      "master": "qkh_packet_v256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        59.496,
+        787.818
+      ],
+      "R_TT_ps": 73.5,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "tx3_r0_lo",
+      "master": "qkh_packet_v256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        59.496,
+        706.008
+      ],
+      "R_TT_ps": 73.5,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "tx3_r1_lo",
+      "master": "qkh_packet_v256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        59.496,
+        858.018
+      ],
+      "R_TT_ps": 73.5,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "tx4_r0_lo",
+      "master": "qkh_packet_v256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        425.616,
+        483.798
+      ],
+      "R_TT_ps": 73.5,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "tx4_r1_lo",
+      "master": "qkh_packet_v256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        425.616,
+        331.788
+      ],
+      "R_TT_ps": 73.5,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "tx5_r0_lo",
+      "master": "qkh_packet_v256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        425.616,
+        553.998
+      ],
+      "R_TT_ps": 73.5,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "tx5_r1_lo",
+      "master": "qkh_packet_v256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        425.616,
+        401.988
+      ],
+      "R_TT_ps": 73.5,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "tx6_r0_lo",
+      "master": "qkh_packet_v256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        209.184,
+        787.818
+      ],
+      "R_TT_ps": 73.5,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "tx6_r1_lo",
+      "master": "qkh_packet_v256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        425.616,
+        787.818
+      ],
+      "R_TT_ps": 73.5,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "tx7_r0_lo",
+      "master": "qkh_packet_v256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        425.616,
+        706.008
+      ],
+      "R_TT_ps": 73.5,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "tx7_r1_lo",
+      "master": "qkh_packet_v256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        425.616,
+        858.018
+      ],
+      "R_TT_ps": 73.5,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "face_n_a",
+      "master": "qwen_glue_v514",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        5.496,
+        586.614
+      ],
+      "R_TT_ps": 83.7,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "face_n_b",
+      "master": "qwen_glue_v514",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        32.496,
+        642.63
+      ],
+      "R_TT_ps": 83.7,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "face_n_y",
+      "master": "qwen_glue_v514",
+      "orientation": "MY",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        26.904,
+        672.528
+      ],
+      "R_TT_ps": 83.7,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "face_t_out",
+      "master": "qwen_glue_v514",
+      "orientation": "MY",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        26.904,
+        753.552
+      ],
+      "R_TT_ps": 83.7,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "face_tap",
+      "master": "qwen_glue_v508",
+      "orientation": "MY",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        476.184,
+        656.304
+      ],
+      "R_TT_ps": 83.2,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "s2_word_0",
+      "master": "qwen_glue_v514",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        209.184,
+        487.038
+      ],
+      "R_TT_ps": 83.7,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "s2_word_1",
+      "master": "qwen_glue_v514",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        236.184,
+        487.038
+      ],
+      "R_TT_ps": 83.7,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "node_stage_n_a",
+      "master": "qwen_glue_v514",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        209.184,
+        395.508
+      ],
+      "R_TT_ps": 83.7,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "node_stage_n_b",
+      "master": "qwen_glue_v514",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        236.184,
+        635.808
+      ],
+      "R_TT_ps": 83.7,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "node_stage_n_y",
+      "master": "qwen_glue_v514",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        209.184,
+        635.808
+      ],
+      "R_TT_ps": 83.7,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "node_stage_t_out",
+      "master": "qwen_glue_v514",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        236.184,
+        787.818
+      ],
+      "R_TT_ps": 83.7,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "return_south_0",
+      "master": "qkh_packet_h256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        26.016,
+        937.698
+      ],
+      "R_TT_ps": 76.0,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "return_south_1",
+      "master": "qkh_packet_h256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        96.216,
+        937.698
+      ],
+      "R_TT_ps": 76.0,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "return_south_2",
+      "master": "qkh_packet_h256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        166.416,
+        937.698
+      ],
+      "R_TT_ps": 76.0,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "return_south_3",
+      "master": "qkh_packet_h256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        236.616,
+        937.698
+      ],
+      "R_TT_ps": 76.0,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "return_north_0",
+      "master": "qkh_packet_v256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        5.496,
+        516.198
+      ],
+      "R_TT_ps": 73.5,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "return_north_1",
+      "master": "qkh_packet_v256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        32.496,
+        401.988
+      ],
+      "R_TT_ps": 73.5,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "return_north_2",
+      "master": "qkh_packet_v256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        236.616,
+        331.788
+      ],
+      "R_TT_ps": 73.5,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "return_north_3",
+      "master": "qkh_packet_v256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        236.616,
+        401.988
+      ],
+      "R_TT_ps": 73.5,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "xdelay_extra",
+      "master": "qkh_packet_v256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        32.496,
+        331.788
+      ],
+      "R_TT_ps": 73.5,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "s2_x_full",
+      "master": "qkh_packet_v256",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        80.016,
+        553.998
+      ],
+      "R_TT_ps": 73.5,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "reset_root",
+      "master": "qkh_packet_v16",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        430.908,
+        642.102
+      ],
+      "R_TT_ps": 52.4,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "reset_mid_w",
+      "master": "qkh_packet_v16",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        37.788,
+        605.732
+      ],
+      "R_TT_ps": 52.4,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "reset_mid_e",
+      "master": "qkh_packet_v16",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        457.908,
+        622.932
+      ],
+      "R_TT_ps": 52.4,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "reset_mid_high",
+      "master": "qkh_packet_v16",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        345.588,
+        957.192
+      ],
+      "R_TT_ps": 52.4,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "reset_branch_w_low",
+      "master": "qkh_packet_v16",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        10.788,
+        400.722
+      ],
+      "R_TT_ps": 52.4,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "reset_branch_w_mid",
+      "master": "qkh_packet_v16",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        31.308,
+        552.732
+      ],
+      "R_TT_ps": 52.4,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "reset_branch_w_high0",
+      "master": "qkh_packet_v16",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        10.788,
+        837.312
+      ],
+      "R_TT_ps": 52.4,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "reset_branch_w_high1",
+      "master": "qkh_packet_v16",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        10.788,
+        897.252
+      ],
+      "R_TT_ps": 52.4,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "reset_branch_e_low",
+      "master": "qkh_packet_v16",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        377.988,
+        383.442
+      ],
+      "R_TT_ps": 52.4,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "reset_branch_e_high",
+      "master": "qkh_packet_v16",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        345.588,
+        1297.392
+      ],
+      "R_TT_ps": 52.4,
+      "measured_parent_phase": null
+    },
+    {
+      "instance": "reset_branch_e_mid",
+      "master": "qkh_packet_v16",
+      "orientation": "R0",
+      "clock_pin": "clk",
+      "actual_clock_xy_um": [
+        377.988,
+        880.872
+      ],
+      "R_TT_ps": 52.4,
+      "measured_parent_phase": null
+    }
+  ],
+  "data_bank_clock_index": [
+    {
+      "index": 0,
+      "instance": "strap",
+      "port": "ck_bank[0]",
+      "actual_clock_xy_um": [
+        430.908,
+        1017.672
+      ]
+    },
+    {
+      "index": 1,
+      "instance": "rqr_south_0",
+      "port": "ck_bank[1]",
+      "actual_clock_xy_um": [
+        26.016,
+        1093.218
+      ]
+    },
+    {
+      "index": 2,
+      "instance": "rqr_south_1",
+      "port": "ck_bank[2]",
+      "actual_clock_xy_um": [
+        96.216,
+        1093.218
+      ]
+    },
+    {
+      "index": 3,
+      "instance": "rqr_south_2",
+      "port": "ck_bank[3]",
+      "actual_clock_xy_um": [
+        166.416,
+        1093.218
+      ]
+    },
+    {
+      "index": 4,
+      "instance": "rqr_south_3",
+      "port": "ck_bank[4]",
+      "actual_clock_xy_um": [
+        236.616,
+        1093.218
+      ]
+    },
+    {
+      "index": 5,
+      "instance": "rqr_north_0",
+      "port": "ck_bank[5]",
+      "actual_clock_xy_um": [
+        26.016,
+        315.348
+      ]
+    },
+    {
+      "index": 6,
+      "instance": "rqr_north_1",
+      "port": "ck_bank[6]",
+      "actual_clock_xy_um": [
+        96.216,
+        315.348
+      ]
+    },
+    {
+      "index": 7,
+      "instance": "rqr_north_2",
+      "port": "ck_bank[7]",
+      "actual_clock_xy_um": [
+        166.416,
+        315.348
+      ]
+    },
+    {
+      "index": 8,
+      "instance": "rqr_north_3",
+      "port": "ck_bank[8]",
+      "actual_clock_xy_um": [
+        236.616,
+        315.348
+      ]
+    },
+    {
+      "index": 9,
+      "instance": "mq_wrom_0",
+      "port": "ck_bank[9]",
+      "actual_clock_xy_um": [
+        33.576,
+        537.558
+      ]
+    },
+    {
+      "index": 10,
+      "instance": "mq_wrom_1",
+      "port": "ck_bank[10]",
+      "actual_clock_xy_um": [
+        38.976,
+        828.318
+      ]
+    },
+    {
+      "index": 11,
+      "instance": "mq_wrom_2",
+      "port": "ck_bank[11]",
+      "actual_clock_xy_um": [
+        229.704,
+        716.808
+      ]
+    },
+    {
+      "index": 12,
+      "instance": "mq_wrom_3",
+      "port": "ck_bank[12]",
+      "actual_clock_xy_um": [
+        208.968,
+        716.808
+      ]
+    },
+    {
+      "index": 13,
+      "instance": "xdelay_0",
+      "port": "ck_bank[13]",
+      "actual_clock_xy_um": [
+        461.256,
+        261.588
+      ]
+    },
+    {
+      "index": 14,
+      "instance": "xdelay_1",
+      "port": "ck_bank[14]",
+      "actual_clock_xy_um": [
+        384.576,
+        315.348
+      ]
+    },
+    {
+      "index": 15,
+      "instance": "xdelay_2",
+      "port": "ck_bank[15]",
+      "actual_clock_xy_um": [
+        339.0,
+        294.828
+      ]
+    },
+    {
+      "index": 16,
+      "instance": "xdelay_3",
+      "port": "ck_bank[16]",
+      "actual_clock_xy_um": [
+        425.616,
+        241.068
+      ]
+    },
+    {
+      "index": 17,
+      "instance": "xdelay_4",
+      "port": "ck_bank[17]",
+      "actual_clock_xy_um": [
+        26.016,
+        481.668
+      ]
+    },
+    {
+      "index": 18,
+      "instance": "xdelay_5",
+      "port": "ck_bank[18]",
+      "actual_clock_xy_um": [
+        306.816,
+        315.348
+      ]
+    },
+    {
+      "index": 19,
+      "instance": "xdelay_6",
+      "port": "ck_bank[19]",
+      "actual_clock_xy_um": [
+        33.576,
+        502.188
+      ]
+    },
+    {
+      "index": 20,
+      "instance": "xdelay_7",
+      "port": "ck_bank[20]",
+      "actual_clock_xy_um": [
+        11.976,
+        331.788
+      ]
+    },
+    {
+      "index": 21,
+      "instance": "tx0_r0_lo",
+      "port": "ck_bank[21]",
+      "actual_clock_xy_um": [
+        5.496,
+        445.998
+      ]
+    },
+    {
+      "index": 22,
+      "instance": "tx0_r1_lo",
+      "port": "ck_bank[22]",
+      "actual_clock_xy_um": [
+        59.496,
+        331.788
+      ]
+    },
+    {
+      "index": 23,
+      "instance": "tx1_r0_lo",
+      "port": "ck_bank[23]",
+      "actual_clock_xy_um": [
+        59.496,
+        553.998
+      ]
+    },
+    {
+      "index": 24,
+      "instance": "tx1_r1_lo",
+      "port": "ck_bank[24]",
+      "actual_clock_xy_um": [
+        59.496,
+        401.988
+      ]
+    },
+    {
+      "index": 25,
+      "instance": "tx2_r0_lo",
+      "port": "ck_bank[25]",
+      "actual_clock_xy_um": [
+        59.496,
+        635.808
+      ]
+    },
+    {
+      "index": 26,
+      "instance": "tx2_r1_lo",
+      "port": "ck_bank[26]",
+      "actual_clock_xy_um": [
+        59.496,
+        787.818
+      ]
+    },
+    {
+      "index": 27,
+      "instance": "tx3_r0_lo",
+      "port": "ck_bank[27]",
+      "actual_clock_xy_um": [
+        59.496,
+        706.008
+      ]
+    },
+    {
+      "index": 28,
+      "instance": "tx3_r1_lo",
+      "port": "ck_bank[28]",
+      "actual_clock_xy_um": [
+        59.496,
+        858.018
+      ]
+    },
+    {
+      "index": 29,
+      "instance": "tx4_r0_lo",
+      "port": "ck_bank[29]",
+      "actual_clock_xy_um": [
+        425.616,
+        483.798
+      ]
+    },
+    {
+      "index": 30,
+      "instance": "tx4_r1_lo",
+      "port": "ck_bank[30]",
+      "actual_clock_xy_um": [
+        425.616,
+        331.788
+      ]
+    },
+    {
+      "index": 31,
+      "instance": "tx5_r0_lo",
+      "port": "ck_bank[31]",
+      "actual_clock_xy_um": [
+        425.616,
+        553.998
+      ]
+    },
+    {
+      "index": 32,
+      "instance": "tx5_r1_lo",
+      "port": "ck_bank[32]",
+      "actual_clock_xy_um": [
+        425.616,
+        401.988
+      ]
+    },
+    {
+      "index": 33,
+      "instance": "tx6_r0_lo",
+      "port": "ck_bank[33]",
+      "actual_clock_xy_um": [
+        209.184,
+        787.818
+      ]
+    },
+    {
+      "index": 34,
+      "instance": "tx6_r1_lo",
+      "port": "ck_bank[34]",
+      "actual_clock_xy_um": [
+        425.616,
+        787.818
+      ]
+    },
+    {
+      "index": 35,
+      "instance": "tx7_r0_lo",
+      "port": "ck_bank[35]",
+      "actual_clock_xy_um": [
+        425.616,
+        706.008
+      ]
+    },
+    {
+      "index": 36,
+      "instance": "tx7_r1_lo",
+      "port": "ck_bank[36]",
+      "actual_clock_xy_um": [
+        425.616,
+        858.018
+      ]
+    },
+    {
+      "index": 37,
+      "instance": "face_n_a",
+      "port": "ck_bank[37]",
+      "actual_clock_xy_um": [
+        5.496,
+        586.614
+      ]
+    },
+    {
+      "index": 38,
+      "instance": "face_n_b",
+      "port": "ck_bank[38]",
+      "actual_clock_xy_um": [
+        32.496,
+        642.63
+      ]
+    },
+    {
+      "index": 39,
+      "instance": "face_n_y",
+      "port": "ck_bank[39]",
+      "actual_clock_xy_um": [
+        26.904,
+        672.528
+      ]
+    },
+    {
+      "index": 40,
+      "instance": "face_t_out",
+      "port": "ck_bank[40]",
+      "actual_clock_xy_um": [
+        26.904,
+        753.552
+      ]
+    },
+    {
+      "index": 41,
+      "instance": "face_tap",
+      "port": "ck_bank[41]",
+      "actual_clock_xy_um": [
+        476.184,
+        656.304
+      ]
+    },
+    {
+      "index": 42,
+      "instance": "s2_word_0",
+      "port": "ck_bank[42]",
+      "actual_clock_xy_um": [
+        209.184,
+        487.038
+      ]
+    },
+    {
+      "index": 43,
+      "instance": "s2_word_1",
+      "port": "ck_bank[43]",
+      "actual_clock_xy_um": [
+        236.184,
+        487.038
+      ]
+    },
+    {
+      "index": 44,
+      "instance": "node_stage_n_a",
+      "port": "ck_bank[44]",
+      "actual_clock_xy_um": [
+        209.184,
+        395.508
+      ]
+    },
+    {
+      "index": 45,
+      "instance": "node_stage_n_b",
+      "port": "ck_bank[45]",
+      "actual_clock_xy_um": [
+        236.184,
+        635.808
+      ]
+    },
+    {
+      "index": 46,
+      "instance": "node_stage_n_y",
+      "port": "ck_bank[46]",
+      "actual_clock_xy_um": [
+        209.184,
+        635.808
+      ]
+    },
+    {
+      "index": 47,
+      "instance": "node_stage_t_out",
+      "port": "ck_bank[47]",
+      "actual_clock_xy_um": [
+        236.184,
+        787.818
+      ]
+    },
+    {
+      "index": 48,
+      "instance": "return_south_0",
+      "port": "ck_bank[48]",
+      "actual_clock_xy_um": [
+        26.016,
+        937.698
+      ]
+    },
+    {
+      "index": 49,
+      "instance": "return_south_1",
+      "port": "ck_bank[49]",
+      "actual_clock_xy_um": [
+        96.216,
+        937.698
+      ]
+    },
+    {
+      "index": 50,
+      "instance": "return_south_2",
+      "port": "ck_bank[50]",
+      "actual_clock_xy_um": [
+        166.416,
+        937.698
+      ]
+    },
+    {
+      "index": 51,
+      "instance": "return_south_3",
+      "port": "ck_bank[51]",
+      "actual_clock_xy_um": [
+        236.616,
+        937.698
+      ]
+    },
+    {
+      "index": 52,
+      "instance": "return_north_0",
+      "port": "ck_bank[52]",
+      "actual_clock_xy_um": [
+        5.496,
+        516.198
+      ]
+    },
+    {
+      "index": 53,
+      "instance": "return_north_1",
+      "port": "ck_bank[53]",
+      "actual_clock_xy_um": [
+        32.496,
+        401.988
+      ]
+    },
+    {
+      "index": 54,
+      "instance": "return_north_2",
+      "port": "ck_bank[54]",
+      "actual_clock_xy_um": [
+        236.616,
+        331.788
+      ]
+    },
+    {
+      "index": 55,
+      "instance": "return_north_3",
+      "port": "ck_bank[55]",
+      "actual_clock_xy_um": [
+        236.616,
+        401.988
+      ]
+    },
+    {
+      "index": 56,
+      "instance": "xdelay_extra",
+      "port": "ck_bank[56]",
+      "actual_clock_xy_um": [
+        32.496,
+        331.788
+      ]
+    },
+    {
+      "index": 57,
+      "instance": "s2_x_full",
+      "port": "ck_bank[57]",
+      "actual_clock_xy_um": [
+        80.016,
+        553.998
+      ]
+    }
+  ],
+  "reset": {
+    "source_topology": [
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[0]",
+        "sink": "reset_mid_w",
+        "sink_pin": "d[0]",
+        "source_xy": [
+          447.078,
+          642.744
+        ],
+        "sink_xy": [
+          32.442,
+          606.374
+        ],
+        "distance_um": 451.006,
+        "margin_ps": 48.89503
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[0]",
+        "sink": "reset_mid_w",
+        "sink_pin": "d[1]",
+        "source_xy": [
+          447.078,
+          642.744
+        ],
+        "sink_xy": [
+          32.442,
+          607.718
+        ],
+        "distance_um": 449.662,
+        "margin_ps": 50.17144
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[0]",
+        "sink": "reset_mid_w",
+        "sink_pin": "d[2]",
+        "source_xy": [
+          447.078,
+          642.744
+        ],
+        "sink_xy": [
+          32.442,
+          609.062
+        ],
+        "distance_um": 448.318,
+        "margin_ps": 50.28924
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[0]",
+        "sink": "reset_mid_w",
+        "sink_pin": "d[3]",
+        "source_xy": [
+          447.078,
+          642.744
+        ],
+        "sink_xy": [
+          32.442,
+          610.406
+        ],
+        "distance_um": 446.974,
+        "margin_ps": 67.659
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[0]",
+        "sink": "reset_mid_w",
+        "sink_pin": "d[4]",
+        "source_xy": [
+          447.078,
+          642.744
+        ],
+        "sink_xy": [
+          32.442,
+          611.75
+        ],
+        "distance_um": 445.63,
+        "margin_ps": 52.50794
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[0]",
+        "sink": "reset_mid_w",
+        "sink_pin": "d[5]",
+        "source_xy": [
+          447.078,
+          642.744
+        ],
+        "sink_xy": [
+          32.442,
+          613.094
+        ],
+        "distance_um": 444.286,
+        "margin_ps": 69.46478
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[0]",
+        "sink": "reset_mid_w",
+        "sink_pin": "d[6]",
+        "source_xy": [
+          447.078,
+          642.744
+        ],
+        "sink_xy": [
+          32.442,
+          614.486
+        ],
+        "distance_um": 442.894,
+        "margin_ps": 70.87414
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[0]",
+        "sink": "reset_mid_w",
+        "sink_pin": "d[7]",
+        "source_xy": [
+          447.078,
+          642.744
+        ],
+        "sink_xy": [
+          32.442,
+          615.83
+        ],
+        "distance_um": 441.55,
+        "margin_ps": 71.26493
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[0]",
+        "sink": "reset_mid_w",
+        "sink_pin": "d[8]",
+        "source_xy": [
+          447.078,
+          642.744
+        ],
+        "sink_xy": [
+          32.442,
+          617.174
+        ],
+        "distance_um": 440.206,
+        "margin_ps": 72.48906
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[0]",
+        "sink": "reset_mid_w",
+        "sink_pin": "d[9]",
+        "source_xy": [
+          447.078,
+          642.744
+        ],
+        "sink_xy": [
+          32.442,
+          618.518
+        ],
+        "distance_um": 438.862,
+        "margin_ps": 72.85723
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[0]",
+        "sink": "reset_mid_w",
+        "sink_pin": "d[10]",
+        "source_xy": [
+          447.078,
+          642.744
+        ],
+        "sink_xy": [
+          32.442,
+          619.862
+        ],
+        "distance_um": 437.518,
+        "margin_ps": 74.24932
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[0]",
+        "sink": "reset_mid_w",
+        "sink_pin": "d[11]",
+        "source_xy": [
+          447.078,
+          642.744
+        ],
+        "sink_xy": [
+          32.442,
+          621.206
+        ],
+        "distance_um": 436.174,
+        "margin_ps": 74.12496
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[0]",
+        "sink": "reset_mid_w",
+        "sink_pin": "d[12]",
+        "source_xy": [
+          447.078,
+          642.744
+        ],
+        "sink_xy": [
+          32.442,
+          622.55
+        ],
+        "distance_um": 434.83,
+        "margin_ps": 76.81982
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[0]",
+        "sink": "reset_mid_w",
+        "sink_pin": "d[13]",
+        "source_xy": [
+          447.078,
+          642.744
+        ],
+        "sink_xy": [
+          32.442,
+          623.894
+        ],
+        "distance_um": 433.486,
+        "margin_ps": 77.10398
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[0]",
+        "sink": "reset_mid_w",
+        "sink_pin": "d[14]",
+        "source_xy": [
+          447.078,
+          642.744
+        ],
+        "sink_xy": [
+          32.442,
+          625.286
+        ],
+        "distance_um": 432.094,
+        "margin_ps": 78.41538
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[0]",
+        "sink": "reset_mid_w",
+        "sink_pin": "d[15]",
+        "source_xy": [
+          447.078,
+          642.744
+        ],
+        "sink_xy": [
+          32.442,
+          626.63
+        ],
+        "distance_um": 430.75,
+        "margin_ps": 79.16587
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[1]",
+        "sink": "reset_mid_e",
+        "sink_pin": "d[0]",
+        "source_xy": [
+          447.078,
+          644.088
+        ],
+        "sink_xy": [
+          452.562,
+          623.574
+        ],
+        "distance_um": 25.998,
+        "margin_ps": 373.08475
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[1]",
+        "sink": "reset_mid_e",
+        "sink_pin": "d[1]",
+        "source_xy": [
+          447.078,
+          644.088
+        ],
+        "sink_xy": [
+          452.562,
+          624.918
+        ],
+        "distance_um": 24.654,
+        "margin_ps": 374.36116
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[1]",
+        "sink": "reset_mid_e",
+        "sink_pin": "d[2]",
+        "source_xy": [
+          447.078,
+          644.088
+        ],
+        "sink_xy": [
+          452.562,
+          626.262
+        ],
+        "distance_um": 23.31,
+        "margin_ps": 374.47896
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[1]",
+        "sink": "reset_mid_e",
+        "sink_pin": "d[3]",
+        "source_xy": [
+          447.078,
+          644.088
+        ],
+        "sink_xy": [
+          452.562,
+          627.606
+        ],
+        "distance_um": 21.966,
+        "margin_ps": 391.84872
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[1]",
+        "sink": "reset_mid_e",
+        "sink_pin": "d[4]",
+        "source_xy": [
+          447.078,
+          644.088
+        ],
+        "sink_xy": [
+          452.562,
+          628.95
+        ],
+        "distance_um": 20.622,
+        "margin_ps": 376.69766
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[1]",
+        "sink": "reset_mid_e",
+        "sink_pin": "d[5]",
+        "source_xy": [
+          447.078,
+          644.088
+        ],
+        "sink_xy": [
+          452.562,
+          630.294
+        ],
+        "distance_um": 19.278,
+        "margin_ps": 393.6545
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[1]",
+        "sink": "reset_mid_e",
+        "sink_pin": "d[6]",
+        "source_xy": [
+          447.078,
+          644.088
+        ],
+        "sink_xy": [
+          452.562,
+          631.686
+        ],
+        "distance_um": 17.886,
+        "margin_ps": 395.06386
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[1]",
+        "sink": "reset_mid_e",
+        "sink_pin": "d[7]",
+        "source_xy": [
+          447.078,
+          644.088
+        ],
+        "sink_xy": [
+          452.562,
+          633.03
+        ],
+        "distance_um": 16.542,
+        "margin_ps": 395.45465
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[1]",
+        "sink": "reset_mid_e",
+        "sink_pin": "d[8]",
+        "source_xy": [
+          447.078,
+          644.088
+        ],
+        "sink_xy": [
+          452.562,
+          634.374
+        ],
+        "distance_um": 15.198,
+        "margin_ps": 396.67878
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[1]",
+        "sink": "reset_mid_e",
+        "sink_pin": "d[9]",
+        "source_xy": [
+          447.078,
+          644.088
+        ],
+        "sink_xy": [
+          452.562,
+          635.718
+        ],
+        "distance_um": 13.854,
+        "margin_ps": 397.04695
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[1]",
+        "sink": "reset_mid_e",
+        "sink_pin": "d[10]",
+        "source_xy": [
+          447.078,
+          644.088
+        ],
+        "sink_xy": [
+          452.562,
+          637.062
+        ],
+        "distance_um": 12.51,
+        "margin_ps": 398.43904
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[1]",
+        "sink": "reset_mid_e",
+        "sink_pin": "d[11]",
+        "source_xy": [
+          447.078,
+          644.088
+        ],
+        "sink_xy": [
+          452.562,
+          638.406
+        ],
+        "distance_um": 11.166,
+        "margin_ps": 398.31468
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[1]",
+        "sink": "reset_mid_e",
+        "sink_pin": "d[12]",
+        "source_xy": [
+          447.078,
+          644.088
+        ],
+        "sink_xy": [
+          452.562,
+          639.75
+        ],
+        "distance_um": 9.822,
+        "margin_ps": 401.00954
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[1]",
+        "sink": "reset_mid_e",
+        "sink_pin": "d[13]",
+        "source_xy": [
+          447.078,
+          644.088
+        ],
+        "sink_xy": [
+          452.562,
+          641.094
+        ],
+        "distance_um": 8.478,
+        "margin_ps": 401.2937
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[1]",
+        "sink": "reset_mid_e",
+        "sink_pin": "d[14]",
+        "source_xy": [
+          447.078,
+          644.088
+        ],
+        "sink_xy": [
+          452.562,
+          642.486
+        ],
+        "distance_um": 7.086,
+        "margin_ps": 402.6051
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[1]",
+        "sink": "reset_mid_e",
+        "sink_pin": "d[15]",
+        "source_xy": [
+          447.078,
+          644.088
+        ],
+        "sink_xy": [
+          452.562,
+          643.83
+        ],
+        "distance_um": 5.742,
+        "margin_ps": 403.35559
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[2]",
+        "sink": "reset_mid_high",
+        "sink_pin": "d[0]",
+        "source_xy": [
+          447.078,
+          645.432
+        ],
+        "sink_xy": [
+          340.242,
+          957.834
+        ],
+        "distance_um": 419.238,
+        "margin_ps": 77.54345
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[2]",
+        "sink": "reset_mid_high",
+        "sink_pin": "d[1]",
+        "source_xy": [
+          447.078,
+          645.432
+        ],
+        "sink_xy": [
+          340.242,
+          959.178
+        ],
+        "distance_um": 420.582,
+        "margin_ps": 76.77698
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[2]",
+        "sink": "reset_mid_high",
+        "sink_pin": "d[2]",
+        "source_xy": [
+          447.078,
+          645.432
+        ],
+        "sink_xy": [
+          340.242,
+          960.522
+        ],
+        "distance_um": 421.926,
+        "margin_ps": 74.8519
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[2]",
+        "sink": "reset_mid_high",
+        "sink_pin": "d[3]",
+        "source_xy": [
+          447.078,
+          645.432
+        ],
+        "sink_xy": [
+          340.242,
+          961.866
+        ],
+        "distance_um": 423.27,
+        "margin_ps": 90.17878
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[2]",
+        "sink": "reset_mid_high",
+        "sink_pin": "d[4]",
+        "source_xy": [
+          447.078,
+          645.432
+        ],
+        "sink_xy": [
+          340.242,
+          963.21
+        ],
+        "distance_um": 424.614,
+        "margin_ps": 72.98484
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[2]",
+        "sink": "reset_mid_high",
+        "sink_pin": "d[5]",
+        "source_xy": [
+          447.078,
+          645.432
+        ],
+        "sink_xy": [
+          340.242,
+          964.554
+        ],
+        "distance_um": 425.958,
+        "margin_ps": 87.8988
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[2]",
+        "sink": "reset_mid_high",
+        "sink_pin": "d[6]",
+        "source_xy": [
+          447.078,
+          645.432
+        ],
+        "sink_xy": [
+          340.242,
+          965.946
+        ],
+        "distance_um": 427.35,
+        "margin_ps": 87.19232
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[2]",
+        "sink": "reset_mid_high",
+        "sink_pin": "d[7]",
+        "source_xy": [
+          447.078,
+          645.432
+        ],
+        "sink_xy": [
+          340.242,
+          967.29
+        ],
+        "distance_um": 428.694,
+        "margin_ps": 85.54023
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[2]",
+        "sink": "reset_mid_high",
+        "sink_pin": "d[8]",
+        "source_xy": [
+          447.078,
+          645.432
+        ],
+        "sink_xy": [
+          340.242,
+          968.634
+        ],
+        "distance_um": 430.038,
+        "margin_ps": 84.72148
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[2]",
+        "sink": "reset_mid_high",
+        "sink_pin": "d[9]",
+        "source_xy": [
+          447.078,
+          645.432
+        ],
+        "sink_xy": [
+          340.242,
+          969.978
+        ],
+        "distance_um": 431.382,
+        "margin_ps": 83.04677
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[2]",
+        "sink": "reset_mid_high",
+        "sink_pin": "d[10]",
+        "source_xy": [
+          447.078,
+          645.432
+        ],
+        "sink_xy": [
+          340.242,
+          971.322
+        ],
+        "distance_um": 432.726,
+        "margin_ps": 82.39598
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[2]",
+        "sink": "reset_mid_high",
+        "sink_pin": "d[11]",
+        "source_xy": [
+          447.078,
+          645.432
+        ],
+        "sink_xy": [
+          340.242,
+          972.666
+        ],
+        "distance_um": 434.07,
+        "margin_ps": 80.22874
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[2]",
+        "sink": "reset_mid_high",
+        "sink_pin": "d[12]",
+        "source_xy": [
+          447.078,
+          645.432
+        ],
+        "sink_xy": [
+          340.242,
+          974.01
+        ],
+        "distance_um": 435.414,
+        "margin_ps": 80.88072
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[2]",
+        "sink": "reset_mid_high",
+        "sink_pin": "d[13]",
+        "source_xy": [
+          447.078,
+          645.432
+        ],
+        "sink_xy": [
+          340.242,
+          975.354
+        ],
+        "distance_um": 436.758,
+        "margin_ps": 79.122
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[2]",
+        "sink": "reset_mid_high",
+        "sink_pin": "d[14]",
+        "source_xy": [
+          447.078,
+          645.432
+        ],
+        "sink_xy": [
+          340.242,
+          976.746
+        ],
+        "distance_um": 438.15,
+        "margin_ps": 78.31756
+      },
+      {
+        "kind": "root_to_mid",
+        "source": "reset_root",
+        "source_pin": "q[2]",
+        "sink": "reset_mid_high",
+        "sink_pin": "d[15]",
+        "source_xy": [
+          447.078,
+          645.432
+        ],
+        "sink_xy": [
+          340.242,
+          978.09
+        ],
+        "distance_um": 439.494,
+        "margin_ps": 77.02517
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_w_low",
+        "sink_pin": "d[0]",
+        "source_xy": [
+          53.958,
+          606.374
+        ],
+        "sink_xy": [
+          5.442,
+          401.364
+        ],
+        "distance_um": 253.526,
+        "margin_ps": 198.97983
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_w_low",
+        "sink_pin": "d[1]",
+        "source_xy": [
+          53.958,
+          606.374
+        ],
+        "sink_xy": [
+          5.442,
+          402.708
+        ],
+        "distance_um": 252.182,
+        "margin_ps": 200.25624
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_w_low",
+        "sink_pin": "d[2]",
+        "source_xy": [
+          53.958,
+          606.374
+        ],
+        "sink_xy": [
+          5.442,
+          404.052
+        ],
+        "distance_um": 250.838,
+        "margin_ps": 200.37404
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_w_low",
+        "sink_pin": "d[3]",
+        "source_xy": [
+          53.958,
+          606.374
+        ],
+        "sink_xy": [
+          5.442,
+          405.396
+        ],
+        "distance_um": 249.494,
+        "margin_ps": 217.7438
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_w_low",
+        "sink_pin": "d[4]",
+        "source_xy": [
+          53.958,
+          606.374
+        ],
+        "sink_xy": [
+          5.442,
+          406.74
+        ],
+        "distance_um": 248.15,
+        "margin_ps": 202.59274
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_w_low",
+        "sink_pin": "d[5]",
+        "source_xy": [
+          53.958,
+          606.374
+        ],
+        "sink_xy": [
+          5.442,
+          408.084
+        ],
+        "distance_um": 246.806,
+        "margin_ps": 219.54958
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_w_low",
+        "sink_pin": "d[6]",
+        "source_xy": [
+          53.958,
+          606.374
+        ],
+        "sink_xy": [
+          5.442,
+          409.476
+        ],
+        "distance_um": 245.414,
+        "margin_ps": 220.95894
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_w_low",
+        "sink_pin": "d[7]",
+        "source_xy": [
+          53.958,
+          606.374
+        ],
+        "sink_xy": [
+          5.442,
+          410.82
+        ],
+        "distance_um": 244.07,
+        "margin_ps": 221.34973
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_w_low",
+        "sink_pin": "d[8]",
+        "source_xy": [
+          53.958,
+          606.374
+        ],
+        "sink_xy": [
+          5.442,
+          412.164
+        ],
+        "distance_um": 242.726,
+        "margin_ps": 222.57386
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_w_low",
+        "sink_pin": "d[9]",
+        "source_xy": [
+          53.958,
+          606.374
+        ],
+        "sink_xy": [
+          5.442,
+          413.508
+        ],
+        "distance_um": 241.382,
+        "margin_ps": 222.94203
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_w_low",
+        "sink_pin": "d[10]",
+        "source_xy": [
+          53.958,
+          606.374
+        ],
+        "sink_xy": [
+          5.442,
+          414.852
+        ],
+        "distance_um": 240.038,
+        "margin_ps": 224.33412
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_w_low",
+        "sink_pin": "d[11]",
+        "source_xy": [
+          53.958,
+          606.374
+        ],
+        "sink_xy": [
+          5.442,
+          416.196
+        ],
+        "distance_um": 238.694,
+        "margin_ps": 224.20976
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_w_low",
+        "sink_pin": "d[12]",
+        "source_xy": [
+          53.958,
+          606.374
+        ],
+        "sink_xy": [
+          5.442,
+          417.54
+        ],
+        "distance_um": 237.35,
+        "margin_ps": 226.90462
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_w_low",
+        "sink_pin": "d[13]",
+        "source_xy": [
+          53.958,
+          606.374
+        ],
+        "sink_xy": [
+          5.442,
+          418.884
+        ],
+        "distance_um": 236.006,
+        "margin_ps": 227.18878
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_w_low",
+        "sink_pin": "d[14]",
+        "source_xy": [
+          53.958,
+          606.374
+        ],
+        "sink_xy": [
+          5.442,
+          420.276
+        ],
+        "distance_um": 234.614,
+        "margin_ps": 228.50018
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_w_low",
+        "sink_pin": "d[15]",
+        "source_xy": [
+          53.958,
+          606.374
+        ],
+        "sink_xy": [
+          5.442,
+          421.62
+        ],
+        "distance_um": 233.27,
+        "margin_ps": 229.25067
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_w_mid",
+        "sink_pin": "d[0]",
+        "source_xy": [
+          53.958,
+          607.718
+        ],
+        "sink_xy": [
+          25.962,
+          553.374
+        ],
+        "distance_um": 82.34,
+        "margin_ps": 330.26483
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_w_mid",
+        "sink_pin": "d[1]",
+        "source_xy": [
+          53.958,
+          607.718
+        ],
+        "sink_xy": [
+          25.962,
+          554.718
+        ],
+        "distance_um": 80.996,
+        "margin_ps": 331.54124
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_w_mid",
+        "sink_pin": "d[2]",
+        "source_xy": [
+          53.958,
+          607.718
+        ],
+        "sink_xy": [
+          25.962,
+          556.062
+        ],
+        "distance_um": 79.652,
+        "margin_ps": 331.65904
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_w_mid",
+        "sink_pin": "d[3]",
+        "source_xy": [
+          53.958,
+          607.718
+        ],
+        "sink_xy": [
+          25.962,
+          557.406
+        ],
+        "distance_um": 78.308,
+        "margin_ps": 349.0288
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_w_mid",
+        "sink_pin": "d[4]",
+        "source_xy": [
+          53.958,
+          607.718
+        ],
+        "sink_xy": [
+          25.962,
+          558.75
+        ],
+        "distance_um": 76.964,
+        "margin_ps": 333.87774
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_w_mid",
+        "sink_pin": "d[5]",
+        "source_xy": [
+          53.958,
+          607.718
+        ],
+        "sink_xy": [
+          25.962,
+          560.094
+        ],
+        "distance_um": 75.62,
+        "margin_ps": 350.83458
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_w_mid",
+        "sink_pin": "d[6]",
+        "source_xy": [
+          53.958,
+          607.718
+        ],
+        "sink_xy": [
+          25.962,
+          561.486
+        ],
+        "distance_um": 74.228,
+        "margin_ps": 352.24394
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_w_mid",
+        "sink_pin": "d[7]",
+        "source_xy": [
+          53.958,
+          607.718
+        ],
+        "sink_xy": [
+          25.962,
+          562.83
+        ],
+        "distance_um": 72.884,
+        "margin_ps": 352.63473
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_w_mid",
+        "sink_pin": "d[8]",
+        "source_xy": [
+          53.958,
+          607.718
+        ],
+        "sink_xy": [
+          25.962,
+          564.174
+        ],
+        "distance_um": 71.54,
+        "margin_ps": 353.85886
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_w_mid",
+        "sink_pin": "d[9]",
+        "source_xy": [
+          53.958,
+          607.718
+        ],
+        "sink_xy": [
+          25.962,
+          565.518
+        ],
+        "distance_um": 70.196,
+        "margin_ps": 354.22703
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_w_mid",
+        "sink_pin": "d[10]",
+        "source_xy": [
+          53.958,
+          607.718
+        ],
+        "sink_xy": [
+          25.962,
+          566.862
+        ],
+        "distance_um": 68.852,
+        "margin_ps": 355.61912
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_w_mid",
+        "sink_pin": "d[11]",
+        "source_xy": [
+          53.958,
+          607.718
+        ],
+        "sink_xy": [
+          25.962,
+          568.206
+        ],
+        "distance_um": 67.508,
+        "margin_ps": 355.49476
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_w_mid",
+        "sink_pin": "d[12]",
+        "source_xy": [
+          53.958,
+          607.718
+        ],
+        "sink_xy": [
+          25.962,
+          569.55
+        ],
+        "distance_um": 66.164,
+        "margin_ps": 358.18962
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_w_mid",
+        "sink_pin": "d[13]",
+        "source_xy": [
+          53.958,
+          607.718
+        ],
+        "sink_xy": [
+          25.962,
+          570.894
+        ],
+        "distance_um": 64.82,
+        "margin_ps": 358.47378
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_w_mid",
+        "sink_pin": "d[14]",
+        "source_xy": [
+          53.958,
+          607.718
+        ],
+        "sink_xy": [
+          25.962,
+          572.286
+        ],
+        "distance_um": 63.428,
+        "margin_ps": 359.78518
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_w_mid",
+        "sink_pin": "d[15]",
+        "source_xy": [
+          53.958,
+          607.718
+        ],
+        "sink_xy": [
+          25.962,
+          573.63
+        ],
+        "distance_um": 62.084,
+        "margin_ps": 360.53567
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[2]",
+        "sink": "reset_branch_w_high0",
+        "sink_pin": "d[0]",
+        "source_xy": [
+          53.958,
+          609.062
+        ],
+        "sink_xy": [
+          5.442,
+          837.954
+        ],
+        "distance_um": 277.408,
+        "margin_ps": 185.33425
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[2]",
+        "sink": "reset_branch_w_high0",
+        "sink_pin": "d[1]",
+        "source_xy": [
+          53.958,
+          609.062
+        ],
+        "sink_xy": [
+          5.442,
+          839.298
+        ],
+        "distance_um": 278.752,
+        "margin_ps": 184.56778
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[2]",
+        "sink": "reset_branch_w_high0",
+        "sink_pin": "d[2]",
+        "source_xy": [
+          53.958,
+          609.062
+        ],
+        "sink_xy": [
+          5.442,
+          840.642
+        ],
+        "distance_um": 280.096,
+        "margin_ps": 182.6427
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[2]",
+        "sink": "reset_branch_w_high0",
+        "sink_pin": "d[3]",
+        "source_xy": [
+          53.958,
+          609.062
+        ],
+        "sink_xy": [
+          5.442,
+          841.986
+        ],
+        "distance_um": 281.44,
+        "margin_ps": 197.96958
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[2]",
+        "sink": "reset_branch_w_high0",
+        "sink_pin": "d[4]",
+        "source_xy": [
+          53.958,
+          609.062
+        ],
+        "sink_xy": [
+          5.442,
+          843.33
+        ],
+        "distance_um": 282.784,
+        "margin_ps": 180.77564
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[2]",
+        "sink": "reset_branch_w_high0",
+        "sink_pin": "d[5]",
+        "source_xy": [
+          53.958,
+          609.062
+        ],
+        "sink_xy": [
+          5.442,
+          844.674
+        ],
+        "distance_um": 284.128,
+        "margin_ps": 195.6896
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[2]",
+        "sink": "reset_branch_w_high0",
+        "sink_pin": "d[6]",
+        "source_xy": [
+          53.958,
+          609.062
+        ],
+        "sink_xy": [
+          5.442,
+          846.066
+        ],
+        "distance_um": 285.52,
+        "margin_ps": 194.98312
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[2]",
+        "sink": "reset_branch_w_high0",
+        "sink_pin": "d[7]",
+        "source_xy": [
+          53.958,
+          609.062
+        ],
+        "sink_xy": [
+          5.442,
+          847.41
+        ],
+        "distance_um": 286.864,
+        "margin_ps": 193.33103
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[2]",
+        "sink": "reset_branch_w_high0",
+        "sink_pin": "d[8]",
+        "source_xy": [
+          53.958,
+          609.062
+        ],
+        "sink_xy": [
+          5.442,
+          848.754
+        ],
+        "distance_um": 288.208,
+        "margin_ps": 192.51228
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[2]",
+        "sink": "reset_branch_w_high0",
+        "sink_pin": "d[9]",
+        "source_xy": [
+          53.958,
+          609.062
+        ],
+        "sink_xy": [
+          5.442,
+          850.098
+        ],
+        "distance_um": 289.552,
+        "margin_ps": 190.83757
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[2]",
+        "sink": "reset_branch_w_high0",
+        "sink_pin": "d[10]",
+        "source_xy": [
+          53.958,
+          609.062
+        ],
+        "sink_xy": [
+          5.442,
+          851.442
+        ],
+        "distance_um": 290.896,
+        "margin_ps": 190.18678
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[2]",
+        "sink": "reset_branch_w_high0",
+        "sink_pin": "d[11]",
+        "source_xy": [
+          53.958,
+          609.062
+        ],
+        "sink_xy": [
+          5.442,
+          852.786
+        ],
+        "distance_um": 292.24,
+        "margin_ps": 188.01954
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[2]",
+        "sink": "reset_branch_w_high0",
+        "sink_pin": "d[12]",
+        "source_xy": [
+          53.958,
+          609.062
+        ],
+        "sink_xy": [
+          5.442,
+          854.13
+        ],
+        "distance_um": 293.584,
+        "margin_ps": 188.67152
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[2]",
+        "sink": "reset_branch_w_high0",
+        "sink_pin": "d[13]",
+        "source_xy": [
+          53.958,
+          609.062
+        ],
+        "sink_xy": [
+          5.442,
+          855.474
+        ],
+        "distance_um": 294.928,
+        "margin_ps": 186.9128
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[2]",
+        "sink": "reset_branch_w_high0",
+        "sink_pin": "d[14]",
+        "source_xy": [
+          53.958,
+          609.062
+        ],
+        "sink_xy": [
+          5.442,
+          856.866
+        ],
+        "distance_um": 296.32,
+        "margin_ps": 186.10836
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[2]",
+        "sink": "reset_branch_w_high0",
+        "sink_pin": "d[15]",
+        "source_xy": [
+          53.958,
+          609.062
+        ],
+        "sink_xy": [
+          5.442,
+          858.21
+        ],
+        "distance_um": 297.664,
+        "margin_ps": 184.81597
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[3]",
+        "sink": "reset_branch_w_high1",
+        "sink_pin": "d[0]",
+        "source_xy": [
+          53.958,
+          610.406
+        ],
+        "sink_xy": [
+          5.442,
+          897.894
+        ],
+        "distance_um": 336.004,
+        "margin_ps": 143.62257
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[3]",
+        "sink": "reset_branch_w_high1",
+        "sink_pin": "d[1]",
+        "source_xy": [
+          53.958,
+          610.406
+        ],
+        "sink_xy": [
+          5.442,
+          899.238
+        ],
+        "distance_um": 337.348,
+        "margin_ps": 142.8561
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[3]",
+        "sink": "reset_branch_w_high1",
+        "sink_pin": "d[2]",
+        "source_xy": [
+          53.958,
+          610.406
+        ],
+        "sink_xy": [
+          5.442,
+          900.582
+        ],
+        "distance_um": 338.692,
+        "margin_ps": 140.93102
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[3]",
+        "sink": "reset_branch_w_high1",
+        "sink_pin": "d[3]",
+        "source_xy": [
+          53.958,
+          610.406
+        ],
+        "sink_xy": [
+          5.442,
+          901.926
+        ],
+        "distance_um": 340.036,
+        "margin_ps": 156.2579
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[3]",
+        "sink": "reset_branch_w_high1",
+        "sink_pin": "d[4]",
+        "source_xy": [
+          53.958,
+          610.406
+        ],
+        "sink_xy": [
+          5.442,
+          903.27
+        ],
+        "distance_um": 341.38,
+        "margin_ps": 139.06396
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[3]",
+        "sink": "reset_branch_w_high1",
+        "sink_pin": "d[5]",
+        "source_xy": [
+          53.958,
+          610.406
+        ],
+        "sink_xy": [
+          5.442,
+          904.614
+        ],
+        "distance_um": 342.724,
+        "margin_ps": 153.97792
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[3]",
+        "sink": "reset_branch_w_high1",
+        "sink_pin": "d[6]",
+        "source_xy": [
+          53.958,
+          610.406
+        ],
+        "sink_xy": [
+          5.442,
+          906.006
+        ],
+        "distance_um": 344.116,
+        "margin_ps": 153.27144
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[3]",
+        "sink": "reset_branch_w_high1",
+        "sink_pin": "d[7]",
+        "source_xy": [
+          53.958,
+          610.406
+        ],
+        "sink_xy": [
+          5.442,
+          907.35
+        ],
+        "distance_um": 345.46,
+        "margin_ps": 151.61935
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[3]",
+        "sink": "reset_branch_w_high1",
+        "sink_pin": "d[8]",
+        "source_xy": [
+          53.958,
+          610.406
+        ],
+        "sink_xy": [
+          5.442,
+          908.694
+        ],
+        "distance_um": 346.804,
+        "margin_ps": 150.8006
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[3]",
+        "sink": "reset_branch_w_high1",
+        "sink_pin": "d[9]",
+        "source_xy": [
+          53.958,
+          610.406
+        ],
+        "sink_xy": [
+          5.442,
+          910.038
+        ],
+        "distance_um": 348.148,
+        "margin_ps": 149.12589
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[3]",
+        "sink": "reset_branch_w_high1",
+        "sink_pin": "d[10]",
+        "source_xy": [
+          53.958,
+          610.406
+        ],
+        "sink_xy": [
+          5.442,
+          911.382
+        ],
+        "distance_um": 349.492,
+        "margin_ps": 148.4751
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[3]",
+        "sink": "reset_branch_w_high1",
+        "sink_pin": "d[11]",
+        "source_xy": [
+          53.958,
+          610.406
+        ],
+        "sink_xy": [
+          5.442,
+          912.726
+        ],
+        "distance_um": 350.836,
+        "margin_ps": 146.30786
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[3]",
+        "sink": "reset_branch_w_high1",
+        "sink_pin": "d[12]",
+        "source_xy": [
+          53.958,
+          610.406
+        ],
+        "sink_xy": [
+          5.442,
+          914.07
+        ],
+        "distance_um": 352.18,
+        "margin_ps": 146.95984
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[3]",
+        "sink": "reset_branch_w_high1",
+        "sink_pin": "d[13]",
+        "source_xy": [
+          53.958,
+          610.406
+        ],
+        "sink_xy": [
+          5.442,
+          915.414
+        ],
+        "distance_um": 353.524,
+        "margin_ps": 145.20112
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[3]",
+        "sink": "reset_branch_w_high1",
+        "sink_pin": "d[14]",
+        "source_xy": [
+          53.958,
+          610.406
+        ],
+        "sink_xy": [
+          5.442,
+          916.806
+        ],
+        "distance_um": 354.916,
+        "margin_ps": 144.39668
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_w",
+        "source_pin": "q[3]",
+        "sink": "reset_branch_w_high1",
+        "sink_pin": "d[15]",
+        "source_xy": [
+          53.958,
+          610.406
+        ],
+        "sink_xy": [
+          5.442,
+          918.15
+        ],
+        "distance_um": 356.26,
+        "margin_ps": 143.10429
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_e",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_low",
+        "sink_pin": "d[0]",
+        "source_xy": [
+          474.078,
+          623.574
+        ],
+        "sink_xy": [
+          372.642,
+          384.084
+        ],
+        "distance_um": 340.926,
+        "margin_ps": 132.55583
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_e",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_low",
+        "sink_pin": "d[1]",
+        "source_xy": [
+          474.078,
+          623.574
+        ],
+        "sink_xy": [
+          372.642,
+          385.428
+        ],
+        "distance_um": 339.582,
+        "margin_ps": 133.83224
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_e",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_low",
+        "sink_pin": "d[2]",
+        "source_xy": [
+          474.078,
+          623.574
+        ],
+        "sink_xy": [
+          372.642,
+          386.772
+        ],
+        "distance_um": 338.238,
+        "margin_ps": 133.95004
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_e",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_low",
+        "sink_pin": "d[3]",
+        "source_xy": [
+          474.078,
+          623.574
+        ],
+        "sink_xy": [
+          372.642,
+          388.116
+        ],
+        "distance_um": 336.894,
+        "margin_ps": 151.3198
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_e",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_low",
+        "sink_pin": "d[4]",
+        "source_xy": [
+          474.078,
+          623.574
+        ],
+        "sink_xy": [
+          372.642,
+          389.46
+        ],
+        "distance_um": 335.55,
+        "margin_ps": 136.16874
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_e",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_low",
+        "sink_pin": "d[5]",
+        "source_xy": [
+          474.078,
+          623.574
+        ],
+        "sink_xy": [
+          372.642,
+          390.804
+        ],
+        "distance_um": 334.206,
+        "margin_ps": 153.12558
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_e",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_low",
+        "sink_pin": "d[6]",
+        "source_xy": [
+          474.078,
+          623.574
+        ],
+        "sink_xy": [
+          372.642,
+          392.196
+        ],
+        "distance_um": 332.814,
+        "margin_ps": 154.53494
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_e",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_low",
+        "sink_pin": "d[7]",
+        "source_xy": [
+          474.078,
+          623.574
+        ],
+        "sink_xy": [
+          372.642,
+          393.54
+        ],
+        "distance_um": 331.47,
+        "margin_ps": 154.92573
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_e",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_low",
+        "sink_pin": "d[8]",
+        "source_xy": [
+          474.078,
+          623.574
+        ],
+        "sink_xy": [
+          372.642,
+          394.884
+        ],
+        "distance_um": 330.126,
+        "margin_ps": 156.14986
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_e",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_low",
+        "sink_pin": "d[9]",
+        "source_xy": [
+          474.078,
+          623.574
+        ],
+        "sink_xy": [
+          372.642,
+          396.228
+        ],
+        "distance_um": 328.782,
+        "margin_ps": 156.51803
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_e",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_low",
+        "sink_pin": "d[10]",
+        "source_xy": [
+          474.078,
+          623.574
+        ],
+        "sink_xy": [
+          372.642,
+          397.572
+        ],
+        "distance_um": 327.438,
+        "margin_ps": 157.91012
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_e",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_low",
+        "sink_pin": "d[11]",
+        "source_xy": [
+          474.078,
+          623.574
+        ],
+        "sink_xy": [
+          372.642,
+          398.916
+        ],
+        "distance_um": 326.094,
+        "margin_ps": 157.78576
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_e",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_low",
+        "sink_pin": "d[12]",
+        "source_xy": [
+          474.078,
+          623.574
+        ],
+        "sink_xy": [
+          372.642,
+          400.26
+        ],
+        "distance_um": 324.75,
+        "margin_ps": 160.48062
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_e",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_low",
+        "sink_pin": "d[13]",
+        "source_xy": [
+          474.078,
+          623.574
+        ],
+        "sink_xy": [
+          372.642,
+          401.604
+        ],
+        "distance_um": 323.406,
+        "margin_ps": 160.76478
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_e",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_low",
+        "sink_pin": "d[14]",
+        "source_xy": [
+          474.078,
+          623.574
+        ],
+        "sink_xy": [
+          372.642,
+          402.996
+        ],
+        "distance_um": 322.014,
+        "margin_ps": 162.07618
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_e",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_low",
+        "sink_pin": "d[15]",
+        "source_xy": [
+          474.078,
+          623.574
+        ],
+        "sink_xy": [
+          372.642,
+          404.34
+        ],
+        "distance_um": 320.67,
+        "margin_ps": 162.82667
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_high",
+        "sink_pin": "d[0]",
+        "source_xy": [
+          361.758,
+          957.834
+        ],
+        "sink_xy": [
+          340.242,
+          1298.034
+        ],
+        "distance_um": 361.716,
+        "margin_ps": 116.75543
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_high",
+        "sink_pin": "d[1]",
+        "source_xy": [
+          361.758,
+          957.834
+        ],
+        "sink_xy": [
+          340.242,
+          1299.378
+        ],
+        "distance_um": 363.06,
+        "margin_ps": 115.98896
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_high",
+        "sink_pin": "d[2]",
+        "source_xy": [
+          361.758,
+          957.834
+        ],
+        "sink_xy": [
+          340.242,
+          1300.722
+        ],
+        "distance_um": 364.404,
+        "margin_ps": 114.06388
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_high",
+        "sink_pin": "d[3]",
+        "source_xy": [
+          361.758,
+          957.834
+        ],
+        "sink_xy": [
+          340.242,
+          1302.066
+        ],
+        "distance_um": 365.748,
+        "margin_ps": 129.39076
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_high",
+        "sink_pin": "d[4]",
+        "source_xy": [
+          361.758,
+          957.834
+        ],
+        "sink_xy": [
+          340.242,
+          1303.41
+        ],
+        "distance_um": 367.092,
+        "margin_ps": 112.19682
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_high",
+        "sink_pin": "d[5]",
+        "source_xy": [
+          361.758,
+          957.834
+        ],
+        "sink_xy": [
+          340.242,
+          1304.754
+        ],
+        "distance_um": 368.436,
+        "margin_ps": 127.11078
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_high",
+        "sink_pin": "d[6]",
+        "source_xy": [
+          361.758,
+          957.834
+        ],
+        "sink_xy": [
+          340.242,
+          1306.146
+        ],
+        "distance_um": 369.828,
+        "margin_ps": 126.4043
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_high",
+        "sink_pin": "d[7]",
+        "source_xy": [
+          361.758,
+          957.834
+        ],
+        "sink_xy": [
+          340.242,
+          1307.49
+        ],
+        "distance_um": 371.172,
+        "margin_ps": 124.75221
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_high",
+        "sink_pin": "d[8]",
+        "source_xy": [
+          361.758,
+          957.834
+        ],
+        "sink_xy": [
+          340.242,
+          1308.834
+        ],
+        "distance_um": 372.516,
+        "margin_ps": 123.93346
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_high",
+        "sink_pin": "d[9]",
+        "source_xy": [
+          361.758,
+          957.834
+        ],
+        "sink_xy": [
+          340.242,
+          1310.178
+        ],
+        "distance_um": 373.86,
+        "margin_ps": 122.25875
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_high",
+        "sink_pin": "d[10]",
+        "source_xy": [
+          361.758,
+          957.834
+        ],
+        "sink_xy": [
+          340.242,
+          1311.522
+        ],
+        "distance_um": 375.204,
+        "margin_ps": 121.60796
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_high",
+        "sink_pin": "d[11]",
+        "source_xy": [
+          361.758,
+          957.834
+        ],
+        "sink_xy": [
+          340.242,
+          1312.866
+        ],
+        "distance_um": 376.548,
+        "margin_ps": 119.44072
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_high",
+        "sink_pin": "d[12]",
+        "source_xy": [
+          361.758,
+          957.834
+        ],
+        "sink_xy": [
+          340.242,
+          1314.21
+        ],
+        "distance_um": 377.892,
+        "margin_ps": 120.0927
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_high",
+        "sink_pin": "d[13]",
+        "source_xy": [
+          361.758,
+          957.834
+        ],
+        "sink_xy": [
+          340.242,
+          1315.554
+        ],
+        "distance_um": 379.236,
+        "margin_ps": 118.33398
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_high",
+        "sink_pin": "d[14]",
+        "source_xy": [
+          361.758,
+          957.834
+        ],
+        "sink_xy": [
+          340.242,
+          1316.946
+        ],
+        "distance_um": 380.628,
+        "margin_ps": 117.52954
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[0]",
+        "sink": "reset_branch_e_high",
+        "sink_pin": "d[15]",
+        "source_xy": [
+          361.758,
+          957.834
+        ],
+        "sink_xy": [
+          340.242,
+          1318.29
+        ],
+        "distance_um": 381.972,
+        "margin_ps": 116.23715
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_e_mid",
+        "sink_pin": "d[0]",
+        "source_xy": [
+          361.758,
+          959.178
+        ],
+        "sink_xy": [
+          372.642,
+          881.514
+        ],
+        "distance_um": 88.548,
+        "margin_ps": 325.54675
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_e_mid",
+        "sink_pin": "d[1]",
+        "source_xy": [
+          361.758,
+          959.178
+        ],
+        "sink_xy": [
+          372.642,
+          882.858
+        ],
+        "distance_um": 87.204,
+        "margin_ps": 326.82316
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_e_mid",
+        "sink_pin": "d[2]",
+        "source_xy": [
+          361.758,
+          959.178
+        ],
+        "sink_xy": [
+          372.642,
+          884.202
+        ],
+        "distance_um": 85.86,
+        "margin_ps": 326.94096
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_e_mid",
+        "sink_pin": "d[3]",
+        "source_xy": [
+          361.758,
+          959.178
+        ],
+        "sink_xy": [
+          372.642,
+          885.546
+        ],
+        "distance_um": 84.516,
+        "margin_ps": 344.31072
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_e_mid",
+        "sink_pin": "d[4]",
+        "source_xy": [
+          361.758,
+          959.178
+        ],
+        "sink_xy": [
+          372.642,
+          886.89
+        ],
+        "distance_um": 83.172,
+        "margin_ps": 329.15966
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_e_mid",
+        "sink_pin": "d[5]",
+        "source_xy": [
+          361.758,
+          959.178
+        ],
+        "sink_xy": [
+          372.642,
+          888.234
+        ],
+        "distance_um": 81.828,
+        "margin_ps": 346.1165
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_e_mid",
+        "sink_pin": "d[6]",
+        "source_xy": [
+          361.758,
+          959.178
+        ],
+        "sink_xy": [
+          372.642,
+          889.626
+        ],
+        "distance_um": 80.436,
+        "margin_ps": 347.52586
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_e_mid",
+        "sink_pin": "d[7]",
+        "source_xy": [
+          361.758,
+          959.178
+        ],
+        "sink_xy": [
+          372.642,
+          890.97
+        ],
+        "distance_um": 79.092,
+        "margin_ps": 347.91665
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_e_mid",
+        "sink_pin": "d[8]",
+        "source_xy": [
+          361.758,
+          959.178
+        ],
+        "sink_xy": [
+          372.642,
+          892.314
+        ],
+        "distance_um": 77.748,
+        "margin_ps": 349.14078
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_e_mid",
+        "sink_pin": "d[9]",
+        "source_xy": [
+          361.758,
+          959.178
+        ],
+        "sink_xy": [
+          372.642,
+          893.658
+        ],
+        "distance_um": 76.404,
+        "margin_ps": 349.50895
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_e_mid",
+        "sink_pin": "d[10]",
+        "source_xy": [
+          361.758,
+          959.178
+        ],
+        "sink_xy": [
+          372.642,
+          895.002
+        ],
+        "distance_um": 75.06,
+        "margin_ps": 350.90104
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_e_mid",
+        "sink_pin": "d[11]",
+        "source_xy": [
+          361.758,
+          959.178
+        ],
+        "sink_xy": [
+          372.642,
+          896.346
+        ],
+        "distance_um": 73.716,
+        "margin_ps": 350.77668
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_e_mid",
+        "sink_pin": "d[12]",
+        "source_xy": [
+          361.758,
+          959.178
+        ],
+        "sink_xy": [
+          372.642,
+          897.69
+        ],
+        "distance_um": 72.372,
+        "margin_ps": 353.47154
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_e_mid",
+        "sink_pin": "d[13]",
+        "source_xy": [
+          361.758,
+          959.178
+        ],
+        "sink_xy": [
+          372.642,
+          899.034
+        ],
+        "distance_um": 71.028,
+        "margin_ps": 353.7557
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_e_mid",
+        "sink_pin": "d[14]",
+        "source_xy": [
+          361.758,
+          959.178
+        ],
+        "sink_xy": [
+          372.642,
+          900.426
+        ],
+        "distance_um": 69.636,
+        "margin_ps": 355.0671
+      },
+      {
+        "kind": "mid_to_branch",
+        "source": "reset_mid_high",
+        "source_pin": "q[1]",
+        "sink": "reset_branch_e_mid",
+        "sink_pin": "d[15]",
+        "source_xy": [
+          361.758,
+          959.178
+        ],
+        "sink_xy": [
+          372.642,
+          901.77
+        ],
+        "distance_um": 68.292,
+        "margin_ps": 355.81759
+      }
+    ],
+    "target_assignment": [
+      {
+        "source": "reset_branch_w_low",
+        "source_pin": "q[2]",
+        "sink": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_hd.u_rp",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          26.958,
+          404.052
+        ],
+        "sink_xy": [
+          22.506,
+          53.484
+        ],
+        "distance_um": 355.02,
+        "margin_ps": 65.82214
+      },
+      {
+        "source": "reset_branch_w_low",
+        "source_pin": "q[3]",
+        "sink": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_hd.u_rp",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          26.958,
+          405.396
+        ],
+        "sink_xy": [
+          22.506,
+          204.684
+        ],
+        "distance_um": 205.164,
+        "margin_ps": 182.53398
+      },
+      {
+        "source": "reset_branch_w_high1",
+        "source_pin": "q[14]",
+        "sink": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_hd.u_rp",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          26.958,
+          916.806
+        ],
+        "sink_xy": [
+          22.506,
+          1052.706
+        ],
+        "distance_um": 140.352,
+        "margin_ps": 228.22567
+      },
+      {
+        "source": "reset_branch_w_high1",
+        "source_pin": "q[8]",
+        "sink": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_hd.u_rp",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          26.958,
+          908.694
+        ],
+        "sink_xy": [
+          22.506,
+          1208.226
+        ],
+        "distance_um": 303.984,
+        "margin_ps": 104.7066
+      },
+      {
+        "source": "reset_branch_e_high",
+        "source_pin": "q[15]",
+        "sink": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_hd.u_rp",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          361.758,
+          1318.29
+        ],
+        "sink_xy": [
+          22.506,
+          1359.426
+        ],
+        "distance_um": 380.388,
+        "margin_ps": 48.91437
+      },
+      {
+        "source": "reset_branch_e_low",
+        "source_pin": "q[14]",
+        "sink": "u_tile.u_tile.u_logic.genblk4.g_ndh.u_node",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          394.158,
+          402.996
+        ],
+        "sink_xy": [
+          420.078,
+          608.412
+        ],
+        "distance_um": 231.336,
+        "margin_ps": 183.35635
+      },
+      {
+        "source": "reset_branch_w_low",
+        "source_pin": "q[1]",
+        "sink": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          26.958,
+          402.708
+        ],
+        "sink_xy": [
+          103.722,
+          397.5
+        ],
+        "distance_um": 81.972,
+        "margin_ps": 323.05538
+      },
+      {
+        "source": "reset_branch_e_low",
+        "source_pin": "q[9]",
+        "sink": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          394.158,
+          396.228
+        ],
+        "sink_xy": [
+          365.43,
+          397.5
+        ],
+        "distance_um": 30.0,
+        "margin_ps": 365.72746
+      },
+      {
+        "source": "reset_branch_w_mid",
+        "source_pin": "q[4]",
+        "sink": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          47.478,
+          558.75
+        ],
+        "sink_xy": [
+          103.722,
+          549.51
+        ],
+        "distance_um": 65.484,
+        "margin_ps": 338.30556
+      },
+      {
+        "source": "reset_branch_e_low",
+        "source_pin": "q[13]",
+        "sink": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          394.158,
+          401.604
+        ],
+        "sink_xy": [
+          365.43,
+          549.51
+        ],
+        "distance_um": 176.634,
+        "margin_ps": 254.8328
+      },
+      {
+        "source": "reset_branch_w_mid",
+        "source_pin": "q[12]",
+        "sink": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          47.478,
+          569.55
+        ],
+        "sink_xy": [
+          103.722,
+          701.52
+        ],
+        "distance_um": 188.214,
+        "margin_ps": 245.35356
+      },
+      {
+        "source": "reset_branch_e_mid",
+        "source_pin": "q[0]",
+        "sink": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          394.158,
+          881.514
+        ],
+        "sink_xy": [
+          365.43,
+          701.52
+        ],
+        "distance_um": 208.722,
+        "margin_ps": 225.54174
+      },
+      {
+        "source": "reset_branch_w_high0",
+        "source_pin": "q[12]",
+        "sink": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          26.958,
+          854.13
+        ],
+        "sink_xy": [
+          103.722,
+          853.53
+        ],
+        "distance_um": 77.364,
+        "margin_ps": 329.59956
+      },
+      {
+        "source": "reset_branch_e_mid",
+        "source_pin": "q[3]",
+        "sink": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          394.158,
+          885.546
+        ],
+        "sink_xy": [
+          365.43,
+          853.53
+        ],
+        "distance_um": 60.744,
+        "margin_ps": 345.33104
+      },
+      {
+        "source": "reset_branch_e_mid",
+        "source_pin": "q[15]",
+        "sink": "strap",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          394.158,
+          901.77
+        ],
+        "sink_xy": [
+          441.708,
+          1017.672
+        ],
+        "distance_um": 163.452,
+        "margin_ps": 296.42964
+      },
+      {
+        "source": "reset_branch_w_high1",
+        "source_pin": "q[12]",
+        "sink": "rqr_south_0",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          26.958,
+          914.07
+        ],
+        "sink_xy": [
+          26.016,
+          1097.538
+        ],
+        "distance_um": 184.41,
+        "margin_ps": 263.51247
+      },
+      {
+        "source": "reset_branch_w_high1",
+        "source_pin": "q[9]",
+        "sink": "rqr_south_1",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          26.958,
+          910.038
+        ],
+        "sink_xy": [
+          96.216,
+          1097.538
+        ],
+        "distance_um": 256.758,
+        "margin_ps": 208.65925
+      },
+      {
+        "source": "reset_branch_w_high1",
+        "source_pin": "q[10]",
+        "sink": "rqr_south_2",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          26.958,
+          911.382
+        ],
+        "sink_xy": [
+          166.416,
+          1097.538
+        ],
+        "distance_um": 325.614,
+        "margin_ps": 159.35526
+      },
+      {
+        "source": "reset_branch_e_high",
+        "source_pin": "q[0]",
+        "sink": "rqr_south_3",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          361.758,
+          1298.034
+        ],
+        "sink_xy": [
+          236.616,
+          1097.538
+        ],
+        "distance_um": 325.638,
+        "margin_ps": 151.95345
+      },
+      {
+        "source": "reset_branch_w_low",
+        "source_pin": "q[8]",
+        "sink": "rqr_north_0",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          26.958,
+          412.164
+        ],
+        "sink_xy": [
+          26.016,
+          319.668
+        ],
+        "distance_um": 93.438,
+        "margin_ps": 333.02729
+      },
+      {
+        "source": "reset_branch_w_low",
+        "source_pin": "q[7]",
+        "sink": "rqr_north_1",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          26.958,
+          410.82
+        ],
+        "sink_xy": [
+          96.216,
+          319.668
+        ],
+        "distance_um": 160.41,
+        "margin_ps": 284.53708
+      },
+      {
+        "source": "reset_branch_w_low",
+        "source_pin": "q[6]",
+        "sink": "rqr_north_2",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          26.958,
+          409.476
+        ],
+        "sink_xy": [
+          166.416,
+          319.668
+        ],
+        "distance_um": 229.266,
+        "margin_ps": 230.54055
+      },
+      {
+        "source": "reset_branch_e_low",
+        "source_pin": "q[2]",
+        "sink": "rqr_north_3",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          394.158,
+          386.772
+        ],
+        "sink_xy": [
+          236.616,
+          319.668
+        ],
+        "distance_um": 224.646,
+        "margin_ps": 233.21211
+      },
+      {
+        "source": "reset_branch_w_mid",
+        "source_pin": "q[1]",
+        "sink": "mq_wrom_0",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          47.478,
+          554.718
+        ],
+        "sink_xy": [
+          33.576,
+          541.878
+        ],
+        "distance_um": 26.742,
+        "margin_ps": 380.29805
+      },
+      {
+        "source": "reset_branch_w_high0",
+        "source_pin": "q[0]",
+        "sink": "mq_wrom_1",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          26.958,
+          837.954
+        ],
+        "sink_xy": [
+          48.588,
+          827.106
+        ],
+        "distance_um": 32.478,
+        "margin_ps": 367.81564
+      },
+      {
+        "source": "reset_branch_e_mid",
+        "source_pin": "q[1]",
+        "sink": "mq_wrom_2",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          394.158,
+          882.858
+        ],
+        "sink_xy": [
+          239.316,
+          715.596
+        ],
+        "distance_um": 322.104,
+        "margin_ps": 148.88352
+      },
+      {
+        "source": "reset_branch_w_high0",
+        "source_pin": "q[3]",
+        "sink": "mq_wrom_3",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          26.958,
+          841.986
+        ],
+        "sink_xy": [
+          218.58,
+          715.596
+        ],
+        "distance_um": 318.012,
+        "margin_ps": 158.13582
+      },
+      {
+        "source": "reset_branch_e_low",
+        "source_pin": "q[0]",
+        "sink": "xdelay_0",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          394.158,
+          384.084
+        ],
+        "sink_xy": [
+          470.868,
+          260.376
+        ],
+        "distance_um": 200.418,
+        "margin_ps": 240.18124
+      },
+      {
+        "source": "reset_branch_e_low",
+        "source_pin": "q[1]",
+        "sink": "xdelay_1",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          394.158,
+          385.428
+        ],
+        "sink_xy": [
+          384.576,
+          319.668
+        ],
+        "distance_um": 75.342,
+        "margin_ps": 343.36205
+      },
+      {
+        "source": "reset_branch_e_low",
+        "source_pin": "q[4]",
+        "sink": "xdelay_2",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          394.158,
+          389.46
+        ],
+        "sink_xy": [
+          339.0,
+          299.148
+        ],
+        "distance_um": 145.47,
+        "margin_ps": 292.78407
+      },
+      {
+        "source": "reset_branch_e_low",
+        "source_pin": "q[5]",
+        "sink": "xdelay_3",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          394.158,
+          390.804
+        ],
+        "sink_xy": [
+          435.228,
+          239.856
+        ],
+        "distance_um": 192.018,
+        "margin_ps": 251.6562
+      },
+      {
+        "source": "reset_branch_w_low",
+        "source_pin": "q[14]",
+        "sink": "xdelay_4",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          26.958,
+          420.276
+        ],
+        "sink_xy": [
+          26.016,
+          485.988
+        ],
+        "distance_um": 66.654,
+        "margin_ps": 352.54188
+      },
+      {
+        "source": "reset_branch_e_low",
+        "source_pin": "q[3]",
+        "sink": "xdelay_5",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          394.158,
+          388.116
+        ],
+        "sink_xy": [
+          306.816,
+          319.668
+        ],
+        "distance_um": 155.79,
+        "margin_ps": 288.36395
+      },
+      {
+        "source": "reset_branch_w_mid",
+        "source_pin": "q[5]",
+        "sink": "xdelay_6",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          47.478,
+          560.094
+        ],
+        "sink_xy": [
+          33.576,
+          506.508
+        ],
+        "distance_um": 67.488,
+        "margin_ps": 353.23841
+      },
+      {
+        "source": "reset_branch_w_low",
+        "source_pin": "q[10]",
+        "sink": "xdelay_7",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          26.958,
+          414.852
+        ],
+        "sink_xy": [
+          21.588,
+          330.576
+        ],
+        "distance_um": 89.646,
+        "margin_ps": 331.75153
+      },
+      {
+        "source": "reset_branch_w_low",
+        "source_pin": "q[15]",
+        "sink": "tx0_r0_lo",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          26.958,
+          421.62
+        ],
+        "sink_xy": [
+          15.108,
+          444.786
+        ],
+        "distance_um": 35.016,
+        "margin_ps": 372.76341
+      },
+      {
+        "source": "reset_branch_w_low",
+        "source_pin": "q[4]",
+        "sink": "tx0_r1_lo",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          26.958,
+          406.74
+        ],
+        "sink_xy": [
+          69.108,
+          330.576
+        ],
+        "distance_um": 118.314,
+        "margin_ps": 306.48322
+      },
+      {
+        "source": "reset_branch_w_mid",
+        "source_pin": "q[6]",
+        "sink": "tx1_r0_lo",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          47.478,
+          561.486
+        ],
+        "sink_xy": [
+          69.108,
+          552.786
+        ],
+        "distance_um": 30.33,
+        "margin_ps": 374.7925
+      },
+      {
+        "source": "reset_branch_w_low",
+        "source_pin": "q[5]",
+        "sink": "tx1_r1_lo",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          26.958,
+          408.084
+        ],
+        "sink_xy": [
+          69.108,
+          400.776
+        ],
+        "distance_um": 49.458,
+        "margin_ps": 360.0018
+      },
+      {
+        "source": "reset_branch_w_mid",
+        "source_pin": "q[11]",
+        "sink": "tx2_r0_lo",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          47.478,
+          568.206
+        ],
+        "sink_xy": [
+          69.108,
+          634.596
+        ],
+        "distance_um": 88.02,
+        "margin_ps": 334.03189
+      },
+      {
+        "source": "reset_branch_w_high0",
+        "source_pin": "q[2]",
+        "sink": "tx2_r1_lo",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          26.958,
+          840.642
+        ],
+        "sink_xy": [
+          69.108,
+          786.606
+        ],
+        "distance_um": 96.186,
+        "margin_ps": 323.9023
+      },
+      {
+        "source": "reset_branch_w_mid",
+        "source_pin": "q[14]",
+        "sink": "tx3_r0_lo",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          47.478,
+          572.286
+        ],
+        "sink_xy": [
+          69.108,
+          704.796
+        ],
+        "distance_um": 154.14,
+        "margin_ps": 279.11311
+      },
+      {
+        "source": "reset_branch_w_high0",
+        "source_pin": "q[14]",
+        "sink": "tx3_r1_lo",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          26.958,
+          856.866
+        ],
+        "sink_xy": [
+          69.108,
+          856.806
+        ],
+        "distance_um": 42.21,
+        "margin_ps": 364.17991
+      },
+      {
+        "source": "reset_branch_e_low",
+        "source_pin": "q[15]",
+        "sink": "tx4_r0_lo",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          394.158,
+          404.34
+        ],
+        "sink_xy": [
+          435.228,
+          482.586
+        ],
+        "distance_um": 119.316,
+        "margin_ps": 308.69541
+      },
+      {
+        "source": "reset_branch_e_low",
+        "source_pin": "q[6]",
+        "sink": "tx4_r1_lo",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          394.158,
+          392.196
+        ],
+        "sink_xy": [
+          435.228,
+          330.576
+        ],
+        "distance_um": 102.69,
+        "margin_ps": 319.7989
+      },
+      {
+        "source": "reset_branch_e_low",
+        "source_pin": "q[10]",
+        "sink": "tx5_r0_lo",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          394.158,
+          397.572
+        ],
+        "sink_xy": [
+          435.228,
+          552.786
+        ],
+        "distance_um": 196.284,
+        "margin_ps": 250.70665
+      },
+      {
+        "source": "reset_branch_e_low",
+        "source_pin": "q[11]",
+        "sink": "tx5_r1_lo",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          394.158,
+          398.916
+        ],
+        "sink_xy": [
+          435.228,
+          400.776
+        ],
+        "distance_um": 42.93,
+        "margin_ps": 368.30029
+      },
+      {
+        "source": "reset_branch_w_high0",
+        "source_pin": "q[1]",
+        "sink": "tx6_r0_lo",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          26.958,
+          839.298
+        ],
+        "sink_xy": [
+          218.796,
+          786.606
+        ],
+        "distance_um": 244.53,
+        "margin_ps": 207.83976
+      },
+      {
+        "source": "reset_branch_e_mid",
+        "source_pin": "q[5]",
+        "sink": "tx6_r1_lo",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          394.158,
+          888.234
+        ],
+        "sink_xy": [
+          435.228,
+          786.606
+        ],
+        "distance_um": 142.698,
+        "margin_ps": 289.1394
+      },
+      {
+        "source": "reset_branch_e_mid",
+        "source_pin": "q[2]",
+        "sink": "tx7_r0_lo",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          394.158,
+          884.202
+        ],
+        "sink_xy": [
+          435.228,
+          704.796
+        ],
+        "distance_um": 220.476,
+        "margin_ps": 229.4419
+      },
+      {
+        "source": "reset_branch_e_mid",
+        "source_pin": "q[6]",
+        "sink": "tx7_r1_lo",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          394.158,
+          889.626
+        ],
+        "sink_xy": [
+          435.228,
+          856.806
+        ],
+        "distance_um": 73.89,
+        "margin_ps": 341.6869
+      },
+      {
+        "source": "reset_branch_w_mid",
+        "source_pin": "q[10]",
+        "sink": "face_n_a",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          47.478,
+          566.862
+        ],
+        "sink_xy": [
+          15.108,
+          585.402
+        ],
+        "distance_um": 50.91,
+        "margin_ps": 358.70727
+      },
+      {
+        "source": "reset_branch_w_mid",
+        "source_pin": "q[9]",
+        "sink": "face_n_b",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          47.478,
+          565.518
+        ],
+        "sink_xy": [
+          42.108,
+          641.418
+        ],
+        "distance_um": 81.27,
+        "margin_ps": 332.6071
+      },
+      {
+        "source": "reset_branch_w_mid",
+        "source_pin": "q[8]",
+        "sink": "face_n_y",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          47.478,
+          564.174
+        ],
+        "sink_xy": [
+          17.292,
+          671.316
+        ],
+        "distance_um": 137.328,
+        "margin_ps": 290.24786
+      },
+      {
+        "source": "reset_branch_w_high0",
+        "source_pin": "q[4]",
+        "sink": "face_t_out",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          26.958,
+          843.33
+        ],
+        "sink_xy": [
+          17.292,
+          752.34
+        ],
+        "distance_um": 100.656,
+        "margin_ps": 317.41968
+      },
+      {
+        "source": "reset_branch_e_mid",
+        "source_pin": "q[7]",
+        "sink": "face_tap",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          394.158,
+          890.97
+        ],
+        "sink_xy": [
+          466.572,
+          655.092
+        ],
+        "distance_um": 308.292,
+        "margin_ps": 168.84451
+      },
+      {
+        "source": "reset_branch_w_mid",
+        "source_pin": "q[3]",
+        "sink": "s2_word_0",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          47.478,
+          557.406
+        ],
+        "sink_xy": [
+          218.796,
+          485.826
+        ],
+        "distance_um": 242.898,
+        "margin_ps": 212.73884
+      },
+      {
+        "source": "reset_branch_w_mid",
+        "source_pin": "q[2]",
+        "sink": "s2_word_1",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          47.478,
+          556.062
+        ],
+        "sink_xy": [
+          245.796,
+          485.826
+        ],
+        "distance_um": 268.554,
+        "margin_ps": 190.419
+      },
+      {
+        "source": "reset_branch_e_low",
+        "source_pin": "q[8]",
+        "sink": "node_stage_n_a",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          394.158,
+          394.884
+        ],
+        "sink_xy": [
+          218.796,
+          394.296
+        ],
+        "distance_um": 175.95,
+        "margin_ps": 260.89514
+      },
+      {
+        "source": "reset_branch_w_mid",
+        "source_pin": "q[13]",
+        "sink": "node_stage_n_b",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          47.478,
+          570.894
+        ],
+        "sink_xy": [
+          245.796,
+          634.596
+        ],
+        "distance_um": 262.02,
+        "margin_ps": 195.78428
+      },
+      {
+        "source": "reset_branch_w_mid",
+        "source_pin": "q[15]",
+        "sink": "node_stage_n_y",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          47.478,
+          573.63
+        ],
+        "sink_xy": [
+          218.796,
+          634.596
+        ],
+        "distance_um": 232.284,
+        "margin_ps": 220.35611
+      },
+      {
+        "source": "reset_branch_e_mid",
+        "source_pin": "q[4]",
+        "sink": "node_stage_t_out",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          394.158,
+          886.89
+        ],
+        "sink_xy": [
+          245.796,
+          786.606
+        ],
+        "distance_um": 248.646,
+        "margin_ps": 204.94728
+      },
+      {
+        "source": "reset_branch_w_high1",
+        "source_pin": "q[13]",
+        "sink": "return_south_0",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          26.958,
+          915.414
+        ],
+        "sink_xy": [
+          26.016,
+          942.018
+        ],
+        "distance_um": 27.546,
+        "margin_ps": 383.40755
+      },
+      {
+        "source": "reset_branch_w_high1",
+        "source_pin": "q[11]",
+        "sink": "return_south_1",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          26.958,
+          912.726
+        ],
+        "sink_xy": [
+          96.216,
+          942.018
+        ],
+        "distance_um": 98.55,
+        "margin_ps": 332.9685
+      },
+      {
+        "source": "reset_branch_w_high1",
+        "source_pin": "q[15]",
+        "sink": "return_south_2",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          26.958,
+          918.15
+        ],
+        "sink_xy": [
+          166.416,
+          942.018
+        ],
+        "distance_um": 163.326,
+        "margin_ps": 282.18722
+      },
+      {
+        "source": "reset_branch_e_mid",
+        "source_pin": "q[14]",
+        "sink": "return_south_3",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          394.158,
+          900.426
+        ],
+        "sink_xy": [
+          236.616,
+          942.018
+        ],
+        "distance_um": 199.134,
+        "margin_ps": 251.85708
+      },
+      {
+        "source": "reset_branch_w_mid",
+        "source_pin": "q[0]",
+        "sink": "return_north_0",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          47.478,
+          553.374
+        ],
+        "sink_xy": [
+          15.108,
+          514.986
+        ],
+        "distance_um": 70.758,
+        "margin_ps": 338.72284
+      },
+      {
+        "source": "reset_branch_w_low",
+        "source_pin": "q[0]",
+        "sink": "return_north_1",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          26.958,
+          401.364
+        ],
+        "sink_xy": [
+          42.108,
+          400.776
+        ],
+        "distance_um": 15.738,
+        "margin_ps": 380.53804
+      },
+      {
+        "source": "reset_branch_e_low",
+        "source_pin": "q[7]",
+        "sink": "return_north_2",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          394.158,
+          393.54
+        ],
+        "sink_xy": [
+          246.228,
+          330.576
+        ],
+        "distance_um": 210.894,
+        "margin_ps": 239.22983
+      },
+      {
+        "source": "reset_branch_e_low",
+        "source_pin": "q[12]",
+        "sink": "return_north_3",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          394.158,
+          400.26
+        ],
+        "sink_xy": [
+          246.228,
+          400.776
+        ],
+        "distance_um": 148.446,
+        "margin_ps": 283.9057
+      },
+      {
+        "source": "reset_branch_w_low",
+        "source_pin": "q[9]",
+        "sink": "xdelay_extra",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          26.958,
+          413.508
+        ],
+        "sink_xy": [
+          42.108,
+          330.576
+        ],
+        "distance_um": 98.082,
+        "margin_ps": 322.3136
+      },
+      {
+        "source": "reset_branch_w_mid",
+        "source_pin": "q[7]",
+        "sink": "s2_x_full",
+        "sink_pin": "rst_n",
+        "source_xy": [
+          47.478,
+          562.83
+        ],
+        "sink_xy": [
+          89.628,
+          552.786
+        ],
+        "distance_um": 52.194,
+        "margin_ps": 359.84183
+      }
+    ],
+    "target_count": 72,
+    "branch_slots": 112,
+    "all_tree_margins_ge15": true,
+    "all_target_margins_ge15": true,
+    "global_parent_pin": {
+      "before_xy_um": [
+        481.68,
+        689.436
+      ],
+      "proposed_xy_um": [
+        481.68,
+        660.816
+      ],
+      "basis": "Translate actual source reset parent pin with root displacement; preserve source-to-root geometry and original input contract",
+      "qualified": false
+    },
+    "excluded_residual_core_target": {
+      "home": null,
+      "reason": "Original220,720 placeholder is not actual physical source; preserve unresolved"
+    }
+  },
+  "fixed_capture_map": {
+    "xl_q": {
+      "bank": "xdelay_0",
+      "offset": 128,
+      "width": 128
+    },
+    "mq_x": {
+      "bank": "xdelay_6",
+      "offset": 128,
+      "width": 128
+    },
+    "s2_x": {
+      "bank": "s2_x_full",
+      "master": "qkh_packet_v256",
+      "offset": 0,
+      "width": 128,
+      "additional_bank": true
+    }
+  },
+  "existing_staged_cycle_ledger": {
+    "reference_staged_ledger": "Preserve prior nodeinput/output/RQR/Xdelay compiler additions; TX198 adds0edges",
+    "TX198_extra_edges": 0
+  },
+  "residual_core_root": {
+    "home": null,
+    "clock_pin": null,
+    "synthesized_state_census_required": true
+  },
+  "parent_face_ABI_changes": [
+    {
+      "parent_face": "n_a",
+      "delta_xy_um": [
+        0.0,
+        -14.31
+      ],
+      "basis": "Translate actual native parent pin window with unchanged face bank, preserving boundary-to-bank geometry; source/die contract must emit new pins",
+      "qualified": false
+    },
+    {
+      "parent_face": "n_b",
+      "delta_xy_um": [
+        0.0,
+        -14.31
+      ],
+      "basis": "Translate actual native parent pin window with unchanged face bank, preserving boundary-to-bank geometry; source/die contract must emit new pins",
+      "qualified": false
+    },
+    {
+      "parent_face": "n_y",
+      "delta_xy_um": [
+        0.0,
+        -28.62
+      ],
+      "basis": "Translate actual native parent pin window with unchanged face bank, preserving boundary-to-bank geometry; source/die contract must emit new pins",
+      "qualified": false
+    },
+    {
+      "parent_face": "t_out",
+      "delta_xy_um": [
+        0.0,
+        -28.62
+      ],
+      "basis": "Translate actual native parent pin window with unchanged face bank, preserving boundary-to-bank geometry; source/die contract must emit new pins",
+      "qualified": false
+    },
+    {
+      "parent_face": "tap",
+      "delta_xy_um": [
+        0.0,
+        -28.62
+      ],
+      "basis": "Translate actual native parent pin window with unchanged face bank, preserving boundary-to-bank geometry; source/die contract must emit new pins",
+      "qualified": false
+    }
+  ],
+  "original_source_bundle_sha256": "4c35b9fd87b80b24586cbc8159c97d3406a6d008b308221ca5b68d001a08378d"
+}
