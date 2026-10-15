@@ -9,6 +9,9 @@
 // Functional candidate: ctl/AQ pin stages and clock closure are still owed.
 module ot_s81_pq_core_native (
     input wire ck_ctl, ck_qb, ck_fault,
+`ifdef OT_PQ_QB_PIPE
+    input wire ck_qb_align,
+`endif
 `ifdef OT_PQ_QB_PHYS_SPLIT
     input wire [3:0] ck_qb_aux,
 `endif
@@ -309,7 +312,7 @@ module ot_s81_pq_core_native (
     wire [1633:0] bc [0:4];
 `ifdef OT_PQ_QB_PIPE
     wire[609:0] bc_hr_q;wire[1023:0] bt_d_q;
-    ot_s81_pq_qb_align_native u_qb_align (.clk(ck_qb),.rst_n(rst_n),.bc_hr(bc_hr),.bt_d(bt_d),
+    ot_s81_pq_qb_align_native u_qb_align (.clk(ck_qb_align),.rst_n(rst_n),.bc_hr(bc_hr),.bt_d(bt_d),
       .bc_hr_q(bc_hr_q),.bt_d_q(bt_d_q));
     assign bc[0] = {bc_hr_q[609:578], hq0, he0, hq1, he1, bc_hr_q[45:0], bt_d_q};
 `else
