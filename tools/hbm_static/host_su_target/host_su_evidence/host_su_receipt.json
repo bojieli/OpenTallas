@@ -1,0 +1,42 @@
+{
+  "schema": "opentallas.host_su_target.component.v1",
+  "qualified": false,
+  "component_gate": "PASS",
+  "source_commit": "deea4bb4e",
+  "native_programme_unchanged": true,
+  "scope": "bank16/row7 configuration, actual 301 target SRAMs, hardware installation validation, fixed-edge command producer; parent host integration and whole-SU numerical/physical qualification separate",
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-1568285-1792099499",
+  "ot_run_exit": 0,
+  "requested_mem_gb": 16,
+  "threads": 4,
+  "edges": 7111,
+  "exact_replays": 2,
+  "config_writes": 34400,
+  "macros": 301,
+  "powerup_sram_initialization": false,
+  "negatives": [
+    "omitted required index row",
+    "omitted required dictionary row",
+    "unknown bank",
+    "out-of-range dictionary index",
+    "reconfiguration invalidates readiness",
+    "write while executing rejected"
+  ],
+  "mutants": {
+    "DATA": "exact mismatch edge0",
+    "ADDR": "exact mismatch edge0",
+    "PHASE": "exact mismatch edge0",
+    "READY": "missing index row falsely ready detected"
+  },
+  "evidence_sha256": {
+    "host_su_build_ready.log": "3fa3c4fb3ca95654ede75ac455ddaa395f584c04cd72c8aaa7300db77be9713c",
+    "host_su_build.log": "b7a474c764f13a8e77bbc1bf84d25eb5eeeecc1a1bd0324635d1b10c17952080",
+    "host_su_otrun.log": "52a95b402639a83dd5ea9c54c7e803d994c5f22a945bff5aa7b548a99ca2af99",
+    "host_su_mut_PHASE.log": "308d57496c01b3e7d214fef779771c12637ad3f89241fc9c69a7263e1c40ff8f",
+    "host_su_mut_ready.log": "e6cde33d072a72d9eeedc5e11add82d3db98832241e450e9906649c0fb1a9c47",
+    "host_su_positive.log": "c40acd6592d2c1e1ba5ded12de77ae2783f2d7c18c06101621e13fdefa9aadc8",
+    "host_su_mut_ADDR.log": "308d57496c01b3e7d214fef779771c12637ad3f89241fc9c69a7263e1c40ff8f",
+    "host_su_mut_DATA.log": "308d57496c01b3e7d214fef779771c12637ad3f89241fc9c69a7263e1c40ff8f"
+  }
+}
