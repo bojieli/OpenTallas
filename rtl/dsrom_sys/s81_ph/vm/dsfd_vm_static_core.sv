@@ -120,7 +120,8 @@ module dsfd_vm_static_core (
         s_v[52] = wf_v; s_row[14*52 +: 14] = wf_row; s_m[16*52 +: 16] = 16'hffff; s_d[512*52 +: 512] = wf_d; s_t[8*52 +: 8] = 8'd52;
     end
     wire [31:0] wq_v; wire [447:0] wq_row; wire [511:0] wq_mask; wire [16383:0] wq_data; wire [255:0] wq_tag; wire w_flt;
-    dsfd_vm_static_wsched #(.NSRC(NSRC)) u_ws (.ck(ck), .rst_n(rss), .i_v(s_v), .i_row(s_row), .i_mask(s_m), .i_data(s_d),
+    dsfd_vm_static_wsched #(.NSRC(NSRC)) u_ws (.ck_control(ck), .ck_header(ck), .ck_payload({4{ck}}),
+        .ck_dispatch({16{ck}}), .ck_stage({128{ck}}), .rst_n(rss), .i_v(s_v), .i_row(s_row), .i_mask(s_m), .i_data(s_d),
         .i_tag(s_t), .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_data(wq_data), .wq_tag(wq_tag), .fault(w_flt));
 
     // ---------------------------------------------------------------- native memory
