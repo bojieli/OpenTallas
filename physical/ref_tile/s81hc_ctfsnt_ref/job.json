@@ -1,5 +1,5 @@
 {
- "name": "s81hc_ctfsnt_ref-v4-straight-COMMIT",
+ "name": "s81hc_ctfsnt_ref-v4-straight-c79f32477",
  "block": "ot_s81_hc_ctfs_nt",
  "ref_tile": true,
  "owner": "Claude:el1014-s81-norm-tree",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/s81-norm-tree-1014",
-  "commit": "COMMIT"
+  "commit": "c79f32477"
  },
  "stages": {
   "bench": [
@@ -104,7 +104,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_ctfsnt_ref/s81hc_ctfsnt_ref-v4-straight-COMMIT"
+   "to": "results/rtl/ref_tile/s81hc_ctfsnt_ref/s81hc_ctfsnt_ref-v4-straight-c79f32477"
   }
  ],
  "cycles_added": 0,
