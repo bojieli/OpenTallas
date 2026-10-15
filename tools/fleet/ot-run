@@ -8,7 +8,7 @@
                            and the host the next 16-thread job would get
 
 Asks every host for `ot-heavy-reconcile --free` (free_gb = the largest request `ot-heavy` admits there now, by the same
-arithmetic, minus what its waiters will take), drops hosts with less than --disk GB (default 20) free under --dir (or
+arithmetic; queued waiters are reported separately), drops hosts with less than --disk GB (default 20) free under --dir (or
 where --dir does not exist), and among the hosts that can admit --mem takes the one with the lowest
 (load1 + threads of the units started in the last 90 s + this job's threads) / cores  (v4, owner 2026-10-13 17:55: the
 128-core hosts fill evenly before either passes 1.0 x cores).  A host with fewer than 48 cores never gets a job of more
@@ -21,6 +21,9 @@ Load hold (v5, owner 2026-10-14 ~18:40 "1.5 times cores is fine ... there needs 
 job is held on THIS side (re-probing every 60 s) while every host that qualifies has load1 > 1.5 x cores, then goes to
 a host under that line.  Memory remains the only admission limit on the hosts; closure-loop routes (which call
 ot-heavy directly) are not held.  OT_RUN_NO_LOAD_HOLD=1 disables the hold.  --max-wait also bounds the hold.
+Immediate eligibility uses admit_gb (the actual atomic ot-heavy admission capacity), not free_gb after subtracting
+unstarted waiters. When no host can admit now, planned free_gb still chooses the memory queue; waiting jobs do not
+reserve physical RAM or prevent a smaller job using otherwise idle capacity. ot-heavy rechecks admission atomically.
 The CPU hold considers memory-admissible hosts first; if none admits the request, it considers the hosts eligible
 for a memory queue. An underloaded host without enough memory cannot release a hold on memory-admissible hosts.
 --max-wait SEC: give up (exit 75, NOT RUN) when the host has not admitted the command after SEC seconds.
@@ -64,14 +67,14 @@ def choose(res, mem, threads=THREADS):
     ok = {h: r for h, r in res.items() if r and not r.get("error") and r.get("ncpu")}
     if not ok:
         return None, False
-    fits = [h for h in ok if ok[h]["free_gb"] >= mem]
+    fits = [h for h in ok if ok[h].get("admit_gb", ok[h]["free_gb"]) >= mem]
     if not fits:                                   # nobody admits it now: queue where the most memory is free
         return max(ok, key=lambda h: ok[h]["free_gb"]), True
     big = [h for h in fits if ok[h]["ncpu"] >= SMALL_CORES and ratio(ok[h], threads) <= 1.0]
     if threads > SMALL_THREADS and big:
         fits = [h for h in fits if ok[h]["ncpu"] >= SMALL_CORES]
     # hosts within 0.1 x cores of each other are equal: the one that admits more memory takes the job
-    return min(fits, key=lambda h: (round(ratio(ok[h], threads), 1), -ok[h]["free_gb"])), False
+    return min(fits, key=lambda h: (round(ratio(ok[h], threads), 1), -ok[h].get("admit_gb", ok[h]["free_gb"]))), False
 
 
 def choose_selftest():
@@ -213,7 +216,7 @@ def main():
         # A host that cannot admit this request cannot release the CPU hold:
         # otherwise an idle, memory-full EPYC filters out a loaded PVE that
         # actually has memory, then choose() queues on the full EPYC forever.
-        fits = {h: r for h, r in live.items() if r["free_gb"] >= mem}
+        fits = {h: r for h, r in live.items() if r.get("admit_gb", r["free_gb"]) >= mem}
         qualifying = fits or live
         under = {h: r for h, r in qualifying.items() if r.get("load1", 0) <= LOAD_HOLD * r["ncpu"]}
         bypass = os.environ.get("OT_RUN_NO_LOAD_HOLD") == "1"
@@ -239,7 +242,7 @@ def main():
     for h, r in res.items():
         note = "no " + str(d) if r is None else r.get("error") or ("disk %d GB < %d" % (r["disk_gb"], disk) if r["disk_gb"] < disk else "")
         if r and not r.get("error"):
-            print(f"ot-run: {h:14s} admits {r['free_gb']:5d} GB (avail {r['avail_gb']}, growth {r['growth_gb']}, headroom "
+            print(f"ot-run: {h:14s} admits {r.get('admit_gb', r['free_gb']):5d} GB (avail {r['avail_gb']}, growth {r['growth_gb']}, headroom "
                   f"{r['headroom_gb']}, waiters {r['waiting']}/{r['waiting_gb']} GB) load {r.get('load1', 0):.0f}/{r.get('ncpu', 0)} "
                   f"running {r['running']} disk {r['disk_gb']} GB {note}", file=sys.stderr)
             if not note:
