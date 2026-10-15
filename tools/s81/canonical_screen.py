@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """Run the real canonical die generator; retain exact partial evidence on failure."""
-import argparse,gzip,hashlib,json,sys,traceback
+import argparse,gzip,hashlib,json,pickle,sys,traceback
 from pathlib import Path
 R=Path(__file__).resolve().parents[2];sys.path.insert(0,str(R/'tools'));import dsrom_s81_fulldie as G
 
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--work',type=Path,required=True);ap.add_argument('args',nargs=argparse.REMAINDER);a=ap.parse_args();w=a.work.resolve();w.mkdir(parents=True,exist_ok=True)
  p=argparse.ArgumentParser();p.add_argument('mode');p.add_argument('--k',type=int,default=16);G.die_options(p);opts=p.parse_args(a.args);G.apply_options(opts);assert G.CANONICAL_LAYOUT is not None
- live={};old=G.buses_r8
+ live={};checkpoint=[0];old=G.buses_r8
  def capture(m):
   live['m']=m
   # Export the fully populated actual field before trunk placement can fail.
@@ -20,6 +20,10 @@ def main():
  G.buses_r8=capture
  old_finalize=G.finalize_r8;passes=[0]
  def finalize_capture(m):
+  # Retain the full model before any costly final alignment. Public plan JSON
+  # omits glue/pdir/spread metadata and cannot safely recreate emitted RTL.
+  with (w/f'model_before_finalize{checkpoint[0]}.pickle').open('wb') as f:pickle.dump(m,f,protocol=5)
+  checkpoint[0]+=1
   result=old_finalize(m)
   if m.get('canonical_buses_complete') and not m.get('_canonical_snapshot_done'):
    m['_canonical_snapshot_done']=True;name=f'construction_pass{passes[0]}';passes[0]+=1
