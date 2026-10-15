@@ -1,5 +1,5 @@
 {
- "name": "dsfd_vm_direct_scatter_b8_native_cb-cb3-COMMIT",
+ "name": "dsfd_vm_direct_scatter_b8_native_cb-cb3-da7a5b863",
  "block": "dsfd_vm_static_scatter_b8_out_B8",
  "ref_tile": true,
  "owner": "Claude:S81 VM F6 scatter",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/s81-vm-f6-scatter-1015",
-  "commit": "COMMIT",
+  "commit": "da7a5b863",
   "extra_paths": [
    "physical/s81_die_pins/v20_vm_direct_write",
    "physical/s81_vm_direct_write_native_1015",
@@ -115,7 +115,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_vm_direct_scatter_b8_native_cb/dsfd_vm_direct_scatter_b8_native_cb-cb3-COMMIT"
+   "to": "results/rtl/ref_tile/dsfd_vm_direct_scatter_b8_native_cb/dsfd_vm_direct_scatter_b8_native_cb-cb3-da7a5b863"
   }
  ],
  "cycles_added": 0,
