@@ -1,0 +1,9 @@
+{
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-1396701-1792054044",
+  "result": "RAN exit0",
+  "scope": "only pin placement on readonly IO ODB copy. No synthesis/CTS repeated. Source CTS5581e2e16 still runningimmutable originalsnapshot.",
+  "input_ODB": "/srv/opentallas-scratch/claude/ref_gate/vms_bank_static_rg7wg3_1015-20261015-014435/routes/gate/work/orfs/results/asap7/opentallas_hfd_vms_bank_static_rg7wg3_asap7_ref_gate/base/3_2_place_iop.odb",
+  "fix": "Request1DBUbelowactualdesiredtrack sincePPLselectsstrictlyuppertrack; actual BTermcenters nowallmatchrequestedrealtrack",
+  "remaining_gate": "fullCTS withcorrectedhook after progressingoriginalCTS terminal; no physical closure claim"
+}
