@@ -16,7 +16,7 @@ for frame in range(3):
   for q in range(4):
    vals=[];ids=[];lv=0
    for l in range(16):
-    i=q*2736+a*16+l;ids.append(gid(i));v=bits[i] if i<n else 0
+    i=q*2736+a*16+l;ids.append(gid(i)&((1<<20)-1));v=bits[i] if i<n else 0
     if frame==1:v=65408 # allmasked still newest pinned ifvalid
     if i<n:lv|=1<<l
     vals.append(v)
