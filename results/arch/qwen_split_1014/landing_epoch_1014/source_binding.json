@@ -1,0 +1,14 @@
+{
+  "source_commit": "f2cf210f4c7cbb23b6054251be66021a6ac97dcb",
+  "source_sha256": {
+    "rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv": "e1accdaa3ea3fb2e627423d1552416bd03d0e1d58ca8ccc0ca9a5c65bfa3d11f",
+    "rtl/qwen_sys/kv_die_20261009/qkd_land_strip.sv": "2b5357bfbaffd87f3cebf55a08b37a534c268d45e398bb21165b69b1053ce7bb",
+    "rtl/qwen_sys/split_20261014/qkd_ectl3_direct_s.sv": "6fc3462edbce8112e3256f7eea6110a62189a0b0d5844ed80967ecd5557bdaf6",
+    "rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv": "c9391910fe0b4a0fa8790231e23127998359a9a8ec5c55eeda436661cd1bfd5c",
+    "rtl/test/qwen_split/tb_qkd_land_rd_kd.sv": "ffb6cbea53e98a5a35ceb7b988be2dc563c2066227fe19602c46733e5d0fb318",
+    "rtl/test/qwen_kv_die/tb_qkd_ectl3.sv": "119e95d6260cbfc31f20096c908ce26afd405f149463c5975bf30b757c5b8d5c"
+  },
+  "production_credit": 128,
+  "adopted": false,
+  "qualification": "RTL exactness only; fresh assigned pins, views and native/die timing still pending"
+}
