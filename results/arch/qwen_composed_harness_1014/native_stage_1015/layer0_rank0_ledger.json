@@ -1,0 +1,1343 @@
+{
+  "scope": "exhaustive source operation ledger for the supplied rank program; candidate paths only",
+  "program_sha256": "cc5bc8fc17d4068ac9a49e8bf79f34e74350d56d114dd7fe5cde433d2ac82796",
+  "operations": [
+    {
+      "pc": 0,
+      "unit": 2,
+      "instruction_sha256": "7a77a2078e51d1d06d1dc933d032d036e232ad2231572c0d912e1241a61af247",
+      "decoded": {
+        "unit": 2,
+        "su_nout": 1,
+        "su_nin": 4096,
+        "a_base": 4096,
+        "a_si": 1,
+        "red": 1,
+        "r_base": 14240,
+        "red_sq": 1
+      },
+      "candidate_arithmetic": "u_math.u_su; qfd_sp_su64_sfu actual64 lanes",
+      "operand_ports": {
+        "a": {
+          "src": 0,
+          "base": 4096,
+          "so": 0,
+          "si": 1,
+          "d": 0
+        },
+        "b": {
+          "src": 0,
+          "base": 0,
+          "so": 0,
+          "si": 0,
+          "d": 0
+        },
+        "c": {
+          "src": 0,
+          "base": 0,
+          "so": 0,
+          "si": 0,
+          "d": 0
+        }
+      },
+      "required_storage_join": "mapped NOX VM via actual A/B/C ports; constant operands require actual CROM; KV destination requires actual formatter/remote writer",
+      "source_sha256": {
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475",
+        "rtl/qwen_split/qfd_sp_su64_sfu.sv": "4e6a04746fdfb502ba299cc611e3531eb68fdd4217f9b6a89dddab8ceab0cba5",
+        "rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv": "5c4c57787d17469798ab10206c5bfa8f478991e2ca0c868d3935c63e5058e5ba",
+        "rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv": "3aec6ea06c328e53284758b544c50fe942bd96a9577e6e7611b7604c8b0b99bb",
+        "rtl/hdc/ot_hdc_vstream_lane.sv": "c42913f0e7a4155116337312c3cc269e6e8aca42f68c08504929fc356c401ab0",
+        "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+        "rtl/physical/ot_hdc_vreduce_entries64.sv": "5d49d87ce82af59487a59d16a01299dc3d4bf46d3e3d7a3d30518940e39d1ca8"
+      },
+      "runtime_native_join_verified": false,
+      "blocking_evidence": "exact source operation -> actual producer/calendar -> arithmetic -> mapped storage runtime plus mutant and native profile still required",
+      "source_dependency_flags": {}
+    },
+    {
+      "pc": 1,
+      "unit": 1,
+      "instruction_sha256": "0cc5b1a4546d4714ae7d418a3759064785f7fe62fe2f937f80051848bdfff3c6",
+      "decoded": {
+        "unit": 1,
+        "me_nout": 768,
+        "me_tiles": 1,
+        "me_k": 8,
+        "me_ts": 64,
+        "me_ks": 8,
+        "me_js": 1,
+        "me_xbase": 4096,
+        "me_round": 1,
+        "me_obase": 768,
+        "me_oen": 1,
+        "me_xks": 1,
+        "me_ots": 8,
+        "me_ojs": 1,
+        "me_split": 9,
+        "me_xcs": 8
+      },
+      "candidate_arithmetic": "actual ME/attention producer path not instantiated by embedding-stage harness",
+      "operand_ports": {
+        "me_nout": 768,
+        "me_tiles": 1,
+        "me_k": 8,
+        "me_ts": 64,
+        "me_ks": 8,
+        "me_js": 1,
+        "me_xbase": 4096,
+        "me_round": 1,
+        "me_obase": 768,
+        "me_oen": 1,
+        "me_xks": 1,
+        "me_ots": 8,
+        "me_ojs": 1,
+        "me_split": 9,
+        "me_xcs": 8
+      },
+      "required_storage_join": "actual weight ROM/scale and mapped VM operands/results; native attention for me_wsrc1",
+      "source_sha256": {
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475",
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv": "c4c4d9aeecf629bd9f0d7adf99fac1968a0fa9605bfb74c3cc0b629e0fe6c245"
+      },
+      "runtime_native_join_verified": false,
+      "blocking_evidence": "exact source operation -> actual producer/calendar -> arithmetic -> mapped storage runtime plus mutant and native profile still required",
+      "source_dependency_flags": {}
+    },
+    {
+      "pc": 2,
+      "unit": 2,
+      "instruction_sha256": "82505ae794e9b88bb38852c0359c8a5a7bf8ce844b3ca15f599ffd4606094504",
+      "decoded": {
+        "unit": 2,
+        "wait_su": 1,
+        "su_nout": 1,
+        "su_nin": 1,
+        "a_base": 14240,
+        "ma": 3,
+        "ad": 4,
+        "sfu": 3,
+        "dst": 1,
+        "d_base": 14256,
+        "imm1": 964689920,
+        "imm2": 897988541
+      },
+      "candidate_arithmetic": "u_math.u_su; qfd_sp_su64_sfu actual64 lanes",
+      "operand_ports": {
+        "a": {
+          "src": 0,
+          "base": 14240,
+          "so": 0,
+          "si": 0,
+          "d": 0
+        },
+        "b": {
+          "src": 0,
+          "base": 0,
+          "so": 0,
+          "si": 0,
+          "d": 0
+        },
+        "c": {
+          "src": 0,
+          "base": 0,
+          "so": 0,
+          "si": 0,
+          "d": 0
+        }
+      },
+      "required_storage_join": "mapped NOX VM via actual A/B/C ports; constant operands require actual CROM; KV destination requires actual formatter/remote writer",
+      "source_sha256": {
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475",
+        "rtl/qwen_split/qfd_sp_su64_sfu.sv": "4e6a04746fdfb502ba299cc611e3531eb68fdd4217f9b6a89dddab8ceab0cba5",
+        "rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv": "5c4c57787d17469798ab10206c5bfa8f478991e2ca0c868d3935c63e5058e5ba",
+        "rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv": "3aec6ea06c328e53284758b544c50fe942bd96a9577e6e7611b7604c8b0b99bb",
+        "rtl/hdc/ot_hdc_vstream_lane.sv": "c42913f0e7a4155116337312c3cc269e6e8aca42f68c08504929fc356c401ab0",
+        "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+        "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923"
+      },
+      "runtime_native_join_verified": false,
+      "blocking_evidence": "exact source operation -> actual producer/calendar -> arithmetic -> mapped storage runtime plus mutant and native profile still required",
+      "source_dependency_flags": {
+        "wait_su": 1
+      }
+    },
+    {
+      "pc": 3,
+      "unit": 2,
+      "instruction_sha256": "d99f697b7ccfc393d374be7b5ab2150d84478944e20a8df4a85cdb640298dcb0",
+      "decoded": {
+        "unit": 2,
+        "barrier": 1,
+        "su_nout": 1,
+        "su_nin": 128,
+        "a_base": 12928,
+        "a_so": 128,
+        "a_si": 1,
+        "b_base": 14256,
+        "ma": 1,
+        "dst": 2,
+        "d_base": 1048576,
+        "d_so": 1048576,
+        "d_si": 1,
+        "d_d": 4
+      },
+      "candidate_arithmetic": "u_math.u_su; qfd_sp_su64_sfu actual64 lanes",
+      "operand_ports": {
+        "a": {
+          "src": 0,
+          "base": 12928,
+          "so": 128,
+          "si": 1,
+          "d": 0
+        },
+        "b": {
+          "src": 0,
+          "base": 14256,
+          "so": 0,
+          "si": 0,
+          "d": 0
+        },
+        "c": {
+          "src": 0,
+          "base": 0,
+          "so": 0,
+          "si": 0,
+          "d": 0
+        }
+      },
+      "required_storage_join": "mapped NOX VM via actual A/B/C ports; constant operands require actual CROM; KV destination requires actual formatter/remote writer",
+      "source_sha256": {
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475",
+        "rtl/qwen_split/qfd_sp_su64_sfu.sv": "4e6a04746fdfb502ba299cc611e3531eb68fdd4217f9b6a89dddab8ceab0cba5",
+        "rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv": "5c4c57787d17469798ab10206c5bfa8f478991e2ca0c868d3935c63e5058e5ba",
+        "rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv": "3aec6ea06c328e53284758b544c50fe942bd96a9577e6e7611b7604c8b0b99bb",
+        "rtl/hdc/ot_hdc_vstream_lane.sv": "c42913f0e7a4155116337312c3cc269e6e8aca42f68c08504929fc356c401ab0",
+        "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+      },
+      "runtime_native_join_verified": false,
+      "blocking_evidence": "exact source operation -> actual producer/calendar -> arithmetic -> mapped storage runtime plus mutant and native profile still required",
+      "source_dependency_flags": {
+        "barrier": 1
+      }
+    },
+    {
+      "pc": 4,
+      "unit": 2,
+      "instruction_sha256": "00dd68199d8c0543f7b55a6838d0f76878a47a2764af78a1c363cb0391d4a47c",
+      "decoded": {
+        "unit": 2,
+        "su_nout": 5,
+        "su_nin": 128,
+        "a_base": 12288,
+        "a_so": 128,
+        "a_si": 1,
+        "b_base": 14256,
+        "ma": 1,
+        "dst": 1,
+        "d_base": 12288,
+        "d_so": 128,
+        "d_si": 1,
+        "red": 1,
+        "r_base": 14208,
+        "r_so": 1,
+        "red_sq": 1
+      },
+      "candidate_arithmetic": "u_math.u_su; qfd_sp_su64_sfu actual64 lanes",
+      "operand_ports": {
+        "a": {
+          "src": 0,
+          "base": 12288,
+          "so": 128,
+          "si": 1,
+          "d": 0
+        },
+        "b": {
+          "src": 0,
+          "base": 14256,
+          "so": 0,
+          "si": 0,
+          "d": 0
+        },
+        "c": {
+          "src": 0,
+          "base": 0,
+          "so": 0,
+          "si": 0,
+          "d": 0
+        }
+      },
+      "required_storage_join": "mapped NOX VM via actual A/B/C ports; constant operands require actual CROM; KV destination requires actual formatter/remote writer",
+      "source_sha256": {
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475",
+        "rtl/qwen_split/qfd_sp_su64_sfu.sv": "4e6a04746fdfb502ba299cc611e3531eb68fdd4217f9b6a89dddab8ceab0cba5",
+        "rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv": "5c4c57787d17469798ab10206c5bfa8f478991e2ca0c868d3935c63e5058e5ba",
+        "rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv": "3aec6ea06c328e53284758b544c50fe942bd96a9577e6e7611b7604c8b0b99bb",
+        "rtl/hdc/ot_hdc_vstream_lane.sv": "c42913f0e7a4155116337312c3cc269e6e8aca42f68c08504929fc356c401ab0",
+        "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+        "rtl/physical/ot_hdc_vreduce_entries64.sv": "5d49d87ce82af59487a59d16a01299dc3d4bf46d3e3d7a3d30518940e39d1ca8"
+      },
+      "runtime_native_join_verified": false,
+      "blocking_evidence": "exact source operation -> actual producer/calendar -> arithmetic -> mapped storage runtime plus mutant and native profile still required",
+      "source_dependency_flags": {}
+    },
+    {
+      "pc": 5,
+      "unit": 2,
+      "instruction_sha256": "0cc567dfb0a19a83f3c53444826e40c188c02faca7d070e18fa217fe67885174",
+      "decoded": {
+        "unit": 2,
+        "wait_su": 1,
+        "su_nout": 1,
+        "su_nin": 5,
+        "a_base": 14208,
+        "a_si": 1,
+        "ma": 3,
+        "ad": 4,
+        "sfu": 3,
+        "dst": 1,
+        "d_base": 14224,
+        "d_si": 1,
+        "imm1": 1006632960,
+        "imm2": 897988541
+      },
+      "candidate_arithmetic": "u_math.u_su; qfd_sp_su64_sfu actual64 lanes",
+      "operand_ports": {
+        "a": {
+          "src": 0,
+          "base": 14208,
+          "so": 0,
+          "si": 1,
+          "d": 0
+        },
+        "b": {
+          "src": 0,
+          "base": 0,
+          "so": 0,
+          "si": 0,
+          "d": 0
+        },
+        "c": {
+          "src": 0,
+          "base": 0,
+          "so": 0,
+          "si": 0,
+          "d": 0
+        }
+      },
+      "required_storage_join": "mapped NOX VM via actual A/B/C ports; constant operands require actual CROM; KV destination requires actual formatter/remote writer",
+      "source_sha256": {
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475",
+        "rtl/qwen_split/qfd_sp_su64_sfu.sv": "4e6a04746fdfb502ba299cc611e3531eb68fdd4217f9b6a89dddab8ceab0cba5",
+        "rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv": "5c4c57787d17469798ab10206c5bfa8f478991e2ca0c868d3935c63e5058e5ba",
+        "rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv": "3aec6ea06c328e53284758b544c50fe942bd96a9577e6e7611b7604c8b0b99bb",
+        "rtl/hdc/ot_hdc_vstream_lane.sv": "c42913f0e7a4155116337312c3cc269e6e8aca42f68c08504929fc356c401ab0",
+        "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+        "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923"
+      },
+      "runtime_native_join_verified": false,
+      "blocking_evidence": "exact source operation -> actual producer/calendar -> arithmetic -> mapped storage runtime plus mutant and native profile still required",
+      "source_dependency_flags": {
+        "wait_su": 1
+      }
+    },
+    {
+      "pc": 6,
+      "unit": 2,
+      "instruction_sha256": "7c7ed76b05e6ece49cb24b203c5f7a6b035cd8c2695dd8680ca93a99a4bf4bbb",
+      "decoded": {
+        "unit": 2,
+        "wait_su": 1,
+        "su_nout": 5,
+        "su_nin": 128,
+        "a_base": 12288,
+        "a_so": 128,
+        "a_si": 1,
+        "b_base": 14224,
+        "b_so": 1,
+        "c_src": 1,
+        "c_base": 4096,
+        "c_so": 128,
+        "c_si": 1,
+        "ma": 1,
+        "mc": 1,
+        "dst": 1,
+        "d_base": 13056,
+        "d_so": 128,
+        "d_si": 1
+      },
+      "candidate_arithmetic": "u_math.u_su; qfd_sp_su64_sfu actual64 lanes",
+      "operand_ports": {
+        "a": {
+          "src": 0,
+          "base": 12288,
+          "so": 128,
+          "si": 1,
+          "d": 0
+        },
+        "b": {
+          "src": 0,
+          "base": 14224,
+          "so": 1,
+          "si": 0,
+          "d": 0
+        },
+        "c": {
+          "src": 1,
+          "base": 4096,
+          "so": 128,
+          "si": 1,
+          "d": 0
+        }
+      },
+      "required_storage_join": "mapped NOX VM via actual A/B/C ports; constant operands require actual CROM; KV destination requires actual formatter/remote writer",
+      "source_sha256": {
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475",
+        "rtl/qwen_split/qfd_sp_su64_sfu.sv": "4e6a04746fdfb502ba299cc611e3531eb68fdd4217f9b6a89dddab8ceab0cba5",
+        "rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv": "5c4c57787d17469798ab10206c5bfa8f478991e2ca0c868d3935c63e5058e5ba",
+        "rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv": "3aec6ea06c328e53284758b544c50fe942bd96a9577e6e7611b7604c8b0b99bb",
+        "rtl/hdc/ot_hdc_vstream_lane.sv": "c42913f0e7a4155116337312c3cc269e6e8aca42f68c08504929fc356c401ab0",
+        "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+      },
+      "runtime_native_join_verified": false,
+      "blocking_evidence": "exact source operation -> actual producer/calendar -> arithmetic -> mapped storage runtime plus mutant and native profile still required",
+      "source_dependency_flags": {
+        "wait_su": 1
+      }
+    },
+    {
+      "pc": 7,
+      "unit": 2,
+      "instruction_sha256": "32808aa0912ce241288ff3f031514102cbaad81331d0355bd4a1a3a8d987fec9",
+      "decoded": {
+        "unit": 2,
+        "wait_su": 1,
+        "su_nout": 4,
+        "su_nin": 64,
+        "a_base": 13056,
+        "a_so": 128,
+        "a_si": 1,
+        "b_src": 1,
+        "b_base": 8833,
+        "b_si": 1,
+        "b_d": 2,
+        "c_base": 13120,
+        "c_so": 128,
+        "c_si": 1,
+        "ma": 1,
+        "mb": 2,
+        "ad": 1,
+        "dst": 1,
+        "d_base": 13696,
+        "d_so": 128,
+        "d_si": 1
+      },
+      "candidate_arithmetic": "u_math.u_su; qfd_sp_su64_sfu actual64 lanes",
+      "operand_ports": {
+        "a": {
+          "src": 0,
+          "base": 13056,
+          "so": 128,
+          "si": 1,
+          "d": 0
+        },
+        "b": {
+          "src": 1,
+          "base": 8833,
+          "so": 0,
+          "si": 1,
+          "d": 2
+        },
+        "c": {
+          "src": 0,
+          "base": 13120,
+          "so": 128,
+          "si": 1,
+          "d": 0
+        }
+      },
+      "required_storage_join": "mapped NOX VM via actual A/B/C ports; constant operands require actual CROM; KV destination requires actual formatter/remote writer",
+      "source_sha256": {
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475",
+        "rtl/qwen_split/qfd_sp_su64_sfu.sv": "4e6a04746fdfb502ba299cc611e3531eb68fdd4217f9b6a89dddab8ceab0cba5",
+        "rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv": "5c4c57787d17469798ab10206c5bfa8f478991e2ca0c868d3935c63e5058e5ba",
+        "rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv": "3aec6ea06c328e53284758b544c50fe942bd96a9577e6e7611b7604c8b0b99bb",
+        "rtl/hdc/ot_hdc_vstream_lane.sv": "c42913f0e7a4155116337312c3cc269e6e8aca42f68c08504929fc356c401ab0",
+        "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+      },
+      "runtime_native_join_verified": false,
+      "blocking_evidence": "exact source operation -> actual producer/calendar -> arithmetic -> mapped storage runtime plus mutant and native profile still required",
+      "source_dependency_flags": {
+        "wait_su": 1
+      }
+    },
+    {
+      "pc": 8,
+      "unit": 2,
+      "instruction_sha256": "57f3d842fbdd7e90a39835d95d727ad7e166a40031213377392a0cd083900aca",
+      "decoded": {
+        "unit": 2,
+        "su_nout": 1,
+        "su_nin": 64,
+        "a_base": 13568,
+        "a_so": 128,
+        "a_si": 1,
+        "b_src": 1,
+        "b_base": 8833,
+        "b_si": 1,
+        "b_d": 2,
+        "c_base": 13632,
+        "c_so": 128,
+        "c_si": 1,
+        "ma": 1,
+        "mb": 2,
+        "ad": 1,
+        "dst": 2,
+        "d_so": 1048576,
+        "d_si": 16,
+        "d_d": 3
+      },
+      "candidate_arithmetic": "u_math.u_su; qfd_sp_su64_sfu actual64 lanes",
+      "operand_ports": {
+        "a": {
+          "src": 0,
+          "base": 13568,
+          "so": 128,
+          "si": 1,
+          "d": 0
+        },
+        "b": {
+          "src": 1,
+          "base": 8833,
+          "so": 0,
+          "si": 1,
+          "d": 2
+        },
+        "c": {
+          "src": 0,
+          "base": 13632,
+          "so": 128,
+          "si": 1,
+          "d": 0
+        }
+      },
+      "required_storage_join": "mapped NOX VM via actual A/B/C ports; constant operands require actual CROM; KV destination requires actual formatter/remote writer",
+      "source_sha256": {
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475",
+        "rtl/qwen_split/qfd_sp_su64_sfu.sv": "4e6a04746fdfb502ba299cc611e3531eb68fdd4217f9b6a89dddab8ceab0cba5",
+        "rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv": "5c4c57787d17469798ab10206c5bfa8f478991e2ca0c868d3935c63e5058e5ba",
+        "rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv": "3aec6ea06c328e53284758b544c50fe942bd96a9577e6e7611b7604c8b0b99bb",
+        "rtl/hdc/ot_hdc_vstream_lane.sv": "c42913f0e7a4155116337312c3cc269e6e8aca42f68c08504929fc356c401ab0",
+        "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+      },
+      "runtime_native_join_verified": false,
+      "blocking_evidence": "exact source operation -> actual producer/calendar -> arithmetic -> mapped storage runtime plus mutant and native profile still required",
+      "source_dependency_flags": {}
+    },
+    {
+      "pc": 9,
+      "unit": 2,
+      "instruction_sha256": "e34ddbb54cd4de67d428d997cc633d3cffd2467385f1c514d552ffd7cffdcf6f",
+      "decoded": {
+        "unit": 2,
+        "su_nout": 4,
+        "su_nin": 64,
+        "a_base": 13120,
+        "a_so": 128,
+        "a_si": 1,
+        "b_src": 1,
+        "b_base": 8833,
+        "b_si": 1,
+        "b_d": 2,
+        "c_base": 13056,
+        "c_so": 128,
+        "c_si": 1,
+        "ma": 1,
+        "mb": 1,
+        "ad": 1,
+        "dst": 1,
+        "d_base": 13760,
+        "d_so": 128,
+        "d_si": 1
+      },
+      "candidate_arithmetic": "u_math.u_su; qfd_sp_su64_sfu actual64 lanes",
+      "operand_ports": {
+        "a": {
+          "src": 0,
+          "base": 13120,
+          "so": 128,
+          "si": 1,
+          "d": 0
+        },
+        "b": {
+          "src": 1,
+          "base": 8833,
+          "so": 0,
+          "si": 1,
+          "d": 2
+        },
+        "c": {
+          "src": 0,
+          "base": 13056,
+          "so": 128,
+          "si": 1,
+          "d": 0
+        }
+      },
+      "required_storage_join": "mapped NOX VM via actual A/B/C ports; constant operands require actual CROM; KV destination requires actual formatter/remote writer",
+      "source_sha256": {
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475",
+        "rtl/qwen_split/qfd_sp_su64_sfu.sv": "4e6a04746fdfb502ba299cc611e3531eb68fdd4217f9b6a89dddab8ceab0cba5",
+        "rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv": "5c4c57787d17469798ab10206c5bfa8f478991e2ca0c868d3935c63e5058e5ba",
+        "rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv": "3aec6ea06c328e53284758b544c50fe942bd96a9577e6e7611b7604c8b0b99bb",
+        "rtl/hdc/ot_hdc_vstream_lane.sv": "c42913f0e7a4155116337312c3cc269e6e8aca42f68c08504929fc356c401ab0",
+        "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+      },
+      "runtime_native_join_verified": false,
+      "blocking_evidence": "exact source operation -> actual producer/calendar -> arithmetic -> mapped storage runtime plus mutant and native profile still required",
+      "source_dependency_flags": {}
+    },
+    {
+      "pc": 10,
+      "unit": 2,
+      "instruction_sha256": "73e4d2d6fcadc34ac78d2c00ac52d5f6aef4e22d9c4e5e775ac3b511eeb459ff",
+      "decoded": {
+        "unit": 2,
+        "su_nout": 1,
+        "su_nin": 64,
+        "a_base": 13632,
+        "a_so": 128,
+        "a_si": 1,
+        "b_src": 1,
+        "b_base": 8833,
+        "b_si": 1,
+        "b_d": 2,
+        "c_base": 13568,
+        "c_so": 128,
+        "c_si": 1,
+        "ma": 1,
+        "mb": 1,
+        "ad": 1,
+        "dst": 2,
+        "d_base": 1024,
+        "d_so": 1048576,
+        "d_si": 16,
+        "d_d": 3
+      },
+      "candidate_arithmetic": "u_math.u_su; qfd_sp_su64_sfu actual64 lanes",
+      "operand_ports": {
+        "a": {
+          "src": 0,
+          "base": 13632,
+          "so": 128,
+          "si": 1,
+          "d": 0
+        },
+        "b": {
+          "src": 1,
+          "base": 8833,
+          "so": 0,
+          "si": 1,
+          "d": 2
+        },
+        "c": {
+          "src": 0,
+          "base": 13568,
+          "so": 128,
+          "si": 1,
+          "d": 0
+        }
+      },
+      "required_storage_join": "mapped NOX VM via actual A/B/C ports; constant operands require actual CROM; KV destination requires actual formatter/remote writer",
+      "source_sha256": {
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475",
+        "rtl/qwen_split/qfd_sp_su64_sfu.sv": "4e6a04746fdfb502ba299cc611e3531eb68fdd4217f9b6a89dddab8ceab0cba5",
+        "rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv": "5c4c57787d17469798ab10206c5bfa8f478991e2ca0c868d3935c63e5058e5ba",
+        "rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv": "3aec6ea06c328e53284758b544c50fe942bd96a9577e6e7611b7604c8b0b99bb",
+        "rtl/hdc/ot_hdc_vstream_lane.sv": "c42913f0e7a4155116337312c3cc269e6e8aca42f68c08504929fc356c401ab0",
+        "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+      },
+      "runtime_native_join_verified": false,
+      "blocking_evidence": "exact source operation -> actual producer/calendar -> arithmetic -> mapped storage runtime plus mutant and native profile still required",
+      "source_dependency_flags": {}
+    },
+    {
+      "pc": 11,
+      "unit": 1,
+      "instruction_sha256": "c47aac75e940fae1e10c1875ebe84968489021ad67a6653f5a3242609dea839f",
+      "decoded": {
+        "unit": 1,
+        "barrier": 1,
+        "me_nout": 512,
+        "me_tiles": 1,
+        "me_k": 128,
+        "me_wsrc": 1,
+        "me_xbase": 13696,
+        "me_obase": 3167,
+        "me_oen": 1,
+        "me_xks": 1,
+        "me_ots": 1,
+        "me_ojs": 1,
+        "me_mmode": 1
+      },
+      "candidate_arithmetic": "actual ME/attention producer path not instantiated by embedding-stage harness",
+      "operand_ports": {
+        "me_nout": 512,
+        "me_tiles": 1,
+        "me_k": 128,
+        "me_wsrc": 1,
+        "me_xbase": 13696,
+        "me_obase": 3167,
+        "me_oen": 1,
+        "me_xks": 1,
+        "me_ots": 1,
+        "me_ojs": 1,
+        "me_mmode": 1
+      },
+      "required_storage_join": "actual weight ROM/scale and mapped VM operands/results; native attention for me_wsrc1",
+      "source_sha256": {
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475",
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv": "c4c4d9aeecf629bd9f0d7adf99fac1968a0fa9605bfb74c3cc0b629e0fe6c245"
+      },
+      "runtime_native_join_verified": false,
+      "blocking_evidence": "exact source operation -> actual producer/calendar -> arithmetic -> mapped storage runtime plus mutant and native profile still required",
+      "source_dependency_flags": {
+        "barrier": 1
+      }
+    },
+    {
+      "pc": 12,
+      "unit": 1,
+      "instruction_sha256": "43dcfdba1c0ba0ee654d933feaa3847fe60054d97849d7535247b1fcb2d11984",
+      "decoded": {
+        "unit": 1,
+        "barrier": 1,
+        "me_nout": 4096,
+        "me_tiles": 3,
+        "me_k": 2,
+        "me_wbase": 64,
+        "me_ts": 16,
+        "me_ks": 8,
+        "me_js": 1,
+        "me_xbase": 50672,
+        "me_round": 1,
+        "me_oen": 1,
+        "me_xks": 1,
+        "me_ots": 8,
+        "me_ojs": 1,
+        "me_split": 8,
+        "me_xcs": 2,
+        "me_wcs": 48
+      },
+      "candidate_arithmetic": "actual ME/attention producer path not instantiated by embedding-stage harness",
+      "operand_ports": {
+        "me_nout": 4096,
+        "me_tiles": 3,
+        "me_k": 2,
+        "me_wbase": 64,
+        "me_ts": 16,
+        "me_ks": 8,
+        "me_js": 1,
+        "me_xbase": 50672,
+        "me_round": 1,
+        "me_oen": 1,
+        "me_xks": 1,
+        "me_ots": 8,
+        "me_ojs": 1,
+        "me_split": 8,
+        "me_xcs": 2,
+        "me_wcs": 48
+      },
+      "required_storage_join": "actual weight ROM/scale and mapped VM operands/results; native attention for me_wsrc1",
+      "source_sha256": {
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475",
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv": "c4c4d9aeecf629bd9f0d7adf99fac1968a0fa9605bfb74c3cc0b629e0fe6c245"
+      },
+      "runtime_native_join_verified": false,
+      "blocking_evidence": "exact source operation -> actual producer/calendar -> arithmetic -> mapped storage runtime plus mutant and native profile still required",
+      "source_dependency_flags": {
+        "barrier": 1
+      }
+    },
+    {
+      "pc": 13,
+      "unit": 0,
+      "instruction_sha256": "39b7d126a1d8354c283f65278adbd1f315a5cf4e2459e6a534df035c48b986ad",
+      "decoded": {
+        "barrier": 1
+      },
+      "candidate_arithmetic": "actual controller fixed owner END; full layer calendar not yet measured",
+      "operand_ports": {},
+      "required_storage_join": null,
+      "source_sha256": {
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475"
+      },
+      "runtime_native_join_verified": false,
+      "blocking_evidence": "exact source operation -> actual producer/calendar -> arithmetic -> mapped storage runtime plus mutant and native profile still required",
+      "source_dependency_flags": {
+        "barrier": 1
+      }
+    },
+    {
+      "pc": 14,
+      "unit": 2,
+      "instruction_sha256": "5ea44d01bb5c68a9a865172e30b437d547a45a4c078716ac551efb6e48ef49b2",
+      "decoded": {
+        "unit": 2,
+        "barrier": 1,
+        "su_nout": 1,
+        "su_nin": 4096,
+        "a_si": 1,
+        "c_src": 1,
+        "c_base": 533121,
+        "c_si": 1,
+        "mc": 1,
+        "dst": 1,
+        "d_si": 1
+      },
+      "candidate_arithmetic": "u_math.u_su; qfd_sp_su64_sfu actual64 lanes",
+      "operand_ports": {
+        "a": {
+          "src": 0,
+          "base": 0,
+          "so": 0,
+          "si": 1,
+          "d": 0
+        },
+        "b": {
+          "src": 0,
+          "base": 0,
+          "so": 0,
+          "si": 0,
+          "d": 0
+        },
+        "c": {
+          "src": 1,
+          "base": 533121,
+          "so": 0,
+          "si": 1,
+          "d": 0
+        }
+      },
+      "required_storage_join": "mapped NOX VM via actual A/B/C ports; constant operands require actual CROM; KV destination requires actual formatter/remote writer",
+      "source_sha256": {
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475",
+        "rtl/qwen_split/qfd_sp_su64_sfu.sv": "4e6a04746fdfb502ba299cc611e3531eb68fdd4217f9b6a89dddab8ceab0cba5",
+        "rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv": "5c4c57787d17469798ab10206c5bfa8f478991e2ca0c868d3935c63e5058e5ba",
+        "rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv": "3aec6ea06c328e53284758b544c50fe942bd96a9577e6e7611b7604c8b0b99bb",
+        "rtl/hdc/ot_hdc_vstream_lane.sv": "c42913f0e7a4155116337312c3cc269e6e8aca42f68c08504929fc356c401ab0",
+        "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+      },
+      "runtime_native_join_verified": false,
+      "blocking_evidence": "exact source operation -> actual producer/calendar -> arithmetic -> mapped storage runtime plus mutant and native profile still required",
+      "source_dependency_flags": {
+        "barrier": 1
+      }
+    },
+    {
+      "pc": 15,
+      "unit": 2,
+      "instruction_sha256": "3c61e936bac852afd904b29b6523bb91330988de7b25b013c341d25bced50b19",
+      "decoded": {
+        "unit": 2,
+        "su_nout": 1,
+        "su_nin": 4096,
+        "a_base": 4096,
+        "a_si": 1,
+        "c_si": 1,
+        "ad": 2,
+        "dst": 1,
+        "d_base": 4096,
+        "d_si": 1,
+        "red": 1,
+        "r_base": 14240,
+        "red_sq": 1
+      },
+      "candidate_arithmetic": "u_math.u_su; qfd_sp_su64_sfu actual64 lanes",
+      "operand_ports": {
+        "a": {
+          "src": 0,
+          "base": 4096,
+          "so": 0,
+          "si": 1,
+          "d": 0
+        },
+        "b": {
+          "src": 0,
+          "base": 0,
+          "so": 0,
+          "si": 0,
+          "d": 0
+        },
+        "c": {
+          "src": 0,
+          "base": 0,
+          "so": 0,
+          "si": 1,
+          "d": 0
+        }
+      },
+      "required_storage_join": "mapped NOX VM via actual A/B/C ports; constant operands require actual CROM; KV destination requires actual formatter/remote writer",
+      "source_sha256": {
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475",
+        "rtl/qwen_split/qfd_sp_su64_sfu.sv": "4e6a04746fdfb502ba299cc611e3531eb68fdd4217f9b6a89dddab8ceab0cba5",
+        "rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv": "5c4c57787d17469798ab10206c5bfa8f478991e2ca0c868d3935c63e5058e5ba",
+        "rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv": "3aec6ea06c328e53284758b544c50fe942bd96a9577e6e7611b7604c8b0b99bb",
+        "rtl/hdc/ot_hdc_vstream_lane.sv": "c42913f0e7a4155116337312c3cc269e6e8aca42f68c08504929fc356c401ab0",
+        "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+        "rtl/physical/ot_hdc_vreduce_entries64.sv": "5d49d87ce82af59487a59d16a01299dc3d4bf46d3e3d7a3d30518940e39d1ca8"
+      },
+      "runtime_native_join_verified": false,
+      "blocking_evidence": "exact source operation -> actual producer/calendar -> arithmetic -> mapped storage runtime plus mutant and native profile still required",
+      "source_dependency_flags": {}
+    },
+    {
+      "pc": 16,
+      "unit": 1,
+      "instruction_sha256": "d1bdf0fd6cef357e370b24f72ef34a0a8d335eb9267f19888696891fd5a81d75",
+      "decoded": {
+        "unit": 1,
+        "chase": 1,
+        "chase_n": 64,
+        "me_nout": 3072,
+        "me_tiles": 1,
+        "me_k": 32,
+        "me_wbase": 112,
+        "me_ts": 256,
+        "me_ks": 8,
+        "me_js": 1,
+        "me_xbase": 4096,
+        "me_round": 1,
+        "me_obase": 2975,
+        "me_oen": 1,
+        "me_xks": 1,
+        "me_ots": 8,
+        "me_ojs": 1,
+        "me_split": 7,
+        "me_xcs": 32,
+        "me_wcs": 336
+      },
+      "candidate_arithmetic": "actual ME/attention producer path not instantiated by embedding-stage harness",
+      "operand_ports": {
+        "me_nout": 3072,
+        "me_tiles": 1,
+        "me_k": 32,
+        "me_wbase": 112,
+        "me_ts": 256,
+        "me_ks": 8,
+        "me_js": 1,
+        "me_xbase": 4096,
+        "me_round": 1,
+        "me_obase": 2975,
+        "me_oen": 1,
+        "me_xks": 1,
+        "me_ots": 8,
+        "me_ojs": 1,
+        "me_split": 7,
+        "me_xcs": 32,
+        "me_wcs": 336
+      },
+      "required_storage_join": "actual weight ROM/scale and mapped VM operands/results; native attention for me_wsrc1",
+      "source_sha256": {
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475",
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv": "c4c4d9aeecf629bd9f0d7adf99fac1968a0fa9605bfb74c3cc0b629e0fe6c245"
+      },
+      "runtime_native_join_verified": false,
+      "blocking_evidence": "exact source operation -> actual producer/calendar -> arithmetic -> mapped storage runtime plus mutant and native profile still required",
+      "source_dependency_flags": {
+        "chase": 1
+      }
+    },
+    {
+      "pc": 17,
+      "unit": 2,
+      "instruction_sha256": "82505ae794e9b88bb38852c0359c8a5a7bf8ce844b3ca15f599ffd4606094504",
+      "decoded": {
+        "unit": 2,
+        "wait_su": 1,
+        "su_nout": 1,
+        "su_nin": 1,
+        "a_base": 14240,
+        "ma": 3,
+        "ad": 4,
+        "sfu": 3,
+        "dst": 1,
+        "d_base": 14256,
+        "imm1": 964689920,
+        "imm2": 897988541
+      },
+      "candidate_arithmetic": "u_math.u_su; qfd_sp_su64_sfu actual64 lanes",
+      "operand_ports": {
+        "a": {
+          "src": 0,
+          "base": 14240,
+          "so": 0,
+          "si": 0,
+          "d": 0
+        },
+        "b": {
+          "src": 0,
+          "base": 0,
+          "so": 0,
+          "si": 0,
+          "d": 0
+        },
+        "c": {
+          "src": 0,
+          "base": 0,
+          "so": 0,
+          "si": 0,
+          "d": 0
+        }
+      },
+      "required_storage_join": "mapped NOX VM via actual A/B/C ports; constant operands require actual CROM; KV destination requires actual formatter/remote writer",
+      "source_sha256": {
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475",
+        "rtl/qwen_split/qfd_sp_su64_sfu.sv": "4e6a04746fdfb502ba299cc611e3531eb68fdd4217f9b6a89dddab8ceab0cba5",
+        "rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv": "5c4c57787d17469798ab10206c5bfa8f478991e2ca0c868d3935c63e5058e5ba",
+        "rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv": "3aec6ea06c328e53284758b544c50fe942bd96a9577e6e7611b7604c8b0b99bb",
+        "rtl/hdc/ot_hdc_vstream_lane.sv": "c42913f0e7a4155116337312c3cc269e6e8aca42f68c08504929fc356c401ab0",
+        "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+        "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923"
+      },
+      "runtime_native_join_verified": false,
+      "blocking_evidence": "exact source operation -> actual producer/calendar -> arithmetic -> mapped storage runtime plus mutant and native profile still required",
+      "source_dependency_flags": {
+        "wait_su": 1
+      }
+    },
+    {
+      "pc": 18,
+      "unit": 2,
+      "instruction_sha256": "bbc5da53b1b945ad06111964dcb51f529647991e168dc443461b9d2e2ceb7524",
+      "decoded": {
+        "unit": 2,
+        "barrier": 1,
+        "su_nout": 1,
+        "su_nin": 3072,
+        "a_base": 47600,
+        "a_si": 1,
+        "b_base": 14256,
+        "ma": 1,
+        "dst": 1,
+        "d_base": 47600,
+        "d_si": 1
+      },
+      "candidate_arithmetic": "u_math.u_su; qfd_sp_su64_sfu actual64 lanes",
+      "operand_ports": {
+        "a": {
+          "src": 0,
+          "base": 47600,
+          "so": 0,
+          "si": 1,
+          "d": 0
+        },
+        "b": {
+          "src": 0,
+          "base": 14256,
+          "so": 0,
+          "si": 0,
+          "d": 0
+        },
+        "c": {
+          "src": 0,
+          "base": 0,
+          "so": 0,
+          "si": 0,
+          "d": 0
+        }
+      },
+      "required_storage_join": "mapped NOX VM via actual A/B/C ports; constant operands require actual CROM; KV destination requires actual formatter/remote writer",
+      "source_sha256": {
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475",
+        "rtl/qwen_split/qfd_sp_su64_sfu.sv": "4e6a04746fdfb502ba299cc611e3531eb68fdd4217f9b6a89dddab8ceab0cba5",
+        "rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv": "5c4c57787d17469798ab10206c5bfa8f478991e2ca0c868d3935c63e5058e5ba",
+        "rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv": "3aec6ea06c328e53284758b544c50fe942bd96a9577e6e7611b7604c8b0b99bb",
+        "rtl/hdc/ot_hdc_vstream_lane.sv": "c42913f0e7a4155116337312c3cc269e6e8aca42f68c08504929fc356c401ab0",
+        "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+      },
+      "runtime_native_join_verified": false,
+      "blocking_evidence": "exact source operation -> actual producer/calendar -> arithmetic -> mapped storage runtime plus mutant and native profile still required",
+      "source_dependency_flags": {
+        "barrier": 1
+      }
+    },
+    {
+      "pc": 19,
+      "unit": 2,
+      "instruction_sha256": "0257074a5c37a2efaf93321e53aaeb76d22ba4b090b0db8fc0fc4bc0a1f58b6c",
+      "decoded": {
+        "unit": 2,
+        "wait_su": 1,
+        "su_nout": 12,
+        "su_nin": 128,
+        "a_base": 47600,
+        "a_so": 256,
+        "a_si": 1,
+        "b_base": 47728,
+        "b_so": 256,
+        "b_si": 1,
+        "c_base": 47600,
+        "c_so": 256,
+        "c_si": 1,
+        "ma": 3,
+        "sfu": 4,
+        "mc": 1,
+        "md": 1,
+        "dst": 1,
+        "d_base": 55280,
+        "d_so": 128,
+        "d_si": 1,
+        "imm1": 3212836864
+      },
+      "candidate_arithmetic": "u_math.u_su; qfd_sp_su64_sfu actual64 lanes",
+      "operand_ports": {
+        "a": {
+          "src": 0,
+          "base": 47600,
+          "so": 256,
+          "si": 1,
+          "d": 0
+        },
+        "b": {
+          "src": 0,
+          "base": 47728,
+          "so": 256,
+          "si": 1,
+          "d": 0
+        },
+        "c": {
+          "src": 0,
+          "base": 47600,
+          "so": 256,
+          "si": 1,
+          "d": 0
+        }
+      },
+      "required_storage_join": "mapped NOX VM via actual A/B/C ports; constant operands require actual CROM; KV destination requires actual formatter/remote writer",
+      "source_sha256": {
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475",
+        "rtl/qwen_split/qfd_sp_su64_sfu.sv": "4e6a04746fdfb502ba299cc611e3531eb68fdd4217f9b6a89dddab8ceab0cba5",
+        "rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv": "5c4c57787d17469798ab10206c5bfa8f478991e2ca0c868d3935c63e5058e5ba",
+        "rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv": "3aec6ea06c328e53284758b544c50fe942bd96a9577e6e7611b7604c8b0b99bb",
+        "rtl/hdc/ot_hdc_vstream_lane.sv": "c42913f0e7a4155116337312c3cc269e6e8aca42f68c08504929fc356c401ab0",
+        "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+        "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923"
+      },
+      "runtime_native_join_verified": false,
+      "blocking_evidence": "exact source operation -> actual producer/calendar -> arithmetic -> mapped storage runtime plus mutant and native profile still required",
+      "source_dependency_flags": {
+        "wait_su": 1
+      }
+    },
+    {
+      "pc": 20,
+      "unit": 1,
+      "instruction_sha256": "b654982b3b533c474793724a6fb42ddf2d6a88b86c2b67e954a17022a64ea682",
+      "decoded": {
+        "unit": 1,
+        "chase": 1,
+        "chase_n": 24,
+        "me_nout": 4096,
+        "me_tiles": 3,
+        "me_k": 6,
+        "me_wbase": 368,
+        "me_ts": 48,
+        "me_ks": 8,
+        "me_js": 1,
+        "me_xbase": 55280,
+        "me_round": 1,
+        "me_oen": 1,
+        "me_xks": 1,
+        "me_ots": 8,
+        "me_ojs": 1,
+        "me_split": 8,
+        "me_xcs": 6,
+        "me_wcs": 528
+      },
+      "candidate_arithmetic": "actual ME/attention producer path not instantiated by embedding-stage harness",
+      "operand_ports": {
+        "me_nout": 4096,
+        "me_tiles": 3,
+        "me_k": 6,
+        "me_wbase": 368,
+        "me_ts": 48,
+        "me_ks": 8,
+        "me_js": 1,
+        "me_xbase": 55280,
+        "me_round": 1,
+        "me_oen": 1,
+        "me_xks": 1,
+        "me_ots": 8,
+        "me_ojs": 1,
+        "me_split": 8,
+        "me_xcs": 6,
+        "me_wcs": 528
+      },
+      "required_storage_join": "actual weight ROM/scale and mapped VM operands/results; native attention for me_wsrc1",
+      "source_sha256": {
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475",
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv": "c4c4d9aeecf629bd9f0d7adf99fac1968a0fa9605bfb74c3cc0b629e0fe6c245"
+      },
+      "runtime_native_join_verified": false,
+      "blocking_evidence": "exact source operation -> actual producer/calendar -> arithmetic -> mapped storage runtime plus mutant and native profile still required",
+      "source_dependency_flags": {
+        "chase": 1
+      }
+    },
+    {
+      "pc": 21,
+      "unit": 0,
+      "instruction_sha256": "39b7d126a1d8354c283f65278adbd1f315a5cf4e2459e6a534df035c48b986ad",
+      "decoded": {
+        "barrier": 1
+      },
+      "candidate_arithmetic": "actual controller fixed owner END; full layer calendar not yet measured",
+      "operand_ports": {},
+      "required_storage_join": null,
+      "source_sha256": {
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475"
+      },
+      "runtime_native_join_verified": false,
+      "blocking_evidence": "exact source operation -> actual producer/calendar -> arithmetic -> mapped storage runtime plus mutant and native profile still required",
+      "source_dependency_flags": {
+        "barrier": 1
+      }
+    },
+    {
+      "pc": 22,
+      "unit": 2,
+      "instruction_sha256": "c43c2d239591eead3a5cbaeb0551bf3848d774116eab161591671251c5dfb861",
+      "decoded": {
+        "unit": 2,
+        "barrier": 1,
+        "su_nout": 1,
+        "su_nin": 4096,
+        "a_si": 1,
+        "c_src": 1,
+        "c_base": 537217,
+        "c_si": 1,
+        "mc": 1,
+        "dst": 1,
+        "d_si": 1
+      },
+      "candidate_arithmetic": "u_math.u_su; qfd_sp_su64_sfu actual64 lanes",
+      "operand_ports": {
+        "a": {
+          "src": 0,
+          "base": 0,
+          "so": 0,
+          "si": 1,
+          "d": 0
+        },
+        "b": {
+          "src": 0,
+          "base": 0,
+          "so": 0,
+          "si": 0,
+          "d": 0
+        },
+        "c": {
+          "src": 1,
+          "base": 537217,
+          "so": 0,
+          "si": 1,
+          "d": 0
+        }
+      },
+      "required_storage_join": "mapped NOX VM via actual A/B/C ports; constant operands require actual CROM; KV destination requires actual formatter/remote writer",
+      "source_sha256": {
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475",
+        "rtl/qwen_split/qfd_sp_su64_sfu.sv": "4e6a04746fdfb502ba299cc611e3531eb68fdd4217f9b6a89dddab8ceab0cba5",
+        "rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv": "5c4c57787d17469798ab10206c5bfa8f478991e2ca0c868d3935c63e5058e5ba",
+        "rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv": "3aec6ea06c328e53284758b544c50fe942bd96a9577e6e7611b7604c8b0b99bb",
+        "rtl/hdc/ot_hdc_vstream_lane.sv": "c42913f0e7a4155116337312c3cc269e6e8aca42f68c08504929fc356c401ab0",
+        "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+      },
+      "runtime_native_join_verified": false,
+      "blocking_evidence": "exact source operation -> actual producer/calendar -> arithmetic -> mapped storage runtime plus mutant and native profile still required",
+      "source_dependency_flags": {
+        "barrier": 1
+      }
+    },
+    {
+      "pc": 23,
+      "unit": 2,
+      "instruction_sha256": "3c61e936bac852afd904b29b6523bb91330988de7b25b013c341d25bced50b19",
+      "decoded": {
+        "unit": 2,
+        "su_nout": 1,
+        "su_nin": 4096,
+        "a_base": 4096,
+        "a_si": 1,
+        "c_si": 1,
+        "ad": 2,
+        "dst": 1,
+        "d_base": 4096,
+        "d_si": 1,
+        "red": 1,
+        "r_base": 14240,
+        "red_sq": 1
+      },
+      "candidate_arithmetic": "u_math.u_su; qfd_sp_su64_sfu actual64 lanes",
+      "operand_ports": {
+        "a": {
+          "src": 0,
+          "base": 4096,
+          "so": 0,
+          "si": 1,
+          "d": 0
+        },
+        "b": {
+          "src": 0,
+          "base": 0,
+          "so": 0,
+          "si": 0,
+          "d": 0
+        },
+        "c": {
+          "src": 0,
+          "base": 0,
+          "so": 0,
+          "si": 1,
+          "d": 0
+        }
+      },
+      "required_storage_join": "mapped NOX VM via actual A/B/C ports; constant operands require actual CROM; KV destination requires actual formatter/remote writer",
+      "source_sha256": {
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475",
+        "rtl/qwen_split/qfd_sp_su64_sfu.sv": "4e6a04746fdfb502ba299cc611e3531eb68fdd4217f9b6a89dddab8ceab0cba5",
+        "rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv": "5c4c57787d17469798ab10206c5bfa8f478991e2ca0c868d3935c63e5058e5ba",
+        "rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv": "3aec6ea06c328e53284758b544c50fe942bd96a9577e6e7611b7604c8b0b99bb",
+        "rtl/hdc/ot_hdc_vstream_lane.sv": "c42913f0e7a4155116337312c3cc269e6e8aca42f68c08504929fc356c401ab0",
+        "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+        "rtl/physical/ot_hdc_vreduce_entries64.sv": "5d49d87ce82af59487a59d16a01299dc3d4bf46d3e3d7a3d30518940e39d1ca8"
+      },
+      "runtime_native_join_verified": false,
+      "blocking_evidence": "exact source operation -> actual producer/calendar -> arithmetic -> mapped storage runtime plus mutant and native profile still required",
+      "source_dependency_flags": {}
+    },
+    {
+      "pc": 24,
+      "unit": 0,
+      "instruction_sha256": "39b7d126a1d8354c283f65278adbd1f315a5cf4e2459e6a534df035c48b986ad",
+      "decoded": {
+        "barrier": 1
+      },
+      "candidate_arithmetic": "actual controller fixed owner END; full layer calendar not yet measured",
+      "operand_ports": {},
+      "required_storage_join": null,
+      "source_sha256": {
+        "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475"
+      },
+      "runtime_native_join_verified": false,
+      "blocking_evidence": "exact source operation -> actual producer/calendar -> arithmetic -> mapped storage runtime plus mutant and native profile still required",
+      "source_dependency_flags": {
+        "barrier": 1
+      }
+    }
+  ],
+  "count": 25,
+  "full_native_token": false,
+  "proven_native_operations": 0,
+  "embedding_stage_note": "Separate two-instruction token151935 arithmetic/mapped SRAM stage remains BUILD_PENDING until collected; not evidence for these layer PCs"
+}

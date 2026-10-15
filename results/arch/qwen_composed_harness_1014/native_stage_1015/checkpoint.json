@@ -1,0 +1,51 @@
+{
+  "scope": "Actual native-stage collection and explicit remaining-operation inventory",
+  "native_full_token": false,
+  "embedding": {
+    "build_pid": 1293985,
+    "host": "ot-epyc4",
+    "frozen_source": "c6c44c12c",
+    "scope": "oth-ubuntu-1293985-1792052164",
+    "collector_scope": "oth-ubuntu-1443545-1792054614",
+    "collector_session": 22418,
+    "collector_path": "/srv/opentallas-scratch/codex/qfunc-native-stage-1015",
+    "state": "BUILD_PENDING actual cc1plus1311485 active35min;2335objects preserved"
+  },
+  "math": {
+    "host": "ot-agidock128",
+    "scope": "oth-ubuntu-3786061-1792037492",
+    "cc1plus_pid": 4028453,
+    "state": "ACTIVE CPU4h35min; no numerical verdict"
+  },
+  "core_arithmetic_diagnostic": {
+    "inner_exit": 0,
+    "outer_exit": 141,
+    "outer_failure": "SIGPIPE after numeric success; queued mutant never started",
+    "words": "one full-shaped layer,0errors",
+    "core_edges": 25585,
+    "wall_seconds": 3139.96,
+    "not_native_reasons": [
+      "C++ ROM/VM on-chip memories",
+      "C-DPI attention",
+      "modeled internal links/producers"
+    ],
+    "mutant_scope": "oth-ubuntu-1452218-1792054674",
+    "mutant_session": 16755,
+    "mutant_state": "RUNNING samebinary, noRTLbuild"
+  },
+  "legacy_chain": {
+    "pid": 455795,
+    "state": "STOPPED via exact verifiedPID SIGTERM",
+    "head_measured_lower_bound_seconds": 48084.9,
+    "minimum_projection_seconds": 175684.9,
+    "owner_cap_seconds": 172800
+  },
+  "hcpost": {
+    "commit": "20d249948",
+    "actual_words": 5120,
+    "mutant_pid": 660748,
+    "mutant_session": 90566,
+    "owner": "root/s_func",
+    "scope": "allkind/MOE still open"
+  }
+}

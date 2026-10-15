@@ -1,0 +1,11 @@
+{
+  "pid": 455795,
+  "command": "/srv/opentallas-scratch/claude/qwen-wholetoken-1014/bin_v8/whole_token /srv/opentallas-scratch/claude/qwen-wholetoken-1014/plans/plan_token0_all36/layers.plan /srv/opentallas-scratch/codex/qwen-host-embedding-1014/embedding/embedding_program.hex /srv/opentallas-scratch/codex/qwen-host-embedding-1014/embedding/vectors /srv/opentallas-scratch/claude/qwen-wholetoken-1014/plans/head/image /srv/opentallas-scratch/claude/qwen-wholetoken-1014/plans/head/program /srv/opentallas-scratch/claude/qwen-wholetoken-1014/deps/qwen-full-layer-sequence-1014/libnative59.so /srv/opentallas-scratch/claude/qwen-wholetoken-1014/runs/token0_all36_split44_v8/actual 50994 1100755280 ",
+  "reason": "head measured lower-bound already exceeds remaining 48h projection budget",
+  "projected_layer_seconds": 127600,
+  "head_measured_lower_bound_seconds": 48084.9,
+  "cap_seconds": 172800,
+  "minimum_projected_total_seconds": 175684.9,
+  "action": "SIGTERM exact verified live process; raw logs/progress and all output preserved",
+  "time": "2026-10-15T08:57:53.981786+00:00"
+}
