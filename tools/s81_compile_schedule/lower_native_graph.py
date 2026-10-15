@@ -129,14 +129,24 @@ def lower(programs, root=ROOT):
                  fixed_service_contract=None,dispatch_eligible=False)
         layer,tail=layer_tail(rep)
         if layer and tail=='attn.a_allgather':
-            job['required_transport']=dict(mode=1,records_per_rank=28,total_output_rows=112,
-                                           scope='WQ_A plus WKV subtransport only',
-                                           additional_compressor_transport_unresolved=f'{layer}.attn.cmp.row_qdq' in raw,
-                                           arg24=(1<<16)|28,
+            count=44 if f'{layer}.attn.cmp.pool' in raw else 36 if f'{layer}.attn.cmp.row_qdq' in raw else 28
+            job['required_transport']=dict(mode=1,records_per_rank=count,total_output_rows=4*count,
+                                           scope='WQ_A, WKV and actual compressor branches',
+                                           additional_compressor_transport_unresolved=False,
+                                           arg24=(1<<16)|count,
                                            payload='320 WQ_A FP32 and128 WKV FP32 words perrank',
                                            required_owner='S81 native collective integration',
                                            historical_fixture_records_per_rank=12,
                                            historical_fixture_timing_usable=False)
+        if layer and tail=='ffn.router_allgather':
+            job['required_transport']=dict(mode=1,records_per_rank=6,total_output_rows=24,arg24=(1<<16)|6,
+                                           payload='96 native RA FP32 scores perrank',
+                                           destination_base_row=5169,historical_fixture_records_per_rank=4,
+                                           historical_fixture_timing_usable=False)
+        if layer and tail=='attn.cmp.pool':
+            job['persistent_state_requirement']=dict(cache='CP',physical_groups=1,slots_per_group=2,
+                context_bits=32,native_first_slot_producer=None,
+                required='actual previous-token K/sc native store or retained-VM restore; explicit context lifetime and pool commit fence; no golden initialization or implicit multiuser capacity')
         if native:
             path=root/native['source']
             job['source_evidence']=[dict(path=native['source'],sha256=hashlib.sha256(path.read_bytes()).hexdigest())] if path.exists() else []

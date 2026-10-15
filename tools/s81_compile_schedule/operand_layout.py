@@ -20,6 +20,15 @@ LAYOUT={
  'q_norm_output':dict(base_row=4176,nrows=25,format='five groups each four FP8-code rows then one UE8M0 exponent row',producer='attn.q_quant',consumer='attn.wq_b'),
  'kv_norm_input':dict(base_row=4224,nrows=32,scalars=512,format='fp32',producer='attn.a_allgather',consumer='attn.kv_rope_qdq'),
  'kv_norm_output':dict(base_row=4256,nrows=25,format='8 FP8-code rows, one UE8M0 exponent row, 16 packed-BF16 QDQ rows',producer='attn.kv_rope_qdq',consumer='attn.own_row_write'),
+ 'router_input':dict(base_row=5008,nrows=6,scalars=96,format='fp32 rank-local96 logits',producer='ffn.router',consumer='ffn.softplus_sqrt'),
+ 'router_local_scores':dict(base_row=5024,nrows=6,scalars=96,format='fp32 rank-local96 sqrtsoftplus scores',producer='ffn.softplus_sqrt',consumer='ffn.router_allgather'),
+ 'route_ids':dict(base_row=5168,nrows=1,format='six selected uint32 IDs; actual selector producer',producer='ffn.top6_order',consumer='ffn.weights'),
+ 'router_all_scores':dict(base_row=5169,nrows=24,scalars=384,format='fp32 rank-major384 scores; immediately after IDs',producer='ffn.router_allgather',consumer='ffn.bias and ffn.weights'),
+ 'router_bias':dict(base_row=5193,nrows=24,scalars=384,format='residentFP32 bias; immediately after scores',producer='native constant boot',consumer='ffn.bias'),
+ 'router_biased_scores':dict(base_row=5232,nrows=24,scalars=384,format='fp32 biased scores',producer='ffn.bias',consumer='ffn.top6'),
+ 'compressor_kv':dict(base_row=4816,nrows=32,scalars=512,format='fp32',producer='attn.a_allgather',consumer='attn.cmp.pool or ratio1 CN'),
+ 'compressor_score':dict(base_row=4848,nrows=32,scalars=512,format='fp32',producer='attn.a_allgather',consumer='attn.cmp.pool'),
+ 'compressor_pool':dict(base_row=4880,nrows=32,scalars=512,format='BF16 values widened to FP32',producer='attn.cmp.pool',consumer='attn.cmp.row_qdq'),
  'q_projection':dict(base_row=4304,nrows=512,scalars=8192,format='fp32, 16 heads x512; QR updates only last64 elements/head',producer='attn.wq_b',consumer='attn.q_rope'),
 }
 
@@ -42,6 +51,10 @@ def scalar_destination(matrix,rank,global_row):
         allocation='q_norm_input';scalar=global_row
     elif alias=='wkv':
         allocation='kv_norm_input';scalar=global_row
+    elif alias=='gate':
+        allocation='router_input';scalar=global_row-96*rank
+    elif alias in ('compressor.wkv','compressor.wgate'):
+        allocation='compressor_kv' if alias.endswith('wkv') else 'compressor_score';scalar=global_row
     elif alias.startswith('wq_b.rows'):
         allocation='q_projection';scalar=global_row-rank*8192
     else:
@@ -50,7 +63,7 @@ def scalar_destination(matrix,rank,global_row):
     if not 0<=scalar<item['scalars']:
         raise ValueError('source shape does not fit actual consumer shape')
     return dict(tensor=allocation,row=item['base_row']+scalar//16,word=scalar%16,
-                source_rank=rank,consumer_rank='all-four-after-real-allgather' if alias in ('wq_a','wkv') else rank,
+                source_rank=rank,consumer_rank='all-four-after-real-allgather' if alias in ('wq_a','wkv','compressor.wkv','compressor.wgate') else rank,
                 scalar_index=scalar)
 
 
@@ -96,6 +109,37 @@ def a_projection_gather_landing():
                 native_endpoint_bound=False)
 
 
+def full_a_projection_gather_landing(layer):
+    """Released source layers add real compressor records, never zero rows."""
+    if type(layer) is not int or not 0<=layer<40:
+        raise ValueError('actual backbone layer0..39 required')
+    result=a_projection_gather_landing()
+    result['records']=[dict(row) for row in result['records']]
+    if layer in (2,8,14,20):
+        for rank in range(4):
+            for record in range(8):
+                result['records'].append(dict(source_rank=rank,source_record=28+record,
+                    destination_tensor='compressor_kv',destination_vm_row=4816+8*rank+record,word_mask=65535))
+        result['records_per_rank']=36
+    if layer in (2,8,14):
+        for rank in range(4):
+            for record in range(8):
+                result['records'].append(dict(source_rank=rank,source_record=36+record,
+                    destination_tensor='compressor_score',destination_vm_row=4848+8*rank+record,word_mask=65535))
+        result['records_per_rank']=44
+    result.update(total_output_rows=4*result['records_per_rank'],arg24=(1<<16)|result['records_per_rank'],
+                  scope='actual ordinary Q/KV plus released compressor branches',layer=layer)
+    return result
+
+
+def router_gather_landing():
+    records=[dict(source_rank=r,source_record=j,source_vm_row=5024+j,
+                  destination_vm_row=5169+6*r+j,word_mask=65535) for r in range(4) for j in range(6)]
+    return dict(mode=1,records_per_rank=6,total_output_rows=24,arg24=(1<<16)|6,records=records,
+                scope='main384-expert router only; MTP128-expert path requires actual plan proof',
+                fixed_transport_cycles=None,native_endpoint_bound=False)
+
+
 def source_matrices(path=MATRIX):
     if hashlib.sha256(path.read_bytes()).hexdigest()!=MATRIX_SHA:
         raise ValueError('released source matrix metadata changed')
@@ -103,7 +147,7 @@ def source_matrices(path=MATRIX):
     with gzip.open(path,'rt') as f:
         for line in f:
             row=json.loads(line)
-            if row.get('layer') in range(40) and (row['alias'] in ('wq_a','wkv') or row['alias'].startswith('wq_b.rows')):
+            if row.get('layer') in range(40) and (row['alias'] in ('wq_a','wkv','compressor.wkv','compressor.wgate','gate') or row['alias'].startswith('wq_b.rows')):
                 result.append({k:row[k] for k in ('layer','alias','rank_slices','tensor','format','K','rows')})
     return result
 
@@ -122,21 +166,23 @@ def generate(matrices):
             joins.append(dict(layer=L,source_tensor=matrix['tensor'],alias=matrix['alias'],source_rank=rank,
                               source_global_rows=[begin,end],destination_first=first,destination_last=last,
                               implemented_write_path=False,fixed_calendar=None))
-    expected={(L,name,rank) for L in range(40) for name in ('q_norm_input','kv_norm_input','q_projection') for rank in range(4)}
+    expected={(L,name,rank) for L in range(40) for name in ('q_norm_input','kv_norm_input','q_projection','router_input') for rank in range(4)}
+    expected |= {(L,'compressor_kv',rank) for L in (2,8,14,20) for rank in range(4)}
+    expected |= {(L,'compressor_score',rank) for L in (2,8,14) for rank in range(4)}
     if set(coverage)!=expected:
         raise ValueError('missing/extra released field producer scope')
     for (L,name,rank),intervals in coverage.items():
         ordered=sorted(intervals)
         begin=0 if name!='q_projection' else 0
         # For replicated operands each source supplies its exact quarter.
-        if name!='q_projection':
+        if name not in ('q_projection','router_input'):
             begin=rank*LAYOUT[name]['scalars']//4
         cursor=begin
         for lo,hi in ordered:
             if lo!=cursor or hi<=lo:
                 raise ValueError('duplicate/gapped field producer rows')
             cursor=hi
-        count=LAYOUT[name]['scalars'] if name=='q_projection' else LAYOUT[name]['scalars']//4
+        count=LAYOUT[name]['scalars'] if name in ('q_projection','router_input') else LAYOUT[name]['scalars']//4
         if cursor!=begin+count:
             raise ValueError('incomplete actual consumer row coverage')
     return dict(schema='opentallas.s81.first-native-operand-layout.v1',layout=LAYOUT,
@@ -145,6 +191,8 @@ def generate(matrices):
                 status='PRODUCTION_ALLOCATION_REQUIRES_NATIVE_PRODUCER_INTEGRATION',
                 source_matrices=len(matrices),rank_fragments=len(joins),joins=joins,
                 a_projection_allgather=a_projection_gather_landing(),
+                router_allgather=router_gather_landing(),
+                full_a_projection_allgather={str(L):full_a_projection_gather_landing(L) for L in range(40)},
                 field_quantized_operand_views={kind:[quantized_block_view(kind,b) for b in range(count)] for kind,count in [('QN',40),('KV',16)]},
                 descriptors=dict(QN=dict(row=12288,opcode=0,gain_set=1,input_row=4096,output_row=4176),
                                  KV=dict(row=12304,opcode=1,gain_set=2,input_row=4224,output_row=4256),
