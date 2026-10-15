@@ -178,6 +178,17 @@
    "native_qualified": false,
    "defect": "Service accepts precomputed32-head FP4/UE8M0/BF16 query frames; no shared batch RoPE/quantizer or actual frame producer is bound",
    "progress": "Native service owner confirmed prepared-query boundary; shared IK single128-key unit cannot implement batch query; standalone16-head ownership must be reconciled"
+  },
+  {
+   "item": "collective_record_shapes",
+   "source": "tools/s81_ctrl/die_layer_stim.py",
+   "line": 51,
+   "source_sha256": "647b1b053ff1d5e3546b1918b61a273470cb5e9a43a7f6e258ea62398d9e62a4",
+   "evidence_excerpt": "GATHER_REC = {'router_allgather': 4, 'a_allgather': 12, 'rows_allgather': 64, 'idx.topk_merge': 8,",
+   "owner": "S-COMPILE-SCHEDULE + S-NATIVE-FIELD + S-FUNC",
+   "native_qualified": false,
+   "defect": "Fixture a_allgather emits12 records/rank; actual released1792 field wq_a320+wkv128 requires28 FP32 records/rank,112 globally",
+   "progress": "Actual four-rank matrix slices confirmed by field owner; production semantic compiler must assign exact collective count and separate QN/KV landing views. Historical SU/HC request traces exclude true field/collective demand."
   }
  ]
 }
