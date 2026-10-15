@@ -120,7 +120,6 @@ module dsfd_vm_static_capl_pipe #(parameter integer E = 8) (
             kk = 10'd0;
             for (k = 0; k < 16; k = k + 1)
                 kk = kk | (ek[k] & {10{first[k]}});
-            if (effV[e]) kk = KEY[e];
             accepted = 16'd0;
             for (k = 0; k < 16; k = k + 1) begin
                 if (eok[k] && ek[k][EB-1:0] == e[EB-1:0]) begin
@@ -135,12 +134,24 @@ module dsfd_vm_static_capl_pipe #(parameter integer E = 8) (
                 end
             end
             hit = |accepted;
-            nV[e] = effV[e] || hit;
-            nK[e] = hit ? kk : KEY[e];
+            // An empty entry always accepts its first targeted valid input;
+            // a live entry retains its key. Neither control needs to wait for
+            // the accepted-data key comparisons to return.
+            nV[e] = effV[e] || (|targeted);
+            nK[e] = (!effV[e] && (|targeted)) ? kk : KEY[e];
+            // Existing-word duplicates compare directly with the registered
+            // key. Alignment fixes ew[k][3:1] to k/2, so only bit0 selects
+            // between this root's two mask bits. New pairs duplicate iff the
+            // two accepted elements select the same low word bit.
+            for (k = 0; k < 16; k = k + 1)
+                if (targeted[k] && ek[k] == KEY[e] &&
+                    effM[e][2*(k/2)+ew[k][0]]) f_dup = 1'b1;
+            for (k = 0; k < 8; k = k + 1)
+                if (accepted[2*k] && accepted[2*k+1] &&
+                    ew[2*k][0] == ew[2*k+1][0]) f_dup = 1'b1;
             for (w = 0; w < 16; w = w + 1) begin
-                a = accepted[2*(w/2)] && ew[2*(w/2)] == w[3:0];
-                b = accepted[2*(w/2)+1] && ew[2*(w/2)+1] == w[3:0];
-                if ((effM[e][w] && (a || b)) || (a && b)) f_dup = 1'b1;
+                a = accepted[2*(w/2)] && ew[2*(w/2)][0] == w[0];
+                b = accepted[2*(w/2)+1] && ew[2*(w/2)+1][0] == w[0];
                 nM[e][w] = effM[e][w] || a || b;
                 // Match the original ascending-k blocking merge: last wins.
                 nD[e][32*w +: 32] = b ? ed[2*(w/2)+1] :
