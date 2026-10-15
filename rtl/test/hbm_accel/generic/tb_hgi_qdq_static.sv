@@ -2,7 +2,7 @@
 // Actual QDQ decoder + eight actual VM bank pipelines and 24 mapped SRAM macros.
 // Golden vectors and external preload are declared component-boundary stimuli.
 // This does not claim native whole-chip programme execution.
-module tb_hgi_qdq_static #(parameter integer MUT=0,IO_REGS=0);
+module tb_hgi_qdq_static #(parameter integer MUT=0,IO_REGS=0,LG=0);
     reg clk=0; always #1 clk=~clk;
     reg rst_n=0, cv=0, last=0;
     reg [5:0] op=0; reg [7:0] block_n=0;
@@ -17,8 +17,8 @@ module tb_hgi_qdq_static #(parameter integer MUT=0,IO_REGS=0);
     reg [2247:0] pwq=0;
     reg [135:0] prq=0;
     wire [143:0] status;
-    ot_hgi_qdq_program_static #(.IO_REGS(IO_REGS),.MUT(MUT==1?1:MUT==2?2:0)) dut(
-        .clk_program(clk),.clk_transport(clk),.clk_dxl(clk),.clk_dbq(clk),.clk_daq(clk),.rst_n(rst_n),
+    ot_hgi_qdq_program_static #(.IO_REGS(IO_REGS),.LG(LG),.LGMUT(MUT==4?1:0),.MUT(MUT==1?1:MUT==2?2:0)) dut(
+        .clk_program(clk),.clk_lg({4{clk}}),.clk_transport(clk),.clk_dxl(clk),.clk_dbq(clk),.clk_daq(clk),.rst_n(rst_n),
         .cfg_we(cfg_we),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
         .start_v(start_v),.start_base(10'd0),.start_limit(start_limit),.start_loops(16'd1),
         .program_active(program_active),.program_done(program_done),
