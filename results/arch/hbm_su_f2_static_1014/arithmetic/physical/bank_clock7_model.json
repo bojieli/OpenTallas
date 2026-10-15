@@ -25,8 +25,11 @@
       151.2
     ],
     "new_clock_pins_per_bank": 6,
-    "routing": "Existing macro positions/guard retained for CTS diagnostic; die must deliver phi-R per measured entry; no route grant"
+    "routing": "Existing macro positions/guard retained for CTS diagnostic; die must deliver phi-R per measured entry; no route grant",
+    "clock_entry_policy": "hybrid_entries: six raw_liberty_clock_pin references, one boundary-register CTS root",
+    "word_select_flop_clock": "existing register root; all324 total FF remain there"
   },
   "model_pricing": "No data bandwidth,operand bytes,capacity,II or timeline changes. Six new physical clock entry wires per bank; actual CTS area and insertion must be measured, original placement stays provisional.",
-  "negative_control": "Halt macro5 clock for16 scheduled reads after all512 seed writes; actual mismatch must fail."
+  "negative_control": "Halt macro5 clock for16 scheduled reads after all512 seed writes; actual mismatch must fail.",
+  "failed_attempt1": "multiple_cts_roots would feed raw SRAM pin into CTS source; native OT_HYBRID guard rejected it. Explicit direct-entry policy corrects that mistake without timing exceptions."
 }

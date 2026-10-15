@@ -8,16 +8,27 @@
 module ot_hbm_su_static_replicated_bank #(
  parameter integer READERS=6,RB=9,MUT_COHERENCE=0
 )(
+ input wire clk, // word-select flops stay on the boundary register root
  input wire[READERS-1:0]clk_macro,
  input wire[READERS-1:0]read_v,
  input wire[READERS*RB-1:0]read_addr,
  output wire[READERS*32-1:0]read_data,
  input wire write_v,input wire[RB-1:0]write_addr,input wire[31:0]write_data
 );
+ // Exact RB9 provider geometry of ot_hgi_su_lbank:512 words in64
+ // active rows of the actual128x256 SRAM. Word mask and read-before-write
+ // semantics are unchanged. Only the SRAM pin gets its own raw clock entry.
+ initial if(RB!=9)$fatal(1,"static replicated bank requires RB9 actual128x256 provider");
  for(genvar r=0;r<READERS;r=r+1)begin:g_read
-  ot_hgi_su_lbank #(.RB(RB),.MACRO(1))u_bank(
-   .clk(clk_macro[r]),.re(read_v[r]),.ra(read_addr[r*RB+:RB]),.rd(read_data[r*32+:32]),
-   .we(write_v && !(MUT_COHERENCE!=0&&r==READERS-1)),.wa(write_addr),.wd(write_data));
+  reg[2:0]ks;
+  always @(posedge clk)if(read_v[r])ks<=read_addr[r*RB+:3];
+  wire[255:0]raw;
+  wire[255:0]mask={224'd0,32'hffffffff} << {write_addr[2:0],5'd0};
+  ot_sram_1r1w_128x256_m1_r2c2 u_m(
+   .clk(clk_macro[r]),.r_ce_in(read_v[r]),.r_addr_in({1'b0,read_addr[r*RB+3+:6]}),.rd_out(raw),
+   .w_ce_in(write_v&&!(MUT_COHERENCE!=0&&r==READERS-1)),.w_addr_in({1'b0,write_addr[8:3]}),
+   .wd_in({8{write_data}}),.w_mask_in(mask),.rr_en(2'b00),.rr_addr(14'd0),.cr_en(2'b00),.cr_sel(16'd0));
+  assign read_data[r*32+:32]=raw[{ks,5'd0}+:32];
  end
 endmodule
 
@@ -29,6 +40,7 @@ endmodule
 module ot_hbm_su_static_data_store #(
  parameter integer QUARTERS=4,BANKS_PER_QUARTER=128,READERS=6,RB=9,MUT_COHERENCE=0
 )(
+ input wire[QUARTERS*BANKS_PER_QUARTER-1:0]clk_bank,
  input wire[QUARTERS*BANKS_PER_QUARTER*READERS-1:0]clk_macro,
  input wire[QUARTERS*BANKS_PER_QUARTER*READERS-1:0]read_v,
  input wire[QUARTERS*BANKS_PER_QUARTER*READERS*RB-1:0]read_addr,
@@ -41,7 +53,7 @@ module ot_hbm_su_static_data_store #(
   for(genvar b=0;b<BANKS_PER_QUARTER;b=b+1)begin:g_bank
    localparam I=q*BANKS_PER_QUARTER+b;
    ot_hbm_su_static_replicated_bank #(.READERS(READERS),.RB(RB),.MUT_COHERENCE(MUT_COHERENCE))u_bank(
-    .clk_macro(clk_macro[I*READERS+:READERS]),.read_v(read_v[I*READERS+:READERS]),
+    .clk(clk_bank[I]),.clk_macro(clk_macro[I*READERS+:READERS]),.read_v(read_v[I*READERS+:READERS]),
     .read_addr(read_addr[I*READERS*RB+:READERS*RB]),.read_data(read_data[I*READERS*32+:READERS*32]),
     .write_v(write_v[I]),.write_addr(write_addr[I*RB+:RB]),.write_data(write_data[I*32+:32]));
   end

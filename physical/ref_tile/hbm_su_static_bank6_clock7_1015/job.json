@@ -3,7 +3,7 @@
  "block": "ot_hbm_su_static_bank6_clock_physical",
  "ref_tile": true,
  "owner": "Codex:/root/hbm_su_sm_1103/su_physical_inventory",
- "purpose": "Candidate structural per-macro clocks: six distinct provider roots plus one boundary-register root. Previous bank r1 CTS insertion316.9ps/spread92.5ps/slew229.8ps, two SRAMs sharing clocknets. Actual one source per macro, no added data edge/retiming. Serial1111.111111ps unchanged. No route/replication qualification before physical slot/pins and TTsetup FFhold DRC0 nativeclock checks.",
+ "purpose": "Candidate structural per-macro clocks: six distinct provider roots plus one boundary-register root. Previous bank r1 CTS insertion316.9ps/spread92.5ps/slew229.8ps, two SRAMs sharing clocknets. Actual one source per macro, no added data edge/retiming. Serial1111.111111ps unchanged. No route/replication qualification before physical slot/pins and TTsetup FFhold DRC0 nativeclock checks. Native CTS attempt1 rejected mixed raw-macro CTS roots; corrected explicit hybrid policy: six actual raw SRAM pin references plus one CTS root, no macro pin on a CTS source. Word-select flops remain on the existing register root.",
  "threads": 4,
  "peak_ram_gb": 24,
  "source": {
