@@ -1,0 +1,31 @@
+{
+  "source_commit": "73d97feb4",
+  "host": "ot-epyc4",
+  "run": "/srv/opentallas-scratch/claude/hbm-su-top-1015/run_73d97feb4",
+  "old_unit": "oth-ubuntu-1144707-1792091813",
+  "status": "component_pass",
+  "lanes": 512,
+  "slices": 16,
+  "store_banks": 512,
+  "native_srams": 3080,
+  "edges": 7111,
+  "fill_reads": 32768,
+  "vm_writes": 135184,
+  "scalars": 9,
+  "MLAT": 3,
+  "RF_RELAY": 8,
+  "reducer_latency": 8,
+  "mutant_error_counts": {
+    "ADDR": 6164,
+    "DATA": 15,
+    "RED": 4102,
+    "RF": 1492
+  },
+  "limits": [
+    "not full native VM/programme composition",
+    "not current phase composition",
+    "not production canonical operations",
+    "not compact660 RF_RELAY36",
+    "not reducer r3 LAT9"
+  ]
+}

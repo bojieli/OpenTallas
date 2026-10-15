@@ -14,7 +14,7 @@ banks / 3,072 SRAM models, 4 reducers, 4 RF replicas, RF relay routes). Nothing 
          RF sector drains (class 5 + slice-0 port 0) from EVERY quarter of every quarter's results (replica coherence).
 Expected values: hdc_golden add/mul/to_bf16 (independent NumPy FP32 RNE, canonical +0) in the compiled order.
 Edge rule (see RTL headers): command line E is sampled at edge E; LG samples fill requests at E (data back E+10), drain
-writes at E+4; reducer command E -> issue E+2 -> scalar held from E+10 (checked at E+11, reducer r1 LAT 8); RF word
+writes at E+4; reducer command E -> issue E+2 -> scalar held from E+11 (checked at E+12, reducer r3 LAT 9); RF word
 readable by a read sampled at >= export_edge + 12 + RF_RELAY; lane store read n consumed n+3; RF broadcast class command issued n-1 (held for the op).
 """
 import argparse, json, subprocess, sys
@@ -156,7 +156,7 @@ def main():
     rf_val = {}
     lane_sum = [7 * q + 3 for q in range(4)]; lane_max = [11 * q + 5 for q in range(4)]
     X = {}
-    RLAT = 8                     # reducer command edge E -> issue E+2 -> commit / scalar issue+8 (r1 operand stage)
+    RLAT = 9                     # reducer command edge E -> issue E+2 -> commit / scalar issue+9 (r3 pin-ingress stage)
     DEP = RLAT + 1               # same-address dependent command distance
     NCH = DEP                    # interleaved accumulation chains so one lane output per edge never waits
     for kind, t, lanes, base_addr, rfo in (('sum', t_ab, lane_sum, 0, 0), ('max', t_aa, lane_max, 32, 1)):
