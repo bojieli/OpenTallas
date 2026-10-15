@@ -23,6 +23,7 @@ def source_fingerprint(model):
                    port_join=model.get('port_join', {}),
                    port_split=model.get('port_split', {}),
                    ties=model.get('ties', []),
+                   master_params=model.get('master_params', {}),
                    source_bindings={k: model[k] for k in
                        ('native_control_contract', 'native_graph_bind', 'static_link_bind',
                         'res_train_bind', 'native_static_io_bind') if k in model})

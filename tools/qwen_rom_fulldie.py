@@ -843,7 +843,7 @@ def masters(m, k=1, port_bits=None):
         if it.kind != 'spine_block' or it.master in M:
             continue
         b = mk(it.master, it.w, it.h, 7, f'spine reservation slab {it.master}')
-        if it.master == 'qfd_sp_vector_memory':
+        if it.master in ('qfd_sp_vector_memory', 'qfd_sp_vector_memory_par'):
             b.face('xw', CORRIDOR_BITS, 'W', 'M4', b.h / 2, 1)
             b.face('xe', CORRIDOR_BITS, 'E', 'M4', b.h / 2, 1)
             b.face('ar', IO_BITS, 'E', 'M4', b.h / 2 - 60, 2)

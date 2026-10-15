@@ -1405,7 +1405,7 @@ def _wrap(v, m, G, peers):
                 if sp[0] == 'face' and sp[2] in 'NS' and p not in ('va', 'vq'):
                     q.ports[p] = sp[:2] + ('S' if sp[2] == 'N' else 'N',) + sp[3:]
         # ---- T10 / T14 / T17: VM region, SU, seq_su, control tile: pins toward their peers on the final placement
-        vmm = M.get('qfd_sp_vector_memory')
+        vmm = M.get(byi['sp_vector_memory'].master)
         if vmm is not None:
             vi, si = byi['sp_vector_memory'], byi['sp_su64_sfu']
             sx, sy = VM_ENV['w'] / vmm.w, VM_ENV['h'] / vmm.h
@@ -1501,7 +1501,7 @@ def _wrap(v, m, G, peers):
             sq_ = M.get('qfd_seq_su')
             if sq_ is not None and 'kvd' in sq_.ports:
                 sq_.ports['kvd'] = (sq_.ports['kvd'][0], 44) + tuple(sq_.ports['kvd'][2:])
-            vmm_ = M.get('qfd_sp_vector_memory')
+            vmm_ = M.get(byi['sp_vector_memory'].master)
             if vmm_ is not None and 'ar' in vmm_.ports:
                 vmm_.ports['ar'] = (vmm_.ports['ar'][0], 520) + tuple(vmm_.ports['ar'][2:])
         # v1.2 (compute lead r4, 21:4x): contract straps are REAL pins of the receiving master.  C14's abstracts had no
@@ -1747,7 +1747,7 @@ def _wrap(v, m, G, peers):
     v.V5_FINAL_MASTERS = final
     # split compute C17: band_lanes may be placed MX (band 0 stack mirrored); its clock pins are the closed native view's
     # real pins set in final(), so the generic mirror clock-pin relocation must not run for it
-    v.MIRROR_CK_FINAL = (('qfd_sp_band_lanes',) + tuple(f'qfd_sp_res_train_{b}' for b in range(3))) if SPLIT_COMPUTE else ()
+    v.MIRROR_CK_FINAL = (('qfd_sp_band_lanes',) + tuple(f'qfd_sp_res_train{suffix}_{b}' for suffix in ('', '_par') for b in range(3))) if SPLIT_COMPUTE else ()
 
     def port_widths(model, k=1):
         w = base_pw(model, k)
