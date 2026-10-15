@@ -16388,3 +16388,16 @@ def hbm_idx_static_scorer_model():
         latency='engine123stage path, metadata123stages; measured fullshape join required',
         slot='source successor UNASSIGNED; no old scorer physicalview alias',
         price='immutable INDEX price; selector865cycles includes171scoreingest, overlap must be measured')
+
+
+def hbm_idx_static_vm_query_model():
+    """Real operand producer: two weight sectors and512query sectors to FP4 query."""
+    return dict(schema='opentallas.hbm-idx-static-vm-query.v1',
+        query_bytes=16384,weight_bytes=64,query_blocks=128,
+        active_lanes_per_query_slot=4,query_slot_II=1,read_bytes_per_query_edge=128,
+        storage_bits=dict(weight_pin_registers=512,block_pin_registers=1024),
+        latency_edges=dict(vm_face=8,assembly_pin=1,quant=13,emit_pin=1),
+        port='dedicated IDX read group4SW/SE,6NW/NE; querybase4sector-aligned,weightbase8sector-aligned, own/mirror',
+        reservation='two weight sectors first; compiler leaves fixed8+1edge weight visibility then128query slots',
+        roots='VM face + query assembly + four querybanks + quant and delay + control',
+        qualification='OPEN actual512querysector SRAM provenance, exactquant/negative proof, native parent and physical slot')
