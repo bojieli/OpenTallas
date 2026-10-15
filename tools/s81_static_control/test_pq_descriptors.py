@@ -18,13 +18,17 @@ class NativePQImageTest(unittest.TestCase):
  def test_missing_duration_and_out_of_range_refuse(self):
   with self.assertRaises(ValueError):encode_descriptors([{}])
  def test_real_issuer_to_native_GO_calendar_edges(self):
-  cmd=[dict(engine=0,issue=3,done=400,native_tag=2)]
+  cmd=[dict(engine=0,issue=3,done=400,pin_to_pin=396,native_tag=2)]
   events=[dict(timestamp=4,action=dict(accept_tag=2)),dict(timestamp=20,action=dict(vm_req=1,vm_addr=8192)),dict(timestamp=500,action=dict(phase_end=1))]
   rows=compile_events(events,cmd);self.assertEqual(rows[0],(4<<72)|2)
   events[0]['timestamp']=3
   with self.assertRaisesRegex(ValueError,'align'):compile_events(events,cmd)
+ def test_pq_done_row_is_issue_plus_one_plus_pin_to_pin(self):
+  events=[dict(timestamp=4,action=dict(accept_tag=2)),dict(timestamp=500,action=dict(phase_end=1))]
+  for bad in [dict(engine=0,issue=3,done=399,pin_to_pin=396,native_tag=2),dict(engine=0,issue=3,done=400,native_tag=2)]:
+   with self.assertRaisesRegex(ValueError,'pin'):compile_events(events,[bad])
  def test_canonical_calendar_action75_bank_and_end(self):
-  rows=compile_events([dict(timestamp=1,action=dict(stream_addr=16383,launch=1)),dict(timestamp=9,action=dict(phase_end=1))],[dict(engine=0,issue=0,done=20,native_tag=0)],action_bits=75)
+  rows=compile_events([dict(timestamp=1,action=dict(stream_addr=16383,launch=1)),dict(timestamp=9,action=dict(phase_end=1))],[dict(engine=0,issue=0,done=20,pin_to_pin=19,native_tag=0)],action_bits=75)
   self.assertEqual((rows[0]>>40)&16383,16383);self.assertEqual((rows[0]>>65)&1,1)
   self.assertEqual(rows[1],(9<<75)|(1<<72))
  def test_real_macro_via_bit_order(self):
