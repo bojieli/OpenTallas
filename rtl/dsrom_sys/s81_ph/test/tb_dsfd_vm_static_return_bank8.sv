@@ -54,6 +54,7 @@ module tb_dsfd_vm_static_return_bank8;
     iv[b]=issuedmask[s];it[8*b+:8]={3'(g),5'(s)};id[128*b+:128]=value(g,s);
    end
    check();
+   if(g!=0)for(s=0;s<32;s=s+1)if(newv[s] && newd[128*s+:128]!==value(g-1,s))errors=errors+1;
   end
   @(negedge ck);iv=0;pv=0;rv=1;rg=3'(g-1);rm=pm;check();
   // Each missing lane must suppress ALL32slots, even the24present other lanes.
