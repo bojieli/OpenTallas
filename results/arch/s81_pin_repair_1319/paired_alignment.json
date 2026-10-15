@@ -1,0 +1,575 @@
+{
+  "scope": "PRESERVED_GEN19RB_FINAL_ALIGNMENT_REPLAY_ONLY",
+  "native_qualified": false,
+  "remaining": "All-bit incident reach and native pair comparison running; real-view GRT/TT-FF STA and four unrelated pin-align defects remain open.",
+  "baseline": {
+    "which": "baseline",
+    "source_sha256": "0194a7a445a740344c6a85f5eefc9e5587661a92f5efdf2c1d70ef654d6125b3",
+    "checkpoint_sha256": "36933d43da1448dfca65362f08660563ce5a1d000b8d544fa2409fd694ecd61a",
+    "legality": {
+      "instances": 80654,
+      "overlaps": 0,
+      "overlap_examples": [],
+      "outside": 0,
+      "outside_examples": []
+    },
+    "frozen_loads": [],
+    "native_qualified": false,
+    "scope": "EXACT_PRESERVED_MODEL_FINAL_ALIGNMENT_REPLAY_NO_ROUTE_NO_STA",
+    "pin_align_summary": {
+      "verdict": "FAIL",
+      "bundles": 159291,
+      "bits": 11567602,
+      "bits_without_pin": 2,
+      "by_verdict": {
+        "OK": 62646,
+        "WARN": 96640,
+        "FAIL": 5
+      },
+      "len_max": 811.488
+    },
+    "failing_classes": [
+      {
+        "drv": "dsfd_hstnh_759.dq",
+        "load": "dsfd_sp_gather_c.rW2",
+        "kind": "straight",
+        "cls": "local",
+        "bundles": 1,
+        "bits": 759,
+        "face": [
+          "E",
+          "W"
+        ],
+        "layer": [
+          "M4",
+          "M4"
+        ],
+        "jog_max": 301.2,
+        "len_max": 305.784,
+        "gap_min": 4.584,
+        "jog_cut_max": 5.2546,
+        "order": {
+          "interleaved": 1
+        },
+        "verdict": {
+          "FAIL": 1
+        },
+        "example": {
+          "bus": "hr_W2_o_d1",
+          "drv": "f_hr_W2_o_1",
+          "load": "sp_gather",
+          "at": [
+            13938,
+            17709,
+            13943,
+            17823
+          ],
+          "verdict": "FAIL",
+          "jog_max": 301.2
+        },
+        "why": [
+          "jog cut 5.25 > 0.6: 759 jog wires in a 4.6 um channel (144 tracks): the jog spills onto the die's over-tile tracks (13.8% of a 260-um cut window)",
+          "jog 301.2 um > 20",
+          "bit order interleaved (91% of pairs cross)"
+        ],
+        "jog_mean": 150.833,
+        "len_mean": 155.417,
+        "worst": "FAIL"
+      },
+      {
+        "drv": "dsfd_stnh_512x1.do0",
+        "load": "dsfd_m2l_raw_512x1__hl_E1.di0",
+        "kind": "straight",
+        "cls": "lane",
+        "bundles": 1,
+        "bits": 512,
+        "face": [
+          "W",
+          "E"
+        ],
+        "layer": [
+          "M4",
+          "M4"
+        ],
+        "jog_max": 32.4,
+        "len_max": 37.008,
+        "gap_min": 4.608,
+        "jog_cut_max": 3.5262,
+        "order": {
+          "preserved": 1
+        },
+        "verdict": {
+          "FAIL": 1
+        },
+        "example": {
+          "bus": "KE1r_de",
+          "drv": "f_KE1r_73",
+          "load": "hl_E1",
+          "at": [
+            15809,
+            21059,
+            15805,
+            21091
+          ],
+          "verdict": "FAIL",
+          "jog_max": 32.4
+        },
+        "why": [
+          "jog cut 3.53 > 0.6: 512 jog wires in a 4.6 um channel (145 tracks): the jog spills onto the die's over-tile tracks (9.3% of a 260-um cut window)",
+          "jog 32.4 um > 20"
+        ],
+        "jog_mean": 32.4,
+        "len_mean": 37.008,
+        "worst": "FAIL"
+      },
+      {
+        "drv": "dsfd_m2l_raw_512x1__hl_E3.o",
+        "load": "dsfd_sp_collective_static_c.rE3",
+        "kind": "straight",
+        "cls": "local",
+        "bundles": 1,
+        "bits": 515,
+        "face": [
+          "W",
+          "E"
+        ],
+        "layer": [
+          "M4",
+          "M4"
+        ],
+        "jog_max": 53.28,
+        "len_max": 59.136,
+        "gap_min": 5.856,
+        "jog_cut_max": 2.7909,
+        "order": {
+          "preserved": 1
+        },
+        "verdict": {
+          "FAIL": 1
+        },
+        "example": {
+          "bus": "hl_E3_o",
+          "drv": "hl_E3",
+          "load": "sp_collective",
+          "at": [
+            15677,
+            21281,
+            15671,
+            21228
+          ],
+          "verdict": "FAIL",
+          "jog_max": 53.28
+        },
+        "why": [
+          "jog cut 2.79 > 0.6: 515 jog wires in a 5.9 um channel (184 tracks): the jog spills onto the die's over-tile tracks (9.4% of a 260-um cut window)",
+          "jog 53.3 um > 20"
+        ],
+        "jog_mean": 53.28,
+        "len_mean": 59.136,
+        "worst": "FAIL"
+      },
+      {
+        "drv": "dsfd_m2l_vr_68x11__hr_E3.o",
+        "load": "dsfd_hstnh_761.di",
+        "kind": "straight",
+        "cls": "local",
+        "bundles": 1,
+        "bits": 761,
+        "face": [
+          "W",
+          "E"
+        ],
+        "layer": [
+          "M4",
+          "M4"
+        ],
+        "jog_max": 47.192,
+        "len_max": 76.424,
+        "gap_min": 29.232,
+        "jog_cut_max": 0.8262,
+        "order": {
+          "preserved": 1
+        },
+        "verdict": {
+          "FAIL": 1
+        },
+        "example": {
+          "bus": "hr_E3_o_d0",
+          "drv": "hr_E3",
+          "load": "f_hr_E3_o_1",
+          "at": [
+            16732,
+            17772,
+            16703,
+            17819
+          ],
+          "verdict": "FAIL",
+          "jog_max": 47.192
+        },
+        "why": [
+          "jog cut 0.83 > 0.6: 761 jog wires in a 29.2 um channel (921 tracks): the jog spills onto the die's over-tile tracks (13.9% of a 260-um cut window)",
+          "jog 47.2 um > 20"
+        ],
+        "jog_mean": 47.192,
+        "len_mean": 76.424,
+        "worst": "FAIL"
+      },
+      {
+        "drv": "dsfd_hstnv_2164_sp4.dq",
+        "load": "dsfd_sp_hc_c.f_tr2",
+        "kind": "straight",
+        "cls": "hub",
+        "bundles": 1,
+        "bits": 2164,
+        "face": [
+          "N",
+          "S"
+        ],
+        "layer": [
+          "M5",
+          "M5"
+        ],
+        "jog_max": 33.456,
+        "len_max": 33.72,
+        "gap_min": 0.264,
+        "jog_cut_max": null,
+        "order": {
+          "preserved": 1
+        },
+        "verdict": {
+          "FAIL": 1
+        },
+        "example": {
+          "bus": "hb_hc_t_t_sr2_hc_s_d6_g2_sp_hc_s",
+          "drv": "g_hb_hc_t_t_sr2_hc_s_d6_sp_hc_s_1",
+          "load": "sp_hc_s",
+          "at": [
+            18538,
+            13826,
+            18504,
+            13826
+          ],
+          "verdict": "FAIL",
+          "jog_max": 33.456
+        },
+        "why": [
+          "abutted faces (gap 0.264 um) with a jog of 33.456 um",
+          "jog 33.5 um > 20"
+        ],
+        "jog_mean": 33.456,
+        "len_mean": 33.72,
+        "worst": "FAIL"
+      }
+    ],
+    "hc_return_spread": [
+      {
+        "drv": "dsfd_hstnv_2164_sp4.dq",
+        "load": "dsfd_sp_hc_c.f_tr2",
+        "kind": "straight",
+        "cls": "hub",
+        "bundles": 1,
+        "bits": 2164,
+        "face": [
+          "N",
+          "S"
+        ],
+        "layer": [
+          "M5",
+          "M5"
+        ],
+        "jog_max": 33.456,
+        "len_max": 33.72,
+        "gap_min": 0.264,
+        "jog_cut_max": null,
+        "order": {
+          "preserved": 1
+        },
+        "verdict": {
+          "FAIL": 1
+        },
+        "example": {
+          "bus": "hb_hc_t_t_sr2_hc_s_d6_g2_sp_hc_s",
+          "drv": "g_hb_hc_t_t_sr2_hc_s_d6_sp_hc_s_1",
+          "load": "sp_hc_s",
+          "at": [
+            18538,
+            13826,
+            18504,
+            13826
+          ],
+          "verdict": "FAIL",
+          "jog_max": 33.456
+        },
+        "why": [
+          "abutted faces (gap 0.264 um) with a jog of 33.456 um",
+          "jog 33.5 um > 20"
+        ],
+        "jog_mean": 33.456,
+        "len_mean": 33.72,
+        "worst": "FAIL"
+      }
+    ]
+  },
+  "candidate": {
+    "which": "candidate",
+    "source_sha256": "26c0a1644cd83bde645cd667465060c6396e8e68fa0801512c9bf81dc1b0ae1d",
+    "checkpoint_sha256": "36933d43da1448dfca65362f08660563ce5a1d000b8d544fa2409fd694ecd61a",
+    "legality": {
+      "instances": 80654,
+      "overlaps": 0,
+      "overlap_examples": [],
+      "outside": 0,
+      "outside_examples": []
+    },
+    "frozen_loads": [
+      "dsfd_sp_gather_c",
+      "dsfd_sp_hc_c"
+    ],
+    "native_qualified": false,
+    "scope": "EXACT_PRESERVED_MODEL_FINAL_ALIGNMENT_REPLAY_NO_ROUTE_NO_STA",
+    "pin_align_summary": {
+      "verdict": "FAIL",
+      "bundles": 159291,
+      "bits": 11567602,
+      "bits_without_pin": 2,
+      "by_verdict": {
+        "OK": 62647,
+        "WARN": 96640,
+        "FAIL": 4
+      },
+      "len_max": 811.488
+    },
+    "failing_classes": [
+      {
+        "drv": "dsfd_hstnh_759.dq",
+        "load": "dsfd_sp_gather_c.rW2",
+        "kind": "straight",
+        "cls": "local",
+        "bundles": 1,
+        "bits": 759,
+        "face": [
+          "E",
+          "W"
+        ],
+        "layer": [
+          "M4",
+          "M4"
+        ],
+        "jog_max": 301.2,
+        "len_max": 305.784,
+        "gap_min": 4.584,
+        "jog_cut_max": 5.2546,
+        "order": {
+          "interleaved": 1
+        },
+        "verdict": {
+          "FAIL": 1
+        },
+        "example": {
+          "bus": "hr_W2_o_d1",
+          "drv": "f_hr_W2_o_1",
+          "load": "sp_gather",
+          "at": [
+            13938,
+            17709,
+            13943,
+            17823
+          ],
+          "verdict": "FAIL",
+          "jog_max": 301.2
+        },
+        "why": [
+          "jog cut 5.25 > 0.6: 759 jog wires in a 4.6 um channel (144 tracks): the jog spills onto the die's over-tile tracks (13.8% of a 260-um cut window)",
+          "jog 301.2 um > 20",
+          "bit order interleaved (91% of pairs cross)"
+        ],
+        "jog_mean": 150.833,
+        "len_mean": 155.417,
+        "worst": "FAIL"
+      },
+      {
+        "drv": "dsfd_stnh_512x1.do0",
+        "load": "dsfd_m2l_raw_512x1__hl_E1.di0",
+        "kind": "straight",
+        "cls": "lane",
+        "bundles": 1,
+        "bits": 512,
+        "face": [
+          "W",
+          "E"
+        ],
+        "layer": [
+          "M4",
+          "M4"
+        ],
+        "jog_max": 32.4,
+        "len_max": 37.008,
+        "gap_min": 4.608,
+        "jog_cut_max": 3.5262,
+        "order": {
+          "preserved": 1
+        },
+        "verdict": {
+          "FAIL": 1
+        },
+        "example": {
+          "bus": "KE1r_de",
+          "drv": "f_KE1r_73",
+          "load": "hl_E1",
+          "at": [
+            15809,
+            21059,
+            15805,
+            21091
+          ],
+          "verdict": "FAIL",
+          "jog_max": 32.4
+        },
+        "why": [
+          "jog cut 3.53 > 0.6: 512 jog wires in a 4.6 um channel (145 tracks): the jog spills onto the die's over-tile tracks (9.3% of a 260-um cut window)",
+          "jog 32.4 um > 20"
+        ],
+        "jog_mean": 32.4,
+        "len_mean": 37.008,
+        "worst": "FAIL"
+      },
+      {
+        "drv": "dsfd_m2l_raw_512x1__hl_E3.o",
+        "load": "dsfd_sp_collective_static_c.rE3",
+        "kind": "straight",
+        "cls": "local",
+        "bundles": 1,
+        "bits": 515,
+        "face": [
+          "W",
+          "E"
+        ],
+        "layer": [
+          "M4",
+          "M4"
+        ],
+        "jog_max": 53.28,
+        "len_max": 59.136,
+        "gap_min": 5.856,
+        "jog_cut_max": 2.7909,
+        "order": {
+          "preserved": 1
+        },
+        "verdict": {
+          "FAIL": 1
+        },
+        "example": {
+          "bus": "hl_E3_o",
+          "drv": "hl_E3",
+          "load": "sp_collective",
+          "at": [
+            15677,
+            21281,
+            15671,
+            21228
+          ],
+          "verdict": "FAIL",
+          "jog_max": 53.28
+        },
+        "why": [
+          "jog cut 2.79 > 0.6: 515 jog wires in a 5.9 um channel (184 tracks): the jog spills onto the die's over-tile tracks (9.4% of a 260-um cut window)",
+          "jog 53.3 um > 20"
+        ],
+        "jog_mean": 53.28,
+        "len_mean": 59.136,
+        "worst": "FAIL"
+      },
+      {
+        "drv": "dsfd_m2l_vr_68x11__hr_E3.o",
+        "load": "dsfd_hstnh_761.di",
+        "kind": "straight",
+        "cls": "local",
+        "bundles": 1,
+        "bits": 761,
+        "face": [
+          "W",
+          "E"
+        ],
+        "layer": [
+          "M4",
+          "M4"
+        ],
+        "jog_max": 47.192,
+        "len_max": 76.424,
+        "gap_min": 29.232,
+        "jog_cut_max": 0.8262,
+        "order": {
+          "preserved": 1
+        },
+        "verdict": {
+          "FAIL": 1
+        },
+        "example": {
+          "bus": "hr_E3_o_d0",
+          "drv": "hr_E3",
+          "load": "f_hr_E3_o_1",
+          "at": [
+            16732,
+            17772,
+            16703,
+            17819
+          ],
+          "verdict": "FAIL",
+          "jog_max": 47.192
+        },
+        "why": [
+          "jog cut 0.83 > 0.6: 761 jog wires in a 29.2 um channel (921 tracks): the jog spills onto the die's over-tile tracks (13.9% of a 260-um cut window)",
+          "jog 47.2 um > 20"
+        ],
+        "jog_mean": 47.192,
+        "len_mean": 76.424,
+        "worst": "FAIL"
+      }
+    ],
+    "hc_return_spread": [
+      {
+        "drv": "dsfd_hstnv_2164_sp4.dq",
+        "load": "dsfd_sp_hc_c.f_tr2",
+        "kind": "straight",
+        "cls": "hub",
+        "bundles": 1,
+        "bits": 2164,
+        "face": [
+          "N",
+          "S"
+        ],
+        "layer": [
+          "M5",
+          "M5"
+        ],
+        "jog_max": 0.0,
+        "len_max": 0.264,
+        "gap_min": 0.264,
+        "jog_cut_max": null,
+        "order": {
+          "preserved": 1
+        },
+        "verdict": {
+          "OK": 1
+        },
+        "example": {
+          "bus": "hb_hc_t_t_sr2_hc_s_d6_g2_sp_hc_s",
+          "drv": "g_hb_hc_t_t_sr2_hc_s_d6_sp_hc_s_1",
+          "load": "sp_hc_s",
+          "at": [
+            18538,
+            13826,
+            18538,
+            13826
+          ],
+          "verdict": "OK",
+          "jog_max": 0.0
+        },
+        "why": [],
+        "jog_mean": 0.0,
+        "len_mean": 0.264,
+        "worst": "OK"
+      }
+    ]
+  }
+}

@@ -30,6 +30,7 @@ from __future__ import annotations
 
 import argparse
 import bisect
+import copy
 import hashlib
 import json
 import math
@@ -8279,7 +8280,21 @@ def align_station_jogs(m, rounds=2):
             for nm in {eps[0][0], load[0]}:
                 incident.setdefault(nm, []).append(hop)
 
+    # A spread register is placed against these exact load pins. Generated
+    # hub pins otherwise follow the changed peer centroid when LEFs are
+    # emitted again, invalidating the channel just assessed. Retain the full
+    # load map, including neighboring ports and their access rectangles.
+    hard_maps = masters_r8(m) if ALIGN_EXT[0] else {}
     ppins = PA.read_pins(die_lef_texts(m))
+
+    def keep_load_map(load):
+        if load.master in REAL_FILES or load.master in m.get('bound_views', {}):
+            return
+        source = hard_maps.get(load.master)
+        if source is not None:
+            m.setdefault('spread_load_pin_maps', {}).setdefault(load.master, dict(
+                outline=[source.w, source.h], ports=copy.deepcopy(source.ports), order=list(source.order),
+                port_signature=dict(m['pdir'][load.master])))
 
     def pts(it, port, bits):
         w, h, pp = ppins.get(it.master, (0.0, 0.0, {}))
@@ -8573,12 +8588,14 @@ def align_station_jogs(m, rounds=2):
                                             hard_short=ALIGN_HARD_SHORT_UM if side_ == 'E' else 0.0)
                         if split_:
                             ch_ = BT.apply(sys.modules[__name__],m,it,split_,ins_[0],outs_[0])
+                            keep_load_map(ld)
                             moved[it.name] = ('band_split',[c_.name for c_ in ch_],r['bus'])
                             refused.pop(r['bus'],None)
                             continue
                 refused[r['bus']] = refused.get(r['bus'], []) + ['spread:no_position']
                 continue
             bx, loc, vin = done_
+            keep_load_map(ld)
             old = it.master
             it.master = '%s_sp%d' % (old, len(spread))
             m['pdir'][it.master] = dict(m['pdir'][old])
@@ -8901,7 +8918,14 @@ def masters_r8(m, k=1):
         ports = pdir.get(mst, {})
         Mx = Q.Master(mst, it.w, it.h, 3 if is_glue(mst) or mst in CFG7_MASTERS else 7, f'r8 {it.kind}')
         M[mst] = Mx
-        _faces_r8(m, Mx, it, ports)
+        saved = m.get('spread_load_pin_maps', {}).get(mst) if k == 1 else None
+        if saved is None:
+            _faces_r8(m, Mx, it, ports)
+        else:
+            assert all(abs(a - b) < 1e-6 for a, b in zip(saved['outline'], (Mx.w, Mx.h))), (mst, 'spread load outline changed')
+            assert saved['port_signature'] == ports, (mst, 'spread load port signature changed')
+            Mx.ports = copy.deepcopy(saved['ports'])
+            Mx.order = list(saved['order'])
         _apply_pin_overrides(Mx, it)
         if k == 1:
             _assigned_physical_pins(Mx, ports)
