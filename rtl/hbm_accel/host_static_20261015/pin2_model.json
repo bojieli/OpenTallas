@@ -33,5 +33,16 @@
     "host_installation_min_edges_1024rows": 40960
   },
   "cost": "host init only; minimum five core edges per independently completed AXI word, eight words/row. No measured E2E cost or acceptance claimed.",
-  "qualification": "full 1024row x2loop actual SRAM component proof PASS; physical map/native CTS/route pending"
+  "qualification": "full 1024row x2loop actual SRAM component proof PASS; physical map/native CTS/route pending",
+  "mapping": {
+    "source_commit": "6a8b88eb0",
+    "cells": 3339,
+    "ff": 1069,
+    "std_area_um2": 490.6899,
+    "sequential_area_um2": 346.88736,
+    "library": "existing SS merged ASAP7 RVT, sizing only",
+    "unit": "oth-ubuntu-1567371-1792099479",
+    "host": "ot-agidock128",
+    "netlist_sha256": "92aa52d7a53bd500eda826522515440056b478e2bde8086db484f78e238d4592"
+  }
 }
