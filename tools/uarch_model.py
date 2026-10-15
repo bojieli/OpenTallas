@@ -63,8 +63,8 @@ def qwen_xpf_static_control_model(entries=4, program_words=64):
 def qwen_host_typed_record_model():
     """Exact declared control-storage census before physical record leaf sizing."""
     return dict(schema='opentallas.qwen-host-typed-record.v1',replicas=1,
-        context_tx_ff=630,auth_tx_ff=664,witness_rx_ff=84,shared_pin_ff=550,
-        declared_ff=1928,clock_roots_added=1,clock_period_fs=833334,
+        context_tx_ff=630,auth_tx_ff=665,witness_rx_ff=84,shared_pin_ff=550,
+        declared_ff=1929,clock_roots_added=1,clock_period_fs=833334,
         payload_bits_per_cycle=548,max_records_per_cycle=1,MACs_per_cycle=0,
         SRAM_macros_added=0,added_boundary_bits=548*2+8,
         removed_external_fabricated_commit_bits=1+1+16+64,
