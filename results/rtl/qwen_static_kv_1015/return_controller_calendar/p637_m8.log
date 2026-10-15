@@ -1,0 +1,16 @@
+BAD predicted raw pin calendar
+BAD controller sticky fault phase1 t223
+BAD controller sticky fault phase1 t224
+BAD controller sticky fault phase1 t225
+BAD controller sticky fault phase1 t226
+BAD controller sticky fault phase1 t227
+BAD controller sticky fault phase1 t228
+BAD controller sticky fault phase1 t229
+BAD controller sticky fault phase1 t230
+BAD controller sticky fault phase1 t231
+BAD controller sticky fault phase1 t232
+BAD controller sticky fault phase1 t233
+FAIL persistent staticKV host controller errors2178 mode8
+[4948000000] %Fatal: tb_static_return_controller_calendar.sv:172: Assertion failed in tb_static_return_controller_calendar
+%Error: rtl/test/qwen_static_kv/tb_static_return_controller_calendar.sv:172: Verilog $stop
+Aborting...

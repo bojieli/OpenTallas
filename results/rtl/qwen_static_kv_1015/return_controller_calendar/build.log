@@ -140,29 +140,29 @@
                                                                                    : ... note: In instance 'tb_static_return_controller_calendar.controllers[1].dut.u_ecc'
    33 |     if(ov&&s<=71)begin for(p=1;p<=71;p=p+1)if(s==p)c[p-1]=~c[p-1];co=1;end
       |                                                ^~
-%Warning-WIDTHEXPAND: rtl/test/qwen_static_kv/tb_static_return_controller_calendar.sv:43:55: Operator FUNCREF 'data' expects 32 bits on the Function Argument, but Function Argument's VARREF 'return_sector' generates 10 bits.
+%Warning-WIDTHEXPAND: rtl/test/qwen_static_kv/tb_static_return_controller_calendar.sv:45:55: Operator FUNCREF 'data' expects 32 bits on the Function Argument, but Function Argument's VARREF 'return_sector' generates 10 bits.
                                                                                            : ... note: In instance 'tb_static_return_controller_calendar'
-   43 |    if(return_epoch!=7||return_layer!=3||return_data!==data(67,return_sector))
+   45 |    if(return_epoch!=7||return_layer!=3||return_data!==data(67,return_sector))
       |                                                       ^~~~
-%Warning-WIDTHEXPAND: rtl/test/qwen_static_kv/tb_static_return_controller_calendar.sv:129:38: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 5 bits.
+%Warning-WIDTHEXPAND: rtl/test/qwen_static_kv/tb_static_return_controller_calendar.sv:131:38: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 5 bits.
                                                                                             : ... note: In instance 'tb_static_return_controller_calendar'
-  129 |      automatic integer bank=po[phase][34:30];
+  131 |      automatic integer bank=po[phase][34:30];
       |                                      ^
-%Warning-WIDTHEXPAND: rtl/test/qwen_static_kv/tb_static_return_controller_calendar.sv:130:37: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 5 bits.
+%Warning-WIDTHEXPAND: rtl/test/qwen_static_kv/tb_static_return_controller_calendar.sv:132:37: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 5 bits.
                                                                                             : ... note: In instance 'tb_static_return_controller_calendar'
-  130 |      automatic integer col=po[phase][39:35];
+  132 |      automatic integer col=po[phase][39:35];
       |                                     ^
-%Warning-WIDTHEXPAND: rtl/test/qwen_static_kv/tb_static_return_controller_calendar.sv:132:35: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's ARRAYSEL generates 19 bits.
+%Warning-WIDTHEXPAND: rtl/test/qwen_static_kv/tb_static_return_controller_calendar.sv:134:35: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's ARRAYSEL generates 19 bits.
                                                                                             : ... note: In instance 'tb_static_return_controller_calendar'
-  132 |      automatic integer row=openrow[bank];
+  134 |      automatic integer row=openrow[bank];
       |                                   ^
-%Warning-WIDTHEXPAND: rtl/test/qwen_static_kv/tb_static_return_controller_calendar.sv:153:28: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's REPLICATE generates 10 bits.
+%Warning-WIDTHEXPAND: rtl/test/qwen_static_kv/tb_static_return_controller_calendar.sv:155:28: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's REPLICATE generates 10 bits.
                                                                                             : ... note: In instance 'tb_static_return_controller_calendar'
-  153 |      automatic integer sec={co[phase][11:9],co[phase][7:1]};
+  155 |      automatic integer sec={co[phase][11:9],co[phase][7:1]};
       |                            ^
-%Warning-WIDTHTRUNC: rtl/test/qwen_static_kv/tb_static_return_controller_calendar.sv:170:3: Logical operator IF expects 1 bit on the If, but If's VARREF 'errors' generates 32 bits.
+%Warning-WIDTHTRUNC: rtl/test/qwen_static_kv/tb_static_return_controller_calendar.sv:172:3: Logical operator IF expects 1 bit on the If, but If's VARREF 'errors' generates 32 bits.
                                                                                           : ... note: In instance 'tb_static_return_controller_calendar'
-  170 |   if(errors)begin $display("FAIL persistent staticKV host controller errors%0d mode%0d",errors,mode);$fatal(1);end
+  172 |   if(errors)begin $display("FAIL persistent staticKV host controller errors%0d mode%0d",errors,mode);$fatal(1);end
       |   ^~
 %Warning-UNSIGNED: rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv:215:33: Comparison is constant due to unsigned arithmetic
                                                                                     : ... note: In instance 'tb_static_return_controller_calendar.controllers[1].dut.u_ctl.core'
@@ -172,7 +172,7 @@
                                                                                     : ... note: In instance 'tb_static_return_controller_calendar.controllers[1].dut.u_ctl.core'
   215 |       wire ahead = (S >= k && S <= last) || next_posted;
       |                       ^~
-make: Entering directory '/srv/opentallas-scratch/codex/q-static-return-calendar-hostbound-1015/evidence/obj'
+make: Entering directory '/srv/opentallas-scratch/codex/q-static-return-calendar-staticread-1015/evidence/obj'
 g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /usr/share/verilator/include/verilated.cpp
 g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /usr/share/verilator/include/verilated_timing.cpp
 g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /usr/share/verilator/include/verilated_threads.cpp
@@ -196,7 +196,7 @@ g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vl
 g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_static_return_controller_calendar__pch.h.slow -c -o Vtb_static_return_controller_calendar__Syms.o Vtb_static_return_controller_calendar__Syms.cpp
 g++    verilated.o verilated_timing.o verilated_threads.o Vtb_static_return_controller_calendar__ALL.a    -pthread -lpthread -latomic   -o Vtb_static_return_controller_calendar
 rm Vtb_static_return_controller_calendar__ALL.verilator_deplist.tmp
-make: Leaving directory '/srv/opentallas-scratch/codex/q-static-return-calendar-hostbound-1015/evidence/obj'
+make: Leaving directory '/srv/opentallas-scratch/codex/q-static-return-calendar-staticread-1015/evidence/obj'
 - V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
-- Verilator: Built from 0.804 MB sources in 17 modules, into 7.418 MB in 15 C++ files needing 0.009 MB
-- Verilator: Walltime 6.944 s (elab=0.076, cvt=0.982, bld=5.787); cpu 1.277 s on 4 threads; alloced 81.266 MB
+- Verilator: Built from 0.806 MB sources in 17 modules, into 7.419 MB in 15 C++ files needing 0.009 MB
+- Verilator: Walltime 6.361 s (elab=0.047, cvt=0.739, bld=5.481); cpu 0.997 s on 4 threads; alloced 81.262 MB

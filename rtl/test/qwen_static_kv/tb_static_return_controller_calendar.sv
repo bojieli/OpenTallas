@@ -29,7 +29,9 @@ module tb_static_return_controller_calendar;
   automatic integer o=publish_ordinal-256;
   automatic integer sec=publish_ordinal<256?publish_ordinal:512+((o&8)<<4)+((o>>4)<<3)+(o&7);
   if(core_slots[c])$fatal(1,"compiled core slot collision");
-  core_slots[c]=1;core_sector[c]=10'(sec);publish_ordinal++;
+  core_slots[c]=1;core_sector[c]=10'(sec);
+  if($test$plusargs("report_calendar"))$display("COMPILED_RETURN ordinal%0d sector%0d core%0d",publish_ordinal,sec,c);
+  publish_ordinal++;
  end
  always @(negedge core)begin
   // First positive edge is index0. After a negative edge, core_edge points
@@ -53,7 +55,7 @@ module tb_static_return_controller_calendar;
  wire [327:0] po[0:1];wire [293:0] co[0:1];wire [260:0] er[0:1];wire [1:0] fault,cv,cw,cf;
  wire predicted_raw,predicted_corrected;wire[15:0] predicted_epoch;
  qkd_static_kv_return_calendar u_calendar(.pll_hbm(ck),.hrst(rst[1]),
-  .reserved_rd(reserved),.reserved_static_read(sr_read_reserved),.reservation_epoch(16'd7),
+  .reserved_rd(reserved),.reserved_static_read(mode==8?1'b0:sr_read_reserved),.reservation_epoch(16'd7),
   .expected_raw_valid(predicted_raw),.compiled_hbm_put(predicted_corrected),
   .expected_return_epoch(predicted_epoch));
  integer predicted_count;
