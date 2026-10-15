@@ -84,7 +84,11 @@ module qfd_xs_tap #(parameter integer NW = 18, parameter integer AW = 24, parame
     // the head row is a lockstep broadcast on compiler-reserved slots: no ready port (static schedule); a root's
     // faults arrive on hw_f / he_f
     wire tf;
-    ot_qfd_xs_tap #(.AW(AW), .NW(NW), .XCW(XCW),.STATIC_SCHEDULE(1),.NATIVE_AFFINE(1),.MUT(MUT)) u_tap (.clk(ck), .rst_n(rst_n),
+    // One physical reset-capture edge at the tap boundary. The compiler boot
+    // contract must release this local reset before any scheduled input.
+    (* keep *) reg local_rst_n;
+    always @(posedge ck) local_rst_n <= rst_n;
+    ot_qfd_xs_tap #(.AW(AW), .NW(NW), .XCW(XCW),.STATIC_SCHEDULE(1),.NATIVE_AFFINE(1),.MUT(MUT)) u_tap (.clk(ck), .rst_n(local_rst_n),
         .xpf_v(xpf[0]), .xpf_xbase(xpf[1 +: AW]), .xpf_xcs(xpf[1+AW +: XCW]), .xpf_xks(xpf[1+AW+XCW +: XCW]),
         .xpf_split(xpf[1+AW+2*XCW +: 4]), .xpf_k(xpf[1+AW+2*XCW+4 +: NW]), .xpf_round(xpf[1+AW+2*XCW+4+NW]),
         .sw_v(sw[0]), .sw_a(sw[1 +: AW]), .sw_m(sw[1+AW +: 64]), .sw_d(sw[1+AW+64 +: 2048]),

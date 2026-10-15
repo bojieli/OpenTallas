@@ -1,0 +1,92 @@
+[
+ {
+  "cell": "qfd_xcst_n",
+  "view": "physical/ref_tile/qfd_xcst_n/views/qfd_xcst_n",
+  "lib_cell": "qfd_xcst_n",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 123.8,
+  "spread_ps": 25.9,
+  "outputs": 960,
+  "inputs": 520,
+  "launch_ps": 190.1,
+  "launch_pin": "tap_d[79]",
+  "capture_ps": 210.4,
+  "capture_pin": "b_d[0]",
+  "launch_over": 0,
+  "capture_over": 1,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "capture 210.4 > 190 (1 pins)",
+  "sha256": {
+   "qfd_xcst_n.lef": "23cde4e008ce8de7fb3af3e68d5f7e79c70c628df1f126c3543ccb716130a17b",
+   "qfd_xcst_n_ff.lib": "c593ea74b75595ec074564cb3587f7d981a23b0aacff53a803f62f1a8f91a355",
+   "insertion.json": "89fff37cfc3a05a29dc11ef2c01d172616f378970dbed0c96187b132bd256dd6",
+   "qfd_xcst_n_ss.lib": "8677967683b752d95826505052d28a2ac6706786384c7bbafdb264c401797fe1",
+   "qfd_xcst_n_tt.lib": "7975f8fefec21594fd4ff4821184c9062017fa4983ed2cb210dec0fd8c400baa"
+  }
+ },
+ {
+  "cell": "qfd_xcst_s",
+  "view": "physical/ref_tile/qfd_xcst_s/views/qfd_xcst_s",
+  "lib_cell": "qfd_xcst_s",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 128.0,
+  "spread_ps": 32.4,
+  "outputs": 960,
+  "inputs": 520,
+  "launch_ps": 192.5,
+  "launch_pin": "b_d[169]",
+  "capture_ps": 189.3,
+  "capture_pin": "a_d[507]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "sha256": {
+   "qfd_xcst_s.lef": "55b3e39d92fdd0f8afb505c18c74bb44335587c8c289fea086c797c43c8f6230",
+   "insertion.json": "395f5d1f040a4420072cadba99c04785bf1845ede981e0e7b36026fe98036ed0",
+   "qfd_xcst_s_ss.lib": "36708f3a224b86c505a7be7b51b00059b2942d2b2204539989280f09bba503f5",
+   "qfd_xcst_s_tt.lib": "cad2a2803caecd271a2dee367849f63b96d03b8054dd8838ccc5b71e1196a9ee",
+   "qfd_xcst_s_ff.lib": "65e0d0d964706af4610fb4be33349ff7f99dace0527b8ba13098afbd42a28b60"
+  }
+ },
+ {
+  "cell": "qfd_xs_tap",
+  "view": "physical/ref_tile/qfd_xs_tap/views/qfd_xs_tap",
+  "lib_cell": "qfd_xs_tap",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 292.0,
+  "spread_ps": 55.9,
+  "outputs": 3135,
+  "inputs": 3145,
+  "launch_ps": 240.5,
+  "launch_pin": "he_d[462]",
+  "capture_ps": 502.7,
+  "capture_pin": "rst_n",
+  "launch_over": 1,
+  "capture_over": 4,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "launch 240.5 > 220 (1 pins); capture 502.7 > 190 (4 pins)",
+  "sha256": {
+   "qfd_xs_tap_ff.lib": "7682cd9d496e046c397f2adcb199284d9c5d3840b4898b73baeb2f9a8d67e03c",
+   "qfd_xs_tap_tt.lib": "9bd86c0a75786052ebdb8383d72b098057ee080beddacecdddf135cdbc5256ee",
+   "insertion.json": "74cc35d443e9b1647b5837724dcc740065711896a0fcb0e55519222c2cc6a72f",
+   "qfd_xs_tap_ss.lib": "08b928e411cdfd2f91c8e1a4424fd93416f498054e0be98626ddf3895bf36c4f",
+   "qfd_xs_tap.lef": "4cc3fb84b4d5b2dd3d7a0d2894386acbbb1f76a5543b5dce8800cc75fb508f19"
+  }
+ }
+]
