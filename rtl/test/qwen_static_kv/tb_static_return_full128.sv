@@ -3,7 +3,7 @@
 // each HOST native WR/readback then K256/V256 without resetting. Discovery is
 // a separate executable whose frozen fixture is replayed by PROFILE0. Return
 // calendar is reservation-only; production physical phases/source/token OPEN.
-module qkd_full128_return_cell #(parameter integer PC=0, STACK=0, DISCOVERY=0)(output reg done=0, output wire [327:0] phy_command, output wire phy_clk);
+module qkd_full128_return_cell #(parameter integer PC=0, STACK=0, DISCOVERY=0, HOST_DUAL=0)(output reg done=0, output wire [327:0] phy_command, output wire phy_clk);
  localparam CYCLES=2600,RL=23;
  // Source qkd_ctrl_pc_host_static: pc_q and dsel run throughout reset;
  // hr_q takes the release edge, then dcnt needs dtab[pc]+1 edges to hgo.
@@ -18,8 +18,13 @@ module qkd_full128_return_cell #(parameter integer PC=0, STACK=0, DISCOVERY=0)(o
  string fixture_root; string fixture_file; integer fixture_fd;
  
  integer core_phase_ps=137;real CORE_FIRST;
+ integer host_wr_core,host_rd_core;
  reg core=0;initial begin void'($value$plusargs("phase=%d",core_phase_ps));
   CORE_FIRST=(core_phase_ps+416.667)/1000.0;
+  // Compile HOST request edges from the same source-bound HBM program, then
+  // drive exactly one whole CORE cycle. No actual CDC/result event selects it.
+  host_wr_core=$rtoi($ceil(((16+100+PROGRAM_SHIFT)*1.024-core_phase_ps/1000.0)/0.833334));
+  host_rd_core=$rtoi($ceil(((16+160+PROGRAM_SHIFT)*1.024-core_phase_ps/1000.0)/0.833334));
   #(core_phase_ps/1000.0);forever #0.416667 core=~core;end
  reg late_calendar;always @(posedge ck)late_calendar<=predicted_corrected;
  wire[293:0] observed_co={co[293:1],co[0]&&!(mode==7&&publish_ordinal==80)};
@@ -48,6 +53,11 @@ module qkd_full128_return_cell #(parameter integer PC=0, STACK=0, DISCOVERY=0)(o
   // First positive edge is index0. After a negative edge, core_edge points
   // at the next positive edge, which samples this fixed calendar pin.
   expected_core_put=core_slots[core_edge];expected_core_sector=core_sector[core_edge];
+  if(HOST_DUAL)begin
+   es=0;
+   if(rst&&core_edge==host_wr_core)es={1'b1,1'b1,5'd5,5'd7,19'd24427,data(24427,157),1'b1};
+   if(rst&&core_edge==host_rd_core)es={1'b0,1'b0,5'd5,5'd7,19'd24427,256'b0,1'b1};
+  end
  end
  always @(posedge core)begin
   core_edge++;
@@ -56,6 +66,13 @@ module qkd_full128_return_cell #(parameter integer PC=0, STACK=0, DISCOVERY=0)(o
    if(return_epoch!=7||return_layer!=3||return_data!==data(67,return_sector))
     $fatal(1,"actual controller dual-clock return metadata/data");
    returned_count++;
+  end
+  if(HOST_DUAL&&rst)begin
+   if(er[0])begin
+    hostreads++;
+    if(er[258:257]!=0||er[256:1]!==data(24427,157))bad("host native dual-clock read data");
+   end
+   if(cv)commits++;
   end
   if(!DISCOVERY&&rst&&(return_hfault||return_cfault))$fatal(1,"actual controller dual-clock slot fault at core%0d",core_edge);
  end
@@ -74,7 +91,7 @@ module qkd_full128_return_cell #(parameter integer PC=0, STACK=0, DISCOVERY=0)(o
  reg slots[0:CYCLES-1],srslots[0:CYCLES-1],wrslots[0:CYCLES-1],rawslots[0:CYCLES-1];
  reg sr_read_reserved=0;reg rawslot=0;wire [15:0] out_epoch;
  qkd_ctrl_pc_host_static #(.PROFILE(DISCOVERY))dut(
-   .pll_hbm(ck),.hrst(rst),.ck(ck),.rsi(rst),.pc(5'(PC)),.ci(319'b0),.co(co),
+   .pll_hbm(ck),.hrst(rst),.ck(HOST_DUAL?core:ck),.rsi(rst),.pc(5'(PC)),.ci(319'b0),.co(co),
    .es(es),.er(er),.po(po),.pi(pi),.ki(33'b0),.ko(),.fi(1'b0),.fo(fault),
    .static_cmd_owner(owner),.static_cmd(cmd),.reserved_rd(reserved),.reserved_static_col(sr_reserved),.reserved_write_col(wr_reserved),
    .static_epoch(16'd7),.expected_raw_valid(DISCOVERY ? rawslot : predicted_raw),.cfg_stack(2'(STACK)),.es_context(318'b0),.es_expected_valid(1'b0),.es_expected_identity(61'b0),.es_expected_address(29'b0),.es_expected_pc(5'b0),.es_expected_stack(2'b0),.native_commit_valid(),.native_commit_identity(),.native_commit_address(),.corrected_epoch(out_epoch),.completion_v(cv),.completion_we(cw),.completion_fault(cf));
@@ -102,9 +119,9 @@ module qkd_full128_return_cell #(parameter integer PC=0, STACK=0, DISCOVERY=0)(o
  endtask
  task automatic drive(input integer edge_index);
   integer t;t=edge_index-PROGRAM_SHIFT;
-  es=0;cmd=0;owner=t>=220;
-  if(t==100)es={1'b1,1'b1,5'd5,5'd7,19'd24427,data(24427,157),1'b1};
-  if(t==160)es={1'b0,1'b0,5'd5,5'd7,19'd24427,256'b0,1'b1};
+  if(!HOST_DUAL)es=0;cmd=0;owner=t>=220;
+  if(!HOST_DUAL&&t==100)es={1'b1,1'b1,5'd5,5'd7,19'd24427,data(24427,157),1'b1};
+  if(!HOST_DUAL&&t==160)es={1'b0,1'b0,5'd5,5'd7,19'd24427,256'b0,1'b1};
   if(t==230)cmd={10'd0,2'b0,11'd256,19'd67,1'b1};
   if(t==300||t==1360)cmd={10'b0,2'd1,30'b0,1'b1};
   if(t==1300)cmd={10'd512,2'b0,11'd768,19'd67,1'b1};
@@ -176,11 +193,11 @@ module qkd_full128_return_cell #(parameter integer PC=0, STACK=0, DISCOVERY=0)(o
      if(out_epoch!=7||sec!=expected_sector||co[281:26]!==data(67,expected_sector))bad($sformatf("KV row phase%0d index%0d sec%0d",phase,landed,sec));
      landed++;
     end
-    if(er[0])begin
+    if(!HOST_DUAL&&er[0])begin
      hostreads++;
      if(er[258:257]!=0||er[256:1]!==data(24427,157))bad("host native read data");
     end
-    if(cv)commits++;
+    if(!HOST_DUAL&&cv)commits++;
     if(fault||cf)bad($sformatf("controller sticky fault phase%0d t%0d",phase,t));
     @(negedge ck);
    end
@@ -199,7 +216,7 @@ module qkd_full128_return_cell #(parameter integer PC=0, STACK=0, DISCOVERY=0)(o
  end
 endmodule
 
-module tb_static_return_full128 #(parameter integer DISCOVERY=0);
+module tb_static_return_full128 #(parameter integer DISCOVERY=0,HOST_DUAL=0);
  wire [127:0] done;
  wire [127:0] phy_clk;wire [327:0] phy_command[0:127];
  integer paired_row_conflicts=0,paired_column_conflicts=0,phy_edges=0;
@@ -213,11 +230,11 @@ module tb_static_return_full128 #(parameter integer DISCOVERY=0);
   phy_edges++;
  end
  for(genvar i=0;i<128;i++)begin:pc
-  qkd_full128_return_cell #(.PC(i%32),.STACK(i/32),.DISCOVERY(DISCOVERY)) cell_i(.done(done[i]),.phy_clk(phy_clk[i]),.phy_command(phy_command[i]));
+  qkd_full128_return_cell #(.PC(i%32),.STACK(i/32),.DISCOVERY(DISCOVERY),.HOST_DUAL(HOST_DUAL)) cell_i(.done(done[i]),.phy_clk(phy_clk[i]),.phy_command(phy_command[i]));
  end
  always @(done)if(&done)begin
   $display("AUDIT pairedPC sharedbus simultaneous row%0d column%0d edges%0d DDRSerializationOPEN",paired_row_conflicts,paired_column_conflicts,phy_edges);
-  $display("PASS full128 persistent actual controllers 65536 KV sectors hostWriteRead128 completions256 discovery%0d physicalPhaseSourceProfileFullTokenOPEN",DISCOVERY);
+  $display("PASS full128 persistent actual controllers 65536 KV sectors hostWriteRead128 completions256 discovery%0d hostDual%0d physicalPhaseSourceProfileFullTokenOPEN",DISCOVERY,HOST_DUAL);
   $finish;
  end
 endmodule

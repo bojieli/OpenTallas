@@ -1,0 +1,29 @@
+{
+  "status": "OPEN",
+  "scope": "Actual 128-controller digital component with independent abstract288-bit PHY data interfaces. Raw command bus coincidence audit is not a validated HBM3 DDR command encoder/serializer.",
+  "sources": [
+    {
+      "url": "https://docs.amd.com/r/en-US/pg276-axi-hbm/HBM-Topology",
+      "type": "manufacturer HBM topology",
+      "supports": "Two pseudo-channels share a command/address/control bus. This HBM2-generation topology does not establish HBM3 DDR command edge occupancy."
+    },
+    {
+      "url": "https://assets.micron.com/adobe/assets/urn%3Aaaid%3Aaem%3A275edf31-79e3-4b6c-8bbd-a233babe9281/renditions/original/as/micron-hbm2e-memory-wp.pdf",
+      "type": "manufacturer HBM2E technical brief",
+      "supports": "Semi-independent pseudo-channels share row/column command buses; alternating pseudo-channel column operations uses the shared interface. Not a license to apply HBM2E timing to HBM3E."
+    },
+    {
+      "url": "https://www.micron.com/products/memory/hbm/hbm3e",
+      "type": "manufacturer HBM3E product description",
+      "supports": "HBM3E provides16 independent channels and32 pseudo-channels. This product page does not provide command DDR edge encoding."
+    }
+  ],
+  "required_next": "Join actual source-pinned HBM3E PHY command serializer and its CK edge encoding, pair shared-bus occupancy, data beat/sector mapping, RL and phase; then compile one legal shared-PC row/column calendar, price measured bandwidth/preload/CDC depth. Do not silently add ready arbitration or assume per-PC half-rate from HBM2E.",
+  "other_open": [
+    "True HOST controller dual-clock ABI in the first common-HOST-clock run",
+    "Warm epoch/refresh/layer continuation",
+    "Full36-layer compiled native HOST/source program",
+    "Physical clock insertion, phase and routed timing",
+    "Full token"
+  ]
+}
