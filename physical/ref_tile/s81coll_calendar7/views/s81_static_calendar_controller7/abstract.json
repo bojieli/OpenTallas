@@ -1,0 +1,195 @@
+{
+  "name": "s81_static_calendar_controller7",
+  "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/routes/s81coll_calendar7_c2n_02a0655f8/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -2.995100834013442e-10 min 7.487399589223287e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/routes/s81coll_calendar7_c2n_02a0655f8/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/record/views/s81_static_calendar_controller7:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/src/physical/ref_tile/s81coll_calendar7/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/routes/s81coll_calendar7_c2n_02a0655f8/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/src/physical/asap7_memory_macros/ot_rom_4096x266_m8:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 6.029643451199718e-11 min 3.118283409264677e-12",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/routes/s81coll_calendar7_c2n_02a0655f8/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/record/views/s81_static_calendar_controller7:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/src/physical/ref_tile/s81coll_calendar7/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/routes/s81coll_calendar7_c2n_02a0655f8/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/src/physical/asap7_memory_macros/ot_rom_4096x266_m8:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 9.78334080414811e-12 min 4.626471428181844e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/routes/s81coll_calendar7_c2n_02a0655f8/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/record/views/s81_static_calendar_controller7:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/src/physical/ref_tile/s81coll_calendar7/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/routes/s81coll_calendar7_c2n_02a0655f8/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/src/physical/asap7_memory_macros/ot_rom_4096x266_m8:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/src/physical/ref_tile/s81coll_calendar7/signoff.sdc",
+    "sha256": "ead8f733ac4dad244460e67c3e62e96e6858a2a36ec2a6999c9a2f29dd9946b1",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict",
+    "in_verdict_sequence": true
+  },
+  "verdict": {
+    "json": "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/cl/routed_ioref.a1.json",
+    "sha256": "dcf9427bf3264434f9a36bda3ce619248cfee0eba8bfa2e0f912b8040af46680",
+    "expect_ps": {
+      "tt": 9.78,
+      "ff": 3.12
+    },
+    "tol_ps": 0.05,
+    "work": "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/routes/s81coll_calendar7_c2n_02a0655f8/work/orfs",
+    "files": {
+      "/meas/app0_io_ref_routed.sdc": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
+        "sha256": "cb2805c3a4a622051ebd24447f6898db2d82fdd6060317692dc3180ef5ac6a7e"
+      },
+      "/work/results/asap7/opentallas_s81_static_calendar_controller7_asap7_ref_s81coll_calendar7_c2n_02a0655f8/base/6_final.odb": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/routes/s81coll_calendar7_c2n_02a0655f8/work/orfs/results/asap7/opentallas_s81_static_calendar_controller7_asap7_ref_s81coll_calendar7_c2n_02a0655f8/base/6_final.odb",
+        "sha256": "e22c6a2012511e379aa3d85c21ecea4c96b0f02c81f46a4fac1f86fc0d0be225"
+      },
+      "/work/results/asap7/opentallas_s81_static_calendar_controller7_asap7_ref_s81coll_calendar7_c2n_02a0655f8/base/6_final.sdc": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/routes/s81coll_calendar7_c2n_02a0655f8/work/orfs/results/asap7/opentallas_s81_static_calendar_controller7_asap7_ref_s81coll_calendar7_c2n_02a0655f8/base/6_final.sdc",
+        "sha256": "0dcf9dd68ce27927f8affe70b13cf074033fa3cade395194f6d08a1a5d2d0dac"
+      },
+      "/work/results/asap7/opentallas_s81_static_calendar_controller7_asap7_ref_s81coll_calendar7_c2n_02a0655f8/base/6_final.spef": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/routes/s81coll_calendar7_c2n_02a0655f8/work/orfs/results/asap7/opentallas_s81_static_calendar_controller7_asap7_ref_s81coll_calendar7_c2n_02a0655f8/base/6_final.spef",
+        "sha256": "811895148eeb23f909f7cf49a7972cafc7ebdd9f5ca14f61d1ff1240016ded66"
+      },
+      "/work/w18_extra.sdc": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/routes/s81coll_calendar7_c2n_02a0655f8/work/orfs/w18_extra.sdc",
+        "sha256": "ead8f733ac4dad244460e67c3e62e96e6858a2a36ec2a6999c9a2f29dd9946b1"
+      }
+    },
+    "check": {
+      "ff": {
+        "export_ps": 3.118283409264677,
+        "verdict_ps": 3.12,
+        "ok": true
+      },
+      "tt": {
+        "export_ps": 9.78334080414811,
+        "verdict_ps": 9.78,
+        "ok": true
+      }
+    }
+  },
+  "sdc_sequence": {
+    "ss": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_s81_static_calendar_controller7_asap7_ref_s81coll_calendar7_c2n_02a0655f8/base/6_final.odb",
+        "set ::ot_ce_corner ss",
+        "read_sdc /work/results/asap7/opentallas_s81_static_calendar_controller7_asap7_ref_s81coll_calendar7_c2n_02a0655f8/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_s81_static_calendar_controller7_asap7_ref_s81coll_calendar7_c2n_02a0655f8/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "ff": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_s81_static_calendar_controller7_asap7_ref_s81coll_calendar7_c2n_02a0655f8/base/6_final.odb",
+        "set ::ot_ce_corner ff",
+        "read_sdc /work/results/asap7/opentallas_s81_static_calendar_controller7_asap7_ref_s81coll_calendar7_c2n_02a0655f8/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_s81_static_calendar_controller7_asap7_ref_s81coll_calendar7_c2n_02a0655f8/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "tt": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_s81_static_calendar_controller7_asap7_ref_s81coll_calendar7_c2n_02a0655f8/base/6_final.odb",
+        "set ::ot_ce_corner tt",
+        "read_sdc /work/results/asap7/opentallas_s81_static_calendar_controller7_asap7_ref_s81coll_calendar7_c2n_02a0655f8/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_s81_static_calendar_controller7_asap7_ref_s81coll_calendar7_c2n_02a0655f8/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    }
+  },
+  "macro_views": [
+    "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7-c2n-02a0655f8/src/physical/asap7_memory_macros/ot_rom_4096x266_m8"
+  ],
+  "files": {
+    "s81_static_calendar_controller7.lef": "07dd1be4d54da044cdd2723b134abec69e3c4519e3d8d1329da3108e034060e7",
+    "s81_static_calendar_controller7_ff.lib": "e57d70634572b2595470c3535e69e0cccbc5d9b77c8d6e315a8f68341ad04eb2",
+    "s81_static_calendar_controller7_ss.lib": "df1c28d32c256527e89c74d63522af34252a4054fe0e6df5a959f2ded237aba2",
+    "s81_static_calendar_controller7_tt.lib": "9f6c0341f5f19505e8a1b1d1a2ca3e1d00397a764a32f2d966ee8c206a236835"
+  },
+  "ok": true,
+  "checked": true
+}
