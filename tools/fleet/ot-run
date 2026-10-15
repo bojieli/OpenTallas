@@ -24,6 +24,8 @@ ot-heavy directly) are not held.  OT_RUN_NO_LOAD_HOLD=1 disables the hold.  --ma
 Immediate eligibility uses admit_gb (the actual atomic ot-heavy admission capacity), not free_gb after subtracting
 unstarted waiters. When no host can admit now, planned free_gb still chooses the memory queue; waiting jobs do not
 reserve physical RAM or prevent a smaller job using otherwise idle capacity. ot-heavy rechecks admission atomically.
+Queue candidates must have enough total physical RAM after mandatory headroom for the request; an idle small host
+cannot take an impossible request or release a capable host's CPU hold. Older probes without a total retain legacy eligibility.
 The CPU hold considers memory-admissible hosts first; if none admits the request, it considers the hosts eligible
 for a memory queue. An underloaded host without enough memory cannot release a hold on memory-admissible hosts.
 --max-wait SEC: give up (exit 75, NOT RUN) when the host has not admitted the command after SEC seconds.
