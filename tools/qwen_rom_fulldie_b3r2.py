@@ -1104,7 +1104,13 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
                 v.V5_FINAL_MASTERS(model, o, k)
                 return o
             v.masters = _mfinal
-        _relays(v, m, relay_pitch)
+        _corr0 = v.CORR
+        if m.get('corridor_lanes'):
+            v.CORR = min(w_ for _, w_ in m['corridor_lanes'])
+        try:
+            _relays(v, m, relay_pitch)
+        finally:
+            v.CORR = _corr0
         if getattr(v, 'RELAY_REACH_GATE', False):   # tp8b (die timing by construction)
             _reset_tree(v, m)     # after the relays: legalised against the FINAL placement
         if before_relays is not None:
@@ -1223,7 +1229,7 @@ def _su_vm_bus(v, m, a_bits=None, q_bits=None):
             # These are unbound abstract pins, not a reusable physical view.
             for retired in ('xd', 'xr'):
                 q.ports.pop(retired, None)
-                q.order[:] = [p for p in q.order if p != retired]
+                q.order[:] = [x_ for x_ in q.order if x_ != retired]   # not 'p': py3.12+ inlined comprehension
         for M_, f, mine in ((s, 'S' if north else 'N', ('va', 'vq')), (q, 'N' if north else 'S', ('sa', 'sq'))):
             for pn in mine:                 # the base wrapper's default pin group for the new bus: replaced here
                 if pn in M_.ports:
@@ -1823,6 +1829,11 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     COLS = v.COLS
     cx_list = [m['col_x'](c) + v.TILE_BODY_W + v.CORR / 2 for c in range(COLS)]
     corr_x0 = [m['col_x'](c) + v.TILE_BODY_W for c in range(COLS)]
+    if m.get('corridor_lanes'):
+        # split compute PM-H-S: per-column station lanes (even W of its MY tile, odd E of its R0 tile); v.CORR is the
+        # lane width for the whole relay plan (set by the caller)
+        corr_x0 = [x0 for x0, _ in m['corridor_lanes']]
+        cx_list = [x0 + v.CORR / 2 for x0 in corr_x0]
     fields = [r['rect'] for r in m['regions'] if r['kind'] == 'tile_field']
     fw, fe = fields[0], fields[1]
 
