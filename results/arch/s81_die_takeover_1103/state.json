@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.s81.die.takeover.v1",
-  "updated_utc": "2026-10-15T18:10:24.708444+00:00",
+  "updated_utc": "2026-10-15T18:14:59.657457+00:00",
   "source_commit": "eb9cfa044920f23a9565d6c5fda43d2d5f217d06",
   "native_qualified": false,
   "clock_source_join": {
@@ -164,7 +164,7 @@
       }
     },
     "clock_rule": "Deliver each actual root at phi - wire - R from source-matched insertion.json; no inherited/default R",
-    "parent_geometry_open": "v23 cth outline790.56 but sub_layout row list still serial; v24 report uses777.60. Actual NT+return-column child origins and first/last chain anchors must be reconciled"
+    "parent_geometry_open": "Actual NT substitution ctfxs25.92+ctfl25.92 replacing serialctfx12.96 adds38.88, not advertised19.44: v22cth771.12 ->810.00 lowerbound. v23claimed790.56 is not an actual row packing. Head/tail independent chain lengths/root controls must be source-reconciled before global grant."
   },
   "blockers": [
     {
@@ -231,5 +231,24 @@
       ],
       "scope": "GEN20 old-topology/v23+stationgrants alternative; NOT SA; source20 andexactfinalmasterfootprintfix20ebb0973"
     }
-  ]
+  ],
+  "pq_headpc_candidate_leaf_grant": {
+    "source_commit": "bb15fdbd3",
+    "outline_um": [
+      142.56,
+      103.68
+    ],
+    "pins": "physical/ref_tile_specs/s81pq_native/s81pq_qb_headpc_native_spread_pins.tcl",
+    "pins_sha256": "e5ceebddfc4999790958a31565a365ee3f1ef7619531c3506717bab56fc56d6e",
+    "decision": "Authorize exact candidate leaf closure; final PQ parent growth held until actual child origins and every incident neighbor fit",
+    "extra_data_edges": 0,
+    "phase": "Actual source-matched routed insertion and native pin timing required"
+  },
+  "real_view_guard": {
+    "tool": "tools/s81/die_sta.py",
+    "flag": "--require-real-views",
+    "behavior": "Refuse missing source-filtered SS/TT/FF library files before timing library emission; no interim cell or SS-as-TT substitution",
+    "tests": "7 unit regressions PASS:2 new real-view gate +5 collective source binding",
+    "scope": "Library gate only; physical clock/phase/hardware composition remain independent requirements"
+  }
 }
