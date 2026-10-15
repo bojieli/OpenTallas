@@ -44,11 +44,23 @@
    "native_qualified": false,
    "done_boundary": "legacy_internal_core",
    "external_write_deadlines_observed": false
+  },
+  {
+   "layer": 20,
+   "observed_layer_verdict": "PASS",
+   "request_sha256": "de4e16b19f65e534e05a3807434fef6d6dae095aebb8b5a27a77bd49cea37d45",
+   "counts": {
+    "hc_read": 1288,
+    "su_read": 2569,
+    "hc_write": 970,
+    "su_write": 1633
+   },
+   "native_qualified": false,
+   "done_boundary": "legacy_internal_core",
+   "external_write_deadlines_observed": false
   }
  ],
- "pending_layers": [
-  20
- ],
+ "pending_layers": [],
  "remote_root": "ot-epyc1tb:/srv/opentallas-scratch/codex/s81-statictrace",
  "scope": "Production-shape SU/HC RTL with DPI arithmetic, ideal VM and fixture numerical producers; observed row requests only",
  "missing": [
