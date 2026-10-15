@@ -1,0 +1,105 @@
+{
+  "schema": "hbm_smh_native_mapped_numerical_v1",
+  "updated_utc": "2026-10-15T09:53:15.938110+00:00",
+  "status": "STACK0_PASS_STACK1_LIVE",
+  "source_commits": [
+    "ceb834c54",
+    "5fd91715d"
+  ],
+  "source_pins": "native_build_source_pins.json",
+  "source_archive_immutable": true,
+  "positive_unit": "oth-ubuntu-731050-1792055886",
+  "host": "ot-epyc1tb",
+  "positive_exit": 0,
+  "active_sms_proven": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "exact_1088_records": 320,
+  "actual_PHY_sectors": 1376,
+  "bit_exact_FP32_results": 64,
+  "result_after_command_edges": 197,
+  "cold_prefetch_ps_range": [
+    103749.958,
+    112916.621
+  ],
+  "mutant": {
+    "mutation": "first external activation xwrite bit7 flipped",
+    "verdict": "FAIL expected at native numerical mismatch",
+    "log": "native_mapped_stack0/mutant.log"
+  },
+  "cases": [
+    {
+      "sm": 0,
+      "sha256": "845e13683bece2dc6a2e5a3ff7d90c1c3186881e984262a783fc524d465696b0",
+      "verdict": "MAPPED4_NATIVE_SM PASS sm=0 stack=0 exact_records=40 sectors=172 PHY_bursts=52 row_base=20738 cold_prefetch_ps=103749.958000 native_FP32columns=8 result_after_command_edges=197 full_price_qualified=0"
+    },
+    {
+      "sm": 1,
+      "sha256": "fa2c26bad46d6083dcc7dc166579142651253f6cc27e6dd2249e08a33bc4ff32",
+      "verdict": "MAPPED4_NATIVE_SM PASS sm=1 stack=0 exact_records=40 sectors=172 PHY_bursts=52 row_base=20738 cold_prefetch_ps=103749.958000 native_FP32columns=8 result_after_command_edges=197 full_price_qualified=0"
+    },
+    {
+      "sm": 2,
+      "sha256": "9b8299a5a94744ca902f2a7f00989d0abcc6c81d95a2dfe752acd03b7638e251",
+      "verdict": "MAPPED4_NATIVE_SM PASS sm=2 stack=0 exact_records=40 sectors=172 PHY_bursts=52 row_base=20738 cold_prefetch_ps=103749.958000 native_FP32columns=8 result_after_command_edges=197 full_price_qualified=0"
+    },
+    {
+      "sm": 3,
+      "sha256": "738d3015a79ba3f6cee8cc1f92a00aabf10291336d5a6dd49819e080d0e65f90",
+      "verdict": "MAPPED4_NATIVE_SM PASS sm=3 stack=0 exact_records=40 sectors=172 PHY_bursts=52 row_base=20738 cold_prefetch_ps=103749.958000 native_FP32columns=8 result_after_command_edges=197 full_price_qualified=0"
+    },
+    {
+      "sm": 4,
+      "sha256": "9bb51429394c96ef44054376cd29ee5876287b645ec967243cff47c774c8f0b7",
+      "verdict": "MAPPED4_NATIVE_SM PASS sm=4 stack=0 exact_records=40 sectors=172 PHY_bursts=52 row_base=20738 cold_prefetch_ps=112916.621000 native_FP32columns=8 result_after_command_edges=197 full_price_qualified=0"
+    },
+    {
+      "sm": 5,
+      "sha256": "fc3023e27ff913d56e54c7af57be0a680b358b4fe54c6c422d8335217b66954e",
+      "verdict": "MAPPED4_NATIVE_SM PASS sm=5 stack=0 exact_records=40 sectors=172 PHY_bursts=52 row_base=20738 cold_prefetch_ps=107916.623000 native_FP32columns=8 result_after_command_edges=197 full_price_qualified=0"
+    },
+    {
+      "sm": 6,
+      "sha256": "aa7c191bfb1ee63c654d7bf2df5fe087c0efaae4b3eee9a4c134d5aace35c547",
+      "verdict": "MAPPED4_NATIVE_SM PASS sm=6 stack=0 exact_records=40 sectors=172 PHY_bursts=52 row_base=20738 cold_prefetch_ps=103749.958000 native_FP32columns=8 result_after_command_edges=197 full_price_qualified=0"
+    },
+    {
+      "sm": 7,
+      "sha256": "1963cdddf10b303398b2b264882cfbb8d6513f433928ce717049c1eba3e904f8",
+      "verdict": "MAPPED4_NATIVE_SM PASS sm=7 stack=0 exact_records=40 sectors=172 PHY_bursts=52 row_base=20738 cold_prefetch_ps=103749.958000 native_FP32columns=8 result_after_command_edges=197 full_price_qualified=0"
+    }
+  ],
+  "scope": "Actual checkpoint\u2192mapped4 PHY\u219237 service SRAMs\u21922 SRAM programme planes83/34\u2192original production NC8/SUB4 arithmetic. External seedX explicitly declared; golden comparison only. Behavioral PHY/controller retained.",
+  "full_price_qualified": false,
+  "remaining": [
+    "STACK1 SM08..12 true specialization",
+    "Actual VM activation/xwrite producer",
+    "Common native len4 DRAM controller",
+    "WB/34band/native source composition",
+    "Ahead-prefetch full-operation immutable price",
+    "Fullbook installation/offset support",
+    "1024 word programme whole-operation capacity",
+    "Physical completefront slots and closure"
+  ],
+  "live_stack1": {
+    "unit": "oth-ubuntu-797598-1792057960",
+    "pid": 797622,
+    "session": 80021,
+    "directory": "/var/tmp/smh-native-mapped-1015-v2",
+    "admission_directory": "/var/tmp/smh-native-stack1-reuse-1015-731050",
+    "same_objects_reused": true
+  },
+  "failed_stack1_admission": {
+    "unit": "oth-ubuntu-1630988-1792057951",
+    "host": "ot-epyc4",
+    "exit": 127,
+    "reason": "Shared directory name existed on host without script; command did not build. Corrected to unique existing-object admission directory."
+  }
+}

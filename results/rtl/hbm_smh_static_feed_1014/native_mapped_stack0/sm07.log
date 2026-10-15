@@ -1,0 +1,5 @@
+MAPPED4_NATIVE_SM PASS sm=7 stack=0 exact_records=40 sectors=172 PHY_bursts=52 row_base=20738 cold_prefetch_ps=103749.958000 native_FP32columns=8 result_after_command_edges=197 full_price_qualified=0
+- rtl/test/tb_smh_mapped_checkpoint_native.sv:120: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 949ns; walltime 10.745 s; speed 88.357 ns/s
+- Verilator: cpu 10.745 s on 1 threads; alloced 1075 MB
