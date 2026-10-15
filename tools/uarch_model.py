@@ -17319,3 +17319,26 @@ def hbm_host_static_ingress_model():
       area_slot_um=[432,432], slot_area_um2=186624,
       sink_bound='under700 source registers, no programme SRAM inside ingress; mapped area and CTS still required',
       scope='component ingress only; actual host packet/landing join, heterogeneous target adapters, all-ready reduction, fullchip binding and performance remain OPEN')
+
+
+def qwen_kv_calendar_replay_model(depth=64, width=64, replicas=1):
+    """Sizing before RTL: bounded boot-flop sparse calendar leaf, no SRAM fiction."""
+    if not 1 <= depth <= 64 or not 1 <= width <= 64 or replicas < 1:
+        raise ValueError("leaf depth/width must be 1..64; split larger calendars")
+    return dict(schema="opentallas.qwen-kv-calendar-replay.v1", depth=depth,
+      width=width, replicas=replicas, macs_per_cycle=0,
+      storage_bits_per_leaf=depth*(32+width),
+      storage_implementation="explicit boot flops, no behavioral on-chip RAM substitute",
+      boot_bytes_per_event=(32+width+7)//8, maximum_events_per_cycle=1,
+      input_capture_edges=1, output_slot_predecode_edges=1,
+      event_time_origin="cycle0 interval after internally accepted start",
+      boundary_bits=dict(cfg_inputs=2+6+32+width, start=1, payload_outputs=width,
+                         status_outputs=5+32),
+      data_bytes_per_cycle=width/8, input_fanout=depth,
+      output_mux_inputs=depth, config_decode_outputs=depth,
+      maximum_storage_bits_all_replicas=replicas*depth*(32+width),
+      routing_tracks_needed=width, assigned_channel_capacity=None,
+      physical_slot_um=None, mapped_area_um2=None,
+      latency_contribution="one start-pin capture edge; event timestamps already include downstream path ages",
+      production_image="MISSING persistent boot/ingest, all36 perPC reservations, front capacity/release and independent ring/core expectations",
+      status="COMPONENT_RTL_ONLY_NO_PRODUCTION_FIT_OR_RATE_CLAIM")

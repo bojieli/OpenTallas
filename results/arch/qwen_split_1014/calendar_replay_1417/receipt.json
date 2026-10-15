@@ -1,0 +1,203 @@
+{
+  "status": "PASS_COMPONENT_ONLY",
+  "elaboration": {
+    "HBM": {
+      "width": 64,
+      "source_ff_bits": 6428,
+      "storage_bits": 6144,
+      "inferred_memory_cells": 0,
+      "direct_pin_flop_bits": {
+        "payload": 64,
+        "cfg_addr": 6,
+        "cfg_time": 32,
+        "cfg_payload": 64,
+        "cfg_we": 1,
+        "cfg_seal": 1,
+        "start": 1
+      },
+      "scope": "source elaboration only; no mapped cells/area/CTS/timing claim"
+    },
+    "CORE": {
+      "width": 33,
+      "source_ff_bits": 4382,
+      "storage_bits": 4160,
+      "inferred_memory_cells": 0,
+      "direct_pin_flop_bits": {
+        "payload": 33,
+        "cfg_addr": 6,
+        "cfg_time": 32,
+        "cfg_payload": 33,
+        "cfg_we": 1,
+        "cfg_seal": 1,
+        "start": 1
+      },
+      "scope": "source elaboration only; no mapped cells/area/CTS/timing claim"
+    }
+  },
+  "replication": {
+    "pseudo_channels": 128,
+    "domains": 2,
+    "events_per_domain_leaf": 64,
+    "source_ff_bits_128PC_two_domains": 1383680,
+    "storage_bits_128PC_two_domains": 1318912,
+    "stage_coverage": 1,
+    "actual_all36_rowcount_evidence": false,
+    "physical_slot_grant": false,
+    "limitation": "One leaf/domain/PC has only64 events; actual512 sectors perPC perlayer need at least8 leaves/domain before command/front extras, unless source-proven compression/reuse replaces this mechanism. No all36 coverage."
+  },
+  "model": {
+    "schema": "opentallas.qwen-kv-calendar-replay.v1",
+    "depth": 64,
+    "width": 64,
+    "replicas": 1,
+    "macs_per_cycle": 0,
+    "storage_bits_per_leaf": 6144,
+    "storage_implementation": "explicit boot flops, no behavioral on-chip RAM substitute",
+    "boot_bytes_per_event": 12,
+    "maximum_events_per_cycle": 1,
+    "input_capture_edges": 1,
+    "output_slot_predecode_edges": 1,
+    "event_time_origin": "cycle0 interval after internally accepted start",
+    "boundary_bits": {
+      "cfg_inputs": 104,
+      "start": 1,
+      "payload_outputs": 64,
+      "status_outputs": 37
+    },
+    "data_bytes_per_cycle": 8.0,
+    "input_fanout": 64,
+    "output_mux_inputs": 64,
+    "config_decode_outputs": 64,
+    "maximum_storage_bits_all_replicas": 6144,
+    "routing_tracks_needed": 64,
+    "assigned_channel_capacity": null,
+    "physical_slot_um": null,
+    "mapped_area_um2": null,
+    "latency_contribution": "one start-pin capture edge; event timestamps already include downstream path ages",
+    "production_image": "MISSING persistent boot/ingest, all36 perPC reservations, front capacity/release and independent ring/core expectations",
+    "status": "COMPONENT_RTL_ONLY_NO_PRODUCTION_FIT_OR_RATE_CLAIM"
+  },
+  "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_calendar_replay.sv": "b1cc730b3eff43790aea3614032be87f373370fdfc3eafcacd076561e92a6488",
+    "rtl/test/qwen_static_kv/tb_qkd_kv_calendar_replay.sv": "c957681d2bd6efd09beb0f41848cf81c9971b99e5b2c75f56c838ee3a5277a9a",
+    "tools/qwen_static_kv/calendar_replay.py": "53115f3c3dca7809c6012e414fd1743127528fa219d04a750ef0ac970f304923",
+    "tools/qwen_static_kv/check_calendar_replay.py": "7cdd6c6fca43c08269f736e4fcfd8a8f039fba522291830ae9e1ab8eae514ab3",
+    "tools/uarch_model.py": "72b1dfcb50e8e04651eaaac428e6d1d56be5618cab38fec4f759df616fa730cc"
+  },
+  "runs": [
+    {
+      "name": "hbm_m0",
+      "exit": 0,
+      "mutant_rejected": false,
+      "log": "hbm_m0.log"
+    },
+    {
+      "name": "hbm_m1",
+      "exit": 1,
+      "mutant_rejected": true,
+      "log": "hbm_m1.log"
+    },
+    {
+      "name": "hbm_m2",
+      "exit": 1,
+      "mutant_rejected": true,
+      "log": "hbm_m2.log"
+    },
+    {
+      "name": "core_m0",
+      "exit": 0,
+      "mutant_rejected": false,
+      "log": "core_m0.log"
+    },
+    {
+      "name": "core_m1",
+      "exit": 1,
+      "mutant_rejected": true,
+      "log": "core_m1.log"
+    },
+    {
+      "name": "core_m2",
+      "exit": 1,
+      "mutant_rejected": true,
+      "log": "core_m2.log"
+    }
+  ],
+  "negative_controls": [
+    {
+      "name": "HBM_production",
+      "error": "production missing all36 source calendar/physical clock-path receipts and storage/home/cost"
+    },
+    {
+      "name": "HBM_observation",
+      "error": "runtime controller/arrival/ready traces cannot define a calendar"
+    },
+    {
+      "name": "HBM_source",
+      "error": "missing or changed actual producer/consumer source rtl/qwen_sys/static_kv_20261014/qkd_kv_calendar_replay.sv"
+    },
+    {
+      "name": "HBM_cycle",
+      "error": "explicit output interval origin required"
+    },
+    {
+      "name": "HBM_collision",
+      "error": "strict increasing event cycles before stop required"
+    },
+    {
+      "name": "HBM_capacity",
+      "error": "split into 1..64-event leaves"
+    },
+    {
+      "name": "HBM_width",
+      "error": "nonzero exact payload width required"
+    },
+    {
+      "name": "HBM_stop",
+      "error": "strict increasing event cycles before stop required"
+    },
+    {
+      "name": "HBM_all36",
+      "error": "leaf has no actual36-layer rowcount/image coverage; stage_count must be1"
+    },
+    {
+      "name": "CORE_production",
+      "error": "production missing all36 source calendar/physical clock-path receipts and storage/home/cost"
+    },
+    {
+      "name": "CORE_observation",
+      "error": "runtime controller/arrival/ready traces cannot define a calendar"
+    },
+    {
+      "name": "CORE_source",
+      "error": "missing or changed actual producer/consumer source rtl/qwen_sys/static_kv_20261014/qkd_kv_calendar_replay.sv"
+    },
+    {
+      "name": "CORE_cycle",
+      "error": "explicit output interval origin required"
+    },
+    {
+      "name": "CORE_collision",
+      "error": "strict increasing event cycles before stop required"
+    },
+    {
+      "name": "CORE_capacity",
+      "error": "split into 1..64-event leaves"
+    },
+    {
+      "name": "CORE_width",
+      "error": "nonzero exact payload width required"
+    },
+    {
+      "name": "CORE_stop",
+      "error": "strict increasing event cycles before stop required"
+    },
+    {
+      "name": "CORE_all36",
+      "error": "leaf has no actual36-layer rowcount/image coverage; stage_count must be1"
+    }
+  ],
+  "production_installable": false,
+  "physical_qualified": false,
+  "full_token_qualified": false,
+  "limitation": "64-event mechanism per domain only. Test image roots are declared boundary stimuli, not fullshape actual calendars; no controller/front/ring composition, physical storage fit or die binding."
+}
