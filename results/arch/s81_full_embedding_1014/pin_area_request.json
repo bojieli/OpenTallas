@@ -1,0 +1,1101 @@
+{
+  "schema": "opentallas.s81.full-embedding.physical-request.v1",
+  "owner_quarters": 4,
+  "physical_head_shards_per_quarter": 3,
+  "global_physical_heads": 12,
+  "global_macros": 5052,
+  "macros_per_head": 421,
+  "quarter_macro_count": 1263,
+  "macro": {
+    "top": "ot_rom_8192x274_m8",
+    "source": "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8.v",
+    "width_um": 125.712,
+    "height_um": 119.34,
+    "area_um2": 15002.470080000001,
+    "payload_bits": 256,
+    "physical_word_bits": 274,
+    "depth": 8192,
+    "bank_image": "s81_embed_o{owner}_b{bank}.viamap.hex"
+  },
+  "raw_macro_area_mm2_per_head": 6.31603990368,
+  "raw_macro_area_mm2_full_table": 75.79247884416,
+  "shard": {
+    "top": "ot_s81_embed_rom_tree",
+    "parameters": {
+      "OWNER": "0..3",
+      "FIRST": "421*physical_shard_index_within_quarter",
+      "COUNT": 421,
+      "LEVEL": 5,
+      "SHARD_FIRST": "FIRST"
+    },
+    "ports": {
+      "clocks": {
+        "dir": "input",
+        "width": 8
+      },
+      "rst_n": {
+        "dir": "input",
+        "width": 1
+      },
+      "ce": {
+        "dir": "input",
+        "width": 1
+      },
+      "bank": {
+        "dir": "input",
+        "width": 11
+      },
+      "address": {
+        "dir": "input",
+        "width": 13
+      },
+      "valid": {
+        "dir": "output",
+        "width": 1
+      },
+      "data": {
+        "dir": "output",
+        "width": 274
+      }
+    },
+    "control_flops_per_root": [
+      900,
+      6364,
+      6364,
+      6364,
+      6364,
+      6364,
+      6364,
+      4237
+    ],
+    "macro_clock_pins_per_root": [
+      0,
+      64,
+      64,
+      64,
+      64,
+      64,
+      64,
+      37
+    ],
+    "tree_internal_nodes": [
+      {
+        "level": 5,
+        "first_relative_bank": 0,
+        "banks": 421,
+        "clock_group": 0,
+        "flops": 300
+      },
+      {
+        "level": 4,
+        "first_relative_bank": 0,
+        "banks": 256,
+        "clock_group": 0,
+        "flops": 300
+      },
+      {
+        "level": 4,
+        "first_relative_bank": 256,
+        "banks": 165,
+        "clock_group": 0,
+        "flops": 300
+      },
+      {
+        "level": 3,
+        "first_relative_bank": 0,
+        "banks": 64,
+        "clock_group": 1,
+        "flops": 300
+      },
+      {
+        "level": 3,
+        "first_relative_bank": 64,
+        "banks": 64,
+        "clock_group": 2,
+        "flops": 300
+      },
+      {
+        "level": 3,
+        "first_relative_bank": 128,
+        "banks": 64,
+        "clock_group": 3,
+        "flops": 300
+      },
+      {
+        "level": 3,
+        "first_relative_bank": 192,
+        "banks": 64,
+        "clock_group": 4,
+        "flops": 300
+      },
+      {
+        "level": 3,
+        "first_relative_bank": 256,
+        "banks": 64,
+        "clock_group": 5,
+        "flops": 300
+      },
+      {
+        "level": 3,
+        "first_relative_bank": 320,
+        "banks": 64,
+        "clock_group": 6,
+        "flops": 300
+      },
+      {
+        "level": 3,
+        "first_relative_bank": 384,
+        "banks": 37,
+        "clock_group": 7,
+        "flops": 300
+      },
+      {
+        "level": 2,
+        "first_relative_bank": 0,
+        "banks": 16,
+        "clock_group": 1,
+        "flops": 300
+      },
+      {
+        "level": 2,
+        "first_relative_bank": 16,
+        "banks": 16,
+        "clock_group": 1,
+        "flops": 300
+      },
+      {
+        "level": 2,
+        "first_relative_bank": 32,
+        "banks": 16,
+        "clock_group": 1,
+        "flops": 300
+      },
+      {
+        "level": 2,
+        "first_relative_bank": 48,
+        "banks": 16,
+        "clock_group": 1,
+        "flops": 300
+      },
+      {
+        "level": 2,
+        "first_relative_bank": 64,
+        "banks": 16,
+        "clock_group": 2,
+        "flops": 300
+      },
+      {
+        "level": 2,
+        "first_relative_bank": 80,
+        "banks": 16,
+        "clock_group": 2,
+        "flops": 300
+      },
+      {
+        "level": 2,
+        "first_relative_bank": 96,
+        "banks": 16,
+        "clock_group": 2,
+        "flops": 300
+      },
+      {
+        "level": 2,
+        "first_relative_bank": 112,
+        "banks": 16,
+        "clock_group": 2,
+        "flops": 300
+      },
+      {
+        "level": 2,
+        "first_relative_bank": 128,
+        "banks": 16,
+        "clock_group": 3,
+        "flops": 300
+      },
+      {
+        "level": 2,
+        "first_relative_bank": 144,
+        "banks": 16,
+        "clock_group": 3,
+        "flops": 300
+      },
+      {
+        "level": 2,
+        "first_relative_bank": 160,
+        "banks": 16,
+        "clock_group": 3,
+        "flops": 300
+      },
+      {
+        "level": 2,
+        "first_relative_bank": 176,
+        "banks": 16,
+        "clock_group": 3,
+        "flops": 300
+      },
+      {
+        "level": 2,
+        "first_relative_bank": 192,
+        "banks": 16,
+        "clock_group": 4,
+        "flops": 300
+      },
+      {
+        "level": 2,
+        "first_relative_bank": 208,
+        "banks": 16,
+        "clock_group": 4,
+        "flops": 300
+      },
+      {
+        "level": 2,
+        "first_relative_bank": 224,
+        "banks": 16,
+        "clock_group": 4,
+        "flops": 300
+      },
+      {
+        "level": 2,
+        "first_relative_bank": 240,
+        "banks": 16,
+        "clock_group": 4,
+        "flops": 300
+      },
+      {
+        "level": 2,
+        "first_relative_bank": 256,
+        "banks": 16,
+        "clock_group": 5,
+        "flops": 300
+      },
+      {
+        "level": 2,
+        "first_relative_bank": 272,
+        "banks": 16,
+        "clock_group": 5,
+        "flops": 300
+      },
+      {
+        "level": 2,
+        "first_relative_bank": 288,
+        "banks": 16,
+        "clock_group": 5,
+        "flops": 300
+      },
+      {
+        "level": 2,
+        "first_relative_bank": 304,
+        "banks": 16,
+        "clock_group": 5,
+        "flops": 300
+      },
+      {
+        "level": 2,
+        "first_relative_bank": 320,
+        "banks": 16,
+        "clock_group": 6,
+        "flops": 300
+      },
+      {
+        "level": 2,
+        "first_relative_bank": 336,
+        "banks": 16,
+        "clock_group": 6,
+        "flops": 300
+      },
+      {
+        "level": 2,
+        "first_relative_bank": 352,
+        "banks": 16,
+        "clock_group": 6,
+        "flops": 300
+      },
+      {
+        "level": 2,
+        "first_relative_bank": 368,
+        "banks": 16,
+        "clock_group": 6,
+        "flops": 300
+      },
+      {
+        "level": 2,
+        "first_relative_bank": 384,
+        "banks": 16,
+        "clock_group": 7,
+        "flops": 300
+      },
+      {
+        "level": 2,
+        "first_relative_bank": 400,
+        "banks": 16,
+        "clock_group": 7,
+        "flops": 300
+      },
+      {
+        "level": 2,
+        "first_relative_bank": 416,
+        "banks": 5,
+        "clock_group": 7,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 0,
+        "banks": 4,
+        "clock_group": 1,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 4,
+        "banks": 4,
+        "clock_group": 1,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 8,
+        "banks": 4,
+        "clock_group": 1,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 12,
+        "banks": 4,
+        "clock_group": 1,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 16,
+        "banks": 4,
+        "clock_group": 1,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 20,
+        "banks": 4,
+        "clock_group": 1,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 24,
+        "banks": 4,
+        "clock_group": 1,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 28,
+        "banks": 4,
+        "clock_group": 1,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 32,
+        "banks": 4,
+        "clock_group": 1,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 36,
+        "banks": 4,
+        "clock_group": 1,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 40,
+        "banks": 4,
+        "clock_group": 1,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 44,
+        "banks": 4,
+        "clock_group": 1,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 48,
+        "banks": 4,
+        "clock_group": 1,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 52,
+        "banks": 4,
+        "clock_group": 1,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 56,
+        "banks": 4,
+        "clock_group": 1,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 60,
+        "banks": 4,
+        "clock_group": 1,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 64,
+        "banks": 4,
+        "clock_group": 2,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 68,
+        "banks": 4,
+        "clock_group": 2,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 72,
+        "banks": 4,
+        "clock_group": 2,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 76,
+        "banks": 4,
+        "clock_group": 2,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 80,
+        "banks": 4,
+        "clock_group": 2,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 84,
+        "banks": 4,
+        "clock_group": 2,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 88,
+        "banks": 4,
+        "clock_group": 2,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 92,
+        "banks": 4,
+        "clock_group": 2,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 96,
+        "banks": 4,
+        "clock_group": 2,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 100,
+        "banks": 4,
+        "clock_group": 2,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 104,
+        "banks": 4,
+        "clock_group": 2,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 108,
+        "banks": 4,
+        "clock_group": 2,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 112,
+        "banks": 4,
+        "clock_group": 2,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 116,
+        "banks": 4,
+        "clock_group": 2,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 120,
+        "banks": 4,
+        "clock_group": 2,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 124,
+        "banks": 4,
+        "clock_group": 2,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 128,
+        "banks": 4,
+        "clock_group": 3,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 132,
+        "banks": 4,
+        "clock_group": 3,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 136,
+        "banks": 4,
+        "clock_group": 3,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 140,
+        "banks": 4,
+        "clock_group": 3,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 144,
+        "banks": 4,
+        "clock_group": 3,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 148,
+        "banks": 4,
+        "clock_group": 3,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 152,
+        "banks": 4,
+        "clock_group": 3,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 156,
+        "banks": 4,
+        "clock_group": 3,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 160,
+        "banks": 4,
+        "clock_group": 3,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 164,
+        "banks": 4,
+        "clock_group": 3,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 168,
+        "banks": 4,
+        "clock_group": 3,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 172,
+        "banks": 4,
+        "clock_group": 3,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 176,
+        "banks": 4,
+        "clock_group": 3,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 180,
+        "banks": 4,
+        "clock_group": 3,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 184,
+        "banks": 4,
+        "clock_group": 3,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 188,
+        "banks": 4,
+        "clock_group": 3,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 192,
+        "banks": 4,
+        "clock_group": 4,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 196,
+        "banks": 4,
+        "clock_group": 4,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 200,
+        "banks": 4,
+        "clock_group": 4,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 204,
+        "banks": 4,
+        "clock_group": 4,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 208,
+        "banks": 4,
+        "clock_group": 4,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 212,
+        "banks": 4,
+        "clock_group": 4,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 216,
+        "banks": 4,
+        "clock_group": 4,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 220,
+        "banks": 4,
+        "clock_group": 4,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 224,
+        "banks": 4,
+        "clock_group": 4,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 228,
+        "banks": 4,
+        "clock_group": 4,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 232,
+        "banks": 4,
+        "clock_group": 4,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 236,
+        "banks": 4,
+        "clock_group": 4,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 240,
+        "banks": 4,
+        "clock_group": 4,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 244,
+        "banks": 4,
+        "clock_group": 4,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 248,
+        "banks": 4,
+        "clock_group": 4,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 252,
+        "banks": 4,
+        "clock_group": 4,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 256,
+        "banks": 4,
+        "clock_group": 5,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 260,
+        "banks": 4,
+        "clock_group": 5,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 264,
+        "banks": 4,
+        "clock_group": 5,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 268,
+        "banks": 4,
+        "clock_group": 5,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 272,
+        "banks": 4,
+        "clock_group": 5,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 276,
+        "banks": 4,
+        "clock_group": 5,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 280,
+        "banks": 4,
+        "clock_group": 5,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 284,
+        "banks": 4,
+        "clock_group": 5,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 288,
+        "banks": 4,
+        "clock_group": 5,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 292,
+        "banks": 4,
+        "clock_group": 5,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 296,
+        "banks": 4,
+        "clock_group": 5,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 300,
+        "banks": 4,
+        "clock_group": 5,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 304,
+        "banks": 4,
+        "clock_group": 5,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 308,
+        "banks": 4,
+        "clock_group": 5,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 312,
+        "banks": 4,
+        "clock_group": 5,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 316,
+        "banks": 4,
+        "clock_group": 5,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 320,
+        "banks": 4,
+        "clock_group": 6,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 324,
+        "banks": 4,
+        "clock_group": 6,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 328,
+        "banks": 4,
+        "clock_group": 6,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 332,
+        "banks": 4,
+        "clock_group": 6,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 336,
+        "banks": 4,
+        "clock_group": 6,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 340,
+        "banks": 4,
+        "clock_group": 6,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 344,
+        "banks": 4,
+        "clock_group": 6,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 348,
+        "banks": 4,
+        "clock_group": 6,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 352,
+        "banks": 4,
+        "clock_group": 6,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 356,
+        "banks": 4,
+        "clock_group": 6,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 360,
+        "banks": 4,
+        "clock_group": 6,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 364,
+        "banks": 4,
+        "clock_group": 6,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 368,
+        "banks": 4,
+        "clock_group": 6,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 372,
+        "banks": 4,
+        "clock_group": 6,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 376,
+        "banks": 4,
+        "clock_group": 6,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 380,
+        "banks": 4,
+        "clock_group": 6,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 384,
+        "banks": 4,
+        "clock_group": 7,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 388,
+        "banks": 4,
+        "clock_group": 7,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 392,
+        "banks": 4,
+        "clock_group": 7,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 396,
+        "banks": 4,
+        "clock_group": 7,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 400,
+        "banks": 4,
+        "clock_group": 7,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 404,
+        "banks": 4,
+        "clock_group": 7,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 408,
+        "banks": 4,
+        "clock_group": 7,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 412,
+        "banks": 4,
+        "clock_group": 7,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 416,
+        "banks": 4,
+        "clock_group": 7,
+        "flops": 300
+      },
+      {
+        "level": 1,
+        "first_relative_bank": 420,
+        "banks": 1,
+        "clock_group": 7,
+        "flops": 300
+      }
+    ],
+    "period_ps": 833.334,
+    "root_count": 8,
+    "clock_phase": "same family; die must deliver compensated phi-R per hardened node/root; not measured yet",
+    "reset": "active-low synchronous reset on control, ROM mask never reset",
+    "fixed_component_cycles": 11
+  },
+  "logical_home": {
+    "controller_and_expander_clock": "clk",
+    "storage_clock_ports": 24,
+    "first_rom_sample_cycle": 15,
+    "first_header_cycle": 337,
+    "last_payload_done_cycle": 1377,
+    "physical_inter_head_link_cycles_included": false,
+    "additional_link_latency_rule": "balanced exact fixed outbound+return link cycles must increase ROM_FIRST; static compiler update required"
+  },
+  "physical_status": "q_host_program_loader considering distinct embedding~3000x2600um/head; UNMEASURED FIT. Existing216x216expander reservation is not fullfabric. No physical build before assigned slots/clock/pins.",
+  "no_duplicate_arrays": true
+}
