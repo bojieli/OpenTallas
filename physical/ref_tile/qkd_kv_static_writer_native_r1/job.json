@@ -1,5 +1,5 @@
 {
- "name": "qkd_kv_static_writer_native_r1-r3-COMMIT",
+ "name": "qkd_kv_static_writer_native_r1-r3-c9d3f1d89",
  "block": "qkd_kv_static_writer_native",
  "ref_tile": true,
  "owner": "Claude:el1014-qwen-kvsys-elements",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/qwen-kvsys-el-r5-1015",
-  "commit": "COMMIT",
+  "commit": "c9d3f1d89",
   "extra_paths": [
    "rtl/test/qwen_static_kv",
    "tools/qwen_static_kv",
@@ -97,7 +97,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_kv_static_writer_native_r1/qkd_kv_static_writer_native_r1-r3-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_kv_static_writer_native_r1/qkd_kv_static_writer_native_r1-r3-c9d3f1d89"
   }
  ],
  "cycles_added": 0,
