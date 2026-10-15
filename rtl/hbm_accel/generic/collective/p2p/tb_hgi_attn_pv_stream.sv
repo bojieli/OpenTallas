@@ -26,6 +26,7 @@ module tb_hgi_attn_pv_stream;
  wire [3:0] ring_fault;
  string programme="";
  integer expect_schedule_fault=0,last,batches;
+ bit schedule_rejected=0;
  integer checked=0,first_output=-1,last_output=-1;
  integer ring_writes=0,local_writes=0,scratch_reads=0;
  integer overlap_read=0,overlap_write=0,overlap_reducer=0;
@@ -78,7 +79,7 @@ module tb_hgi_attn_pv_stream;
    @(posedge clk);#0.01;
    if((|ring_fault)||local_fault||scratch_fault)begin
     if(expect_schedule_fault!=0 && local_fault && !(|ring_fault) && !scratch_fault)begin
-     $display("PV_STREAM_EXPECTED_SCHEDULE_FAULT cycle%0d cause%h",t,dut.reduce_cause);$finish;
+     $display("PV_STREAM_EXPECTED_SCHEDULE_FAULT cycle%0d cause%h",t,dut.reduce_cause);schedule_rejected=1;break;
     end
     $fatal(1,"PV_STREAM_NATIVE_FAULT cycle%0d ring%h local%b scratch%b cause%h carry%0d bank%0d",t,ring_fault,local_fault,scratch_fault,dut.reduce_cause,MUT_CARRY,MUT_BANK);
    end
@@ -92,12 +93,14 @@ module tb_hgi_attn_pv_stream;
    end
    @(negedge clk);
   end
+  if(!schedule_rejected)begin
   if(expect_schedule_fault!=0)$fatal(1,"PV_STREAM schedule fault mutant survived");
   if(checked!=8*batches || ring_writes!=16*batches || local_writes!=14*batches || scratch_reads!=30*batches)
    $fatal(1,"PV_STREAM_COVERAGE checked%0d ring%0d writes%0d reads%0d",checked,ring_writes,local_writes,scratch_reads);
   if(overlap_read==0||overlap_reducer==0)$fatal(1,"PV_STREAM no measured ring/local overlap");
   if(first_output!=165 || last_output!=(batches-1)*82+165)$fatal(1,"PV_STREAM output timeline %0d/%0d",first_output,last_output);
   $display("PV_STREAM_PASS checked%0d batches%0d resets1 first%0d last%0d period82 ring_writes%0d local_writes%0d reads%0d overlap_read%0d overlap_write%0d overlap_reducer%0d SRAM2",checked,batches,first_output,last_output,ring_writes,local_writes,scratch_reads,overlap_read,overlap_write,overlap_reducer);
+  end
   $finish;
  end
 endmodule

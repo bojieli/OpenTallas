@@ -63,6 +63,7 @@ grep -Eq 'PV_STREAM_DATA_MISMATCH faults_zero=1' "$OUT/localfirst.run.log"
 "$binary" "+PROGRAM_DIR=$OUT/earlypub" +EXPECT_SCHEDULE_FAULT=1 > "$OUT/earlypub.run.log" 2>&1
 cat "$OUT/earlypub.run.log"
 grep -Eq '^PV_STREAM_EXPECTED_SCHEDULE_FAULT ' "$OUT/earlypub.run.log"
+if grep -Eq 'Fatal|PV_STREAM_PASS' "$OUT/earlypub.run.log";then echo 'invalid earlypub negative control';exit 1;fi
 for mutation in carry bank;do
  args=();if [[ "$mutation" == carry ]];then args+=(-GMUT_CARRY=1);else args+=(-GMUT_BANK=1);fi
  build "$mutation" "${args[@]}"
