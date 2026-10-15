@@ -1,0 +1,50 @@
+{
+  "schema": "opentallas.s81.full-su-allocation-proof.v1",
+  "qualified": false,
+  "spatial_check": {
+    "reserved_rows": 7077,
+    "highest_reserved_row": 12799,
+    "vm_capacity_rows": 16384,
+    "moe_edges": 80,
+    "moe_requests": 560,
+    "moe_bank_conflicts": 0,
+    "source_timing_and_lifetimes_qualified": false
+  },
+  "canonical_relevant_fragments": 46360,
+  "literal_SU_instructions": 2654,
+  "stage_records": 324,
+  "unbound_stage_rank_records": 324,
+  "source_sha256": {
+    "tools/s81_compile_schedule/full_su_operand_layout.py": "79e119447332c527c196fff7aa8cb8352fdf45023b952d6c0faac538a7fa500e",
+    "tools/s81_compile_schedule/su_stage_coverage.py": "f2f53aa85b3c6520a04ba5898d343f9396ff7ee0c5ce4a3c993cddb7fb135741",
+    "tools/s81_compile_schedule/compile_calendar.py": "30547ed3a748124123a4b600160d466217d04dd8a37df333c74204812b3194be",
+    "tools/s81_suhc/static_su_calendar.py": "d3e22394593d49f2f25c49292fa9c6838dab4ce6d50272beb7f7a04538048952"
+  },
+  "source_inputs": {
+    "results/uarch/dsrom_s81_released_binding_20261004/canonical/matrix_map.jsonl.gz": "985a9ee7ea26d2a7bb1aebadc5151252836eacf8181e8794b1ef6d7819db0326",
+    "results/uarch/dsrom_s81_released_binding_20261004/canonical/stage_map.json": "47ea9eb0ba0b404f629a4bc758d28d8ac1fe28dcb31de3e5816517fa1d097815",
+    "results/uarch/dsrom_native_weight_address_join_20261002/inputs/demand-r5.json.gz": "fec91ca041e8b1640292ca06163def706c0d0dab8c5d524ba9e8f611dd925d0f"
+  },
+  "tests": {
+    "compiler_suite": 66,
+    "static_SU_calendar_suite": 11
+  },
+  "generation": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-1690058-1792059015",
+    "exit_code": 0,
+    "memory_gb": 4
+  },
+  "source_binding": "HE/CROM provider_homes are not SU/VM homes; all324 SU stage/rank mappings unbound until actual generator inventory exists",
+  "opcode": "MOE15; CP14 preserved and not supported by SU calendar",
+  "missing": [
+    "actual81stage/rank SU/VM homes (HE/CROM provider_homes2L are NOT SU homes) and source-bound transfer/pack/write calendars",
+    "actual native SW576 kernel/28row output and measured exact fullshape gate (legacy1024 is incompatible, never padded implicitly)",
+    "actual T0 count/denominator lifetime and native PV/softmax full calendar",
+    "native SW activation TP4 gather for all7slots and all72W2blocks",
+    "actual descriptors/gains/RoPE/route weights constant/producer/commit bindings",
+    "all2654 raw SU instructions\u2192exact native fused providers with rounding/order proof",
+    "persistent state, MTP continuation, global lifetimes and all other VM clients",
+    "actual physical paths, clock phases, commit visibility and end-to-end throughput"
+  ]
+}

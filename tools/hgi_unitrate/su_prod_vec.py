@@ -26,6 +26,8 @@ are preset in VM to unique markers no record ever wrote; the golden keeps them. 
 regardless of the dirty word mask (MUT_DIRTY / MUT_V 2) corrupts them.
 """
 import argparse
+import dataclasses
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -243,12 +245,15 @@ def main():
     ap.add_argument('--out', required=True)
     ap.add_argument('--unit', default='both', choices=['su', 'sfu', 'both'])
     ap.add_argument('--tags', default='', help='comma list of tags to keep (default: every layer-0 SU / SFU record)')
+    ap.add_argument('--allow-incomplete-coverage', action='store_true', help='emit explicitly unqualified partial vectors instead of failing when canonical SU/SFU coverage is incomplete')
     ap.add_argument('--seed', type=int, default=20261010)
     ap.add_argument('--chain', action='store_true', help='ONE case: every kept record back to back (the unit may '
                     'overlap them); VM in = the pre-chain state of every touched sector, out = the final sink sectors')
     ap.add_argument('--drain-traffic', action='store_true', help='independent per-record masked VM write golden for the production chain, including overwritten predecessor sinks')
     ap.add_argument('--ds-program', default='', help='a ds_native --program-out dump: use its layer-0 rank-0 records '
                     '(DeepSeek-V4.1 1M) instead of the Qwen3-8B token program')
+    ap.add_argument('--ds-layer', type=int, default=0, help='--ds-program layer index (0: T128 window layer; 3: a T640 '
+                    'sparse layer, the DS 38/40-layer shape)')
     ap.add_argument('--sink-unstaged', action=argparse.BooleanOptionalAction, default=None,
                     help='append the SINK_UNSTAGED case (see the module text); default: on with --chain')
     ap.add_argument('--fwd-pin', action='store_true',
@@ -265,7 +270,7 @@ def main():
     if a.ds_program:
         from hgi_sim.records import decode_one
         dd = json.loads(Path(a.ds_program).read_text())
-        lay = dd['layers'][0]
+        lay = dd['layers'][a.ds_layer]
         words, recs = [], []
         for x in lay['records']:
             b = bytes.fromhex(x['hex'])
@@ -298,6 +303,23 @@ def main():
     wrmask = {}                                             # case index -> word addresses its records write
     used, prev_sinks = set(), []
     chain = []
+    coverage = {}
+    for dispatch_index, (record_index, layer) in enumerate(ex):
+        record = recs[record_index]
+        if record.unit not in ('SU', 'SFU') or record.tag in coverage:
+            continue
+        coverage[record.tag] = dict(unit=record.unit, tag=record.tag, status='NOT_EMITTED', descriptors={k: dataclasses.asdict(v) for k, v in record.desc.items()}, effective_dispatch_hex=C.hexw(SB.pack_rec(tr[dispatch_index]), 2197))
+        if any(md.space != 'VM' for md in record.desc.values()):
+            coverage[record.tag]['status'] = 'UNQUALIFIED_NON_VM_FIXTURE'
+            fixture = dict(coverage[record.tag], qualification='actual canonical descriptor/dispatch fixture; native STREAM execution unqualified; no VM alias substitution')
+            (out / ('fixture_' + record.tag.replace('.', '_') + '.json')).write_text(json.dumps(fixture, indent=2) + '\n')
+    # Seed isolated indexed scalar fixtures before taking the chain's initial
+    # VM snapshot, so su_vmi carries the same U32 values used by Machine.eff.
+    for record_index, layer in ex:
+        record = recs[record_index]
+        if record.tag.startswith('route.gather') and any(md.indexed for md in record.desc.values()):
+            ib = M._plain_base(record.desc['I'], die, layer)
+            die.vm[ib + layer] = np.uint32(int(record.tag.removeprefix('route.gather')))
     drain_traffic = []
     seen = set()
     for i, (k, L) in enumerate(ex):
@@ -306,38 +328,70 @@ def main():
         if r.unit not in ('SU', 'SFU'):
             continue
         if any(x.space != 'VM' for x in r.desc.values()):
+            coverage[r.tag]['status'] = 'UNQUALIFIED_NON_VM_FIXTURE'
+            fixture = dict(coverage[r.tag], qualification='actual descriptor/dispatch fixture; native STREAM execution unqualified; no VM alias substitution')
+            (out / ('fixture_' + r.tag.replace('.', '_') + '.json')).write_text(json.dumps(fixture, indent=2) + '\n')
             continue                                        # STREAM / HBM operands: not a D1 VM record
         if r.unit == 'SU' and r.sut.get('a_ind'):
-            print(f"skip {r.tag}: SU gather (a_ind) - the D1 peer refuses it (record fault)")
+            coverage[r.tag]['status'] = 'UNQUALIFIED_VECTOR_GATHER'
+            print(f"unqualified {r.tag}: SU vector gather is unsupported by this golden; never silently omitted")
             continue
         if r.tag in seen:
             break                                           # next layer
         seen.add(r.tag)
         die.dyn[4] = L
         M.cur = r
+        # Indexed MDESCs are resolved by the sequencer, unlike SUT a_ind.
+        # Other units are not executed in this isolated SU fixture. Supply
+        # explicit valid TOPK index fixture data instead of interpreting random
+        # FP32 bits as U32 route indices, and pin the exact effective dispatch.
+        if any(md.indexed for md in r.desc.values()):
+            assert r.tag.startswith('route.gather') and r.desc['A'].n == 1 and r.desc['A'].m == 1, 'unsupported indexed fixture; do not invent arbitrary gather data'
+            selected = int(r.tag.removeprefix('route.gather'))
+            ib = M._plain_base(r.desc['I'], die, L)
+            die.vm[ib + L] = np.uint32(selected)
+            d = dict(d, eff=list(d['eff']), n=list(d['n']))
+            effective = {}
+            for role, md in r.desc.items():
+                base, nn, _, _, _ = M.eff(md, die, L)
+                slot = C.OPND.index(role)
+                lsb, width = C.MD['base']
+                d['eff'][slot] = (d['eff'][slot] & ~(((1 << width) - 1) << lsb)) | (int(base) << lsb)
+                d['n'][slot] = int(nn)
+                effective[role] = dict(base=int(base), n=int(nn))
+            coverage[r.tag]['index_fixture'] = dict(source='isolated valid route-index fixture; actual TOPK producer not executed', index_word=int(ib + L), selected=selected, effective=effective)
+            coverage[r.tag]['effective_dispatch_hex'] = C.hexw(SB.pack_rec(d), 2197)
         try:
             sp = spans(r, M, die, L)
         except MA.Fault as e:
-            print(f"skip {r.tag}: {e} (sut a_ind {r.sut.get('a_ind')})")
+            coverage[r.tag]['status'] = 'UNQUALIFIED_ADDRESS_FAULT'
+            coverage[r.tag]['reason'] = str(e)
+            print(f"unqualified {r.tag}: {e} (sut a_ind {r.sut.get('a_ind')})")
             continue
         src = np.unique(np.concatenate([v for kk, v in sp.items() if kk not in ('O', 'R')]))
         snk = np.unique(np.concatenate([v for kk, v in sp.items() if kk in ('O', 'R')]))
         if a.chain and r.unit not in units:
+            coverage[r.tag]['status'] = 'DECLARED_UNIT_FILTER'
             continue                                         # a chain runs one unit's records only, on its own state
         before = die.vm.copy()
         try:
             MA.UNITS[(r.unit, r.op)](M, r, L)
         except MA.Fault as e:
-            print(f"skip {r.tag}: {e}")
+            coverage[r.tag]['status'] = 'UNQUALIFIED_ARITHMETIC_FAULT'
+            coverage[r.tag]['reason'] = str(e)
+            print(f"unqualified {r.tag}: {e}")
             die.vm[:] = before
             continue
         changed = np.nonzero(die.vm != before)[0]
         wrote = snk                                          # every sink word the op writes (value may be unchanged)
         assert set(changed) <= set(wrote.tolist()), (r.tag, 'wrote outside its sinks')
         if keep and r.tag not in keep:
+            coverage[r.tag]['status'] = 'DECLARED_TAG_FILTER'
             continue
         if r.unit not in units:
+            coverage[r.tag]['status'] = 'DECLARED_UNIT_FILTER'
             continue
+        coverage[r.tag]['status'] = 'EMITTED_VM_COMPONENT_FIXTURE'
         used.update((src >> 3).tolist(), (snk >> 3).tolist())
         prev_sinks.append(snk)
         if a.chain:
@@ -451,6 +505,20 @@ def main():
     (out / 'su_prod.json').write_text(json.dumps(dict(schema='opentallas.hgi_unitrate.su_prod_vec.v1',
                                                       program=prog_name,
                                                       seed=a.seed, cases=man), indent=1) + '\n')
+    emitted = {row['tag'] for row in man}
+    for tag in coverage:
+        if coverage[tag]['status'] == 'EMITTED_VM_COMPONENT_FIXTURE':
+            assert tag in emitted, 'coverage says emitted but no record exists'
+    complete = all(item['status'] == 'EMITTED_VM_COMPONENT_FIXTURE' for item in coverage.values())
+    coverage_manifest = dict(schema='opentallas.su.actual_canonical_coverage.v1',
+        status='ALL_CANONICAL_COMPONENT_RECORDS_EMITTED' if complete else 'FAIL_INCOMPLETE_CANONICAL_COVERAGE',
+        qualification='component fixtures only; native programme execution/throughput not qualified',
+        source_sha256={str(Path(__file__)): hashlib.sha256(Path(__file__).read_bytes()).hexdigest()},
+        required_records=list(coverage.values()), emitted_record_count=len(recl))
+    (out / 'su_coverage.json').write_text(json.dumps(coverage_manifest, indent=2) + '\n')
+    if not complete and not a.allow_incomplete_coverage:
+        raise SystemExit('FAIL_INCOMPLETE_CANONICAL_COVERAGE: see su_coverage.json and actual nonVM fixtures; --allow-incomplete-coverage permits explicitly partial component evidence only')
+
 
 
 if __name__ == '__main__':

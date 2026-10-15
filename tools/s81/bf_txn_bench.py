@@ -136,6 +136,10 @@ def main():
                         '2 x dsfd_bf_col (rtl/dsrom_sys/s81_die_bind, the die-name RTL of the closed views) wired by die bit '
                         'vectors (rtl/dsrom_sys/s81_die_bind/test/bf_die_pair.sv); --params are then ignored (the wrappers '
                         'carry the closed routes\' parameters)')
+    p.add_argument('--static-prog', type=int, default=None, metavar='DELTA',
+                   help='S-BIND 2026-10-15 (with --die-pair): the shadow front is dsfd_bf_front_static fed by '
+                        'ot_s81_bf_prog_seq (DELTA edges) from the compiled descriptor table --desc')
+    p.add_argument('--desc', type=Path, help='--static-prog descriptor hex (tools/s81/bf_programme_compile.py)')
     a = p.parse_args()
     prep = a.prep or a.work / 'prep'
     if not (prep / 'prepared.json').exists():
@@ -153,11 +157,12 @@ def main():
     wrapper = re.sub(r'(?<![\w$])ot_v41_rom_elem_w10(?![\w$])', 'cand_ot_v41_rom_elem_w10', wrapper)
     wrapper = re.sub(r'(?<![\w$])ot_hdc_cg(?![\w$])', 'cand_ot_hdc_cg', wrapper)
     files['ot_s81_bf_native.sv'] = wrapper
+    files['ot_s81_bf_seam.sv'] = (ROOT / 'rtl/s81/ot_s81_bf_seam.sv').read_text()
     # the wrapper holds the original element in generate block g_orig (RECUT = 0)
     tb = 'tb_dsrom_actual_element_rne_wake.sv'
     if 'cand_dut.u_e.g_orig.u_elem.' not in files[tb]:
         files[tb] = files[tb].replace('cand_dut.u_e.u_elem.', 'cand_dut.u_e.g_orig.u_elem.')
-    extra = []
+    extra = ['ot_s81_bf_seam.sv']
     for n in EXTRA:
         f = 'x_' + n + '.sv'
         files[f] = candify((ROOT / 'rtl/v41rom' / (n + '.sv')).read_text(), names)
@@ -178,12 +183,20 @@ def main():
     muts += [(m.split('=')[0], ['+define+' + m.split('=', 1)[1]]) for m in a.mutant]
     if a.die_pair:
         assert a.variant == 'recut', '--die-pair is a recut shadow'
-        sh, n_ = re.subn(r'ot_s81_bf_native #\(.*?\) u_shadow \(', 'bf_die_pair #(.INSTANCE(INSTANCE)) u_shadow (', sh, flags=re.S)
+        if a.static_prog is not None:
+            pair_ = f'bf_die_pair_static #(.INSTANCE(INSTANCE), .DELTA({a.static_prog}), .DESC("{a.desc.resolve()}")) u_shadow ('
+        else:
+            pair_ = 'bf_die_pair #(.INSTANCE(INSTANCE)) u_shadow ('
+        sh, n_ = re.subn(r'ot_s81_bf_native #\(.*?\) u_shadow \(', pair_, sh, flags=re.S)
         assert n_ == 1
         for f_, src_ in (('x_ot_s81_bf_front.sv', 'rtl/s81/ot_s81_bf_front.sv'),
                          ('x_dsfd_bf_col.sv', 'rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv'),
                          ('x_dsfd_bf_front.sv', 'rtl/dsrom_sys/s81_die_bind/dsfd_bf_front.sv'),
-                         ('x_bf_die_pair.sv', 'rtl/dsrom_sys/s81_die_bind/test/bf_die_pair.sv')):
+                         ('x_bf_die_pair.sv', 'rtl/dsrom_sys/s81_die_bind/test/bf_die_pair.sv')) + ((
+                         ('x_dsfd_bf_front_static.sv', 'rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv'),
+                         ('x_ot_s81_bf_prog_seq.sv', 'rtl/dsrom_sys/s81_die_bind/ot_s81_bf_prog_seq.sv'),
+                         ('x_bf_die_pair_static.sv', 'rtl/dsrom_sys/s81_die_bind/test/bf_die_pair_static.sv'))
+                         if a.static_prog is not None else ()):
             files[f_] = candify((ROOT / src_).read_text(), names)
             extra.append(f_)
         muts = [] if a.no_default_mutants else [('mutant_die_swap', ['+define+DSFD_BF_DIE_MUT_SWAP'])]

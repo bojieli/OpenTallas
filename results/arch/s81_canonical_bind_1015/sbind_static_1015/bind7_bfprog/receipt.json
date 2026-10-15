@@ -1,0 +1,3 @@
+{"scope":"COMPLETE_CONSTRUCTION_BEFORE_HOP_SIGNOFF_NOT_NATIVE port-bind","flags":"--static-coll --suhc-static-issue --bf-static-prog","source_commit":"bd3c4ce87f52c1b5cdfe7f366077b6006cea864a",
+ "result":"FAIL 4 masters: dsfd_bf_front_static xb (x2 transport geometry-blocked), dsfd_host_c 516/81 (static host next), dsfd_sp_pq_n (ra2 SAW14 ROM depth + f_iss: S-ELEM-B; xw/xe 565 vs 1101 = the manifest's DSFD_PQ_STATIC_X2 needs --bf-x2-static), dsfd_sp_vm f_mx (MIX4 home: S-DIE). f_prog / io_clk of all 519 static fronts and the 519 ot_s81_cfg7_seq_bfp sequencers (72-b cfg ROM reads) bind clean; WFC kit no longer fails on this source; undriven 0, not_in_rtl 0.",
+ "native_qualified":false}

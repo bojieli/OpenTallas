@@ -68,8 +68,7 @@
     "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programmed_engine.sv": "772f73880697dddb6458f7d7c086402bb5ca7814758816176f8d7517f6dd47b4",
     "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
     "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
-    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
-    "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv": "3cfaf90b9e730bb33b92f350ac6d3bcd604191cc8f37e7a31698fb394767e69c"
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
   },
   "shared_primitive": "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv current main; RB11 lbank branch unchanged by H-ELEM-B RB9 fix2758fad65; publication must pin actual current-main file hash",
   "hardware_scalar_class": "KIND1 scalar-side classes fault, require actual KIND2 dispatcher",
@@ -82,10 +81,5 @@
   "current_source_elaboration": "publication owner to run against current main with this explicit source list",
   "native_qualified": false,
   "timing_qualified": false,
-  "full_layer_qualified": false,
-  "publisher_source_refresh": {
-    "base_main": "1e332bc73fb762e3cee50cd2506097d166f6a265",
-    "changes": [],
-    "scope": "Exact publication source closure; historical component hashes remain separate; full programme latest-source simulation and physical qualification not claimed"
-  }
+  "full_layer_qualified": false
 }

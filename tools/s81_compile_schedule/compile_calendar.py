@@ -30,6 +30,33 @@ def integer(value, label, low=0):
     return value
 
 
+# Actual ot_s81_fixed_issue row semantics (single source for every engine):
+# 'issue' is the context age whose edge loads the command register, so the
+# command pin rises at issue+1; 'done' is the age whose edge samples the
+# completion pin. A native owner's duration_cycles is its measured
+# command-pin -> done-pin latency (timing_boundary sequencer_cmd_pin_to_done_pin),
+# hence done = issue + 1 + pin_to_pin. done = issue + pin_to_pin misses the
+# completion by one edge (issuer fault 8; MIX4 layer run 10-15, reproduced by
+# tb_s81_engram_mix4_fixed: 1428 FAIL code 8, 1429 PASS, 1430 FAIL code 6).
+ISSUE_TO_CMD_PIN_EDGES = 1
+PIPELINE_ABI = json.loads((ROOT / 'tools/s81/engine_pipeline_abi.json').read_text())['engines']
+
+
+def check_pipeline_abi(job):
+    """A measured duration is valid only for the engine's current fixed pipeline (e.g. HC return columns +1)."""
+    want = PIPELINE_ABI.get(job.get('engine'))
+    if want is not None and job.get('pipeline_abi') != want:
+        raise ValueError(f"duration measured against a stale {job.get('engine')} pipeline; re-measure with "
+                         f"{sorted(want)} (tools/s81/engine_pipeline_abi.json)")
+
+
+def issuer_done_row(issue, pin_to_pin):
+    """Compiled done row of an issuer command with measured pin-to-pin latency."""
+    if type(issue) is not int or issue < 0 or type(pin_to_pin) is not int or pin_to_pin < 1:
+        raise ValueError('integer issue row and measured command-pin -> done-pin latency required')
+    return issue + ISSUE_TO_CMD_PIN_EDGES + pin_to_pin
+
+
 def validate_evidence(evidence, root):
     if not evidence:
         raise ValueError('missing source-pinned native evidence')
@@ -103,6 +130,25 @@ def check_persistent_state(program, binding, root):
     return errors
 
 
+def tensor_span_end(tensor):
+    """Exclusive reserved physical bound; nrows counts actual logical rows."""
+    base = integer(tensor['base_row'], 'base_row')
+    size = integer(tensor['nrows'], 'nrows', 1)
+    stride = integer(tensor.get('row_stride', 1), 'row_stride', 1)
+    actual_span = (size - 1) * stride + 1
+    reserved = integer(tensor.get('reserved_span_rows', actual_span), 'reserved_span_rows', 1)
+    if reserved < actual_span:
+        raise ValueError('reserved span excludes sparse physical rows')
+    return base + reserved
+
+
+def tensor_physical_row(tensor, logical_offset):
+    offset = integer(logical_offset, 'row_offset')
+    if offset >= integer(tensor['nrows'], 'nrows', 1):
+        raise ValueError('access outside tensor allocation')
+    return integer(tensor['base_row'], 'base_row') + offset * integer(tensor.get('row_stride', 1), 'row_stride', 1)
+
+
 def compile_program(program, binding, contract, root=ROOT):
     """Atomic lowering; every program op, even a non-VM op, needs a binding.
 
@@ -135,7 +181,7 @@ def compile_program(program, binding, contract, root=ROOT):
         try:
             base = integer(tensor['base_row'], 'base_row')
             size = integer(tensor['nrows'], 'nrows', 1)
-            if base + size > 16384:
+            if tensor_span_end(tensor) > 16384:
                 raise ValueError('tensor exceeds VM address space')
             source = tensor['source']
             if source not in ('native_job', 'external_input', 'resident_constant'):
@@ -160,7 +206,7 @@ def compile_program(program, binding, contract, root=ROOT):
         a = valid_tensors[name]
         for other in names[i+1:]:
             b = valid_tensors[other]
-            if max(a['base_row'], b['base_row']) >= min(a['base_row']+a['nrows'], b['base_row']+b['nrows']):
+            if max(a['base_row'], b['base_row']) >= min(tensor_span_end(a), tensor_span_end(b)):
                 continue
             la, lb = lifetime(a), lifetime(b)
             if max(la[0], lb[0]) <= min(la[1], lb[1]):
@@ -176,10 +222,11 @@ def compile_program(program, binding, contract, root=ROOT):
                 raise ValueError('operation requires native RTL')
             if job.get('engine') != op['eng'] or not job.get('endpoint'):
                 raise ValueError('native engine/endpoint mismatch')
+            check_pipeline_abi(job)
             start = integer(op['start'], 'start')
             duration = integer(job['duration_cycles'], 'duration', 1)
-            if op['end'] != start + duration:
-                raise ValueError('program duration differs from native fixed duration; recompile graph')
+            if op['end'] != issuer_done_row(start, duration):
+                raise ValueError('done row must be issue + 1 + native command-pin -> done-pin latency; recompile graph')
             period = integer(job['phase_period_stream'], 'phase period', 1)
             if start % period != integer(job['start_phase_stream'], 'start phase'):
                 raise ValueError('native template does not match scheduled clock phase')
@@ -194,8 +241,7 @@ def compile_program(program, binding, contract, root=ROOT):
             for i, access in enumerate(events):
                 tensor = valid_tensors[access['tensor']]
                 offset = integer(access['row_offset'], 'row_offset')
-                if offset >= tensor['nrows']:
-                    raise ValueError('access outside tensor allocation')
+                physical_row = tensor_physical_row(tensor, offset)
                 kind = access['kind']
                 if kind not in ('read', 'write'):
                     raise ValueError('unsupported native access kind')
@@ -204,7 +250,7 @@ def compile_program(program, binding, contract, root=ROOT):
                 if kind == 'read' and ident not in tensor['consumers']:
                     raise ValueError('read has undeclared tensor consumer')
                 event = dict(id=f'{ident}/access/{i}', client=job['client'], job=ident,
-                             kind=kind, tensor=access['tensor'], row=tensor['base_row']+offset,
+                             kind=kind, tensor=access['tensor'], row=physical_row,
                              slot=integer(access['slot'], 'slot'), tag=integer(job['tag'], 'tag'))
                 for field in ('issue_cycle', 'deadline_cycle', 'response_cycle' if kind == 'read' else 'commit_cycle'):
                     event[field] = start + integer(access[field], field)
@@ -275,6 +321,7 @@ def schedule_jobs(program, binding):
     ends, ports = {}, {}
     for index, op in enumerate(ops):
         owner = bindings[op['id']]
+        check_pipeline_abi(owner)
         duration = integer(owner['duration_cycles'], 'native duration', 1)
         phase_period = integer(owner['phase_period_stream'], 'phase period', 1)
         phase = integer(owner['start_phase_stream'], 'start phase')
@@ -286,12 +333,13 @@ def schedule_jobs(program, binding):
         earliest = max([integer(op.get('ext', 0), 'external arrival'), ports.get(op['port'], 0)]
                        + [ends[p] for p in predecessors])
         start = earliest + (phase - earliest) % phase_period
-        op.update(start=start, end=start+duration, dur=duration)
+        # end is the issuer done row; the engine port is occupied until it.
+        op.update(start=start, end=issuer_done_row(start, duration), dur=duration)
         ends[index] = op['end']
         ports[op['port']] = op['end']
     previous = program.get('makespan', max(o['end'] for o in program['ops']))
     result['makespan'] = max(ends.values())
-    result['offline_schedule'] = dict(policy='fixed native duration, single inflight per port, explicit clock phase',
+    result['offline_schedule'] = dict(policy='done = issue + 1 + native pin-to-pin duration, single inflight per port, explicit clock phase',
                                      original_makespan=previous, native_makespan=result['makespan'],
                                      added_cycles=result['makespan']-previous,
                                      performance_accepted=False)

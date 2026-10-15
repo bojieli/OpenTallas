@@ -1,0 +1,41 @@
+{
+  "schema": "opentallas.ref-tile.stage-parity.v1",
+  "job": "qfd_slab_pair_add-pa5-e2333e464",
+  "source": "e2333e464",
+  "gate_source": "5ed014119",
+  "host": "ot-epyc1tb",
+  "gate": "/srv/opentallas-scratch/claude/ref_gate/qfd_slab_pair_add-20261015-103006/routes/gate/work/orfs",
+  "production": "/srv/opentallas/claude/closure-loop/qfd_slab_pair_add-pa5-e2333e464/routes/qfd_slab_pair_add_pa5_e2333e464/work/orfs",
+  "identical_files": {
+    "3_detailed_place.rpt": {
+      "bytes": 922265,
+      "sha256": "0c26c6fe352de56efa05841db05db96786953c4142338e59eec1e0a2ac1b3ada"
+    },
+    "3_3_place_gp.odb": {
+      "bytes": 30960574,
+      "sha256": "3cd81d9c0f5527ade381d600af6cef1d6a3fcd200be1c0ae3e4237f141922678"
+    },
+    "1_2_yosys.sdc": {
+      "bytes": 29876,
+      "sha256": "f68c30ba37e89c96f7119dfb01db54a506e723608074f09cb4a3e28e02318c78"
+    }
+  },
+  "netlist": {
+    "instances": 59241,
+    "canonical_cell_type_and_sorted_pin_to_net_counter_sha256": "1c1272672383f4ff156beb7a83f52ebd46d152ec7df316b0e9904d8004cd6744",
+    "semantic_counter_differences": 0,
+    "raw_gate_sha256": "0675ccf5f8187f7129b67b040facc96553c5d7f39ff2ca0753b9bfc123ca50f7",
+    "raw_production_sha256": "4823f62afff2c57bed40bb390cfa9ee97df7c7abe2b603c13d5c4dcc4a1eaa13",
+    "raw_difference": "BUF/tie instance ordering only; identical cell connection multiset"
+  },
+  "config_difference_only": "DESIGN_NICKNAME gate versus job label",
+  "route_period_ps": 770,
+  "signoff_period_ps": 833.333,
+  "shared_before_cts_reg2reg_slack_ps": -3752.59,
+  "production_preroute_signoff_slack_ps": -3689.3,
+  "gate_after_cts_slack_ps": 58.49754,
+  "worst_endpoint": "g_lane[5].u_add.u_cc.genblk1.g_rv.rd[26]$_DFF_P_/QN -> g_lane[5].u_add.y[31]$_DFF_P_/D",
+  "classification": "STAGE_GUARD_PARITY: same source/circuit/placement/constraints; historical gate proceeds through CTS but current production applies early PREROUTE_MARGIN",
+  "qualification": "No route or native qualification. No threshold/constraint changes, unchanged retry or datapath rewrite authorized from incomparable stages.",
+  "preservation": "Explicit reaper_holds marker installed for exact failed production job; original gate artifacts preserved; flow owner notified."
+}

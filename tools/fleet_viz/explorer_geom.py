@@ -54,6 +54,26 @@ def recipe_key(d, commit):
     return commit[:12] + '-' + hashlib.sha256(json.dumps(keep, sort_keys=True).encode()).hexdigest()[:8]
 
 
+# ------------------------------------------------------------------------------------------------ raw bus records
+def width(value):
+    return value if isinstance(value, int) and not isinstance(value, bool) and value > 0 else None
+
+
+def model_connections(model):
+    """Keep raw recipe IDs and ports before geometry compression loses them."""
+    out = []
+    for ordinal, bus in enumerate(model.get('buses', [])):
+        if not isinstance(bus, (list, tuple)) or len(bus) < 4:
+            continue
+        bid, cls, bits, endpoints = bus[:4]
+        out.append(dict(id=str(bid), kind='ported_bus', bus_class=str(cls),
+                        width_bits=width(bits), endpoints=[
+                            dict(instance=str(e[0]), port=str(e[1]) if len(e) > 1 else None)
+                            if isinstance(e, (list, tuple)) else dict(instance=str(e), port=None)
+                            for e in endpoints], ordinal=ordinal))
+    return out
+
+
 # ------------------------------------------------------------------------------------------------ source snapshot
 def snapshot(repo, commit, state):
     root = pathlib.Path(state) / 'explorer' / 'src' / commit[:12]
@@ -332,7 +352,7 @@ def serialise(d, commit, m, W, H, extra):
                key=recipe_key(d, commit), generated=datetime.datetime.now().astimezone().isoformat(timespec='seconds'),
                W=round(W, 3), H=round(H, 3), masters=masters, kinds=kinds, regions_names=regs, orients=ors, domains=doms,
                inst=cols, bus_classes=cls, buses=buses, buses_skipped=skipped, regions=regions, relays=len(relay),
-               model_keys=keys)
+               model_keys=keys, dataflow_connections=model_connections(m))
     if extra:
         out.update({k: v for k, v in extra.items() if v is not None})
     return out

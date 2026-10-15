@@ -1,0 +1,239 @@
+{
+ "name": "vms_bank_vs_rg4wg1_1015",
+ "top": "hfd_vms_bank_vs_rg4wg1",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_vs_rg4wg1.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_wdecode_vs.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "rq0",
+   "rr0",
+   "wq0",
+   "wq_done0",
+   "clk",
+   "rst_n",
+   "bid",
+   "wslot_v",
+   "status"
+  ],
+  "S": [
+   "rq1",
+   "rr1",
+   "pq",
+   "pr",
+   "eg"
+  ],
+  "E": [
+   "rq2",
+   "rr2",
+   "dq",
+   "dq_done",
+   "xq",
+   "xq_done",
+   "sid",
+   "wslot"
+  ],
+  "W": [
+   "rq3",
+   "rr3",
+   "kq",
+   "kq_done",
+   "xq2",
+   "xq2_done",
+   "rslot_v",
+   "rslot"
+  ]
+ },
+ "pin_ranges": {
+  "rq0": [
+   5.4,
+   12.28
+  ],
+  "rr0": [
+   12.28,
+   116.283
+  ],
+  "wq0": [
+   227.167,
+   340.883
+  ],
+  "wq_done0": [
+   340.883,
+   341.288
+  ],
+  "clk": [
+   341.288,
+   341.692
+  ],
+  "rst_n": [
+   341.692,
+   342.097
+  ],
+  "bid": [
+   342.097,
+   343.311
+  ],
+  "wslot_v": [
+   343.311,
+   343.716
+  ],
+  "status": [
+   343.716,
+   351.0
+  ],
+  "rq1": [
+   5.4,
+   10.736
+  ],
+  "rr1": [
+   10.736,
+   91.408
+  ],
+  "pq": [
+   91.408,
+   180.868
+  ],
+  "pr": [
+   180.868,
+   264.365
+  ],
+  "eg": [
+   264.365,
+   351.0
+  ],
+  "rq2": [
+   5.4,
+   12.586
+  ],
+  "rr2": [
+   12.586,
+   121.225
+  ],
+  "dq": [
+   121.225,
+   240.01
+  ],
+  "dq_done": [
+   240.01,
+   240.433
+  ],
+  "xq": [
+   240.433,
+   357.104
+  ],
+  "xq_done": [
+   357.104,
+   357.526
+  ],
+  "sid": [
+   357.526,
+   358.372
+  ],
+  "wslot": [
+   358.372,
+   359.64
+  ],
+  "rq3": [
+   5.4,
+   12.595
+  ],
+  "rr3": [
+   12.595,
+   121.364
+  ],
+  "kq": [
+   121.364,
+   240.29
+  ],
+  "kq_done": [
+   240.29,
+   240.714
+  ],
+  "xq2": [
+   240.714,
+   357.524
+  ],
+  "xq2_done": [
+   357.524,
+   357.947
+  ],
+  "rslot_v": [
+   357.947,
+   358.37
+  ],
+  "rslot": [
+   358.37,
+   359.64
+  ]
+ },
+ "outline": {
+  "w": 356.4,
+  "h": 365.04,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 3
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 32,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:H-ELEM-A r2",
+  "branch": "claude/hea-r2-main-1015",
+  "tag": "vs1",
+  "purpose": "Valid-select successor of CLOSED hfd_vms_bank_ft_rg4wg1 (native pin audit FAIL: capture wslot 286/310 ps, wslot_v 219/300 ps -- the write one-hot decode sat in front of 8 pin-edge flops each fanning out to 276 AND gates on all four faces, so they were placed at the block centre far from the corner slot pins). Each write leaf is now masked by its OWN pin-captured valid (same face/edge as its payload, local fan-out); wslot/wslot_v feed only plain pin flops into the small write-enable/fault cone. No added edge (read n+6 / commit n+3 / egress n+1), same 3 SRAMs, pin ABI and balanced clock spine; a valid compiler schedule writes identical data; a schedule conflict faults and suppresses the write.",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/vm/static"
+  ],
+  "record_to": "results/rtl/ref_tile/vms_bank_vs_rg4wg1_1015",
+  "benches": [
+   {
+    "name": "all_native_groups_exact_and_mutants",
+    "cmd": "mkdir -p {RUN}/bench_inputs && cp rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_wdecode_vs.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v {RUN}/bench_inputs/ && bash rtl/hbm_accel/generic/vm/static/physical/run_physical_banks_vs.sh {RUN}/bench/allgroups {RUN}/bench_inputs",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "min_count_regex": "eachgroup_reads=(\\d+)"
+   }
+  ],
+  "structural_change": "Valid-select successor of CLOSED hfd_vms_bank_ft_rg4wg1 (native pin audit FAIL: capture wslot 286/310 ps, wslot_v 219/300 ps -- the write one-hot decode sat in front of 8 pin-edge flops each fanning out to 276 AND gates on all four faces, so they were placed at the block centre far from the corner slot pins). Each write leaf is now masked by its OWN pin-captured valid (same face/edge as its payload, local fan-out); wslot/wslot_v feed only plain pin flops into the small write-enable/fault cone. No added edge (read n+6 / commit n+3 / egress n+1), same 3 SRAMs, pin ABI and balanced clock spine; a valid compiler schedule writes identical data; a schedule conflict faults and suppresses the write.",
+  "views_to": "physical/ref_tile/vms_bank_vs_rg4wg1_1015/views"
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "clock": "spine"
+}

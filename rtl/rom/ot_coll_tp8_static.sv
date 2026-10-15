@@ -52,6 +52,7 @@ module ot_coll_tp8_static #(
     input  wire              clk,
     input  wire [3:0]        clk_pfold,     // CCLK 1: package-fold slice clock entries (same edge as clk)
     input  wire [3:0]        clk_xfold,     // CCLK 1: cross-fold slice clock entries
+    input wire [8:0] clk_mem, // CCLK1: P0/P1,S0..S4,R0/R1 direct macro entries
     input  wire              rst_n,
     input  wire [1:0]        pkg_s,
     input  wire              die_ps,
@@ -155,7 +156,7 @@ module ot_coll_tp8_static #(
     assign up_valid = upv_q;
     assign up_rec   = uprec_q;
     wire [PW-1:0] pr_rd;
-    ot_coll_static_ring #(.OFF(LU + 2)) u_pring (.clk(clk), .rs_n(rs_p), .wd(ir_q), .rd(pr_rd));
+    ot_coll_static_ring #(.OFF(LU + 2)) u_pring (.clk(clk), .mem_ck(CCLK ? {clk_mem[1:0],clk_mem[1:0]} : {4{clk}}), .rs_n(rs_p), .wd(ir_q), .rd(pr_rd));
     // schedule token A -> B (LU + 2 edges): {v, mode, last, parity}
     localparam integer DAB = LU + 2;
     reg [4*DAB-1:0] tab;
@@ -169,8 +170,20 @@ module ot_coll_tp8_static #(
     always @(posedge clk or negedge rs_p) if (!rs_p) dpv_q <= 1'b0; else dpv_q <= dp_valid;
     wire b_lnk = (dpv_q != tb_v);
     wire b_md  = tb_v && dpv_q && (dpr_q[FW +: TAGW + 2] != pr_rd[FW +: TAGW + 2]);
-    wire [FW-1:0] lo = !DI ? pr_rd[FW-1:0] : dpr_q[FW-1:0];
-    wire [FW-1:0] hi = !DI ? dpr_q[FW-1:0] : pr_rd[FW-1:0];
+    // s4 fanout structure (s1/s3 gates: strap PK/DI and token-valid broadcasts drove 2,000-4,600 loads each over the
+    // 860-um cluster and crashed the resizer): every wide-word select comes from its own registered copy per 128-bit
+    // slice (keep_hierarchy, distinct IDs: no merge), loaded from the same D as the original -> identical cycle.
+    wire [NS-1:0] di_r, tbv_r;
+    genvar gr;
+    generate for (gr = 0; gr < NS; gr = gr + 1) begin : g_rb
+        ot_coll_rep_reg #(.W(1), .ID(16 + gr), .RST(0)) u_di (.clk(clk), .rst_n(1'b1), .d(die_ps), .q(di_r[gr]));
+        ot_coll_rep_reg #(.W(1), .ID(20 + gr), .RST(1)) u_tbv (.clk(clk), .rst_n(rs_p), .d(tab[4*(DAB-1)-1]), .q(tbv_r[gr]));
+    end endgenerate
+    wire [FW-1:0] lo, hi;
+    generate for (gr = 0; gr < NS; gr = gr + 1) begin : g_lohi
+        assign lo[gr*128 +: 128] = !di_r[gr] ? pr_rd[gr*128 +: 128] : dpr_q[gr*128 +: 128];
+        assign hi[gr*128 +: 128] = !di_r[gr] ? dpr_q[gr*128 +: 128] : pr_rd[gr*128 +: 128];
+    end endgenerate
 `ifdef OT_TP8S_MUT_OWNER
     wire own_b = tb_v && !tb_m && (tb_p == 1'b0);    // owner ignores the die strap: both dies claim even words
 `else
@@ -178,7 +191,9 @@ module ot_coll_tp8_static #(
 `endif
     // B1 registers: the fold-slice feed and the gather hold (loaded only on a scheduled word)
     reg [FW-1:0] lo_q, hi_q; reg red_q;
-    always @(posedge clk) if (tb_v) begin lo_q <= lo; hi_q <= hi; end
+    generate for (gr = 0; gr < NS; gr = gr + 1) begin : g_lohiq
+        always @(posedge clk) if (tbv_r[gr]) begin lo_q[gr*128 +: 128] <= lo[gr*128 +: 128]; hi_q[gr*128 +: 128] <= hi[gr*128 +: 128]; end
+    end endgenerate
     always @(posedge clk or negedge rs_p) if (!rs_p) red_q <= 1'b0; else red_q <= own_b;
     wire [NS-1:0] ps_v, ps_e; wire [FW-1:0] ps_sum;
     genvar gs;
@@ -197,6 +212,7 @@ module ot_coll_tp8_static #(
     // gather hold run: k = 0..7 at B1 .. B1 + 7
     reg g_run; reg [2:0] g_k; reg g_l; reg [TAGW-1:0] g_t;
     wire g_bad = tb_v && g_run && (g_k != 3'd7);
+    wire [2:0] gk_next = (tb_v && tb_m) ? 3'd0 : g_run ? g_k + 3'd1 : g_k;
     always @(posedge clk or negedge rs_p)
         if (!rs_p) begin g_run <= 1'b0; g_k <= 0; g_l <= 1'b0; g_t <= 0; end
         else if (tb_v && tb_m) begin g_run <= 1'b1; g_k <= 0; g_l <= tb_l; g_t <= pr_rd[FW+2 +: TAGW]; end
@@ -222,7 +238,18 @@ module ot_coll_tp8_static #(
     wire [1:0] w_r = w_red ? 2'd0 : g_r;
     wire w_l    = w_red ? tc_l : g_l;
     wire [TAGW-1:0] w_t = w_red ? tc_t : g_t;
-    wire [FW-1:0] w_d = w_red ? pf_q : (g_d ? hi_q : lo_q);
+    wire [NS-1:0] tcv_r, gd_r;
+    wire [FW-1:0] w_d;
+    generate for (gr = 0; gr < NS; gr = gr + 1) begin : g_wd
+        ot_coll_rep_reg #(.W(1), .ID(24 + gr), .RST(1)) u_tcv (.clk(clk), .rst_n(rs_p), .d(tbc[TBW*(DBC-1)-1]), .q(tcv_r[gr]));
+        // g_d = g_k[2]: the copy follows g_k's next-state (same reset/enable as g_k)
+        ot_coll_rep_reg #(.W(1), .ID(28 + gr), .RST(1)) u_gd (.clk(clk), .rst_n(rs_p), .d(gk_next[2]), .q(gd_r[gr]));
+`ifdef OT_TP8S_MUT_GATHER
+        assign w_d[gr*128 +: 128] = tcv_r[gr] ? pf_q[gr*128 +: 128] : (!gd_r[gr] ? hi_q[gr*128 +: 128] : lo_q[gr*128 +: 128]);
+`else
+        assign w_d[gr*128 +: 128] = tcv_r[gr] ? pf_q[gr*128 +: 128] : (gd_r[gr] ? hi_q[gr*128 +: 128] : lo_q[gr*128 +: 128]);
+`endif
+    end endgenerate
     wire w_send = w_red ? (tc_v && tc_o) : (g_run && g_r == PK);
     wire [SEW-1:0] s_wd = {{(SEW-550){1'b0}}, w_v, w_r, w_od, w_mode, w_l, w_t, w_d};
     // These are physically distinct face registers. Keep each soft hierarchy
@@ -245,7 +272,7 @@ module ot_coll_tp8_static #(
     wire [SEW-1:0] s_rd;
     genvar gm;
     generate for (gm = 0; gm < SEW / 128; gm = gm + 1) begin : g_sring
-        ot_sram_1r1w_512x128_m4_r2c2 u_m (.clk(clk), .r_ce_in(1'b1), .r_addr_in(cc - 9'(LS + 1)),
+        ot_sram_1r1w_512x128_m4_r2c2 u_m (.clk(CCLK ? clk_mem[2+gm] : clk), .r_ce_in(1'b1), .r_addr_in(cc - 9'(LS + 1)),
             .rd_out(s_rd[gm*128 +: 128]), .w_ce_in(1'b1), .w_addr_in(cc), .wd_in(s_wd[gm*128 +: 128]),
             .w_mask_in({128{1'b1}}), .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(14'b0));
     end endgenerate
@@ -279,10 +306,17 @@ module ot_coll_tp8_static #(
     wire red2 = td_v && !td_m && td_od;
     wire [4*FW-1:0] xsrc;
     genvar gq;
+    // static rank select, decoded from the strap into a registered one-hot {own, port2, port1, port0} per (rank, slice)
     generate for (gq = 0; gq < 4; gq = gq + 1) begin : g_xs
-        wire [1:0] jq = 2'(gq) - PK + 2'd3;
-        assign xsrc[gq*FW +: FW] = (2'(gq) == PK) ? td_d
-                                 : (jq == 2'd0) ? srr_q[0][FW-1:0] : (jq == 2'd1) ? srr_q[1][FW-1:0] : srr_q[2][FW-1:0];
+        for (gr = 0; gr < NS; gr = gr + 1) begin : g_s
+            wire [1:0] jqs = 2'(gq) - pkg_s + 2'd3;
+            wire [3:0] sel;
+            ot_coll_rep_reg #(.W(4), .ID(32 + gq*NS + gr), .RST(0)) u_sel (.clk(clk), .rst_n(1'b1),
+                .d({2'(gq) == pkg_s, (2'(gq) != pkg_s) && jqs == 2'd2, (2'(gq) != pkg_s) && jqs == 2'd1,
+                    (2'(gq) != pkg_s) && jqs == 2'd0}), .q(sel));
+            assign xsrc[gq*FW + gr*128 +: 128] = (td_d[gr*128 +: 128] & {128{sel[3]}}) | (srr_q[2][gr*128 +: 128] & {128{sel[2]}})
+                                             | (srr_q[1][gr*128 +: 128] & {128{sel[1]}}) | (srr_q[0][gr*128 +: 128] & {128{sel[0]}});
+        end
     end endgenerate
 `ifdef OT_TP8S_MUT_RANK
     wire [4*FW-1:0] xs = {xsrc[3*FW +: FW], xsrc[1*FW +: FW], xsrc[2*FW +: FW], xsrc[0 +: FW]};
@@ -325,7 +359,7 @@ module ot_coll_tp8_static #(
 `else
     localparam integer ROFF = LU + 2;
 `endif
-    ot_coll_static_ring #(.OFF(ROFF)) u_rring (.clk(clk), .rs_n(rs_r), .wd({{(PW-RW){1'b0}}, xe_q, te_l, xr_q}), .rd(rr_rd));
+    ot_coll_static_ring #(.OFF(ROFF)) u_rring (.clk(clk), .mem_ck(CCLK ? {clk_mem[8:7],clk_mem[8:7]} : {4{clk}}), .rs_n(rs_r), .wd({{(PW-RW){1'b0}}, xe_q, te_l, xr_q}), .rd(rr_rd));
     // token E -> F (LU + 2 edges): {v, own, last}
     localparam integer DEF = LU + 2;
     reg [3*DEF-1:0] tef;
@@ -339,12 +373,18 @@ module ot_coll_tp8_static #(
     always @(posedge clk or negedge rs_r) if (!rs_r) drv_q <= 1'b0; else drv_q <= dr_valid;
     wire f_lnk = (drv_q != (tf_v && !tf_o));
     wire f_mdx = tf_v && !tf_o && drv_q && (drr_q[FW] != tf_l);
-    wire [FW-1:0] rf_d = tf_o ? rr_rd[FW-1:0] : drr_q[FW-1:0];
+    wire [NS-1:0] tfv_r, tfo_r;
+    wire [FW-1:0] rf_d;
+    generate for (gr = 0; gr < NS; gr = gr + 1) begin : g_rf
+        ot_coll_rep_reg #(.W(1), .ID(48 + gr), .RST(1)) u_tfv (.clk(clk), .rst_n(rs_r), .d(tef[3*(DEF-1)-1]), .q(tfv_r[gr]));
+        ot_coll_rep_reg #(.W(1), .ID(52 + gr), .RST(1)) u_tfo (.clk(clk), .rst_n(rs_r), .d(tef[3*(DEF-1)-2]), .q(tfo_r[gr]));
+        assign rf_d[gr*128 +: 128] = tfo_r[gr] ? rr_rd[gr*128 +: 128] : drr_q[gr*128 +: 128];
+    end endgenerate
     wire          rf_e = tf_o ? rr_rd[FW+1] : drr_q[FW+1];
     wire o_conf = tf_v && gd_v;
-    reg ov_q, ol_q, oe_q; reg [2:0] or_q; reg [FW-1:0] od_q;
+    reg ov_q, ol_q, oe_q; reg [2:0] or_q; reg [FW-1:0] od_q; integer kq;
     always @(posedge clk) begin
-        od_q <= tf_v ? rf_d : g_out;
+        for (kq = 0; kq < NS; kq = kq + 1) od_q[kq*128 +: 128] <= tfv_r[kq] ? rf_d[kq*128 +: 128] : g_out[kq*128 +: 128];
         ol_q <= tf_v ? tf_l : (td_l && td_od && td_r == 2'd3);
         or_q <= tf_v ? 3'd0 : {td_od, td_r};
         oe_q <= tf_v ? rf_e : 1'b0;
@@ -371,6 +411,7 @@ endmodule
 // select is registered with the macro's registered read.
 module ot_coll_static_ring #(parameter integer OFF = 20) (
     input  wire         clk,
+    input wire [3:0] mem_ck,
     input  wire         rs_n,
     input  wire [545:0] wd,
     output wire [545:0] rd
@@ -384,20 +425,31 @@ module ot_coll_static_ring #(parameter integer OFF = 20) (
     wire [546*B-1:0] rdb;
     genvar b;
     generate for (b = 0; b < B; b = b + 1) begin : g_b
-        ot_sram_1r1w_32x546_m1 u_m (.clk(clk), .r_ce_in(1'b1), .r_addr_in(ra[4:0]), .rd_out(rdb[b*546 +: 546]),
+        ot_sram_1r1w_32x546_m1 u_m (.clk(mem_ck[b]), .r_ce_in(1'b1), .r_addr_in(ra[4:0]), .rd_out(rdb[b*546 +: 546]),
             .w_ce_in((B == 1) ? 1'b1 : (wa[AW-1:5] == b)), .w_addr_in(wa[4:0]), .wd_in(wd), .w_mask_in({546{1'b1}}));
     end endgenerate
     generate if (B == 1) begin : g_one
         assign rd = rdb;
     end else begin : g_sel
-        reg [AW-6:0] rbs;
-        always @(posedge clk) rbs <= ra[AW-1:5];
-        // decoded bank select (one-hot AND-OR, constant-index slices: no wide runtime part-select)
+        // decoded bank select (one-hot AND-OR, constant-index slices: no wide runtime part-select); the registered
+        // one-hot is replicated per <= 110-bit group (s4: one rbs drove 1,604 loads)
+        localparam integer NG = 5, GW = 110;
         reg [545:0] rsel;
-        integer kb;
+        wire [B*NG-1:0] boh;
+        genvar gg;
+        for (gg = 0; gg < NG; gg = gg + 1) begin : g_g
+            wire [B-1:0] oh_d;
+            for (genvar kd = 0; kd < B; kd = kd + 1) begin : g_d
+                assign oh_d[kd] = (ra[AW-1:5] == kd);
+            end
+            ot_coll_rep_reg #(.W(B), .ID(64 + OFF*8 + gg), .RST(0)) u_oh (.clk(clk), .rst_n(1'b1), .d(oh_d), .q(boh[gg*B +: B]));
+        end
+        integer kb, kbit;
         always @(*) begin
             rsel = 546'd0;
-            for (kb = 0; kb < B; kb = kb + 1) rsel = rsel | (rdb[kb*546 +: 546] & {546{rbs == kb}});
+            for (kbit = 0; kbit < 546; kbit = kbit + 1)
+                for (kb = 0; kb < B; kb = kb + 1)
+                    rsel[kbit] = rsel[kbit] | (rdb[kb*546 + kbit] & boh[(kbit / GW)*B + kb]);
         end
         assign rd = rsel;
     end endgenerate
@@ -413,4 +465,16 @@ endmodule
  (* keep *)wire[W-1:0]face_data=data;
  always @(posedge clk)qdata<=face_data;
  always @(posedge clk or negedge rst_n)if(!rst_n)qv<=0;else qv<=dv;
+endmodule
+
+// Registered copy of a broadcast select (s4 fanout structure).  Each instance is a separate hardened-in-place
+// soft hierarchy so synthesis cannot merge the copies back into one high-fanout driver; no cycle is added (the copy
+// is loaded from the same D as the register it replaces).
+(* keep_hierarchy = 1 *) module ot_coll_rep_reg #(parameter integer W = 1, ID = 0, RST = 1) (
+    input wire clk, input wire rst_n, input wire [W-1:0] d, output reg [W-1:0] q);
+    generate if (RST) begin : g_r
+        always @(posedge clk or negedge rst_n) if (!rst_n) q <= {W{1'b0}}; else q <= d;
+    end else begin : g_n
+        always @(posedge clk) q <= d;
+    end endgenerate
 endmodule

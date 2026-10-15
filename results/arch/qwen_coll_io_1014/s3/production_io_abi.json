@@ -1,0 +1,306 @@
+{
+  "schema": "opentallas.qwen.static_io.production_source_abi.v1",
+  "top": "qfd_collective_static_io",
+  "source": "rtl/physical/ot_qfd_collective_static_io.sv",
+  "per_face_master": "qfd_coll_static_face",
+  "per_face_source": "rtl/physical/ot_qfd_coll_static_face.sv",
+  "faces": [
+    {
+      "index": 0,
+      "name": "ucie_P",
+      "payload_bits": 546,
+      "phy_frame_bits": 597,
+      "collective_face": "E",
+      "relay_cycles": 5,
+      "PHY_latency_cycles": 14,
+      "minimum_composed_age_formula": "37+local_R+peer_R",
+      "roots": {
+        "cal_ck": "core",
+        "cal_lck": "link",
+        "tx_wck": "core",
+        "tx_rck": "link",
+        "rx_wck": "link",
+        "rx_rck": "core",
+        "codec_ck0": "link",
+        "codec_ck1": "link",
+        "codec_ck2": "link",
+        "codec_ck3": "link",
+        "codec_ck4": "link"
+      },
+      "physical_home": null,
+      "pin_file": null,
+      "qualified_view": null
+    },
+    {
+      "index": 1,
+      "name": "ucie_R",
+      "payload_bits": 514,
+      "phy_frame_bits": 565,
+      "collective_face": "E",
+      "relay_cycles": 5,
+      "PHY_latency_cycles": 14,
+      "minimum_composed_age_formula": "37+local_R+peer_R",
+      "roots": {
+        "cal_ck": "core",
+        "cal_lck": "link",
+        "tx_wck": "core",
+        "tx_rck": "link",
+        "rx_wck": "link",
+        "rx_rck": "core",
+        "codec_ck0": "link",
+        "codec_ck1": "link",
+        "codec_ck2": "link",
+        "codec_ck3": "link",
+        "codec_ck4": "link"
+      },
+      "physical_home": null,
+      "pin_file": null,
+      "qualified_view": null
+    },
+    {
+      "index": 2,
+      "name": "serdes0",
+      "payload_bits": 546,
+      "phy_frame_bits": 597,
+      "collective_face": "E",
+      "relay_cycles": 0,
+      "PHY_latency_cycles": 339,
+      "minimum_composed_age_formula": "362+local_R+peer_R",
+      "roots": {
+        "cal_ck": "core",
+        "cal_lck": "link",
+        "tx_wck": "core",
+        "tx_rck": "link",
+        "rx_wck": "link",
+        "rx_rck": "core",
+        "codec_ck0": "link",
+        "codec_ck1": "link",
+        "codec_ck2": "link",
+        "codec_ck3": "link",
+        "codec_ck4": "link"
+      },
+      "physical_home": null,
+      "pin_file": null,
+      "qualified_view": null
+    },
+    {
+      "index": 3,
+      "name": "serdes1",
+      "payload_bits": 546,
+      "phy_frame_bits": 597,
+      "collective_face": "W",
+      "relay_cycles": 0,
+      "PHY_latency_cycles": 339,
+      "minimum_composed_age_formula": "362+local_R+peer_R",
+      "roots": {
+        "cal_ck": "core",
+        "cal_lck": "link",
+        "tx_wck": "core",
+        "tx_rck": "link",
+        "rx_wck": "link",
+        "rx_rck": "core",
+        "codec_ck0": "link",
+        "codec_ck1": "link",
+        "codec_ck2": "link",
+        "codec_ck3": "link",
+        "codec_ck4": "link"
+      },
+      "physical_home": null,
+      "pin_file": null,
+      "qualified_view": null
+    },
+    {
+      "index": 4,
+      "name": "serdes2",
+      "payload_bits": 546,
+      "phy_frame_bits": 597,
+      "collective_face": "W",
+      "relay_cycles": 5,
+      "PHY_latency_cycles": 339,
+      "minimum_composed_age_formula": "362+local_R+peer_R",
+      "roots": {
+        "cal_ck": "core",
+        "cal_lck": "link",
+        "tx_wck": "core",
+        "tx_rck": "link",
+        "rx_wck": "link",
+        "rx_rck": "core",
+        "codec_ck0": "link",
+        "codec_ck1": "link",
+        "codec_ck2": "link",
+        "codec_ck3": "link",
+        "codec_ck4": "link"
+      },
+      "physical_home": null,
+      "pin_file": null,
+      "qualified_view": null
+    }
+  ],
+  "collective_outline_um": [
+    864,
+    950.4
+  ],
+  "collective_s3_clock_roots": 18,
+  "collective_clock_ports": [
+    "clk",
+    "clk_pfold0",
+    "clk_pfold1",
+    "clk_pfold2",
+    "clk_pfold3",
+    "clk_xfold0",
+    "clk_xfold1",
+    "clk_xfold2",
+    "clk_xfold3",
+    "clk_pring0",
+    "clk_pring1",
+    "clk_sring0",
+    "clk_sring1",
+    "clk_sring2",
+    "clk_sring3",
+    "clk_sring4",
+    "clk_rring0",
+    "clk_rring1"
+  ],
+  "command_input_bits": 50,
+  "command_pin_lead_cycles": 1,
+  "required_adjacencies": [
+    "eachfacecalendar/CDCcore side adjacentcollective correspondingface",
+    "codec PHY face adjacentactuallicensedPHY",
+    "coreandlink roots atsourcepinnedmesochronousphase",
+    "UCIePandRconcurrentframe capacity unresolved; no silentarbiter"
+  ],
+  "external_boundary": "actuallicensedPHY597/P597/R565frames only; paddedRlane32bits outsideframe ignored",
+  "normal_schedule": "compiled slots only; fault/abort never reschedules",
+  "source_sha256": {
+    "rtl/physical/ot_qfd_collective_static_io.sv": "573ef50bb76d8eaf0dbcbe87cd3eb18714061119f0d4e6b55d372f1c8aeff0ca",
+    "rtl/physical/ot_qfd_coll_static_face.sv": "514584ea3103da9a516372e8c25b2e4316eda0b1c904d2432d36114fe3dd1be5",
+    "rtl/rom/ot_coll_tp8_static.sv": "8b32e6a42e3e68d8ba46ca1f9df8163da197faac898027c12548b5f618a0bcba",
+    "rtl/physical/ot_qfd_io_collective_static.sv": "32e51fe1aa7ba1120e7cefc33d3345095350e9c9c1e0b24a570e8cb89d604447"
+  },
+  "bench_status": "PASS: current source8d92; 4 production cases each PHI0/PHI1 +6unit cases; peer-age mutant rejected with2048 mismatches and transport faults",
+  "physical_qualified": false,
+  "native_system_qualified": false,
+  "relay_clock_ports": "2*(2*RU+RS0+RS1+RS2) individual core-phase roots (oneunusedplaceholderport for allzeroR)",
+  "relay_rows": "actual kept fixed-cycle tx(payload+observed-valid+txslot+peerslot), rx(payload+valid) flop rows",
+  "fault_output": "fault is collective fault only; caller must aggregate20CDCfault and5codecabort explicit outputs for native acceptance; none gates normal issue",
+  "initial_actual_parent_proof": "Historical R0 proof retained; superseded for production by exact-source LU47 proof",
+  "peer_face_mapping": {
+    "P": "P",
+    "R": "R",
+    "SerDes0": "SerDes2",
+    "SerDes1": "SerDes1",
+    "SerDes2": "SerDes0"
+  },
+  "RX_PHY_expect_offset": "KC+4+KW+4+PHY+peer_R-local_R after peer slot reaches local face; source-visible static shift, no observation chooses event",
+  "relay_profile_status": "R5/0/0/5 exact-source PASS both phases; LU47/LS376 measured; old peer-age mutant fails",
+  "per_face_room_proposal": {
+    "outline_um": [
+      720,
+      432
+    ],
+    "core_face": "E",
+    "PHY_face": "W",
+    "status": "PROPOSAL_NOT_ASSIGNED_OR_QUALIFIED",
+    "children": [
+      {
+        "master": "qfd_static_ch546",
+        "count": 2,
+        "outline_um": [
+          233.28,
+          151.2
+        ],
+        "at_um": [
+          [
+            466.56,
+            43.2
+          ],
+          [
+            466.56,
+            237.6
+          ]
+        ],
+        "actual_routed_view": "physical/ref_tile/qfd_static_ch546/views/qfd_static_ch546",
+        "source": "rtl/physical/ot_qfd_static_transport.sv",
+        "closed_source": "885fe056c",
+        "TT_setup_ps": 46.88,
+        "FF_hold_ps": 9.11,
+        "native_pin_audit": "results/arch/qwen_coll_io_1014/s3/cdc_native_pin_audit.json; auditor0violating q_lb176.7ps/p_lb134.7ps, conservative launch220.3ps/capture156.2ps/selfreach403.7um"
+      },
+      {
+        "master": "ot_qkvd_llr_replay_sram_leaf",
+        "count": 4,
+        "source": "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+        "raw_macro": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+        "raw_macro_outline_um": [
+          171.288,
+          77.76
+        ],
+        "at_um": [
+          [
+            259.2,
+            0
+          ],
+          [
+            259.2,
+            108
+          ],
+          [
+            259.2,
+            216
+          ],
+          [
+            259.2,
+            324
+          ]
+        ],
+        "qualified_view": null
+      },
+      {
+        "master": "ot_qwen_static_slot_ctl",
+        "count": 1,
+        "params": "FW546or514,CW32",
+        "candidate_outline_um": [
+          216,
+          172.8
+        ],
+        "at_um": [
+          0,
+          129.6
+        ],
+        "qualified_view": null
+      },
+      {
+        "master": "actual_perface_calendar",
+        "count": 1,
+        "candidate_outline_um": [
+          216,
+          108
+        ],
+        "at_um": [
+          0,
+          324
+        ],
+        "qualified_view": null
+      }
+    ]
+  },
+  "calendar_legality": "L >= KC+KW+17+PHY+local_R+peer_R; RX local read offset L-4-2local_R; per-peer RXexpect offset PEER_R-local_R",
+  "default_profile": {
+    "LU": 47,
+    "LS": 376,
+    "R_U": 5,
+    "R_S0": 0,
+    "R_S1": 0,
+    "R_S2": 5,
+    "relay_clock_roots": 30,
+    "total_clock_roots": 103
+  },
+  "evidence": "results/rtl/qwen_coll_io_1014/production_parent_lu47_1015",
+  "production_cycles": {
+    "AR256": 783,
+    "two_AR256": 1039,
+    "argmax": 438,
+    "two_AR256_argmax": 1047
+  },
+  "shared_PHY_capacity_status": "OPEN: P597/R565 overlap144 cycles for twoAR; licensed simultaneous capacity not established; no shared-PHY serialization implemented"
+}

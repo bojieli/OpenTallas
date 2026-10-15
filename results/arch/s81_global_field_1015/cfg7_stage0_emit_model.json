@@ -1,0 +1,20 @@
+{
+  "scope": "actual canonical stage0 CFG mask generation; metadata/storage only",
+  "pairs": 2417,
+  "BF_pairs": 519,
+  "phase_count": 626,
+  "PHW": 10,
+  "words_per_phase": 25,
+  "macros_per_pair": 7,
+  "physical_macros": 16919,
+  "macro": "ot_rom_4096x72_m8",
+  "payload_bits": 48,
+  "logical_CFG_array_bytes": 302608400,
+  "native_mask_text_bytes": 1256066560,
+  "source_CFG_text_bytes": 491738650,
+  "requested_memory_GB": 2,
+  "requested_threads": 1,
+  "arithmetic_executed": false,
+  "added_hardware": false,
+  "native_execution_qualified": false
+}

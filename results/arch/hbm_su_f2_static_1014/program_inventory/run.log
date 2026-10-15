@@ -1,0 +1,54 @@
+{
+  "program": "hbm-sim Qwen3-8B TP4 P8191 rank 0 layer 0",
+  "record_count": 18,
+  "gather_records": 0,
+  "cases": [
+    {
+      "case_id": 0,
+      "first_record": 0,
+      "records": 11,
+      "first_output_sector": 0,
+      "output_sectors": 2530,
+      "output_words": 20228,
+      "summed_model_price": 1548.0
+    },
+    {
+      "case_id": 1,
+      "first_record": 11,
+      "records": 7,
+      "first_output_sector": 2530,
+      "output_sectors": 2643,
+      "output_words": 20835,
+      "summed_model_price": 457.0
+    }
+  ],
+  "golden_output_mask_sectors_verified": 5173,
+  "calendar_emitted": false
+}
+{
+  "program": "ds_native DeepSeek-V4.1 TP96 P1048575 rank 0 layer 0 (results/arch/hgi_programs_20261010/inputs/ds_rank0_program.json)",
+  "record_count": 34,
+  "gather_records": 0,
+  "cases": [
+    {
+      "case_id": 0,
+      "first_record": 0,
+      "records": 27,
+      "first_output_sector": 0,
+      "output_sectors": 786,
+      "output_words": 6229,
+      "summed_model_price": 2912.0
+    },
+    {
+      "case_id": 1,
+      "first_record": 27,
+      "records": 7,
+      "first_output_sector": 786,
+      "output_sectors": 2643,
+      "output_words": 20835,
+      "summed_model_price": 457.0
+    }
+  ],
+  "golden_output_mask_sectors_verified": 3429,
+  "calendar_emitted": false
+}

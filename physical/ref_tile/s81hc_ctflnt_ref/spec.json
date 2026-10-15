@@ -1,0 +1,132 @@
+{
+ "name": "s81hc_ctflnt_ref",
+ "top": "ot_s81_hc_ctfl_nt",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ntree.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_stree.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_hc_core.sv",
+  "rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/lib/ot_skid_buffer.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "rtl/hdc/v41/ot_hdc_softplus.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/hdc/v41/ot_hdc_actquant.sv",
+  "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [],
+ "outline": {
+  "w": 576.72,
+  "h": 25.92
+ },
+ "why_floorplan": "LOCAL_SPLIT relay strip: S-DIE granted cth_nt row directly below ctfxs_nt (576.72x25.92, y 390.96 from N); N fdx/fv abutted below ctfxs fdx/fv, S fdx_local spread 132-419 (2.5x)",
+ "macros": [],
+ "pins": {
+  "W": [
+   "clk",
+   "rst_in"
+  ],
+  "N": [
+   "fv",
+   "fdx"
+  ],
+  "S": [
+   "fv_local",
+   "fdx_local"
+  ]
+ },
+ "refglob": "*",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "benches_from": "tools/s81_suhc/hc_owned_nt_benches.json",
+  "owner": "Claude:S-NORM",
+  "branch": "claude/s81-norm-tree-1014",
+  "tag": "s4-straight",
+  "structural_change": "v23 straight relay (220c62a71): fdx_local at the fdx x of the same bit wherever the 8 CLOSED CTPL stay <= 499.8 um (302 bits moved, max 46.8 um lateral; cut 82 vs v22 737; s3 native launch 288 on 202 laterally-displaced outputs). rst_in capture flop no longer pinned at the W pin (it sat on the earliest clock branch: capture 234.3); single clock root over the 115-um flop window. 0 cycles, 0 area.",
+  "no_bench_reason": "bit-exactness is gated on the HC slab composition with dsfd_sp_hc NTREE 1 (tools/s81_suhc/hc_ntree_bench.sh: NG 256 production shape exact PASS + mutant 3 FAIL; tools/s81_suhc/hc_gate.py --ntree 1 NG 256 exact 0/1940 x3 + per-tile mutants); the tile alone has no golden",
+  "purpose": "el1014-s81-norm-tree LOCAL_SPLIT: fdx_local relay strip",
+  "views_to": "physical/ref_tile/s81hc_ctflnt_ref/views",
+  "record_to": "results/rtl/ref_tile/s81hc_ctflnt_ref",
+  "benches": [
+   {
+    "name": "hc_ntree_tmut_ot_s81_hc_ctfl_nt",
+    "cmd": "bash tools/s81_suhc/hc_owned_bench.sh {RUN}/bench/nt_tm 1 ot_s81_hc_ctfl_nt",
+    "expect": "fail",
+    "fail_regex": "^RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_pipe40_nt67_tm-ot_s81_hc_ctfl_nt fail$",
+    "threads": 16,
+    "peak_ram_gb": 40,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "reroute_reason": {
+   "kind": "pin_register",
+   "source": "record dd8cae478 native audit launch 288.0 (fdx_local[693], 202 pins) / capture 234.3 (rst_in)",
+   "cell": "ot_s81_hc_ctfl_nt",
+   "launch_ps": 288.0,
+   "capture_ps": 234.3,
+   "fix": "v23 straight relay (220c62a71): fdx_local at the fdx x of the same bit wherever the 8 CLOSED CTPL stay <= 499.8 um (302 bits moved, max 46.8 um lateral; cut 82 vs v22 737; s3 native launch 288 on 202 laterally-displaced outputs). rst_in capture flop no longer pinned at the W pin (it sat on the earliest clock branch: capture 234.3); single clock root over the 115-um flop window. 0 cycles, 0 area."
+  }
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB1xp67_ASAP7_75t_R",
+  "basis": "Native routed phi-R audit: output lead/HB2/buffer plus capture pad exceed 220/190ps; remove the fixed output pad and use HB1 at input pins, retaining all MIN constraints and automatic hold repair."
+ },
+ "boundary_tcl": [
+  "physical/common_flow/hold_pad_hb4.tcl"
+ ],
+ "io_tcl": "physical/s81_die_pins/v23_hc_norm_straight_candidate/ot_s81_hc_ctfl_nt.tcl",
+ "assigned_pins": {
+  "file": "physical/s81_die_pins/v23_hc_norm_straight_candidate/ot_s81_hc_ctfl_nt.json",
+  "source": "S-NORM v23 candidate 220c62a71",
+  "layout": "physical/s81_die_pins/v23_hc_norm_straight_candidate/report.json"
+ },
+ "orfs_vars": {
+  "OT_OFLOP_PORT_RE": "^f"
+ },
+ "slot_change_request": {
+  "file": "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/v23_straight/request.json",
+  "note": "S-NORM v23 straight fd/fv chain candidate (tools/s81/hc_norm_straight_pins.py, 220c62a71): pins differ from the v22 grant; request posted to S-DIE el1011-s81die.log"
+ }
+}

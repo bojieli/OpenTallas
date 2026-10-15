@@ -1,0 +1,14 @@
+read_verilog -sv -DSYNTHESIS rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap_leaf.sv
+hierarchy -check -top dsfd_vm_static_cap_leaf
+synth -top dsfd_vm_static_cap_leaf -flatten -noabc
+dfflibmap -liberty map/libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+abc -liberty map/libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty map/libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty map/libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty map/libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty map/libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib -D 1111
+clean
+read_liberty -lib map/libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib
+read_liberty -lib map/libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib
+read_liberty -lib map/libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib
+read_liberty -lib map/libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -lib map/libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+check -assert
+stat -liberty map/libs/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty map/libs/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty map/libs/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty map/libs/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty map/libs/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+write_json map2/mapped.json

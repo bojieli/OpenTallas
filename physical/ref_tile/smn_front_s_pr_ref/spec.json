@@ -1,0 +1,150 @@
+{
+ "name": "smn_front_s_pr_ref",
+ "top": "ot_hbm_accel_smh_front_s",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/v41rom/ot_v41_bterm.sv",
+  "rtl/v41rom/ot_v41_bterm2.sv",
+  "rtl/gpu/ot_gpu_fadd.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/gpu/ot_gpu_tree.sv",
+  "rtl/gpu/ot_gpu_issue.sv",
+  "rtl/gpu/ot_gpu_stack.sv",
+  "rtl/gpu/ot_gpu_tc_col.sv",
+  "rtl/gpu/ot_gpu_bd_col.sv",
+  "rtl/hdc/v41/ot_hdc_blockdot.sv",
+  "rtl/gpu/ot_gpu_bulk_copy.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_int8_line.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/hbm_accel/cg/ot_cg_tile.sv"
+ ],
+ "defines": [
+  "OT_SMH_CG",
+  "OT_SMH_FC_HIER",
+  "OT_SMH_CG_ENREG",
+  "OT_SMH_XLK",
+  "OT_FP_DATA_NORST",
+  "OT_SMH_DRST0",
+  "OT_SMH_RSTRELAY",
+  "OT_SMH_HIER",
+  "OT_SMH_PTW_OHDLY",
+  "OT_SMH_PINREG"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 432.0,
+  "h": 241.92
+ },
+ "pins": {
+  "N": [
+   "clk",
+   "fd_d",
+   "fd_ret",
+   "fd_v",
+   "fi_row3",
+   "fp_d",
+   "fp_v",
+   "fq_d",
+   "fq_ret",
+   "fq_v",
+   "fsv",
+   "rst_n"
+  ],
+  "S": [
+   "d_base",
+   "d_lines",
+   "d_ready",
+   "d_valid",
+   "fault",
+   "rdata",
+   "req_addr",
+   "req_ready",
+   "req_tag",
+   "req_v",
+   "rrow",
+   "rsp_data",
+   "rsp_tag",
+   "rsp_v",
+   "rv"
+  ],
+  "E": [
+   "qin_r",
+   "rout_r3"
+  ],
+  "W": [
+   "qin_l",
+   "rout_l3"
+  ]
+ },
+ "refglob": "*",
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 96,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:el1013-smh-r11",
+  "branch": "claude/el1013-smh-r11",
+  "tag": "r1",
+  "structural_change": "result deskew 5 + PT4 + 1 a tile hop (OT_SMH_PINREG): the gated SM tile cluster r14 lands rin / bin in its own pin registers, so a column's results arrive one cycle later per hop; +276 deskew flops per side.  Same module text otherwise (the native snapshot's front_s), same outline and pin plan as smn_front_s_ref r1 (CLOSED TT +207.5 / FF +4.6); live rtl/ sources",
+  "purpose": "ot_hbm_accel_smh_front_s for the SM whose tiles are the r14 gated clusters (smh_tile_eg_ref / smh_tile_wg_ref with OT_SMH_PINREG): identical to the native front_s but for the result deskew (7 a hop instead of 6).  A separate kit, so the closed smn_front_s_ref view (6 a hop) stays valid for a composition with pre-r14 tiles; the die lead takes the front that matches the tile it places.  Benches: the full production-shape SM (NC 8, 8 active columns, RMAX 4096, request credit, hierarchical gated tiles with pin registers) 13-op stress sequence bit-exact with the clock-gating lockstep at 0 mismatches; the deskew mutant (front built WITHOUT the extra hop cycle against PINREG tiles) must mismatch.",
+  "benches": [
+   {
+    "name": "lockstep_pinreg",
+    "expect": "pass",
+    "pass_regex": "SMFS_LOCKSTEP_PASS",
+    "threads": 8,
+    "peak_ram_gb": 72,
+    "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; W=$(mktemp -d /tmp/smfs.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_RSTPIN --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --define OT_SMH_PINREG --define OT_SMH_PRODUCTION_SHAPE --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_lockstep_pinreg.json > {RUN}/b_lockstep_pinreg.log 2>&1; rc=$?; tail -5 {RUN}/b_lockstep_pinreg.log; grep -h CG_LOCKSTEP $W/*/runtime.log; test $rc -eq 0 && grep -q 'CG_LOCKSTEP mismatches 0 ' $W/*/runtime.log && echo SMFS_LOCKSTEP_PASS"
+   },
+   {
+    "name": "mut_deskew",
+    "expect": "fail",
+    "fail_regex": "SMFS_DESKEW_MUTANT_KILLED [1-9]",
+    "threads": 8,
+    "peak_ram_gb": 72,
+    "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; W=$(mktemp -d /tmp/smfs.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_RSTPIN --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --define OT_SMH_PINREG --define OT_SMH_PRODUCTION_SHAPE --define OT_SMH_MUT_PINR_DESKEW --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_mut_deskew.json > {RUN}/b_mut_deskew.log 2>&1; rc=$?; tail -5 {RUN}/b_mut_deskew.log; grep -h CG_LOCKSTEP $W/*/runtime.log; python3 -c 'import json,sys; x=json.load(open(sys.argv[1])); assert x[\"timeout\"] is None and x[\"mismatching_ops\"] > 0; print(\"SMFS_DESKEW_MUTANT_KILLED\", x[\"mismatching_ops\"])' {RUN}/b_mut_deskew.json; test $rc -eq 0"
+   }
+  ]
+ },
+ "clock": "spine",
+ "spine_through_icg": false,
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true
+}

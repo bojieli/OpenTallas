@@ -1,0 +1,478 @@
+{
+ "schema": "opentallas.qwen.qcoll.s4_fanout_proof.v1",
+ "source_commit": "c4778300e",
+ "note": "Negative controls are judged on the cases each mutant applies to: RANK -> AR cases (argmax gather unaffected), GATHER -> argmax cases (pure AR unaffected), unsafe shared calendar -> two-message programs (single message has no P/R overlap); the bench's --expect-fail exit demands every case fail, so its rc=1 for these three is expected and not a pass.",
+ "runs": {
+  "gather": {
+   "expect_fail": true,
+   "mutant": "OT_TP8S_MUT_GATHER",
+   "latu": 53,
+   "fdi_phase": 0,
+   "sequencer_face": false,
+   "plusargs": [],
+   "cases": {
+    "qwen_ar_256w": {
+     "passed": true,
+     "span": 795,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "qwen_layer_2x256w": {
+     "passed": true,
+     "span": 1533,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "qwen_argmax_1w": {
+     "passed": false,
+     "span": 444,
+     "mismatches": "144",
+     "die_fault": "00000000"
+    },
+    "qwen_layer_2x256w_argmax": {
+     "passed": false,
+     "span": 1541,
+     "mismatches": "144",
+     "die_fault": "00000000"
+    }
+   },
+   "rtl_sha": "f1a941b846a439ab95832aaa7d96426505a6b1b1767487faac0265c4e1365336"
+  },
+  "lu52": {
+   "expect_fail": true,
+   "mutant": null,
+   "latu": 52,
+   "fdi_phase": 0,
+   "sequencer_face": false,
+   "plusargs": [],
+   "cases": {
+    "qwen_ar_256w": {
+     "passed": false,
+     "span": 793,
+     "mismatches": "0",
+     "die_fault": "11111111"
+    },
+    "qwen_layer_2x256w": {
+     "passed": false,
+     "span": 1530,
+     "mismatches": "0",
+     "die_fault": "11111111"
+    },
+    "qwen_argmax_1w": {
+     "passed": false,
+     "span": 443,
+     "mismatches": "0",
+     "die_fault": "11111111"
+    },
+    "qwen_layer_2x256w_argmax": {
+     "passed": false,
+     "span": 1538,
+     "mismatches": "0",
+     "die_fault": "11111111"
+    }
+   },
+   "rtl_sha": "f1a941b846a439ab95832aaa7d96426505a6b1b1767487faac0265c4e1365336"
+  },
+  "phase0": {
+   "expect_fail": false,
+   "mutant": null,
+   "latu": 53,
+   "fdi_phase": 0,
+   "sequencer_face": false,
+   "plusargs": [],
+   "cases": {
+    "qwen_ar_256w": {
+     "passed": true,
+     "span": 795,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "qwen_layer_2x256w": {
+     "passed": true,
+     "span": 1533,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "qwen_argmax_1w": {
+     "passed": true,
+     "span": 444,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "qwen_layer_2x256w_argmax": {
+     "passed": true,
+     "span": 1541,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    }
+   },
+   "rtl_sha": "f1a941b846a439ab95832aaa7d96426505a6b1b1767487faac0265c4e1365336"
+  },
+  "phase1": {
+   "expect_fail": false,
+   "mutant": null,
+   "latu": 53,
+   "fdi_phase": 1,
+   "sequencer_face": false,
+   "plusargs": [],
+   "cases": {
+    "qwen_ar_256w": {
+     "passed": true,
+     "span": 795,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "qwen_layer_2x256w": {
+     "passed": true,
+     "span": 1533,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "qwen_argmax_1w": {
+     "passed": true,
+     "span": 444,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "qwen_layer_2x256w_argmax": {
+     "passed": true,
+     "span": 1541,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    }
+   },
+   "rtl_sha": "f1a941b846a439ab95832aaa7d96426505a6b1b1767487faac0265c4e1365336"
+  },
+  "phase2": {
+   "expect_fail": false,
+   "mutant": null,
+   "latu": 53,
+   "fdi_phase": 2,
+   "sequencer_face": false,
+   "plusargs": [],
+   "cases": {
+    "qwen_ar_256w": {
+     "passed": true,
+     "span": 795,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "qwen_layer_2x256w": {
+     "passed": true,
+     "span": 1533,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "qwen_argmax_1w": {
+     "passed": true,
+     "span": 444,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "qwen_layer_2x256w_argmax": {
+     "passed": true,
+     "span": 1541,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    }
+   },
+   "rtl_sha": "f1a941b846a439ab95832aaa7d96426505a6b1b1767487faac0265c4e1365336"
+  },
+  "phase3": {
+   "expect_fail": false,
+   "mutant": null,
+   "latu": 53,
+   "fdi_phase": 3,
+   "sequencer_face": false,
+   "plusargs": [],
+   "cases": {
+    "qwen_ar_256w": {
+     "passed": true,
+     "span": 795,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "qwen_layer_2x256w": {
+     "passed": true,
+     "span": 1533,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "qwen_argmax_1w": {
+     "passed": true,
+     "span": 444,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "qwen_layer_2x256w_argmax": {
+     "passed": true,
+     "span": 1541,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    }
+   },
+   "rtl_sha": "f1a941b846a439ab95832aaa7d96426505a6b1b1767487faac0265c4e1365336"
+  },
+  "phase4": {
+   "expect_fail": false,
+   "mutant": null,
+   "latu": 53,
+   "fdi_phase": 4,
+   "sequencer_face": false,
+   "plusargs": [],
+   "cases": {
+    "qwen_ar_256w": {
+     "passed": true,
+     "span": 795,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "qwen_layer_2x256w": {
+     "passed": true,
+     "span": 1533,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "qwen_argmax_1w": {
+     "passed": true,
+     "span": 444,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "qwen_layer_2x256w_argmax": {
+     "passed": true,
+     "span": 1541,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    }
+   },
+   "rtl_sha": "f1a941b846a439ab95832aaa7d96426505a6b1b1767487faac0265c4e1365336"
+  },
+  "phase5": {
+   "expect_fail": false,
+   "mutant": null,
+   "latu": 53,
+   "fdi_phase": 5,
+   "sequencer_face": false,
+   "plusargs": [],
+   "cases": {
+    "qwen_ar_256w": {
+     "passed": true,
+     "span": 795,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "qwen_layer_2x256w": {
+     "passed": true,
+     "span": 1533,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "qwen_argmax_1w": {
+     "passed": true,
+     "span": 444,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "qwen_layer_2x256w_argmax": {
+     "passed": true,
+     "span": 1541,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    }
+   },
+   "rtl_sha": "f1a941b846a439ab95832aaa7d96426505a6b1b1767487faac0265c4e1365336"
+  },
+  "rank": {
+   "expect_fail": true,
+   "mutant": "OT_TP8S_MUT_RANK",
+   "latu": 53,
+   "fdi_phase": 0,
+   "sequencer_face": false,
+   "plusargs": [],
+   "cases": {
+    "qwen_ar_256w": {
+     "passed": false,
+     "span": 795,
+     "mismatches": "1328",
+     "die_fault": "00000000"
+    },
+    "qwen_layer_2x256w": {
+     "passed": false,
+     "span": 1533,
+     "mismatches": "2704",
+     "die_fault": "00000000"
+    },
+    "qwen_argmax_1w": {
+     "passed": true,
+     "span": 444,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "qwen_layer_2x256w_argmax": {
+     "passed": false,
+     "span": 1541,
+     "mismatches": "2704",
+     "die_fault": "00000000"
+    }
+   },
+   "rtl_sha": "f1a941b846a439ab95832aaa7d96426505a6b1b1767487faac0265c4e1365336"
+  },
+  "seqsu": {
+   "expect_fail": false,
+   "mutant": null,
+   "latu": 53,
+   "fdi_phase": 0,
+   "sequencer_face": true,
+   "plusargs": [],
+   "cases": {
+    "qwen_ar_256w": {
+     "passed": true,
+     "span": 795,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "qwen_layer_2x256w": {
+     "passed": true,
+     "span": 1533,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "qwen_argmax_1w": {
+     "passed": true,
+     "span": 444,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "qwen_layer_2x256w_argmax": {
+     "passed": true,
+     "span": 1541,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    }
+   },
+   "rtl_sha": "f1a941b846a439ab95832aaa7d96426505a6b1b1767487faac0265c4e1365336"
+  },
+  "seqsu_tok": {
+   "expect_fail": true,
+   "mutant": null,
+   "latu": 53,
+   "fdi_phase": 0,
+   "sequencer_face": true,
+   "plusargs": [
+    "TOKMUT=1"
+   ],
+   "cases": {
+    "qwen_ar_256w": {
+     "passed": false,
+     "span": 795,
+     "mismatches": "0",
+     "die_fault": "11111111"
+    },
+    "qwen_layer_2x256w": {
+     "passed": false,
+     "span": 1533,
+     "mismatches": "0",
+     "die_fault": "11111111"
+    },
+    "qwen_argmax_1w": {
+     "passed": false,
+     "span": 444,
+     "mismatches": "0",
+     "die_fault": "11111111"
+    },
+    "qwen_layer_2x256w_argmax": {
+     "passed": false,
+     "span": 1541,
+     "mismatches": "0",
+     "die_fault": "11111111"
+    }
+   },
+   "rtl_sha": "f1a941b846a439ab95832aaa7d96426505a6b1b1767487faac0265c4e1365336"
+  },
+  "unit": {
+   "expect_fail": false,
+   "mutant": null,
+   "latu": 53,
+   "fdi_phase": 0,
+   "sequencer_face": false,
+   "plusargs": [],
+   "cases": {
+    "reduce_8w_x7": {
+     "passed": true,
+     "span": 595,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "reduce_1w_x7_odd": {
+     "passed": true,
+     "span": 546,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "gather_4w_x4": {
+     "passed": true,
+     "span": 564,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "mixed_8w_x7": {
+     "passed": true,
+     "span": 802,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "fault_drop_word": {
+     "passed": true,
+     "span": 571,
+     "mismatches": "0",
+     "die_fault": "00100000"
+    },
+    "fault_serdes_crc": {
+     "passed": true,
+     "span": 675,
+     "mismatches": "0",
+     "die_fault": "00000001"
+    }
+   },
+   "rtl_sha": "f1a941b846a439ab95832aaa7d96426505a6b1b1767487faac0265c4e1365336"
+  },
+  "unsafe": {
+   "expect_fail": true,
+   "mutant": null,
+   "latu": 53,
+   "fdi_phase": 0,
+   "sequencer_face": false,
+   "plusargs": [],
+   "cases": {
+    "qwen_ar_256w": {
+     "passed": true,
+     "span": 795,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "qwen_layer_2x256w": {
+     "passed": false,
+     "span": 1051,
+     "mismatches": "16",
+     "die_fault": "11111111"
+    },
+    "qwen_argmax_1w": {
+     "passed": true,
+     "span": 444,
+     "mismatches": "0",
+     "die_fault": "00000000"
+    },
+    "qwen_layer_2x256w_argmax": {
+     "passed": false,
+     "span": 1059,
+     "mismatches": "48",
+     "die_fault": "11111111"
+    }
+   },
+   "rtl_sha": "f1a941b846a439ab95832aaa7d96426505a6b1b1767487faac0265c4e1365336"
+  }
+ },
+ "native_layer_qualified": false,
+ "physical_qualified": false
+}

@@ -1,0 +1,65 @@
+{
+  "cases": [
+    {
+      "case": "positive",
+      "returncode": 0,
+      "expected_pass": true,
+      "log_sha256": "6b501e9e746198e1e6211af45856c6f9fc52d61400a72c647fc02cafd62ea836"
+    },
+    {
+      "case": "reread",
+      "returncode": 0,
+      "expected_pass": true,
+      "log_sha256": "d40053321ea1e94bcfe02f785504c94bce080334ffb8dfb48a9453bf73ecb962"
+    },
+    {
+      "case": "wrong_corner",
+      "returncode": 1,
+      "expected_pass": false,
+      "log_sha256": "95129d1b7818a36da80b4fe250009e01e2f0a6459ac30b013b3dab1358698c43"
+    },
+    {
+      "case": "wrong_scene_library",
+      "returncode": 1,
+      "expected_pass": false,
+      "log_sha256": "c2ecbcf691c23ea629c55a808bd1797d6686ee0871aae2b34881b32ed55bb2af"
+    },
+    {
+      "case": "missing_library",
+      "returncode": 1,
+      "expected_pass": false,
+      "log_sha256": "7aa68031a1ece9c7b105ebb0fd6c3cd0a96a55ffde3c9020c7f4bb9309ad2385"
+    },
+    {
+      "case": "unobserved_scene",
+      "returncode": 1,
+      "expected_pass": false,
+      "log_sha256": "8e623098dc8cb010aa70ac07047b609f52b72d2e750e3a4ff72f758fa488981f"
+    },
+    {
+      "case": "redefined_scene",
+      "returncode": 1,
+      "expected_pass": false,
+      "log_sha256": "c51e4820f404509f45be0163fc9d3cf3b8feef2d99eac8fdbb3fa5bc3bc0e15a"
+    },
+    {
+      "case": "mixed_min_max",
+      "returncode": 1,
+      "expected_pass": false,
+      "log_sha256": "8d950f7a60287d520aaf663c000771cbaa3df2109cb2a7692e7fdcc95e718f8d"
+    },
+    {
+      "case": "duplicate_master",
+      "returncode": 1,
+      "expected_pass": false,
+      "log_sha256": "e98cc46c13375db5dd0cf9b0082e0fda43048917416f5b318e22317d63cfac0b"
+    }
+  ],
+  "source_sha256": "ae44213a3fa23d3b0c70d2515137272b7ea6e2c96134d13028c20798713526bd",
+  "source_libraries": {
+    "ot_sram_1r1w_32x546_m1_ss.lib": "e6f86bfa8d697cd62c99cbb5d2f7240eae4a5dad98e28fded936e570b06e0b26",
+    "ot_sram_1r1w_32x546_m1_tt.lib": "6fd25b08829e040b4089f00701d64711ed6b3bf331fd37328bbafc58d003cf1c",
+    "ot_sram_1r1w_32x546_m1_ff.lib": "3d94fe5a3c38973b04521c4754d9d1a8d2cec332bdcc8f1f788f008c0b912688"
+  },
+  "qualification": "Actual OpenSTA scene association test; fixture only, no route/native-parent closure"
+}

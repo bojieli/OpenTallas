@@ -3,7 +3,7 @@
 import { P, h, CSS, injectCSS, Clock, fmtCyc, fmtUs, fmtPct, GRADE, detail, tip, CRIT, PHASE, HW } from './core.js';
 import { mountFlow } from './flow.js';
 import { mountGantt } from './gantt.js';
-import { DieReplay } from './overlay.js';
+import { mountDataflow } from '/explorer/dataflow/dataflow.js';
 import { attachCoverage, coverageVersion, COV, saveCov, GAPS, COL, covLevel } from '/explorer/coverage/gaps.js';
 
 export const DESIGNS = [
@@ -18,13 +18,6 @@ export const canonDesign = (d) => ALIASES[d] || d;
 
 /** Default geometry sources, tried in order: the Chip Explorer die export (same instance names as /explorer's die
  *  map), then the snapshot the export tool writes beside the data. */
-export function defaultGeometry(base) {
-  return (design) => {
-    const d = DESIGNS.find((x) => x.id === design);
-    return [d && d.die ? `/api/explorer/geom?die=${encodeURIComponent(d.die)}` : null, `${base}geo_${design}.json`].filter(Boolean);
-  };
-}
-
 const T_CSS = `
 .tp-x{display:flex;flex-direction:column;gap:0;min-width:0;overflow-wrap:anywhere;height:100%;min-height:0}
 .tp-x .workspace{display:grid;grid-template-columns:220px minmax(0,1fr);flex:1;min-height:0}
@@ -114,20 +107,19 @@ const GRADE_COL = { measured: '#199e70', 'measured+vendor': '#3987e5', apportion
 export async function loadRecord(url) { const r = await fetch(url); if (!r.ok) throw new Error(url + ' ' + r.status); return r.json(); }
 
 /**
- * mountTokenExplorer(el, {base, design, group, geometryUrl, onState})
+ * mountTokenExplorer(el, {base, design, group, onState})
  *   base         URL prefix of the data directory (default './data/'): <base><design>.json
  *   design       'qwen_rom' | 'ds_rom' | 'hbm_gen_qwen' | 'hbm_gen_ds' (retired ids map through ALIASES)
  *   group        initial drill group id (null = whole token)
- *   geometryUrl  (design, record) => URL (or list of URLs, tried in order) of the die geometry, or null to hide the
- *                die replay (default: /api/explorer/geom?die=<die of the design>, then <base>geo_<design>.json)
+ *   floorplan    false hides the data-flow floorplan replay (/explorer/dataflow/dataflow.js, link records per die revision)
  *   onState      called with {design, group} on every navigation (e.g. to update the URL hash)
  */
 export async function mountTokenExplorer(el, opts = {}) {
   injectCSS('tp-css', CSS); injectCSS('tp-x-css', T_CSS);
-  const o = Object.assign({ base: './data/', design: 'qwen_rom', group: null, onState: null,
-    geometryUrl: defaultGeometry(opts.base || './data/') }, opts);
+  const o = Object.assign({ base: './data/', design: 'qwen_rom', group: null, onState: null, floorplan: true }, opts);
+  const dfRecord = {};   // design -> die revision chosen in the data-flow panel (kept across re-renders)
   const state = { design: canonDesign(o.design), group: o.group, mode: o.mode === 'mtp' ? 'mtp' : 'ar' };
-  const cache = {}, gcache = {}, pcache = {};
+  const cache = {}, pcache = {};
   // generic HBM die: the decoded HGI-1 record behind an operator (tools/hgi_sim/listing.py), loaded on first click
   async function programRecord(data, n) {
     const f = data.program && data.program.file;
@@ -278,16 +270,17 @@ export async function mountTokenExplorer(el, opts = {}) {
     const stageP = g ? h('div', { class: 'panel stage-flow' }, h('div', { class: 'pt' }, h('b', {}, `Operators of ${g.label}`), h('span', {}, `${fmtCyc(g.cycles)} · ${fmtPct(g.share)} of token`)), h('div', { class: 'fl' })) : null;
     const ganttP = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, 'Timeline by element class'), h('span', {}, 'critical chain = cyan line · dbl-click to seek')), h('div', { class: 'gn' }));
     const sel = h('div', { class: 'kv' }, 'Click an operator for its detail and element cards.');
-    const dieBox = h('div', {}, loading('Loading floorplan…', 'Fetching the die geometry…'));
-    const dieP = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, 'Floorplan replay'), h('span', {}, 'lit = instances of the running operators · line = data moving')), dieBox);
+    const dieBox = h('div', {}, loading('Loading the link model…', 'Fetching the die revision…'));
+    const dieP = o.floorplan ? h('section', { class: 'panel df-host', 'aria-label': 'Data flow on the floorplan' }, h('div', { class: 'pt' }, h('b', {}, 'Data flow on the floorplan'),
+      h('span', {}, 'links active in the schedule window · width ∝ log bits · colour = length vs reach · ', h('a', { href: `/explorer/dataflow/#design=${state.design}`, class: 'tp-el' }, 'full view →'))), dieBox) : null;
     const selP = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, 'Selected operator')), sel);
     const shareP = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, mtp ? 'Share of the MTP step' : 'Share of the token latency'), h('span', {}, 'by stage and by element class')), shareTables(data, p, openStage));
     const notes = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, 'How the numbers are built')), h('ul', { class: 'notes' }, ...data.notes.map((n) => h('li', {}, n))));
     const inspector = h('section', { class: 'panel inspector', 'aria-label': 'Stage inspector', tabindex: -1 }, crumb,
       ...(g ? [stageP] : [h('div', { class: 'kv' }, 'Inspect a stage from the flow graph or the stage list. Select an operator to see its timing, source and hardware mapping.')]),
-      h('div', { class: 'two' }, dieP, selP));
+      selP);
     const evidence = h('details', { class: 'evidence' }, h('summary', {}, 'Timing provenance, accounting and source records'), banner);
-    const content = h('div', { class: 'content' }, flowP, inspector, ganttP);
+    const content = h('div', { class: 'content' }, flowP, ...(dieP ? [dieP] : []), inspector, ganttP);
     if (mtp) content.append(hwPanel(data, (n) => openStage(n.group)));
     content.append(shareP, evidence, notes, nativePanel);
     views.forEach((v) => v && v.destroy && v.destroy()); views = [];
@@ -325,23 +318,16 @@ export async function mountTokenExplorer(el, opts = {}) {
       if (box) { box.classList.add('inspected'); box.setAttribute('aria-current', 'step'); }
     }
     views.push(mountGantt(ganttP.querySelector('.gn'), data, { clock, range: [t0, t1], onSelect, onZoom: openStage }));
-    let gurls = o.geometryUrl && o.geometryUrl(state.design, data);
-    gurls = gurls ? [].concat(gurls) : [];
-    let geo = null, gsrc = null, gerr = [];
-    for (const u of gurls) {
-      try { geo = gcache[u] ||= await loadRecord(u); gsrc = u; break; } catch (e) { gerr.push(e.message); }
+    if (dieP) {
+      clock.seek(keepT != null && keepT >= t0 && keepT <= t1 ? keepT : t0);
+      try {
+        const df = await mountDataflow(dieBox, { data, clock, design: state.design, group: state.group, record: dfRecord[state.design] || null,
+          onRecord: (id) => { dfRecord[state.design] = id; }, onNode: (n) => onSelect(n) });
+        if (revision !== renderRevision) { df.destroy(); return; }
+        views.push(df);
+      } catch (e) { dieBox.replaceChildren(h('div', { class: 'kv' }, 'data-flow view unavailable: ' + e.message)); }
       if (revision !== renderRevision) return;
     }
-    if (revision !== renderRevision) return;
-    if (geo) {
-      const rp = new DieReplay(dieBox, geo, data, { clock, group: state.group });
-      views.push(rp);
-      const dd = DESIGNS.find((x) => x.id === state.design);
-      const off = data.classes.filter((c) => data.nodes.some((n) => n.cls === c.id) && !rp.classHits(c.id));
-      dieBox.append(h('div', { class: 'kv', style: 'margin-top:4px' },
-        gsrc.startsWith('/api/') ? ['die map: ', h('a', { class: 'tp-el', href: `/explorer#die=${dd.die}` }, geo.label || dd.die)] : `die map: ${geo.source || gsrc} (snapshot)`,
-        off.length ? ` · not on this die: ${off.map((c) => c.label).join(', ')}` : ''));
-    } else dieBox.replaceChildren(h('div', { class: 'kv' }, gurls.length ? 'no die geometry: ' + gerr.join('; ') : 'no die geometry mounted'));
     clock.seek(keepT != null && keepT >= t0 && keepT <= t1 ? keepT : t0);
   }
   function rerender() { return render(clock.t); }

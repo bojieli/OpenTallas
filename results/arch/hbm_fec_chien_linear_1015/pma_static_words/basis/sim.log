@@ -1,0 +1,9 @@
+BASIS_PASS rev=1 full_block_input_basis=8704 decoded_basis_words=139264
+PAIR_PASS rev=1 checks=290672 golden_fullwords=140362 resets=6
+BASIS_PASS rev=0 full_block_input_basis=8704 decoded_basis_words=147968
+PAIR_PASS rev=0 checks=290879 golden_fullwords=149223 resets=6
+PMA_STATIC_WORDS_PASS both16x544_to17x512_and_reverse
+- /srv/opentallas-scratch/codex/fec-chien-linear-1015/pma-static-words-source-v1/tb_pma_static_words.sv:92: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 2ms; walltime 7.481 s; speed 320.803 us/s
+- Verilator: cpu 7.474 s on 1 threads; alloced 1018 MB

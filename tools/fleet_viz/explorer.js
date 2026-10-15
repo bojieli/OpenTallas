@@ -25,6 +25,9 @@ const JOB_COL = s => s === 'CLOSED' ? ST_COL.closed : ['RUNNING', 'QUEUED', 'REA
   : s === 'CANCELLED' ? ST_COL.superseded : /NEEDS|INVALID|REFUSED|FAIL/.test(s || '') ? ST_COL.failing : ST_COL.revoked;
 const S = { meta: null, die: null, geo: {}, colour: 'status', sel: null, hover: -1, bus: true, view: null, focus: null, card: null, loading: {} };
 const cv = $('map'), ctx = cv.getContext('2d');
+// Data flow lives in /explorer/dataflow/ (one link model for the token replay, the die link map and the debug table).
+const DF_DESIGN = {qwen_r21b: 'qwen_rom', s81_layer_r3: 'ds_rom', hbm_r25gph: 'hbm_gen_qwen'};
+const dataflowLink = (id) => { const a = document.getElementById('dataflow'); if (a) a.href = '/explorer/dataflow/' + (DF_DESIGN[id] ? '#design=' + DF_DESIGN[id] + '&die=' + id : ''); };
 let CW = 0, CH = 0, DPR = 1;
 
 async function getJSON(u){ const r = await fetch(u, {cache: 'no-store'}); if (!r.ok) throw new Error(r.status + ' ' + u); return r.json(); }
@@ -122,6 +125,7 @@ async function setDie(id, keepSel){
   recolour(g); S.view = fitView(g); S.moved = false; S.hover = -1;
   if (S.sel && keepSel !== false){ const s = S.sel; S.sel = null; if (s.element) selectElement(s.element, {zoom: false, keepCard: true}); else if (s.master && s.die === id) selectMaster(id, s.master, {zoom: false}); }
   else if (keepSel === false){ /* initial */ }
+  dataflowLink(id);
   dieInfo(); legend(); draw();
   if (!S.sel) setHash({die: id});
 }

@@ -1,0 +1,103 @@
+{
+  "schema": "opentallas.qwen.natural-dataflow-locality-trades.v1",
+  "qualified": false,
+  "baseline": {
+    "actual_native_nodes": 7,
+    "actual_source_roots": 956,
+    "actual_internal_joins": 69,
+    "unbound_external_functional_inputs": 87,
+    "whole_system_physical_qualified": false,
+    "real_concatenated_IO_return_fields": 5,
+    "total_directed_fields_in_our_map": 69,
+    "external_clock_ports": 871,
+    "clock_port_bits": 956,
+    "external_reset_ports": 7,
+    "external_input_ports": 965
+  },
+  "A_gateway": {
+    "source": "ot_qwen_rom_core_ctrl_su_static.sv:815-866",
+    "existing_source_state_bits": 466,
+    "state": {
+      "active": 1,
+      "pending": 1,
+      "scale": 16,
+      "select": 64,
+      "lane_index": 384
+    },
+    "existing_decode_count": 64,
+    "existing_mux_bits": 2048,
+    "existing_clock": "shared sequencer main",
+    "single_local_gateway": {
+      "source_state_bits": 466,
+      "new_clock_roots_relative_current": 1,
+      "added_pipeline_edges": 0,
+      "added_SRAMs": 0,
+      "physical_area": null,
+      "physical_home": null,
+      "proof_required": true,
+      "functional_proof": "3x2048 four-state comparison PASS;5 mutants reject;source d8fdf94f1"
+    },
+    "eight_octet_gateways": {
+      "source_state_bits": 592,
+      "additional_state_bits_vs_shared": 126,
+      "new_clock_roots_relative_current": 8,
+      "code_bus_bits_each": 512,
+      "scale_bus_bits_each": 16,
+      "added_pipeline_edges": 0,
+      "added_SRAMs": 0,
+      "physical_area": null,
+      "physical_homes": null,
+      "proof_required": true
+    },
+    "root_counts_with_copy": {
+      "current956_includes_copy_and_production_IO": 956,
+      "plus_single_gateway": 957,
+      "plus_eight_gateways": 964
+    },
+    "warning": "Full six-bit byte indices allow arbitrary selection across all64 bytes; cannot assume64-code-bits per octet"
+  },
+  "SU_broadcast": {
+    "source_logical_group_bits": 500,
+    "actual_optimized_variable_data_bits": 240,
+    "actual_optimized_flag_bits": 3,
+    "actual_reset_bits": 1,
+    "current_merged_groups": 1,
+    "current_merged_state_FF": 244,
+    "proposed_physical_groups": 8,
+    "proposed_state_FF": 1952,
+    "additional_FF": 1708,
+    "residual_base_FF_before": 13305,
+    "residual_base_FF_after": 13061,
+    "additional_clock_roots_if_all8_extracted": 8,
+    "added_pipeline_edges": 0,
+    "physical_area": null,
+    "actual_residual_boundary_unique_nets": 42538,
+    "actual_residual_inputs": 20889,
+    "actual_residual_outputs": 21649,
+    "physical_qualification": false,
+    "warning": "Earlier subtract4032-source-bits estimate9273 residual is invalid after optimization",
+    "actual_constant_source_bits": 256,
+    "live_logical_bit_positions": 244,
+    "remaining_state_difference": "Four live bit positions reduce by synthesis outputlogic/sharing; not proven alias-only",
+    "later_structural_cut_state_range_FF": [
+      15013,
+      15045
+    ],
+    "later_root_count": "owner356 underaudit against347copy-inclusive baseline; do not adopt until clockportset reconciled"
+  },
+  "missing_objective_inputs": [
+    "Source-current programme activity/cadence per operand/join",
+    "Actual data/clock pins, obstructions, routes, phase and cut capacities",
+    "Semantic extraction proof including unreset scale/indices and reset/epoch ownership",
+    "Actual area and clock-tree cost of duplicated state/decode",
+    "Full compute/KV/collective compiler ownership and external service contracts"
+  ],
+  "canonical_programme_activity": {
+    "source": "1680c684e",
+    "embedding_vectors": 64,
+    "embedding_lane_reads": 4096,
+    "layer_VM_vectors": 427,
+    "layer_lane_reads": 27143,
+    "full_token_cycles": null
+  }
+}

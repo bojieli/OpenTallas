@@ -1,0 +1,329 @@
+{
+  "schema": "opentallas.hbm_attn.actual_forward_source_graph.v1",
+  "qualification": false,
+  "profile": "H16D512 TD32NL2 existing32pairs,shared512HG1",
+  "native_head_mapping": "NativeDSprogrammehead-per-die\u2192physicalH16engineallocationstillopen; H16componentmathdoesnotprovewhole-tokenownership",
+  "nodes": [
+    {
+      "id": "query",
+      "owner": "h_attention_quant",
+      "source": "rtl/hdc/v41x/static/ot_hbm_attn_query_prefetch.sv",
+      "kind": "actual_component",
+      "storage": "64real32x128,2epochs",
+      "format": "unchangedFP32VM\u2192BF16upper16,nonzero low16 faults",
+      "record_words": 8192,
+      "VM_read_edges": 128
+    },
+    {
+      "id": "KV_source",
+      "owner": "h_die/service_native",
+      "kind": "nativeallocation_open",
+      "format": "source544B/row17sectors\u2192packed4240b/row",
+      "phase": "K andV fullreload distinctjobs",
+      "rows": [
+        128,
+        640
+      ]
+    },
+    {
+      "id": "stage",
+      "owner": "geometry_hbm_system+h_attention_quant",
+      "source": "rtl/hdc/v41x/static/ot_hbm_attn_staging_grouped.sv",
+      "kind": "actual34macro_component",
+      "storage": "34real1024x256 once perengine",
+      "current": "grouped265b rawABI,1edge read",
+      "candidate": "same34 mode-specificK/V permutation +640validFF inprogress, no unpricedreuse"
+    },
+    {
+      "id": "shared_tiles",
+      "owner": "h_attention_quant+h_die",
+      "source": "rtl/hdc/v41x/static/ot_hdc_v41x_attn_physical_calendar.sv",
+      "hierarchy": "g_t[gk].g_ts.u_t, ot_hdc_v41x_attn_tile_s HG1",
+      "kind": "ACTUAL_SHARED_QK_PV_ARITHMETIC",
+      "tiles": 32,
+      "HG1_engines": 512,
+      "quads": 128,
+      "H": 16,
+      "D": 512,
+      "TD": 32,
+      "NL": 2,
+      "FPL": 6,
+      "FML": 8,
+      "PWORDS": 2,
+      "phase": "QKonly orPVonly separatejob; samearithinstance/stationarybanks/issueports",
+      "duplication_required_for_dedicated_QK_and_PV": true
+    },
+    {
+      "id": "QK_reduce",
+      "owner": "h_attention_quant+h_die",
+      "source": "rtl/hdc/v41x/static/ot_hdc_v41x_attn_physical_calendar.sv",
+      "hierarchy": "g_ln/gl.g_lh/gh",
+      "kind": "actual_local16featuretile tree",
+      "operation": "D512chunk8 orderedFP32dot",
+      "collective": false,
+      "ports": "sc_v,sc_row16,sc_m2,sc_y1024,sc_f32"
+    },
+    {
+      "id": "SC_store",
+      "owner": "h_attention_quant",
+      "source": "rtl/hdc/v41x/static/ot_hbm_attn_qk_native_output.sv",
+      "kind": "actual_component_current7b2_NE",
+      "storage": "256real32x128,2epochs,32768flagFF+1024readflagFF",
+      "VM_WG": 1,
+      "VM_readback_RG": 3,
+      "VM_edges": [
+        32,
+        160
+      ],
+      "format": "head-majorFP32[16][T] plusaggregatefault;actualarithjoinopen"
+    },
+    {
+      "id": "REDMAX",
+      "owner": "h_elements_b",
+      "kind": "actualreducer_join_inprogress",
+      "operation": "SC*FP32scale0x3d3504f3\u2192wholeT localMAX\u2192MB[16]",
+      "collective": false,
+      "format": "FP32unrounded"
+    },
+    {
+      "id": "SFU_EXP",
+      "owner": "h_hc_sfu",
+      "kind": "actualSFUprogramme_join_inprogress",
+      "operation": "EXP(FP32(SC*scale)-MBhead)",
+      "format": "unroundedFP32E[16][T]",
+      "source": "tools/hgi_sim/ds_native.py:1066-1071"
+    },
+    {
+      "id": "REDSUM",
+      "owner": "h_elements_b",
+      "kind": "actualreducer_join_inprogress",
+      "operation": "exactchunk8 wholeT SUM(E)\u2192SE[16]",
+      "collective": false,
+      "format": "FP32unrounded"
+    },
+    {
+      "id": "EB_publish",
+      "owner": "h_hc_sfu/native_p_producer_join",
+      "kind": "actualrounding_component",
+      "operation": "goldenBF16RNE(E),expandedFP32VM while E remainsunroundedforSUM",
+      "format": "UNNORMALIZEDexp BF16,notE/SE",
+      "aperture": "allocatorauthorityopen"
+    },
+    {
+      "id": "P_prefetch",
+      "owner": "h_attention_quant",
+      "source": "rtl/hdc/v41x/static/ot_hbm_attn_p_prefetch.sv",
+      "kind": "actualcomponent_current7b2_NE",
+      "storage": "128real32x128,2epochs",
+      "VM_RG": 3,
+      "VM_edges": [
+        32,
+        160
+      ],
+      "ports": "Pword4rows\u00d716heads\u00d716b=1024b,eventPWORDS2",
+      "latency": "barebank6,registeredrequest/consumer sourceFILL_LAT8;notSFUsharedLG14tap"
+    },
+    {
+      "id": "PV_transpose",
+      "owner": "h_attention_quant+h_die",
+      "source": "rtl/hdc/v41x/static/ot_hbm_attn_transpose_regs.sv",
+      "kind": "explicitFFcomponent_fulljoinopen",
+      "FF": 589824,
+      "operation": "NL2\u00d716featuretiles ofV readforPV16dim outputs",
+      "clock": "64nominal9216sinkroots;physicalqualificationopen"
+    },
+    {
+      "id": "PV_merge",
+      "owner": "h_attention_quant+h_die",
+      "source": "rtl/hdc/v41x/static/ot_hdc_v41x_attn_physical_calendar.sv",
+      "hierarchy": "g_m",
+      "kind": "actual_localblockmerge",
+      "operation": "unnormalizedEB\u00d7V exactchunk8 T-reduction",
+      "collective": false,
+      "ports": "32tiles\u00d716headsFP32/beat,16dimensionbeats\u2192FP32[16][512]"
+    },
+    {
+      "id": "PV_local_D",
+      "owner": "h_attention_quant+geometry_hbm_system",
+      "source": "rtl/hdc/v41x/static/ot_hbm_attn_pv_serializer_local_registered.sv",
+      "kind": "selecteddevelopment_actualcomponent",
+      "storage": "2048real32x128,2epochs",
+      "status_FF": 16384,
+      "readflags_FF": 8192,
+      "physical_roots": "4tile%4 roots +globalcontrol",
+      "phase": "16captureedges,128headmajorVMwriteedges"
+    },
+    {
+      "id": "PV_gather",
+      "owner": "h_attention_quant+geometry_hbm_system",
+      "source": "rtl/hdc/v41x/static/ot_hbm_attn_pv_group_gather_registered.sv",
+      "kind": "registeredphysical_candidate_notclosed",
+      "count": 4,
+      "leaf_FF": 4757,
+      "TT_logic_area_um2": 2487.59586,
+      "pin_bits": 4759,
+      "added_edges": 2,
+      "root_withlocalPVclock_sinks": 11445,
+      "operation": "8tile512b+16flags inputs\u2192one512b+16flags outputtogroupVMpair"
+    },
+    {
+      "id": "PV_VM",
+      "owner": "h_vm+h_attention_quant",
+      "kind": "actualcurrent7b2_NE_component",
+      "VM_WG": 1,
+      "VM_bank_pairs": "g\u2192{2g,2g+1}",
+      "format": "unchangedFP32head-major[16][512]",
+      "write_edges": 128,
+      "commit_latency": 3,
+      "physical_scatter": "candidate8banks\u21924pairs,notextraVMports"
+    },
+    {
+      "id": "DEN",
+      "owner": "h_hc_sfu+h_elements_b",
+      "kind": "nativejoin_open",
+      "operation": "FP32(EXP(SINKhead-MBhead)+SEhead)",
+      "format": "FP32[16]",
+      "source": "tools/hgi_sim/ds_native.py:1076-1085",
+      "collective": false
+    },
+    {
+      "id": "norm_invRoPE",
+      "owner": "h_hc_sfu+h_elements_b",
+      "kind": "nativejoin_open",
+      "operation": "BF16(PV/DENhead),then64dimpairwiseinverseRoPEtail\u2192o_own",
+      "format": "512expandedBF16FP32words/head",
+      "source": "tools/hgi_sim/ds_native.py:1086-1089"
+    },
+    {
+      "id": "post_attention",
+      "owner": "h_vm+h_die+actualSM/COLLowner",
+      "kind": "nativeglobalheadmapping_open",
+      "operation": "nativeOprojection/ogroupcollective/downstreamactualconsumer;do notinventinsideATTcollective"
+    }
+  ],
+  "edges": [
+    {
+      "source": "query",
+      "destination": "shared_tiles",
+      "contract": "QKphaseBF16query:16KiBuseful/32KiBFP32prefetch;physicalquadbroadcastsourceactivityseparatemodel"
+    },
+    {
+      "source": "KV_source",
+      "destination": "stage",
+      "contract": "Ksource544*Tbytes andVsource544*Tbytes,separatefullreloads"
+    },
+    {
+      "source": "stage",
+      "destination": "shared_tiles",
+      "contract": "QKmodeactualNL2K operands32terms\u00d718b/tile;crossgrouptrafficmustcount"
+    },
+    {
+      "source": "shared_tiles",
+      "destination": "QK_reduce",
+      "contract": "QKphase32tiles\u00d716FP32 partials,2lane16featuretiletrees"
+    },
+    {
+      "source": "QK_reduce",
+      "destination": "SC_store",
+      "contract": "2rows\u00d716FP32+flags/edge;T/2captureedges"
+    },
+    {
+      "source": "SC_store",
+      "destination": "REDMAX",
+      "contract": "H16T FP32score actualVM/consumerjoinopen"
+    },
+    {
+      "source": "SC_store",
+      "destination": "SFU_EXP",
+      "contract": "sameunroundedscore image,exactFP32scale"
+    },
+    {
+      "source": "REDMAX",
+      "destination": "SFU_EXP",
+      "contract": "16FP32MB scalars/headbroadcast"
+    },
+    {
+      "source": "SFU_EXP",
+      "destination": "REDSUM",
+      "contract": "H16T unroundedFP32E"
+    },
+    {
+      "source": "SFU_EXP",
+      "destination": "EB_publish",
+      "contract": "H16T E\u2192BF16RNE storagepass"
+    },
+    {
+      "source": "EB_publish",
+      "destination": "P_prefetch",
+      "contract": "H16T expandedFP32BF16grid words;32/160bareRG3reads"
+    },
+    {
+      "source": "P_prefetch",
+      "destination": "shared_tiles",
+      "contract": "PVphase4row\u00d716headBF16Pwords/edge"
+    },
+    {
+      "source": "stage",
+      "destination": "PV_transpose",
+      "contract": "VphasebothNLrows/group,real544Bsource/stagingnotfromQKscores"
+    },
+    {
+      "source": "PV_transpose",
+      "destination": "shared_tiles",
+      "contract": "PVphase16featurevalues\u00d72lanes transposed576b operands"
+    },
+    {
+      "source": "shared_tiles",
+      "destination": "PV_merge",
+      "contract": "PVphase512FP32partialoutputs/beat"
+    },
+    {
+      "source": "PV_merge",
+      "destination": "PV_local_D",
+      "contract": "H16D512fullFP32:16capturephases\u00d716384b+512flags"
+    },
+    {
+      "source": "PV_local_D",
+      "destination": "PV_gather",
+      "contract": "g tile%4:8\u00d7(512b+16flags) pin-localcapture"
+    },
+    {
+      "source": "PV_gather",
+      "destination": "PV_VM",
+      "contract": "4\u00d7528bregisteredoutput,8x281actualwq,128headmajorrequests+2stageedges"
+    },
+    {
+      "source": "REDMAX",
+      "destination": "DEN",
+      "contract": "16FP32MB"
+    },
+    {
+      "source": "REDSUM",
+      "destination": "DEN",
+      "contract": "16FP32SE"
+    },
+    {
+      "source": "PV_VM",
+      "destination": "norm_invRoPE",
+      "contract": "16\u00d7512FP32PV"
+    },
+    {
+      "source": "DEN",
+      "destination": "norm_invRoPE",
+      "contract": "16FP32DEN broadcast"
+    },
+    {
+      "source": "norm_invRoPE",
+      "destination": "post_attention",
+      "contract": "actualo_own512words/head,nativemappingauthorityopen"
+    }
+  ],
+  "local_reductions": "QKfeaturetree,wholeTMAX/SUM,PVblockmergearelocalinthisH16component;nointerdieCOLLwithinATTinvented",
+  "source_sha256": {
+    "rtl/hdc/v41x/static/ot_hdc_v41x_attn_physical_calendar.sv": "7e5644e811aa1071310e7bf6547d5396ee79340332b17831e1ce4760ef67a8ef",
+    "rtl/hdc/v41x/static/ot_hbm_attention_physical_static_engine.sv": "24961206978e7592720bb6551af763a84e11ebb0cf38750584271cae6092d120",
+    "tools/hgi_sim/ds_native.py": "127598c96f67e21e3de6a176d4749bc30b2a45ba17675c7ee5a1b91ff57558ad"
+  },
+  "activity_model": "results/arch/hbm_attention_static_1015/source_activity_model.json",
+  "open": "Actualfullarith+SC+SU/SFU+EB+PVnativeproducerjoin,globalcalendar/residency,sourcebandwidth,station/clock/pin/cut/route/price"
+}

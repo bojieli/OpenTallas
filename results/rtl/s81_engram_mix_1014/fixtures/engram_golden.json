@@ -1,0 +1,44 @@
+{
+ "status": "pass",
+ "layers": {
+  "L1": {
+   "checks": {
+    "rebuild_equals_model_engram_layer": true,
+    "rebuild_equals_shard": true,
+    "h_is_bf16": true
+   },
+   "rows": 24,
+   "row_ids_sha256": "8156de814b6ef480070a68998978a8d9bffcad29bdf1bf353e3b974386f0b1fc",
+   "kv_rows": 25600,
+   "wkv_k": 6144,
+   "shard": "ctx1048576_L01.npz",
+   "shard_sha256": "6c43fc6f1ec2b5317e5d767825caa351afcec865ea417da041eac50640265b03"
+  },
+  "L14": {
+   "checks": {
+    "rebuild_equals_model_engram_layer": true,
+    "rebuild_equals_shard": true,
+    "h_is_bf16": true
+   },
+   "rows": 24,
+   "row_ids_sha256": "386bee4d4aa57991b13f3ed7846d131fa625b7bd75aebdb4dda9071df044822a",
+   "kv_rows": 25600,
+   "wkv_k": 6144,
+   "shard": "ctx1048576_L14.npz",
+   "shard_sha256": "2f0d79a326a122c996aebf8b2adc5daceeed95e13df27ff35f16441e98c5a901"
+  }
+ },
+ "history": [
+  19673,
+  48197,
+  13977,
+  74560,
+  112671,
+  119148,
+  47073,
+  16754
+ ],
+ "checkpoint": "/srv/opentallas-scratch/claude/s81-ftok/r3/ckpt",
+ "arith": "chunk8",
+ "generated_utc": "2026-10-15T02:02:10Z"
+}

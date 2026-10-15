@@ -4,12 +4,12 @@
 // counter slot, ARM pin cycle, every operand element's commit on its ACTUAL native observation port (slice g, bank =
 // row[4:0] ^ {row[7:5],00}, address row[13:5]; at most one commit per port per cycle; partial masks split a row's
 // words over several commits), a CHECK pin at/after the last commit, legal reads after the CHECK, native codes 4..7.
-// Checks, every cycle: c_done == exactly the expected {v, tag} (DLAT 6 after each command pin; the stimulus is driven after the previous edge, nothing else);
-// t_inp_su / t_inp_hc == the contract window [CHECK + 6, next ARM of that slot + 3); final sticky fault vector == the
+// Checks, every cycle: c_done == exactly the expected {v, tag} (DLAT 7 after each command pin; the stimulus is driven after the previous edge, nothing else);
+// t_inp_su / t_inp_hc == the contract window [CHECK + 7, next ARM of that slot + 3); final sticky fault vector == the
 // mode's expected set (0 in the base mode).  +mode: 0 base, 1 dropped commit, 2 duplicated commit, 3 early read,
 // 4 re-ARM before CHECK, 5 CHECK client mismatch, 6 CHECK of an unarmed slot.  +seed, +jobs.
 module tb_dsfd_vm_seq_static;
-    localparam integer MAXC = 60000, MAXE = 1200000, MAXJ = 2000, DLAT = 6;
+    localparam integer MAXC = 60000, MAXE = 1200000, MAXJ = 2000, DLAT = 7;
     reg ck = 1'b0; reg rst = 1'b0;
     always #0.4167 ck = ~ck;
     reg  [84:0] c_cmd; wire [8:0] c_done; wire [1:0] c_st;
@@ -125,19 +125,19 @@ module tb_dsfd_vm_seq_static;
             end
             for (k = b16; k < b16 + (nr + 15) / 16; k = k + 1) blk_free[k] = m1 + 1;
             slot_free[s] = pin + 1;
-            // contract window of t_inp: [CHECK + 6, next ARM of slot + 3)
-            if (slot_last[s] >= 0) for (k = j_chk[slot_last[s]] + 6; k < j_arm[jb] + 3; k = k + 1) inp_at[k][j_cl[slot_last[s]]] = 1'b1;
+            // contract window of t_inp: [CHECK + 7, next ARM of slot + 3)
+            if (slot_last[s] >= 0) for (k = j_chk[slot_last[s]] + 7; k < j_arm[jb] + 3; k = k + 1) inp_at[k][j_cl[slot_last[s]]] = 1'b1;
             slot_last[s] = jb;
             // native op now and then
             if (urand(5) == 0) begin
-                put_cmd(c + urand(8), {3'(4 + urand(4)), 21'(urand(2097152))}, pin);
+                put_cmd(c + urand(8), {3'(4 + 2*urand(2)), 21'(urand(2097152))}, pin);
                 k = pin + 3 + urand(20); while (vdv_at[k]) k = k + 1; vdv_at[k] = 1'b1;
             end
             c = c + 1 + urand(nr / 8 + 2);
             if (last_cycle > MAXC - 2000) begin njobs = jb + 1; end
         end
         for (s = 0; s < 4; s = s + 1) if (slot_last[s] >= 0)
-            for (k = j_chk[slot_last[s]] + 6; k < last_cycle + 24; k = k + 1) inp_at[k][j_cl[slot_last[s]]] = 1'b1;
+            for (k = j_chk[slot_last[s]] + 7; k < last_cycle + 24; k = k + 1) inp_at[k][j_cl[slot_last[s]]] = 1'b1;
         // ---------------- fault injection (one job in the middle)
         jb = njobs / 2;
         case (mode)

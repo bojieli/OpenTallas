@@ -1,0 +1,21 @@
+{
+  "source": "de6ef76d6",
+  "PIPE": 1,
+  "default_PIPE": 0,
+  "serial_age_delta": 1,
+  "II": 1,
+  "bench_changes": [
+    "dsfd_vm_static_cap #(.E(8)) -> dsfd_vm_static_cap #(.E(8), .CAP_PIPE(1))",
+    "q=p+2 -> q=p+3"
+  ],
+  "x34_first_visibility": "4*floor((P+3)/3)+2+((P+3)%3); existing output checker +1 unchanged",
+  "native_clock_claim": false,
+  "hashes": {
+    "dsfd_vm_static_capl.sv": "e670e0e56e81aa5ff3557e701ded33702e67fa8c30f1dccb065ae46339c550fe",
+    "tb_dsfd_vm_static_cap.sv": "1e536a95acbe3bbfc2151552e0e08a3af75e3895c7a99e3037616ac2a8278595",
+    "ot_s81_vm_x34.sv": "c95f6eb78b68bed81746829e0194ad86accc45f9a70f764ff81bcc1f575e22f3",
+    "dsfd_vm_static_cap.sv": "6f339f5654c5675a8bdaebafb26f6bb1876172f28617d6ad8df21112e55c6ba5",
+    "dsfd_vm_static_cap_leaf.sv": "fd346e147ab5ab2a894e2cd9397f468eff1789a8790d0fcfcec518b27c6d9c47",
+    "dsfd_vm_static_capl_pipe.sv": "4a9e0077d2652a8cb4291a4eb2cbcaaa19da81be9b42f426b21ac3959f27d8d3"
+  }
+}

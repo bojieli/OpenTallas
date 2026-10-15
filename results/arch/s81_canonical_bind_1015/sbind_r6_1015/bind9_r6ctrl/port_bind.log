@@ -1,0 +1,5 @@
+FAIL dsfd_bf_front_static               x519    INPUT_UNCONNECTED in_unconn=xb
+FAIL dsfd_sp_pq_n                       x1      WIDTH_MISMATCH/INPUT_UNCONNECTED width=ra2:12vs14,t_cnt:456vs458,xe:565vs1101,xw:565vs1101 in_unconn=f_iss
+FAIL dsfd_sp_vm                         x1      INPUT_UNCONNECTED in_unconn=f_mx_rq,f_mx_rqv,f_mx_wq,f_mx_wqd,f_mx_wqm,f_mx_wqv
+DIE_PORT_BIND FAIL masters=213 instances=78787 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=4 input_unconnected=8 input_tied=0 unparsed_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 top_assigns=0 params_not_in_rtl=0 strap_ports=0
+BIND_EXIT 1

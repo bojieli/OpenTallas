@@ -1,0 +1,36 @@
+{
+  "scope": "Actual hardware command/calendar input capture and registered-producer ROM ownership; zero numerical-programme pin component only.",
+  "positive_unit": "oth-ubuntu-1474420-1792064720",
+  "phase_mutant_unit": "oth-ubuntu-1478902-1792064788",
+  "rom_cell_mutant_unit": "oth-ubuntu-1479520-1792064790",
+  "host": "ot-epyc1tb",
+  "checks": 280,
+  "phases": [
+    511,
+    512,
+    513,
+    514
+  ],
+  "normal_faults": 0,
+  "go_pin_latency_edges": 2,
+  "calendar_start_to_action_extra_edges": 1,
+  "external_command_to_completion_edges": 35,
+  "descriptor_internal_duration": 34,
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_core_native.sv": "bc6f8dd9724383feb3c6c840e5e3b67162c8399bad3d713ffa76ef5b7e31cf58",
+    "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_state_phw10.sv": "d4d7804c8c60dcf823dbef9b78248fdac798d276821ff16a50bac104d0463ba2",
+    "rtl/dsrom_sys/s81_static_control/ot_s81_pq_command_endpoint.sv": "6a29f05c55160f7af19d8d4ccc2b0f79e927c81a0e8664d1260a21522b5438e9",
+    "rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_reader.sv": "d8fe6f80d2d73ad48380ff4711144c0ea91b61a1e6c5c3f83a48b8edefbdf6fd",
+    "rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_rom.sv": "22ba8d997758f11d5fb280c4bd2006e1c99553635a2c8efc2082fd15987f1377",
+    "rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_produced.sv": "6baafec39276fb0f75ce6568e8d56a6517af664971832fe209d97ced37b7cf2f",
+    "rtl/test/dsrom_sys/tb_s81_pq_produced_pins.sv": "8c4f756d9b4157b3420fa4d6b95654f5ff415655ddda580b78f4cedf277d23a6",
+    "tools/s81/pq_canonical_pins_gate.py": "164985c37a87bacc7c01a953009bcfd0f9eb2b4fa8b66376cd8ee5cd051bbcd8"
+  },
+  "physical_qualified": false,
+  "full_2417_BF519_numerical_qualified": false,
+  "remaining": [
+    "actual VM request/response calendar and full model ROM programmes",
+    "full physical closure of capture successors",
+    "controller deep input paths/reset ownership/clock spread"
+  ]
+}

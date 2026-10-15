@@ -5,6 +5,7 @@ source-published physical locations and the phase-minus-insertion contract.
 """
 import json
 import math
+import os
 from pathlib import Path
 import sys
 
@@ -28,6 +29,30 @@ def snap(z):
     return round(.012 + round((z - .012) / .048) * .048, 4)
 
 
+# ASAP7 preferred-direction routing tracks (make_tracks.tcl): layer -> (axis, offset um, pitch um).
+# A parent entry pin is a 24-nm square on ONE layer; its centre must sit on a preferred-direction
+# track of that layer, else no placement origin puts every pin of the master on track
+# (tools/check_macro_track_alignment.py; C18 smoke 2026-10-15: qfd_tile_nk/nl, qfd_xcol_e/w refused).
+TRACK = {'M2': (1, .009, .036), 'M3': (0, .009, .036), 'M4': (1, .012, .048), 'M5': (0, .012, .048),
+         'M6': (1, .016, .064), 'M7': (0, .016, .064)}
+
+
+def on_track(layer, xy, w=None, h=None):
+    """Move an entry pin centre <= half a pitch across its layer's preferred tracks onto the nearest
+    track that keeps the 24-nm pin inside [0, w] x [0, h].  The child pin stays where it is; the
+    parent CTS / router measures the <= 24-nm (M5) or <= 18-nm (M3) jog like any other entry wire."""
+    ax, off, pitch = TRACK[layer]
+    v = list(xy)
+    k = round((v[ax] - off) / pitch)
+    lim = (w, h)[ax]
+    for d in (0, 1, -1):
+        z = round(off + (k + d) * pitch, 4)
+        if z - .012 >= 0 and (lim is None or z + .012 <= lim):
+            break
+    v[ax] = z
+    return (round(v[0], 4), round(v[1], 4))
+
+
 def apply_tile(q, entries):
     q.w, q.h = 449.28, 1442.88  # actual parent-kit outline, never legacy SHAVE
     ports = rtl_ports(ROOT / 'rtl/physical/qfd_tile_nk_slot.sv', q.name)
@@ -35,9 +60,23 @@ def apply_tile(q, entries):
     q.ports, q.order = {}, []
     # Four 514-bit words need 197.4 um at 96-nm pitch.  Separate real
     # W-face windows replace the four coincident M8 interior groups.
-    for j, p in enumerate(('n_a', 'n_b', 'n_y', 't_out')):
-        if p in ports:
-            q.face(p, ports[p][0], 'W', 'M4', q.h / 2 + (j - 1.5) * 56.0, 2)
+    # Interleaved tree words (GEO-Q PM-H-S, coordinator ADOPT 2026-10-15): t_out[k] / n_b[k] and n_y[k] / n_a[k] one
+    # 0.096 slot apart on the W face, so a mirrored neighbour's t_out[k] lands one track from this tile's n_b[k]
+    # across the 16.44-um inner channel (vertical cut 0.001, horizontal 0.136 vs 0.975 for separate windows).
+    if os.environ.get('OT_SPLIT_TREE_INTERLEAVE', '1') != '0':
+        for (a, b), c in ((('t_out', 'n_b'), q.h / 2 + 5.0 + 49.344), (('n_y', 'n_a'), q.h / 2 - 5.0 - 49.344)):
+            n = 514                                      # tree word; the node-less tile has only t_out / n_y
+            y0 = snap(c - (2 * n - 1) * .096 / 2)
+            for off, p in enumerate((a, b)):
+                if p not in ports:
+                    continue
+                assert ports[p][0] == n, (q.name, p, ports[p][0])
+                q.ports[p] = ('pins', n, 'W', 'M4', [round(y0 + (2 * k + off) * .096, 4) for k in range(n)], 1)
+                q.order.append(p)
+    else:
+        for j, p in enumerate(('n_a', 'n_b', 'n_y', 't_out')):
+            if p in ports:
+                q.face(p, ports[p][0], 'W', 'M4', q.h / 2 + (j - 1.5) * 56.0, 2)
     # Preserve the station-facing registered tap location.  Straps/ties stay
     # beside it, with fixed disjoint ranges on the same E face.
     tap = old.get('tap')
@@ -57,7 +96,7 @@ def apply_tile(q, entries):
                 raise ValueError(f'{q.name}.{p}: child clock outside parent: {xy}')
             # Parent entry is M5 over the child's M4 rectangle: same XY,
             # one local via; parent CTS must measure that entry wire.
-            q.ports[p] = ('xy', 1, 'M5', [xy], 1)
+            q.ports[p] = ('xy', 1, 'M5', [on_track('M5', xy, q.w, q.h)], 1)
             q.order.append(p)
     q.obs_top = 7
     if set(q.ports) != set(ports):
@@ -118,7 +157,7 @@ def apply_dvm_clocks(M):
             continue
         for k,y in enumerate(ys):
             p = f'ck{k}'
-            q.ports[p] = ('xy',1,'M5',[(.042,y)],1)
+            q.ports[p] = ('xy',1,'M5',[on_track('M5', (.042,y), q.w, q.h)],1)
             if p not in q.order:
                 q.order.append(p)
     for name in ('qfd_xcst_n','qfd_xcst_s'):
@@ -126,7 +165,7 @@ def apply_dvm_clocks(M):
         if q is None:
             continue
         for p,xy in (('ck',(52.065,103.637)),('rst_n',(52.353,103.637))):
-            q.ports[p] = ('xy',1,'M3',[xy],1)
+            q.ports[p] = ('xy',1,'M3',[on_track('M3', xy, q.w, q.h)],1)
             if p not in q.order:
                 q.order.append(p)
 
@@ -140,7 +179,7 @@ def apply_band(q):
     for p in ('ck',*[f'ck_l{k}' for k in range(16)],'rst_n','b0','lnk'):
         r=old[p]
         if r.get('interior'):
-            q.ports[p]=('xy',1,r['layer'],[tuple(r['positions_xy_um'][0])],1);q.order.append(p)
+            q.ports[p]=('xy',1,r['layer'],[on_track(r['layer'],tuple(r['positions_xy_um'][0]),q.w,q.h)],1);q.order.append(p)
         else:
             n=ports[p][0];lo,hi=r['range_um']
             points=[lo+(hi-lo)*k/(n-1) for k in range(n)] if n>1 else [lo]
@@ -184,7 +223,7 @@ def export(q, out):
                 rects.append((p+f'[{k}]',L,r))
         if s[0] == 'xy':
             x,y = s[3][0]
-            rects.append((p+'[0]', s[2], (x-.012,y-.012,x+.012,y+.012)))
+            rects.append((p+'[0]', s[2], ((x-.012,y-.048,x+.012,y+.048) if s[2] in ('M1','M3','M5','M7','M9') else (x-.048,y-.012,x+.048,y+.012))))
     seen = {}
     tcl = []
     groups = {}

@@ -1,0 +1,6 @@
+ERR c=2 replica=5 data=00000000
+ERR c=3 replica=5 data=00000000
+ERR c=4 replica=5 data=00000000
+ERR c=5 replica=5 data=00000000
+FATAL: tb_hbm_su_static_pinned_bank.sv:38: SU_PINNED_BANK FAIL checks=3598 errors=514
+       Time: 10336000  Scope: tb_hbm_su_static_pinned_bank

@@ -40,6 +40,16 @@ class BoundData(unittest.TestCase):
                 'serial': {'ratio': [4, 3], 'ports': ['ckv'], 'inputs': ['rsv'], 'outputs': []}}
             generated = C.generate(spec, root)
             self.assertIn('io_budget_ps 222.222', generated)
+            self.assertIn('io_budget_ps 166.667 inputs', generated)
+            # composition-derived output budget: tightening only, emitted per domain, consumed by the output -max delay
+            tight = copy.deepcopy(spec); tight['clock_entry_domains']['core']['io_budget'] = {'out': 0.6}
+            g2 = C.generate(tight, root)
+            self.assertIn('io_budget_ps 166.667 io_budget_out_ps 500.0', g2)
+            self.assertIn('$budget_out-$dlmax+$sk', g2)
+            for bad in ({'out': 0.1}, {'in': 0.9}, {'max': 0.3}):
+                loose = copy.deepcopy(spec); loose['clock_entry_domains']['core']['io_budget'] = bad
+                with self.assertRaises(ValueError):
+                    C.generate(loose, root)
             self.assertIn('incomplete actual IO domain coverage', generated)
             clock = C.clocks(spec, 833.333)
             self.assertIn('ot_io_serial -period 1111.110666667', clock)

@@ -1,0 +1,12 @@
+{
+  "unit": "EPYC1/546831",
+  "positive_beats": 513,
+  "errors": 0,
+  "disabled_newest_mutant_errors": 3,
+  "scope": "parallel candidate blockmax/newest component only, fullK2048COLLjoin remainsOPEN",
+  "sha256": {
+    "rtl/hbm_accel/index/ot_hbm_idx_candidate_static.sv": "3413726aeacff62b8bb3394623560885cde31cdfedc236c7d7404c7477bddbc8",
+    "rtl/test/hbm_idx_static/tb_candidate_static.sv": "5a42aa92e67eb6a71ede343aedfb2baf0800ee504548d7a0bd2263902734166c",
+    "tools/hbm_idx_static_candidate_vectors.py": "84f5c166f2b1697ed34b1e67467bcafc1bf65f96f41e02a76099393a13cdf374"
+  }
+}

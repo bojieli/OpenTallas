@@ -58,7 +58,12 @@ def render(die, rtl, groups, dirs, params, extra_params, note):
     decl = []
     for port, pins in groups.items():
         w = len(pins)
-        decl.append(f'    {"input " if dirs[port] == "in" else "output"} wire [{w - 1}:0] {port}')
+        scalar = die == "dsfd_bf_front_static" and w == 1
+        shape = "" if scalar else f"[{w - 1}:0] "
+        decl.append(f'    {"input " if dirs[port] == "in" else "output"} wire {shape}{port}')
+    if die == 'dsfd_bf_front_static':
+        decl.append('    input wire [37:0] f_prog')
+        decl.append('    input wire io_clk')
     L.append(',\n'.join(decl))
     L.append(');')
     for b in sorted(widths):
@@ -77,14 +82,18 @@ def render(die, rtl, groups, dirs, params, extra_params, note):
                     L.append('`ifdef DSFD_BF_DIE_MUT_SWAP')
                     L.append(f'    assign {sig} = {port}[{mut[(port, i)]}];')
                     L.append('`else')
-                    L.append(f'    assign {sig} = {port}[{i}];')
+                    pin = port if die == 'dsfd_bf_front_static' and len(pins) == 1 else f'{port}[{i}]'
+                    L.append(f'    assign {sig} = {pin};')
                     L.append('`endif')
                 else:
-                    L.append(f'    assign {sig} = {port}[{i}];')
+                    pin = port if die == 'dsfd_bf_front_static' and len(pins) == 1 else f'{port}[{i}]'
+                    L.append(f'    assign {sig} = {pin};')
             else:
                 L.append(f'    assign {port}[{i}] = {sig};')
     ps = ', '.join(f'.{k}({v})' for k, v in list(params.items()) + [(n, n) for n in pnames])
     conns = [f'.{b}(w_{b})' for b in sorted(widths)] + [f'.{o}()' for o in OPEN_OUT.get(rtl, [])]
+    if die == 'dsfd_bf_front_static':
+        conns.extend(['.f_prog(f_prog)', '.io_clk(io_clk)'])
     L.append('    /* verilator lint_off PINCONNECTEMPTY */')
     L.append(f'    {rtl} #({ps}) u_view (')
     L.append('        ' + ',\n        '.join(conns) + ');')
@@ -114,6 +123,12 @@ def build():
              'xb_pos, go_bf} (bit 0 go_bf): the native BF16 x stream, a die port with NO die driver until the BF transport',
              'is built (die_port_bind reports it; never tied).  hph (1 at HALF 0) has no reader.']),
     }
+    files['dsfd_bf_front_static.sv'] = render(
+        'dsfd_bf_front_static', 'ot_s81_bf_front', front, FRONT_DIR,
+        dict(FRONT_PARAMS, STATIC_PROGRAM=1, CPIN=1), [('INSTANCE', '""')],
+        ['Actual compiler-programmed BF front: all legacy payload pins retained;',
+         'f_prog[37:0] captured at pins, core consumes +1 edge, CPIN adds +1 column edge.',
+         'Requires its own static physical view; historical CLOSED view is not substituted.'])
     return files
 
 

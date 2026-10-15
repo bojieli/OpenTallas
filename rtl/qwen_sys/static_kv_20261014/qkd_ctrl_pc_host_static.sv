@@ -12,7 +12,20 @@ module qkd_ctrl_pc_host_static #(
     parameter integer LATE  = 4096,        // a held (layer-mismatch) write faults after this many cycles
     parameter integer PROFILE = 0,
     parameter integer EVMUT = 0,
-    parameter integer MUT   = 0
+    parameter integer MUT   = 0,
+    // HANDOFF 0az: 1 = the PHY read return is elastic (HBM/PHY latency not
+    // compile-time fixed). expected_raw_valid is then the NOMINAL (minimum)
+    // raw return slot: a return earlier than the nominal count is a fault, a
+    // return later is absorbed (tag queue + landing ECC are in order, and the
+    // qkd_kv_hbm_elastic_front block buffer re-times the corrected sectors),
+    // and an outstanding nominal return with no PHY data for RAW_WD edges is a
+    // PHY-late fault (watchdog). 0 = historical exact-slot check.
+    parameter integer ELASTIC = 0,
+    parameter integer RAW_WD = 256,
+    // In-order read tag / pcport class queue depth. The fixed RL23 calendar
+    // needs 32; the elastic PHY window needs CMD 4 + RL 23 + window + ECC
+    // outstanding reads, so ELASTIC uses 64 (sized in the 0az parent proof).
+    parameter integer TQD = (ELASTIC != 0) ? 64 : 32
 ) (
     input  wire         pll_hbm,
     input  wire         hrst,
@@ -91,6 +104,23 @@ module qkd_ctrl_pc_host_static #(
     (* keep *) reg [287:0] rd_q;
     always @(posedge hclk or negedge h_rn) if (!h_rn) rv_q <= 1'b0; else rv_q <= pi[0];
     always @(posedge hclk) rd_q <= pi[288:1];
+
+    // ---- raw PHY return check: exact slot (historical) or elastic window (0az) ---------------------------------------
+    localparam integer TQA = $clog2(TQD);
+    reg [6:0] raw_out;               // nominal raw returns not yet received (<= TQD outstanding tags)
+    reg [8:0] raw_age;
+    reg f_raw;
+    always @(posedge hclk or negedge h_rn)
+        if (!h_rn) begin raw_out <= 6'd0; raw_age <= 9'd0; f_raw <= 1'b0; end
+        else if (ELASTIC != 0) begin
+            raw_out <= raw_out + {6'd0, rawslot_q} - {6'd0, rv_q};
+            if (rv_q && raw_out == 7'd0 && !rawslot_q) f_raw <= 1'b1;           // earlier than nominal / unsolicited
+            if (raw_out == 7'(TQD) && rawslot_q && !rv_q) f_raw <= 1'b1;        // outstanding count overflow
+            if (rv_q || raw_out == 7'd0) raw_age <= 9'd0;
+            else if (raw_age == 9'(RAW_WD - 1)) f_raw <= 1'b1;                  // PHY late beyond watchdog
+            else raw_age <= raw_age + 9'd1;
+        end
+    wire raw_bad = (ELASTIC == 0) ? (rv_q != rawslot_q) : f_raw;
 
     // ---- command arbiter ---------------------------------------------------------------------------------------------
     wire        c_v;                 // embedding static command, HBM side of its crossing (below)
@@ -188,32 +218,32 @@ module qkd_ctrl_pc_host_static #(
     wire [287:0] wd, kv_d;
     wire         kv_v, em_v, port_fault;
     wire [257:0] em_d;
-    ot_qfd_emb_pcport #(.KVW(2), .MUT(MUT == 2 ? 4 : 0)) u_port (
+    ot_qfd_emb_pcport #(.KVW(2), .RQD(TQD), .MUT(MUT == 2 ? 4 : 0)) u_port (
         .clk(hclk), .rst_n(h_rn), .col_v(pcol_v), .col_we(pcol_we), .col_sr(pcol_sr),
         .w_v(c_v && c_d[286]), .w_d(c_d[255:0]), .wd(wd), .kw_v(cv_q), .kw_d(cdata_q),
         .r_v(rv_q), .r_d(rd_q), .kv_v(kv_v), .kv_d(kv_d), .em_v(em_v), .em_d(em_d), .fault(port_fault));
 
     // ---- read tags: {open row, j} per KV RD, in order ----------------------------------------------------------------
     reg  [7:0]  brow [0:31];
-    reg  [33:0] tq [0:31];
-    reg  [5:0]  tw, tr;
+    reg  [33:0] tq [0:TQD-1];
+    reg  [TQA:0] tw, tr;
     reg         f_tag;
     wire        rd_kv   = col_v && !col_we && !col_sr;
     wire [9:0]  rj      = {col_bank[4:2], col_col, col_bank[1:0]};
     wire        t_empty = tw == tr;
-    wire        t_full  = tw[4:0] == tr[4:0] && tw[5] != tr[5];
-    wire [33:0] t_head  = tq[tr[4:0]];
+    wire        t_full  = tw[TQA-1:0] == tr[TQA-1:0] && tw[TQA] != tr[TQA];
+    wire [33:0] t_head  = tq[tr[TQA-1:0]];
     wire [9:0]  t_j     = (MUT == 3) ? {t_head[9:2], t_head[0], t_head[1]} : t_head[9:0];
     wire [7:0]  t_layer = t_head[17:10] - 8'(ROW0);
     always @(posedge hclk) begin
         if (row_v && row_op == 3'd1) brow[row_bank] <= row_row[7:0];
-        if (rd_kv) tq[tw[4:0]] <= {epoch_q,brow[col_bank], rj};
+        if (rd_kv) tq[tw[TQA-1:0]] <= {epoch_q,brow[col_bank], rj};
     end
     always @(posedge hclk or negedge h_rn)
-        if (!h_rn) begin tw <= 6'd0; tr <= 6'd0; f_tag <= 1'b0; end
+        if (!h_rn) begin tw <= '0; tr <= '0; f_tag <= 1'b0; end
         else begin
-            if (rd_kv) begin tw <= tw + 6'd1; if (t_full) f_tag <= 1'b1; end
-            if (kv_v)  begin tr <= tr + 6'd1; if (t_empty) f_tag <= 1'b1; end
+            if (rd_kv) begin tw <= tw + 1'b1; if (t_full) f_tag <= 1'b1; end
+            if (kv_v)  begin tr <= tr + 1'b1; if (t_empty) f_tag <= 1'b1; end
         end
 
     // ---- landing ECC -> CDC hi ---------------------------------------------------------------------------------------
@@ -284,7 +314,7 @@ module qkd_ctrl_pc_host_static #(
     // ---- sticky fault chain, S -> N ----------------------------------------------------------------------------------
     always @(posedge hclk or negedge h_rn)
         if (!h_rn) fo <= 1'b0;
-        else fo <= fo | fi | ctl_fault | port_fault | ecc_fault | hf_q | f_ecdc | f_late | f_cmd | f_early | f_wmis | f_tag | (rv_q!=rawslot_q) | native_observer_fault;
+        else fo <= fo | fi | ctl_fault | port_fault | ecc_fault | hf_q | f_ecdc | f_late | f_cmd | f_early | f_wmis | f_tag | raw_bad | native_observer_fault;
     qkd_static_kv_write_observer #(.STRICT(PROFILE==0)) u_native_write_observer(
         .hclk(hclk),.rst_n(h_rn),.po(po),.static_column(physical_col_sr),.expected_static_column(expected_sr_pipe[3]),.context_word(physical_context),
         .commit_valid(native_commit_valid),.commit_identity(native_commit_identity),.commit_address(native_commit_address),.fault(native_observer_fault));

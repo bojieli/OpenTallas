@@ -1,0 +1,112 @@
+{
+  "status": "CANDIDATE_COMPONENT_ONLY",
+  "quarter_ring": [
+    0,
+    1,
+    3,
+    2
+  ],
+  "program_join": "Not integrated. Requires additional real catalog/issuer; current V3 word has no assumed spare fields.",
+  "word_convention": "All fields sampled on router input edge C; output published C+1; destination input samples C+2. RX face selector uses same convention.",
+  "sources": [
+    "local qslots railTX[0:NPT]",
+    "CW neighbor arrival",
+    "CCW neighbor arrival"
+  ],
+  "sinks": [
+    "local PHY TX[0:NPT]",
+    "RX ejection[0:NPT]",
+    "CW launch",
+    "CCW launch"
+  ],
+  "rx_mux_select": {
+    "0": "local endpoint RX",
+    "1": "corresponding bridge RX ejection"
+  },
+  "commands": {
+    "q3": {
+      "width": 49,
+      "expected_v": {
+        "lsb": 0,
+        "width": 5
+      },
+      "out_slot": {
+        "lsb": 5,
+        "width": 8
+      },
+      "out_select": {
+        "lsb": 13,
+        "width": 24,
+        "per_output_width": 3
+      },
+      "rx_face_control": {
+        "lsb": 37,
+        "width": 12,
+        "per_port_low_to_high": [
+          "expected_localRX",
+          "expected_bridgeRX",
+          "slot",
+          "select"
+        ]
+      }
+    },
+    "q2": {
+      "width": 30,
+      "expected_v": {
+        "lsb": 0,
+        "width": 4
+      },
+      "out_slot": {
+        "lsb": 4,
+        "width": 6
+      },
+      "out_select": {
+        "lsb": 10,
+        "width": 12,
+        "per_output_width": 2
+      },
+      "rx_face_control": {
+        "lsb": 22,
+        "width": 8,
+        "per_port_low_to_high": [
+          "expected_localRX",
+          "expected_bridgeRX",
+          "slot",
+          "select"
+        ]
+      }
+    }
+  },
+  "compiler_conflicts": [
+    "Two distinct flits may not occupy the same directed ring edge or local output at the same capture edge.",
+    "A local endpoint RX and bridge ejection sharing one RX mux must not both require delivery on the same edge.",
+    "A valid wire event must equal expected_v, even if no local output selects it.",
+    "Every selected input must be valid at capture. Duplicate selection is explicit multicast, not arbitration."
+  ],
+  "measured_gate": {
+    "full545_transfers": 256,
+    "quarters": "one NPT3 plus three NPT2",
+    "both_directions": true,
+    "continuous_burst_length": 16,
+    "additional_instances": "one actual NS2 RX selector and two actual relay leaves",
+    "mutants_rejected": [
+      "selection changed",
+      "fault detection removed"
+    ],
+    "payload_generator": "seeded32bit xorshift, updated per bit; independent545bit flit content"
+  },
+  "physical": "No geometry, corridor capacity, mapped area or SS/FF claim; 90,394 modeled flops excludes real wire stations and program issuer.",
+  "absolute_edge_contract": {
+    "from_qslots_source_capture_C_to_PHY_write_capture": {
+      "same_quarter": "C+5",
+      "adjacent": "C+7+relay_count",
+      "opposite": "C+9+relay_count_sum"
+    },
+    "from_endpoint_RX_output_changes_R_to_destination_qslots_capture": {
+      "same_quarter": "R+3",
+      "adjacent": "R+12+relay_count",
+      "opposite": "R+14+relay_count_sum"
+    },
+    "remote_RX_path": "source RX mux -> source qslots -> bridge injection -> ring -> ejection RX mux -> destination qslots; no direct endpointRX to bridge input"
+  }
+}

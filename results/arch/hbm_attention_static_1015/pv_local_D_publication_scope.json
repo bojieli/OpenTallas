@@ -1,0 +1,26 @@
+{
+  "selection": "User approved HBM D local PV2048 primary; C fallback",
+  "qualification": false,
+  "full_native_qualified": false,
+  "physical_qualified": false,
+  "scope": "Actual opt-in serializer and adapter component with current7b2 NE SID3 WG1 commit/readback; primary selection does not satisfy remaining gates",
+  "source_sha256": {
+    "rtl/hdc/v41x/static/ot_hbm_attn_pv_serializer_local.sv": "1acef905baf503c6488107b4465c393a519245a809718c4b9039cf37ec789918",
+    "rtl/hdc/v41x/static/ot_hbm_attn_pv_native_output_local.sv": "61c52943e45b2ef3ddfe374e4b2a4300608861c4ba52ab7ff98f0d1c92c6d987",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "rtl/test/hbm_accel/generic/tb_hbm_attn_pv_native_output_local.sv": "dd579fbc9070b175a614332d0c85c2a1b5beaceca18110ac70fc52fd5982cfcc",
+    "tools/hbm_static_attention/run_pv_native_output_local.sh": "55ea1af26b28aae148b0a57b5524df6ee1efabe33e6d6a0eb93dfeff4cfcd323"
+  },
+  "preserved_receipt": "pv_local_D_current7b2_NE_gate/receipt.json",
+  "receipt_extra_profiles": "QP_host_front TB/runner and baseline PV native-output TB/runner are not consumed by D runner. Their recorded profile is historical/separate and is not asserted to match main.",
+  "remaining": [
+    "ExactHG1 arithmetic producer fullrun",
+    "Actualfulltarget49 PS/P/drain programme",
+    "ActualCP/dispatch fault andNaN/Infcases",
+    "Canonicalphysicalregister ages/stations/cellcount",
+    "Whole-systemgeometry/clock/cut/route qualification",
+    "Immutableoverlappedthroughput price"
+  ]
+}

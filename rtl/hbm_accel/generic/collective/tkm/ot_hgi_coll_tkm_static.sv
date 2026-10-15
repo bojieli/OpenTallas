@@ -92,7 +92,10 @@ module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0)(
    if(vv==32'hffffffff||32'(irel>>3)*4+32'(lane)>=32'(flits))raw[s]=0;
    sorted[s]=0;
   end
-  if(buf_valid)for(integer s=0;s<4;s=s+1)raw[s]=tinv(buf_data[85*s+:85]);
+  // pass-2 re-read: the buffer holds ELEMENT form with the region bit (e[84]) set at capture (buf_wdata below), so it
+  // re-enters directly; tinv() here mapped the region-1 element back to region 0 (pass 2 re-sorted by value, O came
+  // out in value order: KMAX2048 syn_sel 512/512 mismatches, 2026-10-15).
+  if(buf_valid)for(integer s=0;s<4;s=s+1)raw[s]=buf_data[85*s+:85];
   for(integer s=0;s<4;s=s+1)begin:rank_sort
    integer rank_s;rank_s=0;
    for(integer j_=0;j_<4;j_=j_+1)if(key2(raw[j_])>key2(raw[s])||(key2(raw[j_])==key2(raw[s])&&j_<s))rank_s=rank_s+1;
@@ -108,6 +111,9 @@ module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0)(
  end
  reg[31:0]ids[0:15],values[0:15];
  reg pending_r;reg[511:0]rline;reg[39:0]raddr;reg[15:0]rmask;
+ // A final partial line one cell after a full line (cells%4==1) would share the single write port with the
+ // previous line's R write. It is statically deferred one edge (O at +1, R at +2); the timeline is unchanged.
+ reg pending_o,r_after_o;reg[511:0]oline_q;reg[39:0]oaddr_q;reg[15:0]omask_q;
  always @(posedge clk)begin
   if(capture)beat<=del_flit;
   entry_v<=busy&&(issue1||buf_valid);
@@ -115,7 +121,7 @@ module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0)(
  end
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin busy<=0;done<=0;fault<=0;stat_cycles<=0;tick<=0;conv_pipe<=0;
-   cap1<=0;cap2<=0;buf_wv<=0;w_v<=0;pending_r<=0;end
+   cap1<=0;cap2<=0;buf_wv<=0;w_v<=0;pending_r<=0;pending_o<=0;r_after_o<=0;end
   else begin
    done<=0;w_v<=0;buf_wv<=0;
    conv_pipe<={conv_pipe[1:0],conv1||conv2};
@@ -139,7 +145,8 @@ module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0)(
       buf_wdata[85*s+:85]<=((cap1*4+32'(s))<32'(nout))?(e|{e[83],84'd0}):85'd0;
      end
     end
-    if(pending_r)begin w_v<=1;w_data<=rline;w_addr<=raddr;w_mask<=rmask;pending_r<=0;end
+    if(pending_o)begin w_v<=1;w_data<=oline_q;w_addr<=oaddr_q;w_mask<=omask_q;pending_o<=0;pending_r<=r_after_o;r_after_o<=0;end
+    else if(pending_r)begin w_v<=1;w_data<=rline;w_addr<=raddr;w_mask<=rmask;pending_r<=0;end
     if(conv_pipe[1]&&tick>=second)begin:output_cell
      reg[84:0]e;reg[511:0]oline,rl;reg[15:0]mask_;integer ix;integer count_;
      cap2<=cap2+1;oline=0;rl=0;
@@ -153,12 +160,13 @@ module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0)(
       count_=int'(nout)-16*int'(cap2>>2);if(count_>16)count_=16;
       mask_=16'((17'd1<<count_)-1);
       for(integer i=0;i<16;i=i+1)if(i>=count_)begin oline[32*i+:32]=0;rl[32*i+:32]=0;end
-      w_v<=1;w_data<=oline;w_mask<=mask_;w_addr<=ob+40'(16*(cap2>>2));
-      if(hr)begin pending_r<=1;rline<=rl;raddr<=rb+40'(16*(cap2>>2));rmask<=mask_;end
+      if(pending_r&&MUT!=2)begin pending_o<=1;oline_q<=oline;omask_q<=mask_;oaddr_q<=ob+40'(16*(cap2>>2));r_after_o<=hr;end
+      else begin w_v<=1;w_data<=oline;w_mask<=mask_;w_addr<=ob+40'(16*(cap2>>2));if(hr)pending_r<=1;end
+      if(hr)begin rline<=rl;raddr<=rb+40'(16*(cap2>>2));rmask<=mask_;end
      end
     end
     if(tick==finish)begin
-     if(cap1!=32'(cells)||cap2!=32'(cells)||pending_r||32'(nout)!=((32'(k)<valid_pairs)?32'(k):valid_pairs))fault<=1;
+     if(cap1!=32'(cells)||cap2!=32'(cells)||pending_r||pending_o||32'(nout)!=((32'(k)<valid_pairs)?32'(k):valid_pairs))fault<=1;
      busy<=0;done<=1;
     end
    end
@@ -172,7 +180,7 @@ module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0)(
         cfg_nout>cfg_k||cfg_obase[3:0]!=0||cfg_rbase[3:0]!=0;
      busy<=1;tick<=0;stat_cycles<=0;ingress_end<=i_;first<=a_;clear2<=b_;read2<=r_;second<=s_;finish<=f_;
      valid_pairs<=0;k<=cfg_k;flits<=24'(fl_);cells<=13'(c_);nout<=cfg_nout;gb<=cfg_gbase;g<=cfg_g;pf<=cfg_pf;ob<=cfg_obase;rb<=cfg_rbase;hr<=cfg_has_r;
-     cap1<=0;cap2<=0;conv_pipe<=0;pending_r<=0;
+     cap1<=0;cap2<=0;conv_pipe<=0;pending_r<=0;pending_o<=0;r_after_o<=0;
     end
    end
   end

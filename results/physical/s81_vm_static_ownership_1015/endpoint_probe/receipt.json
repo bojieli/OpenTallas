@@ -1,0 +1,42 @@
+{
+  "schema": "opentallas.s81.vm-routed-endpoint-probe.v1",
+  "unit": "oth-ubuntu-1827582-1792061289",
+  "host": "ot-epyc4",
+  "exit": 0,
+  "endpoint": "o_sd[321]",
+  "source_job": "dsfd_vm_static_relay128_b4_native_option-nativepin1-e12206107",
+  "source_record": "1318328a1",
+  "original_artifacts_unchanged": true,
+  "remote": "/srv/opentallas-scratch2/codex/s81-b4-endpoint-probe-1015",
+  "TT": {
+    "global_setup_slack_ps": 152.0613635,
+    "source_latency_ps": 52.196758,
+    "actual_CTS_to_endpoint_ps": 90.504643,
+    "endpoint_clock_ps": 142.701401,
+    "arrival_ps": 511.853333,
+    "physical_clock_pin_to_output_ps": 369.151932,
+    "DFF_QN_ps": 106.485489,
+    "inverter_ps": 122.763107,
+    "output_driver_hold_chain_ps": 139.877584,
+    "mean_response_R_ps": 91.1351113,
+    "output_min_delay_ps": -189.6473
+  },
+  "FF": {
+    "global_hold_slack_ps": 18.7443394,
+    "endpoint_hold_slack_ps": 173.539383,
+    "source_latency_ps": 49.157597,
+    "endpoint_clock_ps": 117.437935,
+    "arrival_ps": 367.302094,
+    "physical_clock_pin_to_output_ps": 249.864159,
+    "output_min_delay_ps": -168.7627
+  },
+  "finding": "Large launch delay exists in actual physical data path; source latency alone does not explain it. Mapping/driver and output hold construction cause under investigation by shared-flow owner. No full-native qualification or changed timing constraints.",
+  "files": {
+    "probe_tt.tcl": "3681f029de32332da81aac49422f716d7d62619249b2dbd4fb2e42c034795d11",
+    "probe_ff.tcl": "5ec952b84fedc90407a3588669bec325d5fc351a90dca81833b4745cd3a45be2",
+    "probe_tt.log": "3c4a2af9c2a62fb7586fd19c0f60664e7bc99dd5cb5f07dda6eda52882c5a40e",
+    "probe_ff.log": "b8a4bbea78a4468c70f4532ec7a1991f5306cf0e11ef27db09c902726f5c677b",
+    "scene_tt_endpoint.sdc": "da5051572ed34edfcfb2f4717bcb5554c32f341e2db9344f16113065c6b2ab23",
+    "scene_ff_endpoint.sdc": "615349628ee0b69375511d4c80e252b02be2dba6c7c48c10d01740a8de5cbb09"
+  }
+}

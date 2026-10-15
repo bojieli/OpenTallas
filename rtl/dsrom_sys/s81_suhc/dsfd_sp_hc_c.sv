@@ -8,6 +8,9 @@
 // under --suhc-1011; the adapter's pulse CDC stays and runs synchronous).
 // f_inp is the die dependency net of the HC (head descriptor's VM operands present: the VM row-completion event of the
 // producing stage, s81-ctl); it is a die pin, never tied here.  Latency vs dsfd_sp_hc: +1 cycle each way.
+// DSFD_SUHC_STATIC_ISSUE (S-BIND 2026-10-15, owner static-cycle rule 2026-10-14T18:59): the die build has NO f_inp pin;
+// the slab issues on the compiler-scheduled command edge (operands present by the static schedule, as the VM /
+// selector engines' e_inputs_present 1).  Without the define the historical ready-driven f_inp pin remains (benches).
 // ---------------------------------------------------------------------------------------------------------------------
 module dsfd_sp_hc_c #(
     parameter integer NG = 256, D = 5120, S_RD = 2, S_WR = 8, S_RT = 4, HIER = 0, HALF = 0, CSPLIT = 0, TAIL_SPLIT = 0, MUT = 0, AMUT = 0,
@@ -23,7 +26,9 @@ module dsfd_sp_hc_c #(
     input  wire [84:0]         c_cmd,
     output reg  [8:0]          c_done,
     output reg  [1:0]          c_st,
+`ifndef DSFD_SUHC_STATIC_ISSUE
     input  wire [0:0]          f_inp,
+`endif
     input  wire                y_v,
     output wire                y_rdy,
     input  wire [NG*32-1:0]    y_d,
@@ -54,7 +59,7 @@ module dsfd_sp_hc_c #(
                  .HEAD_ROWS(HEAD_ROWS),.CNL_PIN(CNL_PIN),.CHAIN_STEP(CHAIN_STEP),.PIPE(PIPE),.PIPE_PD(PIPE_PD),.NTREE(NTREE),.NT_K(NT_K)) u_hc (
         .t_tf0(t_tf0),.t_tf1(t_tf1),.t_tf2(t_tf2),.f_tr0(f_tr0),.f_tr1(f_tr1),.f_tr2(f_tr2),
         .cck(ck[0]), .crs(rn), .sk(ck[0]), .srs(rn), .c_cmd_v(cv_q), .c_cmd_d(cd_q), .c_done_v(dv), .c_done_tag(dt),
-        .inp(f_inp[0]), .y_v(y_v), .y_rdy(y_rdy), .y_d(y_d), .rq_v(rq_v), .rq_row(rq_row), .rs_v(rs_v), .rs_d(rs_d),
+        .inp(`ifdef DSFD_SUHC_STATIC_ISSUE 1'b1 `else f_inp[0] `endif), .y_v(y_v), .y_rdy(y_rdy), .y_d(y_d), .rq_v(rq_v), .rq_row(rq_row), .rs_v(rs_v), .rs_d(rs_d),
         .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d), .flt(flt), .online(onl), .fcode(fcode));
     always @(posedge ck[0] or negedge rn)
         if (!rn) begin c_done <= 9'd0; c_st <= 2'b00; end

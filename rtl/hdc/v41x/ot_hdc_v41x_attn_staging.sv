@@ -22,8 +22,8 @@ module ot_hdc_v41x_attn_staging #(
     genvar l, b;
     generate if (SRAM_MACRO) begin : g_macro
         initial begin
-            if (DEPTH > 256 || AW > 8 || D % 32 != 0)
-                $fatal(1, "attention staging macro requires DEPTH<=256, D%%32=0");
+            if (DEPTH > 1024 || AW > 10 || D % 32 != 0)
+                $fatal(1, "attention staging macro requires DEPTH<=1024, D%%32=0");
         end
         for (l = 0; l < NL; l = l + 1) begin : g_lane
             wire [NB*256-1:0] padded_in;
@@ -31,6 +31,7 @@ module ot_hdc_v41x_attn_staging #(
             assign padded_in = {{(NB*256-ROWW){1'b0}}, wr_data[l*ROWW +: ROWW]};
             assign rd_data[l*ROWW +: ROWW] = padded_out[ROWW-1:0];
             for (b = 0; b < NB; b = b + 1) begin : g_slice
+                if (DEPTH <= 256) begin : g_256
                 ot_sram_1r1w_256x256_m2_r2c2 u_mem (
                     .clk(clk), .r_ce_in(1'b1), .r_addr_in({{(8-AW){1'b0}}, rd_addr}),
                     .rd_out(padded_out[b*256 +: 256]),
@@ -38,6 +39,15 @@ module ot_hdc_v41x_attn_staging #(
                     .wd_in(padded_in[b*256 +: 256]),
                     .w_mask_in({256{1'b1}}), .rr_en(2'b0), .rr_addr(14'b0),
                     .cr_en(2'b0), .cr_sel(16'b0));
+                end else begin : g_1024
+                ot_sram_1r1w_1024x256_m2_r2c2 u_mem (
+                    .clk(clk), .r_ce_in(1'b1), .r_addr_in({{(10-AW){1'b0}}, rd_addr}),
+                    .rd_out(padded_out[b*256 +: 256]),
+                    .w_ce_in(wr_en[l]), .w_addr_in({{(10-AW){1'b0}}, wr_addr}),
+                    .wd_in(padded_in[b*256 +: 256]),
+                    .w_mask_in({256{1'b1}}), .rr_en(2'b0), .rr_addr(18'b0),
+                    .cr_en(2'b0), .cr_sel(16'b0));
+                end
             end
         end
     end else begin : g_behavioural

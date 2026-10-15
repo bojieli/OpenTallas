@@ -2,7 +2,7 @@
 """Pre-route gate (tools/ref_tile, ref-flow-1011 2026-10-11): reject the known flow / structure pitfalls in minutes,
 before a multi-hour route.  Clear PASS / WARN / FAIL with the fix for every finding.
 
-    pre_route_gate.py KIT_DIR_OR_SPEC [--job JOB.json] [--remote HOST [--cts] [--synth-cap S] [--mem GB]] [--json OUT]
+    pre_route_gate.py KIT_DIR_OR_SPEC [--job JOB.json] [--remote HOST [--cts] [--synth-cap S] [--mem GB] [--disk GB]] [--json OUT]
     pre_route_gate.py --job JOB.json                 (any closure-loop spec: source-sync + generic checks only)
 
 LOCAL (seconds; also run by the closure loop at submit for "ref_tile": true jobs):
@@ -408,13 +408,65 @@ def check_sources(g: Gate, job: dict, extra_seeds=(), commit=None):
 
 
 # --------------------------------------------------------------------------------------------- kit checks
+MULTI_ROOT_PROOF = "related crossing lacks actual finite"
+MULTI_ROOT_DEFERRAL = "RELATED_PATH_DEFERRED"
+
+
+def stale_multi_root_sdcs(kd: Path) -> list:
+    """Kit SDCs baked by ref_tile.py before f489fa9d5: they carry the multi-root related-crossing finite-path proof
+    without the multi-mode pre-scene deferral, so under the gate/production OT_HOLD_MM session (read_sdc -mode ss before
+    any scene) find_timing_paths returns nothing and 1_synth/synth_odb dies with 'OT_MULTI_ROOT: related crossing lacks
+    actual finite max STA path' although the same netlist + SDC pass a single-scene replay (TT head h3, xcol_{e,w}_rq,
+    2026-10-15).  The generator is current; only the committed kit bytes are stale."""
+    out = []
+    for f in sorted(kd.glob("*.sdc")):
+        t = f.read_text(errors="replace")
+        # independent-domain leaves never reach the proof (any crossing is refused structurally first)
+        if MULTI_ROOT_PROOF in t and MULTI_ROOT_DEFERRAL not in t and "set ::ot_ce_related_data 1" in t:
+            out.append(f.name)
+    return out
+
+
+
+def stale_native_cts_sdcs(kd: Path, spec: dict) -> list:
+    """Require operational current generated policy, only for native leaf CTS kits.
+
+    These modes prohibit custom SDC hooks. Compare the complete generated SDCs,
+    including stage flags, executable procedure and its invocation: a log marker,
+    commented correction, no-op, or later re-propagation is not sufficient proof.
+    This local/new-submit check never walks accepted jobs or changes frozen SDCs.
+    """
+    if not RT.clock_entry_constraints.native_leaf(spec):
+        return []
+    expected = {
+        "clock.sdc": RT.gen_sdc(spec, float(spec.get("route", {}).get("period_ps", 770))),
+        "clock_entry.sdc": "set ::ot_ce_require_wire 1\n" + RT.clock_entry_constraints.generate(spec, RT.ROOT),
+        "signoff.sdc": RT.gen_signoff(spec, spec.get("refglob", "*"), ",".join(spec.get("inter", [])) or "none_*"),
+    }
+    return [name for name, text in expected.items()
+            if not (kd / name).is_file() or (kd / name).read_bytes() != text.encode()]
+
+
 def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
+    stale = stale_multi_root_sdcs(kd)
+    if stale:
+        g.add("FAIL", "kit_sdc", f"{stale} predate the multi-mode pre-scene deferral of the OT_MULTI_ROOT related-crossing "
+              "proof (f489fa9d5): ORFS synth_odb fails 'related crossing lacks actual finite max STA path' under OT_HOLD_MM",
+              "rebase on main and re-run ref_tile.py gen for this kit, commit, then gate")
     spec = RT.load_spec(str(kd / "spec.json"))
     try:
         fresh = RT.gen(str(kd / "spec.json"), spec.get("std_area_um2"), write=False)
     except RT.SpecError as ex:
         g.add("FAIL", "spec", str(ex), "fix the tile spec")
         return spec
+    stale_native = stale_native_cts_sdcs(kd, spec)
+    if stale_native:
+        g.add("FAIL", "native_cts_sdc", f"{stale_native} differ from current generated native CTS stage policy "
+              "(4af58769b): declared standard CTS roots must be ideal before CTS, while raw hard-entry roots "
+              "and require-wire/postCTS checks retain actual propagation; a marker alone is insufficient",
+              "rebase on main; run python3 tools/ref_tile/ref_tile.py gen <this kit's spec.json>; "
+              "review unchanged RTL/pins/periods, commit regenerated kit, then run a fresh source-bound --cts gate "
+              "and submit a new normal successor; preserve original accepted/frozen jobs")
     for sev, chk, msg, fix in fresh["findings"]:
         g.add(sev, chk, msg, fix)
     fp = json.loads((kd / "floorplan.json").read_text())
@@ -700,23 +752,52 @@ def gate_route_clock_hooks(script: str, spec: dict) -> str:
     return script.replace(marker, marker + "export OT_CTS_FIX_HOOKS=" + shlex.quote(RT.clock_fix_hooks(spec)) + "\n", 1)
 
 
-def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bool):
+def gate_route_hold_context(script: str, spec: dict, kd: str) -> str:
+    """Use production hold settings, never the ref_route.sh 10ps fallback.
+
+    This is not OT_CAL_CTS_ONLY insertion measurement. The formal gate builds
+    placement/CTS with the route's actual MM scenes, margin and physical hooks.
+    """
+    marker = "export OT_ORFS_CORNER_OVERRIDE=TC\n"
+    if script.count(marker) != 1:
+        raise ValueError("remote gate runtime-context insertion marker changed")
+    values = RT.route_hold_context(spec, kd)
+    if spec.get("clock") != "multiple_cts_roots":
+        values["OT_CTS_FIX_HOOKS"] = RT.clock_fix_hooks(spec)
+    text = "".join("export " + k + "=" + shlex.quote(v) + "\n" for k, v in values.items())
+    return script.replace(marker, marker + text, 1)
+
+
+def gate_disk_budget(spec: dict, data: bytes, override=None) -> dict:
+    """GiB required before shipping and before unpacking; ot-run accepts integer GiB.
+
+    Keep the ordinary 20 GiB work/output reserve. Add the actual compressed
+    snapshot and an upper estimate of its unpacked 4 KiB allocation before
+    choosing a host. A further GiB covers metadata and integer df rounding.
+    This is an admission check, not a disk reservation against other jobs.
+    """
+    import io
+    import tarfile
+    value = override if override is not None else spec.get("gate_disk_gb", 20)
+    if (isinstance(value, bool) or not isinstance(value, (int, float))
+            or not math.isfinite(value) or value <= 0):
+        raise RT.SpecError("gate_disk_gb / --disk must be a positive finite number of GiB")
+    reserve = math.ceil(value)
+    with tarfile.open(fileobj=io.BytesIO(data), mode="r:gz") as tf:
+        unpacked = sum(((m.size + 4095) // 4096) * 4096 + 4096 for m in tf)
+    gib = 1024 ** 3
+    return {"reserve_gb": reserve, "archive_bytes": len(data), "unpacked_bytes": unpacked,
+            "pick_gb": reserve + math.ceil((len(data) + unpacked) / gib) + 1,
+            "runtime_gb": reserve + math.ceil(unpacked / gib) + 1}
+
+
+def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bool, disk=None):
     fp = json.loads((kd / "floorplan.json").read_text())
     absent = absent_working_inputs(set(fp["referenced"]))
     if absent:
         g.add("FAIL", "sources", f"{len(absent)} committed input(s) absent from the working-tree archive: {absent[:8]}",
               "materialize the referenced files in the sparse checkout before rerunning the gate")
         return
-    if host == "auto":
-        picked = subprocess.run(["ot-run", "--mem", str(mem), "--pick"], capture_output=True, text=True)
-        if picked.returncode or not picked.stdout.strip():
-            g.add("FAIL", "remote", "fleet admission could not choose a host: " + picked.stderr[-500:], "read ot-run --status")
-            return
-        host = picked.stdout.strip()
-        g.add("INFO", "remote", f"ot-run selected {host} for {mem} GB; inputs ship there before admission")
-        auto = True
-    else:
-        auto = False
     ref = set(fp["referenced"])
     # Ship the same transitive Tcl/shell dependencies checked by the local gate.
     # A custom PRE_GLOBAL_PLACE hook may source helpers outside its own folder.
@@ -730,7 +811,23 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     daemon_commit = SB.git_head(DAEMON_TREE)
     route_plan, overlay_payloads = HO.capture_plan(DAEMON_TREE, ROOT)
     data = ship_tar(dirs, overlay_payloads, {f["path"]: f["mode"] for f in route_plan["files"]})
+    budget = gate_disk_budget(spec, data, disk)
+    auto = host == "auto"
+    # Probe the actual scratch filesystem, not / (the two can be different).
+    # This parent already exists before the per-run directory is uploaded.
+    pick_cmd = ["ot-run", "--mem", str(mem), "--disk", str(budget["pick_gb"]),
+                "--dir", "/srv/opentallas-scratch", "--pick"]
+    if not auto:
+        pick_cmd += ["--hosts", host]
+    picked = subprocess.run(pick_cmd, capture_output=True, text=True)
+    if picked.returncode or not picked.stdout.strip():
+        g.add("FAIL", "remote", "fleet admission could not choose a host: " + picked.stderr[-500:], "read ot-run --status")
+        return
+    host = picked.stdout.strip()
+    g.add("INFO", "remote", f"ot-run selected {host} for {mem} GB memory; disk pick {budget['pick_gb']} GiB, "
+          f"runtime {budget['runtime_gb']} GiB includes {budget['reserve_gb']} GiB work reserve plus snapshot staging")
     binding = SB.snapshot(data, ROOT, start_commit, DAEMON_TREE, daemon_commit, SHIP_HELPERS)
+    binding["disk_admission"] = budget
     binding["route_overlay_plan"] = route_plan
     binding["consumed"] = gate_consumed(data, kd, spec, ref, binding["files"])
     binding["captured"] = time.strftime("%Y-%m-%dT%H:%M:%S%z")
@@ -740,6 +837,8 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
                           RC=",".join(GATE_REFUSE), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
                           CLK=spec["clock_port"], ARCHIVE_SHA256=binding["archive_sha256"])   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
     sh = gate_route_clock_hooks(sh, spec)
+    sh = gate_route_hold_context(sh, spec, str(kd.relative_to(ROOT)))
+    binding["route_hold_context"] = RT.route_hold_context(spec, str(kd.relative_to(ROOT)))
     import hashlib
     binding["remote_script_sha256"] = hashlib.sha256(sh.encode()).hexdigest()
     binding["tool_image_requested"] = "openroad/orfs:latest"
@@ -759,14 +858,11 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     if up.returncode:
         g.add("FAIL", "remote", f"cannot ship to {host}: {up.stderr[-200:]!r}", "pick another host")
         return
-    if auto:
-        # Exactly one ot-heavy reservation, inside ot-run; never nest guards.
-        p = subprocess.run(["ot-run", "--mem", str(mem), "--hosts", host,
-                            "--dir", str(Path(R).parent), "--", "bash", script],
-                           stdin=subprocess.DEVNULL, capture_output=True)
-    else:
-        cmd = f"ot-heavy --mem {mem} -- bash {script}"
-        p = subprocess.run(["ssh", host, cmd], stdin=subprocess.DEVNULL, capture_output=True)
+    # Exactly one ot-heavy reservation, inside ot-run; never nest guards.
+    # Recheck after upload, reserving enough for extraction as well as outputs.
+    p = subprocess.run(["ot-run", "--mem", str(mem), "--disk", str(budget["runtime_gb"]), "--hosts", host,
+                        "--dir", str(Path(R).parent), "--", "bash", script],
+                       stdin=subprocess.DEVNULL, capture_output=True)
     out = p.stdout.decode(errors="replace")
     logp = Path(os.environ.get("TMPDIR", "/tmp")) / f"ref_gate_{spec['name']}_{ts}.log"   # never into the kit (dirty tree)
     logp.write_text(out + "\n--- stderr\n" + p.stderr.decode(errors="replace")[-4000:])
@@ -1008,6 +1104,10 @@ def check_clock_evidence(g: Gate, kd: Path, known_sinks: int | None = None, clos
     ev = rec["clock"] if rec else None
     if rec and note and "reported, not refused" in note[0]:
         g.add("INFO", "source_binding", note[0][:1500])
+    if rec and not closed_stands and not rec["source_binding"].get("route_hold_context"):
+        g.add("WARN", "route_hold_context",
+              "historical CTS gate does not attest production hold margin/MM context; diagnostic clock evidence only",
+              "re-gate with the route hold context before claiming production placement/CTS readiness; routed signoff remains required")
     if rec and not closed_stands:
         frozen = rec["source_binding"].get("route_overlay_plan")
         if frozen is None:
@@ -1061,6 +1161,7 @@ def main(argv=None) -> int:
     ap.add_argument("--cts", action="store_true", help="with --remote: continue through CTS, report insertion + paths")
     ap.add_argument("--synth-cap", type=int, default=2700, help="synthesis time cap, s (default 2700; <=0 means unlimited)")
     ap.add_argument("--mem", type=int, default=24, help="ot-heavy GB (< 32 = small slot, no big-slot wait)")
+    ap.add_argument("--disk", type=float, help="work/output disk reserve in GiB (spec gate_disk_gb, default 20); snapshot staging is added")
     ap.add_argument("--json")
     a = ap.parse_args(argv)
     g = Gate()
@@ -1081,7 +1182,7 @@ def main(argv=None) -> int:
                 job = json.loads((kd / "job.json").read_text())
             spec = check_kit(g, kd, job, a.commit)
             if a.remote and g.verdict != "FAIL":
-                remote(g, kd, spec, a.remote, a.synth_cap, a.mem, a.cts)
+                remote(g, kd, spec, a.remote, a.synth_cap, a.mem, a.cts, a.disk)
             elif a.remote:
                 g.add("INFO", "remote", "skipped: local FAIL first")
         elif job is not None:

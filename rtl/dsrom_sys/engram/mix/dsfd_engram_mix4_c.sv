@@ -23,10 +23,18 @@
 // the published VM latency + 2 and check it exactly (lost/late reply = fault).
 // The command/completion pins use the shared ot_s81_slab_ep endpoint (as every S81
 // slab master); its inherited adapter is owned by the static control stream.
+// H LAYOUT (HLAYOUT=1, default, production): H/output rows are the HC hidden-row layout shared with the
+// package landing producer and every HC consumer (hc_gate h_rows): row q holds elements 8q..8q+7, copy k
+// of element e at bit 16*((e%8)*4+k). Beat b of every copy covers elements 32b..32b+31 = HC rows 4b..4b+3:
+// cluster q reads HC row 4b+q on its lane 0 (still 4 distinct H reads per beat, no extra read), and the
+// four lane-0 returns are re-sliced by a fixed wire permutation so cluster q receives its copy's 32
+// elements; on writes the four lockstep clusters' rows are interleaved by the inverse fixed permutation
+// and write lane j writes HC row out+4b+j. Wires only: no stage, no cycle, no request/write added.
+// HLAYOUT=0 keeps the copy-major component layout (row = 32 elements of one copy; receipts of 10-14).
 // MUT (negative controls): 1 key->1.0 data mutant inside every multiplier leaf;
 // 2 cluster 3 reads copy 2's H rows (address/lane map); 3 the V broadcast tree
 // hands clusters 1..3 the previous beat's V row pair (stale broadcast stage).
-module dsfd_engram_mix4_c #(parameter integer MUT=0, VM_LAT=1, WRITE_COMMIT_LAT=1, BC=2)(
+module dsfd_engram_mix4_c #(parameter integer MUT=0, VM_LAT=1, WRITE_COMMIT_LAT=1, BC=2, HLAYOUT=1)(
  input wire [132:0] ck,              // ck[0] top; ck[1+33q +: 33] cluster q roots
  input wire [0:0] rst,input wire [84:0] c_cmd,
  output wire [8:0] c_done,output wire [1:0] c_st,input wire [0:0] f_inp,
@@ -46,6 +54,16 @@ module dsfd_engram_mix4_c #(parameter integer MUT=0, VM_LAT=1, WRITE_COMMIT_LAT=
  // ---- cluster interfaces
  wire [19:0] c_rqv;wire [279:0] c_rqrow;wire [3:0] c_vtag;   // vtag: this cycle's lanes 1,2 request is V
  wire [3:0] c_done_q,c_fault_q;
+ wire [3:0] c_wq_v;wire [2047:0] c_wq_d;                     // cluster write lanes (copy-major data)
+ assign wq_v=c_wq_v;
+ genvar wj,we,wk;
+ generate if(HLAYOUT!=0)begin:g_hwr
+  for(wj=0;wj<4;wj=wj+1)for(we=0;we<8;we=we+1)for(wk=0;wk<4;wk=wk+1)begin:p
+   assign wq_d[512*wj+16*(4*we+wk)+:16]=c_wq_d[512*wk+16*(8*wj+we)+:16];
+  end
+ end else begin:g_cwr
+  assign wq_d=c_wq_d;
+ end endgenerate
  reg [19:0] l_rsv;reg [10239:0] l_rsd;                        // returns delivered to the clusters
  reg [BC:0] st_line;reg [223:0] desc_line[0:BC];
 
@@ -54,7 +72,7 @@ module dsfd_engram_mix4_c #(parameter integer MUT=0, VM_LAT=1, WRITE_COMMIT_LAT=
  reg desc_rq;reg [1023:0] v_prev;
  // registered request stage: lane 0 of cluster 0 doubles as descriptor reader,
  // lanes 1,2 of clusters 1..3 are suppressed for V (cluster 0 reads V once).
- integer q,l;
+ integer q,l,hm;
  always @(posedge ck[0] or negedge rn)if(!rn)begin rq_v<=0;rq_row<=0;end else begin
   rq_v<=c_rqv;rq_row<=c_rqrow;
   for(q=1;q<4;q=q+1)if(c_vtag[q])begin rq_v[5*q+1]<=0;rq_v[5*q+2]<=0;end
@@ -78,6 +96,8 @@ module dsfd_engram_mix4_c #(parameter integer MUT=0, VM_LAT=1, WRITE_COMMIT_LAT=
    l_rsv[5*q+1]=rvq[1];l_rsv[5*q+2]=rvq[2];
    l_rsd[2560*q+512+:1024]=(MUT==3&&q!=0)?v_prev:rdq[512+:1024];
   end
+  if(HLAYOUT!=0)for(q=0;q<4;q=q+1)for(hm=0;hm<32;hm=hm+1)
+   l_rsd[2560*q+16*hm+:16]=rdq[2560*(hm/8)+16*(4*(hm%8)+q)+:16];
  end
 
  always @(posedge ck[0] or negedge rn)if(!rn)begin
@@ -88,6 +108,8 @@ module dsfd_engram_mix4_c #(parameter integer MUT=0, VM_LAT=1, WRITE_COMMIT_LAT=
   if(dtag[TL]&&!rvq[0])fault<=1;                      // lost descriptor reply
   if(desc_rq&&c_rqv[0])fault<=1;                          // lane 0 reservation clash
   if(c_vtag!=4'b0000&&c_vtag!=4'b1111)fault<=1;           // clusters out of lockstep
+  if(HLAYOUT!=0&&!dtag[TL]&&{rvq[15],rvq[10],rvq[5],rvq[0]}!=4'b0000&&{rvq[15],rvq[10],rvq[5],rvq[0]}!=4'b1111)fault<=1; // H rows re-sliced across clusters
+  if(HLAYOUT!=0&&c_wq_v!=4'b0000&&c_wq_v!=4'b1111)fault<=1;                       // interleaved H writes need all four
   case(tstate)
   T_IDLE:if(jv&&!fault)begin
    if(!inp_q||jd[30:21]!=0)fault<=1;else begin desc_rq<=1;tstate<=T_DESC;end
@@ -119,32 +141,60 @@ module dsfd_engram_mix4_c #(parameter integer MUT=0, VM_LAT=1, WRITE_COMMIT_LAT=
   always @(posedge ck[0])desc_line[s]<=desc_line[s-1];
  end
  for(c=0;c<4;c=c+1)begin:cl
-  ot_s81_engram_mixq #(.CL(c),.MUT(MUT),.VM_LAT(VM_LAT+2),.WRITE_COMMIT_LAT(WRITE_COMMIT_LAT)) u(
+  ot_s81_engram_mixq #(.CL(c),.MUT(MUT),.VM_LAT(VM_LAT+2),.WRITE_COMMIT_LAT(WRITE_COMMIT_LAT),.HLAYOUT(HLAYOUT)) u(
    .ck(ck[1+33*c+:33]),.rst(rst[0]),.start(st_line[BC]),.desc(desc_line[BC]),
    .rq_v(c_rqv[5*c+:5]),.rq_row(c_rqrow[70*c+:70]),.vtag(c_vtag[c]),
    .rs_v(l_rsv[5*c+:5]),.rs_d(l_rsd[2560*c+:2560]),
-   .wq_v(wq_v[c]),.wq_row(wq_row[14*c+:14]),.wq_mask(wq_mask[16*c+:16]),.wq_d(wq_d[512*c+:512]),
+   .wq_v(c_wq_v[c]),.wq_row(wq_row[14*c+:14]),.wq_mask(wq_mask[16*c+:16]),.wq_d(c_wq_d[512*c+:512]),
    .done(c_done_q[c]),.fault(c_fault_q[c]));
  end endgenerate
 endmodule
 
 // One copy cluster: static row sequencer + the unchanged exact arithmetic leaf.
 // Copy index CL is fixed by placement; lanes: 0 H, 1-2 K (REDUCE) / V (ADD, vtag), 3-4 W.
-module ot_s81_engram_mixq #(parameter integer CL=0, MUT=0, VM_LAT=3, WRITE_COMMIT_LAT=1)(
+module ot_s81_engram_mixq #(parameter integer CL=0, MUT=0, VM_LAT=3, WRITE_COMMIT_LAT=1, HLAYOUT=1)(
  input wire [32:0] ck,input wire rst,input wire start,input wire [223:0] desc,
+ output wire [4:0] rq_v,output wire [69:0] rq_row,output wire vtag,
+ input wire [4:0] rs_v,input wire [2559:0] rs_d,
+ output wire wq_v,output wire [13:0] wq_row,output wire [15:0] wq_mask,output wire [511:0] wq_d,
+ output wire done,output wire fault);
+ // Wires-only composition: shell owns ck[0] state; arithmetic keeps ck[1:32].
+ wire go,iv,phase,gv,ov,mf;wire [1:0] copy,gc,oc;
+ wire [1023:0] h,kv,w,result;wire [31:0] eps,scale,gate,hh,kk,dd;
+ ot_s81_engram_mixq_shell #(.CL(CL),.MUT(MUT),.VM_LAT(VM_LAT),.WRITE_COMMIT_LAT(WRITE_COMMIT_LAT),.HLAYOUT(HLAYOUT)) shell(
+  .ck(ck[0]),.rst(rst),.start(start),.desc(desc),
+  .rq_v(rq_v),.rq_row(rq_row),.vtag(vtag),.rs_v(rs_v),.rs_d(rs_d),
+  .wq_v(wq_v),.wq_row(wq_row),.wq_mask(wq_mask),.wq_d(wq_d),.done(done),.fault(fault),
+  .go(go),.iv(iv),.phase(phase),.copy(copy),.h(h),.kv(kv),.w(w),.eps(eps),.scale(scale),
+  .gv(gv),.gc(gc),.ov(ov),.oc(oc),.result(result),.mf(mf));
+ ot_s81_engram_mix #(.MUT(MUT==1?1:0)) mix(ck[1],rst,go,phase,iv,copy,h,kv,w,kv,eps,scale,
+  gv,gc,gate,hh,kk,dd,ov,oc,result,mf,ck[32:2]);
+endmodule
+
+// Actual FSM/data-register boundary. No pipeline stage is added or removed.
+// Arithmetic-facing outputs are the original registers/wires, and returns land
+// at the original shell consumers. The arithmetic source and clock ABI stand.
+module ot_s81_engram_mixq_shell #(parameter integer CL=0, MUT=0, VM_LAT=3, WRITE_COMMIT_LAT=1, HLAYOUT=1)(
+ input wire [0:0] ck,input wire rst,input wire start,input wire [223:0] desc,
  output reg [4:0] rq_v,output reg [69:0] rq_row,output reg vtag,
  input wire [4:0] rs_v,input wire [2559:0] rs_d,
  output reg wq_v,output reg [13:0] wq_row,output reg [15:0] wq_mask,output reg [511:0] wq_d,
- output reg done,output reg fault);
+ output reg done,output reg fault,
+ output reg go,iv,phase,output wire [1:0] copy,
+ output reg [1023:0] h,kv,w,output wire [31:0] eps,scale,
+ input wire gv,ov,mf,input wire [1:0] gc,oc,input wire [1023:0] result);
  reg [1:0] reset_sync;
  always @(posedge ck[0] or negedge rst)if(!rst)reset_sync<=0;else reset_sync<={reset_sync[0],1'b1};
  wire rn=reset_sync[1];
  localparam [1:0] COPY=CL;
- reg go,iv,phase;reg [1023:0] h,kv,w;wire gv,ov,mf;wire [1:0] gc,oc;wire [1023:0] result;wire [31:0] gate,hh,kk,dd;
+ assign copy=COPY;
  reg [223:0] dsc;
- wire [31:0] eps=dsc[160+:32],scale=dsc[192+:32];
+ assign eps=dsc[160+:32];assign scale=dsc[192+:32];
  wire [13:0] hb=dsc[0+:14],kb=dsc[32+:14],wb=dsc[64+:14],vb=dsc[96+:14],ob=dsc[128+:14];
- wire [13:0] hrow_base=(MUT==2&&CL==3)?hb+14'd320:hb+14'd160*CL;
+ // HLAYOUT=1: beat b of this copy = HC rows 4b..4b+3; this cluster fetches row 4b+CL for all four
+ // (MUT2: cluster 3 fetches row 4b+2, the address/lane-map negative control).
+ wire [13:0] hrow_base=(HLAYOUT!=0)?hb+((MUT==2&&CL==3)?14'd2:14'(CL)):(MUT==2&&CL==3)?hb+14'd320:hb+14'd160*CL;
+ wire [13:0] hstep=(HLAYOUT!=0)?14'd4:14'd1;
  reg [4:0] expected[0:VM_LAT];integer k;
  always @(posedge ck[0] or negedge rn)if(!rn)begin
   for(k=0;k<=VM_LAT;k=k+1)expected[k]<=0;
@@ -167,7 +217,7 @@ module ot_s81_engram_mixq #(parameter integer CL=0, MUT=0, VM_LAT=3, WRITE_COMMI
   BEGIN:begin go<=1;phase<=0;req<=0;received<=0;written<=0;state<=REDUCE;end
   REDUCE:begin
    if(req<160)begin
-    rq_v<=5'b11111;rq_row[0+:14]<=hrow_base+req;
+    rq_v<=5'b11111;rq_row[0+:14]<=hrow_base+hstep*req;
     for(lane=0;lane<2;lane=lane+1)begin
      rq_row[14*(lane+1)+:14]<=kb+14'd320*CL+2*req+lane;
      rq_row[14*(lane+3)+:14]<=wb+14'd320*CL+2*req+lane;
@@ -182,7 +232,7 @@ module ot_s81_engram_mixq #(parameter integer CL=0, MUT=0, VM_LAT=3, WRITE_COMMI
   GATE:if(gv)begin if(gc!=COPY)fault<=1;phase<=1;req<=0;received<=0;state<=ADD;end
   ADD:begin
    if(req<160)begin
-    rq_v<=5'b00111;vtag<=1'b1;rq_row[0+:14]<=hrow_base+req;
+    rq_v<=5'b00111;vtag<=1'b1;rq_row[0+:14]<=hrow_base+hstep*req;
     for(lane=0;lane<2;lane=lane+1)rq_row[14*(lane+1)+:14]<=vb+2*req+lane;
     req<=req+1;
    end
@@ -203,11 +253,9 @@ module ot_s81_engram_mixq #(parameter integer CL=0, MUT=0, VM_LAT=3, WRITE_COMMI
    if((state!=ADD&&state!=DRAIN)||oc!=COPY||written>=160)fault<=1;
    wq_v<=1'b1;wq_mask<=16'hffff;
    for(lane=0;lane<32;lane=lane+1)wq_d[16*lane+:16]<=result[32*lane+16+:16];
-   wq_row<=ob+14'd160*CL+written;
+   wq_row<=(HLAYOUT!=0)?ob+14'd4*written+14'(CL):ob+14'd160*CL+written;
    written<=written+1;
    if(written==159)begin state<=FINISH;commit_left<=WRITE_COMMIT_LAT;end
   end
  end
- ot_s81_engram_mix #(.MUT(MUT==1?1:0)) mix(ck[1],rst,go,phase,iv,COPY,h,kv,w,kv,eps,scale,
-  gv,gc,gate,hh,kk,dd,ov,oc,result,mf,ck[32:2]);
 endmodule

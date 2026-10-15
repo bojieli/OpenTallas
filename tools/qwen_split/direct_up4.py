@@ -136,10 +136,12 @@ def apply(v, m):
 def partition_master(q, join_map, rects):
     """Split the real face pins into synthetic wire fragments without moving them."""
     points={}
+    original={}
     for name,layer,r in rects:
         base,_,bit=name.partition('[')
         k=int(bit[:-1]) if bit else 0
         points[(base,k)]=(layer,((r[0]+r[2])/2,(r[1]+r[3])/2))
+        original[(base,k)]=(layer,tuple(r))
     remove={p for real,_ in join_map.values() for p in [real]}
     keep={p:s for p,s in q.ports.items() if p not in remove}
     q.ports=keep;q.order=[p for p in q.order if p in keep]
@@ -148,6 +150,12 @@ def partition_master(q, join_map, rects):
         if len({L for L,_ in data})!=1:
             raise ValueError(f'{q.name}.{alias}: fragment spans incompatible pin layers')
         q.ports[alias]=('xy',len(data),data[0][0],[xy for _,xy in data],1)
+        # XY remains the net/reach endpoint, but is insufficient to reconstruct
+        # a face rectangle. Shortening it around its centre leaves the pin
+        # inset under the parent's OBS (C21s DRT-0073 on joined face ports).
+        if not hasattr(q,'assigned_fragment_rects'):
+            q.assigned_fragment_rects={}
+        q.assigned_fragment_rects[alias]=[original[(real,k)] for k in indexes]
         q.order.append(alias)
 
 

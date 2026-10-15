@@ -268,10 +268,16 @@ module ot_vms_bank #(
         end
     always @(posedge clk) begin : s1d
         reg [11:0] dd;
+        // entries at or above a lane's own depth are never written (constant-false enable): a shallow lane (WRS 0: the SW
+        // slice's in-parent COLL group) carries only its own 4 entries, not the array's LQ.  Defaults: every lane LQ deep.
         for (integer g = 0; g < WG; g = g + 1)
-            if (wq_r[g*281 + 280]) begin dd = dsec(wq_r[g*281 + 264 +: 16], bid_r, sid_r); wqm[g][wqt[g]] <= {dd, wq_r[g*281 +: 264]}; end
+            if (wq_r[g*281 + 280]) begin
+                dd = dsec(wq_r[g*281 + 264 +: 16], bid_r, sid_r);
+                for (integer e = 0; e < LQ; e = e + 1) if (e < wlq(g) && wqt[g] == LQB'(e)) wqm[g][e] <= {dd, wq_r[g*281 +: 264]};
+            end
         for (integer g = 0; g < RG; g = g + 1)
-            if (rq_r[g*17 + 16]) rqm[g][rqt[g]] <= dsec(rq_r[g*17 +: 16], bid_r, sid_r);
+            if (rq_r[g*17 + 16])
+                for (integer e = 0; e < LQ; e = e + 1) if (e < rlq(g) && rqt[g] == LQB'(e)) rqm[g][e] <= dsec(rq_r[g*17 +: 16], bid_r, sid_r);
         if (kq_r[280]) kqm[kqt] <= {dsec(kq_r[264 +: 16], bid_r, sid_r), kq_r[263:0]};
         if (xq_r[275]) xqm[xqt] <= {1'b0, xq_r[274:0]};
         if (x2_r[275]) x2m[x2t] <= {1'b0, x2_r[274:0]};

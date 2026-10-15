@@ -13,7 +13,7 @@ module qfd_slab_result_half #(
     output wire [2212:0] rq,
     output wire [51:0] am
 );
-    wire [1023:0] sq;
+    wire [4095:0] colq_all;
     genvar g,c;
     generate for(g=0;g<4;g=g+1) begin:g_group
         localparam integer REQ = 4*HALF+g;
@@ -28,10 +28,7 @@ module qfd_slab_result_half #(
                 .addr1(tc[149+24*REQ +: 24]), .cid(4'(c)),
                 .m5(colq[256*c +: 256]));
         end
-        (* keep *) reg [255:0] merged;
-        always @(posedge ck_group[g])
-            merged <= colq[255:0] | colq[511:256] | colq[767:512] | colq[1023:768];
-        assign sq[256*g +: 256] = merged;
+        assign colq_all[1024*g +: 1024] = colq;
     end endgenerate
     wire [3:0] we;
     wire [95:0] addr;
@@ -40,12 +37,11 @@ module qfd_slab_result_half #(
     wire ov,fault;
     wire [203:0] heads;
     wire [3:0] gov,gfault;
+    // q15: port q (scale merge of group q + spport) is the hardened leaf qfd_slab_port_leaf on clock entry ck_group[q].
     generate for(genvar q=0;q<4;q=q+1) begin:g_port
-        wire [3:0] mul_clks=ck_mul[4*q +:4];
-        ot_qwen_me_spport_w12 #(.W(16),.IL(8),.AW(24),.NW(18),.GT(3072),
-            .SMIN(7),.PQ(1),.TREE_LAT(7),.SCALE_LAT(8),.BANDF(1),.TCUT(7),.HARD_MUL(1)) u_port (
-            .clk(ck_group[q]),.ck_mul({12'd0,mul_clks}),.rst_n(rst_n),.pt_id(16'(8*BAND+4*HALF+q)),
-            .lv_in(ty[512*q +:512]),.a_v_e2(tc[26]),.a_f_e2(tc[139:27]),.scale_q(sq[256*q +:256]),
+        qfd_slab_port_leaf u_leaf (
+            .ck(ck_group[q]),.ck_mul0(ck_mul[4*q]),.ck_mul1(ck_mul[4*q+1]),.ck_mul2(ck_mul[4*q+2]),.ck_mul3(ck_mul[4*q+3]),.rst_n(rst_n),.pt_id(5'(8*BAND+4*HALF+q)),
+            .colq(colq_all[1024*q +: 1024]),.lv_in(ty[512*q +:512]),.a_v_e2(tc[26]),.a_f_e2(tc[139:27]),
             .o_we(we[q]),.o_addr(addr[24*q +:24]),.o_mask(mask[16*q +:16]),
             .o_data(data[512*q +:512]),.o_ov(gov[q]),.am(heads[51*q +:51]),.fault(gfault[q]));
     end endgenerate

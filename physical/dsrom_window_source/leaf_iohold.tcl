@@ -14,7 +14,8 @@ if {[info exists ::env(OT_IOHOLD_IN)] && $::env(OT_IOHOLD_IN)} {
   source /src/physical/dsrom_window_source/leaf_inhold.tcl
 }
 set ot_oh_blk [ord::get_db_block]
-set ot_oh_hb [[ord::get_db] findMaster [expr {[info exists ::env(OT_INHOLD_MASTER)] ? $::env(OT_INHOLD_MASTER) : "HB4xp67_ASAP7_75t_R"}]]
+# OT_OUTHOLD_MASTER (ref_tile hold_pad.out_cell): a separate output pad; default the input pad (unchanged kits)
+set ot_oh_hb [[ord::get_db] findMaster [expr {([info exists ::env(OT_OUTHOLD_MASTER)] && $::env(OT_OUTHOLD_MASTER) ne "") ? $::env(OT_OUTHOLD_MASTER) : ([info exists ::env(OT_INHOLD_MASTER)] ? $::env(OT_INHOLD_MASTER) : "HB4xp67_ASAP7_75t_R")}]]
 set ot_oh_bf [[ord::get_db] findMaster [expr {([info exists ::env(OT_INHOLD_DRV)] && $::env(OT_INHOLD_DRV) ne "") ? $::env(OT_INHOLD_DRV) : "BUFx4f_ASAP7_75t_R"}]]
 if {$ot_oh_hb eq "NULL" || $ot_oh_bf eq "NULL"} { error "OUTHOLD: master missing" }
 # per-port strong pad (el1014-root-recipe2; see leaf_inhold.tcl): OT_HOLD_PAD_STRONG_RE ports take
@@ -67,7 +68,9 @@ foreach bt [$ot_oh_blk getBTerms] {
       set cur $n2
     }
     if {$hold} { lappend ot_oh_dt [[$i findITerm A] getNet] }
-    $i setOrient R0; $i setLocation $x $y; $i setPlacementStatus FIRM
+    $i setOrient R0
+    if {[[$i getMaster] isBlock]} {error {standard cell placement refuses BLOCK}}
+    $i setLocation $x $y; $i setPlacementStatus FIRM
     lappend ot_oh_firm $nm
     incr k
   }

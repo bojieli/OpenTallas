@@ -177,29 +177,31 @@ module qkd_land_strip_s (
     input  wire          cf31,
     output wire [287:0]  es31,
     input  wire [260:0]  er31,
-    input  wire [15:0]   rq0,
+    input  wire [16:0]   rq0,
     output wire [1024:0] rs0,
-    input  wire [15:0]   rq1,
+    input  wire [16:0]   rq1,
     output wire [1024:0] rs1,
-    input  wire [15:0]   rq2,
+    input  wire [16:0]   rq2,
     output wire [1024:0] rs2,
-    input  wire [15:0]   rq3,
+    input  wire [16:0]   rq3,
     output wire [1024:0] rs3,
-    input  wire [15:0]   rq4,
+    input  wire [16:0]   rq4,
     output wire [1024:0] rs4,
-    input  wire [15:0]   rq5,
+    input  wire [16:0]   rq5,
     output wire [1024:0] rs5,
-    input  wire [15:0]   rq6,
+    input  wire [16:0]   rq6,
     output wire [1024:0] rs6,
-    input  wire [15:0]   rq7,
+    input  wire [16:0]   rq7,
     output wire [1024:0] rs7,
     input  wire [20:0]   lt,
     input  wire [1046:0] kvi,
     output wire          kvi_cr,
     output wire [1046:0] kvo,
     input  wire          kvo_cr,
-    input  wire [529:0]  emf,
-    output wire [529:0]  emr,
+    input  wire [287:0]  emf,
+    output wire          emf_cr,
+    output wire [519:0]  emr,
+    input  wire          emr_cr,
     output wire          mf,
     input  wire          wf,
     input  wire          kf
@@ -275,15 +277,15 @@ module qkd_land_strip_s (
     qkd_land_pc u_pc29 (.ck(ck_p[29]), .rst_n(rst_n), .lpc(5'd15), .li(li29), .lp(lp29), .cf(cf29), .gw(gw[29]), .gc(gc[29]), .es(es29), .er(er29), .dni(dn[30]), .dno(dn[29]), .upi(up[29]), .upo(up[30]), .cri(cr[29]), .cro(cr[30]), .fi(pf[29]), .fo(pf[30]));
     qkd_land_pc u_pc30 (.ck(ck_p[30]), .rst_n(rst_n), .lpc(5'd23), .li(li30), .lp(lp30), .cf(cf30), .gw(gw[30]), .gc(gc[30]), .es(es30), .er(er30), .dni(dn[31]), .dno(dn[30]), .upi(up[30]), .upo(up[31]), .cri(cr[30]), .cro(cr[31]), .fi(pf[30]), .fo(pf[31]));
     qkd_land_pc u_pc31 (.ck(ck_p[31]), .rst_n(rst_n), .lpc(5'd31), .li(li31), .lp(lp31), .cf(cf31), .gw(gw[31]), .gc(gc[31]), .es(es31), .er(er31), .dni(dn[32]), .dno(dn[31]), .upi(up[31]), .upo(up[32]), .cri(cr[31]), .cro(cr[32]), .fi(pf[31]), .fo(pf[32]));
-    qkd_land_grp u_g0 (.ck(ck_g[0]), .rst_n(rst_n), .g(3'd4), .s(st), .gw0(gw[0]), .gc0(gc[0]), .gw1(gw[1]), .gc1(gc[1]), .gw2(gw[2]), .gc2(gc[2]), .gw3(gw[3]), .gc3(gc[3]), .rq(rq4), .rs(rs4), .lt(tap[0][1067:1047]), .kn(tap[0][1046:0]), .fi(gf[0]), .fo(gf[1]));
-    qkd_land_grp u_g1 (.ck(ck_g[1]), .rst_n(rst_n), .g(3'd5), .s(st), .gw0(gw[4]), .gc0(gc[4]), .gw1(gw[5]), .gc1(gc[5]), .gw2(gw[6]), .gc2(gc[6]), .gw3(gw[7]), .gc3(gc[7]), .rq(rq5), .rs(rs5), .lt(tap[1][1067:1047]), .kn(tap[1][1046:0]), .fi(gf[1]), .fo(gf[2]));
-    qkd_land_grp u_g2 (.ck(ck_g[2]), .rst_n(rst_n), .g(3'd0), .s(st), .gw0(gw[8]), .gc0(gc[8]), .gw1(gw[9]), .gc1(gc[9]), .gw2(gw[10]), .gc2(gc[10]), .gw3(gw[11]), .gc3(gc[11]), .rq(rq0), .rs(rs0), .lt(tap[2][1067:1047]), .kn(tap[2][1046:0]), .fi(gf[2]), .fo(gf[3]));
-    qkd_land_grp u_g3 (.ck(ck_g[3]), .rst_n(rst_n), .g(3'd1), .s(st), .gw0(gw[12]), .gc0(gc[12]), .gw1(gw[13]), .gc1(gc[13]), .gw2(gw[14]), .gc2(gc[14]), .gw3(gw[15]), .gc3(gc[15]), .rq(rq1), .rs(rs1), .lt(tap[3][1067:1047]), .kn(tap[3][1046:0]), .fi(gf[3]), .fo(gf[4]));
-    qkd_land_grp u_g4 (.ck(ck_g[4]), .rst_n(rst_n), .g(3'd2), .s(st), .gw0(gw[16]), .gc0(gc[16]), .gw1(gw[17]), .gc1(gc[17]), .gw2(gw[18]), .gc2(gc[18]), .gw3(gw[19]), .gc3(gc[19]), .rq(rq2), .rs(rs2), .lt(tap[4][1067:1047]), .kn(tap[4][1046:0]), .fi(gf[4]), .fo(gf[5]));
-    qkd_land_grp u_g5 (.ck(ck_g[5]), .rst_n(rst_n), .g(3'd3), .s(st), .gw0(gw[20]), .gc0(gc[20]), .gw1(gw[21]), .gc1(gc[21]), .gw2(gw[22]), .gc2(gc[22]), .gw3(gw[23]), .gc3(gc[23]), .rq(rq3), .rs(rs3), .lt(tap[5][1067:1047]), .kn(tap[5][1046:0]), .fi(gf[5]), .fo(gf[6]));
-    qkd_land_grp u_g6 (.ck(ck_g[6]), .rst_n(rst_n), .g(3'd6), .s(st), .gw0(gw[24]), .gc0(gc[24]), .gw1(gw[25]), .gc1(gc[25]), .gw2(gw[26]), .gc2(gc[26]), .gw3(gw[27]), .gc3(gc[27]), .rq(rq6), .rs(rs6), .lt(tap[6][1067:1047]), .kn(tap[6][1046:0]), .fi(gf[6]), .fo(gf[7]));
-    qkd_land_grp u_g7 (.ck(ck_g[7]), .rst_n(rst_n), .g(3'd7), .s(st), .gw0(gw[28]), .gc0(gc[28]), .gw1(gw[29]), .gc1(gc[29]), .gw2(gw[30]), .gc2(gc[30]), .gw3(gw[31]), .gc3(gc[31]), .rq(rq7), .rs(rs7), .lt(tap[7][1067:1047]), .kn(tap[7][1046:0]), .fi(gf[7]), .fo(gf[8]));
-    qkd_land_emb u_emb (.ck(ck_e), .rst_n(rst_n), .st(st), .emf(emf), .emr(emr), .dno(dn[32]), .upi(up[32]), .cri(cr[32]), .fi(pf[32]), .gfi(gf[8]), .mf(mf));
+    qkd_land_grp_epoch u_g0 (.ck(ck_g[0]), .rst_n(rst_n), .g(3'd4), .s(st), .gw0(gw[0]), .gc0(gc[0]), .gw1(gw[1]), .gc1(gc[1]), .gw2(gw[2]), .gc2(gc[2]), .gw3(gw[3]), .gc3(gc[3]), .rq(rq4), .rs(rs4), .lt(tap[0][1067:1047]), .kn(tap[0][1046:0]), .fi(gf[0]), .fo(gf[1]));
+    qkd_land_grp_epoch u_g1 (.ck(ck_g[1]), .rst_n(rst_n), .g(3'd5), .s(st), .gw0(gw[4]), .gc0(gc[4]), .gw1(gw[5]), .gc1(gc[5]), .gw2(gw[6]), .gc2(gc[6]), .gw3(gw[7]), .gc3(gc[7]), .rq(rq5), .rs(rs5), .lt(tap[1][1067:1047]), .kn(tap[1][1046:0]), .fi(gf[1]), .fo(gf[2]));
+    qkd_land_grp_epoch u_g2 (.ck(ck_g[2]), .rst_n(rst_n), .g(3'd0), .s(st), .gw0(gw[8]), .gc0(gc[8]), .gw1(gw[9]), .gc1(gc[9]), .gw2(gw[10]), .gc2(gc[10]), .gw3(gw[11]), .gc3(gc[11]), .rq(rq0), .rs(rs0), .lt(tap[2][1067:1047]), .kn(tap[2][1046:0]), .fi(gf[2]), .fo(gf[3]));
+    qkd_land_grp_epoch u_g3 (.ck(ck_g[3]), .rst_n(rst_n), .g(3'd1), .s(st), .gw0(gw[12]), .gc0(gc[12]), .gw1(gw[13]), .gc1(gc[13]), .gw2(gw[14]), .gc2(gc[14]), .gw3(gw[15]), .gc3(gc[15]), .rq(rq1), .rs(rs1), .lt(tap[3][1067:1047]), .kn(tap[3][1046:0]), .fi(gf[3]), .fo(gf[4]));
+    qkd_land_grp_epoch u_g4 (.ck(ck_g[4]), .rst_n(rst_n), .g(3'd2), .s(st), .gw0(gw[16]), .gc0(gc[16]), .gw1(gw[17]), .gc1(gc[17]), .gw2(gw[18]), .gc2(gc[18]), .gw3(gw[19]), .gc3(gc[19]), .rq(rq2), .rs(rs2), .lt(tap[4][1067:1047]), .kn(tap[4][1046:0]), .fi(gf[4]), .fo(gf[5]));
+    qkd_land_grp_epoch u_g5 (.ck(ck_g[5]), .rst_n(rst_n), .g(3'd3), .s(st), .gw0(gw[20]), .gc0(gc[20]), .gw1(gw[21]), .gc1(gc[21]), .gw2(gw[22]), .gc2(gc[22]), .gw3(gw[23]), .gc3(gc[23]), .rq(rq3), .rs(rs3), .lt(tap[5][1067:1047]), .kn(tap[5][1046:0]), .fi(gf[5]), .fo(gf[6]));
+    qkd_land_grp_epoch u_g6 (.ck(ck_g[6]), .rst_n(rst_n), .g(3'd6), .s(st), .gw0(gw[24]), .gc0(gc[24]), .gw1(gw[25]), .gc1(gc[25]), .gw2(gw[26]), .gc2(gc[26]), .gw3(gw[27]), .gc3(gc[27]), .rq(rq6), .rs(rs6), .lt(tap[6][1067:1047]), .kn(tap[6][1046:0]), .fi(gf[6]), .fo(gf[7]));
+    qkd_land_grp_epoch u_g7 (.ck(ck_g[7]), .rst_n(rst_n), .g(3'd7), .s(st), .gw0(gw[28]), .gc0(gc[28]), .gw1(gw[29]), .gc1(gc[29]), .gw2(gw[30]), .gc2(gc[30]), .gw3(gw[31]), .gc3(gc[31]), .rq(rq7), .rs(rs7), .lt(tap[7][1067:1047]), .kn(tap[7][1046:0]), .fi(gf[7]), .fo(gf[8]));
+    qkd_land_emb_ifw u_emb (.ck(ck_e), .rst_n(rst_n), .st(st), .emf(emf), .emf_cr(emf_cr), .emr(emr), .emr_cr(emr_cr), .dno(dn[32]), .upi(up[32]), .cri(cr[32]), .fi(pf[32]), .gfi(gf[8]), .mf(mf));
 endmodule
 
 module qkd_astk_strip_s #(

@@ -170,6 +170,9 @@ foreach bt [$ot_blk getBTerms] {
   set fn [$ff getName]
   if {[dict exists $ot_seen $fn]} continue
   dict set ot_seen $fn 1
+  # el1013-smh-r14 2026-10-13: a pin flop the kit already fixed at its own station (FIRM before global placement: the SM
+  # tile cluster's strap stage 0 and reset pin flop, placed by its POST_TAPCELL stations) stays there (ODB-0359 otherwise)
+  if {[$ff isFixed]} { if {![info exists ot_kept]} { set ot_kept 0 }; incr ot_kept; continue }
   set bb [$bt getBBox]
   set px [expr {double([$bb xMin] + [$bb xMax]) / 2.0 / $ot_dbu}]
   set py [expr {double([$bb yMin] + [$bb yMax]) / 2.0 / $ot_dbu}]
@@ -233,6 +236,7 @@ foreach c $cand {
     B { set x $px; set y [expr {$cy0 + $sg + $col * $h}] }
     T { set x $px; set y [expr {$cy1 - $sg - ($col + 1) * $h}] }
   }
+  if {[[$ff getMaster] isBlock]} {error {standard cell placement refuses BLOCK}}
   $ff setLocation [expr {round($x * $ot_dbu)}] [expr {round($y * $ot_dbu)}]
   $ff setPlacementStatus FIRM
   lappend ot_list [$ff getName]
@@ -315,6 +319,7 @@ if {[llength $ot_extra]} {
     if {$best eq ""} { error "OT_IOFLOP: no legal capture site for $name ($port)" }
     lassign $best ri x y orient
     $ff setOrient $orient
+    if {[[$ff getMaster] isBlock]} {error {standard cell placement refuses BLOCK}}
     $ff setLocation $x $y
     $ff setPlacementStatus FIRM
     dict lappend ot_occupied $ri [list $x [expr {$x + $width}]]
@@ -375,6 +380,7 @@ if {[info exists ::env(OT_MPFLOP_PINS)] && $::env(OT_MPFLOP_PINS) ne ""} {
       } elseif {$dbo == $dm} { set x $px; set y [expr {$my0 - $mgap - $h}]
       } else { set x $px; set y [expr {$my1 + $mgap}] }
       set x [expr {max($cx0, min($x, $cx1 - $w))}]; set y [expr {max($cy0, min($y, $cy1 - $h))}]
+      if {[[$ff getMaster] isBlock]} {error {standard cell placement refuses BLOCK}}
       $ff setLocation [expr {round($x * $ot_dbu)}] [expr {round($y * $ot_dbu)}]
       $ff setPlacementStatus FIRM
       lappend ot_list $fn
@@ -385,8 +391,80 @@ if {[info exists ::env(OT_MPFLOP_PINS)] && $::env(OT_MPFLOP_PINS) ne ""} {
   puts "OT_MPFLOP fixed $ot_nm macro-input-pin flops beside their pins ($mskip pins not flop-driven)"
   if {$ot_nm == 0} { error "OT_MPFLOP: OT_MPFLOP_PINS=$::env(OT_MPFLOP_PINS) matched no flop-driven macro pin (netlist changed?)" }
 }
+# OT_MPCAP_PINS (S-ELEM-B 2026-10-15, optional; comma-separated hard-macro OUTPUT bus base names, e.g. "rd_out"): anchor the
+# flop that CAPTURES each such macro output bit (the output net's single data sink, followed through <= 2 single-output
+# cells such as the capture-enable mux), FIRM just outside the macro halo on the macro edge nearest the pin.  calendar7
+# c2: the ROM clk->q is 586-609 ps of 833, so the capture flop may spend only ~80 ps on wire + mux + setup; unanchored, the
+# placer pulled the 565 capture flops toward their output-port consumers (63 ps wire + 51 ps buffer from the ROM pin).
+# Released at PRE_DETAIL_PLACE with the port flops (same list file).  Placement only, 0 cycles.
+if {[info exists ::env(OT_MPCAP_PINS)] && $::env(OT_MPCAP_PINS) ne ""} {
+  set cpins [split $::env(OT_MPCAP_PINS) ","]
+  set cgap [expr {[info exists ::env(OT_MPCAP_GAP)] ? $::env(OT_MPCAP_GAP) : 2.7}]
+  set cskip 0; set ot_nc 0
+  foreach inst [$ot_blk getInsts] {
+    if {![[$inst getMaster] isBlock]} continue
+    set mb [$inst getBBox]
+    set mx0 [expr {double([$mb xMin]) / $ot_dbu}]; set mx1 [expr {double([$mb xMax]) / $ot_dbu}]
+    set my0 [expr {double([$mb yMin]) / $ot_dbu}]; set my1 [expr {double([$mb yMax]) / $ot_dbu}]
+    foreach it [$inst getITerms] {
+      if {![$it isOutputSignal]} continue
+      set base [regsub {\[[0-9]+\]$} [[$it getMTerm] getName] ""]
+      if {[lsearch -exact $cpins $base] < 0} continue
+      set net [$it getNet]; if {$net eq "NULL"} continue
+      set ff ""
+      for {set hop 0} {$hop < 3} {incr hop} {
+        set s [ot_of_sink $net]; if {$s eq ""} break
+        set si [$s getInst]
+        if {[ot_of_isff $si]} { if {[[$s getMTerm] getName] eq "D"} { set ff $si }; break }
+        set onet ""; set nout 0
+        foreach o [$si getITerms] { if {[$o isOutputSignal]} { incr nout; set onet [$o getNet] } }
+        if {$nout != 1 || $onet eq "" || $onet eq "NULL"} break
+        set net $onet
+      }
+      if {$ff eq ""} { incr cskip; continue }
+      set fn [$ff getName]
+      if {[dict exists $ot_seen $fn]} continue
+      dict set ot_seen $fn 1
+      if {[catch {set pb [$it getBBox]}] || $pb eq "" || $pb eq "NULL"} {
+        set px [expr {($mx0 + $mx1) / 2.0}]; set py [expr {($my0 + $my1) / 2.0}]
+      } else {
+        set px [expr {double([$pb xMin] + [$pb xMax]) / 2.0 / $ot_dbu}]; set py [expr {double([$pb yMin] + [$pb yMax]) / 2.0 / $ot_dbu}]
+      }
+      set w [expr {double([[$ff getMaster] getWidth]) / $ot_dbu}]
+      set h [expr {double([[$ff getMaster] getHeight]) / $ot_dbu}]
+      set dl [expr {$px - $mx0}]; set dr [expr {$mx1 - $px}]; set dbo [expr {$py - $my0}]; set dt [expr {$my1 - $py}]
+      set dm [expr {min($dl, $dr, $dbo, $dt)}]
+      if {$dl == $dm} { set x [expr {$mx0 - $cgap - $w}]; set y $py
+      } elseif {$dr == $dm} { set x [expr {$mx1 + $cgap}]; set y $py
+      } elseif {$dbo == $dm} { set x $px; set y [expr {$my0 - $cgap - $h}]
+      } else { set x $px; set y [expr {$my1 + $cgap}] }
+      set x [expr {max($cx0, min($x, $cx1 - $w))}]; set y [expr {max($cy0, min($y, $cy1 - $h))}]
+      $ff setLocation [expr {round($x * $ot_dbu)}] [expr {round($y * $ot_dbu)}]
+      $ff setPlacementStatus FIRM
+      lappend ot_list $fn
+      incr ot_nc
+    }
+  }
+  puts "OT_MPCAP fixed $ot_nc macro-output capture flops beside their pins ($cskip connected pins without a single capture flop)"
+  if {$ot_nc == 0} { error "OT_MPCAP: OT_MPCAP_PINS=$::env(OT_MPCAP_PINS) matched no captured macro output (netlist changed?)" }
+}
+# Resolve actual FIRM overlaps without changing the native boundary circuit.
+# The hold hooks record exactly the cells they own; unrelated FIRM cells and
+# hard macros are obstacles, not candidates for movement.
+set ot_pack_names $ot_list
+set ot_pack_record $::env(RESULTS_DIR)/ot_inhold_firm.txt
+if {[file exists $ot_pack_record]} {
+  set ot_pack_file [open $ot_pack_record r]
+  foreach ot_pack_name [split [read $ot_pack_file] \n] {
+    if {$ot_pack_name ne ""} {lappend ot_pack_names $ot_pack_name}
+  }
+  close $ot_pack_file
+}
+source /src/physical/common_flow/anchor_row_packing.tcl
+ot_anchor_pack::repair $ot_blk $ot_pack_names
 set fh [open $::env(RESULTS_DIR)/ot_out_flop_at_pins.txt w]
 foreach n $ot_list { puts $fh $n }
 close $fh
 puts "OT_IOFLOP fixed $ot_n output-port and $ot_ni input-port flops at their pins ($ot_skip ports not single-flop)"
+if {[info exists ot_kept]} { puts "OT_IOFLOP kept $ot_kept pin flops the kit had already fixed at their own stations" }
 if {$ot_n + $ot_ni == 0 && !$ot_allow_none && $ot_verified_hard_faces == 0} { error "OT_IOFLOP: no pin flop found (netlist changed?)" }

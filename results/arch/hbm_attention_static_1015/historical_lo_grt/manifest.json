@@ -1,0 +1,213 @@
+{
+ "schema": "opentallas.hbm.native_component_grt.v1",
+ "case": "hb_attn_SW_0_lo_cluster_i30",
+ "namespace": "hb_attn_SW_0_lo",
+ "source_commit": "5818fa3093833871f40d7f633fc113a5b48928eb",
+ "source_dirty": true,
+ "tool": {
+  "path": "tools/hbm_native_component_grt_1013.py",
+  "sha256": "6d5fabe518c46075671379ee9fd92de03e6a50f88dd0521d3ad7b5a8289074d0"
+ },
+ "candidate": {
+  "path": "results/arch/hbm_native_1013/die_v13/candidate.json",
+  "sha256": "b8f1dfec4e73b8bc9ee68b6b3976a8881e01c6b1739e388f3b9367ba77ca38f2",
+  "variant": "r25gqn_v13_native_track_legal"
+ },
+ "component": {
+  "path": "results/arch/hbm_native_1013/attention/lo.component.json",
+  "sha256": "e5b1da797e6aea809b0c1cb8c74ea46622679c440d0bf028c069215bb803c44a"
+ },
+ "window": {
+  "die_origin_um": [
+   12787.2,
+   0.0
+  ],
+  "size_um": [
+   1788.48,
+   1287.36
+  ],
+  "children_bbox_die_um": [
+   12811.392,
+   23.76,
+   14549.976,
+   1264.68
+  ],
+  "margin_um": 21.6,
+  "snap_um": 8.64
+ },
+ "counts": {
+  "instances": 89,
+  "masters": 7,
+  "bit_nets": 40877,
+  "bit_net_pins": 86610,
+  "buses": 109,
+  "bit_nets_also_on_boundary": 0,
+  "clock_reset_nets": 1,
+  "clock_reset_pins": 89,
+  "missing_lef_pins": 0,
+  "signal_pin_classes": {
+   "routed": 86610,
+   "clock_reset_excluded": 89,
+   "boundary_only_unconnected": 10241,
+   "power_ground": 178,
+   "constant_tied_excluded": 784
+  }
+ },
+ "missing_lef_pins": {
+  "count": 0,
+  "by_master_port": {},
+  "first": []
+ },
+ "clock_reset_nets": [
+  {
+   "net": "n1620",
+   "bit": 0,
+   "pins": 89,
+   "boundary": false
+  }
+ ],
+ "pin_name_convention": "LEF BUSBITCHARS \"[]\": bus bit = port[i]; scalar port = port (no index)",
+ "grt": {
+  "signal_layers": "M2-M7",
+  "profile": "cluster",
+  "layer_adjustment": {
+   "M2": 0.5,
+   "M3": 0.5,
+   "M4": 0.5,
+   "M5": 0.5,
+   "M6": 0.5,
+   "M7": 0.6
+  },
+  "congestion_iterations": 30,
+  "tech": "platform asap7_tech_1x_201209.lef + make_tracks.tcl (k = 1)",
+  "block_blockage": "each child's own LEF OBS (no region adjustment)",
+  "m8_m9": "not used for signals"
+ },
+ "lefs": {
+  "physical/ref_tile/hattn_lo_root/views/ot_attn_lo_root/ot_attn_lo_root.lef": {
+   "file": "ot_attn_lo_root.lef",
+   "sha256": "5fad5da1e02067b1c1198346e2b82e81f397479b9194e50ad42bd327a7e29bcf",
+   "macro": "ot_attn_lo_root",
+   "w_um": 285.12,
+   "h_um": 285.12,
+   "pins": 7585,
+   "obs_layers": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "RVTN",
+    "RVTP"
+   ]
+  },
+  "physical/hbm_attn_tile_r/bank_v12/sn544_rec/view/ot_attn_bank_sn544.lef": {
+   "file": "ot_attn_bank_sn544.lef",
+   "sha256": "087397e176b9655c7fd8a2824dc94b356e8d6f8212553b002d8b83aaef56b199",
+   "macro": "ot_attn_bank_sn544",
+   "w_um": 105.84,
+   "h_um": 11.88,
+   "pins": 1091,
+   "obs_layers": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6",
+    "RVTN",
+    "RVTP"
+   ]
+  },
+  "physical/hbm_attn_tile_r/quad_b_tc/04424cd9f_pka/view/ot_attn_tile_m6h1q.lef": {
+   "file": "ot_attn_tile_m6h1q.lef",
+   "sha256": "ac510d59eafc85b5b516f40e21227e532fbe63527e23d772e5ebc357cf6b89f4",
+   "macro": "ot_attn_tile_m6h1q",
+   "w_um": 514.89,
+   "h_um": 562.95,
+   "pins": 1766,
+   "obs_layers": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6",
+    "M7",
+    "RVTN",
+    "RVTP"
+   ]
+  },
+  "physical/hbm_attn_tile_r/bank/ot_attn_bank_ew136/ot_attn_bank_ew136.lef": {
+   "file": "ot_attn_bank_ew136.lef",
+   "sha256": "3794eafa63b9c50b9675108a3081d62f6643a79f13feb09d2d21227cb63054f7",
+   "macro": "ot_attn_bank_ew136",
+   "w_um": 11.88,
+   "h_um": 28.08,
+   "pins": 275,
+   "obs_layers": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6",
+    "RVTN",
+    "RVTP"
+   ]
+  },
+  "physical/hbm_attn_tile_r/bank_v12/sn136_rec/view/ot_attn_bank_sn136.lef": {
+   "file": "ot_attn_bank_sn136.lef",
+   "sha256": "3a9951ddfc4adb4ada03b8d4b915d8204b22d767f24d31e142631211487e7cea",
+   "macro": "ot_attn_bank_sn136",
+   "w_um": 28.08,
+   "h_um": 11.88,
+   "pins": 275,
+   "obs_layers": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6",
+    "RVTN",
+    "RVTP"
+   ]
+  },
+  "physical/hbm_attn_tile_r/bank_v12/ew544_rec/view/ot_attn_bank_ew544.lef": {
+   "file": "ot_attn_bank_ew544.lef",
+   "sha256": "c3897eb006844f906392cf8afaa1f90442e9b5c5cd95d1afc51920afca05dc21",
+   "macro": "ot_attn_bank_ew544",
+   "w_um": 11.88,
+   "h_um": 105.84,
+   "pins": 1091,
+   "obs_layers": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6",
+    "RVTN",
+    "RVTP"
+   ]
+  },
+  "physical/ref_tile/hattn_ks_entry/views/ot_attn_ks_entry/ot_attn_ks_entry.lef": {
+   "file": "ot_attn_ks_entry.lef",
+   "sha256": "a97441fff21e219cb940292430bce093b7969a0520756f949960a557a727bba6",
+   "macro": "ot_attn_ks_entry",
+   "w_um": 103.68,
+   "h_um": 129.6,
+   "pins": 2210,
+   "obs_layers": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "RVTN",
+    "RVTP"
+   ]
+  }
+ }
+}

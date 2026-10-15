@@ -82,10 +82,14 @@ foreach bt [$ot_ih_blk getBTerms] {
   set ca [$ot_ih_blk getCoreArea]
   set x [expr {max([$ca xMin], min($x, [$ca xMax] - [$pm getWidth]))}]
   set y [expr {max([$ca yMin], min($y, [$ca yMax] - [$pm getHeight]))}]
-  $cell setOrient R0; $cell setLocation $x $y
+  $cell setOrient R0
+  if {[[$cell getMaster] isBlock]} {error {standard cell placement refuses BLOCK}}
+  $cell setLocation $x $y
   if {$drv ne ""} {
     $cell setPlacementStatus FIRM; lappend ot_ih_firm [$cell getName]
-    $drv setOrient R0; $drv setLocation $x $y; $drv setPlacementStatus FIRM; lappend ot_ih_firm [$drv getName]
+    $drv setOrient R0
+    if {[[$drv getMaster] isBlock]} {error {standard cell placement refuses BLOCK}}
+    $drv setLocation $x $y; $drv setPlacementStatus FIRM; lappend ot_ih_firm [$drv getName]
   } else {
     $cell setPlacementStatus PLACED
   }

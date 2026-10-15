@@ -1,0 +1,126 @@
+{
+  "status": "PASS_SELECTED_NATIVE_MECHANISM_NOT_FULL_Q3",
+  "program_rows": 64,
+  "native_SRAMs": {
+    "program": 3,
+    "VM": 24
+  },
+  "cases": [
+    "FP32 tie lower id",
+    "all NaNs lower id",
+    "signedzero equality",
+    "infinity withNaN",
+    "negative values"
+  ],
+  "measured": {
+    "runs": 5,
+    "group": 96,
+    "native_operand_records_checked": 480,
+    "native_output_records_checked": 5,
+    "native_result_sector_commits": 10,
+    "native_result_readbacks": 5
+  },
+  "start_edge_offsets": {
+    "first_input_visible": 17,
+    "last_input_visible": 40,
+    "first_ARG_sample": 18,
+    "last_ARG_sample": 41,
+    "flush": 42,
+    "ARG_publication": 48,
+    "writer_input_visible": 51,
+    "writer_sample": 52,
+    "low_commit": 57,
+    "high_commit": 58,
+    "native_result_readback": 67,
+    "halt_pulse": 66
+  },
+  "halt_note": "Readback is part of declared gate observation after halt; do not infer full production drain from halt.",
+  "mutants": {
+    "1": "wrong ARG mode exposes TKM valid/slot and is rejected",
+    "2": "wrong independent ARG source selection faults qslots availability",
+    "3": "early publication faults actual native ARG controller"
+  },
+  "parent_connection_check": {
+    "status": "PASS",
+    "checked_parent_child_ports": [
+      "u_arg.start",
+      "u_arg.cfg_g",
+      "u_arg.cfg_gbase",
+      "u_arg.cfg_rank",
+      "u_arg.in_slot",
+      "u_arg.in_v",
+      "u_arg.in_flit",
+      "u_arg.flush_slot",
+      "u_arg.publish_slot",
+      "u_writer.rgx_v",
+      "u_writer.rgx_addr",
+      "u_writer.rgx_data",
+      "u_writer.rgx_vm",
+      "u_writer.ingress_slot",
+      "u_writer.slot_valid",
+      "u_writer.slot_owner",
+      "u_qslots.capture_slot",
+      "u_qslots.sink_slot",
+      "u_qslots.sink_select",
+      "u_control.inst",
+      "u_control.iteration",
+      "u_control.dest_v",
+      "u_control.vm_rr",
+      "u_control.rgx_addr_pin",
+      "u_control.vm_source_meta",
+      "u_control.vm_assembled",
+      "u_control.vm_assembled_v",
+      "u_issuer.cfg",
+      "u_issuer.uop",
+      "u_issuer.iteration"
+    ],
+    "selected_instances": [
+      "u_arg",
+      "u_writer",
+      "u_qslots",
+      "u_control",
+      "u_issuer"
+    ],
+    "excluded_subtrees": [
+      "TKM",
+      "reduction",
+      "ring",
+      "links"
+    ],
+    "scope": "selected native parent mechanism with checked connection expressions and ISA fields; not fullq3"
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static_v2.sv": "d199ad158db31f6493c3b6e4f4b514390b7f389c5c0471b344fe3d44bcb5f37e",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer.sv": "bcc5a2ca21788b0a312266a5a4b8533b652081c16695897bc8f9152b52362f42",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_argmax_static.sv": "24a8a6253bf5d50ea8b238bda497487438f1c3702af3376573fd6066667879f7",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv": "ec2cc4de9173c2bc059fbc23aa9d0136e89ab0952ff22cdd8cdda6d98b54897c",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv": "4fc382d585026bc8fc23464ea90b9d5b86ad7bbec34acef0dccc65e3eb9d88f3",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_sw_arg_join.sv": "b77873bc8cc4fd9451af425144131322e99e2fef4e02aaa37fb807b7b17fbb89",
+    "rtl/hbm_accel/generic/collective/p2p/run_sw_arg_join.sh": "babe8d9cb337f0a53baea74440b2b0b87364af9b2fb7fbb80d0dabea57ac35f4",
+    "rtl/hbm_accel/generic/collective/p2p/static_uop_layout_v2.json": "9d64823c8ad0bd9214ed168a3956fce902aa266741e972eb492ebc22e622904c",
+    "rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv": "95a258b9175d2a9223faa184475298a7d3636c3b95220fa3aaa3f4fc15c9e1d9",
+    "tools/hbm_coll_static/check_sw_arg_join.py": "a010b1adb58684cda98732f73ea7292c51bae734c995d4ec03ab8ad605e607c5"
+  },
+  "native_bank_inputs": {
+    "bank_revision": "0334452c",
+    "bank_git_blob": "aab60c35b8950342622d92c2711caa93abe481fb",
+    "sha256": {
+      "ot_vms_bank_static.sv": "7828d619da2fd2462cf0253b78c074dad1171e6ca77799bfc21f22987ed72237",
+      "ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380"
+    }
+  },
+  "execution": {
+    "tool": "ot-run",
+    "unit": "oth-ubuntu-3723058-1792051767",
+    "host": "ot-agidock128",
+    "exit": 0
+  },
+  "limitations": [
+    "actual five selected child mechanisms instantiated; TKM/reduce/ring/link subtrees excluded from declared boundary",
+    "no production RTL changed or parameter pruning added",
+    "no fullq3 hierarchy qualification",
+    "no full networkG96 simulation",
+    "no physical timing/CTS/area/tokenrate claim",
+    "actual normative host assembler entry remains external"
+  ]
+}

@@ -2,6 +2,7 @@
 """Validate real-case logs even when caught OpenROAD errors leave process exit zero."""
 import argparse
 import json
+import math
 from pathlib import Path
 import re
 
@@ -19,6 +20,18 @@ def check(log, stage, process_exit=0, case_kind='a'):
                     r'^OT_PGCHECK VDD PASS$', r'^OT_PGCHECK VSS PASS$']
     elif stage == 'run_pdn.tcl':
         required = [r'^OT_PDN PASS\b', r'^OT_PGCHECK VDD PASS$', r'^OT_PGCHECK VSS PASS$']
+    elif re.fullmatch(r'grt_(tt|ff|ss)\.tcl', stage):
+        # A completed clock/SPEF load is insufficient: require real STA output.
+        required = []
+        for metric in ('tns', 'wns', 'worst slack'):
+            # OpenSTA prints 'tns max -1.0' (path type) on current builds, 'tns -1.0' on older ones.
+            matches = re.findall(r'^' + metric + r'(?:\s+(?:max|min))?\s+(\S+)\s*$', log, re.M)
+            try:
+                valid = bool(matches) and all(math.isfinite(float(v)) for v in matches)
+            except ValueError:
+                valid = False
+            if not valid:
+                failures.append(f'missing or nonfinite numeric STA metric: {metric}')
     else:
         required = []
     for pattern in required:
