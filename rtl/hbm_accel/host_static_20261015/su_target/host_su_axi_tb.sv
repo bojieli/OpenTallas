@@ -70,7 +70,9 @@ initial begin
  wr('hf3c,1,0);repeat(3)tick();if(block_ready||!fault)$fatal(1,"HOST_SU_AXI missing row falsely ready");
  reset_target();
  // All eight payload chunks are required; true bank16 overflow reaches error.
- wr('hf34,M,0);for(integer j=0;j<8;j=j+1)wr('hf38,0,(j==7)?2:0);
+ wr('hf34,M,0);for(integer j=0;j<7;j=j+1)wr('hf38,0,0);
+ if(fault)$fatal(1,"HOST_SU_AXI partial payload reached target");
+ wr('hf3c,1,2);wr('hf44,1,2);wr('hf38,0,2);
  if(!fault||block_ready)$fatal(1,"HOST_SU_AXI invalid bank not rejected");
  reset_target();
  for(integer i=0;i<W;i=i+1)begin
