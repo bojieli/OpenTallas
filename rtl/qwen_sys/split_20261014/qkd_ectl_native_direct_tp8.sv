@@ -3,7 +3,7 @@
 // Every consumer still sees stage 3. B no longer captures and launches at opposite faces on one flop.
 // Fresh native TP8 leaf masters. Historical qkd_ectl_a/b/c views remain on their frozen profile.
 // Each native leaf fixes HEADS=1 / Q_FP32=1 independently of global simulation defines.
-module qkd_ectl_a_tp8_direct #(parameter integer EPOCH=0, parameter integer STATIC_QK=0, parameter integer QK_ISSUE_AGE=34, parameter integer ROW_RETURN_LAT=9) (
+module qkd_ectl_a_tp8_direct #(parameter integer EPOCH=0, parameter integer STATIC_QK=0, parameter integer QK_ISSUE_AGE=34, parameter integer ROW_RETURN_LAT=9, parameter integer HXK=0) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire [4:0]    cfg,            // {e 3, s 2} strap
@@ -20,7 +20,7 @@ module qkd_ectl_a_tp8_direct #(parameter integer EPOCH=0, parameter integer STAT
 `else
     if (EPOCH != 0) assign rq[16] = epoch;
 `endif
-    ot_qkd_ectl_part #(.STATIC_QK(STATIC_QK), .QK_ISSUE_AGE(QK_ISSUE_AGE), .ROW_RETURN_LAT(ROW_RETURN_LAT), .PART(1), .HEADS(1), .Q_FP32(1)) u (.clk(ck), .rst_n(rst_n), .cfg_s(cfg[1:0]), .cfg_e(cfg[4:2]),
+    ot_qkd_ectl_part #(.STATIC_QK(STATIC_QK), .QK_ISSUE_AGE(QK_ISSUE_AGE), .ROW_RETURN_LAT(ROW_RETURN_LAT), .HXK(HXK), .PART(1), .HEADS(1), .Q_FP32(1)) u (.clk(ck), .rst_n(rst_n), .cfg_s(cfg[1:0]), .cfg_e(cfg[4:2]),
         .start_in(1'b0), .T_in(14'd0), .cyc8_in(3'd0), .q_valid_in(1'b0), .q_beat_in(6'd0), .q_data_in(512'd0),
         .exp_done(32'd0), .nb_cr(1'b0), .er_data(64'd0), .er_valid(), .er_addr(), .sc_valid(), .sc_addr(), .sc_data(),
         .lmax(), .lmax_any(), .nb_valid(), .nb_beat(), .nb_g(), .nb_gam(), .k_done(), .v_done(), .fault(), .ev_k_first(),
@@ -31,7 +31,7 @@ module qkd_ectl_a_tp8_direct #(parameter integer EPOCH=0, parameter integer STAT
         .ts0_gf(2'd0), .ts1_gf(2'd0));
 endmodule
 
-module qkd_ectl_b_tp8_direct #(parameter integer STATIC_QK=0, parameter integer QK_ISSUE_AGE=34, parameter integer ROW_RETURN_LAT=9) (
+module qkd_ectl_b_tp8_direct #(parameter integer STATIC_QK=0, parameter integer QK_ISSUE_AGE=34, parameter integer ROW_RETURN_LAT=9, parameter integer HXK=0) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire [4:0]    cfg,
@@ -42,7 +42,7 @@ module qkd_ectl_b_tp8_direct #(parameter integer STATIC_QK=0, parameter integer 
     input  wire [512:0]  rs_i,           // W seam: from A
     input  wire [51:0]   x_i             // E seam: stage-2 control word from C; B's pin flop x1 is stage 3 (XB2, r3)
 );
-    ot_qkd_ectl_part #(.STATIC_QK(STATIC_QK), .QK_ISSUE_AGE(QK_ISSUE_AGE), .ROW_RETURN_LAT(ROW_RETURN_LAT), .PART(2), .HEADS(1), .Q_FP32(1), .XB2(1)) u (.clk(ck), .rst_n(rst_n), .cfg_s(cfg[1:0]), .cfg_e(cfg[4:2]),
+    ot_qkd_ectl_part #(.STATIC_QK(STATIC_QK), .QK_ISSUE_AGE(QK_ISSUE_AGE), .ROW_RETURN_LAT(ROW_RETURN_LAT), .HXK(HXK), .PART(2), .HEADS(1), .Q_FP32(1), .XB2(1)) u (.clk(ck), .rst_n(rst_n), .cfg_s(cfg[1:0]), .cfg_e(cfg[4:2]),
         .start_in(1'b0), .T_in(14'd0), .cyc8_in(3'd0), .q_valid_in(1'b0), .q_beat_in(6'd0), .q_data_in(512'd0),
         .exp_done(32'd0), .nb_cr(1'b0), .er_data(64'd0), .er_valid(), .er_addr(), .sc_valid(), .sc_addr(), .sc_data(),
         .lmax(), .lmax_any(), .nb_valid(), .nb_beat(), .nb_g(), .nb_gam(), .k_done(), .v_done(), .fault(), .ev_k_first(),
@@ -53,7 +53,7 @@ module qkd_ectl_b_tp8_direct #(parameter integer STATIC_QK=0, parameter integer 
         .ts0_sf(2'd0), .ts1_sf(2'd0), .ts0_gf(2'd0), .ts1_gf(2'd0));
 endmodule
 
-module qkd_ectl_c_tp8_direct #(parameter integer STATIC_QK=0, parameter integer QK_ISSUE_AGE=34, parameter integer ROW_RETURN_LAT=9) (
+module qkd_ectl_c_tp8_direct #(parameter integer STATIC_QK=0, parameter integer QK_ISSUE_AGE=34, parameter integer ROW_RETURN_LAT=9, parameter integer HXK=0) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire [4:0]    cfg,
@@ -67,7 +67,7 @@ module qkd_ectl_c_tp8_direct #(parameter integer STATIC_QK=0, parameter integer 
     output wire [51:0]   x_b,            // W: stage-2 control word to B (the same x2 register as x_a; r3)
     output wire [51:0]   x_a             // W: stage-2 control word directly to A
 );
-    ot_qkd_ectl_part #(.STATIC_QK(STATIC_QK), .QK_ISSUE_AGE(QK_ISSUE_AGE), .ROW_RETURN_LAT(ROW_RETURN_LAT), .PART(3), .HEADS(1), .Q_FP32(1)) u (.clk(ck), .rst_n(rst_n), .cfg_s(cfg[1:0]), .cfg_e(cfg[4:2]),
+    ot_qkd_ectl_part #(.STATIC_QK(STATIC_QK), .QK_ISSUE_AGE(QK_ISSUE_AGE), .ROW_RETURN_LAT(ROW_RETURN_LAT), .HXK(HXK), .PART(3), .HEADS(1), .Q_FP32(1)) u (.clk(ck), .rst_n(rst_n), .cfg_s(cfg[1:0]), .cfg_e(cfg[4:2]),
         .start_in(si[0]), .T_in(si[14:1]), .cyc8_in(si[17:15]), .q_valid_in(si[18]), .q_beat_in(si[24:19]),
         .q_data_in(si[536:25]), .exp_done(si[568:537]), .er_data(si[632:569]), .nb_cr(si[633]),
         .er_valid(so[0]), .er_addr(so[12:1]), .sc_valid(so[13]), .sc_addr(so[25:14]), .sc_data(so[153:26]),
