@@ -141,7 +141,7 @@ TILES.update({
     "ot_s81_hc_ctfs_nt": dict(src=_NT, routed=[{}], mut=("else dl_out <= dl_in;", "else dl_out <= dl_in ^ (275'd1 << 40);")),
     "ot_s81_hc_cncla":   dict(src=_NT, routed=[dict(C=0), dict(C=1), dict(C=2)], mut=("pi <= {5'd0, i_q}; ex <= ex_w;", "pi <= {5'd0, i_q}; ex <= ex_w ^ (1 << 29);")),
     "ot_s81_hc_cnclb":   dict(src=_NT, routed=[dict(C=0), dict(C=1), dict(C=2)], mut=("always @(posedge sk) ex <= ex_w;", "always @(posedge sk) ex <= ex_w ^ (1 << 29);")),
-    "ot_s81_hc_cnrsq":   dict(src=_NT, routed=[{}], mut=("fcq[O_RC + 16 * s +: 16] == 16'd1", "fcq[O_RC + 16 * s +: 16] == 16'd0")),
+    "ot_s81_hc_cnrsq":   dict(src=_NT, routed=[{}], mut=("else ngo <= f_fv[S_RD + 1];", "else ngo <= 1'b0;")),
 })
 TILE_RE = re.compile(r"^HCTILE (\w+) (\S+) ?(.*)$", re.M)
 
