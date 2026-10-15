@@ -61,7 +61,11 @@
    "xq_s",
    "xq_vi",
    "xq_y",
-   "xq_f"
+   "xq_f",
+   "xb_v",
+   "xb_vi",
+   "xb_y",
+   "xb_f"
   ]
  },
  "route": {
@@ -75,10 +79,10 @@
  "recipe": 2,
  "job": {
   "benched_by": "s81su_full",
-  "owner": "Claude:s81-romB3-1014",
-  "branch": "claude/s81-romB2-su",
-  "tag": "g1",
-  "purpose": "S81 SU rx cluster control leaf (rxt control + RB adders; RA/QR lanes in leaves)",
+  "owner": "Claude:s81-elemB6-1014",
+  "branch": "claude/s81-elemB6-su",
+  "tag": "g2",
+  "purpose": "S81 SU rx cluster control leaf (rxt control; RA / QR / RB lanes in leaves)",
   "views_to": "physical/ref_tile/s81su_rxc_ref/views",
   "record_to": "results/rtl/ref_tile/s81su_rxc_ref"
  },
@@ -101,5 +105,6 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
- }
+ },
+ "structural_change": " | g2 (B6 10-14): RB adders moved to the leaf ot_s81_su_rxrb (g1 gate: 17,301 sinks, CTS 491.5 ps, spread 73.2, TT -367 refused)"
 }
