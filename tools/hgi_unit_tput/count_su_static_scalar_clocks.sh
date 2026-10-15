@@ -10,10 +10,12 @@ base=Path(os.environ['DEPS'])
 s += [str(base/'rtl/hbm_accel/generic/adapters/static_su'/p) for p in ['arithmetic/ot_hbm_su_static_lane.sv','arithmetic/ot_hbm_su_static_ins.sv','data_store/ot_hbm_su_static_data_store.sv','data_store/ot_hbm_su_static_pinned_bank.sv']]
 s += [str(base/'rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv')]
 for name,top in [('head','ot_hbm_su_static_scalar'),('bank','ot_hbm_su_static_pinned_bank')]:
- cmd='read_verilog -sv '+' '.join(s)+'\nread_verilog -lib physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v\nhierarchy -check -top '+top+'\nproc\ncheck\nwrite_json '+os.environ['OUT']+'/'+name+'.json\n'
+ cmd='read_verilog -defer -sv '+' '.join(s)+'\nread_verilog -lib physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v\nhierarchy -check -top '+top+'\nproc\ncheck\nwrite_json '+os.environ['OUT']+'/'+name+'.json\n'
  (Path(os.environ['OUT'])/(name+'.ys')).write_text(cmd)
 PY
-for block in head bank;do yosys -Q -s "$OUT/$block.ys" > "$OUT/$block.log" 2>&1;done
+for block in head bank;do
+ if [ ! -s "$OUT/$block.json" ];then yosys -Q -s "$OUT/$block.ys" > "$OUT/$block.log" 2>&1;fi
+done
 python3 - <<'PY'
 import os,json
 from pathlib import Path

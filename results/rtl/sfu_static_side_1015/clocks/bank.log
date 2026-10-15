@@ -1,0 +1,478 @@
+
+-- Executing script file `/srv/opentallas-scratch/codex/sfu-fused-latency-1015/scalar_clock_counts_r2/bank.ys' --
+
+1. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_su12_lane'.
+Storing AST representation for module `$abstract\ot_su12_light'.
+Storing AST representation for module `$abstract\ot_su12_sfu'.
+Storing AST representation for module `$abstract\ot_su12_full'.
+Storing AST representation for module `$abstract\ot_su12_full31'.
+Storing AST representation for module `$abstract\ot_su12_side'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_v41x_vec_lane'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_v41x_exp'.
+Storing AST representation for module `$abstract\ot_hdc_v41x_rsqrt'.
+Storing AST representation for module `$abstract\ot_hdc_v41x_fdiv'.
+Storing AST representation for module `$abstract\ot_hdc_v41x_softplus'.
+Storing AST representation for module `$abstract\ot_hdc_v41x_ins'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_delay.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_delay.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_delay'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fpu.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fpu.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_fadd'.
+Storing AST representation for module `$abstract\ot_hdc_fmul'.
+Storing AST representation for module `$abstract\ot_hdc_bmul'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_fp32_mul_pipe'.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/proto/ot_fp32_add_rne_pipe.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/proto/ot_fp32_add_rne_pipe.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_fp32_add_rne_pipe'.
+Successfully finished Verilog frontend.
+
+8. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_sfu.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_sfu.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_vline'.
+Storing AST representation for module `$abstract\ot_hdc_exp'.
+Storing AST representation for module `$abstract\ot_hdc_recip'.
+Storing AST representation for module `$abstract\ot_hdc_rsqrt'.
+Successfully finished Verilog frontend.
+
+9. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fdiv.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fdiv.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_fdiv'.
+Successfully finished Verilog frontend.
+
+10. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_softplus.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_softplus.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_softplus'.
+Successfully finished Verilog frontend.
+
+11. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fastfp.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fastfp.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_ksa'.
+Storing AST representation for module `$abstract\ot_hdc_lzc32'.
+Storing AST representation for module `$abstract\ot_hdc_mul24_rows'.
+Storing AST representation for module `$abstract\ot_hdc_mul24_sum'.
+Storing AST representation for module `$abstract\ot_hdc_fp32_add_fast'.
+Storing AST representation for module `$abstract\ot_hdc_fp32_mul_fast'.
+Storing AST representation for module `$abstract\ot_hdc_qadd'.
+Storing AST representation for module `$abstract\ot_hdc_qmul'.
+Successfully finished Verilog frontend.
+
+12. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fastfp_lat_c12.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fastfp_lat_c12.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_qmul_lat'.
+Storing AST representation for module `$abstract\ot_hdc_qadd_lat'.
+Storing AST representation for module `$abstract\ot_hdc_kadd'.
+Storing AST representation for module `$abstract\ot_hdc_kge'.
+Storing AST representation for module `$abstract\ot_hdc_kinc'.
+Successfully finished Verilog frontend.
+
+13. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_f12.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_f12.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_f12_cut'.
+Storing AST representation for module `$abstract\ot_hdc_fp32_add_f12'.
+Storing AST representation for module `$abstract\ot_hdc_fp32_mul_f12'.
+Storing AST representation for module `$abstract\ot_hdc_fp32_add_f12_l4'.
+Storing AST representation for module `$abstract\ot_hdc_fp32_add_f12_l5'.
+Storing AST representation for module `$abstract\ot_hdc_fp32_mul_f12_l5'.
+Storing AST representation for module `$abstract\ot_hdc_fp32_mul_f12_l6'.
+Storing AST representation for module `$abstract\ot_hdc_fp32_add_f12_l5s'.
+Storing AST representation for module `$abstract\ot_hdc_fp32_add_f12_l5x'.
+Storing AST representation for module `$abstract\ot_hdc_f12_inreg'.
+Storing AST representation for module `$abstract\ot_hdc_fp32_add_f12_l5i'.
+Storing AST representation for module `$abstract\ot_hdc_fp32_mul_f12_l6i'.
+Successfully finished Verilog frontend.
+
+14. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_add6.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_add6.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_fp32_add_f12_l6x'.
+Successfully finished Verilog frontend.
+
+15. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_dsrom_exp_f12'.
+Storing AST representation for module `$abstract\ot_dsrom_fdiv_f12'.
+Storing AST representation for module `$abstract\ot_dsrom_add_f12_l6'.
+Storing AST representation for module `$abstract\ot_dsrom_actquant_f12'.
+Successfully finished Verilog frontend.
+
+16. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt_c12.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt_c12.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_fsqrt_c12'.
+Successfully finished Verilog frontend.
+
+17. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_fsqrt'.
+Successfully finished Verilog frontend.
+
+18. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_fp32_mul_lat'.
+Storing AST representation for module `$abstract\ot_hdc_fp32_mul_lat4'.
+Storing AST representation for module `$abstract\ot_hdc_fp32_mul_lat5'.
+Storing AST representation for module `$abstract\ot_hdc_fp32_mul_lat6'.
+Storing AST representation for module `$abstract\ot_hdc_fp32_mul_lat7'.
+Storing AST representation for module `$abstract\ot_hdc_fp32_mul_lat9'.
+Storing AST representation for module `$abstract\ot_hdc_fp32_mul_lat5i'.
+Successfully finished Verilog frontend.
+
+19. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_add_lat.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_add_lat.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_fp32_add_lat'.
+Storing AST representation for module `$abstract\ot_hdc_w11_cut'.
+Storing AST representation for module `$abstract\ot_hdc_fp32_add_lat4i'.
+Storing AST representation for module `$abstract\ot_hdc_fp32_add_lat3'.
+Storing AST representation for module `$abstract\ot_hdc_fp32_add_lat4'.
+Storing AST representation for module `$abstract\ot_hdc_fp32_add_lat5'.
+Storing AST representation for module `$abstract\ot_hdc_fp32_add_lat6'.
+Storing AST representation for module `$abstract\ot_hdc_fp32_add_lat7'.
+Successfully finished Verilog frontend.
+
+20. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_prefix.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_prefix.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_ksadd_k'.
+Storing AST representation for module `$abstract\ot_hdc_inc_k'.
+Successfully finished Verilog frontend.
+
+21. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_delay_ring.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_delay_ring.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_delay_ring'.
+Successfully finished Verilog frontend.
+
+22. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_v41x_vec'.
+Storing AST representation for module `$abstract\ot_hdc_v41x_cmul4'.
+Storing AST representation for module `$abstract\ot_hdc_v41x_cmul2'.
+Storing AST representation for module `$abstract\ot_hdc_v41x_csum8'.
+Storing AST representation for module `$abstract\ot_hdc_v41x_csa8'.
+Storing AST representation for module `$abstract\ot_hdc_v41x_ckmux'.
+Storing AST representation for module `$abstract\ot_hdc_v41x_csum4'.
+Storing AST representation for module `$abstract\ot_hdc_v41x_chf'.
+Storing AST representation for module `$abstract\ot_hdc_v41x_ckreg'.
+Storing AST representation for module `$abstract\ot_hdc_v41x_chf3'.
+Successfully finished Verilog frontend.
+
+23. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hbm_su_static_side'.
+Storing AST representation for module `$abstract\ot_hbm_su_static_side_softplus'.
+Successfully finished Verilog frontend.
+
+24. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_scalar.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_scalar.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hbm_su_static_scalar'.
+Successfully finished Verilog frontend.
+
+25. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hbm_su_static_lane'.
+Successfully finished Verilog frontend.
+
+26. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hbm_su_static_ins'.
+Successfully finished Verilog frontend.
+
+27. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hbm_su_static_replicated_bank'.
+Storing AST representation for module `$abstract\ot_hbm_su_static_data_store'.
+Successfully finished Verilog frontend.
+
+28. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hbm_su_static_pinned_bank'.
+Successfully finished Verilog frontend.
+
+29. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv' to AST representation.
+Warning: Encountered `translate_off' comment! Such legacy hot comments are supported by Yosys, but are not part of any formal language specification. Using a portable and standards-compliant construct such as `ifdef is recommended!
+Storing AST representation for module `$abstract\ot_hgi_su_ctl'.
+Storing AST representation for module `$abstract\ot_hgi_su_lbank'.
+Storing AST representation for module `$abstract\ot_hgi_su_lgroup2'.
+Storing AST representation for module `$abstract\ot_hgi_su_rfile'.
+Storing AST representation for module `$abstract\ot_hgi_su_lmem'.
+Storing AST representation for module `$abstract\ot_hgi_su_unit'.
+Storing AST representation for module `$abstract\ot_hgi_su_ctlw'.
+Storing AST representation for module `$abstract\ot_hgi_su_lmemw'.
+Storing AST representation for module `$abstract\ot_hgi_su_ctlx'.
+Storing AST representation for module `$abstract\ot_hgi_su_ctlw_slice'.
+Successfully finished Verilog frontend.
+
+30. Executing Verilog-2005 frontend: physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v
+Parsing Verilog input from `physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v' to AST representation.
+Generating RTLIL representation for module `\ot_sram_1r1w_128x256_m1_r2c2'.
+Successfully finished Verilog frontend.
+
+31. Executing Verilog-2005 frontend: physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v
+Parsing Verilog input from `physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v' to AST representation.
+Generating RTLIL representation for module `\ot_sram_1r1w_1024x256_m2_r2c2'.
+Successfully finished Verilog frontend.
+
+32. Executing Verilog-2005 frontend: physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v
+Parsing Verilog input from `physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v' to AST representation.
+Generating RTLIL representation for module `\ot_sram_1r1w_256x256_m2_r2c2'.
+Successfully finished Verilog frontend.
+
+33. Executing HIERARCHY pass (managing design hierarchy).
+
+34. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_su_static_pinned_bank'.
+Generating RTLIL representation for module `\ot_hbm_su_static_pinned_bank'.
+
+34.1. Analyzing design hierarchy..
+Top module:  \ot_hbm_su_static_pinned_bank
+Parameter \READERS = 6
+Parameter \RB = 9
+Parameter \MUT_COHERENCE = 0
+
+34.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_su_static_replicated_bank'.
+Parameter \READERS = 6
+Parameter \RB = 9
+Parameter \MUT_COHERENCE = 0
+Generating RTLIL representation for module `$paramod$2c68e77745cdf0781f22e4bef14272be1e671e24\ot_hbm_su_static_replicated_bank'.
+
+34.3. Analyzing design hierarchy..
+Top module:  \ot_hbm_su_static_pinned_bank
+Used module:     $paramod$2c68e77745cdf0781f22e4bef14272be1e671e24\ot_hbm_su_static_replicated_bank
+Parameter \RB = 9
+Parameter \MACRO = 1
+
+34.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_su_lbank'.
+Parameter \RB = 9
+Parameter \MACRO = 1
+Generating RTLIL representation for module `$paramod$b81a6e250b2a20ec7259710bf9e765b346b85b5c\ot_hgi_su_lbank'.
+Parameter \RB = 9
+Parameter \MACRO = 1
+Found cached RTLIL representation for module `$paramod$b81a6e250b2a20ec7259710bf9e765b346b85b5c\ot_hgi_su_lbank'.
+Parameter \RB = 9
+Parameter \MACRO = 1
+Found cached RTLIL representation for module `$paramod$b81a6e250b2a20ec7259710bf9e765b346b85b5c\ot_hgi_su_lbank'.
+Parameter \RB = 9
+Parameter \MACRO = 1
+Found cached RTLIL representation for module `$paramod$b81a6e250b2a20ec7259710bf9e765b346b85b5c\ot_hgi_su_lbank'.
+Parameter \RB = 9
+Parameter \MACRO = 1
+Found cached RTLIL representation for module `$paramod$b81a6e250b2a20ec7259710bf9e765b346b85b5c\ot_hgi_su_lbank'.
+Parameter \RB = 9
+Parameter \MACRO = 1
+Found cached RTLIL representation for module `$paramod$b81a6e250b2a20ec7259710bf9e765b346b85b5c\ot_hgi_su_lbank'.
+
+34.5. Analyzing design hierarchy..
+Top module:  \ot_hbm_su_static_pinned_bank
+Used module:     $paramod$2c68e77745cdf0781f22e4bef14272be1e671e24\ot_hbm_su_static_replicated_bank
+Used module:         $paramod$b81a6e250b2a20ec7259710bf9e765b346b85b5c\ot_hgi_su_lbank
+
+34.6. Analyzing design hierarchy..
+Top module:  \ot_hbm_su_static_pinned_bank
+Used module:     $paramod$2c68e77745cdf0781f22e4bef14272be1e671e24\ot_hbm_su_static_replicated_bank
+Used module:         $paramod$b81a6e250b2a20ec7259710bf9e765b346b85b5c\ot_hgi_su_lbank
+Removing unused module `$abstract\ot_hgi_su_ctlw_slice'.
+Removing unused module `$abstract\ot_hgi_su_ctlx'.
+Removing unused module `$abstract\ot_hgi_su_lmemw'.
+Removing unused module `$abstract\ot_hgi_su_ctlw'.
+Removing unused module `$abstract\ot_hgi_su_unit'.
+Removing unused module `$abstract\ot_hgi_su_lmem'.
+Removing unused module `$abstract\ot_hgi_su_rfile'.
+Removing unused module `$abstract\ot_hgi_su_lgroup2'.
+Removing unused module `$abstract\ot_hgi_su_lbank'.
+Removing unused module `$abstract\ot_hgi_su_ctl'.
+Removing unused module `$abstract\ot_hbm_su_static_pinned_bank'.
+Removing unused module `$abstract\ot_hbm_su_static_data_store'.
+Removing unused module `$abstract\ot_hbm_su_static_replicated_bank'.
+Removing unused module `$abstract\ot_hbm_su_static_ins'.
+Removing unused module `$abstract\ot_hbm_su_static_lane'.
+Removing unused module `$abstract\ot_hbm_su_static_scalar'.
+Removing unused module `$abstract\ot_hbm_su_static_side_softplus'.
+Removing unused module `$abstract\ot_hbm_su_static_side'.
+Removing unused module `$abstract\ot_hdc_v41x_chf3'.
+Removing unused module `$abstract\ot_hdc_v41x_ckreg'.
+Removing unused module `$abstract\ot_hdc_v41x_chf'.
+Removing unused module `$abstract\ot_hdc_v41x_csum4'.
+Removing unused module `$abstract\ot_hdc_v41x_ckmux'.
+Removing unused module `$abstract\ot_hdc_v41x_csa8'.
+Removing unused module `$abstract\ot_hdc_v41x_csum8'.
+Removing unused module `$abstract\ot_hdc_v41x_cmul2'.
+Removing unused module `$abstract\ot_hdc_v41x_cmul4'.
+Removing unused module `$abstract\ot_hdc_v41x_vec'.
+Removing unused module `$abstract\ot_hdc_delay_ring'.
+Removing unused module `$abstract\ot_hdc_inc_k'.
+Removing unused module `$abstract\ot_hdc_ksadd_k'.
+Removing unused module `$abstract\ot_hdc_fp32_add_lat7'.
+Removing unused module `$abstract\ot_hdc_fp32_add_lat6'.
+Removing unused module `$abstract\ot_hdc_fp32_add_lat5'.
+Removing unused module `$abstract\ot_hdc_fp32_add_lat4'.
+Removing unused module `$abstract\ot_hdc_fp32_add_lat3'.
+Removing unused module `$abstract\ot_hdc_fp32_add_lat4i'.
+Removing unused module `$abstract\ot_hdc_w11_cut'.
+Removing unused module `$abstract\ot_hdc_fp32_add_lat'.
+Removing unused module `$abstract\ot_hdc_fp32_mul_lat5i'.
+Removing unused module `$abstract\ot_hdc_fp32_mul_lat9'.
+Removing unused module `$abstract\ot_hdc_fp32_mul_lat7'.
+Removing unused module `$abstract\ot_hdc_fp32_mul_lat6'.
+Removing unused module `$abstract\ot_hdc_fp32_mul_lat5'.
+Removing unused module `$abstract\ot_hdc_fp32_mul_lat4'.
+Removing unused module `$abstract\ot_hdc_fp32_mul_lat'.
+Removing unused module `$abstract\ot_hdc_fsqrt'.
+Removing unused module `$abstract\ot_hdc_fsqrt_c12'.
+Removing unused module `$abstract\ot_dsrom_actquant_f12'.
+Removing unused module `$abstract\ot_dsrom_add_f12_l6'.
+Removing unused module `$abstract\ot_dsrom_fdiv_f12'.
+Removing unused module `$abstract\ot_dsrom_exp_f12'.
+Removing unused module `$abstract\ot_hdc_fp32_add_f12_l6x'.
+Removing unused module `$abstract\ot_hdc_fp32_mul_f12_l6i'.
+Removing unused module `$abstract\ot_hdc_fp32_add_f12_l5i'.
+Removing unused module `$abstract\ot_hdc_f12_inreg'.
+Removing unused module `$abstract\ot_hdc_fp32_add_f12_l5x'.
+Removing unused module `$abstract\ot_hdc_fp32_add_f12_l5s'.
+Removing unused module `$abstract\ot_hdc_fp32_mul_f12_l6'.
+Removing unused module `$abstract\ot_hdc_fp32_mul_f12_l5'.
+Removing unused module `$abstract\ot_hdc_fp32_add_f12_l5'.
+Removing unused module `$abstract\ot_hdc_fp32_add_f12_l4'.
+Removing unused module `$abstract\ot_hdc_fp32_mul_f12'.
+Removing unused module `$abstract\ot_hdc_fp32_add_f12'.
+Removing unused module `$abstract\ot_hdc_f12_cut'.
+Removing unused module `$abstract\ot_hdc_kinc'.
+Removing unused module `$abstract\ot_hdc_kge'.
+Removing unused module `$abstract\ot_hdc_kadd'.
+Removing unused module `$abstract\ot_hdc_qadd_lat'.
+Removing unused module `$abstract\ot_hdc_qmul_lat'.
+Removing unused module `$abstract\ot_hdc_qmul'.
+Removing unused module `$abstract\ot_hdc_qadd'.
+Removing unused module `$abstract\ot_hdc_fp32_mul_fast'.
+Removing unused module `$abstract\ot_hdc_fp32_add_fast'.
+Removing unused module `$abstract\ot_hdc_mul24_sum'.
+Removing unused module `$abstract\ot_hdc_mul24_rows'.
+Removing unused module `$abstract\ot_hdc_lzc32'.
+Removing unused module `$abstract\ot_hdc_ksa'.
+Removing unused module `$abstract\ot_hdc_softplus'.
+Removing unused module `$abstract\ot_hdc_fdiv'.
+Removing unused module `$abstract\ot_hdc_rsqrt'.
+Removing unused module `$abstract\ot_hdc_recip'.
+Removing unused module `$abstract\ot_hdc_exp'.
+Removing unused module `$abstract\ot_hdc_vline'.
+Removing unused module `$abstract\ot_fp32_add_rne_pipe'.
+Removing unused module `$abstract\ot_hdc_fp32_mul_pipe'.
+Removing unused module `$abstract\ot_hdc_bmul'.
+Removing unused module `$abstract\ot_hdc_fmul'.
+Removing unused module `$abstract\ot_hdc_fadd'.
+Removing unused module `$abstract\ot_hdc_delay'.
+Removing unused module `$abstract\ot_hdc_v41x_ins'.
+Removing unused module `$abstract\ot_hdc_v41x_softplus'.
+Removing unused module `$abstract\ot_hdc_v41x_fdiv'.
+Removing unused module `$abstract\ot_hdc_v41x_rsqrt'.
+Removing unused module `$abstract\ot_hdc_v41x_exp'.
+Removing unused module `$abstract\ot_hdc_v41x_vec_lane'.
+Removing unused module `$abstract\ot_su12_side'.
+Removing unused module `$abstract\ot_su12_full31'.
+Removing unused module `$abstract\ot_su12_full'.
+Removing unused module `$abstract\ot_su12_sfu'.
+Removing unused module `$abstract\ot_su12_light'.
+Removing unused module `$abstract\ot_su12_lane'.
+Removed 102 unused modules.
+
+35. Executing PROC pass (convert processes to netlists).
+
+35.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+35.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv:21$187 in module ot_hbm_su_static_pinned_bank.
+Removed a total of 0 dead cases.
+
+35.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 5 redundant assignments.
+Promoted 4 assignments to connections.
+
+35.4. Executing PROC_INIT pass (extract init attributes).
+
+35.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\ot_hbm_su_static_pinned_bank.$proc$/srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv:21$187'.
+
+35.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~1 debug messages>
+
+35.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod$b81a6e250b2a20ec7259710bf9e765b346b85b5c\ot_hgi_su_lbank.$proc$/srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:506$195'.
+     1/1: $0\ks[2:0]
+Creating decoders for process `\ot_hbm_su_static_pinned_bank.$proc$/srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv:21$187'.
+     1/5: $0\w_pin[0:0]
+     2/5: $0\r_late[5:0]
+     3/5: $0\r_return[5:0]
+     4/5: $0\r_macro[5:0]
+     5/5: $0\r_pin[5:0]
+Creating decoders for process `\ot_hbm_su_static_pinned_bank.$proc$/srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv:18$186'.
+
+35.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+35.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod$b81a6e250b2a20ec7259710bf9e765b346b85b5c\ot_hgi_su_lbank.\ks' using process `$paramod$b81a6e250b2a20ec7259710bf9e765b346b85b5c\ot_hgi_su_lbank.$proc$/srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:506$195'.
+  created $dff cell `$procdff$201' with positive edge clock.
+Creating register for signal `\ot_hbm_su_static_pinned_bank.\r_pin' using process `\ot_hbm_su_static_pinned_bank.$proc$/srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv:21$187'.
+  created $adff cell `$procdff$206' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_su_static_pinned_bank.\r_macro' using process `\ot_hbm_su_static_pinned_bank.$proc$/srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv:21$187'.
+  created $adff cell `$procdff$211' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_su_static_pinned_bank.\r_return' using process `\ot_hbm_su_static_pinned_bank.$proc$/srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv:21$187'.
+  created $adff cell `$procdff$216' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_su_static_pinned_bank.\r_late' using process `\ot_hbm_su_static_pinned_bank.$proc$/srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv:21$187'.
+  created $adff cell `$procdff$221' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_su_static_pinned_bank.\w_pin' using process `\ot_hbm_su_static_pinned_bank.$proc$/srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv:21$187'.
+  created $adff cell `$procdff$226' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hbm_su_static_pinned_bank.\read_data' using process `\ot_hbm_su_static_pinned_bank.$proc$/srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv:18$186'.
+  created $dff cell `$procdff$227' with positive edge clock.
+Creating register for signal `\ot_hbm_su_static_pinned_bank.\a_pin' using process `\ot_hbm_su_static_pinned_bank.$proc$/srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv:18$186'.
+  created $dff cell `$procdff$228' with positive edge clock.
+Creating register for signal `\ot_hbm_su_static_pinned_bank.\wa_pin' using process `\ot_hbm_su_static_pinned_bank.$proc$/srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv:18$186'.
+  created $dff cell `$procdff$229' with positive edge clock.
+Creating register for signal `\ot_hbm_su_static_pinned_bank.\wd_pin' using process `\ot_hbm_su_static_pinned_bank.$proc$/srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv:18$186'.
+  created $dff cell `$procdff$230' with positive edge clock.
+
+35.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+35.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `$paramod$b81a6e250b2a20ec7259710bf9e765b346b85b5c\ot_hgi_su_lbank.$proc$/srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:506$195'.
+Removing empty process `$paramod$b81a6e250b2a20ec7259710bf9e765b346b85b5c\ot_hgi_su_lbank.$proc$/srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:506$195'.
+Removing empty process `ot_hbm_su_static_pinned_bank.$proc$/srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv:21$187'.
+Removing empty process `ot_hbm_su_static_pinned_bank.$proc$/srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv:18$186'.
+Cleaned up 1 empty switch.
+
+35.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$b81a6e250b2a20ec7259710bf9e765b346b85b5c\ot_hgi_su_lbank.
+Optimizing module $paramod$2c68e77745cdf0781f22e4bef14272be1e671e24\ot_hbm_su_static_replicated_bank.
+<suppressed ~6 debug messages>
+Optimizing module ot_hbm_su_static_pinned_bank.
+<suppressed ~10 debug messages>
+
+36. Executing CHECK pass (checking for obvious problems).
+Checking module $paramod$b81a6e250b2a20ec7259710bf9e765b346b85b5c\ot_hgi_su_lbank...
+Checking module $paramod$2c68e77745cdf0781f22e4bef14272be1e671e24\ot_hbm_su_static_replicated_bank...
+Checking module ot_hbm_su_static_pinned_bank...
+Found and reported 0 problems.
+
+37. Executing JSON backend.
+
+Warnings: 1 unique messages, 1 total
+End of script. Logfile hash: d9f2911a98, CPU: user 0.06s system 0.01s, MEM: 67.36 MB peak
+Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+Time spent: 87% 34x read_verilog (0 sec), 8% 1x hierarchy (0 sec), ...

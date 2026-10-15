@@ -1,0 +1,39 @@
+{
+  "root_sinks": {
+    "head": {
+      "clk_lane[0]": 1481,
+      "clk_lane[1]": 4935,
+      "clk_lane[2]": 1699,
+      "clk_lane[3]": 578,
+      "clk_lane[4]": 11703,
+      "clk_lane[5]": 1099,
+      "clk_lane[6]": 794,
+      "clk_lane[7]": 148,
+      "clk_insert[0]": 5808,
+      "clk_insert[1]": 5808,
+      "clk_insert[2]": 5808,
+      "clk_insert[3]": 2178,
+      "clk_side[0]": 8521,
+      "clk_side[1]": 3814,
+      "clk_side[2]": 10813,
+      "clk_side[3]": 10794,
+      "clk_side[4]": 9139,
+      "clk_side[5]": 13902,
+      "clk_bcast[0]": 1742
+    },
+    "bank": {
+      "clk[0]": 336
+    }
+  },
+  "max_root_sinks": 13902,
+  "all_related_phase0": true,
+  "clock_period_ps": 833.333,
+  "physical_qualified": false,
+  "head_inventory_job": "oth-ubuntu-1755849-1792059840",
+  "bank_and_combined_count_job": "oth-ubuntu-1775525-1792060156",
+  "head_JSON_reused": true,
+  "original_failure": "initial bank hierarchy lacked declarations for unused defaultRB13 macro; actualfunctionalRB9 unaffected; original failure preserved; deferred frontend+all3blackbox declarations fixes tooling",
+  "head_register_sinks": 100764,
+  "bank_register_sinks": 330,
+  "bank_macro_clock_pins": 6
+}

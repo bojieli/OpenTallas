@@ -1,0 +1,459 @@
+
+-- Executing script file `/srv/opentallas-scratch/codex/sfu-fused-latency-1015/scalar_clock_counts/bank.ys' --
+
+1. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv' to AST representation.
+Generating RTLIL representation for module `\ot_su12_lane'.
+Generating RTLIL representation for module `\ot_su12_light'.
+Generating RTLIL representation for module `\ot_su12_sfu'.
+Generating RTLIL representation for module `\ot_su12_full'.
+Generating RTLIL representation for module `\ot_su12_full31'.
+Generating RTLIL representation for module `\ot_su12_side'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_v41x_vec_lane'.
+Warning: Replacing memory \off0 with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:278
+Warning: Replacing memory \off1 with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:278
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_v41x_exp'.
+Generating RTLIL representation for module `\ot_hdc_v41x_rsqrt'.
+Generating RTLIL representation for module `\ot_hdc_v41x_fdiv'.
+Warning: Replacing memory \r_e with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv:568
+Warning: Replacing memory \r_bad with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv:567
+Warning: Replacing memory \r_zero with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv:566
+Warning: Replacing memory \r_sign with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv:565
+Warning: Replacing memory \r_mb3 with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv:564
+Warning: Replacing memory \r_mb with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv:563
+Warning: Replacing memory \r_q with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv:562
+Warning: Replacing memory \r_rem with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv:561
+Generating RTLIL representation for module `\ot_hdc_v41x_softplus'.
+Generating RTLIL representation for module `\ot_hdc_v41x_ins'.
+Warning: Replacing memory \genblk1.genblk1.g_line.r with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv:1004
+Warning: Replacing memory \genblk1.genblk1.g_line.rv with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv:999
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_delay.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_delay.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_delay'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fpu.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fpu.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_fadd'.
+Generating RTLIL representation for module `\ot_hdc_fmul'.
+Generating RTLIL representation for module `\ot_hdc_bmul'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_pipe'.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/proto/ot_fp32_add_rne_pipe.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/proto/ot_fp32_add_rne_pipe.sv' to AST representation.
+Generating RTLIL representation for module `\ot_fp32_add_rne_pipe'.
+Successfully finished Verilog frontend.
+
+8. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_sfu.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_sfu.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_vline'.
+physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_sfu.sv:23: Warning: Range [1:0] select out of bounds on signal `\line': Setting 1 LSB bits to undef.
+Generating RTLIL representation for module `\ot_hdc_exp'.
+Generating RTLIL representation for module `\ot_hdc_recip'.
+Generating RTLIL representation for module `\ot_hdc_rsqrt'.
+Successfully finished Verilog frontend.
+
+9. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fdiv.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fdiv.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_fdiv'.
+Warning: Replacing memory \r_e with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fdiv.sv:101
+Warning: Replacing memory \r_bad with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fdiv.sv:100
+Warning: Replacing memory \r_zero with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fdiv.sv:99
+Warning: Replacing memory \r_sign with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fdiv.sv:98
+Warning: Replacing memory \r_mb with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fdiv.sv:97
+Warning: Replacing memory \r_q with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fdiv.sv:96
+Warning: Replacing memory \r_rem with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fdiv.sv:95
+Successfully finished Verilog frontend.
+
+10. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_softplus.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_softplus.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_softplus'.
+Successfully finished Verilog frontend.
+
+11. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fastfp.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fastfp.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_ksa'.
+Generating RTLIL representation for module `\ot_hdc_lzc32'.
+Generating RTLIL representation for module `\ot_hdc_mul24_rows'.
+Generating RTLIL representation for module `\ot_hdc_mul24_sum'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_fast'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_fast'.
+Generating RTLIL representation for module `\ot_hdc_qadd'.
+Generating RTLIL representation for module `\ot_hdc_qmul'.
+Successfully finished Verilog frontend.
+
+12. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fastfp_lat_c12.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fastfp_lat_c12.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_qmul_lat'.
+Generating RTLIL representation for module `\ot_hdc_qadd_lat'.
+Generating RTLIL representation for module `\ot_hdc_kadd'.
+Generating RTLIL representation for module `\ot_hdc_kge'.
+Generating RTLIL representation for module `\ot_hdc_kinc'.
+Successfully finished Verilog frontend.
+
+13. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_f12.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_f12.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_f12_cut'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_f12'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_f12'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_f12_l4'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_f12_l5'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_f12_l5'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_f12_l6'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_f12_l5s'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_f12_l5x'.
+Generating RTLIL representation for module `\ot_hdc_f12_inreg'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_f12_l5i'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_f12_l6i'.
+Successfully finished Verilog frontend.
+
+14. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_add6.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_add6.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_f12_l6x'.
+Successfully finished Verilog frontend.
+
+15. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv' to AST representation.
+Generating RTLIL representation for module `\ot_dsrom_exp_f12'.
+Generating RTLIL representation for module `\ot_dsrom_fdiv_f12'.
+Warning: Replacing memory \r_e with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv:508
+Warning: Replacing memory \r_bad with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv:507
+Warning: Replacing memory \r_zero with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv:506
+Warning: Replacing memory \r_sign with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv:505
+Warning: Replacing memory \r_mb3 with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv:504
+Warning: Replacing memory \r_mb with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv:503
+Warning: Replacing memory \r_q with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv:502
+Warning: Replacing memory \r_rem with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv:501
+Generating RTLIL representation for module `\ot_dsrom_add_f12_l6'.
+Generating RTLIL representation for module `\ot_dsrom_actquant_f12'.
+Warning: Replacing memory \c1_sub with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv:816
+Warning: Replacing memory \c1_bb with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv:814
+Warning: Replacing memory \c1_cn with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv:813
+Warning: Replacing memory \c1_p with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv:812
+Warning: Replacing memory \r2_base with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv:777
+Warning: Replacing memory \r2_g with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv:776
+Warning: Replacing memory \r2_c with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv:775
+Warning: Replacing memory \r1_g with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv:758
+Warning: Replacing memory \r1_t with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv:755
+Warning: Replacing memory \g2_rs with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv:733
+Warning: Replacing memory \g2_g with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv:732
+Warning: Replacing memory \g2_sig with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv:730
+Warning: Replacing memory \g1_sig with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv:709
+Warning: Replacing memory \g1_ev with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv:708
+Successfully finished Verilog frontend.
+
+16. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt_c12.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt_c12.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_fsqrt_c12'.
+Warning: Replacing memory \err_stage with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt_c12.sv:98
+Warning: Replacing memory \zero_stage with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt_c12.sv:97
+Warning: Replacing memory \half_stage with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt_c12.sv:96
+Warning: Replacing memory \rad_stage with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt_c12.sv:95
+Warning: Replacing memory \root_stage with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt_c12.sv:94
+Warning: Replacing memory \rem_stage with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt_c12.sv:93
+Successfully finished Verilog frontend.
+
+17. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_fsqrt'.
+Warning: Replacing memory \err_stage with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt.sv:103
+Warning: Replacing memory \zero_stage with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt.sv:102
+Warning: Replacing memory \half_stage with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt.sv:101
+Warning: Replacing memory \rad_stage with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt.sv:100
+Warning: Replacing memory \root_stage with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt.sv:99
+Warning: Replacing memory \rem_stage with list of registers. See physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt.sv:98
+Successfully finished Verilog frontend.
+
+18. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_lat'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_lat4'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_lat5'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_lat6'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_lat7'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_lat9'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_lat5i'.
+Successfully finished Verilog frontend.
+
+19. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_add_lat.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_add_lat.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_lat'.
+Generating RTLIL representation for module `\ot_hdc_w11_cut'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_lat4i'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_lat3'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_lat4'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_lat5'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_lat6'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_lat7'.
+Successfully finished Verilog frontend.
+
+20. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_prefix.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_prefix.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_ksadd_k'.
+Generating RTLIL representation for module `\ot_hdc_inc_k'.
+Successfully finished Verilog frontend.
+
+21. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_delay_ring.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_delay_ring.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_delay_ring'.
+Successfully finished Verilog frontend.
+
+22. Executing Verilog-2005 frontend: physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv
+Parsing SystemVerilog input from `physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_v41x_vec'.
+Generating RTLIL representation for module `\ot_hdc_v41x_cmul4'.
+Generating RTLIL representation for module `\ot_hdc_v41x_cmul2'.
+Generating RTLIL representation for module `\ot_hdc_v41x_csum8'.
+Generating RTLIL representation for module `\ot_hdc_v41x_csa8'.
+Generating RTLIL representation for module `\ot_hdc_v41x_ckmux'.
+Generating RTLIL representation for module `\ot_hdc_v41x_csum4'.
+Generating RTLIL representation for module `\ot_hdc_v41x_chf'.
+Generating RTLIL representation for module `\ot_hdc_v41x_ckreg'.
+Generating RTLIL representation for module `\ot_hdc_v41x_chf3'.
+Successfully finished Verilog frontend.
+
+23. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_su_static_side'.
+Generating RTLIL representation for module `\ot_hbm_su_static_side_softplus'.
+Successfully finished Verilog frontend.
+
+24. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_scalar.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_scalar.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_su_static_scalar'.
+Successfully finished Verilog frontend.
+
+25. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_su_static_lane'.
+Warning: Replacing memory \g_fetch_edge.tag with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv:478
+Warning: Replacing memory \g_index_edge.payload with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv:428
+Warning: Replacing memory \off0 with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv:278
+Warning: Replacing memory \off1 with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv:278
+Successfully finished Verilog frontend.
+
+26. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_su_static_ins'.
+Warning: Replacing memory \g_line.r with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv:64
+Warning: Replacing memory \g_line.rv with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv:59
+Successfully finished Verilog frontend.
+
+27. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_su_static_replicated_bank'.
+Generating RTLIL representation for module `\ot_hbm_su_static_data_store'.
+Successfully finished Verilog frontend.
+
+28. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_su_static_pinned_bank'.
+Successfully finished Verilog frontend.
+
+29. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv' to AST representation.
+Warning: Encountered `translate_off' comment! Such legacy hot comments are supported by Yosys, but are not part of any formal language specification. Using a portable and standards-compliant construct such as `ifdef is recommended!
+Generating RTLIL representation for module `\ot_hgi_su_ctl'.
+Warning: Replacing memory \df with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:444
+Warning: Replacing memory \q_msk with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:367
+Warning: Replacing memory \q_la with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:366
+Warning: Replacing memory \q_off with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:365
+Warning: Replacing memory \q_hi with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:364
+Warning: Replacing memory \q_lo with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:364
+Warning: Replacing memory \q_w with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:363
+Warning: Replacing memory \q_md with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:363
+Warning: Replacing memory \q_sec with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:363
+Warning: Replacing memory \lb with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:309
+Warning: Replacing memory \lsz with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:299
+Warning: Replacing memory \Lr with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:280
+Warning: Replacing memory \nir with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:279
+Warning: Replacing memory \nrr with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:279
+Warning: Replacing memory \sir with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:279
+Warning: Replacing memory \sor with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:279
+Warning: Replacing memory \lo with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:279
+Warning: Replacing memory \rv with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:278
+Warning: Replacing memory \galloc with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:246
+Generating RTLIL representation for module `\ot_hgi_su_lbank'.
+Generating RTLIL representation for module `\ot_hgi_su_lgroup2'.
+Warning: Replacing memory \br_q with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:715
+Warning: Replacing memory \lr_q with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:714
+Warning: Replacing memory \b_wd with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:685
+Warning: Replacing memory \b_wa with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:685
+Warning: Replacing memory \lb_q2 with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:644
+Warning: Replacing memory \sr_lo2 with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:643
+Warning: Replacing memory \sr_lo with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:643
+Warning: Replacing memory \lb_q with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:642
+Warning: Replacing memory \b_ra with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:627, /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:616
+Generating RTLIL representation for module `\ot_hgi_su_rfile'.
+Generating RTLIL representation for module `\ot_hgi_su_lmem'.
+Generating RTLIL representation for module `\ot_hgi_su_unit'.
+Generating RTLIL representation for module `\ot_hgi_su_ctlw'.
+Warning: Replacing memory \d_dsec with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1639
+Warning: Replacing memory \d_rv with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1639
+Warning: Replacing memory \d_lb with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1639
+Warning: Replacing memory \d_hi with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1639
+Warning: Replacing memory \d_lo with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1639
+Warning: Replacing memory \r_dsec with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1616
+Warning: Replacing memory \r_rv with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1616
+Warning: Replacing memory \r_lb with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1616
+Warning: Replacing memory \r_hi with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1616
+Warning: Replacing memory \r_lo with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1616
+Warning: Replacing memory \dsec with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1607
+Warning: Replacing memory \hi with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1575
+Warning: Replacing memory \lo with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1552
+Warning: Replacing memory \lb with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1549
+Warning: Replacing memory \rv with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1539
+Warning: Replacing memory \dq_s with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1348
+Warning: Replacing memory \dg_end with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1341
+Warning: Replacing memory \dg_nx with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1341
+Warning: Replacing memory \cl_end with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1323
+Warning: Replacing memory \cl_nx with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1323
+Warning: Replacing memory \lq with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1302
+Warning: Replacing memory \sg_end with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1297
+Warning: Replacing memory \sg_nx with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1297
+Warning: Replacing memory \wpend with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1283
+Warning: Replacing memory \lqn with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1283
+Warning: Replacing memory \lqt with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1302, /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1283
+Warning: Replacing memory \lqh with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1283
+Warning: Replacing memory \wcr with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1283
+Warning: Replacing memory \cr with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1283
+Warning: Replacing memory \dg_on with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1282
+Warning: Replacing memory \dg_r with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1282
+Warning: Replacing memory \cl_on with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1282
+Warning: Replacing memory \cl_r with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1282
+Warning: Replacing memory \sg_on with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1282
+Warning: Replacing memory \sg_r with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1282
+Warning: Replacing memory \dq_n with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1279
+Warning: Replacing memory \dq_t with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1348, /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1279
+Warning: Replacing memory \dq_h with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1279
+Generating RTLIL representation for module `\ot_hgi_su_lmemw'.
+Warning: Replacing memory \sm_p with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1732
+Warning: Replacing memory \sd_p with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1732
+Warning: Replacing memory \lm_p with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1732
+Warning: Replacing memory \ld_p with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1732
+Warning: Replacing memory \sv_p with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1729
+Warning: Replacing memory \lv_p with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1729
+Generating RTLIL representation for module `\ot_hgi_su_ctlx'.
+Warning: Replacing memory \dq with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2387
+Warning: Replacing memory \bq_cnt with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2338
+Warning: Replacing memory \bq_id with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2338
+Warning: Replacing memory \lq with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2289
+Warning: Replacing memory \mq with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2258
+Warning: Replacing memory \dq_t with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2387, /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2217
+Warning: Replacing memory \dq_h with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2217
+Warning: Replacing memory \dq_n with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2217
+Warning: Replacing memory \wpend with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2217
+Warning: Replacing memory \wcr with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2217
+Warning: Replacing memory \lq_t with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2289, /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2217
+Warning: Replacing memory \lq_h with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2217
+Warning: Replacing memory \lq_n with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2217
+Warning: Replacing memory \mq_t with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2258, /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2216
+Warning: Replacing memory \mq_h with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2216
+Warning: Replacing memory \mq_n with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2216
+Warning: Replacing memory \slot with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2216
+Warning: Replacing memory \cr with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2216
+Warning: Replacing memory \d_rv with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2168
+Warning: Replacing memory \d_L with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2168
+Warning: Replacing memory \d_lb with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2168
+Warning: Replacing memory \d_nw with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2168
+Warning: Replacing memory \d_nr with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2168
+Warning: Replacing memory \d_si with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2167
+Warning: Replacing memory \d_so with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2167
+Warning: Replacing memory \d_vhi with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2167
+Warning: Replacing memory \d_lo with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2167
+Warning: Replacing memory \r_rv with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2139
+Warning: Replacing memory \r_L with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2139
+Warning: Replacing memory \r_lb with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2139
+Warning: Replacing memory \r_nw with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2139
+Warning: Replacing memory \r_nr with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2138
+Warning: Replacing memory \r_si with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2138
+Warning: Replacing memory \r_so with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2138
+Warning: Replacing memory \r_vhi with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2138
+Warning: Replacing memory \r_lo with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2138
+Warning: Replacing memory \lb with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2103
+Warning: Replacing memory \galloc with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2098
+Warning: Replacing memory \gbase with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2098
+Warning: Replacing memory \vhi with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2089
+Warning: Replacing memory \lsz with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2088
+Warning: Replacing memory \Lr with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2071
+Warning: Replacing memory \nir with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2071
+Warning: Replacing memory \nrr with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2071
+Warning: Replacing memory \sir with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2071
+Warning: Replacing memory \sor with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2071
+Warning: Replacing memory \lo with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2071
+Warning: Replacing memory \rv with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2062
+Warning: Replacing memory \d_ge with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2048
+Warning: Replacing memory \d_gs with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2048
+Warning: Replacing memory \r_ge with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2048
+Warning: Replacing memory \r_gs with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2048
+Warning: Replacing memory \need with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2048
+Warning: Replacing memory \gap with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2048
+Warning: Replacing memory \try_b with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2023, /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2021
+Generating RTLIL representation for module `\ot_hgi_su_ctlw_slice'.
+Warning: Replacing memory \dq_s with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2626
+Warning: Replacing memory \dg_end with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2619
+Warning: Replacing memory \dg_nx with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2619
+Warning: Replacing memory \cl_end with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2601
+Warning: Replacing memory \cl_nx with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2601
+Warning: Replacing memory \lq_first with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2580
+Warning: Replacing memory \lq with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2579
+Warning: Replacing memory \sg_end with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2574
+Warning: Replacing memory \sg_nx with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2574
+Warning: Replacing memory \wpend with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2560
+Warning: Replacing memory \lqn with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2560
+Warning: Replacing memory \lqt with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2579, /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2560
+Warning: Replacing memory \lqh with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2560
+Warning: Replacing memory \wcr with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2560
+Warning: Replacing memory \cr with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2560
+Warning: Replacing memory \dg_on with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2559
+Warning: Replacing memory \dg_r with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2559
+Warning: Replacing memory \cl_on with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2559
+Warning: Replacing memory \cl_r with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2559
+Warning: Replacing memory \sg_on with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2559
+Warning: Replacing memory \sg_r with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2559
+Warning: Replacing memory \dq_n with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2556
+Warning: Replacing memory \dq_t with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2626, /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2556
+Warning: Replacing memory \dq_h with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2556
+Warning: Replacing memory \d_dsec with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2487
+Warning: Replacing memory \d_rv with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2487
+Warning: Replacing memory \d_lb with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2486
+Warning: Replacing memory \d_hi with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2486
+Warning: Replacing memory \d_lo with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2486
+Warning: Replacing memory \dsec with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2483
+Warning: Replacing memory \rv with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2482
+Warning: Replacing memory \lb with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2482
+Warning: Replacing memory \hi with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2482
+Warning: Replacing memory \lo with list of registers. See /srv/opentallas-scratch/codex/sfu-fused-latency-1015/head_deps/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2482
+Successfully finished Verilog frontend.
+
+30. Executing Verilog-2005 frontend: physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v
+Parsing Verilog input from `physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v' to AST representation.
+Generating RTLIL representation for module `\ot_sram_1r1w_128x256_m1_r2c2'.
+Successfully finished Verilog frontend.
+
+31. Executing HIERARCHY pass (managing design hierarchy).
+
+31.1. Analyzing design hierarchy..
+Top module:  \ot_hbm_su_static_pinned_bank
+Used module:     \ot_hbm_su_static_replicated_bank
+Used module:         \ot_hgi_su_lbank
+Parameter \RB = 9
+Parameter \MACRO = 1
+
+31.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_su_lbank'.
+ERROR: Module `\ot_sram_1r1w_1024x256_m2_r2c2' referenced in module `\ot_hgi_su_lbank' in cell `\g_m.u_m' is not part of the design.

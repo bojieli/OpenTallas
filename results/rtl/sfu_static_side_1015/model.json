@@ -14,6 +14,25 @@
     "broadcast_clocks": 1,
     "SIDE_clocks": 6,
     "bank_clocks": 1,
+    "measured_lane_root_sinks": [
+      1481,
+      4935,
+      1699,
+      578,
+      11703,
+      1099,
+      794,
+      148
+    ],
+    "measured_metadata_root_sinks": [
+      5808,
+      5808,
+      5808,
+      2178
+    ],
+    "measured_broadcast_root_sinks": 1742,
+    "measured_bank_root_sinks": 336,
+    "measured_all20root_max": 13902,
     "clock_relation": "all20related1:1phase0",
     "source_lane_commit": "f1ce8bc88",
     "parent_fn_pin_commit": "6c58a8068",
