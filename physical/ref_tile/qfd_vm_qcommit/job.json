@@ -12,11 +12,18 @@
   "extra_paths": [
    "rtl/qwen_sys/vm_nox_20261014",
    "rtl/qwen_sys/vm_me_20261008",
-   "rtl/hdc",
-   "rtl/lib",
-   "tools/qwen_tp8",
-   "physical/asap7_memory_macros",
-   "rtl/qwen_split/ot_qfd_vm_q_export.sv"
+   "rtl/qwen_sys/vm_plane_20261013",
+   "rtl/qwen_sys/vm_die_split_20261012",
+   "rtl/qwen_sys/rtl_finish_20261007",
+   "rtl/qwen_sys/dvm_20261014",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/physical/ot_qwen_tree_delay.sv",
+   "rtl/physical/ot_qwen_tree_delay_tiles.sv",
+   "rtl/qwen_split/qfd_su_vm_pack.sv",
+   "tools/qwen_tp8/vm_die_static_bench.sh",
+   "tools/qwen_tp8/vm_attention_commit_gate.sh",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2"
   ]
  },
  "stages": {
