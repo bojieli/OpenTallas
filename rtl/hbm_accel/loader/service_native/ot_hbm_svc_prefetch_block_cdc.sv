@@ -3,7 +3,7 @@
 // Variable waits are entirely on the HBM side. Delivery begins only after a
 // whole block is resident and then emits ceil(total/8) fixed stream cycles.
 // Performance, routing, and physical CDC timing remain unqualified.
-module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0, parameter integer DELIVERY_II=1)(
+module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0, parameter integer DELIVERY_II=1, parameter integer ISSUE_INTERLEAVE=0)(
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
  input wire reserve_v,output wire reserve_ready,input wire [31:0] reserve_base,
  input wire [11:0] reserve_total,input wire reserve_bank,input wire [15:0] reserve_epoch,
@@ -28,7 +28,7 @@ module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0, parameter intege
   pc_of=s[6:2]^s[11:7]^s[16:12];
  endfunction
  wire [32:0] reserve_end={3'b0,reserve_base[29:0]}+reserve_total;
- wire descriptor_ok=reserve_total!=0&&reserve_total<=2048&&reserve_base[31:30]==STACK&&reserve_end<=33'h040000000;
+ wire descriptor_ok=(!ISSUE_INTERLEAVE || reserve_total[5:0]==0)&&reserve_total!=0&&reserve_total<=2048&&reserve_base[31:30]==STACK&&reserve_end<=33'h040000000;
  reg [1:0] allocated,ready_q,announced;
  reg [15:0] bank_epoch[0:1];reg [11:0] bank_total[0:1],received[0:1];
  reg [2047:0] seen[0:1];reg stream_fault,hbm_fault;
@@ -48,7 +48,11 @@ module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0, parameter intege
  reg [11:0] h_total,h_next,h_received;
  reg [31:0] outstanding;reg [10:0] owner_ordinal[0:31];
  assign desc_rd_ready=!h_active&&!hbm_fault&&hrst&&desc_rd_valid;
- wire [29:0] issue_sector=h_base+h_next;
+ // Reorder requests only within the variable-latency PHY boundary. A tile of
+ //64 sectors visits16 distinct PCs before revisiting any PC, rather than
+ //four requests to one PC. Owner ordinals remain true source-relative offsets.
+ wire [11:0] issue_ordinal=ISSUE_INTERLEAVE?{h_next[11:6],h_next[3:0],h_next[5:4]}:h_next;
+ wire [29:0] issue_sector=h_base+issue_ordinal;
  wire [4:0] issue_pc=pc_of(issue_sector);
  assign k_len={32{4'd1}};assign k_tag={32{{h_bank,h_epoch}}};
  assign k_we=0;assign k_wdata=0;assign k_wstrb=0;
@@ -97,7 +101,7 @@ module ot_hbm_svc_prefetch_block_cdc #(parameter [1:0] STACK=0, parameter intege
    end
    if(h_active)begin
     if(k_v[issue_pc]&&k_rdy[issue_pc])begin
-     outstanding[issue_pc]<=1;owner_ordinal[issue_pc]<=h_next[10:0];h_next<=h_next+1'b1;
+     outstanding[issue_pc]<=1;owner_ordinal[issue_pc]<=issue_ordinal[10:0];h_next<=h_next+1'b1;
     end
     for(hp=0;hp<32;hp=hp+1)begin
      if(kr_v[hp]&&(!outstanding[hp]||kr_tag[17*hp+:17]!={h_bank,h_epoch}||kr_beat[4*hp+:4]!=0))hbm_fault<=1;

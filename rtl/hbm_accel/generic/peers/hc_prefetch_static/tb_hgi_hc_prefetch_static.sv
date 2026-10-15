@@ -14,7 +14,8 @@ module tb_hgi_hc_prefetch_static;
  reg [2175:0] kr_tag=0;reg [511:0] kr_beat=0;reg [32767:0] kr_data=0;
  reg [255:0] image[0:2559];reg pending[0:127];integer delay_q[0:127];
  reg [16:0] tag_q[0:127];reg [255:0] data_q[0:127];
- integer requests=0,responses=0,checked=0,stream_cycles=0;
+ integer requests=0,responses=0,checked=0,stream_cycles=0,last_ap_commit=0;
+ always @(negedge stream_clk)if(|write_done)last_ap_commit=stream_cycles;
  string image_path;
  ot_hgi_hc_prefetch_static #(.MUT(MUT)) dut(.*);
  function automatic [4:0] pc_of(input [29:0] s);pc_of=s[6:2]^s[11:7]^s[16:12];endfunction
@@ -65,15 +66,16 @@ module tb_hgi_hc_prefetch_static;
   idle(264);
  end endtask
  initial begin:run
-  integer slot,r,b,q,pos;reg [255:0] expected;
+  integer slot,r,b,q,pos,row_start,prefetch0_done,prefetch1_done,drain0_done,drain1_done,padding_done,delivery0_done;reg [255:0] expected;
   if(!$value$plusargs("IMAGE=%s",image_path))$fatal(1,"IMAGE required");$readmemh(image_path,image);
   for(integer i=0;i<128;i=i+1)begin pending[i]=0;delay_q[i]=0;end
   idle(4);stream_rst_n=1;hbm_rst_n=1;idle(12);
   for(slot=0;slot<2;slot=slot+1)begin
-   row_slot=slot;row_epoch=16'h6001+slot;pulse_row();reserve(0);reserve(1);drain(0);drain(1);
-   pad_v=1;tick();@(negedge stream_clk);pad_v=0;idle(196);
+   row_slot=slot;row_epoch=16'h6001+slot;row_start=stream_cycles;pulse_row();reserve(0);prefetch0_done=stream_cycles;reserve(1);prefetch1_done=stream_cycles;drain(0);drain0_done=stream_cycles;drain(1);drain1_done=stream_cycles;
+   pad_v=1;tick();@(negedge stream_clk);pad_v=0;idle(196);padding_done=stream_cycles;
    if(delivery_ready!=3)$fatal(1,"two full actual landing blocks missing %b",delivery_ready);
-   deliver(0);deliver(1);
+   deliver(0);delivery0_done=stream_cycles;deliver(1);
+   $display("HC_PREFETCH_PHASE slot=%0d start=%0d prefetch0_ready=%0d prefetch1_ready=%0d drain0_end=%0d drain1_end=%0d pad_end=%0d deliver0_end=%0d last_ap_commit=%0d all_done=%0d",slot,row_start,prefetch0_done,prefetch1_done,drain0_done,drain1_done,padding_done,delivery0_done,last_ap_commit,stream_cycles);
    for(r=0;r<128;r=r+1)begin
     @(negedge stream_clk);read_v=255;read_slot={8{1'(slot)}};
     for(b=0;b<8;b=b+1)read_row[b*7+:7]=r;
