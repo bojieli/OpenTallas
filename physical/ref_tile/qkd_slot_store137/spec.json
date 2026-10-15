@@ -1,0 +1,138 @@
+{
+ "name": "qkd_slot_store137",
+ "top": "ot_qkvd_llr_replay_sram_leaf",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [],
+ "outline": {
+  "w": 216,
+  "h": 172.8
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "W": [
+   "we",
+   "din",
+   "dout",
+   "wa",
+   "ra"
+  ],
+  "S": [
+   "ck"
+  ],
+  "E": [],
+  "N": []
+ },
+ "pin_ranges": {
+  "we": [
+   3,
+   4
+  ],
+  "din": [
+   8,
+   76
+  ],
+  "dout": [
+   84,
+   162
+  ],
+  "wa": [
+   166,
+   167
+  ],
+  "ra": [
+   169,
+   170
+  ],
+  "ck": [
+   104,
+   106
+  ]
+ },
+ "route": {
+  "pd": 0.52,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_balance": {
+   "group_max": 32,
+   "v": "M5",
+   "h": "M4"
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 2,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "structural_change": "Replace64-word flop mux (~-900ps placedsetup) with real64x512 macro + registered write/read faces (431 wrapperFF); independent bank clock. Two collision-age bypasses preserve synchronous SRAM read-before-write. Static compiler ownswr/rdslot/epoch; fixedTX2/RX1 codec, no runtimeACK/credit/backpressure. Root assigned216x172.8 slot within691.2x367.2 fourbank/control cluster. s2 removes impossible late-write bypass from rawinputpins; nativewritesarecaptured, unread/pendingreadreusefaults. SRAMMX movesaddress/readfaces nearWupperwindows, unchangedmacroorigin andassignedports. ExactproductionTX3 fixture.",
+ "job": {
+  "owner": "Codex:q-link-replay",
+  "branch": "codex/q-link-replay-1014",
+  "tag": "s2",
+  "purpose": "Real fixed-slot SRAM store, independently clocked read/write pin registers, native clock and pin validation",
+  "benches": [
+   {
+    "name": "compiled_static_slot_exact",
+    "cmd": "bash rtl/test/qwen_split/run_static_slot_link.sh {RUN}/bench/positive",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 3,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "STATIC_SLOT_PASS",
+    "min_count_regex": "checks(\\d+)"
+   },
+   {
+    "name": "compiled_static_slot_bank_mut",
+    "cmd": "bash rtl/test/qwen_split/run_static_slot_link.sh {RUN}/bench/mutant -Ptb_qwen_static_slot_link.MUT=3",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 3,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "STATIC_SLOT_PASS"
+   }
+  ],
+  "extra_paths": [
+   "rtl/qwen_split",
+   "rtl/test/qwen_split",
+   "rtl/qwen_sys",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "physical/qwen_kv_die_phy",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
+  ],
+  "views_to": "physical/ref_tile/qkd_slot_store137/views",
+  "record_to": "results/rtl/ref_tile/qkd_slot_store137"
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "*u_sram",
+   "at": [
+    22.464,
+    43.2
+   ],
+   "orient": "MX"
+  }
+ ],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
