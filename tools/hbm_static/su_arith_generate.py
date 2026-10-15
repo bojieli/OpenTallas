@@ -173,7 +173,7 @@ def main():
 // Each quarter control is compiler-rebased explicitly; no hidden address translation.
 // All clock entries are independent physical roots with a common scheduled phase.
 // Scalar native side pipe is external and belongs only to global lane0.
-module ot_hbm_su_static_arithmetic #(parameter integer FETCH_EXTRA_EDGES=2)(
+module ot_hbm_su_static_arithmetic #(parameter integer FETCH_EXTRA_EDGES=2, MLAT=3, ALAT=3, LEAF=0)(
  '''+ports+'''
 );
  for(genvar b=0;b<64;b=b+1)begin:g_bcast
@@ -193,7 +193,7 @@ module ot_hbm_su_static_arithmetic #(parameter integer FETCH_EXTRA_EDGES=2)(
     # Keep low7 terms for 128 true local lanes. Other ABI terms have no identity bit.
     grid+='  wire [839:0] terms;\n  for(genvar s=0;s<5;s=s+1)begin:g_terms\n   assign terms[s*168+:168]=c_ld_c[s*240+:168];\n  end\n'
     grid+='  wire sv; wire [31:0] sx;\n  if(l==0)begin:g_side\n   assign side_v=sv; assign side_x=sx; assign side_fn=c_ci_sfu; assign side_fn_out=c_cs_sfu;\n  end\n'
-    grid+='  ot_hbm_su_static_lane #(.LN(7),.KIND(KIND),.MLAT(3),.ALAT(3),.FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES)) u_lane(\n'
+    grid+='  ot_hbm_su_static_lane #(.LN(7),.KIND(KIND),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES)) u_lane(\n'
     conns=['.clk_stage(clk_lane[l*8+:8])','.clk_insert(clk_insert[l*4+:4])','.rst_n(rst_lane_n[l])',".lane_id(11'(LOCAL))",'.cx_srcs(c_srcs)']
     conns += [f'.{n}(terms)' if n=='ld_c' else f'.{n}(c_{n})' for n,_ in FIELDS]
     for n,w in [('vi_q',32),('rd_q',128),('vi_re',1),('vm_we',1),('kv_we',1),('ro_v',1),('fault',1),('coll',1),('vi_addr',24),('vm_waddr',24),('kv_waddr',24),('rd_addr',96),('rd_re',4),('rd_src',8),('vm_wdata',32),('kv_wdata',32),('ro_x',32)]:

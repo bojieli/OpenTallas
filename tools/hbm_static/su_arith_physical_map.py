@@ -2,7 +2,7 @@
 """Map one actual SU master independently; this is no CTS/closure claim."""
 import json,re,subprocess,sys
 from pathlib import Path
-R=Path(__file__).resolve().parents[2];kind=sys.argv[1];out=Path(sys.argv[2]).resolve();out.mkdir(parents=True,exist_ok=True)
+R=Path(__file__).resolve().parents[2];kind=sys.argv[1];variant=(kind=='0_lat4_leaf1');out=Path(sys.argv[2]).resolve();out.mkdir(parents=True,exist_ok=True)
 args=[sys.executable,'tools/run_abi3_physical.py','--view','asap7','--clock-period-ns','1.111111111','--clock-uncertainty-ns','0.060','--clock-uncertainty-hold-ns','0.025','--stages','synth','--synth-timeout-seconds','unlimited','--flow-timeout-seconds','unlimited','--keep-workdir',str(out/'work'),'--output',str(out/'result.json')]
 if kind=='bank':
  args[args.index('synth')]='pnr'
@@ -12,7 +12,7 @@ if kind=='bank':
 else:
  files=re.findall(r'(?:rtl|physical)/[^\s\\]+\.(?:sv|v)',(R/'tools/hbm_static/su_arith_run.sh').read_text());files=[f for f in files if '/data_store/'not in f and '/peers/'not in f and not f.startswith('physical/') and '/tb_'not in f]
  args+=['--top','ot_hbm_su_static_lane','--clock-port','clk_stage[0]']
- for p in ['KIND='+kind,'LN=7','MLAT=3','ALAT=3','FETCH_EXTRA_EDGES=2']:args+=['--param',p]
+ for p in ['KIND='+('0' if variant else kind),'LN=7','MLAT='+('4' if variant else '3'),'ALAT=3','LEAF='+('1' if variant else '0'),'FETCH_EXTRA_EDGES=2']:args+=['--param',p]
 for f in files:args+=['--source',f]
 (out/'command.json').write_text(json.dumps(args,indent=2)+'\n')
 with (out/'map.log').open('w')as log:r=subprocess.run(args,cwd=R,stdout=log,stderr=subprocess.STDOUT)

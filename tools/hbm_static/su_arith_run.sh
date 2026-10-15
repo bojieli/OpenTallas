@@ -4,10 +4,14 @@ cd "$(dirname "$0")/../.."
 out=$(realpath -m "$1")
 mkdir -p "$out"
 python3 tools/hbm_static/su_arith_compile.py "$out/vectors"
+mlat=${SU_ARITH_MLAT:-3}
+alat=${SU_ARITH_ALAT:-3}
+leaf=${SU_ARITH_LEAF:-0}
+printf 'MLAT=%s ALAT=%s LEAF=%s\n' "$mlat" "$alat" "$leaf" > "$out/native_profile.txt"
 nops=$(python3 -c 'import json,sys;print(len(json.load(open(sys.argv[1]))["ops"]))' "$out/vectors/programme.json")
 vl=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 "$vl" --binary --timing --hierarchical -O1 -j 4 -CFLAGS -O0 -Wno-fatal \
- --top-module tb_su_static_arithmetic -GNOPS="$nops" --Mdir "$out/obj" \
+ --top-module tb_su_static_arithmetic -GNOPS="$nops" -GMLAT="$mlat" -GALAT="$alat" -GLEAF="$leaf" --Mdir "$out/obj" \
  rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv \
  rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv \
  rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_arithmetic.sv \

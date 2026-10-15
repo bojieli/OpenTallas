@@ -4,7 +4,7 @@
 // Each quarter control is compiler-rebased explicitly; no hidden address translation.
 // All clock entries are independent physical roots with a common scheduled phase.
 // Scalar native side pipe is external and belongs only to global lane0.
-module ot_hbm_su_static_arithmetic #(parameter integer FETCH_EXTRA_EDGES=2)(
+module ot_hbm_su_static_arithmetic #(parameter integer FETCH_EXTRA_EDGES=2, MLAT=3, ALAT=3, LEAF=0)(
  input wire [4095:0] clk_lane, input wire [2047:0] clk_insert,
  input wire [511:0] rst_lane_n,
  input wire [63:0] clk_bcast, rst_bcast_n,
@@ -82,7 +82,7 @@ module ot_hbm_su_static_arithmetic #(parameter integer FETCH_EXTRA_EDGES=2)(
   if(l==0)begin:g_side
    assign side_v=sv; assign side_x=sx; assign side_fn=c_ci_sfu; assign side_fn_out=c_cs_sfu;
   end
-  ot_hbm_su_static_lane #(.LN(7),.KIND(KIND),.MLAT(3),.ALAT(3),.FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES)) u_lane(
+  ot_hbm_su_static_lane #(.LN(7),.KIND(KIND),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES)) u_lane(
    .clk_stage(clk_lane[l*8+:8]),
    .clk_insert(clk_insert[l*4+:4]),
    .rst_n(rst_lane_n[l]),

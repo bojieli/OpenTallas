@@ -1,6 +1,8 @@
 `timescale 1ns/1ps
 module tb_su_static_arithmetic;
- parameter integer NOPS=12;
+ parameter integer NOPS=12,MLAT=3,ALAT=3,LEAF=0;
+ localparam integer LATENCY=23+4*(MLAT-3)+(ALAT-3)+LEAF;
+ localparam integer FIRST_OUTPUT=8+LATENCY;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,seed_v=0,drain_v=0;
  reg[8:0]seed_row=0,drain_row=0;
@@ -18,7 +20,7 @@ module tb_su_static_arithmetic;
  integer count[0:511];
  bit mut_addr,mut_phase,mut_data;
  string dir;
- ot_hbm_su_static_arithmetic dut(.clk_lane({4096{clk}}),.clk_insert({2048{clk}}),.rst_lane_n({512{rst_n}}),
+ ot_hbm_su_static_arithmetic #(.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF)) dut(.clk_lane({4096{clk}}),.clk_insert({2048{clk}}),.rst_lane_n({512{rst_n}}),
   .clk_bcast({64{clk}}),.rst_bcast_n({64{rst_n}}),.control(control),
   .vi_q(vi_q),.rd_q(rd_q),.side_y(32'h0),.side_v(side_v),.side_x(side_x),
   .vi_re(vi_re),.vm_we(vm_we),.kv_we(kv_we),.ro_v(ro_v),.fault(fault),.coll(coll),
@@ -53,7 +55,7 @@ module tb_su_static_arithmetic;
     else begin
      // Compiler cycle8 issue -> registered output visible to the receiving
      // pin at cycle31. Every subsequent issued vector must appear next edge.
-     if(cycle!=31+count[l])fail("compiled output cycle mismatch");
+     if(cycle!=FIRST_OUTPUT+count[l])fail("compiled output cycle mismatch");
      if(vm_wdata[l*32+:32]!==gold[op*32768+count[l]*512+l])fail($sformatf("lane=%0d word=%0d got=%h want=%h",l,count[l],vm_wdata[l*32+:32],gold[op*32768+count[l]*512+l]));
      if(vm_waddr[l*24+:24]!==24'(((l/128)<<14)+(((256+count[l])>>7)<<16)+(((256+count[l])&127)<<7)+(l%128)))fail("output identity/address");
     end
@@ -94,6 +96,6 @@ module tb_su_static_arithmetic;
    drain_v=0;
   end
   if(errors)$fatal(1,"SU_ARITH FAIL checks=%0d errors=%0d outputs=%0d",checks,errors,outputs);
-  $display("SU_ARITH PASS lanes=512 FULL=1 SFU=127 LIGHT=384 actual_SRAMs=3072 outputs=%0d checks=%0d fixed_issue=64 first_output=31 last_output=94 issue_to_output=23 II=1",outputs,checks);$finish;
+  $display("SU_ARITH PASS lanes=512 FULL=1 SFU=127 LIGHT=384 actual_SRAMs=3072 outputs=%0d checks=%0d fixed_issue=64 first_output=%0d last_output=%0d issue_to_output=%0d II=1 MLAT=%0d ALAT=%0d LEAF=%0d",outputs,checks,FIRST_OUTPUT,FIRST_OUTPUT+63,LATENCY,MLAT,ALAT,LEAF);$finish;
  end
 endmodule
