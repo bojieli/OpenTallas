@@ -1,0 +1,574 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "hgi_coll_rgx_rx_r2-r2-51de2332d",
+ "block": "ot_hgi_coll_rx_native",
+ "owner": "Codex:H-COLL",
+ "source_branch": "claude/hbm-p2p-coll-1014",
+ "record_branch": "codex/closure-record-hgi_coll_rgx_rx_r2-r2-51de2332d",
+ "source_commit": "51de2332d507173f6901cd266b397a3324eed419",
+ "host": "ot-epyc4",
+ "run_dir": "/srv/opentallas-scratch2/claude/closure-loop/hgi_coll_rgx_rx_r2-r2-51de2332d",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {
+   "core_clk": 833.333
+  },
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 51.81,
+  "ff_ps": 20.47,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {
+   "core_clk": 833.333
+  },
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -245.25,
+  "ss_sensitivity_tns_ps": -464173.4,
+  "corner_sta_tt": "/srv/opentallas-scratch2/claude/closure-loop/hgi_coll_rgx_rx_r2-r2-51de2332d/routes/hgi_coll_rgx_rx_r2_r2_51de2332d/corner_sta.json",
+  "post_sdc": [
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch2/claude/closure-loop/hgi_coll_rgx_rx_r2-r2-51de2332d/routes/hgi_coll_rgx_rx_r2_r2_51de2332d/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch2/claude/closure-loop/hgi_coll_rgx_rx_r2-r2-51de2332d/routes/hgi_coll_rgx_rx_r2_r2_51de2332d/work/orfs/logs/asap7/opentallas_ot_hgi_coll_rx_native_asap7_ref_hgi_coll_rgx_rx_r2_r2_51de2332d/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_lint": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.058 MB sources in 8 modules, into 0.002 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.006 s (elab=0.001, cvt=0.002, bld=0.000); cpu 0.006 s on 1 threads; allocated 33.379 MB\nlint-ok\n",
+   "track": "parallel"
+  },
+  "bench_native_vm_r20": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "Y=20 VC=2 C=2\nB2_RING sid=1 CW_hops=926 CCW_hops=1848 CW_credits=926 CCW_credits=1850 RLY=20 VC=2 C=2\nB2_RING sid=2 CW_hops=922 CCW_hops=0 CW_credits=922 CCW_credits=0 RLY=20 VC=2 C=2\nB2_RING sid=3 CW_hops=0 CCW_hops=926 CW_credits=0 CCW_credits=926 RLY=20 VC=2 C=2\nB2_COLL_VMPORT PASS flits=768 checked=2442 scalar_checked=1536\n- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_b2_vmport.sv:144: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 411us; walltime 9.153 s; speed 44.935 us/s\n- Verilator: cpu 9.153 s on 1 threads; allocated 15 MB\n",
+   "track": "parallel"
+  },
+  "bench_native_vm_early_credit": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "[151308000] %Fatal: tb_hgi_coll_b2_vmport.sv:131: Assertion failed in tb_hgi_coll_b2_vmport.unnamedblk19: premature credit drain lane4\n%Error: rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_b2_vmport.sv:131: Verilog $stop\nAborting...\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": "ive_asap7_ref_hgi_coll_rgx_rx_r2_r2_51de2332d/base/4_1_cts.log: (single)=TT\nok  routes/hgi_coll_rgx_rx_r2_r2_51de2332d/work/orfs/logs/asap7/opentallas_ot_hgi_coll_rx_native_asap7_ref_hgi_coll_rgx_rx_r2_r2_51de2332d/base/5_1_grt.log: (single)=TT\nROUTE_CORNER OK (setup corners must read TT liberties)\n"
+  }
+ },
+ "submit_checks": {
+  "bench_gate": {
+   "verdict": "PASS"
+  },
+  "macro_grid": {
+   "verdict": "WARN",
+   "mode": "refuse",
+   "message": "MACRO_GRID WARN: macro placement ['physical/ref_tile/hgi_coll_rgx_rx_r2/pre_gpl.tcl'] but no macro LEF resolved from the commands"
+  },
+  "ref_gate": {
+   "verdict": "PASS",
+   "mode": "refuse",
+   "message": "pre-route gate PASS"
+  }
+ },
+ "calibration": null,
+ "route_overlay_plan": {
+  "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
+  "origin_main": "eabb53e6604d4407b42db2cf9f2cff2bb2d97f0c",
+  "content_sha256": "3aa06e8a1032dc99d562bed65137a274b594aaf57a13b24cb79440b848b5e115",
+  "files": [
+   {
+    "path": "physical/common_flow/cg_pushdown.tcl",
+    "sha256": "09575e679bdbf90f99dca1ba100e14f4d7d9b54111159377626cb079f9daf118",
+    "git_blob": "56b97adbe97449de95775f371ce64f3111705135",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "56b97adbe97449de95775f371ce64f3111705135"
+   },
+   {
+    "path": "physical/common_flow/clk_net_protect.tcl",
+    "sha256": "ca5acab6f7b55b145dc6bccff3f5db5d10d9b4fed85678582bfc02e347509845",
+    "git_blob": "bbd1c6bd03febbd492a88ad85faccafbe010849d",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "bbd1c6bd03febbd492a88ad85faccafbe010849d"
+   },
+   {
+    "path": "physical/common_flow/edge_sliver_block.tcl",
+    "sha256": "714d28eeea112f820044e3c11a32ece53a76e44fc3fb54b1ce8fa87cb1619a74",
+    "git_blob": "601cdc0c3a9fafb123d288ebaf9dfcc4c0960e44",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "601cdc0c3a9fafb123d288ebaf9dfcc4c0960e44"
+   },
+   {
+    "path": "physical/common_flow/grt_macro_top_layer.tcl",
+    "sha256": "dfd76e540035bce859d8f2f303996390abe276f20bc1057c28d5781a87982389",
+    "git_blob": "a1527e60338a69bf165ea3518f8eb1ab1e938b4e",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "a1527e60338a69bf165ea3518f8eb1ab1e938b4e"
+   },
+   {
+    "path": "physical/common_flow/grt_macro_top_layer_post.tcl",
+    "sha256": "c1b31d6f5b1f9bcf3e586f25b7eeaf792611f3f00e4914abe482672460a43f18",
+    "git_blob": "124affca42fe9de5664556fa6778e3e546791335",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "124affca42fe9de5664556fa6778e3e546791335"
+   },
+   {
+    "path": "physical/common_flow/io_ref_routed.sdc",
+    "sha256": "cb2805c3a4a622051ebd24447f6898db2d82fdd6060317692dc3180ef5ac6a7e",
+    "git_blob": "ea82fe2628f9920b7ec6bc8b20656e18ad3523ae",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "ea82fe2628f9920b7ec6bc8b20656e18ad3523ae"
+   },
+   {
+    "path": "physical/common_flow/link_budget_consistent.sdc",
+    "sha256": "3d298ce13f96c011e8dc089c7b6617f36ba781fd64e92d8778e525d36028343f",
+    "git_blob": "f1358db231d660a7af3ed4b11a47de6fc94797d8",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "f1358db231d660a7af3ed4b11a47de6fc94797d8"
+   },
+   {
+    "path": "physical/common_flow/link_budget_hook.tcl",
+    "sha256": "af848b76a6a29c5facbbd64b396951707e9ba5935f5db53efc5e6d1c7ee5485a",
+    "git_blob": "20feda96cb386012dc737547a1835470557d1283",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "20feda96cb386012dc737547a1835470557d1283"
+   },
+   {
+    "path": "physical/common_flow/macro_cts_cluster.tcl",
+    "sha256": "a7af2ec6314ea96d71c966704e0ecae1f9dc3715a6519063fe151c0d1ebac798",
+    "git_blob": "df5f3153fe62b2fce5c539f23fce9911472f1aa7",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "df5f3153fe62b2fce5c539f23fce9911472f1aa7"
+   },
+   {
+    "path": "physical/common_flow/macro_sliver_block.tcl",
+    "sha256": "837dd48a48603ea95ddaa12ba5e6a66e80d9fe2976908c8734889540231c10a2",
+    "git_blob": "f989c3c340b9615f4e72c7635a97de1ccbc8056b",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "f989c3c340b9615f4e72c7635a97de1ccbc8056b"
+   },
+   {
+    "path": "physical/common_flow/nbr_clk_measured_ttb.sdc",
+    "sha256": "ce6df0a5101ca85c53598bd65a234b7fdcd6ff6f414d4b914904b54f1df62f52",
+    "git_blob": "4d441aac8ea0dee0f6775fe11bb866e58714fe4f",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "4d441aac8ea0dee0f6775fe11bb866e58714fe4f"
+   },
+   {
+    "path": "physical/qwen_die_masters/pinflop_ref.tcl",
+    "sha256": "8a0af71bf234b90b70674190c65d8d4942f2b717a22934f63be5fd20dfb95b2a",
+    "git_blob": "1c0b770414b5bcfd313aa22949ac8907f2e62393",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "1c0b770414b5bcfd313aa22949ac8907f2e62393"
+   },
+   {
+    "path": "tools/closure_loop/cal_classify.sh",
+    "sha256": "773bfb8d964e3a55eafdfc6ccb610380ef41e3897eb5f4fedeeb6ab4392d0e87",
+    "git_blob": "076cd5cd03a6a7d73797c902f832ffa3d524e388",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "076cd5cd03a6a7d73797c902f832ffa3d524e388"
+   },
+   {
+    "path": "tools/closure_loop/ck_insertion.py",
+    "sha256": "aa781a57409f054dfcbd54bca32e887dfbf6b199e16d48083450670b66d20e6a",
+    "git_blob": "e1f3aeff2d05031fe49488358f66c3d4d12ed4a1",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "e1f3aeff2d05031fe49488358f66c3d4d12ed4a1"
+   },
+   {
+    "path": "tools/closure_loop/eco_recovery.py",
+    "sha256": "e53c1b932e3c8b57d0056a205feb95eb7f47e041af55773673cdee38e085dbdf",
+    "git_blob": "95ec2e19c2d81165f033212c125e6e3e7a65bbbb",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "95ec2e19c2d81165f033212c125e6e3e7a65bbbb"
+   },
+   {
+    "path": "tools/closure_loop/h1_patch.py",
+    "sha256": "09c35b5d4e359eb3c1e0dd57f933ab92739962c6ac4df09ed8fc2fecdbbc2df1",
+    "git_blob": "d46106edd9daad6fd0476b4125af906b5fc1498f",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "d46106edd9daad6fd0476b4125af906b5fc1498f"
+   },
+   {
+    "path": "tools/closure_loop/hold_corners_patch.py",
+    "sha256": "3899d47b1e2b8101685dd627d63384385feb0b7574dc108bb9ed65a20686cfe9",
+    "git_blob": "72617e211054496b4b9a710462fbf052b904c2cb",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "72617e211054496b4b9a710462fbf052b904c2cb"
+   },
+   {
+    "path": "tools/closure_loop/hold_eco.sh",
+    "sha256": "5e3e3e07139a86744060de72268b9f7f3152007b84812793f1bf8ad4aa0387b5",
+    "git_blob": "2d10fe44c8f167d681c0330ef40ad55a3f81f2b9",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "2d10fe44c8f167d681c0330ef40ad55a3f81f2b9"
+   },
+   {
+    "path": "tools/closure_loop/hold_eco.tcl",
+    "sha256": "939fa18e6461fbd76d1402d844ff5265c277bb1133f756a91ed4a9ac7fe4885c",
+    "git_blob": "5767fadba209a89bf49bc44c890bb486472ae040",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "5767fadba209a89bf49bc44c890bb486472ae040"
+   },
+   {
+    "path": "tools/closure_loop/hold_eco_corner.tcl",
+    "sha256": "58a7c443623e233abe36ef12cc93cead969035878cbba5257a952eea6dc8830e",
+    "git_blob": "f8ce5182e3b0720f408b43aa843235073b730ee0",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "f8ce5182e3b0720f408b43aa843235073b730ee0"
+   },
+   {
+    "path": "tools/closure_loop/hold_eco_sdc.py",
+    "sha256": "81d7c403edb7899d96d88deb5b616d9821c066fefd6cbc6bc99328a1124ad9a7",
+    "git_blob": "7a7de573a4f1fe8eec1133c1a6eeee5d065e2b63",
+    "mode": 509,
+    "resolution": "same",
+    "literal_git_blob": "7a7de573a4f1fe8eec1133c1a6eeee5d065e2b63"
+   },
+   {
+    "path": "tools/closure_loop/hold_eco_window.tcl",
+    "sha256": "ad0d172d3b11952a27c22e11e02f6dd2158d200179faed87e58dbb953d99ac35",
+    "git_blob": "dfef049aac05beebdee3800806bae2add86a614e",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "dfef049aac05beebdee3800806bae2add86a614e"
+   },
+   {
+    "path": "tools/closure_loop/lane_kh_overlay.py",
+    "sha256": "d251933802ac6cdc6f3fe68c0a6b9bc58fda33bd72be1bb5b180015f1eb0df41",
+    "git_blob": "a063f6f72e788ab3f3756a75b7deb5b7ee4b3045",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "a063f6f72e788ab3f3756a75b7deb5b7ee4b3045"
+   },
+   {
+    "path": "tools/closure_loop/macro_views.py",
+    "sha256": "f36101f77b5d83d49ba81928bea7660920e4ac77931e2a4614738f677d306ea1",
+    "git_blob": "d4ed13e553ab0298839ccd973fc698d280bc1c0f",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "d4ed13e553ab0298839ccd973fc698d280bc1c0f"
+   },
+   {
+    "path": "tools/closure_loop/meas_resta.py",
+    "sha256": "be7f8fd6154591f276987ed32de6a672c1991c6cef35cb14e26686108107800d",
+    "git_blob": "fde25f6808f803d628b5ab09b4d02b93ea3511bc",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "fde25f6808f803d628b5ab09b4d02b93ea3511bc"
+   },
+   {
+    "path": "tools/closure_loop/path_summary.py",
+    "sha256": "5917b8f0263d52f0e15856549bb62ff97748b43fa8484cb98bc66885acf74a88",
+    "git_blob": "341e9a3da6d5561a5ca5717877fd2853f220ceda",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "341e9a3da6d5561a5ca5717877fd2853f220ceda"
+   },
+   {
+    "path": "tools/closure_loop/pinflop_overlay.py",
+    "sha256": "6e1824cecdb0701660337041728e9af03d1b3d8fe193e1509df436e61bc0bd51",
+    "git_blob": "f5828eb48adbeea266de70154a357c6df2bdae0f",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "f5828eb48adbeea266de70154a357c6df2bdae0f"
+   },
+   {
+    "path": "tools/closure_loop/resume_check.sh",
+    "sha256": "ff6cb4bd794dddd6a815c6f23b34bd72327a8af7e2e68a036fedf2d2914c31d5",
+    "git_blob": "fbdd0e40d18708183a3f6bc712fbe66bd84d91af",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "fbdd0e40d18708183a3f6bc712fbe66bd84d91af"
+   },
+   {
+    "path": "tools/closure_loop/resume_patch.py",
+    "sha256": "1a0284c4bfae8cf5545bd3987cb5320150737860f7fa5b85f8b992dda1063714",
+    "git_blob": "4d3590fc4339a349ded26432b3123cb2fb711355",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "4d3590fc4339a349ded26432b3123cb2fb711355"
+   },
+   {
+    "path": "tools/closure_loop/route_corner_check.py",
+    "sha256": "f7893aab46440460421b7e945f3be70ce9e509a61fba2fbfaccc162b8f9a94f4",
+    "git_blob": "c434d05a6c768738b5c540b1a6898cb34dce5a32",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "c434d05a6c768738b5c540b1a6898cb34dce5a32"
+   },
+   {
+    "path": "tools/closure_loop/tt_overlay.py",
+    "sha256": "4adb0e8e7fefcfc7fe1141d9caeb47329f25e2f267a5ae4dd238e4f217bc3da4",
+    "git_blob": "ba24e51f8a1dcb9041b1c48494a5c1e702ce86ea",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "ba24e51f8a1dcb9041b1c48494a5c1e702ce86ea"
+   },
+   {
+    "path": "tools/closure_loop/tt_resta.sh",
+    "sha256": "4b663918cc4a82c8b9839b31062e377eca1134e3ed45729f2cb4dde9dc5dc49b",
+    "git_blob": "2ce64ca5cd0837c0dcc16597bc7b6f7852eee0d3",
+    "mode": 509,
+    "resolution": "same",
+    "literal_git_blob": "2ce64ca5cd0837c0dcc16597bc7b6f7852eee0d3"
+   },
+   {
+    "path": "tools/closure_loop/vtswap_eco.sh",
+    "sha256": "653d59b203ee26d868a7df705f95a2a1be4ef66dc839a1b60d5cd14262717791",
+    "git_blob": "762920e7efd6b34db55532c5a01e269c442eba22",
+    "mode": 509,
+    "resolution": "same",
+    "literal_git_blob": "762920e7efd6b34db55532c5a01e269c442eba22"
+   },
+   {
+    "path": "tools/closure_loop/vtswap_eco.tcl",
+    "sha256": "18bfc18933f7732e7601078484967eeb4cdeeb68d7585562876dbdb4592bda4f",
+    "git_blob": "e78ca03865259bbb56bbc1523a6ebe3a124a0ca6",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "e78ca03865259bbb56bbc1523a6ebe3a124a0ca6"
+   },
+   {
+    "path": "tools/fp_margin_lint.py",
+    "sha256": "8515ae7bf245dfe1917ab7fb4376913649546f98724c088dd490f61e71cc3044",
+    "git_blob": "4f013fe292c88ffba7150eb62d5b0a19125f046f",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "4f013fe292c88ffba7150eb62d5b0a19125f046f"
+   },
+   {
+    "path": "tools/fp_margin_lint.tcl",
+    "sha256": "4002a944a0d0deb06e2b6b4a1d5c196596509a93a563a77a91f0bd2400976063",
+    "git_blob": "60f86ca61e74b842bd19caf2185e7a58ceacbffe",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "60f86ca61e74b842bd19caf2185e7a58ceacbffe"
+   },
+   {
+    "path": "tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "252e63041ed47cd5b4bdca41532c89f8f859b8e783a99487cb308d89e916aec5",
+    "git_blob": "fb534959f21c156f85135c692bd4bf04182b72ff",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "fb534959f21c156f85135c692bd4bf04182b72ff"
+   },
+   {
+    "path": "tools/hier_contract/child_lint.py",
+    "sha256": "3246b49e146f1af649917b3e898cb3ed5ca69601c4835bcc5d8191bf9671eed7",
+    "git_blob": "9c26c73e9275b6e4ddd958b44133153844e043fb",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "9c26c73e9275b6e4ddd958b44133153844e043fb"
+   },
+   {
+    "path": "tools/hier_contract/m6_pin_grant.py",
+    "sha256": "de8f8cad30b82e20e5c71053d54bf8b7f88fab2590191c4309dcf67aaea0abb9",
+    "git_blob": "6ed8adaffa74f961a5cc6c0684cd0058bc7a17b6",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "6ed8adaffa74f961a5cc6c0684cd0058bc7a17b6"
+   },
+   {
+    "path": "tools/orfs_hold_mm.py",
+    "sha256": "d34ce8c6de00df77fa712798fb2a99038b641642719516e34cd3b23e5f56203d",
+    "git_blob": "af2c0a55a8158e746c79ee801fc0c8ad12da0629",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "af2c0a55a8158e746c79ee801fc0c8ad12da0629"
+   },
+   {
+    "path": "tools/orfs_hold_mm.tcl",
+    "sha256": "80f8d1c70610016b872515163e54a58b939e03ea6931ba6d0e1a159de3884c6b",
+    "git_blob": "f60bbcd264a127b7dca1c9cc6b48df5cccd81d8c",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "f60bbcd264a127b7dca1c9cc6b48df5cccd81d8c"
+   },
+   {
+    "path": "tools/preroute_gate.py",
+    "sha256": "3acb3f5784563888aa984928dd992026c3767a0f890149f91d32c029bef458cf",
+    "git_blob": "558a8dad06b0d516fa089e498f12908c009bd901",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "558a8dad06b0d516fa089e498f12908c009bd901"
+   },
+   {
+    "path": "tools/preroute_gate.tcl",
+    "sha256": "cb26dd3c1faa53058290838dd53e53b2f6ba55a0cece82c0e833c6b0c3fcea68",
+    "git_blob": "f2ad9a44d8ea657526a074bf723d4554c0ebd09d",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "f2ad9a44d8ea657526a074bf723d4554c0ebd09d"
+   },
+   {
+    "path": "tools/textbook_lint.py",
+    "sha256": "cfe6ea4687e4c4afe180909445d7ff10b18b8202b1bd4e2af259a9a42d2e76af",
+    "git_blob": "9369dc5cbe74efe049b5b3db1abaa0d833f86269",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "9369dc5cbe74efe049b5b3db1abaa0d833f86269"
+   },
+   {
+    "path": "tools/tt_views/view_export.py",
+    "sha256": "2eb060cd9bb3817bc41d87ed6c61c3ffaf3d4c08870d4a86878c241adf86ca4a",
+    "git_blob": "e21e446314922e0cc349cd91df837594588d7388",
+    "mode": 509,
+    "resolution": "same",
+    "literal_git_blob": "e21e446314922e0cc349cd91df837594588d7388"
+   },
+   {
+    "path": "tools/w18/corner_sta.py",
+    "sha256": "7801f467617d68c7e8a3f906e5415c8913de77188a6af30dbfe835fc28b05fd1",
+    "git_blob": "37f4efefa7bccad9d778cbe4c7d0026f7834cf41",
+    "mode": 436,
+    "resolution": "same",
+    "literal_git_blob": "37f4efefa7bccad9d778cbe4c7d0026f7834cf41"
+   }
+  ]
+ },
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-14T20:56:44-07:00",
+ "job_spec": {
+  "name": "hgi_coll_rgx_rx_r2-r2-51de2332d",
+  "block": "ot_hgi_coll_rx_native",
+  "ref_tile": true,
+  "owner": "Codex:H-COLL",
+  "purpose": "Official-pin FIFO with retained per-64-bit pointer copies eliminating reset and head-select fanout",
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "source": {
+   "branch": "claude/hbm-p2p-coll-1014",
+   "commit": "51de2332d"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "lint",
+     "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_coll_rx_native #(.W(552), .CRD(16)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_crl.sv && echo lint-ok",
+     "expect": "pass",
+     "threads": 1,
+     "peak_ram_gb": 4,
+     "needs": [
+      "verilator"
+     ]
+    },
+    {
+     "name": "native_vm_r20",
+     "cmd": "JOBS=4 bash rtl/hbm_accel/generic/collective/p2p/run_b2_vmport_bench.sh {RUN}/native_vm_r20 -GRLY=20",
+     "expect": "pass",
+     "threads": 4,
+     "peak_ram_gb": 64,
+     "needs": [
+      "verilator"
+     ]
+    },
+    {
+     "name": "native_vm_early_credit",
+     "cmd": "if JOBS=4 bash rtl/hbm_accel/generic/collective/p2p/run_b2_vmport_bench.sh {RUN}/native_vm_early_credit -GRLY=20 -GMUT=1; then exit 0; elif test -s {RUN}/native_vm_early_credit/run.log && grep -q \"premature credit drain\" {RUN}/native_vm_early_credit/run.log; then exit 1; else exit 0; fi",
+     "expect": "fail",
+     "threads": 4,
+     "peak_ram_gb": 64,
+     "needs": [
+      "verilator"
+     ]
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+   },
+   "route": {
+    "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hgi_coll_rgx_rx_r2/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hgi_coll_rgx_rx_r2/kit.env {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log"
+    ],
+    "threads": 8,
+    "peak_ram_gb": 24
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hgi_coll_rgx_rx_r2 --out {RUN}/record/views/ot_hgi_coll_rx_native  > {RUN}/record/route/export.log 2>&1"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/ref_tile/hgi_coll_rgx_rx_r2/signoff.sdc",
+    "physical/common_flow/link_budget_consistent.sdc"
+   ],
+   "macros": []
+  },
+  "hold_eco": {
+   "enabled": true,
+   "session": "mm",
+   "reason": "ref_tile: corrected FF hold flow"
+  },
+  "budget": {
+   "enabled": false,
+   "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+  },
+  "record": [
+   {
+    "from": "{RUN}/record/views",
+    "to": "physical/ref_tile/hgi_coll_rgx_rx_r2/views"
+   },
+   {
+    "from": "{RUN}/record/route",
+    "to": "results/rtl/ref_tile/hgi_coll_rgx_rx_r2/hgi_coll_rgx_rx_r2-r2-51de2332d"
+   }
+  ],
+  "cycles_added": 0,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.03,
+  "route_corner": "TC",
+  "notes": "generated by tools/ref_tile/ref_tile.py",
+  "merge_target": null,
+  "hold_merge": "Individual leaf route only; native parent pin/reset/clock integration qualification remains required."
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}
