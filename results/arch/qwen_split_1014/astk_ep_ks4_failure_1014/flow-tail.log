@@ -1,0 +1,69 @@
+OT_ORFS_CORNER=TC (tt_overlay v2): corner WC reads the TT liberties (std cells + macro _tt.lib); orfs corner WC, hold corners WC,BC
+OT_ROUTE_HOLD_CORNERS=mm: repair scenes WC,BC (SS setup + FF hold), FF SDCs [/src/physical/ref_tile/qkd_astk_ep/signoff.sdc]
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+700          25.43%
+M5         Vertical      1750446       1287134          26.47%
+M6         Horizontal    1527926             0          100.00%
+---------------------------------------------------------------
+
+[INFO GRT-0101] Running extra iterations to remove congestion.
+[INFO GRT-0102] Start extra iteration 1/30
+[INFO GRT-0102] Start extra iteration 2/30
+[INFO GRT-0102] Start extra iteration 3/30
+[INFO GRT-0102] Start extra iteration 4/30
+[INFO GRT-0102] Start extra iteration 5/30
+[INFO GRT-0102] Start extra iteration 6/30
+[INFO GRT-0102] Start extra iteration 7/30
+[INFO GRT-0102] Start extra iteration 8/30
+[INFO GRT-0102] Start extra iteration 9/30
+[INFO GRT-0102] Start extra iteration 10/30
+[INFO GRT-0102] Start extra iteration 11/30
+[INFO GRT-0102] Start extra iteration 12/30
+[INFO GRT-0102] Start extra iteration 13/30
+[INFO GRT-0102] Start extra iteration 14/30
+[INFO GRT-0102] Start extra iteration 15/30
+[INFO GRT-0102] Start extra iteration 16/30
+[INFO GRT-0102] Start extra iteration 17/30
+[INFO GRT-0102] Start extra iteration 18/30
+[INFO GRT-0102] Start extra iteration 19/30
+[INFO GRT-0102] Start extra iteration 20/30
+[INFO GRT-0102] Start extra iteration 21/30
+[INFO GRT-0102] Start extra iteration 22/30
+[INFO GRT-0102] Start extra iteration 23/30
+[INFO GRT-0102] Start extra iteration 24/30
+[INFO GRT-0102] Start extra iteration 25/30
+[INFO GRT-0102] Start extra iteration 26/30
+[INFO GRT-0102] Start extra iteration 27/30
+[INFO GRT-0102] Start extra iteration 28/30
+[INFO GRT-0102] Start extra iteration 29/30
+[INFO GRT-0102] Start extra iteration 30/30
+[INFO GRT-0197] Via related to pin nodes: 419895
+[INFO GRT-0198] Via related Steiner nodes: 5888
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 654484
+[INFO GRT-0112] Final usage 3D: 4177241
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2             1338418        479900           35.86%             2 /  0 / 18
+M3             1611718        835464           51.84%             0 /  2 / 16
+M4             1234700        299463           24.25%             4 /  1 / 168
+M5             1287134        598962           46.53%             0 /  3 / 201
+M6                   0             0            0.00%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total          5471970       2213789           40.46%             6 /  6 / 403
+
+[INFO GRT-0018] Total wirelength: 1401006 um
+[INFO GRT-0014] Routed nets: 78425
+[ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.
+write_db /work/results/asap7/opentallas_qkd_astk_ep_asap7_ref_qkd_astk_ep_ks4_1dfea0ac7/base/5_1_grt-failed.odb
+Error: global_route.tcl, 175 GRT-0116
+
+Elapsed time: 26:34.03[h:]min:sec. CPU time: user 1634.62 sys 8.50 (103%). Peak memory: 1481028KB.
+Elapsed time: 15:52.77[h:]min:sec. CPU time: user 2084.42 sys 25.98 (221%). Peak memory: 1903348KB.
+make[1]: *** [Makefile:585: do-5_1_grt] Error 1
+make: *** [Makefile:585: /work/results/asap7/opentallas_qkd_astk_ep_asap7_ref_qkd_astk_ep_ks4_1dfea0ac7/base/5_1_grt.odb] Error 2
+
+partial record written to /srv/opentallas-scratch2/claude/closure-loop/qkd_astk_ep-ks4-1dfea0ac7/routes/qkd_astk_ep_ks4_1dfea0ac7/physical.json

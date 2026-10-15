@@ -1,0 +1,66 @@
+{
+  "schema": "opentallas.hbm.vm-bank-static-receipt.v1",
+  "source_base": "03637f961ef734f10b59cdd97841a6c98826d0ef",
+  "files": {
+    "ot_vms_bank_static.sv": "7828d619da2fd2462cf0253b78c074dad1171e6ca77799bfc21f22987ed72237",
+    "tb_bank_static.sv": "a8a8209d9a7fb9c91334666454c1b6c6f235fe230860b1d3ec61c37c3d607dfb",
+    "run_bank_static.sh": "910624264ac5d82b7172b3de79a81af7aea77b7db83a13922a62dc74113f3509",
+    "bank_static_model.json": "78ffec51f511b080a05404c4e5da37536e32c977cedfed98776e01dd6896889a",
+    "bank_static_abi.json": "867c4614639ce1477ebae6896aafa189fbcf85dfb2a73707180b31ad6167debb"
+  },
+  "historical_bank_sha256": "dff065484261b7768a8594bbd1b508a7fdb6b89aa0c09db9b5a965364621b904",
+  "macro_source": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+  "macro_sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+  "gate": {
+    "result": "PASS",
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-2401771-1792045752",
+    "command": "ot-run --mem 2 --threads 1 --dir /tmp/hbm-static-bank-1014-input -- bash run_bank_static.sh /tmp/hbm-static-bank-1014-run1",
+    "exit": 0,
+    "positive": {
+      "reads": 220,
+      "writes": 240,
+      "mirror_egress": 34,
+      "cycles": 352
+    },
+    "mutant": {
+      "kind": "MUT1 selects read lane1 instead of reserved lane0",
+      "result": "EXPECTED_FAIL",
+      "failure": "read valid timing cycle34 lane0 got0 expected1"
+    },
+    "timing": {
+      "read": 6,
+      "macro_commit": 3,
+      "egress": 1
+    },
+    "sustained": {
+      "read_sectors_per_cycle": 1,
+      "write_sectors_per_cycle": 1,
+      "consecutive_cycles": 210,
+      "initiation_interval": 1
+    },
+    "peak_rss_kib": {
+      "compile": 9468,
+      "simulate": 8484
+    },
+    "coverage": [
+      "all seven writer owners",
+      "both wide readers and packet read",
+      "main/mirror parity sidecar independence",
+      "word masks",
+      "simultaneous read-before-write in real macro",
+      "single-bit correction and double-bit detection by physical macro cell upset",
+      "illegal address mask clearing and completion",
+      "unselected active request faults, no later replay",
+      "invalid owner slot faults"
+    ]
+  },
+  "lint": {
+    "result": "PASS_WITH_UNUSED_ONLY",
+    "unit": "oth-ubuntu-194073-1792045803",
+    "host": "ot-epyc1tb",
+    "command": "verilator --lint-only --timing -Wall -Wno-fatal --top-module ot_vms_bank_static ot_vms_bank_static.sv ot_sram_1r1w_1024x256_m2_r2c2.v",
+    "warnings": "Only unused historical helper arguments/payload duplicate valid bits/unused parity macro high bits and two historical unused identity declarations; no latch,width,multidriver or other warnings"
+  },
+  "scope": "Component gate; compiler full-shape quadrant composition and physical successor closure pending. Historical closed credit-based bank unchanged."
+}

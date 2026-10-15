@@ -1,0 +1,49 @@
+{
+ "master": "hfd_stn_v15_cc2248",
+ "ports": {
+  "ck": {
+   "direction": "input",
+   "bits": 1,
+   "dir_segments": [
+    [
+     0,
+     1,
+     "in"
+    ]
+   ]
+  },
+  "rst": {
+   "direction": "input",
+   "bits": 1,
+   "dir_segments": [
+    [
+     0,
+     1,
+     "in"
+    ]
+   ]
+  },
+  "a": {
+   "direction": "input",
+   "bits": 2248,
+   "dir_segments": [
+    [
+     0,
+     2248,
+     "in"
+    ]
+   ]
+  },
+  "b": {
+   "direction": "output",
+   "bits": 2248,
+   "dir_segments": [
+    [
+     0,
+     2248,
+     "out"
+    ]
+   ]
+  }
+ }
+}

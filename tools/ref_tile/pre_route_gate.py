@@ -439,6 +439,16 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
                   f"gives cap {fresh_lc['rlayers'][1]} / PG {fresh_lc['pg_layer']} ({fresh_lc.get('cap_basis')}; new tiles "
                   "cap at M5, M6 only with layer_cap_grant)", "re-run ref_tile.py gen")
         cap_n = int(rl.group(1)[1:])
+        if cap_n < 5:
+            cr = re.search(r"^CLOCK_RLAYERS='(M[2-9]) (M[2-9])'$", env, re.M)
+            try:
+                want = RT.clock_rlayers(fresh_lc)
+            except RT.SpecError as e:
+                want = None
+                g.add("FAIL", "layer", str(e), "raise the tile's signal cap to >= M3")
+            if want and (not cr or cr.groups() != want):
+                g.add("FAIL", "layer", f"signal cap {rl.group(1)} needs CLOCK_RLAYERS='{want[0]} {want[1]}' (OpenROAD needs a "
+                      "two-layer clock range; the ASAP7 default M4..cap fails ODB-0137 at floorplan)", "re-run ref_tile.py gen")
         pins_used = set()
         for k in ("PIN_H", "PIN_V", "export OT_PIN_BALANCE_H", "export OT_PIN_BALANCE_V"):
             mm = re.search(rf"^{k}='([^']*)'", env, re.M)
@@ -759,10 +769,23 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
     fp = json.loads((kd / "floorplan.json").read_text())
     kv = dict(re.findall(r"\b(GATE_[A-Z0-9_]+)=(\S+)", out))
     errs = re.findall(r"^GATE_FLOWERR (.*)$", out, re.M)
-    if kv.get("GATE_SOURCE_ARCHIVE_SHA256") != binding["archive_sha256"]:
+    if binding.get("staged_remeasurement"):
+        if not SB.staged_remeasurement_matches_log(binding, out.encode()):
+            g.add("FAIL", "source_binding", "new staged remeasurement receipt/log mismatch", "rehash remote original source and artifacts")
+            return
+        binding["staged_measurement_log"] = out  # persisted exact bytes, checked again at route admission
+        g.add("INFO", "source_binding", "NEW staged remeasurement: all original staged bytes, script and CTS artifacts rehashed; original archive stdout unavailable")
+        # This is new measurement evidence, never historical archive verification.
+        if errs or kv.get("GATE_FLOW_RC") not in (None, "0"):
+            g.add("FAIL", "floorplan_run", "new measurement reports a flow failure: " + "; ".join(errs[:4]), "preserve failed evidence")
+            return
+        kv["GATE_FLOW_RC"] = "0"  # verified existing artifacts, no new floorplan execution
+        kv["GATE_FLOW_S"] = "reused_original_floorplan"
+    elif kv.get("GATE_SOURCE_ARCHIVE_SHA256") != binding["archive_sha256"]:
         g.add("FAIL", "source_binding", "remote did not verify the staged source archive", "preserve log; rerun gate")
         return
-    binding["remote_archive_verified"] = True
+    else:
+        binding["remote_archive_verified"] = True
     binding["runtime_tool_provenance"] = re.findall(r"^GATE_TOOL_.*$", out, re.M)
     if local_snapshot is not None:
         local_snapshot.write_text(json.dumps(binding, indent=1) + "\n")
@@ -776,7 +799,10 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
               "decoded constant-index slices instead of runtime part-selects; replicate instead of wide shifters"
               if stall else "read the first [ERROR] above (PDN-0217/0233/0006, PPL-0061, MPL, ...) and fix the kit/RTL")
         return
-    g.add("INFO", "remote", f"synth + floorplan + PDN OK on {host} in {kv.get('GATE_FLOW_S')} s (gate total {secs} s)")
+    if binding.get("staged_remeasurement"):
+        g.add("INFO", "remote", f"reused verified original netlist, floorplan and CTS state on {host}; only measurement commands executed anew")
+    else:
+        g.add("INFO", "remote", f"synth + floorplan + PDN OK on {host} in {kv.get('GATE_FLOW_S')} s (gate total {secs} s)")
     if kv.get("GATE_IOP_RC") not in (None, "0"):
         g.add("FAIL", "io_place", "IO placement failed: " + "; ".join(errs[:3]),
               PF.FIX_TEXT if any("PPL-0093" in e for e in errs) else "fix the pin plan / pin layers")
@@ -916,7 +942,11 @@ def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, not
             return no(reason)
         if note is not None:
             note.append(reason)
-        if not binding.get("remote_archive_verified"):
+        if binding.get("staged_remeasurement"):
+            log = binding.get("staged_measurement_log")
+            if not isinstance(log, str) or not SB.staged_remeasurement_matches_log(binding, log.encode()):
+                return no("staged remeasurement persisted log missing or receipt mismatch")
+        elif not binding.get("remote_archive_verified"):
             return no("remote archive verification missing")
         if not isinstance(d.get("clock"), dict):
             return no("gate result carries no clock record (gate ran without --cts?)")

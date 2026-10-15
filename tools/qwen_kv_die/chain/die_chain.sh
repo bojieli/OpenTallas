@@ -13,23 +13,27 @@ C=$R/case_$DIE; G=$R/grt_$DIE          # unique dir names: run_case.sh / dietop_
 # old per-stage admission; OT_STOP=grt ends the chain after the full-die GRT (the early overflow map)
 ADMIT=/srv/opentallas-scratch/admit.sh
 [ "${OT_ADMIT:-}" = pass ] && ADMIT=$H/admit_pass.sh
+validate_case() {
+  local log=$1 stage=$2
+  python3 "$H/case_status.py" --log "$C/$log" --stage "$stage" --process-exit "$(cat "$C/$log.exit" 2>/dev/null || echo 1)"
+}
 say() { echo "$(date '+%F %T %Z') $*" >> $R/STATUS.log; }
 case $DIE in kv) P1=20; P2=80; P3=60; P4=40;; r22k) P1=40; P2=130; P3=160; P4=110;; *) echo bad die; exit 2;; esac
 say "chain start die=$DIE src=$(cat $C/SOURCE_COMMIT 2>/dev/null) from=${OT_FROM:-case}"
 # OT_FROM=grt resumes on a case whose real case + PDN already passed (floorplan_pdn.odb present; logs re-checked)
 if [ "${OT_FROM:-case}" = grt ]; then
-  grep -q OT_LEGAL $C/run.log && grep -q "OT_PDN PASS" $C/run_pdn.log && [ -f $C/floorplan_pdn.odb ] || { say "OT_FROM=grt: case/PDN not passed"; exit 1; }
+  validate_case run.log run.tcl && validate_case run_pdn.log run_pdn.tcl && [ -f $C/floorplan_pdn.odb ] || { say "OT_FROM=grt: case/PDN not passed"; exit 1; }
   say "resume: $(grep -m1 OT_LEGAL $C/run.log) / $(grep -m1 'OT_PDN PASS' $C/run_pdn.log)"
 else
 # OT_FROM=pdn (qwen-1010/b): reuse a passed real case (floorplan.odb + run.log from an earlier run), redo the PDN
-if [ "${OT_FROM:-case}" = pdn ] && grep -q OT_LEGAL $C/run.log 2>/dev/null && [ -s $C/floorplan.odb ]; then say "real case reused"
+if [ "${OT_FROM:-case}" = pdn ] && validate_case run.log run.tcl && [ -s $C/floorplan.odb ]; then say "real case reused"
 else
-$ADMIT $P1 -- $H/run_case.sh $C run.tcl run.log 16 $((P1+40))
+$ADMIT $P1 -- $H/run_case.sh $C run.tcl run.log 16 $((P1+40)) || { say "REAL CASE process/status failed"; exit 1; }
 fi
-grep -q OT_LEGAL $C/run.log || { say "REAL CASE FAIL ($C/run.log)"; exit 1; }
+validate_case run.log run.tcl || { say "REAL CASE FAIL ($C/run.log)"; exit 1; }
 say "real case: $(grep -m4 -E 'OT_LEGAL|OT_ASSERT|OT_PA' $C/run.log | tr '\n' ' ')"
-$ADMIT $P2 -- $H/run_case.sh $C run_pdn.tcl run_pdn.log 8 $((P2+60))
-grep -q "OT_PDN PASS" $C/run_pdn.log || { say "PDN FAIL ($C/run_pdn.log)"; exit 1; }
+$ADMIT $P2 -- $H/run_case.sh $C run_pdn.tcl run_pdn.log 8 $((P2+60)) || { say "PDN process/status failed"; exit 1; }
+validate_case run_pdn.log run_pdn.tcl || { say "PDN FAIL ($C/run_pdn.log)"; exit 1; }
 say "PDN PASS $(grep -m2 OT_PGCHECK $C/run_pdn.log | tr '\n' ' ')"
 fi
 mkdir -p $G; cp $H/grt.tcl $G/; ln -f $C/floorplan_pdn.odb $G/floorplan_pdn.odb

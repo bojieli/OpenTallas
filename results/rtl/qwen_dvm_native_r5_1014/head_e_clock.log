@@ -1,0 +1,13 @@
+ot-run: ot-epyc1tb     skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-epyc4       admits   417 GB (avail 644, growth 118, headroom 48, waiters 0/0 GB) load 83/128 running 24 disk 913 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  skipped: load hold: load1 > 1.5 x cores
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-990281-1792046920 after 1 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+DVM_PIN ck M4 0 210480 84 210504 DBU 1000
+DVM_PIN rst_n M4 0 212496 84 212520 DBU 1000
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-990281-1792046920): exit 0

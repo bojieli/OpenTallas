@@ -1,0 +1,281 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_bl_lane#0: origin (25.92, 25.92) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_bl_lane#0: origin (311.04, 25.92) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_bl_lane#0: origin (596.16, 25.92) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_bl_lane#0: origin (25.92, 203.04) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_bl_lane#0: origin (311.04, 203.04) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_bl_lane#0: origin (596.16, 203.04) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_bl_lane#0: origin (25.92, 380.16) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_bl_lane#0: origin (311.04, 380.16) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_bl_lane#0: origin (596.16, 380.16) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_bl_lane#0: origin (25.92, 557.28) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_bl_lane#0: origin (311.04, 557.28) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_bl_lane#0: origin (596.16, 557.28) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_bl_lane#0: origin (25.92, 734.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_bl_lane#0: origin (311.04, 734.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_bl_lane#0: origin (596.16, 734.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "qfd_bl_lane#0: origin (25.92, 911.52) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "cluster: PG M7 stripes as pins, signals M2-M7, parent strap M8; children PG {'qfd_bl_lane': 'M5'}",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "E face 7.9 pins/um (pw): recipe-2 hold stages take 2.65 um behind the face, the pin flops need gap 3.4 um and 8 columns (derived in the flow)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "N face 10.5 pins/um (ty): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 21 columns (derived in the flow)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "qfd_bl_lane: (f) face-pin access: 656 of 679 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c[10] M5 (68.544,150.469), c[8] M5 (68.544,150.469), c[9] M5 (68.544,150.469))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-agidock128 for 24 GB; inputs ship there before admission",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_qfd_sp_band_lanes_native_20261014-204626.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_qfd_sp_band_lanes_native_20261014-204626.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/qfd_sp_band_lanes_native-20261014-204626",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-agidock128 in 93 s (gate total 6930 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 3786 um2 + macros 627057 in core 988790: util 64%",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN qfd_sp_band_lanes cells 25,210 flops 10,278 depth 133.4 ps util 0.638 reach 0.0 um (1.9 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port ck: 10,278 flops > 8,000 spread over a 877 x 1128 um outline (> 600 um) (+0 ICGs, 0 macro clock pins; e.g. b0_q$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  },
+  {
+   "severity": "FAIL",
+   "check": "cts_run",
+   "message": "placement / CTS of the kit failed: ",
+   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
+  },
+  {
+   "severity": "WARN",
+   "check": "cts_calibration",
+   "message": "CTS rc=2 ck_insertion rc=1",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:ck: 10,278 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)",
+   "fix": ""
+  }
+ ]
+}

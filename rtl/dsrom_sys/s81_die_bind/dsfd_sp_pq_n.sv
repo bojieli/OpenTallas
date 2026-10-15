@@ -1,4 +1,13 @@
 `timescale 1ns/1ps
+// Unified compiler-slot lane supersedes the diagnostic two-FIFO BF transport.
+`ifdef DSFD_PQ_STATIC_X2
+`define DSFD_PQ_HAS_BF_X2
+`else
+`ifdef DSFD_PQ_BF_X2
+`define DSFD_PQ_HAS_BF_X2
+`define DSFD_PQ_DIAG_BF_X2
+`endif
+`endif
 // ---------------------------------------------------------------------------------------------------------------------
 // dsfd_sp_pq_n (s81-die-rtl-bind 2026-10-14): the S81 layer-die PQ core slot under the --rtl-bind die netlist, as a
 // wires-only CLUSTER over
@@ -11,6 +20,12 @@
 //                                   by the macro at t + 1 (rd_out <= word), captured by the core at t + 2 -- no
 //                                   register here (one would make it three cycles: DSFD_PQ_ROM_MUT_REG, the bench's
 //                                   negative control)
+// DSFD_PQ_STATIC_X2 selects the actual static successor: xw/xe[1100:0]
+// {BF low536 extension, legacy564 payload, valid}, one common clock/valid and
+// one cycle latency at full rate; xws/xes are historical observation inputs,
+// with no effect on data, validity, faults or progress. No FIFO-ready rule is
+// used in this mode. Without the define, the legacy/diagnostic transports below
+// remain for historical comparisons.
 //   u_lane  dsfd_pq_lx              the x lane: the q-family fields of the native 1,633-b broadcast f_bus packed into the
 //                                   die's 564-b lane word {cc 15 | x1 266 | x0 283} + valid, registered at the pins, one
 //                                   copy per lane start block (W / E); lane-FIFO overrun is a sticky fault into the core
@@ -63,9 +78,13 @@ module dsfd_sp_pq_n (
     input  wire [47:0]   rq2,
     output wire [457:0]  t_cnt,
     input  wire [203:0]  f_cnt,
+`ifdef DSFD_PQ_STATIC_X2
+    output wire [1100:0] xw, xe,
+`else
     output wire [564:0]  xw, xe,
+`endif
     input  wire [2:0]    xws, xes
-`ifdef DSFD_PQ_BF_X2
+`ifdef DSFD_PQ_DIAG_BF_X2
     ,output wire [536:0] x2w, x2e
     ,input wire [2:0] x2ws, x2es
 `endif
@@ -112,7 +131,7 @@ module dsfd_sp_pq_n (
 `endif
     dsfd_pq_lx u_lane (.ck(ck_lane), .rst(rst), .f_bus(f_bus), .f_fault(f_iss[91]), .xws(xws), .xes(xes),
         .xw(xw), .xe(xe), .f_fault_c(f_fault_c)
-`ifdef DSFD_PQ_BF_X2
+`ifdef DSFD_PQ_DIAG_BF_X2
         ,.x2w(x2w), .x2e(x2e), .x2ws(x2ws), .x2es(x2es)
 `endif
     );
@@ -136,9 +155,13 @@ module dsfd_pq_lx (
     input  wire [1632:0] f_bus,
     input  wire          f_fault,
     input  wire [2:0]    xws, xes,
+`ifdef DSFD_PQ_STATIC_X2
+    output reg [1100:0] xw, xe,
+`else
     output reg  [564:0]  xw, xe,
+`endif
     output reg           f_fault_c
-`ifdef DSFD_PQ_BF_X2
+`ifdef DSFD_PQ_DIAG_BF_X2
     ,output reg [536:0] x2w, x2e
     ,input wire [2:0] x2ws, x2es
 `endif
@@ -163,7 +186,7 @@ module dsfd_pq_lx (
 `endif
     wire [265:0] x1 = {e1, q1};
     wire [14:0]  cc = {np, 1'b0, ph, cfg, go};
-`ifdef DSFD_PQ_BF_X2
+`ifdef DSFD_PQ_HAS_BF_X2
     // Authoritative die map: physical/s81_die_pins/v20/bf_x2_lane.json.
     wire [1067:0] xb = {f_bus[1023:0], f_bus[1055:1024], f_bus[1059:1056],
                        f_bus[1062:1060], f_bus[1063], f_bus[1066:1064], f_bus[1618]};
@@ -175,11 +198,28 @@ module dsfd_pq_lx (
 `else
     wire [536:0] w2 = bv ? {1'b1, xb[535:0]} : 537'd0;
 `endif
+`ifndef DSFD_PQ_STATIC_X2
     reg [2:0] s2w_q, s2e_q;
     always @(posedge ck) begin x2w <= w2; x2e <= w2; s2w_q <= x2ws; s2e_q <= x2es; end
+`endif
 `else
     wire [564:0] w = {cc, x1, x0, qv | go | cfg};
 `endif
+`ifdef DSFD_PQ_STATIC_X2
+    // One registered 1,101-bit transport, consumed on fixed compiler slots.
+    // Valid is bit 0; legacy payload is [564:1]; BF extension is [1100:565].
+    // No lane-ready signal participates in data, validity, fault or progress.
+    // w2[536] is redundant with w[0] for BF words and is deliberately omitted.
+    wire [1100:0] static_word = {w2[535:0], w};
+    always @(posedge ck) begin xw <= static_word; xe <= static_word; end
+    reg collision_fault;
+    always @(posedge ck or negedge rst)
+        if (!rst) begin collision_fault <= 1'b0; f_fault_c <= 1'b0; end
+        else begin
+            if (collision) collision_fault <= 1'b1;
+            f_fault_c <= f_fault | collision | collision_fault;
+        end
+`else
     reg  [2:0]   sw_q, se_q;
     reg          ovf;
     reg [1:0]    rs_q;
@@ -190,10 +230,19 @@ module dsfd_pq_lx (
         if (!rs_q[1]) begin ovf <= 1'b0; f_fault_c <= 1'b0; end
         else begin
             if ((xw[0] && !(sw_q[0] && sw_q[1])) || (xe[0] && !(se_q[0] && se_q[1]))) ovf <= 1'b1;
-`ifdef DSFD_PQ_BF_X2
+`ifdef DSFD_PQ_DIAG_BF_X2
             if (collision || (x2w[536] && !(s2w_q[0] && s2w_q[1])) ||
                 (x2e[536] && !(s2e_q[0] && s2e_q[1]))) ovf <= 1'b1;
 `endif
             f_fault_c <= f_fault | ovf;
         end
+`endif // legacy ready/overrun diagnostic transport
 endmodule
+
+`ifdef DSFD_PQ_HAS_BF_X2
+`undef DSFD_PQ_HAS_BF_X2
+`endif
+
+`ifdef DSFD_PQ_DIAG_BF_X2
+`undef DSFD_PQ_DIAG_BF_X2
+`endif

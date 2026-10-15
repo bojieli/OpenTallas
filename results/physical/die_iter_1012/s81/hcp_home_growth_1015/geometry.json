@@ -1,0 +1,832 @@
+{
+ "scope": "Constructive42child geometric sizing candidate + six expanded home collision audits; NOT pin/timing qualification",
+ "mapped_area_source": {
+  "commit": "164085869",
+  "path": "results/rtl/s81_hcx_partition_1015/mapped_area_summary.json",
+  "sha256": "c2aefc7c49075eef6cf648c6d3a045c275f4bea62f9aad014809d85d4d696af7"
+ },
+ "plan_sha256": "1b49ef315f732ef95c79fe6cb8236a442a14eb9426164b5c25396c6eab20b59d",
+ "placed_instances": 56525,
+ "parent_outline_um": [
+  1728.0,
+  1296.0
+ ],
+ "child_count": 42,
+ "checks": [],
+ "nodes": [
+  {
+   "name": "bank0",
+   "master": "ot_s81_hcx_hcp_bank",
+   "idx": 0,
+   "kind": "child",
+   "x": 43.2,
+   "y": 43.2,
+   "w": 324,
+   "h": 367.2,
+   "offtrack": null,
+   "standardcell_area_um2": 1381.5862200000786,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "bank1",
+   "master": "ot_s81_hcx_hcp_bank",
+   "idx": 1,
+   "kind": "child",
+   "x": 388.8,
+   "y": 43.2,
+   "w": 324,
+   "h": 367.2,
+   "offtrack": null,
+   "standardcell_area_um2": 1381.5862200000786,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "bank2",
+   "master": "ot_s81_hcx_hcp_bank",
+   "idx": 2,
+   "kind": "child",
+   "x": 734.4000000000001,
+   "y": 43.2,
+   "w": 324,
+   "h": 367.2,
+   "offtrack": null,
+   "standardcell_area_um2": 1381.5862200000786,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "bank3",
+   "master": "ot_s81_hcx_hcp_bank",
+   "idx": 3,
+   "kind": "child",
+   "x": 1080.0000000000002,
+   "y": 43.2,
+   "w": 324,
+   "h": 367.2,
+   "offtrack": null,
+   "standardcell_area_um2": 1381.5862200000786,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "bank4",
+   "master": "ot_s81_hcx_hcp_bank",
+   "idx": 4,
+   "kind": "child",
+   "x": 43.2,
+   "y": 432.0,
+   "w": 324,
+   "h": 367.2,
+   "offtrack": null,
+   "standardcell_area_um2": 1381.5862200000786,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "bank5",
+   "master": "ot_s81_hcx_hcp_bank",
+   "idx": 5,
+   "kind": "child",
+   "x": 388.8,
+   "y": 432.0,
+   "w": 324,
+   "h": 367.2,
+   "offtrack": null,
+   "standardcell_area_um2": 1381.5862200000786,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "bank6",
+   "master": "ot_s81_hcx_hcp_bank",
+   "idx": 6,
+   "kind": "child",
+   "x": 734.4000000000001,
+   "y": 432.0,
+   "w": 324,
+   "h": 367.2,
+   "offtrack": null,
+   "standardcell_area_um2": 1381.5862200000786,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "bank7",
+   "master": "ot_s81_hcx_hcp_bank",
+   "idx": 7,
+   "kind": "child",
+   "x": 1080.0000000000002,
+   "y": 432.0,
+   "w": 324,
+   "h": 367.2,
+   "offtrack": null,
+   "standardcell_area_um2": 1381.5862200000786,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane0",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 8,
+   "kind": "child",
+   "x": 1425.6,
+   "y": 43.2,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane1",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 9,
+   "kind": "child",
+   "x": 1425.6,
+   "y": 129.60000000000002,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane2",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 10,
+   "kind": "child",
+   "x": 1425.6,
+   "y": 216.0,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane3",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 11,
+   "kind": "child",
+   "x": 1425.6,
+   "y": 302.40000000000003,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane4",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 12,
+   "kind": "child",
+   "x": 1425.6,
+   "y": 388.8,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane5",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 13,
+   "kind": "child",
+   "x": 1425.6,
+   "y": 475.2,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane6",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 14,
+   "kind": "child",
+   "x": 43.2,
+   "y": 820.8,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane7",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 15,
+   "kind": "child",
+   "x": 302.4,
+   "y": 820.8,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane8",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 16,
+   "kind": "child",
+   "x": 561.6,
+   "y": 820.8,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane9",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 17,
+   "kind": "child",
+   "x": 820.8,
+   "y": 820.8,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane10",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 18,
+   "kind": "child",
+   "x": 1080.0,
+   "y": 820.8,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane11",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 19,
+   "kind": "child",
+   "x": 1339.2,
+   "y": 820.8,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane12",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 20,
+   "kind": "child",
+   "x": 43.2,
+   "y": 907.1999999999999,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane13",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 21,
+   "kind": "child",
+   "x": 302.4,
+   "y": 907.1999999999999,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane14",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 22,
+   "kind": "child",
+   "x": 561.6,
+   "y": 907.1999999999999,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane15",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 23,
+   "kind": "child",
+   "x": 820.8,
+   "y": 907.1999999999999,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane16",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 24,
+   "kind": "child",
+   "x": 1080.0,
+   "y": 907.1999999999999,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane17",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 25,
+   "kind": "child",
+   "x": 1339.2,
+   "y": 907.1999999999999,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane18",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 26,
+   "kind": "child",
+   "x": 43.2,
+   "y": 993.5999999999999,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane19",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 27,
+   "kind": "child",
+   "x": 302.4,
+   "y": 993.5999999999999,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane20",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 28,
+   "kind": "child",
+   "x": 561.6,
+   "y": 993.5999999999999,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane21",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 29,
+   "kind": "child",
+   "x": 820.8,
+   "y": 993.5999999999999,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane22",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 30,
+   "kind": "child",
+   "x": 1080.0,
+   "y": 993.5999999999999,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane23",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 31,
+   "kind": "child",
+   "x": 1339.2,
+   "y": 993.5999999999999,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane24",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 32,
+   "kind": "child",
+   "x": 43.2,
+   "y": 1080.0,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane25",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 33,
+   "kind": "child",
+   "x": 302.4,
+   "y": 1080.0,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane26",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 34,
+   "kind": "child",
+   "x": 561.6,
+   "y": 1080.0,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane27",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 35,
+   "kind": "child",
+   "x": 820.8,
+   "y": 1080.0,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane28",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 36,
+   "kind": "child",
+   "x": 1080.0,
+   "y": 1080.0,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane29",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 37,
+   "kind": "child",
+   "x": 1339.2,
+   "y": 1080.0,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane30",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 38,
+   "kind": "child",
+   "x": 43.2,
+   "y": 1166.4,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "lane31",
+   "master": "ot_s81_hcx_hcp_lane8",
+   "idx": 39,
+   "kind": "child",
+   "x": 302.4,
+   "y": 1166.4,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 7186.817340004665,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "tree",
+   "master": "ot_hdc_v41x_addtree",
+   "idx": 40,
+   "kind": "child",
+   "x": 1425.6,
+   "y": 561.6,
+   "w": 211.68,
+   "h": 62.64,
+   "offtrack": null,
+   "standardcell_area_um2": 6938.753220004612,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  },
+  {
+   "name": "shell",
+   "master": "ot_s81_hcx_projection_partition::shell_clock_owner",
+   "idx": 41,
+   "kind": "child",
+   "x": 1425.6,
+   "y": 648,
+   "w": 211.68,
+   "h": 125.28,
+   "offtrack": null,
+   "standardcell_area_um2": 12870.990719993675,
+   "native_pin_views": "NOT_YET_PUBLISHED: offtrack is unknown; geometry only"
+  }
+ ],
+ "native_geometry_tool_sha256": "57fd157f3fafc7a68f1754437aa3275fa81cc7c28fe5ede9d7a0d57568b79b87",
+ "hard_child_geometry_status": "PRE_ROTATOR_REDESIGN: sizing evidence for current mapped owners, not an adopted partition",
+ "child_core_utilization": [
+  {
+   "name": "lane0",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane1",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane2",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane3",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane4",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane5",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane6",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane7",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane8",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane9",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane10",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane11",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane12",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane13",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane14",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane15",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane16",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane17",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane18",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane19",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane20",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane21",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane22",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane23",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane24",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane25",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane26",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane27",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane28",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane29",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane30",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "lane31",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.5942840952935956
+  },
+  {
+   "name": "tree",
+   "core_area_um2": 12093.235200000001,
+   "standardcell_util": 0.573771460262727
+  },
+  {
+   "name": "shell",
+   "core_area_um2": 25082.265600000002,
+   "standardcell_util": 0.5131510416664145
+  }
+ ],
+ "home_audits": [
+  {
+   "name": "sp_hcx_south0",
+   "origin_um": [
+    17334.0,
+    1857.6
+   ],
+   "outline_um": [
+    1728.0,
+    1296.0
+   ],
+   "existing_instance_collisions": [],
+   "outside": false
+  },
+  {
+   "name": "sp_hcx_south1",
+   "origin_um": [
+    19200.0,
+    1857.6
+   ],
+   "outline_um": [
+    1728.0,
+    1296.0
+   ],
+   "existing_instance_collisions": [],
+   "outside": false
+  },
+  {
+   "name": "sp_hcx_north0",
+   "origin_um": [
+    17334.0,
+    22307.04
+   ],
+   "outline_um": [
+    1728.0,
+    1296.0
+   ],
+   "existing_instance_collisions": [],
+   "outside": false
+  },
+  {
+   "name": "sp_hcx_north1",
+   "origin_um": [
+    19200.0,
+    22770.0
+   ],
+   "outline_um": [
+    1728.0,
+    1296.0
+   ],
+   "existing_instance_collisions": [],
+   "outside": false
+  },
+  {
+   "name": "sp_hcx_west0",
+   "origin_um": [
+    9504.0,
+    22770.0
+   ],
+   "outline_um": [
+    1728.0,
+    1296.0
+   ],
+   "existing_instance_collisions": [],
+   "outside": false
+  },
+  {
+   "name": "sp_hcx_west1",
+   "origin_um": [
+    11384.064,
+    22770.0
+   ],
+   "outline_um": [
+    1728.0,
+    1296.0
+   ],
+   "existing_instance_collisions": [],
+   "outside": false
+  }
+ ],
+ "rules": {
+  "channel_um": 20.0,
+  "core_edge_margin_um": 2.16,
+  "child_origin_lattice_um": 43.2,
+  "diagnostic_exceptions": false
+ },
+ "open": [
+  "bank->lane combinational shell rotation violates strict registered boundary: implement real registered rotation and re-measure area/latency/clock ABI",
+  "actual lane pin files and all per-bit bank/rotator/lane/shell cuts",
+  "actual offtrack pin check from published child LEFs",
+  "registered die hops and physical compiled calendar;264cycles is component-only",
+  "per-root measured phi-R/CTS and TTsetup/FFhold/DRC0",
+  "actual wrapper shell hard boundary/module and full real view binding"
+ ]
+}

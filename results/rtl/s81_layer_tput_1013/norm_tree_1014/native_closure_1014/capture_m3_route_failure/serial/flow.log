@@ -1,0 +1,78 @@
+OT_ORFS_CORNER=TC (tt_overlay v2): corner WC reads the TT liberties (std cells + macro _tt.lib); orfs corner WC, hold corners WC,BC
+OT_ROUTE_HOLD_CORNERS=mm: repair scenes WC,BC (SS setup + FF hold), FF SDCs [/src/physical/ref_tile/s81hc_ctfxcap_ref/signoff.sdc]
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+FO GRT-0102] Start extra iteration 12/30
+[INFO GRT-0102] Start extra iteration 13/30
+[INFO GRT-0102] Start extra iteration 14/30
+[INFO GRT-0102] Start extra iteration 15/30
+[WARNING GRT-0273] Disabled NDR (to reduce congestion) for net: clknet_0_clk
+[WARNING GRT-0273] Disabled NDR (to reduce congestion) for net: net3426
+[INFO GRT-0102] Start extra iteration 1/30
+[INFO GRT-0102] Start extra iteration 2/30
+[INFO GRT-0102] Start extra iteration 3/30
+[INFO GRT-0102] Start extra iteration 4/30
+[INFO GRT-0102] Start extra iteration 5/30
+[INFO GRT-0102] Start extra iteration 6/30
+[INFO GRT-0102] Start extra iteration 7/30
+[INFO GRT-0102] Start extra iteration 8/30
+[INFO GRT-0102] Start extra iteration 9/30
+[INFO GRT-0102] Start extra iteration 10/30
+[INFO GRT-0102] Start extra iteration 11/30
+[INFO GRT-0102] Start extra iteration 12/30
+[INFO GRT-0102] Start extra iteration 13/30
+[INFO GRT-0102] Start extra iteration 14/30
+[INFO GRT-0102] Start extra iteration 15/30
+[INFO GRT-0102] Start extra iteration 16/30
+[INFO GRT-0102] Start extra iteration 17/30
+[INFO GRT-0102] Start extra iteration 18/30
+[INFO GRT-0102] Start extra iteration 19/30
+[INFO GRT-0102] Start extra iteration 20/30
+[INFO GRT-0102] Start extra iteration 21/30
+[INFO GRT-0102] Start extra iteration 22/30
+[INFO GRT-0102] Start extra iteration 23/30
+[INFO GRT-0102] Start extra iteration 24/30
+[INFO GRT-0102] Start extra iteration 25/30
+[INFO GRT-0102] Start extra iteration 26/30
+[INFO GRT-0102] Start extra iteration 27/30
+[INFO GRT-0102] Start extra iteration 28/30
+[INFO GRT-0102] Start extra iteration 29/30
+[INFO GRT-0102] Start extra iteration 30/30
+[INFO GRT-0197] Via related to pin nodes: 121397
+[INFO GRT-0198] Via related Steiner nodes: 1361
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 232096
+[INFO GRT-0112] Final usage 3D: 1012791
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2              439356         81300           18.50%             5 /  2 / 1062
+M3              507647        111630           21.99%             2 / 17 / 6217
+M4              400886         67357           16.80%             5 /  2 / 1148
+M5              375731         56216           14.96%             1 /  7 / 2608
+---------------------------------------------------------------------------------------
+Total          1723620        316503           18.36%            13 / 28 / 11035
+
+[INFO GRT-0018] Total wirelength: 239451 um
+[INFO GRT-0014] Routed nets: 22919
+[ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.
+write_db /work/results/asap7/opentallas_ot_s81_hc_ctfx_cap_asap7_ref_s81hc_ctfxcap_ref_v1_owned_epoch_631a20a94/base/5_1_grt-failed.odb
+Error: global_route.tcl, 175 GRT-0116
+
+Elapsed time: 0:03.28[h:]min:sec. CPU time: user 3.15 sys 0.13 (99%). Peak memory: 323760KB.
+Elapsed time: 0:03.95[h:]min:sec. CPU time: user 4.00 sys 0.30 (108%). Peak memory: 352372KB.
+Elapsed time: 0:03.58[h:]min:sec. CPU time: user 3.46 sys 0.12 (99%). Peak memory: 318060KB.
+Elapsed time: 0:03.18[h:]min:sec. CPU time: user 3.04 sys 0.14 (99%). Peak memory: 315940KB.
+Elapsed time: 0:03.56[h:]min:sec. CPU time: user 3.43 sys 0.13 (99%). Peak memory: 326936KB.
+Elapsed time: 0:03.50[h:]min:sec. CPU time: user 3.35 sys 0.13 (99%). Peak memory: 319960KB.
+Elapsed time: 0:03.66[h:]min:sec. CPU time: user 3.51 sys 0.14 (99%). Peak memory: 324388KB.
+Elapsed time: 0:18.70[h:]min:sec. CPU time: user 60.94 sys 1.03 (331%). Peak memory: 621384KB.
+Elapsed time: 0:07.32[h:]min:sec. CPU time: user 8.34 sys 0.78 (124%). Peak memory: 378844KB.
+Elapsed time: 0:11.30[h:]min:sec. CPU time: user 12.25 sys 0.74 (114%). Peak memory: 422308KB.
+Elapsed time: 1:37.72[h:]min:sec. CPU time: user 103.33 sys 2.67 (108%). Peak memory: 602192KB.
+Elapsed time: 5:48.33[h:]min:sec. CPU time: user 782.05 sys 5.52 (226%). Peak memory: 796492KB.
+make[1]: *** [Makefile:585: do-5_1_grt] Error 1
+make: *** [Makefile:585: /work/results/asap7/opentallas_ot_s81_hc_ctfx_cap_asap7_ref_s81hc_ctfxcap_ref_v1_owned_epoch_631a20a94/base/5_1_grt.odb] Error 2
+
+partial record written to /srv/opentallas-scratch2/claude/closure-loop/s81hc_ctfxcap_ref-v1-owned-epoch-631a20a94/routes/s81hc_ctfxcap_ref_v1_owned_epoch_631a20a94/physical.json

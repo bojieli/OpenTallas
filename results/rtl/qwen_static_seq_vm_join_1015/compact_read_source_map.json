@@ -1,0 +1,24 @@
+{
+ "status": "SOURCE_MAP_ONLY_SELECTED_NATIVE_MASTER_ADOPTION_REQUIRED",
+ "scope": "Actual existing lane-to-descriptor serialization, not approval of historical master embedding/ready body",
+ "descriptor": {
+  "bits": "50 peroperand, A/B/C at0/50/100",
+  "a0": "24bitaddress fromlane0",
+  "a1": "24bitaddress fromlane1, NOT lane32",
+  "re0": "lane0strobe atbit48",
+  "re1": "lane1strobe atbit49"
+ },
+ "consumer": {
+  "stride1": "re1 && a1-a0==1",
+  "broadcast": "otherwise stride0",
+  "fault": "re0 && re1 && a1-a0>1",
+  "unsupported": "arbitrary64lane gather; cannot collapse without actual-program lane-pattern proof"
+ },
+ "return": "actualmaster preserves per-lane read mask and held values; data3x2048 bitsA/B/C fromVM",
+ "production": "q_native_compute selectsactualnativeSUmaster andembeddingdecodeowner, q_control_host composesactualISAstage; nohistoricalreadyadapter",
+ "source_sha256": {
+  "rtl/qwen_sys/redesign_qwen/ot_qfd_su_master_bv_acc.sv": "58b332cdc73ac2b88782ba21ff8649e7911c6dcf21b2e3e2c22dbc874bfe087e",
+  "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv": "38d358d1265301f06032f63d0c00a09926c34ac84de4d648d14ad911254c640d",
+  "rtl/qwen_split/qfd_su_vm_pack.sv": "89cfe22baa32e68ec0b1231857d6a09ca52a239ced43b1feaed70078c8863886"
+ }
+}

@@ -1,0 +1,227 @@
+{
+ "name": "qfd_xs_leaf",
+ "top": "ot_qfd_xs_leaf",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
+  "rtl/hdc/ot_hdc_delay.sv"
+ ],
+ "params": {
+  "NCH": 4
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 72.36,
+  "h": 149.04,
+  "exact": true
+ },
+ "pins": {
+  "S": [
+   "w_v",
+   "w_ep",
+   "w_off",
+   "w_m",
+   "w_d",
+   "w_ctl",
+   "c_v",
+   "c_ep"
+  ],
+  "N": [
+   "wo_v",
+   "wo_ep",
+   "wo_off",
+   "wo_m",
+   "wo_d",
+   "wo_ctl",
+   "co_v",
+   "co_ep"
+  ],
+  "E": [
+   "r_v",
+   "r_t",
+   "r_ep",
+   "r_p",
+   "q_v",
+   "q",
+   "q_bad"
+  ],
+  "W": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "route": {
+  "pd": 0.52,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "macro_halo_um": 5.4
+ },
+ "pin_ranges": {
+  "w_v": [
+   5.28,
+   5.58
+  ],
+  "w_ep": [
+   5.68,
+   5.98
+  ],
+  "w_off": [
+   6.08,
+   6.68
+  ],
+  "w_m": [
+   6.78,
+   10.78
+  ],
+  "w_d": [
+   10.88,
+   61.28
+  ],
+  "w_ctl": [
+   61.38,
+   66.38
+  ],
+  "c_v": [
+   66.48,
+   66.68
+  ],
+  "c_ep": [
+   66.78,
+   66.98
+  ],
+  "wo_v": [
+   5.28,
+   5.58
+  ],
+  "wo_ep": [
+   5.68,
+   5.98
+  ],
+  "wo_off": [
+   6.08,
+   6.68
+  ],
+  "wo_m": [
+   6.78,
+   10.78
+  ],
+  "wo_d": [
+   10.88,
+   61.28
+  ],
+  "wo_ctl": [
+   61.38,
+   66.38
+  ],
+  "co_v": [
+   66.48,
+   66.68
+  ],
+  "co_ep": [
+   66.78,
+   66.98
+  ],
+  "r_v": [
+   2.0,
+   2.5
+  ],
+  "r_t": [
+   2.6,
+   3.1
+  ],
+  "r_ep": [
+   3.2,
+   3.7
+  ],
+  "r_p": [
+   3.8,
+   20.0
+  ],
+  "q_v": [
+   20.2,
+   20.7
+  ],
+  "q": [
+   20.8,
+   55.0
+  ],
+  "q_bad": [
+   55.2,
+   55.7
+  ],
+  "clk": [
+   60.0,
+   61.0
+  ],
+  "rst_n": [
+   62.0,
+   63.0
+  ]
+ },
+ "pin_source": "chain faces N / S on identical ranges (abutted leaf-to-leaf, the same bit at the same x); read bus on E at the low-y end (R0 in the N chain, MX in the S chain: the end nearest the column head, read hop <= ~440 um to the far leaf)",
+ "slot_change_request": "Q-COMPUTE-DIE 2026-10-15 actual C17 geometry candidate: 72.36x1537.92 column, head64.8x345.6 centered at x3.78. 48columns/96neareststations moved, zero rectangles overlap/outside; 0.648um horizontal remainder requires actual pin-access proof.",
+ "job": {
+  "owner": "Codex:el1014-qwen-dvm-build",
+  "branch": "claude/qwen-dvm-1014",
+  "tag": "xl7",
+  "purpose": "Qwen TP8 distributed x slice LEAF r3 (owner 08:20 PT 10-14; el1014-qwen-dvm-build.log 16:15): 2 tiles x 2 epochs x one 64-position slot of BF16 operands (+ per-element valid), footprints > 64 pooled over a tile pair by the column head; ONE 128:1 x 17-b serial read tree per tile (r2: four 512:1 trees, 2.7x the slot); write chain pin-registered pass-through (18-b control a leaf); answer pin flops at R + 4.",
+  "benches": [
+   {
+    "name": "dvm_array_exact",
+    "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/pos tb_qwen_me_dvm_w12 -GNCOL=2 -GNH=8 -GSMIN=4 -GSMAX=7 -GNOPS=40 -GSEED=3 -GGAP=0",
+    "expect": "pass",
+    "pass_regex": "^PASS dvm",
+    "threads": 12,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "dvm_array_swapped_tile",
+    "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/neg tb_qwen_me_dvm_w12 -GNCOL=2 -GNH=8 -GSMIN=4 -GSMAX=7 -GNOPS=12 -GSEED=3 -GGAP=0 -GLEAF_MUT=2",
+    "expect": "fail",
+    "pass_regex": "^PASS dvm",
+    "threads": 12,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/hdc",
+   "rtl/proto",
+   "rtl/qwen_sys/dvm_20261014"
+  ],
+  "views_to": "physical/ref_tile/qfd_xs_leaf/views",
+  "record_to": "results/rtl/ref_tile/qfd_xs_leaf"
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "Measured xl6 M3 demand121.51% and M5 104.08%; grow real leaf to72.36x149.04 (+25%core route area), retain64tile storage/schedule, shift N/S chain pin ranges+3.78 to preserve absolute head chain x."
+}

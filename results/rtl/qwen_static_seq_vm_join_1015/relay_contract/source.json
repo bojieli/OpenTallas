@@ -1,0 +1,68 @@
+{
+ "status": "PASS_ELABORATION_ONLY_CLOCK_PROFILE_UNQUALIFIED",
+ "problem": "Selected qfd_seq_su_static RLY2 expects VRL=IS1+OS1+ROW_LAT13+2*RLY2=19; direct wire join omitted physical relay stages and gives15. Earlier elaboration receipts do not establish this timing.",
+ "hardware": {
+  "outgoing": "two real fixed registers of554bits {write533,read21}",
+  "incoming": "two real fixed registers of513bits {valid1,data512}",
+  "flops": 2134,
+  "clock_roots": {
+   "ck_vm_out_relay": 1108,
+   "ck_vm_in_relay": 1026
+  },
+  "throughput_words_per_cycle": 1,
+  "buffering": "two statically sized register stages each direction; no ready/credit/retry",
+  "row_roundtrip_edges": 19,
+  "model_source": "existing actual selected qfd_seq_su_static RLY=2, not inferred from output values"
+ },
+ "source_sha256": {
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83",
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/hdc/ot_hdc_dyn_ttiles.sv": "574b918154da9bc8e1fde75f8c9d3bfd10374c5e1979c26588d5c00f133c5f93",
+  "rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv": "2eb902b1979247bb1d6c7d7589955965669b3377ef81b542681a56d17fbca86c",
+  "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv": "f7c420676f57d6b377b89cd52da7d78f9332e2a7d762dca039565076c5a49dfa",
+  "rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv": "0fe1d499dad8a137f237b66077e499e40a50ec8e259ea04c77e7eae3fe248207",
+  "rtl/qwen_sys/redesign_qwen/ot_qfd_seq_su_bi.sv": "963d40aa92acec288337ad011750933e7df7d032bfd1095fed933b2529601529",
+  "rtl/qwen_split/qfd_seq_su_collective_calendar.sv": "46fe0b5bc621fe32f1353fc49849ad3efae84f758bcf3f5defdaccbfa513c170",
+  "rtl/rom/ot_coll_cmd_issue.sv": "22e08d8e69f7b449fffda8880cd6c0458d59e99403bdebc0b0b8a450da267a11",
+  "rtl/qwen_split/qfd_seq_su_static.sv": "f6e771ccdd29eb98f31253f0708fd95504138ebc8b0211f7fcc9d101d7ae9520",
+  "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv": "26a396b1826998c681fe23090d0dab22b5a6df9334b10fd4b47fbd967e3eb291",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qfd_seq_su_bi_static.sv": "fef74413a95a3d978c8f1885c6fadceeab98ffdb737fe7a235cdcc9ba48f79df",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp_seq_calendar.sv": "11c43345f8fa9d6a73263deaa5c5876f441f55daf8399f7e0195ba6405da1977",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv": "0d533e9a09514840fac0628053fd1aaa501bccbffeaf8913afb6a936d1d994b1",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv": "400fe076fb13a12a414cd15d95982704ecf5d77b61a8f2e2c3d7fd5ae8518659",
+  "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv": "61467355ebbc7de8c617645a5566dd0b92be0af5fae01536f4d1b9a26dd79db8",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+  "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+  "rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv": "17bf67a31183238bf1399466b8d3c701926e9bb943618e6b6c054207551f6ef2",
+  "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv": "f7cd663de88c6a07dad159b46d67348575415c8b3eb97a70902784e2a806e647",
+  "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_region_quarter.sv": "02a0f49b766c299b8de5371671afd33314a09a929c1b5a2a0c93c7532919d989",
+  "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_answer_tiles.sv": "993d2f31e2741755a9aba8ff44c29d6b0df8562764797ad3a31806bbbec4ddac",
+  "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_xfifo8_t.sv": "17fc7ce6995bdf41f0dcd1ae3abced60b1a0f86dcb5ded98b1b95e3660383421",
+  "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv": "38d358d1265301f06032f63d0c00a09926c34ac84de4d648d14ad911254c640d",
+  "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv": "2ec29c19e804843e0e6819e173c0e30f2bc47abff14b383046036c077ec16f25",
+  "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv": "3998d891fa7c22658680da39bd4c970b2d4286ddd5b23575141ef1de03da1242",
+  "rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv": "58cf023e623627da6790d20bb0cae2611c491ebc9a4251e491ba629b245dac17",
+  "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv": "8dbb5752657f157d2c81aaf47bec486c19b55994a2f8d0d763cbcc07743b2853",
+  "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv": "51145388077b85b2e19c71c71dc959c40097d963a9c3fc8eba00d5137d2bfcb1",
+  "rtl/physical/ot_qwen_tree_delay.sv": "c9ab39febd24fbf11181d223b55d2e6718feabbc016b5ba85eb97a7b613f6c1b",
+  "rtl/physical/ot_qwen_tree_delay_tiles.sv": "e0bcd2f85cd5fd854f4f3d6c0d1acfa85bbeb7328e550427baf154fab406ca3f",
+  "rtl/qwen_split/qfd_su_vm_pack.sv": "89cfe22baa32e68ec0b1231857d6a09ca52a239ced43b1feaed70078c8863886",
+  "rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory.sv": "413360beffc89158a79f631a9e60f20925e37ad418be78028bb057c883a0fe55",
+  "rtl/qwen_split/qfd_su_static_copy.sv": "9e8d4b785e937a5e2302e6a704fc8d553f79dfbd7af103b356610a776bf08007",
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv": "c042cd7a447be662e4f05f43b6a649eeb26a70dc872fbf5db720617a25e9a85d",
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv": "37ce9d2de4227bb5f072c2452fac1efde921491de34ae84ead0c113da676bbeb",
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_vm_q_export_fixed.sv": "f7c95a54cc6581171e43eb73ad06739f0254fbf7c05e95efa70e642ee8e75c92",
+  "rtl/qwen_split/qfd_seq_su_vm_static.sv": "bdcad457015b072664bc376579ec30e0848d7227fd61469a674e897cd5d114f8"
+ },
+ "ot_run": {
+  "host": "ot-epyc1tb",
+  "unit": "oth-ubuntu-458880-1792050836",
+  "exit": 0
+ },
+ "remaining": [
+  "Actual physical relay cells/homes and independent per-root phases from C17",
+  "Production calendar lowering remains REFUSED until qualified profile",
+  "Actual real producer/consumer numerical execution"
+ ]
+}

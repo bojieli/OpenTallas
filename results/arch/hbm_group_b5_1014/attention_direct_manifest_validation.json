@@ -1,0 +1,23 @@
+{
+  "orientation_involution": "PASS",
+  "layer_and_rectangle_transform": "PASS",
+  "source_LEF_hash_and_PIN_census": "PASS",
+  "components": [
+    {
+      "half": "hi",
+      "children": 54,
+      "pins": 39562,
+      "obs": 643619,
+      "component_sha256": "749dbcfa83f66c839539badaec0799f329fa463e1df105fc9ff313c19ce3b748",
+      "component_source_commit": "8c33fcd81653f46392b3e01048a0789241facca8"
+    },
+    {
+      "half": "lo",
+      "children": 89,
+      "pins": 97902,
+      "obs": 746886,
+      "component_sha256": "e5b1da797e6aea809b0c1cb8c74ea46622679c440d0bf028c069215bb803c44a",
+      "component_source_commit": "8c33fcd81653f46392b3e01048a0789241facca8"
+    }
+  ]
+}

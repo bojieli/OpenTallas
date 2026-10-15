@@ -1,0 +1,9 @@
+{
+  "runner": "ot-run --mem 2 --threads 1 --dir /var/tmp/hbm-vm-allgroups-static-1015 -- bash inputs/run_allgroups_static.sh gate inputs",
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-1070833-1792047707",
+  "result": "RAN exit 0",
+  "actual_bank_source_commit": "0334452c354ae46f8ed1671753f98f8579742711",
+  "actual_bank_source_sha256": "7828d619da2fd2462cf0253b78c074dad1171e6ca77799bfc21f22987ed72237",
+  "scope": "Both final native group-count shapes, each with eight actual banks and 24 SRAM macros. No bank source changes."
+}

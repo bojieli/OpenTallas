@@ -1,0 +1,42 @@
+{
+  "g96_n512_k2048": {
+    "flits": 6144,
+    "groups": 1536,
+    "ingress_cycles": 12288,
+    "pairs_per_cycle": 4,
+    "lane_beat_period": 8,
+    "tile_count": 32,
+    "tile_positions": 64,
+    "insertion_settle_cycles": 104,
+    "selected_cells": 512,
+    "pass_buffer_bytes": 65536,
+    "ingress_register_bits": 2180,
+    "chain_bits_per_cycle": 340,
+    "root_sink_plan": "sequencer, ingress, buffer, packer and each tile own clock roots; phi-R per root",
+    "record_cycles": 14065,
+    "exact_done_cycle": 14065,
+    "output_lines": 256,
+    "schedule": "fixed all-element insertion; fixed value conveyor; fixed SRAM reinsertion; fixed id conveyor",
+    "price_comparison": "historical estimate retained separately; static throughput remains unqualified until measured"
+  },
+  "g96_n2048_k2048": {
+    "flits": 24576,
+    "groups": 6144,
+    "ingress_cycles": 49152,
+    "pairs_per_cycle": 4,
+    "lane_beat_period": 8,
+    "tile_count": 32,
+    "tile_positions": 64,
+    "insertion_settle_cycles": 104,
+    "selected_cells": 512,
+    "pass_buffer_bytes": 65536,
+    "ingress_register_bits": 2180,
+    "chain_bits_per_cycle": 340,
+    "root_sink_plan": "sequencer, ingress, buffer, packer and each tile own clock roots; phi-R per root",
+    "record_cycles": 50929,
+    "exact_done_cycle": 50929,
+    "output_lines": 256,
+    "schedule": "fixed all-element insertion; fixed value conveyor; fixed SRAM reinsertion; fixed id conveyor",
+    "price_comparison": "historical estimate retained separately; static throughput remains unqualified until measured"
+  }
+}

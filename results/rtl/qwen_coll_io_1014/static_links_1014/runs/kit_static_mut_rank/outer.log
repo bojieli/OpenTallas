@@ -1,0 +1,9 @@
+ot-run: ot-epyc4       admits   609 GB (avail 836, growth 86, headroom 48, waiters 0/0 GB) load 144/128 running 19 disk 597 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-573194-1792042372 after 0 s
+case qwen_ar_256w kind=pos latu=37 lats=376 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK FAIL mismatches=1328 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=2048 compiled_span=763
+case qwen_layer_2x256w kind=pos latu=37 lats=376 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK FAIL mismatches=2704 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=4096 compiled_span=1019
+case qwen_argmax_1w kind=pos latu=37 lats=376 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK PASS mismatches=0 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=64 compiled_span=428
+case qwen_layer_2x256w_argmax kind=pos latu=37 lats=376 xu=0 xs=0 mutant=OT_TP8S_MUT_RANK FAIL mismatches=2704 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=4160 compiled_span=1027
+COLL_TP8S FAIL mutant=OT_TP8S_MUT_RANK failed=qwen_ar_256w,qwen_layer_2x256w,qwen_layer_2x256w_argmax
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-573194-1792042372): exit 1

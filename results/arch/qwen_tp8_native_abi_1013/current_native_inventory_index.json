@@ -12,12 +12,6 @@
     "Q_heads_per_rank": 4,
     "KV_heads_per_rank": 1
   },
-  "legacy_live_planner": {
-    "generator_commit": "761665623",
-    "PID": 4119778,
-    "path": "ot-epyc4:/home/ubuntu/scratch-tp8-r10/g9",
-    "note": "Legacy geometry baseline. Native successor index cannot be interpreted as source bound in liveg9."
-  },
   "streams": [
     {
       "name": "native_tile_candidates",
@@ -28,7 +22,7 @@
         "sha256": "0aa826882d50d3ada7902abbe02b21a959a4b4df8b3560ad01859a6ebdda0120"
       },
       "status": "5source-qualified CTS prototypes, ANYpins/unexportedhardlibs, no closednativeparent; groupedTXnewcandidate underway",
-      "clock_coverage_question": "compactCTL declared8921 vs measuredall7767 censusstage/clockcoverage pending"
+      "clock_coverage": "Frozen864dc prototype actualCTS7767FF equals ck.json all.n7767; 1154 logicalFF removed by eliminate_dead_logic before first ODB. Receipt eca87d714. New context/query40/lifetime sources require fresh gates; old clock census is not their physical census."
     },
     {
       "name": "native_KV_seq",
@@ -49,12 +43,38 @@
       "name": "native_host",
       "owner": "/root/qwen_host_integration",
       "receipt": {
-        "commit": "1d5435003",
+        "commit": "89fc289ab",
         "path": "physical/qkd_host_integration/pin_inventory.json",
-        "sha256": "9831235058cb7e82de9d1584bf66d1b3c13532f686f5f9ae88729cbd803a867e"
+        "sha256": "d3673720fd4b467cea0b9e06b1de67ca5020b585c4a4b570aa48225672495579"
       },
-      "status": "22ABIs/2500links, outlinesUNVERIFIED; QM sixroots independentfrequency families and extraCDC/countercapacity unresolved, promptq4/fault5 distinctfromoldq3",
-      "mandatory_seams": "packet833ps toQMhost1000ps515ingress/65completion/count5 unresolved; receiverinitial5->CDCIBUF4 capacity translation unproved"
+      "status": "35 requested master ABIs and 2532 links. Native permit token control has 6249 generic FF; full packet has 25916 FF across ten roots. Current controller census is source-bound, with no physical view, measured outline or assigned pins. co[0] remains a mixed registration exception pending a distinct KVCDC/CVL/HOFF successor. No legacy frame fit or native whole-token qualification follows from this inventory.",
+      "mandatory_seams": "833ps packet to1000ps QM host unrelated; new real16x514 ingress queue reserves CDC4 and local count5 credit pacer, physical seam and native throughput unqualified. Receiver R5 capacity adapter still requires actual structural binding.",
+      "declared_master_entries": 35,
+      "connectivity_records": 2532,
+      "shared_token_transport": {
+        "allocator_seams_bits": {
+          "request": 39,
+          "grant": 114,
+          "witness": 56,
+          "cancel": 68,
+          "ACK": 1
+        },
+        "clock_family": "CORE833 synchronous compensated family, actualdelivery unbound",
+        "transported_HC182": "unchanged plus tokenEpoch[245:230]/valid246/distinctServiceEpoch[262:247]",
+        "binding": "No localoperationcontextcounter substitutesactualsharedHOSTepoch; sourceleaseheldtokeninput remainsunbounduntilactualcomposition."
+      },
+      "current_controller_census": {
+        "path": "results/arch/qwen_host_controller_census_1014/census.json",
+        "source_commit": "2cec08fb0fbcdf25bee4ab77b21d9c89cd83ab2c",
+        "Q_bits": 12719,
+        "Q_by_clock_port": {
+          "pll_hbm": 9780,
+          "ck": 2939
+        },
+        "ports_input": 939,
+        "ports_output": 920,
+        "status": "Distinct actual controller variant generic sourcecensus. No mappedoutline/CTS/assignedpins or legacyviewalias; co0 has three generic comb cells and needs actual budget measurement. Real WDONE17 observer, notearlycredit/timerACK."
+      }
     },
     {
       "name": "native_SU_formatter",
@@ -68,13 +88,38 @@
     },
     {
       "name": "VM_producer_epoch_binding",
-      "owner": "/root/qwen_vm",
+      "owner": "/root/qwen_die",
       "receipt": {
         "commit": "11be84371",
         "path": "results/arch/qwen_tp8_1012/vm_region_epoch_binding_candidate.json",
         "sha256": "b08448a63b051be22502597ecb11c90147f8cd4cf23d2bbfd0f81003700adfd4"
       },
-      "status": "Actual regionleaf data-only xo/ro/so/ovf; token/outputvalid/ACK/load_step/sourcecontext notimplemented; CLOCK/ENGINEtagdebt unbound"
+      "status": "Native region remains data-only. Separate source-bound lease9110seq16 is preserved; seq40/mode successor0292 supersedes only candidate protocol interface. Actual production source and posted-write/physical binding remain open.",
+      "lease_candidate": {
+        "commit": "9110bda97",
+        "path": "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease.sv",
+        "sha256": "6c98b25ec8f4bae81c77a687491485720cd190591a7cd6a817ecd5411b279b34"
+      },
+      "lease_seq40_successor": {
+        "commit": "0292fb4f0",
+        "path": "results/rtl/qwen_vm_producer_seq40_1014/component/receipt.json",
+        "sha256": "ea679f6aff25075d5a3801d4283fb2ea20ec92306b0f89df30482e436ca2d956",
+        "status": "Distinct default-off canonical nativeIB379 xjs[179:156] mode and fullquery_seq40. Component32ops2queries1positive10observedmutants, defaultoff and actualnativeROW64reads512bits/provenance plus earlycapturemutant pass. Old9110 dependencies source-hashed, no viewalias. Real postedSUwriter admission/commit drain, X source/normalization/32roots, TAG59 sharedtoken and physicalinterface/census/nativecost remain unbound."
+      },
+      "full_provenance_successor": {
+        "commit": "5b9e9859d",
+        "path": "results/rtl/qwen_vm_provenance_1014/component/receipt.json",
+        "sha256": "de4511110f0cd194f2a1fd015637590f654e8a4e22a4f6accf4d85766ea120ff"
+      },
+      "full_provenance_scope": "Default-off full247 logicalmetadata includingretained token16/epoch21;39analyticalstatebits notmapped. Actual64nativeROW reads512+247 andearlycapturemutant validated; trustedactualHOSTtoken ingress, actualXnormalize/32roots and realpostedwriterfence/commits remain unbound. Fulloutput759b/selected375b arefields only, no assignedphysicalchannel/compression.",
+      "full_provenance_census": {
+        "source_commit": "5b9e9859d",
+        "path": "results/rtl/qwen_vm_provenance_1014/census",
+        "provenance_Q_bits": 1241,
+        "row_binding_Q_bits": 597,
+        "scope": "Exactgenericcurrentproc/opt/flatten/memory_map state, notmappedarea/CTS/physicalclockdelivery"
+      },
+      "production_writer_fence_owner": "/root/qwen_tile"
     },
     {
       "name": "VM_band_pockets_ACK",
@@ -94,7 +139,22 @@
         "path": "results/arch/qwen_tp8_cache_ack_1013/recipient_expectation.json",
         "sha256": "8c014aca70b5b1bc4e114111fbc8637edd210adbec755de5a65a12a355ce1dea"
       },
-      "status": "Expected768TIDmap only, no actualstrap/32fabric/acceptedload orquiescenceACK; livej_repeatoverlap defect alsoopen"
+      "status": "Actual128-bit cache capture is one tile-query obligation; expected768TIDs require16x48 banks. Source-bound seq40 supports conservative2^39 legal query bound. Production acceptedIB guard709/query40b646 and output-identity0c81 are distinct default-off candidates. Actual final TOREG lastissue+46 coherent steps, clear47; declared local drain49 costs2 beyondclear. All numeric936 outputs must deliver, only872 query outputs retire in current fixture. Full node/source/replay/global seals and physical transport remain unbound.",
+      "accepted_interface": {
+        "commit": "a778c2ba6",
+        "path": "results/arch/qwen_tp8_context_interface_1014/interface.json",
+        "sha256": "71bec20d4217deaa0563d88a0cd7f983d980d65eceb5b35e2c2abbb93a48f006"
+      },
+      "event_interface": {
+        "commit": "c58d1436e",
+        "path": "results/rtl/qwen_xcache_events_1014/interface.json",
+        "sha256": "bf1d95f4afcbdfb1b966992334d37dc1cb90ebca3a38694bb5f75cd39f832be2"
+      },
+      "sequence_interface": {
+        "commit": "b646b9303",
+        "path": "results/rtl/qwen_query_sequence40_1014/bound_and_interface.json",
+        "sha256": "af9f88c4d561dd7df01edc05059f991dcfe901e64cf064551451b35b3e3c370b"
+      }
     },
     {
       "name": "native_TT_head_ARG2",
@@ -105,12 +165,92 @@
         "sha256": "66427c59f8a3a9314ef36015c867eb177549217e27af3330fdd6214e7782639c"
       },
       "status": "ARG2immutableclockref; sharedmainpath nowARG1d38d, nevermix variants; SSnegative/allspread82.2 retained, parentnotadopted"
+    },
+    {
+      "name": "delivery_lifetime_component",
+      "owner": "/root/qwen_die",
+      "receipt": {
+        "commit": "f9bb1fc09",
+        "path": "results/arch/qwen_delivery_lifetime_1014/receipt.json",
+        "sha256": "eb147d4cab8c62be3211c86890cdb53959369c64af886d7b667e7dc3128d8164"
+      },
+      "status": "Default-off component seq40/count7 with16x48 real tile-query banks; two positive cases and10 observed failing mutants. Vector48 concurrent issue/retire events and49 outstanding requests tested. Exact generic census vector4370Q/bank +1985Q controller =71905Q field, 11094ports/bank. Scalar4322Q/bank =71137Q field. No mapped area, clock delivery, assigned pins or native field cost. Scalar768 acceptance reduction still requires actual spatial transport.",
+      "start_event_fence_successor": {
+        "commit": "20d3727f6",
+        "path": "results/arch/qwen_delivery_lifetime_1014/start_event_fence/receipt.json",
+        "sha256": "7ba4884e88bf481e5a5ee63515b500c782770ce304c3cbe2f1a6c5fe89b8c90b",
+        "status": "Default-off successor rejects begin simultaneous issue/retire/seal;14cases=2positives12observedmutants, admitted1GB1thread gate. No fresh successor census/CTS; f9 generic census remains old exact source."
+      },
+      "actual_numeric_join": {
+        "commit": "b66fe0230",
+        "path": "results/rtl/qwen_numeric_delivery_lifetime_1014",
+        "status": "Actual36f everymathidentity+20d ledger+livebase D2queue delivers936numeric words,872orderedqueryretirements;47ledgerpeak/2queuepeak/zerooutstanding/zero seals. Actualnonqueryctx/ver andhigh32version retained. Isolatedprofile resetafterlocaldrain; no sharedHOSTTAG59/fullprovider/aggregatepeer/reset/fieldseal/physicalphase/nativeperf qualification. Exactreceipt hashes undernamedpath."
+      },
+      "streaming_numeric_join": {
+        "tile_source_commit": "e24671b5b",
+        "queue_source_commit": "393c9d1ef",
+        "ledger_source_commit": "20d3727f6",
+        "main_unit": "oth-ubuntu-2233017-1791977250",
+        "main_exit": 1,
+        "status": "Archived f99 source-bound three numeric positives and five observed rejections. Original main2233017 exit1 and escaped identity-only offset stay explicit. Selected local two-operation boundary623 passed with no full768 release, source or node seals. Distinct merged22-root and STREAM_QUERY successors require fresh source-bound proofs; no old receipt alias.",
+        "full_shape": {
+          "numeric_words": 936,
+          "query_retirements": 872,
+          "nonquery_words": 64,
+          "queue_peak": 8,
+          "ledger_peak": 54,
+          "outstanding_final": 0,
+          "global_seals": 0
+        },
+        "physical_scope": "Source frame601=word512+atomic89, numeric_valid and output_step separate. Metadata4094Q+queue4820Q=8914Q; live queue clock beyond23 parent entries. Combinational reserved credit remains unclosed; no free registered return latency, no full-field COUNT7 adequacy or throughput qualification.",
+        "receipt": {
+          "commit": "f99c37934",
+          "path": "results/rtl/qwen_numeric_stream_lifetime_1014/receipt.json",
+          "sha256": "39fc079e31df2f0b6f688d49b5361922bf5d0f5e6cada629ba79e93b5ebbdcbf"
+        }
+      },
+      "initialization_barrier_candidate": {
+        "path": "results/arch/qwen_delivery_lifetime_1014/init_barrier/receipt.json",
+        "sha256": "4156727ff36c36aef456e13fc2dc2745132c62870a1dc875ee5d06cbb4f8cee7",
+        "status": "Distinct default-off controller waits matching actual-bank context/version/participant receipts before dispatch; real vector-bank receipt wrapper tested separately. Three positives/seven observed mutants, admitted1GB/1thread unit2403436. Analytical1584statebit increment for16x48, not measuredcensus. Physical BEGIN/receipt/ACK transport, fullfieldcomposition, assignedpins, clock/resetdelivery and cost remain unbound."
+      },
+      "initialization_field_successor": {
+        "path": "results/arch/qwen_delivery_lifetime_1014/init_field/receipt.json",
+        "sha256": "3e2d163bbc58ea570cbf0655ea0afe2c4682090abde5af1c661de6f4ab853518",
+        "status": "Logicalreal16x48 bank/controller composition, delayedregistered BEGIN, retainedmask/context/version,partialreset andlatecorruptreceipt. Four positives/eightobservedmutants. Heldparticipants768 exportedconfigurationseam, notfreecommonper-cycletransport; actualnativeacceptance/seals/globalrelease/physicaldelivery andcostunbound."
+      },
+      "selected_local_two_operation_boundary": {
+        "commit": "623b7ee4a",
+        "path": "results/rtl/qwen_numeric_admission_boundary_1014/receipt.json",
+        "sha256": "2b83503d9ec9cb125b0270a8c549eff2b26ab6984e871d9211f43ba5c656bedb",
+        "unit": "oth-ubuntu-2439988-1791979032",
+        "status": "Actual e246 source, two actual accepts, 112 numeric words and 112 query retirements. Offer B at base201 while46 old obligations remain; station holds A until real local49/queue empty/ledger zero grant301, actual B accept303. Early-dispatch mutant faults real old ledger. Old bank remains active and unsealed; no source/node/full768 global release is fabricated. +2base dispatch/IREG seam is fixture observation, not a native performance price."
+      }
+    },
+    {
+      "name": "SU_writer_quiescence",
+      "owner": "/root/qwen_small",
+      "receipt": {
+        "commit": "64e16e88d",
+        "path": "results/rtl/ref_tile/qfd_su_vreduce/writer_quiescent_1014/source_manifest.json",
+        "sha256": "a196b12e7cb8725fbe5773b01d0c2b06e2a6656d72a97b3423460ba5dc0a7cf3"
+      },
+      "status": "Actual IS1 writer_quiescent captures no go/go_q/go_s/e_pend, idle/inactive/inflight0 and no posted VM/reducer/KV writes. SW8 120 accepted component commands,5738 certificate samples/0futurewrites; idle-only mutant513 future-write hazards. Parent must block new/queued admission and separately drain posted buffers/memory commit ACKs. OtherIS conservativelyfalse; no physical/lease composition qualification."
     }
   ],
   "other_open_physical": {
-    "SU_alignment": "Source0cc1b8a81 VL7/LMIN15 randomizedcomponentproof; declared100352addedstate, newcomplete16leafequationalignment135168bits onlyequivalencecandidate, notbv_acc integration/physical views",
-    "adapter": "NewCLOSED128leaf source owneredge;8leafparent842.4unclosed, newcreditproxy1252.8candidateexternal4/internal12capacity explicit; allnewparams namedviews required",
+    "SU_alignment": "Actual default-off16 four-lane children integrated in bv_acc baac1408f/evidence eed16e1bd; fullSW64 120component commands/1117events/282tuples exact VL7/CRX2/MC4/ML15. Complete135168 alignmentbits/provisional16x129.6x108 unmeasured. Native CROM5 requires distinct CRX4/MC6/alignment9 proof; future VM external debt must rebind. No full native-image price.",
+    "adapter": "Source03afb6d02 proxy candidate externalTX4/R5: measured+16cycles unit proof, generic66575FF/78roots/max9275+8SRAM. Requested1360.8 parentH lacks constructive78-station placement/reach/PG/power; no adoption. Existing8-leaf842.4 parent remains unqualified.",
     "collective_local": "N8/credit32/return517 nativeLOCALn9 gateopen; no oldN4/credit8 alias; UCIeP546+R514 transport simultaneous1060>1024 requires actualserializedrate proof"
   },
-  "release_gate": "Finalv5 constructivegeometry/currentrealmasters/assignedpins/registeredfaces/clockPG/nativeprotocol/cost and realdieGRT+3cornerSTA remainrequired; no target or gate relaxed"
+  "release_gate": "Finalv5 constructivegeometry/currentrealmasters/assignedpins/registeredfaces/clockPG/nativeprotocol/cost and realdieGRT+3cornerSTA remainrequired; no target or gate relaxed",
+  "legacy_planner_terminal": {
+    "generator_commit": "761665623",
+    "path": "ot-epyc4:/home/ubuntu/scratch-tp8-r10/g9",
+    "note": "Frozen legacy generator completed with geometry failures; no native source binding or die GRT/STA. 315 stack reach violations, 128 zero-terminal unrepaired paths, window cut0.654>0.60, pin330FAIL, reset19 overreach,36828 bits without pins.",
+    "status": "TERMINAL_GEOMETRY_FAIL",
+    "unit": "oth-ubuntu-4119751-1791945869",
+    "receipt_commit": "414d80093",
+    "receipt_path": "results/arch/qwen_tp8_1013/g9_terminal/classification.json"
+  }
 }

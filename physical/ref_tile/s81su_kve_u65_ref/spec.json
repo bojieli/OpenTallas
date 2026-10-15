@@ -1,0 +1,90 @@
+{
+ "name": "s81su_kve_u65_ref",
+ "top": "dsfd_su_t_kve",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kv.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "rtl/hdc/ot_sram_bank.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 112.32,
+  "h": 112.32
+ },
+ "util": 0.65,
+ "pins": {
+  "S": [
+   "ck",
+   "rst",
+   "i_v",
+   "i_x",
+   "i_gk",
+   "i_gr",
+   "i_gw",
+   "r_v",
+   "r_d"
+  ],
+  "N": [
+   "p_v",
+   "p_d",
+   "y_v",
+   "y",
+   "o_f"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "aspect": 1.0,
+ "job": {
+  "benched_by": "s81su_full",
+  "owner": "Claude:s81-suhc-r10",
+  "branch": "claude/s81-suhc-r9",
+  "tag": "v1",
+  "purpose": "S81 SU slab fit: dsfd_su_t_kve x56 re-sized from 125.28 sq (closed util 0.513, no macro) to 112.32 sq (util 0.65), same RTL, same pin faces; -0.172 mm2 over 56 instances",
+  "views_to": "physical/ref_tile/s81su_kve_u65_ref/views",
+  "record_to": "results/rtl/ref_tile/s81su_kve_u65_ref"
+ },
+ "recipe": 2,
+ "reroute_reason": {
+  "kind": "slot_change",
+  "contract": {
+   "name": "results/arch/hier_contract_1011/s81.json",
+   "version": 17
+  },
+  "slot_change_request": "el1011-s81die.log 2026-10-13 [s81su -> s81-die] SU SLAB FIT, FIRM TABLE r10 (kve 125.28 sq -> 112.32 sq; die contract v17 sp_su_s_v17_decision D)",
+  "why": "sp_su_s tile bill 21.151 mm2 in an 18.942 mm2 slab (fill 1.117); slab growth N impossible (hub column full); with sml / smd / pin re-sized the fill without S growth is still 0.971 > 0.90"
+ },
+ "slot_change_request": "el1011-s81die.log 2026-10-13 [s81su -> s81-die] SU SLAB FIT, FIRM TABLE r10 (kve 125.28 sq -> 112.32 sq; die contract v17 sp_su_s_v17_decision D)",
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true
+}

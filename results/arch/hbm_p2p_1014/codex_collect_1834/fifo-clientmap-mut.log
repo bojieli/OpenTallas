@@ -1,0 +1,7 @@
+ot-run: ot-epyc1tb     admits   304 GB (avail 551, growth 211, headroom 64, waiters 0/0 GB) load 82/128 running 23 disk 711 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-3947648-1792033646 after 0 s
+[171502000] %Fatal: tb_hgi_coll_b2_vmport.sv:108: Assertion failed in tb_hgi_coll_b2_vmport.unnamedblk18: premature credit drain lane4
+%Error: rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_b2_vmport.sv:108: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-3947648-1792033646): exit 1

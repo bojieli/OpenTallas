@@ -1,0 +1,6 @@
+RESULT requests3345 accepted3327 restored3327 collision_buckets9 bad3327 native_qualified0
+FAIL
+- static_leaf/tb_dsfd_vm_static_suhc_map.sv:68: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 144us; walltime 0.073 s; speed 1.978 ms/s
+- Verilator: cpu 0.073 s on 1 threads; allocated 7 MB

@@ -94,8 +94,7 @@
         "threads": 1,
         "peak_ram_gb": 4,
         "needs": [
-          "iverilog",
-          "vvp"
+          "iverilog"
         ],
         "pass_regex": "^PASS qkd_cdc_wleaf"
       },
@@ -106,8 +105,7 @@
         "threads": 1,
         "peak_ram_gb": 4,
         "needs": [
-          "iverilog",
-          "vvp"
+          "iverilog"
         ],
         "fail_regex": "^FAIL qkd_cdc_wleaf NEG=4"
       },

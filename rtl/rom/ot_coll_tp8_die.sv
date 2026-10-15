@@ -24,6 +24,7 @@
 // gather message hi before lo); the engine's OT_ONESHOT_M_MUTANT swaps package ranks 1 and 2.
 // ---------------------------------------------------------------------------
 module ot_coll_tp8_die #(
+    parameter integer CCLK = 0, // independent hardened-child clocks; legacy default unchanged
     parameter integer PKG     = 0,
     parameter integer DIE     = 0,
     parameter integer LANES   = 16,
@@ -64,6 +65,8 @@ module ot_coll_tp8_die #(
     parameter integer RW      = FW + 2
 ) (
     input  wire              clk,
+    input wire [FW/128-1:0] clk_colr, clk_pfold, clk_efold,
+    input wire [(PW+127)/128-1:0] clk_ecol,
     input  wire              rst_n,
     // local port (credit-based, ICR credits)
     input  wire              in_valid,
@@ -218,7 +221,7 @@ module ot_coll_tp8_die #(
     genvar gs;
     generate for (gs = 0; gs < NS; gs = gs + 1) begin : g_pf
         (* keep_hierarchy *) ot_coll_fold_slice u_fs (   // the hardened N 4 / ADD_LAT 7 / SEAM 1 master, no override
-            .clk(clk), .rst_n(rst_n), .red_in(red_x),
+            .clk(CCLK ? clk_pfold[gs] : clk), .rst_n(rst_n), .red_in(red_x),
             .src({256'd0, s_hi[gs*128 +: 128], s_lo[gs*128 +: 128]}),
             .sum(sl_sum[gs*128 +: 128]), .v_out(sl_v[gs]), .e_out(sl_e[gs]));
     end endgenerate
@@ -356,8 +359,8 @@ module ot_coll_tp8_die #(
     assign sx_valid = (WT == 3) ? sxv_q2 : sxv_q; assign sx_rec = sxrec_q; assign sr_cr_out = src_q;
     ot_rom_oneshot_die_m #(.N(N), .RANK(PKG), .LANES(LANES), .TAGW(TAGW), .DEPTH(DEPTH), .ADD_LAT(ADD_LAT), .IB(4),
         .PR(PR), .OPQ(0), .TXK(TXK), .FPIPE(FPIPE), .HDLO(HDLO), .MEMM(MEMM), .FSL(FSL), .IBH(IBH), .CT(CT),
-        .RSTRAP(STRAP)) u_eng (
-        .clk(clk), .rst_n(rst_n), .self_s(self_oh),
+        .RSTRAP(STRAP), .CCLK(CCLK)) u_eng (
+        .clk(clk), .clk_cols(clk_ecol), .clk_folds(clk_efold), .rst_n(rst_n), .self_s(self_oh),
         .in_valid(e_iv), .in_cr(e_icr), .in_data(eq_hd[FW-1:0]), .in_last(e_il), .in_mode(e_im),
         .in_tag(e_itg),
         .tx_valid(e_txv), .tx_rec(e_txr), .tx_ready(e_txrdy), .cr_in(e_crin),
@@ -591,7 +594,7 @@ module ot_coll_tp8_die #(
         for (genvar c=0;c<4;c=c+1) begin : g_col
             wire [383:0] sri = {sr_rec[2*PW+c*128 +: 128], sr_rec[PW+c*128 +: 128], sr_rec[c*128 +: 128]};
             wire [383:0] sro, sxo;
-            ot_coll_tp8_col_tile_r3 u_wc (.clk(clk),.rst_n(rst_n),.die_s(DI),
+            ot_coll_tp8_col_tile_r3 u_wc (.clk(CCLK ? clk_colr[c] : clk),.rst_n(rst_n),.die_s(DI),
                 .in_d(in_data[c*128 +: 128]),.dp_d(dp_rec[c*128 +: 128]),.dr_d(dr_rec[c*128 +: 128]),.sr_d(sri),
                 .sum_d(sl_sum_f[c*128 +: 128]),.lq_wd(e_od[c*128 +: 128]),.tq_wd(e_od[c*128 +: 128]),
                 .e_tx(e_txr[c*128 +: 128]),

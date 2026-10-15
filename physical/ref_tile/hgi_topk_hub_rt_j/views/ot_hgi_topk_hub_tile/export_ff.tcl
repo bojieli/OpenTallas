@@ -5,13 +5,12 @@ read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_IN
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
-read_db /work/results/asap7/opentallas_ot_hgi_topk_hub_tile_asap7_ref_hgi_topk_hub_rt_j_j1_b19f38969/base/6_final.odb
+read_db /work/results/asap7/opentallas_ot_hgi_topk_hub_tile_asap7_ref_hgi_topk_hub_rt_j_j3_42dee101e/base/6_final.odb
 set ::ot_ce_corner ff
-read_sdc /work/results/asap7/opentallas_ot_hgi_topk_hub_tile_asap7_ref_hgi_topk_hub_rt_j_j1_b19f38969/base/6_final.sdc
-read_spef /work/results/asap7/opentallas_ot_hgi_topk_hub_tile_asap7_ref_hgi_topk_hub_rt_j_j1_b19f38969/base/6_final.spef
+read_sdc /work/results/asap7/opentallas_ot_hgi_topk_hub_tile_asap7_ref_hgi_topk_hub_rt_j_j3_42dee101e/base/6_final.sdc
+read_spef /work/results/asap7/opentallas_ot_hgi_topk_hub_tile_asap7_ref_hgi_topk_hub_rt_j_j3_42dee101e/base/6_final.spef
 set_propagated_clock [all_clocks]
-read_sdc /src/physical/ref_tile/hgi_topk_hub_rt_j/signoff.sdc
-read_sdc /src/physical/common_flow/io_ref_routed.sdc
+read_sdc /work/w18_extra.sdc
 read_sdc /meas/app0_io_ref_routed.sdc
 puts "OT_WS max [sta::worst_slack_cmd max] min [sta::worst_slack_cmd min]"
 write_timing_model -library_name ot_hgi_topk_hub_tile_ff /out/ot_hgi_topk_hub_tile_ff.lib

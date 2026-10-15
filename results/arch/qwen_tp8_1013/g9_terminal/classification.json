@@ -1,0 +1,154 @@
+{
+  "schema": "opentallas.qwen-g9-terminal-classification.v1",
+  "unit": "oth-ubuntu-4119751-1791945869",
+  "host": "ot-epyc4",
+  "exit": 0,
+  "verdict": "GEOMETRY_FAIL_NOT_NATIVE_DIE_TIMING",
+  "generator_commit": "761665623",
+  "generator_sha256": "4cd9d71b15ee8dbb770716d44a05dad32c8425a5350c25599bc7b19d980bd242",
+  "terminal_scope": "Legacy planner only, nativecurrentmaster/pin/context/token binding not present; noGRT/STA run",
+  "die": {
+    "w": 31785.696,
+    "h": 25891.92,
+    "mm2": 822.993,
+    "budget_mm2": 858,
+    "margin_mm2": 35.007
+  },
+  "build_seconds": 30390,
+  "failure_categories": [
+    {
+      "category": "Registered signal geometric reach",
+      "count": 315,
+      "by_class": {
+        "stack_local": 315
+      },
+      "max_pin_to_pin_um": 2182.7,
+      "limit_um": 500.0,
+      "cause": "All315 longhops arestack_local;128unrepaired paths have zero legal terminal relay sites",
+      "next": "Repack actualregisteredstackfaces/childplacements and terminalrelaycorridors; no reach waiver"
+    },
+    {
+      "category": "Unrepaired relay paths",
+      "count": 128,
+      "prefix_counts": {
+        "te": 64,
+        "ts": 64
+      },
+      "next": "Nativeendpointandregistered-face inventory first; avoid futilezero-terminal BFS"
+    },
+    {
+      "category": "Windowcut capacity",
+      "worst": 0.654,
+      "limit": 0.6,
+      "worst_window": {
+        "ax": "y",
+        "pos": 14150.0,
+        "win": [
+          19760.0,
+          20020.0
+        ],
+        "bits": 2130.0,
+        "usable": 3257.0,
+        "util": 0.654,
+        "fam": {
+          "kvn": 1048.0,
+          "spine_local": 563.0,
+          "corridor": 509.0,
+          "reset": 10.0
+        }
+      },
+      "next": "SeparateKVN/spine/control/corridor crossings orreshapechannels, actualcurrentPG/sourcefields required"
+    },
+    {
+      "category": "Face pin access/jog spill",
+      "FAIL": 330,
+      "WARN": 5598,
+      "by_class": {
+        "stack_local": 193,
+        "hbm_cdc": 132,
+        "crom": 1,
+        "spine_local": 4,
+        "io": 0,
+        "kvn": 0,
+        "cdc_core": 0,
+        "d2d_fdi": 0,
+        "tree_spine": 0,
+        "stack_local@kv": 0,
+        "tree_block": 0,
+        "spine_local@kv": 0,
+        "corridor": 0,
+        "sequencer": 0,
+        "head_chain": 0,
+        "tap": 0
+      },
+      "failed_bits": 141991,
+      "cause": "LegacyECTL/head2.352um seams, CDC/controllerabutted.216um faces and CROM/spine joggle",
+      "next": "Realnativeboundfaces andsufficient seamchannels, no legacygeneratedpin assumption"
+    },
+    {
+      "category": "Reset delivery",
+      "count": 19,
+      "error_counts": {
+        "sink_unreachable": 16
+      },
+      "next": "Actualregistered resetentry reach/latency/unresetable core-source inventory"
+    },
+    {
+      "category": "Placeholder/mismatched views",
+      "bits_without_pin": 36828,
+      "mismatched_view_records": {
+        "qkd_ctrl_pc": "outline differs: frame 247.512 x 377.976, view 246.24 x 172.8: generated pins kept",
+        "qkd_ctrl_kc": "outline differs: frame 247.512 x 45.336, view 64.8 x 43.2: generated pins kept"
+      },
+      "next": "Source-currentmaster/outlines/LEF/pins beforedie route"
+    },
+    {
+      "category": "Clock phase / STA",
+      "clock_nets_missing_reported": 0,
+      "STA_performed": false,
+      "next": "Actualper-child insertion/phi-R/entryRC/3corner pair screens onlyafterconstructive nativegeometry"
+    }
+  ],
+  "legacy_relay_projection": {
+    "schema": "opentallas.qwen-rom-relay-token-cost.v1",
+    "stages_r21": {
+      "bd": 63,
+      "tree": 44,
+      "tws": 49,
+      "ord": 1,
+      "link": 0
+    },
+    "stages_rtl": {
+      "bd": 41,
+      "tree": 20,
+      "tws": 38,
+      "ord": 7,
+      "link": 46
+    },
+    "bd_worst_tile": {
+      "col": 47,
+      "row": 0,
+      "head_stages": 32,
+      "head_roots": {
+        "head_23": 8,
+        "head_24": 9
+      }
+    },
+    "me_ops_per_ar_token": 217,
+    "me_ops_source": "217 = results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json (latency() unavailable: FileNotFoundError)",
+    "delta_per_me_op": 51,
+    "delta_link_per_traversal": -46,
+    "cycles_per_ar_token": 7755,
+    "basis": "one register boundary per die hop (element ports registered); r21 relays add hops; the measured token RTL carries the base stages (k_AR0 wire_stages bd / nws x 4 levels / tws / ord, r2 link)"
+  },
+  "source_files": {
+    "timing_masters.json": "a2a22abc567e5395faa02a2816042e397e729619f60f2eb1136f6761ca4ca134",
+    "pin_align.json": "2baee2152f5d7adc789a65b60a043f357399f06384631276b1e7846572fbe69c",
+    "pin_align_rows.json.gz": "47c2adc3a19600c4131f9d9891721b328087925b79fcb58b4c198d18f0313a2c",
+    "out.log": "7ec9e8a0c39b4345a9dff24931826d685407fbe81995a7425c94992189407190",
+    "relay_run.json": "459f255026080c78c5d68e85de2c25863fe4269289d3208220a5d78dec8ab3c3",
+    "dump.json": "d2f6abc72910af8a3d6a789d097730b1d0d4f465e2e7f69f2ce136afe32866cb",
+    "rom_tp8b.json_original": "98ef00f72c282eab5e73bf25992f9ec7bac30a44a0bd0cb33201c2c4759b4829",
+    "rom_tp8b.json.gz": "8d980297634089229858fbe5b2f76de98c7c728a64bdf0e9f34adece989393b3"
+  }
+}

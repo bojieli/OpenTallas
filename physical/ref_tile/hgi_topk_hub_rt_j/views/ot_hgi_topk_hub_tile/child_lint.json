@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas/claude/closure-loop/hgi_topk_hub_rt_j-j1-b19f38969/record/views/ot_hgi_topk_hub_tile/ot_hgi_topk_hub_tile.lef",
+ "lef": "/srv/opentallas/claude/closure-loop/hgi_topk_hub_rt_j-j3-42dee101e/record/views/ot_hgi_topk_hub_tile/ot_hgi_topk_hub_tile.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [
-  "(f) face-pin access: 1943 of 1943 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M4 (0.060,26.448), cmd_m[0] M4 (0.060,26.448), cmd_m[10] M4 (0.060,26.448))"
+  "(f) face-pin access: 1943 of 1943 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M4 (0.060,7.248), cmd_m[0] M4 (0.060,7.248), cmd_m[10] M4 (0.060,7.248))"
  ],
- "summary": "ot_hgi_topk_hub_tile 388.8 x 64.8: PG M5 VDD 72 stripes (99% spread, 100% cov) / VSS 72 stripes (99% spread, 100% cov); strap M6; face pins 1943 blocked-above 0 blocked-same 0; clock clk insertion 387 ps; pockets M5 0 (closed)",
+ "summary": "ot_hgi_topk_hub_tile 388.8 x 64.8: PG M5 VDD 72 stripes (99% spread, 100% cov) / VSS 72 stripes (99% spread, 100% cov); strap M6; face pins 1943 blocked-above 0 blocked-same 0; clock clk insertion 400 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "ot_hgi_topk_hub_tile",
   "W": 388.8,
@@ -40,24 +40,24 @@
   "face": {
    "face_pins": 1943,
    "blocked_above": 0,
-   "covered_below": 649,
+   "covered_below": 160,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
    "band_same": 1943,
    "band_examples": [
-    "clk M4 (0.060,26.448)",
-    "cmd_m[0] M4 (0.060,26.448)",
-    "cmd_m[10] M4 (0.060,26.448)",
-    "cmd_m[11] M4 (0.060,26.448)",
-    "cmd_m[12] M4 (0.060,26.448)",
-    "cmd_m[13] M4 (0.060,26.448)"
+    "clk M4 (0.060,7.248)",
+    "cmd_m[0] M4 (0.060,7.248)",
+    "cmd_m[10] M4 (0.060,7.248)",
+    "cmd_m[11] M4 (0.060,7.248)",
+    "cmd_m[12] M4 (0.060,7.248)",
+    "cmd_m[13] M4 (0.060,7.248)"
    ]
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 386.73,
-    "min_ps": 292.53
+    "max_ps": 400.13,
+    "min_ps": 319.68
    }
   },
   "pockets": {
@@ -66,7 +66,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 3467
+    "added": 1926
    },
    "count": 0,
    "area_um2": 0,

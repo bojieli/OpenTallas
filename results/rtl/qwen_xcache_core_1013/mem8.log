@@ -1,0 +1,5 @@
+PASS production-core-cache ops=6 arithmetic_outputs=680 core_edges=1254 native_qkv_o_gu_down=4 SMAX11=1 arbitrary_xjs=2 wholecore_stalls=1 instructionclear=1 midop_reset=1 reactive_misses=126 MEM_EXTRA=8
+- rtl/test/qwen_kv_die/tb_qwen_xcache_core.sv:106: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 20us; walltime 0.068 s; speed 292.574 us/s
+- Verilator: cpu 0.068 s on 1 threads; allocated 10 MB

@@ -1,0 +1,158 @@
+{
+  "schema": "ot.qwen.native_io.evidence.v1",
+  "source_commit": "3c73fc3097d745163f55a807b3af67d80a8e9c82",
+  "production": [
+    {
+      "master": "qfd_io_xfifo",
+      "words": 5120,
+      "verdict": "PASS",
+      "evidence": "xf_exact.log"
+    },
+    {
+      "master": "qfd_io_serdes",
+      "words_each_direction": 1500,
+      "phy_latency": 223,
+      "verdict": "PASS",
+      "evidence": "serdes_exact.log"
+    },
+    {
+      "master": "qfd_coll_xfifo_native",
+      "messages": 3000,
+      "words": 17000,
+      "paired_mismatches": 0,
+      "verdict": "PASS",
+      "evidence": "local_native_regression.log"
+    },
+    {
+      "master": "qfd_io_ucie",
+      "words_each_direction_each_channel": 1500,
+      "channels": 2,
+      "phy_latency": 223,
+      "payload_pair": "R bitwise complement of P",
+      "verdict": "PASS",
+      "evidence": "ucie_exact.log"
+    }
+  ],
+  "mutants": [
+    {
+      "master": "qfd_io_xfifo",
+      "verdict": "FAIL_EXPECTED",
+      "mismatched_channels": "3ff",
+      "evidence": "xf_mutant.log"
+    },
+    {
+      "master": "qfd_io_serdes",
+      "verdict": "FAIL_EXPECTED",
+      "mismatched_words": 1125,
+      "evidence": "serdes_mutant.log"
+    },
+    {
+      "master": "qfd_io_ucie",
+      "verdict": "FAIL_EXPECTED",
+      "mismatched_words": 1125,
+      "evidence": "ucie_mutant.log"
+    }
+  ],
+  "native_local_physical": {
+    "gate_verdict": "WARN",
+    "route_allowed": false,
+    "reason": "CK boundary spread169.1ps exceeds80ps; CKDspine28.8ps passes. Clock count gate alone does not establish native qualification.",
+    "boundary_domains": [
+      {
+        "source": "ck",
+        "clock": "core_clk",
+        "tt": {
+          "boundary": {
+            "n": 1067,
+            "mean": 473.3,
+            "min": 434.8,
+            "max": 603.9
+          },
+          "all": {
+            "n": 4829,
+            "mean": 462.6,
+            "min": 404.8,
+            "max": 603.9
+          },
+          "errors": [],
+          "macros": {
+            "n": 2,
+            "nets": 2,
+            "max_per_net": 1,
+            "reg_mean": 462.6,
+            "max_slew": 34.4,
+            "max_late": -57.8,
+            "pins": [
+              {
+                "pin": "u_port.u_cq.g_afw.u_af.g_mm.genblk1.genblk1.g_256x517.u_m/wclk",
+                "arr": 403.6,
+                "slew": 30.7,
+                "late": -59.0,
+                "net": "clknet_1_0_0_ck"
+              },
+              {
+                "pin": "u_port.u_sq.g_afw.u_af.g_mm.genblk1.genblk1.genblk1.g_64x546.u_m/rclk",
+                "arr": 404.8,
+                "slew": 34.4,
+                "late": -57.8,
+                "net": "clknet_1_1_0_ck"
+              }
+            ]
+          },
+          "macro_libs": 3
+        }
+      },
+      {
+        "source": "ckd",
+        "clock": "ckd",
+        "tt": {
+          "boundary": {
+            "n": 1068,
+            "mean": 627.1,
+            "min": 615.6,
+            "max": 644.4
+          },
+          "all": {
+            "n": 3363,
+            "mean": 626.4,
+            "min": 615.3,
+            "max": 644.6
+          },
+          "errors": [],
+          "macros": {
+            "n": 3,
+            "nets": 3,
+            "max_per_net": 1,
+            "reg_mean": 626.4,
+            "max_slew": 14.3,
+            "max_late": 10.5,
+            "pins": [
+              {
+                "pin": "u_port.u_cq.g_afw.u_af.g_mm.genblk1.genblk1.g_256x517.u_m/rclk",
+                "arr": 622.3,
+                "slew": 14.3,
+                "late": -4.1,
+                "net": "clkbuf_sp_L432_net"
+              },
+              {
+                "pin": "u_port.u_sq.g_afw.u_af.g_mm.genblk1.genblk1.genblk1.g_64x546.u_m/wclk",
+                "arr": 628.5,
+                "slew": 13.4,
+                "late": 2.1,
+                "net": "clkbuf_sp_L294_net"
+              },
+              {
+                "pin": "u_port.u_sq.g_ib_mem.u_ib/clk",
+                "arr": 636.9,
+                "slew": 13.8,
+                "late": 10.5,
+                "net": "clkbuf_sp_L267_net"
+              }
+            ]
+          },
+          "macro_libs": 3
+        }
+      }
+    ]
+  }
+}

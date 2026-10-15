@@ -1,0 +1,6 @@
+ot-run: ot-epyc4       admits   610 GB (avail 836, growth 86, headroom 48, waiters 0/0 GB) load 144/128 running 19 disk 597 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-573259-1792042372 after 1 s
+case phy_longer_than_compiled kind=link latu=37 lats=362 phi=0 xu=1 xs=0 mutant=- PASS mismatches=736 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=1600 meas_lu=37 meas_ls=362 pr_overlap=0 compiled_span=693
+COLL_TP8SL PASS cases=1 latu=37 lats=362
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-573259-1792042372): exit 0

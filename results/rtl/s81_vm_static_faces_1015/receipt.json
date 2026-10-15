@@ -1,0 +1,12 @@
+{
+  "status": "component PASS; master and physical qualification pending",
+  "capture": "two seeds 1735full+8partial /1194full+7partial exact rows;5faultwitnesses;wordmutantFAIL",
+  "x43": "1377checkedwords;3schedule/phasefaultwitnesses;phasemutantFAIL",
+  "xio": "128consecutiveexactL12readslots;4independenttupletags/masks/rows;tagmutantFAIL",
+  "source_sha256": {
+    "dsfd_vm_static_cap.sv": "a2be383e8ff1be4efc178807a507744abb10dea0d8ddc4c6288d6bb9fa81e764",
+    "dsfd_vm_static_capl.sv": "b6c23720c6dd34c3ec7296dfb44d41848abea4fe18f260ab75a7839660dba538",
+    "ot_s81_vm_x43.sv": "7056c742b154593afc92dd4a6709454f23e371b432c33614d1572f19adff7253",
+    "dsfd_vm_static_xio.sv": "377c62b7593c495145d25cde015723cd9af3fe0656e73a51b0299e21d3ae6271"
+  }
+}
