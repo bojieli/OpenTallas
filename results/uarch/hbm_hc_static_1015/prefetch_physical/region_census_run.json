@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.hc.region.physical-census-run.v1",
-  "state": "LIVE",
+  "state": "TERMINAL_PASS_SOURCE_EXACT_CENSUS_ONLY",
   "functional_gate_authorization": "Parent explicitly triggered after all8native320positives, criticalP6absolutephase and staleepoch/4same-region/wrongtag/payloadmutantsPASS; actualDUTSHAunchanged, benchonlycad2e3b94",
   "source_pins": {
     "region.sv": {
@@ -48,7 +48,9 @@
     ],
     "no_CTS_or_route": true,
     "elaboration": "Purewiremirrorportwrapper hc_prefetch_region_census_root instantiates actualfrozenhelperMAX8/WIDTH4/II8/interleave1; reset/FIFOreadnormal, actualhelperreaddeferred. No DUTfileedit oraddedstate.",
-    "log": "yosys_wrapper.log"
+    "log": "yosys_wrapper.log",
+    "terminal_exit": 0,
+    "terminal": "ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3998700-1792063700): exit 0"
   },
   "initial_terminal_failure": {
     "session": 10835,
@@ -59,9 +61,11 @@
     "fix": "Use deferredVerilogAST and hierarchy -chparam actualMAX8 beforeelaboration; source unchanged",
     "preserved_log": "ot-epyc4:/srv/opentallas-scratch/claude/codex-hc-prefetch-region-census-1015/yosys.log",
     "preserved_script": "census.ys/run.sh",
-    "not_an_observation_timeout_restart": true
+    "not_an_observation_timeout_restart": true,
+    "log_sha256": "81492d2618533bc94d7d38fb50de27482a951351833374ae169ff90204ae0473",
+    "log_bytes": 1337
   },
-  "limits": "Helper standalone production parameters with frozen dependencies. Wrapper hash pinned and4instances sourceaudited but wrapper notsynthesized. No LIBmapped/CTS/physicalqualification claim.",
+  "limits": "Actual standalone helper at production MAX8/WIDTH4/II8/interleave1. Pure-wire mirror wrapper adds no state/logic. Generic/primitive counts before standard-cell library mapping, clock gating, CTS, routing or signoff; not full combined native-PC or full-wrapper count. Physical and performance qualification remain false.",
   "deferred_top_internal_failure": {
     "session": 4669,
     "host": "ot-agidock128",
@@ -82,6 +86,57 @@
     "state": "TERMINAL",
     "exit": 1,
     "reason": "Yosys0.68internalassert modules_.count(module->name)==0 duringtopreprocessing afterFIFOwidthderivedmodulesavailable",
-    "preserved_log": "ot-agidock128:/srv/opentallas-scratch/claude/codex-hc-prefetch-region-census-1015/yosys_deferred.log"
-  }
+    "preserved_log": "ot-agidock128:/srv/opentallas-scratch/claude/codex-hc-prefetch-region-census-1015/yosys_deferred.log",
+    "log_sha256": "20044e9b73257687a2e3963bbddc613acd5ea97856323df07343ff328e001967",
+    "log_bytes": 7797
+  },
+  "functional_gate_receipt": {
+    "commit": "d81e5236e68a176774c49e9d494a94514ddc7b0e",
+    "path": "results/rtl/hbm_hc_static_1015/weight_prefetch_resident/receipt.json",
+    "sha256": "e888897cb90b0196cb2681c681c49f68b05d49951aff11c90e4e7ab5f0207a8d",
+    "status": "PASS_NINE_FULL_ROW_PHASE_CASES_AND_THREE_MUTANTS_COMPONENT_ONLY",
+    "DUT_and_FIFO_reset_hashes_match_actual_census_inputs": true,
+    "scope": "Component only; no inherited SYS1 numeric, full-native throughput or physical qualification"
+  },
+  "remote_input_script_output_hashes_verified": {
+    "region.sv": "2dda0c920f3c295bb27507ef08da28e8ab418864e86cef56a68bbf8b7b9a6f96",
+    "resident.sv": "2f48b7acfbc645bb919e3e33b2b90cdb080e24c821b966088e3806d548b603a3",
+    "fifo.sv": "e091268202e1c6bcc18c8eb83304730c5a29bc10e0a6c52a4dcfc19c177e882e",
+    "reset.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "macro.lib": "c39f42e739c93c5809d82fdc12d41cbb3ddfc6ab43fba192e542e347a7f6ea94",
+    "census_root.sv": "4f63ce2a2d4c0d2c8866480160131815f7b06e94c4b3c791ebfb997b3b23bc1d",
+    "census_wrapper.ys": "d9287b53d007105f4e918778a90556cf607a2bc14f0dbd514bd0a4942ab1f425",
+    "run_wrapper.sh": "a74c408912692e2fbc52c7800556ec7a4f9fef409073465929cc706cbde23b21",
+    "census.json": "5f0d2f9770083b7ff2df696e64ce4d19fac5d6686984c922d6a2af9c369559e5",
+    "sequential_bitmapped.json": "18f33815b8dee61d57a8a8e7bbd7066727b7ed14bf8576ee403c13f6d50d9132",
+    "yosys_wrapper.log": "ce3e83729bad7cd618e56c5eafc686090ead21683a078f7b71605ea1b28ccf09"
+  },
+  "outputs": {
+    "census.json": {
+      "bytes": 53875668,
+      "sha256": "5f0d2f9770083b7ff2df696e64ce4d19fac5d6686984c922d6a2af9c369559e5",
+      "remote": "/srv/opentallas-scratch/claude/codex-hc-prefetch-region-census-1015/census.json"
+    },
+    "sequential_bitmapped.json": {
+      "bytes": 63044754,
+      "sha256": "18f33815b8dee61d57a8a8e7bbd7066727b7ed14bf8576ee403c13f6d50d9132",
+      "remote": "/srv/opentallas-scratch/claude/codex-hc-prefetch-region-census-1015/sequential_bitmapped.json"
+    },
+    "yosys_wrapper.log": {
+      "bytes": 2892870,
+      "sha256": "ce3e83729bad7cd618e56c5eafc686090ead21683a078f7b71605ea1b28ccf09",
+      "remote": "/srv/opentallas-scratch/claude/codex-hc-prefetch-region-census-1015/yosys_wrapper.log"
+    }
+  },
+  "actual_counts_per_helper": {
+    "stream_clk": 4962,
+    "hbm_clk": 21714
+  },
+  "SRAM_clock_pins_per_helper": 32,
+  "bitmapped_cells_all_one_bit": 26676,
+  "baseline_measured_delta": {
+    "stream_clk": 272,
+    "hbm_clk": 578
+  },
+  "wrapper_top_has_only_single_actual_helper_cell": true
 }

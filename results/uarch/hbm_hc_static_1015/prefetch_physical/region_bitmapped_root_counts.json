@@ -1,0 +1,30 @@
+{
+  "top": "hc_prefetch_region_census_root",
+  "root_sequential_bits": {
+    "stream_clk": 4962,
+    "hbm_clk": 21714
+  },
+  "root_sequential_cells": {
+    "stream_clk": {
+      "$_DFFE_PN0P_": 411,
+      "$_DFF_PN0_": 4291,
+      "$_DFF_PN1_": 8,
+      "$_DFFE_PP_": 252
+    },
+    "hbm_clk": {
+      "$_DFFE_PN0P_": 12126,
+      "$_DFF_PN0_": 435,
+      "$_DFFE_PP_": 9152,
+      "$_DFF_PN1_": 1
+    }
+  },
+  "sequential_cell_width_histogram": {
+    "1": 26676
+  },
+  "bitwise_primitive_mapping_complete": true,
+  "SRAM_clock_pins_additional": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 32
+  },
+  "unresolved": [],
+  "counts_are": "bitwise technology primitives before library mapping/clock gating, not CTS sinks or timing"
+}

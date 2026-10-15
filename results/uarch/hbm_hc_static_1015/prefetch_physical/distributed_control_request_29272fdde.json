@@ -25,7 +25,6 @@
     "limits": "Owner suppliedframe/rowcount/outline; no literalPCcoordinates or newcombinedsourcegrant inspected yet"
   },
   "physical_failure": {
-    "onepoint_parameter_control_to32PCmax_horizontal_um_atleast": 2235.6,
     "central_to_extreme_PCcenter_um": 2106,
     "minimum_500um_hops_from_center_to_far_face": 5,
     "minimum_hops_from_end_to_opposite_end": 9,
@@ -36,7 +35,10 @@
       "h_epoch": 16,
       "h_bank": 3
     },
-    "return_arbitration": "32PCs to8lanes withowner/tag/epoch/regionchecks andprioritymux iscurrently combinational; FIFOroot splitalone doesnotregisterthispath"
+    "return_arbitration": "32PCs to8lanes withowner/tag/epoch/regionchecks andprioritymux iscurrently combinational; FIFOroot splitalone doesnotregisterthispath",
+    "minimum_possible_max_horizontal_to_extreme_PC_centres_um": 2106,
+    "frame_center_to_outer_face_horizontal_um": 2235.6,
+    "geometric_lower_bound_note": "ExtremePCcentres separated4212um => anysinglepoint maxhorizontal>=2106um; framecenter-to-outerface2235.6um is a specific centralplacement distance, not a universalpinlocationbound. Bothrequire>=5wirehops at500um."
   },
   "required_successor": [
     "Explicitstaticdistributedparameters/start delivery withregisteredboundedhops",

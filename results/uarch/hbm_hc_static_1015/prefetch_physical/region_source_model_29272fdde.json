@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.hc.prefetch.region-physical-model.v1",
-  "status": "SOURCE_EXACT_DIFF_ONLY_AWAIT_FUNCTIONAL_GATE_PASS",
+  "status": "SOURCE_EXACT_STANDALONE_CENSUS_COMPLETE_NOT_PHYSICAL_QUALIFICATION",
   "source_pins": [
     {
       "commit": "29272fdde3585a83fe803ba2d63166b98b1df016",
@@ -133,7 +133,8 @@
     "HBM_4helpers": 2312,
     "stream_4helpers_plus_wrapper_region_q3": 1091,
     "total": 3403,
-    "NOT_A_MEASURED_ROOT_COUNT": true
+    "NOT_A_MEASURED_ROOT_COUNT": true,
+    "wrapper_alias_note": "region_q3 equals existingepoch_q[1:0]/half_q on identical reset/enable; those3 declaredbits can alias existingregisters. Wholewrapper3403declaredwidth is NOTactualmappedcount."
   },
   "source_model_baseline_plus_declared_delta_per_helper": {
     "HBM": 21714,
@@ -213,5 +214,15 @@
     },
     "total": 21714,
     "crosscheck": "12288+8*(1144+18)+(110+18+2)=21714; newsourcecensus can change optimization/aliasing. Oldbaseline11776+8*(1136+18)+(108+18+2)=21136 exact measured baseline."
+  },
+  "actual_standalone_helper_census": {
+    "receipt": "region_census_run.json",
+    "generic_counts": "region_root_counts.json",
+    "bitmapped_counts": "region_bitmapped_root_counts.json",
+    "HBM_FF": 21714,
+    "stream_FF": 4962,
+    "stream_SRAM_clock_pins": 32,
+    "delta_matches_declared_helper_model_exactly": true,
+    "full_wrapper_counts_unmeasured": true
   }
 }

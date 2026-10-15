@@ -1,0 +1,41 @@
+{
+  "top": "hc_prefetch_region_census_root",
+  "root_sequential_bits": {
+    "hbm_clk": 21714,
+    "stream_clk": 4962
+  },
+  "root_sequential_cells": {
+    "hbm_clk": {
+      "$adffe": 1031,
+      "$adff": 119,
+      "$dffe": 32
+    },
+    "stream_clk": {
+      "$adffe": 40,
+      "$adff": 101,
+      "$dffe": 4
+    }
+  },
+  "sequential_cell_width_histogram": {
+    "3": 332,
+    "17": 257,
+    "11": 256,
+    "16": 267,
+    "1": 91,
+    "32": 1,
+    "2": 21,
+    "12": 19,
+    "30": 1,
+    "4": 1,
+    "8": 37,
+    "512": 8,
+    "286": 32,
+    "63": 4
+  },
+  "bitwise_primitive_mapping_complete": false,
+  "SRAM_clock_pins_additional": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 32
+  },
+  "unresolved": [],
+  "counts_are": "optimized generic sequential bits before technology mapping/clock gating, not CTS sinks or timing"
+}
