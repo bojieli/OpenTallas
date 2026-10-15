@@ -1,0 +1,28 @@
+{
+  "schema": "opentallas.s81.gather.co178_driver.v1",
+  "unit": "oth-ubuntu-2206169-1792065118",
+  "host": "ot-epyc4",
+  "exit": 0,
+  "actual_odb": "ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/dsfd_gth_rw_pin_repair_1015-20261015-044321/routes/gate/work/orfs/results/asap7/opentallas_dsfd_gth_rw_asap7_ref_gate/base/4_cts.odb",
+  "driver": "ot_prs_00083_ff",
+  "master": "DFFHQNx1_ASAP7_75t_R",
+  "clock": "clknet_6_32__leaf_ck_regs",
+  "chain_from_co178": [
+    "place4913 BUFx6f",
+    "output3820 BUFx3",
+    "ot_ohdrv_00086_2 BUFx4f",
+    "ot_outhold_00086_1 HB2xp67",
+    "ot_ohdrv_00086_0 BUFx4f",
+    "ot_prs_00083_b0 INVx1",
+    "ot_prs_00083_ff DFFHQN QN"
+  ],
+  "actual_retap_distance_um": 0.921,
+  "native_cts_unit": "oth-ubuntu-4056305-1792064624",
+  "gate": "WARN 0fail5warn",
+  "largest_root_sinks": 11418,
+  "TT_max_clock_ps": 260.9,
+  "TT_spread_ps": 52.9,
+  "TT_setup_diagnostic_ps": 208.149,
+  "TT_hold_diagnostic_ps": 22.637,
+  "qualification": "Actual CTS driver identity and local retap verified. Full routed TT/FF/DRC and native launch/capture/phi-R audit still required."
+}
