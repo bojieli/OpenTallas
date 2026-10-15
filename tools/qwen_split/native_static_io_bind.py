@@ -279,13 +279,21 @@ def phy_master(Master, name, view):
             continue
         r = re.search(r'LAYER (\S+) ;\s*\n\s*RECT ([-\d. ]+) ;', m.group(2))
         x0, y0, x1, y1 = map(float, r.group(2).split()[:4])
-        if x0 > 1e-6:
-            raise ValueError(f'{name}.{m.group(1)}: PHY FDI pin not on the W face')
+        if x0 <= 1e-6:
+            f, z = 'W', (y0 + y1) / 2
+        elif x1 >= w - 1e-6:
+            f, z = 'E', (y0 + y1) / 2
+        elif y0 <= 1e-6:
+            f, z = 'S', (x0 + x1) / 2
+        elif y1 >= h - 1e-6:
+            f, z = 'N', (x0 + x1) / 2
+        else:
+            raise ValueError(f'{name}.{m.group(1)}: PHY pin not on a face')
         base, _, idx = m.group(1).partition('[')
-        bits.setdefault(base, {})[int(idx[:-1]) if idx else 0] = (r.group(1), round((y0 + y1) / 2, 4))
+        bits.setdefault(base, {})[int(idx[:-1]) if idx else 0] = (r.group(1), round(z, 4), f)
     for base, d in bits.items():
-        if set(d) != set(range(len(d))):
-            raise ValueError(f'{name}.{base}: incomplete bus in LEF')
-        q.ports[base] = ('pins', len(d), 'W', d[0][0], [d[k][1] for k in range(len(d))], 1)
+        if set(d) != set(range(len(d))) or len({v_[2] for v_ in d.values()}) != 1:
+            raise ValueError(f'{name}.{base}: incomplete or multi-face bus in LEF')
+        q.ports[base] = ('pins', len(d), d[0][2], d[0][0], [d[k][1] for k in range(len(d))], 1)
         q.order.append(base)
     return q

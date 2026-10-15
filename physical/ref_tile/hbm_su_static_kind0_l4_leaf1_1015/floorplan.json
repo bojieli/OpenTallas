@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  216.0,
-  216.0
+  125.28,
+  125.28
  ],
  "core": [
   2.16,
   2.16,
-  213.84,
-  213.84
+  123.12,
+  123.12
  ],
- "why": "spec outline",
- "std_area_um2": 7207.419,
+ "why": "util 0.5 of std 7207 + macros 0 um2",
+ "std_area_um2": 7207.42,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -126,14 +126,7 @@
   "clk_stage_7"
  ],
  "blocks": [],
- "findings": [
-  [
-   "WARN",
-   "util",
-   "utilisation 16% outside 45%-60% (std 7207 + macro 0 in core 44808 um2)",
-   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
-  ]
- ],
+ "findings": [],
  "referenced": [
   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv",
   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv",

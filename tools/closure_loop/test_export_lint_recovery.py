@@ -6,6 +6,8 @@ from pathlib import Path
 import subprocess
 import tempfile
 import unittest
+from types import SimpleNamespace
+from unittest.mock import patch
 
 import export_lint_recovery as E
 
@@ -90,6 +92,31 @@ class ExportLintRecovery(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'missing routed spef'):
             E.prepare(self.request)
         self.assertFalse((self.run / 'cl/export-lint-recovery').exists())
+
+    def test_actual_publish_keeps_original_overlay_and_adds_separate_recovery_receipt(self):
+        import closure_loop as C
+        recovery = E.prepare(self.request)
+        original = copy.deepcopy(self.j['route_overlay_plan'])
+        j = dict(self.j, export_lint_recovery=recovery, host='ot-epyc1tb')
+        j['spec'] = dict(source=dict(branch='codex/test'), block='station', owner='test',
+                         dry_run_git=True, record=[])
+        state = self.run / 'state'
+        response = SimpleNamespace(stdout='a' * 40, returncode=0)
+        with patch.object(C, 'STATE', state), patch.object(C, 'claude_owns_main', return_value=False), \
+             patch.object(C, 'gfetch'), patch.object(C, 'wt_add', side_effect=lambda p,*a: p.mkdir(parents=True,exist_ok=True)), \
+             patch.object(C, 'wt_rm'), patch.object(C, 'git', return_value=response), \
+             patch.object(C, 'sh', return_value=SimpleNamespace(stdout='',returncode=0)):
+            C.publish(j, self.j['metrics'])
+            target = state / 'git/station-commit/results/closure_loop/station/verdict.json'
+            published = json.loads(target.read_text())
+            self.assertEqual(published['route_overlay_plan'], original)
+            self.assertEqual(published['export_lint_recovery'], recovery)
+            self.assertEqual(published['export_lint_recovery']['helper_commit'], 'b' * 40)
+            self.assertEqual(published['export_lint_recovery']['manifest_sha256'], recovery['manifest_sha256'])
+            j.pop('export_lint_recovery')
+            C.publish(j, self.j['metrics'])
+            self.assertNotIn('export_lint_recovery',json.loads(target.read_text()))
+        self.assertEqual(self.j['route_overlay_plan'], original)
 
 
 if __name__ == '__main__':

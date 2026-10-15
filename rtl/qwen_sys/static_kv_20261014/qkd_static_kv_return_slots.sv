@@ -13,7 +13,8 @@ module qkd_static_kv_return_slots #(parameter integer DEPTH=8)(
  input wire [15:0] expected_epoch,input wire [5:0] expected_layer,
  output reg actual_valid,output reg [9:0] actual_sector,
  output reg [15:0] actual_epoch,output reg [5:0] actual_layer,
- output reg [255:0] actual_data,output reg fault_hbm,output reg fault_core
+ output reg [255:0] actual_data,output reg fault_hbm,output reg fault_core,
+ output reg idle_hbm,output reg idle_core
 );
  localparam integer AW=$clog2(DEPTH);
  initial if(DEPTH<4 || (DEPTH&(DEPTH-1))!=0)$error("static return depth must be power of two >=4");
@@ -33,6 +34,17 @@ module qkd_static_kv_return_slots #(parameter integer DEPTH=8)(
  reg [287:0] data[0:DEPTH-1];
  reg [DEPTH-1:0] published,consumed,observed_valid;
  (* async_reg="true" *)reg [DEPTH-1:0] pub_sync1,pub_sync2,done_sync1,done_sync2;
+ // Local-domain drain observations, not a ready or scheduling interface.
+ // Both exports plus upstream controller/front quiet are required at the parent.
+ // Core publication synchronizers can lag a new HBM write; idle_core alone
+ // therefore cannot establish whole-ring or whole-KV drained.
+ always @(posedge pll_hbm or negedge hr)
+  if(!hr)idle_hbm<=0;
+  else idle_hbm<=(published==done_sync2) && !observed && !write_slot &&
+                  !controller_co[0] && !compiled_hbm_put;
+ always @(posedge ck or negedge rs)
+  if(!rs)idle_core<=0;
+  else idle_core<=(pub_sync2==consumed) && !slot && !expected_put && !actual_valid;
  reg [AW:0] wp,rp;
  wire [AW-1:0] wa=wp[AW-1:0];
 `ifdef OT_KV_RETURN_MUT_READ_ADDR

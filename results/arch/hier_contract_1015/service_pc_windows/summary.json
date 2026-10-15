@@ -1,0 +1,336 @@
+{
+ "status": "GEOMETRY_ONLY_ALL_BITS_WITHIN_500UM",
+ "source_root_ref": "00fcd6406",
+ "pc_lef_sha256": "a5a21cacf9fd23165b0e078e9d5456385da47ba0277a1587c33554498d473cc9",
+ "masters": {
+  "hfd_svc_v15_SW_s0": {
+   "pins": 5253,
+   "children": 4,
+   "worst": {
+    "port": "rst_n",
+    "child": "u_pc0",
+    "leaf_pin": "rst_n",
+    "endpoint": [
+     172.842,
+     290.844
+    ],
+    "manhattan_um": 384.918
+   },
+   "face_utilisation": {
+    "N": 0.256019,
+    "S": 0.23037
+   },
+   "source_sha256": "df2c50b4428fb83b6e2a76358ddf9673143abaee50ebc41743ef6d79820fb045"
+  },
+  "hfd_svc_v15_SW_s1": {
+   "pins": 6566,
+   "children": 5,
+   "worst": {
+    "port": "rst_n",
+    "child": "u_pc8",
+    "leaf_pin": "rst_n",
+    "endpoint": [
+     777.642,
+     290.844
+    ],
+    "manhattan_um": 454.482
+   },
+   "face_utilisation": {
+    "N": 0.32,
+    "S": 0.287963
+   },
+   "source_sha256": "b254710f11bf970dc35db5e3651941b175429afd8274633fba8c6fbb478e8fec"
+  },
+  "hfd_svc_v15_SW_s2": {
+   "pins": 5253,
+   "children": 4,
+   "worst": {
+    "port": "rst_n",
+    "child": "u_pc9",
+    "leaf_pin": "rst_n",
+    "endpoint": [
+     172.842,
+     290.844
+    ],
+    "manhattan_um": 384.918
+   },
+   "face_utilisation": {
+    "N": 0.256019,
+    "S": 0.23037
+   },
+   "source_sha256": "5408bc6b6038e94114ca630d98bcde40d323ba4251736b3d64831c6244c4561d"
+  },
+  "hfd_svc_v15_SW_s3": {
+   "pins": 5253,
+   "children": 4,
+   "worst": {
+    "port": "rst_n",
+    "child": "u_pc13",
+    "leaf_pin": "rst_n",
+    "endpoint": [
+     172.842,
+     290.844
+    ],
+    "manhattan_um": 384.918
+   },
+   "face_utilisation": {
+    "N": 0.256019,
+    "S": 0.23037
+   },
+   "source_sha256": "858b455fa8501cace223983ef37fc37c76925da57fda5eb05f4875c368051a29"
+  },
+  "hfd_svc_v15_SW_s4": {
+   "pins": 3940,
+   "children": 3,
+   "worst": {
+    "port": "k_wdata[139]",
+    "child": "u_pc17",
+    "leaf_pin": "k_wdata[139]",
+    "endpoint": [
+     259.932,
+     259.242
+    ],
+    "manhattan_um": 317.466
+   },
+   "face_utilisation": {
+    "N": 0.192037,
+    "S": 0.172778
+   },
+   "source_sha256": "0b63f6404de67420d67e19855a8c839363b19d5bf949e58767723cbcff05e863"
+  },
+  "hfd_svc_v15_SW_s5": {
+   "pins": 5253,
+   "children": 4,
+   "worst": {
+    "port": "rst_n",
+    "child": "u_pc20",
+    "leaf_pin": "rst_n",
+    "endpoint": [
+     172.842,
+     290.844
+    ],
+    "manhattan_um": 384.918
+   },
+   "face_utilisation": {
+    "N": 0.256019,
+    "S": 0.23037
+   },
+   "source_sha256": "5e5a33ca13f482b588f39e7e6bfdcce7deb86b64db6990bc0ee9205b1fe21b86"
+  },
+  "hfd_svc_v15_SW_s6": {
+   "pins": 5253,
+   "children": 4,
+   "worst": {
+    "port": "rst_n",
+    "child": "u_pc24",
+    "leaf_pin": "rst_n",
+    "endpoint": [
+     172.842,
+     290.844
+    ],
+    "manhattan_um": 384.918
+   },
+   "face_utilisation": {
+    "N": 0.256019,
+    "S": 0.23037
+   },
+   "source_sha256": "19cca7840dbe856c5579d5ff0cf9464885d865f9fd9d80a4e9427acb9a2b3eaf"
+  },
+  "hfd_svc_v15_SW_s7": {
+   "pins": 5253,
+   "children": 4,
+   "worst": {
+    "port": "rst_n",
+    "child": "u_pc28",
+    "leaf_pin": "rst_n",
+    "endpoint": [
+     172.842,
+     290.844
+    ],
+    "manhattan_um": 384.918
+   },
+   "face_utilisation": {
+    "N": 0.256019,
+    "S": 0.23037
+   },
+   "source_sha256": "a356c3e3ba26eaa591194874c44b4fae9fffc61ab0a11492992dc463b3d78a9d"
+  },
+  "hfd_svc_v15_SE_s0": {
+   "pins": 5253,
+   "children": 4,
+   "worst": {
+    "port": "rst_n",
+    "child": "u_pc0",
+    "leaf_pin": "rst_n",
+    "endpoint": [
+     172.842,
+     290.844
+    ],
+    "manhattan_um": 384.918
+   },
+   "face_utilisation": {
+    "N": 0.256019,
+    "S": 0.23037
+   },
+   "source_sha256": "31cda896cc7988d072d8f198b4e09aef181e9eef1c0b4db01084023de8207411"
+  },
+  "hfd_svc_v15_SE_s1": {
+   "pins": 6566,
+   "children": 5,
+   "worst": {
+    "port": "rst_n",
+    "child": "u_pc8",
+    "leaf_pin": "rst_n",
+    "endpoint": [
+     777.642,
+     290.844
+    ],
+    "manhattan_um": 454.482
+   },
+   "face_utilisation": {
+    "N": 0.32,
+    "S": 0.287963
+   },
+   "source_sha256": "fbc4be4a0c030095d7a0c6559301aa982f51d17e10b71d256a00a4a9e535c92f"
+  },
+  "hfd_svc_v15_SE_s2": {
+   "pins": 5253,
+   "children": 4,
+   "worst": {
+    "port": "rst_n",
+    "child": "u_pc9",
+    "leaf_pin": "rst_n",
+    "endpoint": [
+     172.842,
+     290.844
+    ],
+    "manhattan_um": 384.918
+   },
+   "face_utilisation": {
+    "N": 0.256019,
+    "S": 0.23037
+   },
+   "source_sha256": "d2ede3a254e5a0996eb3fc7df5caf1159b80a36f8fe28f80fd5569a1c87aa557"
+  },
+  "hfd_svc_v15_SE_s3": {
+   "pins": 6566,
+   "children": 5,
+   "worst": {
+    "port": "rst_n",
+    "child": "u_pc17",
+    "leaf_pin": "rst_n",
+    "endpoint": [
+     777.642,
+     290.844
+    ],
+    "manhattan_um": 454.482
+   },
+   "face_utilisation": {
+    "N": 0.32,
+    "S": 0.287963
+   },
+   "source_sha256": "54d769dec1d14d80faf27f3b423fdee3a21d244a63ecf8b7aa5956a5bf3e7c8f"
+  },
+  "hfd_svc_v15_SE_s4": {
+   "pins": 5253,
+   "children": 4,
+   "worst": {
+    "port": "rst_n",
+    "child": "u_pc18",
+    "leaf_pin": "rst_n",
+    "endpoint": [
+     172.842,
+     290.844
+    ],
+    "manhattan_um": 384.918
+   },
+   "face_utilisation": {
+    "N": 0.256019,
+    "S": 0.23037
+   },
+   "source_sha256": "1e5e2c4083ecdf494c08198ae07d73124e89f01f08fae68f132e402bf1faef2f"
+  },
+  "hfd_svc_v15_SE_s5": {
+   "pins": 5253,
+   "children": 4,
+   "worst": {
+    "port": "rst_n",
+    "child": "u_pc22",
+    "leaf_pin": "rst_n",
+    "endpoint": [
+     172.842,
+     290.844
+    ],
+    "manhattan_um": 384.918
+   },
+   "face_utilisation": {
+    "N": 0.256019,
+    "S": 0.23037
+   },
+   "source_sha256": "82c1276397a197a00f885f2f1c8779004d1c22c875b2c2348086e745323986f1"
+  },
+  "hfd_svc_v15_SE_s6": {
+   "pins": 3940,
+   "children": 3,
+   "worst": {
+    "port": "k_wdata[139]",
+    "child": "u_pc26",
+    "leaf_pin": "k_wdata[139]",
+    "endpoint": [
+     259.932,
+     259.242
+    ],
+    "manhattan_um": 317.466
+   },
+   "face_utilisation": {
+    "N": 0.192037,
+    "S": 0.172778
+   },
+   "source_sha256": "b70d487ad1ed7c04f1d793b007bce5aa942c4f0149145624433cd79c8932f488"
+  },
+  "hfd_svc_v15_SE_s7": {
+   "pins": 2627,
+   "children": 2,
+   "worst": {
+    "port": "k_wdata[139]",
+    "child": "u_pc29",
+    "leaf_pin": "k_wdata[139]",
+    "endpoint": [
+     346.332,
+     259.242
+    ],
+    "manhattan_um": 317.466
+   },
+   "face_utilisation": {
+    "N": 0.128056,
+    "S": 0.115185
+   },
+   "source_sha256": "3512683e0faab883b13ec1aa576a2f6ba709f9aab208be2af75cef461bde4aa2"
+  },
+  "hfd_svc_v15_SE_s8": {
+   "pins": 1314,
+   "children": 1,
+   "worst": {
+    "port": "k_wdata[139]",
+    "child": "u_pc31",
+    "leaf_pin": "k_wdata[139]",
+    "endpoint": [
+     432.732,
+     259.242
+    ],
+    "manhattan_um": 317.466
+   },
+   "face_utilisation": {
+    "N": 0.064074,
+    "S": 0.057593
+   },
+   "source_sha256": "12720c1ad5da541946db015e3e49ee9b98f608875654af510b32e49629b73c74"
+  }
+ },
+ "limitations": [
+  "No routed timing or clock-insertion qualification.",
+  "CLOSED PC L408.99/C508.02/spread104.7 remains a native boundary failure.",
+  "Generic n1 terminal TT -220.50/FF +63.16/DRC0; this is a structural slot-change successor.",
+  "Complete source contract per-PC root binding and all external links remain open."
+ ]
+}
