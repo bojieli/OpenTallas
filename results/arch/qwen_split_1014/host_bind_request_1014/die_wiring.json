@@ -298,35 +298,35 @@
     },
     "phy_up": {
       "rtl_port": "phy_up",
-      "endpoint": "host_serdes.up (actual analog PHY status)",
+      "endpoint": "host_serdes.tx_up -> HOST.phy_up -> u_adapter.tx_up (actual analog PHY train status)",
       "clock_family": "PHY1043",
       "status": "SOURCE_BACKED_CONNECTION",
       "note": ""
     },
     "phy_rx_v": {
       "rtl_port": "phy_rx_v",
-      "endpoint": "host_serdes.phy_rx_v -> u_adapter RX pins (1043-bit flit)",
+      "endpoint": "host_serdes.rx_v -> HOST.phy_rx_v -> u_adapter.rx_v",
       "clock_family": "PHY1043",
       "status": "SOURCE_BACKED_CONNECTION",
       "note": ""
     },
     "phy_rx_flit": {
       "rtl_port": "phy_rx_flit",
-      "endpoint": "host_serdes.phy_rx_flit -> u_adapter RX pins (1043-bit flit)",
+      "endpoint": "host_serdes.rx_flit -> HOST.phy_rx_flit -> u_adapter.rx_flit",
       "clock_family": "PHY1043",
       "status": "SOURCE_BACKED_CONNECTION",
       "note": ""
     },
     "phy_tx_v": {
       "rtl_port": "phy_tx_v",
-      "endpoint": "u_adapter TX pins -> host_serdes.phy_tx_v (1043-bit flit)",
+      "endpoint": "u_adapter.tx_v -> HOST.phy_tx_v -> host_serdes.tx_v",
       "clock_family": "PHY1043",
       "status": "SOURCE_BACKED_CONNECTION",
       "note": ""
     },
     "phy_tx_flit": {
       "rtl_port": "phy_tx_flit",
-      "endpoint": "u_adapter TX pins -> host_serdes.phy_tx_flit (1043-bit flit)",
+      "endpoint": "u_adapter.tx_flit -> HOST.phy_tx_flit -> host_serdes.tx_flit",
       "clock_family": "PHY1043",
       "status": "SOURCE_BACKED_CONNECTION",
       "note": ""
@@ -2468,7 +2468,8 @@
     "rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_epoch_allocator.sv": "3a7d297b3492b1a3eb3d0ce2a067d3962e034328e8614956cd63f08e005180fd",
     "rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_cohort.sv": "56396c2a8ff6ed64760c38e5fd4b798866d11aedb88d08496be930f99647e919",
     "tools/qwen_native_host/host_owner.hpp": "e68e05b0207b5dc7e20ddaf5d370a913b216bb9dc0cdea5f4e4ed07fa0fcc5c8",
-    "tools/qwen_kv_die/kv_strips.py": "45d7193b7280b899be7d7ea63b7e8f4d882018cb8eb787d0d30309cac0258f40"
+    "tools/qwen_kv_die/kv_strips.py": "45d7193b7280b899be7d7ea63b7e8f4d882018cb8eb787d0d30309cac0258f40",
+    "tools/qwen_missing/link_phy_gen.py": "d28595bd68bdfadbc25ac85950ffe55c772068941a38b9dd8839907e5ec7681d"
   },
   "singleton_placement": {
     "allocator": "one actual ot_qwen_tp8_token_epoch_allocator on designated coordinator KV die; POR-only identity state",
