@@ -39,7 +39,14 @@ def su_writes(f):
             for o in range(f['su_nout']) for i in range(f['su_nin'])}
 
 
-def schedule(raw, external_writes=()):
+def required_x(f):
+    if f['me_xjs'] or f['me_d_xbase'] or f['me_d_k']:
+        raise ValueError('unsupported compute operand: xjs or unresolved dynamic address/count')
+    return {f['me_xbase'] + c*f['me_xcs'] + k*f['me_xks']
+            for c in range(1 << f['me_split']) for k in range(f['me_k'])}
+
+
+def schedule(raw, external_writes=(), next_raw=None):
     words = [ISA.decode_instruction(int(w, 16)) for w in raw.decode().split()]
     writers = {}
     external = {}
@@ -62,10 +69,7 @@ def schedule(raw, external_writes=()):
     gaps = []
     for pc, f in enumerate(words):
         if f['unit'] == 1 and not f['me_wsrc']:
-            if f['me_xjs'] or f['me_d_xbase'] or f['me_d_k']:
-                raise ValueError('unsupported compute operand: xjs or unresolved dynamic address/count')
-            required = {f['me_xbase'] + c*f['me_xcs'] + k*f['me_xks']
-                        for c in range(1 << f['me_split']) for k in range(f['me_k'])}
+            required = required_x(f)
             missing = required - writers.keys()
             producers = sorted({writers[a] for a in required if a in writers})
             record = dict(consumer_pc=pc, consumer_unit=1, xpf_hex=descriptor(f),
@@ -83,6 +87,29 @@ def schedule(raw, external_writes=()):
             records.append(record)
         for address in su_writes(f) | external.get(pc, set()):
             writers[address] = pc
+    if next_raw is not None:
+        next_words = [ISA.decode_instruction(int(w, 16)) for w in next_raw.decode().split()]
+        next_writers = set()
+        for pc, f in enumerate(next_words):
+            if f['unit'] == 1 and not f['me_wsrc']:
+                required = required_x(f)
+                # The first next-stage ROM matvec has a live-in iff its own
+                # preceding SU instructions did not write that entire X.
+                if not required <= next_writers:
+                    missing = required - writers.keys()
+                    if missing:
+                        gaps.append(dict(next_consumer_pc=pc, live_in_elements=len(missing),
+                                         required_action='actual preceding-stage producer does not cover next-stage live-in'))
+                    else:
+                        producers = sorted({writers[a] for a in required})
+                        records.append(dict(consumer_pc=pc, consumer_unit=1,
+                                            consumer_program_sha256=hashlib.sha256(next_raw).hexdigest(),
+                                            xpf_hex=descriptor(f), x_elements=len(required),
+                                            producer_pcs=producers, arm_before_pc=min(producers),
+                                            producer_unit=words[min(producers)]['unit'],
+                                            consumer_in_next_stage=True))
+                break
+            next_writers.update(su_writes(f))
     return dict(schema='opentallas.qwen-xpf-producer-schedule.v1',
                 program_sha256=hashlib.sha256(raw).hexdigest(), records=records,
                 external_effects=receipts, unresolved=gaps,
@@ -94,13 +121,54 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--program', type=Path, required=True)
     p.add_argument('--external-effects', type=Path)
+    p.add_argument('--next-program', type=Path, help='actual next-stage image; derive its live-in arm before current-stage writes')
     p.add_argument('--out', type=Path, required=True)
     a = p.parse_args()
     effects = json.loads(a.external_effects.read_text()) if a.external_effects else []
-    result = schedule(a.program.read_bytes(), effects)
+    result = schedule(a.program.read_bytes(), effects,
+                      a.next_program.read_bytes() if a.next_program else None)
     a.out.write_text(json.dumps(result, indent=2)+'\n')
     print(result['status'])
     return 2 if result['unresolved'] else 0
+
+
+def chain_schedule(images, effects):
+    """Bind each live-in to the actual preceding image's producer record.
+
+    `images` includes embedding, each layer and head in execution order.
+    Native write receipts are per-image; no effect is inferred from a label.
+    Packed records are exactly the RTL schedule bank's92-bit load interface.
+    """
+    if len(images) != len(effects) or len(images) > 64:
+        raise ValueError('stage/effect inventory or actual six-bit stage width')
+    stages = []
+    remaining = []
+    for index, raw in enumerate(images):
+        result = schedule(raw, effects[index], images[index+1] if index+1 < len(images) else None)
+        unresolved = []
+        for gap in result['unresolved']:
+            resolved = False
+            if index and 'consumer_pc' in gap:
+                own = next(r for r in result['records'] if r['consumer_pc'] == gap['consumer_pc'] and not r.get('consumer_in_next_stage'))
+                resolved = any(r.get('consumer_in_next_stage') and
+                               r['consumer_program_sha256'] == result['program_sha256'] and
+                               r['consumer_pc'] == gap['consumer_pc'] and
+                               r['xpf_hex'] == own['xpf_hex'] and
+                               r['x_elements'] == gap.get('live_in_elements')
+                               for r in stages[-1]['records'])
+            if not resolved:
+                unresolved.append(gap)
+        result['unresolved'] = unresolved
+        records = [r for r in result['records'] if r['arm_before_pc'] is not None]
+        if len(records) > 8:
+            raise ValueError('producer stage exceeds real eight-entry arm bank; repartition or enlarge with measured cost')
+        result['cfg_data_hex'] = [f"{(index<<86)|(r['producer_unit']<<84)|(r['arm_before_pc']<<72)|int(r['xpf_hex'],16):023x}" for r in records]
+        result['stage'] = index
+        stages.append(result)
+        remaining.extend(dict(gap, stage=index) for gap in unresolved)
+    return dict(schema='opentallas.qwen-xpf-chain-schedule.v1', stages=stages,
+                unresolved=remaining, status='UNRESOLVED' if remaining else 'STATIC_PREPRODUCER_CHAIN_RESOLVED',
+                claim='Instruction-bound static chain only; actual configuration transport, all producer issue guards and DVM consumption must pass RTL composition before adoption.')
 
 
 if __name__ == '__main__':

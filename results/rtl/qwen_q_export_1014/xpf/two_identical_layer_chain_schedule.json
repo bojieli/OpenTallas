@@ -1,0 +1,183 @@
+{
+  "schema": "opentallas.qwen-xpf-chain-schedule.v1",
+  "stages": [
+    {
+      "schema": "opentallas.qwen-xpf-producer-schedule.v1",
+      "program_sha256": "37033bec53b5c33bdd5674d8451d1250ca5275ba6190619d775bebcfde69e8d0",
+      "records": [
+        {
+          "consumer_pc": 1,
+          "consumer_unit": 1,
+          "consumer_program_sha256": "cc5bc8fc17d4068ac9a49e8bf79f34e74350d56d114dd7fe5cde433d2ac82796",
+          "xpf_hex": "800112002010002001",
+          "x_elements": 4096,
+          "producer_pcs": [
+            0
+          ],
+          "arm_before_pc": 0,
+          "producer_unit": 2,
+          "consumer_in_next_stage": true
+        }
+      ],
+      "external_effects": [],
+      "unresolved": [],
+      "status": "LOCAL_PRODUCERS_RESOLVED",
+      "claim": "Static instruction-bound arm records only; relay latency, table loading, epoch ownership and release guard require RTL composition.",
+      "cfg_data_hex": [
+        "02000800112002010002001"
+      ],
+      "stage": 0
+    },
+    {
+      "schema": "opentallas.qwen-xpf-producer-schedule.v1",
+      "program_sha256": "cc5bc8fc17d4068ac9a49e8bf79f34e74350d56d114dd7fe5cde433d2ac82796",
+      "records": [
+        {
+          "consumer_pc": 1,
+          "consumer_unit": 1,
+          "xpf_hex": "800112002010002001",
+          "x_elements": 4096,
+          "producer_pcs": [],
+          "arm_before_pc": null,
+          "producer_unit": null
+        },
+        {
+          "consumer_pc": 12,
+          "consumer_unit": 1,
+          "xpf_hex": "800050002004018be1",
+          "x_elements": 512,
+          "producer_pcs": [
+            11
+          ],
+          "arm_before_pc": 11,
+          "producer_unit": 1
+        },
+        {
+          "consumer_pc": 16,
+          "consumer_unit": 1,
+          "xpf_hex": "80040e002040002001",
+          "x_elements": 4096,
+          "producer_pcs": [
+            15
+          ],
+          "arm_before_pc": 15,
+          "producer_unit": 2
+        },
+        {
+          "consumer_pc": 20,
+          "consumer_unit": 1,
+          "xpf_hex": "8000d000200c01afe1",
+          "x_elements": 1536,
+          "producer_pcs": [
+            19
+          ],
+          "arm_before_pc": 19,
+          "producer_unit": 2
+        },
+        {
+          "consumer_pc": 1,
+          "consumer_unit": 1,
+          "consumer_program_sha256": "cc5bc8fc17d4068ac9a49e8bf79f34e74350d56d114dd7fe5cde433d2ac82796",
+          "xpf_hex": "800112002010002001",
+          "x_elements": 4096,
+          "producer_pcs": [
+            23
+          ],
+          "arm_before_pc": 23,
+          "producer_unit": 2,
+          "consumer_in_next_stage": true
+        }
+      ],
+      "external_effects": [
+        {
+          "producer_pc": 11,
+          "producer_unit": 1,
+          "base": 50672,
+          "count": 512,
+          "source": "rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_native_services_frontend_native59.sv",
+          "source_sha256": "7f09088bb568c5305ba96192f647f6019fb0332a5a39db0871fcf8210dd1d3ab"
+        }
+      ],
+      "unresolved": [],
+      "status": "PRECEDING_STAGE_REQUIRED",
+      "claim": "Static instruction-bound arm records only; relay latency, table loading, epoch ownership and release guard require RTL composition.",
+      "cfg_data_hex": [
+        "0500b800050002004018be1",
+        "0600f80040e002040002001",
+        "060138000d000200c01afe1",
+        "06017800112002010002001"
+      ],
+      "stage": 1
+    },
+    {
+      "schema": "opentallas.qwen-xpf-producer-schedule.v1",
+      "program_sha256": "cc5bc8fc17d4068ac9a49e8bf79f34e74350d56d114dd7fe5cde433d2ac82796",
+      "records": [
+        {
+          "consumer_pc": 1,
+          "consumer_unit": 1,
+          "xpf_hex": "800112002010002001",
+          "x_elements": 4096,
+          "producer_pcs": [],
+          "arm_before_pc": null,
+          "producer_unit": null
+        },
+        {
+          "consumer_pc": 12,
+          "consumer_unit": 1,
+          "xpf_hex": "800050002004018be1",
+          "x_elements": 512,
+          "producer_pcs": [
+            11
+          ],
+          "arm_before_pc": 11,
+          "producer_unit": 1
+        },
+        {
+          "consumer_pc": 16,
+          "consumer_unit": 1,
+          "xpf_hex": "80040e002040002001",
+          "x_elements": 4096,
+          "producer_pcs": [
+            15
+          ],
+          "arm_before_pc": 15,
+          "producer_unit": 2
+        },
+        {
+          "consumer_pc": 20,
+          "consumer_unit": 1,
+          "xpf_hex": "8000d000200c01afe1",
+          "x_elements": 1536,
+          "producer_pcs": [
+            19
+          ],
+          "arm_before_pc": 19,
+          "producer_unit": 2
+        }
+      ],
+      "external_effects": [
+        {
+          "producer_pc": 11,
+          "producer_unit": 1,
+          "base": 50672,
+          "count": 512,
+          "source": "rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_native_services_frontend_native59.sv",
+          "source_sha256": "7f09088bb568c5305ba96192f647f6019fb0332a5a39db0871fcf8210dd1d3ab"
+        }
+      ],
+      "unresolved": [],
+      "status": "PRECEDING_STAGE_REQUIRED",
+      "claim": "Static instruction-bound arm records only; relay latency, table loading, epoch ownership and release guard require RTL composition.",
+      "cfg_data_hex": [
+        "0900b800050002004018be1",
+        "0a00f80040e002040002001",
+        "0a0138000d000200c01afe1"
+      ],
+      "stage": 2
+    }
+  ],
+  "unresolved": [],
+  "status": "STATIC_PREPRODUCER_CHAIN_RESOLVED",
+  "claim": "Instruction-bound static chain only; actual configuration transport, all producer issue guards and DVM consumption must pass RTL composition before adoption."
+}

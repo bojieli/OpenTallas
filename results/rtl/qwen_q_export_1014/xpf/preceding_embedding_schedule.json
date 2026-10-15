@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.qwen-xpf-producer-schedule.v1",
+  "program_sha256": "37033bec53b5c33bdd5674d8451d1250ca5275ba6190619d775bebcfde69e8d0",
+  "records": [
+    {
+      "consumer_pc": 1,
+      "consumer_unit": 1,
+      "consumer_program_sha256": "cc5bc8fc17d4068ac9a49e8bf79f34e74350d56d114dd7fe5cde433d2ac82796",
+      "xpf_hex": "800112002010002001",
+      "x_elements": 4096,
+      "producer_pcs": [
+        0
+      ],
+      "arm_before_pc": 0,
+      "producer_unit": 2,
+      "consumer_in_next_stage": true
+    }
+  ],
+  "external_effects": [],
+  "unresolved": [],
+  "status": "LOCAL_PRODUCERS_RESOLVED",
+  "claim": "Static instruction-bound arm records only; relay latency, table loading, epoch ownership and release guard require RTL composition."
+}
