@@ -1061,9 +1061,13 @@ def _wrap(v, m, G, peers):
         # Legacy frame clock planning cannot mirror M8 pins; these two frames are
         # replaced by closed M5 pins below, so construct their disposable frame R0.
         frame_model = dict(model)
-        frame_model['insts'] = [copy.copy(i) if i.master in ('qfd_su_cbuf_g', 'qfd_crom_g', 'qfd_tile_nl') else i for i in model['insts']]
+        frame_model['insts'] = [copy.copy(i) if i.master in ('qfd_su_cbuf_g', 'qfd_crom_g', 'qfd_tile_nl')
+                                or (SPLIT_COMPUTE and i.master.startswith('qfd_port_tiles_')) else i
+                                for i in model['insts']]
         for i in frame_model['insts']:
-            if i.master in ('qfd_su_cbuf_g', 'qfd_crom_g'):
+            if i.master in ('qfd_su_cbuf_g', 'qfd_crom_g') or (SPLIT_COMPUTE and i.master.startswith('qfd_port_tiles_')):
+                # Native source-exact static slab pins and49clock entries are
+                # rebuilt by final(); legacy M8 mirror planning is disposable.
                 i.orient = 'R0'
             elif i.master == 'qfd_tile_nl':
                 i.master = 'qfd_tile_nk'  # base frame shape; actual node-less ports below
