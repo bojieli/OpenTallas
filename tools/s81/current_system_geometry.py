@@ -21,8 +21,8 @@ def main():
   x,y=b['xy_um'];w,h=b['outline_um'];return [(i,j) for i in range(int(x//1000),int((x+w)//1000)+1) for j in range(int(y//1000),int((y+h)//1000)+1)]
  for i,b in enumerate(fields):
   for c in cells(b):grid.setdefault(c,[]).append(i)
- sw,sh=2030.4,2440.8;gap=21.6;opts=[]
- for name,origins,hcdx,sudx,svc in [('B_compact_2x2',[[13592.88+(sw+gap)*(s%2),12804.48+(sh+gap)*(s//2)] for s in range(4)],384.48,0,True),('C_two_client_regions',[[15584.4,6000.48+(sh+gap)*s] if s<2 else [15584.4,14001.12+(sh+gap)*(s-2)] for s in range(4)],324,-108,False)]:
+ sw,sh=1965.6,2440.8;gap=21.6;opts=[]
+ for name,origins,hcdx,sudx,svc in [('B_compact_2x2',[[13592.88+(sw+gap)*(s%2),12804.48+(sh+gap)*(s//2)] for s in range(4)],254.88,0,True),('C_two_client_regions',[[15584.4,6000.48+(sh+gap)*s] if s<2 else [15584.4,14001.12+(sh+gap)*(s-2)] for s in range(4)],259.2,-108,False)]:
   nodes=[];unplaced=[]
   for n in local['nodes']:
    s=n['slice'];master=n['master'];ox,oy=origins[s]
@@ -31,11 +31,11 @@ def main():
    elif 'quarter' in n['name']:nq=int(n['name'].split('quarter')[-1])//2
    elif 'bridge' in n['name']:nq=int(n['name'].split('bridge')[-1])
    else:unplaced.append(dict(name=n['name'],master=master,reason='Actual global read/control and scalar-return structural repair; inherited rectangle not qualified'));continue
-   x,y=n['xy_um'];x+=1080*(nq%2)-1123.2*(nq%2);y+=1166.4*(nq//2)-777.6*(nq//2)-1468.8*s
+   x,y=n['xy_um'];x+=1015.2*(nq%2)-1123.2*(nq%2);y+=1166.4*(nq//2)-777.6*(nq//2)-1468.8*s
    nodes.append(box(n['name'],[ox+x,oy+y],n['outline_um'],'bank_local_memory',master=master,slice=s,q8=nq))
   for s,(ox,oy) in enumerate(origins):
    for q in range(4):
-    qx,qy=ox+1080*(q%2),oy+1166.4*(q//2)
+    qx,qy=ox+1015.2*(q%2),oy+1166.4*(q//2)
     for b in range(8):
      cx=540+64.8*b if b<4 else 237.6-64.8*(b-4)
      nodes.append(box(f'vm_s{s}_q{q}_capture{b}',[qx+cx,qy+756],[43.2,43.2],'write_capture',master='dsfd_vm_static_write_capture128',slice=s,q8=q))
@@ -66,7 +66,7 @@ def main():
     if overlap(b,other):collisions.append([b['name'],other['name']])
   assert len(nodes)==470,len(nodes);assert len(unplaced)==8,len(unplaced)
   outside=[b['name'] for b in allboxes if any(b['xy_um'][i]<0 or b['xy_um'][i]+b['outline_um'][i]>cap['die_outline_um'][i] for i in [0,1])]
-  opts.append(dict(name=name,slice_origins_um=origins,slice_known_outline_um=[sw,sh],nodes=nodes,fixed=fixed,unplaced_actual_core=unplaced,collisions=collisions,outside=outside,source_inventory=dict(core_leaves=328,core_clock_roots=376,write_edge_leaves=150,write_edge_clock_roots=150,known_total_leaves=478,known_total_clock_roots=526,placed_real_leaf_rectangles=470,unplaced_real_read_control_leaves=8),costs=dict(local_write_extra_cycles=0,read_repair_extra_cycles='Pending actual scope/implementation; proposal +1 per local return',global_write_distribution_cycles='UNPRICED: payload to four dispatches/slice exceeds single-hop distance',cap16_CDC16_x34_area='MISSING_NATIVE_DIMENSIONS; upstream capture remains separate',cuts='LOCAL_PIN_DISTANCE_ONLY; no fullboundary/activity/clock/PG cut pass'),changes=dict(hc_dx_um=hcdx,su_dx_um=sudx,service_stack='Tightly reordered preserving real macro heights' if svc else 'West108um, preserving source y')))
+  opts.append(dict(name=name,slice_origins_um=origins,slice_known_outline_um=[sw,sh],nodes=nodes,fixed=fixed,unplaced_actual_core=unplaced,collisions=collisions,outside=outside,geometry_screen=dict(q8_intergroup_horizontal_channel_um=64.8,E_HC_to_first_field_column_gap_um=19558.8-(17312.4+hcdx+1816.536),service_v1026_station_width_um=54.84,unproven='E corridor fulltraffic/clock/PG and actual futureGEN routes'),source_inventory=dict(core_leaves=328,core_clock_roots=376,write_edge_leaves=150,write_edge_clock_roots=150,known_total_leaves=478,known_total_clock_roots=526,placed_real_leaf_rectangles=470,unplaced_real_read_control_leaves=8),costs=dict(local_write_extra_cycles=0,read_repair_extra_cycles='Pending actual scope/implementation; proposal +1 per local return',global_write_distribution_cycles='UNPRICED: payload to four dispatches/slice exceeds single-hop distance',cap16_CDC16_x34_area='MISSING_NATIVE_DIMENSIONS; upstream capture remains separate',cuts='LOCAL_PIN_DISTANCE_ONLY; no fullboundary/activity/clock/PG cut pass'),changes=dict(hc_dx_um=hcdx,su_dx_um=sudx,service_stack='Tightly reordered preserving real macro heights' if svc else 'West108um, preserving source y')))
  report=dict(scope='PARTIAL_CURRENT_SYSTEM_PACKING_NOT_NATIVE_ADOPTED',source_sha256={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in [a.capacity,a.local,a.field,a.edge,Path(__file__)]},die_um=cap['die_outline_um'],field_regions=cap['placements'],service_corridors=cap['service_access_corridors'],options=opts,known_missing=['VM FSR/read-return native geometry (eight known blocks) and proposed egress replacement','Cap16/CDC16/x34 native footprints/clock roots','Actual W0 shared fanout and header/control distribution trees','All81stage actual activity/programme/physicalSUhome map','Actual production whole-die pin/clock/PG/fullcuts/extra fixedage proof','Actual routed localbank/q4/b8 timing audit rejects27344of83712bits; geometry is not timing proof'],recommendation='B remains development direction. C compares client proximity but has a larger all-slice service span. No performance/cut-qualified selection.')
  report['source_inventory_binding']='328 memory leaves/376 roots from S_VM dfe28f6f8 + proof94c4514c2; local bank vectors from actual188 predecessor; direct capture/out pins30421c7c5 and q8reach eaca93a88; no scalar returnrepair substitution'
  a.out.parent.mkdir(parents=True,exist_ok=True);a.out.write_text(json.dumps(report,indent=1)+'\n');print(json.dumps([dict(name=o['name'],collisions=len(o['collisions']),first=o['collisions'][:8],outside=o['outside'],placed=len(o['nodes'])) for o in opts],indent=1))
