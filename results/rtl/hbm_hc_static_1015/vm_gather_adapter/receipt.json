@@ -1,0 +1,39 @@
+{
+  "scope": "opt-in native-wrapper shared VM port adapter only, actual8banks24SRAM+3LG; no arithmetic/whole-native/physical qualification",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_vm_gather_adapter_static.sv": "ce2420b8573850d223f5fb2c130fd4a8941f074dbc57e938f0e23622ea08660b",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_static.sv": "345e8db865751a19491a08145ea081883cd104669ab830e1dacbf0e062ccffa7",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_tap.sv": "cc7c0d00ead994fb66360a00da7acd4b70e8a2f9f6e2a3b8013a9672d1ab29de",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "rtl/test/tb_hgi_hc_vm_gather_adapter_static.sv": "7a3240fa9c796883fa24eff6cfb74432ae5a1e7f057152dbcc55dbf9e57bf636",
+    "tools/rtl_hgi_hc_vm_gather_adapter_gate.sh": "34a931d93bbf8443d44cc528db8060477b304a914bfbe88ffea9e0e76841b388"
+  },
+  "positive": "PASS",
+  "actual_SRAM_payload_mutant": "KILLED at real residual readback",
+  "actual_compiler_phase_collision_mutant": "KILLED stickyfault",
+  "enabled": {
+    "canonical_P1_stride0": 24,
+    "component_P6_P8_stride3_5": 672,
+    "shared_residual_readback": 1,
+    "neighbor_readbacks": 4,
+    "same_VM_ports": true,
+    "additional_pipeline_edges": 0
+  },
+  "disabled": "every residual rq/read/rr and external gathered payload bit passes with no added edge",
+  "timing": {
+    "gather_request_sample": 1,
+    "registered_word0": 20,
+    "engine_capture": 21
+  },
+  "logs_sha256": {
+    "compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "positive.log": "9d3c7948e594321ac657fdc6755fa26b1bf10e0d0d9d30c8e7ec8266dc862daa",
+    "COLLISION.log": "cc4d7d5014fdb8b46a0cfadb0d80e4d3e4907912cdd53a89552a736022e487e1",
+    "MUTANT.log": "9ed628756c7837f70069432adfd2afa674b486e267aeb028021e79f10b2c4107"
+  },
+  "full_native_qualified": false,
+  "physical_qualified": false,
+  "all_compiled_hashes_verified": true,
+  "canonical_metadata_receipt": "results/rtl/hbm_hc_static_1015/gathered_mix_reader_canonical_p1/canonical_allocation.json"
+}
