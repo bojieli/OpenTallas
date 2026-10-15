@@ -5,7 +5,9 @@ set -euo pipefail
 ulimit -c 0
 root=$(cd "$(dirname "$0")/../.." && pwd)
 hostdual=${HOST_DUAL:-0}
-out=${1:?fresh output directory};mkdir -p "$out/source" "$out/fixtures";src="$out/source"
+out=${1:?fresh output directory}
+if [[ -e "$out" ]];then echo "Refusing to overwrite existing evidence: $out" >&2;exit 2;fi
+mkdir -p "$out/source" "$out/fixtures";src="$out/source"
 for p in rtl/qwen_sys/static_kv_20261014/{ot_qkd_static_emb_cdc,qkd_static_kv_write_observer,qkd_ctrl_pc_host_static,ot_qkd_static_ctrl_pc_emb,ot_qkd_static_kv_timing}.sv rtl/qwen_sys/kv_die_20261009/ot_qkvd_kcmd_tap.sv rtl/qwen_sys/emb_hbm_20261008/synth/ot_qfd_emb_pcport.sv rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_cdc.sv rtl/qwen_sys/q5_20261009/synth/ot_qfd_kv_landing_ecc.sv rtl/qwen_sys/host_20261013/qkd_host_static_pc.sv rtl/lib/{ot_async_fifo,ot_reset_sync}.sv;do
  mkdir -p "$src/$(dirname "$p")";git -C "$root" show "3221e4f5e:$p" > "$src/$p"
 done
