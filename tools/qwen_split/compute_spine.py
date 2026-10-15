@@ -570,6 +570,21 @@ def place(v, m, G):
         rec['geoq_orient'] = flips
     m['tie_self'] = sorted(TIE_SELF)
     rec['tie_self'] = sorted(TIE_SELF)
+    # RTL is the truth (owner no-stub rule): the static DVM stations (rtl/qwen_sys/dvm_20261014 qfd_xcst_n/s) have no
+    # tap_r ready input, so the die must not drive one; the qfd_d2d_rom RTL (rtl/qwen_split/qfd_link_slots.sv) has ONE
+    # clock input, so its per-child clock entries wait for the Q-link-replay successor that actually has them.
+    byi_ = {i.name: i.master for i in m['insts']}
+    ties_ = m.setdefault('ties', [])
+    ties_[:] = [t for t in ties_ if not (t[1] == 'tap_r' and byi_.get(t[0]) in ('qfd_xcst_n', 'qfd_xcst_s'))]
+    nb_ = []
+    for b, c, n, e in m['buses']:
+        if c == 'clock_trunk':
+            e = [(i, p) for i, p in e if not (byi_.get(i) == 'qfd_d2d_rom' and p != 'ck')]
+            if any(byi_.get(i) == 'qfd_d2d_rom' for i, _ in e) and ('d2d_rom', 'ck') not in e:
+                e = e + [('d2d_rom', 'ck')]
+        nb_.append((b, c, n, e))
+    m['buses'] = nb_
+    rec['rtl_truth_fixes'] = dict(xcst_tap_r_untied=True, d2d_rom_clocks=['ck'])
     _link_words(m, rec)
     if os.environ.get('OT_SPLIT_TREE_VF', '1') != '0':
         _tree_widths(m, rec)
