@@ -70,9 +70,9 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Claude:el1013-hbm-redesign-smmv",
-  "branch": "claude/hbm-redesign-smmv",
-  "tag": "r1",
+  "owner": "Claude:H-ELEM-A",
+  "branch": "claude/hbm-groupA-1014",
+  "tag": "pinreg2",
   "purpose": "SM.MATVEC redesign (owner 10-13) per-cluster record engine with EARLY DESCRIPTORS (DE 1: descriptor pass ahead of the x load, start pass behind it), XQ 3 loads in flight, window 8, publication-queue occupancy fix; M5 leaf; production L0 2,952 / 2,950.4 = 1.001x, L1 0.961x at XSPD 0 (exact, six mutants fail); current face pin request for physical closure; final die slot/guide fit pending docs/hbm_smmv_xp_slot_requests_1013.json",
   "extra_paths": [
    "results/arch/hgi_sim_20261010/g25_proof",
@@ -119,7 +119,7 @@
   ],
   "views_to": "physical/ref_tile/hgi_smmv_eng_de/views",
   "record_to": "results/rtl/ref_tile/hgi_smmv_eng_de",
-  "structural_change": "r0-b261b2e2c FLOORPLAN_MARGIN util 61.1% (std 6,573 um2 in 10,750 um2 core, flat leaf): outline 108 -> 112.32 sq (core ~11,660 um2 -> ~56%); RTL/pins/benches unchanged. Prior: "
+  "structural_change": "H-ELEM-A 10-14 22:00 re-gate on exact source (pinreg1 c86ead857 REFUSED source_binding after the 11:23 textbook_lint change; never resubmitted): native pin repair 74cd27e9f (recipe-2 pin_reg_split / keep_pin_regs / HB2 pad) unchanged. Earlier: r0-b261b2e2c FLOORPLAN_MARGIN util 61.1% (std 6,573 um2 in 10,750 um2 core, flat leaf): outline 108 -> 112.32 sq (core ~11,660 um2 -> ~56%); RTL/pins/benches unchanged. Prior: "
  },
  "util": 0.5,
  "params": {
