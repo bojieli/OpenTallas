@@ -1,0 +1,6 @@
+{
+  "owner": "Codex:H-COLL-static-endpoint-physical",
+  "source_commit": "44720c8ad6ad",
+  "reason": "Do not adopt as parent-usable hardleaf: native checked STA is TT+238.62/FF+24.44/SS sensitivity-5.77, but exported hardleaf fails child_lint on 3 blocked-above face pins dout128..130 even after approved own-stub/pocket postprocess. Original daemon verdict omitted native SRAM macro context. Preserve CLOSED raw timing record; qualify against explicit native-corner receipt and repair physical pin access before hierarchy adoption.",
+  "evidence": "physical/hcoll_seq612_1015/native_qualified/child_lint_poststub.json"
+}

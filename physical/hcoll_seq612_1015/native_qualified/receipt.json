@@ -1,0 +1,44 @@
+{
+  "source_commit": "44720c8ad6ad",
+  "hardware_source_commit": "cc12ab88a",
+  "qualification": "NativeTT/FFtimingchecked; NOTparent-usablehardleaf; adoptionholdactive",
+  "native_checks": {
+    "TT_setup_ps": 238.62,
+    "FF_hold_ps": 24.44,
+    "SS_sensitivity_ps": -5.77,
+    "DRC": 0,
+    "macro_library_explicit": true,
+    "export_checked_against_independent_native_STA": true
+  },
+  "source_bound_state": {
+    "generic_W141_FF": 597,
+    "native64x512": 1,
+    "clock_sinks": 598,
+    "final_clock_macro_libs_per_corner": 1
+  },
+  "physical_ABI": {
+    "outline_um": [
+      207.36,
+      129.6
+    ],
+    "signal_pins": 296,
+    "PG_layers": [
+      "M1",
+      "M2",
+      "M3",
+      "M4",
+      "M5",
+      "M6"
+    ],
+    "max_signal_layer": "M7",
+    "raw_child_lint": "FAIL3above/231ownstubs",
+    "post_stub_child_lint": "FAIL3above; ownstubs0,pockets0",
+    "unresolved_pins": [
+      "dout[128]",
+      "dout[129]",
+      "dout[130]"
+    ]
+  },
+  "actual_composed_successor": "ControllercapturecandidateTX6/RX2, sourcef7280c70d; this storeunchanged. HistoricalTX5modelappliestopriorcontroller only.",
+  "daemon_verdict_correction": "Original daemon263.11/22.89/SS-1.04 omittednative macro libraries; use this native-corner recordinstead; preserve oldCLOSED history underadoptionhold."
+}

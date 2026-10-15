@@ -1,0 +1,91 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "physical/hcoll_seq612_1015/native_qualified/view/ot_hgi_coll_static_pinreg_store.lef",
+ "verdict": "FAIL",
+ "fails": [
+  "(f) face-pin access: 3 of 296 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. dout[128] M5 (185.664,129.516), dout[129] M5 (187.104,129.516), dout[130] M5 (188.496,129.516)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT",
+  "(f) face-pin access: 231 of 296 face pins overlapped by OBS on their OWN layer by a stub OBS touching no other pin (the pin's route stub exported as OBS: no access point, DRT-0073 class; e.g. clk M4 (0.060,64.800), din[0] M5 (4.656,0.016), din[10] M5 (17.568,0.016)); fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef (73e17f447): move the pin's own same-layer stub from OBS into its PORT"
+ ],
+ "warns": [
+  "(f) face-pin access: 65 of 296 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. din[100] M7 (131.520,0.035), din[101] M7 (131.520,0.035), din[98] M7 (131.520,0.035))",
+  "(h) pockets: 270 open own-layer pocket rects on M7 (627.523 um2; gaps < 2.048 um between the child's own obstacles; largest (15.776,31.979)-(17.344,59.243), (5.664,67.307)-(6.976,82.731), (8.928,76.917)-(10.496,88.757)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M7 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)"
+ ],
+ "summary": "ot_hgi_coll_static_pinreg_store 207.36 x 129.6: PG M6 VDD 12 stripes (92% spread, 100% cov) / VSS 12 stripes (92% spread, 100% cov); strap M8; face pins 296 blocked-above 3 blocked-same 231; clock clk insertion 265 ps; pockets M7 270 (legacy view)",
+ "info": {
+  "cell": "ot_hgi_coll_static_pinreg_store",
+  "W": 207.36,
+  "H": 129.6,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M6",
+     "stripes": 12,
+     "dir": "H",
+     "spread": 0.917,
+     "coverage": 1.0,
+     "shapes_on_top": 12
+    },
+    "VSS": {
+     "top_layer": "M6",
+     "stripes": 12,
+     "dir": "H",
+     "spread": 0.917,
+     "coverage": 1.0,
+     "shapes_on_top": 12
+    }
+   },
+   "top_layer": "M6",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M7",
+  "strap_layer": "M8",
+  "cap": "M7",
+  "face": {
+   "face_pins": 296,
+   "blocked_above": 3,
+   "covered_below": 108,
+   "examples": [
+    "dout[128] M5 (185.664,129.516)",
+    "dout[129] M5 (187.104,129.516)",
+    "dout[130] M5 (188.496,129.516)"
+   ],
+   "blocked_same": 231,
+   "same_examples": [
+    "clk M4 (0.060,64.800)",
+    "din[0] M5 (4.656,0.016)",
+    "din[10] M5 (17.568,0.016)",
+    "din[11] M5 (18.864,0.016)",
+    "din[128] M5 (170.352,0.016)",
+    "din[129] M5 (171.648,0.016)"
+   ],
+   "band_same": 65,
+   "band_examples": [
+    "din[100] M7 (131.520,0.035)",
+    "din[101] M7 (131.520,0.035)",
+    "din[98] M7 (131.520,0.035)",
+    "din[99] M7 (131.520,0.035)",
+    "din[102] M7 (136.704,0.035)",
+    "din[103] M7 (136.704,0.035)"
+   ]
+  },
+  "clock_insertion": {
+   "clk": {
+    "max_ps": 264.64,
+    "min_ps": 154.31
+   }
+  },
+  "pockets": {
+   "layer": "M7",
+   "d_um": 2.048,
+   "marker": null,
+   "count": 270,
+   "area_um2": 627.523,
+   "examples": [
+    "(15.776,31.979)-(17.344,59.243)",
+    "(5.664,67.307)-(6.976,82.731)",
+    "(8.928,76.917)-(10.496,88.757)"
+   ]
+  }
+ }
+}

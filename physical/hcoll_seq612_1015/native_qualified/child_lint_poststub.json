@@ -1,0 +1,82 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "physical/hcoll_seq612_1015/native_qualified/view_poststub/ot_hgi_coll_static_pinreg_store.lef",
+ "verdict": "FAIL",
+ "fails": [
+  "(f) face-pin access: 3 of 296 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. dout[128] M5 (185.664,129.516), dout[129] M5 (187.104,129.516), dout[130] M5 (188.496,129.516)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT"
+ ],
+ "warns": [
+  "(f) face-pin access: 65 of 296 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. din[100] M7 (131.520,0.035), din[101] M7 (131.520,0.035), din[98] M7 (131.520,0.035))"
+ ],
+ "summary": "ot_hgi_coll_static_pinreg_store 207.36 x 129.6: PG M6 VDD 12 stripes (92% spread, 100% cov) / VSS 12 stripes (92% spread, 100% cov); strap M8; face pins 296 blocked-above 3 blocked-same 0; clock clk insertion 265 ps; pockets M7 0 (closed)",
+ "info": {
+  "cell": "ot_hgi_coll_static_pinreg_store",
+  "W": 207.36,
+  "H": 129.6,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M6",
+     "stripes": 12,
+     "dir": "H",
+     "spread": 0.917,
+     "coverage": 1.0,
+     "shapes_on_top": 12
+    },
+    "VSS": {
+     "top_layer": "M6",
+     "stripes": 12,
+     "dir": "H",
+     "spread": 0.917,
+     "coverage": 1.0,
+     "shapes_on_top": 12
+    }
+   },
+   "top_layer": "M6",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M7",
+  "strap_layer": "M8",
+  "cap": "M7",
+  "face": {
+   "face_pins": 296,
+   "blocked_above": 3,
+   "covered_below": 108,
+   "examples": [
+    "dout[128] M5 (185.664,129.516)",
+    "dout[129] M5 (187.104,129.516)",
+    "dout[130] M5 (188.496,129.516)"
+   ],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 65,
+   "band_examples": [
+    "din[100] M7 (131.520,0.035)",
+    "din[101] M7 (131.520,0.035)",
+    "din[98] M7 (131.520,0.035)",
+    "din[99] M7 (131.520,0.035)",
+    "din[102] M7 (136.704,0.035)",
+    "din[103] M7 (136.704,0.035)"
+   ]
+  },
+  "clock_insertion": {
+   "clk": {
+    "max_ps": 264.64,
+    "min_ps": 154.31
+   }
+  },
+  "pockets": {
+   "layer": "M7",
+   "d_um": 2.048,
+   "marker": {
+    "layer": "M7",
+    "d_um": 2.048,
+    "added": 149
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}
