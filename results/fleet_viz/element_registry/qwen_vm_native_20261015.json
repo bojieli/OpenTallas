@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "qvm_data256_native",
+      "target": "Qwen ROM",
+      "owner": "Codex:q_vm_physical",
+      "recorded_at": "2026-10-15T11:48:49.216668+00:00",
+      "description": "Actual256-bit data-stage leaf reused by Qwen central VM row/operand bank input, capture and output slices",
+      "source": {
+        "commit": "4eeecdcb6",
+        "paths": [
+          "rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv",
+          "rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_native.sv",
+          "results/arch/qwen_central_vm_physical_1015/banked_sizing.json"
+        ]
+      },
+      "implementation": {
+        "status": "Implemented structural9-root source; default selected96f fullVM remains unchanged"
+      },
+      "model": {
+        "status": "112 actual banks each9roots; no extra SRAM or bank data edges; actual parent area and global clocks pending",
+        "evidence": [
+          "results/arch/qwen_central_vm_physical_1015/banked_sizing.json",
+          "results/arch/qwen_central_vm_physical_1015/operand_bank_sizing.json"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS actual2-SRAM bank at production depth, masked writes, RBW, reset preservation",
+          "evidence": [
+            "results/arch/qwen_central_vm_physical_1015/banked_m0.log"
+          ]
+        },
+        "negative": {
+          "status": "PASS meaningful capture-bypass and actual input-bit corruption mutants both reject",
+          "evidence": [
+            "results/arch/qwen_central_vm_physical_1015/banked_m1.log",
+            "results/arch/qwen_central_vm_physical_1015/banked_m2.log"
+          ]
+        }
+      },
+      "physical": {
+        "status": "CLOSED TT317.07ps FF27.04ps DRC0; independent native O201.6ps S120.0ps R69.3ps spread4.7ps; selfreach476um",
+        "job": "qvm_data256_native-np1-0e820215a",
+        "evidence": [
+          "results/arch/qwen_central_vm_physical_1015/new_native_audit.json"
+        ]
+      },
+      "integration": {
+        "status": "OPEN actual9-entry parent/clock/pin-hop/PG/cut/global floorplan and source adoption; fulltarget qualification false"
+      },
+      "dependencies": [
+        "actual parent clock entry binding and routing",
+        "global per-pin placement and throughput qualification"
+      ]
+    },
+    {
+      "element": "qvm_bank_ctrl_native",
+      "target": "Qwen ROM",
+      "owner": "Codex:q_vm_physical",
+      "recorded_at": "2026-10-15T11:48:49.216668+00:00",
+      "description": "Actual35FF LAW8 command/control leaf of Qwen central VM174-row bank",
+      "source": {
+        "commit": "4eeecdcb6",
+        "paths": [
+          "rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv",
+          "rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_native.sv",
+          "results/arch/qwen_central_vm_physical_1015/banked_sizing.json"
+        ]
+      },
+      "implementation": {
+        "status": "Implemented structural9-root source; default selected96f fullVM remains unchanged"
+      },
+      "model": {
+        "status": "112 actual banks each9roots; no extra SRAM or bank data edges; actual parent area and global clocks pending",
+        "evidence": [
+          "results/arch/qwen_central_vm_physical_1015/banked_sizing.json",
+          "results/arch/qwen_central_vm_physical_1015/operand_bank_sizing.json"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS actual2-SRAM bank at production depth, masked writes, RBW, reset preservation",
+          "evidence": [
+            "results/arch/qwen_central_vm_physical_1015/banked_m0.log"
+          ]
+        },
+        "negative": {
+          "status": "PASS meaningful capture-bypass and actual input-bit corruption mutants both reject",
+          "evidence": [
+            "results/arch/qwen_central_vm_physical_1015/banked_m1.log",
+            "results/arch/qwen_central_vm_physical_1015/banked_m2.log"
+          ]
+        }
+      },
+      "physical": {
+        "status": "CLOSED TT345.17ps FF28.70ps DRC0; native O173.3ps S109.1ps R54.8ps spread0.9ps; selfreach527.5um",
+        "job": "qvm_bank_ctrl_native-np2-99be1c5dc",
+        "evidence": [
+          "results/arch/qwen_central_vm_physical_1015/new_native_audit.json"
+        ]
+      },
+      "integration": {
+        "status": "OPEN actual9-entry parent/clock/pin-hop/PG/cut/global floorplan and source adoption; fulltarget qualification false"
+      },
+      "dependencies": [
+        "actual parent clock entry binding and routing",
+        "global per-pin placement and throughput qualification"
+      ]
+    },
+    {
+      "element": "qvm_su_bank_ctrl_native",
+      "target": "Qwen ROM",
+      "owner": "Codex:q_vm_physical",
+      "recorded_at": "2026-10-15T11:48:49.216668+00:00",
+      "description": "Actual39FF LAWS10 command/control leaf of Qwen central VM695-row operand bank",
+      "source": {
+        "commit": "4eeecdcb6",
+        "paths": [
+          "rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv",
+          "rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_native.sv",
+          "results/arch/qwen_central_vm_physical_1015/banked_sizing.json"
+        ]
+      },
+      "implementation": {
+        "status": "Implemented structural9-root source; default selected96f fullVM remains unchanged"
+      },
+      "model": {
+        "status": "112 actual banks each9roots; no extra SRAM or bank data edges; actual parent area and global clocks pending",
+        "evidence": [
+          "results/arch/qwen_central_vm_physical_1015/banked_sizing.json",
+          "results/arch/qwen_central_vm_physical_1015/operand_bank_sizing.json"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS actual2-SRAM bank at production depth, masked writes, RBW, reset preservation",
+          "evidence": [
+            "results/arch/qwen_central_vm_physical_1015/su_banked_m0.log"
+          ]
+        },
+        "negative": {
+          "status": "PASS meaningful capture-bypass and actual input-bit corruption mutants both reject",
+          "evidence": [
+            "results/arch/qwen_central_vm_physical_1015/su_banked_m1.log",
+            "results/arch/qwen_central_vm_physical_1015/su_banked_m2.log"
+          ]
+        }
+      },
+      "physical": {
+        "status": "CLOSED TT346.15ps FF28.18ps DRC0; independent native O172.5ps S108.5ps R54.9ps spread1.0ps; selfreach529.4um",
+        "job": "qvm_su_bank_ctrl_native-np1-f9e55e7a5",
+        "evidence": [
+          "results/arch/qwen_central_vm_physical_1015/new_native_audit.json"
+        ]
+      },
+      "integration": {
+        "status": "OPEN actual9-entry parent/clock/pin-hop/PG/cut/global floorplan and source adoption; fulltarget qualification false"
+      },
+      "dependencies": [
+        "actual parent clock entry binding and routing",
+        "global per-pin placement and throughput qualification"
+      ]
+    },
+    {
+      "element": "qvm_bank_banked_native",
+      "target": "Qwen ROM",
+      "owner": "Codex:q_vm_physical",
+      "recorded_at": "2026-10-15T11:48:49.216668+00:00",
+      "description": "Qwen central174-row bank native nine-clock structural successor; mirrored SRAM read faces point toward capture stages",
+      "source": {
+        "commit": "9e48dd5ff",
+        "paths": [
+          "rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv",
+          "rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_hard_native.sv",
+          "tools/ref_tile/specs_qvm_native/qvm_bank_entries_my_native.json"
+        ]
+      },
+      "implementation": {
+        "status": "Implemented structural9-root source; default selected96f fullVM remains unchanged"
+      },
+      "model": {
+        "status": "112 actual banks each9roots; no extra SRAM or bank data edges; actual parent area and global clocks pending",
+        "evidence": [
+          "results/arch/qwen_central_vm_physical_1015/banked_sizing.json",
+          "results/arch/qwen_central_vm_physical_1015/operand_bank_sizing.json"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS actual2-SRAM bank at production depth, masked writes, RBW, reset preservation",
+          "evidence": [
+            "results/arch/qwen_central_vm_physical_1015/banked_m0.log"
+          ]
+        },
+        "negative": {
+          "status": "PASS meaningful capture-bypass and actual input-bit corruption mutants both reject",
+          "evidence": [
+            "results/arch/qwen_central_vm_physical_1015/banked_m1.log",
+            "results/arch/qwen_central_vm_physical_1015/banked_m2.log"
+          ]
+        }
+      },
+      "physical": {
+        "status": "Actual9-entry parent CTS passed131.4ps minimum TTsetup, zero ownFF; full route STOPPED beforeCTS completion by direct-macro TT-network/FF-scene library assertion. Tool correction in progress.2084 actual internal pin-leg model margins >=125.69ps. Routed FF/DRC/nativeparent/PG/cuts remainOPEN.",
+        "job": "qvm_bank_entries_my_native-ne1-4eeecdcb6",
+        "evidence": [
+          "physical/ref_tile/qvm_bank_entries_my_native/gate_result.json",
+          "results/arch/qwen_central_vm_physical_1015/row_bank_my_candidate/pin_screen.json"
+        ]
+      },
+      "integration": {
+        "status": "OPEN actual9-entry parent/clock/pin-hop/PG/cut/global floorplan and source adoption; fulltarget qualification false"
+      },
+      "dependencies": [
+        "actual parent clock entry binding and routing",
+        "global per-pin placement and throughput qualification"
+      ]
+    }
+  ]
+}
