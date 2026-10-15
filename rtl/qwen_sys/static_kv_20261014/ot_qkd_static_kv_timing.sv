@@ -36,7 +36,7 @@ module ot_qkd_static_kv_timing #(
   output wire        row_v, output wire row_prio, input wire row_gnt,
   output wire [2:0]  row_op, output wire [4:0] row_bank, output wire [18:0] row_row,
   output wire        col_v, output wire [4:0] col_bank, output wire [4:0] col_col,
-  input wire reserved_rd,
+  input wire reserved_rd,input wire reserved_static_col,input wire reserved_write_col,
   input wire [9:0] desc_first,
   output wire schedule_fault,
   output wire phase_idle,
@@ -284,15 +284,17 @@ module ot_qkd_static_kv_timing #(
     reg [31:0] s_pblk;
     wire s_col_ok = s_hit && ccdl_z[sb[1:0]] && !(|(sb_oh & blk)) && !rd_block &&
                     (swe ? (W && |(sb_oh & rcdw_z) && rtw_c == 0) : (|(sb_oh & rcd_z) && wtr_c == 0));
-    assign s_go = s_col_ok && (sprio || (!rd_ok_base && !(W && wr_ok0)));
+    wire legal_static = s_col_ok && (sprio || (!rd_ok_base && !(W && wr_ok0)));
+    assign s_go = legal_static && (PROFILE != 0 || reserved_static_col);
     wire legal_rd = rd_ok0 && !s_go && !(|(rd_oh & s_pblk));
     assign rd_ok = legal_rd && (PROFILE != 0 || reserved_rd);
     reg fault_schedule;
     assign schedule_fault = fault_schedule;
     always @(posedge clk or negedge rst_n)
       if (!rst_n) fault_schedule <= 0;
-      else if (PROFILE == 0 && reserved_rd && !legal_rd) fault_schedule <= 1;
-    assign wr_ok = wr_ok0 && !s_go && !(|(hb_oh & s_pblk));
+      else if (PROFILE == 0 && ((reserved_rd && !legal_rd) || (reserved_static_col && !legal_static) || (reserved_write_col && !legal_write) || (({1'b0,reserved_rd}+{1'b0,reserved_static_col}+{1'b0,reserved_write_col})>1))) fault_schedule <= 1;
+    wire legal_write = wr_ok0 && !s_go && !(|(hb_oh & s_pblk));
+    assign wr_ok = legal_write && (PROFILE != 0 || reserved_write_col);
     // ---- row: refresh > forced PRE > ACT ahead (sets k, k+1) > PRE finished -----------
     function automatic [4:0] act_bank(input integer c, input [2:0] kk);
       act_bank = {(c >= 4) ? kk + 3'd1 : kk, 2'(c & 3)};

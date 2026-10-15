@@ -6,17 +6,17 @@ module tb_static_host_controller;
  localparam CYCLES=2400,RL=23;
  reg ck=0;always #0.512 ck=~ck;
  reg [1:0] rst=0;
- reg owner=0;reg [42:0] cmd=0;reg reserved=0;
+ reg owner=0;reg [42:0] cmd=0;reg reserved=0,sr_reserved=0,wr_reserved=0;
  reg [287:0] es=0;reg [288:0] pi=0;
  wire [327:0] po[0:1];wire [293:0] co[0:1];wire [260:0] er[0:1];wire [1:0] fault,cv,cw,cf;
- reg slots[0:CYCLES-1],rawslots[0:CYCLES-1];
+ reg slots[0:CYCLES-1],srslots[0:CYCLES-1],wrslots[0:CYCLES-1],rawslots[0:CYCLES-1];
  reg rawslot=0;wire [15:0] out_epoch[0:1];
  genvar g;
  generate for(g=0;g<2;g++)begin:controllers
   qkd_ctrl_pc_host_static #(.PROFILE(g==0?1:0))dut(
    .pll_hbm(ck),.hrst(rst[g]),.ck(ck),.rsi(rst[g]),.pc(5'd13),.ci(319'b0),.co(co[g]),
    .es(es),.er(er[g]),.po(po[g]),.pi(pi),.ki(33'b0),.ko(),.fi(1'b0),.fo(fault[g]),
-   .static_cmd_owner(owner),.static_cmd(cmd),.reserved_rd(reserved),
+   .static_cmd_owner(owner),.static_cmd(cmd),.reserved_rd(reserved),.reserved_static_col(sr_reserved),.reserved_write_col(wr_reserved),
    .static_epoch(16'd7),.expected_raw_valid(rawslot),.corrected_epoch(out_epoch[g]),.completion_v(cv[g]),.completion_we(cw[g]),.completion_fault(cf[g]));
  end endgenerate
  function automatic [255:0] data(input integer row,sector);
@@ -60,7 +60,8 @@ module tb_static_host_controller;
    repeat(16)@(negedge ck);rst[phase]=1;
    for(integer t=0;t<CYCLES;t++)begin
     drive(t);
-    if(phase==0)reserved=0;else reserved=slots[t];
+    if(phase==0)begin reserved=0;sr_reserved=0;wr_reserved=0;end
+    else begin reserved=slots[t];sr_reserved=srslots[t];wr_reserved=wrslots[t];end
     if(phase==1&&mode==1&&t>0)reserved=slots[t-1];
     if(phase==1&&mode==2&&t==1300)cmd[42:33]=10'd513;
     pi={word[t],due[t]};
@@ -69,7 +70,11 @@ module tb_static_host_controller;
     if(phase==1&&mode==3&&t==400)pi[0]=0;
     @(posedge ck);
     // Wrapper has two RD reservation pin stages ahead of its actual core.
-    if(phase==0&&t>=2)slots[t-2]=controllers[0].dut.u_ctl.core.on.legal_rd;
+    if(phase==0&&t>=2)begin
+     slots[t-2]=controllers[0].dut.u_ctl.core.on.legal_rd;
+     srslots[t-2]=controllers[0].dut.u_ctl.core.on.legal_static;
+     wrslots[t-2]=controllers[0].dut.u_ctl.core.on.legal_write;
+    end
     if(po[phase][0]&&po[phase][3:1]==3'd1)openrow[po[phase][8:4]]=po[phase][27:9];
     if(po[phase][28])begin
      automatic integer bank=po[phase][34:30];
@@ -100,7 +105,7 @@ module tb_static_host_controller;
     if(fault[phase]||cf[phase])bad($sformatf("controller sticky fault phase%0d t%0d",phase,t));
     @(negedge ck);
    end
-   if(phase==0)begin slots[CYCLES-2]=0;slots[CYCLES-1]=0;end
+   if(phase==0)begin slots[CYCLES-2]=0;slots[CYCLES-1]=0;srslots[CYCLES-2]=0;srslots[CYCLES-1]=0;wrslots[CYCLES-2]=0;wrslots[CYCLES-1]=0;end
    if(landed!=512||hostreads!=1||hostwrites!=1||commits!=2||reads!=513)
     bad($sformatf("counts phase%0d land%0d hostread%0d write%0d commit%0d rawread%0d",phase,landed,hostreads,hostwrites,commits,reads));
   end

@@ -21,7 +21,7 @@ module tb_static_controller_write_abi;
     wire [32:0]  ko;
     wire         fo;
     qkd_ctrl_pc_host_static #(.MUT(MUT),.PROFILE(1)) dut (.pll_hbm(hclk), .hrst(hrst), .ck(ck), .rsi(rsi), .pc(5'(PCI)), .ci(ci), .co(co),
-        .es(es), .er(er), .po(po), .pi(pi), .ki(ki), .ko(ko), .fi(1'b0), .fo(fo),.static_cmd_owner(1'b0),.static_cmd(43'b0),.reserved_rd(1'b0),.static_epoch(16'd7),.expected_raw_valid(pi[0]),.corrected_epoch(),.completion_v(),.completion_we(),.completion_fault());
+        .es(es), .er(er), .po(po), .pi(pi), .ki(ki), .ko(ko), .fi(1'b0), .fo(fo),.static_cmd_owner(1'b0),.static_cmd(43'b0),.reserved_rd(1'b0),.reserved_static_col(1'b0),.reserved_write_col(1'b0),.static_epoch(16'd7),.expected_raw_valid(pi[0]),.corrected_epoch(),.completion_v(),.completion_we(),.completion_fault());
 
     wire        p_rv  = po[O_po_row_v];
     wire [2:0]  p_rop = po[O_po_row_op +: 3];

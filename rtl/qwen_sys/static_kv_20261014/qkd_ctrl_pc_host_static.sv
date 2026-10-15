@@ -29,7 +29,7 @@ module qkd_ctrl_pc_host_static #(
     output wire [32:0]  ko,
     input  wire         fi,
     output reg          fo,
-    input wire static_cmd_owner,input wire [42:0] static_cmd,input wire reserved_rd,
+    input wire static_cmd_owner,input wire [42:0] static_cmd,input wire reserved_rd,input wire reserved_static_col,input wire reserved_write_col,
     input wire [15:0] static_epoch,input wire expected_raw_valid,
     output wire [15:0] corrected_epoch,
     output wire completion_v,completion_we,completion_fault
@@ -106,13 +106,13 @@ module qkd_ctrl_pc_host_static #(
     wire        w_match = (cur_v && cur_row == wrow && !wsec_q[7]) || (MUT == 4);
     wire        w_pend = hgo && wv_q && hold == 3'd0;
     wire        w_go   = w_pend && w_match && cr > 4'd2 && !tc_v && !static_owner_q;
-    (* keep *) reg static_owner_q,static_v_q,rdslot_q;
+    (* keep *) reg static_owner_q,static_v_q,rdslot_q,srslot_q,wrslot_q;
     (* keep *) reg [31:0] static_d_q;
     (* keep *) reg [9:0] static_first_q;
     always @(posedge hclk)begin static_d_q<=static_cmd[32:1];static_first_q<=static_cmd[42:33];end
     always @(posedge hclk or negedge h_rn)
-      if(!h_rn)begin static_owner_q<=0;static_v_q<=0;rdslot_q<=0;end
-      else begin static_owner_q<=static_cmd_owner;static_v_q<=static_cmd[0];rdslot_q<=reserved_rd;end
+      if(!h_rn)begin static_owner_q<=0;static_v_q<=0;rdslot_q<=0;srslot_q<=0;wrslot_q<=0;end
+      else begin static_owner_q<=static_cmd_owner;static_v_q<=static_cmd[0];rdslot_q<=reserved_rd;srslot_q<=reserved_static_col;wrslot_q<=reserved_write_col;end
     wire        cmd_v  = static_owner_q ? static_v_q : (tc_v | w_go);
     wire [31:0] cmd    = static_owner_q ? static_d_q : tc_v ? tc_d : {2'd2, 20'd0, wj[6:2], wj[9:7], wj[1:0]};
     always @(posedge hclk or negedge hgo)
@@ -141,7 +141,7 @@ module qkd_ctrl_pc_host_static #(
     wire [4:0]  row_bank, col_bank, col_col;
     wire [18:0] row_row;
     ot_qkd_static_ctrl_pc_emb #(.ENABLE(1), .PC(0), .PHASE(0),.PROFILE(PROFILE)) u_ctl (
-        .clk(hclk), .rst_n(hgo), .cmd_v(cmd_v), .cmd(cmd), .cmd_first(static_owner_q?static_first_q:10'd0),.reserved_rd(rdslot_q), .cmd_credit(cmd_credit),
+        .clk(hclk), .rst_n(hgo), .cmd_v(cmd_v), .cmd(cmd), .cmd_first(static_owner_q?static_first_q:10'd0),.reserved_rd(rdslot_q),.reserved_static_col(srslot_q),.reserved_write_col(wrslot_q), .cmd_credit(cmd_credit),
         .row_v(row_v), .row_op(row_op), .row_bank(row_bank), .row_row(row_row),
         .col_v(col_v), .col_bank(col_bank), .col_col(col_col), .col_we(col_we), .busy(), .phase_idle(ctl_phase_idle), .fault(ctl_fault),
         .s_v(c_v), .s_we(c_d[285]), .s_bank(c_d[284:280]), .s_col(c_d[279:275]), .s_row(c_d[274:256]),
