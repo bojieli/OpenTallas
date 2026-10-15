@@ -1,0 +1,125 @@
+{
+ "name": "s81pq_qb_headpc_native",
+ "top": "ot_s81_pq_qb_headpc_native",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pipe_native.sv",
+  "physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pinread_native.sv"
+ ],
+ "outline": {
+  "w": 142.56,
+  "h": 95.04
+ },
+ "pins": {
+  "N": [
+   "rd_data"
+  ],
+  "S": [
+   "hq0",
+   "hq1"
+  ],
+  "W": [
+   "clk",
+   "rst_n",
+   "consume",
+   "aqi_d",
+   "h_b0",
+   "h_b1",
+   "hw_sv",
+   "aq_e",
+   "aq_p"
+  ],
+  "E": [
+   "wr0",
+   "wr1",
+   "wq0",
+   "wq1",
+   "i0",
+   "i1",
+   "rq0",
+   "rq1",
+   "he0",
+   "he1",
+   "fault"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 24,
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "kind": "tile",
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "layer_cap": "M5",
+ "recipe": 2,
+ "macros": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "P4 route CLOSED but nativeFAIL capture308.7ps on1045pins, raw1024bank data into4:1mux; P5 inserts1024actual data captureFF plus38matching valid/select/metadataFF (+1062FF), exact +1readedge (legacydelta2\u21923), same4physical SRAM banks. Actual345800bit parent comparison +57344independent changing head pin bitchecks +3source mutants PASS. Same142.56x95.04 and exactP4io_tcl; native8i0launch errors remain toassess/repair, so this is bounded CTS characterization only, no route/adoption/throughput qualification.",
+ "slot_change_request": {
+  "name": "S-DIE0757-headpc-p5-same-actual-slot",
+  "outline": [
+   142.56,
+   95.04
+  ],
+  "why": "Same actual P4outline/pins/faces; one bounded nativeCTS granted with mappedutil/sinks check, explicit1062FF/+1readedge; no route until nativeallpins pass."
+ },
+ "job": {
+  "owner": "Codex:s81-pq-coll-0802",
+  "branch": "codex/s81-field-native-1015",
+  "tag": "p5",
+  "purpose": "S81 PQ QB pipelined head (metadata in head), canonical +2 QB pipeline",
+  "benches": [
+   {
+    "name": "native_pinread_exact_and_mutants",
+    "cmd": "bash tools/s81/pq_qb_pinread_bench.sh {RUN}/native_pinread",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog",
+     "vvp"
+    ],
+    "pass_regex": "PQ_QB_PINREAD_GATE PASS",
+    "min_count_regex": "checks=([0-9]+)"
+   }
+  ],
+  "views_to": "physical/ref_tile/s81pq_qb_headpc_native/views",
+  "record_to": "results/rtl/ref_tile/s81pq_qb_headpc_native",
+  "extra_paths": [
+   "rtl/dsrom_sys",
+   "rtl/test/dsrom_sys",
+   "physical/s81_pq_hier/pinned",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "physical/ref_tile_specs/s81pq_native",
+   "tools/s81",
+   "tools/s81_static_control",
+   "rtl/test/dsrom_sys/tb_s81_pq_qb_pinread.sv",
+   "rtl/test/dsrom_sys/tb_s81_pq_headpc_pin_capture.sv",
+   "tools/s81/pq_qb_pinread_bench.sh"
+  ]
+ },
+ "defines": [
+  "OT_PQ_ROM_PORTS"
+ ],
+ "io_tcl": "physical/ref_tile_specs/s81pq_native/s81pq_qb_headp_native_spread_pins.tcl",
+ "params": {},
+ "children": [],
+ "inter": []
+}
