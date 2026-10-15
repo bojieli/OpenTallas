@@ -3301,6 +3301,12 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             if idx not in lifted0:
                 for r_ in own:
                     add_rect(r_)
+            else:
+                # Pass-1 frames were lifted before the work list, so another
+                # repaired chain may own their sites now. Do not emit those
+                # stale rectangles on a failed search. The open chain remains
+                # explicitly unrepaired; a later retry can search fresh sites.
+                pl['frames'] = []
             if unbooked:
                 book(booked[idx][0], bits)
             return False
