@@ -129,8 +129,14 @@ module ot_hgi_qdq_wr_pay #(
     end else begin:g_no_result_tracker
         assign result_empty=1'b0;assign tracker_bad=1'b0;assign re_nf=1'b0;assign re_f=1'b0;
     end endgenerate
-    ot_fifo_sram_fwft #(.W(512), .DEPTH(OD), .MACRO(0), .ESL(128)) u_od (.clk(clk), .rst_n(rr_n[1]), .push(vo2&&!bypass_fire),
-        .wdata(y_f2), .pop(w_fire), .hv(od_hv), .head(od_head), .ovf(od_ovf));
+    // p12c: PAY-local FWFT (ot_qdq_pay_fwft): same records / order / occupancy as ot_fifo_sram_fwft ESL 128, but it exports
+    // the two output-buffer registers (od_b0 / od_b1) so the payload selects b0 / b1 directly with registered one-hot
+    // selects that already include the head index (poh mirrors the buffer's oh), and keeps the array count registered.
+    wire [511:0] od_b0, od_b1;
+    ot_qdq_pay_fwft #(.DEPTH(OD)) u_od (.clk(clk), .rst_n(rr_n[1]), .push(vo2&&!bypass_fire),
+        .wdata(y_f2), .pop(w_fire), .hv(od_hv), .head(od_head), .ob0(od_b0), .ob1(od_b1), .ovf(od_ovf));
+    reg poh;                                            // == u_od head index (toggles on every pop of a held head)
+    always @(posedge clk or negedge rr_n[1]) if (!rr_n[1]) poh <= 1'b0; else if (w_fire && od_hv) poh <= ~poh;
     wire snapshot_push = w_fire && mh_z;
     wire [63:0] snapshot_counts;
     for(genvar q=0;q<8;q=q+1)begin:g_snapshot
@@ -165,22 +171,26 @@ module ot_hgi_qdq_wr_pay #(
         end
     end
     localparam integer REP = 4;                        // kept select copies per lane (32 payload bits each)
-    (* keep="true",dont_touch="true" *) reg [8*REP*8-1:0] pl_sel;   // per lane/copy: [3:0] y_f sector, [7:4] od_head sector
+    (* keep="true",dont_touch="true" *) reg [8*REP*12-1:0] pl_sel;  // per lane/copy: [3:0] y_f2, [7:4] od_b0, [11:8] od_b1 sector
     (* keep="true",dont_touch="true" *) reg [7:0] pl_lt;
     (* keep="true",dont_touch="true" *) reg [12:0] pl_hi, pl_hi1;
     // p12: every fire-selected next state is formed from registered state for BOTH outcomes and picked by one explicit
     // AO22 a bit (ot_qdq_pay_sel): fire is the only late signal and it is never re-folded into the candidate cones.
-    localparam integer NSEL = 8*REP*8 + 8 + 13 + 13 + 19 + 8 + 8 + 1;
-    reg  [8*REP*8-1:0] sel_a0, sel_a1; reg [7:0] lt_a0, lt_a1, z_a0, z_a1;
+    localparam integer NSEL = 8*REP*12 + 8 + 13 + 13 + 19 + 8 + 8 + 1;
+    reg  [8*REP*12-1:0] sel_a0, sel_a1;
+    wire poh1 = poh ^ od_hv;                            // head index after a fire (a fire pops only a held head)
+    reg [7:0] lt_a0, lt_a1, z_a0, z_a1;
     wire [7:0] wcr_z_n; wire cr_ok_n;
     always @* begin
         for (integer b = 0; b < 8; b = b + 1) begin
             for (integer g = 0; g < REP; g = g + 1)
                 for (integer j = 0; j < 4; j = j + 1) begin
-                    sel_a0[(b*REP+g)*8 + j]     = mq_oh0[(b-j)&3] &  ((EMPTY_BYPASS != 0) && re_nf);
-                    sel_a0[(b*REP+g)*8 + 4 + j] = mq_oh0[(b-j)&3] & !((EMPTY_BYPASS != 0) && re_nf);
-                    sel_a1[(b*REP+g)*8 + j]     = mq_oh1[(b-j)&3] &  ((EMPTY_BYPASS != 0) && re_f);
-                    sel_a1[(b*REP+g)*8 + 4 + j] = mq_oh1[(b-j)&3] & !((EMPTY_BYPASS != 0) && re_f);
+                    sel_a0[(b*REP+g)*12 + j]     = mq_oh0[(b-j)&3] &  ((EMPTY_BYPASS != 0) && re_nf);
+                    sel_a0[(b*REP+g)*12 + 4 + j] = mq_oh0[(b-j)&3] & !((EMPTY_BYPASS != 0) && re_nf) & !poh;
+                    sel_a0[(b*REP+g)*12 + 8 + j] = mq_oh0[(b-j)&3] & !((EMPTY_BYPASS != 0) && re_nf) &  poh;
+                    sel_a1[(b*REP+g)*12 + j]     = mq_oh1[(b-j)&3] &  ((EMPTY_BYPASS != 0) && re_f);
+                    sel_a1[(b*REP+g)*12 + 4 + j] = mq_oh1[(b-j)&3] & !((EMPTY_BYPASS != 0) && re_f) & !poh1;
+                    sel_a1[(b*REP+g)*12 + 8 + j] = mq_oh1[(b-j)&3] & !((EMPTY_BYPASS != 0) && re_f) &  poh1;
                 end
             lt_a0[b] = |(mq_oh0 & ~((4'd2 << (b&3)) - 4'd1));   // b[1:0] < sector[1:0]
             lt_a1[b] = |(mq_oh1 & ~((4'd2 << (b&3)) - 4'd1));
@@ -216,8 +226,9 @@ module ot_hgi_qdq_wr_pay #(
                 for (integer i = 0; i < 128; i = i + 1) begin
                     c[i] = 1'b0;
                     for (integer j = 0; j < 4; j = j + 1)
-                        c[i] = c[i] | (pl_sel[(b*REP + i/(128/REP))*8 + j] & y_f2[j*128 + i])
-                                    | (pl_sel[(b*REP + i/(128/REP))*8 + 4 + j] & od_head[j*128 + i]);
+                        c[i] = c[i] | (pl_sel[(b*REP + i/(128/REP))*12 + j] & y_f2[j*128 + i])
+                                    | (pl_sel[(b*REP + i/(128/REP))*12 + 4 + j] & od_b0[j*128 + i])
+                                    | (pl_sel[(b*REP + i/(128/REP))*12 + 8 + j] & od_b1[j*128 + i]);
                 end
                 for (integer k = 0; k < 8; k = k + 1) d[k*32 +: 32] = {c[k*16 +: 16], 16'd0};
                 wwq_q[b*280 +: 279] <= {(pl_lt[b] ? pl_hi1 : pl_hi), 2'(b), d, 8'hff};
@@ -250,3 +261,77 @@ module ot_qdq_pay_sel #(parameter integer W = 1) (
 `endif
 endmodule
 `default_nettype wire
+
+// PAY-local first-word-fall-through FIFO (p12c): the behaviour of ot_fifo_sram_fwft #(.W(512), .MACRO(0), .ESL(128)) --
+// same push / pop / bypass / read issue rules, same order, same 2-register output buffer per 128-b slice with kept copies
+// of the head / occupancy / landing state -- with two structural differences: (1) the array count is a REGISTER (na,
+// with a registered empty flag ez) instead of wp - rp in front of every bypass / read decision; (2) the landing and
+// bypass slots are formed from registered state only (ia = oh ^ oc[0], ib = oh ^ oc[0] ^ inflight: the pop terms
+// cancel), and both buffer registers are exported (ob0 / ob1) for consumers that select them with their own one-hot.
+module ot_qdq_pay_fwft #(parameter integer DEPTH = 64) (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire          push,
+    input  wire [511:0]  wdata,
+    input  wire          pop,
+    output wire          hv,
+    output wire [511:0]  head,
+    output wire [511:0]  ob0,
+    output wire [511:0]  ob1,
+    output reg           ovf
+);
+    localparam integer AW = $clog2(DEPTH);
+    initial if (DEPTH > 64 || (1 << AW) != DEPTH) $fatal(1, "ot_qdq_pay_fwft: DEPTH must be a power of two <= 64");
+    reg  [AW:0]   wp, rp, na;
+    reg           ez;                               // na == 0, registered
+    wire [AW:0]   in_arr = na;
+    reg           inflight;
+    wire [511:0]  rq;
+    reg  [1:0]    oc;
+    assign hv = oc != 0;
+    wire          do_pop = pop && hv;
+    wire [1:0]    oc_after = oc - (do_pop ? 1'b1 : 1'b0);
+    wire          room = (oc_after + (inflight ? 2'd1 : 2'd0)) < 2'd2;
+    wire          bypass = push && ez && !inflight && room;
+    wire          wr_arr = push && !bypass;
+    wire          rd_arr = !ez && room;
+    wire [AW:0]   na_n = na + (wr_arr ? 1'b1 : 1'b0) - (rd_arr ? 1'b1 : 1'b0);
+    ot_sram_1r1w_64x512_m1_r2c2 u_m (.clk(clk), .r_ce_in(rd_arr), .r_addr_in(6'(rp[AW-1:0])), .rd_out(rq),
+        .w_ce_in(wr_arr), .w_addr_in(6'(wp[AW-1:0])), .wd_in(wdata), .w_mask_in({512{1'b1}}),
+        .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
+    wire [1:0] n_in = (inflight ? 2'd1 : 2'd0) + (bypass ? 2'd1 : 2'd0);
+    wire [1:0] oc_nx = oc_after + n_in;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            wp <= 0; rp <= 0; na <= 0; ez <= 1'b1; inflight <= 1'b0; oc <= 0; ovf <= 1'b0;
+        end else begin
+            if (wr_arr) begin
+                wp <= wp + 1'b1;
+                if (na == DEPTH) ovf <= 1'b1;
+            end
+            if (rd_arr) rp <= rp + 1'b1;
+            na <= na_n; ez <= na_n == 0;
+            inflight <= rd_arr;
+            oc <= oc_nx;
+            if (oc_after + n_in > 2) ovf <= 1'b1;
+        end
+    end
+    genvar s;
+    for (s = 0; s < 4; s = s + 1) begin : g_s
+        (* keep *) reg oh_c, oc0_c, inf_c;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin oh_c <= 1'b0; oc0_c <= 1'b0; inf_c <= 1'b0; end
+            else begin oh_c <= do_pop ? ~oh_c : oh_c; oc0_c <= oc_nx[0]; inf_c <= rd_arr; end
+        wire ia = oh_c ^ oc0_c;                         // == the post-pop landing slot (pop terms cancel)
+        wire ib = oh_c ^ oc0_c ^ inf_c;                 // == the post-pop bypass slot
+        reg [127:0] b0, b1;
+        always @(posedge clk) begin
+            if (inf_c && !ia) b0 <= rq[s*128 +: 128];
+            if (inf_c &&  ia) b1 <= rq[s*128 +: 128];
+            if (bypass && !ib) b0 <= wdata[s*128 +: 128];
+            if (bypass &&  ib) b1 <= wdata[s*128 +: 128];
+        end
+        assign head[s*128 +: 128] = oh_c ? b1 : b0;
+        assign ob0[s*128 +: 128] = b0; assign ob1[s*128 +: 128] = b1;
+    end
+endmodule
