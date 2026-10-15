@@ -10,7 +10,7 @@ FILES="dsfd_vm_static_suhc_fsr.sv dsfd_vm_static_suhc_return_map.sv dsfd_vm_stat
  ot_sram_1r1w_512x128_m4_r2c2.v dsfd_vm_static_wdispatch128.sv dsfd_vm_static_wstage128.sv dsfd_vm_static_wsched.sv
  dsfd_vm_static_rsched.sv dsfd_vm_static_landing.sv dsfd_vm_seq_static.sv dsfd_vm_static_core.sv tb_dsfd_vm_static_core.sv"
 F=""; for f in $FILES; do F="$F $S/$f"; done
-build(){ "$V" --binary --timing -O1 -Wno-fatal -j 8 -MAKEFLAGS "OPT_FAST=-O0 OPT_SLOW=-O0 OPT_GLOBAL=-O0" --top-module tb_dsfd_vm_static_core --Mdir "$O/obj_$1" -o tb ${2:-} $F > "$O/build_$1.log" 2>&1 || { echo "BUILD FAIL $1"; tail -20 "$O/build_$1.log"; }; }
+build(){ "$V" --binary --timing -O1 -Wno-fatal -j "${VM_BUILD_JOBS:-1}" -MAKEFLAGS "OPT_FAST=-O0 OPT_SLOW=-O0 OPT_GLOBAL=-O0" --top-module tb_dsfd_vm_static_core --Mdir "$O/obj_$1" -o tb ${2:-} $F > "$O/build_$1.log" 2>&1 || { echo "BUILD FAIL $1"; tail -20 "$O/build_$1.log"; }; }
 build base & p0=$!
 build mlane +define+OT_VM_WSCHED_MUT_LANE & p1=$!
 build mdrain +define+OT_VM_WSCHED_MUT_DRAIN & p2=$!
