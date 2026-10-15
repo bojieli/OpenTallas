@@ -31,7 +31,7 @@ module tb_hgi_coll_sm_stage_profiles;
         return 32'h3f000000+32'((epoch<<19)+(q<<17)+(sm<<13)+(slot<<12)+(h<<8)+dim);
     endfunction
     bit ev[0:9999],eb[0:9999];integer ee[0:9999],es[0:9999];
-    integer cycle=0,scenario=0,raw_checks=0,vector_checks=0,raw_rows=0;
+    integer cycle=0,scenario=0,raw_checks=0,vector_checks=0,raw_rows=0,required_raw_rows=64;
     always @(posedge clk)begin:monitor
         #1;
         if(rst_n)begin
@@ -105,7 +105,7 @@ module tb_hgi_coll_sm_stage_profiles;
     endtask
     task automatic require_fault;
         if(!(|fault))$fatal(1,"RAW_STAGE invalid read escaped scenario%0d",scenario);
-        if(raw_rows<64)$fatal(1,"RAW_STAGE invalid read stalled rows%0d",raw_rows);
+        if(raw_rows<required_raw_rows)$fatal(1,"RAW_STAGE invalid read stalled rows%0d",raw_rows);
         $display("RAW_STAGE FAULT PASS scenario=%0d fixed_raw_rows=%0d",scenario,raw_rows);$finish;
     endtask
     initial begin
@@ -119,6 +119,7 @@ module tb_hgi_coll_sm_stage_profiles;
         if(scenario==3)begin start_raw(1,1);repeat(70)@(negedge clk);require_fault();end
         if(scenario==4)begin start_raw(0,1);fill(2,0);repeat(70)@(negedge clk);require_fault();end
         if(scenario==5)begin
+            required_raw_rows=128;
             start_raw(0,1);repeat(70)@(negedge clk);release_bank(0);fill(2,0);
             start_raw(0,1);repeat(70)@(negedge clk);require_fault();
         end
