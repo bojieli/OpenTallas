@@ -1,0 +1,95 @@
+{
+  "source_commit": "deaa0ec4f",
+  "kind": "actual native49 controlcatalogue and whole fourquarterbridge network component proof",
+  "catalogue": "ten49ops/512word;top22zero; q2opupper19zero; no behavioral/DPI memory",
+  "configuration": "TARGET56+qid actualraw256 hostframes,globalword*2+half,descriptorcontrolcycles basealigned10,loops1;wordgap2,descgap64*NBANKS+2",
+  "native_catalogue_proof": {
+    "banks_tested": [
+      2,
+      4,
+      5
+    ],
+    "capacities": [
+      1280,
+      2560,
+      3200
+    ],
+    "fullwidth_checked_controls": 22198,
+    "fault_scenarios": 68,
+    "first_output_from_local_launch": 5,
+    "mutants": [
+      "outputbitflip rejected CONTROL mismatch",
+      "wordwrap8 instead9 rejected CONTROL mismatch"
+    ],
+    "real_compiler_profiles_executed": [
+      "historicalrelay1_G96_d0q0_1093cycles",
+      "historicalrelay1_G96_d0q1_1093cycles"
+    ],
+    "all384profile_transport": "419712controls full49 roundtrip; current TX6/RX2/FEC profile notinherited"
+  },
+  "whole_fourquarter_network": {
+    "native_catalogue_macros": 8,
+    "bridge_output_leaves": 26,
+    "actual_RXfaces": 9,
+    "actual_relay1_stations": 8,
+    "routes": 256,
+    "checked_bridge_outputs": 512,
+    "checked_RX_deliveries": 128,
+    "payload_bits_each": 545,
+    "controls_source": "onlyreal nativeSRAM issuers, no external idealcontrolports",
+    "first_bridge_capture_local_launch": 6,
+    "mutants": [
+      "outputbitflip rejected programmednetworkfault atcycle2",
+      "wordwrap rejected networkvalid mismatch cycle10"
+    ]
+  },
+  "terminal_runs": [
+    {
+      "unit": "oth-ubuntu-3827514-1792055941",
+      "host": "ot-agidock128",
+      "exit": 0,
+      "scope": "wholefourquarterpositive+2mutants",
+      "memory_peak": "journalunavailable; admitted8GB; simulator9MB"
+    },
+    {
+      "unit": "oth-ubuntu-731600-1792055994",
+      "host": "ot-epyc1tb",
+      "exit": 0,
+      "scope": "q3/q2/4bank positives+51faults+2mutants+actualconditionalG96controls",
+      "memory_peak": "1.6G roundedjournal",
+      "wall_seconds": 36.575,
+      "cpu_seconds": 75.768
+    },
+    {
+      "unit": "oth-ubuntu-3835148-1792056183",
+      "host": "ot-agidock128",
+      "exit": 0,
+      "scope": "5actualbanks full3200+2560controls,17faults"
+    },
+    {
+      "unit": "oth-ubuntu-3836847-1792056326",
+      "host": "ot-agidock128",
+      "exit": 0,
+      "scope": "5bank descriptor2833+2193controls"
+    }
+  ],
+  "preserved_failure": "initialnetwork build didnotcreate nestedoutputdirectory; Verilatorcouldnotwritegeneratedfile, exit2. Runnerfixed; hardware unchanged. failed_missing_output_directory.log retained.",
+  "new_2833_profile": "4banks2560 explicitlyreject;5banks3200 nativeproven,284words568hostframes4547CSRwrites,descgap322; contentsnotyetnewprofilebound",
+  "normative_limit": "typedbridgecontrolmechanism only. Doesnotexecute unchangedoldG25A.HBM/HBMEG_STG/EG_LIST; explicitENGRAM_FETCH_ROWS8 compiler/consumercontract remainsseparate. Newcontrol256target120+qid isdistinctfuturebackend.",
+  "unqualified": [
+    "finalTX6/RX2/FEC/CDC fullproductioncalendar",
+    "physicalmacroplacement/clockinsertion/TTFFroute",
+    "nativeG96wholeworkloadrate",
+    "actualEngramhomefill/packetizer/decode/WKV normativejoin"
+  ],
+  "sha256": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_bridge_program.sv": "4327af23b282c85f0b32c984b2a85786a3a3bf753f6aa857bf63091032ad7313",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_quarter_bridge_programmed.sv": "998c22142ac229918be1712ed9ba30e2bc7c83e9d3d67bc46198b9bbf060d8b6",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_quarter_bridge.sv": "cd080c0c18a65303095a101a181f57872c180b0e574035c197622a82fbb86fae",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer.sv": "bcc5a2ca21788b0a312266a5a4b8533b652081c16695897bc8f9152b52362f42",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_bridge_program.sv": "5b1250fa91db0e2141f5079336fcdaf884ef0084a2509f1eb8c6f6ce2e38accd",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_bridge_program_network.sv": "d34bb3d45bf692bb5391e2826222ec4d067112d8e87df14fe4d00a3217db7fad",
+    "rtl/hbm_accel/generic/collective/p2p/run_bridge_program_suite.sh": "fb4bc3be91215df9e4ea1bb2551369aa6e4d0b5b42124942db16dfb21ac1181b",
+    "rtl/hbm_accel/generic/collective/p2p/run_bridge_program_network.sh": "da4fbf88d690edaa1a90475d4a48922dca8c2a7f043a261668a366ff9bc61d60"
+  }
+}

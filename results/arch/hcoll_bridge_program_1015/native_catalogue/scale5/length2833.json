@@ -1,0 +1,21 @@
+{
+  "command": "ot-run --mem4 --threads1 --dir /srv/opentallas-scratch/codex/hcoll-bridge-program-fivebank-out -- ./obj/Vtb_hgi_coll_bridge_program +length=2833",
+  "unit": "oth-ubuntu-3836847-1792056326",
+  "terminal": "ot-run: RAN on ot-agidock128: exit0",
+  "first_control_edges": 5,
+  "runs": [
+    {
+      "banks": 5,
+      "base": 0,
+      "limit": 2833,
+      "count": 2833
+    },
+    {
+      "banks": 5,
+      "base": 640,
+      "limit": 2833,
+      "count": 2193
+    }
+  ],
+  "scope": "synthetic exact49bit fullcapacity programme, notnewFECprofile content"
+}

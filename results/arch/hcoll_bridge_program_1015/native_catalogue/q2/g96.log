@@ -1,0 +1,7 @@
+BRIDGE_PROGRAM EXEC PASS banks=2 qid=1 base=0 limit=1093 count=1093 first_edges=5
+BRIDGE_PROGRAM EXEC PASS banks=2 qid=1 base=640 limit=1093 count=453 first_edges=5
+BRIDGE_PROGRAM PASS actual_macro_count=2 capacity=1280 exact_control_bits=49
+- /srv/opentallas-scratch/codex/hcoll-bridge-program-deaa0ec4f/rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_bridge_program.sv:94: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.002 s; speed 1.557 ms/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 7 MB

@@ -24,4 +24,4 @@ def model(banks=2,qid=0):
   'macs_per_cycle':0,'elastic_queue':0,'runtime_ready_credit':False,
   'area':'native macro abstracts plus controller FF/mux area, not mapped yet',
   'qualification':'component candidate, productionFEC/relaycalendar/actualnetwork integration not yet proven'}
-if __name__=='__main__':print(json.dumps({'q3':model(),'q2':model(qid=1),'scaled4banks':model(4)},indent=2))
+if __name__=='__main__':print(json.dumps({'q3':model(),'q2':model(qid=1),'scaled4banks':model(4),'engram2833_5banks':model(5)},indent=2))
