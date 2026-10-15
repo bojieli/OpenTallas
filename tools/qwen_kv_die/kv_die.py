@@ -33,6 +33,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools'))
 import qwen_rom_fulldie as F     # noqa: E402  (Inst, Master, lattice, phy_pins, pin_rects, write_netlist)
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import kv_elastic_boundary       # noqa: E402
 import kv_strips as KS           # noqa: E402  (v1.2 strip compositions: land / astk RTL bindings + clock entries)
 
 GX, GY, SHAVE = F.GX, F.GY, F.SHAVE
@@ -2302,6 +2303,7 @@ def record(m):
                 template=dict(path=str(TPL_PATH.relative_to(ROOT)), sha256=hashlib.sha256(TPL_PATH.read_bytes()).hexdigest()),
                 die_um=[die['w'], die['h']], die_mm2=die['mm2'], instances=len(m['insts']), buses=len(m['buses']),
                 instance_mm2=round(inst_mm2, 3), fill=round(inst_mm2 / die['mm2'], 4),
+                elastic_boundary=kv_elastic_boundary.inventory(ROOT, m, BINDINGS),
                 static_memory_reservation=dict(enabled=m['geo'].get('static_memory_reservation',False),
                     land_width_um=LAND_W, status='PLAN_ONLY_ACTUAL_ADAPTER_BINDING_REQUIRED' if m['geo'].get('static_memory_reservation') else 'LEGACY_LANDING_PROFILE'),
                 native_astk_reservation=dict(enabled=ASTK_W>324, parent_width_um=ASTK_W,
