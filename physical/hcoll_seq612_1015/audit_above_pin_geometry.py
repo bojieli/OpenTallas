@@ -25,14 +25,32 @@ def check(net,layer,box,kind):
 for net in block.getNets():
  wire=net.getWire()
  if wire:
-  itr=odb.dbWireShapeItr();shape=odb.dbShape();itr.begin(wire)
-  while itr.next(shape):
-   if not shape.isVia():
-    layer=shape.getTechLayer()
-    if layer:check(net,layer.getName(),rect(shape.getBox()),'routed_segment')
-   else:
-    via=shape.getTechVia() or shape.getVia()
-    if via and any(b.getTechLayer().getName()=='M6' for b in via.getBoxes()):check(net,'M6',rect(shape.getBox()),'via_conservative_bbox')
+  dec=odb.dbWireDecoder();dec.begin(wire);prev=None
+  while True:
+   op=dec.next()
+   if op==odb.dbWireDecoder.END_DECODE:break
+   if op in (odb.dbWireDecoder.PATH,odb.dbWireDecoder.SHORT,odb.dbWireDecoder.VWIRE):prev=None
+   elif op in (odb.dbWireDecoder.POINT,odb.dbWireDecoder.POINT_EXT):
+    pt=list(dec.getPoint());layer=dec.getLayer()
+    if prev is not None and layer:
+     width=layer.getWidth()
+     ndr=net.getNonDefaultRule()
+     if ndr:
+      rules=[r for r in ndr.getLayerRules() if r.getLayer()==layer]
+      if len(rules)!=1:raise ValueError('Unresolved native nondefault width')
+      width=max(width,rules[0].getWidth())
+     # Conservative end extension: no false empty-space claim at a segment end.
+     h=max(width/2,200)
+     box=[min(prev[0],pt[0])-h,min(prev[1],pt[1])-h,max(prev[0],pt[0])+h,max(prev[1],pt[1])+h]
+     check(net,layer.getName(),box,'routed_segment_conservative_200DBU_end_halo')
+    prev=pt
+   elif op in (odb.dbWireDecoder.TECH_VIA,odb.dbWireDecoder.VIA):
+    pt=list(dec.getPoint());via=dec.getTechVia() if op==odb.dbWireDecoder.TECH_VIA else dec.getVia()
+    for vb in via.getBoxes():
+     if vb.getTechLayer().getName()=='M6':
+      z=rect(vb);check(net,'M6',[z[0]+pt[0],z[1]+pt[1],z[2]+pt[0],z[3]+pt[1]],'actual_via_M6_metal')
+    prev=pt
+   elif op==odb.dbWireDecoder.JUNCTION:prev=list(dec.getPoint())
  for sw in net.getSWires():
   for box in sw.getWires():
    if not box.isVia():check(net,box.getTechLayer().getName(),rect(box),'special_wire')
