@@ -156,7 +156,7 @@
  "hold_merge": "New C0 chain-output physical bit placement: actual downstream peer binding + parent geometry + full native TT/FF/DRC signoff required before adoption",
  "structural_change": "C0 exact realRTL unchanged: physical S ch_fd[104+i] reassigned among sameexisting tracklocations to orderby actualN p_y[i] x. Reversedbus3,669,353 pair inversions->0; horizontal bitwire369131.214->51303.666um. Failedv6GPL0305 immutable. Allclock/SDC/inputhold/IO budgets preserved; downstreampeerrebind remains open.",
  "reroute_reason": {
-  "kind": "native_launch",
-  "why": "C0 exact realRTL unchanged: physical S ch_fd[104+i] reassigned among sameexisting tracklocations to orderby actualN p_y[i] x. Reversedbus3,669,353 pair inversions->0; horizontal bitwire369131.214->51303.666um. Failedv6GPL0305 immutable. Allclock/SDC/inputhold/IO budgets preserved; downstreampeerrebind remains open."
+  "kind": "rtl_change",
+  "why": "Actual production RTL vs CLOSED v2 f41de6496 differs: kept pin-register p_req copies and NPR16 same-epoch POST-select replicas. v6 failed GPL0305; this sameRTL successor changes only the physical S Y-outputpinorder on sameexistingtracks. All realRTL widths/epochs and original SDC constraints retained. Distinct newkit with hold_merge until peerbinding/actualparent qualification. Reroute declaration is submit metadata; gate physical source snapshot remains immutable532b3221d."
  }
 }
