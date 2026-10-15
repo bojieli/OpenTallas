@@ -1,0 +1,44 @@
+{
+  "address_bound": true,
+  "address_patches": {
+    "me_wbase": {
+      "new": 327680,
+      "old": 0
+    }
+  },
+  "alias": "wo_a.group0",
+  "classification": "WEIGHT_PHASE",
+  "consumer_X_FP32_VM_elements": [
+    74272,
+    78368
+  ],
+  "consumer_output_base_elements": 82464,
+  "instruction_predicate": 0,
+  "kind": "ME",
+  "layer": 0,
+  "native_admission_failures": [],
+  "node": "L0.I37",
+  "output_format": "FP32",
+  "phase_choices": [
+    {
+      "alias": "wo_a.group0",
+      "config_logical_word_range": [
+        75,
+        100
+      ],
+      "expert": null,
+      "matrix_journal_ordinal": 3,
+      "phase": 3,
+      "source_key_word": 3221553152,
+      "stage": 0
+    }
+  ],
+  "runtime_selection_predicate": "instruction predicate",
+  "selector_VM_element_address": null,
+  "selector_slot": null,
+  "source_node_semantic_sha256": "f4b67a515133f43ad2005cfeac7630eaf19d29ceffdd1d692fd02ef781ff49bd",
+  "stage_dispatch_adapter_implemented": false,
+  "template_word_sha256": "45c200b5a5da494362a161b0a31ca549fa7b897f27471afab5ed31466876c891",
+  "source_file_sha256": "07a9a3ff9a371c4ef3fbe941661105b91da281636674c4045a7b961e81c2b434",
+  "historical_phase_number_note": "Historical phase3 is superseded by canonical stage0 phase4; source actor/template and rounding retained."
+}

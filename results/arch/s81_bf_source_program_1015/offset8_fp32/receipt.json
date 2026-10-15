@@ -1,0 +1,52 @@
+{
+  "schema": "s81.canonical_bf_source_program.v1",
+  "stage": 0,
+  "rank": 0,
+  "phase": 4,
+  "pair": 13,
+  "K": 4096,
+  "rows": 768,
+  "issue_count": 256,
+  "stream_edges": 256,
+  "programme_edges": 264,
+  "issue_offset": 8,
+  "fp32_output": true,
+  "cfg_words": 25,
+  "full_pair_words": 256,
+  "canonical_pins": {
+    "matrix_map.jsonl.gz": "985a9ee7ea26d2a7bb1aebadc5151252836eacf8181e8794b1ef6d7819db0326",
+    "stage_map.json": "47ea9eb0ba0b404f629a4bc758d28d8ac1fe28dcb31de3e5816517fa1d097815",
+    "inventory.json": "0b8d8f6fddf7a427941b7a235aeb80e0ee370c51cafddba6427fa61d3ff99480"
+  },
+  "stream_emitter_sha256": "8cfea7014a7513448455a612230b6e1fdda14f974f66fa4ee999a0d8ce3ba95e",
+  "source_pins": {
+    "dsrom_full_owner_compiler.py": "cd6aa9d94575df565d5c0bd807229db65a0cf5971d6a0f2fe724e0266103f68b",
+    "v41_rom_ksplit_bankmap.py": "890634fb2f9e07f3578f800282cb7588112ff59a900fb79268629babbd40a47e",
+    "dsrom_s81_target_field_controls.py": "a3ba111e3635070d2db649bf3dec84b1704a3ca0926a980a5f5f173b2d3b39e4"
+  },
+  "weight_payload": "OPEN: exact released checkpoint matrix_word provider required",
+  "input_payload": "OPEN: actual source producer operand snapshot required",
+  "ingress_contract": "Declared front-pin offset; hardware gate must validate FIFO age and fault-only checks",
+  "numerical_gate": false,
+  "physical_gate": false,
+  "price": {
+    "macs_per_issue": 32,
+    "weight_bits_per_issue": 548,
+    "operand_bits_per_stream_beat": 1024,
+    "programme_bits_per_edge": 38,
+    "ingress_offset_edges": 8,
+    "core_issue_after_front_pin": 1,
+    "public_i1_after_front_pin": 2,
+    "public_i2x_after_front_pin": 3,
+    "unchanged_arithmetic_pipeline": true
+  },
+  "files": {
+    "cfg.hex": "053be20350d88b53281e5fc1722c31846a2c98da121cc94f9c0dadcc8bd409a0",
+    "issues.json": "01e576ada1fcc204847885b005c0e3d4008c44c76139079b703ef86d43f71011",
+    "matrix.json": "93282992084d1c20a0cf2048ca02dc706b0e5712ce66366c028ec61e2fc03b35",
+    "phrom.hex": "95c6c3631f5921ae8f324c8fc4ec0a4d0b85ef58e94e9874f9c2702bfb388069",
+    "programme.hex": "c0582fffbe0c3eb9566c4cb6f03fdf267a6a26c99e08cc3c0d410a8d61e2d056",
+    "stream.hex": "5708d31baf12ee05b19618a1f3b8a94dda471620a9f3adbaaf7d83c9dbd17acf",
+    "weight_coordinates.json": "e56f1178dca62d0a097b4c33c67cada4c9ed4b47fa7e27d9b4a014b21e94e664"
+  }
+}
