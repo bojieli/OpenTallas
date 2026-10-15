@@ -18,7 +18,7 @@ module tb_hgi_qdq_static #(parameter integer MUT=0);
     reg [135:0] prq=0;
     wire [143:0] status;
     ot_hgi_qdq_program_static #(.MUT(MUT==1?1:MUT==2?2:0)) dut(
-        .clk_program(clk),.clk_engine(clk),.rst_n(rst_n),
+        .clk_program(clk),.clk_transport(clk),.clk_dxl(clk),.clk_dbq(clk),.clk_daq(clk),.rst_n(rst_n),
         .cfg_we(cfg_we),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
         .start_v(start_v),.start_base(10'd0),.start_limit(start_limit),.start_loops(16'd1),
         .program_active(program_active),.program_done(program_done),
@@ -51,11 +51,11 @@ module tb_hgi_qdq_static #(parameter integer MUT=0);
             if(dut.ordinal!=nissue || cyc-t0!=nissue+5) $fatal(1,"programme fixed issue expected%0d actualordinal%0d cycle%0d",nissue,dut.ordinal,cyc-t0);
             nissue++;
         end
-        if(!preload && (dut.engine.bad || dut.engine.decode_fault || (dut.engine.vo&&dut.engine.qfault) || dut.engine.vo!=dut.engine.dv[24]))
-            $display("FAULT_CAUSE cycle=%0d bad=%b decode=%b qfault=%b vo=%b expected=%b rr_mask=%b",cyc-t0,dut.engine.bad,dut.engine.decode_fault,dut.engine.qfault,dut.engine.vo,dut.engine.dv[24],dut.engine.expected);
+        if(!preload && (dut.engine.transport.bad || dut.engine.decode_fault || (dut.engine.vo&&dut.engine.qfault) || dut.engine.vo!=dut.engine.transport.dv[24]))
+            $display("FAULT_CAUSE cycle=%0d bad=%b decode=%b qfault=%b vo=%b expected=%b rr_mask=%b",cyc-t0,dut.engine.transport.bad,dut.engine.decode_fault,dut.engine.qfault,dut.engine.vo,dut.engine.transport.dv[24],dut.engine.transport.expected);
     end
     always @(negedge clk) if(!preload && rst_n) begin
-        if(fault && !check_fault) $fatal(1,"unexpected static fault at cycle %0d vo=%b expected=%b",cyc-t0,dut.engine.vo,dut.engine.dv[24]);
+        if(fault && !check_fault) $fatal(1,"unexpected static fault at cycle %0d vo=%b expected=%b",cyc-t0,dut.engine.vo,dut.engine.transport.dv[24]);
         if(done) nreturn=nreturn+1;
         if(done != (|bankdone)) $fatal(1,"fixed done differs from actual bank commit cycle%0d",cyc-t0);
         for(integer b=0;b<8;b=b+1) if(bankdone[b]) begin ncommit++;last_commit=cyc-t0;end
