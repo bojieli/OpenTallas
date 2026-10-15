@@ -16632,10 +16632,10 @@ def hbm_vm_static_bank_model():
     return json.loads((ROOT / 'rtl/hbm_accel/generic/vm/static/bank_static_model.json').read_text())
 
 
-def s81_static_vm_face_model(entries=8):
+def s81_static_vm_face_model(entries=8, cap_pipeline=0, read_pipeline=0):
     """Static capture/WFC/outbound sizing; physical slots remain unqualified."""
     from s81_vm.static_face_model import model
-    return model(entries)
+    return model(entries, cap_pipeline, read_pipeline)
 
 
 def s81_static_channels_1014_model():
