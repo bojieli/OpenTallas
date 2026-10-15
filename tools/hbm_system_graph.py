@@ -111,6 +111,32 @@ def graph(root):
     tap=f'lg_{q}_{stage}_bank{b}'
     for port,w in [('rq',17),('wq',281)]:edge(f'{n}_{b}_{port}',[n,f'vm_{port}[{b}]'],[tap,'local_'+port],w,'mandatory_local_client_boundary_UNJOINED',fixed_read_return=10+4*stage,fixed_write_return=7+4*stage)
     for port,w in [('rr',257),('w_done',1)]:edge(f'{n}_{b}_{port}',[tap,'local_'+port],[n,f'vm_{port}[{b}]'],w,'mandatory_local_client_boundary_UNJOINED')
+ # Four HC_Q names are architectural LG client obligations, not arithmetic copies.
+ for q in ['SW','SE','NW','NE']:
+  nodes['HC_'+q].update(role='HC local LG tap/client obligation; NOT an arithmetic engine',arithmetic_instance_count=0,engine_binding='HC_ENGINE proposed singleNEengine; kernel join open')
+ hcbase=BASE/'hc-static-engine-1014/rtl/hbm_accel/generic/peers/static_hc'
+ if (hcbase/'ot_hgi_hc_projection_sys1_static.sv').exists():
+  nodes['HC_ENGINE']=module(hcbase/'ot_hgi_hc_projection_sys1_static.sv','ot_hgi_hc_projection_sys1_static')
+  nodes['HC_ENGINE'].update(role='ONE actual shared8bank arithmetic engine container',arithmetic_instance_count=1,proposed_VM_quarter='NE',proposed_RG=4,proposed_WG=2,physical_parent_qualified=False,arithmetic_MACs=32,memory_shells=8,arithmetic_SRAMs=80,weight_store64_is_subset_of80=True,maximum_accepted_sum_hop_um=406.491)
+  nodes['HC_NATIVE_WRAPPER']=module(hcbase/'ot_hgi_hc_native_sys1_mtp_static.sv','ot_hgi_hc_native_sys1_mtp_static')
+  nodes['HC_NATIVE_WRAPPER'].update(role='container, NOT a second arithmetic engine',arithmetic_instance_count=0,contains='HC_ENGINE plus128prefetchSRAM plus2programmeSRAM',native_kernel_instantiated=False,physical_clock_partition_admitted=False,declared_clock_ports_not_physical_root_admission=True)
+  for bank in range(8):
+   n=f'HC_ENGINE/bank{bank}'
+   nodes[n]={'role':'sharedmemory/stage-control shell+4MAC composition obligation','parent':'HC_ENGINE','geometry':None,'MACs':4,'weight_SRAMs':8,'residual_SRAMs':2,'physical_composition_qualified':False,'native_parent_join_proved':False}
+  gaps.append({'kind':'single_HC_engine_native_VM_join_open','engine':'HC_ENGINE','LG_tap_roles':['HC_'+q for q in ['SW','SE','NW','NE']],'proposed_quarter':'NE','no_four_engine_replication':True})
+  gaps.append({'kind':'HC_commonHBM_root_requires_actual_partition','wrapper':'HC_NATIVE_WRAPPER','prefetch_SRAMs':128,'programme_SRAMs':2,'prefetch_legacy_owner_FF_per_stack':21136,'new_region_source_census_pending':True})
+ # Source-exact successor PC prototype profile; predecessor is historical only.
+ assignment=root/'results/arch/hbm_system_geometry_1015/physical_assignments/native_PC_340cfd747.json'
+ if assignment.exists():
+  pcprofile=get('current_native_PC_prototype_assignment',assignment)
+  for n,v in nodes.items():
+   if n.startswith('HBM_shared_controller_'):
+    v['superseded_predecessor']=True;v['replacement_profile']='340cfd747 read1..4 responseSRAM owner; nativefunctional/physical unqualified'
+  for q,frame in pcprofile['system_candidate_homes'].items():
+   for pc,xy in enumerate(frame['pc_origins_um']):
+    n=f'HBM_current_PC_{q}_{pc}'
+    nodes[n]={'role':'current candidate sharedPC controller ONEperphysicalPC acrossclients','source_snapshot':'340cfd747','source_assignment_sha256':digest(assignment),'geometry':{'xy_um':xy,'outline_um':pcprofile['outline_um'],'orientation':'R0','status':'PROTOTYPE_RESERVATION_ONLY'},'source_census_FF':13649,'macro_clock_pins':1,'clock_roots_declared':1,'shared_K_mux_extra_logical_FF_not_yet_composed':233,'native_parent_join_proved':False,'physical_qualified':False}
+    nodes[n+'/responseSRAM']={'parent':n,'role':'ONEactual128x256 responseSRAM, commoncontroller inventory','geometry':None,'outline_um':[94.824,41.064],'clock_pins':1,'native_parent_join_proved':False}
  # Current IDX parent and literal internal functional clusters from actual source.
  idxbase=root/'rtl/hbm_accel/index';idx='IDX'
  nodes[idx]=module(idxbase/'ot_hbm_idx_parent_static.sv','ot_hbm_idx_parent_static');nodes[idx]['role']='container_not_additional_physical_area'
@@ -228,11 +254,15 @@ def graph(root):
   'additional_QK_store':'256 real32x128 macros +32768 statusFF +1024 readflagFF; omitted from current known-box figure and must be reserved before full fit',
   'PMA':'544coded to512PHY ratio16:17 streaming sourceproof; physical oneclk/recovered-clock contract and analog rate remain unbound',
  }
+ h1path=root/'results/arch/hbm_system_geometry_1015/forward_D_geometry.json'
+ canonical_h1=load(h1path).get('canonical_HEADS1_binding_gap') if h1path.exists() else None
+ # Source activity H16 fixture is not canonical G25 production H1 activity.
+ profiles['canonical_H1_report_not_native_joined']=canonical_h1
  # Every unknown remains actionable in one report; no fabricated global count.
  for n,v in nodes.items():
   if v.get('geometry') is None or v.get('geometry',{}).get('xy_um') is None:gaps.append({'kind':'missing_current_physical_placement','node':n})
   if not v.get('native_parent_join_proved',False):v['whole_native_qualification']=False
- return {'schema':'opentallas.hbm.system_geometry.current_graph.v1','complete':False,'adoption_allowed':False,'references':refs,'nodes':nodes,'edges':edges,'gaps':gaps,'ATT_production_activity':activity,'exclusive_successor_profiles':profiles,'mandatory_transpose_payload_FF_bits':589824,'mandatory_PV_flags_FF_bits':16384,'counts':{'functional_or_physical_records':len(nodes),'edges_including_explicit_required_unjoined':len(edges),'actual_pin_verified_edges':0,'native_service_placements':service['instance_count'],'LG_bank_leaves':96,'SM_full_frames':32,'IDX_literal_parent_clock_roots':nodes['IDX']['clock_roots_declared']},'limits':['Mixed hierarchical container/leaf/obligation graph; do not sum node count as physical instances or area.','Inherited contract connections are port-checked only; new native source joins remain explicit.','Unknown widths are null, never zero-width wires or free services.','No complete global wirelength/cut/clock/performance score while any outside paths or physical views are absent.']}
+ return {'schema':'opentallas.hbm.system_geometry.current_graph.v1','complete':False,'adoption_allowed':False,'references':refs,'nodes':nodes,'edges':edges,'gaps':gaps,'ATT_H16_component_activity':activity,'ATT_production_activity':{'status':'canonicalG25logicalH1 actualwriter/wholearith/physicaljoinOPEN','owner_report':canonical_h1},'exclusive_successor_profiles':profiles,'mandatory_transpose_payload_FF_bits':589824,'mandatory_PV_flags_FF_bits':16384,'counts':{'functional_or_physical_records':len(nodes),'edges_including_explicit_required_unjoined':len(edges),'actual_pin_verified_edges':0,'native_service_placements':service['instance_count'],'LG_bank_leaves':96,'SM_full_frames':32,'IDX_literal_parent_clock_roots':nodes['IDX']['clock_roots_declared']},'limits':['Mixed hierarchical container/leaf/obligation graph; do not sum node count as physical instances or area.','Inherited contract connections are port-checked only; new native source joins remain explicit.','Unknown widths are null, never zero-width wires or free services.','No complete global wirelength/cut/clock/performance score while any outside paths or physical views are absent.']}
 
 def main():
  p=argparse.ArgumentParser();p.add_argument('--root',default='.');p.add_argument('--out',required=True);a=p.parse_args();r=graph(Path(a.root).resolve());Path(a.out).write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r['counts']))
