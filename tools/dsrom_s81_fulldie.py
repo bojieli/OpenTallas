@@ -3107,6 +3107,8 @@ def frame_slots_needed(npairs_frame, bf_frac, nv_frac=0.0):
 def capacity_report():
     """pairs per die that fit the r8 field at the current slot height, and the die count for the S81 deployment"""
     sh, sl = slot_geometry()
+    if CANONICAL_LAYOUT is not None:
+        return dict(scope='Canonical immutable full2417 typed frame inventory; actual native binding and transport gates are separate', pairs=2417, bf_double=519, ordinary=1898, bf_pair_ids=sorted(BF_EXPLICIT_IDS), source_sha256=CANONICAL_LAYOUT['sha256'], frames=128, typed_frame_inventory_complete=True)
     if BF_EXPLICIT_IDS is not None:
         # The typed head inventory is fixed; layer capacity sweeps would
         # change pair identity and omit its dedicated Markov engines.
@@ -8950,7 +8952,7 @@ def plan_record_r8(m):
         instances=dict(kinds), area_mm2_by_kind={k: round(v, 3) for k, v in area.items()},
         placed_footprint_mm2=round(sum(area.values()), 2),
         utilisation=dict(placed_over_die=round(sum(area.values()) / (DIE[0] * DIE[1] / 1e6), 4),
-                         field_frames_mm2=round(ROOTS * COL_W8 * g['frame_h'] / 1e6, 2)),
+                         field_frames_mm2=round(sum(COL_W8 * f.get('h', g['frame_h']) for f in fr.values()) / 1e6, 2)),
         geometry={k: (round(v, 3) if isinstance(v, float) else v) for k, v in g.items() if k != 'col_x'},
         forwarded=dict(stations=len(stn), ot_fwd_link_stage_instances=slices, chains=len(ch),
                        max_hop_um=max(c['max_hop_um'] for c in ch), hops_over_430p56=len(over),
