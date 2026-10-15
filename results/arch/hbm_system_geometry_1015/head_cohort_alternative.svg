@@ -2,6 +2,14 @@
 <rect width="100%" height="100%" fill="white"/>
 <text x="20" y="25" font-size="19">Head-cohort alternative: shared arithmetic, NEW bank/control profile (unqualified)</text>
 <text x="20" y="48" font-size="12">Actual macro shapes / true32.984×25.981mm aspect. Four headsets,32feature quads each; shared QK/PV compute.</text>
+<rect x="20" y="56" width="10" height="10" fill="#ddd9e8"/><text x="34" y="64" font-size="11">32 full SM frames</text>
+<rect x="235" y="56" width="10" height="10" fill="#d99035"/><text x="249" y="64" font-size="11">shared QK/PV quads</text>
+<rect x="450" y="56" width="10" height="10" fill="#3c9b5e"/><text x="464" y="64" font-size="11">K/V banks</text>
+<rect x="665" y="56" width="10" height="10" fill="#c5508a"/><text x="679" y="64" font-size="11">local PV stores</text>
+<rect x="20" y="73" width="10" height="10" fill="#4e93bf"/><text x="34" y="81" font-size="11">Q/P stores</text>
+<rect x="235" y="73" width="10" height="10" fill="#dfbf42"/><text x="249" y="81" font-size="11">VM banks</text>
+<rect x="450" y="73" width="10" height="10" fill="#adc592"/><text x="464" y="81" font-size="11">LG taps</text>
+<rect x="665" y="73" width="10" height="10" fill="#f1b0b5"/><text x="679" y="81" font-size="11">gather reservations</text>
 <rect x="20" y="90" width="824.6072" height="649.5132" fill="#fafafa" stroke="black"/>
 <rect x="56.396" y="709.5432000000001" width="212.50140000000002" height="29.430000000000003" fill="#aaa" stroke="white" stroke-width=".3"><title>phy_SW: candidate</title></rect>
 <rect x="574.1428" y="709.5432000000001" width="212.50140000000002" height="29.430000000000003" fill="#aaa" stroke="white" stroke-width=".3"><title>phy_SE: candidate</title></rect>

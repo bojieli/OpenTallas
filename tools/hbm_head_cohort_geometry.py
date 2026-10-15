@@ -43,6 +43,9 @@ def build(g):
 def draw(c,path,quad):
  scale=.025;x0=20;y0=90;svg=['<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="950">','<rect width="100%" height="100%" fill="white"/>','<text x="20" y="25" font-size="19">Head-cohort alternative: shared arithmetic, NEW bank/control profile (unqualified)</text>','<text x="20" y="48" font-size="12">Actual macro shapes / true32.984×25.981mm aspect. Four headsets,32feature quads each; shared QK/PV compute.</text>']
  colors={'SM_frame':'#ddd9e8','ATT_quad':'#d99035','KV_code':'#3c9b5e','KV_metadata':'#3c9b5e','PV_memory':'#c5508a','P_Q_memory':'#4e93bf','VM_bank':'#dfbf42','LG_prototype':'#adc592','HBM_PHY_abstract':'#aaa','SerDes':'#666','endpoint_group':'#9db9b5','programme':'#795f9f','gather_reservation':'#f1b0b5'}
+ for i,(label,role) in enumerate([('32 full SM frames','SM_frame'),('shared QK/PV quads','ATT_quad'),('K/V banks','KV_code'),('local PV stores','PV_memory'),('Q/P stores','P_Q_memory'),('VM banks','VM_bank'),('LG taps','LG_prototype'),('gather reservations','gather_reservation')]):
+  xx=20+(i%4)*215;yy=64+(i//4)*17
+  svg.append(f'<rect x="{xx}" y="{yy-8}" width="10" height="10" fill="{colors[role]}"/><text x="{xx+14}" y="{yy}" font-size="11">{label}</text>')
  def xy(p):return x0+p[0]*scale,y0+(H-p[1])*scale
  svg.append(f'<rect x="{x0}" y="{y0}" width="{W*scale}" height="{H*scale}" fill="#fafafa" stroke="black"/>')
  for n,b in c['boxes'].items():
