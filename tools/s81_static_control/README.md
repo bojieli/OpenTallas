@@ -72,3 +72,24 @@ physical setup/hold or the full head path. Output pins launch at request+6..21;
 the kernel receives them at+7..22, so its start is sampled at request+6. Actual
 Wtable/head-logit producers and prefix pairing are separate native callers;
 head logits are never stored as immutable descriptor values.
+
+Canonical PHW10 command support (2026-10-15): instantiate the command endpoint
+with PHW=10, use encode_descriptors(..., phase_width=10), and load all117
+descriptor bits. This produces f_iss93 with phase10; PHW9 remains an explicit
+historical component default. The current native PQ core is PHW10/SAW14 with
+75-bit actions, six actual phase/stream ROMs and36 SRAMs. Use ACTION_BITS=75
+on both the calendar reader and paired-ROM wrapper, and compile_events(...,
+action_bits=75). Rows remain144 bits: action75, timestamp24, reserved45. The
+action's top3 bits share the time macro's low3 bits. A legacy72-bit calendar
+cannot be connected to the canonical controller. These component tests do not
+establish canonical2417/BF519 numerical execution, die connectivity, physical
+clock delivery or production throughput.
+
+`dsfd_sp_pq_produced` joins the actual PHW10 descriptor endpoint and 75-bit
+paired-ROM reader to `dsfd_sp_pq_n`. It exposes separate command/calendar
+clock entries, fixed prime/start inputs and normal fault outputs. The added
+`pq_canonical_pins_gate.py --produced` component checks boundary phases511..514
+with the real eight total ROM macros and36 SRAMs, fixed command completion33,
+and rejects a dropped physical calendar CFG cell and source phase-MSB mutant.
+Its zero phase/stream images prove connectivity and pin epochs only; they do
+not implement the canonical model numerical programme.
