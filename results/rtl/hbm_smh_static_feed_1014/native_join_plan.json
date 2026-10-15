@@ -1,1 +1,61 @@
-{"schema":"opentallas.actual-native-sm-mapped-checkpoint-prebuild.v1","vehicle":"one original productionNC8 SUB4 SM, no32SMarray simulation","reuse":"existing checkpoint83/read34/packed136/mapped4 prefetcharithmetic sources unchanged","actual_memory_macros":"32producerlanding+5packedcache+2programme+originalSMxstores","new_compute_MACs":0,"production_channels":{"command_bits":83,"readplane_bits":34,"packet_bits":1099,"xwrite_bits":2048,"xwrite_addresses":40,"xwrite_beats_per_address":13,"result_FP32columns":8},"price_changed":false,"critical_latency":"Measure native command→lastrow; cold102.916625ns remainsunqualified until fullaheadprefetchcalendar","activation":"Declared external5120FP32vectors8columns quantized/packed onlyas boundaryinput; realVMxwriteproducer stillrequired","checkpoint":"actualreleasedL0wq_aTP96rank0 13active/19idle component, notfulloperation sourcecapacity","admission_GB":72,"admission_basis":"actual measured fullSMsimulation class per H-ELEM-A","physical_fit":false,"goals_open":["actualnativearithmeticnumericalproof","actualVMactivationproducer","full179595520Bsource/descriptoroffset/currentbook","WB/34band/nativephysicaljoin","cold/steady immutableprice"]}
+{
+  "schema": "opentallas.actual-native-sm-mapped-checkpoint-prebuild.v1",
+  "vehicle": "one original productionNC8 SUB4 SM, no32SMarray simulation",
+  "reuse": "existing checkpoint83/read34/packed136/mapped4 prefetcharithmetic sources unchanged",
+  "actual_memory_macros": "32producerlanding+5packedcache+2programme+originalSMxstores",
+  "new_compute_MACs": 0,
+  "production_channels": {
+    "command_bits": 83,
+    "readplane_bits": 34,
+    "packet_bits": 1099,
+    "xwrite_bits": 2048,
+    "xwrite_addresses": 40,
+    "xwrite_beats_per_address": 13,
+    "result_FP32columns": 8
+  },
+  "price_changed": false,
+  "critical_latency": "Measure native command\u2192lastrow; cold102.916625ns remainsunqualified until fullaheadprefetchcalendar",
+  "activation": "Declared external5120FP32vectors8columns quantized/packed onlyas boundaryinput; realVMxwriteproducer stillrequired",
+  "checkpoint": "actualreleasedL0wq_aTP96rank0 13active/19idle component, notfulloperation sourcecapacity",
+  "admission_GB": 72,
+  "admission_basis": "actual measured fullSMsimulation class per H-ELEM-A",
+  "physical_fit": false,
+  "goals_open": [
+    "actualnativearithmeticnumericalproof",
+    "actualVMactivationproducer",
+    "full179595520Bsource/descriptoroffset/currentbook",
+    "WB/34band/nativephysicaljoin",
+    "cold/steady immutableprice"
+  ],
+  "current_run": {
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-731050-1792055886",
+    "verilator_pid": 731069,
+    "session": 74470,
+    "path": "/var/tmp/smh-native-mapped-1015-v2",
+    "source_archive_sha256": "1b4bd1987bd742010adb6bf4756ea74689db49624cccc7f55e7af12eb313a89c",
+    "planned_cases": [
+      "SM00..07 STACK0",
+      "actualactivation-signmutant"
+    ],
+    "status": "LIVE_BUILD_NO_VERDICT"
+  },
+  "next_stack": {
+    "STACK": 1,
+    "SMs": "08..12",
+    "status": "not launched; reuse actualobjects after existingunit terminal"
+  },
+  "PHY_controller": {
+    "frozen_source": "440d2e37e",
+    "status": "modeledPHY/controller explicit gap; nativecommon aec541364 len1 cannotqualifymappedlen4",
+    "scope": "nativeSMnumericalcomponent only, not fullnativechip"
+  },
+  "stage256_physical": {
+    "sinks": 256,
+    "TT_insertion_ps": 80.8,
+    "TT_spread_ps": 1.5,
+    "post_CTS_design_area_um2": 293,
+    "route_CLOSED": false,
+    "status": "actualCTSgateWARN0fails; nocompletefrontslotassigned, physicalsubmissiondeferred while numericaljoin active"
+  }
+}
