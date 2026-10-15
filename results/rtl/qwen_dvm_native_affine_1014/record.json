@@ -1,0 +1,29 @@
+{
+  "schema": "opentallas.qwen-native-affine-dvm-proof.v1",
+  "source_commit": "656e5d834b27e398685a03f7ab9628ee1fda20b3",
+  "status": "PARTIAL_FUNCTIONAL_ONLY_FULL_PRODUCTION_PENDING",
+  "sources": "executed_source.sha256",
+  "profile": {
+    "NATIVE_AFFINE": 1,
+    "STATIC_SCHEDULE": 1,
+    "NW": 18,
+    "NCOL": 4,
+    "NH": 8,
+    "NLAYER": 1,
+    "NRAND": 0
+  },
+  "positive": "PASS4actualoperations64tiles114688elementchecks",
+  "observed_mutants": {
+    "round": "FAIL57328operandmismatches",
+    "station": "FAIL114544errors",
+    "epoch": "FAIL115334errorsincludingx_fault",
+    "tile": "FAIL38840operandmismatches"
+  },
+  "production_768": "LIVE, not qualified in this record",
+  "notes": [
+    "Checks raw operand interface against real central x spine; no tile arithmetic in this production-shape bench.",
+    "Native standalone wrapper and physical phi-R transports not represented.",
+    "Mutants print FAIL but bench exits0; acceptance checks log semantics, not exit status.",
+    "Actual tap/head die wrappers specialize same primitives but are not compiled by this bench."
+  ]
+}

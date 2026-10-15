@@ -87,23 +87,21 @@ module ot_s81_hc_cth #(
     wire [FXW-1:0]  fdx;
     wire [S_RD+4:0] fv_local;
     wire [FXW-1:0] fdx_local;
-    generate if (CNL_PIN) begin : g_local_epoch
-        reg [S_RD+4:0] v;
-        reg [FXW-1:0] d;
-        always @(posedge clk or negedge rst_c)
-            if (!rst_c) v <= 0; else v <= fv;
-        always @(posedge clk) d <= fdx;
-        assign fv_local = v; assign fdx_local = d;
-    end else begin : g_legacy_epoch
-        assign fv_local = fv; assign fdx_local = fdx;
-    end endgenerate
     wire [S_RD+4:0] fvm;
     wire [FDW-1:0]  fdm;
     wire            rst_c;                     // ctfn's first reset stage -> one relay flop in every tile
     ot_s81_hc_ctfn #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD)) u_fn (
         .clk(clk), .rst_in(rst_in), .rst_c(rst_c), .fv_in(fv_in), .fd_in(fd_in), .fvm(fvm), .fdm(fdm));
+    generate if (CNL_PIN) begin : g_captured_broadcast
+        ot_s81_hc_ctfx_cap #(.S_RD(S_RD)) u_fx (
+            .clk(clk), .rst_in(rst_c), .fv_in(fv_in), .fd_in(fd_in[FXW-1:0]), .fv(fv), .fdx(fdx),
+            .fv_local(fv_local), .fdx_local(fdx_local));
+    end else begin : g_legacy_broadcast
     ot_s81_hc_ctfx #(.S_RD(S_RD)) u_fx (
         .clk(clk), .rst_in(rst_c), .fv_in(fv_in), .fd_in(fd_in[FXW-1:0]), .fv(fv), .fdx(fdx));
+        assign fv_local = fv;
+        assign fdx_local = fdx;
+    end endgenerate
     ot_s81_hc_ctfs #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .RLY(RLY)) u_fs (
         .clk(clk), .rst_in(rst_c), .rst_out(rst_out), .fvm(fvm), .fdm(fdm), .fv_out(fv_out), .fd_out(fd_out));
     wire [16*S_RT-1:0]  rq_q;
@@ -286,6 +284,28 @@ module ot_s81_hc_ctfx #(
     wire rst_n = rr;
     always @(posedge clk or negedge rst_n) if (!rst_n) fv <= 0; else fv <= fv_in;
     always @(posedge clk) fdx <= fd_in;
+endmodule
+
+// Serial production broadcast owns both first-stage and local-epoch capture registers.
+// The original ot_s81_hc_ctfx remains the CNL_PIN=0 master; this is a distinct physical leaf.
+module ot_s81_hc_ctfx_cap #(parameter integer S_RD = 2) (
+    input wire clk,
+    input wire rst_in,
+    input wire [S_RD+4:0] fv_in,
+    input wire [FXW-1:0] fd_in,
+    output reg [S_RD+4:0] fv,
+    output reg [FXW-1:0] fdx,
+    output reg [S_RD+4:0] fv_local,
+    output reg [FXW-1:0] fdx_local
+);
+    localparam integer O_D = 5 + S_RD*16 + 20 + 6 + 8 + 32 + 1, FXW = O_D + S_RD*512;
+    reg rr;
+    always @(posedge clk) rr <= rst_in;
+    always @(posedge clk or negedge rr) if (!rr) fv <= 0; else fv <= fv_in;
+    always @(posedge clk) fdx <= fd_in;
+    // Match the former region register's reset epoch exactly: incoming rst_c, not rr.
+    always @(posedge clk or negedge rst_in) if (!rst_in) fv_local <= 0; else fv_local <= fv;
+    always @(posedge clk) fdx_local <= fdx;
 endmodule
 
 module ot_s81_hc_ctfs #(

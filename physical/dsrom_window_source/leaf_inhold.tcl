@@ -39,16 +39,25 @@ foreach bt [$ot_ih_blk getBTerms] {
   if {[$bt getIoType] ne "INPUT"} continue
   set net [$bt getNet]; if {$net eq "NULL"} continue
   if {[$net getSigType] ne "SIGNAL"} { incr ot_ih_skip; continue }
-  set its [$net getITerms]
-  if {[llength $its] != 1} { incr ot_ih_skip; continue }
-  set d [lindex $its 0]; set ff [$d getInst]
-  if {![string match "DFF*" [[$ff getMaster] getName]] || [[$d getMTerm] getName] ne "D"} { incr ot_ih_skip; continue }
+  # Output-register splitting can create several identical D captures. Insert
+  # one pad before that fanout, rather than silently dropping input hold repair.
+  # A reset synchronizer's D may share the port with async-reset pins; leave
+  # those reset loads on the original net, outside the data delay chain.
+  set captures {}; set other_load 0
+  foreach it [$net getITerms] {
+    if {![$it isInputSignal]} { set other_load 1; break }
+    set inst [$it getInst]; set master [[$inst getMaster] getName]
+    if {![string match "DFF*" $master] && ![string match "ASYNC_DFF*" $master]} { set other_load 1; break }
+    if {[[$it getMTerm] getName] eq "D"} { lappend captures $it }
+  }
+  if {$other_load || ![llength $captures]} { incr ot_ih_skip; continue }
+  set ff [[lindex $captures 0] getInst]
   set name [format "ot_inhold_%05d" $ot_ih_n]; set nn [format "ot_inhold_n%05d" $ot_ih_n]
   set pm $ot_ih_m
   if {$ot_ih_sm ne "NULL" && [regexp -- $ot_ih_sre [$bt getName]]} { set pm $ot_ih_sm; incr ot_ih_ns }
   set cell [odb::dbInst_create $ot_ih_blk $pm $name]
   set n2 [odb::dbNet_create $ot_ih_blk $nn]
-  $d disconnect
+  foreach d $captures { $d disconnect }
   [$cell findITerm A] connect $net
   [$cell findITerm Y] connect $n2
   if {$ot_ih_dm ne "NULL"} {
@@ -56,11 +65,11 @@ foreach bt [$ot_ih_blk getBTerms] {
     set n3 [odb::dbNet_create $ot_ih_blk [format "ot_ihdrv_n%05d" $ot_ih_n]]
     [$drv findITerm A] connect $n2
     [$drv findITerm Y] connect $n3
-    $d connect $n3
+    foreach d $captures { $d connect $n3 }
     lappend ot_ih_dnets $n2
   } else {
     set drv ""
-    $d connect $n2
+    foreach d $captures { $d connect $n2 }
   }
   # [vm8 r9] seed the hold cell AT its input pin (clamped into the core), not at the capture flop: GPL's timing-driven
   # repair_design otherwise sees a long port -> hold-cell wire whose only load is dont_touch and aborts with RSZ-3006
@@ -91,4 +100,4 @@ if {$ot_ih_n > 0} {
 if {[info exists ::env(RESULTS_DIR)]} {
   set fh [open $::env(RESULTS_DIR)/ot_inhold_firm.txt w]; puts $fh [join $ot_ih_firm "\n"]; close $fh
 }
-puts "INHOLD: $ot_ih_n input hold cells ($ot_ih_master; $ot_ih_ns strong pads by OT_HOLD_PAD_STRONG_RE, dont_touch; driver '$ot_ih_drv', [llength $ot_ih_firm] FIRM for GPL), $ot_ih_skip inputs skipped (clock / reset / multi-sink / non-DFF)"
+puts "INHOLD: $ot_ih_n input hold cells ($ot_ih_master; $ot_ih_ns strong pads by OT_HOLD_PAD_STRONG_RE, dont_touch; driver '$ot_ih_drv', [llength $ot_ih_firm] FIRM for GPL), $ot_ih_skip inputs skipped (clock / reset-only / non-DFF)"

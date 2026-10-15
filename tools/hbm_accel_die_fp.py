@@ -2921,12 +2921,16 @@ def build_r25gq_net(variant):
         for d_, es_ in ck_sinks.items():
             for e in es_:
                 dom_of.setdefault(e[0], d_)
+        # Pin repair creates new forwarded segments after fcl_ was snapshotted.
+        # Use the complete current map for clock admission AND circuit-master selection.
+        fcl_live_ = dict(fcl_, **fclk_new_)
+        isf_ = lambda b: b in fcl_live_ or b.split('_p')[0] in fcl_live_ or re.sub(r'_(t|r)?\d+$', '', b) in fcl_live_
         for r_, bid in new_rl.items():      # new relays: reset always, clock unless the bus forwards its clock
             b0_ = bid.split('_p')[0]
             drv_ = next((b_[3][0][0] for b_ in buses if b_[0] == b0_), None)
             d_ = dom_of.get(drv_) or 'stream'
             rs_sinks[d_].append((r_, 'rst'))
-            if b0_ not in fcl_:
+            if not isf_(bid):
                 ck_sinks[d_].append((r_, 'ck'))
         # hbmdie-v10-sta 2026-10-12 (the kv_die 758ccc84c pattern): the Option-A chain stations of relays() (wq*_<bid>,
         # hfd_stn_q*) and the attention -> SU relays (hfd_att_su_relay) are register stages but joined no clock net, so
@@ -2941,7 +2945,6 @@ def build_r25gq_net(variant):
         for b_ in buses:
             if len(b_[3]) == 2 and b_[1] not in ('clock_trunk', 'reset_tree'):
                 inb_.setdefault(b_[3][1][0], (b_[0], b_[3][0][0]))
-        isf_ = lambda b: b in fcl_ or b.split('_p')[0] in fcl_ or re.sub(r'_(t|r)?\d+$', '', b) in fcl_
         phys_rec['stations_clock_added'] = phys_rec['stations_forwarded'] = 0
         for it_ in insts:
             if not isr_(it_.name) or it_.name in ckd_ or it_.name in (base.get('fwd_dom') or {}):
