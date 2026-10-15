@@ -1,5 +1,5 @@
 {
- "name": "ot_s81_vm_x34_s_w560_1015_f4-f4-COMMIT",
+ "name": "ot_s81_vm_x34_s_w560_1015_f4-f4-5b4b102fa",
  "block": "ot_s81_vm_x34_s",
  "ref_tile": true,
  "owner": "claude:S81 VM F4 cdc-leaves",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/s81-vm-f4-leaves-1015",
-  "commit": "COMMIT",
+  "commit": "5b4b102fa",
   "extra_paths": [
    "tools/s81_vm",
    "rtl/dsrom_sys/s81_ph/vm",
@@ -111,7 +111,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/ot_s81_vm_x34_s_w560_1015_f4/ot_s81_vm_x34_s_w560_1015_f4-f4-COMMIT"
+   "to": "results/rtl/ref_tile/ot_s81_vm_x34_s_w560_1015_f4/ot_s81_vm_x34_s_w560_1015_f4-f4-5b4b102fa"
   }
  ],
  "cycles_added": 0,
