@@ -1,5 +1,5 @@
 {
- "name": "qkd_land_emb_ifw-if2-COMMIT",
+ "name": "qkd_land_emb_ifw-if2-5c33d1a08",
  "block": "qkd_land_emb_ifw",
  "ref_tile": true,
  "owner": "Claude:el1014-qwen-kvsys-elements",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/qwen-kvsys-el-r5-1015",
-  "commit": "COMMIT",
+  "commit": "5c33d1a0870bb00c79a380aff12168c2092da9e8",
   "extra_paths": [
    "physical/qkd_land_strip",
    "rtl/test/qwen_kv_die/tb_qkd_land_emb_ifw.sv",
@@ -101,7 +101,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_land_emb_ifw/qkd_land_emb_ifw-if2-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_land_emb_ifw/qkd_land_emb_ifw-if2-5c33d1a08"
   }
  ],
  "cycles_added": 0,
