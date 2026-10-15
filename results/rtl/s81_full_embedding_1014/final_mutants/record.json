@@ -1,0 +1,34 @@
+{
+  "fixtures_sha256": {
+    "expected.mem": "90c59a424fda1900e0b436f6cb05ff0d8dcb78d2d3b7aaa9e5c242e325df529c",
+    "tokens.mem": "618c435f3fe5c384a4fbc0fddb261289a2da011e1ce827c83c1aec7b60f04952",
+    "fixtures.json": "08001608d76180518fb60fa4efb0f84f1eb7c687dccbf4f6a20ab450d1a131af"
+  },
+  "sources": {
+    "rtl/dsrom_sys/s81_embedding/ot_s81_embed_full_home.sv": "274b47a566c64f1683638cf3f4abeebb76334042850ba562908265fc87228cc8",
+    "rtl/dsrom_sys/s81_embedding/ot_s81_embed_full_table.sv": "d20a0a40bb57a2c6658b46cb63c90c271e95eb46edefab550841f87754ec4e46",
+    "rtl/dsrom_sys/s81_embedding/ot_s81_embed_rom_home.sv": "cafaaf5fa11cede4d2db31f20eb5e48381f182b446c8fd0c1e79d193c89cfbcf",
+    "rtl/dsrom_sys/s81_embedding/ot_s81_embed_rom_tree.sv": "a039608b13ed0d79d923180e9dff518f49a9f1b9e26d1070798484e61c668a40",
+    "rtl/dsrom_sys/s81_embedding/ot_s81_embed_expand.sv": "eed83009f3ca88ecb45d8094d81ca462943f07a0be45018680a0a1969c9c98ef",
+    "rtl/dsrom_sys/s81_embedding/tb_s81_embed_full_table.sv": "098df338f7250978def4a571c7e785dde6b978282b8ede1ddae7159c632686cb",
+    "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8.v": "47659841275cfe94391679cc4d83f5af1c85aa5298f66a280b231dd86100387d",
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59"
+  },
+  "image_manifest_sha256": "c07a66f7c32ac8e23d9e1e57e356868329d5cd2fb72550c690a73de49e4431c1",
+  "image_macros": 5052,
+  "images_validated": true,
+  "runs": {
+    "1": {
+      "returncode": -6,
+      "stdout": "[3520000] %Fatal: tb_s81_embed_full_table.sv:36: Assertion failed in tb_s81_embed_full_table: native result mismatch token0 row0 age348\n%Error: /srv/opentallas-scratch/codex/s81-full-embedding-1014/src/rtl/dsrom_sys/s81_embedding/tb_s81_embed_full_table.sv:36: Verilog $stop\nAborting...\n",
+      "stderr": ""
+    },
+    "2": {
+      "returncode": -6,
+      "stdout": "FULL_EMBED token0 rows640 hops641 cycles1377 PASS\nFULL_EMBED token12 rows640 hops641 cycles1377 PASS\n[37360000] %Fatal: tb_s81_embed_full_table.sv:36: Assertion failed in tb_s81_embed_full_table: native result mismatch token25 row384 age972\n%Error: /srv/opentallas-scratch/codex/s81-full-embedding-1014/src/rtl/dsrom_sys/s81_embedding/tb_s81_embed_full_table.sv:36: Verilog $stop\nAborting...\n",
+      "stderr": ""
+    }
+  },
+  "scope": "Full-resident macro functional component; physical inter-HEAD/link/VM composition and native reset/phi-R not qualified",
+  "pass": true
+}
