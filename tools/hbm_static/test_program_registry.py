@@ -18,6 +18,14 @@ def fixture():
 
 
 class RegistryTest(unittest.TestCase):
+    def test_ordered_profile_has_distinct_limit(self):
+        image = dict(target=120, encoding='raw_control256', native_profile='slot160_21_ordered_drain5',
+                     programme=dict(start=dict(base=0, limit=2091, loops=1),
+                       configuration_writes=[dict(addr=pc,data='0') for pc in range(2092)]))
+        self.assertEqual(raw_fragment(image)['launch_guard_core_edges'], 1346)
+        image['programme']['start']['limit'] = 2574
+        with self.assertRaisesRegex(ValueError, 'limit2091'): raw_fragment(image)
+
     def test_explicit_drain5_profile(self):
         image = dict(target=120, encoding='raw_control256', native_profile='slot160_21_drain5',
                      programme=dict(start=dict(base=0, limit=2574, loops=1),

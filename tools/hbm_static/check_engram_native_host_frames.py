@@ -12,7 +12,7 @@ from host_program_image import raw_fragment
 
 
 def check(source, out, profile="legacy19"):
-    capacity, limit, guard = {"legacy19": (2432, 2424, 1218), "slot160_21": (2688, 2569, 1346), "slot160_21_drain5": (2688, 2574, 1346)}[profile]
+    capacity, limit, guard = {"legacy19": (2432, 2424, 1218), "slot160_21": (2688, 2569, 1346), "slot160_21_drain5": (2688, 2574, 1346), "slot160_21_ordered_drain5": (2688, 2091, 1346)}[profile]
     images = []
     for path in sorted(source.glob('layer*/n*.hex')):
         words = [int(line, 16) for line in path.read_text().splitlines() if line.strip()]
@@ -55,6 +55,6 @@ def check(source, out, profile="legacy19"):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('source', type=Path); parser.add_argument('out', type=Path)
-    parser.add_argument('--profile', choices=['legacy19', 'slot160_21', 'slot160_21_drain5'], default='legacy19')
+    parser.add_argument('--profile', choices=['legacy19', 'slot160_21', 'slot160_21_drain5', 'slot160_21_ordered_drain5'], default='legacy19')
     args = parser.parse_args(); result = check(args.source, args.out, args.profile)
     print(f"PASS images={len(result['images'])} exact_raw_operations={result['exact_raw_operations']}")
