@@ -2,10 +2,11 @@
   "scope": "RTL component composition of released L0 attention HC weights with declared native VM input and result apertures; not whole-token allocation or physical qualification",
   "sources": {
     "engine": "16b885432",
-    "prefetch": "f6090ae7a",
+    "prefetch": "pending accepted-mask successor of58af1e8ba",
     "book": "4b9a13572",
     "join": "de0ca7df8",
-    "PHY_window": "942124cb2"
+    "PHY_window": "942124cb2",
+    "tail_issuer": "76522e515"
   },
   "K": 20480,
   "rows": 24,
@@ -52,7 +53,14 @@
     ],
     "initial_PHY_boundary_wait_allowed": true,
     "steady_state_wait_allowed": false,
-    "host_programme_reconfigure_between_projection_rows": false
+    "host_programme_reconfigure_between_projection_rows": false,
+    "tail_body_period": 497,
+    "tail_programme_loops": [
+      6,
+      8
+    ],
+    "tail_configuration_words": 497,
+    "host_programme_reconfigure_between_tail_positions": false
   },
   "ports": {
     "PHY_stacks": 4,
@@ -87,5 +95,5 @@
     "immutable full-dataflow throughput price and SS/FF timing closure"
   ],
   "historical_PHY_issue_width1_failure": "Published refresh-aware model failed fixed1080 row4half1; bounded80..92edge predecessor passed. Failure retained by child.",
-  "successor_scope": "WIDTH4 same-macro/same-identity-state PHY issue; actual publishedPHY component24rows gate passes1080/1400; final native wrapper composition pending."
+  "successor_scope": "Nativewrapper binds opt-in TAIL_LOOP to one497wordbody6/8positions; single finalcomposition gate pending no-feedback guarded PHY source."
 }
