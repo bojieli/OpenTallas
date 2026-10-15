@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "hbm_native_sram_cdc_w280_1014",
  "verdict": "WARN",
- "generated": "2026-10-14T18:38:37-0700",
- "host": "ot-agidock128",
+ "generated": "2026-10-14T22:10:20-0700",
+ "host": "ot-epyc1tb",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "19b32dfb6c9476de1a7f203ec6e627dd7dc4c41e",
+  "start_commit": "a2b992c9c18636574a7f6f0aee08e70f662b993e",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "103ddeb91575a9253c133f438141120473c87aca6da440935403246404d5020c",
-  "manifest_sha256": "89d1a13fd324b407c554472de9cf34a27bb85676f26373c36106ac0306185344",
+  "archive_sha256": "0283128f1cdd09b9f3082a68ab4df973987ecea84f1dc4c21a5a0ece1d7cf979",
+  "manifest_sha256": "40dcfffc0a687cba13663823f4c799c645da3322dcb2cd76b105b81025b8ef3b",
   "files": [
    {
     "path": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.json",
@@ -753,10 +753,26 @@
     "matches_provenance_commit": true
    },
    {
+    "path": "physical/hbm_native_sram_cdc_1014/fullpar1_equiv.ys",
+    "kind": "file",
+    "sha256": "d53e3e0a562117f8c8b2d2b3fc9d327b42fe57cc079f917e83495493e93510cb",
+    "git_blob": "a8d2faa1bca9eb4d92884bce017a8888ef9e11a5",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/hbm_native_sram_cdc_1014/fullpar1_suite_gate.json",
+    "kind": "file",
+    "sha256": "fd5bdd99aeb216347d90bb35519db4962bf066132db7e72be4742308f6fc912e",
+    "git_blob": "c5865ddc96c52976c221fdccc2f721714fc9c0b9",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
     "path": "physical/hbm_native_sram_cdc_1014/ot_hbm_native_sram_cdc.sv",
     "kind": "file",
-    "sha256": "59a74322c4fd924773c1e08151e73899b43162853efda2de86f3a8a8cadc6100",
-    "git_blob": "66a7c8ceb7331360c195e07d0c5ff0d63495f9cd",
+    "sha256": "4c087ab4ee778ddaf1d9de6b1595fcd09ee2ed179c6f819d3d19e3c48d18e34e",
+    "git_blob": "6b407c9f20f29fe35f1315d8a42b2ef5df413cec",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -18035,8 +18051,8 @@
    {
     "path": "physical/ref_tile/hbm_native_sram_cdc_w280_1014/job.json",
     "kind": "file",
-    "sha256": "82e9b9e0b651c84ff44ad5717713ccb914308a1f965a1df8aaa5c5262aa6e5f4",
-    "git_blob": "c84d10d17c451460de0c63dd2c02d18264aad1a6",
+    "sha256": "925761db383c804389924f8e4fe7d2afea4cff51a95896728eff3a1a625b4e53",
+    "git_blob": "a1fdac78599da5af37a4feba043a98c59af36b40",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -18155,8 +18171,8 @@
    {
     "path": "physical/ref_tile/hbm_native_sram_cdc_w280_1014/spec.json",
     "kind": "file",
-    "sha256": "f1993b3902e795236b915747d02359cb76fc42d53662293b5dec12238c8c273a",
-    "git_blob": "e7005db503da289affa11e6e533d8811891abdf1",
+    "sha256": "76e95ba7b06b83ebecd1ed6c5c987ea1fbbeda4464a71e9d7df5a0596635f56f",
+    "git_blob": "f1552a006056df183dd9f51671b9b188ea33ea97",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -116339,8 +116355,8 @@
   ],
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "1ed24ac9549963471ebbc8b8f650e824c76d6d54",
-   "content_sha256": "3aa06e8a1032dc99d562bed65137a274b594aaf57a13b24cb79440b848b5e115",
+   "origin_main": "5e97eb2a3fc4099af019aaa1fc9bda8da1866311",
+   "content_sha256": "04479b51c1099324a92c10d653597aa6873626616900cf3115891b8772553365",
    "files": [
     {
      "path": "physical/common_flow/cg_pushdown.tcl",
@@ -116696,11 +116712,11 @@
     },
     {
      "path": "tools/tt_views/view_export.py",
-     "sha256": "2eb060cd9bb3817bc41d87ed6c61c3ffaf3d4c08870d4a86878c241adf86ca4a",
-     "git_blob": "e21e446314922e0cc349cd91df837594588d7388",
+     "sha256": "8a95a819ddead4518f8b1fe438821aa6d9f6964253e0c1fae1a163c3c7d60d76",
+     "git_blob": "f800759a7f7a19dd3c74b2ee10009b37b944839a",
      "mode": 509,
      "resolution": "same",
-     "literal_git_blob": "e21e446314922e0cc349cd91df837594588d7388"
+     "literal_git_blob": "f800759a7f7a19dd3c74b2ee10009b37b944839a"
     },
     {
      "path": "tools/w18/corner_sta.py",
@@ -116712,11 +116728,11 @@
     }
    ]
   },
-  "captured": "2026-10-14T18:24:31-0700",
-  "remote_script_sha256": "42c1385b22c21c631f302f9a5be5f5e0a209e8eefa2dfacf8ce535e80c57d3ba",
+  "captured": "2026-10-14T21:42:17-0700",
+  "remote_script_sha256": "faac72bbe62c2fcea124927052d44a1248a022c923a2175c8a4d380fc9ec4418",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-agidock128",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_native_sram_cdc_w280_1014-20261014-182359",
+  "remote_host": "ot-epyc1tb",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_native_sram_cdc_w280_1014-20261014-214147",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -116727,8 +116743,8 @@
   "max_root_sinks": 4956,
   "root": "port:rclk",
   "cts": true,
-  "tt_insertion_ps": 283.0,
-  "tt_spread_ps": 48.1,
+  "tt_insertion_ps": 279.6,
+  "tt_spread_ps": 38.6,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
@@ -116742,30 +116758,30 @@
     "tt": {
      "boundary": {
       "n": 322,
-      "mean": 319.6,
-      "min": 281.6,
-      "max": 347.3
+      "mean": 315.7,
+      "min": 287.2,
+      "max": 344.8
      },
      "all": {
       "n": 4687,
-      "mean": 286.8,
-      "min": 249.0,
-      "max": 347.3
+      "mean": 289.8,
+      "min": 254.6,
+      "max": 349.9
      },
      "errors": [],
      "macros": {
       "n": 1,
       "nets": 1,
       "max_per_net": 1,
-      "reg_mean": 286.8,
-      "max_slew": 13.4,
-      "max_late": -37.0,
+      "reg_mean": 289.8,
+      "max_slew": 13.8,
+      "max_late": -19.4,
       "pins": [
        {
         "pin": "u_sram/clk",
-        "arr": 249.8,
-        "slew": 13.4,
-        "late": -37.0,
+        "arr": 270.4,
+        "slew": 13.8,
+        "late": -19.4,
         "net": "clknet_1_0__leaf_wclk"
        }
       ]
@@ -116779,15 +116795,15 @@
     "tt": {
      "boundary": {
       "n": 329,
-      "mean": 262.1,
-      "min": 237.3,
-      "max": 268.2
+      "mean": 273.1,
+      "min": 253.1,
+      "max": 279.6
      },
      "all": {
       "n": 5235,
-      "mean": 252.7,
-      "min": 234.9,
-      "max": 283.0
+      "mean": 257.1,
+      "min": 241.0,
+      "max": 279.6
      },
      "errors": [],
      "macros": null,
@@ -116797,14 +116813,14 @@
   ],
   "measured_clock": "vm_clk",
   "verdict": "PASS",
-  "text": "4,956 sinks on the largest root <= 15,000; measured TT insertion 283.0 ps, leaf spread 48.1 ps"
+  "text": "4,956 sinks on the largest root <= 15,000; measured TT insertion 279.6 ps, leaf spread 38.6 ps"
  },
  "items": [
   {
    "severity": "WARN",
    "check": "util",
-   "message": "synthesized std area 5408 um2 + macros 13319 in core 49857: util 38%",
-   "fix": "set \"std_area_um2\": 5408 and drop 'outline' (gen sizes to util 0.52)"
+   "message": "synthesized std area 5453 um2 + macros 13319 in core 49857: util 38%",
+   "fix": "set \"std_area_um2\": 5453 and drop 'outline' (gen sizes to util 0.52)"
   },
   {
    "severity": "WARN",
@@ -116815,13 +116831,13 @@
   {
    "severity": "WARN",
    "check": "textbook.boundary",
-   "message": "12 input->register endpoint(s) > 3 levels (worst re->rb_n[4]$_DFFE_PN1P_/D 5 lv, re->rb_n[1]$_DFFE_PN1P_/D 5 lv, re->rb_n[0]$_DFFE_PN1P_/D 5 lv): register the boundary (pin flops / registered outputs)",
+   "message": "6 input->register endpoint(s) > 3 levels (worst re->rb_n[4]$_DFFE_PN1P_/D 4 lv, re->rb_n[1]$_DFFE_PN1P_/D 4 lv, re->rb_n[0]$_DFFE_PN1P_/D 4 lv): register the boundary (pin flops / registered outputs)",
    "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
   },
   {
    "severity": "WARN",
    "check": "textbook.util_channel",
-   "message": "utilisation 37.6% outside 45%-65% (std 5438 + macro 13319 um2 in 49857 um2): shrink the outline (long wires / sparse placement)",
+   "message": "utilisation 37.8% outside 45%-65% (std 5503 + macro 13319 um2 in 49857 um2): shrink the outline (long wires / sparse placement)",
    "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
   }
  ]
