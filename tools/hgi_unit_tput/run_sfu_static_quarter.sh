@@ -3,11 +3,13 @@ set -euo pipefail
 mkdir -p "$OUT"
 mapfile -t sources < results/arch/hbm_native_1013/sfu_native_quarter/r2_sources.txt
 manifest=results/arch/hbm_native_1013/sfu_native_quarter/closed_ae5899467.sha256
-frozen="$OUT/frozen"
+frozen="${SFU_FROZEN_DIR:-$OUT/frozen}"
+if [ -z "${SFU_FROZEN_DIR:-}" ];then
 while read -r digest path;do
  mkdir -p "$frozen/$(dirname "$path")"
  git show "ae5899467:physical/ref_tile/sfu_lane_ring3_rt/src/$path" > "$frozen/$path"
 done < "$manifest"
+fi
 frozen=$(realpath "$frozen")
 (cd "$frozen" && sha256sum -c "$OLDPWD/$manifest")
 declare -A closed_paths
