@@ -16331,3 +16331,9 @@ def hbm_vm_static_calendar_host_model():
       clocks='hostconfigurationclock mustsharedefinedcompilerphase atlaunch or getexplicitstaticcrossing',
       physical='newnativeproducer requiresdiepin/slot/clock qualification; no closedloaderalias',
       qualification='realexistingloaderCP→LCPdoorbell→real4programmeSRAMs composition test required')
+
+
+def hbm_vm_sm_activation_static_model():
+    """Actual fixed-slot FP32 VM -> FP8 fragment SRAM -> original SM pins."""
+    from tools.hbm_vm_sm_activation_static_model import model, four_sid_comparison
+    return dict(primary=model(), four_sid_comparison=four_sid_comparison())
