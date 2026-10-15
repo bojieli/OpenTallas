@@ -1,0 +1,191 @@
+{
+  "schema": "opentallas.s81.vm-open-element-ownership.v1",
+  "owner": "/root/s_vm",
+  "active": true,
+  "canonical_contract": {
+    "contexts": 2417,
+    "BF_width": 519,
+    "PHW": 10
+  },
+  "actual_source": [
+    "370225c2f",
+    "92154feb6",
+    "409 follow-on main source must be included in die manifest"
+  ],
+  "historical_to_required": [
+    {
+      "historical": [
+        "dsfd_vm_be",
+        "dsfd_vm_be_sl"
+      ],
+      "required_successors": [
+        "dsfd_vm_static512_suhc",
+        "dsfd_vm_static_slice128_suhc",
+        "dsfd_vm_static_bank128"
+      ],
+      "reason": "Actual128 SRAM array; legacy be_sl ECO preserved for historical evidence only",
+      "state": "OPEN physical closure; historical parent must not be rerouted as surrogate"
+    },
+    {
+      "historical": [
+        "dsfd_vm_bgh",
+        "dsfd_vm_bgl28",
+        "dsfd_vm_bgq28"
+      ],
+      "required_successors": [
+        "dsfd_vm_static_scatter",
+        "dsfd_vm_static_return",
+        "dsfd_vm_static_relay128_b16",
+        "dsfd_vm_static_relay128_b8",
+        "dsfd_vm_static_wdispatch128",
+        "dsfd_vm_static_wstage128"
+      ],
+      "reason": "Fixed indexed request/return/write transport replaces dynamic bank-group queues; published views never transfer by name",
+      "state": "OPEN physical closure; historical parent must not be rerouted as surrogate"
+    },
+    {
+      "historical": [
+        "dsfd_vm_fe",
+        "dsfd_vm_fe_h"
+      ],
+      "required_successors": [
+        "dsfd_vm_static_cap",
+        "dsfd_vm_static_cap_leaf",
+        "dsfd_vm_static_capl",
+        "dsfd_vm_static_rsched",
+        "dsfd_vm_static_wsched",
+        "dsfd_vm_static_landing"
+      ],
+      "reason": "16 deterministic capture lanes plus fixed read/write service; actual field producer calendar remains required",
+      "state": "OPEN physical closure; historical parent must not be rerouted as surrogate"
+    },
+    {
+      "historical": [
+        "dsfd_vm_fra",
+        "dsfd_vm_frg"
+      ],
+      "required_successors": [
+        "dsfd_vm_static_relay128_b16",
+        "dsfd_vm_static_relay128_b8",
+        "dsfd_vm_seq_static"
+      ],
+      "reason": "Legacy grant/address relays not production endpoints; fixed transport/control with actual pin-to-pin budget replaces them",
+      "state": "OPEN physical closure; historical parent must not be rerouted as surrogate"
+    },
+    {
+      "historical": [
+        "dsfd_vm_wfc_ep",
+        "dsfd_wfc_stg seam"
+      ],
+      "required_successors": [
+        "dsfd_vm_static_wfc",
+        "ot_s81_vm_x34",
+        "ot_s81_vm_x43"
+      ],
+      "reason": "VM endpoint accepts every assigned slot; constant-live compatibility outputs cannot justify a ready-driven upstream stage",
+      "state": "OPEN physical closure; historical parent must not be rerouted as surrogate"
+    },
+    {
+      "historical": [
+        "dsfd_cfifo",
+        "collective cfifo"
+      ],
+      "required_successors": [
+        "dsfd_vm_static_xio"
+      ],
+      "reason": "Direct compiler row writes2204 and source request15/response513L12; no credits/room/legacy push",
+      "state": "OPEN physical closure; historical parent must not be rerouted as surrogate"
+    }
+  ],
+  "required_gates": [
+    {
+      "step": 1,
+      "artifact": "physical/s81_die_pins/v20_vm_static_native/layout_candidate.json",
+      "status": "CORE_GEOMETRY_PASS",
+      "evidence": "164actualcorechildren,128banks;43.2umoriginlattice;20umchannels;0fails0warnings",
+      "limit": "No capture/edge/fullparent fit, actual pins, cuts or views proved"
+    },
+    {
+      "step": 2,
+      "master": "dsfd_vm_static_bank128",
+      "status": "RECOVERY active bank_fix",
+      "job": "dsfd_vm_static_bank128_m4_v20-v20std2-977ea3ed7",
+      "observed": "viz export failed read_db6_final; inspect actual route verdict before recovery; no rerouteclosed"
+    },
+    {
+      "step": 3,
+      "master": "dsfd_vm_static_cap_leaf",
+      "status": "MAPPING_LIVE",
+      "handle": "ot-epyc1tb PID271098 unitoth-ubuntu-271080-1792046481",
+      "candidate_outline_um": [
+        80.64,
+        230.04
+      ],
+      "pins": {
+        "N": "f_c832",
+        "S": "o_v1,o_row14,o_m16,o_d512,flt5",
+        "W": "ck,rn,gid4,flush"
+      },
+      "evidence": "Full128capture2seeds,5faults,wordmutant; pinned92154feb6",
+      "limit": "Yosys mapping still live; preserve before CTS/native-slot decision"
+    },
+    {
+      "step": 4,
+      "masters": [
+        "ot_s81_vm_x34",
+        "ot_s81_vm_x43",
+        "dsfd_vm_static_wfc",
+        "dsfd_vm_static_xio",
+        "dsfd_vm_seq_static"
+      ],
+      "status": "OPEN hard leaf extraction and slot definition",
+      "requirements": [
+        "separate <=15000FFroots or actual insertion/spread gate",
+        "fixed3:4epoch related-clock arcs with phi-R",
+        "real serial/stream producer ports; no dynamic adapter fallback",
+        "outline and bit-count pins after mapped area"
+      ]
+    },
+    {
+      "step": 5,
+      "masters": [
+        "dsfd_vm_static_suhc_fsr",
+        "dsfd_vm_static_scatter",
+        "dsfd_vm_static_return",
+        "dsfd_vm_static_relay128_b16",
+        "dsfd_vm_static_relay128_b8",
+        "dsfd_vm_static_wsched",
+        "dsfd_vm_static_wdispatch128",
+        "dsfd_vm_static_wstage128"
+      ],
+      "status": "OPEN actual footprint/pin/cut/visibility join",
+      "requirements": [
+        "bind real NROW32 return and production53-source dispatch variants",
+        "readL12 and writeK11+lane remain claims until physical uniform-stage paths proved",
+        "nativeTTsetup FFhold DRC0 and child_lint",
+        "compose capture+edges in same reserved parent without overlap or undeclared storage"
+      ]
+    }
+  ],
+  "die_slot": {
+    "outline_um": [
+      1541.784,
+      3952.776
+    ],
+    "bank_pin_file": "physical/s81_die_pins/v20_vm_static_standard/dsfd_vm_static_bank128.tcl",
+    "other_native_pin_files": "UNASSIGNED until actual source masters mapped; do not reuse legacy faces by name"
+  },
+  "producer_abi": {
+    "collective_write": "4x551{tag8,data512,mask16,row14,valid}",
+    "collective_request": "15{row14,valid}",
+    "collective_response": "513{data512,valid},L12",
+    "MIX4": "20R/4W with DSFD_SP_VM_MIX4 enabled; 8actualports",
+    "capture": "13376serial bits,128roots",
+    "wfc": "560in/1029out static slots"
+  },
+  "live_preserved": {
+    "be_sl": "ot-pve1 OpenROAD1177371 under docker1177327, hold_eco/pass2; old1138376 terminal",
+    "cap_mapper": "ot-epyc1tb271098 live1h40CPU99.9% in PROC_DLATCH, not restarted"
+  },
+  "full_goal_status": "NOT qualified; native parent/cuts/pins/TTFFDRC/throughput remain open"
+}
