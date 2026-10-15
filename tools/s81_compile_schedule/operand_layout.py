@@ -80,6 +80,21 @@ def quantized_block_view(kind, block):
                 native_transport_bound=False)
 
 
+def a_projection_gather_landing():
+    """Actual per-rank20 WQ_A +8 WKV FP32 records, not fixture12."""
+    rows=[]
+    for rank in range(4):
+        for record in range(28):
+            tensor='q_norm_input' if record<20 else 'kv_norm_input'
+            row=4096+20*rank+record if record<20 else 4224+8*rank+record-20
+            rows.append(dict(source_rank=rank,source_record=record,destination_tensor=tensor,
+                             destination_vm_row=row,word_mask=65535))
+    return dict(mode=1,records_per_rank=28,total_output_rows=112,
+                arg24=(1<<16)|28,records=rows,fixed_transport_cycles=None,
+                historical_fixture_records_per_rank=12,historical_fixture_timing_usable=False,
+                native_endpoint_bound=False)
+
+
 def source_matrices(path=MATRIX):
     if hashlib.sha256(path.read_bytes()).hexdigest()!=MATRIX_SHA:
         raise ValueError('released source matrix metadata changed')
@@ -128,6 +143,7 @@ def generate(matrices):
                 abi_evidence=[dict(path=rel,sha256=hashlib.sha256((ROOT/rel).read_bytes()).hexdigest()) for rel in ('rtl/dsrom_sys/s81_suhc/ot_s81_su_core.sv','tools/s81_suhc/su_gate.py')],
                 status='PRODUCTION_ALLOCATION_REQUIRES_NATIVE_PRODUCER_INTEGRATION',
                 source_matrices=len(matrices),rank_fragments=len(joins),joins=joins,
+                a_projection_allgather=a_projection_gather_landing(),
                 field_quantized_operand_views={kind:[quantized_block_view(kind,b) for b in range(count)] for kind,count in [('QN',40),('KV',16)]},
                 descriptors=dict(QN=dict(row=12288,opcode=0,gain_set=1,input_row=4096,output_row=4176),
                                  KV=dict(row=12304,opcode=1,gain_set=2,input_row=4224,output_row=4256),

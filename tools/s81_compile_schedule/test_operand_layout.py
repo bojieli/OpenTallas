@@ -1,6 +1,6 @@
 import copy
 import unittest
-from operand_layout import generate, scalar_destination, source_matrices, quantized_block_view, LAYOUT
+from operand_layout import generate, scalar_destination, source_matrices, quantized_block_view, a_projection_gather_landing, LAYOUT
 
 
 class ReleasedOperandLayoutTest(unittest.TestCase):
@@ -60,6 +60,17 @@ class ReleasedOperandLayoutTest(unittest.TestCase):
         self.assertEqual(quantized_block_view('KV',15)['exponent_row'],4264)
         with self.assertRaises(ValueError):
             quantized_block_view('QN',40)
+
+    def test_actual_collective_count_and_landing_replace_fixture12(self):
+        gather=a_projection_gather_landing()
+        self.assertEqual(gather['records_per_rank'],28)
+        self.assertEqual(gather['arg24'],65564)
+        self.assertEqual(len(gather['records']),112)
+        q={r['destination_vm_row'] for r in gather['records'] if r['destination_tensor']=='q_norm_input'}
+        kv={r['destination_vm_row'] for r in gather['records'] if r['destination_tensor']=='kv_norm_input'}
+        self.assertEqual(q,set(range(4096,4176)))
+        self.assertEqual(kv,set(range(4224,4256)))
+        self.assertFalse(gather['historical_fixture_timing_usable'])
 
     def test_missing_actual_fragment_rejected(self):
         with self.assertRaisesRegex(ValueError,'incomplete actual consumer|producer scope|gapped'):

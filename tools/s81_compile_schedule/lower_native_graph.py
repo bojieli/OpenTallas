@@ -127,6 +127,14 @@ def lower(programs, root=ROOT):
         job=dict(id=rep,source_ids=source_ids,source_stages=sorted({raw[i]['stage'] for i in source_ids}),
                  preds=preds,native_binding=native,duration_cycles=None,
                  fixed_service_contract=None,dispatch_eligible=False)
+        layer,tail=layer_tail(rep)
+        if layer and tail=='attn.a_allgather':
+            job['required_transport']=dict(mode=1,records_per_rank=28,total_output_rows=112,
+                                           arg24=(1<<16)|28,
+                                           payload='320 WQ_A FP32 and128 WKV FP32 words perrank',
+                                           required_owner='S81 native collective integration',
+                                           historical_fixture_records_per_rank=12,
+                                           historical_fixture_timing_usable=False)
         if native:
             path=root/native['source']
             job['source_evidence']=[dict(path=native['source'],sha256=hashlib.sha256(path.read_bytes()).hexdigest())] if path.exists() else []
