@@ -71,10 +71,35 @@ s=s[:a]+'''    // Static tree owns no duplicate/shadow instruction controller. E
 '''+s[b:]
 # Header replaces claims of unchanged MEREG gates.
 s='`timescale 1ns/1ps\n// NEW static physical masters; archived closed head/tree remain unchanged.\n// Fixed normal engine cadence; actual decoder/fold state, no shadow controller.\n'+s[s.index('module qfd_tt_ctlm_head_static'):]
+# Observe actual accepted identity at the exact same registered stage as cmdGO.
+s=s.replace('    output wire [379:0] cmd,','    output wire [379:0] cmd,\n    output reg [15:0] me_observe,',1)
+a=s.index('    assign cmd = ')
+s=s[:a]+"    always @(posedge clk or negedge rrv[6])\n      if(!rrv[6])me_observe<=0;\n      else me_observe<={fixed_issue,candidate_v,fixed_unit,q_prog_base+candidate_pc};\n"+s[a:]
 # Shadow-only interface pins have no remaining receiver in the static tree.
 a=s.index('module qfd_tt_ctlm_tree_static');h,b=s[a:].split('\n);',1)
 for n in ['me_mem_ok','h_start','token','pos','prog_base','pw_v','pw_addr','pw_data','x_oacc','x_oidle','x_oprog','x_orows','kv_ok','kv_write_drained']:
  h=re.sub(r'^\s*input wire[^\n]*\b'+n+r',\n','',h,flags=re.M)
 s=s[:a]+h+'\n);'+b
+# Obsolete VM demand-read handshake has no receiver in real distributed XS.
+# Preserve actual engine ready as a diagnostic, remove only the phantom VM AND.
+a=s.index('module qfd_tt_ctlm_tree_static');h,b=s[a:].split('\n);',1)
+for n in ['x_rdy','x_dv','x_dc','x_dcs','x_dsp']:
+ h=re.sub(r'^\s*(?:input|output) wire[^\n]*\b'+n+r',\n','',h,flags=re.M)
+b=b.replace('wire up_fault_c, x_rdy_c, fab_fault_c;', 'wire up_fault_c, fab_fault_c;')
+b=b.replace('DPW = 35 + NPE', 'DPW = 34 + NPE').replace('land_cnt, x_rdy, tr_fault','land_cnt, tr_fault').replace('land_cnt_c, x_rdy_c, tr_fault_c','land_cnt_c, tr_fault_c')
+b=b.replace('ot_qfd_tt_ctl #(', 'ot_qfd_tt_ctl_static #(')
+b=b.replace('.x_rdy(x_rdy_c), .x_dv(x_dv), .x_dc(x_dc), .x_dcs(x_dcs), .x_dsp(x_dsp),', '.x_dv(), .x_dc(), .x_dcs(), .x_dsp(),')
+s=s[:a]+h+'\n);'+b
 (d/'ot_qfd_tt_ctlm_split_static.sv').write_text(s)
 print('wrote static decoder/head/tree successors')
+
+# Real tree control successor: remove obsolete VM readiness station, retain
+# numeric/tree/scale/tag paths exactly. No substitute ready constant is added.
+src=root/'rtl/qwen_sys/redesign_qwen/ot_qfd_tt_split.sv';v=src.read_text()
+a=v.index('module ot_qfd_tt_ctl #(');b=v.index('endmodule',a)+len('endmodule');v=v[a:b]
+v=v.replace('module ot_qfd_tt_ctl #(', 'module ot_qfd_tt_ctl_static #(',1)
+v=re.sub(r'^\s*input\s+wire\s+x_rdy,\n','',v,flags=re.M)
+v=v.replace('go_q, fab_q, xr_q','go_q, fab_q').replace('.W(3 + W + NPE)', '.W(2 + W + NPE)')
+v=v.replace('go, fab_fault, x_rdy, tr_fault', 'go, fab_fault, tr_fault').replace('go_q, fab_q, xr_q, trf_q', 'go_q, fab_q, trf_q')
+v=v.replace('c_ready && xr_q','c_ready')
+(d/'ot_qfd_tt_ctl_static.sv').write_text('`timescale 1ns/1ps\n// Static no-VM-demand successor; source SHA256 '+hashlib.sha256(src.read_bytes()).hexdigest()+'\n'+v+'\n')

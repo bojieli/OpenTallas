@@ -63,6 +63,7 @@ module qfd_tt_ctlm_head_static #(
     output wire  kvd_kindk,
     output wire [18-1:0] kvd_pos,
     output wire [379:0] cmd,
+    output reg [15:0] me_observe,
     input wire [94:0] ret
 );
 
@@ -435,6 +436,9 @@ module qfd_tt_ctlm_head_static #(
     ot_tt_ce_delay #(.W(1), .D(1), .RESET(1)) u_su_me_am_any (.clk(clk), .en(me_clk_en), .rst_n(rrv[7]), .d(u_me_am_any), .q(c_me_am_any));
     ot_tt_ce_delay #(.W(16), .D(1), .RESET(1)) u_su_me_progress (.clk(clk), .en(me_clk_en), .rst_n(rrv[2]), .d(u_me_progress), .q(c_me_progress));
     ot_tt_ce_delay #(.W(1), .D(1), .RESET(1)) u_su_me_fault (.clk(clk), .en(me_clk_en), .rst_n(rrv[3]), .d(u_me_fault), .q(c_me_fault));
+    always @(posedge clk or negedge rrv[6])
+      if(!rrv[6])me_observe<=0;
+      else me_observe<={fixed_issue,candidate_v,fixed_unit,q_prog_base+candidate_pc};
     assign cmd = {u_me_i_mbase, u_me_i_rmax, u_me_i_amax, u_me_i_oen, u_me_i_mmode, u_me_i_ojs, u_me_i_ots, u_me_i_obase, u_me_i_round, u_me_i_wcs, u_me_i_split, u_me_i_jsh, u_me_i_xcs, u_me_i_xjs, u_me_i_xks, u_me_i_xbase, u_me_i_js, u_me_i_ks, u_me_i_ts, u_me_i_wbase, u_me_i_wsrc, u_me_i_k, u_me_i_tiles, u_me_i_nout, u_me_go};
     assign {u_me_fault, u_me_progress, u_me_am_any, u_me_am_val, u_me_am_idx, u_me_wrom_addr, u_me_wrom_re, u_me_idle, u_me_ready} = ret;
     ot_hdc_delay #(.W(1),.D(OS),.RESET(1)) u_os_fin (.clk(clk),.rst_n(rsv[4]),.d(m_fin),.q(m_fin_o));
@@ -476,11 +480,6 @@ module qfd_tt_ctlm_tree_static #(
     output wire  scale_re,
     output wire [(G >> 7)-1:0] scale_gre,
     output wire [(G >> 7)*24-1:0] scale_addr,
-    input wire  x_rdy,
-    output wire  x_dv,
-    output wire [24-1:0] x_dc,
-    output wire [24-1:0] x_dcs,
-    output wire [3:0] x_dsp,
     output wire [$clog2(G):0] t_sel_e,
     output wire [$clog2(G):0] t_tv_e,
     input wire [16-1:0] tr_fault,
@@ -502,16 +501,16 @@ module qfd_tt_ctlm_tree_static #(
     // Static tree owns no duplicate/shadow instruction controller. Every assigned
     // production edge clocks the real engine; schedule violations fault upstream.
     wire ec=clk;
-    wire up_fault_c, x_rdy_c, fab_fault_c; wire [15:0] land_cnt_c; wire [16-1:0] tr_fault_c;
-    localparam integer NPE = (G >> 7) / 4, DPW = 35 + NPE;   // DPW: 47 at the TP4 default
+    wire up_fault_c, fab_fault_c; wire [15:0] land_cnt_c; wire [16-1:0] tr_fault_c;
+    localparam integer NPE = (G >> 7) / 4, DPW = 34 + NPE;   // DPW: 47 at the TP4 default
     wire [NPE-1:0] p_fault_c;
-    wire [DPW-1:0] dpin = {up_fault, land_cnt, x_rdy, tr_fault, p_fault, fab_fault};
+    wire [DPW-1:0] dpin = {up_fault, land_cnt, tr_fault, p_fault, fab_fault};
     generate if ((AUD & 16) != 0) begin : g_dpin
         reg [DPW-1:0] dpin_q;    // AUD 16: die-input pin flops (status / count / fault inputs; p_am stays direct)
         always @(posedge clk) dpin_q <= dpin;
-        assign {up_fault_c, land_cnt_c, x_rdy_c, tr_fault_c, p_fault_c, fab_fault_c} = dpin_q;
+        assign {up_fault_c, land_cnt_c, tr_fault_c, p_fault_c, fab_fault_c} = dpin_q;
     end else begin : g_ddir
-        assign {up_fault_c, land_cnt_c, x_rdy_c, tr_fault_c, p_fault_c, fab_fault_c} = dpin;
+        assign {up_fault_c, land_cnt_c, tr_fault_c, p_fault_c, fab_fault_c} = dpin;
     end endgenerate
     wire [0:0] u_me_go;
     wire [17:0] u_me_i_nout;
@@ -561,12 +560,12 @@ module qfd_tt_ctlm_tree_static #(
     reg [94:0] ret_q;
     always @(posedge ec or negedge rs) if(!rs) ret_q<=0; else ret_q<={u_me_fault, u_me_progress, u_me_am_any, u_me_am_val, u_me_am_idx, u_me_wrom_addr, u_me_wrom_re, u_me_idle, u_me_ready};
     assign ret=ret_q;
-    ot_qfd_tt_ctl #(.W(16), .IL(8), .AW(24), .NW(18), .GT(G), .TG(4), .SMIN(7), .SMAX(11), .TCUT(7), .XD(105), .XVM(15), .ORD(7), .ACC_LAT(7), .TREE_LAT(7), .MUL_LAT(6), .FAST_ISSUE(1), .KV_PREP(3), .SCALE_LAT(6), .LANDED(1), .BAND(1), .LNK(0), .CLNK(0), .AMR(1), .SPRE(2), .IS(0), .OS(OS), .XADDR(((AUD & 1) != 0) ? 0 : 1), .RDMEM(((AUD & 8) != 0) ? 2 : ((AUD & 2) != 0) ? 1 : 0), .OKEEP(((AUD & 32) != 0) ? 1 : 0), .PK(((AUD & 256) != 0) ? 2 : ((AUD & 128) != 0) ? 1 : 0), .SC(((AUD & 1024) != 0) ? (1 | ((AUD >> 10) & 14)) : 0), .AMI(((AUD & 65536) != 0) ? 2 : ((AUD & 32768) != 0) ? 1 : 0)) u_tt (
+    ot_qfd_tt_ctl_static #(.W(16), .IL(8), .AW(24), .NW(18), .GT(G), .TG(4), .SMIN(7), .SMAX(11), .TCUT(7), .XD(105), .XVM(15), .ORD(7), .ACC_LAT(7), .TREE_LAT(7), .MUL_LAT(6), .FAST_ISSUE(1), .KV_PREP(3), .SCALE_LAT(6), .LANDED(1), .BAND(1), .LNK(0), .CLNK(0), .AMR(1), .SPRE(2), .IS(0), .OS(OS), .XADDR(((AUD & 1) != 0) ? 0 : 1), .RDMEM(((AUD & 8) != 0) ? 2 : ((AUD & 2) != 0) ? 1 : 0), .OKEEP(((AUD & 32) != 0) ? 1 : 0), .PK(((AUD & 256) != 0) ? 2 : ((AUD & 128) != 0) ? 1 : 0), .SC(((AUD & 1024) != 0) ? (1 | ((AUD >> 10) & 14)) : 0), .AMI(((AUD & 65536) != 0) ? 2 : ((AUD & 32768) != 0) ? 1 : 0)) u_tt (
         .clk(ec), .rst_n(rs), .up_fault(up_fault_c), .land_cnt(land_cnt_c), .go(u_me_go), .ready(u_me_ready),
         .idle(u_me_idle), .i_nout(u_me_i_nout), .i_tiles(u_me_i_tiles), .i_k(u_me_i_k), .i_wsrc(u_me_i_wsrc), .i_wbase(u_me_i_wbase), .i_ts(u_me_i_ts), .i_ks(u_me_i_ks), .i_js(u_me_i_js), .i_xbase(u_me_i_xbase), .i_xks(u_me_i_xks), .i_xjs(u_me_i_xjs), .i_xcs(u_me_i_xcs), .i_jsh(u_me_i_jsh), .i_split(u_me_i_split), .i_wcs(u_me_i_wcs), .i_round(u_me_i_round), .i_obase(u_me_i_obase), .i_ots(u_me_i_ots), .i_ojs(u_me_i_ojs), .i_mmode(u_me_i_mmode), .i_oen(u_me_i_oen), .i_amax(u_me_i_amax), .i_rmax(u_me_i_rmax), .i_mbase(u_me_i_mbase),
         .wrom_re(u_me_wrom_re), .wrom_addr(u_me_wrom_addr), .kv_re(),
         .scale_re(scale_re), .scale_gre(scale_gre), .scale_addr(scale_addr),
-        .x_rdy(x_rdy_c), .x_dv(x_dv), .x_dc(x_dc), .x_dcs(x_dcs), .x_dsp(x_dsp),
+        .x_dv(), .x_dc(), .x_dcs(), .x_dsp(),
         .t_sel_e(t_sel_e), .t_tv_e(t_tv_e), .tr_fault(tr_fault_c),
         .p_v_e2(p_v_e2), .p_f_e2(p_f_e2), .p_am(p_am), .p_fault(p_fault_c), .fab_fault(fab_fault_c),
         .ov(ov), .am_idx(u_me_am_idx), .am_val(u_me_am_val), .am_any(u_me_am_any),
