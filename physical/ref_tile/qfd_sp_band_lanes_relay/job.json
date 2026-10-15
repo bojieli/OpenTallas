@@ -1,0 +1,166 @@
+{
+ "name": "qfd_sp_band_lanes_relay-rl1-COMMIT",
+ "block": "qfd_sp_band_lanes",
+ "ref_tile": true,
+ "owner": "Claude:q15_band_helper",
+ "purpose": "BAND relay successor: 16 CLOSED lanes MX, 2 relay stations per lane/group, 70 clock entries",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/q15-band-successor",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/qwen_band_fault_tree_1015",
+   "physical/qwen_band_native_1014",
+   "physical/qwen_band_relay_1015",
+   "results/rtl/qwen_compute_native_glue_1014/band_native_io",
+   "rtl/hdc",
+   "rtl/physical/ot_qwen_spine_lane.sv",
+   "rtl/physical/ot_qwen_tt_up4_cluster.sv",
+   "rtl/qwen_sys/band_fault_tree_20261015",
+   "rtl/qwen_sys/band_relay_20261015",
+   "rtl/qwen_sys/lane_band_20261008",
+   "rtl/test/qwen_band_relay",
+   "rtl/test/qwen_lane_band",
+   "rtl/test/qwen_split/tb_qfd_upper_faces.sv",
+   "tools/qwen_split/run_up4_faces_bench.sh"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_sp_band_lanes u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/band_fault_tree_20261015/ot_qfd_band_fault_tree3.sv rtl/qwen_sys/band_relay_20261015/ot_qfd_band_relay.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "equiv_relay_vs_predecessor",
+    "cmd": "bash rtl/test/qwen_band_relay/run_equiv.sh {RUN}/bench/equiv 0",
+    "expect": "pass",
+    "pass_regex": "^BAND_RELAY_EQUIV PASS",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "equiv_mut1_lnk_short",
+    "cmd": "bash rtl/test/qwen_band_relay/run_equiv.sh {RUN}/bench/m1 1",
+    "expect": "fail",
+    "fail_regex": "^BAND_RELAY_EQUIV FAIL",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "equiv_mut2_station_skip",
+    "cmd": "bash rtl/test/qwen_band_relay/run_equiv.sh {RUN}/bench/m2 2",
+    "expect": "fail",
+    "fail_regex": "^BAND_RELAY_EQUIV FAIL",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "equiv_mut3_fault_drop",
+    "cmd": "bash rtl/test/qwen_band_relay/run_equiv.sh {RUN}/bench/m3 3",
+    "expect": "fail",
+    "fail_regex": "^BAND_RELAY_EQUIV FAIL",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "fault_tree3_formal",
+    "cmd": "bash physical/qwen_band_fault_tree_1015/run_proofs.sh {RUN}/bench/tree3",
+    "expect": "pass",
+    "pass_regex": "BAND_TREE PASS",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "yosys",
+     "iverilog"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_sp_band_lanes_relay/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_sp_band_lanes_relay/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_sp_band_lanes_relay --out {RUN}/record/views/qfd_sp_band_lanes --macro-view physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_sp_band_lanes_relay/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_sp_band_lanes_relay/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_sp_band_lanes_relay/qfd_sp_band_lanes_relay-rl1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "q15 r13 BAND relay successor (claude/q15-band-successor). Measured predecessor failure: one std-cell root over 10,798 pin flops on three faces (TT 997..1756 ps) AND single-cycle port<->lane paths of 1.4-1.8 mm (c17 pins interleave each lane's 256 tw/ty bits over the whole face). Fix: lanes MX (tw/ty face toward N), two relay stations per lane per bus group (TW, TY, TT, CP, S) at planned points (worst planned hop 666 um), station flops on 42 local std-cell roots, face pin flops on 12 segment roots, Codex tree3 valid/fault (3 edges). Edges: lane inputs +2, round trip +2 LNK units (pw/f +4, returned tt +4), ty +8. Exact equivalence vs predecessor: rtl/test/qwen_band_relay (3 mutants fail).",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "source": "results/rtl/qwen_band_relay_1015/station_plan.json",
+  "cell": "qfd_sp_band_lanes",
+  "why": "structural: relay stations + local roots replace the 10.8k-flop single root and 1.8 mm single-cycle paths"
+ }
+}
