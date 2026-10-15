@@ -1,5 +1,5 @@
 {
- "name": "hcoll_capture_ctl-tc-f5034d006",
+ "name": "hcoll_capture_ctl-tc-f5034d006-src2",
  "block": "ot_hgi_coll_static_capture_ctl",
  "ref_tile": true,
  "owner": "Codex:H-COLL-pinreg-controller",
@@ -12,7 +12,9 @@
   "extra_paths": [
    "results/arch/hcoll_pinreg_1015",
    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
-   "physical/ref_tile_specs/hcoll_pinreg_ctl_pins.tcl"
+   "physical/ref_tile_specs/hcoll_pinreg_ctl_pins.tcl",
+   "physical/hbm_w2_rb_station_20261006",
+   "physical/hgi_idx_hier"
   ],
   "paths": [
    "tools",

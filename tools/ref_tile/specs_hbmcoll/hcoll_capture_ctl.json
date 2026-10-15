@@ -72,7 +72,9 @@
     "extra_paths": [
       "results/arch/hcoll_pinreg_1015",
       "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
-      "physical/ref_tile_specs/hcoll_pinreg_ctl_pins.tcl"
+      "physical/ref_tile_specs/hcoll_pinreg_ctl_pins.tcl",
+      "physical/hbm_w2_rb_station_20261006",
+      "physical/hgi_idx_hier"
     ],
     "views_to": "physical/ref_tile/hcoll_capture_ctl/views",
     "record_to": "results/arch/hcoll_capture_ctl_1015",
