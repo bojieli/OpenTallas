@@ -1,5 +1,5 @@
 {
- "name": "dsfd_vm_static_return_bank8_l3_1015_r6-native6-COMMIT",
+ "name": "dsfd_vm_static_return_bank8_l3_1015_r6-native6-09a0eb9a4",
  "block": "dsfd_vm_static_return_bank8_l3",
  "ref_tile": true,
  "owner": "claude:S81 VM F3 return",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/s81-vm-f3-ret-1015",
-  "commit": "COMMIT"
+  "commit": "09a0eb9a441cba468bee2c192490153fa994c78f"
  },
  "stages": {
   "bench": [
@@ -88,7 +88,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_vm_static_return_bank8_l3_1015_r6/dsfd_vm_static_return_bank8_l3_1015_r6-native6-COMMIT"
+   "to": "results/rtl/ref_tile/dsfd_vm_static_return_bank8_l3_1015_r6/dsfd_vm_static_return_bank8_l3_1015_r6-native6-09a0eb9a4"
   }
  ],
  "cycles_added": 0,
