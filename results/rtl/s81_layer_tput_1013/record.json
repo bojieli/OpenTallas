@@ -28756,6 +28756,13 @@
    "verdict": "FAIL",
    "fails_as_required": true,
    "summary": "SUMMARY jobs=1 layer_cycles=21511 (header 1268 -> H_STORE done 22779) stage_done_cycle=23384 jobs_done=1/1 dones=79/79 phases_released=10 field_phases=10 capture_writes=5560 mismatching_roots=0 coll_words_die0=728 coll_errors=303 coll_incomplete=0 y_exact=585/640 y_bad=55 y_consumed=640 norm_rows_exact=240/480 hstore_rows_exact=532/640 ref_fault=0 dut_fault=0 ctrl_flt=0 fvec=0000 stuck=0 ep_faults=0 gather_stage_fault=0 hc_fcode=0 max_done_latency=9 errors=0 first_coll_send=1111"
+  },
+  "lvm54_mhc": {
+   "mode": "mut_hc",
+   "layer": "L0",
+   "verdict": "FAIL",
+   "fails_as_required": true,
+   "summary": "SUMMARY jobs=1 layer_cycles=10266 (header 1249 -> H_STORE done 11515) stage_done_cycle=12120 jobs_done=1/1 dones=61/61 phases_released=8 field_phases=8 capture_writes=5048 mismatching_roots=0 coll_words_die0=720 coll_errors=0 coll_incomplete=0 y_exact=640/640 y_bad=0 y_consumed=640 norm_rows_exact=85/330 hstore_rows_exact=0/640 ref_fault=0 dut_fault=0 ctrl_flt=0 fvec=0000 stuck=0 ep_faults=0 gather_stage_fault=0 hc_fcode=0 max_done_latency=16 errors=0 first_coll_send=1111"
   }
  },
  "hc_production": {
@@ -29247,6 +29254,116 @@
    "status": "dsfd_engram_c ALL-TILE, tools/s81_svceng/engram_c_gate.py; off the token critical path (slack L1 ~8.5k / L14 ~235k cycles): 0 cycles on the priced layer; the L14 layer run hosts eng.* behaviourally"
   }
  },
+ "vm_read_measured": {
+  "what": "tb_s81_die_layer, production shape (NG 256, hierarchical HC slab, nominal link, --coef-split), read latency of the behavioural VM raised from the bench default: + 20 = the bgq28 leaf chain at hop 1, + 44 = hop 2 (+ 40) with the front-end hierarchy (+ 4).  Only the HC master reads this VM in the bench (SU / svc / select are behavioural, the field has its own capture path): the field + SU share of the VM read cost stays modelled",
+  "base": {
+   "name": "lvm10",
+   "lvm": 10,
+   "layers": {
+    "L0": 8823,
+    "L2": 17737
+   }
+  },
+  "runs": [
+   {
+    "name": "lvm30",
+    "dir": "results/rtl/s81_layer_tput_1013/runs/lvm30",
+    "lvm": 30,
+    "added_latency": 20,
+    "layers": {
+     "L0": {
+      "layer_cycles": 8883,
+      "verdict": "PASS",
+      "delta": 60,
+      "serial_reads": 3.0,
+      "hc_jobs_longer_by_the_latency": 7
+     },
+     "L2": {
+      "layer_cycles": 17797,
+      "verdict": "PASS",
+      "delta": 60,
+      "serial_reads": 3.0,
+      "hc_jobs_longer_by_the_latency": 7
+     }
+    },
+    "token_measured_layer_delta_on_every_layer": {
+     "ar": {
+      "layers": 40,
+      "added_cycles": 2400,
+      "e2e_loss_pct": 0.289
+     },
+     "mtp": {
+      "layers": 43,
+      "added_cycles": 2580,
+      "e2e_loss_pct": 0.219
+     }
+    },
+    "token_model_h_load_and_coef_a": {
+     "ar": {
+      "nodes": 121,
+      "h_transfers": 41,
+      "added_cycles": 2420.0,
+      "e2e_loss_pct": 0.291
+     },
+     "mtp": {
+      "nodes": 127,
+      "h_transfers": 41,
+      "added_cycles": 2540.0,
+      "e2e_loss_pct": 0.215
+     }
+    }
+   },
+   {
+    "name": "lvm54",
+    "dir": "results/rtl/s81_layer_tput_1013/runs/lvm54",
+    "lvm": 54,
+    "added_latency": 44,
+    "layers": {
+     "L0": {
+      "layer_cycles": 8962,
+      "verdict": "PASS",
+      "delta": 139,
+      "serial_reads": 3.16,
+      "hc_jobs_longer_by_the_latency": 7
+     },
+     "L2": {
+      "layer_cycles": 17874,
+      "verdict": "PASS",
+      "delta": 137,
+      "serial_reads": 3.11,
+      "hc_jobs_longer_by_the_latency": 7
+     }
+    },
+    "token_measured_layer_delta_on_every_layer": {
+     "ar": {
+      "layers": 40,
+      "added_cycles": 5560,
+      "e2e_loss_pct": 0.666
+     },
+     "mtp": {
+      "layers": 43,
+      "added_cycles": 5977,
+      "e2e_loss_pct": 0.505
+     }
+    },
+    "token_model_h_load_and_coef_a": {
+     "ar": {
+      "nodes": 121,
+      "h_transfers": 41,
+      "added_cycles": 5324.0,
+      "e2e_loss_pct": 0.638
+     },
+     "mtp": {
+      "nodes": 127,
+      "h_transfers": 41,
+      "added_cycles": 5588.0,
+      "e2e_loss_pct": 0.472
+     }
+    }
+   }
+  ],
+  "finding": "three VM read round trips of the HC master are serial in a layer: H_LOAD (layer entry) and the COEF-a in front of each of the two NORMs; COEF-b and the boot GAIN loads take the latency too but are off the critical chain"
+ },
  "families": {
   "note": "S81 registry families with no measured production throughput (budget.json status UNMEASURED) and the cheapest production-shape vehicle for each. 'ratio' is given only where a production-shape run exists; an exactness gate alone is not a throughput measurement.",
   "rows": [
@@ -29337,5 +29454,10 @@
     "ratio": 1.017
    }
   ]
+ },
+ "r6_candidate_scope": {
+  "record": "results/rtl/s81_layer_tput_1013/r6_scope.json",
+  "status": "candidate measurement only; full production die throughput unmeasured",
+  "adoption": "default-on and hardened landing commits require separate current-source gates and native physical integration"
  }
 }

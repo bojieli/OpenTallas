@@ -1,4 +1,9 @@
 `timescale 1ns/1ps
+`ifdef OT_TP8_QFD
+`define TP8_CORE u_die.u_coll
+`else
+`define TP8_CORE u_die
+`endif
 // ---------------------------------------------------------------------------
 // qwen-tp8 bench of rtl/rom/ot_coll_tp8_die.sv: 8 dies (die r = 2 * package + die-in-package), each package's dies
 // joined by two UCIe channel models (partials P, results R; LATU cycles), die d of every package joined to die d of
@@ -16,7 +21,22 @@ module tb_coll_tp8 #(
     parameter integer LATS  = 40,
     parameter integer BPC   = 3600,
     parameter integer WT    = 0,
-    parameter integer ICR   = 32
+    parameter integer ICR   = 32,
+    // qwen-coll-io 2026-10-14: LEB 1 puts ot_coll_link_end (link-level credit termination, LC-word receive buffer)
+    // at both ends of every SerDes port; LEB 0 = the engine's 32-credit loop closed over the board link.
+    parameter integer LEB   = 0,
+    parameter integer LC    = 128,
+    // qwen-coll-io 2026-10-14 depth sweep (WT 0 only; WT 1/2 fix the production shape): engine DEPTH / PR / MEMM / CT and
+    // the result-queue reservation depths LQD / TQD
+    parameter integer EDEPTH = 32,
+    parameter integer EPR    = 2,
+    parameter integer EMEMM  = 1,
+    parameter integer ECT    = 1,
+    parameter integer QLQD   = 64,
+    parameter integer QTQD   = 32,
+    // STRAP 1 (qwen-coll-io r3): every die is the SAME master (PKG 0 / DIE 0 parameters) told its rank by the straps;
+    // OT_TP8_MUT_STRAP (negative control): packages 1 and 2 get each other's pkg strap
+    parameter integer STRAP  = 0
 ) (input wire clk);
     localparam integer ND = 8, FW = 32 * LANES, TAGW = 32, PW = FW + 2 + TAGW, RW = FW + 2, MAXW = 1 << 16;
     reg [FW-1:0] part [0:MAXW-1];
@@ -42,6 +62,8 @@ module tb_coll_tp8 #(
     wire [ND*RW-1:0] urrec, drrec;
     wire [ND*3-1:0] sxv, sxrdy, sxcr, srv, srcr;
     wire [ND*3*PW-1:0] sxrec, srrec;
+    wire [ND*3-1:0] lsxv, lsxcr, lsrv, lsrcr, lef;
+    wire [ND*3*PW-1:0] lsxrec, lsrrec;
 
     function [31:0] xs(input [31:0] v0);
         reg [31:0] v;
@@ -52,7 +74,18 @@ module tb_coll_tp8 #(
     generate
         for (g = 0; g < ND; g = g + 1) begin : g_die
             localparam integer P = g / 2, D = g % 2;
-            ot_coll_tp8_die #(.PKG(P), .DIE(D), .LANES(LANES), .WT(WT), .ICR(ICR)) u_die (
+`ifdef OT_TP8_MUT_STRAP
+            localparam integer PS = (P == 1) ? 2 : (P == 2) ? 1 : P;
+`else
+            localparam integer PS = P;
+`endif
+`ifdef OT_TP8_QFD
+            qfd_io_collective u_die (
+                .clk_colr0(clk), .clk_colr1(clk), .clk_colr2(clk), .clk_colr3(clk), .clk_ecol0(clk), .clk_ecol1(clk), .clk_ecol2(clk), .clk_ecol3(clk), .clk_ecol4(clk), .clk_pfold0(clk), .clk_pfold1(clk), .clk_pfold2(clk), .clk_pfold3(clk), .clk_efold0(clk), .clk_efold1(clk), .clk_efold2(clk), .clk_efold3(clk),
+`else
+            ot_coll_tp8_die #(.PKG(STRAP ? 0 : P), .DIE(STRAP ? 0 : D), .STRAP(STRAP), .LANES(LANES), .WT(WT), .ICR(ICR), .DEPTH(EDEPTH), .PR(EPR), .MEMM(EMEMM),
+                .CT(ECT), .LQD(QLQD), .TQD(QTQD)) u_die (
+`endif
                 .clk(clk), .rst_n(rst_n),
                 .in_valid(iv[g]), .in_cr(icr[g]), .in_data(id[g*FW +: FW]), .in_last(il[g]), .in_mode(im[g]),
                 .in_tag(it[g*TAGW +: TAGW]),
@@ -64,7 +97,8 @@ module tb_coll_tp8 #(
                 .sx_cr_in(sxcr[g*3 +: 3]), .sr_valid(srv[g*3 +: 3]), .sr_rec(srrec[g*3*PW +: 3*PW]),
                 .sr_cr_out(srcr[g*3 +: 3]),
                 .out_valid(ov[g]), .out_data(od[g*FW +: FW]), .out_last(ol[g]), .out_rank(orank[g*3 +: 3]),
-                .out_err(oe[g]), .fault(flt[g]), .fault_code(fc[g*5 +: 5]));
+                .out_err(oe[g]), .fault(flt[g]), .fault_code(fc[g*5 +: 5]),
+                .pkg_s(PS[1:0]), .die_ps(D[0]));
             // in-package UCIe: this die -> its peer (g ^ 1)
             ot_rom_ucie_link #(.PW(PW), .LAT(LATU), .FLIT_BYTES(FW / 8), .BPC_NUM(BPC)) u_up (
                 .clk(clk), .rst_n(rst_n), .in_valid(upv[g]), .in_rec(uprec[g*PW +: PW]), .in_ready(uprdy[g]),
@@ -75,10 +109,24 @@ module tb_coll_tp8 #(
             // SerDes: port j -> die D of package Q = (P + 1 + j) mod 4, arriving on its port (P - Q + 3) mod 4
             for (j = 0; j < 3; j = j + 1) begin : g_sx
                 localparam integer Q = (P + 1 + j) % 4, R2 = 2 * Q + D, J2 = (P - Q + 7) % 4;
+                if (LEB == 0) begin : g_direct
                 ot_rom_ucie_link #(.PW(PW), .LAT(LATS), .FLIT_BYTES(FW / 8), .BPC_NUM(BPC)) u_sx (
                     .clk(clk), .rst_n(rst_n), .in_valid(sxv[g*3 + j]), .in_rec(sxrec[(g*3 + j)*PW +: PW]),
                     .in_ready(sxrdy[g*3 + j]), .out_valid(srv[R2*3 + J2]), .out_rec(srrec[(R2*3 + J2)*PW +: PW]),
                     .cr_in(srcr[R2*3 + J2]), .cr_out(sxcr[g*3 + j]));
+                assign lef[g*3 + j] = 1'b0;
+                end else begin : g_le
+                ot_coll_link_end #(.PW(PW), .EC(EDEPTH), .LC(LC)) u_le (.clk(clk), .rst_n(rst_n),
+                    .e_tx_v(sxv[g*3 + j]), .e_tx_rec(sxrec[(g*3 + j)*PW +: PW]), .e_tx_cr(sxcr[g*3 + j]),
+                    .l_tx_v(lsxv[g*3 + j]), .l_tx_rec(lsxrec[(g*3 + j)*PW +: PW]), .l_tx_cr(lsxcr[g*3 + j]),
+                    .l_rx_v(lsrv[g*3 + j]), .l_rx_rec(lsrrec[(g*3 + j)*PW +: PW]), .l_rx_cr(lsrcr[g*3 + j]),
+                    .e_rx_v(srv[g*3 + j]), .e_rx_rec(srrec[(g*3 + j)*PW +: PW]), .e_rx_cr(srcr[g*3 + j]),
+                    .fault(lef[g*3 + j]));
+                ot_rom_ucie_link #(.PW(PW), .LAT(LATS), .FLIT_BYTES(FW / 8), .BPC_NUM(BPC)) u_sx (
+                    .clk(clk), .rst_n(rst_n), .in_valid(lsxv[g*3 + j]), .in_rec(lsxrec[(g*3 + j)*PW +: PW]),
+                    .in_ready(sxrdy[g*3 + j]), .out_valid(lsrv[R2*3 + J2]), .out_rec(lsrrec[(R2*3 + J2)*PW +: PW]),
+                    .cr_in(lsrcr[R2*3 + J2]), .cr_out(lsxcr[g*3 + j]));
+                end
             end
             // sender (sequencer with ICR credits)
             integer m = 0, w = 0, cred = ICR;
@@ -154,19 +202,20 @@ module tb_coll_tp8 #(
     end
 
 `ifdef TP8_DEBUG
-    always @(posedge clk) if (g_die[2].u_die.prot_n || g_die[2].u_die.arith_n)
+    always @(posedge clk) if (g_die[2].`TP8_CORE.prot_n || g_die[2].`TP8_CORE.arith_n)
         $display("DBG cyc=%0d pp=%b pbad=%b oddw=%b slv=%b tail=%b eov=%b mfhv=%b mgo=%b tl=%b mm=%b lqm=%b upbad=%b ovf=%b%b%b%b%b%b%b arith=%b sle=%b",
-            cyc, g_die[2].u_die.pair_pop, g_die[2].u_die.p_bad, g_die[2].u_die.pr_red && g_die[2].u_die.p_last && !g_die[2].u_die.wpar,
-            g_die[2].u_die.sl_v, g_die[2].u_die.sl_tail, g_die[2].u_die.e_ov, g_die[2].u_die.mf_hv, g_die[2].u_die.m_go,
-            g_die[2].u_die.take_l, g_die[2].u_die.m_mode, g_die[2].u_die.lq_hd[FW+4], g_die[2].u_die.up_bad,
-            g_die[2].u_die.lb_ovf, g_die[2].u_die.pq_ovf, g_die[2].u_die.eq_ovf, g_die[2].u_die.mf_ovf, g_die[2].u_die.lq_ovf,
-            g_die[2].u_die.tq_ovf, g_die[2].u_die.rq_ovf, g_die[2].u_die.arith_n, g_die[2].u_die.sl_e);
+            cyc, g_die[2].`TP8_CORE.pair_pop, g_die[2].`TP8_CORE.p_bad, g_die[2].`TP8_CORE.pr_red && g_die[2].`TP8_CORE.p_last && !g_die[2].`TP8_CORE.wpar,
+            g_die[2].`TP8_CORE.sl_v, g_die[2].`TP8_CORE.sl_tail, g_die[2].`TP8_CORE.e_ov, g_die[2].`TP8_CORE.mf_hv, g_die[2].`TP8_CORE.m_go,
+            g_die[2].`TP8_CORE.take_l, g_die[2].`TP8_CORE.m_mode, g_die[2].`TP8_CORE.lq_hd[FW+4], g_die[2].`TP8_CORE.up_bad,
+            g_die[2].`TP8_CORE.lb_ovf, g_die[2].`TP8_CORE.pq_ovf, g_die[2].`TP8_CORE.eq_ovf, g_die[2].`TP8_CORE.mf_ovf, g_die[2].`TP8_CORE.lq_ovf,
+            g_die[2].`TP8_CORE.tq_ovf, g_die[2].`TP8_CORE.rq_ovf, g_die[2].`TP8_CORE.arith_n, g_die[2].`TP8_CORE.sl_e);
 `endif
     integer t;
     reg tagok;
     always @(posedge clk) begin
         if ((done_n == ND && INJECT < 0 && TAGBAD < 0) ||
             ((INJECT >= 0 || TAGBAD >= 0) && cyc > 4000 + 4 * LATS + NMSG * WORDS * 16)) begin
+            if (lef != 0) begin bad = bad + 1; $display("LINKEND_FAULT %b", lef); end
             $display("TP8COLL dies=%0d latu=%0d lats=%0d msgs=%0d words=%0d gap=%0d skew=%0d inject=%0d mismatches=%0d out_err=%0d fault=%b code=%b words_out=%0d first=%0d last=%0d",
                      ND, LATU, LATS, NMSG, WORDS, GAP, SKEW, INJECT, bad, errs, flt, fc, words_out, first, lastc);
             if (TAGBAD >= 0) begin
@@ -182,7 +231,7 @@ module tb_coll_tp8 #(
         end
         if (cyc > MAXCYC) begin
             $display("TIMEOUT cyc=%0d done_n=%0d words_out=%0d mismatches=%0d fault=%b code=%b", cyc, done_n, words_out, bad, flt, fc);
-            `define TP8_DUMP(i) $display("die %0d sent_msgs=%0d lb_hv=%b pq_hv=%b eq_res=%0d infl=%0d eq_hv=%b ecred=%0d lq_res=%0d tq_res=%0d mf_n=%0d lq_hv=%b rq_hv=%b mc=%0d cr_a=%0d cr_b=%0d wpar=%b", i, g_die[i].m, g_die[i].u_die.lb_hv, g_die[i].u_die.pq_hv, g_die[i].u_die.eq_res, g_die[i].u_die.infl, g_die[i].u_die.eq_hv, g_die[i].u_die.ecred, g_die[i].u_die.lq_res, g_die[i].u_die.tq_res, g_die[i].u_die.mf_n, g_die[i].u_die.lq_hv, g_die[i].u_die.rq_hv, g_die[i].u_die.mc, g_die[i].u_die.cr_a, g_die[i].u_die.cr_b, g_die[i].u_die.wpar);
+            `define TP8_DUMP(i) $display("die %0d sent_msgs=%0d lb_hv=%b pq_hv=%b eq_res=%0d infl=%0d eq_hv=%b ecred=%0d lq_res=%0d tq_res=%0d mf_n=%0d lq_hv=%b rq_hv=%b mc=%0d cr_a=%0d cr_b=%0d wpar=%b", i, g_die[i].m, g_die[i].`TP8_CORE.lb_hv, g_die[i].`TP8_CORE.pq_hv, g_die[i].`TP8_CORE.eq_res, g_die[i].`TP8_CORE.infl, g_die[i].`TP8_CORE.eq_hv, g_die[i].`TP8_CORE.ecred, g_die[i].`TP8_CORE.lq_res, g_die[i].`TP8_CORE.tq_res, g_die[i].`TP8_CORE.mf_n, g_die[i].`TP8_CORE.lq_hv, g_die[i].`TP8_CORE.rq_hv, g_die[i].`TP8_CORE.mc, g_die[i].`TP8_CORE.cr_a, g_die[i].`TP8_CORE.cr_b, g_die[i].`TP8_CORE.wpar);
             `TP8_DUMP(0) `TP8_DUMP(1) `TP8_DUMP(2) `TP8_DUMP(3) `TP8_DUMP(4) `TP8_DUMP(5) `TP8_DUMP(6) `TP8_DUMP(7)
             $display("TIMEOUT"); $finish;
         end

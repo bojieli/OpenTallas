@@ -1,0 +1,101 @@
+{
+ "schema": "opentallas.hbm.die_bind_gap.v1",
+ "date": "2026-10-14T22:20-07:00",
+ "author": "Claude H-DIE",
+ "trigger": "H-COLL 21:30 / coordinator: hb_vms_SW is a pin-only placeholder (NO-STUBS); bind ot_vms_slice_coll_sw",
+ "finding": "the v14 die slice interface is the legacy B2_CHAIN8 lane-group set; the real slices (rtl/hbm_accel/generic/vm/b2/ot_vms_slice.sv, p2p/ot_vms_slice_coll_sw.sv) speak RG x 8 x 17 / 257 read groups, WG x 8 x 281 write groups, NC x 338/274 records, 2224-b rings. Only records and COLL match exactly; lane groups need width changes on BOTH the slice and every client (SU/SFU/HC/IDX/loader/DMA/attention, mostly pin-only today); four die families have no RTL port at all. A wrapper alias would be a stub; binding needs the VM owner to fix the client protocol, then the die generator emits the slice nets from the RTL ports.",
+ "families": {
+  "lg<q>  f_lg_wup 2243 / t_lg_rdn 2067 / f_lg_rup 131 / t_lg_wdn 19 (SU->SFU->HC lane group, 8 lanes, +3 fwd clocks)": {
+   "rtl": "one RG group (rq 8x17 / rr 8x257 / rq_cr 8) + one WG group (wq 8x281 / wq_cr 8 / wq_done 8)",
+   "delta": "req 16 -> 17 b/lane, resp 258 -> 257 b/lane, write 280 -> 281 b/lane, wdn 2/lane = cr + done (match)",
+   "status": "MAPS_WITH_WIDTH_CHANGE"
+  },
+  "db  f_db_rup 129 / t_db_rdn 2065 (DMA back read, 8 lanes +1 fwd clock)": {
+   "rtl": "one RG group",
+   "delta": "16 -> 17 req, 258 -> 257 resp",
+   "status": "MAPS_WITH_WIDTH_CHANGE"
+  },
+  "xl  f_xl_rup 129 / t_xl_rdn 2065 (x-load read)": {
+   "rtl": "one RG group",
+   "delta": "as db",
+   "status": "MAPS_WITH_WIDTH_CHANGE"
+  },
+  "rc*  NW rccp/rcq, NE rcatt/rchce: f_rup 129 / f_wup 2241 / t_rdn 2065 / t_wdn 17": {
+   "rtl": "one RG + one WG group each",
+   "delta": "as lg",
+   "status": "MAPS_WITH_WIDTH_CHANGE"
+  },
+  "hgi_<client> f 338 / t 274 (records: SW argmax/coll/dma/hc/idx/sfu/su, NW cp/fmv/fused/quant)": {
+   "rtl": "cq / cr, NC = record clients",
+   "delta": "none (338/274 exact)",
+   "status": "MAPS_BY_NC"
+  },
+  "ring f_ring/t_ring 2148 + ringc 4 per neighbour": {
+   "rtl": "cw_in/cw_out/ccw_in/ccw_out 2224 + 2-b per-VC credit",
+   "delta": "2148 -> 2224 data, 4 -> 2 credit; orientation: two neighbours = CW and CCW stop",
+   "status": "MAPS_WITH_WIDTH_CHANGE"
+  },
+  "COLL (SW only) f_coll_rgx_c 8961 / t_coll_rgx_c 65 / f_coll_tkw 569 / t_coll_tkw_rdy": {
+   "rtl": "ot_vms_slice_coll_sw: rgx_t_* 2213 / rgx_f_cr 4 + coll_fault, tkw_t_* 569 / tkw_f_cr, coll_xw 652 / coll_xwa 2 (H-COLL map el1014-hbm-p2p-coll.log 21:30)",
+   "delta": "8961 -> 2213+5 (H-COLL main ab98a6b93)",
+   "status": "MAPS (H-COLL map)"
+  },
+  "q<q> 351 out / r<q> 294 in (HBM service request / response)": {
+   "rtl": "NONE in ot_vms_slice (dq 8x281 / dq_done and vcb 2130 / kq_done are the bulk/HBM fill side)",
+   "delta": "protocol differs",
+   "status": "NO_RTL_PORT: VM owner must define the svc <-> slice fill path (dq / vcb) or the die drops q/r"
+  },
+  "t_hgi_vmap 1200 / f_hgi_vmap 16 (aperture map)": {
+   "rtl": "NONE",
+   "delta": "-",
+   "status": "NO_RTL_PORT: VM owner"
+  },
+  "dbk_mv f 4 / t 229 (DMA-back move)": {
+   "rtl": "NONE (closest dq 8x281 / dq_done 8)",
+   "delta": "-",
+   "status": "NO_RTL_PORT: VM owner"
+  },
+  "t_hgi_vmstat 19 (NW)": {
+   "rtl": "bank_status 144 / hub_status 3 / mirror_busy 2",
+   "delta": "19 vs 149",
+   "status": "WIDTH_MISMATCH: VM owner"
+  },
+  "clocks ck / rst": {
+   "rtl": "clk, rst_n (+ coll_sw: clk_coll_rx[4:0], clk_vm_child[12:0] per-child roots inside the master)",
+   "delta": "per-child roots are slice-internal (die delivers phi-R at the slice clock pins)",
+   "status": "MAPS"
+  }
+ },
+ "proposed_params": {
+  "SW": {
+   "NC": 7,
+   "RG": "3 (lg, db, xl)",
+   "WG": "1 (lg)",
+   "rtl": "ot_vms_slice_coll_sw"
+  },
+  "SE": {
+   "NC": 0,
+   "RG": "3 (lg, db, xl)",
+   "WG": "1 (lg)",
+   "rtl": "ot_vms_slice"
+  },
+  "NW": {
+   "NC": 4,
+   "RG": "5 (lg, db, xl, rccp, rcq)",
+   "WG": "3 (lg, rccp, rcq)",
+   "rtl": "ot_vms_slice"
+  },
+  "NE": {
+   "NC": 0,
+   "RG": "5 (lg, db, xl, rcatt, rchce)",
+   "WG": "3 (lg, rcatt, rchce)",
+   "rtl": "ot_vms_slice"
+  }
+ },
+ "die_plan": "v15 (with the SM count decision): hb_vms_<q> master = the real slice RTL with the params above (the H-ELEM-B 833 variant once closed); die nets generated from parse_module(slice) port widths; client ends re-pinned top-down; NO_RTL_PORT families either get RTL (VM owner) or are removed from the die with their client ports; the 59 vms-direction station failures clear with it.",
+ "owners": {
+  "slice_rtl_and_client_protocol": "H-ELEM-A/H-ELEM-B (VM)",
+  "coll_ports": "H-COLL",
+  "die_nets_pins_slots": "H-DIE"
+ }
+}

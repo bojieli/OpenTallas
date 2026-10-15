@@ -8,6 +8,39 @@
  "rows": [
   {
    "design": "qwen_rom",
+   "unit": "DIE.RELAY (r21 die relay stations as wire-stage counts: BD 41->77, TWS 38->93, ORD 7->10, link 339->365; increment a layer)",
+   "group": "DIE.RELAY",
+   "measured": 613.0,
+   "price": 428.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.4322,
+   "e2e_loss_pct": 2.601,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 249431.0,
+     "cycles": 256091.0,
+     "added_cycles": 6660.0,
+     "runs_per_token": 36,
+     "critical_runs": 36,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 6660.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 2.601
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/qwen_layer_tput_1013/die_terms.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-13",
+   "status": "proposed",
+   "note": "per-layer TP4 vehicle qB_dierelay (source 68dd9fcf7, exact 0/12 X 0/12 KV, compensation mutant qE fails with 16,384 X mismatches): L1 6,093 against the priced 5,908 = 1.0313 as a LAYER (qualifies per layer); the relay increment itself is 613 against 428 priced = 1.432x, +185 cycles on each of the 36 layers (L0 measured +92: charged 185, upper bound). Combined with the issue relays (qC 6,716 / 6,531 = 1.0283) the excess is the same 185: it is all in the die relays. The row counts that cost against the design total; nothing is re-priced. TP4 r21 stage counts: the TP8 floorplan's counts replace them when the die lead posts relay_token_cost for TP8 (pair check so far: +939 cycles a token at most, 0.43 %, spine_local / stack_local candidates)"
+  },
+  {
+   "design": "qwen_rom",
    "unit": "KV-end d2d credit class 6 (HCTL, 4 credits)",
    "group": "KV_END.class6",
    "measured": 0.4,
@@ -36,36 +69,183 @@
   },
   {
    "design": "qwen_rom",
-   "unit": "VM.XREAD (TP8 bit-plane VM x transport, +16 edges per x read: XPR 12 / XQR 2 / RO 1)",
+   "unit": "VM.XREAD DVM (owner-adopted distributed x slices, TP8: x read = central priced XVM 1 -> 13 edges: tap 3 + head/leaf DX 10)",
    "group": "VM.XREAD",
-   "measured": 38.0,
-   "price": 22.0,
+   "measured": 13.0,
+   "price": 1.0,
    "unit_of_measure": "cycles",
-   "unit_ratio": 1.7273,
-   "e2e_loss_pct": 1.367,
+   "unit_ratio": 13.0,
+   "e2e_loss_pct": 1.028,
    "binding_workload": "ar",
    "per_workload": {
     "ar": {
      "model": "token-path longest path",
      "base_cycles": 249431.0,
-     "cycles": 252887.0,
-     "added_cycles": 3456.0,
+     "cycles": 252023.0,
+     "added_cycles": 2592.0,
      "runs_per_token": 36,
      "critical_runs": 36,
      "overlapped_runs": 0,
      "other_price_nodes_skipped": 0,
-     "naive_added_cycles": 3456.0,
+     "naive_added_cycles": 2592.0,
      "wave_positions": 0,
      "wave_added_cycles_per_position": 0.0,
-     "e2e_loss_pct": 1.367
+     "e2e_loss_pct": 1.028
     }
    },
    "within_unit_limit": true,
-   "evidence": "results/rtl/qwen_layer_tput_1013/xvm17_bd57/record.json",
+   "evidence": "results/rtl/qwen_dvm_priced_latency_1014/record.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-14",
+   "status": "proposed",
+   "note": "MEASURED TP8 per-layer vehicle qD_dvm_r3x12 (XVM 13 / BD 89, source 67683b2ea, exact 12/12 X + 12/12 KV, writeback drained, no faults): L1 = L2 = 6,868 against the immutable price qD_all_ml15 6,796 = +72 cycles a layer (6 cycles an edge, +12 edges); charged +72 on each of the 36 layers (L0 7,224 in the vehicle; head not included). The current native source (affine 656e5d834, head compare 619c60641, stage-D integrity c549942dd) keeps DX 10 and the measured first-result delta +1 edge over XVMR 12 (tb_qfd_xdvm_prod), i.e. the x-read latency the vehicle priced; physical phi-R relay stages of the column/tap are not yet in the figure. The DVM replaces the TP8 bit-plane VM x read (owner 10-14 08:20); this row supersedes the VM.XREAD bit-plane row for the TP8 design (Q-DVM r4, 10-14).",
+   "supersedes": {
+    "unit": "VM.XREAD (TP8 bit-plane VM x transport, +16 edges per x read: XPR 12 / XQR 2 / RO 1)",
+    "measured": 38.0,
+    "price": 22.0,
+    "unit_ratio": 1.7273,
+    "e2e_loss_pct": 1.367,
+    "status": "proposed",
+    "evidence": "results/rtl/qwen_layer_tput_1013/xvm17_bd57/record.json",
+    "date": "2026-10-13",
+    "by": "owner 2026-10-14 ~08:20 PT adopted the distributed VM (HANDOFF 0aa): the bit-plane central x read is no longer the TP8 design"
+   }
+  },
+  {
+   "design": "s81",
+   "unit": "HC.COEF (coefficient-row load in front of each NORM, unpriced serial HC job)",
+   "group": "HC.COEF",
+   "measured": 17.0,
+   "price": 0.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": null,
+   "e2e_loss_pct": 0.164,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 828866.4,
+     "cycles": 830226.4,
+     "added_cycles": 1360.0,
+     "runs_per_token": 80,
+     "critical_runs": 80,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 1360.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.164
+    },
+    "mtp": {
+     "model": "token-path longest path",
+     "base_cycles": 1177516.1,
+     "cycles": 1179148.1,
+     "added_cycles": 1632.0,
+     "runs_per_token": 86,
+     "critical_runs": 86,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 1462.0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 34.0,
+     "e2e_loss_pct": 0.138
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/s81_layer_tput_1013/record.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-13",
-   "status": "proposed",
-   "note": "per-layer TP4 vehicle with QROM_XVM 17 / QROM_BD 57 (40 wire stages kept): L0 / L1 / L2 6,231 / 5,576 / 5,576 against 6,151 / 5,480 / 5,480, exact, compensation mutant fails; +96 cycles a layer (+80 on L0, +16 head bound) = 3,456 cycles a token. unit = the VM x-read latency on r21 (XVM 22 -> 38). +14 (XPR 10) measures 1.198 %, +10 0.859 %. Coordinator 10-13 12:25: acceptable; PROPOSED at the plan's upper value until the VM stream posts the placed XPR / XQR (asked in el1013-qwen-vm.log). TP4 reference composition, not a native TP8 run"
+   "status": "accepted",
+   "note": "per-layer die run at production shape: COEF 17 cycles, serial in front of every NORM (hc_pre node), with the --coef-split program (COEF-a reads the previous block's pre row; COEF-b after the NORM is off the NORM's start). The die program and the coefficient producers' row map MUST be written as --coef-split: the single-COEF program of the first bench serialises the block's whole coefficient chain in front of its NORM (1,555-1,560 cycles, 11.7 % AR) and is not accepted",
+   "share_basis": "modelled",
+   "accepted_date": "2026-10-14",
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
+  },
+  {
+   "design": "s81",
+   "unit": "HC.H_MAT_ENGRAM (same-stage h materialization for the Engram layers: H_STORE before eng.dot/hh + H_LOAD of the Engram-updated h before the NORM, unpriced serial HC jobs)",
+   "group": "HC.H_MAT_ENGRAM",
+   "measured": 723.0,
+   "price": 0.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": null,
+   "e2e_loss_pct": 0.174,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 828866.4,
+     "cycles": 830312.4,
+     "added_cycles": 1446.0,
+     "runs_per_token": 2,
+     "critical_runs": 2,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 1446.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.174
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/s81_layer_tput_1013/round_1014.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-14",
+   "status": "accepted",
+   "note": "COUNT (fact): 2 a token (L1, L14 Engram layers: S001 / S020 hold Ln.ffn.hc_post -> L(n+1).eng.dot / eng.hh reading raw h from the VM, and eng.add -> attn.hc_pre needs the Engram-updated h reloaded into the HC cache); both on the critical path. Cost per pair = the measured store-and-forward H_STORE 387 + H_LOAD 336 (r6 pA, production shape): the streaming landing and the cut-through do not serve this path (the Engram writes are not the landing tee). Modelled share: node delta on L1/L14.eng.add (the chain is serial). Removal: a POST -> VM row tap (the POST write-back emits the h rows the hop store would) and a tee of the Engram VM writes into the landing streamer.",
+   "share_basis": "modelled",
+   "accepted_date": "2026-10-14",
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
+  },
+  {
+   "design": "s81",
+   "unit": "HC.H_XFER (H_STORE at the stage exit + H_LOAD at the stage entry, unpriced serial HC jobs, per h transfer)",
+   "group": "HC.H_XFER",
+   "measured": 246.0,
+   "price": 0.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": null,
+   "e2e_loss_pct": 1.202,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 828866.4,
+     "cycles": 838952.4,
+     "added_cycles": 10086.0,
+     "runs_per_token": 41,
+     "critical_runs": 41,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 10086.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 1.202
+    },
+    "mtp": {
+     "model": "token-path longest path",
+     "base_cycles": 1177516.1,
+     "cycles": 1188586.1,
+     "added_cycles": 11070.0,
+     "runs_per_token": 40,
+     "critical_runs": 40,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 9840.0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 246.0,
+     "e2e_loss_pct": 0.931
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/s81_layer_tput_1013/round_1014.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-14",
+   "status": "accepted",
+   "note": "MEASURED AFTER THE STRUCTURAL FIX (main: cseq PIPE default 1 + FD16 registered H landing streamer ot_s81_hc_hland + cut-through hand-off at an 8-row ARMN watermark): per h transfer H_STORE head 233 + H_LOAD tail 5 = 238 (r6 pC, 64-row landing) + 8 (FD16 pin registers: r8 original order 8,060 / 16,966 vs pC 8,052 / 16,970) = 246 cycles, was 723 (store-and-forward, r6 pA). Production shape NG 256 hierarchical HC, bit-exact NORM rows + 640 H_STORE rows + 640 hand-off flits; mutants mut_hl / mut_tx / HLMUT FAIL. COUNT (fact, round_1014.json h_transfer_count): 41 hop transfers a token on the critical path (40 substage_hop0 + head.hop; programs results/rtl/s81_ctrl_20261008 + h_materialization_audit.json); the 2 Engram materializations are row HC.H_MAT_ENGRAM; the 37 same-stage coefficient materializations are off-critical (>= 6,483 cycles slack, 0 e2e if issued after the NORM). QUALIFIER: streaming needs H_LOAD issued before the 16-row FIFO fills (r8 used PGAP 600; a cold payload falls back to the VM path at 723) and the native 120-stage programs do not exist yet; cseq/comb have no CLOSED view and no die slot (v17): the route waits for the S81 die lead's slot.",
+   "share_basis": "modelled",
+   "accepted_date": "2026-10-14",
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
   },
   {
    "design": "s81",
@@ -99,7 +279,9 @@
    "date": "2026-10-13",
    "status": "accepted",
    "note": "wave bench charge p2.core_transaction 6,092 measured / 5,467 price; the step charges it three times (mtp.0-2 rank prefixes, node mc.p2.selected_path = 3 x (5,467 - 348)), on the critical path; MTP only",
-   "accepted_date": "2026-10-13"
+   "accepted_date": "2026-10-13",
+   "share_basis": "modelled",
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
   },
   {
    "design": "s81",
@@ -147,7 +329,9 @@
    "date": "2026-10-13",
    "status": "accepted",
    "note": "twelve production POST jobs at 286-287 cycles against the immutable 112.9 (source 3c62573d5); 80 runs a token (attn + ffn x 40 layers), all on the critical path; in MTP the slowest verify stage holds two, paid again at each of the 5 wave positions; the 6 draft-block hc_post nodes (641.3, another vehicle) are not touched.  CURRENT BASELINE: to be replaced by the POST express measurement (post_express_spec.json).",
-   "accepted_date": "2026-10-13"
+   "accepted_date": "2026-10-13",
+   "share_basis": "modelled",
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
   },
   {
    "design": "s81",
@@ -193,8 +377,11 @@
    "evidence": "results/rtl/s81_layer_tput_1013/record.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-13",
-   "status": "proposed",
-   "note": "per-layer die run tb_s81_die_layer HCH=1 NG=256 nominal link, L0 / L2 / L14 bit-exact, mut_hc + mut_coll fail: NORM 713 cycles in all 6 jobs against the fused price 327.0-333.9 (hc_pre + quant [+ norm.scale]); hc_gate --hier 3 unit bench 727. REPLACES the row at 449 (1.361x, 1.178 %), which was the FLAT engine at the reduced NG 16 shape; the flat engine at NG 256 measures 235-237 (0.71x): the excess is the hierarchical slab's serial forward / return chains, not arithmetic"
+   "status": "accepted",
+   "note": "per-layer die run tb_s81_die_layer HCH=1 NG=256 nominal link, L0 / L2 / L14 bit-exact, mut_hc + mut_coll fail: NORM 713 cycles in all 6 jobs against the fused price 327.0-333.9 (hc_pre + quant [+ norm.scale]); hc_gate --hier 3 unit bench 727. REPLACES the row at 449 (1.361x, 1.178 %), which was the FLAT engine at the reduced NG 16 shape; the flat engine at NG 256 measures 235-237 (0.71x): the excess is the hierarchical slab's serial forward / return chains, not arithmetic DECOMPOSITION (Codex trace 7eb398556, hc_gate NG 256 hier3, 4 NORMs identical, exact 0/1940): accept -> sum_return 339 (mix forward + partial sums back over the 22-half-tile chain) + rsqrt 74 + rsqrt -> first row 238 (scale broadcast forward + scaled rows back) + 40 rows 39 + writer 22 + done 15 = 727; the two chain traversal pairs are 577 of 727. Structural fix (not built): registered regional reduction collectors + a narrow registered rsqrt broadcast tree instead of the serial chains (no FP reassociation). | MEASURED 2026-10-14 T3 (results/rtl/s81_layer_tput_1013/variants_1014, same bench, LVM 54): NORM tree NTREE 1 NT_K 67 (7d904baa4) L0/L2/L14 8,276/17,190/18,752 vs default 8,702/17,610/19,183 = -426/-420/-431 a layer (2 NORMs), -2.04 % AR by layer delta (accepted_cost node delta 383.1 -> 167.1: 3.609 -> 1.607 %); all exact, mut_hc FAIL. Row status unchanged (swap only when every variant tile closes).",
+   "share_basis": "modelled",
+   "accepted_date": "2026-10-14",
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated); owner ~06:55 PT 2026-10-14: stays accepted at its CURRENT measured figure (serial chain); the NORM tree replaces it only if it closes"
   },
   {
    "design": "s81",
@@ -240,8 +427,11 @@
    "evidence": "results/rtl/ref_tile/s81su_full_gate_9e37b21b2/run_full_dpi_m0_a0_h.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-13",
-   "status": "proposed",
-   "note": "hierarchical slab at the slab pins, su_gate full --hier @9e37b21b2; 40 critical runs a token (L*.attn.z_quant)"
+   "status": "accepted",
+   "note": "hierarchical slab at the slab pins, su_gate full --hier @9e37b21b2; 40 critical runs a token (L*.attn.z_quant) QUALIFIER (rom-tput 2026-10-14): accepted on the MEASURED unit ratio x the MODELLED token share (40 critical runs a token from the token-path model results/arch/token_path_20261009/ds_rom.json); no per-layer die run shows these SU jobs serial yet (tb_s81_die_layer runs the SU behaviourally at program durations). The su_gate --lvm runs show every SU job holds TWO serial VM read round trips (descriptor/parameter rows, then operands), so the production VM read latency adds 2 x (read latency - bench latency) a job on top of these rows (see VM read in round_1014.json).",
+   "accepted_date": "2026-10-13",
+   "share_basis": "modelled",
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
   },
   {
    "design": "s81",
@@ -287,8 +477,11 @@
    "evidence": "results/rtl/ref_tile/s81su_full_gate_9e37b21b2/run_full_dpi_m0_a0_h.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-13",
-   "status": "proposed",
-   "note": "hierarchical slab at the slab pins, su_gate full --hier @9e37b21b2; 40 critical runs a token (L*.attn.normalize)"
+   "status": "accepted",
+   "note": "hierarchical slab at the slab pins, su_gate full --hier @9e37b21b2; 40 critical runs a token (L*.attn.normalize) QUALIFIER (rom-tput 2026-10-14): accepted on the MEASURED unit ratio x the MODELLED token share (40 critical runs a token from the token-path model results/arch/token_path_20261009/ds_rom.json); no per-layer die run shows these SU jobs serial yet (tb_s81_die_layer runs the SU behaviourally at program durations). The su_gate --lvm runs show every SU job holds TWO serial VM read round trips (descriptor/parameter rows, then operands), so the production VM read latency adds 2 x (read latency - bench latency) a job on top of these rows (see VM read in round_1014.json).",
+   "accepted_date": "2026-10-13",
+   "share_basis": "modelled",
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
   },
   {
    "design": "s81",
@@ -334,8 +527,58 @@
    "evidence": "results/rtl/ref_tile/s81su_full_gate_9e37b21b2/run_full_dpi_m0_a0_h.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-13",
-   "status": "proposed",
-   "note": "hierarchical slab at the slab pins, su_gate full --hier @9e37b21b2; 40 critical runs a token (L*.ffn.quant2)"
+   "status": "accepted",
+   "note": "hierarchical slab at the slab pins, su_gate full --hier @9e37b21b2; 40 critical runs a token (L*.ffn.quant2) QUALIFIER (rom-tput 2026-10-14): accepted on the MEASURED unit ratio x the MODELLED token share (40 critical runs a token from the token-path model results/arch/token_path_20261009/ds_rom.json); no per-layer die run shows these SU jobs serial yet (tb_s81_die_layer runs the SU behaviourally at program durations). The su_gate --lvm runs show every SU job holds TWO serial VM read round trips (descriptor/parameter rows, then operands), so the production VM read latency adds 2 x (read latency - bench latency) a job on top of these rows (see VM read in round_1014.json).",
+   "accepted_date": "2026-10-13",
+   "share_basis": "modelled",
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
+  },
+  {
+   "design": "s81",
+   "unit": "VM.READ (VM read latency at the leaf chain, CURRENT design: leaf hop 2 (+40 a read round trip) + dsfd_vm_fe_h FRL 6 (+4); flat 41 -> 85 cycles)",
+   "group": "VM.READ",
+   "measured": 85.0,
+   "price": 41.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 2.0732,
+   "e2e_loss_pct": 9.093,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path, node deltas by class",
+     "base_cycles": 828866.4,
+     "e2e_loss_pct": 9.093,
+     "source": "results/rtl/s81_layer_tput_1013/round_1014.json vm_read.model_upper_bound_pct.hop2_fe",
+     "delta": "hop-2 node deltas: unit +44 over flat 41 (hop 2 +40, FE FRL 6 +4); field +44 a critical field node, SU +88 a critical SU node (2 serial VM reads a job), hc_pre +66"
+    },
+    "mtp": {
+     "model": "token-path longest path, node deltas by class",
+     "base_cycles": 1177516.1,
+     "e2e_loss_pct": 7.556,
+     "source": "results/rtl/s81_layer_tput_1013/round_1014.json vm_read.model_upper_bound_pct.hop2_fe"
+    }
+   },
+   "within_unit_limit": false,
+   "evidence": "results/rtl/s81_layer_tput_1013/round_1014.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-14",
+   "status": "accepted",
+   "note": "CURRENT DESIGN (leaf hop 2): MEASURED unit latency flat dsfd_vm_bgr 41 (master gate s81_vm_gate tp, price basis) -> 81 at leaf hop 2 (claude/s81-bgq28-1013 1640f47fb) + 4 from the vm_fe hierarchy FRL 6 (693940a56) = 85. Per-layer MEASURED part: tb_s81_die_layer LVM 10/30/54 (3 serial HC reads a layer, +139 a layer at +44); su_gate --lvm 54: two serial VM read round trips a SU job (+87..89). Token share MODELLED (upper bound) -> 9.093 % AR / 7.556 % MTP (round_1014.json vm_read.model_upper_bound_pct.hop2_fe). Hop-1 variant (a841984b9, 53 cycles, 2.654 %) built in parallel; replaces this row only if it closes (then re-measured). | MEASURED 2026-10-14 T3 (results/rtl/s81_layer_tput_1013/variants_1014, tb_s81_die_layer NG256 HCH1 nom --coef-split --h-stream PIPE/HST/HTX2): layer L0/L2/L14 at LVM 54 (this row) 8,702/17,610/19,183; XGOS-equivalent LVM 38 (unit 107->91) 8,688/17,594/19,130 = -14/-16/-53 a layer = -0.082 % AR (HC share only, not the ~45 estimated: with the H landing stream only the attn COEF-a VM read stays serial); LVM 10 -42/-44/-133. Field/SU VM-read shares remain modelled. Row status unchanged.",
+   "share_basis": "modelled",
+   "supersedes": {
+    "unit": "VM.READ (VM read latency at the leaf chain: bgq28 leaf hop 1 (+8 a read round trip) + dsfd_vm_fe_h FRL 6 (+4); flat 41 -> 53 cycles)",
+    "measured": 53.0,
+    "price": 41.0,
+    "unit_ratio": 1.2927,
+    "e2e_loss_pct": 2.654,
+    "status": "accepted",
+    "accepted_date": "2026-10-14",
+    "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated); accepted ONLY at leaf hop 1 (flat 41 -> 53 cycles, bgq28 a841984b9 +8); hop 2 (+44, ~9.09%) is NOT accepted and would break 15%",
+    "by": "OWNER ~06:55 PT 2026-10-14: current designs (VM leaf hop 2, serial NORM) accepted as long as they close; optimized variants replace them only if they close"
+   },
+   "accepted_date": "2026-10-14",
+   "owner_exception": "owner exception 2026-10-14: accepted above the 5%/unit limit; hop-1 variant in progress, row to be re-measured if it replaces",
+   "acceptance_note": "owner exception 2026-10-14: accepted above the 5%/unit limit; hop-1 variant in progress, row to be re-measured if it replaces; S81 accepted total 17.485 % is OVER the 15 % design limit: owner-accepted exception (owner ~06:55 PT 2026-10-14 accepts the CURRENT VM read (leaf hop 2) and HC NORM (serial chain) designs as long as they close)"
   },
   {
    "design": "r25gq",
@@ -719,35 +962,78 @@
    "date": "2026-10-13",
    "status": "proposed",
    "note": "applied to every SU.VOP record of both programs (the DS bench of record is 1.067, qualified)"
+  },
+  {
+   "design": "r25gq",
+   "unit": "VM8 x-load service start-to-dispatch (ot_hbm_b2_xcommit XR_LEAD 6 + closed vm_cp_root, WR +4 / RD +12)",
+   "group": "VM8.XLOAD_SERVICE",
+   "measured": 169.0,
+   "price": 139.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.2158,
+   "e2e_loss_pct": 2.977,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "S2 schedule, fixed cycles added to every record of the op",
+     "base_cycles": 576702.4,
+     "cycles": 594397.5,
+     "added_cycles": 17695.1,
+     "program_records": 1095,
+     "added_cycles_per_record": 30.0,
+     "e2e_loss_pct": 2.977
+    },
+    "qwen_ar": {
+     "model": "S2 schedule, fixed cycles added to every record of the op",
+     "base_cycles": 1269120.1,
+     "cycles": 1273470.1,
+     "added_cycles": 4350.0,
+     "program_records": 5,
+     "added_cycles_per_record": 30.0,
+     "e2e_loss_pct": 0.342
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/vm8_service_root_1013/xload_service_gate_r5.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-13",
+   "status": "proposed",
+   "note": "structural design first (next fetch overlapped under the drain: period 1.0143x <= 1.10; dispatch two edges after the final release on the measured write-before-read lead 6-9 edges); what remains is +29/30 edges start-to-dispatch a record (worst record 169 / 139 = 1.2158x), of which 16 = the closed root composition's measured accept -> release latency (results/rtl/vm8_service_root_1013/root_latency_closed_1013.json: WR +4 / RD +12, hash MATCH) and 13/14 the tracker tail; charged as 30 fixed cycles on every SM.MATVEC record of the S2 schedule (DS 1,095 records, Qwen 5); without the root 0.87 % / 0.16 %, a full 27-edge drain would be 3.79 %"
   }
  ],
  "totals": {
   "qwen_rom": {
    "accepted_pct": 0,
-   "proposed_pct": 1.367,
-   "accepted_plus_proposed_pct": 1.367,
+   "proposed_pct": 3.629,
+   "accepted_plus_proposed_pct": 3.629,
    "limit_pct": 15.0,
    "accepted_rows": 0,
-   "proposed_rows": 2,
-   "headroom_pct": 15.0
+   "proposed_rows": 3,
+   "headroom_pct": 15.0,
+   "owner_exception_rows": 0,
+   "over_limit_by_owner_exception": false
   },
   "s81": {
-   "accepted_pct": 1.812,
-   "proposed_pct": 5.04,
-   "accepted_plus_proposed_pct": 6.852,
+   "accepted_pct": 17.485,
+   "proposed_pct": 0,
+   "accepted_plus_proposed_pct": 17.485,
    "limit_pct": 15.0,
-   "accepted_rows": 2,
-   "proposed_rows": 4,
-   "headroom_pct": 13.188
+   "accepted_rows": 10,
+   "proposed_rows": 0,
+   "headroom_pct": -2.485,
+   "owner_exception_rows": 1,
+   "over_limit_by_owner_exception": true
   },
   "r25gq": {
    "accepted_pct": 0,
-   "proposed_pct": 104.995,
-   "accepted_plus_proposed_pct": 104.995,
+   "proposed_pct": 107.972,
+   "accepted_plus_proposed_pct": 107.972,
    "limit_pct": 15.0,
    "accepted_rows": 0,
-   "proposed_rows": 13,
-   "headroom_pct": 15.0
+   "proposed_rows": 14,
+   "headroom_pct": 15.0,
+   "owner_exception_rows": 0,
+   "over_limit_by_owner_exception": false
   }
  }
 }

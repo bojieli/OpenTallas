@@ -209,7 +209,11 @@ module ot_hgi_coll_ep #(
     always @(posedge clk) if (r_go || go) b_run <= r_bbase;
     always @(posedge clk or negedge rst_n) if (!rst_n) tkm_inj <= 1'b0; else if (r_go) tkm_inj <= (TKM != 0) && r_tkm; else if (go) tkm_inj <= 1'b0;
     generate if (TKM != 0) begin : g_tkm
+`ifdef OT_TKM_CLUSTER_BENCH
+        ot_hgi_coll_tkm_cluster #(.KMAX(TKM_KMAX), .DEL(DEL), .FW(FW), .PWT(PWT), .MUT(MUT_TKM)) u_tkm (.tile_ck0(clk),.tile_ck1(clk),.tile_ck2(clk),.tile_ck3(clk),.tile_ck4(clk),.tile_ck5(clk),.tile_ck6(clk),.tile_ck7(clk),.tile_ck8(clk),.tile_ck9(clk),.tile_ck10(clk),.tile_ck11(clk),.tile_ck12(clk),.tile_ck13(clk),.tile_ck14(clk),.tile_ck15(clk),.tile_ck16(clk),.tile_ck17(clk),.tile_ck18(clk),.tile_ck19(clk),.tile_ck20(clk),.tile_ck21(clk),.tile_ck22(clk),.tile_ck23(clk),.tile_ck24(clk),.tile_ck25(clk),.tile_ck26(clk),.tile_ck27(clk),.tile_ck28(clk),.tile_ck29(clk),.tile_ck30(clk),.tile_ck31(clk),.lane_ck0(clk),.lane_ck1(clk),.lane_ck2(clk),.lane_ck3(clk), .clk(clk), .rst_n(rst_n),
+`else
         ot_hgi_coll_tkm #(.KMAX(TKM_KMAX), .DEL(DEL), .FW(FW), .PWT(PWT), .MUT(MUT_TKM)) u_tkm (.clk(clk), .rst_n(rst_n),
+`endif
             .start(tk_start), .cfg_n(tk_n), .cfg_k(tk_ko), .cfg_g(tk_g), .cfg_gbase(tk_gb), .cfg_pf(tk_pf), .cfg_nout(tk_no),
             .cfg_obase(tk_ob), .cfg_rbase(tk_rb), .cfg_has_r(tk_hr),
             .del_reserve(tkm_now ? rg_reserve : {DEL{1'b0}}), .del_permit(tk_permit),

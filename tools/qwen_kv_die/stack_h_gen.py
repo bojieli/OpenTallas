@@ -457,6 +457,17 @@ def generate():
         ot_nhb_fifo_h #(.W(64), .D(DQ)) u_e (.clk(clk), .rst_n(rc), .push(er_pend), .din(er_data),
                                         .pop(pop_e), .dout(e_word), .nonempty(e_ne), .count(e_cnt));
     end endgenerate""")
+    # (h) el1013-qwen-kvstrips: the e read's latency is a build constant KVD_ERL (default 1 = the golden contract: data the
+    # cycle after er_valid).  The die's aggregator slice registers the read address at its pin and the SRAM output before
+    # its pin (qkd_astk_ep: 3), so the push follows the word by that many cycles; nothing else changes.
+    ectl = rep(ectl, """    always @(posedge clk or negedge rc) if (!rc) er_pend <= 1'b0; else er_pend <= er_valid;""",
+               """`ifdef KVD_ERL
+    reg [`KVD_ERL-1:0] er_dl;
+    always @(posedge clk or negedge rc) if (!rc) er_dl <= {`KVD_ERL{1'b0}}; else er_dl <= {er_dl, er_valid};
+    always @* er_pend = er_dl[`KVD_ERL-1];
+`else
+    always @(posedge clk or negedge rc) if (!rc) er_pend <= 1'b0; else er_pend <= er_valid;
+`endif""")
     wrapper = ENGINE
     s = s[:i] + HEAD.lstrip('\n') + '\n' + ectl + '\n' + wrapper + s[j:]
     # ================= the aggregator: node beat lanes (beat b = lanes d = LFB k + b of every head) =================
@@ -942,6 +953,9 @@ def ectl_slot(s):
     s = rall(s, 'er_valid <= ', '`ECTL_ERV <= ', 3)
     s = rall(s, 'er_addr <= {rg_g', '`ECTL_ERA <= {rg_g', 1)
     s = rall(s, 'else er_pend <= er_valid;', 'else er_pend <= `ECTL_ERP;', 1)
+    # merge of el1013-qwen-kvstrips (KVD_ERL) with q13-ectl (KVD_ECTL_SLOT): the KVD_ERL delay line starts from the same
+    # slot-qualified strobe, so the two build constants compose (slot push delay + e-slice read latency)
+    s = rall(s, 'else er_dl <= {er_dl, er_valid};', 'else er_dl <= {er_dl, `ECTL_ERP};', 1)
     s = rall(s, '.push(er_pend), .din(er_data),', '.push(er_pend), .din(`ECTL_ERD),', 2)
     s = rall(s, 'ot_nhb_fifo_rows2_h #(.W(HD*8), .D(DQ)) u_rows', 'ot_nhb_fifo_rows2_h #(.W(HD*8), .D(DQ), .D1(`ECTL_D1)) u_rows', 1)
     s = rall(s, 'ot_nhb_fifo_rows2_h #(.W(64), .D(DQ)) u_e', 'ot_nhb_fifo_rows2_h #(.W(64), .D(DQ), .D1(`ECTL_D1)) u_e', 1)
@@ -975,8 +989,54 @@ def ectl3(s):
     return s[:i] + s[i:].replace(a, b)
 
 
+def native_profile(s):
+    """Explicit default-off TP8 transport profile; golden Q rounding stays at consumption."""
+    header = """`ifndef KVD_HEADS
+`define KVD_HEADS 2
+`endif
+`ifndef KVD_Q_FP32
+`define KVD_Q_FP32 0
+`endif
+`ifndef KVD_QK_ONLY
+`define KVD_QK_ONLY 0
+`endif
+// TP8 is HEADS=1, Q_FP32=1: four query heads, one KV group.
+// FP32 transport rounds to BF16 RNE here, exactly decode_token_tp's matvec operand.
+// Existing HSUB/ECTL3 hard views need independent native body/parameter qualification.
+"""
+    s = s.replace('`timescale 1ns/1ps\n', '`timescale 1ns/1ps\n' + header, 1)
+    s = s.replace('8 * HD * 16 / 512', '4 * `KVD_HEADS * HD * (`KVD_Q_FP32 ? 32 : 16) / 512')
+    a=s.index('    // q rows of heads hid')
+    b=s.index('    // ---- S3 per 16-lane group',a)
+    q=s[a:b]
+    q=q.replace('localparam integer NB = HD * 16 / 512;', 'localparam integer QBW = `KVD_Q_FP32 ? 256 : 512;\n    localparam integer NB = HD * 16 / QBW;\n    wire [511:0] qc;\n    genvar qi;\n    generate if (`KVD_Q_FP32) begin : g_qfp32\n        for (qi=0; qi<16; qi=qi+1) begin : g_round\n            wire [31:0] x = qd2[32*qi +: 32];\n            assign qc[16*qi +: 16] = x[31:16] + (x[15] && (|x[14:0] || x[16]));\n        end\n        assign qc[511:256] = 256\'d0;\n    end else assign qc = qd2; endgenerate')
+    q=q.replace('(HD * 16) % 512', '(HD * 16) % QBW')
+    q=q.replace('[512*bi +: 512]', '[QBW*bi +: QBW]').replace('<= qd2;', '<= qc[QBW-1:0];')
+    q=q.replace('if (qv2 && qb2 == 6\'(NB * (4 +', 'if (`KVD_HEADS == 2 && qv2 && qb2 == 6\'(NB * (4 +')
+    q=q.replace('BO = 512 * bi', 'BO = QBW * bi').replace('BO + 512', 'BO + QBW').replace('qd2[A', 'qc[A')
+    q=q.replace('if (Z1 > A1)', 'if (`KVD_HEADS == 2 && Z1 > A1)')
+    s=s[:a]+q+s[b:]
+    for name in ('rg_g','c_g'):
+        s=s.replace(f'else if (!{name}) begin', f'else if (`KVD_HEADS == 2 && !{name}) begin')
+    s=s.replace("if (sg) run <= 1'b0; else sg <= 1'b1;", "if (sg || `KVD_HEADS == 1) run <= 1'b0; else sg <= 1'b1;")
+    s=s.replace("if (tg) run <= 1'b0;", "if (tg || `KVD_HEADS == 1) run <= 1'b0;")
+    s=s.replace("if (scnt1 == n_s) kdone[1] <= 1'b1;", "if (`KVD_HEADS == 2 && scnt1 == n_s) kdone[1] <= 1'b1;")
+    s=s.replace("rg_vph <= 1'b1; rg_g <= 1'b0; rg_gam <= E; rg_k <= 0; rg_j <= 0;", "if (`KVD_QK_ONLY) rg_run <= 1'b0;\n                    else begin rg_vph <= 1'b1; rg_g <= 1'b0; rg_gam <= E; rg_k <= 0; rg_j <= 0; end")
+    s=s.replace("c_vph <= 1'b1; c_g <= 1'b0; c_gam <= E; c_k <= 0; c_j <= 0; k_done <= 1'b1;", "k_done <= 1'b1;\n                        if (`KVD_QK_ONLY) c_fin <= 1'b1;\n                        else begin c_vph <= 1'b1; c_g <= 1'b0; c_gam <= E; c_k <= 0; c_j <= 0; end")
+    a=s.index('module ot_qwen_nearhbm_attn_stack_h #(')
+    sub=s[a:]
+    sub=sub.replace('    output wire [15:0]       ev ', "    input wire native_e_read,\n    input wire [10:0] native_e_addr,\n    output reg [63:0] native_e_data,\n    output wire [15:0] native_exp_done,\n    output wire native_score_done,\n    output wire [15:0]       ev ",1)
+    sub=sub.replace('    reg [63:0]  e_mem  [0:4095];', "    reg [63:0]  e_mem  [0:4095];\n    always @(posedge clk) if (native_e_read) native_e_data <= e_mem[{1'b0,native_e_addr}];")
+    sub=sub.replace('    reg  [31:0] exp_done;', '    reg  [31:0] exp_done;\n    assign native_exp_done = exp_done[15:0];\n    assign native_score_done = kdone[0];')
+    # A native empty stack completes its parent count before the three-leaf
+    # controller start has cleared previous maxima. Ownership, not stored flags,
+    # decides whether this stack contributes a max to the new frame.
+    sub=sub.replace('so_any <= sany[lsent[0]];', "so_any <= (!`KVD_QK_ONLY || n_s != 0) && sany[lsent[0]];")
+    return s[:a]+sub
+
+
 def main():
-    txt = ectl3(ectl_slot(generate()))
+    txt = native_profile(ectl3(ectl_slot(generate())))
     if '--check' in sys.argv:
         sys.exit(0 if DST.exists() and DST.read_text() == txt else 1)
     DST.write_text(txt)

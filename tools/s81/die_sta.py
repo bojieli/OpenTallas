@@ -22,8 +22,13 @@ _g = next((sys.argv[i + 1] for i, x in enumerate(sys.argv[:-1]) if x == '--gen-r
 sys.path.insert(0, str(Path(_g) / 'tools' if _g else ROOT / 'tools'))
 import dsrom_s81_fulldie as S  # noqa: E402
 
-CLK_NAMES = ('ck', 'clk', 'cks', 'ckh', 'cw', 'wclk', 'fi0', 'fi', 'xf', 'ck_in')
-K = dict(ss=dict(cq=90.0, su=30.0, ho=15.0), tt=dict(cq=55.0, su=18.0, ho=15.0), ff=dict(cq=32.0, su=10.0, ho=15.0))
+CLK_NAMES = ('ck', 'clk', 'sk', 'cks', 'ckh', 'cw', 'wclk', 'fi0', 'fi', 'xf', 'ck_in')
+# s81-die 2026-10-13 (c6p STA by path class, results/physical/die_iter_1012/s81/c6p_sta_classes_1013): FF cq 32 ps against
+# hold 15 + die hold uncertainty 50 made EVERY short placeholder hop a hold violation (1,010,469 endpoints at >= -33.3 ps).
+# A pin-registered tile owes the contract minimum clk -> pin of 65 ps at FF (the relay kits build it: outhold
+# BUF-HB4-BUF); the placeholder carries that minimum, so a hop between placeholders is neutral (0 at zero wire) and a
+# placeholder launching into a REAL pin is judged against the real pin's hold with the contract launch.
+K = dict(ss=dict(cq=90.0, su=30.0, ho=15.0), tt=dict(cq=55.0, su=18.0, ho=15.0), ff=dict(cq=65.0, su=10.0, ho=15.0))
 # s81-die-iter 2026-10-12 (FF hold, r4f SPEF: hco_SW -> xsco_SW -103.7, hr_W<n> -> f_hr_W<n>_o_1 -77.9, hl_W<n> ->
 # g_hl_W<n>_o_sp_collective_0 -77.6 ps): a closed end block (m2l / r2l / l2r, kind 'hend') is balanced on its MEAN clock
 # insertion, but its boundary output flops ride a shorter branch (~80 vs 152 ps), so its outputs launch ~70 ps early
@@ -38,6 +43,12 @@ HOLD_PAD_FF = 120.0
 PAD_NEAR_UM = 100.0
 PAD_SUFFIX = '__hp'
 REL_CLK = {'dsfd_xstg': {'i': 'cw'}}
+# s81-die 2026-10-13: the --cfifo-colck column FIFO is a TWO-domain master (lane write side on xf, column side on cr = its
+# column tree's return; ck only passes to co).  The single-clock placeholder timed its column side on the trunk ck and
+# the clock return cr as data: all of c6p's TT -1,426.8 ps (co -> cr 111 ep, relay -> st / ri 8,960 ep) and the 72,192 FF
+# endpoints at -519..-577 ps (xa / xb / cc launched 548 ps before the column relays' clock).  Inputs AND outputs of a
+# multi-clock glue master are related to the clock that captures / launches them (REL_CLK_COLCK applies with --cfifo-colck).
+REL_CLK_COLCK = {'dsfd_cfifo': dict(xd='xf', st='cr', ri='cr', xa='cr', xb='cr', cc='cr', rs='cr', rd='cr', rf='cr')}
 
 
 def hold_pad_sites(m):
@@ -387,7 +398,7 @@ def clock_delivery(lat, pin_master, masters, libs, by, vroot):
                              spread_tt_ps=round(tt['max'] - tt['min'], 1), source='insertion.json boundary mean',
                              file=str(ij.relative_to(vroot)) if ij.is_relative_to(vroot) else str(ij))
             if 'R_tt_ps' not in t and view != 'interim':
-                pn = pin.split('/')[1].split('[')[0]
+                pn = pin.split('/')[1]
                 v = pin_insertion(mst, pn, libs)
                 if v:
                     t.update(R_tt_ps=round(v[2], 1), source='ESTIMATED: ETM min/max_clock_tree_path midrange over all sinks '
@@ -395,6 +406,14 @@ def clock_delivery(lat, pin_master, masters, libs, by, vroot):
                 elif r.get('insertion_in_arcs_ps'):
                     t.update(R_tt_ps=round(r['insertion_in_arcs_ps'][2], 1), source='ESTIMATED: measured_insertion.json / '
                              'calib.json block mean (no insertion.json beside the bound lib)')
+            if 'R_tt_ps' not in t and view == 'macro':
+                # r5 2026-10-14: a hard memory macro (cfg ROM ot_rom_4096x72_m8) has no clock tree inside its view: every
+                # liberty arc (clk -> rd_out, addr/ce setup / hold) is referenced to its clk pin, so R = 0 by construction
+                t.update(R_tt_ps=0.0, source='hard macro: liberty arcs referenced to the clock pin (no internal tree), R = 0')
+            if 'R_tt_ps' not in t and view == 'partitioned' and lp is None:
+                # r5 2026-10-14: a partitioned master without an assembled lib is timed by its interim pin-registered
+                # model (pin = flop) like any interim master: R = 0 is exact for that model (not an estimate of a view)
+                t.update(R_tt_ps=0.0, source='interim pin-registered model (partitioned, children not assembled): no internal insertion')
             if 'R_tt_ps' not in t:
                 t.update(R_tt_ps=0.0, source='interim pin-registered model (pin = flop): no internal insertion' if view == 'interim'
                          else 'UNMEASURED: routed view without insertion.json and without a clock_tree_path on this pin '
@@ -450,9 +469,32 @@ def pin_tree_insertion(lib, pin):
     if key not in _TREE_INS:
         t = Path(lib).read_text(errors='ignore') if lib and Path(lib).exists() else ''
         out = {}
-        pm = re.search(r'pin\(\s*"?%s(?:\[0\])?"?\s*\)\s*\{(.*?)\n    \}' % re.escape(pin), t, re.S)
+        names = [pin] if '[' in pin else [pin,pin+'[0]']
+        if pin.endswith('[0]'):
+            names.append(pin[:-3])
+        body = ''
+        for name in names:
+            pm = re.search(r'\bpin\s*\(\s*"?%s"?\s*\)\s*\{' % re.escape(name),t)
+            if not pm:
+                continue
+            start,depth = pm.end(),1
+            quoted,escaped = False,False
+            for end in range(start,len(t)):
+                ch=t[end]
+                if escaped:
+                    escaped=False
+                elif ch=='\\' and quoted:
+                    escaped=True
+                elif ch=='"':
+                    quoted=not quoted
+                elif not quoted:
+                    depth += (ch=='{')-(ch=='}')
+                    if depth==0:
+                        body=t[start:end]
+                        break
+            break
         for tm in re.finditer(r'timing_type\s*:\s*(min|max)_clock_tree_path\s*;.*?cell_rise\s*\([^)]*\)\s*\{[^}]*?values\(\s*"\s*([\d.]+)',
-                              pm.group(1) if pm else '', re.S):
+                              body, re.S):
             out[tm.group(1)] = float(tm.group(2))
         _TREE_INS[key] = out
     return _TREE_INS[key]
@@ -487,7 +529,7 @@ def sta_latency_lines(lat, pin_master, libs, corner, ci):
     """
     lines, correction = [], {}
     for pin, v in sorted(lat.items()):
-        mst, port = pin_master[pin], pin.split('/')[1].split('[')[0]
+        mst, port = pin_master[pin], pin.split('/')[1]
         lp = libs[corner].get(mst, (None,))[0]
         tree = pin_tree_insertion(lp, port) if lp else {}
         pins = f'[get_pins -quiet {{{pin} {pin}[0]}}]'
@@ -524,7 +566,7 @@ def balance_latency(lat, pin_master, masters, mi, libs=None, group=None, parts=N
     # (the colck cfifo) were already balanced per pin.
     pin_ins, per_pin = {}, {}
     for k_ in lat:
-        mst, pn = pin_master[k_], k_.split('/')[1].split('[')[0]
+        mst, pn = pin_master[k_], k_.split('/')[1]
         if masters.get(mst, {}).get('view', 'interim') != 'interim':
             if (mst, pn) not in per_pin:
                 per_pin[(mst, pn)] = pin_insertion(mst, pn, libs)
@@ -561,24 +603,44 @@ def interim_lib(cells, corner, pads=None):
         L.append(f' type (b{w}) {{ base_type : array; data_type : bit; bit_width : {w}; bit_from : {w - 1}; bit_to : 0; '
                  'downto : true; }')
     for name, area, ports in cells:
+        assigned = S._assigned_record(name) if hasattr(S, '_assigned_record') else None
+        clock_bits = (assigned or {}).get('data_clock_bits', {})
+        assigned_clocks = {p.split('[')[0] for pins in (assigned or {}).get('clock_entries', {}).values() for p in pins}
         ck = next((c for c in CLK_NAMES if c in ports and ports[c][0] == 'input'), None)
+        rel = dict(next((v_ for m_, v_ in REL_CLK.items() if name.startswith(m_)), {}))
+        if getattr(S, 'CFIFO_COLCK', False):
+            rel.update(next((v_ for m_, v_ in REL_CLK_COLCK.items() if name.startswith(m_)), {}))
+        rel = {p_: c_ for p_, c_ in rel.items() if c_ in ports and ports[c_][0] == 'input'}
         L.append(f' cell ({name}) {{ area : {area:.3f};')
         for p, (d, w) in sorted(ports.items()):
             head = f'  bus ({p}) {{ bus_type : b{w};'
             body = [head, f'   direction : {"input" if d == "input" else "output" if d == "output" else "inout"};']
             if d == 'input':
                 body.append('   capacitance : 1.0;')
-            if p == ck or (d == 'input' and p in CLK_NAMES):     # every clock pin of a multi-clock glue master
+            if p == ck or (d == 'input' and (p in CLK_NAMES or p in rel.values() or p in assigned_clocks)):
                 body.append('   clock : true;')
+            elif p in clock_bits:
+                assert len(clock_bits[p]) == w, (name, p, 'clock attribution width')
+                for bit, rck in enumerate(clock_bits[p]):
+                    assert rck.split('[')[0] in assigned_clocks, (name, p, bit, rck)
+                    body.append(f'   pin ("{p}[{bit}]") {{')
+                    if d == 'input':
+                        for tt, v in (('setup_rising', k['su']), ('hold_rising', k['ho'])):
+                            body.append(f'    timing () {{ related_pin : "{rck}"; timing_type : {tt}; '
+                                        f'rise_constraint (scalar) {{ values ("{v}"); }} fall_constraint (scalar) {{ values ("{v}"); }} }}')
+                    elif d == 'output':
+                        body.append(f'    timing () {{ related_pin : "{rck}"; timing_type : rising_edge; '
+                                    f'cell_rise (scalar) {{ values ("{k["cq"]}"); }} cell_fall (scalar) {{ values ("{k["cq"]}"); }} '
+                                    'rise_transition (scalar) { values ("20"); } fall_transition (scalar) { values ("20"); } }')
+                    body.append('   }')
             elif ck and d == 'input':
-                rck = next((v_[p] for m_, v_ in REL_CLK.items() if name.startswith(m_) and p in v_), ck)
-                rck = rck if rck in ports else ck
+                rck = rel.get(p, ck)
                 pps = HOLD_PAD_FF if p in pads.get(name, ()) else 0.0
                 for tt, v in (('setup_rising', k['su'] + pps * PAD_SCALE[corner]), ('hold_rising', k['ho'] - pps)):
                     body.append(f'   timing () {{ related_pin : "{rck}"; timing_type : {tt}; '
                                 f'rise_constraint (scalar) {{ values ("{v}"); }} fall_constraint (scalar) {{ values ("{v}"); }} }}')
             elif ck and d == 'output':
-                body.append(f'   timing () {{ related_pin : "{ck}"; timing_type : rising_edge; '
+                body.append(f'   timing () {{ related_pin : "{rel.get(p, ck)}"; timing_type : rising_edge; '
                             f'cell_rise (scalar) {{ values ("{k["cq"]}"); }} cell_fall (scalar) {{ values ("{k["cq"]}"); }} '
                             'rise_transition (scalar) { values ("20"); } fall_transition (scalar) { values ("20"); } }')
             body.append('  }')

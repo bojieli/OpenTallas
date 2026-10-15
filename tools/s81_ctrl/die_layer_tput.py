@@ -248,8 +248,54 @@ def handoffs():
                            'L14 ~235k cycles): 0 cycles on the priced layer; the L14 layer run hosts eng.* behaviourally'))
 
 
+def vm_read_measured(specs):
+    """--lvm NAME=DIR:LVM (the first is the base): the production-shape layer at several read latencies of the bench's
+    behavioural VM (tb_s81_die_layer LVM).  Which jobs of the HC master pay the latency serially, measured."""
+    runs = []
+    for sp in specs:
+        name, rest = sp.split('=', 1)
+        d, lvm = rest.rsplit(':', 1)
+        lay = {}
+        for f in sorted(Path(d).glob('run_nom_L*.log')):
+            log = f.read_text()
+            m = re.search(r'layer_cycles=(\d+)', log)
+            opt = {int(x[1]): (int(x[2]), int(x[4]), int(x[5])) for x in re.finditer(r'OPT (\d+) port (\d+) dur (-?\d+) start (-?\d+) end (-?\d+)', log)}
+            lay[f.stem.split('_')[-1]] = dict(layer_cycles=int(m[1]), verdict='PASS' if 'TB_S81_DIE_LAYER PASS' in log else 'FAIL', opt=opt)
+        runs.append(dict(name=name, dir=str(d), lvm=int(lvm), layers=lay))
+    base = runs[0]
+    out = dict(what='tb_s81_die_layer, production shape (NG 256, hierarchical HC slab, nominal link, --coef-split), read latency of '
+                    'the behavioural VM raised from the bench default: + 20 = the bgq28 leaf chain at hop 1, + 44 = hop 2 (+ 40) with '
+                    'the front-end hierarchy (+ 4).  Only the HC master reads this VM in the bench (SU / svc / select are '
+                    'behavioural, the field has its own capture path): the field + SU share of the VM read cost stays modelled',
+               base=dict(name=base['name'], lvm=base['lvm'], layers={L: v['layer_cycles'] for L, v in base['layers'].items()}), runs=[])
+    for r in runs[1:]:
+        d = r['lvm'] - base['lvm']
+        row = dict(name=r['name'], dir=r['dir'], lvm=r['lvm'], added_latency=d, layers={})
+        worst = 0
+        for L, v in r['layers'].items():
+            b = base['layers'][L]
+            own = sorted(k for k in v['opt'] if (v['opt'][k][2] - v['opt'][k][1]) - (b['opt'][k][2] - b['opt'][k][1]) == d and v['opt'][k][0] == 2)
+            dl = v['layer_cycles'] - b['layer_cycles']
+            worst = max(worst, dl)
+            row['layers'][L] = dict(layer_cycles=v['layer_cycles'], verdict=v['verdict'], delta=dl, serial_reads=round(dl / d, 2),
+                                    hc_jobs_longer_by_the_latency=len(own))
+        base_tok = {}
+        for wl, name in AC.DESIGNS['s81']['workloads'].items():
+            doc = json.loads((AC.TP / f'{name}.json').read_text())
+            t, _ = AC.solve(doc['nodes'], doc['edges'])
+            nl = sum(n.get('op') == 'attn.hc_post' for n in doc['nodes'])          # layers of the token (AR 40; MTP + its draft layers)
+            base_tok[wl] = dict(layers=nl, added_cycles=worst * nl, e2e_loss_pct=round(AC.loss_pct(t, t + worst * nl), 3))
+        row['token_measured_layer_delta_on_every_layer'] = base_tok
+        row['token_model_h_load_and_coef_a'] = token_loss({'attn.hc_pre': d, 'ffn.hc_pre': d}, hop_delta=d)
+        out['runs'].append(row)
+    out['finding'] = ('three VM read round trips of the HC master are serial in a layer: H_LOAD (layer entry) and the COEF-a in front of '
+                      'each of the two NORMs; COEF-b and the boot GAIN loads take the latency too but are off the critical chain')
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument('--lvm', action='append', default=[], help='NAME=DIR:LVM, the first is the base (VM read latency runs)')
     ap.add_argument('--run', action='append', default=[], help='NAME=DIR:MODE:L0,L2[:label] (repeat)')
     ap.add_argument('--mut', action='append', default=[], help='NAME=DIR:MODE:L (negative controls, repeat)')
     ap.add_argument('--primary', required=True, help='the production-shape run the ratios and the ledger rows come from')
@@ -304,6 +350,8 @@ def main():
                delta_by_op={k: round(v, 1) for k, v in d.items()}, e2e_norm=token_loss(d), unpriced_serial=serial,
                coefficient_chain=chain)
     rec['handoffs'] = handoffs()
+    if a.lvm:
+        rec['vm_read_measured'] = vm_read_measured(a.lvm)
     if a.extra:
         rec.update(json.loads(a.extra.read_text()))
     a.out.parent.mkdir(parents=True, exist_ok=True)

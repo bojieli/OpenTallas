@@ -260,13 +260,64 @@ def check(spec, name, jobs, show, blob, closure_counts=None, bench_gap=None, exi
         if not txt("fix", 20):
             return refuse("pin_register needs \"fix\": what the new kit changes so the pin flops sit at the pins "
                           "(kit recipe 2, RTL pin flops, a split): a re-route of the same kit repeats the defect")
+        # tile defect (header 10-13 die clock delivery rule): launch > 220 ps or capture > 190 ps beyond the boundary
+        # clock (phi - R, first-load Liberty) is a defect of the VIEW whatever the pair it meets -- the die budget is
+        # one fixed budget per face, so a view that spends more than its share is re-built, not waived.
+        lw, cp = rr.get("launch_ps"), rr.get("capture_ps")
+        if (_num(lw) and lw > TL.PIN_LAUNCH_MAX_PS) or (_num(cp) and cp > TL.PIN_CAPTURE_MAX_PS):
+            return admit(f"{rr['cell']} is a pin-register tile defect: worst launch {lw} ps (> {TL.PIN_LAUNCH_MAX_PS}) / "
+                         f"capture {cp} ps (> {TL.PIN_CAPTURE_MAX_PS}) at phi - R ({rr['source']}); fix: "
+                         f"{rr['fix'].strip()[:200]}")
         if not _num(pc):
-            return refuse("pin_register needs the measured \"pair_cost_ps\" (o + s of the view in the audit)")
+            return refuse("pin_register needs the measured \"pair_cost_ps\" (o + s of the view in the audit) or the "
+                          f"view's worst \"launch_ps\" > {TL.PIN_LAUNCH_MAX_PS} / \"capture_ps\" > {TL.PIN_CAPTURE_MAX_PS}")
         if pc <= TL.PIN_REGISTER_PAIR_MAX_PS:
             return refuse(f"pin_register pair cost {pc} ps is not above {TL.PIN_REGISTER_PAIR_MAX_PS} ps: the view "
                           f"closes a hop within its reach (relay within the reach), the closed view stands")
         return admit(f"{rr['cell']} is a pin-register violation: pair cost {pc} ps > {TL.PIN_REGISTER_PAIR_MAX_PS} ps "
                      f"({rr['source']}); fix: {rr['fix'].strip()[:200]}")
+    if kind == "native_launch":
+        # (el1014-root-macro-edge, 2026-10-14) a CLOSED view over the native launch budget (TT launch > 220 ps at phi - R)
+        # because its kit is older than the recipe-2 output stage (main 36de4b87f: one launch flop per output pin, HB2
+        # pad, pin registers kept).  Re-kit of the SAME block: same RTL, same outline / pin faces, only the output stage
+        # changes -- the gate verifies all three (tools/ref_tile/rekit_native_launch.py writes such a job).
+        lw = rr.get("launch_ps")
+        if not txt("source", 3):
+            return refuse("native_launch needs \"source\": the native pin audit JSON the view failed in "
+                          "(results/arch/native_pin_audit_*/<design>.json)")
+        if exists is not None and not exists(rr["source"].strip()):
+            return refuse(f"native_launch source file {rr['source']!r} does not exist (absolute path, or a path on the "
+                          f"job's commit / origin/main)")
+        if not txt("cell", 3):
+            return refuse("native_launch needs \"cell\": the audited cell (the view's lib cell)")
+        if not _num(lw) or lw <= TL.PIN_LAUNCH_MAX_PS:
+            return refuse(f"native_launch needs the view's measured worst \"launch_ps\" > {TL.PIN_LAUNCH_MAX_PS} "
+                          f"(got {lw!r}); a capture-only miss is pin_register")
+        if rtl[last["name"]][0] == "differs":
+            return refuse("native_launch is a re-kit of the closed RTL, but " + rtl[last["name"]][1]
+                          + " (a changed block is rtl_change)")
+        g_new = (new_rec or {}).get("geom") or {}
+        g_old = (recs[last["name"]] or {}).get("geom") or {}
+        moved = sorted(k for k in ("FW", "FH", "PINS") if g_new.get(k) != g_old.get(k))
+        if g_new and g_old and moved:
+            return refuse(f"native_launch keeps the closed outline and pin faces, but {', '.join(moved)} differ from "
+                          f"closed {last['name']} (a moved outline / pin plan is slot_change)")
+        m = KIT_RE.search(((spec.get("stages") or {}).get("route") or {}).get("cmd") or "")
+        kd = m.group(1) if m else None
+        if kd:
+            env = show(new_commit, f"{kd}/kit.env") or ""
+            gpl = show(new_commit, f"{kd}/pre_gpl.tcl") or ""
+            if env and not (re.search(r"^RECIPE=([2-9]|\d\d)", env, re.M) and "pin_reg_split.tcl" in gpl
+                            and "OT_KEEP_PIN_REGS=1" in env):
+                return refuse(f"native_launch: the kit {kd} at {new_commit[:9]} does not carry the recipe-2 output stage "
+                              f"(RECIPE=2, pin_reg_split.tcl in pre_gpl.tcl, OT_KEEP_PIN_REGS=1): a re-route of the same "
+                              f"output stage repeats the launch miss")
+            old_gpl = show(_commit(last), f"{kd}/pre_gpl.tcl") or ""
+            if "pin_reg_split.tcl" in old_gpl:
+                return refuse(f"native_launch: closed {last['name']} already had the recipe-2 output stage; the launch "
+                              f"miss has another cause (pin_register with the measured fix)")
+        return admit(f"{rr['cell']} TT launch {lw} ps > {TL.PIN_LAUNCH_MAX_PS} at phi - R ({rr['source']}); same RTL "
+                     f"({rtl[last['name']][0]}), same outline / pins, kit re-generated with the recipe-2 output stage")
     # evidence_gap
     if not txt("why_route", 20):
         return refuse("evidence_gap needs \"why_route\": why a ROUTE is needed (a missing bench is bound to the closed "

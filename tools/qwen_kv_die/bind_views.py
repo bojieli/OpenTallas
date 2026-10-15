@@ -29,6 +29,7 @@ sys.path.insert(0, str(ROOT / 'tools' / 'qwen_kv_die'))
 import kv_die as KV  # noqa: E402
 
 CORNERS = ('tt', 'ff')
+OPTIONAL_CORNERS = ('ss',)     # qwen-split kvsys: SS is a reported sensitivity only (owner option B), bound when the view has it
 
 
 def macro_block(text, name=None):
@@ -201,19 +202,23 @@ def bind(case, libs, master, vdir):
     new = re.sub(rf'FOREIGN {re.escape(rname)}\b', f'FOREIGN {master}', new)
     libsha = {}
     try:
-        for c in CORNERS:
+        for c in CORNERS + OPTIONAL_CORNERS:
             src = next(vdir.glob(f'*_{c}.lib'), None)
             if src is None:
+                if c in OPTIONAL_CORNERS:
+                    continue
                 raise ValueError(f'{master}: view has no {c} lib')
             libsha[c] = write_lib(master, c, src, pmap, frame_w, libs / f'qfd_etm_{master}_{c}.lib')
     except (ValueError, StopIteration) as e:
-        for c in CORNERS:
+        for c in CORNERS + OPTIONAL_CORNERS:
             (libs / f'qfd_etm_{master}_{c}.lib').unlink(missing_ok=True)
         rec.update(bound=False, cls='timing_view', reason=str(e))
         return rec
     elef.write_text(et[:s0] + new + et[s1:])
-    for c in CORNERS:
+    for c in CORNERS + OPTIONAL_CORNERS:
         f = libs / f'qfd_elements_{c}.lib'
+        if not f.exists():
+            continue
         t, ok = strip_cell(f.read_text(), master)
         f.write_text(t)
     rec.update(bound=True, mapped_bits=len(pmap), unmapped_real_pins=len(real_w) and sum(1 for p in rpins if p not in pmap and p not in ('VDD', 'VSS')),
@@ -252,7 +257,10 @@ def main(argv=None):
     ap.add_argument('--libs', type=Path, required=True)
     ap.add_argument('--view', action='append', default=[], help='master=view_dir')
     ap.add_argument('--out', type=Path, required=True)
+    ap.add_argument('--split', action='store_true', help='qwen-split KV/system die bindings (kv_die SPLIT_BINDINGS)')
     a = ap.parse_args(argv)
+    if a.split:
+        KV._set_geometry(True)
     recs = {}
     for v in a.view:
         mst, d = v.split('=', 1)

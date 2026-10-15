@@ -25,6 +25,33 @@ def spec(_ex, **kw):
 
 
 class Gen(unittest.TestCase):
+    def test_ordered_pin_group_limit_reaches_gate_and_route(self):
+        s = RT.load_spec(spec("nhb_pbst_ref", route={"pin_group_max": 16}))
+        r = RT.gen(spec("nhb_pbst_ref", route={"pin_group_max": 16}), write=False)
+        blocks = RT.place_blocks(s, *r["outline"], RT.blocks_of(s))
+        env = RT.gen_env(s, "k", *r["outline"], RT.layer_contract(s, None), blocks)
+        self.assertIn("export OT_PIN_GROUP_MAX=16", env)
+        self.assertIn("PIN_MIN_TRACKS=2", env)
+        self.assertIn("OT_PIN_GROUP_MAX=16", RT.gen_job(s, "k", "deadbeef", blocks)["stages"]["route"]["cmd"])
+        s["route"].pop("pin_group_max")
+        self.assertEqual(RT.pin_group_max(s), 32)
+
+    def test_invalid_ordered_pin_group_limit_refused(self):
+        for value in (0, -1, 33, True, 16.5, "16"):
+            with self.assertRaises(RT.SpecError):
+                RT.load_spec(spec("nhb_pbst_ref", route={"pin_group_max": value}))
+    def test_secondary_clock_is_declared_before_data_slew(self):
+        s = {"name": "two_root", "clock_port": "ck",
+             "sdc_extra": ["physical/qwen_romio_slots/qfd_coll_xfifo_native.sdc"]}
+        text = RT.gen_sdc(s, 770)
+        self.assertLess(text.index("create_clock -name ckd"),
+                        text.index("set_input_transition 150 [all_inputs -no_clocks]"))
+        # Source slew stays explicit, and data arrival tags are removed before
+        # measuring the secondary boundary reference in the extra SDC.
+        self.assertIn("set_input_transition 150 [get_ports ckd]", text)
+        self.assertLess(text.index("unset_input_delay -clock $ot_xf_refclk"),
+                        text.index("arrival_max_rise"))
+
     def test_pbst_kit(self):
         r = RT.gen(spec("nhb_pbst_ref"), write=False)
         self.assertEqual([f for f in r["findings"] if f[0] == "FAIL"], [])
@@ -108,6 +135,69 @@ class Gen(unittest.TestCase):
         for b in blocks:
             for v in (b["x"], b["y"]):
                 self.assertAlmostEqual(v / RT.CHILD_LATTICE_UM, round(v / RT.CHILD_LATTICE_UM), places=6)
+
+
+class Abut(unittest.TestCase):
+    """two R0 macros stacked N-S at gap <= 0.1 um with pins on W / E only are one abutted stack (no channel FAIL);
+    side by side, or a real gap under 20 um, keeps the channel rule"""
+    V = "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+
+    def blk(self, i, x, y):
+        m = RT.read_view_lef(self.V)
+        return {"kind": "macro", "view": self.V, "master": m["name"], "inst": None, "w": m["W"], "h": m["H"], "at": [x, y],
+                "orient": "R0", "count": 1, "idx": i, "x": x, "y": y, "offtrack": 0}
+
+    def chan(self, blocks):
+        s = {"pins": {"S": ["ck"]}}
+        return [m for sev, chk, m, _ in RT.floorplan_checks(s, 400.0, 400.0, blocks, None) if chk == "channel"]
+
+    def test_abut_plan_is_probe_only(self):
+        """abut_plan admits a planned narrow channel as WARN only on a probe cluster (job.hold_merge); without the
+        probe marker it FAILs itself and the 20-um channel rule still fires"""
+        w = RT.read_view_lef(self.V)["W"]
+        bl = [self.blk(0, 100.0, 100.0), self.blk(1, 100.0 + w + 4.32, 100.0)]
+        ab = {"channel_um": 4.32, "edge_um": 20.0, "why": "lane bay probe"}
+        probe = {"kind": "cluster", "pins": {"S": ["ck"]}, "abut_plan": ab, "job": {"hold_merge": "probe"}}
+        r = RT.floorplan_checks(probe, 400.0, 400.0, bl, None)
+        self.assertEqual([c for sev, c, _, _ in r if sev == "FAIL" and c == "channel"], [])
+        self.assertEqual([sev for sev, c, _, _ in r if c == "abut_plan"], ["WARN"])
+        merge = {"kind": "cluster", "pins": {"S": ["ck"]}, "abut_plan": ab, "job": {}}
+        r = RT.floorplan_checks(merge, 400.0, 400.0, bl, None)
+        self.assertEqual([sev for sev, c, _, _ in r if c == "abut_plan"], ["FAIL"])
+        self.assertEqual(len([c for sev, c, _, _ in r if sev == "FAIL" and c == "channel"]), 1)
+        tight = [self.blk(0, 100.0, 100.0), self.blk(1, 100.0 + w + 2.16, 100.0)]        # under the declared channel
+        r = RT.floorplan_checks(probe, 400.0, 400.0, tight, None)
+        self.assertEqual(len([c for sev, c, _, _ in r if sev == "FAIL" and c == "channel"]), 1)
+
+    def test_stack_abutted(self):
+        h = RT.read_view_lef(self.V)["H"]
+        self.assertEqual(self.chan([self.blk(0, 100.0, 100.0), self.blk(1, 100.0, 100.0 + h + 0.024)]), [])
+
+    def test_stack_abutted_mirrored(self):
+        """MY / MX / R180 banks abut like R0 (touching faces carry no signal pin); a rotated macro keeps the rule"""
+        h = RT.read_view_lef(self.V)["H"]
+        for o in ("MY", "MX", "R180"):
+            a, b = self.blk(0, 100.0, 100.0), self.blk(1, 100.0, 100.0 + h + 0.024)
+            a["orient"] = b["orient"] = o
+            self.assertEqual(self.chan([a, b]), [], o)
+        a, b = self.blk(0, 100.0, 100.0), self.blk(1, 100.0, 100.0 + h + 0.024)
+        a["orient"] = b["orient"] = "R90"
+        self.assertEqual(len(self.chan([a, b])), 1)
+
+    def test_at_exact_is_not_snapped(self):
+        h = RT.read_view_lef(self.V)["H"]
+        s = {"kind": "tile", "pins": {"S": ["ck"]}, "children": [],
+             "macros": [{"view": self.V, "count": 1, "at": [99.792, 99.36], "at_exact": True},
+                        {"view": self.V, "count": 1, "at": [99.792, round(99.36 + h + 0.024, 3)], "at_exact": True}]}
+        bl = RT.place_blocks(s, 400.0, 400.0, RT.blocks_of(s))
+        self.assertEqual([b["y"] for b in bl], [99.36, round(99.36 + h + 0.024, 3)])
+        self.assertEqual([b["offtrack"] for b in bl], [bl[0]["offtrack"]] * 2)      # same residue on every track grid
+        self.assertEqual([m for sev, chk, m, _ in RT.floorplan_checks(s, 400.0, 400.0, bl, None) if chk == "channel"], [])
+
+    def test_gap_and_side_by_side_still_fail(self):
+        m = RT.read_view_lef(self.V)
+        self.assertEqual(len(self.chan([self.blk(0, 100.0, 100.0), self.blk(1, 100.0, 100.0 + m["H"] + 5.0)])), 1)
+        self.assertEqual(len(self.chan([self.blk(0, 100.0, 100.0), self.blk(1, 100.0 + m["W"] + 0.024, 100.0)])), 1)
 
 
 class Job(unittest.TestCase):
@@ -222,8 +312,14 @@ class Recipe(unittest.TestCase):
                   "OT_INHOLD_DRV=BUFx4f_ASAP7_75t_R", "--macro-place-halo 5.4 5.4"):
             self.assertIn(k, env)
         gpl = [x for x in new["pre_gpl.tcl"].splitlines() if x.startswith("source ")]
-        self.assertEqual(gpl, ["source /src/physical/dsrom_window_source/leaf_iohold.tcl",
-                               "source /src/physical/qwen_die_masters/io_flop_at_pins.tcl"])   # hold stages FIRST
+        self.assertEqual(gpl, ["source /src/physical/common_flow/pin_reg_split.tcl",          # one flop per pin FIRST
+                               "source /src/physical/dsrom_window_source/leaf_iohold.tcl",      # then the hold stages
+                               "source /src/physical/qwen_die_masters/io_flop_at_pins.tcl"])
+        # recipe-2 pin defaults (el1014-root-recipe2): HB2 pad, synthesis keep of top-level pin registers
+        self.assertIn("OT_INHOLD_MASTER=HB2xp67_ASAP7_75t_R", env)
+        self.assertIn("OT_KEEP_PIN_REGS=1", env)
+        self.assertNotIn("HB4xp67", env)
+        self.assertNotIn("OT_HOLD_PAD_STRONG", env)
         dpl = new["pre_dpl.tcl"]
         self.assertIn("leaf_inhold_release.tcl", dpl)
         self.assertIn("out_flop_release.tcl", dpl)
@@ -234,11 +330,54 @@ class Recipe(unittest.TestCase):
         self.assertEqual((sp["recipe"], sp["inhold"], sp["outhold"], sp["io_flop_at_pins"]["cols"]), (2, True, True, 4))
         ref = json.loads(new["floorplan.json"])["referenced"]
         for f in (f"{kd}/pre_gpl.tcl", f"{kd}/pre_dpl.tcl", "physical/dsrom_window_source/leaf_iohold.tcl",
+                  "physical/common_flow/pin_reg_split.tcl",
                   "physical/dsrom_window_source/leaf_inhold.tcl", "physical/dsrom_window_source/leaf_inhold_release.tcl",
                   "physical/qwen_die_masters/io_flop_at_pins.tcl", "physical/qwen_die_masters/out_flop_release.tcl"):
             self.assertIn(f, ref)
             if not f.startswith(kd):
                 self.assertTrue((RT.ROOT / f).is_file(), f)
+
+    def test_recipe_2_macro_edge_guard_default(self):
+        # el1014-root-macro-edge: a recipe-2 tile with hard macros routes with the macro-edge via guard (pre-GRT add,
+        # post-DRT remove); recipe 1, a spec with its own edge guard, and "macro_edge_guard": false do not get it
+        g = "source /src/physical/qwen_die_masters/sram_edge_guard.tcl"
+        with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as b, \
+                tempfile.TemporaryDirectory() as c, tempfile.TemporaryDirectory() as d:
+            new, old = self.kit(a), self.kit(b, recipe=1)
+            own = self.kit(c, boundary_tcl=["physical/qwen_die_masters/sram_edge_guard.tcl"])
+            off = self.kit(d, macro_edge_guard=False)
+        self.assertEqual(new["pre_grt.tcl"].count(g), 1)
+        self.assertEqual(new["post_drt.tcl"].count(g), 1)
+        self.assertLess(new["pre_grt.tcl"].index("grt_macro_top_layer.tcl"), new["pre_grt.tcl"].index(g))
+        self.assertNotIn(g, old["pre_grt.tcl"] + old["post_drt.tcl"])
+        self.assertEqual(own["pre_grt.tcl"].count(g), 1)                    # the spec's own entry, not a second one
+        self.assertNotIn(g, off["pre_grt.tcl"] + off["post_drt.tcl"])
+        s = RT.load_spec(spec(self.EXN))
+        RT.apply_recipe(s, 2)
+        kd = RT.kit_dir(s)
+        self.assertIn("physical/common_flow/macro_edge_via_guard.tcl", RT.referenced_paths(s, kd))
+        self.assertFalse(RT.macro_edge_guard(dict(s, macros=[])))           # no hard macro: no guard
+
+    def test_io_hold_margin_split(self):
+        # q14 r8 2026-10-14: route.io_hold_margin_ns relieves ONLY the route-time FF repair SDC of the boundary; sign-off
+        # (signoff.sdc, verdict post_sdc) is unchanged; no field -> one margin, no extra file (existing kits unchanged)
+        with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as b:
+            k = self.kit(a, name="iohm_a", route={"hold_margin_ns": 0.06, "io_hold_margin_ns": 0.01})
+            o = self.kit(b, name="iohm_b", route={"hold_margin_ns": 0.03})
+        ffr, so = k["signoff_ffrepair.sdc"], k["signoff.sdc"]
+        self.assertIn("set ::env(OT_IO_HOLD_SKEW) 0\nset ::env(OT_IO_IN_HOLD_SKEW) -50\n", ffr)
+        self.assertTrue(ffr.rstrip().endswith("unset -nocomplain ::env(OT_IO_IN_HOLD_SKEW)"))
+        self.assertNotIn("set ::env(OT_IO_IN_HOLD_SKEW)", so)
+        self.assertIn("set ::env(OT_IO_HOLD_SKEW) 50\n", so)
+        job = json.loads(k["job.json"])
+        self.assertIn("signoff_ffrepair.sdc'", job["stages"]["route"]["cmd"])
+        self.assertIn("HM=0.06 ", job["stages"]["route"]["cmd"])
+        self.assertTrue(job["verdict"]["post_sdc"][0].endswith("/signoff.sdc"))
+        self.assertTrue(any(f.endswith("/signoff_ffrepair.sdc") for f in json.loads(k["floorplan.json"])["referenced"]))
+        self.assertNotIn("signoff_ffrepair.sdc", o)
+        self.assertNotIn("signoff_ffrepair", json.loads(o["job.json"])["stages"]["route"]["cmd"])
+        with self.assertRaises(RT.SpecError):
+            RT.io_hold_relief_ps({"route": {"hold_margin_ns": 0.01, "io_hold_margin_ns": 0.02}})
 
     def test_recipe_2_spec_overrides(self):
         with tempfile.TemporaryDirectory() as a:
@@ -270,6 +409,47 @@ class Recipe(unittest.TestCase):
             self.assertFalse("inhold" in s or "outhold" in s)
             with self.assertRaises(RT.SpecError):
                 self.kit(a, name="rcp_e", recipe=3)
+
+    def test_hold_pad_strong_ports_need_a_measured_basis(self):
+        with tempfile.TemporaryDirectory() as a:
+            with self.assertRaises(RT.SpecError):        # HB4 on some pins only with the routed FF evidence
+                self.kit(a, name="rcp_hp0", hold_pad={"strong_ports": "^n_y"})
+            k = self.kit(a, name="rcp_hp1", hold_pad={"strong_ports": "^(n_y|rq_row)",
+                                                      "basis": "job x-r1: FF -7.1 ps on n_y[*] with HB2"})
+            env = k["kit.env"]
+            self.assertIn("OT_INHOLD_MASTER=HB2xp67_ASAP7_75t_R", env)
+            self.assertIn("OT_HOLD_PAD_STRONG_RE='^(n_y|rq_row)'", env)
+            self.assertIn("OT_HOLD_PAD_STRONG_MASTER=HB4xp67_ASAP7_75t_R", env)
+            k = self.kit(a, name="rcp_hp2", hold_pad={"cell": "HB4xp67_ASAP7_75t_R"})   # an explicit pad wins
+            self.assertIn("OT_INHOLD_MASTER=HB4xp67_ASAP7_75t_R", k["kit.env"])
+            with self.assertRaises(RT.SpecError):
+                self.kit(a, name="rcp_hp3", hold_pad={"cell": "BUFx2_ASAP7_75t_R"})
+
+    def test_spec_orfs_vars_pad_and_driver_win(self):
+        # a spec that names its own pad / driver in orfs_vars keeps them (no recipe default appended after them)
+        with tempfile.TemporaryDirectory() as a:
+            k = self.kit(a, name="rcp_ov", orfs_vars={"OT_INHOLD_MASTER": "HB2xp67_ASAP7_75t_R",
+                                                      "OT_INHOLD_DRV": "BUFx2_ASAP7_75t_R"})
+            env = k["kit.env"]
+            self.assertEqual(env.count("OT_INHOLD_MASTER="), 1)
+            self.assertEqual(env.count("OT_INHOLD_DRV="), 1)
+            self.assertIn("OT_INHOLD_DRV=BUFx2_ASAP7_75t_R", env)
+            self.assertNotIn("hold_pad", json.loads(k["spec.json"]))
+
+    def test_split_and_keep_switch_off(self):
+        with tempfile.TemporaryDirectory() as a:
+            k = self.kit(a, name="rcp_off", pin_reg_split=False, keep_pin_regs=False)
+            self.assertNotIn("pin_reg_split", k["pre_gpl.tcl"])
+            self.assertNotIn("OT_KEEP_PIN_REGS", k["kit.env"])
+            k = self.kit(a, name="rcp_noflop", io_flop_at_pins=None)          # hold stages alone: no split, no keep
+            self.assertNotIn("OT_KEEP_PIN_REGS", k["kit.env"])
+            self.assertIn("OT_INHOLD_MASTER=HB2xp67_ASAP7_75t_R", k["kit.env"])
+
+    def test_existing_kit_keeps_hb4_pad(self):
+        with tempfile.TemporaryDirectory() as a:
+            old = self.old_kit(a, name="rcp_old_pad", outhold=True)
+            self.assertNotIn("OT_INHOLD_MASTER", old["kit.env"])          # recipe 1: leaf_iohold default (HB4), unchanged
+            self.assertNotIn("OT_KEEP_PIN_REGS", old["kit.env"])
 
     def test_pin_flop_hook_knobs_are_opt_in(self):
         t = (RT.ROOT / "physical/qwen_die_masters/io_flop_at_pins.tcl").read_text()

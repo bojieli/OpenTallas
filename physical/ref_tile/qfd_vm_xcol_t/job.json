@@ -1,5 +1,5 @@
 {
- "name": "qfd_vm_xcol_t-xc1-COMMIT",
+ "name": "qfd_vm_xcol_t-xc1-d6fcb8405",
  "block": "ot_qfd_vm_xcol_t",
  "ref_tile": true,
  "owner": "Claude:qwen_tp8_vm_plan",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/qwen-tp8-vm-phys",
-  "commit": "COMMIT",
+  "commit": "d6fcb8405",
   "extra_paths": [
    "rtl/qwen_sys/vm_me_20261008",
    "rtl/qwen_sys/vm_die_split_20261012",
@@ -149,7 +149,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_vm_xcol_t/qfd_vm_xcol_t-xc1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_vm_xcol_t/qfd_vm_xcol_t-xc1-d6fcb8405"
   }
  ],
  "cycles_added": 0,

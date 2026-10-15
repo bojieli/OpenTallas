@@ -43,10 +43,10 @@ SRC = [
     f'{M}/dsfd_mtp_seq_rtt.sv', f'{M}/dsfd_mtp_partner_ep.sv', f'{C}/dsfd_coll_mtp_lane.sv', f'{M}/dsfd_coll_mtp_ep.sv',
     'rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv', f'{C}/ot_s81ph_skid2.sv',
     # primary die
-    f'{M}/ot_dsrom_mtp_seed_launch.sv', f'{M}/ot_dsrom_mtp_hrow.sv',
+    f'{M}/ot_dsrom_mtp_seed_launch.sv', f'{M}/ot_dsrom_mtp_hrow.sv', f'{M}/ot_dsrom_mtp_hrow_bank.sv',   # hrow_rx's hardened bank (el1013)
     # draft die A: P2
     f'{C}/dsfd_coll_p2_lane.sv', f'{D}/ot_mtp_p2_ordered_rows.sv', f'{D}/ot_mtp_p2_prefix.sv', f'{D}/ot_mtp_p2_prefix_native.sv',
-    f'{D}/ot_mtp_p2_prefix_path.sv', f'{D}/dsfd_p2_lnk.sv', f'{D}/dsfd_p2_rtt.sv', 'rtl/v41rom/ot_v41_fadd.sv',
+    f'{D}/ot_mtp_p2_prefix_path.sv', f'{D}/ot_mtp_p2_tiles.sv', f'{D}/dsfd_p2_lnk.sv', f'{D}/dsfd_p2_rtt.sv', 'rtl/v41rom/ot_v41_fadd.sv',
     'rtl/common/ot_prefix.sv', 'rtl/common/ot_secded.sv', 'rtl/common/ot_sc_pfifo.sv',
     # draft head Markov join
     'rtl/v41rom/ot_v41_bmul2.sv', 'rtl/v41rom/ot_dsrom_bmul3.sv', 'rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv',
@@ -55,6 +55,7 @@ SRC = [
     # SRAM macro models
     'physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v',
     'physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v',
+    'physical/s81_ph_views/mtp/macros/ot_sram_1r1w_512x64_m4_r2c2/ot_sram_1r1w_512x64_m4_r2c2.v',
     'physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v',
 ]
 MARKOV = 'results/rtl/dsrom_markov_row_20261008'
@@ -76,6 +77,18 @@ def prepare(d: Path):
     subprocess.run(['python3', str(ROOT / 'tools/mtp_p2_prefix_fixture.py')], cwd=d, check=True, capture_output=True)
     for a, b in (('w', 'mk_w'), ('x', 'mk_x'), ('head', 'mk_head'), ('gold', 'mk_gold')):
         shutil.copy2(ROOT / MARKOV / f'{a}.hex', d / f'{b}.hex')
+
+
+def classify_run(log: str, returncode: int) -> str:
+    # A missing PASS line is not evidence that a mutation was observed. Runtime
+    # crashes, missing memory files and simulator aborts are harness failures.
+    if returncode != 0 or re.search(r'(?im)^(?:FATAL:|ERROR:|Traceback|Segmentation fault)', log):
+        return 'runtime_error'
+    if re.search(r'^WAVE FAIL', log, re.M):
+        return 'fail'
+    if re.search(r'^WAVE PASS ', log, re.M):
+        return 'pass'
+    return 'no_observation'
 
 
 def run_case(name: str, out: Path, sim: str):
@@ -100,10 +113,9 @@ def run_case(name: str, out: Path, sim: str):
     if b.returncode:
         return dict(case=name, expect=c['expect'], got='build_error', ok=False, tail=(b.stdout + b.stderr).splitlines()[-12:])
     with open(d / 'run.log', 'w') as fo:
-        subprocess.run(run, cwd=d, stdout=fo, stderr=subprocess.STDOUT)
+        result = subprocess.run(run, cwd=d, stdout=fo, stderr=subprocess.STDOUT)
     log = (d / 'run.log').read_text(errors='replace')
-    passed = bool(re.search(r'^WAVE PASS ', log, re.M))
-    got = 'pass' if passed else 'fail'
+    got = classify_run(log, result.returncode)
     lines = [l for l in log.splitlines() if l.startswith(('WAVE ', 'WAVE_CHARGE', 'WAVE_EVENT', 'WAVE FAIL'))]
     return dict(case=name, expect=c['expect'], got=got, ok=got == c['expect'], params=c['params'], defines=c['defines'],
                 lines=lines[:80], first_fail=next((l for l in lines if l.startswith('WAVE FAIL')), None))
@@ -112,7 +124,10 @@ def run_case(name: str, out: Path, sim: str):
 def main_run(a):
     out = a.out.resolve()
     out.mkdir(parents=True, exist_ok=True)
-    names = a.case or list(CASES)
+    names = list(a.case or CASES)
+    # Mutants use SMOKE parameters; their exact matched control must pass too.
+    if any(CASES[n]['expect'] == 'fail' for n in names) and 'smoke' not in names:
+        names.append('smoke')
     with cf.ThreadPoolExecutor(a.jobs) as ex:
         res = list(ex.map(lambda n: run_case(n, out, a.sim), names))
     src = sorted(set(SRC + TB + [f'{M}/tb/tb_mtp_wave_fn.svh', f'{M}/tb/tb_mtp_wave_meas.svh', 'tools/mtp_wave_bench.py']))

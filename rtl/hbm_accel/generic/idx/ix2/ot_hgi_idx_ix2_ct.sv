@@ -69,4 +69,44 @@ module ot_hgi_idx_ix2_ct (
             endcase
         end
 endmodule
+
+// ---------------------------------------------------------------------------------------------------------------------
+// ot_hgi_idx_ix2_kc: ONE hardened leaf = the frame control (ot_hgi_idx_ix2_ct, 169 flops: glue, no tile of its own)
+// + the keep bitmaps (ot_hgi_idx_ix2_ks).  Wires only; start / run leave the leaf from ct's flops and feed ks's pin
+// flops inside it.
+// ---------------------------------------------------------------------------------------------------------------------
+module ot_hgi_idx_ix2_kc (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire          go_i,
+    input  wire [11:0]   k_i,
+    input  wire          cand_en_i, keep_en_i,
+    input  wire [31:0]   n_i,
+    input  wire [6:0]    rank_i,
+    input  wire [19:0]   pos_i,
+    input  wire [2:0]    a_lo_i,
+    input  wire [5:0]    cs_lo_i,
+    input  wire [1:0]    ev,
+    input  wire [7:0]    ln_idle,
+    input  wire          qa_done, qa_bad, pk_done, pk_bad, wp_idle,
+    output wire          start,
+    output wire          run,
+    output wire          flush,
+    output wire [89:0]   fs,
+    output wire          rg_req,
+    output wire          done,
+    output wire          fault,
+    input  wire [1:0]    ks_v,
+    input  wire [21:0]   ks_ord,
+    input  wire [7:0]    c_done,
+    output wire [344:0]  kin,
+    output wire          kin_sent
+);
+    ot_hgi_idx_ix2_ct u_ct (.clk(clk), .rst_n(rst_n), .go_i(go_i), .k_i(k_i), .cand_en_i(cand_en_i), .keep_en_i(keep_en_i),
+        .n_i(n_i), .rank_i(rank_i), .pos_i(pos_i), .a_lo_i(a_lo_i), .cs_lo_i(cs_lo_i), .ev(ev), .ln_idle(ln_idle),
+        .qa_done(qa_done), .qa_bad(qa_bad), .pk_done(pk_done), .pk_bad(pk_bad), .wp_idle(wp_idle),
+        .start(start), .run(run), .flush(flush), .fs(fs), .rg_req(rg_req), .done(done), .fault(fault));
+    ot_hgi_idx_ix2_ks u_ks (.clk(clk), .rst_n(rst_n), .start(start), .run(run), .keep_en_i(keep_en_i), .ks_v(ks_v),
+        .ks_ord(ks_ord), .c_done(c_done), .kin(kin), .kin_sent(kin_sent));
+endmodule
 `default_nettype wire

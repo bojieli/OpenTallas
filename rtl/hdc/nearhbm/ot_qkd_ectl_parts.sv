@@ -1,4 +1,13 @@
 `timescale 1ns/1ps
+`ifndef KVD_HEADS
+`define KVD_HEADS 2
+`endif
+`ifndef KVD_Q_FP32
+`define KVD_Q_FP32 0
+`endif
+`ifndef KVD_QK_ONLY
+`define KVD_QK_ONLY 0
+`endif
 // ---------------------------------------------------------------------------------------------------------------------
 // q13-kvleaves 2026-10-13: the near-HBM row-engine control cell qkd_ectl as THREE die leaves (A | B | C, west to east).
 // The one-tile form (qkd_ectl_slot-q13r3: 648 x 129.6 um, 14,806 sinks on one root, TritonCTS insertion 357..538 ps /
@@ -55,6 +64,13 @@ module ot_qkd_fifo2_sh #(parameter integer D = 128, parameter integer D1 = 8) (
 endmodule
 
 module ot_qkd_ectl_part #(
+    // Static native QK profile: compiler reserves the return and consume edges.
+    // Ages count edges after the control-copy start edge (age register is zero there).
+    parameter integer STATIC_QK = 0,
+    parameter integer QK_ISSUE_AGE = 34,
+    parameter integer ROW_RETURN_LAT = 9, // rq_valid generator -> rsp_valid at this control copy
+    parameter integer HEADS = `KVD_HEADS,
+    parameter integer Q_FP32 = `KVD_Q_FP32,
     parameter integer PART = 1,          // 1 = A (W leaf), 2 = B (middle leaf), 3 = C (E leaf)
     parameter integer HD = 128,
     parameter integer R = 8,             // row engines in the stack
@@ -66,7 +82,9 @@ module ot_qkd_ectl_part #(
     parameter integer ND = 1,
     parameter integer HXK = 0,
     parameter integer HXN = 0,
-    parameter integer RWD = (PART == 3) ? 32 : 512     // row bits held here (C holds none: a pruned dummy slice)
+    parameter integer RWD = (PART == 3) ? 32 : 512,    // row bits held here (C holds none: a pruned dummy slice)
+    parameter integer XB2 = 0            // B (PART 2) only: x_i already carries the stage-2 word (direct seams: C's x2), so
+                                         // B's stage 3 is its own pin flop x1 (kvsys-elements r3)
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -99,6 +117,7 @@ module ot_qkd_ectl_part #(
     output reg                  ev_k_first,
     output reg                  ev_v_first,
     // W face (leaf A)
+    output wire                 req_epoch,          // alternating layer identity at the request pin
     output wire                 req_valid,
     output wire                 req_v,
     output wire                 req_g,
@@ -108,6 +127,7 @@ module ot_qkd_ectl_part #(
     // seams: the E-face control word west (C pin flops -> B pin flops -> A pin flops), the row response east
     input  wire [51:0]          x_i,
     output wire [51:0]          x_o,
+    output wire [51:0]          x2_o,        // optional stage-2 launch: direct C -> A seam, existing x2 state
     input  wire                 rsv_i,        // rsp_valid: A stage 2 -> B pin (B) | B feed-through -> C pin (C)
     output wire                 rsv_o,        // A: stage 2 (E-face flop); B: the feed-through flop (to C)
     input  wire                 rvm_i,        // B: A's second capture flop of rsp_valid (stage 1) -> the feed-through
@@ -153,24 +173,30 @@ module ot_qkd_ectl_part #(
     localparam integer GPH = HD / 16;                      // 16-lane groups per head
     localparam integer NG = 4 * GPH;
     // ---- reset tree: root, central control leaf, halves, heads, groups -----------------------------------------------
+    // kvsys-elements r2 2026-10-14 (native pin audit, qkd_ectl_b_tp8: rst_n capture 307.0 ps > 190): ONE synchroniser at
+    // the rst_n pin (ot_rst_relay 2 + 1); every reset leaf and pin-register block below takes rp, not the raw pin.
+    // Release is 3 cycles later in all three leaves alike (the copies still agree from the first start).
+    wire [0:0] rp_v;
+    ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rpin (.clk(clk), .rst_n_in(rst_n), .rst_n(rp_v));
+    wire rp = rp_v[0];
     wire r0, rc;
     wire [1:0] rhalf;
     wire [3:0] rhead;
     wire [NG-1:0] rgrp;
-    (* keep_hierarchy *) ot_nhb_rleaf_h u_r0 (.clk(clk), .arst_n(rst_n), .d(1'b1), .q(r0));
-    (* keep_hierarchy *) ot_nhb_rleaf_h u_rc (.clk(clk), .arst_n(rst_n), .d(r0), .q(rc));
+    (* keep_hierarchy *) ot_nhb_rleaf_h u_r0 (.clk(clk), .arst_n(rp), .d(1'b1), .q(r0));
+    (* keep_hierarchy *) ot_nhb_rleaf_h u_rc (.clk(clk), .arst_n(rp), .d(r0), .q(rc));
     wire rsc;                                                         // the score / running-max block's own leaf
-    (* keep_hierarchy *) ot_nhb_rleaf_h u_rsc (.clk(clk), .arst_n(rst_n), .d(r0), .q(rsc));
+    (* keep_hierarchy *) ot_nhb_rleaf_h u_rsc (.clk(clk), .arst_n(rp), .d(r0), .q(rsc));
     genvar gr;
     generate
         for (gr = 0; gr < 2; gr = gr + 1) begin : g_rhalf
-            (* keep_hierarchy *) ot_nhb_rleaf_h u_l (.clk(clk), .arst_n(rst_n), .d(r0), .q(rhalf[gr]));
+            (* keep_hierarchy *) ot_nhb_rleaf_h u_l (.clk(clk), .arst_n(rp), .d(r0), .q(rhalf[gr]));
         end
         for (gr = 0; gr < 4; gr = gr + 1) begin : g_rhead
-            (* keep_hierarchy *) ot_nhb_rleaf_h u_l (.clk(clk), .arst_n(rst_n), .d(rhalf[gr / 2]), .q(rhead[gr]));
+            (* keep_hierarchy *) ot_nhb_rleaf_h u_l (.clk(clk), .arst_n(rp), .d(rhalf[gr / 2]), .q(rhead[gr]));
         end
         for (gr = 0; gr < NG; gr = gr + 1) begin : g_rgrp
-            (* keep_hierarchy *) ot_nhb_rleaf_h u_l (.clk(clk), .arst_n(rst_n), .d(rhead[gr / GPH]), .q(rgrp[gr]));
+            (* keep_hierarchy *) ot_nhb_rleaf_h u_l (.clk(clk), .arst_n(rp), .d(rhead[gr / GPH]), .q(rgrp[gr]));
         end
     endgenerate
     // ---- registered boundary: every control copy sees each die input THREE flops after its pin ----------------------------
@@ -179,15 +205,16 @@ module ot_qkd_ectl_part #(
     localparam integer XW = 52;
     reg  [XW-1:0] x1, x2, x3;
     wire [XW-1:0] x_d = (PART == 3) ? {q_valid_in, nb_cr, exp_done, cyc8_in, T_in, start_in} : x_i;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin x1 <= {XW{1'b0}}; x2 <= {XW{1'b0}}; x3 <= {XW{1'b0}}; end
+    always @(posedge clk or negedge rp)
+        if (!rp) begin x1 <= {XW{1'b0}}; x2 <= {XW{1'b0}}; x3 <= {XW{1'b0}}; end
         else begin x1 <= x_d; x2 <= x1; x3 <= x2; end
 `ifdef KVD_ECTL3_MUT_B
-    wire [XW-1:0] xv = (PART == 3) ? x3 : x1;            // mutant: leaf B's control one cycle early
+    wire [XW-1:0] xv = (PART == 3) ? x3 : (PART == 2 && XB2 != 0) ? x_i : x1;   // mutant: leaf B's control one cycle early
 `else
-    wire [XW-1:0] xv = (PART == 3) ? x3 : (PART == 2) ? x2 : x1;
+    wire [XW-1:0] xv = (PART == 3) ? x3 : (PART == 2) ? ((XB2 != 0) ? x1 : x2) : x1;
 `endif
     assign x_o = x1;
+    assign x2_o = x2;
     wire        start      = xv[0];
     wire [13:0] T          = xv[14:1];
     wire [2:0]  cyc8_r     = xv[17:15];
@@ -203,8 +230,8 @@ module ot_qkd_ectl_part #(
     reg  [511:0]    rse;                                  // A: E-face flops of B's half (stage 2)
     reg  [RWD-1:0]  rd2, rd3;
     wire            rv_d = (PART == 1) ? rsp_valid_in : rsv_i;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin rv1 <= 1'b0; rv2 <= 1'b0; rv3 <= 1'b0; rvm <= 1'b0; bf <= 1'b0; end
+    always @(posedge clk or negedge rp)
+        if (!rp) begin rv1 <= 1'b0; rv2 <= 1'b0; rv3 <= 1'b0; rvm <= 1'b0; bf <= 1'b0; end
         else begin rv1 <= rv_d; rv2 <= rv1; rv3 <= rv2; rvm <= rsp_valid_in; bf <= rvm_i; end
     wire            rsp_valid = (PART == 1) ? rv3 : rv1;
     assign rsv_o = (PART == 1) ? rv2 : bf;
@@ -227,12 +254,12 @@ module ot_qkd_ectl_part #(
     reg  [1:0]      er_pd;                      // the push follows the word through both pin stages
     assign er_valid = er_valid_o;
     assign er_addr = er_addr_o;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin er_valid_o <= 1'b0; er_pd <= 2'b00; end
+    always @(posedge clk or negedge rp)
+        if (!rp) begin er_valid_o <= 1'b0; er_pd <= 2'b00; end
         else begin er_valid_o <= er_valid_g; er_pd <= {er_pd[0], er_valid_g}; end
     always @(posedge clk) begin er_addr_o <= er_addr_g; er_data_p <= er_data; end
     // the q beat (leaf C): pin flops, mid stage, third stage (with qv_r of the control word), then the S1b copies
-    localparam integer NQB = 8 * HD * 16 / 512;
+    localparam integer NQB = 4 * HEADS * HD * (Q_FP32 ? 32 : 16) / 512;
     reg  [5:0]        qb_p, qb_m, qb_r;
     reg  [511:0]      qd_p, qd_m, qd_r;
     reg  [6:0]        qcnt;
@@ -244,11 +271,21 @@ module ot_qkd_ectl_part #(
         qd_r <= qd_m;
 `endif
     end
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) qcnt <= 7'd0;
+    always @(posedge clk or negedge rp)
+        if (!rp) qcnt <= 7'd0;
         else if (start) qcnt <= 7'd0;
         else if (qv_r) qcnt <= qcnt + 7'd1;
     wire q_ready = (qcnt == NQB);
+    reg [15:0] schedule_age;
+    reg schedule_active;
+    always @(posedge clk or negedge rc)
+        if (!rc) begin schedule_age <= 0; schedule_active <= 0; end
+        else if (start) begin schedule_age <= 0; schedule_active <= 1; end
+        else if (schedule_active && schedule_age != 16'hffff) schedule_age <= schedule_age + 1'b1;
+    initial begin
+        if (STATIC_QK && (HEADS != 1 || QK_ISSUE_AGE < 2 || ROW_RETURN_LAT < 1 || DQ != 128))
+            $fatal(1, "invalid static QK profile");
+    end
 
     // ---- stack geometry ----------------------------------------------------------------------------------------------
     wire [13:0] base_s = {5'd0, S, 7'd0};
@@ -308,16 +345,17 @@ module ot_qkd_ectl_part #(
             end else if (rg_run && !rg_vph) begin
                 if (rg_klim) begin
                     if (rg_pidx >= n_s) rg_idx <= rg_idx + R;             // not a position: skip
-                    else if (has_credit) begin
+                    else if (STATIC_QK || has_credit) begin
                         issue = 1'b1;
                         rq_valid <= 1'b1; rq_v <= 1'b0; rq_g <= rg_g;
                         rq_t <= tpos(rg_pidx[10:7], rg_pidx[6:0]);
                         rg_idx <= rg_idx + R;
                     end
-                end else if (!rg_g) begin
+                end else if (HEADS == 2 && !rg_g) begin
                     rg_g <= 1'b1; rg_idx <= E;
                 end else begin
-                    rg_vph <= 1'b1; rg_g <= 1'b0; rg_gam <= E; rg_k <= 0; rg_j <= 0;
+                    if (STATIC_QK || `KVD_QK_ONLY) rg_run <= 1'b0;
+                    else begin rg_vph <= 1'b1; rg_g <= 1'b0; rg_gam <= E; rg_k <= 0; rg_j <= 0; end
                 end
             end else if (rg_run && rg_vph) begin
                 if (rg_gam < gmax) begin
@@ -335,7 +373,7 @@ module ot_qkd_ectl_part #(
                             end else rg_k <= rg_k + 4'd1;
                         end
                     end
-                end else if (!rg_g) begin
+                end else if (HEADS == 2 && !rg_g) begin
                     rg_g <= 1'b1; rg_gam <= E; rg_k <= 0; rg_j <= 0;
                 end else rg_run <= 1'b0;
             end
@@ -354,9 +392,27 @@ module ot_qkd_ectl_part #(
         (* keep_hierarchy *) ot_nhb_repr_h #(.W(1)) u_v (.clk(clk), .rst_n(rc), .d(rqv_s[gq]), .q(rqv_s[gq + 1]));
         (* keep_hierarchy *) ot_nhb_rep_h #(.W(15)) u_d (.clk(clk), .d(rqd_s[15*gq +: 15]), .q(rqd_s[15*(gq + 1) +: 15]));
     end endgenerate
+    // First start after reset is layer zero (even); NL=36 preserves parity at the token wrap.
+    reg layer_epoch;
+    always @(posedge clk or negedge rc)
+        if (!rc) layer_epoch <= 1'b1;
+        else if (start) layer_epoch <= ~layer_epoch;
+    wire [RQD:0] epoch_s;
+    assign epoch_s[0] = layer_epoch;
+    for (genvar ep = 0; ep < RQD; ep = ep + 1) begin : g_epoch
+        (* keep_hierarchy *) ot_nhb_rep_h #(.W(1)) u_ep (.clk(clk), .d(epoch_s[ep]), .q(epoch_s[ep+1]));
+    end
+    assign req_epoch = epoch_s[RQD];
     assign req_valid = rqv_s[RQD];
     assign {req_v, req_g, req_t} = rqd_s[15*RQD +: 15];
 
+    reg [ROW_RETURN_LAT-1:0] return_slots;
+    always @(posedge clk or negedge rc)
+        if (!rc) return_slots <= 0;
+        else if (start) return_slots <= 0;
+        else return_slots <= (return_slots << 1) | rq_valid;
+    wire row_slot = return_slots[ROW_RETURN_LAT-1];
+    wire ring_fault;
     // ---- row and e FIFOs ---------------------------------------------------------------------------------------------
     wire [RWD-1:0]  row;
     wire            row_ne;
@@ -367,12 +423,22 @@ module ot_qkd_ectl_part #(
     always @(posedge clk or negedge rc) if (!rc) er_pend <= 1'b0; else er_pend <= er_pd[1];
     // the row FIFO is sliced by word bits (its control does not depend on the data): leaves A / B hold a 512-bit slice
     // (2 SRAM macros each), leaf C a control-only copy; the e FIFO is whole in leaf C, control-only in A / B
-    generate if (PART != 3) begin : g_rows2
+    generate if (STATIC_QK) begin : g_static_rows
+        // All copies advance the same reserved pointers, even on a missing response.
+        ot_qkd_static_row_ring #(.W(RWD), .DATA(PART != 3)) u_rows (
+            .clk(clk), .rst_n(rc), .clear(start), .write_slot(row_slot), .write_valid(rsp_valid),
+            .din(rsp_data), .read_slot(c_started && !c_fin && schedule_age >= QK_ISSUE_AGE-2),
+            .consume_slot(consume), .dout(row), .nonempty(row_ne), .fault(ring_fault));
+        assign e_word = 64'd0;
+        assign e_ne = 1'b0;
+    end else if (PART != 3) begin : g_rows2
+        assign ring_fault = 1'b0;
         ot_nhb_fifo_rows2_h #(.W(RWD), .D(DQ), .D1(4)) u_rows (.clk(clk), .rst_n(rc), .push(rsp_valid), .din(rsp_data),
                                                  .pop(consume), .dout(row), .nonempty(row_ne), .count());
         ot_qkd_fifo2_sh #(.D(DQ), .D1(4)) u_e (.clk(clk), .rst_n(rc), .push(er_pend), .pop(pop_e), .nonempty(e_ne));
         assign e_word = 64'd0;
     end else begin : g_rowsh
+        assign ring_fault = 1'b0;
         ot_qkd_fifo2_sh #(.D(DQ), .D1(4)) u_rows (.clk(clk), .rst_n(rc), .push(rsp_valid), .pop(consume), .nonempty(row_ne));
         assign row = {RWD{1'b0}};
         ot_qkd_efifo2 #(.D1(4)) u_e (.clk(clk), .rst_n(rc), .push(er_pend), .din(er_data_p), .pop(pop_e), .dout(e_word),
@@ -392,7 +458,7 @@ module ot_qkd_ectl_part #(
     reg        c_started;
     wire [11:0] c_pidx = kord ? {c_idx[11], c_idx[9:6], c_idx[10], c_idx[5:0]} : c_idx;
     wire       c_klim = kord ? (c_idx < 12'd2048) : (c_idx < n_s);
-    wire       k_issue = c_started && !c_vph && !c_fin && c_klim && (c_pidx < n_s) && row_ne && q_ready;
+    wire       k_issue = c_started && !c_vph && !c_fin && c_klim && (c_pidx < n_s) && (STATIC_QK ? (schedule_age >= QK_ISSUE_AGE-1) : (row_ne && q_ready));
     // V pass
 `ifdef KVD_VMUT
     wire [3:0]  c_kk = klast(c_gam[3:0]) - c_k;              // MUTANT: the V pass k order reversed (P.V sum reordered)
@@ -439,10 +505,12 @@ module ot_qkd_ectl_part #(
                             c_idx <= c_idx + R;
                             if (c_idx == E && !c_g) ev_k_first <= 1'b1;
                         end
-                    end else if (!c_g) begin
+                    end else if (HEADS == 2 && !c_g) begin
                         c_g <= 1'b1; c_idx <= E;
                     end else begin
-                        c_vph <= 1'b1; c_g <= 1'b0; c_gam <= E; c_k <= 0; c_j <= 0; k_done <= 1'b1;
+                        k_done <= 1'b1;
+                        if (STATIC_QK || `KVD_QK_ONLY) c_fin <= 1'b1;
+                        else begin c_vph <= 1'b1; c_g <= 1'b0; c_gam <= E; c_k <= 0; c_j <= 0; end
                     end
                 end else begin
                     if (c_gam < gmax) begin
@@ -454,7 +522,7 @@ module ot_qkd_ectl_part #(
                                 else c_k <= c_k + 4'd1;
                             end
                         end
-                    end else if (!c_g) begin
+                    end else if (HEADS == 2 && !c_g) begin
                         c_g <= 1'b1; c_gam <= E; c_k <= 0; c_j <= 0;
                     end else begin
                         c_fin <= 1'b1; v_done <= 1'b1;
@@ -621,7 +689,7 @@ module ot_qkd_ectl_part #(
                         if (!lmax_any[sc_addr[11]] || gtv[hh]) lmax[32*(4*sc_addr[11] + hh) +: 32] <= sc_data[32*hh +: 32];
                     lmax_any[sc_addr[11]] <= 1'b1;
                 end
-                if ((|tf) || mac_fault || lt_fault) fault <= 1'b1;
+                if ((|tf) || mac_fault || lt_fault || ring_fault || (STATIC_QK && ((k_issue && !q_ready) || (PART == 3 && qv_r && (qcnt >= NQB || qb_r != qcnt[5:0]))))) fault <= 1'b1;
             end
         end
     end
@@ -901,3 +969,43 @@ module ot_qkd_ectl3_h #(
     assign t0_e = {e1, e0};  assign t1_e = {e3, e2};
 endmodule
 `endif
+
+// Compiler-reserved 128-row ring. No demand refill, bypass, ready or credit path.
+// Reads occupy the compiler-reserved QK window for the NEXT consume pointer; the current SRAM
+// output is captured by S1 on the consume edge. Writes must precede that read.
+module ot_qkd_static_row_ring #(parameter integer W=512, parameter integer DATA=1) (
+    input wire clk, rst_n, clear, write_slot, write_valid,
+    input wire [W-1:0] din, input wire read_slot, consume_slot,
+    output wire [W-1:0] dout, output wire nonempty, output reg fault
+);
+    reg [6:0] wp, rp;
+    reg [7:0] occupancy;
+    reg read_visible;
+    wire [6:0] read_addr = rp + (consume_slot ? 7'd1 : 7'd0);
+    assign nonempty = occupancy != 0;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin wp<=0; rp<=0; occupancy<=0; fault<=0; read_visible<=0; end
+        else if (clear) begin wp<=0; rp<=0; occupancy<=0; fault<=0; read_visible<=0; end
+        else begin
+            if (read_slot) read_visible <= occupancy > (consume_slot ? 8'd1 : 8'd0);
+            if (write_slot) wp <= wp + 1'b1;
+            if (consume_slot) rp <= rp + 1'b1;
+            occupancy <= occupancy + (write_slot ? 8'd1 : 8'd0) - (consume_slot ? 8'd1 : 8'd0);
+            if (write_valid != write_slot || (consume_slot && (occupancy == 0 || !read_visible)) ||
+                (write_slot && occupancy == 128 && !consume_slot)) fault <= 1'b1;
+        end
+    generate if (DATA) begin : g_data
+        localparam integer NM=(W+255)/256;
+        wire [NM*256-1:0] padded = {{(NM*256-W){1'b0}},din};
+        wire [NM*256-1:0] rd;
+        for (genvar m=0;m<NM;m=m+1) begin : g_macro
+            ot_sram_1r1w_128x256_m1_r2c2 u_s (.clk(clk), .r_ce_in(read_slot), .r_addr_in(read_addr),
+                .rd_out(rd[m*256+:256]), .w_ce_in(write_slot && !clear), .w_addr_in(wp),
+                .wd_in(padded[m*256+:256]), .w_mask_in({256{1'b1}}),
+                .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+        end
+        assign dout=rd[W-1:0];
+    end else begin : g_shadow
+        assign dout={W{1'b0}};
+    end endgenerate
+endmodule

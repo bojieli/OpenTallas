@@ -38,6 +38,9 @@ module ot_qwen_rom_tile_logic_w12 #(
     parameter integer W  = 16,
     parameter integer IL = 8,
     parameter integer AW = 24,
+`ifndef SYNTHESIS
+    parameter integer ROM_TILE = -1, // constant die tile identity for released simulation masks
+`endif
     parameter integer NW = 18,
     parameter integer GT = 6144,
     parameter integer TG = 4,
@@ -117,6 +120,9 @@ module ot_qwen_rom_tile_logic_w12 #(
     //           (t_out feed-through) input with lanes 0 / 1 swapped.
     //   q14: with NDH 1 the TOREG t_out / t_vout pin registers are the leaf's feed-through registers (needs TOREG 1).
     parameter integer NDH = 0,
+    // q14 r9 (2026-10-14): NODE 0 = node-less tile (the block-last tile of a 16-leaf tree has no node role): no node
+    //   logic at all, n_a / n_b / n_va unread, n_y / n_vy / node fault constant 0; t_out via the TOREG pin registers.
+    parameter integer NODE = 1,
     parameter integer BMUT = 0,
     parameter integer NREG = 1,
     parameter integer KV_LOCAL = 1,
@@ -130,8 +136,12 @@ module ot_qwen_rom_tile_logic_w12 #(
     parameter integer FAST_ISSUE = 0,     // 1.2 GHz issue loop (ot_qwen_w12_matvec_part FAST_ISSUE)
     parameter integer KV_PREP = 0,        // KV-op offset pipeline cycles (ot_qwen_w12_matvec_part KV_PREP)
     parameter integer MUL_LAT = 5,        // lane BF16 product latency (ot_qwen_w12_matvec_part MUL_LAT)
-    parameter integer TREE_LAT = 3        // split-tree pair adder latency (ot_qwen_w12_matvec_part TREE_LAT)
+    parameter integer TREE_LAT = 3,       // split-tree pair adder latency (ot_qwen_w12_matvec_part TREE_LAT)
+    parameter integer CHILD_CLOCKS = 0
 ) (
+    input wire [CODE_BANKS-1:0] ck_rpair,
+    input wire [7:0] ck_lsl,
+    input wire ck_node,
     input  wire              clk,
     input  wire              rst_n,
     input  wire [15:0]       tile_id,
@@ -219,7 +229,7 @@ module ot_qwen_rom_tile_logic_w12 #(
     //: t_out pins lie in the leaf's W pin band), same edge and value
     wire [W*32-1:0]   t_out_nd;
     wire              t_vout_nd;
-    generate if (NDH != 0) begin : g_tond
+    generate if (NDH != 0 && NODE != 0) begin : g_tond
         assign t_out = t_out_nd;
         assign t_vout = t_vout_nd;
     end else if (TOREG != 0) begin : g_toreg
@@ -234,8 +244,9 @@ module ot_qwen_rom_tile_logic_w12 #(
         assign t_vout = t_vout_i;
     end endgenerate
     ot_qwen_w12_matvec_part #(.W(W), .G(TG), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1),
-        .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX(0), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST), .TMUT(TMUT), .ANR(ANR), .HIER(HIER), .HIER_HARD(HIER_HARD), .LRR(LRR), .XTX(XTX),
+        .CHILD_CLOCKS(CHILD_CLOCKS), .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX(0), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST), .TMUT(TMUT), .ANR(ANR), .HIER(HIER), .HIER_HARD(HIER_HARD), .LRR(LRR), .XTX(XTX),
         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_me (
+        .ck_lsl(ck_lsl),
         .clk(clk), .rst_n(rst_n), .go(go_i), .ready(), .idle(),
         .i_nout(b_nout), .i_tiles(b_tiles), .i_k(b_k), .i_wsrc(b_wsrc),
         .i_wbase(b_wbase), .i_ts(b_ts), .i_ks(b_ks), .i_js(b_js),
@@ -255,7 +266,13 @@ module ot_qwen_rom_tile_logic_w12 #(
 
     // -- upper tree node ---------------------------------------------------------
     wire node_fault;
-    generate if (NDH != 0) begin : g_ndh
+    generate if (NODE == 0) begin : g_nonode
+        assign t_out_nd = {W*32{1'b0}};
+        assign t_vout_nd = 1'b0;
+        assign n_y = {W*32{1'b0}};
+        assign n_vy = 1'b0;
+        assign node_fault = 1'b0;
+    end else if (NDH != 0) begin : g_ndh
         if (W != 16 || NREG != 1 || TREE_LAT != 7 || ANR != 1 || TOREG == 0) begin : g_bad
             initial $error("NDH needs W 16, NREG 1, TREE_LAT 7, ANR 1, TOREG 1 (the fixed hardened leaf ot_qwen_tile_node)");
         end
@@ -271,7 +288,7 @@ module ot_qwen_rom_tile_logic_w12 #(
         end else begin : g_ok
             assign na_x = n_a;
         end
-        ot_qwen_tile_node u_node (.clk(clk), .rst_n(rst_n), .a(na_x), .b(n_b), .va(n_va),
+        ot_qwen_tile_node u_node (.clk(CHILD_CLOCKS ? ck_node : clk), .rst_n(rst_n), .a(na_x), .b(n_b), .va(n_va),
                                   .y(n_y), .vy(n_vy), .fault(node_fault),
                                   .t_d(td_x), .t_vd(t_vout_i), .t_out(t_out_nd), .t_vout(t_vout_nd));
     end else begin : g_nd
@@ -473,7 +490,11 @@ module ot_qwen_rom_tile_logic_w12 #(
                     if (PWB != 256 || ROM_CAP2 != 1 || ROM_CAPX != 2 || BAW != 12 || ROM_MUT != 0 || TMUT != 0) begin : g_hbad
                         initial begin $display("FAIL RPH = 2: parameters differ from the hardened leaf ot_qwen_tile_rpair"); $finish; end
                     end
-                    ot_qwen_tile_rpair u_rp (.clk(clk), .rst_n(rst_n), .ce_d(ce_pre[b]), .any_d((b < SB) ? any_s : any_n), .ad_d((b < SB) ? adm_pre : adm_pre_n), .r_q(r_q));
+                    ot_qwen_tile_rpair
+`ifndef SYNTHESIS
+                        #(.ROM_TILE(ROM_TILE), .ROM_BANK(b))
+`endif
+                        u_rp (.clk(CHILD_CLOCKS ? ck_rpair[b] : clk), .rst_n(rst_n), .ce_d(ce_pre[b]), .any_d((b < SB) ? any_s : any_n), .ad_d((b < SB) ? adm_pre : adm_pre_n), .r_q(r_q));
                     assign rom_req_m[13*b +: 13] = 13'd0;
                     assign rom_req_m[13*(CODE_BANKS+b) +: 13] = 13'd0;
                 end else begin : g_sf
@@ -678,6 +699,9 @@ endmodule
 // and its KV slice (2 x ot_sram_1r1w_128x256_m1_r2c2, written through a
 // registered masked port from the die's KV fill network).
 module ot_qwen_rom_tile_w12 #(
+`ifndef SYNTHESIS
+    parameter integer ROM_TILE = -1, // constant die tile identity for released simulation masks
+`endif
     parameter integer NW = 18,
     parameter integer GT = 6144,
     parameter integer SMIN = 6,
@@ -705,6 +729,9 @@ module ot_qwen_rom_tile_w12 #(
     // hardened leaf
     // q13 spec r5 leaf 2: NDH = the tree node as the hardened leaf ot_qwen_tile_node; BMUT 2 = its bench boundary mutant
     parameter integer NDH = 0,
+    // q14 r9 (2026-10-14): NODE 0 = node-less tile (the block-last tile of a 16-leaf tree has no node role): no node
+    //   logic at all, n_a / n_b / n_va unread, n_y / n_vy / node fault constant 0; t_out via the TOREG pin registers.
+    parameter integer NODE = 1,
     parameter integer BMUT = 0,
     parameter integer TOREG = 0,
     parameter integer TIDR = 0,
@@ -713,8 +740,12 @@ module ot_qwen_rom_tile_w12 #(
     parameter integer RQR = 0,            // q14 r5-fp1: ROM return relay: 1 = one register per bank group (south / north) on the rows' relay words before the group OR (+1 cycle on the ROM data), and per-group copies of the rpair address / any seam (needs RPH)
     parameter integer XTX = 0,             // el1011-q-tile r3: registered transmit rungs per hardened leaf (matvec HIER_HARD; +XTX cycles)
     parameter integer KV_SLICE = 1,       // 0 (el1011-q-tile, r22ko4 qfd_tile_nk): no KV slice macros / write port (attention on the KV die)
-    parameter integer BAW = 12            // 11: ot_rom_2048x266_m8 banks (set CODE_BANKS to twice the 4096-word count)
+    parameter integer BAW = 12,           // 11: ot_rom_2048x266_m8 banks (set CODE_BANKS to twice the 4096-word count)
+    parameter integer CHILD_CLOCKS = 0
 ) (
+    input wire [CODE_BANKS-1:0] ck_rpair,
+    input wire [7:0] ck_lsl,
+    input wire ck_node,
     input  wire              clk,
     input  wire              rst_n,
     input  wire [15:0]       tile_id,
@@ -743,8 +774,13 @@ module ot_qwen_rom_tile_w12 #(
     wire                  kvs_r_ce;
     wire [6:0]            kvs_r_addr;
     wire [511:0]          kvs_rd;
-    ot_qwen_rom_tile_logic_w12 #(.NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_LOCAL(KV_SLICE),
-        .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .BMUT(BMUT)) u_logic (
+    ot_qwen_rom_tile_logic_w12 #(
+`ifndef SYNTHESIS
+        .ROM_TILE(ROM_TILE),
+`endif
+        .CHILD_CLOCKS(CHILD_CLOCKS), .NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_LOCAL(KV_SLICE),
+        .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .NODE(NODE), .BMUT(BMUT)) u_logic (
+        .ck_rpair(ck_rpair), .ck_lsl(ck_lsl), .ck_node(ck_node),
         .clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl),
         .t_out(t_out), .t_vout(t_vout), .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .fault(fault),
         .rom_ce(rom_ce), .rom_addr(rom_addr), .rom_addr_n(rom_addr_n), .rom_addr_b(rom_addr_b), .rom_req_m(rom_req_m), .rom_rd(rom_rd),

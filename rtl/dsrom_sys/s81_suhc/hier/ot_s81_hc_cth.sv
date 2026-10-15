@@ -87,28 +87,33 @@ module ot_s81_hc_cth #(
     wire [FXW-1:0]  fdx;
     wire [S_RD+4:0] fv_local;
     wire [FXW-1:0] fdx_local;
-    generate if (CNL_PIN) begin : g_local_epoch
-        reg [S_RD+4:0] v;
-        reg [FXW-1:0] d;
-        always @(posedge clk or negedge rst_c)
-            if (!rst_c) v <= 0; else v <= fv;
-        always @(posedge clk) d <= fdx;
-        assign fv_local = v; assign fdx_local = d;
-    end else begin : g_legacy_epoch
-        assign fv_local = fv; assign fdx_local = fdx;
-    end endgenerate
     wire [S_RD+4:0] fvm;
     wire [FDW-1:0]  fdm;
     wire            rst_c;                     // ctfn's first reset stage -> one relay flop in every tile
     ot_s81_hc_ctfn #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD)) u_fn (
         .clk(clk), .rst_in(rst_in), .rst_c(rst_c), .fv_in(fv_in), .fd_in(fd_in), .fvm(fvm), .fdm(fdm));
+    generate if (CNL_PIN) begin : g_captured_broadcast
+        ot_s81_hc_ctfx_cap #(.S_RD(S_RD)) u_fx (
+            .clk(clk), .rst_in(rst_c), .fv_in(fv_in), .fd_in(fd_in[FXW-1:0]), .fv(fv), .fdx(fdx),
+            .fv_local(fv_local), .fdx_local(fdx_local));
+    end else begin : g_legacy_broadcast
     ot_s81_hc_ctfx #(.S_RD(S_RD)) u_fx (
         .clk(clk), .rst_in(rst_c), .fv_in(fv_in), .fd_in(fd_in[FXW-1:0]), .fv(fv), .fdx(fdx));
+        assign fv_local = fv;
+        assign fdx_local = fdx;
+    end endgenerate
     ot_s81_hc_ctfs #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .RLY(RLY)) u_fs (
         .clk(clk), .rst_in(rst_c), .rst_out(rst_out), .fvm(fvm), .fdm(fdm), .fv_out(fv_out), .fd_out(fd_out));
     wire [16*S_RT-1:0]  rq_q;
     wire                hs_run;
     wire [15:0]         hs_c;
+    // One physical source per horizontal CTNL column, same registered epoch.
+    wire [16*S_RT-1:0] rq_col [0:3];
+    wire [3:0] hs_run_col;
+    wire [15:0] hs_c_col [0:3];
+    assign rq_col[0] = rq_q;
+    assign hs_run_col[0] = hs_run;
+    assign hs_c_col[0] = hs_c;
     wire [16*64-1:0]    hpr;                       // lane tile n = 4 bank + group
     wire [16*64*S_RT-1:0] hrq;
     wire [16*16-1:0]    yb;
@@ -125,7 +130,7 @@ module ot_s81_hc_cth #(
             ot_s81_hc_ctnl #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .RLY(RLY), .PIN_STAGE(CNL_PIN), .CHAIN_STEP(CHAIN_STEP)) u_n (
                 .clk(clk), .rst_in(rst_c), .tid(tid), .bank(j[1:0]), .lane(l[1:0]), .last(last), .fv(fv), .fdx(fdx),
                 .wb_v(hov[2 * l]), .wb_en(pwb[2 * l]), .wb_hs(phs[2 * l]), .wb_ob(pob[16 * (2 * l) +: 16]),
-                .wb_d(hpo[64 * l +: 64]), .rq_q(rq_q), .hs_run(hs_run), .hs_c(hs_c),
+                .wb_d(hpo[64 * l +: 64]), .rq_q(rq_col[l]), .hs_run(hs_run_col[l]), .hs_c(hs_c_col[l]),
                 .hpr(hpr[64 * n +: 64]), .hrq(hrq[64 * S_RT * n +: 64 * S_RT]),
                 .cy_in(cy_in[32 * j +: 32]), .acc_in(l == 0 ? 32'd0 : acc[32 * (n > 0 ? n - 1 : 0) +: 32]),
                 .sqn_in(l == 3 ? 32'd0 : sq[32 * (n < 15 ? n + 1 : 15) +: 32]),
@@ -145,7 +150,7 @@ module ot_s81_hc_cth #(
             ot_s81_hc_ctnl_l0 #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .RLY(RLY), .PIN_STAGE(CNL_PIN), .CHAIN_STEP(CHAIN_STEP)) u_n (
                 .clk(clk), .rst_in(rst_c), .tid(tid), .bank(j[1:0]), .lane(l[1:0]), .last(last), .fv(fv), .fdx(fd_lane),
                 .wb_v(hov[2 * l]), .wb_en(pwb[2 * l]), .wb_hs(phs[2 * l]), .wb_ob(pob[16 * (2 * l) +: 16]),
-                .wb_d(hpo[64 * l +: 64]), .rq_q(rq_q), .hs_run(hs_run), .hs_c(hs_c),
+                .wb_d(hpo[64 * l +: 64]), .rq_q(rq_col[l]), .hs_run(hs_run_col[l]), .hs_c(hs_c_col[l]),
                 .hpr(hpr[64 * n +: 64]), .hrq(hrq[64 * S_RT * n +: 64 * S_RT]),
                 .cy_in(cy_in[32 * j +: 32]), .acc_in(l == 0 ? 32'd0 : acc[32 * (n > 0 ? n - 1 : 0) +: 32]),
                 .sqn_in(l == 3 ? 32'd0 : sq[32 * (n < 15 ? n + 1 : 15) +: 32]),
@@ -156,7 +161,7 @@ module ot_s81_hc_cth #(
             ot_s81_hc_ctnl_l1 #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .RLY(RLY), .PIN_STAGE(CNL_PIN), .CHAIN_STEP(CHAIN_STEP)) u_n (
                 .clk(clk), .rst_in(rst_c), .tid(tid), .bank(j[1:0]), .lane(l[1:0]), .last(last), .fv(fv), .fdx(fd_lane),
                 .wb_v(hov[2 * l]), .wb_en(pwb[2 * l]), .wb_hs(phs[2 * l]), .wb_ob(pob[16 * (2 * l) +: 16]),
-                .wb_d(hpo[64 * l +: 64]), .rq_q(rq_q), .hs_run(hs_run), .hs_c(hs_c),
+                .wb_d(hpo[64 * l +: 64]), .rq_q(rq_col[l]), .hs_run(hs_run_col[l]), .hs_c(hs_c_col[l]),
                 .hpr(hpr[64 * n +: 64]), .hrq(hrq[64 * S_RT * n +: 64 * S_RT]),
                 .cy_in(cy_in[32 * j +: 32]), .acc_in(l == 0 ? 32'd0 : acc[32 * (n > 0 ? n - 1 : 0) +: 32]),
                 .sqn_in(l == 3 ? 32'd0 : sq[32 * (n < 15 ? n + 1 : 15) +: 32]),
@@ -167,7 +172,7 @@ module ot_s81_hc_cth #(
             ot_s81_hc_ctnl_l2 #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .RLY(RLY), .PIN_STAGE(CNL_PIN), .CHAIN_STEP(CHAIN_STEP)) u_n (
                 .clk(clk), .rst_in(rst_c), .tid(tid), .bank(j[1:0]), .lane(l[1:0]), .last(last), .fv(fv), .fdx(fd_lane),
                 .wb_v(hov[2 * l]), .wb_en(pwb[2 * l]), .wb_hs(phs[2 * l]), .wb_ob(pob[16 * (2 * l) +: 16]),
-                .wb_d(hpo[64 * l +: 64]), .rq_q(rq_q), .hs_run(hs_run), .hs_c(hs_c),
+                .wb_d(hpo[64 * l +: 64]), .rq_q(rq_col[l]), .hs_run(hs_run_col[l]), .hs_c(hs_c_col[l]),
                 .hpr(hpr[64 * n +: 64]), .hrq(hrq[64 * S_RT * n +: 64 * S_RT]),
                 .cy_in(cy_in[32 * j +: 32]), .acc_in(l == 0 ? 32'd0 : acc[32 * (n > 0 ? n - 1 : 0) +: 32]),
                 .sqn_in(l == 3 ? 32'd0 : sq[32 * (n < 15 ? n + 1 : 15) +: 32]),
@@ -178,7 +183,7 @@ module ot_s81_hc_cth #(
             ot_s81_hc_ctnl_l3 #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .RLY(RLY), .PIN_STAGE(CNL_PIN), .CHAIN_STEP(CHAIN_STEP)) u_n (
                 .clk(clk), .rst_in(rst_c), .tid(tid), .bank(j[1:0]), .lane(l[1:0]), .last(last), .fv(fv), .fdx(fd_lane),
                 .wb_v(hov[2 * l]), .wb_en(pwb[2 * l]), .wb_hs(phs[2 * l]), .wb_ob(pob[16 * (2 * l) +: 16]),
-                .wb_d(hpo[64 * l +: 64]), .rq_q(rq_q), .hs_run(hs_run), .hs_c(hs_c),
+                .wb_d(hpo[64 * l +: 64]), .rq_q(rq_col[l]), .hs_run(hs_run_col[l]), .hs_c(hs_c_col[l]),
                 .hpr(hpr[64 * n +: 64]), .hrq(hrq[64 * S_RT * n +: 64 * S_RT]),
                 .cy_in(cy_in[32 * j +: 32]), .acc_in(l == 0 ? 32'd0 : acc[32 * (n > 0 ? n - 1 : 0) +: 32]),
                 .sqn_in(l == 3 ? 32'd0 : sq[32 * (n < 15 ? n + 1 : 15) +: 32]),
@@ -213,6 +218,9 @@ module ot_s81_hc_cth #(
     ot_s81_hc_ctra #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP), .READ_STAGE(CNL_PIN)) u_ra (
         .clk(clk), .rst_in(rst_c), .tid(tid), .last(last), .fv(fv_local), .fdx(fdx_local[O_D-1:0]), .rv_in(rv_in),
         .rd_in(rd_in[WA-1:0]), .rvm(rvm), .rdm(rdm[WA-1:0]), .rq_q(rq_q), .hs_run(hs_run), .hs_c(hs_c),
+        .rq_q_c1(rq_col[1]), .rq_q_c2(rq_col[2]), .rq_q_c3(rq_col[3]),
+        .hs_run_c1(hs_run_col[1]), .hs_run_c2(hs_run_col[2]), .hs_run_c3(hs_run_col[3]),
+        .hs_c_c1(hs_c_col[1]), .hs_c_c2(hs_c_col[2]), .hs_c_c3(hs_c_col[3]),
         .hrq_n(hqa_n), .hrq_s(hqa_s), .yb_n(yb[0 +: 128]), .yb_s(yb[128 +: 128]), .cs(cs),
         .nflt_n(nflt[7:0]), .nflt_s(nflt[15:8]), .hov_d(hov_d[0]),
         .hnz_n({hnz_d[6], hnz_d[4], hnz_d[2], hnz_d[0]}), .hnz_s({hnz_d[7], hnz_d[5], hnz_d[3], hnz_d[1]}),
@@ -286,6 +294,28 @@ module ot_s81_hc_ctfx #(
     wire rst_n = rr;
     always @(posedge clk or negedge rst_n) if (!rst_n) fv <= 0; else fv <= fv_in;
     always @(posedge clk) fdx <= fd_in;
+endmodule
+
+// Serial production broadcast owns both first-stage and local-epoch capture registers.
+// The original ot_s81_hc_ctfx remains the CNL_PIN=0 master; this is a distinct physical leaf.
+module ot_s81_hc_ctfx_cap #(parameter integer S_RD = 2) (
+    input wire clk,
+    input wire rst_in,
+    input wire [S_RD+4:0] fv_in,
+    input wire [FXW-1:0] fd_in,
+    output reg [S_RD+4:0] fv,
+    output reg [FXW-1:0] fdx,
+    output reg [S_RD+4:0] fv_local,
+    output reg [FXW-1:0] fdx_local
+);
+    localparam integer O_D = 5 + S_RD*16 + 20 + 6 + 8 + 32 + 1, FXW = O_D + S_RD*512;
+    reg rr;
+    always @(posedge clk) rr <= rst_in;
+    always @(posedge clk or negedge rr) if (!rr) fv <= 0; else fv <= fv_in;
+    always @(posedge clk) fdx <= fd_in;
+    // Match the former region register's reset epoch exactly: incoming rst_c, not rr.
+    always @(posedge clk or negedge rst_in) if (!rst_in) fv_local <= 0; else fv_local <= fv;
+    always @(posedge clk) fdx_local <= fdx;
 endmodule
 
 module ot_s81_hc_ctfs #(
@@ -1020,6 +1050,9 @@ module ot_s81_hc_ctra #(
     output wire [16*S_RT-1:0]     rq_q,
     output wire                   hs_run,
     output wire [15:0]            hs_c,
+    output wire [16*S_RT-1:0]     rq_q_c1, rq_q_c2, rq_q_c3,
+    output wire                  hs_run_c1, hs_run_c2, hs_run_c3,
+    output wire [15:0]           hs_c_c1, hs_c_c2, hs_c_c3,
     input  wire [8*64*SH-1:0]     hrq_n, hrq_s,     // [lane n (or n - 8)][slot s] 64 b
     input  wire [8*16-1:0]        yb_n, yb_s,
     input  wire [4*32-1:0]        cs,
@@ -1048,6 +1081,17 @@ module ot_s81_hc_ctra #(
         .hs_c(hs_c), .hrq(hrq), .yb({yb_s, yb_n}), .cs(cs), .nflt({nflt_s, nflt_n}), .hov_d(hov_d), .hnz_d(hnz),
         .pflt_d(pfl));
     assign rdm = rdm_w[WA-1:0];
+    // Aliases of genuine registered state; pin_reg_split creates one kept
+    // launch flop per physical pin. Parent columns consume every copy.
+    assign rq_q_c1 = rq_q;
+    assign rq_q_c2 = rq_q;
+    assign rq_q_c3 = rq_q;
+    assign hs_run_c1 = hs_run;
+    assign hs_run_c2 = hs_run;
+    assign hs_run_c3 = hs_run;
+    assign hs_c_c1 = hs_c;
+    assign hs_c_c2 = hs_c;
+    assign hs_c_c3 = hs_c;
 endmodule
 
 module ot_s81_hc_ctrb #(

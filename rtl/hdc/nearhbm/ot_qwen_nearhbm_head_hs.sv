@@ -1,4 +1,7 @@
 `timescale 1ns/1ps
+`ifndef KVD_Q_FP32
+`define KVD_Q_FP32 0
+`endif
 // ---------------------------------------------------------------------------------------------------------------------
 // el1011-q-kvd-head 2026-10-11 (owner textbook audit): HIERARCHICAL successor of ot_qwen_nearhbm_head_h (one q head of a
 // near-HBM row engine), opt-in through `KVD_HSUB in ot_qwen_nearhbm_row_engine_h (default off).
@@ -96,6 +99,40 @@ module ot_qwen_nearhbm_head_hs #(
         if (!rp) begin c2[3:1] <= 3'd0; lt2 <= {LTW{1'b0}}; qv2 <= 1'b0; end
         else begin c2[3:1] <= c_in[3:1]; lt2 <= lt_in; qv2 <= q_valid_in; end
     always @(posedge clk) begin c2[0] <= c_in[0]; row2 <= row_in; e2 <= e_in; qb2 <= q_beat_in; qd2 <= q_data_in; hid2 <= hid; end
+    // Native FP32 transport uses twice the legacy beat count. Round at the
+    // canonical attention consumption point, pair consecutive beats, and retain
+    // each hardened lane's 128-bit BF16 face. No producer-side Q narrowing.
+    wire qv_send;
+    wire [5:0] qb_send;
+    wire [511:0] qd_send;
+    wire q_pack_fault;
+    generate if (`KVD_Q_FP32) begin : g_qfp32
+        wire [255:0] rounded;
+        genvar qi;
+        for (qi=0; qi<16; qi=qi+1) begin : g_round
+            wire [31:0] x=qd2[32*qi +: 32];
+            assign rounded[16*qi +:16]=x[31:16]+(x[15] && (|x[14:0] || x[16]));
+        end
+        reg [255:0] lower;
+        reg [4:0] pair_tag;
+        reg half_valid, pack_fault;
+        always @(posedge clk or negedge rp)
+            if (!rp) begin half_valid<=0;pack_fault<=0;end
+            else if(qv2) begin
+                if(!qb2[0]) begin half_valid<=1;if(half_valid) pack_fault<=1;end
+                else begin
+                    half_valid<=0;
+                    if(!half_valid || pair_tag!=qb2[5:1]) pack_fault<=1;
+                end
+            end
+        always @(posedge clk) if(qv2 && !qb2[0]) begin lower<=rounded;pair_tag<=qb2[5:1];end
+        assign qv_send=qv2 && qb2[0] && half_valid && pair_tag==qb2[5:1];
+        assign qb_send={1'b0,qb2[5:1]};
+        assign qd_send={rounded,lower};
+        assign q_pack_fault=pack_fault;
+    end else begin : g_qbf16
+        assign qv_send=qv2;assign qb_send=qb2;assign qd_send=qd2;assign q_pack_fault=0;
+    end endgenerate
     // ---- S2b (q13-rhead r2, structural): the S-face pin flops no longer drive the 16 per-sub-tile relays directly.
     // Route evidence qkh_head_hs_ref-q13a-75e0349aa: qd2[392] (S face, y = 0) -> g_t[15].u_rid/r[0] (row 3 of the 4 x 4
     // floor, y > 560 um) = 765 ps of data path through 7 wire repeaters in ONE cycle (TT -41.92 ps; 11 endpoints, all rows
@@ -104,9 +141,9 @@ module ot_qwen_nearhbm_head_hs #(
     // parent stays under 15k sinks on its clock root.  Latency + NRS on every input (HXK / HXN of the control tile).
     wire [3+LTW:0]  cs_o;                     // reset part: {c[3:1], lt, qv}
     wire [HD*8+16+6+512+2:0] ds_o;            // plain part: {c[0], row, e, qb, qd, hid}
-    (* keep_hierarchy *) ot_qkh_relay #(.W(4 + LTW), .D(NRS), .RST(1)) u_rsc (.clk(clk), .rst_n(rp), .d({c2[3:1], lt2, qv2}), .q(cs_o));
+    (* keep_hierarchy *) ot_qkh_relay #(.W(4 + LTW), .D(NRS), .RST(1)) u_rsc (.clk(clk), .rst_n(rp), .d({c2[3:1], lt2, qv_send}), .q(cs_o));
     (* keep_hierarchy *) ot_qkh_relay #(.W(1 + HD*8 + 16 + 6 + 512 + 2), .D(NRS)) u_rsd (.clk(clk), .rst_n(rp),
-                                                                                    .d({c2[0], row2, e2, qb2, qd2, hid2}), .q(ds_o));
+                                                                                    .d({c2[0], row2, e2, qb_send, qd_send, hid2}), .q(ds_o));
     wire [3:0]       c3   = {cs_o[3+LTW:1+LTW], ds_o[HD*8+16+6+512+2]};
     wire [LTW-1:0]   lt3  = cs_o[LTW:1];
     wire             qv3  = cs_o[0];
@@ -149,5 +186,5 @@ module ot_qwen_nearhbm_head_hs #(
     ot_qkh_ktree u_kt (.clk(clk), .rst_n(rr[NT]), .kp_in(kp_k),
         .kpv_in(kpv_k[0]), .gf_in(gf_k_w), .sc_d(sc_k), .sc_f(sf_k), .g_f(gf_kt));
     (* keep_hierarchy *) ot_qkh_relay #(.W(32), .D(1)) u_ros (.clk(clk), .rst_n(rp), .d(sc_k), .q(sc_d));
-    (* keep_hierarchy *) ot_qkh_relay #(.W(2), .D(1), .RST(1)) u_rof (.clk(clk), .rst_n(rp), .d({sf_k, gf_kt}), .q({sc_f, g_f}));
+    (* keep_hierarchy *) ot_qkh_relay #(.W(2), .D(1), .RST(1)) u_rof (.clk(clk), .rst_n(rp), .d({sf_k, gf_kt | q_pack_fault}), .q({sc_f, g_f}));
 endmodule

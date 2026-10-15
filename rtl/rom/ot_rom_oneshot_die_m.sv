@@ -88,9 +88,17 @@ module ot_rom_oneshot_die_m #(
     // keeps the control state machine, a 2-bit {mode, last} replica of source 0 for the pop decision, the fold slices and
     // the output registers.  Needs PR 2, MEMM 1, FSL 1, IBH 1, TXK 1, N 4, DEPTH 32, IB 4, LANES 16, TAGW 32.
     // +1 cycle on tx (tx_valid / tx_rec) and on the result path (out_*); the fault flags (agree) one edge later.
-    parameter integer CT      = 0
+    parameter integer CT      = 0,
+    // RSTRAP = 1 (qwen-coll-io r3 2026-10-14, one compute-die type for all 8 TP8 dies): the die's own source is the
+    // one-hot STRAP self_s (static, from the die's package-rank bumps through the parent's pin flop) instead of the
+    // RANK parameter, so one hardened cluster serves every package.  RSTRAP = 0: self_s is unused and every decision
+    // below reduces to the RANK constant exactly as before.
+    parameter integer RSTRAP  = 0,
+    parameter integer CCLK = 0 // opt-in: independent phi-R clock at each hardened child
 ) (
     input  wire              clk,
+    input wire [(PW+127)/128-1:0] clk_cols,
+    input wire [FW/128-1:0] clk_folds,
     input  wire              rst_n,
     input  wire              in_valid,
     output wire              in_cr,
@@ -111,7 +119,8 @@ module ot_rom_oneshot_die_m #(
     output wire [RB-1:0]     out_rank,
     output wire              out_err,
     output reg               fault,
-    output reg  [2:0]        fault_code
+    output reg  [2:0]        fault_code,
+    input  wire [N-1:0]      self_s
 );
     localparam integer DB = (DEPTH > 1) ? $clog2(DEPTH) : 1;
     localparam integer CB = $clog2(DEPTH + 1);
@@ -149,6 +158,8 @@ module ot_rom_oneshot_die_m #(
     wire [PW-1:0] ib_head;
     always @(posedge clk) if (iv_q && !ib_full) ib[iw[IA-1:0]] <= irec_q;
     // ---- credits and transmit -------------------------------------------------------------------------------------
+    localparam [N-1:0] SELF = {{(N-1){1'b0}}, 1'b1} << RANK;
+    wire [N-1:0] SF = (RSTRAP != 0) ? self_s : SELF;      // the die's own source (one-hot)
     reg  [CB-1:0] cr [0:N-1];
     reg  [CB:0]   mcnt [0:N-1];          // words in the source FIFO (head register excluded)
     reg  [N-1:0]  hv;                    // head register valid
@@ -156,7 +167,7 @@ module ot_rom_oneshot_die_m #(
     reg           lpv;                   // PR: the local word sent last edge, entering its FIFO now
     reg  [PW-1:0] lpq;
     always @(*) for (r = 0; r < N; r = r + 1)
-        can_tx[r] = (r == RANK) ? ((mcnt[r] + hv[r] + ((PR != 0) ? lpv : 1'b0)) < DEPTH) : (cr[r] != 0 && txr_q[r]);
+        can_tx[r] = SF[r] ? ((mcnt[r] + hv[r] + ((PR != 0) ? lpv : 1'b0)) < DEPTH) : (cr[r] != 0 && txr_q[r]);
     wire fire = !ib_empty && (&can_tx);
     generate if (IBH != 0) begin : g_ibh
         wire [IA:0] ir_nx = fire ? ir + 1'b1 : ir;
@@ -219,7 +230,10 @@ module ot_rom_oneshot_die_m #(
     wire [1:0] ml0_rec;                  // source 0's {mode, last} at push timing (CT: from the 2-bit replica)
     always @(posedge clk) if (push[0]) m0ml[wp[0]] <= (CT != 0) ? ml0_rec : push_rec[FW +: 2];
     generate for (g = 0; g < N; g = g + 1) begin : g_src
-        if (g == RANK) begin : g_loc
+        if (RSTRAP != 0) begin : g_sel
+            assign push[g] = SF[g] ? ((PR != 0) ? lpv : fire) : rxv_q[g];
+            assign push_rec[g*PW +: PW] = SF[g] ? ((PR != 0) ? lpq : ib_head) : rxr_q[g*PW +: PW];
+        end else if (g == RANK) begin : g_loc
             assign push[g] = (PR != 0) ? lpv : fire;
             assign push_rec[g*PW +: PW] = (PR != 0) ? lpq : ib_head;
         end else begin : g_rem
@@ -240,7 +254,7 @@ module ot_rom_oneshot_die_m #(
             else hq_ml <= ib_ml[ir_nxm[IA-1:0]];
             lpq_ml <= hq_ml;
         end
-        assign ml0_rec = (RANK == 0) ? lpq_ml : rxr0_ml;
+        assign ml0_rec = SF[0] ? lpq_ml : rxr0_ml;
     end else begin : g_mlo
         assign ml0_rec = push_rec[FW +: 2];
     end endgenerate
@@ -263,7 +277,7 @@ module ot_rom_oneshot_die_m #(
     reg cro_q;
     always @(posedge clk or negedge rst_i) if (!rst_i) cro_q <= 1'b0; else cro_q <= pop;
     generate for (g = 0; g < N; g = g + 1) begin : g_cr
-        assign cr_out[g] = (g == RANK) ? 1'b0 : cro_q;
+        assign cr_out[g] = SF[g] ? 1'b0 : cro_q;
     end endgenerate
     always @(posedge clk or negedge rst_i) begin
         if (!rst_i) begin
@@ -271,7 +285,7 @@ module ot_rom_oneshot_die_m #(
             hv <= 0;
         end else begin
             for (r = 0; r < N; r = r + 1) begin
-                if (r != RANK) cr[r] <= cr[r] - (fire ? 1'b1 : 1'b0) + (cri_q[r] ? 1'b1 : 1'b0);
+                if (!SF[r]) cr[r] <= cr[r] - (fire ? 1'b1 : 1'b0) + (cri_q[r] ? 1'b1 : 1'b0);
                 if (push[r]) begin
                     if (MEMM == 0) mem[r*DEPTH + wp[r]] <= push_rec[r*PW +: PW];
                     wp[r] <= wp[r] + 1'b1;
@@ -360,7 +374,7 @@ module ot_rom_oneshot_die_m #(
             end
             (* keep_hierarchy *) ot_coll_fold_slice u_fs (   // hardened defaults N 4 / ADD_LAT 7 / SEAM 1 (no override: the
                                                            // parent takes the hardened macro master by name)
-                .clk(clk), .rst_n(rst_n), .red_in(red_in_f), .src(sd), .sum(fsum[gs*128 +: 128]),
+                .clk(CCLK ? clk_folds[gs] : clk), .rst_n(rst_n), .red_in(red_in_f), .src(sd), .sum(fsum[gs*128 +: 128]),
                 .v_out(sl_v[gs]), .e_out(sl_e[gs]));
         end
         assign sum[N-1] = fsum;
@@ -490,11 +504,10 @@ module ot_rom_oneshot_die_m #(
         ovf = iv_q && ib_full;                                   // the sender ignored its credits
         for (r = 0; r < N; r = r + 1) if (mcnt[r] > DEPTH) ovf = 1'b1;
     end
-    localparam [N-1:0] SELF = {{(N-1){1'b0}}, 1'b1} << RANK;
     reg txv_d, txbad;     // a send while a link said no (link-layer violation), judged from the pin registers
     always @(posedge clk or negedge rst_i)
         if (!rst_i) begin txv_d <= 1'b0; txbad <= 1'b0; end
-        else begin txv_d <= txv_q; txbad <= txv_d && !(&(txr_q | SELF)); end
+        else begin txv_d <= txv_q; txbad <= txv_d && !(&(txr_q | SF)); end
     wire rerr_f;
     generate if (FPIPE != 0) begin : g_fp
         reg rerr_q;
@@ -644,13 +657,14 @@ module ot_rom_oneshot_die_m #(
             end
         end
         if (CT != 0) begin : g_ct
-            initial if (N != 4 || DEPTH != 32 || IB != 4 || FW != 512 || PW != 546 || MEMM == 0 || FSL == 0 || IBH == 0 || TXK == 0)
-                $error("ot_rom_oneshot_die_m CT: N 4, DEPTH 32, IB 4, LANES 16, TAGW 32, MEMM 1, FSL 1, IBH 1, TXK 1");
+            initial if (N != 4 || (DEPTH != 32 && DEPTH != 64) || IB != 4 || FW != 512 || PW != 546 || MEMM == 0 || FSL == 0 || IBH == 0 || TXK == 0)
+                $error("ot_rom_oneshot_die_m CT: N 4, DEPTH 32 | 64 (ot_coll_col_tile_d64), IB 4, LANES 16, TAGW 32, MEMM 1, FSL 1, IBH 1, TXK 1");
+            localparam integer WB = (DEPTH == 64) ? 6 : 5;
             localparam integer NC = (PW + 127) / 128;   // 5 columns: 4 data + 1 {tag, mode, last}
             wire [PW-1:0] inrec = {in_tag, in_mode, in_last, in_data};
-            wire [N*5-1:0] wpall;
+            wire [N*WB-1:0] wpall;
             for (gr = 0; gr < N; gr = gr + 1) begin : g_wp
-                assign wpall[gr*5 +: 5] = wp[gr];
+                assign wpall[gr*WB +: WB] = wp[gr];
             end
             for (gk = 0; gk < NC; gk = gk + 1) begin : g_c
                 localparam integer LO = gk * 128;
@@ -671,9 +685,15 @@ module ot_rom_oneshot_die_m #(
                     end
                     assign s0f[gr*PW + LO +: SW] = s0o[gr*128 +: SW];
                 end
-                (* keep_hierarchy *) ot_coll_col_tile u_ct (.clk(clk), .rst_n(rst_n), .rank_oh(SELF),
+                if (DEPTH == 64) begin : g_d64
+                (* keep_hierarchy *) ot_coll_col_tile_d64 u_ct (.clk(CCLK ? clk_cols[gk] : clk), .rst_n(rst_n), .rank_oh(SF),
                     .in_d(ind), .rx_d(rxd), .c_ibw(iv_q && !ib_full), .c_iw(iw[1:0]), .c_fire(fire), .c_ir(ir[1:0]),
                     .c_push(push), .c_wp(wpall), .c_l1(l1all), .c_gidx(gc_idx), .s0(s0o), .go(goo), .tx(txo));
+                end else begin : g_d32
+                (* keep_hierarchy *) ot_coll_col_tile u_ct (.clk(CCLK ? clk_cols[gk] : clk), .rst_n(rst_n), .rank_oh(SF),
+                    .in_d(ind), .rx_d(rxd), .c_ibw(iv_q && !ib_full), .c_iw(iw[1:0]), .c_fire(fire), .c_ir(ir[1:0]),
+                    .c_push(push), .c_wp(wpall), .c_l1(l1all), .c_gidx(gc_idx), .s0(s0o), .go(goo), .tx(txo));
+                end
                 assign tx_rec[LO +: SW] = txo[SW-1:0];
                 if (gk < FW / 128) begin : g_go
                     assign ct_go[LO +: 128] = goo;

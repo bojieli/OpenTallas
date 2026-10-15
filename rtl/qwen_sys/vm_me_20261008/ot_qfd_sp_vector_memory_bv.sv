@@ -1,4 +1,15 @@
 `timescale 1ns/1ps
+// OT_QFD_VM_NOX (2026-10-14, owner 08:20 PT: distributed x slices, el1014-qwen-dvm-build.log): the TRIMMED central VM.
+// The x read is REMOVED from the port list (me_en_t, x_dv / x_dc / x_dcs / x_dsp, x_q, x_rdy, x_fault, x_hazard) and
+// the region tile is ot_qfd_vm_region_nx (rtl/qwen_sys/vm_nox_20261014: no x FIFOs, no xv / pop / me_in / xo / ovf).
+// Inside, the x descriptor is the constant "no tuple" (an internal wire, not a port), so the x schedule, rotation,
+// planes and line logic never issue and synthesis removes them; banks, SU reads / writes, row reads, skid writes, the
+// merge of the ME result links and me_en (maxima writes, row-read admission) are unchanged edge for edge.
+`ifdef OT_QFD_VM_NOX
+`ifndef OT_QFD_VM_TILE_MOD
+`define OT_QFD_VM_TILE_MOD ot_qfd_vm_region_nx
+`endif
+`endif
 `ifndef OT_QFD_VM_TILE_MOD
 `define OT_QFD_VM_TILE_MOD ot_qfd_vm_grp
 `endif
@@ -101,6 +112,9 @@ endmodule
 
 
 module ot_qfd_sp_vector_memory_bv #(
+    parameter integer USE_OBSERVER_CLOCKS = 0,
+    parameter integer STATIC_SCHEDULE = 0,
+    parameter integer USE_LEAF_CLOCKS = 0,
     parameter integer ELEMS = 177808,
     parameter integer NRB = 64,
     parameter integer AW = 24,
@@ -164,9 +178,22 @@ module ot_qfd_sp_vector_memory_bv #(
     parameter integer XQR = 0
 ) (
     input  wire                    clk,
+`ifdef OT_QFD_VM_NOX
+    input  wire [(NRB/8)*56-1:0]    leaf_ck,
+    input wire [NRB-1:0] observer_ck,
+    output wire [511:0]             qr_commit_mask,
+    output wire [NRB-1:0] write_commit_v,
+    output wire [NRB*LAW-1:0] write_commit_line,
+    output wire [NRB*16-1:0] write_commit_mask,
+    input wire aw_v,
+    input wire [AW-5:0] aw_row,
+    input wire [511:0] aw_data,
+    output wire aw_cr,
+`endif
     input  wire                    rst_n,
     input  wire                    me_en,
     input  wire                    me_en_e,        // MEE: me_en one edge early
+`ifndef OT_QFD_VM_NOX
     input  wire                    me_en_t,        // XMK: me_en (XMK + 1) edges early (unused when XMK = 0)
     // x descriptor (tree top)
     input  wire                    x_dv,
@@ -177,6 +204,7 @@ module ot_qfd_sp_vector_memory_bv #(
     output wire                    x_rdy,
     output reg                     x_fault,
     output reg                     x_hazard,
+`endif
     // SU lane reads (operand o = 0 a, 1 b, 2 c): descriptors, answers 1 + VL edges later
     input  wire [NSU-1:0]          s_re0,
     input  wire [NSU-1:0]          s_re1,
@@ -221,6 +249,21 @@ module ot_qfd_sp_vector_memory_bv #(
     output reg                     w_fault,
     output reg                     w_hazard
 );
+`ifdef OT_QFD_VM_NOX
+    // no x read: the descriptor is the constant "no tuple"; x_q / x_rdy / x_fault / x_hazard have no consumer
+    wire                    me_en_t = 1'b0;
+    wire                    x_dv = 1'b0;
+    wire [AW-1:0]           x_dc = {AW{1'b0}};
+    wire [AW-1:0]           x_dcs = {AW{1'b0}};
+    wire [3:0]              x_dsp = 4'd0;
+    wire [(1<<SMAX)*32-1:0] x_q;
+    wire                    x_rdy;
+    reg                     x_fault, x_hazard;
+`ifndef SYNTHESIS
+    initial if (XPR != 0 || XTK != 0 || XMK != 0 || XLO != 0 || VMT == 0)
+        $fatal(1, "ot_qfd_sp_vector_memory_bv OT_QFD_VM_NOX: needs VMT 1 and XPR / XTK / XMK / XLO 0");
+`endif
+`endif
     localparam integer RW = AW - 4;
     localparam integer NX = 1 << SMAX;
     localparam integer LNRB = $clog2(NRB);
@@ -259,7 +302,11 @@ module ot_qfd_sp_vector_memory_bv #(
     localparam integer NWE = NWR * 16;
     localparam integer LSW = (SW > 1) ? $clog2(SW) : 1;
     localparam integer NP = NWR + 7;                   // coarse-rotate positions
+`ifdef OT_QFD_VM_NOX
+    localparam integer NK = 4;
+`else
     localparam integer NK = 3;                         // skid sources: 0 mx, 1 rd, 2 seq (base commit order)
+`endif
     localparam integer LNRBS = $clog2(NRBS);
     localparam integer DEPTHS = (ROWS + NRBS - 1) / NRBS;
     localparam integer LAWS = (DEPTHS > 1) ? $clog2(DEPTHS) : 1;
@@ -317,6 +364,13 @@ module ot_qfd_sp_vector_memory_bv #(
     end else begin : g_mef
         assign me_lf = {NMC{(MEE != 0) ? me_en_e : me_en}};
     end endgenerate
+`ifdef OT_QFD_VM_NOX
+    wire [(NRB/8)*512-1:0] qr_masks;
+    reg [511:0] qcm_or;
+    integer qci;
+    always @* begin qcm_or = 512'd0; for (qci=0;qci<NRB/8;qci=qci+1) qcm_or=qcm_or|qr_masks[512*qci +:512]; end
+    assign qr_commit_mask = qcm_or;
+`endif
     // =================================================================================================================
     // x path (copy 0), as ot_qfd_sp_vector_memory
     // =================================================================================================================
@@ -479,10 +533,17 @@ module ot_qfd_sp_vector_memory_bv #(
     reg  [RW-1:0]  k1_row [0:NK-1];
     reg  [15:0]    k1_mask [0:NK-1];
     reg  [511:0]   k1_data [0:NK-1];
-    always @(posedge clk or negedge rst_n) if (!rst_n) k1_v <= 0; else k1_v <= {w_v, rd_v, me_c && mx_we};
+    always @(posedge clk or negedge rst_n) if (!rst_n) k1_v <= 0; else k1_v <= {
+`ifdef OT_QFD_VM_NOX
+        aw_v,
+`endif
+        w_v, rd_v, me_c && mx_we};
     always @(posedge clk) begin
         if (me_c) begin k1_row[0] <= mx_addr[RW-1:0]; k1_mask[0] <= mx_mask; k1_data[0] <= mx_data; end
         k1_row[1] <= rd_addr[AW-1:4]; k1_mask[1] <= 16'd1 << rd_addr[3:0]; k1_data[1] <= {16{rd_data}};
+`ifdef OT_QFD_VM_NOX
+        k1_row[3] <= aw_row; k1_mask[3] <= 16'hffff; k1_data[3] <= aw_data;
+`endif
         k1_row[2] <= w_row; k1_mask[2] <= w_mask; k1_data[2] <= w_data;
     end
     // ---- E2: SU rows formed (window of NWR rows from row r0), ELEMS-bounded ----
@@ -537,10 +598,34 @@ module ot_qfd_sp_vector_memory_bv #(
     wire           m_busy, m_fault;
     reg  [15:0]    m_mb;
     always @(*) for (i = 0; i < 16; i = i + 1) m_mb[i] = m_mask[i] && ({m_row, 4'h0} + i < ELEMS);
+    generate if(STATIC_SCHEDULE!=0)begin : g_static_merge
+        reg [RW-1:0] row;reg [15:0] mask;reg [511:0] data;
+        reg nv,nul,en;integer j,n;
+        reg [15:0] landed;
+        reg bad;
+        always @* begin
+            row=0;mask=0;data=0;nv=0;nul=0;en=0;n=0;
+            for(j=0;j<NB;j=j+1)if(rb_v[j])begin
+                n=n+1;nv=1;row=row|rb_row[RW*j+:RW];mask=mask|rb_mask[16*j+:16];
+                data=data|rb_data[512*j+:512];nul=nul|rb_nul[j];en=en|rb_end[j];
+            end
+        end
+        assign m_v=nv;assign m_nowr=nul;assign m_land=en;
+        assign m_row=row;assign m_mask=mask;assign m_data=data;
+        assign m_busy=nv;assign m_fault=bad;assign land_cnt=landed;
+        assign rb_cr=0; // Historical parent-only output; absent from the static native die interface.
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)begin landed<=0;bad<=0;end
+            else begin
+                if(n>1 || (nv && !m_take))bad<=1;
+                if(nv && en)landed<=landed+1'b1;
+            end
+    end else begin : g_legacy_merge
     ot_qfd_res_merge #(.NB(NB), .W(16), .RW(RW), .CRB(CRB)) u_merge (.clk(clk), .rst_n(rst_n),
         .b_v(rb_v), .b_end(rb_end), .b_nul(rb_nul), .b_row(rb_row), .b_mask(rb_mask), .b_data(rb_data), .b_cr(rb_cr),
         .m_v(m_v), .m_nowr(m_nowr), .m_land(m_land), .m_row(m_row), .m_mask(m_mask), .m_data(m_data),
         .m_take(m_take), .land_cnt(land_cnt), .busy(m_busy), .fault(m_fault));
+    end endgenerate
     // ---- E2 -> E3: per-bank arbitration ----
     reg  [NRB-1:0] su_hit;
     reg  [NRB*3-1:0] su_k;
@@ -578,7 +663,22 @@ module ot_qfd_sp_vector_memory_bv #(
         bl = su_hs[m_row[LNRBS-1:0]];
         for (e = 0; e < NQ; e = e + 1) if (qvf[e] && q_row[e][LNRBS-1:0] == m_row[LNRBS-1:0]) bl = 1'b1;
         gm = m_v && !m_nowr && !bl;
+        if(STATIC_SCHEDULE!=0)begin ge=qvf;gm=m_v && !m_nowr;end
     end
+`ifdef OT_QFD_VM_NOX
+    // Return every attention-row credit exactly once after its skid entry is granted. The arbiter may grant
+    // several rows in one cycle; serialise the count into pulses rather than losing simultaneous credits.
+    generate if(STATIC_SCHEDULE!=0)begin : g_no_credit
+        assign aw_cr=1'b0;
+    end else begin : g_aw_credit
+    reg [7:0] aw_return;
+    integer aw_taken, aq;
+    always @* begin aw_taken=0; for(aq=3*SQD;aq<4*SQD;aq=aq+1) if(ge[aq]) aw_taken=aw_taken+1; end
+    assign aw_cr = (aw_return != 0) || (aw_taken != 0);
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n) aw_return<=0; else aw_return<=aw_return+aw_taken-aw_cr;
+    end endgenerate
+`endif
     assign m_take = m_v && (m_nowr || gm);
     // per-bank write registers (beside the bank; written into every copy's macro the next edge)
     reg  [NRB-1:0]      bw_we;
@@ -600,7 +700,7 @@ module ot_qfd_sp_vector_memory_bv #(
             es = 3'd0; er = {RW{1'b0}}; em = 16'd0; ed = 512'd0;
             for (ee = 0; ee < NQ; ee = ee + 1)
                 if (ge[ee] && q_row[ee][LNRB-1:0] == g) begin
-                    es = es | (ee / SQD + 2); er = er | q_row[ee]; em = em | q_mask[ee]; ed = ed | q_data[ee];
+                    es = es | ((ee / SQD == 3) ? 6 : ee / SQD + 2); er = er | q_row[ee]; em = em | q_mask[ee]; ed = ed | q_data[ee];
                 end
             src = 3'd0;
             if (su_hit[g]) src = 3'd1;
@@ -613,7 +713,7 @@ module ot_qfd_sp_vector_memory_bv #(
             case (src)
                 3'd1: begin bw_line[g*LAW +: LAW] <= srow[LNRB +: LAW]; bw_mask[g*16 +: 16] <= f_m[kk*16 +: 16];
                             bw_data[g*512 +: 512] <= f_d[kk*512 +: 512]; end
-                3'd2, 3'd3, 3'd4: begin bw_line[g*LAW +: LAW] <= er[LNRB +: LAW]; bw_mask[g*16 +: 16] <= em;
+                3'd2, 3'd3, 3'd4, 3'd6: begin bw_line[g*LAW +: LAW] <= er[LNRB +: LAW]; bw_mask[g*16 +: 16] <= em;
                             bw_data[g*512 +: 512] <= ed; end
                 default: begin bw_line[g*LAW +: LAW] <= m_row[LNRB +: LAW]; bw_mask[g*16 +: 16] <= m_mb;
                             bw_data[g*512 +: 512] <= m_data; end
@@ -680,6 +780,23 @@ module ot_qfd_sp_vector_memory_bv #(
     reg  [NQ-1:0] lg_v;
     reg  [RW-1:0] lg_row [0:NQ-1];
     reg           q_ovf;
+    generate if(STATIC_SCHEDULE!=0)begin : g_static_writes
+        // Exactly one fixed pipeline register per source. No occupancy state,compaction,credit or held request.
+        integer k,i;
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)begin
+                for(k=0;k<NK;k=k+1)begin q_v[k]<=0;q_late[k]<=0;end
+                lg_v<=0;q_ovf<=0;
+            end else begin
+                lg_v<=0;q_ovf<=0;
+                for(k=0;k<NK;k=k+1)begin q_v[k]<={{(SQD-1){1'b0}},k1_v[k]};q_late[k]<=0;end
+            end
+        always @(posedge clk)
+            for(k=0;k<NK;k=k+1)begin
+                q_row[k*SQD]<=k1_row[k];q_mask[k*SQD]<=k1_mb[k];q_data[k*SQD]<=k1_data[k];
+                for(i=1;i<SQD;i=i+1)begin q_row[k*SQD+i]<=0;q_mask[k*SQD+i]<=0;q_data[k*SQD+i]<=0;end
+            end
+    end else begin : g_legacy_writes
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             for (k = 0; k < NK; k = k + 1) begin q_v[k] <= 0; q_late[k] <= 0; end
@@ -705,6 +822,7 @@ module ot_qfd_sp_vector_memory_bv #(
                 end
             end
     end
+    end endgenerate
     // late rows (queue entries with late set + late grants now in the bank write registers)
     reg  [NL-1:0]  lt_v;
     reg  [NL*RW-1:0] lt_row;
@@ -807,12 +925,26 @@ module ot_qfd_sp_vector_memory_bv #(
                 assign pw[kq] = r;
             end
             wire [8*512-1:0] xo; wire [511:0] ro_t; wire [NSU*NSB*512-1:0] so_t; wire ovf_t;
+`ifdef OT_QFD_VM_NOX
+            `OT_QFD_VM_TILE_MOD #(.NBK(8), .NSB(NSB), .NSU(NSU), .DEPTH(DEPTH), .LAW(LAW), .DEPTHS(DEPTHS), .LAWS(LAWS),
+                .USE_OBSERVER_CLOCKS(USE_OBSERVER_CLOCKS), .BANK_BASE(8*g), .TOTAL_BANKS(NRB), .USE_MACRO(USE_MACRO), .USE_LEAF_CLOCKS(USE_LEAF_CLOCKS), .NRI(TNI), .NRX(TNX), .NRS(TNS)) u_t (
+                .clk(clk), .rst_n(rst_n), .leaf_ck(leaf_ck[56*g +: 56]), .observer_ck(observer_ck[8*g+:8]),
+                .re(d_re), .ra(d_ra), .we(d_we), .wl(d_wl), .wm(d_wm), .wd(d_wd), .rq(d_rq), .rqb(d_rqb),
+                .sre(d_sre), .sra(d_sra), .sv(d_sv), .swe(d_swe), .swl(d_swl), .swm(d_swm), .swd(d_swd),
+                .qr_commit_mask(qr_masks[512*g +: 512]),
+                .write_commit_v(write_commit_v[8*g+:8]),
+                .write_commit_line(write_commit_line[8*LAW*g+:8*LAW]),
+                .write_commit_mask(write_commit_mask[128*g+:128]), .ro(ro_t), .so(so_t));
+            assign xo = {8*512{1'b0}};
+            assign ovf_t = 1'b0;
+`else
             `OT_QFD_VM_TILE_MOD #(.NBK(8), .NSB(NSB), .NSU(NSU), .DEPTH(DEPTH), .LAW(LAW), .DEPTHS(DEPTHS), .LAWS(LAWS),
                 .USE_MACRO(USE_MACRO), .NPP(NPP), .MEREG((MEE != 0) ? 1 : 0), .NRI(TNI), .NRX(TNX), .NRS(TNS)) u_t (
                 .clk(clk), .rst_n(rst_n), .me_in(me_lf[g*MCG]),
                 .re(d_re), .ra(d_ra), .we(d_we), .wl(d_wl), .wm(d_wm), .wd(d_wd), .xv(d_xv), .rq(d_rq), .rqb(d_rqb),
                 .sre(d_sre), .sra(d_sra), .sv(d_sv), .swe(d_swe), .swl(d_swl), .swm(d_swm), .swd(d_swd),
                 .pop(pw[RO-1]), .xo(xo), .ro(ro_t), .so(so_t), .ovf(ovf_t));
+`endif
             wire [(XRN+1)*8*512-1:0] xw;         // x words: tile register, then XRN engine-edge relays
             assign xw[0 +: 8*512] = xo;
             if (XPR == 0) begin : g_xsoft
@@ -951,17 +1083,21 @@ module ot_qfd_sp_vector_memory_bv #(
         localparam integer SWW = 1 + ND + LB + 4;
         localparam integer XNVW = $clog2(BEAT + 1);
         localparam integer XPCW = LNRB + 4 + XNVW;
-        wire [7*SWW-1:0] stg;                                  // the line-write word at stage n (6 = s6 ... 3 = s3)
-        assign stg[6*SWW +: SWW] = {s6_bv, s6_d, s6_j, s6_sp};
-        assign stg[5*SWW +: SWW] = {s5_bv, s5_d, s5_j, s5_sp};
-        assign stg[4*SWW +: SWW] = {s4_bv, s4_d, s4_j, s4_sp};
-        assign stg[3*SWW +: SWW] = {s3_bv, s3_d, s3_j, s3_sp};
+        // PLAN 2026-10-13: the placed control chain along the column row needs XTK 7 (13 stations, root at the centre), one
+        // more than the 7-entry word pipeline allowed: the seam-queue part now has QE = max(3, XTK - 3) entries (same taps
+        // for XTK <= 6; the seam queue holds XS >= XTK + 2 entries whenever the bit plane is on).
+        localparam integer QE = (XTK > 6) ? XTK - 3 : 3;
+        wire [(QE+4)*SWW-1:0] stg;                             // the line-write word at stage n (QE + 3 = s6 ... QE = s3)
+        assign stg[(QE+3)*SWW +: SWW] = {s6_bv, s6_d, s6_j, s6_sp};
+        assign stg[(QE+2)*SWW +: SWW] = {s5_bv, s5_d, s5_j, s5_sp};
+        assign stg[(QE+1)*SWW +: SWW] = {s4_bv, s4_d, s4_j, s4_sp};
+        assign stg[QE*SWW +: SWW] = {s3_bv, s3_d, s3_j, s3_sp};
         genvar sq;
-        for (sq = 0; sq < 3; sq = sq + 1) begin : g_sq          // stage 2 = seam-queue entry XS-1, 1 = XS-2, 0 = XS-3
-            assign stg[sq*SWW +: SWW] = {g_xs.qb[XS-3+sq], g_xs.qd[(XS-3+sq)*QWL + 4 +: ND],
-                                         g_xs.qd[(XS-3+sq)*QWL + ND + 4 + AW +: LB], g_xs.qd[(XS-3+sq)*QWL +: 4]};
+        for (sq = 0; sq < QE; sq = sq + 1) begin : g_sq         // stage QE - 1 = seam-queue entry XS-1, ... 0 = XS-QE
+            assign stg[sq*SWW +: SWW] = {g_xs.qb[XS-QE+sq], g_xs.qd[(XS-QE+sq)*QWL + 4 +: ND],
+                                         g_xs.qd[(XS-QE+sq)*QWL + ND + 4 + AW +: LB], g_xs.qd[(XS-QE+sq)*QWL +: 4]};
         end
-        wire [LCW-1:0] lc_d = {stg[(6-XTK)*SWW +: SWW], h_new[XVMI-1-XTK], h_sp[XVMI-1-XTK]};
+        wire [LCW-1:0] lc_d = {stg[(QE+3-XTK)*SWW +: SWW], h_new[XVMI-1-XTK], h_sp[XVMI-1-XTK]};
         wire [32*LCW-1:0] lcq;
         if (XTK == 0) begin : g_cb
             assign lcq = {32{lc_d}};
@@ -1102,7 +1238,7 @@ module ot_qfd_sp_vector_memory_bv #(
         for (k = 0; k < NK; k = k + 1)
             for (i = 0; i < SQD; i = i + 1)
                 if (q_v[k][i] && q_late[k][i] && bw_we[q_row[k*SQD + i][LNRB-1:0]] &&
-                    bw_src[q_row[k*SQD + i][LNRB-1:0]*3 +: 3] != k + 2 &&
+                    bw_src[q_row[k*SQD + i][LNRB-1:0]*3 +: 3] != ((k == 3) ? 6 : k + 2) &&
                     bw_line[q_row[k*SQD + i][LNRB-1:0]*LAW +: LAW] == q_row[k*SQD + i][LNRB +: LAW]) waw = 1'b1;
     end
     // x hazard: a landing row (registered rows of this edge's bank writes) on the span of a pending x tuple
@@ -1135,13 +1271,27 @@ module ot_qfd_sp_vector_memory_bv #(
             for (k = 0; k < NQ; k = k + 1) if (lr_k[k] && hits(lr_kr[k], lr_kr[k], x_dc, span_n)) hzx = 1'b1;
         end
     end
+    reg static_conflict;
+    integer se,sf;
+    always @* begin
+        static_conflict=0;
+        if(STATIC_SCHEDULE!=0)begin
+            for(se=0;se<NQ;se=se+1)if(qvf[se])begin
+                if(su_hs[q_row[se][LNRBS-1:0]])static_conflict=1;
+                if(m_v && !m_nowr && m_row[LNRBS-1:0]==q_row[se][LNRBS-1:0])static_conflict=1;
+                for(sf=0;sf<se;sf=sf+1)
+                    if(qvf[sf] && q_row[sf][LNRBS-1:0]==q_row[se][LNRBS-1:0])static_conflict=1;
+            end
+            if(m_v && !m_nowr && su_hs[m_row[LNRBS-1:0]])static_conflict=1;
+        end
+    end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin x_hazard <= 1'b0; w_hazard <= 1'b0; w_fault <= 1'b0; me_ok <= 1'b0; end
         else begin
             if (hzx) x_hazard <= 1'b1;
             if (hz0 || (|su_hz) || waw) w_hazard <= 1'b1;
-            if (q_ovf || f_bad || m_fault || t_ovf) w_fault <= 1'b1;
-            me_ok <= &rb_ok;
+            if (q_ovf || f_bad || m_fault || t_ovf || static_conflict) w_fault <= 1'b1;
+            me_ok <= (STATIC_SCHEDULE!=0) ? !(q_ovf || f_bad || m_fault || t_ovf || static_conflict) : &rb_ok;
         end
     end
 endmodule

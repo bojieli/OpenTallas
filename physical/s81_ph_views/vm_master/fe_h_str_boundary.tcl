@@ -15,9 +15,10 @@ proc ot_feh_boundary {} {
 }
 proc ot_feh_ins_mean {clk} {
   catch {sta::worst_slack_cmd max}
-  # dsfd_vm_fcc: ot_ratio_cdc_fifo u_cc0 / u_cc1, write side cks (str_clk), read side ck (core_clk)
-  if {$clk eq "core_clk"} { set ptr {u_cc[01]\.(wp_r|w_st_r|rp|r_st)\[}; set sto {u_cc[01]\.sh\[}
-  } else { set ptr {u_cc[01]\.(wp|wp_pub|w_st|rp_w|r_st_w)\[}; set sto {u_cc[01]\.mem\[} }
+  # B8: the crossings are real two-clock CDCs now (Gray pointers / storage read after the pointer: max-delay arcs, see
+  # fe_h_str_clock_ref.sdc); the balance only serves the few arcs that stay timed between the related clocks (sticky
+  # status levels) and the tile's ONE insertion figure: reference = the engine adapter's two sides (fcn), else all registers
+  set ptr {^$}; set sto {^$}
   set sp 0.0; set np 0; set ss 0.0; set ns 0; set sa 0.0; set na 0; set sx 0.0; set nx 0
   foreach p [all_registers -clock $clk -clock_pins] {
     set a [get_property $p arrival_max_rise]
@@ -91,6 +92,12 @@ if {[llength [info commands ::qdm_cts_orig]] && ![llength [info commands ::ot_fe
   rename clock_tree_synthesis ::ot_feh_cts_inner
   proc clock_tree_synthesis {args} {
     ::ot_feh_cts_inner {*}$args
+    if {![info exists ::env(OT_FEH_BAL)] || $::env(OT_FEH_BAL) ne "0"} { ot_feh_clk_balance }
+    ot_feh_boundary
+  }
+  # claude s81-grpA r5 (2026-10-14): generated ref_tile wrappers (6a3b8e235) source this AFTER the tree is built; the
+  # wrapper above then never runs (same defect as be_sl_str_boundary.tcl r5): balance + boundary now.
+  if {[llength [info commands ::ot_ref_cts_boundary_orig]] && [info exists ::ot_ref_pre_cts] && $::ot_ref_pre_cts == 0} {
     if {![info exists ::env(OT_FEH_BAL)] || $::env(OT_FEH_BAL) ne "0"} { ot_feh_clk_balance }
     ot_feh_boundary
   }

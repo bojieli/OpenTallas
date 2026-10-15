@@ -28,7 +28,10 @@ step special {
   # die clock / reset / forwarded-clock nets are built by the die clock tree (CTS), not the signal router
   set n 0
   foreach net [[ord::get_db_block] getNets] {
-    if {[regexp {^n_(clk_|fck_|rst_)} [$net getName]]} { $net setSpecial; incr n }
+    # die lead r9 2026-10-13: with the registered reset tree every reset net is an ordinary <= 500 um registered hop
+    # between repeaters and is ROUTED (OT_ROUTE_RESET=1); only the clocks stay with CTS
+    if {[info exists ::env(OT_ROUTE_RESET)] && $::env(OT_ROUTE_RESET) == 1} { set pat {^n_(clk_|fck_)} } else { set pat {^n_(clk_|fck_|rst_)} }
+    if {[regexp $pat [$net getName]]} { $net setSpecial; incr n }
   }
   puts "OT_SPECIAL clock_reset_nets=$n"
 }

@@ -309,9 +309,16 @@ module ot_s81_su_sml #(
     // A. s = s_raw * scale -> buffer; running max
     wire [LM:0] smv;
     ot_hdc_vline #(.D(LM)) u_smv (.clk(clk), .rst_n(rst_n), .v(sv), .vd(smv));
-    wire [31:0] s_m;
+    wire [31:0] s_m, s_m_raw;
     wire fm;
-    ot_dsrom_su_softmax_mul #(LM) u_m (clk, rst_n, sv, s_p, scale, s_m, fm);
+    wire [LM:0] s_inactive;
+    ot_hdc_vline #(.D(LM)) u_s_inactive (.clk(clk), .rst_n(rst_n),
+        .v(sv && s_p == 32'hff800000), .vd(s_inactive));
+    // The finite-domain multiplier does not implement IEEE infinity. Carry the
+    // compiler's mask around it and retain the sentinel in the score store/max.
+    ot_dsrom_su_softmax_mul #(LM) u_m (clk, rst_n, sv,
+        s_p == 32'hff800000 ? 32'd0 : s_p, scale, s_m_raw, fm);
+    assign s_m = s_inactive[LM] ? 32'hff800000 : s_m_raw;
     reg [31:0] sbuf [0:NVMAX-1];
     reg [6:0]  wcnt;
     reg        s_mlast, a_done, fv, ff;
@@ -367,7 +374,13 @@ module ot_s81_su_sml #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin o_ev <= 1'b0; o_es <= 1'b0; o_el <= 1'b0; end
         else begin o_ev <= bv[LA + D_EXP]; o_es <= bs[LA + D_EXP]; o_el <= bl[LA + D_EXP]; end
-    always @(posedge clk) o_e <= be;
+    // -Inf is the compiler's inactive score-lane sentinel.  The polynomial exp
+    // clamps its input to -87, so it MUST NOT supply the inactive lane's value.
+    // Delay the mask on the same fixed add/exp timeline; no execution gating.
+    wire [LA+D_EXP:0] inactive;
+    ot_hdc_vline #(.D(LA + D_EXP)) u_inactive (.clk(clk), .rst_n(rst_n),
+        .v(rv && s_rd == 32'hff800000), .vd(inactive));
+    always @(posedge clk) o_e <= inactive[LA + D_EXP] ? 32'd0 : be;
 endmodule
 
 // ======================================================================================================== SUM

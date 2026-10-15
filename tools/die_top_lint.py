@@ -38,6 +38,7 @@ import argparse
 import hashlib
 import json
 import math
+import os
 import re
 import shlex
 import sys
@@ -146,10 +147,33 @@ QWEN_TP8A = dict(QWEN_R22KO4, tp8=dict(bands=3, ch_rows=(2, 10), row_gap=669.6, 
 # slot (column pitch 394.848 = slot + 83.8-um column channel; row gap 190.08), 3 compact bands of 16 blocks, the spine
 # widened to 4,589 um (KV-centre sub-column), KV-die halves 3.7 mm + 100-um channel on the W / E edges, all IO in one S
 # band under a 400-um IO word channel (qwen_rom_fulldie_b3r2._tp8b_f2)
-QWEN_TP8B = dict(QWEN_R22KO4, tp8=dict(bands=3, ch_rows=(1, 15), row_gap=190.08, tile_body=311.04, tile_h=1296.0,
+# r8 (coordinator DECISION 2026-10-13, tile growth): the tile slot grows 21.6 um (rpair 648 + kvl 108 + lsl 561.6 = 1,317.6)
+# and the row gap gives it back (190.08 -> 168.48): row pitch 1,486.08 and the die height (25,870.32 < 26.0 mm) are
+# unchanged; the tiles are M5-capped, so die M6 over the tile field carries horizontal buses (tile_m6: cuts.py
+# CLUSTER_PLAN 'M6'); relay sites stay in the row gaps / column corridors
+QWEN_TP8B = dict(QWEN_R22KO4, tp8=dict(bands=3, ch_rows=(1, 15), row_gap=168.48, tile_body=311.04, tile_h=1317.6,
                                        spine_gap=171.936, root_spread=True,
                                        f2=dict(cols=48, rows=16, col_pitch=394.848, spine_w=4589.0, kv_w=3700.0,
-                                               kv_ch=100.0, io_chan=480.0, crom_ch=151.2, kv=True, w_ch=200.0, ab_ch=400.0, host_serdes=True, host_serdes_w=2400.0, io_gap=4.32, kvc_east=True, kv_xch=86.4)))
+                                               kv_ch=100.0, io_chan=480.0, crom_ch=151.2, kv=True, w_ch=200.0, ab_ch=400.0, host_serdes=True, host_serdes_w=2400.0, io_gap=4.32, kvc_east=True, kv_xch=86.4, tile_m6=True, v5=True)))
+# r10 (coordinator 2026-10-13 18:30, q15 / q17 tile stream): the tile PARENT as submitted (qfd_tile_nk_r5-fp1-63e7ca004) is
+# 362.88 x 1,442.88.  OT_TP8_TILE="body,height,row_gap,col_pitch" builds the die with that slot (pathfinding variant: the
+# station corridor needs 52.68 um, so the column pitch grows with the body; the row pitch 1,486.08 is kept)
+if os.environ.get('OT_TP8_TILE'):
+    _tb, _th, _rg, _cp = (float(q) for q in os.environ['OT_TP8_TILE'].split(','))
+    QWEN_TP8B['tp8'] = dict(QWEN_TP8B['tp8'], tile_body=_tb, tile_h=_th, row_gap=_rg,
+                            f2=dict(QWEN_TP8B['tp8']['f2'], col_pitch=_cp))
+# qwen-split compute die (owner 2026-10-14 06:45: Qwen -> two-die split; compute-die lead, el1014-qwen-split-compute.log):
+# OT_TP8_SPLIT=compute builds the tp8b F2 ROM field WITHOUT the KV halves / KV centre (they are the KV/system die): the r22k
+# link end (ucie_kv PHY + qfd_d2d_rom + ckb_rom forwarded-clock bump + rs_bump reset sync) stays, the KV die's PLL forwards
+# the clock.  Slot (contract v1-a = Codex split candidate codex/qwen-split-feasibility-1013): tile 399.6 x 1,442.88, column
+# pitch 472.608, row gap 43.2 (row pitch 1,486.08 as tp8b), spine sub-column OT_TP8_SPLIT_SPINE um (default 5,200 total).
+# C4 / contract v1 (compute lead r2, 2026-10-14): tile slot 449.28 x 1,442.88 (q-tile r6 option (a): ctl + TX + node +
+# 2 lsl columns with 20-um channels need 444.9 um), column pitch 522.288 (73-um corridor kept), die 32.41 x 25.94 mm.
+if os.environ.get('OT_TP8_SPLIT') == 'compute':
+    _tb, _th, _rg, _cp = (float(q) for q in os.environ.get('OT_TP8_SPLIT_TILE', '449.28,1442.88,43.2,522.288').split(','))
+    QWEN_TP8B['tp8'] = dict(QWEN_TP8B['tp8'], tile_body=_tb, tile_h=_th, row_gap=_rg, split='compute',
+                            f2=dict(QWEN_TP8B['tp8']['f2'], col_pitch=_cp, kv=False, kv_w=0.0, kv_ch=0.0, host_serdes=False, io_chan=400.0,
+                                    spine_w=float(os.environ.get('OT_TP8_SPLIT_SPINE', '6700'))))
 R22K_FAMILY = ('r22k', 'r22kcs', 'r22ks', 'r22ko4', 'r22ksv', 'tp8a', 'tp8b')
 QWEN_RECIPES = {'r18': QWEN_R18, 'r19': QWEN_R19, 'r20c': QWEN_R20C, 'r20f1': QWEN_R20F1, 'r20g': QWEN_R20G, 'r21': QWEN_R21,
                 'r22': QWEN_R22, 'r21v': QWEN_R21V, 'r21f': QWEN_R21F, 'r21m': QWEN_R21M,
@@ -518,6 +542,25 @@ def real_blocks(die, m=None):
         out['hfd_sm'] = dict(module='ot_hbm_accel_sm_v', file='rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv',
                              kind='RTL (sm_r2 parameters; hardened sub-views tc16 / bd_col / ring SRAM only)',
                              params=prm, ports=pm['ports'], binding=lay)
+        if V.get('sm_native_abi'):
+            # H-DIE 10-14: the die SM is the native hierarchical SM ot_hbm_accel_smh (production parameters); the control
+            # leaf is the record's per-SM ABI from source (ot_hgi_sm_record sm_cmd 106 b, bit 0 = start, the record's
+            # sm_cg_en (OT_SMH_CG wake, production define), then sm_ret 4 b {start_ready, d_ready, arrive, fault}); the
+            # result leaf has no fault bit (it rides the control leaf);
+            # busy / released are SM outputs with no RTL consumer (left open, never tied)
+            f = 'rtl/hbm_accel/sm/ot_hbm_accel_smh.sv'
+            dfn = {d_: '' for d_ in json.loads((ROOT / 'results/arch/hbm_native_1013/sm/component.json').read_text())['defines']}
+            pm = parse_module(f, 'ot_hbm_accel_smh', {}, dfn)
+            lay = dict(d=['rsp_v'] + _bus('rsp_tag', 10) + _bus('rsp_data', 1088),
+                       q=['req_v'] + _bus('req_addr', 32) + _bus('req_tag', 10) + ['req_ready'],
+                       x=SM_LAYOUT['x'], r=['rv'] + _bus('rrow', 12) + _bus('rdata', 256),
+                       c=['start'] + _bus('op_rows', 13) + _bus('op_c', 16) + _bus('op_g', 8) + ['op_gs'] + _bus('op_fmt', 2)
+                         + _bus('op_xb', 7) + ['d_valid'] + _bus('d_base', 32) + _bus('d_lines', 24) + ['release_in']
+                         + ['cg_en'] + ['start_ready', 'd_ready', 'arrive', 'fault'],
+                       ck=['clk'], rst=['rst_n'])
+            assert len(lay['c']) == 111 and len(lay['r']) == 269 and len(lay['d']) == 1099 and len(lay['q']) == 44
+            out['hfd_sm'] = dict(module='ot_hbm_accel_smh', file=f, kind='RTL (native hierarchical SM; record ABI control '
+                                 'leaf)', params={}, ports=pm['ports'], binding=lay)
     if die == 'hbm' and V.get('native_indexer'):
         directory = 'physical/hbm_accel_die_views/index/rtl/'
         for mn,filename,prm in (
@@ -676,7 +719,46 @@ def real_blocks_r8(die):
             pm = parse_module(f, mst)
             out[mst] = dict(module=mst, file=f, kind='glue RTL (S81-DIE)', params={}, ports=pm['ports'],
                             binding={p: (_bus(p, w) if w > 1 or True else [p]) for p, (d, w) in pm['ports'].items()})
+    if FULL_RTL[0]:
+        # s81-die-rtl-bind 2026-10-14 (owner NO STUBS rule): every other die master binds by ITS OWN RTL module (same
+        # name, rtl/ tree, the hardened elaboration parameters of tools/dsrom_s81_fulldie.py die_master_params) -- the
+        # hub / compute slab masters, the link macros' link-layer RTL, the ROM macro's bit-array model.  A master with
+        # no RTL stays a stub and the record's verilog.stubs counts it (a FAIL of the full-RTL lint).
+        sys.path.insert(0, str(ROOT / 'tools'))
+        import die_port_bind as DPB
+        # the die RTL manifest (physical/s81_die_rtl/layer1.f: production cluster RTL per die master + defines + macro
+        # model libraries) -- the same binding tools/die_port_bind.py -f uses
+        mf_, md_, ml_ = DPB.load_manifest(ROOT / FULL_RTL_MANIFEST) if (ROOT / FULL_RTL_MANIFEST).exists() else ([], [], [])
+        files_ = [_glue_path(), S.CFG7_RTL] + list(FULL_RTL_MODELS.values()) + mf_
+        idx, _amb = DPB.rtl_index(['rtl'] + sorted(str(p_.relative_to(ROOT)) for p_ in (ROOT / 'physical').glob('**/rtl') if p_.is_dir()) + ml_,
+                                  files_, {d_: '' for d_ in tuple(FULL_RTL_DEFINES) + tuple(md_)}, mf_)
+        FULL_RTL_FILES[:] = mf_; FULL_RTL_EXTRA_DEFINES[:] = md_; FULL_RTL_LIBDIRS[:] = ml_
+        mpar = S.die_master_params(m)
+        for mst in sorted(used):
+            if mst in out and not out[mst]['file'].endswith('_bb.v'):
+                continue
+            mod = idx.get(mst)
+            if mod is None:
+                continue            # no RTL: a stub (or a black box) -- counted as a full-RTL failure
+            prm = {k_: v_ for k_, v_ in mpar.get(mst, {}).items() if not k_.startswith('_')}
+            env = mod.env(prm)
+            ports = {p_: (d_, mod.width(p_, env) or 1) for p_, (d_, _) in mod.ports.items()}
+            rel_ = str(Path(mod.path).resolve().relative_to(ROOT)) if str(Path(mod.path).resolve()).startswith(str(ROOT)) else mod.path
+            bnd_ = {p_: _bus(p_, w_) for p_, (d_, w_) in ports.items()}
+            if mst in out:          # a macro with a generator pin map (e.g. link ck -> clk): keep it over the identity
+                bnd_.update(out[mst]['binding'])
+            out[mst] = dict(module=mst, file=rel_, kind='RTL (full-RTL die lint)', params=prm, ports=ports, binding=bnd_)
     return out
+
+
+FULL_RTL = [True]       # s81r8: bind every master by its RTL (False: the legacy placeholder-stub lint)
+FULL_RTL_DEFINES = ('OT_S81PH_COLL_JOB',)
+FULL_RTL_MODELS = {     # hard-macro behavioural models allowed under real RTL (owner rule: analog / bit-array cores)
+    'ot_rom_4096x72_m8': 'physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v',
+}
+FULL_RTL_KEEP_BB = ()
+FULL_RTL_MANIFEST = 'physical/s81_die_rtl/layer1.f'   # s81-die-rtl-bind 2026-10-14
+FULL_RTL_FILES, FULL_RTL_EXTRA_DEFINES, FULL_RTL_LIBDIRS = [], [], []
 
 
 class SplitIO(list):
@@ -893,7 +975,7 @@ def dirs_qwen(bid, cls, bits, eps, j, port):
         return flow(j, bits, bits - 1)               # instruction beats + go + x + clock/reset down, ready back
     bid = bid[:-2] if bid.endswith('_x') else bid      # r18: second half of a bus through a CDC cluster
     if cls in ('tree_block', 'tree_spine', 'spine_local', 'hbm_read', 'crom', 'clock_trunk', 'reset', 'kv_land',
-               'stack_local'):
+               'stack_local', 'kv_oneway'):
         return [(0, bits, 'out' if j == 0 else 'in')]
     if cls == 'io':
         if bid in ('ucie_tx', 'serdes_tx', 'ucie_rx', 'serdes_rx'):          # 2 x IO_BITS: the collective's link word, 512 tx + 512 rx
@@ -938,7 +1020,7 @@ def dirs_hbm(bid, cls, bits, eps, j, port):
 
 def dirs_hbm_base(bid, cls, bits, eps, j, port, V):
     if cls in ('x_trunk', 'x_leaf', 'result_leaf', 'result_trunk', 'expert_req', 'kv_rows', 'attn_chain', 'attn_root',
-               'idx_sel', 'kv_credit',       # R25GQ 10-10: one class a net type, endpoint 0 drives
+               'idx_sel', 'kv_credit', 'ctl_top',       # R25GQ 10-10: one class a net type, endpoint 0 drives
                'attn_kv', 'attn_out', 'attn_operand', 'attn_input', 'attn_query', 'attn_packet'):
         return [(0, bits, 'out' if j == 0 else 'in')]
     if cls == 'weight':     # line + tag + valid down, ready back (TF7 / r15 sm_rtl_w: no ready)
@@ -946,7 +1028,15 @@ def dirs_hbm_base(bid, cls, bits, eps, j, port, V):
     if cls in ('weight_req', 'control_leaf', 'phy_dfi'):
         if any(CUR_M['_by'][i].master in CUR_M['_real'] for i, _ in eps):
             return 'complement'
+        if cls == 'control_leaf' and V.get('sm_native_abi') and bits == 111:
+            return flow(j, 111, 107)     # H-DIE 10-14: record ABI leaf, 106 + cg_en down from the cdist side, 4 returns up
         return [(0, bits, 'out' if j == 0 else 'in')]       # r15 rq_chain: station -> station, SM side upstream
+    if cls == 'control' and V.get('sm_native_abi'):
+        # H-DIE 10-14: per SM 111 b = the record ABI (ot_hgi_sm_record sm_cmd 106 + sm_cg_en down, sm_ret 4 up)
+        seg = []
+        for s_ in range(bits // 111):
+            seg += [(a + s_ * 111, b + s_ * 111, d) for a, b, d in flow(j, 111, 107)]
+        return seg
     if cls == 'control':
         w = H.W_CTL + (H.W_DESC if V.get('sm_desc') else 0)
         seg = []
@@ -1668,17 +1758,18 @@ def emit_verilog(die, m, real, ports_w, out_dir, top):
                         i += 1
                 if segs:
                     outs.append((p, w, segs))
-            decl.append(f'    {d} wire [{w - 1}:0] {p}')
+            decl.append(f'    {d} wire [{w - 1}:0] {vid(p)}')
         ck = 'ck' if 'ck' in ports else None
         body = [f'module {mst} (', ',\n'.join(decl), ');' + ('  // NO PORTS: reservation slab, no die net' if not decl else ''),
                 '    wire lint_clk = ' + (ck + '[0]' if ck else "1'b0") + ';  // '
                 + ('stub clock = abstract ck port' if ck else 'NO CLOCK PORT ON THIS ABSTRACT')]
-        red = ', '.join(f'^{p}' for p, _ in ins) or "1'b0"
+        red = ', '.join(f'^{vid(p)} ' for p, _ in ins) or "1'b0"
         body.append(f'    wire lint_in = ^{{{red}}};')
         for p, w, segs in outs:
+            pr_ = re.sub(r'\W', '_', p)
             for a, b in segs:
-                body.append(f'    reg [{b - a - 1}:0] r_{p}_{a}; always @(posedge lint_clk) r_{p}_{a} <= {{{b - a}{{lint_in}}}};'
-                            f' assign {p}[{b - 1}:{a}] = r_{p}_{a};')
+                body.append(f'    reg [{b - a - 1}:0] r_{pr_}_{a}; always @(posedge lint_clk) r_{pr_}_{a} <= {{{b - a}{{lint_in}}}};'
+                            f' assign {vid(p)} [{b - 1}:{a}] = r_{pr_}_{a};')
         body.append('endmodule\n')
         stubs.append('\n'.join(body))
     (out_dir / f'{top}_stubs.sv').write_text('\n'.join(stubs))
@@ -1740,11 +1831,11 @@ def emit_verilog(die, m, real, ports_w, out_dir, top):
             V.append(f'  {rb["module"]} ' + (f'#({prm}) ' if prm else '') + f'{vid(it.name)} (\n    ' + ',\n    '.join(parts) + ');')
         else:
             for port, net, bits, j, bus in conns.get(it.name, []):
-                parts.append(f'.{port}({net})')
+                parts.append(f'.{vid(port)} ({net})')
             V.append(f'  {mst} {vid(it.name)} (' + ', '.join(parts) + ');')
     V.append('endmodule\n')
     (out_dir / f'{top}.sv').write_text('\n'.join(V))
-    return dict(top=top, stubs=len(pdir), nc_wires=nfl)
+    return dict(top=top, stubs=len(pdir), stub_masters=sorted(pdir), nc_wires=nfl)
 
 
 def write_shells(real, path):
@@ -2619,6 +2710,26 @@ def run_lint(die, out, top_fix=False, tag=''):
     em = emit_verilog(die, m, real, pw, out, top)
     extra = (_glue_path(), S.CFG7_RTL) if R8_ACTIVE[0] else ()
     files, unresolved = rtl_closure([v['module'] for v in real.values() if not v['file'].endswith('_bb.v')], extra)
+    if R8_ACTIVE[0] and FULL_RTL[0]:
+        # s81-die-rtl-bind 2026-10-14: the full-RTL closure from the die RTL manifest (production cluster RTL of every
+        # die master under its defines, macro model libraries) -- the binding tools/die_port_bind.py checks
+        import die_port_bind as DPB
+        idx_, _ = DPB.rtl_index(['rtl'] + sorted(str(p_.relative_to(ROOT)) for p_ in (ROOT / 'physical').glob('**/rtl') if p_.is_dir())
+                                + list(FULL_RTL_LIBDIRS), [_glue_path(), S.CFG7_RTL] + list(FULL_RTL_MODELS.values()) + list(FULL_RTL_FILES),
+                                {d_: '' for d_ in tuple(FULL_RTL_DEFINES) + tuple(FULL_RTL_EXTRA_DEFINES)}, list(FULL_RTL_FILES))
+        files, seen_, todo_, unresolved = [], set(), sorted(v['module'] for v in real.values() if not v['file'].endswith('_bb.v')), []
+        while todo_:
+            n_ = todo_.pop()
+            if n_ in seen_:
+                continue
+            seen_.add(n_)
+            md_ = idx_.get(n_)
+            if md_ is None:
+                unresolved.append(n_); continue
+            if md_.path not in files:
+                files.append(md_.path)
+            todo_ += sorted(md_.children(idx_) - seen_)
+        files = [f'+define+{d_}' for d_ in tuple(FULL_RTL_DEFINES) + tuple(FULL_RTL_EXTRA_DEFINES)] + files
     bb = sorted({rb['file'] for rb in real.values() if rb['file'].endswith('_bb.v')})
     if R8_ACTIVE[0]:
         # die-level list: the q element by its interface shell, every glue master and primitive by its full RTL
@@ -2663,7 +2774,10 @@ def run_lint(die, out, top_fix=False, tag=''):
         margin_lint=margin(die, m),
         abstract_ports_without_net=ports_without_net(m, M, pw),
         top_fixes=TOP_FIXES if top_fix else {},
-        verilog=dict(em, filelist=f'{top}.f', rtl_files=len(files), unresolved_modules=unresolved))
+        verilog=dict(em, filelist=f'{top}.f', rtl_files=len(files), unresolved_modules=unresolved),
+        full_rtl=dict(verdict='PASS' if (FULL_RTL[0] and not em['stubs'] and not bb) else 'FAIL', stub_masters=em['stub_masters'],
+                      black_boxes=bb, rule='owner 2026-10-14 08:05 NO STUBS: every die master elaborates from its RTL '
+                      '(hard analog / bit-array cores as behavioural models under real digital RTL)') if R8_ACTIVE[0] else None)
     if die == 'hbm':
         rec['wrapper_ledgers'] = hbm_wrapper_ledgers({it.master for it in m['insts']})
     try:        # pin alignment of the die bundles (owner 2026-10-13); the full record: mode pin_align

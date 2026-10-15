@@ -113,12 +113,12 @@
   }
  },
  "recipe": 2,
- "structural_change": "qkd_ectl as THREE DIE LEAVES with their own clock roots (A 254.88 | B 254.88 | C 138.24 x 129.6 um) in place of the one 648-um tile (qkd_ectl_slot-q13r3: 14,806 sinks on one root, TritonCTS insertion 357..538 ps / spread 181, declared spine 616..654 ps, CTS hold repair stalled on 8,710 endpoints): the row FIFO is sliced by word bits (2 SRAMs in A, 2 in B), the e FIFO's SRAM level is 128 x 64 registers in C (no macro in the 138-um leaf), every leaf carries a copy of the control and a control-only copy of the FIFOs it does not hold, so no timing loop crosses a seam; every die input reaches each control copy three flops after its pin (start / exp_done / nb_cr +2 cycles, q beat +1, row response +1); S / E are strap pins",
+ "structural_change": "SRAM pin-edge no-entry guard (spec boundary_tcl physical/qwen_die_masters/sram_edge_guard.tcl = macro_edge_via_guard, 1.2 um per vertical macro edge, added pre-GRT / removed post-DRT; the fix that closed qkd_sbufp_ref-q15): all three q16 routes met timing (TT +55..+78 / FF -2.4..+12.6) and kept 2-7 M4 Short / Metal Spacing markers 'inst:u.g_rows2.u_rows.g_m[0].u_s' at that SRAM's east pin edge (x 117.16..117.25, macro M4 OBS edge 117.216): a net given an over-macro track in the GCell straddling the edge jogs on M4 through the macro OBS. RTL, outline, pins, clock unchanged.",
  "slot_change_request": "qkd_ectl (32 slots ectl_*, 647.976 x 129.576) -> three abutting leaves W to E: qkd_ectl_a 254.88 x 129.6 (W: rq rs; S/N: row bits [511:0] of t0 / t1), qkd_ectl_b 254.88 x 129.6 (S/N: row bits [1023:512] + {lt, c} of t0 / t1), qkd_ectl_c 138.24 x 129.6 (E: si so; S/N: {q_data, q_beat, q_valid} of t0 / t1, e0..e3, s0..s3); each leaf its own ck (N, M5) and rst_n (S), 5-bit strap cfg = {E 3, S 2} per slot on S; seam buses A.E-B.W {rs_o 513, x 52} and B.E-C.W {x 52, rsv 1} at matching y; timing: start / exp_done / nb_cr 2 cycles later, q beat 1, row response 1 (layer step +2..3 cycles)",
  "job": {
   "owner": "Claude:q13-kvleaves",
-  "branch": "claude/q13-ectl",
-  "tag": "q16",
+  "branch": "claude/q17-ectl",
+  "tag": "q17",
   "purpose": "q13-kvleaves: qkd_ectl split into three die leaves -- leaf A (W face): row-response pin flops, row FIFO slice [511:0] (2 SRAMs), S1 / S1b copies of its row bits, the request relay; own control copy. M5 leaf, own clock root, S / E strap pins.",
   "benches": [
    {
@@ -165,7 +165,10 @@
   ],
   "views_to": "physical/ref_tile/qkd_ectl_a/views",
   "record_to": "results/rtl/ref_tile/qkd_ectl_a",
-  "structural_change": "qkd_ectl as THREE DIE LEAVES with their own clock roots (A 254.88 | B 254.88 | C 138.24 x 129.6 um) in place of the one 648-um tile (qkd_ectl_slot-q13r3: 14,806 sinks on one root, TritonCTS insertion 357..538 ps / spread 181, declared spine 616..654 ps, CTS hold repair stalled on 8,710 endpoints): the row FIFO is sliced by word bits (2 SRAMs in A, 2 in B), the e FIFO's SRAM level is 128 x 64 registers in C (no macro in the 138-um leaf), every leaf carries a copy of the control and a control-only copy of the FIFOs it does not hold, so no timing loop crosses a seam; every die input reaches each control copy three flops after its pin (start / exp_done / nb_cr +2 cycles, q beat +1, row response +1); S / E are strap pins",
+  "structural_change": "SRAM pin-edge no-entry guard (spec boundary_tcl physical/qwen_die_masters/sram_edge_guard.tcl = macro_edge_via_guard, 1.2 um per vertical macro edge, added pre-GRT / removed post-DRT; the fix that closed qkd_sbufp_ref-q15): all three q16 routes met timing (TT +55..+78 / FF -2.4..+12.6) and kept 2-7 M4 Short / Metal Spacing markers 'inst:u.g_rows2.u_rows.g_m[0].u_s' at that SRAM's east pin edge (x 117.16..117.25, macro M4 OBS edge 117.216): a net given an over-macro track in the GCell straddling the edge jogs on M4 through the macro OBS. RTL, outline, pins, clock unchanged.",
   "slot_change_request": "qkd_ectl (32 slots ectl_*, 647.976 x 129.576) -> three abutting leaves W to E: qkd_ectl_a 254.88 x 129.6 (W: rq rs; S/N: row bits [511:0] of t0 / t1), qkd_ectl_b 254.88 x 129.6 (S/N: row bits [1023:512] + {lt, c} of t0 / t1), qkd_ectl_c 138.24 x 129.6 (E: si so; S/N: {q_data, q_beat, q_valid} of t0 / t1, e0..e3, s0..s3); each leaf its own ck (N, M5) and rst_n (S), 5-bit strap cfg = {E 3, S 2} per slot on S; seam buses A.E-B.W {rs_o 513, x 52} and B.E-C.W {x 52, rsv 1} at matching y; timing: start / exp_done / nb_cr 2 cycles later, q beat 1, row response 1 (layer step +2..3 cycles)"
- }
+ },
+ "boundary_tcl": [
+  "physical/qwen_die_masters/sram_edge_guard.tcl"
+ ]
 }

@@ -96,11 +96,13 @@ module tb_s81ph_gather_capture;
         end
     end
     initial for (ka = 0; ka < NR; ka = ka + 1) acnt[ka] = 0;
+    // Monitor indices must not overwrite the driver's timeout counter at an edge.
     integer k;
-    always @(posedge ck) for (k = 0; k < NR; k = k + 1) if (rv_valid[k]) refq[k].push_back({rv_data[32*k +: 32], rv_addr[30*k +: 19]});
-    always @(posedge ckv) for (k = 0; k < NR; k = k + 1) begin
-        if (tvm[104*k]) dutq[k].push_back(tvm[104*k + 1 +: 51]);
-        if (tvm[104*k + 52]) dutq[k].push_back(tvm[104*k + 53 +: 51]);
+    always @(posedge ck) for (integer mon_k = 0; mon_k < NR; mon_k = mon_k + 1)
+        if (rv_valid[mon_k]) refq[mon_k].push_back({rv_data[32*mon_k +: 32], rv_addr[30*mon_k +: 19]});
+    always @(posedge ckv) for (integer mon_k = 0; mon_k < NR; mon_k = mon_k + 1) begin
+        if (tvm[104*mon_k]) dutq[mon_k].push_back(tvm[104*mon_k + 1 +: 51]);
+        if (tvm[104*mon_k + 52]) dutq[mon_k].push_back(tvm[104*mon_k + 53 +: 51]);
     end
     // ---------------- driver
     integer fd, rc, gap, root, e_, n_ph, worst, maxd, t_issue, t_ref, t_dut, timeouts;

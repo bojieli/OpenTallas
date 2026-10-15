@@ -174,6 +174,13 @@ CASES = {  # name -> (base case in dsrom_mtp_rom_bench.cases(), stage?, extra de
     'posthep_s0_tr_forced': ('s0_tr_forced', 0, [], 'pass', 11), 'posthep_s0_hash_u3': ('s0_hash_u3', 0, [], 'pass', 11),
     'posthep_stg_r1': ('stg_r1', 1, [], 'pass', 11),
     'posthep_s0_neg_stale': ('s0_hash_u3', 0, ['OT_WFCHEP_MUT_STALE'], 'fail', 11),
+    # PRICED kit (el1013-s81-wfcstg: the configuration of record of the S81 dies): VM_LINK + POSTED + RD2 + VMRQ 64 +
+    # WOUTW 8 + HEP in one instance (rd2_* has no HEP, posthep_* no RD2); the sp_wfc cluster dsfd_wfc_stg_cl is this
+    # configuration (tools/dsrom_wfc_cl_bench.py)
+    'prc_stg_r1': ('stg_r1', 1, [], 'pass', 12), 'prc_stg_vmnat': ('stg_vmnat', 1, [], 'pass', 12),
+    'prc_stg_r2_slowvm': ('stg_r2_slowvm', 1, [], 'pass', 12), 'prc_s0_hash_u3': ('s0_hash_u3', 0, [], 'pass', 12),
+    'prc_stg_neg_swap': ('stg_r1', 1, ['OT_WFCVMX_MUT_RD2_SWAP'], 'fail', 12),
+    'prc_s0_neg_stale': ('s0_hash_u3', 0, ['OT_WFCHEP_MUT_STALE'], 'fail', 12),
     # TOKIN: the S0 kit's link-in from the collective MTP lane (t_mrt {data, valid} / f_mrt grant)
     'tokin_s0_tr_forced': ('s0_tr_forced', 0, [], 'pass', 6), 'tokin_s0_hash_u3': ('s0_hash_u3', 0, [], 'pass', 6),
     'vmrly_stg_neg_wout4': ('stg_r1', 1, [], 'fail', 3),   # s0 never exceeds 15 writes in flight: stg only 'vmrly_s0_neg_nolink': ('s0_tr_forced', 0, [], 'fail', 2),
@@ -211,7 +218,7 @@ def kit_tb(stage, vmrly=0):
             assert a_ in kit, a_
             kit = kit.replace(a_, b_)
         kit = SSEQ + kit
-    elif vmrly in (7, 8):   # posted + RD2 (2-port prefetch); 8 = mutant (define in the case)
+    elif vmrly in (7, 8, 12):   # posted + RD2 (2-port prefetch); 8 = mutant (define in the case); 12 = + HEP (PRICED kit)
         kit = kit.replace('u_kit (', '#(.VM_LINK(1), .VMRQ(64), .WOUTW(8), .POSTED(1), .RD2(1)) u_kit (').replace(
             'dsfd_wfc_stg #(.LAG(LAG)) #(.VM_LINK(1), .VMRQ(64), .WOUTW(8), .POSTED(1), .RD2(1))',
             'dsfd_wfc_stg #(.LAG(LAG), .VM_LINK(1), .VMRQ(64), .WOUTW(8), .POSTED(1), .RD2(1))')
@@ -238,6 +245,11 @@ def kit_tb(stage, vmrly=0):
         for chk in ('RD2(1)', 'e_m1od <= vmem', '2*FLIT+2', '2*VWA+2', 'wire [2*VWA:0] k_srd'):
             assert chk in pv, chk
         kit = pv + kit
+        if vmrly == 12:
+            assert kit.count('.RD2(1)) u_kit (') == 1 and '.t_ft(k_ft));' in kit
+            kit = kit.replace('.RD2(1)) u_kit (', '.RD2(1), .HEP(1)) u_kit (').replace('.t_ft(k_ft));', '.t_ft(k_ft), .t_hep(k_hep));')
+            tag = 'MTP_STG' if stage else 'MTP_S0'
+            kit = kit + HEPCHK.replace('TAGFAIL("', '$display("' + tag + ' FAIL: hep ').replace('); end', '); $finish; end')
     elif vmrly in (4, 5, 11):   # posted: endpoint + VM port model; 5 = mutant (the define is in the case); 11 = + HEP
         kit = kit.replace('u_kit (', '#(.VM_LINK(1), .VMRQ(64), .WOUTW(8), .POSTED(1)) u_kit (').replace(
             'dsfd_wfc_stg #(.LAG(LAG)) #(.VM_LINK(1), .VMRQ(64), .WOUTW(8), .POSTED(1))',
@@ -265,7 +277,7 @@ def kit_tb(stage, vmrly=0):
             kit = kit.replace(a_, b_)
     body, n = re.subn(r'    dsfd_wfc_vmx #\(.*?\) u_vmx \(.*?\);\n', lambda m: kit + binds, body, count=1, flags=re.S)
     assert n == 1, tb
-    if vmrly in (10, 11) and not stage:   # HEP: the epochs advance exactly once per WFC rejection
+    if vmrly in (10, 11, 12) and not stage:   # HEP: the epochs advance exactly once per WFC rejection
         assert body.count('        $display("MTP_S0 PASS mode') == 1
         body = body.replace('        $display("MTP_S0 PASS mode', '        if (h_inc != rej) begin $display("MTP_S0 FAIL: hep epoch '
                             'advances %0d != WFC rejections %0d", h_inc, rej); $finish; end\n        $display("MTP_S0 PASS mode')

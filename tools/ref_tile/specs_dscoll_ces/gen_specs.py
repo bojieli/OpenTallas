@@ -202,7 +202,9 @@ def cluster_spec(s0):
     return {"name": name, "top": top, "kind": "cluster", "sources": SRC, "defines": ["OT_S81PH_COLL_CES_SPLIT"],
             "clock_port": "ck", "reset_ports": ["rs"], "outline": {"w": CL_W, "h": CL_H}, "child_lattice_um": 8.64,
             "children": kids, "pins": pins, "pin_ranges": {k: v for k, v in CL_RANGES.items() if k in sum(pins.values(), [])},
-            "route": {"pd": 0.3, "threads": 8, "peak_ram_gb": 32}, "structural_change": STRUCT,
+            # E / W pins on M4 only, as the leaves' own E / W faces (straight M4 from the cluster edge to the relay pins): with
+            # 'M4 M6' PPL placed the 845-b / 1,304-b groups in fallback mode outside their ranges (PPL-0102 x1000, PPL-0107)
+            "route": {"pd": 0.3, "threads": 8, "peak_ram_gb": 32, "pin_h": "M4"}, "structural_change": STRUCT,
             # clock entry: the spine balances every child clock pin to that child's ROUTED boundary insertion R
             # (views/<child>/insertion.json tt.boundary.mean: core 322 / 312, relays 127-166, lane 114, output 98 ps);
             # the cluster has no register, so its IO reference is child clock pin + R (wires_only_ioref.py)

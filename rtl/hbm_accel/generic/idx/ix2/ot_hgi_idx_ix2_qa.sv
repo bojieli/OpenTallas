@@ -36,7 +36,17 @@ module ot_hgi_idx_ix2_qa #(
         if (!rn) begin st_q <= 1'b0; run_q <= 1'b0; ks_q <= 1'b0; qbr_q <= 1'b0; end
         else begin st_q <= start; run_q <= run; ks_q <= kin_sent; qbr_q <= qbr; end
     always @(posedge clk) begin keep_en <= keep_en_i; a_lo <= a_base_i[5:3]; b_lo <= b_base_i[5:0]; end
-    wire [7:0] bv_q = b_v; wire [2047:0] in_d = ab_d;            // B lands directly in the weight buffer
+    // B (head weights, once a frame): pin flops of the 8 lane buses before the head-weight select (10-13: B went
+    // through that select straight from the pins: 663 input -> register endpoints of up to 9 levels).  A is NOT
+    // delayed: an A sector lands in its slot register straight from the pin (write enable = the lane's a_v and the
+    // slot pointer), the slot is the pin register.  (A pin flop in front of the slots was tried: it lengthens the
+    // lane's 2-credit loop by an edge, the lanes rewind, front 217 -> 305 cycles.)
+    reg [2047:0] in_d; reg [7:0] bv_q;
+    always @(posedge clk or negedge rn) if (!rn) bv_q <= 8'd0; else bv_q <= b_v;
+    always @(posedge clk) in_d <= ab_d;
+    // the block's quarter -> lane map: one kept copy of the frame constant a quarter (a_lo[0] drove 7,283 loads)
+    (* keep = 1 *) reg [1:0] ppq [0:3];
+    always @(posedge clk) if (st_q) for (i = 0; i < 4; i = i + 1) ppq[i] <= a_lo[1:0] + 2'(i);
     // ---------------------------------------------------------------- head weights
     reg [127:0] bh [0:4]; reg [7:0] bz [0:4]; reg [4:0] bgot; reg wts_ok; reg [15:0] wts [0:31];
     reg [2:0] bl; reg [5:0] bw; reg [7:0] nz; reg bad_w;
@@ -68,7 +78,7 @@ module ot_hgi_idx_ix2_qa #(
         for (l = 0; l < 8; l = l + 1) if (a_v[l]) sl[2*l + {31'd0, swp[l]}] <= ab_d[l*256 +: 256];
         if (send) begin
             for (i = 0; i < 4; i = i + 1) begin
-                pp = a_lo[1:0] + 2'(i); ln = {q0[pp] ^ jn[0], pp};
+                pp = ppq[i]; ln = {q0[pp] ^ jn[0], pp};
                 qb[8 + i*256 +: 256] <= sl[{ln, srp[ln]}];
             end
             qb[1047 -: 16] <= wts[(MUT == 1) ? jn[6:2] + 5'd1 : jn[6:2]];

@@ -1,0 +1,29 @@
+{
+  "cell": "qkd_ectl_b_tp8_direct",
+  "view": "physical/ref_tile/qkd_ectl_b_tp8_direct/views/qkd_ectl_b_tp8_direct",
+  "lib_cell": "qkd_ectl_b_tp8_direct",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 438.4,
+  "spread_ps": 29.0,
+  "outputs": 1056,
+  "inputs": 555,
+  "launch_ps": 181.3,
+  "launch_pin": "t1_row[346]",
+  "capture_ps": 163.2,
+  "capture_pin": "x_i[30]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "job": "qkd_ectl_b_tp8_direct-dr3-97a28cc59",
+  "closed_commit": "2be92ba00",
+  "main_merge": "bfb2996c8",
+  "tt_setup_ps": 136.61,
+  "ff_hold_ps": 18.4,
+  "drc": 0
+}

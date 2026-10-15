@@ -1,0 +1,2023 @@
+
+-- Executing script file `qkd_seq_core_tp8.ys' --
+
+1. Executing Verilog-2005 frontend: rtl/physical/ot_qwen_kv_centre_slots.sv
+Parsing SystemVerilog input from `rtl/physical/ot_qwen_kv_centre_slots.sv' to AST representation.
+Generating RTLIL representation for module `\qkd_seq_core'.
+Generating RTLIL representation for module `\qkd_seq_xs'.
+Generating RTLIL representation for module `\qkd_seq_fan'.
+Generating RTLIL representation for module `\qkd_seq'.
+Generating RTLIL representation for module `\qkd_rstseq'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qkvd_seq_m_ctl'.
+Warning: Replacing memory \jc with list of registers. See rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:263
+Generating RTLIL representation for module `\ot_qkvd_seq_m_sfifo'.
+Generating RTLIL representation for module `\ot_qkvd_seq_m_store'.
+Generating RTLIL representation for module `\ot_qkvd_seq_m_fan'.
+Generating RTLIL representation for module `\ot_qkvd_kv_seq_merged'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qkvd_fifo'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qfd_dctl'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qkvd_kv_desc'.
+Generating RTLIL representation for module `\ot_qkvd_kcmd_tap'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: rtl/lib/ot_rst_relay.sv
+Parsing SystemVerilog input from `rtl/lib/ot_rst_relay.sv' to AST representation.
+Generating RTLIL representation for module `\ot_rst_relay'.
+Warning: Replacing memory \relay_q with list of registers. See rtl/lib/ot_rst_relay.sv:42
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: rtl/qwen_sys/ot_qwen_sys_rst_seq.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/ot_qwen_sys_rst_seq.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qwen_sys_rst_seq'.
+Successfully finished Verilog frontend.
+
+8. Executing Verilog-2005 frontend: rtl/lib/ot_reset_sync.sv
+Parsing SystemVerilog input from `rtl/lib/ot_reset_sync.sv' to AST representation.
+Generating RTLIL representation for module `\ot_reset_sync'.
+Successfully finished Verilog frontend.
+
+9. Executing Verilog-2005 frontend: rtl/physical/ot_qwen_kv_seq_tp8.sv
+Parsing SystemVerilog input from `rtl/physical/ot_qwen_kv_seq_tp8.sv' to AST representation.
+Generating RTLIL representation for module `\qkd_seq_core_tp8'.
+Generating RTLIL representation for module `\qkd_seq_xs_tp8'.
+Generating RTLIL representation for module `\qkd_seq_tp8'.
+Successfully finished Verilog frontend.
+
+10. Executing HIERARCHY pass (managing design hierarchy).
+
+10.1. Analyzing design hierarchy..
+Top module:  \qkd_seq_core_tp8
+Used module:     \qkd_seq_core
+Used module:         \ot_qkvd_seq_m_ctl
+Used module:             \ot_qkvd_kv_desc
+Used module:             \ot_qfd_dctl
+Used module:             \ot_qkvd_fifo
+Used module:         \ot_rst_relay
+Parameter \Q_FP32 = 0
+Parameter \HEADS = 2
+Parameter \XS = 40
+Parameter \KD = 8
+Parameter \KWC = 4
+Parameter \OCR_AR = 64
+Parameter \NS = 38
+Parameter \KDESC = 1
+Parameter \KD_PMID = 0
+Parameter \KD_PTOK = 0
+Parameter \MUT = 0
+
+10.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qkvd_seq_m_ctl'.
+Parameter \Q_FP32 = 0
+Parameter \HEADS = 2
+Parameter \XS = 40
+Parameter \KD = 8
+Parameter \KWC = 4
+Parameter \OCR_AR = 64
+Parameter \NS = 38
+Parameter \KDESC = 1
+Parameter \KD_PMID = 0
+Parameter \KD_PTOK = 0
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$30c9c16332f3179c8fe3894cd5893950a3bc5001\ot_qkvd_seq_m_ctl'.
+Warning: Replacing memory \jc with list of registers. See rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:263
+Parameter \REGIONS = 1
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+
+10.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rst_relay'.
+Parameter \REGIONS = 1
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+Generating RTLIL representation for module `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay'.
+Warning: Replacing memory \relay_q with list of registers. See rtl/lib/ot_rst_relay.sv:42
+Parameter \NL = 36
+
+10.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qkvd_kv_desc'.
+Parameter \NL = 36
+Generating RTLIL representation for module `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100'.
+Parameter \NW = 18
+Parameter \AW = 24
+Parameter \NS = 38
+Parameter \VOCAB = 151936
+Parameter \WDOG = 1048576
+Parameter \STAB = 2128'1011111100000000000000000000000000000000000000000000000001100011000000000000000000000000000000000000000000000000011000100000000000000000000000000000000000000000000000000110000100000000000000000000000000000000000000000000000001100000000000000000000000000000000000000000000000000000010111110000000000000000000000000000000000000000000000000101111000000000000000000000000000000000000000000000000001011101000000000000000000000000000000000000000000000000010111000000000000000000000000000000000000000000000000000101101100000000000000000000000000000000000000000000000001011010000000000000000000000000000000000000000000000000010110010000000000000000000000000000000000000000000000000101100000000000000000000000000000000000000000000000000001010111000000000000000000000000000000000000000000000000010101100000000000000000000000000000000000000000000000000101010100000000000000000000000000000000000000000000000001010100000000000000000000000000000000000000000000000000010100110000000000000000000000000000000000000000000000000101001000000000000000000000000000000000000000000000000001010001000000000000000000000000000000000000000000000000010100000000000000000000000000000000000000000000000000000100111100000000000000000000000000000000000000000000000001001110000000000000000000000000000000000000000000000000010011010000000000000000000000000000000000000000000000000100110000000000000000000000000000000000000000000000000001001011000000000000000000000000000000000000000000000000010010100000000000000000000000000000000000000000000000000100100100000000000000000000000000000000000000000000000001001000000000000000000000000000000000000000000000000000010001110000000000000000000000000000000000000000000000000100011000000000000000000000000000000000000000000000000001000101000000000000000000000000000000000000000000000000010001000000000000000000000000000000000000000000000000000100001100000000000000000000000000000000000000000000000001000010000000000000000000000000000000000000000000000000010000010000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000111111000000000000000000000000000000000000000000000000
+
+10.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qfd_dctl'.
+Parameter \NW = 18
+Parameter \AW = 24
+Parameter \NS = 38
+Parameter \VOCAB = 151936
+Parameter \WDOG = 1048576
+Parameter \STAB = 2128'1011111100000000000000000000000000000000000000000000000001100011000000000000000000000000000000000000000000000000011000100000000000000000000000000000000000000000000000000110000100000000000000000000000000000000000000000000000001100000000000000000000000000000000000000000000000000000010111110000000000000000000000000000000000000000000000000101111000000000000000000000000000000000000000000000000001011101000000000000000000000000000000000000000000000000010111000000000000000000000000000000000000000000000000000101101100000000000000000000000000000000000000000000000001011010000000000000000000000000000000000000000000000000010110010000000000000000000000000000000000000000000000000101100000000000000000000000000000000000000000000000000001010111000000000000000000000000000000000000000000000000010101100000000000000000000000000000000000000000000000000101010100000000000000000000000000000000000000000000000001010100000000000000000000000000000000000000000000000000010100110000000000000000000000000000000000000000000000000101001000000000000000000000000000000000000000000000000001010001000000000000000000000000000000000000000000000000010100000000000000000000000000000000000000000000000000000100111100000000000000000000000000000000000000000000000001001110000000000000000000000000000000000000000000000000010011010000000000000000000000000000000000000000000000000100110000000000000000000000000000000000000000000000000001001011000000000000000000000000000000000000000000000000010010100000000000000000000000000000000000000000000000000100100100000000000000000000000000000000000000000000000001001000000000000000000000000000000000000000000000000000010001110000000000000000000000000000000000000000000000000100011000000000000000000000000000000000000000000000000001000101000000000000000000000000000000000000000000000000010001000000000000000000000000000000000000000000000000000100001100000000000000000000000000000000000000000000000001000010000000000000000000000000000000000000000000000000010000010000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000111111000000000000000000000000000000000000000000000000
+Generating RTLIL representation for module `$paramod$e356536e992e195455fe84667caa9314623ffa71\ot_qfd_dctl'.
+Parameter \W = 3
+Parameter \D = 8
+
+10.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qkvd_fifo'.
+Parameter \W = 3
+Parameter \D = 8
+Generating RTLIL representation for module `$paramod$0057a2c3c0ada1800e8a3e86b6571f7ec2ff3c7f\ot_qkvd_fifo'.
+Parameter \W = 6
+Parameter \D = 40
+
+10.7. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qkvd_fifo'.
+Parameter \W = 6
+Parameter \D = 40
+Generating RTLIL representation for module `$paramod$6730ca5ea43799d7eaa22d86661af5b7eccc45c9\ot_qkvd_fifo'.
+Parameter \HEADS = 1
+Parameter \Q_FP32 = 1
+
+10.8. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_seq_core'.
+Parameter \HEADS = 1
+Parameter \Q_FP32 = 1
+Generating RTLIL representation for module `$paramod$91d2734501416876e755d6712f24fc4a83ddc6e7\qkd_seq_core'.
+
+10.9. Analyzing design hierarchy..
+Top module:  \qkd_seq_core_tp8
+Used module:     $paramod$91d2734501416876e755d6712f24fc4a83ddc6e7\qkd_seq_core
+Used module:         \ot_qkvd_seq_m_ctl
+Used module:             $paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100
+Used module:             $paramod$e356536e992e195455fe84667caa9314623ffa71\ot_qfd_dctl
+Used module:             $paramod$0057a2c3c0ada1800e8a3e86b6571f7ec2ff3c7f\ot_qkvd_fifo
+Used module:             $paramod$6730ca5ea43799d7eaa22d86661af5b7eccc45c9\ot_qkvd_fifo
+Used module:         \ot_rst_relay
+Parameter \Q_FP32 = 1
+Parameter \HEADS = 1
+Parameter \XS = 40
+Parameter \KD = 8
+Parameter \KWC = 4
+Parameter \OCR_AR = 64
+Parameter \NS = 38
+Parameter \KDESC = 1
+Parameter \KD_PMID = 0
+Parameter \KD_PTOK = 0
+Parameter \MUT = 0
+
+10.10. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qkvd_seq_m_ctl'.
+Parameter \Q_FP32 = 1
+Parameter \HEADS = 1
+Parameter \XS = 40
+Parameter \KD = 8
+Parameter \KWC = 4
+Parameter \OCR_AR = 64
+Parameter \NS = 38
+Parameter \KDESC = 1
+Parameter \KD_PMID = 0
+Parameter \KD_PTOK = 0
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$0bd3427c325c81a4c2060e1b56ade5cb49d705c7\ot_qkvd_seq_m_ctl'.
+Warning: Replacing memory \jc with list of registers. See rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:263
+Parameter \REGIONS = 1
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+Found cached RTLIL representation for module `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay'.
+
+10.11. Analyzing design hierarchy..
+Top module:  \qkd_seq_core_tp8
+Used module:     $paramod$91d2734501416876e755d6712f24fc4a83ddc6e7\qkd_seq_core
+Used module:         $paramod$0bd3427c325c81a4c2060e1b56ade5cb49d705c7\ot_qkvd_seq_m_ctl
+Used module:             \ot_qkvd_kv_desc
+Used module:             \ot_qfd_dctl
+Used module:             \ot_qkvd_fifo
+Used module:         $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay
+Parameter \NL = 36
+Found cached RTLIL representation for module `$paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100'.
+Parameter \NW = 18
+Parameter \AW = 24
+Parameter \NS = 38
+Parameter \VOCAB = 151936
+Parameter \WDOG = 1048576
+Parameter \STAB = 2128'1011111100000000000000000000000000000000000000000000000001100011000000000000000000000000000000000000000000000000011000100000000000000000000000000000000000000000000000000110000100000000000000000000000000000000000000000000000001100000000000000000000000000000000000000000000000000000010111110000000000000000000000000000000000000000000000000101111000000000000000000000000000000000000000000000000001011101000000000000000000000000000000000000000000000000010111000000000000000000000000000000000000000000000000000101101100000000000000000000000000000000000000000000000001011010000000000000000000000000000000000000000000000000010110010000000000000000000000000000000000000000000000000101100000000000000000000000000000000000000000000000000001010111000000000000000000000000000000000000000000000000010101100000000000000000000000000000000000000000000000000101010100000000000000000000000000000000000000000000000001010100000000000000000000000000000000000000000000000000010100110000000000000000000000000000000000000000000000000101001000000000000000000000000000000000000000000000000001010001000000000000000000000000000000000000000000000000010100000000000000000000000000000000000000000000000000000100111100000000000000000000000000000000000000000000000001001110000000000000000000000000000000000000000000000000010011010000000000000000000000000000000000000000000000000100110000000000000000000000000000000000000000000000000001001011000000000000000000000000000000000000000000000000010010100000000000000000000000000000000000000000000000000100100100000000000000000000000000000000000000000000000001001000000000000000000000000000000000000000000000000000010001110000000000000000000000000000000000000000000000000100011000000000000000000000000000000000000000000000000001000101000000000000000000000000000000000000000000000000010001000000000000000000000000000000000000000000000000000100001100000000000000000000000000000000000000000000000001000010000000000000000000000000000000000000000000000000010000010000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000111111000000000000000000000000000000000000000000000000
+Found cached RTLIL representation for module `$paramod$e356536e992e195455fe84667caa9314623ffa71\ot_qfd_dctl'.
+Parameter \W = 3
+Parameter \D = 8
+Found cached RTLIL representation for module `$paramod$0057a2c3c0ada1800e8a3e86b6571f7ec2ff3c7f\ot_qkvd_fifo'.
+Parameter \W = 6
+Parameter \D = 40
+Found cached RTLIL representation for module `$paramod$6730ca5ea43799d7eaa22d86661af5b7eccc45c9\ot_qkvd_fifo'.
+
+10.12. Analyzing design hierarchy..
+Top module:  \qkd_seq_core_tp8
+Used module:     $paramod$91d2734501416876e755d6712f24fc4a83ddc6e7\qkd_seq_core
+Used module:         $paramod$0bd3427c325c81a4c2060e1b56ade5cb49d705c7\ot_qkvd_seq_m_ctl
+Used module:             $paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100
+Used module:             $paramod$e356536e992e195455fe84667caa9314623ffa71\ot_qfd_dctl
+Used module:             $paramod$0057a2c3c0ada1800e8a3e86b6571f7ec2ff3c7f\ot_qkvd_fifo
+Used module:             $paramod$6730ca5ea43799d7eaa22d86661af5b7eccc45c9\ot_qkvd_fifo
+Used module:         $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay
+
+10.13. Analyzing design hierarchy..
+Top module:  \qkd_seq_core_tp8
+Used module:     $paramod$91d2734501416876e755d6712f24fc4a83ddc6e7\qkd_seq_core
+Used module:         $paramod$0bd3427c325c81a4c2060e1b56ade5cb49d705c7\ot_qkvd_seq_m_ctl
+Used module:             $paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100
+Used module:             $paramod$e356536e992e195455fe84667caa9314623ffa71\ot_qfd_dctl
+Used module:             $paramod$0057a2c3c0ada1800e8a3e86b6571f7ec2ff3c7f\ot_qkvd_fifo
+Used module:             $paramod$6730ca5ea43799d7eaa22d86661af5b7eccc45c9\ot_qkvd_fifo
+Used module:         $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay
+Removing unused module `$paramod$30c9c16332f3179c8fe3894cd5893950a3bc5001\ot_qkvd_seq_m_ctl'.
+Removing unused module `\qkd_seq_tp8'.
+Removing unused module `\qkd_seq_xs_tp8'.
+Removing unused module `\ot_reset_sync'.
+Removing unused module `\ot_qwen_sys_rst_seq'.
+Removing unused module `\ot_rst_relay'.
+Removing unused module `\ot_qkvd_kcmd_tap'.
+Removing unused module `\ot_qkvd_kv_desc'.
+Removing unused module `\ot_qfd_dctl'.
+Removing unused module `\ot_qkvd_fifo'.
+Removing unused module `\ot_qkvd_kv_seq_merged'.
+Removing unused module `\ot_qkvd_seq_m_fan'.
+Removing unused module `\ot_qkvd_seq_m_store'.
+Removing unused module `\ot_qkvd_seq_m_sfifo'.
+Removing unused module `\ot_qkvd_seq_m_ctl'.
+Removing unused module `\qkd_rstseq'.
+Removing unused module `\qkd_seq'.
+Removing unused module `\qkd_seq_fan'.
+Removing unused module `\qkd_seq_xs'.
+Removing unused module `\qkd_seq_core'.
+Removed 20 unused modules.
+
+11. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$e356536e992e195455fe84667caa9314623ffa71\ot_qfd_dctl.
+Deleting now unused module $paramod\ot_qkvd_kv_desc\NL=s32'00000000000000000000000000100100.
+Deleting now unused module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.
+Deleting now unused module $paramod$0bd3427c325c81a4c2060e1b56ade5cb49d705c7\ot_qkvd_seq_m_ctl.
+Deleting now unused module $paramod$91d2734501416876e755d6712f24fc4a83ddc6e7\qkd_seq_core.
+Deleting now unused module $paramod$6730ca5ea43799d7eaa22d86661af5b7eccc45c9\ot_qkvd_fifo.
+Deleting now unused module $paramod$0057a2c3c0ada1800e8a3e86b6571f7ec2ff3c7f\ot_qkvd_fifo.
+<suppressed ~7 debug messages>
+
+12. Executing PROC pass (convert processes to netlists).
+
+12.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\qkd_seq_core_tp8.$flatten\u_native.\u_rr.$proc$rtl/lib/ot_rst_relay.sv:40$1016'.
+Cleaned up 1 empty switch.
+
+12.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_rr.$proc$rtl/lib/ot_rst_relay.sv:40$1016 in module qkd_seq_core_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_rr.$proc$rtl/lib/ot_rst_relay.sv:28$1014 in module qkd_seq_core_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:54$1028 in module qkd_seq_core_tp8.
+Marked 18 switch rules as full_case in process $flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033 in module qkd_seq_core_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:78$1281 in module qkd_seq_core_tp8.
+Marked 9 switch rules as full_case in process $flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:101$1303 in module qkd_seq_core_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_body.\u_kt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:31$1335 in module qkd_seq_core_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_body.\u_kt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:32$1342 in module qkd_seq_core_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_body.\u_qt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:31$1358 in module qkd_seq_core_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_body.\u_qt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:32$1365 in module qkd_seq_core_tp8.
+Marked 6 switch rules as full_case in process $flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418 in module qkd_seq_core_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:132$1380 in module qkd_seq_core_tp8.
+Removed a total of 0 dead cases.
+
+12.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 69 redundant assignments.
+Promoted 82 assignments to connections.
+
+12.4. Executing PROC_INIT pass (extract init attributes).
+
+12.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \u_native.u_rr.rst_n_in in `\qkd_seq_core_tp8.$flatten\u_native.\u_rr.$proc$rtl/lib/ot_rst_relay.sv:40$1016'.
+Found async reset \u_native.u_rr.rst_n_in in `\qkd_seq_core_tp8.$flatten\u_native.\u_rr.$proc$rtl/lib/ot_rst_relay.sv:28$1014'.
+Found async reset \u_native.u_body.g_kd.u_kd.rst_n in `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:54$1028'.
+Found async reset \u_native.u_body.g_kd.u_kd.rst_n in `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+Found async reset \u_native.u_body.u_step.rst_n in `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:78$1281'.
+Found async reset \u_native.u_body.u_step.rst_n in `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:101$1303'.
+Found async reset \u_native.u_body.u_kt.rst_n in `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_kt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:32$1342'.
+Found async reset \u_native.u_body.u_qt.rst_n in `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_qt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:32$1365'.
+Found async reset \u_native.u_body.rst_n in `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+Found async reset \u_native.u_body.rst_n in `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:132$1380'.
+
+12.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~73 debug messages>
+
+12.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\qkd_seq_core_tp8.$flatten\u_native.\u_rr.$proc$rtl/lib/ot_rst_relay.sv:40$1016'.
+     1/1: $flatten\u_native.\u_rr.$0\relay_q[0][0:0]
+Creating decoders for process `\qkd_seq_core_tp8.$flatten\u_native.\u_rr.$proc$rtl/lib/ot_rst_relay.sv:28$1014'.
+     1/1: $flatten\u_native.\u_rr.$0\sync_q[1:0]
+Creating decoders for process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:54$1028'.
+     1/2: $flatten\u_native.\u_body.\g_kd.u_kd.$0\d_v[0:0]
+     2/2: $flatten\u_native.\u_body.\g_kd.u_kd.$0\a_v[0:0]
+Creating decoders for process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:56$1030'.
+Creating decoders for process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+     1/209: $flatten\u_native.\u_body.\g_kd.u_kd.$8\step.o[2:0]
+     2/209: $flatten\u_native.\u_body.\g_kd.u_kd.$12\step.n[1:0]
+     3/209: $flatten\u_native.\u_body.\g_kd.u_kd.$15\step.r1[31:0]
+     4/209: $flatten\u_native.\u_body.\g_kd.u_kd.$4\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1027.$result[31:0]$1261
+     5/209: $flatten\u_native.\u_body.\g_kd.u_kd.$4\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1027.t[13:0]$1263
+     6/209: $flatten\u_native.\u_body.\g_kd.u_kd.$4\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1027.l[5:0]$1262
+     7/209: $flatten\u_native.\u_body.\g_kd.u_kd.$16\step.r0[31:0]
+     8/209: $flatten\u_native.\u_body.\g_kd.u_kd.$4\wdesc$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1026.$result[31:0]$1258
+     9/209: $flatten\u_native.\u_body.\g_kd.u_kd.$4\wdesc$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1026.t[13:0]$1260
+    10/209: $flatten\u_native.\u_body.\g_kd.u_kd.$4\wdesc$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1026.l[5:0]$1259
+    11/209: $flatten\u_native.\u_body.\g_kd.u_kd.$15\step.r0[31:0]
+    12/209: $flatten\u_native.\u_body.\g_kd.u_kd.$6\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1024.$result[31:0]$1248
+    13/209: $flatten\u_native.\u_body.\g_kd.u_kd.$6\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1024.t[13:0]$1250
+    14/209: $flatten\u_native.\u_body.\g_kd.u_kd.$6\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1024.l[5:0]$1249
+    15/209: $flatten\u_native.\u_body.\g_kd.u_kd.$6\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1025.t[13:0]$1253
+    16/209: $flatten\u_native.\u_body.\g_kd.u_kd.$6\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1025.l[5:0]$1252
+    17/209: $flatten\u_native.\u_body.\g_kd.u_kd.$6\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1025.$result[31:0]$1251
+    18/209: $flatten\u_native.\u_body.\g_kd.u_kd.$14\step.r1[31:0]
+    19/209: $flatten\u_native.\u_body.\g_kd.u_kd.$11\step.n[1:0]
+    20/209: $flatten\u_native.\u_body.\g_kd.u_kd.$5\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1025.t[13:0]$1246
+    21/209: $flatten\u_native.\u_body.\g_kd.u_kd.$5\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1025.l[5:0]$1245
+    22/209: $flatten\u_native.\u_body.\g_kd.u_kd.$5\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1025.$result[31:0]$1244
+    23/209: $flatten\u_native.\u_body.\g_kd.u_kd.$5\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1024.t[13:0]$1243
+    24/209: $flatten\u_native.\u_body.\g_kd.u_kd.$5\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1024.l[5:0]$1242
+    25/209: $flatten\u_native.\u_body.\g_kd.u_kd.$5\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1024.$result[31:0]$1241
+    26/209: $flatten\u_native.\u_body.\g_kd.u_kd.$13\step.r1[31:0]
+    27/209: $flatten\u_native.\u_body.\g_kd.u_kd.$14\step.r0[31:0]
+    28/209: $flatten\u_native.\u_body.\g_kd.u_kd.$4\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1025.t[13:0]$1239
+    29/209: $flatten\u_native.\u_body.\g_kd.u_kd.$4\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1025.l[5:0]$1238
+    30/209: $flatten\u_native.\u_body.\g_kd.u_kd.$4\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1025.$result[31:0]$1237
+    31/209: $flatten\u_native.\u_body.\g_kd.u_kd.$4\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1024.t[13:0]$1236
+    32/209: $flatten\u_native.\u_body.\g_kd.u_kd.$4\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1024.l[5:0]$1235
+    33/209: $flatten\u_native.\u_body.\g_kd.u_kd.$4\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1024.$result[31:0]$1234
+    34/209: $flatten\u_native.\u_body.\g_kd.u_kd.$12\step.r1[31:0]
+    35/209: $flatten\u_native.\u_body.\g_kd.u_kd.$13\step.r0[31:0]
+    36/209: $flatten\u_native.\u_body.\g_kd.u_kd.$10\step.n[1:0]
+    37/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1025.t[13:0]$1223
+    38/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1025.l[5:0]$1222
+    39/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1025.$result[31:0]$1221
+    40/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1024.t[13:0]$1220
+    41/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1024.l[5:0]$1219
+    42/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1024.$result[31:0]$1218
+    43/209: $flatten\u_native.\u_body.\g_kd.u_kd.$11\step.r1[31:0]
+    44/209: $flatten\u_native.\u_body.\g_kd.u_kd.$12\step.r0[31:0]
+    45/209: $flatten\u_native.\u_body.\g_kd.u_kd.$9\step.n[1:0]
+    46/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1027.t[13:0]$1229
+    47/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1027.l[5:0]$1228
+    48/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1027.$result[31:0]$1227
+    49/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wdesc$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1026.t[13:0]$1226
+    50/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wdesc$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1026.l[5:0]$1225
+    51/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wdesc$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1026.$result[31:0]$1224
+    52/209: $flatten\u_native.\u_body.\g_kd.u_kd.$7\step.o[2:0]
+    53/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\step.p[19:0]
+    54/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1027.t[13:0]$1206
+    55/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1027.l[5:0]$1205
+    56/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1027.$result[31:0]$1204
+    57/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wdesc$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1026.t[13:0]$1203
+    58/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wdesc$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1026.l[5:0]$1202
+    59/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wdesc$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1026.$result[31:0]$1201
+    60/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1025.t[13:0]$1200
+    61/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1025.l[5:0]$1199
+    62/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1025.$result[31:0]$1198
+    63/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1024.t[13:0]$1197
+    64/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1024.l[5:0]$1196
+    65/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1024.$result[31:0]$1195
+    66/209: $flatten\u_native.\u_body.\g_kd.u_kd.$6\step.o[2:0]
+    67/209: $flatten\u_native.\u_body.\g_kd.u_kd.$10\step.r1[31:0]
+    68/209: $flatten\u_native.\u_body.\g_kd.u_kd.$11\step.r0[31:0]
+    69/209: $flatten\u_native.\u_body.\g_kd.u_kd.$8\step.n[1:0]
+    70/209: $flatten\u_native.\u_body.\g_kd.u_kd.$10\step.r0[31:0]
+    71/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:122$1022.$result[31:0]$1188
+    72/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:122$1022.t[13:0]$1190
+    73/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:122$1022.l[5:0]$1189
+    74/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:122$1023.t[13:0]$1193
+    75/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:122$1023.l[5:0]$1192
+    76/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:122$1023.$result[31:0]$1191
+    77/209: $flatten\u_native.\u_body.\g_kd.u_kd.$9\step.r1[31:0]
+    78/209: $flatten\u_native.\u_body.\g_kd.u_kd.$7\step.n[1:0]
+    79/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:122$1023.t[13:0]$1186
+    80/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:122$1023.l[5:0]$1185
+    81/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:122$1023.$result[31:0]$1184
+    82/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:122$1022.t[13:0]$1183
+    83/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:122$1022.l[5:0]$1182
+    84/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:122$1022.$result[31:0]$1181
+    85/209: $flatten\u_native.\u_body.\g_kd.u_kd.$8\step.r1[31:0]
+    86/209: $flatten\u_native.\u_body.\g_kd.u_kd.$9\step.r0[31:0]
+    87/209: $flatten\u_native.\u_body.\g_kd.u_kd.$8\step.r0[31:0]
+    88/209: $flatten\u_native.\u_body.\g_kd.u_kd.$7\step.r1[31:0]
+    89/209: $flatten\u_native.\u_body.\g_kd.u_kd.$5\step.o[2:0]
+    90/209: $flatten\u_native.\u_body.\g_kd.u_kd.$6\step.n[1:0]
+    91/209: $flatten\u_native.\u_body.\g_kd.u_kd.$6\step.r1[31:0]
+    92/209: $flatten\u_native.\u_body.\g_kd.u_kd.$7\step.r0[31:0]
+    93/209: $flatten\u_native.\u_body.\g_kd.u_kd.$6\step.r0[31:0]
+    94/209: $flatten\u_native.\u_body.\g_kd.u_kd.$5\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1020.$result[31:0]$1141
+    95/209: $flatten\u_native.\u_body.\g_kd.u_kd.$5\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1020.t[13:0]$1143
+    96/209: $flatten\u_native.\u_body.\g_kd.u_kd.$5\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1020.l[5:0]$1142
+    97/209: $flatten\u_native.\u_body.\g_kd.u_kd.$5\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1021.t[13:0]$1146
+    98/209: $flatten\u_native.\u_body.\g_kd.u_kd.$5\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1021.l[5:0]$1145
+    99/209: $flatten\u_native.\u_body.\g_kd.u_kd.$5\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1021.$result[31:0]$1144
+   100/209: $flatten\u_native.\u_body.\g_kd.u_kd.$5\step.r1[31:0]
+   101/209: $flatten\u_native.\u_body.\g_kd.u_kd.$5\step.n[1:0]
+   102/209: $flatten\u_native.\u_body.\g_kd.u_kd.$4\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1021.t[13:0]$1139
+   103/209: $flatten\u_native.\u_body.\g_kd.u_kd.$4\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1021.l[5:0]$1138
+   104/209: $flatten\u_native.\u_body.\g_kd.u_kd.$4\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1021.$result[31:0]$1137
+   105/209: $flatten\u_native.\u_body.\g_kd.u_kd.$4\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1020.t[13:0]$1136
+   106/209: $flatten\u_native.\u_body.\g_kd.u_kd.$4\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1020.l[5:0]$1135
+   107/209: $flatten\u_native.\u_body.\g_kd.u_kd.$4\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1020.$result[31:0]$1134
+   108/209: $flatten\u_native.\u_body.\g_kd.u_kd.$4\step.r1[31:0]
+   109/209: $flatten\u_native.\u_body.\g_kd.u_kd.$5\step.r0[31:0]
+   110/209: $flatten\u_native.\u_body.\g_kd.u_kd.$4\step.o[2:0]
+   111/209: $flatten\u_native.\u_body.\g_kd.u_kd.$4\step.n[1:0]
+   112/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\step.r1[31:0]
+   113/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:106$1019.$result[31:0]$1121
+   114/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:106$1019.t[13:0]$1123
+   115/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:106$1019.l[5:0]$1122
+   116/209: $flatten\u_native.\u_body.\g_kd.u_kd.$4\step.r0[31:0]
+   117/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wdesc$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:106$1018.$result[31:0]$1118
+   118/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wdesc$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:106$1018.t[13:0]$1120
+   119/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wdesc$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:106$1018.l[5:0]$1119
+   120/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1021.t[13:0]$1129
+   121/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1021.l[5:0]$1128
+   122/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1021.$result[31:0]$1127
+   123/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1020.t[13:0]$1126
+   124/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1020.l[5:0]$1125
+   125/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1020.$result[31:0]$1124
+   126/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1021.t[13:0]$1113
+   127/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1021.l[5:0]$1112
+   128/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1021.$result[31:0]$1111
+   129/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1020.t[13:0]$1110
+   130/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1020.l[5:0]$1109
+   131/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1020.$result[31:0]$1108
+   132/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:106$1019.t[13:0]$1107
+   133/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:106$1019.l[5:0]$1106
+   134/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:106$1019.$result[31:0]$1105
+   135/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wdesc$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:106$1018.t[13:0]$1104
+   136/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wdesc$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:106$1018.l[5:0]$1103
+   137/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\wdesc$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:106$1018.$result[31:0]$1102
+   138/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\step.o[2:0]
+   139/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\step.r1[31:0]
+   140/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\step.r0[31:0]
+   141/209: $flatten\u_native.\u_body.\g_kd.u_kd.$3\step.n[1:0]
+   142/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\step.o[2:0]
+   143/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\step.n[1:0]
+   144/209: $flatten\u_native.\u_body.\g_kd.u_kd.$2\step.r0[31:0]
+   145/209: $flatten\u_native.\u_body.\g_kd.u_kd.$0\outst[2:0]
+   146/209: $flatten\u_native.\u_body.\g_kd.u_kd.$0\qn[1:0]
+   147/209: $flatten\u_native.\u_body.\g_kd.u_kd.$0\q1[31:0]
+   148/209: $flatten\u_native.\u_body.\g_kd.u_kd.$0\q0[31:0]
+   149/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1027.t[13:0]$1094
+   150/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1027.l[5:0]$1093
+   151/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1027.$result[31:0]$1092
+   152/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wdesc$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1026.t[13:0]$1091
+   153/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wdesc$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1026.l[5:0]$1090
+   154/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wdesc$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1026.$result[31:0]$1089
+   155/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1025.t[13:0]$1088
+   156/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1025.l[5:0]$1087
+   157/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1025.$result[31:0]$1086
+   158/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1024.t[13:0]$1085
+   159/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1024.l[5:0]$1084
+   160/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1024.$result[31:0]$1083
+   161/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\step.p[19:0]
+   162/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\step.o[2:0]
+   163/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\step.r1[31:0]
+   164/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\step.r0[31:0]
+   165/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\step.n[1:0]
+   166/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:122$1023.t[13:0]$1082
+   167/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:122$1023.l[5:0]$1081
+   168/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:122$1023.$result[31:0]$1080
+   169/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:122$1022.t[13:0]$1079
+   170/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:122$1022.l[5:0]$1078
+   171/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:122$1022.$result[31:0]$1077
+   172/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\step.post_go[0:0]
+   173/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\step.post_desc[0:0]
+   174/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1021.t[13:0]$1076
+   175/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1021.l[5:0]$1075
+   176/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1021.$result[31:0]$1074
+   177/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1020.t[13:0]$1073
+   178/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1020.l[5:0]$1072
+   179/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1020.$result[31:0]$1071
+   180/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:106$1019.t[13:0]$1070
+   181/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:106$1019.l[5:0]$1069
+   182/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:106$1019.$result[31:0]$1068
+   183/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wdesc$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:106$1018.t[13:0]$1067
+   184/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wdesc$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:106$1018.l[5:0]$1066
+   185/209: $flatten\u_native.\u_body.\g_kd.u_kd.$1\wdesc$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:106$1018.$result[31:0]$1065
+   186/209: $flatten\u_native.\u_body.\g_kd.u_kd.$0\k_v[0:0]
+   187/209: $flatten\u_native.\u_body.\g_kd.u_kd.$0\now[19:0]
+   188/209: $flatten\u_native.\u_body.\g_kd.u_kd.$0\gw_T[13:0]
+   189/209: $flatten\u_native.\u_body.\g_kd.u_kd.$0\gw_l[5:0]
+   190/209: $flatten\u_native.\u_body.\g_kd.u_kd.$0\gw_d[0:0]
+   191/209: $flatten\u_native.\u_body.\g_kd.u_kd.$0\gw[0:0]
+   192/209: $flatten\u_native.\u_body.\g_kd.u_kd.$0\pT[13:0]
+   193/209: $flatten\u_native.\u_body.\g_kd.u_kd.$0\pl[5:0]
+   194/209: $flatten\u_native.\u_body.\g_kd.u_kd.$0\gposted[0:0]
+   195/209: $flatten\u_native.\u_body.\g_kd.u_kd.$0\gtv[0:0]
+   196/209: $flatten\u_native.\u_body.\g_kd.u_kd.$0\gtmr[19:0]
+   197/209: $flatten\u_native.\u_body.\g_kd.u_kd.$0\posted[0:0]
+   198/209: $flatten\u_native.\u_body.\g_kd.u_kd.$0\pred_ok[0:0]
+   199/209: $flatten\u_native.\u_body.\g_kd.u_kd.$0\l_last[5:0]
+   200/209: $flatten\u_native.\u_body.\g_kd.u_kd.$0\tv[0:0]
+   201/209: $flatten\u_native.\u_body.\g_kd.u_kd.$0\last_ok[0:0]
+   202/209: $flatten\u_native.\u_body.\g_kd.u_kd.$0\pt_ok[0:0]
+   203/209: $flatten\u_native.\u_body.\g_kd.u_kd.$0\pm_ok[0:0]
+   204/209: $flatten\u_native.\u_body.\g_kd.u_kd.$0\tmr[19:0]
+   205/209: $flatten\u_native.\u_body.\g_kd.u_kd.$0\p_tok[19:0]
+   206/209: $flatten\u_native.\u_body.\g_kd.u_kd.$0\p_mid[19:0]
+   207/209: $flatten\u_native.\u_body.\g_kd.u_kd.$0\t_last[19:0]
+   208/209: $flatten\u_native.\u_body.\g_kd.u_kd.$0\k_d[31:0]
+   209/209: $flatten\u_native.\u_body.\g_kd.u_kd.$0\fault[0:0]
+Creating decoders for process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:78$1281'.
+     1/6: $flatten\u_native.\u_body.\u_step.$0\q_dr[0:0]
+     2/6: $flatten\u_native.\u_body.\u_step.$0\q_lf[0:0]
+     3/6: $flatten\u_native.\u_body.\u_step.$0\q_cf[0:0]
+     4/6: $flatten\u_native.\u_body.\u_step.$0\q_sf[0:0]
+     5/6: $flatten\u_native.\u_body.\u_step.$0\q_done[0:0]
+     6/6: $flatten\u_native.\u_body.\u_step.$0\q_start[0:0]
+Creating decoders for process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:85$1283'.
+Creating decoders for process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:91$1285'.
+Creating decoders for process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:101$1303'.
+     1/22: $flatten\u_native.\u_body.\u_step.$0\h_start[0:0]
+     2/22: $flatten\u_native.\u_body.\u_step.$0\gap[1:0]
+     3/22: $flatten\u_native.\u_body.\u_step.$0\wd[31:0]
+     4/22: $flatten\u_native.\u_body.\u_step.$0\s[5:0]
+     5/22: $flatten\u_native.\u_body.\u_step.$0\st_scale[23:0]
+     6/22: $flatten\u_native.\u_body.\u_step.$0\st_code[23:0]
+     7/22: $flatten\u_native.\u_body.\u_step.$0\st_crom[5:0]
+     8/22: $flatten\u_native.\u_body.\u_step.$0\st_next_layer[5:0]
+     9/22: $flatten\u_native.\u_body.\u_step.$0\st_layer[5:0]
+    10/22: $flatten\u_native.\u_body.\u_step.$0\st_prog[1:0]
+    11/22: $flatten\u_native.\u_body.\u_step.$0\d_cycles[31:0]
+    12/22: $flatten\u_native.\u_body.\u_step.$0\d_fault_code[3:0]
+    13/22: $flatten\u_native.\u_body.\u_step.$0\d_next_val[31:0]
+    14/22: $flatten\u_native.\u_body.\u_step.$0\d_next_token[17:0]
+    15/22: $flatten\u_native.\u_body.\u_step.$0\d_done_gen[1:0]
+    16/22: $flatten\u_native.\u_body.\u_step.$0\st[2:0]
+    17/22: $flatten\u_native.\u_body.\u_step.$0\stage[5:0]
+    18/22: $flatten\u_native.\u_body.\u_step.$0\tp_pos[17:0]
+    19/22: $flatten\u_native.\u_body.\u_step.$0\tp_token[17:0]
+    20/22: $flatten\u_native.\u_body.\u_step.$0\d_fault[0:0]
+    21/22: $flatten\u_native.\u_body.\u_step.$0\d_drained[0:0]
+    22/22: $flatten\u_native.\u_body.\u_step.$0\d_done[0:0]
+Creating decoders for process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_kt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:31$1335'.
+     1/3: $flatten\u_native.\u_body.\u_kt.$1$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:31$1331_EN[2:0]$1341
+     2/3: $flatten\u_native.\u_body.\u_kt.$1$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:31$1331_DATA[2:0]$1340
+     3/3: $flatten\u_native.\u_body.\u_kt.$1$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:31$1331_ADDR[2:0]$1339
+Creating decoders for process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_kt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:32$1342'.
+     1/3: $flatten\u_native.\u_body.\u_kt.$0\count[3:0]
+     2/3: $flatten\u_native.\u_body.\u_kt.$0\rp[2:0]
+     3/3: $flatten\u_native.\u_body.\u_kt.$0\wp[2:0]
+Creating decoders for process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_qt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:31$1358'.
+     1/3: $flatten\u_native.\u_body.\u_qt.$1$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:31$1354_EN[5:0]$1364
+     2/3: $flatten\u_native.\u_body.\u_qt.$1$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:31$1354_DATA[5:0]$1363
+     3/3: $flatten\u_native.\u_body.\u_qt.$1$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:31$1354_ADDR[5:0]$1362
+Creating decoders for process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_qt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:32$1365'.
+     1/3: $flatten\u_native.\u_body.\u_qt.$0\count[5:0]
+     2/3: $flatten\u_native.\u_body.\u_qt.$0\rp[5:0]
+     3/3: $flatten\u_native.\u_body.\u_qt.$0\wp[5:0]
+Creating decoders for process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+     1/70: $flatten\u_native.\u_body.$4$lookahead\kv_seen$1417[7:0]$1467
+     2/70: $flatten\u_native.\u_body.$3$bitselwrite$pos$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:300$1378[2:0]$1466
+     3/70: $flatten\u_native.\u_body.$3$lookahead\kv_seen$1417[7:0]$1465
+     4/70: $flatten\u_native.\u_body.$2$lookahead\kv_seen$1417[7:0]$1464
+     5/70: $flatten\u_native.\u_body.$2$bitselwrite$pos$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:300$1378[2:0]$1463
+     6/70: $flatten\u_native.\u_body.$0\fault[0:0]
+     7/70: $flatten\u_native.\u_body.$0\fault_cause[8:0]
+     8/70: $flatten\u_native.\u_body.$0\f_step[0:0]
+     9/70: $flatten\u_native.\u_body.$0\f_pend[0:0]
+    10/70: $flatten\u_native.\u_body.$0\f_row[0:0]
+    11/70: $flatten\u_native.\u_body.$0\hs[0:0]
+    12/70: $flatten\u_native.\u_body.$0\hsd[2:0]
+    13/70: $flatten\u_native.\u_body.$1\f_kc[65:65]
+    14/70: $flatten\u_native.\u_body.$0\f_kc[32:32]
+    15/70: $flatten\u_native.\u_body.$1\f_kwm[45:45]
+    16/70: $flatten\u_native.\u_body.$0\f_kwm[22:22]
+    17/70: $flatten\u_native.\u_body.$0\kw1[22:22]
+    18/70: $flatten\u_native.\u_body.$2\f_aqm[34:34]
+    19/70: $flatten\u_native.\u_body.$3\f_aqm[55:55]
+    20/70: $flatten\u_native.\u_body.$0\f_aqm[6:6]
+    21/70: $flatten\u_native.\u_body.$1\f_aqm[27:27]
+    22/70: $flatten\u_native.\u_body.$0\aq1[6:6]
+    23/70: $flatten\u_native.\u_body.$1\aq1[27:27]
+    24/70: $flatten\u_native.\u_body.$1\i[31:0]
+    25/70: $flatten\u_native.\u_body.$0\jc[3][2:0]
+    26/70: $flatten\u_native.\u_body.$0\jc[2][2:0]
+    27/70: $flatten\u_native.\u_body.$0\jc[1][2:0]
+    28/70: $flatten\u_native.\u_body.$0\jc[0][2:0]
+    29/70: $flatten\u_native.\u_body.$0\kwq[0:0]
+    30/70: $flatten\u_native.\u_body.$0\kwc[7:0]
+    31/70: $flatten\u_native.\u_body.$0\kvw_v[0:0]
+    32/70: $flatten\u_native.\u_body.$0\kw_go[0:0]
+    33/70: $flatten\u_native.\u_body.$0\uc0[7:0]
+    34/70: $flatten\u_native.\u_body.$0\ar_v[0:0]
+    35/70: $flatten\u_native.\u_body.$1$lookahead\kv_seen$1417[7:0]$1423
+    36/70: $flatten\u_native.\u_body.$1$bitselwrite$pos$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:300$1378[2:0]$1422
+    37/70: $flatten\u_native.\u_body.$0\drn[0:0]
+    38/70: $flatten\u_native.\u_body.$0\kfq[0:0]
+    39/70: $flatten\u_native.\u_body.$0\cbq[0:0]
+    40/70: $flatten\u_native.\u_body.$0\dwo[67:67]
+    41/70: $flatten\u_native.\u_body.$0\pws[74:74]
+    42/70: $flatten\u_native.\u_body.$0\pw[74:74]
+    43/70: $flatten\u_native.\u_body.$0\dwc[67:67]
+    44/70: $flatten\u_native.\u_body.$0\pwc[74:74]
+    45/70: $flatten\u_native.\u_body.$0\a_q_valid[0:0]
+    46/70: $flatten\u_native.\u_body.$0\a_start[0:0]
+    47/70: $flatten\u_native.\u_body.$0\s_kwgo[0:0]
+    48/70: $flatten\u_native.\u_body.$0\s_kpop[0:0]
+    49/70: $flatten\u_native.\u_body.$0\s_qpop[0:0]
+    50/70: $flatten\u_native.\u_body.$0\x3_cr[0:0]
+    51/70: $flatten\u_native.\u_body.$0\f_join[0:0]
+    52/70: $flatten\u_native.\u_body.$0\f_xovr[0:0]
+    53/70: $flatten\u_native.\u_body.$0\f_x[0:0]
+    54/70: $flatten\u_native.\u_body.$0\f_kw[0:0]
+    55/70: $flatten\u_native.\u_body.$0\f_ord[0:0]
+    56/70: $flatten\u_native.\u_body.$0\f_res[0:0]
+    57/70: $flatten\u_native.\u_body.$0\kw_n[2:0]
+    58/70: $flatten\u_native.\u_body.$0\r_n[6:0]
+    59/70: $flatten\u_native.\u_body.$0\q_n[5:0]
+    60/70: $flatten\u_native.\u_body.$0\kv_n[3:0]
+    61/70: $flatten\u_native.\u_body.$0\a_T[13:0]
+    62/70: $flatten\u_native.\u_body.$0\layer[5:0]
+    63/70: $flatten\u_native.\u_body.$0\st[2:0]
+    64/70: $flatten\u_native.\u_body.$0\f_kvd[0:0]
+    65/70: $flatten\u_native.\u_body.$0\f_kq[0:0]
+    66/70: $flatten\u_native.\u_body.$0\lp_v[0:0]
+    67/70: $flatten\u_native.\u_body.$0\lp[17:0]
+    68/70: $flatten\u_native.\u_body.$0\ln[1:0]
+    69/70: $flatten\u_native.\u_body.$0\lq1[19:0]
+    70/70: $flatten\u_native.\u_body.$0\lq0[19:0]
+Creating decoders for process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:246$1416'.
+Creating decoders for process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:237$1410'.
+Creating decoders for process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:236$1409'.
+Creating decoders for process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:219$1403'.
+     1/5: $flatten\u_native.\u_body.$0\kvw_layer[5:0]
+     2/5: $flatten\u_native.\u_body.$0\kvw_t[13:0]
+     3/5: $flatten\u_native.\u_body.$0\kvw_vg[1:0]
+     4/5: $flatten\u_native.\u_body.$0\a_q_beat[5:0]
+     5/5: $flatten\u_native.\u_body.$0\ar_d[518:0]
+Creating decoders for process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:211$1392'.
+Creating decoders for process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:175$1386'.
+Creating decoders for process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:132$1380'.
+     1/8: $flatten\u_native.\u_body.$0\mfq[3:0]
+     2/8: $flatten\u_native.\u_body.$0\afq[3:0]
+     3/8: $flatten\u_native.\u_body.$0\crq[3:0]
+     4/8: $flatten\u_native.\u_body.$0\hfq[0:0]
+     5/8: $flatten\u_native.\u_body.$0\ucq[0:0]
+     6/8: $flatten\u_native.\u_body.$0\ov[0:0]
+     7/8: $flatten\u_native.\u_body.$0\kv[0:0]
+     8/8: $flatten\u_native.\u_body.$0\xv[0:0]
+Creating decoders for process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:131$1379'.
+
+12.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\qkd_seq_core_tp8.\u_native.u_body.q_pop' from process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:211$1392'.
+No latch inferred for signal `\qkd_seq_core_tp8.\u_native.u_body.k_pop' from process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:211$1392'.
+
+12.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_rr.relay_q[0]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_rr.$proc$rtl/lib/ot_rst_relay.sv:40$1016'.
+  created $adff cell `$procdff$3433' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_rr.sync_q' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_rr.$proc$rtl/lib/ot_rst_relay.sv:28$1014'.
+  created $adff cell `$procdff$3438' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.a_v' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:54$1028'.
+  created $adff cell `$procdff$3443' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.d_v' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:54$1028'.
+  created $adff cell `$procdff$3448' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.a_T' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:56$1030'.
+  created $dff cell `$procdff$3449' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.a_l' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:56$1030'.
+  created $dff cell `$procdff$3450' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.fault' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3455' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.k_v' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3460' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.k_d' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3465' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.now' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3470' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.t_last' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3475' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.p_mid' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3480' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.p_tok' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3485' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.tmr' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3490' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.pm_ok' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3495' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.pt_ok' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3500' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.last_ok' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3505' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.tv' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3510' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.l_last' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3515' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.pred_ok' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3520' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.posted' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3525' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.gtmr' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3530' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.gtv' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3535' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.gposted' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3540' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.pl' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3545' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.pT' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3550' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.outst' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3555' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.q0' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3560' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.q1' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3565' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.qn' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3570' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.gw' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3575' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.gw_d' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3580' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.gw_l' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3585' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.gw_T' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3590' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.step.n' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $dff cell `$procdff$3597' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.step.r0' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $dff cell `$procdff$3604' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.step.r1' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $dff cell `$procdff$3611' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.step.post_desc' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $dff cell `$procdff$3618' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.step.post_go' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $dff cell `$procdff$3625' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.step.o' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $dff cell `$procdff$3632' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.step.p' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $dff cell `$procdff$3639' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wdesc$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:106$1018.$result' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3644' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wdesc$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:106$1018.l' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3649' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wdesc$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:106$1018.t' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3654' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:106$1019.$result' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3659' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:106$1019.l' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3664' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:106$1019.t' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3669' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1020.$result' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3674' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1020.l' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3679' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1020.t' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3684' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1021.$result' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3689' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1021.l' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3694' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:108$1021.t' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3699' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:122$1022.$result' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3704' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:122$1022.l' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3709' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:122$1022.t' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3714' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:122$1023.$result' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3719' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:122$1023.l' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3724' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:122$1023.t' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3729' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1024.$result' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3734' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1024.l' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3739' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1024.t' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3744' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1025.$result' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3749' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1025.l' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3754' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:136$1025.t' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3759' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wdesc$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1026.$result' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3764' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wdesc$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1026.l' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3769' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wdesc$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1026.t' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3774' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1027.$result' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3779' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1027.l' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3784' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.g_kd.u_kd.wgo$func$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:140$1027.t' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+  created $adff cell `$procdff$3789' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.q_start' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:78$1281'.
+  created $adff cell `$procdff$3794' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.q_done' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:78$1281'.
+  created $adff cell `$procdff$3799' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.q_sf' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:78$1281'.
+  created $adff cell `$procdff$3804' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.q_cf' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:78$1281'.
+  created $adff cell `$procdff$3809' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.q_lf' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:78$1281'.
+  created $adff cell `$procdff$3814' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.q_dr' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:78$1281'.
+  created $adff cell `$procdff$3819' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.q_tok' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:85$1283'.
+  created $dff cell `$procdff$3820' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.q_pos' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:85$1283'.
+  created $dff cell `$procdff$3821' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.q_ntok' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:85$1283'.
+  created $dff cell `$procdff$3822' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.q_gen' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:85$1283'.
+  created $dff cell `$procdff$3823' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.q_nval' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:85$1283'.
+  created $dff cell `$procdff$3824' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.ent' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:91$1285'.
+  created $dff cell `$procdff$3825' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.ent_n' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:91$1285'.
+  created $dff cell `$procdff$3826' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.ent_nn' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:91$1285'.
+  created $dff cell `$procdff$3827' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.h_start' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:101$1303'.
+  created $adff cell `$procdff$3832' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.d_done' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:101$1303'.
+  created $adff cell `$procdff$3837' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.d_drained' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:101$1303'.
+  created $adff cell `$procdff$3842' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.d_fault' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:101$1303'.
+  created $adff cell `$procdff$3847' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.tp_token' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:101$1303'.
+  created $adff cell `$procdff$3852' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.tp_pos' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:101$1303'.
+  created $adff cell `$procdff$3857' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.stage' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:101$1303'.
+  created $adff cell `$procdff$3862' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.st' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:101$1303'.
+  created $adff cell `$procdff$3867' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.d_done_gen' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:101$1303'.
+  created $adff cell `$procdff$3872' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.d_next_token' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:101$1303'.
+  created $adff cell `$procdff$3877' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.d_next_val' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:101$1303'.
+  created $adff cell `$procdff$3882' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.d_fault_code' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:101$1303'.
+  created $adff cell `$procdff$3887' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.d_cycles' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:101$1303'.
+  created $adff cell `$procdff$3892' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.st_prog' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:101$1303'.
+  created $adff cell `$procdff$3897' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.st_layer' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:101$1303'.
+  created $adff cell `$procdff$3902' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.st_next_layer' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:101$1303'.
+  created $adff cell `$procdff$3907' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.st_crom' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:101$1303'.
+  created $adff cell `$procdff$3912' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.st_code' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:101$1303'.
+  created $adff cell `$procdff$3917' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.st_scale' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:101$1303'.
+  created $adff cell `$procdff$3922' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.s' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:101$1303'.
+  created $adff cell `$procdff$3927' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.wd' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:101$1303'.
+  created $adff cell `$procdff$3932' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_step.gap' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:101$1303'.
+  created $adff cell `$procdff$3937' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_kt.$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:31$1331_ADDR' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_kt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:31$1335'.
+  created $dff cell `$procdff$3938' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_kt.$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:31$1331_DATA' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_kt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:31$1335'.
+  created $dff cell `$procdff$3939' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_kt.$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:31$1331_EN' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_kt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:31$1335'.
+  created $dff cell `$procdff$3940' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_kt.count' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_kt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:32$1342'.
+  created $adff cell `$procdff$3945' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_kt.wp' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_kt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:32$1342'.
+  created $adff cell `$procdff$3950' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_kt.rp' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_kt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:32$1342'.
+  created $adff cell `$procdff$3955' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_qt.$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:31$1354_ADDR' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_qt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:31$1358'.
+  created $dff cell `$procdff$3956' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_qt.$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:31$1354_DATA' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_qt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:31$1358'.
+  created $dff cell `$procdff$3957' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_qt.$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:31$1354_EN' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_qt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:31$1358'.
+  created $dff cell `$procdff$3958' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_qt.count' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_qt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:32$1365'.
+  created $adff cell `$procdff$3963' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_qt.wp' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_qt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:32$1365'.
+  created $adff cell `$procdff$3968' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.u_qt.rp' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_qt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:32$1365'.
+  created $adff cell `$procdff$3973' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.x3_cr' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$3978' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.s_qpop' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$3983' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.s_kpop' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$3988' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.s_kwgo' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$3993' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.hs' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$3998' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.ar_v' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4003' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.pw [74]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4008' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.f_aqm [6]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4013' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.f_aqm [27]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4018' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.f_aqm [34]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4023' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.f_aqm [55]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4028' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.f_kwm [22]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4033' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.f_kwm [45]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4038' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.f_kc [32]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4043' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.f_kc [65]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4048' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.fault' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4053' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.fault_cause' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4058' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.kv_seen' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4063' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.drn' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4068' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.cbq' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4073' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.kfq' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4078' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.f_step' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4083' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.pwc [74]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4088' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.pws [74]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4093' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.dwc [67]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4098' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.dwo [67]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4103' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.lq0' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4108' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.lq1' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4113' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.ln' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4118' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.lp' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4123' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.lp_v' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4128' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.f_kq' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4133' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.f_kvd' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4138' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.st' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4143' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.layer' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4148' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.a_T' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4153' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.a_start' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4158' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.a_q_valid' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4163' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.kv_n' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4168' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.q_n' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4173' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.r_n' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4178' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.kw_n' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4183' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.kwc' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4188' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.uc0' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4193' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.kw_go' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4198' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.kwq' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4203' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.kvw_v' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4208' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.f_res' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4213' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.f_ord' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4218' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.f_row' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4223' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.f_pend' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4228' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.f_kw' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4233' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.f_x' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4238' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.f_xovr' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4243' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.f_join' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4248' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.aq1 [6]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4253' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.aq1 [27]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4258' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.kw1 [22]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4263' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.hsd' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4268' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.i' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4273' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.jc[0]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4278' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.jc[1]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4283' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.jc[2]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4288' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.jc[3]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4293' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$bitselwrite$pos$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:300$1378' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4298' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$lookahead\kv_seen$1417' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+  created $adff cell `$procdff$4303' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.f_aqm [5:0]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:246$1416'.
+  created $dff cell `$procdff$4304' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.f_aqm [26:7]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:246$1416'.
+  created $dff cell `$procdff$4305' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.f_aqm [33:28]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:246$1416'.
+  created $dff cell `$procdff$4306' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.f_aqm [54:35]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:246$1416'.
+  created $dff cell `$procdff$4307' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.f_kwm [21:0]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:246$1416'.
+  created $dff cell `$procdff$4308' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.f_kwm [44:23]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:246$1416'.
+  created $dff cell `$procdff$4309' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.aq1 [5:0]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:246$1416'.
+  created $dff cell `$procdff$4310' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.aq1 [26:7]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:246$1416'.
+  created $dff cell `$procdff$4311' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.kw1 [21:0]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:246$1416'.
+  created $dff cell `$procdff$4312' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.f_kc [64:33]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:237$1410'.
+  created $dff cell `$procdff$4313' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.f_kc [31:0]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:236$1409'.
+  created $dff cell `$procdff$4314' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.s_kidx' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:219$1403'.
+  created $dff cell `$procdff$4315' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.s_kwn' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:219$1403'.
+  created $dff cell `$procdff$4316' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.ar_d' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:219$1403'.
+  created $dff cell `$procdff$4317' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.a_q_beat' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:219$1403'.
+  created $dff cell `$procdff$4318' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.kvw_vg' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:219$1403'.
+  created $dff cell `$procdff$4319' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.kvw_t' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:219$1403'.
+  created $dff cell `$procdff$4320' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.kvw_layer' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:219$1403'.
+  created $dff cell `$procdff$4321' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.pw [73:0]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:175$1386'.
+  created $dff cell `$procdff$4322' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.pwc [73:0]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:175$1386'.
+  created $dff cell `$procdff$4323' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.pws [73:0]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:175$1386'.
+  created $dff cell `$procdff$4324' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.dwc [66:0]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:175$1386'.
+  created $dff cell `$procdff$4325' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.dwo [66:0]' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:175$1386'.
+  created $dff cell `$procdff$4326' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.xv' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:132$1380'.
+  created $adff cell `$procdff$4331' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.kv' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:132$1380'.
+  created $adff cell `$procdff$4336' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.ov' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:132$1380'.
+  created $adff cell `$procdff$4341' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.ucq' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:132$1380'.
+  created $adff cell `$procdff$4346' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.hfq' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:132$1380'.
+  created $adff cell `$procdff$4351' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.crq' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:132$1380'.
+  created $adff cell `$procdff$4356' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.afq' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:132$1380'.
+  created $adff cell `$procdff$4361' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.mfq' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:132$1380'.
+  created $adff cell `$procdff$4366' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.og' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:131$1379'.
+  created $dff cell `$procdff$4367' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.xt' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:131$1379'.
+  created $dff cell `$procdff$4368' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.kr' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:131$1379'.
+  created $dff cell `$procdff$4369' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.ob' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:131$1379'.
+  created $dff cell `$procdff$4370' with positive edge clock.
+Creating register for signal `\qkd_seq_core_tp8.\u_native.u_body.od' using process `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:131$1379'.
+  created $dff cell `$procdff$4371' with positive edge clock.
+
+12.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+12.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `qkd_seq_core_tp8.$flatten\u_native.\u_rr.$proc$rtl/lib/ot_rst_relay.sv:40$1016'.
+Removing empty process `qkd_seq_core_tp8.$flatten\u_native.\u_rr.$proc$rtl/lib/ot_rst_relay.sv:28$1014'.
+Removing empty process `qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:54$1028'.
+Removing empty process `qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:56$1030'.
+Found and cleaned up 23 empty switches in `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+Removing empty process `qkd_seq_core_tp8.$flatten\u_native.\u_body.\g_kd.u_kd.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:84$1033'.
+Removing empty process `qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:78$1281'.
+Removing empty process `qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:85$1283'.
+Removing empty process `qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:91$1285'.
+Found and cleaned up 14 empty switches in `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:101$1303'.
+Removing empty process `qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_step.$proc$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:101$1303'.
+Found and cleaned up 1 empty switch in `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_kt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:31$1335'.
+Removing empty process `qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_kt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:31$1335'.
+Found and cleaned up 2 empty switches in `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_kt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:32$1342'.
+Removing empty process `qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_kt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:32$1342'.
+Found and cleaned up 1 empty switch in `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_qt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:31$1358'.
+Removing empty process `qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_qt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:31$1358'.
+Found and cleaned up 2 empty switches in `\qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_qt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:32$1365'.
+Removing empty process `qkd_seq_core_tp8.$flatten\u_native.\u_body.\u_qt.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:32$1365'.
+Found and cleaned up 27 empty switches in `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+Removing empty process `qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:254$1418'.
+Removing empty process `qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:246$1416'.
+Removing empty process `qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:237$1410'.
+Removing empty process `qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:236$1409'.
+Found and cleaned up 3 empty switches in `\qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:219$1403'.
+Removing empty process `qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:219$1403'.
+Removing empty process `qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:211$1392'.
+Removing empty process `qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:175$1386'.
+Removing empty process `qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:132$1380'.
+Removing empty process `qkd_seq_core_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:131$1379'.
+Cleaned up 73 empty switches.
+
+12.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qkd_seq_core_tp8.
+<suppressed ~419 debug messages>
+
+13. Executing OPT pass (performing simple optimizations).
+
+13.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qkd_seq_core_tp8.
+<suppressed ~6 debug messages>
+
+13.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qkd_seq_core_tp8'.
+<suppressed ~1005 debug messages>
+Removed a total of 335 cells.
+
+13.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \qkd_seq_core_tp8..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+      Replacing known input bits on port A of cell $procmux$2608: \u_native.u_body.g_kd.u_kd.gw -> 1'0
+      Replacing known input bits on port A of cell $procmux$2603: \u_native.u_body.g_kd.u_kd.gw -> 1'1
+  Analyzing evaluation results.
+    dead port 1/2 on $mux $procmux$3255.
+    dead port 2/2 on $mux $procmux$3255.
+    dead port 2/2 on $mux $procmux$3242.
+    dead port 1/2 on $mux $procmux$3232.
+    dead port 2/2 on $mux $procmux$3232.
+    dead port 1/2 on $mux $procmux$3230.
+    dead port 2/2 on $mux $procmux$3230.
+    dead port 2/2 on $mux $procmux$3223.
+    dead port 1/2 on $mux $procmux$2530.
+    dead port 2/2 on $mux $procmux$2530.
+    dead port 1/2 on $mux $procmux$2527.
+    dead port 2/2 on $mux $procmux$2527.
+    dead port 1/2 on $mux $procmux$2524.
+    dead port 2/2 on $mux $procmux$2524.
+    dead port 1/2 on $mux $procmux$2521.
+    dead port 2/2 on $mux $procmux$2521.
+    dead port 1/2 on $mux $procmux$2518.
+    dead port 2/2 on $mux $procmux$2518.
+    dead port 1/2 on $mux $procmux$2515.
+    dead port 2/2 on $mux $procmux$2515.
+    dead port 1/2 on $mux $procmux$2512.
+    dead port 2/2 on $mux $procmux$2512.
+    dead port 1/2 on $mux $procmux$2509.
+    dead port 2/2 on $mux $procmux$2509.
+    dead port 1/2 on $mux $procmux$2506.
+    dead port 2/2 on $mux $procmux$2506.
+    dead port 1/2 on $mux $procmux$2503.
+    dead port 2/2 on $mux $procmux$2503.
+    dead port 1/2 on $mux $procmux$2500.
+    dead port 2/2 on $mux $procmux$2500.
+    dead port 1/2 on $mux $procmux$2497.
+    dead port 2/2 on $mux $procmux$2497.
+    dead port 1/2 on $mux $procmux$2494.
+    dead port 2/2 on $mux $procmux$2494.
+    dead port 1/2 on $mux $procmux$2492.
+    dead port 2/2 on $mux $procmux$2492.
+    dead port 1/2 on $mux $procmux$2488.
+    dead port 2/2 on $mux $procmux$2488.
+    dead port 1/2 on $mux $procmux$2486.
+    dead port 2/2 on $mux $procmux$2486.
+    dead port 1/2 on $mux $procmux$2482.
+    dead port 2/2 on $mux $procmux$2482.
+    dead port 1/2 on $mux $procmux$2480.
+    dead port 2/2 on $mux $procmux$2480.
+    dead port 1/2 on $mux $procmux$2476.
+    dead port 2/2 on $mux $procmux$2476.
+    dead port 1/2 on $mux $procmux$2474.
+    dead port 2/2 on $mux $procmux$2474.
+    dead port 1/2 on $mux $procmux$2470.
+    dead port 2/2 on $mux $procmux$2470.
+    dead port 1/2 on $mux $procmux$2468.
+    dead port 2/2 on $mux $procmux$2468.
+    dead port 1/2 on $mux $procmux$2464.
+    dead port 2/2 on $mux $procmux$2464.
+    dead port 1/2 on $mux $procmux$2462.
+    dead port 2/2 on $mux $procmux$2462.
+    dead port 1/2 on $mux $procmux$2458.
+    dead port 2/2 on $mux $procmux$2458.
+    dead port 1/2 on $mux $procmux$2456.
+    dead port 2/2 on $mux $procmux$2456.
+    dead port 1/2 on $mux $procmux$2452.
+    dead port 2/2 on $mux $procmux$2452.
+    dead port 1/2 on $mux $procmux$2450.
+    dead port 2/2 on $mux $procmux$2450.
+    dead port 1/2 on $mux $procmux$2446.
+    dead port 2/2 on $mux $procmux$2446.
+    dead port 1/2 on $mux $procmux$2444.
+    dead port 2/2 on $mux $procmux$2444.
+    dead port 2/2 on $mux $procmux$2440.
+    dead port 1/2 on $mux $procmux$2434.
+    dead port 2/2 on $mux $procmux$2434.
+    dead port 1/2 on $mux $procmux$2432.
+    dead port 2/2 on $mux $procmux$2432.
+    dead port 1/2 on $mux $procmux$2428.
+    dead port 2/2 on $mux $procmux$2428.
+    dead port 1/2 on $mux $procmux$2426.
+    dead port 2/2 on $mux $procmux$2426.
+    dead port 1/2 on $mux $procmux$2422.
+    dead port 2/2 on $mux $procmux$2422.
+    dead port 1/2 on $mux $procmux$2420.
+    dead port 2/2 on $mux $procmux$2420.
+    dead port 2/2 on $mux $procmux$2416.
+    dead port 2/2 on $mux $procmux$2410.
+    dead port 2/2 on $mux $procmux$2404.
+    dead port 2/2 on $mux $procmux$2398.
+    dead port 1/2 on $mux $procmux$2396.
+    dead port 2/2 on $mux $procmux$2389.
+    dead port 1/2 on $mux $procmux$2387.
+    dead port 1/2 on $mux $procmux$2380.
+    dead port 2/2 on $mux $procmux$2380.
+    dead port 1/2 on $mux $procmux$2378.
+    dead port 2/2 on $mux $procmux$2378.
+    dead port 1/2 on $mux $procmux$2375.
+    dead port 2/2 on $mux $procmux$2375.
+    dead port 1/2 on $mux $procmux$2371.
+    dead port 2/2 on $mux $procmux$2371.
+    dead port 1/2 on $mux $procmux$2369.
+    dead port 2/2 on $mux $procmux$2369.
+    dead port 1/2 on $mux $procmux$2366.
+    dead port 2/2 on $mux $procmux$2366.
+    dead port 1/2 on $mux $procmux$2362.
+    dead port 2/2 on $mux $procmux$2362.
+    dead port 1/2 on $mux $procmux$2360.
+    dead port 2/2 on $mux $procmux$2360.
+    dead port 1/2 on $mux $procmux$2357.
+    dead port 2/2 on $mux $procmux$2357.
+    dead port 1/2 on $mux $procmux$2353.
+    dead port 2/2 on $mux $procmux$2353.
+    dead port 1/2 on $mux $procmux$2351.
+    dead port 2/2 on $mux $procmux$2351.
+    dead port 1/2 on $mux $procmux$2348.
+    dead port 2/2 on $mux $procmux$2348.
+    dead port 1/2 on $mux $procmux$2344.
+    dead port 2/2 on $mux $procmux$2344.
+    dead port 1/2 on $mux $procmux$2342.
+    dead port 2/2 on $mux $procmux$2342.
+    dead port 1/2 on $mux $procmux$2339.
+    dead port 2/2 on $mux $procmux$2339.
+    dead port 1/2 on $mux $procmux$2335.
+    dead port 2/2 on $mux $procmux$2335.
+    dead port 1/2 on $mux $procmux$2333.
+    dead port 2/2 on $mux $procmux$2333.
+    dead port 1/2 on $mux $procmux$2330.
+    dead port 2/2 on $mux $procmux$2330.
+    dead port 2/2 on $mux $procmux$2326.
+    dead port 1/2 on $mux $procmux$2324.
+    dead port 2/2 on $mux $procmux$2317.
+    dead port 1/2 on $mux $procmux$2315.
+    dead port 2/2 on $mux $procmux$2312.
+    dead port 1/2 on $mux $procmux$2305.
+    dead port 2/2 on $mux $procmux$2305.
+    dead port 1/2 on $mux $procmux$2303.
+    dead port 2/2 on $mux $procmux$2303.
+    dead port 1/2 on $mux $procmux$2300.
+    dead port 2/2 on $mux $procmux$2300.
+    dead port 1/2 on $mux $procmux$2298.
+    dead port 2/2 on $mux $procmux$2298.
+    dead port 1/2 on $mux $procmux$2293.
+    dead port 2/2 on $mux $procmux$2293.
+    dead port 1/2 on $mux $procmux$2291.
+    dead port 2/2 on $mux $procmux$2291.
+    dead port 1/2 on $mux $procmux$2288.
+    dead port 2/2 on $mux $procmux$2288.
+    dead port 1/2 on $mux $procmux$2286.
+    dead port 2/2 on $mux $procmux$2286.
+    dead port 1/2 on $mux $procmux$2281.
+    dead port 2/2 on $mux $procmux$2281.
+    dead port 1/2 on $mux $procmux$2279.
+    dead port 2/2 on $mux $procmux$2279.
+    dead port 1/2 on $mux $procmux$2276.
+    dead port 2/2 on $mux $procmux$2276.
+    dead port 1/2 on $mux $procmux$2274.
+    dead port 2/2 on $mux $procmux$2274.
+    dead port 1/2 on $mux $procmux$2269.
+    dead port 2/2 on $mux $procmux$2269.
+    dead port 1/2 on $mux $procmux$2267.
+    dead port 2/2 on $mux $procmux$2267.
+    dead port 1/2 on $mux $procmux$2264.
+    dead port 2/2 on $mux $procmux$2264.
+    dead port 1/2 on $mux $procmux$2262.
+    dead port 2/2 on $mux $procmux$2262.
+    dead port 1/2 on $mux $procmux$2257.
+    dead port 2/2 on $mux $procmux$2257.
+    dead port 1/2 on $mux $procmux$2255.
+    dead port 2/2 on $mux $procmux$2255.
+    dead port 1/2 on $mux $procmux$2252.
+    dead port 2/2 on $mux $procmux$2252.
+    dead port 1/2 on $mux $procmux$2250.
+    dead port 2/2 on $mux $procmux$2250.
+    dead port 1/2 on $mux $procmux$2245.
+    dead port 2/2 on $mux $procmux$2245.
+    dead port 1/2 on $mux $procmux$2243.
+    dead port 2/2 on $mux $procmux$2243.
+    dead port 1/2 on $mux $procmux$2240.
+    dead port 2/2 on $mux $procmux$2240.
+    dead port 1/2 on $mux $procmux$2238.
+    dead port 2/2 on $mux $procmux$2238.
+    dead port 2/2 on $mux $procmux$2233.
+    dead port 1/2 on $mux $procmux$2231.
+    dead port 2/2 on $mux $procmux$2228.
+    dead port 2/2 on $mux $procmux$2209.
+    dead port 2/2 on $mux $procmux$2203.
+    dead port 1/2 on $mux $procmux$2191.
+    dead port 2/2 on $mux $procmux$2191.
+    dead port 1/2 on $mux $procmux$2188.
+    dead port 2/2 on $mux $procmux$2188.
+    dead port 1/2 on $mux $procmux$2185.
+    dead port 2/2 on $mux $procmux$2185.
+    dead port 1/2 on $mux $procmux$2182.
+    dead port 2/2 on $mux $procmux$2182.
+    dead port 1/2 on $mux $procmux$2179.
+    dead port 2/2 on $mux $procmux$2179.
+    dead port 1/2 on $mux $procmux$2176.
+    dead port 2/2 on $mux $procmux$2176.
+    dead port 2/2 on $mux $procmux$2170.
+    dead port 1/2 on $mux $procmux$2164.
+    dead port 2/2 on $mux $procmux$2164.
+    dead port 1/2 on $mux $procmux$2162.
+    dead port 2/2 on $mux $procmux$2162.
+    dead port 1/2 on $mux $procmux$2158.
+    dead port 2/2 on $mux $procmux$2158.
+    dead port 1/2 on $mux $procmux$2156.
+    dead port 2/2 on $mux $procmux$2156.
+    dead port 1/2 on $mux $procmux$2152.
+    dead port 2/2 on $mux $procmux$2152.
+    dead port 1/2 on $mux $procmux$2150.
+    dead port 2/2 on $mux $procmux$2150.
+    dead port 1/2 on $mux $procmux$2146.
+    dead port 2/2 on $mux $procmux$2146.
+    dead port 1/2 on $mux $procmux$2144.
+    dead port 2/2 on $mux $procmux$2144.
+    dead port 1/2 on $mux $procmux$2140.
+    dead port 2/2 on $mux $procmux$2140.
+    dead port 1/2 on $mux $procmux$2138.
+    dead port 2/2 on $mux $procmux$2138.
+    dead port 1/2 on $mux $procmux$2134.
+    dead port 2/2 on $mux $procmux$2134.
+    dead port 1/2 on $mux $procmux$2132.
+    dead port 2/2 on $mux $procmux$2132.
+    dead port 2/2 on $mux $procmux$2128.
+    dead port 1/2 on $mux $procmux$2110.
+    dead port 2/2 on $mux $procmux$2110.
+    dead port 1/2 on $mux $procmux$2107.
+    dead port 2/2 on $mux $procmux$2107.
+    dead port 1/2 on $mux $procmux$2104.
+    dead port 2/2 on $mux $procmux$2104.
+    dead port 1/2 on $mux $procmux$2101.
+    dead port 2/2 on $mux $procmux$2101.
+    dead port 1/2 on $mux $procmux$2098.
+    dead port 2/2 on $mux $procmux$2098.
+    dead port 1/2 on $mux $procmux$2095.
+    dead port 2/2 on $mux $procmux$2095.
+    dead port 1/2 on $mux $procmux$2092.
+    dead port 2/2 on $mux $procmux$2092.
+    dead port 1/2 on $mux $procmux$2089.
+    dead port 2/2 on $mux $procmux$2089.
+    dead port 1/2 on $mux $procmux$2086.
+    dead port 2/2 on $mux $procmux$2086.
+    dead port 1/2 on $mux $procmux$2083.
+    dead port 2/2 on $mux $procmux$2083.
+    dead port 1/2 on $mux $procmux$2080.
+    dead port 2/2 on $mux $procmux$2080.
+    dead port 1/2 on $mux $procmux$2077.
+    dead port 2/2 on $mux $procmux$2077.
+    dead port 2/2 on $mux $procmux$2071.
+    dead port 1/2 on $mux $procmux$2065.
+    dead port 2/2 on $mux $procmux$2065.
+    dead port 1/2 on $mux $procmux$2063.
+    dead port 2/2 on $mux $procmux$2063.
+    dead port 1/2 on $mux $procmux$2059.
+    dead port 2/2 on $mux $procmux$2059.
+    dead port 1/2 on $mux $procmux$2057.
+    dead port 2/2 on $mux $procmux$2057.
+    dead port 1/2 on $mux $procmux$2053.
+    dead port 2/2 on $mux $procmux$2053.
+    dead port 1/2 on $mux $procmux$2051.
+    dead port 2/2 on $mux $procmux$2051.
+    dead port 1/2 on $mux $procmux$2047.
+    dead port 2/2 on $mux $procmux$2047.
+    dead port 1/2 on $mux $procmux$2045.
+    dead port 2/2 on $mux $procmux$2045.
+    dead port 1/2 on $mux $procmux$2041.
+    dead port 2/2 on $mux $procmux$2041.
+    dead port 1/2 on $mux $procmux$2039.
+    dead port 2/2 on $mux $procmux$2039.
+    dead port 1/2 on $mux $procmux$2035.
+    dead port 2/2 on $mux $procmux$2035.
+    dead port 1/2 on $mux $procmux$2033.
+    dead port 2/2 on $mux $procmux$2033.
+    dead port 2/2 on $mux $procmux$2029.
+    dead port 2/2 on $mux $procmux$2023.
+    dead port 2/2 on $mux $procmux$2017.
+    dead port 1/2 on $mux $procmux$2011.
+    dead port 2/2 on $mux $procmux$2011.
+    dead port 1/2 on $mux $procmux$2009.
+    dead port 2/2 on $mux $procmux$2009.
+    dead port 1/2 on $mux $procmux$2005.
+    dead port 2/2 on $mux $procmux$2005.
+    dead port 1/2 on $mux $procmux$2003.
+    dead port 2/2 on $mux $procmux$2003.
+    dead port 1/2 on $mux $procmux$1999.
+    dead port 2/2 on $mux $procmux$1999.
+    dead port 1/2 on $mux $procmux$1997.
+    dead port 2/2 on $mux $procmux$1997.
+    dead port 1/2 on $mux $procmux$1993.
+    dead port 2/2 on $mux $procmux$1993.
+    dead port 1/2 on $mux $procmux$1991.
+    dead port 2/2 on $mux $procmux$1991.
+    dead port 1/2 on $mux $procmux$1987.
+    dead port 2/2 on $mux $procmux$1987.
+    dead port 1/2 on $mux $procmux$1985.
+    dead port 2/2 on $mux $procmux$1985.
+    dead port 1/2 on $mux $procmux$1981.
+    dead port 2/2 on $mux $procmux$1981.
+    dead port 1/2 on $mux $procmux$1979.
+    dead port 2/2 on $mux $procmux$1979.
+    dead port 2/2 on $mux $procmux$1975.
+    dead port 2/2 on $mux $procmux$1973.
+    dead port 2/2 on $mux $procmux$1966.
+    dead port 2/2 on $mux $procmux$1964.
+    dead port 2/2 on $mux $procmux$1957.
+    dead port 2/2 on $mux $procmux$1955.
+    dead port 1/2 on $mux $procmux$1948.
+    dead port 2/2 on $mux $procmux$1948.
+    dead port 1/2 on $mux $procmux$1946.
+    dead port 2/2 on $mux $procmux$1946.
+    dead port 1/2 on $mux $procmux$1944.
+    dead port 2/2 on $mux $procmux$1944.
+    dead port 1/2 on $mux $procmux$1939.
+    dead port 2/2 on $mux $procmux$1939.
+    dead port 1/2 on $mux $procmux$1937.
+    dead port 2/2 on $mux $procmux$1937.
+    dead port 1/2 on $mux $procmux$1935.
+    dead port 2/2 on $mux $procmux$1935.
+    dead port 1/2 on $mux $procmux$1930.
+    dead port 2/2 on $mux $procmux$1930.
+    dead port 1/2 on $mux $procmux$1928.
+    dead port 2/2 on $mux $procmux$1928.
+    dead port 1/2 on $mux $procmux$1926.
+    dead port 2/2 on $mux $procmux$1926.
+    dead port 1/2 on $mux $procmux$1921.
+    dead port 2/2 on $mux $procmux$1921.
+    dead port 1/2 on $mux $procmux$1919.
+    dead port 2/2 on $mux $procmux$1919.
+    dead port 1/2 on $mux $procmux$1917.
+    dead port 2/2 on $mux $procmux$1917.
+    dead port 1/2 on $mux $procmux$1912.
+    dead port 2/2 on $mux $procmux$1912.
+    dead port 1/2 on $mux $procmux$1910.
+    dead port 2/2 on $mux $procmux$1910.
+    dead port 1/2 on $mux $procmux$1908.
+    dead port 2/2 on $mux $procmux$1908.
+    dead port 1/2 on $mux $procmux$1903.
+    dead port 2/2 on $mux $procmux$1903.
+    dead port 1/2 on $mux $procmux$1901.
+    dead port 2/2 on $mux $procmux$1901.
+    dead port 1/2 on $mux $procmux$1899.
+    dead port 2/2 on $mux $procmux$1899.
+    dead port 2/2 on $mux $procmux$1894.
+    dead port 2/2 on $mux $procmux$1892.
+    dead port 1/2 on $mux $procmux$1890.
+    dead port 2/2 on $mux $procmux$1882.
+    dead port 2/2 on $mux $procmux$1880.
+    dead port 1/2 on $mux $procmux$1878.
+    dead port 1/2 on $mux $procmux$1870.
+    dead port 2/2 on $mux $procmux$1870.
+    dead port 1/2 on $mux $procmux$1868.
+    dead port 2/2 on $mux $procmux$1868.
+    dead port 1/2 on $mux $procmux$1866.
+    dead port 2/2 on $mux $procmux$1866.
+    dead port 1/2 on $mux $procmux$1863.
+    dead port 2/2 on $mux $procmux$1863.
+    dead port 1/2 on $mux $procmux$1858.
+    dead port 2/2 on $mux $procmux$1858.
+    dead port 1/2 on $mux $procmux$1856.
+    dead port 2/2 on $mux $procmux$1856.
+    dead port 1/2 on $mux $procmux$1854.
+    dead port 2/2 on $mux $procmux$1854.
+    dead port 1/2 on $mux $procmux$1851.
+    dead port 2/2 on $mux $procmux$1851.
+    dead port 1/2 on $mux $procmux$1846.
+    dead port 2/2 on $mux $procmux$1846.
+    dead port 1/2 on $mux $procmux$1844.
+    dead port 2/2 on $mux $procmux$1844.
+    dead port 1/2 on $mux $procmux$1842.
+    dead port 2/2 on $mux $procmux$1842.
+    dead port 1/2 on $mux $procmux$1839.
+    dead port 2/2 on $mux $procmux$1839.
+    dead port 1/2 on $mux $procmux$1834.
+    dead port 2/2 on $mux $procmux$1834.
+    dead port 1/2 on $mux $procmux$1832.
+    dead port 2/2 on $mux $procmux$1832.
+    dead port 1/2 on $mux $procmux$1830.
+    dead port 2/2 on $mux $procmux$1830.
+    dead port 1/2 on $mux $procmux$1827.
+    dead port 2/2 on $mux $procmux$1827.
+    dead port 1/2 on $mux $procmux$1822.
+    dead port 2/2 on $mux $procmux$1822.
+    dead port 1/2 on $mux $procmux$1820.
+    dead port 2/2 on $mux $procmux$1820.
+    dead port 1/2 on $mux $procmux$1818.
+    dead port 2/2 on $mux $procmux$1818.
+    dead port 1/2 on $mux $procmux$1815.
+    dead port 2/2 on $mux $procmux$1815.
+    dead port 1/2 on $mux $procmux$1810.
+    dead port 2/2 on $mux $procmux$1810.
+    dead port 1/2 on $mux $procmux$1808.
+    dead port 2/2 on $mux $procmux$1808.
+    dead port 1/2 on $mux $procmux$1806.
+    dead port 2/2 on $mux $procmux$1806.
+    dead port 1/2 on $mux $procmux$1803.
+    dead port 2/2 on $mux $procmux$1803.
+    dead port 2/2 on $mux $procmux$1798.
+    dead port 2/2 on $mux $procmux$1796.
+    dead port 1/2 on $mux $procmux$1794.
+    dead port 2/2 on $mux $procmux$1786.
+    dead port 2/2 on $mux $procmux$1784.
+    dead port 1/2 on $mux $procmux$1782.
+    dead port 2/2 on $mux $procmux$1779.
+    dead port 1/2 on $mux $procmux$1771.
+    dead port 2/2 on $mux $procmux$1771.
+    dead port 1/2 on $mux $procmux$1769.
+    dead port 2/2 on $mux $procmux$1769.
+    dead port 1/2 on $mux $procmux$1767.
+    dead port 2/2 on $mux $procmux$1767.
+    dead port 1/2 on $mux $procmux$1764.
+    dead port 2/2 on $mux $procmux$1764.
+    dead port 1/2 on $mux $procmux$1762.
+    dead port 2/2 on $mux $procmux$1762.
+    dead port 1/2 on $mux $procmux$1756.
+    dead port 2/2 on $mux $procmux$1756.
+    dead port 1/2 on $mux $procmux$1754.
+    dead port 2/2 on $mux $procmux$1754.
+    dead port 1/2 on $mux $procmux$1752.
+    dead port 2/2 on $mux $procmux$1752.
+    dead port 1/2 on $mux $procmux$1749.
+    dead port 2/2 on $mux $procmux$1749.
+    dead port 1/2 on $mux $procmux$1747.
+    dead port 2/2 on $mux $procmux$1747.
+    dead port 1/2 on $mux $procmux$1741.
+    dead port 2/2 on $mux $procmux$1741.
+    dead port 1/2 on $mux $procmux$1739.
+    dead port 2/2 on $mux $procmux$1739.
+    dead port 1/2 on $mux $procmux$1737.
+    dead port 2/2 on $mux $procmux$1737.
+    dead port 1/2 on $mux $procmux$1734.
+    dead port 2/2 on $mux $procmux$1734.
+    dead port 1/2 on $mux $procmux$1732.
+    dead port 2/2 on $mux $procmux$1732.
+    dead port 1/2 on $mux $procmux$1726.
+    dead port 2/2 on $mux $procmux$1726.
+    dead port 1/2 on $mux $procmux$1724.
+    dead port 2/2 on $mux $procmux$1724.
+    dead port 1/2 on $mux $procmux$1722.
+    dead port 2/2 on $mux $procmux$1722.
+    dead port 1/2 on $mux $procmux$1719.
+    dead port 2/2 on $mux $procmux$1719.
+    dead port 1/2 on $mux $procmux$1717.
+    dead port 2/2 on $mux $procmux$1717.
+    dead port 1/2 on $mux $procmux$1711.
+    dead port 2/2 on $mux $procmux$1711.
+    dead port 1/2 on $mux $procmux$1709.
+    dead port 2/2 on $mux $procmux$1709.
+    dead port 1/2 on $mux $procmux$1707.
+    dead port 2/2 on $mux $procmux$1707.
+    dead port 1/2 on $mux $procmux$1704.
+    dead port 2/2 on $mux $procmux$1704.
+    dead port 1/2 on $mux $procmux$1702.
+    dead port 2/2 on $mux $procmux$1702.
+    dead port 1/2 on $mux $procmux$1696.
+    dead port 2/2 on $mux $procmux$1696.
+    dead port 1/2 on $mux $procmux$1694.
+    dead port 2/2 on $mux $procmux$1694.
+    dead port 1/2 on $mux $procmux$1692.
+    dead port 2/2 on $mux $procmux$1692.
+    dead port 1/2 on $mux $procmux$1689.
+    dead port 2/2 on $mux $procmux$1689.
+    dead port 1/2 on $mux $procmux$1687.
+    dead port 2/2 on $mux $procmux$1687.
+    dead port 2/2 on $mux $procmux$1681.
+    dead port 2/2 on $mux $procmux$1679.
+    dead port 1/2 on $mux $procmux$1677.
+    dead port 2/2 on $mux $procmux$1674.
+    dead port 1/2 on $mux $procmux$1666.
+    dead port 2/2 on $mux $procmux$1666.
+    dead port 1/2 on $mux $procmux$1664.
+    dead port 2/2 on $mux $procmux$1664.
+    dead port 1/2 on $mux $procmux$1661.
+    dead port 2/2 on $mux $procmux$1661.
+    dead port 1/2 on $mux $procmux$1657.
+    dead port 2/2 on $mux $procmux$1657.
+    dead port 1/2 on $mux $procmux$1655.
+    dead port 2/2 on $mux $procmux$1655.
+    dead port 1/2 on $mux $procmux$1652.
+    dead port 2/2 on $mux $procmux$1652.
+    dead port 1/2 on $mux $procmux$1648.
+    dead port 2/2 on $mux $procmux$1648.
+    dead port 1/2 on $mux $procmux$1646.
+    dead port 2/2 on $mux $procmux$1646.
+    dead port 1/2 on $mux $procmux$1643.
+    dead port 2/2 on $mux $procmux$1643.
+    dead port 2/2 on $mux $procmux$1639.
+    dead port 1/2 on $mux $procmux$1637.
+    dead port 1/2 on $mux $procmux$1630.
+    dead port 2/2 on $mux $procmux$1630.
+    dead port 1/2 on $mux $procmux$1628.
+    dead port 2/2 on $mux $procmux$1628.
+    dead port 1/2 on $mux $procmux$1625.
+    dead port 2/2 on $mux $procmux$1625.
+    dead port 1/2 on $mux $procmux$1621.
+    dead port 2/2 on $mux $procmux$1621.
+    dead port 1/2 on $mux $procmux$1619.
+    dead port 2/2 on $mux $procmux$1619.
+    dead port 1/2 on $mux $procmux$1616.
+    dead port 2/2 on $mux $procmux$1616.
+    dead port 1/2 on $mux $procmux$1612.
+    dead port 2/2 on $mux $procmux$1612.
+    dead port 1/2 on $mux $procmux$1610.
+    dead port 2/2 on $mux $procmux$1610.
+    dead port 1/2 on $mux $procmux$1607.
+    dead port 2/2 on $mux $procmux$1607.
+    dead port 2/2 on $mux $procmux$1603.
+    dead port 1/2 on $mux $procmux$1601.
+    dead port 2/2 on $mux $procmux$1594.
+    dead port 1/2 on $mux $procmux$1592.
+    dead port 2/2 on $mux $procmux$1585.
+    dead port 1/2 on $mux $procmux$1583.
+Removed 507 multiplexer ports.
+<suppressed ~132 debug messages>
+
+13.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \qkd_seq_core_tp8.
+    Consolidated identical input bits for $mux cell $procmux$3204:
+      Old ports: A=6'000000, B=6'111111, Y=$procmux$3204_Y
+      New ports: A=1'0, B=1'1, Y=$procmux$3204_Y [0]
+      New connections: $procmux$3204_Y [5:1] = { $procmux$3204_Y [0] $procmux$3204_Y [0] $procmux$3204_Y [0] $procmux$3204_Y [0] $procmux$3204_Y [0] }
+    Consolidated identical input bits for $mux cell $procmux$3191:
+      Old ports: A=3'000, B=3'111, Y=$procmux$3191_Y
+      New ports: A=1'0, B=1'1, Y=$procmux$3191_Y [0]
+      New connections: $procmux$3191_Y [2:1] = { $procmux$3191_Y [0] $procmux$3191_Y [0] }
+  Optimizing cells in module \qkd_seq_core_tp8.
+Performed a total of 2 changes.
+
+13.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qkd_seq_core_tp8'.
+<suppressed ~12 debug messages>
+Removed a total of 4 cells.
+
+13.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$4173 ($adff) from module qkd_seq_core_tp8 (D = $procmux$3325_Y, Q = \u_native.u_body.q_n).
+Adding EN signal on $procdff$3955 ($adff) from module qkd_seq_core_tp8 (D = $flatten\u_native.\u_body.\u_kt.$ternary$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:36$1349_Y, Q = \u_native.u_body.u_kt.rp).
+Adding EN signal on $procdff$3580 ($adff) from module qkd_seq_core_tp8 (D = $procmux$2597_Y, Q = \u_native.u_body.g_kd.u_kd.gw_d).
+Adding EN signal on $procdff$3585 ($adff) from module qkd_seq_core_tp8 (D = $procmux$2582_Y, Q = \u_native.u_body.g_kd.u_kd.gw_l).
+Adding EN signal on $procdff$4321 ($dff) from module qkd_seq_core_tp8 (D = \u_native.u_body.layer, Q = \u_native.u_body.kvw_layer).
+Adding EN signal on $procdff$3590 ($adff) from module qkd_seq_core_tp8 (D = $procmux$2567_Y, Q = \u_native.u_body.g_kd.u_kd.gw_T).
+Adding EN signal on $procdff$4233 ($adff) from module qkd_seq_core_tp8 (D = 1'1, Q = \u_native.u_body.f_kw).
+Adding EN signal on $procdff$3597 ($dff) from module qkd_seq_core_tp8 (D = $procmux$2122_Y, Q = \u_native.u_body.g_kd.u_kd.step.n).
+Adding EN signal on $procdff$3604 ($dff) from module qkd_seq_core_tp8 (D = $procmux$2119_Y, Q = \u_native.u_body.g_kd.u_kd.step.r0).
+Adding EN signal on $procdff$3611 ($dff) from module qkd_seq_core_tp8 (D = $procmux$2116_Y, Q = \u_native.u_body.g_kd.u_kd.step.r1).
+Adding EN signal on $procdff$3618 ($dff) from module qkd_seq_core_tp8 (D = $flatten\u_native.\u_body.\g_kd.u_kd.$logic_and$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:114$1162_Y, Q = \u_native.u_body.g_kd.u_kd.step.post_desc).
+Adding EN signal on $procdff$4178 ($adff) from module qkd_seq_core_tp8 (D = $procmux$3319_Y, Q = \u_native.u_body.r_n).
+Adding EN signal on $procdff$3852 ($adff) from module qkd_seq_core_tp8 (D = \u_native.u_body.u_step.q_tok, Q = \u_native.u_body.u_step.tp_token).
+Adding EN signal on $procdff$3545 ($adff) from module qkd_seq_core_tp8 (D = $procmux$2633_Y, Q = \u_native.u_body.g_kd.u_kd.pl).
+Adding EN signal on $procdff$3973 ($adff) from module qkd_seq_core_tp8 (D = $flatten\u_native.\u_body.\u_qt.$ternary$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:36$1372_Y, Q = \u_native.u_body.u_qt.rp).
+Adding EN signal on $procdff$3857 ($adff) from module qkd_seq_core_tp8 (D = \u_native.u_body.u_step.q_pos, Q = \u_native.u_body.u_step.tp_pos).
+Adding EN signal on $procdff$4123 ($adff) from module qkd_seq_core_tp8 (D = \u_native.u_body.kr [41:24], Q = \u_native.u_body.lp).
+Adding EN signal on $procdff$4248 ($adff) from module qkd_seq_core_tp8 (D = $procmux$3271_Y, Q = \u_native.u_body.f_join).
+Adding EN signal on $procdff$3862 ($adff) from module qkd_seq_core_tp8 (D = $procmux$3089_Y, Q = \u_native.u_body.u_step.stage).
+Adding EN signal on $procdff$4183 ($adff) from module qkd_seq_core_tp8 (D = $procmux$3307_Y, Q = \u_native.u_body.kw_n).
+Adding EN signal on $procdff$3867 ($adff) from module qkd_seq_core_tp8 (D = $procmux$3071_Y, Q = \u_native.u_body.u_step.st).
+Adding EN signal on $procdff$4133 ($adff) from module qkd_seq_core_tp8 (D = 1'1, Q = \u_native.u_body.f_kq).
+Adding EN signal on $procdff$3550 ($adff) from module qkd_seq_core_tp8 (D = $procmux$2627_Y, Q = \u_native.u_body.g_kd.u_kd.pT).
+Adding EN signal on $procdff$3872 ($adff) from module qkd_seq_core_tp8 (D = \u_native.u_body.u_step.q_gen, Q = \u_native.u_body.u_step.d_done_gen).
+Adding EN signal on $procdff$3950 ($adff) from module qkd_seq_core_tp8 (D = $flatten\u_native.\u_body.\u_kt.$ternary$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:35$1346_Y, Q = \u_native.u_body.u_kt.wp).
+Adding EN signal on $procdff$4243 ($adff) from module qkd_seq_core_tp8 (D = 1'1, Q = \u_native.u_body.f_xovr).
+Adding EN signal on $procdff$3877 ($adff) from module qkd_seq_core_tp8 (D = \u_native.u_body.u_step.q_ntok, Q = \u_native.u_body.u_step.d_next_token).
+Adding EN signal on $procdff$3882 ($adff) from module qkd_seq_core_tp8 (D = \u_native.u_body.u_step.q_nval, Q = \u_native.u_body.u_step.d_next_val).
+Adding EN signal on $procdff$4143 ($adff) from module qkd_seq_core_tp8 (D = $procmux$3367_Y, Q = \u_native.u_body.st).
+Adding EN signal on $procdff$3530 ($adff) from module qkd_seq_core_tp8 (D = $procmux$2652_Y, Q = \u_native.u_body.g_kd.u_kd.gtmr).
+Adding EN signal on $procdff$4118 ($adff) from module qkd_seq_core_tp8 (D = $procmux$3397_Y, Q = \u_native.u_body.ln).
+Adding EN signal on $procdff$3887 ($adff) from module qkd_seq_core_tp8 (D = $procmux$2985_Y, Q = \u_native.u_body.u_step.d_fault_code).
+Adding EN signal on $procdff$4128 ($adff) from module qkd_seq_core_tp8 (D = 1'1, Q = \u_native.u_body.lp_v).
+Adding EN signal on $procdff$4063 ($adff) from module qkd_seq_core_tp8 (D = $procmux$3248_Y, Q = \u_native.u_body.kv_seen).
+Adding EN signal on $procdff$3535 ($adff) from module qkd_seq_core_tp8 (D = $procmux$2647_Y, Q = \u_native.u_body.g_kd.u_kd.gtv).
+Adding EN signal on $procdff$4153 ($adff) from module qkd_seq_core_tp8 (D = \u_native.u_body.lq0 [19:6], Q = \u_native.u_body.a_T).
+Adding EN signal on $procdff$3897 ($adff) from module qkd_seq_core_tp8 (D = $procmux$2937_Y, Q = \u_native.u_body.u_step.st_prog).
+Adding EN signal on $procdff$3902 ($adff) from module qkd_seq_core_tp8 (D = $procmux$2913_Y, Q = \u_native.u_body.u_step.st_layer).
+Adding EN signal on $procdff$3907 ($adff) from module qkd_seq_core_tp8 (D = $procmux$2889_Y, Q = \u_native.u_body.u_step.st_next_layer).
+Adding EN signal on $procdff$4148 ($adff) from module qkd_seq_core_tp8 (D = \u_native.u_body.lq0 [5:0], Q = \u_native.u_body.layer).
+Adding EN signal on $procdff$3912 ($adff) from module qkd_seq_core_tp8 (D = $procmux$2865_Y, Q = \u_native.u_body.u_step.st_crom).
+Adding EN signal on $procdff$3917 ($adff) from module qkd_seq_core_tp8 (D = $procmux$2841_Y, Q = \u_native.u_body.u_step.st_code).
+Adding EN signal on $procdff$4213 ($adff) from module qkd_seq_core_tp8 (D = 1'1, Q = \u_native.u_body.f_res).
+Adding EN signal on $procdff$4320 ($dff) from module qkd_seq_core_tp8 (D = $flatten\u_native.\u_body.$sub$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:222$1408_Y, Q = \u_native.u_body.kvw_t).
+Adding EN signal on $procdff$4319 ($dff) from module qkd_seq_core_tp8 (D = { \u_native.u_body.kw_n [0] 1'0 }, Q = \u_native.u_body.kvw_vg).
+Adding EN signal on $procdff$3922 ($adff) from module qkd_seq_core_tp8 (D = $procmux$2817_Y, Q = \u_native.u_body.u_step.st_scale).
+Adding EN signal on $procdff$4318 ($dff) from module qkd_seq_core_tp8 (D = $flatten\u_native.\u_body.$ternary$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:220$1407_Y, Q = \u_native.u_body.a_q_beat).
+Adding EN signal on $procdff$3455 ($adff) from module qkd_seq_core_tp8 (D = $procmux$2712_Y, Q = \u_native.u_body.g_kd.u_kd.fault).
+Adding EN signal on $procdff$4317 ($dff) from module qkd_seq_core_tp8 (D = { \u_native.u_body.og \u_native.u_body.ob \u_native.u_body.od }, Q = \u_native.u_body.ar_d).
+Adding EN signal on $procdff$3465 ($adff) from module qkd_seq_core_tp8 (D = \u_native.u_body.g_kd.u_kd.q0, Q = \u_native.u_body.g_kd.u_kd.k_d).
+Adding EN signal on $procdff$4168 ($adff) from module qkd_seq_core_tp8 (D = $procmux$3338_Y, Q = \u_native.u_body.kv_n).
+Adding EN signal on $procdff$3927 ($adff) from module qkd_seq_core_tp8 (D = $procmux$2793_Y, Q = \u_native.u_body.u_step.s).
+Adding EN signal on $procdff$3475 ($adff) from module qkd_seq_core_tp8 (D = \u_native.u_body.g_kd.u_kd.now, Q = \u_native.u_body.g_kd.u_kd.t_last).
+Adding EN signal on $procdff$3480 ($adff) from module qkd_seq_core_tp8 (D = $flatten\u_native.\u_body.\g_kd.u_kd.$sub$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:128$1215_Y, Q = \u_native.u_body.g_kd.u_kd.p_mid).
+Adding EN signal on $procdff$3485 ($adff) from module qkd_seq_core_tp8 (D = $flatten\u_native.\u_body.\g_kd.u_kd.$sub$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:127$1211_Y, Q = \u_native.u_body.g_kd.u_kd.p_tok).
+Adding EN signal on $procdff$3490 ($adff) from module qkd_seq_core_tp8 (D = $procmux$2688_Y, Q = \u_native.u_body.g_kd.u_kd.tmr).
+Adding EN signal on $procdff$3932 ($adff) from module qkd_seq_core_tp8 (D = $procmux$2768_Y, Q = \u_native.u_body.u_step.wd).
+Adding EN signal on $procdff$3495 ($adff) from module qkd_seq_core_tp8 (D = 1'1, Q = \u_native.u_body.g_kd.u_kd.pm_ok).
+Adding EN signal on $procdff$3500 ($adff) from module qkd_seq_core_tp8 (D = 1'1, Q = \u_native.u_body.g_kd.u_kd.pt_ok).
+Adding EN signal on $procdff$3937 ($adff) from module qkd_seq_core_tp8 (D = $procmux$2744_Y, Q = \u_native.u_body.u_step.gap).
+Adding EN signal on $procdff$3505 ($adff) from module qkd_seq_core_tp8 (D = 1'1, Q = \u_native.u_body.g_kd.u_kd.last_ok).
+Adding EN signal on $procdff$3510 ($adff) from module qkd_seq_core_tp8 (D = $procmux$2670_Y, Q = \u_native.u_body.g_kd.u_kd.tv).
+Adding EN signal on $procdff$3515 ($adff) from module qkd_seq_core_tp8 (D = \u_native.u_body.g_kd.u_kd.a_l, Q = \u_native.u_body.g_kd.u_kd.l_last).
+Adding EN signal on $procdff$3520 ($adff) from module qkd_seq_core_tp8 (D = $flatten\u_native.\u_body.\g_kd.u_kd.$ne$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:149$1270_Y, Q = \u_native.u_body.g_kd.u_kd.pred_ok).
+Adding EN signal on $procdff$3525 ($adff) from module qkd_seq_core_tp8 (D = $procmux$2658_Y, Q = \u_native.u_body.g_kd.u_kd.posted).
+Adding EN signal on $procdff$4238 ($adff) from module qkd_seq_core_tp8 (D = 1'1, Q = \u_native.u_body.f_x).
+Adding EN signal on $procdff$3625 ($dff) from module qkd_seq_core_tp8 (D = $flatten\u_native.\u_body.\g_kd.u_kd.$logic_and$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:120$1180_Y, Q = \u_native.u_body.g_kd.u_kd.step.post_go).
+Adding EN signal on $procdff$3632 ($dff) from module qkd_seq_core_tp8 (D = $procmux$2113_Y, Q = \u_native.u_body.g_kd.u_kd.step.o).
+Adding EN signal on $procdff$3540 ($adff) from module qkd_seq_core_tp8 (D = $procmux$2641_Y, Q = \u_native.u_body.g_kd.u_kd.gposted).
+Adding SRST signal on $procdff$3826 ($dff) from module qkd_seq_core_tp8 (D = $flatten\u_native.\u_body.\u_step.$shiftx$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:0$1292_Y, Q = \u_native.u_body.u_step.ent_n, rval = 56'00111111000000000000000000000000000000000000000000000000).
+Adding EN signal on $procdff$3639 ($dff) from module qkd_seq_core_tp8 (D = $flatten\u_native.\u_body.\g_kd.u_kd.$ternary$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv:148$1269_Y, Q = \u_native.u_body.g_kd.u_kd.step.p).
+Adding SRST signal on $procdff$3827 ($dff) from module qkd_seq_core_tp8 (D = $flatten\u_native.\u_body.\u_step.$shiftx$rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv:0$1299_Y, Q = \u_native.u_body.u_step.ent_nn, rval = 56'00111111000000000000000000000000000000000000000000000000).
+Adding EN signal on $procdff$4108 ($adff) from module qkd_seq_core_tp8 (D = $procmux$3412_Y, Q = \u_native.u_body.lq0).
+Adding EN signal on $procdff$3837 ($adff) from module qkd_seq_core_tp8 (D = $procmux$3188_Y, Q = \u_native.u_body.u_step.d_done).
+Adding EN signal on $procdff$4138 ($adff) from module qkd_seq_core_tp8 (D = $procmux$3386_Y, Q = \u_native.u_body.f_kvd).
+Adding EN signal on $procdff$3842 ($adff) from module qkd_seq_core_tp8 (D = $procmux$3152_Y, Q = \u_native.u_body.u_step.d_drained).
+Adding EN signal on $procdff$3968 ($adff) from module qkd_seq_core_tp8 (D = $flatten\u_native.\u_body.\u_qt.$ternary$rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv:35$1369_Y, Q = \u_native.u_body.u_qt.wp).
+Adding EN signal on $procdff$4113 ($adff) from module qkd_seq_core_tp8 (D = $procmux$3403_Y, Q = \u_native.u_body.lq1).
+Adding EN signal on $procdff$3847 ($adff) from module qkd_seq_core_tp8 (D = $procmux$3147_Y, Q = \u_native.u_body.u_step.d_fault).
+Setting constant 0-bit at position 0 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 1 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 2 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 3 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 4 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 5 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 6 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 7 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 8 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 9 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 10 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 11 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 12 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 13 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 14 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 15 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 16 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 17 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 18 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 19 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 20 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 21 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 22 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 23 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 24 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 25 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 26 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 27 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 28 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 29 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 30 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 31 on $procdff$4273 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 0 on $procdff$4303 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 1 on $procdff$4303 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 2 on $procdff$4303 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 3 on $procdff$4303 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 4 on $procdff$4303 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 5 on $procdff$4303 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 6 on $procdff$4303 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 7 on $procdff$4303 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 0 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 1 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 2 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 3 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 4 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 5 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 6 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 7 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 8 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 9 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 10 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 11 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 12 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 13 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 14 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 15 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 16 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 17 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 18 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 19 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 20 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 21 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 22 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 23 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 24 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 25 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 26 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 27 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 28 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 29 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 30 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 31 on $procdff$3779 ($adff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 0 on $procdff$4316 ($dff) from module qkd_seq_core_tp8.
+Setting constant 0-bit at position 0 on $auto$ff.cc:266:slice$4660 ($dffe) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 0 on $procdff$3784 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 1 on $procdff$3784 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 2 on $procdff$3784 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 3 on $procdff$3784 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 4 on $procdff$3784 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 5 on $procdff$3784 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 0 on $procdff$4298 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 1 on $procdff$4298 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 2 on $procdff$4298 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 0 on $procdff$3789 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 1 on $procdff$3789 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 2 on $procdff$3789 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 3 on $procdff$3789 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 4 on $procdff$3789 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 5 on $procdff$3789 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 6 on $procdff$3789 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 7 on $procdff$3789 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 8 on $procdff$3789 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 9 on $procdff$3789 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 10 on $procdff$3789 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 11 on $procdff$3789 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 12 on $procdff$3789 ($adff) from module qkd_seq_core_tp8.
+Setting constant 1-bit at position 13 on $procdff$3789 ($adff) from module qkd_seq_core_tp8.
+
+13.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qkd_seq_core_tp8..
+Removed 197 unused cells and 1987 unused wires.
+<suppressed ~214 debug messages>
+
+13.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qkd_seq_core_tp8.
+<suppressed ~25 debug messages>
+
+13.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+13.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \qkd_seq_core_tp8..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~88 debug messages>
+
+13.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \qkd_seq_core_tp8.
+Performed a total of 0 changes.
+
+13.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qkd_seq_core_tp8'.
+<suppressed ~240 debug messages>
+Removed a total of 80 cells.
+
+13.13. Executing OPT_DFF pass (perform DFF optimizations).
+Setting constant 0-bit at position 20 on $procdff$4312 ($dff) from module qkd_seq_core_tp8.
+
+13.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qkd_seq_core_tp8..
+Removed 0 unused cells and 80 unused wires.
+<suppressed ~1 debug messages>
+
+13.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qkd_seq_core_tp8.
+
+13.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+13.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \qkd_seq_core_tp8..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~93 debug messages>
+
+13.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \qkd_seq_core_tp8.
+Performed a total of 0 changes.
+
+13.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qkd_seq_core_tp8'.
+Removed a total of 0 cells.
+
+13.20. Executing OPT_DFF pass (perform DFF optimizations).
+Setting constant 0-bit at position 20 on $procdff$4309 ($dff) from module qkd_seq_core_tp8.
+
+13.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qkd_seq_core_tp8..
+
+13.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qkd_seq_core_tp8.
+
+13.23. Rerunning OPT passes. (Maybe there is more to do..)
+
+13.24. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \qkd_seq_core_tp8..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~93 debug messages>
+
+13.25. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \qkd_seq_core_tp8.
+Performed a total of 0 changes.
+
+13.26. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qkd_seq_core_tp8'.
+Removed a total of 0 cells.
+
+13.27. Executing OPT_DFF pass (perform DFF optimizations).
+
+13.28. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qkd_seq_core_tp8..
+
+13.29. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qkd_seq_core_tp8.
+
+13.30. Finished OPT passes. (There is nothing left to do.)
+
+14. Printing statistics.
+
+=== qkd_seq_core_tp8 ===
+
+   Number of wires:                883
+   Number of wire bits:          11296
+   Number of public wires:         338
+   Number of public wire bits:    8276
+   Number of ports:                 34
+   Number of port bits:           1893
+   Number of memories:               2
+   Number of memory bits:          264
+   Number of processes:              0
+   Number of cells:                738
+     $add                           34
+     $adff                          65
+     $adffe                         60
+     $and                            1
+     $dff                           26
+     $dffe                           5
+     $eq                            36
+     $ge                             4
+     $gt                             2
+     $logic_and                     70
+     $logic_not                     31
+     $logic_or                      11
+     $lt                             6
+     $memrd                          2
+     $memwr_v2                       2
+     $mul                            2
+     $mux                          213
+     $ne                            42
+     $neg                            1
+     $not                            4
+     $or                             9
+     $pmux                          19
+     $reduce_and                    24
+     $reduce_bool                   34
+     $reduce_or                      4
+     $scopeinfo                      7
+     $sdff                           1
+     $shift                          1
+     $shiftx                         3
+     $sub                           19
+
+15. Executing JSON backend.
+
+Warnings: 2 unique messages, 5 total
+End of script. Logfile hash: 3b6c06dc94, CPU: user 0.25s system 0.01s, MEM: 32.62 MB peak
+Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+Time spent: 19% 10x read_verilog (0 sec), 16% 6x opt_expr (0 sec), ...

@@ -26,7 +26,7 @@ CLK = {'ck', 'cks'}
 EXEMPT = {   # leaf -> ports legally unregistered at the pin (reason in the dsfd_vm_fe_h.sv header)
     'dsfd_vm_flt': {'stride', 'off'},       # straps: registered (st_q / of_q) anyway; listed for the parent ties
     'dsfd_vm_fcw': {'rst', 'f_swv', 'f_swd', 'f_srv', 'f_srd', 't_swg', 't_srg', 't_ks'},   # dsfd_vm_wfc_ep owns the pin registers
-    'dsfd_vm_fcc': {'rss'},
+    'dsfd_vm_fcc': {'rss', 'rst'},   # both only into the crossing's reset synchronisers
     'dsfd_vm_fcn': {'rst', 'rss', 'cv', 'cd', 'c_wr'},   # rstsync / cv, cd pin flops in the cks domain (checked: flop sinks only) / ready of a held output
     'dsfd_vm_clt': {'gid'},
 }

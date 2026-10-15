@@ -1,0 +1,24 @@
+{
+  "cell": "ot_hgi_idx_ix2_wp",
+  "view": "physical/ref_tile/hgi_ix2_wp/views/ot_hgi_idx_ix2_wp",
+  "lib_cell": "ot_hgi_idx_ix2_wp",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 260.9,
+  "spread_ps": 28.0,
+  "outputs": 2244,
+  "inputs": 464,
+  "launch_ps": 191.7,
+  "launch_pin": "wwq[1676]",
+  "capture_ps": 154.9,
+  "capture_pin": "t_o[30]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "source_commit": "fd6463b5c"
+}

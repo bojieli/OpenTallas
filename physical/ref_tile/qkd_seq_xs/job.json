@@ -1,5 +1,5 @@
 {
- "name": "qkd_seq_xs-kc2-COMMIT",
+ "name": "qkd_seq_xs-kc2-dbf8a21da",
  "block": "qkd_seq_xs",
  "ref_tile": true,
  "owner": "Claude:el1013-qwen-kvcentre",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/qwen-kvcentre-1013",
-  "commit": "COMMIT"
+  "commit": "dbf8a21da"
  },
  "stages": {
   "bench": [
@@ -68,7 +68,7 @@
     "needs": [
      "verilator"
     ],
-    "note": "the KV-end attention layer step through the CLUSTER (Verilator, STACK=h): 7 vectors x VM stall 0/1 x launch by dc ATTN / by kvd descriptor, bit-exact against tools/qwen_nearhbm_attn_ref.py"
+    "note": "the KV-end attention layer step as a whole decode step through the CLUSTER (Verilator, STACK=h): 7 vectors x VM stall 0 / 1 = 14 runs, all bit-exact against the golden; step 1,794 cycles at context 8192 (two-die 1,842); measured 10-13 on ot-agidock128"
    },
    {
     "name": "layer_cluster_wire_mutant",
@@ -131,7 +131,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_seq_xs/qkd_seq_xs-kc2-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_seq_xs/qkd_seq_xs-kc2-dbf8a21da"
   }
  ],
  "cycles_added": 0,

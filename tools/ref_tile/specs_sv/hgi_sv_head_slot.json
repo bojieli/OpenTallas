@@ -1,0 +1,138 @@
+{
+ "name": "hgi_sv_head_slot",
+ "top": "ot_hgi_sv_head",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/generic/peers/ot_hgi_sv_unit.sv",
+  "rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "params": {
+  "N": 512,
+  "M": 128,
+  "LV": 7,
+  "LWB": 18,
+  "LQ": 8,
+  "NSJ": 6
+ },
+ "pins": {
+  "N": [
+   "rec_v",
+   "rec_rdy",
+   "rec_hdr",
+   "rec_sut",
+   "rec_a",
+   "rec_b",
+   "rec_c",
+   "rec_d",
+   "rec_o",
+   "rec_r",
+   "rec_i",
+   "rec_n_a",
+   "rec_done",
+   "rec_fault",
+   "halted"
+  ],
+  "S": [
+   "go",
+   "ready",
+   "idle",
+   "vfault",
+   "wl",
+   "x_seq",
+   "x_dseq",
+   "x_cnt",
+   "cr_seq_i",
+   "cr_dseq",
+   "cr_cnt_i",
+   "wep",
+   "rf_clr",
+   "rf_rv",
+   "rf_rsec",
+   "rf_rrv",
+   "rf_rd",
+   "rf_rm",
+   "lm_err",
+   "s0_v",
+   "s0_idx",
+   "s0_data",
+   "am_stream",
+   "am_rdy"
+  ],
+  "W": [
+   "clk",
+   "rst_n",
+   "vmq",
+   "vmr"
+  ],
+  "E": [
+   "lf_cmd",
+   "lf_status",
+   "rg_req",
+   "rg_gnt",
+   "wg_req",
+   "wg_gnt",
+   "walks"
+  ]
+ },
+ "outline": {
+  "w": 216.0,
+  "h": 216.0
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "pin_h": "M4",
+  "pin_v": "M3 M5"
+ },
+ "job": {
+  "owner": "Claude:hbm-group-B3-1014",
+  "branch": "claude/hbm-suvop-head-pre-1014",
+  "tag": "r4-pre",
+  "purpose": "SU.VOP redesign (owner 10-13) head ot_hgi_sv_head (N 512, M 128): record ring of 8, 4-edge pipelined span multiply, region table, 4 frames + epochs, stage / drain dispatch to the 16 lane2 leaves, EXT stream credit and live drain frontier; one clock root; N = record bus 2,203 b on M3 + M5 (0.50), S = vec / local-memory control 1,609 b (0.36), W = packet client 614 b on M4 (0.28), E = leaf relay chain 510 b on M4 (0.23), for the current contract 216 x 216 outline; physical master naming matches live v12 SU child slot; legacy ot_hgi_sv_ctl is a zero-logic compatibility wrapper; replaces provisional no-slot ot_hgi_sv_ctl kit, separate directory preserves the still-live old diagnostic gate",
+  "extra_paths": [
+   "compiler",
+   "results/arch/hgi_sim_20261009/conformance",
+   "rtl/hbm_accel/generic/adapters/tb",
+   "tools/hgi_unitrate",
+   "tools/hgi_adapters",
+   "tools/hgi_sim"
+  ],
+  "benches": [
+   {
+    "name": "sv_chain_n64_exact",
+    "cmd": "set -o pipefail; SV=1 CHAIN=1 N=64 JOBS=16 VEC='--unit su --chain' bash rtl/hbm_accel/generic/adapters/tb/run_su_prod.sh {RUN}/bench/svq; grep -aE 'summary:|HGI_SU_PROD' {RUN}/bench/svq/run_n64_sv_wide_chain.log; grep -q 'HGI_SU_PROD PASS' {RUN}/bench/svq/run_n64_sv_wide_chain.log",
+    "expect": "pass",
+    "pass_regex": "HGI_SU_PROD PASS",
+    "min_count_regex": "summary: ([1-9][0-9]*) production-shape cases",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 21600
+   },
+   {
+    "name": "sv_chain_n64_bypass_mutant",
+    "cmd": "set -o pipefail; MUTV=6 CHAIN=1 N=64 JOBS=16 VEC='--unit su --chain' bash rtl/hbm_accel/generic/adapters/tb/run_su_prod.sh {RUN}/bench/svq6; grep -aE 'summary:|HGI_SU_PROD' {RUN}/bench/svq6/run_n64_sv_mutv6_wide_chain.log; grep -q 'HGI_SU_PROD PASS' {RUN}/bench/svq6/run_n64_sv_mutv6_wide_chain.log",
+    "expect": "fail",
+    "fail_regex": "HGI_SU_PROD FAIL",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 21600
+   }
+  ],
+  "views_to": "physical/ref_tile/hgi_sv_head_slot/views",
+  "record_to": "results/rtl/ref_tile/hgi_sv_head_slot"
+ },
+ "structural_change": "r4-pre (Claude group-B3 10-14): the preoffset head gate measured reg->reg -118.9 ps (rk -> tb_lb 22 levels: rk-indexed lo/hi/span/ext/f_e/f_hit operands, the 17-bit bump-fit add + compare, ra_ok, aa_go and the victim decode in ONE D_AA edge). Every rk-indexed operand and the bump-fit arithmetic (lbk, fits, bp_n) are now REGISTERED, loaded on the edge that sets rk (SK1, AA skip, AB step) or resets bp (frame turnover), from registers stable from SK1 on; D_AA selects registered terms only. No cycle added: N64/M64/LQ8 CASE0 4,105 = before; N512 q/d + MUTV6 in flight. Second gate (r4-pre, 13:05): allocator gone from the worst list; new worst = span multiply (m_a -> pn 21 levels; pq -> pacc 4-input 40-b add -64.0 ps): operand selects registered first and the 4-input sum split into two pair sums + their add (MUL 4 -> 6 edges a record; decode runs ahead of execution). Reset relay (r4) kept; kit recipe 2. Per-region span and extent are registered in the existing classification edges, and bump placement uses page carry plus the low offset byte instead of subtraction followed by addition. This removes the 21-level rk-to-table-write allocator path (~847 ps) without adding service cycles. Physical master is ot_hgi_sv_head as granted in the current die contract; dense-face placement uses measured hold-strip spread. Measured CTS worst path a_lo[0] to w[307] is -111.1 ps: split base-origin subtraction and local-base addition over the existing allocation A/B edges, no extra service edges. CTS relocation attempt still measured a_delta[22] at -90.5 ps. Precompute each own-region base-origin in CL0; forward-origin capture in SK0 then forward base-origin subtraction in SK1. Allocation A now selects registered offsets and B adds local base. Every existing decode/service edge is preserved.",
+ "recipe": 2
+}

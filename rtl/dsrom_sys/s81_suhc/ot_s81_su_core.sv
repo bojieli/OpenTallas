@@ -18,12 +18,22 @@
 //   SE   softmax scores -> e (P), den            ot_dsrom_su_softmax (SM_H heads x SM_LPH lanes)      attn.max/exp/den/sink
 //   SO   P.V -> o / den -> inverse RoPE -> BF16  the same unit (den held from the slot's SE)          attn.normalize
 //   GQ / GK  gain set load for QN / KV (layer constants: on silicon a ROM image; loaded at boot through the VM)
+//   RA   sqrt(softplus) of the router scores     ot_s81_su_rx (RAL ot_hdc_v41x_softplus_s lanes)    ffn.softplus_sqrt
+//   RB   router scores + bias                    ot_s81_su_rx (16 binary32 adders)                   ffn.bias
+//   QR   RoPE tail of each q head (forward)      ot_s81_su_rx (16 lanes: 2 multiplies + 1 add)       attn.q_rope
+//        (s81-functional-token 2026-10-14, die item F1: the stage programs issue these three to the SU)
 //
-// Descriptor.  arg[23:20] kind (0 QN, 1 KV, 2 QB, 3 SW, 4 SE, 5 SO, 6 GQ, 7 GK), arg[19:18] gain set, arg[14] FP4 (QB),
+// Descriptor.  arg[23:20] kind (0 QN, 1 KV, 2 QB, 3 SW, 4 SE, 5 SO, 6 GQ, 7 GK, 8 RA, 9 RB, 10 QR; 11..15 fault), arg[19:18] gain set, arg[14] FP4 (QB),
 // arg[13:0] = the job's DESCRIPTOR ROW in the VM (compiler-written).  Descriptor row words: 0 out_base, 1 in_base,
 // 2 count (QB beats / SW vectors / SE score vectors nv), 3 eps (QN, KV) / lim (SW) / scale (SE), 4 lt (SE),
 // 5.. 5+NSW-1 routing weights (SW, one per vector).  Parameter rows after it: KV / SO cos (2 rows) + sin (2 rows);
 // SE sink (SM_H words).
+// RA / RB / QR (one operand beat = every operand row of the job): count = rows (RA, RB) / q heads (QR).
+//   RA rows ibase .. +count-1 -> result rows out_base .. (binary32 r);  RB count score rows from ibase followed by count
+//   bias rows (the compiler places the layer's bias constant directly after the router all-gather's output region) ->
+//   out_base .. (binary32 scores + bias);  QR the 4 rope rows of each
+//   head (head h: rows ibase + 32 h + 28 .. 31, the last 64 of its 512) -> the same offsets from out_base (out_base =
+//   in_base rotates in place); parameter rows cos (2) + sin (2) as KV / SO.
 // Operand rows (from in_base, beat-major: each engine beat is RPB consecutive rows):
 //   QN NV_Q beats of QN_N/16 rows; KV 1 beat of KV_N/16; QB count beats of 2*QB_NB; SW count x (g W/16 rows, u W/16);
 //   SE nv beats of SM_H*SM_LPH/16; SO 512/SM_LPH beats; GQ 1280/16 rows, GK 512/16 rows.
@@ -43,7 +53,9 @@ module ot_s81_su_core #(
     parameter integer S_WR = 16,            // VM write rows a cycle
     parameter integer LM = 5, LA = 4,
     parameter integer OQ = 1024,            // result row FIFO
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer RAL = 16,             // RA lanes (ot_s81_su_rx)
+    parameter integer XMUT = 0              // ot_s81_su_rx negative controls (1 RA, 2 RB, 3 QR)
 ) (
     input  wire                   clk,
     input  wire                   rst_n,
@@ -79,6 +91,10 @@ module ot_s81_su_core #(
     end
 `endif
     localparam [3:0] K_QN = 0, K_KV = 1, K_QB = 2, K_SW = 3, K_SE = 4, K_SO = 5, K_GQ = 6, K_GK = 7;
+    localparam [3:0] K_RA = 8, K_RB = 9, K_QR = 10, K_RW = 11;    // RW: s81-ftok r3 die item F11 (ffn.weights)
+    function automatic is_rx(input [3:0] k);
+        is_rx = (k == K_RA || k == K_RB || k == K_QR || k == K_RW);
+    endfunction
 
     // ------------------------------------------------------------------ job state
     reg         run;
@@ -103,7 +119,7 @@ module ot_s81_su_core #(
     wire [31:0] w3 = prow[0][96 +: 32];
     wire [2:0]  lt4 = prow[0][128 +: 3];
     function automatic [15:0] nparams(input [3:0] k);
-        nparams = (k == K_KV || k == K_SO) ? 5 : (k == K_SE) ? 1 + (SM_H + 15) / 16 : 1;
+        nparams = (k == K_KV || k == K_SO || k == K_QR) ? 5 : (k == K_SE) ? 1 + (SM_H + 15) / 16 : 1;
     endfunction
 
     // ------------------------------------------------------------------ gain tables (layer constants)
@@ -163,6 +179,31 @@ module ot_s81_su_core #(
         .mx_d(sm_mx), .es_v(sm_esv), .es_d(sm_es), .den_v(sm_denv), .den_d(sm_den), .pv_v(sm_pv), .pv_d(be[0 +: SMW * 32]),
         .o_v(sm_ov), .o_d(sm_od), .fault(sm_f));
 
+    // RA / RB / QR (die item F1)
+    reg rx_st;
+    wire rx_ov, rx_f; wire [15:0] rx_oi; wire [511:0] rx_od;
+    ot_s81_su_rx #(.BR(BMAX), .RAL(RAL), .LM(LM), .LA(LA), .MUT(XMUT)) u_rx (
+        .clk(clk), .rst_n(rst_n), .start(rx_st), .knd(kind[1:0]), .nr(nrow), .bt(be), .cos_t({prow[2], prow[1]}),
+        .sin_t({prow[4], prow[3]}), .o_v(rx_ov), .o_i(rx_oi), .o_d(rx_od), .fault(rx_f));
+    // RW (s81-ftok r3, die item F11): the ids row + the score rows, contiguous from in_base, walked a row a cycle into
+    // ot_s81_su_rw; its one result is a word-masked write of the weights into the SW descriptor row (out_base)
+    reg rw_go, rw_run; reg [15:0] rw_i;
+    wire rw_ov, rw_f; wire [511:0] rw_od; wire [15:0] rw_om;
+    ot_s81_su_rw #(.LM(LM), .LA(LA), .MUT((XMUT == 4) ? 4 : 0)) u_rw (
+        .clk(clk), .rst_n(rst_n), .start(rw_go), .k_i(prow[0][160 +: 4]), .scale_i(prow[0][96 +: 32]), .off_i(prow[0][128 +: 4]),
+        .i_v(rw_run), .i_x(be[512 * rw_i +: 512]), .i_last(rw_i == nrow - 16'd1), .o_v(rw_ov), .o_d(rw_od), .o_m(rw_om), .fault(rw_f));
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin rw_run <= 0; rw_i <= 0; end
+        else if (rw_go) begin rw_run <= 1; rw_i <= 0; end
+        else if (rw_run) begin if (rw_i == nrow - 16'd1) rw_run <= 0; else rw_i <= rw_i + 1; end
+    // operand row address of operand row i (QR: the head's 4 rope rows; RB: scores then bias, contiguous)
+    function automatic [13:0] oaddr(input [3:0] k, input [15:0] i, input [13:0] ib);
+        case (k)
+            K_QR: oaddr = ib + {i[13:2], 5'd0} + 14'd28 + {12'd0, i[1:0]};
+            default: oaddr = ib + i[13:0];
+        endcase
+    endfunction
+
     // ------------------------------------------------------------------ result row FIFO
     reg [OW-1:0]  oq [0:OQ-1];
     reg [OQB:0]   oq_n;
@@ -177,6 +218,9 @@ module ot_s81_su_core #(
             K_SW: rows_out = c * (SW_W / 64 + 1 + SW_W / 32);
             K_SE: rows_out = c * RSM;
             K_SO: rows_out = NPV * (SMW / 32);
+            K_RA, K_RB: rows_out = c;
+            K_QR: rows_out = 4 * c;
+            K_RW: rows_out = 1;
             default: rows_out = 0;
         endcase
     endfunction
@@ -184,6 +228,8 @@ module ot_s81_su_core #(
         case (k)
             K_QN: rows_in = NVQ * RQN;  K_KV: rows_in = RKV;  K_QB: rows_in = c * RQB;  K_SW: rows_in = c * 2 * RSW;
             K_SE: rows_in = c * RSM;    K_SO: rows_in = NPV * RSM; K_GQ: rows_in = DQ / 16; K_GK: rows_in = DK / 16;
+            K_RA: rows_in = c;          K_RB: rows_in = 2 * c;     K_QR: rows_in = 4 * c;
+            K_RW: rows_in = c;
             default: rows_in = 0;
         endcase
     endfunction
@@ -203,18 +249,18 @@ module ot_s81_su_core #(
             e_done_v <= 0; e_done_tag <= 0; fault <= 0; fault_code <= 0; st_jobs <= 0;
             rq_v <= 0; wq_v <= 0; beat_v <= 0; beat_i <= 0; go_pend <= 0;
             qn_go <= 0; qn_in <= 0; qn_wl <= 0; qn_wi <= 0; kv_go <= 0; kv_in <= 0; kv_wl <= 0; qb_v <= 0; sw_v <= 0;
-            sm_sv <= 0; sm_pv <= 0; sm_rst_n <= 1'b1; sm_owner_v <= 0; sm_owner <= 0; sm_dn <= 0;
+            rx_st <= 0; rw_go <= 0; sm_sv <= 0; sm_pv <= 0; sm_rst_n <= 1'b1; sm_owner_v <= 0; sm_owner <= 0; sm_dn <= 0;
             oq_n <= 0; oq_w <= 0; oq_r <= 0; ocur <= 0;
         end else begin
             e_done_v <= 0; rq_v <= 0; wq_v <= 0; beat_v <= 0;
             qn_go <= 0; qn_in <= 0; qn_wl <= 0; kv_go <= 0; kv_in <= 0; kv_wl <= 0; qb_v <= 0; sw_v <= 0; sm_sv <= 0;
-            sm_pv <= 0; sm_rst_n <= 1'b1;
-            if (qn_f || kv_f || qb_f || sw_f || sm_f) begin fault <= 1; if (!fault) fault_code <= 1; end
+            sm_pv <= 0; sm_rst_n <= 1'b1; rx_st <= 0; rw_go <= 0;
+            if (qn_f || kv_f || qb_f || sw_f || sm_f || rx_f || rw_f) begin fault <= 1; if (!fault) fault_code <= 1; end
             if (take) begin
                 run <= 1; kind <= c_arg[23:20]; jslot <= e_cmd_d[83]; jtag <= {e_cmd_d[83], e_cmd_d[6:0]};
                 gsel <= c_arg[19:18]; fp4 <= c_arg[14]; dbase <= c_arg[13:0];
                 ph <= 0; ri <= 0; rr <= 0; np <= nparams(c_arg[23:20]); cw <= 0; beats <= 0; ocur <= 0; beat_i <= 0;
-                if (c_arg[23]) begin fault <= 1; fault_code <= 3; end
+                if (c_arg[23:20] > K_RW) begin fault <= 1; fault_code <= 3; end
                 if (c_arg[23:20] == K_SO && !(sm_owner_v && sm_owner == e_cmd_d[83])) begin fault <= 1; fault_code <= 6; end
             end
             if (run && !fault) begin
@@ -235,7 +281,7 @@ module ot_s81_su_core #(
                         if (c == np) begin
                             ph <= 2; ri <= 0; rr <= 0;
                             nrow <= rows_in(kind, prow[0][64 +: 16]);
-                            rpb <= rows_beat(kind);
+                            rpb <= is_rx(kind) ? rows_in(kind, prow[0][64 +: 16]) : rows_beat(kind);
                             nw <= rows_out(kind, prow[0][64 +: 16], fp4);
                             if (kind == K_SE) begin
                                 sm_nv <= prow[0][64 +: 7]; sm_lt <= prow[0][128 +: 3]; sm_scale <= prow[0][96 +: 32];
@@ -254,7 +300,9 @@ module ot_s81_su_core #(
                     // QN / KV: operands only after the unit's go (gain vectors loaded first)
                     if ((kind != K_QN && kind != K_KV) || go_pend == 16'hFFFF) begin
                         for (s = 0; s < S_RD; s = s + 1)
-                            if (ri + s < nrow) begin rq_v[s] <= 1; rq_row[14 * s +: 14] <= ibase + ri + s; end
+                            if (ri + s < nrow) begin
+                                rq_v[s] <= 1; rq_row[14 * s +: 14] <= oaddr(kind, ri + s, ibase);
+                            end
                         ri <= ri + S_RD;
                     end
                     begin : orsp
@@ -286,6 +334,8 @@ module ot_s81_su_core #(
                         K_SO: sm_pv <= 1;
                         K_GQ: gq[gsel * NVQ + beat_i] <= bq[0 +: QN_N * 32];
                         K_GK: gk[gsel] <= bq[0 +: KV_N * 32];
+                        K_RA, K_RB, K_QR: rx_st <= 1;            // the beat is in be from the next cycle
+                        K_RW: rw_go <= 1;                        // RW walks the beat a row a cycle (ot_s81_su_rw)
                         default: ;
                     endcase
                     beats <= beats + 1;
@@ -348,6 +398,10 @@ module ot_s81_su_core #(
                 if (sm_ev && kind == K_SE) begin
                     for (q = 0; q < RSM; q = q + 1) begin oq[wp] <= {obase + oc, sm_ed[512 * q +: 512]}; wp = wp + 1; oc = oc + 1; n_in = n_in + 1; end
                 end
+                if (rx_ov) begin
+                    oq[wp] <= {(kind == K_QR) ? obase + {rx_oi[13:2], 5'd0} + 14'd28 + {12'd0, rx_oi[1:0]} : obase + rx_oi[13:0], rx_od};
+                    wp = wp + 1; n_in = n_in + 1;
+                end
                 if (sm_ov) begin
                     for (q = 0; q < SMW / 32; q = q + 1) begin oq[wp] <= {obase + oc, sm_od[512 * q +: 512]}; wp = wp + 1; oc = oc + 1; n_in = n_in + 1; end
                 end
@@ -358,7 +412,12 @@ module ot_s81_su_core #(
                         wq_v[s] <= 1; wq_row[14 * s +: 14] <= oq[rp][OW-1:512]; wq_mask[16 * s +: 16] <= 16'hFFFF;
                         wq_d[512 * s +: 512] <= oq[rp][511:0]; rp = rp + 1; n_out = n_out + 1;
                     end
-                oq_w <= wp; oq_r <= rp; oq_n <= oq_n + n_in - n_out;
+                // RW's one result: a word-masked write straight to slot 0 (the job runs alone, the FIFO is empty)
+                if (rw_ov) begin
+                    wq_v[0] <= 1; wq_row[13:0] <= obase; wq_mask[15:0] <= rw_om; wq_d[511:0] <= rw_od; n_out = n_out + 1;
+                    if (oq_n != 0) begin fault <= 1; fault_code <= 5; end
+                end
+                oq_w <= wp; oq_r <= rp; oq_n <= oq_n + n_in - (n_out - (rw_ov ? 1 : 0));
                 if (oq_n + n_in > OQ) begin fault <= 1; fault_code <= 5; end
                 if (run && ph == 2 && nw != 0) begin
                     cw <= cw + n_out;

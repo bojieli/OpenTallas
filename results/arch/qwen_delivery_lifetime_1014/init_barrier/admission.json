@@ -1,0 +1,13 @@
+{
+  "unit": "oth-ubuntu-2403436-1791978670",
+  "host": "ot-epyc4",
+  "request_GB": 1,
+  "threads": 1,
+  "exit": 0,
+  "staging": "/srv/opentallas-scratch/codex/qwen-init-barrier-v3-1014",
+  "cases": 10,
+  "positive_cases": 3,
+  "observed_mutants": 7,
+  "production_adopted": false,
+  "physical_binding": false
+}

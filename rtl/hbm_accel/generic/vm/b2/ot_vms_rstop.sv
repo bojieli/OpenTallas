@@ -23,6 +23,7 @@
 // than one chunk (~800 loads) -- no 2,223-b-wide select net.  VC1 (PRSP / WACK) flits carry only the header and lane 0's
 // data, so the VC1 buffer stores 271 b an entry and the forwarded flit is rebuilt (the other lanes are zero).
 module ot_vms_rstop #(
+    parameter integer PHYSICAL_RING = 0, // 1: global SID order SW0,SE1,NE3,NW2 on physical perimeter
     parameter integer FW  = 2224,   // flit width (fixed)
     parameter integer D   = 3,      // per-VC input buffer depth (= the upstream's credits a VC)
     parameter integer HF  = 2,      // hub PREQ FIFO depth (the hub's pi credits)
@@ -125,7 +126,11 @@ module ot_vms_rstop #(
     wire inj_hub = can0 && hn != 0 && (!inj_pick || g_v == 8'd0);
     wire inj_eg  = can0 && g_v != 8'd0 && !inj_hub;
     // WBC destinations of this direction: CW {sid+1, sid+2}, CCW {sid+3}
-    wire [1:0] me1 = me + 2'd1, me2 = me + 2'd2, me3 = me + 2'd3;
+    wire [1:0] me_rank={me[1],me[1]^me[0]};
+    wire [1:0] rank1=me_rank+2'd1,rank2=me_rank+2'd2,rank3=me_rank+2'd3;
+    wire [1:0] me1=PHYSICAL_RING?{rank1[1],rank1[1]^rank1[0]}:me+2'd1;
+    wire [1:0] me2=PHYSICAL_RING?{rank2[1],rank2[1]^rank2[0]}:me+2'd2;
+    wire [1:0] me3=PHYSICAL_RING?{rank3[1],rank3[1]^rank3[0]}:me+2'd3;
     wire [3:0] wdm = dr ? (4'd1 << me3) : ((4'd1 << me1) | (4'd1 << me2));
     wire [7:0] wdn = dr ? 8'd1 : 8'd2;
 
