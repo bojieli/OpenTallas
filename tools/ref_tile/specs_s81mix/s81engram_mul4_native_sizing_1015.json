@@ -1,0 +1,91 @@
+{
+ "name": "s81engram_mul4_native_sizing_1015",
+ "kind": "tile",
+ "top": "ot_s81_engram_mul4",
+ "sources": [
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "rtl/hdc/v41/ot_hdc_softplus.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/hdc/v41/ot_hdc_actquant.sv",
+  "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv",
+  "rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv",
+  "rtl/dsrom_sys/engram/mix/dsfd_engram_mix_c.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_slab_ep.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "arst_n"
+ ],
+ "outline": {
+  "w": 181.44,
+  "h": 129.6
+ },
+ "util": 0.5,
+ "layer_cap": "M5",
+ "recipe": 2,
+ "pins": {
+  "W": [
+   "clk",
+   "arst_n"
+  ],
+  "S": [
+   "v",
+   "phase",
+   "h",
+   "k",
+   "w"
+  ],
+  "N": [
+   "vo",
+   "hh",
+   "kk",
+   "dot",
+   "fault"
+  ],
+  "E": []
+ },
+ "io_tcl": "physical/s81_die_pins/v20_engram_arithmetic/ot_s81_engram_mul4.tcl",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "pin_v": "M3 M5",
+  "pin_h": "M4",
+  "pin_min_tracks": 1
+ },
+ "why_floorplan": "Existing die assigned native root outline 181.44x129.6; actual mapped cells8825.2011um2, independent clk. This gate measures actual placement/CTS of a representative maximal root, never the33root parent.",
+ "job": {
+  "owner": "Codex:mix4-sizing-1015",
+  "branch": "codex/mix4-sizing-1015",
+  "tag": "native-sizing",
+  "purpose": "Representative MIX4 root placement/CTS sizing; functional arithmetic is unchanged and native mix4 production bench belongs to S-FUNC. No whole-MIX timing qualification inferred.",
+  "benched_by": {
+   "composition": "results/rtl/s81_engram_mix_1014/mix4/report.json",
+   "source_manifest": "results/rtl/s81_engram_mix_1014/mix4/sources_rtl.json",
+   "exact": "L01/L14 native full4x5120 PASS;772cycles",
+   "mutant": "m1 key->1.0 in every multiplier leaf:L01/L14 fail20471/20480 words",
+   "scope": "Functional arithmetic composition only; not integrated VM/die or physical qualification."
+  }
+ }
+}

@@ -12,7 +12,8 @@
 // queue (P 64, R 32, SerDes = engine DEPTH 64); io_xfifo channels are hop-by-hop converters (IBUF = sender credits,
 // OCRED = receiver queue; the board BDP buffer stays in the link adapter).
 module qfd_io_collective (
-    input  wire              clk,
+    input  wire              clk, // parent controller root
+    input wire clk_colr0, clk_colr1, clk_colr2, clk_colr3, clk_ecol0, clk_ecol1, clk_ecol2, clk_ecol3, clk_ecol4, clk_pfold0, clk_pfold1, clk_pfold2, clk_pfold3, clk_efold0, clk_efold1, clk_efold2, clk_efold3,
     input  wire              rst_n,
     input  wire [1:0]        pkg_s,
     input  wire              die_ps,
@@ -52,8 +53,13 @@ module qfd_io_collective (
     output wire [4:0]        fault_code
 );
     ot_coll_tp8_die #(.PKG(0), .DIE(0), .LANES(16), .TAGW(32), .WT(3), .CT(1), .DEPTH(64), .LQD(128), .TQD(128),
-        .STRAP(1)) u_coll (
-        .clk(clk), .rst_n(rst_n), .pkg_s(pkg_s), .die_ps(die_ps),
+        .STRAP(1), .CCLK(1)) u_coll (
+        .clk(clk),
+        .clk_colr({clk_colr3,clk_colr2,clk_colr1,clk_colr0}),
+        .clk_ecol({clk_ecol4,clk_ecol3,clk_ecol2,clk_ecol1,clk_ecol0}),
+        .clk_pfold({clk_pfold3,clk_pfold2,clk_pfold1,clk_pfold0}),
+        .clk_efold({clk_efold3,clk_efold2,clk_efold1,clk_efold0}),
+        .rst_n(rst_n), .pkg_s(pkg_s), .die_ps(die_ps),
         .in_valid(in_valid), .in_cr(in_cr), .in_data(in_data), .in_last(in_last), .in_mode(in_mode), .in_tag(in_tag),
         .up_valid(up_valid), .up_rec(up_rec), .up_ready(up_ready), .up_cr_in(up_cr_in),
         .dp_valid(dp_valid), .dp_rec(dp_rec), .dp_cr_out(dp_cr_out),

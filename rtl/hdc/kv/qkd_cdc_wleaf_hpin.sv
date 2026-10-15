@@ -1,5 +1,6 @@
 `timescale 1ns/1ps
-// Native successor: one hclk capture register on h_hand, other interfaces unchanged.
+// Native successor: one hclk capture register on h_hand; hp2: h_wcon lands on ONE pin flop that also drives the
+// column-group completion enables (cycle-identical). Other interfaces unchanged.
 module qkd_cdc_wleaf_hpin (
     input  wire         clk,
     input  wire         c_arst_n,
@@ -35,5 +36,5 @@ module qkd_cdc_wleaf_hpin (
     input  wire [8:0]   h_atag,
     output wire         h_fault
 );
-    qkd_cdc_wleaf #(.HANDPIPE(1)) u (.*);
+    qkd_cdc_wleaf #(.HANDPIPE(1), .WCPIN(1)) u (.*);
 endmodule

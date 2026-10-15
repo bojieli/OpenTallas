@@ -1,0 +1,41 @@
+{
+  "schema": "ot.qwen.static_io.board.unit.v1",
+  "source_commit": "1515e0dbac741376f7d13386d8a56b83c4f2f58c",
+  "source_sha256": {
+    "rtl/physical/ot_qfd_static_transport.sv": "ff4b1d88115f73a79c560617b7a747fd1b95c6757b8895245c67bc0b3a5471a4",
+    "rtl/physical/ot_qfd_io_xfifo_static.sv": "572eccedb96536760d1cda089df7a00870f388aab7085bbe640957622946eecf",
+    "rtl/physical/ot_qfd_io_links_static.sv": "16d307249ae529600c6f96f830efd125e2878a762b0ad8cea808414c024b3f81",
+    "rtl/test/tb_qfd_io_static.sv": "68fe0326371f1915e477a382b68a23ae2d7df78a79a867a0193a19d6985e27b7",
+    "rtl/test/tb_qfd_serdes_static.sv": "89a2ccfb36251d73e6b7688085fe66a379a6f59c97e7df08ffa8f5cac6ee9552",
+    "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv": "fc74c84ca5fbab889ab55c35e1e119c96c29e7177f05c91656d84fee634ce22b",
+    "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv": "cf5fb4b1a4a4c5eb297756ddc8745819081e72f0f903b8c6800b69d5dbd706f6"
+  },
+  "qualification": "UNIT_IMPLEMENTATION_ONLY; actual fullshape source-PC compiler calendar, die latency/pins, nativephysical and completeUCIePHYcapacity reservation remain open",
+  "io": {
+    "channels": 12,
+    "words": 6144,
+    "read_to_output_rck": 3,
+    "normal": "PASS",
+    "fault_only_late_producer": "FAIL_EXPECTED singlechannel bit3 with unchangedtimeline",
+    "rtl_latency_mutant": "FAIL_EXPECTED all12channels"
+  },
+  "board": {
+    "native_word_bits": 546,
+    "frame_bits": 597,
+    "crc_bits": 32,
+    "words_each_direction": 512,
+    "checks": 1024,
+    "slot_count": 64,
+    "slot_wraps": 8,
+    "codec_TX": 2,
+    "codec_RX": 1,
+    "PHY_pipeline": 339,
+    "scheduled_RD_to_RX_output": 343,
+    "clock_edge_sampling_between_PHY_and_RX": 1,
+    "normal": "PASS",
+    "CRC_mutant": "FAIL_EXPECTED",
+    "PHY_plus1_mutant": "FAIL_EXPECTED",
+    "exceptional_limitation": "fault_cause can containX afterabort inuninitializedSRAM model; positivefullyknown, peerownerinformed"
+  },
+  "no_runtime_scheduling": "Compilercommandsonly; no credits, ready-drivenissue, runtimearbitration or normalretry; abort/recovery remains explicit exceptional mode"
+}

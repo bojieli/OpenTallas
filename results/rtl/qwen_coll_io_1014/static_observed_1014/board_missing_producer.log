@@ -1,0 +1,9 @@
+ot-run: ot-epyc1tb     admits   504 GB (avail 730, growth 60, headroom 64, waiters 0/0 GB) load 83/128 running 17 disk 837 GB 
+ot-run: ot-epyc4       admits   212 GB (avail 497, growth 237, headroom 48, waiters 0/0 GB) load 93/128 running 21 disk 660 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/qcoll-1834
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/qcoll-1834
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1109288-1792032540 after 0 s
+STATIC_BOARD_FAIL FW546 CW32 checks1024 errors979 abort_cycles829 causes80/04 MUT5
+/srv/opentallas-scratch/codex/qcoll-1834/rtl/test/tb_qfd_serdes_static.sv:70: $finish called at 9080000 (1ps)
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1109288-1792032540): exit 1

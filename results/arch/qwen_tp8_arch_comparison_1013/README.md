@@ -44,23 +44,25 @@ The present merged generator's earlier relay pathfinding reported8406additionalc
 
 Validation: re-read both actual models, computed geometric frame unions and category sums, cross-checked768tile/768station counts, reproduced the reported die areas and illegal g5 axis, and computed capacity from the historical published track pitches/PDN derates. No heavy job was launched, no generated model was called qualified, and no architecture was adopted.
 
-## Metadata-bearing root ribbon candidate
+## Metadata-bearing root ribbon candidate (ABI corrected)
 
-The die lead's candidate interface carries128payload+4phase+16epoch+1valid=149bits/root;32roots give4768pins, plus379commoninstruction=5147bits if concentrated on one horizontal cut. Forking to64halfendpoints gives8192payload+1344metadata=9536branchbits; with instruction crossing once,9915bits. Additional native selector/credits/reset/clock traffic is not yet included.
+The existing word is 508 bits: `xl[127:0] + ib[378:0] + ib_go`, as recorded in `tools/qwen_rom_fulldie_b3r2.py:894` and the die lead's `band_plan` audit. The proposed root word has 128 payload + 4 phase + 16 epoch + 1 selector-valid = 149 bits. Selector-valid does **not** establish replacement of the independent compute issue `ib_go`. Pending native proof, the common instruction therefore remains **380 bits**, giving **5148 aggregate source bits**, **529 bits for one local root plus instruction**, and **9916 fork bits if the instruction crosses once**. The 149-bit root metadata is itself a proposed bound; the actual production core uses a 96-bit `x_addr` key, and collision-free epoch encoding remains pending.
 
-The VM Sface y17051.04 and clk_rx top16966.776 leave an ideal84.264um gap. Its full width4838.4um may supply face pin positions; horizontal ribbon capacity depends on the84.264um height, not that width. At relay pin spacing.096um, source+instruction uses494.112um of face span (10.21%ofSface), but this does not demonstrate lateral routing capacity.
+The current JSON retains the previous 379-bit instruction / 5147-bit aggregate / 528-bit local scenario explicitly as superseded arithmetic, so earlier comparisons remain reviewable. Both PDN capacity assumptions also remain explicit.
 
-Authoritative pitches in tools/hier_contract/pin_align.py:68-74 and cuts.py:19 are M4/M5=.048um,M6/M7=.064,M8/M9=.080. The .096relay pin pitch is2M4tracks, not the M8wire pitch. The supplied89.4401%usableM8 fraction is a scenario assumption from the die lead; the historical capacity tools use75%. Local actualPDN obstruction must justify89.4401%before signoff.
+The VM S face at y17051.04 and clk_rx top at y16966.776 leave an ideal 84.264 um gap. Its 4838.4 um width may supply pin positions; horizontal ribbon capacity depends on the 84.264 um height. At relay pin spacing 0.096 um, the source interface plus instruction occupies 494.208 um of face span, which does not prove lateral routing capacity.
 
-| Horizontal option | Required height for5147bits at.60 | Bits admitted in84.264um |
+Authoritative pitches in `tools/hier_contract/pin_align.py:68-74` and `cuts.py:19` are M4/M5 = 0.048 um, M6/M7 = 0.064 um, and M8/M9 = 0.080 um. The 0.096 um relay pin pitch is two M4 tracks. The supplied 89.4401% usable M8 fraction is a die-lead scenario assumption; historical capacity tools use 75%. Actual local PDN obstruction must justify the larger fraction.
+
+| Horizontal option | Required height for 5148 bits at 0.60 | Bits admitted in 84.264 um |
 |---|---:|---:|
-| M8 single-wire.080,usable.894401 |767.292um|565.244|
-| M8 effective spacing.096,usable.894401 |920.750um|471.036|
-| literal2M8tracks.160,usable.894401 |1534.584um|282.622|
-| M8 single-wire.080,historicalusable.75 |915.022um|473.985|
-| open M6+M8,.75/.894401usable |374.620um|1157.725|
-| open M4+M6+M8,.50/.75/.894401usable |257.488um|1684.375|
+| M8 single wire 0.080, usable 0.894401 | 767.441 um | 565.244 |
+| M8 single wire 0.080, historical usable 0.75 | 915.200 um | 473.985 |
+| M8 effective spacing 0.096, usable 0.894401 | 920.929 um | 471.036 |
+| Literal two M8 tracks 0.160, usable 0.894401 | 1534.882 um | 282.622 |
+| Open M6 + M8, usable 0.75 / 0.894401 | 374.693 um | 1157.725 |
+| Open M4 + M6 + M8, usable 0.50 / 0.75 / 0.894401 | 257.538 um | 1684.375 |
 
-Even all three horizontal layers cannot carry the aggregated interface in the84um gap. Those extra-layer options exist only where actual channel ownership and LEFOBS allow; over an M7-capped tile onlyM8horizontal/M9vertical remain. M9 is not a second horizontal layer. None of these options permit transit through the allM1-M9VMwall.
+Even all three horizontal layers cannot concentrate this interface in the 84 um gap. Extra layers exist only where actual channel ownership and LEF obstructions allow. Over an M7-capped tile, only M8 horizontal / M9 vertical remain; M9 cannot be counted as another horizontal ribbon layer. No option permits transit through the VM wall, which blocks M1–M9.
 
-One truthful topology candidate is32spatially local source/fork regions, so no strip segment collects many root words. An ideal one-root149+commoninstruction379=528bit local segment uses.5605of singleM8 capacity with the assumed.894401fraction, leaving37.24admissiblebits. At the historical.75derate it fails.60:528exceeds473.985. Thus that illustrative allocation is not adopted pins, a route or a qualified design. It needs measuredPDN capacity or more local channel/layer capacity, explicit select/credit/reset/clock demand, source placements, and full native topology cuts/windows/STA. Avoiding a global choke requires actual localized sources or independently distributed access lanes; merely renaming32roots cannot remove traffic that an upstream shared source still must carry.
+A candidate with 32 spatially local source/fork regions could avoid a shared aggregate choke. Its ideal one-root local segment has **529 bits** and utilization 0.561528 with the supplied 0.894401 fraction. At the historical 0.75 fraction it exceeds the 473.985 admitted bits and fails 0.60. Neither example is adopted pins, a route or a qualified design. Both omit unresolved selector/credit/reset/clock traffic. The candidate requires localized sources, actual cut/window accounting, PDN evidence, and native full-layer qualification. Renaming roots cannot remove traffic crossing an upstream shared source.

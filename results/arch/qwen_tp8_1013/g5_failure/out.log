@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/home/ubuntu/scratch-tp8-r10/g5/src/tools/qwen_tp8/relay_data_run.py", line 132, in <module>
+    print(json.dumps(dict(relays=r.get('relays'), max_pin_to_pin_um=r.get('max_pin_to_pin_um'), over_reach=len(r.get('over_reach') or []),
+                                 ^^^^^
+AttributeError: 'tuple' object has no attribute 'get'
+rc=1
+rc=1

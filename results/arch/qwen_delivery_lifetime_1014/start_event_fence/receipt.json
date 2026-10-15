@@ -1,0 +1,94 @@
+{
+  "scope": "LIFETIME_COMPONENT_ONLY_NOT_ACTUAL_TILE_VM_COMPOSITION",
+  "sources": {
+    "ot_qwen_xdelivery_lifetime.sv": "26ed989248805d7857850beea48e83dee9945667dda3a8a5d302f6f005e36ffa",
+    "tb_qwen_xdelivery_lifetime.sv": "06a43d6ece98e288785409ca1e05c473538fe50ebf7c183826f92d71adb1a7fb",
+    "tb_qwen_xdelivery_vector.sv": "20e85938910a6d3cfe02fd25e42d05c41bb575e352372832f5fba15fdb0db355"
+  },
+  "cases": [
+    {
+      "case": "positive",
+      "exit": 0,
+      "observed": "PASS lifetime: 12 held operations, 3 context wraps, backpressure, consumer drain, late ACK\n/srv/opentallas-scratch/codex/qwen-lifetime-1014-v5/tb_qwen_xdelivery_lifetime.sv:101: $finish called at 1900000 (1ps)",
+      "source_sha256": "26ed989248805d7857850beea48e83dee9945667dda3a8a5d302f6f005e36ffa"
+    },
+    {
+      "case": "begin_overlap_mutant",
+      "exit": 1,
+      "observed": "FATAL: /srv/opentallas-scratch/codex/qwen-lifetime-1014-v5/tb_qwen_xdelivery_lifetime.sv:98: scalar begin overlap silently dropped event\n       Time: 1860000  Scope: tb_qwen_xdelivery_lifetime",
+      "source_sha256": "2c12d6e0c781921609ff30fc5f6ab3208b138f870dc9df0d7221c9499f8c8419"
+    },
+    {
+      "case": "vector_begin_overlap_mutant",
+      "exit": 1,
+      "observed": "FATAL: /srv/opentallas-scratch/codex/qwen-lifetime-1014-v5/tb_qwen_xdelivery_vector.sv:67: vector begin overlap silently dropped event\n       Time: 1150000  Scope: tb_qwen_xdelivery_vector",
+      "source_sha256": "f20a2770ab396e72127e5ccebf668bfbb179e30ac1f995bcff85d602b0cc007a"
+    },
+    {
+      "case": "version_mutant",
+      "exit": 1,
+      "observed": "FATAL: /srv/opentallas-scratch/codex/qwen-lifetime-1014-v5/tb_qwen_xdelivery_lifetime.sv:91: late version ACK retired new request\n       Time: 1830000  Scope: tb_qwen_xdelivery_lifetime",
+      "source_sha256": "3844506d323324e5b6d5db679472e44c92de80a38206ab165122fab8b310ce7b"
+    },
+    {
+      "case": "source_drain_mutant",
+      "exit": 1,
+      "observed": "FATAL: /srv/opentallas-scratch/codex/qwen-lifetime-1014-v5/tb_qwen_xdelivery_lifetime.sv:54: release before source quiescence\n       Time: 120000  Scope: tb_qwen_xdelivery_lifetime",
+      "source_sha256": "44197fa273d58adf69a52c4c5e34f1fa76268cd886b6c13eebf57708823fe00e"
+    },
+    {
+      "case": "context_mutant",
+      "exit": 1,
+      "observed": "FATAL: /srv/opentallas-scratch/codex/qwen-lifetime-1014-v5/tb_qwen_xdelivery_lifetime.sv:70: late context acceptance joined new operation\n       Time: 1620000  Scope: tb_qwen_xdelivery_lifetime",
+      "source_sha256": "25bdf9b24e625e8976f2547c21ee4a34856bee7f34dc3b395cde6b07933cbe70"
+    },
+    {
+      "case": "accepted_ib_mutant",
+      "exit": 1,
+      "observed": "FATAL: /srv/opentallas-scratch/codex/qwen-lifetime-1014-v5/tb_qwen_xdelivery_lifetime.sv:76: offered IB substituted for actually accepted IB\n       Time: 1680000  Scope: tb_qwen_xdelivery_lifetime",
+      "source_sha256": "2ae1e58627682297a054c4c420bde198325e78152c45508c17dfbfe84616fc2d"
+    },
+    {
+      "case": "wrap_fence_mutant",
+      "exit": 1,
+      "observed": "FATAL: /srv/opentallas-scratch/codex/qwen-lifetime-1014-v5/tb_qwen_xdelivery_lifetime.sv:61: context wrap reopened without fence\n       Time: 510000  Scope: tb_qwen_xdelivery_lifetime",
+      "source_sha256": "a7114c8b621bd214740f3dff6d412735a1bc3b3c44c2abc36ef42e9cf673046d"
+    },
+    {
+      "case": "pending_retire_mutant",
+      "exit": 1,
+      "observed": "FATAL: /srv/opentallas-scratch/codex/qwen-lifetime-1014-v5/tb_qwen_xdelivery_lifetime.sv:84: seal waived outstanding consumer requests\n       Time: 1770000  Scope: tb_qwen_xdelivery_lifetime",
+      "source_sha256": "cf165e20fe4d1bb5bc9122d5cd610ad4c0479e71e5d0b07ac36e45c195cc9f19"
+    },
+    {
+      "case": "vector_positive",
+      "exit": 0,
+      "observed": "PASS vector:48 simultaneous queries,49 outstanding stages, all-recipient drain, stale version and full40-bit identity\n/srv/opentallas-scratch/codex/qwen-lifetime-1014-v5/tb_qwen_xdelivery_vector.sv:70: $finish called at 1190000 (1ps)",
+      "source_sha256": "26ed989248805d7857850beea48e83dee9945667dda3a8a5d302f6f005e36ffa"
+    },
+    {
+      "case": "vector_version_mutant",
+      "exit": 1,
+      "observed": "FATAL: /srv/opentallas-scratch/codex/qwen-lifetime-1014-v5/tb_qwen_xdelivery_vector.sv:35: one stale version escaped parallel cohort\n       Time: 90000  Scope: tb_qwen_xdelivery_vector",
+      "source_sha256": "7f865cd40b2eba8c5574c08745504a811606432c4377d6fbfaadba43c00ce069"
+    },
+    {
+      "case": "vector_capacity_mutant",
+      "exit": 1,
+      "observed": "FATAL: /srv/opentallas-scratch/codex/qwen-lifetime-1014-v5/tb_qwen_xdelivery_vector.sv:26: parallel48 issue capacity lost\n       Time: 21000  Scope: tb_qwen_xdelivery_vector",
+      "source_sha256": "17353289904f492e358728b68b5f23ded8ae6b67d02e225d62ed6cbf50e70331"
+    },
+    {
+      "case": "vector_seq_highbit_mutant",
+      "exit": 1,
+      "observed": "FATAL: /srv/opentallas-scratch/codex/qwen-lifetime-1014-v5/tb_qwen_xdelivery_vector.sv:58: query sequence high bit truncated\n       Time: 1130000  Scope: tb_qwen_xdelivery_vector",
+      "source_sha256": "9922c004abe8f243ade4c71ee53b46e3afd35552defd16e2997838895fff733f"
+    },
+    {
+      "case": "vector_outstanding_capacity_mutant",
+      "exit": 1,
+      "observed": "FATAL: /srv/opentallas-scratch/codex/qwen-lifetime-1014-v5/tb_qwen_xdelivery_vector.sv:41: 49-stage outstanding capacity lost\n       Time: 261000  Scope: tb_qwen_xdelivery_vector",
+      "source_sha256": "4e4edabc1a06b794e2f3708e9cd2a166ee92fc49ec5e632de400a36fa89a7368"
+    }
+  ]
+}

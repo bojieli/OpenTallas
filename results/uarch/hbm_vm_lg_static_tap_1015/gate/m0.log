@@ -1,0 +1,2 @@
+VM_LG_STATIC_TAP PASS taps=3 banks=8 SRAMs=24 writes=3072 exact_readbacks=3072 issue_cycles_per_phase=384 sectors_per_cycle=8 SU_RD=10 SFU_RD=14 HC_RD=18 SU_WR=7 SFU_WR=11 HC_WR=15 missing_response_fixed_phase=1 unselected_local_fault=1 collision_fault=1
+/var/tmp/hbm-vm-lg-static-tap-1015/inputs/tb_hbm_vm_lg_static_tap.sv:146: $finish called at 8700000 (1ps)

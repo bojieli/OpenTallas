@@ -1,0 +1,99 @@
+{
+ "name": "s81engc_rr256w",
+ "top": "ot_engc_rr256w",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/engram/rso_candidate/ot_engc_hl_leaves.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "util": 0.5,
+ "pins": {
+  "W": [
+   "d"
+  ],
+  "N": [
+   "q"
+  ],
+  "E": [
+   "ck",
+   "rst_n"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "pin_v": "M3 M5",
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "Die decision 10-14 06:36 (el1013-s81-engram.log): the Engram parent's own state (930 data + 16 reset flops) is hardened into leaves so the parent holds no flop: three same-edge return relay leaves at the bank source pins (256/256/64) and one control leaf beside IO_R1 (8 conditioners, status/transit/release pipes, registered ACK). Parent dsfd_engram_c_hl, rtl/dsrom_sys/engram/rso_candidate/{dsfd_engram_c_hl,ot_engc_hl_leaves}.sv. Die r6 16:26 (v19_engram_hl, main eb466f470): ot_engc_rr256w outline 30.24 x 32.4 and pins assigned by the die (io_tcl); ctl split into ot_engc_ctl_x / ot_engc_ctl_s, rr1 = ot_engc_rr256w, rr64 conditions the async die reset itself.",
+ "job": {
+  "owner": "Claude:s81-elemB6-1014",
+  "branch": "claude/s81-elemB6-1014",
+  "tag": "hl2",
+  "purpose": "S81 Engram hardened own-state leaf ot_engc_rr256w on the die-assigned v19_engram_hl pins/outline",
+  "benches": [
+   {
+    "name": "engram_hl_exact",
+    "cmd": "python3 tools/s81_svceng/engram_c_gate.py --rso-candidate --top dsfd_engram_c_hl --out {RUN}/hl_exact",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "ENGRAM_C_GATE PASS"
+   },
+   {
+    "name": "engram_hl_mut_rrw",
+    "cmd": "python3 tools/s81_svceng/engram_c_gate.py --rso-candidate --top dsfd_engram_c_hl --dut-exit --leaf-mut OT_ENGC_HL_MUT_RRW --out {RUN}/hl_mut",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "ENGRAM_C_GATE FAIL"
+   }
+  ],
+  "views_to": "physical/ref_tile/s81engc_rr256w/views",
+  "record_to": "results/rtl/ref_tile/s81engc_rr256w",
+  "extra_paths": [
+   "physical/asap7_memory_macros",
+   "physical/s81_die_pins/v19_engram_hl",
+   "rtl/dsrom_sys",
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/test",
+   "rtl/v41rom",
+   "tools/s81_svceng"
+  ]
+ },
+ "outline": {
+  "w": 30.24,
+  "h": 32.4
+ },
+ "why_floorplan": "pin-limited relay/control leaf: face length set by the bus at <= 6-10 b/um/layer, not by area",
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "io_tcl": "physical/s81_die_pins/v19_engram_hl/ot_engc_rr256w.tcl"
+}

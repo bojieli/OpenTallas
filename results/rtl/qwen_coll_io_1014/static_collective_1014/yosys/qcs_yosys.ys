@@ -1,0 +1,7 @@
+read_verilog -sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/rom/ot_coll_fold_slice.sv rtl/rom/ot_coll_rst_leaf.sv rtl/rom/ot_coll_tp8_static.sv rtl/physical/ot_qfd_io_collective_static.sv
+read_verilog -lib physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_bb.v physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v
+hierarchy -check -top qfd_io_collective_static
+proc; opt_clean
+stat
+synth -top qfd_io_collective_static -flatten -run begin:fine
+stat

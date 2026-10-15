@@ -1,0 +1,2 @@
+HBM_STAGING_VM_STATIC PASS landing_macros=32 vm_macros=24 sectors=2048 issue_slots=256 banks_per_cycle=8 DMA_commit_edges=3 readback_sectors=2048 read_edges=6
+/var/tmp/hbm-staging-vm-static-1015/inputs/tb_hbm_staging_vm_static.sv:119: $finish called at 5980000 (1ps)

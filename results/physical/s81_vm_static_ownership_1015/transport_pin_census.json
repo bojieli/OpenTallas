@@ -1,0 +1,313 @@
+{
+  "schema": "opentallas.s81.vm-transport-pin-census.v1",
+  "scope": "actual RTL port-bit census and conservative single-layer-per-face native two-track pin-pitch capacity; not a claim that every alternate multilayer scheme is impossible",
+  "pin_pitch_um": 0.096,
+  "native_face_policy": "M4 W/E + M5 N/S, one chosen signal layer perface; no optional multilayer access granted",
+  "masters": [
+    {
+      "master": "dsfd_vm_static_relay128_b8",
+      "source": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128_b8.sv",
+      "ports": {
+        "ck_req": {
+          "direction": "input",
+          "width": 1
+        },
+        "ck_rsp": {
+          "direction": "input",
+          "width": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "width": 1
+        },
+        "i_rv": {
+          "direction": "input",
+          "width": 8
+        },
+        "i_wv": {
+          "direction": "input",
+          "width": 8
+        },
+        "i_ra": {
+          "direction": "input",
+          "width": 72
+        },
+        "i_wa": {
+          "direction": "input",
+          "width": 72
+        },
+        "i_rt": {
+          "direction": "input",
+          "width": 64
+        },
+        "i_wt": {
+          "direction": "input",
+          "width": 64
+        },
+        "i_wm": {
+          "direction": "input",
+          "width": 32
+        },
+        "i_wd": {
+          "direction": "input",
+          "width": 1024
+        },
+        "o_rv": {
+          "direction": "output",
+          "width": 8
+        },
+        "o_wv": {
+          "direction": "output",
+          "width": 8
+        },
+        "o_ra": {
+          "direction": "output",
+          "width": 72
+        },
+        "o_wa": {
+          "direction": "output",
+          "width": 72
+        },
+        "o_rt": {
+          "direction": "output",
+          "width": 64
+        },
+        "o_wt": {
+          "direction": "output",
+          "width": 64
+        },
+        "o_wm": {
+          "direction": "output",
+          "width": 32
+        },
+        "o_wd": {
+          "direction": "output",
+          "width": 1024
+        },
+        "i_sv": {
+          "direction": "input",
+          "width": 8
+        },
+        "i_cv": {
+          "direction": "input",
+          "width": 8
+        },
+        "i_sd": {
+          "direction": "input",
+          "width": 1024
+        },
+        "i_st": {
+          "direction": "input",
+          "width": 64
+        },
+        "i_ct": {
+          "direction": "input",
+          "width": 64
+        },
+        "i_ca": {
+          "direction": "input",
+          "width": 72
+        },
+        "i_cm": {
+          "direction": "input",
+          "width": 32
+        },
+        "o_sv": {
+          "direction": "output",
+          "width": 8
+        },
+        "o_cv": {
+          "direction": "output",
+          "width": 8
+        },
+        "o_sd": {
+          "direction": "output",
+          "width": 1024
+        },
+        "o_st": {
+          "direction": "output",
+          "width": 64
+        },
+        "o_ct": {
+          "direction": "output",
+          "width": 64
+        },
+        "o_ca": {
+          "direction": "output",
+          "width": 72
+        },
+        "o_cm": {
+          "direction": "output",
+          "width": 32
+        }
+      },
+      "port_bits": 5235,
+      "template_outline_um": [
+        64.8,
+        103.68
+      ],
+      "single_layer_per_face_raw_capacity_at_0_096um": 3510,
+      "template_minimum_pin_demand_ratio": 1.4914529914529913,
+      "template_status": "REJECT_NATIVE_SINGLE_LAYER_FACE_PIN_CAPACITY",
+      "generous_sizing_option_um": [
+        172.8,
+        172.8
+      ],
+      "option_raw_pin_demand_ratio": 0.7270833333333333,
+      "option_status": "BOUNDARY_CAPACITY_ONLY; no actual face assignment or area/clock/STA proof"
+    },
+    {
+      "master": "dsfd_vm_static_relay128_b16",
+      "source": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128_b16.sv",
+      "ports": {
+        "ck_req": {
+          "direction": "input",
+          "width": 1
+        },
+        "ck_rsp": {
+          "direction": "input",
+          "width": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "width": 1
+        },
+        "i_rv": {
+          "direction": "input",
+          "width": 16
+        },
+        "i_wv": {
+          "direction": "input",
+          "width": 16
+        },
+        "i_ra": {
+          "direction": "input",
+          "width": 144
+        },
+        "i_wa": {
+          "direction": "input",
+          "width": 144
+        },
+        "i_rt": {
+          "direction": "input",
+          "width": 128
+        },
+        "i_wt": {
+          "direction": "input",
+          "width": 128
+        },
+        "i_wm": {
+          "direction": "input",
+          "width": 64
+        },
+        "i_wd": {
+          "direction": "input",
+          "width": 2048
+        },
+        "o_rv": {
+          "direction": "output",
+          "width": 16
+        },
+        "o_wv": {
+          "direction": "output",
+          "width": 16
+        },
+        "o_ra": {
+          "direction": "output",
+          "width": 144
+        },
+        "o_wa": {
+          "direction": "output",
+          "width": 144
+        },
+        "o_rt": {
+          "direction": "output",
+          "width": 128
+        },
+        "o_wt": {
+          "direction": "output",
+          "width": 128
+        },
+        "o_wm": {
+          "direction": "output",
+          "width": 64
+        },
+        "o_wd": {
+          "direction": "output",
+          "width": 2048
+        },
+        "i_sv": {
+          "direction": "input",
+          "width": 16
+        },
+        "i_cv": {
+          "direction": "input",
+          "width": 16
+        },
+        "i_sd": {
+          "direction": "input",
+          "width": 2048
+        },
+        "i_st": {
+          "direction": "input",
+          "width": 128
+        },
+        "i_ct": {
+          "direction": "input",
+          "width": 128
+        },
+        "i_ca": {
+          "direction": "input",
+          "width": 144
+        },
+        "i_cm": {
+          "direction": "input",
+          "width": 64
+        },
+        "o_sv": {
+          "direction": "output",
+          "width": 16
+        },
+        "o_cv": {
+          "direction": "output",
+          "width": 16
+        },
+        "o_sd": {
+          "direction": "output",
+          "width": 2048
+        },
+        "o_st": {
+          "direction": "output",
+          "width": 128
+        },
+        "o_ct": {
+          "direction": "output",
+          "width": 128
+        },
+        "o_ca": {
+          "direction": "output",
+          "width": 144
+        },
+        "o_cm": {
+          "direction": "output",
+          "width": 64
+        }
+      },
+      "port_bits": 10467,
+      "template_outline_um": [
+        64.8,
+        207.36
+      ],
+      "single_layer_per_face_raw_capacity_at_0_096um": 5670,
+      "template_minimum_pin_demand_ratio": 1.8460317460317461,
+      "template_status": "REJECT_NATIVE_SINGLE_LAYER_FACE_PIN_CAPACITY",
+      "generous_sizing_option_um": [
+        345.6,
+        259.2
+      ],
+      "option_raw_pin_demand_ratio": 0.8307142857142858,
+      "option_status": "BOUNDARY_CAPACITY_ONLY; no actual face assignment or area/clock/STA proof"
+    }
+  ],
+  "consequence": "existing64.8um-wide b8/b16 template outlines cannot be treated as real nativehardmasters; all geometryoptions preserving those sizes stay UNADOPTED until actualpinplans/sizing. New non-minimal width options must be propagated through localgroup placement."
+}

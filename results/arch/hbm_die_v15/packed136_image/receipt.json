@@ -1,0 +1,72 @@
+{
+  "status": "PACKED136_IMAGE_MAPPING_PASS_PRODUCTION_UNBOUND",
+  "fixture_scope": "procedural byte identity, not checkpoint",
+  "rows": 317,
+  "sectors": 1368,
+  "layout_cases": [
+    {
+      "rows": 1,
+      "sectors": 8,
+      "bytes": 256
+    },
+    {
+      "rows": 2,
+      "sectors": 12,
+      "bytes": 384
+    },
+    {
+      "rows": 3,
+      "sectors": 16,
+      "bytes": 512
+    },
+    {
+      "rows": 4,
+      "sectors": 20,
+      "bytes": 640
+    },
+    {
+      "rows": 5,
+      "sectors": 24,
+      "bytes": 768
+    },
+    {
+      "rows": 15,
+      "sectors": 64,
+      "bytes": 2048
+    },
+    {
+      "rows": 16,
+      "sectors": 68,
+      "bytes": 2176
+    },
+    {
+      "rows": 17,
+      "sectors": 76,
+      "bytes": 2432
+    },
+    {
+      "rows": 63,
+      "sectors": 268,
+      "bytes": 8576
+    },
+    {
+      "rows": 64,
+      "sectors": 272,
+      "bytes": 8704
+    },
+    {
+      "rows": 127,
+      "sectors": 540,
+      "bytes": 17280
+    }
+  ],
+  "rejected_invalid_inputs": 5,
+  "actual_RTL_map_vectors": 1344,
+  "mutant_rejected": true,
+  "source_sha256": {
+    "tools/hbm_svc_packed136_image.py": "cb4542a28de27913557f5f9425e2f82aabf62a155c87684559d685418b4889c4",
+    "tools/hbm_svc_packed136_image_gate.py": "a9f37fe67c32edcaca865e1ccd43d23d358569329f49dc91d3e2cbcf04007c85",
+    "tools/w19_payload_loader.py": "ea11be4101495c66a04cc7a4cbb1b88090c66f96eaba5ae9787c838e64ea26ca",
+    "rtl/hbm_accel/service/ot_hbm_kport_map.sv": "93e6f1e03c7c9ce4780da18b3c453381878107d5db68cda8312d2fb9a61ab84f"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "status": "PASS",
+  "scope": "assigned slot port names/widths only; not native timing",
+  "source_commit": "60822b1f0",
+  "source_path": "/home/ubuntu/wt/el1011-s81dieit/physical/s81_die_pins/v20_functional/dsfd_engram_mix_c.json",
+  "assigned_sha256": "512f7bf155b4a4245847c2d3b70c6c9e2c32afc3d7a44f61ba11a5b2628880e8",
+  "outline_um": [
+    1152.0,
+    864.0
+  ],
+  "ports": {
+    "ck": 33,
+    "rst": 1,
+    "c_cmd": 85,
+    "c_done": 9,
+    "c_st": 2,
+    "f_inp": 1,
+    "rq_v": 5,
+    "rq_row": 70,
+    "rs_v": 5,
+    "rs_d": 2560,
+    "wq_v": 1,
+    "wq_row": 14,
+    "wq_mask": 16,
+    "wq_d": 512
+  }
+}

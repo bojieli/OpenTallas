@@ -1,0 +1,46 @@
+{
+  "kind": "tile",
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "layer_cap": "M5",
+  "route": {
+    "peak_ram_gb": 24,
+    "threads": 8
+  },
+  "job": {
+    "owner": "Codex:H-COLL",
+    "branch": "claude/hbm-p2p-coll-1014",
+    "tag": "n3",
+    "hold_merge": "Native partition sizing/CTS probe. Die pin file, routed native pin/reset/clock audit and physical leaf views still required.",
+    "purpose": "Native FIFO payload reset enable removal; measure real leaf clock root and boundary paths before assigned-pin routing"
+  },
+  "name": "hgi_coll_rgx_rx_n3",
+  "top": "ot_hgi_coll_rx_native",
+  "sources": [
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_crl.sv"
+  ],
+  "params": {
+    "W": 552,
+    "CRD": 16
+  },
+  "pins": {
+    "S": [
+      "t_v",
+      "t_d"
+    ],
+    "N": [
+      "out_v",
+      "out_d",
+      "out_rdy",
+      "epoch",
+      "fault"
+    ],
+    "W": [
+      "clk",
+      "rst_n"
+    ]
+  },
+  "std_area_um2": 6471
+}

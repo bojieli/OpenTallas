@@ -1,0 +1,18 @@
+{
+ "schema": "opentallas.s81_vm_fe_sloc.replays.v1",
+ "note": "claude s81-grpA r5 2026-10-14: FE (a) parent replays at 1520.064 x 889.92 with the v18 assigned capture pins (tools/s81_ph/s81_ph_vm_fe_h_floorplan.py, OT_FE_SLOC=1 for s1/struct2). replay_s0 = default crossbar, seed-1 5-sweep search; replay_s1 = SLOC, same search; struct2 = SLOC with capture relays in 4 columns (fxs b -> 3 relay rows -> fsr b) and the fsr row at the S edge. Not a pass: lanes/central leaves still placed by the non-cut-aware search.",
+ "runs": {
+  "replay_s0": {
+   "cuts": "{'gcell_um': 10.8, 'window_um': 54.0, 'routing_model': 'finite L/Z plus full-slot legal detours; every blocked crossing retained', 'unroutable_bundle_segments': 0, 'route_segments_over_500_um': 134, 'longest_grid_route_um': 734.4000000000001, 'blocked_interior_cells': 0, 'full_vertical_cut_max': [0.866, 550.8], 'full_horizontal_cut_max': [1.148, 75.6], 'window_vertical_cut_max': 4.145, 'window_horizontal_cut_max': 3.086, 'gcells_over_0p60': 4628, 'gcells': 11703, 'gcell_max': [5.812, 4.723]}",
+   "verdict": "FAIL (placement 3, hop classes over ['clt.w->fxs', 's0->relay', 'relay->relay', 'lane word', 'flt.ret->frm', 'frm.ret->fld', 'grant frm->flt', 'arm frm->flt', 'reset', 'status', 'client N', 'f_cap_status'], pin_align FAIL {'f_cap': 16, 'clt.w->fxs': 4, 's0->relay': 4, 'relay->relay': 16, 'relay->fsr': 10, 'frm.ret->fld': 1}, cuts ['full_vertical_cut_max', 'full_horizontal_cut_max', 'window_vertical_cut_max', 'window_horizontal_cut_max'], not modelled 0)"
+  },
+  "replay_s1": {
+   "cuts": "{'gcell_um': 10.8, 'window_um': 54.0, 'routing_model': 'finite L/Z plus full-slot legal detours; every blocked crossing retained', 'unroutable_bundle_segments': 0, 'route_segments_over_500_um': 99, 'longest_grid_route_um': 788.4000000000001, 'blocked_interior_cells': 0, 'full_vertical_cut_max': [0.864, 918.0], 'full_horizontal_cut_max': [1.149, 75.6], 'window_vertical_cut_max': 3.549, 'window_horizontal_cut_max': 2.412, 'gcells_over_0p60': 4298, 'gcells': 11703, 'gcell_max': [6.444, 3.346]}",
+   "verdict": "FAIL (placement 0, hop classes over ['s0->relay', 'lane word', 'flt.ret->frm', 'frm.ret->fld', 'grant frm->flt', 'arm fcn->frm', 'arm frm->flt', 'reset', 'k src->relay', 'status', 'client N', 'f_cap_status'], pin_align FAIL {'f_cap': 16, 'clt.w->fxs': 8, 's0->relay': 5, 'relay->relay': 5, 'relay->fsr': 8}, cuts ['full_vertical_cut_max', 'full_horizontal_cut_max', 'window_vertical_cut_max', 'window_horizontal_cut_max'], not modelled 0)"
+  },
+  "struct2": {
+   "cuts": "{'gcell_um': 10.8, 'window_um': 54.0, 'routing_model': 'finite L/Z plus full-slot legal detours; every blocked crossing retained', 'unroutable_bundle_segments': 9, 'route_segments_over_500_um': 106, 'longest_grid_route_um': 1220.4, 'blocked_interior_cells': 31, 'full_vertical_cut_max': [0.729, 572.4], 'full_horizontal_cut_max': [0.742, 334.8], 'window_vertical_cut_max': 1311000000.0, 'window_horizontal_cut_max': 1147000000.0, 'gcells_over_0p60': 3439, 'gcells': 11703, 'gcell_max': [128000000.0, 128000000.0]}",
+   "verdict": "FAIL (placement 44, hop classes over ['relay->fsr', 'lane word', 'flt.ret->frm', 'frm.ret->fld', 'grant frm->flt', 'arm fcn->frm', 'arm frm->flt', 'reset', 'k src->relay', 'status', 'client N', 'f_cap_status'], pin_align FAIL {'f_cap': 16, 'clt.w->fxs': 8, 's0->relay': 2, 'relay->relay': 3, 'relay->fsr': 2}, cuts ['unroutable_bundle_segments', 'full_vertical_cut_max', 'full_horizontal_cut_max', 'window_vertical_cut_max', 'window_horizontal_cut_max'], not modelled 0)"
+  }
+ }
+}

@@ -1,0 +1,12 @@
+ot-run: ot-epyc1tb     admits   464 GB (avail 727, growth 211, headroom 64, waiters 0/0 GB) load 85/128 running 21 disk 618 GB 
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/astk-er-1014
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/astk-er-1014
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/astk-er-1014
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1000178-1792034159 after 0 s
+PASS native_er actual_EP=8 score_macros=16 e_macros=32 requests=2048 responses=2048 ERL=3 conflict_fault=1
+- rtl/test/qwen_kv_die/tb_qkd_astk_native_er.sv:59: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.084 s; speed 55.496 us/s
+- Verilator: cpu 0.084 s on 1 threads; allocated 8 MB
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1000178-1792034159): exit 0

@@ -123,6 +123,8 @@ TILES.update({
     "ot_s81_hc_ctfx_cap": dict(src=_CTH, routed=[{}], mut=("else fv_local <= fv;", "else fv_local <= 0;")),
     "ot_s81_hc_ctfs":     dict(src=_CTH, routed=[{}], mut=("fd_out <= fdm_d;", "fd_out <= fdm_d ^ " + _BIT("FDW", "O_D + 15") + ";")),
     "ot_s81_hc_ctpl":     dict(src=_CTH, routed=[dict(PIN_STAGE=1)], mut=("x_d <= b_d;", "x_d <= b_d ^ 160'h00800000;")),
+    "ot_s81_hc_ctra": dict(src=_CTH, routed=[dict(CHAIN_STEP=6, READ_STAGE=1)], mut=("assign rq_q_c1 = rq_q;", "assign rq_q_c1 = rq_q ^ " + _BIT("16*S_RT", "5") + ";")),
+    "ot_s81_hc_ctrb": dict(src=_CTH, routed=[dict(CHAIN_STEP=6, READ_STAGE=1)], mut=("assign rdm = rdm_w[RDW-1 -: 512 * SH];", "assign rdm = rdm_w[RDW-1 -: 512 * SH] ^ " + _BIT("512 * SH", "15") + ";")),
     "ot_s81_hc_ctrn":     dict(src=_CTH, routed=[{}], mut=("rd_out <= rd_out_d;", "rd_out <= rd_out_d ^ " + _BIT("RDW", "123") + ";")),
     "ot_s81_hc_crootr_t": dict(src=_CR, routed=[dict(C=0), dict(C=2)], mut=("s_ex <= ex_r;", "s_ex <= ex_r ^ 32'h00800000;")),
     "ot_s81_hc_crootr_f": dict(src=_CR, routed=[dict(C=0), dict(C=2)], mut=(".D(RF)) u_rfd", ".D(RF - 1)) u_rfd")),

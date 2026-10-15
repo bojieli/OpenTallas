@@ -1,0 +1,342 @@
+{
+  "schema": "ot.qwen.static_io.endpoint_request.v1",
+  "status": "SOURCE_BACKED_CDC_AND_CODEC_ROLE_MAP; collective static successor ports and absolute die sites pending",
+  "cdc_parent": "qfd_io_xfifo_static",
+  "no_monolithic_outline": true,
+  "channels": [
+    {
+      "channel": "up",
+      "width": 546,
+      "cdc_instance": "u_up",
+      "cdc_master": "qfd_static_ch546",
+      "parent_input_data": "up_i_data",
+      "parent_input_observed_valid": "up_i_valid",
+      "parent_output_data": "up_o_data",
+      "parent_output_observed_valid": "up_o_valid",
+      "codec_endpoint": {
+        "instance_role": "io_ucie",
+        "master": "qfd_io_ucie_static",
+        "word_port": "p_wr_word",
+        "observed_valid_port": "p_wr_observed_v",
+        "word_width": 546
+      },
+      "codec_side": "consumer",
+      "collective_side": "producer",
+      "collective_boundary_reference": {
+        "master": "qfd_io_collective",
+        "word_port": "up_rec",
+        "slice": [
+          545,
+          0
+        ],
+        "valid_port": "up_valid",
+        "valid_bit": null,
+        "status": "EXISTING_CREDIT_MASTER_REFERENCE_ONLY; static successor and producer calendar pending"
+      }
+    },
+    {
+      "channel": "dp",
+      "width": 546,
+      "cdc_instance": "u_dp",
+      "cdc_master": "qfd_static_ch546",
+      "parent_input_data": "dp_i_data",
+      "parent_input_observed_valid": "dp_i_valid",
+      "parent_output_data": "dp_o_data",
+      "parent_output_observed_valid": "dp_o_valid",
+      "codec_endpoint": {
+        "instance_role": "io_ucie",
+        "master": "qfd_io_ucie_static",
+        "word_port": "p_rx_word",
+        "observed_valid_port": "p_rx_v",
+        "word_width": 546
+      },
+      "codec_side": "producer",
+      "collective_side": "consumer",
+      "collective_boundary_reference": {
+        "master": "qfd_io_collective",
+        "word_port": "dp_rec",
+        "slice": [
+          545,
+          0
+        ],
+        "valid_port": "dp_valid",
+        "valid_bit": null,
+        "status": "EXISTING_CREDIT_MASTER_REFERENCE_ONLY; static successor and producer calendar pending"
+      }
+    },
+    {
+      "channel": "ur",
+      "width": 514,
+      "cdc_instance": "u_ur",
+      "cdc_master": "qfd_static_ch546",
+      "parent_input_data": "ur_i_data",
+      "parent_input_observed_valid": "ur_i_valid",
+      "parent_output_data": "ur_o_data",
+      "parent_output_observed_valid": "ur_o_valid",
+      "codec_endpoint": {
+        "instance_role": "io_ucie",
+        "master": "qfd_io_ucie_static",
+        "word_port": "r_wr_word",
+        "observed_valid_port": "r_wr_observed_v",
+        "word_width": 514
+      },
+      "codec_side": "consumer",
+      "collective_side": "producer",
+      "collective_boundary_reference": {
+        "master": "qfd_io_collective",
+        "word_port": "ur_rec",
+        "slice": [
+          513,
+          0
+        ],
+        "valid_port": "ur_valid",
+        "valid_bit": null,
+        "status": "EXISTING_CREDIT_MASTER_REFERENCE_ONLY; static successor and producer calendar pending"
+      }
+    },
+    {
+      "channel": "dr",
+      "width": 514,
+      "cdc_instance": "u_dr",
+      "cdc_master": "qfd_static_ch546",
+      "parent_input_data": "dr_i_data",
+      "parent_input_observed_valid": "dr_i_valid",
+      "parent_output_data": "dr_o_data",
+      "parent_output_observed_valid": "dr_o_valid",
+      "codec_endpoint": {
+        "instance_role": "io_ucie",
+        "master": "qfd_io_ucie_static",
+        "word_port": "r_rx_word",
+        "observed_valid_port": "r_rx_v",
+        "word_width": 514
+      },
+      "codec_side": "producer",
+      "collective_side": "consumer",
+      "collective_boundary_reference": {
+        "master": "qfd_io_collective",
+        "word_port": "dr_rec",
+        "slice": [
+          513,
+          0
+        ],
+        "valid_port": "dr_valid",
+        "valid_bit": null,
+        "status": "EXISTING_CREDIT_MASTER_REFERENCE_ONLY; static successor and producer calendar pending"
+      }
+    },
+    {
+      "channel": "sx0",
+      "width": 546,
+      "cdc_instance": "u_sx0",
+      "cdc_master": "qfd_static_ch546",
+      "parent_input_data": "sx0_i_data",
+      "parent_input_observed_valid": "sx0_i_valid",
+      "parent_output_data": "sx0_o_data",
+      "parent_output_observed_valid": "sx0_o_valid",
+      "codec_endpoint": {
+        "instance_role": "io_serdes",
+        "master": "qfd_io_serdes_static",
+        "word_port": "wr_word",
+        "observed_valid_port": "wr_observed_v",
+        "word_width": 546
+      },
+      "codec_side": "consumer",
+      "collective_side": "producer",
+      "collective_boundary_reference": {
+        "master": "qfd_io_collective",
+        "word_port": "sx_rec",
+        "slice": [
+          545,
+          0
+        ],
+        "valid_port": "sx_valid",
+        "valid_bit": 0,
+        "status": "EXISTING_CREDIT_MASTER_REFERENCE_ONLY; static successor and producer calendar pending"
+      }
+    },
+    {
+      "channel": "sx1",
+      "width": 546,
+      "cdc_instance": "u_sx1",
+      "cdc_master": "qfd_static_ch546",
+      "parent_input_data": "sx1_i_data",
+      "parent_input_observed_valid": "sx1_i_valid",
+      "parent_output_data": "sx1_o_data",
+      "parent_output_observed_valid": "sx1_o_valid",
+      "codec_endpoint": {
+        "instance_role": "io_serdes_1",
+        "master": "qfd_io_serdes_static",
+        "word_port": "wr_word",
+        "observed_valid_port": "wr_observed_v",
+        "word_width": 546
+      },
+      "codec_side": "consumer",
+      "collective_side": "producer",
+      "collective_boundary_reference": {
+        "master": "qfd_io_collective",
+        "word_port": "sx_rec",
+        "slice": [
+          1091,
+          546
+        ],
+        "valid_port": "sx_valid",
+        "valid_bit": 1,
+        "status": "EXISTING_CREDIT_MASTER_REFERENCE_ONLY; static successor and producer calendar pending"
+      }
+    },
+    {
+      "channel": "sx2",
+      "width": 546,
+      "cdc_instance": "u_sx2",
+      "cdc_master": "qfd_static_ch546",
+      "parent_input_data": "sx2_i_data",
+      "parent_input_observed_valid": "sx2_i_valid",
+      "parent_output_data": "sx2_o_data",
+      "parent_output_observed_valid": "sx2_o_valid",
+      "codec_endpoint": {
+        "instance_role": "io_serdes_2",
+        "master": "qfd_io_serdes_static",
+        "word_port": "wr_word",
+        "observed_valid_port": "wr_observed_v",
+        "word_width": 546
+      },
+      "codec_side": "consumer",
+      "collective_side": "producer",
+      "collective_boundary_reference": {
+        "master": "qfd_io_collective",
+        "word_port": "sx_rec",
+        "slice": [
+          1637,
+          1092
+        ],
+        "valid_port": "sx_valid",
+        "valid_bit": 2,
+        "status": "EXISTING_CREDIT_MASTER_REFERENCE_ONLY; static successor and producer calendar pending"
+      }
+    },
+    {
+      "channel": "sr0",
+      "width": 546,
+      "cdc_instance": "u_sr0",
+      "cdc_master": "qfd_static_ch546",
+      "parent_input_data": "sr0_i_data",
+      "parent_input_observed_valid": "sr0_i_valid",
+      "parent_output_data": "sr0_o_data",
+      "parent_output_observed_valid": "sr0_o_valid",
+      "codec_endpoint": {
+        "instance_role": "io_serdes",
+        "master": "qfd_io_serdes_static",
+        "word_port": "rx_word",
+        "observed_valid_port": "rx_v",
+        "word_width": 546
+      },
+      "codec_side": "producer",
+      "collective_side": "consumer",
+      "collective_boundary_reference": {
+        "master": "qfd_io_collective",
+        "word_port": "sr_rec",
+        "slice": [
+          545,
+          0
+        ],
+        "valid_port": "sr_valid",
+        "valid_bit": 0,
+        "status": "EXISTING_CREDIT_MASTER_REFERENCE_ONLY; static successor and producer calendar pending"
+      }
+    },
+    {
+      "channel": "sr1",
+      "width": 546,
+      "cdc_instance": "u_sr1",
+      "cdc_master": "qfd_static_ch546",
+      "parent_input_data": "sr1_i_data",
+      "parent_input_observed_valid": "sr1_i_valid",
+      "parent_output_data": "sr1_o_data",
+      "parent_output_observed_valid": "sr1_o_valid",
+      "codec_endpoint": {
+        "instance_role": "io_serdes_1",
+        "master": "qfd_io_serdes_static",
+        "word_port": "rx_word",
+        "observed_valid_port": "rx_v",
+        "word_width": 546
+      },
+      "codec_side": "producer",
+      "collective_side": "consumer",
+      "collective_boundary_reference": {
+        "master": "qfd_io_collective",
+        "word_port": "sr_rec",
+        "slice": [
+          1091,
+          546
+        ],
+        "valid_port": "sr_valid",
+        "valid_bit": 1,
+        "status": "EXISTING_CREDIT_MASTER_REFERENCE_ONLY; static successor and producer calendar pending"
+      }
+    },
+    {
+      "channel": "sr2",
+      "width": 546,
+      "cdc_instance": "u_sr2",
+      "cdc_master": "qfd_static_ch546",
+      "parent_input_data": "sr2_i_data",
+      "parent_input_observed_valid": "sr2_i_valid",
+      "parent_output_data": "sr2_o_data",
+      "parent_output_observed_valid": "sr2_o_valid",
+      "codec_endpoint": {
+        "instance_role": "io_serdes_2",
+        "master": "qfd_io_serdes_static",
+        "word_port": "rx_word",
+        "observed_valid_port": "rx_v",
+        "word_width": 546
+      },
+      "codec_side": "producer",
+      "collective_side": "consumer",
+      "collective_boundary_reference": {
+        "master": "qfd_io_collective",
+        "word_port": "sr_rec",
+        "slice": [
+          1637,
+          1092
+        ],
+        "valid_port": "sr_valid",
+        "valid_bit": 2,
+        "status": "EXISTING_CREDIT_MASTER_REFERENCE_ONLY; static successor and producer calendar pending"
+      }
+    },
+    {
+      "channel": "seq",
+      "width": 546,
+      "cdc_instance": "u_seq",
+      "cdc_master": "qfd_static_ch546",
+      "parent_input_data": "seq_i_data",
+      "parent_input_observed_valid": "seq_i_valid",
+      "parent_output_data": "seq_o_data",
+      "parent_output_observed_valid": "seq_o_valid",
+      "codec_endpoint": null,
+      "endpoint_status": "Static collective and sequencer producer/consumer master port names pending owning stream; do not tie observed valid to calendar."
+    },
+    {
+      "channel": "cq",
+      "width": 517,
+      "cdc_instance": "u_cq",
+      "cdc_master": "qfd_static_ch546",
+      "parent_input_data": "cq_i_data",
+      "parent_input_observed_valid": "cq_i_valid",
+      "parent_output_data": "cq_o_data",
+      "parent_output_observed_valid": "cq_o_valid",
+      "codec_endpoint": null,
+      "endpoint_status": "Static collective and sequencer producer/consumer master port names pending owning stream; do not tie observed valid to calendar."
+    }
+  ],
+  "fixed_latency": {
+    "cdc_write_commit_wck": 1,
+    "cdc_read_output_rck": 3,
+    "codec_TX": 3,
+    "codec_RX": 1,
+    "codec_TX_physical_qualification": "OPEN",
+    "codec_RX_physical_qualification": "OPEN"
+  },
+  "observed_valid_contract": "CDC i_valid and codec wr_observed_v carry actual selected producer-valid, never the compiled wr_v/slot command. Missing/unknown actual publication at a reserved write causes a sticky fault and never reschedules normal issue. Board/UCIe ABI wired in b4fbf1031 to canonical peer99041b285; codec cause outputs are8bits, missing publication cause0x80.",
+  "calendar": "Compiler reserves commands, phase, SRAM visibility, synchronization, native relays and licensed PHY capacity. No fullshape production calendar qualified."
+}

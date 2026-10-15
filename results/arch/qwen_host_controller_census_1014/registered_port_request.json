@@ -1,0 +1,112 @@
+{
+  "master": "qkd_ctrl_pc_host",
+  "instances_per_die": 128,
+  "source_commit": "2cec08fb0fbcdf25bee4ab77b21d9c89cd83ab2c",
+  "source_sha256": "1817467f76f6be5165d2184cf1346ea5009de371f7a65d81e829746598f3ef75",
+  "source_path": "rtl/qwen_sys/host_20261013/qkd_ctrl_pc_host.sv",
+  "parameters": {
+    "ROW0": 64,
+    "CVL": 2,
+    "HOFF": 3,
+    "WDONE": 17,
+    "LATE": 4096,
+    "EVMUT": 0,
+    "MUT": 0
+  },
+  "generic_Q_bits": 12719,
+  "generic_clock_trees": {
+    "pll_hbm": 9780,
+    "ck": 2939
+  },
+  "clock_contract": {
+    "ck": "CORE833 family; actual clock entry and insertion unassigned",
+    "pll_hbm": "HBM600 MHz family; actual entry and insertion unassigned",
+    "crossings": "Real internal async FIFOs and static completion observer; do not collapse domains"
+  },
+  "ports": {
+    "pll_hbm": {
+      "direction": "input",
+      "width": 1
+    },
+    "hrst": {
+      "direction": "input",
+      "width": 1
+    },
+    "ck": {
+      "direction": "input",
+      "width": 1
+    },
+    "rsi": {
+      "direction": "input",
+      "width": 1
+    },
+    "pc": {
+      "direction": "input",
+      "width": 5
+    },
+    "ci": {
+      "direction": "input",
+      "width": 319
+    },
+    "co": {
+      "direction": "output",
+      "width": 294
+    },
+    "es": {
+      "direction": "input",
+      "width": 288
+    },
+    "er": {
+      "direction": "output",
+      "width": 261
+    },
+    "po": {
+      "direction": "output",
+      "width": 328
+    },
+    "pi": {
+      "direction": "input",
+      "width": 289
+    },
+    "ki": {
+      "direction": "input",
+      "width": 33
+    },
+    "ko": {
+      "direction": "output",
+      "width": 33
+    },
+    "fi": {
+      "direction": "input",
+      "width": 1
+    },
+    "fo": {
+      "direction": "output",
+      "width": 1
+    },
+    "completion_v": {
+      "direction": "output",
+      "width": 1
+    },
+    "completion_we": {
+      "direction": "output",
+      "width": 1
+    },
+    "completion_fault": {
+      "direction": "output",
+      "width": 1
+    }
+  },
+  "physical_pin_assignment": "UNASSIGNED",
+  "outline": "UNMEASURED_VARIANT_NO_OLD_CONTROLLER_FIT_ALIAS",
+  "normalized_per_pin_budgets": "NO_CURRENT_LIBERTY_VIEW",
+  "output_registration_exception": {
+    "co[0]": "three generic combinational cells from pll_hbm state; actual launch cost unmeasured"
+  },
+  "real_completion": "completion_v/completion_we/completion_fault originate actual WDONE17 static observer and ordered async event FIFO on ck",
+  "old_outline_request_um": [
+    246.24,
+    172.8
+  ],
+  "old_outline_status": "UNVERIFIED_DO_NOT_BIND_AS_CURRENT_VIEW"
+}

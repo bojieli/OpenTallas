@@ -1,0 +1,14 @@
+ot-run: ot-epyc1tb     admits   463 GB (avail 690, growth 68, headroom 64, waiters 0/0 GB) load 113/128 running 19 disk 855 GB 
+ot-run: ot-epyc4       admits   223 GB (avail 458, growth 187, headroom 48, waiters 0/0 GB) load 81/128 running 21 disk 689 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/kvsys-epoch-pinfix-1014
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/kvsys-epoch-pinfix-1014
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-48693-1792030464 after 0 s
+MISMATCH fault chain set
+LAND_COST cycles 9611 epoch 1 KD 12 KL 12
+FAIL qkd_land_rd gm=4 pm=0: 1 mismatches
+- rtl/test/qwen_split/tb_qkd_land_rd_kd.sv:153: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.021 s; speed 378.113 us/s
+- Verilator: cpu 0.021 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-48693-1792030464): exit 1

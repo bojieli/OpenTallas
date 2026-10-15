@@ -21,6 +21,9 @@ module ot_qkvd_kv_merge #(
     parameter integer PD  = DQ,                // queued requests / pending tags per engine: >= DQ (qwen-1010/b 2026-10-10:
                                                // was a fixed 64 -- DQ 96 / 128 overran the pending-tag queue
                                                // silently and merged the wrong rows; now derived and checked)
+    parameter integer RH  = 0,                 // 1: both queues read from a head register (ot_qkvd_fifo RH 1, cycle-identical):
+                                               // removes the PD:1 head mux from rp -> head_last / go -> pop and ph -> the
+                                               // 1024-bit response select (qkd_land_grp_epoch ep2 gate TT -37.4 at PD 128)
     parameter integer MUT = 0
 ) (
     input  wire              clk,
@@ -91,7 +94,7 @@ module ot_qkvd_kv_merge #(
         wire        qe, qf;
         wire        head_last = ({1'b0, qh[12:0]} == tn);
         wire        go = !qe && (!head_last || row_ok[qh[14:13]] || MUT == 2);
-        ot_qkvd_fifo #(.W(15), .D(PD)) u_q (.clk(clk), .rst_n(rst_n), .push(rq_v), .din(rq_d), .pop(go), .dout(qh),
+        ot_qkvd_fifo #(.W(15), .D(PD), .RH(RH)) u_q (.clk(clk), .rst_n(rst_n), .push(rq_v), .din(rq_d), .pop(go), .dout(qh),
             .empty(qe), .full(qf), .count());
         always @(posedge clk) if (go) begin h_req_v[e] <= qh[14]; h_req_g[e] <= qh[13]; h_req_t[13*e +: 13] <= qh[12:0]; end
         always @(posedge clk or negedge rst_n) if (!rst_n) h_req_valid[e] <= 1'b0; else h_req_valid[e] <= go;
@@ -102,7 +105,7 @@ module ot_qkvd_kv_merge #(
         always @(posedge clk or negedge rst_n) if (!rst_n) hv <= 1'b0; else hv <= h_rsp_valid[e];
         wire [2:0] ph;
         wire pe, pf;
-        ot_qkvd_fifo #(.W(3), .D(PD)) u_p (.clk(clk), .rst_n(rst_n), .push(go), .din({head_last, qh[14:13]}),
+        ot_qkvd_fifo #(.W(3), .D(PD), .RH(RH)) u_p (.clk(clk), .rst_n(rst_n), .push(go), .din({head_last, qh[14:13]}),
             .pop(hv), .dout(ph), .empty(pe), .full(pf), .count());
         always @(posedge clk) if (hv) e_rsp_data[HD*8*e +: HD*8] <= (ph[2] && MUT != 1) ? row[ph[1:0]] : hd;
         always @(posedge clk or negedge rst_n) if (!rst_n) e_rsp_valid[e] <= 1'b0; else e_rsp_valid[e] <= hv;

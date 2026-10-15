@@ -1,0 +1,10 @@
+{
+  "status": "HISTORICAL credit-based P2P; not production static-schedule evidence",
+  "commit": "35ef578ad",
+  "remote": "ot-epyc4:/srv/opentallas-scratch/claude/p2pcoll/g8price-35ef578ad",
+  "grm8": {"group": 8, "n": 5120, "records": 4, "sequence_cycles": 5199, "average_cycles": 1299.75, "exact": true},
+  "ds": {"group": 8, "records": 16, "sequence_cycles": 5412, "exact": true},
+  "immutable_price": {"op": "COLL.GROUP_REDUCE_MCAST", "cycles": 1325.9, "items_bytes": 4096, "source": "results/arch/throughput_budget_20261010/budget.json"},
+  "required_shape_source": "tools/hgi_sim/ds_native.py: all_reduce A n1024 FP32 / O n12288 BF16, G96, subgroup8",
+  "price_qualification": "UNQUALIFIED: diagnostic G8 n5120 differs from actual priced G96 n1024, and the source uses historical runtime credits. Average diagnostic 1299.75/1325.9 is not an accepted ratio. No repricing or cost ledger acceptance."
+}

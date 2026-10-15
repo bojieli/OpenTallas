@@ -1,0 +1,82 @@
+%Warning-MULTIDRIVEN: rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:113:19: Signal has multiple driving blocks with different clocking: 'hfd_serdes487_static_window.u_dec.bcw'
+                      rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:147:17: ... Location of first driving block
+  147 |                 bcw[u] <= sb; bact[u] <= 1'b1; bn[u] <= 6'd0; bL[u] <= 6'd0; bb[u] <= 10'd1; bany[u] <= sany;
+      |                 ^~~
+                      rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:147:17: ... Location of other driving block
+  147 |                 bcw[u] <= sb; bact[u] <= 1'b1; bn[u] <= 6'd0; bL[u] <= 6'd0; bb[u] <= 10'd1; bany[u] <= sany;
+      |                 ^~~
+                      ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.032
+                      ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:121:19: Signal has multiple driving blocks with different clocking: 'hfd_serdes487_static_window.u_dec.bact'
+                      rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:147:31: ... Location of first driving block
+  147 |                 bcw[u] <= sb; bact[u] <= 1'b1; bn[u] <= 6'd0; bL[u] <= 6'd0; bb[u] <= 10'd1; bany[u] <= sany;
+      |                               ^~~~
+                      rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:147:31: ... Location of other driving block
+  147 |                 bcw[u] <= sb; bact[u] <= 1'b1; bn[u] <= 6'd0; bL[u] <= 6'd0; bb[u] <= 10'd1; bany[u] <= sany;
+      |                               ^~~~
+%Warning-MULTIDRIVEN: rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:120:19: Signal has multiple driving blocks with different clocking: 'hfd_serdes487_static_window.u_dec.bn'
+                      rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:147:48: ... Location of first driving block
+  147 |                 bcw[u] <= sb; bact[u] <= 1'b1; bn[u] <= 6'd0; bL[u] <= 6'd0; bb[u] <= 10'd1; bany[u] <= sany;
+      |                                                ^~
+                      rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:147:48: ... Location of other driving block
+  147 |                 bcw[u] <= sb; bact[u] <= 1'b1; bn[u] <= 6'd0; bL[u] <= 6'd0; bb[u] <= 10'd1; bany[u] <= sany;
+      |                                                ^~
+%Warning-MULTIDRIVEN: rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:119:19: Signal has multiple driving blocks with different clocking: 'hfd_serdes487_static_window.u_dec.bL'
+                      rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:147:63: ... Location of first driving block
+  147 |                 bcw[u] <= sb; bact[u] <= 1'b1; bn[u] <= 6'd0; bL[u] <= 6'd0; bb[u] <= 10'd1; bany[u] <= sany;
+      |                                                               ^~
+                      rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:147:63: ... Location of other driving block
+  147 |                 bcw[u] <= sb; bact[u] <= 1'b1; bn[u] <= 6'd0; bL[u] <= 6'd0; bb[u] <= 10'd1; bany[u] <= sany;
+      |                                                               ^~
+%Warning-MULTIDRIVEN: rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:118:19: Signal has multiple driving blocks with different clocking: 'hfd_serdes487_static_window.u_dec.bb'
+                      rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:147:78: ... Location of first driving block
+  147 |                 bcw[u] <= sb; bact[u] <= 1'b1; bn[u] <= 6'd0; bL[u] <= 6'd0; bb[u] <= 10'd1; bany[u] <= sany;
+      |                                                                              ^~
+                      rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:147:78: ... Location of other driving block
+  147 |                 bcw[u] <= sb; bact[u] <= 1'b1; bn[u] <= 6'd0; bL[u] <= 6'd0; bb[u] <= 10'd1; bany[u] <= sany;
+      |                                                                              ^~
+%Warning-MULTIDRIVEN: rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:115:19: Signal has multiple driving blocks with different clocking: 'hfd_serdes487_static_window.u_dec.bC'
+                      rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:150:21: ... Location of first driving block
+  150 |                     bC[u][a] <= (a == 0) ? 10'd1 : 10'd0;
+      |                     ^~
+                      rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:150:21: ... Location of other driving block
+  150 |                     bC[u][a] <= (a == 0) ? 10'd1 : 10'd0;
+      |                     ^~
+%Warning-MULTIDRIVEN: rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:116:19: Signal has multiple driving blocks with different clocking: 'hfd_serdes487_static_window.u_dec.bB'
+                      rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:151:21: ... Location of first driving block
+  151 |                     bB[u][a] <= (a == 1) ? 10'd1 : 10'd0;        
+      |                     ^~
+                      rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:151:21: ... Location of other driving block
+  151 |                     bB[u][a] <= (a == 1) ? 10'd1 : 10'd0;        
+      |                     ^~
+%Warning-MULTIDRIVEN: rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:117:19: Signal has multiple driving blocks with different clocking: 'hfd_serdes487_static_window.u_dec.bW'
+                      rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:152:21: ... Location of first driving block
+  152 |                     bW[u][a] <= (a == 0) ? nS[0] : 10'd0;
+      |                     ^~
+                      rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:152:21: ... Location of other driving block
+  152 |                     bW[u][a] <= (a == 0) ? nS[0] : 10'd0;
+      |                     ^~
+%Warning-MULTIDRIVEN: rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:123:19: Signal has multiple driving blocks with different clocking: 'hfd_serdes487_static_window.u_dec.bO'
+                      rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:174:48: ... Location of first driving block
+  174 |                 for (a = 0; a < NT; a = a + 1) bO[u][a] <= oc_[a];    
+      |                                                ^~
+                      rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:174:48: ... Location of other driving block
+  174 |                 for (a = 0; a < NT; a = a + 1) bO[u][a] <= oc_[a];    
+      |                                                ^~
+%Warning-MULTIDRIVEN: rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:122:19: Signal has multiple driving blocks with different clocking: 'hfd_serdes487_static_window.u_dec.bany'
+                      rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:147:94: ... Location of first driving block
+  147 |                 bcw[u] <= sb; bact[u] <= 1'b1; bn[u] <= 6'd0; bL[u] <= 6'd0; bb[u] <= 10'd1; bany[u] <= sany;
+      |                                                                                              ^~~~
+                      rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:147:94: ... Location of other driving block
+  147 |                 bcw[u] <= sb; bact[u] <= 1'b1; bn[u] <= 6'd0; bL[u] <= 6'd0; bb[u] <= 10'd1; bany[u] <= sany;
+      |                                                                                              ^~~~
+%Warning-MULTIDRIVEN: rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:114:19: Signal has multiple driving blocks with different clocking: 'hfd_serdes487_static_window.u_dec.bS'
+                      rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:148:48: ... Location of first driving block
+  148 |                 for (a = 0; a < NT; a = a + 1) bS[u][a] <= nS[a];
+      |                                                ^~
+                      rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv:148:48: ... Location of other driving block
+  148 |                 for (a = 0; a < NT; a = a + 1) bS[u][a] <= nS[a];
+      |                                                ^~
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 0.848 MB sources in 13 modules, into 37.764 MB in 53 C++ files needing 0.000 MB
+- Verilator: Walltime 4.613 s (elab=0.014, cvt=3.912, bld=0.000); cpu 4.612 s on 1 threads; alloced 323.941 MB

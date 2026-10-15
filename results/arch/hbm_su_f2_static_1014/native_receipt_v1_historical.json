@@ -1,0 +1,50 @@
+{
+  "bank_source_commit": "0334452c354ae46f8ed1671753f98f8579742711",
+  "source_sha256": {
+    "ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "ot_hbm_su_f2_static_link.sv": "7f07df561f7f7c710748f07dfafad0f179eac02323b289b4f48e4e70c9f0520c",
+    "tb_hbm_su_f2_native_banks.sv": "1da0604e2942355a50d26e1f61e384b8805ebeb4ef52b6f900dd11e7a6a66a92",
+    "ot_vms_bank_static.sv": "7828d619da2fd2462cf0253b78c074dad1171e6ca77799bfc21f22987ed72237"
+  },
+  "command": "iverilog -g2012 -s tb_hbm_su_f2_native_banks -o exact ot_hbm_su_f2_static_link.sv tb_hbm_su_f2_native_banks.sv ot_vms_bank_static.sv ot_sram_1r1w_1024x256_m2_r2c2.v && vvp exact",
+  "host": "ot-epyc1tb",
+  "unit": "oth-ubuntu-197628-1792045845",
+  "exit": 0,
+  "shape": {
+    "quarters": 4,
+    "banks": 32,
+    "rows": 512,
+    "words": 131072,
+    "macros": 96,
+    "RG": [
+      3,
+      3,
+      5,
+      5
+    ],
+    "WG": [
+      1,
+      1,
+      3,
+      3
+    ],
+    "slot": 0
+  },
+  "read_latency": "bank sample n0->registered output n6->link captured n7",
+  "status": "real SRAM/ECC native port proof, not full SU.VOP qualification",
+  "source_commits": {
+    "ot_vms_bank_static.sv": "0334452c354ae46f8ed1671753f98f8579742711",
+    "ot_hbm_su_f2_static_link.sv": "9c33e47d6",
+    "tb_hbm_su_f2_native_banks.sv": "companion file in this receipt commit; exact sha256 above",
+    "ot_sram_1r1w_1024x256_m2_r2c2.v": "source manifest hash is authoritative"
+  },
+  "mutant": {
+    "name": "route lane b to bank (b+1)%8",
+    "command": "iverilog -g2012 -s tb_hbm_su_f2_native_banks -Ptb_hbm_su_f2_native_banks.MUT_ROUTE=1 -o route_mutant ot_hbm_su_f2_static_link.sv tb_hbm_su_f2_native_banks.sv ot_vms_bank_static.sv ot_sram_1r1w_1024x256_m2_r2c2.v && vvp route_mutant",
+    "unit": "oth-ubuntu-213702-1792045930",
+    "observed": "F2_NATIVE FAIL checks=16384 errors=1; every actual bank sticky fault asserted on wrongbank owner",
+    "raw_sim_exit": 1,
+    "wrapper_expected_fail_exit": 0,
+    "log": "native_route_mutant.log"
+  }
+}

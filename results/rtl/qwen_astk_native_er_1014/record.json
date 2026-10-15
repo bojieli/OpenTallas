@@ -1,0 +1,29 @@
+{
+  "schema": "opentallas.qwen-native-astk-er-proof.v1",
+  "status": "MAPPED_EP_MEMORY_COMPONENT_PASS_FULL_NATIVE_PROFILE_UNQUALIFIED",
+  "source_snapshot": "ot-epyc1tb:/srv/opentallas-scratch/codex/astk-er-1014",
+  "component": "qkd_astk_native_er_service +8 actual qkd_astk_ep and actual SRAM model modules",
+  "tests": {
+    "positive": "PASS2048consecutivee-quadreads,256serialized512bitrowwrites,all8owners/all16k/all16gam/all8j,ERL3",
+    "route_mutant": "EXPECTED FAIL1920errors",
+    "tag_mutant": "EXPECTED FAIL255errors",
+    "latency_mutant": "EXPECTED FAIL2048errors",
+    "legacy_read_conflict": "PASS stickyfault1; no dynamic arbitration or waiting"
+  },
+  "ABI": {
+    "request": "read_addr11={k4,gam4,j3};nativeg=0",
+    "owner": "read_addr[5:3]",
+    "EP_so": "low13={g0,read_addr11,valid};upper412unchanged",
+    "EP_si": "e64=data[632:569]",
+    "response": "fixed3edges,requesttagcarried; no ready/credit"
+  },
+  "limits": [
+    "Only actual e-row memory/read service exercised here; score macros are instantiated in EP source but this test does not validate score SRAM/EXP/Z.",
+    "EP math and unused lane/node interfaces quiescent fixture, not full native pipeline.",
+    "No ideal score/e multiport arrays in DUT; SRAM behavior supplied by actual generated1r1w macro models.",
+    "All normalized clocks common; native110/86 root phi-R/hops unqualified.",
+    "Full selected profile must remove64oldPV leaves and use actual46nonPV roots plus newnativePV/head roots.",
+    "Fresh staticEP/CTL source/profile still in integration; EP ks4 has noCLOSEDview.",
+    "No throughput or full-token claim."
+  ]
+}

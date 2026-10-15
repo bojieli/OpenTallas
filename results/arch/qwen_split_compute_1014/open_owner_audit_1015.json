@@ -1,0 +1,548 @@
+{
+  "schema": "opentallas.qwen.compute-open-owner-audit.v1",
+  "scope": "Authoritative actual956 compute integration plus all40 nonclosed/nonsuperseded Qwen rows from the stated frozen global snapshot. Not an assertion that old membership or counts are current. No CLOSED reclassification.",
+  "ledger_snapshot": "/home/ubuntu/claude-takeover-20261007/element-current-raw-1015.json",
+  "ledger_sha256": "650a0d7bb528a06b7c5ceded996ecb17d8976a8fe47ce2cb50f9cc6fa0c8aa90",
+  "ledger_generated_at": 1792051955.7730045,
+  "legacy_open_rows": 40,
+  "legacy_rows": [
+    {
+      "element": "qfd_tile",
+      "ledger_category": "revoked (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Claude:qwen-1010",
+      "current_owner": "/root/q_elements",
+      "coverage": "ACTIVE_SUCCESSOR_WORK_CONFIRMED_MEMBERSHIP_PENDING_FOR_OLD_NAME",
+      "concrete_work_or_prerequisite": "Actual TX198/58bank84root fulltile source/parent proof and current BAND remeasurement; actual geometry/pins/clock admission still required",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "ot_coll_tp8_die",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Claude:el1011-qwen-tp8-coll",
+      "current_owner": "/root/q_collective",
+      "coverage": "SOURCE_OWNER_CONFIRMED_PHYSICAL_END_TO_END_ACTION_NOT_YET_CONFIRMED",
+      "concrete_work_or_prerequisite": "Actual production108 IO source/proof published; new gearbox5root native physical leaf views/PLL/phase/homes still OPEN",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "ot_qfd_band_lanes",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Claude:el1011-reroute-m5",
+      "current_owner": "/root/q_elements",
+      "coverage": "ACTIVE_SUCCESSOR_WORK_CONFIRMED_MEMBERSHIP_PENDING_FOR_OLD_NAME",
+      "concrete_work_or_prerequisite": "Actual TX198/58bank84root fulltile source/parent proof and current BAND remeasurement; actual geometry/pins/clock admission still required",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "ot_qfd_vm_bay_pad15s0",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Claude:qwen_tp8_vm4",
+      "current_owner": "/root/q_vm_physical",
+      "coverage": "ACTIVE_SUCCESSOR_WORK_CONFIRMED",
+      "concrete_work_or_prerequisite": "Selected actual VM488 per-module native audits; reuse CLOSED views, partition residual dispatcher/6144FF return",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "ot_qfd_xs_leaf",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Codex:el1014-qwen-dvm-build",
+      "current_owner": "/root/q_dvm",
+      "coverage": "ACTIVE_SUCCESSOR_WORK_CONFIRMED",
+      "concrete_work_or_prerequisite": "Actual external WDcapture source/native gate, preserve edge1 capture/edge2 store/forward; geometry must assign two514b homes perleaf",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "ot_qkh_head_front_native",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Codex:coordinator-kvsys-1014-pm",
+      "current_owner": null,
+      "coverage": "MEMBERSHIP_AND_END_TO_END_OWNER_UNCONFIRMED",
+      "concrete_work_or_prerequisite": "Needs selected-source membership/successor proof and explicit active KV/attention/HOST physical owner; a historical charter is not coverage.",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "ot_qkvd_kv_end",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Claude:qwen-1010",
+      "current_owner": null,
+      "coverage": "MEMBERSHIP_AND_END_TO_END_OWNER_UNCONFIRMED",
+      "concrete_work_or_prerequisite": "Needs selected-source membership/successor proof and explicit active KV/attention/HOST physical owner; a historical charter is not coverage.",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "ot_qwen_nearhbm_attn_hub_p",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Claude:qwen-1010",
+      "current_owner": null,
+      "coverage": "MEMBERSHIP_AND_END_TO_END_OWNER_UNCONFIRMED",
+      "concrete_work_or_prerequisite": "Needs selected-source membership/successor proof and explicit active KV/attention/HOST physical owner; a historical charter is not coverage.",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "ot_qwen_nearhbm_attn_hub_t",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Claude:el1013-qwen-stalls",
+      "current_owner": null,
+      "coverage": "MEMBERSHIP_AND_END_TO_END_OWNER_UNCONFIRMED",
+      "concrete_work_or_prerequisite": "Needs selected-source membership/successor proof and explicit active KV/attention/HOST physical owner; a historical charter is not coverage.",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "ot_qwen_nearhbm_head_h",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Claude:qwen-1010",
+      "current_owner": null,
+      "coverage": "MEMBERSHIP_AND_END_TO_END_OWNER_UNCONFIRMED",
+      "concrete_work_or_prerequisite": "Needs selected-source membership/successor proof and explicit active KV/attention/HOST physical owner; a historical charter is not coverage.",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "ot_qwen_rom_tile_die",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Codex:qwen_tile",
+      "current_owner": "/root/q_elements",
+      "coverage": "ACTIVE_SUCCESSOR_WORK_CONFIRMED_MEMBERSHIP_PENDING_FOR_OLD_NAME",
+      "concrete_work_or_prerequisite": "Actual TX198/58bank84root fulltile source/parent proof and current BAND remeasurement; actual geometry/pins/clock admission still required",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "ot_qwen_rom_tile_nk",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Claude:q18-tile",
+      "current_owner": "/root/q_elements",
+      "coverage": "ACTIVE_SUCCESSOR_WORK_CONFIRMED_MEMBERSHIP_PENDING_FOR_OLD_NAME",
+      "concrete_work_or_prerequisite": "Actual TX198/58bank84root fulltile source/parent proof and current BAND remeasurement; actual geometry/pins/clock admission still required",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "ot_qwen_slab_port_group",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Claude:el1013-qwen-small-masters r3b",
+      "current_owner": "/root/q_elements",
+      "coverage": "ACTIVE_SUCCESSOR_WORK_CONFIRMED_MEMBERSHIP_PENDING_FOR_OLD_NAME",
+      "concrete_work_or_prerequisite": "Actual TX198/58bank84root fulltile source/parent proof and current BAND remeasurement; actual geometry/pins/clock admission still required",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "ot_qwen_tile_kvl",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Claude:q13-tile-kvl",
+      "current_owner": "/root/q_elements",
+      "coverage": "ACTIVE_SUCCESSOR_WORK_CONFIRMED_MEMBERSHIP_PENDING_FOR_OLD_NAME",
+      "concrete_work_or_prerequisite": "Actual TX198/58bank84root fulltile source/parent proof and current BAND remeasurement; actual geometry/pins/clock admission still required",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "ot_qwen_tile_lsl",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": true,
+      "historical_owner": "Claude:el1011-reroute-m5",
+      "current_owner": "/root/q_elements",
+      "coverage": "ACTIVE_SUCCESSOR_WORK_CONFIRMED_MEMBERSHIP_PENDING_FOR_OLD_NAME",
+      "concrete_work_or_prerequisite": "Actual TX198/58bank84root fulltile source/parent proof and current BAND remeasurement; actual geometry/pins/clock admission still required",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "ot_rom_oneshot_die_m",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Claude:el1011-qwen-tp8-coll",
+      "current_owner": null,
+      "coverage": "MEMBERSHIP_AND_END_TO_END_OWNER_UNCONFIRMED",
+      "concrete_work_or_prerequisite": "Needs selected-source membership/successor proof and explicit active KV/attention/HOST physical owner; a historical charter is not coverage.",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "qfd_coll_xfifo_native",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Codex:qwen_small/io",
+      "current_owner": "/root/q_collective",
+      "coverage": "SOURCE_OWNER_CONFIRMED_PHYSICAL_END_TO_END_ACTION_NOT_YET_CONFIRMED",
+      "concrete_work_or_prerequisite": "Actual production108 IO source/proof published; new gearbox5root native physical leaf views/PLL/phase/homes still OPEN",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "qfd_io_collective",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": true,
+      "historical_owner": "Claude:qwen-1010",
+      "current_owner": "/root/q_collective",
+      "coverage": "SOURCE_OWNER_CONFIRMED_PHYSICAL_END_TO_END_ACTION_NOT_YET_CONFIRMED",
+      "concrete_work_or_prerequisite": "Actual production108 IO source/proof published; new gearbox5root native physical leaf views/PLL/phase/homes still OPEN",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "qfd_kv_row",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Claude:qwen-1010",
+      "current_owner": null,
+      "coverage": "MEMBERSHIP_AND_END_TO_END_OWNER_UNCONFIRMED",
+      "concrete_work_or_prerequisite": "Needs selected-source membership/successor proof and explicit active KV/attention/HOST physical owner; a historical charter is not coverage.",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "qfd_link_adp512",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Claude:el1013-qwen-small-masters",
+      "current_owner": "/root/q_collective",
+      "coverage": "SOURCE_OWNER_CONFIRMED_PHYSICAL_END_TO_END_ACTION_NOT_YET_CONFIRMED",
+      "concrete_work_or_prerequisite": "Actual production108 IO source/proof published; new gearbox5root native physical leaf views/PLL/phase/homes still OPEN",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "qfd_sp_constants_sequencer_nc",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Claude:sys-takeover",
+      "current_owner": "/root/q_compute_integration",
+      "coverage": "INTEGRATION_OWNER_CONFIRMED_PHYSICAL_ELEMENT_ACTION_NOT_YET_STARTED",
+      "concrete_work_or_prerequisite": "Actual controller/BI/seq native source/pin binding; gateway physical preflight active, remainder physical master jobs queued/unqualified",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "qfd_sp_tree_top_b",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Claude:safe-qwen",
+      "current_owner": "/root/q_elements",
+      "coverage": "ACTIVE_SUCCESSOR_WORK_CONFIRMED_MEMBERSHIP_PENDING_FOR_OLD_NAME",
+      "concrete_work_or_prerequisite": "Actual TX198/58bank84root fulltile source/parent proof and current BAND remeasurement; actual geometry/pins/clock admission still required",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "qfd_sp_vector_memory",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": true,
+      "historical_owner": "Claude:qwen-1010",
+      "current_owner": "/root/q_vm_physical",
+      "coverage": "ACTIVE_SUCCESSOR_WORK_CONFIRMED",
+      "concrete_work_or_prerequisite": "Selected actual VM488 per-module native audits; reuse CLOSED views, partition residual dispatcher/6144FF return",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "qfd_su_cbuf",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Claude:redesign-qwen",
+      "current_owner": "/root/q_compute_integration",
+      "coverage": "INTEGRATION_OWNER_CONFIRMED_PHYSICAL_ELEMENT_ACTION_NOT_YET_STARTED",
+      "concrete_work_or_prerequisite": "Actual controller/BI/seq native source/pin binding; gateway physical preflight active, remainder physical master jobs queued/unqualified",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "qfd_sysctl_sram",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Codex:qwen-system-crom-control",
+      "current_owner": "/root/q_compute_integration",
+      "coverage": "INTEGRATION_OWNER_CONFIRMED_PHYSICAL_ELEMENT_ACTION_NOT_YET_STARTED",
+      "concrete_work_or_prerequisite": "Actual controller/BI/seq native source/pin binding; gateway physical preflight active, remainder physical master jobs queued/unqualified",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "qfd_tile_e",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Claude:qwen-1010",
+      "current_owner": "/root/q_elements",
+      "coverage": "ACTIVE_SUCCESSOR_WORK_CONFIRMED_MEMBERSHIP_PENDING_FOR_OLD_NAME",
+      "concrete_work_or_prerequisite": "Actual TX198/58bank84root fulltile source/parent proof and current BAND remeasurement; actual geometry/pins/clock admission still required",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "qfd_tt_ctl",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Claude:qwen-1010",
+      "current_owner": "/root/q_compute_integration",
+      "coverage": "INTEGRATION_OWNER_CONFIRMED_PHYSICAL_ELEMENT_ACTION_NOT_YET_STARTED",
+      "concrete_work_or_prerequisite": "Actual controller/BI/seq native source/pin binding; gateway physical preflight active, remainder physical master jobs queued/unqualified",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "qfd_tt_ctlm_tree",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Claude:q14-r8-compute",
+      "current_owner": "/root/q_elements",
+      "coverage": "ACTIVE_SUCCESSOR_WORK_CONFIRMED_MEMBERSHIP_PENDING_FOR_OLD_NAME",
+      "concrete_work_or_prerequisite": "Actual TX198/58bank84root fulltile source/parent proof and current BAND remeasurement; actual geometry/pins/clock admission still required",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "qfd_vm_grp",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Claude:el1011-q-sp",
+      "current_owner": "/root/q_vm_physical",
+      "coverage": "ACTIVE_SUCCESSOR_WORK_CONFIRMED",
+      "concrete_work_or_prerequisite": "Selected actual VM488 per-module native audits; reuse CLOSED views, partition residual dispatcher/6144FF return",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "qfd_xhead_e",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Claude:el1014-qwen-dvm-build",
+      "current_owner": "/root/q_dvm",
+      "coverage": "ACTIVE_SUCCESSOR_WORK_CONFIRMED",
+      "concrete_work_or_prerequisite": "Actual external WDcapture source/native gate, preserve edge1 capture/edge2 store/forward; geometry must assign two514b homes perleaf",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "qfd_xhead_w",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Claude:el1014-qwen-dvm-build",
+      "current_owner": "/root/q_dvm",
+      "coverage": "ACTIVE_SUCCESSOR_WORK_CONFIRMED",
+      "concrete_work_or_prerequisite": "Actual external WDcapture source/native gate, preserve edge1 capture/edge2 store/forward; geometry must assign two514b homes perleaf",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "qkd_astk_ep",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Claude:el1014-qwen-kvsys-elements",
+      "current_owner": null,
+      "coverage": "MEMBERSHIP_AND_END_TO_END_OWNER_UNCONFIRMED",
+      "concrete_work_or_prerequisite": "Needs selected-source membership/successor proof and explicit active KV/attention/HOST physical owner; a historical charter is not coverage.",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "qkd_ectl",
+      "ledger_category": "needs redesign (no live job)",
+      "ledger_die_used": true,
+      "historical_owner": "Claude:q13-ectl",
+      "current_owner": null,
+      "coverage": "MEMBERSHIP_AND_END_TO_END_OWNER_UNCONFIRMED",
+      "concrete_work_or_prerequisite": "Needs selected-source membership/successor proof and explicit active KV/attention/HOST physical owner; a historical charter is not coverage.",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "ot_qfd_vm_bay_pad15s0m",
+      "ledger_category": "flow failure (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Claude:qwen_tp8_vm6",
+      "current_owner": "/root/q_vm_physical",
+      "coverage": "ACTIVE_SUCCESSOR_WORK_CONFIRMED",
+      "concrete_work_or_prerequisite": "Selected actual VM488 per-module native audits; reuse CLOSED views, partition residual dispatcher/6144FF return",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "ot_qfd_vm_bay_pad15s0s",
+      "ledger_category": "flow failure (no live job)",
+      "ledger_die_used": false,
+      "historical_owner": "Claude:qwen_tp8_vm6",
+      "current_owner": "/root/q_vm_physical",
+      "coverage": "ACTIVE_SUCCESSOR_WORK_CONFIRMED",
+      "concrete_work_or_prerequisite": "Selected actual VM488 per-module native audits; reuse CLOSED views, partition residual dispatcher/6144FF return",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "qfd_sp_su64_sfu",
+      "ledger_category": "flow failure (no live job)",
+      "ledger_die_used": true,
+      "historical_owner": "Claude:qwen-rtl-finish",
+      "current_owner": "/root/q_native_compute/su_glue_physical",
+      "coverage": "ACTIVE_SUCCESSOR_WORK_CONFIRMED",
+      "concrete_work_or_prerequisite": "Actual347root corrected CPstatus/copy2572FF/native relay1621FF/hold alignment; residual base source/physical closure",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "qfd_tile_nk",
+      "ledger_category": "flow failure (no live job)",
+      "ledger_die_used": true,
+      "historical_owner": "Claude:el1011-q-tile",
+      "current_owner": "/root/q_elements",
+      "coverage": "ACTIVE_SUCCESSOR_WORK_CONFIRMED_MEMBERSHIP_PENDING_FOR_OLD_NAME",
+      "concrete_work_or_prerequisite": "Actual TX198/58bank84root fulltile source/parent proof and current BAND remeasurement; actual geometry/pins/clock admission still required",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "ot_qfd_vm_grp",
+      "ledger_category": "cancelled only",
+      "ledger_die_used": false,
+      "historical_owner": "Claude:el1011-q-sp",
+      "current_owner": "/root/q_vm_physical",
+      "coverage": "ACTIVE_SUCCESSOR_WORK_CONFIRMED",
+      "concrete_work_or_prerequisite": "Selected actual VM488 per-module native audits; reuse CLOSED views, partition residual dispatcher/6144FF return",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "qfd_sp_tree_top_b_f1a",
+      "ledger_category": "cancelled only",
+      "ledger_die_used": false,
+      "historical_owner": "Claude:kv-die",
+      "current_owner": "/root/q_elements",
+      "coverage": "ACTIVE_SUCCESSOR_WORK_CONFIRMED_MEMBERSHIP_PENDING_FOR_OLD_NAME",
+      "concrete_work_or_prerequisite": "Actual TX198/58bank84root fulltile source/parent proof and current BAND remeasurement; actual geometry/pins/clock admission still required",
+      "closure_not_inherited": true
+    },
+    {
+      "element": "qfd_sp_tree_top_b_f1b",
+      "ledger_category": "cancelled only",
+      "ledger_die_used": false,
+      "historical_owner": "Claude:kv-die",
+      "current_owner": "/root/q_elements",
+      "coverage": "ACTIVE_SUCCESSOR_WORK_CONFIRMED_MEMBERSHIP_PENDING_FOR_OLD_NAME",
+      "concrete_work_or_prerequisite": "Actual TX198/58bank84root fulltile source/parent proof and current BAND remeasurement; actual geometry/pins/clock admission still required",
+      "closure_not_inherited": true
+    }
+  ],
+  "current_integration_work": [
+    {
+      "element": "actual qfd_tt_ctlm_static_s 50port master",
+      "owner": "/root/q_compute_integration",
+      "state": "OPEN_PHYSICAL",
+      "evidence": "TT6fd2 actual source and assigned-pin graph;956 fullhier PASS",
+      "next": "Actual source-equivalent physical controller/clock/pin kit; external rf/f0/uf actual tile producers and KV visibility/fabric faults unbound"
+    },
+    {
+      "element": "actual seq/CBUF/source programme boundary",
+      "owner": "/root/q_control_host",
+      "state": "ACTIVE_SOURCE_PROOF_PHYSICAL_GAP",
+      "evidence": "BI f8c409, source programme activity/gateway extraction d8f/1680",
+      "next": "q_compute owns separate gateway clock/flattened pins; source-equivalent BI/CBUF physical masters remain required"
+    },
+    {
+      "element": "actual A operand gateway",
+      "owner": "/root/q_compute_integration",
+      "state": "TERMINAL_PHYSICAL_DIAGNOSTIC_FAILED_STRUCTURAL_REDESIGN_ACTIVE",
+      "evidence": "b26 exact source/kit; terminal CTS gate FAIL 2026-10-15T04:17:53-0700, TT in/out WNS -1527.5ps; native_cts terminal receipt",
+      "next": "q_control source proof of unused VM passthrough/compiler aligned index and existing embedding-stage retiming; q_compute owns revised physical cut/clock/pin integration"
+    },
+    {
+      "element": "actual SU347 parents/base/copy/relay/alignment",
+      "owner": "/root/q_native_compute/su_glue_physical",
+      "state": "ACTIVE",
+      "evidence": "79cf actualsource;measured relay/alignment/copy views reported",
+      "next": "Residual base physical master and exact per-child source/view/pin/phase adoption; no parent-container credit"
+    },
+    {
+      "element": "actual VM488 leafs/main residual",
+      "owner": "/root/q_vm_physical",
+      "state": "ACTIVE",
+      "evidence": "VM map3eb;selected96f;actualbank CLOSED reuse/native audit",
+      "next": "Per-module current view native audits; main descriptor/rotate/6144FF residual partition"
+    },
+    {
+      "element": "actual collective108/new5gearbox roots",
+      "owner": "/root/q_collective",
+      "state": "SOURCE_PROOF_DONE_PHYSICAL_ACTION_UNCONFIRMED",
+      "evidence": "a7faf production24cases/all6FDIphase,956fullhierPASS",
+      "next": "Five actual gearbox physical leaf masters/native roots,1GHz/1.2GHz PLL phase and legal boundary homes"
+    },
+    {
+      "element": "actual native59 six roots/context/format/record/Qtag/X3/service",
+      "owner": null,
+      "state": "ORPHAN_PHYSICAL_END_TO_END",
+      "evidence": "575 registered return/source gates,956fullhierPASS;old q_native_compute absent from active tree",
+      "next": "Assign actual source/native leaf partition and physical closure owner; KVtransport/HOST/context/calendar inputs remain unbound"
+    },
+    {
+      "element": "actual embedding core provider/store/preload",
+      "owner": null,
+      "state": "ORPHAN_PHYSICAL_END_TO_END",
+      "evidence": "96f/provider a90c/storedf2b source proof and956fullhierPASS",
+      "next": "Assign actual provider/macro/clock/pin physical master and HBM return/fill/calendar producer integration owner"
+    },
+    {
+      "element": "external HOST/D2D programme and reset/clock/fabric parent",
+      "owner": "/root/q_compute_integration",
+      "state": "INTEGRATION_OWNED_UPSTREAM_HARDWARE_OWNER_UNCONFIRMED",
+      "evidence": "87functional source declarations remain explicit, no tied producers",
+      "next": "Actual HOST/D2D physical owner/prerequisite; real source producer/fault aggregation/calendar/clock/reset binding"
+    },
+    {
+      "element": "external KV visibility kok/kwd and attention/native transport",
+      "owner": null,
+      "state": "ORPHAN_OR_UNCONFIRMED_ACTIVE_OWNER",
+      "evidence": "Cannot derive remote KV visibility from local attention fence; actual pins intentionally unbound",
+      "next": "Explicit active q_attention/native KV owner and source visibility producer/transport/master proof"
+    },
+    {
+      "element": "system geometry/pin-route grouping and reticle",
+      "owner": "/root/geometry_qwen_system",
+      "state": "ACTIVE",
+      "evidence": "Actual956 directed69field graph and VM488 map;source-aware NK candidate/WDhomes",
+      "next": "Actual sourcepin/views and programme activity, all hardware homes, cut/PG/clock/reticle/perpin timing"
+    },
+    {
+      "element": "die physical integration/route/programme calendar",
+      "owner": "/root/q_compute_integration",
+      "state": "ACTIVE_DEPENDENCY_BLOCKED_NOT_CLOSED",
+      "evidence": "Actual956fullhierPASS;original allocator1201509/C11/C16 preserved",
+      "next": "Qualified current hardleaf views/real pin graph/calendar plus PG/clock/cut/floorplan gates before new admitted die route"
+    }
+  ],
+  "important_count_limits": "956clock roots are NOT956unclosed unique elements;87functional ports are source header declarations, including compile-time inactive candidates requiring cone audit; never infer hardware count from declarations. Historical CLOSED names require selected per-module source/view qualification; do not reroute blindly.",
+  "uncovered_physical_work": [
+    "native59six-root service partition/views",
+    "embeddingprovider/store/preload physical master and actual HBMreturn producer",
+    "KV visibility/attention/native transport end-to-end ownership acceptance",
+    "collective five gearbox native physical roots action receipt",
+    "HOST/D2D and CBUF/seq actual source-equivalent hard masters"
+  ],
+  "preserve_jobs": [
+    "wideallocator1201509",
+    "C16437563",
+    "C11873628"
+  ],
+  "vm_native_audit_update": {
+    "owner": "/root/q_vm_physical",
+    "receipt_ref": "502e7e191",
+    "receipt": "results/arch/qwen_central_vm_physical_1015/all_existing_native_audit.json",
+    "per_module_source_equivalence_ref": "571510c93",
+    "source_identical_existing_modules": [
+      "ot_qfd_vm_bctl_nx",
+      "qfd_vm_qcommit",
+      "ot_qfd_vm_bank_t"
+    ],
+    "native_pin_screen_pass_families": [
+      "ot_qfd_vm_bctl_nx",
+      "qfd_vm_qcommit",
+      "ot_qfd_vm_sctl_t",
+      "ot_qfd_vm_su1024_t",
+      "ot_qfd_vm_rr4_t",
+      "ot_qfd_vm_rr2_nx"
+    ],
+    "screen_pass_instances": 199,
+    "native_storage_repair_families": {
+      "ot_qfd_vm_bank_t": 64,
+      "ot_qfd_vm_su_t": 48
+    },
+    "missing_exact_delay_view_instances": 176,
+    "main_residual_instances": 1,
+    "qualification_limit": "All eight existing source-view family module/parameter bindings are verified; six source-bound families/199 entries pass stated native pin screen. Actual per-hop timing, placement and global clock integration remain required. Two storage families112, exact delay views176 and main residual1 still require structural/native work. Closed views retained; no blind reroutes.",
+    "concrete_active_work": "New9root actual bank with exact+2mutants passed; control35FF route READY qvm_bank_ctrl_native-np1-c9bb6b00d and data256 pin-plan repair gate65384 live.",
+    "remaining_module_source_equivalence_ref": "2f9adbb2d",
+    "all_eight_existing_module_families_source_bound": true
+  },
+  "tile_hierarchy_update": {
+    "owner": "/root/q_elements",
+    "state": "NK_HARDPARENT_HELD_DIAGNOSTIC_ONLY",
+    "preferred_successor": "Actual83 closed hardchildren plus source-bound residual hardleaf under logical tile grouping; exact residual cut/native gate required",
+    "mapped_residual_ff": 954,
+    "mapped_residual_std_um2": 3684,
+    "raw_source_residual_ff": 2278,
+    "external_dvm_placement_rule": "No external GW in holes within retained NK hardabstract bbox. Flatten legal real descendants or new source-owned co-pack ABI."
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "scope": "actual rooted encoder/channel/decoder + explicit finite-window raw-word CDC numerical component; only allowed PMA analog model",
+  "positive": {
+    "words": 2048,
+    "decoded_words_checked": 2376,
+    "constant_fec_age_cycles": 102,
+    "capture_start_edge": 600,
+    "capture_edges": [
+      601,
+      2648
+    ],
+    "read_start_edge": 608,
+    "read_edges": [
+      609,
+      2656
+    ],
+    "channel": "one flipped PMA bit every3cycles; KP4 corrects within t15",
+    "raw_word2": "included every13 source words, no legacy marker/drop semantics"
+  },
+  "decoder_mutant": {
+    "MUT": 2,
+    "meaning": "incorrect Forney correction arithmetic",
+    "rejected_at_cycle": 302,
+    "reason": "FEC word error"
+  },
+  "clock_scope": "declared ideal same-frequency same-phase12root family,0.833334ns; no measured physical phase or drift qualification",
+  "checker": "measures/validates constant decoded age; never drives DUT issue, all capture/read reservations fixed before execution",
+  "source_sha256": {
+    "rtl/hbm_accel/io_static_20261015/tb_fec_static_window.sv": "807c4191428b39972aad796bf196c9d47f4e9e39b190f33c4aa39f3ea844530d",
+    "rtl/hbm_accel/io_static_20261015/hfd_serdes487_static_window.sv": "98749b360c86041a02ff88c42e048bbee34ea1f4bede7f37a61198f864d601aa",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_word_cdc.sv": "ad94b9faac315ceab60a97cfbc6c3242ab0872031b252132bb7f72b769182d0e",
+    "tools/hbm_io/run_fec_static_window.sh": "8af2af93888a2317f51986dc814819e537206b2121df165b59df59963414cee7",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_enc_rooted.sv": "f6c0ab6832cadd0f5caf3de18164fdec6335cdbd513107231a8ba1d4000588fa",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv": "15923b429259c028375c48d617189468528b3089047ecab648208c5c0cbd4d10",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_encode52_map.sv": "401ecc4c70ebfc04a624faee5540fc625c4c7bddc8a3f4c6bc48ba30d22b81a3",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_syndrome55_map.sv": "ade2e0bbf131d65d979f693ea4347c6431f9d7cfb420d9273c04849a57fbc27c",
+    "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv": "467abe1090a24cffad29443edd4dce5ab33eeebff98bf2bc98de7d9d19556c41",
+    "rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh": "0c1d1e94f6a2a360da1f1b23b1cd7847958450c3b642b9978b0c13faead4b855"
+  },
+  "runs": {
+    "positive": {
+      "host": "ot-agidock128",
+      "unit": "oth-ubuntu-3725934-1792052138",
+      "exit": 0
+    },
+    "mutant_expected_rejection": {
+      "host": "ot-agidock128",
+      "unit": "oth-ubuntu-3725929-1792052138",
+      "runner_exit": 0,
+      "simulator_aborted_as_expected": true
+    }
+  },
+  "fixture_correction": "initial label checker is reservedSystemVerilogkeyword; changedtofec_check, preserved first parser failure; no numerical pass claimed for firstattempt",
+  "open": [
+    "Measured physical clock phases/drift/registered pin timing",
+    "Compiled actual startup/lock/epoch and window resource profile",
+    "Actual replay endpoint and613gearbox+FEC whole composition",
+    "Production throughput/area/cuts/TT/FF/DRC"
+  ],
+  "native_full_target_qualified": false,
+  "physical_qualified": false
+}

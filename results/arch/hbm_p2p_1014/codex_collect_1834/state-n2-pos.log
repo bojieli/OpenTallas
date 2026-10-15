@@ -1,0 +1,12 @@
+ot-run: ot-epyc1tb     admits   502 GB (avail 729, growth 66, headroom 64, waiters 0/0 GB) load 112/128 running 19 disk 851 GB 
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/hcoll-state-n2
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/hcoll-state-n2
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/hcoll-state-n2
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1502358-1792031139 after 0 s
+PRING_NATIVE PASS checked=1024 cycles=841 rounds=4
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_pring.sv:68: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 708ns; walltime 0.010 s; speed 67.716 us/s
+- Verilator: cpu 0.010 s on 1 threads; allocated 9 MB
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1502358-1792031139): exit 0

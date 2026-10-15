@@ -1,0 +1,6 @@
+{
+  "runner": "ot-run --mem 1 --threads 1 --dir /var/tmp/hbm-vm-static-hub-1014-gate -- bash rtl/hbm_accel/generic/vm/static/run_hub_static.sh results/gate",
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-2494588-1792046032",
+  "result": "RAN exit 0"
+}

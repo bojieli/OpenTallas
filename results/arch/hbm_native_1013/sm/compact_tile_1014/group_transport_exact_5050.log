@@ -1,0 +1,12 @@
+ot-run: ot-epyc1tb     admits   207 GB (avail 434, growth 143, headroom 64, waiters 0/0 GB) load 121/128 running 14 disk 690 GB 
+ot-run: ot-epyc4       admits   431 GB (avail 658, growth 155, headroom 48, waiters 0/0 GB) load 102/128 running 28 disk 767 GB 
+ot-run: ot-pve1        admits   163 GB (avail 210, growth 8, headroom 32, waiters 0/0 GB) load 34/28 running 3 disk 1307 GB 
+ot-run: ot-agidock128  admits    42 GB (avail 78, growth 23, headroom 24, waiters 0/0 GB) load 27/64 running 6 disk 78 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-2711638-1792046668 after 0 s
+COMPACT EXACT PASS cycles=4096 checks=4087 width_r=818 width_b=2069 stages=4
+- tb_hbm_smh_compact_transport.sv:42: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.118 s; speed 29.039 us/s
+- Verilator: cpu 0.118 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-2711638-1792046668): exit 0

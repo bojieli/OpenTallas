@@ -31,6 +31,12 @@ rtl/v41rom/ot_v41_bf_col.sv
 rtl/v41rom/ot_v41_bf_front_core.sv
 # BF weight ROM macro model (bit array; the macro is hard IP)
 physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v
+# stage sequencer (--rtl-bind): the STATIC issuer (owner 2026-10-14 18:59: calendar-fixed issue, no credits); layer1
+# die name dsfd_stage_seq_static_c8 = engines 0..7 + VM engine 12 (gate rtl/dsrom_sys/s81_static_control/test/run_static_c8.sh)
+rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c8.sv
+rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c.sv
+rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv
+rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv
 # PQ core slot (--rtl-bind master dsfd_sp_pq_n): the production native core cluster + ROM register / x-lane leaves.
 # Core leaf set = these OT_PQ_* defines (tools/dsrom_s81_fulldie.py pq_rtl_clock_ports() reads them: one source).  The
 # PQ's pinned-only modules come from its pinned tree; the repo copies of the shared float modules are supersets whose
@@ -54,3 +60,33 @@ physical/s81_pq_hier/pinned/rtl/hdc/v41x/ot_dsrom_aq12m.sv
 physical/s81_pq_hier/pinned/rtl/v41die/ot_v41_pqc_tiles.sv
 physical/s81_pq_hier/pinned/physical/dsrom_field_spine/ot_v41_pqc_tile_tops.sv
 physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
+
+# Static VM: real 128-bank SRAM service, fixed-phase serial crossings, and engine 12.
+# Pin mismatches with older die/collective recipes remain errors; no legacy port adapter.
+rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv
+rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x34.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_core.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wsched.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wstage128.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wdispatch128.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_rsched.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_landing.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static512_suhc.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_suhc_return_map.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_slice128_suhc.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_suhc_fsr.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_scatter.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128.sv
+physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_return.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_seq_static.sv
+
+# Production static VM s2: real capture, WFC and scheduled scan/gather services.
++define+DSFD_SP_VM_MIX4
+rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x43.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_capl.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap_leaf.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wfc.sv
+rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_xio.sv

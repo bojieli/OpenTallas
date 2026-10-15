@@ -1,0 +1,64 @@
+{
+  "scope": "Actual clock-partition candidate arithmetic gate; equal-phase clock waveforms only, no CTS or physical qualification",
+  "rows": [
+    {
+      "tag": "L00",
+      "layer": 0,
+      "returncode": 0,
+      "exact_outputs": 2,
+      "cycles": 264,
+      "pass": true
+    },
+    {
+      "tag": "L24",
+      "layer": 24,
+      "returncode": 0,
+      "exact_outputs": 2,
+      "cycles": 264,
+      "pass": true
+    },
+    {
+      "tag": "L25",
+      "layer": 25,
+      "returncode": 0,
+      "exact_outputs": 2,
+      "cycles": 264,
+      "pass": true
+    },
+    {
+      "tag": "L39",
+      "layer": 39,
+      "returncode": 0,
+      "exact_outputs": 2,
+      "cycles": 264,
+      "pass": true
+    },
+    {
+      "tag": "M0R0",
+      "layer": 40,
+      "returncode": 0,
+      "exact_outputs": 2,
+      "cycles": 264,
+      "pass": true
+    },
+    {
+      "tag": "M1R0",
+      "layer": 41,
+      "returncode": 0,
+      "exact_outputs": 2,
+      "cycles": 264,
+      "pass": true
+    },
+    {
+      "tag": "M2R4",
+      "layer": 42,
+      "returncode": 0,
+      "exact_outputs": 2,
+      "cycles": 264,
+      "pass": true
+    }
+  ],
+  "mutant_rejected": true,
+  "mutant_returncode": 1,
+  "all_pass": true
+}

@@ -1,0 +1,20 @@
+PHYSICAL_COLUMN lane3 hc254 write1
+PHYSICAL_COLUMN lane2 hc254 write1
+PHYSICAL_COLUMN lane1 hc254 write1
+PHYSICAL_COLUMN lane0 hc254 write1
+BAD raw physical data lane0 hc259
+PHYSICAL_RETIRE lane0 hc276 scheduled271
+PHYSICAL_RETIRE lane1 hc276 scheduled271
+PHYSICAL_RETIRE lane2 hc276 scheduled271
+PHYSICAL_RETIRE lane3 hc276 scheduled271
+PHYSICAL_COLUMN lane0 hc304 write1
+PHYSICAL_COLUMN lane1 hc304 write1
+PHYSICAL_COLUMN lane2 hc304 write1
+PHYSICAL_COLUMN lane3 hc304 write1
+BAD raw physical data lane0 hc309
+PHYSICAL_RETIRE lane0 hc326 scheduled321
+PHYSICAL_RETIRE lane1 hc326 scheduled321
+PHYSICAL_RETIRE lane2 hc326 scheduled321
+PHYSICAL_RETIRE lane3 hc326 scheduled321
+FATAL: /tmp/qkd-static-physical-gate-out-v2/source/tb_qkd_kv_physical_composed.sv:218: FAIL physical boundary errors4 writes8 commits8 retirements8 ctrl0 intake0 completion0
+       Time: 946000000  Scope: tb_qkd_kv_physical_composed

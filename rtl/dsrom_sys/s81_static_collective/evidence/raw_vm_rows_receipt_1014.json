@@ -1,0 +1,86 @@
+{
+  "clocked_channels": {
+    "adapter_clock_inputs": 1,
+    "lane_clock_inputs": 5,
+    "verification": "15 transfers/5lanes/3legacywirechecks at same declared phase; delivered pin phases,insertion,sinkcounts and production throughput UNQUALIFIED"
+  },
+  "model": {
+    "actual_vm_latency_edges": 12,
+    "area_um2": null,
+    "capture_storage_bits": 553,
+    "compiler_capture_after_read_control_edges": 14,
+    "consumer_capture_edges": 1,
+    "loaded_state_bits": 2,
+    "macs_per_cycle": 0,
+    "measured_insertion_ps": null,
+    "metadata_bits": 41,
+    "metadata_layout": "low41={outer_last,payload[551:512]}",
+    "metadata_mask": 3,
+    "mutually_exclusive_read_return_owners": [
+      "TP4",
+      "raw payload",
+      "raw metadata"
+    ],
+    "name": "s81_static_raw_vm_rows",
+    "outline_um": null,
+    "payload_mask": 65535,
+    "physical_status": "UNVERIFIED: no kit or contract-fit claim",
+    "queues": 0,
+    "read_payload_bits": 512,
+    "read_ports": 1,
+    "real_vm_reads_per_record": 2,
+    "real_vm_writes_per_received_record": 2,
+    "receive_write_output_edges": 1,
+    "registered_vm_request_edges": 1,
+    "replicas": 1,
+    "token_cost": "two real VM read reservations and two write reservations per raw record; compose actual controller calendar",
+    "transmit_output_extra_edges": 0,
+    "tuple_bits_each": 551,
+    "vm_write_source_ids": [
+      44,
+      45
+    ],
+    "write_collision_rule": "parent forbids overlap with gather/reduce and all other source44/45 writers"
+  },
+  "rx_timing": "REGISTER_VM_WRITES default1: registered tuples on RX edge. Native parent uses0: combinational tuples into parent final output flop on same RX edge; both configurations20SRAMroundtrips PASS.",
+  "schema": "opentallas.s81-static-raw-vm-rows.component.v1",
+  "scope_limit": "Ten service relay registers are synthetic BENCH timing boundary only. They are not actual productionVM and do not qualify full native service. Parent combinedbench must instantiate actual128SRAMstaticVM and actual shared request/return ownership.",
+  "source_sha256": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128.sv": "28b404bc01d8722b2cac8aadf058d48edb4c99d6128f7b8872f971f8dda940d8",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_channels_clocked.sv": "23ae49f680e76d317179eb387e3df4769bbb375441e1efded261462abb310dca",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_raw_vm_rows.sv": "87de1b455f52f379a39db71b10d2f6a1923f6017d2c2d3806d029527727a8a58",
+    "rtl/dsrom_sys/s81_static_collective/tb_s81_static_fmt1_channels.sv": "3aa4247f80c811c9fcb6fa4a480d78b0e7ac17a6fe6723c814378aeede1a6cac",
+    "rtl/dsrom_sys/s81_static_collective/tb_s81_static_raw_vm_rows.sv": "cdab7f42b3721af2728aac7861803fe67be7e7f3dcfa61bce48745b984a56800"
+  },
+  "status": "PASS_COMPONENT_ONLY",
+  "tx_timing": "combinational from loaded fixed registers; adapter captures on send slot, no extra output edge",
+  "unqualified": [
+    "full combined slab and actual nativeVM service",
+    "nativehost+HC bindings",
+    "fullshape productioncalendar",
+    "physical clock phases/insertion/sinkcounts/contract fit",
+    "timing closure"
+  ],
+  "verification": {
+    "actual_DUT_mutant": "stored TX payload bit0 flipped, rejected at281ns",
+    "actual_SRAM_macros": 8,
+    "fault_checks": [
+      "send without loaded tuple",
+      "unexpected response",
+      "missing capture response",
+      "loaded register overwritten",
+      "RX missing response",
+      "RX two rows alias"
+    ],
+    "latency": "registered request1 + actual bank2 + ten synthetic bench relay registers + consumer capture1 = readcontrol14",
+    "preserved_bits": 553,
+    "reads_per_record": 2,
+    "register_configurations": [
+      1,
+      0
+    ],
+    "roundtrips": 20,
+    "writes_per_record": 2
+  }
+}

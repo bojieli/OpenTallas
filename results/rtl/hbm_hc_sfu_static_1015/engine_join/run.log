@@ -1,0 +1,5 @@
+PASS SFU static composition 16 actual C12 lanes 80 actual SRAMs independent Python calendar words=7168 exact_checks=7168 preload_edges=448 compiler_edges=502 drain_edges=448
+- rtl/test/hbm_accel/generic/tb_hgi_sfu_static_engine.sv:54: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 19.335 s; speed 60.992 ns/s
+- Verilator: cpu 19.325 s on 1 threads; allocated 73 MB

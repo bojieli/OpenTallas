@@ -1,0 +1,8 @@
+{
+  "date": "2026-10-15",
+  "owner": "root shared flow (Claude)",
+  "question": "Does main's compiled scene accessor (e98d76186, tools/ref_tile/sta_scene_binding.cc) bind direct SRAM clock entries to the FF Liberty inside tools/orfs_hold_mm.tcl's BC sign-off SDC context, where the old get_lib_cells -of_objects check saw the first-linked TT master (QVM MY parent qvm_bank_entries_my_native-ne1-4eeecdcb6 stopped twice)?",
+  "answer": "Yes. In the exact ORFS image (openroad/orfs@sha256:16470cea...), scenes TC(mode ss, TT lib) + BC(mode ff, FF lib), set_scene TC, then set_mode ff (as ot_mm_sync does, no set_scene): cmd_scene becomes BC and ot_ce_direct_rows ff binds ot_sram_1r1w_32x546_m1_ff for min and max. Mutant: BC bound to the TT library is refused (actual corner mismatch scene=BC).",
+  "consequence": "codex/q-vm-physical-1015 eb9e64b37 (Tcl define_scene_cmd observer) is superseded and must not be published: it refuses ORFS's early WC/BC scenes (flat9 gates 59579/29340 'unobserved actual scene definition WC'). QVM kits must be regenerated on current main (merge main, ref_tile.py gen) and re-gated. Trial: MY kit regenerated on main + QVM branch passed pre_route_gate --cts on ot-epyc4 (TT, accessor loaded, 2 raw SRAM pins bound); no route claim.",
+  "suite": "tools/ref_tile/test_direct_macro_scene_binding.py --openroad-probe: 2 positives (TT/FF/SS, hold-mm BC) + 7 refusals, receipt.json"
+}

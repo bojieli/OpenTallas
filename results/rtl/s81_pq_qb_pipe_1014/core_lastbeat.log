@@ -1,0 +1,6 @@
+/srv/opentallas-scratch/codex/qbpipe-1015/core-lastbeat/bench
+PQ_CORE_PIPE TIMING test=0 baseline_cycles=936 candidate_cycles=938 delta=2 baseline_phase=904 candidate_phase=906 packets=772
+PQ_CORE_PIPE TIMING test=1 baseline_cycles=992 candidate_cycles=994 delta=2 baseline_phase=960 candidate_phase=962 packets=772
+PQ_CORE_PIPE TIMING test=2 baseline_cycles=1917 candidate_cycles=1925 delta=8 baseline_phase=1885 candidate_phase=1893 packets=1540
+PQ_CORE_PIPE TIMING test=3 baseline_cycles=2012 candidate_cycles=2014 delta=2 baseline_phase=1980 candidate_phase=1982 packets=1540
+PQ_CORE_PIPE PASS component_diagnostic=1 baseline_cycles=5857 candidate_cycles=5871 loss_pct=0.239030 native_full_token_qualified=0

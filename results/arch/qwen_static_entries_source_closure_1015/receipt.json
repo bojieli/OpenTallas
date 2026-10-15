@@ -1,0 +1,23 @@
+{
+  "source_commit": "96f30a6a0",
+  "qualification": false,
+  "full_native_qualified": false,
+  "physical_qualified": false,
+  "scope": "Restore two previously absent actual source dependencies of the current static SU parent, with author source byte identity. No existing parent RTL overwritten.",
+  "source_sha256": {
+    "rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv": "3aec6ea06c328e53284758b544c50fe942bd96a9577e6e7611b7604c8b0b99bb",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv": "5c4c57787d17469798ab10206c5bfa8f478991e2ca0c868d3935c63e5058e5ba"
+  },
+  "validation": {
+    "iverilog": "-g2012 -i -tnull -s ot_qfd_sp_su64_static_entries on both source files PASS; unresolved modules ignored, syntax check only",
+    "complete_hierarchy": "Owned by q_compute_integration; no complete-hierarchy success claim"
+  },
+  "embedding_dependencies": "99d2b7a53+b0046ef09 actual mapped code/scale store/provider component receipts",
+  "native59_dependency": "575a85850 actual registered return; all10 receipt source hashes match and fresh nine-case component gate PASS",
+  "remaining": [
+    "Full seven-master dependency hierarchy elaboration",
+    "Actual arithmetic/native operation integration",
+    "Canonical geometry/clock/physical qualification"
+  ],
+  "source_owner_confirmation": "q_compute_integration confirms both entries match exact private current96f snapshot; do not substitute historical ea88 SU entries variant."
+}

@@ -1,0 +1,802 @@
+{
+  "schema": "opentallas.hbm_geometry.actual_pin_search.v1",
+  "component": "attention_hi",
+  "component_sha256": "0090bb4de86122a4c408818e88fdd31a9952852e2c5dbcc9d12cd5bad0055fd8",
+  "native_qualified": false,
+  "geometry_candidate_only": true,
+  "objective": "sum Manhattan distance over all internal non-clock/reset actual LEF pin-shape pairs",
+  "actual_bit_pairs": 18944,
+  "external_data_anchored_children": [
+    "g_mt.u_mt",
+    "g_y1.g_x[0].u_row.gn.g_s[0].g_c[2].g_ew.u_b",
+    "g_y1.g_x[0].u_xr.gn.g_s[0].g_c[0].g_sn.u_b",
+    "g_y1.g_x[1].u_row.gn.g_s[0].g_c[2].g_ew.u_b",
+    "g_y1.g_x[1].u_xr.gn.g_s[0].g_c[0].g_sn.u_b",
+    "g_y1.u_mid.gn.g_s[0].g_c[2].g_sn.u_b",
+    "u_fc.gn.g_s[1].g_c[0].g_sn.u_b",
+    "u_fc.gn.g_s[1].g_c[1].g_sn.u_b",
+    "u_fc.gn.g_s[1].g_c[2].g_sn.u_b",
+    "u_pi.gn.g_s[0].g_c[0].g_ew.u_b",
+    "u_pi.gn.g_s[6].g_c[0].g_sn.u_b",
+    "u_xin.gn.g_s[0].g_c[0].g_sn.u_b",
+    "u_xin.gn.g_s[0].g_c[1].g_sn.u_b",
+    "u_xin.gn.g_s[0].g_c[2].g_sn.u_b"
+  ],
+  "before": {
+    "total_bit_um": 3488973.6659999997,
+    "max_pin_manhattan_um": 383.04
+  },
+  "after": {
+    "total_bit_um": 3199090.8419999997,
+    "max_pin_manhattan_um": 383.04
+  },
+  "placement_deltas_um": {
+    "g_y1.g_x[0].u_q": [
+      17.28,
+      0.0
+    ],
+    "g_y1.g_x[0].u_res.gn.g_s[2].g_c[0].g_sn.u_b": [
+      21.6,
+      21.6
+    ],
+    "g_y1.g_x[0].u_res.gn.g_s[3].g_c[0].g_sn.u_b": [
+      0.0,
+      8.64
+    ],
+    "g_y1.g_x[1].u_q": [
+      -17.28,
+      0.0
+    ],
+    "g_y1.g_x[1].u_res.gn.g_s[3].g_c[0].g_sn.u_b": [
+      0.0,
+      21.6
+    ],
+    "g_y1.u_mid.gn.g_s[0].g_c[0].g_sn.u_b": [
+      -4.32,
+      0.0
+    ],
+    "u_fc.gn.g_s[0].g_c[0].g_sn.u_b": [
+      -43.2,
+      21.6
+    ],
+    "u_fc.gn.g_s[0].g_c[1].g_sn.u_b": [
+      -43.2,
+      21.6
+    ],
+    "u_fc.gn.g_s[0].g_c[2].g_sn.u_b": [
+      -43.2,
+      25.92
+    ],
+    "u_pi.gn.g_s[5].g_c[0].g_sn.u_b": [
+      -43.2,
+      0.0
+    ]
+  },
+  "moves": [
+    {
+      "instance": "g_y1.g_x[0].u_q",
+      "from_delta_um": [
+        0.0,
+        0.0
+      ],
+      "to_delta_um": [
+        4.32,
+        0.0
+      ],
+      "all_incident_bits_saving_um": 6402.239999999991
+    },
+    {
+      "instance": "g_y1.g_x[0].u_res.gn.g_s[2].g_c[0].g_sn.u_b",
+      "from_delta_um": [
+        0.0,
+        0.0
+      ],
+      "to_delta_um": [
+        0.0,
+        21.6
+      ],
+      "all_incident_bits_saving_um": 3179.1359999999986
+    },
+    {
+      "instance": "g_y1.g_x[0].u_res.gn.g_s[3].g_c[0].g_sn.u_b",
+      "from_delta_um": [
+        0.0,
+        0.0
+      ],
+      "to_delta_um": [
+        0.0,
+        4.32
+      ],
+      "all_incident_bits_saving_um": 1175.0399999999936
+    },
+    {
+      "instance": "g_y1.g_x[1].u_q",
+      "from_delta_um": [
+        0.0,
+        0.0
+      ],
+      "to_delta_um": [
+        -4.32,
+        0.0
+      ],
+      "all_incident_bits_saving_um": 6402.239999999991
+    },
+    {
+      "instance": "g_y1.g_x[1].u_res.gn.g_s[3].g_c[0].g_sn.u_b",
+      "from_delta_um": [
+        0.0,
+        0.0
+      ],
+      "to_delta_um": [
+        0.0,
+        21.6
+      ],
+      "all_incident_bits_saving_um": 3179.1359999999986
+    },
+    {
+      "instance": "g_y1.u_mid.gn.g_s[0].g_c[0].g_sn.u_b",
+      "from_delta_um": [
+        0.0,
+        0.0
+      ],
+      "to_delta_um": [
+        -4.32,
+        0.0
+      ],
+      "all_incident_bits_saving_um": 2350.079999999958
+    },
+    {
+      "instance": "u_fc.gn.g_s[0].g_c[0].g_sn.u_b",
+      "from_delta_um": [
+        0.0,
+        0.0
+      ],
+      "to_delta_um": [
+        -21.6,
+        0.0
+      ],
+      "all_incident_bits_saving_um": 23500.800000000017
+    },
+    {
+      "instance": "u_fc.gn.g_s[0].g_c[1].g_sn.u_b",
+      "from_delta_um": [
+        0.0,
+        0.0
+      ],
+      "to_delta_um": [
+        0.0,
+        21.6
+      ],
+      "all_incident_bits_saving_um": 12716.544000000053
+    },
+    {
+      "instance": "u_fc.gn.g_s[0].g_c[2].g_sn.u_b",
+      "from_delta_um": [
+        0.0,
+        0.0
+      ],
+      "to_delta_um": [
+        0.0,
+        21.6
+      ],
+      "all_incident_bits_saving_um": 12691.679999999993
+    },
+    {
+      "instance": "u_pi.gn.g_s[5].g_c[0].g_sn.u_b",
+      "from_delta_um": [
+        0.0,
+        0.0
+      ],
+      "to_delta_um": [
+        -21.6,
+        0.0
+      ],
+      "all_incident_bits_saving_um": 23500.800000000003
+    },
+    {
+      "instance": "g_y1.g_x[0].u_q",
+      "from_delta_um": [
+        4.32,
+        0.0
+      ],
+      "to_delta_um": [
+        8.64,
+        0.0
+      ],
+      "all_incident_bits_saving_um": 6402.24000000002
+    },
+    {
+      "instance": "g_y1.g_x[0].u_res.gn.g_s[2].g_c[0].g_sn.u_b",
+      "from_delta_um": [
+        0.0,
+        21.6
+      ],
+      "to_delta_um": [
+        21.6,
+        21.6
+      ],
+      "all_incident_bits_saving_um": 2019.6239999999962
+    },
+    {
+      "instance": "g_y1.g_x[0].u_res.gn.g_s[3].g_c[0].g_sn.u_b",
+      "from_delta_um": [
+        0.0,
+        4.32
+      ],
+      "to_delta_um": [
+        0.0,
+        8.64
+      ],
+      "all_incident_bits_saving_um": 1175.0400000000081
+    },
+    {
+      "instance": "g_y1.g_x[1].u_q",
+      "from_delta_um": [
+        -4.32,
+        0.0
+      ],
+      "to_delta_um": [
+        -8.64,
+        0.0
+      ],
+      "all_incident_bits_saving_um": 6402.239999999991
+    },
+    {
+      "instance": "u_fc.gn.g_s[0].g_c[0].g_sn.u_b",
+      "from_delta_um": [
+        -21.6,
+        0.0
+      ],
+      "to_delta_um": [
+        -21.6,
+        21.6
+      ],
+      "all_incident_bits_saving_um": 12716.543999999994
+    },
+    {
+      "instance": "u_fc.gn.g_s[0].g_c[1].g_sn.u_b",
+      "from_delta_um": [
+        0.0,
+        21.6
+      ],
+      "to_delta_um": [
+        -21.6,
+        21.6
+      ],
+      "all_incident_bits_saving_um": 23500.800000000017
+    },
+    {
+      "instance": "u_fc.gn.g_s[0].g_c[2].g_sn.u_b",
+      "from_delta_um": [
+        0.0,
+        21.6
+      ],
+      "to_delta_um": [
+        -21.6,
+        21.6
+      ],
+      "all_incident_bits_saving_um": 23198.400000000023
+    },
+    {
+      "instance": "u_pi.gn.g_s[5].g_c[0].g_sn.u_b",
+      "from_delta_um": [
+        -21.6,
+        0.0
+      ],
+      "to_delta_um": [
+        -43.2,
+        0.0
+      ],
+      "all_incident_bits_saving_um": 23500.800000000017
+    },
+    {
+      "instance": "g_y1.g_x[0].u_q",
+      "from_delta_um": [
+        8.64,
+        0.0
+      ],
+      "to_delta_um": [
+        12.96,
+        0.0
+      ],
+      "all_incident_bits_saving_um": 6402.24000000002
+    },
+    {
+      "instance": "g_y1.g_x[1].u_q",
+      "from_delta_um": [
+        -8.64,
+        0.0
+      ],
+      "to_delta_um": [
+        -12.96,
+        0.0
+      ],
+      "all_incident_bits_saving_um": 6402.24000000002
+    },
+    {
+      "instance": "u_fc.gn.g_s[0].g_c[0].g_sn.u_b",
+      "from_delta_um": [
+        -21.6,
+        21.6
+      ],
+      "to_delta_um": [
+        -43.2,
+        21.6
+      ],
+      "all_incident_bits_saving_um": 23500.800000000017
+    },
+    {
+      "instance": "u_fc.gn.g_s[0].g_c[1].g_sn.u_b",
+      "from_delta_um": [
+        -21.6,
+        21.6
+      ],
+      "to_delta_um": [
+        -43.2,
+        21.6
+      ],
+      "all_incident_bits_saving_um": 23500.800000000017
+    },
+    {
+      "instance": "u_fc.gn.g_s[0].g_c[2].g_sn.u_b",
+      "from_delta_um": [
+        -21.6,
+        21.6
+      ],
+      "to_delta_um": [
+        -43.2,
+        21.6
+      ],
+      "all_incident_bits_saving_um": 23198.399999999994
+    },
+    {
+      "instance": "g_y1.g_x[0].u_q",
+      "from_delta_um": [
+        12.96,
+        0.0
+      ],
+      "to_delta_um": [
+        17.28,
+        0.0
+      ],
+      "all_incident_bits_saving_um": 6402.239999999991
+    },
+    {
+      "instance": "g_y1.g_x[1].u_q",
+      "from_delta_um": [
+        -12.96,
+        0.0
+      ],
+      "to_delta_um": [
+        -17.28,
+        0.0
+      ],
+      "all_incident_bits_saving_um": 6402.239999999991
+    },
+    {
+      "instance": "u_fc.gn.g_s[0].g_c[2].g_sn.u_b",
+      "from_delta_um": [
+        -43.2,
+        21.6
+      ],
+      "to_delta_um": [
+        -43.2,
+        25.92
+      ],
+      "all_incident_bits_saving_um": 60.47999999995227
+    }
+  ],
+  "top20_before": [
+    {
+      "net": "n8894",
+      "source": "g_y1.u_mid.gn.g_s[0].g_c[1].g_sn.u_b",
+      "sink": "g_y1.g_x[1].u_row.gn.g_s[0].g_c[1].g_ew.u_b",
+      "bits": 544,
+      "before_bit_um": 161239.4640000013,
+      "after_bit_um": 161239.4640000013,
+      "before_max_um": 380.88,
+      "after_max_um": 380.88
+    },
+    {
+      "net": "n8350",
+      "source": "g_y1.u_mid.gn.g_s[0].g_c[0].g_sn.u_b",
+      "sink": "g_y1.g_x[1].u_row.gn.g_s[0].g_c[0].g_ew.u_b",
+      "bits": 544,
+      "before_bit_um": 161031.57599999977,
+      "after_bit_um": 163381.65599999946,
+      "before_max_um": 376.55999999999995,
+      "after_max_um": 380.88
+    },
+    {
+      "net": "n9438",
+      "source": "g_y1.u_mid.gn.g_s[0].g_c[2].g_sn.u_b",
+      "sink": "g_y1.g_x[1].u_row.gn.g_s[0].g_c[2].g_ew.u_b",
+      "bits": 531,
+      "before_bit_um": 158024.54400000046,
+      "after_bit_um": 158024.54400000046,
+      "before_max_um": 383.04,
+      "after_max_um": 383.04
+    },
+    {
+      "net": "n13790",
+      "source": "u_xin.gn.g_s[0].g_c[0].g_sn.u_b",
+      "sink": "u_fc.gn.g_s[0].g_c[0].g_sn.u_b",
+      "bits": 544,
+      "before_bit_um": 146658.0480000009,
+      "after_bit_um": 122191.10399999902,
+      "before_max_um": 269.592,
+      "after_max_um": 224.616
+    },
+    {
+      "net": "n14334",
+      "source": "u_xin.gn.g_s[0].g_c[1].g_sn.u_b",
+      "sink": "u_fc.gn.g_s[0].g_c[1].g_sn.u_b",
+      "bits": 544,
+      "before_bit_um": 146658.0480000009,
+      "after_bit_um": 122191.10399999874,
+      "before_max_um": 269.59200000000004,
+      "after_max_um": 224.61599999999996
+    },
+    {
+      "net": "n14878",
+      "source": "u_xin.gn.g_s[0].g_c[2].g_sn.u_b",
+      "sink": "u_fc.gn.g_s[0].g_c[2].g_sn.u_b",
+      "bits": 530,
+      "before_bit_um": 142883.76000000085,
+      "after_bit_um": 121336.08000000067,
+      "before_max_um": 269.5920000000001,
+      "after_max_um": 228.93600000000015
+    },
+    {
+      "net": "n18156",
+      "source": "u_pi.gn.g_s[2].g_c[0].g_sn.u_b",
+      "sink": "u_pi.gn.g_s[3].g_c[0].g_sn.u_b",
+      "bits": 544,
+      "before_bit_um": 142662.9120000013,
+      "after_bit_um": 142662.9120000013,
+      "before_max_um": 262.24800000000016,
+      "after_max_um": 262.24800000000016
+    },
+    {
+      "net": "n17068",
+      "source": "u_pi.gn.g_s[0].g_c[0].g_ew.u_b",
+      "sink": "u_pi.gn.g_s[1].g_c[0].g_sn.u_b",
+      "bits": 544,
+      "before_bit_um": 140977.56000000026,
+      "after_bit_um": 140977.56000000026,
+      "before_max_um": 334.776,
+      "after_max_um": 334.776
+    },
+    {
+      "net": "n17612",
+      "source": "u_pi.gn.g_s[1].g_c[0].g_sn.u_b",
+      "sink": "u_pi.gn.g_s[2].g_c[0].g_sn.u_b",
+      "bits": 544,
+      "before_bit_um": 132779.52000000072,
+      "after_bit_um": 132779.52000000072,
+      "before_max_um": 244.0800000000001,
+      "after_max_um": 244.0800000000001
+    },
+    {
+      "net": "n8894",
+      "source": "g_y1.u_mid.gn.g_s[0].g_c[1].g_sn.u_b",
+      "sink": "g_y1.g_x[0].u_row.gn.g_s[0].g_c[1].g_ew.u_b",
+      "bits": 544,
+      "before_bit_um": 132490.15199999977,
+      "after_bit_um": 132490.15199999977,
+      "before_max_um": 314.472,
+      "after_max_um": 314.472
+    },
+    {
+      "net": "n8350",
+      "source": "g_y1.u_mid.gn.g_s[0].g_c[0].g_sn.u_b",
+      "sink": "g_y1.g_x[0].u_row.gn.g_s[0].g_c[0].g_ew.u_b",
+      "bits": 544,
+      "before_bit_um": 132282.26399999968,
+      "after_bit_um": 129932.18399999973,
+      "before_max_um": 318.79200000000003,
+      "after_max_um": 314.472
+    },
+    {
+      "net": "n9438",
+      "source": "g_y1.u_mid.gn.g_s[0].g_c[2].g_sn.u_b",
+      "sink": "g_y1.g_x[0].u_row.gn.g_s[0].g_c[2].g_ew.u_b",
+      "bits": 531,
+      "before_bit_um": 128636.88000000035,
+      "after_bit_um": 128636.88000000035,
+      "before_max_um": 307.32000000000005,
+      "after_max_um": 307.32000000000005
+    },
+    {
+      "net": "n15422",
+      "source": "u_fc.gn.g_s[0].g_c[0].g_sn.u_b",
+      "sink": "u_fc.gn.g_s[1].g_c[0].g_sn.u_b",
+      "bits": 544,
+      "before_bit_um": 87409.91999999915,
+      "after_bit_um": 52158.71999999967,
+      "before_max_um": 160.68000000000018,
+      "after_max_um": 95.88000000000011
+    },
+    {
+      "net": "n15966",
+      "source": "u_fc.gn.g_s[0].g_c[1].g_sn.u_b",
+      "sink": "u_fc.gn.g_s[1].g_c[1].g_sn.u_b",
+      "bits": 544,
+      "before_bit_um": 87409.91999999915,
+      "after_bit_um": 52158.71999999958,
+      "before_max_um": 160.68000000000012,
+      "after_max_um": 95.88000000000005
+    },
+    {
+      "net": "n16510",
+      "source": "u_fc.gn.g_s[0].g_c[2].g_sn.u_b",
+      "sink": "u_fc.gn.g_s[1].g_c[2].g_sn.u_b",
+      "bits": 544,
+      "before_bit_um": 87409.91999999915,
+      "after_bit_um": 49808.639999999745,
+      "before_max_um": 160.68000000000006,
+      "after_max_um": 91.56000000000006
+    },
+    {
+      "net": "n13790",
+      "source": "u_xin.gn.g_s[0].g_c[0].g_sn.u_b",
+      "sink": "g_y1.u_mid.gn.g_s[0].g_c[0].g_sn.u_b",
+      "bits": 544,
+      "before_bit_um": 76390.6559999996,
+      "after_bit_um": 74040.57600000016,
+      "before_max_um": 140.4240000000001,
+      "after_max_um": 136.1040000000001
+    },
+    {
+      "net": "n14334",
+      "source": "u_xin.gn.g_s[0].g_c[1].g_sn.u_b",
+      "sink": "g_y1.u_mid.gn.g_s[0].g_c[1].g_sn.u_b",
+      "bits": 544,
+      "before_bit_um": 76390.6559999996,
+      "after_bit_um": 76390.6559999996,
+      "before_max_um": 140.4240000000001,
+      "after_max_um": 140.4240000000001
+    },
+    {
+      "net": "n14878",
+      "source": "u_xin.gn.g_s[0].g_c[2].g_sn.u_b",
+      "sink": "g_y1.u_mid.gn.g_s[0].g_c[2].g_sn.u_b",
+      "bits": 530,
+      "before_bit_um": 74424.71999999961,
+      "after_bit_um": 74424.71999999961,
+      "before_max_um": 140.4240000000001,
+      "after_max_um": 140.4240000000001
+    },
+    {
+      "net": "n5647",
+      "source": "g_y1.g_x[0].u_row.gn.g_s[0].g_c[0].g_ew.u_b",
+      "sink": "g_y1.g_x[0].u_q",
+      "bits": 544,
+      "before_bit_um": 74091.45599999998,
+      "after_bit_um": 64691.13599999992,
+      "before_max_um": 218.88000000000002,
+      "after_max_um": 201.60000000000002
+    },
+    {
+      "net": "n10530",
+      "source": "g_y1.g_x[1].u_row.gn.g_s[0].g_c[0].g_ew.u_b",
+      "sink": "g_y1.g_x[1].u_q",
+      "bits": 544,
+      "before_bit_um": 73944.5760000001,
+      "after_bit_um": 64544.256000000125,
+      "before_max_um": 218.61000000000016,
+      "after_max_um": 201.33000000000015
+    }
+  ],
+  "top20_after": [
+    {
+      "net": "n8350",
+      "source": "g_y1.u_mid.gn.g_s[0].g_c[0].g_sn.u_b",
+      "sink": "g_y1.g_x[1].u_row.gn.g_s[0].g_c[0].g_ew.u_b",
+      "bits": 544,
+      "before_bit_um": 161031.57599999977,
+      "after_bit_um": 163381.65599999946,
+      "before_max_um": 376.55999999999995,
+      "after_max_um": 380.88
+    },
+    {
+      "net": "n8894",
+      "source": "g_y1.u_mid.gn.g_s[0].g_c[1].g_sn.u_b",
+      "sink": "g_y1.g_x[1].u_row.gn.g_s[0].g_c[1].g_ew.u_b",
+      "bits": 544,
+      "before_bit_um": 161239.4640000013,
+      "after_bit_um": 161239.4640000013,
+      "before_max_um": 380.88,
+      "after_max_um": 380.88
+    },
+    {
+      "net": "n9438",
+      "source": "g_y1.u_mid.gn.g_s[0].g_c[2].g_sn.u_b",
+      "sink": "g_y1.g_x[1].u_row.gn.g_s[0].g_c[2].g_ew.u_b",
+      "bits": 531,
+      "before_bit_um": 158024.54400000046,
+      "after_bit_um": 158024.54400000046,
+      "before_max_um": 383.04,
+      "after_max_um": 383.04
+    },
+    {
+      "net": "n18156",
+      "source": "u_pi.gn.g_s[2].g_c[0].g_sn.u_b",
+      "sink": "u_pi.gn.g_s[3].g_c[0].g_sn.u_b",
+      "bits": 544,
+      "before_bit_um": 142662.9120000013,
+      "after_bit_um": 142662.9120000013,
+      "before_max_um": 262.24800000000016,
+      "after_max_um": 262.24800000000016
+    },
+    {
+      "net": "n17068",
+      "source": "u_pi.gn.g_s[0].g_c[0].g_ew.u_b",
+      "sink": "u_pi.gn.g_s[1].g_c[0].g_sn.u_b",
+      "bits": 544,
+      "before_bit_um": 140977.56000000026,
+      "after_bit_um": 140977.56000000026,
+      "before_max_um": 334.776,
+      "after_max_um": 334.776
+    },
+    {
+      "net": "n17612",
+      "source": "u_pi.gn.g_s[1].g_c[0].g_sn.u_b",
+      "sink": "u_pi.gn.g_s[2].g_c[0].g_sn.u_b",
+      "bits": 544,
+      "before_bit_um": 132779.52000000072,
+      "after_bit_um": 132779.52000000072,
+      "before_max_um": 244.0800000000001,
+      "after_max_um": 244.0800000000001
+    },
+    {
+      "net": "n8894",
+      "source": "g_y1.u_mid.gn.g_s[0].g_c[1].g_sn.u_b",
+      "sink": "g_y1.g_x[0].u_row.gn.g_s[0].g_c[1].g_ew.u_b",
+      "bits": 544,
+      "before_bit_um": 132490.15199999977,
+      "after_bit_um": 132490.15199999977,
+      "before_max_um": 314.472,
+      "after_max_um": 314.472
+    },
+    {
+      "net": "n8350",
+      "source": "g_y1.u_mid.gn.g_s[0].g_c[0].g_sn.u_b",
+      "sink": "g_y1.g_x[0].u_row.gn.g_s[0].g_c[0].g_ew.u_b",
+      "bits": 544,
+      "before_bit_um": 132282.26399999968,
+      "after_bit_um": 129932.18399999973,
+      "before_max_um": 318.79200000000003,
+      "after_max_um": 314.472
+    },
+    {
+      "net": "n9438",
+      "source": "g_y1.u_mid.gn.g_s[0].g_c[2].g_sn.u_b",
+      "sink": "g_y1.g_x[0].u_row.gn.g_s[0].g_c[2].g_ew.u_b",
+      "bits": 531,
+      "before_bit_um": 128636.88000000035,
+      "after_bit_um": 128636.88000000035,
+      "before_max_um": 307.32000000000005,
+      "after_max_um": 307.32000000000005
+    },
+    {
+      "net": "n13790",
+      "source": "u_xin.gn.g_s[0].g_c[0].g_sn.u_b",
+      "sink": "u_fc.gn.g_s[0].g_c[0].g_sn.u_b",
+      "bits": 544,
+      "before_bit_um": 146658.0480000009,
+      "after_bit_um": 122191.10399999902,
+      "before_max_um": 269.592,
+      "after_max_um": 224.616
+    },
+    {
+      "net": "n14334",
+      "source": "u_xin.gn.g_s[0].g_c[1].g_sn.u_b",
+      "sink": "u_fc.gn.g_s[0].g_c[1].g_sn.u_b",
+      "bits": 544,
+      "before_bit_um": 146658.0480000009,
+      "after_bit_um": 122191.10399999874,
+      "before_max_um": 269.59200000000004,
+      "after_max_um": 224.61599999999996
+    },
+    {
+      "net": "n14878",
+      "source": "u_xin.gn.g_s[0].g_c[2].g_sn.u_b",
+      "sink": "u_fc.gn.g_s[0].g_c[2].g_sn.u_b",
+      "bits": 530,
+      "before_bit_um": 142883.76000000085,
+      "after_bit_um": 121336.08000000067,
+      "before_max_um": 269.5920000000001,
+      "after_max_um": 228.93600000000015
+    },
+    {
+      "net": "n14334",
+      "source": "u_xin.gn.g_s[0].g_c[1].g_sn.u_b",
+      "sink": "g_y1.u_mid.gn.g_s[0].g_c[1].g_sn.u_b",
+      "bits": 544,
+      "before_bit_um": 76390.6559999996,
+      "after_bit_um": 76390.6559999996,
+      "before_max_um": 140.4240000000001,
+      "after_max_um": 140.4240000000001
+    },
+    {
+      "net": "n14878",
+      "source": "u_xin.gn.g_s[0].g_c[2].g_sn.u_b",
+      "sink": "g_y1.u_mid.gn.g_s[0].g_c[2].g_sn.u_b",
+      "bits": 530,
+      "before_bit_um": 74424.71999999961,
+      "after_bit_um": 74424.71999999961,
+      "before_max_um": 140.4240000000001,
+      "after_max_um": 140.4240000000001
+    },
+    {
+      "net": "n13790",
+      "source": "u_xin.gn.g_s[0].g_c[0].g_sn.u_b",
+      "sink": "g_y1.u_mid.gn.g_s[0].g_c[0].g_sn.u_b",
+      "bits": 544,
+      "before_bit_um": 76390.6559999996,
+      "after_bit_um": 74040.57600000016,
+      "before_max_um": 140.4240000000001,
+      "after_max_um": 136.1040000000001
+    },
+    {
+      "net": "n4570",
+      "source": "u_pi.gn.g_s[6].g_c[0].g_sn.u_b",
+      "sink": "g_mt.u_mt",
+      "bits": 529,
+      "before_bit_um": 72984.22199999997,
+      "after_bit_um": 72984.22199999997,
+      "before_max_um": 181.18199999999996,
+      "after_max_um": 181.18199999999996
+    },
+    {
+      "net": "n5647",
+      "source": "g_y1.g_x[0].u_row.gn.g_s[0].g_c[0].g_ew.u_b",
+      "sink": "g_y1.g_x[0].u_q",
+      "bits": 544,
+      "before_bit_um": 74091.45599999998,
+      "after_bit_um": 64691.13599999992,
+      "before_max_um": 218.88000000000002,
+      "after_max_um": 201.60000000000002
+    },
+    {
+      "net": "n10530",
+      "source": "g_y1.g_x[1].u_row.gn.g_s[0].g_c[0].g_ew.u_b",
+      "sink": "g_y1.g_x[1].u_q",
+      "bits": 544,
+      "before_bit_um": 73944.5760000001,
+      "after_bit_um": 64544.256000000125,
+      "before_max_um": 218.61000000000016,
+      "after_max_um": 201.33000000000015
+    },
+    {
+      "net": "n18700",
+      "source": "u_pi.gn.g_s[3].g_c[0].g_sn.u_b",
+      "sink": "u_pi.gn.g_s[4].g_c[0].g_sn.u_b",
+      "bits": 544,
+      "before_bit_um": 64157.184000000576,
+      "after_bit_um": 64157.184000000576,
+      "before_max_um": 117.93600000000015,
+      "after_max_um": 117.93600000000015
+    },
+    {
+      "net": "n6747",
+      "source": "g_y1.g_x[0].u_row.gn.g_s[0].g_c[2].g_ew.u_b",
+      "sink": "g_y1.g_x[0].u_q",
+      "bits": 517,
+      "before_bit_um": 70618.03199999998,
+      "after_bit_um": 61684.27199999998,
+      "before_max_um": 252.52799999999996,
+      "after_max_um": 235.24799999999996
+    }
+  ],
+  "limits": [
+    "Clock/reset ports are excluded from the data objective. All external data endpoint children fixed; clock/reset pin positions move with children, clock-route proof outstanding.",
+    "No flips without actual LEF symmetry and PG legality evidence.",
+    "Existing pair clearance retained up to 5.4um; no halo is reduced by search.",
+    "No routed congestion, clock, timing, source-native or throughput claim.",
+    "Bounded local translation search, not proof of global optimum.",
+    "Whole-die service, SM, VM, SU and other omitted links are outside this component objective."
+  ],
+  "manifest_sha256": "3f821008b7a80ea382e22c9476919536bfa17df540e6e321483b1bf2eb74d4ce"
+}

@@ -1,0 +1,17 @@
+== run_qfix_qwen.log
+REC 0 op=0 n=4096 afmt=0 ofmt=1 | die0 issue->done central 1233 p2p 1218 cycles
+REC 1 op=0 n=4096 afmt=0 ofmt=0 | die0 issue->done central 1233 p2p 2385 cycles
+REC 2 op=1 n=4096 afmt=0 ofmt=0 | die0 issue->done central 671 p2p 2978 cycles
+REC 3 op=1 n=4096 afmt=1 ofmt=1 | die0 issue->done central 806 p2p 1895 cycles
+REC 4 op=3 n=2 afmt=0 ofmt=5 | die0 issue->done central 1290 p2p 1230 cycles
+REC 5 op=0 n=1280 afmt=0 ofmt=1 | die0 issue->done central 1145 p2p 2334 cycles
+REC 6 op=1 n=1000 afmt=0 ofmt=0 | die0 issue->done central 623 p2p 2889 cycles
+REC 7 op=1 n=96 afmt=1 ofmt=1 | die0 issue->done central 633 p2p 1749 cycles
+SEQ case=qwen G=4 records=8 central 5704 cycles, p2p 5368 cycles (first issue -> last done, all dies); flits sent central 3048 p2p 3048
+PASS HGI_COLL_P2P case=qwen G=4 records=8 rc=1
+== run_qfix_grm.log
+REC 0 op=4 n=4096 afmt=0 ofmt=1 | die0 issue->done central 1233 p2p 1218 cycles
+REC 1 op=4 n=2048 afmt=0 ofmt=0 | die0 issue->done central 1169 p2p 2397 cycles
+REC 2 op=0 n=4096 afmt=0 ofmt=1 | die0 issue->done central 1233 p2p 3525 cycles
+SEQ case=grm G=4 records=3 central 3635 cycles, p2p 3572 cycles (first issue -> last done, all dies); flits sent central 2304 p2p 2304
+PASS HGI_COLL_P2P case=grm G=4 records=3 rc=1

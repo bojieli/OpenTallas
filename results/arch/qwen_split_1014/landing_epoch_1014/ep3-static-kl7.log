@@ -1,0 +1,3 @@
+LAND_COST cycles 9606 epoch 1 KD 12 KL 7 LEAD 7
+PASS qkd_land_rd g=5 s=3: 2471 row responses exact in request order (8 replaced by the posted row behind the fence), 273 V rows not requested and 16384 words in all consumed, 4 layers across the wrap, tail beyond T dropped
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-81869-1792037871): exit 0

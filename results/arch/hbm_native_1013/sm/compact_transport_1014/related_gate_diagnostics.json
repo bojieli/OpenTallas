@@ -1,0 +1,268 @@
+{
+  "collected": "2026-10-14T18:44:24.824400-07:00",
+  "rows": [
+    {
+      "kit": "hgi_dfmain13",
+      "gate_sha256": "438f8f5bfd45c86f7bd53a2ce137c35a6eeaead444babf6f44340c1157534dfb",
+      "gate_generated": "2026-10-14T18:40:37-0700",
+      "host": "ot-epyc4",
+      "verdict": "WARN",
+      "source_binding": "422830d81ca49462958efbfe65d05e834eb6227234dafc44f470320fe01914d1",
+      "clock": {
+        "max_root_sinks": 13758,
+        "root": "port:clk",
+        "cts": true,
+        "tt_insertion_ps": 405.8,
+        "tt_spread_ps": 89.6,
+        "declared_clock": null,
+        "limits": {
+          "sinks": 15000,
+          "insertion_ps": 300.0,
+          "spread_ps": 80.0
+        },
+        "clock_measurements": [
+          {
+            "source": "clk",
+            "clock": "core_clk",
+            "tt": {
+              "boundary": {
+                "n": 7749,
+                "mean": 335.2,
+                "min": 316.6,
+                "max": 405.7
+              },
+              "all": {
+                "n": 14183,
+                "mean": 335.0,
+                "min": 316.2,
+                "max": 405.8
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            }
+          }
+        ],
+        "measured_clock": "core_clk",
+        "verdict": "PASS",
+        "text": "13,758 sinks on the largest root <= 15,000; measured TT insertion 405.8 ps, leaf spread 89.6 ps"
+      },
+      "diagnostic_items": [],
+      "log_tail": [
+        "GATE WARN textbook.logic_depth: reg->reg stage formatter.g_preg.ls_q[3876]$_DFF_P_ -> formatter.g_preg.bk[5].wl_d[253]$_DFF_P_/D: ~707 ps estimated (18 logic levels) > 600 ps: pipeline / restructure the stage  -> FIX: pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration",
+        "GATE WARN textbook.util_channel: utilisation 32.1% outside 45%-65% (std 19452 + macro 0 um2 in 60634 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels",
+        "GATE INFO cts_calibration: ss insertion all 415.2..510.6 ps (spread 95.4), boundary mean 436.0; tt insertion all 316.2..405.8 ps (spread 89.6), boundary mean 335.2; ff insertion all 256.3..341.6 ps (spread 85.3), boundary mean 274.4; macro_clk flag False",
+        "GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50",
+        "GATE INFO path_classes: constraints signoff /src/physical/ref_tile/hgi_dfmain13/signoff.sdc (TT placement RC; diagnostic)",
+        "GATE INFO path_classes: reg->reg      595 paths, worst slack -417.5 ps (e.g. formatter.g_preg.bk[0].wl_d[221]$_DFF_P_/D)",
+        "GATE INFO path_classes: in->reg         5 paths, worst slack 258.8 ps (e.g. u_ctrl.lease_busy$_DFF_PN0_/RESETN)",
+        "GATE INFO path_classes: setup WNS -4.1754688595574407e-10 hold WNS 2.3317181518933694e-11",
+        "GATE INFO clock_rule: root port:clk: 13,758 sinks on the largest root <= 15,000; measured TT insertion 405.8 ps, leaf spread 89.6 ps",
+        "PRE_ROUTE_GATE: WARN (0 fail, 6 warn)",
+        "GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/codex-hbm-front-leaves-1013/physical/ref_tile/hgi_dfmain13/source_binding_history/1a184eca382688c9e7c62ab90888285777761e570038289c12a050fbbf75cbab.json",
+        "GATE: hgi_dfmain13/gate_result.json written (exact staged source binding; commit it with the kit)"
+      ],
+      "action": "Preserved gate evidence; structural timing repair required before route; WARN0fail does not imply native qualification"
+    },
+    {
+      "kit": "hbm_native_sram_cdc_w256_1014",
+      "gate_sha256": "350b163a7790d767895f0c1ac76b50f849c5627d2f40e81760fdce5ae886274e",
+      "gate_generated": "2026-10-14T18:39:49-0700",
+      "host": "ot-agidock128",
+      "verdict": "WARN",
+      "source_binding": "0876da1f0e1c4e529eae4f103bf350dd0f02d3072ea74f8ca31274d4c29c5bb9",
+      "clock": {
+        "max_root_sinks": 4860,
+        "root": "port:rclk",
+        "cts": true,
+        "tt_insertion_ps": 283.2,
+        "tt_spread_ps": 46.6,
+        "declared_clock": null,
+        "limits": {
+          "sinks": 15000,
+          "insertion_ps": 300.0,
+          "spread_ps": 80.0
+        },
+        "clock_measurements": [
+          {
+            "source": "wclk",
+            "clock": "core_clk",
+            "tt": {
+              "boundary": {
+                "n": 298,
+                "mean": 325.0,
+                "min": 292.5,
+                "max": 365.1
+              },
+              "all": {
+                "n": 4588,
+                "mean": 291.4,
+                "min": 249.5,
+                "max": 367.0
+              },
+              "errors": [],
+              "macros": {
+                "n": 1,
+                "nets": 1,
+                "max_per_net": 1,
+                "reg_mean": 291.4,
+                "max_slew": 13.5,
+                "max_late": -41.9,
+                "pins": [
+                  {
+                    "pin": "u_sram/clk",
+                    "arr": 249.5,
+                    "slew": 13.5,
+                    "late": -41.9,
+                    "net": "clknet_1_0__leaf_wclk"
+                  }
+                ]
+              },
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "rclk",
+            "clock": "vm_clk",
+            "tt": {
+              "boundary": {
+                "n": 305,
+                "mean": 263.6,
+                "min": 236.7,
+                "max": 269.6
+              },
+              "all": {
+                "n": 5115,
+                "mean": 254.7,
+                "min": 236.6,
+                "max": 283.2
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 1
+            }
+          }
+        ],
+        "measured_clock": "vm_clk",
+        "verdict": "PASS",
+        "text": "4,860 sinks on the largest root <= 15,000; measured TT insertion 283.2 ps, leaf spread 46.6 ps"
+      },
+      "diagnostic_items": [],
+      "log_tail": [
+        "GATE WARN textbook.logic_depth: reg->reg stage rx_code[264]$_DFFE_PP_ -> dec_data[196]$_DFFE_PP_/D: ~610 ps estimated (15 logic levels) > 600 ps: pipeline / restructure the stage  -> FIX: pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration",
+        "GATE WARN textbook.util_channel: utilisation 37.4% outside 45%-65% (std 5316 + macro 13319 um2 in 49857 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels",
+        "GATE INFO cts_calibration: ss insertion all 337.3..450.5 ps (spread 113.2), boundary mean 406.0; tt insertion all 249.5..367.0 ps (spread 117.5), boundary mean 325.0; ff insertion all 192.3..314.0 ps (spread 121.7), boundary mean 274.0; macro_clk flag False",
+        "GATE INFO density: effective global-placement target density 0.550 vs spec PD 0.55",
+        "GATE INFO path_classes: constraints signoff /src/physical/ref_tile/hbm_native_sram_cdc_w256_1014/signoff.sdc (TT placement RC; diagnostic)",
+        "GATE INFO path_classes: reg->reg     1196 paths, worst slack -94.8 ps (e.g. full$_DFF_PN1_/D)",
+        "GATE INFO path_classes: in->reg         4 paths, worst slack 417.5 ps (e.g. u_wrst.rst_n[0]$_DFF_PN0_/RESETN)",
+        "GATE INFO path_classes: setup WNS -9.482103990876567e-11 hold WNS 1.662273096947331e-11",
+        "GATE INFO clock_rule: root port:rclk: 4,860 sinks on the largest root <= 15,000; measured TT insertion 283.2 ps, leaf spread 46.6 ps",
+        "PRE_ROUTE_GATE: WARN (0 fail, 5 warn)",
+        "GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/codex-hbm-native-physical-1014/physical/ref_tile/hbm_native_sram_cdc_w256_1014/source_binding_history/10dd850bda185b266961195345afcae79b6165d68516befbe3fe9c6005b40b39.json",
+        "GATE: hbm_native_sram_cdc_w256_1014/gate_result.json written (exact staged source binding; commit it with the kit)"
+      ],
+      "action": "Preserved gate evidence; structural timing repair required before route; WARN0fail does not imply native qualification"
+    },
+    {
+      "kit": "hbm_native_sram_cdc_w280_1014",
+      "gate_sha256": "c94370de7e78da876242bce19ec493dc993c7489000e2f8a2210f62dd73ad042",
+      "gate_generated": "2026-10-14T18:38:37-0700",
+      "host": "ot-agidock128",
+      "verdict": "WARN",
+      "source_binding": "89d1a13fd324b407c554472de9cf34a27bb85676f26373c36106ac0306185344",
+      "clock": {
+        "max_root_sinks": 4956,
+        "root": "port:rclk",
+        "cts": true,
+        "tt_insertion_ps": 283.0,
+        "tt_spread_ps": 48.1,
+        "declared_clock": null,
+        "limits": {
+          "sinks": 15000,
+          "insertion_ps": 300.0,
+          "spread_ps": 80.0
+        },
+        "clock_measurements": [
+          {
+            "source": "wclk",
+            "clock": "core_clk",
+            "tt": {
+              "boundary": {
+                "n": 322,
+                "mean": 319.6,
+                "min": 281.6,
+                "max": 347.3
+              },
+              "all": {
+                "n": 4687,
+                "mean": 286.8,
+                "min": 249.0,
+                "max": 347.3
+              },
+              "errors": [],
+              "macros": {
+                "n": 1,
+                "nets": 1,
+                "max_per_net": 1,
+                "reg_mean": 286.8,
+                "max_slew": 13.4,
+                "max_late": -37.0,
+                "pins": [
+                  {
+                    "pin": "u_sram/clk",
+                    "arr": 249.8,
+                    "slew": 13.4,
+                    "late": -37.0,
+                    "net": "clknet_1_0__leaf_wclk"
+                  }
+                ]
+              },
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "rclk",
+            "clock": "vm_clk",
+            "tt": {
+              "boundary": {
+                "n": 329,
+                "mean": 262.1,
+                "min": 237.3,
+                "max": 268.2
+              },
+              "all": {
+                "n": 5235,
+                "mean": 252.7,
+                "min": 234.9,
+                "max": 283.0
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 1
+            }
+          }
+        ],
+        "measured_clock": "vm_clk",
+        "verdict": "PASS",
+        "text": "4,956 sinks on the largest root <= 15,000; measured TT insertion 283.0 ps, leaf spread 48.1 ps"
+      },
+      "diagnostic_items": [],
+      "log_tail": [
+        "GATE WARN textbook.boundary: 12 input->register endpoint(s) > 3 levels (worst re->rb_n[4]$_DFFE_PN1P_/D 5 lv, re->rb_n[1]$_DFFE_PN1P_/D 5 lv, re->rb_n[0]$_DFFE_PN1P_/D 5 lv): register the boundary (pin flops / registered outputs)  -> FIX: register every boundary: pin flop in, flop out; never an ICG enable from a port",
+        "GATE WARN textbook.util_channel: utilisation 37.6% outside 45%-65% (std 5438 + macro 13319 um2 in 49857 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels",
+        "GATE INFO cts_calibration: ss insertion all 326.6..430.3 ps (spread 103.7), boundary mean 401.0; tt insertion all 249.0..347.3 ps (spread 98.3), boundary mean 319.6; ff insertion all 192.5..295.0 ps (spread 102.5), boundary mean 268.6; macro_clk flag False",
+        "GATE INFO density: effective global-placement target density 0.550 vs spec PD 0.55",
+        "GATE INFO path_classes: constraints signoff /src/physical/ref_tile/hbm_native_sram_cdc_w280_1014/signoff.sdc (TT placement RC; diagnostic)",
+        "GATE INFO path_classes: reg->reg     1196 paths, worst slack -116.9 ps (e.g. ot_prs_00000_ff/D)",
+        "GATE INFO path_classes: in->reg         4 paths, worst slack 425.0 ps (e.g. u_wrst.sync_q[1]$_DFF_PN0_/RESETN)",
+        "GATE INFO path_classes: setup WNS -1.1685885592527256e-10 hold WNS 1.8405194035508998e-11",
+        "GATE INFO clock_rule: root port:rclk: 4,956 sinks on the largest root <= 15,000; measured TT insertion 283.0 ps, leaf spread 48.1 ps",
+        "PRE_ROUTE_GATE: WARN (0 fail, 4 warn)",
+        "GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/codex-hbm-native-physical-1014/physical/ref_tile/hbm_native_sram_cdc_w280_1014/source_binding_history/8da179938007dba8640ee3e2da4adc5c4132a0275d7a9cf05b54f56c674219fc.json",
+        "GATE: hbm_native_sram_cdc_w280_1014/gate_result.json written (exact staged source binding; commit it with the kit)"
+      ],
+      "action": "Preserved gate evidence; structural timing repair required before route; WARN0fail does not imply native qualification"
+    }
+  ]
+}

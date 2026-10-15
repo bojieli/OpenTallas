@@ -1,13 +1,13 @@
 {
- "name": "s81_markov_mul_native-g1-COMMIT",
+ "name": "s81_markov_mul_native-pc2-COMMIT",
  "block": "ot_s81_markov_mul_native",
  "ref_tile": true,
- "owner": "Codex:s81-rom-2250",
+ "owner": "Claude:s81-elemB6-1014",
  "purpose": "Original K256PINREG1CUT511SPLIT9 row partitioned to39real clocks, ring skew preserves every original interface epoch; parent wires only. No thresholds relaxed.",
  "threads": 8,
  "peak_ram_gb": 12,
  "source": {
-  "branch": "codex/s81-rom-2250",
+  "branch": "claude/s81-elemB6-1014",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/experimental/dsrom_markov_20261008",
@@ -41,6 +41,17 @@
      "iverilog"
     ],
     "pass_regex": "all_native_checks_PASS"
+   },
+   {
+    "name": "native_mutant_dut",
+    "cmd": "python3 tools/s81/markov_native_bench.py {RUN}/native_dut mul!",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 3,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "MARKOV_NATIVE_DUT FAIL"
    }
   ],
   "calibrate": {
@@ -91,7 +102,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81_markov_mul_native/s81_markov_mul_native-g1-COMMIT"
+   "to": "results/rtl/ref_tile/s81_markov_mul_native/s81_markov_mul_native-pc2-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -103,6 +114,6 @@
  "structural_change": "Original K256PINREG1CUT511SPLIT9 row partitioned to39real clocks, ring skew preserves every original interface epoch; parent wires only. No thresholds relaxed.",
  "reroute_reason": {
   "kind": "rtl_change",
-  "why": "genuine fixedK256 native source partition replaces unclosed cancelled flat43267sink requirement"
+  "why": "pc2: leaf reset conditioner (2 flops at the rst_n pin; pc1 views of chunk1..7 captured rst_n at 208-268 ps > 190 through the ring pointer / valid resets); data-path pin capture of pc1 unchanged (pc1 native audit: launch 177-194, data capture <= 190). markov_native_bench every-cycle equality vs PINREG1 PASS, all 15 mutants FAIL"
  }
 }

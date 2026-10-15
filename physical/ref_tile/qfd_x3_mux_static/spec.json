@@ -1,0 +1,114 @@
+{
+ "name": "qfd_x3_mux_static",
+ "top": "ot_qfd_x3_mux",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_split/ot_qfd_x3_mux.sv"
+ ],
+ "params": {
+  "MUT": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 129.6,
+  "h": 129.6,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "ck",
+   "rst_n",
+   "slot_v",
+   "slot_q"
+  ],
+  "W": [
+   "q",
+   "kvn_v",
+   "kvn_d",
+   "kvn_tag"
+  ],
+  "E": [
+   "x3_v",
+   "x3_d",
+   "x3_tag",
+   "fault"
+  ]
+ },
+ "inter": [
+  "*"
+ ],
+ "refglob": "*",
+ "io_budget": {
+  "in": 0.2,
+  "out": 0.2
+ },
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 770,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:qwen_x3_physical",
+  "branch": "codex/q-x3-physical-1014",
+  "tag": "p1",
+  "purpose": "Real fixed-calendar Q/KVN mux source ca4ffc617; measured CTS and native pin budget, TT setup and FF hold, DRC zero. Exact die assigned129.6-square link slot, official pinfile source613e09f09, ca4ffc617 RTL. Includes registered output+1 edge in compiler calendar.",
+  "extra_paths": [
+   "tools/qwen_split",
+   "rtl/test/qwen_split",
+   "results/rtl/qwen_x3_static_1014",
+   "results/arch/qwen_split_compute_1014/static_x3"
+  ],
+  "benches": [
+   {
+    "name": "x3_static_exact_and_mutants",
+    "cmd": "bash tools/qwen_split/run_x3_mux_gate.sh {RUN}/bench/x3",
+    "expect": "pass",
+    "pass_regex": "^PASS static Q/KVN",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "x3_wrong_calendar",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qfd_x3_mux -Ptb_qfd_x3_mux.MUT=1 -o {RUN}/bench/negative rtl/qwen_split/ot_qfd_x3_mux.sv rtl/test/qwen_split/tb_qfd_x3_mux.sv && vvp {RUN}/bench/negative",
+    "expect": "fail",
+    "fail_regex": "^FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_x3_mux_static/views",
+  "record_to": "results/rtl/ref_tile/qfd_x3_mux_static"
+ },
+ "io_tcl": "physical/ref_tile/qfd_x3_mux_static/assigned_pins.tcl",
+ "assigned_pin_source": {
+  "file": "results/arch/qwen_split_compute_1014/static_x3/ot_qfd_x3_mux.json",
+  "sha256": "eb17633b8f95b77b8fa4112b3492c20c18e1a868fe67fadf357288d6caaf71fe",
+  "owner": "q_compute_die",
+  "commit": "613e09f09",
+  "clock_contract": "Own measured phi-R delivery; d2d parent mux_ck must connect to actual leaf ck, never borrow another child early clock",
+  "placement_status": "LOCAL_PINS_ASSIGNED; link-boundary absolute site not yet integrated"
+ },
+ "slot_change_request": "Official q_compute_die local link-boundary slot assignment613e09f09; exact129.6square, absolute site not yet integrated",
+ "macros": [],
+ "children": [],
+ "recipe": 2,
+ "keep_pin_regs": true
+}

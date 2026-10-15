@@ -1,0 +1,21 @@
+{
+  "schema": "qwen.compute.geometry-smoke.v1",
+  "source": "61297767d",
+  "environment": {
+    "OT_TP8_SPLIT": "compute",
+    "OT_SPLIT_STACK": "seam",
+    "OT_RELAY_SKIP": "1"
+  },
+  "result_scope": "geometry only; historical/diagnostic RTL interfaces, no relay qualification",
+  "records": [
+    "OT_TIME place_s=132",
+    "OT_LEGAL instances=1630 overlaps=0 outside=0",
+    "OT_ASSERT PASS",
+    "[ERROR DRT-0305] Net one_ of signal type POWER is not routable by TritonRoute. Move to special nets.",
+    "OT_PA FAIL DRT-0305",
+    "OT_TIME pa_s=17"
+  ],
+  "sta": "NOT_RUN",
+  "grt": "NOT_RUN",
+  "production_static_schedule": "NOT_QUALIFIED"
+}

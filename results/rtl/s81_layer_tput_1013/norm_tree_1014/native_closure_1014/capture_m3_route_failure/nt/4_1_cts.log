@@ -1,0 +1,858 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_s81_hc_ctfx_nt_asap7_ref_s81hc_ctfxnt_ref_v3_owned_epoch_631a20a94/base/3_place.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_s81_hc_ctfx_nt_asap7_ref_s81hc_ctfxnt_ref_v3_owned_epoch_631a20a94/base/3_place.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_s81_hc_ctfx_nt_asap7_ref_s81hc_ctfxnt_ref_v3_owned_epoch_631a20a94/base/3_place.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_s81_hc_ctfx_nt_asap7_ref_s81hc_ctfxnt_ref_v3_owned_epoch_631a20a94/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_cts_ot_cts_fix.tcl
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75
+OT_CG_PUSHDOWN total gates=0 clones=0 K=48 MIN=64
+OT_MACRO_CTS skipped: 0 clocked macro(s)
+[INFO CTS-0050] Root buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx24_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0007] Net "clk" found for clock "core_clk".
+[INFO CTS-0010]  Clock net "clk" has 4021 sinks.
+[INFO CTS-0008] TritonCTS found 1 clock nets.
+[INFO CTS-0097] Characterization used 1 buffer(s) types.
+[INFO CTS-0201] 0 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net clk.
+[INFO CTS-0028]  Total number of sinks: 4021.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 11.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 129.
+[INFO CTS-0024]  Normalized sink region: [(31.8077, 1.86875), (249.853, 15.3871)].
+[INFO CTS-0025]     Width:  218.0455.
+[INFO CTS-0026]     Height: 13.5184.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 65
+    Sub-region size: 109.0227 X 13.5184
+[INFO CTS-0034]     Segment length (rounded): 54.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 33
+    Sub-region size: 109.0227 X 6.7592
+[INFO CTS-0034]     Segment length (rounded): 4.
+ Level 3
+    Direction: Horizontal
+    Sinks per sub-region: 17
+    Sub-region size: 54.5114 X 6.7592
+[INFO CTS-0034]     Segment length (rounded): 28.
+ Level 4
+    Direction: Vertical
+    Sinks per sub-region: 9
+    Sub-region size: 54.5114 X 3.3796
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 129.
+[INFO CTS-0018]     Created 160 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 6.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 6.
+[INFO CTS-0015]     Created 160 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 2:1, 4:2, 5:1, 6:3, 7:1, 8:4, 10:2, 11:2, 17:1, 18:1, 20:2, 21:1, 22:1, 27:2, 28:1, 30:1, 31:2, 32:117..
+[INFO CTS-0017]     Max level of the clock tree: 4.
+[INFO CTS-0098] Clock net "clk"
+[INFO CTS-0099]  Sinks 4054
+[INFO CTS-0100]  Leaf buffers 129
+[INFO CTS-0101]  Average sink wire length 354.68 um
+[INFO CTS-0102]  Path depth 5 - 6
+[INFO CTS-0207]  Dummy loads inserted 33
+[INFO RSZ-0047] Found 1 long wires.
+[INFO RSZ-0048] Inserted 1 buffers in 1 nets.
+[INFO CTS-0500] Runtime: 1.98s
+QDM PINFLOP reference: 2284 input pin flops, median arrival 263.004272 (range 249.154556 .. 324.280609)
+QDM reference pin fdx[425]$_DFF_P_/CLK clock arrival max 263.004272 min 206.391815 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+QDM boundary referenced to the propagated tree
+OT_LINK_BUDGET clock core_clk T 770.000 L 281.3 (238.3..324.3 clock_latency) skew 150 link 114 -> S 223.0 R 223.0; in max 487.0 out max 487.0
+OT_LINK_BUDGET ports in:core_clk 1579 out:core_clk 2578 async_pins_excluded 858
+Took 6 seconds: clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75
+estimate_parasitics -placement
+detailed_placement
+[INFO DPL-0006] Core area: 12363.84 um^2
+[INFO DPL-0007] Movable instances area: 1845.45 um^2
+[INFO DPL-0008] Fixed instances area within core: 30.97 um^2
+[INFO DPL-0009] Utilization: 15.2%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 14532 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |       4430 |       440 |      3990
+        1 |       3920 |       396 |      3524
+        2 |       3540 |       344 |      3196
+        3 |       3530 |       311 |      3207
+        4 |       3204 |       297 |      2907
+        5 |       3248 |       275 |      2973
+        6 |       2948 |       265 |      2668
+        7 |       3068 |       268 |      2800
+        8 |       2853 |       280 |      2549
+        9 |       2768 |       257 |      2478
+       10 |       2687 |       247 |      2440
+       20 |       1418 |       142 |      1273
+       30 |        747 |        77 |       670
+       40 |        535 |        44 |       463
+       50 |        359 |        38 |       321
+       60 |          8 |         2 |         6
+       61 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 61.
+[INFO DPL-0500] Runtime: 2.41s
+Placement Analysis
+---------------------------------
+total displacement       5828.4 u
+average displacement        0.4 u
+max displacement           13.1 u
+original HPWL           93828.8 u
+legalized HPWL          97244.5 u
+delta HPWL                    4 %
+
+estimate_parasitics -placement
+OT_CLK_PROTECT dont_touch clock nets=162 clock buffers=161
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM: ff mode reads /src/physical/ref_tile/s81hc_ctfxnt_ref/signoff.sdc
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM PINFLOP reference: 2284 input pin flops, median arrival 217.1811 (range 202.8332 .. 262.2293)
+QDM reference pin ot_prs_00099_ff/CLK clock arrival max 217.1811 min 205.8623 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM: ff mode reads /src/.ot_mm/ff_ioref_last.sdc (loop default, appended last)
+OT_IOREF multi-scene session: arrivals of scene BC
+OT_IOREF clock-port clk (core_clk): data input delays dropped
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_core_clk and core_clk.
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_core_clk and core_clk.
+OT_IOREF_EDGE core_clk boundary 3752 negedge 0 noarc 0 inverted 0
+OT_IOREF ot_lb_v_core_clk core_clk mean 224.5 min 202.8 max 262.2 n 3752 boundary
+OT_IOREF_PF core_clk input pin flops 2284 mean 224.1
+OT_IOREF_PF 0 input delays re-referenced (ports 0)
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_core_clk and core_clk.
+OT_HOLD_MM sync: SS setup ws 48.29 / FF hold ws -53.80 ps
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0098] No setup violations found
+[INFO RSZ-0505] Runtime: 0.17s
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_core_clk and core_clk.
+OT_HM_GUARD: margin 30 kept: 6592 endpoints in margin, ~15676 buffers, +10.1 util pts (projected +10.1 util points > 8)
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_core_clk and core_clk.
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_core_clk and core_clk.
+OT_HOLD_GUARD start: hold ws -53.80 tns -64899.7 viol 4334 (margin 30, chunk 1000 it)
+repair_timing -setup_margin 0 -hold_margin 30 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+[INFO RSZ-0046] Found 6592 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -53.802 | -64899.707 | fdx[449]$_DFF_P_/D
+       10 |       0 |      20 |            0 |    +0.1% | -51.585 | -64481.867 | fdx[667]$_DFF_P_/D
+       20 |       0 |      40 |            0 |    +0.2% | -51.078 | -63986.035 | fdx[954]$_DFF_P_/D
+       30 |       0 |      64 |            0 |    +0.2% | -50.596 | -63471.297 | ot_prs_00698_ff/D
+       40 |       0 |      86 |            0 |    +0.3% | -50.213 | -62978.098 | fdx[457]$_DFF_P_/D
+       50 |       0 |     110 |            0 |    +0.4% | -50.008 | -62545.199 | fdx[568]$_DFF_P_/D
+       60 |       0 |     134 |            0 |    +0.5% | -49.774 | -62039.945 | fdx[558]$_DFF_P_/D
+       70 |       0 |     158 |            0 |    +0.6% | -49.522 | -61560.336 | fdx[617]$_DFF_P_/D
+       80 |       0 |     180 |            0 |    +0.7% | -49.366 | -61065.812 | ot_prs_00725_ff/D
+       90 |       0 |     202 |            0 |    +0.8% | -49.078 | -60596.414 | fdx[635]$_DFF_P_/D
+      100 |       0 |     224 |            0 |    +0.9% | -48.856 | -60099.191 | ot_prs_00631_ff/D
+      110 |       0 |     250 |            0 |    +1.0% | -48.576 | -59651.895 | fdx[892]$_DFF_P_/D
+      120 |       0 |     274 |            0 |    +1.1% | -48.265 | -59229.418 | ot_prs_00625_ff/D
+      130 |       0 |     298 |            0 |    +1.2% | -47.812 | -58787.941 | ot_prs_00635_ff/D
+      140 |       0 |     326 |            0 |    +1.3% | -47.495 | -58368.957 | fdx[878]$_DFF_P_/D
+      150 |       0 |     352 |            0 |    +1.4% | -47.153 | -57924.344 | fdx_local[566]$_DFF_P_/D
+      160 |       0 |     382 |            0 |    +1.5% | -46.134 | -57553.812 | ot_prs_01063_ff/D
+      170 |       0 |     412 |            0 |    +1.6% | -44.796 | -57068.766 | ot_prs_00899_ff/D
+      180 |       0 |     434 |            0 |    +1.7% | -43.248 | -56630.363 | fdx[786]$_DFF_P_/D
+      190 |       0 |     454 |            0 |    +1.8% | -42.554 | -56151.129 | fdx[448]$_DFF_P_/D
+      200 |       0 |     480 |            0 |    +1.9% | -41.920 | -55696.363 | fdx[818]$_DFF_P_/D
+      210 |       0 |     504 |            0 |    +2.0% | -41.300 | -55239.645 | fdx[956]$_DFF_P_/D
+      220 |       0 |     530 |            0 |    +2.1% | -40.582 | -54784.168 | ot_prs_00986_ff/D
+      230 |       0 |     556 |            0 |    +2.2% | -37.388 | -54332.941 | fdx[653]$_DFF_P_/D
+      240 |       0 |     578 |            0 |    +2.2% | -35.955 | -53919.438 | fdx[889]$_DFF_P_/D
+      250 |       0 |     606 |            0 |    +2.4% | -34.710 | -53535.969 | fdx[854]$_DFF_P_/D
+      260 |       0 |     636 |            0 |    +2.5% | -34.308 | -53174.797 | fdx[858]$_DFF_P_/D
+      270 |       0 |     670 |            0 |    +2.6% | -33.924 | -52921.191 | fdx[649]$_DFF_P_/D
+      280 |       0 |     696 |            0 |    +2.7% | -33.118 | -52587.984 | fdx[846]$_DFF_P_/D
+      290 |       0 |     724 |            0 |    +2.8% | -32.806 | -52285.969 | fdx[936]$_DFF_P_/D
+      300 |       0 |     756 |            0 |    +2.9% | -32.499 | -51962.852 | fdx_local[226]
+      310 |       0 |     789 |            0 |    +3.1% | -32.291 | -51625.820 | ot_prs_01091_ff/D
+      320 |       0 |     819 |            0 |    +3.2% | -31.637 | -51301.223 | ul_out[7]$_DFF_PN0_/D
+      330 |       0 |     846 |            0 |    +3.3% | -31.415 | -50959.328 | ul_out[14]$_DFF_PN0_/D
+      340 |       0 |     873 |            0 |    +3.4% | -31.141 | -50594.809 | ul_out[9]$_DFF_PN0_/D
+      350 |       0 |     901 |            0 |    +3.5% | -30.908 | -50234.730 | fdx[832]$_DFF_P_/D
+      360 |       0 |     932 |            0 |    +3.6% | -30.480 | -50022.203 | fdx_local[136]
+      370 |       0 |     965 |            0 |    +3.7% | -30.281 | -49697.172 | fdx_local[575]$_DFF_P_/D
+      380 |       0 |     997 |            0 |    +3.9% | -29.926 | -49419.773 | ot_prs_00523_ff/D
+      390 |       0 |    1025 |            0 |    +4.0% | -29.460 | -49115.910 | fdx_local[453]$_DFF_P_/D
+      400 |       0 |    1058 |            0 |    +4.1% | -29.134 | -48834.676 | ot_prs_00543_ff/D
+      410 |       0 |    1089 |            0 |    +4.2% | -28.769 | -48553.855 | fdx[803]$_DFF_P_/D
+      420 |       0 |    1118 |            0 |    +4.3% | -28.491 | -48298.672 | u_q.u_si.genblk1.g_line.line[114]$_DFF_P_/D
+      430 |       0 |    1143 |            0 |    +4.4% | -28.208 | -48022.684 | oct[0]$_DFF_P_/D
+      440 |       0 |    1169 |            0 |    +4.5% | -28.104 | -47743.730 | fdx_local[246]
+      450 |       0 |    1200 |            0 |    +4.7% | -27.886 | -47462.039 | fdx[876]$_DFF_P_/D
+      460 |       0 |    1225 |            0 |    +4.8% | -27.635 | -47112.605 | fdx[203]
+      470 |       0 |    1254 |            0 |    +4.9% | -27.494 | -46889.566 | fdx_local[24]
+      480 |       0 |    1278 |            0 |    +5.0% | -27.470 | -46598.535 | fdx_local[477]$_DFF_P_/D
+      490 |       0 |    1307 |            0 |    +5.1% | -27.470 | -46343.121 | fdx_local[477]$_DFF_P_/D
+      500 |       0 |    1339 |            0 |    +5.2% | -27.470 | -46078.609 | fdx_local[477]$_DFF_P_/D
+      510 |       0 |    1365 |            0 |    +5.3% | -27.470 | -45802.879 | fdx_local[477]$_DFF_P_/D
+      520 |       0 |    1393 |            0 |    +5.4% | -27.470 | -45486.605 | fdx_local[477]$_DFF_P_/D
+      530 |       0 |    1420 |            0 |    +5.5% | -27.470 | -45214.777 | fdx_local[477]$_DFF_P_/D
+      540 |       0 |    1450 |            0 |    +5.6% | -27.470 | -44928.707 | fdx_local[477]$_DFF_P_/D
+      550 |       0 |    1480 |            0 |    +5.7% | -27.470 | -44664.539 | fdx_local[477]$_DFF_P_/D
+      560 |       0 |    1510 |            0 |    +5.9% | -27.470 | -44417.895 | fdx_local[477]$_DFF_P_/D
+      570 |       0 |    1541 |            0 |    +6.0% | -27.470 | -44195.426 | fdx_local[477]$_DFF_P_/D
+      580 |       0 |    1569 |            0 |    +6.1% | -27.470 | -43907.520 | fdx_local[477]$_DFF_P_/D
+      590 |       0 |    1598 |            0 |    +6.2% | -27.470 | -43611.895 | fdx_local[477]$_DFF_P_/D
+      600 |       0 |    1625 |            0 |    +6.3% | -27.470 | -43326.023 | fdx_local[477]$_DFF_P_/D
+      610 |       0 |    1653 |            0 |    +6.4% | -27.470 | -43052.012 | fdx_local[477]$_DFF_P_/D
+      620 |       0 |    1682 |            0 |    +6.5% | -27.470 | -42757.891 | fdx_local[477]$_DFF_P_/D
+      630 |       0 |    1711 |            0 |    +6.6% | -27.470 | -42553.320 | fdx_local[477]$_DFF_P_/D
+      640 |       0 |    1739 |            0 |    +6.8% | -27.470 | -42331.387 | fdx_local[477]$_DFF_P_/D
+      650 |       0 |    1765 |            0 |    +6.9% | -27.470 | -42065.121 | fdx_local[477]$_DFF_P_/D
+      660 |       0 |    1793 |            0 |    +7.0% | -27.470 | -41796.746 | fdx_local[477]$_DFF_P_/D
+      670 |       0 |    1822 |            0 |    +7.1% | -27.470 | -41529.379 | fdx_local[477]$_DFF_P_/D
+      680 |       0 |    1853 |            0 |    +7.2% | -27.470 | -41290.195 | fdx_local[477]$_DFF_P_/D
+      690 |       0 |    1883 |            0 |    +7.3% | -27.470 | -41036.566 | fdx_local[477]$_DFF_P_/D
+      700 |       0 |    1910 |            0 |    +7.4% | -27.470 | -40737.875 | fdx_local[477]$_DFF_P_/D
+      710 |       0 |    1939 |            0 |    +7.5% | -27.470 | -40561.375 | fdx_local[477]$_DFF_P_/D
+      720 |       0 |    1968 |            0 |    +7.6% | -27.470 | -40346.168 | fdx_local[477]$_DFF_P_/D
+      730 |       0 |    1999 |            0 |    +7.8% | -27.470 | -40152.973 | fdx_local[477]$_DFF_P_/D
+      740 |       0 |    2026 |            0 |    +7.9% | -27.470 | -39878.191 | fdx_local[477]$_DFF_P_/D
+      750 |       0 |    2053 |            0 |    +8.0% | -27.470 | -39611.344 | fdx_local[477]$_DFF_P_/D
+      760 |       0 |    2079 |            0 |    +8.1% | -27.470 | -39336.738 | fdx_local[477]$_DFF_P_/D
+      770 |       0 |    2108 |            0 |    +8.2% | -27.470 | -39144.723 | fdx_local[477]$_DFF_P_/D
+      780 |       0 |    2138 |            0 |    +8.3% | -27.470 | -38900.227 | fdx_local[477]$_DFF_P_/D
+      790 |       0 |    2164 |            0 |    +8.4% | -27.470 | -38589.543 | fdx_local[477]$_DFF_P_/D
+      800 |       0 |    2193 |            0 |    +8.5% | -27.470 | -38379.508 | fdx_local[477]$_DFF_P_/D
+      810 |       0 |    2218 |            0 |    +8.6% | -27.470 | -38075.062 | fdx_local[477]$_DFF_P_/D
+      820 |       0 |    2247 |            0 |    +8.7% | -27.470 | -37862.656 | fdx_local[477]$_DFF_P_/D
+      830 |       0 |    2271 |            0 |    +8.8% | -27.470 | -37568.176 | fdx_local[477]$_DFF_P_/D
+      840 |       0 |    2298 |            0 |    +8.9% | -27.470 | -37334.594 | fdx_local[477]$_DFF_P_/D
+      850 |       0 |    2326 |            0 |    +9.0% | -27.470 | -37082.191 | fdx_local[477]$_DFF_P_/D
+      860 |       0 |    2353 |            0 |    +9.1% | -27.470 | -36845.617 | fdx_local[477]$_DFF_P_/D
+      870 |       0 |    2381 |            0 |    +9.3% | -27.470 | -36622.715 | fdx_local[477]$_DFF_P_/D
+      880 |       0 |    2408 |            0 |    +9.4% | -27.470 | -36345.402 | fdx_local[477]$_DFF_P_/D
+      890 |       0 |    2435 |            0 |    +9.5% | -27.470 | -36053.270 | fdx_local[477]$_DFF_P_/D
+      900 |       0 |    2462 |            0 |    +9.6% | -27.470 | -35808.551 | fdx_local[477]$_DFF_P_/D
+      910 |       0 |    2488 |            0 |    +9.7% | -27.470 | -35552.379 | fdx_local[477]$_DFF_P_/D
+      920 |       0 |    2517 |            0 |    +9.8% | -27.470 | -35301.086 | fdx_local[477]$_DFF_P_/D
+      930 |       0 |    2544 |            0 |    +9.9% | -27.470 | -35128.270 | fdx_local[477]$_DFF_P_/D
+      940 |       0 |    2573 |            0 |   +10.0% | -27.470 | -34902.582 | fdx_local[477]$_DFF_P_/D
+      950 |       0 |    2601 |            0 |   +10.1% | -27.470 | -34744.332 | fdx_local[477]$_DFF_P_/D
+      960 |       0 |    2627 |            0 |   +10.2% | -27.470 | -34486.012 | fdx_local[477]$_DFF_P_/D
+      970 |       0 |    2655 |            0 |   +10.3% | -27.470 | -34267.438 | fdx_local[477]$_DFF_P_/D
+      980 |       0 |    2682 |            0 |   +10.4% | -27.470 | -34054.441 | fdx_local[477]$_DFF_P_/D
+      990 |       0 |    2712 |            0 |   +10.5% | -27.470 | -33856.750 | fdx_local[477]$_DFF_P_/D
+     1000 |       0 |    2739 |            0 |   +10.6% | -27.470 | -33610.129 | fdx_local[477]$_DFF_P_/D
+     1010 |       0 |    2766 |            0 |   +10.7% | -27.470 | -33383.406 | fdx_local[477]$_DFF_P_/D
+     1020 |       0 |    2789 |            0 |   +10.8% | -27.470 | -33143.512 | fdx_local[477]$_DFF_P_/D
+     1030 |       0 |    2818 |            0 |   +10.9% | -27.470 | -32944.836 | fdx_local[477]$_DFF_P_/D
+     1040 |       0 |    2845 |            0 |   +11.1% | -27.470 | -32726.934 | fdx_local[477]$_DFF_P_/D
+     1050 |       0 |    2875 |            0 |   +11.2% | -27.470 | -32509.756 | fdx_local[477]$_DFF_P_/D
+     1060 |       0 |    2904 |            0 |   +11.3% | -27.470 | -32291.045 | fdx_local[477]$_DFF_P_/D
+     1070 |       0 |    2932 |            0 |   +11.4% | -27.470 | -32113.139 | fdx_local[477]$_DFF_P_/D
+     1080 |       0 |    2961 |            0 |   +11.5% | -27.470 | -31919.207 | fdx_local[477]$_DFF_P_/D
+     1090 |       0 |    2990 |            0 |   +11.6% | -27.470 | -31702.203 | fdx_local[477]$_DFF_P_/D
+     1100 |       0 |    3019 |            0 |   +11.7% | -27.470 | -31492.984 | fdx_local[477]$_DFF_P_/D
+     1110 |       0 |    3047 |            0 |   +11.8% | -27.470 | -31279.264 | fdx_local[477]$_DFF_P_/D
+     1120 |       0 |    3073 |            0 |   +11.9% | -27.470 | -31080.543 | fdx_local[477]$_DFF_P_/D
+     1130 |       0 |    3099 |            0 |   +12.0% | -27.470 | -30838.627 | fdx_local[477]$_DFF_P_/D
+     1140 |       0 |    3125 |            0 |   +12.1% | -27.470 | -30614.711 | fdx_local[477]$_DFF_P_/D
+     1150 |       0 |    3151 |            0 |   +12.2% | -27.470 | -30386.822 | fdx_local[477]$_DFF_P_/D
+     1160 |       0 |    3180 |            0 |   +12.4% | -27.470 | -30178.346 | fdx_local[477]$_DFF_P_/D
+     1170 |       0 |    3209 |            0 |   +12.5% | -27.470 | -29970.621 | fdx_local[477]$_DFF_P_/D
+     1180 |       0 |    3239 |            0 |   +12.6% | -27.470 | -29782.473 | fdx_local[477]$_DFF_P_/D
+     1190 |       0 |    3265 |            0 |   +12.7% | -27.470 | -29560.611 | fdx_local[477]$_DFF_P_/D
+     1200 |       0 |    3295 |            0 |   +12.8% | -27.470 | -29374.270 | fdx_local[477]$_DFF_P_/D
+     1210 |       0 |    3324 |            0 |   +12.9% | -27.470 | -29210.881 | fdx_local[477]$_DFF_P_/D
+     1220 |       0 |    3354 |            0 |   +13.0% | -27.470 | -29007.271 | fdx_local[477]$_DFF_P_/D
+     1230 |       0 |    3384 |            0 |   +13.1% | -27.470 | -28804.430 | fdx_local[477]$_DFF_P_/D
+     1240 |       0 |    3413 |            0 |   +13.3% | -27.470 | -28602.182 | fdx_local[477]$_DFF_P_/D
+     1250 |       0 |    3443 |            0 |   +13.4% | -27.470 | -28400.906 | fdx_local[477]$_DFF_P_/D
+     1260 |       0 |    3470 |            0 |   +13.5% | -27.470 | -28200.219 | fdx_local[477]$_DFF_P_/D
+     1270 |       0 |    3499 |            0 |   +13.6% | -27.470 | -28000.162 | fdx_local[477]$_DFF_P_/D
+     1280 |       0 |    3527 |            0 |   +13.7% | -27.470 | -27810.744 | fdx_local[477]$_DFF_P_/D
+     1290 |       0 |    3556 |            0 |   +13.8% | -27.470 | -27631.988 | fdx_local[477]$_DFF_P_/D
+     1300 |       0 |    3586 |            0 |   +13.9% | -27.470 | -27434.227 | fdx_local[477]$_DFF_P_/D
+     1310 |       0 |    3612 |            0 |   +14.0% | -27.470 | -27237.471 | fdx_local[477]$_DFF_P_/D
+     1320 |       0 |    3641 |            0 |   +14.1% | -27.470 | -27080.592 | fdx_local[477]$_DFF_P_/D
+     1330 |       0 |    3667 |            0 |   +14.2% | -27.470 | -26863.447 | fdx_local[477]$_DFF_P_/D
+     1340 |       0 |    3694 |            0 |   +14.4% | -27.470 | -26697.061 | fdx_local[477]$_DFF_P_/D
+     1350 |       0 |    3723 |            0 |   +14.5% | -27.470 | -26521.598 | fdx_local[477]$_DFF_P_/D
+     1360 |       0 |    3751 |            0 |   +14.6% | -27.470 | -26327.818 | fdx_local[477]$_DFF_P_/D
+     1370 |       0 |    3779 |            0 |   +14.7% | -27.470 | -26131.650 | fdx_local[477]$_DFF_P_/D
+     1380 |       0 |    3806 |            0 |   +14.8% | -27.470 | -25957.129 | fdx_local[477]$_DFF_P_/D
+     1390 |       0 |    3834 |            0 |   +14.9% | -27.470 | -25781.908 | fdx_local[477]$_DFF_P_/D
+     1400 |       0 |    3862 |            0 |   +15.0% | -27.470 | -25590.664 | fdx_local[477]$_DFF_P_/D
+     1410 |       0 |    3889 |            0 |   +15.1% | -27.470 | -25415.889 | fdx_local[477]$_DFF_P_/D
+     1420 |       0 |    3919 |            0 |   +15.2% | -27.470 | -25261.758 | fdx_local[477]$_DFF_P_/D
+     1430 |       0 |    3947 |            0 |   +15.3% | -27.470 | -25082.432 | fdx_local[477]$_DFF_P_/D
+     1440 |       0 |    3977 |            0 |   +15.5% | -27.470 | -24910.846 | fdx_local[477]$_DFF_P_/D
+     1450 |       0 |    4004 |            0 |   +15.6% | -27.470 | -24741.174 | fdx_local[477]$_DFF_P_/D
+     1460 |       0 |    4033 |            0 |   +15.7% | -27.470 | -24572.125 | fdx_local[477]$_DFF_P_/D
+     1470 |       0 |    4062 |            0 |   +15.8% | -27.470 | -24394.312 | fdx_local[477]$_DFF_P_/D
+     1480 |       0 |    4090 |            0 |   +15.9% | -27.470 | -24222.703 | fdx_local[477]$_DFF_P_/D
+     1490 |       0 |    4118 |            0 |   +16.0% | -27.470 | -24034.754 | fdx_local[477]$_DFF_P_/D
+     1500 |       0 |    4147 |            0 |   +16.1% | -27.470 | -23904.770 | fdx_local[477]$_DFF_P_/D
+     1510 |       0 |    4176 |            0 |   +16.2% | -27.470 | -23720.445 | fdx_local[477]$_DFF_P_/D
+     1520 |       0 |    4206 |            0 |   +16.3% | -27.470 | -23554.352 | fdx_local[477]$_DFF_P_/D
+     1530 |       0 |    4236 |            0 |   +16.5% | -27.470 | -23388.355 | fdx_local[477]$_DFF_P_/D
+     1540 |       0 |    4265 |            0 |   +16.6% | -27.470 | -23196.496 | fdx_local[477]$_DFF_P_/D
+     1550 |       0 |    4295 |            0 |   +16.7% | -27.470 | -23049.414 | fdx_local[477]$_DFF_P_/D
+     1560 |       0 |    4324 |            0 |   +16.8% | -27.470 | -22902.029 | fdx_local[477]$_DFF_P_/D
+     1570 |       0 |    4350 |            0 |   +16.9% | -27.470 | -22719.533 | fdx_local[477]$_DFF_P_/D
+     1580 |       0 |    4377 |            0 |   +17.0% | -27.470 | -22554.596 | fdx_local[477]$_DFF_P_/D
+     1590 |       0 |    4404 |            0 |   +17.1% | -27.470 | -22375.471 | fdx_local[477]$_DFF_P_/D
+     1600 |       0 |    4432 |            0 |   +17.2% | -27.470 | -22194.250 | fdx_local[477]$_DFF_P_/D
+     1610 |       0 |    4460 |            0 |   +17.3% | -27.470 | -22007.160 | fdx_local[477]$_DFF_P_/D
+     1620 |       0 |    4487 |            0 |   +17.4% | -27.470 | -21824.109 | fdx_local[477]$_DFF_P_/D
+     1630 |       0 |    4516 |            0 |   +17.5% | -27.470 | -21638.316 | fdx_local[477]$_DFF_P_/D
+     1640 |       0 |    4539 |            0 |   +17.6% | -27.470 | -21453.021 | fdx_local[477]$_DFF_P_/D
+     1650 |       0 |    4567 |            0 |   +17.7% | -27.470 | -21275.145 | fdx_local[477]$_DFF_P_/D
+     1660 |       0 |    4596 |            0 |   +17.9% | -27.470 | -21100.898 | fdx_local[477]$_DFF_P_/D
+     1670 |       0 |    4623 |            0 |   +18.0% | -27.470 | -20925.656 | fdx_local[477]$_DFF_P_/D
+     1680 |       0 |    4651 |            0 |   +18.1% | -27.470 | -20750.670 | fdx_local[477]$_DFF_P_/D
+     1690 |       0 |    4680 |            0 |   +18.2% | -27.470 | -20578.998 | fdx_local[477]$_DFF_P_/D
+     1700 |       0 |    4708 |            0 |   +18.3% | -27.470 | -20405.816 | fdx_local[477]$_DFF_P_/D
+     1710 |       0 |    4738 |            0 |   +18.4% | -27.470 | -20235.365 | fdx_local[477]$_DFF_P_/D
+     1720 |       0 |    4767 |            0 |   +18.5% | -27.470 | -20065.742 | fdx_local[477]$_DFF_P_/D
+     1730 |       0 |    4796 |            0 |   +18.6% | -27.470 | -19896.807 | fdx_local[477]$_DFF_P_/D
+     1740 |       0 |    4823 |            0 |   +18.7% | -27.470 | -19726.725 | fdx_local[477]$_DFF_P_/D
+     1750 |       0 |    4850 |            0 |   +18.8% | -27.470 | -19558.941 | fdx_local[477]$_DFF_P_/D
+     1760 |       0 |    4879 |            0 |   +19.0% | -27.470 | -19391.768 | fdx_local[477]$_DFF_P_/D
+     1770 |       0 |    4908 |            0 |   +19.1% | -27.470 | -19225.465 | fdx_local[477]$_DFF_P_/D
+     1780 |       0 |    4938 |            0 |   +19.2% | -27.470 | -19059.707 | fdx_local[477]$_DFF_P_/D
+     1790 |       0 |    4965 |            0 |   +19.3% | -27.470 | -18892.971 | fdx_local[477]$_DFF_P_/D
+     1800 |       0 |    4995 |            0 |   +19.4% | -27.470 | -18728.713 | fdx_local[477]$_DFF_P_/D
+     1810 |       0 |    5024 |            0 |   +19.5% | -27.470 | -18565.053 | fdx_local[477]$_DFF_P_/D
+     1820 |       0 |    5052 |            0 |   +19.6% | -27.470 | -18402.594 | fdx_local[477]$_DFF_P_/D
+     1830 |       0 |    5081 |            0 |   +19.7% | -27.470 | -18241.234 | fdx_local[477]$_DFF_P_/D
+     1840 |       0 |    5110 |            0 |   +19.9% | -27.470 | -18080.775 | fdx_local[477]$_DFF_P_/D
+     1850 |       0 |    5137 |            0 |   +20.0% | -27.470 | -17921.203 | fdx_local[477]$_DFF_P_/D
+     1860 |       0 |    5167 |            0 |   +20.1% | -27.470 | -17762.717 | fdx_local[477]$_DFF_P_/D
+     1870 |       0 |    5196 |            0 |   +20.2% | -27.470 | -17605.053 | fdx_local[477]$_DFF_P_/D
+     1880 |       0 |    5223 |            0 |   +20.3% | -27.470 | -17444.607 | fdx_local[477]$_DFF_P_/D
+     1890 |       0 |    5251 |            0 |   +20.4% | -27.470 | -17288.230 | fdx_local[477]$_DFF_P_/D
+     1900 |       0 |    5278 |            0 |   +20.5% | -27.470 | -17134.422 | fdx_local[477]$_DFF_P_/D
+     1910 |       0 |    5307 |            0 |   +20.6% | -27.470 | -16981.535 | fdx_local[477]$_DFF_P_/D
+     1920 |       0 |    5333 |            0 |   +20.7% | -27.470 | -16829.252 | fdx_local[477]$_DFF_P_/D
+     1930 |       0 |    5361 |            0 |   +20.8% | -27.470 | -16677.906 | fdx_local[477]$_DFF_P_/D
+     1940 |       0 |    5387 |            0 |   +20.9% | -27.470 | -16516.266 | fdx_local[477]$_DFF_P_/D
+     1950 |       0 |    5417 |            0 |   +21.0% | -27.470 | -16388.936 | fdx_local[477]$_DFF_P_/D
+     1960 |       0 |    5446 |            0 |   +21.2% | -27.470 | -16237.777 | fdx_local[477]$_DFF_P_/D
+     1970 |       0 |    5476 |            0 |   +21.3% | -27.470 | -16088.663 | fdx_local[477]$_DFF_P_/D
+     1980 |       0 |    5505 |            0 |   +21.4% | -27.470 | -15934.099 | fdx_local[477]$_DFF_P_/D
+     1990 |       0 |    5532 |            0 |   +21.5% | -27.470 | -15786.739 | fdx_local[477]$_DFF_P_/D
+     2000 |       0 |    5560 |            0 |   +21.6% | -27.470 | -15643.504 | fdx_local[477]$_DFF_P_/D
+     2010 |       0 |    5588 |            0 |   +21.7% | -27.470 | -15497.438 | fdx_local[477]$_DFF_P_/D
+     2020 |       0 |    5615 |            0 |   +21.8% | -27.470 | -15352.322 | fdx_local[477]$_DFF_P_/D
+     2030 |       0 |    5644 |            0 |   +21.9% | -27.470 | -15207.030 | fdx_local[477]$_DFF_P_/D
+     2040 |       0 |    5671 |            0 |   +22.0% | -27.470 | -15062.243 | fdx_local[477]$_DFF_P_/D
+     2050 |       0 |    5698 |            0 |   +22.1% | -27.470 | -14915.151 | fdx_local[477]$_DFF_P_/D
+     2060 |       0 |    5726 |            0 |   +22.2% | -27.470 | -14775.311 | fdx_local[477]$_DFF_P_/D
+     2070 |       0 |    5755 |            0 |   +22.4% | -27.470 | -14633.650 | fdx_local[477]$_DFF_P_/D
+     2080 |       0 |    5784 |            0 |   +22.5% | -27.470 | -14486.292 | fdx_local[477]$_DFF_P_/D
+     2090 |       0 |    5811 |            0 |   +22.6% | -27.470 | -14345.905 | fdx_local[477]$_DFF_P_/D
+     2100 |       0 |    5839 |            0 |   +22.7% | -27.470 | -14208.882 | fdx_local[477]$_DFF_P_/D
+     2110 |       0 |    5866 |            0 |   +22.8% | -27.470 | -14064.309 | fdx_local[477]$_DFF_P_/D
+     2120 |       0 |    5893 |            0 |   +22.9% | -27.470 | -13922.491 | fdx_local[477]$_DFF_P_/D
+     2130 |       0 |    5920 |            0 |   +23.0% | -27.470 | -13787.321 | fdx_local[477]$_DFF_P_/D
+     2140 |       0 |    5945 |            0 |   +23.1% | -27.470 | -13640.918 | fdx_local[477]$_DFF_P_/D
+     2150 |       0 |    5973 |            0 |   +23.2% | -27.470 | -13498.998 | fdx_local[477]$_DFF_P_/D
+     2160 |       0 |    6001 |            0 |   +23.3% | -27.470 | -13364.297 | fdx_local[477]$_DFF_P_/D
+     2170 |       0 |    6027 |            0 |   +23.4% | -27.470 | -13229.438 | fdx_local[477]$_DFF_P_/D
+     2180 |       0 |    6053 |            0 |   +23.5% | -27.470 | -13083.908 | fdx_local[477]$_DFF_P_/D
+     2190 |       0 |    6079 |            0 |   +23.6% | -27.470 | -12943.776 | fdx_local[477]$_DFF_P_/D
+     2200 |       0 |    6108 |            0 |   +23.7% | -27.470 | -12810.872 | fdx_local[477]$_DFF_P_/D
+     2210 |       0 |    6132 |            0 |   +23.8% | -27.470 | -12670.873 | fdx_local[477]$_DFF_P_/D
+     2220 |       0 |    6159 |            0 |   +23.9% | -27.470 | -12542.883 | fdx_local[477]$_DFF_P_/D
+     2230 |       0 |    6187 |            0 |   +24.0% | -27.470 | -12428.195 | fdx_local[477]$_DFF_P_/D
+     2240 |       0 |    6215 |            0 |   +24.1% | -27.470 | -12290.589 | fdx_local[477]$_DFF_P_/D
+     2250 |       0 |    6240 |            0 |   +24.2% | -27.470 | -12163.632 | fdx_local[477]$_DFF_P_/D
+     2260 |       0 |    6268 |            0 |   +24.4% | -27.470 | -12031.807 | fdx_local[477]$_DFF_P_/D
+     2270 |       0 |    6294 |            0 |   +24.5% | -27.470 | -11905.021 | fdx_local[477]$_DFF_P_/D
+     2280 |       0 |    6321 |            0 |   +24.6% | -27.470 | -11779.856 | fdx_local[477]$_DFF_P_/D
+     2290 |       0 |    6347 |            0 |   +24.7% | -27.470 | -11655.883 | fdx_local[477]$_DFF_P_/D
+     2300 |       0 |    6375 |            0 |   +24.8% | -27.470 | -11533.654 | fdx_local[477]$_DFF_P_/D
+     2310 |       0 |    6400 |            0 |   +24.9% | -27.470 | -11418.406 | fdx_local[477]$_DFF_P_/D
+     2320 |       0 |    6426 |            0 |   +25.0% | -27.470 | -11296.676 | fdx_local[477]$_DFF_P_/D
+     2330 |       0 |    6451 |            0 |   +25.1% | -27.470 | -11170.903 | fdx_local[477]$_DFF_P_/D
+     2340 |       0 |    6478 |            0 |   +25.2% | -27.470 | -11063.394 | fdx_local[477]$_DFF_P_/D
+     2350 |       0 |    6502 |            0 |   +25.3% | -27.470 | -10928.785 | fdx_local[477]$_DFF_P_/D
+     2360 |       0 |    6530 |            0 |   +25.4% | -27.470 | -10820.984 | fdx_local[477]$_DFF_P_/D
+     2370 |       0 |    6556 |            0 |   +25.5% | -27.470 | -10703.770 | fdx_local[477]$_DFF_P_/D
+     2380 |       0 |    6582 |            0 |   +25.6% | -27.470 | -10574.217 | fdx_local[477]$_DFF_P_/D
+     2390 |       0 |    6609 |            0 |   +25.7% | -27.470 | -10457.072 | fdx_local[477]$_DFF_P_/D
+     2400 |       0 |    6636 |            0 |   +25.8% | -27.470 | -10340.868 | fdx_local[477]$_DFF_P_/D
+     2410 |       0 |    6661 |            0 |   +25.9% | -27.470 | -10227.070 | fdx_local[477]$_DFF_P_/D
+     2420 |       0 |    6689 |            0 |   +26.0% | -27.470 | -10126.302 | fdx_local[477]$_DFF_P_/D
+     2430 |       0 |    6716 |            0 |   +26.1% | -27.470 | -10015.219 | fdx_local[477]$_DFF_P_/D
+     2440 |       0 |    6743 |            0 |   +26.2% | -27.470 | -9916.072 | fdx_local[477]$_DFF_P_/D
+     2450 |       0 |    6770 |            0 |   +26.3% | -27.470 | -9806.633 | fdx_local[477]$_DFF_P_/D
+     2460 |       0 |    6797 |            0 |   +26.4% | -27.470 | -9705.471 | fdx_local[477]$_DFF_P_/D
+     2470 |       0 |    6822 |            0 |   +26.5% | -27.470 | -9604.469 | fdx_local[477]$_DFF_P_/D
+     2480 |       0 |    6849 |            0 |   +26.6% | -27.470 | -9486.646 | fdx_local[477]$_DFF_P_/D
+     2490 |       0 |    6876 |            0 |   +26.7% | -27.470 | -9380.795 | fdx_local[477]$_DFF_P_/D
+     2500 |       0 |    6905 |            0 |   +26.8% | -27.470 | -9274.303 | fdx_local[477]$_DFF_P_/D
+     2510 |       0 |    6931 |            0 |   +26.9% | -27.470 | -9188.604 | fdx_local[477]$_DFF_P_/D
+     2520 |       0 |    6957 |            0 |   +27.0% | -27.470 | -9070.823 | fdx_local[477]$_DFF_P_/D
+     2530 |       0 |    6983 |            0 |   +27.1% | -27.470 | -8959.255 | fdx_local[477]$_DFF_P_/D
+     2540 |       0 |    7010 |            0 |   +27.2% | -27.470 | -8857.153 | fdx_local[477]$_DFF_P_/D
+     2550 |       0 |    7039 |            0 |   +27.3% | -27.470 | -8773.729 | fdx_local[477]$_DFF_P_/D
+     2560 |       0 |    7066 |            0 |   +27.5% | -27.470 | -8669.972 | fdx_local[477]$_DFF_P_/D
+     2570 |       0 |    7095 |            0 |   +27.6% | -27.470 | -8557.312 | fdx_local[477]$_DFF_P_/D
+     2580 |       0 |    7122 |            0 |   +27.7% | -27.470 | -8466.711 | fdx_local[477]$_DFF_P_/D
+     2590 |       0 |    7143 |            0 |   +27.8% | -27.470 | -8352.887 | fdx_local[477]$_DFF_P_/D
+     2600 |       0 |    7172 |            0 |   +27.9% | -27.470 | -8261.795 | fdx_local[477]$_DFF_P_/D
+     2610 |       0 |    7197 |            0 |   +28.0% | -27.470 | -8172.081 | fdx_local[477]$_DFF_P_/D
+     2620 |       0 |    7223 |            0 |   +28.1% | -27.470 | -8092.638 | fdx_local[477]$_DFF_P_/D
+     2630 |       0 |    7248 |            0 |   +28.2% | -27.470 | -8019.800 | fdx_local[477]$_DFF_P_/D
+     2640 |       0 |    7273 |            0 |   +28.3% | -27.470 | -7931.980 | fdx_local[477]$_DFF_P_/D
+     2650 |       0 |    7302 |            0 |   +28.4% | -27.470 | -7843.595 | fdx_local[477]$_DFF_P_/D
+     2660 |       0 |    7329 |            0 |   +28.5% | -27.470 | -7745.745 | fdx_local[477]$_DFF_P_/D
+     2670 |       0 |    7353 |            0 |   +28.6% | -27.470 | -7660.412 | fdx_local[477]$_DFF_P_/D
+     2680 |       0 |    7377 |            0 |   +28.7% | -27.470 | -7568.432 | fdx_local[477]$_DFF_P_/D
+     2690 |       0 |    7398 |            0 |   +28.7% | -27.470 | -7499.272 | fdx_local[477]$_DFF_P_/D
+     2700 |       0 |    7423 |            0 |   +28.8% | -27.470 | -7396.818 | fdx_local[477]$_DFF_P_/D
+     2710 |       0 |    7449 |            0 |   +28.9% | -27.470 | -7321.976 | fdx_local[477]$_DFF_P_/D
+     2720 |       0 |    7476 |            0 |   +29.0% | -27.470 | -7234.953 | fdx_local[477]$_DFF_P_/D
+     2730 |       0 |    7501 |            0 |   +29.1% | -27.470 | -7156.246 | fdx_local[477]$_DFF_P_/D
+     2740 |       0 |    7528 |            0 |   +29.2% | -27.470 | -7083.336 | fdx_local[477]$_DFF_P_/D
+     2750 |       0 |    7553 |            0 |   +29.3% | -27.470 | -6992.284 | fdx_local[477]$_DFF_P_/D
+     2760 |       0 |    7577 |            0 |   +29.4% | -27.470 | -6901.749 | fdx_local[477]$_DFF_P_/D
+     2770 |       0 |    7603 |            0 |   +29.5% | -27.470 | -6811.093 | fdx_local[477]$_DFF_P_/D
+     2780 |       0 |    7630 |            0 |   +29.6% | -27.470 | -6717.689 | fdx_local[477]$_DFF_P_/D
+     2790 |       0 |    7658 |            0 |   +29.8% | -27.470 | -6636.641 | fdx_local[477]$_DFF_P_/D
+     2800 |       0 |    7680 |            0 |   +29.8% | -27.470 | -6537.678 | fdx_local[477]$_DFF_P_/D
+     2810 |       0 |    7703 |            0 |   +29.9% | -27.470 | -6467.893 | fdx_local[477]$_DFF_P_/D
+     2820 |       0 |    7730 |            0 |   +30.0% | -27.470 | -6387.581 | fdx_local[477]$_DFF_P_/D
+     2830 |       0 |    7754 |            0 |   +30.1% | -27.470 | -6322.710 | fdx_local[477]$_DFF_P_/D
+     2840 |       0 |    7782 |            0 |   +30.2% | -27.470 | -6245.540 | fdx_local[477]$_DFF_P_/D
+     2850 |       0 |    7805 |            0 |   +30.3% | -27.470 | -6167.643 | fdx_local[477]$_DFF_P_/D
+     2860 |       0 |    7829 |            0 |   +30.4% | -27.470 | -6084.841 | fdx_local[477]$_DFF_P_/D
+     2870 |       0 |    7854 |            0 |   +30.5% | -27.470 | -6007.069 | fdx_local[477]$_DFF_P_/D
+     2880 |       0 |    7877 |            0 |   +30.6% | -27.470 | -5923.078 | fdx_local[477]$_DFF_P_/D
+     2890 |       0 |    7898 |            0 |   +30.7% | -27.470 | -5839.534 | fdx_local[477]$_DFF_P_/D
+     2900 |       0 |    7919 |            0 |   +30.8% | -27.470 | -5754.712 | fdx_local[477]$_DFF_P_/D
+     2910 |       0 |    7945 |            0 |   +30.9% | -27.470 | -5676.114 | fdx_local[477]$_DFF_P_/D
+     2920 |       0 |    7968 |            0 |   +31.0% | -27.470 | -5589.732 | fdx_local[477]$_DFF_P_/D
+     2930 |       0 |    7992 |            0 |   +31.0% | -27.470 | -5512.913 | fdx_local[477]$_DFF_P_/D
+     2940 |       0 |    8019 |            0 |   +31.2% | -27.470 | -5448.317 | fdx_local[477]$_DFF_P_/D
+     2950 |       0 |    8043 |            0 |   +31.2% | -27.470 | -5378.032 | fdx_local[477]$_DFF_P_/D
+     2960 |       0 |    8067 |            0 |   +31.3% | -27.470 | -5310.826 | fdx_local[477]$_DFF_P_/D
+     2970 |       0 |    8091 |            0 |   +31.4% | -27.470 | -5227.031 | fdx_local[477]$_DFF_P_/D
+     2980 |       0 |    8115 |            0 |   +31.5% | -27.470 | -5159.439 | fdx_local[477]$_DFF_P_/D
+     2990 |       0 |    8134 |            0 |   +31.6% | -27.470 | -5079.444 | fdx_local[477]$_DFF_P_/D
+     3000 |       0 |    8158 |            0 |   +31.7% | -27.470 | -5000.153 | fdx_local[477]$_DFF_P_/D
+     3010 |       0 |    8181 |            0 |   +31.8% | -27.470 | -4903.992 | fdx_local[477]$_DFF_P_/D
+     3020 |       0 |    8204 |            0 |   +31.9% | -27.470 | -4823.839 | fdx_local[477]$_DFF_P_/D
+     3030 |       0 |    8228 |            0 |   +32.0% | -27.470 | -4753.988 | fdx_local[477]$_DFF_P_/D
+     3040 |       0 |    8250 |            0 |   +32.1% | -27.470 | -4686.833 | fdx_local[477]$_DFF_P_/D
+     3050 |       0 |    8275 |            0 |   +32.1% | -27.470 | -4616.507 | fdx_local[477]$_DFF_P_/D
+     3060 |       0 |    8296 |            0 |   +32.2% | -27.470 | -4555.632 | fdx_local[477]$_DFF_P_/D
+     3070 |       0 |    8318 |            0 |   +32.3% | -27.470 | -4478.455 | fdx_local[477]$_DFF_P_/D
+     3080 |       0 |    8339 |            0 |   +32.4% | -27.470 | -4401.126 | fdx_local[477]$_DFF_P_/D
+     3090 |       0 |    8364 |            0 |   +32.5% | -27.470 | -4346.980 | fdx_local[477]$_DFF_P_/D
+     3100 |       0 |    8387 |            0 |   +32.6% | -27.470 | -4282.873 | fdx_local[477]$_DFF_P_/D
+     3110 |       0 |    8411 |            0 |   +32.7% | -27.470 | -4237.638 | fdx_local[477]$_DFF_P_/D
+     3120 |       0 |    8434 |            0 |   +32.8% | -27.470 | -4190.666 | fdx_local[477]$_DFF_P_/D
+     3130 |       0 |    8457 |            0 |   +32.9% | -27.470 | -4110.242 | fdx_local[477]$_DFF_P_/D
+     3140 |       0 |    8479 |            0 |   +32.9% | -27.470 | -4041.310 | fdx_local[477]$_DFF_P_/D
+     3150 |       0 |    8502 |            0 |   +33.0% | -27.470 | -3978.156 | fdx_local[477]$_DFF_P_/D
+     3160 |       0 |    8526 |            0 |   +33.1% | -27.470 | -3913.466 | fdx_local[477]$_DFF_P_/D
+     3170 |       0 |    8550 |            0 |   +33.2% | -27.470 | -3855.606 | fdx_local[477]$_DFF_P_/D
+     3180 |       0 |    8573 |            0 |   +33.3% | -27.470 | -3779.882 | fdx_local[477]$_DFF_P_/D
+     3190 |       0 |    8594 |            0 |   +33.4% | -27.470 | -3726.312 | fdx_local[477]$_DFF_P_/D
+     3200 |       0 |    8619 |            0 |   +33.5% | -27.470 | -3678.656 | fdx_local[477]$_DFF_P_/D
+     3210 |       0 |    8641 |            0 |   +33.6% | -27.470 | -3626.405 | fdx_local[477]$_DFF_P_/D
+     3220 |       0 |    8662 |            0 |   +33.7% | -27.470 | -3582.862 | fdx_local[477]$_DFF_P_/D
+     3230 |       0 |    8684 |            0 |   +33.7% | -27.470 | -3537.068 | fdx_local[477]$_DFF_P_/D
+     3240 |       0 |    8708 |            0 |   +33.8% | -27.470 | -3486.445 | fdx_local[477]$_DFF_P_/D
+     3250 |       0 |    8729 |            0 |   +33.9% | -27.470 | -3435.203 | fdx_local[477]$_DFF_P_/D
+     3260 |       0 |    8751 |            0 |   +34.0% | -27.470 | -3375.380 | fdx_local[477]$_DFF_P_/D
+     3270 |       0 |    8773 |            0 |   +34.1% | -27.470 | -3306.961 | fdx_local[477]$_DFF_P_/D
+     3280 |       0 |    8798 |            0 |   +34.2% | -27.470 | -3232.218 | fdx_local[477]$_DFF_P_/D
+     3290 |       0 |    8818 |            0 |   +34.3% | -27.470 | -3184.855 | fdx_local[477]$_DFF_P_/D
+     3300 |       0 |    8842 |            0 |   +34.4% | -27.470 | -3123.587 | fdx_local[477]$_DFF_P_/D
+     3310 |       0 |    8862 |            0 |   +34.4% | -27.470 | -3076.593 | fdx_local[477]$_DFF_P_/D
+     3320 |       0 |    8882 |            0 |   +34.5% | -27.470 | -3033.152 | fdx_local[477]$_DFF_P_/D
+     3330 |       0 |    8906 |            0 |   +34.6% | -27.470 | -2981.383 | fdx_local[477]$_DFF_P_/D
+     3340 |       0 |    8932 |            0 |   +34.7% | -27.470 | -2937.591 | fdx_local[477]$_DFF_P_/D
+     3350 |       0 |    8952 |            0 |   +34.8% | -27.470 | -2892.504 | fdx_local[477]$_DFF_P_/D
+     3360 |       0 |    8975 |            0 |   +34.9% | -27.470 | -2846.979 | fdx_local[477]$_DFF_P_/D
+     3370 |       0 |    8995 |            0 |   +34.9% | -27.470 | -2805.706 | fdx_local[477]$_DFF_P_/D
+     3380 |       0 |    9017 |            0 |   +35.0% | -27.470 | -2754.684 | fdx_local[477]$_DFF_P_/D
+     3390 |       0 |    9039 |            0 |   +35.1% | -27.470 | -2710.271 | fdx_local[477]$_DFF_P_/D
+     3400 |       0 |    9060 |            0 |   +35.2% | -27.470 | -2671.346 | fdx_local[477]$_DFF_P_/D
+     3410 |       0 |    9081 |            0 |   +35.3% | -27.470 | -2634.116 | fdx_local[477]$_DFF_P_/D
+     3420 |       0 |    9101 |            0 |   +35.4% | -27.470 | -2597.462 | fdx_local[477]$_DFF_P_/D
+     3430 |       0 |    9123 |            0 |   +35.4% | -27.470 | -2555.508 | fdx_local[477]$_DFF_P_/D
+     3440 |       0 |    9144 |            0 |   +35.5% | -27.470 | -2526.644 | fdx_local[477]$_DFF_P_/D
+     3450 |       0 |    9167 |            0 |   +35.6% | -27.470 | -2479.866 | fdx_local[477]$_DFF_P_/D
+     3460 |       0 |    9188 |            0 |   +35.7% | -27.470 | -2436.972 | fdx_local[477]$_DFF_P_/D
+     3470 |       0 |    9209 |            0 |   +35.8% | -27.470 | -2415.288 | fdx_local[477]$_DFF_P_/D
+     3480 |       0 |    9230 |            0 |   +35.9% | -27.470 | -2385.375 | fdx_local[477]$_DFF_P_/D
+     3490 |       0 |    9253 |            0 |   +35.9% | -27.470 | -2353.717 | fdx_local[477]$_DFF_P_/D
+     3500 |       0 |    9273 |            0 |   +36.0% | -27.470 | -2326.345 | fdx_local[477]$_DFF_P_/D
+     3510 |       0 |    9297 |            0 |   +36.1% | -27.470 | -2266.477 | fdx_local[477]$_DFF_P_/D
+     3520 |       0 |    9320 |            0 |   +36.2% | -27.470 | -2228.685 | fdx_local[477]$_DFF_P_/D
+     3530 |       0 |    9345 |            0 |   +36.3% | -27.470 | -2168.828 | fdx_local[477]$_DFF_P_/D
+     3540 |       0 |    9369 |            0 |   +36.4% | -27.470 | -2139.803 | fdx_local[477]$_DFF_P_/D
+     3550 |       0 |    9389 |            0 |   +36.5% | -27.470 | -2112.624 | fdx_local[477]$_DFF_P_/D
+     3560 |       0 |    9411 |            0 |   +36.6% | -27.470 | -2075.935 | fdx_local[477]$_DFF_P_/D
+     3570 |       0 |    9435 |            0 |   +36.7% | -27.470 | -2049.470 | fdx_local[477]$_DFF_P_/D
+     3580 |       0 |    9458 |            0 |   +36.7% | -27.470 | -2015.399 | fdx_local[477]$_DFF_P_/D
+     3590 |       0 |    9481 |            0 |   +36.8% | -27.470 | -1984.011 | fdx_local[477]$_DFF_P_/D
+     3600 |       0 |    9505 |            0 |   +36.9% | -27.470 | -1941.760 | fdx_local[477]$_DFF_P_/D
+     3610 |       0 |    9528 |            0 |   +37.0% | -27.470 | -1910.825 | fdx_local[477]$_DFF_P_/D
+     3620 |       0 |    9554 |            0 |   +37.1% | -27.470 | -1875.941 | fdx_local[477]$_DFF_P_/D
+     3630 |       0 |    9576 |            0 |   +37.2% | -27.470 | -1835.342 | fdx_local[477]$_DFF_P_/D
+     3640 |       0 |    9601 |            0 |   +37.3% | -27.470 | -1798.482 | fdx_local[477]$_DFF_P_/D
+     3650 |       0 |    9626 |            0 |   +37.4% | -27.470 | -1766.492 | fdx_local[477]$_DFF_P_/D
+     3660 |       0 |    9645 |            0 |   +37.5% | -27.470 | -1750.181 | fdx_local[477]$_DFF_P_/D
+     3670 |       0 |    9668 |            0 |   +37.6% | -27.470 | -1729.933 | fdx_local[477]$_DFF_P_/D
+     3680 |       0 |    9695 |            0 |   +37.7% | -27.470 | -1683.123 | fdx_local[477]$_DFF_P_/D
+     3690 |       0 |    9720 |            0 |   +37.8% | -27.470 | -1661.631 | fdx_local[477]$_DFF_P_/D
+     3700 |       0 |    9743 |            0 |   +37.9% | -27.470 | -1646.479 | fdx_local[477]$_DFF_P_/D
+     3710 |       0 |    9764 |            0 |   +37.9% | -27.470 | -1622.519 | fdx_local[477]$_DFF_P_/D
+     3720 |       0 |    9783 |            0 |   +38.0% | -27.470 | -1607.777 | fdx_local[477]$_DFF_P_/D
+     3730 |       0 |    9801 |            0 |   +38.1% | -27.470 | -1593.249 | fdx_local[477]$_DFF_P_/D
+     3740 |       0 |    9821 |            0 |   +38.2% | -27.470 | -1564.931 | fdx_local[477]$_DFF_P_/D
+     3750 |       0 |    9846 |            0 |   +38.3% | -27.470 | -1538.238 | fdx_local[477]$_DFF_P_/D
+     3760 |       0 |    9866 |            0 |   +38.3% | -27.470 | -1517.089 | fdx_local[477]$_DFF_P_/D
+     3770 |       0 |    9887 |            0 |   +38.4% | -27.470 | -1500.528 | fdx_local[477]$_DFF_P_/D
+     3780 |       0 |    9910 |            0 |   +38.5% | -27.470 | -1479.288 | fdx_local[477]$_DFF_P_/D
+     3790 |       0 |    9930 |            0 |   +38.6% | -27.470 | -1456.228 | fdx_local[477]$_DFF_P_/D
+     3800 |       0 |    9950 |            0 |   +38.7% | -27.470 | -1433.229 | fdx_local[477]$_DFF_P_/D
+     3810 |       0 |    9970 |            0 |   +38.7% | -27.470 | -1420.512 | fdx_local[477]$_DFF_P_/D
+     3820 |       0 |    9995 |            0 |   +38.8% | -27.470 | -1400.651 | fdx_local[477]$_DFF_P_/D
+     3830 |       0 |   10014 |            0 |   +38.9% | -27.470 | -1390.914 | fdx_local[477]$_DFF_P_/D
+     3840 |       0 |   10034 |            0 |   +39.0% | -27.470 | -1374.185 | fdx_local[477]$_DFF_P_/D
+     3850 |       0 |   10054 |            0 |   +39.1% | -27.470 | -1357.747 | fdx_local[477]$_DFF_P_/D
+     3860 |       0 |   10078 |            0 |   +39.2% | -27.470 | -1348.548 | fdx_local[477]$_DFF_P_/D
+     3870 |       0 |   10105 |            0 |   +39.3% | -27.470 | -1295.761 | fdx_local[477]$_DFF_P_/D
+     3880 |       0 |   10126 |            0 |   +39.3% | -27.470 | -1274.506 | fdx_local[477]$_DFF_P_/D
+     3890 |       0 |   10149 |            0 |   +39.4% | -27.470 | -1259.299 | fdx_local[477]$_DFF_P_/D
+     3900 |       0 |   10170 |            0 |   +39.5% | -27.470 | -1238.800 | fdx_local[477]$_DFF_P_/D
+     3910 |       0 |   10191 |            0 |   +39.6% | -27.470 | -1224.127 | fdx_local[477]$_DFF_P_/D
+     3920 |       0 |   10211 |            0 |   +39.7% | -27.470 | -1208.023 | fdx_local[477]$_DFF_P_/D
+     3930 |       0 |   10236 |            0 |   +39.8% | -27.470 | -1187.123 | fdx_local[477]$_DFF_P_/D
+     3940 |       0 |   10256 |            0 |   +39.8% | -27.470 | -1173.441 | fdx_local[477]$_DFF_P_/D
+     3950 |       0 |   10274 |            0 |   +39.9% | -27.470 | -1145.272 | fdx_local[477]$_DFF_P_/D
+     3960 |       0 |   10298 |            0 |   +40.0% | -27.470 | -1124.972 | fdx_local[477]$_DFF_P_/D
+     3970 |       0 |   10322 |            0 |   +40.1% | -27.470 | -1089.819 | fdx_local[477]$_DFF_P_/D
+     3980 |       0 |   10343 |            0 |   +40.2% | -27.470 | -1076.676 | fdx_local[477]$_DFF_P_/D
+     3990 |       0 |   10365 |            0 |   +40.3% | -27.470 | -1061.078 | fdx_local[477]$_DFF_P_/D
+     4000 |       0 |   10386 |            0 |   +40.4% | -27.470 | -1028.537 | fdx_local[477]$_DFF_P_/D
+     4010 |       0 |   10409 |            0 |   +40.4% | -27.470 | -1011.921 | fdx_local[477]$_DFF_P_/D
+     4020 |       0 |   10430 |            0 |   +40.5% | -27.470 | -997.329 | fdx_local[477]$_DFF_P_/D
+     4030 |       0 |   10450 |            0 |   +40.6% | -27.470 | -986.382 | fdx_local[477]$_DFF_P_/D
+     4040 |       0 |   10474 |            0 |   +40.7% | -27.470 | -975.687 | fdx_local[477]$_DFF_P_/D
+     4050 |       0 |   10493 |            0 |   +40.8% | -27.470 | -966.740 | fdx_local[477]$_DFF_P_/D
+     4060 |       0 |   10519 |            0 |   +40.9% | -27.470 | -936.808 | fdx_local[477]$_DFF_P_/D
+     4070 |       0 |   10538 |            0 |   +40.9% | -27.470 | -925.479 | fdx_local[477]$_DFF_P_/D
+     4080 |       0 |   10555 |            0 |   +41.0% | -27.470 | -918.645 | fdx_local[477]$_DFF_P_/D
+     4090 |       0 |   10578 |            0 |   +41.1% | -27.470 | -906.705 | fdx_local[477]$_DFF_P_/D
+     4100 |       0 |   10604 |            0 |   +41.2% | -27.470 | -889.421 | fdx_local[477]$_DFF_P_/D
+     4110 |       0 |   10628 |            0 |   +41.3% | -27.470 | -879.498 | fdx_local[477]$_DFF_P_/D
+     4120 |       0 |   10648 |            0 |   +41.4% | -27.470 | -869.844 | fdx_local[477]$_DFF_P_/D
+     4130 |       0 |   10669 |            0 |   +41.4% | -27.470 | -861.877 | fdx_local[477]$_DFF_P_/D
+     4140 |       0 |   10691 |            0 |   +41.5% | -27.470 | -853.018 | fdx_local[477]$_DFF_P_/D
+     4150 |       0 |   10711 |            0 |   +41.6% | -27.470 | -838.353 | fdx_local[477]$_DFF_P_/D
+     4160 |       0 |   10732 |            0 |   +41.7% | -27.470 | -832.373 | fdx_local[477]$_DFF_P_/D
+     4170 |       0 |   10757 |            0 |   +41.8% | -27.470 | -824.653 | fdx_local[477]$_DFF_P_/D
+     4180 |       0 |   10782 |            0 |   +41.9% | -27.470 | -795.017 | fdx_local[477]$_DFF_P_/D
+     4190 |       0 |   10806 |            0 |   +42.0% | -27.470 | -787.155 | fdx_local[477]$_DFF_P_/D
+     4200 |       0 |   10826 |            0 |   +42.1% | -27.470 | -779.855 | fdx_local[477]$_DFF_P_/D
+     4210 |       0 |   10853 |            0 |   +42.2% | -27.470 | -730.588 | fdx_local[477]$_DFF_P_/D
+     4220 |       0 |   10875 |            0 |   +42.3% | -27.470 | -702.855 | fdx_local[477]$_DFF_P_/D
+     4230 |       0 |   10893 |            0 |   +42.3% | -27.470 | -699.416 | fdx_local[477]$_DFF_P_/D
+     4240 |       0 |   10915 |            0 |   +42.4% | -27.470 | -694.611 | fdx_local[477]$_DFF_P_/D
+     4250 |       0 |   10940 |            0 |   +42.5% | -27.470 | -667.700 | fdx_local[477]$_DFF_P_/D
+     4260 |       0 |   10960 |            0 |   +42.6% | -27.470 | -664.088 | fdx_local[477]$_DFF_P_/D
+     4270 |       0 |   10985 |            0 |   +42.7% | -27.470 | -661.708 | fdx_local[477]$_DFF_P_/D
+     4280 |       0 |   11008 |            0 |   +42.8% | -27.470 | -658.924 | fdx_local[477]$_DFF_P_/D
+     4290 |       0 |   11033 |            0 |   +42.9% | -27.470 | -633.438 | fdx_local[477]$_DFF_P_/D
+     4300 |       0 |   11053 |            0 |   +42.9% | -27.470 | -631.634 | fdx_local[477]$_DFF_P_/D
+     4310 |       0 |   11076 |            0 |   +43.0% | -27.470 | -607.290 | fdx_local[477]$_DFF_P_/D
+     4320 |       0 |   11098 |            0 |   +43.1% | -27.470 | -584.118 | fdx_local[477]$_DFF_P_/D
+     4330 |       0 |   11121 |            0 |   +43.2% | -27.470 | -583.531 | fdx_local[477]$_DFF_P_/D
+     4340 |       0 |   11142 |            0 |   +43.3% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4350 |       0 |   11162 |            0 |   +43.4% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4360 |       0 |   11182 |            0 |   +43.4% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4370 |       0 |   11207 |            0 |   +43.5% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4380 |       0 |   11230 |            0 |   +43.6% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4390 |       0 |   11250 |            0 |   +43.7% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4400 |       0 |   11271 |            0 |   +43.8% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4410 |       0 |   11292 |            0 |   +43.9% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4420 |       0 |   11312 |            0 |   +43.9% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4430 |       0 |   11331 |            0 |   +44.0% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4440 |       0 |   11354 |            0 |   +44.1% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4450 |       0 |   11374 |            0 |   +44.2% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4460 |       0 |   11396 |            0 |   +44.3% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4470 |       0 |   11417 |            0 |   +44.4% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4480 |       0 |   11437 |            0 |   +44.4% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4490 |       0 |   11458 |            0 |   +44.5% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4500 |       0 |   11478 |            0 |   +44.6% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4510 |       0 |   11498 |            0 |   +44.7% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4520 |       0 |   11516 |            0 |   +44.7% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4530 |       0 |   11537 |            0 |   +44.8% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4540 |       0 |   11558 |            0 |   +44.9% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4550 |       0 |   11581 |            0 |   +45.0% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4560 |       0 |   11598 |            0 |   +45.1% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4570 |       0 |   11617 |            0 |   +45.1% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4580 |       0 |   11638 |            0 |   +45.2% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4590 |       0 |   11660 |            0 |   +45.3% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4600 |       0 |   11685 |            0 |   +45.4% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4610 |       0 |   11707 |            0 |   +45.5% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4620 |       0 |   11729 |            0 |   +45.6% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4630 |       0 |   11752 |            0 |   +45.7% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4640 |       0 |   11772 |            0 |   +45.7% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4650 |       0 |   11792 |            0 |   +45.8% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4660 |       0 |   11814 |            0 |   +45.9% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4670 |       0 |   11833 |            0 |   +46.0% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4680 |       0 |   11851 |            0 |   +46.0% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4690 |       0 |   11870 |            0 |   +46.1% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4700 |       0 |   11888 |            0 |   +46.2% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4710 |       0 |   11912 |            0 |   +46.3% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4720 |       0 |   11934 |            0 |   +46.4% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4730 |       0 |   11953 |            0 |   +46.4% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4740 |       0 |   11976 |            0 |   +46.5% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4750 |       0 |   11996 |            0 |   +46.6% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4760 |       0 |   12016 |            0 |   +46.7% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4770 |       0 |   12037 |            0 |   +46.8% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4780 |       0 |   12060 |            0 |   +46.9% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4790 |       0 |   12080 |            0 |   +46.9% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4800 |       0 |   12098 |            0 |   +47.0% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4810 |       0 |   12123 |            0 |   +47.1% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4820 |       0 |   12142 |            0 |   +47.2% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4830 |       0 |   12165 |            0 |   +47.3% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4840 |       0 |   12185 |            0 |   +47.3% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4850 |       0 |   12206 |            0 |   +47.4% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4860 |       0 |   12230 |            0 |   +47.5% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4870 |       0 |   12251 |            0 |   +47.6% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4880 |       0 |   12271 |            0 |   +47.7% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4890 |       0 |   12292 |            0 |   +47.8% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4900 |       0 |   12313 |            0 |   +47.8% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4910 |       0 |   12334 |            0 |   +47.9% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4920 |       0 |   12357 |            0 |   +48.0% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4930 |       0 |   12379 |            0 |   +48.1% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4940 |       0 |   12401 |            0 |   +48.2% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4950 |       0 |   12421 |            0 |   +48.3% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4960 |       0 |   12442 |            0 |   +48.3% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4970 |       0 |   12461 |            0 |   +48.4% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4980 |       0 |   12482 |            0 |   +48.5% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     4990 |       0 |   12504 |            0 |   +48.6% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5000 |       0 |   12522 |            0 |   +48.6% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5010 |       0 |   12544 |            0 |   +48.7% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5020 |       0 |   12564 |            0 |   +48.8% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5030 |       0 |   12587 |            0 |   +48.9% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5040 |       0 |   12609 |            0 |   +49.0% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5050 |       0 |   12629 |            0 |   +49.1% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5060 |       0 |   12650 |            0 |   +49.1% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5070 |       0 |   12673 |            0 |   +49.2% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5080 |       0 |   12698 |            0 |   +49.3% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5090 |       0 |   12720 |            0 |   +49.4% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5100 |       0 |   12739 |            0 |   +49.5% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5110 |       0 |   12759 |            0 |   +49.6% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5120 |       0 |   12782 |            0 |   +49.7% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5130 |       0 |   12807 |            0 |   +49.8% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5140 |       0 |   12832 |            0 |   +49.9% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5150 |       0 |   12851 |            0 |   +49.9% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5160 |       0 |   12872 |            0 |   +50.0% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5170 |       0 |   12897 |            0 |   +50.1% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5180 |       0 |   12919 |            0 |   +50.2% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5190 |       0 |   12940 |            0 |   +50.3% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5200 |       0 |   12963 |            0 |   +50.4% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5210 |       0 |   12988 |            0 |   +50.5% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5220 |       0 |   13011 |            0 |   +50.5% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5230 |       0 |   13029 |            0 |   +50.6% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5240 |       0 |   13047 |            0 |   +50.7% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5250 |       0 |   13068 |            0 |   +50.8% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5260 |       0 |   13090 |            0 |   +50.9% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5270 |       0 |   13111 |            0 |   +50.9% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5280 |       0 |   13133 |            0 |   +51.0% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5290 |       0 |   13155 |            0 |   +51.1% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5300 |       0 |   13177 |            0 |   +51.2% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5310 |       0 |   13198 |            0 |   +51.3% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5320 |       0 |   13219 |            0 |   +51.4% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5330 |       0 |   13237 |            0 |   +51.4% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5340 |       0 |   13258 |            0 |   +51.5% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5350 |       0 |   13283 |            0 |   +51.6% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5360 |       0 |   13304 |            0 |   +51.7% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5370 |       0 |   13326 |            0 |   +51.8% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5380 |       0 |   13346 |            0 |   +51.9% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5390 |       0 |   13372 |            0 |   +52.0% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5400 |       0 |   13395 |            0 |   +52.0% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5410 |       0 |   13419 |            0 |   +52.1% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5420 |       0 |   13448 |            0 |   +52.2% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5430 |       0 |   13470 |            0 |   +52.3% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5440 |       0 |   13493 |            0 |   +52.4% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5450 |       0 |   13515 |            0 |   +52.5% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5460 |       0 |   13541 |            0 |   +52.6% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5470 |       0 |   13563 |            0 |   +52.7% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5480 |       0 |   13588 |            0 |   +52.8% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5490 |       0 |   13610 |            0 |   +52.9% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5500 |       0 |   13633 |            0 |   +53.0% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5510 |       0 |   13654 |            0 |   +53.0% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5520 |       0 |   13676 |            0 |   +53.1% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5530 |       0 |   13696 |            0 |   +53.2% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5540 |       0 |   13716 |            0 |   +53.3% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5550 |       0 |   13737 |            0 |   +53.4% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5560 |       0 |   13758 |            0 |   +53.5% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5570 |       0 |   13781 |            0 |   +53.5% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5580 |       0 |   13804 |            0 |   +53.6% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5590 |       0 |   13832 |            0 |   +53.7% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5600 |       0 |   13846 |            0 |   +53.8% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5610 |       0 |   13865 |            0 |   +53.9% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5620 |       0 |   13888 |            0 |   +54.0% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5630 |       0 |   13909 |            0 |   +54.0% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5640 |       0 |   13928 |            0 |   +54.1% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5650 |       0 |   13948 |            0 |   +54.2% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5660 |       0 |   13971 |            0 |   +54.3% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5670 |       0 |   13987 |            0 |   +54.3% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5680 |       0 |   14004 |            0 |   +54.4% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5690 |       0 |   14027 |            0 |   +54.5% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5700 |       0 |   14050 |            0 |   +54.6% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5710 |       0 |   14071 |            0 |   +54.7% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5720 |       0 |   14092 |            0 |   +54.7% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5730 |       0 |   14120 |            0 |   +54.9% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5740 |       0 |   14138 |            0 |   +54.9% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5750 |       0 |   14162 |            0 |   +55.0% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5760 |       0 |   14183 |            0 |   +55.1% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5770 |       0 |   14204 |            0 |   +55.2% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5780 |       0 |   14222 |            0 |   +55.3% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5790 |       0 |   14243 |            0 |   +55.3% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5800 |       0 |   14260 |            0 |   +55.4% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5810 |       0 |   14285 |            0 |   +55.5% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5820 |       0 |   14308 |            0 |   +55.6% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5830 |       0 |   14333 |            0 |   +55.7% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5840 |       0 |   14353 |            0 |   +55.8% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5850 |       0 |   14370 |            0 |   +55.8% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5860 |       0 |   14385 |            0 |   +55.9% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5870 |       0 |   14407 |            0 |   +56.0% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5880 |       0 |   14429 |            0 |   +56.1% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5890 |       0 |   14453 |            0 |   +56.2% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5900 |       0 |   14471 |            0 |   +56.2% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5910 |       0 |   14490 |            0 |   +56.3% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5920 |       0 |   14509 |            0 |   +56.4% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+     5930 |       0 |   14530 |            0 |   +56.4% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+    final |       0 |   14535 |            0 |   +56.5% | -27.470 | -560.708 | fdx_local[477]$_DFF_P_/D
+--------------------------------------------------------------------------------------
+[WARNING RSZ-0064] Unable to repair all hold checks within margin.
+[INFO RSZ-0032] Inserted 14535 hold buffers.
+[ERROR RSZ-0060] Max buffer count reached.
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_core_clk and core_clk.
+OT_HOLD_MM after repair: SS setup ws 23.03 / FF hold ws -27.47 ps
+OT_HOLD_MM: repair hit the buffer cap (RSZ-0060); continuing on the repaired design, sign-off decides
+detailed_placement
+[INFO DPL-0006] Core area: 12363.84 um^2
+[INFO DPL-0007] Movable instances area: 2905.05 um^2
+[INFO DPL-0008] Fixed instances area within core: 30.97 um^2
+[INFO DPL-0009] Utilization: 23.7%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 29067 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |      89475 |     15453 |     72867
+        1 |     102640 |     11432 |     63618
+        2 |      83644 |     11594 |     63162
+        3 |      73122 |     11526 |     58271
+        4 |      65329 |     11189 |     52643
+        5 |      59754 |     10864 |     47708
+        6 |      54306 |     10462 |     43277
+        7 |      49873 |      9929 |     39382
+        8 |      45486 |      9458 |     35686
+        9 |      41356 |      9045 |     32065
+       10 |      37815 |      8443 |     29219
+       20 |      16674 |      4432 |     12138
+       30 |       9611 |      2654 |      6865
+       40 |       5935 |      1677 |      4195
+       50 |       3912 |      1186 |      2699
+       60 |       2669 |       791 |      1878
+       70 |       1836 |       578 |      1258
+       80 |       1775 |       513 |      1262
+       90 |       1288 |       350 |       926
+      100 |        858 |       268 |       590
+      110 |        839 |       239 |       600
+      120 |        663 |       221 |       442
+      130 |        565 |       169 |       396
+      140 |        446 |       150 |       296
+      150 |        487 |       143 |       344
+      160 |        430 |       134 |       296
+      170 |        330 |       110 |       220
+      180 |        218 |        70 |       148
+      190 |        281 |        73 |       208
+      200 |        156 |        58 |        98
+      210 |         96 |        34 |        62
+      220 |         78 |        30 |        48
+      230 |         74 |        26 |        48
+      240 |         57 |        15 |        42
+      250 |         59 |        17 |        42
+      260 |         43 |        11 |        32
+      270 |         31 |        13 |        18
+      280 |         30 |        12 |        18
+      285 |         16 |         8 |         8
+[WARNING DPL-0700] Negotiation phase 1: violations stuck at 16 for 3 consecutive iterations.
+Using old diamond search for 8 remaining illegal cells.
+diamond recovery: recovered 5/8 stuck cells.
+Negotiation phase 2: isolation point active, 1000 iterations.
+      400 |          0 |         0 |         0
+Negotiation phase 2 converged at iteration 0.
+[INFO DPL-0500] Runtime: 61.77s
+Placement Analysis
+---------------------------------
+total displacement      62744.6 u
+average displacement        2.2 u
+max displacement           33.4 u
+original HPWL          102584.9 u
+legalized HPWL         142565.8 u
+delta HPWL                   39 %
+
+Took 62 seconds: detailed_placement
+estimate_parasitics -placement
+Report metrics stage 4, cts final...
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_core_clk and core_clk.
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_core_clk and core_clk.
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_core_clk and core_clk.
+
+==========================================================================
+cts final report_design_area
+--------------------------------------------------------------------------
+Design area 2936 um^2 24% utilization.
+source /work/hooks/post_cts_post_cts.tcl
+write_db /work/results/asap7/opentallas_ot_s81_hc_ctfx_nt_asap7_ref_s81hc_ctfxnt_ref_v3_owned_epoch_631a20a94/base/4_1_cts.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_s81_hc_ctfx_nt_asap7_ref_s81hc_ctfxnt_ref_v3_owned_epoch_631a20a94/base/4_cts.sdc
+Elapsed time: 5:47.44[h:]min:sec. CPU time: user 354.56 sys 2.98 (102%). Peak memory: 588872KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+4_1_cts                   .odb          347            575 06946ee46064c122b42d

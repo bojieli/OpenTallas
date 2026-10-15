@@ -1,0 +1,39 @@
+{
+  "schema": "opentallas.s81.static_bf_lane.v1",
+  "generated": "2026-10-15T06:33:12.204355+00:00",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv": "dda2821fa599e5e13486d05e4bd29f51c64926da1807560693ea25ed0d2da744",
+    "rtl/test/dsrom_sys/tb_s81_pq_static_x2.sv": "eccf34b412482f1edc7ccc09fd80f487d3e77120282c58cbc153dcb85755be26",
+    "tools/s81/pq_static_x2_gate.sh": "0416534f26ed85a65714ec4bf6e1e6e83682fe951a64952dde1b869efb611330"
+  },
+  "define": "DSFD_PQ_STATIC_X2",
+  "word_bits": 1101,
+  "latency_cycles": 1,
+  "cycles": 20000,
+  "compared_bits": 44040000,
+  "bf_words": 10000,
+  "q_words": 6000,
+  "commands": 2000,
+  "ready_independent": true,
+  "positive": {
+    "returncode": 0,
+    "result": "STATIC_X2 PASS"
+  },
+  "mutants": {
+    "DSFD_PQ_X2_MUT_SWAP": {
+      "returncode": 1,
+      "first_bad_cycle": 2
+    },
+    "DSFD_PQ_LX_MUT_SWAP": {
+      "returncode": 1,
+      "first_bad_cycle": 5
+    }
+  },
+  "compile_modes": [
+    "static",
+    "static+diagnostic-flag",
+    "diagnostic",
+    "legacy"
+  ],
+  "scope": "Actual encoder leaf full native broadcast payload. Generator/crossing/decoder composition, physical closure, and whole-token measurement pending; no release claim."
+}

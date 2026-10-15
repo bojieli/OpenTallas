@@ -1,0 +1,55 @@
+{
+  "schema": "opentallas.s81.structural_physical_candidate.v1",
+  "source": "6101c6d19",
+  "native_job": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-1852022-1792061512",
+    "pid": 1852022,
+    "session": 37867,
+    "remote": "/srv/opentallas-scratch/claude/ref_gate/dsfd_gth_re_transverse_1015-20261015-035122"
+  },
+  "scope": "Native CTS running; not route closure or production qualification",
+  "original_failed_job": "dsfd_gth_re_v19-g10-c3e6bccc9",
+  "failure": "Repeated GRT-0183 boxed net5958; root banks form continuous SRAM walls",
+  "geometry": {
+    "outline_um": [
+      190.08,
+      224.64
+    ],
+    "previous_outline_um": [
+      190.08,
+      164.16
+    ],
+    "root_pitch_um": 49.248,
+    "largest_actual_LEF_height_um": 28.92,
+    "minimum_actual_channel_um": 20.328,
+    "parent_outline_um": [
+      1728,
+      1045.44
+    ],
+    "PQ_and_PQROM_candidate_shift_y_um": 86.4
+  },
+  "unchanged": [
+    "all eight actual SRAMs",
+    "all 494 signal ports",
+    "data pin centres",
+    "RTL",
+    "latency",
+    "clock period",
+    "TT/FF/DRC thresholds"
+  ],
+  "changed": [
+    "actual root SRAM pairs spread across explicit transverse channels",
+    "N clock/reset at new boundary",
+    "remove prior g10 clock-pair retap workaround"
+  ],
+  "slot_status": "Die owner MIX4 verified feasible current-hub candidate within reticle; actual full placement/native PQ integration still required",
+  "remaining": [
+    "actual native CTS/pin/PG proof",
+    "full source-equivalent positive and mutant evidence for submitted route",
+    "actual TT setup/FF hold/DRC0",
+    "full parent clock/native hops",
+    "whole die and static programme qualification"
+  ],
+  "visual_review": "Generated to actual dimensions from both floorplan.json files and visually inspected SVG render; shows preserved full8-SRAM shape and three genuinely open transverse channels"
+}

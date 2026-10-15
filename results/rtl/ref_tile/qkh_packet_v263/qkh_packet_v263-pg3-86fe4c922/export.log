@@ -1,0 +1,4 @@
+{"name": "qkh_packet_v263", "ok": true, "checked": true, "files": {"qkh_packet_v263.lef": "45760b40543d70364a6fcdbc9bfa898c3718489f5592ee43ada9e49b85327d78", "qkh_packet_v263_ff.lib": "f8961983a330d59ce7db3843387b32ce94ec67580ec3ce01b55dcfa9f77b6c61", "qkh_packet_v263_ss.lib": "9b19ec7897b3ac1438a7e8d1d8a5197cb4f8e618afc61332d84e97cc8e95d464", "qkh_packet_v263_tt.lib": "f4a837499f8b8978f79a3071968c45cd5c0fd5a2d090fd4ec9f112a1d192633f"}}
+CK_SS_MEAN=100 CK_SS_ALL_MEAN=100 CK_SS_MIN=97 CK_SS_ALL_MIN=97 CK_SS_MAX=102 CK_SS_ALL_MAX=102 CK_TT_MEAN=74 CK_TT_ALL_MEAN=74 CK_TT_MIN=71 CK_TT_ALL_MIN=71 CK_TT_MAX=77 CK_TT_ALL_MAX=77 CK_FF_MEAN=59 CK_FF_ALL_MEAN=59 CK_FF_MIN=56 CK_FF_ALL_MIN=56 CK_FF_MAX=62 CK_FF_ALL_MAX=62 CK_ROUTE_REF=SS
+pinstub: 2 OBS rects moved into 2 pins: clk, rst_n; pockets: 27 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)
+REF_TILE export qkh_packet_v263: views rc=0 child_lint PASS 

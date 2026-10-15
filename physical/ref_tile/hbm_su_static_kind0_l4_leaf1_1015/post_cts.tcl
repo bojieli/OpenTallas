@@ -1,0 +1,1 @@
+source /src/physical/ref_tile/hbm_su_static_kind0_l4_leaf1_1015/clock_entry.sdc

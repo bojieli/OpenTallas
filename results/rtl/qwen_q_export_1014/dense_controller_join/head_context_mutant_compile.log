@@ -1,0 +1,40 @@
+<gate_tmp>/head.sv:242: warning: Port 26 (wrom_q) of ot_qwen_rom_core_ctrl_static expects 786432 bits, got 1.
+<gate_tmp>/head.sv:242:        : Padding 786431 high bits of the port.
+<gate_tmp>/head.sv:242: warning: Port 32 (scale_q) of ot_qwen_rom_core_ctrl_static expects 6144 bits, got 1.
+<gate_tmp>/head.sv:242:        : Padding 6143 high bits of the port.
+<gate_tmp>/head.sv:242: warning: Port 35 (embed_code_q) of ot_qwen_rom_core_ctrl_static expects 512 bits, got 1.
+<gate_tmp>/head.sv:242:        : Padding 511 high bits of the port.
+<gate_tmp>/head.sv:242: warning: Port 38 (embed_scale_q) of ot_qwen_rom_core_ctrl_static expects 16 bits, got 1.
+<gate_tmp>/head.sv:242:        : Padding 15 high bits of the port.
+<gate_tmp>/head.sv:242: warning: Port 41 (crom_q) of ot_qwen_rom_core_ctrl_static expects 4096 bits, got 1.
+<gate_tmp>/head.sv:242:        : Padding 4095 high bits of the port.
+<gate_tmp>/head.sv:242: warning: Port 50 (va_q) of ot_qwen_rom_core_ctrl_static expects 2048 bits, got 1.
+<gate_tmp>/head.sv:242:        : Padding 2047 high bits of the port.
+<gate_tmp>/head.sv:242: warning: Port 53 (vb_q) of ot_qwen_rom_core_ctrl_static expects 2048 bits, got 1.
+<gate_tmp>/head.sv:242:        : Padding 2047 high bits of the port.
+<gate_tmp>/head.sv:242: warning: Port 56 (vc_q) of ot_qwen_rom_core_ctrl_static expects 2048 bits, got 1.
+<gate_tmp>/head.sv:242:        : Padding 2047 high bits of the port.
+<gate_tmp>/head.sv:242: warning: Port 95 (vx_q) of ot_qwen_rom_core_ctrl_static expects 65536 bits, got 1.
+<gate_tmp>/head.sv:242:        : Padding 65535 high bits of the port.
+<gate_tmp>/head.sv:242: warning: Port 99 (t_lvl) of ot_qwen_rom_core_ctrl_static expects 12288 bits, got 1.
+<gate_tmp>/head.sv:242:        : Padding 12287 high bits of the port.
+<gate_tmp>/head.sv:242: warning: Port 136 (pi_me_o_we) of ot_qwen_rom_core_ctrl_static expects 24 bits, got 1.
+<gate_tmp>/head.sv:242:        : Padding 23 high bits of the port.
+<gate_tmp>/head.sv:242: warning: Port 143 (pi_su_rt_inflight) of ot_qwen_rom_core_ctrl_static expects 8 bits, got 1.
+<gate_tmp>/head.sv:242:        : Padding 7 high bits of the port.
+<gate_tmp>/head.sv:242: warning: Port 177 (pi_su_va_re) of ot_qwen_rom_core_ctrl_static expects 64 bits, got 1.
+<gate_tmp>/head.sv:242:        : Padding 63 high bits of the port.
+<gate_tmp>/head.sv:242: warning: Port 178 (pi_su_va_addr) of ot_qwen_rom_core_ctrl_static expects 1536 bits, got 1.
+<gate_tmp>/head.sv:242:        : Padding 1535 high bits of the port.
+<gate_tmp>/head.sv:242: warning: Port 181 (pi_su_wrom_addr) of ot_qwen_rom_core_ctrl_static expects 24 bits, got 1.
+<gate_tmp>/head.sv:242:        : Padding 23 high bits of the port.
+<gate_tmp>/head.sv:242: warning: Port 182 (pi_su_kv_we) of ot_qwen_rom_core_ctrl_static expects 64 bits, got 1.
+<gate_tmp>/head.sv:242:        : Padding 63 high bits of the port.
+<gate_tmp>/head.sv:242: warning: Port 183 (pi_su_progress) of ot_qwen_rom_core_ctrl_static expects 16 bits, got 1.
+<gate_tmp>/head.sv:242:        : Padding 15 high bits of the port.
+<gate_tmp>/head.sv:242: warning: Port 184 (pi_su_progress_rows) of ot_qwen_rom_core_ctrl_static expects 16 bits, got 1.
+<gate_tmp>/head.sv:242:        : Padding 15 high bits of the port.
+<gate_tmp>/head.sv:242: warning: Port 192 (x_fidx) of ot_qwen_rom_core_ctrl_static expects 18 bits, got 1.
+<gate_tmp>/head.sv:242:        : Padding 17 high bits of the port.
+<gate_tmp>/head.sv:242: warning: Port 193 (x_fval) of ot_qwen_rom_core_ctrl_static expects 32 bits, got 1.
+<gate_tmp>/head.sv:242:        : Padding 31 high bits of the port.

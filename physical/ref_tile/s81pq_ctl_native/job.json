@@ -1,13 +1,13 @@
 {
- "name": "s81pq_ctl_native-g1-COMMIT",
+ "name": "s81pq_ctl_native-wv1-COMMIT",
  "block": "ot_s81_pq_ctl_fixed_native",
  "ref_tile": true,
- "owner": "Codex:s81-rom-2250",
+ "owner": "Claude:s81-elemB6-1014",
  "purpose": "Exact fixed PHW9 SAW11 R128 KMAX6144 controller physical wrapper and original 19-FF two-edge fault ownership; wrapper wires only, original controller and fault capture epochs preserved. Full77root/44SRAM source bench5536 exact and owned actual mutant.",
  "threads": 16,
  "peak_ram_gb": 40,
  "source": {
-  "branch": "codex/s81-rom-2250",
+  "branch": "claude/s81-elemB6-pq",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/dsrom_sys",
@@ -101,7 +101,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81pq_ctl_native/s81pq_ctl_native-g1-COMMIT"
+   "to": "results/rtl/ref_tile/s81pq_ctl_native/s81pq_ctl_native-wv1-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -112,8 +112,7 @@
  "merge_target": null,
  "structural_change": "GRT-0116 cut at the congested window (ctl g1-5b55f7666): 16 overflow gcells, all at y 69.5-70.7 (one gcell under the N face), x 2-35, vertical M3/M5. N face carries 1,295 of 1,772 pins in x 4.33-74.21 = 18.5 bits/um over M3 (27.8 tr/um) + M5 (20.8 tr/um) = 0.38 of raw tracks for pins alone, ~0.65 after the 25 % GRT layer adjustment and PG: over the 0.55-0.60 cut rule. Fix: outline 86.4 -> 108.0 um wide (same height 77.76), N pins re-spread in order over 2.66-105.34 um = 12.6 bits/um (0.44 of adjusted tracks), S/W pins unchanged; util 0.574 -> 0.46. Same RTL, same epochs.",
  "reroute_reason": {
-  "kind": "slot_change",
-  "slot_change_request": "s81pq_ctl_native-0555",
-  "why": "GRT-0116 cut at the congested window (ctl g1-5b55f7666): 16 overflow gcells, all at y 69.5-70.7 (one gcell under the N face), x 2-35, vertical M3/M5. N face carries 1,295 of 1,772 pins in x 4.33-74.21 = 18.5 bits/um over M3 (27.8 tr/um) + M5 (20.8 tr/um) = 0.38 of raw tracks for pins alone, ~0.65 after the 25 % GRT layer adjustment and PG: over the 0.55-0.60 cut rule. Fix: outline 86.4 -> 108.0 um wide (same height 77.76), N pins re-spread in order over 2.66-105.34 um = 12.6 bits/um (0.44 of adjusted tracks), S/W pins unchanged; util 0.574 -> 0.46. Same RTL, same epochs."
+  "kind": "rtl_change",
+  "why": "(1) NO-STUBS: new registered outputs ba_wv_o[1:0] (per-parity stage A write enables, same edge as ba_v_o) replace the IX tiles' parity tie; (2) Codex d7f2edbd3: count tree NCA = NGR (12 return groups; the CLOSED view read ga_i beyond 192 bits with NCA (R+7)/8). Generator tools/s81/pq_native_ctl.py carries both. Bit-exact pq_native_core_bench PASS 5,536 (ctl_fixed config), mutants IX/WV FAIL; count-tree gate (tools/s81/pq_row_count_gate.py) PASS 5,000 / mutant FAIL."
  }
 }

@@ -1,0 +1,5 @@
+FAIL dsfd_bf_front                      x519    INPUT_UNCONNECTED in_unconn=xb
+FAIL dsfd_sp_hc_t                       x1      INPUT_UNCONNECTED in_unconn=f_dl,srs
+FAIL dsfd_sp_pq_n                       x1      INPUT_UNCONNECTED in_unconn=f_cnt,f_iss
+FAIL dsfd_sp_vm                         x1      UNBOUND 
+DIE_PORT_BIND FAIL masters=209 instances=78183 unbound_masters=1 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=5 input_tied=0 unparsed_connections=0 undriven_net_bits=13945 multi_driven_net_bits=0 top_assigns=0 params_not_in_rtl=0 strap_ports=0

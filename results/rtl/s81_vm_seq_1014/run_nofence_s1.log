@@ -1,0 +1,7 @@
+FAIL: incomplete program at end (out 1 xstate 4 queued streams 1 reads 0 responses 0)
+RESULT jobs 120 (arm 97 give 23) credited 120 dones 133 writes 2162 reads 2162 stream rows 232 (6 streams) cycles 60039 bad 1
+FAIL
+- /srv/opentallas-scratch/claude/s81grpA6-codex/src/rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_seq.sv:226: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 180us; walltime 36.108 s; speed 4.988 us/s
+- Verilator: cpu 23.567 s on 1 threads; allocated 20 MB

@@ -1,0 +1,14 @@
+embedding.dequant            priced     67 edges    60 issues    8 rd   516 wr   512 reuse      0 elide      0
+row_scale_qkv                priced     62 edges    55 issues    3 rd   384 wr   192 reuse      0 elide      0
+rope                         priced     62 edges    51 issues    3 rd   224 wr   160 reuse      0 elide      0
+round_q                      priced     61 edges     4 issues    2 rd     0 wr   128 reuse   1024 elide      0
+softmax.max                  priced    302 edges   393 issues  128 rd  8192 wr    32 reuse      0 elide      0  OVER
+softmax.exp_sum              priced    524 edges   121 issues  128 rd     0 wr     8 reuse  65568 elide  65536
+softmax.bf16_p               priced    187 edges   256 issues  128 rd     0 wr  8192 reuse  65536 elide      0  OVER
+pv_normalize                 priced     78 edges    47 issues    2 rd   128 wr   128 reuse      8 elide      0
+row_scale_o+residual         priced     67 edges    75 issues    8 rd  1024 wr   512 reuse   4096 elide      0  OVER
+row_scale_gu                 priced     71 edges    91 issues   12 rd  1536 wr   768 reuse      0 elide      0  OVER
+swiglu                       priced    120 edges    12 issues    6 rd     4 wr   384 reuse   6144 elide      0
+row_scale_down+residual      priced     67 edges    75 issues    8 rd  1024 wr   512 reuse   4096 elide      0  OVER
+qwen {'priced': 1668.0, 'edges': 1240, 'ratio': 0.743} slices [43681, 43681, 43425, 43425] replicated 138 conflicts 0 affine_fail 0
+vehicle images /tmp/suspread/gate/veh_qwen preload sectors 21780 events 24560

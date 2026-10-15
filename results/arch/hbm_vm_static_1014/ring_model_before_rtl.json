@@ -1,0 +1,22 @@
+{
+  "schema": "opentallas.hbm-vm-static-ring.v1",
+  "replicas": 8,
+  "macs_per_cycle": 0,
+  "link_bits_per_cycle": 2224,
+  "request_bits_per_cycle": 290,
+  "response_bits_per_cycle": 266,
+  "mirror_bits_per_cycle": 2208,
+  "memory_bytes_per_cycle": 256,
+  "mux": "five explicit compiler sources, one 2224-bit registered output; no scan/arbitration",
+  "storage": "one pin rung and one output rung; four fixed commit-observation rungs",
+  "area": "ASSUMED register area; no closed view inherited",
+  "route": "2224 data tracks each direction, zero credit-return tracks; die reach/cut proof pending",
+  "slot_fit": "new source successor needs native physical closure; historical closed stop remains untouched",
+  "latency_edges": {
+    "pin_to_output": 1,
+    "bank_commit_after_xq_sample": 3
+  },
+  "compiler_requirement": "reserve every transit/injection output, packet replay, bank write and ack output cycle",
+  "throughput": "one flit per direction per edge; mirror local injection carries up to eight sectors",
+  "qualification": "UNQUALIFIED until real ring4/macro integration, mutants, physical closure and production price"
+}

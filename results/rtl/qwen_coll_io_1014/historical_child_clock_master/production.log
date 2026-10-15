@@ -1,0 +1,12 @@
+ot-run: ot-epyc1tb     admits   325 GB (avail 551, growth 142, headroom 64, waiters 0/0 GB) load 255/128 running 31 disk 867 GB 
+ot-run: ot-epyc4       admits    78 GB (avail 401, growth 275, headroom 48, waiters 0/0 GB) load 200/128 running 27 disk 700 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/qcoll-1834
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/qcoll-1834
+ot-run: -> ot-epyc4
+ot-heavy: request 48G is charged 22G (class 'qwen_coll_tp#_bench.py' measured peak 13.9G, n=10+0 proved); the cap stays 48G
+ot-heavy: admitted on regular-crane as oth-ubuntu-2335943-1792029252 after 0 s
+case qwen_ar_256w lats=339 mutant=- PASS mismatches=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=2048 cycles=971
+case qwen_layer_2x256w lats=339 mutant=- PASS mismatches=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=4096 cycles=1681
+case qwen_argmax_1w lats=339 mutant=- PASS mismatches=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=64 cycles=402
+COLL_TP8 PASS cases=3 lats=339 wt=3 leb=1 lc=128
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2335943-1792029252): exit 0

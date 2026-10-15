@@ -1,0 +1,13 @@
+TB_VMSS schedule: mode 0 seed 1 jobs 100 commands 217 commits 23596 cycles 494
+TB_VMSS ERROR cycle 32 c_st 11 flt 00000100000
+TB_VMSS ERROR cycle 33 c_st 11 flt 00000100000
+TB_VMSS ERROR cycle 34 c_st 11 flt 00000100000
+TB_VMSS ERROR cycle 35 c_st 11 flt 00000100011
+TB_VMSS ERROR cycle 36 t_inp {hc,su} 00 expected 10
+TB_VMSS ERROR cycle 36 c_st 11 flt 00000100011
+TB_VMSS ERROR cycle 37 t_inp {hc,su} 00 expected 10
+TB_VMSS ERROR cycle 37 c_st 11 flt 00000100011
+TB_VMSS ERROR cycle 38 t_inp {hc,su} 00 expected 10
+TB_VMSS ERROR fault vector 00000100011 expected 00000000000
+TB_VMSS RESULT mode 0 cycles 518 commands 217 dones 217 commits 23596 inp_cycles 459 errors 603
+TB_VMSS FAIL mode 0

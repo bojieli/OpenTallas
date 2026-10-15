@@ -1,0 +1,12 @@
+ot-run: ot-epyc1tb     skipped: no /srv/opentallas-scratch/codex/dvm4-vmcurrent
+ot-run: ot-epyc4       admits   240 GB (avail 491, growth 203, headroom 48, waiters 0/0 GB) load 190/128 running 22 disk 701 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/dvm4-vmcurrent
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/dvm4-vmcurrent
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2087911-1792029167 after 0 s
+FAIL committed Q fence never opened OBS_MUT=1
+- rtl/qwen_sys/vm_nox_20261014/tb_qfd_vm_die.sv:490: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 492ns; walltime 0.020 s; speed 25.205 us/s
+- Verilator: cpu 0.016 s on 1 threads; allocated 9 MB
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2087911-1792029167): exit 1

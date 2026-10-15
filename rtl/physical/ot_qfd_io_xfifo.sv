@@ -106,10 +106,12 @@ module qfd_io_xfifo (
         .wck(ur_wck),.rck(ur_rck),.rst_n(rst_n),
         .i_v(ur_i_v),.i_d({32'b0,ur_i_d}),.i_cr(ur_i_cr),.w_fault(fault[4]),
         .o_v(ur_o_v),.o_d(ur_padded),.o_cr(ur_o_cr),.r_fault(fault[5]));
-    qfd_xf_ch #(.W(514),.IBUF(4),.OCRED(32)) u_dr (
+    wire [545:0] dr_padded;
+    assign dr_o_d=dr_padded[513:0];
+    qfd_xf_ch #(.W(546),.IBUF(4),.OCRED(32)) u_dr (
         .wck(dr_wck),.rck(dr_rck),.rst_n(rst_n),
-        .i_v(dr_i_v),.i_d(dr_i_d),.i_cr(dr_i_cr),.w_fault(fault[6]),
-        .o_v(dr_o_v),.o_d(dr_o_d),.o_cr(dr_o_cr),.r_fault(fault[7]));
+        .i_v(dr_i_v),.i_d({32'b0,dr_i_d}),.i_cr(dr_i_cr),.w_fault(fault[6]),
+        .o_v(dr_o_v),.o_d(dr_padded),.o_cr(dr_o_cr),.r_fault(fault[7]));
     qfd_xf_ch #(.W(546),.IBUF(64),.OCRED(4),.IBMEM(2)) u_sx0 (
         .wck(sx0_wck),.rck(sx0_rck),.rst_n(rst_n),
         .i_v(sx0_i_v),.i_d(sx0_i_d),.i_cr(sx0_i_cr),.w_fault(fault[8]),

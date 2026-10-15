@@ -1,0 +1,39 @@
+{
+ "source": "v19c/xsp7_screen/plan.json.gz",
+ "source_sha256": "73f9e829ff52120226090a61c1875a1686dab0ae00c9bebd4f92867032bfd561",
+ "corrections": [
+  {
+   "instance": "sp_sseq",
+   "master_in_measured_plan": "dsfd_stage_seq_c8",
+   "previous_contract_origin": null,
+   "measured_plan_origin": {
+    "x": 13942.8,
+    "y": 19461.6,
+    "orient": "R0"
+   },
+   "outline_um": [
+    1727.976,
+    88.536
+   ]
+  },
+  {
+   "instance": "sp_collective",
+   "master_in_measured_plan": "dsfd_sp_collective_c",
+   "previous_contract_origin": {
+    "x": 13942.8,
+    "y": 18677.52,
+    "orient": "R0"
+   },
+   "measured_plan_origin": {
+    "x": 13942.8,
+    "y": 19722.96,
+    "orient": "R0"
+   },
+   "outline_um": [
+    1727.976,
+    2721.576
+   ]
+  }
+ ],
+ "qualification": "origin bookkeeping only; no new source binding or native parent qualification"
+}

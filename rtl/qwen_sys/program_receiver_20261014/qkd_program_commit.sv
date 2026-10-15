@@ -114,7 +114,12 @@ module qkd_program_commit_join #(parameter integer SINKS=2)(
       if(execution_active||armed||complete||!begin_pending)begin fault<=1;ready<=0;installed_fusedcap<=0;end
       else begin armed<=1;begin_pending<=0;epoch<=auth_epoch;digest<=auth_digest;end
      end
-     if((|sink_fault)||(armed&&mismatch))begin fault<=1;ready<=0;installed_fusedcap<=0;armed<=0;end
+     // A completed receipt is valid only while all actual sinks retain it.
+     // A lost seal revokes it without re-arming; only fresh BEGIN/AUTH can install.
+     if(complete&&(!(&sink_ready)||!control_stores_ready||installed_fusedcap!=(&sink_fusedcap)))begin
+      ready<=0;installed_fusedcap<=0;if(execution_active)fault<=1;
+     end
+     if((|sink_fault)||((armed||complete)&&mismatch))begin fault<=1;ready<=0;installed_fusedcap<=0;armed<=0;end
      else if(armed&&(&seen_empty)&&(&sink_ready)&&control_stores_ready&&!auth_v)begin
       commit_v<=1;ready<=1;installed_fusedcap<=&sink_fusedcap;
       commit_epoch<=epoch;commit_digest<=digest;armed<=0;complete<=1;

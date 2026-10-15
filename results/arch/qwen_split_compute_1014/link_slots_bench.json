@@ -1,0 +1,9 @@
+{"schema": "opentallas.qwen-split.compute-link-slots-bench.v1", "date": "2026-10-14T16:56:36-07:00",
+ "rtl": "rtl/qwen_split/qfd_link_slots.sv (qfd_d2d_rom, qfd_ckbump, qfd_rstsync, qfd_rstseq)",
+ "full_link_bench": {"runner": "rtl/test/qwen_split/run_d2d_rom_link.sh (tb_qwen_split_link.sv LLR=1 with the compute end replaced by qfd_d2d_rom)",
+   "positive": "SPLIT_LINK_PASS c_st=8 k_st=16 rom_st=24 phy=5 step=21057 att_mean=403",
+   "error_injection_ERRP_501": "SPLIT_LINK_PASS step=26554 att_mean=478",
+   "mutant_D2D_MUT_1_crossed_x3_tag": "SPLIT_LINK_FAIL errors=649"},
+ "equivalence_and_reset_bench": {"tb": "rtl/test/qwen_split/tb_qfd_link_slots.sv (iverilog)",
+   "positive": "LINK_SLOTS checks=19995 mismatches=0 reset_errors=0 PASS",
+   "mutant_MUT_1": "LINK_SLOTS mismatches=1 FAIL"}}

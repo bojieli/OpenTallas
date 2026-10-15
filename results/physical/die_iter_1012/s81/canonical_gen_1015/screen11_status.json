@@ -1,0 +1,12 @@
+{
+ "status": "GEN_FAIL",
+ "error": "NameError(\"name 'c' is not defined\")",
+ "traceback": "Traceback (most recent call last):\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/s81/canonical_screen.py\", line 22, in main\n    m=G.build();G.finalize_r8(m)\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/dsrom_s81_fulldie.py\", line 568, in build\n    return build_r8(variant)\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/dsrom_s81_fulldie.py\", line 3662, in build_r8\n    m0 = build_r8(variant)\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/dsrom_s81_fulldie.py\", line 4312, in build_r8\n    buses_r8(m)\n    ~~~~~~~~^^^\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/s81/canonical_screen.py\", line 15, in capture\n    return old(m)\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/dsrom_s81_fulldie.py\", line 4680, in buses_r8\n    canonical_trunks(sys.modules[__name__], m, CH8, cor, starts, ga, end_spec, hub_block, bus)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/s81/canonical_layout.py\", line 192, in trunks\n    road=Roadmap(G,m,cor);allowed=[v for k,v in cor.items() if k.startswith(('cfstreet','rsclane','s14','vch','hcc','svc_access'))]\n  File \"/srv/opentallas-scratch/codex-canonical-gen-1015/src/tools/s81/canonical_layout.py\", line 97, in __init__\n    if side=='W':sx=max(sx,c['x_um']+G.COL_W8+G.stn_dims([1026],False)[0]/2+.864)\n                           ^\nNameError: name 'c' is not defined\n",
+ "native_qualified": false,
+ "source_sha256": {
+  "tools/dsrom_s81_fulldie.py": "6e199ca9fd540b3fcb7f9eee163051e1be3b57226f3875f4c552cc24574ae012",
+  "tools/s81/canonical_layout.py": "2753c5b1e376ef025110d3a55afe3cd08f99857e8945041222730b85cac64c32",
+  "tools/s81/canonical_screen.py": "2572cee225bdd559befe53026bffafceb2dc0c22f159b325d8713107c8b7fe0b"
+ },
+ "capacity_sha256": "2d1fa10aa7e3136a4fece04b2b9b1d094a99391dcd5c7a6726991061ff540995"
+}

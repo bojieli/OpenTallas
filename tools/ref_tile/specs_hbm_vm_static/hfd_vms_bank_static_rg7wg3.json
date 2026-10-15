@@ -1,0 +1,272 @@
+{
+  "name": "vms_bank_static_rg7wg3_1015",
+  "top": "hfd_vms_bank_static_rg7wg3",
+  "kind": "tile",
+  "sources": [
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_static_rg7wg3.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "pins": {
+    "N": [
+      "rq0",
+      "rr0",
+      "rq4",
+      "rr4",
+      "dq",
+      "dq_done",
+      "wq2",
+      "wq_done2",
+      "wslot"
+    ],
+    "S": [
+      "rq1",
+      "rr1",
+      "rq5",
+      "rr5",
+      "kq",
+      "kq_done",
+      "xq",
+      "xq_done",
+      "eg"
+    ],
+    "E": [
+      "rq2",
+      "rr2",
+      "rq6",
+      "rr6",
+      "wq0",
+      "wq_done0",
+      "xq2",
+      "xq2_done",
+      "clk",
+      "bid",
+      "rslot"
+    ],
+    "W": [
+      "rq3",
+      "rr3",
+      "pq",
+      "pr",
+      "wq1",
+      "wq_done1",
+      "rst_n",
+      "sid",
+      "rslot_v",
+      "wslot_v",
+      "status"
+    ]
+  },
+  "pin_ranges": {
+    "rq0": [
+      5.4,
+      11.493
+    ],
+    "rr0": [
+      11.493,
+      103.598
+    ],
+    "rq4": [
+      103.598,
+      109.69
+    ],
+    "rr4": [
+      109.69,
+      201.795
+    ],
+    "dq": [
+      201.795,
+      302.502
+    ],
+    "dq_done": [
+      302.502,
+      302.86
+    ],
+    "wq2": [
+      302.86,
+      403.566
+    ],
+    "wq_done2": [
+      403.566,
+      403.925
+    ],
+    "wslot": [
+      403.925,
+      405.0
+    ],
+    "rq1": [
+      5.4,
+      10.312
+    ],
+    "rr1": [
+      10.312,
+      84.569
+    ],
+    "rq5": [
+      84.569,
+      89.481
+    ],
+    "rr5": [
+      89.481,
+      163.738
+    ],
+    "kq": [
+      163.738,
+      244.929
+    ],
+    "kq_done": [
+      244.929,
+      245.218
+    ],
+    "xq": [
+      245.218,
+      324.964
+    ],
+    "xq_done": [
+      324.964,
+      325.253
+    ],
+    "eg": [
+      325.253,
+      405.0
+    ],
+    "rq2": [
+      5.4,
+      11.498
+    ],
+    "rr2": [
+      11.498,
+      103.686
+    ],
+    "rq6": [
+      103.686,
+      109.784
+    ],
+    "rr6": [
+      109.784,
+      201.972
+    ],
+    "wq0": [
+      201.972,
+      302.768
+    ],
+    "wq_done0": [
+      302.768,
+      303.127
+    ],
+    "xq2": [
+      303.127,
+      402.13
+    ],
+    "xq2_done": [
+      402.13,
+      402.489
+    ],
+    "clk": [
+      402.489,
+      402.848
+    ],
+    "bid": [
+      402.848,
+      403.924
+    ],
+    "rslot": [
+      403.924,
+      405.0
+    ],
+    "rq3": [
+      5.4,
+      11.412
+    ],
+    "rr3": [
+      11.412,
+      102.294
+    ],
+    "pq": [
+      102.294,
+      203.078
+    ],
+    "pr": [
+      203.078,
+      297.143
+    ],
+    "wq1": [
+      297.143,
+      396.513
+    ],
+    "wq_done1": [
+      396.513,
+      396.867
+    ],
+    "rst_n": [
+      396.867,
+      397.22
+    ],
+    "sid": [
+      397.22,
+      397.927
+    ],
+    "rslot_v": [
+      397.927,
+      398.281
+    ],
+    "wslot_v": [
+      398.281,
+      398.635
+    ],
+    "status": [
+      398.635,
+      405.0
+    ]
+  },
+  "outline": {
+    "w": 410.4,
+    "h": 410.4,
+    "exact": true
+  },
+  "layer_cap": "M5",
+  "recipe": 2,
+  "macros": [
+    {
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+      "count": 3
+    }
+  ],
+  "route": {
+    "pd": 0.5,
+    "period_ps": 833.333,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "hold_margin_ns": 0.03,
+    "pin_balance": {
+      "group_max": 32,
+      "h": "M4",
+      "v": "M3 M5"
+    }
+  },
+  "job": {
+    "owner": "Codex:H-VM static bank native physical",
+    "branch": "codex/hbm-vm-static-hub-1014",
+    "tag": "static1015",
+    "purpose": "Native static bank RG7WG3; unchanged real3SRAM core, dedicated COLL+IDX readgroups; pre-route synthesis/CTS first, no route until die cuts approved",
+    "extra_paths": [
+      "rtl/hbm_accel/generic/vm/static"
+    ],
+    "benched_by": "results/uarch/hbm_vm_allgroups_static_1015/receipt.json",
+    "record_to": "results/rtl/ref_tile/vms_bank_static_rg7wg3_1015",
+    "benches": [
+      {
+        "name": "all_native_groups_exact_and_mutants",
+        "cmd": "mkdir -p {RUN}/bench_inputs && cp rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v {RUN}/bench_inputs/ && bash rtl/hbm_accel/generic/vm/static/physical/run_physical_banks_static.sh {RUN}/bench/allgroups {RUN}/bench_inputs",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "min_count_regex": "eachgroup_reads=(\\d+)"
+      }
+    ]
+  }
+}

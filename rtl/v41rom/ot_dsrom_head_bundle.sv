@@ -31,7 +31,10 @@ module ot_dsrom_head_bundle #(
     output reg          res_v,
     output reg  [16:0]  res_row,
     output reg  [31:0]  res_bits,
-    output wire         fault
+    output wire         fault,
+    output wire [3:0]   head_v,
+    output wire [127:0] head_d,
+    output wire [67:0]  head_row
 );
     // registered broadcast
     wire        go_d;
@@ -89,7 +92,8 @@ module ot_dsrom_head_bundle #(
             .clk(clk), .rst_n(rst_n), .d({row_in, xsa, bd_r}), .q({row_a, x_a, bd_a}));
         ot_dsrom_head_elem #(.LV(8), .PAD(0), .JOIN(1), .ROWS(32), .CUT(CUT), .INSTANCE($sformatf("%sa%0d", INSTANCE, q)), .IOREG(IOREG), .SAFE(SAFE), .SPLIT9(SPLIT9)) u_e (
             .clk(clk), .rst_n(rst_n), .go(a_go[q]), .row0(row_a), .x(x_a), .b_v(bv_a), .b_d(bd_a),
-            .o_v(ov), .o_d(od), .l_v(lv), .l_d(ld), .done(a_done[q]), .best_row(a_row[q]), .best_bits(a_bits[q]),
+            .o_v(ov), .o_d(od), .l_v(lv), .l_d(ld),
+            .head_v(head_v[q]), .head_d(head_d[32*q+:32]), .head_row(head_row[17*q+:17]), .done(a_done[q]), .best_row(a_row[q]), .best_bits(a_bits[q]),
             .best_key(a_key[q]), .fault(a_fault[q]));
     end endgenerate
     // 2-level compare tree (lowest-id first max): level 1 (0,1) (2,3), level 2

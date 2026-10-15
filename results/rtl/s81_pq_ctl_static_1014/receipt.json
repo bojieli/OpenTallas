@@ -1,0 +1,66 @@
+{
+  "status": "STATIC_CONTROLLER_COMPONENT_PASS_NATIVE_CALENDAR_COMPOSITION_OWED",
+  "base_commit": "d7c72df4b993f9f55f66739c4c50dad220b7431a",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_static_native.sv": "d91994f68ed9589121d4e53dbdd606ae911d0efeca86423296ac237d70f575db",
+    "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_core_native.sv": "9a734e356fbb29c37318d5d533b2f40421992d3f0b5dc8fb7e7bdaaf7d3e7c40",
+    "rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv": "93ae8b810448265345df4773100a3c95cddb9171ee8adfbeef9eb161aeef2b1e",
+    "rtl/test/dsrom_sys/tb_s81_pq_ctl_static.sv": "ba7d575d0dd02da9571a91b4769106d9940b0c23e9e4e546b9a374ea0f330dc6",
+    "tools/s81/pq_ctl_static_bench.sh": "5237619dff9a0917e7da462ca9e684fd7bf6299ea57c24bff506114d4636569d",
+    "tools/s81/pq_static_calendar_abi.json": "23abce5fbb0f9645a74fad5ebfda907f7152802554559a650f24de758fcce3af"
+  },
+  "command": "bash tools/s81/pq_ctl_static_bench.sh final",
+  "shape": {
+    "K": 6144,
+    "regions": 128,
+    "count_groups": 12,
+    "tags_tested": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "positions_tested": [
+      1,
+      2
+    ],
+    "families": [
+      "PQ",
+      "BF16"
+    ],
+    "checks_per_scenario": 2500,
+    "stream_beats_per_scenario": 1152
+  },
+  "positive": "PASS native phase/stream-ROM data inputs and native index/metadata arithmetic; exact consume, BC, AQI, cfg, GO, and retire edges checked",
+  "mutants": [
+    "config-tag actual source mutant FAIL",
+    "missing VM return faults while preserving all request/consume/retire edges",
+    "missing return counts faults while preserving all request/consume/retire edges"
+  ],
+  "timing": {
+    "VM_request": 0,
+    "stream_request_to_consume_pin": 5,
+    "stream_request_to_bc_hr_valid_pin": 8,
+    "cfg_to_bc_hr_cfg_pin": 2,
+    "launch_to_bc_hr_go_pin": 2,
+    "VM_response_to_AQI_metadata_pin": 26,
+    "retire_to_ev_end_pin": 0,
+    "GA_input_sample_to_last_count_available_for_retire": 3
+  },
+  "initial_failure": "Initial expected-index formula omitted the stream u=(k/8)%12 wrap; corrected the test oracle. The DUT datapath did not change for that correction. Failed diagnostic retained.",
+  "qualification_limits": [
+    "component calendar action input is external stimulus; actual immutable source-ROM calendar consumer and compiler emitter are separately owned by q_native_compute",
+    "VM responses are declared external controller stimuli; no VM macro or math core instantiated in this controller-only bench",
+    "count sums use real CTL balanced tree but ga_i is external stimulus; q_native_compute owns actual 12-leaf/128-region composed count proof",
+    "four tags tested individually; concurrent tag calendar/VM/QB/field/count composition remains required",
+    "QB_PIPE physical +2 path needs new head/align slots and all physical gates",
+    "no native token-rate/end-to-end loss measured; no accepted-cost ledger update"
+  ],
+  "static_replacements": [
+    "x_rv metadata FIFO and xo credit removed; response context comes from fixed action",
+    "no have/credit/gap/guard/backpressure state",
+    "native stream-ROM fixed decode pipeline replaces demand queue",
+    "configuration/launch/tag allocation/retirement come from compiler calendar",
+    "availability, VM validity, count mismatches set sticky fault only"
+  ]
+}

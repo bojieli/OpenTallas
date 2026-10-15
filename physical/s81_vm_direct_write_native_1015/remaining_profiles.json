@@ -1,0 +1,285 @@
+{
+  "schema": "opentallas.s81.vm-distinct-native-write-profiles.v1",
+  "status": "ACTUAL_TRANSPARENT_SOURCE_WRAPPERS_NOT_NATIVE_CLOSURE_OR_PRODUCTION_ADOPTION",
+  "wrapper_source": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_direct_write_native_profiles.sv",
+  "wrapper_sha256": "dce23e0eb6b8de3eaae06fa2f90291b76df464bb915c1e260d3fbb20b7bb3822",
+  "profiles": [
+    {
+      "tag": "capture_w",
+      "top": "dsfd_vm_static_write_capture128_W",
+      "primitive": "dsfd_vm_static_write_capture128",
+      "bank_base": null,
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "width": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "width": 1
+        },
+        "i_v": {
+          "direction": "input",
+          "width": 1
+        },
+        "i_we": {
+          "direction": "input",
+          "width": 1
+        },
+        "i_row": {
+          "direction": "input",
+          "width": 14
+        },
+        "i_mask": {
+          "direction": "input",
+          "width": 4
+        },
+        "i_data": {
+          "direction": "input",
+          "width": 128
+        },
+        "i_tag": {
+          "direction": "input",
+          "width": 8
+        },
+        "o_v": {
+          "direction": "output",
+          "width": 1
+        },
+        "o_we": {
+          "direction": "output",
+          "width": 1
+        },
+        "o_row": {
+          "direction": "output",
+          "width": 14
+        },
+        "o_mask": {
+          "direction": "output",
+          "width": 4
+        },
+        "o_data": {
+          "direction": "output",
+          "width": 128
+        },
+        "o_tag": {
+          "direction": "output",
+          "width": 8
+        }
+      },
+      "primitive_source": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_write_capture128.sv",
+      "primitive_sha256": "be5afc68ba562ac9f6a00908e5ed1fadd59818d4679e933aab8e37472e8c35f9"
+    },
+    {
+      "tag": "scatter_b8",
+      "top": "dsfd_vm_static_scatter_b8_out_B8",
+      "primitive": "dsfd_vm_static_scatter_b8_out",
+      "bank_base": 8,
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "width": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "width": 1
+        },
+        "i_v": {
+          "direction": "input",
+          "width": 8
+        },
+        "i_we": {
+          "direction": "input",
+          "width": 8
+        },
+        "i_row": {
+          "direction": "input",
+          "width": 112
+        },
+        "i_mask": {
+          "direction": "input",
+          "width": 32
+        },
+        "i_data": {
+          "direction": "input",
+          "width": 1024
+        },
+        "i_tag": {
+          "direction": "input",
+          "width": 64
+        },
+        "o_v": {
+          "direction": "output",
+          "width": 8
+        },
+        "o_we": {
+          "direction": "output",
+          "width": 8
+        },
+        "o_addr": {
+          "direction": "output",
+          "width": 72
+        },
+        "o_mask": {
+          "direction": "output",
+          "width": 32
+        },
+        "o_data": {
+          "direction": "output",
+          "width": 1024
+        },
+        "o_tag": {
+          "direction": "output",
+          "width": 64
+        },
+        "fault": {
+          "direction": "output",
+          "width": 1
+        }
+      },
+      "primitive_source": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_scatter_b8_out.sv",
+      "primitive_sha256": "2d107c469fa34b611e879fc5f5f86091df7d6295d5b06ff4e5dd5c8a899ee397"
+    },
+    {
+      "tag": "scatter_b16",
+      "top": "dsfd_vm_static_scatter_b8_out_B16",
+      "primitive": "dsfd_vm_static_scatter_b8_out",
+      "bank_base": 16,
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "width": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "width": 1
+        },
+        "i_v": {
+          "direction": "input",
+          "width": 8
+        },
+        "i_we": {
+          "direction": "input",
+          "width": 8
+        },
+        "i_row": {
+          "direction": "input",
+          "width": 112
+        },
+        "i_mask": {
+          "direction": "input",
+          "width": 32
+        },
+        "i_data": {
+          "direction": "input",
+          "width": 1024
+        },
+        "i_tag": {
+          "direction": "input",
+          "width": 64
+        },
+        "o_v": {
+          "direction": "output",
+          "width": 8
+        },
+        "o_we": {
+          "direction": "output",
+          "width": 8
+        },
+        "o_addr": {
+          "direction": "output",
+          "width": 72
+        },
+        "o_mask": {
+          "direction": "output",
+          "width": 32
+        },
+        "o_data": {
+          "direction": "output",
+          "width": 1024
+        },
+        "o_tag": {
+          "direction": "output",
+          "width": 64
+        },
+        "fault": {
+          "direction": "output",
+          "width": 1
+        }
+      },
+      "primitive_source": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_scatter_b8_out.sv",
+      "primitive_sha256": "2d107c469fa34b611e879fc5f5f86091df7d6295d5b06ff4e5dd5c8a899ee397"
+    },
+    {
+      "tag": "scatter_b24",
+      "top": "dsfd_vm_static_scatter_b8_out_B24",
+      "primitive": "dsfd_vm_static_scatter_b8_out",
+      "bank_base": 24,
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "width": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "width": 1
+        },
+        "i_v": {
+          "direction": "input",
+          "width": 8
+        },
+        "i_we": {
+          "direction": "input",
+          "width": 8
+        },
+        "i_row": {
+          "direction": "input",
+          "width": 112
+        },
+        "i_mask": {
+          "direction": "input",
+          "width": 32
+        },
+        "i_data": {
+          "direction": "input",
+          "width": 1024
+        },
+        "i_tag": {
+          "direction": "input",
+          "width": 64
+        },
+        "o_v": {
+          "direction": "output",
+          "width": 8
+        },
+        "o_we": {
+          "direction": "output",
+          "width": 8
+        },
+        "o_addr": {
+          "direction": "output",
+          "width": 72
+        },
+        "o_mask": {
+          "direction": "output",
+          "width": 32
+        },
+        "o_data": {
+          "direction": "output",
+          "width": 1024
+        },
+        "o_tag": {
+          "direction": "output",
+          "width": 64
+        },
+        "fault": {
+          "direction": "output",
+          "width": 1
+        }
+      },
+      "primitive_source": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_scatter_b8_out.sv",
+      "primitive_sha256": "2d107c469fa34b611e879fc5f5f86091df7d6295d5b06ff4e5dd5c8a899ee397"
+    }
+  ],
+  "assertion": "Eachprimitiveinput/output/clock/resetconnectedoncebyname, nocomputation/state/controlinwrapper; constantBANK_BASEsourceidentity. Pin304variants retained exact. Existingproductionprimitivebytes unchanged."
+}

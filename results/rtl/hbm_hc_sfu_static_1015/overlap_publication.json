@@ -1,0 +1,28 @@
+{
+  "source": "c11352426 current-bank receipt plus f5bcba789 compiler and e40b1b28b historical evidence",
+  "scope": "Component3072canonicalVMwords; no native full4x7168IO, physical, wholelayer or throughput qualification",
+  "hashes": {
+    "matched_compiled_sources": 43,
+    "total_compiled_sources": 44,
+    "shared_source_differences": [
+      {
+        "path": "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+        "compiled_hash": "3cfaf90b9e730bb33b92f350ac6d3bcd604191cc8f37e7a31698fb394767e69c",
+        "current_hash": "e494c109a829a081eae4d4f96a0e1e1ee68f08e87f9ac977f3460250ef77db85"
+      }
+    ],
+    "explanation": "Current sharedSU preserved with additiveRB9mapping/unsupportedmacroguard; defaultRB11functionalpath unchanged. Receipt original sourcehash retained."
+  },
+  "verification": [
+    "7Python testsPASS",
+    "800rowdefault byteidentical",
+    "432rowimageexactregeneration",
+    "bash-nPASS"
+  ],
+  "measured": {
+    "IOrows": 432,
+    "observer_edges": 442,
+    "immutable_price": 120,
+    "throughput_qualified": false
+  }
+}

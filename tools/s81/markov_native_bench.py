@@ -6,8 +6,11 @@ src=[r/x for x in ['rtl/common/ot_prefix.sv','rtl/v41rom/ot_v41_bmul2.sv','rtl/v
 results=[]
 modes=[('exact',0),('join_mut',1),('delay_mut',0),('ctl_mut',0),('mul_mut',0),('pair_mut',0),('fold_mut',0)]+[(f'chunk{k}_mut',0)for k in range(8)]+[('fault',0)]
 if len(sys.argv)>2:
- selected=sys.argv[2]+'_mut';modes=[m for m in modes if m[0]in ['exact','fault',selected]]
- assert len(modes)==3,'unknown owned-master mode'
+ dut=sys.argv[2].endswith('!')  # '<leaf>!': the mutant alone as the DUT (closure-loop expect=fail bench)
+ selected=sys.argv[2].rstrip('!')+'_mut';modes=[m for m in modes if m[0]in(([selected])if dut else['exact','fault',selected])]
+ assert len(modes)==(1 if dut else 3),'unknown owned-master mode'
+ if dut:
+  kind,mut=modes[0]
 for kind,mut in modes:
  oldname='tb_markov_fault'if kind=='fault'else'tb_markov_row'
  tb=(r/f'rtl/test/dsrom_markov_20261008/{oldname}.sv').read_text()
@@ -35,6 +38,8 @@ for kind,mut in modes:
  with (out/f'{kind}_build.log').open('w')as f:rc=subprocess.run(cmd+['-o',str(exe),*map(str,src),str(tp)],stdout=f,stderr=subprocess.STDOUT).returncode
  if rc:print('BUILDFAIL',kind,(out/f'{kind}_build.log').read_text()[-1800:],flush=True);raise SystemExit(rc)
  p=subprocess.run(['vvp',str(exe),f'+DIR={out}'],text=True,capture_output=True);(out/f'{kind}.log').write_text(p.stdout+p.stderr)
+ if len(sys.argv)>2 and sys.argv[2].endswith('!'):
+  print('MARKOV_NATIVE_DUT','FAIL' if p.returncode!=0 else 'PASS',kind,p.stdout[-300:],flush=True);raise SystemExit(1 if p.returncode!=0 else 0)
  positive=kind in ['exact','fault'];ok=(p.returncode==0)if positive else(p.returncode!=0)
  results.append({'kind':kind,'rc':p.returncode,'expected': 'pass'if positive else'functionalfail','ok':ok,'stdout':p.stdout[-600:]});print(results[-1],flush=True)
  if not ok:raise SystemExit(2)

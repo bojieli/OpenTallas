@@ -1,0 +1,315 @@
+{
+  "scope": "Actual staging and static8bankdq delivery components; NOT segmented/native die qualification",
+  "model": {
+    "schema": "opentallas.hbm.static-landing.v1",
+    "opt_in": true,
+    "pcs": 32,
+    "banks": 2,
+    "sectors_per_bank_per_pc": 64,
+    "sector_bits": 256,
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "macro_count": 32,
+    "macro_area_um2": 3893.852736,
+    "array_area_um2": 124603.287552,
+    "capacity_bytes": 131072,
+    "fill_bytes_per_cycle": 1024,
+    "drain_groups": 4,
+    "drain_bytes_per_cycle": 256,
+    "drain_cycles_per_block": 256,
+    "read_latency_cycles": 1,
+    "read_issue_interval_cycles": 1,
+    "block_boundary_bits": 2,
+    "payload_boundary_bits": 2048,
+    "fill_boundary_bits": 8960,
+    "landing_input_bits": 8998,
+    "landing_output_bits": 2078,
+    "delivery_input_bits": 9014,
+    "delivery_output_bits": 2252,
+    "fill_port_bits": {
+      "fill_v": 32,
+      "fill_bank": 32,
+      "fill_slot": 192,
+      "fill_epoch": 512,
+      "fill_data": 8192
+    },
+    "dq_bits": 2248,
+    "dq_sector_mapping": "base+slot*32+group*8+bank",
+    "drain_output_port_bits": {
+      "out_v": 1,
+      "out_bank": 1,
+      "out_slot": 6,
+      "out_group": 2,
+      "out_epoch": 16,
+      "out_data": 2048
+    },
+    "macs_per_cycle": 0,
+    "valid_state_bits": 4096,
+    "replica_mux": "32 independent 1R1W macros; group4: eight local 4:1 sector muxes; only selected 8 PCs read each cycle",
+    "fanout": "start/bank to 32 macros; PC-local write enables and addresses",
+    "routing_tracks_needed": 2048,
+    "routing_capacity": null,
+    "slot_fit": null,
+    "composed_latency": "one macro read edge; 256 fixed group issue slots per block (group4); prefetch latency external",
+    "token_delta_cycles": null,
+    "adopted": false,
+    "qualification": "mechanism only; band ABI, native loader, SM/WB and compiler calendar joins absent"
+  },
+  "source_ports": {
+    "ot_hbm_svc_static_landing": {
+      "counts": {
+        "input": 8998,
+        "output": 2078
+      },
+      "ports": {
+        "clk": [
+          "input",
+          1
+        ],
+        "rst_n": [
+          "input",
+          1
+        ],
+        "begin_v": [
+          "input",
+          1
+        ],
+        "begin_bank": [
+          "input",
+          1
+        ],
+        "begin_epoch": [
+          "input",
+          16
+        ],
+        "fill_v": [
+          "input",
+          32
+        ],
+        "fill_bank": [
+          "input",
+          32
+        ],
+        "fill_slot": [
+          "input",
+          192
+        ],
+        "fill_epoch": [
+          "input",
+          512
+        ],
+        "fill_data": [
+          "input",
+          8192
+        ],
+        "block_ready": [
+          "output",
+          2
+        ],
+        "start": [
+          "input",
+          1
+        ],
+        "start_bank": [
+          "input",
+          1
+        ],
+        "start_epoch": [
+          "input",
+          16
+        ],
+        "out_v": [
+          "output",
+          1
+        ],
+        "out_bank": [
+          "output",
+          1
+        ],
+        "out_slot": [
+          "output",
+          6
+        ],
+        "out_group": [
+          "output",
+          2
+        ],
+        "out_data": [
+          "output",
+          2048
+        ],
+        "out_epoch": [
+          "output",
+          16
+        ],
+        "busy": [
+          "output",
+          1
+        ],
+        "fault": [
+          "output",
+          1
+        ]
+      }
+    },
+    "ot_hbm_svc_static_vm_delivery": {
+      "counts": {
+        "input": 9014,
+        "output": 2252
+      },
+      "ports": {
+        "clk": [
+          "input",
+          1
+        ],
+        "rst_n": [
+          "input",
+          1
+        ],
+        "begin_v": [
+          "input",
+          1
+        ],
+        "begin_bank": [
+          "input",
+          1
+        ],
+        "begin_epoch": [
+          "input",
+          16
+        ],
+        "fill_v": [
+          "input",
+          32
+        ],
+        "fill_bank": [
+          "input",
+          32
+        ],
+        "fill_slot": [
+          "input",
+          192
+        ],
+        "fill_epoch": [
+          "input",
+          512
+        ],
+        "fill_data": [
+          "input",
+          8192
+        ],
+        "block_ready": [
+          "output",
+          2
+        ],
+        "start": [
+          "input",
+          1
+        ],
+        "start_bank": [
+          "input",
+          1
+        ],
+        "start_epoch": [
+          "input",
+          16
+        ],
+        "start_base_sector": [
+          "input",
+          16
+        ],
+        "dq": [
+          "output",
+          2248
+        ],
+        "busy": [
+          "output",
+          1
+        ],
+        "fault": [
+          "output",
+          1
+        ]
+      }
+    }
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_landing.sv": "0c3122d06032896c52c97a11c3e65bf041ae5f420259671868e1f2ef988fab25",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_vm_delivery.sv": "91b0265ba4c0ce452cffbfd7776d25922dc6747de8a0a34b28c7b2e54354f3f2",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_static_landing.sv": "c3156ca38bec358bd8d82fe120f3aa562d450d373bab246566baf22c36810598",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_static_vm_delivery.sv": "ce5f5de6175aafee5fa8311fe86ac6134f00a0ed1aee5e91e293fe7f56857743",
+    "rtl/hbm_accel/loader/service_native/run_static_landing_bench.sh": "24f3769e345fed3f8864df83635f55697c373aa5be67d8d56dcd4fbd35a0fff4"
+  },
+  "logs": {
+    "positive.log": "STATIC_LANDING PASS PCs=32 blocks=3 outputs=192 overlap=64 II=1 faults=duplicate,epoch,incomplete\n",
+    "mutant.log": "FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_svc_static_landing.sv:37: payload pc=0 slot=0\n       Time: 2637000 Scope: tb_hbm_svc_static_landing.$ivl_for_loop1\n",
+    "vm.log": "STATIC_VM_DELIVERY PASS sectors=2048 slots=256 II=1 dq_bits=2248 aperture_fault=1\n",
+    "group_mutant.log": "FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_svc_static_vm_delivery.sv:19: VM delivery bank/group mismatch ordinal=0 bank=0\n       Time: 667000 Scope: tb_hbm_svc_static_vm_delivery.check_slot\n"
+  },
+  "yosys_check": "hierarchy -check; proc; opt_clean; check -assert PASS (real landing SRAM blackbox ABI)",
+  "schedule": {
+    "cycles_per_block": 256,
+    "read_groups_per_sector_slot": 4,
+    "sector": "base+slot*32+group*8+bank",
+    "dq": "valid280;sector279:264;data263:8;mask7:0",
+    "base_alignment_sectors": 32,
+    "block_sectors": 2048,
+    "block_bytes": 65536,
+    "bank_commit": "VM samples dq edge n; actual VM commit n+3 (joint proof owned by h_vm/static_hub)"
+  },
+  "gaps": [
+    "Joint realVM2048write/readback proof in flight",
+    "No compiler production prefetch calendar",
+    "No segmented service native/SM/WB replacement",
+    "No physical slot/timing/clockroot qualification"
+  ],
+  "historical_initial_receipt": {
+    "scope": "mechanism component; NOT seg_psn/native die qualification",
+    "model": {
+      "schema": "opentallas.hbm.static-landing.v1",
+      "opt_in": true,
+      "pcs": 32,
+      "banks": 2,
+      "sectors_per_bank_per_pc": 64,
+      "sector_bits": 256,
+      "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+      "macro_count": 32,
+      "macro_area_um2": 3893.852736,
+      "array_area_um2": 124603.287552,
+      "capacity_bytes": 131072,
+      "fill_bytes_per_cycle": 1024,
+      "drain_bytes_per_cycle": 1024,
+      "drain_cycles_per_block": 64,
+      "read_latency_cycles": 1,
+      "read_issue_interval_cycles": 1,
+      "block_boundary_bits": 2,
+      "payload_boundary_bits": 8192,
+      "fill_boundary_bits": 8416,
+      "macs_per_cycle": 0,
+      "valid_state_bits": 4096,
+      "replica_mux": "32 independent 1R1W macros; no payload crossbar",
+      "fanout": "start/bank to 32 macros; PC-local write enables and addresses",
+      "routing_tracks_needed": 8192,
+      "routing_capacity": null,
+      "slot_fit": null,
+      "composed_latency": "one macro read edge; 64 fixed issue slots per block; prefetch latency external",
+      "token_delta_cycles": null,
+      "adopted": false,
+      "qualification": "mechanism only; band ABI, native loader, SM/WB and compiler calendar joins absent"
+    },
+    "source_sha256": {
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_landing.sv": "f50a040e66a67f24bfa5d7615f0df1e4001dac049f81d5c1c1efefd02da2c2b8",
+      "rtl/hbm_accel/loader/service_native/tb_hbm_svc_static_landing.sv": "36ab9f0312b4651cc0d86281201b81e1b36a6f075f1fd0178afd7b9b5629f57c",
+      "rtl/hbm_accel/loader/service_native/run_static_landing_bench.sh": "c3addd766b339c92d3edda0da4c997bb5204330db2671c3ad2bb1868c7056053"
+    },
+    "positive_log": "STATIC_LANDING PASS PCs=32 blocks=3 outputs=192 overlap=64 II=1 faults=duplicate,epoch,incomplete\n",
+    "mutant_log": "FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_svc_static_landing.sv:37: payload pc=0 slot=0\n       Time: 2637000 Scope: tb_hbm_svc_static_landing.$ivl_for_loop1\n",
+    "yosys_check": "hierarchy -check; proc; opt_clean; check -assert PASS (real macro blackbox ABI)",
+    "gaps": [
+      "No compiler production prefetch/calendar bound",
+      "No SRAM physical slot/timing/clockroot qualification",
+      "No actual segmented service native/SM/WB replacement",
+      "32PC to 8-bank VM adaptation requires explicit static bandwidth pricing"
+    ],
+    "historical_model_correction": "fill_boundary_bits8416 omitted bank32 and epoch512; actual8960. Initial32wide mode is opt-in READ_GROUPS1; current selected modegroup4."
+  }
+}

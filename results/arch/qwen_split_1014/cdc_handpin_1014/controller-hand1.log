@@ -1,0 +1,12 @@
+ot-run: ot-epyc1tb     admits   457 GB (avail 684, growth 94, headroom 64, waiters 0/0 GB) load 119/128 running 22 disk 878 GB 
+ot-run: ot-epyc4       admits   380 GB (avail 614, growth 186, headroom 48, waiters 0/0 GB) load 165/128 running 25 disk 708 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/kvsys-handpin-1014
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/kvsys-handpin-1014
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-648898-1792028805 after 0 s
+PASS qkd_ctrl_pc pc=13: 4685 hclk compared to ot_qwen_ctrl_pc_emb #(PC) (305 row, 3110 column commands, 137 ACT); 3072 sectors landed exact (82 single-bit upsets corrected), 28 KV writes + 3 static writes exact at the PHY, 28 write-dones, 7 static beats, late-layer write held
+- rtl/test/qwen_kv_die/tb_qkd_ctrl_pc.sv:298: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.073 s; speed 66.122 us/s
+- Verilator: cpu 0.072 s on 1 threads; allocated 9 MB
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-648898-1792028805): exit 0

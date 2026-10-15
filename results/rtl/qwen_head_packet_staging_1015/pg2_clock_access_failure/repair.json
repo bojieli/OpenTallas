@@ -1,0 +1,8 @@
+{
+  "cause": "Actual DRT-0255 netclk access failure at S-M5port in bothdensePG2routes; intended4.968 coordinate also failed .012+.048k legaltrack rule.",
+  "fix": "Structural clockface/layerchange S-M5 toW-M4(.096,1.308), belowfirstdatabit5.436. Keep data/resetpins and PG2.7. FreshCTS/routes required, no identicalsource retry.",
+  "physical_area_added_um2": 0,
+  "operational_edges_added": 0,
+  "thresholds": "unchanged",
+  "acceptance": "OPEN"
+}

@@ -1,0 +1,10 @@
+ot-run: ot-epyc1tb     admits   304 GB (avail 551, growth 211, headroom 64, waiters 0/0 GB) load 82/128 running 23 disk 711 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-3947655-1792033646 after 0 s
+B2_WRITE cycles=35743 rgx=512 topk=256
+B2_COLL_VMPORT PASS flits=768 checked=2442
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_b2_vmport.sv:113: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 216us; walltime 6.334 s; speed 34.059 us/s
+- Verilator: cpu 6.327 s on 1 threads; allocated 15 MB
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-3947655-1792033646): exit 0

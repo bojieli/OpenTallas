@@ -1,0 +1,69 @@
+{
+ "source": "xsp7_screen/plan.json.gz",
+ "source_sha256": "73f9e829ff52120226090a61c1875a1686dab0ae00c9bebd4f92867032bfd561",
+ "source_instances": 56440,
+ "homes": [
+  {
+   "name": "sp_hcx_south0",
+   "rectangle_um": [
+    17334.0,
+    1857.6,
+    1728.0,
+    864.0
+   ],
+   "old_instance_overlaps": []
+  },
+  {
+   "name": "sp_hcx_south1",
+   "rectangle_um": [
+    19200.0,
+    1857.6,
+    1728.0,
+    864.0
+   ],
+   "old_instance_overlaps": []
+  },
+  {
+   "name": "sp_hcx_north0",
+   "rectangle_um": [
+    17334.0,
+    22307.04,
+    1728.0,
+    864.0
+   ],
+   "old_instance_overlaps": []
+  },
+  {
+   "name": "sp_hcx_north1",
+   "rectangle_um": [
+    19200.0,
+    22770.0,
+    1728.0,
+    864.0
+   ],
+   "old_instance_overlaps": []
+  },
+  {
+   "name": "sp_hcx_west0",
+   "rectangle_um": [
+    9504.0,
+    22770.0,
+    1728.0,
+    864.0
+   ],
+   "old_instance_overlaps": []
+  },
+  {
+   "name": "sp_hcx_west1",
+   "rectangle_um": [
+    11384.064,
+    22770.0,
+    1728.0,
+    864.0
+   ],
+   "old_instance_overlaps": []
+  }
+ ],
+ "new_home_pairwise_overlaps": 0,
+ "qualification": "old full-instance geometry and reserved rectangle audit only; no physical fit or transport timing claim"
+}

@@ -68,12 +68,20 @@ module qfd_tile_nk #(
 
     input  wire          rst_n,
     input  wire [15:0]   tile_id,
+    // die contract v1.2 (compute lead 21:23 10-14): strap ties.  The die wires every tile_id strap bit to this
+    // instance's own tie_hi / tie_lo (E face, adjacent to tile_id): no die-netlist literal (one_/zero_ POWER nets).
+    output wire          tie_hi,
+    output wire          tie_lo,
     input  wire [507:0]  tap,
     output wire [513:0]  t_out,
     input  wire [513:0]  n_a,
     input  wire [513:0]  n_b,
     output wire [513:0]  n_y
 );
+    (* keep = "true" *) wire tie_hi_w = 1'b1;
+    (* keep = "true" *) wire tie_lo_w = 1'b0;
+    assign tie_hi = tie_hi_w;
+    assign tie_lo = tie_lo_w;
 `ifndef SYNTHESIS
     // Rehosting the tree must preserve both the constant mask identity and
     // the real static die strap. A wrong binding is a simulation error.
@@ -195,9 +203,17 @@ module qfd_tile_nl #(
 
     input  wire          rst_n,
     input  wire [15:0]   tile_id,
+    // die contract v1.2 (compute lead 21:23 10-14): strap ties.  The die wires every tile_id strap bit to this
+    // instance's own tie_hi / tie_lo (E face, adjacent to tile_id): no die-netlist literal (one_/zero_ POWER nets).
+    output wire          tie_hi,
+    output wire          tie_lo,
     input  wire [507:0]  tap,
     output wire [513:0]  t_out
 );
+    (* keep = "true" *) wire tie_hi_w = 1'b1;
+    (* keep = "true" *) wire tie_lo_w = 1'b0;
+    assign tie_hi = tie_hi_w;
+    assign tie_lo = tie_lo_w;
 `ifndef SYNTHESIS
     // Rehosting the tree must preserve both the constant mask identity and
     // the real static die strap. A wrong binding is a simulation error.

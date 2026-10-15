@@ -1,0 +1,19 @@
+{
+  "leaf": "ot_hgi_coll_control256_capture",
+  "source_commit": "79037c152",
+  "source_sha256": "25dcd51a52b5ff57aac1804725844f707db9d953a1e4895eaf3c3af4a3659bcc",
+  "actual_flops": 512,
+  "clock_roots": 1,
+  "ports": 1025,
+  "latency_edges": 1,
+  "proof": {
+    "host": "ot-epyc4",
+    "path": "/srv/opentallas-scratch/hcoll-capture-proof-1015",
+    "vectors": 520,
+    "bit_checks": 532480,
+    "result": "PASS",
+    "mutant": "actual registered output bit0 corrupted; rejected vector0"
+  },
+  "physical": "OPEN native CTS gate running; no current whole21-bank controller qualification",
+  "owner": "/root/h_collective_physical"
+}

@@ -23,7 +23,7 @@ forwarded clock; every launch is on the rising edge of the forwarded clock it se
 
 Role maps (data index conventions the endpoint owners adopt):
   gath   b data = {a2 (meso'd), a, t1, t0} from bit 0 up: t0 [0, 270), t1 [270, 540), a [540, 1080), a2 [1080, 2160)
-  cdist  a / b are 103-bit control leaves; leaves 0-3 of a are the taps t0-t3, leaves 4-7 of a are leaves 0-3 of b
+  cdist  a / b are SM control leaves (103 b legacy, 110 b native record ABI); leaves 0-3 of a are the taps t0-t3, leaves 4-7 of a are leaves 0-3 of b
   launch (weight request, SM side): a[42:0] -> b[42:0]; a[43] (SM req_ready) is driven 1 (no ready return in the
          generator), b[43] is driven 0
 Reset 'rst' is active low (rst_n), quasi-static: it resets the meso crossings and launch registers.
@@ -257,6 +257,24 @@ def build(rec, fcm, mutant=False, margin=False, **kw):
         # coordinator's relay pricing).  The block is ~73 um wide: the register sits within ~40 um of either pin.
         da, db_ = dirs(rec, 'a'), dirs(rec, 'b')
         ain = [i for i, d in enumerate(da) if d == 'in']
+        if len(da) == len(db_) and any(d == 'out' for d in da) and \
+                all({x, y} == {'in', 'out'} for x, y in zip(da, db_)):
+            # H-DIE 10-14: a bidirectional common-clock relay (e.g. the 1,120-b lk_ep rail: per-direction bit runs):
+            # bus bit i enters at one face and leaves at the other, one register per bit in each direction
+            bin_ = [i for i, d in enumerate(db_) if d == 'in']
+            for i in ain:
+                E.ins[('a', i)] = ('ck', 0)
+            for i in bin_:
+                E.ins[('b', i)] = ('ck', 0)
+            ra = E.reg([f'a[{i}]' for i in ain], 'relay')
+            rb = E.reg([f'b[{i}]' for i in bin_], 'relay')
+            for r_, i in zip(ra, ain):
+                E.body.append(f'  assign b[{i}] = {r_};')
+            for r_, i in zip(rb, bin_):
+                E.body.append(f'  assign a[{i}] = {r_};')
+            E.local([f'a[{i}]' for i in ain], 'b', ain)
+            E.local([f'b[{i}]' for i in bin_], 'a', bin_)
+            return E, 'relay'
         assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))
         for i in ain:
             E.ins[('a', i)] = ('ck', 0)
@@ -264,6 +282,16 @@ def build(rec, fcm, mutant=False, margin=False, **kw):
         E.body.append(f'  assign b = {{{", ".join(reversed(regs))}}};')
         E.local([f'a[{i}]' for i in ain], 'b', list(range(len(ain))))
         rl = 'relay'
+    elif role == 'stn' and lay['a'][0] and not lay['b'][0] and not lay['a'][0][2]:
+        # H-DIE 10-14: landing station (a forwarded in, b on the core ck): the meso role on a stn master
+        for ib, ic in E.slices('a', 'in'):
+            wn, srcs = E.meso('a', ib, ic, 'down')
+            if E.margin:
+                E.drive('b', ib, [f'{wn}[{j}]' for j in range(len(ib))])
+            else:
+                E.body.append(f'  assign {rng([("b", i) for i in ib])} = {wn};')
+            E.local(srcs, 'b', ib)
+        rl = 'meso'
     elif role == 'stn':                           # launch: a local (SM request), b forwarded
         da = dirs(rec, 'a')
         assert not lay['a'][0] and lay['b'][0]
@@ -303,6 +331,32 @@ def build(rec, fcm, mutant=False, margin=False, **kw):
                 for i, b in zip(ob, ob):
                     E.map[f'a[{b}]']['src'] = f'b[{i}]'
         rl = 'meso'
+    elif role == 'mcast' and not lay['a'][0]:
+        # H-DIE 10-14: common-clock multicast (a on the core ck): register once, fan to the taps (and b)
+        da = dirs(rec, 'a')
+        ain = [i for i, d in enumerate(da) if d == 'in']
+        for i in ain:
+            E.ins[('a', i)] = ('ck', 0)
+        regs = E.reg([f'a[{i}]' for i in ain], 'mc')
+        for t in [t for t in ('t0', 't1', 'b') if has(t)]:
+            n_ = min(P[t]['bits'], len(regs))
+            E.body.append(f'  assign {t}[{n_ - 1}:0] = {{{", ".join(reversed(regs[:n_]))}}};')
+            E.local([f'a[{i}]' for i in ain[:n_]], t, list(range(n_)))
+        rl = 'mcast'
+    elif role == 'mcast' and has('b') and not lay['b'][0]:
+        # H-DIE 10-14: forwarded-in multicast whose onward b segment is on the core ck: land once, drive taps and b
+        for ib, ic in E.slices('a', 'in'):
+            wn, srcs = E.meso('a', ib, ic, 'tap')
+            for t in ('t0', 't1', 'b'):
+                tb = [i for i in ib if i < P[t]['bits']]
+                if not tb:
+                    continue
+                if E.margin:
+                    E.drive(t, tb, [f'{wn}[{j}]' for j in range(len(tb))])
+                else:
+                    E.body.append(f'  assign {rng([(t, i) for i in tb])} = {wn}[{len(tb) - 1}:0];')
+                E.local(srcs[:len(tb)], t, tb)
+        rl = 'mcast'
     elif role == 'mcast':
         for ib, ic in E.slices('a', 'in'):
             if has('b'):
@@ -348,7 +402,8 @@ def build(rec, fcm, mutant=False, margin=False, **kw):
             E.local(srcs, 'b', list(range(len(srcs))))
         rl = 'gather'
     elif role == 'cdist':
-        W = 103
+        W = P['t0']['bits']        # one SM control leaf (the die model's wctl: 103 legacy, 110 native record ABI)
+        assert P['a']['bits'] - sum((lay['a'][0] or (0, 0, 0))[1:]) in (4 * W, 8 * W), (mst, P['a']['bits'], W)
         da = dirs(rec, 'a')
         nleaf_a = (lay['a'][0][0]) // W
         # downstream: a -> meso -> ck

@@ -1,0 +1,167 @@
+{
+  "schema": "opentallas.qwen.tp8.collective.static_links.v1",
+  "ranks": 8,
+  "latu": 37,
+  "lats": 362,
+  "kc": 4,
+  "kw": 2,
+  "phy_ucie": 14,
+  "phy_serdes": 339,
+  "xu": 1,
+  "xs": 0,
+  "phi": 0,
+  "die_name_master": false,
+  "mutant": null,
+  "expect_fail": false,
+  "production": false,
+  "issuer_depth": 8,
+  "stage_start": 40,
+  "modelled": "PHY frame pipes only (fixed latency); all on-chip blocks are the real RTL masters",
+  "mechanism": "compiler program -> fixed-issue core -> collective tokens -> IO calendar slots; no credits/ready/backpressure; observed validity, CRC and publication are fault-only checks",
+  "cases": [
+    {
+      "name": "phy_longer_than_compiled",
+      "kind": "link",
+      "passed": true,
+      "messages": 4,
+      "words_per_message": [
+        8,
+        8,
+        8,
+        8
+      ],
+      "modes": [
+        1,
+        1,
+        0,
+        1
+      ],
+      "program": [
+        {
+          "msg": 0,
+          "mode": 1,
+          "words": 8,
+          "cmd_cycle": 46,
+          "first_slot": 47,
+          "first_out": 453,
+          "last_out": 516
+        },
+        {
+          "msg": 1,
+          "mode": 1,
+          "words": 8,
+          "cmd_cycle": 110,
+          "first_slot": 111,
+          "first_out": 517,
+          "last_out": 580
+        },
+        {
+          "msg": 2,
+          "mode": 0,
+          "words": 8,
+          "cmd_cycle": 174,
+          "first_slot": 175,
+          "first_out": 668,
+          "last_out": 675
+        },
+        {
+          "msg": 3,
+          "mode": 1,
+          "words": 8,
+          "cmd_cycle": 269,
+          "first_slot": 270,
+          "first_out": 676,
+          "last_out": 739
+        }
+      ],
+      "program_words": [
+        [
+          0,
+          "0001000800000005"
+        ],
+        [
+          1,
+          "0000000000000000"
+        ],
+        [
+          2,
+          "0001000800000045"
+        ],
+        [
+          3,
+          "0000000000000001"
+        ],
+        [
+          4,
+          "0000000800000085"
+        ],
+        [
+          5,
+          "0000000000000002"
+        ],
+        [
+          6,
+          "00010008000000e4"
+        ],
+        [
+          7,
+          "0000000000000003"
+        ],
+        [
+          8,
+          "000200000000011f"
+        ],
+        [
+          9,
+          "0000000000000000"
+        ],
+        [
+          16,
+          "434c00050000011f"
+        ]
+      ],
+      "compiled_span_cycles": 693,
+      "result": {
+        "mismatches": "736",
+        "extra": "0",
+        "out_err": "0",
+        "cmd_bad": "0",
+        "coll_fault": "11111111",
+        "issuer_fault": "00000000",
+        "die_fault": "11111111",
+        "words_out": "1600",
+        "meas_lu": "37",
+        "meas_ls": "362",
+        "pr_overlap": "0",
+        "issuer_done": "00000000"
+      }
+    }
+  ],
+  "source_sha256": {
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "rtl/rom/ot_coll_fold_slice.sv": "e57f799a6df0f3ba263a3108c18df058d2b554723f5a4f56cce909f61442d60e",
+    "rtl/rom/ot_coll_rst_leaf.sv": "ff6546f30f4c166ac47a96c876161984256073904fbf444b74fbbb22ac4a2916",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v": "c86e80340814833f88a8f0215aabd9bcf62b46755650d778758f126cfa225279",
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+    "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v": "df1106d6ebda58f53513825922b9e1773434723c29303e1299604aec62154236",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+    "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv": "5af1eb77614de845771413c279de8858017a1e8220407e847d501537b110f43a",
+    "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv": "df23697e8d58e67ae3209eac9162d1393bed3a510a6e090149c2694bea9eacd8",
+    "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv": "3b4d10d5d8f86557f3a6a342d9964ecad6d99579c90fc9438d469b14a5da478c",
+    "rtl/physical/ot_qfd_static_transport.sv": "1ce0011bd1adba3b44829431a34de3b93317ed94a5b0cb3f36021e3b92d7f0ee",
+    "rtl/physical/ot_qfd_io_xfifo_static.sv": "572eccedb96536760d1cda089df7a00870f388aab7085bbe640957622946eecf",
+    "rtl/physical/ot_qfd_io_links_static.sv": "88e53cea3345d51d8e99ea6ee6bd1b9d3e09fd86338729aa69e2aab56b2660fc",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv": "0d533e9a09514840fac0628053fd1aaa501bccbffeaf8913afb6a936d1d994b1",
+    "rtl/rom/ot_coll_tp8_static.sv": "1a79e04c2852ba62d87fe09ff7e411dc7377861ce741ca8208dcbf27580bf876",
+    "rtl/physical/ot_qfd_io_collective_static.sv": "cc6b12b081b83adf4456a63aa89cd0bd5475e7832f675a666dcf91abd4fd5c43",
+    "rtl/rom/ot_coll_static_linkcal.sv": "c5beac91a28441ac4315ee400047bc7d6e638d497fb5b34acf68ffd6a562dac0",
+    "rtl/rom/ot_coll_cmd_issue.sv": "0bea10879c446f25be3090f5daf421952cfde71241a65a3212710e6dc453e497",
+    "rtl/test/tb_coll_tp8_static_links.sv": "5bc568c91a5698a9b59ffaf37c20a47fb0ff2293626a0988f091db35b9e02fe2"
+  },
+  "executable_sha256": "1f07e550bc1288418551cd773034333d0bb09b0e048c3fa5a8df44c829652cec",
+  "native_layer_qualified": false,
+  "physical_qualified": false
+}

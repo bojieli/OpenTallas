@@ -1,0 +1,21 @@
+{
+  "time": "2026-10-14T19:52:42-07:00",
+  "scope": "Real four-SRAM per endpoint static link component; not native die qualification",
+  "source_sha256": {
+    "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv": "5af1eb77614de845771413c279de8858017a1e8220407e847d501537b110f43a",
+    "rtl/test/qwen_split/tb_qwen_static_slot_link.sv": "09b4f0e7ac7c00834a72f9e5311f6d0f7107cdc928c2c046bb7e88f89fd28bb3",
+    "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv": "3b4d10d5d8f86557f3a6a342d9964ecad6d99579c90fc9438d469b14a5da478c",
+    "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv": "df23697e8d58e67ae3209eac9162d1393bed3a510a6e090149c2694bea9eacd8"
+  },
+  "normal": "PASS FW548 CW16 checks256 TX3 RX1 PHY5, strict known-zero fault status",
+  "mutants": {
+    "missing_second_lap_write": "FAIL errors128 cause20/20",
+    "early_reuse": "FAIL errors256 cause40/40",
+    "missing_observed_producer": "FAIL errors128 cause80/04"
+  },
+  "host": "ot-agidock128",
+  "logs": "/srv/opentallas-scratch/codex/q-link-replay-1014/out/static_cmdcap_m{0,5,6,7}",
+  "crc_matrix": "Independent serial reference PASS 256 full words for CW16/DW567 and CW32/DW565",
+  "pin_assignment": "284543fb0; exact checker PASS 21 ports, 2308 bits",
+  "latency": "Input metadata captured at pins; fault-only ownership observations one edge later; production issue and TX3/RX1 unchanged"
+}

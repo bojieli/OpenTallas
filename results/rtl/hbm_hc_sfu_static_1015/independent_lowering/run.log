@@ -1,0 +1,9 @@
+SFU_STATIC_CASE case=0 shape=1x4096 words=4096
+SFU_STATIC_CASE case=1 shape=1x7168 words=7168
+SFU_STATIC_CASE case=2 shape=1x7168 words=7168
+SFU_STATIC_CASE case=3 shape=4x7168 words=28672
+PASS SFU static actual16lanes checks=16384 exact_words=47104 independent_vector_compiler=1 production_layer_calendar=unbound memory_contract=external
+- rtl/test/hbm_accel/generic/tb_hgi_sfu_static_calendar.sv:151: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 27us; walltime 940.291 s; speed 29.188 ns/s
+- Verilator: cpu 940.182 s on 1 threads; allocated 147 MB

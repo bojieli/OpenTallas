@@ -91,9 +91,9 @@
   "pin_v": "M3 M5"
  },
  "job": {
-  "owner": "Claude:el1013-hbm-redesign-suvop",
-  "branch": "claude/hbm-redesign-suvop",
-  "tag": "r3-preoffset",
+  "owner": "Claude:hbm-group-B6-1014",
+  "branch": "claude/hbm-suvop-head-r5-1014",
+  "tag": "r5",
   "purpose": "SU.VOP redesign (owner 10-13) head ot_hgi_sv_head (N 512, M 128): record ring of 8, 4-edge pipelined span multiply, region table, 4 frames + epochs, stage / drain dispatch to the 16 lane2 leaves, EXT stream credit and live drain frontier; one clock root; N = record bus 2,203 b on M3 + M5 (0.50), S = vec / local-memory control 1,609 b (0.36), W = packet client 614 b on M4 (0.28), E = leaf relay chain 510 b on M4 (0.23), for the current contract 216 x 216 outline; physical master naming matches live v12 SU child slot; legacy ot_hgi_sv_ctl is a zero-logic compatibility wrapper; replaces provisional no-slot ot_hgi_sv_ctl kit, separate directory preserves the still-live old diagnostic gate",
   "extra_paths": [
    "compiler",
@@ -133,5 +133,14 @@
   "views_to": "physical/ref_tile/hgi_sv_head_slot/views",
   "record_to": "results/rtl/ref_tile/hgi_sv_head_slot"
  },
- "structural_change": "Per-region span and extent are registered in the existing classification edges, and bump placement uses page carry plus the low offset byte instead of subtraction followed by addition. This removes the 21-level rk-to-table-write allocator path (~847 ps) without adding service cycles. Physical master is ot_hgi_sv_head as granted in the current die contract; dense-face placement uses measured hold-strip spread. Measured CTS worst path a_lo[0] to w[307] is -111.1 ps: split base-origin subtraction and local-base addition over the existing allocation A/B edges, no extra service edges. CTS relocation attempt still measured a_delta[22] at -90.5 ps. Precompute each own-region base-origin in CL0; forward-origin capture in SK0 then forward base-origin subtraction in SK1. Allocation A now selects registered offsets and B adds local base. Every existing decode/service edge is preserved."
+ "structural_change": "r5 (Claude group-B6 10-14): native pin audit of CLOSED mul7 hgi_sv_head_slot-r4-pre-04c986630 (TT +41.31 / FF +11.23, main 8f685e6b2): launch 272.8 ps on rec_rdy (AND3 of three internal record-station flops) + 3 wl pins 236; capture 229.9 on vmr[256]/[273] (AND in front of vr_ack) + rst_n 224.4 (relay sync/tree flops: shared relay library, reported to ROOT). RTL: rec_rdy is a flop holding its exact next value (ot_hgi_su_record RDY_REG, with an in-sim equality check against the combinational form), vmr valid/last land in their own pin flops and vr_ack is their AND (same cycle). No service change expected; N64/MUTV6/q512/d512 re-run.",
+ "recipe": 2,
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "source": "results/arch/hbm_group_b6_1014/native_audit_b6_head_hub.json",
+  "cell": "ot_hgi_sv_head",
+  "launch_ps": 272.8,
+  "capture_ps": 229.9,
+  "fix": "registered rec_rdy (exact next state), vmr pin flops"
+ }
 }

@@ -1,0 +1,382 @@
+{
+  "schema": "opentallas.native-seq.clock-pin-candidate.v1",
+  "status": "CANDIDATE_NOT_FINAL_DIE_ASSIGNED_PINS",
+  "source_commit": "4b66ce3a4",
+  "parent": "qkd_seq_tp8",
+  "outline_request_um": [
+    604.8,
+    475.2
+  ],
+  "entry_lattice": "relative M7 pitch0.064 offset0.016; matches current g8 parent ck residue; actual die-origin/orientation legality must pass",
+  "data_pin_basis": "g8 qkd_seq assigned pin file, N data layer M5. Candidate clock ports M7; no data pin relocation inferred.",
+  "physical_gates": [
+    "nonoverlap and die-origin pin lattice legality",
+    "real parent internal congestion",
+    "actual per-corner entry compensation and setup150/210 hold100",
+    "final v5 placement and assigned ports",
+    "replace pre-route CTS coordinates/corner R with actual routed views upon closure; no final v5 assignment"
+  ],
+  "entries": [
+    {
+      "port": "clk_core",
+      "child_pattern": "*u_core*",
+      "child_clock_port": "ck",
+      "face": "N",
+      "layer": "M7",
+      "parent_pin_um": [
+        314.192,
+        475.2
+      ],
+      "child_clock_target_um": [
+        314.22,
+        237.558
+      ],
+      "clock_wire_manhattan_um": 237.67000000000002,
+      "target_status": "MEASURED_PRE_ROUTE_CTS_NOT_ROUTED_VIEW",
+      "geometry_source_lef": null,
+      "geometry_source_sha256": "0eddb847934597b49d25fed0746f927ae29753e32e15c955b02a30ac0ad935d2",
+      "corner_compensation": "Actual native pre-route child references measured. Parent wire corner delay plus final routed child R still pending; no TP4 alias.",
+      "geometry_source_commit": "453f5ea76",
+      "geometry_source": "physical/qwen_kv_centre/native_tp8_candidate_1013/clock_pins.json",
+      "actual_clock_rectangles": [
+        [
+          "M5",
+          [
+            65.808,
+            43.116,
+            65.832,
+            43.2
+          ]
+        ]
+      ],
+      "child_boundary_corner_refs": {
+        "tt": {
+          "n": 1805,
+          "mean": 129.1,
+          "min": 125.2,
+          "max": 135.3
+        },
+        "ff": {
+          "n": 1805,
+          "mean": 103.1,
+          "min": 99.2,
+          "max": 109.4
+        },
+        "ss": {
+          "n": 1805,
+          "mean": 174.2,
+          "min": 170.3,
+          "max": 180.2
+        }
+      },
+      "insertion_file": "physical/qwen_kv_centre/native_tp8_candidate_1013/core/ck.json",
+      "insertion_sha256": "6218c71866c0e193d540a9ba76c2ed279fbbbc1d63c58d77f5466f1c827ad1b3"
+    },
+    {
+      "port": "clk_xs0",
+      "child_pattern": "*g_xs?0?*u_xs",
+      "child_clock_port": "ck",
+      "face": "N",
+      "layer": "M7",
+      "parent_pin_um": [
+        201.04,
+        475.2
+      ],
+      "child_clock_target_um": [
+        201.06,
+        170.598
+      ],
+      "clock_wire_manhattan_um": 304.62199999999996,
+      "target_status": "MEASURED_PRE_ROUTE_CTS_NOT_ROUTED_VIEW",
+      "geometry_source_lef": null,
+      "geometry_source_sha256": "0eddb847934597b49d25fed0746f927ae29753e32e15c955b02a30ac0ad935d2",
+      "corner_compensation": "Actual native pre-route child references measured. Parent wire corner delay plus final routed child R still pending; no TP4 alias.",
+      "geometry_source_commit": "453f5ea76",
+      "geometry_source": "physical/qwen_kv_centre/native_tp8_candidate_1013/clock_pins.json",
+      "actual_clock_rectangles": [
+        [
+          "M5",
+          [
+            12.048,
+            105.756,
+            12.072,
+            105.84
+          ]
+        ]
+      ],
+      "child_boundary_corner_refs": {
+        "tt": {
+          "n": 909,
+          "mean": 183.7,
+          "min": 180.3,
+          "max": 186.9
+        },
+        "ff": {
+          "n": 909,
+          "mean": 149.7,
+          "min": 146.5,
+          "max": 152.6
+        },
+        "ss": {
+          "n": 909,
+          "mean": 240.4,
+          "min": 236.6,
+          "max": 243.9
+        }
+      },
+      "insertion_file": "physical/qwen_kv_centre/native_tp8_candidate_1013/xs/ck.json",
+      "insertion_sha256": "8a89e7ca14101067aa27ab7b9c983a6192a9084999bfc9aa524b076221fc4aea"
+    },
+    {
+      "port": "clk_xs1",
+      "child_pattern": "*g_xs?1?*u_xs",
+      "child_clock_port": "ck",
+      "face": "N",
+      "layer": "M7",
+      "parent_pin_um": [
+        319.888,
+        475.2
+      ],
+      "child_clock_target_um": [
+        319.86,
+        170.598
+      ],
+      "clock_wire_manhattan_um": 304.62999999999994,
+      "target_status": "MEASURED_PRE_ROUTE_CTS_NOT_ROUTED_VIEW",
+      "geometry_source_lef": null,
+      "geometry_source_sha256": "0eddb847934597b49d25fed0746f927ae29753e32e15c955b02a30ac0ad935d2",
+      "corner_compensation": "Actual native pre-route child references measured. Parent wire corner delay plus final routed child R still pending; no TP4 alias.",
+      "geometry_source_commit": "453f5ea76",
+      "geometry_source": "physical/qwen_kv_centre/native_tp8_candidate_1013/clock_pins.json",
+      "actual_clock_rectangles": [
+        [
+          "M5",
+          [
+            12.048,
+            105.756,
+            12.072,
+            105.84
+          ]
+        ]
+      ],
+      "child_boundary_corner_refs": {
+        "tt": {
+          "n": 909,
+          "mean": 183.7,
+          "min": 180.3,
+          "max": 186.9
+        },
+        "ff": {
+          "n": 909,
+          "mean": 149.7,
+          "min": 146.5,
+          "max": 152.6
+        },
+        "ss": {
+          "n": 909,
+          "mean": 240.4,
+          "min": 236.6,
+          "max": 243.9
+        }
+      },
+      "insertion_file": "physical/qwen_kv_centre/native_tp8_candidate_1013/xs/ck.json",
+      "insertion_sha256": "8a89e7ca14101067aa27ab7b9c983a6192a9084999bfc9aa524b076221fc4aea"
+    },
+    {
+      "port": "clk_xs2",
+      "child_pattern": "*g_xs?2?*u_xs",
+      "child_clock_port": "ck",
+      "face": "N",
+      "layer": "M7",
+      "parent_pin_um": [
+        203.024,
+        475.2
+      ],
+      "child_clock_target_um": [
+        201.06,
+        364.998
+      ],
+      "clock_wire_manhattan_um": 112.166,
+      "target_status": "MEASURED_PRE_ROUTE_CTS_NOT_ROUTED_VIEW",
+      "geometry_source_lef": null,
+      "geometry_source_sha256": "0eddb847934597b49d25fed0746f927ae29753e32e15c955b02a30ac0ad935d2",
+      "corner_compensation": "Actual native pre-route child references measured. Parent wire corner delay plus final routed child R still pending; no TP4 alias.",
+      "geometry_source_commit": "453f5ea76",
+      "geometry_source": "physical/qwen_kv_centre/native_tp8_candidate_1013/clock_pins.json",
+      "actual_clock_rectangles": [
+        [
+          "M5",
+          [
+            12.048,
+            105.756,
+            12.072,
+            105.84
+          ]
+        ]
+      ],
+      "child_boundary_corner_refs": {
+        "tt": {
+          "n": 909,
+          "mean": 183.7,
+          "min": 180.3,
+          "max": 186.9
+        },
+        "ff": {
+          "n": 909,
+          "mean": 149.7,
+          "min": 146.5,
+          "max": 152.6
+        },
+        "ss": {
+          "n": 909,
+          "mean": 240.4,
+          "min": 236.6,
+          "max": 243.9
+        }
+      },
+      "insertion_file": "physical/qwen_kv_centre/native_tp8_candidate_1013/xs/ck.json",
+      "insertion_sha256": "8a89e7ca14101067aa27ab7b9c983a6192a9084999bfc9aa524b076221fc4aea"
+    },
+    {
+      "port": "clk_xs3",
+      "child_pattern": "*g_xs?3?*u_xs",
+      "child_clock_port": "ck",
+      "face": "N",
+      "layer": "M7",
+      "parent_pin_um": [
+        321.872,
+        475.2
+      ],
+      "child_clock_target_um": [
+        319.86,
+        364.998
+      ],
+      "clock_wire_manhattan_um": 112.214,
+      "target_status": "MEASURED_PRE_ROUTE_CTS_NOT_ROUTED_VIEW",
+      "geometry_source_lef": null,
+      "geometry_source_sha256": "0eddb847934597b49d25fed0746f927ae29753e32e15c955b02a30ac0ad935d2",
+      "corner_compensation": "Actual native pre-route child references measured. Parent wire corner delay plus final routed child R still pending; no TP4 alias.",
+      "geometry_source_commit": "453f5ea76",
+      "geometry_source": "physical/qwen_kv_centre/native_tp8_candidate_1013/clock_pins.json",
+      "actual_clock_rectangles": [
+        [
+          "M5",
+          [
+            12.048,
+            105.756,
+            12.072,
+            105.84
+          ]
+        ]
+      ],
+      "child_boundary_corner_refs": {
+        "tt": {
+          "n": 909,
+          "mean": 183.7,
+          "min": 180.3,
+          "max": 186.9
+        },
+        "ff": {
+          "n": 909,
+          "mean": 149.7,
+          "min": 146.5,
+          "max": 152.6
+        },
+        "ss": {
+          "n": 909,
+          "mean": 240.4,
+          "min": 236.6,
+          "max": 243.9
+        }
+      },
+      "insertion_file": "physical/qwen_kv_centre/native_tp8_candidate_1013/xs/ck.json",
+      "insertion_sha256": "8a89e7ca14101067aa27ab7b9c983a6192a9084999bfc9aa524b076221fc4aea"
+    },
+    {
+      "port": "clk_fan0",
+      "child_pattern": "*g_fan?0?*u_fan",
+      "child_clock_port": "ck",
+      "face": "N",
+      "layer": "M7",
+      "parent_pin_um": [
+        69.072,
+        475.2
+      ],
+      "child_clock_target_um": [
+        69.084,
+        226.8
+      ],
+      "clock_wire_manhattan_um": 248.412,
+      "target_status": "PROVISIONAL inherited clock-port geometry; replace core/xs coordinates with native assigned/gated port geometry",
+      "geometry_source_lef": "physical/ref_tile/qkd_seq_fan/views/qkd_seq_fan/qkd_seq_fan.lef",
+      "geometry_source_sha256": "d21f765f5c9548b1cba588e3488842203edcfc9958be272dea36f053032c5248",
+      "corner_compensation": "PENDING actual per-entry parent-wire plus native child boundary references; never inherit TP4 core/xs R"
+    },
+    {
+      "port": "clk_fan1",
+      "child_pattern": "*g_fan?1?*u_fan",
+      "child_clock_port": "ck",
+      "face": "N",
+      "layer": "M7",
+      "parent_pin_um": [
+        71.056,
+        475.2
+      ],
+      "child_clock_target_um": [
+        69.084,
+        399.6
+      ],
+      "clock_wire_manhattan_um": 77.572,
+      "target_status": "PROVISIONAL inherited clock-port geometry; replace core/xs coordinates with native assigned/gated port geometry",
+      "geometry_source_lef": "physical/ref_tile/qkd_seq_fan/views/qkd_seq_fan/qkd_seq_fan.lef",
+      "geometry_source_sha256": "d21f765f5c9548b1cba588e3488842203edcfc9958be272dea36f053032c5248",
+      "corner_compensation": "PENDING actual per-entry parent-wire plus native child boundary references; never inherit TP4 core/xs R"
+    },
+    {
+      "port": "clk_fan2",
+      "child_pattern": "*g_fan?2?*u_fan",
+      "child_clock_port": "ck",
+      "face": "N",
+      "layer": "M7",
+      "parent_pin_um": [
+        535.696,
+        475.2
+      ],
+      "child_clock_target_um": [
+        535.716,
+        226.8
+      ],
+      "clock_wire_manhattan_um": 248.42,
+      "target_status": "PROVISIONAL inherited clock-port geometry; replace core/xs coordinates with native assigned/gated port geometry",
+      "geometry_source_lef": "physical/ref_tile/qkd_seq_fan/views/qkd_seq_fan/qkd_seq_fan.lef",
+      "geometry_source_sha256": "d21f765f5c9548b1cba588e3488842203edcfc9958be272dea36f053032c5248",
+      "corner_compensation": "PENDING actual per-entry parent-wire plus native child boundary references; never inherit TP4 core/xs R"
+    },
+    {
+      "port": "clk_fan3",
+      "child_pattern": "*g_fan?3?*u_fan",
+      "child_clock_port": "ck",
+      "face": "N",
+      "layer": "M7",
+      "parent_pin_um": [
+        537.68,
+        475.2
+      ],
+      "child_clock_target_um": [
+        535.716,
+        399.6
+      ],
+      "clock_wire_manhattan_um": 77.564,
+      "target_status": "PROVISIONAL inherited clock-port geometry; replace core/xs coordinates with native assigned/gated port geometry",
+      "geometry_source_lef": "physical/ref_tile/qkd_seq_fan/views/qkd_seq_fan/qkd_seq_fan.lef",
+      "geometry_source_sha256": "d21f765f5c9548b1cba588e3488842203edcfc9958be272dea36f053032c5248",
+      "corner_compensation": "PENDING actual per-entry parent-wire plus native child boundary references; never inherit TP4 core/xs R"
+    }
+  ],
+  "measured_native_receipt": {
+    "commit": "453f5ea76",
+    "path": "physical/qwen_kv_centre/native_tp8_candidate_1013/clock_pins.json",
+    "sha256": "0eddb847934597b49d25fed0746f927ae29753e32e15c955b02a30ac0ad935d2",
+    "collector_unit": "482716 exit0 4GB1thread actual read_db"
+  }
+}

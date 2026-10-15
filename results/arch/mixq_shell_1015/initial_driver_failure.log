@@ -1,0 +1,12 @@
+ot-run: ot-epyc1tb     admits   353 GB (avail 613, growth 196, headroom 64, waiters 0/0 GB) load 91/128 running 33 disk 713 GB 
+ot-run: ot-epyc4       skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  skipped: load hold: load1 > 1.5 x cores
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-343325-1792047970 after 0 s
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex-mixq-shell-1015/run.py", line 28, in <module>
+    assert sorted(c['type'] for c in top['cells'].values())==['ot_s81_engram_mix','ot_s81_engram_mixq_shell']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-343325-1792047970): exit 1

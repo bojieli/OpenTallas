@@ -1,0 +1,102 @@
+{
+  "calendar": {
+    "codec_first_edge": 1,
+    "codec_frame_edge": 2,
+    "phy_first_beat_edge": 3,
+    "phy_second_beat_edge": 7,
+    "rx_adapter_commit_edge": 11,
+    "rx_codec_payload_edge": 10,
+    "rx_expected_metadata_sample_edge": 9,
+    "rx_frame_edge": 8,
+    "source_edge": 0
+  },
+  "model": {
+    "aggregate_boundary_bits_per_cycle": 2760,
+    "area": "UNMEASURED",
+    "buffers": 0,
+    "channel_capacity_tracks": null,
+    "channel_plus_codec_plus_gearbox_edges_each_direction": 4,
+    "codec_pipeline_edges_each_direction": 2,
+    "floorplan_slot_fit": "UNVERIFIED: no contract slot or physical closure claim",
+    "forward_frame_bits": 595,
+    "gearbox_edges_each_direction": 1,
+    "host_reply_bytes_per_slot": 10.125,
+    "immutable_price": "unchanged; no production token-rate qualification before composed calendar",
+    "macs_per_cycle": 0,
+    "measured_component_calendar": {
+      "client_transfers": 15,
+      "first_payload_phy_beat_after_source_cycles": 3,
+      "note": "component cadence only, no production token-rate claim",
+      "physical_lanes": 5,
+      "receive_commit_after_source_cycles": 11,
+      "source_interval_cycles": 16
+    },
+    "memory_ports": 0,
+    "name": "s81_static_channels",
+    "outer_last_bits": 1,
+    "physical_lane_map": {
+      "0": 3,
+      "1": 4,
+      "2": 5,
+      "3": 6,
+      "4": 7
+    },
+    "raw_payload_bits": 552,
+    "registered_latency_cycles_each_direction": 1,
+    "replicas": 5,
+    "routing_tracks": 2760,
+    "singleton_source_max_fanout": 5,
+    "source_mux_inputs": 3,
+    "throughput": "one scheduled payload per channel per cycle internally; FMT1 transport calendar limits wire occupancy",
+    "token_latency": "two channel pin stages per end-to-end hop plus measured transport latency",
+    "vm_payload_bytes_per_cycle": 69,
+    "wfc_payload_bytes_per_cycle": 64
+  },
+  "schema": "opentallas.s81-static-raw-channels.component.v1",
+  "scope": "actual five-lane scheduled channel RTL + CRC + FMT1 gearbox; declared external PHY loopback",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_static_channels.sv": "12c2bcf55caca4c1a909ebf37f1d551f902ede41b2b27ef24df3a689b7e4c131",
+    "rtl/dsrom_sys/s81_ph/coll/test/tb_static_channels.sv": "462062a3bb6236b87452a3cb82c5b819cd9381972d4b6a466aefd6d8b7db8637",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv": "1826102edf211742df583b4aa6a229c6ce410b30508a76e4f061fc2efcdadb9c",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_channels.sv": "c58460b6549408a6773cfd9d4c3e3960f871d67f1cd9a701b2a0194107d19dd4",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_gearbox.sv": "42d3c37f9db7a4ae1a6fcb03d42313ced946fcc9760e4d96538308e0f592b5e2",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_phy_digital.sv": "b0bf36eee6f37a07f6467b52a1d6c3facf43367d7cdf79a339c98ac3b5184b87",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_raw_fmt1_codec.sv": "feb23026c65ca9c83825a5363d79d3d07503231d656c9f30c78cd7cf88ae1deb",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_raw_fmt1_lane.sv": "c6a7c7e50b5001a858675a991c5598516699f112c4b982b52fee4489bc983c34",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_tp4_endpoint.sv": "80216add00fb826a414cdcc3cb85dc3676186b431ccae9fdb953dd597699ef62",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_tp4_rank.sv": "11918bee7fb76affe1599fb18f1979aa2a74c9898adad33a25a424dd9523502b",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_tp4_vm_producer.sv": "d057a98110f00a48ef8a1607d340914577c7cd4f52d5db4c07ddf924a2b635e1",
+    "rtl/dsrom_sys/s81_static_collective/tb_s81_static_fmt1_channels.sv": "27d9a2547b2353561766d504a3258900b72fb884b04f62a34ab98f9c9c4dd9eb",
+    "rtl/dsrom_sys/s81_static_collective/tb_s81_static_raw_fmt1_codec.sv": "3590d207ec3043bd10997a82421a5afa7d4104365bb0343726fef1a51df21376",
+    "rtl/dsrom_sys/s81_static_collective/tb_s81_static_tp4.sv": "3ea5171c5bf097e0cce9d7ecb4fc2d86be4ef2d5dd30fb3997fbf157d6c930e3",
+    "rtl/link/ot_link_crc32.sv": "2ce3961b122aec70a8a509e4f5638904363d72f6bc90db93e5ff1a35b71e4c97"
+  },
+  "status": "PASS_COMPONENT_ONLY",
+  "unqualified": [
+    "native VM raw552 row storage and service binding",
+    "actual host static controller binding",
+    "production full-shape calendar and throughput",
+    "physical slot/model channel capacity",
+    "timing closure"
+  ],
+  "verification": {
+    "actual_DUT_mutant": "CRC output bitflip rejected at447ns",
+    "adapter_faults": [
+      "missing",
+      "late",
+      "duplicate singleton source",
+      "duplicate singleton sink",
+      "unscheduled source",
+      "illegal kind"
+    ],
+    "codec_faults": [
+      "CRC",
+      "sequence",
+      "outer last"
+    ],
+    "independent_serial_crc": true,
+    "legacy_wire_frame_checks": 3,
+    "physical_lanes": 5,
+    "transfers": 15
+  }
+}

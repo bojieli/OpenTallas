@@ -1,0 +1,70 @@
+{
+  "source_commit": "efa61ddcd",
+  "engine_commit": "5188b4fb2",
+  "time": "2026-10-14T18:55:45.154453-07:00",
+  "native_physical_qualified": false,
+  "gate": "PASS",
+  "base": {
+    "s1": {
+      "verdict": "PASS",
+      "result": "RESULT jobs 120 (arm 97 give 23) credited 120 dones 138 writes 2162 reads 2162 stream rows 281 (9 streams) cycles 5338 bad 0"
+    },
+    "s3": {
+      "verdict": "PASS",
+      "result": "RESULT jobs 120 (arm 109 give 11) credited 120 dones 140 writes 2548 reads 2548 stream rows 267 (10 streams) cycles 6168 bad 0"
+    },
+    "s2": {
+      "verdict": "PASS",
+      "result": "RESULT jobs 120 (arm 104 give 16) credited 120 dones 138 writes 2208 reads 2208 stream rows 226 (9 streams) cycles 5513 bad 0"
+    }
+  },
+  "mutants": {
+    "earlycr": {
+      "s2": {
+        "verdict": "FAIL",
+        "result": "SPVM EARLY_READ assertion"
+      },
+      "s3": {
+        "verdict": "FAIL",
+        "result": "SPVM EARLY_READ assertion"
+      },
+      "s1": {
+        "verdict": "FAIL",
+        "result": "SPVM EARLY_READ assertion"
+      }
+    },
+    "nofence": {
+      "s1": {
+        "verdict": "FAIL",
+        "result": "RESULT jobs 120 (arm 97 give 23) credited 120 dones 133 writes 2162 reads 2162 stream rows 232 (6 streams) cycles 60039 bad 1"
+      },
+      "s2": {
+        "verdict": "FAIL",
+        "result": "RESULT jobs 120 (arm 104 give 16) credited 120 dones 122 writes 2208 reads 2208 stream rows 2 (1 streams) cycles 60039 bad 1"
+      },
+      "s3": {
+        "verdict": "PASS",
+        "result": "RESULT jobs 120 (arm 109 give 11) credited 120 dones 140 writes 2548 reads 2548 stream rows 265 (10 streams) cycles 6166 bad 0"
+      }
+    },
+    "order": {
+      "s2": {
+        "verdict": "FAIL",
+        "result": "SPVM EARLY_READ assertion"
+      },
+      "s3": {
+        "verdict": "FAIL",
+        "result": "SPVM EARLY_READ assertion"
+      },
+      "s1": {
+        "verdict": "FAIL",
+        "result": "SPVM EARLY_READ assertion"
+      }
+    }
+  },
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_seq.sv": "926241d546a5905e63e38081b36c1175184158ace720aeb30e1f200bffe33cb3",
+    "rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_seq.sv": "31c1281153d01e5465fa2e52ad978d93a673e5467dfe42b03874b4e61e351b48",
+    "tools/s81_vm/vm_seq_gate.sh": "82077a5facebde88d6c85db5c06862e8f6917b15a10a5646708fc34f7764362c"
+  }
+}

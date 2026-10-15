@@ -1,10 +1,12 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch/claude/closure-loop/s81hc_cntreeh2_ref-v1-70eafa55c/record/views/ot_s81_hc_cntree/ot_s81_hc_cntree.lef",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_cntreeh2_ref-v2-native-capture-62fe033d592286033494c9f63c6e0daa8ee475e6/record/views/ot_s81_hc_cntree/ot_s81_hc_cntree.lef",
  "verdict": "PASS",
  "fails": [],
- "warns": [],
- "summary": "ot_s81_hc_cntree 181.44 x 181.44: PG M6 VDD 17 stripes (95% spread, 100% cov) / VSS 17 stripes (95% spread, 100% cov); strap M7; face pins 1344 blocked-above 0; clock sk insertion 255 ps",
+ "warns": [
+  "(f) face-pin access: 1344 of 1344 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. c_ex[0] M5 (77.520,0.016), c_ex[10] M5 (77.520,0.016), c_ex[11] M5 (77.520,0.016))"
+ ],
+ "summary": "ot_s81_hc_cntree 181.44 x 181.44: PG M6 VDD 17 stripes (95% spread, 100% cov) / VSS 17 stripes (95% spread, 100% cov); strap M7; face pins 1344 blocked-above 0 blocked-same 0; clock sk insertion 264 ps; pockets M6 0 (closed)",
  "info": {
   "cell": "ot_s81_hc_cntree",
   "W": 181.44,
@@ -34,17 +36,41 @@
   },
   "pg_layer": "M6",
   "strap_layer": "M7",
+  "cap": null,
   "face": {
    "face_pins": 1344,
    "blocked_above": 0,
-   "covered_below": 331,
-   "examples": []
+   "covered_below": 60,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 1344,
+   "band_examples": [
+    "c_ex[0] M5 (77.520,0.016)",
+    "c_ex[10] M5 (77.520,0.016)",
+    "c_ex[11] M5 (77.520,0.016)",
+    "c_ex[12] M5 (77.520,0.016)",
+    "c_ex[13] M5 (77.520,0.016)",
+    "c_ex[14] M5 (77.520,0.016)"
+   ]
   },
   "clock_insertion": {
    "sk": {
-    "max_ps": 255.41,
-    "min_ps": 200.78
+    "max_ps": 264.1,
+    "min_ps": 199.76
    }
+  },
+  "pockets": {
+   "layer": "M6",
+   "d_um": 2.048,
+   "marker": {
+    "layer": "M6",
+    "d_um": 2.048,
+    "added": 762
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
   }
  }
 }

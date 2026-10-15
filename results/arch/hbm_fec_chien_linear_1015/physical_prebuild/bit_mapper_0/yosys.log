@@ -1,0 +1,762 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+
+-- Executing script file `/srv/opentallas-scratch/codex/fec-chien-linear-1015/bit_mapper_0/map.ys' --
+
+1. Executing JSON frontend.
+Importing module hfd_serdes487_chien_linear_window from JSON tree.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \hfd_serdes487_chien_linear_window
+
+2.2. Analyzing design hierarchy..
+Top module:  \hfd_serdes487_chien_linear_window
+Removed 0 unused modules.
+
+3. Executing TECHMAP pass (map to technology primitives).
+
+3.1. Executing Verilog-2005 frontend: /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+3.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $adff.
+Using extmapper simplemap for cells of type $dff.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $nex.
+Using extmapper simplemap for cells of type $logic_not.
+Using extmapper simplemap for cells of type $logic_and.
+Using extmapper simplemap for cells of type $xor.
+Running "alumacc" on wrapper $extern:wrap:$sub:A_SIGNED=0:A_WIDTH=5:B_SIGNED=0:B_WIDTH=5:Y_WIDTH=5:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:A_SIGNED=0:A_WIDTH=5:B_SIGNED=0:B_WIDTH=5:Y_WIDTH=5:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:A_SIGNED=0:A_WIDTH=5:B_SIGNED=0:B_WIDTH=5:Y_WIDTH=5:394426c56d1a028ba8fdd5469b163e04011def47.
+Using extmapper simplemap for cells of type $eq.
+Using extmapper simplemap for cells of type $pmux.
+Using extmapper simplemap for cells of type $logic_or.
+Running "alumacc" on wrapper $extern:wrap:$gt:A_SIGNED=0:A_WIDTH=5:B_SIGNED=0:B_WIDTH=32:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$gt:A_SIGNED=0:A_WIDTH=5:B_SIGNED=0:B_WIDTH=32:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$gt:A_SIGNED=0:A_WIDTH=5:B_SIGNED=0:B_WIDTH=32:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:A_SIGNED=0:A_WIDTH=5:B_SIGNED=0:B_WIDTH=32:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:A_SIGNED=0:A_WIDTH=5:B_SIGNED=0:B_WIDTH=32:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:A_SIGNED=0:A_WIDTH=5:B_SIGNED=0:B_WIDTH=32:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$add:A_SIGNED=0:A_WIDTH=12:B_SIGNED=0:B_WIDTH=1:Y_WIDTH=12:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$add:A_SIGNED=0:A_WIDTH=12:B_SIGNED=0:B_WIDTH=1:Y_WIDTH=12:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$add:A_SIGNED=0:A_WIDTH=12:B_SIGNED=0:B_WIDTH=1:Y_WIDTH=12:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$add:A_SIGNED=0:A_WIDTH=5:B_SIGNED=0:B_WIDTH=1:Y_WIDTH=5:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$add:A_SIGNED=0:A_WIDTH=5:B_SIGNED=0:B_WIDTH=1:Y_WIDTH=5:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$add:A_SIGNED=0:A_WIDTH=5:B_SIGNED=0:B_WIDTH=1:Y_WIDTH=5:394426c56d1a028ba8fdd5469b163e04011def47.
+Using extmapper simplemap for cells of type $reduce_xor.
+Running "alumacc" on wrapper $extern:wrap:$sub:A_SIGNED=0:A_WIDTH=32:B_SIGNED=0:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:A_SIGNED=0:A_WIDTH=32:B_SIGNED=0:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:A_SIGNED=0:A_WIDTH=32:B_SIGNED=0:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $paramod$constmap:b848fb021c331d32cf42b4faecb83863d4d99fa6$paramod$9c1929134928cbc0d49387b2f9f07e9b41a800ad\_90_shift_shiftx for cells of type $shiftx.
+Using template $paramod$constmap:ae33222bd4aef095a054a83f24f522bbcf0ffabd$paramod$ce28dc4bf76f99e57531902a7d7b442020c7d3a4\_90_shift_shiftx for cells of type $shift.
+Using template $paramod$constmap:e3be1532173eba50ec430736c3af2f170b28aceb$paramod$e615aa1e421db5d9d06d6e5b8716854b76cfce3d\_90_shift_shiftx for cells of type $shift.
+Using extmapper simplemap for cells of type $not.
+Running "alumacc" on wrapper $extern:wrap:$neg:A_SIGNED=1:A_WIDTH=33:Y_WIDTH=33:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$neg:A_SIGNED=1:A_WIDTH=33:Y_WIDTH=33:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$neg:A_SIGNED=1:A_WIDTH=33:Y_WIDTH=33:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$mul:A_SIGNED=0:A_WIDTH=27:B_SIGNED=0:B_WIDTH=4:Y_WIDTH=27:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$mul:A_SIGNED=0:A_WIDTH=27:B_SIGNED=0:B_WIDTH=4:Y_WIDTH=27:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$mul:A_SIGNED=0:A_WIDTH=27:B_SIGNED=0:B_WIDTH=4:Y_WIDTH=27:394426c56d1a028ba8fdd5469b163e04011def47.
+Using extmapper simplemap for cells of type $and.
+Running "alumacc" on wrapper $extern:wrap:$add:A_SIGNED=0:A_WIDTH=32:B_SIGNED=0:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$add:A_SIGNED=0:A_WIDTH=32:B_SIGNED=0:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$add:A_SIGNED=0:A_WIDTH=32:B_SIGNED=0:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$add:A_SIGNED=0:A_WIDTH=8:B_SIGNED=0:B_WIDTH=1:Y_WIDTH=8:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$add:A_SIGNED=0:A_WIDTH=8:B_SIGNED=0:B_WIDTH=1:Y_WIDTH=8:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$add:A_SIGNED=0:A_WIDTH=8:B_SIGNED=0:B_WIDTH=1:Y_WIDTH=8:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$add:A_SIGNED=0:A_WIDTH=4:B_SIGNED=0:B_WIDTH=1:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$add:A_SIGNED=0:A_WIDTH=4:B_SIGNED=0:B_WIDTH=1:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$add:A_SIGNED=0:A_WIDTH=4:B_SIGNED=0:B_WIDTH=1:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:A_SIGNED=0:A_WIDTH=6:B_SIGNED=0:B_WIDTH=6:Y_WIDTH=6:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:A_SIGNED=0:A_WIDTH=6:B_SIGNED=0:B_WIDTH=6:Y_WIDTH=6:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:A_SIGNED=0:A_WIDTH=6:B_SIGNED=0:B_WIDTH=6:Y_WIDTH=6:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $paramod$constmap:2981875452f5f22a23449e4bb75a5ca5357ecab0$paramod$1f3e58edfd73782d0aaf4ede979fcb7d26b2fe08\_90_shift_shiftx for cells of type $shiftx.
+Using template $paramod$constmap:b2b3a2f577f89ddb9d8bc2c918e3e8be2949f948$paramod$0d4232e721d18fc7b60c54bb2ca63266f5460f67\_90_shift_shiftx for cells of type $shiftx.
+Using template $paramod$constmap:88913007b5a12ac2cf3d19b3886f0cef624c5f5f$paramod$7ac295edf55050aa0ed112406117d7c8340e0f03\_90_shift_shiftx for cells of type $shift.
+Analyzing pattern of constant bits for this cell:
+  Constant input on bit 0 of port A: 1'1
+  Constant input on bit 1 of port A: 1'1
+  Constant input on bit 2 of port A: 1'1
+  Constant input on bit 3 of port A: 1'1
+  Constant input on bit 4 of port A: 1'1
+  Constant input on bit 5 of port A: 1'1
+  Constant input on bit 6 of port A: 1'1
+  Constant input on bit 7 of port A: 1'1
+  Constant input on bit 8 of port A: 1'1
+  Constant input on bit 9 of port A: 1'1
+  Constant input on bit 10 of port A: 1'1
+  Constant input on bit 11 of port A: 1'1
+  Constant input on bit 12 of port A: 1'1
+  Constant input on bit 13 of port A: 1'1
+  Constant input on bit 14 of port A: 1'1
+  Constant input on bit 15 of port A: 1'1
+  Constant input on bit 16 of port A: 1'1
+  Constant input on bit 17 of port A: 1'1
+  Constant input on bit 18 of port A: 1'1
+  Constant input on bit 19 of port A: 1'1
+  Constant input on bit 20 of port A: 1'1
+  Constant input on bit 21 of port A: 1'1
+  Constant input on bit 22 of port A: 1'1
+  Constant input on bit 23 of port A: 1'1
+  Constant input on bit 24 of port A: 1'1
+  Constant input on bit 25 of port A: 1'1
+  Constant input on bit 26 of port A: 1'1
+  Constant input on bit 27 of port A: 1'1
+  Constant input on bit 28 of port A: 1'1
+  Constant input on bit 29 of port A: 1'1
+  Constant input on bit 30 of port A: 1'1
+  Constant input on bit 31 of port A: 1'1
+  Constant input on bit 32 of port A: 1'1
+  Constant input on bit 33 of port A: 1'1
+  Constant input on bit 34 of port A: 1'1
+  Constant input on bit 35 of port A: 1'1
+  Constant input on bit 36 of port A: 1'1
+  Constant input on bit 37 of port A: 1'1
+  Constant input on bit 38 of port A: 1'1
+  Constant input on bit 39 of port A: 1'1
+  Constant input on bit 40 of port A: 1'1
+  Constant input on bit 41 of port A: 1'1
+  Constant input on bit 42 of port A: 1'1
+  Constant input on bit 43 of port A: 1'1
+  Constant input on bit 44 of port A: 1'1
+  Constant input on bit 45 of port A: 1'1
+  Constant input on bit 46 of port A: 1'1
+  Constant input on bit 47 of port A: 1'1
+  Constant input on bit 48 of port A: 1'1
+  Constant input on bit 49 of port A: 1'1
+  Constant input on bit 50 of port A: 1'1
+  Constant input on bit 51 of port A: 1'1
+  Constant input on bit 52 of port A: 1'1
+  Constant input on bit 53 of port A: 1'1
+  Constant input on bit 54 of port A: 1'1
+  Constant input on bit 55 of port A: 1'1
+  Constant input on bit 56 of port A: 1'1
+  Constant input on bit 57 of port A: 1'1
+  Constant input on bit 58 of port A: 1'1
+  Constant input on bit 59 of port A: 1'1
+  Constant input on bit 60 of port A: 1'1
+  Constant input on bit 61 of port A: 1'1
+  Constant input on bit 62 of port A: 1'1
+  Constant input on bit 63 of port A: 1'1
+  Constant input on bit 64 of port A: 1'1
+  Constant input on bit 65 of port A: 1'1
+  Constant input on bit 66 of port A: 1'1
+  Constant input on bit 67 of port A: 1'1
+  Constant input on bit 68 of port A: 1'1
+  Constant input on bit 69 of port A: 1'1
+  Constant input on bit 70 of port A: 1'1
+  Constant input on bit 71 of port A: 1'1
+  Constant input on bit 72 of port A: 1'1
+  Constant input on bit 73 of port A: 1'1
+  Constant input on bit 74 of port A: 1'1
+  Constant input on bit 75 of port A: 1'1
+  Constant input on bit 76 of port A: 1'1
+  Constant input on bit 77 of port A: 1'1
+  Constant input on bit 78 of port A: 1'1
+  Constant input on bit 79 of port A: 1'1
+  Constant input on bit 80 of port A: 1'1
+  Constant input on bit 81 of port A: 1'1
+  Constant input on bit 82 of port A: 1'1
+  Constant input on bit 83 of port A: 1'1
+  Constant input on bit 84 of port A: 1'1
+  Constant input on bit 85 of port A: 1'1
+  Constant input on bit 86 of port A: 1'1
+  Constant input on bit 87 of port A: 1'1
+  Constant input on bit 88 of port A: 1'1
+  Constant input on bit 89 of port A: 1'1
+  Constant input on bit 90 of port A: 1'1
+  Constant input on bit 91 of port A: 1'1
+  Constant input on bit 92 of port A: 1'1
+  Constant input on bit 93 of port A: 1'1
+  Constant input on bit 94 of port A: 1'1
+  Constant input on bit 95 of port A: 1'1
+  Constant input on bit 96 of port A: 1'1
+  Constant input on bit 97 of port A: 1'1
+  Constant input on bit 98 of port A: 1'1
+  Constant input on bit 99 of port A: 1'1
+  Constant input on bit 100 of port A: 1'1
+  Constant input on bit 101 of port A: 1'1
+  Constant input on bit 102 of port A: 1'1
+  Constant input on bit 103 of port A: 1'1
+  Constant input on bit 104 of port A: 1'1
+  Constant input on bit 105 of port A: 1'1
+  Constant input on bit 106 of port A: 1'1
+  Constant input on bit 107 of port A: 1'1
+  Constant input on bit 108 of port A: 1'1
+  Constant input on bit 109 of port A: 1'1
+  Constant input on bit 110 of port A: 1'1
+  Constant input on bit 111 of port A: 1'1
+  Constant input on bit 112 of port A: 1'1
+  Constant input on bit 113 of port A: 1'1
+  Constant input on bit 114 of port A: 1'1
+  Constant input on bit 115 of port A: 1'1
+  Constant input on bit 116 of port A: 1'1
+  Constant input on bit 117 of port A: 1'1
+  Constant input on bit 118 of port A: 1'1
+  Constant input on bit 119 of port A: 1'1
+  Constant input on bit 120 of port A: 1'1
+  Constant input on bit 121 of port A: 1'1
+  Constant input on bit 122 of port A: 1'1
+  Constant input on bit 123 of port A: 1'1
+  Constant input on bit 124 of port A: 1'1
+  Constant input on bit 125 of port A: 1'1
+  Constant input on bit 126 of port A: 1'1
+  Constant input on bit 127 of port A: 1'1
+  Constant input on bit 128 of port A: 1'1
+  Constant input on bit 129 of port A: 1'1
+  Constant input on bit 130 of port A: 1'1
+  Constant input on bit 131 of port A: 1'1
+  Constant input on bit 132 of port A: 1'1
+  Constant input on bit 133 of port A: 1'1
+  Constant input on bit 134 of port A: 1'1
+  Constant input on bit 135 of port A: 1'1
+  Constant input on bit 136 of port A: 1'1
+  Constant input on bit 137 of port A: 1'1
+  Constant input on bit 138 of port A: 1'1
+  Constant input on bit 139 of port A: 1'1
+  Constant input on bit 140 of port A: 1'1
+  Constant input on bit 141 of port A: 1'1
+  Constant input on bit 142 of port A: 1'1
+  Constant input on bit 143 of port A: 1'1
+  Constant input on bit 144 of port A: 1'1
+  Constant input on bit 145 of port A: 1'1
+  Constant input on bit 146 of port A: 1'1
+  Constant input on bit 147 of port A: 1'1
+  Constant input on bit 148 of port A: 1'1
+  Constant input on bit 149 of port A: 1'1
+  Constant input on bit 150 of port A: 1'1
+  Constant input on bit 151 of port A: 1'1
+  Constant input on bit 152 of port A: 1'1
+  Constant input on bit 153 of port A: 1'1
+  Constant input on bit 154 of port A: 1'1
+  Constant input on bit 155 of port A: 1'1
+  Constant input on bit 156 of port A: 1'1
+  Constant input on bit 157 of port A: 1'1
+  Constant input on bit 158 of port A: 1'1
+  Constant input on bit 159 of port A: 1'1
+  Constant input on bit 160 of port A: 1'1
+  Constant input on bit 161 of port A: 1'1
+  Constant input on bit 162 of port A: 1'1
+  Constant input on bit 163 of port A: 1'1
+  Constant input on bit 164 of port A: 1'1
+  Constant input on bit 165 of port A: 1'1
+  Constant input on bit 166 of port A: 1'1
+  Constant input on bit 167 of port A: 1'1
+  Constant input on bit 168 of port A: 1'1
+  Constant input on bit 169 of port A: 1'1
+  Constant input on bit 170 of port A: 1'1
+  Constant input on bit 171 of port A: 1'1
+  Constant input on bit 172 of port A: 1'1
+  Constant input on bit 173 of port A: 1'1
+  Constant input on bit 174 of port A: 1'1
+  Constant input on bit 175 of port A: 1'1
+  Constant input on bit 176 of port A: 1'1
+  Constant input on bit 177 of port A: 1'1
+  Constant input on bit 178 of port A: 1'1
+  Constant input on bit 179 of port A: 1'1
+  Constant input on bit 180 of port A: 1'1
+  Constant input on bit 181 of port A: 1'1
+  Constant input on bit 182 of port A: 1'1
+  Constant input on bit 183 of port A: 1'1
+  Constant input on bit 184 of port A: 1'1
+  Constant input on bit 185 of port A: 1'1
+  Constant input on bit 186 of port A: 1'1
+  Constant input on bit 187 of port A: 1'1
+  Constant input on bit 188 of port A: 1'1
+  Constant input on bit 189 of port A: 1'1
+  Constant input on bit 190 of port A: 1'1
+  Constant input on bit 191 of port A: 1'1
+  Constant input on bit 192 of port A: 1'1
+  Constant input on bit 193 of port A: 1'1
+  Constant input on bit 194 of port A: 1'1
+  Constant input on bit 195 of port A: 1'1
+  Constant input on bit 196 of port A: 1'1
+  Constant input on bit 197 of port A: 1'1
+  Constant input on bit 198 of port A: 1'1
+  Constant input on bit 199 of port A: 1'1
+  Constant input on bit 200 of port A: 1'1
+  Constant input on bit 201 of port A: 1'1
+  Constant input on bit 202 of port A: 1'1
+  Constant input on bit 203 of port A: 1'1
+  Constant input on bit 204 of port A: 1'1
+  Constant input on bit 205 of port A: 1'1
+  Constant input on bit 206 of port A: 1'1
+  Constant input on bit 207 of port A: 1'1
+  Constant input on bit 208 of port A: 1'1
+  Constant input on bit 209 of port A: 1'1
+  Constant input on bit 210 of port A: 1'1
+  Constant input on bit 211 of port A: 1'1
+  Constant input on bit 212 of port A: 1'1
+  Constant input on bit 213 of port A: 1'1
+  Constant input on bit 214 of port A: 1'1
+  Constant input on bit 215 of port A: 1'1
+  Constant input on bit 216 of port A: 1'1
+  Constant input on bit 217 of port A: 1'1
+  Constant input on bit 218 of port A: 1'1
+  Constant input on bit 219 of port A: 1'1
+  Constant input on bit 220 of port A: 1'1
+  Constant input on bit 221 of port A: 1'1
+  Constant input on bit 222 of port A: 1'1
+  Constant input on bit 223 of port A: 1'1
+  Constant input on bit 224 of port A: 1'1
+  Constant input on bit 225 of port A: 1'1
+  Constant input on bit 226 of port A: 1'1
+  Constant input on bit 227 of port A: 1'1
+  Constant input on bit 228 of port A: 1'1
+  Constant input on bit 229 of port A: 1'1
+  Constant input on bit 230 of port A: 1'1
+  Constant input on bit 231 of port A: 1'1
+  Constant input on bit 232 of port A: 1'1
+  Constant input on bit 233 of port A: 1'1
+  Constant input on bit 234 of port A: 1'1
+  Constant input on bit 235 of port A: 1'1
+  Constant input on bit 236 of port A: 1'1
+  Constant input on bit 237 of port A: 1'1
+  Constant input on bit 238 of port A: 1'1
+  Constant input on bit 239 of port A: 1'1
+  Constant input on bit 240 of port A: 1'1
+  Constant input on bit 241 of port A: 1'1
+  Constant input on bit 242 of port A: 1'1
+  Constant input on bit 243 of port A: 1'1
+  Constant input on bit 244 of port A: 1'1
+  Constant input on bit 245 of port A: 1'1
+  Constant input on bit 246 of port A: 1'1
+  Constant input on bit 247 of port A: 1'1
+  Constant input on bit 248 of port A: 1'1
+  Constant input on bit 249 of port A: 1'1
+  Constant input on bit 250 of port A: 1'1
+  Constant input on bit 251 of port A: 1'1
+  Constant input on bit 252 of port A: 1'1
+  Constant input on bit 253 of port A: 1'1
+  Constant input on bit 254 of port A: 1'1
+  Constant input on bit 255 of port A: 1'1
+  Constant input on bit 256 of port A: 1'1
+  Constant input on bit 257 of port A: 1'1
+  Constant input on bit 258 of port A: 1'1
+  Constant input on bit 259 of port A: 1'1
+  Constant input on bit 260 of port A: 1'1
+  Constant input on bit 261 of port A: 1'1
+  Constant input on bit 262 of port A: 1'1
+  Constant input on bit 263 of port A: 1'1
+  Constant input on bit 264 of port A: 1'1
+  Constant input on bit 265 of port A: 1'1
+  Constant input on bit 266 of port A: 1'1
+  Constant input on bit 267 of port A: 1'1
+  Constant input on bit 268 of port A: 1'1
+  Constant input on bit 269 of port A: 1'1
+  Constant input on bit 270 of port A: 1'1
+  Constant input on bit 271 of port A: 1'1
+  Constant input on bit 272 of port A: 1'1
+  Constant input on bit 273 of port A: 1'1
+  Constant input on bit 274 of port A: 1'1
+  Constant input on bit 275 of port A: 1'1
+  Constant input on bit 276 of port A: 1'1
+  Constant input on bit 277 of port A: 1'1
+  Constant input on bit 278 of port A: 1'1
+  Constant input on bit 279 of port A: 1'1
+  Constant input on bit 280 of port A: 1'1
+  Constant input on bit 281 of port A: 1'1
+  Constant input on bit 282 of port A: 1'1
+  Constant input on bit 283 of port A: 1'1
+  Constant input on bit 284 of port A: 1'1
+  Constant input on bit 285 of port A: 1'1
+  Constant input on bit 286 of port A: 1'1
+  Constant input on bit 287 of port A: 1'1
+  Constant input on bit 288 of port A: 1'1
+  Constant input on bit 289 of port A: 1'1
+  Constant input on bit 290 of port A: 1'1
+  Constant input on bit 291 of port A: 1'1
+  Constant input on bit 292 of port A: 1'1
+  Constant input on bit 293 of port A: 1'1
+  Constant input on bit 294 of port A: 1'1
+  Constant input on bit 295 of port A: 1'1
+  Constant input on bit 296 of port A: 1'1
+  Constant input on bit 297 of port A: 1'1
+  Constant input on bit 298 of port A: 1'1
+  Constant input on bit 299 of port A: 1'1
+  Constant input on bit 300 of port A: 1'1
+  Constant input on bit 301 of port A: 1'1
+  Constant input on bit 302 of port A: 1'1
+  Constant input on bit 303 of port A: 1'1
+  Constant input on bit 304 of port A: 1'1
+  Constant input on bit 305 of port A: 1'1
+  Constant input on bit 306 of port A: 1'1
+  Constant input on bit 307 of port A: 1'1
+  Constant input on bit 308 of port A: 1'1
+  Constant input on bit 309 of port A: 1'1
+  Constant input on bit 310 of port A: 1'1
+  Constant input on bit 311 of port A: 1'1
+  Constant input on bit 312 of port A: 1'1
+  Constant input on bit 313 of port A: 1'1
+  Constant input on bit 314 of port A: 1'1
+  Constant input on bit 315 of port A: 1'1
+  Constant input on bit 316 of port A: 1'1
+  Constant input on bit 317 of port A: 1'1
+  Constant input on bit 318 of port A: 1'1
+  Constant input on bit 319 of port A: 1'1
+  Constant input on bit 320 of port A: 1'1
+  Constant input on bit 321 of port A: 1'1
+  Constant input on bit 322 of port A: 1'1
+  Constant input on bit 323 of port A: 1'1
+  Constant input on bit 324 of port A: 1'1
+  Constant input on bit 325 of port A: 1'1
+  Constant input on bit 326 of port A: 1'1
+  Constant input on bit 327 of port A: 1'1
+  Constant input on bit 328 of port A: 1'1
+  Constant input on bit 329 of port A: 1'1
+  Constant input on bit 330 of port A: 1'1
+  Constant input on bit 331 of port A: 1'1
+  Constant input on bit 332 of port A: 1'1
+  Constant input on bit 333 of port A: 1'1
+  Constant input on bit 334 of port A: 1'1
+  Constant input on bit 335 of port A: 1'1
+  Constant input on bit 336 of port A: 1'1
+  Constant input on bit 337 of port A: 1'1
+  Constant input on bit 338 of port A: 1'1
+  Constant input on bit 339 of port A: 1'1
+  Constant input on bit 340 of port A: 1'1
+  Constant input on bit 341 of port A: 1'1
+  Constant input on bit 342 of port A: 1'1
+  Constant input on bit 343 of port A: 1'1
+  Constant input on bit 344 of port A: 1'1
+  Constant input on bit 345 of port A: 1'1
+  Constant input on bit 346 of port A: 1'1
+  Constant input on bit 347 of port A: 1'1
+  Constant input on bit 348 of port A: 1'1
+  Constant input on bit 349 of port A: 1'1
+  Constant input on bit 350 of port A: 1'1
+  Constant input on bit 351 of port A: 1'1
+  Constant input on bit 352 of port A: 1'1
+  Constant input on bit 353 of port A: 1'1
+  Constant input on bit 354 of port A: 1'1
+  Constant input on bit 355 of port A: 1'1
+  Constant input on bit 356 of port A: 1'1
+  Constant input on bit 357 of port A: 1'1
+  Constant input on bit 358 of port A: 1'1
+  Constant input on bit 359 of port A: 1'1
+  Constant input on bit 360 of port A: 1'1
+  Constant input on bit 361 of port A: 1'1
+  Constant input on bit 362 of port A: 1'1
+  Constant input on bit 363 of port A: 1'1
+  Constant input on bit 364 of port A: 1'1
+  Constant input on bit 365 of port A: 1'1
+  Constant input on bit 366 of port A: 1'1
+  Constant input on bit 367 of port A: 1'1
+  Constant input on bit 368 of port A: 1'1
+  Constant input on bit 369 of port A: 1'1
+  Constant input on bit 370 of port A: 1'1
+  Constant input on bit 371 of port A: 1'1
+  Constant input on bit 372 of port A: 1'1
+  Constant input on bit 373 of port A: 1'1
+  Constant input on bit 374 of port A: 1'1
+  Constant input on bit 375 of port A: 1'1
+  Constant input on bit 376 of port A: 1'1
+  Constant input on bit 377 of port A: 1'1
+  Constant input on bit 378 of port A: 1'1
+  Constant input on bit 379 of port A: 1'1
+  Constant input on bit 380 of port A: 1'1
+  Constant input on bit 381 of port A: 1'1
+  Constant input on bit 382 of port A: 1'1
+  Constant input on bit 383 of port A: 1'1
+  Constant input on bit 384 of port A: 1'1
+  Constant input on bit 385 of port A: 1'1
+  Constant input on bit 386 of port A: 1'1
+  Constant input on bit 387 of port A: 1'1
+  Constant input on bit 388 of port A: 1'1
+  Constant input on bit 389 of port A: 1'1
+  Constant input on bit 390 of port A: 1'1
+  Constant input on bit 391 of port A: 1'1
+  Constant input on bit 392 of port A: 1'1
+  Constant input on bit 393 of port A: 1'1
+  Constant input on bit 394 of port A: 1'1
+  Constant input on bit 395 of port A: 1'1
+  Constant input on bit 396 of port A: 1'1
+  Constant input on bit 397 of port A: 1'1
+  Constant input on bit 398 of port A: 1'1
+  Constant input on bit 399 of port A: 1'1
+  Constant input on bit 400 of port A: 1'1
+  Constant input on bit 401 of port A: 1'1
+  Constant input on bit 402 of port A: 1'1
+  Constant input on bit 403 of port A: 1'1
+  Constant input on bit 404 of port A: 1'1
+  Constant input on bit 405 of port A: 1'1
+  Constant input on bit 406 of port A: 1'1
+  Constant input on bit 407 of port A: 1'1
+  Constant input on bit 408 of port A: 1'1
+  Constant input on bit 409 of port A: 1'1
+  Constant input on bit 410 of port A: 1'1
+  Constant input on bit 411 of port A: 1'1
+  Constant input on bit 412 of port A: 1'1
+  Constant input on bit 413 of port A: 1'1
+  Constant input on bit 414 of port A: 1'1
+  Constant input on bit 415 of port A: 1'1
+  Constant input on bit 416 of port A: 1'1
+  Constant input on bit 417 of port A: 1'1
+  Constant input on bit 418 of port A: 1'1
+  Constant input on bit 419 of port A: 1'1
+  Constant input on bit 420 of port A: 1'1
+  Constant input on bit 421 of port A: 1'1
+  Constant input on bit 422 of port A: 1'1
+  Constant input on bit 423 of port A: 1'1
+  Constant input on bit 424 of port A: 1'1
+  Constant input on bit 425 of port A: 1'1
+  Constant input on bit 426 of port A: 1'1
+  Constant input on bit 427 of port A: 1'1
+  Constant input on bit 428 of port A: 1'1
+  Constant input on bit 429 of port A: 1'1
+  Constant input on bit 430 of port A: 1'1
+  Constant input on bit 431 of port A: 1'1
+  Constant input on bit 432 of port A: 1'1
+  Constant input on bit 433 of port A: 1'1
+  Constant input on bit 434 of port A: 1'1
+  Constant input on bit 435 of port A: 1'1
+  Constant input on bit 436 of port A: 1'1
+  Constant input on bit 437 of port A: 1'1
+  Constant input on bit 438 of port A: 1'1
+  Constant input on bit 439 of port A: 1'1
+  Constant input on bit 440 of port A: 1'1
+  Constant input on bit 441 of port A: 1'1
+  Constant input on bit 442 of port A: 1'1
+  Constant input on bit 443 of port A: 1'1
+  Constant input on bit 444 of port A: 1'1
+  Constant input on bit 445 of port A: 1'1
+  Constant input on bit 446 of port A: 1'1
+  Constant input on bit 447 of port A: 1'1
+  Constant input on bit 448 of port A: 1'1
+  Constant input on bit 449 of port A: 1'1
+  Constant input on bit 450 of port A: 1'1
+  Constant input on bit 451 of port A: 1'1
+  Constant input on bit 452 of port A: 1'1
+  Constant input on bit 453 of port A: 1'1
+  Constant input on bit 454 of port A: 1'1
+  Constant input on bit 455 of port A: 1'1
+  Constant input on bit 456 of port A: 1'1
+  Constant input on bit 457 of port A: 1'1
+  Constant input on bit 458 of port A: 1'1
+  Constant input on bit 459 of port A: 1'1
+  Constant input on bit 460 of port A: 1'1
+  Constant input on bit 461 of port A: 1'1
+  Constant input on bit 462 of port A: 1'1
+  Constant input on bit 463 of port A: 1'1
+  Constant input on bit 464 of port A: 1'1
+  Constant input on bit 465 of port A: 1'1
+  Constant input on bit 466 of port A: 1'1
+  Constant input on bit 467 of port A: 1'1
+  Constant input on bit 468 of port A: 1'1
+  Constant input on bit 469 of port A: 1'1
+  Constant input on bit 470 of port A: 1'1
+  Constant input on bit 471 of port A: 1'1
+  Constant input on bit 472 of port A: 1'1
+  Constant input on bit 473 of port A: 1'1
+  Constant input on bit 474 of port A: 1'1
+  Constant input on bit 475 of port A: 1'1
+  Constant input on bit 476 of port A: 1'1
+  Constant input on bit 477 of port A: 1'1
+  Constant input on bit 478 of port A: 1'1
+  Constant input on bit 479 of port A: 1'1
+  Constant input on bit 480 of port A: 1'1
+  Constant input on bit 481 of port A: 1'1
+  Constant input on bit 482 of port A: 1'1
+  Constant input on bit 483 of port A: 1'1
+  Constant input on bit 484 of port A: 1'1
+  Constant input on bit 485 of port A: 1'1
+  Constant input on bit 486 of port A: 1'1
+  Constant input on bit 487 of port A: 1'1
+  Constant input on bit 488 of port A: 1'1
+  Constant input on bit 489 of port A: 1'1
+  Constant input on bit 490 of port A: 1'1
+  Constant input on bit 491 of port A: 1'1
+  Constant input on bit 492 of port A: 1'1
+  Constant input on bit 493 of port A: 1'1
+  Constant input on bit 494 of port A: 1'1
+  Constant input on bit 495 of port A: 1'1
+  Constant input on bit 496 of port A: 1'1
+  Constant input on bit 497 of port A: 1'1
+  Constant input on bit 498 of port A: 1'1
+  Constant input on bit 499 of port A: 1'1
+  Constant input on bit 500 of port A: 1'1
+  Constant input on bit 501 of port A: 1'1
+  Constant input on bit 502 of port A: 1'1
+  Constant input on bit 503 of port A: 1'1
+  Constant input on bit 504 of port A: 1'1
+  Constant input on bit 505 of port A: 1'1
+  Constant input on bit 506 of port A: 1'1
+  Constant input on bit 507 of port A: 1'1
+  Constant input on bit 508 of port A: 1'1
+  Constant input on bit 509 of port A: 1'1
+  Constant input on bit 510 of port A: 1'1
+  Constant input on bit 511 of port A: 1'1
+  Constant input on bit 512 of port A: 1'1
+  Constant input on bit 513 of port A: 1'1
+  Constant input on bit 514 of port A: 1'1
+  Constant input on bit 515 of port A: 1'1
+  Constant input on bit 516 of port A: 1'1
+  Constant input on bit 517 of port A: 1'1
+  Constant input on bit 518 of port A: 1'1
+  Constant input on bit 519 of port A: 1'1
+  Constant input on bit 520 of port A: 1'1
+  Constant input on bit 521 of port A: 1'1
+  Constant input on bit 522 of port A: 1'1
+  Constant input on bit 523 of port A: 1'1
+  Constant input on bit 524 of port A: 1'1
+  Constant input on bit 525 of port A: 1'1
+  Constant input on bit 526 of port A: 1'1
+  Constant input on bit 527 of port A: 1'1
+  Constant input on bit 528 of port A: 1'1
+  Constant input on bit 529 of port A: 1'1
+  Constant input on bit 530 of port A: 1'1
+  Constant input on bit 531 of port A: 1'1
+  Constant input on bit 532 of port A: 1'1
+  Constant input on bit 533 of port A: 1'1
+  Constant input on bit 534 of port A: 1'1
+  Constant input on bit 535 of port A: 1'1
+  Constant input on bit 536 of port A: 1'1
+  Constant input on bit 537 of port A: 1'1
+  Constant input on bit 538 of port A: 1'1
+  Constant input on bit 539 of port A: 1'1
+  Constant input on bit 540 of port A: 1'1
+  Constant input on bit 541 of port A: 1'1
+  Constant input on bit 542 of port A: 1'1
+  Constant input on bit 543 of port A: 1'1
+Creating constmapped module `$paramod$constmap:0236fa9beed5b1d46ae52d57366b8b3588ee6927$paramod$7ac295edf55050aa0ed112406117d7c8340e0f03\_90_shift_shiftx'.
+
+3.59. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod$constmap:0236fa9beed5b1d46ae52d57366b8b3588ee6927$paramod$7ac295edf55050aa0ed112406117d7c8340e0f03\_90_shift_shiftx..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 2/2 on $mux $procmux$1954040.
+    dead port 2/2 on $mux $procmux$1954046.
+    dead port 2/2 on $mux $procmux$1954052.
+    dead port 2/2 on $mux $procmux$1954058.
+    dead port 2/2 on $mux $procmux$1954064.
+    dead port 2/2 on $mux $procmux$1954070.
+    dead port 2/2 on $mux $procmux$1954076.
+    dead port 2/2 on $mux $procmux$1954082.
+    dead port 2/2 on $mux $procmux$1954088.
+    dead port 2/2 on $mux $procmux$1954094.
+    dead port 2/2 on $mux $procmux$1954100.
+    dead port 2/2 on $mux $procmux$1954106.
+    dead port 2/2 on $mux $procmux$1954112.
+    dead port 2/2 on $mux $procmux$1954118.
+Removed 14 multiplexer ports.
+<suppressed ~122868 debug messages>
+
+3.60. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$constmap:0236fa9beed5b1d46ae52d57366b8b3588ee6927$paramod$7ac295edf55050aa0ed112406117d7c8340e0f03\_90_shift_shiftx.
+<suppressed ~20 debug messages>
+Removed 0 unused cells and 19 unused wires.
+Using template $paramod$constmap:0236fa9beed5b1d46ae52d57366b8b3588ee6927$paramod$7ac295edf55050aa0ed112406117d7c8340e0f03\_90_shift_shiftx for cells of type $shift.
+Using template $paramod$constmap:8a5df170973c4d38ebf984f8e4280eab0c816169$paramod$68c8542ebf26952517a4cd18e51538717f87e697\_90_shift_shiftx for cells of type $shift.
+Analyzing pattern of constant bits for this cell:
+  Constant input on bit 0 of port A: 1'1
+  Constant input on bit 1 of port A: 1'1
+  Constant input on bit 2 of port A: 1'1
+  Constant input on bit 3 of port A: 1'1
+  Constant input on bit 4 of port A: 1'1
+  Constant input on bit 5 of port A: 1'1
+  Constant input on bit 6 of port A: 1'1
+  Constant input on bit 7 of port A: 1'1
+  Constant input on bit 8 of port A: 1'1
+  Constant input on bit 9 of port A: 1'1
+Creating constmapped module `$paramod$constmap:15ebc0b95d83da4a3396af3e30b94a6018e47fe9$paramod$68c8542ebf26952517a4cd18e51538717f87e697\_90_shift_shiftx'.
+
+3.66. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod$constmap:15ebc0b95d83da4a3396af3e30b94a6018e47fe9$paramod$68c8542ebf26952517a4cd18e51538717f87e697\_90_shift_shiftx..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 2/2 on $mux $procmux$1954208.
+    dead port 2/2 on $mux $procmux$1954214.
+    dead port 2/2 on $mux $procmux$1954220.
+    dead port 2/2 on $mux $procmux$1954226.
+    dead port 2/2 on $mux $procmux$1954232.
+    dead port 2/2 on $mux $procmux$1954238.
+    dead port 2/2 on $mux $procmux$1954244.
+    dead port 2/2 on $mux $procmux$1954250.
+    dead port 2/2 on $mux $procmux$1954256.
+    dead port 2/2 on $mux $procmux$1954262.
+    dead port 2/2 on $mux $procmux$1954268.
+    dead port 2/2 on $mux $procmux$1954274.
+    dead port 2/2 on $mux $procmux$1954280.
+    dead port 2/2 on $mux $procmux$1954286.
+Removed 14 multiplexer ports.
+<suppressed ~676 debug messages>
+
+3.67. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$constmap:15ebc0b95d83da4a3396af3e30b94a6018e47fe9$paramod$68c8542ebf26952517a4cd18e51538717f87e697\_90_shift_shiftx.
+<suppressed ~20 debug messages>
+Removed 0 unused cells and 19 unused wires.
+Using template $paramod$constmap:15ebc0b95d83da4a3396af3e30b94a6018e47fe9$paramod$68c8542ebf26952517a4cd18e51538717f87e697\_90_shift_shiftx for cells of type $shift.
+Using extmapper simplemap for cells of type $ne.
+Using extmapper simplemap for cells of type $reduce_bool.
+Running "alumacc" on wrapper $extern:wrap:$mul:A_SIGNED=0:A_WIDTH=2:B_SIGNED=0:B_WIDTH=31:Y_WIDTH=31:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$mul:A_SIGNED=0:A_WIDTH=2:B_SIGNED=0:B_WIDTH=31:Y_WIDTH=31:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$mul:A_SIGNED=0:A_WIDTH=2:B_SIGNED=0:B_WIDTH=31:Y_WIDTH=31:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$mul:A_SIGNED=0:A_WIDTH=2:B_SIGNED=0:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$mul:A_SIGNED=0:A_WIDTH=2:B_SIGNED=0:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$mul:A_SIGNED=0:A_WIDTH=2:B_SIGNED=0:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$mul:A_SIGNED=1:A_WIDTH=31:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=31:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$mul:A_SIGNED=1:A_WIDTH=31:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=31:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$mul:A_SIGNED=1:A_WIDTH=31:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=31:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$mul:A_SIGNED=0:A_WIDTH=32:B_SIGNED=0:B_WIDTH=4:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$mul:A_SIGNED=0:A_WIDTH=32:B_SIGNED=0:B_WIDTH=4:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$mul:A_SIGNED=0:A_WIDTH=32:B_SIGNED=0:B_WIDTH=4:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$lt:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$lt:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$lt:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$lt:A_SIGNED=0:A_WIDTH=6:B_SIGNED=0:B_WIDTH=6:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$lt:A_SIGNED=0:A_WIDTH=6:B_SIGNED=0:B_WIDTH=6:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$lt:A_SIGNED=0:A_WIDTH=6:B_SIGNED=0:B_WIDTH=6:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$le:A_SIGNED=0:A_WIDTH=4:B_SIGNED=0:B_WIDTH=32:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$le:A_SIGNED=0:A_WIDTH=4:B_SIGNED=0:B_WIDTH=32:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$le:A_SIGNED=0:A_WIDTH=4:B_SIGNED=0:B_WIDTH=32:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$le:A_SIGNED=0:A_WIDTH=32:B_SIGNED=0:B_WIDTH=6:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$le:A_SIGNED=0:A_WIDTH=32:B_SIGNED=0:B_WIDTH=6:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$le:A_SIGNED=0:A_WIDTH=32:B_SIGNED=0:B_WIDTH=6:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$gt:A_SIGNED=0:A_WIDTH=6:B_SIGNED=0:B_WIDTH=6:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$gt:A_SIGNED=0:A_WIDTH=6:B_SIGNED=0:B_WIDTH=6:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$gt:A_SIGNED=0:A_WIDTH=6:B_SIGNED=0:B_WIDTH=6:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$add:A_SIGNED=0:A_WIDTH=2:B_SIGNED=0:B_WIDTH=1:Y_WIDTH=2:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$add:A_SIGNED=0:A_WIDTH=2:B_SIGNED=0:B_WIDTH=1:Y_WIDTH=2:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$add:A_SIGNED=0:A_WIDTH=2:B_SIGNED=0:B_WIDTH=1:Y_WIDTH=2:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$add:A_SIGNED=0:A_WIDTH=4:B_SIGNED=0:B_WIDTH=1:Y_WIDTH=4:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$add:A_SIGNED=0:A_WIDTH=4:B_SIGNED=0:B_WIDTH=1:Y_WIDTH=4:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$add:A_SIGNED=0:A_WIDTH=4:B_SIGNED=0:B_WIDTH=1:Y_WIDTH=4:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$add:A_SIGNED=0:A_WIDTH=6:B_SIGNED=0:B_WIDTH=6:Y_WIDTH=6:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$add:A_SIGNED=0:A_WIDTH=6:B_SIGNED=0:B_WIDTH=6:Y_WIDTH=6:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$add:A_SIGNED=0:A_WIDTH=6:B_SIGNED=0:B_WIDTH=6:Y_WIDTH=6:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$add:A_SIGNED=0:A_WIDTH=6:B_SIGNED=0:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$add:A_SIGNED=0:A_WIDTH=6:B_SIGNED=0:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$add:A_SIGNED=0:A_WIDTH=6:B_SIGNED=0:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$add:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$add:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$add:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47.
+Using extmapper simplemap for cells of type $reduce_and.
+Using extmapper simplemap for cells of type $dffe.
+Using extmapper simplemap for cells of type $adffe.
+Using extmapper simplemap for cells of type $sdffce.
+Using extmapper simplemap for cells of type $sdff.
+Using template $paramod$b18e16801adf491a64caa0542270798e5d4ac6b6\_90_alu for cells of type $alu.
+Using template $paramod$b0777dc865134c8525a4aa84de8cfa938974cad1\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $reduce_or.
+Using template $paramod$8f780356cb6cdb52f6a744190131b65634639c4e\_90_alu for cells of type $alu.
+Using template $paramod$672a140277c71df8314410f22acc08d55222c3c7\_90_alu for cells of type $alu.
+Using template $paramod$fbc7873bff55778c0b3173955b7e4bce1d9d6834\_90_alu for cells of type $alu.
+Using template $paramod$e3e2a2ae1e4d598b5e0e0be67cc1104653ecf8c1\_90_alu for cells of type $alu.
+Using extmapper maccmap for cells of type $macc_v2.
+  add 27'000000000000000000000010001 * \u_enc.ph (27x4 bits, unsigned)
+Using template $paramod$c3cd1564c35d873179656addd6052d7ea8b6d991\_90_alu for cells of type $alu.
+Using template $paramod$37f83faf74b71c7b77f41ccc3bf432252092379f\_90_alu for cells of type $alu.
+Using template $paramod$2653f68ddb8eab7b1907b4a20767b72a824a7a36\_90_alu for cells of type $alu.

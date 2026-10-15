@@ -42,19 +42,19 @@
  "why_floorplan": "Same width and first-stage pin positions as CLOSED ctfx; owns 1135 formerly unplaced local-epoch FV/FD capture flops. 25.92um height matches the assigned NTREE strip, providing legal rows for two output capture stages.",
  "macros": [],
  "pins": {
+  "W": [
+   "clk"
+  ],
   "N": [
+   "fd_in",
    "fv_in",
-   "fd_in"
+   "rst_in"
   ],
   "S": [
-   "fv",
    "fdx",
+   "fv",
    "fv_local",
    "fdx_local"
-  ],
-  "W": [
-   "clk",
-   "rst_in"
   ]
  },
  "refglob": "*",
@@ -68,12 +68,12 @@
  "job": {
   "owner": "Codex:S-NORM",
   "branch": "claude/s81-norm-tree-1014",
-  "tag": "v1-owned-epoch",
+  "tag": "v2-owned-pads",
   "purpose": "Production serial HC owns every local broadcast register in its physical strip; no region-wrapper flops.",
   "no_bench_reason": "bit-exactness is gated on the HC slab composition bench (tools/s81_suhc/hc_gate.py NG256 HIER=2 m0 PASS + m1 FAIL, NG64 m0 PASS + m3 FAIL) at the kit commit; the tile alone has no golden",
   "views_to": "physical/ref_tile/s81hc_ctfxcap_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_ctfxcap_ref",
-  "structural_change": "Physical leaf owns all local broadcast state; local M3 pin layer aligns input-to-local-output wires, removing668-net horizontal crosscut caused by all-M5 pin collision fallback. Same clocks/reset/epochs/constraints/outline.",
+  "structural_change": "Complete multi-D configured input pad before all data D fanouts; die-owned reset N M3 pin at225.036um joins actual localclock cluster (old W reset caused longclockreturn). Same arithmetic, cycles, outline, data pin rectangles and IO/clock timing budgets.",
   "benches": [
    {
     "name": "owned_serial_exact",
@@ -117,7 +117,7 @@
  "io_tcl": "physical/s81_die_pins/v20_hc_capture/ot_s81_hc_ctfx_cap.tcl",
  "assigned_pins": {
   "file": "physical/s81_die_pins/v20_hc_capture/ot_s81_hc_ctfx_cap.json",
-  "source": "S81 die lead 6cae93a72; original M5 rectangles kept, local M3 register pins vertically aligned with input captures and clamped to actual CPL reach",
+  "source": "S81 die lead433f0d8f0 reset N M3x225.036; unchanged original data/UL rectangles and vertically aligned localM3 captures",
   "layout": "physical/s81_die_pins/v20_hc_capture/serial_capture_layout.json"
  },
  "slot_change_request": "S81 die lead 2495f77a6 accepted serial/NTREE captured strip 576.72x25.92; enclosing cth751.68, rowshifts12.96"

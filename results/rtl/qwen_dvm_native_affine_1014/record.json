@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.qwen-native-affine-dvm-proof.v1",
   "source_commit": "656e5d834b27e398685a03f7ab9628ee1fda20b3",
-  "status": "PARTIAL_FUNCTIONAL_ONLY_FULL_PRODUCTION_PENDING",
+  "status": "FUNCTIONAL_PRODUCTION_SHAPE_PASS_PHYSICAL_UNQUALIFIED",
   "sources": "executed_source.sha256",
   "profile": {
     "NATIVE_AFFINE": 1,
@@ -19,11 +19,12 @@
     "epoch": "FAIL115334errorsincludingx_fault",
     "tile": "FAIL38840operandmismatches"
   },
-  "production_768": "LIVE, not qualified in this record",
+  "production_768": "PASS NCOL48 NH8 tiles768 GT3072,14ops,2276cycles,4177920elementchecks,delta1",
   "notes": [
     "Checks raw operand interface against real central x spine; no tile arithmetic in this production-shape bench.",
     "Native standalone wrapper and physical phi-R transports not represented.",
     "Mutants print FAIL but bench exits0; acceptance checks log semantics, not exit status.",
-    "Actual tap/head die wrappers specialize same primitives but are not compiled by this bench."
+    "Actual tap/head die wrappers specialize same primitives but are not compiled by this bench.",
+    "Subsequent pos_bad integrity-register change is a separate unqualified source; this record binds original656 source."
   ]
 }

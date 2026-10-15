@@ -63650,5 +63650,26 @@
    259.932,
    259.884
   ]
- ]
+ ],
+ "reset_reassignment": {
+  "source": "CLOSED ot_s81_hc_ctfn.rst_c W M4 centre(0.042,10.044), ctfn Noffset390.96",
+  "source_xy_um": [
+   0.042,
+   344.844
+  ],
+  "capture_N_y_um": 386.598,
+  "serial_reset_x_um": 225.036,
+  "nt_reset_x_um": 45.036,
+  "serial_hop_um": 266.748,
+  "nt_hop_um": 86.748,
+  "qualification": "geometry only; native reset epoch, launch/capture and CTS remain required"
+ },
+ "tid_delivery": {
+  "port": "ot_s81_hc_ctfx_nt.tid[7:0]",
+  "pins": "N/M3 x45.132..45.804",
+  "source": "rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv localparam TID=BC+p or BC+START+p, passed through cth_nt to ctfx_nt",
+  "delivery": "static per-instance value; local tie realization remains required in native parent, no dynamic launch source",
+  "native_capture": "must be measured after retap/pin move"
+ },
+ "ul_policy": "preserve original UL rectangles; ul_out15 needs a measured local clock branch, not a pin move"
 }

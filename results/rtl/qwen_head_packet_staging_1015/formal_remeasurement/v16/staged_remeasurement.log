@@ -1,0 +1,22 @@
+GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=["openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"]
+RECOVERY_STAGED_REMEASUREMENT
+GATE_IOP_RC=0
+GATE_DUMP_RC=0
+GATE_TB textbook_lint: WARN qkh_packet_v16 cells 55 flops 19 depth 11.7 ps util 0.0356 reach 10.8 um (0.0 s)
+GATE_TB textbook_lint: INFO clock_roots max_root_sinks=19 root=port:clk rule=PASS: 19 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+GATE_TB textbook_lint: WARN util_channel: utilisation 3.6% outside 45%-65% (std 11 + macro 0 um2 in 299 um2): shrink the outline (long wires / sparse placement)
+GATE_PORTS {"clk": [1, false], "rst_n": [1, false], "d": [null, true], "q": [null, true]}
+GATE_AREA    Chip area for module '\qkh_packet_v16': 9.797760
+GATE_CTS_RC=0
+RECOVERY_CTS_REUSED_EXISTING_DATABASE
+GATE_GPLD global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+GATE_GPLD [INFO GPL-0023] Placement target density:       0.5000
+GATE_CK_RC=0
+GATE_CK ss insertion all 78.5..80.1 ps (spread 1.6), boundary mean 79.4; tt insertion all 54.5..55.7 ps (spread 1.2), boundary mean 55.1; ff insertion all 40.4..41.5 ps (spread 1.1), boundary mean 41.0; macro_clk flag False
+GATE_CK_DOMAIN {"source": "clk", "clock": "core_clk", "tt": {"boundary": {"n": 19, "mean": 55.1, "min": 54.5, "max": 55.7}, "all": {"n": 19, "mean": 55.1, "min": 54.5, "max": 55.7}, "errors": [], "macros": null, "macro_libs": 0}}
+GATE_PC constraints signoff /src/physical/ref_tile/qkh_packet_v16/signoff.sdc (TT placement RC; diagnostic)
+GATE_PC reg->out       16 paths, worst slack 271.1 ps (e.g. q[0])
+GATE_PC in->reg        19 paths, worst slack 414.6 ps (e.g. u_pipe.q[15]$_DFF_PN0_/D)
+GATE_PC reg->reg       18 paths, worst slack 670.7 ps (e.g. u_pipe.u_reset.sync_q[1]$_DFF_PN0_/D)
+GATE_PC setup WNS 2.711290081336415e-10 hold WNS 2.6566616961876122e-11
+GATE_DONE

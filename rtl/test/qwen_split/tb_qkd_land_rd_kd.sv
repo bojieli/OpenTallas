@@ -1,8 +1,11 @@
 `timescale 1ns/1ps
 // qwen-split/kvsys v1.2 (die lead r4, 2026-10-14): tb_qkd_land_rd with the landing strip's kn / lt delivery depths:
 // KD = registered stages on kn (the KV write words), KL = on lt (layer start / T / index) between the bench and the group.
-// EPOCH=1 uses rq[16] (layer parity) and a DQ ingress queue before merge; a future layer's requests
-// wait for lt instead of being attributed to the previous layer. GM=4 bypasses parity waiting and must FAIL.
+// EPOCH=1 uses rq[16] (layer parity), CHECKED in the group against the compiled layer context (static schedule, no hold):
+// LEAD = the compiler's issue offset of a layer's first request after its lt (cycles at the bench = die issue points);
+// LEAD < 0 selects the compiled value KL: the layer's first request reaches the group's rq pin no earlier than the edge
+// its lt reaches the lt pin (measured boundary: LEAD KL PASS exact, LEAD KL - 1 trips the epoch check). EXPECT_FAULT=1 is the schedule-error case (LEAD below the compiled value): it PASSES only if the
+// group's epoch check fires before any wrong response; GM=4 removes the check and must FAIL there.
 // EPOCH=0 preserves the historical interface/behaviour; KL>=7 then reproduces the fault.
 // el1013-qwen-kvstrips 2026-10-13: exact bench of the KV landing read path of one row engine:
 // 4 x qkd_land_pc (the group's pseudo-channels, CDC landing port) + qkd_land_grp (row matcher + ot_qkvd_kv_merge E 1).
@@ -16,7 +19,9 @@
 //   * layers 34, 35, 0, 1 (the wrap) over two tokens (T 8,190 then 3,000: 3,000 leaves a tail beyond T to drop);
 //   * end: every streamed word was consumed (credits home), no fault.
 // PASS line "PASS qkd_land_rd ..."; mutants (GM = qkd_land_grp MUT, PM = qkd_land_pc MUT) must FAIL.
-module tb_qkd_land_rd_kd #(parameter integer KD = 12, KL = 12, GM = 0, PM = 0, G = 5, S = 3, EPOCH = 1, DQ = 128);
+module tb_qkd_land_rd_kd #(parameter integer KD = 12, KL = 12, GM = 0, PM = 0, G = 5, S = 3, EPOCH = 1, DQ = 128,
+                          LEAD = -1, EXPECT_FAULT = 0);
+    localparam integer LD = (LEAD < 0) ? KL : LEAD;
 
     reg ck = 0; always #0.416667 ck = ~ck;
     reg rst_n = 0;
@@ -59,7 +64,7 @@ module tb_qkd_land_rd_kd #(parameter integer KD = 12, KL = 12, GM = 0, PM = 0, G
     function automatic integer t_of(input integer j);
         t_of = (((j >> 3) & 15) << 9) | (S << 7) | (((j >> 7) & 1) << 6) | ((j & 7) << 3) | G;
     endfunction
-    longint cycles = 0;
+    longint cycles = 0, start_ok = 0;
     always @(posedge ck) if (rst_n) cycles <= cycles + 1;
     longint n_err = 0, n_rsp = 0, n_kept = 0, n_req = 0, n_skip = 0, n_word [0:3], n_pop [0:3];
     task automatic bad(input string what);
@@ -96,7 +101,7 @@ module tb_qkd_land_rd_kd #(parameter integer KD = 12, KL = 12, GM = 0, PM = 0, G
                 if (rs[1024:1] !== e) bad($sformatf("response %0d data", n_rsp));
             end
         end
-        if (rst_n && rq_l.size() != 0 && eout < DQ && rnd[14:12] != 0) begin
+        if (rst_n && rq_l.size() != 0 && eout < DQ && rnd[14:12] != 0 && cycles >= start_ok) begin
             automatic int l = rq_l.pop_front(), j = rq_j.pop_front();
             automatic int t = t_of(j);
             rq <= {1'(l & 1), 13'(t), 1'((j >> 8) & 1), 1'((j >> 9) & 1), 1'b1};
@@ -117,7 +122,7 @@ module tb_qkd_land_rd_kd #(parameter integer KD = 12, KL = 12, GM = 0, PM = 0, G
         end
     endtask
     task automatic lay(input integer l, input integer T);
-        @(negedge ck); lt = {6'(l), 14'(T), 1'b1}; @(negedge ck); lt[0] = 1'b0;
+        @(negedge ck); lt = {6'(l), 14'(T), 1'b1}; start_ok = cycles + LD; @(negedge ck); lt[0] = 1'b0;
     endtask
     task automatic post(input integer l, input integer T);
         for (int vg = 0; vg < 4; vg++) begin
@@ -145,13 +150,22 @@ module tb_qkd_land_rd_kd #(parameter integer KD = 12, KL = 12, GM = 0, PM = 0, G
         repeat (20) @(negedge ck);
         if (fo !== 1'b0) bad("fault chain set");
         if (n_rsp != n_req || n_kept != 8 || n_skip < 100) bad("coverage floor");
-        $display("LAND_COST cycles %0d epoch %0d KD %0d KL %0d", cycles, EPOCH, KD, KL);
+        $display("LAND_COST cycles %0d epoch %0d KD %0d KL %0d LEAD %0d", cycles, EPOCH, KD, KL, LD);
+        if (EXPECT_FAULT != 0) bad("schedule error not detected by the epoch check");
         if (n_err == 0)
             $display("PASS qkd_land_rd g=%0d s=%0d: %0d row responses exact in request order (%0d replaced by the posted row behind the fence), %0d V rows not requested and %0d words in all consumed, 4 layers across the wrap, tail beyond T dropped",
                      G, S, n_rsp, n_kept, n_skip, n_pop[0] + n_pop[1] + n_pop[2] + n_pop[3]);
         else $display("FAIL qkd_land_rd gm=%0d pm=%0d: %0d mismatches", GM, PM, n_err);
         $finish;
     end
+    generate if (EPOCH != 0) begin : g_sched_check
+        always @(posedge ck) if (EXPECT_FAULT != 0 && g_native.grp.u.epoch_fault) begin
+            if (n_err == 0) $display("PASS qkd_land_rd schedule fault detected: epoch check at cycle %0d (LEAD %0d < compiled %0d), %0d responses before it all exact",
+                                     cycles, LD, KL, n_rsp);
+            else $display("FAIL qkd_land_rd gm=%0d pm=%0d: %0d wrong responses before the epoch check", GM, PM, n_err);
+            $finish;
+        end
+    end endgenerate
     initial begin
         #400000;
         $display("FAIL qkd_land_rd gm=%0d pm=%0d: watchdog (responses %0d of %0d requests, pops %0d %0d %0d %0d, fault %0d, mismatches %0d)",

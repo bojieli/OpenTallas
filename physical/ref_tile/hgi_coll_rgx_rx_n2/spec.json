@@ -1,0 +1,63 @@
+{
+ "kind": "tile",
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "layer_cap": "M5",
+ "route": {
+  "peak_ram_gb": 24,
+  "threads": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:H-COLL",
+  "branch": "claude/hbm-p2p-coll-1014",
+  "tag": "n2",
+  "hold_merge": "Native partition sizing/CTS probe. Die pin file, routed native pin/reset/clock audit and physical leaf views still required.",
+  "purpose": "Measure real leaf clock root, boundary paths and standard area before integration routing"
+ },
+ "name": "hgi_coll_rgx_rx_n2",
+ "top": "ot_hgi_coll_rx_native",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_crl.sv"
+ ],
+ "params": {
+  "W": 552,
+  "CRD": 16
+ },
+ "pins": {
+  "S": [
+   "t_v",
+   "t_d"
+  ],
+  "N": [
+   "out_v",
+   "out_d",
+   "out_rdy",
+   "epoch",
+   "fault"
+  ],
+  "W": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "std_area_um2": 6471,
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

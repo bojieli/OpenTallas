@@ -1,0 +1,24 @@
+DIAG central ep=0 multi=0 pipe=0 rec=0 state= 0
+REC 0 op=1 n=1280 afmt=0 ofmt=0 | die0 issue->done central 630 p2p 673 cycles
+REC 1 op=1 n=512 afmt=0 ofmt=0 | die0 issue->done central 633 p2p 702 cycles
+REC 2 op=1 n=5120 afmt=0 ofmt=0 | die0 issue->done central 694 p2p 739 cycles
+REC 3 op=1 n=384 afmt=0 ofmt=0 | die0 issue->done central 662 p2p 714 cycles
+REC 4 op=1 n=2304 afmt=0 ofmt=0 | die0 issue->done central 1059 p2p 1179 cycles
+REC 5 op=1 n=2304 afmt=0 ofmt=0 | die0 issue->done central 665 p2p 1183 cycles
+REC 6 op=1 n=2304 afmt=0 ofmt=0 | die0 issue->done central 703 p2p 1201 cycles
+REC 7 op=1 n=2304 afmt=0 ofmt=0 | die0 issue->done central 669 p2p 757 cycles
+REC 8 op=1 n=2304 afmt=0 ofmt=0 | die0 issue->done central 1038 p2p 1186 cycles
+REC 9 op=1 n=2304 afmt=0 ofmt=0 | die0 issue->done central 665 p2p 1163 cycles
+REC 10 op=1 n=2304 afmt=0 ofmt=0 | die0 issue->done central 704 p2p 1186 cycles
+REC 11 op=1 n=5120 afmt=0 ofmt=0 | die0 issue->done central 703 p2p 777 cycles
+REC 12 op=1 n=2304 afmt=0 ofmt=0 | die0 issue->done central 1034 p2p 1186 cycles
+REC 13 op=4 n=5120 afmt=0 ofmt=1 | die0 issue->done central 1873 p2p 2403 cycles
+REC 14 op=4 n=5120 afmt=0 ofmt=0 | die0 issue->done central 1270 p2p 3646 cycles
+REC 15 op=3 n=2 afmt=0 ofmt=5 | die0 issue->done central 597 p2p 3442 cycles
+SEQ case=ds G=8 records=16 central 5683 cycles, p2p 5412 cycles (first issue -> last done, all dies); flits sent central 6896 p2p 7048
+IMAGES words=308352 diff=0 count_mismatch=0 gather_expect_mismatch=0
+PASS HGI_COLL_P2P case=ds G=8 records=16 rc=0
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_p2p.sv:556: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 163.664 s; speed 32.114 ns/s
+- Verilator: cpu 163.658 s on 1 threads; allocated 317 MB

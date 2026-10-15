@@ -1,0 +1,70 @@
+{
+  "scope": "COMBINED_COMPONENT_ONLY_NOT_CANONICAL_81_STAGE_PRODUCTION",
+  "source_commit": "7431b0d19",
+  "native_execution": false,
+  "physical_qualified": false,
+  "canonical_shape": {
+    "stages": 81,
+    "field_pairs": 2417,
+    "bf_pairs": 519,
+    "PHW": 10,
+    "binding_verified": false
+  },
+  "test_shapes": {
+    "gather_records_per_rank": 44,
+    "reduce_records_per_rank": 320,
+    "reduce_fp32_per_rank": 5120,
+    "canonical_production_sizes": false
+  },
+  "actual_rtl": {
+    "static_slab_instances": 1,
+    "remote_tp4_instances": 3,
+    "control_rom_macros": 3,
+    "vm_instances": 1,
+    "vm_sram_macros": 128,
+    "clock_roots": 29
+  },
+  "result": {
+    "destination_rows": 498,
+    "hc_rows_8192bits": 20,
+    "command_completions": 2,
+    "wfc_transfers": 1,
+    "host_transfers": 1,
+    "reported_fp32_groups": 7968,
+    "caveat": "metadata row checks low64bits only; reported7968 counts16 groups perrow, not7968 independent arithmetic results"
+  },
+  "base": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-3625260-1792049512",
+    "exit": 0,
+    "log": "base29.log"
+  },
+  "mutant": {
+    "unit": "oth-ubuntu-3625264-1792049512",
+    "gate_exit": 0,
+    "change": "invert actual reduced VM payload bit0 at final slab packing",
+    "observed": "FATAL reduce VM pins item0 edge432",
+    "log": "mutant29.log"
+  },
+  "preserved_objects": "/srv/opentallas-scratch/codex/s81-fullslab-flat-1015/obj_base29 and obj_mutant29",
+  "admission": {
+    "successful_request_gb": 12,
+    "threads": 8,
+    "prior_requests_gb": 6,
+    "prior_result": "verified oom-kill, both MemoryPeak6442450944; incrementalobjects preserved"
+  },
+  "clock_rule": {
+    "total_register_bits": 104225,
+    "maximum_per_root": 8438,
+    "hard_rom_clock_pins": 3,
+    "verdict": "COUNT_ONLY_PASS"
+  },
+  "open_gates": [
+    "actual2417/BF519/81stage FIELDtag/capture/VM source allocation and nativeproductioncalendar",
+    "HCPOST/HCP actualconsumer ABI and WFC actualnativeVM producer binding",
+    "host producer and sparsePHY beatvalid source binding",
+    "actualleaf area/outline/pinregister/cuts/reach,diephi-Rclock/resetprofile and nonzeroPHYflight",
+    "TTsetup FFhold DRC0 benches/mutants boundtoactualphysicalmasters",
+    "productionprice comparison and wholepagecapacity/paging"
+  ]
+}

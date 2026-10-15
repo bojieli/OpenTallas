@@ -1,0 +1,119 @@
+{
+  "schema": "opentallas.qwen.compute-physical-reset.v1",
+  "qualification": "Source-bound local pipeline inventory; missing die-reset-relay ages and compensated child clock phases prohibit a complete boot-time claim.",
+  "edge_convention": "Count complete rising edges after the reset pin deasserts; traffic starts strictly after each downstream consumer reset has deasserted. Child reset dependencies compose through actual compensated clock phases, not by a global common-clock assumption.",
+  "missing": [
+    "C17 actual per-instance reset root release and relay stages",
+    "per-child compensated clock period/phase and parent CTS entry-wire insertion",
+    "remaining rpair/node/controller internal reset chains"
+  ],
+  "masters": {
+    "ot_qfd_x3_mux_native": {
+      "source_sha256": {
+        "rtl/qwen_split/ot_qfd_x3_mux_native.sv": "5c00203517db8608da3f57b64e3e14e15b6af1578df88410a831fa69d90305b3"
+      },
+      "parameters": {},
+      "local_reset_pin_edges": 1,
+      "local_reset_internal_max_edges": 0,
+      "reset_deassert_edges_after_pin": 1,
+      "reset_successor_delta_edges": 1,
+      "data_latency_edges": 2,
+      "data_successor_delta_edges": 0,
+      "fault_vs_legacy_delta_edges": 0,
+      "child_reset_dependencies": [],
+      "physical_receipt_commit_prefix": "c442c7548"
+    },
+    "ot_qfd_su_cbuf_g_tp8": {
+      "source_sha256": {
+        "rtl/qwen_sys/redesign_qwen/ot_qfd_crom_lbuf.sv": "83413d8e691f18129f03136d97c8226f88339f0c8cbd134bc4dfb95e0e1f72c5",
+        "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+      },
+      "parameters": {},
+      "local_reset_pin_edges": 1,
+      "local_reset_internal_max_edges": 3,
+      "reset_deassert_edges_after_pin": 4,
+      "reset_successor_delta_edges": 1,
+      "data_latency_edges": 5,
+      "data_successor_delta_edges": 0,
+      "fault_vs_legacy_delta_edges": 0,
+      "child_reset_dependencies": [],
+      "physical_receipt_commit_prefix": "5fcf476c0"
+    },
+    "ot_qwen_tile_lsl_fp1": {
+      "source_sha256": {
+        "rtl/physical/ot_qwen_tile_lsl_fp1.sv": "7811e798022fadb7778bab5025e8a769a59215e4efae872491a6bcf8c463a7ad",
+        "rtl/hdc/ot_qwen_w12_matvec.sv": "bb84cbf6b865c5c448aa31c4facdf766100fdafd712bfed18b516778c41f66f3"
+      },
+      "parameters": {
+        "LRST": 3,
+        "G": 4,
+        "NPL": 2
+      },
+      "local_reset_pin_edges": 1,
+      "local_reset_internal_max_edges": 2,
+      "reset_deassert_edges_after_pin": 3,
+      "reset_successor_delta_edges": 1,
+      "data_latency_edges": null,
+      "data_successor_delta_edges": 0,
+      "fault_vs_legacy_delta_edges": 1,
+      "child_reset_dependencies": [],
+      "physical_receipt_commit_prefix": "2efa"
+    },
+    "ot_qfd_band_upper": {
+      "source_sha256": {
+        "rtl/qwen_sys/lane_band_20261008/ot_qfd_band_lanes.sv": "fdbc3ac7fee587342359a96ef7b2b0117aa7dfcd923e598513d4cc995fe5d226"
+      },
+      "parameters": {
+        "NL": 4,
+        "NB": 3,
+        "RPIN": 1,
+        "DLY": 1,
+        "TCUT": 7,
+        "LG": 12
+      },
+      "local_reset_pin_edges": 1,
+      "local_reset_internal_max_edges": 0,
+      "reset_deassert_edges_after_pin": 1,
+      "reset_successor_delta_edges": 1,
+      "data_latency_edges": null,
+      "data_successor_delta_edges": 0,
+      "fault_vs_legacy_delta_edges": 0,
+      "child_reset_dependencies": [],
+      "physical_receipt_commit_prefix": "91bb"
+    },
+    "qfd_tile_nk": {
+      "source_sha256": {
+        "rtl/physical/qfd_tile_nk_slot.sv": "d0f082b2efe651abbec5f093fe92798b8952dbafa01a5c6ea8741c69e5e50893"
+      },
+      "parameters": {},
+      "local_reset_pin_edges": 1,
+      "local_reset_internal_max_edges": 0,
+      "reset_deassert_edges_after_pin": 1,
+      "reset_successor_delta_edges": 1,
+      "data_latency_edges": null,
+      "data_successor_delta_edges": 2,
+      "fault_vs_legacy_delta_edges": 0,
+      "child_reset_dependencies": [
+        "ot_qwen_tile_lsl_fp1"
+      ],
+      "physical_receipt_commit_prefix": null
+    },
+    "qfd_tile_nl": {
+      "source_sha256": {
+        "rtl/physical/qfd_tile_nk_slot.sv": "d0f082b2efe651abbec5f093fe92798b8952dbafa01a5c6ea8741c69e5e50893"
+      },
+      "parameters": {},
+      "local_reset_pin_edges": 1,
+      "local_reset_internal_max_edges": 0,
+      "reset_deassert_edges_after_pin": 1,
+      "reset_successor_delta_edges": 1,
+      "data_latency_edges": null,
+      "data_successor_delta_edges": 2,
+      "fault_vs_legacy_delta_edges": 0,
+      "child_reset_dependencies": [
+        "ot_qwen_tile_lsl_fp1"
+      ],
+      "physical_receipt_commit_prefix": null
+    }
+  }
+}

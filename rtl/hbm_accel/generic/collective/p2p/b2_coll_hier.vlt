@@ -1,0 +1,4 @@
+`verilator_config
+hier_block -module "ot_vms_bank"
+hier_block -module "ot_vms_hub"
+hier_block -module "ot_vms_rstop"

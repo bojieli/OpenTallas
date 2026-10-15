@@ -1,0 +1,31 @@
+{
+  "status": "production_core_seam_gate_pass_not_tile_or_token_qualification",
+  "host": "ot-epyc4",
+  "admission": "oth-ubuntu-4176711-1791947020",
+  "memory_gb": 8,
+  "threads": 4,
+  "source_base": "origin/main 7153d64e4",
+  "production_core": "rtl/hdc/ot_qwen_w12_matvec.sv unmodified",
+  "positive_modes": [
+    {
+      "MEM_EXTRA": 0,
+      "ops": 6,
+      "arithmetic_words": 680,
+      "reactive_misses": 126
+    },
+    {
+      "MEM_EXTRA": 8,
+      "ops": 6,
+      "arithmetic_words": 680,
+      "reactive_misses": 126
+    }
+  ],
+  "mutant": "adjacent-address row, arithmetic mismatch op0 edge29",
+  "remaining": [
+    "physical epoch-cache lowering",
+    "full tile read seam",
+    "global related-clock stall controller",
+    "source write/chase freshness",
+    "native layer performance"
+  ]
+}

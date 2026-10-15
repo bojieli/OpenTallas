@@ -1,0 +1,86 @@
+{
+ "kind": "tile",
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "layer_cap": "M5",
+ "route": {
+  "peak_ram_gb": 24,
+  "threads": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:H-COLL",
+  "branch": "claude/hbm-p2p-coll-1014",
+  "tag": "r1",
+  "hold_merge": "Individual leaf route only; native parent pin/reset/clock integration qualification remains required.",
+  "purpose": "Real native leaf with official H-DIE pins, exact bench and sensitized negative controls",
+  "benches": [
+   {
+    "name": "native_vm_r20",
+    "cmd": "JOBS=4 bash rtl/hbm_accel/generic/collective/p2p/run_b2_vmport_bench.sh {RUN}/native_vm_r20 -GRLY=20",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "native_vm_early_credit",
+    "cmd": "if JOBS=4 bash rtl/hbm_accel/generic/collective/p2p/run_b2_vmport_bench.sh {RUN}/native_vm_early_credit -GRLY=20 -GMUT=1; then exit 0; elif test -s {RUN}/native_vm_early_credit/run.log && grep -q \"premature credit drain\" {RUN}/native_vm_early_credit/run.log; then exit 1; else exit 0; fi",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ },
+ "name": "hgi_coll_rgx_rx_r1",
+ "top": "ot_hgi_coll_rx_native",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_crl.sv"
+ ],
+ "params": {
+  "W": 552,
+  "CRD": 16
+ },
+ "pins": {
+  "S": [
+   "t_v",
+   "t_d"
+  ],
+  "N": [
+   "out_v",
+   "out_d",
+   "out_rdy",
+   "epoch",
+   "fault"
+  ],
+  "W": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "std_area_um2": 6471,
+ "io_tcl": "physical/hbm_accel_die_views/coll_native_v14/pins/hgi_coll_rgx_rx_n2_io.tcl",
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

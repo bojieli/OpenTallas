@@ -1,0 +1,106 @@
+{
+  "schema": "opentallas.g9.readonly-profile.v1",
+  "pid": 4119778,
+  "tool": "py-spy0.4.2 --nonblocking --locals; no code injection or stop/restart",
+  "tool_source": "https://github.com/benfred/py-spy/releases/tag/v0.4.2",
+  "live_source_sha256": "4cd9d71b15ee8dbb770716d44a05dad32c8425a5350c25599bc7b19d980bd242",
+  "samples": [
+    {
+      "time": "2026-10-13 21:56:06 PT",
+      "frames": [
+        {
+          "function": "bfs",
+          "line": 3064,
+          "locals": {
+            "De": "403.648",
+            "mono": "False",
+            "i": "105322",
+            "j": "372489",
+            "hit": "None"
+          }
+        },
+        {
+          "function": "repair",
+          "line": 3160,
+          "locals": {
+            "idx": "6555",
+            "pl": "{\"bid\": \"ts_WN_3_3\", \"cl\": \"stack_local\", \"bits\": 34, \"eps\": [(\"head_WN_3_3\", \"s\"), (\"ectl_WN_3_c\", \"s3\")], \"P0\": (...), ...}",
+            "De": "403.648",
+            "mono": "False",
+            "near_r": "300",
+            "why": "\"span 0-6 of 6, start 14, visited 57, sites 578490, D 430, De 404, corridor None, load 1.0, end sites 0 / free 0 / reached 0...\"",
+            "r_": "None",
+            "lim": "1",
+            "a_": "0",
+            "b_": "6",
+            "hit": "None"
+          }
+        },
+        {
+          "function": "_relays",
+          "line": 3330,
+          "locals": {
+            "idx": "6555",
+            "pl": "{\"bid\": \"ts_WN_3_3\", \"cl\": \"stack_local\", \"bits\": 34, \"eps\": [(\"head_WN_3_3\", \"s\"), (\"ectl_WN_3_c\", \"s3\")], \"P0\": (...), ...}",
+            "r_": "(28758.24, 22144.32, 28896.480000000003, 22273.92)",
+            "b_": "2500"
+          }
+        }
+      ]
+    },
+    {
+      "time": "2026-10-13 22:01:04 PT",
+      "frames": [
+        {
+          "function": "bfs",
+          "line": 3066,
+          "locals": {
+            "De": "403.648",
+            "mono": "False",
+            "i": "241686",
+            "j": "243401",
+            "hit": "None"
+          }
+        },
+        {
+          "function": "repair",
+          "line": 3160,
+          "locals": {
+            "idx": "6556",
+            "pl": "{\"bid\": \"ts_WN_4_0\", \"cl\": \"stack_local\", \"bits\": 34, \"eps\": [(\"head_WN_4_0\", \"s\"), (\"ectl_WN_4_c\", \"s0\")], ...}",
+            "De": "403.648",
+            "mono": "False",
+            "near_r": "300",
+            "why": "\"span 0-4 of 4, start 47, visited 272, sites 415308, D 430, De 404, corridor None, load None, end sites 0 / free 0 / reached...\"",
+            "r_": "None",
+            "lim": "None",
+            "a_": "0",
+            "b_": "4",
+            "hit": "None"
+          }
+        },
+        {
+          "function": "_relays",
+          "line": 3325,
+          "locals": {
+            "idx": "6556",
+            "pl": "{\"bid\": \"ts_WN_4_0\", \"cl\": \"stack_local\", \"bits\": 34, \"eps\": [(\"head_WN_4_0\", \"s\"), (\"ectl_WN_4_c\", \"s0\")], ...}",
+            "r_": "(28758.24, 22144.32, 28896.480000000003, 22273.92)",
+            "b_": "2500"
+          }
+        }
+      ]
+    }
+  ],
+  "sampling_profile": {
+    "unit": "oth-ubuntu-316982-1791954172",
+    "exit": 0,
+    "seconds": 10,
+    "rate_hz": 10,
+    "valid_samples": 82,
+    "nonblocking_errors": 17
+  },
+  "finding": "Progress observed: repairidx6555 ts_WN_3_3 to6556 ts_WN_4_0. Search bounded at400000visited/front4000, no nontermination proved. Expensive global BFS repeated despite previous zero-endpoint diagnostics; these diagnostics query site origins, so a safe precondition must test actual centers and exact hop/occupancy predicates.",
+  "future_fix": "_relay_terminal_possible checks exactly the terminal center/occupancy/pair condition and skips futile BFS only when no legal last site exists; live g9 source unchanged.",
+  "live_job_action": "Preserved; no cancellation, duplication or geometry/gate relaxation."
+}

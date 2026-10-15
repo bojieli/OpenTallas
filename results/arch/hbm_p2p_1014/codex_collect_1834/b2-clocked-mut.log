@@ -1,0 +1,10 @@
+ot-run: ot-epyc1tb     admits   503 GB (avail 730, growth 56, headroom 64, waiters 0/0 GB) load 135/128 running 18 disk 852 GB 
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/hcoll-clocked-bfad08e9f
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/hcoll-clocked-bfad08e9f
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/hcoll-clocked-bfad08e9f
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-967805-1792030892 after 1 s
+[72140000] %Fatal: tb_hgi_coll_b2_vmport.sv:87: Assertion failed in tb_hgi_coll_b2_vmport.unnamedblk12: premature credit drain lane4
+%Error: rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_b2_vmport.sv:87: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-967805-1792030892): exit 1

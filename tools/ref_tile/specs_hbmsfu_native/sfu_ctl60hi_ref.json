@@ -3,6 +3,7 @@
   "top": "ot_hgi_sfu_ctl60hi",
   "kind": "tile",
   "sources": [
+    "rtl/lib/ot_rst_relay.sv",
     "rtl/hbm_accel/generic/peers/ot_hgi_sfu_ctl_chunk.sv",
     "rtl/hbm_accel/generic/peers/ot_hgi_sfu_ctl_masters.sv"
   ],
@@ -47,42 +48,50 @@
     "pin_min_tracks": 1
   },
   "job": {
-    "owner": "Claude:hbm-group-B3-1014",
-    "branch": "claude/hbm-sfu-ctl-ring-1014",
-    "tag": "c5",
+    "owner": "Claude:hbm-group-B6-1014",
+    "branch": "claude/hbm-sfu-ctl-c6-1014",
+    "tag": "c6",
     "views_to": "physical/ref_tile/sfu_ctl60hi_ref/views",
     "record_to": "results/rtl/ref_tile/sfu_ctl60hi_ref",
-    "purpose": "Actual c12 chronological S-control partition, payload60 ×138 stages offset138. Registered injection capture decrements original depth by1, retaining exact data/valid waveform; collision terms and occupied-state snapshots are registered before final status reduction; status adds2edges, composed status alignment/price stillopen. Full276horizon remains; existing CLOSED SFU body/side/reducer stand. New leaf area-derived from actual c1 synthesized standard area, no assigned native slot/grant, unselected until true fullquarter/cache/VM/throughput/physical integration. C3 unreset status payload snapshots with registered known_q validity mask suppress stale observations after asynchronous reset without extra logical edges.",
+    "purpose": "Actual c12 chronological S-control partition, payload60 \u00d7138 stages offset138. Registered injection capture decrements original depth by1, retaining exact data/valid waveform; collision terms and occupied-state snapshots are registered before final status reduction; status adds2edges, composed status alignment/price stillopen. Full276horizon remains; existing CLOSED SFU body/side/reducer stand. New leaf area-derived from actual c1 synthesized standard area, no assigned native slot/grant, unselected until true fullquarter/cache/VM/throughput/physical integration. C3 unreset status payload snapshots with registered known_q validity mask suppress stale observations after asynchronous reset without extra logical edges.",
     "benches": [
       {
         "name": "full_depth_exact",
-        "cmd": "WIDTH=60 STATUS_REG=2 PIN_CAPTURE=1 OUT={RUN}/exact bash tools/hgi_unit_tput/run_sfu_ctl_chunk.sh",
+        "cmd": "WIDTH=60 STATUS_REG=2 PIN_CAPTURE=1 C6=1 OUT={RUN}/exact bash tools/hgi_unit_tput/run_sfu_ctl_chunk.sh",
         "expect": "pass",
+        "pass_regex": "PASS SFU chronological chunks",
+        "min_count_regex": "checks=([1-9][0-9]*)",
         "threads": 4,
-        "peak_ram_gb": 4,
-        "pass_regex": "PASS SFU chronological chunks"
+        "peak_ram_gb": 4
       },
       {
         "name": "crossing_valid_mutant",
-        "cmd": "WIDTH=60 STATUS_REG=2 PIN_CAPTURE=1 MUT_BOUNDARY=1 OUT={RUN}/mutant bash tools/hgi_unit_tput/run_sfu_ctl_chunk.sh",
+        "cmd": "WIDTH=60 STATUS_REG=2 PIN_CAPTURE=1 C6=1 MUT_BOUNDARY=1 OUT={RUN}/mutant bash tools/hgi_unit_tput/run_sfu_ctl_chunk.sh",
         "expect": "fail",
+        "fail_regex": "REGISTERED_STATUS_MISMATCH|CHUNK_MISMATCH",
         "threads": 4,
-        "peak_ram_gb": 4,
-        "fail_regex": "REGISTERED_STATUS_MISMATCH|CHUNK_MISMATCH"
+        "peak_ram_gb": 4
       },
       {
-        "name": "stale_status_mask_mutant",
-        "cmd": "WIDTH=60 STATUS_REG=2 PIN_CAPTURE=1 MUT_STALE_STATUS=1 OUT={RUN}/stale_mutant bash tools/hgi_unit_tput/run_sfu_ctl_chunk.sh",
+        "name": "tail_late_mutant",
+        "cmd": "WIDTH=60 STATUS_REG=2 PIN_CAPTURE=1 C6=1 MUT_TAIL_LATE=1 OUT={RUN}/tail_mutant bash tools/hgi_unit_tput/run_sfu_ctl_chunk.sh",
         "expect": "fail",
+        "fail_regex": "REGISTERED_STATUS_MISMATCH|CHUNK_MISMATCH",
         "threads": 4,
         "peak_ram_gb": 4,
-        "fail_regex": "REGISTERED_STATUS_MISMATCH"
+        "pass_regex": "PASS SFU chronological chunks"
       }
     ]
   },
   "cycles_added": 0,
-  "structural_change": "c5 (Claude group-B4 10-14): c4 RTL unchanged (timing wheel); the c4 --cts gate FAILED util 74-81% (kit sized from the c3 shift-chain std area 4,500/5,600 um2; the wheel's 138-way one-hot read is larger) and CTS/placement failed -> kit re-sized from the MEASURED c4 synthesized std area 6631 um2 at util 0.52. Benches re-run on c4 RTL: exact PASS 5,337 checks / 831 collisions, crossing (REGISTERED_STATUS_MISMATCH cycle 42) and stale-status mutants FAIL. c4 RING (Claude group-B3 10-14): the c3 -nl routes closed setup (TT +21..+144) but FF -94..-156 ps, hold ECO missed (5.5k cells, setup broke): class g_stage[p+1].nx -> g_stage[p].nx (381 paths), i.e. the 138-stage x W shift chain is a neighbour hold race at every hop against the leaf clock spread. c4 replaces the shift chain by a timing wheel of the same chunk (stage p at time t = slot (h+p-1) mod 138): an item is written once at its inject or tail slot and read once into the output register; no flop-to-flop data chain remains (counter + registered one-hot slot pointer). Same q/vo/coll/busy cycle for cycle: full_depth_exact PASS (W 75 and 60, 5,337 checks, 831 collisions, 3 warm resets), crossing_valid and stale_status mutants FAIL. Partition original276-stage variable insertion pipe into chronological138-stage chunks and75/60bit live-field groups, four separate roots with payload<=10350/8280FF. First capture at injection face uses compensateddepth-1; all data/valid/status exports registered. No original CLOSED source edited, no SDC relaxation. Unique top master per75/60bit andlo/hi parameter set prevents four distinct physical views sharing one cell/module name; HARD_CHILDREN binds exact alias withoutparameter override. C2 registers local collision/occupancy terms before final status reduction, correcting tail_v boundary depth. Captured pending injection participates in busy, preserving original occupancy before registered status delay. Data/valid edges unchanged; status integration remains open. C3 removes reset on collision/occupancy/front payload snapshots; reset known_q and final status outputs mask stale snapshots. Original c12 data/valid/status proof includes active1ps asynchronous reset and real mask-removal negative.",
+  "structural_change": "c6 (Claude group-B6 10-14): native pin audit of CLOSED sfu_ctl60lo c5 (TT +59.70 / FF +25.49): capture 414 ps on tail_d (60 b written straight into 138 wheel slots) and rst_n (raw async, 289 flops), launch 251 ps on q (138-way slot read in front of q); 75lo/75hi c5 NEEDS_RTL TT -41/-121, FF -58/-95 with routed boundary clock 640-834 ps (spread ~195). RTL: q is read RDK-1 stages early into rd_q and copied flop->flop (low RDK 3 = cycle-exact, high RDK 4 exports r[1] one edge early), the low chunk captures tail_d/tail_v in pin flops (same slot, same cycle), rst_n drives only ot_rst_relay (oracle + depth-0 bypass see the same relayed reset in the bench). Exact PASS 60/75 (5,328 checks, 828 collisions, 3 warm resets); crossing and tail-late mutants FAIL. The c5 stale-status mutant is structurally void under the relay (snapshots flush during the held reset) and is replaced by tail_late_mutant.",
   "slot_change_request": "UNASSIGNED area-derived c2 control leaf, M5 PG; actual native SFU slot/source clock/PG/pin/cut/hop grant remains OPEN.",
   "std_area_um2": 6631,
-  "aspect": 1.25
+  "aspect": 1.25,
+  "reroute_reason": {
+    "kind": "rtl_change",
+    "source": "results/arch/hbm_group_b6_1014/native_audit_b6.json",
+    "cell": "ot_hgi_sfu_ctl60hi",
+    "fix": "tail pin capture + early registered read (q flop->flop) + rst relay"
+  }
 }

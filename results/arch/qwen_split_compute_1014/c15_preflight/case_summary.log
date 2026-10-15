@@ -1,0 +1,4 @@
+OT_LEGAL instances=1630 overlaps=0 outside=0
+OT_ASSERT PASS
+[ERROR DRT-0305] Net one_ of signal type POWER is not routable by TritonRoute. Move to special nets.
+OT_PA FAIL DRT-0305

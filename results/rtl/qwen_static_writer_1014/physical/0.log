@@ -1,0 +1,18 @@
+PHYSICAL_COLUMN lane3 hc254 write1
+PHYSICAL_COLUMN lane2 hc254 write1
+PHYSICAL_COLUMN lane1 hc254 write1
+PHYSICAL_COLUMN lane0 hc254 write1
+PHYSICAL_RETIRE lane0 hc276 scheduled271
+PHYSICAL_RETIRE lane1 hc276 scheduled271
+PHYSICAL_RETIRE lane2 hc276 scheduled271
+PHYSICAL_RETIRE lane3 hc276 scheduled271
+PHYSICAL_COLUMN lane0 hc304 write1
+PHYSICAL_COLUMN lane1 hc304 write1
+PHYSICAL_COLUMN lane2 hc304 write1
+PHYSICAL_COLUMN lane3 hc304 write1
+PHYSICAL_RETIRE lane0 hc326 scheduled321
+PHYSICAL_RETIRE lane1 hc326 scheduled321
+PHYSICAL_RETIRE lane2 hc326 scheduled321
+PHYSICAL_RETIRE lane3 hc326 scheduled321
+PASS actualformatter/context59/gen2 writer4PC PROFILE0 fixedslots250/300 physicalCMD254/304 data+5 HBMretire+17 corevisibility+22 8exactsectors
+/tmp/qkd-static-physical-gate-out-v2/source/tb_qkd_kv_physical_composed.sv:221: $finish called at 946000000 (1fs)

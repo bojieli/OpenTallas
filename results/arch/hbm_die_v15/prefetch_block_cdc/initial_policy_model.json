@@ -1,0 +1,20 @@
+[
+  {
+    "base": 4099,
+    "total": 640,
+    "hbm_cycles": 3145,
+    "hbm_ns": 3220.48,
+    "fixed_stream_cycles": 80,
+    "issue_policy": "one global ordinal per HBM cycle, one outstanding per PC",
+    "bandwidth_qualified": false
+  },
+  {
+    "base": 12295,
+    "total": 2048,
+    "hbm_cycles": 9994,
+    "hbm_ns": 10233.856,
+    "fixed_stream_cycles": 256,
+    "issue_policy": "one global ordinal per HBM cycle, one outstanding per PC",
+    "bandwidth_qualified": false
+  }
+]

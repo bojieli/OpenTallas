@@ -1,0 +1,433 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2025  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+
+-- Running command `read_verilog -sv /srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv /srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_provenance.sv; hierarchy -top ot_qfd_vm_producer_row_binding_seq40 -chparam LAW 8 -chparam MUT 0; proc; opt; flatten; opt; memory_map; opt; stat; write_json row.json' --
+
+1. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qfd_vm_producer_lease_seq40'.
+Generating RTLIL representation for module `\ot_qfd_vm_producer_row_binding_seq40'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_provenance.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_provenance.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qfd_vm_producer_lease_provenance'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \LAW = 8
+Parameter \MUT = 0
+
+4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qfd_vm_producer_row_binding_seq40'.
+Parameter \LAW = 8
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$6a9a6b7b0e77f350dc13206e7b863f5c701afaaa\ot_qfd_vm_producer_row_binding_seq40'.
+
+4.1. Analyzing design hierarchy..
+Top module:  \ot_qfd_vm_producer_row_binding_seq40
+
+4.2. Analyzing design hierarchy..
+Top module:  \ot_qfd_vm_producer_row_binding_seq40
+Removing unused module `\ot_qfd_vm_producer_lease_provenance'.
+Removing unused module `$paramod$6a9a6b7b0e77f350dc13206e7b863f5c701afaaa\ot_qfd_vm_producer_row_binding_seq40'.
+Removing unused module `\ot_qfd_vm_producer_lease_seq40'.
+Removed 3 unused modules.
+
+5. Executing PROC pass (convert processes to netlists).
+
+5.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 2 switch rules as full_case in process $proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:140$155 in module ot_qfd_vm_producer_row_binding_seq40.
+Removed a total of 0 dead cases.
+
+5.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 3 redundant assignments.
+Promoted 3 assignments to connections.
+
+5.4. Executing PROC_INIT pass (extract init attributes).
+
+5.5. Executing PROC_ARST pass (detect async resets in processes).
+
+5.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~5 debug messages>
+
+5.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_qfd_vm_producer_row_binding_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:140$155'.
+     1/12: $2$lookahead\ra$154[63:0]$164
+     2/12: $2$bitselwrite$pos$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:150$149[31:0]$163
+     3/12: $0\write_pipe[2:0]
+     4/12: $0\rq[0:0]
+     5/12: $1$lookahead\ra$154[63:0]$160
+     6/12: $0\re[7:0]
+     7/12: $1$bitselwrite$pos$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:150$149[31:0]$159
+     8/12: $0\busy[0:0]
+     9/12: $0\age[3:0]
+    10/12: $0\rqb[2:0]
+    11/12: $0\response_data[511:0]
+    12/12: $0\response_v[0:0]
+
+5.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+5.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_qfd_vm_producer_row_binding_seq40.\response_v' using process `\ot_qfd_vm_producer_row_binding_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:140$155'.
+  created $dff cell `$procdff$256' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_producer_row_binding_seq40.\response_data' using process `\ot_qfd_vm_producer_row_binding_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:140$155'.
+  created $dff cell `$procdff$257' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_producer_row_binding_seq40.\re' using process `\ot_qfd_vm_producer_row_binding_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:140$155'.
+  created $dff cell `$procdff$258' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_producer_row_binding_seq40.\ra' using process `\ot_qfd_vm_producer_row_binding_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:140$155'.
+  created $dff cell `$procdff$259' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_producer_row_binding_seq40.\rq' using process `\ot_qfd_vm_producer_row_binding_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:140$155'.
+  created $dff cell `$procdff$260' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_producer_row_binding_seq40.\rqb' using process `\ot_qfd_vm_producer_row_binding_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:140$155'.
+  created $dff cell `$procdff$261' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_producer_row_binding_seq40.\write_pipe' using process `\ot_qfd_vm_producer_row_binding_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:140$155'.
+  created $dff cell `$procdff$262' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_producer_row_binding_seq40.\age' using process `\ot_qfd_vm_producer_row_binding_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:140$155'.
+  created $dff cell `$procdff$263' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_producer_row_binding_seq40.\busy' using process `\ot_qfd_vm_producer_row_binding_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:140$155'.
+  created $dff cell `$procdff$264' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_producer_row_binding_seq40.$bitselwrite$pos$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:150$149' using process `\ot_qfd_vm_producer_row_binding_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:140$155'.
+  created $dff cell `$procdff$265' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_producer_row_binding_seq40.$lookahead\ra$154' using process `\ot_qfd_vm_producer_row_binding_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:140$155'.
+  created $dff cell `$procdff$266' with positive edge clock.
+
+5.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+5.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 5 empty switches in `\ot_qfd_vm_producer_row_binding_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:140$155'.
+Removing empty process `ot_qfd_vm_producer_row_binding_seq40.$proc$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:140$155'.
+Cleaned up 5 empty switches.
+
+5.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qfd_vm_producer_row_binding_seq40.
+<suppressed ~12 debug messages>
+
+6. Executing OPT pass (performing simple optimizations).
+
+6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qfd_vm_producer_row_binding_seq40.
+<suppressed ~3 debug messages>
+
+6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qfd_vm_producer_row_binding_seq40'.
+<suppressed ~3 debug messages>
+Removed a total of 1 cells.
+
+6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qfd_vm_producer_row_binding_seq40..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+      Replacing known input bits on port A of cell $procmux$212: \busy -> 1'0
+      Replacing known input bits on port A of cell $procmux$210: \busy -> 1'1
+  Analyzing evaluation results.
+    dead port 1/2 on $mux $procmux$208.
+    dead port 2/2 on $mux $procmux$208.
+    dead port 1/2 on $mux $procmux$187.
+    dead port 2/2 on $mux $procmux$187.
+    dead port 1/2 on $mux $procmux$184.
+    dead port 2/2 on $mux $procmux$184.
+    dead port 2/2 on $mux $procmux$181.
+Removed 7 multiplexer ports.
+<suppressed ~10 debug messages>
+
+6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qfd_vm_producer_row_binding_seq40.
+Performed a total of 0 changes.
+
+6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qfd_vm_producer_row_binding_seq40'.
+Removed a total of 0 cells.
+
+6.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding SRST signal on $procdff$261 ($dff) from module ot_qfd_vm_producer_row_binding_seq40 (D = $procmux$229_Y, Q = \rqb, rval = 3'000).
+Adding EN signal on $auto$ff.cc:266:slice$267 ($sdff) from module ot_qfd_vm_producer_row_binding_seq40 (D = \decoded_bank, Q = \rqb).
+Adding SRST signal on $procdff$262 ($dff) from module ot_qfd_vm_producer_row_binding_seq40 (D = { \write_pipe [1:0] \accepted_write }, Q = \write_pipe, rval = 3'000).
+Adding SRST signal on $procdff$263 ($dff) from module ot_qfd_vm_producer_row_binding_seq40 (D = $procmux$220_Y, Q = \age, rval = 4'0000).
+Adding EN signal on $auto$ff.cc:266:slice$270 ($sdff) from module ot_qfd_vm_producer_row_binding_seq40 (D = $add$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:153$175_Y [3:0], Q = \age).
+Adding SRST signal on $procdff$264 ($dff) from module ot_qfd_vm_producer_row_binding_seq40 (D = $procmux$215_Y, Q = \busy, rval = 1'0).
+Adding SRST signal on $procdff$256 ($dff) from module ot_qfd_vm_producer_row_binding_seq40 (D = $procmux$251_Y, Q = \response_v, rval = 1'0).
+Adding SRST signal on $procdff$257 ($dff) from module ot_qfd_vm_producer_row_binding_seq40 (D = $procmux$239_Y, Q = \response_data, rval = 512'00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000).
+Adding EN signal on $auto$ff.cc:266:slice$278 ($sdff) from module ot_qfd_vm_producer_row_binding_seq40 (D = \native_ro, Q = \response_data).
+Adding SRST signal on $procdff$258 ($dff) from module ot_qfd_vm_producer_row_binding_seq40 (D = $shl$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:149$165_Y, Q = \re, rval = 8'00000000).
+Adding SRST signal on $procdff$259 ($dff) from module ot_qfd_vm_producer_row_binding_seq40 (D = $2$lookahead\ra$154[63:0]$164, Q = \ra, rval = 64'0000000000000000000000000000000000000000000000000000000000000000).
+Adding SRST signal on $procdff$260 ($dff) from module ot_qfd_vm_producer_row_binding_seq40 (D = $procmux$193_Y, Q = \rq, rval = 1'0).
+Setting constant 1-bit at position 0 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 1 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 2 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 3 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 4 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 5 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 6 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 7 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 8 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 9 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 10 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 11 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 12 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 13 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 14 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 15 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 16 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 17 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 18 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 19 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 20 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 21 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 22 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 23 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 24 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 25 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 26 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 27 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 28 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 29 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 30 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 31 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 32 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 33 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 34 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 35 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 36 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 37 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 38 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 39 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 40 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 41 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 42 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 43 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 44 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 45 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 46 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 47 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 48 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 49 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 50 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 51 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 52 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 53 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 54 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 55 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 56 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 57 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 58 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 59 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 60 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 61 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 62 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 63 on $procdff$266 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 0 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 1 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 2 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 3 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 4 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 5 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 6 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 7 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 8 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 9 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 10 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 11 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 12 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 13 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 14 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 15 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 16 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 17 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 18 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 19 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 20 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 21 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 22 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 23 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 24 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 25 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 26 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 27 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 28 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 29 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 30 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+Setting constant 1-bit at position 31 on $procdff$265 ($dff) from module ot_qfd_vm_producer_row_binding_seq40.
+
+6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qfd_vm_producer_row_binding_seq40..
+Removed 17 unused cells and 72 unused wires.
+<suppressed ~19 debug messages>
+
+6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qfd_vm_producer_row_binding_seq40.
+
+6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qfd_vm_producer_row_binding_seq40..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~5 debug messages>
+
+6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qfd_vm_producer_row_binding_seq40.
+Performed a total of 0 changes.
+
+6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qfd_vm_producer_row_binding_seq40'.
+Removed a total of 0 cells.
+
+6.13. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $auto$ff.cc:266:slice$287 ($sdff) from module ot_qfd_vm_producer_row_binding_seq40 (D = $or$/srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv:0$174_Y, Q = \ra).
+
+6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qfd_vm_producer_row_binding_seq40..
+Removed 1 unused cells and 1 unused wires.
+<suppressed ~2 debug messages>
+
+6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qfd_vm_producer_row_binding_seq40.
+
+6.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qfd_vm_producer_row_binding_seq40..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~4 debug messages>
+
+6.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qfd_vm_producer_row_binding_seq40.
+Performed a total of 0 changes.
+
+6.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qfd_vm_producer_row_binding_seq40'.
+Removed a total of 0 cells.
+
+6.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qfd_vm_producer_row_binding_seq40..
+
+6.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qfd_vm_producer_row_binding_seq40.
+
+6.23. Finished OPT passes. (There is nothing left to do.)
+
+7. Executing FLATTEN pass (flatten design).
+
+8. Executing OPT pass (performing simple optimizations).
+
+8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qfd_vm_producer_row_binding_seq40.
+
+8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qfd_vm_producer_row_binding_seq40'.
+Removed a total of 0 cells.
+
+8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qfd_vm_producer_row_binding_seq40..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~4 debug messages>
+
+8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qfd_vm_producer_row_binding_seq40.
+Performed a total of 0 changes.
+
+8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qfd_vm_producer_row_binding_seq40'.
+Removed a total of 0 cells.
+
+8.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qfd_vm_producer_row_binding_seq40..
+
+8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qfd_vm_producer_row_binding_seq40.
+
+8.9. Finished OPT passes. (There is nothing left to do.)
+
+9. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+10. Executing OPT pass (performing simple optimizations).
+
+10.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qfd_vm_producer_row_binding_seq40.
+
+10.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qfd_vm_producer_row_binding_seq40'.
+Removed a total of 0 cells.
+
+10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qfd_vm_producer_row_binding_seq40..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~4 debug messages>
+
+10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qfd_vm_producer_row_binding_seq40.
+Performed a total of 0 changes.
+
+10.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qfd_vm_producer_row_binding_seq40'.
+Removed a total of 0 cells.
+
+10.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qfd_vm_producer_row_binding_seq40..
+
+10.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qfd_vm_producer_row_binding_seq40.
+
+10.9. Finished OPT passes. (There is nothing left to do.)
+
+11. Printing statistics.
+
+=== ot_qfd_vm_producer_row_binding_seq40 ===
+
+   Number of wires:                 46
+   Number of wire bits:           1539
+   Number of public wires:          20
+   Number of public wire bits:    1128
+   Number of ports:                 17
+   Number of port bits:           1120
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 37
+     $add                            1
+     $and                            1
+     $eq                             1
+     $logic_and                      3
+     $logic_not                      2
+     $mux                            8
+     $neg                            1
+     $not                            3
+     $or                             1
+     $reduce_and                     2
+     $reduce_or                      2
+     $sdff                           5
+     $sdffe                          4
+     $shift                          2
+     $shl                            1
+
+12. Executing JSON backend.
+
+End of script. Logfile hash: ee881e9955, CPU: user 0.03s system 0.00s, MEM: 16.40 MB peak
+Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+Time spent: 21% 5x opt_clean (0 sec), 20% 9x opt_expr (0 sec), ...

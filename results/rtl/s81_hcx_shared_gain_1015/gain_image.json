@@ -1,0 +1,31 @@
+{
+  "existing_macros": 4,
+  "macro": "ot_rom_4096x72_m8",
+  "coeff_reserved": [
+    0,
+    343
+  ],
+  "gain_reserved": [
+    512,
+    1151
+  ],
+  "original_parameter_rows_preserved": true,
+  "physical_new_macros": 0,
+  "inputs": {
+    "/srv/opentallas-scratch/codex/s81-native-head-glue-1014/gain_gate/image/gain0.mem": "1686880d6010e8958ba21f414e8ffac1ada7a7589acaf25032897cedc4e61409",
+    "/srv/opentallas-scratch/codex/s81-native-head-glue-1014/gain_gate/image/gain1.mem": "b67bfee1d7a55ee676d0b580a14986079eb4472f94ece02ab24db4b36082c342"
+  },
+  "original_parameter_masks": {
+    "hcx_post_p0.viamap.hex": "28cb53c89f9474f792efd8bbca664ea84d90da64f5d3aaff5590079d80e0f126",
+    "hcx_post_p1.viamap.hex": "6adf61ab55eced81269064e7b669bfb77044b987e4e83a842daf43faf2706eae",
+    "hcx_post_p2.viamap.hex": "413a6caa6ad0428760be21880e689d70891c5ae238143ad49b5092a0bc11c18a",
+    "hcx_post_p3.viamap.hex": "34b858db9378e6a1bc1db85684c2c88669ac26b00c803a0a1c7b9cfc5d78d43f"
+  },
+  "output_masks": {
+    "hcx_post_p0.viamap.hex": "c7d51fb6a9a2b4624ff9fd3fa4147235b452ebe4751708b592b9dcf244ae8108",
+    "hcx_post_p1.viamap.hex": "2431432e495428d95f4fe06662e63feb624b248ee1ab91bd01213971f98e50a2",
+    "hcx_post_p2.viamap.hex": "775f8b8a714cef57b0aedad54a67ae811af94cceade8136a4778e17ea6824aa1",
+    "hcx_post_p3.viamap.hex": "8b6229f478369e8f5b5ad161a77c28334b12a022949fa8936fa350b5bcaeba41"
+  },
+  "qualification": "ROM image and stream component; shared-port physical parent integration pending"
+}

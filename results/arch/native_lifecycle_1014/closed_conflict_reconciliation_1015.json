@@ -1,0 +1,162 @@
+{
+  "schema": "opentallas.closed_conflict_reconciliation.v1",
+  "generated": "2026-10-15T06:27:04.210505+00:00",
+  "origin_main": "e47d9b14de2763eb629bbbf39063f44a58c2bef3",
+  "purpose": "Reconcile stale daemon auto-merge conflict messages against actual published immutable artifacts; no daemon mutation and no reroute.",
+  "records": [
+    {
+      "job": "qfd_vm_qcommit-raw2-ff602c0d7",
+      "source_commit": "ff602c0d73ebcd56425e76bd71d5a72e40edcce4",
+      "record_commit": "34bfaf11f",
+      "already_published_identical": true,
+      "artifact_count": 19,
+      "different_paths": [],
+      "closure_metrics": {
+        "setup_corner": "tt",
+        "ss_ps": 343.8,
+        "ff_ps": 28.94,
+        "drc": 0,
+        "ss_sensitivity_ps": 255.24
+      },
+      "benches": {
+        "bench_lint": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.091 MB sources in 14 modules, into 0.008 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.011 s (elab=0.001, cvt=0.003, bld=0.000); cpu 0.011 s on 1 threads; allocated 33.133 MB\nlint-ok\n",
+          "track": "parallel"
+        },
+        "bench_actual_macro_consumption_and_eight_fault_mutants": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "omplete=0\n%Error: rtl/qwen_sys/vm_nox_20261014/tb_qfd_vm_die_static.sv:583: Verilog $stop\nAborting...\nMUTANT 7 exit=1\n[105000] %Fatal: tb_qfd_vm_die_static.sv:29: Assertion failed in tb_qfd_vm_die_static.g_check_r[7].g_check_b[6]: FAIL actual SRAM consumed data/mask r7 b6\n%Error: rtl/qwen_sys/vm_nox_20261014/tb_qfd_vm_die_static.sv:29: Verilog $stop\nAborting...\nMUTANT 8 exit=1\n[218000] %Fatal: tb_qfd_vm_die_static.sv:583: Assertion failed in tb_qfd_vm_die_static: FAIL fence commits=0 fault=1 complete=0\n%Error: rtl/qwen_sys/vm_nox_20261014/tb_qfd_vm_die_static.sv:583: Verilog $stop\nAborting...\n",
+          "track": "parallel"
+        },
+        "bench_actual_macro_missing_commit_mutant": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "[218000] %Fatal: tb_qfd_vm_die_static.sv:583: Assertion failed in tb_qfd_vm_die_static: FAIL fence commits=31 fault=1 complete=0\n%Error: rtl/qwen_sys/vm_nox_20261014/tb_qfd_vm_die_static.sv:583: Verilog $stop\nAborting...\n",
+          "track": "parallel"
+        }
+      },
+      "native_pin_audit": {
+        "cell": "qfd_vm_qcommit",
+        "view": "physical/ref_tile/qfd_vm_qcommit/views/qfd_vm_qcommit",
+        "lib_cell": "qfd_vm_qcommit",
+        "insertion": true,
+        "ref_src": [
+          "insertion.json boundary mean"
+        ],
+        "R_ps": 47.6,
+        "spread_ps": 1.2,
+        "outputs": 25,
+        "inputs": 27,
+        "launch_ps": 175.3,
+        "launch_pin": "cm[3]",
+        "capture_ps": 116.2,
+        "capture_pin": "rst_n",
+        "launch_over": 0,
+        "capture_over": 0,
+        "comb_pins": 0,
+        "comb_first": [],
+        "pass": true,
+        "fail_why": ""
+      },
+      "view_hashes": {
+        "physical/ref_tile/qfd_vm_qcommit/views/qfd_vm_qcommit/export_tt.tcl": "18c1bc4febb5fc82dda4ac9f74294f081bacd9cd66b8ebf42700b0898b772d2f",
+        "physical/ref_tile/qfd_vm_qcommit/views/qfd_vm_qcommit/qfd_vm_qcommit_tt.lib": "19f9c89fd3e9a747f2cfc398d4ce984db8704c165c0fe56b5e76626be59793cc",
+        "physical/ref_tile/qfd_vm_qcommit/views/qfd_vm_qcommit/abstract.json": "55c5b68de7e960b459c56ec6290edd83f2bdcd9b851ee70b71c73d2d47729fd4",
+        "physical/ref_tile/qfd_vm_qcommit/views/qfd_vm_qcommit/export_ff.tcl": "44685bbb614ec3d1c434eebfd98e3cd1b1ae9911edc884847d2e470044f35f54",
+        "physical/ref_tile/qfd_vm_qcommit/views/qfd_vm_qcommit/insertion.json": "a437f1fa551111df48f8e308bdda3924c952e7413886bddadd0e3751f3d9db55",
+        "physical/ref_tile/qfd_vm_qcommit/views/qfd_vm_qcommit/export_tt.log": "60678af05a479b58101ac09146efa443eba653e093988b7cad20f2aed2cdde47",
+        "physical/ref_tile/qfd_vm_qcommit/views/qfd_vm_qcommit/export_ss.log": "c154cbd534d677c253da5423134e58797b0b0b25ce7ae83d97b58c70dd1d1550",
+        "physical/ref_tile/qfd_vm_qcommit/views/qfd_vm_qcommit/export_ff.log": "c5e80605fc5d21c7342b7e9fc45a41f934342d7bded7db94e065e80539f6a218",
+        "physical/ref_tile/qfd_vm_qcommit/views/qfd_vm_qcommit/qfd_vm_qcommit_ss.lib": "fc2f29b93f848790515471570f0394af04f898e45c6e381c729a30b3cda8f5e8",
+        "physical/ref_tile/qfd_vm_qcommit/views/qfd_vm_qcommit/qfd_vm_qcommit.lef": "12d0c6529045b98dc898fe63d0444ff7d1fcf113daf1016fed5f9feedf4a7b38",
+        "physical/ref_tile/qfd_vm_qcommit/views/qfd_vm_qcommit/qfd_vm_qcommit_ff.lib": "fec232207b448e2207dacf4902b6d428ac2b3e97d65307de87f3e3bf4dd299cc",
+        "physical/ref_tile/qfd_vm_qcommit/views/qfd_vm_qcommit/export_ss.tcl": "6e1b31db198ef4e3074b5730ca0b00c8df3fce2bea4405bf277769a60708ccad",
+        "physical/ref_tile/qfd_vm_qcommit/views/qfd_vm_qcommit/child_lint.json": "0d414e0ae3da61b3e2315852a76441611709fceded00b3039a5ba8f6beec22c5"
+      },
+      "qualification": "native boundary PASS; parent phi-R binding and complete static schedule remain parent owner obligations"
+    },
+    {
+      "job": "hgi_sv_head_slot-r4-pre-04c986630",
+      "source_commit": "04c98663073da86c470f48555bcd27d971f0d80f",
+      "record_commit": "04727803a",
+      "already_published_identical": true,
+      "artifact_count": 19,
+      "different_paths": [],
+      "closure_metrics": {
+        "setup_corner": "tt",
+        "ss_ps": 41.31,
+        "ff_ps": 11.23,
+        "drc": 0,
+        "ss_sensitivity_ps": -318.58
+      },
+      "benches": {
+        "bench_lint": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.275 MB sources in 11 modules, into 0.013 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.069 s (elab=0.013, cvt=0.041, bld=0.000); cpu 0.069 s on 1 threads; allocated 50.387 MB\nlint-ok\n",
+          "track": "parallel"
+        },
+        "bench_sv_chain_n64_exact": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "ectors, 309 guard words; errors 0 (written words 0, guard words 0)\nCASECHK 1 is SINK_UNSTAGED\nsummary: 2 production-shape cases, 101800 sink-sector words checked (written = golden, rest = pre-op)\nHGI_SU_PROD PASS\n- rtl/hbm_accel/generic/adapters/tb/tb_hgi_su_prod.sv:509: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 654us; walltime 1799.331 s; speed 363.520 ns/s\n- Verilator: cpu 1799.271 s on 1 threads; allocated 73 MB\nsummary: 2 production-shape cases, 101800 sink-sector words checked (written = golden, rest = pre-op)\nHGI_SU_PROD PASS\n",
+          "track": "parallel"
+        },
+        "bench_sv_chain_n64_bypass_mutant": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "rrors 0 (written words 0, guard words 0)\nCASECHK 1 is SINK_UNSTAGED\nsummary: 2 production-shape cases, 101800 sink-sector words checked (written = golden, rest = pre-op)\nHGI_SU_PROD FAIL errors=66568\n- rtl/hbm_accel/generic/adapters/tb/tb_hgi_su_prod.sv:509: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 654us; walltime 2138.593 s; speed 305.852 ns/s\n- Verilator: cpu 2138.375 s on 1 threads; allocated 73 MB\nsummary: 2 production-shape cases, 101800 sink-sector words checked (written = golden, rest = pre-op)\nHGI_SU_PROD FAIL errors=66568\n",
+          "track": "parallel"
+        }
+      },
+      "native_pin_audit": {
+        "cell": "ot_hgi_sv_head",
+        "view": "physical/ref_tile/hgi_sv_head_slot/views/ot_hgi_sv_head",
+        "lib_cell": "ot_hgi_sv_head",
+        "insertion": true,
+        "ref_src": [
+          "insertion.json boundary mean"
+        ],
+        "R_ps": 274.2,
+        "spread_ps": 51.2,
+        "outputs": 1166,
+        "inputs": 1345,
+        "launch_ps": 272.8,
+        "launch_pin": "rec_rdy",
+        "capture_ps": 229.9,
+        "capture_pin": "vmr[256]",
+        "launch_over": 4,
+        "capture_over": 3,
+        "comb_pins": 0,
+        "comb_first": [],
+        "pass": false,
+        "fail_why": "launch 272.8 > 220 (4 pins); capture 229.9 > 190 (3 pins)"
+      },
+      "view_hashes": {
+        "physical/ref_tile/hgi_sv_head_slot/views/ot_hgi_sv_head/export_tt.tcl": "e99b842f1e78ca963d5e2706bd2ee2b01bb70b2d24357cec231a4aa334722722",
+        "physical/ref_tile/hgi_sv_head_slot/views/ot_hgi_sv_head/ot_hgi_sv_head_ff.lib": "a7507ea4c02beea6fbe928a01e2609d423eb93df5f5eb62be51005579698a1bf",
+        "physical/ref_tile/hgi_sv_head_slot/views/ot_hgi_sv_head/abstract.json": "655d24f5b82566615493547323793181e53b31da9da4c4162454ea5eaf5bcf43",
+        "physical/ref_tile/hgi_sv_head_slot/views/ot_hgi_sv_head/export_ff.tcl": "40e93a750c4c4542ecbf71410c64a04ce503467307018a977aeb21b93148325b",
+        "physical/ref_tile/hgi_sv_head_slot/views/ot_hgi_sv_head/insertion.json": "bd714b165eab6e39c27bc793034d5d51f73e42b99db1053323e31650622c445b",
+        "physical/ref_tile/hgi_sv_head_slot/views/ot_hgi_sv_head/export_tt.log": "7ce21979e7e211ce9080c74df30e920e18ee6e7e6467eb34cdd40578c3170d2a",
+        "physical/ref_tile/hgi_sv_head_slot/views/ot_hgi_sv_head/export_ss.log": "41f05c9e7b6cc4482eb99e3ede5c0417e10014abcec681029a3818fffa54e3ed",
+        "physical/ref_tile/hgi_sv_head_slot/views/ot_hgi_sv_head/export_ff.log": "f3ecc5a5af2b38110ea8040a111bfc47a85af897e14ed637b507ed9e595cc4a1",
+        "physical/ref_tile/hgi_sv_head_slot/views/ot_hgi_sv_head/ot_hgi_sv_head.lef": "71f85184874ebef99d13c532cf2c435d3ed41744863c5449d0e1cf944ece9c67",
+        "physical/ref_tile/hgi_sv_head_slot/views/ot_hgi_sv_head/ot_hgi_sv_head_tt.lib": "261a05af31a738697186d737b42ffb5d39faacafe0b4bf126cceb5dd985c26f1",
+        "physical/ref_tile/hgi_sv_head_slot/views/ot_hgi_sv_head/export_ss.tcl": "17e256f5bad3a0df890bb7749177d5313e3d7ff72e63a8575d2a5384a0641cb4",
+        "physical/ref_tile/hgi_sv_head_slot/views/ot_hgi_sv_head/ot_hgi_sv_head_ss.lib": "db553391448409b0994a089ecf9bff50d94995a8f4ec4444379366702ab4cc92",
+        "physical/ref_tile/hgi_sv_head_slot/views/ot_hgi_sv_head/child_lint.json": "fa532966a4f262e9f54a9e08e48530bee2c33642b7f784284faf384bdf76f94e"
+      },
+      "qualification": "NOT BINDABLE: repair native face timing; historical dynamic SU bench does not qualify static execution"
+    }
+  ]
+}

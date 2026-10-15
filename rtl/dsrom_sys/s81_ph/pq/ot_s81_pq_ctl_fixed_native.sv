@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-// Exact fixed native PHW9/SAW11/KMAX6144/R128 controller physical interface.
+// Exact fixed native PHW10/SAW14/KMAX6144/R128 controller physical interface.
 module ot_s81_pq_ctl_fixed_native (
  input wire clk,
  input wire rst_n,
@@ -9,6 +9,7 @@ module ot_s81_pq_ctl_fixed_native (
  input wire [1:0] aqf,
  output wire [9:0] aqi_o,
  output wire ba_v_o,
+ output wire [1:0] ba_wv_o,
  output wire [7:0] ba_blk_o,
  output wire [47:0] hw_o,
  output wire [35:0] h_hi_o,
@@ -17,9 +18,9 @@ module ot_s81_pq_ctl_fixed_native (
  output wire [457:0] mdr_o,
  input wire [11:0] q2f_i,
  input wire [191:0] ga_i,
- output wire [608:0] bc_hr_o,
+ output wire [609:0] bc_hr_o,
  input wire go,
- input wire [8:0] i_ph,
+ input wire [9:0] i_ph,
  input wire [2:0] i_np,
  input wire [18:0] i_xbase,
  input wire [18:0] i_xps,
@@ -37,14 +38,14 @@ module ot_s81_pq_ctl_fixed_native (
  output wire ev_go,
  output wire ev_end,
  output wire [1:0] ev_tag,
- output wire [9:0] rom_pa0,
- output wire [9:0] rom_pa1,
+ output wire [10:0] rom_pa0,
+ output wire [10:0] rom_pa1,
  input wire [63:0] rom_pq0,
  input wire [63:0] rom_pq1,
- output wire [10:0] rom_sa,
+ output wire [13:0] rom_sa,
  input wire [47:0] rom_sq
 );
- ot_s81_pq_ctl_native #(.PHW(9),.SAW(11),.R(128),.VAW(19),.VRD(64),.KMAX(6144),.BST(2),.NSEG(8),.PQ(1),.GAP(12),.GUARD(180),.GSLACK(6),.RG(11),.XRV(1),.XCAP(16),.RPT(2),.BW(1633)) u_native (
+ ot_s81_pq_ctl_native #(.PHW(10),.SAW(14),.R(128),.VAW(19),.VRD(64),.KMAX(6144),.BST(2),.NSEG(8),.PQ(1),.GAP(12),.GUARD(180),.GSLACK(6),.RG(11),.XRV(1),.XCAP(16),.RPT(2),.BW(1634)) u_native (
  .clk(clk),
  .rst_n(rst_n),
  .q_consume(q_consume),
@@ -53,6 +54,7 @@ module ot_s81_pq_ctl_fixed_native (
  .aqf(aqf),
  .aqi_o(aqi_o),
  .ba_v_o(ba_v_o),
+ .ba_wv_o(ba_wv_o),
  .ba_blk_o(ba_blk_o),
  .hw_o(hw_o),
  .h_hi_o(h_hi_o),

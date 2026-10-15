@@ -1,0 +1,43 @@
+{
+  "schema": "opentallas.s81.static-moe-sum-model.v1",
+  "qualified": false,
+  "source": "results/uarch/dsrom_native_weight_address_join_20261002/inputs/demand-r5.json.gz",
+  "source_sha256": "fec91ca041e8b1640292ca06163def706c0d0dab8c5d524ba9e8f611dd925d0f",
+  "source_nodes_L0": [
+    "L0.I101",
+    "L0.I102",
+    "L0.I103",
+    "L0.I104",
+    "L0.I105",
+    "L0.I106"
+  ],
+  "semantics": "six sequential FP32 RNE sums E0+E1, then E2,E3,E4,E5,E6; only final sum rounded BF16 and widened FP32",
+  "shape": {
+    "rank_words": 1280,
+    "row_words": 16,
+    "rows": 80,
+    "experts": 7,
+    "scalar_adds": 7680
+  },
+  "microarchitecture": {
+    "lanes": 16,
+    "add_leaves": 6,
+    "add_lat": 6,
+    "registered_leaf_output": 1,
+    "composed_latency_edges": 42,
+    "steady_rows_per_edge": 1,
+    "input_bits_per_edge": 3584,
+    "output_bits_per_edge": 512,
+    "input_bytes_per_edge": 448,
+    "output_bytes_per_edge": 64,
+    "clock_roots": 6,
+    "max_sinks_per_new_root": 15000,
+    "leaf_clock_census_proven": false,
+    "physical_slot": null,
+    "full80row_duration": "80 issue edges +42 pipeline edges; actual edge convention measured by bench",
+    "alignment_sram_64x512_macros": 5
+  },
+  "physical_qualified": false,
+  "production_vm_phase_bound": false,
+  "throughput_price_bound": false
+}

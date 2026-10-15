@@ -1,0 +1,24 @@
+{
+  "schema": "opentallas.s81.static_lane_cross.v1",
+  "native_qualified": false,
+  "die_adopted": false,
+  "width": 1101,
+  "depth": 8,
+  "latency_destination_edges": 4,
+  "contract": "first active source/destination edges carry common epoch 0; equal frequency; fixed phase; no paused clock",
+  "traffic": "one full word every source edge, including bubbles",
+  "state_bits_estimate": 9961,
+  "outputs": "registered, fixed every destination edge after warmup; epoch fault observation never retimes",
+  "validation": "six phases, three reset epochs each, one slipped epoch fault witness, wrong-offset mutant rejected",
+  "sources": {
+    "rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross.sv": "598c0e50de64c61822063ca2c2046be046ea697bfb5d98fb5a86ea7e3c634bca",
+    "rtl/dsrom_sys/s81_die_bind/test/tb_static_lane_cross.sv": "afba78a2252f40a70a0b370d542dafc888fe3bb2600f0c34d55ada34c91819ca",
+    "tools/s81/static_lane_cross_gate.sh": "cefa4730bbd54291452b50d7f0a947de2b9392813bd32219c1c0a863bdee158d"
+  },
+  "remaining": [
+    "die reset epoch mapping",
+    "shared BF/Q transport generator integration",
+    "native timing and slot view",
+    "full emitted die binding"
+  ]
+}

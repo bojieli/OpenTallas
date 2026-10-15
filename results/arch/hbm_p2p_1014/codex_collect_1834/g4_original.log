@@ -1,0 +1,37 @@
+ot-run: ot-epyc1tb     admits   507 GB (avail 734, growth 75, headroom 64, waiters 0/0 GB) load 221/128 running 25 disk 881 GB 
+ot-run: ot-epyc4       admits   453 GB (avail 679, growth 86, headroom 48, waiters 0/0 GB) load 161/128 running 22 disk 730 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/p2pcoll/src_ed00a5ad0
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/p2pcoll/src_ed00a5ad0
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2073075-1792027807 after 0 s
+== grm rc=0
+FAULT die=0 central flt=0 ret=000 done=0 | p2p flt=1100 ret=100 done=0
+FAULT die=1 central flt=0 ret=000 done=0 | p2p flt=1100 ret=100 done=0
+FAULT die=2 central flt=0 ret=000 done=0 | p2p flt=1100 ret=100 done=0
+FAULT die=3 central flt=0 ret=000 done=0 | p2p flt=1100 ret=100 done=0
+REC 0 op=4 n=4096 afmt=0 ofmt=1 | die0 issue->done central -18 p2p -18 cycles
+REC 1 op=4 n=2048 afmt=0 ofmt=0 | die0 issue->done central 0 p2p -22 cycles
+REC 2 op=0 n=4096 afmt=0 ofmt=1 | die0 issue->done central 0 p2p -65 cycles
+SEQ case=grm G=4 records=3 central -18 cycles, p2p -18 cycles (first issue -> last done, all dies); flits sent central 868 p2p 1040
+WCOUNT die=0 addr=0000000000800080 central=1 p2p=0
+WCOUNT die=0 addr=0000000000800081 central=1 p2p=0
+WCOUNT die=0 addr=0000000000800082 central=1 p2p=0
+WCOUNT die=0 addr=0000000000800083 central=1 p2p=0
+WCOUNT die=0 addr=0000000000800084 central=1 p2p=0
+IMAGES words=1280 diff=0 count_mismatch=1792 gather_expect_mismatch=0
+RED_CARRY rounds=1 folds=128 errors=0
+FAIL HGI_COLL_P2P case=grm fails=2
+== qwen rc=0
+REC 0 op=0 n=4096 afmt=0 ofmt=1 | die0 issue->done central 1233 p2p 1686 cycles
+REC 1 op=0 n=4096 afmt=0 ofmt=0 | die0 issue->done central 1233 p2p 3321 cycles
+REC 2 op=1 n=4096 afmt=0 ofmt=0 | die0 issue->done central 671 p2p 3914 cycles
+REC 3 op=1 n=4096 afmt=1 ofmt=1 | die0 issue->done central 806 p2p 2363 cycles
+REC 4 op=3 n=2 afmt=0 ofmt=5 | die0 issue->done central 1290 p2p 727 cycles
+REC 5 op=0 n=1280 afmt=0 ofmt=1 | die0 issue->done central 1145 p2p 1844 cycles
+REC 6 op=1 n=1000 afmt=0 ofmt=0 | die0 issue->done central 623 p2p 2400 cycles
+REC 7 op=1 n=96 afmt=1 ofmt=1 | die0 issue->done central 633 p2p 1800 cycles
+SEQ case=qwen G=4 records=8 central 5704 cycles, p2p 5852 cycles (first issue -> last done, all dies); flits sent central 3048 p2p 3048
+IMAGES words=81120 diff=0 count_mismatch=0 gather_expect_mismatch=0
+RED_CARRY rounds=1 folds=128 errors=0
+PASS HGI_COLL_P2P case=qwen G=4 records=8 rc=1
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2073075-1792027807): exit 1

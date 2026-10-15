@@ -1,0 +1,26 @@
+ot-run: ot-epyc1tb     admits   507 GB (avail 734, growth 75, headroom 64, waiters 0/0 GB) load 221/128 running 25 disk 881 GB 
+ot-run: ot-epyc4       admits   453 GB (avail 679, growth 86, headroom 48, waiters 0/0 GB) load 161/128 running 22 disk 730 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/p2pcoll/src_ed00a5ad0
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/p2pcoll/src_ed00a5ad0
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2073060-1792027807 after 0 s
+== dsg rc=0
+REC 0 op=1 n=1280 afmt=0 ofmt=0 | die0 issue->done central 642 p2p 658 cycles
+REC 1 op=1 n=512 afmt=0 ofmt=0 | die0 issue->done central 667 p2p 698 cycles
+REC 2 op=1 n=5120 afmt=0 ofmt=0 | die0 issue->done central 787 p2p 735 cycles
+REC 3 op=1 n=384 afmt=0 ofmt=0 | die0 issue->done central 783 p2p 748 cycles
+REC 4 op=1 n=2304 afmt=0 ofmt=0 | die0 issue->done central 945 p2p 1147 cycles
+REC 5 op=1 n=2304 afmt=0 ofmt=0 | die0 issue->done central 755 p2p 1161 cycles
+REC 6 op=1 n=2304 afmt=0 ofmt=0 | die0 issue->done central 787 p2p 1147 cycles
+REC 7 op=1 n=2304 afmt=0 ofmt=0 | die0 issue->done central 755 p2p 771 cycles
+REC 8 op=1 n=2304 afmt=0 ofmt=0 | die0 issue->done central 945 p2p 1147 cycles
+REC 9 op=1 n=2304 afmt=0 ofmt=0 | die0 issue->done central 755 p2p 1139 cycles
+REC 10 op=1 n=2304 afmt=0 ofmt=0 | die0 issue->done central 787 p2p 1147 cycles
+REC 11 op=1 n=5120 afmt=0 ofmt=0 | die0 issue->done central 843 p2p 797 cycles
+REC 12 op=1 n=2304 afmt=0 ofmt=0 | die0 issue->done central 945 p2p 1147 cycles
+REC 13 op=3 n=2 afmt=0 ofmt=5 | die0 issue->done central 1228 p2p 1626 cycles
+SEQ case=dsg G=2 records=14 central 3237 cycles, p2p 3051 cycles (first issue -> last done, all dies); flits sent central 1930 p2p 1930
+IMAGES words=61728 diff=0 count_mismatch=0 gather_expect_mismatch=0
+RED_CARRY rounds=2 folds=128 errors=0
+PASS HGI_COLL_P2P case=dsg G=2 records=14 rc=2
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2073060-1792027807): exit 0

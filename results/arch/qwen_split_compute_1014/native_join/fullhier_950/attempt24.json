@@ -1,0 +1,25 @@
+{
+  "status": "INCOMPLETE_OOM",
+  "scope": "actual950-root7-masterfullhierarchy; no elaboration completion or physical qualification",
+  "unit": "oth-ubuntu-1644258-1792058178.scope",
+  "exit": 143,
+  "memory_peak_bytes": 25769803776,
+  "authoritative_result": "oom-kill",
+  "source_manifest_sha256": "af83d08b3bd5a78d5d02ee5dca1c4a948aefb332a6cf3439919f1058ae165f8a",
+  "warning_counts_before_termination": {
+    "PINMISSING": 53,
+    "WIDTHEXPAND": 193,
+    "WIDTHTRUNC": 112,
+    "WIDTHCONCAT": 14,
+    "CMPCONST": 1,
+    "UNOPTFLAT": 3
+  },
+  "hard_errors_before_termination": [],
+  "successor_run": {
+    "unit": "oth-ubuntu-1668505-1792058645.scope",
+    "memory_cap_GiB": 96,
+    "source_changes": false,
+    "status": "RUNNING"
+  },
+  "warnings_not_waived": "PINMISSING includes parsed legacy/unused module definitions; active hierarchy needs independent classification. UNOPTFLAT declarations are bit/level feedforward constructs on source inspection, actual selected source requires final verification."
+}

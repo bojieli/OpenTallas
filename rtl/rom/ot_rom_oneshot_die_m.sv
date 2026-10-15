@@ -93,9 +93,12 @@ module ot_rom_oneshot_die_m #(
     // one-hot STRAP self_s (static, from the die's package-rank bumps through the parent's pin flop) instead of the
     // RANK parameter, so one hardened cluster serves every package.  RSTRAP = 0: self_s is unused and every decision
     // below reduces to the RANK constant exactly as before.
-    parameter integer RSTRAP  = 0
+    parameter integer RSTRAP  = 0,
+    parameter integer CCLK = 0 // opt-in: independent phi-R clock at each hardened child
 ) (
     input  wire              clk,
+    input wire [(PW+127)/128-1:0] clk_cols,
+    input wire [FW/128-1:0] clk_folds,
     input  wire              rst_n,
     input  wire              in_valid,
     output wire              in_cr,
@@ -371,7 +374,7 @@ module ot_rom_oneshot_die_m #(
             end
             (* keep_hierarchy *) ot_coll_fold_slice u_fs (   // hardened defaults N 4 / ADD_LAT 7 / SEAM 1 (no override: the
                                                            // parent takes the hardened macro master by name)
-                .clk(clk), .rst_n(rst_n), .red_in(red_in_f), .src(sd), .sum(fsum[gs*128 +: 128]),
+                .clk(CCLK ? clk_folds[gs] : clk), .rst_n(rst_n), .red_in(red_in_f), .src(sd), .sum(fsum[gs*128 +: 128]),
                 .v_out(sl_v[gs]), .e_out(sl_e[gs]));
         end
         assign sum[N-1] = fsum;
@@ -683,11 +686,11 @@ module ot_rom_oneshot_die_m #(
                     assign s0f[gr*PW + LO +: SW] = s0o[gr*128 +: SW];
                 end
                 if (DEPTH == 64) begin : g_d64
-                (* keep_hierarchy *) ot_coll_col_tile_d64 u_ct (.clk(clk), .rst_n(rst_n), .rank_oh(SF),
+                (* keep_hierarchy *) ot_coll_col_tile_d64 u_ct (.clk(CCLK ? clk_cols[gk] : clk), .rst_n(rst_n), .rank_oh(SF),
                     .in_d(ind), .rx_d(rxd), .c_ibw(iv_q && !ib_full), .c_iw(iw[1:0]), .c_fire(fire), .c_ir(ir[1:0]),
                     .c_push(push), .c_wp(wpall), .c_l1(l1all), .c_gidx(gc_idx), .s0(s0o), .go(goo), .tx(txo));
                 end else begin : g_d32
-                (* keep_hierarchy *) ot_coll_col_tile u_ct (.clk(clk), .rst_n(rst_n), .rank_oh(SF),
+                (* keep_hierarchy *) ot_coll_col_tile u_ct (.clk(CCLK ? clk_cols[gk] : clk), .rst_n(rst_n), .rank_oh(SF),
                     .in_d(ind), .rx_d(rxd), .c_ibw(iv_q && !ib_full), .c_iw(iw[1:0]), .c_fire(fire), .c_ir(ir[1:0]),
                     .c_push(push), .c_wp(wpall), .c_l1(l1all), .c_gidx(gc_idx), .s0(s0o), .go(goo), .tx(txo));
                 end

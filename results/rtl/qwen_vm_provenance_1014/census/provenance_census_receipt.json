@@ -1,0 +1,289 @@
+{
+  "status": "GENERIC_POST_PROC_OPT_MEMORY_MAP_CENSUS_NOT_MAPPED_AREA_OR_CTS",
+  "sources": {
+    "ot_qfd_vm_producer_lease_seq40.sv": "09342e3e812a693a026c9bf5abcf09ec71e3ab8f9de82e9465e7062c6c012ca3",
+    "ot_qfd_vm_producer_lease_provenance.sv": "e44f06d1ec9b0ed93d848e69d25d4bceba18d2cd8b2361c2c216d55fe8b52810"
+  },
+  "top": "ot_qfd_vm_producer_lease_provenance",
+  "params": {
+    "ENABLE": 1,
+    "MUT": 0
+  },
+  "command": [
+    "yosys",
+    "-p",
+    "read_verilog -sv /srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_seq40.sv /srv/opentallas-scratch/codex/qwen-provenance-census-1014-v1/ot_qfd_vm_producer_lease_provenance.sv; hierarchy -top ot_qfd_vm_producer_lease_provenance -chparam ENABLE 1 -chparam MUT 0; proc; opt; flatten; opt; memory_map; opt; stat; write_json provenance.json"
+  ],
+  "yosys": "Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)",
+  "sequential_Q_bits": 1241,
+  "cell_types": {
+    "$sdffe": 20,
+    "$reduce_bool": 5,
+    "$not": 2,
+    "$reduce_or": 1,
+    "$eq": 12,
+    "$add": 3,
+    "$ne": 6,
+    "$reduce_and": 4,
+    "$logic_not": 13,
+    "$logic_and": 57,
+    "$mux": 14,
+    "$pmux": 1,
+    "$logic_or": 1,
+    "$scopeinfo": 1
+  },
+  "ports": {
+    "clk": {
+      "direction": "input",
+      "bits": 1
+    },
+    "rst_n": {
+      "direction": "input",
+      "bits": 1
+    },
+    "acquire_v": {
+      "direction": "input",
+      "bits": 1
+    },
+    "acquire_ready": {
+      "direction": "output",
+      "bits": 1
+    },
+    "held_ib": {
+      "direction": "input",
+      "bits": 379
+    },
+    "held_mode": {
+      "direction": "input",
+      "bits": 1
+    },
+    "held_token": {
+      "direction": "input",
+      "bits": 16
+    },
+    "held_context": {
+      "direction": "input",
+      "bits": 16
+    },
+    "request_phase": {
+      "direction": "input",
+      "bits": 4
+    },
+    "request_address": {
+      "direction": "input",
+      "bits": 96
+    },
+    "request_root": {
+      "direction": "input",
+      "bits": 5
+    },
+    "request_recipient": {
+      "direction": "input",
+      "bits": 16
+    },
+    "query_v": {
+      "direction": "input",
+      "bits": 1
+    },
+    "query_ready": {
+      "direction": "output",
+      "bits": 1
+    },
+    "query_context": {
+      "direction": "input",
+      "bits": 16
+    },
+    "query_version": {
+      "direction": "input",
+      "bits": 32
+    },
+    "query_seq40": {
+      "direction": "input",
+      "bits": 40
+    },
+    "query_mode": {
+      "direction": "input",
+      "bits": 1
+    },
+    "query_token": {
+      "direction": "input",
+      "bits": 16
+    },
+    "query_epoch": {
+      "direction": "input",
+      "bits": 21
+    },
+    "commit_v": {
+      "direction": "input",
+      "bits": 1
+    },
+    "commit_pending": {
+      "direction": "input",
+      "bits": 1
+    },
+    "native_write_allowed": {
+      "direction": "output",
+      "bits": 1
+    },
+    "acquire_version": {
+      "direction": "output",
+      "bits": 32
+    },
+    "read_v": {
+      "direction": "output",
+      "bits": 1
+    },
+    "read_ready": {
+      "direction": "input",
+      "bits": 1
+    },
+    "read_ib": {
+      "direction": "output",
+      "bits": 379
+    },
+    "read_mode": {
+      "direction": "output",
+      "bits": 1
+    },
+    "read_phase": {
+      "direction": "output",
+      "bits": 4
+    },
+    "read_address": {
+      "direction": "output",
+      "bits": 96
+    },
+    "read_root": {
+      "direction": "output",
+      "bits": 5
+    },
+    "read_recipient": {
+      "direction": "output",
+      "bits": 16
+    },
+    "read_seq40": {
+      "direction": "output",
+      "bits": 40
+    },
+    "read_token": {
+      "direction": "output",
+      "bits": 16
+    },
+    "read_epoch": {
+      "direction": "output",
+      "bits": 21
+    },
+    "response_v": {
+      "direction": "input",
+      "bits": 1
+    },
+    "response_ready": {
+      "direction": "output",
+      "bits": 1
+    },
+    "response_data": {
+      "direction": "input",
+      "bits": 512
+    },
+    "q_v": {
+      "direction": "output",
+      "bits": 1
+    },
+    "q_ready": {
+      "direction": "input",
+      "bits": 1
+    },
+    "q_data": {
+      "direction": "output",
+      "bits": 512
+    },
+    "q_context": {
+      "direction": "output",
+      "bits": 16
+    },
+    "q_version": {
+      "direction": "output",
+      "bits": 32
+    },
+    "q_mode": {
+      "direction": "output",
+      "bits": 1
+    },
+    "q_phase": {
+      "direction": "output",
+      "bits": 4
+    },
+    "q_address": {
+      "direction": "output",
+      "bits": 96
+    },
+    "q_root": {
+      "direction": "output",
+      "bits": 5
+    },
+    "q_recipient": {
+      "direction": "output",
+      "bits": 16
+    },
+    "q_seq40": {
+      "direction": "output",
+      "bits": 40
+    },
+    "q_token": {
+      "direction": "output",
+      "bits": 16
+    },
+    "q_epoch": {
+      "direction": "output",
+      "bits": 21
+    },
+    "release_v": {
+      "direction": "input",
+      "bits": 1
+    },
+    "release_ready": {
+      "direction": "output",
+      "bits": 1
+    },
+    "release_token": {
+      "direction": "input",
+      "bits": 16
+    },
+    "release_context": {
+      "direction": "input",
+      "bits": 16
+    },
+    "release_version": {
+      "direction": "input",
+      "bits": 32
+    },
+    "recipients_quiescent": {
+      "direction": "input",
+      "bits": 1
+    },
+    "source_output_drained": {
+      "direction": "output",
+      "bits": 1
+    },
+    "transport_flush_req": {
+      "direction": "input",
+      "bits": 1
+    },
+    "transport_flush_ack": {
+      "direction": "output",
+      "bits": 1
+    },
+    "fault": {
+      "direction": "output",
+      "bits": 1
+    },
+    "blocked_write_cycles": {
+      "direction": "output",
+      "bits": 32
+    },
+    "leased_cycles": {
+      "direction": "output",
+      "bits": 32
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "source_commit": "5ec8cfcea",
+  "kind": "diagnostic measured observation; not a production static upper bound",
+  "gate": "PASS",
+  "mask_mutant": "FAIL192 data mismatches plus ACKmaskfault",
+  "errors": [],
+  "write_transactions": 385,
+  "macro_events": 1540,
+  "read_transactions": 192,
+  "macro_visibility_stream_cycles": {
+    "min": 18.5,
+    "max": 47.5,
+    "count": 385
+  },
+  "commit_return_stream_cycles": {
+    "min": 25.0,
+    "max": 54.0,
+    "count": 385
+  },
+  "read_return_stream_cycles": {
+    "min": 66.0,
+    "max": 67.0,
+    "count": 192
+  },
+  "banks_covered": [
+    0,
+    1,
+    2,
+    3,
+    5,
+    6,
+    7,
+    9,
+    10,
+    12,
+    13,
+    14,
+    16,
+    17,
+    19,
+    20,
+    21,
+    23,
+    24,
+    26,
+    27,
+    28,
+    30,
+    31
+  ],
+  "clock_scale": {
+    "bench_stream_ns": 3,
+    "bench_serial_ns": 4,
+    "production_stream_ps": 833.333333,
+    "production_serial_ps": 1111.111111
+  },
+  "production_schedule_qualified": false,
+  "native_views_qualified": false,
+  "required": "Replay unchanged full layer trace incl capture/landing/collective/PQ traffic; assign native tag/commit leaves and fixed service slots; do not infer credit-based production acceptance."
+}

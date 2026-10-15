@@ -1,0 +1,72 @@
+{
+  "scope": "actual static command producer, paired mask-ROM event consumer, and native count-leaf mechanisms; not production phase image or native layer",
+  "native_qualified": false,
+  "endpoint": {
+    "unit": "oth-ubuntu-2750554-1792046789",
+    "outer_exit": 0,
+    "actual_issuer_commands": 252,
+    "actual_registered_GO": 252,
+    "fixed_retire": 252,
+    "stage_END": 2,
+    "native_tags": 4,
+    "concurrent_tag_slots": 4,
+    "descriptor_rows": 64,
+    "descriptor_bits": 116,
+    "status_boundary": "modeled PQ retire events; arithmetic/static internal controller composition remains separate",
+    "positive_mode": 0,
+    "fault_modes": {
+      "unavailable": 1,
+      "missing_retire": 2,
+      "early_retire": 3,
+      "bad_tag": 4
+    },
+    "deadline_mutant": "actual endpoint MUT1 delayed fixed completion fails unchanged scoreboard",
+    "all_modes_same_END_time_ps": 17600000
+  },
+  "calendar": {
+    "unit": "oth-ubuntu-2660303-1792046517",
+    "outer_exit": 0,
+    "actual_mask_ROM_count": 2,
+    "macro": "ot_rom_4096x72_m8",
+    "events": 24,
+    "consecutive_events": 12,
+    "positive": true,
+    "missing_prime_fault": true,
+    "actual_via_bit_mutant_fails": true,
+    "synthetic_component_calendar": true
+  },
+  "count_chain": {
+    "unit": "oth-ubuntu-2710338-1792046665",
+    "outer_exit": 0,
+    "leaf_count": 12,
+    "region_partition": [
+      15,
+      2,
+      15,
+      15,
+      2,
+      15,
+      15,
+      2,
+      15,
+      15,
+      2,
+      15
+    ],
+    "regions": 128,
+    "measured_live_pin_to_farthest_leaf_edges": 12,
+    "measured_root_to_ga_edges": 4,
+    "measured_root_to_q2f_edges": 5,
+    "early_root_fault": true,
+    "early_live_clear_fault": true,
+    "actual_dropped_region_mutant_fails": true,
+    "actual_controller_live_producer_bound": false
+  },
+  "remaining": [
+    "actual static PQ controller/full native core join",
+    "native phase/stream/VM source calendar and phase-ROM identities",
+    "actual controller-tag source plus whole chain last-count consumption",
+    "physical native clocks/reset/slots/phase",
+    "fullstage throughput and wholelayer dispatch"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "source_commit": "6c00b9c63",
+  "unit": "ot-epyc1tb/oth-ubuntu-313909-1792047478",
+  "actual_memory_macros": 24,
+  "checks": 3848,
+  "positive_errors": 0,
+  "mutant_errors": [
+    3848,
+    764,
+    3840
+  ],
+  "latency_edges": 8,
+  "II": 1,
+  "client_groups": {
+    "SW": 4,
+    "SE": 4,
+    "NW": 6,
+    "NE": 6
+  },
+  "qualification": "VM face only. Full production engine static migration, native physical slots and rate OPEN",
+  "sha256": {
+    "rtl/hbm_accel/index/ot_hbm_idx_vm_static.sv": "10e9556a6abbcc14f4f98bc61078ab84bcbb0a5f7354b2e68624c90eed8b26b7",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7828d619da2fd2462cf0253b78c074dad1171e6ca77799bfc21f22987ed72237",
+    "rtl/test/hbm_idx_static/tb_idx_vm_static.sv": "7f157a18eb8ffd3b46f25cfe4563e7f34bdba85bcc5b9cb0fccc2c5349a27c84",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380"
+  }
+}

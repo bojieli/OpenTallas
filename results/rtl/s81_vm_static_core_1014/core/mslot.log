@@ -1,0 +1,17 @@
+FIRST FAULT cy 1183: wsched own 00 dflt 0000 sflt 00000000000000000000000000000000 | mem 1111 | land 000 pq 0 out 0 op 0 rsched 0 | seq flt 00000000000
+READ DATA MISMATCH cy 1193 port 0 row 15713
+READ DATA MISMATCH cy 1193 port 1 row 1985
+READ DATA MISMATCH cy 1198 port 1 row 2650
+READ DATA MISMATCH cy 1198 port 2 row 12694
+READ DATA MISMATCH cy 1199 port 0 row 333
+READ DATA MISMATCH cy 1199 port 1 row 14633
+READ DATA MISMATCH cy 1201 port 1 row 10874
+READ DATA MISMATCH cy 1201 port 2 row 7246
+READ DATA MISMATCH cy 1202 port 1 row 12463
+UNEXPECTED FAULT vm_fault 1 c_st 11: wsched own 00 dflt 0000 sflt 00000000000000000000000000000000 | mem 5555 | land 000 pq 0 out 0 op 0 rsched 0 | seq flt 10000000000
+TB_VMCORE RESULT mode 0 cycles 5210 commits 73696 K 11 reads 39528 pq 1018 mix_reads 7933 mix_writes 2000 rows_checked 51533 dones 4 cmds 4 bad 3865
+TB_VMCORE FAIL mode 0
+- /srv/opentallas-scratch/claude/s81vm-r8/src/tb_dsfd_vm_static_core.sv:280: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 21.834 s; speed 199.127 ns/s
+- Verilator: cpu 21.827 s on 1 threads; allocated 49 MB

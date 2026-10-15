@@ -1,0 +1,45 @@
+%Warning-UNUSEDSIGNAL: ot_vms_bank_static.sv:58:58: Signal is not used: 'dummy'
+                                                  : ... note: In instance 'ot_vms_bank_static'
+   58 |     function automatic [32*7-1:0] cols_all(input integer dummy);
+      |                                                          ^~~~~
+                       ... For warning description see https://verilator.org/warn/UNUSEDSIGNAL?v=5.032
+                       ... Use "/* verilator lint_off UNUSEDSIGNAL */" and lint_on around source to disable this message.
+%Warning-UNUSEDSIGNAL: ot_vms_bank_static.sv:63:58: Signal is not used: 'dummy'
+                                                  : ... note: In instance 'ot_vms_bank_static'
+   63 |     function automatic [7*32-1:0] rows_all(input integer dummy);
+      |                                                          ^~~~~
+%Warning-UNUSEDSIGNAL: ot_vms_bank_static.sv:88:62: Bits of signal are not used: 'dq_d'[280]
+                                                  : ... note: In instance 'ot_vms_bank_static'
+   88 |     reg [RG*17-1:0] rq_d; reg [WG*281-1:0] wq_d; reg [280:0] dq_d, kq_d; reg [275:0] xq_d, x2_d; reg [284:0] pq_d;
+      |                                                              ^~~~
+%Warning-UNUSEDSIGNAL: ot_vms_bank_static.sv:88:68: Bits of signal are not used: 'kq_d'[280]
+                                                  : ... note: In instance 'ot_vms_bank_static'
+   88 |     reg [RG*17-1:0] rq_d; reg [WG*281-1:0] wq_d; reg [280:0] dq_d, kq_d; reg [275:0] xq_d, x2_d; reg [284:0] pq_d;
+      |                                                                    ^~~~
+%Warning-UNUSEDSIGNAL: ot_vms_bank_static.sv:88:86: Bits of signal are not used: 'xq_d'[275]
+                                                  : ... note: In instance 'ot_vms_bank_static'
+   88 |     reg [RG*17-1:0] rq_d; reg [WG*281-1:0] wq_d; reg [280:0] dq_d, kq_d; reg [275:0] xq_d, x2_d; reg [284:0] pq_d;
+      |                                                                                      ^~~~
+%Warning-UNUSEDSIGNAL: ot_vms_bank_static.sv:88:92: Bits of signal are not used: 'x2_d'[275]
+                                                  : ... note: In instance 'ot_vms_bank_static'
+   88 |     reg [RG*17-1:0] rq_d; reg [WG*281-1:0] wq_d; reg [280:0] dq_d, kq_d; reg [275:0] xq_d, x2_d; reg [284:0] pq_d;
+      |                                                                                            ^~~~
+%Warning-UNUSEDSIGNAL: ot_vms_bank_static.sv:88:110: Bits of signal are not used: 'pq_d'[284]
+                                                   : ... note: In instance 'ot_vms_bank_static'
+   88 |     reg [RG*17-1:0] rq_d; reg [WG*281-1:0] wq_d; reg [280:0] dq_d, kq_d; reg [275:0] xq_d, x2_d; reg [284:0] pq_d;
+      |                                                                                                              ^~~~
+%Warning-UNUSEDSIGNAL: ot_vms_bank_static.sv:223:23: Bits of signal are not used: 'rdB'[255:112]
+                                                   : ... note: In instance 'ot_vms_bank_static'
+  223 |     wire [255:0] rdA, rdB, rdC;
+      |                       ^~~
+%Warning-UNUSEDSIGNAL: ot_vms_bank_static.sv:233:116: Signal is not driven, nor used: 'cw_p'
+                                                    : ... note: In instance 'ot_vms_bank_static'
+  233 |     reg c_v; reg [3:0] c_p; reg c_mir; reg [7:0] c_tag; reg [255:0] c_a, c_c; reg [111:0] c_b; reg cw_v; reg [3:0] cw_p; reg [7:0] cw_tag;
+      |                                                                                                                    ^~~~
+%Warning-UNUSEDSIGNAL: ot_vms_bank_static.sv:234:103: Signal is not driven, nor used: 'dw_p'
+                                                    : ... note: In instance 'ot_vms_bank_static'
+  234 |     reg d_v; reg [3:0] d_p; reg [7:0] d_tag; reg [255:0] d_dat; reg [55:0] d_syn; reg dw_v; reg [3:0] dw_p; reg [7:0] dw_tag;
+      |                                                                                                       ^~~~
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 0.061 MB sources in 3 modules, into 0.427 MB in 5 C++ files needing 0.000 MB
+- Verilator: Walltime 0.058 s (elab=0.008, cvt=0.039, bld=0.000); cpu 0.058 s on 1 threads; alloced 15.773 MB

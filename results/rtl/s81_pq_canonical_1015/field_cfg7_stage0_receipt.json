@@ -1,0 +1,36 @@
+{
+  "stage": 0,
+  "rank": 0,
+  "phase_count": 626,
+  "pairs": 2417,
+  "macros": 16919,
+  "all_pair_images": true,
+  "all_source_words_read_back": true,
+  "source_pins": {
+    "matrix_map.jsonl.gz": "985a9ee7ea26d2a7bb1aebadc5151252836eacf8181e8794b1ef6d7819db0326",
+    "stage_map.json": "47ea9eb0ba0b404f629a4bc758d28d8ac1fe28dcb31de3e5816517fa1d097815",
+    "inventory.json": "0b8d8f6fddf7a427941b7a235aeb80e0ee370c51cafddba6427fa61d3ff99480"
+  },
+  "active_pair_phases": 122752,
+  "arithmetic_qualified": false,
+  "calendar_qualified": false,
+  "physical_qualified": false,
+  "native_execution_qualified": false,
+  "source_commit": "8b06b0adf",
+  "unit": "oth-ubuntu-3781409-1792053947",
+  "outer_exit": 0,
+  "remote_image_root": "ot-agidock128:/srv/opentallas-scratch/codex/s81-cfg7-stage0-1015/images",
+  "full_receipt_sha256": "90db6efa62d704e65fb378a6c4db07d3e576aeda6d92204abb2af1c120e14c83",
+  "full_receipt_bytes": 3299565,
+  "physical_macro_image_count": 16919,
+  "source_CFG_words": 37826050,
+  "physical_CFG_words": 69300224,
+  "phase_source_count": 626,
+  "missing": [
+    "actual phase/stream source image and producer",
+    "actual globalflight and clockphase profile",
+    "static BF/PQ arithmetic and VM capture composition",
+    "remaining resident stages/ranks images"
+  ],
+  "current_mask_scope": "complete canonical stage0 rank0 CFG only, not phase/stream/weight payload"
+}

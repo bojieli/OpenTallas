@@ -153,7 +153,15 @@
    "change": "s81-die: (1) sp_capture slot = its cluster kit: 1728 x 561.6, + ckv / rsv (S, M5), cluster layers (PG M7, strap M8, signals <= M6), clock entry N / M5, clock level early_tap owed with spread <= 80 ps. (2) field plan v17: q-bank pins on the q element pins, node pins in fixed slots, x relay site beside the slot station, station xai / xbi at the E end, falling-edge capture at the forwarded-lane ends. (3) relay masters dsfd_rly_283_EW / 266_EW (kits submitted). (4) SU does not fit (fill 1.117): the column gives at most +2.45 mm2 below the slab (v18 trial), wings beyond; bgq28 height not taken (column full); capture per-child clock pins, hub cluster rule, crooty_y 11 slices, ce_s clusters taken. (5) c6p pathfinding STA read by path class: real to real TT +169.3 / FF +131.1; every violator is a placeholder lib. NEIGHBOUR COST: none (no slab moved; the capture slot is 0.024 um wider inside the 1,728-um hub column). No price changed; cfifo: -1 cycle on the field round trip."
   },
   "v18 (2026-10-14): base = v18 geometry trial (SU S growth 686.88 um, VM +609.12, HC comb 840.24); Q element per-mac re-partition; dsfd_rly_283_EW v3 kit; SU region decision; master list + assigned pin files; sign-off TT setup / FF hold / DRC 0 with SS as a sensitivity column (owner 10-07, restated 10-14 06:35).",
-  "v19 (2026-10-14 PM): PQ return topology G (frame pq_root row off the layer die; 12 count-only RWB slots in a 43.2-um gather|capture seam); Engram hl / Markov K256 / gather v4 / NORM-variant pin files + subslots; cfifo falling-edge station launch; crootr_f target insertion = measured R; IR gate recipe --pdn-field-cov 0.09; recipe s81_layer1_v19c (c9p)."
+  "v19 (2026-10-14 PM): PQ return topology G (frame pq_root row off the layer die; 12 count-only RWB slots in a 43.2-um gather|capture seam); Engram hl / Markov K256 / gather v4 / NORM-variant pin files + subslots; cfifo falling-edge station launch; crootr_f target insertion = measured R; IR gate recipe --pdn-field-cov 0.09; recipe s81_layer1_v19c (c9p).",
+  "Codex S-DIE: reserve real Engram MIX and six HCP homes in measured voids; middle relay collisions OPEN; no production adoption without static calendar/native checks.",
+  "Codex S-DIE: reserve real Engram MIX and six HCP homes in measured voids; middle relay collisions OPEN; no production adoption without static calendar/native checks.",
+  "Codex S-DIE: reserve real Engram MIX and six HCP homes in measured voids; middle relay collisions OPEN; no production adoption without static calendar/native checks.",
+  "Codex S-DIE: reserve real Engram MIX and six HCP homes in measured voids; middle relay collisions OPEN; no production adoption without static calendar/native checks.",
+  "Codex S-DIE: reserve real Engram MIX and six HCP homes in measured voids; middle relay collisions OPEN; no production adoption without static calendar/native checks.",
+  "Codex S-DIE: reserve real Engram MIX and six HCP homes in measured voids; middle relay collisions OPEN; no production adoption without static calendar/native checks.",
+  "Codex S-DIE: reserve real Engram MIX and six HCP homes in measured voids; middle relay collisions OPEN; no production adoption without static calendar/native checks.",
+  "Codex S-DIE: reserve real Engram MIX and six HCP homes in measured voids; six fullresident1.493mm2 leaf homes clear of measured old instances; physical fit OPEN; no production adoption without static calendar/native checks."
  ],
  "slots": [
   {
@@ -1695,7 +1703,7 @@
    "parent": "s81_layer1",
    "outline": {
     "w": 1816.56,
-    "h": 8525.52
+    "h": 8633.52
    },
    "origin": {
     "x": 17312.4,
@@ -1894,7 +1902,7 @@
    "parent": "s81_layer1",
    "outline": {
     "w": 1816.56,
-    "h": 8890.56
+    "h": 9020.16
    },
    "origin": {
     "x": 17312.4,
@@ -6325,7 +6333,7 @@
    },
    "origin": {
     "x": 13942.8,
-    "y": 18677.52,
+    "y": 19722.96,
     "orient": "R0"
    },
    "io_budget": {
@@ -6698,7 +6706,8 @@
      ],
      "reason": "v13 ADOPTED (layout needs it): two 172.8-um 256x256 SRAMs with pins on their short W/E edges leave ~45 um side channels at 226.8; GRT over-macro capacity is 0 under the M5 cap -> macro-band cut 0.65-0.86 of raw M3/M5 tracks (ces0_rt GRT-0116, 94 % of overflow inside the macros); 302.4 with the macros split S/N -> 0.24. Pin faces unchanged. Kit physical/ref_tile/dscoll_ces0_rts (claude/el1011-ds-coll); ce region (367.2..1,727.976 x 444.96..2,359.776, 1,360.8 wide) takes 4 a row at 302.4 + 21.6."
     }
-   }
+   },
+   "origin_receipt": "physical/s81_die_pins/v20_functional/origin_receipt.json"
   },
   {
    "name": "sp_collective/lane0",
@@ -13531,6 +13540,336 @@
     }
    },
    "route_admission": false
+  },
+  {
+   "name": "sp_embed_expand",
+   "master": "ot_s81_embed_expand",
+   "at_um": [
+    15120.0,
+    22770.0
+   ],
+   "outline": {
+    "w": 216.0,
+    "h": 216.0
+   },
+   "clock": "stream_1p2",
+   "role": "S000 source/input role; ordinary layer1 c8 excludes engine9 and must not falsely bind it",
+   "engine": 9,
+   "geometry": "xsp7 full instance plan at exact rectangle:0collisions; new MIX ends15094.8 leaving25.2umgap",
+   "memory": {
+    "master": "ot_sram_1r1w_512x128_m4_r2c2",
+    "count": 2,
+    "size_um": [
+     174.096,
+     29.7
+    ]
+   },
+   "pin_file": "physical/s81_die_pins/v20_embedding/ot_s81_embed_expand.tcl",
+   "qualification": "NATIVE_LEAF_RESERVATION; role-specific controller and full-table ROM topology OPEN"
+  },
+  {
+   "name": "sp_engram_mix",
+   "master": "dsfd_engram_mix_c",
+   "at_um": [
+    13942.8,
+    22770.0
+   ],
+   "outline": {
+    "w": 1152.0,
+    "h": 864.0
+   },
+   "clock": "stream_1p2",
+   "geometry": "xsp7_screen plan.json.gz actual entire instance set:0overlaps",
+   "memory_calendar": {
+    "read_rows_per_cycle": 5,
+    "read_port_shape_reserved": 5,
+    "write_rows_per_cycle": 1,
+    "format": "H/out packedBF16;K/W/V FP32",
+    "runtime_backpressure": false,
+    "qualification": "OPEN: fixed source/flight/bank cycles must be compiled"
+   },
+   "pin_file": "physical/s81_die_pins/v20_functional/dsfd_engram_mix_c.tcl",
+   "qualification": "RESERVED_REAL_RTL_NOT_ROUTED"
+  },
+  {
+   "name": "sp_hcx_south0",
+   "master": "ot_s81_hcx_projection_leaf",
+   "at_um": [
+    17334.0,
+    1857.6
+   ],
+   "outline": {
+    "w": 1728.0,
+    "h": 864.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
+   "ROM": {
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "RESERVATION only:1.493mm2 vs1.0968mm2 macro+MAC lower bound; synthesis/CTS/pins/relay cuts/staticcalendar/native gates still owed"
+  },
+  {
+   "name": "sp_hcx_south1",
+   "master": "ot_s81_hcx_projection_leaf",
+   "at_um": [
+    19200.0,
+    1857.6
+   ],
+   "outline": {
+    "w": 1728.0,
+    "h": 864.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
+   "ROM": {
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "RESERVATION only:1.493mm2 vs1.0968mm2 macro+MAC lower bound; synthesis/CTS/pins/relay cuts/staticcalendar/native gates still owed"
+  },
+  {
+   "name": "sp_hcx_north0",
+   "master": "ot_s81_hcx_projection_leaf",
+   "at_um": [
+    17334.0,
+    22307.04
+   ],
+   "outline": {
+    "w": 1728.0,
+    "h": 864.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
+   "ROM": {
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "RESERVATION only:1.493mm2 vs1.0968mm2 macro+MAC lower bound; synthesis/CTS/pins/relay cuts/staticcalendar/native gates still owed"
+  },
+  {
+   "name": "sp_hcx_north1",
+   "master": "ot_s81_hcx_projection_leaf",
+   "at_um": [
+    19200.0,
+    22770.0
+   ],
+   "outline": {
+    "w": 1728.0,
+    "h": 864.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
+   "ROM": {
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "RESERVATION only:1.493mm2 vs1.0968mm2 macro+MAC lower bound; synthesis/CTS/pins/relay cuts/staticcalendar/native gates still owed"
+  },
+  {
+   "name": "sp_hcx_west0",
+   "master": "ot_s81_hcx_projection_leaf",
+   "at_um": [
+    9504.0,
+    22770.0
+   ],
+   "outline": {
+    "w": 1728.0,
+    "h": 864.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
+   "ROM": {
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "RESERVATION only:1.493mm2 vs1.0968mm2 macro+MAC lower bound; synthesis/CTS/pins/relay cuts/staticcalendar/native gates still owed"
+  },
+  {
+   "name": "sp_hcx_west1",
+   "master": "ot_s81_hcx_projection_leaf",
+   "at_um": [
+    11384.064,
+    22770.0
+   ],
+   "outline": {
+    "w": 1728.0,
+    "h": 864.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
+   "ROM": {
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "RESERVATION only:1.493mm2 vs1.0968mm2 macro+MAC lower bound; synthesis/CTS/pins/relay cuts/staticcalendar/native gates still owed"
+  },
+  {
+   "name": "sp_hcx_ctl",
+   "master": "ot_s81_hcx_controller",
+   "at_um": [
+    15362.4,
+    22770.0
+   ],
+   "outline": {
+    "w": 216.0,
+    "h": 216.0
+   },
+   "geometry": "exact xsp7 full instance rectangle0collisions;25um eastofembedding",
+   "pin_file": "physical/s81_die_pins/v20_functional/ot_s81_hcx_controller.tcl",
+   "qualification": "OPEN native two-root controller; parent wires+6 actual projection leaves+controller; no raw payload stub"
+  },
+  {
+   "name": "sp_hcx_gatherpack",
+   "master": "ot_s81_hcx_gatherpack",
+   "at_um": [
+    15600.0,
+    22770.0
+   ],
+   "outline": {
+    "w": 216.0,
+    "h": 216.0
+   },
+   "pin_file": "physical/s81_die_pins/v20_functional/ot_s81_hcx_gatherpack.tcl",
+   "clock": "stream_1p2",
+   "geometry": "full xsp7 instance rectangle0overlaps;21.6um east of controller; disjoint all six HCP/MIX/embedding reservations",
+   "qualification": "NEW actual compaction leaf; no collective/VM transport latency claim"
+  },
+  {
+   "name": "sp_engram_dispatch",
+   "master": "ot_s81_engram_dispatch",
+   "at_um": [
+    15120.0,
+    23007.6
+   ],
+   "outline": {
+    "w": 129.6,
+    "h": 86.4
+   },
+   "clock": "stream_1p2",
+   "geometry": "full xsp7 instance rectangle0overlaps;21.6um above embedding,25.2um east of MIX face; no collision with reserved HCP/controller/gatherpack",
+   "pin_file": "physical/s81_die_pins/v20_functional/ot_s81_engram_dispatch.tcl",
+   "qualification": "real static engine10arg23 dispatch; lookup home/long sequencer relays and completion phase still OPEN"
+  },
+  {
+   "name": "sp_sseq",
+   "cell": "dsfd_stage_seq_static_c",
+   "outline": {
+    "w": 1727.976,
+    "h": 88.536
+   },
+   "origin": {
+    "x": 13942.8,
+    "y": 19461.6,
+    "orient": "R0"
+   },
+   "kind": "native_successor_reservation",
+   "parent": "s81_layer1",
+   "pin_file": "physical/s81_die_pins/v20_static_seq/dsfd_stage_seq_static_c.tcl",
+   "qualification": "static source all13engines, native gate/phase/transport required; no predecessor functional/timing equivalence"
   }
  ],
  "pdn": {
@@ -15038,6 +15377,11 @@
   "dsfd_svc_c_native_ingress": {
    "source": "physical/s81_die_pins/v20_svc_native/ingress_layout.json",
    "qualification": "OPEN native full parent, slots reserved for actual masters"
+  },
+  "sp_vm_static_v3_banks": {
+   "source": "physical/s81_die_pins/v20_vm_static_standard/layout_candidate.json",
+   "bank_pin_file": "physical/s81_die_pins/v20_vm_static_standard/dsfd_vm_static_bank128.tcl",
+   "qualification": "128standard20um banks assigned;2x2slice parent candidate0overlap, realfrontend/transport cuts/staticphase remainOPEN;47.52probe diagnosticonly"
   }
  },
  "layer_cap_grants": {
@@ -17966,5 +18310,679 @@
   "hc_widths": "hc_s <-> hc_t at the RTL widths 3,056 / 2,164 per column (15,660 b): cut 0.24 of M5+M7 over the 1,816.5-um slab width; reach needs --hop-spread",
   "recipe": "results/physical/die_iter_1012/s81/s81_layer1_v19c.opts (c9p)",
   "source": "el1011-s81die.log 2026-10-14 (s81-die lead r6)"
+ },
+ "v20_functional_home_reservation": "physical/s81_die_pins/v20_functional/homes.json",
+ "v20_embedding_home": "physical/s81_die_pins/v20_embedding/home.json",
+ "v20_ces_d6": {
+  "decision": "D6 option A (el1011-s81die.log 2026-10-14 18:06, confirmed r7 21:2x): no ces parent cell; children die-placed inside sp_collective; per-child clock entry phi - R_i; child pins adopted",
+  "owner_rules": "static cycle schedule (owner 10-14 18:59): the ces sources include rtl/common/ot_link_credit.sv; credit seams must become compiler-scheduled static slots before native qualification. Children whose CLOSED view fails the native pin audit (cesc0: launch cr_o 290 ps) are bound only after their re-route (dscoll_cesc0_ln-pr1) closes and passes the native audit.",
+  "slots": {
+   "sp_collective/ce_s0": {
+    "frame": {
+     "origin": [
+      604.8,
+      1017.36
+     ],
+     "w": 432.0,
+     "h": 345.6,
+     "keepout": true,
+     "parent_cell": null
+    },
+    "replaces": "dsfd_coll_ces0",
+    "spec": "tools/ref_tile/specs_dscoll_ces/dscoll_ces0_pc.json",
+    "children": [
+     {
+      "inst": "*g_x?1?.u_x",
+      "view": "physical/ref_tile/dscoll_cesx/views/dsfd_coll_cesx",
+      "master": "dsfd_coll_cesx",
+      "origin_in_sp_collective_um": [
+       630.72,
+       1043.28
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s0_x1",
+      "child_clock": "ck",
+      "R_child_tt_ps": 127.3,
+      "insertion_sha256": "b37baf15e61ffca6e31a361a549a8bae0829eaf8a6df7b1c1b5763be704fe80c",
+      "insertion_current": true
+     },
+     {
+      "inst": "*g_x?2?.u_x",
+      "view": "physical/ref_tile/dscoll_cesx/views/dsfd_coll_cesx",
+      "master": "dsfd_coll_cesx",
+      "origin_in_sp_collective_um": [
+       630.72,
+       1146.96
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s0_x2",
+      "child_clock": "ck",
+      "R_child_tt_ps": 127.3,
+      "insertion_sha256": "b37baf15e61ffca6e31a361a549a8bae0829eaf8a6df7b1c1b5763be704fe80c",
+      "insertion_current": true
+     },
+     {
+      "inst": "*g_x?3?.u_x",
+      "view": "physical/ref_tile/dscoll_cesx/views/dsfd_coll_cesx",
+      "master": "dsfd_coll_cesx",
+      "origin_in_sp_collective_um": [
+       630.72,
+       1250.64
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s0_x3",
+      "child_clock": "ck",
+      "R_child_tt_ps": 127.3,
+      "insertion_sha256": "b37baf15e61ffca6e31a361a549a8bae0829eaf8a6df7b1c1b5763be704fe80c",
+      "insertion_current": true
+     },
+     {
+      "inst": "*u_c",
+      "view": "physical/ref_tile/dscoll_cesc0_ln/views/dsfd_coll_cesc0",
+      "master": "dsfd_coll_cesc0",
+      "origin_in_sp_collective_um": [
+       699.84,
+       1043.28
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s0_core",
+      "child_clock": "ck",
+      "R_child_tt_ps": 413.5,
+      "insertion_sha256": "6d5cafbe250813058a9c4e0840a9cafc6c81f11a12717b6295a9ba5829aa6c3b",
+      "insertion_current": false
+     },
+     {
+      "inst": "*g_ln?0?.u_l",
+      "view": "physical/ref_tile/dscoll_cesl/views/dsfd_coll_cesl",
+      "master": "dsfd_coll_cesl",
+      "origin_in_sp_collective_um": [
+       699.84,
+       1285.2
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s0_l0",
+      "child_clock": "ck",
+      "R_child_tt_ps": 113.7,
+      "insertion_sha256": "7d1da24f6cf2a1d3bb419b745b697352e50b320d67798814b6563f9a2843a030",
+      "insertion_current": true
+     },
+     {
+      "inst": "*g_ln?1?.u_l",
+      "view": "physical/ref_tile/dscoll_cesl/views/dsfd_coll_cesl",
+      "master": "dsfd_coll_cesl",
+      "origin_in_sp_collective_um": [
+       768.96,
+       1285.2
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s0_l1",
+      "child_clock": "ck",
+      "R_child_tt_ps": 113.7,
+      "insertion_sha256": "7d1da24f6cf2a1d3bb419b745b697352e50b320d67798814b6563f9a2843a030",
+      "insertion_current": true
+     },
+     {
+      "inst": "*g_ln?2?.u_l",
+      "view": "physical/ref_tile/dscoll_cesl/views/dsfd_coll_cesl",
+      "master": "dsfd_coll_cesl",
+      "origin_in_sp_collective_um": [
+       838.08,
+       1285.2
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s0_l2",
+      "child_clock": "ck",
+      "R_child_tt_ps": 113.7,
+      "insertion_sha256": "7d1da24f6cf2a1d3bb419b745b697352e50b320d67798814b6563f9a2843a030",
+      "insertion_current": true
+     },
+     {
+      "inst": "*g_ln?3?.u_l",
+      "view": "physical/ref_tile/dscoll_cesl/views/dsfd_coll_cesl",
+      "master": "dsfd_coll_cesl",
+      "origin_in_sp_collective_um": [
+       907.2,
+       1285.2
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s0_l3",
+      "child_clock": "ck",
+      "R_child_tt_ps": 113.7,
+      "insertion_sha256": "7d1da24f6cf2a1d3bb419b745b697352e50b320d67798814b6563f9a2843a030",
+      "insertion_current": true
+     },
+     {
+      "inst": "*u_o",
+      "view": "physical/ref_tile/dscoll_ceso/views/dsfd_coll_ceso",
+      "master": "dsfd_coll_ceso",
+      "origin_in_sp_collective_um": [
+       941.76,
+       1043.28
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s0_o",
+      "child_clock": "ck",
+      "R_child_tt_ps": 98.2,
+      "insertion_sha256": "2b84d3553083a3b9d96918434c3da3afb07ce58dd1e8f4dc91f837bf801b72b4",
+      "insertion_current": true
+     },
+     {
+      "inst": "*u_p",
+      "view": "physical/ref_tile/dscoll_cesp0/views/dsfd_coll_cesp0",
+      "master": "dsfd_coll_cesp0",
+      "origin_in_sp_collective_um": [
+       941.76,
+       1103.76
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s0_pt",
+      "child_clock": "ck",
+      "R_child_tt_ps": 166.3,
+      "insertion_sha256": "695dd73de77e2683c0ad7209757ec15df50883157c7ea3f9aaeca4183bc9b217",
+      "insertion_current": true
+     }
+    ]
+   },
+   "sp_collective/ce_s1": {
+    "frame": {
+     "origin": [
+      1058.4,
+      1017.36
+     ],
+     "w": 432.0,
+     "h": 345.6,
+     "keepout": true,
+     "parent_cell": null
+    },
+    "replaces": "dsfd_coll_cesn",
+    "spec": "tools/ref_tile/specs_dscoll_ces/dscoll_cesn_pc.json",
+    "children": [
+     {
+      "inst": "*g_x?1?.u_x",
+      "view": "physical/ref_tile/dscoll_cesx/views/dsfd_coll_cesx",
+      "master": "dsfd_coll_cesx",
+      "origin_in_sp_collective_um": [
+       1084.32,
+       1043.28
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s1_x1",
+      "child_clock": "ck",
+      "R_child_tt_ps": 127.3,
+      "insertion_sha256": "b37baf15e61ffca6e31a361a549a8bae0829eaf8a6df7b1c1b5763be704fe80c",
+      "insertion_current": true
+     },
+     {
+      "inst": "*g_x?2?.u_x",
+      "view": "physical/ref_tile/dscoll_cesx/views/dsfd_coll_cesx",
+      "master": "dsfd_coll_cesx",
+      "origin_in_sp_collective_um": [
+       1084.32,
+       1146.96
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s1_x2",
+      "child_clock": "ck",
+      "R_child_tt_ps": 127.3,
+      "insertion_sha256": "b37baf15e61ffca6e31a361a549a8bae0829eaf8a6df7b1c1b5763be704fe80c",
+      "insertion_current": true
+     },
+     {
+      "inst": "*g_x?3?.u_x",
+      "view": "physical/ref_tile/dscoll_cesx/views/dsfd_coll_cesx",
+      "master": "dsfd_coll_cesx",
+      "origin_in_sp_collective_um": [
+       1084.32,
+       1250.64
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s1_x3",
+      "child_clock": "ck",
+      "R_child_tt_ps": 127.3,
+      "insertion_sha256": "b37baf15e61ffca6e31a361a549a8bae0829eaf8a6df7b1c1b5763be704fe80c",
+      "insertion_current": true
+     },
+     {
+      "inst": "*u_c",
+      "view": "physical/ref_tile/dscoll_cescn_ln_c16/views/dsfd_coll_cescn",
+      "master": "dsfd_coll_cescn",
+      "origin_in_sp_collective_um": [
+       1153.44,
+       1043.28
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s1_core",
+      "child_clock": "ck",
+      "R_child_tt_ps": 420.9,
+      "insertion_sha256": "537796ee40e234b0dc134c5d0daad0843b87a88c5c791d1b12c04e57893d93b9",
+      "insertion_current": false
+     },
+     {
+      "inst": "*g_ln?0?.u_l",
+      "view": "physical/ref_tile/dscoll_cesl/views/dsfd_coll_cesl",
+      "master": "dsfd_coll_cesl",
+      "origin_in_sp_collective_um": [
+       1153.44,
+       1285.2
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s1_l0",
+      "child_clock": "ck",
+      "R_child_tt_ps": 113.7,
+      "insertion_sha256": "7d1da24f6cf2a1d3bb419b745b697352e50b320d67798814b6563f9a2843a030",
+      "insertion_current": true
+     },
+     {
+      "inst": "*g_ln?1?.u_l",
+      "view": "physical/ref_tile/dscoll_cesl/views/dsfd_coll_cesl",
+      "master": "dsfd_coll_cesl",
+      "origin_in_sp_collective_um": [
+       1222.56,
+       1285.2
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s1_l1",
+      "child_clock": "ck",
+      "R_child_tt_ps": 113.7,
+      "insertion_sha256": "7d1da24f6cf2a1d3bb419b745b697352e50b320d67798814b6563f9a2843a030",
+      "insertion_current": true
+     },
+     {
+      "inst": "*g_ln?2?.u_l",
+      "view": "physical/ref_tile/dscoll_cesl/views/dsfd_coll_cesl",
+      "master": "dsfd_coll_cesl",
+      "origin_in_sp_collective_um": [
+       1291.68,
+       1285.2
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s1_l2",
+      "child_clock": "ck",
+      "R_child_tt_ps": 113.7,
+      "insertion_sha256": "7d1da24f6cf2a1d3bb419b745b697352e50b320d67798814b6563f9a2843a030",
+      "insertion_current": true
+     },
+     {
+      "inst": "*g_ln?3?.u_l",
+      "view": "physical/ref_tile/dscoll_cesl/views/dsfd_coll_cesl",
+      "master": "dsfd_coll_cesl",
+      "origin_in_sp_collective_um": [
+       1360.8,
+       1285.2
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s1_l3",
+      "child_clock": "ck",
+      "R_child_tt_ps": 113.7,
+      "insertion_sha256": "7d1da24f6cf2a1d3bb419b745b697352e50b320d67798814b6563f9a2843a030",
+      "insertion_current": true
+     },
+     {
+      "inst": "*u_o",
+      "view": "physical/ref_tile/dscoll_ceso/views/dsfd_coll_ceso",
+      "master": "dsfd_coll_ceso",
+      "origin_in_sp_collective_um": [
+       1395.36,
+       1043.28
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s1_o",
+      "child_clock": "ck",
+      "R_child_tt_ps": 98.2,
+      "insertion_sha256": "2b84d3553083a3b9d96918434c3da3afb07ce58dd1e8f4dc91f837bf801b72b4",
+      "insertion_current": true
+     },
+     {
+      "inst": "*u_p",
+      "view": "physical/ref_tile/dscoll_cespn/views/dsfd_coll_cespn",
+      "master": "dsfd_coll_cespn",
+      "origin_in_sp_collective_um": [
+       1395.36,
+       1103.76
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s1_pt",
+      "child_clock": "ck",
+      "R_child_tt_ps": 151.7,
+      "insertion_sha256": "0d79b02afce5fc055703bf337eeb7991d4598afc184965bccbbaffcdc98c84d9",
+      "insertion_current": true
+     }
+    ]
+   },
+   "sp_collective/ce_s2": {
+    "frame": {
+     "origin": [
+      604.8,
+      1406.16
+     ],
+     "w": 432.0,
+     "h": 345.6,
+     "keepout": true,
+     "parent_cell": null
+    },
+    "replaces": "dsfd_coll_cesn",
+    "spec": "tools/ref_tile/specs_dscoll_ces/dscoll_cesn_pc.json",
+    "children": [
+     {
+      "inst": "*g_x?1?.u_x",
+      "view": "physical/ref_tile/dscoll_cesx/views/dsfd_coll_cesx",
+      "master": "dsfd_coll_cesx",
+      "origin_in_sp_collective_um": [
+       630.72,
+       1432.08
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s2_x1",
+      "child_clock": "ck",
+      "R_child_tt_ps": 127.3,
+      "insertion_sha256": "b37baf15e61ffca6e31a361a549a8bae0829eaf8a6df7b1c1b5763be704fe80c",
+      "insertion_current": true
+     },
+     {
+      "inst": "*g_x?2?.u_x",
+      "view": "physical/ref_tile/dscoll_cesx/views/dsfd_coll_cesx",
+      "master": "dsfd_coll_cesx",
+      "origin_in_sp_collective_um": [
+       630.72,
+       1535.76
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s2_x2",
+      "child_clock": "ck",
+      "R_child_tt_ps": 127.3,
+      "insertion_sha256": "b37baf15e61ffca6e31a361a549a8bae0829eaf8a6df7b1c1b5763be704fe80c",
+      "insertion_current": true
+     },
+     {
+      "inst": "*g_x?3?.u_x",
+      "view": "physical/ref_tile/dscoll_cesx/views/dsfd_coll_cesx",
+      "master": "dsfd_coll_cesx",
+      "origin_in_sp_collective_um": [
+       630.72,
+       1639.44
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s2_x3",
+      "child_clock": "ck",
+      "R_child_tt_ps": 127.3,
+      "insertion_sha256": "b37baf15e61ffca6e31a361a549a8bae0829eaf8a6df7b1c1b5763be704fe80c",
+      "insertion_current": true
+     },
+     {
+      "inst": "*u_c",
+      "view": "physical/ref_tile/dscoll_cescn_ln_c16/views/dsfd_coll_cescn",
+      "master": "dsfd_coll_cescn",
+      "origin_in_sp_collective_um": [
+       699.84,
+       1432.08
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s2_core",
+      "child_clock": "ck",
+      "R_child_tt_ps": 420.9,
+      "insertion_sha256": "537796ee40e234b0dc134c5d0daad0843b87a88c5c791d1b12c04e57893d93b9",
+      "insertion_current": false
+     },
+     {
+      "inst": "*g_ln?0?.u_l",
+      "view": "physical/ref_tile/dscoll_cesl/views/dsfd_coll_cesl",
+      "master": "dsfd_coll_cesl",
+      "origin_in_sp_collective_um": [
+       699.84,
+       1674.0
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s2_l0",
+      "child_clock": "ck",
+      "R_child_tt_ps": 113.7,
+      "insertion_sha256": "7d1da24f6cf2a1d3bb419b745b697352e50b320d67798814b6563f9a2843a030",
+      "insertion_current": true
+     },
+     {
+      "inst": "*g_ln?1?.u_l",
+      "view": "physical/ref_tile/dscoll_cesl/views/dsfd_coll_cesl",
+      "master": "dsfd_coll_cesl",
+      "origin_in_sp_collective_um": [
+       768.96,
+       1674.0
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s2_l1",
+      "child_clock": "ck",
+      "R_child_tt_ps": 113.7,
+      "insertion_sha256": "7d1da24f6cf2a1d3bb419b745b697352e50b320d67798814b6563f9a2843a030",
+      "insertion_current": true
+     },
+     {
+      "inst": "*g_ln?2?.u_l",
+      "view": "physical/ref_tile/dscoll_cesl/views/dsfd_coll_cesl",
+      "master": "dsfd_coll_cesl",
+      "origin_in_sp_collective_um": [
+       838.08,
+       1674.0
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s2_l2",
+      "child_clock": "ck",
+      "R_child_tt_ps": 113.7,
+      "insertion_sha256": "7d1da24f6cf2a1d3bb419b745b697352e50b320d67798814b6563f9a2843a030",
+      "insertion_current": true
+     },
+     {
+      "inst": "*g_ln?3?.u_l",
+      "view": "physical/ref_tile/dscoll_cesl/views/dsfd_coll_cesl",
+      "master": "dsfd_coll_cesl",
+      "origin_in_sp_collective_um": [
+       907.2,
+       1674.0
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s2_l3",
+      "child_clock": "ck",
+      "R_child_tt_ps": 113.7,
+      "insertion_sha256": "7d1da24f6cf2a1d3bb419b745b697352e50b320d67798814b6563f9a2843a030",
+      "insertion_current": true
+     },
+     {
+      "inst": "*u_o",
+      "view": "physical/ref_tile/dscoll_ceso/views/dsfd_coll_ceso",
+      "master": "dsfd_coll_ceso",
+      "origin_in_sp_collective_um": [
+       941.76,
+       1432.08
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s2_o",
+      "child_clock": "ck",
+      "R_child_tt_ps": 98.2,
+      "insertion_sha256": "2b84d3553083a3b9d96918434c3da3afb07ce58dd1e8f4dc91f837bf801b72b4",
+      "insertion_current": true
+     },
+     {
+      "inst": "*u_p",
+      "view": "physical/ref_tile/dscoll_cespn/views/dsfd_coll_cespn",
+      "master": "dsfd_coll_cespn",
+      "origin_in_sp_collective_um": [
+       941.76,
+       1492.56
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s2_pt",
+      "child_clock": "ck",
+      "R_child_tt_ps": 151.7,
+      "insertion_sha256": "0d79b02afce5fc055703bf337eeb7991d4598afc184965bccbbaffcdc98c84d9",
+      "insertion_current": true
+     }
+    ]
+   },
+   "sp_collective/ce_s3": {
+    "frame": {
+     "origin": [
+      1058.4,
+      1406.16
+     ],
+     "w": 432.0,
+     "h": 345.6,
+     "keepout": true,
+     "parent_cell": null
+    },
+    "replaces": "dsfd_coll_cesn",
+    "spec": "tools/ref_tile/specs_dscoll_ces/dscoll_cesn_pc.json",
+    "children": [
+     {
+      "inst": "*g_x?1?.u_x",
+      "view": "physical/ref_tile/dscoll_cesx/views/dsfd_coll_cesx",
+      "master": "dsfd_coll_cesx",
+      "origin_in_sp_collective_um": [
+       1084.32,
+       1432.08
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s3_x1",
+      "child_clock": "ck",
+      "R_child_tt_ps": 127.3,
+      "insertion_sha256": "b37baf15e61ffca6e31a361a549a8bae0829eaf8a6df7b1c1b5763be704fe80c",
+      "insertion_current": true
+     },
+     {
+      "inst": "*g_x?2?.u_x",
+      "view": "physical/ref_tile/dscoll_cesx/views/dsfd_coll_cesx",
+      "master": "dsfd_coll_cesx",
+      "origin_in_sp_collective_um": [
+       1084.32,
+       1535.76
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s3_x2",
+      "child_clock": "ck",
+      "R_child_tt_ps": 127.3,
+      "insertion_sha256": "b37baf15e61ffca6e31a361a549a8bae0829eaf8a6df7b1c1b5763be704fe80c",
+      "insertion_current": true
+     },
+     {
+      "inst": "*g_x?3?.u_x",
+      "view": "physical/ref_tile/dscoll_cesx/views/dsfd_coll_cesx",
+      "master": "dsfd_coll_cesx",
+      "origin_in_sp_collective_um": [
+       1084.32,
+       1639.44
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s3_x3",
+      "child_clock": "ck",
+      "R_child_tt_ps": 127.3,
+      "insertion_sha256": "b37baf15e61ffca6e31a361a549a8bae0829eaf8a6df7b1c1b5763be704fe80c",
+      "insertion_current": true
+     },
+     {
+      "inst": "*u_c",
+      "view": "physical/ref_tile/dscoll_cescn_ln_c16/views/dsfd_coll_cescn",
+      "master": "dsfd_coll_cescn",
+      "origin_in_sp_collective_um": [
+       1153.44,
+       1432.08
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s3_core",
+      "child_clock": "ck",
+      "R_child_tt_ps": 420.9,
+      "insertion_sha256": "537796ee40e234b0dc134c5d0daad0843b87a88c5c791d1b12c04e57893d93b9",
+      "insertion_current": false
+     },
+     {
+      "inst": "*g_ln?0?.u_l",
+      "view": "physical/ref_tile/dscoll_cesl/views/dsfd_coll_cesl",
+      "master": "dsfd_coll_cesl",
+      "origin_in_sp_collective_um": [
+       1153.44,
+       1674.0
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s3_l0",
+      "child_clock": "ck",
+      "R_child_tt_ps": 113.7,
+      "insertion_sha256": "7d1da24f6cf2a1d3bb419b745b697352e50b320d67798814b6563f9a2843a030",
+      "insertion_current": true
+     },
+     {
+      "inst": "*g_ln?1?.u_l",
+      "view": "physical/ref_tile/dscoll_cesl/views/dsfd_coll_cesl",
+      "master": "dsfd_coll_cesl",
+      "origin_in_sp_collective_um": [
+       1222.56,
+       1674.0
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s3_l1",
+      "child_clock": "ck",
+      "R_child_tt_ps": 113.7,
+      "insertion_sha256": "7d1da24f6cf2a1d3bb419b745b697352e50b320d67798814b6563f9a2843a030",
+      "insertion_current": true
+     },
+     {
+      "inst": "*g_ln?2?.u_l",
+      "view": "physical/ref_tile/dscoll_cesl/views/dsfd_coll_cesl",
+      "master": "dsfd_coll_cesl",
+      "origin_in_sp_collective_um": [
+       1291.68,
+       1674.0
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s3_l2",
+      "child_clock": "ck",
+      "R_child_tt_ps": 113.7,
+      "insertion_sha256": "7d1da24f6cf2a1d3bb419b745b697352e50b320d67798814b6563f9a2843a030",
+      "insertion_current": true
+     },
+     {
+      "inst": "*g_ln?3?.u_l",
+      "view": "physical/ref_tile/dscoll_cesl/views/dsfd_coll_cesl",
+      "master": "dsfd_coll_cesl",
+      "origin_in_sp_collective_um": [
+       1360.8,
+       1674.0
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s3_l3",
+      "child_clock": "ck",
+      "R_child_tt_ps": 113.7,
+      "insertion_sha256": "7d1da24f6cf2a1d3bb419b745b697352e50b320d67798814b6563f9a2843a030",
+      "insertion_current": true
+     },
+     {
+      "inst": "*u_o",
+      "view": "physical/ref_tile/dscoll_ceso/views/dsfd_coll_ceso",
+      "master": "dsfd_coll_ceso",
+      "origin_in_sp_collective_um": [
+       1395.36,
+       1432.08
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s3_o",
+      "child_clock": "ck",
+      "R_child_tt_ps": 98.2,
+      "insertion_sha256": "2b84d3553083a3b9d96918434c3da3afb07ce58dd1e8f4dc91f837bf801b72b4",
+      "insertion_current": true
+     },
+     {
+      "inst": "*u_p",
+      "view": "physical/ref_tile/dscoll_cespn/views/dsfd_coll_cespn",
+      "master": "dsfd_coll_cespn",
+      "origin_in_sp_collective_um": [
+       1395.36,
+       1492.56
+      ],
+      "orient": "R0",
+      "clock_entry": "ck_ce_s3_pt",
+      "child_clock": "ck",
+      "R_child_tt_ps": 151.7,
+      "insertion_sha256": "0d79b02afce5fc055703bf337eeb7991d4598afc184965bccbbaffcdc98c84d9",
+      "insertion_current": true
+     }
+    ]
+   }
+  },
+  "children_total": 40,
+  "clock_entries_total": 40
  }
 }

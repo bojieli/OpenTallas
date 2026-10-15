@@ -1,0 +1,12 @@
+{
+  "status": "INTENTIONALLY_STOPPED_CONFIRMED_FLOW_TOOLING_ERROR",
+  "unit": "oth-ubuntu-1899971-1792061814.scope",
+  "ot_run_exit": 143,
+  "reason": "Missing imported liberty cell declarations makes check-assert report false undriven FF outputs; reproduced in one-FF probe",
+  "probe_before": "FAIL_UNDRIVEN_NET",
+  "probe_with_liberty_declarations": "PASS_ZERO_PROBLEMS",
+  "corrected_live_unit": "oth-ubuntu-1922885-1792061929.scope",
+  "hardware_changed": false,
+  "timing_target_changed": false,
+  "unrelated_jobs_touched": false
+}
