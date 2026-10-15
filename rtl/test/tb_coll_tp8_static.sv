@@ -69,8 +69,15 @@ module tb_coll_tp8_static #(
     generate
         for (g = 0; g < ND; g = g + 1) begin : g_die
             localparam integer P = g / 2, D = g % 2;
+`ifdef OT_TP8S_QFD
+            qfd_io_collective_static u_die (       // the die-name master (LU / LS by +define, = LATU / LATS)
+                .clk(clk), .clk_pfold0(clk), .clk_pfold1(clk), .clk_pfold2(clk), .clk_pfold3(clk),
+                .clk_xfold0(clk), .clk_xfold1(clk), .clk_xfold2(clk), .clk_xfold3(clk),
+`else
             ot_coll_tp8_static #(.LU(LATU), .LS(LATS)) u_die (
-                .clk(clk), .rst_n(rst_n), .pkg_s(P[1:0]), .die_ps(D[0]),
+                .clk(clk), .clk_pfold({4{clk}}), .clk_xfold({4{clk}}),
+`endif
+                .rst_n(rst_n), .pkg_s(P[1:0]), .die_ps(D[0]),
                 .cmd_v(cmd_v), .cmd_mode(cmd_mode), .cmd_words(cmd_words), .cmd_tag(cmd_tag),
                 .in_valid(iv[g]), .in_data(id[g*FW +: FW]), .in_last(il[g]), .in_mode(im[g]), .in_tag(it[g*TAGW +: TAGW]),
                 .up_valid(upv[g]), .up_rec(uprec[g*PW +: PW]), .dp_valid(dpv[g]), .dp_rec(dprec[g*PW +: PW]),

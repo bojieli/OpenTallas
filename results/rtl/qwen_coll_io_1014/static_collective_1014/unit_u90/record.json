@@ -6,6 +6,7 @@
   "lats": 400,
   "xu": 0,
   "xs": 0,
+  "die_name_master": false,
   "slice_latency": 23,
   "gather_cadence": 8,
   "mutant": null,
@@ -1310,9 +1311,10 @@
     "rtl/rom/ot_coll_rst_leaf.sv": "ff6546f30f4c166ac47a96c876161984256073904fbf444b74fbbb22ac4a2916",
     "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v": "c86e80340814833f88a8f0215aabd9bcf62b46755650d778758f126cfa225279",
     "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
-    "rtl/rom/ot_coll_tp8_static.sv": "72b3f2f6b63ff6cdca45e993c1d407fc832d06ba0554e052c5141d28772f377b",
-    "rtl/test/tb_coll_tp8_static.sv": "313a9e5143edd9face5cb85943640bb38f8f692775aa17444431c2268b8836af"
+    "rtl/rom/ot_coll_tp8_static.sv": "1796e31958b2209f500475af6c75f6895600f9a5df95b1b80ff343cbd7074aaa",
+    "rtl/physical/ot_qfd_io_collective_static.sv": "17845efc864616a0d8a5aec692812d53a2537334ef7f22132220099c3599b533",
+    "rtl/test/tb_coll_tp8_static.sv": "40e1ffe020b9ebd018db39ecae01abe36adb5e664c95f954df72091020ed090c"
   },
-  "executable_sha256": "058c62ca0a79aa99e20f8a0a68fce5cae87f61179aa23772f2020df9b4f6ac9c",
+  "executable_sha256": "532ea301f8e098f85c535a03f99a2ecb447403a9842de45f127b6708ea5c9130",
   "native_layer_qualified": false
 }

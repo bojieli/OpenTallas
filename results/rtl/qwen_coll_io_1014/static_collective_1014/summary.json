@@ -1,27 +1,43 @@
 {
  "schema": "opentallas.qwen.tp8.collective.static.summary.v1",
  "owner_rule": "0ah static cycle schedule, no credits/backpressure; checks fault-only",
+ "rtl": "rtl/rom/ot_coll_tp8_static.sv (+ die-name master rtl/physical/ot_qfd_io_collective_static.sv)",
+ "all_runs_one_source_set": true,
  "price_cycles": {
   "ar256": 1121,
   "layer_2xar256": 2100,
-  "source": "strap bench ratios 971/0.866, 1681/0.80 (el1014-qwen-coll-io.log 17:47)"
+  "source": "strap bench ratios 971/0.866 and 1681/0.80, el1014-qwen-coll-io.log 17:47"
+ },
+ "measured": {
+  "ar256_lu19_ls344": 695,
+  "ar256_lu28_ls352": 721,
+  "layer_2xar256_back_to_back_lu19_ls344": 951,
+  "argmax_1w_lu19_ls344": 378
  },
  "measured_vs_price": {
   "ar256": 0.62,
-  "layer_2xar256_back_to_back": 0.453
+  "ar256_lu28_ls352": 0.643
  },
  "buffers": {
-  "P": "ot_coll_static_ring 32x546 (1 bank at LU<=30)",
-  "S": "5 x ot_sram_1r1w_512x128_m4_r2c2 (token+tag+data, offset LS+1)",
+  "P": "ot_coll_static_ring 32x546",
+  "S": "5 x ot_sram_1r1w_512x128_m4_r2c2 (token+tag+data)",
   "R": "ot_coll_static_ring 32x546",
-  "macro_area_um2": 54651.7,
-  "predecessor_macro_area_um2_estimate": "~22 x 32x546 = ~317k (WT3 production queues + engine sources)"
+  "macro_area_um2": 54651.7
  },
- "expected_negative": {
-  "m_owner": "FAIL (link schedule faults)",
-  "m_gather": "FAIL (gather mismatches)",
-  "m_rank": "FAIL (reduce mismatches)",
-  "m_rlat": "FAIL (reduce mismatches)"
+ "yosys": {
+  "parent_glue_flops": 8231,
+  "fold_slice_children": 8,
+  "fold_slice_flops_each": 3345,
+  "design_flops_total": 93191,
+  "note": "parent glue < 15k sinks; the 8 ot_coll_fold_slice children are the existing closed master on their own clock entries"
+ },
+ "negative_controls": {
+  "OT_TP8S_MUT_OWNER": "FAIL (link-schedule faults; a uniform parity swap is an equivalent mutant)",
+  "OT_TP8S_MUT_GATHER": "FAIL",
+  "OT_TP8S_MUT_RANK": "FAIL",
+  "OT_TP8S_MUT_RLAT": "FAIL",
+  "link_plus1_ucie": "every die fault_code[3]",
+  "link_plus1_serdes": "every die fault_code[3]"
  },
  "runs": [
   {
@@ -31,6 +47,7 @@
    "xu": 0,
    "xs": 0,
    "mutant": "OT_TP8S_MUT_GATHER",
+   "die_name_master": false,
    "cases": {
     "reduce_8w_x16": {
      "exact": true,
@@ -106,6 +123,7 @@
    "xu": 0,
    "xs": 0,
    "mutant": "OT_TP8S_MUT_OWNER",
+   "die_name_master": false,
    "cases": {
     "reduce_8w_x16": {
      "exact": false,
@@ -181,6 +199,7 @@
    "xu": 0,
    "xs": 0,
    "mutant": "OT_TP8S_MUT_RANK",
+   "die_name_master": false,
    "cases": {
     "reduce_8w_x16": {
      "exact": false,
@@ -256,6 +275,7 @@
    "xu": 0,
    "xs": 0,
    "mutant": "OT_TP8S_MUT_RLAT",
+   "die_name_master": false,
    "cases": {
     "reduce_8w_x16": {
      "exact": false,
@@ -331,6 +351,7 @@
    "xu": 0,
    "xs": 0,
    "mutant": null,
+   "die_name_master": false,
    "cases": {
     "qwen_ar_256w": {
      "exact": true,
@@ -361,6 +382,7 @@
    "xu": 0,
    "xs": 0,
    "mutant": null,
+   "die_name_master": false,
    "cases": {
     "qwen_ar_256w": {
      "exact": true,
@@ -391,6 +413,7 @@
    "xu": 0,
    "xs": 0,
    "mutant": null,
+   "die_name_master": false,
    "cases": {
     "qwen_ar_256w": {
      "exact": true,
@@ -415,12 +438,120 @@
    }
   },
   {
+   "run": "qfd_prod",
+   "latu": 28,
+   "lats": 352,
+   "xu": 0,
+   "xs": 0,
+   "mutant": null,
+   "die_name_master": true,
+   "cases": {
+    "qwen_ar_256w": {
+     "exact": true,
+     "span": 721,
+     "fault_code": "0000000000000000000000000000000000000000"
+    },
+    "qwen_layer_2x256w": {
+     "exact": true,
+     "span": 977,
+     "fault_code": "0000000000000000000000000000000000000000"
+    },
+    "qwen_argmax_1w": {
+     "exact": true,
+     "span": 395,
+     "fault_code": "0000000000000000000000000000000000000000"
+    },
+    "qwen_layer_2x256w_argmax": {
+     "exact": true,
+     "span": 985,
+     "fault_code": "0000000000000000000000000000000000000000"
+    }
+   }
+  },
+  {
+   "run": "qfd_unit",
+   "latu": 28,
+   "lats": 352,
+   "xu": 0,
+   "xs": 0,
+   "mutant": null,
+   "die_name_master": true,
+   "cases": {
+    "reduce_8w_x16": {
+     "exact": true,
+     "span": 593,
+     "fault_code": "0000000000000000000000000000000000000000"
+    },
+    "reduce_1w_x9_odd": {
+     "exact": true,
+     "span": 474,
+     "fault_code": "0000000000000000000000000000000000000000"
+    },
+    "reduce_3w_x8_odd": {
+     "exact": true,
+     "span": 489,
+     "fault_code": "0000000000000000000000000000000000000000"
+    },
+    "gather_1w_x6": {
+     "exact": true,
+     "span": 435,
+     "fault_code": "0000000000000000000000000000000000000000"
+    },
+    "gather_4w_x4": {
+     "exact": true,
+     "span": 515,
+     "fault_code": "0000000000000000000000000000000000000000"
+    },
+    "mixed_8w_x24": {
+     "exact": true,
+     "span": 1753,
+     "fault_code": "0000000000000000000000000000000000000000"
+    },
+    "fault_nan": {
+     "exact": true,
+     "span": 497,
+     "fault_code": "0000100001000010000100001000010000100001"
+    },
+    "fault_inf": {
+     "exact": true,
+     "span": 497,
+     "fault_code": "0000100001000010000100001000010000100001"
+    },
+    "fault_overflow": {
+     "exact": true,
+     "span": 497,
+     "fault_code": "0000100001000010000100001000010000100001"
+    },
+    "fault_tag": {
+     "exact": true,
+     "span": 497,
+     "fault_code": "0000000010000000001000010001100000000010"
+    },
+    "fault_drop_word": {
+     "exact": true,
+     "span": 497,
+     "fault_code": "0000000000001000100000000000000000000000"
+    },
+    "fault_late_producer": {
+     "exact": true,
+     "span": 631,
+     "fault_code": "0000000000001000100000000000000000000000"
+    },
+    "fault_unreserved_schedule": {
+     "exact": true,
+     "span": 638,
+     "fault_code": "1000010000100001000010000100001000010000"
+    }
+   }
+  },
+  {
    "run": "unit",
    "latu": 19,
    "lats": 344,
    "xu": 0,
    "xs": 0,
    "mutant": null,
+   "die_name_master": false,
    "cases": {
     "reduce_8w_x16": {
      "exact": true,
@@ -496,6 +627,7 @@
    "xu": 0,
    "xs": 0,
    "mutant": null,
+   "die_name_master": false,
    "cases": {
     "reduce_8w_x16": {
      "exact": true,
@@ -571,6 +703,7 @@
    "xu": 0,
    "xs": 0,
    "mutant": null,
+   "die_name_master": false,
    "cases": {
     "reduce_8w_x16": {
      "exact": true,
@@ -646,6 +779,7 @@
    "xu": 0,
    "xs": 1,
    "mutant": null,
+   "die_name_master": false,
    "cases": {
     "link_longer_than_compiled": {
      "exact": true,
@@ -661,6 +795,7 @@
    "xu": 1,
    "xs": 0,
    "mutant": null,
+   "die_name_master": false,
    "cases": {
     "link_longer_than_compiled": {
      "exact": true,
@@ -671,5 +806,11 @@
   }
  ],
  "native_layer_qualified": false,
- "physical_qualified": false
+ "physical_qualified": false,
+ "open": [
+  "physical: cluster kit with die slot (8 closed fold-slice children + 7 macros + glue)",
+  "die LU/LS from compute lead",
+  "collective command source in the die controller/compiler",
+  "composition with qfd_io_*_static links"
+ ]
 }

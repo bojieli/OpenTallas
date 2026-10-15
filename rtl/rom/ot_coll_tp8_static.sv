@@ -44,11 +44,14 @@ module ot_coll_tp8_static #(
     parameter integer LU      = 19,     // UCIe: up/ur output-register cycle -> peer dp/dr pin cycle (implemented)
     parameter integer LS      = 344,    // SerDes: sx output-register cycle -> peer sr pin cycle (implemented)
     parameter integer GC      = 8,      // gather input cadence: 8 output words per input word on a 1-word output
+    parameter integer CCLK    = 0,      // 1: each hardened fold slice on its own clock entry (clk_pfold / clk_xfold)
     parameter integer FW      = 32 * LANES,
     parameter integer PW      = FW + 2 + TAGW,
     parameter integer RW      = FW + 2
 ) (
     input  wire              clk,
+    input  wire [3:0]        clk_pfold,     // CCLK 1: package-fold slice clock entries (same edge as clk)
+    input  wire [3:0]        clk_xfold,     // CCLK 1: cross-fold slice clock entries
     input  wire              rst_n,
     input  wire [1:0]        pkg_s,
     input  wire              die_ps,
@@ -165,7 +168,7 @@ module ot_coll_tp8_static #(
     wire [NS-1:0] ps_v, ps_e; wire [FW-1:0] ps_sum;
     genvar gs;
     generate for (gs = 0; gs < NS; gs = gs + 1) begin : g_pf
-        (* keep_hierarchy *) ot_coll_fold_slice u_fs (.clk(clk), .rst_n(rst_n), .red_in(red_q),
+        (* keep_hierarchy *) ot_coll_fold_slice u_fs (.clk(CCLK ? clk_pfold[gs] : clk), .rst_n(rst_n), .red_in(red_q),
             .src({256'd0, hi_q[gs*128 +: 128], lo_q[gs*128 +: 128]}),
             .sum(ps_sum[gs*128 +: 128]), .v_out(ps_v[gs]), .e_out(ps_e[gs]));
     end endgenerate
@@ -264,7 +267,7 @@ module ot_coll_tp8_static #(
 `endif
     wire [NS-1:0] xs_v, xs_e; wire [FW-1:0] xs_sum;
     generate for (gs = 0; gs < NS; gs = gs + 1) begin : g_xf
-        (* keep_hierarchy *) ot_coll_fold_slice u_fs (.clk(clk), .rst_n(rst_n), .red_in(red2),
+        (* keep_hierarchy *) ot_coll_fold_slice u_fs (.clk(CCLK ? clk_xfold[gs] : clk), .rst_n(rst_n), .red_in(red2),
             .src({xs[3*FW + gs*128 +: 128], xs[2*FW + gs*128 +: 128], xs[FW + gs*128 +: 128], xs[gs*128 +: 128]}),
             .sum(xs_sum[gs*128 +: 128]), .v_out(xs_v[gs]), .e_out(xs_e[gs]));
     end endgenerate

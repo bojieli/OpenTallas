@@ -32,7 +32,7 @@ SRC = [ROOT / p for p in (
     "rtl/rom/ot_coll_fold_slice.sv", "rtl/rom/ot_coll_rst_leaf.sv",
     "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
     "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
-    "rtl/rom/ot_coll_tp8_static.sv", "rtl/test/tb_coll_tp8_static.sv")]
+    "rtl/rom/ot_coll_tp8_static.sv", "rtl/physical/ot_qfd_io_collective_static.sv", "rtl/test/tb_coll_tp8_static.sv")]
 RES = re.compile(r"TP8S dies=8 .* mismatches=(\d+) extra=(\d+) out_err=(\d+) fault=([01]+) code=([01]+) "
                  r"words_out=(\d+) first=(-?\d+) last=(\d+)")
 
@@ -133,8 +133,8 @@ def vectors(path: Path, nwords, prog, seed, big=False):
     (path / "cmd.hex").write_text("".join(lines))
 
 
-def build(out: Path, lu: int, ls: int, xu: int, xs: int, define: str | None) -> Path:
-    obj = out / f"obj_u{lu}_s{ls}_xu{xu}_xs{xs}{('_' + define) if define else ''}"
+def build(out: Path, lu: int, ls: int, xu: int, xs: int, define: str | None, qfd: bool = False) -> Path:
+    obj = out / f"obj_u{lu}_s{ls}_xu{xu}_xs{xs}{'_qfd' if qfd else ''}{('_' + define) if define else ''}"
     h = out / "harness.cpp"
     h.write_text('#include "Vtb_coll_tp8_static.h"\n#include "verilated.h"\n'
                  "int main(int argc, char** argv) { Verilated::commandArgs(argc, argv);\n"
@@ -145,6 +145,8 @@ def build(out: Path, lu: int, ls: int, xu: int, xs: int, define: str | None) -> 
            "-Wno-TIMESCALEMOD", "--top-module", "tb_coll_tp8_static", f"-GLATU={lu}", f"-GLATS={ls}", f"-GXU={xu}",
            f"-GXS={xs}", "-Mdir", str(obj)] + ([f"+define+{define}"] if define else []) + [str(s) for s in SRC] + \
           [str(h), "-CFLAGS", "-O1", "-j", "16"]
+    if qfd:
+        cmd += ["+define+OT_TP8S_QFD", f"+define+OT_QFDS_LU={lu}", f"+define+OT_QFDS_LS={ls}"]
     r = subprocess.run(cmd, capture_output=True, text=True)
     if r.returncode:
         sys.exit(f"build failed:\n{r.stdout[-3000:]}{r.stderr[-3000:]}")
@@ -161,6 +163,7 @@ def main():
     ap.add_argument("--production", action="store_true")
     ap.add_argument("--mutant-define", default=None)
     ap.add_argument("--only", default=None)
+    ap.add_argument("--qfd", action="store_true", help="bench the die-name master qfd_io_collective_static")
     a = ap.parse_args()
     a.out = a.out.resolve()
     a.out.mkdir(parents=True, exist_ok=True)
@@ -169,7 +172,7 @@ def main():
         cases = [c for c in cases if re.search(a.only, c[0])]
     if a.xu or a.xs:   # link-latency negative control: one positive shape, every die must flag the link schedule
         cases = [("link_longer_than_compiled", 4, 8, "m", "link", {})]
-    exe = build(a.out, a.latu, a.lats, a.xu, a.xs, a.mutant_define)
+    exe = build(a.out, a.latu, a.lats, a.xu, a.xs, a.mutant_define, a.qfd)
     bad, records = [], []
     for i, (name, nmsg, words, mk, kind, extra) in enumerate(cases):
         rng = np.random.default_rng(100 + i)
@@ -200,7 +203,7 @@ def main():
             bad.append(name)
     (a.out / "record.json").write_text(json.dumps(dict(
         schema="opentallas.qwen.tp8.collective.static.v1", ranks=ND, lanes=LANES, latu=a.latu, lats=a.lats,
-        xu=a.xu, xs=a.xs, slice_latency=SL, gather_cadence=GC, mutant=a.mutant_define, production=a.production,
+        xu=a.xu, xs=a.xs, die_name_master=a.qfd, slice_latency=SL, gather_cadence=GC, mutant=a.mutant_define, production=a.production,
         cycle_span="first compiled input slot to last compiled output slot (inclusive); every output checked at its exact "
                    "compiled cycle",
         mechanism="no credits/ready/backpressure: compiled command + fixed-offset rings; checks are fault-only",
