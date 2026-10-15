@@ -82,6 +82,16 @@ def main():
         c = json.loads((CAND / (cand + '.json')).read_text())
         w, h = c['outline_um']
         faces = {f: [x for x in (rename(top, p['name']) for p in c['pins'] if p['face'] == f) if x] for f in 'NSEW'}
+        if top == 'dsfd_vm_static_w0_payload':
+            # STRUCTURAL (CTS gate 2026-10-15: masks W->E across 1166 um failed 212-stage wire reach, TT reg->out -519 ps,
+            # clock insertion 828 ps over the 1166 um span): each source's 4 mask + 128 data bits enter together on N and
+            # leave together on S at the same x, so every flop sits between its two pins; outline narrowed to 691.2 um
+            # (two-track pitch .096, 50 % of the M5 tracks <= 0.60).
+            w = 691.2
+            faces = {'N': [], 'S': [], 'E': ['ck', 'rst_n'] + [f'o_epoch[{i}]' for i in range(3)], 'W': []}
+            for src in range(53):
+                faces['N'] += [f'i_mask[{4*src+i}]' for i in range(4)] + [f'i_data[{128*src+i}]' for i in range(128)]
+                faces['S'] += [f'o_mask[{4*src+i}]' for i in range(4)] + [f'o_data[{128*src+i}]' for i in range(128)]
         pins, pitches = [], {}
         for f in 'NSEW':
             if not faces[f]:

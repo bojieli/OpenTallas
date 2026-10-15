@@ -6,13 +6,13 @@
  "die": [
   0,
   0,
-  1166.4,
+  691.2,
   86.4
  ],
  "core": [
   2.16,
   2.16,
-  1164.24,
+  689.0400000000001,
   84.24000000000001
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
@@ -30,20 +30,19 @@
  },
  "pins": {
   "N": [
+   "i_mask",
    "i_data"
   ],
   "S": [
+   "o_mask",
    "o_data"
   ],
   "E": [
-   "o_mask",
    "ck",
    "rst_n",
    "o_epoch"
   ],
-  "W": [
-   "i_mask"
-  ]
+  "W": []
  },
  "clock_port": "ck",
  "blocks": [],
@@ -51,7 +50,7 @@
   [
    "WARN",
    "clock_span",
-   "1166.4 x 86.4 um: one clock root over > 600 um",
+   "691.2 x 86.4 um: one clock root over > 600 um",
    "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
   ]
  ],

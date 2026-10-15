@@ -20,6 +20,24 @@
    "sources": {
     "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wcontrol.sv": "f4960525892eab76fb194b3fbd64712593cd42912851112dfa840ee66d1d409d"
    }
+  },
+  "dsfd_vm_write_payload_native": {
+   "top": "dsfd_vm_static_w0_payload",
+   "category": "ck_write_payload_t",
+   "roots": 4,
+   "outline_um": [
+    691.2,
+    86.4
+   ],
+   "signal_pins": 13997,
+   "face_pitch_um": {
+    "N": 0.096,
+    "S": 0.096,
+    "E": 0.432
+   },
+   "sources": {
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_w0.sv": "4baa6926cec55bafa02e25fbd5a98513c3c95850d8db69536f598e05b7da147d"
+   }
   }
  }
 }

@@ -11,26 +11,25 @@
   "rst_n"
  ],
  "outline": {
-  "w": 1166.4,
+  "w": 691.2,
   "h": 86.4,
   "exact": true
  },
  "pins": {
   "N": [
+   "i_mask",
    "i_data"
   ],
   "S": [
+   "o_mask",
    "o_data"
   ],
   "E": [
-   "o_mask",
    "ck",
    "rst_n",
    "o_epoch"
   ],
-  "W": [
-   "i_mask"
-  ]
+  "W": []
  },
  "io_tcl": "physical/s81_vm_write_edge_1015/native/dsfd_vm_static_w0_payload.tcl",
  "params": {},
