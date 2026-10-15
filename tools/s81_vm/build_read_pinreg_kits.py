@@ -13,18 +13,23 @@ SPECS=ROOT/'tools/ref_tile/specs_s81vm_read_pinreg_1015';SPECS.mkdir(parents=Tru
 read=json.loads((PIN/'read_pin_candidates.json').read_text())['types']
 model={'schema':'s81.native-read-pinreg-leaves.v1','scope':'READ_PIPE 2 pin-registered read/valid leaves; no physical/throughput qualification',
        'period_ps':833.333,'route_period_ps':770,'added_stream_edges_per_native_read':1,'read_latency_edges':14,'types':{}}
-branch=sys.argv[1] if len(sys.argv)>1 else 'claude/s81-vm-read-pinreg-1015'
+# usage: build_read_pinreg_kits.py [--rev p2 --only q0,v0,...]  (r2: q0 peer pins S face, v leaves + i_slot_valid)
+args=sys.argv[1:];branch='claude/s81-vm-read-pinreg-1015'
+rev=args[args.index('--rev')+1] if '--rev' in args else 'p1'
+only=set(args[args.index('--only')+1].split(',')) if '--only' in args else None
 for kind in 'qv':
  for g in range(8):
+  if only is not None and f'{kind}{g}' not in only:continue
   base=f'dsfd_vm_static_read_{kind}{g}';top=base+'_p'
   choice=read[base];w,h=choice['outline_um']
-  pins=json.loads((PIN/f'{base}.pins.json').read_text())
+  own=OUT/f'{top}.pins.json'
+  pins=json.loads((own if own.exists() else PIN/f'{base}.pins.json').read_text())
   assert pins['outline_um']==[w,h]
   faces={x:[]for x in 'NSEW'}
   for p in pins['pins']:
    b=p['port'].split('[')[0]
    if b not in faces[p['face']]:faces[p['face']].append(b)
-  io=PIN/f'{base}.tcl'
+  io=OUT/f'{top}.tcl' if own.exists() else PIN/f'{base}.tcl'
   sources=['rtl/dsrom_sys/s81_ph/vm/'+n for n in (['dsfd_vm_static_read_valid.sv','dsfd_vm_static_read_valid_quartets_p.sv']if kind=='v'else['dsfd_vm_static_read_leaf.sv','dsfd_vm_static_read_quartets_p.sv'])]
   cmd=f'python3 tools/s81_vm/native_read_leaf_gate.py {kind} {g}'
   benches=[]
@@ -33,7 +38,7 @@ for kind in 'qv':
    b['pass_regex'if mode=='positive'else'fail_regex']='NATIVE_LEAF '+('PASS'if mode=='positive'else'FAIL')+f' {kind}{g} '
    if mode=='positive':b['min_count_regex']=r'checks (\d+)'
    benches.append(b)
-  spec={'name':f'{top}_native_1015_p1','top':top,'kind':'tile','sources':sources,'clock_port':'ck','reset_ports':['rst_n'],
+  spec={'name':f'{top}_native_1015_{rev}','top':top,'kind':'tile','sources':sources,'clock_port':'ck','reset_ports':['rst_n'],
    'outline':{'w':w,'h':h,'exact':True},'pins':faces,'io_tcl':str(io.relative_to(ROOT)),'macros':[],
    'route':{'pd':.4,'threads':8,'peak_ram_gb':16,'period_ps':770,'hold_margin_ns':.03},'recipe':2,
    'structural_change':('Native capture audit of the r1 routed views FAILS (S+R>190: q0 316.1/284 pins, q1 320.7, v0 276.4, v2 279.3, v6 225.8): '
@@ -41,11 +46,12 @@ for kind in 'qv':
      '(leaf IN_REG=1), the select/valid/fault logic runs register-to-register; v leaves pin-register expected/slot and the fault-observed '
      'inputs. +1 stream edge per native read (READ_PIPE 2, L14), WFC keeps one 4:3 epoch (pad 3->2). Same pins/outline/833.333 sign-off/770 route.'),
    'slot_change_request':{'contract':'S81 VM native read/FSR geometry candidate','version':'r1 pins unchanged','why':'new hard master name (_p) for the READ_PIPE 2 leaf; die geometry reservation required before parent adoption'},
-   'job':{'owner':'Claude:S81 VM F5 read-capture','branch':branch,'tag':'pinreg1','extra_paths':['tools/s81_vm','rtl/dsrom_sys/s81_ph/vm','rtl/dsrom_sys/s81_ph/test','physical/s81_vm_read_native_1015'],
+   'job':{'owner':'Claude:S81 VM F5 read-capture','branch':branch,'tag':'pinreg'+rev[1:],'extra_paths':['tools/s81_vm','rtl/dsrom_sys/s81_ph/vm','rtl/dsrom_sys/s81_ph/test','physical/s81_vm_read_native_1015'],
      'purpose':'READ_PIPE 2 pin-registered read leaf: exact positive oracle at +1 edge + observed mutant, native CTS/pin/reset, one route; parent unqualified.',
      'benches':benches,'cycles_added':1}}
+  if rev!='p1':spec['structural_change']+=(' r2 (routed p1 audit): '+('q0 SU1 peer inputs moved N->S face east end next to o_data[64..127] (peer->o_data wire ~250 -> ~69 um; capture 224.8 on 8 i_peer_data pins).' if kind=='q' else 'completeness recomputed from pin-registered memory slot-valid bits (new S-face i_slot_valid) so i_partial_valid/i_peer_valid feed only registered fault checks (capture 199.9-267.2 through the cross-stripe AND).'))
   path=SPECS/f'{top}.json';path.write_text(json.dumps(spec,indent=2)+'\n')
   model['types'][top]={'base':base,'source_sha256':{f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest()for f in sources},'signal_pins':len(pins['pins']),'outline_um':[w,h],'qualification':'UNQUALIFIED_PENDING_NATIVE_CTS_ROUTE_AUDIT'}
   subprocess.run(['python3',str(ROOT/'tools/ref_tile/ref_tile.py'),'gen',str(path)],cwd=ROOT,check=True,stdout=subprocess.DEVNULL)
-(OUT/'model.json').write_text(json.dumps(model,indent=2)+'\n')
+(OUT/('model.json' if rev=='p1' else f'model_{rev}.json')).write_text(json.dumps(model,indent=2)+'\n')
 print('READ_PINREG_KITS',len(model['types']))
