@@ -14,7 +14,9 @@ module qkh_head_ingress_abc #(parameter integer MUT=0)
  wire [534:0] bc;
  wire [534:0] cq;
  // One physical535-bit master reused3times; A23/B7 explicit padding bits are
- // still actual hardened flops. Only those pad outputs are discarded.
+ // retained ONLY when this standalone535 master is hardened and bound as a
+ // hard child. A flattened parent may prune constant pad flops; no view exists yet.
+ // Only those pad outputs are discarded.
  // A: lower512 row bits. B: c4 + upper512 row + lt12. C: epoch16 + q519.
  qkh_head_chunk_stage #(.W(535)) u_a(.ck(ck_a),.a({23'b0,ti_a[1042:531]}),.b(ar));
  qkh_head_chunk_stage #(.W(535)) u_b(.ck(ck_b),.a({7'b0,ti_a[1558:1043],ti_a[530:519]}),.b(bc));

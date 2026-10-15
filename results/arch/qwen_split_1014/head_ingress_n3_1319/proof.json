@@ -1,0 +1,53 @@
+{
+  "schema": "opentallas.qwen-head-n3-proof.v1",
+  "native_complete": false,
+  "physical_qualified": false,
+  "source_commit": "f53043b49",
+  "actual_tested_RTL_sha256": "f754d32f911bd7e01b7ce7e74f41ab6265e3e1e4b94532cb10e9b2ca4e96f79e",
+  "local_source_sha256": "9320fd09db0bd54704be339f58babb6acecf98d4953f005faa90ba6bdabfc0aa",
+  "source_note": "Local followup changes comments only to clarify that535padFF per copy require actual hard-view binding; numerical RTL unchanged from tested snapshot.",
+  "scope": "Actual rawR4 attention head behind producer-localABC capture + existingT1/T2 + S1 vs existing actual reference head;128real transport paths and three actual ingress mutants. NOT actual ECTL8192bit/full-layer/staticcalendar/die qualification. Functional benches use common synchronous clocks; new physical compensated phase/tree/hold closure is NOT proven.",
+  "numeric": {
+    "checks": 3515,
+    "score_changes": 1716,
+    "node_changes": 128,
+    "resets": 2,
+    "passed": true,
+    "mutant32_errors": 3328,
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-1448693-1792097254",
+    "mutant_host": "ot-epyc4",
+    "mutant_unit": "oth-ubuntu-1492314-1792097256"
+  },
+  "transport": {
+    "heads": 128,
+    "words": 204160,
+    "payload_bits": 1575,
+    "latency": 3,
+    "mutants": [
+      31,
+      32,
+      33
+    ],
+    "passed": true,
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-1439680-1792097205"
+  },
+  "cost": {
+    "measured": false,
+    "increment_vs_N2": 1,
+    "per_layer_input_stages": 3,
+    "score_return": 1,
+    "layer_added": 4,
+    "accepted_ledger": false
+  },
+  "planned_hardening": {
+    "types": 1,
+    "W": 535,
+    "copies": 384,
+    "proposed_physical_FF": 205440,
+    "payload_FF": 201600,
+    "pad_FF": 3840,
+    "requires": "same standalone535-bit hard view bound all384sites; flattened parent may prune pad flops"
+  }
+}
