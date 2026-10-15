@@ -1,0 +1,61 @@
+{
+  "name": "s81hc_ctfxcap_ref-v4-rr-epoch-539178932",
+  "status": "NEEDS_HUMAN",
+  "reason": "route crashed twice (rc=1 ok-check failed;; first error: s81hc_ctfxcap_ref_v4_rr_epoch_539178932/flow.log: [ERROR DPL-0033] detailed placement checks failed during check placement. [step do-4_1_cts]; resource=False)",
+  "host": "ot-epyc1tb",
+  "commit_full": "539178932673f3ff71d2341f654699d9874a98df",
+  "events": [
+    "2026-10-14T22:49:01-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/s81hc_ctfxcap_ref-v4-rr-epoch-539178932.json",
+    "2026-10-14T22:49:01-07:00 STRUCTURE-REPEAT: 2 failed routes of ot_s81_hc_ctfx_cap since its last CLOSED; structural_change: Local-epoch capture fv_local reset by the pin capture rr (rst_in's only load): the async form put the pin on 7 RESETN pins, a removal arc (FF -41.4 ps) that hold repair cannot buffer (v3 EARLY_FAIL_HOLD). Same sampled reset epoch (lockstep exact), cycles, outline, pins, budgets; v3 multi-D pad + die",
+    "2026-10-14T22:49:02-07:00 MACRO_GRID WARN (refuse): MACRO_GRID WARN: macro placement ['physical/ref_tile/s81hc_ctfxcap_ref/pre_gpl.tcl'] but no macro LEF resolved from the commands",
+    "2026-10-14T22:49:04-07:00 CLOCK-RULE at submit: 2,271 sinks on the largest root <= 15,000; measured TT insertion 259.6 ps, leaf spread 17.7 ps",
+    "2026-10-14T22:49:04-07:00 ref gate PASS: pre-route gate PASS",
+    "2026-10-14T22:49:13-07:00 benches run in parallel with calibrate/route (3 benches; spec bench_first opts out)",
+    "2026-10-14T22:49:32-07:00 git-mirror sync 539178932673 via upstream in 2s + extract 10s; 3469 views / 6.0 GB hard-linked from the host view store",
+    "2026-10-14T22:49:38-07:00 source 539178932673 synced to ot-epyc1tb:/srv/opentallas/claude/closure-loop/s81hc_ctfxcap_ref-v4-rr-epoch-539178932/src",
+    "2026-10-14T22:49:41-07:00 bench track: launched bench_lint (bench_lint.a1b1) beside None",
+    "2026-10-14T22:49:51-07:00 launched route (attempt 1) on ot-epyc1tb",
+    "2026-10-14T22:50:08-07:00 bench track: bench_lint PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+    "2026-10-14T22:50:12-07:00 bench track: launched bench_owned_serial_exact (bench_owned_serial_exact.a1b1) beside route",
+    "2026-10-14T22:59:14-07:00 bench track: bench_owned_serial_exact PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+    "2026-10-14T22:59:18-07:00 bench track: launched bench_owned_serial_local_mut (bench_owned_serial_local_mut.a1b1) beside route",
+    "2026-10-14T23:00:28-07:00 TEXTBOOK-LINT route.a1: WARN ot_s81_hc_ctfx_cap cells 4,543 flops 2,271 depth 11.7 ps util 0.1087 reach 54.8 um (0.1 s) || INFO clock_roots max_root_sinks=2271 root=port:clk rule=PASS: 2,271 sinks on the largest root <= 15,000; measured TT insertion 259.6 ps, leaf spread 17.7 ps || WARN util_channel: utilisation 10.9% outside 45%-65% (std 1343 + macro 0 um2 in 12364 um2): shrink the outline (long wires / sparse placement)",
+    "2026-10-14T23:17:26-07:00 bench track: bench_owned_serial_local_mut FAIL as expected (rc=1) ",
+    "2026-10-14T23:27:33-07:00 route crashed (rc=1 ok-check failed;; first error: s81hc_ctfxcap_ref_v4_rr_epoch_539178932/flow.log: [ERROR DPL-0033] detailed placement checks failed during check placement. [step do-4_1_cts]) -> retry once on the same host",
+    "2026-10-14T23:28:45-07:00 launched route (attempt 2) on ot-epyc1tb",
+    "2026-10-14T23:40:29-07:00 TEXTBOOK-LINT route.a2: WARN ot_s81_hc_ctfx_cap cells 4,543 flops 2,271 depth 11.7 ps util 0.1087 reach 54.8 um (0.1 s) || INFO clock_roots max_root_sinks=2271 root=port:clk rule=PASS: 2,271 sinks on the largest root <= 15,000; measured TT insertion 259.6 ps, leaf spread 17.7 ps || WARN util_channel: utilisation 10.9% outside 45%-65% (std 1343 + macro 0 um2 in 12364 um2): shrink the outline (long wires / sparse placement)",
+    "2026-10-15T00:09:31-07:00 NEEDS_HUMAN: route crashed twice (rc=1 ok-check failed;; first error: s81hc_ctfxcap_ref_v4_rr_epoch_539178932/flow.log: [ERROR DPL-0033] detailed placement checks failed during check placement. [step do-4_1_cts]; resource=False)",
+    "2026-10-15T00:10:29-07:00 auto-react: no recipe; structural fix needed (noted in ds-1010.log)"
+  ],
+  "btrack": {
+    "bench_lint": {
+      "state": "done",
+      "tag": "bench_lint.a1b1",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas/claude/closure-loop/s81hc_ctfxcap_ref-v4-rr-epoch-539178932",
+      "n": 1,
+      "started": "2026-10-14T22:49:41-07:00",
+      "stage_source": "/srv/opentallas/claude/closure-loop/s81hc_ctfxcap_ref-v4-rr-epoch-539178932/bench_src_a1"
+    },
+    "bench_owned_serial_exact": {
+      "state": "done",
+      "tag": "bench_owned_serial_exact.a1b1",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas/claude/closure-loop/s81hc_ctfxcap_ref-v4-rr-epoch-539178932",
+      "n": 1,
+      "started": "2026-10-14T22:50:12-07:00",
+      "stage_source": "/srv/opentallas/claude/closure-loop/s81hc_ctfxcap_ref-v4-rr-epoch-539178932/bench_src_a1",
+      "wd_checked": 1792043474.1229887
+    },
+    "bench_owned_serial_local_mut": {
+      "state": "done",
+      "tag": "bench_owned_serial_local_mut.a1b1",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas/claude/closure-loop/s81hc_ctfxcap_ref-v4-rr-epoch-539178932",
+      "n": 1,
+      "started": "2026-10-14T22:59:18-07:00",
+      "stage_source": "/srv/opentallas/claude/closure-loop/s81hc_ctfxcap_ref-v4-rr-epoch-539178932/bench_src_a1",
+      "wd_checked": 1792044026.0143476
+    }
+  }
+}
