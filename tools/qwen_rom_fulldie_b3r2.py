@@ -1209,8 +1209,11 @@ def _su_vm_bus(v, m, a_bits=None, q_bits=None):
                          'route the bus with relay stations and matching RTL latency instead')
     if su.domain != vm.domain:
         raise ValueError(f'su_vm_abut: SU64 ({su.domain}) and VM ({vm.domain}) in different clock domains')
-    m['buses'] += [('su_vm_a', 'spine_local', SU_VM_A_BITS, [('sp_su64_sfu', 'va'), ('sp_vector_memory', 'sa')]),
-                   ('su_vm_q', 'spine_local', SU_VM_Q_BITS, [('sp_vector_memory', 'sq'), ('sp_su64_sfu', 'vq')])]
+    if not m.get('native_graph_bind'):
+        m['buses'] += [('su_vm_a', 'spine_local', SU_VM_A_BITS, [('sp_su64_sfu', 'va'), ('sp_vector_memory', 'sa')]),
+                       ('su_vm_q', 'spine_local', SU_VM_Q_BITS, [('sp_vector_memory', 'sq'), ('sp_su64_sfu', 'vq')])]
+    # Native source edges already cover these exact numeric ports via fragments.
+    # Appending the historical raw buses would double-drive/count each interface.
     w = su.w
     p = 0.048                                       # M5 track (qwen_rom_fulldie TRK)
     a_span, q_span = SU_VM_A_BITS * p, SU_VM_Q_BITS * p
@@ -1247,6 +1250,16 @@ def _su_vm_bus(v, m, a_bits=None, q_bits=None):
         s.face('vq', SU_VM_Q_BITS, 'S' if north else 'N', 'M5', q_c, 1)
         q.face('sa', SU_VM_A_BITS, 'N' if north else 'S', 'M5', a_c + off, 1)
         q.face('sq', SU_VM_Q_BITS, 'N' if north else 'S', 'M5', q_c + off, 1)
+        if model.get('native_graph_bind'):
+            # This wrapper runs AFTER native pin assignment. Rebuild fragments
+            # from the final canonical seam pins, then remove raw canonical pins.
+            from qwen_split.direct_up4 import partition_master
+            for master_ in (s, q):
+                aliases_ = {a_: rb_ for a_, rb_ in model.get('port_join', {}).get(master_.name, {}).items()
+                            if rb_[0] in master_.ports}
+                if aliases_:
+                    rects_ = v.pin_rects(master_, 1, {p_: sp_[1] for p_, sp_ in master_.ports.items()})
+                    partition_master(master_, aliases_, rects_)
         return out
     v.masters = masters
     m['r21v_su_vm'] = dict(bits_su_to_vm=SU_VM_A_BITS, bits_vm_to_su=SU_VM_Q_BITS, gap_um=round(gap, 4),
