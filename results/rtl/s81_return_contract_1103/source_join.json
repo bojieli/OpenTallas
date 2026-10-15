@@ -1,0 +1,1285 @@
+{
+  "scope": "SOURCE_JOIN_AND_CONDITIONAL_LEAF_CONTRACT_NOT_NATIVE_OR_CALENDAR_ADOPTION",
+  "candidate_source_sha256": "f58ce1247a32d0b67af33465930ce4ee14f88e5b3f92ae28b5b781d9f6139f01",
+  "recovered_ancestors": [
+    "1a561dddb",
+    "f68eb90f7",
+    "20c63c643",
+    "46d0620d8",
+    "82424ff85"
+  ],
+  "base_modules_byte_identical_to_82424_reference": {
+    "ot_s81_hc_ctq": "c9a9a2adf546aa94ad9dc42bc39f8e462f23ee91660bfd0c081c9cca82a92a27",
+    "ot_s81_hc_ctrs": "8da68dcca4bb42e3ac8b3d64472d015fb35022a8223bb7c4d2a53e56045f7a02",
+    "ot_s81_hc_ctra": "78446a816ce23a974a23dea2a445466c7eeba2b6f5a37d59648fd89328db6c09",
+    "ot_s81_hc_ctrb": "4075cf7fed55b09072562fd5757e81caace1cb4d4d5eab2a68f9b3a2a73130c0",
+    "ot_s81_hc_ctrn": "433d7361cba2de6e177eca2008b97b3ea50006031aa2ede9fb5f674cc9516eb4"
+  },
+  "component_proof_commit": "82424ff85",
+  "component_positive_cycles": 2500,
+  "negatives": [
+    "bad_lane_a",
+    "bad_lane_b",
+    "drop_fault_a",
+    "missing_column_clock_a",
+    "missing_column_clock_b"
+  ],
+  "return_cycle_contract": {
+    "data_valid_delta_per_traversed_cth": 1,
+    "bank_request_delta": 0,
+    "canonical_programme_acceptance": false,
+    "required_compiler_join": "Add one serial return edge for EACH traversed candidate CTH; preserve READ_STAGE1/CHAIN_STEP6 requests and fixed producer/consumer slots; account independently for any future broadcast stages"
+  },
+  "leaves": [
+    {
+      "top": "ot_s81_hc_ctra_column",
+      "params": {
+        "NG": 256,
+        "D": 5120,
+        "NCOL": 3,
+        "GS": 8,
+        "S_RD": 2,
+        "S_RT": 4,
+        "ML": 5,
+        "AL": 4,
+        "READ_STAGE": 1,
+        "CHAIN_STEP": 6,
+        "COLUMN": 0
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_in": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tid": {
+          "direction": "input",
+          "bits": 8
+        },
+        "last": {
+          "direction": "input",
+          "bits": 1
+        },
+        "fv": {
+          "direction": "input",
+          "bits": 7
+        },
+        "fdx": {
+          "direction": "input",
+          "bits": 104
+        },
+        "rv_in": {
+          "direction": "input",
+          "bits": 8
+        },
+        "rdh_in": {
+          "direction": "input",
+          "bits": 108
+        },
+        "rdp_in": {
+          "direction": "input",
+          "bits": 512
+        },
+        "rvm": {
+          "direction": "output",
+          "bits": 8
+        },
+        "peer_fault": {
+          "direction": "input",
+          "bits": 3
+        },
+        "peer_hnz": {
+          "direction": "input",
+          "bits": 3
+        },
+        "rdm": {
+          "direction": "output",
+          "bits": 256
+        },
+        "rq_q": {
+          "direction": "output",
+          "bits": 64
+        },
+        "hs_run": {
+          "direction": "output",
+          "bits": 1
+        },
+        "hs_c": {
+          "direction": "output",
+          "bits": 16
+        },
+        "rq_q_c1": {
+          "direction": "output",
+          "bits": 64
+        },
+        "rq_q_c2": {
+          "direction": "output",
+          "bits": 64
+        },
+        "rq_q_c3": {
+          "direction": "output",
+          "bits": 64
+        },
+        "hs_run_c1": {
+          "direction": "output",
+          "bits": 1
+        },
+        "hs_run_c2": {
+          "direction": "output",
+          "bits": 1
+        },
+        "hs_run_c3": {
+          "direction": "output",
+          "bits": 1
+        },
+        "hs_c_c1": {
+          "direction": "output",
+          "bits": 16
+        },
+        "hs_c_c2": {
+          "direction": "output",
+          "bits": 16
+        },
+        "hs_c_c3": {
+          "direction": "output",
+          "bits": 16
+        },
+        "hrq_n": {
+          "direction": "input",
+          "bits": 256
+        },
+        "hrq_s": {
+          "direction": "input",
+          "bits": 256
+        },
+        "yb_n": {
+          "direction": "input",
+          "bits": 128
+        },
+        "yb_s": {
+          "direction": "input",
+          "bits": 128
+        },
+        "cs": {
+          "direction": "input",
+          "bits": 128
+        },
+        "nflt_n": {
+          "direction": "input",
+          "bits": 2
+        },
+        "nflt_s": {
+          "direction": "input",
+          "bits": 2
+        },
+        "hov_d": {
+          "direction": "input",
+          "bits": 1
+        },
+        "flag_fault": {
+          "direction": "output",
+          "bits": 1
+        },
+        "flag_hnz": {
+          "direction": "output",
+          "bits": 1
+        },
+        "header_delay": {
+          "direction": "output",
+          "bits": 108
+        },
+        "hnz_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "hnz_s": {
+          "direction": "input",
+          "bits": 1
+        },
+        "pflt_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "pflt_s": {
+          "direction": "input",
+          "bits": 1
+        }
+      },
+      "clock": {
+        "port": "clk",
+        "domain": "serial",
+        "independent_root": true,
+        "delivery": "phi - measured insertion R; same intended phase across all column roots",
+        "native_insertion_ps": null,
+        "native_spread_ps": null
+      },
+      "provisional_outline_um": [
+        144.18,
+        30.24
+      ],
+      "pin_assignment": "physical/s81_die_pins/v22_hc_return_columns/c0/ot_s81_hc_ctra_column.json",
+      "leaf_ready": false,
+      "physical_status": "HELD_CANDIDATE_NO_REAL_VIEW_OR_CURRENT_GRANT"
+    },
+    {
+      "top": "ot_s81_hc_ctra_column",
+      "params": {
+        "NG": 256,
+        "D": 5120,
+        "NCOL": 3,
+        "GS": 8,
+        "S_RD": 2,
+        "S_RT": 4,
+        "ML": 5,
+        "AL": 4,
+        "READ_STAGE": 1,
+        "CHAIN_STEP": 6,
+        "COLUMN": 1
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_in": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tid": {
+          "direction": "input",
+          "bits": 8
+        },
+        "last": {
+          "direction": "input",
+          "bits": 1
+        },
+        "fv": {
+          "direction": "input",
+          "bits": 7
+        },
+        "fdx": {
+          "direction": "input",
+          "bits": 104
+        },
+        "rv_in": {
+          "direction": "input",
+          "bits": 8
+        },
+        "rdh_in": {
+          "direction": "input",
+          "bits": 108
+        },
+        "rdp_in": {
+          "direction": "input",
+          "bits": 512
+        },
+        "rvm": {
+          "direction": "output",
+          "bits": 8
+        },
+        "peer_fault": {
+          "direction": "input",
+          "bits": 3
+        },
+        "peer_hnz": {
+          "direction": "input",
+          "bits": 3
+        },
+        "rdm": {
+          "direction": "output",
+          "bits": 256
+        },
+        "rq_q": {
+          "direction": "output",
+          "bits": 64
+        },
+        "hs_run": {
+          "direction": "output",
+          "bits": 1
+        },
+        "hs_c": {
+          "direction": "output",
+          "bits": 16
+        },
+        "rq_q_c1": {
+          "direction": "output",
+          "bits": 64
+        },
+        "rq_q_c2": {
+          "direction": "output",
+          "bits": 64
+        },
+        "rq_q_c3": {
+          "direction": "output",
+          "bits": 64
+        },
+        "hs_run_c1": {
+          "direction": "output",
+          "bits": 1
+        },
+        "hs_run_c2": {
+          "direction": "output",
+          "bits": 1
+        },
+        "hs_run_c3": {
+          "direction": "output",
+          "bits": 1
+        },
+        "hs_c_c1": {
+          "direction": "output",
+          "bits": 16
+        },
+        "hs_c_c2": {
+          "direction": "output",
+          "bits": 16
+        },
+        "hs_c_c3": {
+          "direction": "output",
+          "bits": 16
+        },
+        "hrq_n": {
+          "direction": "input",
+          "bits": 256
+        },
+        "hrq_s": {
+          "direction": "input",
+          "bits": 256
+        },
+        "yb_n": {
+          "direction": "input",
+          "bits": 128
+        },
+        "yb_s": {
+          "direction": "input",
+          "bits": 128
+        },
+        "cs": {
+          "direction": "input",
+          "bits": 128
+        },
+        "nflt_n": {
+          "direction": "input",
+          "bits": 2
+        },
+        "nflt_s": {
+          "direction": "input",
+          "bits": 2
+        },
+        "hov_d": {
+          "direction": "input",
+          "bits": 1
+        },
+        "flag_fault": {
+          "direction": "output",
+          "bits": 1
+        },
+        "flag_hnz": {
+          "direction": "output",
+          "bits": 1
+        },
+        "header_delay": {
+          "direction": "output",
+          "bits": 108
+        },
+        "hnz_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "hnz_s": {
+          "direction": "input",
+          "bits": 1
+        },
+        "pflt_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "pflt_s": {
+          "direction": "input",
+          "bits": 1
+        }
+      },
+      "clock": {
+        "port": "clk",
+        "domain": "serial",
+        "independent_root": true,
+        "delivery": "phi - measured insertion R; same intended phase across all column roots",
+        "native_insertion_ps": null,
+        "native_spread_ps": null
+      },
+      "provisional_outline_um": [
+        144.18,
+        30.24
+      ],
+      "pin_assignment": "physical/s81_die_pins/v22_hc_return_columns/c1/ot_s81_hc_ctra_column.json",
+      "leaf_ready": false,
+      "physical_status": "HELD_CANDIDATE_NO_REAL_VIEW_OR_CURRENT_GRANT"
+    },
+    {
+      "top": "ot_s81_hc_ctra_column",
+      "params": {
+        "NG": 256,
+        "D": 5120,
+        "NCOL": 3,
+        "GS": 8,
+        "S_RD": 2,
+        "S_RT": 4,
+        "ML": 5,
+        "AL": 4,
+        "READ_STAGE": 1,
+        "CHAIN_STEP": 6,
+        "COLUMN": 2
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_in": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tid": {
+          "direction": "input",
+          "bits": 8
+        },
+        "last": {
+          "direction": "input",
+          "bits": 1
+        },
+        "fv": {
+          "direction": "input",
+          "bits": 7
+        },
+        "fdx": {
+          "direction": "input",
+          "bits": 104
+        },
+        "rv_in": {
+          "direction": "input",
+          "bits": 8
+        },
+        "rdh_in": {
+          "direction": "input",
+          "bits": 108
+        },
+        "rdp_in": {
+          "direction": "input",
+          "bits": 512
+        },
+        "rvm": {
+          "direction": "output",
+          "bits": 8
+        },
+        "peer_fault": {
+          "direction": "input",
+          "bits": 3
+        },
+        "peer_hnz": {
+          "direction": "input",
+          "bits": 3
+        },
+        "rdm": {
+          "direction": "output",
+          "bits": 256
+        },
+        "rq_q": {
+          "direction": "output",
+          "bits": 64
+        },
+        "hs_run": {
+          "direction": "output",
+          "bits": 1
+        },
+        "hs_c": {
+          "direction": "output",
+          "bits": 16
+        },
+        "rq_q_c1": {
+          "direction": "output",
+          "bits": 64
+        },
+        "rq_q_c2": {
+          "direction": "output",
+          "bits": 64
+        },
+        "rq_q_c3": {
+          "direction": "output",
+          "bits": 64
+        },
+        "hs_run_c1": {
+          "direction": "output",
+          "bits": 1
+        },
+        "hs_run_c2": {
+          "direction": "output",
+          "bits": 1
+        },
+        "hs_run_c3": {
+          "direction": "output",
+          "bits": 1
+        },
+        "hs_c_c1": {
+          "direction": "output",
+          "bits": 16
+        },
+        "hs_c_c2": {
+          "direction": "output",
+          "bits": 16
+        },
+        "hs_c_c3": {
+          "direction": "output",
+          "bits": 16
+        },
+        "hrq_n": {
+          "direction": "input",
+          "bits": 256
+        },
+        "hrq_s": {
+          "direction": "input",
+          "bits": 256
+        },
+        "yb_n": {
+          "direction": "input",
+          "bits": 128
+        },
+        "yb_s": {
+          "direction": "input",
+          "bits": 128
+        },
+        "cs": {
+          "direction": "input",
+          "bits": 128
+        },
+        "nflt_n": {
+          "direction": "input",
+          "bits": 2
+        },
+        "nflt_s": {
+          "direction": "input",
+          "bits": 2
+        },
+        "hov_d": {
+          "direction": "input",
+          "bits": 1
+        },
+        "flag_fault": {
+          "direction": "output",
+          "bits": 1
+        },
+        "flag_hnz": {
+          "direction": "output",
+          "bits": 1
+        },
+        "header_delay": {
+          "direction": "output",
+          "bits": 108
+        },
+        "hnz_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "hnz_s": {
+          "direction": "input",
+          "bits": 1
+        },
+        "pflt_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "pflt_s": {
+          "direction": "input",
+          "bits": 1
+        }
+      },
+      "clock": {
+        "port": "clk",
+        "domain": "serial",
+        "independent_root": true,
+        "delivery": "phi - measured insertion R; same intended phase across all column roots",
+        "native_insertion_ps": null,
+        "native_spread_ps": null
+      },
+      "provisional_outline_um": [
+        144.18,
+        30.24
+      ],
+      "pin_assignment": "physical/s81_die_pins/v22_hc_return_columns/c2/ot_s81_hc_ctra_column.json",
+      "leaf_ready": false,
+      "physical_status": "HELD_CANDIDATE_NO_REAL_VIEW_OR_CURRENT_GRANT"
+    },
+    {
+      "top": "ot_s81_hc_ctra_column",
+      "params": {
+        "NG": 256,
+        "D": 5120,
+        "NCOL": 3,
+        "GS": 8,
+        "S_RD": 2,
+        "S_RT": 4,
+        "ML": 5,
+        "AL": 4,
+        "READ_STAGE": 1,
+        "CHAIN_STEP": 6,
+        "COLUMN": 3
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_in": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tid": {
+          "direction": "input",
+          "bits": 8
+        },
+        "last": {
+          "direction": "input",
+          "bits": 1
+        },
+        "fv": {
+          "direction": "input",
+          "bits": 7
+        },
+        "fdx": {
+          "direction": "input",
+          "bits": 104
+        },
+        "rv_in": {
+          "direction": "input",
+          "bits": 8
+        },
+        "rdh_in": {
+          "direction": "input",
+          "bits": 108
+        },
+        "rdp_in": {
+          "direction": "input",
+          "bits": 512
+        },
+        "rvm": {
+          "direction": "output",
+          "bits": 8
+        },
+        "peer_fault": {
+          "direction": "input",
+          "bits": 3
+        },
+        "peer_hnz": {
+          "direction": "input",
+          "bits": 3
+        },
+        "rdm": {
+          "direction": "output",
+          "bits": 256
+        },
+        "rq_q": {
+          "direction": "output",
+          "bits": 64
+        },
+        "hs_run": {
+          "direction": "output",
+          "bits": 1
+        },
+        "hs_c": {
+          "direction": "output",
+          "bits": 16
+        },
+        "rq_q_c1": {
+          "direction": "output",
+          "bits": 64
+        },
+        "rq_q_c2": {
+          "direction": "output",
+          "bits": 64
+        },
+        "rq_q_c3": {
+          "direction": "output",
+          "bits": 64
+        },
+        "hs_run_c1": {
+          "direction": "output",
+          "bits": 1
+        },
+        "hs_run_c2": {
+          "direction": "output",
+          "bits": 1
+        },
+        "hs_run_c3": {
+          "direction": "output",
+          "bits": 1
+        },
+        "hs_c_c1": {
+          "direction": "output",
+          "bits": 16
+        },
+        "hs_c_c2": {
+          "direction": "output",
+          "bits": 16
+        },
+        "hs_c_c3": {
+          "direction": "output",
+          "bits": 16
+        },
+        "hrq_n": {
+          "direction": "input",
+          "bits": 256
+        },
+        "hrq_s": {
+          "direction": "input",
+          "bits": 256
+        },
+        "yb_n": {
+          "direction": "input",
+          "bits": 128
+        },
+        "yb_s": {
+          "direction": "input",
+          "bits": 128
+        },
+        "cs": {
+          "direction": "input",
+          "bits": 128
+        },
+        "nflt_n": {
+          "direction": "input",
+          "bits": 2
+        },
+        "nflt_s": {
+          "direction": "input",
+          "bits": 2
+        },
+        "hov_d": {
+          "direction": "input",
+          "bits": 1
+        },
+        "flag_fault": {
+          "direction": "output",
+          "bits": 1
+        },
+        "flag_hnz": {
+          "direction": "output",
+          "bits": 1
+        },
+        "header_delay": {
+          "direction": "output",
+          "bits": 108
+        },
+        "hnz_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "hnz_s": {
+          "direction": "input",
+          "bits": 1
+        },
+        "pflt_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "pflt_s": {
+          "direction": "input",
+          "bits": 1
+        }
+      },
+      "clock": {
+        "port": "clk",
+        "domain": "serial",
+        "independent_root": true,
+        "delivery": "phi - measured insertion R; same intended phase across all column roots",
+        "native_insertion_ps": null,
+        "native_spread_ps": null
+      },
+      "provisional_outline_um": [
+        144.18,
+        30.24
+      ],
+      "pin_assignment": "physical/s81_die_pins/v22_hc_return_columns/c3/ot_s81_hc_ctra_column.json",
+      "leaf_ready": false,
+      "physical_status": "HELD_CANDIDATE_NO_REAL_VIEW_OR_CURRENT_GRANT"
+    },
+    {
+      "top": "ot_s81_hc_ctrb_column",
+      "params": {
+        "NG": 256,
+        "D": 5120,
+        "NCOL": 3,
+        "GS": 8,
+        "S_RD": 2,
+        "S_RT": 4,
+        "ML": 5,
+        "AL": 4,
+        "READ_STAGE": 1,
+        "CHAIN_STEP": 6,
+        "COLUMN": 0
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_in": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tid": {
+          "direction": "input",
+          "bits": 8
+        },
+        "last": {
+          "direction": "input",
+          "bits": 1
+        },
+        "fv": {
+          "direction": "input",
+          "bits": 7
+        },
+        "fdx": {
+          "direction": "input",
+          "bits": 104
+        },
+        "rv_in": {
+          "direction": "input",
+          "bits": 8
+        },
+        "rdh_in": {
+          "direction": "input",
+          "bits": 108
+        },
+        "rdp_in": {
+          "direction": "input",
+          "bits": 512
+        },
+        "rdm": {
+          "direction": "output",
+          "bits": 256
+        },
+        "hrq_n": {
+          "direction": "input",
+          "bits": 256
+        },
+        "hrq_s": {
+          "direction": "input",
+          "bits": 256
+        },
+        "yb_n": {
+          "direction": "input",
+          "bits": 128
+        },
+        "yb_s": {
+          "direction": "input",
+          "bits": 128
+        }
+      },
+      "clock": {
+        "port": "clk",
+        "domain": "serial",
+        "independent_root": true,
+        "delivery": "phi - measured insertion R; same intended phase across all column roots",
+        "native_insertion_ps": null,
+        "native_spread_ps": null
+      },
+      "provisional_outline_um": [
+        144.18,
+        25.92
+      ],
+      "pin_assignment": "physical/s81_die_pins/v22_hc_return_columns/c0/ot_s81_hc_ctrb_column.json",
+      "leaf_ready": false,
+      "physical_status": "HELD_CANDIDATE_NO_REAL_VIEW_OR_CURRENT_GRANT"
+    },
+    {
+      "top": "ot_s81_hc_ctrb_column",
+      "params": {
+        "NG": 256,
+        "D": 5120,
+        "NCOL": 3,
+        "GS": 8,
+        "S_RD": 2,
+        "S_RT": 4,
+        "ML": 5,
+        "AL": 4,
+        "READ_STAGE": 1,
+        "CHAIN_STEP": 6,
+        "COLUMN": 1
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_in": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tid": {
+          "direction": "input",
+          "bits": 8
+        },
+        "last": {
+          "direction": "input",
+          "bits": 1
+        },
+        "fv": {
+          "direction": "input",
+          "bits": 7
+        },
+        "fdx": {
+          "direction": "input",
+          "bits": 104
+        },
+        "rv_in": {
+          "direction": "input",
+          "bits": 8
+        },
+        "rdh_in": {
+          "direction": "input",
+          "bits": 108
+        },
+        "rdp_in": {
+          "direction": "input",
+          "bits": 512
+        },
+        "rdm": {
+          "direction": "output",
+          "bits": 256
+        },
+        "hrq_n": {
+          "direction": "input",
+          "bits": 256
+        },
+        "hrq_s": {
+          "direction": "input",
+          "bits": 256
+        },
+        "yb_n": {
+          "direction": "input",
+          "bits": 128
+        },
+        "yb_s": {
+          "direction": "input",
+          "bits": 128
+        }
+      },
+      "clock": {
+        "port": "clk",
+        "domain": "serial",
+        "independent_root": true,
+        "delivery": "phi - measured insertion R; same intended phase across all column roots",
+        "native_insertion_ps": null,
+        "native_spread_ps": null
+      },
+      "provisional_outline_um": [
+        144.18,
+        25.92
+      ],
+      "pin_assignment": "physical/s81_die_pins/v22_hc_return_columns/c1/ot_s81_hc_ctrb_column.json",
+      "leaf_ready": false,
+      "physical_status": "HELD_CANDIDATE_NO_REAL_VIEW_OR_CURRENT_GRANT"
+    },
+    {
+      "top": "ot_s81_hc_ctrb_column",
+      "params": {
+        "NG": 256,
+        "D": 5120,
+        "NCOL": 3,
+        "GS": 8,
+        "S_RD": 2,
+        "S_RT": 4,
+        "ML": 5,
+        "AL": 4,
+        "READ_STAGE": 1,
+        "CHAIN_STEP": 6,
+        "COLUMN": 2
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_in": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tid": {
+          "direction": "input",
+          "bits": 8
+        },
+        "last": {
+          "direction": "input",
+          "bits": 1
+        },
+        "fv": {
+          "direction": "input",
+          "bits": 7
+        },
+        "fdx": {
+          "direction": "input",
+          "bits": 104
+        },
+        "rv_in": {
+          "direction": "input",
+          "bits": 8
+        },
+        "rdh_in": {
+          "direction": "input",
+          "bits": 108
+        },
+        "rdp_in": {
+          "direction": "input",
+          "bits": 512
+        },
+        "rdm": {
+          "direction": "output",
+          "bits": 256
+        },
+        "hrq_n": {
+          "direction": "input",
+          "bits": 256
+        },
+        "hrq_s": {
+          "direction": "input",
+          "bits": 256
+        },
+        "yb_n": {
+          "direction": "input",
+          "bits": 128
+        },
+        "yb_s": {
+          "direction": "input",
+          "bits": 128
+        }
+      },
+      "clock": {
+        "port": "clk",
+        "domain": "serial",
+        "independent_root": true,
+        "delivery": "phi - measured insertion R; same intended phase across all column roots",
+        "native_insertion_ps": null,
+        "native_spread_ps": null
+      },
+      "provisional_outline_um": [
+        144.18,
+        25.92
+      ],
+      "pin_assignment": "physical/s81_die_pins/v22_hc_return_columns/c2/ot_s81_hc_ctrb_column.json",
+      "leaf_ready": false,
+      "physical_status": "HELD_CANDIDATE_NO_REAL_VIEW_OR_CURRENT_GRANT"
+    },
+    {
+      "top": "ot_s81_hc_ctrb_column",
+      "params": {
+        "NG": 256,
+        "D": 5120,
+        "NCOL": 3,
+        "GS": 8,
+        "S_RD": 2,
+        "S_RT": 4,
+        "ML": 5,
+        "AL": 4,
+        "READ_STAGE": 1,
+        "CHAIN_STEP": 6,
+        "COLUMN": 3
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_in": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tid": {
+          "direction": "input",
+          "bits": 8
+        },
+        "last": {
+          "direction": "input",
+          "bits": 1
+        },
+        "fv": {
+          "direction": "input",
+          "bits": 7
+        },
+        "fdx": {
+          "direction": "input",
+          "bits": 104
+        },
+        "rv_in": {
+          "direction": "input",
+          "bits": 8
+        },
+        "rdh_in": {
+          "direction": "input",
+          "bits": 108
+        },
+        "rdp_in": {
+          "direction": "input",
+          "bits": 512
+        },
+        "rdm": {
+          "direction": "output",
+          "bits": 256
+        },
+        "hrq_n": {
+          "direction": "input",
+          "bits": 256
+        },
+        "hrq_s": {
+          "direction": "input",
+          "bits": 256
+        },
+        "yb_n": {
+          "direction": "input",
+          "bits": 128
+        },
+        "yb_s": {
+          "direction": "input",
+          "bits": 128
+        }
+      },
+      "clock": {
+        "port": "clk",
+        "domain": "serial",
+        "independent_root": true,
+        "delivery": "phi - measured insertion R; same intended phase across all column roots",
+        "native_insertion_ps": null,
+        "native_spread_ps": null
+      },
+      "provisional_outline_um": [
+        144.18,
+        25.92
+      ],
+      "pin_assignment": "physical/s81_die_pins/v22_hc_return_columns/c3/ot_s81_hc_ctrb_column.json",
+      "leaf_ready": false,
+      "physical_status": "HELD_CANDIDATE_NO_REAL_VIEW_OR_CURRENT_GRANT"
+    }
+  ],
+  "conditional_v22_audit": {
+    "hrq_n": {
+      "joins": 2048,
+      "over500": 0,
+      "rectangle_over500": 0,
+      "max_um": 264.804
+    },
+    "yb_n": {
+      "joins": 1024,
+      "over500": 144,
+      "rectangle_over500": 144,
+      "max_um": 671.112
+    },
+    "nflt_n": {
+      "joins": 8,
+      "over500": 0,
+      "rectangle_over500": 0,
+      "max_um": 247.968
+    },
+    "hnz_n": {
+      "joins": 4,
+      "over500": 0,
+      "rectangle_over500": 0,
+      "max_um": 18.078
+    },
+    "pflt_n": {
+      "joins": 4,
+      "over500": 0,
+      "rectangle_over500": 0,
+      "max_um": 18.174
+    },
+    "hrq_s": {
+      "joins": 2048,
+      "over500": 0,
+      "rectangle_over500": 0,
+      "max_um": 436.716
+    },
+    "yb_s": {
+      "joins": 1024,
+      "over500": 393,
+      "rectangle_over500": 352,
+      "max_um": 804.852
+    },
+    "nflt_s": {
+      "joins": 8,
+      "over500": 0,
+      "rectangle_over500": 0,
+      "max_um": 436.62
+    },
+    "hnz_s": {
+      "joins": 4,
+      "over500": 0,
+      "rectangle_over500": 0,
+      "max_um": 211.662
+    },
+    "pflt_s": {
+      "joins": 4,
+      "over500": 0,
+      "rectangle_over500": 0,
+      "max_um": 211.662
+    },
+    "rdh_in": {
+      "joins": 864,
+      "over500": 549,
+      "rectangle_over500": 434,
+      "max_um": 815.682
+    },
+    "rdp_in": {
+      "joins": 3968,
+      "over500": 1832,
+      "rectangle_over500": 1309,
+      "max_um": 769.4
+    },
+    "rdm": {
+      "joins": 2048,
+      "over500": 640,
+      "rectangle_over500": 640,
+      "max_um": 730.642
+    },
+    "header_delay": {
+      "joins": 108,
+      "over500": 0,
+      "rectangle_over500": 0,
+      "max_um": 321.69
+    },
+    "rq_q": {
+      "joins": 1024,
+      "over500": 0,
+      "rectangle_over500": 0,
+      "max_um": 414.264
+    },
+    "hs_run": {
+      "joins": 16,
+      "over500": 0,
+      "rectangle_over500": 0,
+      "max_um": 401.4
+    },
+    "hs_c": {
+      "joins": 256,
+      "over500": 0,
+      "rectangle_over500": 0,
+      "max_um": 401.4
+    }
+  },
+  "actual_external_source": "dsfd_sp_hc.sv: CTH[p].rd_in = rdo[p+1] or external rd_in at chain tail; current CTH CTRn captures local A/B.rdm and drives rdo[p]",
+  "audit_limit": "rdh/rdp comparisons to CTRn.rd_out use SAME v22 origin as a conditional stand-in; actual neighboring CTH homes/orientations and timing remain required",
+  "uncovered_incident_edges": [
+    "CTFN rst_c to all leaves",
+    "CTFX fv_local/fdx_local to all leaves",
+    "external tid/last and rv_in to all leaves",
+    "CS128 from end-column CTNL acc_out to A leaves",
+    "A peer_fault/peer_hnz joins",
+    "actual adjacent CTH CTRn.rd_out to current A/B rd input",
+    "local A/B.rdm to CTRn and CTRn.rd_out to actual downstream CTH"
+  ],
+  "structural_next_steps": [
+    "Map exact CURRENT source dependencies and roots before modifying declared interfaces",
+    "Use registered YB distribution with aligned control epochs; all256YB bits are real candidates until actual mapped proof says otherwise",
+    "Regroup CTRn by actual column/shift ownership; candidate rdp requires own-column and c-2 chunks, so a naive same-column-only split is insufficient",
+    "Jointly assign actual adjacent CTH launch/capture homes and audit every incident edge and clock before a physical kit"
+  ],
+  "native_qualified": false
+}
