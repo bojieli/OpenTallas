@@ -6,6 +6,7 @@ ROOT=Path(__file__).resolve().parents[2]
 P=ROOT/'rtl/hbm_accel/generic/collective/p2p'
 
 def header(source,name):
+ source=re.sub(r"//[^\n]*", "", source)
  start=re.search(r'\bmodule\s+'+name+r'\b',source).start()
  text=source[start:source.index(');',start)]
  result={}
