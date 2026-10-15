@@ -7784,6 +7784,23 @@ def align_station_jogs(m, rounds=2):
                 done_ = (bx, [q[al] - start for q in B], bi['verdict'])
                 break
             if done_ is None:
+                # A whole-height spread rectangle can cover empty spaces
+                # occupied by other chains. Split only across actual gaps in
+                # the hard port's pins; all slices keep the SAME capture edge.
+                # Every bit still uses the real hstn register primitive.
+                if horiz and it.orient == 'R0' and fa == 'E':
+                    from s81 import banded_terminal as BT
+                    ins_ = [b_ for b_ in m['buses'] if len(b_[3]) == 2 and b_[3][1] == (it.name, 'di')]
+                    outs_ = [b_ for b_ in m['buses'] if len(b_[3]) == 2 and b_[3][0] == (it.name, 'dq')]
+                    if len(ins_) == len(outs_) == 1:
+                        obs_ = [(o.name,o.x,o.y,o.w,o.h) for o in m['insts']]
+                        split_ = BT.propose(A,B,pts(it,'dq',bits),obs_,it.name,it.w,PA,
+                                            gx=GX,gy=GY,inset=FACE_PIN_INSET,reach=ALIGN_STN_REACH_UM)
+                        if split_:
+                            ch_ = BT.apply(sys.modules[__name__],m,it,split_,ins_[0],outs_[0])
+                            moved[it.name] = ('band_split',[c_.name for c_ in ch_],r['bus'])
+                            refused.pop(r['bus'],None)
+                            continue
                 refused[r['bus']] = refused.get(r['bus'], []) + ['spread:no_position']
                 continue
             bx, loc, vin = done_

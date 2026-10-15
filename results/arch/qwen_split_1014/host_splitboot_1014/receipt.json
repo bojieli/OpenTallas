@@ -1,0 +1,47 @@
+{
+  "status": "REAL_HOST_SUCCESSOR_SOURCE_CANDIDATE_NOT_FULL_NATIVE_OR_PHYSICAL_QUALIFICATION",
+  "profile": {
+    "ENABLE_SERVICE": 1,
+    "ENABLE_TOKEN": 1,
+    "ENABLE_NATIVE": 1
+  },
+  "gate": {
+    "mixed": "512 sectors256KV+256embedding exact; global real completion prefix before BOOT_END;692cycles",
+    "hot": "same exact512 sectors on hotPC127;8693cycles",
+    "mutant": "completion-ignore mutant fails premature ACK assertion",
+    "barrier": "new-image marker requires ready-low then verified ready-high;KV-only marker reuses valid unchanged image; bypass mutant FAIL",
+    "elaboration": "all-enabled full real HOST top lint/elaboration PASS on main-source modules and physical SRAMmodels",
+    "gateway": "actual gateway+4 real monolithic strip engines PASS2600 exact response words; packing mutant FAIL1215 errors",
+    "fresh_reload": "new BOOT_END withdraws old ready;good then bad reload PASS;sticky-ready mutant FAIL",
+    "post_image": "stream blocked until accepted image marker;KV-only warm marker skips image recheck; early-payload mutant FAIL"
+  },
+  "remaining": [
+    "whole-native host cohort lifecycle gate on this successor",
+    "assign real child slots/clocks/pins, harden new leaves; no old-view relabeling",
+    "route controller completion observers and147 actual host ports in real die",
+    "native physical root/pin/reset and throughput cost gates",
+    "PLL allowed analog model must be instantiated on actual reference pads; no independent digital reset FSM"
+  ],
+  "sources": {
+    "rtl/qwen_sys/host_20261013/qkd_host_splitboot_service.sv": "eb2966dda0301e24a813ff2b87b81b0bd4dd802eec91650d58c499dcb0bfc784",
+    "rtl/qwen_sys/host_20261013/qkd_host_boot_dispatch.sv": "4c070f6bd2ececf5582edaac6684bfed6b0452408fec804c6560950ecfde3f8f",
+    "rtl/qwen_sys/host_20261013/qkd_host_static_pc_emback.sv": "c9c6208fb9219217d8900ee1e8a8de0c6390fe8e6300fd1153d3e2c4ea79866c",
+    "rtl/qwen_sys/host_20261013/qkd_host_ingest_chain_splitboot.sv": "d6f75890973fd4b23912ef50cc433e39753a3ddf5c37cb446fc94450e948276a",
+    "rtl/qwen_sys/host_20261013/qkd_host_emb_boot_barrier.sv": "e49893d71224a047e61fd8b1bf04c8defe5ef5dc8e4f3257933c2958bb1248b5",
+    "rtl/qwen_sys/host_20261013/qkd_host_commit_order.sv": "67f4c981db6f72e4b00d5971a67e9bab334ca2260c8731966b689b78d145643a",
+    "rtl/qwen_sys/host_20261013/qkd_host_ingest_map.sv": "f9cb8a9c496ee44c25d7f2600246fc79b39c409a8cc2835b9765dbb5aeb6ce91",
+    "rtl/test/qwen_host/tb_qkd_host_splitboot_chain.sv": "17739d53748ffa2d1edacce7d76d473621f33081ebcb75a0c2de69a542bf230a",
+    "rtl/test/qwen_host/tb_qkd_host_emb_boot_barrier.sv": "40fd8e578d5f3137e5ac936ddbd60f47bb7efed3621fa0b48b9179980e134258",
+    "tools/qwen_host/splitboot_chain_gate.sh": "7b9651cee3bc5015e371c66060bd6781358136e5202600be238966f98e932b63",
+    "tools/qwen_host/splitboot_elaborate.sh": "89154d94ef99c49e38fc4aec54f03624eb55ac8db701ef9ac78d1a8c1d2f7713",
+    "rtl/qwen_sys/split_20261014/qkd_pll_analog_model.sv": "cd618150858037f9b5342c7f7548b4da3c99ae3a62ceb096309b3da1d02ef9d9",
+    "tools/qwen_native_host/host_owner.hpp": "e68e05b0207b5dc7e20ddaf5d370a913b216bb9dc0cdea5f4e4ed07fa0fcc5c8",
+    "rtl/qwen_sys/split_20261014/qkd_embgw_splitboot.sv": "48a92ba150a415ad4f03563b631f8e9f6ea022e6b0c67e2d25638b4ca8af18c1",
+    "rtl/test/qwen_host/tb_qkd_embgw_fresh_boot.sv": "682227dc2aed00cdd00e41d71c64a4558ebcb05b7d78d4bc747398c5901c2db0",
+    "rtl/test/qwen_host/tb_qkd_embgw_splitboot.sv": "1f6984642a3478c1cc6e05e8253741d0882a0055d7372a1fa56d1c93554e7f46",
+    "rtl/test/qwen_host/tb_qkd_host_boot_dispatch_lifecycle.sv": "bdb92fd00485abfcf6c54948dd4b4ff66968c6852c202d9d5acd41a016cb5ea4",
+    "tools/qwen_host/splitboot_gateway_gate.sh": "7683f45c8f56a70988a42126d551f5c571496dd2ded0a983fc1743acde7da7f8",
+    "tools/qwen_host/splitboot_lifecycle_gate.sh": "220536b1cd625e5d7ce96e86fd8f473d96137a567fb4f1cf3d85f5fabf94fe6f"
+  },
+  "final_live_job": "none;job oth-ubuntu-3562538-1792030180 terminalexit0"
+}

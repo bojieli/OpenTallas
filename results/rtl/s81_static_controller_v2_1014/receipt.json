@@ -1,0 +1,318 @@
+{
+  "status": "CONTROLLER_V2_COMPONENT_MECHANISM_PASS",
+  "production_qualified": false,
+  "integration_ready": false,
+  "abi": "opentallas.s81.collective-fixed-edge-rom.v2",
+  "control_bits": 468,
+  "rom_bits": 564,
+  "control_layout": [
+    {
+      "name": "read_slot",
+      "lsb": 0,
+      "width": 1
+    },
+    {
+      "name": "read_row",
+      "lsb": 1,
+      "width": 14
+    },
+    {
+      "name": "issue_slot",
+      "lsb": 15,
+      "width": 1
+    },
+    {
+      "name": "tag",
+      "lsb": 16,
+      "width": 32
+    },
+    {
+      "name": "seq",
+      "lsb": 48,
+      "width": 16
+    },
+    {
+      "name": "last",
+      "lsb": 64,
+      "width": 1
+    },
+    {
+      "name": "rankmask",
+      "lsb": 65,
+      "width": 4
+    },
+    {
+      "name": "commit_slot",
+      "lsb": 69,
+      "width": 1
+    },
+    {
+      "name": "commit_tag",
+      "lsb": 70,
+      "width": 32
+    },
+    {
+      "name": "commit_seq",
+      "lsb": 102,
+      "width": 16
+    },
+    {
+      "name": "commit_last",
+      "lsb": 118,
+      "width": 1
+    },
+    {
+      "name": "commit_rankmask",
+      "lsb": 119,
+      "width": 4
+    },
+    {
+      "name": "commit_rows",
+      "lsb": 123,
+      "width": 60
+    },
+    {
+      "name": "tx_beat_slot",
+      "lsb": 183,
+      "width": 1
+    },
+    {
+      "name": "tx_phase",
+      "lsb": 184,
+      "width": 2
+    },
+    {
+      "name": "tx_frame_slot",
+      "lsb": 186,
+      "width": 1
+    },
+    {
+      "name": "rx_beat_slot",
+      "lsb": 187,
+      "width": 1
+    },
+    {
+      "name": "rx_phase",
+      "lsb": 188,
+      "width": 2
+    },
+    {
+      "name": "rx_frame_slot",
+      "lsb": 190,
+      "width": 1
+    },
+    {
+      "name": "channel_tx_slot",
+      "lsb": 191,
+      "width": 5
+    },
+    {
+      "name": "channel_tx_kind",
+      "lsb": 196,
+      "width": 10
+    },
+    {
+      "name": "channel_tx_seq",
+      "lsb": 206,
+      "width": 50
+    },
+    {
+      "name": "channel_tx_last",
+      "lsb": 256,
+      "width": 5
+    },
+    {
+      "name": "channel_rx_slot",
+      "lsb": 261,
+      "width": 5
+    },
+    {
+      "name": "channel_rx_kind",
+      "lsb": 266,
+      "width": 10
+    },
+    {
+      "name": "channel_rx_seq",
+      "lsb": 276,
+      "width": 50
+    },
+    {
+      "name": "channel_rx_last",
+      "lsb": 326,
+      "width": 5
+    },
+    {
+      "name": "channel_tx_beat_slot",
+      "lsb": 331,
+      "width": 5
+    },
+    {
+      "name": "channel_tx_frame_slot",
+      "lsb": 336,
+      "width": 5
+    },
+    {
+      "name": "channel_tx_phase",
+      "lsb": 341,
+      "width": 10
+    },
+    {
+      "name": "channel_rx_beat_slot",
+      "lsb": 351,
+      "width": 5
+    },
+    {
+      "name": "channel_rx_frame_slot",
+      "lsb": 356,
+      "width": 5
+    },
+    {
+      "name": "channel_rx_phase",
+      "lsb": 361,
+      "width": 10
+    },
+    {
+      "name": "hc_reduce_slot",
+      "lsb": 371,
+      "width": 1
+    },
+    {
+      "name": "hc_write_slot",
+      "lsb": 372,
+      "width": 1
+    },
+    {
+      "name": "hc_word_index",
+      "lsb": 373,
+      "width": 4
+    },
+    {
+      "name": "hc_expect_seq",
+      "lsb": 377,
+      "width": 16
+    },
+    {
+      "name": "hc_expect_last",
+      "lsb": 393,
+      "width": 1
+    },
+    {
+      "name": "hc_emit_slot",
+      "lsb": 394,
+      "width": 1
+    },
+    {
+      "name": "hc_emit_tag",
+      "lsb": 395,
+      "width": 32
+    },
+    {
+      "name": "commit_gather",
+      "lsb": 427,
+      "width": 1
+    },
+    {
+      "name": "raw_capture_payload_slot",
+      "lsb": 428,
+      "width": 1
+    },
+    {
+      "name": "raw_capture_meta_slot",
+      "lsb": 429,
+      "width": 1
+    },
+    {
+      "name": "raw_rx_write_slot",
+      "lsb": 430,
+      "width": 1
+    },
+    {
+      "name": "raw_rx_payload_row",
+      "lsb": 431,
+      "width": 14
+    },
+    {
+      "name": "raw_rx_meta_row",
+      "lsb": 445,
+      "width": 14
+    },
+    {
+      "name": "raw_rx_tag",
+      "lsb": 459,
+      "width": 8
+    },
+    {
+      "name": "hc_assemble_slot",
+      "lsb": 467,
+      "width": 1
+    }
+  ],
+  "latencies": {
+    "controller_command_register_edges": 1,
+    "controller_output_register_edges": 1,
+    "vm_request_to_issue_edges": 14,
+    "issue_to_gather_edges": 11,
+    "gather_to_vm_source_edges": 1,
+    "hc_reduce_to_write_edges": 18,
+    "hc_final_write_to_earliest_emit_edges": 1,
+    "done_rom_to_c_done_edges": 1
+  },
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv": "a5d5d29e9ed7b774fd613d5a2979b56660693cdbc5859b32a0f5ca7eb7f15671",
+    "tools/s81_static_collective/controller_image.py": "0cce1e511067c3551b6de98a0d83703642fe16378daf0b6acddc300845be25c8",
+    "tools/s81_static_collective/test_controller_image.py": "5d60431149fb586ee4fb5b949ff17c618f72bb2691dda00f6649b687eb7be6a6"
+  },
+  "artifact_sha256": {
+    "reduce_vm_hc.log": "aec15534da94540632a1ce3b41247d43e7473eeacf2200b4f7568fa016114a99",
+    "mutant_suppressed_raw_tag.log": "4bf6ae00ea08ddf55ad8bde0e378022789763426465ac4414dcd153bada475bb",
+    "gather_raw.log": "aec15534da94540632a1ce3b41247d43e7473eeacf2200b4f7568fa016114a99",
+    "gather_raw.json": "4560fd19e7d4b26ccf5c80e8ced52014d775875c8369fd6bd5b702242844e558",
+    "lint.json": "3f157ba796974d49082f8a054c2b38632e68c1285b690c8a2572bde0d5ff0aff",
+    "reduce_vm_hc.json": "6342c0f6c774cc016e14528d8b23096652f25826d911b278705c52e9d71d1935",
+    "reduce_vm.log": "aec15534da94540632a1ce3b41247d43e7473eeacf2200b4f7568fa016114a99",
+    "gate.log": "86e1b4e1bf60b3605229b561bb9aaf7cae9dbf4eb96af54f25a3e8d60f8bea54",
+    "reduce_vm.mem": "36569dba6fc12b1924d6aa98673956ac28dd7c9fc3400a98404780ae92a2e657",
+    "reduce_vm_hc.mem": "faafa41e9d62b6b7e2f6ea30539863484fe9522017f48235b10f76a7e850ef38",
+    "reduce_vm.json": "08935fe994e9f298e26ac076f70f2597f266d00d66cdc5441a696f751c769416",
+    "gather_raw.mem": "82961fa3d41d52aee67e7f4e128962082cba63c14d40cd7bf634892f513500c4"
+  },
+  "cases": [
+    "gather_vm plus two real-row raw capture control streams and RX writer control",
+    "reduce_vm one word with no HC assembly",
+    "reduce_vm_hc16words with explicit assembly/emit"
+  ],
+  "proof_scope": "Only generated controller output slots are simulated here; native source data, source SRAM values, network transport and reducers are separately qualified components",
+  "invariant_rejections": [
+    "v1ABI",
+    "mode-consumer mismatch",
+    "wrongcommitmode",
+    "missingreadreservation",
+    "wrongreadreservationrow",
+    "readreturntwoowners",
+    "rawregisteroverlap",
+    "rawsendwithoutcaptures",
+    "rawRXaliasrows",
+    "rawRXwrongcaptureedge",
+    "earlydone",
+    "missingHCassemblyword",
+    "duplicateHCassemblyindex",
+    "invalidsequence",
+    "invalidrecordcount",
+    "stalesourceevidence"
+  ],
+  "measured_edges": {
+    "command_register": 1,
+    "control_output_register": 1,
+    "raw_rx_tag_output_visible_after_external_command": 22,
+    "observed_mutant_failure_edge": 22
+  },
+  "observed_mutant": "Actual raw_rx_tag register update forcedzero; all468bit output comparison fails edge22",
+  "command": "S81_CONTROLLER_EVIDENCE=results/rtl/s81_static_controller_v2_1014 python3 -m unittest discover -s tools/s81_static_collective -p test_controller_image.py -v",
+  "blockers": [
+    "actual compiler production source image and read reservations",
+    "full production source/phase/price bindings",
+    "accepted native controller slot and pins",
+    "full slab exactness and throughput",
+    "TT setup FF hold DRC0 native phi-R qualification"
+  ]
+}

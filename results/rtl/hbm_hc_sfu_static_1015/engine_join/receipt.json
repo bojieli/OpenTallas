@@ -1,0 +1,24 @@
+{
+  "gate": "PASS",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_engine.sv": "3dac2a3551703b5d8a7a718ec55a3bc30bb1d5f52a4b145db3033d02ef50b7cf",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv": "e1a7d41038aa43e22a12886749f884a17900254f27fa5f4fe9efae84dfdcf524",
+    "rtl/test/hbm_accel/generic/tb_hgi_sfu_static_engine.sv": "df6ecbe65125025de128e335088f476bf8d72772f627a2af1e23782e99c8b08a"
+  },
+  "native_qualified": false,
+  "physical_qualified": false,
+  "layer_calendar_qualified": false,
+  "source_commit": "0d5c21443",
+  "real_SRAMs": 80,
+  "actual_C12_lanes": 16,
+  "exact_words": 7168,
+  "arithmetic_class": "SFU_NONE pass-through; nonlinear arithmetic independently tested by fixed_phase",
+  "compiler": "independent Python contiguous vector lowering",
+  "compiler_source_commit": "0d5c21443",
+  "compiler_source_sha256": "9f4fe9825fea5f030d4bdc65ddd28688b04245d3935b713ca1aaa6838d7f3234",
+  "preload_edges": 448,
+  "compiler_edges": 502,
+  "drain_edges": 448,
+  "mutant": "suppressed first actual issue; FAIL ENGINE_WORD beat0 lane0",
+  "VM_tap_join": false
+}

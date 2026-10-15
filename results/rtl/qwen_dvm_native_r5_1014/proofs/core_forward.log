@@ -1,0 +1,5 @@
+PASS xdvm_prod NCOL=4 NH=8 tiles=64 GT=256 SMIN=7 SMAX=11 NXL=512 HB=3 DX=10 XOFF=3 XVMR=12 ops=10 cycles=1710 element_checks=159744 dvm_minus_ref_edges=1
+- rtl/qwen_sys/dvm_20261014/tb_qfd_xdvm_prod.sv:213: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.567 s; speed 6.048 us/s
+- Verilator: cpu 0.563 s on 1 threads; allocated 17 MB

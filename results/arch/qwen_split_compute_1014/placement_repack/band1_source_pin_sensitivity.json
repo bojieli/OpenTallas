@@ -1,0 +1,3205 @@
+{
+  "schema": "opentallas.qwen.band1-source-pin-sensitivity.v1",
+  "scope": "Actual source-assigned pin bounding spans; historical P2P endpoint graph. Not allocated routes, cuts or compiler ages.",
+  "placements": [
+    {
+      "n": "sp_band_lanes_1",
+      "m": "qfd_sp_band_lanes",
+      "x": 12742.272,
+      "y": 12601.44,
+      "w": 881.28,
+      "h": 1131.84,
+      "o": "MX"
+    },
+    {
+      "n": "sp_port_tiles_1",
+      "m": "qfd_port_tiles_1",
+      "x": 12664.512,
+      "y": 10134.72,
+      "w": 1036.776,
+      "h": 2462.376,
+      "o": "MX"
+    },
+    {
+      "n": "sp_port_tiles_1_f1",
+      "m": "qfd_port_tiles_1_f1",
+      "x": 13705.632,
+      "y": 10134.72,
+      "w": 1036.776,
+      "h": 2462.376,
+      "o": "R0"
+    },
+    {
+      "n": "sp_res_ser_1",
+      "m": "qfd_sp_res_ser",
+      "x": 12794.112,
+      "y": 9612.0,
+      "w": 777.576,
+      "h": 518.376,
+      "o": "MX"
+    }
+  ],
+  "pin_plan_sha256": {
+    "results/arch/qwen_split_compute_1014/c17_source_pins/qfd_tile_nk.json": "faeb153ebc0b6a1b2074f4c0dd75b5381c88331b8ace2193a31c7de219b50124",
+    "results/arch/qwen_split_compute_1014/c17_source_pins/qfd_tile_nl.json": "6cff5677457503e5fe957ce574347da8c08a4b3a0935d25daf1a793a22e51ea8",
+    "results/arch/qwen_split_compute_1014/c17_source_pins/qfd_port_tiles_1_f1.json": "6b86f344a786ad3f43d85290e29dff931c8455b7434e9401e46fb61c585df9a1",
+    "results/arch/qwen_split_compute_1014/c17_source_pins/qfd_port_tiles_2.json": "51801db78222c86571728d54f69ed582bbeed502bc8a9a77b9bd42883896658c",
+    "results/arch/qwen_split_compute_1014/c17_source_pins/qfd_port_tiles_2_f1.json": "84d7cea76c4a167a4942d8736b4e11b3798e1236e8e20d4acb5a0791be942337",
+    "results/arch/qwen_split_compute_1014/c17_source_pins/qfd_port_tiles_0.json": "c9e91403dc1904c00e67bca1c0d6e184fa35f9c675e55e5b79b40458e1f5c7ef",
+    "results/arch/qwen_split_compute_1014/c17_source_pins/qfd_port_tiles_0_f1.json": "46677a3da17e6003d6a79ca3ec977d0a7360913b7fc2bd1928605d63abf626b2",
+    "results/arch/qwen_split_compute_1014/c17_source_pins/qfd_port_tiles_1.json": "2c41be2a4bf2e9609065c7558de438f1822289d9c341289d179b0d42d7f43b91",
+    "results/arch/qwen_split_compute_1014/c17_band_quarter_pins/qfd_sp_band_lanes.json": "293e9b862c73fd533bc482745fc5661499aa0dd4c07748cf378645c69be4e684"
+  },
+  "paired_paths": [
+    {
+      "bus": "bword_1",
+      "bits": 514,
+      "old_pin_span_um": 11308.272,
+      "new_pin_span_um": 11152.896,
+      "delta_um": -155.376,
+      "old_geometric_hops": 24,
+      "new_geometric_hops": 23
+    },
+    {
+      "bus": "bword_5",
+      "bits": 514,
+      "old_pin_span_um": 9168.768,
+      "new_pin_span_um": 9058.896,
+      "delta_um": -109.872,
+      "old_geometric_hops": 19,
+      "new_geometric_hops": 19
+    },
+    {
+      "bus": "bword_9",
+      "bits": 514,
+      "old_pin_span_um": 7029.264,
+      "new_pin_span_um": 7020.096,
+      "delta_um": -9.168,
+      "old_geometric_hops": 15,
+      "new_geometric_hops": 15
+    },
+    {
+      "bus": "bword_10",
+      "bits": 514,
+      "old_pin_span_um": 9951.072,
+      "new_pin_span_um": 10042.608,
+      "delta_um": 91.536,
+      "old_geometric_hops": 21,
+      "new_geometric_hops": 21
+    },
+    {
+      "bus": "bword_13",
+      "bits": 514,
+      "old_pin_span_um": 4876.272,
+      "new_pin_span_um": 5031.648,
+      "delta_um": 155.376,
+      "old_geometric_hops": 10,
+      "new_geometric_hops": 11
+    },
+    {
+      "bus": "bword_14",
+      "bits": 514,
+      "old_pin_span_um": 7761.264,
+      "new_pin_span_um": 8054.112,
+      "delta_um": 292.848,
+      "old_geometric_hops": 16,
+      "new_geometric_hops": 17
+    },
+    {
+      "bus": "bword_18",
+      "bits": 514,
+      "old_pin_span_um": 5621.76,
+      "new_pin_span_um": 6015.312,
+      "delta_um": 393.552,
+      "old_geometric_hops": 12,
+      "new_geometric_hops": 13
+    },
+    {
+      "bus": "bword_22",
+      "bits": 514,
+      "old_pin_span_um": 4968.336,
+      "new_pin_span_um": 5462.592,
+      "delta_um": 494.256,
+      "old_geometric_hops": 11,
+      "new_geometric_hops": 12
+    },
+    {
+      "bus": "bword_26",
+      "bits": 514,
+      "old_pin_span_um": 9569.688,
+      "new_pin_span_um": 10183.128,
+      "delta_um": 613.44,
+      "old_geometric_hops": 20,
+      "new_geometric_hops": 21
+    },
+    {
+      "bus": "bword_30",
+      "bits": 514,
+      "old_pin_span_um": 10122.408,
+      "new_pin_span_um": 10735.848,
+      "delta_um": 613.44,
+      "old_geometric_hops": 21,
+      "new_geometric_hops": 22
+    },
+    {
+      "bus": "bword_33",
+      "bits": 514,
+      "old_pin_span_um": 9495.0,
+      "new_pin_span_um": 9802.488,
+      "delta_um": 307.488,
+      "old_geometric_hops": 20,
+      "new_geometric_hops": 21
+    },
+    {
+      "bus": "bword_34",
+      "bits": 514,
+      "old_pin_span_um": 13596.936,
+      "new_pin_span_um": 14210.376,
+      "delta_um": 613.44,
+      "old_geometric_hops": 28,
+      "new_geometric_hops": 30
+    },
+    {
+      "bus": "bword_37",
+      "bits": 514,
+      "old_pin_span_um": 11684.856,
+      "new_pin_span_um": 11790.936,
+      "delta_um": 106.08,
+      "old_geometric_hops": 24,
+      "new_geometric_hops": 25
+    },
+    {
+      "bus": "bword_38",
+      "bits": 514,
+      "old_pin_span_um": 14099.304,
+      "new_pin_span_um": 14712.744,
+      "delta_um": 613.44,
+      "old_geometric_hops": 29,
+      "new_geometric_hops": 31
+    },
+    {
+      "bus": "bword_41",
+      "bits": 514,
+      "old_pin_span_um": 13874.664,
+      "new_pin_span_um": 13779.432,
+      "delta_um": -95.232,
+      "old_geometric_hops": 29,
+      "new_geometric_hops": 29
+    },
+    {
+      "bus": "bword_45",
+      "bits": 514,
+      "old_pin_span_um": 16014.168,
+      "new_pin_span_um": 15818.232,
+      "delta_um": -195.936,
+      "old_geometric_hops": 33,
+      "new_geometric_hops": 33
+    },
+    {
+      "bus": "pfrag_1_port_tiles_1_f1",
+      "bits": 2050,
+      "old_pin_span_um": 651.816,
+      "new_pin_span_um": 202.104,
+      "delta_um": -449.712,
+      "old_geometric_hops": 2,
+      "new_geometric_hops": 1
+    },
+    {
+      "bus": "tw_1",
+      "bits": 4096,
+      "old_pin_span_um": 410.208,
+      "new_pin_span_um": 410.232,
+      "delta_um": 0.024,
+      "old_geometric_hops": 1,
+      "new_geometric_hops": 1
+    },
+    {
+      "bus": "ty_1",
+      "bits": 4096,
+      "old_pin_span_um": 410.448,
+      "new_pin_span_um": 410.472,
+      "delta_um": 0.024,
+      "old_geometric_hops": 1,
+      "new_geometric_hops": 1
+    },
+    {
+      "bus": "slab_tc_1",
+      "bits": 341,
+      "old_pin_span_um": 454.2,
+      "new_pin_span_um": 235.656,
+      "delta_um": -218.544,
+      "old_geometric_hops": 1,
+      "new_geometric_hops": 1
+    },
+    {
+      "bus": "slab_ty_1",
+      "bits": 2048,
+      "old_pin_span_um": 618.072,
+      "new_pin_span_um": 233.544,
+      "delta_um": -384.528,
+      "old_geometric_hops": 2,
+      "new_geometric_hops": 1
+    },
+    {
+      "bus": "slab_rq_1",
+      "bits": 2213,
+      "old_pin_span_um": 250.2,
+      "new_pin_span_um": 223.752,
+      "delta_um": -26.448,
+      "old_geometric_hops": 1,
+      "new_geometric_hops": 1
+    },
+    {
+      "bus": "slab_am_1",
+      "bits": 52,
+      "old_pin_span_um": 42.792,
+      "new_pin_span_um": 221.592,
+      "delta_um": 178.8,
+      "old_geometric_hops": 1,
+      "new_geometric_hops": 1
+    }
+  ],
+  "missing_peer_pin_plans": [
+    {
+      "bus": "tt_c1",
+      "instance": "tt_ctlm",
+      "port": "c1",
+      "master": "qfd_tt_ctlm"
+    },
+    {
+      "bus": "tt_f1",
+      "instance": "tt_ctlm",
+      "port": "f1",
+      "master": "qfd_tt_ctlm"
+    },
+    {
+      "bus": "tt_lc1",
+      "instance": "tt_ctlm",
+      "port": "lc1",
+      "master": "qfd_tt_ctlm"
+    },
+    {
+      "bus": "rq_1",
+      "instance": "sp_res_ser_1",
+      "port": "i",
+      "master": "qfd_sp_res_ser"
+    },
+    {
+      "bus": "rs_1",
+      "instance": "sp_res_ser_1",
+      "port": "o",
+      "master": "qfd_sp_res_ser"
+    },
+    {
+      "bus": "rc_1",
+      "instance": "sp_vector_memory",
+      "port": "rc1",
+      "master": "qfd_sp_vector_memory"
+    },
+    {
+      "bus": "rk_1",
+      "instance": "sp_res_ser_1",
+      "port": "ok",
+      "master": "qfd_sp_res_ser"
+    },
+    {
+      "bus": "pword_1",
+      "instance": "tt_up4_0",
+      "port": "pw1",
+      "reason": "retired historical endpoint; direct-leaf lowering must replace"
+    },
+    {
+      "bus": "tt_lf1",
+      "instance": "tt_up4_0",
+      "port": "lf1",
+      "reason": "retired historical endpoint; direct-leaf lowering must replace"
+    },
+    {
+      "bus": "o4_me_en_rs1",
+      "instance": "tt_ctlm",
+      "port": "mer1",
+      "master": "qfd_tt_ctlm"
+    },
+    {
+      "bus": "rs_fault_1",
+      "instance": "sp_res_ser_1",
+      "port": "fault",
+      "master": "qfd_sp_res_ser"
+    }
+  ],
+  "transformed_clock_entries": [
+    {
+      "instance": "sp_band_lanes_1",
+      "port": "ck_l0",
+      "before": [
+        [
+          12865.212000000001,
+          9789.078
+        ]
+      ],
+      "after": [
+        [
+          12865.212000000001,
+          13556.202000000001
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_band_lanes_1",
+      "port": "ck_l3",
+      "before": [
+        [
+          12865.212000000001,
+          9966.198
+        ]
+      ],
+      "after": [
+        [
+          12865.212000000001,
+          13379.082
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_band_lanes_1",
+      "port": "ck_l6",
+      "before": [
+        [
+          12865.212000000001,
+          10143.318
+        ]
+      ],
+      "after": [
+        [
+          12865.212000000001,
+          13201.962
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_band_lanes_1",
+      "port": "ck_l9",
+      "before": [
+        [
+          12865.212000000001,
+          10320.438
+        ]
+      ],
+      "after": [
+        [
+          12865.212000000001,
+          13024.842
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_band_lanes_1",
+      "port": "ck_l12",
+      "before": [
+        [
+          12865.212000000001,
+          10497.558
+        ]
+      ],
+      "after": [
+        [
+          12865.212000000001,
+          12847.722
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_band_lanes_1",
+      "port": "ck_l15",
+      "before": [
+        [
+          12865.212000000001,
+          10674.678
+        ]
+      ],
+      "after": [
+        [
+          12865.212000000001,
+          12670.602
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_band_lanes_1",
+      "port": "ck_l1",
+      "before": [
+        [
+          13150.332,
+          9789.078
+        ]
+      ],
+      "after": [
+        [
+          13150.332,
+          13556.202000000001
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_band_lanes_1",
+      "port": "ck_l4",
+      "before": [
+        [
+          13150.332,
+          9966.198
+        ]
+      ],
+      "after": [
+        [
+          13150.332,
+          13379.082
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_band_lanes_1",
+      "port": "ck_l7",
+      "before": [
+        [
+          13150.332,
+          10143.318
+        ]
+      ],
+      "after": [
+        [
+          13150.332,
+          13201.962
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_band_lanes_1",
+      "port": "ck_l10",
+      "before": [
+        [
+          13150.332,
+          10320.438
+        ]
+      ],
+      "after": [
+        [
+          13150.332,
+          13024.842
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_band_lanes_1",
+      "port": "ck_l13",
+      "before": [
+        [
+          13150.332,
+          10497.558
+        ]
+      ],
+      "after": [
+        [
+          13150.332,
+          12847.722
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_band_lanes_1",
+      "port": "ck",
+      "before": [
+        [
+          13182.924,
+          10743.84
+        ],
+        [
+          13182.924,
+          10743.84
+        ]
+      ],
+      "after": [
+        [
+          13182.924,
+          12601.44
+        ],
+        [
+          13182.924,
+          12601.44
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_band_lanes_1",
+      "port": "ck_l2",
+      "before": [
+        [
+          13435.452000000001,
+          9789.078
+        ]
+      ],
+      "after": [
+        [
+          13435.452000000001,
+          13556.202000000001
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_band_lanes_1",
+      "port": "ck_l5",
+      "before": [
+        [
+          13435.452000000001,
+          9966.198
+        ]
+      ],
+      "after": [
+        [
+          13435.452000000001,
+          13379.082
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_band_lanes_1",
+      "port": "ck_l8",
+      "before": [
+        [
+          13435.452000000001,
+          10143.318
+        ]
+      ],
+      "after": [
+        [
+          13435.452000000001,
+          13201.962
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_band_lanes_1",
+      "port": "ck_l11",
+      "before": [
+        [
+          13435.452000000001,
+          10320.438
+        ]
+      ],
+      "after": [
+        [
+          13435.452000000001,
+          13024.842
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_band_lanes_1",
+      "port": "ck_l14",
+      "before": [
+        [
+          13435.452000000001,
+          10497.558
+        ]
+      ],
+      "after": [
+        [
+          13435.452000000001,
+          12847.722
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck",
+      "before": [
+        [
+          13155.516000000001,
+          13210.536
+        ],
+        [
+          13155.516000000001,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13155.516000000001,
+          10134.72
+        ],
+        [
+          13155.516000000001,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_bw0",
+      "before": [
+        [
+          13156.62,
+          13210.536
+        ],
+        [
+          13156.62,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13156.62,
+          10134.72
+        ],
+        [
+          13156.62,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_bw1",
+      "before": [
+        [
+          13157.724,
+          13210.536
+        ],
+        [
+          13157.724,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13157.724,
+          10134.72
+        ],
+        [
+          13157.724,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_bw2",
+      "before": [
+        [
+          13158.78,
+          13210.536
+        ],
+        [
+          13158.78,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13158.78,
+          10134.72
+        ],
+        [
+          13158.78,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_bw3",
+      "before": [
+        [
+          13159.884,
+          13210.536
+        ],
+        [
+          13159.884,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13159.884,
+          10134.72
+        ],
+        [
+          13159.884,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_bw4",
+      "before": [
+        [
+          13160.988000000001,
+          13210.536
+        ],
+        [
+          13160.988000000001,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13160.988000000001,
+          10134.72
+        ],
+        [
+          13160.988000000001,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_bw5",
+      "before": [
+        [
+          13162.092,
+          13210.536
+        ],
+        [
+          13162.092,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13162.092,
+          10134.72
+        ],
+        [
+          13162.092,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_bw6",
+      "before": [
+        [
+          13163.196,
+          13210.536
+        ],
+        [
+          13163.196,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13163.196,
+          10134.72
+        ],
+        [
+          13163.196,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_bw7",
+      "before": [
+        [
+          13164.300000000001,
+          13210.536
+        ],
+        [
+          13164.300000000001,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13164.300000000001,
+          10134.72
+        ],
+        [
+          13164.300000000001,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_pair0",
+      "before": [
+        [
+          13165.356,
+          13210.536
+        ],
+        [
+          13165.356,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13165.356,
+          10134.72
+        ],
+        [
+          13165.356,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_pair1",
+      "before": [
+        [
+          13166.460000000001,
+          13210.536
+        ],
+        [
+          13166.460000000001,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13166.460000000001,
+          10134.72
+        ],
+        [
+          13166.460000000001,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_pair2",
+      "before": [
+        [
+          13167.564,
+          13210.536
+        ],
+        [
+          13167.564,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13167.564,
+          10134.72
+        ],
+        [
+          13167.564,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_pair3",
+      "before": [
+        [
+          13168.668000000001,
+          13210.536
+        ],
+        [
+          13168.668000000001,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13168.668000000001,
+          10134.72
+        ],
+        [
+          13168.668000000001,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_col0",
+      "before": [
+        [
+          13169.772,
+          13210.536
+        ],
+        [
+          13169.772,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13169.772,
+          10134.72
+        ],
+        [
+          13169.772,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_col1",
+      "before": [
+        [
+          13170.876,
+          13210.536
+        ],
+        [
+          13170.876,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13170.876,
+          10134.72
+        ],
+        [
+          13170.876,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_col2",
+      "before": [
+        [
+          13171.932,
+          13210.536
+        ],
+        [
+          13171.932,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13171.932,
+          10134.72
+        ],
+        [
+          13171.932,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_col3",
+      "before": [
+        [
+          13173.036,
+          13210.536
+        ],
+        [
+          13173.036,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13173.036,
+          10134.72
+        ],
+        [
+          13173.036,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_col4",
+      "before": [
+        [
+          13174.140000000001,
+          13210.536
+        ],
+        [
+          13174.140000000001,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13174.140000000001,
+          10134.72
+        ],
+        [
+          13174.140000000001,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_col5",
+      "before": [
+        [
+          13175.244,
+          13210.536
+        ],
+        [
+          13175.244,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13175.244,
+          10134.72
+        ],
+        [
+          13175.244,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_col6",
+      "before": [
+        [
+          13176.348,
+          13210.536
+        ],
+        [
+          13176.348,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13176.348,
+          10134.72
+        ],
+        [
+          13176.348,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_col7",
+      "before": [
+        [
+          13177.452000000001,
+          13210.536
+        ],
+        [
+          13177.452000000001,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13177.452000000001,
+          10134.72
+        ],
+        [
+          13177.452000000001,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_col8",
+      "before": [
+        [
+          13178.508,
+          13210.536
+        ],
+        [
+          13178.508,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13178.508,
+          10134.72
+        ],
+        [
+          13178.508,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_col9",
+      "before": [
+        [
+          13179.612000000001,
+          13210.536
+        ],
+        [
+          13179.612000000001,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13179.612000000001,
+          10134.72
+        ],
+        [
+          13179.612000000001,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_col10",
+      "before": [
+        [
+          13180.716,
+          13210.536
+        ],
+        [
+          13180.716,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13180.716,
+          10134.72
+        ],
+        [
+          13180.716,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_col11",
+      "before": [
+        [
+          13181.82,
+          13210.536
+        ],
+        [
+          13181.82,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13181.82,
+          10134.72
+        ],
+        [
+          13181.82,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_col12",
+      "before": [
+        [
+          13182.924,
+          13210.536
+        ],
+        [
+          13182.924,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13182.924,
+          10134.72
+        ],
+        [
+          13182.924,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_col13",
+      "before": [
+        [
+          13184.028,
+          13210.536
+        ],
+        [
+          13184.028,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13184.028,
+          10134.72
+        ],
+        [
+          13184.028,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_col14",
+      "before": [
+        [
+          13185.084,
+          13210.536
+        ],
+        [
+          13185.084,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13185.084,
+          10134.72
+        ],
+        [
+          13185.084,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_col15",
+      "before": [
+        [
+          13186.188,
+          13210.536
+        ],
+        [
+          13186.188,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13186.188,
+          10134.72
+        ],
+        [
+          13186.188,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_mul0",
+      "before": [
+        [
+          13187.292000000001,
+          13210.536
+        ],
+        [
+          13187.292000000001,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13187.292000000001,
+          10134.72
+        ],
+        [
+          13187.292000000001,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_mul1",
+      "before": [
+        [
+          13188.396,
+          13210.536
+        ],
+        [
+          13188.396,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13188.396,
+          10134.72
+        ],
+        [
+          13188.396,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_mul2",
+      "before": [
+        [
+          13189.5,
+          13210.536
+        ],
+        [
+          13189.5,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13189.5,
+          10134.72
+        ],
+        [
+          13189.5,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_mul3",
+      "before": [
+        [
+          13190.604000000001,
+          13210.536
+        ],
+        [
+          13190.604000000001,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13190.604000000001,
+          10134.72
+        ],
+        [
+          13190.604000000001,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_mul4",
+      "before": [
+        [
+          13191.66,
+          13210.536
+        ],
+        [
+          13191.66,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13191.66,
+          10134.72
+        ],
+        [
+          13191.66,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_mul5",
+      "before": [
+        [
+          13192.764000000001,
+          13210.536
+        ],
+        [
+          13192.764000000001,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13192.764000000001,
+          10134.72
+        ],
+        [
+          13192.764000000001,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_mul6",
+      "before": [
+        [
+          13193.868,
+          13210.536
+        ],
+        [
+          13193.868,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13193.868,
+          10134.72
+        ],
+        [
+          13193.868,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_mul7",
+      "before": [
+        [
+          13194.972,
+          13210.536
+        ],
+        [
+          13194.972,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13194.972,
+          10134.72
+        ],
+        [
+          13194.972,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_mul8",
+      "before": [
+        [
+          13196.076000000001,
+          13210.536
+        ],
+        [
+          13196.076000000001,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13196.076000000001,
+          10134.72
+        ],
+        [
+          13196.076000000001,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_mul9",
+      "before": [
+        [
+          13197.18,
+          13210.536
+        ],
+        [
+          13197.18,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13197.18,
+          10134.72
+        ],
+        [
+          13197.18,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_mul10",
+      "before": [
+        [
+          13198.236,
+          13210.536
+        ],
+        [
+          13198.236,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13198.236,
+          10134.72
+        ],
+        [
+          13198.236,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_mul11",
+      "before": [
+        [
+          13199.34,
+          13210.536
+        ],
+        [
+          13199.34,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13199.34,
+          10134.72
+        ],
+        [
+          13199.34,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_mul12",
+      "before": [
+        [
+          13200.444000000001,
+          13210.536
+        ],
+        [
+          13200.444000000001,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13200.444000000001,
+          10134.72
+        ],
+        [
+          13200.444000000001,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_mul13",
+      "before": [
+        [
+          13201.548,
+          13210.536
+        ],
+        [
+          13201.548,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13201.548,
+          10134.72
+        ],
+        [
+          13201.548,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_mul14",
+      "before": [
+        [
+          13202.652,
+          13210.536
+        ],
+        [
+          13202.652,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13202.652,
+          10134.72
+        ],
+        [
+          13202.652,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_mul15",
+      "before": [
+        [
+          13203.756000000001,
+          13210.536
+        ],
+        [
+          13203.756000000001,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13203.756000000001,
+          10134.72
+        ],
+        [
+          13203.756000000001,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_group0",
+      "before": [
+        [
+          13204.812,
+          13210.536
+        ],
+        [
+          13204.812,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13204.812,
+          10134.72
+        ],
+        [
+          13204.812,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_group1",
+      "before": [
+        [
+          13205.916000000001,
+          13210.536
+        ],
+        [
+          13205.916000000001,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13205.916000000001,
+          10134.72
+        ],
+        [
+          13205.916000000001,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_group2",
+      "before": [
+        [
+          13207.02,
+          13210.536
+        ],
+        [
+          13207.02,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13207.02,
+          10134.72
+        ],
+        [
+          13207.02,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1",
+      "port": "ck_group3",
+      "before": [
+        [
+          13208.124,
+          13210.536
+        ],
+        [
+          13208.124,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          13208.124,
+          10134.72
+        ],
+        [
+          13208.124,
+          10134.72
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck",
+      "before": [
+        [
+          14196.636,
+          13210.536
+        ],
+        [
+          14196.636,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14196.636,
+          12597.096
+        ],
+        [
+          14196.636,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_bw0",
+      "before": [
+        [
+          14197.74,
+          13210.536
+        ],
+        [
+          14197.74,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14197.74,
+          12597.096
+        ],
+        [
+          14197.74,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_bw1",
+      "before": [
+        [
+          14198.844,
+          13210.536
+        ],
+        [
+          14198.844,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14198.844,
+          12597.096
+        ],
+        [
+          14198.844,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_bw2",
+      "before": [
+        [
+          14199.9,
+          13210.536
+        ],
+        [
+          14199.9,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14199.9,
+          12597.096
+        ],
+        [
+          14199.9,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_bw3",
+      "before": [
+        [
+          14201.003999999999,
+          13210.536
+        ],
+        [
+          14201.003999999999,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14201.003999999999,
+          12597.096
+        ],
+        [
+          14201.003999999999,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_bw4",
+      "before": [
+        [
+          14202.108,
+          13210.536
+        ],
+        [
+          14202.108,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14202.108,
+          12597.096
+        ],
+        [
+          14202.108,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_bw5",
+      "before": [
+        [
+          14203.212,
+          13210.536
+        ],
+        [
+          14203.212,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14203.212,
+          12597.096
+        ],
+        [
+          14203.212,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_bw6",
+      "before": [
+        [
+          14204.315999999999,
+          13210.536
+        ],
+        [
+          14204.315999999999,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14204.315999999999,
+          12597.096
+        ],
+        [
+          14204.315999999999,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_bw7",
+      "before": [
+        [
+          14205.42,
+          13210.536
+        ],
+        [
+          14205.42,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14205.42,
+          12597.096
+        ],
+        [
+          14205.42,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_pair0",
+      "before": [
+        [
+          14206.475999999999,
+          13210.536
+        ],
+        [
+          14206.475999999999,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14206.475999999999,
+          12597.096
+        ],
+        [
+          14206.475999999999,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_pair1",
+      "before": [
+        [
+          14207.58,
+          13210.536
+        ],
+        [
+          14207.58,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14207.58,
+          12597.096
+        ],
+        [
+          14207.58,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_pair2",
+      "before": [
+        [
+          14208.684,
+          13210.536
+        ],
+        [
+          14208.684,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14208.684,
+          12597.096
+        ],
+        [
+          14208.684,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_pair3",
+      "before": [
+        [
+          14209.788,
+          13210.536
+        ],
+        [
+          14209.788,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14209.788,
+          12597.096
+        ],
+        [
+          14209.788,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_col0",
+      "before": [
+        [
+          14210.892,
+          13210.536
+        ],
+        [
+          14210.892,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14210.892,
+          12597.096
+        ],
+        [
+          14210.892,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_col1",
+      "before": [
+        [
+          14211.996,
+          13210.536
+        ],
+        [
+          14211.996,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14211.996,
+          12597.096
+        ],
+        [
+          14211.996,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_col2",
+      "before": [
+        [
+          14213.052,
+          13210.536
+        ],
+        [
+          14213.052,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14213.052,
+          12597.096
+        ],
+        [
+          14213.052,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_col3",
+      "before": [
+        [
+          14214.155999999999,
+          13210.536
+        ],
+        [
+          14214.155999999999,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14214.155999999999,
+          12597.096
+        ],
+        [
+          14214.155999999999,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_col4",
+      "before": [
+        [
+          14215.26,
+          13210.536
+        ],
+        [
+          14215.26,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14215.26,
+          12597.096
+        ],
+        [
+          14215.26,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_col5",
+      "before": [
+        [
+          14216.364,
+          13210.536
+        ],
+        [
+          14216.364,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14216.364,
+          12597.096
+        ],
+        [
+          14216.364,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_col6",
+      "before": [
+        [
+          14217.467999999999,
+          13210.536
+        ],
+        [
+          14217.467999999999,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14217.467999999999,
+          12597.096
+        ],
+        [
+          14217.467999999999,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_col7",
+      "before": [
+        [
+          14218.572,
+          13210.536
+        ],
+        [
+          14218.572,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14218.572,
+          12597.096
+        ],
+        [
+          14218.572,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_col8",
+      "before": [
+        [
+          14219.627999999999,
+          13210.536
+        ],
+        [
+          14219.627999999999,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14219.627999999999,
+          12597.096
+        ],
+        [
+          14219.627999999999,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_col9",
+      "before": [
+        [
+          14220.732,
+          13210.536
+        ],
+        [
+          14220.732,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14220.732,
+          12597.096
+        ],
+        [
+          14220.732,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_col10",
+      "before": [
+        [
+          14221.836,
+          13210.536
+        ],
+        [
+          14221.836,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14221.836,
+          12597.096
+        ],
+        [
+          14221.836,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_col11",
+      "before": [
+        [
+          14222.939999999999,
+          13210.536
+        ],
+        [
+          14222.939999999999,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14222.939999999999,
+          12597.096
+        ],
+        [
+          14222.939999999999,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_col12",
+      "before": [
+        [
+          14224.044,
+          13210.536
+        ],
+        [
+          14224.044,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14224.044,
+          12597.096
+        ],
+        [
+          14224.044,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_col13",
+      "before": [
+        [
+          14225.148,
+          13210.536
+        ],
+        [
+          14225.148,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14225.148,
+          12597.096
+        ],
+        [
+          14225.148,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_col14",
+      "before": [
+        [
+          14226.204,
+          13210.536
+        ],
+        [
+          14226.204,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14226.204,
+          12597.096
+        ],
+        [
+          14226.204,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_col15",
+      "before": [
+        [
+          14227.307999999999,
+          13210.536
+        ],
+        [
+          14227.307999999999,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14227.307999999999,
+          12597.096
+        ],
+        [
+          14227.307999999999,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_mul0",
+      "before": [
+        [
+          14228.412,
+          13210.536
+        ],
+        [
+          14228.412,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14228.412,
+          12597.096
+        ],
+        [
+          14228.412,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_mul1",
+      "before": [
+        [
+          14229.516,
+          13210.536
+        ],
+        [
+          14229.516,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14229.516,
+          12597.096
+        ],
+        [
+          14229.516,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_mul2",
+      "before": [
+        [
+          14230.619999999999,
+          13210.536
+        ],
+        [
+          14230.619999999999,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14230.619999999999,
+          12597.096
+        ],
+        [
+          14230.619999999999,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_mul3",
+      "before": [
+        [
+          14231.724,
+          13210.536
+        ],
+        [
+          14231.724,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14231.724,
+          12597.096
+        ],
+        [
+          14231.724,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_mul4",
+      "before": [
+        [
+          14232.779999999999,
+          13210.536
+        ],
+        [
+          14232.779999999999,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14232.779999999999,
+          12597.096
+        ],
+        [
+          14232.779999999999,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_mul5",
+      "before": [
+        [
+          14233.884,
+          13210.536
+        ],
+        [
+          14233.884,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14233.884,
+          12597.096
+        ],
+        [
+          14233.884,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_mul6",
+      "before": [
+        [
+          14234.988,
+          13210.536
+        ],
+        [
+          14234.988,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14234.988,
+          12597.096
+        ],
+        [
+          14234.988,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_mul7",
+      "before": [
+        [
+          14236.091999999999,
+          13210.536
+        ],
+        [
+          14236.091999999999,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14236.091999999999,
+          12597.096
+        ],
+        [
+          14236.091999999999,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_mul8",
+      "before": [
+        [
+          14237.196,
+          13210.536
+        ],
+        [
+          14237.196,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14237.196,
+          12597.096
+        ],
+        [
+          14237.196,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_mul9",
+      "before": [
+        [
+          14238.3,
+          13210.536
+        ],
+        [
+          14238.3,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14238.3,
+          12597.096
+        ],
+        [
+          14238.3,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_mul10",
+      "before": [
+        [
+          14239.356,
+          13210.536
+        ],
+        [
+          14239.356,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14239.356,
+          12597.096
+        ],
+        [
+          14239.356,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_mul11",
+      "before": [
+        [
+          14240.46,
+          13210.536
+        ],
+        [
+          14240.46,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14240.46,
+          12597.096
+        ],
+        [
+          14240.46,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_mul12",
+      "before": [
+        [
+          14241.564,
+          13210.536
+        ],
+        [
+          14241.564,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14241.564,
+          12597.096
+        ],
+        [
+          14241.564,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_mul13",
+      "before": [
+        [
+          14242.668,
+          13210.536
+        ],
+        [
+          14242.668,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14242.668,
+          12597.096
+        ],
+        [
+          14242.668,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_mul14",
+      "before": [
+        [
+          14243.771999999999,
+          13210.536
+        ],
+        [
+          14243.771999999999,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14243.771999999999,
+          12597.096
+        ],
+        [
+          14243.771999999999,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_mul15",
+      "before": [
+        [
+          14244.876,
+          13210.536
+        ],
+        [
+          14244.876,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14244.876,
+          12597.096
+        ],
+        [
+          14244.876,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_group0",
+      "before": [
+        [
+          14245.931999999999,
+          13210.536
+        ],
+        [
+          14245.931999999999,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14245.931999999999,
+          12597.096
+        ],
+        [
+          14245.931999999999,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_group1",
+      "before": [
+        [
+          14247.036,
+          13210.536
+        ],
+        [
+          14247.036,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14247.036,
+          12597.096
+        ],
+        [
+          14247.036,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_group2",
+      "before": [
+        [
+          14248.14,
+          13210.536
+        ],
+        [
+          14248.14,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14248.14,
+          12597.096
+        ],
+        [
+          14248.14,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    },
+    {
+      "instance": "sp_port_tiles_1_f1",
+      "port": "ck_group3",
+      "before": [
+        [
+          14249.243999999999,
+          13210.536
+        ],
+        [
+          14249.243999999999,
+          13210.536
+        ]
+      ],
+      "after": [
+        [
+          14249.243999999999,
+          12597.096
+        ],
+        [
+          14249.243999999999,
+          12597.096
+        ]
+      ],
+      "R_ps": null,
+      "phi_ps": null
+    }
+  ],
+  "qualification": false,
+  "critical_upper_geometric_depth": "27 unchanged: band2 remains limiting",
+  "notes": [
+    "Clock XY transformed with actual MX; measured root route/phi-R remains unavailable.",
+    "Geometric hops are ceil(max pin bounding span /490), never actual relay counts.",
+    "Legacy res_ser and VM peers without complete source pin plans remain explicit gaps."
+  ],
+  "input_sha256": {
+    "/tmp/claude-1000/qsc/v13_dump.json": "91a04e4307a5f5162ccc91581f2b36ee353e83e687e23de4d160c446d28f9e7d",
+    "results/arch/qwen_split_compute_1014/placement_repack/wide_channel_projection.json": "0b6cf17b00d10cfaab00751d3d3a05c7548c0f1a068cea503984a58600b9be51"
+  }
+}

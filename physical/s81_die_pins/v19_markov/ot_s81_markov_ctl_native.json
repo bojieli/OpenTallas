@@ -7374,7 +7374,15 @@
   }
  },
  "phi_R_ps": {
+  "ss": 125.4,
   "tt": 91.4,
   "ff": 72.0
+ },
+ "clock_reference": {
+  "source": "physical/ref_tile/s81_markov_ctl_native/views/ot_s81_markov_ctl_native/insertion.json",
+  "sha256": "77b75a9e5f05250346d845b2d10a8c58b2a4e5a2a6a830612d7c942bb34f6b12",
+  "basis": "measured boundary mean; deliver clock at phi - R, per corner",
+  "job": "s81_markov_ctl_native-g1-443f55354",
+  "status": "legacy controller retained; static successor has no routed view"
  }
 }

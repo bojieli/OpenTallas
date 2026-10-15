@@ -1,0 +1,543 @@
+`timescale 1ns/1ps
+// Actual HOST0 parent; owns exactly one TP8 coordinator and real peer root mux.
+module qkd_host_root_integrated #(
+ parameter T_LINK=200000,T_HBM=200000,WDOG=1<<22,
+ parameter ENABLE_SERVICE=0,ENABLE_NATIVE=0,ENABLE_TOKEN=0,
+ parameter PHY_MUT=0,QM_MUT=0,ORDER_MUT=0,BRIDGE_MUT=0,HC_MUT=0,PROMPT_MUT=0
+)(
+ input wire[7:0] ck_phy,
+ input wire ck_pad,
+ input wire ck_phy_rx_w,
+ input wire ck_phy_rx_r,
+ input wire ck_phy_tx_w,
+ input wire ck_phy_tx_r,
+ input wire ck_peer,
+ input wire ck_program_rx,
+ input wire ck_program_loader,
+ input wire[127:0] ck_boot,
+ input wire[127:0] ck_boot_test,
+ input wire ck_host,
+ input wire ck_csr,
+ input wire ck_rst,
+ input wire ck_ctl,
+ input wire ck_prompt,
+ input wire ck_rx,
+ input wire ck_tx,
+ input wire ck_axi,
+ input wire ck_ctrl,
+ input wire ck_hc,
+ input wire ck_qm_queue,
+ input wire ck_qm_ing_w,
+ input wire ck_qm_ing_r,
+ input wire ck_qm_credit,
+ input wire ck_qm_done_w,
+ input wire ck_qm_done_r,
+ input wire ck_qm_core,
+ input wire ck_qm_host,
+ input wire ck_qm_ingest,
+ input wire[1:0] ck_qm_bank,
+ input wire ck_qm_out,
+ input wire ck_map,
+ input wire ck_sum,
+ input wire ck_order,
+ input wire ck_dispatch,
+ input wire ck_retire,
+ input wire ck_bootbarrier,
+ input wire[127:0] ck_station,
+ input wire[127:0] ck_static,
+ input wire ck_fence_core,
+ input wire ck_fence_host,
+ input wire ck_guard,
+ input wire ck_native,
+ output wire package_abort,
+ input wire[3:0] abort_drained,
+ output wire token_epoch_valid,
+ output wire[15:0] token_epoch,
+ output wire[142:0] native_pr,
+ input wire native_kv_drained,
+ input wire native_vm_drained,
+ input wire native_collective_drained,
+ input wire native_host_drained,
+ input wire native_collective_busy,
+ input wire native_kv_flush,
+ output wire service_ready,
+ output wire service_abort,
+ output wire ingest_permission,
+ output wire[15:0] local_service_epoch,
+ output wire[25:0] service_diag_raw,
+ output wire[31:0] service_status,
+ input wire[2:0] die_id,
+ input wire por_n,
+ input wire pll_locked,
+ input wire phy_up,
+ input wire phy_rx_v,
+ input wire[1042:0] phy_rx_flit,
+ output wire phy_tx_v,
+ output wire[1042:0] phy_tx_flit,
+ input wire[5:0] link_up,
+ input wire[7:0] transport_fault,
+ input wire[7:0] physical_fault,
+ input wire crom_fault,
+ input wire[92:0] local_tk,
+ input wire[9:0] local_kst,
+ // Compiler-assigned native link record face; no fabricated commit inputs.
+ input wire ck_records,
+ input wire[1:0] record_send_kind,
+ input wire record_witness_slot,record_rx_v,
+ input wire[547:0] record_rx,
+ output wire record_tx_v,record_tx_observed_v,
+ output wire[547:0] record_tx,
+ output wire record_fault,
+ input wire execution_active,
+
+ output wire program_ready,
+ output wire[15:0] program_epoch,
+ output wire[63:0] program_digest,
+ output wire program_authorized_footer_v,
+ output wire[63:0] program_authorized_footer64,
+ output wire program_begin_v,
+ output wire program_auth_v,
+ output wire[10:0] program_expected_pw,
+ output wire[3:0] program_expected_dw,
+ output wire[15:0] program_auth_epoch,
+ output wire[63:0] program_auth_digest,
+ output wire[181:0] hc,
+ output wire[7:0] seen,
+ output wire irq,
+ output wire host_rst_n,
+ output wire link_rst_n,
+ output wire hbm_rst_n,
+ output wire boot_go,
+ output wire die_rst_n,
+ output wire sys_ready,
+ output wire[31:0] fault_src,
+ output wire source_cr,
+ output wire available,
+ output wire[282:0] hb,
+ input wire hb_cr,
+ input wire[12:0] est,
+ input wire[36863:0] land_es,
+ output wire[33407:0] land_er,
+ output wire[36863:0] ctrl_es,
+ input wire[33407:0] ctrl_er,
+ input wire[127:0] ctrl_completion_v,
+ input wire[127:0] ctrl_completion_we,
+ input wire[127:0] ctrl_completion_fault,
+ output wire marker_v,
+ output wire[65:0] marker,
+ output wire[31:0] issued,
+ output wire[31:0] landed,
+ output wire[7:0] physical_ack_n,
+ output wire[24:0] service_faults,
+ input wire native_admit_ready,
+ input wire native_links_drained,
+ input wire native_link_reset_seen,
+ input wire native_retrained,
+ output wire peer_protocol_fault,
+ input wire ck_root_mux,ck_coordinator_codec,ck_coordinator_lifecycle,ck_coordinator_post,
+ input wire engine_admit_ready,output wire dispatch_valid,dispatched,output wire[58:0]cohort_tag,output wire[1:0]cohort_gen,
+ output wire[7:0]accepted_ranks,output wire[255:0]participant_trace,output wire[143:0]participant_token,participant_pos,
+ input wire engine_result_v,input wire[58:0]engine_result_tag,input wire[1:0]engine_result_gen,input wire engine_result_done,engine_result_fault,
+ input wire[3:0]engine_result_cause,input wire[17:0]engine_result_token,input wire[31:0]engine_result_value,engine_result_cycles,output wire engine_result_cr,
+ output wire program_consensus,output wire coordinator_fault,output wire recovery_complete
+);
+ localparam[2:0]RANK=0;
+ wire token_allocator_fault;
+ wire token_wrap_fence_valid;
+ wire token_wrap_drained;
+ wire token_wrap_link_reset_seen;
+ wire token_wrap_retraining_done;
+ wire token_request_valid;
+ wire token_request_ready;
+ wire[17:0] token_request_token;
+ wire[17:0] token_request_position;
+ wire[1:0] token_request_generation;
+ wire token_grant_valid;
+ wire token_grant_ready;
+ wire[15:0] token_grant_epoch;
+ wire[17:0] token_grant_token;
+ wire[17:0] token_grant_position;
+ wire[1:0] token_grant_generation;
+ wire[58:0] token_grant_tag;
+ wire allocated_valid;
+ wire allocated_delivered;
+ wire[15:0] allocated_epoch;
+ wire[17:0] allocated_token;
+ wire[17:0] allocated_position;
+ wire[1:0] allocated_generation;
+ wire program_installed_valid,program_commit_v,installed_fusedcap;
+ wire[15:0]program_commit_epoch,program_begin_epoch;wire[63:0]program_commit_digest;
+ qkd_host_record_port u_records(.ck(ck_records),.rst_n(host_rst_n),.send_kind(record_send_kind),
+ .request_v(native_request_v),.request_tag(native_request_tag),.request_gen(native_request_gen),
+ .request_token(native_request_token),.request_position(native_request_pos),
+ .token_epoch_valid(token_epoch_valid),.token_epoch(token_epoch),
+ .begin_v(program_begin_v),.begin_epoch(program_begin_epoch),.expected_pw(program_expected_pw),.expected_dw(program_expected_dw),
+ .auth_v(program_auth_v),.auth_epoch(program_auth_epoch),.auth_digest(program_auth_digest),
+ .program_ready(program_ready),.program_epoch(program_epoch),.program_digest(program_digest),
+ .authorized_footer_valid(program_authorized_footer_v),.authorized_footer(program_authorized_footer64),
+ .witness_slot(record_witness_slot),.rx_v(record_rx_v),.rx_record(record_rx),
+ .commit_v(program_commit_v),.installed_valid(program_installed_valid),.installed_fusedcap(installed_fusedcap),
+ .commit_epoch(program_commit_epoch),.commit_digest(program_commit_digest),
+ .tx_v(record_tx_v),.tx_observed_v(record_tx_observed_v),.tx_record(record_tx),.fault(record_fault));
+ wire peer_reset_request;
+ wire native_recovery_clear;
+ wire peer_tx_valid;
+ wire[511:0] peer_tx_data;
+ wire peer_tx_ready;
+ wire peer_rx_valid;
+ wire[511:0] peer_rx_data;
+ wire peer_rx_ready;
+ wire peer_link_drained;
+ wire cancel_release_v;
+ wire[58:0] cancel_release_tag;
+ wire[1:0] cancel_release_gen;
+ wire cancel_released;
+ wire native_context_owned;
+ wire cancel_valid;
+ wire[58:0] cancel_tag;
+ wire[1:0] cancel_generation;
+ wire cancel_done;
+ wire cancel_fault;
+ wire[3:0] cancel_drained;
+ wire token_cancel_accepted;
+ wire native_request_v;
+ wire[58:0] native_request_tag;
+ wire[31:0] native_request_trace;
+ wire[1:0] native_request_gen;
+ wire[17:0] native_request_token;
+ wire[17:0] native_request_pos;
+ wire native_request_cr;
+ wire native_result_v;
+ wire[58:0] native_result_tag;
+ wire[1:0] native_result_gen;
+ wire native_result_done;
+ wire native_result_fault;
+ wire[3:0] native_result_cause;
+ wire[17:0] native_result_token;
+ wire[31:0] native_result_value;
+ wire[31:0] native_result_cycles;
+ wire native_result_cr;
+ wire certificate_v;
+ wire[65:0] certificate;
+ wire[31:0] certificate_prefix;
+ wire cq_commit_v;
+ wire[15:0] cq_client_tag;
+ wire[7:0] cq_slot;
+ wire[17:0] cq_pos;
+ wire[17:0] cq_token;
+ wire[1:0] cq_kind;
+ wire[3:0] cq_status;
+ wire step_issue_v;
+ wire[15:0] step_client_tag;
+ wire[7:0] step_slot;
+ wire[17:0] step_pos;
+ wire step_retire_v;
+ wire step_retire_cq;
+ wire[15:0] step_retire_client_tag;
+ wire[7:0] step_retire_slot;
+ wire[17:0] step_retire_pos;
+ wire[17:0] step_retire_token;
+ wire host_idle;
+ wire host_observer_fault;
+ wire peer_retrain_request,request_aborted;
+ wire codec_allocated_valid,codec_allocated_delivered;wire[15:0]codec_allocated_epoch;wire[17:0]codec_allocated_token,codec_allocated_position;wire[1:0]codec_allocated_gen;
+ qkd_host_rank_services #(.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.ENABLE_SERVICE(ENABLE_SERVICE),.ENABLE_NATIVE(ENABLE_NATIVE),.ENABLE_TOKEN(ENABLE_TOKEN),.PHY_MUT(PHY_MUT),.QM_MUT(QM_MUT),.ORDER_MUT(ORDER_MUT),.BRIDGE_MUT(BRIDGE_MUT),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT))u_rank(
+ .ck_phy(ck_phy),
+ .ck_pad(ck_pad),
+ .ck_phy_rx_w(ck_phy_rx_w),
+ .ck_phy_rx_r(ck_phy_rx_r),
+ .ck_phy_tx_w(ck_phy_tx_w),
+ .ck_phy_tx_r(ck_phy_tx_r),
+ .peer_reset_request(peer_reset_request),
+ .native_recovery_clear(native_recovery_clear),
+ .ck_peer(ck_peer),
+ .peer_tx_valid(peer_tx_valid),
+ .peer_tx_data(peer_tx_data),
+ .peer_tx_ready(peer_tx_ready),
+ .peer_rx_valid(peer_rx_valid),
+ .peer_rx_data(peer_rx_data),
+ .peer_rx_ready(peer_rx_ready),
+ .peer_link_drained(peer_link_drained),
+ .ck_program_rx(ck_program_rx),
+ .ck_program_loader(ck_program_loader),
+ .ck_boot(ck_boot),
+ .ck_boot_test(ck_boot_test),
+ .ck_host(ck_host),
+ .ck_csr(ck_csr),
+ .ck_rst(ck_rst),
+ .ck_ctl(ck_ctl),
+ .ck_prompt(ck_prompt),
+ .ck_rx(ck_rx),
+ .ck_tx(ck_tx),
+ .ck_axi(ck_axi),
+ .ck_ctrl(ck_ctrl),
+ .ck_hc(ck_hc),
+ .ck_qm_queue(ck_qm_queue),
+ .ck_qm_ing_w(ck_qm_ing_w),
+ .ck_qm_ing_r(ck_qm_ing_r),
+ .ck_qm_credit(ck_qm_credit),
+ .ck_qm_done_w(ck_qm_done_w),
+ .ck_qm_done_r(ck_qm_done_r),
+ .ck_qm_core(ck_qm_core),
+ .ck_qm_host(ck_qm_host),
+ .ck_qm_ingest(ck_qm_ingest),
+ .ck_qm_bank(ck_qm_bank),
+ .ck_qm_out(ck_qm_out),
+ .ck_map(ck_map),
+ .ck_sum(ck_sum),
+ .ck_order(ck_order),
+ .ck_dispatch(ck_dispatch),
+ .ck_retire(ck_retire),
+ .ck_bootbarrier(ck_bootbarrier),
+ .ck_station(ck_station),
+ .ck_static(ck_static),
+ .ck_fence_core(ck_fence_core),
+ .ck_fence_host(ck_fence_host),
+ .ck_guard(ck_guard),
+ .ck_native(ck_native),
+ .token_allocator_fault(token_allocator_fault),
+ .token_wrap_fence_valid(token_wrap_fence_valid),
+ .token_wrap_drained(token_wrap_drained),
+ .token_wrap_link_reset_seen(token_wrap_link_reset_seen),
+ .token_wrap_retraining_done(token_wrap_retraining_done),
+ .package_abort(package_abort),
+ .abort_drained(abort_drained),
+ .token_request_valid(token_request_valid),
+ .token_request_ready((RANK==0)?token_request_ready:codec_allocated_valid),
+ .token_request_token(token_request_token),
+ .token_request_position(token_request_position),
+ .token_request_generation(token_request_generation),
+ .cancel_release_v(cancel_release_v),
+ .cancel_release_tag(cancel_release_tag),
+ .cancel_release_gen(cancel_release_gen),
+ .cancel_released(cancel_released),
+ .native_context_owned(native_context_owned),
+ .token_grant_valid((RANK==0)?token_grant_valid:(codec_allocated_valid&&!codec_allocated_delivered)),
+ .token_grant_ready(token_grant_ready),
+ .token_grant_epoch((RANK==0)?token_grant_epoch:codec_allocated_epoch),
+ .token_grant_token((RANK==0)?token_grant_token:codec_allocated_token),
+ .token_grant_position((RANK==0)?token_grant_position:codec_allocated_position),
+ .token_grant_generation((RANK==0)?token_grant_generation:codec_allocated_gen),
+ .token_grant_tag((RANK==0)?token_grant_tag:{codec_allocated_epoch,6'd0,codec_allocated_token,codec_allocated_position[12:0],6'd0}),
+ .allocated_valid((RANK==0)?allocated_valid:codec_allocated_valid),
+ .allocated_delivered((RANK==0)?allocated_delivered:codec_allocated_delivered),
+ .allocated_epoch((RANK==0)?allocated_epoch:codec_allocated_epoch),
+ .allocated_token((RANK==0)?allocated_token:codec_allocated_token),
+ .allocated_position((RANK==0)?allocated_position:codec_allocated_position),
+ .allocated_generation((RANK==0)?allocated_generation:codec_allocated_gen),
+ .token_epoch_valid(token_epoch_valid),
+ .token_epoch(token_epoch),
+ .cancel_valid(cancel_valid),
+ .cancel_tag(cancel_tag),
+ .cancel_generation(cancel_generation),
+ .cancel_done(cancel_done),
+ .cancel_fault(cancel_fault),
+ .cancel_drained(cancel_drained),
+ .token_cancel_accepted(token_cancel_accepted),
+ .native_request_v(native_request_v),
+ .native_request_tag(native_request_tag),
+ .native_request_trace(native_request_trace),
+ .native_request_gen(native_request_gen),
+ .native_request_token(native_request_token),
+ .native_request_pos(native_request_pos),
+ .native_request_cr(native_request_cr),
+ .native_pr(native_pr),
+ .native_result_v(native_result_v),
+ .native_result_tag(native_result_tag),
+ .native_result_gen(native_result_gen),
+ .native_result_done(native_result_done),
+ .native_result_fault(native_result_fault),
+ .native_result_cause(native_result_cause),
+ .native_result_token(native_result_token),
+ .native_result_value(native_result_value),
+ .native_result_cycles(native_result_cycles),
+ .native_result_cr(native_result_cr),
+ .native_kv_drained(native_kv_drained),
+ .native_vm_drained(native_vm_drained),
+ .native_collective_drained(native_collective_drained),
+ .native_host_drained(native_host_drained),
+ .native_collective_busy(native_collective_busy),
+ .native_kv_flush(native_kv_flush),
+ .service_ready(service_ready),
+ .service_abort(service_abort),
+ .ingest_permission(ingest_permission),
+ .local_service_epoch(local_service_epoch),
+ .service_diag_raw(service_diag_raw),
+ .service_status(service_status),
+ .die_id(die_id),
+ .por_n(por_n),
+ .pll_locked(pll_locked),
+ .phy_up(phy_up),
+ .phy_rx_v(phy_rx_v),
+ .phy_rx_flit(phy_rx_flit),
+ .phy_tx_v(phy_tx_v),
+ .phy_tx_flit(phy_tx_flit),
+ .link_up(link_up),
+ .transport_fault(transport_fault),
+ .physical_fault(physical_fault| (8'(record_fault)<<die_id) |(8'(peer_protocol_fault||coordinator_fault||root_mux_fault)<<die_id)),
+ .crom_fault(crom_fault),
+ .local_tk(local_tk),
+ .local_kst(local_kst),
+ .program_installed_valid(program_installed_valid),
+ .execution_active(execution_active||allocated_valid||native_context_owned),
+ .program_commit_v(program_commit_v),
+ .program_commit_epoch(program_commit_epoch),
+ .program_commit_digest(program_commit_digest),
+ .program_ready(program_ready),
+ .program_epoch(program_epoch),
+ .program_digest(program_digest),
+ .program_authorized_footer_v(program_authorized_footer_v),.program_authorized_footer64(program_authorized_footer64),
+ .program_begin_epoch(program_begin_epoch),.program_begin_v(program_begin_v),
+ .program_auth_v(program_auth_v),
+ .program_expected_pw(program_expected_pw),
+ .program_expected_dw(program_expected_dw),
+ .program_auth_epoch(program_auth_epoch),
+ .program_auth_digest(program_auth_digest),
+ .hc(hc),
+ .seen(seen),
+ .irq(irq),
+ .host_rst_n(host_rst_n),
+ .link_rst_n(link_rst_n),
+ .hbm_rst_n(hbm_rst_n),
+ .boot_go(boot_go),
+ .die_rst_n(die_rst_n),
+ .sys_ready(sys_ready),
+ .fault_src(fault_src),
+ .source_cr(source_cr),
+ .available(available),
+ .hb(hb),
+ .hb_cr(hb_cr),
+ .est(est),
+ .land_es(land_es),
+ .land_er(land_er),
+ .ctrl_es(ctrl_es),
+ .ctrl_er(ctrl_er),
+ .ctrl_completion_v(ctrl_completion_v),
+ .ctrl_completion_we(ctrl_completion_we),
+ .ctrl_completion_fault(ctrl_completion_fault),
+ .marker_v(marker_v),
+ .marker(marker),
+ .certificate_v(certificate_v),
+ .certificate(certificate),
+ .certificate_prefix(certificate_prefix),
+ .issued(issued),
+ .landed(landed),
+ .physical_ack_n(physical_ack_n),
+ .service_faults(service_faults),
+ .cq_commit_v(cq_commit_v),
+ .cq_client_tag(cq_client_tag),
+ .cq_slot(cq_slot),
+ .cq_pos(cq_pos),
+ .cq_token(cq_token),
+ .cq_kind(cq_kind),
+ .cq_status(cq_status),
+ .step_issue_v(step_issue_v),
+ .step_client_tag(step_client_tag),
+ .step_slot(step_slot),
+ .step_pos(step_pos),
+ .step_retire_v(step_retire_v),
+ .step_retire_cq(step_retire_cq),
+ .step_retire_client_tag(step_retire_client_tag),
+ .step_retire_slot(step_retire_slot),
+ .step_retire_pos(step_retire_pos),
+ .step_retire_token(step_retire_token),
+ .host_idle(host_idle),
+ .host_observer_fault(host_observer_fault));
+ qkd_host_peer_rank_codec #(.RANK(RANK))u_peer_codec(
+ .ck(ck_peer),
+ .por_n(por_n&&pll_locked),
+ .tx_valid(local_tx_valid),
+ .tx_data(local_tx_data),
+ .tx_ready(local_tx_ready),
+ .rx_valid(local_rx_valid),
+ .rx_data(local_rx_data),
+ .rx_ready(local_rx_ready),
+ .request_v(native_request_v),
+ .request_tag(native_request_tag),
+ .request_gen(native_request_gen),
+ .request_trace(native_request_trace),
+ .request_token(native_request_token),
+ .request_pos(native_request_pos),
+ .request_cr(native_request_cr),
+ .request_aborted(request_aborted),
+ .cancel_valid(cancel_valid),
+ .cancel_tag(cancel_tag),
+ .cancel_gen(cancel_generation),
+ .cancel_done(cancel_done),
+ .cancel_fault(cancel_fault),
+ .cancel_drained(cancel_drained),
+ .cancel_accepted(token_cancel_accepted),
+ .cancel_release_v(cancel_release_v),
+ .cancel_release_tag(cancel_release_tag),
+ .cancel_release_gen(cancel_release_gen),
+ .cancel_released(cancel_released),
+ .result_v(native_result_v),
+ .result_tag(native_result_tag),
+ .result_gen(native_result_gen),
+ .result_done(native_result_done),
+ .result_fault(native_result_fault),
+ .result_cause(native_result_cause),
+ .result_token(native_result_token),
+ .result_value(native_result_value),
+ .result_cycles(native_result_cycles),
+ .result_cr(native_result_cr),
+ .service_ready(service_ready),.service_epoch(local_service_epoch),
+ .native_ready(native_admit_ready),
+ .drained({native_host_drained,native_collective_drained,native_vm_drained,native_kv_drained}),
+ .context_owned(native_context_owned),
+ .links_drained(native_links_drained),
+ .link_reset_seen(native_link_reset_seen),
+ .retrained(native_retrained),
+ .program_ready(program_ready),
+ .program_epoch(program_epoch),
+ .program_digest(program_digest),
+ .allocated_valid(codec_allocated_valid),
+ .allocated_delivered(codec_allocated_delivered),
+ .allocated_epoch(codec_allocated_epoch),
+ .allocated_token(codec_allocated_token),
+ .allocated_position(codec_allocated_position),
+ .allocated_gen(codec_allocated_gen),
+ .reset_request(peer_reset_request),
+ .retrain_request(peer_retrain_request),
+ .recovery_clear(native_recovery_clear),
+ .fault(peer_protocol_fault),
+ .step_issue_v(step_issue_v),
+ .step_client_tag(step_client_tag),
+ .step_slot(step_slot),
+ .step_pos(step_pos),
+ .step_retire_v(step_retire_v),
+ .step_retire_cq(step_retire_cq),
+ .step_retire_client_tag(step_retire_client_tag),
+ .step_retire_slot(step_retire_slot),
+ .step_retire_pos(step_retire_pos),
+ .step_retire_token(step_retire_token),
+ .cq_commit_v(cq_commit_v),
+ .cq_client_tag(cq_client_tag),
+ .cq_slot(cq_slot),
+ .cq_pos(cq_pos),
+ .cq_token(cq_token),
+ .certificate_v(certificate_v),
+ .certificate(certificate),
+ .certificate_prefix(certificate_prefix));
+ wire local_tx_valid,local_tx_ready,local_rx_valid,local_rx_ready;wire[511:0]local_tx_data,local_rx_data;
+ wire[7:0]coordinator_rx_valid,coordinator_rx_ready,coordinator_tx_valid,coordinator_tx_ready;wire[4095:0]coordinator_rx_data,coordinator_tx_data;
+ wire root_mux_fault,coordinator_wrap_locked,coordinator_identity_fault,coordinator_post_pending;
+ wire[15:0]coordinator_program_epoch;wire[63:0]coordinator_program_digest;
+ wire[7:0]coordinator_certificate_valid;wire[527:0]coordinator_certificate;wire[255:0]coordinator_certificate_prefix;
+ assign allocated_epoch=token_grant_epoch;assign allocated_token=token_grant_token;assign allocated_position=token_grant_position;assign allocated_generation=token_grant_generation;
+ assign token_allocator_fault=coordinator_identity_fault;
+ // Each legacy fact input carries the actual same completed global fence
+ // certificate: all native drains, resets and retraining were proved upstream.
+ assign token_wrap_fence_valid=recovery_complete;assign token_wrap_drained=recovery_complete;assign token_wrap_link_reset_seen=recovery_complete;assign token_wrap_retraining_done=recovery_complete;
+ qkd_host_peer_root_mux u_root_mux(.ck(ck_root_mux),.por_n(por_n),.physical_rx_valid(peer_rx_valid),.physical_rx_data(peer_rx_data),.physical_rx_ready(peer_rx_ready),.physical_tx_valid(peer_tx_valid),.physical_tx_data(peer_tx_data),.physical_tx_ready(peer_tx_ready),
+ .local_tx_valid(local_tx_valid),.local_tx_data(local_tx_data),.local_tx_ready(local_tx_ready),.local_rx_valid(local_rx_valid),.local_rx_data(local_rx_data),.local_rx_ready(local_rx_ready),
+ .coordinator_rx_valid(coordinator_rx_valid),.coordinator_rx_data(coordinator_rx_data),.coordinator_rx_ready(coordinator_rx_ready),.coordinator_tx_valid(coordinator_tx_valid),.coordinator_tx_data(coordinator_tx_data),.coordinator_tx_ready(coordinator_tx_ready),.fault(root_mux_fault));
+ qkd_host_tp8_coordinator u_coordinator(.ck_codec(ck_coordinator_codec),.ck_lifecycle(ck_coordinator_lifecycle),.ck_post(ck_coordinator_post),.por_n(por_n),
+ .peer_rx_valid(coordinator_rx_valid),.peer_rx_data(coordinator_rx_data),.peer_rx_ready(coordinator_rx_ready),.peer_tx_valid(coordinator_tx_valid),.peer_tx_data(coordinator_tx_data),.peer_tx_ready(coordinator_tx_ready),
+ .token_request_valid(token_request_valid),.token_request_token(token_request_token),.token_request_position(token_request_position),.token_request_gen(token_request_generation),.token_request_ready(token_request_ready),
+ .token_grant_valid(token_grant_valid),.token_grant_ready(token_grant_ready),.token_grant_epoch(token_grant_epoch),.token_grant_token(token_grant_token),.token_grant_position(token_grant_position),.token_grant_gen(token_grant_generation),.token_grant_tag(token_grant_tag),.allocated_valid(allocated_valid),.allocated_delivered(allocated_delivered),
+ .engine_admit_ready(engine_admit_ready),.dispatch_valid(dispatch_valid),.dispatched(dispatched),.cohort_tag(cohort_tag),.cohort_gen(cohort_gen),.accepted_ranks(accepted_ranks),.participant_trace(participant_trace),.participant_token(participant_token),.participant_pos(participant_pos),
+ .engine_result_v(engine_result_v),.engine_result_tag(engine_result_tag),.engine_result_gen(engine_result_gen),.engine_result_done(engine_result_done),.engine_result_fault(engine_result_fault),.engine_result_cause(engine_result_cause),.engine_result_token(engine_result_token),.engine_result_value(engine_result_value),.engine_result_cycles(engine_result_cycles),.engine_result_cr(engine_result_cr),
+ .program_consensus(program_consensus),.program_epoch(coordinator_program_epoch),.program_digest(coordinator_program_digest),.certificate_valid(coordinator_certificate_valid),.certificate(coordinator_certificate),.certificate_prefix(coordinator_certificate_prefix),
+ .wrap_locked(coordinator_wrap_locked),.identity_fault(coordinator_identity_fault),.recovery_complete(recovery_complete),.post_pending(coordinator_post_pending),.fault(coordinator_fault));
+endmodule

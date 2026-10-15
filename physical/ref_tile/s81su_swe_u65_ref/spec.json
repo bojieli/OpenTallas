@@ -1,0 +1,104 @@
+{
+ "name": "s81su_swe_u65_ref",
+ "top": "dsfd_su_t_swe",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sw.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sw.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_swiglu.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 194.4,
+  "h": 194.4
+ },
+ "util": 0.65,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 2
+  }
+ ],
+ "pins": {
+  "W": [
+   "ck",
+   "rst",
+   "i_gv",
+   "i_uv",
+   "i_d",
+   "i_t",
+   "i_w",
+   "i_lim"
+  ],
+  "N": [
+   "c_iv",
+   "c_id",
+   "c_it",
+   "c_if"
+  ],
+  "S": [
+   "c_ov",
+   "c_od",
+   "c_ot",
+   "c_of"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "aspect": 1.0,
+ "job": {
+  "benched_by": "s81su_full",
+  "owner": "Claude:s81-suhc-r10",
+  "branch": "claude/s81-suhc-r9",
+  "tag": "v1",
+  "purpose": "S81 SU slab fit (coordinator 10-13: fill > 0.90 without S growth): dsfd_su_t_swe x128 re-sized from 216.0 sq (closed v4-sp8, util 0.523 with its two SRAMs) to 194.4 sq (util 0.65), same RTL, same pin faces, same spine / capture-delay / SRAM edge hooks (name-based, no coordinates); -1.135 mm2 over 128 instances",
+  "views_to": "physical/ref_tile/s81su_swe_u65_ref/views",
+  "record_to": "results/rtl/ref_tile/s81su_swe_u65_ref"
+ },
+ "orfs_vars": {
+  "PRE_GLOBAL_PLACE_TCL": "physical/s81su_physical/s81su_swe_spx_ref.tcl",
+  "PRE_DETAIL_PLACE_TCL": "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "OT_SPINE_LEAF_N": 8,
+  "OT_SPINE_BIN": 40,
+  "OT_SPINE_SEG": 100,
+  "OT_SPINE_TOL_PS": 10,
+  "OT_SPINE_ITERS": 10
+ },
+ "boundary_tcl": [
+  "physical/s81su_physical/swe_sram_edge_access.tcl"
+ ],
+ "clock": "spine",
+ "recipe": 2,
+ "reroute_reason": {
+  "kind": "slot_change",
+  "contract": {
+   "name": "results/arch/hier_contract_1011/s81.json",
+   "version": 17
+  },
+  "slot_change_request": "el1011-s81die.log 2026-10-13 [s81su -> s81-die] SU SLAB FIT, FIRM TABLE r10 (swe 216.0 sq -> 194.4 sq; die contract v17 sp_su_s_v17_decision D)",
+  "why": "sp_su_s tile bill 21.151 mm2 in an 18.942 mm2 slab (fill 1.117); slab growth N impossible (hub column full); with sml / smd / pin re-sized the fill without S growth is still 0.971 > 0.90"
+ },
+ "slot_change_request": "el1011-s81die.log 2026-10-13 [s81su -> s81-die] SU SLAB FIT, FIRM TABLE r10 (swe 216.0 sq -> 194.4 sq; die contract v17 sp_su_s_v17_decision D)",
+ "params": {},
+ "children": [],
+ "inter": []
+}

@@ -1,0 +1,44 @@
+{
+  "schema": "opentallas.qwen.direct-upper-source-proof.v1",
+  "source_sha256": {
+    "rtl/physical/ot_qwen_band_lanes_slots.sv": "fb8564605a50210d5211dcc6cbd416d4b22d0f59681744103f825599e7c39cc6",
+    "rtl/test/qwen_split/tb_qfd_upper_faces.sv": "1a8f300fa07285096a4cdca1e43a44aa65e9d78ac235954086c256919bafaa2b",
+    "tools/qwen_split/direct_up4.py": "2300d0fa140845120fdeb5efc55e148aaca5b9ab9148b09a9cf78283c8c47dc1",
+    "tools/qwen_split/placement_repack.py": "416fa0fe11724ea1106082b5c9f48eafcc41fe584aad32b910b61598f36665da",
+    "tools/qwen_kv_die/tp8b_v5.py": "f201fb0aac62cb0f068e53ddb4cb0f027768b53e0b34dbf2b8d8ab86ab5860d7",
+    "tools/qwen_rom_fulldie_b3r2.py": "920b824bd1d3d4b729710e8ff9ad2a613710541d655c97d033ad564d61a01e14"
+  },
+  "behavior": {
+    "positive": "PASS 2048 cycles quarter valid/fault and exact legacy fault union",
+    "mutant": "FAIL at cycle4 when quarter3 fault dropped",
+    "gate_scope": "new quarter-boundary logic only; upper arithmetic uses independently closed exact four-lane leaf"
+  },
+  "graph": {
+    "test": "4 PASS: actual four leaf replacement,1536 return-bit lane order/P2P topology,real equal-age pads,missing group refusal",
+    "params": {
+      "NL": 4,
+      "NB": 3,
+      "LNK": 0,
+      "DLY": 1,
+      "TREE_LAT": 7,
+      "TCUT": 7,
+      "LG": 12,
+      "RPIN": 1
+    }
+  },
+  "geometry": {
+    "candidate": "OT_SPLIT_REPACK=1",
+    "area_mm2": 840.715,
+    "projection_roundtrip_stages": [
+      40,
+      26
+    ],
+    "qualification": "rectangle lower bound only; actual pin reaches, cuts, installed relay frames and die TT/FF remain unqualified"
+  },
+  "open": [
+    "actual static controller uf4 selection and complete native service bindings",
+    "full native band parent fresh physical qualification",
+    "C17 generated exact pin/clock/port-bind gate",
+    "actual native selector station view and routed stage/cut evidence"
+  ]
+}

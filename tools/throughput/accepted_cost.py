@@ -26,7 +26,13 @@ A design with several workloads (s81: ar + mtp, r25gq: ds_ar + qwen_ar) is charg
     python3 tools/throughput/accepted_cost.py compute s81 --unit SU.HC_POST --match 'hc_post$' --price 112.9 --measured 287
     python3 tools/throughput/accepted_cost.py propose s81 --unit ... --evidence <path> [--note ...]
     python3 tools/throughput/accepted_cost.py accept  <design> <unit>     (refused over 5 % / 15 %)
+    python3 tools/throughput/accepted_cost.py annotate <design> <unit> --share-basis modelled --append "..."
     python3 tools/throughput/accepted_cost.py table | check
+
+A row's loss is  (measured - price) x (how often the unit sits on the token's critical path).  The first factor is a
+measured run; the second is MEASURED only when a per-layer die run (owner 2026-10-13 ROM throughput rule) shows the
+unit's jobs serial on the layer's critical path, otherwise it is the token-path model's share.  Row field
+"share_basis" says which ("measured" | "modelled"); a row without it has not been stated by its owner (table: "-").
 """
 from __future__ import annotations
 
@@ -362,6 +368,26 @@ def accept(led, design, unit, root=ROOT, note="", owner_exception=""):
     return row
 
 
+SHARE_BASES = ("measured", "modelled")
+
+
+def annotate(led, design, unit, share_basis=None, append=""):
+    """Qualify a row without touching its numbers or its status: who measured the token share, and a note."""
+    row = find(led, design, unit)
+    if row is None:
+        hits = [r for r in led["rows"] if r["design"] == design and r.get("group") == unit]
+        if len(hits) != 1:
+            raise LedgerError(f"no row {design} {unit}")
+        row = hits[0]
+    if share_basis:
+        if share_basis not in SHARE_BASES:
+            raise LedgerError(f"share basis {share_basis!r} is not one of {SHARE_BASES}")
+        row["share_basis"] = share_basis
+    if append and append not in row.get("note", ""):
+        row["note"] = (row.get("note", "").rstrip() + "  " + append).strip()
+    return row
+
+
 def check(led, root=ROOT):
     """Violations of a ledger as written (hand edits included)."""
     bad = []
@@ -378,6 +404,8 @@ def check(led, root=ROOT):
     for r in led["rows"]:
         if r["design"] not in DESIGNS:
             bad.append(f"unknown design {r['design']}")
+        if r.get("share_basis", "modelled") not in SHARE_BASES:   # absent = not stated yet
+            bad.append(f"{r['design']} {r['unit']}: share basis {r.get('share_basis')!r}")
         if r["status"] not in ("proposed", "accepted"):
             bad.append(f"{r['design']} {r['unit']}: status {r['status']!r}")
         if r.get("unit_ratio") is None and r.get("price"):
@@ -388,14 +416,18 @@ def check(led, root=ROOT):
 
 
 def table(led):
-    out = ["| design | unit | measured | price | unit ratio | e2e loss % | binding workload | within 5 % | grade | status |",
-           "|---|---|---|---|---|---|---|---|---|---|"]
+    out = ["| design | unit | measured | price | unit ratio | e2e loss % | binding workload | within 5 % | grade | token share | status |",
+           "|---|---|---|---|---|---|---|---|---|---|---|"]
     for r in led["rows"]:
         out.append(f"| {r['design']} | {r['unit']} | {r['measured']} | {r['price'] or 'unpriced'} | "
                    f"{r['unit_ratio'] if r['unit_ratio'] is not None else '-'} | "
                    f"{r['e2e_loss_pct']:.3f} | {r['binding_workload']} | {'yes' if r['within_unit_limit'] else 'NO'} | "
-                   f"{r['evidence_grade']} | {r['status']}{' (owner exception)' if r.get('owner_exception') else ''} |")
+                   f"{r['evidence_grade']} | { {'modelled': 'MODELLED', 'measured': 'measured'}.get(r.get('share_basis'), '-') } | "
+                   f"{r['status']}{' (owner exception)' if r.get('owner_exception') else ''} |")
     out.append("")
+    out.append("token share MODELLED = the unit ratio is a measured run, the number of critical runs a token is the "
+               "token-path model's: not a fully measured end-to-end loss until a per-layer die run shows the share; "
+               "- = not stated by the row's owner")
     for d, t in totals(led).items():
         out.append(f"{d}: accepted {t['accepted_pct']} % + proposed {t['proposed_pct']} % = "
                    f"{t['accepted_plus_proposed_pct']} % of {DESIGN_LIMIT} %"
@@ -431,6 +463,11 @@ def main(argv=None):
     p.add_argument("unit")
     p.add_argument("--note", default="", help="the acceptance decision: who, when, basis")
     p.add_argument("--owner-exception", default="", help="OWNER decision accepting above the unit/design limit")
+    p = sub.add_parser("annotate")
+    p.add_argument("design", choices=DESIGNS)
+    p.add_argument("unit", help="the row's unit string, or its group when one row holds it")
+    p.add_argument("--share-basis", choices=SHARE_BASES)
+    p.add_argument("--append", default="", help="text appended to the row note (once)")
     sub.add_parser("table")
     sub.add_parser("check")
     a = ap.parse_args(argv)
@@ -451,6 +488,10 @@ def main(argv=None):
             accept(led, a.design, a.unit, note=a.note, owner_exception=a.owner_exception)
             save_ledger(led, a.ledger)
             print(f"ACCEPTED {a.design} {a.unit}")
+        elif a.cmd == "annotate":
+            row = annotate(led, a.design, a.unit, a.share_basis, a.append)
+            save_ledger(led, a.ledger)
+            print(f"ANNOTATED {row['design']} {row['unit']}: share basis {row.get('share_basis', 'not stated')}")
         elif a.cmd == "table":
             print(table(led))
         else:
