@@ -1,0 +1,115 @@
+{
+ "name": "hcoll_pinreg_ctl",
+ "top": "ot_hgi_coll_static_pinreg_ctl",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 324,
+  "h": 216
+ },
+ "pins": {
+  "N": [
+   "bank_we",
+   "bank_wa",
+   "bank_ra",
+   "bank_data",
+   "stored"
+  ],
+  "S": [
+   "wr_flit",
+   "tx_pin_flit"
+  ],
+  "E": [
+   "rx_pin_flit",
+   "rx_flit"
+  ],
+  "W": [
+   "clk",
+   "rst_n",
+   "epoch_begin",
+   "epoch",
+   "wr_v",
+   "wr_observed_v",
+   "wr_seq",
+   "rd_v",
+   "rd_seq",
+   "rx_expect_v",
+   "rx_expect_seq",
+   "phy_up",
+   "tx_pin_v",
+   "rx_pin_v",
+   "rx_v",
+   "epoch_abort",
+   "retry_requested",
+   "fault_cause"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "refglob": "*u_codec*",
+ "route": {
+  "pd": 0.52,
+  "threads": 4,
+  "peak_ram_gb": 16,
+  "period_ps": 833.333,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:H-COLL-pinreg-controller",
+  "branch": "codex/hcoll-static-seq-1015",
+  "tag": "tc",
+  "purpose": "Actual pinregistered controller leaf, actual parallelCRC and fullsequence; TX5/RX1 model, 833psTT+FFhold,SSsensitivity; allinputs/outputs registered",
+  "extra_paths": [
+   "results/arch/hcoll_pinreg_1015",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/ref_tile_specs/hcoll_pinreg_ctl_pins.tcl"
+  ],
+  "views_to": "physical/ref_tile/hcoll_pinreg_ctl/views",
+  "record_to": "results/arch/hcoll_pinreg_ctl_1015",
+  "benches": [
+   {
+    "name": "native1024actual",
+    "cmd": "HCOLL_ROOT={SRC} MUTANTS=0 bash tools/hbm_io/run_pinreg_native_gate.sh {RUN}/bench/native",
+    "expect": "pass",
+    "pass_regex": "HBM_STATIC_LINK_PINREG_PASS FW545 CW32 checks2048 TX5 RX1",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "controller_stale_fullseq_mutant",
+    "cmd": "HCOLL_ROOT={SRC} MUTANTS=11 bash tools/hbm_io/run_pinreg_native_gate.sh {RUN}/bench/mut && grep -q 'HBM_STATIC_LINK_PINREG_PASS' {RUN}/bench/mut/m11.log",
+    "expect": "fail",
+    "fail_regex": "HBM_STATIC_LINK_PINREG_FAIL",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ]
+ },
+ "io_tcl": "physical/ref_tile_specs/hcoll_pinreg_ctl_pins.tcl",
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
