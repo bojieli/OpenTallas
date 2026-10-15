@@ -1,0 +1,70 @@
+`timescale 1ps/1fs
+`default_nettype none
+// Real16-port bridge + real128SRAM VM. No modeled VM response provider.
+module tb_su_vm_dualclock;
+ reg s_ck=1,t_ck=1,rst_n=0;
+ always #555.556 s_ck=~s_ck;
+ always #416.667 t_ck=~t_ck;
+ reg[15:0] sv=0,swv=0;reg[223:0] sr=0,swr=0;reg[255:0] swm=0;reg[8191:0] swd=0;
+ wire[15:0] sov,tv,rv,wv,req_fault,rsp_fault,wr_fault;wire[223:0] tr,wr;wire[255:0] wm;
+ wire[8191:0] sod,rd,wd;wire bridge_fault;wire[1:0] c_st;
+ integer tk=-1,sk=-1,seed=1,nreads=1200,bad=0,rows=0,macro_writes=0,returned_commits=0;
+ integer phase_rows[0:2];integer write_trace=0,read_trace=0,pin_trace=0,rsp_trace=0,pad_trace=0,x43_trace=0;
+ integer p,r,ps,b,w;reg[15:0] want;
+ function[511:0] rowdata(input integer row);integer q;begin
+  for(q=0;q<16;q=q+1)rowdata[32*q+:32]=32'(row*773+q*40503+seed*2654435761);
+ end endfunction
+@VM_INSTANCE@
+@BRIDGE_INSTANCE@
+ // Drivers run on the preceding negative edge; the positive edge is the
+ // physical source pin sample. No procedural launch/counter sampling race.
+ always @(negedge s_ck)if(rst_n)begin
+  ps=sk+1;sv=0;swv=0;sr=0;swr=0;swm=0;swd=0;
+  for(p=0;p<16;p=p+1)begin
+   if(ps>=24&&ps<40)begin
+    r=4096+256*(ps-24)+p;swv[p]=1;swr[14*p+:14]=14'(r);swm[16*p+:16]=16'hffff;swd[512*p+:512]=rowdata(r);
+   end
+   if(ps>=80&&ps<80+nreads)begin
+    r=4096+256*((ps-80)%16)+p;sv[p]=1;sr[14*p+:14]=14'(r);
+   end
+  end
+ end
+ always @(posedge s_ck)if(rst_n)begin
+  sk=sk+1;
+  if(sk>=80&&sk<83)$display("SU_REQUEST S%0d row%0d",sk,sr[13:0]);
+  if(sk>=24&&sk<27)$display("SU_WRITE S%0d row%0d",sk,swr[13:0]);
+  #0.020;
+  want=(sk>=95&&sk<95+nreads)?16'hffff:16'd0;
+  if(sov!==want)begin bad=bad+1;if(bad<8)$display("SERIAL_VALID_FAIL S%0d got%h expected%h",sk,sov,want);end
+  if(want!=0)for(b=0;b<16;b=b+1)begin
+   r=4096+256*((sk-95)%16)+b;
+   if(sod[512*b+:512]!==rowdata(r))begin bad=bad+1;if(bad<8)$display("SERIAL_DATA_FAIL S%0d port%0d row%0d",sk,b,r);end
+   rows=rows+1;phase_rows[(sk-15)%3]=phase_rows[(sk-15)%3]+1;
+  end
+  if(sk>=95&&sk<98)$display("SU_RESPONSE S%0d valid%h firstword%h",sk,sov,sod[31:0]);
+  if(bridge_fault||c_st[0])begin bad=bad+1;if(bad<8)$display("DUT_FAULT S%0d bridge%0d core%0d req%h rsp%h write%h",sk,bridge_fault,c_st[0],req_fault,rsp_fault,wr_fault);end
+  if(sk==80+nreads+40)begin
+   if(rows!=16*nreads||macro_writes!=1024||returned_commits!=1024)bad=bad+1;
+   $display("SU_VM_DUAL_RESULT seed%0d rows%0d phases%0d/%0d/%0d macro_writes%0d commits%0d bad%0d",seed,rows,phase_rows[0],phase_rows[1],phase_rows[2],macro_writes,returned_commits,bad);
+   if(bad==0)$display("SU_VM_DUAL_PASS");else $display("SU_VM_DUAL_FAIL");$finish;
+  end
+ end
+ always @(posedge t_ck)if(rst_n)begin
+  tk=tk+1;
+  if(tv[0]&&pin_trace<3)begin $display("VM_PIN T%0d row%0d",tk,tr[13:0]);pin_trace=pin_trace+1;end
+  if(bridge.g_port[0].u_rsp.s_v&&x43_trace<3)begin $display("X43_SAMPLE T%0d index%0d",tk,bridge.g_port[0].u_rsp.tn);x43_trace=x43_trace+1;end
+@MACRO_MONITOR@
+  #0.020;
+  for(w=0;w<128;w=w+1)if(dut.u_core.cm_v[w])returned_commits=returned_commits+1;
+  if(rv[0]&&rsp_trace<3)begin $display("VM_RESPONSE T%0d firstword%h",tk,rd[31:0]);rsp_trace=rsp_trace+1;end
+  if(bridge.g_port[0].pad_v&&pad_trace<3)begin $display("PAD_OUTPUT T%0d firstword%h",tk,bridge.g_port[0].pad_data[31:0]);pad_trace=pad_trace+1;end
+ end
+ initial begin
+  phase_rows[0]=0;phase_rows[1]=0;phase_rows[2]=0;
+  if(!$value$plusargs("seed=%d",seed))seed=1;
+  if(!$value$plusargs("reads=%d",nreads))nreads=1200;
+  // Both next positive edges are the same PLL epoch edge0.
+  #(4*3333.336-100);rst_n=1;
+ end
+endmodule
+`default_nettype wire

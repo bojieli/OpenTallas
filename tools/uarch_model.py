@@ -16798,3 +16798,9 @@ def s81_static_vm_small_transport_model():
     """Actual small-group VM replica, pin, clock and state sizing; native gates remain open."""
     from s81_vm.static_transport_model import model
     return model()
+
+
+def s81_static_su_vm_bridge_model():
+    """Real fixed-phase serial-SU bridge inventory; dual-clock measurement required."""
+    from s81_vm.su_dualclock.model import model
+    return model()
