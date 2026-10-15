@@ -2,5 +2,5 @@ MEASURE jit0 godly1 blk8 nblk4 maxocc9 stall0 go64 freed64 put512 first_go342 ct
 FRONT ordinal512 bad0
 OBSERVED_FAIL controller PHY window mode5 elastic1
 [5358000000] %Fatal: tb_kv_hbm_elastic_boundary.sv:252: Assertion failed in tb_kv_hbm_elastic_boundary
-%Error: /srv/opentallas-scratch/claude/qwen-kvsys/kvel-82a445f8a/source/rtl/test/qwen_static_kv/tb_kv_hbm_elastic_boundary.sv:252: Verilog $stop
+%Error: /srv/opentallas-scratch/claude/qwen-kvsys/kvel-fc673d277/source/rtl/test/qwen_static_kv/tb_kv_hbm_elastic_boundary.sv:252: Verilog $stop
 Aborting...
