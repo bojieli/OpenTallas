@@ -35,7 +35,9 @@ module ot_v41_field_w17w10 #(
     parameter integer ROOTD = 128,
     parameter integer PHW = 6,
     parameter integer QELEM = 0,        // 1: the FP8/FP4 pairs are the DS q-element (ot_v41_pair_w17w10 QELEM)
-    parameter integer QXV = 9
+    parameter integer QXV = 9,
+    // Physical gather owns the final root when set. No second arithmetic root is retained.
+    parameter integer EXTERNAL_ROOTS = 0
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -65,6 +67,9 @@ module ot_v41_field_w17w10 #(
     output wire [32*R-1:0] r_fp32,
     output wire [16*R-1:0] r_bf16,
     output wire [R-1:0]    r_e,
+    // Raw return-tree cut: {error, FP32 partial, segment tag, valid}, one word per region.
+    output wire [66*R-1:0] tree_return,
+    output wire         tree_fault,
     output wire         busy,
     output wire         fault
 );
@@ -119,11 +124,28 @@ module ot_v41_field_w17w10 #(
     end endgenerate
     wire [R-1:0] rf;
     generate for (g = 0; g < R; g = g + 1) begin : g_r
+        assign tree_return[66*g +: 66] = {ne[LS][g], nd[LS][g], nt[LS][g], nv[LS][g]};
+        if (EXTERNAL_ROOTS == 0) begin : g_internal
         ot_v41_ret_root #(.D(ROOTD), .QD(ROOTD)) u_root (.clk(clk), .rst_n(rst_n), .i_v(nv[LS][g]), .i_t(nt[LS][g]),
             .i_d(nd[LS][g]), .i_e(ne[LS][g]), .r_v(r_v[g]), .r_row(r_row[16*g +: 16]), .r_pos(r_pos[3*g +: 3]),
             .r_fp32(r_fp32[32*g +: 32]), .r_bf16(r_bf16[16*g +: 16]), .r_e(r_e[g]), .fault(rf[g]));
+        end else begin : g_external
+            // Unused observer outputs; the raw cut goes to the physical gather's actual root.
+            assign r_v[g] = 1'b0;
+            assign r_row[16*g +: 16] = 16'd0;
+            assign r_pos[3*g +: 3] = 3'd0;
+            assign r_fp32[32*g +: 32] = 32'd0;
+            assign r_bf16[16*g +: 16] = 16'd0;
+            assign r_e[g] = 1'b0;
+            assign rf[g] = 1'b0;
+        end
     end endgenerate
-    assign n_fault[NL-1] = 1'b0;
+    // A forest has NL-R internal nodes, not NL-1. All unused fault
+    // bits must be driven for a multi-region four-state simulation.
+    generate for (g = NL-R; g < NL; g = g + 1) begin : g_unused_fault
+        assign n_fault[g] = 1'b0;
+    end endgenerate
     assign busy = |p_busy;
-    assign fault = (|p_fault) | (|n_fault) | (|rf);
+    assign tree_fault = (|p_fault) | (|n_fault);
+    assign fault = tree_fault | (|rf);
 endmodule

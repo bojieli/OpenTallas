@@ -132,12 +132,40 @@ module ot_v41_fieldtop_w17w10 #(
     assign r_bf16 = fr_bf16; assign r_e = fr_e; assign f_fault = fr_fault;
 `else
     wire f_busy;
+`ifdef S81_NATIVE_GATHER_ROOT
+    wire [66*R-1:0] raw_return;
+    wire tree_fault;
+    wire [R-1:0] gather_fault;
+    genvar rg;
+    generate for (rg = 0; rg < R; rg = rg + 1) begin : g_native_gather
+        // Same arithmetic owner as the physical S81 gather; source is the real field tree.
+        // No reference row/partial input exists in this path.
+        ot_s81ph_ret_root_p #(.D(128), .QD(128)) u_root (
+            .clk(clk), .rst_n(rst_n), .i_v(raw_return[66*rg]),
+            .i_t(raw_return[66*rg+1 +: 32]), .i_d(raw_return[66*rg+33 +: 32]),
+            .i_e(raw_return[66*rg+65]), .r_v(r_v[rg]), .r_row(r_row[16*rg +: 16]),
+            .r_pos(r_pos[3*rg +: 3]), .r_fp32(r_fp32[32*rg +: 32]),
+            .r_bf16(r_bf16[16*rg +: 16]), .r_e(r_e[rg]), .fault(gather_fault[rg]));
+    end endgenerate
+    assign f_fault = tree_fault | (|gather_fault);
+`endif
     ot_v41_field_w17w10 #(.FAST(FAST), .PP(PP), .BP(BP), .NP(NP), .R(R), .NBF(NBF), .PHW(PHW), .RST(RST),
-                          .QELEM(QELEM), .QXV(QXV)) u_f (
+                          .QELEM(QELEM), .QXV(QXV)
+`ifdef S81_NATIVE_GATHER_ROOT
+                          , .EXTERNAL_ROOTS(1)
+`endif
+                          ) u_f (
         .clk(clk), .rst_n(rst_n), .cfg_go(c_cfg), .cfg_ph(c_ph), .cfg_np(c_np), .go(c_go), .go_bf(c_gobf),
         .xs_v(c_xs_v), .xs_p(c_xs_p), .xs_b(c_xs_b), .xs_sv(c_xs_sv), .xs_q0(c_xs_q0), .xs_e0(c_xs_e0),
         .xs_q1(c_xs_q1), .xs_e1(c_xs_e1), .xs_pos(c_xs_pos), .xb_pos(c_xb_pos), .xb_v(c_xb_v), .xb_b(c_xb_b),
-        .xb_sv(c_xb_sv), .xb_u(c_xb_u), .xb_d(c_xb_d), .r_v(r_v), .r_row(r_row), .r_pos(r_pos),
+        .xb_sv(c_xb_sv), .xb_u(c_xb_u), .xb_d(c_xb_d),
+`ifdef S81_NATIVE_GATHER_ROOT
+        .tree_return(raw_return), .tree_fault(tree_fault),
+        .r_v(), .r_row(), .r_pos(), .r_fp32(), .r_bf16(), .r_e(), .busy(f_busy), .fault());
+`else
+        .tree_return(), .tree_fault(),
+        .r_v(r_v), .r_row(r_row), .r_pos(r_pos),
         .r_fp32(r_fp32), .r_bf16(r_bf16), .r_e(r_e), .busy(f_busy), .fault(f_fault));
+`endif
 `endif
 endmodule

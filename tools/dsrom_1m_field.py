@@ -539,12 +539,18 @@ def cmd_build(a):
         params += ["-GQELEM=1", f"-GQXV={a.qelem}"]
     # s81-ftok r5: --define NAME builds an RTL negative control (e.g. CH_MUTANT_PD in ot_v41_chain4)
     params += [f"-D{d}" for d in (getattr(a, "define", None) or [])]
+    die_rtl = DIE
+    if getattr(a, "native_gather_root", False):
+        params += ["-DS81_NATIVE_GATHER_ROOT"]
+        die_rtl = DIE + [ROOT / "rtl/dsrom_sys/s81_ph/ot_s81ph_ret_root_p.sv",
+                         ROOT / "rtl/gpu/ot_fp32_add_rne_deep.sv",
+                         ROOT / "rtl/hdc/ot_hdc_prefix.sv"]
     mdir = out / "flat"
     steps = []
     for name, cmd in (
             ("verilate", [VERILATOR, "--cc", "-O3", "-Wno-fatal", "-Wno-lint", "-Wno-style", "-Wno-TIMESCALEMOD",
                           "--top-module", "ot_v41_fieldtop_w17w10", "--prefix", "Vflat", "--Mdir", str(mdir), *params,
-                          *map(str, DIE + ROMS + rtl)]),
+                          *map(str, die_rtl + ROMS + rtl)]),
             ("make", ["make", "-C", str(mdir), "-f", "Vflat.mk", f"-j{a.jobs}", "Vflat__ALL.a", "OPT_FAST=-O2",
                       "OPT_SLOW=-O1"]),
             ("link", ["g++", "-std=c++20", "-O2", f"-DNR={NR}", f"-DVAW={VAW}", f"-I{vroot}/include",
@@ -558,7 +564,14 @@ def cmd_build(a):
         print(name, steps[-1], flush=True)
         if p.returncode:
             raise SystemExit(f"{name} failed: {(p.stdout + p.stderr)[-3000:]}")
-    (out / "build.json").write_text(json.dumps(dict(steps=steps, params=params, qelem=a.qelem, tb_sha256=sha(out / "tb"),
+    source_paths = list(dict.fromkeys(die_rtl + ROMS + rtl + [TB, Path(__file__)]))
+    (out / "build.json").write_text(json.dumps(dict(steps=steps, params=params, qelem=a.qelem,
+                                                    native_gather_root=getattr(a, "native_gather_root", False),
+                                                    source_sha256={str(p.relative_to(ROOT)): sha(p) for p in source_paths},
+                                                    qualification=("field-plus-physical-root component; modeled VM; not native layer"
+                                                                   if getattr(a, "native_gather_root", False) else
+                                                                   "historical field component; modeled VM; not native layer"),
+                                                    tb_sha256=sha(out / "tb"),
                                                     simulator=subprocess.check_output([VERILATOR, "--version"],
                                                                                       text=True).strip()),
                                                indent=1) + "\n")
@@ -722,7 +735,10 @@ def run_one(args):
     img.mkdir(parents=True)
     t0 = time.time()
     meta, expect, xcheck = region_image(work, ph, reg, rb, bfs, x, img)
-    (rd / "ops.txt").write_text(f"0 0 {XBASE} {ph['K']} {OBASE} {meta['nrows']}\n")
+    build_meta = json.loads((Path(work) / "build/build.json").read_text())
+    native_return = "-DS81_NATIVE_GATHER_ROOT" in build_meta["params"]
+    issue = " 1" if native_return else ""
+    (rd / "ops.txt").write_text(f"0 0 {XBASE} {ph['K']} {OBASE} {meta['nrows']}{issue}\n")
     t1 = time.time()
     p = subprocess.run([str(Path(work) / "build" / "tb"), str(img), str(rd / "ops.txt")], capture_output=True,
                        text=True)
@@ -739,7 +755,8 @@ def run_one(args):
     wrong = [ad for ad, v in expect.items() if writes.get(ad) != [v]]
     extra = [ad for ad in writes if ad not in expect]
     ok = p.returncode == 0 and bool(lines) and lines[-1].startswith("PASS") and not wrong and not extra
-    res = dict(phase=ph["phase"], region=reg, pass_=ok, rows=len(expect), mismatched=len(wrong), extra=len(extra),
+    res = dict(native_gather_root=native_return, scheduled_issue_cycle=1 if native_return else None,
+               phase=ph["phase"], region=reg, pass_=ok, rows=len(expect), mismatched=len(wrong), extra=len(extra),
                first_mismatch=[(ad, writes.get(ad), expect[ad]) for ad in wrong[:3]], **meta,
                go=op.get("go"), first_w=op.get("first_w"), last_w=op.get("last_w"), idle=op.get("idle"),
                phase_cycles=op.get("phase_cycles"), fault=op.get("fault"),
@@ -984,6 +1001,9 @@ def main() -> int:
     ap.add_argument("--qelem", type=int, default=0,
                     help="build: 0 = the pinned W10 element (default); N > 0 = the DS q-element with QX = N on the "
                          "FP8/FP4 pairs (ot_v41_pair_w17w10 QELEM)")
+    ap.add_argument("--native-gather-root", action="store_true",
+                    help="build: connect real field partials to the physical S81 pipelined gather root; "
+                         "component composition only, VM remains the declared vehicle model")
     ap.add_argument("--define", action="append", default=[], help="build: Verilog define (RTL mutant)")
     a = ap.parse_args()
     G.set_arith("chunk8")

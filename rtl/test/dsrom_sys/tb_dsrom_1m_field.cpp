@@ -28,7 +28,7 @@ template <class V> static uint64_t getb(const V& v, size_t pos, int n) {
     }
 }
 
-struct Op { int ph, np, xbase, xps, obase, ops; };
+struct Op { int ph, np, xbase, xps, obase, ops; long issue_cycle = -1; };
 
 int main(int argc, char** argv) {
     if (argc < 3) { printf("usage: tb DIR OPS\n"); return 2; }
@@ -40,9 +40,13 @@ int main(int argc, char** argv) {
         while (std::getline(f, line)) {
             std::istringstream is(line);
             Op o;
-            if (is >> o.ph >> o.np >> o.xbase >> o.xps >> o.obase >> o.ops) ops.push_back(o);
+            if (is >> o.ph >> o.np >> o.xbase >> o.xps >> o.obase >> o.ops) {
+                is >> o.issue_cycle;
+                ops.push_back(o);
+            }
         }
     }
+    if (ops.empty()) { printf("FAIL no_operations\n"); return 2; }
     std::string plus = "+OT_ROM_DIR=" + dir;
     const char* av[] = {"tb", plus.c_str()};
     VerilatedContext ctx;
@@ -73,7 +77,22 @@ int main(int argc, char** argv) {
     cyc = 0;
     const long LIMIT = 2000000;
     for (size_t k = 0; k < ops.size(); k++) {
-        while (!top.ready) { tick(nullptr, false, 1); if (cyc > LIMIT) { printf("FAIL timeout\n"); return 1; } }
+        if (ops[k].issue_cycle >= 0) {
+            // Compiler-assigned cycle is binding: unavailable is a fault, never a delayed issue.
+            if (ops[k].issue_cycle > LIMIT) { printf("FAIL scheduled_issue_out_of_range\n"); return 1; }
+            if (ops[k].issue_cycle <= cyc) {
+                printf("FAIL scheduled_issue_late op=%zu compiled=%ld current=%ld\n", k, ops[k].issue_cycle, cyc);
+                return 1;
+            }
+            while (cyc + 1 < ops[k].issue_cycle) tick(nullptr, false, 1);
+            if (!top.ready) {
+                printf("FAIL scheduled_resource_unavailable op=%zu cycle=%ld\n", k, ops[k].issue_cycle);
+                return 1;
+            }
+        } else {
+            // Historical diagnostic mode only; native-return runs provide the issue cycle explicitly.
+            while (!top.ready) { tick(nullptr, false, 1); if (cyc > LIMIT) { printf("FAIL timeout\n"); return 1; } }
+        }
         nw = 0; first_w = -1; last_w = -1;
         tick(&ops[k], true, 1);
         long g = cyc;                       // the edge that samples go
