@@ -1,5 +1,5 @@
 {
- "name": "hbm_native_pc340_p0_ref-340cfd-p0-COMMIT",
+ "name": "hbm_native_pc340_p0_ref-340cfd-p0-702ba8131",
  "block": "ot_hbm_svc_native_pc_census",
  "ref_tile": true,
  "owner": "Codex:HBM-native-PC-physical",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/hbm-die-sm-compact-1014",
-  "commit": "COMMIT",
+  "commit": "702ba8131",
   "extra_paths": [
    "physical/hbm_accel_die_views/svc/native_pc_340cfd747",
    "results/arch/hbm_die_v15/native_pc_clock_census"
@@ -77,7 +77,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/physical/hbm_native_pc340_p0_ref/hbm_native_pc340_p0_ref-340cfd-p0-COMMIT"
+   "to": "results/physical/hbm_native_pc340_p0_ref/hbm_native_pc340_p0_ref-340cfd-p0-702ba8131"
   }
  ],
  "cycles_added": 0,
