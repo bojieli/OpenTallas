@@ -40,7 +40,7 @@ reg init=0;
  .rst_lane_n({16{rst_n}}),.rst_map_n({16{rst_n}}),
  .cfg_we(cfg_we),.cfg_stripe(cfg_stripe),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
  .start_v(start_v),.start_base(11'd0),.start_limit(12'(NINST)),.start_loops(16'd1),
- .prefetch_v(pf_v),.prefetch_scalar(pf_scalar),.prefetch_sector(pf_sec),.prefetch_group(pf_group),.prefetch_local_addr(pf_addr),
+ .prefetch_v(readback?8'd0:pf_v),.prefetch_scalar(pf_scalar),.prefetch_sector(pf_sec),.prefetch_group(pf_group),.prefetch_local_addr(pf_addr),
  .prefetch_word(24'd0),.scalar_addr({48'd0,24'd12672,24'd0}),.scalar_enable(4'b0010),
  .local_rq(rq),.local_rr(rr),.local_wq(wq),.local_w_done(done),
  .vi_q(512'd0),.side_y(512'd0),.drain_v(drain_v),.drain_addr(drain_addr),.drain_vm_sector(drain_sector),.fault(fault));
@@ -117,6 +117,7 @@ reg init=0;
    @(negedge clk);
   end
   pf_v=0;repeat(14)@(negedge clk);
+  if(fault||t0f||t1f||bs!=0)$fatal(1,"VM_QSWIGLU_FINAL_FAULT");
   if(observed!=WORDS)$fatal(1,"VM_QSWIGLU_COUNT got=%0d",observed);
   $display("PASS canonical Qswiglu actual exp/div/multiply/BF16 16 C12 lanes 80 operand SRAMs 16 programme SRAMs 24 protected VM SRAMs actualtap14 real scalar-route capture words=%0d exact_VM_committed_words=%0d preload_edges=192 compiler_edges=368 programme_to_consumer=5 drain_edges=192 golden=actualcanonicalhgiMachine",WORDS,observed);
   $finish;
