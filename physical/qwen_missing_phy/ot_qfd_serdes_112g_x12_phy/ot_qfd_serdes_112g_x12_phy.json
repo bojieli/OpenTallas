@@ -1,39 +1,39 @@
 {
   "assumed": {
     "boundary_timing": "registered FDI pins: ASAP7 flop clk->q / setup + 3 FO4",
-    "fdi_clock": "1.0 GHz FDI clock (the link_serdes domain)",
-    "footprint": "2,400 x 1,512 um (3.63 mm2) for 12 lanes = 0.30 mm2 a lane incl. PCS/FEC, inside the r21 4.0 mm2 qfd_io_serdes reservation (no published per-lane area in the registry)"
+    "fdi_clock": "1.0 GHz FDI clock (the link_serdes domain); TP8 adapter RXD 512, 1,043-bit flit",
+    "footprint": "TP8 die lead's approved frame: at most 2,320.2 x 1,563.8 um, snapped down to the ASAP7 macro grid (nominal 3.629 mm2); licensed-IP area remains ASSUMED"
   },
   "claim_boundary": "a placement / connection / timing abstract of licensed IP: no PHY design, no GDS, no SI or bump-map analysis; footprint and boundary timing ASSUMED as stated",
   "derived": {
     "energy_pj_per_bit": 5.6,
     "lanes": "12 x 112G PAM4 = 1,265 Gb/s net >= the adapter's 1,024 b per 1.0 GHz FDI cycle (81 % load)",
     "latency_cycles": "198 ns KP4 + 25 ns PHY/PCS = 223 ns = 223 FDI cycles at 1.0 GHz (one way)",
-    "rx_buffer": "RXD = 128 flits (one 4,096-element FP32 all-reduce message, 128 x 1,024 b) so a message streams without a credit stall; full line rate needs RXD >= RTT ~ 460 flits (SRAM; not taken: the per-token exchanges are message-latency bound)"
+    "rx_buffer": "RXD 512 selected by the TP8 die lead; receiver SRAM is in the routed adapter, this PHY view encodes its 10-bit credit field"
   },
   "fdi": {
     "clock_ghz": 1.0,
-    "flit_bits": 1041,
+    "flit_bits": 1043,
     "latency_fdi_cycles_one_way": 223,
     "payload_bits": 1024,
-    "rx_buffer_flits": 128
+    "rx_buffer_flits": 512
   },
   "footprint": {
-    "area_mm2": 3.6291,
-    "height_um": 1512.0,
-    "width_um": 2400.192
+    "area_mm2": 3.6276,
+    "height_um": 1563.5700000000002,
+    "width_um": 2320.056
   },
   "generator": "tools/qwen_missing/link_phy_gen.py",
   "name": "ot_qfd_serdes_112g_x12_phy",
   "pins": {
-    "pin_block_x_um": [
-      999.744,
-      1400.448
+    "pin_block_y_um": [
+      600.0,
+      700.368
     ],
-    "pin_edge": "top (core-facing)",
-    "pin_layer": "M5",
-    "pin_pitch_um": 0.192,
-    "signal_pins": 2087
+    "pin_edge": "west (adapter-facing)",
+    "pin_layer": "M4",
+    "pin_pitch_um": 0.048,
+    "signal_pins": 2091
   },
   "published": [
     {
@@ -120,12 +120,26 @@
       "write_energy_fj": 0.0
     }
   },
+  "tp8_plan": {
+    "access_strip_um": 0.4,
+    "authority": "el1013-qwen-romio.log, TP8 die lead 2026-10-13 08:45 approval",
+    "pin_face": "W",
+    "pin_layer": "M4",
+    "pin_window_y_um": [
+      600,
+      720
+    ],
+    "published_view_revision": "tp8_1013",
+    "rx_buffer_flits": 512,
+    "signal_pitch_um": 0.048,
+    "signal_spacing_um": 0.024
+  },
   "views": {
-    "ot_qfd_serdes_112g_x12_phy.lef": "595c6d2010c23cd9e56642651d988326dd17b798e10b59b67288662cbd684a87",
-    "ot_qfd_serdes_112g_x12_phy_bb.v": "7af10ec365e94778ed96c6cc0258f32dd2d5be1eabb796de2f8b5449782f9952",
-    "ot_qfd_serdes_112g_x12_phy_ff.lib": "1536d30022ae0320e30738ddd8a9105b047aeacf197173ba9f33e360829380dc",
-    "ot_qfd_serdes_112g_x12_phy_model.sv": "9f94c1f86b52ab0d5b04314583df097d34b039a284b9c2183de1b304e7458b22",
-    "ot_qfd_serdes_112g_x12_phy_ss.lib": "ba0643b85723ec0cf8c28551d02f42dc58a77ee8a282eab3360fabe07034683c",
-    "ot_qfd_serdes_112g_x12_phy_tt.lib": "eb773396d14d10738fb54a9e1c34f639af8a06acfa60c832e48b4515192c797e"
+    "ot_qfd_serdes_112g_x12_phy.lef": "275757af990df783f797bc56182f486015667abd7f064324c3692d8e0900e711",
+    "ot_qfd_serdes_112g_x12_phy_bb.v": "0ec87e980393de6942b05e4e1e2d5805223b1c4ad99630e28b272857d739dfd4",
+    "ot_qfd_serdes_112g_x12_phy_ff.lib": "ba16f75f76173eda51d89d55d5117cedd6221875ce50b01d1529702425ea99b9",
+    "ot_qfd_serdes_112g_x12_phy_model.sv": "1c76c6a8cf1acab88e1e71af245f81f9489f6cf3fe39eb2d69702a07932fce54",
+    "ot_qfd_serdes_112g_x12_phy_ss.lib": "9ce5020c5e589a198e92ad08afcc8862014ffcf9b4340d9456e4b35dc6029f07",
+    "ot_qfd_serdes_112g_x12_phy_tt.lib": "009556f16162790b2291f9f3cb103b25d5bab529a9bdf5cccf0b1a4a07ed3eed"
   }
 }

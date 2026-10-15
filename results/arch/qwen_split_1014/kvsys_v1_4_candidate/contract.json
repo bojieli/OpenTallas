@@ -1,0 +1,377 @@
+{
+ "schema": "opentallas.qwen_kvsys_contract.v1_4_candidate",
+ "date": "2026-10-15",
+ "owner": "kvsys die lead r7",
+ "status": "CANDIDATE: netlist binds every master to real RTL except the named open inputs below (no stubs, no ties); NOT a die result, no chain until strict bind",
+ "source_commit": "b253c75f1",
+ "generator": "tools/qwen_kv_die/kv_die.py --kv-wq-mirror --split --host-v14 (prep: OT_KV_HOST_V14=1 tools/qwen_kv_die/chain/kvsys_prep.sh OUT)",
+ "geometry": {
+  "die_um": [
+   10798.272,
+   24587.28
+  ],
+  "die_mm2": 265.5,
+  "v1_3_die_um": [
+   10495.872,
+   24587.28
+  ],
+  "v1_3_die_mm2": 258.065,
+  "delta_mm2": 7.435,
+  "slice_column": "qkd_host_pc_slice_die 129.576 x 345.576 per PC, level with its CDC/write-leaf pair, between the landing channel and the landing strip (abuts the landing); +21.6-um routing cell W of the column (the write-queue controller closes the channel otherwise: N-stack slot-0 slices had no route); landing + attention groups shift 151.2 um per side",
+  "legality": {
+   "overlaps": 0,
+   "overlap_examples": [],
+   "outside": 0,
+   "outside_examples": []
+  },
+  "pin_reach_violations": 0,
+  "stack_local_reach_violations": 0
+ },
+ "masters": {
+  "qkd_host_rt": "qkd_host_root_pt (generated from qkd_host_root_integrated by tools/qwen_kv_die/host_partition.py; +2 exported outputs host_link_reset_req / host_recovery_clear for the static D2D end)",
+  "qkd_hslice": "qkd_host_pc_slice_die x128 = proven qkd_host_pc_slice + fixed-latency status chain (sk/sd/so/sf by lpc, slot k reaches the root k+1 cycles + relays) + boot_go chain (slot k starts k cycles after slot 0); bench results/arch/qwen_split_1014/kvsys_v1_4_candidate/slice_die_bench (PASS / mutant FAIL)",
+  "qkd_pllm": "qkd_pll_analog_model (allowed analog model; no reset outputs: every reset is a root output: die_rst_n / hbm_rst_n / host_rst_n / link_rst_n, boot_go)",
+  "qkd_d2ds": "qkd_d2d_static NL=2 (Q-LINK main c43263b31; replaces qkd_d2d ot_qkvd_kv_end + qkd_lnk, credit-based = historical); UCIe binds its native 583-b word; phy_rst_n drives the UCIe reset; two forwarded bumps qkd_fwdbump (fwd_epoch, fwd_link_rst_n)",
+  "serdes": "ot_qfd_serdes_112g_x12_phy native ports <-> root phy_* (tx_up also taps link_up[1] serdes_up)"
+ },
+ "host_clock_families": {
+  "fixture": [
+   [
+    "ck_axi",
+    "core"
+   ],
+   [
+    "ck_csr",
+    "core"
+   ],
+   [
+    "ck_ctl",
+    "core"
+   ],
+   [
+    "ck_ctrl",
+    "core"
+   ],
+   [
+    "ck_fence_core",
+    "core"
+   ],
+   [
+    "ck_fence_host",
+    "host"
+   ],
+   [
+    "ck_guard",
+    "core"
+   ],
+   [
+    "ck_hc",
+    "core"
+   ],
+   [
+    "ck_host",
+    "core"
+   ],
+   [
+    "ck_map",
+    "core"
+   ],
+   [
+    "ck_native",
+    "core"
+   ],
+   [
+    "ck_order",
+    "core"
+   ],
+   [
+    "ck_pad",
+    "phy"
+   ],
+   [
+    "ck_phy0",
+    "phy"
+   ],
+   [
+    "ck_phy1",
+    "phy"
+   ],
+   [
+    "ck_phy2",
+    "phy"
+   ],
+   [
+    "ck_phy3",
+    "phy"
+   ],
+   [
+    "ck_phy4",
+    "phy"
+   ],
+   [
+    "ck_phy5",
+    "phy"
+   ],
+   [
+    "ck_phy6",
+    "phy"
+   ],
+   [
+    "ck_phy7",
+    "phy"
+   ],
+   [
+    "ck_phy_rx_r",
+    "core"
+   ],
+   [
+    "ck_phy_rx_w",
+    "phy"
+   ],
+   [
+    "ck_phy_tx_r",
+    "phy"
+   ],
+   [
+    "ck_phy_tx_w",
+    "core"
+   ],
+   [
+    "ck_prompt",
+    "core"
+   ],
+   [
+    "ck_qm_bank0",
+    "ingest"
+   ],
+   [
+    "ck_qm_bank1",
+    "ingest"
+   ],
+   [
+    "ck_qm_core",
+    "core"
+   ],
+   [
+    "ck_qm_credit",
+    "host"
+   ],
+   [
+    "ck_qm_done_r",
+    "core"
+   ],
+   [
+    "ck_qm_done_w",
+    "host"
+   ],
+   [
+    "ck_qm_host",
+    "host"
+   ],
+   [
+    "ck_qm_ing_r",
+    "host"
+   ],
+   [
+    "ck_qm_ing_w",
+    "core"
+   ],
+   [
+    "ck_qm_ingest",
+    "ingest"
+   ],
+   [
+    "ck_qm_out",
+    "ingest"
+   ],
+   [
+    "ck_qm_queue",
+    "core"
+   ],
+   [
+    "ck_rst",
+    "core"
+   ],
+   [
+    "ck_rx",
+    "core"
+   ],
+   [
+    "ck_sum",
+    "core"
+   ],
+   [
+    "ck_tx",
+    "core"
+   ]
+  ],
+  "inferred_need_host_owner_confirmation": [
+   [
+    "ck_bootbarrier",
+    "core"
+   ],
+   [
+    "ck_coordinator_codec",
+    "core"
+   ],
+   [
+    "ck_coordinator_lifecycle",
+    "core"
+   ],
+   [
+    "ck_coordinator_post",
+    "core"
+   ],
+   [
+    "ck_dispatch",
+    "core"
+   ],
+   [
+    "ck_peer",
+    "host"
+   ],
+   [
+    "ck_program_loader",
+    "core"
+   ],
+   [
+    "ck_program_rx",
+    "core"
+   ],
+   [
+    "ck_records",
+    "core"
+   ],
+   [
+    "ck_retire",
+    "core"
+   ],
+   [
+    "ck_root_mux",
+    "host"
+   ]
+  ]
+ },
+ "port_bind": {
+  "HARD_PHY": {
+   "masters": 5,
+   "instances": 9
+  },
+  "REAL": {
+   "masters": 45,
+   "instances": 14747
+  },
+  "MISMATCH": {
+   "masters": 5,
+   "instances": 132
+  }
+ },
+ "open_inputs": {
+  "qkd_host_rt.lup": "link_up RTL 6 b vs 2 real link ends: thread NL through the HOST service chain (root_integrated -> rank_services -> control_packet* -> sysctl NL) -- HOST owner (= KV die lead) next",
+  "qkd_host_rt.engine_admit_ready": "HOST/TP8 coordinator (8-rank admission via board links)",
+  "qkd_host_rt.ctrl_completion_fault": "qkd_ctrl_pc_host_static completion observer x128 (root_macro_tools owner)",
+  "qkd_host_rt.physical_fault": "per-rank physical fault vector (bit die_id local): HOST owner semantics + KV controller/PHY fault reduction (die lead)",
+  "qkd_hslice.ctrl_completion_v/we": "controller completion observer qkd_ctrl_pc_host_static as the die controller leaf (root_macro_tools)",
+  "qkd_d2ds.att_tx_v/att_tx_payload, cal_start": "KV sequencer static adapter (seq lx/lr face is credit-based: replaced by the slot calendar) -- die lead + Q-LINK",
+  "qkd_d2ds.cfg_tx_we/cfg_rx_we/cfg_addr/cfg_data": "control-image loader of the KV die (compiler calendar images) -- Q-LINK + HOST program loader",
+  "qkd_d2ds.host_boot_begin, status_epoch16, host_drained_local": "HOST owner: which root outputs (boot begin, status epoch) -- asked Q-LINK",
+  "qkd_d2ds.kv_drained_local/kv_flush_local/kv_active_local": "Q-KVSYS-ELEM: queue/controller/landing idle + active reductions",
+  "qkd_d2ds.kvn_compiled_identity/generation": "static KV writer qkd_kv_static_writer_native (not yet in the die) + compiler",
+  "qkd_seq.r_x3_d/r_sd/r_kvd/t_ar_cr": "the bridge qkd_lnk is gone: static sequencer link adapter owed (credits removed)",
+  "qkd_embgw.r_ea": "embedding request word from the bridge (gq): static adapter owed"
+ },
+ "flow_control": {
+  "rule": "OWNER 10-14 + HANDOFF 0az: credit-free everywhere EXCEPT the HBM-backed KV boundary (KV controller <-> HBM: elastic buffer / link-level flow control, one buffer-block ready check); everything after buffer-block ready is compiler fixed-slot",
+  "elastic_allowed": {
+   "qkd_cdc_wleaf (ot_qwen_stream4_cdc_pc l_pop / h_cred)": "core <-> HBM-clock CDC at the controller: THE allowed HBM boundary buffer",
+   "qkd_ctrl_pc / qkd_ctrl_kc + qkd_hbm3e_phy_pc DFI": "HBM controller <-> PHY (HBM timing not compile-time fixed)"
+  },
+  "historical_credit_to_remove": {
+   "kvn (qkd_seq kvn_*_cr, landing kvi_cr/kvo_cr, qkd_kvwq_ctl_bin kvn_cr)": "replaced by qkd_d2d_static KVN face -> qkd_kv_static_writer_native (elements rank 4) + static return slots (rank 3)",
+   "emf/emr (qkd_embgw *_cr, landing emf_cr/emr_cr)": "replaced by the static embedding path (qkd_land_emb_ifw + embedding return hops)",
+   "qkd_seq r_x3_cr / t_ar_cr": "static sequencer link adapter (open input above)",
+   "ot_qkh_head_stin_native cr_i/cr_o": "head lane station credit inside the attention head: must become fixed-slot (Q-KVSYS-ELEM, head r4 leaves)"
+  },
+  "host_external_boundary_needs_owner_ruling": {
+   "qkd_host_rt hb_cr / source_cr / ck_qm_credit / engine_result_cr, qkd_embgw hb_cr": "HOST service queue toward the off-chip host link (SerDes); NOT the HBM boundary: proposed fixed-slot gateway delivery, keep elasticity only at the SerDes host link"
+  }
+ },
+ "compiler_stages": {
+  "head_stages": "ECTL -> head t/e: +2 per-head registered stages (uniform); head score4 -> ECTL: +1; +3 cycles/layer (~-0.043 % tok/s, ledger row after measured bench)",
+  "slice_status": "slot k (physical slot, lpc = landing logical PC) -> chain head: k+1 cycles, then the die relays below",
+  "slice_boot": "slot k boot_go = root boot_go + root->slot0 relays + k cycles",
+  "writer_reset": "qkd_kv_static_writer_native first slot >= 3 edges after rst_n (boot_local_reset.json)",
+  "die_relay_stages": {
+   "hcha_EN": 46,
+   "hcha_ES": 12,
+   "hcha_WN": 43,
+   "hcha_WS": 11,
+   "hchc_EN": 45,
+   "hchc_ES": 12,
+   "hchc_WN": 43,
+   "hchc_WS": 11,
+   "hchf_EN": 43,
+   "hchf_ES": 10,
+   "hchf_WN": 44,
+   "hchf_WS": 12,
+   "hchx_EN": 46,
+   "hchx_ES": 13,
+   "hchx_WN": 43,
+   "hchx_WS": 11,
+   "hfwd_epoch": 3,
+   "hfwd_link_rst_n": 7,
+   "hlrc": 55,
+   "hlup": 54,
+   "hrec_rx": 56,
+   "hrec_tx": 55,
+   "hsak_EN": 47,
+   "hsak_ES": 13,
+   "hsak_WN": 44,
+   "hsak_WS": 11,
+   "hsbd_EN": 47,
+   "hsbd_ES": 13,
+   "hsbd_WN": 44,
+   "hsbd_WS": 11,
+   "hsbf_EN": 99,
+   "hsbf_ES": 14,
+   "hsbf_WN": 94,
+   "hsbf_WS": 11,
+   "hsbo_EN": 98,
+   "hsbo_ES": 13,
+   "hsbo_WN": 95,
+   "hsbo_WS": 12,
+   "hsvc": 57,
+   "lkf_EN": 32,
+   "lkf_ES": 1,
+   "lkf_WN": 32,
+   "lkf_WS": 1,
+   "pll_lock": 58
+  }
+ },
+ "window": {
+  "fine": {
+   "window_um": 260.0,
+   "grid": [
+    42,
+    95
+   ],
+   "max_util_h": 0.971,
+   "max_util_v": 1.422,
+   "over_055": 181,
+   "over_060": 155
+  },
+  "coarse": {
+   "window_um": 1040.0,
+   "grid": [
+    11,
+    24
+   ],
+   "max_util_h": 1.11,
+   "max_util_v": 0.939,
+   "over_055": 75,
+   "over_060": 54
+  },
+  "note": "cut rule (<=0.55-0.60) still violated as in v1.3 (kvn / krs lanes dominate; kvn goes with the static writer); v1.4 adds hrec_rx / hsvc host<->d2d bundles (55-57 relay stages)"
+ },
+ "landing_expansion": "NOT DONE: kv_expand refuses glue; the landing strip has 1068-b ot_hdc_delay relay chains (24 stages) + qkd_land_emb_ifw without a closed view. Plan: expand land_pc x32 + land_grp_epoch (ep3) x8 on views at their slots (pc 64.8 tall at its PC level, group 302.4 between its four PCs), strip relays as die relay masters in the free strip rows; emb_ifw kit/route first (elements)."
+}

@@ -1,0 +1,19 @@
+{
+  "scope": "Allowed analog source periods only; actual digital reset/lifecycle and physical phi-R remain mandatory",
+  "sources": {
+    "rtl/qwen_sys/split_20261014/qkd_pll_analog_model.sv": "931d838764e4cbcd77a56368228214357507bd472e00278709669d51b3795095",
+    "rtl/test/qwen_split/tb_qkd_pll_source_periods.sv": "36271be8081bf161909f66da922a2cd096cbfed7194df9e19540e8f42d3d529f"
+  },
+  "cases": [
+    {
+      "mutant": 0,
+      "exit_code": 0,
+      "observed": "PASS"
+    },
+    {
+      "mutant": 1,
+      "exit_code": 1,
+      "observed": "FAIL"
+    }
+  ]
+}

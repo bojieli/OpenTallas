@@ -1,0 +1,45 @@
+{
+  "scope": "component boundary only; actual clock crossings, static link/calendar and native service integration required",
+  "sources": {
+    "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv": "8822195c0d888cd132e9a828fc7367d3d3c1eddc28dfcfab01f905d9c881abfd",
+    "rtl/test/qwen_split/tb_native_attention_record.sv": "8ffbaa0e167bbfba73d3a1ff9cd7f8a9a8152733c36aef9fff707763fb197c49"
+  },
+  "cases": [
+    {
+      "kv_side": 0,
+      "mutant": 0,
+      "exit_code": 0,
+      "observed": "PASS"
+    },
+    {
+      "kv_side": 0,
+      "mutant": 1,
+      "exit_code": 1,
+      "observed": "FAIL"
+    },
+    {
+      "kv_side": 0,
+      "mutant": 2,
+      "exit_code": 1,
+      "observed": "FAIL"
+    },
+    {
+      "kv_side": 1,
+      "mutant": 0,
+      "exit_code": 0,
+      "observed": "PASS"
+    },
+    {
+      "kv_side": 1,
+      "mutant": 1,
+      "exit_code": 1,
+      "observed": "FAIL"
+    },
+    {
+      "kv_side": 1,
+      "mutant": 2,
+      "exit_code": 1,
+      "observed": "FAIL"
+    }
+  ]
+}

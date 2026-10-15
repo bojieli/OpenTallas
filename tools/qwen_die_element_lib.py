@@ -26,8 +26,19 @@ class _Clocks(tuple):
     """the clock pin names; qwen-split kvsys v1.1 adds the per-child clock entries of a wires-only parent frame
     (ck_<letter>[<index>]: ck_a / ck_b / ck_c of the control tile, ck_f / ck_k / ck_s / ck_t0..15 / ck_l0..15 of the
     native head), each its own clock input"""
+    # kvsys v1.4 (2026-10-15): the HOST root core's named clock inputs (qkd_host_root_pt) and the HOST slice entries
+    HOST_V14 = frozenset(('ck_station', 'ck_static', 'ck_boot', 'ck_boot_test', 'ck_pad', 'ck_phy_rx_w', 'ck_phy_rx_r',
+                          'ck_phy_tx_w', 'ck_phy_tx_r', 'ck_peer', 'ck_program_rx', 'ck_program_loader', 'ck_host', 'ck_csr',
+                          'ck_rst', 'ck_ctl', 'ck_prompt', 'ck_rx', 'ck_tx', 'ck_axi', 'ck_ctrl', 'ck_hc', 'ck_qm_queue',
+                          'ck_qm_ing_w', 'ck_qm_ing_r', 'ck_qm_credit', 'ck_qm_done_w', 'ck_qm_done_r', 'ck_qm_core',
+                          'ck_qm_host', 'ck_qm_ingest', 'ck_qm_out', 'ck_map', 'ck_sum', 'ck_order', 'ck_dispatch',
+                          'ck_retire', 'ck_bootbarrier', 'ck_fence_core', 'ck_fence_host', 'ck_guard', 'ck_native',
+                          'ck_records', 'ck_root_mux', 'ck_coordinator_codec', 'ck_coordinator_lifecycle',
+                          'ck_coordinator_post') + tuple(f'ck_phy{i}' for i in range(8)) + ('ck_qm_bank0', 'ck_qm_bank1'))
+
     def __contains__(self, p):
-        return tuple.__contains__(self, p) or bool(re.fullmatch(r'(ck|hk)_[a-z]\d{0,2}', str(p)))   # hk_*: v1.2 HBM-clock entries
+        return tuple.__contains__(self, p) or str(p) in self.HOST_V14 or \
+            bool(re.fullmatch(r'(ck|hk)_[a-z]\d{0,2}', str(p)))   # hk_*: v1.2 HBM-clock entries
 
 
 CLOCKS = _Clocks(('ck', 'ckx', 'cks', 'cku', 'ckd', 'clk', 'hclk') + tuple(f'ck{i}' for i in range(9)) + ('ck_pin','ck_head','ck_tree','ck_xpf','ck_me_sched','ck_sched'))   # + per-child clock entries (qwen split compute C5: xcol ck0..8, tt_up4 ck_pin / ck_l0..3)
