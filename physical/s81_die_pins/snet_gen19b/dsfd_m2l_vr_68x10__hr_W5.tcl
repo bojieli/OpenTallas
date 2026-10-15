@@ -1,1405 +1,1405 @@
-# dsfd_m2l_vr_68x10__hr_W5: die generator pin centres (gen19b pins.lef); outline 149.04 x 151.2 (slot 148.584 x 151.176 rounded up to the 2.16-um lattice; N / E pins follow their face)
-place_pin -pin_name {ck} -layer M5 -location {66.780000 0.120000} -force_to_die_boundary
-place_pin -pin_name {rs} -layer M5 -location {66.972000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[0]} -layer M5 -location {67.068000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[1]} -layer M5 -location {67.116000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[2]} -layer M5 -location {67.164000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[3]} -layer M5 -location {67.212000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[4]} -layer M5 -location {67.260000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[5]} -layer M5 -location {67.308000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[6]} -layer M5 -location {67.356000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[7]} -layer M5 -location {67.404000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[8]} -layer M5 -location {67.452000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[9]} -layer M5 -location {67.500000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[10]} -layer M5 -location {67.548000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[11]} -layer M5 -location {67.596000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[12]} -layer M5 -location {67.644000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[13]} -layer M5 -location {67.692000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[14]} -layer M5 -location {67.740000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[15]} -layer M5 -location {67.788000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[16]} -layer M5 -location {67.836000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[17]} -layer M5 -location {67.884000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[18]} -layer M5 -location {67.932000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[19]} -layer M5 -location {67.980000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[20]} -layer M5 -location {68.028000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[21]} -layer M5 -location {68.076000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[22]} -layer M5 -location {68.124000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[23]} -layer M5 -location {68.172000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[24]} -layer M5 -location {68.220000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[25]} -layer M5 -location {68.268000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[26]} -layer M5 -location {68.316000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[27]} -layer M5 -location {68.364000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[28]} -layer M5 -location {68.412000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[29]} -layer M5 -location {68.460000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[30]} -layer M5 -location {68.508000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[31]} -layer M5 -location {68.556000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[32]} -layer M5 -location {68.604000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[33]} -layer M5 -location {68.652000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[34]} -layer M5 -location {68.700000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[35]} -layer M5 -location {68.748000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[36]} -layer M5 -location {68.796000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[37]} -layer M5 -location {68.844000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[38]} -layer M5 -location {68.892000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[39]} -layer M5 -location {68.940000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[40]} -layer M5 -location {68.988000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[41]} -layer M5 -location {69.036000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[42]} -layer M5 -location {69.084000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[43]} -layer M5 -location {69.132000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[44]} -layer M5 -location {69.180000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[45]} -layer M5 -location {69.228000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[46]} -layer M5 -location {69.276000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[47]} -layer M5 -location {69.324000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[48]} -layer M5 -location {69.372000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[49]} -layer M5 -location {69.420000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[50]} -layer M5 -location {69.468000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[51]} -layer M5 -location {69.516000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[52]} -layer M5 -location {69.564000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[53]} -layer M5 -location {69.612000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[54]} -layer M5 -location {69.660000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[55]} -layer M5 -location {69.708000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[56]} -layer M5 -location {69.756000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[57]} -layer M5 -location {69.804000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[58]} -layer M5 -location {69.852000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[59]} -layer M5 -location {69.900000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[60]} -layer M5 -location {69.948000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[61]} -layer M5 -location {69.996000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[62]} -layer M5 -location {70.044000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[63]} -layer M5 -location {70.092000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[64]} -layer M5 -location {70.140000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[65]} -layer M5 -location {70.188000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[66]} -layer M5 -location {70.236000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[67]} -layer M5 -location {70.284000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[68]} -layer M5 -location {70.332000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di1[69]} -layer M5 -location {70.380000 0.120000} -force_to_die_boundary
-place_pin -pin_name {fi1} -layer M5 -location {70.668000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[0]} -layer M5 -location {70.764000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[1]} -layer M5 -location {70.812000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[2]} -layer M5 -location {70.860000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[3]} -layer M5 -location {70.908000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[4]} -layer M5 -location {70.956000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[5]} -layer M5 -location {71.004000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[6]} -layer M5 -location {71.052000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[7]} -layer M5 -location {71.100000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[8]} -layer M5 -location {71.148000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[9]} -layer M5 -location {71.196000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[10]} -layer M5 -location {71.244000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[11]} -layer M5 -location {71.292000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[12]} -layer M5 -location {71.340000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[13]} -layer M5 -location {71.388000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[14]} -layer M5 -location {71.436000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[15]} -layer M5 -location {71.484000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[16]} -layer M5 -location {71.532000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[17]} -layer M5 -location {71.580000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[18]} -layer M5 -location {71.628000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[19]} -layer M5 -location {71.676000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[20]} -layer M5 -location {71.724000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[21]} -layer M5 -location {71.772000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[22]} -layer M5 -location {71.820000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[23]} -layer M5 -location {71.868000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[24]} -layer M5 -location {71.916000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[25]} -layer M5 -location {71.964000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[26]} -layer M5 -location {72.012000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[27]} -layer M5 -location {72.060000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[28]} -layer M5 -location {72.108000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[29]} -layer M5 -location {72.156000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[30]} -layer M5 -location {72.204000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[31]} -layer M5 -location {72.252000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[32]} -layer M5 -location {72.300000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[33]} -layer M5 -location {72.348000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[34]} -layer M5 -location {72.396000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[35]} -layer M5 -location {72.444000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[36]} -layer M5 -location {72.492000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[37]} -layer M5 -location {72.540000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[38]} -layer M5 -location {72.588000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[39]} -layer M5 -location {72.636000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[40]} -layer M5 -location {72.684000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[41]} -layer M5 -location {72.732000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[42]} -layer M5 -location {72.780000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[43]} -layer M5 -location {72.828000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[44]} -layer M5 -location {72.876000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[45]} -layer M5 -location {72.924000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[46]} -layer M5 -location {72.972000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[47]} -layer M5 -location {73.020000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[48]} -layer M5 -location {73.068000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[49]} -layer M5 -location {73.116000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[50]} -layer M5 -location {73.164000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[51]} -layer M5 -location {73.212000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[52]} -layer M5 -location {73.260000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[53]} -layer M5 -location {73.308000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[54]} -layer M5 -location {73.356000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[55]} -layer M5 -location {73.404000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[56]} -layer M5 -location {73.452000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[57]} -layer M5 -location {73.500000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[58]} -layer M5 -location {73.548000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[59]} -layer M5 -location {73.596000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[60]} -layer M5 -location {73.644000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[61]} -layer M5 -location {73.692000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[62]} -layer M5 -location {73.740000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[63]} -layer M5 -location {73.788000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[64]} -layer M5 -location {73.836000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[65]} -layer M5 -location {73.884000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[66]} -layer M5 -location {73.932000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[67]} -layer M5 -location {73.980000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[68]} -layer M5 -location {74.028000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di2[69]} -layer M5 -location {74.076000 0.120000} -force_to_die_boundary
-place_pin -pin_name {fi2} -layer M5 -location {74.364000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[0]} -layer M5 -location {74.460000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[1]} -layer M5 -location {74.508000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[2]} -layer M5 -location {74.556000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[3]} -layer M5 -location {74.604000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[4]} -layer M5 -location {74.652000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[5]} -layer M5 -location {74.700000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[6]} -layer M5 -location {74.748000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[7]} -layer M5 -location {74.796000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[8]} -layer M5 -location {74.844000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[9]} -layer M5 -location {74.892000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[10]} -layer M5 -location {74.940000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[11]} -layer M5 -location {74.988000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[12]} -layer M5 -location {75.036000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[13]} -layer M5 -location {75.084000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[14]} -layer M5 -location {75.132000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[15]} -layer M5 -location {75.180000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[16]} -layer M5 -location {75.228000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[17]} -layer M5 -location {75.276000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[18]} -layer M5 -location {75.324000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[19]} -layer M5 -location {75.372000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[20]} -layer M5 -location {75.420000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[21]} -layer M5 -location {75.468000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[22]} -layer M5 -location {75.516000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[23]} -layer M5 -location {75.564000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[24]} -layer M5 -location {75.612000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[25]} -layer M5 -location {75.660000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[26]} -layer M5 -location {75.708000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[27]} -layer M5 -location {75.756000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[28]} -layer M5 -location {75.804000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[29]} -layer M5 -location {75.852000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[30]} -layer M5 -location {75.900000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[31]} -layer M5 -location {75.948000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[32]} -layer M5 -location {75.996000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[33]} -layer M5 -location {76.044000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[34]} -layer M5 -location {76.092000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[35]} -layer M5 -location {76.140000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[36]} -layer M5 -location {76.188000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[37]} -layer M5 -location {76.236000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[38]} -layer M5 -location {76.284000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[39]} -layer M5 -location {76.332000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[40]} -layer M5 -location {76.380000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[41]} -layer M5 -location {76.428000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[42]} -layer M5 -location {76.476000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[43]} -layer M5 -location {76.524000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[44]} -layer M5 -location {76.572000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[45]} -layer M5 -location {76.620000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[46]} -layer M5 -location {76.668000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[47]} -layer M5 -location {76.716000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[48]} -layer M5 -location {76.764000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[49]} -layer M5 -location {76.812000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[50]} -layer M5 -location {76.860000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[51]} -layer M5 -location {76.908000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[52]} -layer M5 -location {76.956000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[53]} -layer M5 -location {77.004000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[54]} -layer M5 -location {77.052000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[55]} -layer M5 -location {77.100000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[56]} -layer M5 -location {77.148000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[57]} -layer M5 -location {77.196000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[58]} -layer M5 -location {77.244000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[59]} -layer M5 -location {77.292000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[60]} -layer M5 -location {77.340000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[61]} -layer M5 -location {77.388000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[62]} -layer M5 -location {77.436000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[63]} -layer M5 -location {77.484000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[64]} -layer M5 -location {77.532000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[65]} -layer M5 -location {77.580000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[66]} -layer M5 -location {77.628000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[67]} -layer M5 -location {77.676000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[68]} -layer M5 -location {77.724000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di3[69]} -layer M5 -location {77.772000 0.120000} -force_to_die_boundary
-place_pin -pin_name {fi3} -layer M5 -location {78.060000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[0]} -layer M5 -location {78.156000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[1]} -layer M5 -location {78.204000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[2]} -layer M5 -location {78.252000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[3]} -layer M5 -location {78.300000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[4]} -layer M5 -location {78.348000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[5]} -layer M5 -location {78.396000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[6]} -layer M5 -location {78.444000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[7]} -layer M5 -location {78.492000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[8]} -layer M5 -location {78.540000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[9]} -layer M5 -location {78.588000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[10]} -layer M5 -location {78.636000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[11]} -layer M5 -location {78.684000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[12]} -layer M5 -location {78.732000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[13]} -layer M5 -location {78.780000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[14]} -layer M5 -location {78.828000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[15]} -layer M5 -location {78.876000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[16]} -layer M5 -location {78.924000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[17]} -layer M5 -location {78.972000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[18]} -layer M5 -location {79.020000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[19]} -layer M5 -location {79.068000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[20]} -layer M5 -location {79.116000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[21]} -layer M5 -location {79.164000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[22]} -layer M5 -location {79.212000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[23]} -layer M5 -location {79.260000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[24]} -layer M5 -location {79.308000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[25]} -layer M5 -location {79.356000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[26]} -layer M5 -location {79.404000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[27]} -layer M5 -location {79.452000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[28]} -layer M5 -location {79.500000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[29]} -layer M5 -location {79.548000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[30]} -layer M5 -location {79.596000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[31]} -layer M5 -location {79.644000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[32]} -layer M5 -location {79.692000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[33]} -layer M5 -location {79.740000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[34]} -layer M5 -location {79.788000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[35]} -layer M5 -location {79.836000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[36]} -layer M5 -location {79.884000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[37]} -layer M5 -location {79.932000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[38]} -layer M5 -location {79.980000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[39]} -layer M5 -location {80.028000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[40]} -layer M5 -location {80.076000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[41]} -layer M5 -location {80.124000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[42]} -layer M5 -location {80.172000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[43]} -layer M5 -location {80.220000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[44]} -layer M5 -location {80.268000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[45]} -layer M5 -location {80.316000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[46]} -layer M5 -location {80.364000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[47]} -layer M5 -location {80.412000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[48]} -layer M5 -location {80.460000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[49]} -layer M5 -location {80.508000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[50]} -layer M5 -location {80.556000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[51]} -layer M5 -location {80.604000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[52]} -layer M5 -location {80.652000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[53]} -layer M5 -location {80.700000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[54]} -layer M5 -location {80.748000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[55]} -layer M5 -location {80.796000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[56]} -layer M5 -location {80.844000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[57]} -layer M5 -location {80.892000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[58]} -layer M5 -location {80.940000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[59]} -layer M5 -location {80.988000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[60]} -layer M5 -location {81.036000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[61]} -layer M5 -location {81.084000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[62]} -layer M5 -location {81.132000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[63]} -layer M5 -location {81.180000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[64]} -layer M5 -location {81.228000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[65]} -layer M5 -location {81.276000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[66]} -layer M5 -location {81.324000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[67]} -layer M5 -location {81.372000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[68]} -layer M5 -location {81.420000 0.120000} -force_to_die_boundary
-place_pin -pin_name {di4[69]} -layer M5 -location {81.468000 0.120000} -force_to_die_boundary
-place_pin -pin_name {fi4} -layer M5 -location {81.756000 0.120000} -force_to_die_boundary
-place_pin -pin_name {o[0]} -layer M4 -location {148.920000 95.481000} -force_to_die_boundary
-place_pin -pin_name {o[1]} -layer M4 -location {148.920000 95.529000} -force_to_die_boundary
-place_pin -pin_name {o[2]} -layer M4 -location {148.920000 95.577000} -force_to_die_boundary
-place_pin -pin_name {o[3]} -layer M4 -location {148.920000 95.625000} -force_to_die_boundary
-place_pin -pin_name {o[4]} -layer M4 -location {148.920000 95.673000} -force_to_die_boundary
-place_pin -pin_name {o[5]} -layer M4 -location {148.920000 95.721000} -force_to_die_boundary
-place_pin -pin_name {o[6]} -layer M4 -location {148.920000 95.769000} -force_to_die_boundary
-place_pin -pin_name {o[7]} -layer M4 -location {148.920000 95.817000} -force_to_die_boundary
-place_pin -pin_name {o[8]} -layer M4 -location {148.920000 95.865000} -force_to_die_boundary
-place_pin -pin_name {o[9]} -layer M4 -location {148.920000 95.913000} -force_to_die_boundary
-place_pin -pin_name {o[10]} -layer M4 -location {148.920000 95.961000} -force_to_die_boundary
-place_pin -pin_name {o[11]} -layer M4 -location {148.920000 96.009000} -force_to_die_boundary
-place_pin -pin_name {o[12]} -layer M4 -location {148.920000 96.057000} -force_to_die_boundary
-place_pin -pin_name {o[13]} -layer M4 -location {148.920000 96.105000} -force_to_die_boundary
-place_pin -pin_name {o[14]} -layer M4 -location {148.920000 96.153000} -force_to_die_boundary
-place_pin -pin_name {o[15]} -layer M4 -location {148.920000 96.201000} -force_to_die_boundary
-place_pin -pin_name {o[16]} -layer M4 -location {148.920000 96.249000} -force_to_die_boundary
-place_pin -pin_name {o[17]} -layer M4 -location {148.920000 96.297000} -force_to_die_boundary
-place_pin -pin_name {o[18]} -layer M4 -location {148.920000 96.345000} -force_to_die_boundary
-place_pin -pin_name {o[19]} -layer M4 -location {148.920000 96.393000} -force_to_die_boundary
-place_pin -pin_name {o[20]} -layer M4 -location {148.920000 96.441000} -force_to_die_boundary
-place_pin -pin_name {o[21]} -layer M4 -location {148.920000 96.489000} -force_to_die_boundary
-place_pin -pin_name {o[22]} -layer M4 -location {148.920000 96.537000} -force_to_die_boundary
-place_pin -pin_name {o[23]} -layer M4 -location {148.920000 96.585000} -force_to_die_boundary
-place_pin -pin_name {o[24]} -layer M4 -location {148.920000 96.633000} -force_to_die_boundary
-place_pin -pin_name {o[25]} -layer M4 -location {148.920000 96.681000} -force_to_die_boundary
-place_pin -pin_name {o[26]} -layer M4 -location {148.920000 96.729000} -force_to_die_boundary
-place_pin -pin_name {o[27]} -layer M4 -location {148.920000 96.777000} -force_to_die_boundary
-place_pin -pin_name {o[28]} -layer M4 -location {148.920000 96.825000} -force_to_die_boundary
-place_pin -pin_name {o[29]} -layer M4 -location {148.920000 96.873000} -force_to_die_boundary
-place_pin -pin_name {o[30]} -layer M4 -location {148.920000 96.921000} -force_to_die_boundary
-place_pin -pin_name {o[31]} -layer M4 -location {148.920000 96.969000} -force_to_die_boundary
-place_pin -pin_name {o[32]} -layer M4 -location {148.920000 97.017000} -force_to_die_boundary
-place_pin -pin_name {o[33]} -layer M4 -location {148.920000 97.065000} -force_to_die_boundary
-place_pin -pin_name {o[34]} -layer M4 -location {148.920000 97.113000} -force_to_die_boundary
-place_pin -pin_name {o[35]} -layer M4 -location {148.920000 97.161000} -force_to_die_boundary
-place_pin -pin_name {o[36]} -layer M4 -location {148.920000 97.209000} -force_to_die_boundary
-place_pin -pin_name {o[37]} -layer M4 -location {148.920000 97.257000} -force_to_die_boundary
-place_pin -pin_name {o[38]} -layer M4 -location {148.920000 97.305000} -force_to_die_boundary
-place_pin -pin_name {o[39]} -layer M4 -location {148.920000 97.353000} -force_to_die_boundary
-place_pin -pin_name {o[40]} -layer M4 -location {148.920000 97.401000} -force_to_die_boundary
-place_pin -pin_name {o[41]} -layer M4 -location {148.920000 97.449000} -force_to_die_boundary
-place_pin -pin_name {o[42]} -layer M4 -location {148.920000 97.497000} -force_to_die_boundary
-place_pin -pin_name {o[43]} -layer M4 -location {148.920000 97.545000} -force_to_die_boundary
-place_pin -pin_name {o[44]} -layer M4 -location {148.920000 97.593000} -force_to_die_boundary
-place_pin -pin_name {o[45]} -layer M4 -location {148.920000 97.641000} -force_to_die_boundary
-place_pin -pin_name {o[46]} -layer M4 -location {148.920000 97.689000} -force_to_die_boundary
-place_pin -pin_name {o[47]} -layer M4 -location {148.920000 97.737000} -force_to_die_boundary
-place_pin -pin_name {o[48]} -layer M4 -location {148.920000 97.785000} -force_to_die_boundary
-place_pin -pin_name {o[49]} -layer M4 -location {148.920000 97.833000} -force_to_die_boundary
-place_pin -pin_name {o[50]} -layer M4 -location {148.920000 97.881000} -force_to_die_boundary
-place_pin -pin_name {o[51]} -layer M4 -location {148.920000 97.929000} -force_to_die_boundary
-place_pin -pin_name {o[52]} -layer M4 -location {148.920000 97.977000} -force_to_die_boundary
-place_pin -pin_name {o[53]} -layer M4 -location {148.920000 98.025000} -force_to_die_boundary
-place_pin -pin_name {o[54]} -layer M4 -location {148.920000 98.073000} -force_to_die_boundary
-place_pin -pin_name {o[55]} -layer M4 -location {148.920000 98.121000} -force_to_die_boundary
-place_pin -pin_name {o[56]} -layer M4 -location {148.920000 98.169000} -force_to_die_boundary
-place_pin -pin_name {o[57]} -layer M4 -location {148.920000 98.217000} -force_to_die_boundary
-place_pin -pin_name {o[58]} -layer M4 -location {148.920000 98.265000} -force_to_die_boundary
-place_pin -pin_name {o[59]} -layer M4 -location {148.920000 98.313000} -force_to_die_boundary
-place_pin -pin_name {o[60]} -layer M4 -location {148.920000 98.361000} -force_to_die_boundary
-place_pin -pin_name {o[61]} -layer M4 -location {148.920000 98.409000} -force_to_die_boundary
-place_pin -pin_name {o[62]} -layer M4 -location {148.920000 98.457000} -force_to_die_boundary
-place_pin -pin_name {o[63]} -layer M4 -location {148.920000 98.505000} -force_to_die_boundary
-place_pin -pin_name {o[64]} -layer M4 -location {148.920000 98.553000} -force_to_die_boundary
-place_pin -pin_name {o[65]} -layer M4 -location {148.920000 98.601000} -force_to_die_boundary
-place_pin -pin_name {o[66]} -layer M4 -location {148.920000 98.649000} -force_to_die_boundary
-place_pin -pin_name {o[67]} -layer M4 -location {148.920000 98.697000} -force_to_die_boundary
-place_pin -pin_name {o[68]} -layer M4 -location {148.920000 98.745000} -force_to_die_boundary
-place_pin -pin_name {o[69]} -layer M4 -location {148.920000 98.793000} -force_to_die_boundary
-place_pin -pin_name {o[70]} -layer M4 -location {148.920000 98.841000} -force_to_die_boundary
-place_pin -pin_name {o[71]} -layer M4 -location {148.920000 98.889000} -force_to_die_boundary
-place_pin -pin_name {o[72]} -layer M4 -location {148.920000 98.937000} -force_to_die_boundary
-place_pin -pin_name {o[73]} -layer M4 -location {148.920000 98.985000} -force_to_die_boundary
-place_pin -pin_name {o[74]} -layer M4 -location {148.920000 99.033000} -force_to_die_boundary
-place_pin -pin_name {o[75]} -layer M4 -location {148.920000 99.081000} -force_to_die_boundary
-place_pin -pin_name {o[76]} -layer M4 -location {148.920000 99.129000} -force_to_die_boundary
-place_pin -pin_name {o[77]} -layer M4 -location {148.920000 99.177000} -force_to_die_boundary
-place_pin -pin_name {o[78]} -layer M4 -location {148.920000 99.225000} -force_to_die_boundary
-place_pin -pin_name {o[79]} -layer M4 -location {148.920000 99.273000} -force_to_die_boundary
-place_pin -pin_name {o[80]} -layer M4 -location {148.920000 99.321000} -force_to_die_boundary
-place_pin -pin_name {o[81]} -layer M4 -location {148.920000 99.369000} -force_to_die_boundary
-place_pin -pin_name {o[82]} -layer M4 -location {148.920000 99.417000} -force_to_die_boundary
-place_pin -pin_name {o[83]} -layer M4 -location {148.920000 99.465000} -force_to_die_boundary
-place_pin -pin_name {o[84]} -layer M4 -location {148.920000 99.513000} -force_to_die_boundary
-place_pin -pin_name {o[85]} -layer M4 -location {148.920000 99.561000} -force_to_die_boundary
-place_pin -pin_name {o[86]} -layer M4 -location {148.920000 99.609000} -force_to_die_boundary
-place_pin -pin_name {o[87]} -layer M4 -location {148.920000 99.657000} -force_to_die_boundary
-place_pin -pin_name {o[88]} -layer M4 -location {148.920000 99.705000} -force_to_die_boundary
-place_pin -pin_name {o[89]} -layer M4 -location {148.920000 99.753000} -force_to_die_boundary
-place_pin -pin_name {o[90]} -layer M4 -location {148.920000 99.801000} -force_to_die_boundary
-place_pin -pin_name {o[91]} -layer M4 -location {148.920000 99.849000} -force_to_die_boundary
-place_pin -pin_name {o[92]} -layer M4 -location {148.920000 99.897000} -force_to_die_boundary
-place_pin -pin_name {o[93]} -layer M4 -location {148.920000 99.945000} -force_to_die_boundary
-place_pin -pin_name {o[94]} -layer M4 -location {148.920000 99.993000} -force_to_die_boundary
-place_pin -pin_name {o[95]} -layer M4 -location {148.920000 100.041000} -force_to_die_boundary
-place_pin -pin_name {o[96]} -layer M4 -location {148.920000 100.089000} -force_to_die_boundary
-place_pin -pin_name {o[97]} -layer M4 -location {148.920000 100.137000} -force_to_die_boundary
-place_pin -pin_name {o[98]} -layer M4 -location {148.920000 100.185000} -force_to_die_boundary
-place_pin -pin_name {o[99]} -layer M4 -location {148.920000 100.233000} -force_to_die_boundary
-place_pin -pin_name {o[100]} -layer M4 -location {148.920000 100.281000} -force_to_die_boundary
-place_pin -pin_name {o[101]} -layer M4 -location {148.920000 100.329000} -force_to_die_boundary
-place_pin -pin_name {o[102]} -layer M4 -location {148.920000 100.377000} -force_to_die_boundary
-place_pin -pin_name {o[103]} -layer M4 -location {148.920000 100.425000} -force_to_die_boundary
-place_pin -pin_name {o[104]} -layer M4 -location {148.920000 100.473000} -force_to_die_boundary
-place_pin -pin_name {o[105]} -layer M4 -location {148.920000 100.521000} -force_to_die_boundary
-place_pin -pin_name {o[106]} -layer M4 -location {148.920000 100.569000} -force_to_die_boundary
-place_pin -pin_name {o[107]} -layer M4 -location {148.920000 100.617000} -force_to_die_boundary
-place_pin -pin_name {o[108]} -layer M4 -location {148.920000 100.665000} -force_to_die_boundary
-place_pin -pin_name {o[109]} -layer M4 -location {148.920000 100.713000} -force_to_die_boundary
-place_pin -pin_name {o[110]} -layer M4 -location {148.920000 100.761000} -force_to_die_boundary
-place_pin -pin_name {o[111]} -layer M4 -location {148.920000 100.809000} -force_to_die_boundary
-place_pin -pin_name {o[112]} -layer M4 -location {148.920000 100.857000} -force_to_die_boundary
-place_pin -pin_name {o[113]} -layer M4 -location {148.920000 100.905000} -force_to_die_boundary
-place_pin -pin_name {o[114]} -layer M4 -location {148.920000 100.953000} -force_to_die_boundary
-place_pin -pin_name {o[115]} -layer M4 -location {148.920000 101.001000} -force_to_die_boundary
-place_pin -pin_name {o[116]} -layer M4 -location {148.920000 101.049000} -force_to_die_boundary
-place_pin -pin_name {o[117]} -layer M4 -location {148.920000 101.097000} -force_to_die_boundary
-place_pin -pin_name {o[118]} -layer M4 -location {148.920000 101.145000} -force_to_die_boundary
-place_pin -pin_name {o[119]} -layer M4 -location {148.920000 101.193000} -force_to_die_boundary
-place_pin -pin_name {o[120]} -layer M4 -location {148.920000 101.241000} -force_to_die_boundary
-place_pin -pin_name {o[121]} -layer M4 -location {148.920000 101.289000} -force_to_die_boundary
-place_pin -pin_name {o[122]} -layer M4 -location {148.920000 101.337000} -force_to_die_boundary
-place_pin -pin_name {o[123]} -layer M4 -location {148.920000 101.385000} -force_to_die_boundary
-place_pin -pin_name {o[124]} -layer M4 -location {148.920000 101.433000} -force_to_die_boundary
-place_pin -pin_name {o[125]} -layer M4 -location {148.920000 101.481000} -force_to_die_boundary
-place_pin -pin_name {o[126]} -layer M4 -location {148.920000 101.529000} -force_to_die_boundary
-place_pin -pin_name {o[127]} -layer M4 -location {148.920000 101.577000} -force_to_die_boundary
-place_pin -pin_name {o[128]} -layer M4 -location {148.920000 101.625000} -force_to_die_boundary
-place_pin -pin_name {o[129]} -layer M4 -location {148.920000 101.673000} -force_to_die_boundary
-place_pin -pin_name {o[130]} -layer M4 -location {148.920000 101.721000} -force_to_die_boundary
-place_pin -pin_name {o[131]} -layer M4 -location {148.920000 101.769000} -force_to_die_boundary
-place_pin -pin_name {o[132]} -layer M4 -location {148.920000 101.817000} -force_to_die_boundary
-place_pin -pin_name {o[133]} -layer M4 -location {148.920000 101.865000} -force_to_die_boundary
-place_pin -pin_name {o[134]} -layer M4 -location {148.920000 101.913000} -force_to_die_boundary
-place_pin -pin_name {o[135]} -layer M4 -location {148.920000 101.961000} -force_to_die_boundary
-place_pin -pin_name {o[136]} -layer M4 -location {148.920000 102.009000} -force_to_die_boundary
-place_pin -pin_name {o[137]} -layer M4 -location {148.920000 102.057000} -force_to_die_boundary
-place_pin -pin_name {o[138]} -layer M4 -location {148.920000 102.105000} -force_to_die_boundary
-place_pin -pin_name {o[139]} -layer M4 -location {148.920000 102.153000} -force_to_die_boundary
-place_pin -pin_name {o[140]} -layer M4 -location {148.920000 102.201000} -force_to_die_boundary
-place_pin -pin_name {o[141]} -layer M4 -location {148.920000 102.249000} -force_to_die_boundary
-place_pin -pin_name {o[142]} -layer M4 -location {148.920000 102.297000} -force_to_die_boundary
-place_pin -pin_name {o[143]} -layer M4 -location {148.920000 102.345000} -force_to_die_boundary
-place_pin -pin_name {o[144]} -layer M4 -location {148.920000 102.393000} -force_to_die_boundary
-place_pin -pin_name {o[145]} -layer M4 -location {148.920000 102.441000} -force_to_die_boundary
-place_pin -pin_name {o[146]} -layer M4 -location {148.920000 102.489000} -force_to_die_boundary
-place_pin -pin_name {o[147]} -layer M4 -location {148.920000 102.537000} -force_to_die_boundary
-place_pin -pin_name {o[148]} -layer M4 -location {148.920000 102.585000} -force_to_die_boundary
-place_pin -pin_name {o[149]} -layer M4 -location {148.920000 102.633000} -force_to_die_boundary
-place_pin -pin_name {o[150]} -layer M4 -location {148.920000 102.681000} -force_to_die_boundary
-place_pin -pin_name {o[151]} -layer M4 -location {148.920000 102.729000} -force_to_die_boundary
-place_pin -pin_name {o[152]} -layer M4 -location {148.920000 102.777000} -force_to_die_boundary
-place_pin -pin_name {o[153]} -layer M4 -location {148.920000 102.825000} -force_to_die_boundary
-place_pin -pin_name {o[154]} -layer M4 -location {148.920000 102.873000} -force_to_die_boundary
-place_pin -pin_name {o[155]} -layer M4 -location {148.920000 102.921000} -force_to_die_boundary
-place_pin -pin_name {o[156]} -layer M4 -location {148.920000 102.969000} -force_to_die_boundary
-place_pin -pin_name {o[157]} -layer M4 -location {148.920000 103.017000} -force_to_die_boundary
-place_pin -pin_name {o[158]} -layer M4 -location {148.920000 103.065000} -force_to_die_boundary
-place_pin -pin_name {o[159]} -layer M4 -location {148.920000 103.113000} -force_to_die_boundary
-place_pin -pin_name {o[160]} -layer M4 -location {148.920000 103.161000} -force_to_die_boundary
-place_pin -pin_name {o[161]} -layer M4 -location {148.920000 103.209000} -force_to_die_boundary
-place_pin -pin_name {o[162]} -layer M4 -location {148.920000 103.257000} -force_to_die_boundary
-place_pin -pin_name {o[163]} -layer M4 -location {148.920000 103.305000} -force_to_die_boundary
-place_pin -pin_name {o[164]} -layer M4 -location {148.920000 103.353000} -force_to_die_boundary
-place_pin -pin_name {o[165]} -layer M4 -location {148.920000 103.401000} -force_to_die_boundary
-place_pin -pin_name {o[166]} -layer M4 -location {148.920000 103.449000} -force_to_die_boundary
-place_pin -pin_name {o[167]} -layer M4 -location {148.920000 103.497000} -force_to_die_boundary
-place_pin -pin_name {o[168]} -layer M4 -location {148.920000 103.545000} -force_to_die_boundary
-place_pin -pin_name {o[169]} -layer M4 -location {148.920000 103.593000} -force_to_die_boundary
-place_pin -pin_name {o[170]} -layer M4 -location {148.920000 103.641000} -force_to_die_boundary
-place_pin -pin_name {o[171]} -layer M4 -location {148.920000 103.689000} -force_to_die_boundary
-place_pin -pin_name {o[172]} -layer M4 -location {148.920000 103.737000} -force_to_die_boundary
-place_pin -pin_name {o[173]} -layer M4 -location {148.920000 103.785000} -force_to_die_boundary
-place_pin -pin_name {o[174]} -layer M4 -location {148.920000 103.833000} -force_to_die_boundary
-place_pin -pin_name {o[175]} -layer M4 -location {148.920000 103.881000} -force_to_die_boundary
-place_pin -pin_name {o[176]} -layer M4 -location {148.920000 103.929000} -force_to_die_boundary
-place_pin -pin_name {o[177]} -layer M4 -location {148.920000 103.977000} -force_to_die_boundary
-place_pin -pin_name {o[178]} -layer M4 -location {148.920000 104.025000} -force_to_die_boundary
-place_pin -pin_name {o[179]} -layer M4 -location {148.920000 104.073000} -force_to_die_boundary
-place_pin -pin_name {o[180]} -layer M4 -location {148.920000 104.121000} -force_to_die_boundary
-place_pin -pin_name {o[181]} -layer M4 -location {148.920000 104.169000} -force_to_die_boundary
-place_pin -pin_name {o[182]} -layer M4 -location {148.920000 104.217000} -force_to_die_boundary
-place_pin -pin_name {o[183]} -layer M4 -location {148.920000 104.265000} -force_to_die_boundary
-place_pin -pin_name {o[184]} -layer M4 -location {148.920000 104.313000} -force_to_die_boundary
-place_pin -pin_name {o[185]} -layer M4 -location {148.920000 104.361000} -force_to_die_boundary
-place_pin -pin_name {o[186]} -layer M4 -location {148.920000 104.409000} -force_to_die_boundary
-place_pin -pin_name {o[187]} -layer M4 -location {148.920000 104.457000} -force_to_die_boundary
-place_pin -pin_name {o[188]} -layer M4 -location {148.920000 104.505000} -force_to_die_boundary
-place_pin -pin_name {o[189]} -layer M4 -location {148.920000 104.553000} -force_to_die_boundary
-place_pin -pin_name {o[190]} -layer M4 -location {148.920000 104.601000} -force_to_die_boundary
-place_pin -pin_name {o[191]} -layer M4 -location {148.920000 104.649000} -force_to_die_boundary
-place_pin -pin_name {o[192]} -layer M4 -location {148.920000 104.697000} -force_to_die_boundary
-place_pin -pin_name {o[193]} -layer M4 -location {148.920000 104.745000} -force_to_die_boundary
-place_pin -pin_name {o[194]} -layer M4 -location {148.920000 104.793000} -force_to_die_boundary
-place_pin -pin_name {o[195]} -layer M4 -location {148.920000 104.841000} -force_to_die_boundary
-place_pin -pin_name {o[196]} -layer M4 -location {148.920000 104.889000} -force_to_die_boundary
-place_pin -pin_name {o[197]} -layer M4 -location {148.920000 104.937000} -force_to_die_boundary
-place_pin -pin_name {o[198]} -layer M4 -location {148.920000 104.985000} -force_to_die_boundary
-place_pin -pin_name {o[199]} -layer M4 -location {148.920000 105.033000} -force_to_die_boundary
-place_pin -pin_name {o[200]} -layer M4 -location {148.920000 105.081000} -force_to_die_boundary
-place_pin -pin_name {o[201]} -layer M4 -location {148.920000 105.129000} -force_to_die_boundary
-place_pin -pin_name {o[202]} -layer M4 -location {148.920000 105.177000} -force_to_die_boundary
-place_pin -pin_name {o[203]} -layer M4 -location {148.920000 105.225000} -force_to_die_boundary
-place_pin -pin_name {o[204]} -layer M4 -location {148.920000 105.273000} -force_to_die_boundary
-place_pin -pin_name {o[205]} -layer M4 -location {148.920000 105.321000} -force_to_die_boundary
-place_pin -pin_name {o[206]} -layer M4 -location {148.920000 105.369000} -force_to_die_boundary
-place_pin -pin_name {o[207]} -layer M4 -location {148.920000 105.417000} -force_to_die_boundary
-place_pin -pin_name {o[208]} -layer M4 -location {148.920000 105.465000} -force_to_die_boundary
-place_pin -pin_name {o[209]} -layer M4 -location {148.920000 105.513000} -force_to_die_boundary
-place_pin -pin_name {o[210]} -layer M4 -location {148.920000 105.561000} -force_to_die_boundary
-place_pin -pin_name {o[211]} -layer M4 -location {148.920000 105.609000} -force_to_die_boundary
-place_pin -pin_name {o[212]} -layer M4 -location {148.920000 105.657000} -force_to_die_boundary
-place_pin -pin_name {o[213]} -layer M4 -location {148.920000 105.705000} -force_to_die_boundary
-place_pin -pin_name {o[214]} -layer M4 -location {148.920000 105.753000} -force_to_die_boundary
-place_pin -pin_name {o[215]} -layer M4 -location {148.920000 105.801000} -force_to_die_boundary
-place_pin -pin_name {o[216]} -layer M4 -location {148.920000 105.849000} -force_to_die_boundary
-place_pin -pin_name {o[217]} -layer M4 -location {148.920000 105.897000} -force_to_die_boundary
-place_pin -pin_name {o[218]} -layer M4 -location {148.920000 105.945000} -force_to_die_boundary
-place_pin -pin_name {o[219]} -layer M4 -location {148.920000 105.993000} -force_to_die_boundary
-place_pin -pin_name {o[220]} -layer M4 -location {148.920000 106.041000} -force_to_die_boundary
-place_pin -pin_name {o[221]} -layer M4 -location {148.920000 106.089000} -force_to_die_boundary
-place_pin -pin_name {o[222]} -layer M4 -location {148.920000 106.137000} -force_to_die_boundary
-place_pin -pin_name {o[223]} -layer M4 -location {148.920000 106.185000} -force_to_die_boundary
-place_pin -pin_name {o[224]} -layer M4 -location {148.920000 106.233000} -force_to_die_boundary
-place_pin -pin_name {o[225]} -layer M4 -location {148.920000 106.281000} -force_to_die_boundary
-place_pin -pin_name {o[226]} -layer M4 -location {148.920000 106.329000} -force_to_die_boundary
-place_pin -pin_name {o[227]} -layer M4 -location {148.920000 106.377000} -force_to_die_boundary
-place_pin -pin_name {o[228]} -layer M4 -location {148.920000 106.425000} -force_to_die_boundary
-place_pin -pin_name {o[229]} -layer M4 -location {148.920000 106.473000} -force_to_die_boundary
-place_pin -pin_name {o[230]} -layer M4 -location {148.920000 106.521000} -force_to_die_boundary
-place_pin -pin_name {o[231]} -layer M4 -location {148.920000 106.569000} -force_to_die_boundary
-place_pin -pin_name {o[232]} -layer M4 -location {148.920000 106.617000} -force_to_die_boundary
-place_pin -pin_name {o[233]} -layer M4 -location {148.920000 106.665000} -force_to_die_boundary
-place_pin -pin_name {o[234]} -layer M4 -location {148.920000 106.713000} -force_to_die_boundary
-place_pin -pin_name {o[235]} -layer M4 -location {148.920000 106.761000} -force_to_die_boundary
-place_pin -pin_name {o[236]} -layer M4 -location {148.920000 106.809000} -force_to_die_boundary
-place_pin -pin_name {o[237]} -layer M4 -location {148.920000 106.857000} -force_to_die_boundary
-place_pin -pin_name {o[238]} -layer M4 -location {148.920000 106.905000} -force_to_die_boundary
-place_pin -pin_name {o[239]} -layer M4 -location {148.920000 106.953000} -force_to_die_boundary
-place_pin -pin_name {o[240]} -layer M4 -location {148.920000 107.001000} -force_to_die_boundary
-place_pin -pin_name {o[241]} -layer M4 -location {148.920000 107.049000} -force_to_die_boundary
-place_pin -pin_name {o[242]} -layer M4 -location {148.920000 107.097000} -force_to_die_boundary
-place_pin -pin_name {o[243]} -layer M4 -location {148.920000 107.145000} -force_to_die_boundary
-place_pin -pin_name {o[244]} -layer M4 -location {148.920000 107.193000} -force_to_die_boundary
-place_pin -pin_name {o[245]} -layer M4 -location {148.920000 107.241000} -force_to_die_boundary
-place_pin -pin_name {o[246]} -layer M4 -location {148.920000 107.289000} -force_to_die_boundary
-place_pin -pin_name {o[247]} -layer M4 -location {148.920000 107.337000} -force_to_die_boundary
-place_pin -pin_name {o[248]} -layer M4 -location {148.920000 107.385000} -force_to_die_boundary
-place_pin -pin_name {o[249]} -layer M4 -location {148.920000 107.433000} -force_to_die_boundary
-place_pin -pin_name {o[250]} -layer M4 -location {148.920000 107.481000} -force_to_die_boundary
-place_pin -pin_name {o[251]} -layer M4 -location {148.920000 107.529000} -force_to_die_boundary
-place_pin -pin_name {o[252]} -layer M4 -location {148.920000 107.577000} -force_to_die_boundary
-place_pin -pin_name {o[253]} -layer M4 -location {148.920000 107.625000} -force_to_die_boundary
-place_pin -pin_name {o[254]} -layer M4 -location {148.920000 107.673000} -force_to_die_boundary
-place_pin -pin_name {o[255]} -layer M4 -location {148.920000 107.721000} -force_to_die_boundary
-place_pin -pin_name {o[256]} -layer M4 -location {148.920000 107.769000} -force_to_die_boundary
-place_pin -pin_name {o[257]} -layer M4 -location {148.920000 107.817000} -force_to_die_boundary
-place_pin -pin_name {o[258]} -layer M4 -location {148.920000 107.865000} -force_to_die_boundary
-place_pin -pin_name {o[259]} -layer M4 -location {148.920000 107.913000} -force_to_die_boundary
-place_pin -pin_name {o[260]} -layer M4 -location {148.920000 107.961000} -force_to_die_boundary
-place_pin -pin_name {o[261]} -layer M4 -location {148.920000 108.009000} -force_to_die_boundary
-place_pin -pin_name {o[262]} -layer M4 -location {148.920000 108.057000} -force_to_die_boundary
-place_pin -pin_name {o[263]} -layer M4 -location {148.920000 108.105000} -force_to_die_boundary
-place_pin -pin_name {o[264]} -layer M4 -location {148.920000 108.153000} -force_to_die_boundary
-place_pin -pin_name {o[265]} -layer M4 -location {148.920000 108.201000} -force_to_die_boundary
-place_pin -pin_name {o[266]} -layer M4 -location {148.920000 108.249000} -force_to_die_boundary
-place_pin -pin_name {o[267]} -layer M4 -location {148.920000 108.297000} -force_to_die_boundary
-place_pin -pin_name {o[268]} -layer M4 -location {148.920000 108.345000} -force_to_die_boundary
-place_pin -pin_name {o[269]} -layer M4 -location {148.920000 108.393000} -force_to_die_boundary
-place_pin -pin_name {o[270]} -layer M4 -location {148.920000 108.441000} -force_to_die_boundary
-place_pin -pin_name {o[271]} -layer M4 -location {148.920000 108.489000} -force_to_die_boundary
-place_pin -pin_name {o[272]} -layer M4 -location {148.920000 108.537000} -force_to_die_boundary
-place_pin -pin_name {o[273]} -layer M4 -location {148.920000 108.585000} -force_to_die_boundary
-place_pin -pin_name {o[274]} -layer M4 -location {148.920000 108.633000} -force_to_die_boundary
-place_pin -pin_name {o[275]} -layer M4 -location {148.920000 108.681000} -force_to_die_boundary
-place_pin -pin_name {o[276]} -layer M4 -location {148.920000 108.729000} -force_to_die_boundary
-place_pin -pin_name {o[277]} -layer M4 -location {148.920000 108.777000} -force_to_die_boundary
-place_pin -pin_name {o[278]} -layer M4 -location {148.920000 108.825000} -force_to_die_boundary
-place_pin -pin_name {o[279]} -layer M4 -location {148.920000 108.873000} -force_to_die_boundary
-place_pin -pin_name {o[280]} -layer M4 -location {148.920000 108.921000} -force_to_die_boundary
-place_pin -pin_name {o[281]} -layer M4 -location {148.920000 108.969000} -force_to_die_boundary
-place_pin -pin_name {o[282]} -layer M4 -location {148.920000 109.017000} -force_to_die_boundary
-place_pin -pin_name {o[283]} -layer M4 -location {148.920000 109.065000} -force_to_die_boundary
-place_pin -pin_name {o[284]} -layer M4 -location {148.920000 109.113000} -force_to_die_boundary
-place_pin -pin_name {o[285]} -layer M4 -location {148.920000 109.161000} -force_to_die_boundary
-place_pin -pin_name {o[286]} -layer M4 -location {148.920000 109.209000} -force_to_die_boundary
-place_pin -pin_name {o[287]} -layer M4 -location {148.920000 109.257000} -force_to_die_boundary
-place_pin -pin_name {o[288]} -layer M4 -location {148.920000 109.305000} -force_to_die_boundary
-place_pin -pin_name {o[289]} -layer M4 -location {148.920000 109.353000} -force_to_die_boundary
-place_pin -pin_name {o[290]} -layer M4 -location {148.920000 109.401000} -force_to_die_boundary
-place_pin -pin_name {o[291]} -layer M4 -location {148.920000 109.449000} -force_to_die_boundary
-place_pin -pin_name {o[292]} -layer M4 -location {148.920000 109.497000} -force_to_die_boundary
-place_pin -pin_name {o[293]} -layer M4 -location {148.920000 109.545000} -force_to_die_boundary
-place_pin -pin_name {o[294]} -layer M4 -location {148.920000 109.593000} -force_to_die_boundary
-place_pin -pin_name {o[295]} -layer M4 -location {148.920000 109.641000} -force_to_die_boundary
-place_pin -pin_name {o[296]} -layer M4 -location {148.920000 109.689000} -force_to_die_boundary
-place_pin -pin_name {o[297]} -layer M4 -location {148.920000 109.737000} -force_to_die_boundary
-place_pin -pin_name {o[298]} -layer M4 -location {148.920000 109.785000} -force_to_die_boundary
-place_pin -pin_name {o[299]} -layer M4 -location {148.920000 109.833000} -force_to_die_boundary
-place_pin -pin_name {o[300]} -layer M4 -location {148.920000 109.881000} -force_to_die_boundary
-place_pin -pin_name {o[301]} -layer M4 -location {148.920000 109.929000} -force_to_die_boundary
-place_pin -pin_name {o[302]} -layer M4 -location {148.920000 109.977000} -force_to_die_boundary
-place_pin -pin_name {o[303]} -layer M4 -location {148.920000 110.025000} -force_to_die_boundary
-place_pin -pin_name {o[304]} -layer M4 -location {148.920000 110.073000} -force_to_die_boundary
-place_pin -pin_name {o[305]} -layer M4 -location {148.920000 110.121000} -force_to_die_boundary
-place_pin -pin_name {o[306]} -layer M4 -location {148.920000 110.169000} -force_to_die_boundary
-place_pin -pin_name {o[307]} -layer M4 -location {148.920000 110.217000} -force_to_die_boundary
-place_pin -pin_name {o[308]} -layer M4 -location {148.920000 110.265000} -force_to_die_boundary
-place_pin -pin_name {o[309]} -layer M4 -location {148.920000 110.313000} -force_to_die_boundary
-place_pin -pin_name {o[310]} -layer M4 -location {148.920000 110.361000} -force_to_die_boundary
-place_pin -pin_name {o[311]} -layer M4 -location {148.920000 110.409000} -force_to_die_boundary
-place_pin -pin_name {o[312]} -layer M4 -location {148.920000 110.457000} -force_to_die_boundary
-place_pin -pin_name {o[313]} -layer M4 -location {148.920000 110.505000} -force_to_die_boundary
-place_pin -pin_name {o[314]} -layer M4 -location {148.920000 110.553000} -force_to_die_boundary
-place_pin -pin_name {o[315]} -layer M4 -location {148.920000 110.601000} -force_to_die_boundary
-place_pin -pin_name {o[316]} -layer M4 -location {148.920000 110.649000} -force_to_die_boundary
-place_pin -pin_name {o[317]} -layer M4 -location {148.920000 110.697000} -force_to_die_boundary
-place_pin -pin_name {o[318]} -layer M4 -location {148.920000 110.745000} -force_to_die_boundary
-place_pin -pin_name {o[319]} -layer M4 -location {148.920000 110.793000} -force_to_die_boundary
-place_pin -pin_name {o[320]} -layer M4 -location {148.920000 110.841000} -force_to_die_boundary
-place_pin -pin_name {o[321]} -layer M4 -location {148.920000 110.889000} -force_to_die_boundary
-place_pin -pin_name {o[322]} -layer M4 -location {148.920000 110.937000} -force_to_die_boundary
-place_pin -pin_name {o[323]} -layer M4 -location {148.920000 110.985000} -force_to_die_boundary
-place_pin -pin_name {o[324]} -layer M4 -location {148.920000 111.033000} -force_to_die_boundary
-place_pin -pin_name {o[325]} -layer M4 -location {148.920000 111.081000} -force_to_die_boundary
-place_pin -pin_name {o[326]} -layer M4 -location {148.920000 111.129000} -force_to_die_boundary
-place_pin -pin_name {o[327]} -layer M4 -location {148.920000 111.177000} -force_to_die_boundary
-place_pin -pin_name {o[328]} -layer M4 -location {148.920000 111.225000} -force_to_die_boundary
-place_pin -pin_name {o[329]} -layer M4 -location {148.920000 111.273000} -force_to_die_boundary
-place_pin -pin_name {o[330]} -layer M4 -location {148.920000 111.321000} -force_to_die_boundary
-place_pin -pin_name {o[331]} -layer M4 -location {148.920000 111.369000} -force_to_die_boundary
-place_pin -pin_name {o[332]} -layer M4 -location {148.920000 111.417000} -force_to_die_boundary
-place_pin -pin_name {o[333]} -layer M4 -location {148.920000 111.465000} -force_to_die_boundary
-place_pin -pin_name {o[334]} -layer M4 -location {148.920000 111.513000} -force_to_die_boundary
-place_pin -pin_name {o[335]} -layer M4 -location {148.920000 111.561000} -force_to_die_boundary
-place_pin -pin_name {o[336]} -layer M4 -location {148.920000 111.609000} -force_to_die_boundary
-place_pin -pin_name {o[337]} -layer M4 -location {148.920000 111.657000} -force_to_die_boundary
-place_pin -pin_name {o[338]} -layer M4 -location {148.920000 111.705000} -force_to_die_boundary
-place_pin -pin_name {o[339]} -layer M4 -location {148.920000 111.753000} -force_to_die_boundary
-place_pin -pin_name {o[340]} -layer M4 -location {148.920000 111.801000} -force_to_die_boundary
-place_pin -pin_name {o[341]} -layer M4 -location {148.920000 111.849000} -force_to_die_boundary
-place_pin -pin_name {o[342]} -layer M4 -location {148.920000 111.897000} -force_to_die_boundary
-place_pin -pin_name {o[343]} -layer M4 -location {148.920000 111.945000} -force_to_die_boundary
-place_pin -pin_name {o[344]} -layer M4 -location {148.920000 111.993000} -force_to_die_boundary
-place_pin -pin_name {o[345]} -layer M4 -location {148.920000 112.041000} -force_to_die_boundary
-place_pin -pin_name {o[346]} -layer M4 -location {148.920000 112.089000} -force_to_die_boundary
-place_pin -pin_name {o[347]} -layer M4 -location {148.920000 112.137000} -force_to_die_boundary
-place_pin -pin_name {o[348]} -layer M4 -location {148.920000 112.185000} -force_to_die_boundary
-place_pin -pin_name {o[349]} -layer M4 -location {148.920000 112.233000} -force_to_die_boundary
-place_pin -pin_name {o[350]} -layer M4 -location {148.920000 112.281000} -force_to_die_boundary
-place_pin -pin_name {o[351]} -layer M4 -location {148.920000 112.329000} -force_to_die_boundary
-place_pin -pin_name {o[352]} -layer M4 -location {148.920000 112.377000} -force_to_die_boundary
-place_pin -pin_name {o[353]} -layer M4 -location {148.920000 112.425000} -force_to_die_boundary
-place_pin -pin_name {o[354]} -layer M4 -location {148.920000 112.473000} -force_to_die_boundary
-place_pin -pin_name {o[355]} -layer M4 -location {148.920000 112.521000} -force_to_die_boundary
-place_pin -pin_name {o[356]} -layer M4 -location {148.920000 112.569000} -force_to_die_boundary
-place_pin -pin_name {o[357]} -layer M4 -location {148.920000 112.617000} -force_to_die_boundary
-place_pin -pin_name {o[358]} -layer M4 -location {148.920000 112.665000} -force_to_die_boundary
-place_pin -pin_name {o[359]} -layer M4 -location {148.920000 112.713000} -force_to_die_boundary
-place_pin -pin_name {o[360]} -layer M4 -location {148.920000 112.761000} -force_to_die_boundary
-place_pin -pin_name {o[361]} -layer M4 -location {148.920000 112.809000} -force_to_die_boundary
-place_pin -pin_name {o[362]} -layer M4 -location {148.920000 112.857000} -force_to_die_boundary
-place_pin -pin_name {o[363]} -layer M4 -location {148.920000 112.905000} -force_to_die_boundary
-place_pin -pin_name {o[364]} -layer M4 -location {148.920000 112.953000} -force_to_die_boundary
-place_pin -pin_name {o[365]} -layer M4 -location {148.920000 113.001000} -force_to_die_boundary
-place_pin -pin_name {o[366]} -layer M4 -location {148.920000 113.049000} -force_to_die_boundary
-place_pin -pin_name {o[367]} -layer M4 -location {148.920000 113.097000} -force_to_die_boundary
-place_pin -pin_name {o[368]} -layer M4 -location {148.920000 113.145000} -force_to_die_boundary
-place_pin -pin_name {o[369]} -layer M4 -location {148.920000 113.193000} -force_to_die_boundary
-place_pin -pin_name {o[370]} -layer M4 -location {148.920000 113.241000} -force_to_die_boundary
-place_pin -pin_name {o[371]} -layer M4 -location {148.920000 113.289000} -force_to_die_boundary
-place_pin -pin_name {o[372]} -layer M4 -location {148.920000 113.337000} -force_to_die_boundary
-place_pin -pin_name {o[373]} -layer M4 -location {148.920000 113.385000} -force_to_die_boundary
-place_pin -pin_name {o[374]} -layer M4 -location {148.920000 113.433000} -force_to_die_boundary
-place_pin -pin_name {o[375]} -layer M4 -location {148.920000 113.481000} -force_to_die_boundary
-place_pin -pin_name {o[376]} -layer M4 -location {148.920000 113.529000} -force_to_die_boundary
-place_pin -pin_name {o[377]} -layer M4 -location {148.920000 113.577000} -force_to_die_boundary
-place_pin -pin_name {o[378]} -layer M4 -location {148.920000 113.625000} -force_to_die_boundary
-place_pin -pin_name {o[379]} -layer M4 -location {148.920000 113.673000} -force_to_die_boundary
-place_pin -pin_name {o[380]} -layer M4 -location {148.920000 113.721000} -force_to_die_boundary
-place_pin -pin_name {o[381]} -layer M4 -location {148.920000 113.769000} -force_to_die_boundary
-place_pin -pin_name {o[382]} -layer M4 -location {148.920000 113.817000} -force_to_die_boundary
-place_pin -pin_name {o[383]} -layer M4 -location {148.920000 113.865000} -force_to_die_boundary
-place_pin -pin_name {o[384]} -layer M4 -location {148.920000 113.913000} -force_to_die_boundary
-place_pin -pin_name {o[385]} -layer M4 -location {148.920000 113.961000} -force_to_die_boundary
-place_pin -pin_name {o[386]} -layer M4 -location {148.920000 114.009000} -force_to_die_boundary
-place_pin -pin_name {o[387]} -layer M4 -location {148.920000 114.057000} -force_to_die_boundary
-place_pin -pin_name {o[388]} -layer M4 -location {148.920000 114.105000} -force_to_die_boundary
-place_pin -pin_name {o[389]} -layer M4 -location {148.920000 114.153000} -force_to_die_boundary
-place_pin -pin_name {o[390]} -layer M4 -location {148.920000 114.201000} -force_to_die_boundary
-place_pin -pin_name {o[391]} -layer M4 -location {148.920000 114.249000} -force_to_die_boundary
-place_pin -pin_name {o[392]} -layer M4 -location {148.920000 114.297000} -force_to_die_boundary
-place_pin -pin_name {o[393]} -layer M4 -location {148.920000 114.345000} -force_to_die_boundary
-place_pin -pin_name {o[394]} -layer M4 -location {148.920000 114.393000} -force_to_die_boundary
-place_pin -pin_name {o[395]} -layer M4 -location {148.920000 114.441000} -force_to_die_boundary
-place_pin -pin_name {o[396]} -layer M4 -location {148.920000 114.489000} -force_to_die_boundary
-place_pin -pin_name {o[397]} -layer M4 -location {148.920000 114.537000} -force_to_die_boundary
-place_pin -pin_name {o[398]} -layer M4 -location {148.920000 114.585000} -force_to_die_boundary
-place_pin -pin_name {o[399]} -layer M4 -location {148.920000 114.633000} -force_to_die_boundary
-place_pin -pin_name {o[400]} -layer M4 -location {148.920000 114.681000} -force_to_die_boundary
-place_pin -pin_name {o[401]} -layer M4 -location {148.920000 114.729000} -force_to_die_boundary
-place_pin -pin_name {o[402]} -layer M4 -location {148.920000 114.777000} -force_to_die_boundary
-place_pin -pin_name {o[403]} -layer M4 -location {148.920000 114.825000} -force_to_die_boundary
-place_pin -pin_name {o[404]} -layer M4 -location {148.920000 114.873000} -force_to_die_boundary
-place_pin -pin_name {o[405]} -layer M4 -location {148.920000 114.921000} -force_to_die_boundary
-place_pin -pin_name {o[406]} -layer M4 -location {148.920000 114.969000} -force_to_die_boundary
-place_pin -pin_name {o[407]} -layer M4 -location {148.920000 115.017000} -force_to_die_boundary
-place_pin -pin_name {o[408]} -layer M4 -location {148.920000 115.065000} -force_to_die_boundary
-place_pin -pin_name {o[409]} -layer M4 -location {148.920000 115.113000} -force_to_die_boundary
-place_pin -pin_name {o[410]} -layer M4 -location {148.920000 115.161000} -force_to_die_boundary
-place_pin -pin_name {o[411]} -layer M4 -location {148.920000 115.209000} -force_to_die_boundary
-place_pin -pin_name {o[412]} -layer M4 -location {148.920000 115.257000} -force_to_die_boundary
-place_pin -pin_name {o[413]} -layer M4 -location {148.920000 115.305000} -force_to_die_boundary
-place_pin -pin_name {o[414]} -layer M4 -location {148.920000 115.353000} -force_to_die_boundary
-place_pin -pin_name {o[415]} -layer M4 -location {148.920000 115.401000} -force_to_die_boundary
-place_pin -pin_name {o[416]} -layer M4 -location {148.920000 115.449000} -force_to_die_boundary
-place_pin -pin_name {o[417]} -layer M4 -location {148.920000 115.497000} -force_to_die_boundary
-place_pin -pin_name {o[418]} -layer M4 -location {148.920000 115.545000} -force_to_die_boundary
-place_pin -pin_name {o[419]} -layer M4 -location {148.920000 115.593000} -force_to_die_boundary
-place_pin -pin_name {o[420]} -layer M4 -location {148.920000 115.641000} -force_to_die_boundary
-place_pin -pin_name {o[421]} -layer M4 -location {148.920000 115.689000} -force_to_die_boundary
-place_pin -pin_name {o[422]} -layer M4 -location {148.920000 115.737000} -force_to_die_boundary
-place_pin -pin_name {o[423]} -layer M4 -location {148.920000 115.785000} -force_to_die_boundary
-place_pin -pin_name {o[424]} -layer M4 -location {148.920000 115.833000} -force_to_die_boundary
-place_pin -pin_name {o[425]} -layer M4 -location {148.920000 115.881000} -force_to_die_boundary
-place_pin -pin_name {o[426]} -layer M4 -location {148.920000 115.929000} -force_to_die_boundary
-place_pin -pin_name {o[427]} -layer M4 -location {148.920000 115.977000} -force_to_die_boundary
-place_pin -pin_name {o[428]} -layer M4 -location {148.920000 116.025000} -force_to_die_boundary
-place_pin -pin_name {o[429]} -layer M4 -location {148.920000 116.073000} -force_to_die_boundary
-place_pin -pin_name {o[430]} -layer M4 -location {148.920000 116.121000} -force_to_die_boundary
-place_pin -pin_name {o[431]} -layer M4 -location {148.920000 116.169000} -force_to_die_boundary
-place_pin -pin_name {o[432]} -layer M4 -location {148.920000 116.217000} -force_to_die_boundary
-place_pin -pin_name {o[433]} -layer M4 -location {148.920000 116.265000} -force_to_die_boundary
-place_pin -pin_name {o[434]} -layer M4 -location {148.920000 116.313000} -force_to_die_boundary
-place_pin -pin_name {o[435]} -layer M4 -location {148.920000 116.361000} -force_to_die_boundary
-place_pin -pin_name {o[436]} -layer M4 -location {148.920000 116.409000} -force_to_die_boundary
-place_pin -pin_name {o[437]} -layer M4 -location {148.920000 116.457000} -force_to_die_boundary
-place_pin -pin_name {o[438]} -layer M4 -location {148.920000 116.505000} -force_to_die_boundary
-place_pin -pin_name {o[439]} -layer M4 -location {148.920000 116.553000} -force_to_die_boundary
-place_pin -pin_name {o[440]} -layer M4 -location {148.920000 116.601000} -force_to_die_boundary
-place_pin -pin_name {o[441]} -layer M4 -location {148.920000 116.649000} -force_to_die_boundary
-place_pin -pin_name {o[442]} -layer M4 -location {148.920000 116.697000} -force_to_die_boundary
-place_pin -pin_name {o[443]} -layer M4 -location {148.920000 116.745000} -force_to_die_boundary
-place_pin -pin_name {o[444]} -layer M4 -location {148.920000 116.793000} -force_to_die_boundary
-place_pin -pin_name {o[445]} -layer M4 -location {148.920000 116.841000} -force_to_die_boundary
-place_pin -pin_name {o[446]} -layer M4 -location {148.920000 116.889000} -force_to_die_boundary
-place_pin -pin_name {o[447]} -layer M4 -location {148.920000 116.937000} -force_to_die_boundary
-place_pin -pin_name {o[448]} -layer M4 -location {148.920000 116.985000} -force_to_die_boundary
-place_pin -pin_name {o[449]} -layer M4 -location {148.920000 117.033000} -force_to_die_boundary
-place_pin -pin_name {o[450]} -layer M4 -location {148.920000 117.081000} -force_to_die_boundary
-place_pin -pin_name {o[451]} -layer M4 -location {148.920000 117.129000} -force_to_die_boundary
-place_pin -pin_name {o[452]} -layer M4 -location {148.920000 117.177000} -force_to_die_boundary
-place_pin -pin_name {o[453]} -layer M4 -location {148.920000 117.225000} -force_to_die_boundary
-place_pin -pin_name {o[454]} -layer M4 -location {148.920000 117.273000} -force_to_die_boundary
-place_pin -pin_name {o[455]} -layer M4 -location {148.920000 117.321000} -force_to_die_boundary
-place_pin -pin_name {o[456]} -layer M4 -location {148.920000 117.369000} -force_to_die_boundary
-place_pin -pin_name {o[457]} -layer M4 -location {148.920000 117.417000} -force_to_die_boundary
-place_pin -pin_name {o[458]} -layer M4 -location {148.920000 117.465000} -force_to_die_boundary
-place_pin -pin_name {o[459]} -layer M4 -location {148.920000 117.513000} -force_to_die_boundary
-place_pin -pin_name {o[460]} -layer M4 -location {148.920000 117.561000} -force_to_die_boundary
-place_pin -pin_name {o[461]} -layer M4 -location {148.920000 117.609000} -force_to_die_boundary
-place_pin -pin_name {o[462]} -layer M4 -location {148.920000 117.657000} -force_to_die_boundary
-place_pin -pin_name {o[463]} -layer M4 -location {148.920000 117.705000} -force_to_die_boundary
-place_pin -pin_name {o[464]} -layer M4 -location {148.920000 117.753000} -force_to_die_boundary
-place_pin -pin_name {o[465]} -layer M4 -location {148.920000 117.801000} -force_to_die_boundary
-place_pin -pin_name {o[466]} -layer M4 -location {148.920000 117.849000} -force_to_die_boundary
-place_pin -pin_name {o[467]} -layer M4 -location {148.920000 117.897000} -force_to_die_boundary
-place_pin -pin_name {o[468]} -layer M4 -location {148.920000 117.945000} -force_to_die_boundary
-place_pin -pin_name {o[469]} -layer M4 -location {148.920000 117.993000} -force_to_die_boundary
-place_pin -pin_name {o[470]} -layer M4 -location {148.920000 118.041000} -force_to_die_boundary
-place_pin -pin_name {o[471]} -layer M4 -location {148.920000 118.089000} -force_to_die_boundary
-place_pin -pin_name {o[472]} -layer M4 -location {148.920000 118.137000} -force_to_die_boundary
-place_pin -pin_name {o[473]} -layer M4 -location {148.920000 118.185000} -force_to_die_boundary
-place_pin -pin_name {o[474]} -layer M4 -location {148.920000 118.233000} -force_to_die_boundary
-place_pin -pin_name {o[475]} -layer M4 -location {148.920000 118.281000} -force_to_die_boundary
-place_pin -pin_name {o[476]} -layer M4 -location {148.920000 118.329000} -force_to_die_boundary
-place_pin -pin_name {o[477]} -layer M4 -location {148.920000 118.377000} -force_to_die_boundary
-place_pin -pin_name {o[478]} -layer M4 -location {148.920000 118.425000} -force_to_die_boundary
-place_pin -pin_name {o[479]} -layer M4 -location {148.920000 118.473000} -force_to_die_boundary
-place_pin -pin_name {o[480]} -layer M4 -location {148.920000 118.521000} -force_to_die_boundary
-place_pin -pin_name {o[481]} -layer M4 -location {148.920000 118.569000} -force_to_die_boundary
-place_pin -pin_name {o[482]} -layer M4 -location {148.920000 118.617000} -force_to_die_boundary
-place_pin -pin_name {o[483]} -layer M4 -location {148.920000 118.665000} -force_to_die_boundary
-place_pin -pin_name {o[484]} -layer M4 -location {148.920000 118.713000} -force_to_die_boundary
-place_pin -pin_name {o[485]} -layer M4 -location {148.920000 118.761000} -force_to_die_boundary
-place_pin -pin_name {o[486]} -layer M4 -location {148.920000 118.809000} -force_to_die_boundary
-place_pin -pin_name {o[487]} -layer M4 -location {148.920000 118.857000} -force_to_die_boundary
-place_pin -pin_name {o[488]} -layer M4 -location {148.920000 118.905000} -force_to_die_boundary
-place_pin -pin_name {o[489]} -layer M4 -location {148.920000 118.953000} -force_to_die_boundary
-place_pin -pin_name {o[490]} -layer M4 -location {148.920000 119.001000} -force_to_die_boundary
-place_pin -pin_name {o[491]} -layer M4 -location {148.920000 119.049000} -force_to_die_boundary
-place_pin -pin_name {o[492]} -layer M4 -location {148.920000 119.097000} -force_to_die_boundary
-place_pin -pin_name {o[493]} -layer M4 -location {148.920000 119.145000} -force_to_die_boundary
-place_pin -pin_name {o[494]} -layer M4 -location {148.920000 119.193000} -force_to_die_boundary
-place_pin -pin_name {o[495]} -layer M4 -location {148.920000 119.241000} -force_to_die_boundary
-place_pin -pin_name {o[496]} -layer M4 -location {148.920000 119.289000} -force_to_die_boundary
-place_pin -pin_name {o[497]} -layer M4 -location {148.920000 119.337000} -force_to_die_boundary
-place_pin -pin_name {o[498]} -layer M4 -location {148.920000 119.385000} -force_to_die_boundary
-place_pin -pin_name {o[499]} -layer M4 -location {148.920000 119.433000} -force_to_die_boundary
-place_pin -pin_name {o[500]} -layer M4 -location {148.920000 119.481000} -force_to_die_boundary
-place_pin -pin_name {o[501]} -layer M4 -location {148.920000 119.529000} -force_to_die_boundary
-place_pin -pin_name {o[502]} -layer M4 -location {148.920000 119.577000} -force_to_die_boundary
-place_pin -pin_name {o[503]} -layer M4 -location {148.920000 119.625000} -force_to_die_boundary
-place_pin -pin_name {o[504]} -layer M4 -location {148.920000 119.673000} -force_to_die_boundary
-place_pin -pin_name {o[505]} -layer M4 -location {148.920000 119.721000} -force_to_die_boundary
-place_pin -pin_name {o[506]} -layer M4 -location {148.920000 119.769000} -force_to_die_boundary
-place_pin -pin_name {o[507]} -layer M4 -location {148.920000 119.817000} -force_to_die_boundary
-place_pin -pin_name {o[508]} -layer M4 -location {148.920000 119.865000} -force_to_die_boundary
-place_pin -pin_name {o[509]} -layer M4 -location {148.920000 119.913000} -force_to_die_boundary
-place_pin -pin_name {o[510]} -layer M4 -location {148.920000 119.961000} -force_to_die_boundary
-place_pin -pin_name {o[511]} -layer M4 -location {148.920000 120.009000} -force_to_die_boundary
-place_pin -pin_name {o[512]} -layer M4 -location {148.920000 120.057000} -force_to_die_boundary
-place_pin -pin_name {o[513]} -layer M4 -location {148.920000 120.105000} -force_to_die_boundary
-place_pin -pin_name {o[514]} -layer M4 -location {148.920000 120.153000} -force_to_die_boundary
-place_pin -pin_name {o[515]} -layer M4 -location {148.920000 120.201000} -force_to_die_boundary
-place_pin -pin_name {o[516]} -layer M4 -location {148.920000 120.249000} -force_to_die_boundary
-place_pin -pin_name {o[517]} -layer M4 -location {148.920000 120.297000} -force_to_die_boundary
-place_pin -pin_name {o[518]} -layer M4 -location {148.920000 120.345000} -force_to_die_boundary
-place_pin -pin_name {o[519]} -layer M4 -location {148.920000 120.393000} -force_to_die_boundary
-place_pin -pin_name {o[520]} -layer M4 -location {148.920000 120.441000} -force_to_die_boundary
-place_pin -pin_name {o[521]} -layer M4 -location {148.920000 120.489000} -force_to_die_boundary
-place_pin -pin_name {o[522]} -layer M4 -location {148.920000 120.537000} -force_to_die_boundary
-place_pin -pin_name {o[523]} -layer M4 -location {148.920000 120.585000} -force_to_die_boundary
-place_pin -pin_name {o[524]} -layer M4 -location {148.920000 120.633000} -force_to_die_boundary
-place_pin -pin_name {o[525]} -layer M4 -location {148.920000 120.681000} -force_to_die_boundary
-place_pin -pin_name {o[526]} -layer M4 -location {148.920000 120.729000} -force_to_die_boundary
-place_pin -pin_name {o[527]} -layer M4 -location {148.920000 120.777000} -force_to_die_boundary
-place_pin -pin_name {o[528]} -layer M4 -location {148.920000 120.825000} -force_to_die_boundary
-place_pin -pin_name {o[529]} -layer M4 -location {148.920000 120.873000} -force_to_die_boundary
-place_pin -pin_name {o[530]} -layer M4 -location {148.920000 120.921000} -force_to_die_boundary
-place_pin -pin_name {o[531]} -layer M4 -location {148.920000 120.969000} -force_to_die_boundary
-place_pin -pin_name {o[532]} -layer M4 -location {148.920000 121.017000} -force_to_die_boundary
-place_pin -pin_name {o[533]} -layer M4 -location {148.920000 121.065000} -force_to_die_boundary
-place_pin -pin_name {o[534]} -layer M4 -location {148.920000 121.113000} -force_to_die_boundary
-place_pin -pin_name {o[535]} -layer M4 -location {148.920000 121.161000} -force_to_die_boundary
-place_pin -pin_name {o[536]} -layer M4 -location {148.920000 121.209000} -force_to_die_boundary
-place_pin -pin_name {o[537]} -layer M4 -location {148.920000 121.257000} -force_to_die_boundary
-place_pin -pin_name {o[538]} -layer M4 -location {148.920000 121.305000} -force_to_die_boundary
-place_pin -pin_name {o[539]} -layer M4 -location {148.920000 121.353000} -force_to_die_boundary
-place_pin -pin_name {o[540]} -layer M4 -location {148.920000 121.401000} -force_to_die_boundary
-place_pin -pin_name {o[541]} -layer M4 -location {148.920000 121.449000} -force_to_die_boundary
-place_pin -pin_name {o[542]} -layer M4 -location {148.920000 121.497000} -force_to_die_boundary
-place_pin -pin_name {o[543]} -layer M4 -location {148.920000 121.545000} -force_to_die_boundary
-place_pin -pin_name {o[544]} -layer M4 -location {148.920000 121.593000} -force_to_die_boundary
-place_pin -pin_name {o[545]} -layer M4 -location {148.920000 121.641000} -force_to_die_boundary
-place_pin -pin_name {o[546]} -layer M4 -location {148.920000 121.689000} -force_to_die_boundary
-place_pin -pin_name {o[547]} -layer M4 -location {148.920000 121.737000} -force_to_die_boundary
-place_pin -pin_name {o[548]} -layer M4 -location {148.920000 121.785000} -force_to_die_boundary
-place_pin -pin_name {o[549]} -layer M4 -location {148.920000 121.833000} -force_to_die_boundary
-place_pin -pin_name {o[550]} -layer M4 -location {148.920000 121.881000} -force_to_die_boundary
-place_pin -pin_name {o[551]} -layer M4 -location {148.920000 121.929000} -force_to_die_boundary
-place_pin -pin_name {o[552]} -layer M4 -location {148.920000 121.977000} -force_to_die_boundary
-place_pin -pin_name {o[553]} -layer M4 -location {148.920000 122.025000} -force_to_die_boundary
-place_pin -pin_name {o[554]} -layer M4 -location {148.920000 122.073000} -force_to_die_boundary
-place_pin -pin_name {o[555]} -layer M4 -location {148.920000 122.121000} -force_to_die_boundary
-place_pin -pin_name {o[556]} -layer M4 -location {148.920000 122.169000} -force_to_die_boundary
-place_pin -pin_name {o[557]} -layer M4 -location {148.920000 122.217000} -force_to_die_boundary
-place_pin -pin_name {o[558]} -layer M4 -location {148.920000 122.265000} -force_to_die_boundary
-place_pin -pin_name {o[559]} -layer M4 -location {148.920000 122.313000} -force_to_die_boundary
-place_pin -pin_name {o[560]} -layer M4 -location {148.920000 122.361000} -force_to_die_boundary
-place_pin -pin_name {o[561]} -layer M4 -location {148.920000 122.409000} -force_to_die_boundary
-place_pin -pin_name {o[562]} -layer M4 -location {148.920000 122.457000} -force_to_die_boundary
-place_pin -pin_name {o[563]} -layer M4 -location {148.920000 122.505000} -force_to_die_boundary
-place_pin -pin_name {o[564]} -layer M4 -location {148.920000 122.553000} -force_to_die_boundary
-place_pin -pin_name {o[565]} -layer M4 -location {148.920000 122.601000} -force_to_die_boundary
-place_pin -pin_name {o[566]} -layer M4 -location {148.920000 122.649000} -force_to_die_boundary
-place_pin -pin_name {o[567]} -layer M4 -location {148.920000 122.697000} -force_to_die_boundary
-place_pin -pin_name {o[568]} -layer M4 -location {148.920000 122.745000} -force_to_die_boundary
-place_pin -pin_name {o[569]} -layer M4 -location {148.920000 122.793000} -force_to_die_boundary
-place_pin -pin_name {o[570]} -layer M4 -location {148.920000 122.841000} -force_to_die_boundary
-place_pin -pin_name {o[571]} -layer M4 -location {148.920000 122.889000} -force_to_die_boundary
-place_pin -pin_name {o[572]} -layer M4 -location {148.920000 122.937000} -force_to_die_boundary
-place_pin -pin_name {o[573]} -layer M4 -location {148.920000 122.985000} -force_to_die_boundary
-place_pin -pin_name {o[574]} -layer M4 -location {148.920000 123.033000} -force_to_die_boundary
-place_pin -pin_name {o[575]} -layer M4 -location {148.920000 123.081000} -force_to_die_boundary
-place_pin -pin_name {o[576]} -layer M4 -location {148.920000 123.129000} -force_to_die_boundary
-place_pin -pin_name {o[577]} -layer M4 -location {148.920000 123.177000} -force_to_die_boundary
-place_pin -pin_name {o[578]} -layer M4 -location {148.920000 123.225000} -force_to_die_boundary
-place_pin -pin_name {o[579]} -layer M4 -location {148.920000 123.273000} -force_to_die_boundary
-place_pin -pin_name {o[580]} -layer M4 -location {148.920000 123.321000} -force_to_die_boundary
-place_pin -pin_name {o[581]} -layer M4 -location {148.920000 123.369000} -force_to_die_boundary
-place_pin -pin_name {o[582]} -layer M4 -location {148.920000 123.417000} -force_to_die_boundary
-place_pin -pin_name {o[583]} -layer M4 -location {148.920000 123.465000} -force_to_die_boundary
-place_pin -pin_name {o[584]} -layer M4 -location {148.920000 123.513000} -force_to_die_boundary
-place_pin -pin_name {o[585]} -layer M4 -location {148.920000 123.561000} -force_to_die_boundary
-place_pin -pin_name {o[586]} -layer M4 -location {148.920000 123.609000} -force_to_die_boundary
-place_pin -pin_name {o[587]} -layer M4 -location {148.920000 123.657000} -force_to_die_boundary
-place_pin -pin_name {o[588]} -layer M4 -location {148.920000 123.705000} -force_to_die_boundary
-place_pin -pin_name {o[589]} -layer M4 -location {148.920000 123.753000} -force_to_die_boundary
-place_pin -pin_name {o[590]} -layer M4 -location {148.920000 123.801000} -force_to_die_boundary
-place_pin -pin_name {o[591]} -layer M4 -location {148.920000 123.849000} -force_to_die_boundary
-place_pin -pin_name {o[592]} -layer M4 -location {148.920000 123.897000} -force_to_die_boundary
-place_pin -pin_name {o[593]} -layer M4 -location {148.920000 123.945000} -force_to_die_boundary
-place_pin -pin_name {o[594]} -layer M4 -location {148.920000 123.993000} -force_to_die_boundary
-place_pin -pin_name {o[595]} -layer M4 -location {148.920000 124.041000} -force_to_die_boundary
-place_pin -pin_name {o[596]} -layer M4 -location {148.920000 124.089000} -force_to_die_boundary
-place_pin -pin_name {o[597]} -layer M4 -location {148.920000 124.137000} -force_to_die_boundary
-place_pin -pin_name {o[598]} -layer M4 -location {148.920000 124.185000} -force_to_die_boundary
-place_pin -pin_name {o[599]} -layer M4 -location {148.920000 124.233000} -force_to_die_boundary
-place_pin -pin_name {o[600]} -layer M4 -location {148.920000 124.281000} -force_to_die_boundary
-place_pin -pin_name {o[601]} -layer M4 -location {148.920000 124.329000} -force_to_die_boundary
-place_pin -pin_name {o[602]} -layer M4 -location {148.920000 124.377000} -force_to_die_boundary
-place_pin -pin_name {o[603]} -layer M4 -location {148.920000 124.425000} -force_to_die_boundary
-place_pin -pin_name {o[604]} -layer M4 -location {148.920000 124.473000} -force_to_die_boundary
-place_pin -pin_name {o[605]} -layer M4 -location {148.920000 124.521000} -force_to_die_boundary
-place_pin -pin_name {o[606]} -layer M4 -location {148.920000 124.569000} -force_to_die_boundary
-place_pin -pin_name {o[607]} -layer M4 -location {148.920000 124.617000} -force_to_die_boundary
-place_pin -pin_name {o[608]} -layer M4 -location {148.920000 124.665000} -force_to_die_boundary
-place_pin -pin_name {o[609]} -layer M4 -location {148.920000 124.713000} -force_to_die_boundary
-place_pin -pin_name {o[610]} -layer M4 -location {148.920000 124.761000} -force_to_die_boundary
-place_pin -pin_name {o[611]} -layer M4 -location {148.920000 124.809000} -force_to_die_boundary
-place_pin -pin_name {o[612]} -layer M4 -location {148.920000 124.857000} -force_to_die_boundary
-place_pin -pin_name {o[613]} -layer M4 -location {148.920000 124.905000} -force_to_die_boundary
-place_pin -pin_name {o[614]} -layer M4 -location {148.920000 124.953000} -force_to_die_boundary
-place_pin -pin_name {o[615]} -layer M4 -location {148.920000 125.001000} -force_to_die_boundary
-place_pin -pin_name {o[616]} -layer M4 -location {148.920000 125.049000} -force_to_die_boundary
-place_pin -pin_name {o[617]} -layer M4 -location {148.920000 125.097000} -force_to_die_boundary
-place_pin -pin_name {o[618]} -layer M4 -location {148.920000 125.145000} -force_to_die_boundary
-place_pin -pin_name {o[619]} -layer M4 -location {148.920000 125.193000} -force_to_die_boundary
-place_pin -pin_name {o[620]} -layer M4 -location {148.920000 125.241000} -force_to_die_boundary
-place_pin -pin_name {o[621]} -layer M4 -location {148.920000 125.289000} -force_to_die_boundary
-place_pin -pin_name {o[622]} -layer M4 -location {148.920000 125.337000} -force_to_die_boundary
-place_pin -pin_name {o[623]} -layer M4 -location {148.920000 125.385000} -force_to_die_boundary
-place_pin -pin_name {o[624]} -layer M4 -location {148.920000 125.433000} -force_to_die_boundary
-place_pin -pin_name {o[625]} -layer M4 -location {148.920000 125.481000} -force_to_die_boundary
-place_pin -pin_name {o[626]} -layer M4 -location {148.920000 125.529000} -force_to_die_boundary
-place_pin -pin_name {o[627]} -layer M4 -location {148.920000 125.577000} -force_to_die_boundary
-place_pin -pin_name {o[628]} -layer M4 -location {148.920000 125.625000} -force_to_die_boundary
-place_pin -pin_name {o[629]} -layer M4 -location {148.920000 125.673000} -force_to_die_boundary
-place_pin -pin_name {o[630]} -layer M4 -location {148.920000 125.721000} -force_to_die_boundary
-place_pin -pin_name {o[631]} -layer M4 -location {148.920000 125.769000} -force_to_die_boundary
-place_pin -pin_name {o[632]} -layer M4 -location {148.920000 125.817000} -force_to_die_boundary
-place_pin -pin_name {o[633]} -layer M4 -location {148.920000 125.865000} -force_to_die_boundary
-place_pin -pin_name {o[634]} -layer M4 -location {148.920000 125.913000} -force_to_die_boundary
-place_pin -pin_name {o[635]} -layer M4 -location {148.920000 125.961000} -force_to_die_boundary
-place_pin -pin_name {o[636]} -layer M4 -location {148.920000 126.009000} -force_to_die_boundary
-place_pin -pin_name {o[637]} -layer M4 -location {148.920000 126.057000} -force_to_die_boundary
-place_pin -pin_name {o[638]} -layer M4 -location {148.920000 126.105000} -force_to_die_boundary
-place_pin -pin_name {o[639]} -layer M4 -location {148.920000 126.153000} -force_to_die_boundary
-place_pin -pin_name {o[640]} -layer M4 -location {148.920000 126.201000} -force_to_die_boundary
-place_pin -pin_name {o[641]} -layer M4 -location {148.920000 126.249000} -force_to_die_boundary
-place_pin -pin_name {o[642]} -layer M4 -location {148.920000 126.297000} -force_to_die_boundary
-place_pin -pin_name {o[643]} -layer M4 -location {148.920000 126.345000} -force_to_die_boundary
-place_pin -pin_name {o[644]} -layer M4 -location {148.920000 126.393000} -force_to_die_boundary
-place_pin -pin_name {o[645]} -layer M4 -location {148.920000 126.441000} -force_to_die_boundary
-place_pin -pin_name {o[646]} -layer M4 -location {148.920000 126.489000} -force_to_die_boundary
-place_pin -pin_name {o[647]} -layer M4 -location {148.920000 126.537000} -force_to_die_boundary
-place_pin -pin_name {o[648]} -layer M4 -location {148.920000 126.585000} -force_to_die_boundary
-place_pin -pin_name {o[649]} -layer M4 -location {148.920000 126.633000} -force_to_die_boundary
-place_pin -pin_name {o[650]} -layer M4 -location {148.920000 126.681000} -force_to_die_boundary
-place_pin -pin_name {o[651]} -layer M4 -location {148.920000 126.729000} -force_to_die_boundary
-place_pin -pin_name {o[652]} -layer M4 -location {148.920000 126.777000} -force_to_die_boundary
-place_pin -pin_name {o[653]} -layer M4 -location {148.920000 126.825000} -force_to_die_boundary
-place_pin -pin_name {o[654]} -layer M4 -location {148.920000 126.873000} -force_to_die_boundary
-place_pin -pin_name {o[655]} -layer M4 -location {148.920000 126.921000} -force_to_die_boundary
-place_pin -pin_name {o[656]} -layer M4 -location {148.920000 126.969000} -force_to_die_boundary
-place_pin -pin_name {o[657]} -layer M4 -location {148.920000 127.017000} -force_to_die_boundary
-place_pin -pin_name {o[658]} -layer M4 -location {148.920000 127.065000} -force_to_die_boundary
-place_pin -pin_name {o[659]} -layer M4 -location {148.920000 127.113000} -force_to_die_boundary
-place_pin -pin_name {o[660]} -layer M4 -location {148.920000 127.161000} -force_to_die_boundary
-place_pin -pin_name {o[661]} -layer M4 -location {148.920000 127.209000} -force_to_die_boundary
-place_pin -pin_name {o[662]} -layer M4 -location {148.920000 127.257000} -force_to_die_boundary
-place_pin -pin_name {o[663]} -layer M4 -location {148.920000 127.305000} -force_to_die_boundary
-place_pin -pin_name {o[664]} -layer M4 -location {148.920000 127.353000} -force_to_die_boundary
-place_pin -pin_name {o[665]} -layer M4 -location {148.920000 127.401000} -force_to_die_boundary
-place_pin -pin_name {o[666]} -layer M4 -location {148.920000 127.449000} -force_to_die_boundary
-place_pin -pin_name {o[667]} -layer M4 -location {148.920000 127.497000} -force_to_die_boundary
-place_pin -pin_name {o[668]} -layer M4 -location {148.920000 127.545000} -force_to_die_boundary
-place_pin -pin_name {o[669]} -layer M4 -location {148.920000 127.593000} -force_to_die_boundary
-place_pin -pin_name {o[670]} -layer M4 -location {148.920000 127.641000} -force_to_die_boundary
-place_pin -pin_name {o[671]} -layer M4 -location {148.920000 127.689000} -force_to_die_boundary
-place_pin -pin_name {o[672]} -layer M4 -location {148.920000 127.737000} -force_to_die_boundary
-place_pin -pin_name {o[673]} -layer M4 -location {148.920000 127.785000} -force_to_die_boundary
-place_pin -pin_name {o[674]} -layer M4 -location {148.920000 127.833000} -force_to_die_boundary
-place_pin -pin_name {o[675]} -layer M4 -location {148.920000 127.881000} -force_to_die_boundary
-place_pin -pin_name {o[676]} -layer M4 -location {148.920000 127.929000} -force_to_die_boundary
-place_pin -pin_name {o[677]} -layer M4 -location {148.920000 127.977000} -force_to_die_boundary
-place_pin -pin_name {o[678]} -layer M4 -location {148.920000 128.025000} -force_to_die_boundary
-place_pin -pin_name {o[679]} -layer M4 -location {148.920000 128.073000} -force_to_die_boundary
-place_pin -pin_name {o[680]} -layer M4 -location {148.920000 128.121000} -force_to_die_boundary
-place_pin -pin_name {o[681]} -layer M4 -location {148.920000 128.169000} -force_to_die_boundary
-place_pin -pin_name {o[682]} -layer M4 -location {148.920000 128.217000} -force_to_die_boundary
-place_pin -pin_name {o[683]} -layer M4 -location {148.920000 128.265000} -force_to_die_boundary
-place_pin -pin_name {o[684]} -layer M4 -location {148.920000 128.313000} -force_to_die_boundary
-place_pin -pin_name {o[685]} -layer M4 -location {148.920000 128.361000} -force_to_die_boundary
-place_pin -pin_name {o[686]} -layer M4 -location {148.920000 128.409000} -force_to_die_boundary
-place_pin -pin_name {o[687]} -layer M4 -location {148.920000 128.457000} -force_to_die_boundary
-place_pin -pin_name {o[688]} -layer M4 -location {148.920000 128.505000} -force_to_die_boundary
-place_pin -pin_name {o[689]} -layer M4 -location {148.920000 128.553000} -force_to_die_boundary
-place_pin -pin_name {o[690]} -layer M4 -location {148.920000 128.601000} -force_to_die_boundary
-place_pin -pin_name {o[691]} -layer M4 -location {148.920000 128.649000} -force_to_die_boundary
-place_pin -pin_name {di0[0]} -layer M5 -location {63.372000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[1]} -layer M5 -location {63.420000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[2]} -layer M5 -location {63.468000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[3]} -layer M5 -location {63.516000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[4]} -layer M5 -location {63.564000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[5]} -layer M5 -location {63.612000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[6]} -layer M5 -location {63.660000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[7]} -layer M5 -location {63.708000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[8]} -layer M5 -location {63.756000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[9]} -layer M5 -location {63.804000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[10]} -layer M5 -location {63.852000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[11]} -layer M5 -location {63.900000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[12]} -layer M5 -location {63.948000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[13]} -layer M5 -location {63.996000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[14]} -layer M5 -location {64.044000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[15]} -layer M5 -location {64.092000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[16]} -layer M5 -location {64.140000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[17]} -layer M5 -location {64.188000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[18]} -layer M5 -location {64.236000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[19]} -layer M5 -location {64.284000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[20]} -layer M5 -location {64.332000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[21]} -layer M5 -location {64.380000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[22]} -layer M5 -location {64.428000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[23]} -layer M5 -location {64.476000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[24]} -layer M5 -location {64.524000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[25]} -layer M5 -location {64.572000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[26]} -layer M5 -location {64.620000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[27]} -layer M5 -location {64.668000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[28]} -layer M5 -location {64.716000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[29]} -layer M5 -location {64.764000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[30]} -layer M5 -location {64.812000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[31]} -layer M5 -location {64.860000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[32]} -layer M5 -location {64.908000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[33]} -layer M5 -location {64.956000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[34]} -layer M5 -location {65.004000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[35]} -layer M5 -location {65.052000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[36]} -layer M5 -location {65.100000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[37]} -layer M5 -location {65.148000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[38]} -layer M5 -location {65.196000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[39]} -layer M5 -location {65.244000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[40]} -layer M5 -location {65.292000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[41]} -layer M5 -location {65.340000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[42]} -layer M5 -location {65.388000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[43]} -layer M5 -location {65.436000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[44]} -layer M5 -location {65.484000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[45]} -layer M5 -location {65.532000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[46]} -layer M5 -location {65.580000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[47]} -layer M5 -location {65.628000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[48]} -layer M5 -location {65.676000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[49]} -layer M5 -location {65.724000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[50]} -layer M5 -location {65.772000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[51]} -layer M5 -location {65.820000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[52]} -layer M5 -location {65.868000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[53]} -layer M5 -location {65.916000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[54]} -layer M5 -location {65.964000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[55]} -layer M5 -location {66.012000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[56]} -layer M5 -location {66.060000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[57]} -layer M5 -location {66.108000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[58]} -layer M5 -location {66.156000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[59]} -layer M5 -location {66.204000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[60]} -layer M5 -location {66.252000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[61]} -layer M5 -location {66.300000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[62]} -layer M5 -location {66.348000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[63]} -layer M5 -location {66.396000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[64]} -layer M5 -location {66.444000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[65]} -layer M5 -location {66.492000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[66]} -layer M5 -location {66.540000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[67]} -layer M5 -location {66.588000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[68]} -layer M5 -location {66.636000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di0[69]} -layer M5 -location {66.684000 151.080000} -force_to_die_boundary
-place_pin -pin_name {fi0} -layer M5 -location {66.780000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[0]} -layer M5 -location {67.068000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[1]} -layer M5 -location {67.116000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[2]} -layer M5 -location {67.164000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[3]} -layer M5 -location {67.212000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[4]} -layer M5 -location {67.260000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[5]} -layer M5 -location {67.308000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[6]} -layer M5 -location {67.356000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[7]} -layer M5 -location {67.404000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[8]} -layer M5 -location {67.452000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[9]} -layer M5 -location {67.500000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[10]} -layer M5 -location {67.548000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[11]} -layer M5 -location {67.596000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[12]} -layer M5 -location {67.644000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[13]} -layer M5 -location {67.692000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[14]} -layer M5 -location {67.740000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[15]} -layer M5 -location {67.788000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[16]} -layer M5 -location {67.836000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[17]} -layer M5 -location {67.884000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[18]} -layer M5 -location {67.932000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[19]} -layer M5 -location {67.980000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[20]} -layer M5 -location {68.028000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[21]} -layer M5 -location {68.076000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[22]} -layer M5 -location {68.124000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[23]} -layer M5 -location {68.172000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[24]} -layer M5 -location {68.220000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[25]} -layer M5 -location {68.268000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[26]} -layer M5 -location {68.316000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[27]} -layer M5 -location {68.364000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[28]} -layer M5 -location {68.412000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[29]} -layer M5 -location {68.460000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[30]} -layer M5 -location {68.508000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[31]} -layer M5 -location {68.556000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[32]} -layer M5 -location {68.604000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[33]} -layer M5 -location {68.652000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[34]} -layer M5 -location {68.700000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[35]} -layer M5 -location {68.748000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[36]} -layer M5 -location {68.796000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[37]} -layer M5 -location {68.844000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[38]} -layer M5 -location {68.892000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[39]} -layer M5 -location {68.940000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[40]} -layer M5 -location {68.988000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[41]} -layer M5 -location {69.036000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[42]} -layer M5 -location {69.084000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[43]} -layer M5 -location {69.132000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[44]} -layer M5 -location {69.180000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[45]} -layer M5 -location {69.228000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[46]} -layer M5 -location {69.276000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[47]} -layer M5 -location {69.324000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[48]} -layer M5 -location {69.372000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[49]} -layer M5 -location {69.420000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[50]} -layer M5 -location {69.468000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[51]} -layer M5 -location {69.516000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[52]} -layer M5 -location {69.564000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[53]} -layer M5 -location {69.612000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[54]} -layer M5 -location {69.660000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[55]} -layer M5 -location {69.708000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[56]} -layer M5 -location {69.756000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[57]} -layer M5 -location {69.804000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[58]} -layer M5 -location {69.852000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[59]} -layer M5 -location {69.900000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[60]} -layer M5 -location {69.948000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[61]} -layer M5 -location {69.996000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[62]} -layer M5 -location {70.044000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[63]} -layer M5 -location {70.092000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[64]} -layer M5 -location {70.140000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[65]} -layer M5 -location {70.188000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[66]} -layer M5 -location {70.236000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[67]} -layer M5 -location {70.284000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[68]} -layer M5 -location {70.332000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di5[69]} -layer M5 -location {70.380000 151.080000} -force_to_die_boundary
-place_pin -pin_name {fi5} -layer M5 -location {70.476000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[0]} -layer M5 -location {70.764000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[1]} -layer M5 -location {70.812000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[2]} -layer M5 -location {70.860000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[3]} -layer M5 -location {70.908000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[4]} -layer M5 -location {70.956000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[5]} -layer M5 -location {71.004000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[6]} -layer M5 -location {71.052000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[7]} -layer M5 -location {71.100000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[8]} -layer M5 -location {71.148000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[9]} -layer M5 -location {71.196000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[10]} -layer M5 -location {71.244000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[11]} -layer M5 -location {71.292000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[12]} -layer M5 -location {71.340000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[13]} -layer M5 -location {71.388000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[14]} -layer M5 -location {71.436000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[15]} -layer M5 -location {71.484000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[16]} -layer M5 -location {71.532000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[17]} -layer M5 -location {71.580000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[18]} -layer M5 -location {71.628000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[19]} -layer M5 -location {71.676000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[20]} -layer M5 -location {71.724000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[21]} -layer M5 -location {71.772000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[22]} -layer M5 -location {71.820000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[23]} -layer M5 -location {71.868000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[24]} -layer M5 -location {71.916000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[25]} -layer M5 -location {71.964000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[26]} -layer M5 -location {72.012000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[27]} -layer M5 -location {72.060000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[28]} -layer M5 -location {72.108000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[29]} -layer M5 -location {72.156000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[30]} -layer M5 -location {72.204000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[31]} -layer M5 -location {72.252000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[32]} -layer M5 -location {72.300000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[33]} -layer M5 -location {72.348000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[34]} -layer M5 -location {72.396000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[35]} -layer M5 -location {72.444000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[36]} -layer M5 -location {72.492000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[37]} -layer M5 -location {72.540000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[38]} -layer M5 -location {72.588000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[39]} -layer M5 -location {72.636000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[40]} -layer M5 -location {72.684000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[41]} -layer M5 -location {72.732000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[42]} -layer M5 -location {72.780000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[43]} -layer M5 -location {72.828000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[44]} -layer M5 -location {72.876000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[45]} -layer M5 -location {72.924000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[46]} -layer M5 -location {72.972000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[47]} -layer M5 -location {73.020000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[48]} -layer M5 -location {73.068000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[49]} -layer M5 -location {73.116000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[50]} -layer M5 -location {73.164000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[51]} -layer M5 -location {73.212000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[52]} -layer M5 -location {73.260000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[53]} -layer M5 -location {73.308000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[54]} -layer M5 -location {73.356000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[55]} -layer M5 -location {73.404000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[56]} -layer M5 -location {73.452000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[57]} -layer M5 -location {73.500000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[58]} -layer M5 -location {73.548000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[59]} -layer M5 -location {73.596000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[60]} -layer M5 -location {73.644000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[61]} -layer M5 -location {73.692000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[62]} -layer M5 -location {73.740000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[63]} -layer M5 -location {73.788000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[64]} -layer M5 -location {73.836000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[65]} -layer M5 -location {73.884000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[66]} -layer M5 -location {73.932000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[67]} -layer M5 -location {73.980000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[68]} -layer M5 -location {74.028000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di6[69]} -layer M5 -location {74.076000 151.080000} -force_to_die_boundary
-place_pin -pin_name {fi6} -layer M5 -location {74.172000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[0]} -layer M5 -location {74.268000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[1]} -layer M5 -location {74.316000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[2]} -layer M5 -location {74.364000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[3]} -layer M5 -location {74.412000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[4]} -layer M5 -location {74.460000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[5]} -layer M5 -location {74.508000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[6]} -layer M5 -location {74.556000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[7]} -layer M5 -location {74.604000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[8]} -layer M5 -location {74.652000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[9]} -layer M5 -location {74.700000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[10]} -layer M5 -location {74.748000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[11]} -layer M5 -location {74.796000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[12]} -layer M5 -location {74.844000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[13]} -layer M5 -location {74.892000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[14]} -layer M5 -location {74.940000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[15]} -layer M5 -location {74.988000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[16]} -layer M5 -location {75.036000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[17]} -layer M5 -location {75.084000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[18]} -layer M5 -location {75.132000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[19]} -layer M5 -location {75.180000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[20]} -layer M5 -location {75.228000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[21]} -layer M5 -location {75.276000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[22]} -layer M5 -location {75.324000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[23]} -layer M5 -location {75.372000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[24]} -layer M5 -location {75.420000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[25]} -layer M5 -location {75.468000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[26]} -layer M5 -location {75.516000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[27]} -layer M5 -location {75.564000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[28]} -layer M5 -location {75.612000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[29]} -layer M5 -location {75.660000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[30]} -layer M5 -location {75.708000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[31]} -layer M5 -location {75.756000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[32]} -layer M5 -location {75.804000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[33]} -layer M5 -location {75.852000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[34]} -layer M5 -location {75.900000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[35]} -layer M5 -location {75.948000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[36]} -layer M5 -location {75.996000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[37]} -layer M5 -location {76.044000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[38]} -layer M5 -location {76.092000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[39]} -layer M5 -location {76.140000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[40]} -layer M5 -location {76.188000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[41]} -layer M5 -location {76.236000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[42]} -layer M5 -location {76.284000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[43]} -layer M5 -location {76.332000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[44]} -layer M5 -location {76.380000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[45]} -layer M5 -location {76.428000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[46]} -layer M5 -location {76.476000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[47]} -layer M5 -location {76.524000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[48]} -layer M5 -location {76.572000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[49]} -layer M5 -location {76.620000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[50]} -layer M5 -location {76.668000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[51]} -layer M5 -location {76.716000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[52]} -layer M5 -location {76.764000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[53]} -layer M5 -location {76.812000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[54]} -layer M5 -location {76.860000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[55]} -layer M5 -location {76.908000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[56]} -layer M5 -location {76.956000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[57]} -layer M5 -location {77.004000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[58]} -layer M5 -location {77.052000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[59]} -layer M5 -location {77.100000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[60]} -layer M5 -location {77.148000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[61]} -layer M5 -location {77.196000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[62]} -layer M5 -location {77.244000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[63]} -layer M5 -location {77.292000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[64]} -layer M5 -location {77.340000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[65]} -layer M5 -location {77.388000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[66]} -layer M5 -location {77.436000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[67]} -layer M5 -location {77.484000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[68]} -layer M5 -location {77.532000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di7[69]} -layer M5 -location {77.580000 151.080000} -force_to_die_boundary
-place_pin -pin_name {fi7} -layer M5 -location {77.868000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[0]} -layer M5 -location {78.156000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[1]} -layer M5 -location {78.204000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[2]} -layer M5 -location {78.252000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[3]} -layer M5 -location {78.300000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[4]} -layer M5 -location {78.348000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[5]} -layer M5 -location {78.396000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[6]} -layer M5 -location {78.444000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[7]} -layer M5 -location {78.492000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[8]} -layer M5 -location {78.540000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[9]} -layer M5 -location {78.588000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[10]} -layer M5 -location {78.636000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[11]} -layer M5 -location {78.684000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[12]} -layer M5 -location {78.732000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[13]} -layer M5 -location {78.780000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[14]} -layer M5 -location {78.828000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[15]} -layer M5 -location {78.876000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[16]} -layer M5 -location {78.924000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[17]} -layer M5 -location {78.972000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[18]} -layer M5 -location {79.020000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[19]} -layer M5 -location {79.068000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[20]} -layer M5 -location {79.116000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[21]} -layer M5 -location {79.164000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[22]} -layer M5 -location {79.212000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[23]} -layer M5 -location {79.260000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[24]} -layer M5 -location {79.308000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[25]} -layer M5 -location {79.356000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[26]} -layer M5 -location {79.404000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[27]} -layer M5 -location {79.452000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[28]} -layer M5 -location {79.500000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[29]} -layer M5 -location {79.548000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[30]} -layer M5 -location {79.596000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[31]} -layer M5 -location {79.644000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[32]} -layer M5 -location {79.692000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[33]} -layer M5 -location {79.740000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[34]} -layer M5 -location {79.788000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[35]} -layer M5 -location {79.836000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[36]} -layer M5 -location {79.884000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[37]} -layer M5 -location {79.932000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[38]} -layer M5 -location {79.980000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[39]} -layer M5 -location {80.028000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[40]} -layer M5 -location {80.076000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[41]} -layer M5 -location {80.124000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[42]} -layer M5 -location {80.172000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[43]} -layer M5 -location {80.220000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[44]} -layer M5 -location {80.268000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[45]} -layer M5 -location {80.316000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[46]} -layer M5 -location {80.364000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[47]} -layer M5 -location {80.412000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[48]} -layer M5 -location {80.460000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[49]} -layer M5 -location {80.508000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[50]} -layer M5 -location {80.556000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[51]} -layer M5 -location {80.604000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[52]} -layer M5 -location {80.652000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[53]} -layer M5 -location {80.700000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[54]} -layer M5 -location {80.748000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[55]} -layer M5 -location {80.796000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[56]} -layer M5 -location {80.844000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[57]} -layer M5 -location {80.892000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[58]} -layer M5 -location {80.940000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[59]} -layer M5 -location {80.988000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[60]} -layer M5 -location {81.036000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[61]} -layer M5 -location {81.084000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[62]} -layer M5 -location {81.132000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[63]} -layer M5 -location {81.180000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[64]} -layer M5 -location {81.228000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[65]} -layer M5 -location {81.276000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[66]} -layer M5 -location {81.324000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[67]} -layer M5 -location {81.372000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[68]} -layer M5 -location {81.420000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di8[69]} -layer M5 -location {81.468000 151.080000} -force_to_die_boundary
-place_pin -pin_name {fi8} -layer M5 -location {81.564000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[0]} -layer M5 -location {81.660000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[1]} -layer M5 -location {81.708000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[2]} -layer M5 -location {81.756000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[3]} -layer M5 -location {81.804000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[4]} -layer M5 -location {81.852000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[5]} -layer M5 -location {81.900000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[6]} -layer M5 -location {81.948000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[7]} -layer M5 -location {81.996000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[8]} -layer M5 -location {82.044000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[9]} -layer M5 -location {82.092000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[10]} -layer M5 -location {82.140000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[11]} -layer M5 -location {82.188000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[12]} -layer M5 -location {82.236000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[13]} -layer M5 -location {82.284000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[14]} -layer M5 -location {82.332000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[15]} -layer M5 -location {82.380000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[16]} -layer M5 -location {82.428000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[17]} -layer M5 -location {82.476000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[18]} -layer M5 -location {82.524000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[19]} -layer M5 -location {82.572000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[20]} -layer M5 -location {82.620000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[21]} -layer M5 -location {82.668000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[22]} -layer M5 -location {82.716000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[23]} -layer M5 -location {82.764000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[24]} -layer M5 -location {82.812000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[25]} -layer M5 -location {82.860000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[26]} -layer M5 -location {82.908000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[27]} -layer M5 -location {82.956000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[28]} -layer M5 -location {83.004000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[29]} -layer M5 -location {83.052000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[30]} -layer M5 -location {83.100000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[31]} -layer M5 -location {83.148000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[32]} -layer M5 -location {83.196000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[33]} -layer M5 -location {83.244000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[34]} -layer M5 -location {83.292000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[35]} -layer M5 -location {83.340000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[36]} -layer M5 -location {83.388000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[37]} -layer M5 -location {83.436000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[38]} -layer M5 -location {83.484000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[39]} -layer M5 -location {83.532000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[40]} -layer M5 -location {83.580000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[41]} -layer M5 -location {83.628000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[42]} -layer M5 -location {83.676000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[43]} -layer M5 -location {83.724000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[44]} -layer M5 -location {83.772000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[45]} -layer M5 -location {83.820000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[46]} -layer M5 -location {83.868000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[47]} -layer M5 -location {83.916000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[48]} -layer M5 -location {83.964000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[49]} -layer M5 -location {84.012000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[50]} -layer M5 -location {84.060000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[51]} -layer M5 -location {84.108000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[52]} -layer M5 -location {84.156000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[53]} -layer M5 -location {84.204000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[54]} -layer M5 -location {84.252000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[55]} -layer M5 -location {84.300000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[56]} -layer M5 -location {84.348000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[57]} -layer M5 -location {84.396000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[58]} -layer M5 -location {84.444000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[59]} -layer M5 -location {84.492000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[60]} -layer M5 -location {84.540000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[61]} -layer M5 -location {84.588000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[62]} -layer M5 -location {84.636000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[63]} -layer M5 -location {84.684000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[64]} -layer M5 -location {84.732000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[65]} -layer M5 -location {84.780000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[66]} -layer M5 -location {84.828000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[67]} -layer M5 -location {84.876000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[68]} -layer M5 -location {84.924000 151.080000} -force_to_die_boundary
-place_pin -pin_name {di9[69]} -layer M5 -location {84.972000 151.080000} -force_to_die_boundary
-place_pin -pin_name {fi9} -layer M5 -location {85.260000 151.080000} -force_to_die_boundary
+# generated by tools/ref_tile/spread_face_pins.py from /home/ubuntu/wt/el1015-s81-net/tools/ref_tile/specs_s81_snet/s81net_m2l_vr_68x10__hr_w5.json: every face spread evenly, buses in face order
+place_pin -pin_name {o[0]} -layer M4 -location {149.040 4.404} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[1]} -layer M4 -location {149.040 4.644} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[2]} -layer M4 -location {149.040 4.836} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[3]} -layer M4 -location {149.040 5.028} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[4]} -layer M4 -location {149.040 5.268} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[5]} -layer M4 -location {149.040 5.460} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[6]} -layer M4 -location {149.040 5.652} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[7]} -layer M4 -location {149.040 5.844} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[8]} -layer M4 -location {149.040 6.084} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[9]} -layer M4 -location {149.040 6.276} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[10]} -layer M4 -location {149.040 6.468} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[11]} -layer M4 -location {149.040 6.708} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[12]} -layer M4 -location {149.040 6.900} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[13]} -layer M4 -location {149.040 7.092} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[14]} -layer M4 -location {149.040 7.284} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[15]} -layer M4 -location {149.040 7.524} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[16]} -layer M4 -location {149.040 7.716} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[17]} -layer M4 -location {149.040 7.908} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[18]} -layer M4 -location {149.040 8.148} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[19]} -layer M4 -location {149.040 8.340} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[20]} -layer M4 -location {149.040 8.532} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[21]} -layer M4 -location {149.040 8.772} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[22]} -layer M4 -location {149.040 8.964} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[23]} -layer M4 -location {149.040 9.156} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[24]} -layer M4 -location {149.040 9.348} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[25]} -layer M4 -location {149.040 9.588} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[26]} -layer M4 -location {149.040 9.780} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[27]} -layer M4 -location {149.040 9.972} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[28]} -layer M4 -location {149.040 10.212} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[29]} -layer M4 -location {149.040 10.404} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[30]} -layer M4 -location {149.040 10.596} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[31]} -layer M4 -location {149.040 10.788} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[32]} -layer M4 -location {149.040 11.028} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[33]} -layer M4 -location {149.040 11.220} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[34]} -layer M4 -location {149.040 11.412} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[35]} -layer M4 -location {149.040 11.652} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[36]} -layer M4 -location {149.040 11.844} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[37]} -layer M4 -location {149.040 12.036} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[38]} -layer M4 -location {149.040 12.228} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[39]} -layer M4 -location {149.040 12.468} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[40]} -layer M4 -location {149.040 12.660} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[41]} -layer M4 -location {149.040 12.852} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[42]} -layer M4 -location {149.040 13.092} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[43]} -layer M4 -location {149.040 13.284} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[44]} -layer M4 -location {149.040 13.476} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[45]} -layer M4 -location {149.040 13.716} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[46]} -layer M4 -location {149.040 13.908} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[47]} -layer M4 -location {149.040 14.100} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[48]} -layer M4 -location {149.040 14.292} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[49]} -layer M4 -location {149.040 14.532} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[50]} -layer M4 -location {149.040 14.724} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[51]} -layer M4 -location {149.040 14.916} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[52]} -layer M4 -location {149.040 15.156} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[53]} -layer M4 -location {149.040 15.348} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[54]} -layer M4 -location {149.040 15.540} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[55]} -layer M4 -location {149.040 15.732} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[56]} -layer M4 -location {149.040 15.972} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[57]} -layer M4 -location {149.040 16.164} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[58]} -layer M4 -location {149.040 16.356} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[59]} -layer M4 -location {149.040 16.596} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[60]} -layer M4 -location {149.040 16.788} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[61]} -layer M4 -location {149.040 16.980} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[62]} -layer M4 -location {149.040 17.172} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[63]} -layer M4 -location {149.040 17.412} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[64]} -layer M4 -location {149.040 17.604} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[65]} -layer M4 -location {149.040 17.796} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[66]} -layer M4 -location {149.040 18.036} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[67]} -layer M4 -location {149.040 18.228} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[68]} -layer M4 -location {149.040 18.420} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[69]} -layer M4 -location {149.040 18.660} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[70]} -layer M4 -location {149.040 18.852} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[71]} -layer M4 -location {149.040 19.044} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[72]} -layer M4 -location {149.040 19.236} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[73]} -layer M4 -location {149.040 19.476} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[74]} -layer M4 -location {149.040 19.668} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[75]} -layer M4 -location {149.040 19.860} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[76]} -layer M4 -location {149.040 20.100} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[77]} -layer M4 -location {149.040 20.292} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[78]} -layer M4 -location {149.040 20.484} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[79]} -layer M4 -location {149.040 20.676} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[80]} -layer M4 -location {149.040 20.916} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[81]} -layer M4 -location {149.040 21.108} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[82]} -layer M4 -location {149.040 21.300} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[83]} -layer M4 -location {149.040 21.540} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[84]} -layer M4 -location {149.040 21.732} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[85]} -layer M4 -location {149.040 21.924} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[86]} -layer M4 -location {149.040 22.116} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[87]} -layer M4 -location {149.040 22.356} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[88]} -layer M4 -location {149.040 22.548} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[89]} -layer M4 -location {149.040 22.740} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[90]} -layer M4 -location {149.040 22.980} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[91]} -layer M4 -location {149.040 23.172} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[92]} -layer M4 -location {149.040 23.364} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[93]} -layer M4 -location {149.040 23.604} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[94]} -layer M4 -location {149.040 23.796} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[95]} -layer M4 -location {149.040 23.988} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[96]} -layer M4 -location {149.040 24.180} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[97]} -layer M4 -location {149.040 24.420} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[98]} -layer M4 -location {149.040 24.612} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[99]} -layer M4 -location {149.040 24.804} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[100]} -layer M4 -location {149.040 25.044} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[101]} -layer M4 -location {149.040 25.236} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[102]} -layer M4 -location {149.040 25.428} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[103]} -layer M4 -location {149.040 25.620} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[104]} -layer M4 -location {149.040 25.860} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[105]} -layer M4 -location {149.040 26.052} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[106]} -layer M4 -location {149.040 26.244} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[107]} -layer M4 -location {149.040 26.484} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[108]} -layer M4 -location {149.040 26.676} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[109]} -layer M4 -location {149.040 26.868} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[110]} -layer M4 -location {149.040 27.108} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[111]} -layer M4 -location {149.040 27.300} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[112]} -layer M4 -location {149.040 27.492} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[113]} -layer M4 -location {149.040 27.684} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[114]} -layer M4 -location {149.040 27.924} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[115]} -layer M4 -location {149.040 28.116} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[116]} -layer M4 -location {149.040 28.308} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[117]} -layer M4 -location {149.040 28.548} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[118]} -layer M4 -location {149.040 28.740} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[119]} -layer M4 -location {149.040 28.932} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[120]} -layer M4 -location {149.040 29.124} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[121]} -layer M4 -location {149.040 29.364} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[122]} -layer M4 -location {149.040 29.556} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[123]} -layer M4 -location {149.040 29.748} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[124]} -layer M4 -location {149.040 29.988} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[125]} -layer M4 -location {149.040 30.180} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[126]} -layer M4 -location {149.040 30.372} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[127]} -layer M4 -location {149.040 30.564} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[128]} -layer M4 -location {149.040 30.804} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[129]} -layer M4 -location {149.040 30.996} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[130]} -layer M4 -location {149.040 31.188} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[131]} -layer M4 -location {149.040 31.428} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[132]} -layer M4 -location {149.040 31.620} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[133]} -layer M4 -location {149.040 31.812} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[134]} -layer M4 -location {149.040 32.052} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[135]} -layer M4 -location {149.040 32.244} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[136]} -layer M4 -location {149.040 32.436} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[137]} -layer M4 -location {149.040 32.628} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[138]} -layer M4 -location {149.040 32.868} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[139]} -layer M4 -location {149.040 33.060} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[140]} -layer M4 -location {149.040 33.252} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[141]} -layer M4 -location {149.040 33.492} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[142]} -layer M4 -location {149.040 33.684} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[143]} -layer M4 -location {149.040 33.876} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[144]} -layer M4 -location {149.040 34.068} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[145]} -layer M4 -location {149.040 34.308} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[146]} -layer M4 -location {149.040 34.500} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[147]} -layer M4 -location {149.040 34.692} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[148]} -layer M4 -location {149.040 34.932} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[149]} -layer M4 -location {149.040 35.124} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[150]} -layer M4 -location {149.040 35.316} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[151]} -layer M4 -location {149.040 35.508} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[152]} -layer M4 -location {149.040 35.748} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[153]} -layer M4 -location {149.040 35.940} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[154]} -layer M4 -location {149.040 36.132} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[155]} -layer M4 -location {149.040 36.372} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[156]} -layer M4 -location {149.040 36.564} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[157]} -layer M4 -location {149.040 36.756} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[158]} -layer M4 -location {149.040 36.996} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[159]} -layer M4 -location {149.040 37.188} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[160]} -layer M4 -location {149.040 37.380} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[161]} -layer M4 -location {149.040 37.572} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[162]} -layer M4 -location {149.040 37.812} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[163]} -layer M4 -location {149.040 38.004} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[164]} -layer M4 -location {149.040 38.196} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[165]} -layer M4 -location {149.040 38.436} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[166]} -layer M4 -location {149.040 38.628} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[167]} -layer M4 -location {149.040 38.820} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[168]} -layer M4 -location {149.040 39.012} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[169]} -layer M4 -location {149.040 39.252} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[170]} -layer M4 -location {149.040 39.444} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[171]} -layer M4 -location {149.040 39.636} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[172]} -layer M4 -location {149.040 39.876} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[173]} -layer M4 -location {149.040 40.068} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[174]} -layer M4 -location {149.040 40.260} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[175]} -layer M4 -location {149.040 40.452} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[176]} -layer M4 -location {149.040 40.692} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[177]} -layer M4 -location {149.040 40.884} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[178]} -layer M4 -location {149.040 41.076} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[179]} -layer M4 -location {149.040 41.316} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[180]} -layer M4 -location {149.040 41.508} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[181]} -layer M4 -location {149.040 41.700} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[182]} -layer M4 -location {149.040 41.940} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[183]} -layer M4 -location {149.040 42.132} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[184]} -layer M4 -location {149.040 42.324} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[185]} -layer M4 -location {149.040 42.516} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[186]} -layer M4 -location {149.040 42.756} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[187]} -layer M4 -location {149.040 42.948} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[188]} -layer M4 -location {149.040 43.140} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[189]} -layer M4 -location {149.040 43.380} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[190]} -layer M4 -location {149.040 43.572} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[191]} -layer M4 -location {149.040 43.764} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[192]} -layer M4 -location {149.040 43.956} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[193]} -layer M4 -location {149.040 44.196} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[194]} -layer M4 -location {149.040 44.388} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[195]} -layer M4 -location {149.040 44.580} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[196]} -layer M4 -location {149.040 44.820} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[197]} -layer M4 -location {149.040 45.012} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[198]} -layer M4 -location {149.040 45.204} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[199]} -layer M4 -location {149.040 45.396} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[200]} -layer M4 -location {149.040 45.636} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[201]} -layer M4 -location {149.040 45.828} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[202]} -layer M4 -location {149.040 46.020} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[203]} -layer M4 -location {149.040 46.260} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[204]} -layer M4 -location {149.040 46.452} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[205]} -layer M4 -location {149.040 46.644} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[206]} -layer M4 -location {149.040 46.884} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[207]} -layer M4 -location {149.040 47.076} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[208]} -layer M4 -location {149.040 47.268} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[209]} -layer M4 -location {149.040 47.460} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[210]} -layer M4 -location {149.040 47.700} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[211]} -layer M4 -location {149.040 47.892} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[212]} -layer M4 -location {149.040 48.084} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[213]} -layer M4 -location {149.040 48.324} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[214]} -layer M4 -location {149.040 48.516} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[215]} -layer M4 -location {149.040 48.708} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[216]} -layer M4 -location {149.040 48.900} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[217]} -layer M4 -location {149.040 49.140} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[218]} -layer M4 -location {149.040 49.332} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[219]} -layer M4 -location {149.040 49.524} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[220]} -layer M4 -location {149.040 49.764} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[221]} -layer M4 -location {149.040 49.956} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[222]} -layer M4 -location {149.040 50.148} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[223]} -layer M4 -location {149.040 50.340} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[224]} -layer M4 -location {149.040 50.580} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[225]} -layer M4 -location {149.040 50.772} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[226]} -layer M4 -location {149.040 50.964} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[227]} -layer M4 -location {149.040 51.204} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[228]} -layer M4 -location {149.040 51.396} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[229]} -layer M4 -location {149.040 51.588} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[230]} -layer M4 -location {149.040 51.828} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[231]} -layer M4 -location {149.040 52.020} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[232]} -layer M4 -location {149.040 52.212} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[233]} -layer M4 -location {149.040 52.404} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[234]} -layer M4 -location {149.040 52.644} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[235]} -layer M4 -location {149.040 52.836} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[236]} -layer M4 -location {149.040 53.028} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[237]} -layer M4 -location {149.040 53.268} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[238]} -layer M4 -location {149.040 53.460} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[239]} -layer M4 -location {149.040 53.652} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[240]} -layer M4 -location {149.040 53.844} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[241]} -layer M4 -location {149.040 54.084} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[242]} -layer M4 -location {149.040 54.276} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[243]} -layer M4 -location {149.040 54.468} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[244]} -layer M4 -location {149.040 54.708} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[245]} -layer M4 -location {149.040 54.900} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[246]} -layer M4 -location {149.040 55.092} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[247]} -layer M4 -location {149.040 55.284} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[248]} -layer M4 -location {149.040 55.524} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[249]} -layer M4 -location {149.040 55.716} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[250]} -layer M4 -location {149.040 55.908} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[251]} -layer M4 -location {149.040 56.148} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[252]} -layer M4 -location {149.040 56.340} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[253]} -layer M4 -location {149.040 56.532} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[254]} -layer M4 -location {149.040 56.772} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[255]} -layer M4 -location {149.040 56.964} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[256]} -layer M4 -location {149.040 57.156} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[257]} -layer M4 -location {149.040 57.348} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[258]} -layer M4 -location {149.040 57.588} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[259]} -layer M4 -location {149.040 57.780} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[260]} -layer M4 -location {149.040 57.972} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[261]} -layer M4 -location {149.040 58.212} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[262]} -layer M4 -location {149.040 58.404} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[263]} -layer M4 -location {149.040 58.596} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[264]} -layer M4 -location {149.040 58.788} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[265]} -layer M4 -location {149.040 59.028} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[266]} -layer M4 -location {149.040 59.220} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[267]} -layer M4 -location {149.040 59.412} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[268]} -layer M4 -location {149.040 59.652} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[269]} -layer M4 -location {149.040 59.844} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[270]} -layer M4 -location {149.040 60.036} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[271]} -layer M4 -location {149.040 60.276} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[272]} -layer M4 -location {149.040 60.468} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[273]} -layer M4 -location {149.040 60.660} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[274]} -layer M4 -location {149.040 60.852} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[275]} -layer M4 -location {149.040 61.092} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[276]} -layer M4 -location {149.040 61.284} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[277]} -layer M4 -location {149.040 61.476} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[278]} -layer M4 -location {149.040 61.716} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[279]} -layer M4 -location {149.040 61.908} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[280]} -layer M4 -location {149.040 62.100} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[281]} -layer M4 -location {149.040 62.292} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[282]} -layer M4 -location {149.040 62.532} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[283]} -layer M4 -location {149.040 62.724} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[284]} -layer M4 -location {149.040 62.916} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[285]} -layer M4 -location {149.040 63.156} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[286]} -layer M4 -location {149.040 63.348} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[287]} -layer M4 -location {149.040 63.540} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[288]} -layer M4 -location {149.040 63.732} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[289]} -layer M4 -location {149.040 63.972} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[290]} -layer M4 -location {149.040 64.164} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[291]} -layer M4 -location {149.040 64.356} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[292]} -layer M4 -location {149.040 64.596} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[293]} -layer M4 -location {149.040 64.788} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[294]} -layer M4 -location {149.040 64.980} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[295]} -layer M4 -location {149.040 65.220} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[296]} -layer M4 -location {149.040 65.412} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[297]} -layer M4 -location {149.040 65.604} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[298]} -layer M4 -location {149.040 65.796} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[299]} -layer M4 -location {149.040 66.036} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[300]} -layer M4 -location {149.040 66.228} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[301]} -layer M4 -location {149.040 66.420} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[302]} -layer M4 -location {149.040 66.660} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[303]} -layer M4 -location {149.040 66.852} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[304]} -layer M4 -location {149.040 67.044} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[305]} -layer M4 -location {149.040 67.236} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[306]} -layer M4 -location {149.040 67.476} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[307]} -layer M4 -location {149.040 67.668} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[308]} -layer M4 -location {149.040 67.860} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[309]} -layer M4 -location {149.040 68.100} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[310]} -layer M4 -location {149.040 68.292} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[311]} -layer M4 -location {149.040 68.484} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[312]} -layer M4 -location {149.040 68.676} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[313]} -layer M4 -location {149.040 68.916} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[314]} -layer M4 -location {149.040 69.108} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[315]} -layer M4 -location {149.040 69.300} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[316]} -layer M4 -location {149.040 69.540} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[317]} -layer M4 -location {149.040 69.732} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[318]} -layer M4 -location {149.040 69.924} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[319]} -layer M4 -location {149.040 70.164} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[320]} -layer M4 -location {149.040 70.356} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[321]} -layer M4 -location {149.040 70.548} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[322]} -layer M4 -location {149.040 70.740} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[323]} -layer M4 -location {149.040 70.980} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[324]} -layer M4 -location {149.040 71.172} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[325]} -layer M4 -location {149.040 71.364} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[326]} -layer M4 -location {149.040 71.604} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[327]} -layer M4 -location {149.040 71.796} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[328]} -layer M4 -location {149.040 71.988} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[329]} -layer M4 -location {149.040 72.180} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[330]} -layer M4 -location {149.040 72.420} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[331]} -layer M4 -location {149.040 72.612} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[332]} -layer M4 -location {149.040 72.804} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[333]} -layer M4 -location {149.040 73.044} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[334]} -layer M4 -location {149.040 73.236} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[335]} -layer M4 -location {149.040 73.428} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[336]} -layer M4 -location {149.040 73.620} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[337]} -layer M4 -location {149.040 73.860} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[338]} -layer M4 -location {149.040 74.052} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[339]} -layer M4 -location {149.040 74.244} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[340]} -layer M4 -location {149.040 74.484} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[341]} -layer M4 -location {149.040 74.676} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[342]} -layer M4 -location {149.040 74.868} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[343]} -layer M4 -location {149.040 75.108} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[344]} -layer M4 -location {149.040 75.300} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[345]} -layer M4 -location {149.040 75.492} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[346]} -layer M4 -location {149.040 75.684} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[347]} -layer M4 -location {149.040 75.924} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[348]} -layer M4 -location {149.040 76.116} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[349]} -layer M4 -location {149.040 76.308} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[350]} -layer M4 -location {149.040 76.548} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[351]} -layer M4 -location {149.040 76.740} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[352]} -layer M4 -location {149.040 76.932} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[353]} -layer M4 -location {149.040 77.124} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[354]} -layer M4 -location {149.040 77.364} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[355]} -layer M4 -location {149.040 77.556} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[356]} -layer M4 -location {149.040 77.748} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[357]} -layer M4 -location {149.040 77.988} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[358]} -layer M4 -location {149.040 78.180} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[359]} -layer M4 -location {149.040 78.372} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[360]} -layer M4 -location {149.040 78.564} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[361]} -layer M4 -location {149.040 78.804} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[362]} -layer M4 -location {149.040 78.996} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[363]} -layer M4 -location {149.040 79.188} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[364]} -layer M4 -location {149.040 79.428} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[365]} -layer M4 -location {149.040 79.620} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[366]} -layer M4 -location {149.040 79.812} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[367]} -layer M4 -location {149.040 80.052} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[368]} -layer M4 -location {149.040 80.244} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[369]} -layer M4 -location {149.040 80.436} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[370]} -layer M4 -location {149.040 80.628} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[371]} -layer M4 -location {149.040 80.868} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[372]} -layer M4 -location {149.040 81.060} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[373]} -layer M4 -location {149.040 81.252} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[374]} -layer M4 -location {149.040 81.492} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[375]} -layer M4 -location {149.040 81.684} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[376]} -layer M4 -location {149.040 81.876} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[377]} -layer M4 -location {149.040 82.068} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[378]} -layer M4 -location {149.040 82.308} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[379]} -layer M4 -location {149.040 82.500} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[380]} -layer M4 -location {149.040 82.692} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[381]} -layer M4 -location {149.040 82.932} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[382]} -layer M4 -location {149.040 83.124} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[383]} -layer M4 -location {149.040 83.316} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[384]} -layer M4 -location {149.040 83.508} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[385]} -layer M4 -location {149.040 83.748} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[386]} -layer M4 -location {149.040 83.940} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[387]} -layer M4 -location {149.040 84.132} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[388]} -layer M4 -location {149.040 84.372} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[389]} -layer M4 -location {149.040 84.564} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[390]} -layer M4 -location {149.040 84.756} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[391]} -layer M4 -location {149.040 84.996} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[392]} -layer M4 -location {149.040 85.188} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[393]} -layer M4 -location {149.040 85.380} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[394]} -layer M4 -location {149.040 85.572} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[395]} -layer M4 -location {149.040 85.812} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[396]} -layer M4 -location {149.040 86.004} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[397]} -layer M4 -location {149.040 86.196} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[398]} -layer M4 -location {149.040 86.436} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[399]} -layer M4 -location {149.040 86.628} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[400]} -layer M4 -location {149.040 86.820} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[401]} -layer M4 -location {149.040 87.012} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[402]} -layer M4 -location {149.040 87.252} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[403]} -layer M4 -location {149.040 87.444} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[404]} -layer M4 -location {149.040 87.636} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[405]} -layer M4 -location {149.040 87.876} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[406]} -layer M4 -location {149.040 88.068} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[407]} -layer M4 -location {149.040 88.260} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[408]} -layer M4 -location {149.040 88.452} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[409]} -layer M4 -location {149.040 88.692} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[410]} -layer M4 -location {149.040 88.884} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[411]} -layer M4 -location {149.040 89.076} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[412]} -layer M4 -location {149.040 89.316} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[413]} -layer M4 -location {149.040 89.508} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[414]} -layer M4 -location {149.040 89.700} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[415]} -layer M4 -location {149.040 89.940} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[416]} -layer M4 -location {149.040 90.132} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[417]} -layer M4 -location {149.040 90.324} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[418]} -layer M4 -location {149.040 90.516} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[419]} -layer M4 -location {149.040 90.756} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[420]} -layer M4 -location {149.040 90.948} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[421]} -layer M4 -location {149.040 91.140} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[422]} -layer M4 -location {149.040 91.380} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[423]} -layer M4 -location {149.040 91.572} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[424]} -layer M4 -location {149.040 91.764} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[425]} -layer M4 -location {149.040 91.956} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[426]} -layer M4 -location {149.040 92.196} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[427]} -layer M4 -location {149.040 92.388} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[428]} -layer M4 -location {149.040 92.580} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[429]} -layer M4 -location {149.040 92.820} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[430]} -layer M4 -location {149.040 93.012} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[431]} -layer M4 -location {149.040 93.204} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[432]} -layer M4 -location {149.040 93.444} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[433]} -layer M4 -location {149.040 93.636} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[434]} -layer M4 -location {149.040 93.828} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[435]} -layer M4 -location {149.040 94.020} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[436]} -layer M4 -location {149.040 94.260} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[437]} -layer M4 -location {149.040 94.452} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[438]} -layer M4 -location {149.040 94.644} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[439]} -layer M4 -location {149.040 94.884} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[440]} -layer M4 -location {149.040 95.076} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[441]} -layer M4 -location {149.040 95.268} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[442]} -layer M4 -location {149.040 95.460} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[443]} -layer M4 -location {149.040 95.700} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[444]} -layer M4 -location {149.040 95.892} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[445]} -layer M4 -location {149.040 96.084} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[446]} -layer M4 -location {149.040 96.324} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[447]} -layer M4 -location {149.040 96.516} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[448]} -layer M4 -location {149.040 96.708} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[449]} -layer M4 -location {149.040 96.900} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[450]} -layer M4 -location {149.040 97.140} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[451]} -layer M4 -location {149.040 97.332} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[452]} -layer M4 -location {149.040 97.524} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[453]} -layer M4 -location {149.040 97.764} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[454]} -layer M4 -location {149.040 97.956} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[455]} -layer M4 -location {149.040 98.148} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[456]} -layer M4 -location {149.040 98.388} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[457]} -layer M4 -location {149.040 98.580} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[458]} -layer M4 -location {149.040 98.772} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[459]} -layer M4 -location {149.040 98.964} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[460]} -layer M4 -location {149.040 99.204} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[461]} -layer M4 -location {149.040 99.396} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[462]} -layer M4 -location {149.040 99.588} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[463]} -layer M4 -location {149.040 99.828} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[464]} -layer M4 -location {149.040 100.020} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[465]} -layer M4 -location {149.040 100.212} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[466]} -layer M4 -location {149.040 100.404} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[467]} -layer M4 -location {149.040 100.644} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[468]} -layer M4 -location {149.040 100.836} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[469]} -layer M4 -location {149.040 101.028} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[470]} -layer M4 -location {149.040 101.268} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[471]} -layer M4 -location {149.040 101.460} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[472]} -layer M4 -location {149.040 101.652} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[473]} -layer M4 -location {149.040 101.844} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[474]} -layer M4 -location {149.040 102.084} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[475]} -layer M4 -location {149.040 102.276} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[476]} -layer M4 -location {149.040 102.468} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[477]} -layer M4 -location {149.040 102.708} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[478]} -layer M4 -location {149.040 102.900} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[479]} -layer M4 -location {149.040 103.092} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[480]} -layer M4 -location {149.040 103.332} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[481]} -layer M4 -location {149.040 103.524} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[482]} -layer M4 -location {149.040 103.716} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[483]} -layer M4 -location {149.040 103.908} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[484]} -layer M4 -location {149.040 104.148} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[485]} -layer M4 -location {149.040 104.340} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[486]} -layer M4 -location {149.040 104.532} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[487]} -layer M4 -location {149.040 104.772} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[488]} -layer M4 -location {149.040 104.964} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[489]} -layer M4 -location {149.040 105.156} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[490]} -layer M4 -location {149.040 105.348} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[491]} -layer M4 -location {149.040 105.588} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[492]} -layer M4 -location {149.040 105.780} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[493]} -layer M4 -location {149.040 105.972} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[494]} -layer M4 -location {149.040 106.212} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[495]} -layer M4 -location {149.040 106.404} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[496]} -layer M4 -location {149.040 106.596} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[497]} -layer M4 -location {149.040 106.788} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[498]} -layer M4 -location {149.040 107.028} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[499]} -layer M4 -location {149.040 107.220} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[500]} -layer M4 -location {149.040 107.412} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[501]} -layer M4 -location {149.040 107.652} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[502]} -layer M4 -location {149.040 107.844} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[503]} -layer M4 -location {149.040 108.036} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[504]} -layer M4 -location {149.040 108.276} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[505]} -layer M4 -location {149.040 108.468} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[506]} -layer M4 -location {149.040 108.660} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[507]} -layer M4 -location {149.040 108.852} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[508]} -layer M4 -location {149.040 109.092} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[509]} -layer M4 -location {149.040 109.284} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[510]} -layer M4 -location {149.040 109.476} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[511]} -layer M4 -location {149.040 109.716} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[512]} -layer M4 -location {149.040 109.908} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[513]} -layer M4 -location {149.040 110.100} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[514]} -layer M4 -location {149.040 110.292} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[515]} -layer M4 -location {149.040 110.532} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[516]} -layer M4 -location {149.040 110.724} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[517]} -layer M4 -location {149.040 110.916} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[518]} -layer M4 -location {149.040 111.156} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[519]} -layer M4 -location {149.040 111.348} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[520]} -layer M4 -location {149.040 111.540} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[521]} -layer M4 -location {149.040 111.732} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[522]} -layer M4 -location {149.040 111.972} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[523]} -layer M4 -location {149.040 112.164} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[524]} -layer M4 -location {149.040 112.356} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[525]} -layer M4 -location {149.040 112.596} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[526]} -layer M4 -location {149.040 112.788} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[527]} -layer M4 -location {149.040 112.980} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[528]} -layer M4 -location {149.040 113.220} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[529]} -layer M4 -location {149.040 113.412} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[530]} -layer M4 -location {149.040 113.604} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[531]} -layer M4 -location {149.040 113.796} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[532]} -layer M4 -location {149.040 114.036} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[533]} -layer M4 -location {149.040 114.228} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[534]} -layer M4 -location {149.040 114.420} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[535]} -layer M4 -location {149.040 114.660} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[536]} -layer M4 -location {149.040 114.852} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[537]} -layer M4 -location {149.040 115.044} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[538]} -layer M4 -location {149.040 115.236} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[539]} -layer M4 -location {149.040 115.476} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[540]} -layer M4 -location {149.040 115.668} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[541]} -layer M4 -location {149.040 115.860} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[542]} -layer M4 -location {149.040 116.100} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[543]} -layer M4 -location {149.040 116.292} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[544]} -layer M4 -location {149.040 116.484} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[545]} -layer M4 -location {149.040 116.676} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[546]} -layer M4 -location {149.040 116.916} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[547]} -layer M4 -location {149.040 117.108} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[548]} -layer M4 -location {149.040 117.300} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[549]} -layer M4 -location {149.040 117.540} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[550]} -layer M4 -location {149.040 117.732} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[551]} -layer M4 -location {149.040 117.924} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[552]} -layer M4 -location {149.040 118.164} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[553]} -layer M4 -location {149.040 118.356} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[554]} -layer M4 -location {149.040 118.548} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[555]} -layer M4 -location {149.040 118.740} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[556]} -layer M4 -location {149.040 118.980} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[557]} -layer M4 -location {149.040 119.172} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[558]} -layer M4 -location {149.040 119.364} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[559]} -layer M4 -location {149.040 119.604} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[560]} -layer M4 -location {149.040 119.796} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[561]} -layer M4 -location {149.040 119.988} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[562]} -layer M4 -location {149.040 120.180} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[563]} -layer M4 -location {149.040 120.420} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[564]} -layer M4 -location {149.040 120.612} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[565]} -layer M4 -location {149.040 120.804} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[566]} -layer M4 -location {149.040 121.044} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[567]} -layer M4 -location {149.040 121.236} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[568]} -layer M4 -location {149.040 121.428} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[569]} -layer M4 -location {149.040 121.620} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[570]} -layer M4 -location {149.040 121.860} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[571]} -layer M4 -location {149.040 122.052} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[572]} -layer M4 -location {149.040 122.244} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[573]} -layer M4 -location {149.040 122.484} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[574]} -layer M4 -location {149.040 122.676} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[575]} -layer M4 -location {149.040 122.868} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[576]} -layer M4 -location {149.040 123.108} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[577]} -layer M4 -location {149.040 123.300} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[578]} -layer M4 -location {149.040 123.492} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[579]} -layer M4 -location {149.040 123.684} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[580]} -layer M4 -location {149.040 123.924} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[581]} -layer M4 -location {149.040 124.116} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[582]} -layer M4 -location {149.040 124.308} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[583]} -layer M4 -location {149.040 124.548} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[584]} -layer M4 -location {149.040 124.740} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[585]} -layer M4 -location {149.040 124.932} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[586]} -layer M4 -location {149.040 125.124} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[587]} -layer M4 -location {149.040 125.364} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[588]} -layer M4 -location {149.040 125.556} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[589]} -layer M4 -location {149.040 125.748} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[590]} -layer M4 -location {149.040 125.988} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[591]} -layer M4 -location {149.040 126.180} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[592]} -layer M4 -location {149.040 126.372} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[593]} -layer M4 -location {149.040 126.564} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[594]} -layer M4 -location {149.040 126.804} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[595]} -layer M4 -location {149.040 126.996} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[596]} -layer M4 -location {149.040 127.188} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[597]} -layer M4 -location {149.040 127.428} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[598]} -layer M4 -location {149.040 127.620} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[599]} -layer M4 -location {149.040 127.812} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[600]} -layer M4 -location {149.040 128.052} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[601]} -layer M4 -location {149.040 128.244} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[602]} -layer M4 -location {149.040 128.436} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[603]} -layer M4 -location {149.040 128.628} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[604]} -layer M4 -location {149.040 128.868} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[605]} -layer M4 -location {149.040 129.060} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[606]} -layer M4 -location {149.040 129.252} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[607]} -layer M4 -location {149.040 129.492} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[608]} -layer M4 -location {149.040 129.684} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[609]} -layer M4 -location {149.040 129.876} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[610]} -layer M4 -location {149.040 130.068} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[611]} -layer M4 -location {149.040 130.308} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[612]} -layer M4 -location {149.040 130.500} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[613]} -layer M4 -location {149.040 130.692} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[614]} -layer M4 -location {149.040 130.932} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[615]} -layer M4 -location {149.040 131.124} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[616]} -layer M4 -location {149.040 131.316} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[617]} -layer M4 -location {149.040 131.556} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[618]} -layer M4 -location {149.040 131.748} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[619]} -layer M4 -location {149.040 131.940} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[620]} -layer M4 -location {149.040 132.132} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[621]} -layer M4 -location {149.040 132.372} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[622]} -layer M4 -location {149.040 132.564} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[623]} -layer M4 -location {149.040 132.756} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[624]} -layer M4 -location {149.040 132.996} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[625]} -layer M4 -location {149.040 133.188} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[626]} -layer M4 -location {149.040 133.380} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[627]} -layer M4 -location {149.040 133.572} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[628]} -layer M4 -location {149.040 133.812} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[629]} -layer M4 -location {149.040 134.004} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[630]} -layer M4 -location {149.040 134.196} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[631]} -layer M4 -location {149.040 134.436} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[632]} -layer M4 -location {149.040 134.628} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[633]} -layer M4 -location {149.040 134.820} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[634]} -layer M4 -location {149.040 135.012} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[635]} -layer M4 -location {149.040 135.252} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[636]} -layer M4 -location {149.040 135.444} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[637]} -layer M4 -location {149.040 135.636} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[638]} -layer M4 -location {149.040 135.876} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[639]} -layer M4 -location {149.040 136.068} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[640]} -layer M4 -location {149.040 136.260} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[641]} -layer M4 -location {149.040 136.500} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[642]} -layer M4 -location {149.040 136.692} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[643]} -layer M4 -location {149.040 136.884} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[644]} -layer M4 -location {149.040 137.076} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[645]} -layer M4 -location {149.040 137.316} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[646]} -layer M4 -location {149.040 137.508} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[647]} -layer M4 -location {149.040 137.700} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[648]} -layer M4 -location {149.040 137.940} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[649]} -layer M4 -location {149.040 138.132} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[650]} -layer M4 -location {149.040 138.324} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[651]} -layer M4 -location {149.040 138.516} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[652]} -layer M4 -location {149.040 138.756} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[653]} -layer M4 -location {149.040 138.948} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[654]} -layer M4 -location {149.040 139.140} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[655]} -layer M4 -location {149.040 139.380} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[656]} -layer M4 -location {149.040 139.572} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[657]} -layer M4 -location {149.040 139.764} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[658]} -layer M4 -location {149.040 139.956} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[659]} -layer M4 -location {149.040 140.196} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[660]} -layer M4 -location {149.040 140.388} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[661]} -layer M4 -location {149.040 140.580} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[662]} -layer M4 -location {149.040 140.820} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[663]} -layer M4 -location {149.040 141.012} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[664]} -layer M4 -location {149.040 141.204} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[665]} -layer M4 -location {149.040 141.444} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[666]} -layer M4 -location {149.040 141.636} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[667]} -layer M4 -location {149.040 141.828} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[668]} -layer M4 -location {149.040 142.020} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[669]} -layer M4 -location {149.040 142.260} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[670]} -layer M4 -location {149.040 142.452} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[671]} -layer M4 -location {149.040 142.644} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[672]} -layer M4 -location {149.040 142.884} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[673]} -layer M4 -location {149.040 143.076} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[674]} -layer M4 -location {149.040 143.268} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[675]} -layer M4 -location {149.040 143.460} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[676]} -layer M4 -location {149.040 143.700} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[677]} -layer M4 -location {149.040 143.892} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[678]} -layer M4 -location {149.040 144.084} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[679]} -layer M4 -location {149.040 144.324} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[680]} -layer M4 -location {149.040 144.516} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[681]} -layer M4 -location {149.040 144.708} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[682]} -layer M4 -location {149.040 144.900} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[683]} -layer M4 -location {149.040 145.140} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[684]} -layer M4 -location {149.040 145.332} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[685]} -layer M4 -location {149.040 145.524} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[686]} -layer M4 -location {149.040 145.764} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[687]} -layer M4 -location {149.040 145.956} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[688]} -layer M4 -location {149.040 146.148} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[689]} -layer M4 -location {149.040 146.388} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[690]} -layer M4 -location {149.040 146.580} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {o[691]} -layer M4 -location {149.040 146.772} -pin_size {0.192 0.024} -force_to_die_boundary
+place_pin -pin_name {di0[0]} -layer M3 -location {4.473 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[1]} -layer M5 -location {4.812 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[2]} -layer M3 -location {5.157 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[3]} -layer M5 -location {5.484 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[4]} -layer M3 -location {5.805 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[5]} -layer M5 -location {6.156 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[6]} -layer M3 -location {6.453 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[7]} -layer M5 -location {6.780 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[8]} -layer M3 -location {7.137 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[9]} -layer M5 -location {7.452 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[10]} -layer M3 -location {7.785 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[11]} -layer M5 -location {8.124 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[12]} -layer M3 -location {8.433 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[13]} -layer M5 -location {8.748 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[14]} -layer M3 -location {9.081 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[15]} -layer M5 -location {9.420 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[16]} -layer M3 -location {9.765 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[17]} -layer M5 -location {10.092 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[18]} -layer M3 -location {10.413 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[19]} -layer M5 -location {10.764 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[20]} -layer M3 -location {11.061 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[21]} -layer M5 -location {11.388 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[22]} -layer M3 -location {11.745 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[23]} -layer M5 -location {12.060 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[24]} -layer M3 -location {12.393 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[25]} -layer M5 -location {12.732 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[26]} -layer M3 -location {13.041 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[27]} -layer M5 -location {13.404 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[28]} -layer M3 -location {13.725 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[29]} -layer M5 -location {14.028 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[30]} -layer M3 -location {14.373 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[31]} -layer M5 -location {14.700 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[32]} -layer M3 -location {15.021 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[33]} -layer M5 -location {15.372 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[34]} -layer M3 -location {15.705 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[35]} -layer M5 -location {15.996 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[36]} -layer M3 -location {16.353 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[37]} -layer M5 -location {16.668 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[38]} -layer M3 -location {17.001 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[39]} -layer M5 -location {17.340 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[40]} -layer M3 -location {17.685 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[41]} -layer M5 -location {18.012 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[42]} -layer M3 -location {18.333 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[43]} -layer M5 -location {18.636 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[44]} -layer M3 -location {18.981 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[45]} -layer M5 -location {19.308 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[46]} -layer M3 -location {19.629 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[47]} -layer M5 -location {19.980 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[48]} -layer M3 -location {20.313 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[49]} -layer M5 -location {20.652 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[50]} -layer M3 -location {20.961 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[51]} -layer M5 -location {21.276 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[52]} -layer M3 -location {21.609 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[53]} -layer M5 -location {21.948 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[54]} -layer M3 -location {22.293 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[55]} -layer M5 -location {22.620 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[56]} -layer M3 -location {22.941 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[57]} -layer M5 -location {23.292 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[58]} -layer M3 -location {23.589 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[59]} -layer M5 -location {23.916 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[60]} -layer M3 -location {24.273 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[61]} -layer M5 -location {24.588 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[62]} -layer M3 -location {24.921 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[63]} -layer M5 -location {25.260 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[64]} -layer M3 -location {25.569 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[65]} -layer M5 -location {25.884 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[66]} -layer M3 -location {26.253 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[67]} -layer M5 -location {26.556 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di0[68]} -layer M3 -location {26.901 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di0[69]} -layer M5 -location {27.228 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[0]} -layer M3 -location {27.549 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[1]} -layer M5 -location {27.900 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[2]} -layer M3 -location {28.197 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[3]} -layer M5 -location {28.524 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[4]} -layer M3 -location {28.881 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[5]} -layer M5 -location {29.196 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[6]} -layer M3 -location {29.529 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[7]} -layer M5 -location {29.868 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[8]} -layer M3 -location {30.177 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[9]} -layer M5 -location {30.540 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[10]} -layer M3 -location {30.861 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[11]} -layer M5 -location {31.164 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[12]} -layer M3 -location {31.509 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[13]} -layer M5 -location {31.836 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[14]} -layer M3 -location {32.157 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[15]} -layer M5 -location {32.508 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[16]} -layer M3 -location {32.841 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[17]} -layer M5 -location {33.180 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[18]} -layer M3 -location {33.489 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[19]} -layer M5 -location {33.804 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[20]} -layer M3 -location {34.137 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[21]} -layer M5 -location {34.476 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[22]} -layer M3 -location {34.821 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[23]} -layer M5 -location {35.148 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[24]} -layer M3 -location {35.469 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[25]} -layer M5 -location {35.772 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[26]} -layer M3 -location {36.117 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[27]} -layer M5 -location {36.444 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[28]} -layer M3 -location {36.801 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[29]} -layer M5 -location {37.116 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[30]} -layer M3 -location {37.449 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[31]} -layer M5 -location {37.788 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[32]} -layer M3 -location {38.097 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[33]} -layer M5 -location {38.412 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[34]} -layer M3 -location {38.745 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[35]} -layer M5 -location {39.084 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[36]} -layer M3 -location {39.429 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[37]} -layer M5 -location {39.756 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[38]} -layer M3 -location {40.077 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[39]} -layer M5 -location {40.428 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[40]} -layer M3 -location {40.725 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[41]} -layer M5 -location {41.052 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[42]} -layer M3 -location {41.409 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[43]} -layer M5 -location {41.724 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[44]} -layer M3 -location {42.057 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[45]} -layer M5 -location {42.396 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[46]} -layer M3 -location {42.705 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[47]} -layer M5 -location {43.068 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[48]} -layer M3 -location {43.389 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[49]} -layer M5 -location {43.692 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[50]} -layer M3 -location {44.037 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[51]} -layer M5 -location {44.364 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[52]} -layer M3 -location {44.685 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[53]} -layer M5 -location {45.036 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[54]} -layer M3 -location {45.369 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[55]} -layer M5 -location {45.660 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[56]} -layer M3 -location {46.017 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[57]} -layer M5 -location {46.332 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[58]} -layer M3 -location {46.665 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[59]} -layer M5 -location {47.004 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[60]} -layer M3 -location {47.313 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[61]} -layer M5 -location {47.676 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[62]} -layer M3 -location {47.997 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[63]} -layer M5 -location {48.300 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[64]} -layer M3 -location {48.645 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[65]} -layer M5 -location {48.972 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[66]} -layer M3 -location {49.293 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[67]} -layer M5 -location {49.644 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di5[68]} -layer M3 -location {49.977 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di5[69]} -layer M5 -location {50.316 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[0]} -layer M3 -location {50.625 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[1]} -layer M5 -location {50.940 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[2]} -layer M3 -location {51.273 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[3]} -layer M5 -location {51.612 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[4]} -layer M3 -location {51.957 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[5]} -layer M5 -location {52.284 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[6]} -layer M3 -location {52.605 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[7]} -layer M5 -location {52.956 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[8]} -layer M3 -location {53.253 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[9]} -layer M5 -location {53.580 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[10]} -layer M3 -location {53.937 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[11]} -layer M5 -location {54.252 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[12]} -layer M3 -location {54.585 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[13]} -layer M5 -location {54.924 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[14]} -layer M3 -location {55.233 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[15]} -layer M5 -location {55.548 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[16]} -layer M3 -location {55.881 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[17]} -layer M5 -location {56.220 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[18]} -layer M3 -location {56.565 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[19]} -layer M5 -location {56.892 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[20]} -layer M3 -location {57.213 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[21]} -layer M5 -location {57.564 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[22]} -layer M3 -location {57.861 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[23]} -layer M5 -location {58.188 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[24]} -layer M3 -location {58.545 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[25]} -layer M5 -location {58.860 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[26]} -layer M3 -location {59.193 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[27]} -layer M5 -location {59.532 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[28]} -layer M3 -location {59.841 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[29]} -layer M5 -location {60.204 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[30]} -layer M3 -location {60.525 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[31]} -layer M5 -location {60.828 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[32]} -layer M3 -location {61.173 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[33]} -layer M5 -location {61.500 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[34]} -layer M3 -location {61.821 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[35]} -layer M5 -location {62.172 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[36]} -layer M3 -location {62.505 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[37]} -layer M5 -location {62.796 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[38]} -layer M3 -location {63.153 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[39]} -layer M5 -location {63.468 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[40]} -layer M3 -location {63.801 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[41]} -layer M5 -location {64.140 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[42]} -layer M3 -location {64.485 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[43]} -layer M5 -location {64.812 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[44]} -layer M3 -location {65.133 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[45]} -layer M5 -location {65.436 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[46]} -layer M3 -location {65.781 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[47]} -layer M5 -location {66.108 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[48]} -layer M3 -location {66.429 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[49]} -layer M5 -location {66.780 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[50]} -layer M3 -location {67.113 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[51]} -layer M5 -location {67.452 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[52]} -layer M3 -location {67.761 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[53]} -layer M5 -location {68.076 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[54]} -layer M3 -location {68.409 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[55]} -layer M5 -location {68.748 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[56]} -layer M3 -location {69.093 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[57]} -layer M5 -location {69.420 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[58]} -layer M3 -location {69.741 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[59]} -layer M5 -location {70.092 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[60]} -layer M3 -location {70.389 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[61]} -layer M5 -location {70.716 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[62]} -layer M3 -location {71.073 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[63]} -layer M5 -location {71.388 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[64]} -layer M3 -location {71.721 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[65]} -layer M5 -location {72.060 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[66]} -layer M3 -location {72.369 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[67]} -layer M5 -location {72.684 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di6[68]} -layer M3 -location {73.053 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di6[69]} -layer M5 -location {73.356 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[0]} -layer M3 -location {73.701 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[1]} -layer M5 -location {74.028 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[2]} -layer M3 -location {74.349 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[3]} -layer M5 -location {74.700 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[4]} -layer M3 -location {74.997 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[5]} -layer M5 -location {75.324 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[6]} -layer M3 -location {75.681 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[7]} -layer M5 -location {75.996 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[8]} -layer M3 -location {76.329 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[9]} -layer M5 -location {76.668 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[10]} -layer M3 -location {76.977 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[11]} -layer M5 -location {77.340 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[12]} -layer M3 -location {77.661 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[13]} -layer M5 -location {77.964 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[14]} -layer M3 -location {78.309 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[15]} -layer M5 -location {78.636 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[16]} -layer M3 -location {78.957 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[17]} -layer M5 -location {79.308 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[18]} -layer M3 -location {79.641 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[19]} -layer M5 -location {79.980 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[20]} -layer M3 -location {80.289 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[21]} -layer M5 -location {80.604 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[22]} -layer M3 -location {80.937 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[23]} -layer M5 -location {81.276 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[24]} -layer M3 -location {81.621 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[25]} -layer M5 -location {81.948 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[26]} -layer M3 -location {82.269 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[27]} -layer M5 -location {82.572 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[28]} -layer M3 -location {82.917 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[29]} -layer M5 -location {83.244 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[30]} -layer M3 -location {83.601 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[31]} -layer M5 -location {83.916 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[32]} -layer M3 -location {84.249 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[33]} -layer M5 -location {84.588 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[34]} -layer M3 -location {84.897 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[35]} -layer M5 -location {85.212 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[36]} -layer M3 -location {85.545 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[37]} -layer M5 -location {85.884 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[38]} -layer M3 -location {86.229 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[39]} -layer M5 -location {86.556 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[40]} -layer M3 -location {86.877 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[41]} -layer M5 -location {87.228 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[42]} -layer M3 -location {87.525 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[43]} -layer M5 -location {87.852 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[44]} -layer M3 -location {88.209 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[45]} -layer M5 -location {88.524 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[46]} -layer M3 -location {88.857 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[47]} -layer M5 -location {89.196 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[48]} -layer M3 -location {89.505 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[49]} -layer M5 -location {89.868 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[50]} -layer M3 -location {90.189 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[51]} -layer M5 -location {90.492 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[52]} -layer M3 -location {90.837 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[53]} -layer M5 -location {91.164 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[54]} -layer M3 -location {91.485 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[55]} -layer M5 -location {91.836 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[56]} -layer M3 -location {92.169 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[57]} -layer M5 -location {92.460 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[58]} -layer M3 -location {92.817 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[59]} -layer M5 -location {93.132 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[60]} -layer M3 -location {93.465 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[61]} -layer M5 -location {93.804 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[62]} -layer M3 -location {94.113 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[63]} -layer M5 -location {94.476 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[64]} -layer M3 -location {94.797 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[65]} -layer M5 -location {95.100 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[66]} -layer M3 -location {95.445 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[67]} -layer M5 -location {95.772 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di7[68]} -layer M3 -location {96.093 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di7[69]} -layer M5 -location {96.444 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[0]} -layer M3 -location {96.777 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[1]} -layer M5 -location {97.116 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[2]} -layer M3 -location {97.425 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[3]} -layer M5 -location {97.740 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[4]} -layer M3 -location {98.073 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[5]} -layer M5 -location {98.412 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[6]} -layer M3 -location {98.757 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[7]} -layer M5 -location {99.084 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[8]} -layer M3 -location {99.405 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[9]} -layer M5 -location {99.756 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[10]} -layer M3 -location {100.053 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[11]} -layer M5 -location {100.380 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[12]} -layer M3 -location {100.737 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[13]} -layer M5 -location {101.052 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[14]} -layer M3 -location {101.385 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[15]} -layer M5 -location {101.724 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[16]} -layer M3 -location {102.033 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[17]} -layer M5 -location {102.348 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[18]} -layer M3 -location {102.681 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[19]} -layer M5 -location {103.020 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[20]} -layer M3 -location {103.365 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[21]} -layer M5 -location {103.692 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[22]} -layer M3 -location {104.013 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[23]} -layer M5 -location {104.364 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[24]} -layer M3 -location {104.661 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[25]} -layer M5 -location {104.988 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[26]} -layer M3 -location {105.345 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[27]} -layer M5 -location {105.660 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[28]} -layer M3 -location {105.993 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[29]} -layer M5 -location {106.332 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[30]} -layer M3 -location {106.641 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[31]} -layer M5 -location {107.004 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[32]} -layer M3 -location {107.325 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[33]} -layer M5 -location {107.628 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[34]} -layer M3 -location {107.973 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[35]} -layer M5 -location {108.300 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[36]} -layer M3 -location {108.621 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[37]} -layer M5 -location {108.972 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[38]} -layer M3 -location {109.305 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[39]} -layer M5 -location {109.596 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[40]} -layer M3 -location {109.953 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[41]} -layer M5 -location {110.268 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[42]} -layer M3 -location {110.601 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[43]} -layer M5 -location {110.940 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[44]} -layer M3 -location {111.285 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[45]} -layer M5 -location {111.612 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[46]} -layer M3 -location {111.933 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[47]} -layer M5 -location {112.236 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[48]} -layer M3 -location {112.581 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[49]} -layer M5 -location {112.908 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[50]} -layer M3 -location {113.229 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[51]} -layer M5 -location {113.580 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[52]} -layer M3 -location {113.913 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[53]} -layer M5 -location {114.252 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[54]} -layer M3 -location {114.561 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[55]} -layer M5 -location {114.876 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[56]} -layer M3 -location {115.209 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[57]} -layer M5 -location {115.548 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[58]} -layer M3 -location {115.893 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[59]} -layer M5 -location {116.220 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[60]} -layer M3 -location {116.541 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[61]} -layer M5 -location {116.892 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[62]} -layer M3 -location {117.189 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[63]} -layer M5 -location {117.516 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[64]} -layer M3 -location {117.873 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[65]} -layer M5 -location {118.188 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[66]} -layer M3 -location {118.521 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[67]} -layer M5 -location {118.860 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di8[68]} -layer M3 -location {119.169 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di8[69]} -layer M5 -location {119.484 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[0]} -layer M3 -location {119.853 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[1]} -layer M5 -location {120.156 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[2]} -layer M3 -location {120.501 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[3]} -layer M5 -location {120.828 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[4]} -layer M3 -location {121.149 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[5]} -layer M5 -location {121.500 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[6]} -layer M3 -location {121.797 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[7]} -layer M5 -location {122.124 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[8]} -layer M3 -location {122.481 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[9]} -layer M5 -location {122.796 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[10]} -layer M3 -location {123.129 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[11]} -layer M5 -location {123.468 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[12]} -layer M3 -location {123.777 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[13]} -layer M5 -location {124.140 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[14]} -layer M3 -location {124.461 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[15]} -layer M5 -location {124.764 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[16]} -layer M3 -location {125.109 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[17]} -layer M5 -location {125.436 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[18]} -layer M3 -location {125.757 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[19]} -layer M5 -location {126.108 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[20]} -layer M3 -location {126.441 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[21]} -layer M5 -location {126.780 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[22]} -layer M3 -location {127.089 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[23]} -layer M5 -location {127.404 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[24]} -layer M3 -location {127.737 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[25]} -layer M5 -location {128.076 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[26]} -layer M3 -location {128.421 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[27]} -layer M5 -location {128.748 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[28]} -layer M3 -location {129.069 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[29]} -layer M5 -location {129.372 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[30]} -layer M3 -location {129.717 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[31]} -layer M5 -location {130.044 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[32]} -layer M3 -location {130.401 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[33]} -layer M5 -location {130.716 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[34]} -layer M3 -location {131.049 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[35]} -layer M5 -location {131.388 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[36]} -layer M3 -location {131.697 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[37]} -layer M5 -location {132.012 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[38]} -layer M3 -location {132.345 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[39]} -layer M5 -location {132.684 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[40]} -layer M3 -location {133.029 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[41]} -layer M5 -location {133.356 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[42]} -layer M3 -location {133.677 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[43]} -layer M5 -location {134.028 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[44]} -layer M3 -location {134.325 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[45]} -layer M5 -location {134.652 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[46]} -layer M3 -location {135.009 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[47]} -layer M5 -location {135.324 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[48]} -layer M3 -location {135.657 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[49]} -layer M5 -location {135.996 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[50]} -layer M3 -location {136.305 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[51]} -layer M5 -location {136.668 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[52]} -layer M3 -location {136.989 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[53]} -layer M5 -location {137.292 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[54]} -layer M3 -location {137.637 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[55]} -layer M5 -location {137.964 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[56]} -layer M3 -location {138.285 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[57]} -layer M5 -location {138.636 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[58]} -layer M3 -location {138.969 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[59]} -layer M5 -location {139.260 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[60]} -layer M3 -location {139.617 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[61]} -layer M5 -location {139.932 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[62]} -layer M3 -location {140.265 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[63]} -layer M5 -location {140.604 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[64]} -layer M3 -location {140.913 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[65]} -layer M5 -location {141.276 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[66]} -layer M3 -location {141.597 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[67]} -layer M5 -location {141.900 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di9[68]} -layer M3 -location {142.245 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di9[69]} -layer M5 -location {142.572 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {fi0[0]} -layer M3 -location {142.893 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {fi5[0]} -layer M5 -location {143.244 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {fi6[0]} -layer M3 -location {143.577 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {fi7[0]} -layer M5 -location {143.916 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {fi8[0]} -layer M3 -location {144.225 151.200} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {fi9[0]} -layer M5 -location {144.540 151.200} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {ck[0]} -layer M3 -location {4.581 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[0]} -layer M5 -location {5.052 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[1]} -layer M3 -location {5.553 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[2]} -layer M5 -location {6.060 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[3]} -layer M3 -location {6.525 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[4]} -layer M5 -location {7.020 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[5]} -layer M3 -location {7.497 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[6]} -layer M5 -location {7.980 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[7]} -layer M3 -location {8.505 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[8]} -layer M5 -location {8.988 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[9]} -layer M3 -location {9.477 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[10]} -layer M5 -location {9.948 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[11]} -layer M3 -location {10.449 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[12]} -layer M5 -location {10.956 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[13]} -layer M3 -location {11.421 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[14]} -layer M5 -location {11.916 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[15]} -layer M3 -location {12.429 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[16]} -layer M5 -location {12.924 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[17]} -layer M3 -location {13.401 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[18]} -layer M5 -location {13.884 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[19]} -layer M3 -location {14.373 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[20]} -layer M5 -location {14.892 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[21]} -layer M3 -location {15.381 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[22]} -layer M5 -location {15.852 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[23]} -layer M3 -location {16.353 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[24]} -layer M5 -location {16.860 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[25]} -layer M3 -location {17.325 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[26]} -layer M5 -location {17.820 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[27]} -layer M3 -location {18.297 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[28]} -layer M5 -location {18.780 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[29]} -layer M3 -location {19.305 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[30]} -layer M5 -location {19.788 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[31]} -layer M3 -location {20.277 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[32]} -layer M5 -location {20.748 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[33]} -layer M3 -location {21.249 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[34]} -layer M5 -location {21.756 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[35]} -layer M3 -location {22.221 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[36]} -layer M5 -location {22.716 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[37]} -layer M3 -location {23.229 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[38]} -layer M5 -location {23.724 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[39]} -layer M3 -location {24.201 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[40]} -layer M5 -location {24.684 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[41]} -layer M3 -location {25.173 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[42]} -layer M5 -location {25.692 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[43]} -layer M3 -location {26.181 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[44]} -layer M5 -location {26.652 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[45]} -layer M3 -location {27.153 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[46]} -layer M5 -location {27.660 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[47]} -layer M3 -location {28.125 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[48]} -layer M5 -location {28.620 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[49]} -layer M3 -location {29.097 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[50]} -layer M5 -location {29.580 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[51]} -layer M3 -location {30.105 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[52]} -layer M5 -location {30.588 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[53]} -layer M3 -location {31.077 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[54]} -layer M5 -location {31.548 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[55]} -layer M3 -location {32.049 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[56]} -layer M5 -location {32.556 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[57]} -layer M3 -location {33.021 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[58]} -layer M5 -location {33.516 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[59]} -layer M3 -location {34.029 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[60]} -layer M5 -location {34.524 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[61]} -layer M3 -location {35.001 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[62]} -layer M5 -location {35.484 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[63]} -layer M3 -location {35.973 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[64]} -layer M5 -location {36.492 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[65]} -layer M3 -location {36.981 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[66]} -layer M5 -location {37.452 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[67]} -layer M3 -location {37.953 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di1[68]} -layer M5 -location {38.460 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di1[69]} -layer M3 -location {38.925 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[0]} -layer M5 -location {39.420 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[1]} -layer M3 -location {39.897 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[2]} -layer M5 -location {40.380 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[3]} -layer M3 -location {40.905 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[4]} -layer M5 -location {41.388 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[5]} -layer M3 -location {41.877 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[6]} -layer M5 -location {42.348 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[7]} -layer M3 -location {42.849 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[8]} -layer M5 -location {43.356 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[9]} -layer M3 -location {43.821 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[10]} -layer M5 -location {44.316 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[11]} -layer M3 -location {44.829 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[12]} -layer M5 -location {45.324 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[13]} -layer M3 -location {45.801 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[14]} -layer M5 -location {46.284 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[15]} -layer M3 -location {46.773 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[16]} -layer M5 -location {47.292 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[17]} -layer M3 -location {47.781 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[18]} -layer M5 -location {48.252 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[19]} -layer M3 -location {48.753 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[20]} -layer M5 -location {49.260 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[21]} -layer M3 -location {49.725 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[22]} -layer M5 -location {50.220 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[23]} -layer M3 -location {50.697 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[24]} -layer M5 -location {51.180 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[25]} -layer M3 -location {51.705 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[26]} -layer M5 -location {52.188 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[27]} -layer M3 -location {52.677 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[28]} -layer M5 -location {53.148 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[29]} -layer M3 -location {53.649 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[30]} -layer M5 -location {54.156 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[31]} -layer M3 -location {54.621 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[32]} -layer M5 -location {55.116 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[33]} -layer M3 -location {55.629 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[34]} -layer M5 -location {56.124 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[35]} -layer M3 -location {56.601 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[36]} -layer M5 -location {57.084 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[37]} -layer M3 -location {57.573 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[38]} -layer M5 -location {58.092 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[39]} -layer M3 -location {58.581 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[40]} -layer M5 -location {59.052 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[41]} -layer M3 -location {59.553 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[42]} -layer M5 -location {60.060 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[43]} -layer M3 -location {60.525 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[44]} -layer M5 -location {61.020 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[45]} -layer M3 -location {61.497 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[46]} -layer M5 -location {61.980 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[47]} -layer M3 -location {62.505 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[48]} -layer M5 -location {62.988 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[49]} -layer M3 -location {63.477 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[50]} -layer M5 -location {63.948 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[51]} -layer M3 -location {64.449 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[52]} -layer M5 -location {64.956 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[53]} -layer M3 -location {65.421 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[54]} -layer M5 -location {65.916 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[55]} -layer M3 -location {66.429 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[56]} -layer M5 -location {66.924 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[57]} -layer M3 -location {67.401 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[58]} -layer M5 -location {67.884 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[59]} -layer M3 -location {68.373 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[60]} -layer M5 -location {68.892 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[61]} -layer M3 -location {69.381 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[62]} -layer M5 -location {69.852 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[63]} -layer M3 -location {70.353 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[64]} -layer M5 -location {70.860 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[65]} -layer M3 -location {71.325 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[66]} -layer M5 -location {71.820 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[67]} -layer M3 -location {72.297 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di2[68]} -layer M5 -location {72.780 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di2[69]} -layer M3 -location {73.305 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[0]} -layer M5 -location {73.788 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[1]} -layer M3 -location {74.277 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[2]} -layer M5 -location {74.748 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[3]} -layer M3 -location {75.249 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[4]} -layer M5 -location {75.756 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[5]} -layer M3 -location {76.221 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[6]} -layer M5 -location {76.716 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[7]} -layer M3 -location {77.229 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[8]} -layer M5 -location {77.724 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[9]} -layer M3 -location {78.201 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[10]} -layer M5 -location {78.684 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[11]} -layer M3 -location {79.173 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[12]} -layer M5 -location {79.692 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[13]} -layer M3 -location {80.181 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[14]} -layer M5 -location {80.652 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[15]} -layer M3 -location {81.153 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[16]} -layer M5 -location {81.660 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[17]} -layer M3 -location {82.125 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[18]} -layer M5 -location {82.620 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[19]} -layer M3 -location {83.097 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[20]} -layer M5 -location {83.580 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[21]} -layer M3 -location {84.105 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[22]} -layer M5 -location {84.588 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[23]} -layer M3 -location {85.077 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[24]} -layer M5 -location {85.548 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[25]} -layer M3 -location {86.049 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[26]} -layer M5 -location {86.556 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[27]} -layer M3 -location {87.021 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[28]} -layer M5 -location {87.516 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[29]} -layer M3 -location {88.029 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[30]} -layer M5 -location {88.524 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[31]} -layer M3 -location {89.001 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[32]} -layer M5 -location {89.484 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[33]} -layer M3 -location {89.973 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[34]} -layer M5 -location {90.492 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[35]} -layer M3 -location {90.981 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[36]} -layer M5 -location {91.452 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[37]} -layer M3 -location {91.953 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[38]} -layer M5 -location {92.460 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[39]} -layer M3 -location {92.925 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[40]} -layer M5 -location {93.420 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[41]} -layer M3 -location {93.897 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[42]} -layer M5 -location {94.380 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[43]} -layer M3 -location {94.905 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[44]} -layer M5 -location {95.388 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[45]} -layer M3 -location {95.877 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[46]} -layer M5 -location {96.348 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[47]} -layer M3 -location {96.849 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[48]} -layer M5 -location {97.356 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[49]} -layer M3 -location {97.821 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[50]} -layer M5 -location {98.316 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[51]} -layer M3 -location {98.829 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[52]} -layer M5 -location {99.324 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[53]} -layer M3 -location {99.801 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[54]} -layer M5 -location {100.284 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[55]} -layer M3 -location {100.773 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[56]} -layer M5 -location {101.292 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[57]} -layer M3 -location {101.781 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[58]} -layer M5 -location {102.252 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[59]} -layer M3 -location {102.753 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[60]} -layer M5 -location {103.260 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[61]} -layer M3 -location {103.725 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[62]} -layer M5 -location {104.220 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[63]} -layer M3 -location {104.697 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[64]} -layer M5 -location {105.180 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[65]} -layer M3 -location {105.705 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[66]} -layer M5 -location {106.188 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[67]} -layer M3 -location {106.677 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di3[68]} -layer M5 -location {107.148 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di3[69]} -layer M3 -location {107.649 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[0]} -layer M5 -location {108.156 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[1]} -layer M3 -location {108.621 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[2]} -layer M5 -location {109.116 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[3]} -layer M3 -location {109.629 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[4]} -layer M5 -location {110.124 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[5]} -layer M3 -location {110.601 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[6]} -layer M5 -location {111.084 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[7]} -layer M3 -location {111.573 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[8]} -layer M5 -location {112.092 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[9]} -layer M3 -location {112.581 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[10]} -layer M5 -location {113.052 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[11]} -layer M3 -location {113.553 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[12]} -layer M5 -location {114.060 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[13]} -layer M3 -location {114.525 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[14]} -layer M5 -location {115.020 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[15]} -layer M3 -location {115.497 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[16]} -layer M5 -location {115.980 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[17]} -layer M3 -location {116.505 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[18]} -layer M5 -location {116.988 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[19]} -layer M3 -location {117.477 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[20]} -layer M5 -location {117.948 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[21]} -layer M3 -location {118.449 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[22]} -layer M5 -location {118.956 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[23]} -layer M3 -location {119.421 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[24]} -layer M5 -location {119.916 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[25]} -layer M3 -location {120.429 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[26]} -layer M5 -location {120.924 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[27]} -layer M3 -location {121.401 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[28]} -layer M5 -location {121.884 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[29]} -layer M3 -location {122.373 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[30]} -layer M5 -location {122.892 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[31]} -layer M3 -location {123.381 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[32]} -layer M5 -location {123.852 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[33]} -layer M3 -location {124.353 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[34]} -layer M5 -location {124.860 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[35]} -layer M3 -location {125.325 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[36]} -layer M5 -location {125.820 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[37]} -layer M3 -location {126.297 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[38]} -layer M5 -location {126.780 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[39]} -layer M3 -location {127.305 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[40]} -layer M5 -location {127.788 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[41]} -layer M3 -location {128.277 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[42]} -layer M5 -location {128.748 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[43]} -layer M3 -location {129.249 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[44]} -layer M5 -location {129.756 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[45]} -layer M3 -location {130.221 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[46]} -layer M5 -location {130.716 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[47]} -layer M3 -location {131.229 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[48]} -layer M5 -location {131.724 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[49]} -layer M3 -location {132.201 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[50]} -layer M5 -location {132.684 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[51]} -layer M3 -location {133.173 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[52]} -layer M5 -location {133.692 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[53]} -layer M3 -location {134.181 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[54]} -layer M5 -location {134.652 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[55]} -layer M3 -location {135.153 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[56]} -layer M5 -location {135.660 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[57]} -layer M3 -location {136.125 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[58]} -layer M5 -location {136.620 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[59]} -layer M3 -location {137.097 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[60]} -layer M5 -location {137.580 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[61]} -layer M3 -location {138.105 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[62]} -layer M5 -location {138.588 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[63]} -layer M3 -location {139.077 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[64]} -layer M5 -location {139.548 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[65]} -layer M3 -location {140.049 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[66]} -layer M5 -location {140.556 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[67]} -layer M3 -location {141.021 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {di4[68]} -layer M5 -location {141.516 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {di4[69]} -layer M3 -location {142.029 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {fi1[0]} -layer M5 -location {142.524 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {fi2[0]} -layer M3 -location {143.001 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {fi3[0]} -layer M5 -location {143.484 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {fi4[0]} -layer M3 -location {143.973 0.000} -pin_size {0.018 0.144} -force_to_die_boundary
+place_pin -pin_name {rs[0]} -layer M5 -location {144.492 0.000} -pin_size {0.024 0.192} -force_to_die_boundary
