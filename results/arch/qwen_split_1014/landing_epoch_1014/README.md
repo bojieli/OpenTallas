@@ -9,3 +9,5 @@ Same-input RTL cost comparison at KL=0: legacy 9,596 cycles vs epoch 9,597 (+1, 
 Native successor masters: qkd_ectl_a_tp8_epoch_direct (rq17), qkd_land_grp_epoch (rq17, DQ128); parent qkd_ectl3_epoch_direct_s (rq17). B/C direct masters keep their ports and consume recovered r3 direct-seam RTL (C x2 to A/B, B x1 captures stage3). The die generator must change request routes and landing strip instances to these masters and assign bit16. No old 16-bit view is valid for the new 17-bit masters.
 
 Existing ECTL dr1 audits: A PASS 183.0/159.1ps launch/capture; B FAIL launch225.6; C FAIL capture223.2. Recovered r3 B/C gate jobs qkd_ectl_b_tp8_direct-dr3-97a28cc59 / qkd_ectl_c_tp8_direct-dr2-97a28cc59 validated source binding and were submitted. Their views/native audits remain outstanding.
+
+Named native successor composition proof on abf84515f reproduces all prior numeric verdicts exactly (native-*.log), with qkd_land_grp_epoch and qkd_ectl3_epoch_direct_s instantiated directly. Both mutants exit1; both positives exit0.
