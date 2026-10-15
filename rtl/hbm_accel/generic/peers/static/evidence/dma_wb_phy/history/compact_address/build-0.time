@@ -1,0 +1,23 @@
+	Command being timed: "verilator --binary --timing -j 4 -Wno-fatal --top-module tb_dma_wb_phy_static -GMUT=0 --Mdir /tmp/hbm-dma-wb-phy-run2/obj-0 -o gate ot_hgi_dma_back_static.sv ot_hgi_b2_swap_disp_static.sv ot_hgi_b2_swap_grp_static.sv ot_hgi_b2_swap_wb_grp_static.sv ot_vms_bank_static.sv ot_hbm_svc_wb_block_cdc.sv ot_hbm_svc_phy_mux.sv ot_reset_sync.sv ot_async_fifo.sv ot_hbm_accel_cdc_fifo.sv ot_sram_1r1w_128x256_m1_r2c2.v ot_sram_1r1w_1024x256_m2_r2c2.v ot_hdc_v41x_idx_hbm.sv ot_hdc_hbm_model.sv ot_chip_v41x_hbm3e_phy.sv tb_dma_wb_phy_static.sv"
+	User time (seconds): 144.72
+	System time (seconds): 12.32
+	Percent of CPU this job got: 295%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:53.10
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1024052
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 3562127
+	Voluntary context switches: 1213
+	Involuntary context switches: 395
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
