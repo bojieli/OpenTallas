@@ -27,7 +27,7 @@ def relay_children():
         for k in range(4):
             for c in range(4):
                 for st in range((0, 0, 1, 2)[c]):
-                    x, dy = ((near, 40.32) if c == 2 else (near, 93.6)) if st == 0 else (far, 66.96)
+                    x, dy = ((near, 40.32) if c == 2 else (near, 93.6)) if st == 0 else (far, 40.32)
                     out.append({"master": m, "inst": f"u_rq_{hn}{k}_{c}_{st}", "at": [x, round(ROW_Y[k] + dy, 3)], "clock": f"ck_q[{q}]"})
                     q += 1
     for g in range(8):
