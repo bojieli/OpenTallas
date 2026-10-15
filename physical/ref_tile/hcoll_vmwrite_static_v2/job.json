@@ -7,7 +7,7 @@
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "claude/hcoll-writer-cap-1015",
+  "branch": "codex/hcoll-writer-capture-1417",
   "commit": "COMMIT",
   "extra_paths": [
    "tools/hbm_coll_static",
@@ -35,7 +35,7 @@
     "needs": [
      "verilator"
     ],
-    "min_count_regex": "checked=83"
+    "min_count_regex": "checked=(83)"
    },
    {
     "name": "vmwrite_payload_mutant",
