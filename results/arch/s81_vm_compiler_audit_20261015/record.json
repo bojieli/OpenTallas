@@ -1,0 +1,129 @@
+{
+  "status": "READ_ONLY_SOURCE_AUDIT_COMPLETE_NO_NEW_HARDWARE_QUALIFICATION",
+  "source_revision": "f3329dfb0",
+  "also_checked_revision": "d437a9c0a",
+  "all48_fullmaster_compiled_source_hashes_equal_36732083b": true,
+  "selected_construction": {
+    "READ_PIPE": 4,
+    "CAP_PIPE": 2,
+    "WSCATTER_PIPE": 1
+  },
+  "defaults": "Actual generator/default0/0 construction remains separate; selected4/2/W1 is explicit opt-in. No default adoption inferred.",
+  "observed_service_boundaries": {
+    "external_read_pin_to_macro_r_ce": 7,
+    "external_read_pin_to_return": 16,
+    "core_source_write_pin_to_macro_w_ce": "10+scheduled_samebank_lane",
+    "core_source_write_pin_to_returned_commit": "12+scheduled_samebank_lane",
+    "raw_write_to_returned_commit": 2,
+    "same_address_macro_policy": "read_before_write; dependent new-value read needs rawreadedge strictly after matching rawwriteedge",
+    "capture_seam": "CAP2 serial physical pin P: lane row age3, x34 sample q=P+4; x34 stream output edge4*(q//3)+2+(q%3)+1. Compiler must then name receiving core sample edge, samebank lane and flush/directmapped entry slots explicitly; no uniform age from first field element."
+  },
+  "definitions": [
+    {
+      "path": "tools/s81_compile_schedule/compile_calendar.py",
+      "sha256": "94b96d147d835124916f96baf14ffad832511610ca231b83427de3eafbdadfa6"
+    },
+    {
+      "path": "tools/s81_suhc/static_vm_reservations.py",
+      "sha256": "2417f5423cdcd09895dd0531ab2e3434dbca1c3c120ae36499ee5818df1d5fd3"
+    },
+    {
+      "path": "tools/s81_compile_schedule/read_packets.py",
+      "sha256": "397ff87a8bc632563a29460f3f37ec876c9157560d5eab4cca38bb27ae7c42ed"
+    },
+    {
+      "path": "tools/s81_compile_schedule/write_itinerary.py",
+      "sha256": "1d96e496b16e003f9ecda7a0399fd3d738eebdc6c89839069397708e58caa94d"
+    },
+    {
+      "path": "tools/s81_compile_schedule/README.md",
+      "sha256": "d99e1a8f4946792ddcf1b51a51c19d18b57d29a1e141db453aea2a49d1177348"
+    },
+    {
+      "path": "tools/s81/engine_pipeline_abi.json",
+      "sha256": "5026fb2045f190ef97fbd7425d548dd19184e368028ab794d28071559941c6f4"
+    },
+    {
+      "path": "tools/s81_vm/static_transport_model.py",
+      "sha256": "163aa19e449ad3dfeaed941a0095dd857e5891ceea857b06075ca2f884542e84"
+    },
+    {
+      "path": "tools/s81_vm/static_face_model.py",
+      "sha256": "530c0da15a6b082fad82b03884e6b2c7b554f82396c862fa35dad295a4ccbf8b"
+    },
+    {
+      "path": "tools/s81_vm/static_read_router_contract.py",
+      "sha256": "67a9ecb1e31fda3357a009a9d54b8ca3a8aa2cad3c6b718cc82699bf7d8dd165"
+    },
+    {
+      "path": "tools/s81_vm/static_vm_engine.py",
+      "sha256": "c51e7408b47a337d64b67ba3b41b8cae66cbc96a4155023539d172262cf0285b"
+    },
+    {
+      "path": "tools/s81_vm/native_clock_prepare.py",
+      "sha256": "368036a38d5db0d2b0f348a4028c855e164daea8fe7ce062a59e2708c55809f4"
+    },
+    {
+      "path": "results/arch/s81_native_compile_1014/write_itineraries/contract.json",
+      "sha256": "96d9ead168fb58e8ac9b6209339755e8ad73cf8b7915576fd6bf6b0ddedf3b9b"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap.sv",
+      "sha256": "3fa3da393f9e02dbca8ee5769cc14990cacbeb4a08930c2e2e71f018463b96f5"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_cap_leaf.sv",
+      "sha256": "f832ceea225aa9fb5bd58c580ce645ad0e5ee4ca1a1f2aecdc05e1228ef5873a"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_core.sv",
+      "sha256": "61e5685984773281c7d35c78bd8bd320bb6908ecf7a27a1a6f01fb60880eac70"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128.sv",
+      "sha256": "28b404bc01d8722b2cac8aadf058d48edb4c99d6128f7b8872f971f8dda940d8"
+    }
+  ],
+  "api_excerpts": {
+    "compile_calendar.py": "compile_program(program,binding,contract,root=ROOT): translates explicit job access issue/response/commit/deadline and ingress/enqueue/service edges; check_pipeline_abi checks only named engines in engine_pipeline_abi.json.",
+    "static_vm_reservations.py": "check(schedule,contract,source_root=None): minimum path delays, optional sourced1r1w ports, sameedgevisibility, bank/slot/clientcapacities, explicit dependencies and responsegroupedge equality; measured_native_bounds is callerboolean.",
+    "static_transport_model.py": "model(): read_pin12/returned_commit11/command_done6 historical baseline. write_scatter_pin_stage_model(write_pipeline=0): raw9+pipe/returned11+pipe, correctforpipe1.",
+    "static_face_model.py": "model(entries=8,cap_pipeline=0,read_pipeline=0); acceptedreadvalues0/1/2, no scatterparameter. Selectedread4 raises: only measured structural candidates are supported (cap 0/1/2, read 0/1/2)",
+    "static_read_router_contract.py": "read_latency(opt_in=False,pinreg=False):12/13/14 only; no selectedL16case.",
+    "read_packets.py": "compile_packets(requests,bank_mapping=...,return_cycles=10): explicitly OBSERVED_DEMAND_PACKET_MAP_ONLY, dispatch_eligibleFalse.",
+    "write_itinerary.py": "compile_itinerary(requests,contract): explicitsource/capture/drain/macroedges, DEMAND_ITINERARY_ONLY; committedcontract capture_to_drain1/drain_to_macro5 taggedSTAGING_HARDWARE_NOT_YET_IMPLEMENTED."
+  },
+  "concrete_gaps": [
+    {
+      "id": "selected_profile_not_admission_abi",
+      "finding": "NoVM READ4/CAP2/WSCATTER1 exact source-bound tuple in engine_pipeline_abi or reservationchecker. Existing correctwrite helper is not imported by compiler. Cannot claimcurrentproductioncompilerusesK12; callerprovidedK11 remains admitted if minimaare stale.",
+      "diagnostic": "admission_diagnostic.json: sourcedbankRTL plus callermeasuredflag admits responseP15/rawP7 and returnedcommitP11/rawP10; qualifiedFalse. This demonstrates absentpipelineguard, not a productioncompilerdispatch."
+    },
+    {
+      "id": "raw_and_returned_commit_need_distinct_fields",
+      "finding": "Single commit_cycle feeds both producerdonecheck and dependencyreadvisibility. Binding it to returnedP12 conservatively rejects legal rawreadP11; bindingrawP10 cannot express returnedcommit completionfence separately. Sameedge1r1w oldvalue rule exists but requires correctraw servicebinding."
+    },
+    {
+      "id": "selected_face_and_return_descriptor_tables_missing",
+      "finding": "Genericface/routermodels cannotrepresentREAD4, facehasnoscatterarg, and generictransportmodel retainsL12/K11. Genericcheckerdoesnotderiveactualreadslot/rowlowbit legality,8releasegroupreuse,prepare/returnmaskslotdescriptor ages,auxexclusivity orCAPentry/key/flush schedules. read_packetsdefault10 is diagnosticdemandonly."
+    },
+    {
+      "id": "producer_phase_join_not_complete",
+      "finding": "compile_calendar correctlyrequires exactstartphase and sourcedjobtemplates, but complete4/2/W1 producerbindings stillneeded: actualsourceportrowmask identity, core sampleedge, at mostthree samebank captures with laneindex0..2 and fixeddrainreservations, CAP2serial/x34phase/flush, allnative endpoint duration/commit fences. Currentgenericstagingcontract is explicitlyunimplemented; do notpromote it."
+    }
+  ],
+  "next_action": "Add an explicit opt-in selected VM service ABI with pinnedRTLtuple, exactrawread7/return16/rawwrite10/returned12+lane, relatedclockphase and separate raw/returnedcommit fields; consumeit in checker/model before buildingowner producer phase/descriptor tables. Preserve historical/defaultprofiles. Reuse completedfull128proofs; no newwhole-token cost or passclaim.",
+  "coordination": {
+    "PQ_owner": "Confirmedtools/s81/pq_canonical_pins_gate.py + rtl/test/dsrom_sys/tb_s81_pq_produced_pins.sv and tools/s81/pq_static_calendar_abi.json. PQcalendarengine/ROM4port/productionVMbinding S-BIND OPEN; localCFG>=GO+4/resetpriming6 are separate.",
+    "Engram_owner": {
+      "owned_paths": [
+        "rtl/dsrom_sys/engram/mix/tb_s81_engram_mix4_native_vm.sv",
+        "tools/s81_engram_mix/native_vm_gate.py",
+        "tools/s81_engram_mix/vm_banked_layout.py",
+        "tools/s81_ctrl/die_layer_stim.py --mix-vm-banked"
+      ],
+      "current_join": "Owner confirms immutable native3c30 is explicitREAD4/CAP2/SCATTER0: RL16/rawP9/returnedP11, not selectedSCATTER1. Top descriptor metadata validationfailed whileVMnofault; ownerrepairing. No PIPE1 adoption or fullproof inheritance.",
+      "default_confirmation": "Published RTL/generator default0/0/W0 remains separate from explicit selected4/2/W1."
+    }
+  }
+}

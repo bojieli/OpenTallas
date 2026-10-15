@@ -1,0 +1,98 @@
+{
+  "purpose": "Schema diagnostic with deliberately stale callerlatencies; not a native schedule or new hardwarepass",
+  "contract": {
+    "stream_period_ps": 833,
+    "vm_period_ps": 833,
+    "stream_phase_ps": 0,
+    "vm_phase_ps": 0,
+    "banks": 32,
+    "bank_mapping": "xor_row7_5_shift2",
+    "bank_ops_per_cycle": 1,
+    "bank_port_capacities": {
+      "read": 1,
+      "write": 1
+    },
+    "same_address_policy": "read_before_write",
+    "bank_port_evidence": [
+      {
+        "path": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128.sv",
+        "sha256": "28b404bc01d8722b2cac8aadf058d48edb4c99d6128f7b8872f971f8dda940d8"
+      }
+    ],
+    "read_ingress_per_cycle": 1,
+    "write_ingress_per_cycle": 1,
+    "request_min_ps": 0,
+    "read_min_ps": 6664,
+    "commit_min_ps": 833,
+    "slot_capacity": {
+      "su/read/0": 1,
+      "su/write/0": 1
+    },
+    "client_capacity": {
+      "su": 2
+    },
+    "bank_queue_capacity": 2,
+    "measured_native_bounds": true
+  },
+  "schedule": {
+    "trace_complete": true,
+    "events": [
+      {
+        "id": "stale_read",
+        "client": "su",
+        "slot": 0,
+        "row": 1,
+        "tag": 0,
+        "job": "j",
+        "kind": "read",
+        "issue_cycle": 0,
+        "ingress_cycle": 0,
+        "bank_enqueue_cycle": 0,
+        "service_cycle": 7,
+        "response_cycle": 15,
+        "deadline_cycle": 20
+      },
+      {
+        "id": "stale_write",
+        "client": "su",
+        "slot": 0,
+        "row": 0,
+        "tag": 0,
+        "job": "j",
+        "kind": "write",
+        "issue_cycle": 0,
+        "ingress_cycle": 0,
+        "bank_enqueue_cycle": 0,
+        "service_cycle": 10,
+        "commit_cycle": 11,
+        "deadline_cycle": 20
+      }
+    ],
+    "jobs": [
+      {
+        "client": "su",
+        "job": "j",
+        "tag": 0,
+        "done_cycle": 20
+      }
+    ]
+  },
+  "result": {
+    "status": "pass",
+    "qualified": false,
+    "events": 2,
+    "violations": [],
+    "slot_peaks": {
+      "su/read/0": 1,
+      "su/write/0": 1
+    },
+    "bank_queue_peaks": {
+      "1": 1,
+      "0": 1
+    },
+    "bank_mapping": "xor_row7_5_shift2",
+    "measured_native_bounds": true,
+    "trace_complete": true,
+    "note": "Static reservation check only; native RTL, die timing and performance gates remain required."
+  }
+}
