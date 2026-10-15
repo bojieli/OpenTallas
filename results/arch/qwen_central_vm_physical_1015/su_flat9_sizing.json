@@ -1,0 +1,61 @@
+{
+  "schema": "opentallas.qwen-central-vm-flat-nine-root-bank.v1",
+  "opt_in_default": false,
+  "macs_per_cycle": 0,
+  "memory_read_bytes_per_cycle": 64,
+  "memory_write_bytes_per_cycle": 64,
+  "replicas": 48,
+  "memory_macros_per_bank": 2,
+  "clock_roots_per_bank": 9,
+  "data_leaf_bits": 256,
+  "data_leaf_copies_per_bank": 6,
+  "control_leaf_bits": 39,
+  "data_leaf_outline_um": [
+    25.92,
+    51.84
+  ],
+  "control_leaf_outline_um": [
+    17.28,
+    21.6
+  ],
+  "data_leaf_area_um2": 1343.6928000000003,
+  "estimated_face_cut_ratio": 0.5171717171717172,
+  "input_bits_per_cycle": 546,
+  "output_bits_per_cycle": 512,
+  "fixed_edges": 4,
+  "added_fixed_edges": 0,
+  "parent_own_flops": 1575,
+  "total_register_bits_per_bank": 1575,
+  "mux_demux_cost": "same16word mask expansion; wires-only low/high256-bit partition",
+  "actual_parent_homes": null,
+  "actual_parent_area_um2": null,
+  "prior_failure": "full512/547-bit strips: GPL artificial inflation900pct and Inf/NaN; immutable failures preserved",
+  "qualification": "Actual seven-root CTS and two raw-entry ownership, route, native boundaries and global capacity remain open. Existing VM main residual remains open.",
+  "physical_depth": 1024,
+  "logical_depth": 695,
+  "address_bits": 10,
+  "memory_macro": "ot_sram_1r1w_1024x256_m2_r2c2",
+  "original_native_failure": "launch293.5ps/capture260.9ps/boundaryspread95.9ps",
+  "parent_own_clock_roots": 7,
+  "own_root_flops": [
+    39,
+    256,
+    256,
+    256,
+    256,
+    256,
+    256
+  ],
+  "children_register_macros": 0,
+  "raw_sram_clock_entries": 2,
+  "actual_clock_roots": 9,
+  "candidate_outline_um": [
+    241.92,
+    241.92
+  ],
+  "candidate_area_um2": 58525.2864,
+  "hierarchy_change": "Harden existing register stages together; remove seven artificial macro boundaries and channels.",
+  "timing_policy": "Same 833.333 ps clocks and TT/FF/DRC policy; actual internal SRAM capture paths stay constrained.",
+  "signal_and_pg_cap": "M7 cluster: global M6/M7 through tracks blocked inside bank. Old M5 closure is not inherited.",
+  "new_memory_copies": 0
+}

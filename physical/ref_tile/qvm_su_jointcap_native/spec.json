@@ -1,0 +1,217 @@
+{
+ "params": {
+  "MUT": 0
+ },
+ "job": {
+  "owner": "Codex:qwen_vm_physical",
+  "branch": "codex/q-vm-physical-1015",
+  "tag": "jc1",
+  "purpose": "Hard bank includes actual512 captureFF on2explicit roots beside2real1024x256 SRAMs; all input/output stages are real hard leaves. Same4edges/9roots, no generic mid-read I/O padding.",
+  "views_to": "physical/ref_tile/qvm_su_jointcap_native/views",
+  "record_to": "results/rtl/ref_tile/qvm_su_jointcap_native",
+  "cycles_added": 0,
+  "extra_paths": [
+   "rtl/qwen_sys/vm_native_physical_20261015",
+   "rtl/qwen_sys/vm_plane_20261013",
+   "rtl/qwen_sys/vm_me_20261008",
+   "rtl/qwen_sys/rtl_finish_20261007",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/ref_tile/qvm_data256_native/views",
+   "physical/ref_tile/qvm_su_bank_ctrl_native/views"
+  ],
+  "benches": [
+   {
+    "name": "bank_m0",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_su_bank_jointcap_native -GMUT=0 -j 2 --Mdir {RUN}/bench/m0 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_su_bank_jointcap_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_jointcap_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v > {RUN}/bench/m0.build.log 2>&1 && {RUN}/bench/m0/Vtb_qvm_su_bank_jointcap_native",
+    "expect": "pass",
+    "pass_regex": "PASS qvm_su_bank_jointcap_native",
+    "threads": 2,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "bank_m1",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_su_bank_jointcap_native -GMUT=1 -j 2 --Mdir {RUN}/bench/m1 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_su_bank_jointcap_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_jointcap_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v > {RUN}/bench/m1.build.log 2>&1 && {RUN}/bench/m1/Vtb_qvm_su_bank_jointcap_native",
+    "expect": "fail",
+    "pass_regex": "PASS qvm_su_bank_jointcap_native",
+    "threads": 2,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "bank_m2",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_su_bank_jointcap_native -GMUT=2 -j 2 --Mdir {RUN}/bench/m2 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_su_bank_jointcap_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_jointcap_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v > {RUN}/bench/m2.build.log 2>&1 && {RUN}/bench/m2/Vtb_qvm_su_bank_jointcap_native",
+    "expect": "fail",
+    "pass_regex": "PASS qvm_su_bank_jointcap_native",
+    "threads": 2,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "structural_change": "Raw1024SRAM TT CQ544.8ps+generic captureS120 is too tight. Put actual readcaptureFF inside hardened bank on2real256-sink CTSroots; retain all actual producer\u2192macro\u2192capture max/min paths, no clock/I/O waiver. Other seven roots source-bound hard/rawentries; same data stages/memory."
+ },
+ "name": "qvm_su_jointcap_native",
+ "top": "qvm_su_bank_jointcap_native",
+ "kind": "cluster",
+ "sources": [
+  "rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_jointcap_native.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "clock": "hybrid_entries",
+ "clock_port": "ck_ctrl",
+ "clock_ports": [
+  "ck_ctrl",
+  "ck_in_lo",
+  "ck_in_hi",
+  "ck_mem_lo",
+  "ck_mem_hi",
+  "ck_cap_lo",
+  "ck_cap_hi",
+  "ck_out_lo",
+  "ck_out_hi"
+ ],
+ "reset_ports": [
+  "rst_n"
+ ],
+ "std_area_um2": 209,
+ "outline": {
+  "w": 371.52,
+  "h": 263.52
+ },
+ "pins": {
+  "W": [
+   "re",
+   "we",
+   "ra",
+   "wl",
+   "wm",
+   "wd"
+  ],
+  "E": [
+   "q"
+  ],
+  "S": [
+   "ck_ctrl",
+   "ck_in_lo",
+   "ck_in_hi",
+   "ck_mem_lo",
+   "ck_mem_hi",
+   "ck_cap_lo",
+   "ck_cap_hi",
+   "ck_out_lo",
+   "ck_out_hi",
+   "rst_n"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "macro_halo_um": 5.4,
+  "hold_margin_ns": 0.03
+ },
+ "slot_change_request": "Actual695row SUbank hybrid9clock candidate:512 captureFF hardened with SRAM inside bank; real input/output/dataCTRL hardleaves;371.52x263.52um layout candidate, no globalfit/adoptionyet.",
+ "children": [
+  {
+   "view": "physical/ref_tile/qvm_su_bank_ctrl_native/views/qvm_su_bank_ctrl_native",
+   "count": 1,
+   "inst": "u_ctrl",
+   "at": [
+    25.92,
+    216.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
+   "count": 1,
+   "inst": "u_in_lo",
+   "at": [
+    25.92,
+    25.92
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
+   "count": 1,
+   "inst": "u_in_hi",
+   "at": [
+    25.92,
+    120.96
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
+   "count": 1,
+   "inst": "u_out_lo",
+   "at": [
+    315.36,
+    25.92
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
+   "count": 1,
+   "inst": "u_out_hi",
+   "at": [
+    315.36,
+    120.96
+   ]
+  }
+ ],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "u_lo",
+   "at": [
+    73.44,
+    25.92
+   ],
+   "clock_entry": {
+    "port": "ck_mem_lo",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "u_hi",
+   "at": [
+    73.44,
+    120.96
+   ],
+   "clock_entry": {
+    "port": "ck_mem_hi",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "orient": "MY"
+  }
+ ],
+ "child_lattice_um": 4.32,
+ "clock_cts_roots": [
+  "ck_cap_lo",
+  "ck_cap_hi"
+ ],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

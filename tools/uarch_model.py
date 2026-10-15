@@ -84,6 +84,47 @@ def qwen_central_vm_operand_bank_model():
     return x
 
 
+def qwen_central_vm_joint_capture_bank_model():
+    """Price real SRAM+readcapture together, preserving all existing bank edges."""
+    x=qwen_central_vm_operand_bank_model()
+    x.update(schema='opentallas.qwen-central-vm-joint-capture-bank.v1',
+        parent_own_flops=512,parent_own_clock_roots=2,flops_per_own_root=256,
+        hard_data_leaf_copies_per_bank=4,hard_control_leaf_copies_per_bank=1,
+        raw_sram_clock_entries=2,total_clock_roots_per_bank=9,
+        actual_sram_read_cq_tt_ps=544.8138,old_generic_capture_setup_tt_ps=120.03997,
+        interface_change='remove artificial subelement boundary between rawSRAM and existing captureFF, retain actual max/min timing inside hardened bank; no falsepaths, relaxed clocks or IO masks',
+        parent_candidate_outline_um=[371.52,267.84],parent_candidate_area_um2=371.52*267.84,
+        fixed_edges=4,added_fixed_edges=0,memory_copies_added=0,
+        expected_capture_ff_standard_area_um2=209,
+        area_basis='actual512FF register family synthesized209um2, placeholder until exact hybrid-bank synthesis',
+        qualification='model first; source miter+2mutants, actual hybrid clocks/route and nativeparent/hop checks pending; no new unowned state at fullVM assembly; existing central main residual remains OPEN')
+    return x
+
+
+def qwen_central_vm_flat_nine_root_model(operand=False):
+    """Verified bank RTL: seven physical clock regions and two raw SRAM entries."""
+    model = qwen_central_vm_operand_bank_model() if operand else qwen_central_vm_banked_native_model()
+    width, height = (241.92, 241.92) if operand else (224.64, 190.08)
+    model.update(
+        schema='opentallas.qwen-central-vm-flat-nine-root-bank.v1',
+        parent_own_flops=1575 if operand else 1571,
+        parent_own_clock_roots=7,
+        own_root_flops=[39 if operand else 35, 256, 256, 256, 256, 256, 256],
+        children_register_macros=0,
+        raw_sram_clock_entries=2,
+        actual_clock_roots=9,
+        candidate_outline_um=[width, height],
+        candidate_area_um2=width * height,
+        hierarchy_change='Harden existing register stages together; remove seven artificial macro boundaries and channels.',
+        timing_policy='Same 833.333 ps clocks and TT/FF/DRC policy; actual internal SRAM capture paths stay constrained.',
+        signal_and_pg_cap='M7 cluster: global M6/M7 through tracks blocked inside bank. Old M5 closure is not inherited.',
+        fixed_edges=4,
+        added_fixed_edges=0,
+        new_memory_copies=0,
+        qualification='Actual seven-root CTS and two raw-entry ownership, route, native boundaries and global capacity remain open. Existing VM main residual remains open.')
+    return model
+
+
 def qwen_central_vm_control_leaf_model(observer=False):
     """Selected 488-root VM, actual LAW8 control leaves before native CTS/route."""
     bits_in, bits_out, registers, copies = (27,25,51,39) if observer else (35,35,70,64)
