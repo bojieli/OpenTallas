@@ -52,3 +52,28 @@ closure, insertion, clock epoch, physical transport flight, real source
 reservations, HC consumer schedule and whole-layer price composition are
 unqualified. No route was submitted, and no existing performance claim or
 qualified collective view is replaced by this evidence.
+
+Clock partition follow-up
+
+The native source interfaces now expose `clk_lane[15:0]` and `clk_control`.
+The actual arithmetic scalar modules are instantiated 16 times, and the
+assembly payload registers are split across 16 scalar assembly modules.
+Each scalar lane holds one scalar from all 16 HC word positions. Each
+lane's output is physically a separate 512-bit register, preserving the
+original interleaved 8192-bit HC layout at the top-level port. The existing
+single-clock module names are compatibility wrappers that tie the clocks
+for functional proof; physical parents must use the clocked interfaces.
+
+`python3 tools/s81_static_hc/clock_preflight.py` elaborates, lowers processes,
+flattens each scalar leaf, and counts actual clocked Q bits after Yosys opt.
+It measures 2,086 bits in the scalar reducer and 1,024 in its scalar assembler:
+3,110 bits per lane root, 49,760 across the 16 lane roots. Metadata/bitmap
+state uses the seventeenth control root. This is a real clock-pin and flop
+partition, not CTS evidence or an accepted hardened view. A monolithic root
+would exceed the owner's 15,000-sink rule even before metadata.
+
+Actual common epoch, die clock delivery, control-to-leaf pin registration,
+wire reach, insertion/spread, slot outlines, TT setup/FF hold and SS
+sensitivity remain open. Functional proof with tied clocks establishes the
+arithmetic/packing contract only. No whole-tile or independent-clock timing
+claim follows from it.
