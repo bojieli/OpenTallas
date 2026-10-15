@@ -1,0 +1,63 @@
+{
+  "schema": "opentallas.su-static-side.v1",
+  "default_OFF": true,
+  "function_depths": {
+    "rsqrt": 37,
+    "sqrt": 31,
+    "spsqrt": 162,
+    "egate": 104
+  },
+  "primitive_mul_latency": 3,
+  "primitive_add_latency": 3,
+  "primitive_div_latency": 19,
+  "initiation_interval": 1,
+  "replicas": 1,
+  "MACs_per_cycle": 0,
+  "arithmetic": {
+    "mul": 35,
+    "add": 30,
+    "div": 2,
+    "sqrt": 3
+  },
+  "clock_sinks_before_opt": {
+    "rsqrt": 8521,
+    "sqrt": 3814,
+    "softplus_exp": 10813,
+    "softplus_poly": 10794,
+    "softplus_finish": 9139,
+    "egate": 13902
+  },
+  "total_register_bits": 56983,
+  "max_sinks_per_root": 13902,
+  "max_allowed_sinks_per_root": 15000,
+  "clock_roots": 6,
+  "clock_relation": "all six roots related1:1 phase0; simultaneous rising edges mandatory",
+  "boundary": "native lane0 side_v/side_x/side_fn at S input; side_fn_out at native S output; unregistered result mux; zero added edges",
+  "new_memory_macros": 0,
+  "memory_bytes_per_cycle": 0,
+  "input_bits_per_cycle": 36,
+  "output_bits_per_cycle": 33,
+  "input_side_fn_out_bits": 3,
+  "routing_tracks_input_output": 72,
+  "channel_capacity": null,
+  "replica_mux_demux": "one lane0 consumer; three independent functions plus three-root softplus; output4way32b mux",
+  "FF_area_floor_um2": 16616.2428,
+  "cell_area_reservation_um2": 149472,
+  "area_basis": "4x37368um2 actual C12SFUlane cell area conservative reservation; no SIDE synthesis mapping yet",
+  "outline_area_reservation_um2": 271767.2727272727,
+  "utilization": 0.55,
+  "proposed_outline_um": [
+    648,
+    432
+  ],
+  "slot_fit": false,
+  "clock_period_ps": 833.333,
+  "SS_uncertainty_ps": 60,
+  "FF_uncertainty_ps": 25,
+  "adopted": false,
+  "physical_qualified": false,
+  "numerical_qualified": false,
+  "production_throughput_qualified": false,
+  "token_rate_credit": 0,
+  "qualification": "old3stage arithmetic misses production clock; six-root partition addresses sinks only; requires real physical timing evidence"
+}

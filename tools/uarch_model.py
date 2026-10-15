@@ -13937,6 +13937,39 @@ def hbm_native_index_sram_join_model():
         token_rate_credit=0, offpackage_FEC='FULL; no light130ns budget; no offpackage link in this local wiring')
 
 
+def hbm_su_static_side_model():
+    """Original MLAT3/ALAT3 SIDE with six real 1:1 phase0 clock roots.
+
+    Source71b52f3016e76f1ef9ed3ca81333a73a0866b071dd4fa1c9f5727c49701c550b;
+    Yosys recursive width count before optimization, actual primitive RTL.
+    """
+    sinks = dict(rsqrt=8521, sqrt=3814, softplus_exp=10813,
+                 softplus_poly=10794, softplus_finish=9139, egate=13902)
+    return dict(schema='opentallas.su-static-side.v1', default_OFF=True,
+        function_depths=dict(rsqrt=37, sqrt=31, spsqrt=162, egate=104),
+        primitive_mul_latency=3, primitive_add_latency=3, primitive_div_latency=19,
+        initiation_interval=1, replicas=1, MACs_per_cycle=0,
+        arithmetic=dict(mul=35, add=30, div=2, sqrt=3),
+        clock_sinks_before_opt=sinks, total_register_bits=sum(sinks.values()),
+        max_sinks_per_root=max(sinks.values()), max_allowed_sinks_per_root=15000,
+        clock_roots=len(sinks), clock_relation='all six roots related1:1 phase0; simultaneous rising edges mandatory',
+        boundary='native lane0 side_v/side_x/side_fn at S input; side_fn_out at native S output; unregistered result mux; zero added edges',
+        new_memory_macros=0, memory_bytes_per_cycle=0,
+        input_bits_per_cycle=36, output_bits_per_cycle=33,
+        input_side_fn_out_bits=3,
+        routing_tracks_input_output=72, channel_capacity=None,
+        replica_mux_demux='one lane0 consumer; three independent functions plus three-root softplus; output4way32b mux',
+        FF_area_floor_um2=sum(sinks.values())*.2916,
+        cell_area_reservation_um2=4*37368,
+        area_basis='4x37368um2 actual C12SFUlane cell area conservative reservation; no SIDE synthesis mapping yet',
+        outline_area_reservation_um2=4*37368/.55, utilization=.55,
+        proposed_outline_um=[648,432], slot_fit=False,
+        clock_period_ps=833.333, SS_uncertainty_ps=60, FF_uncertainty_ps=25,
+        adopted=False, physical_qualified=False, numerical_qualified=False,
+        production_throughput_qualified=False, token_rate_credit=0,
+        qualification='old3stage arithmetic misses production clock; six-root partition addresses sinks only; requires real physical timing evidence')
+
+
 def hbm_sfu_fused_glu_model(lanes=256, words=3072, mul_latency=5, add_latency=4):
     """Exact resident-producer candidate, 2026-10-15; not timing/rate credit.
 
