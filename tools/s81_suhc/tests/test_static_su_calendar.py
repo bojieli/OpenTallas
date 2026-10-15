@@ -23,6 +23,8 @@ class CalendarTest(unittest.TestCase):
         self.job=dict(op='RB',sources=pins,evidence=dict(path=str(self.e),sha256=hashlib.sha256(self.e.read_bytes()).hexdigest()),
                       start=0,done=42,count=1,id=7,tag=42,gain_set=0,fp4=False,events=events)
         self.p=dict(cycles=44,jobs=[self.job])
+    def test_softmax_tail_full8192_values_are256_bf16_rows(self):
+        self.assertEqual(C.row_counts('SO',1),(5,8192//16,8192//32))
     def test_explicit_edges_and_halt(self):
         words=C.compile_program(self.p)
         self.assertEqual(words[2]&3,3)
