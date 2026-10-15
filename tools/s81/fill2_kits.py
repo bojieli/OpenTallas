@@ -112,6 +112,38 @@ MASTERS = {
              "hold cells: grown in depth only (N/S data faces, width kept); N/S pins alternate M5/M3 by index where the "
              "face exceeds 10 b/um/layer (the die's --stn-pin-alt rule, S-DIE grant 10:35)",
         benches=[("relay_exact", "pass", "pass"), ("payload_bit_mutant", "mut_payload", "fail"), ("no_reset_mutant", "mut_noreset", "fail")]),
+    "s81fill2_cfg7_seq_l1": dict(
+        master="ot_s81_cfg7_seq", top="ot_s81_cfg7_seq", params={"PQ": 1, "LAYOUT": 1}, sources=CFG7_SRC, extra=CFG7_EXTRA,
+        clock="clk", resets=["rst_n"], inst=1898,
+        what="per-pair configuration sequencer at LAYOUT 1 (STRUCTURAL FIX of the LAYOUT 0 verdict TT -179.46 "
+             "s81fill2_cfg7_seq-g1-ea607c448: lc -> phase*25 multiply -> add -> bank decode -> ce/a pins; LAYOUT 1 = word k "
+             "of phase p in macro k%7 row 4p+k/7, a/ce one level from flops or cfg_go, 0 cycles, exact lockstep "
+             "unchanged), generator slot outline",
+        benches=[('lockstep_il7_pq1', 'il7_pq1', 'pass'), ('go_tag_mutant', 'il7_mut_tag', 'fail'), ('phase_row_mutant', 'il7_mut_stride', 'fail')]),
+    "s81fill2_cfg7_seq_l1pd": dict(
+        master="ot_s81_cfg7_seq", top="ot_s81_cfg7_seq", params={"PQ": 1, "LAYOUT": 1}, sources=CFG7_SRC, extra=CFG7_EXTRA,
+        clock="clk", resets=["rst_n"], inst=1898, size="density", std_um2=230,
+        what="per-pair configuration sequencer at LAYOUT 1 (STRUCTURAL FIX of the LAYOUT 0 verdict TT -179.46 "
+             "s81fill2_cfg7_seq-g1-ea607c448: lc -> phase*25 multiply -> add -> bank decode -> ce/a pins; LAYOUT 1 = word k "
+             "of phase p in macro k%7 row 4p+k/7, a/ce one level from flops or cfg_go, 0 cycles, exact lockstep "
+             "unchanged), outline from pin density",
+        benches=[('lockstep_il7_pq1', 'il7_pq1', 'pass'), ('go_tag_mutant', 'il7_mut_tag', 'fail'), ('phase_row_mutant', 'il7_mut_stride', 'fail')]),
+    "s81fill2_cfg7_seq_bf_l1": dict(
+        master="ot_s81_cfg7_seq_bf", top="ot_s81_cfg7_seq_bf", params={"LAYOUT": 1}, sources=CFG7_SRC, extra=CFG7_EXTRA,
+        clock="clk", resets=["rst_n"], inst=519,
+        what="BF pair configuration sequencer at LAYOUT 1 (STRUCTURAL FIX of the LAYOUT 0 verdict TT -179.46 "
+             "s81fill2_cfg7_seq-g1-ea607c448: lc -> phase*25 multiply -> add -> bank decode -> ce/a pins; LAYOUT 1 = word k "
+             "of phase p in macro k%7 row 4p+k/7, a/ce one level from flops or cfg_go, 0 cycles, exact lockstep "
+             "unchanged), generator slot outline",
+        benches=[('lockstep_il7_bf', 'il7_bf', 'pass'), ('bank_select_mutant', 'il7_mut_bank_bf', 'fail')]),
+    "s81fill2_cfg7_seq_bf_l1pd": dict(
+        master="ot_s81_cfg7_seq_bf", top="ot_s81_cfg7_seq_bf", params={"LAYOUT": 1}, sources=CFG7_SRC, extra=CFG7_EXTRA,
+        clock="clk", resets=["rst_n"], inst=519, size="density", std_um2=230,
+        what="BF pair configuration sequencer at LAYOUT 1 (STRUCTURAL FIX of the LAYOUT 0 verdict TT -179.46 "
+             "s81fill2_cfg7_seq-g1-ea607c448: lc -> phase*25 multiply -> add -> bank decode -> ce/a pins; LAYOUT 1 = word k "
+             "of phase p in macro k%7 row 4p+k/7, a/ce one level from flops or cfg_go, 0 cycles, exact lockstep "
+             "unchanged), outline from pin density",
+        benches=[('lockstep_il7_bf', 'il7_bf', 'pass'), ('bank_select_mutant', 'il7_mut_bank_bf', 'fail')]),
     "s81fill2_cfg7_seq_bf": dict(
         master="ot_s81_cfg7_seq_bf", top="ot_s81_cfg7_seq_bf", params={}, sources=CFG7_SRC, extra=CFG7_EXTRA,
         clock="clk", resets=["rst_n"], inst=519,
@@ -181,6 +213,11 @@ def spread(mac: dict, dw: float, dh: float, clock: str, resets: list):
 
 
 BPU = 10.0             # target pins per um per layer on the busiest face (gate limit 12)
+
+
+def pin_name(name: str, d: dict) -> str:
+    """pin file per outline: the master name for its own outline (_pd for the pin-density B outline)"""
+    return d["master"] + ("_pd" if d.get("size") == "density" and not d.get("majority") else "")
 
 
 def majority(mac: dict) -> dict:
@@ -258,7 +295,7 @@ def main() -> int:
             tcl.append(f'place_pin -pin_name {{{pname}}} -layer {p["layer"]} -location {{{p["x"]:.3f} {p["y"]:.3f}}} '
                        f'-force_to_die_boundary')
             faces.setdefault(p['face'], set()).add(base(p['pin']))
-        (ROOT / PIN_DIR / f'{d["master"]}{"_pd" if d.get("size") == "density" and not d.get("majority") else ""}.tcl').write_text('\n'.join(tcl) + '\n')
+        (ROOT / PIN_DIR / f'{pin_name(name, d)}.tcl').write_text('\n'.join(tcl) + '\n')
         bsh, btag = d.get('bench', BENCH), d.get('bench_tag', 'CFG7')
         bcmd = d.get('bench_cmd', 'bash ' + bsh + ' {mode} {RUN}/bench_{mode}')
         benches = [{'name': bn, 'cmd': bcmd.replace('{mode}', mode), 'expect': exp,
@@ -269,7 +306,7 @@ def main() -> int:
             'clock_port': d['clock'], 'reset_ports': d['resets'],
             'outline': {'w': dw, 'h': dh, 'exact': True}, 'layer_cap': 'M5',
             'pins': {f: sorted(v) for f, v in sorted(faces.items())},
-            'io_tcl': f'{PIN_DIR}/{d["master"]}{"_pd" if d.get("size") == "density" and not d.get("majority") else ""}.tcl',
+            'io_tcl': f'{PIN_DIR}/{pin_name(name, d)}.tcl',
             'recipe': 2, 'outhold': False, **d.get('extra_spec', {}), **({'defines': d['defines']} if d.get('defines') else {}),
             'route': {'pd': 0.5, 'threads': 4, 'peak_ram_gb': 8, 'pin_h': 'M4', 'pin_v': 'M3 M5', 'm5_pg_pitch': 2.7},
             **({'slot_change_request': {'reason': f'depth-only growth: {d["bits"]} relay flops + recipe-2 input hold '
