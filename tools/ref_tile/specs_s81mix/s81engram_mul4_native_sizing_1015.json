@@ -79,6 +79,13 @@
   "owner": "Codex:mix4-sizing-1015",
   "branch": "codex/mix4-sizing-1015",
   "tag": "native-sizing",
-  "purpose": "Representative MIX4 root placement/CTS sizing; functional arithmetic is unchanged and native mix4 production bench belongs to S-FUNC. No whole-MIX timing qualification inferred."
+  "purpose": "Representative MIX4 root placement/CTS sizing; functional arithmetic is unchanged and native mix4 production bench belongs to S-FUNC. No whole-MIX timing qualification inferred.",
+  "benched_by": {
+   "composition": "results/rtl/s81_engram_mix_1014/mix4/report.json",
+   "source_manifest": "results/rtl/s81_engram_mix_1014/mix4/sources_rtl.json",
+   "exact": "L01/L14 native full4x5120 PASS;772cycles",
+   "mutant": "m1 key->1.0 in every multiplier leaf:L01/L14 fail20471/20480 words",
+   "scope": "Functional arithmetic composition only; not integrated VM/die or physical qualification."
+  }
  }
 }
