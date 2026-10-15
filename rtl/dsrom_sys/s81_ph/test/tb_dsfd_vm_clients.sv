@@ -38,6 +38,20 @@ module tb_dsfd_vm_clients;
    for(ts=0;ts<4;ts=ts+1)begin:tr_s
     for(tb=0;tb<2;tb=tb+1)begin:tr_b
      always @(posedge clk)begin
+      for(integer qe=0;qe<4;qe=qe+1)begin
+       if(u_vm.g_h[th].g_t[tt].u_bg.g_s[ts].g_bank[tb].k_v[qe] &&
+        u_vm.g_h[th].g_t[tt].u_bg.g_s[ts].g_bank[tb].occ-
+        u_vm.g_h[th].g_t[tt].u_bg.g_s[ts].g_bank[tb].serve+qe<4 &&
+        (u_vm.g_h[th].g_t[tt].u_bg.g_s[ts].g_bank[tb].k_p[qe]==3 ||
+         u_vm.g_h[th].g_t[tt].u_bg.g_s[ts].g_bank[tb].k_p[qe]==4))
+        $fwrite(trace_fd,"bank_enqueue,%0.3f,%0d,%0d,%0d,%0d,%0d,%0d,%0d,%0d\n",$realtime,
+         u_vm.g_h[th].g_t[tt].u_bg.g_s[ts].g_bank[tb].k_tag[qe],
+         {u_vm.g_h[th].g_t[tt].u_bg.g_s[ts].g_bank[tb].k_r[qe],
+          u_vm.g_h[th].g_t[tt].u_bg.g_s[ts].g_bank[tb].gidq},th,tt,ts*2+tb,
+         u_vm.g_h[th].g_t[tt].u_bg.g_s[ts].g_bank[tb].k_we[qe],
+         u_vm.g_h[th].g_t[tt].u_bg.g_s[ts].g_bank[tb].occ,
+         u_vm.g_h[th].g_t[tt].u_bg.g_s[ts].g_bank[tb].serve);
+      end
       if(u_vm.g_h[th].g_t[tt].u_bg.g_s[ts].g_bank[tb].s_we &&
        (u_vm.g_h[th].g_t[tt].u_bg.g_s[ts].g_bank[tb].s_p==3 ||
         u_vm.g_h[th].g_t[tt].u_bg.g_s[ts].g_bank[tb].s_p==4))
