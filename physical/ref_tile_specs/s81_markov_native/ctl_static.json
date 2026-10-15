@@ -1,0 +1,156 @@
+{
+  "name": "s81_markov_ctl_static",
+  "top": "ot_s81_markov_ctl_static",
+  "kind": "tile",
+  "sources": [
+    "rtl/common/ot_prefix.sv",
+    "rtl/v41rom/ot_v41_bmul2.sv",
+    "rtl/v41rom/ot_dsrom_bmul3.sv",
+    "rtl/v41rom/ot_v41_fadd.sv",
+    "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv",
+    "rtl/experimental/dsrom_markov_20261008/ot_s81_markov_k256_native.sv",
+    "rtl/experimental/dsrom_markov_20261008/ot_s81_markov_k256_static.sv"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 73.44,
+    "h": 34.56
+  },
+  "pins": {
+    "S": [
+      "head_logit",
+      "weight_bf16",
+      "embed_bf16",
+      "pf",
+      "bad_chunk",
+      "bad_tree",
+      "jv",
+      "jd",
+      "je"
+    ],
+    "N": [
+      "out_valid",
+      "out_bits",
+      "fault",
+      "mul_fire",
+      "mul_weight",
+      "mul_embed",
+      "head",
+      "pv_last"
+    ],
+    "W": [
+      "clk",
+      "rst_n",
+      "start"
+    ],
+    "E": []
+  },
+  "layer_cap": "M5",
+  "recipe": 2,
+  "route": {
+    "pd": 0.45,
+    "threads": 8,
+    "peak_ram_gb": 12,
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4
+  },
+  "structural_change": "Static16beat calendar replaces demand/ready controller; unconditional payload/diagnostic input captures, registered launch data/head, reset conditioner. Arithmetic pc2 leaves unchanged. Fixed calendar measured in static bench; no flow control.",
+  "slot_change_request": {
+    "name": "s81_markov_ctl_static",
+    "outline": [
+      73.44,
+      34.56
+    ],
+    "pin_faces": {
+      "S": [
+        "head_logit",
+        "weight_bf16",
+        "embed_bf16",
+        "pf",
+        "bad_chunk",
+        "bad_tree",
+        "jv",
+        "jd",
+        "je"
+      ],
+      "N": [
+        "out_valid",
+        "out_bits",
+        "fault",
+        "mul_fire",
+        "mul_weight",
+        "mul_embed",
+        "head",
+        "pv_last"
+      ],
+      "W": [
+        "clk",
+        "rst_n",
+        "start"
+      ],
+      "E": []
+    },
+    "reason": "Static successor of assigned v19 Markov controller: sameoutline, retainedpins samecoordinates, remove readiness pins; real pin flops. Await die adoption."
+  },
+  "job": {
+    "owner": "Codex:s81-markov-native-1014",
+    "branch": "codex/s81-markov-native-1014",
+    "tag": "st1",
+    "purpose": "Static16beat calendar replaces demand/ready controller; unconditional payload/diagnostic input captures, registered launch data/head, reset conditioner. Arithmetic pc2 leaves unchanged. Fixed calendar measured in static bench; no flow control.",
+    "benches": [
+      {
+        "name": "static_exact",
+        "cmd": "python3 tools/s81/markov_static_bench.py {RUN}/static_proof",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 3,
+        "needs": [
+          "iverilog"
+        ],
+        "pass_regex": "MARKOV_STATIC PASS rows=48 beats=768"
+      },
+      {
+        "name": "static_drop_mutant",
+        "cmd": "python3 tools/s81/markov_static_bench.py {RUN}/static_mutant mutant",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 3,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "fault or missing result|nonexact"
+      }
+    ],
+    "views_to": "physical/ref_tile/s81_markov_ctl_static/views",
+    "record_to": "results/rtl/ref_tile/s81_markov_ctl_static",
+    "extra_paths": [
+      "rtl/experimental/dsrom_markov_20261008",
+      "rtl/test/dsrom_markov_20261008",
+      "rtl/common",
+      "rtl/v41rom",
+      "tools/s81",
+      "results/rtl/dsrom_markov_row_20261008",
+      "physical/ref_tile_specs/s81_markov_native"
+    ]
+  },
+  "io_tcl": "physical/ref_tile_specs/s81_markov_native/ctl_static_pins.tcl",
+  "reroute_reason": {
+    "kind": "rtl_change",
+    "why": "Static16beat calendar replaces demand/ready controller; unconditional payload/diagnostic input captures, registered launch data/head, reset conditioner. Arithmetic pc2 leaves unchanged. Fixed calendar measured in static bench; no flow control."
+  },
+  "params": {},
+  "macros": [],
+  "children": [],
+  "inter": [],
+  "io_flop_at_pins": {
+    "cols": 4,
+    "allow_none": true
+  },
+  "inhold": true,
+  "outhold": true,
+  "keep_pin_regs": true,
+  "pin_reg_split": true
+}
