@@ -9,6 +9,11 @@
       "cell": "qvm_bank_ctrl_native",
       "name": "command",
       "kind": "tile"
+    },
+    {
+      "cell": "qvm_su_bank_ctrl_native",
+      "name": "operand_command",
+      "kind": "tile"
     }
   ]
 }
