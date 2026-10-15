@@ -90,10 +90,21 @@ module ot_s81_pq_qb_headpc_native (
         // Per-bank read-index copies (gate p2: i0/i1[2:1] drove ~3,600 read-mux loads each): each bank's 96:1
         // metadata read uses its own register copy, loaded on the same edge as i0/i1 (0 cycles); the i0/i1
         // output pins keep their own flops.
-        reg [6:0] r0c, r1c;
-        always @(posedge clk) begin r0c <= {h_b0[8:4], h_b0[2:1]}; r1c <= {h_b1[8:4], h_b1[2:1]}; end
-        assign rd0_b[gb] = {written[gb][r0c], meta[gb][r0c][14:0]};
-        assign rd1_b[gb] = {written[gb][r1c], meta[gb][r1c][14:0]};
+        // P6 (10-15): the four per-bank copies were identical registers; synthesis folded them into ONE flop per
+        // bit (gate P5: g_meta[1].r0c[0] 5,900 loads). Now (* keep *) (ot_keep_regs.tcl keeps the flop cells) and
+        // four copies per bank, each selecting one 4-bit slice of the 16-bit row (~370 loads per bit), same edge.
+        (* keep *) reg [6:0] r0c [0:3];
+        (* keep *) reg [6:0] r1c [0:3];
+        always @(posedge clk) begin
+            r0c[0] <= {h_b0[8:4], h_b0[2:1]}; r0c[1] <= {h_b0[8:4], h_b0[2:1]};
+            r0c[2] <= {h_b0[8:4], h_b0[2:1]}; r0c[3] <= {h_b0[8:4], h_b0[2:1]};
+            r1c[0] <= {h_b1[8:4], h_b1[2:1]}; r1c[1] <= {h_b1[8:4], h_b1[2:1]};
+            r1c[2] <= {h_b1[8:4], h_b1[2:1]}; r1c[3] <= {h_b1[8:4], h_b1[2:1]};
+        end
+        assign rd0_b[gb] = {written[gb][r0c[3]], meta[gb][r0c[3]][14:12], meta[gb][r0c[2]][11:8],
+                            meta[gb][r0c[1]][7:4], meta[gb][r0c[0]][3:0]};
+        assign rd1_b[gb] = {written[gb][r1c[3]], meta[gb][r1c[3]][14:12], meta[gb][r1c[2]][11:8],
+                            meta[gb][r1c[1]][7:4], meta[gb][r1c[0]][3:0]};
     end endgenerate
     always @(posedge clk or negedge rst_l[0]) begin
       if(!rst_l[0]) begin
