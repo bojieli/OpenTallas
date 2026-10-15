@@ -31,7 +31,12 @@ module qkd_host_pc_slice_die #(parameter integer MUT=0)(
   .fault_i(fault_i),.fault_o(fault_o),.land_es(land_es),.land_er(land_er),.ctrl_es(ctrl_es),.ctrl_er(ctrl_er),
   .ctrl_completion_v(ctrl_completion_v),.ctrl_completion_we(ctrl_completion_we),
   .all_ack(all_ack),.boot_done(boot_done),.boot_ok(boot_ok),.boot_fault(boot_fault));
- wire[4:0]pos=(MUT==1)?lpc^5'd1:lpc;
+ // The physical strap belongs to ck_station at the input face. Capture it
+ // before its related-clock boot status consumers; lpc is constant per PC.
+ // Boot must allow one station edge for this strap capture before bgi.
+ (* keep = "true" *) reg [4:0] lpc_status;
+ always @(posedge ck_station) lpc_status <= lpc;
+ wire[4:0]pos=(MUT==1)?lpc_status^5'd1:lpc_status;
  wire[31:0]one=32'd1<<pos;
  always @(posedge ck_station or negedge host_rst_n)
   if(!host_rst_n)sko<=0;else sko<=ski|(all_ack?one:32'd0);
