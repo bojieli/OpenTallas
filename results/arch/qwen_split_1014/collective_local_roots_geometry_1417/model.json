@@ -2,7 +2,7 @@
   "schema": "opentallas.qcoll.physical_partition_model.v1",
   "qualified": false,
   "adopted": false,
-  "scope": "Planning budget only;35root inventory per sourceowner newot_coll_tp8_local_roots candidate, not final pinABI; no route and no RTL edits",
+  "scope": "Planning budget only;38root inventory per sourceowner newot_coll_tp8_local_roots candidate, not final pinABI; no route and no RTL edits",
   "outer_frame": {
     "n": "io_collective",
     "m": "qfd_collective_static_io_production",
@@ -176,8 +176,8 @@
     {
       "name": "input",
       "ff": 547,
-      "x": 280.8,
-      "y": 907.2,
+      "x": 345.6,
+      "y": 928.8,
       "w": 129.6,
       "h": 21.6,
       "data_face": "SN",
@@ -187,17 +187,88 @@
       "abi": "candidate_only_source_logic_partition_required"
     },
     {
-      "name": "out",
-      "ff": 527,
-      "x": 561.6,
-      "y": 907.2,
+      "name": "outq0",
+      "ff": 138,
+      "x": 43.2,
+      "y": 885.6,
       "w": 129.6,
-      "h": 21.6,
-      "data_face": "SN",
-      "conservative_two_track_pin_cut": 0.4258585858585859,
+      "h": 64.8,
+      "data_face": "W/E/S inputs,N output",
+      "conservative_two_track_pin_cut": 0.45511111111111113,
       "root": "clk_local[12]",
       "extra_data_edges": 0,
-      "abi": "candidate_only_source_logic_partition_required"
+      "abi": "phase3localoutput128 complete6wayreduce/gatherdatamux,PK/tfv/tfoFF,outputcapture;metadataquarter0only;exactfinalsourceABIrequired",
+      "data_input_bits": 768,
+      "data_output_bits": 128,
+      "control_input_allowance": 20,
+      "input_face_bits": {
+        "W": 256,
+        "E": 256,
+        "S": 256
+      }
+    },
+    {
+      "name": "outq1",
+      "ff": 132,
+      "x": 194.4,
+      "y": 885.6,
+      "w": 129.6,
+      "h": 64.8,
+      "data_face": "W/E/S inputs,N output",
+      "conservative_two_track_pin_cut": 0.45511111111111113,
+      "root": "clk_local[34]",
+      "extra_data_edges": 0,
+      "abi": "phase3localoutput128 complete6wayreduce/gatherdatamux,PK/tfv/tfoFF,outputcapture;metadataquarter0only;exactfinalsourceABIrequired",
+      "data_input_bits": 768,
+      "data_output_bits": 128,
+      "control_input_allowance": 20,
+      "input_face_bits": {
+        "W": 256,
+        "E": 256,
+        "S": 256
+      }
+    },
+    {
+      "name": "outq2",
+      "ff": 132,
+      "x": 529.2,
+      "y": 885.6,
+      "w": 129.6,
+      "h": 64.8,
+      "data_face": "W/E/S inputs,N output",
+      "conservative_two_track_pin_cut": 0.45511111111111113,
+      "root": "clk_local[35]",
+      "extra_data_edges": 0,
+      "abi": "phase3localoutput128 complete6wayreduce/gatherdatamux,PK/tfv/tfoFF,outputcapture;metadataquarter0only;exactfinalsourceABIrequired",
+      "data_input_bits": 768,
+      "data_output_bits": 128,
+      "control_input_allowance": 20,
+      "input_face_bits": {
+        "W": 256,
+        "E": 256,
+        "S": 256
+      }
+    },
+    {
+      "name": "outq3",
+      "ff": 132,
+      "x": 680.4,
+      "y": 885.6,
+      "w": 129.6,
+      "h": 64.8,
+      "data_face": "W/E/S inputs,N output",
+      "conservative_two_track_pin_cut": 0.45511111111111113,
+      "root": "clk_local[36]",
+      "extra_data_edges": 0,
+      "abi": "phase3localoutput128 complete6wayreduce/gatherdatamux,PK/tfv/tfoFF,outputcapture;metadataquarter0only;exactfinalsourceABIrequired",
+      "data_input_bits": 768,
+      "data_output_bits": 128,
+      "control_input_allowance": 20,
+      "input_face_bits": {
+        "W": 256,
+        "E": 256,
+        "S": 256
+      }
     },
     {
       "name": "srr0",
@@ -629,9 +700,9 @@
       "abi": "candidate_only_source_logic_partition_required"
     }
   ],
-  "leaf_count": 35,
-  "leaf_FF_total": 10180,
-  "candidate_leaf_area_um2": 75699.35999999999,
+  "leaf_count": 38,
+  "leaf_FF_total": 10187,
+  "candidate_leaf_area_um2": 106492.31999999996,
   "existing_block_area_um2": 346813.8768,
   "overlaps": [],
   "leaf_pin_budget_max": 0.45866666666666667,
@@ -950,8 +1021,8 @@
       "root": "clk_local[0]",
       "inst": "input",
       "xy_um": [
-        280.896,
-        918.012
+        345.696,
+        939.6119999999999
       ],
       "face": "W",
       "status": "newmasterclockfaceREQUEST_only",
@@ -959,9 +1030,42 @@
     },
     {
       "root": "clk_local[12]",
-      "inst": "out",
+      "inst": "outq0",
       "xy_um": [
-        561.696,
+        43.296,
+        918.012
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[34]",
+      "inst": "outq1",
+      "xy_um": [
+        194.496,
+        918.012
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[35]",
+      "inst": "outq2",
+      "xy_um": [
+        529.296,
+        918.012
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[36]",
+      "inst": "outq3",
+      "xy_um": [
+        680.496,
         918.012
       ],
       "face": "W",
@@ -1270,7 +1374,7 @@
       "inst": "xfselect0",
       "xy_um": [
         54.096,
-        54.012
+        133.93200000000002
       ],
       "face": "W",
       "status": "newmasterclockfaceREQUEST_only",
@@ -1281,7 +1385,7 @@
       "inst": "xfselect1",
       "xy_um": [
         54.096,
-        270.012
+        349.932
       ],
       "face": "W",
       "status": "newmasterclockfaceREQUEST_only",
@@ -1292,7 +1396,7 @@
       "inst": "xfselect2",
       "xy_um": [
         54.096,
-        486.012
+        565.932
       ],
       "face": "W",
       "status": "newmasterclockfaceREQUEST_only",
@@ -1303,7 +1407,7 @@
       "inst": "xfselect3",
       "xy_um": [
         54.096,
-        702.012
+        781.932
       ],
       "face": "W",
       "status": "newmasterclockfaceREQUEST_only",
@@ -1521,10 +1625,10 @@
   ],
   "proposed_obstacle_coarse_worst_cut": {
     "axis": "x",
-    "pos": 645.828,
-    "bits": 4236,
-    "capacity": 7262.639999999998,
-    "ratio": 0.5832589802055452
+    "pos": 629.628,
+    "bits": 4748,
+    "capacity": 6362.639999999998,
+    "ratio": 0.7462311241874445
   },
   "proposed_obstacle_cuts": [
     {
@@ -1538,75 +1642,89 @@
       "axis": "x",
       "pos": 48.6,
       "bits": 2184,
-      "capacity": 32630.4,
-      "ratio": 0.06693145042659605
+      "capacity": 31280.4,
+      "ratio": 0.06982007902712241
     },
     {
       "axis": "x",
       "pos": 64.8,
       "bits": 2184,
-      "capacity": 30830.399999999994,
-      "ratio": 0.07083917172660752
+      "capacity": 29480.399999999994,
+      "ratio": 0.07408311963202671
     },
     {
       "axis": "x",
       "pos": 81.0,
       "bits": 2184,
-      "capacity": 32630.4,
-      "ratio": 0.06693145042659605
+      "capacity": 31280.4,
+      "ratio": 0.06982007902712241
     },
     {
       "axis": "x",
-      "pos": 177.12,
+      "pos": 129.60000000000002,
+      "bits": 2790,
+      "capacity": 6362.639999999998,
+      "ratio": 0.4384972275659162
+    },
+    {
+      "axis": "x",
+      "pos": 183.60000000000002,
       "bits": 2790,
       "capacity": 7712.639999999998,
       "ratio": 0.36174383868558635
     },
     {
       "axis": "x",
-      "pos": 274.32000000000005,
-      "bits": 3352,
-      "capacity": 32630.4,
-      "ratio": 0.10272629204668039
+      "pos": 231.12,
+      "bits": 2790,
+      "capacity": 6362.639999999998,
+      "ratio": 0.4384972275659162
     },
     {
       "axis": "x",
-      "pos": 286.20000000000005,
+      "pos": 279.72,
       "bits": 3352,
-      "capacity": 32180.399999999994,
-      "ratio": 0.10416278231470089
+      "capacity": 31280.4,
+      "ratio": 0.10715975499034538
     },
     {
       "axis": "x",
       "pos": 302.40000000000003,
       "bits": 3352,
-      "capacity": 22955.4,
-      "ratio": 0.14602228669506956
+      "capacity": 22055.4,
+      "ratio": 0.15198092077223718
     },
     {
       "axis": "x",
-      "pos": 324.0,
+      "pos": 318.6,
       "bits": 4020,
-      "capacity": 25655.4,
-      "ratio": 0.15669215837601438
+      "capacity": 24755.4,
+      "ratio": 0.16238881213795778
+    },
+    {
+      "axis": "x",
+      "pos": 329.4,
+      "bits": 4020,
+      "capacity": 26105.4,
+      "ratio": 0.15399112827231146
     },
     {
       "axis": "x",
       "pos": 340.20000000000005,
       "bits": 5062,
-      "capacity": 32180.399999999994,
-      "ratio": 0.157300717206747
+      "capacity": 32630.4,
+      "ratio": 0.15513141119937235
     },
     {
       "axis": "x",
-      "pos": 378.0,
+      "pos": 410.40000000000003,
       "bits": 5062,
       "capacity": 22336.649999999994,
       "ratio": 0.22662306120210512
     },
     {
       "axis": "x",
-      "pos": 465.048,
+      "pos": 497.44800000000004,
       "bits": 5030,
       "capacity": 22786.649999999994,
       "ratio": 0.22074328609075933
@@ -1620,56 +1738,77 @@
     },
     {
       "axis": "x",
-      "pos": 531.684,
+      "pos": 526.2840000000001,
       "bits": 5030,
       "capacity": 32630.4,
       "ratio": 0.1541507306070413
     },
     {
       "axis": "x",
+      "pos": 534.6,
+      "bits": 5030,
+      "capacity": 31280.4,
+      "ratio": 0.16080357028682496
+    },
+    {
+      "axis": "x",
       "pos": 550.8,
       "bits": 5030,
-      "capacity": 19580.4,
-      "ratio": 0.2568895426038283
+      "capacity": 18230.4,
+      "ratio": 0.27591276110233454
     },
     {
       "axis": "x",
       "pos": 567.0,
       "bits": 5260,
-      "capacity": 20030.4,
-      "ratio": 0.2626008467129962
+      "capacity": 19130.4,
+      "ratio": 0.27495504537280974
     },
     {
       "axis": "x",
       "pos": 577.8,
       "bits": 5260,
-      "capacity": 24305.4,
-      "ratio": 0.21641281361343567
+      "capacity": 23405.4,
+      "ratio": 0.2247344629871739
     },
     {
       "axis": "x",
       "pos": 591.828,
       "bits": 5260,
-      "capacity": 32180.399999999994,
-      "ratio": 0.16345353072056285
+      "capacity": 31280.4,
+      "ratio": 0.16815641743711718
     },
     {
       "axis": "x",
-      "pos": 645.828,
-      "bits": 4236,
-      "capacity": 7262.639999999998,
-      "ratio": 0.5832589802055452
+      "pos": 629.628,
+      "bits": 4748,
+      "capacity": 6362.639999999998,
+      "ratio": 0.7462311241874445
     },
     {
       "axis": "x",
-      "pos": 736.548,
+      "pos": 669.6,
       "bits": 4236,
       "capacity": 7712.639999999998,
       "ratio": 0.5492282798108042
     },
     {
       "axis": "x",
-      "pos": 801.348,
+      "pos": 731.1479999999999,
+      "bits": 4236,
+      "capacity": 6362.639999999998,
+      "ratio": 0.6657613820678212
+    },
+    {
+      "axis": "x",
+      "pos": 795.948,
+      "bits": 3212,
+      "capacity": 31280.4,
+      "ratio": 0.10268410889886317
+    },
+    {
+      "axis": "x",
+      "pos": 815.4,
       "bits": 3212,
       "capacity": 32630.4,
       "ratio": 0.09843581445523193
@@ -2166,24 +2305,31 @@
     },
     {
       "axis": "y",
-      "pos": 884.25,
+      "pos": 880.2,
       "bits": 2632,
       "capacity": 27582.0,
       "ratio": 0.09542455224421724
     },
     {
       "axis": "y",
-      "pos": 900.45,
+      "pos": 889.6500000000001,
       "bits": 2632,
-      "capacity": 30000.0,
-      "ratio": 0.08773333333333333
+      "capacity": 9581.999999999998,
+      "ratio": 0.27468169484450017
     },
     {
       "axis": "y",
-      "pos": 918.0,
+      "pos": 911.25,
       "bits": 1115,
-      "capacity": 21000.0,
-      "ratio": 0.0530952380952381
+      "capacity": 12000.0,
+      "ratio": 0.09291666666666666
+    },
+    {
+      "axis": "y",
+      "pos": 939.5999999999999,
+      "bits": 1115,
+      "capacity": 7499.999999999997,
+      "ratio": 0.14866666666666672
     }
   ],
   "external_incidents": [
