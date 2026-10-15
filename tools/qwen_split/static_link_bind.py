@@ -60,8 +60,9 @@ def apply(model):
                                    kind=getattr(d2d, 'kind', None), region=getattr(d2d, 'region', None),
                                    domain=getattr(d2d, 'domain', None)))
         bumps.append(nm)
-    al = model.setdefault('port_join', {}).setdefault(MASTER, {})
-    al.update({f'ck{k}': ('ck', [k]) for k in range(ports['ck'][0])})
+    clock_ports = [p for p in ports if p == 'ck' or p.startswith('ck_')]
+    if clock_ports != ['ck'] or ports['ck'][0] != 1:
+        raise ValueError('static link bind requires the source single scalar ck root')
     nat = 'native59'
     new = [('lnk_fdi_tx', 'spine_local', 583, [('d2d_rom', 'fdi_tx_flit'), ('ucie_kv', 'tx_flit')]),
            ('lnk_fdi_txv', 'spine_local', 1, [('d2d_rom', 'fdi_tx_v'), ('ucie_kv', 'tx_v')]),
@@ -74,7 +75,7 @@ def apply(model):
     for src, sp, dst, dp in [('d2d_rom', 'native_tx_slot', nat, 'tx_slot'), ('d2d_rom', 'native_tx_slot_kind', nat, 'tx_slot_kind'),
                              ('d2d_rom', 'native_tx_slot_beat', nat, 'tx_slot_beat'), (nat, 'native_tx_v', 'd2d_rom', 'native_tx_v'),
                              (nat, 'native_tx_payload', 'd2d_rom', 'native_tx_payload'),
-                             ('d2d_rom', 'native_rx_v', nat, 'native_rx_v'), ('d2d_rom', 'native_rx_payload', nat, 'native_rx_payload'),
+                             ('d2d_rom', 'native_rx_v', nat, 'native_rx_v'), ('d2d_rom', 'rx_payload', nat, 'native_rx_payload'),
                              ('d2d_rom', 'native_rx_slot', nat, 'rx_slot'), ('d2d_rom', 'native_rx_slot_kind', nat, 'rx_slot_kind'),
                              ('d2d_rom', 'native_rx_slot_beat', nat, 'rx_slot_beat'), ('d2d_rom', 'kv_x3_slot', nat, 'kv_x3_slot'),
                              (nat, 'x3', 'd2d_rom', 'x3'), (nat, 'x3_identity', 'd2d_rom', 'x3_identity'),
@@ -84,12 +85,12 @@ def apply(model):
     out = []
     for b, c, n, es in kept:
         if b == clk_bus:
-            es = es + [('d2d_rom', f'ck{k}') for k in range(ports['ck'][0])]
+            es = es + [('d2d_rom', 'ck')]
         if b == rst_bus:
             es = es + [('d2d_rom', 'por_n'), ('d2d_rom', 'rst_n')]
         out.append((b, c, n, es))
     model['buses'] = out + new
-    conn = {('ck' if p.startswith('ck') else p) for b, c, n, es in model['buses'] for i, p in es if i == 'd2d_rom'}
+    conn = {p for b, c, n, es in model['buses'] for i, p in es if i == 'd2d_rom'}
     unknown = sorted(conn - set(ports))
     if unknown:
         raise ValueError(f'static link bind: non-source endpoints {unknown}')
@@ -117,5 +118,8 @@ def install_masters(M, model, Master, partition_master):
     q.ports['o'] = ('pins', 1, 'N', 'M5', [round(.012 + round((BUMP_WH / 2 - .012) / .048) * .048, 4)], 1)
     q.order.append('o')
     M[BUMP] = q
+    # the KV-link PHY on its real abstract pins (die.v names tx_flit / rx_flit / tx_v / rx_v / tx_up / clk / rst_n)
+    from qwen_split.native_static_io_bind import phy_master
+    M['ot_qkvd_ucie_x64_phy'] = phy_master(Master, 'ot_qkvd_ucie_x64_phy', 'physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy')
     M.pop('qfd_d2d_rom', None)
     M.pop('ot_qfd_x3_mux_native', None)

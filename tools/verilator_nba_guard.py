@@ -9,8 +9,10 @@ D > 64, where the packed vector is a VlWide word array (that form escapes the or
 RTL is correct; the simulation model is not, so any PASS/FAIL from such a model is unproven.
 
 Signature in the generated C++ (non-Slow files, NBA-region functions): inside a ``while`` loop, a statement
-writes ``vlSelfRef.X`` (scalar, bit insert or VlWide word) and reads ``vlSelfRef.X`` on its right-hand side,
-X is not a loop counter of that while, and the model has no ``__Vdly__X`` shadow at all.
+writes ``vlSelfRef.X`` (scalar, bit insert or VlWide word) whose inserted VALUE reads ``vlSelfRef.X`` (a
+loop-carried read; the insert's own keep-other-bits mask term does not count), X is not a loop counter of
+that while, the model has no ``__Vdly__X`` shadow, and the recorded RTL writes X with ``<=`` in that scope.
+(Verilator correctly skips the shadow when all reads precede the write; only the loop-carried read breaks.)
 
 Usage: verilator_nba_guard.py OBJ_DIR [OBJ_DIR...]  -> exit 1 if any in-place NBA loop is found.
 Library: scan(obj_dir) -> dict(findings=[...], loops_checked=n); check(obj_dir) raises SystemExit on findings.
@@ -107,9 +109,16 @@ def scan(obj_dir: str) -> dict:
                     var = m.group(1)
                     if var.startswith('__V') or var in counters or var in shadows:
                         continue
-                    if re.search(r'\bvlSelf(?:Ref\.|->)' + re.escape(var) + r'\b', rhs):
+                    # A bit/word insert ``X = (~(m << s) & X) | (v << s)`` reads X once only to keep the other
+                    # bits; Verilator legitimately skips the shadow when nothing reads X after the write. The
+                    # miscompile is a loop-CARRIED read: the inserted value itself reads X (r[i] <= r[i-1]).
+                    reads = len(re.findall(r'\bvlSelf(?:Ref\.|->)' + re.escape(var) + r'\b', rhs))
+                    if re.match(r'[\s(]*~', rhs):
+                        reads -= 1
+                    if reads >= 1:
                         findings.append(dict(file=os.path.relpath(path, obj_dir), function=fname, var=var,
-                                             counter=sorted(counters)))
+                                             counter=sorted(counters),
+                                             statement=' '.join(stmt.split())[:600]))
     # A blocking prefix loop (``p[i] = p[i-1] ^ x``) has the same C++ shape. Separate it with the actual
     # Verilog sources Verilator recorded (__verFiles.dat): only a variable the RTL writes with ``<=`` is
     # an in-place NBA miscompile. Unreadable sources keep the finding (fail closed).

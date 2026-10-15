@@ -1530,7 +1530,7 @@ BF_FRONT_W_PWR = (0.0709, 'MEASURED routed ot_s81_bf_front report_power BC (el10
 def inst_power(it):
     if it.kind == 'bfcol':
         return BF_COL_W[0]
-    if it.kind == 'bf' and it.master == 'dsfd_bf_front':
+    if it.kind == 'bf' and it.master in ('dsfd_bf_front', 'dsfd_bf_front_static'):
         return BF_FRONT_W_PWR[0]
     if GEN == 'r8' and it.kind in ('stn', 'hstn', 'rly', 'qbank', 'hend', 'hb_elem', 'hbglue', 'xstg'):
         return it.power_w
@@ -2858,6 +2858,11 @@ LSW = X0B + X1B + CCB               # 564
 # (load sub-ranges of the x0 / x1 nets + the x2 net).  Owner static-cycle rule: no FIFO ready / credit on the lane.
 X2B = 536
 BF_X2_STATIC = False
+# --bf-static-prog (S-BIND 2026-10-15): every BF pair runs its compiled programme: front = dsfd_bf_front_static (f_prog 38,
+# io_clk), sequencer = ot_s81_cfg7_seq_bfp (the PQ 0 loader + ot_s81_bf_prog_seq; the phase descriptor rides in the spare
+# rd_out[71:48] columns of rows 0..3 of the phase's cfg block, so BF cfg ROM reads are 72 b).  f_prog travels seq -> front
+# beside go (same class / relay cohort: the producer's DELTA 0 assumes equal go / f_prog ages, bench-measured).
+BF_STATIC_PROG = False
 LEAF, NODEB, STB = 63, 66, 2
 CRET = NODEB + STB                  # column return payload: root word + {fault, busy}
 STEP8 = 400.0                       # nominal forwarded-stage spacing (<= LINK_STAGE_UM after placement)
@@ -3208,7 +3213,7 @@ def bf_flavour_capacity(sl, sh):
     slot_geometry()
     return out
 CFG7_RTL = 'rtl/v41die/ot_s81_cfg7_seq.sv'
-CFG7_MASTERS = ('ot_s81_cfg7_seq', 'ot_s81_cfg7_seq_bf')     # q pairs (PQ per the q element) / BF pairs (PQ 0)
+CFG7_MASTERS = ('ot_s81_cfg7_seq', 'ot_s81_cfg7_seq_bf', 'ot_s81_cfg7_seq_bfp')     # q pairs (PQ per the q element) / BF pairs (PQ 0)
 POWER8 = dict(
     seq=(80 * FLOP_CLK_W * 1.5, 'DERIVED ~80 loader flops x W18 per-flop clock x 1.5 (one cfg ROM read: in cfg)'),
     sstn=(LSW * FLOP_CLK_W * 1.5, 'DERIVED 564 stage flops x W18 per-flop clock x 1.5'),
@@ -3809,7 +3814,7 @@ def build_r8(variant=None):
                                   region=f'frame_{r}'))
                 insts.append(Inst(f'e{p}e', 'dsfd_bf_col', ex + cw_ + BF_FRONT_W + 2 * BF_SEAM_UM, sy + ELEM_DY, cw_, BF_ROUTE_H, 'MY',
                                   kind='bfcol', region=f'frame_{r}'))
-                it = Inst(f'e{p}', 'dsfd_bf_front', ex + cw_ + BF_SEAM_UM, sy + ELEM_DY, BF_FRONT_W, BF_ROUTE_H, kind='bf',
+                it = Inst(f'e{p}', 'dsfd_bf_front_static' if BF_STATIC_PROG else 'dsfd_bf_front', ex + cw_ + BF_SEAM_UM, sy + ELEM_DY, BF_FRONT_W, BF_ROUTE_H, kind='bf',
                           region=f'frame_{r}')
             elif kind == 'BF':
                 it = Inst(f'e{p}', 'dsfd_bf', ex, sy + ELEM_DY, 1002.888, ELEM_FRAME_H - SHAVE, kind='bf', region=f'frame_{r}')
@@ -3847,7 +3852,8 @@ def build_r8(variant=None):
             # s81-die-rtl-bind 2026-10-14: the BF pair's element (ot_s81_bf_front) has no PQ loader handshake, so its
             # sequencer is the PQ 0 loader master ot_s81_cfg7_seq_bf (no ef / go_tag pins); q pairs keep
             # ot_s81_cfg7_seq, elaborated PQ 1 when the q element is the PQ element (die.v.params.json)
-            seq_m_ = 'ot_s81_cfg7_seq_bf' if (RTL_BIND and kind == 'BF') else 'ot_s81_cfg7_seq'
+            seq_m_ = ('ot_s81_cfg7_seq_bfp' if BF_STATIC_PROG else 'ot_s81_cfg7_seq_bf') if (RTL_BIND and kind == 'BF') \
+                else 'ot_s81_cfg7_seq'
             insts.append(Inst(f's{p}', seq_m_, sx, sy + CFG_DY, SEQ_WH[0] - SHAVE, SEQ_WH[1] - SHAVE, so,
                               kind='seq', region=f'frame_{r}'))
         # slot stations (one per used slot), above the NV extension in an NV slot
@@ -4581,6 +4587,9 @@ def buses_r8(m):
                 col_rs += [(e, 'rs'), (sq, 'rst_n')]
                 bus(f'cfg_{p}', 'cfg', CFGB, [(sq, 'cfg'), (e, 'cfg')])
                 bus(f'go_{p}', 'go', 1, [(sq, 'go_e'), (e, 'go')])
+                if BF_STATIC_PROG and _is_bf_front(by.get(e)):
+                    bus(f'fp_{p}', 'go', 38, [(sq, 'f_prog'), (e, 'f_prog')])      # compiled programme beside go
+                    col_ck.append((e, 'io_clk'))
                 if kind == 'q' and q_pq():
                     # TA-10: op tag with go (the sequencer counts the broadcast gos = the PQ spine's tag), and the
                     # element's {bank_free, sh_free} that hold a configuration load (ot_v41_pair_pq_ld PQ 1)
@@ -4589,7 +4598,8 @@ def buses_r8(m):
                 bus(f'ra_{p}', 'rom_a', 12, [(sq, 'a')] + [(f'c{p}_{k}', 'a') for k in range(CFG_PER_PAIR)])
                 for k in range(CFG_PER_PAIR):
                     bus(f'rc_{p}_{k}', 'rom_ce', 1, [(sq, f'ce{k}'), (f'c{p}_{k}', 'ce')])
-                    bus(f'rq_{p}_{k}', 'rom_q', 48, [(f'c{p}_{k}', 'rd'), (sq, f'q{k}')])
+                    bus(f'rq_{p}_{k}', 'rom_q', 72 if (BF_STATIC_PROG and _is_bf_front(by.get(e))) else 48,
+                        [(f'c{p}_{k}', 'rd'), (sq, f'q{k}')])
                 bus(f'es_{p}', 'stat', STB, [(e, 'st'), (t_, f'e{j}')])
                 bus(f'ss_{p}', 'stat', STB, [(sq, 'st'), (t_, f'c{j}')])
                 if kind == 'NV':
@@ -8531,9 +8541,18 @@ def _spread_ports(Mx, k):
 
 
 def _faces_r8(m, Mx, it, ports):
-    if _LAY_K[0] == 1 and BF_HIER == 450.144 and BF_ROUTE_H == 198.72 and it.master in ('dsfd_bf_front', 'dsfd_bf_col'):
-        from s81.bf_direct_pins import populate
-        populate(sys.modules[__name__], Mx, it.master == 'dsfd_bf_col', ports)
+    if _LAY_K[0] == 1 and BF_HIER == 450.144 and BF_ROUTE_H == 198.72 and it.master in ('dsfd_bf_front', 'dsfd_bf_col',
+                                                                                         'dsfd_bf_front_static'):
+        from s81.bf_direct_pins import populate, groups
+        # the closed view's pins for the ports it has; the BF x2 stream xb and the static programme f_prog / io_clk have
+        # no closed-view pins (S-BIND 2026-10-15: a static front needs its own physical view): screened on free faces
+        known_ = groups(it.master == 'dsfd_bf_col')
+        populate(sys.modules[__name__], Mx, it.master == 'dsfd_bf_col', {k: v for k, v in ports.items() if k in known_})
+        rest_ = lambda names: [(n, ports[n][1]) for n in names if n in ports and n not in known_]
+        if rest_(['xb']):
+            _lay(Mx, 'N', rest_(['xb']), 'M5', pitch=1)
+        if rest_(['f_prog', 'io_clk']):
+            _lay(Mx, 'S', rest_(['f_prog', 'io_clk']), 'M5')
         return
     P_ = lambda names: [(n, ports[n][1]) for n in names if n in ports]
     kind, mst = it.kind, Mx.name
@@ -8655,7 +8674,7 @@ def _faces_r8(m, Mx, it, ports):
         _lay(Mx, 'W', P_(['ck', 'rst']), 'M4')
     elif kind == 'seq':
         _lay(Mx, 'W', P_([f'q{j}' for j in range(7)] + ['a'] + [f'ce{j}' for j in range(7)]), 'M4', gap=0.0)
-        _lay(Mx, 'N', P_(['cfg', 'go_e', 'go_tag', 'ef']), 'M5')
+        _lay(Mx, 'N', P_(['cfg', 'go_e', 'f_prog', 'go_tag', 'ef']), 'M5')
         _lay(Mx, 'E', P_(['lc', 'st']), 'M4')
         _lay(Mx, 'S', P_(['clk', 'rst_n']), 'M5')
     elif kind == 'hend':
@@ -8697,14 +8716,14 @@ def _faces_r8(m, Mx, it, ports):
             _lay(Mx, f, lst, 'M4' if f in 'EW' else 'M5', gap=0.0)
     elif kind == 'bf' and BF_HIER:   # dsfd_bf_front: x stream N, control S, column interfaces W / E (abutted)
         _lay(Mx, 'N', P_(['x0', 'x1', 'xb']), 'M5', pitch=1)     # xb: --bf-x2-static BF16 stream (x2 + x0 / x1 sub-ranges)
-        _lay(Mx, 'S', P_(['go', 'cfg', 'st', 'ck', 'rs']), 'M5')
+        _lay(Mx, 'S', P_(['go', 'f_prog', 'cfg', 'st', 'ck', 'io_clk', 'rs']), 'M5')
         _lay(Mx, 'W', P_(['c0', 'qy0']), 'M4', gap=0.0)
         _lay(Mx, 'E', P_(['c1', 'qy1']), 'M4', gap=0.0)
     elif kind == 'bfcol':            # dsfd_bf_col: front interface on E (MY east copy faces west), partials + ck S (middle)
         _lay(Mx, 'E', P_(['ci', 'qy']), 'M4', gap=0.0)
         _lay(Mx, 'S', P_(['r', 'ck', 'rs']), 'M5')
     elif kind in ('bf', 'bf_nv'):
-        _lay(Mx, 'S', P_(['go', 'cfg', 'ck', 'rs']), 'M5', start=230.0)
+        _lay(Mx, 'S', P_(['go', 'f_prog', 'cfg', 'ck', 'io_clk', 'rs']), 'M5', start=230.0)
         _lay(Mx, 'S', P_(['x0', 'x1', 'xb']), 'M5', start=SSTN_X - 4.32 - 10.0)
         _lay(Mx, 'N', P_(['nv', 'nvr']), 'M5', start=560.0)
         _lay(Mx, 'E', P_(['r0', 'r1']), 'M4')
@@ -9577,6 +9596,8 @@ def die_options(ap):
                     'are allocated with non-overlapping pin spans; the 8 t_hc_y slices follow the slices of the one port')
     ap.add_argument('--peer-span-centre', action='store_true', help='s81-die-iter: with --rtl-hub-widths, centre each '
                     'face-to-face wide group on the die span shared with its peers (both ends of an abutting pair line up)')
+    ap.add_argument('--bf-static-prog', action='store_true', help='S-BIND 2026-10-15: BF pairs run their compiled '
+                    'programme (dsfd_bf_front_static + ot_s81_cfg7_seq_bfp; descriptor in the cfg ROM spare columns)')
     ap.add_argument('--bf-x2-static', action='store_true', help='S-BIND 2026-10-15: packed 1,101-b static x lane '
                     '(legacy 564 + BF x2 536 + valid): static hx pipelines, static column ingress, x2 slot stations, BF xb bound')
     ap.add_argument('--static-coll', action='store_true', help='S-BIND 2026-10-15: = --static-seams --static-collective')
@@ -9615,7 +9636,8 @@ def apply_options(a):
     global STATIC_SEAMS, STATIC_COLLECTIVE, MIX4_SLOT
     STATIC_SEAMS = bool(getattr(a, 'static_seams', False) or getattr(a, 'static_coll', False))
     STATIC_COLLECTIVE = bool(getattr(a, 'static_collective', False) or getattr(a, 'static_coll', False))
-    global SUHC_STATIC_ISSUE, BF_X2_STATIC, LSW
+    global SUHC_STATIC_ISSUE, BF_X2_STATIC, LSW, BF_STATIC_PROG
+    BF_STATIC_PROG = bool(getattr(a, 'bf_static_prog', False))
     SUHC_STATIC_ISSUE = bool(getattr(a, 'suhc_static_issue', False))
     BF_X2_STATIC = bool(getattr(a, 'bf_x2_static', False))
     LSW = X0B + X1B + CCB + (X2B if BF_X2_STATIC else 0)

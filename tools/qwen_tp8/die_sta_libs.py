@@ -64,12 +64,27 @@ def assumed_clock_refs(master, ports, physical_ports=None):
     The die Verilog connects .ck(net), but a generated LEF may expose ck[0].
     E.write_lib deliberately preserves that spelling; clock delivery must too.
     """
+    vec = {}
     if physical_ports is not None:
-        missing=[p for p in ports if p in E.CLOCKS and p not in physical_ports]
+        # Generated physical clock buses retain indexed pin names, including scalar ck[0].
+        for p in ports:
+            if p in E.CLOCKS and p not in physical_ports:
+                bits = sorted(q for q in physical_ports if q.startswith(p + '[') and q.endswith(']'))
+                if bits:
+                    indices = [int(re.fullmatch(re.escape(p) + r'\[(\d+)\]', q).group(1)) for q in bits]
+                    if set(indices) != set(range(len(indices))):
+                        raise ValueError(f'{master}.{p}: incomplete physical clock bus')
+                    vec[p] = sorted(bits, key=lambda q: int(q.rsplit('[', 1)[1][:-1]))
+        missing=[p for p in ports if p in E.CLOCKS and p not in physical_ports and p not in vec]
         if missing:
             raise ValueError(f'{master}: clock inputs missing from generated physical LEF: {missing}')
-    return {(f'{p}[0]' if (master, p) in E.IDX else p): 0.0
-            for p in ports if p in E.CLOCKS}
+    out = {}
+    for p in ports:
+        if p not in E.CLOCKS:
+            continue
+        for q in vec.get(p, [f'{p}[0]' if (master, p) in E.IDX else p]):
+            out[q] = 0.0
+    return out
 
 
 def clock_tcl(doms, leaves, corner):

@@ -16,6 +16,10 @@
 // Latency (fixed): element at the f_capture pin, serial edge P -> lane row registered P + 3 (pin, merge, out) -> x34
 // stream output at the fixed epoch slot of that serial edge (+2..4 stream edges, x34 header) -> write source.
 // ---------------------------------------------------------------------------------------------------------------
+// CAP_PIPE=2 (claude S81 VM F2 2026-10-15, native capture audit): lanes take every input in a pure pin flop and decode
+// one edge later (lane row at P+3), and the 3:4 transfers run NAT=1 (ICG-gated serial banks; stream side captures each
+// bank unmuxed at its read edge, output one stream edge later): x34 samples the row at q = P+2+CAP_PIPE, stream output
+// at 4*floor(q/3)+2+(q%3)+1.  Explicit added edges vs legacy: 2 serial + 1 stream (static_face_model cap_pipeline=2).
 module dsfd_vm_static_cap #(parameter integer E = 8, parameter integer CAP_PIPE = 0) (
     // Actual source categories. All serial/stream roots share the 3:4 PLL
     // epoch; each physical entry receives its own measured phi-R delivery.
@@ -42,7 +46,7 @@ module dsfd_vm_static_cap #(parameter integer E = 8, parameter integer CAP_PIPE 
         dsfd_vm_static_cap_leaf #(.E(E), .PIPE(CAP_PIPE)) u_l (.ck(ck_lane_s[g]), .rn(rn), .gid(g[3:0]), .f_c(f_capture[832*g +: 832]), .flush(flush),
             .o_v(ov), .o_row(orow), .o_m(om), .o_d(od), .flt(lf[5*g +: 5]));
         wire xv; wire [541:0] xd;
-        ot_s81_vm_x34 #(.W(542)) u_x (.s_ck(ck_x34_s[g]), .s_rst_n(rst_x34_s[g]), .s_v(ov), .s_d({od, om, orow}),
+        ot_s81_vm_x34 #(.W(542), .NAT(CAP_PIPE == 2 ? 1 : 0)) u_x (.s_ck(ck_x34_s[g]), .s_rst_n(rst_x34_s[g]), .s_v(ov), .s_d({od, om, orow}),
             .t_ck(ck_x34_t[g]), .t_rst_n(rss_x34_t[g]), .o_v(xv), .o_d(xd), .fault(xf[g]));
         assign w_v[g] = xv;
         assign w_row[14*g +: 14] = xd[13:0];

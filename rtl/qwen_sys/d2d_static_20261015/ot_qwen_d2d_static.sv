@@ -8,8 +8,12 @@
 // The old 548-wide KV-die FDI net and the 583 = 548 + 35 LLR header of the compute die are both retired.
 //
 // NORMAL MODE (production): every frame is reserved by the compiler.
-//   * Two calendars per end (TX, RX), each a compiler image of 32-b entries {dt14, last1, port3, kind4, beat5, 0}:
-//     event i fires dt_0 + .. + dt_i cycles after the compiled cal_start strobe. At most one TX and one RX event per
+//   * Two calendars per end (TX, RX), each a compiler image of 32-b entries {dt14, last1, port3, kind4, beat5, rep5}:
+//     entry i fires its first event dt_i cycles after the previous event (the first after the compiled cal_start
+//     strobe), then rep more events on the following cycles with beat + 1 each (a 32-beat Q / RESULT burst = 1 entry). Two compiled segments per image:
+//     segment 0 (entries 0..) = the decode-layer run (replayed for each of the 36 layers), segment 1 (entries from the
+//     cfg-loaded base, cfg_addr[5] = 1) = the token run (terminal RESULT C->S, embedding row S->C); cal_seg selects
+//     the segment at cal_start. Both are compiler outputs (tools/qwen_split/d2d_link_calendar.py --profile program). At most one TX and one RX event per
 //     cycle (the PHY carries one frame per cycle per direction). No valid, ready, credit or arrival selects a cycle.
 //   * TX event at cycle c: tx_slot[p] / tx_kind / tx_beat go to producer p's typed codec at c (its tx_expected); that
 //     codec's registered record is captured TXD_p edges later into the slot SRAM (wr), read one edge after (rd), and
@@ -28,31 +32,40 @@
 // ---------------------------------------------------------------------------------------------------------------------
 // Calendar playback: a compiler image in a register file, written only while stopped (init / recovery mode).
 // ---------------------------------------------------------------------------------------------------------------------
-module ot_qwen_d2d_cal #(parameter integer NE = 128, parameter integer AW = $clog2(NE)) (
+module ot_qwen_d2d_cal #(parameter integer NE = 32, parameter integer AW = $clog2(NE)) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire          cfg_we,
-    input  wire [AW-1:0] cfg_addr,
+    input  wire [AW:0]   cfg_addr,       // [AW] = 1: segment-1 base register (cfg_data[AW-1:0])
     input  wire [31:0]   cfg_data,
     input  wire          start,          // compiled start strobe (one cycle)
+    input  wire          start_seg,      // 0: segment 0 (layer run), 1: segment 1 (token run)
     input  wire          halt,           // epoch abort: stop at once
     output reg           ev_v,
     output reg  [2:0]    ev_port,
     output reg  [3:0]    ev_kind,
     output reg  [4:0]    ev_beat,
     output reg           running,
-    output reg           fault           // sticky: start while running, cfg while running, dt 0, table overrun
+    output reg           fault           // sticky: start while running, cfg while running, dt 0, table overrun,
+                                         // burst past beat 31
 );
     reg [31:0]   tbl [0:NE-1];
     reg [31:0]   cur;
     reg [13:0]   cnt;
+    reg [4:0]    rep, bcur;
     reg [AW:0]   ptr;
-    always @(posedge ck) if (cfg_we && !running) tbl[cfg_addr] <= cfg_data;
+    reg [AW-1:0] seg1;
+    always @(posedge ck) if (cfg_we && !running) begin
+        if (cfg_addr[AW]) seg1 <= cfg_data[AW-1:0];
+        else tbl[cfg_addr[AW-1:0]] <= cfg_data;
+    end
+    wire [AW-1:0] sb = start_seg ? seg1 : {AW{1'b0}};
+    wire [31:0] first = tbl[sb];
     wire [31:0] nxt = tbl[ptr[AW-1:0]];
     always @(posedge ck or negedge rst_n) begin
         if (!rst_n) begin
             running <= 1'b0; ev_v <= 1'b0; ev_port <= 3'd0; ev_kind <= 4'd0; ev_beat <= 5'd0;
-            cur <= 32'd0; cnt <= 14'd0; ptr <= 0; fault <= 1'b0;
+            cur <= 32'd0; cnt <= 14'd0; ptr <= 0; fault <= 1'b0; rep <= 5'd0; bcur <= 5'd0;
         end else begin
             ev_v <= 1'b0;
             if (cfg_we && running) fault <= 1'b1;
@@ -60,16 +73,17 @@ module ot_qwen_d2d_cal #(parameter integer NE = 128, parameter integer AW = $clo
             else if (start) begin
                 if (running) fault <= 1'b1;
                 running <= 1'b1;
-                cur <= tbl[0]; cnt <= tbl[0][31:18]; ptr <= 1;
-                if (tbl[0][31:18] == 14'd0) fault <= 1'b1;
+                cur <= first; cnt <= first[31:18]; ptr <= {1'b0, sb} + 1'b1; rep <= first[4:0]; bcur <= first[9:5];
+                if (first[31:18] == 14'd0 || {1'b0, first[9:5]} + {1'b0, first[4:0]} > 6'd31) fault <= 1'b1;
             end else if (running) begin
                 if (cnt == 14'd1) begin
-                    ev_v <= 1'b1; ev_port <= cur[16:14]; ev_kind <= cur[13:10]; ev_beat <= cur[9:5];
-                    if (cur[17]) running <= 1'b0;
+                    ev_v <= 1'b1; ev_port <= cur[16:14]; ev_kind <= cur[13:10]; ev_beat <= bcur;
+                    if (rep != 5'd0) begin rep <= rep - 5'd1; bcur <= bcur + 5'd1; end   // burst: next cycle
+                    else if (cur[17]) running <= 1'b0;
                     else begin
                         if (ptr == NE) fault <= 1'b1;
-                        if (nxt[31:18] == 14'd0) fault <= 1'b1;
-                        cur <= nxt; cnt <= nxt[31:18]; ptr <= ptr + 1'b1;
+                        if (nxt[31:18] == 14'd0 || {1'b0, nxt[9:5]} + {1'b0, nxt[4:0]} > 6'd31) fault <= 1'b1;
+                        cur <= nxt; cnt <= nxt[31:18]; ptr <= ptr + 1'b1; rep <= nxt[4:0]; bcur <= nxt[9:5];
                     end
                 end else cnt <= cnt - 1'b1;
             end
@@ -81,18 +95,19 @@ endmodule
 // Link end: two calendars + per-port fixed producer delays + real SRAM/CRC slot link (ot_qwen_static_slot_link).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_qwen_d2d_static_end #(
-    parameter integer NT = 4, NR = 4, FW = 548, CW = 16, PW = FW + 19 + CW, NE = 128,
+    parameter integer NT = 4, NR = 4, FW = 548, CW = 16, PW = FW + 19 + CW, NE = 32,
     parameter [8*4-1:0] TXD = {8'd1, 8'd1, 8'd2, 8'd1},   // per TX port codec latency (port p = byte p), 1..8
     parameter integer MUT = 0      // bench: 1 = TX write slot off by one (lap ownership), 2 = RX demux port 0<->1
 ) (
     input  wire [4:0]       ck,           // [0] control + calendars, [1..4] SRAM bank entries (one logical domain)
     input  wire             rst_n,
     input  wire             cfg_tx_we, cfg_rx_we,
-    input  wire [6:0]       cfg_addr,
+    input  wire [5:0]       cfg_addr,     // [5] = segment-1 base register, [4:0] entry (NE 32)
     input  wire [31:0]      cfg_data,
     input  wire             epoch_begin,
     input  wire [7:0]       epoch,
     input  wire             cal_start,
+    input  wire             cal_seg,      // segment at cal_start: 0 layer run, 1 token run
     // producer face
     output wire [NT-1:0]    tx_slot,
     output wire [3:0]       tx_kind,
@@ -119,10 +134,10 @@ module ot_qwen_d2d_static_end #(
     wire halt = epoch_abort | end_fault;
     wire tv, rv; wire [2:0] tp, rp; wire [3:0] tk, rk; wire [4:0] tb, rb; wire tf, rf, trun, rrun;
     ot_qwen_d2d_cal #(.NE(NE)) u_txcal (.ck(ck[0]), .rst_n(rst_n), .cfg_we(cfg_tx_we), .cfg_addr(cfg_addr),
-        .cfg_data(cfg_data), .start(cal_start), .halt(halt), .ev_v(tv), .ev_port(tp), .ev_kind(tk), .ev_beat(tb),
+        .cfg_data(cfg_data), .start(cal_start), .start_seg(cal_seg), .halt(halt), .ev_v(tv), .ev_port(tp), .ev_kind(tk), .ev_beat(tb),
         .running(trun), .fault(tf));
     ot_qwen_d2d_cal #(.NE(NE)) u_rxcal (.ck(ck[0]), .rst_n(rst_n), .cfg_we(cfg_rx_we), .cfg_addr(cfg_addr),
-        .cfg_data(cfg_data), .start(cal_start), .halt(halt), .ev_v(rv), .ev_port(rp), .ev_kind(rk), .ev_beat(rb),
+        .cfg_data(cfg_data), .start(cal_start), .start_seg(cal_seg), .halt(halt), .ev_v(rv), .ev_port(rp), .ev_kind(rk), .ev_beat(rb),
         .running(rrun), .fault(rf));
     assign cal_running = trun | rrun;
     genvar p;

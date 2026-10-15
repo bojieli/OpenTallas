@@ -6,11 +6,12 @@
 // +mode 1 stream reset released one stream cycle late (must raise the alignment fault); +mode 2 one serial cycle late.
 module tb_ot_s81_vm_x34;
     localparam integer W = 64;
+    parameter integer NAT = 0;   // NAT=1: captured stream side, every word one stream edge later (claude F2 1015)
     reg s_ck = 0, t_ck = 0, s_rn = 0, t_rn = 0;
     always #556 s_ck = ~s_ck;
     always #417 t_ck = ~t_ck;
     reg s_v = 0; reg [W-1:0] s_d = 0; wire o_v; wire [W-1:0] o_d; wire fault;
-    ot_s81_vm_x34 #(.W(W)) u (.s_ck(s_ck), .s_rst_n(s_rn), .s_v(s_v), .s_d(s_d), .t_ck(t_ck), .t_rst_n(t_rn),
+    ot_s81_vm_x34 #(.W(W), .NAT(NAT)) u (.s_ck(s_ck), .s_rst_n(s_rn), .s_v(s_v), .s_d(s_d), .t_ck(t_ck), .t_rst_n(t_rn),
         .o_v(o_v), .o_d(o_d), .fault(fault));
     integer mode = 0, seed = 1, bad = 0, words = 0, got = 0, sk = 0, tk = 0, i;
     reg ev [0:4095]; reg [W-1:0] ed [0:4095];        // expected word for stream edge index
@@ -20,7 +21,7 @@ module tb_ot_s81_vm_x34;
     always @(posedge s_ck) if (s_rn) begin : sdrive integer kk, nn;
         // the word presented now (sampled at serial edge sk) -> stream edge 4 n + 2 + k (k = sk mod 3, n = sk / 3)
         kk = sk % 3; nn = sk / 3;
-        ev[4 * nn + 2 + kk] = s_v; ed[4 * nn + 2 + kk] = s_d; if (s_v) words = words + 1;
+        ev[4 * nn + 2 + kk + NAT] = s_v; ed[4 * nn + 2 + kk + NAT] = s_d; if (s_v) words = words + 1;
         sk = sk + 1;
         #10 s_v = $random(seed); s_d = s_d + 1;
     end

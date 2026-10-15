@@ -20,8 +20,8 @@ module tb_qwen_d2d_static;
     integer cyc = 0; always @(posedge ck) cyc <= cyc + 1;
 
     // ---------------- calendars (compiler images) ----------------
-    reg [31:0] img_ct [0:127], img_cr [0:127], img_kt [0:127], img_kr [0:127];
-    reg cfg_c_tx = 0, cfg_c_rx = 0, cfg_k_tx = 0, cfg_k_rx = 0; reg [6:0] cfg_a = 0; reg [31:0] cfg_dc = 0, cfg_dk = 0;
+    reg [31:0] img_ct [0:31], img_cr [0:31], img_kt [0:31], img_kr [0:31];
+    reg cfg_c_tx = 0, cfg_c_rx = 0, cfg_k_tx = 0, cfg_k_rx = 0; reg [4:0] cfg_a = 0; reg [31:0] cfg_dc = 0, cfg_dk = 0;
 
     // ---------------- PHY pair (behavioural) ----------------
     wire c_ptx_v, k_ptx_v, c_prx_v, k_prx_v, c_up, k_up; wire [PW-1:0] c_ptx, k_ptx, c_prx, k_prx;
@@ -68,15 +68,15 @@ module tb_qwen_d2d_static;
     wire [3:0] c_rxe, c_rxs, k_rxe, k_rxs; wire [3:0] c_rk, k_rk; wire [4:0] c_rb, k_rb; wire [FW-1:0] c_rxp, k_rxp;
     wire [3:0] c_tv, k_tv; wire [4*FW-1:0] c_tp, k_tp;
     ot_qwen_d2d_static_end #(.NT(4), .NR(4), .TXD({8'd1, 8'd1, 8'd1, 8'd1}), .MUT(MUT == 1 ? 1 : 0)) u_cend (
-        .ck({5{ck}}), .rst_n(rst_n), .cfg_tx_we(cfg_c_tx), .cfg_rx_we(cfg_c_rx), .cfg_addr(cfg_a), .cfg_data(cfg_dc),
-        .epoch_begin(c_eb), .epoch(c_ep), .cal_start(cstart),
+        .ck({5{ck}}), .rst_n(rst_n), .cfg_tx_we(cfg_c_tx), .cfg_rx_we(cfg_c_rx), .cfg_addr({1'b0, cfg_a}), .cfg_data(cfg_dc),
+        .epoch_begin(c_eb), .epoch(c_ep), .cal_start(cstart), .cal_seg(1'b0),
         .tx_slot(c_txs), .tx_kind(c_tk), .tx_beat(c_tb), .tx_valid(c_tv), .tx_payload(c_tp),
         .rx_event(c_rxe), .rx_slot(c_rxs), .rx_kind(c_rk), .rx_beat(c_rb), .rx_payload(c_rxp),
         .p_tx_up(c_up), .p_tx_v(c_ptx_v), .p_tx_flit(c_ptx), .p_rx_v(c_prx_v), .p_rx_flit(c_prx),
         .epoch_abort(c_abort), .fault_cause(c_fc), .end_fault(c_endf), .cal_running());
     ot_qwen_d2d_static_end #(.NT(4), .NR(4), .TXD({8'd1, 8'd1, 8'd1, 8'd1}), .MUT(MUT == 2 ? 2 : 0)) u_kend (
-        .ck({5{ck}}), .rst_n(rst_n), .cfg_tx_we(cfg_k_tx), .cfg_rx_we(cfg_k_rx), .cfg_addr(cfg_a), .cfg_data(cfg_dk),
-        .epoch_begin(k_eb), .epoch(k_ep), .cal_start(cstart),
+        .ck({5{ck}}), .rst_n(rst_n), .cfg_tx_we(cfg_k_tx), .cfg_rx_we(cfg_k_rx), .cfg_addr({1'b0, cfg_a}), .cfg_data(cfg_dk),
+        .epoch_begin(k_eb), .epoch(k_ep), .cal_start(cstart), .cal_seg(1'b0),
         .tx_slot(k_txs), .tx_kind(k_tk), .tx_beat(k_tb), .tx_valid(k_tv), .tx_payload(k_tp),
         .rx_event(k_rxe), .rx_slot(k_rxs), .rx_kind(k_rk), .rx_beat(k_rb), .rx_payload(k_rxp),
         .p_tx_up(k_up), .p_tx_v(k_ptx_v), .p_tx_flit(k_ptx), .p_rx_v(k_prx_v), .p_rx_flit(k_prx),
@@ -205,7 +205,7 @@ module tb_qwen_d2d_static;
         $readmemh({CALDIR, "/cal_K_tx.memh"}, img_kt); $readmemh({CALDIR, "/cal_K_rx.memh"}, img_kr);
         tick(3); por_n = 1; tick(3); rst_n = 1; tick(2);
         // init mode: calendar images through the cfg port (both dies' control-image loaders)
-        for (i = 0; i < 128; i = i + 1) begin
+        for (i = 0; i < 32; i = i + 1) begin
             cfg_a = i; cfg_dc = img_ct[i]; cfg_dk = img_kt[i]; cfg_c_tx = 1; cfg_k_tx = 1; tick(1);
             cfg_c_tx = 0; cfg_k_tx = 0; cfg_dc = img_cr[i]; cfg_dk = img_kr[i]; cfg_c_rx = 1; cfg_k_rx = 1; tick(1);
             cfg_c_rx = 0; cfg_k_rx = 0;

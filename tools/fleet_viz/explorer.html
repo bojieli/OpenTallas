@@ -77,6 +77,7 @@ select,input[type=search]{background:var(--panel);color:var(--ink);border:1px so
 #map.drag{cursor:grabbing}
 .mapbar{position:absolute;left:10px;top:10px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;z-index:5;max-width:calc(100% - 20px)}
 .mapbar .seg button{padding:4px 8px;font-size:11.5px}
+a.btn{text-decoration:none;display:inline-block}
 .btn{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:4px 9px;font:600 12px var(--sans);color:var(--ink);cursor:pointer}
 .btn:hover{border-color:var(--faint)}
 .btn[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
@@ -224,7 +225,7 @@ table.t tr.cl:hover{background:#121a30}
       <div class="seg" role="group" aria-label="Colour by"><button type="button" data-col="status" aria-pressed="true">Status</button><button type="button" data-col="kind" aria-pressed="false">Kind</button></div>
       <button class="btn" type="button" id="zin" aria-label="Zoom in">+</button><button class="btn" type="button" id="zout" aria-label="Zoom out">&minus;</button><button class="btn" type="button" id="zfit">Fit</button>
       <button class="btn" type="button" id="bus" aria-pressed="true" title="Draw the selected element's die buses to its peers">Buses</button>
-      <button class="btn" type="button" id="dataflow" aria-pressed="false">Data flow</button>
+      <a class="btn" id="dataflow" href="/explorer/dataflow/" title="Links of this die: width, length vs reach, bypasses, cut congestion, token replay">Data flow &rarr;</a>
       <button class="btn" type="button" id="clr" hidden>Clear selection</button>
     </div>
     <div class="dinfo" id="dinfo"></div>
@@ -239,7 +240,6 @@ table.t tr.cl:hover{background:#121a30}
 <script src="/fv_stale.js"></script>
 <script src="/explorer_story.js"></script>
 <script src="/fv_flow.js"></script>
-<script src="/explorer_chip_dataflow.js"></script>
 <script src="/explorer.js"></script>
 </body>
 </html>

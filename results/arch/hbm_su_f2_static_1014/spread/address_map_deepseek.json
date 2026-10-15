@@ -15,9 +15,9 @@
   "bank": "sector[2:0]"
  },
  "slice_words_used": [
-  14077,
-  12752,
-  12432,
+  14845,
+  12368,
+  12048,
   11824
  ],
  "replicated_words": 964,
@@ -30,13 +30,13 @@
    "read_words": 192
   },
   "COLL": {
-   "write_runs": 50,
+   "write_runs": 48,
    "write_words": 3293,
-   "read_runs": 50,
+   "read_runs": 48,
    "read_words": 3293
   },
   "DMA": {
-   "write_runs": 23,
+   "write_runs": 21,
    "write_words": 2306,
    "read_runs": 0,
    "read_words": 0
@@ -56,7 +56,7 @@
   "IDX": {
    "write_runs": 0,
    "write_words": 0,
-   "read_runs": 3,
+   "read_runs": 1,
    "read_words": 384
   },
   "SM": {
@@ -2877,7 +2877,7 @@
    "quarter": 0,
    "sid": 0,
    "logical_word_begin": 87366,
-   "logical_word_end": 87488,
+   "logical_word_end": 87744,
    "slice_word_begin": 12934,
    "global_word_begin": 12934,
    "first_sector": 1616,
@@ -2893,16 +2893,16 @@
    "external_readers": [
     "COLL:router_gather.gsc"
    ],
-   "words": 122
+   "words": 378
   },
   {
    "quarter": 0,
    "sid": 0,
    "logical_word_begin": 87744,
-   "logical_word_end": 87872,
-   "slice_word_begin": 13056,
-   "global_word_begin": 13056,
-   "first_sector": 1632,
+   "logical_word_end": 88128,
+   "slice_word_begin": 13312,
+   "global_word_begin": 13312,
+   "first_sector": 1664,
    "first_bank": 0,
    "replica": false,
    "su_roles": [
@@ -2913,16 +2913,16 @@
     "DMA:route.bias"
    ],
    "external_readers": [],
-   "words": 128
+   "words": 384
   },
   {
    "quarter": 0,
    "sid": 0,
    "logical_word_begin": 88128,
-   "logical_word_end": 88256,
-   "slice_word_begin": 13184,
-   "global_word_begin": 13184,
-   "first_sector": 1648,
+   "logical_word_end": 88512,
+   "slice_word_begin": 13696,
+   "global_word_begin": 13696,
+   "first_sector": 1712,
    "first_bank": 0,
    "replica": false,
    "su_roles": [
@@ -2933,16 +2933,16 @@
    "external_readers": [
     "IDX:route.top6"
    ],
-   "words": 128
+   "words": 384
   },
   {
    "quarter": 0,
    "sid": 0,
    "logical_word_begin": 88576,
    "logical_word_end": 88577,
-   "slice_word_begin": 13312,
-   "global_word_begin": 13312,
-   "first_sector": 1664,
+   "slice_word_begin": 14080,
+   "global_word_begin": 14080,
+   "first_sector": 1760,
    "first_bank": 0,
    "replica": false,
    "su_roles": [
@@ -2960,9 +2960,9 @@
    "sid": 0,
    "logical_word_begin": 88577,
    "logical_word_end": 88578,
-   "slice_word_begin": 13313,
-   "global_word_begin": 13313,
-   "first_sector": 1664,
+   "slice_word_begin": 14081,
+   "global_word_begin": 14081,
+   "first_sector": 1760,
    "first_bank": 0,
    "replica": false,
    "su_roles": [
@@ -2980,9 +2980,9 @@
    "sid": 0,
    "logical_word_begin": 88578,
    "logical_word_end": 88579,
-   "slice_word_begin": 13314,
-   "global_word_begin": 13314,
-   "first_sector": 1664,
+   "slice_word_begin": 14082,
+   "global_word_begin": 14082,
+   "first_sector": 1760,
    "first_bank": 0,
    "replica": false,
    "su_roles": [
@@ -3000,9 +3000,9 @@
    "sid": 0,
    "logical_word_begin": 88579,
    "logical_word_end": 88580,
-   "slice_word_begin": 13315,
-   "global_word_begin": 13315,
-   "first_sector": 1664,
+   "slice_word_begin": 14083,
+   "global_word_begin": 14083,
+   "first_sector": 1760,
    "first_bank": 0,
    "replica": false,
    "su_roles": [
@@ -3020,9 +3020,9 @@
    "sid": 0,
    "logical_word_begin": 88580,
    "logical_word_end": 88581,
-   "slice_word_begin": 13316,
-   "global_word_begin": 13316,
-   "first_sector": 1664,
+   "slice_word_begin": 14084,
+   "global_word_begin": 14084,
+   "first_sector": 1760,
    "first_bank": 0,
    "replica": false,
    "su_roles": [
@@ -3040,9 +3040,9 @@
    "sid": 0,
    "logical_word_begin": 88581,
    "logical_word_end": 88582,
-   "slice_word_begin": 13317,
-   "global_word_begin": 13317,
-   "first_sector": 1664,
+   "slice_word_begin": 14085,
+   "global_word_begin": 14085,
+   "first_sector": 1760,
    "first_bank": 0,
    "replica": false,
    "su_roles": [
@@ -3060,9 +3060,9 @@
    "sid": 0,
    "logical_word_begin": 88640,
    "logical_word_end": 88641,
-   "slice_word_begin": 13320,
-   "global_word_begin": 13320,
-   "first_sector": 1665,
+   "slice_word_begin": 14088,
+   "global_word_begin": 14088,
+   "first_sector": 1761,
    "first_bank": 1,
    "replica": false,
    "su_roles": [
@@ -3079,9 +3079,9 @@
    "sid": 0,
    "logical_word_begin": 88704,
    "logical_word_end": 88705,
-   "slice_word_begin": 13328,
-   "global_word_begin": 13328,
-   "first_sector": 1666,
+   "slice_word_begin": 14096,
+   "global_word_begin": 14096,
+   "first_sector": 1762,
    "first_bank": 2,
    "replica": false,
    "su_roles": [
@@ -3098,9 +3098,9 @@
    "sid": 0,
    "logical_word_begin": 88768,
    "logical_word_end": 88772,
-   "slice_word_begin": 13336,
-   "global_word_begin": 13336,
-   "first_sector": 1667,
+   "slice_word_begin": 14104,
+   "global_word_begin": 14104,
+   "first_sector": 1763,
    "first_bank": 3,
    "replica": false,
    "su_roles": [
@@ -3117,9 +3117,9 @@
    "sid": 0,
    "logical_word_begin": 88772,
    "logical_word_end": 88774,
-   "slice_word_begin": 13340,
-   "global_word_begin": 13340,
-   "first_sector": 1667,
+   "slice_word_begin": 14108,
+   "global_word_begin": 14108,
+   "first_sector": 1763,
    "first_bank": 3,
    "replica": true,
    "su_roles": [
@@ -3136,9 +3136,9 @@
    "sid": 0,
    "logical_word_begin": 88832,
    "logical_word_end": 88856,
-   "slice_word_begin": 13344,
-   "global_word_begin": 13344,
-   "first_sector": 1668,
+   "slice_word_begin": 14112,
+   "global_word_begin": 14112,
+   "first_sector": 1764,
    "first_bank": 4,
    "replica": false,
    "su_roles": [
@@ -3159,9 +3159,9 @@
    "sid": 0,
    "logical_word_begin": 91136,
    "logical_word_end": 91160,
-   "slice_word_begin": 13368,
-   "global_word_begin": 13368,
-   "first_sector": 1671,
+   "slice_word_begin": 14136,
+   "global_word_begin": 14136,
+   "first_sector": 1767,
    "first_bank": 7,
    "replica": false,
    "su_roles": [
@@ -3182,9 +3182,9 @@
    "sid": 0,
    "logical_word_begin": 93440,
    "logical_word_end": 93464,
-   "slice_word_begin": 13392,
-   "global_word_begin": 13392,
-   "first_sector": 1674,
+   "slice_word_begin": 14160,
+   "global_word_begin": 14160,
+   "first_sector": 1770,
    "first_bank": 2,
    "replica": false,
    "su_roles": [
@@ -3205,9 +3205,9 @@
    "sid": 0,
    "logical_word_begin": 95744,
    "logical_word_end": 95768,
-   "slice_word_begin": 13416,
-   "global_word_begin": 13416,
-   "first_sector": 1677,
+   "slice_word_begin": 14184,
+   "global_word_begin": 14184,
+   "first_sector": 1773,
    "first_bank": 5,
    "replica": false,
    "su_roles": [
@@ -3228,9 +3228,9 @@
    "sid": 0,
    "logical_word_begin": 104960,
    "logical_word_end": 105013,
-   "slice_word_begin": 13440,
-   "global_word_begin": 13440,
-   "first_sector": 1680,
+   "slice_word_begin": 14208,
+   "global_word_begin": 14208,
+   "first_sector": 1776,
    "first_bank": 0,
    "replica": false,
    "su_roles": [
@@ -3257,9 +3257,9 @@
    "sid": 0,
    "logical_word_begin": 192960,
    "logical_word_end": 192984,
-   "slice_word_begin": 13496,
-   "global_word_begin": 13496,
-   "first_sector": 1687,
+   "slice_word_begin": 14264,
+   "global_word_begin": 14264,
+   "first_sector": 1783,
    "first_bank": 7,
    "replica": false,
    "su_roles": [
@@ -3277,9 +3277,9 @@
    "sid": 0,
    "logical_word_begin": 195264,
    "logical_word_end": 195288,
-   "slice_word_begin": 13520,
-   "global_word_begin": 13520,
-   "first_sector": 1690,
+   "slice_word_begin": 14288,
+   "global_word_begin": 14288,
+   "first_sector": 1786,
    "first_bank": 2,
    "replica": false,
    "su_roles": [
@@ -3297,9 +3297,9 @@
    "sid": 0,
    "logical_word_begin": 197568,
    "logical_word_end": 197621,
-   "slice_word_begin": 13544,
-   "global_word_begin": 13544,
-   "first_sector": 1693,
+   "slice_word_begin": 14312,
+   "global_word_begin": 14312,
+   "first_sector": 1789,
    "first_bank": 5,
    "replica": false,
    "su_roles": [
@@ -3317,9 +3317,9 @@
    "sid": 0,
    "logical_word_begin": 202688,
    "logical_word_end": 202712,
-   "slice_word_begin": 13600,
-   "global_word_begin": 13600,
-   "first_sector": 1700,
+   "slice_word_begin": 14368,
+   "global_word_begin": 14368,
+   "first_sector": 1796,
    "first_bank": 4,
    "replica": false,
    "su_roles": [
@@ -3337,9 +3337,9 @@
    "sid": 0,
    "logical_word_begin": 204992,
    "logical_word_end": 205016,
-   "slice_word_begin": 13624,
-   "global_word_begin": 13624,
-   "first_sector": 1703,
+   "slice_word_begin": 14392,
+   "global_word_begin": 14392,
+   "first_sector": 1799,
    "first_bank": 7,
    "replica": false,
    "su_roles": [
@@ -3357,9 +3357,9 @@
    "sid": 0,
    "logical_word_begin": 207296,
    "logical_word_end": 207349,
-   "slice_word_begin": 13648,
-   "global_word_begin": 13648,
-   "first_sector": 1706,
+   "slice_word_begin": 14416,
+   "global_word_begin": 14416,
+   "first_sector": 1802,
    "first_bank": 2,
    "replica": false,
    "su_roles": [
@@ -3377,9 +3377,9 @@
    "sid": 0,
    "logical_word_begin": 212416,
    "logical_word_end": 212440,
-   "slice_word_begin": 13704,
-   "global_word_begin": 13704,
-   "first_sector": 1713,
+   "slice_word_begin": 14472,
+   "global_word_begin": 14472,
+   "first_sector": 1809,
    "first_bank": 1,
    "replica": false,
    "su_roles": [
@@ -3397,9 +3397,9 @@
    "sid": 0,
    "logical_word_begin": 214720,
    "logical_word_end": 214744,
-   "slice_word_begin": 13728,
-   "global_word_begin": 13728,
-   "first_sector": 1716,
+   "slice_word_begin": 14496,
+   "global_word_begin": 14496,
+   "first_sector": 1812,
    "first_bank": 4,
    "replica": false,
    "su_roles": [
@@ -3417,9 +3417,9 @@
    "sid": 0,
    "logical_word_begin": 217024,
    "logical_word_end": 217077,
-   "slice_word_begin": 13752,
-   "global_word_begin": 13752,
-   "first_sector": 1719,
+   "slice_word_begin": 14520,
+   "global_word_begin": 14520,
+   "first_sector": 1815,
    "first_bank": 7,
    "replica": false,
    "su_roles": [
@@ -3437,9 +3437,9 @@
    "sid": 0,
    "logical_word_begin": 222144,
    "logical_word_end": 222168,
-   "slice_word_begin": 13808,
-   "global_word_begin": 13808,
-   "first_sector": 1726,
+   "slice_word_begin": 14576,
+   "global_word_begin": 14576,
+   "first_sector": 1822,
    "first_bank": 6,
    "replica": false,
    "su_roles": [
@@ -3457,9 +3457,9 @@
    "sid": 0,
    "logical_word_begin": 224448,
    "logical_word_end": 224472,
-   "slice_word_begin": 13832,
-   "global_word_begin": 13832,
-   "first_sector": 1729,
+   "slice_word_begin": 14600,
+   "global_word_begin": 14600,
+   "first_sector": 1825,
    "first_bank": 1,
    "replica": false,
    "su_roles": [
@@ -3477,9 +3477,9 @@
    "sid": 0,
    "logical_word_begin": 226752,
    "logical_word_end": 226805,
-   "slice_word_begin": 13856,
-   "global_word_begin": 13856,
-   "first_sector": 1732,
+   "slice_word_begin": 14624,
+   "global_word_begin": 14624,
+   "first_sector": 1828,
    "first_bank": 4,
    "replica": false,
    "su_roles": [
@@ -3497,9 +3497,9 @@
    "sid": 0,
    "logical_word_begin": 236480,
    "logical_word_end": 236533,
-   "slice_word_begin": 13912,
-   "global_word_begin": 13912,
-   "first_sector": 1739,
+   "slice_word_begin": 14680,
+   "global_word_begin": 14680,
+   "first_sector": 1835,
    "first_bank": 3,
    "replica": false,
    "su_roles": [
@@ -3517,9 +3517,9 @@
    "sid": 0,
    "logical_word_begin": 246208,
    "logical_word_end": 246261,
-   "slice_word_begin": 13968,
-   "global_word_begin": 13968,
-   "first_sector": 1746,
+   "slice_word_begin": 14736,
+   "global_word_begin": 14736,
+   "first_sector": 1842,
    "first_bank": 2,
    "replica": false,
    "su_roles": [
@@ -3537,9 +3537,9 @@
    "sid": 0,
    "logical_word_begin": 255936,
    "logical_word_end": 255989,
-   "slice_word_begin": 14024,
-   "global_word_begin": 14024,
-   "first_sector": 1753,
+   "slice_word_begin": 14792,
+   "global_word_begin": 14792,
+   "first_sector": 1849,
    "first_bank": 1,
    "replica": false,
    "su_roles": [
@@ -5916,73 +5916,11 @@
   {
    "quarter": 1,
    "sid": 1,
-   "logical_word_begin": 87488,
-   "logical_word_end": 87616,
+   "logical_word_begin": 88772,
+   "logical_word_end": 88774,
    "slice_word_begin": 12144,
    "global_word_begin": 77680,
    "first_sector": 9710,
-   "first_bank": 6,
-   "replica": false,
-   "su_roles": [
-    "route.scores_bias.A"
-   ],
-   "su_writer": null,
-   "external_writers": [
-    "COLL:router_gather.gsc"
-   ],
-   "external_readers": [
-    "COLL:router_gather.gsc"
-   ],
-   "words": 128
-  },
-  {
-   "quarter": 1,
-   "sid": 1,
-   "logical_word_begin": 87872,
-   "logical_word_end": 88000,
-   "slice_word_begin": 12272,
-   "global_word_begin": 77808,
-   "first_sector": 9726,
-   "first_bank": 6,
-   "replica": false,
-   "su_roles": [
-    "route.scores_bias.C"
-   ],
-   "su_writer": null,
-   "external_writers": [
-    "DMA:route.bias"
-   ],
-   "external_readers": [],
-   "words": 128
-  },
-  {
-   "quarter": 1,
-   "sid": 1,
-   "logical_word_begin": 88256,
-   "logical_word_end": 88384,
-   "slice_word_begin": 12400,
-   "global_word_begin": 77936,
-   "first_sector": 9742,
-   "first_bank": 6,
-   "replica": false,
-   "su_roles": [
-    "route.scores_bias.O"
-   ],
-   "su_writer": "SU.O q1",
-   "external_writers": [],
-   "external_readers": [
-    "IDX:route.top6"
-   ],
-   "words": 128
-  },
-  {
-   "quarter": 1,
-   "sid": 1,
-   "logical_word_begin": 88772,
-   "logical_word_end": 88774,
-   "slice_word_begin": 12528,
-   "global_word_begin": 78064,
-   "first_sector": 9758,
    "first_bank": 6,
    "replica": true,
    "su_roles": [
@@ -5999,9 +5937,9 @@
    "sid": 1,
    "logical_word_begin": 88774,
    "logical_word_end": 88775,
-   "slice_word_begin": 12530,
-   "global_word_begin": 78066,
-   "first_sector": 9758,
+   "slice_word_begin": 12146,
+   "global_word_begin": 77682,
+   "first_sector": 9710,
    "first_bank": 6,
    "replica": false,
    "su_roles": [
@@ -6019,9 +5957,9 @@
    "sid": 1,
    "logical_word_begin": 98048,
    "logical_word_end": 98072,
-   "slice_word_begin": 12536,
-   "global_word_begin": 78072,
-   "first_sector": 9759,
+   "slice_word_begin": 12152,
+   "global_word_begin": 77688,
+   "first_sector": 9711,
    "first_bank": 7,
    "replica": false,
    "su_roles": [
@@ -6042,9 +5980,9 @@
    "sid": 1,
    "logical_word_begin": 100352,
    "logical_word_end": 100376,
-   "slice_word_begin": 12560,
-   "global_word_begin": 78096,
-   "first_sector": 9762,
+   "slice_word_begin": 12176,
+   "global_word_begin": 77712,
+   "first_sector": 9714,
    "first_bank": 2,
    "replica": false,
    "su_roles": [
@@ -6065,9 +6003,9 @@
    "sid": 1,
    "logical_word_begin": 102656,
    "logical_word_end": 102680,
-   "slice_word_begin": 12584,
-   "global_word_begin": 78120,
-   "first_sector": 9765,
+   "slice_word_begin": 12200,
+   "global_word_begin": 77736,
+   "first_sector": 9717,
    "first_bank": 5,
    "replica": false,
    "su_roles": [
@@ -6088,9 +6026,9 @@
    "sid": 1,
    "logical_word_begin": 231872,
    "logical_word_end": 231896,
-   "slice_word_begin": 12608,
-   "global_word_begin": 78144,
-   "first_sector": 9768,
+   "slice_word_begin": 12224,
+   "global_word_begin": 77760,
+   "first_sector": 9720,
    "first_bank": 0,
    "replica": false,
    "su_roles": [
@@ -6108,9 +6046,9 @@
    "sid": 1,
    "logical_word_begin": 234176,
    "logical_word_end": 234200,
-   "slice_word_begin": 12632,
-   "global_word_begin": 78168,
-   "first_sector": 9771,
+   "slice_word_begin": 12248,
+   "global_word_begin": 77784,
+   "first_sector": 9723,
    "first_bank": 3,
    "replica": false,
    "su_roles": [
@@ -6128,9 +6066,9 @@
    "sid": 1,
    "logical_word_begin": 241600,
    "logical_word_end": 241624,
-   "slice_word_begin": 12656,
-   "global_word_begin": 78192,
-   "first_sector": 9774,
+   "slice_word_begin": 12272,
+   "global_word_begin": 77808,
+   "first_sector": 9726,
    "first_bank": 6,
    "replica": false,
    "su_roles": [
@@ -6148,9 +6086,9 @@
    "sid": 1,
    "logical_word_begin": 243904,
    "logical_word_end": 243928,
-   "slice_word_begin": 12680,
-   "global_word_begin": 78216,
-   "first_sector": 9777,
+   "slice_word_begin": 12296,
+   "global_word_begin": 77832,
+   "first_sector": 9729,
    "first_bank": 1,
    "replica": false,
    "su_roles": [
@@ -6168,9 +6106,9 @@
    "sid": 1,
    "logical_word_begin": 251328,
    "logical_word_end": 251352,
-   "slice_word_begin": 12704,
-   "global_word_begin": 78240,
-   "first_sector": 9780,
+   "slice_word_begin": 12320,
+   "global_word_begin": 77856,
+   "first_sector": 9732,
    "first_bank": 4,
    "replica": false,
    "su_roles": [
@@ -6188,9 +6126,9 @@
    "sid": 1,
    "logical_word_begin": 253632,
    "logical_word_end": 253656,
-   "slice_word_begin": 12728,
-   "global_word_begin": 78264,
-   "first_sector": 9783,
+   "slice_word_begin": 12344,
+   "global_word_begin": 77880,
+   "first_sector": 9735,
    "first_bank": 7,
    "replica": false,
    "su_roles": [
@@ -8567,68 +8505,6 @@
    "external_writers": [],
    "external_readers": [
     "SM:wo_a K-split: the die's head against its o-group's 1,024 rows"
-   ],
-   "words": 128
-  },
-  {
-   "quarter": 2,
-   "sid": 2,
-   "logical_word_begin": 87616,
-   "logical_word_end": 87744,
-   "slice_word_begin": 12048,
-   "global_word_begin": 143120,
-   "first_sector": 17890,
-   "first_bank": 2,
-   "replica": false,
-   "su_roles": [
-    "route.scores_bias.A"
-   ],
-   "su_writer": null,
-   "external_writers": [
-    "COLL:router_gather.gsc"
-   ],
-   "external_readers": [
-    "COLL:router_gather.gsc"
-   ],
-   "words": 128
-  },
-  {
-   "quarter": 2,
-   "sid": 2,
-   "logical_word_begin": 88000,
-   "logical_word_end": 88128,
-   "slice_word_begin": 12176,
-   "global_word_begin": 143248,
-   "first_sector": 17906,
-   "first_bank": 2,
-   "replica": false,
-   "su_roles": [
-    "route.scores_bias.C"
-   ],
-   "su_writer": null,
-   "external_writers": [
-    "DMA:route.bias"
-   ],
-   "external_readers": [],
-   "words": 128
-  },
-  {
-   "quarter": 2,
-   "sid": 2,
-   "logical_word_begin": 88384,
-   "logical_word_end": 88512,
-   "slice_word_begin": 12304,
-   "global_word_begin": 143376,
-   "first_sector": 17922,
-   "first_bank": 2,
-   "replica": false,
-   "su_roles": [
-    "route.scores_bias.O"
-   ],
-   "su_writer": "SU.O q2",
-   "external_writers": [],
-   "external_readers": [
-    "IDX:route.top6"
    ],
    "words": 128
   },
@@ -12499,7 +12375,7 @@
    "per_quarter_read_bases": {
     "A": {
      "q0": {
-      "issues": 1,
+      "issues": 3,
       "lane_bit_terms": [
        1,
        2,
@@ -12510,40 +12386,12 @@
        64
       ],
       "base": 12928,
-      "issue_step": 0
-     },
-     "q1": {
-      "issues": 1,
-      "lane_bit_terms": [
-       1,
-       2,
-       4,
-       8,
-       16,
-       32,
-       64
-      ],
-      "base": 12144,
-      "issue_step": 0
-     },
-     "q2": {
-      "issues": 1,
-      "lane_bit_terms": [
-       1,
-       2,
-       4,
-       8,
-       16,
-       32,
-       64
-      ],
-      "base": 12048,
-      "issue_step": 0
+      "issue_step": 128
      }
     },
     "C": {
      "q0": {
-      "issues": 1,
+      "issues": 3,
       "lane_bit_terms": [
        1,
        2,
@@ -12553,36 +12401,8 @@
        32,
        64
       ],
-      "base": 13056,
-      "issue_step": 0
-     },
-     "q1": {
-      "issues": 1,
-      "lane_bit_terms": [
-       1,
-       2,
-       4,
-       8,
-       16,
-       32,
-       64
-      ],
-      "base": 12272,
-      "issue_step": 0
-     },
-     "q2": {
-      "issues": 1,
-      "lane_bit_terms": [
-       1,
-       2,
-       4,
-       8,
-       16,
-       32,
-       64
-      ],
-      "base": 12176,
-      "issue_step": 0
+      "base": 13312,
+      "issue_step": 128
      }
     }
    }
@@ -12856,7 +12676,7 @@
        0,
        0
       ],
-      "base": 13312,
+      "base": 14080,
       "issue_step": 0
      }
     }
@@ -12891,7 +12711,7 @@
        0,
        0
       ],
-      "base": 13320,
+      "base": 14088,
       "issue_step": 0
      }
     }
@@ -12931,7 +12751,7 @@
        0,
        0
       ],
-      "base": 13312,
+      "base": 14080,
       "issue_step": 0
      }
     },
@@ -12947,7 +12767,7 @@
        0,
        0
       ],
-      "base": 13328,
+      "base": 14096,
       "issue_step": 0
      }
     }
@@ -12992,7 +12812,7 @@
        0,
        0
       ],
-      "base": 13496,
+      "base": 14264,
       "issue_step": 104
      },
      "q1": {
@@ -13006,7 +12826,7 @@
        0,
        0
       ],
-      "base": 12608,
+      "base": 12224,
       "issue_step": 48
      }
     },
@@ -13022,7 +12842,7 @@
        0,
        0
       ],
-      "base": 13336,
+      "base": 14104,
       "issue_step": 1
      },
      "q1": {
@@ -13036,7 +12856,7 @@
        0,
        0
       ],
-      "base": 12528,
+      "base": 12144,
       "issue_step": 1
      }
     },
@@ -13052,7 +12872,7 @@
        0,
        0
       ],
-      "base": 13520,
+      "base": 14288,
       "issue_step": 104
      },
      "q1": {
@@ -13066,7 +12886,7 @@
        0,
        0
       ],
-      "base": 12632,
+      "base": 12248,
       "issue_step": 48
      }
     }
@@ -13106,7 +12926,7 @@
        32,
        0
       ],
-      "base": 13544,
+      "base": 14312,
       "issue_step": 0
      }
     },
@@ -13122,7 +12942,7 @@
        32,
        0
       ],
-      "base": 13648,
+      "base": 14416,
       "issue_step": 0
      }
     }
@@ -13167,7 +12987,7 @@
        32,
        0
       ],
-      "base": 13440,
+      "base": 14208,
       "issue_step": 0
      }
     },
@@ -13183,7 +13003,7 @@
        32,
        0
       ],
-      "base": 13856,
+      "base": 14624,
       "issue_step": 0
      }
     },
@@ -13199,7 +13019,7 @@
        32,
        0
       ],
-      "base": 13752,
+      "base": 14520,
       "issue_step": 0
      }
     }
@@ -13244,7 +13064,7 @@
        32,
        0
       ],
-      "base": 13440,
+      "base": 14208,
       "issue_step": 0
      }
     },
@@ -13260,7 +13080,7 @@
        32,
        0
       ],
-      "base": 13968,
+      "base": 14736,
       "issue_step": 0
      }
     },
@@ -13276,7 +13096,7 @@
        32,
        0
       ],
-      "base": 13912,
+      "base": 14680,
       "issue_step": 0
      }
     }
@@ -13316,7 +13136,7 @@
        32,
        0
       ],
-      "base": 13440,
+      "base": 14208,
       "issue_step": 0
      }
     },
@@ -13332,7 +13152,7 @@
        32,
        0
       ],
-      "base": 14024,
+      "base": 14792,
       "issue_step": 0
      }
     }
