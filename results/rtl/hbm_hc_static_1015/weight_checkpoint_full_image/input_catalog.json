@@ -1,0 +1,1650 @@
+{
+  "schema": "opentallas.hc.released-checkpoint-tensors.v1",
+  "snapshot": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+  "checkpoint_index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+  "descriptor_book_sha256": "1866afcc7c54878ffe5eccbf9f57c982268444ced2f068508e00ee8c23fb510d",
+  "config_sha256": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809",
+  "source_tensors": 86,
+  "source_rows": 2064,
+  "source_bytes": 169082880,
+  "tensors": [
+    {
+      "layer": 0,
+      "which": "attn",
+      "tensor": "layers.0.hc_attn_fn",
+      "file": "L00-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "11c9abd39f35e3364aad812c3f2dcb9c5fa5cf71e0f837a1af684112a00f930c",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+      "checkpoint_data_offsets": [
+        261568,
+        2227648
+      ],
+      "checkpoint_header_sha256": "71213f444f9c15a4af6dbcbddc36f7611542884ebb3aadef54de650071357449"
+    },
+    {
+      "layer": 0,
+      "which": "ffn",
+      "tensor": "layers.0.hc_ffn_fn",
+      "file": "L00-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "9b835d9c8b7454eafdda442beb239d1a2679f9d22ccfe5ada851308df89e6ce2",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+      "checkpoint_data_offsets": [
+        2227756,
+        4193836
+      ],
+      "checkpoint_header_sha256": "71213f444f9c15a4af6dbcbddc36f7611542884ebb3aadef54de650071357449"
+    },
+    {
+      "layer": 1,
+      "which": "attn",
+      "tensor": "layers.1.hc_attn_fn",
+      "file": "L01-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "c95a2d2c56e8ea19b49af37e84e51488d2bbfd5221a3c0bb9626833bf6c1a090",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/79456c9db0cda3b8115fe1c726fe3db1a34b434584a3991917088a0ab56a39de",
+      "checkpoint_data_offsets": [
+        261568,
+        2227648
+      ],
+      "checkpoint_header_sha256": "a18996c1e8f291117f9a2b638ffbd24c0b60babafd44db75bedfab1bec3a3f4a"
+    },
+    {
+      "layer": 1,
+      "which": "ffn",
+      "tensor": "layers.1.hc_ffn_fn",
+      "file": "L01-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "09f10bf8ba6d0f16db0280bf9acb341f92ebd85d4c2a28e19e8e6adce9783114",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/79456c9db0cda3b8115fe1c726fe3db1a34b434584a3991917088a0ab56a39de",
+      "checkpoint_data_offsets": [
+        2227756,
+        4193836
+      ],
+      "checkpoint_header_sha256": "a18996c1e8f291117f9a2b638ffbd24c0b60babafd44db75bedfab1bec3a3f4a"
+    },
+    {
+      "layer": 2,
+      "which": "attn",
+      "tensor": "layers.2.hc_attn_fn",
+      "file": "L02-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "0f81c4fced15e75e4002fd7527f995223557eadc3dd09e38bfd823d021a7f1d8",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/4a42dc78698bee6b1a821aa01c9650749ef1f716143751f1cdb815c6400280a9",
+      "checkpoint_data_offsets": [
+        262528,
+        2228608
+      ],
+      "checkpoint_header_sha256": "c50a8acf025e565be36bf005ae712ad7518a8bcc1d2ed561e413970bbabc86e6"
+    },
+    {
+      "layer": 2,
+      "which": "ffn",
+      "tensor": "layers.2.hc_ffn_fn",
+      "file": "L02-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "dbac2861e3b9b4d96d3d665c8b680fca679755fd1c3072dd01611c093729e0da",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/4a42dc78698bee6b1a821aa01c9650749ef1f716143751f1cdb815c6400280a9",
+      "checkpoint_data_offsets": [
+        2228716,
+        4194796
+      ],
+      "checkpoint_header_sha256": "c50a8acf025e565be36bf005ae712ad7518a8bcc1d2ed561e413970bbabc86e6"
+    },
+    {
+      "layer": 3,
+      "which": "attn",
+      "tensor": "layers.3.hc_attn_fn",
+      "file": "L03-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "033db1325ab02745660b04741fd52bc7a6b09bd7bfe22584bc9dabfbc252380f",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/020a6df51a2853452561d91268a65481f7a7d7954ed47f8e6c9ce69a4a134f77",
+      "checkpoint_data_offsets": [
+        261568,
+        2227648
+      ],
+      "checkpoint_header_sha256": "b6fd1a38fb53430098d46487db546c012d38ac14ac91b22e9af6983ea4290189"
+    },
+    {
+      "layer": 3,
+      "which": "ffn",
+      "tensor": "layers.3.hc_ffn_fn",
+      "file": "L03-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "2922862919472b3bd88e07c0a7a0dff2d69bb042a76bb7c56516fb03d68d4d39",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/020a6df51a2853452561d91268a65481f7a7d7954ed47f8e6c9ce69a4a134f77",
+      "checkpoint_data_offsets": [
+        2227756,
+        4193836
+      ],
+      "checkpoint_header_sha256": "b6fd1a38fb53430098d46487db546c012d38ac14ac91b22e9af6983ea4290189"
+    },
+    {
+      "layer": 4,
+      "which": "attn",
+      "tensor": "layers.4.hc_attn_fn",
+      "file": "L04-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "e275bd5311e955d6c5b847d6643b9dcb8cbf9beffcb5230bda80e0098d2aa24e",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/40f8b52f763f6380d41257e1af04eee3aad300af6a418c38e49ff99e3604163a",
+      "checkpoint_data_offsets": [
+        261568,
+        2227648
+      ],
+      "checkpoint_header_sha256": "3dcfa5cba8e7e80fb684a3166f34164bb1b8ec95a802763b1e2eebb19b2a6ba5"
+    },
+    {
+      "layer": 4,
+      "which": "ffn",
+      "tensor": "layers.4.hc_ffn_fn",
+      "file": "L04-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "127694e96b9e458dc37e64bf978c6424fcbed70d1e6ac4989994207f3ef44469",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/40f8b52f763f6380d41257e1af04eee3aad300af6a418c38e49ff99e3604163a",
+      "checkpoint_data_offsets": [
+        2227756,
+        4193836
+      ],
+      "checkpoint_header_sha256": "3dcfa5cba8e7e80fb684a3166f34164bb1b8ec95a802763b1e2eebb19b2a6ba5"
+    },
+    {
+      "layer": 5,
+      "which": "attn",
+      "tensor": "layers.5.hc_attn_fn",
+      "file": "L05-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "f1f182b5bedd588d57739bc5497d542ac0b314626664a21a4ad5f7951a937e72",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/d62cca4e698f030d4b96ec624c08bed7ad604cec13077da6d6b06669281c4650",
+      "checkpoint_data_offsets": [
+        261568,
+        2227648
+      ],
+      "checkpoint_header_sha256": "fde260ef12e8bc6737afaf29d58799d1f2dcf206a126746a22f61ebff9cb9a87"
+    },
+    {
+      "layer": 5,
+      "which": "ffn",
+      "tensor": "layers.5.hc_ffn_fn",
+      "file": "L05-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "f50a4650a2f2f9531196d64d36555ce74702790498b753bd3152d6b90b45384c",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/d62cca4e698f030d4b96ec624c08bed7ad604cec13077da6d6b06669281c4650",
+      "checkpoint_data_offsets": [
+        2227756,
+        4193836
+      ],
+      "checkpoint_header_sha256": "fde260ef12e8bc6737afaf29d58799d1f2dcf206a126746a22f61ebff9cb9a87"
+    },
+    {
+      "layer": 6,
+      "which": "attn",
+      "tensor": "layers.6.hc_attn_fn",
+      "file": "L06-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "e3fbd5fd90613e11df50aee3c4fc1dba614d07aa65faf4429c81dbe46b128676",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/1ca62e4c294df31aee69a782974cb14269264fdc08465ab4835760258f05d6ef",
+      "checkpoint_data_offsets": [
+        261568,
+        2227648
+      ],
+      "checkpoint_header_sha256": "139eeea4664aba161a4b4cb82a60a86a2429467601ee6584a887825f8137adfd"
+    },
+    {
+      "layer": 6,
+      "which": "ffn",
+      "tensor": "layers.6.hc_ffn_fn",
+      "file": "L06-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "f0fa4bebd818e4cf8ecc76f8d89c883e6e4ea2269cecb4571cd628653c15f782",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/1ca62e4c294df31aee69a782974cb14269264fdc08465ab4835760258f05d6ef",
+      "checkpoint_data_offsets": [
+        2227756,
+        4193836
+      ],
+      "checkpoint_header_sha256": "139eeea4664aba161a4b4cb82a60a86a2429467601ee6584a887825f8137adfd"
+    },
+    {
+      "layer": 7,
+      "which": "attn",
+      "tensor": "layers.7.hc_attn_fn",
+      "file": "L07-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "c75ae9eb3157b7e96ff919c0378fafdd2af6dbfcef4222c38237ed117c9da7f2",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/dd33c9750a40cbfcdfb19cd8335d955f533e3a18b790c0ee43d1e5d77911595c",
+      "checkpoint_data_offsets": [
+        261568,
+        2227648
+      ],
+      "checkpoint_header_sha256": "f60d4a2f55d70b668be2c7a61883ed9e2ba7d2cace06f40c3429da073dca64f2"
+    },
+    {
+      "layer": 7,
+      "which": "ffn",
+      "tensor": "layers.7.hc_ffn_fn",
+      "file": "L07-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "cff5b883b983934d26e31494364ea97572d41c11cd19f1cd96cd28e3d800b0dd",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/dd33c9750a40cbfcdfb19cd8335d955f533e3a18b790c0ee43d1e5d77911595c",
+      "checkpoint_data_offsets": [
+        2227756,
+        4193836
+      ],
+      "checkpoint_header_sha256": "f60d4a2f55d70b668be2c7a61883ed9e2ba7d2cace06f40c3429da073dca64f2"
+    },
+    {
+      "layer": 8,
+      "which": "attn",
+      "tensor": "layers.8.hc_attn_fn",
+      "file": "L08-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "f2a74ab45f37f4c91fa288161845339d6b743f459895e11902c45b33fc7420c3",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/a9b309f90e0d1e2252a224ed6b057b9c82c27d3a49cff64bfbfef12efd067f7c",
+      "checkpoint_data_offsets": [
+        262528,
+        2228608
+      ],
+      "checkpoint_header_sha256": "a2d003170329274ba0d10091b1339e834b603129a4b345009651a5dd6ff1387c"
+    },
+    {
+      "layer": 8,
+      "which": "ffn",
+      "tensor": "layers.8.hc_ffn_fn",
+      "file": "L08-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "98ad1ae23223f3c04d1852e1030113496b3770f2f00e6bd74400bf1f6fe0aff2",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/a9b309f90e0d1e2252a224ed6b057b9c82c27d3a49cff64bfbfef12efd067f7c",
+      "checkpoint_data_offsets": [
+        2228716,
+        4194796
+      ],
+      "checkpoint_header_sha256": "a2d003170329274ba0d10091b1339e834b603129a4b345009651a5dd6ff1387c"
+    },
+    {
+      "layer": 9,
+      "which": "attn",
+      "tensor": "layers.9.hc_attn_fn",
+      "file": "L09-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "65d782c9a4e5b031f62b51eb9647521075ba3beaca922cb62aac410217823ddd",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/b359227eceb3f839c80de19dddf946648ca89425d9b719ff44702cf5e8cfbe0e",
+      "checkpoint_data_offsets": [
+        261568,
+        2227648
+      ],
+      "checkpoint_header_sha256": "ec5434239be33e6d35218d2ed1d4ee522bb02357669280ef6dfe86ce44873e0c"
+    },
+    {
+      "layer": 9,
+      "which": "ffn",
+      "tensor": "layers.9.hc_ffn_fn",
+      "file": "L09-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "8a05ab13d1a389d11085577bc7d66efe4526386e111353c4818f2241d3ac2df1",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/b359227eceb3f839c80de19dddf946648ca89425d9b719ff44702cf5e8cfbe0e",
+      "checkpoint_data_offsets": [
+        2227756,
+        4193836
+      ],
+      "checkpoint_header_sha256": "ec5434239be33e6d35218d2ed1d4ee522bb02357669280ef6dfe86ce44873e0c"
+    },
+    {
+      "layer": 10,
+      "which": "attn",
+      "tensor": "layers.10.hc_attn_fn",
+      "file": "L10-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "e9059bd735b35dcf62685a879a024850efbb9529beb2b91e13b1be3cf4ef6810",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/41d87a4c81fec1550f9cb975db05598a18ee0161c2664e8e1a0c7b60742755a6",
+      "checkpoint_data_offsets": [
+        263904,
+        2229984
+      ],
+      "checkpoint_header_sha256": "e9246f9e946c8b771d95640635c0cc01d295a312fc374fd87f7d0d67e9c7f0fc"
+    },
+    {
+      "layer": 10,
+      "which": "ffn",
+      "tensor": "layers.10.hc_ffn_fn",
+      "file": "L10-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "be01901a972c6c472c7dc17171c9a999991aff61a6bec3d344ca691b957a9218",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/41d87a4c81fec1550f9cb975db05598a18ee0161c2664e8e1a0c7b60742755a6",
+      "checkpoint_data_offsets": [
+        2230092,
+        4196172
+      ],
+      "checkpoint_header_sha256": "e9246f9e946c8b771d95640635c0cc01d295a312fc374fd87f7d0d67e9c7f0fc"
+    },
+    {
+      "layer": 11,
+      "which": "attn",
+      "tensor": "layers.11.hc_attn_fn",
+      "file": "L11-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "cab9264d1a38660474540626788f44c3d525988501408b7dc5c7282d1b53906c",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e7ca4a12688a5819829ead3a03282aedb380e438bc41a00e969f70952c6d0eb9",
+      "checkpoint_data_offsets": [
+        263904,
+        2229984
+      ],
+      "checkpoint_header_sha256": "e2871f3474228510b968b237f9836898a5c9707add5cb1cad51401318dfb5311"
+    },
+    {
+      "layer": 11,
+      "which": "ffn",
+      "tensor": "layers.11.hc_ffn_fn",
+      "file": "L11-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "47536904552c4e3e49026b3599ca3ce564583df6e4f5e211f6ef330862f73d70",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e7ca4a12688a5819829ead3a03282aedb380e438bc41a00e969f70952c6d0eb9",
+      "checkpoint_data_offsets": [
+        2230092,
+        4196172
+      ],
+      "checkpoint_header_sha256": "e2871f3474228510b968b237f9836898a5c9707add5cb1cad51401318dfb5311"
+    },
+    {
+      "layer": 12,
+      "which": "attn",
+      "tensor": "layers.12.hc_attn_fn",
+      "file": "L12-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "c0910064751962492bb6a431c48208e7206616682b45f7440c4780fe740baaa0",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/fa9d49314bbb25118b3d52c573ed66a4d0acfb01dcb26d8367f43c66a52f46c4",
+      "checkpoint_data_offsets": [
+        263904,
+        2229984
+      ],
+      "checkpoint_header_sha256": "4184d16248ac775f7ab002039b2e9a43b98d51f24913cc9b19ceb85c3726ed59"
+    },
+    {
+      "layer": 12,
+      "which": "ffn",
+      "tensor": "layers.12.hc_ffn_fn",
+      "file": "L12-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "a1dc5577510c9293ed9dd9abbaa533aeed6e92be89c6ed2f84f7f9de4079c5d1",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/fa9d49314bbb25118b3d52c573ed66a4d0acfb01dcb26d8367f43c66a52f46c4",
+      "checkpoint_data_offsets": [
+        2230092,
+        4196172
+      ],
+      "checkpoint_header_sha256": "4184d16248ac775f7ab002039b2e9a43b98d51f24913cc9b19ceb85c3726ed59"
+    },
+    {
+      "layer": 13,
+      "which": "attn",
+      "tensor": "layers.13.hc_attn_fn",
+      "file": "L13-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "e80eda212b351f90586e7822e763cea35565434820a8f4b8fafa36d754cb1140",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/07d08bce9d73d416eaca0f42843440a8c45c5f939eff1a3690fb460d8dd7f623",
+      "checkpoint_data_offsets": [
+        263904,
+        2229984
+      ],
+      "checkpoint_header_sha256": "fcdcfd73f87aa514e2c8e3a742104def5a051acd47cd54b0b2bee2033d495edb"
+    },
+    {
+      "layer": 13,
+      "which": "ffn",
+      "tensor": "layers.13.hc_ffn_fn",
+      "file": "L13-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "80c45ec18793b5afb1a6868ebf5055c91709028f8998592f4d6ab5b92d07a940",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/07d08bce9d73d416eaca0f42843440a8c45c5f939eff1a3690fb460d8dd7f623",
+      "checkpoint_data_offsets": [
+        2230092,
+        4196172
+      ],
+      "checkpoint_header_sha256": "fcdcfd73f87aa514e2c8e3a742104def5a051acd47cd54b0b2bee2033d495edb"
+    },
+    {
+      "layer": 14,
+      "which": "attn",
+      "tensor": "layers.14.hc_attn_fn",
+      "file": "L14-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "133599874fa0856640e363f66f49397ae15b7a6e1a6684647ffdb811b46114b8",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/3d35e330a6c28cd59a06a1caab8b0048f7e12cc037d728736f74431c4c0a1a4c",
+      "checkpoint_data_offsets": [
+        264872,
+        2230952
+      ],
+      "checkpoint_header_sha256": "d0869abfd06ac08cc5a376eebf9d7de632227e141e6dcb7109bf0d2bffd3fc79"
+    },
+    {
+      "layer": 14,
+      "which": "ffn",
+      "tensor": "layers.14.hc_ffn_fn",
+      "file": "L14-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "e2a0938bad223ea04c399edcc6520f2c7bfd571f0c199aaf29633b15f12f287b",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/3d35e330a6c28cd59a06a1caab8b0048f7e12cc037d728736f74431c4c0a1a4c",
+      "checkpoint_data_offsets": [
+        2231060,
+        4197140
+      ],
+      "checkpoint_header_sha256": "d0869abfd06ac08cc5a376eebf9d7de632227e141e6dcb7109bf0d2bffd3fc79"
+    },
+    {
+      "layer": 15,
+      "which": "attn",
+      "tensor": "layers.15.hc_attn_fn",
+      "file": "L15-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "fec2c306d457bef286fb0ad1b7e9913cf49780b0a4655703f3ceecebd903896c",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/48bd0c28b7f441f131f562cb664366d7726447a3698da3dd56ebbfeb1b916c75",
+      "checkpoint_data_offsets": [
+        263904,
+        2229984
+      ],
+      "checkpoint_header_sha256": "0ad32850738558e9df1239b284abc748e42e01745eec180cd30815e21a67af55"
+    },
+    {
+      "layer": 15,
+      "which": "ffn",
+      "tensor": "layers.15.hc_ffn_fn",
+      "file": "L15-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "aaa52d4325be64f479b6cdf1e99f1673fb49fbc7dae0726408e87c10d79616b8",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/48bd0c28b7f441f131f562cb664366d7726447a3698da3dd56ebbfeb1b916c75",
+      "checkpoint_data_offsets": [
+        2230092,
+        4196172
+      ],
+      "checkpoint_header_sha256": "0ad32850738558e9df1239b284abc748e42e01745eec180cd30815e21a67af55"
+    },
+    {
+      "layer": 16,
+      "which": "attn",
+      "tensor": "layers.16.hc_attn_fn",
+      "file": "L16-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "15bcb799e3163f55bd55c3513ea9a61e2db48242d9de21e531123adb68cf0f18",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/b7a25cb64a959ca5e5a99e239bb1ba2092b9bcf022bec4ba71f7441334107bd1",
+      "checkpoint_data_offsets": [
+        263904,
+        2229984
+      ],
+      "checkpoint_header_sha256": "efaa20b2c111c875904e0f83623206f3414652353413e9051ba02e60ab7a085f"
+    },
+    {
+      "layer": 16,
+      "which": "ffn",
+      "tensor": "layers.16.hc_ffn_fn",
+      "file": "L16-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "3a8632b55dcc5a0db04bdc3f012152a7768410895688ae29d528e3cdf14d0f56",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/b7a25cb64a959ca5e5a99e239bb1ba2092b9bcf022bec4ba71f7441334107bd1",
+      "checkpoint_data_offsets": [
+        2230092,
+        4196172
+      ],
+      "checkpoint_header_sha256": "efaa20b2c111c875904e0f83623206f3414652353413e9051ba02e60ab7a085f"
+    },
+    {
+      "layer": 17,
+      "which": "attn",
+      "tensor": "layers.17.hc_attn_fn",
+      "file": "L17-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "69dcd2a4cea37a4762be2dfdead95bacef78c37de2b290cec82daa0e3d9666ae",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/8aea8c4026ba4b93e82b4ed1b6b4620d02b6aaac88d211aaf577acea443aff84",
+      "checkpoint_data_offsets": [
+        263904,
+        2229984
+      ],
+      "checkpoint_header_sha256": "6cc297397ef39dc77747d5fbba93a8a299caf4dfb4952886ca9c2d478d517f0c"
+    },
+    {
+      "layer": 17,
+      "which": "ffn",
+      "tensor": "layers.17.hc_ffn_fn",
+      "file": "L17-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "887734ee5c45a0c324c7a48d2943c5004cd638fc3a44387400bd9c9b568825e6",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/8aea8c4026ba4b93e82b4ed1b6b4620d02b6aaac88d211aaf577acea443aff84",
+      "checkpoint_data_offsets": [
+        2230092,
+        4196172
+      ],
+      "checkpoint_header_sha256": "6cc297397ef39dc77747d5fbba93a8a299caf4dfb4952886ca9c2d478d517f0c"
+    },
+    {
+      "layer": 18,
+      "which": "attn",
+      "tensor": "layers.18.hc_attn_fn",
+      "file": "L18-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "b4f37a59d852a13a1a01bbac0f121f3738c21c5439aa374a693692a4ef748d03",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/4cb6558dedfdc75a6be472e27bc3e830d8443a3371854e61dc54454a1b5b18f7",
+      "checkpoint_data_offsets": [
+        263904,
+        2229984
+      ],
+      "checkpoint_header_sha256": "ef8537770773e4006d36e1b5de0082407afe1abeb2309d4efac0e8ffcdc39040"
+    },
+    {
+      "layer": 18,
+      "which": "ffn",
+      "tensor": "layers.18.hc_ffn_fn",
+      "file": "L18-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "6917797c86efb9fe05452537a671aa0ad362209a1e07d4af4d4b08cc9a85f5bd",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/4cb6558dedfdc75a6be472e27bc3e830d8443a3371854e61dc54454a1b5b18f7",
+      "checkpoint_data_offsets": [
+        2230092,
+        4196172
+      ],
+      "checkpoint_header_sha256": "ef8537770773e4006d36e1b5de0082407afe1abeb2309d4efac0e8ffcdc39040"
+    },
+    {
+      "layer": 19,
+      "which": "attn",
+      "tensor": "layers.19.hc_attn_fn",
+      "file": "L19-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "a1fda2aeb6bf0cfada4ddc4fdd466595f2351c60ad3d671c80d7dc537968a2d4",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/81031b68c967539a7c51d1b12d37d18de926ca3045ec554ccdd49a83b4dc0084",
+      "checkpoint_data_offsets": [
+        263904,
+        2229984
+      ],
+      "checkpoint_header_sha256": "6f1df707004fd8f06f44e4a1e79677102037a414862d1550a7ac6a175961fa72"
+    },
+    {
+      "layer": 19,
+      "which": "ffn",
+      "tensor": "layers.19.hc_ffn_fn",
+      "file": "L19-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "28327867e57e252afe33fe70b2bdd769417e7a52ac711c9bb49c8449a51d5715",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/81031b68c967539a7c51d1b12d37d18de926ca3045ec554ccdd49a83b4dc0084",
+      "checkpoint_data_offsets": [
+        2230092,
+        4196172
+      ],
+      "checkpoint_header_sha256": "6f1df707004fd8f06f44e4a1e79677102037a414862d1550a7ac6a175961fa72"
+    },
+    {
+      "layer": 20,
+      "which": "attn",
+      "tensor": "layers.20.hc_attn_fn",
+      "file": "L20-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "d51cf64206c19c7d81936db8a921505b2c9cd87a99449a81992ddb015a170fe5",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/096723fc8afa9886b976fb63aabef159406dc483e6f2a41e3fe386435b0436cc",
+      "checkpoint_data_offsets": [
+        264712,
+        2230792
+      ],
+      "checkpoint_header_sha256": "fef3b0be45a79923f05c0a7e9a8713397d9c9d24dab8e13efc953d609f64efe9"
+    },
+    {
+      "layer": 20,
+      "which": "ffn",
+      "tensor": "layers.20.hc_ffn_fn",
+      "file": "L20-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "da26517301c3769eeb8cb756568b3cdbfb8241e04084af07155384900e48c338",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/096723fc8afa9886b976fb63aabef159406dc483e6f2a41e3fe386435b0436cc",
+      "checkpoint_data_offsets": [
+        2230900,
+        4196980
+      ],
+      "checkpoint_header_sha256": "fef3b0be45a79923f05c0a7e9a8713397d9c9d24dab8e13efc953d609f64efe9"
+    },
+    {
+      "layer": 21,
+      "which": "attn",
+      "tensor": "layers.21.hc_attn_fn",
+      "file": "L21-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "07036cb51cdd46973db5eb771600ff5f3dbb60e30517b8cf8df52c0378d49a00",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/c9438ff607bd902fdeb38267d36239ccf60d38595988364562b862791841da75",
+      "checkpoint_data_offsets": [
+        263904,
+        2229984
+      ],
+      "checkpoint_header_sha256": "190ff387c34f3b0a55277993b798b26adf528de28125361495fa30a050ed106c"
+    },
+    {
+      "layer": 21,
+      "which": "ffn",
+      "tensor": "layers.21.hc_ffn_fn",
+      "file": "L21-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "100434194ab4b2514dac414943f08d3498d5a9422781c09ef7a09ffcde242906",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/c9438ff607bd902fdeb38267d36239ccf60d38595988364562b862791841da75",
+      "checkpoint_data_offsets": [
+        2230092,
+        4196172
+      ],
+      "checkpoint_header_sha256": "190ff387c34f3b0a55277993b798b26adf528de28125361495fa30a050ed106c"
+    },
+    {
+      "layer": 22,
+      "which": "attn",
+      "tensor": "layers.22.hc_attn_fn",
+      "file": "L22-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "8c5acbc4da39d39e29a6fc0be3819cb42c02f64319a24b82648646d054ab0120",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/4227ef9fe34d10de584d67250845fab905cbd8462fd84d9da24d772f223db6b4",
+      "checkpoint_data_offsets": [
+        263904,
+        2229984
+      ],
+      "checkpoint_header_sha256": "ee80ffddf8ddeca1b934f2e32c14b7f4856b2e747088fbdc9fc80dcc27377891"
+    },
+    {
+      "layer": 22,
+      "which": "ffn",
+      "tensor": "layers.22.hc_ffn_fn",
+      "file": "L22-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "c8e564c8466e5a8f2494232e4c667f674430887d5b0ad794eecb624dfee418eb",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/4227ef9fe34d10de584d67250845fab905cbd8462fd84d9da24d772f223db6b4",
+      "checkpoint_data_offsets": [
+        2230092,
+        4196172
+      ],
+      "checkpoint_header_sha256": "ee80ffddf8ddeca1b934f2e32c14b7f4856b2e747088fbdc9fc80dcc27377891"
+    },
+    {
+      "layer": 23,
+      "which": "attn",
+      "tensor": "layers.23.hc_attn_fn",
+      "file": "L23-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "071bd3b578821c206dd7de8cf3d726f827352f5b1067e3cce90b2e90311cf097",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/0af8c8f1b96b502eda652a0549cf55cd8a4d472a34d27ef9bf1c1d7c4567ca3f",
+      "checkpoint_data_offsets": [
+        263904,
+        2229984
+      ],
+      "checkpoint_header_sha256": "ed25fdc55bb96b2101ac8cff12a235a7ea54412050c792b4e72377ae417a9a66"
+    },
+    {
+      "layer": 23,
+      "which": "ffn",
+      "tensor": "layers.23.hc_ffn_fn",
+      "file": "L23-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "79f27dea39bcdcbc2561e1315f6da560116fd18e96b8251c256c0adcfcdfeaeb",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/0af8c8f1b96b502eda652a0549cf55cd8a4d472a34d27ef9bf1c1d7c4567ca3f",
+      "checkpoint_data_offsets": [
+        2230092,
+        4196172
+      ],
+      "checkpoint_header_sha256": "ed25fdc55bb96b2101ac8cff12a235a7ea54412050c792b4e72377ae417a9a66"
+    },
+    {
+      "layer": 24,
+      "which": "attn",
+      "tensor": "layers.24.hc_attn_fn",
+      "file": "L24-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "af0305cfd81e288453433f9dae59275038fec24b2ffd59398abc257fcd8b877c",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/3066bd03043726d2400302cb9af759ec4e3957a935d56e241b83b52870322e28",
+      "checkpoint_data_offsets": [
+        264240,
+        2230320
+      ],
+      "checkpoint_header_sha256": "babf9e26761c97df06490e96368e40e3cc916770abe2afffa9b3a45a5734742b"
+    },
+    {
+      "layer": 24,
+      "which": "ffn",
+      "tensor": "layers.24.hc_ffn_fn",
+      "file": "L24-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "504c5e1ce91ddd52b128c4affd584d3157106b48b8e53bdc458e657baaf4b6a5",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/3066bd03043726d2400302cb9af759ec4e3957a935d56e241b83b52870322e28",
+      "checkpoint_data_offsets": [
+        2230428,
+        4196508
+      ],
+      "checkpoint_header_sha256": "babf9e26761c97df06490e96368e40e3cc916770abe2afffa9b3a45a5734742b"
+    },
+    {
+      "layer": 25,
+      "which": "attn",
+      "tensor": "layers.25.hc_attn_fn",
+      "file": "L25-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "78278184ba0e353b10102d7c31218f6d28a28112a37bafb9fca5623f7191ce01",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/9bc915075568b75e2aec9c645cc0fece6287f115c32031a52ab4f9ba9d12fde6",
+      "checkpoint_data_offsets": [
+        263904,
+        2229984
+      ],
+      "checkpoint_header_sha256": "6dffc2e311e17c5538f2dd92dd3fc8ba7685e3ea67af066603b815e1b722c668"
+    },
+    {
+      "layer": 25,
+      "which": "ffn",
+      "tensor": "layers.25.hc_ffn_fn",
+      "file": "L25-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "68baf36ef3d83bac873ae7763f3cc34cf5d8f653f596e767d028f48d4ee3a1b2",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/9bc915075568b75e2aec9c645cc0fece6287f115c32031a52ab4f9ba9d12fde6",
+      "checkpoint_data_offsets": [
+        2230092,
+        4196172
+      ],
+      "checkpoint_header_sha256": "6dffc2e311e17c5538f2dd92dd3fc8ba7685e3ea67af066603b815e1b722c668"
+    },
+    {
+      "layer": 26,
+      "which": "attn",
+      "tensor": "layers.26.hc_attn_fn",
+      "file": "L26-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "8862ae05e56a1d07bb2bcab3649b195de8e831f5400a87b8268ffc438c573841",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/d153dd9cde7c4aa7ea9896cf7aa25b49447af573f90ad14cfaaa532fbbd19434",
+      "checkpoint_data_offsets": [
+        263904,
+        2229984
+      ],
+      "checkpoint_header_sha256": "611e9ea2b143014df6037e285a3e1a865676e0954091dcbf95b3f57ec825336b"
+    },
+    {
+      "layer": 26,
+      "which": "ffn",
+      "tensor": "layers.26.hc_ffn_fn",
+      "file": "L26-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "05b367544059c819476a5e217f4fa1e4795a8c2106ba092824566236b16b1301",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/d153dd9cde7c4aa7ea9896cf7aa25b49447af573f90ad14cfaaa532fbbd19434",
+      "checkpoint_data_offsets": [
+        2230092,
+        4196172
+      ],
+      "checkpoint_header_sha256": "611e9ea2b143014df6037e285a3e1a865676e0954091dcbf95b3f57ec825336b"
+    },
+    {
+      "layer": 27,
+      "which": "attn",
+      "tensor": "layers.27.hc_attn_fn",
+      "file": "L27-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "415a9f7357857d6a27c92d8e8b20b462c3f4d98fa728f0085277c9c8a04dbb03",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/3c9ccd96e908e00f02a70930b0821a6c53e5301376a261284a092e1aea7bb5da",
+      "checkpoint_data_offsets": [
+        263904,
+        2229984
+      ],
+      "checkpoint_header_sha256": "5a5bf5cbd36e27c13c6dcbd6969db9796e9219e928e69b86fd5704131be598ea"
+    },
+    {
+      "layer": 27,
+      "which": "ffn",
+      "tensor": "layers.27.hc_ffn_fn",
+      "file": "L27-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "83bcd413563f997a8cb648700ccc4d3db842d745f8eac046b6f820ea579fddd5",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/3c9ccd96e908e00f02a70930b0821a6c53e5301376a261284a092e1aea7bb5da",
+      "checkpoint_data_offsets": [
+        2230092,
+        4196172
+      ],
+      "checkpoint_header_sha256": "5a5bf5cbd36e27c13c6dcbd6969db9796e9219e928e69b86fd5704131be598ea"
+    },
+    {
+      "layer": 28,
+      "which": "attn",
+      "tensor": "layers.28.hc_attn_fn",
+      "file": "L28-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "2c169bc95e4defb8c46d6e2edf66d6685ee079405452a8ddb9c32142a71dc6e9",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/0de7b6d7142df18ad45a215e9c0ef004f78cdbfefd59cc16345b2bc004047343",
+      "checkpoint_data_offsets": [
+        264240,
+        2230320
+      ],
+      "checkpoint_header_sha256": "50ac0885851fd0c5f9c2436858fbcecec347dd4efd39557ec68723b224d2985d"
+    },
+    {
+      "layer": 28,
+      "which": "ffn",
+      "tensor": "layers.28.hc_ffn_fn",
+      "file": "L28-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "729e42aa1a16d0f45ac2fb174422436bda5977466ad7352770d1a227d703f758",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/0de7b6d7142df18ad45a215e9c0ef004f78cdbfefd59cc16345b2bc004047343",
+      "checkpoint_data_offsets": [
+        2230428,
+        4196508
+      ],
+      "checkpoint_header_sha256": "50ac0885851fd0c5f9c2436858fbcecec347dd4efd39557ec68723b224d2985d"
+    },
+    {
+      "layer": 29,
+      "which": "attn",
+      "tensor": "layers.29.hc_attn_fn",
+      "file": "L29-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "5728408c803b687bdadaac1952138171965c2b80ffc64cffbf8f15ab789a5078",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/6a5aaa73c6f97294bd079914ba44209ecf3d0491c8b95ef9995655511e35aee6",
+      "checkpoint_data_offsets": [
+        263904,
+        2229984
+      ],
+      "checkpoint_header_sha256": "105e2bffb58a83dd3ca1502ecfbcf14759b1a16f705ca0eac52284053684007f"
+    },
+    {
+      "layer": 29,
+      "which": "ffn",
+      "tensor": "layers.29.hc_ffn_fn",
+      "file": "L29-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "65bb4a9490b5a62d406c03034482830977efd0aec706cd1069f9a9d3ef9a1a2e",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/6a5aaa73c6f97294bd079914ba44209ecf3d0491c8b95ef9995655511e35aee6",
+      "checkpoint_data_offsets": [
+        2230092,
+        4196172
+      ],
+      "checkpoint_header_sha256": "105e2bffb58a83dd3ca1502ecfbcf14759b1a16f705ca0eac52284053684007f"
+    },
+    {
+      "layer": 30,
+      "which": "attn",
+      "tensor": "layers.30.hc_attn_fn",
+      "file": "L30-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "19c5565ec6b25e4ccc169eaa8a0f1189431bc9b7e4169ab34129e95ae99478c8",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/386e3e91f7f02f7e2c25f398b3a63379051c2077839b3081f7556e18c29a69c9",
+      "checkpoint_data_offsets": [
+        263904,
+        2229984
+      ],
+      "checkpoint_header_sha256": "2b3caec06921b098107c3757f81e6b5bd0c401809b19fa65e24ef27ca9eb505e"
+    },
+    {
+      "layer": 30,
+      "which": "ffn",
+      "tensor": "layers.30.hc_ffn_fn",
+      "file": "L30-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "0da392462a1c13c893bbac55fc10cb2eeff53159779430f0261c11ffe057df8e",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/386e3e91f7f02f7e2c25f398b3a63379051c2077839b3081f7556e18c29a69c9",
+      "checkpoint_data_offsets": [
+        2230092,
+        4196172
+      ],
+      "checkpoint_header_sha256": "2b3caec06921b098107c3757f81e6b5bd0c401809b19fa65e24ef27ca9eb505e"
+    },
+    {
+      "layer": 31,
+      "which": "attn",
+      "tensor": "layers.31.hc_attn_fn",
+      "file": "L31-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "fd0099dd9ba97319f6d7bd32473c0a343341481dbff274c012044e1f8cf1125d",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/9deab3c4f27c956f91cd989d9a1f6cf4bbb91858ce3f7164caa5ae61125c943f",
+      "checkpoint_data_offsets": [
+        263904,
+        2229984
+      ],
+      "checkpoint_header_sha256": "08a8b7c04834ea2ca2b3efcebe2bd5b934e165154a7c3d11004242e2a1b438c4"
+    },
+    {
+      "layer": 31,
+      "which": "ffn",
+      "tensor": "layers.31.hc_ffn_fn",
+      "file": "L31-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "9d1725ae5dbf41f4a8889055de423355eba76fff3ed5d6c61a95688a2119fdc6",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/9deab3c4f27c956f91cd989d9a1f6cf4bbb91858ce3f7164caa5ae61125c943f",
+      "checkpoint_data_offsets": [
+        2230092,
+        4196172
+      ],
+      "checkpoint_header_sha256": "08a8b7c04834ea2ca2b3efcebe2bd5b934e165154a7c3d11004242e2a1b438c4"
+    },
+    {
+      "layer": 32,
+      "which": "attn",
+      "tensor": "layers.32.hc_attn_fn",
+      "file": "L32-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "cb8bd4ae420b3b338b7a978c4c8b3b31c6409241d8e146410aa7567e13f26473",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/226573bc07f35091b0ec27b0056ab3059f9bc1c0afd0bc104c93c86dd029cad2",
+      "checkpoint_data_offsets": [
+        264240,
+        2230320
+      ],
+      "checkpoint_header_sha256": "18a61fbf3d94a454137e1d6fc8f19b7ddfe12954f32c47337c8921069d5de193"
+    },
+    {
+      "layer": 32,
+      "which": "ffn",
+      "tensor": "layers.32.hc_ffn_fn",
+      "file": "L32-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "0f8a0dfda1926cfd78df1c7975c69e97d4ed9a586bf619d1cda7e098b7b6c134",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/226573bc07f35091b0ec27b0056ab3059f9bc1c0afd0bc104c93c86dd029cad2",
+      "checkpoint_data_offsets": [
+        2230428,
+        4196508
+      ],
+      "checkpoint_header_sha256": "18a61fbf3d94a454137e1d6fc8f19b7ddfe12954f32c47337c8921069d5de193"
+    },
+    {
+      "layer": 33,
+      "which": "attn",
+      "tensor": "layers.33.hc_attn_fn",
+      "file": "L33-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "0b743630209808e53a9393f09d9cb204204330880a29bbd1ae581971e5e92839",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/90d6a85c1eb0cae68c6c7bffa11b60654ea00353d27a0ae17701b72e239894cd",
+      "checkpoint_data_offsets": [
+        263904,
+        2229984
+      ],
+      "checkpoint_header_sha256": "32ef9284ffa83282248f59443f2c3b4daaf57e305d02a07dad3b493a05d68752"
+    },
+    {
+      "layer": 33,
+      "which": "ffn",
+      "tensor": "layers.33.hc_ffn_fn",
+      "file": "L33-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "cafe22f68c40c0675af15521db9588d2f717c25707bf9a2edeb312d863c6249a",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/90d6a85c1eb0cae68c6c7bffa11b60654ea00353d27a0ae17701b72e239894cd",
+      "checkpoint_data_offsets": [
+        2230092,
+        4196172
+      ],
+      "checkpoint_header_sha256": "32ef9284ffa83282248f59443f2c3b4daaf57e305d02a07dad3b493a05d68752"
+    },
+    {
+      "layer": 34,
+      "which": "attn",
+      "tensor": "layers.34.hc_attn_fn",
+      "file": "L34-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "3a1c7c9ffce0d3af05da6eeb92fb7a7ebfb1490d3f5dcc9b7c6b92d9a89e2429",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/207aef18f995fdfe7506175aabd700aa62dcf6f488c7cc375e9de06f56891b83",
+      "checkpoint_data_offsets": [
+        263904,
+        2229984
+      ],
+      "checkpoint_header_sha256": "7b3daaa3d09fc52c64153c5a81fcd3c4984e6c3dcc6981c95ae840c8928ad1d5"
+    },
+    {
+      "layer": 34,
+      "which": "ffn",
+      "tensor": "layers.34.hc_ffn_fn",
+      "file": "L34-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "4ef3eef4e3894cb047f1957e7737ebbdfe071b51507ac267d822ffc9a3eb5d24",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/207aef18f995fdfe7506175aabd700aa62dcf6f488c7cc375e9de06f56891b83",
+      "checkpoint_data_offsets": [
+        2230092,
+        4196172
+      ],
+      "checkpoint_header_sha256": "7b3daaa3d09fc52c64153c5a81fcd3c4984e6c3dcc6981c95ae840c8928ad1d5"
+    },
+    {
+      "layer": 35,
+      "which": "attn",
+      "tensor": "layers.35.hc_attn_fn",
+      "file": "L35-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "8fe6aa12234d3903f63ba825da68defc0b0b39c2a3cc614e0bb2d50068418a8a",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/cbbaa0b0807311807a696efec09f9b5a5d63bdf68b82378e1fc7402a2533c627",
+      "checkpoint_data_offsets": [
+        263904,
+        2229984
+      ],
+      "checkpoint_header_sha256": "33f706f0d8727ac9aa2154eb56b76f76d5396ea5c9bd94248c7378f086fddc2b"
+    },
+    {
+      "layer": 35,
+      "which": "ffn",
+      "tensor": "layers.35.hc_ffn_fn",
+      "file": "L35-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "3337ac086fec972b01fb6e23158c3ef2c64f2cb7336cc68285d04b34a88778bb",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/cbbaa0b0807311807a696efec09f9b5a5d63bdf68b82378e1fc7402a2533c627",
+      "checkpoint_data_offsets": [
+        2230092,
+        4196172
+      ],
+      "checkpoint_header_sha256": "33f706f0d8727ac9aa2154eb56b76f76d5396ea5c9bd94248c7378f086fddc2b"
+    },
+    {
+      "layer": 36,
+      "which": "attn",
+      "tensor": "layers.36.hc_attn_fn",
+      "file": "L36-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "8f825591d2de67c51bdcbf6fa5b261acd34c5915b69247d9d50dfdeeae66198e",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/f4cf191547b50efbc35c4ed1f36cfb26043d94f987c49d54b15ef2d632a14a77",
+      "checkpoint_data_offsets": [
+        264240,
+        2230320
+      ],
+      "checkpoint_header_sha256": "e5e55c1f73de87075da7717c9319f30d32078ba2f1be641e8cd6127d4c273987"
+    },
+    {
+      "layer": 36,
+      "which": "ffn",
+      "tensor": "layers.36.hc_ffn_fn",
+      "file": "L36-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "c596a1e431c172245dcf81b192683bc6a45a3a88efb5dcf3f00164c97012679a",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/f4cf191547b50efbc35c4ed1f36cfb26043d94f987c49d54b15ef2d632a14a77",
+      "checkpoint_data_offsets": [
+        2230428,
+        4196508
+      ],
+      "checkpoint_header_sha256": "e5e55c1f73de87075da7717c9319f30d32078ba2f1be641e8cd6127d4c273987"
+    },
+    {
+      "layer": 37,
+      "which": "attn",
+      "tensor": "layers.37.hc_attn_fn",
+      "file": "L37-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "acaf3ab52f130248f1350b2c71b52b78129f6f394d2136243fc05d675c33796e",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e991bfc416055c45ddb89f1447eae1e67dba2816e7580044ffff3db7e2af27a3",
+      "checkpoint_data_offsets": [
+        263904,
+        2229984
+      ],
+      "checkpoint_header_sha256": "e8a1a6448644f70d3aa897fba81c2cf2245125851aacdf377c97ef3ce959981e"
+    },
+    {
+      "layer": 37,
+      "which": "ffn",
+      "tensor": "layers.37.hc_ffn_fn",
+      "file": "L37-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "cb382696f16295548d7cdf1333a56395d7fea402aca4dc793008b86abba34874",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e991bfc416055c45ddb89f1447eae1e67dba2816e7580044ffff3db7e2af27a3",
+      "checkpoint_data_offsets": [
+        2230092,
+        4196172
+      ],
+      "checkpoint_header_sha256": "e8a1a6448644f70d3aa897fba81c2cf2245125851aacdf377c97ef3ce959981e"
+    },
+    {
+      "layer": 38,
+      "which": "attn",
+      "tensor": "layers.38.hc_attn_fn",
+      "file": "L38-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "ff9a7f95fbdb21fa9341a85636bc3d58ead8f93a361f40fad521319ec0fd2420",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/48a1c08afadf4e73223c587f9c6ad6f32aef57c01342ae75e96b07a001711d42",
+      "checkpoint_data_offsets": [
+        263904,
+        2229984
+      ],
+      "checkpoint_header_sha256": "3fde0cd4e3167cc5a1117e055b052d20f4a3d8ea013bfc54764abb07d09351c1"
+    },
+    {
+      "layer": 38,
+      "which": "ffn",
+      "tensor": "layers.38.hc_ffn_fn",
+      "file": "L38-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "ec76931a2fdf42adc2f376057c5bb26a109808f853c7304264ea3408d4527bd2",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/48a1c08afadf4e73223c587f9c6ad6f32aef57c01342ae75e96b07a001711d42",
+      "checkpoint_data_offsets": [
+        2230092,
+        4196172
+      ],
+      "checkpoint_header_sha256": "3fde0cd4e3167cc5a1117e055b052d20f4a3d8ea013bfc54764abb07d09351c1"
+    },
+    {
+      "layer": 39,
+      "which": "attn",
+      "tensor": "layers.39.hc_attn_fn",
+      "file": "L39-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "1fb836827da345691926c768e309e837146c76a77ceaa75878765d7f0ef17f31",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1a4d5d30ae51bafda75078d49b05a585c924b0af9b3481c075b04341507c2ef",
+      "checkpoint_data_offsets": [
+        263904,
+        2229984
+      ],
+      "checkpoint_header_sha256": "5ca433405c1b16b8776486a174583e7ff2641889b292d70952da7a339687a70c"
+    },
+    {
+      "layer": 39,
+      "which": "ffn",
+      "tensor": "layers.39.hc_ffn_fn",
+      "file": "L39-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "57d4ddd966895f34ad7134847376b4b25739ec34c758c099860b177ccb0d2fe2",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1a4d5d30ae51bafda75078d49b05a585c924b0af9b3481c075b04341507c2ef",
+      "checkpoint_data_offsets": [
+        2230092,
+        4196172
+      ],
+      "checkpoint_header_sha256": "5ca433405c1b16b8776486a174583e7ff2641889b292d70952da7a339687a70c"
+    },
+    {
+      "layer": 40,
+      "which": "attn",
+      "tensor": "mtp.0.hc_attn_fn",
+      "file": "L40-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "bd28c54795b5b9fa43507f0045158577124607dc6abe0e4540a794128f9c19a9",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/9a6b39fb88a2510487a8efaef77aa7864e8061f6b62c95a0f010e9dd538f3b05",
+      "checkpoint_data_offsets": [
+        86312,
+        2052392
+      ],
+      "checkpoint_header_sha256": "bcfa221d7a325e0a910e262d782c0e97bd5e5b7cbde6c9b480bb88ab7c23a36e"
+    },
+    {
+      "layer": 40,
+      "which": "ffn",
+      "tensor": "mtp.0.hc_ffn_fn",
+      "file": "L40-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "badf9d2c099772d0f84663be6f021a80a66106c0300bffe1acaa7fd50ed70121",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/9a6b39fb88a2510487a8efaef77aa7864e8061f6b62c95a0f010e9dd538f3b05",
+      "checkpoint_data_offsets": [
+        2052500,
+        4018580
+      ],
+      "checkpoint_header_sha256": "bcfa221d7a325e0a910e262d782c0e97bd5e5b7cbde6c9b480bb88ab7c23a36e"
+    },
+    {
+      "layer": 41,
+      "which": "attn",
+      "tensor": "mtp.1.hc_attn_fn",
+      "file": "L41-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "5fa257e21fb12e0980e127b3fe0e1a59ae6921977339cd472816e34415311bcb",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/0cc9d5f6ca3a2158ccc63ce2c70c76aeda8177d54913340481af566680329eb5",
+      "checkpoint_data_offsets": [
+        85992,
+        2052072
+      ],
+      "checkpoint_header_sha256": "c8f2cad66c6387793b335cbc10231661b61f2ec7a8c814bccb8d6ae418200675"
+    },
+    {
+      "layer": 41,
+      "which": "ffn",
+      "tensor": "mtp.1.hc_ffn_fn",
+      "file": "L41-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "dfc887dccce0f03c694a4f707413a969c61ada4a4aa15fff3cbaf2599f71db26",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/0cc9d5f6ca3a2158ccc63ce2c70c76aeda8177d54913340481af566680329eb5",
+      "checkpoint_data_offsets": [
+        2052180,
+        4018260
+      ],
+      "checkpoint_header_sha256": "c8f2cad66c6387793b335cbc10231661b61f2ec7a8c814bccb8d6ae418200675"
+    },
+    {
+      "layer": 42,
+      "which": "attn",
+      "tensor": "mtp.2.hc_attn_fn",
+      "file": "L42-attn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "f3551cf649f6282b84d0aed119c55208cf539ccffa1788d128db5a836dc793b3",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e625902027b9d23d416f8818c665fab4704e0b96dc1bc778321601b700475a9d",
+      "checkpoint_data_offsets": [
+        87000,
+        2053080
+      ],
+      "checkpoint_header_sha256": "1baad4e59ff44a15727f0c294d015da70a90502fd5d1e844c1c0939a8194793e"
+    },
+    {
+      "layer": 42,
+      "which": "ffn",
+      "tensor": "mtp.2.hc_ffn_fn",
+      "file": "L42-ffn.f32",
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "bytes": 1966080,
+      "sha256": "68ac88e2e4cbc548214ae6aa0e61c1fd517cc8b05e61796a37c2c92df59e60ab",
+      "checkpoint_shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e625902027b9d23d416f8818c665fab4704e0b96dc1bc778321601b700475a9d",
+      "checkpoint_data_offsets": [
+        2053188,
+        4019268
+      ],
+      "checkpoint_header_sha256": "1baad4e59ff44a15727f0c294d015da70a90502fd5d1e844c1c0939a8194793e"
+    }
+  ],
+  "stage_peak_RSS_KiB": 56720,
+  "disk_free_before": 14829645824,
+  "disk_free_after": 14660005888,
+  "hardware_installed": false
+}

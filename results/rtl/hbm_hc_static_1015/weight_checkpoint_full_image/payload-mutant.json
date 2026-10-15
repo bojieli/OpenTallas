@@ -1,0 +1,19 @@
+{
+  "status": "EXPECTED_FAILURE_OBSERVED",
+  "changed_byte_offset": 169082879,
+  "actual_row_ordinal": 2063,
+  "mutant_sha256": "ebb8e43d63c6f6f9ce1e498945f5d97bdd856d7d4e5ac4c0da1db46c7bff8d09",
+  "verifier_exit": 1,
+  "command": [
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch/claude/codex-hc-full-image-1015/export_hbm_hc_checkpoint_image.py",
+    "verify",
+    "--inputs",
+    "/srv/opentallas-scratch/claude/codex-hc-full-image-1015/inputs",
+    "--out",
+    "/srv/opentallas-scratch/claude/codex-hc-full-image-1015/output",
+    "--payload",
+    "/srv/opentallas-scratch/claude/codex-hc-full-image-1015/payload-last-row-mutant.bin"
+  ],
+  "disk_free_after": 478678396928
+}

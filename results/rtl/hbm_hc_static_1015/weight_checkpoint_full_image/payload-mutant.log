@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/codex-hc-full-image-1015/export_hbm_hc_checkpoint_image.py", line 189, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/srv/opentallas-scratch/claude/codex-hc-full-image-1015/export_hbm_hc_checkpoint_image.py", line 188, in main
+    a=p.parse_args();{'stage':stage,'export':export,'verify':verify}[a.mode](a)
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/srv/opentallas-scratch/claude/codex-hc-full-image-1015/export_hbm_hc_checkpoint_image.py", line 166, in verify
+    raise ValueError(f'actual row payload mismatch ordinal{checked}')
+ValueError: actual row payload mismatch ordinal2063

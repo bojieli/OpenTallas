@@ -1,0 +1,55 @@
+{
+  "schema": "opentallas.hc.native-stripe4-checkpoint-image.v1",
+  "status": "EXPORTED_NOT_HARDWARE_INSTALLED",
+  "source_tensors": 86,
+  "rows": 2064,
+  "payload_file": "payload.bin",
+  "payload_bytes": 169082880,
+  "payload_sha256": "446c14de96ada5d6baa1737c41700b1b969fdf361e7790549d901399dd5508f9",
+  "row_manifest": "rows.jsonl",
+  "row_manifest_sha256": "d8a26fb986638c6ffcd98e02a591e33347175dd0e2d66fb5d1170f723b6d1321",
+  "source_catalog_sha256": "6af373d9a5c1c37e30a52718ee3172d9b94d9b080ea05d4fc47267a90e99114a",
+  "descriptor_book_sha256": "1866afcc7c54878ffe5eccbf9f57c982268444ced2f068508e00ee8c23fb510d",
+  "config_sha256": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809",
+  "local_byte_base": 21474836480,
+  "protected_capacity_bytes": 268435456,
+  "physical_stack_windows": [
+    {
+      "stack": 0,
+      "file": "stack0.hc-window.bin",
+      "local_byte_base": 21474836480,
+      "logical_bytes": 169082880,
+      "actual_payload_bytes": 42270720,
+      "sha256": "635c3d12149e1530129f8be282a009f7fb79e3c3d4fdf934effa63e47c76a45d"
+    },
+    {
+      "stack": 1,
+      "file": "stack1.hc-window.bin",
+      "local_byte_base": 21474836480,
+      "logical_bytes": 169082880,
+      "actual_payload_bytes": 42270720,
+      "sha256": "5ad22d7eb5ed76c3421d2e38c472de65728e92409a1698c8cc89b11e61e62bf4"
+    },
+    {
+      "stack": 2,
+      "file": "stack2.hc-window.bin",
+      "local_byte_base": 21474836480,
+      "logical_bytes": 169082880,
+      "actual_payload_bytes": 42270720,
+      "sha256": "a1ab11033085cd9cfc2570591ad70d02adf51f96cea61e4670582aa75c32f79f"
+    },
+    {
+      "stack": 3,
+      "file": "stack3.hc-window.bin",
+      "local_byte_base": 21474836480,
+      "logical_bytes": 169082880,
+      "actual_payload_bytes": 42270720,
+      "sha256": "a94939601b931efc7f7dcc150e2c7641c221c75f20519d7ea6e0afaa5a279f80"
+    }
+  ],
+  "sparse_holes": "reserved HC region positions with no bank on this stack; zero in exported files",
+  "peak_RSS_KiB": 41940,
+  "disk_free_before": 479817711616,
+  "disk_free_after": 479366262784,
+  "hardware_install_and_ACK_proven": false
+}

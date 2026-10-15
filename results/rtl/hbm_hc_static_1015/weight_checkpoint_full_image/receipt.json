@@ -1,0 +1,41 @@
+{
+  "schema": "opentallas.hc.full_checkpoint_export_gate.v1",
+  "status": "PASS_EXPORTED_NOT_INSTALLED",
+  "source_hashes": {
+    "tools/export_hbm_hc_checkpoint_image.py": "36eb5690183b7ae2d7da932a43f3f6db3fbc6aae22d652b766ca6748a040ef7f",
+    "tools/test_hbm_hc_checkpoint_image_mutant.py": "39e6f210d8b6e7e7811b7ad810966442828c3c7f1585202568a12f02e3166f88"
+  },
+  "remote_source_hash_match": true,
+  "descriptor_source_commit": "4b9a13572",
+  "remote_host": "ot-epyc4",
+  "remote_directory": "/srv/opentallas-scratch/claude/codex-hc-full-image-1015",
+  "staged_local_input": "/home/ubuntu/artifacts/hc-full-image-1015/inputs",
+  "export": {
+    "session": 44293,
+    "scope": "oth-ubuntu-1883723-1792061732",
+    "exit": 0
+  },
+  "verify": {
+    "session": 98558,
+    "scope": "oth-ubuntu-1887987-1792061756",
+    "exit": 0,
+    "rows_checked": 2064,
+    "bank_segments_checked": 16512
+  },
+  "negative": {
+    "session": 23022,
+    "scope": "oth-ubuntu-1892098-1792061776",
+    "exit": 0,
+    "expected_rejection": "actual row payload mismatch ordinal2063"
+  },
+  "artifacts": {
+    "payload-mutant.json": "698767c1bba323d1baba036c53445742447e7772e9c57bfb0a579b406c74b262",
+    "payload-mutant.log": "fe700dc4ab00510769abad16b21eab6a9e5957adaada658f5af7d2c4bf9c8d37",
+    "manifest.json": "0a0a9b47da804c282577261dd5c08abf842002995246e9dd02276e3cf7fdd9c2",
+    "rows.jsonl.gz": "b0f07df67314c7e41cd9bf71e760c28d6ed162a313fbd82680fced1088010b31",
+    "input_catalog.json": "6af373d9a5c1c37e30a52718ee3172d9b94d9b080ea05d4fc47267a90e99114a"
+  },
+  "hardware_installed": false,
+  "controller_ACK_proven": false,
+  "full_native_chip_qualified": false
+}
