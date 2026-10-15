@@ -21,12 +21,29 @@ def main():
    xs=[x+pin[2] for _,_,x,_ in rows]
    desired.append(((min(xs)+max(xs))/2,source,b))
  old={p:v['per_bit'] for p,v in base['ports'].items()}
- used=[b[2] for ps in old.values() for b in ps if b[:2]==['S','M5']]
- free=[round(0.24+.096*i,3) for i in range(6000) if 0.2<=.24+.096*i<=576.52 and all(abs(.24+.096*i-u)>=.0479 for u in used)]
- desired.sort();target=sum(x[0] for x in desired)/len(desired)
- width=len(desired);start=min(range(len(free)-width+1),key=lambda i:abs((free[i]+free[i+width-1])/2-target))
- extra={'fv_local':[None]*7,'fdx_local':[None]*1128}
- for (_,p,b),x in zip(desired,free[start:start+width]):extra[p][b]=['S','M5',x,.084]
+ # Direct vertical M3 pin-to-pin capture lanes. Original M5 first-stage
+ # rectangles remain fixed; a different net may share x on another layer.
+ extra={'fv_local':[list(x) for x in old['fv_in']],
+        'fdx_local':[list(x) for x in old['fd_in']]}
+ occupied=set();clamps=[]
+ for p,source in [('fv_local','fv'),('fdx_local','fdx')]:
+  for bit,b in enumerate(extra[p]):
+   sx=b[2];sy=751.68-365.04-25.92+.042
+   limits=[]
+   for g,h,x,y in rows:
+    pin=cpl[source][bit];radius=499.8-abs(sy-y-pin[3])
+    limits.append((x+pin[2]-radius,x+pin[2]+radius))
+   lo=max(t[0] for t in limits);hi=min(t[1] for t in limits)
+   assert lo<=hi,(p,bit,'no single-pin CPL reach solution',lo,hi)
+   target=min(max(sx,lo),hi)
+   # ASAP7 M3 vertical track centres: .012 + .048*n; reserve separate
+   # tracks for distinct local outputs, including the nine edge clamps.
+   candidates=[round(.012+.048*n,3) for n in range(max(0,int((lo-.012)/.048)+1),int((hi-.012)/.048)+1)]
+   candidates=[c for c in candidates if c not in occupied]
+   assert candidates,(p,bit,'no free M3 pin within reach interval')
+   outx=min(candidates,key=lambda c:abs(c-target))
+   if abs(outx-sx)>.0241:clamps.append([p,bit,sx,outx])
+   occupied.add(outx);extra[p][bit]=['S','M3',outx,.084]
  proof=[]
  for p,rp in [('fv_local','fv'),('fdx_local','fdx')]:
   for bit,pin in sorted(cpl[rp].items()):
@@ -48,7 +65,7 @@ def main():
     nm=p if len(ps)==1 else f'{p}[{i}]'
     lines.append(f'place_pin -pin_name {{{nm}}} -layer {ly} -location {{{x:.3f} {y:.3f}}} -force_to_die_boundary')
   (out/(master+'.tcl')).write_text('\n'.join(lines)+'\n')
- report={'scope':'actual CLOSED CPL faces only; CTRA/CTRB have no published LEF and remain unverified','max_um':max(r['length_um'] for r in proof),'over500':[r for r in proof if r['length_um']>500],'hops':proof,'new_sink_timing':'unverified pending routed owned capture leaf'}
+ report={'scope':'actual CLOSED CPL faces only; CTRA/CTRB have no published LEF and remain unverified','max_um':max(r['length_um'] for r in proof),'over500':[r for r in proof if r['length_um']>500],'hops':proof,'new_sink_timing':'unverified pending routed owned capture leaf','M3_reach_clamps':clamps}
  (out/'cpl_geometry.json').write_text(json.dumps(report,indent=1)+'\n')
  # Strip expansion requires 751.68 height: old spare2.16 is consumed. N-face
  # offsets preserve upper rows; all rows below capture move12.96 down.
