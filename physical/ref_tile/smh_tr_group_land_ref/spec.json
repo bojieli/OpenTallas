@@ -66,8 +66,7 @@
    }
   ],
   "views_to": "physical/ref_tile/smh_tr_group_land_ref/views",
-  "record_to": "results/rtl/ref_tile/smh_tr_group_land_ref",
-  "reroute_reason": "land1 native audit launch 222.5 > 220 (5 pins) from the output hold stage; outhold dropped"
+  "record_to": "results/rtl/ref_tile/smh_tr_group_land_ref"
  },
  "params": {},
  "children": [],
@@ -83,5 +82,15 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "reroute_reason": {
+  "kind": "native_launch",
+  "source": "results/arch/hbm_native_1013/sm/compact_tile_1014/land1_native_pin_audit.json",
+  "cell": "ot_smh_tr_group_land",
+  "launch_ps": 222.5,
+  "capture_ps": 145.6,
+  "launch_over": 5,
+  "closed_job": "smh_tr_group_land_ref-land1-f4dd17bb0",
+  "fix": "drop the recipe-2 output hold stage (BUF->HB2->BUF between each q launch flop and its pin); q pin flops stay FIRM at the N face; receiver inhold covers boundary hold"
  }
 }
