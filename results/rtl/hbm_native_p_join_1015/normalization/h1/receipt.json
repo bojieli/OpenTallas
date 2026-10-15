@@ -42,7 +42,7 @@
     "T128": "PASS74events0errors",
     "T640": "PASS74events0errors"
   },
-  "A_operand_macro_capture_census": "live75956/84962, required HVM lease source pin addition",
+  "A_operand_macro_capture_census": "PASS82events0ackerrors bothshapes; all owned handles terminal",
   "DUT_initialization_only": [
     "rawSC",
     "rawPV",
@@ -59,7 +59,9 @@
     "directed_ties/t640_h1.log": "d9b933899c9635c29802c0803e59d04b9d1602e20d805264bef73cf3f2f6ef3b",
     "directed_ties/t128_h1.log": "7722df4a704a010ddb78313b1aca0132f71102362d47da4b08b36037cdf98333",
     "mutants/mutant_live_E_rounded_alias.log": "154e5ce9a0f1fa0ca473ac697ae143f3b58097c384c97d2b0dca4707410fc973",
-    "diagnostic/SC_alias_pass.log": "37779c7b281c95277d553bac6d298b4358560abb00df7c76c6ee6f056a2ad47d"
+    "diagnostic/SC_alias_pass.log": "37779c7b281c95277d553bac6d298b4358560abb00df7c76c6ee6f056a2ad47d",
+    "t128_A_lifetime_epochs.json": "49d83d4d3ac9b30fad0eb8ea39d9b2a2ecbd921770bf19e5eb332a4c58c52352",
+    "t640_A_lifetime_epochs.json": "4aa20811557abaf58597d2c0d46c880d0654a62259ea3a46ef96ee2f85d2df8d"
   },
   "lease_pins": {
     "128": {
@@ -126,5 +128,60 @@
         "FP32_words": 640
       }
     }
-  }
+  },
+  "actual_A_operand_lifetime": {
+    "128": {
+      "PV_A_SRAM_read_capture": {
+        "first": 1060,
+        "last": 1091,
+        "count": 32,
+        "FP32_words": 512
+      },
+      "PV_A_SRAM_write_capture": {
+        "first": 1002,
+        "last": 1033,
+        "count": 32,
+        "FP32_words": 512
+      },
+      "raw_SC_A_SRAM_read_capture": {
+        "first": 54,
+        "last": 391,
+        "count": 16,
+        "FP32_words": 256
+      },
+      "raw_SC_A_SRAM_write_capture": {
+        "first": 20,
+        "last": 27,
+        "count": 8,
+        "FP32_words": 128
+      }
+    },
+    "640": {
+      "PV_A_SRAM_read_capture": {
+        "first": 2484,
+        "last": 2515,
+        "count": 32,
+        "FP32_words": 512
+      },
+      "PV_A_SRAM_write_capture": {
+        "first": 2426,
+        "last": 2457,
+        "count": 32,
+        "FP32_words": 512
+      },
+      "raw_SC_A_SRAM_read_capture": {
+        "first": 86,
+        "last": 1039,
+        "count": 80,
+        "FP32_words": 1280
+      },
+      "raw_SC_A_SRAM_write_capture": {
+        "first": 20,
+        "last": 59,
+        "count": 40,
+        "FP32_words": 640
+      }
+    }
+  },
+  "all_owned_runs_terminal": true
 }

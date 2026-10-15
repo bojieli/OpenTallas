@@ -1,0 +1,35 @@
+{
+  "source_branch": "codex/hbm-native-p-join-1015",
+  "actual_RTL_build_manifest": "build_sources.json",
+  "preserved_model_E4": "/tmp/p-native-norm-h1-build-r1/obj/Vtb_hbm_p_norm_h1_static",
+  "preserved_source_E4": "/tmp/p-native-norm-h1-src-r1",
+  "build_admission": {
+    "GB": 20,
+    "threads": 8,
+    "measured_peak_GB": 9.371,
+    "wall_seconds": 152.704
+  },
+  "simulation_admission": {
+    "GB": 1,
+    "threads": 1,
+    "measured_MB": 79
+  },
+  "actual_source_capture_observer": "tools/hbm_static/p_norm_h1_epoch_observer.cpp linked against preserved model archive, not newRTL",
+  "fixture_preparation": [
+    "prepare_p_norm_cases.py canonical with HATT SC/P and PV/SINK pack",
+    "prepare_p_norm_cases.py directed actualMachine DIV ties",
+    "prepare_p_norm_h1.py selects head0 and compiles scaled_in_e epochlease",
+    "run_p_norm_h1.sh rebuild/replay (muststage sourcepack per manifest)"
+  ],
+  "native_whole_kernel_qualified": false,
+  "canonical_transport_slot_grant_bound": false,
+  "alias_negative_only_valid": "roundedEB drain redirects to rawE beforeactualSUMcapture; diagnostic SC-VM alias can be safe dueactualA SRAM caching",
+  "invalid_initial_mutants_excluded": "Initial H16 runner ABI-offset mutants stopped only after both original positive profiles terminal PASS; originalrunner unit1905974 exit143 intentional; source/build/logs preserved",
+  "same_actual_RTL_model_all_positive_cases": true,
+  "source_file_hashes": {
+    "tools/hbm_static/make_p_producer_calendar.py": "e0b208620cd30e77c5873f8ae3556dcc0bccae92a27f8042b78f6591cfa2cb3f",
+    "tools/hbm_static/prepare_p_norm_cases.py": "7155faec8cdee25280800eddae7b5c6c069f76f36cab416005f1c9e844a96f9b",
+    "tools/hbm_static/prepare_p_norm_h1.py": "46989a5a86ecbd29d59a6e3dc84131c140b76004057b3a92effe8f49b52ea16d",
+    "tools/hbm_static/p_norm_h1_epoch_observer.cpp": "2234f9a23a04e5d46451d468082492ed9cf0e02c8865d9da8ec03a43c101dc12"
+  }
+}
