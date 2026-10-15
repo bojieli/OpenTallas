@@ -42,6 +42,11 @@ module ot_s81_stage_seq #(
     parameter integer QD     = 4,                   // engine-side command queue (credits) per port
     parameter integer FQ     = 4,                   // sequencer-side per-port FIFO
     parameter integer MUT    = 0,
+    // KDX (s81-die-rtl-bind 2026-10-14, F4 hop engine): the engine port whose ops the KIT done (job_kdone) does not
+    // wait for -- the stage hand-off engine (layer dies: port 7 hop = the WFC kit's HIDDEN transfer, which the kit
+    // starts at its done).  job_kdone pulses, in job order, when every op of the job on the other ports has completed;
+    // job_done (the slot retire) still waits for every op.  KDX < 0: job_kdone = job_done (unchanged).
+    parameter integer KDX    = -1,
     parameter integer OPW    = $clog2(NOPS),
     parameter integer PEW    = 4 + ARGW,
     parameter integer CMDW   = 1 + USER_W + 2 * NW + ARGW + OPW,
@@ -61,6 +66,7 @@ module ot_s81_stage_seq #(
     input  wire [NW-1:0]           job_pos,
     input  wire [NW-1:0]           job_tok,
     output reg                     job_done,
+    output wire                    job_kdone,
     // engines
     output reg  [NENG-1:0]         cmd_v,
     output reg  [NENG*CMDW-1:0]    cmd_d,
@@ -107,6 +113,11 @@ module ot_s81_stage_seq #(
     reg [USER_W-1:0]  js_u [0:1];
     reg [NW-1:0]      js_p [0:1], js_t [0:1];
     reg [OPW:0]       js_dn [0:1];                // completions counted
+    reg [OPW:0]       js_dk [0:1];                // KDX: completions on the other ports
+    reg [OPW:0]       js_nk [0:1];                // KDX: ops of the job fetched for port KDX
+    reg [1:0]         js_kd;                      // KDX: the job's kit done has been given
+    reg               kold;                       // KDX: oldest slot without its kit done
+    reg               kdone_r;
     reg               old;                        // oldest slot
     reg               nslot;                      // slot the next accepted job takes
     reg               jrdy_r;                     // registered: a slot is free after this cycle
@@ -141,7 +152,7 @@ module ot_s81_stage_seq #(
         for (e = 0; e < NENG; e = e + 1)
             pop[e] = (fq_n[e] != 0) && (cred[e] != 0);
     end
-    reg [OPW:0]       add0, add1;
+    reg [OPW:0]       add0, add1, addk0, addk1;
     reg               nxt_other;                  // the other slot has a job to issue after `fin`
     always @(*) nxt_other = (js_v[~iss_s] && !js_i[~iss_s]) || (jv_q && nslot == ~iss_s);
 
@@ -155,12 +166,14 @@ module ot_s81_stage_seq #(
             prev_open <= 1'b0;
             outst[0] <= 0; outst[1] <= 0;
             js_dn[0] <= 0; js_dn[1] <= 0;
+            js_dk[0] <= 0; js_dk[1] <= 0; js_nk[0] <= 0; js_nk[1] <= 0; js_kd <= 2'b00; kold <= 1'b0; kdone_r <= 1'b0;
             for (e = 0; e < NENG; e = e + 1) begin fq_w[e] <= 0; fq_r[e] <= 0; fq_n[e] <= 0; cred[e] <= CB'(QD); end
         end else begin
             job_done <= 1'b0;
             // ---- accept a job (pin-flopped) ----
             if (jv_q) begin
                 js_v[nslot] <= 1'b1; js_i[nslot] <= 1'b0;
+                js_kd[nslot] <= 1'b0; js_nk[nslot] <= 0;
                 js_u[nslot] <= (MUT == 2) ? {USER_W{1'b0}} : ju_q; js_p[nslot] <= jp_q; js_t[nslot] <= jt_q;
                 nslot <= ~nslot;
                 st_jobs <= st_jobs + 1;
@@ -182,6 +195,7 @@ module ot_s81_stage_seq #(
                 f_v <= 1'b0;
             end
             if (f_v && f_eng >= NENG) begin fault <= 1'b1; if (fault_code == 0) fault_code <= 4'd3; end
+            if (f_take && KDX >= 0 && f_eng == KDX[3:0]) js_nk[f_s] <= js_nk[f_s] + 1'b1;
             if (f_take) begin
                 fq_d[f_eng][fq_w[f_eng]] <= {f_s, f_op, f_e[ARGW-1:0]};
                 fq_w[f_eng] <= fq_w[f_eng] + 1'b1;
@@ -230,6 +244,24 @@ module ot_s81_stage_seq #(
                 js_v[old] <= 1'b0;
                 old <= ~old;
             end
+            // ---- KDX: the oldest job without its kit done, every op on the other ports completed ----
+            kdone_r <= 1'b0;
+            if (KDX >= 0) begin
+                addk0 = 0; addk1 = 0;
+                for (e = 0; e < NENG; e = e + 1)
+                    if (dv_q[e] && e != KDX) begin
+                        if (dt_q[e*TAGW + OPW]) addk1 = addk1 + 1'b1; else addk0 = addk0 + 1'b1;
+                    end
+                js_dk[0] <= (jv_q && !nslot) ? {(OPW+1){1'b0}} : js_dk[0] + addk0;
+                js_dk[1] <= (jv_q &&  nslot) ? {(OPW+1){1'b0}} : js_dk[1] + addk1;
+                if (js_v[kold] && js_i[kold] && !js_kd[kold] && js_dk[kold] + js_nk[kold] == len_q
+`ifdef OT_SSEQ_MUT_KDALL
+                    && js_dn[kold] == len_q                       // negative control: the kit done waits for the hand-off
+`endif
+                    ) begin
+                    kdone_r <= 1'b1; js_kd[kold] <= 1'b1; kold <= ~kold;
+                end
+            end
             js_dn[0] <= (js_v[old] && js_i[old] && js_dn[old] == len_q && !old) ? {(OPW+1){1'b0}} : js_dn[0] + add0;
             js_dn[1] <= (js_v[old] && js_i[old] && js_dn[old] == len_q &&  old) ? {(OPW+1){1'b0}} : js_dn[1] + add1;
             if (js_dn[0] > len_q || js_dn[1] > len_q) begin fault <= 1'b1; if (fault_code == 0) fault_code <= 4'd2; end
@@ -237,4 +269,5 @@ module ot_s81_stage_seq #(
             jrdy_r <= ((js_v[0] ? 1 : 0) + (js_v[1] ? 1 : 0) + (jv_q ? 1 : 0) + ((job_v && jrdy_r) ? 1 : 0)) < 2;
         end
     end
+    assign job_kdone = (KDX >= 0) ? kdone_r : job_done;
 endmodule

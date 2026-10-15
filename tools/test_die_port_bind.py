@@ -54,6 +54,19 @@ class T(unittest.TestCase):
         self.assertIn('en', m['input_tied'])
         self.assertGreater(S['undriven_net_bits'], 0)    # n4 has no driver
 
+    def test_declared_strap(self):
+        die = ("module top (ck);\n  input ck;\n  wire [15:0] n1;\n  wire [15:0] n2;\n"
+               "  a u0 (.ck(ck), .i(n2), .o(n1), .en(1'b1));\n  wrap w (.ck(ck), .i(n1), .o(n2));\nendmodule\n")
+        rc, r = run(die)
+        self.assertEqual(rc, 1)
+        self.assertIn('input_tied', r['failing'])
+        rc, r = run(die, ['--strap', 'a:en'])
+        self.assertEqual(rc, 0, r['summary'])
+        self.assertEqual(r['masters']['a']['straps'], ['en'])
+        self.assertEqual(r['summary']['strap_ports'], 1)
+        rc, r = run(die, ['--strap', 'a:i'])          # a strap on another port does not excuse the tie
+        self.assertEqual(rc, 1)
+
     def test_params_sidecar(self):
         with tempfile.TemporaryDirectory() as d:
             pj = Path(d) / 'p.json'

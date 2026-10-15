@@ -105,8 +105,10 @@ RTL += [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_fpu", "ot_hdc_fp32_mul_pipe",
 RTL += [ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/hdc/v41/ot_hdc_actquant.sv"]
 DIE = [ROOT / f"rtl/v41die/{n}.sv" for n in ("ot_v41_pair_w17w10", "ot_v41_retn_w17w10", "ot_v41_field_w17w10",
                                              "ot_v41_spine_w17w10", "ot_v41_fieldtop_w17w10")]
-ROMS = [ROOT / "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8.v",
-        ROOT / "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v"]
+# the committed ROM functional models live in asap7_memory_macros_v2 (identical behaviour; the v1 dir holds only
+# untracked local products, absent from fresh worktrees and remote source copies)
+ROMS = [next(p for p in (ROOT / f"physical/{d}/{n}/{n}.v" for d in ("asap7_memory_macros_v2", "asap7_memory_macros")) if p.exists())
+        for n in ("ot_rom_8192x274_m8", "ot_rom_4096x274_m8")]
 TB = ROOT / "rtl/test/dsrom_sys/tb_dsrom_1m_field.cpp"
 TOOLS = [Path(__file__), ROOT / "tools/v41_die_images_w17w10.py", ROOT / "tools/v41_rom_ksplit_bankmap.py",
          ROOT / "tools/rtl_v41_rom_array.py", ROOT / "tools/hdc_golden_v41.py", ROOT / "tools/hdc_golden.py",

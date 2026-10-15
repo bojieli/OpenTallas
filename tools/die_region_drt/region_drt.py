@@ -161,7 +161,9 @@ def pick(a):
                 chosen.append(dict(name=why, win=[round(v, 3) for v in w], score=float(score[i, j]), **(extra or {})))
                 return
     ov = np.zeros((nx, ny))
-    if a.congestion_rpt:
+    # r5 2026-10-14: global_route writes -congestion_report_file only when it leaves congestion; an absent report after a
+    # GRT with total overflow 0 means no overflow gcells (c8p REGION_PICK_FAIL was this FileNotFoundError)
+    if a.congestion_rpt and Path(a.congestion_rpt).exists():
         for m in re.finditer(r'bbox = \(([-\d.]+), ([-\d.]+)\) - \(([-\d.]+), ([-\d.]+)\)',
                              Path(a.congestion_rpt).read_text()):
             cx, cy = (float(m.group(1)) + float(m.group(3))) / 2, (float(m.group(2)) + float(m.group(4))) / 2
