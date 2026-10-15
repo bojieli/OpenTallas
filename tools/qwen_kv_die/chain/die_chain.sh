@@ -47,9 +47,16 @@ $ADMIT $P1 -- $H/run_case.sh $C run.tcl run.log 16 $((P1+40))
 fi
 grep -q OT_LEGAL $C/run.log || { say "REAL CASE FAIL ($C/run.log)"; exit 1; }
 say "real case: $(grep -m4 -E 'OT_LEGAL|OT_ASSERT|OT_PA' $C/run.log | tr '\n' ' ')"
+if [ "${OT_PDN:-run}" = skip ]; then
+  # kvsys lead r5 2026-10-14: per-instance macro grids on the 13.4k expanded leaves insert ~15/min (~15 h): a
+  # DIAGNOSTIC chain may skip the die PDN (GRT then sees no M8/M9 straps: overflow optimistic; STA unaffected)
+  ln -f $C/floorplan.odb $C/floorplan_pdn.odb
+  say "PDN SKIPPED (OT_PDN=skip): GRT without die straps -- DIAGNOSTIC ONLY"
+else
 $ADMIT $P2 -- $H/run_case.sh $C run_pdn.tcl run_pdn.log 8 $((P2+60))
 grep -q "OT_PDN PASS" $C/run_pdn.log || { say "PDN FAIL ($C/run_pdn.log)"; exit 1; }
 say "PDN PASS $(grep -m2 OT_PGCHECK $C/run_pdn.log | tr '\n' ' ')"
+fi
 fi
 mkdir -p $G; cp $H/grt.tcl $G/; ln -f $C/floorplan_pdn.odb $G/floorplan_pdn.odb
 $ADMIT $P3 -- $H/dietop_run.sh $G grt.tcl 16 $((P3+80)) OT_ITERS=${OT_ITERS:-30} OT_TILE_UM=4.8 OT_ROUTE_RESET=${OT_ROUTE_RESET:-0}
