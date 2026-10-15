@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.smh.workstream_state.v1",
-  "collected_at": "2026-10-15T09:13:30.616536+00:00",
+  "collected_at": "2026-10-15T09:15:54.096070+00:00",
   "coordinator": "codex",
   "jobs": [
     {
@@ -95,5 +95,26 @@
     "complete_4x4_with_external_retimes_mm2": 11.1634862976,
     "adoption": "NONE; complete staticfront joint placement and native fullshape fit remain open"
   },
-  "park_q1_native": "CLOSED f6b4ec71b TT30.65/FF3.59/DRC0; native pop capture192.1ps FAIL versus190; collective owner notified"
+  "park_q1_native": "CLOSED f6b4ec71b TT30.65/FF3.59/DRC0; native pop capture192.1ps FAIL versus190; collective owner notified",
+  "full_checkpoint_address_plan": {
+    "path": "/home/ubuntu/wt/hbm-die-feas-1014/results/arch/hbm_die_v15/full_native_checkpoint_plan/book.json",
+    "sha256": "606ab17368228f0826cc279c9a12e9071402cf0dd4e8caae6ba0b38479ed3983",
+    "status": "ALL96_RANK32_SM_SOURCE_ADDRESS_CAPACITY_COLLISION_PASS_INSTALLATION_REQUIRED",
+    "per_SM_capacity_bytes": 268435456,
+    "max_SM_payload_bytes": 179595520,
+    "installed": false,
+    "descriptor_support": "mapped4 base0current; nonzero low30offset extension pendingserviceowner",
+    "component_join": "520recordbootstraprow20738 remains separate safeexistingproof"
+  },
+  "full_sm_geometry_inventory": {
+    "path": "/home/ubuntu/wt/sm-dense-pack-1015/results/hbm_sm_dense_pack/canonical_system_inventory.json",
+    "commits": [
+      "2e44ce50a",
+      "9daffc42c"
+    ],
+    "actual_children_LEFs": 19,
+    "missing_tile_parent_LEFs": 16,
+    "frame_mm2": 11.316163968,
+    "scope": "actualsource inventory; plannedtile group outlines are not nativeclosure"
+  }
 }
