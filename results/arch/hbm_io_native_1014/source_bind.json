@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "checks": 232,
+  "mutant": "none",
+  "errors": [],
+  "source_sha256": {
+    "rtl/hbm_accel/generic/loader/ot_hfd_loader_hgi.sv": "8e1982806f2d00cf8d918dfd88894415b297a06a95c376723d497d5d31d97685",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_host_packet.sv": "0b0b1734a1d5f1d92bce77c827d96c7ed04a05e9dd87cb49de7b582fec1330ed",
+    "rtl/hbm_accel/io_native_20261014/hfd_host_packet_face.sv": "e80f0fd8bbd181e1a90f926ea8058c51ff36a1b170a4923e60e82197a90b8b52",
+    "rtl/hbm_accel/io_native_20261014/hfd_host_native.sv": "776ea943b1f244320ffc177af737f1b7f8e4a44359ef270536f23d3b293778b9",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_host_landing256.sv": "bb68c5f78472d5725ca2209620052b7aea9b7236ea0b86c65e682027b146c0ce",
+    "rtl/hbm_accel/io_native_20261014/hfd_serdes487.sv": "81b7ea745a960d84d3f50f1610a6cc5bd22aac0b1847319b0ad11a85d152fa32",
+    "rtl/hbm_accel/io_native_20261014/hbm_link_bank9_native.sv": "371002eda178023782ca2fd308d7087cb59b23eeda51ea89cb08c7e64078a804",
+    "rtl/hbm_accel/tu/lk_ep_20261010/hfd_lk_ep.sv": "6baf244b268203b250ee1906a5fd420edafe52760e74c9165041435760541ad5",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv": "788c6cdaa3fcb111a8baf4756c340a97f6880110ef081327a9df326e4e51f224",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv": "a339db028b9bbf03c1014112e02253faacd02e7bd5b5e1777f0348ddf66070dd",
+    "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv": "467abe1090a24cffad29443edd4dce5ab33eeebff98bf2bc98de7d9d19556c41"
+  },
+  "qualification": "Source ABI and packing only. Actual die producer wiring, elaboration, native physical clocks/reset/pins and slots remain separate required gates."
+}
