@@ -12,7 +12,16 @@ module qkd_ctrl_pc_host_static #(
     parameter integer LATE  = 4096,        // a held (layer-mismatch) write faults after this many cycles
     parameter integer PROFILE = 0,
     parameter integer EVMUT = 0,
-    parameter integer MUT   = 0
+    parameter integer MUT   = 0,
+    // HANDOFF 0az: 1 = the PHY read return is elastic (HBM/PHY latency not
+    // compile-time fixed). expected_raw_valid is then the NOMINAL (minimum)
+    // raw return slot: a return earlier than the nominal count is a fault, a
+    // return later is absorbed (tag queue + landing ECC are in order, and the
+    // qkd_kv_hbm_elastic_front block buffer re-times the corrected sectors),
+    // and an outstanding nominal return with no PHY data for RAW_WD edges is a
+    // PHY-late fault (watchdog). 0 = historical exact-slot check.
+    parameter integer ELASTIC = 0,
+    parameter integer RAW_WD = 256
 ) (
     input  wire         pll_hbm,
     input  wire         hrst,
@@ -91,6 +100,22 @@ module qkd_ctrl_pc_host_static #(
     (* keep *) reg [287:0] rd_q;
     always @(posedge hclk or negedge h_rn) if (!h_rn) rv_q <= 1'b0; else rv_q <= pi[0];
     always @(posedge hclk) rd_q <= pi[288:1];
+
+    // ---- raw PHY return check: exact slot (historical) or elastic window (0az) ---------------------------------------
+    reg [5:0] raw_out;               // nominal raw returns not yet received (<= 32 outstanding tags)
+    reg [8:0] raw_age;
+    reg f_raw;
+    always @(posedge hclk or negedge h_rn)
+        if (!h_rn) begin raw_out <= 6'd0; raw_age <= 9'd0; f_raw <= 1'b0; end
+        else if (ELASTIC != 0) begin
+            raw_out <= raw_out + {5'd0, rawslot_q} - {5'd0, rv_q};
+            if (rv_q && raw_out == 6'd0 && !rawslot_q) f_raw <= 1'b1;           // earlier than nominal / unsolicited
+            if (raw_out == 6'd32 && rawslot_q && !rv_q) f_raw <= 1'b1;          // outstanding count overflow
+            if (rv_q || raw_out == 6'd0) raw_age <= 9'd0;
+            else if (raw_age == 9'(RAW_WD - 1)) f_raw <= 1'b1;                  // PHY late beyond watchdog
+            else raw_age <= raw_age + 9'd1;
+        end
+    wire raw_bad = (ELASTIC == 0) ? (rv_q != rawslot_q) : f_raw;
 
     // ---- command arbiter ---------------------------------------------------------------------------------------------
     wire        c_v;                 // embedding static command, HBM side of its crossing (below)
@@ -284,7 +309,7 @@ module qkd_ctrl_pc_host_static #(
     // ---- sticky fault chain, S -> N ----------------------------------------------------------------------------------
     always @(posedge hclk or negedge h_rn)
         if (!h_rn) fo <= 1'b0;
-        else fo <= fo | fi | ctl_fault | port_fault | ecc_fault | hf_q | f_ecdc | f_late | f_cmd | f_early | f_wmis | f_tag | (rv_q!=rawslot_q) | native_observer_fault;
+        else fo <= fo | fi | ctl_fault | port_fault | ecc_fault | hf_q | f_ecdc | f_late | f_cmd | f_early | f_wmis | f_tag | raw_bad | native_observer_fault;
     qkd_static_kv_write_observer #(.STRICT(PROFILE==0)) u_native_write_observer(
         .hclk(hclk),.rst_n(h_rn),.po(po),.static_column(physical_col_sr),.expected_static_column(expected_sr_pipe[3]),.context_word(physical_context),
         .commit_valid(native_commit_valid),.commit_identity(native_commit_identity),.commit_address(native_commit_address),.fault(native_observer_fault));
