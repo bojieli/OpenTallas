@@ -1,0 +1,37 @@
+{
+  "scope": "actual two-programme-SRAM HC issuer looped tail control only, no arithmetic or physical qualification",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_programme_mtp_static.sv": "c1989cccab9eca6492179acedde45f4d95cd579eb7c4b4d1e51e7c16b17e6b1c",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_program_stripe_static.sv": "cfc58626830f0e8fe6c66488b7768e48a6e38cc124983d0483ec1221aca6c6ee",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "rtl/test/tb_hgi_hc_tail_loop_issuer.sv": "1ebc6e988daf2a5ceb19accb28193a5343f6f8035ea0d1c7fa37ae541b040e32",
+    "tools/lower_hbm_hc_mtp_static_calendar.py": "b72e686a90cc2fa34f246957c6eff870d0fe742a4ca94bb6e2b86e649e5fc156",
+    "tools/lower_hbm_hc_tail_loop_calendar.py": "1e47f29af6ab269495b3520628b2ed0bb8f3ebfdd3432486bb1eeefa29cbb969",
+    "tools/rtl_hgi_hc_tail_loop_gate.sh": "728e57341189afcce882adb933f0ff8c8596a1e29d3cf863bdd83082853f376e"
+  },
+  "positive": "PASS",
+  "actual_counter_state_mutant": "KILLED",
+  "runs": [
+    6,
+    8,
+    8,
+    6
+  ],
+  "period": 497,
+  "sink_divisor": 7,
+  "sink_launch_relative": 203,
+  "sink_capture_relative": 492,
+  "tail_result_expected_relative": 493,
+  "TAIL_LOOP_default": 0,
+  "all51_idle_zero": true,
+  "logs_sha256": {
+    "compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mutant.log": "d657749041d330ea1ed4aff79073c3d1105cc075349088291b42f7f13c0a0363",
+    "positive.log": "73b1a6c10f4dd636ea5537da91cca1f7674dcd2908a67ea738e3d154f223f2a7"
+  },
+  "all_compiled_hashes_verified": true,
+  "measured_valid51_edges": 13916,
+  "measured_tail_launches": 28,
+  "measured_idle_zero_edges": 539,
+  "model_sha256": "a02d0b87bd4add28870f3471bae3110f4132306317847971ff1c3f3edc895ff5"
+}

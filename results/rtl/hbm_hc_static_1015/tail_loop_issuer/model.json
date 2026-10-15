@@ -1,0 +1,156 @@
+{
+  "n6": {
+    "kind": "tail_loop",
+    "instruction_payload_bits": 51,
+    "field_lsb_width": {
+      "clear": [
+        0,
+        1
+      ],
+      "row_launch": [
+        1,
+        1
+      ],
+      "row_raw_read": [
+        2,
+        1
+      ],
+      "row_weight_slot": [
+        3,
+        1
+      ],
+      "row_id": [
+        4,
+        5
+      ],
+      "tail_launch": [
+        9,
+        1
+      ],
+      "sink_launch": [
+        10,
+        1
+      ],
+      "sink_capture": [
+        11,
+        1
+      ],
+      "norm_eps": [
+        12,
+        32
+      ],
+      "row_npos": [
+        44,
+        4
+      ],
+      "tail_position": [
+        48,
+        3
+      ]
+    },
+    "first_consumer_cycle": 2051,
+    "programme_start_edge": 2046,
+    "start_base": 0,
+    "start_limit": 497,
+    "start_loops": 6,
+    "programme_pages": 2,
+    "global_PC_lsb": 223,
+    "npos": 8,
+    "tail_position": 0,
+    "calendar_profile": "nominal",
+    "sink_divisor": 7,
+    "sink_phase": 0,
+    "events_relative_consumer0": {
+      "launch": 0,
+      "exponentials_ready": 197,
+      "sink_launch": 203,
+      "sink_capture": 492,
+      "result": 493
+    },
+    "scope": "real issuer image only; no arithmetic/physical/clock/rate qualification or repricing",
+    "TAIL_LOOP": 1,
+    "period_cycles": 497,
+    "phase_preserved": true,
+    "unrolled_duration_cycles": 2982,
+    "configuration_words": 497,
+    "previous_configuration_words": 2970,
+    "image_sha256": "8a8c13896d5914ccc730fea53536d927078ffc7fe1b43d59b660821311ba6cf8"
+  },
+  "n8": {
+    "kind": "tail_loop",
+    "instruction_payload_bits": 51,
+    "field_lsb_width": {
+      "clear": [
+        0,
+        1
+      ],
+      "row_launch": [
+        1,
+        1
+      ],
+      "row_raw_read": [
+        2,
+        1
+      ],
+      "row_weight_slot": [
+        3,
+        1
+      ],
+      "row_id": [
+        4,
+        5
+      ],
+      "tail_launch": [
+        9,
+        1
+      ],
+      "sink_launch": [
+        10,
+        1
+      ],
+      "sink_capture": [
+        11,
+        1
+      ],
+      "norm_eps": [
+        12,
+        32
+      ],
+      "row_npos": [
+        44,
+        4
+      ],
+      "tail_position": [
+        48,
+        3
+      ]
+    },
+    "first_consumer_cycle": 2051,
+    "programme_start_edge": 2046,
+    "start_base": 0,
+    "start_limit": 497,
+    "start_loops": 8,
+    "programme_pages": 2,
+    "global_PC_lsb": 223,
+    "npos": 8,
+    "tail_position": 0,
+    "calendar_profile": "nominal",
+    "sink_divisor": 7,
+    "sink_phase": 0,
+    "events_relative_consumer0": {
+      "launch": 0,
+      "exponentials_ready": 197,
+      "sink_launch": 203,
+      "sink_capture": 492,
+      "result": 493
+    },
+    "scope": "real issuer image only; no arithmetic/physical/clock/rate qualification or repricing",
+    "TAIL_LOOP": 1,
+    "period_cycles": 497,
+    "phase_preserved": true,
+    "unrolled_duration_cycles": 3976,
+    "configuration_words": 497,
+    "previous_configuration_words": 3960,
+    "image_sha256": "8a8c13896d5914ccc730fea53536d927078ffc7fe1b43d59b660821311ba6cf8"
+  }
+}
