@@ -115,7 +115,7 @@ module ot_qwen_tp8_attention_native_service #(
   wire [35:0] am_s={hub_am[36*s+:32],hub_am[36*s+32+:2],hub_am[36*s+34],hub_am[36*s+35]};
   ot_qwen_tp8_attention_native_stack_cp #(.QK_ISSUE_AGE(QK_ISSUE_AGE),.ROW_RETURN_LAT(ROW_RETURN_LAT),
    .Z_STRIDE(Z_STRIDE)) u_stack(
-   .cal(cal[47:0]),.stack_id(2'(s)),.clk(clk),.rst_n(rst_n),.aq(aq),.am(am_s),.ap(ap_all[563*s+:563]),.active_layer_parity(layer[0]),
+   .cal({EXP_START_AGE,Z_START_AGE,LMAX_START_AGE}),.stack_id(2'(s)),.clk(clk),.rst_n(rst_n),.aq(aq),.am(am_s),.ap(ap_all[563*s+:563]),.active_layer_parity(layer[0]),
    .k_request(k_request),.k_response(k_response),
    .er_v(er_v[s]),.er_addr(er_addr[11*s+:11]),.er_rsp_v(er_rsp_v[s]),.er_rsp_addr(er_rsp_addr[11*s+:11]),
    .er_data(er_data[64*s+:64]),.exp_committed(exp_committed[16*s+:16]),.score_committed(score_committed[s]),
