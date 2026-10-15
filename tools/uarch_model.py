@@ -438,6 +438,12 @@ def hgi_collective_endpoint_model():
     return endpoint_model()
 
 
+def hgi_collective_pinregistered_endpoint_model():
+    """Controller and actual SRAM store faces registered, TX5/RX1."""
+    from uarch_model_hcoll_pinreg import model
+    return model()
+
+
 def hgi_collective_static_reduction_model():
     """16 real native FP32 lanes and fixed-calendar collective publication."""
     from uarch_model_hcoll_reduce_static import model
