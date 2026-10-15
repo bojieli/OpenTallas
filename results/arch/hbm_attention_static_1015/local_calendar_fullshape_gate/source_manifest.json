@@ -1,0 +1,31 @@
+{
+  "source_commit": "ac809b321",
+  "scope": "Newlocalcalendar fullH16D512TD32NL2; externalP/query/KVfixture boundaries, not actualSFUproducerjoin",
+  "files": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "25ca11845381ce089cc5f2fbab82a90672d8704fe6c66f4445814b33b4b7d51e",
+    "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "rtl/hdc/ot_hdc_fp32_f12.sv": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn.sv": "7303ddd5c733c3e7356814d949560c54374df3a303459afbd7d25c5fba50dd09",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv": "13dfe762acd2c4daa5f05f9d405e01b12d2e07790789725fbf1b78ab8a964975",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv": "642772e31fd5e48da976ff1840b91f1adac7095a7e7a527fd7212e51f093bc25",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv": "101359cfadf05f356c6e4e38b6571322475bfd6ac52f4438fb86da385338ffe7",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv": "fe3864d30e2eee9daf8bef2f26f7b0a558235674ef3b156df703aab4c6d02ef7",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv": "99ef793b16f7e41868214ce0d99f82eb6a5b7d4b60aa2bcc141c4b5448d64e84",
+    "rtl/hdc/v41x/ot_hdc_v41x_kreg.sv": "60c209c729d899e399f01239a8b67f936ef82c9778bdb35f85e5ae4bf7908fba",
+    "rtl/hdc/v41x/static/ot_hbm_attn_physical_event_program.sv": "fc4e58ad68f495b5274e7d9298b5722bda92df9522b426600ce534d41a8b278d",
+    "rtl/hdc/v41x/static/ot_hbm_attn_stage_tile_decode.sv": "3024b3a751a5ad3153948d3e1f26ae11c26df1f74645605f7687c8f77df8360f",
+    "rtl/hdc/v41x/static/ot_hbm_attn_staging_grouped.sv": "0e6dce24ab17664785bee31a741d25b16ff92a9e96153f2269e9eae376c21da6",
+    "rtl/hdc/v41x/static/ot_hbm_attn_staging_mode_local.sv": "c5792fdc3237a4a0eb0aecbf6734d5f936cfd628d00a25696f7bf17caa135cf9",
+    "rtl/hdc/v41x/static/ot_hbm_attn_transpose_regs.sv": "b6d3f67119a73f42b394b05ee70200a52d6343309efa1b8325194a8a43c08b34",
+    "rtl/hdc/v41x/static/ot_hdc_v41x_attn_local_calendar.sv": "e14cd5f759b8b8de06f2a79d03a7eb264f60f7fae46d8fa47e42f0ba7be34d25",
+    "rtl/test/hbm_accel/generic/tb_hbm_attn_local_calendar.sv": "d665d8dd9e2e425543e47119a6a0046e98b1834a858c8f129d70ced9aac351c8",
+    "tools/hbm_static_attention/local_hierarchy.vlt": "73a0f0dc8b8ff67b158cc4d41cfb684196f731ec992e2ab89682729d47b0ddfe",
+    "tools/hbm_static_attention/physical_calendar.py": "dc67467a497fd3c88889da0a339086314ee984500f59c5544782956ebfdc6f2a",
+    "tools/hbm_static_attention/prepare_physical_engine.py": "75db51f90a364f78a539a0e2c76c28bc870f52abd71e99f4078f2ad8333d5e85",
+    "tools/hbm_static_attention/run_local_engine.sh": "776bfa650ddf8610ea96375d16b86caecc374df7958d38f5cec298d6a5e2d16d"
+  }
+}

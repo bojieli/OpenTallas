@@ -139,11 +139,14 @@ TILES.update({
 # ---- NORM tree variant tiles (el1014-s81-norm-tree, hier/ot_s81_hc_ntree.sv; probed / mutated only with --ntree 1)
 _NT = _H + "ot_s81_hc_ntree.sv"
 TILES.update({
-    "ot_s81_hc_ctfx_nt": dict(src=_NT, routed=[dict(CHAIN_STEP=6)], mut=("if (!rst_in) v <= 0; else v <= fv;", "if (!rst_in) v <= 0; else v <= 0;")),
+    "ot_s81_hc_ctfx_nt": dict(src=_NT, routed=[dict(CHAIN_STEP=6)], mut=("\n            if (!rst_n) v <= 0; else v <= fv;", "\n            if (!rst_n) v <= 0; else v <= 0;")),  # g_local_capture only (S-NORM 10-14: reset from rr)
     "ot_s81_hc_ctfs_nt": dict(src=_NT, routed=[{}], mut=("else dl_out <= dl_in;", "else dl_out <= dl_in ^ (275'd1 << 40);")),
     "ot_s81_hc_cncla":   dict(src=_NT, routed=[dict(C=0), dict(C=1), dict(C=2)], mut=("pi <= {5'd0, i_q}; ex <= ex_w;", "pi <= {5'd0, i_q}; ex <= ex_w ^ (1 << 29);")),
     "ot_s81_hc_cnclb":   dict(src=_NT, routed=[dict(C=0), dict(C=1), dict(C=2)], mut=("always @(posedge sk) ex <= ex_w;", "always @(posedge sk) ex <= ex_w ^ (1 << 29);")),
     "ot_s81_hc_cnrsq":   dict(src=_NT, routed=[{}], mut=("else ngo <= f_fv[S_RD + 1];", "else ngo <= 1'b0;")),
+    # LOCAL SPLIT (S-NORM 10-15): the ctfx_nt local re-register moved into its own strip
+    "ot_s81_hc_ctfxs_nt": dict(src=_NT, routed=[dict(CHAIN_STEP=6)], mut=(".rst_in(rst_in), .fv_in(fv_in), .fd_in(fd_in)", ".rst_in(rst_in), .fv_in(fv_in & ~7'd1), .fd_in(fd_in)")),
+    "ot_s81_hc_ctfl_nt":  dict(src=_NT, routed=[{}], mut=("always @(posedge clk) fdx_local <= fdx;", "always @(posedge clk) fdx_local <= fdx ^ (1128'd1 << 119);")),
 })
 TILE_RE = re.compile(r"^HCTILE (\w+) (\S+) ?(.*)$", re.M)
 

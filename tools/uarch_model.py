@@ -133,6 +133,54 @@ def qwen_native_head_packet_stage_model(width=519, copies=1, orientation="H"):
         qualification='prebuild sizing only; real mapped area, native pins, CTS, route and actual global per-bit path ages unqualified')
 
 
+def hbm_static_quant_SW_replica_model():
+    """Actual SID0 datahome candidate, authorized by root before new RTL."""
+    return dict(schema='opentallas.hbm-static-quant-SW-replica.v2',
+        target=125,existing_NW_target=48,SW_VM_SID=0,NW_VM_SID=2,
+        native_SW_read_groups=6,native_SW_write_groups=2,Quant_read_group=5,Quant_write_group=1,
+        physical_bank_service='still one actual read and one write per bank/cycle; added groups are source muxes, not extra SRAM ports',
+        canonical_rank0_token_records=40,words_per_record=512,bytes_per_operand=2048,
+        canonical_rank0_Quant_read_bytes=40*2048,canonical_rank0_Quant_write_bytes=40*2048,
+        avoided_cross_SID_bytes_per_token=40*2*2048,
+        avoided_cross_SID_sectors_per_layer=2*64,
+        avoided_extra_staging_RAM_readwrite_bytes_per_token=40*4*2048,
+        incremental_Quant_programme_macros=1,macro_outline_um=[174.744,70.470],
+        incremental_programme_clock_sinks_profile=1576,incremental_transport_clock_sinks=4285,
+        incremental_decoder_leaves=dict(DXL=[120.96,120.96],DBQ=[120.96,120.96],DAQ=[129.6,129.6]),
+        all_new_clock_roots=['ck_program','ck_transport','ck_dxl','ck_dbq','ck_daq'],
+        proposed_transport_outline_um=[432,324],proposed_programme_outline_um=[216,129.6],
+        total_child_outline_area_mm2=(432*324+216*129.6+2*120.96**2+129.6**2)/1e6,
+        existing_NW_arithmetic_leaves_reused_as_source='replicate source-matched actual decoder leaves; do not reroute accepted leaves',
+        boundary_bits_per_cycle=dict(rq=136,rr=2056,wq=2248,host_programme=319),
+        fixed_RL_baseline=7,fixed_WC_baseline=4,actual_SW_station_ages='UNMEASURED; explicit parameters, no hidden zero-stage assumption',
+        programme='distinct typed target125, actualPC12/PCW10; native timestamped descriptor SRAM, preserving target48',
+        predecessor='actual SU kv_norm all512 commits then kv_rope tail64 overwrite',
+        consumer='actual DMA KVWB_DS reads original O52288..52799 SID0',
+        exact_native_epochs='OPEN: SU arithmetic/reducer/data-store join has no fixed producer timestamp yet',
+        model_claim='incremental datahome resource model only; no full native or physical qualification')
+
+
+def hbm_static_quant_record_model():
+    """Proposed native full-token calendar storage, before record-controller RTL."""
+    return dict(schema='opentallas.hbm-static-quant-record-controller.v1',
+        programme_macros=1, programme_macro='actual1024x256', payload_bits=94,
+        payload_fields=dict(start_cycle=32,beat_count=16,source_sector=16,destination_sector=16,op=6,block=8),
+        max_native_records=1024, max_beats_per_record=65535,
+        scheduling='absolute compile-time issue timestamp, no dynamic wait or credit',
+        arithmetic='unchanged existing static QDQ transport+DXL/DBQ/DAQ',
+        memory_bytes_per_cycle=128, output_bytes_per_cycle=128,
+        boundary_bits_per_cycle=136+2056+2248,
+        new_datapath='active beat counter/address walker plus one prefetched descriptor',
+        max_descriptor_state_bits=3*256+4*32+4*16+128,
+        SRAM_fetch_edges=1, independent_macro_capture_edges=1, validation_edges=1,
+        model_min_beats_per_record=4,
+        prefetch_policy='fetch next record on first active beat; source identity and absolute launch checked',
+        startup_model_edges=8, latency_per_record_added_after_startup=0,
+        throughput='immutable168 fixture price, no repricing; actual model comparison remains required',
+        physical_slot='same programme leaf prototype216x129.6 with actual174.744x70.470macro',
+        production_status='UNPROVEN: actual full token operation timestamps/residency and gate not yet built')
+
+
 def hbm_static_quant_model():
     """Fixed RG4/WG2 native QDQ successor; bare-bank proof before placement."""
     beats = 6*16 + 2*4
@@ -16889,3 +16937,23 @@ def hbm_smh_split_west_transport_model():
                         "newmaster preCTS+TT/FF/DRC+native pin budgets",
                         "fullSM source/clock/root/throughput composition"],
         status="MODEL_ONLY_NOT_ADMITTED_FOR_RTL_OR_PHYSICAL")
+
+
+def dsrom_wfc_static_link_price():
+    """S81 WFC stage kit STATIC die form (dsfd_wfc_stg_cl.sv +define DSFD_WFC_STG_STATIC, S-VM F7 2026-10-15): the
+    compiler-scheduled link to the static collective.  Measured on tools/dsrom_wfc_static_bench.py (PRICED stage shape,
+    static VM, RXWORDS 41 / XWORDS 46, 40 jobs) against the grant form on the same bench with an ideal collective."""
+    grant = dict(period_edges=12023 / 40, rx_last_to_tx_header_edges=(241, 244))
+    static = dict(period_edges_min=298, calendar_period_edges=300, tx_off_edges=272, tx_off_min_measured=264,
+                  rx_last_to_tx_header_edges=274, rx_buffer_flits=32, rx_max_occupancy=14,
+                  tx_buffer_flits=64, tx_max_occupancy=9, buffer_bits=(32 + 64) * 513)
+    return dict(schema='opentallas.s81.wfc_static_link_price.v1', clock='fast (stream) edges', grant_form=grant,
+                static_form=static,
+                added_latency_edges_per_stage_handoff=static['rx_last_to_tx_header_edges'] - grant['rx_last_to_tx_header_edges'][0],
+                throughput_change='none: calendar period 300 >= the grant form 300.6 edges/job; 298 measured minimum',
+                compiler_constants=dict(TX_OFF=272, tx_slots='consecutive edges from last RX arrival + TX_OFF',
+                                        rx_slots='any calendar edge; occupancy <= 32 flits'),
+                open=['TX_OFF is measured at the bench stage-core time (T_CORE 80): set per production stage programme',
+                      'internal WFC tokpipe in/out grants and VM write credits stay inside the master (absorbed by the '
+                      'static buffers; any would-be wait at the boundary is a sticky fault)',
+                      'buffers as flops (49,248 b): map to ot_sram_1r1w_64x512 macros at hardening'])
