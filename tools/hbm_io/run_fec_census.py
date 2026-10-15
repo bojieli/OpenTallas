@@ -46,6 +46,9 @@ def main():
     result = census(json.loads((out/'netlist.json').read_text()),
                     'hfd_serdes487_rooted', CLOCKS)
     result['source_sha256'] = hashes
+    result['checker_sha256'] = {
+        name: hashlib.sha256((Path(__file__).parent/name).read_bytes()).hexdigest()
+        for name in ('fec_clock_census.py', 'run_fec_census.py')}
     result['netlist_sha256'] = hashlib.sha256((out/'netlist.json').read_bytes()).hexdigest()
     result['open'] = ['Actual mapped area and leaf partition',
                       'Assigned die slots, pin registration, TT/FF/DRC closure',
