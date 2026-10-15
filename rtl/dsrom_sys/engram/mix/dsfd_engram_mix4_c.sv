@@ -74,6 +74,10 @@ module dsfd_engram_mix4_c #(parameter integer MUT=0, VM_LAT=1, WRITE_COMMIT_LAT=
 
  // ---- descriptor read (top), static: issued only while every cluster is idle
  reg [2:0] tstate;localparam T_IDLE=0,T_DESC=1,T_RUN=2,T_DONE=3,T_POP=4;
+ // Descriptor bit18 selects operand storage; it is not part of the H row address.
+ wire [31:0] desc_hrow=rdq[0+:32]&32'hfffbffff;
+ wire [31:0] desc_kw_span=rdq[18]?32'd5120:32'd1280;
+ wire [31:0] desc_v_span=rdq[18]?32'd640:32'd320;
  reg desc_rq;reg [1023:0] v_prev;
  // registered request stage: lane 0 of cluster 0 doubles as descriptor reader,
  // lanes 1,2 of clusters 1..3 are suppressed for V (cluster 0 reads V once).
@@ -120,11 +124,11 @@ module dsfd_engram_mix4_c #(parameter integer MUT=0, VM_LAT=1, WRITE_COMMIT_LAT=
    if(!inp_q||jd[30:21]!=0)fault<=1;else begin desc_rq<=1;tstate<=T_DESC;end
   end
   T_DESC:if(dtag[TL])begin
-   if(rdq[0+:32]>15744||rdq[32+:32]>15104||rdq[64+:32]>15104||rdq[96+:32]>16064||rdq[128+:32]>15744)fault<=1;
-   if((rdq[128+:32]!=rdq[0+:32] && rdq[128+:32]<rdq[0+:32]+640 && rdq[0+:32]<rdq[128+:32]+640) ||
-      (rdq[128+:32]<rdq[32+:32]+1280 && rdq[32+:32]<rdq[128+:32]+640) ||
-      (rdq[128+:32]<rdq[64+:32]+1280 && rdq[64+:32]<rdq[128+:32]+640) ||
-      (rdq[128+:32]<rdq[96+:32]+320 && rdq[96+:32]<rdq[128+:32]+640))fault<=1;
+   if(desc_hrow>15744||rdq[32+:32]>16384-desc_kw_span||rdq[64+:32]>16384-desc_kw_span||rdq[96+:32]>16384-desc_v_span||rdq[128+:32]>15744)fault<=1;
+   if((rdq[128+:32]!=desc_hrow && rdq[128+:32]<desc_hrow+640 && desc_hrow<rdq[128+:32]+640) ||
+      (rdq[128+:32]<rdq[32+:32]+desc_kw_span && rdq[32+:32]<rdq[128+:32]+640) ||
+      (rdq[128+:32]<rdq[64+:32]+desc_kw_span && rdq[64+:32]<rdq[128+:32]+640) ||
+      (rdq[128+:32]<rdq[96+:32]+desc_v_span && rdq[96+:32]<rdq[128+:32]+640))fault<=1;
    if(rdq[191] || rdq[183+:8]==255 || rdq[160+:31]==0 || rdq[223] || rdq[215+:8]==255 || rdq[192+:31]==0)fault<=1;
    st_line[0]<=1'b1;tstate<=T_RUN;
   end
