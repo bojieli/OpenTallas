@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.s81.die.takeover.v1",
-  "updated_utc": "2026-10-15T18:14:59.657457+00:00",
+  "updated_utc": "2026-10-15T18:28:29.651639+00:00",
   "source_commit": "eb9cfa044920f23a9565d6c5fda43d2d5f217d06",
   "native_qualified": false,
   "clock_source_join": {
@@ -35,7 +35,17 @@
     "superseded_tied_root_ff": 21520,
     "source_fix": "34eba5ffe",
     "proof": "results/rtl/s81_vm_return_clock16_1015/receipt.json",
-    "qualification_scope": "Source ABI join only; physical delivery and individual routed views still required"
+    "qualification_scope": "Source ABI counts only. Fixed16 entry ports do not establish L16/CAP2 use under actual default0/0. Physical view parameters, compiler calendar and hierarchy must match before adoption.",
+    "actual_die_effective_parameters": {
+      "READ_PIPE": 0,
+      "CAP_PIPE": 0,
+      "basis": "Actual RTL defaults; die_master_params has no VM override"
+    },
+    "native_candidate_parameters": {
+      "READ_PIPE": 4,
+      "CAP_PIPE": 2,
+      "basis": "L16/CAP2 benches, routed return leaves and current640-leaf geometry; not actual die adoption"
+    }
   },
   "norm_v24_candidate_leaf_grant": {
     "source_commit": "7a483898c1737dbd1216c23aef56f8cdfb970f0a",
@@ -164,7 +174,15 @@
       }
     },
     "clock_rule": "Deliver each actual root at phi - wire - R from source-matched insertion.json; no inherited/default R",
-    "parent_geometry_open": "Actual NT substitution ctfxs25.92+ctfl25.92 replacing serialctfx12.96 adds38.88, not advertised19.44: v22cth771.12 ->810.00 lowerbound. v23claimed790.56 is not an actual row packing. Head/tail independent chain lengths/root controls must be source-reconciled before global grant."
+    "parent_geometry_open": "Actual NT substitution ctfxs25.92+ctfl25.92 replacing serialctfx12.96 adds38.88, not advertised19.44: v22cth771.12 ->810.00 lowerbound. v23claimed790.56 is not an actual row packing. Head/tail independent chain lengths/root controls must be source-reconciled before global grant.",
+    "ctfl_810_successor_grant": {
+      "source_commit": "e1af956aa",
+      "json_sha256": "08c7a05252d7c64fdffd9c3983023f86e80eb30e748f5500f235c95359f9a4f8",
+      "tcl_sha256": "fe6b075eb82c59d8ef8da01d7816c16054c6daa48d98826e972dda5fe694442d",
+      "decision": "Authorize current810-row candidate CTfl pins; supersedes prior7a483 CTfl pin grant only. Other three master pin files and clocks byte-identical.",
+      "evidence": "All9080 directed legs to actual8CPL LEFs: max499.782um,0over500;685pins moved up to32.112um; internal cut198 vs82. Old CTfl gate invalid for these pins.",
+      "scope": "Candidate leaf closure only; full source hierarchy, first/last chain anchors and actual physical qualification remain OPEN"
+    }
   },
   "blockers": [
     {
@@ -250,5 +268,27 @@
     "behavior": "Refuse missing source-filtered SS/TT/FF library files before timing library emission; no interim cell or SS-as-TT substitution",
     "tests": "7 unit regressions PASS:2 new real-view gate +5 collective source binding",
     "scope": "Library gate only; physical clock/phase/hardware composition remain independent requirements"
+  },
+  "vm_boundary_candidate_leaf_grant": {
+    "source_commit": "5def3d4801ec0349fa00d7ea3cf9ccc56e3118b4",
+    "pin_artifact_commit": "b47229479",
+    "outline_um": [
+      151.2,
+      237.6
+    ],
+    "signal_pins": 6614,
+    "json_path": "physical/s81_die_pins/v24_static_vm_boundary_candidate/s81_static_vm_boundary.json",
+    "json_sha256": "e5fbe96910268130ba8e022dbb11dd620c97e0586ae817026054fcd1ec6f903f",
+    "tcl_sha256": "e313afa4188188ee34196abd213e17efd1dd0942edc11d1373e56de219f37d97",
+    "source_odb_sha256": "c719471432b22b6057321fa259f0c9e232115ad0b4cef1e2eff6ffbb8ba4b69d",
+    "scope": "Exact candidate leaf pins only; full collective constituent packing/VM source join/native clock budget remain OPEN"
+  },
+  "norm_actual_row_schema": "results/arch/s81_die_takeover_1103/nt_rows_candidate.json",
+  "road_repair": {
+    "branch": "codex/s81-sa-road-1015",
+    "commit": "63b1286f4",
+    "verdict": "NO_BUILDABLE_REPAIR_YET",
+    "artifact": "results/arch/s81_globalfp_1015/road_repair/ranked_report.json",
+    "next": "Full source VM actual pin-local packing + system-level source-preserving geometry; reject432road BFx2cut0.643 and648road height overflow"
   }
 }
