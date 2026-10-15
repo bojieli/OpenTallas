@@ -1,0 +1,120 @@
+{
+  "schema": "opentallas.hc.actual-command-controller.weightrefill.v1",
+  "status": "FUNCTIONAL_NATIVE_COMMAND320SRAM_COMPONENT_PASS_PACKED_OUTPUT_LINT_SUPERSEDED_BY_EQUIVALENT_A7_MASTER",
+  "HC_source_commit": "0f8c8b224",
+  "common_controller_source_commit": "340cfd747f40a3bc192356418f2e41c52b64211a",
+  "actual_compiled_source_sha256": {
+    "ot_hgi_hc_aperture_static.sv": "7e14e88870dd131e8f558970dc7929175d1a76fd0317bfd24e0a71587d7419ae",
+    "ot_hbm_svc_native_stream_pc_lease.sv": "c16adc653eff8bce34ace00d6b4753b6937e758604b8d809183e14e85ea8be4c",
+    "tb_hbm_svc_command_dram_pipeline_fixture.sv": "3bb69a5cd9d058bfd28df57acee4fb24e2a3d4992b4a468dbb638c4e5c8ade8f",
+    "ot_async_fifo.sv": "e091268202e1c6bcc18c8eb83304730c5a29bc10e0a6c52a4dcfc19c177e882e",
+    "ot_hbm_svc_prefetch_block_cdc.sv": "4c5d6dd620e17a11d36e9217bdcba492cd2e2fe4d595343f2fd957d9fc6376fb",
+    "ot_hbm_loader_kport_address.sv": "b6eea0ffce657114439b555d6d4eee5ee6ad7efa4c6d226e94aa8697d539898b",
+    "ot_hbm_svc_native_sector_prefetch_stack.sv": "fc9556d64d5da9b2da90acb838a880f162f8e8aaae2ffd286f913afc14cf316f",
+    "tb_hgi_hc_prefetch_direct_controller_static.sv": "f9be9b7b108c5a7ae810aee0e75cfb645b67c11e2d4d37c30f65fcc34b7a2fec",
+    "ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "ot_hgi_hc_prefetch_direct_static.sv": "c5245b01bcb5c3df19d283ec6c1ffa3e92f1c1383ff82aabc642d1469df134c4",
+    "ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+  },
+  "verified_canonical_compiled_sources": 11,
+  "DUT": {
+    "controller": "4xot_hbm_svc_native_sector_prefetch_stack",
+    "FAST_IDLE_DESC": 1,
+    "AQ_ROW_LEASE": 1,
+    "COLUMN_CLOSE_GUARD": 1,
+    "leaf": "ot_hbm_svc_native_stream_pc_lease",
+    "source_SRAMs": 128,
+    "actual_controller_response_SRAMs": 128,
+    "HC_weight_SRAMs": 64,
+    "actual_total_SRAMs": 320,
+    "SRAM_bytes": 1310720,
+    "parent_full_chain_SRAM_count": 434,
+    "all_onchip_components_real_RTL_or_mapped_SRAM": true
+  },
+  "offchip_boundary": {
+    "fixture": "ot_hbm_svc_command_dram_pipeline_fixture",
+    "response_edges": 23,
+    "K_BASE_sectors": 671088640,
+    "K_MEM_sectors": 61440,
+    "K_local_byte_base": 21474836480,
+    "actual_command_timing_checks": "ACT/PRE/REFpb/PREab/RD/WRtiming+actualPCbankrowcolinversenativebounds",
+    "forbidden_substitutions_absent": [
+      "requestlevelbehavioralHBMscheduler",
+      "C++onchipmemory",
+      "goldeninternalresults"
+    ],
+    "external_memory": "declaredreleasedcheckpointstimulusonly"
+  },
+  "actual_weight_input": {
+    "tensor": "layers.0.hc_attn_fn",
+    "shape": [
+      24,
+      20480
+    ],
+    "dtype": "F32",
+    "raw_source_sha256": "11c9abd39f35e3364aad812c3f2dcb9c5fa5cf71e0f837a1af684112a00f930c",
+    "image_scope": "all24rowsofONEtensor;notfull2064rowimage"
+  },
+  "positive_cases": [
+    {
+      "immutable_row_period": 1080,
+      "rows": 24,
+      "exact_requests": 61440,
+      "exact_responses": 61440,
+      "actual_SRAM_readback_sectors": 61440,
+      "production_edges": 25920,
+      "last_store_age_all_rows": 655,
+      "first_drain_cycle": 359,
+      "result": "PASS"
+    },
+    {
+      "immutable_row_period": 1400,
+      "rows": 24,
+      "exact_requests": 61440,
+      "exact_responses": 61440,
+      "actual_SRAM_readback_sectors": 61440,
+      "production_edges": 33600,
+      "last_store_age_all_rows": 655,
+      "first_drain_cycle": 359,
+      "result": "PASS"
+    }
+  ],
+  "actual_payload_mutant": "FAILactualHC_SRAMreadbackrow0bank5position319;clock/controller/tagidentityotherwiseunchanged",
+  "lint": {
+    "UNOPTFLAT": 0,
+    "LATCH": 0,
+    "MULTIDRIVEN": 1,
+    "location": "old340packedoutputregk_wr_donebitswrittenbydistinctpc_clk[p]processes",
+    "paired_runner_exit": 1,
+    "reason": "functionalmutantkilledcorrectlybutpackedvectorlintassertfailed;notclaimedfullcleangate"
+  },
+  "cleanup": {
+    "commit": "a7b86347d6b9719d8132538b11d4c43d4c89c683",
+    "new_master": "ot_hbm_svc_native_sector_owned_stack",
+    "new_master_sha256": "53774057356d0d09c4b6687bcd2760dec8a8a23c6ac02caf522fd72a587869c1",
+    "normalization_equivalence_recomputed_here": "PASS exactentiremoduletextaftersignalrelocationnormalization",
+    "FF_SRAM_root_delta": 0,
+    "common_isolated_lint_exit": 0,
+    "no_old_source_edits": true,
+    "next_full_gate_owner": "/root/h_hc_sfu/hc_static_engine;434SRAMsourcepinsnewa7master",
+    "no_duplicate320rerun": "explicitparentrequestaftercommonexactnormalization;434gateisstrongersuccessor"
+  },
+  "runtime": {
+    "positive_session": 98858,
+    "positive_scope": "oth-ubuntu-919736-1792060423",
+    "positive_exit": 0,
+    "mutant_session": 59675,
+    "mutant_scope": "oth-ubuntu-922712-1792060696",
+    "mutant_expected_failure_observed": true,
+    "mutant_runner_exit_due_lint": 1,
+    "host": "ot-epyc1tb",
+    "remote": "/srv/opentallas-scratch/claude/codex-hc-prefetch-command-native-1015"
+  },
+  "remaining": [
+    "434SRAMactualcompute/nativeVM/ownedcontrollerjointest",
+    "ActualHOST/staticcompilercontrolbinding",
+    "All43layers2064rowactualcheckpointimageandactualinstallACK",
+    "PhysicalsourceownerCDC/store/controllerplacementclocks/TTFFDRC0",
+    "Wholechipnativequalificationfalse"
+  ]
+}
