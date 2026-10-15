@@ -73,23 +73,27 @@ module dsfd_vm_static_capl_pipe #(parameter integer E = 8) (
     integer fe;
     reg flush_q;
     reg [3:0] gid_q, flags_q;
+    // Carry the selected entry as one-hot control through clear and snapshot.
+    // An integer priority encoder followed by dynamic array decoders lengthens
+    // the feedback path from a completed entry into the next merge.
+    reg [E-1:0] selected, first_full, flush_hit;
     always @* begin : p_pick
         integer e;
-        sel = 1'b0; two = 1'b0; fe = -1;
-        for (e = 0; e < E; e = e + 1) begin
+        reg any_full;
+        for (e = 0; e < E; e = e + 1)
             full[e] = V[e] && MSK[e] == 16'hffff;
-            if (full[e]) begin
-                if (sel) two = 1'b1;
-                else begin sel = 1'b1; fe = e; end
-            end
-        end
-        if (fl_on && !sel && V[fl_c-1] && MSK[fl_c-1] != 0) begin
-            sel = 1'b1; fe = fl_c-1;
-        end else if (fl_on && sel && V[fl_c-1] && MSK[fl_c-1] != 0 && fe != fl_c-1)
-            two = 1'b1;
+        any_full = |full;
+        sel = 1'b0; two = 1'b0; fe = 0;
         for (e = 0; e < E; e = e + 1) begin
-            effV[e] = V[e] && !(sel && fe == e);
-            effM[e] = sel && fe == e ? 16'd0 : MSK[e];
+            first_full[e] = full[e] && !(|(full & ((1 << e)-1)));
+            flush_hit[e] = fl_on && fl_c == e+1 && V[e] && |MSK[e];
+            selected[e] = first_full[e] || (!any_full && flush_hit[e]);
+            sel = sel | selected[e];
+            fe = fe | (selected[e] ? e : 0);
+            two = two | (full[e] && |(full & ((1 << e)-1))) |
+                        (any_full && flush_hit[e] && !first_full[e]);
+            effV[e] = V[e] && !selected[e];
+            effM[e] = selected[e] ? 16'd0 : MSK[e];
         end
     end
     // next-state (combinational) per entry
@@ -100,8 +104,8 @@ module dsfd_vm_static_capl_pipe #(parameter integer E = 8) (
     // Select the entry key once, then use two fixed data candidates per word.
     // This avoids a blocking 16-input merge chain on every 512-bit entry.
     always @* begin : p_merge
-        integer e, k, w;
-        reg hit, a, b;
+        integer e, k, w, j;
+        reg hit, a, b, same_first;
         reg [9:0] kk;
         reg [15:0] targeted, first, accepted;
         f_alias = 1'b0; f_dup = 1'b0;
@@ -120,7 +124,13 @@ module dsfd_vm_static_capl_pipe #(parameter integer E = 8) (
             accepted = 16'd0;
             for (k = 0; k < 16; k = k + 1) begin
                 if (eok[k] && ek[k][EB-1:0] == e[EB-1:0]) begin
-                    if (ek[k] != kk) f_alias = 1'b1;
+                    // Compare candidate keys in parallel with first-choice
+                    // control. This avoids muxing a ten-bit key and THEN
+                    // comparing it on every data acceptance path.
+                    same_first = 1'b0;
+                    for (j = 0; j < 16; j = j + 1)
+                        same_first = same_first | (first[j] && ek[k] == ek[j]);
+                    if (effV[e] ? ek[k] != KEY[e] : !same_first) f_alias = 1'b1;
                     else accepted[k] = 1'b1;
                 end
             end
