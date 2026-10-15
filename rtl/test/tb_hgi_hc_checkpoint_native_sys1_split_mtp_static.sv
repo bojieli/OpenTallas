@@ -311,7 +311,7 @@ module tb_hgi_hc_checkpoint_native_sys1_split_mtp_static #(parameter integer COM
             if(age==50)begin
                 if(requests!=61440||phyresponses!=61440)$fatal(1,"checkpoint PHY count requests%0d responses%0d",requests,phyresponses);
                 if(result_sectors!=npos*3)$fatal(1,"nativeHCwritebackcount%0d",result_sectors);
-                $display("HC_CHECKPOINT_NATIVE_SYS1_MTP_DONE npos=%0d rows=%0d tails=%0d nativeVMresultwords=%0d cycles=%0d",npos,seen,tailseen,result_sectors*8,cycle);$finish;
+                $display("HC_CHECKPOINT_NATIVE_SYS1_SPLIT_MTP_DONE npos=%0d rows=%0d tails=%0d nativeVMresultwords=%0d cycles=%0d",npos,seen,tailseen,result_sectors*8,cycle);$finish;
             end
         end
         if(cycle>105000)$fatal(1,"programmed MTP bench watchdog");

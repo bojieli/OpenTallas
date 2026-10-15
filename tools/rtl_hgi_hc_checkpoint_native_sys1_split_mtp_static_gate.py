@@ -163,7 +163,7 @@ def main():
     receipt['source_hashes_match']=True
     receipt['status']='TERMINAL_SEE_CASE_VERDICTS'
     (run/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
-    if any('HC_CHECKPOINT_NATIVE_SYS1_MTP_DONE' not in p.stdout for name,p in verdicts if name.startswith('exact')):raise SystemExit('positive completion marker missing')
+    if any('HC_CHECKPOINT_NATIVE_SYS1_SPLIT_MTP_DONE' not in p.stdout for name,p in verdicts if name.startswith('exact')):raise SystemExit('positive completion marker missing')
     if any('programmed row data/time mismatch' not in p.stdout for name,p in verdicts if name.startswith('mutant')):raise SystemExit('payload mutant rejected for an unexpected reason')
     if any(p.returncode for name,p in verdicts if name.startswith('exact')):raise SystemExit('positive failed; mutant unqualified')
     if any(not p.returncode for name,p in verdicts if name.startswith('mutant')):raise SystemExit('mutant escaped')
