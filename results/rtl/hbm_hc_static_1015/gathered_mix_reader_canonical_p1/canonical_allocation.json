@@ -1,0 +1,188 @@
+{
+  "source": {
+    "path": "results/arch/hgi_sim_20261010/g25_proof/ds_rank0_program.json",
+    "commit": "d066faae228818e63ec68f333a6025e902f83433",
+    "sha256": "43c1652f3c2348fd711c770c4769e041caa51a63209c34670c9993ccbbbe4d1d"
+  },
+  "inventory_snapshot_sha256": "881630723fcba24e44131a4da4ea79c74372132c60f5c3e29ab1654507bf8533",
+  "records": [
+    {
+      "ordinal": 16,
+      "layer": 0,
+      "local_record": 16,
+      "tag": "hc_attn (mixes + Sinkhorn) gather",
+      "family": "hc_mixes",
+      "unit": "COLL",
+      "op": "ALL_GATHER",
+      "predicate": "ALWAYS",
+      "param": 0,
+      "record_sha256": "b78b3721d660221a6e78e85db9d4bba5914bab166ab8e1c2e1f538b0ff606253",
+      "reads": [
+        "MIXRAW"
+      ],
+      "writes": [
+        "MIXRAW"
+      ],
+      "operands": {
+        "A": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 145088,
+            "n": 24,
+            "m": 1,
+            "stride": 0,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "allocation": {
+            "status": "static source range, no relocation granted",
+            "word_begin": 145088,
+            "word_end": 145112,
+            "sector_begin": 18136,
+            "sector_end": 18139,
+            "sids": [
+              2
+            ],
+            "first_bank": 0,
+            "element_word_bytes": 4,
+            "layout_note": "native VM32-bit word slots; BF16-valued words are not silently packed"
+          }
+        },
+        "O": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 145088,
+            "n": 24,
+            "m": 1,
+            "stride": 0,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "allocation": {
+            "status": "static source range, no relocation granted",
+            "word_begin": 145088,
+            "word_end": 145112,
+            "sector_begin": 18136,
+            "sector_end": 18139,
+            "sids": [
+              2
+            ],
+            "first_bank": 0,
+            "element_word_bytes": 4,
+            "layout_note": "native VM32-bit word slots; BF16-valued words are not silently packed"
+          }
+        }
+      },
+      "issue_cycle": null,
+      "issue_cycle_authority": "OPEN; source order is not a clock timestamp"
+    },
+    {
+      "ordinal": 28,
+      "layer": 0,
+      "local_record": 28,
+      "tag": "hc_attn (mixes + Sinkhorn) post",
+      "family": "hc_mixes",
+      "unit": "HC",
+      "op": "HC_MIX_POST",
+      "predicate": "ALWAYS",
+      "param": 0,
+      "record_sha256": "6ec8456441a9be6cd8bc29cad05257b17e3507839c4d0faea0dbfe8b9c9e8675",
+      "reads": [
+        "MIXRAW"
+      ],
+      "writes": [
+        "MIXa"
+      ],
+      "operands": {
+        "A": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 145088,
+            "n": 24,
+            "m": 1,
+            "stride": 0,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "allocation": {
+            "status": "static source range, no relocation granted",
+            "word_begin": 145088,
+            "word_end": 145112,
+            "sector_begin": 18136,
+            "sector_end": 18139,
+            "sids": [
+              2
+            ],
+            "first_bank": 0,
+            "element_word_bytes": 4,
+            "layout_note": "native VM32-bit word slots; BF16-valued words are not silently packed"
+          }
+        },
+        "O": {
+          "descriptor": {
+            "space": "VM",
+            "fmt": "FP32",
+            "base": 41024,
+            "n": 24,
+            "m": 1,
+            "stride": 0,
+            "istride": 0,
+            "lstride": 0,
+            "dyn_sel": 0,
+            "dyn_mul": 0,
+            "n_sel": 0,
+            "l1stride": 0,
+            "ibcast": 0,
+            "indexed": 0
+          },
+          "allocation": {
+            "status": "static source range, no relocation granted",
+            "word_begin": 41024,
+            "word_end": 41048,
+            "sector_begin": 5128,
+            "sector_end": 5131,
+            "sids": [
+              0
+            ],
+            "first_bank": 0,
+            "element_word_bytes": 4,
+            "layout_note": "native VM32-bit word slots; BF16-valued words are not silently packed"
+          }
+        }
+      },
+      "issue_cycle": null,
+      "issue_cycle_authority": "OPEN; source order is not a clock timestamp"
+    }
+  ],
+  "native_binding": {
+    "npos": 1,
+    "base_sector": 18136,
+    "position_stride_sector": 0,
+    "words": 24,
+    "SID": 2
+  },
+  "P6_P8_position_stride": "NOT encoded by this frozen baseline; previous fixtures remain component-only",
+  "timestamps": "not inferred",
+  "wholekernel_qualified": false
+}

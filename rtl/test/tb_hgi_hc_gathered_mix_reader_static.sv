@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 `default_nettype none
 module tb_hgi_hc_gathered_mix_reader_static;
-    
+
     reg clk=0;always #5 clk=~clk;
     reg rst_n=0;
     wire [135:0] local_rq[0:2];
@@ -131,6 +131,8 @@ module tb_hgi_hc_gathered_mix_reader_static;
             start_cycle=cycle;launch=1;check=1;tick();launch=0;
             repeat(20+24*n+2)tick();check=0;
             if(seen!=24*n||consumed!=24*n||requests!=3*n)$fatal(1,"missing real traffic");
+            if(dut.issued!==4'(n)||dut.returned!==4'(n)||dut.active||mix_v||done)$fatal(1,"finish counter underflow or late stream");
+            if(n==1&&st==0)$display("HC_GATHERED_MIX_CANONICAL_P1 PASS base18136 SID2 stride0 words24 requests3 output20 last43 capture21_last44 finish_counters1 inactive_no_late_stream");
             cases=cases+1;
         end
     endtask
@@ -148,7 +150,7 @@ module tb_hgi_hc_gathered_mix_reader_static;
             local_wq[0][bank*281+:281]={1'b1,16'(sector),data,8'hff};tick();
         end
         local_wq[0]=0;local_write[0]=0;repeat(12)tick();
-        neighbors();execute(6,3);execute(8,3);execute(6,5);execute(8,5);neighbors();
+        neighbors();execute(1,0);execute(6,3);execute(8,3);execute(6,5);execute(8,5);neighbors();
         // Guards diagnose exceptions without normal-cycle rescheduling.
         allow_fault=1;reset_reader();npos=8;stride=3;launch=1;tick();launch=0;tick();launch=1;tick();launch=0;
         if(!reader_fault)$fatal(1,"overlapping launch not diagnosed");
@@ -161,8 +163,8 @@ module tb_hgi_hc_gathered_mix_reader_static;
         reset_reader();npos=1;start_cycle=cycle;launch=1;tick();launch=0;suppress=1;repeat(20)tick();
         if(!reader_fault||!mix_v)$fatal(1,"missing response stalled or undiagnosed");
         suppress=0;repeat(28)tick();
-        if(total_words!=672)$fatal(1,"production coverage incomplete");
-        $display("HC_GATHERED_MIX PASS cases=%0d words=%0d npos6_8 stride3_5 canonical_sector18136 SID2 banks8 SRAM24 taps3 request1 output20 capture21 fixed_stream1 faultguards5",cases,total_words);
+        if(total_words!=696)$fatal(1,"production coverage incomplete");
+        $display("HC_GATHERED_MIX PASS cases=%0d words=%0d canonical_P1_stride0 plus_component_npos6_8_stride3_5 sector18136 SID2 banks8 SRAM24 taps3 request1 output20 capture21 fixed_stream1 faultguards5",cases,total_words);
         $finish;
     end
 endmodule
