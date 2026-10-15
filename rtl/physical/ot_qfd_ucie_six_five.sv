@@ -46,16 +46,22 @@ module qfd_ucie_six_five #(parameter integer MUT=0)(
  always @(posedge fdi_ck or negedge rst_n)if(!rst_n)rf_n<=0;else rf_n<=rb_n;
  // ---- core domain: one-hot position we[j]=1 at C(6m+j) (registered enables,
  // no binary decode on the 3588-flop stage); rs = read select, one position behind
- reg[5:0]we,rs;reg cs;
+ // we/rs are replicated: three copies, each owning 199 bits of every word (<=256 loads)
+ reg[5:0]we,rs;reg cs;(* keep *)reg[5:0]we_c[0:2];(* keep *)reg[5:0]rs_c[0:2];
  localparam[5:0]WE0=(MUT==4)?6'b001000:6'b000100;
  localparam[5:0]RS0=(MUT==4)?6'b000100:6'b000010;
  always @(posedge core_ck or negedge rc_n)
-  if(!rc_n)begin we<=WE0;rs<=RS0;cs<=0;end
-  else begin we<={we[4:0],we[5]};rs<={rs[4:0],rs[5]};cs<=bt;end
+  if(!rc_n)begin we<=WE0;rs<=RS0;cs<=0;
+   we_c[0]<=WE0;we_c[1]<=WE0;we_c[2]<=WE0;rs_c[0]<=RS0;rs_c[1]<=RS0;rs_c[2]<=RS0;end
+  else begin we<={we[4:0],we[5]};rs<={rs[4:0],rs[5]};cs<=bt;
+   for(int c=0;c<3;c++)begin we_c[c]<={we_c[c][4:0],we_c[c][5]};rs_c[c]<={rs_c[c][4:0],rs_c[c][5]};end
+  end
  reg[5:0]stg_v;(* keep *)reg[6*597-1:0]stg_d;
  for(genvar j=0;j<6;j=j+1)begin:g_stage
   always @(posedge core_ck or negedge rc_n)if(!rc_n)stg_v[j]<=0;else if(we[j])stg_v[j]<=tx_valid;
-  always @(posedge core_ck)if(we[j])stg_d[j*597+:597]<=tx_frame;
+  for(genvar c=0;c<3;c=c+1)begin:g_cp
+   always @(posedge core_ck)if(we_c[c][j])stg_d[j*597+c*199+:199]<=tx_frame[c*199+:199];
+  end
  end
  wire[3587:0]stg_bits;
  for(genvar j=0;j<6;j=j+1)begin:g_pack
@@ -67,31 +73,40 @@ module qfd_ucie_six_five #(parameter integer MUT=0)(
  // ---- FDI domain: position tp equals k at F(5m+1+k); 4 = idle. txsel/rxen are
  // the registered one-hot beat enables for the NEXT edge (no decode fan-out).
  reg[2:0]tp;reg[1:0]fw;reg fs;reg[3:0]txsel,rxen;reg rxchk,rx3;
+ // beat enables replicated: five copies, each owning <=209 bits of the 1043-bit beat
+ (* keep *)reg[3:0]txsel_c[0:4];(* keep *)reg[3:0]rxen_c[0:4];
  wire[2:0]tp_n=tp==4?3'd0:tp+1'b1;
  wire[1:0]fw_n=(tp==4 && fw!=3)?fw+1'b1:fw;
  wire[3:0]oh_n={tp_n==3,tp_n==2,tp_n==1,tp_n==0};
  always @(posedge fdi_ck or negedge rf_n)
-  if(!rf_n)begin tp<=1;fw<=0;fs<=0;phy_tx_valid<=0;txsel<=0;rxen<=0;rxchk<=0;rx3<=0;end
+  if(!rf_n)begin tp<=1;fw<=0;fs<=0;phy_tx_valid<=0;txsel<=0;rxen<=0;rxchk<=0;rx3<=0;
+   for(int c=0;c<5;c++)begin txsel_c[c]<=0;rxen_c[c]<=0;end end
   else begin
    tp<=tp_n;fw<=fw_n;fs<=bt;
    phy_tx_valid<=|txsel;
    txsel<=(fw_n!=0)?oh_n:4'b0;
    rxen<=(fw_n>=2)?oh_n:4'b0;
+   for(int c=0;c<5;c++)begin txsel_c[c]<=(fw_n!=0)?oh_n:4'b0;rxen_c[c]<=(fw_n>=2)?oh_n:4'b0;end
    rxchk<=fw_n>=2 && tp_n<4;      // expected PHY valid at the next edge
    rx3<=rxen[3];
   end
- always @(posedge fdi_ck)
-  phy_tx_frame<=({1043{txsel[0]}}&txblk[0+:1043])|({1043{txsel[1]}}&txblk[1043+:1043])|
-                ({1043{txsel[2]}}&txblk[2086+:1043])|({1043{txsel[3]}}&{(MUT==1),583'b0,txblk[3129+:459]});
+ wire[1042:0]tb3={(MUT==1),583'b0,txblk[3129+:459]};
+ for(genvar c=0;c<5;c=c+1)begin:g_txs
+  localparam integer LO=c*209,W=(c==4)?1043-4*209:209;
+  always @(posedge fdi_ck)
+   phy_tx_frame[LO+:W]<=({W{txsel_c[c][0]}}&txblk[LO+:W])|({W{txsel_c[c][1]}}&txblk[1043+LO+:W])|
+                        ({W{txsel_c[c][2]}}&txblk[2086+LO+:W])|({W{txsel_c[c][3]}}&tb3[LO+:W]);
+ end
  // ---- FDI RX beat registers (fdi_rx_ck root). Beat 3 is captured full width
  // so the padding check works on registered bits; valid bits kept separately reset.
- (* keep *)reg[3587:0]rxb;(* keep *)reg[583:0]rxpad;reg[5:0]rxv;
- always @(posedge fdi_rx_ck)begin
-  if(rxen[0])rxb[0+:1043]<=phy_rx_frame;
-  if(rxen[1])rxb[1043+:1043]<=phy_rx_frame;
-  if(rxen[2])rxb[2086+:1043]<=phy_rx_frame;
-  if(rxen[3])begin rxb[3129+:459]<=phy_rx_frame[458:0];rxpad<=phy_rx_frame[1042:459];end
+ (* keep *)reg[4171:0]rxq;reg[5:0]rxv;   // four full beats; beat 3 bits 1042:459 = padding
+ for(genvar c=0;c<5;c=c+1)begin:g_rxs
+  localparam integer LO=c*209,W=(c==4)?1043-4*209:209;
+  for(genvar k=0;k<4;k=k+1)begin:g_k
+   always @(posedge fdi_rx_ck)if(rxen_c[c][k])rxq[k*1043+LO+:W]<=phy_rx_frame[LO+:W];
+  end
  end
+ wire[3587:0]rxb=rxq[3587:0];wire[583:0]rxpad=rxq[4171:3588];
  // word j valid bit 598j+597 lands in beat (598j+597)/1043 at that offset
  always @(posedge fdi_rx_ck or negedge rf_n)
   if(!rf_n)rxv<=0;
@@ -114,18 +129,25 @@ module qfd_ucie_six_five #(parameter integer MUT=0)(
  // ---- core output: word j of the block captured at B(m) leaves at C(6m+1+j);
  // one-hot AND-OR select (MUT 2 reads one word late)
  wire[5:0]sel=(MUT==2)?we:rs;
- reg[596:0]rword;reg rvalid;integer w;
+ reg rvalid;integer w;
  always @*begin
-  rword=0;rvalid=0;
-  for(w=0;w<6;w=w+1)begin
-   rword=rword|({597{sel[w]}}&rxblk[w*598+:597]);
-   rvalid=rvalid|(sel[w]&rxblk_v[w]);
-  end
+  rvalid=0;
+  for(w=0;w<6;w=w+1)rvalid=rvalid|(sel[w]&rxblk_v[w]);
  end
  always @(posedge core_ck or negedge rc_n)if(!rc_n)rx_valid<=0;else rx_valid<=rvalid;
- always @(posedge core_ck)rx_frame<=rword;
+ // data select per replicated copy: copy c owns bits c*199 +: 199 of the word
+ for(genvar c=0;c<3;c=c+1)begin:g_rd
+  wire[5:0]sc=(MUT==2)?we_c[c]:rs_c[c];
+  reg[198:0]rw;integer v;
+  always @*begin
+   rw=0;
+   for(v=0;v<6;v=v+1)rw=rw|({199{sc[v]}}&rxblk[v*598+c*199+:199]);
+  end
+  always @(posedge core_ck)rx_frame[c*199+:199]<=rw;
+ end
  // ---- checks: sticky faults only
- wire we_bad=(we==0)||((we&(we-1'b1))!=0)||({we[0],we[5:1]}!=rs);
+ wire we_bad=(we==0)||((we&(we-1'b1))!=0)||({we[0],we[5:1]}!=rs)||
+             (we_c[0]!=we)||(we_c[1]!=we)||(we_c[2]!=we)||(rs_c[0]!=rs)||(rs_c[1]!=rs)||(rs_c[2]!=rs);
  always @(posedge core_ck or negedge rst_n)
   if(!rst_n)core_fault<=0;
   else begin
