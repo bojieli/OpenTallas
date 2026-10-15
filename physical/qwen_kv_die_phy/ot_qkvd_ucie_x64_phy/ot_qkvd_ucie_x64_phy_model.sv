@@ -2,8 +2,7 @@
 // SIMULATION MODEL of the ot_qkvd_ucie_x64_phy hard macro (tools/qwen_kv_die/phy_gen.py): the far end is a second macro;
 // a flit launched on tx_* appears on the FAR macro's rx_* 5 FDI cycles later (link_* ports carry it between the
 // pair).  tx_up rises UP cycles after reset.  Not synthesised.
-// FW (qwen-split 2026-10-14): flit width; 548 = the adapter flit, 583 = with the link-level retry header + CRC (ot_qkvd_d2d_llr)
-module ot_qkvd_ucie_x64_phy_model #(parameter integer LAT = 5, parameter integer UP = 16, parameter integer FW = 548) (
+module ot_qkvd_ucie_x64_phy_model #(parameter integer LAT = 5, parameter integer UP = 16, parameter integer FW = 583) (
     input  wire clk, input wire rst_n,
     output reg  tx_up,
     input  wire tx_v, input wire [FW-1:0] tx_flit,
@@ -16,6 +15,6 @@ module ot_qkvd_ucie_x64_phy_model #(parameter integer LAT = 5, parameter integer
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin pipe <= 0; n <= 0; tx_up <= 1'b0; end
         else begin pipe <= {pipe, far_v, far_flit}; n <= n + 1; if (n >= UP) tx_up <= 1'b1; end
-    assign {rx_v, rx_flit} = pipe[LAT*(FW+1)-1 -: FW+1];
+    assign {rx_v, rx_flit} = pipe[LAT*(FW+1)-1 -: (FW+1)];
     assign link_v = tx_v; assign link_flit = tx_flit;
 endmodule

@@ -8,14 +8,14 @@
 // Direct A/C bypass nets each cross at most the 254.88-um B slot on parent layers above the M5 leaves.
 // Existing pipeline stages move: valid A stage 2 -> C stage 3; control C stage 2 -> A stage 3.
 // No data/control edge is added or removed; physical qualification needs new assigned child pin files/views.
-module qkd_ectl3_direct_s (
+module qkd_ectl3_direct_s #(parameter integer EPOCH = 0) (
     input  wire [2:0]    ck,
     input  wire          rst_n,
     input  wire [4:0]    cfg,
     output wire [15:0]   e0, e1, e2, e3,
     input  wire [33:0]   s0, s1, s2, s3,
     output wire [1558:0] t0, t1,
-    output wire [15:0]   rq,
+    output wire [15+EPOCH:0] rq,
     input  wire [1024:0] rs,
     input  wire [633:0]  si,
     output wire [424:0]  so
@@ -25,7 +25,7 @@ module qkd_ectl3_direct_s (
     wire [511:0] a0, a1, b0, b1;
     wire [15:0]  c0, c1;
     wire [518:0] q0, q1;
-    qkd_ectl_a_tp8_direct u_a (.ck(ck[0]), .rst_n(rst_n), .cfg(cfg), .rq(rq), .rs(rs), .t0_row(a0), .t1_row(a1), .x_i(x_ca), .rs_o(rs_ab));
+    qkd_ectl_a_tp8_direct #(.EPOCH(EPOCH)) u_a (.ck(ck[0]), .rst_n(rst_n), .cfg(cfg), .rq(rq), .rs(rs), .t0_row(a0), .t1_row(a1), .x_i(x_ca), .rs_o(rs_ab));
     qkd_ectl_b_tp8_direct u_b (.ck(ck[1]), .rst_n(rst_n), .cfg(cfg), .t0_row(b0), .t1_row(b1), .t0_cl(c0), .t1_cl(c1), .rs_i(rs_ab), .x_i(x_cb));
     qkd_ectl_c_tp8_direct u_c (.ck(ck[2]), .rst_n(rst_n), .cfg(cfg), .si(si), .so(so), .e0(e0), .e1(e1), .e2(e2), .e3(e3), .s0(s0),
         .s1(s1), .s2(s2), .s3(s3), .t0_q(q0), .t1_q(q1), .rsv_i(rs_ab[0]), .x_b(x_cb), .x_a(x_ca));

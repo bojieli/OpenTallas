@@ -15,10 +15,19 @@ module tb_qkd_ectl3;
     always #0.5 ck = ~ck;
     // DUT-side inputs
     reg  [633:0]  si;  reg [1024:0] rs;  reg [33:0] s0, s1, s2, s3;
-    wire [424:0]  d_so, r_so;  wire [15:0] d_rq, r_rq;  wire [1558:0] d_t0, d_t1, r_t0, r_t1;
+    wire [424:0]  d_so, r_so;  wire [15:0] r_rq;
+`ifdef KVD_ECTL_EPOCH
+    wire [16:0] d_rq;
+`else
+    wire [15:0] d_rq;
+`endif  wire [1558:0] d_t0, d_t1, r_t0, r_t1;
     wire [15:0]   d_e0, d_e1, d_e2, d_e3, r_e0, r_e1, r_e2, r_e3;
 `ifdef KVD_ECTL_DIRECT
-    qkd_ectl3_direct_s u_d (.ck({3{ck}}), .cfg({3'(E), 2'(S)}),
+    `ifdef KVD_ECTL_EPOCH
+    qkd_ectl3_epoch_direct_s u_d
+`else
+    qkd_ectl3_direct_s u_d
+`endif (.ck({3{ck}}), .cfg({3'(E), 2'(S)}),
 `elsif KVD_ECTL_SPLIT_CLOCK
     qkd_ectl3_s u_d (.ck({3{ck}}), .cfg({3'(E), 2'(S)}),
 `else
@@ -85,12 +94,18 @@ module tb_qkd_ectl3;
             s0 = {2'b00, $urandom}; s1 = {2'b00, $urandom}; s2 = {2'b00, $urandom}; s3 = {2'b00, $urandom};
             @(posedge ck); #0.1;
             cmps = cmps + 1;
-            if (d_rq !== r_rq || d_so !== r_so || d_t0 !== r_t0 || d_t1 !== r_t1 || {d_e3, d_e2, d_e1, d_e0} !== {r_e3, r_e2, r_e1, r_e0}) begin
+            if (d_rq[15:0] !== r_rq || d_so !== r_so || d_t0 !== r_t0 || d_t1 !== r_t1 || {d_e3, d_e2, d_e1, d_e0} !== {r_e3, r_e2, r_e1, r_e0}) begin
                 bad = bad + 1;
                 if (bad < 6) $display("LOCKSTEP mismatch cyc %0d layer %0d: rq %s so %s t0 %s t1 %s e %s (so xor %h)", cyc, layer,
-                    d_rq === r_rq ? "eq" : "NE", d_so === r_so ? "eq" : "NE", d_t0 === r_t0 ? "eq" : "NE", d_t1 === r_t1 ? "eq" : "NE",
+                    d_rq[15:0] === r_rq ? "eq" : "NE", d_so === r_so ? "eq" : "NE", d_t0 === r_t0 ? "eq" : "NE", d_t1 === r_t1 ? "eq" : "NE",
                     {d_e3, d_e2, d_e1, d_e0} === {r_e3, r_e2, r_e1, r_e0} ? "eq" : "NE", d_so ^ r_so);
             end
+            `ifdef KVD_ECTL_EPOCH
+            if (d_rq[0] && d_rq[16] !== 1'(layer & 1)) begin
+                bad = bad + 1;
+                if (bad < 6) $display("EPOCH mismatch cyc %0d layer %0d got %0d", cyc, layer, d_rq[16]);
+            end
+`endif
             if (d_rq[0]) begin rq_q[rq_w % 1024] = d_rq[15:1]; rq_w = rq_w + 1; rows = rows + 1; if (d_rq[1]) vrows = vrows + 1; end
             er_v_q = d_so[0]; er_a_q = d_so[12:1];
             if (d_so[412] && d_so[416:413] == 4'd0) begin cr_pend = cr_pend + 1; nodes = nodes + 1; end

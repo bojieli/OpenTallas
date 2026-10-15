@@ -156,7 +156,13 @@ module ot_dsrom_su_softmax #(
     reg              a_done;                     // the lanes' maxima are final this cycle
     generate for (l = 0; l < NL; l = l + 1) begin : g_sm
         wire fm;
-        ot_dsrom_su_softmax_mul #(LM) u_m (clk, rst_n, siv[DIN], s_in[32*l +: 32], scale_i, s_m[32*l +: 32], fm);
+        wire [31:0] raw_scaled;
+        wire [LM:0] inactive;
+        ot_hdc_vline #(.D(LM)) u_inactive (.clk(clk), .rst_n(rst_n),
+            .v(siv[DIN] && s_in[32*l +: 32] == 32'hff800000), .vd(inactive));
+        ot_dsrom_su_softmax_mul #(LM) u_m (clk, rst_n, siv[DIN],
+            s_in[32*l +: 32] == 32'hff800000 ? 32'd0 : s_in[32*l +: 32], scale_i, raw_scaled, fm);
+        assign s_m[32*l +: 32] = inactive[LM] ? 32'hff800000 : raw_scaled;
     end endgenerate
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin wcnt <= 7'd0; a_done <= 1'b0; end
@@ -343,25 +349,30 @@ module ot_dsrom_su_softmax #(
     wire [LA_T+D_EXP:0] bv, blast;
     ot_hdc_vline #(.D(LA_T + D_EXP)) u_bv (.clk(clk), .rst_n(rst_n), .v(rv), .vd(bv));
     ot_hdc_vline #(.D(LA_T + D_EXP)) u_bl (.clk(clk), .rst_n(rst_n), .v(rlast), .vd(blast));
-    wire [NL*32-1:0] bd, be;
+    wire [NL*32-1:0] bd, be, be_raw;
     generate for (l = 0; l < NL; l = l + 1) begin : g_b
         localparam integer HH = l / LPH;
         wire fa, fe;
+        // Compiler padding lane: preserve -Inf for max, emit exact +0 for sum.
+        wire [LA_T+D_EXP:0] inactive;
+        ot_hdc_vline #(.D(LA_T + D_EXP)) u_inactive (.clk(clk), .rst_n(rst_n),
+            .v(rv && s_rd[32*l +: 32] == 32'hff800000), .vd(inactive));
+        assign be[32*l +: 32] = inactive[LA_T + D_EXP] ? 32'd0 : be_raw[32*l +: 32];
         always @(posedge clk) if (mxdv[RWD]) mbn[32*l +: 32] <= {~mx_dn[32*HH + 31], mx_dn[32*HH +: 31]};
         ot_dsrom_su_softmax_add #(.ADD6(ADD6), .LA(LA)) u_a
             (clk, rst_n, rv, s_rd[32*l +: 32], mbn[32*l +: 32], bd[32*l +: 32], fa);
         if (EXP6 && SAFE == 3) begin : g_xh
             ot_dsrom_su_softmax_exp_hr #(.LM(ELM), .LA(ELA_T), .NSPLIT(EXPNS)) u_e (.clk(clk), .rst_n(rst_n), .v(bv[LA_T]), .x(bd[32*l +: 32]),
-                                                 .y(be[32*l +: 32]), .vo(), .fault(fe));
+                                                 .y(be_raw[32*l +: 32]), .vo(), .fault(fe));
         end else if (EXP6 && SAFE) begin : g_xt
             ot_dsrom_su_softmax_exp_tile #(.LM(ELM), .LA(ELA_T), .NSPLIT(EXPNS), .ADDX(RECUT == 2)) u_e (.clk(clk), .rst_n(rst_n), .v(bv[LA_T]), .x(bd[32*l +: 32]),
-                                                 .y(be[32*l +: 32]), .vo(), .fault(fe));
+                                                 .y(be_raw[32*l +: 32]), .vo(), .fault(fe));
         end else if (EXP6) begin : g_x6
             ot_dsrom_su_softmax_exp6 #(.LM(ELM), .LA(ELA_T), .NSPLIT(EXPNS), .ADDX(RECUT == 2)) u_e (.clk(clk), .rst_n(rst_n), .v(bv[LA_T]), .x(bd[32*l +: 32]),
-                                                 .y(be[32*l +: 32]), .vo(), .fault(fe));
+                                                 .y(be_raw[32*l +: 32]), .vo(), .fault(fe));
         end else begin : g_x
             ot_hdc_v41x_exp #(.LM(ELM), .LA(ELA)) u_e (.clk(clk), .rst_n(rst_n), .v(bv[LA_T]), .x(bd[32*l +: 32]),
-                                                 .y(be[32*l +: 32]), .vo(), .fault(fe));
+                                                 .y(be_raw[32*l +: 32]), .vo(), .fault(fe));
         end
     end endgenerate
     wire e_at = bv[LA_T + D_EXP];

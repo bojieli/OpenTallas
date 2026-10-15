@@ -246,8 +246,8 @@ module dsfd_sp_su_h #(
     wire [KL*128-1:0]   kt_d  [0:3];
     wire [511:0]        kt_cs [0:3];
     wire                kt_gk, kt_go;
-    wire [1:0]          kt_gr, kt_gw;
-    wire [13:0]         kt_ob;
+    wire [1:0]          kt_gr, kt_gw, kt_mode;
+    wire [13:0]         kt_ob, kt_nb;
     wire [31:0]         kt_eps;
     wire [NKE:0]        kv_f;
     wire [NKE-1:0]      ky_v, kp_v;
@@ -255,6 +255,17 @@ module dsfd_sp_su_h #(
     wire [NKE*32-1:0]   kp_d;
     wire                kr_v;
     wire [31:0]         kr_d;
+    wire [NKE-1:0] kn_v;wire [NKE*128-1:0] kn_d;
+    wire [15:0] cnn_v;wire [16*14-1:0] cnn_a;wire [16*512-1:0] cnn_d;
+    wire ikr_v, ikr_fault;wire [31:0] ikr_d;
+    wire [19:0] cn_v, cn_fault;
+    wire [20*14-1:0] cn_a;wire [20*16-1:0] cn_m;wire [20*512-1:0] cn_d;
+    // IK's logical chunk order 0..15 maps to physical KVE48..63. The
+    // zero prefix is not included in either tree or the divisor.
+    ot_s81_su_ik_reduce u_ik_reduce(.ck_half({2{sk}}),.rs_half({2{rst[0]}}),
+        .ck_reduce(sk),.rs_reduce(rst[0]),.go(kt_go),.eps(kt_eps),
+        .p_v(kp_v[NKE-16+:16] & {16{kt_mode==2}}),.p_d(kp_d[32*(NKE-16)+:512]),
+        .r_v(ikr_v),.r_d(ikr_d),.fault(ikr_fault));
     wire [NKQ-1:0]      kq_v, kq_fu, kq_fo, kq_al, kq_de, kq_ev;
     wire [NKQ*14-1:0]   kq_a;
     wire [NKQ*16-1:0]   kq_m;
@@ -271,8 +282,8 @@ module dsfd_sp_su_h #(
         ot_hdc_delay #(.W(256 + 5), .D(ERL)) u_id (.clk(sk), .rst_n(rst[0]),
             .d({kt_d[2 * KH + 1][128 * KP +: 128], kt_d[2 * KH][128 * KP +: 128], kt_gk, kt_gr, kt_gw}),
             .q({ix, igk, igr, igw}));
-        ot_hdc_delay #(.W(1), .D(ERL), .RESET(1)) u_rv (.clk(sk), .rst_n(rst[0]), .d(kr_v), .q(rv));
-        ot_hdc_delay #(.W(32), .D(ERL)) u_rd (.clk(sk), .rst_n(rst[0]), .d(kr_d), .q(rd));
+        ot_hdc_delay #(.W(1), .D(ERL), .RESET(1)) u_rv (.clk(sk), .rst_n(rst[0]), .d(kt_mode==2?ikr_v:kr_v), .q(rv));
+        ot_hdc_delay #(.W(32), .D(ERL)) u_rd (.clk(sk), .rst_n(rst[0]), .d(kt_mode==2?ikr_d:kr_d), .q(rd));
         if (ke >= NKE - NRP) begin : g_rp
             // RoPE engine k: cos / sin of lane pairs 4 k .. 4 k + 3 = quarter k % 4 of param rows 1 / 2 (cos), 3 / 4 (sin)
             localparam integer K = ke - (NKE - NRP);
@@ -281,11 +292,11 @@ module dsfd_sp_su_h #(
                 .d({kt_cs[K % 4][(K < 4 ? 256 : 384) +: 128], kt_cs[K % 4][(K < 4 ? 0 : 128) +: 128]}), .q({sn, cc}));
             ot_s81_su_kve #(.RP(1), .LM(LM), .LA(LA)) u_kve (
                 .clk(sk), .rst_in(rst[0]), .i_v(iv), .i_x(ix), .i_gk(igk), .i_gr(igr), .i_gw(igw), .i_cos(cc), .i_sin(sn),
-                .r_v(rv), .r_d(rd), .p_v(pv), .p_d(pd), .y_v(yv), .y(yd), .o_f(ef));
+                .r_v(rv), .r_d(rd), .p_v(pv), .p_d(pd), .norm_v(kn_v[ke]),.norm_y(kn_d[128*ke+:128]),.y_v(yv), .y(yd), .o_f(ef));
         end else begin : g_np
             ot_s81_su_kve #(.RP(0), .LM(LM), .LA(LA)) u_kve (
                 .clk(sk), .rst_in(rst[0]), .i_v(iv), .i_x(ix), .i_gk(igk), .i_gr(igr), .i_gw(igw), .i_cos(128'd0),
-                .i_sin(128'd0), .r_v(rv), .r_d(rd), .p_v(pv), .p_d(pd), .y_v(yv), .y(yd), .o_f(ef));
+                .i_sin(128'd0), .r_v(rv), .r_d(rd), .p_v(pv), .p_d(pd), .norm_v(kn_v[ke]),.norm_y(kn_d[128*ke+:128]),.y_v(yv), .y(yd), .o_f(ef));
         end
         assign ky_v[ke] = yv; assign ky_d[256 * ke +: 256] = yd;
         ot_hdc_delay #(.W(2), .D(ERL), .RESET(1)) u_pv (.clk(sk), .rst_n(rst[0]), .d({pv, ef}), .q({kp_v[ke], kv_f[ke]}));
@@ -323,9 +334,24 @@ module dsfd_sp_su_h #(
             assign gv = 8'd0; assign ge = 80'd0;
         end
         wire [3:0] CB = kb;
+        ot_s81_su_cn_norm_write u_cn_norm_write(.clk(sk),.rst_in(rst[0]),
+            .i_v(kn_v[4*kb] && kt_mode==1),.i_x(kn_d[512*kb+:512]),
+            .i_ob(kt_nb),.i_block(CB),.o_v(cnn_v[kb]),.o_a(cnn_a[14*kb+:14]),.o_d(cnn_d[512*kb+:512]));
+        ot_s81_su_cn_write #(.E4M3(1)) u_cn_write(.clk(sk),.rst_in(rst[0]),
+            .i_v(rv && kt_mode==1),.i_x(ry),.i_ob(rob),.i_block(CB),
+            .o_v(cn_v[kb]),.o_a(cn_a[14*kb+:14]),.o_m(cn_m[16*kb+:16]),
+            .o_d(cn_d[512*kb+:512]),.o_fault(cn_fault[kb]));
+        if(kb>=NKQ-4) begin:g_ik_write
+            localparam integer IB=kb-(NKQ-4), IS=16+IB;
+            wire [3:0] IBC=IB;
+            ot_s81_su_cn_write #(.E4M3(0)) u_ik_write(.clk(sk),.rst_in(rst[0]),
+                .i_v(rv && kt_mode==2),.i_x(ry),.i_ob(rob),.i_block(IBC),
+                .o_v(cn_v[IS]),.o_a(cn_a[14*IS+:14]),.o_m(cn_m[16*IS+:16]),
+                .o_d(cn_d[512*IS+:512]),.o_fault(cn_fault[IS]));
+        end
         wire ov, ofu, ofo, oal, ode, ord; wire [13:0] oa; wire [15:0] om; wire [511:0] od; wire [7:0] orj;
         ot_s81_su_kvq #(.N(KV_N), .MLAT(LM)) u_kvq (
-            .clk(sk), .rst_in(rst[0]), .cfg_b(CB), .i_v(rv), .i_y(ry), .i_ob(rob), .nx_i_v(kqxv[kb ^ 1]),
+            .clk(sk), .rst_in(rst[0]), .cfg_b(CB), .i_v(rv && kt_mode==0), .i_y(ry), .i_ob(rob), .nx_i_v(kqxv[kb ^ 1]),
             .nx_i_q(kqxq[kb ^ 1]), .nx_o_v(kqxv[kb]), .nx_o_q(kqxq[kb]), .e_o_v(kq_ev[kb]), .e_o_e(kq_ee[10 * kb +: 10]),
             .g_i_v(gv), .g_i_e(ge), .o_v(ov), .o_a(oa), .o_m(om), .o_d(od), .o_fu(ofu), .o_fo(ofo), .o_alive(oal),
             .o_den(ode), .o_rdy(ord), .o_rjid(orj));
@@ -452,16 +478,16 @@ module dsfd_sp_su_h #(
                 for (s2 = 0; s2 < S_RD; s2 = s2 + 1) begin : g_s
                     assign dq[128 * s2 +: 128] = dd[t][512 * s2 + 128 * u +: 128];
                 end
-                wire ugk, ugo, ufu, ufo, ual, ude, urd; wire [1:0] ugr, ugw; wire [13:0] uob; wire [31:0] uep; wire [7:0] urj;
+                wire ugk, ugo, ufu, ufo, ual, ude, urd; wire [1:0] ugr, ugw, umode; wire [13:0] uob, unb; wire [31:0] uep; wire [7:0] urj;
                 ot_s81_su_kvt #(.N(KV_N), .S_RD(S_RD), .NFI(NKE + 1), .MUT(MUT)) u_kvt (
                     .clk(sk), .rst_in(rst[t]),
                     .dn_st_i(dst[t]), .dn_kind_i(dkd[t]), .dn_gsel_i(dgs[t]), .dn_jid_i(dji[t]), .dn_v_i(dv[t]), .dn_d_i(dq),
                     .i_f(u == 0 ? kv_f : {(NKE + 1){1'b0}}), .e_v(kt_v[u]), .e_d(kt_d[u]), .e_gk(ugk), .e_gr(ugr),
-                    .e_gw(ugw), .e_go(ugo), .e_ob(uob), .e_eps(uep), .e_cs(kt_cs[u]), .o_fu(ufu), .o_fo(ufo),
+                    .e_gw(ugw), .e_go(ugo), .e_mode(umode), .e_ob(uob), .e_nb(unb), .e_eps(uep), .e_cs(kt_cs[u]), .o_fu(ufu), .o_fo(ufo),
                     .o_alive(ual), .o_den(ude), .o_rdy(urd), .o_rjid(urj));
                 if (u == 0) begin : g_u0
                     assign kt_gk = ugk; assign kt_gr = ugr; assign kt_gw = ugw; assign kt_go = ugo; assign kt_ob = uob;
-                    assign kt_eps = uep;
+                    assign kt_eps = uep; assign kt_mode=umode; assign kt_nb=unb;
                     assign tfu = ufu; assign tfo = ufo; assign tal = ual; assign tde = ude; assign trd = urd; assign trj = urj;
                 end
             end
@@ -476,9 +502,20 @@ module dsfd_sp_su_h #(
                     mm[16 * (b % S_WR) +: 16] = mm[16 * (b % S_WR) +: 16] | kq_m[16 * b +: 16];
                     md[512 * (b % S_WR) +: 512] = md[512 * (b % S_WR) +: 512] | kq_d[512 * b +: 512];
                 end
+                for(b=0;b<16;b=b+1)if(cnn_v[b])begin
+                    mv[b%S_WR]=1'b1;
+                    ma[14*(b%S_WR)+:14]=cnn_a[14*b+:14];mm[16*(b%S_WR)+:16]=16'hffff;
+                    md[512*(b%S_WR)+:512]=cnn_d[512*b+:512];
+                end
+                for(b=0;b<20;b=b+1)if(cn_v[b])begin
+                    mv[(b<16?b:b-16)%S_WR]=1'b1;
+                    ma[14*((b<16?b:b-16)%S_WR)+:14]=cn_a[14*b+:14];
+                    mm[16*((b<16?b:b-16)%S_WR)+:16]=cn_m[16*b+:16];
+                    md[512*((b<16?b:b-16)%S_WR)+:512]=cn_d[512*b+:512];
+                end
             end
             assign o_v = mv; assign o_a = ma; assign o_m = mm; assign o_d = md;
-            assign o_fu = tfu | (|kq_fu); assign o_fo = tfo | (|kq_fo); assign o_alive = tal & (&kq_al);
+            assign o_fu = tfu | (|kq_fu) | (|cn_fault) | ikr_fault; assign o_fo = tfo | (|kq_fo); assign o_alive = tal & (&kq_al);
             assign o_den = tde & (&kq_de); assign o_rdy = trd; assign o_rjid = trj;
 `ifndef SYNTHESIS
             always @(posedge sk) if (rst[t]) begin : sc
