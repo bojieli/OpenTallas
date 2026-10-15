@@ -6,6 +6,9 @@
 // tree node) as tile-level logic.  Every output is flop-launched (t_out / t_vout with TOREG, n_y / n_vy from the node's
 // output stage, fault_q).
 module ot_qwen_rom_tile_nk #(
+`ifndef SYNTHESIS
+    parameter integer ROM_TILE = -1, // constant die tile identity for released simulation masks
+`endif
     parameter integer NW = 18,
     parameter integer GT = 6144,
     parameter integer SMIN = 6,
@@ -62,7 +65,11 @@ module ot_qwen_rom_tile_nk #(
     output wire              fault
 );
     wire tile_fault;
-    ot_qwen_rom_tile_w12 #(.CHILD_CLOCKS(CHILD_CLOCKS), .NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_VB(KV_VB), .KV_NH(KV_NH),
+    ot_qwen_rom_tile_w12 #(
+`ifndef SYNTHESIS
+        .ROM_TILE(ROM_TILE),
+`endif
+        .CHILD_CLOCKS(CHILD_CLOCKS), .NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_VB(KV_VB), .KV_NH(KV_NH),
         .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT),
         .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .NODE(NODE), .BMUT(BMUT), .KV_SLICE(0)) u_tile (
         .ck_rpair(ck_rpair), .ck_lsl(ck_lsl), .ck_node(ck_node),

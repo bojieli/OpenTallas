@@ -38,6 +38,9 @@ module ot_qwen_rom_tile_logic_w12 #(
     parameter integer W  = 16,
     parameter integer IL = 8,
     parameter integer AW = 24,
+`ifndef SYNTHESIS
+    parameter integer ROM_TILE = -1, // constant die tile identity for released simulation masks
+`endif
     parameter integer NW = 18,
     parameter integer GT = 6144,
     parameter integer TG = 4,
@@ -487,7 +490,11 @@ module ot_qwen_rom_tile_logic_w12 #(
                     if (PWB != 256 || ROM_CAP2 != 1 || ROM_CAPX != 2 || BAW != 12 || ROM_MUT != 0 || TMUT != 0) begin : g_hbad
                         initial begin $display("FAIL RPH = 2: parameters differ from the hardened leaf ot_qwen_tile_rpair"); $finish; end
                     end
-                    ot_qwen_tile_rpair u_rp (.clk(CHILD_CLOCKS ? ck_rpair[b] : clk), .rst_n(rst_n), .ce_d(ce_pre[b]), .any_d((b < SB) ? any_s : any_n), .ad_d((b < SB) ? adm_pre : adm_pre_n), .r_q(r_q));
+                    ot_qwen_tile_rpair
+`ifndef SYNTHESIS
+                        #(.ROM_TILE(ROM_TILE), .ROM_BANK(b))
+`endif
+                        u_rp (.clk(CHILD_CLOCKS ? ck_rpair[b] : clk), .rst_n(rst_n), .ce_d(ce_pre[b]), .any_d((b < SB) ? any_s : any_n), .ad_d((b < SB) ? adm_pre : adm_pre_n), .r_q(r_q));
                     assign rom_req_m[13*b +: 13] = 13'd0;
                     assign rom_req_m[13*(CODE_BANKS+b) +: 13] = 13'd0;
                 end else begin : g_sf
@@ -692,6 +699,9 @@ endmodule
 // and its KV slice (2 x ot_sram_1r1w_128x256_m1_r2c2, written through a
 // registered masked port from the die's KV fill network).
 module ot_qwen_rom_tile_w12 #(
+`ifndef SYNTHESIS
+    parameter integer ROM_TILE = -1, // constant die tile identity for released simulation masks
+`endif
     parameter integer NW = 18,
     parameter integer GT = 6144,
     parameter integer SMIN = 6,
@@ -764,7 +774,11 @@ module ot_qwen_rom_tile_w12 #(
     wire                  kvs_r_ce;
     wire [6:0]            kvs_r_addr;
     wire [511:0]          kvs_rd;
-    ot_qwen_rom_tile_logic_w12 #(.CHILD_CLOCKS(CHILD_CLOCKS), .NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_LOCAL(KV_SLICE),
+    ot_qwen_rom_tile_logic_w12 #(
+`ifndef SYNTHESIS
+        .ROM_TILE(ROM_TILE),
+`endif
+        .CHILD_CLOCKS(CHILD_CLOCKS), .NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_LOCAL(KV_SLICE),
         .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .NODE(NODE), .BMUT(BMUT)) u_logic (
         .ck_rpair(ck_rpair), .ck_lsl(ck_lsl), .ck_node(ck_node),
         .clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl),

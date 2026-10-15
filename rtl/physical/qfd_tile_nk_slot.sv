@@ -17,6 +17,9 @@
 // the die instantiates masters without parameter overrides, so the defaults ARE the production configuration.
 // OT_QFD_TILE_NK_MUT (bench only): go taken from the top bit of the tap (wrong field order).
 module qfd_tile_nk #(
+`ifndef SYNTHESIS
+    parameter integer ROM_TILE = -1, // constant die tile identity for released simulation masks
+`endif
     parameter integer NW = 18,
     parameter integer GT = 3072,
     parameter integer SMIN = 7,
@@ -92,7 +95,11 @@ module qfd_tile_nk #(
     wire [127:0]   xl = tap_q[507 -: 128];
     wire [511:0]   to, ny;
     wire           tv, nvy, tf;
-    ot_qwen_rom_tile_nk #(.CHILD_CLOCKS(1), .NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_VB(KV_VB), .KV_NH(KV_NH),
+    ot_qwen_rom_tile_nk #(
+`ifndef SYNTHESIS
+        .ROM_TILE(ROM_TILE),
+`endif
+        .CHILD_CLOCKS(1), .NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_VB(KV_VB), .KV_NH(KV_NH),
         .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT),
         .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX),
         .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR),
@@ -132,6 +139,9 @@ endmodule
 // (ot_qwen_rom_tile_w12 NODE 0: t_out via the TOREG pin registers instead of the node leaf's feed-through registers,
 // same edge and value).  No n_* ports, so nothing is tied on the die.  OT_QFD_TILE_NL_MUT (bench only): go from tap[507].
 module qfd_tile_nl #(
+`ifndef SYNTHESIS
+    parameter integer ROM_TILE = -1, // constant die tile identity for released simulation masks
+`endif
     parameter integer NW = 18,
     parameter integer GT = 3072,
     parameter integer SMIN = 7,
@@ -201,7 +211,11 @@ module qfd_tile_nl #(
     wire [127:0]   xl = tap_q[507 -: 128];
     wire [511:0]   to;
     wire           tv, tf;
-    ot_qwen_rom_tile_nk #(.CHILD_CLOCKS(1), .NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_VB(KV_VB), .KV_NH(KV_NH),
+    ot_qwen_rom_tile_nk #(
+`ifndef SYNTHESIS
+        .ROM_TILE(ROM_TILE),
+`endif
+        .CHILD_CLOCKS(1), .NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_VB(KV_VB), .KV_NH(KV_NH),
         .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT),
         .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX),
         .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR),

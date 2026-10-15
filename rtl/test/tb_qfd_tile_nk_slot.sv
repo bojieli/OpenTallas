@@ -4,7 +4,7 @@
 // tb_qwen_rom_tile_nk_boundary.sv, the inner ROM tile core is a transparent contract model (the datapath exactness of
 // ot_qwen_rom_tile_w12 is gated by its own benches); every output bit is checked every cycle against the field it must
 // carry, so a swapped / shifted field fails.  +define+OT_QFD_TILE_NK_MUT (go from the wrong end of the tap) must FAIL.
-module ot_qwen_rom_tile_w12 #(parameter NW=18,GT=6144,SMIN=7,CODE_BANKS=5,KV_VB=131072,KV_NH=2,MEM_EXTRA=1,ACC_LAT=7,
+module ot_qwen_rom_tile_w12 #(parameter ROM_TILE=-1, NW=18,GT=6144,SMIN=7,CODE_BANKS=5,KV_VB=131072,KV_NH=2,MEM_EXTRA=1,ACC_LAT=7,
     FAST_ISSUE=1,KV_PREP=4,MUL_LAT=8,TREE_LAT=7,ROM_PIPE=1,ROM_ARELAY=2,ROM_CAP2=1,ROM_CAPX=2,LRST=3,ARPB=1,MPR=1,HIER=2,
     HIER_HARD=1,TOREG=1,TIDR=1,LRR=1,XTX=2,ANR=1,BAW=12,KV_SLICE=1,RPH=0,RQR=0,NDH=0,BMUT=0,NODE=1,CHILD_CLOCKS=0) (
     input [CODE_BANKS-1:0] ck_rpair, input [7:0] ck_lsl,input ck_node,
