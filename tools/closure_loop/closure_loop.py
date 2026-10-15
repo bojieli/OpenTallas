@@ -3705,6 +3705,8 @@ def publish(j, metrics):
                        checks=j.get("checks", {}), submit_checks=j.get("submit_checks"), calibration=j.get("calibration"), route_overlay_plan=j.get("route_overlay_plan"), cycles_added=spec.get("cycles_added"), status="CLOSED",
                        closed_at=now_iso(), job_spec=spec, io_budget=(j.get("rebudget") or {}).get("rb") or "link_budget_consistent (fixed split)",
                        rebudget=j.get("rebudget"))
+        if j.get("export_lint_recovery"):
+            verdict["export_lint_recovery"] = j["export_lint_recovery"]
         (cwt / rec_dir / "verdict.json").write_text(json.dumps(verdict, indent=1) + "\n")
         git("add", "--sparse", "--", *tos, cwd=cwt)
         staged = sh(["git", "-C", str(cwt), "diff", "--cached", "--name-only"], timeout=120).stdout.split()
