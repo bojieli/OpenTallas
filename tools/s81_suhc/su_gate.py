@@ -41,8 +41,8 @@ SHAPES = dict(reduced=dict(QN_N=64, KV_N=512, QB_NB=4, SW_W=64, SM_H=2, SM_LPH=1
 # the DS HBM SU case set the golden runs draw on: tools/dshbm_baseline_measure.py prep (snapshots sha256 cd0fc866...)
 # -> tools/dshbm_chain_levers.py prep (_il) -> prep2 (_ildr); recorded in results/rtl/hbm_su_fused_compiler_20261005/v2_ildr.json
 CASES_SHA256 = "8c18c0655ccf6a147cde5e8a65e709ad5ccfd62ba9024e2644019289cd8d2108"
-K = dict(QN=0, KV=1, QB=2, SW=3, SE=4, SO=5, GQ=6, GK=7, RA=8, RB=9, QR=10)
-RTL = ["rtl/dsrom_sys/s81_suhc/ot_s81_su_core.sv", "rtl/dsrom_sys/s81_suhc/ot_s81_su_rx.sv",
+K = dict(QN=0, KV=1, QB=2, SW=3, SE=4, SO=5, GQ=6, GK=7, RA=8, RB=9, QR=10, RW=11, CN=12, IK=13)
+RTL = ["rtl/dsrom_sys/s81_suhc/ot_s81_su_core.sv", "rtl/dsrom_sys/s81_suhc/ot_s81_su_rx.sv", "rtl/dsrom_sys/s81_suhc/ot_s81_su_rw.sv",
        "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv", "rtl/dsrom_sys/s81_suhc/dsfd_sp_su.sv",
        "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv", "rtl/lib/ot_async_fifo.sv", "rtl/lib/ot_reset_sync.sv",
        "rtl/hdc/v41x/ot_dsrom_su_norm.sv", "rtl/hdc/v41x/ot_dsrom_su_swiglu.sv", "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
@@ -62,6 +62,7 @@ HIER = ["rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_hctl.sv", "rtl/dsrom_sys/s81_suhc
         "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
         "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv", "rtl/hdc/ot_sram_bank.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv",
         "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+        "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_cn_ik.sv", "rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv",
         "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxt.sv", "rtl/dsrom_sys/s81_suhc/hier/dsfd_sp_su_h.sv"]
 u32, f32, pack, bf16bits = H.u32, H.f32, H.pack, H.bf16bits
 
@@ -178,7 +179,9 @@ class Run:
             rows += [pack(b[2], 16) for b in blk]
         self.expect(out, rows)
 
-    def sw(self, g, u, wv, lim):
+    def sw(self, g, u, wv, lim, weights_from_rw=False):
+        """weights_from_rw (s81-ftok r3, F11): the descriptor's routing-weight words start ZERO; an RW job writes them
+        (rw() below) before this job runs.  Returns the descriptor row."""
         import dsrom_su_swiglu as SG
         W = self.sh["SW_W"]
         nvec = len(g) // W
@@ -187,7 +190,9 @@ class Run:
             inter.append(g[v * W:(v + 1) * W]); inter.append(u[v * W:(v + 1) * W])
         a = self.put(rows_of(np.concatenate(inter)))
         out = self.alloc(nvec * (W // 64 + 1 + W // 32))
-        self.job("SW", 0, self.desc(out, a, nvec, int(u32([lim])[0]), 0, extra=list(u32(wv))))
+        drow = self.desc(out, a, nvec, int(u32([lim])[0]), 0, extra=[0] * len(wv) if weights_from_rw else list(u32(wv)))
+        self.sw_desc = (drow, [out, a, nvec, int(u32([lim])[0]), 0] + list(u32(wv)))
+        self.job("SW", 0, drow)
         act = SG.golden_swiglu(g, u, np.repeat(wv, W).astype(F), lim)
         q = aq(act)
         rows = []
@@ -202,18 +207,27 @@ class Run:
         import dsrom_su_softmax as SM
         Hh, lph = self.sh["SM_H"], self.sh["SM_LPH"]
         T = s_raw.shape[1]
-        nv = T // lph
+        if T < 1 or s_raw.shape[0] != Hh or not np.isfinite(scale) or scale <= 0:
+            raise ValueError("softmax requires nonempty scores, the target head count, and positive finite scale")
+        nv = (T + lph - 1) // lph
+        if nv > self.sh["SM_NVMAX"]:
+            raise ValueError("softmax score row exceeds the physical score store")
         lt = int(np.ceil(np.log2(nv))) if nv > 1 else 0
         SM.H, SM.ROW = Hh, 512
         ref = SM.reference(s_raw, scale, sink, pv, cos, sin)
 
         def lanes(m, v):
             return np.concatenate([m[h, v * lph:(v + 1) * lph] for h in range(Hh)])
-        a = self.put([r for v in range(nv) for r in rows_of(lanes(s_raw, v))])
+        # Partial vectors have -Inf inactive scores. Real RTL retains these in
+        # max and masks the exp output to +0 (exp's -87 clamp is NOT a mask).
+        padded = np.full((Hh, nv * lph), -np.inf, F)
+        padded[:, :T] = s_raw
+        a = self.put([r for v in range(nv) for r in rows_of(lanes(padded, v))])
         out = self.alloc(nv * Hh * lph // 16)
         sinkrow = rows_of(np.concatenate([sink, np.zeros((-len(sink)) % 16, F)]))
         self.job("SE", 1, self.desc(out, a, nv, int(u32([scale])[0]), lt, prow=sinkrow))
-        e = np.asarray(ref["e"], F)
+        e = np.zeros((Hh, nv * lph), F)
+        e[:, :T] = np.asarray(ref["e"], F)
         self.expect(out, [r for v in range(nv) for r in rows_of(lanes(e, v))])
         b = self.put([r for uu in range(512 // lph) for r in rows_of(lanes(pv, uu))])
         out2 = self.alloc((512 // lph) * Hh * lph // 32)
@@ -267,6 +281,66 @@ class Run:
             for j in range(4):
                 addrs.append(a + 32 * h + 28 + j); rows.append(rr[28 + j])
         self.expect_at(addrs, rows)
+
+    def rw(self, scores, ids, route_scale, target):
+        """ffn.weights (s81-ftok r3, die item F11): w_j = (scores[ids[j]] / (seqsum(scores[ids]) + 1e-20)) * route_scale,
+        written into words 5 .. 5+k-1 of the routed SW job's descriptor row `target` = (row, its full word list).
+        Operand rows: the ids row (word j = id j) directly followed by the score rows."""
+        import hdc_golden_v41 as V
+        sc = np.asarray(scores, F)
+        ids = [int(i) for i in ids]
+        tot = V.seqsum([sc[i] for i in ids])
+        den = V.add(tot, F(1e-20))
+        w = np.asarray([V.mul(V.div(sc[i], den), F(route_scale)) for i in ids], F)
+        a = self.put([pack(ids + [0] * (16 - len(ids)), 32)] + rows_of(sc))
+        self.job("RW", 0, self.desc(target[0], a, 1 + len(sc) // 16, int(u32([route_scale])[0]), 5, extra=[len(ids)]))
+        words = list(target[1])
+        words[5:5 + len(ids)] = list(u32(w))
+        words += [0] * (16 - len(words))
+        self.expect(target[0], [pack(words, 32)])
+        return w
+
+    def cn(self, x, w, eps, cos, sin):
+        """CN512 norm->RoPE64->E4M3 FP4/16. Also writes pre-RoPE norm for field cmp.wk."""
+        import hdc_golden_v41 as V
+        x,w=np.asarray(x,F),np.asarray(w,F)
+        if x.shape!=(512,) or w.shape!=(512,):raise ValueError("CN requires512 elements")
+        self.gain("GK",3,w)
+        a=self.put(rows_of(x));out=self.alloc(32);normout=self.alloc(16)
+        self.job("CN",0,self.desc(out,a,normout,int(u32([eps])[0]),prow=rows_of(np.concatenate([cos,sin]))),gsel=3)
+        y=V.rmsnorm_bf16(x,w,F(eps));ro=V.rope_tail(y,(cos,sin));qd=V.qdq_fp4_e4m3(ro,16)
+        self.expect(out,[pack(bf16bits(qd)[32*i:32*i+32],16) for i in range(16)])
+        import rtl_hdc_v41_blockdot_campaign as BC
+        blocks=np.asarray(ro,F).reshape(-1,16)
+        amax=np.maximum(np.max(np.abs(blocks),axis=1),V.FP4_AMAX_FLOOR_E4M3).astype(F)
+        scales_f=np.minimum(V._e4m3_round(amax.astype(np.float64)/V.FP4_MAX),448.0)
+        mag=np.abs(blocks.astype(np.float64));code=np.zeros(mag.shape,dtype=np.int64)
+        for k,m in enumerate(V.E2M1_MIDPOINTS):
+            threshold=m*scales_f[:,None]
+            code=np.where((mag>threshold)|((mag==threshold)&((k+1)%2==0)),k+1,code)
+        codes=(code+8*np.signbit(blocks)).reshape(-1)
+        scales=BC.e4m3_codes(scales_f)
+        for i in range(16):
+            self.exp[out+16+i]=pack(codes[32*i:32*i+32],4)|(int(scales[2*i])<<128)|(int(scales[2*i+1])<<136)
+            self.exp[normout+i]=pack(bf16bits(y)[32*i:32*i+32],16)
+        self.jexp[len(self.prog)-1]=(out,48)
+        return dict(qdq_base=out,raw_base=out+16,norm_base=normout)
+
+    def ik(self, x, w, eps, cos, sin):
+        """IK128: logical lane0 maps to physical384 in shared KV; divisor remains128."""
+        import hdc_golden_v41 as V
+        x,w=np.asarray(x,F),np.asarray(w,F)
+        if x.shape!=(128,) or w.shape!=(128,):raise ValueError("IK requires128 elements")
+        xx=np.concatenate([np.zeros(384,F),x]);ww=np.concatenate([np.zeros(384,F),w])
+        self.gain("GK",0,ww)
+        a=self.put(rows_of(xx));out=self.alloc(8)
+        self.job("IK",0,self.desc(out,a,0,int(u32([eps])[0]),prow=rows_of(np.concatenate([cos,sin]))),gsel=0)
+        y=V.rmsnorm_bf16(x,w,F(eps));ro=V.rope_tail(y,(cos,sin));qd=V.qdq_fp4_e8m0(ro,32)
+        self.expect(out,[pack(bf16bits(qd)[32*i:32*i+32],16) for i in range(4)])
+        for i,(e,codes,_) in enumerate(aq(ro,True)):
+            self.exp[out+4+i]=pack(codes,4)|((int(e)+127)&255)<<128
+        self.jexp[len(self.prog)-1]=(out,8)
+        return dict(qdq_base=out,raw_base=out+4)
 
     def write(self, d, meta):
         d.mkdir(parents=True, exist_ok=True)
@@ -328,8 +402,24 @@ def build_run(sh, rng, gold=None):
     g[:8] = [0.0, -0.0, lim, -lim, 87.0, -87.0, -100.0, 1e-40]
     wv = np.array([0.37, 1.0, 2.5, 0.0], F)                    # 1.0: the shared expert, exact
     r.sw(g, u, wv, lim)
+    # die item F11 (RW): a routed SW whose routing weights an RW job writes into its descriptor first
+    nsc = 384 if sh["S_RD"] >= 16 else 128
+    scr = np.abs(rng.standard_normal(nsc) * rng.choice([0.01, 1.0, 3.0], nsc)).astype(F)
+    rid = sorted(int(i) for i in rng.choice(nsc, 4, replace=False))
+    import hdc_golden_v41 as V
+    tot = V.seqsum([scr[i] for i in rid]); den = V.add(tot, F(1e-20))
+    wv2 = np.asarray([V.mul(V.div(scr[i], den), F(2.5)) for i in rid], F)
+    g2, u2 = g[:4 * W].copy(), u[:4 * W].copy()
+    r.sw(g2, u2, wv2, lim, weights_from_rw=True)
+    sw_job = r.prog.pop()                                     # issue order: RW first, then its SW
+    jx = r.jexp.pop(len(r.prog), None)
+    w_rw = r.rw(scr, rid, F(2.5), r.sw_desc)
+    assert np.array_equal(u32(w_rw), u32(wv2))
+    r.prog.append((sw_job & ~0x7F) | len(r.prog))
+    if jx is not None:
+        r.jexp[len(r.prog) - 1] = jx
     Hh = sh["SM_H"]
-    for T in (128, 640):
+    for T in (128, 133, 640):
         s_raw = (rng.normal(0, 1, (Hh, T)) * rng.choice([1, 30, 1e3], (Hh, T))).astype(F)
         s_raw[:, 5] = s_raw.max(axis=1)
         pv = (rng.normal(0, 1, (Hh, 512)) * rng.choice([1e-3, 1, 50], (Hh, 512))).astype(F)
@@ -395,7 +485,13 @@ def cmd_run(a):
         gen = [out / "tile_tops/dsfd_sp_su_h_tt.sv"]
     obj = out / f"build_{tag}"
     exe = obj / "Vtb_s81_su_master"
-    if not exe.exists():
+    source_pins = {s: H.sha(ROOT / s) for s in H.FP[a.fp] + rtl + [TB]}
+    cache_identity = dict(source_sha256=source_pins, params=sh,
+                          extra_defines=os.environ.get("OT_SU_VDEFS", ""),
+                          generated={str(p):H.sha(p) for p in gen})
+    cache_file = obj / "build_sources.json"
+    cache_matches = cache_file.exists() and json.loads(cache_file.read_text()) == cache_identity
+    if not exe.exists() or not cache_matches:
         obj.mkdir(parents=True, exist_ok=True)
         srcs = [ROOT / s for s in H.FP[a.fp] + rtl] + gen + [ROOT / TB]
         if a.fp == "dpi":
@@ -407,6 +503,9 @@ def cmd_run(a):
         (out / f"build_{tag}.log").write_text(" ".join(cmd) + "\n" + rr.stdout + rr.stderr)
         if rr.returncode != 0:
             sys.exit(f"build failed: {out}/build_{tag}.log")
+        if source_pins != {s:H.sha(ROOT / s) for s in source_pins}:
+            sys.exit("source changed during SU build; refusing an unbound result")
+        cache_file.write_text(json.dumps(cache_identity,sort_keys=True,indent=1)+"\n")
     res = []
     for meta in json.loads((out / "runs.json").read_text())["runs"]:
         d = out / "runs" / meta["run"]
@@ -432,11 +531,13 @@ def cmd_run(a):
     rec = dict(schema="opentallas.s81_suhc.su_gate.run.v1", generated_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
                shape=a.shape, params=sh, fp=a.fp, mut=a.mut, amut=a.amut, xmut=a.xmut, hier=bool(a.hier), lvm=(a.lvm or 10), runs=res,
                status="pass" if res and all(x["ok"] for x in res) else "fail",
-               source_sha256={s: H.sha(ROOT / s) for s in H.FP[a.fp] + rtl + [TB]})
+               source_sha256=source_pins, build_cache_source_bound=True)
     if a.tiles:
         tag += str(a.tmut)
         rec.update(tiles=True, tmut=a.tmut, tile_tops=json.loads((out / "tile_tops/tile_tops.json").read_text()),
                    slab_tt_sha256=H.sha(out / "tile_tops/dsfd_sp_su_h_tt.sv"))
+    if source_pins != {s:H.sha(ROOT / s) for s in source_pins}:
+        sys.exit("source changed during SU simulation; refusing an unbound result")
     (out / f"run_{tag}.json").write_text(json.dumps(rec, indent=1) + "\n")
     print("RUN", tag, rec["status"])
     return 0 if rec["status"] == "pass" else 1
@@ -459,7 +560,8 @@ def main():
     p.add_argument("--tiles", action="store_true", help="the slab built from the ROUTED tile tops dsfd_su_t_<x> (su_tile_tops.py)")
     p.add_argument("--lvm", type=int, default=0, help="VM read latency of the bench VM (tb LVM; 0 = the bench default 10): "
                    "measures how many serial VM read round trips a job class holds")
-    p.add_argument("--xmut", type=int, default=0, help="ot_s81_su_rx negative control (1 RA sp, 2 RB no bias, 3 QR inverse)")
+    p.add_argument("--xmut", type=int, default=0, help="ot_s81_su_rx negative control (1 RA sp, 2 RB no bias, 3 QR inverse, "
+                   "4 RW no route_scale)")
     p.add_argument("--tmut", type=int, default=0, help="with --tiles: output mutant of tile class K (+tmut=K, no rebuild)")
     a = ap.parse_args()
     return dict(prep=cmd_prep, run=cmd_run)[a.cmd](a)

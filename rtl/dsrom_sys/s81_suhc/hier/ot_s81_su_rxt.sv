@@ -33,7 +33,7 @@ module ot_s81_su_rxt #(
     output reg                    o_fu, o_fo, o_alive, o_den, o_rdy,
     output reg  [7:0]             o_rjid
 );
-    localparam [3:0] K_RA = 8, K_RB = 9, K_QR = 10;
+    localparam [3:0] K_RA = 8, K_RB = 9, K_QR = 10, K_RW = 11;   // RW: s81-ftok r3 (F11, ot_s81_su_rw)
     localparam integer MAXP = 5;
 
     reg rr0, rr1;
@@ -88,7 +88,7 @@ module ot_s81_su_rxt #(
     integer j;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin jk <= 0; mine <= 0; rc <= 0; end
-        else if (dq_st) begin jk <= dq_kind; mine <= (dq_kind == K_RA || dq_kind == K_RB || dq_kind == K_QR); rc <= 0; end
+        else if (dq_st) begin jk <= dq_kind; mine <= (dq_kind == K_RA || dq_kind == K_RB || dq_kind == K_QR || dq_kind == K_RW); rc <= 0; end
         else if (mine) rc <= nrc;
     end
     always @(posedge clk)
@@ -104,7 +104,7 @@ module ot_s81_su_rxt #(
     // RB: a score row and its bias row arrive in one cycle (xin = score, xin2 = bias; xtwo); a lone RB row is the legacy
     // interleave (score held, then bias)
     wire        rbp = (jk == K_RB) && xtwo;
-    wire        e_v = isop && !dq_st && (jk != K_RB || rbp || oi[0]);
+    wire        e_v = isop && !dq_st && jk != K_RW && (jk != K_RB || rbp || oi[0]);
     wire        qrp = (QW > 1) && (jk == K_QR) && xtwo;      // QR pair: rope rows oi, oi + 1 of one head
     wire [1:0]  e_k = (jk == K_RA) ? 2'd0 : (jk == K_RB) ? 2'd1 : 2'd2;
     wire [511:0] e_x = (jk == K_RB) ? (rbp ? xin : hold) : xin;
@@ -115,21 +115,28 @@ module ot_s81_su_rxt #(
         .clk(clk), .rst_n(rst_n), .i_v(e_v), .i_k(e_k), .i_x(e_x), .i_b(e_b), .i_v2(qrp), .i_j(oi[1:0]), .i_rdy(erdy),
         .cos_t({prow[2], prow[1]}), .sin_t({prow[4], prow[3]}), .o_v(ev), .o_d(ed), .o_v2(ev2), .o_d2(ed2), .fault(ef));
 
+    // ------------------------------------------------------------------ RW (ffn.weights): ids row + score rows -> weights
+    wire        rwv, rwf; wire [511:0] rwd; wire [15:0] rwm;
+    ot_s81_su_rw #(.LM(LM), .LA(LA), .MUT((XMUT == 4) ? 4 : 0)) u_rw (
+        .clk(clk), .rst_n(rst_n), .start(dq_st && dq_kind == K_RW), .k_i(prow[0][160 +: 4]), .scale_i(prow[0][96 +: 32]),
+        .off_i(prow[0][128 +: 4]), .i_v(isop && !dq_st && jk == K_RW), .i_x(xin), .i_last(oi == prow[0][64 +: 16] - 16'd1),
+        .o_v(rwv), .o_d(rwd), .o_m(rwm), .fault(rwf));
+
     // ------------------------------------------------------------------ result rows -> the write slot
     reg [15:0] wc;                            // result rows of the job written
     wire [13:0] wa = (jk == K_QR) ? obase + {wc[13:2], 5'd0} + 14'd28 + {12'd0, wc[1:0]} : obase + wc[13:0];
     wire [15:0] wc1 = wc + 16'd1;
     wire [13:0] wa2 = obase + {wc1[13:2], 5'd0} + 14'd28 + {12'd0, wc1[1:0]};
     always @(posedge clk) begin
-        o_a <= wa; o_m <= 16'hFFFF; o_d <= ed; o_a2 <= wa2; o_d2 <= ed2;
+        o_a <= rwv ? obase : wa; o_m <= rwv ? rwm : 16'hFFFF; o_d <= rwv ? rwd : ed; o_a2 <= wa2; o_d2 <= ed2;
     end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             o_v <= 0; o_v2 <= 0; o_fu <= 0; o_fo <= 0; o_alive <= 0; o_den <= 0; o_rdy <= 0; o_rjid <= 0; wc <= 0;
         end else begin
-            o_v <= ev; o_v2 <= ev2; o_alive <= 1'b1; o_den <= 1'b1; o_rdy <= 1'b0; o_rjid <= 8'd0;
+            o_v <= ev | rwv; o_v2 <= ev2; o_alive <= 1'b1; o_den <= 1'b1; o_rdy <= 1'b0; o_rjid <= 8'd0;
             if (dq_st) wc <= 0; else if (ev) wc <= wc + (ev2 ? 16'd2 : 16'd1);
-            if (ef) o_fu <= 1'b1;
+            if (ef || rwf) o_fu <= 1'b1;
             if ((xtwo && mine && jk != K_RB && !(QW > 1 && jk == K_QR)) || (e_v && !erdy)) o_fo <= 1'b1;
         end
     end

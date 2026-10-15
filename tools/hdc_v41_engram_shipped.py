@@ -232,6 +232,39 @@ def decode_rows(codes, scales):
     return (G.bits(v) >> 16).astype(np.int64)
 
 
+def row_bytes8(layer: int, row: int):
+    """(codes[256], scales[8]) of the S81 lookup's content model with the RELEASED row layout (F13, 2026-10-14):
+    one UE8M0 exponent per 32 columns (layers.{1,14}.engram.embed.scale [rows, 8]).  Codes as row_bytes; block k's
+    exponent byte from word 32 + k with row_bytes' rule.  (row_bytes keeps the one-scale contract of the HDC gather
+    campaign, whose RTL decodes one scale a row: see results/rtl/engram_eight_scale_counterexample_20261001.)"""
+    key = (layer << 40) | (row << 6)
+    codes = []
+    for j in range(32):
+        w = splitmix64(key | j)
+        codes.extend((w >> (8 * b)) & 0xFF for b in range(8))
+    scales = []
+    for k in range(8):
+        w = splitmix64(key | (32 + k))
+        scales.append((w & 0xFF) if (w >> 8) & 1 else 107 + (w & 0xFF) % 41)
+    return codes, scales
+
+
+def decode_rows8(codes, scales):
+    """The golden decode_engram_rows (one exponent per 32 columns): BF16 bit patterns [rows, 256] of
+    to_bf16((E4M3[codes] * 2^(scale byte - 127 of the column's block)).astype(F))."""
+    codes = np.asarray(codes, dtype=np.int64)
+    sc = np.repeat(np.asarray(scales, dtype=np.int64) - 127, 32, axis=-1)
+    with np.errstate(all="ignore"):
+        v = G.to_bf16((G.E4M3[codes] * np.exp2(sc.astype(np.float64))).astype(G.F))
+    return (G.bits(v) >> 16).astype(np.int64)
+
+
+def words_of_rows(bf):
+    """192 hex words (512 bits, lane 0 lowest) of 24 decoded rows [24, 256] (the sink's buffer order)."""
+    return ["".join(f"{int(v):04x}" for v in bf[col, 32 * k:32 * (k + 1)][::-1])
+            for col in range(bf.shape[0]) for k in range(BEATS)]
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--emit", action="store_true", help="rewrite the shipped package and hash unit")

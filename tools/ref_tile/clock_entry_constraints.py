@@ -1,4 +1,4 @@
-"""Fail-closed clock delivery for wires-only parents, using bound routed child pins.
+"""Fail-closed clock delivery for hard entries and opt-in local glue CTS roots.
 
 An ETM already contains clock insertion in its launch/check arcs. Source latency
 compensates that reference once; it must never be added back to the ETM arcs.
@@ -58,7 +58,7 @@ def virtual_clock(domain):
 
 
 def clocks(spec, period):
-    if spec.get('clock') != 'entries':
+    if spec.get('clock') not in ('entries', 'hybrid_entries'):
         return f"create_clock -name core_clk -period {period} [get_ports {spec['clock_port']}]\n"
     ds = domains(spec)
     owners = {p: name for name, d in ds.items() for p in d['ports']}
@@ -74,9 +74,13 @@ def clocks(spec, period):
 
 
 def generate(spec, root):
-    if spec.get('clock') != 'entries':
+    if spec.get('clock') not in ('entries', 'hybrid_entries'):
         return ''
     ds = domains(spec)
+    roots = spec.get('clock_cts_roots', []) if spec.get('clock') == 'hybrid_entries' else []
+    if spec.get('clock') == 'hybrid_entries' and (not isinstance(roots, list) or not roots or
+            not all(isinstance(p, str) for p in roots) or len(set(roots)) != len(roots) or not set(roots) < set(spec['clock_ports'])):
+        raise ValueError('hybrid_entries requires a nonempty proper subset of distinct clock_cts_roots')
     refs, counts = {}, {}
     for child in spec['children']:
         view = Path(root) / child['view']
@@ -117,8 +121,8 @@ def generate(spec, root):
                     raise ValueError(f'{view}/{pin}/{corner}: inconsistent boundary reference')
                 refs[master][pin][corner] = values
     expected = sum(counts[m] * len(refs[m]) for m in refs)
-    if expected != len(spec['clock_ports']):
-        raise ValueError(f'entries: {expected} bound child clock pins, {len(spec["clock_ports"])} source ports')
+    if expected != len(spec['clock_ports']) - len(roots):
+        raise ValueError(f'entries: {expected} bound child clock pins, {len(spec["clock_ports"]) - len(roots)} hard source ports')
     rows = []
     for master, pins in refs.items():
         for pin, corners in pins.items():
@@ -137,6 +141,7 @@ def generate(spec, root):
             'set ::ot_ce_domains [dict create ' + ' '.join(domain_rows) + ']\n'
             'set ::ot_ce_source_domains [dict create ' + ' '.join(owner_rows) + ']\n'
             'set ::ot_ce_explicit_domains ' + str(int(spec.get('clock_entry_domains') is not None)) + '\n'
+            'set ::ot_ce_cts_roots {' + ' '.join('{' + p + '}' for p in roots) + '}\n'
             'set ::ot_ce_ports {' + ' '.join('{' + p + '}' for p in spec['clock_ports']) + '}\n' + BODY)
 
 
@@ -211,6 +216,26 @@ proc ot_ce_clock_wire {pin clock} {
   }
   return [lindex $values 0]
 }
+# Match ck_insertion.py's exported insertion.json boundary population: input
+# timing endpoints plus output timing launch registers, intersected with this root.
+proc ot_ce_boundary_pins {pins} {
+  set regs {}; set boundary {}
+  foreach pin $pins { dict set regs [regsub {/[^/]+$} [get_full_name $pin] {}] $pin }
+  set inputs [all_inputs -no_clocks]
+  if {[llength $inputs]} {
+    foreach path [find_timing_paths -path_delay max -from $inputs -to [all_registers -data_pins] -group_path_count 200000 -endpoint_path_count 1] {
+      set name [regsub {/[^/]+$} [get_full_name [get_property $path endpoint]] {}]
+      if {[dict exists $regs $name]} { dict set boundary $name [dict get $regs $name] }
+    }
+  }
+  if {[llength [all_outputs]]} {
+    foreach path [find_timing_paths -path_delay max -from [all_registers -clock_pins] -to [all_outputs] -group_path_count 200000 -endpoint_path_count 100000] {
+      set name [regsub {/[^/]+$} [get_full_name [get_property $path startpoint]] {}]
+      if {[dict exists $regs $name]} { dict set boundary $name [dict get $regs $name] }
+    }
+  }
+  return [dict values $boundary]
+}
 proc ot_ce_apply {} {
   set corner [ot_ce_corner]
   set clk [get_clocks core_clk]
@@ -236,7 +261,7 @@ proc ot_ce_apply {} {
       set ports [get_ports -quiet -of_objects [get_nets -quiet -of_objects $pin]]
       if {[llength $ports] != 1} { error "OT_ENTRIES: [get_full_name $pin] lacks one direct top clock port" }
       set port [lindex $ports 0]; set name [get_full_name $port]
-      if {$name ni $::ot_ce_ports || [dict exists $seen $name]} { error "OT_ENTRIES: duplicate or undeclared source $name" }
+      if {$name ni $::ot_ce_ports || $name in $::ot_ce_cts_roots || [dict exists $seen $name]} { error "OT_ENTRIES: duplicate or undeclared source $name" }
       dict set seen $name 1
       set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $name]]
       if {[llength $clock] != 1} { error "OT_ENTRIES: $name has no unique related clock" }
@@ -267,6 +292,51 @@ proc ot_ce_apply {} {
   }
   dict for {m n} $::ot_ce_counts {
     if {![dict exists $counts $m] || [dict get $counts $m] != $n} { error "OT_ENTRIES: bound child count mismatch $m" }
+  }
+  # Each glue root owns a real CTS tree. Measure every propagated standard-cell
+  # clock sink in the current scene; never substitute a declared/common phase.
+  foreach name $::ot_ce_cts_roots {
+    set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $name]]
+    set pins [all_registers -clock [get_full_name $clock] -clock_pins]
+    if {![llength $pins]} { error "OT_HYBRID: glue root $name has no actual sequential clock sinks" }
+    set arrivals {}; set measured {}; set total 0.0
+    foreach pin $pins {
+      set cell [get_cells -of_objects $pin]
+      set master [get_property $cell ref_name]
+      if {[dict exists $::ot_ce_counts $master]} { error "OT_HYBRID: CTS root $name reaches a hard child" }
+      set arrival [ot_ce_clock_wire $pin $clock]
+      lappend arrivals $arrival
+      dict set measured [get_full_name $pin] $arrival
+      set total [expr {$total + $arrival}]
+    }
+    set arrivals [lsort -real $arrivals]
+    set lo [lindex $arrivals 0]; set hi [lindex $arrivals end]
+    set tree_mean [expr {$total / [llength $arrivals]}]
+    set mean $tree_mean
+    if {[info exists ::ot_ce_require_wire] && $::ot_ce_require_wire && $mean <= 0} {
+      error "OT_HYBRID: glue root $name lacks a positive actual propagated CTS insertion"
+    }
+    if {[llength $arrivals] > 15000 && ($tree_mean > 300 || $hi-$lo > 80)} {
+      error "OT_HYBRID: glue root $name exceeds measured large-root insertion/spread limits"
+    }
+    set boundary [ot_ce_boundary_pins $pins]
+    set scope boundary
+    if {![llength $boundary]} { set boundary $pins; set scope all_internal_only }
+    set arrivals {}; set total 0.0
+    foreach pin $boundary {
+      set arrival [dict get $measured [get_full_name $pin]]
+      lappend arrivals $arrival; set total [expr {$total + $arrival}]
+    }
+    set arrivals [lsort -real $arrivals]
+    set lo [lindex $arrivals 0]; set hi [lindex $arrivals end]
+    set mean [expr {$total / [llength $arrivals]}]
+    if {[llength $pins] > 15000 && $mean > 300} {
+      error "OT_HYBRID: glue root $name exceeds boundary insertion limit"
+    }
+    set domain [dict get $::ot_ce_source_domains $name]
+    lappend rows [list [get_ports $name] [lindex $pins 0] 0 $lo $mean $hi $clock $mean $domain]
+    dict set seen $name 1
+    puts "OT_HYBRID CTS_MEASURE $corner $name sinks=[llength $pins] reference_scope=$scope boundary_sinks=[llength $boundary] min=$lo mean=$mean max=$hi all_mean=$tree_mean"
   }
   if {[dict size $seen] != [llength $::ot_ce_ports]} { error "OT_ENTRIES: incomplete actual child/source coverage" }
   set ref 0

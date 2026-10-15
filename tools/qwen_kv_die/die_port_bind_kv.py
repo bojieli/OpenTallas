@@ -27,7 +27,11 @@ import kv_die as K  # noqa: E402
 
 HARD_PHY = {'ot_hbm3e_phy': 'HBM3E PHY analog (digital layer = HBM controller qkd_ctrl/qkd_ctrl_pc)',
             'ot_qkvd_ucie_x64_phy': 'UCIe x64 PHY analog (digital layer = D2D adapter: framing/credits ot_qkvd_d2d, CRC/retry/FEC)',
-            'ot_qfd_serdes_112g_x12_phy': 'host SerDes PHY analog (digital layer = host link adapter in qkd_host)'}
+            'ot_qfd_serdes_112g_x12_phy': 'host SerDes PHY analog (digital layer = host link adapter in qkd_host)',
+            # v1.2: the clock / reset forwarding bump pair to the compute die is two pad cells (no logic; the compute
+            # side's receiver qfd_clkrx / reset synchroniser are its digital layer)
+            'qkd_ckbump': 'clock / reset forwarding bump pair to the compute die: pad cells, no logic (by design)',
+            'qkd_hbm3e_phy_pc': 'HBM3E PHY analog, PHY only (v1.2): per-PC DFI po / pi; digital layer = qkd_ctrl_pc x32 (REAL)'}
 
 
 def header(text, mod):
@@ -111,8 +115,14 @@ def main(argv=None):
     ap.add_argument('die_v')
     ap.add_argument('--out', required=True)
     ap.add_argument('--split', action='store_true', help='the split KV/system die bindings (kv_die._set_geometry(True))')
+    ap.add_argument('--relay-rtl', help='v1.2: the generated relay RTL (tools/qwen_kv_die/kv_relays.py); its modules bind '
+                                        'the qkd_rly_* masters (else they stay class RELAY = stub)')
+    ap.add_argument('--expanded', help='v1.3: RUN/expand.json of kv_expand.py; its die-placed leaves bind their own RTL '
+                                        'module by name (identity port map: die port = RTL port)')
     a = ap.parse_args(argv)
     K._set_geometry(a.split)
+    EXP = json.loads(Path(a.expanded).read_text())['leaves'] if a.expanded else {}
+    rtxt = Path(a.relay_rtl).read_text() if a.relay_rtl else None
     wires, insts = parse_die(a.die_v)
     rep = {}
     by_m = defaultdict(list)
@@ -123,8 +133,32 @@ def main(argv=None):
         r = dict(n_instances=len(lst), die_ports=len(dp))
         if mst in HARD_PHY:
             r.update(cls='HARD_PHY', note=HARD_PHY[mst])
+        elif mst.startswith('qkd_rly') and rtxt is not None:
+            _, ports = header(rtxt, mst)
+            if ports is None:
+                r.update(cls='RELAY', note=f'no module {mst} in {a.relay_rtl}')
+            else:
+                bad = [dict(die_port=p_, die=w_, rtl=evalw(ports[p_][1], {}) if p_ in ports else None)
+                       for p_, w_ in dp.items() if p_ not in ports or evalw(ports[p_][1], {}) != w_]
+                miss = sorted(set(ports) - set(dp))
+                r.update(cls='REAL' if not bad and not miss else 'MISMATCH', module=mst, file=a.relay_rtl,
+                         note='die relay: generated register RTL, per-bit direction (kv_relays.py)',
+                         width_or_missing=bad, die_ports_not_bound=[], rtl_inputs_unconnected=miss, rtl_outputs_unread=[])
         elif mst.startswith('qkd_rly'):
             r.update(cls='RELAY', note='die-top relay register: only a generated lint stub module exists (no RTL relay master)')
+        elif mst in EXP:
+            f = ROOT / EXP[mst]['rtl']
+            params, ports = header(f.read_text(errors='replace'), mst)
+            if ports is None:
+                r.update(cls='STUB', note=f'die-placed leaf: module {mst} not found in {EXP[mst]["rtl"]}')
+            else:
+                rw = {p: evalw(w, params or {}) for p, (d, w) in ports.items()}
+                bad = [dict(die_port=p_, die=w_, rtl=rw.get(p_)) for p_, w_ in dp.items() if rw.get(p_) != w_]
+                unin = sorted(p for p, (d, _) in ports.items() if p not in dp and d == 'input')
+                unout = sorted(p for p, (d, _) in ports.items() if p not in dp and d == 'output')
+                r.update(cls='REAL' if not bad and not unin else 'MISMATCH', module=mst, file=EXP[mst]['rtl'],
+                         note='die-placed CLOSED leaf (kv_expand.py), view ' + EXP[mst]['view'], width_or_missing=bad,
+                         die_ports_not_bound=[], rtl_inputs_unconnected=unin, rtl_outputs_unread=unout)
         elif mst not in K.BINDINGS:
             r.update(cls='STUB', note=K.FRAME_ONLY.get(mst) or K.RTL.get(mst) or 'no RTL binding')
         else:

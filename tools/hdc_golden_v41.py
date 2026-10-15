@@ -545,7 +545,13 @@ def topk_lowest_index(v, k):
 # -- RoPE ---------------------------------------------------------------------------
 def rope_freqs(dim, original_seq_len, base, factor, beta_fast, beta_slow):
     """precompute_freqs_cis' frequencies in binary32, op by op (a table ROM)."""
-    freqs = (F(1.0) / (F(base) ** (np.arange(0, dim, 2, dtype=F) / F(dim)).astype(F))).astype(F)
+    # base ** (i / dim) is binary32 powf, CORRECTLY ROUNDED (libm): numpy >= 2 evaluates a float32 `**` with its own
+    # SIMD power (not correctly rounded: 4 of the 32 entries of the 1M token's table differ on numpy 2.3.5 / AVX-512),
+    # which moved the RoPE tables and every attention after them off the recorded w17 shards (s81-ftok r3 2026-10-14).
+    # math.pow in binary64 rounded once to binary32 reproduces the recorded tables bit for bit.
+    ex = (np.arange(0, dim, 2, dtype=F) / F(dim)).astype(F)
+    pw = np.array([math.pow(float(F(base)), float(e)) for e in ex], dtype=np.float64).astype(F)
+    freqs = (F(1.0) / pw).astype(F)
     if original_seq_len > 0:
         def corrected(rot):
             return dim * math.log(original_seq_len / (rot * 2 * math.pi)) / (2 * math.log(base))

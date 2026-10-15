@@ -43,7 +43,7 @@ def parse(stubs):
         if m:
             cur['ports'][m.group(3)] = (m.group(1), int(m.group(2)) + 1)
             continue
-        for m in re.finditer(r'assign (\w+)\[(\d+):(\d+)\] = r_', ln):
+        for m in re.finditer(r'assign (\w+) ?\[(\d+):(\d+)\] = r_', ln):   # main 10-14: die_top_lint writes 'b [h:l]'
             rng = set(range(int(m.group(3)), int(m.group(2)) + 1))
             (cur['fwd'] if m.group(1) == 'b' else cur['rev'] if m.group(1) == 'a' else set()).update(rng)
     for mst, r in out.items():

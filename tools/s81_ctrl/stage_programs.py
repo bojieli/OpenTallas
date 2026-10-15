@@ -33,7 +33,7 @@ ROOT = Path(__file__).resolve().parents[2]
 TP = ROOT / "results/arch/token_path_20261008/ds_rom.json"
 
 # engine ports of the S81 die (ot_s81_ctrl ENG_*): the slab / master that executes the job
-ENG = dict(fld=0, su=1, hc=2, coll=3, svc=4, sel=5, col=6, hop=7, head=8, emb=9, eng=10, spare=11)
+ENG = dict(fld=0, su=1, hc=2, coll=3, svc=4, sel=5, col=6, hop=7, head=8, emb=9, eng=10, spare=11, vm=12)
 NPRED = 8
 
 
@@ -162,9 +162,17 @@ def main():
                     help="Compile owner-provided native endpoint jobs; missing binding fails closed")
     ap.add_argument("--native-context", type=Path,
                     help="Explicit token/user/epoch/address context JSON for native compilation")
+    ap.add_argument("--vm-operands", type=Path,
+                    help="Explicit per-stage SU/HC operand ownership JSON; inserts fenced VM engine-12 arms")
     a = ap.parse_args()
     tp = json.loads(TP.read_text())
     progs, asap_bad = build(tp)
+    if a.vm_operands:
+        from vm_arms import insert_arms
+        vm_bindings = json.loads(a.vm_operands.read_text())
+        if set(vm_bindings) != {p["stage"] for p in progs}:
+            raise ValueError("VM operands must bind every stage exactly once")
+        progs = [insert_arms(p, vm_bindings[p["stage"]], NPRED) for p in progs]
     a.out.mkdir(parents=True, exist_ok=True)
     hexdir = a.out / "hex"
     hexdir.mkdir(exist_ok=True)

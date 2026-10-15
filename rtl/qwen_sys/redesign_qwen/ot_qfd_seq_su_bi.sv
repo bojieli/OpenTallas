@@ -1042,6 +1042,8 @@ module ot_qfd_seq_su_bi #(
     parameter integer SMIN = 7, parameter integer SMAX = 11, parameter integer TCUT = 7,
     parameter integer IS = 1, parameter integer OS = 1, parameter integer RT = 4,
     parameter integer RLY = 0, parameter integer CRED = 0,
+    parameter integer ROW_LAT = 13, // measured NOX native row response latency
+    parameter integer VWA = 20, // native VM row address; no implicit base
     // PSRAM = 1 (hardcore-1010 D fallback, 2026-10-10; 0 = unchanged): the 64 x 1,024 program store is two
     // ot_sram_1r1w_64x512_m1_r2c2 macros (64 x 512, bit-masked 64-bit writes) instead of 65,536 flops; the read is
     // issued at the prog_re edge with the unregistered address (12-bit add -> macro address pins), the macro output is
@@ -1052,7 +1054,13 @@ module ot_qfd_seq_su_bi #(
     // HQ2 = 1 (hardcore-1010 fe-h): the controller's FIFO head as two words with a register-only fill enable (FQ_HEAD 2):
     // fba-0ef4d7781 TT -131 / fbb post-CTS -537 on u_ctrl.st -> skip/issue -> load -> hq_fill -> hq[1023:0] enable (26 lv)
     // HQ2 = 2: bench negative control (FQ_HEAD 3: a third fill overwrites an unread head word)
-    parameter integer HQ2 = 0
+    parameter integer HQ2 = 0,
+    // qwen-tp8/seq (2026-10-12): tensor-parallel degree D (= TP, the dies of one tensor group; the argmax gather covers D
+    // ranks) and lane groups G (TP4 6,144; TP8 3,072) are parameters; RBW = the collective's rank width (TP4 2, TP8 3).
+    // The TP4 defaults (D 4, G 6144) elaborate to the unchanged block.  TPMUT: bench negative controls only (0 = off):
+    // 1 = the rank compare sees only rank bits [1:0] (the old 2-bit literal), 2 = the gather ends after 4 ranks.
+    parameter integer RBW = (D > 1) ? $clog2(D) : 1,
+    parameter integer TPMUT = 0
 ) (
     input  wire clk,
     input  wire rst_n,
@@ -1067,11 +1075,12 @@ module ot_qfd_seq_su_bi #(
     input  wire [NW-1:0] tp_pos,
     input  wire [1-1:0] kv_write_drained,
     input  wire [512-1:0] vm_rq,
+    input  wire vm_rvalid, // actual completed row, aligned with vm_rq
     input  wire [1-1:0] c_ready,
     input  wire [1-1:0] r_valid,
     input  wire [512-1:0] r_data,
     input  wire [1-1:0] r_last,
-    input  wire [2-1:0] r_rank,
+    input  wire [RBW-1:0] r_rank,
     input  wire [1-1:0] r_err,
     input  wire [1-1:0] pw_v,
     input  wire [10-1:0] pw_addr,
@@ -1083,8 +1092,12 @@ module ot_qfd_seq_su_bi #(
     input  wire [8-1:0] pi_su_rt_inflight,
     input  wire [1-1:0] pi_su_ready,
     input  wire [1-1:0] pi_su_idle,
+`ifndef OT_QFD_SEQ_SU_NOWROM
+    // q14 r9: the split compute die's SU issues no weight-ROM reads (OT_QFD_SEQ_SU_NOWROM removes these two ports; the
+    // controller's SU weight-read request is then absent, not tied at a pin)
     input  wire [1-1:0] pi_su_wrom_re,
     input  wire [AW-1:0] pi_su_wrom_addr,
+`endif
     input  wire [SW-1:0] pi_su_kv_we,
     input  wire [16-1:0] pi_su_progress,
     input  wire [16-1:0] pi_su_progress_rows,
@@ -1104,9 +1117,9 @@ module ot_qfd_seq_su_bi #(
     output wire [1-1:0] coll_busy,
     output wire [1-1:0] kv_write_flush,
     output wire [1-1:0] vm_re,
-    output wire [8-1:0] vm_raddr,
+    output wire [VWA-1:0] vm_raddr,
     output wire [1-1:0] vm_we,
-    output wire [8-1:0] vm_waddr,
+    output wire [VWA-1:0] vm_waddr,
     output wire [512-1:0] vm_wdata,
     output wire [1-1:0] c_valid,
     output wire [512-1:0] c_data,
@@ -1194,6 +1207,8 @@ module ot_qfd_seq_su_bi #(
     ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_kv_write_drained (.clk(clk), .rst_n(rsv[5]), .d(kv_write_drained), .q(q_kv_write_drained));
     wire [512-1:0] q_vm_rq;
     ot_hdc_delay #(.W(512), .D(IS)) u_i_vm_rq (.clk(clk), .rst_n(rsv[5]), .d(vm_rq), .q(q_vm_rq));
+    wire q_vm_rvalid;
+    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_vm_rvalid (.clk(clk), .rst_n(rsv[5]), .d(vm_rvalid), .q(q_vm_rvalid));
     wire [1-1:0] q_c_ready;
     ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_c_ready (.clk(clk), .rst_n(rsv[5]), .d(c_ready), .q(q_c_ready));
     wire [1-1:0] q_r_valid;
@@ -1202,8 +1217,9 @@ module ot_qfd_seq_su_bi #(
     ot_hdc_delay #(.W(512), .D(IS)) u_i_r_data (.clk(clk), .rst_n(rsv[5]), .d(r_data), .q(q_r_data));
     wire [1-1:0] q_r_last;
     ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_r_last (.clk(clk), .rst_n(rsv[5]), .d(r_last), .q(q_r_last));
-    wire [2-1:0] q_r_rank;
-    ot_hdc_delay #(.W(2), .D(IS)) u_i_r_rank (.clk(clk), .rst_n(rsv[5]), .d(r_rank), .q(q_r_rank));
+    wire [RBW-1:0] q_r_rank;
+    ot_hdc_delay #(.W(RBW), .D(IS)) u_i_r_rank (.clk(clk), .rst_n(rsv[5]), .d(r_rank), .q(q_r_rank));
+    wire [RBW-1:0] q_r_rank_s = (TPMUT == 1) ? (q_r_rank & RBW'(3)) : q_r_rank;   // TPMUT 1: negative control
     wire [1-1:0] q_r_err;
     ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_r_err (.clk(clk), .rst_n(rsv[5]), .d(r_err), .q(q_r_err));
     wire [1-1:0] q_pw_v;
@@ -1227,9 +1243,14 @@ module ot_qfd_seq_su_bi #(
     wire [1-1:0] q_pi_su_idle;
     ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pi_su_idle (.clk(clk), .rst_n(rsv[3]), .d(pi_su_idle), .q(q_pi_su_idle));
     wire [1-1:0] q_pi_su_wrom_re;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pi_su_wrom_re (.clk(clk), .rst_n(rsv[3]), .d(pi_su_wrom_re), .q(q_pi_su_wrom_re));
     wire [AW-1:0] q_pi_su_wrom_addr;
+`ifdef OT_QFD_SEQ_SU_NOWROM
+    assign q_pi_su_wrom_re = 1'b0;          // no SU weight-ROM request exists on the split die (no pin, no flop)
+    assign q_pi_su_wrom_addr = {AW{1'b0}};
+`else
+    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pi_su_wrom_re (.clk(clk), .rst_n(rsv[3]), .d(pi_su_wrom_re), .q(q_pi_su_wrom_re));
     ot_hdc_delay #(.W(AW), .D(IS)) u_i_pi_su_wrom_addr (.clk(clk), .rst_n(rsv[3]), .d(pi_su_wrom_addr), .q(q_pi_su_wrom_addr));
+`endif
     wire [SW-1:0] q_pi_su_kv_we;
     ot_hdc_delay #(.W(SW), .D(IS)) u_i_pi_su_kv_we (.clk(clk), .rst_n(rsv[3]), .d(pi_su_kv_we), .q(q_pi_su_kv_we));
     wire [16-1:0] q_pi_su_progress;
@@ -1267,13 +1288,13 @@ module ot_qfd_seq_su_bi #(
     wire [1-1:0] b_kv_write_flush;
     ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_kv_write_flush (.clk(clk), .rst_n(rsv[5]), .d(b_kv_write_flush), .q(kv_write_flush));
     wire [1-1:0] b_vm_re;
+    wire [VWA-1:0] b_vm_raddr;
     ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_vm_re (.clk(clk), .rst_n(rsv[6]), .d(b_vm_re), .q(vm_re));
-    wire [8-1:0] b_vm_raddr;
-    ot_hdc_delay #(.W(8), .D(OS)) u_o_vm_raddr (.clk(clk), .rst_n(rsv[6]), .d(b_vm_raddr), .q(vm_raddr));
+    ot_hdc_delay #(.W(VWA), .D(OS)) u_o_vm_raddr (.clk(clk), .rst_n(rsv[6]), .d(b_vm_raddr), .q(vm_raddr));
     wire [1-1:0] b_vm_we;
     ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_vm_we (.clk(clk), .rst_n(rsv[6]), .d(b_vm_we), .q(vm_we));
-    wire [8-1:0] b_vm_waddr;
-    ot_hdc_delay #(.W(8), .D(OS)) u_o_vm_waddr (.clk(clk), .rst_n(rsv[6]), .d(b_vm_waddr), .q(vm_waddr));
+    wire [VWA-1:0] b_vm_waddr;
+    ot_hdc_delay #(.W(VWA), .D(OS)) u_o_vm_waddr (.clk(clk), .rst_n(rsv[6]), .d(b_vm_waddr), .q(vm_waddr));
     wire [512-1:0] b_vm_wdata;
     ot_hdc_delay #(.W(512), .D(OS)) u_o_vm_wdata (.clk(clk), .rst_n(rsv[6]), .d(b_vm_wdata), .q(vm_wdata));
     wire [1-1:0] b_c_valid;
@@ -1651,16 +1672,16 @@ module ot_qfd_seq_su_bi #(
         .token(q_tp_token), .pos(q_tp_pos), .st_rdy(q_cb_st_rdy), .st_rdy_stage(q_cb_st_rdy_stage), .go(sg_go),
         .go_token(sg_token), .go_pos(sg_pos), .cur_stage(sg_stage), .tok_start(sg_tok));
     ot_hdc_delay #(.W(6 + 1 + NW), .D(OS)) u_o_cb (.clk(clk), .rst_n(rsv[6]), .d({sg_stage, sg_tok, q_tp_pos}), .q({cb_stage, cb_tok_start, cb_tpos}));
-    ot_qwen_tp_seq_w12_vrl #(.VRL(IS + OS + 1 + 2 * RLY), .CRED(CRED), .N(D), .NW(NW), .PAW(PAW), .VWA(8), .DAW(6), .FW(512), .TAGW(32),
+    ot_qwen_tp_seq_w12_vrl #(.VRL(IS + OS + ROW_LAT + 2 * RLY), .VARIABLE(0), .STATIC(1), .CRED(CRED), .N((TPMUT == 2) ? 4 : D), .NW(NW), .PAW(PAW), .VWA(VWA), .VM_ADDR_EXT(VWA > 8), .DAW(6), .FW(512), .TAGW(32),
         .QWEN_FULLSHAPE(1), .ENABLE_AR256(1), .RMUT(RRG >= 2 ? 1 : 0)) u_seq (
         .clk(clk), .rst_n(rsv[0]), .rst_nw(rsv[1]), .start(sg_go), .token(sg_token), .pos(sg_pos), .done(b_s_done),
         .next_token(b_seq_ntok), .next_val(b_seq_nval), .fault(b_s_fault), .coll_busy(b_coll_busy),
         .core_start(core_start), .core_token(core_tokw), .core_pos(core_pos), .core_done(core_done),
         .core_next_token(core_ntok), .core_next_val(core_nval), .core_fault(core_fault_w), .prog_base(prog_base),
         .desc_re(desc_re), .desc_addr(desc_addr), .desc_q(desc_q), .vm_re(b_vm_re), .vm_raddr(b_vm_raddr),
-        .vm_rq(q_vm_rq), .vm_we(b_vm_we), .vm_waddr(b_vm_waddr), .vm_wdata(b_vm_wdata), .c_valid(b_c_valid),
+        .vm_rq(q_vm_rq), .vm_rvalid(q_vm_rvalid), .vm_we(b_vm_we), .vm_waddr(b_vm_waddr), .vm_wdata(b_vm_wdata), .c_valid(b_c_valid),
         .c_ready(q_c_ready), .c_data(b_c_data), .c_last(b_c_last), .c_mode(b_c_mode), .c_tag(b_c_tag),
-        .r_valid(q_r_valid), .r_data(q_r_data), .r_last(q_r_last), .r_rank(q_r_rank), .r_err(q_r_err));
+        .r_valid(q_r_valid), .r_data(q_r_data), .r_last(q_r_last), .r_rank(q_r_rank_s), .r_err(q_r_err));
     assign b_me_start_o = core_start;
     assign b_me_token_o = core_tokw;
     assign b_me_pos_o = core_pos;
@@ -1724,7 +1745,9 @@ endmodule
 // in a collective (the collective latency share of a step).
 // ---------------------------------------------------------------------------
 module ot_qwen_tp_seq_w12_vrl #(
-    parameter integer VRL = 1,     // vre -> vrq edges
+    parameter integer VRL = 1,     // scheduled request -> actual response edges
+    parameter integer VARIABLE = 0, // diagnostic only; absent from production hierarchy
+    parameter integer STATIC = 1, // fixed collective send slots, no runtime credit or readiness
     parameter integer RMUT = 0,    // el1011-q-seq negative control: vm_wdata bit 0 flipped on the AR write
     parameter integer CRED = 0,    // 0: c_ready = ready (base); > 0: c_ready = credit return pulse, CRED credits
     parameter integer ENABLE_AR256 = 0,
@@ -1732,6 +1755,7 @@ module ot_qwen_tp_seq_w12_vrl #(
     parameter integer NW   = 16,
     parameter integer PAW  = 12,
     parameter integer VWA  = 8,
+    parameter integer VM_ADDR_EXT = 0, // [31:20] high row bits; [9:2] low bits
     parameter integer DAW  = 6,
     parameter integer FW   = 512,
     parameter integer TAGW = 32,
@@ -1769,6 +1793,7 @@ module ot_qwen_tp_seq_w12_vrl #(
     output reg               vm_re,
     output reg  [VWA-1:0]    vm_raddr,
     input  wire [FW-1:0]     vm_rq,
+    input  wire              vm_rvalid,
     output reg               vm_we,
     output reg  [VWA-1:0]    vm_waddr,
     output reg  [FW-1:0]     vm_wdata,
@@ -1792,6 +1817,9 @@ module ot_qwen_tp_seq_w12_vrl #(
     reg [DAW-1:0] seg;
     reg [1:0]     kind;
     reg [VWA-1:0] vw;
+    wire [19:0] descriptor_vw = VM_ADDR_EXT ? {desc_q[31:20], desc_q[9:2]} : {12'd0, desc_q[9:2]};
+    wire [8:0] descriptor_nw = (ENABLE_AR256 && desc_q[1:0] == K_AR && desc_q[17:10] == 0) ? 9'd256 : {1'b0, desc_q[17:10]};
+    wire [20:0] descriptor_end = {1'b0, descriptor_vw} + descriptor_nw;
     reg [8:0]     nw;
     reg [NW-1:0]  row0;
 
@@ -1808,26 +1836,30 @@ module ot_qwen_tp_seq_w12_vrl #(
     endfunction
 
     // -- transmit: vector-memory words (all-reduce) or the argmax record ------------------
-    localparam integer QB = (VRL > 1) ? $clog2(VRL + 4) : 2;   // queue address bits
+    localparam integer QB = (STATIC != 0) ? 2 : ((VRL > 1) ? $clog2(VRL + 4) : 2);   // queue address bits
     localparam integer QD = 1 << QB;
     reg [FW-1:0] q_d [0:QD-1];
     reg [QB-1:0] q_w, q_r;
     reg [QB:0]   q_n;
     reg [8:0]    rd_k, tx_k, rx_k;
-    reg [VRL-1:0] rd_p;                 // reads in flight, oldest at VRL-1
-    wire          rd_v = rd_p[VRL-1];
-    integer       rd_i, rd_n;
-    always @(*) begin rd_n = 0; for (rd_i = 0; rd_i < VRL; rd_i = rd_i + 1) rd_n = rd_n + rd_p[rd_i]; end
+    reg [VRL-1:0] rd_p;
+    integer rd_i, rd_n;
+    always @(*) begin rd_n = 0; for (rd_i=0; rd_i<VRL; rd_i=rd_i+1) rd_n=rd_n+rd_p[rd_i]; end
+    reg rd_pending;
+    wire rd_expected = (VARIABLE != 0) ? rd_pending : rd_p[VRL-1];
+    wire rd_v = vm_rvalid && rd_expected;
+    // Static downstream slots consume every completed row on the next edge.
+    // No outstanding-read capacity is charged to the tiny output FIFO.
     reg [7:0] c_cred;   // credit mode: a word leaves only with a credit (valid = send)
-    assign c_valid = (st == S_COLL) && (q_n != 0) && (CRED == 0 || c_cred != 8'd0);
+    assign c_valid = (st == S_COLL) && (q_n != 0) && (STATIC != 0 || CRED == 0 || c_cred != 8'd0);
     assign c_data  = q_d[q_r];
     assign c_mode  = (kind == K_ARGMAX);
     assign c_last  = (tx_k == ((kind == K_ARGMAX) ? 9'd0 : nw - 1'b1));
-    wire   c_fire  = c_valid && ((CRED == 0) ? c_ready : 1'b1);
+    wire   c_fire  = c_valid && ((STATIC != 0 || CRED != 0) ? 1'b1 : c_ready);
     always @(posedge clk or negedge rst_n)
         if (!rst_n) c_cred <= 8'(CRED);
-        else if (CRED != 0) c_cred <= c_cred - (c_fire ? 8'd1 : 8'd0) + (c_ready ? 8'd1 : 8'd0);
-    wire   rd_go   = (st == S_COLL) && kind == K_AR && rd_k < nw && (q_n + rd_n) < QD;
+        else if (STATIC == 0 && CRED != 0) c_cred <= c_cred - (c_fire ? 8'd1 : 8'd0) + (c_ready ? 8'd1 : 8'd0);
+    wire   rd_go   = (st == S_COLL) && kind == K_AR && rd_k < nw && ((VARIABLE != 0) ? (!rd_pending && q_n < QD) : (STATIC != 0 || (q_n + rd_n) < QD));
 
     reg [NW-1:0] best_i;
     reg [31:0]   best_v;
@@ -1846,12 +1878,16 @@ module ot_qwen_tp_seq_w12_vrl #(
             tok_r <= 0; pos_r <= 0; seg <= 0; kind <= K_END; vw <= 0; nw <= 0; row0 <= 0;
             prog_base <= 0; desc_re <= 1'b0; desc_addr <= 0;
             vm_we <= 1'b0; vm_waddr <= 0;
-            q_w <= 0; q_r <= 0; q_n <= 0; rd_k <= 0; tx_k <= 0; rx_k <= 0; rd_p <= {VRL{1'b0}};
+            q_w <= 0; q_r <= 0; q_n <= 0; rd_k <= 0; tx_k <= 0; rx_k <= 0; rd_pending <= 1'b0; rd_p <= 0;
             best_i <= 0; best_v <= 0;
         end else begin
             desc_re <= 1'b0;
             vm_we <= 1'b0;
             rd_p <= (VRL > 1) ? {rd_p, rd_go} : rd_go;
+            if (rd_go) rd_pending <= 1'b1;
+            if (rd_v) rd_pending <= 1'b0;
+            if ((VARIABLE == 0 && vm_rvalid != rd_expected) ||
+                (vm_rvalid && (!rd_expected || st != S_COLL || kind != K_AR))) fault <= 1'b1;
             case (st)
                 S_IDLE: if (start) begin
                     tok_r <= token; pos_r <= pos; seg <= 0; done <= 1'b0;
@@ -1859,12 +1895,16 @@ module ot_qwen_tp_seq_w12_vrl #(
                 end
                 S_DESC: begin desc_re <= 1'b1; desc_addr <= seg; st <= S_DLAT; end
                 S_DLAT: if (!desc_re) begin
-                    kind <= desc_q[1:0]; vw <= desc_q[2 +: 8];
+                    kind <= desc_q[1:0]; vw <= descriptor_vw;
                     nw <= (ENABLE_AR256 != 0 && desc_q[1:0] == K_AR && desc_q[10 +: 8] == 8'd0) ? 9'd256 : {1'b0, desc_q[10 +: 8]};
                     prog_base <= desc_q[32 +: PAW];
                     row0 <= (QWEN_FULLSHAPE != 0) ?
                             ({desc_q[19:18], desc_q[63:48]}) : desc_q[48 +: NW];
-                    st <= S_RUN;
+                    // Reject an invalid range before launching the core or touching memory.
+                    if (VM_ADDR_EXT && desc_q[1:0] == K_AR &&
+                        (descriptor_nw == 0 || descriptor_end > (21'd1 << VWA))) begin
+                        fault <= 1'b1; done <= 1'b1; st <= S_IDLE;
+                    end else st <= S_RUN;
                 end
                 S_RUN: st <= S_CWAIT;              // the core samples core_start on this edge
                 S_CWAIT: if (core_done) begin
@@ -1884,7 +1924,7 @@ module ot_qwen_tp_seq_w12_vrl #(
                     end
                 end
                 S_COLL: begin
-                    // queue: vector-memory words read one cycle earlier; pop on send
+                    // Queue actual completed rows; outstanding slot reserves capacity.
                     if (rd_go) rd_k <= rd_k + 1'b1;
                     if (rd_v) begin q_d[q_w] <= vm_rq; q_w <= q_w + 1'b1; end
                     if (c_fire) begin q_r <= q_r + 1'b1; tx_k <= tx_k + 1'b1; end
@@ -1924,4 +1964,23 @@ module ot_qwen_tp_seq_w12_vrl #(
     always @(posedge clk or negedge rst_nw)
         if (!rst_nw) vm_wdata <= {FW{1'b0}};
         else if (st == S_COLL && r_valid && kind == K_AR) vm_wdata <= r_data ^ FW'(RMUT != 0);
+endmodule
+
+// Hardened controller-owned row request station. Register at the actual pin;
+// preserve valid/address until external admission, never infer it upstream.
+module ot_qfd_row_request_pin #(parameter integer AW=20, OS=1)(
+    input wire clk, rst_n, request, input wire [AW-1:0] addr,
+    input wire ready, output reg valid, output reg [AW-1:0] pin_addr,
+    output wire pending);
+    wire request_d; wire [AW-1:0] addr_d;
+    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_v (.clk(clk), .rst_n(rst_n), .d(request), .q(request_d));
+    ot_hdc_delay #(.W(AW), .D(OS)) u_a (.clk(clk), .rst_n(rst_n), .d(addr), .q(addr_d));
+    assign pending = valid;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin valid <= 1'b0; pin_addr <= 0; end
+        else begin
+            if (valid && ready) valid <= 1'b0;
+            if (request_d) begin valid <= 1'b1; pin_addr <= addr_d; end
+        end
+    end
 endmodule

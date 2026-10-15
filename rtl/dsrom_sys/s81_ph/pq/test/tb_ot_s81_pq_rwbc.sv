@@ -14,14 +14,14 @@ module tb_ot_s81_pq_rwbc;
     wire [15:0] ga_r15, ga_c15; wire q_r15, q_c15;
     ot_s81_pq_rwb_core #(.NR(15)) u_r15 (.clk(clk), .rst_n(rst_n), .r_v(v15), .r_row(row15), .r_pos(pos15), .r_fp32(f32_15),
         .r_bf16(bf15), .r_e(e15), .mdr(mdr), .r_flt({14'd0, f15[0]}), .w_we(), .w_addr(), .w_data(), .q2f(q_r15), .ga(ga_r15));
-    ot_s81_pq_rwbc_core #(.NR(15)) u_c15 (.clk(clk), .rst_n(rst_n), .r_v(v15), .r_tag(t15), .r_e(e15), .g_flt(f15[0]), .mdr(mdr),
+    ot_s81_pq_rwbc_core #(.NR(15)) u_c15 (.clk(clk), .rst_n(rst_n), .r_v(v15), .r_tag(t15), .r_e(e15), .g_flt(f15[0]), .live_i(mdr[4*CFW +: 4]),
         .q2f(q_c15), .ga(ga_c15));
     // NR 2 pair
     reg  [1:0] v2, e2, f2; reg [3:0] t2; reg [31:0] row2; reg [5:0] pos2; reg [63:0] f32_2; reg [31:0] bf2;
     wire [15:0] ga_r2, ga_c2; wire q_r2, q_c2;
     ot_s81_pq_rwb_core #(.NR(2)) u_r2 (.clk(clk), .rst_n(rst_n), .r_v(v2), .r_row(row2), .r_pos(pos2), .r_fp32(f32_2),
         .r_bf16(bf2), .r_e(e2), .mdr(mdr), .r_flt({1'b0, f2[0]}), .w_we(), .w_addr(), .w_data(), .q2f(q_r2), .ga(ga_r2));
-    ot_s81_pq_rwbc_core #(.NR(2)) u_c2 (.clk(clk), .rst_n(rst_n), .r_v(v2), .r_tag(t2), .r_e(e2), .g_flt(f2[0]), .mdr(mdr),
+    ot_s81_pq_rwbc_core #(.NR(2)) u_c2 (.clk(clk), .rst_n(rst_n), .r_v(v2), .r_tag(t2), .r_e(e2), .g_flt(f2[0]), .live_i(mdr[4*CFW +: 4]),
         .q2f(q_c2), .ga(ga_c2));
     integer i, mode;
     initial begin
