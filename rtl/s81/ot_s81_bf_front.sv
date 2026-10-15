@@ -75,6 +75,7 @@ module ot_s81_bf_front #(
     parameter integer HCOL = 0,
     // Uniform fixed egress stage per column face; +1 cycle, no scheduling feedback.
     parameter integer CPIN = 0,
+    parameter integer STATIC_PROGRAM = 0,
     // PINLAT (BF-PINCLK 2026-10-09, default 0; requires PINREG): a lockup latch, transparent while clk is LOW, between each
     // pin-capture data register and the element.  Routed full-rate dbs miss FF hold on g_pin.r_* -> u_elem b_* (pin group
     // ungated, capture on the deeper ICG-gated eclk tree: 1,407 endpoints, -37 ps).  Through the latch the element sees
@@ -136,10 +137,20 @@ module ot_s81_bf_front #(
     output wire [5*NSEG-1:0] c1_so_idx,
     output wire [5*NSEG-1:0] c1_so_n,
     input  wire [1:0]    c_qy_bkf_in,     // the two columns' registered fault ORs
+    input wire [37:0] f_prog, // fixed core-edge programme, pin->issue +1 edge
     output wire         busy,
     output wire         fault,
     output wire         hph           // HALF: 1 in the clk cycle that ends on a gated (element) edge; 1 when HALF = 0
 );
+
+    // Keep all programme fields together at the physical face. The core samples
+    // the previous registered word; no ready/busy/clock-enable participates.
+    (* keep = 1 *) reg [37:0] programme_pin_q;
+    generate if (STATIC_PROGRAM != 0) begin : g_static_programme_pin
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) programme_pin_q <= 38'd0;
+            else programme_pin_q <= f_prog;
+    end endgenerate
     // bf-arch: the partial outputs leave from the hardened columns, not from this block
     wire [NB-1:0] pv; wire [32*NB-1:0] pval; wire [16*NB-1:0] prow; wire [5*NB-1:0] pseg, pnseg; wire [NB-1:0] perr;
     wire [3*NB-1:0] ppos;
@@ -324,7 +335,10 @@ module ot_s81_bf_front #(
         ot_v41_bf_front_core #(.NSEG(NSEG), .NCH(NCH), .XF(XF), .LV(LV), .BF16(BF16), .NCHB(NCHB), .NB(NB), .MTP(MTP),
             .EARLY(EARLY), .CG(CG), .DRAIN(RDRAIN), .FAST(FAST), .CUT(CUT), .PP(PP), .FRONT_PAR(FRONT_PAR), .BP(BP),
             .QTIMING_FIX(1), .QPIPE(1), .QP_XS(1), .QP_CAP(0), .QP_P1(1), .QP_CSAM(10), .QZ(1), .QZ_NS(8), .QZ_NE(4),
-            .QY(1), .QX(10), .QBF(RECUT), .QZE(QZE), .TCG(TCG), .BXST(BXST), .FXST(FXST), .GRADUAL_RNE(GRADUAL_RNE), .INSTANCE(INSTANCE)) u_front (
+            .QY(1), .QX(10), .QBF(RECUT), .QZE(QZE), .TCG(TCG), .BXST(BXST), .FXST(FXST), .GRADUAL_RNE(GRADUAL_RNE), .INSTANCE(INSTANCE), .STATIC_PROGRAM(STATIC_PROGRAM)) u_front (
+            .prog_issue_pin(programme_pin_q[0]), .prog_addr_pin(programme_pin_q[14:1]),
+            .prog_operand_pin(programme_pin_q[29:15]), .prog_segment_pin(programme_pin_q[32:30]),
+            .prog_half_pin(programme_pin_q[33]), .prog_chain_pin(programme_pin_q[37:34]),
             .clk(eclk), .rst_n_pin(rst_n), .cfg_v_pin(cfg_v_i), .cfg_a_pin(cfg_a_i), .cfg_d_pin(cfg_d_i), .go_pin(go_i),
             .go_bf_pin(go_bf_i), .xs_v_pin(xs_v_i), .xs_p_pin(xs_p_i), .xs_b_pin(xs_b_i), .xs_sv_pin(xs_sv_i),
             .xs_q0_pin(xs_q0_i), .xs_e0_pin(xs_e0_i), .xs_q1_pin(xs_q1_i), .xs_e1_pin(xs_e1_i), .xs_pos_pin(xs_pos_i),
