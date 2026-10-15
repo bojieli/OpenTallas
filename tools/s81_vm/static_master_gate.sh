@@ -14,7 +14,6 @@ run_target() {
   [ "${VM_READ_PIPE:-0}" = 0 ] || defs+=(+define+OT_VM_NATIVE_READ)
   [ "${VM_READ_PIPE:-0}" != 2 ] || defs+=(+define+OT_VM_NATIVE_READ_PINREG)
   [ "${VM_READ_PIPE:-0}" != 4 ] || defs+=(+define+OT_VM_NATIVE_READ_L16)
-  [ "${VM_WSCATTER_PIPE:-0}" = 0 ] || defs+=(+define+OT_VM_NATIVE_WSCATTER)
   [ "${VM_CAP_PIPE:-0}" = 0 ] || defs+=(+define+OT_VM_NATIVE_CAP)
   [ "${VM_CAP_PIPE:-0}" != 2 ] || defs+=(+define+OT_VM_NATIVE_CAP_PINREG)
   [ "${VM_WSCATTER_PIPE:-0}" = 0 ] || defs+=(+define+OT_VM_NATIVE_WSCATTER)
