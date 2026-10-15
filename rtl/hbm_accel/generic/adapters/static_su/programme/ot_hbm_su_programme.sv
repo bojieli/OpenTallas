@@ -3,7 +3,7 @@
 // exclusively from target 128x256 SRAM macros. No simulation-only DUT storage.
 module ot_hbm_su_programme_mem #(
   parameter integer BANKS=1, BASE=0
-)(input logic clk, input logic ren, input logic [15:0] addr,
+)(input logic clk, input logic [BANKS-1:0] clk_macro, input logic ren, input logic [15:0] addr,
   input logic cfg_we, input logic [15:0] cfg_bank, input logic [6:0] cfg_row,
   input logic [255:0] cfg_data, output logic [255:0] data);
   wire [255:0] q [0:BANKS-1];
@@ -15,7 +15,7 @@ module ot_hbm_su_programme_mem #(
   end
   for(genvar k=0;k<BANKS;k=k+1) begin:g
     ot_sram_1r1w_128x256_m1_r2c2 mem(
-      .clk(clk), .r_ce_in(ren && addr[15:7]==k), .r_addr_in(addr[6:0]), .rd_out(q[k]),
+      .clk(clk_macro[k]), .r_ce_in(ren && addr[15:7]==k), .r_addr_in(addr[6:0]), .rd_out(q[k]),
       .w_ce_in(cfg_we && cfg_bank==BASE+k), .w_addr_in(cfg_row),
       .wd_in(cfg_data), .w_mask_in({256{1'b1}}),
       .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(16'b0));
@@ -27,8 +27,9 @@ module ot_hbm_su_programme #(
   parameter integer COLS=(LINE_BITS+255)/256,
   parameter integer INDEX_GROUPS=(COLS+15)/16,
   parameter integer INDEX_BANKS=(EDGES+127)/128,
-  parameter integer DICT_BANKS [0:COLS-1]='{default:1}
-)(input logic clk, rst_n,
+  parameter integer DICT_BANKS [0:COLS-1]='{default:1},
+  parameter integer MACROS=INDEX_GROUPS*INDEX_BANKS+COLS
+)(input logic clk, rst_n, input logic [MACROS-1:0] clk_macro,
   input logic cfg_we, input logic [15:0] cfg_bank, input logic [6:0] cfg_row,
   input logic [255:0] cfg_data,
   input logic start, input logic [15:0] length,
@@ -44,6 +45,7 @@ module ot_hbm_su_programme #(
     end
   endfunction
   localparam integer TOTAL_BANKS=dict_base(COLS);
+  initial if(MACROS!=TOTAL_BANKS) $fatal(1,"programme MACROS capacity mismatch");
   logic issue,v1,v2;
   logic [15:0] pc, count, e1,e2;
   wire [INDEX_GROUPS*256-1:0] indices;
@@ -51,12 +53,12 @@ module ot_hbm_su_programme #(
   wire write_enable=cfg_we && !busy && cfg_bank<TOTAL_BANKS;
   for(genvar g=0;g<INDEX_GROUPS;g=g+1) begin:ix
     ot_hbm_su_programme_mem #(.BANKS(INDEX_BANKS),.BASE(g*INDEX_BANKS)) mem(
-      .clk(clk),.ren(issue),.addr(pc),.cfg_we(write_enable),.cfg_bank(cfg_bank),
+      .clk(clk),.clk_macro(clk_macro[g*INDEX_BANKS+:INDEX_BANKS]),.ren(issue),.addr(pc),.cfg_we(write_enable),.cfg_bank(cfg_bank),
       .cfg_row(cfg_row),.cfg_data(cfg_data),.data(indices[g*256+:256]));
   end
   for(genvar c=0;c<COLS;c=c+1) begin:dt
     ot_hbm_su_programme_mem #(.BANKS(DICT_BANKS[c]),.BASE(dict_base(c))) mem(
-      .clk(clk),.ren(v1),.addr(indices[c*16+:16]),.cfg_we(write_enable),.cfg_bank(cfg_bank),
+      .clk(clk),.clk_macro(clk_macro[dict_base(c)+:DICT_BANKS[c]]),.ren(v1),.addr(indices[c*16+:16]),.cfg_we(write_enable),.cfg_bank(cfg_bank),
       .cfg_row(cfg_row),.cfg_data(cfg_data),.data(templates[c*256+:256]));
   end
   // Start sampled at S; first command/valid presented after S+3 and sampled

@@ -18,8 +18,8 @@ module tb_hbm_su_native_composed_top;
  wire programme_busy,programme_valid,programme_done,programme_fault;
  wire [15:0] programme_edge;
  wire [PROGRAMME_BITS-1:0] programme_command;
- ot_hbm_su_programme #(.LINE_BITS(PROGRAMME_BITS),.EDGES(NE),.DICT_BANKS(PROGRAMME_DICT_BANKS)) programme(
-  .clk(clk),.rst_n(rst_n),.cfg_we(programme_cfg_we),.cfg_bank(programme_cfg_bank),
+ ot_hbm_su_programme #(.LINE_BITS(PROGRAMME_BITS),.EDGES(NE),.DICT_BANKS(PROGRAMME_DICT_BANKS),.MACROS(PROGRAMME_MACROS)) programme(
+  .clk(clk),.clk_macro({PROGRAMME_MACROS{clk}}),.rst_n(rst_n),.cfg_we(programme_cfg_we),.cfg_bank(programme_cfg_bank),
   .cfg_row(programme_cfg_row),.cfg_data(programme_cfg_data),.start(programme_start),.length(16'(NE)),
   .busy(programme_busy),.valid(programme_valid),.done(programme_done),.fault(programme_fault),
   .edge_index(programme_edge),.command(programme_command));
