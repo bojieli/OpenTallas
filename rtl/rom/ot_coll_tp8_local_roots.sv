@@ -50,7 +50,7 @@ module ot_coll_tp8_local_roots #(
     parameter integer RW      = FW + 2
 ) (
     input  wire              clk,
-    input wire [33:0] clk_region, // same compiled edge; independent physical roots
+    input wire [59:0] clk_region, // same compiled edge; independent physical roots
     input  wire [3:0]        clk_pfold,     // CCLK 1: package-fold slice clock entries (same edge as clk)
     input  wire [3:0]        clk_xfold,     // CCLK 1: cross-fold slice clock entries
     input wire [8:0] clk_mem, // CCLK1: P0/P1,S0..S4,R0/R1 direct macro entries
@@ -118,9 +118,6 @@ module ot_coll_tp8_local_roots #(
     reg f_ar, f_md, f_pr, f_ln, f_cf;
 
     // free-running slot index (ring addresses); only offsets matter, so the dies need not agree on its value
-    reg [8:0] cc;
-    always @(posedge clk or negedge rs_s) if (!rs_s) cc <= 9'd0; else cc <= cc + 9'd1;
-
     // ---------------- Q: compiled slot sequencer ----------------
     reg [15:0] rem, sidx; reg [2:0] cnt; reg s_mode; reg [TAGW-1:0] s_tag;
     wire slot    = (rem != 0) && (cnt == 0);
@@ -175,17 +172,7 @@ module ot_coll_tp8_local_roots #(
     // s4 fanout structure (s1/s3 gates: strap PK/DI and token-valid broadcasts drove 2,000-4,600 loads each over the
     // 860-um cluster and crashed the resizer): every wide-word select comes from its own registered copy per 128-bit
     // slice (keep_hierarchy, distinct IDs: no merge), loaded from the same D as the original -> identical cycle.
-    wire [NS-1:0] di_r, tbv_r;
     genvar gr;
-    generate for (gr = 0; gr < NS; gr = gr + 1) begin : g_rb
-        ot_coll_local_rep_reg #(.W(1), .ID(16 + gr), .RST(0)) u_di (.clk(clk_region[13+gr]), .rst_n(1'b1), .d(die_ps), .q(di_r[gr]));
-        ot_coll_local_rep_reg #(.W(1), .ID(20 + gr), .RST(1)) u_tbv (.clk(clk_region[13+gr]), .rst_n(rs_p), .d(tab[4*(DAB-1)-1]), .q(tbv_r[gr]));
-    end endgenerate
-    wire [FW-1:0] lo, hi;
-    generate for (gr = 0; gr < NS; gr = gr + 1) begin : g_lohi
-        assign lo[gr*128 +: 128] = !di_r[gr] ? pr_rd[gr*128 +: 128] : dpr_q[gr*128 +: 128];
-        assign hi[gr*128 +: 128] = !di_r[gr] ? dpr_q[gr*128 +: 128] : pr_rd[gr*128 +: 128];
-    end endgenerate
 `ifdef OT_TP8S_MUT_OWNER
     wire own_b = tb_v && !tb_m && (tb_p == 1'b0);    // owner ignores the die strap: both dies claim even words
 `else
@@ -194,7 +181,7 @@ module ot_coll_tp8_local_roots #(
     // B1 registers: the fold-slice feed and the gather hold (loaded only on a scheduled word)
     wire [FW-1:0] lo_q, hi_q; reg red_q;
     generate for (gr = 0; gr < NS; gr = gr + 1) begin : g_lohiq
-        ot_coll_local_capture #(.W(256),.ID(13+gr)) u_region (.clk(clk_region[13+gr]),.en(tbv_r[gr]),.d({hi[gr*128 +: 128],lo[gr*128 +: 128]}),.q({hi_q[gr*128 +: 128],lo_q[gr*128 +: 128]}));
+        ot_coll_local_pair_capture #(.W(128),.ID(13+gr)) u_region (.clk(clk_region[13+gr]),.rst_n(rs_p),.die_d(die_ps),.token_d(tab[4*(DAB-1)-1]),.local_data(pr_rd[gr*128 +: 128]),.peer_data(dpr_q[gr*128 +: 128]),.lo(lo_q[gr*128 +: 128]),.hi(hi_q[gr*128 +: 128]));
     end endgenerate
     always @(posedge clk or negedge rs_p) if (!rs_p) red_q <= 1'b0; else red_q <= own_b;
     wire [NS-1:0] ps_v, ps_e; wire [FW-1:0] ps_sum;
@@ -233,7 +220,7 @@ module ot_coll_tp8_local_roots #(
     // ---------------- C / W: package word, S ring write, SerDes send ----------------
     wire [FW-1:0] pf_q; reg pe_q;
     generate for (gs = 0; gs < NS; gs = gs + 1) begin : g_pfe
-        ot_coll_local_capture #(.W(128),.ID(17+gs)) u_region (.clk(clk_region[17+gs]),.en(1'b1),.d(ps_e[gs] ? {4{32'h7fc00000}} : ps_sum[gs*128 +: 128]),.q(pf_q[gs*128 +: 128]));
+        ot_coll_local_fold_capture #(.W(128),.ID(17+gs)) u_region (.clk(clk_region[17+gs]),.error(ps_e[gs]),.d(ps_sum[gs*128 +: 128]),.q(pf_q[gs*128 +: 128]));
     end endgenerate
     always @(posedge clk or negedge rs_s) if (!rs_s) pe_q <= 1'b0; else pe_q <= |(ps_e & ps_v);
     wire w_conf = tc_v && g_run;
@@ -244,28 +231,22 @@ module ot_coll_tp8_local_roots #(
     wire [1:0] w_r = w_red ? 2'd0 : g_r;
     wire w_l    = w_red ? tc_l : g_l;
     wire [TAGW-1:0] w_t = w_red ? tc_t : g_t;
-    wire [NS-1:0] tcv_r, gd_r;
-    wire [FW-1:0] w_d;
-    generate for (gr = 0; gr < NS; gr = gr + 1) begin : g_wd
-        ot_coll_local_rep_reg #(.W(1), .ID(24 + gr), .RST(1)) u_tcv (.clk(clk_region[17+gr]), .rst_n(rs_p), .d(tbc[TBW*(DBC-1)-1]), .q(tcv_r[gr]));
-        // g_d = g_k[2]: the copy follows g_k's next-state (same reset/enable as g_k)
-        ot_coll_local_rep_reg #(.W(1), .ID(28 + gr), .RST(1)) u_gd (.clk(clk_region[17+gr]), .rst_n(rs_p), .d(gk_next[2]), .q(gd_r[gr]));
-`ifdef OT_TP8S_MUT_GATHER
-        assign w_d[gr*128 +: 128] = tcv_r[gr] ? pf_q[gr*128 +: 128] : (!gd_r[gr] ? hi_q[gr*128 +: 128] : lo_q[gr*128 +: 128]);
-`else
-        assign w_d[gr*128 +: 128] = tcv_r[gr] ? pf_q[gr*128 +: 128] : (gd_r[gr] ? hi_q[gr*128 +: 128] : lo_q[gr*128 +: 128]);
-`endif
-    end endgenerate
-    wire w_send = w_red ? (tc_v && tc_o) : (g_run && g_r == PK);
-    wire [SEW-1:0] s_wd = {{(SEW-550){1'b0}}, w_v, w_r, w_od, w_mode, w_l, w_t, w_d};
-    // These are physically distinct face registers. Keep each soft hierarchy
-    // through synthesis so identical data/valid cones cannot be merged across
-    // opposite die faces (the failed s1 gate merged all three copies).
-    genvar gj;
-    generate for (gj = 0; gj < 3; gj = gj + 1) begin : g_sxo
-        (* keep_hierarchy = 1 *) ot_coll_local_sx_reg #(.W(PW),.FACE(gj)) u_face (
-            .clk(clk_region[3+gj]),.rst_n(rs_s),.dv(w_send),.data({w_t,w_mode,w_l,w_d}),
-            .qv(sx_valid[gj]),.qdata(sx_rec[gj*PW +: PW]));
+    genvar gj,gso;
+    generate for(gj=0;gj<3;gj=gj+1)begin:g_sxo
+      for(gso=0;gso<4;gso=gso+1)begin:g_quarter
+        localparam integer RID=(gso==0)?3+gj:41+gj*3+gso;
+        wire[TAGW+1:0]qm;wire qv;
+        ot_coll_local_sx_quarter #(.ID(RID),.META(gso==0)) u_region(
+          .clk(clk_region[RID]),.rst_data_n(rs_p),.rst_meta_n(rs_s),
+          .tc_d(tbc[TBW*(DBC-1)-1]),.gd_d(gk_next[2]),
+          .pf(pf_q[gso*128 +:128]),.lo(lo_q[gso*128 +:128]),.hi(hi_q[gso*128 +:128]),
+          .pkg_d(pkg_s),.tc_v(tc_v),.tc_o(tc_o),.tc_l(tc_l),.tc_t(tc_t),
+          .g_run(g_run),.g_r(g_r),.g_l(g_l),.g_t(g_t),
+          .q(sx_rec[gj*PW+gso*128 +:128]),.qm(qm),.qv(qv));
+        if(gso==0)begin:g_meta
+          assign sx_rec[gj*PW+FW +:TAGW+2]=qm;assign sx_valid[gj]=qv;
+        end
+      end
     end endgenerate
     // peer send slots per SerDes port: reduce = the same owned words (equal die-in-package parity); gather = the
     // hold cycle k whose rank field equals the peer package (PK + 1 + j)
@@ -277,16 +258,34 @@ module ot_coll_tp8_local_roots #(
     assign sx_peer_slot = sxp_q;
     wire [SEW-1:0] s_rd;
     genvar gm;
-    generate for (gm = 0; gm < SEW / 128; gm = gm + 1) begin : g_sring
-        ot_sram_1r1w_512x128_m4_r2c2 u_m (.clk(CCLK ? clk_mem[2+gm] : clk), .r_ce_in(1'b1), .r_addr_in(cc - 9'(LS + 1)),
-            .rd_out(s_rd[gm*128 +: 128]), .w_ce_in(1'b1), .w_addr_in(cc), .wd_in(s_wd[gm*128 +: 128]),
-            .w_mask_in({128{1'b1}}), .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(14'b0));
+    generate for(gm=0;gm<5;gm=gm+1)begin:g_sring
+      if(gm<4)begin:g_data
+        ot_coll_local_sring_data #(.LS(LS),.ID(37+gm)) u_region(
+          .ctl_ck(clk_region[37+gm]),.mem_ck(CCLK?clk_mem[2+gm]:clk),.rst_counter_n(rs_s),.rst_select_n(rs_p),
+          .tc_d(tbc[TBW*(DBC-1)-1]),.gd_d(gk_next[2]),
+          .pf(pf_q[gm*128 +:128]),.lo(lo_q[gm*128 +:128]),.hi(hi_q[gm*128 +:128]),.rd(s_rd[gm*128 +:128]));
+      end else begin:g_meta
+        ot_coll_local_sring_meta #(.LS(LS),.ID(41)) u_region(
+          .ctl_ck(clk_region[41]),.mem_ck(CCLK?clk_mem[6]:clk),.rst_counter_n(rs_s),
+          .tc_v(tc_v),.tc_o(tc_o),.tc_l(tc_l),.tc_t(tc_t),
+          .g_run(g_run),.g_r(g_r),.g_od(g_d),.g_l(g_l),.g_t(g_t),.rd(s_rd[512 +:128]));
+      end
     end endgenerate
 
     // ---------------- D: SerDes receive (pins), check, cross fold / gather output ----------------
     wire [2:0] srv_q; wire [PW-1:0] srr_q [0:2];
+    genvar gsi;
     generate for (gj = 0; gj < 3; gj = gj + 1) begin : g_sri
-        ot_coll_local_record #(.W(PW),.ID(6+gj)) u_region (.clk(clk_region[6+gj]),.rst_n(rs_s),.dv(sr_valid[gj]),.d(sr_rec[gj*PW +: PW]),.qv(srv_q[gj]),.q(srr_q[gj]));
+        for(gsi=0;gsi<4;gsi=gsi+1)begin:g_quarter
+            localparam integer RID=(gsi==0)?6+gj:50+gj*3+gsi;
+            if(gsi==0)begin:g_meta
+                ot_coll_local_record #(.W(128+TAGW+2),.ID(RID)) u_region(.clk(clk_region[RID]),.rst_n(rs_s),.dv(sr_valid[gj]),
+                    .d({sr_rec[gj*PW+FW +:TAGW+2],sr_rec[gj*PW +:128]}),.qv(srv_q[gj]),.q({srr_q[gj][FW +:TAGW+2],srr_q[gj][0 +:128]}));
+            end else begin:g_data
+                ot_coll_local_capture #(.W(128),.ID(RID)) u_region(.clk(clk_region[RID]),.en(1'b1),
+                    .d(sr_rec[gj*PW+128*gsi +:128]),.q(srr_q[gj][128*gsi +:128]));
+            end
+        end
     end endgenerate
 
     // a token is meaningful only once the ring has been written LS + 1 cycles after reset (ring power-up content)
@@ -310,34 +309,20 @@ module ot_coll_tp8_local_roots #(
             if (exp_sr[jj] && srv_q[jj] && (srr_q[jj][FW +: TAGW + 2] != {td_t, td_m, td_l})) d_md = 1'b1;
     end
     wire red2 = td_v && !td_m && td_od;
-    wire [4*FW-1:0] xsrc;
-    genvar gq;
-    // static rank select, decoded from the strap into a registered one-hot {own, port2, port1, port0} per (rank, slice)
-    generate for (gq = 0; gq < 4; gq = gq + 1) begin : g_xs
-        for (gr = 0; gr < NS; gr = gr + 1) begin : g_s
-            wire [1:0] jqs = 2'(gq) - pkg_s + 2'd3;
-            wire [3:0] sel;
-            ot_coll_local_rep_reg #(.W(4), .ID(32 + gq*NS + gr), .RST(0)) u_sel (.clk(clk_region[28+gr]), .rst_n(1'b1),
-                .d({2'(gq) == pkg_s, (2'(gq) != pkg_s) && jqs == 2'd2, (2'(gq) != pkg_s) && jqs == 2'd1,
-                    (2'(gq) != pkg_s) && jqs == 2'd0}), .q(sel));
-            assign xsrc[gq*FW + gr*128 +: 128] = (td_d[gr*128 +: 128] & {128{sel[3]}}) | (srr_q[2][gr*128 +: 128] & {128{sel[2]}})
-                                             | (srr_q[1][gr*128 +: 128] & {128{sel[1]}}) | (srr_q[0][gr*128 +: 128] & {128{sel[0]}});
-        end
-    end endgenerate
+    wire[NS-1:0]xs_v,xs_e;wire[FW-1:0]xs_sum;
 `ifdef OT_TP8S_MUT_RANK
-    wire [4*FW-1:0] xs = {xsrc[3*FW +: FW], xsrc[1*FW +: FW], xsrc[2*FW +: FW], xsrc[0 +: FW]};
+    localparam integer LOCAL_XF_MUT=1;
 `else
-    wire [4*FW-1:0] xs = xsrc;
+    localparam integer LOCAL_XF_MUT=0;
 `endif
-    wire [NS-1:0] xs_v, xs_e; wire [FW-1:0] xs_sum;
-    generate for (gs = 0; gs < NS; gs = gs + 1) begin : g_xf
-        (* keep_hierarchy *) ot_coll_fold_slice u_fs (.clk(CCLK ? clk_xfold[gs] : clk), .rst_n(rst_n), .red_in(red2),
-            .src({xs[3*FW + gs*128 +: 128], xs[2*FW + gs*128 +: 128], xs[FW + gs*128 +: 128], xs[gs*128 +: 128]}),
-            .sum(xs_sum[gs*128 +: 128]), .v_out(xs_v[gs]), .e_out(xs_e[gs]));
+    generate for(gs=0;gs<NS;gs=gs+1)begin:g_xf
+      ot_coll_local_xfold #(.MUT_RANK(LOCAL_XF_MUT)) u_region(
+        .ctl_ck(clk_region[28+gs]),.fold_ck(CCLK?clk_xfold[gs]:clk),.rst_n(rst_n),
+        .pkg_s(pkg_s),.red_in(red2),.td(td_d[gs*128 +:128]),
+        .sr0(srr_q[0][gs*128 +:128]),.sr1(srr_q[1][gs*128 +:128]),.sr2(srr_q[2][gs*128 +:128]),
+        .sum(xs_sum[gs*128 +:128]),.v_out(xs_v[gs]),.e_out(xs_e[gs]));
     end endgenerate
     // gather output (D + 1)
-    wire [FW-1:0] g_out = (td_r == PK) ? td_d : (jr == 2'd0) ? srr_q[0][FW-1:0] : (jr == 2'd1) ? srr_q[1][FW-1:0]
-                                                                                              : srr_q[2][FW-1:0];
     wire gd_v = td_v && td_m;
     // reduce token D -> E (SL + 1 edges): {v, own, last}
     localparam integer DDE = SL + 1;
@@ -379,24 +364,26 @@ module ot_coll_tp8_local_roots #(
 
     wire f_lnk = (drv_q != (tf_v && !tf_o));
     wire f_mdx = tf_v && !tf_o && drv_q && (drr_q[FW] != tf_l);
-    wire [NS-1:0] tfv_r, tfo_r;
-    wire [FW-1:0] rf_d;
-    generate for (gr = 0; gr < NS; gr = gr + 1) begin : g_rf
-        ot_coll_local_rep_reg #(.W(1), .ID(48 + gr), .RST(1)) u_tfv (.clk(clk_region[12]), .rst_n(rs_r), .d(tef[3*(DEF-1)-1]), .q(tfv_r[gr]));
-        ot_coll_local_rep_reg #(.W(1), .ID(52 + gr), .RST(1)) u_tfo (.clk(clk_region[12]), .rst_n(rs_r), .d(tef[3*(DEF-1)-2]), .q(tfo_r[gr]));
-        assign rf_d[gr*128 +: 128] = tfo_r[gr] ? rr_rd[gr*128 +: 128] : drr_q[gr*128 +: 128];
+    wire rf_e = tf_o ? rr_rd[FW+1] : drr_q[FW+1];
+    wire o_conf=tf_v&&gd_v;
+    wire[FW-1:0]od_q;wire ov_q,ol_q,oe_q;wire[2:0]or_q;
+    generate for(gr=0;gr<NS;gr=gr+1) begin:g_output_region
+        localparam integer RID=(gr==0)?12:33+gr;
+        wire qv,ql,qe;wire[2:0]qr;
+        ot_coll_local_output #(.W(128),.ID(RID)) u_region(
+          .clk(clk_region[RID]),.rst_n(rs_r),.pkg_d(pkg_s),
+          .tf_v_d(tef[3*(DEF-1)-1]),.tf_o_d(tef[3*(DEF-1)-2]),
+          .tf_v(tf_v),.tf_l(tf_l),.rf_e(rf_e),.gd_v(gd_v),
+          .td_r(td_r),.td_od(td_od),.td_l(td_l),
+          .rr(rr_rd[gr*128 +:128]),.dr(drr_q[gr*128 +:128]),
+          .td(td_d[gr*128 +:128]),.sr0(srr_q[0][gr*128 +:128]),
+          .sr1(srr_q[1][gr*128 +:128]),.sr2(srr_q[2][gr*128 +:128]),
+          .q(od_q[gr*128 +:128]),.qv(qv),.ql(ql),.qe(qe),.qr(qr));
+        if(gr==0)begin:g_meta
+          assign ov_q=qv;assign ol_q=ql;assign oe_q=qe;assign or_q=qr;
+        end
     end endgenerate
-    wire          rf_e = tf_o ? rr_rd[FW+1] : drr_q[FW+1];
-    wire o_conf = tf_v && gd_v;
-    reg ov_q, ol_q, oe_q; reg [2:0] or_q; reg [FW-1:0] od_q; integer kq;
-    always @(posedge clk_region[12]) begin
-        for (kq = 0; kq < NS; kq = kq + 1) od_q[kq*128 +: 128] <= tfv_r[kq] ? rf_d[kq*128 +: 128] : g_out[kq*128 +: 128];
-        ol_q <= tf_v ? tf_l : (td_l && td_od && td_r == 2'd3);
-        or_q <= tf_v ? 3'd0 : {td_od, td_r};
-        oe_q <= tf_v ? rf_e : 1'b0;
-    end
-    always @(posedge clk_region[12] or negedge rs_r) if (!rs_r) ov_q <= 1'b0; else ov_q <= tf_v || gd_v;
-    assign out_valid = ov_q; assign out_data = od_q; assign out_last = ol_q; assign out_rank = or_q; assign out_err = oe_q;
+    assign out_valid=ov_q;assign out_data=od_q;assign out_last=ol_q;assign out_rank=or_q;assign out_err=oe_q;
 
     // ---------------- sticky faults (checks never reschedule) ----------------
     always @(posedge clk or negedge rs_q)
@@ -499,4 +486,79 @@ endmodule
 (* keep_hierarchy = 1 *) module ot_coll_local_delay #(parameter integer W=128,ID=0)(
  input wire clk,rst_n,input wire[W-1:0]d,output reg[W-1:0]q);
  always @(posedge clk or negedge rst_n) if(!rst_n)q<=0;else q<=d;
+endmodule
+(* keep_hierarchy = 1 *) module ot_coll_local_pair_capture #(parameter integer W=128,ID=0)(
+ input wire clk,rst_n,die_d,token_d,input wire[W-1:0]local_data,peer_data,
+ output reg[W-1:0]lo,hi);
+ reg die_q,token_q;
+ always @(posedge clk)die_q<=die_d;
+ always @(posedge clk or negedge rst_n)if(!rst_n)token_q<=0;else token_q<=token_d;
+ always @(posedge clk)if(token_q)begin
+  lo<=die_q?peer_data:local_data;hi<=die_q?local_data:peer_data;
+ end
+endmodule
+(* keep_hierarchy = 1 *) module ot_coll_local_fold_capture #(parameter integer W=128,ID=0)(
+ input wire clk,error,input wire[W-1:0]d,output reg[W-1:0]q);
+ always @(posedge clk)q<=error?{(W/32){32'h7fc00000}}:d;
+endmodule
+(* keep_hierarchy = 1 *) module ot_coll_local_output #(parameter integer W=128,ID=0)(
+ input wire clk,rst_n,input wire[1:0]pkg_d,input wire tf_v_d,tf_o_d,tf_v,tf_l,rf_e,gd_v,
+ input wire[1:0]td_r,input wire td_od,td_l,input wire[W-1:0]rr,dr,td,sr0,sr1,sr2,
+ output reg[W-1:0]q,output reg qv,ql,qe,output reg[2:0]qr);
+ reg[1:0]pkg_q;reg tfv_q,tfo_q;
+ always @(posedge clk)pkg_q<=pkg_d;
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)begin tfv_q<=0;tfo_q<=0;end else begin tfv_q<=tf_v_d;tfo_q<=tf_o_d;end
+ wire[1:0]jr=td_r-pkg_q+2'd3;
+ wire[W-1:0]gather=(td_r==pkg_q)?td:(jr==0)?sr0:(jr==1)?sr1:sr2;
+ always @(posedge clk)begin
+  q<=tfv_q?(tfo_q?rr:dr):gather;
+  ql<=tf_v?tf_l:(td_l&&td_od&&td_r==2'd3);
+  qr<=tf_v?3'd0:{td_od,td_r};qe<=tf_v?rf_e:1'b0;
+ end
+ always @(posedge clk or negedge rst_n)if(!rst_n)qv<=0;else qv<=tf_v||gd_v;
+endmodule
+(* keep_hierarchy = 1 *) module ot_coll_local_sx_quarter #(parameter integer ID=0,META=0)(
+ input wire clk,rst_data_n,rst_meta_n,tc_d,gd_d,input wire[127:0]pf,lo,hi,
+ input wire[1:0]pkg_d,input wire tc_v,tc_o,tc_l,input wire[31:0]tc_t,
+ input wire g_run,input wire[1:0]g_r,input wire g_l,input wire[31:0]g_t,
+ output reg[127:0]q,output wire[33:0]qm,output wire qv);
+ reg tc_q,gd_q;
+ always @(posedge clk or negedge rst_data_n)
+  if(!rst_data_n)begin tc_q<=0;gd_q<=0;end else begin tc_q<=tc_d;gd_q<=gd_d;end
+`ifdef OT_TP8S_MUT_GATHER
+ always @(posedge clk)q<=tc_q?pf:(!gd_q?hi:lo);
+`else
+ always @(posedge clk)q<=tc_q?pf:(gd_q?hi:lo);
+`endif
+ generate if(META)begin:g_meta
+  reg[1:0]pkg_q;reg[33:0]meta_q;reg v_q;
+  always @(posedge clk)begin pkg_q<=pkg_d;meta_q<={tc_v?tc_t:g_t,!tc_v,tc_v?tc_l:g_l};end
+  always @(posedge clk or negedge rst_meta_n)
+   if(!rst_meta_n)v_q<=0;else v_q<=tc_v?(tc_v&&tc_o):(g_run&&g_r==pkg_q);
+  assign qm=meta_q;assign qv=v_q;
+ end else begin:g_data assign qm=0;assign qv=0;end endgenerate
+endmodule
+(* keep_hierarchy = 1 *) module ot_coll_local_sring_data #(parameter integer LS=376,ID=0)(
+ input wire ctl_ck,mem_ck,rst_counter_n,rst_select_n,tc_d,gd_d,input wire[127:0]pf,lo,hi,output wire[127:0]rd);
+ reg[8:0]cc;reg tc_q,gd_q;
+ always @(posedge ctl_ck or negedge rst_counter_n)if(!rst_counter_n)cc<=0;else cc<=cc+9'd1;
+ always @(posedge ctl_ck or negedge rst_select_n)
+  if(!rst_select_n)begin tc_q<=0;gd_q<=0;end else begin tc_q<=tc_d;gd_q<=gd_d;end
+`ifdef OT_TP8S_MUT_GATHER
+ wire[127:0]wd=tc_q?pf:(!gd_q?hi:lo);
+`else
+ wire[127:0]wd=tc_q?pf:(gd_q?hi:lo);
+`endif
+ ot_sram_1r1w_512x128_m4_r2c2 u_m(.clk(mem_ck),.r_ce_in(1'b1),.r_addr_in(cc-9'(LS+1)),.rd_out(rd),
+  .w_ce_in(1'b1),.w_addr_in(cc),.wd_in(wd),.w_mask_in({128{1'b1}}),.rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(14'b0));
+endmodule
+(* keep_hierarchy = 1 *) module ot_coll_local_sring_meta #(parameter integer LS=376,ID=0)(
+ input wire ctl_ck,mem_ck,rst_counter_n,tc_v,tc_o,tc_l,input wire[31:0]tc_t,
+ input wire g_run,input wire[1:0]g_r,input wire g_od,g_l,input wire[31:0]g_t,output wire[127:0]rd);
+ reg[8:0]cc;
+ always @(posedge ctl_ck or negedge rst_counter_n)if(!rst_counter_n)cc<=0;else cc<=cc+9'd1;
+ wire[127:0]wd={90'd0,tc_v||g_run,tc_v?2'd0:g_r,tc_v?tc_o:g_od,!tc_v,tc_v?tc_l:g_l,tc_v?tc_t:g_t};
+ ot_sram_1r1w_512x128_m4_r2c2 u_m(.clk(mem_ck),.r_ce_in(1'b1),.r_addr_in(cc-9'(LS+1)),.rd_out(rd),
+  .w_ce_in(1'b1),.w_addr_in(cc),.wd_in(wd),.w_mask_in({128{1'b1}}),.rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(14'b0));
 endmodule

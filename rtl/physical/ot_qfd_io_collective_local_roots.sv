@@ -12,7 +12,7 @@
 // Successor of qfd_io_collective (credit design, historical/diagnostic under 0ah).
 module qfd_io_collective_local_roots (
     input  wire          clk,                   // controller root
-    input wire [33:0] clk_region,
+    input wire [59:0] clk_region,
     input  wire          clk_pfold0, clk_pfold1, clk_pfold2, clk_pfold3,
     input  wire          clk_xfold0, clk_xfold1, clk_xfold2, clk_xfold3,
     input wire clk_pring0,clk_pring1,clk_sring0,clk_sring1,clk_sring2,clk_sring3,clk_sring4,clk_rring0,clk_rring1,

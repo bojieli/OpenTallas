@@ -169,7 +169,7 @@ module tb_coll_tp8_static_links #(
 `ifdef OT_TP8S_QFD
 `ifdef OT_TP8S_LOCAL_ROOTS
             qfd_io_collective_local_roots u_die (
-                .clk_region({34{clk}}),
+                .clk_region({60{clk}}),
 `else
             qfd_io_collective_static u_die (       // the die-name master (LU / LS by +define)
 `endif
