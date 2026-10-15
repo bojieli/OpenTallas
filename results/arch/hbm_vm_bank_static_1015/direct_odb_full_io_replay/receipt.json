@@ -1,0 +1,18 @@
+{
+  "scope": "Actual ORFS full IO-placement stage replay in separate copied work directory; original sole CTS job untouched. Includes original PPL initialization before hook.",
+  "source_gate": "20261015-022055",
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-3843210-1792056895",
+  "exit_code": 0,
+  "memory_gb": 2,
+  "measured_peak_mb": 518,
+  "elapsed_seconds": 13.86,
+  "signal_pins": 4742,
+  "PG_contacts": 144,
+  "shifted_centers": 0,
+  "PG_clearance_violations": 0,
+  "signal_pitch_violations": 0,
+  "full_cts_qualified": false,
+  "reason": "Current full gate uses previous PPL hook and is still live; future source-exact full gate required.",
+  "fix": "Preserve original legal pin dimensions and create FIRM BPin rectangles directly on audited actual tracks; avoids PPL same-process state moving centers."
+}
