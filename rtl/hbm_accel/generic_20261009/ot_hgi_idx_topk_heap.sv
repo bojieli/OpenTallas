@@ -477,7 +477,8 @@ module ot_hgi_idx_topk_hw #(
  input wire [W-1:0] t_op_cr, t_ext_v, t_idle_i, input wire [W*54-1:0] t_ext_d, input wire [W*53-1:0] t_root_key,
  output wire [W*3-1:0] lt_ph, output wire [W*$clog2(MAX_K+1)-1:0] lt_k, output wire [W-1:0] lt_clr, lt_pv, lt_mcr,
  output wire [W*54-1:0] lt_pd,
- input wire [W-1:0] lt_q, lt_x, lt_ok, lt_mv, lt_me, input wire [W*53-1:0] lt_root, input wire [W*54-1:0] lt_md
+ input wire [W-1:0] lt_q, lt_x, lt_ok, lt_mv, lt_me, input wire [W*53-1:0] lt_root, input wire [W*54-1:0] lt_md,
+ output wire [1:0] rr_x
 );
  localparam integer KW = $clog2(MAX_K + 1);
  localparam [2:0] SCV = HUB ? 3'd5 : 3'd3;              // settle count after an op / clear (covers the seam flops)
@@ -493,8 +494,11 @@ module ot_hgi_idx_topk_hw #(
  localparam integer TL = 2 * WL + 1;                    // merge tree layers (relay, node, relay, ..., relay)
  localparam [2:0] IDLE=0, START=1, FILL=2, FLUSH=3, EXT=4, MERGE=5, ABORT=6, FIN=7;
  // reset standard (ot_rst_relay): the port drives only the relay; lane h resets from region h, the control from region W.
- wire [W:0] rr;
- ot_rst_relay #(.REGIONS(W + 1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
+ // j3: two extra relay regions exported (rr_x) so a wrapper's own registers release on the engine's edge from the
+ // same single port load (hub tile native audit: two relays on rst_n = capture 208.6 ps).  Unused elsewhere.
+ wire [W+2:0] rr;
+ ot_rst_relay #(.REGIONS(W + 3), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
+ assign rr_x = rr[W+2:W+1];
  wire rn = rr[W];
  reg up;
  always @(posedge clk or negedge rn) if (!rn) up <= 1'b0; else up <= 1'b1;

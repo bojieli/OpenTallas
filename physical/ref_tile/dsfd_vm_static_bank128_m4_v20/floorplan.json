@@ -96,8 +96,6 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
-  "physical/qwen_die_masters/sram_edge_guard.tcl",
-  "physical/common_flow/macro_edge_via_guard.tcl",
   "tools/ref_tile/signal_layer_audit.tcl",
   "physical/s81_die_pins/v20_vm_static_standard/dsfd_vm_static_bank128.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",

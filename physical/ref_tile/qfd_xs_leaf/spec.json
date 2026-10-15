@@ -15,7 +15,7 @@
  ],
  "outline": {
   "w": 64.8,
-  "h": 120.96,
+  "h": 136.08,
   "exact": true
  },
  "pins": {
@@ -170,11 +170,11 @@
   ]
  },
  "pin_source": "chain faces N / S on identical ranges (abutted leaf-to-leaf, the same bit at the same x); read bus on E at the low-y end (R0 in the N chain, MX in the S chain: the end nearest the column head, read hop <= ~440 um to the far leaf)",
- "slot_change_request": "el1014-qwen-dvm-build.log 16:15 r3 / el1014-qwen-split-compute.log (DVM builder -> compute die lead): the column slot 64.8 x 1,313.28 holds a die-placed N-S STACK, not a hardened cluster (20-um child channels / edges cannot fit 64.8 um): 4 x qfd_xs_leaf 64.8 x 120.96 (N chain, R0) / qfd_xhead_e|w 64.8 x 345.6 / 4 x qfd_xs_leaf (S chain, MX), chain faces abutted pin to pin; pins re-gated against the die lead's assigned file when it exists.",
+ "slot_change_request": "Q-COMPUTE-DIE approved 2026-10-14: leaf64.8x136.08, column64.8x1434.24, retain head345.6, four leaves on each side, same center.",
  "job": {
-  "owner": "Claude:el1014-qwen-dvm-build",
+  "owner": "Codex:el1014-qwen-dvm-build",
   "branch": "claude/qwen-dvm-1014",
-  "tag": "xl3",
+  "tag": "xl6",
   "purpose": "Qwen TP8 distributed x slice LEAF r3 (owner 08:20 PT 10-14; el1014-qwen-dvm-build.log 16:15): 2 tiles x 2 epochs x one 64-position slot of BF16 operands (+ per-element valid), footprints > 64 pooled over a tile pair by the column head; ONE 128:1 x 17-b serial read tree per tile (r2: four 512:1 trees, 2.7x the slot); write chain pin-registered pass-through (18-b control a leaf); answer pin flops at R + 4.",
   "benches": [
    {
@@ -222,5 +222,6 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
- }
+ },
+ "structural_change": "Increase leaf height120.96->136.08 at fixed64.8 width for measured4600um2 standard cells, reducing core utilization65.2% to57.7%; retain every register and fixed schedule."
 }
