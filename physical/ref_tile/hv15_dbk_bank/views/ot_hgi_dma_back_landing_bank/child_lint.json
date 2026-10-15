@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas/claude/closure-loop/hv15_dbk_bank-pfx4-e59a03341/record/views/ot_hgi_dma_back_landing_bank/ot_hgi_dma_back_landing_bank.lef",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/hv15_dbk_bank-nl1-rr-5b85daf45/record/views/ot_hgi_dma_back_landing_bank/ot_hgi_dma_back_landing_bank.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [
-  "(f) face-pin access: 596 of 596 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M5 (59.856,87.013), output_en M5 (59.856,87.013), read_addr[0] M5 (59.856,87.013))"
+  "(f) face-pin access: 596 of 596 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M5 (63.696,86.423), output_en M5 (63.696,86.423), read_addr[0] M5 (63.696,86.423))"
  ],
- "summary": "ot_hgi_dma_back_landing_bank 140.4 x 88.56: PG M5 VDD 26 stripes (96% spread, 100% cov) / VSS 26 stripes (96% spread, 100% cov); strap M6; face pins 596 blocked-above 0 blocked-same 0; clock clk insertion 198 ps; pockets M5 0 (closed)",
+ "summary": "ot_hgi_dma_back_landing_bank 140.4 x 88.56: PG M5 VDD 26 stripes (96% spread, 100% cov) / VSS 26 stripes (96% spread, 100% cov); strap M6; face pins 596 blocked-above 0 blocked-same 0; clock clk insertion 188 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "ot_hgi_dma_back_landing_bank",
   "W": 140.4,
@@ -40,24 +40,24 @@
   "face": {
    "face_pins": 596,
    "blocked_above": 0,
-   "covered_below": 28,
+   "covered_below": 0,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
    "band_same": 596,
    "band_examples": [
-    "clk M5 (59.856,87.013)",
-    "output_en M5 (59.856,87.013)",
-    "read_addr[0] M5 (59.856,87.013)",
-    "read_addr[10] M5 (59.856,87.013)",
-    "read_addr[11] M5 (59.856,87.013)",
-    "read_addr[12] M5 (59.856,87.013)"
+    "clk M5 (63.696,86.423)",
+    "output_en M5 (63.696,86.423)",
+    "read_addr[0] M5 (63.696,86.423)",
+    "read_addr[10] M5 (63.696,86.423)",
+    "read_addr[11] M5 (63.696,86.423)",
+    "read_addr[12] M5 (63.696,86.423)"
    ]
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 197.86,
-    "min_ps": 132.68
+    "max_ps": 188.3,
+    "min_ps": 123.24
    }
   },
   "pockets": {
@@ -66,7 +66,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 135
+    "added": 126
    },
    "count": 0,
    "area_um2": 0,
