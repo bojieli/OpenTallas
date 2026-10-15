@@ -473,6 +473,20 @@ def layer_contract(s: dict, slot: dict | None) -> dict:
     return out
 
 
+def clock_rlayers(lc: dict) -> tuple[str, str] | None:
+    """Explicit clock routing range for a signal cap below M5, else None (platform default kept).
+    ASAP7 fastroute.tcl routes clocks on MIN_CLK_ROUTING_LAYER (M4)..MAX_ROUTING_LAYER, and OpenROAD
+    set_routing_layers rejects a clock range whose min is not strictly below its max (ODB-0137, measured
+    2026-10-14: M4-M4 and M5-M4 fail, M3-M4 passes). A cap of M4/M3 therefore routes clocks on the top
+    two allowed layers (one per direction); a cap below M3 cannot route a clock."""
+    cap = metal(lc["rlayers"][1])
+    if cap is None or cap >= 5:
+        return None
+    if cap < 3:
+        raise SpecError(f"signal cap {lc['rlayers'][1]} leaves no two-layer clock routing range (needs >= M3)")
+    return (f"M{cap - 1}", f"M{cap}")
+
+
 def pin_layers(s: dict, lc: dict) -> tuple[str, str]:
     """(IO_PLACER_H, IO_PLACER_V) for the kit; every pin layer must be <= the tile's cap (no pin on the parent strap)."""
     r = s["route"]
@@ -630,9 +644,12 @@ ABUT_UM = 0.1           # two macros this close in one axis (and overlapping in 
 
 def abutted_stack(a: dict, b: dict, gx: float, gy: float) -> bool:
     """two MACROS stacked N-S with no cell row between them (0 <= gap <= ABUT_UM, overlapping in x) and no signal /
-    clock pin of either on the two touching faces (memory arrays with their pins on W / E: a bank of arrays).  Only R0;
-    hard children and side-by-side macros keep the channel rule (their touching faces carry pins / need straps)."""
-    if a["kind"] != "macro" or b["kind"] != "macro" or a.get("orient", "R0") != "R0" or b.get("orient", "R0") != "R0":
+    clock pin of either on the two touching faces (memory arrays with their pins on W / E: a bank of arrays).  R0 / MY
+    keep the LEF's top / bottom faces, MX / R180 swap them (the W / E test is mirror-symmetric); rotated (R90 / R270 ...)
+    macros, hard children and side-by-side macros keep the channel rule (their touching faces carry pins / need straps).
+    MY admitted 2026-10-14 (s81-gather r4): a mirrored bank faces its pins at the logic between two banks."""
+    flip = {"R0": False, "MY": False, "MX": True, "R180": True}
+    if a["kind"] != "macro" or b["kind"] != "macro" or a.get("orient", "R0") not in flip or b.get("orient", "R0") not in flip:
         return False
     if not (-1e-6 <= gy <= ABUT_UM + 1e-6 and gx < -1e-6):
         return False
@@ -641,6 +658,8 @@ def abutted_stack(a: dict, b: dict, gx: float, gy: float) -> bool:
         if blk.get("_tm") is None:
             blk["_tm"] = track_macro(blk["view"])
         tm = blk["_tm"]
+        if flip[blk.get("orient", "R0")]:                       # the LEF face that ends up touching the neighbour
+            edge = "bottom" if edge == "top" else "top"
         for pin in tm["pins"]:
             if pin["use"] not in ("SIGNAL", "CLOCK"):
                 continue
@@ -775,7 +794,7 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
                 continue
             if gap < CHANNEL_UM - 1e-6:
                 out.append(("FAIL", "channel", f"{a['master']}#{a['idx']} / {b['master']}#{b['idx']} channel {gap:.1f} um "
-                            f"(< {CHANNEL_UM:.0f} um)", "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0, no pin on the touching faces: abutted_stack)"))
+                            f"(< {CHANNEL_UM:.0f} um)", "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"))
     if ab is not None and (ab_n["channel"] or ab_n["macro_edge"]):
         out.append(("WARN", "abut_plan", f"PROBE: {ab_n['channel']} tile-tile channels in [{ch_min:g}, {CHANNEL_UM:g}) um and "
                     f"{ab_n['macro_edge']} tile-edge distances >= {edge_min:g} um admitted by abut_plan ({ab['why'][:160]})",
@@ -1215,6 +1234,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         f"PINEX={0 if (s['pins'].get('ANY') or s.get('io_tcl')) else 1}", f"INTER={shq(inter)}", f"REFGLOB={shq(refglob)}", f"CLKPORT={s['clock_port']}",
         f"PD={r.get('pd', 0.55)}", f"NC={r.get('threads', 8)}", f"PIN_H={shq(ph)}", f"PIN_V={shq(pv)}", f"PIN_MIN_TRACKS={r.get('pin_min_tracks', 2)}", "STAGES=pnr",
         f"RLAYERS={shq(' '.join(lc['rlayers']))}", f"ROUTE_PERIOD_NS={r.get('period_ps', 770) / 1000.0}",
+        *([f"CLOCK_RLAYERS={shq(' '.join(clock_rlayers(lc)))}"] if clock_rlayers(lc) else []),
         f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({' '.join(extra)})", *pin_balance_env(r, lc),
         *([f"export OT_PIN_GROUP_MAX={pin_group_max(s)}"] if "pin_group_max" in r else []),
         *cts_sink_env(r), *([f"RECIPE={int(s['recipe'])}"] if s.get("recipe", 1) >= 2 else []), ""])
