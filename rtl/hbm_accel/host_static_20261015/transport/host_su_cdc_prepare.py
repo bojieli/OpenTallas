@@ -8,6 +8,7 @@ import shutil
 p = argparse.ArgumentParser()
 p.add_argument('image')
 p.add_argument('out')
+p.add_argument('--target-mhz',type=int,choices=[900,1200],default=900)
 a = p.parse_args()
 src = pathlib.Path(a.image)
 out = pathlib.Path(a.out)
@@ -17,8 +18,9 @@ for name in ['config.mem', 'expected.mem', 'host_su_model.json', 'manifest.json'
         shutil.copyfile(src / name, out / name)
 s = (src / 'host_su_axi_tb.sv').read_text().replace(
     'module host_su_axi_tb;', 'module host_su_cdc_tb;\nparameter integer MUT=0;')
+target_period='5' if a.target_mhz==900 else '3.75'
 s = s.replace('logic clk=0;always #5 clk=~clk;',
-              'logic clk=0;always #5 clk=~clk;\nlogic hostclk=0;always #3.75 hostclk=~hostclk;')
+              'logic clk=0;always #'+target_period+' clk=~clk;\nlogic hostclk=0;always #3.75 hostclk=~hostclk;')
 s = s.replace('wire block_ready,busy,valid,done,fault;', '''wire[11:0]ma,mra;wire mav,mar,mwv,mwr,mbv,mbr,mrav,mrar,mrv,mrr;wire[31:0]mwd,mrd;wire[3:0]mws;wire[1:0]mbresp,mrresp;
 wire block_ready,busy,valid,done,fault;''')
 mp = {'awaddr': 'ma', 'awvalid': 'mav', 'awready': 'mar', 'wdata': 'mwd', 'wstrb': 'mws',
@@ -54,6 +56,6 @@ endtask
 ''' + s[a1:]
 s = s.replace('HOST_SU_AXI_PASS', 'HOST_SU_CDC_PASS')
 (out / 'host_su_cdc_tb.sv').write_text(s)
-print(json.dumps({'source_image': str(src), 'out': str(out), 'clock_ratio': '1200host:900target=4:3',
+print(json.dumps({'source_image': str(src), 'out': str(out), 'clock_ratio': f'1200host:{a.target_mhz}target',
                   'native_start_to_present_local_edges': 3, 'native_start_to_consumer_local_edges': 4,
                   'execution_transport_stalls': 0}))
