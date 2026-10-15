@@ -1267,7 +1267,8 @@ def emit_seq_su_bi() -> str:
         t = t.replace("[8-1:0] " + name, "[VWA-1:0] " + name)
     t = t.replace(".W(8), .D(OS)) u_o_vm_", ".W(VWA), .D(OS)) u_o_vm_")
     t = t.replace(".VWA(8), .DAW(6)", ".VWA(VWA), .VM_ADDR_EXT(VWA > 8), .DAW(6)")
-    return t + "\n" + vrl_rst_split(tp_seq_vrl(cred=True))
+    from seq_row_transport import apply as row_transport
+    return row_transport(t + "\n" + vrl_rst_split(tp_seq_vrl(cred=True)))
 
 
 # el1011-q-seq (2026-10-11): PCUT -- exact path cuts in the controller (verdicts: seq_su_bi fearr-ca675ca83 post-CTS
