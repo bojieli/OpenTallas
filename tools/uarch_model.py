@@ -761,6 +761,33 @@ def hgi_generic_topk_heap_model(n=49152, k=2048, rows=1, iw=1, heaps=2):
                          "VM sector a cycle (item: TOPK 4.3x)")
 
 
+def hbm_coll_static_quadrant_model(npt=3, inject=2, deliver=4, flit_bits=545, period_ps=833.3):
+    """0an successor transport: compiler reserves every pin sample and output edge.
+
+    One pin-capture bank and one registered output bank, no elastic storage.
+    This sizes the transport before RTL; reduction, TOPK and VM service are
+    separately scheduled engines and their latency is not hidden in this row.
+    """
+    if npt not in (2, 3):
+        raise ValueError("production quadrant has two or three rail links")
+    sources = inject + npt + deliver + 1  # SU, rail, VM, ring result
+    sinks = npt + 3 * deliver + 2  # rail, SU, RGX, TKM, TKW, ring partial
+    select_bits = (sources - 1).bit_length()
+    controls = sources + sinks * (select_bits + 1)
+    return dict(source_lanes=sources, sink_lanes=sinks, flit_bits=flit_bits,
+                capture_edges=1, output_edges=1, latency_edges=1,
+                bits_per_cycle_in=sources * flit_bits,
+                bits_per_cycle_out=sinks * flit_bits,
+                payload_flops=(sources + sinks) * flit_bits,
+                control_flops=controls, clock_roots_required=2,
+                largest_root_sinks=max(sources, sinks) * flit_bits + controls,
+                select_cost_bits=sinks * sources * flit_bits,
+                period_ps=period_ps, elastic_entries=0,
+                compiler_rule="each enabled sink selects a source reserved on the preceding capture edge",
+                routing_rule="sources may multicast; distinct sources cannot own the same sink edge",
+                status="SIZED transport only; no physical closure or complete collective price")
+
+
 def hgi_coll_topk_merge_model(G=96, n=512, k=512, kmax=2048, deliver_lanes=4, ser_cycles_per_flit_rank=23.75):
     """HGI COLL.TOPK_MERGE (unit 6 op 2) in hardware (hgi-1010/k 2026-10-10, rtl/hbm_accel/generic/collective/tkm/
     ot_hgi_coll_tkm.sv, ot_hgi_coll_ep TKM = 1): a merge sink on the collective's exact gather bypass.
