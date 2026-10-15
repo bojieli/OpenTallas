@@ -1,0 +1,132 @@
+{
+  "schema": "opentallas.s81.static_svc_storage_mechanism.v1",
+  "scope": "Boundary RTL storage only; actual internal SVC calendar and physical/native qualification incomplete",
+  "native_qualified": false,
+  "sources": {
+    "rtl/dsrom_sys/s81_ph/svc/h/ot_s81_svc_static_store.sv": "43f1d25391a0c140a94dc8ba267fe6ad64226f9dbf915ec9af7b670eb70f8d05",
+    "tools/s81_static_svc/test_static_store.py": "672a4d8930fc7660a3cf227544e5b0ff5757182817df51038934f5a14a628096"
+  },
+  "tests": [
+    {
+      "width": 2132,
+      "depth": 8,
+      "records": 160,
+      "case": "normal",
+      "verdict": "PASS",
+      "faults": "00"
+    },
+    {
+      "width": 2132,
+      "depth": 8,
+      "records": 160,
+      "case": "missing_producer",
+      "verdict": "PASS",
+      "faults": "12"
+    },
+    {
+      "width": 2132,
+      "depth": 8,
+      "records": 160,
+      "case": "wrong_identity",
+      "verdict": "PASS",
+      "faults": "14"
+    },
+    {
+      "width": 2132,
+      "depth": 8,
+      "records": 160,
+      "case": "overwrite_capacity",
+      "verdict": "PASS",
+      "faults": "34"
+    },
+    {
+      "width": 2132,
+      "depth": 8,
+      "records": 160,
+      "case": "unavailable_consumer",
+      "verdict": "PASS",
+      "faults": "08"
+    },
+    {
+      "width": 2132,
+      "depth": 8,
+      "records": 160,
+      "case": "late_producer",
+      "verdict": "PASS",
+      "faults": "01"
+    },
+    {
+      "width": 2132,
+      "depth": 8,
+      "records": 160,
+      "case": "stale_slot",
+      "verdict": "PASS",
+      "faults": "34"
+    },
+    {
+      "width": 8456,
+      "depth": 4,
+      "records": 8,
+      "case": "normal",
+      "verdict": "PASS",
+      "faults": "00"
+    },
+    {
+      "width": 8456,
+      "depth": 4,
+      "records": 8,
+      "case": "missing_producer",
+      "verdict": "PASS",
+      "faults": "12"
+    },
+    {
+      "width": 8456,
+      "depth": 4,
+      "records": 8,
+      "case": "wrong_identity",
+      "verdict": "PASS",
+      "faults": "14"
+    },
+    {
+      "width": 8456,
+      "depth": 4,
+      "records": 8,
+      "case": "overwrite_capacity",
+      "verdict": "PASS",
+      "faults": "34"
+    },
+    {
+      "width": 8456,
+      "depth": 4,
+      "records": 8,
+      "case": "unavailable_consumer",
+      "verdict": "PASS",
+      "faults": "08"
+    },
+    {
+      "width": 8456,
+      "depth": 4,
+      "records": 8,
+      "case": "late_producer",
+      "verdict": "PASS",
+      "faults": "01"
+    },
+    {
+      "width": 8456,
+      "depth": 4,
+      "records": 8,
+      "case": "stale_slot",
+      "verdict": "PASS",
+      "faults": "34"
+    }
+  ],
+  "lint": "verilator --lint-only -Wall: PASS",
+  "physical_qualified": false,
+  "timeline_observation": "every result_v edge equals scheduled get edge; count unchanged after faults",
+  "unresolved": [
+    "native engine demand/credit issue replacement",
+    "actual source-pinned SC/PV/merger/SRAM/relay ages and phases",
+    "compiler-sealed complete production itinerary and done deadline",
+    "new physical view/slot/clock/pins qualification"
+  ]
+}
