@@ -21,8 +21,10 @@ VIEW = 'physical/ref_tile/qfd_tt_up4_tp8/views/ot_qfd_band_upper'
 
 def source_contract(wrapper=None, root=None):
     """Prove the parameter-free source names the existing exact TP8 implementation."""
-    from die_port_bind import parse_modules, parse_die
+    # Establish the repository tools path before resolving the shared parser;
+    # this generator also has a legacy same-basename checker in qwen_split/.
     from qwen_split.source_pin_plan import rtl_ports
+    from die_port_bind import parse_modules, parse_die
     root = Path(root or ROOT)
     wrapper = Path(wrapper or root / SOURCE)
     mods = [m for m in parse_modules(wrapper.read_text(), str(wrapper)) if m.name == MASTER]
