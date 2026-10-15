@@ -3539,7 +3539,10 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             E_[bid] = (eps[0][0], eps[-1][0])
         ipads, irep = _TS.arrival_pads(S_, E_)
         tpads.update(ipads)
-        m['tp8_inline_pads'] = dict(irep, pads=len(ipads), pad_relays=sum(ipads.values()))
+        from qwen_split.direct_up4 import equal_age_pads
+        tpads=equal_age_pads(S_,m.get('relay_equal_groups',{}),tpads)
+        m['tp8_inline_pads'] = dict(irep, pads=len(tpads), pad_relays=sum(tpads.values()),
+                                  equal_age_groups=len(m.get('relay_equal_groups',{})))
     # Reconcile the allocator's mutable occupancy with the exact frames that
     # will be emitted after repair/rip-up/jog/pre-pad trimming. Every inline
     # arrival pad must see ALL surviving frames, not a stale search grid.
@@ -6034,7 +6037,9 @@ def relay_token_cost(v, m, ar_job='results/rtl/qwen_dspark_system_20261004/ctx8k
     prim, frag = {}, {}
     for bid, b in B.items():
         if bid.startswith('pword_'):
-            prim[b[3][0][0]] = bid
+            source=b[3][0][0]
+            if source not in prim or S(bid)>S(prim[source]):
+                prim[source]=bid
         if bid.startswith('pfrag_'):
             frag[b[3][0][0]] = bid
     tws = 0
