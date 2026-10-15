@@ -1,0 +1,10 @@
+ot-run: ot-epyc1tb     admits   211 GB (avail 437, growth 141, headroom 64, waiters 0/0 GB) load 121/128 running 14 disk 690 GB 
+ot-run: ot-epyc4       admits   431 GB (avail 658, growth 155, headroom 48, waiters 0/0 GB) load 102/128 running 28 disk 767 GB 
+ot-run: ot-pve1        admits   163 GB (avail 210, growth 8, headroom 32, waiters 0/0 GB) load 34/28 running 3 disk 1307 GB 
+ot-run: ot-agidock128  admits    37 GB (avail 78, growth 31, headroom 24, waiters 0/0 GB) load 27/64 running 7 disk 78 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-2711931-1792046669 after 0 s
+[9000] %Fatal: tb_hbm_smh_compact_transport.sv:37: Assertion failed in tb_hbm_smh_compact_transport: COMPACT EXACT FAIL cycle=9
+%Error: tb_hbm_smh_compact_transport.sv:37: Verilog $stop
+Aborting...
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-2711931-1792046669): exit 1

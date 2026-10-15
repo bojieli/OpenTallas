@@ -52,6 +52,9 @@ module ot_hbm_smh_compact_pt_w #(parameter integer TAGW=16, NBEAT=13, CHUNK=128)
  localparam integer R=6+TAGW+788+1+7, B=8+NBEAT+2048;
  localparam [R-1:0] RM=({{(R-2){1'b0}},2'b11} << (R-2)) | ({{(R-1){1'b0}},1'b1} << 7);
  localparam [B-1:0] BM=({{(B-1){1'b0}},1'b1} << (B-1));
+`ifdef OT_SMH_GROUP_TRANSPORT
+ ot_hbm_smh_group_pt_w #(.TAGW(TAGW),.NBEAT(NBEAT),.CHUNK(CHUNK)) u_groups(.*);
+`else
  wire [2*R-1:0] first_r;
  wire [B-1:0] first_b;
  genvar row,k;
@@ -74,6 +77,7 @@ module ot_hbm_smh_compact_pt_w #(parameter integer TAGW=16, NBEAT=13, CHUNK=128)
  end endgenerate
  assign rl1_n=first_r[0+:R]; assign rl1_s=first_r[R+:R];
  assign ohl1_n=bk1_n[2048+:NBEAT]; assign ohl1_s=bk1_s[2048+:NBEAT];
+`endif
 endmodule
 
 module ot_hbm_smh_compact_pt_e #(parameter integer TAGW=16,NBEAT=13,CHUNK=128) (
@@ -85,6 +89,9 @@ module ot_hbm_smh_compact_pt_e #(parameter integer TAGW=16,NBEAT=13,CHUNK=128) (
  localparam integer R=6+TAGW+788+1+7, B=8+NBEAT+2048;
  localparam [R-1:0] RM=({{(R-2){1'b0}},2'b11} << (R-2)) | ({{(R-1){1'b0}},1'b1} << 7);
  localparam [B-1:0] BM=({{(B-1){1'b0}},1'b1} << (B-1));
+`ifdef OT_SMH_GROUP_TRANSPORT
+ ot_hbm_smh_group_pt_e #(.TAGW(TAGW),.NBEAT(NBEAT),.CHUNK(CHUNK)) u_groups(.*);
+`else
  genvar row,k;
  generate for(row=0;row<2;row=row+1) begin: g_row
   for(k=0;k<(R+CHUNK-1)/CHUNK;k=k+1) begin: g_slice
@@ -100,6 +107,7 @@ module ot_hbm_smh_compact_pt_e #(parameter integer TAGW=16,NBEAT=13,CHUNK=128) (
   `OT_SMH_SLICE #(.W(W),.RESET_MASK(BM[OFF+:W])) u_slice
    (.clk(clk),.rst_a(rst_a),.d(bm[OFF+:W]),.first(unused_first),.last(bout[OFF+:W]));
  end endgenerate
+`endif
 endmodule
 
 `undef OT_SMH_SLICE
