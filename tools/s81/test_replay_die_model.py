@@ -80,6 +80,23 @@ print('EXACT_MODEL_REUSED')
         with self.assertRaises(ValueError):
             R.validate(self.root.parent, self.capture, self.meta)
 
+    def test_lfs_payload_and_untracked_geometry_refuse(self):
+        path = self.root / 'macro.lef'
+        payload = path.read_bytes()
+        data = json.loads(self.manifest.read_text())
+        entry = next(item for item in data['files'] if item['path'] == 'macro.lef')
+        entry['lfs_sha256'] = hashlib.sha256(payload).hexdigest()
+        self.manifest.write_text(json.dumps(data))
+        self.meta['source_manifest_sha256'] = R.digest(self.manifest)
+        R.validate(self.root, self.capture, self.meta)
+        path.write_bytes(payload + b'changed')
+        with self.assertRaises(ValueError):
+            R.validate(self.root, self.capture, self.meta)
+        path.write_bytes(payload)
+        (self.root / 'tools/shadow_geometry.py').write_text('HEIGHT=3')
+        with self.assertRaisesRegex(ValueError, 'untracked input'):
+            R.validate(self.root, self.capture, self.meta)
+
     def test_emitter_reuses_and_wrong_options_refuse(self):
         cmd = [sys.executable, str(Path(R.__file__)), '--source', str(self.root),
                '--capture', str(self.capture), '--script', 'tools/emitter.py', '--', '--die']

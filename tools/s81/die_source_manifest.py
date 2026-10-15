@@ -29,6 +29,22 @@ def make(repo, commit):
         if kind != 'blob':
             raise ValueError('unsupported Git tree entry: ' + head.decode())
         files.append(dict(path=path.decode(), mode=mode, git_blob=blob, bytes=int(size)))
+    # Git LFS stores a small Git pointer; the actual input is its SHA256 object.
+    candidates = [item for item in files if item['mode'] != '120000' and item['bytes'] <= 256]
+    batch = subprocess.run(['git', '-C', str(repo), 'cat-file', '--batch'],
+                           input=''.join(item['git_blob'] + '\n' for item in candidates).encode(),
+                           stdout=subprocess.PIPE, check=True).stdout
+    position = 0
+    for item in candidates:
+        end = batch.index(b'\n', position)
+        header = batch[position:end].decode().split()
+        size = int(header[2])
+        payload = batch[end+1:end+1+size]
+        position = end + 1 + size + 1
+        if payload.startswith(b'version https://git-lfs.github.com/spec/v1\n'):
+            fields = dict(line.split(' ', 1) for line in payload.decode().splitlines())
+            item['lfs_sha256'] = fields['oid'].removeprefix('sha256:')
+            item['bytes'] = int(fields['size'])
     return dict(schema='opentallas.source-tree-manifest.v1', source_commit=commit,
                 git_tree=tree, files=files, external_files=[])
 
@@ -63,12 +79,14 @@ def verify(root, manifest):
             if path.is_symlink() or not path.is_file():
                 raise ValueError('source file missing or replaced by symlink: ' + entry['path'])
             size = path.stat().st_size
-            value.update(b'blob ' + str(size).encode() + b'\0')
+            value = hashlib.sha256() if entry.get('lfs_sha256') else value
+            if not entry.get('lfs_sha256'):
+                value.update(b'blob ' + str(size).encode() + b'\0')
             with path.open('rb') as stream:
                 while chunk := stream.read(1024 * 1024):
                     value.update(chunk)
             checked_bytes += size
-        if value.hexdigest() != entry['git_blob']:
+        if value.hexdigest() != entry.get('lfs_sha256', entry['git_blob']):
             raise ValueError('actual source bytes differ from Git tree: ' + entry['path'])
     for item in manifest['external_files']:
         if digest(item['path']) != item['sha256']:
