@@ -1,0 +1,95 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc4 for 8 GB; inputs ship there before admission",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_vms_bank_static_rg7wg3_1015_20261015-024127.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_vms_bank_static_rg7wg3_1015_20261015-024127.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/vms_bank_static_rg7wg3_1015-20261015-024127",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc4 in 33 s (gate total 1121 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 3197 um2 + macros 36952 in core 130170: util 31%",
+   "fix": "set \"std_area_um2\": 3197 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN hfd_vms_bank_static_rg7wg3 cells 21,527 flops 6,409 depth 540.1 ps util 0.3086 reach 0.0 um (0.4 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 30.9% outside 45%-65% (std 3218 + macro 36952 um2 in 130170 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 501.3..593.1 ps (spread 91.8), boundary mean 535.6; tt insertion all 381.1..466.0 ps (spread 84.9), boundary mean 412.1; ff insertion all 306.7..388.0 ps (spread 81.3), boundary mean 337.1; macro_clk flag True",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/vms_bank_static_rg7wg3_1015/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      300 paths, worst slack -75.9 ps (e.g. bank.s1w_d[38]$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg        83 paths, worst slack 3.0 ps (e.g. bank.xq_done$_DFF_PN0_/RESETN)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS -7.593881079515086e-11 hold WNS 2.6214336257268656e-11",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:clk: 6,412 sinks on the largest root <= 15,000; measured TT insertion 466.0 ps, leaf spread 84.9 ps",
+   "fix": ""
+  }
+ ]
+}

@@ -1,0 +1,43 @@
+{
+  "source_commit": "17054d4ac",
+  "hook_commit": "7eb4de7d2",
+  "bank_rtl_sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+  "run": "20261015-024127",
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-1592195-1792057330.scope",
+  "full_gate_verdict": "WARN 0fail2utilwarn",
+  "native_qualified": false,
+  "route_admitted": false,
+  "gate_seconds": 1121,
+  "body_um": [
+    393.12,
+    339.12
+  ],
+  "utilization_percent": 30.9,
+  "root_clock_sinks": 6412,
+  "tt_all_spread_ps": 84.9,
+  "tt_boundary_spread_ps": 84.6,
+  "boundary_phase_target_ps": 80,
+  "tt_setup_wns_ps": -75.93881079515086,
+  "critical_endpoint": "bank.s1w_d[38]$_DFF_P_/D",
+  "reset_recovery_slack_ps": 3.0,
+  "ff_hold_wns_ps": 26.214336257268656,
+  "macro_clock_slew_defect": {
+    "pin": "bank.u_c/clk",
+    "tt_ps": 155,
+    "ss_ps": 155,
+    "ff_ps": 161,
+    "limit_ps": 120
+  },
+  "actual_full_IO_pin_gate": "PASS4742pins144PG0shift0PG0pitch",
+  "actual_final_CTS_pin_gate": "PASS independently re-read final CTS ODB, same manifest",
+  "final_odb_sha256": "f803a67058944cf548d0d1da4c8336b8c8f9db132d8b3589358dd14f88862f19",
+  "mapped_netlist_sha256": "368f336ed883c4a13ddb5466dd8f84d1b828bc0e60b4b030e065dabb4978e5eb",
+  "final_ODB_audit_unit": "oth-ubuntu-1662842-1792058496",
+  "structural_next": [
+    "Write-owner select decode/fanout path repair with model and functional equivalence before fresh source",
+    "Actual clock tree phase and third macro slew repair without relaxing constraints",
+    "Retain positive but narrow reset timing and actualPG/nativepinchecks"
+  ],
+  "scope": "Full source-exact synth/IO/placement/CTS and actual final ODB/pin/state audits; no route or full HBM qualification"
+}
