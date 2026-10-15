@@ -1,0 +1,22 @@
+{
+  "name": "wrong_offset_33",
+  "offset": 33,
+  "variant": "wrong_offset",
+  "expect_pass": false,
+  "compile_exit": 0,
+  "exit": 1,
+  "measured": {
+    "off": 33,
+    "checks": 6144,
+    "known_checks": 6006,
+    "errors": 6108,
+    "data_errors": 6108,
+    "metadata_errors": 6107,
+    "unknown_errors": 0,
+    "all_bits_one": 1,
+    "all_bits_zero": 1
+  },
+  "binary_sha256": "e3039e40b7912f85338cc743486cb19a22e02659b35ad8133e15d857b8091f21",
+  "executed_helpers_sha256": "273b345bffae6c5627704c5c4720c6c3ada3e7618eb4929b54f931a023eced9b",
+  "ok": true
+}

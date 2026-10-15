@@ -1,0 +1,3 @@
+RING_QUARTERS off=33 checks=6144 known_checks=6006 errors=6108 data_errors=6108 metadata_errors=6107 unknown_errors=0 all_bits_one=1 all_bits_zero=1
+FATAL: /home/ubuntu/wt/codex-vmwb-functional-1417/rtl/test/tb_coll_ring_quarters.sv:51: RING_QUARTERS FAIL
+       Time: 61522000 Scope: tb_coll_ring_quarters

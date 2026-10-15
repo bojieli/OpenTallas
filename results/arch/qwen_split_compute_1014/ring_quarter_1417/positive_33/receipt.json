@@ -1,0 +1,22 @@
+{
+  "name": "positive_33",
+  "offset": 33,
+  "variant": "positive",
+  "expect_pass": true,
+  "compile_exit": 0,
+  "exit": 0,
+  "measured": {
+    "off": 33,
+    "checks": 6144,
+    "known_checks": 6006,
+    "errors": 0,
+    "data_errors": 0,
+    "metadata_errors": 0,
+    "unknown_errors": 0,
+    "all_bits_one": 1,
+    "all_bits_zero": 1
+  },
+  "binary_sha256": "22da12d028f591d619b98418143b6eef3891b7463d0b37ac92aa330279ce4c80",
+  "executed_helpers_sha256": "9cdf7e2d8539ef00483a7a52ade4b5341b10fdb716ae2e84a3f028e59a0ce87a",
+  "ok": true
+}

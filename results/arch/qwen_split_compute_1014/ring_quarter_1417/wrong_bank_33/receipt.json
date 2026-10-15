@@ -1,0 +1,22 @@
+{
+  "name": "wrong_bank_33",
+  "offset": 33,
+  "variant": "wrong_bank",
+  "expect_pass": false,
+  "compile_exit": 0,
+  "exit": 1,
+  "measured": {
+    "off": 33,
+    "checks": 6144,
+    "known_checks": 6006,
+    "errors": 6111,
+    "data_errors": 6099,
+    "metadata_errors": 3429,
+    "unknown_errors": 0,
+    "all_bits_one": 1,
+    "all_bits_zero": 1
+  },
+  "binary_sha256": "839bc2908542d11688108cc480f7dc543078ed21fa4ae9be98bee7d7576f9292",
+  "executed_helpers_sha256": "bb8280ddf798f695dd62bd18a4151e34f53da17bf843fca8e853d41e5b9b2693",
+  "ok": true
+}

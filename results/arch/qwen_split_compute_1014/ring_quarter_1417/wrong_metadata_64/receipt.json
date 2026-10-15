@@ -1,0 +1,22 @@
+{
+  "name": "wrong_metadata_64",
+  "offset": 64,
+  "variant": "wrong_metadata",
+  "expect_pass": false,
+  "compile_exit": 0,
+  "exit": 1,
+  "measured": {
+    "off": 64,
+    "checks": 6144,
+    "known_checks": 6006,
+    "errors": 6076,
+    "data_errors": 0,
+    "metadata_errors": 6076,
+    "unknown_errors": 0,
+    "all_bits_one": 1,
+    "all_bits_zero": 1
+  },
+  "binary_sha256": "9194d545f27fc1d122e30be824d23b34e6b2ac3c67ed3615b951c442a1ac8641",
+  "executed_helpers_sha256": "90183a3e8530b1dcf85239c2657b9a5c974ab163f045ce6e9ecbe9145ce34ab6",
+  "ok": true
+}
