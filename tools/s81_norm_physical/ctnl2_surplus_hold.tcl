@@ -30,3 +30,12 @@ foreach pin [$downstream getITerms] {if {$pin ne $output} {$pin connect $upstrea
 odb::dbInst_destroy $inst
 odb::dbNet_destroy $downstream
 puts "CTNL2_ECO bypass hold12489 only: ot_ihdrv_00291 -> hold7244; no sequential or clock changes"
+# A final routed ODB carries physical wires for the previous connectivity. They
+# must not enter a fresh GRT/repair transaction after rewiring. Clear ONLY this
+# successor's nonspecial dbWires; PG special wires and placement stay intact.
+set cleared 0
+foreach net [$block getNets] {
+  set wire [$net getWire]
+  if {$wire ne "NULL"} {odb::dbWire_destroy $wire; incr cleared}
+}
+puts "CTNL2_ECO invalidated $cleared old signal/clock wire objects before fresh route"
