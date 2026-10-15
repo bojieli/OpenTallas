@@ -71,6 +71,9 @@ module tb_s81_static_fmt1_dynamic;
    end
    if(mut==7 && cyc==start_cycle+9)strap[0]=strap[0]^2'b01;
    if(mut==6 && commit && cseq==2)rows[14]=1;
+   if(mut==8 && cyc==0)begin
+    issue=1;#1;if(fault!==4'hf)$fatal(1,"uninitialized boot issue not refused on source edge");
+   end
    @(posedge clk);#1;
    if(mut==0)begin
     if(|fault || |sf)$fatal(1,"fault cycle=%0d ep=%h commit=%b",cyc,fault,commit);
