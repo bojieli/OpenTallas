@@ -1,0 +1,4 @@
+FAULT_CAUSE cycle=16 bad=1 decode=0 qfault=0 vo=0 expected=0 rr_mask=00001111
+[1170000] %Fatal: tb_hgi_qdq_static.sv:58: Assertion failed in tb_hgi_qdq_static: unexpected static fault at cycle 17 vo=0 expected=0
+%Error: rtl/test/hbm_accel/generic/tb_hgi_qdq_static.sv:58: Verilog $stop
+Aborting...

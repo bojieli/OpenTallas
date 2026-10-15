@@ -1,0 +1,91 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "hbm_att_bank_gather_binary_1015",
+ "top": "ot_hbm_attn_pv_bank_gather_binary",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  140.4,
+  225.18
+ ],
+ "core": [
+  2.16,
+  2.16,
+  138.24,
+  223.02
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": 971.0,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n",
+   "capture_v",
+   "block_select"
+  ],
+  "W": [
+   "tile_data",
+   "tile_flags"
+  ],
+  "E": [
+   "bank_data",
+   "bank_flags",
+   "output_v"
+  ]
+ },
+ "clock_port": "clk",
+ "blocks": [],
+ "findings": [
+  [
+   "WARN",
+   "util",
+   "utilisation 3% outside 45%-60% (std 971 + macro 0 in core 30055 um2)",
+   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  ]
+ ],
+ "referenced": [
+  "rtl/hdc/v41x/static/ot_hbm_attn_pv_bank_gather_binary.sv",
+  "physical/ref_tile/hbm_att_bank_gather_binary_1015/kit.env",
+  "physical/ref_tile/hbm_att_bank_gather_binary_1015/clock.sdc",
+  "physical/ref_tile/hbm_att_bank_gather_binary_1015/signoff.sdc",
+  "physical/ref_tile/hbm_att_bank_gather_binary_1015/pdn.tcl",
+  "physical/ref_tile/hbm_att_bank_gather_binary_1015/pre_cts.tcl",
+  "physical/ref_tile/hbm_att_bank_gather_binary_1015/post_cts.tcl",
+  "physical/ref_tile/hbm_att_bank_gather_binary_1015/post_grt.tcl",
+  "physical/ref_tile/hbm_att_bank_gather_binary_1015/pre_drt.tcl",
+  "physical/ref_tile/hbm_att_bank_gather_binary_1015/pre_fill.tcl",
+  "physical/ref_tile/hbm_att_bank_gather_binary_1015/post_fill.tcl",
+  "physical/ref_tile/hbm_att_bank_gather_binary_1015/pre_grt.tcl",
+  "physical/ref_tile/hbm_att_bank_gather_binary_1015/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "rtl/hdc/v41x/static/physical/bank_gather_pin_audit.tcl",
+  "rtl/hdc/v41x/static/physical/gather_pdn_setback.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/hbm_att_bank_gather_binary_1015/pre_gpl.tcl",
+  "physical/ref_tile/hbm_att_bank_gather_binary_1015/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
+ ]
+}

@@ -1,0 +1,22 @@
+{
+  "scope": "Preserved predecessor source/placement; diagnostic only, incompatible with static source/current geometry. Process exit0 is not route closure.",
+  "host": "ot-epyc1tb",
+  "original_openroad_pid": 3720927,
+  "status": "TERMINAL_CONGESTION_FAIL",
+  "total_overflow": 3983035,
+  "by_layer": {
+    "M4": 29173,
+    "M5": 198902,
+    "M6": 3694417,
+    "M7": 60543
+  },
+  "wirelength_um": 18101936,
+  "vias": 3109999,
+  "run_sha256": "fc3a78dfbaef80bab5e0608fa1c348baa4288471482c255b7798d6b3c7468a73",
+  "successor_required": [
+    "Actual fixed native producers/controller source",
+    "Adopted bit-weighted placement/clock/pin/cut audit",
+    "Direct M7/M8 expansion and actual PG obstacles",
+    "GRT/DRT/TTFF actual newmodel"
+  ]
+}

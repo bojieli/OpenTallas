@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "source_commit": "0f9c1ab49",
+  "unit": "oth-ubuntu-892409-1792059642",
+  "host": "ot-epyc1tb",
+  "claim": "Actual34v2SRAM raw32,563,200bits, local1,966,080elements and3,932,160K/PVRTLconsumer checks; FP4scale actualDUTmutant caught",
+  "scope": "component only; no full arithmetic/controller, physical station or whole-operation throughput qualification",
+  "evidence_sha256": {
+    "m0.log": "3445a845b19a1ddee5015e46620bd8a24930ebac16ac1316cae3cb5a1d2ad1ea",
+    "m0.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "m1.log": "9aabb3e4673ad9089469e25b0805b4f10cb057a09c737192512a0f930d013bfe",
+    "m1.rc": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+  },
+  "bank_sha256": null
+}

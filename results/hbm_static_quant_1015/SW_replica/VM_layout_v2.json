@@ -1,0 +1,406 @@
+{
+  "SW": {
+    "quadrant": "SW",
+    "params": {
+      "NC": 7,
+      "RG": 6,
+      "WG": 2,
+      "CW": 3,
+      "RB": 3,
+      "WB": 3
+    },
+    "fields": [
+      {
+        "name": "client_seq",
+        "bits": 16,
+        "lo": 0
+      },
+      {
+        "name": "response_enable",
+        "bits": 8,
+        "lo": 16
+      },
+      {
+        "name": "response_seq",
+        "bits": 16,
+        "lo": 24
+      },
+      {
+        "name": "bank_enable",
+        "bits": 8,
+        "lo": 40
+      },
+      {
+        "name": "bank_client",
+        "bits": 24,
+        "lo": 48
+      },
+      {
+        "name": "hub_ring_enable",
+        "bits": 2,
+        "lo": 72
+      },
+      {
+        "name": "hub_ring_client",
+        "bits": 6,
+        "lo": 74
+      },
+      {
+        "name": "rslot_v",
+        "bits": 8,
+        "lo": 80
+      },
+      {
+        "name": "wslot_v",
+        "bits": 8,
+        "lo": 88
+      },
+      {
+        "name": "rslot",
+        "bits": 24,
+        "lo": 96
+      },
+      {
+        "name": "wslot",
+        "bits": 24,
+        "lo": 120
+      },
+      {
+        "name": "ring_tx_enable",
+        "bits": 2,
+        "lo": 144
+      },
+      {
+        "name": "ring_tx_source",
+        "bits": 6,
+        "lo": 146
+      },
+      {
+        "name": "replay_enable",
+        "bits": 1,
+        "lo": 152
+      },
+      {
+        "name": "replay_source",
+        "bits": 1,
+        "lo": 153
+      },
+      {
+        "name": "lg_local_read",
+        "bits": 24,
+        "lo": 154
+      },
+      {
+        "name": "lg_local_write",
+        "bits": 24,
+        "lo": 178
+      }
+    ],
+    "bits": 202,
+    "startup_edges": 4,
+    "sustained_calendars_per_edge": 1
+  },
+  "SE": {
+    "quadrant": "SE",
+    "params": {
+      "NC": 0,
+      "RG": 5,
+      "WG": 1,
+      "CW": 1,
+      "RB": 3,
+      "WB": 3
+    },
+    "fields": [
+      {
+        "name": "client_seq",
+        "bits": 2,
+        "lo": 0
+      },
+      {
+        "name": "response_enable",
+        "bits": 1,
+        "lo": 2
+      },
+      {
+        "name": "response_seq",
+        "bits": 2,
+        "lo": 3
+      },
+      {
+        "name": "bank_enable",
+        "bits": 8,
+        "lo": 5
+      },
+      {
+        "name": "bank_client",
+        "bits": 8,
+        "lo": 13
+      },
+      {
+        "name": "hub_ring_enable",
+        "bits": 2,
+        "lo": 21
+      },
+      {
+        "name": "hub_ring_client",
+        "bits": 2,
+        "lo": 23
+      },
+      {
+        "name": "rslot_v",
+        "bits": 8,
+        "lo": 25
+      },
+      {
+        "name": "wslot_v",
+        "bits": 8,
+        "lo": 33
+      },
+      {
+        "name": "rslot",
+        "bits": 24,
+        "lo": 41
+      },
+      {
+        "name": "wslot",
+        "bits": 24,
+        "lo": 65
+      },
+      {
+        "name": "ring_tx_enable",
+        "bits": 2,
+        "lo": 89
+      },
+      {
+        "name": "ring_tx_source",
+        "bits": 6,
+        "lo": 91
+      },
+      {
+        "name": "replay_enable",
+        "bits": 1,
+        "lo": 97
+      },
+      {
+        "name": "replay_source",
+        "bits": 1,
+        "lo": 98
+      },
+      {
+        "name": "lg_local_read",
+        "bits": 24,
+        "lo": 99
+      },
+      {
+        "name": "lg_local_write",
+        "bits": 24,
+        "lo": 123
+      }
+    ],
+    "bits": 147,
+    "startup_edges": 4,
+    "sustained_calendars_per_edge": 1
+  },
+  "NW": {
+    "quadrant": "NW",
+    "params": {
+      "NC": 4,
+      "RG": 7,
+      "WG": 3,
+      "CW": 3,
+      "RB": 3,
+      "WB": 3
+    },
+    "fields": [
+      {
+        "name": "client_seq",
+        "bits": 10,
+        "lo": 0
+      },
+      {
+        "name": "response_enable",
+        "bits": 5,
+        "lo": 10
+      },
+      {
+        "name": "response_seq",
+        "bits": 10,
+        "lo": 15
+      },
+      {
+        "name": "bank_enable",
+        "bits": 8,
+        "lo": 25
+      },
+      {
+        "name": "bank_client",
+        "bits": 24,
+        "lo": 33
+      },
+      {
+        "name": "hub_ring_enable",
+        "bits": 2,
+        "lo": 57
+      },
+      {
+        "name": "hub_ring_client",
+        "bits": 6,
+        "lo": 59
+      },
+      {
+        "name": "rslot_v",
+        "bits": 8,
+        "lo": 65
+      },
+      {
+        "name": "wslot_v",
+        "bits": 8,
+        "lo": 73
+      },
+      {
+        "name": "rslot",
+        "bits": 24,
+        "lo": 81
+      },
+      {
+        "name": "wslot",
+        "bits": 24,
+        "lo": 105
+      },
+      {
+        "name": "ring_tx_enable",
+        "bits": 2,
+        "lo": 129
+      },
+      {
+        "name": "ring_tx_source",
+        "bits": 6,
+        "lo": 131
+      },
+      {
+        "name": "replay_enable",
+        "bits": 1,
+        "lo": 137
+      },
+      {
+        "name": "replay_source",
+        "bits": 1,
+        "lo": 138
+      },
+      {
+        "name": "lg_local_read",
+        "bits": 24,
+        "lo": 139
+      },
+      {
+        "name": "lg_local_write",
+        "bits": 24,
+        "lo": 163
+      }
+    ],
+    "bits": 187,
+    "startup_edges": 4,
+    "sustained_calendars_per_edge": 1
+  },
+  "NE": {
+    "quadrant": "NE",
+    "params": {
+      "NC": 0,
+      "RG": 7,
+      "WG": 3,
+      "CW": 1,
+      "RB": 3,
+      "WB": 3
+    },
+    "fields": [
+      {
+        "name": "client_seq",
+        "bits": 2,
+        "lo": 0
+      },
+      {
+        "name": "response_enable",
+        "bits": 1,
+        "lo": 2
+      },
+      {
+        "name": "response_seq",
+        "bits": 2,
+        "lo": 3
+      },
+      {
+        "name": "bank_enable",
+        "bits": 8,
+        "lo": 5
+      },
+      {
+        "name": "bank_client",
+        "bits": 8,
+        "lo": 13
+      },
+      {
+        "name": "hub_ring_enable",
+        "bits": 2,
+        "lo": 21
+      },
+      {
+        "name": "hub_ring_client",
+        "bits": 2,
+        "lo": 23
+      },
+      {
+        "name": "rslot_v",
+        "bits": 8,
+        "lo": 25
+      },
+      {
+        "name": "wslot_v",
+        "bits": 8,
+        "lo": 33
+      },
+      {
+        "name": "rslot",
+        "bits": 24,
+        "lo": 41
+      },
+      {
+        "name": "wslot",
+        "bits": 24,
+        "lo": 65
+      },
+      {
+        "name": "ring_tx_enable",
+        "bits": 2,
+        "lo": 89
+      },
+      {
+        "name": "ring_tx_source",
+        "bits": 6,
+        "lo": 91
+      },
+      {
+        "name": "replay_enable",
+        "bits": 1,
+        "lo": 97
+      },
+      {
+        "name": "replay_source",
+        "bits": 1,
+        "lo": 98
+      },
+      {
+        "name": "lg_local_read",
+        "bits": 24,
+        "lo": 99
+      },
+      {
+        "name": "lg_local_write",
+        "bits": 24,
+        "lo": 123
+      }
+    ],
+    "bits": 147,
+    "startup_edges": 4,
+    "sustained_calendars_per_edge": 1
+  }
+}
