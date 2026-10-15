@@ -10,7 +10,7 @@
   "actual_source": [
     "370225c2f",
     "92154feb6",
-    "409 follow-on main source must be included in die manifest"
+    "origin/main262d5e14a inspected dsfd_sp_vm_static/core files"
   ],
   "historical_to_required": [
     {
@@ -108,9 +108,9 @@
     {
       "step": 2,
       "master": "dsfd_vm_static_bank128",
-      "status": "RECOVERY active bank_fix",
+      "status": "NATIVE_CLOSED; optional viewer recovery active",
       "job": "dsfd_vm_static_bank128_m4_v20-v20std2-977ea3ed7",
-      "observed": "viz export failed read_db6_final; inspect actual route verdict before recovery; no rerouteclosed"
+      "observed": "authoritative route CLOSED TT+187.58 FF+21.35 DRC0 SSsensitivity+10.16; child_lint PASS; source recordf87c197e1 onmain; nativeLEF/libs/insertion available; optional viewer parser fails due new set::ot_ce_corner command, fix3d995895f pending main"
     },
     {
       "step": 3,
