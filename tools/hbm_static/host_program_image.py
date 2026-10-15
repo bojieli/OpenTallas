@@ -9,7 +9,7 @@ import json
 from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from program_registry import raw_control256, target_contract
+from program_registry import raw_control256, raw_engram_fetch, target_contract
 
 
 def integer(value):
@@ -31,22 +31,25 @@ def build(spec):
         image = images[target]
         if not (target in range(4) or 16 <= target <= 255):
             raise ValueError('Target is outside the actual direct-VM/extended-engine map')
-        if image.get('encoding') == 'raw_control256':
-            start, words, contract = raw_control256(image)
+        if image.get('encoding') in ('raw_control256', 'raw_engram_fetch7x32'):
+            validate = raw_control256 if image['encoding'] == 'raw_control256' else raw_engram_fetch
+            start, words, contract = validate(image)
             for address, word in sorted(words.items()):
                 # Explicit select per frame: preserve raw half addressing exactly.
                 writes.append(dict(address=0xf20, data=(address << 8) | target))
                 for piece in range(8):
                     writes.append(dict(address=0xf24, data=(word >> (32*piece)) & 0xffffffff))
+            writes.append(dict(idle_core_edges=contract.get('cfg_to_descriptor_min_edges', 2),
+                               reason='actual raw programme final-word commit before descriptor'))
             writes += [dict(address=0xf28, data=(start['limit'] << 12) | start['base']),
                        dict(address=0xf2c, data=1)]
             launch_idle = max(launch_idle, contract['descriptor_to_launch_min_edges'])
-            manifest.append(dict(target=target, encoding='raw_control256', payload_bits=238,
+            manifest.append(dict(target=target, encoding=image['encoding'], payload_bits=contract['payload_bits'],
                                  transport_bits=256, words=len(words), start=start,
-                                 source=contract['source'], native_op_pc_bits=13))
+                                 source=contract['source'], native_op_pc_bits=contract['native_op_pc_bits']))
             continue
-        if target >= 16 and target_contract(target).get('encoding') == 'raw_control256':
-            raise ValueError('Raw control256 target cannot consume protected programme images')
+        if target >= 16 and target_contract(target).get('encoding') in ('raw_control256', 'raw_engram_fetch7x32'):
+            raise ValueError('Raw native target cannot consume protected programme images')
         pcw = integer(image['PCW'])
         payload = integer(image['payload_bits'])
         if not 8 <= pcw <= 12 or not 1 <= payload <= 233-pcw:

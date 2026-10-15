@@ -607,9 +607,19 @@
       "native_banks": 19,
       "capacity_cycles": 2432,
       "descriptor_to_launch_min_edges": 1218,
-      "first_control_after_raw_launch": 6,
-      "first_consumer_after_raw_launch": 7,
-      "status": "source-owned reserved; actual issuer gate and kernel binding required"
+      "status": "Actual source committed; native issuer proof pending",
+      "first_control_after_raw_launch_capture": 6,
+      "first_consumer_after_raw_launch_capture": 7,
+      "analytical_LCP_FFQ_to_consumer_edges": 9,
+      "latency_status": "Local launch-capture offsets source-owned; overlay+issuer composition not yet measured",
+      "source_commit": "eec875a97",
+      "source_sha256": "b8eb77d0fc1f4a356351d7a4d759212bdf6df2511f991b2c290f4fc3ba45c3e7",
+      "source_path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_control256_program.sv",
+      "clock_ports": {
+        "clk_control": 1,
+        "clk_mem": 19,
+        "clk_capture": 19
+      }
     },
     "121": {
       "owner": "ENGRAM COLL control256",
@@ -630,9 +640,19 @@
       "native_banks": 19,
       "capacity_cycles": 2432,
       "descriptor_to_launch_min_edges": 1218,
-      "first_control_after_raw_launch": 6,
-      "first_consumer_after_raw_launch": 7,
-      "status": "source-owned reserved; actual issuer gate and kernel binding required"
+      "status": "Actual source committed; native issuer proof pending",
+      "first_control_after_raw_launch_capture": 6,
+      "first_consumer_after_raw_launch_capture": 7,
+      "analytical_LCP_FFQ_to_consumer_edges": 9,
+      "latency_status": "Local launch-capture offsets source-owned; overlay+issuer composition not yet measured",
+      "source_commit": "eec875a97",
+      "source_sha256": "b8eb77d0fc1f4a356351d7a4d759212bdf6df2511f991b2c290f4fc3ba45c3e7",
+      "source_path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_control256_program.sv",
+      "clock_ports": {
+        "clk_control": 1,
+        "clk_mem": 19,
+        "clk_capture": 19
+      }
     },
     "122": {
       "owner": "ENGRAM COLL control256",
@@ -653,9 +673,19 @@
       "native_banks": 19,
       "capacity_cycles": 2432,
       "descriptor_to_launch_min_edges": 1218,
-      "first_control_after_raw_launch": 6,
-      "first_consumer_after_raw_launch": 7,
-      "status": "source-owned reserved; actual issuer gate and kernel binding required"
+      "status": "Actual source committed; native issuer proof pending",
+      "first_control_after_raw_launch_capture": 6,
+      "first_consumer_after_raw_launch_capture": 7,
+      "analytical_LCP_FFQ_to_consumer_edges": 9,
+      "latency_status": "Local launch-capture offsets source-owned; overlay+issuer composition not yet measured",
+      "source_commit": "eec875a97",
+      "source_sha256": "b8eb77d0fc1f4a356351d7a4d759212bdf6df2511f991b2c290f4fc3ba45c3e7",
+      "source_path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_control256_program.sv",
+      "clock_ports": {
+        "clk_control": 1,
+        "clk_mem": 19,
+        "clk_capture": 19
+      }
     },
     "123": {
       "owner": "ENGRAM COLL control256",
@@ -676,9 +706,65 @@
       "native_banks": 19,
       "capacity_cycles": 2432,
       "descriptor_to_launch_min_edges": 1218,
-      "first_control_after_raw_launch": 6,
-      "first_consumer_after_raw_launch": 7,
-      "status": "source-owned reserved; actual issuer gate and kernel binding required"
+      "status": "Actual source committed; native issuer proof pending",
+      "first_control_after_raw_launch_capture": 6,
+      "first_consumer_after_raw_launch_capture": 7,
+      "analytical_LCP_FFQ_to_consumer_edges": 9,
+      "latency_status": "Local launch-capture offsets source-owned; overlay+issuer composition not yet measured",
+      "source_commit": "eec875a97",
+      "source_sha256": "b8eb77d0fc1f4a356351d7a4d759212bdf6df2511f991b2c290f4fc3ba45c3e7",
+      "source_path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_control256_program.sv",
+      "clock_ports": {
+        "clk_control": 1,
+        "clk_mem": 19,
+        "clk_capture": 19
+      }
+    },
+    "124": {
+      "owner": "ENGRAM_FETCH_ROWS8",
+      "encoding": "raw_engram_fetch7x32",
+      "payload_bits": 224,
+      "transport_bits": 256,
+      "source": "ot_hbm_engram_fetch_program",
+      "source_path": "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_fetch_program.sv",
+      "source_owner": "/root/h_engram_partition",
+      "clock_ports": {
+        "clk_control": 1,
+        "clk_mem": 1
+      },
+      "native_sram": "128x256",
+      "capacity_words": 128,
+      "capacity_cycles": 896,
+      "native_op_pc_bits": 10,
+      "address": "single SRAM word index0..127; seven32b operations per frame",
+      "descriptor_units": "operation cycles",
+      "base_alignment": 7,
+      "loops": 1,
+      "cfg_to_descriptor_min_edges": 2,
+      "descriptor_to_launch_min_edges": 130,
+      "first_instruction_after_raw_launch_capture": 5,
+      "first_kernel_consumer_after_raw_launch_capture": 6,
+      "runtime_token_inputs": [
+        "token_v",
+        "CID17",
+        "first"
+      ],
+      "opcodes": {
+        "0": "NOP",
+        "1": "EPOCH",
+        "2": "HASH",
+        "3": "FETCH_START"
+      },
+      "ordered_events": [
+        "EPOCH",
+        "HASH",
+        "FETCH_START"
+      ],
+      "reserved_bits": "each32b opcode[31:4]=0;frame[255:224]=0",
+      "kernel_duration_after_fetch_consumer": 18945,
+      "replica_scope": "one configured target per physical die; RANK physical strap;96 replicas source owner model",
+      "status": "Actual source written; native programme/kernel gate pending",
+      "source_sha256_at_contract": "16b07e4b76b499b21bd414a494e3bfd92143168090468870a7bfed989ff6c127"
     }
   },
   "map": "F20={PC12 bits19:8,target8 bits7:0}; F24 eight32b pieces; F28={limit13 bits24:12,base12 bits11:0}; F2c loops16; VM F00/F08 retains10/11 addresses",

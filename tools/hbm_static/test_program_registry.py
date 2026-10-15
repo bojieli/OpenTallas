@@ -59,6 +59,25 @@ class RegistryTest(unittest.TestCase):
         image.pop('encoding'); image.update(PCW=10, payload_bits=223)
         with self.assertRaisesRegex(ValueError, 'cannot consume protected'): build(spec)
 
+    def test_fetch_raw224_and_opcode_faults(self):
+        spec = fixture(); spec['required_targets'].append(124)
+        word = 1 | (2 << 32) | (3 << 192)
+        fetch = dict(target=124, encoding='raw_engram_fetch7x32', programme=dict(
+            start=dict(base=0, limit=7, loops=1),
+            configuration_writes=[dict(addr=0, data=f'{word:064x}')]))
+        spec['images'].append(fetch)
+        result = build(spec)
+        self.assertEqual(result['targets'][-1]['payload_bits'], 224)
+        self.assertEqual(result['axi_writes'][-2]['idle_core_edges'], 1218)
+        for bad in (word | (1 << 224), 4, 1 << 4):
+            bad_spec = copy.deepcopy(spec)
+            bad_spec['images'][-1]['programme']['configuration_writes'][0]['data'] = f'{bad:064x}'
+            with self.assertRaises(ValueError): build(bad_spec)
+        for change in (dict(base=1), dict(limit=897), dict(loops=2)):
+            bad_spec = copy.deepcopy(spec)
+            bad_spec['images'][-1]['programme']['start'].update(change)
+            with self.assertRaises(ValueError): build(bad_spec)
+
     def test_old_registered_profile_unchanged(self):
         spec = fixture(); spec['required_targets'].pop(); spec['images'].pop()
         image = build(spec)
