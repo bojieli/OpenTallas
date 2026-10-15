@@ -6,16 +6,16 @@
  "die": [
   0,
   0,
-  54.0,
-  103.68
+  52.68,
+  103.656
  ],
  "core": [
   2.16,
   2.16,
-  51.84,
-  101.52000000000001
+  50.519999999999996,
+  101.49600000000001
  ],
- "why": "spec outline",
+ "why": "spec outline (exact: the closed view's sub-slot)",
  "std_area_um2": null,
  "layer_contract": {
   "children": {},
@@ -41,8 +41,7 @@
    "b_r"
   ],
   "W": [
-   "tap_d",
-   "tap_r"
+   "tap_d"
   ]
  },
  "clock_port": "ck",

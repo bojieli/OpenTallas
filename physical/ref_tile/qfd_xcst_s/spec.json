@@ -14,7 +14,8 @@
  ],
  "outline": {
   "w": 52.68,
-  "h": 103.656
+  "h": 103.656,
+  "exact": true
  },
  "pins": {
   "N": [
@@ -29,8 +30,7 @@
    "b_r"
   ],
   "W": [
-   "tap_d",
-   "tap_r"
+   "tap_d"
   ]
  },
  "route": {
@@ -51,16 +51,16 @@
  "job": {
   "owner": "Claude:el1014-qwen-dvm-build",
   "branch": "claude/qwen-dvm-1014",
-  "tag": "xs2",
-  "purpose": "Qwen TP8 corridor station with the tile's x hold (distributed x slice, owner 08:20 PT 10-14): onward + tap flops as qfd_cst_s, + TDM capture of its own tagged line and the tuple hold register (IL 8, XOFF 3) driving the tile's xl pins.",
+  "tag": "xs3",
+  "purpose": "Qwen TP8 corridor station with the tile's x hold (distributed x slice, owner 08:20 PT 10-14): onward + tap flops as qfd_cst_s, + TDM capture of its own tagged line and the tuple hold register (IL 8, XOFF 3) driving the tile's xl pins. r3: no tap ready (the tile never back-pressures; DIE_BUS_AUDIT row 10).",
   "benches": [
    {
     "name": "dvm_array_exact",
     "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/pos tb_qwen_me_dvm_w12 -GNCOL=2 -GNH=8 -GSMIN=4 -GSMAX=7 -GNOPS=40 -GSEED=3 -GGAP=0",
     "expect": "pass",
     "pass_regex": "^PASS dvm",
-    "threads": 16,
-    "peak_ram_gb": 64,
+    "threads": 12,
+    "peak_ram_gb": 96,
     "needs": [
      "verilator"
     ]
@@ -70,8 +70,8 @@
     "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/neg tb_qwen_me_dvm_w12 -GNCOL=2 -GNH=8 -GSMIN=4 -GSMAX=7 -GNOPS=12 -GSEED=3 -GGAP=0 -GHEAD_MUT=3",
     "expect": "fail",
     "pass_regex": "^PASS dvm",
-    "threads": 16,
-    "peak_ram_gb": 64,
+    "threads": 12,
+    "peak_ram_gb": 96,
     "needs": [
      "verilator"
     ]
@@ -97,10 +97,6 @@
   "tap_d": [
    26.94,
    77.436
-  ],
-  "tap_r": [
-   77.5,
-   78.5
   ],
   "a_r": [
    52.0,
