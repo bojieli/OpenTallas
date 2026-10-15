@@ -16312,3 +16312,19 @@ def s81_static_vm_face_model(entries=8):
 def s81_static_channels_1014_model():
     from uarch_model_s81_static_channels import s81_static_channels_1014_model as model
     return model()
+
+
+def hbm_idx_static_vm_model():
+    """Pre-RTL fixed-slot IDX VM face, superseding runtime leases/credits."""
+    return dict(schema='opentallas.hbm-idx-static-vm.v1',
+        macs_per_cycle=0, replicas=1, lanes=8,
+        read_bytes_per_cycle=256, boundary_bits_per_cycle=dict(request=136,response=2056),
+        mux='no arbitration: one compiler-reserved request per bank; own-SID or mirror only',
+        storage=dict(request_pin_bits=136,response_pin_bits=2056,identity_pipeline_bits=8*8*17),
+        latency_edges=dict(request_pin=1,bank=6,response_pin=1,total=8),
+        routing=dict(request_tracks_per_bank=17,response_tracks_per_bank=257,
+                     slot='UNASSIGNED; die owner must assign pins, clock and bank group'),
+        area='register estimate only; no inherited closed view',
+        compiler='reserve read group per bank, reject remote main addresses, reserve capture edge n+8',
+        price='immutable INDEX price unchanged; full engine rate must be measured',
+        qualification='OPEN real-SRAM composition, engine binding, physical and production-rate proof')
