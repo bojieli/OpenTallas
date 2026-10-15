@@ -18,15 +18,15 @@ def pack(**kw):
         word|=v<<lo
     return word
 
-def lower(kind,*,first_consumer_cycle,sink_divisor,sink_phase,row=0,slot=0,eps=0x358637bd,clear=False,npos=8,tail_position=0):
+def lower(kind,*,first_consumer_cycle,sink_divisor,sink_phase,row=0,slot=0,eps=0x358637bd,clear=False,npos=8,tail_position=0,early=False):
     if first_consumer_cycle<5 or sink_divisor<1 or not 0<=sink_phase<sink_divisor:raise ValueError('clock calendar')
     if not 0<=row<24 or slot not in (0,1) or not 1<=npos<=8 or not 0<=tail_position<8:raise ValueError('row/slot/positions')
     if kind=='row':
-        period=max(322,300+160*(npos-1))
+        period=max(322,(280 if early else 300)+160*(npos-1))
         payload=[pack(norm_eps=eps,row_weight_slot=slot,row_id=row,row_npos=npos) for _ in range(period)]
         payload[0]|=pack(row_launch=1,clear=int(clear))
-        ss=[180+160*p for p in range(npos)]
-        rr=[284+160*p for p in range(npos)]
+        ss=[(160 if early else 180)+160*p for p in range(npos)]
+        rr=[(264 if early else 284)+160*p for p in range(npos)]
         for c in ss+rr:payload[c]|=pack(row_raw_read=1)
         events={'launch':0,'raw_ss':ss,'raw_row':rr,'results':[c+5 for c in rr],'next_row_earliest':period}
     elif kind=='tail':
@@ -47,15 +47,15 @@ def lower(kind,*,first_consumer_cycle,sink_divisor,sink_phase,row=0,slot=0,eps=0
     words=[(0xc7a1<<240)|(pc<<223)|p for pc,p in enumerate(payload)]
     return words,{'kind':kind,'instruction_payload_bits':51,'field_lsb_width':FIELDS,
         'first_consumer_cycle':first_consumer_cycle,'programme_start_edge':first_consumer_cycle-5,
-        'start_base':0,'start_limit':len(words),'start_loops':1,'programme_pages':2,'global_PC_lsb':223,'npos':npos,'tail_position':tail_position,'sink_divisor':sink_divisor,'sink_phase':sink_phase,
+        'start_base':0,'start_limit':len(words),'start_loops':1,'programme_pages':2,'global_PC_lsb':223,'npos':npos,'tail_position':tail_position,'calendar_profile':'early_candidate' if early else 'nominal','sink_divisor':sink_divisor,'sink_phase':sink_phase,
         'events_relative_consumer0':events,'scope':'fixed HC component image; full layer and physical phase integration pending'}
 def main():
     a=argparse.ArgumentParser();a.add_argument('kind',choices=['row','tail']);a.add_argument('--output',type=Path,required=True)
     a.add_argument('--first-consumer-cycle',type=int,required=True);a.add_argument('--sink-divisor',type=int,required=True)
     a.add_argument('--sink-phase',type=int,required=True);a.add_argument('--row',type=int,default=0)
-    a.add_argument('--slot',type=int,default=0);a.add_argument('--npos',type=int,default=8);a.add_argument('--tail-position',type=int,default=0);a.add_argument('--clear',action='store_true');x=a.parse_args()
+    a.add_argument('--slot',type=int,default=0);a.add_argument('--npos',type=int,default=8);a.add_argument('--tail-position',type=int,default=0);a.add_argument('--early',action='store_true');a.add_argument('--clear',action='store_true');x=a.parse_args()
     words,meta=lower(x.kind,first_consumer_cycle=x.first_consumer_cycle,sink_divisor=x.sink_divisor,
-        sink_phase=x.sink_phase,row=x.row,slot=x.slot,clear=x.clear,npos=x.npos,tail_position=x.tail_position)
+        sink_phase=x.sink_phase,row=x.row,slot=x.slot,clear=x.clear,npos=x.npos,tail_position=x.tail_position,early=x.early)
     x.output.parent.mkdir(parents=True,exist_ok=True)
     x.output.write_text(''.join(f'{w:064x}\n' for w in words))
     x.output.with_suffix('.json').write_text(json.dumps(meta,indent=2)+'\n')
