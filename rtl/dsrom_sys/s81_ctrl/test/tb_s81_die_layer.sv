@@ -28,7 +28,7 @@
 //                predecessors ended (dataflow, dropped on the take); every SU result row (su_expa / su_expd.mem) is
 //                checked bit-exact against the CPU golden at the end.  SU ops with no SU job kind run behavioural on
 //                port 11.  SUMUT / SUXMUT: the slab's MUT / XMUT negative controls (4 gain set ignored; 3 QR inverse).
-//   port 10 eng (Engram layers, e.g. L14: eng.hh / dot / gate / add): BEHAVIOURAL at program duration like the others
+//   port 10 eng: default behavioural; TB_MIX4_REAL binds dsfd_engram_mix4_c and consumes actual row writes.
 //                (no Engram RTL in this vehicle).  The HIDDEN payload is then the layer-ENTRY h; the op with wrow >= 0
 //                (eng.add) writes the XW golden post-Engram h rows (coef.mem) over the H rows at its end, and the HC
 //                H_LOAD's f_inp waits on that write (eng_h / eng_done) as well as on its eng.add predecessor.
@@ -47,7 +47,7 @@
 // +HOUT=<file> dumps this layer's hop_tx flits (needs HTX != 0).
 // ---------------------------------------------------------------------------------------------------------------------
 module tb_s81_die_layer;
-    parameter integer MUT = 0, HMUT = 0, INP1 = 0, NG = 16, TMAX = 45000, EPER = 97, CHB = 60, CHU = 12, TSR = 7;
+    parameter integer MXMUT = 0, MUT = 0, HMUT = 0, INP1 = 0, NG = 16, TMAX = 45000, EPER = 97, CHB = 60, CHU = 12, TSR = 7;
     // HC slab structure (defaults = the flat engine).  The production slab is the hierarchical tuple of the HC gate
     // (tools/s81_suhc/hc_gate.py --hier 3): HIER 1, HALF 1, CSPLIT 1, TAIL_SPLIT 2, HEAD_ROWS 10, CNL_PIN 1, CHAIN_STEP 6
     // at NG 256; build it with +define+TB_HC_HIER (the probes below then read the slab's sequencer tile).
@@ -118,6 +118,7 @@ module tb_s81_die_layer;
     // ---------------- DUT: control plane
     reg pw_v = 0; reg [6:0] pw_a = 0; reg [27:0] pw_d = 0; reg [7:0] plen = 0;
     reg i_v = 0; wire i_r; reg [511:0] i_d = 0; reg i_l = 0;
+    wire [84:0] legacy_mix_c;
     wire [84:0] c [0:11]; wire [8:0] d [0:11]; wire [1:0] est [0:11];
 `ifdef TB_SEQC
     // decision A: dsfd_stage_seq_c (kit start / done + program write on the serial clock); the kit (bench) writes the
@@ -128,7 +129,7 @@ module tb_s81_die_layer;
     dsfd_stage_seq_c u_ctl (.ckv(ckv), .rsv(rsv), .ck(ck), .rst(rst), .f_ks(f_ks), .t_kd(t_kd), .f_pw(f_pw), .f_plen(plen),
         .t_st(t_st),
         .c0(c[0]), .c1(c[1]), .c2(c[2]), .c3(c[3]), .c4(c[4]), .c5(c[5]), .c6(c[6]), .c7(c[7]), .c8(c[8]), .c9(c[9]),
-        .c10(c[10]), .c11(c[11]),
+        .c10(legacy_mix_c), .c11(c[11]),
         .d0(d[0]), .d1(d[1]), .d2(d[2]), .d3(d[3]), .d4(d[4]), .d5(d[5]), .d6(d[6]), .d7(d[7]), .d8(d[8]), .d9(d[9]),
         .d10(d[10]), .d11(d[11]),
         .s0(est[0]), .s1(est[1]), .s2(est[2]), .s3(est[3]), .s4(est[4]), .s5(est[5]), .s6(est[6]), .s7(est[7]),
@@ -140,7 +141,7 @@ module tb_s81_die_layer;
     dsfd_sp_ctrl_e #(.MY_ID(2), .SRC_LO(1), .SRC_HI(1)) u_ctl (.ck(ck), .rs(rst), .pw_v(pw_v), .pw_a(pw_a), .pw_d(pw_d),
         .prog_len(plen), .cfg_users(12'd4), .i_v(i_v), .i_r(i_r), .i_d(i_d), .i_l(i_l),
         .c0(c[0]), .c1(c[1]), .c2(c[2]), .c3(c[3]), .c4(c[4]), .c5(c[5]), .c6(c[6]), .c7(c[7]), .c8(c[8]), .c9(c[9]),
-        .c10(c[10]), .c11(c[11]),
+        .c10(legacy_mix_c), .c11(c[11]),
         .d0(d[0]), .d1(d[1]), .d2(d[2]), .d3(d[3]), .d4(d[4]), .d5(d[5]), .d6(d[6]), .d7(d[7]), .d8(d[8]), .d9(d[9]),
         .d10(d[10]), .d11(d[11]),
         .vwe(vwe), .vwa(vwa), .vwd(vwd), .flt(flt), .fvec(fvec), .stk(stk), .snap(snap));
@@ -381,6 +382,72 @@ module tb_s81_die_layer;
     reg [511:0] vm [0:16383];
     reg vm_ok [0:16383];
     integer hcnt = 0, gcnt [0:1];
+`ifdef TB_MIX4_REAL
+    localparam MXR = 1;
+    wire [12:0] mx_cv; wire [1091:0] mx_cd;
+    wire [12:0] mx_av = {2'b0,est[10][1],10'b0};
+    wire [12:0] mx_dv = {2'b0,d[10][8],10'b0};
+    wire [103:0] mx_dt = {16'b0,d[10][7:0],80'b0};
+    // Reset release is a compiler startup edge, driven on the opposite phase;
+    // do not derive async reset from an NBA-updated stream counter expression.
+    reg mx_rst_n=0;
+    initial begin
+        while(cyc<1000) @(negedge ck);
+        mx_rst_n=1;
+    end
+    reg mx_pw_v=0; reg [6:0] mx_pw_a=0; reg [27:0] mx_pw_d=0;
+    wire mx_is_fault; wire [3:0] mx_is_code; wire [1:0] mx_phase;
+    reg [34:0] mx_pmem [0:7];
+    ot_s81_fixed_issue #(.NOPS(2),.NENG(13),.STAGE(0),.OP_BASE(2),.ENG_PRESENT(13'h400)) mx_issuer(
+        .clk(ck),.rst_n(mx_rst_n),.pw_v(mx_pw_v),.pw_a(mx_pw_a),.pw_d(mx_pw_d),.prog_len(8'd2),
+        .job_v(cyc==1250),.job_user(10'd0),.job_pos(21'd0),.job_tok(21'd1000),
+        .cmd_v(mx_cv),.cmd_d(mx_cd),.engine_available(mx_av),.dn_v(mx_dv),.dn_tag(mx_dt),
+        .fault(mx_is_fault),.fault_code(mx_is_code),.phase(mx_phase),
+        .job_rdy(),.busy(),.job_done(),.job_kdone(),.done_slot(),.kit_tok(),.st_jobs(),.st_cmds());
+    assign c[10] = {mx_cv[10],mx_cd[840+:84]};
+    initial begin: mix_fixed_boot
+        wait(dir != "");
+        $readmemh({dir,"/mix_program.mem"},mx_pmem);
+        while(cyc<1010) @(negedge ck);
+        for(int z=0;z<8;z++) begin
+            mx_pw_v=1; mx_pw_a=mx_pmem[z][34:28]; mx_pw_d=mx_pmem[z][27:0];
+            @(negedge ck); mx_pw_v=0; @(negedge ck);
+        end
+    end
+    always @(posedge ck) if(rst && mx_is_fault) $fatal(1,"MIX_FIXED_ISSUER fault code=%0d cycle=%0d phase=%0d sealed=%0d cfg=%0d",mx_is_code,cyc,mx_phase,mx_issuer.sealed,mx_issuer.cfg_fault);
+    initial begin
+        if(JOBS!=1) $fatal(1,"MIX fixed component calendar contains one context; compile all contexts before use");
+`ifdef TB_SEQC
+        $fatal(1,"MIX fixed component calendar requires its declared packet-clock profile");
+`endif
+    end
+    wire [19:0] mx_rq_v; wire [279:0] mx_rq_row;
+    reg [19:0] mx_rs_v = 0; reg [10239:0] mx_rs_d = 0;
+    wire [3:0] mx_wq_v; wire [55:0] mx_wq_row;
+    wire [63:0] mx_wq_mask; wire [2047:0] mx_wq_d;
+    dsfd_engram_mix4_c #(.MUT(MXMUT)) u_mix4 (
+        .ck({133{ck}}), .rst(rst), .c_cmd(c[10]), .c_done(d[10]), .c_st(est[10]),
+        .f_inp(hcnt == XW), .rq_v(mx_rq_v), .rq_row(mx_rq_row),
+        .rs_v(mx_rs_v), .rs_d(mx_rs_d), .wq_v(mx_wq_v), .wq_row(mx_wq_row),
+        .wq_mask(mx_wq_mask), .wq_d(mx_wq_d));
+    integer mx_reads = 0, mx_writes = 0;
+    always @(posedge ck) begin
+        mx_rs_v <= mx_rq_v;
+        for (int ml=0; ml<20; ml++) if(mx_rq_v[ml]) begin
+            mx_rs_d[512*ml+:512] <= vm[mx_rq_row[14*ml+:14]]; mx_reads++;
+        end
+        for (int ml=0; ml<4; ml++) if(mx_wq_v[ml]) begin
+            for(int mw=0; mw<16; mw++) if(mx_wq_mask[16*ml+mw])
+                vm[mx_wq_row[14*ml+:14]][32*mw+:32] = mx_wq_d[512*ml+32*mw+:32];
+            mark(mx_wq_row[14*ml+:14]); mx_writes++;
+        end
+        if(u_mix4.jnew) stt[cj][u_mix4.jnd[6:0]] = cyc;
+        if(u_mix4.done) begin endt[cj][u_mix4.jd[6:0]] = cyc; eng_done = 1; end
+    end
+`else
+    localparam MXR = 0;
+    assign c[10] = legacy_mix_c;
+`endif
     reg eng_h = 0, eng_done = 0;         // eng_h: the program has an Engram h write (a port-10 op with wrow >= 0)
     reg clr_req = 0;
     task automatic mark(input integer r);
@@ -409,11 +476,13 @@ module tb_s81_die_layer;
         if (vwe) begin vm[vwa] = vwd; mark(vwa); nwr = nwr + 1; end
         if (g_eng[9].g_b.jdone_r && o_wr[g_eng[9].g_b.dop_r] >= 0) begin
             vm[o_wr[g_eng[9].g_b.dop_r]] = coefm[o_wr[g_eng[9].g_b.dop_r]]; mark(o_wr[g_eng[9].g_b.dop_r]); end
+`ifndef TB_MIX4_REAL
         if (g_eng[10].g_b.jdone_r && o_wr[g_eng[10].g_b.dop_r] >= 0) begin
             for (i2 = 0; i2 < XW; i2 = i2 + 1) begin
                 vm[o_wr[g_eng[10].g_b.dop_r] + i2] = coefm[o_wr[g_eng[10].g_b.dop_r] + i2]; mark(o_wr[g_eng[10].g_b.dop_r] + i2); end
             eng_done = 1;
         end
+`endif
         for (s = 0; s < S_WR; s = s + 1) if (wq_v[s]) begin vm[wq_row[14 * s +: 14]] = wq_d[512 * s +: 512]; mark(wq_row[14 * s +: 14]); end
 `ifdef TB_SU_REAL
         // the SU's write slots, under each slot's 32-bit word mask (the QN / QB exponent rows are merged word by word),
@@ -526,7 +595,7 @@ module tb_s81_die_layer;
     // ---------------- behavioural engines behind real slab endpoints (ports 1, 4..11; 9 = hcx)
     genvar ge;
     generate for (ge = 1; ge < 12; ge = ge + 1) begin : g_eng
-        if (ge != 2 && ge != 3 && !(ge == 1 && SUR)) begin : g_b
+        if (ge != 2 && ge != 3 && !(ge == 1 && SUR) && !(ge == 10 && MXR)) begin : g_b
             wire jv, jnew, epf; wire [83:0] jd, jnd;
             reg jdone_r = 1'b0, busy = 1'b0; integer rem = 0; reg [6:0] dop_r = 0;
             ot_s81_slab_ep #(.QD(8), .JQ(2)) u_ep (.c_clk(ck), .c_rst_n(rst), .c_cmd(c[ge]), .c_done(d[ge]), .c_st(est[ge]),
@@ -886,6 +955,10 @@ module tb_s81_die_layer;
         if (hout_fd != 0) $fclose(hout_fd);
         $display("HIO hin=%0d hin_bad=%0d hout=%0d", hin_n, hin_bad, hout_fd != 0);
         if (hin_bad != 0) errors = errors + 1;
+`ifdef TB_MIX4_REAL
+        $display("MIX4_REAL reads=%0d writes=%0d golden_output_injection=0 native_layer=0", mx_reads, mx_writes);
+        if(mx_reads != JOBS*4161 || mx_writes != JOBS*640) begin errors++; $display("ERR MIX4 transaction count"); end
+`endif
         $display("SUMMARY jobs=%0d layer_cycles=%0d (header %0d -> H_STORE done %0d) stage_done_cycle=%0d jobs_done=%0d/%0d dones=%0d/%0d phases_released=%0d field_phases=%0d capture_writes=%0d mismatching_roots=%0d coll_words_die0=%0d coll_errors=%0d coll_incomplete=%0d y_exact=%0d/%0d y_bad=%0d y_consumed=%0d norm_rows_exact=%0d/%0d hstore_rows_exact=%0d/%0d ref_fault=%0d dut_fault=%0d ctrl_flt=%0d fvec=%h stuck=%0d ep_faults=%0d gather_stage_fault=%0d hc_fcode=%0d max_done_latency=%0d errors=%0d first_coll_send=%0d",
                  JOBS, t_hstore - t_layer0, t_layer0, t_hstore, cyc, jdn, JOBS, ndone, JOBS * nop, released, nfp, tot, bad, dn[0], coll_err, xm,
                  y_ok, NY * JOBS, y_bad, yrd, n_ok, NE - NST, st_ok, NST, ref_fault, dst[3], flt, fvec, stk, gst_f, u_g.sf, hfcode, maxlat, errors, first_send_cyc);

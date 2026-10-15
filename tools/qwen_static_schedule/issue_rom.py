@@ -67,8 +67,8 @@ def rows(calendar, stage, own, period_fs, phase_fs, stop_cycle):
 
 def pw_image(calendar, stage, me_clock, su_clock, program_words):
     """Load owner stores with separately phase-bound ME/SU terminal cycles."""
-    if not 0<=stage<64 or not 0<program_words<61:
-        raise ScheduleError('calendar reservation requires actual program below instruction61')
+    if not 0<=stage<64 or not 0<program_words<60:
+        raise ScheduleError('calendar reservation requires actual program below instruction60 (PW944 begins collective calendar)')
     me=rows(calendar,stage,1,me_clock['period_fs'],me_clock['phase_fs'],me_clock['stop_cycle'])
     su=rows(calendar,stage,2,su_clock['period_fs'],su_clock['phase_fs'],su_clock['stop_cycle'])
     if len(me)>8 or len(su)>20:

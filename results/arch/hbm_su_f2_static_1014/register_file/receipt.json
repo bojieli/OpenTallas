@@ -1,0 +1,33 @@
+{
+  "status": "actual bounded flop RF functional proof only, not wholeSU/physical qualification",
+  "logical_words": 256,
+  "word_bits": 32,
+  "banks": 64,
+  "words_per_bank": 4,
+  "read_replicas": 6,
+  "retained_payload_bits": 49152,
+  "payload_bits_per_clock_root": 768,
+  "read_response_pipeline_bits_per_clock_root": 384,
+  "clock_roots": 64,
+  "reads_per_edge": 384,
+  "writes_per_edge": 64,
+  "read_edge_offset": 2,
+  "write_commit_edge_offset": 1,
+  "compiler_obligations": [
+    "one scheduled readrow/bank/class",
+    "one canonical writer/bank",
+    "no reads before actual producer capture",
+    "broadcast consumer destination wiring explicitly scheduled",
+    "no implicit epoch/stale-data guard"
+  ],
+  "scope": "register_file contains real bounded kept data flops and explicit muxes, no unbounded behavioral memory",
+  "unit": "oth-ubuntu-1591138-1792057311",
+  "host": "ot-epyc4",
+  "exact_checks": 49666,
+  "coherence_mutant_errors": 8256,
+  "source_sha256": {
+    "rtl/hbm_accel/generic/adapters/static_su/register_file/ot_hbm_su_static_rf.sv": "9689c5640d72f23d411171e58b17680d1ee6a59e893271c8b0bf121fc98d2ca9",
+    "rtl/hbm_accel/generic/adapters/static_su/register_file/tb_hbm_su_static_rf.sv": "a7a9faa39d8d1892de07b6b1632e371e8e0a927d8bed980524587c8aa628c78b"
+  },
+  "no_price_or_native_pin_qualification": true
+}

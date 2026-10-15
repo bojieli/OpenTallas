@@ -1,0 +1,4 @@
+2026-10-14 18:07:48 PDT port-bind (no stubs): DIE_PORT_BIND FAIL masters=231 instances=14826 unbound_masters=16 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=36 width_mismatch=11 input_unconnected=23 input_tied=6 unparsed_connections=0 undriven_net_bits=713112 multi_driven_net_bits=0 top_assigns=0 params_not_in_rtl=0 strap_ports=5 rc=1
+2026-10-14 18:07:48 PDT qwen-split compute chain c8 (src e037bd396); real views: 2 masters / 16 of 1630 instances
+2026-10-14 18:07:49 PDT chain start die=r22k src=e037bd396 from=case
+2026-10-14 18:27:56 PDT REAL CASE FAIL (/srv/opentallas-scratch/claude/qwen-split-compute/c8/chain/case_r22k/run.log)

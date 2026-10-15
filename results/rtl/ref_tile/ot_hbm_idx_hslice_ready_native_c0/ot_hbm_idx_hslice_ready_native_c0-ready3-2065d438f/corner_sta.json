@@ -1,0 +1,88 @@
+{
+ "schema": "opentallas.w18.corner_sta.v1",
+ "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/ot_hbm_idx_hslice_ready_native_c0-ready3-2065d438f/cl/eco/pass1/orfs",
+ "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design ot_hbm_idx_hslice_ready_native\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 770.0000 [get_ports {clk}]\nset_clock_uncertainty -setup 60.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {co",
+ "sdc_name": "6_final.sdc",
+ "setup_tt": {
+  "corner": "tt",
+  "check": "setup",
+  "worst_slack_ps": 100.1,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 100.1,
+  "worst_reg_to_reg_slack_ps": 100.1,
+  "worst_input_to_reg_slack_ps": 342.66,
+  "worst_output_port_slack_ps": 289.86,
+  "violating_d_pins": 0,
+  "errors": [],
+  "tool_rc": 0,
+  "odb_sha256": "3bf9074997c4d98e670a75704bbc9d8c5c018b31509bdd86ecf928d5ccf0085a",
+  "spef_sha256": "db37d7fe91a5c2cdb2421615ca08a939fde0042b2a37d3d30dfc933f1fac0eb6",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "a2fdbddbfc465623d4446f3cc6a9cf16483ceb851ed5c9ad2076a7e45d4273d3"
+ },
+ "setup_ss": {
+  "corner": "ss",
+  "check": "setup",
+  "worst_slack_ps": -231.49,
+  "tns_ps": -36078.6,
+  "worst_register_d_slack_ps": -231.49,
+  "worst_reg_to_reg_slack_ps": -231.49,
+  "worst_input_to_reg_slack_ps": 254.97,
+  "worst_output_port_slack_ps": 179.68,
+  "violating_d_pins": 934,
+  "errors": [],
+  "tool_rc": 0,
+  "odb_sha256": "3bf9074997c4d98e670a75704bbc9d8c5c018b31509bdd86ecf928d5ccf0085a",
+  "spef_sha256": "db37d7fe91a5c2cdb2421615ca08a939fde0042b2a37d3d30dfc933f1fac0eb6",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "a2fdbddbfc465623d4446f3cc6a9cf16483ceb851ed5c9ad2076a7e45d4273d3"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "check": "hold",
+  "worst_slack_ps": 3.11,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 3.11,
+  "worst_reg_to_reg_slack_ps": 5.87,
+  "worst_input_to_reg_slack_ps": 3.11,
+  "worst_output_port_slack_ps": 30.51,
+  "violating_d_pins": 0,
+  "errors": [],
+  "tool_rc": 0,
+  "odb_sha256": "3bf9074997c4d98e670a75704bbc9d8c5c018b31509bdd86ecf928d5ccf0085a",
+  "spef_sha256": "db37d7fe91a5c2cdb2421615ca08a939fde0042b2a37d3d30dfc933f1fac0eb6",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "a2fdbddbfc465623d4446f3cc6a9cf16483ceb851ed5c9ad2076a7e45d4273d3"
+ },
+ "post_sdc": {
+  "physical/ref_tile/ot_hbm_idx_hslice_ready_native_c0/signoff.sdc": "20e72fb6ad274e179baf21830995a9a79088641b2a4ff39da834801e868c93fb",
+  "physical/common_flow/io_ref_routed.sdc": "cb2805c3a4a622051ebd24447f6898db2d82fdd6060317692dc3180ef5ac6a7e"
+ },
+ "libraries": {
+  "ss": [
+   "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+  ],
+  "ff": [
+   "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+  ],
+  "tt": [
+   "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+  ]
+ },
+ "tool_sha256": "7801f467617d68c7e8a3f906e5415c8913de77188a6af30dbfe835fc28b05fd1",
+ "policy": "OWNER Option B (confirmed 2026-10-08): setup at TT >= 0 ps and hold at FF >= 0 ps at the actual clocks and boundaries in the selected propagated SDC; SS setup is a sensitivity; 60/25 ps uncertainty policy. DRC 0 is checked separately by the physical verdict.",
+ "ss_sensitivity": -231.49,
+ "closes_signoff": true
+}

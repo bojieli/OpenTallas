@@ -8,9 +8,8 @@ module ot_s81_pq_ix_sram #(
     input  wire            clk,
     input  wire            rst_n,
     input  wire            consume,
-    input  wire            par,              // the block parity this tile holds (tie: g[1])
     input  wire [1023:0]   xw,               // x_q words 32 g[0] .. 32 g[0] + 31
-    input  wire            ba_v,             // the spine's BF16 write stage A (registers)
+    input  wire            ba_wv,            // stage A write enable of this tile's block parity (controller register; no parity tie)
     input  wire [WBW-1:0]  ba_blk,
     input  wire [35:0]     h_hi,             // the streamer head's row indices (registers)
     input  wire [6:0]      hw7,              // the head word bits [7:1]
@@ -32,7 +31,7 @@ module ot_s81_pq_ix_sram #(
         end
     // stage B: block enables (8 kept copies, one per 4 words) and the rounded words
     reg  [NWB-1:0] bwe_d;
-    always @* for (k = 0; k < NWB; k = k + 1) bwe_d[k] = ba_v && (ba_blk == WBW'(k));
+    always @* for (k = 0; k < NWB; k = k + 1) bwe_d[k] = ba_wv && (ba_blk == WBW'(k));
     wire [8*NWB-1:0] bwe;
     wire [511:0] bw_rn;
     reg  [511:0] bw_d;
@@ -72,9 +71,9 @@ module ot_s81_pq_ix_sram #(
     reg write_valid;
     always @(posedge clk or negedge rst_l[0]) begin
         if (!rst_l[0]) begin write_blk <= '0; write_valid <= 1'b0; end
-        else begin write_blk <= ba_blk; write_valid <= ba_v; end
+        else begin write_blk <= ba_blk; write_valid <= ba_wv; end
     end
-    wire we = write_valid && (write_blk[0] == par);
+    wire we = write_valid;
     wire [6:0] wa = write_blk[WBW-1:1];
     wire [7:0] bank_fault;
     reg consume_1, consume_2;

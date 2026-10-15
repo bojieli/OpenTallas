@@ -1,0 +1,31 @@
+{
+  "schema": "opentallas.qwen.collective.static_links_s2.v1",
+  "source_commit": "f83804c23 plus issuer image_ready ee4033fc9",
+  "all_four_runs_same_RTL_hashes": true,
+  "compiler_and_golden_sha256": {
+    "tools/qwen_coll_tp8_static_links_bench.py": "0e18c4c5521df421af8031941b77c9cc2a5d5d46d8481ab57b931ff2f52f9507",
+    "tools/qwen_coll_tp8_static_bench.py": "e92c25b5a81c057e267486b98b51f083f94c907e39ab90447f78a11ffd111460",
+    "tools/qwen_coll_tp8_bench.py": "2e7afe167dfb5485615db26f9d8df023ad6f5612e67737f0f874e5dae4601f44",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6"
+  },
+  "unit": "6/6 exact including expected fault cases",
+  "production": "4/4 exact zero faults",
+  "mutants": {
+    "rank_AR256": "FAIL1328mismatches asrequired",
+    "command_pin_bypass": "4/4FAIL asrequired"
+  },
+  "clock_phase": 0,
+  "LU": 37,
+  "LS": 376,
+  "command_pin_lead_cycles": 1,
+  "producer_to_last_output_span_cycles": {
+    "AR256": 763,
+    "two_AR256": 1019,
+    "argmax1": 428,
+    "two_AR256_plus_argmax": 1027
+  },
+  "immutable_price_cycles": 1121,
+  "AR256_ratio": 0.6806422836752899,
+  "physical_qualified": false,
+  "native_layer_qualified": false
+}

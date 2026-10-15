@@ -1,0 +1,397 @@
+{
+ "source": "EPYC1 hbmdie-v13/glue26d, src26 = b398efb14 (main 5e2f9ae7d + native SM ABI + station roles + no slicing of late-forwarded segments), history cong_p2",
+ "pass_count": 1388,
+ "fail_count": 77,
+ "remaining": {
+  "vms_pin_only_directions": "qhgi/qvring/qcoll/qhb/qvxl/qvrc/uwq: endpoints on hfd_hgi_vms_* (pin-only, no RTL): bind per results/arch/hbm_die_v14/vms_slice_bind_gap_1014.json",
+  "lane_group_named_port_stations": "hfd_stn_lg<q><k> (12): VM lane-group tap semantics needed from the VM owner",
+  "sm_request_ready": "hfd_stn_q44* (4): SM req_ready has no driver (svc q port pin-only, 45-b input); static-schedule source of req_ready to be fixed with the svc RTL"
+ },
+ "fail": [
+  {
+   "master": "hfd_stn_lgNE0",
+   "error": "KeyError('a')",
+   "tb": "    if role == 'stn' and lay['a'][0] and lay['b'][0]:"
+  },
+  {
+   "master": "hfd_stn_lgNE1",
+   "error": "KeyError('a')",
+   "tb": "    if role == 'stn' and lay['a'][0] and lay['b'][0]:"
+  },
+  {
+   "master": "hfd_stn_lgNE2",
+   "error": "KeyError('a')",
+   "tb": "    if role == 'stn' and lay['a'][0] and lay['b'][0]:"
+  },
+  {
+   "master": "hfd_stn_lgNW0",
+   "error": "KeyError('a')",
+   "tb": "    if role == 'stn' and lay['a'][0] and lay['b'][0]:"
+  },
+  {
+   "master": "hfd_stn_lgNW1",
+   "error": "KeyError('a')",
+   "tb": "    if role == 'stn' and lay['a'][0] and lay['b'][0]:"
+  },
+  {
+   "master": "hfd_stn_lgNW2",
+   "error": "KeyError('a')",
+   "tb": "    if role == 'stn' and lay['a'][0] and lay['b'][0]:"
+  },
+  {
+   "master": "hfd_stn_lgSE0",
+   "error": "KeyError('a')",
+   "tb": "    if role == 'stn' and lay['a'][0] and lay['b'][0]:"
+  },
+  {
+   "master": "hfd_stn_lgSE1",
+   "error": "KeyError('a')",
+   "tb": "    if role == 'stn' and lay['a'][0] and lay['b'][0]:"
+  },
+  {
+   "master": "hfd_stn_lgSE2",
+   "error": "KeyError('a')",
+   "tb": "    if role == 'stn' and lay['a'][0] and lay['b'][0]:"
+  },
+  {
+   "master": "hfd_stn_lgSW0",
+   "error": "KeyError('a')",
+   "tb": "    if role == 'stn' and lay['a'][0] and lay['b'][0]:"
+  },
+  {
+   "master": "hfd_stn_lgSW1",
+   "error": "KeyError('a')",
+   "tb": "    if role == 'stn' and lay['a'][0] and lay['b'][0]:"
+  },
+  {
+   "master": "hfd_stn_lgSW2",
+   "error": "KeyError('a')",
+   "tb": "    if role == 'stn' and lay['a'][0] and lay['b'][0]:"
+  },
+  {
+   "master": "hfd_stn_q1200E_uwq1879",
+   "error": "AssertionError(('hfd_stn_q1200E_uwq1879', 1200, 1200))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_q1200S_uwq1876",
+   "error": "AssertionError(('hfd_stn_q1200S_uwq1876', 1200, 1200))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_q44E",
+   "error": "AssertionError(('hfd_stn_q44E', 43, 44))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_q44N",
+   "error": "AssertionError(('hfd_stn_q44N', 43, 44))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_q44S",
+   "error": "AssertionError(('hfd_stn_q44S', 43, 44))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_q44W",
+   "error": "AssertionError(('hfd_stn_q44W', 43, 44))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qcoll2334",
+   "error": "AssertionError(('hfd_stn_qcoll2334', 8961, 8961))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qcoll2338",
+   "error": "AssertionError(('hfd_stn_qcoll2338', 8961, 8961))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qcoll2340",
+   "error": "AssertionError(('hfd_stn_qcoll2340', 8961, 8961))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qcoll5874",
+   "error": "AssertionError(('hfd_stn_qcoll5874', 8961, 8961))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qcoll5875",
+   "error": "AssertionError(('hfd_stn_qcoll5875', 8961, 8961))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhb5046",
+   "error": "AssertionError(('hfd_stn_qhb5046', 2048, 2048))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhb5062",
+   "error": "AssertionError(('hfd_stn_qhb5062', 2048, 2048))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhb5072",
+   "error": "AssertionError(('hfd_stn_qhb5072', 2048, 2048))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhb5088",
+   "error": "AssertionError(('hfd_stn_qhb5088', 2048, 2048))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5124",
+   "error": "AssertionError(('hfd_stn_qhgi5124', 2075, 2075))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5876",
+   "error": "AssertionError(('hfd_stn_qhgi5876', 2067, 2067))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5881",
+   "error": "AssertionError(('hfd_stn_qhgi5881', 2243, 2243))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5882",
+   "error": "AssertionError(('hfd_stn_qhgi5882', 2243, 2243))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5884",
+   "error": "AssertionError(('hfd_stn_qhgi5884', 2243, 2243))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5885",
+   "error": "AssertionError(('hfd_stn_qhgi5885', 2067, 2067))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5896",
+   "error": "AssertionError(('hfd_stn_qhgi5896', 2067, 2067))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5904",
+   "error": "AssertionError(('hfd_stn_qhgi5904', 2243, 2243))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5905",
+   "error": "AssertionError(('hfd_stn_qhgi5905', 2243, 2243))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5909",
+   "error": "AssertionError(('hfd_stn_qhgi5909', 2067, 2067))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5910",
+   "error": "AssertionError(('hfd_stn_qhgi5910', 2067, 2067))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5921",
+   "error": "AssertionError(('hfd_stn_qhgi5921', 2243, 2243))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5924",
+   "error": "AssertionError(('hfd_stn_qhgi5924', 2243, 2243))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5925",
+   "error": "AssertionError(('hfd_stn_qhgi5925', 2243, 2243))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5926",
+   "error": "AssertionError(('hfd_stn_qhgi5926', 2067, 2067))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5927",
+   "error": "AssertionError(('hfd_stn_qhgi5927', 2067, 2067))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5928",
+   "error": "AssertionError(('hfd_stn_qhgi5928', 2067, 2067))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5929",
+   "error": "AssertionError(('hfd_stn_qhgi5929', 2067, 2067))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5939",
+   "error": "AssertionError(('hfd_stn_qhgi5939', 2243, 2243))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5940",
+   "error": "AssertionError(('hfd_stn_qhgi5940', 2243, 2243))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5944",
+   "error": "AssertionError(('hfd_stn_qhgi5944', 2067, 2067))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5945",
+   "error": "AssertionError(('hfd_stn_qhgi5945', 2067, 2067))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5946",
+   "error": "AssertionError(('hfd_stn_qhgi5946', 2067, 2067))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5961",
+   "error": "AssertionError(('hfd_stn_qhgi5961', 2243, 2243))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5962",
+   "error": "AssertionError(('hfd_stn_qhgi5962', 2067, 2067))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5964",
+   "error": "AssertionError(('hfd_stn_qhgi5964', 2067, 2067))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5971",
+   "error": "AssertionError(('hfd_stn_qhgi5971', 2243, 2243))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5976",
+   "error": "AssertionError(('hfd_stn_qhgi5976', 2243, 2243))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5977",
+   "error": "AssertionError(('hfd_stn_qhgi5977', 2243, 2243))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5978",
+   "error": "AssertionError(('hfd_stn_qhgi5978', 2243, 2243))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5979",
+   "error": "AssertionError(('hfd_stn_qhgi5979', 2243, 2243))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5981",
+   "error": "AssertionError(('hfd_stn_qhgi5981', 2243, 2243))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5982",
+   "error": "AssertionError(('hfd_stn_qhgi5982', 2243, 2243))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5983",
+   "error": "AssertionError(('hfd_stn_qhgi5983', 2243, 2243))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qhgi5985",
+   "error": "AssertionError(('hfd_stn_qhgi5985', 2243, 2243))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qvrc1777",
+   "error": "AssertionError(('hfd_stn_qvrc1777', 2065, 2065))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qvrc1786",
+   "error": "AssertionError(('hfd_stn_qvrc1786', 2241, 2241))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qvring1655",
+   "error": "AssertionError(('hfd_stn_qvring1655', 2148, 2148))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qvring1673",
+   "error": "AssertionError(('hfd_stn_qvring1673', 2148, 2148))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qvring1691",
+   "error": "AssertionError(('hfd_stn_qvring1691', 2148, 2148))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qvring1709",
+   "error": "AssertionError(('hfd_stn_qvring1709', 2148, 2148))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qvring1725",
+   "error": "AssertionError(('hfd_stn_qvring1725', 2148, 2148))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qvring1737",
+   "error": "AssertionError(('hfd_stn_qvring1737', 2148, 2148))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qvring1739",
+   "error": "AssertionError(('hfd_stn_qvring1739', 2148, 2148))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qvring1750",
+   "error": "AssertionError(('hfd_stn_qvring1750', 2148, 2148))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qvring1753",
+   "error": "AssertionError(('hfd_stn_qvring1753', 2148, 2148))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qvring1766",
+   "error": "AssertionError(('hfd_stn_qvring1766', 2148, 2148))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qvxl1789",
+   "error": "AssertionError(('hfd_stn_qvxl1789', 2065, 2065))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qvxl1817",
+   "error": "AssertionError(('hfd_stn_qvxl1817', 2065, 2065))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  },
+  {
+   "master": "hfd_stn_qvxl1869",
+   "error": "AssertionError(('hfd_stn_qvxl1869', 2065, 2065))",
+   "tb": "    assert all(d == 'out' for d in db_) and len(ain) == len(db_), (mst, len(ain), len(db_))"
+  }
+ ]
+}

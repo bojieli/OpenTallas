@@ -1,0 +1,1630 @@
+{
+ "schema": "opentallas.s81.subslots.v1",
+ "case": "v19_pq_topology_G",
+ "owner": "S81 die lead r6",
+ "decision": "PQ return topology G (rtlbind 16:28 option G): ONE root = the gather root leaves; the frame pq_root / rstg_pq66 / rstg_pq68 row leaves the layer die (128 x 3 instances, 6 tier channels x 241.92 um); column return = raw tree words (cfifo ri 68, closed). The closed RWB11/RWB10 views (VM-write half) are NOT bound: superseded by a count-only variant (the w_* VM-write half removed, VM writes stay capture's).",
+ "slots": [
+  {
+   "slot": "pq_cnt_0",
+   "master": "ot_s81_pq_rwbc15",
+   "nr": 15,
+   "at_die": [
+    13943.52,
+    17321.04
+   ],
+   "outline": [
+    142.56,
+    38.88
+   ],
+   "n_face_taps": [
+    {
+     "root": "leaf g0 k0 root 0",
+     "t_capture_bits": [
+      0,
+      52
+     ],
+     "x_um": [
+      64.476,
+      85.596
+     ]
+    },
+    {
+     "root": "leaf g0 k0 root 1",
+     "t_capture_bits": [
+      53,
+      105
+     ],
+     "x_um": [
+      70.236,
+      116.028
+     ]
+    },
+    {
+     "root": "leaf g0 k0 root 2",
+     "t_capture_bits": [
+      106,
+      158
+     ],
+     "x_um": [
+      61.02,
+      117.756
+     ]
+    },
+    {
+     "root": "leaf g0 k0 root 3",
+     "t_capture_bits": [
+      159,
+      211
+     ],
+     "x_um": [
+      61.308,
+      78.588
+     ]
+    },
+    {
+     "root": "leaf g0 k1 root 0",
+     "t_capture_bits": [
+      212,
+      264
+     ],
+     "x_um": [
+      67.164,
+      90.588
+     ]
+    },
+    {
+     "root": "leaf g0 k1 root 1",
+     "t_capture_bits": [
+      265,
+      317
+     ],
+     "x_um": [
+      73.308,
+      92.412
+     ]
+    },
+    {
+     "root": "leaf g0 k1 root 2",
+     "t_capture_bits": [
+      318,
+      370
+     ],
+     "x_um": [
+      80.412,
+      88.476
+     ]
+    },
+    {
+     "root": "leaf g0 k1 root 3",
+     "t_capture_bits": [
+      371,
+      423
+     ],
+     "x_um": [
+      88.572,
+      106.62
+     ]
+    },
+    {
+     "root": "leaf g0 k2 root 0",
+     "t_capture_bits": [
+      424,
+      476
+     ],
+     "x_um": [
+      102.492,
+      133.884
+     ]
+    },
+    {
+     "root": "leaf g0 k2 root 1",
+     "t_capture_bits": [
+      477,
+      529
+     ],
+     "x_um": [
+      102.588,
+      149.052
+     ]
+    },
+    {
+     "root": "leaf g0 k2 root 2",
+     "t_capture_bits": [
+      530,
+      582
+     ],
+     "x_um": [
+      111.708,
+      150.012
+     ]
+    },
+    {
+     "root": "leaf g0 k2 root 3",
+     "t_capture_bits": [
+      583,
+      635
+     ],
+     "x_um": [
+      112.764,
+      153.084
+     ]
+    },
+    {
+     "root": "leaf g0 k3 root 0",
+     "t_capture_bits": [
+      636,
+      688
+     ],
+     "x_um": [
+      99.42,
+      142.812
+     ]
+    },
+    {
+     "root": "leaf g0 k3 root 1",
+     "t_capture_bits": [
+      689,
+      741
+     ],
+     "x_um": [
+      118.62,
+      143.868
+     ]
+    },
+    {
+     "root": "leaf g0 k3 root 2",
+     "t_capture_bits": [
+      742,
+      794
+     ],
+     "x_um": [
+      122.652,
+      146.844
+     ]
+    }
+   ]
+  },
+  {
+   "slot": "pq_cnt_1",
+   "master": "ot_s81_pq_rwbc2",
+   "nr": 2,
+   "at_die": [
+    14087.52,
+    17321.04
+   ],
+   "outline": [
+    142.56,
+    38.88
+   ],
+   "n_face_taps": [
+    {
+     "root": "leaf g0 k3 root 3",
+     "t_capture_bits": [
+      795,
+      847
+     ],
+     "x_um": [
+      137.82,
+      155.004
+     ]
+    },
+    {
+     "root": "leaf g1 k0 root 3",
+     "t_capture_bits": [
+      1007,
+      1059
+     ],
+     "x_um": [
+      277.308,
+      294.588
+     ]
+    }
+   ]
+  },
+  {
+   "slot": "pq_cnt_2",
+   "master": "ot_s81_pq_rwbc15",
+   "nr": 15,
+   "at_die": [
+    14231.52,
+    17321.04
+   ],
+   "outline": [
+    142.56,
+    38.88
+   ],
+   "n_face_taps": [
+    {
+     "root": "leaf g1 k0 root 0",
+     "t_capture_bits": [
+      848,
+      900
+     ],
+     "x_um": [
+      280.476,
+      301.596
+     ]
+    },
+    {
+     "root": "leaf g1 k0 root 1",
+     "t_capture_bits": [
+      901,
+      953
+     ],
+     "x_um": [
+      286.236,
+      332.028
+     ]
+    },
+    {
+     "root": "leaf g1 k0 root 2",
+     "t_capture_bits": [
+      954,
+      1006
+     ],
+     "x_um": [
+      277.02,
+      333.756
+     ]
+    },
+    {
+     "root": "leaf g1 k1 root 0",
+     "t_capture_bits": [
+      1060,
+      1112
+     ],
+     "x_um": [
+      283.164,
+      306.588
+     ]
+    },
+    {
+     "root": "leaf g1 k1 root 1",
+     "t_capture_bits": [
+      1113,
+      1165
+     ],
+     "x_um": [
+      289.308,
+      308.412
+     ]
+    },
+    {
+     "root": "leaf g1 k1 root 2",
+     "t_capture_bits": [
+      1166,
+      1218
+     ],
+     "x_um": [
+      296.412,
+      304.476
+     ]
+    },
+    {
+     "root": "leaf g1 k1 root 3",
+     "t_capture_bits": [
+      1219,
+      1271
+     ],
+     "x_um": [
+      304.572,
+      322.62
+     ]
+    },
+    {
+     "root": "leaf g1 k2 root 0",
+     "t_capture_bits": [
+      1272,
+      1324
+     ],
+     "x_um": [
+      318.492,
+      349.884
+     ]
+    },
+    {
+     "root": "leaf g1 k2 root 1",
+     "t_capture_bits": [
+      1325,
+      1377
+     ],
+     "x_um": [
+      318.588,
+      365.052
+     ]
+    },
+    {
+     "root": "leaf g1 k2 root 2",
+     "t_capture_bits": [
+      1378,
+      1430
+     ],
+     "x_um": [
+      327.708,
+      366.012
+     ]
+    },
+    {
+     "root": "leaf g1 k2 root 3",
+     "t_capture_bits": [
+      1431,
+      1483
+     ],
+     "x_um": [
+      328.764,
+      369.084
+     ]
+    },
+    {
+     "root": "leaf g1 k3 root 0",
+     "t_capture_bits": [
+      1484,
+      1536
+     ],
+     "x_um": [
+      315.42,
+      358.812
+     ]
+    },
+    {
+     "root": "leaf g1 k3 root 1",
+     "t_capture_bits": [
+      1537,
+      1589
+     ],
+     "x_um": [
+      334.62,
+      359.868
+     ]
+    },
+    {
+     "root": "leaf g1 k3 root 2",
+     "t_capture_bits": [
+      1590,
+      1642
+     ],
+     "x_um": [
+      338.652,
+      362.844
+     ]
+    },
+    {
+     "root": "leaf g1 k3 root 3",
+     "t_capture_bits": [
+      1643,
+      1695
+     ],
+     "x_um": [
+      353.82,
+      371.004
+     ]
+    }
+   ]
+  },
+  {
+   "slot": "pq_cnt_3",
+   "master": "ot_s81_pq_rwbc15",
+   "nr": 15,
+   "at_die": [
+    14375.52,
+    17321.04
+   ],
+   "outline": [
+    142.56,
+    38.88
+   ],
+   "n_face_taps": [
+    {
+     "root": "leaf g2 k0 root 0",
+     "t_capture_bits": [
+      1696,
+      1748
+     ],
+     "x_um": [
+      496.476,
+      517.596
+     ]
+    },
+    {
+     "root": "leaf g2 k0 root 1",
+     "t_capture_bits": [
+      1749,
+      1801
+     ],
+     "x_um": [
+      502.236,
+      548.028
+     ]
+    },
+    {
+     "root": "leaf g2 k0 root 2",
+     "t_capture_bits": [
+      1802,
+      1854
+     ],
+     "x_um": [
+      493.02,
+      549.756
+     ]
+    },
+    {
+     "root": "leaf g2 k0 root 3",
+     "t_capture_bits": [
+      1855,
+      1907
+     ],
+     "x_um": [
+      493.308,
+      510.588
+     ]
+    },
+    {
+     "root": "leaf g2 k1 root 0",
+     "t_capture_bits": [
+      1908,
+      1960
+     ],
+     "x_um": [
+      499.164,
+      522.588
+     ]
+    },
+    {
+     "root": "leaf g2 k1 root 1",
+     "t_capture_bits": [
+      1961,
+      2013
+     ],
+     "x_um": [
+      505.308,
+      524.412
+     ]
+    },
+    {
+     "root": "leaf g2 k1 root 2",
+     "t_capture_bits": [
+      2014,
+      2066
+     ],
+     "x_um": [
+      512.412,
+      520.476
+     ]
+    },
+    {
+     "root": "leaf g2 k1 root 3",
+     "t_capture_bits": [
+      2067,
+      2119
+     ],
+     "x_um": [
+      520.572,
+      538.62
+     ]
+    },
+    {
+     "root": "leaf g2 k2 root 0",
+     "t_capture_bits": [
+      2120,
+      2172
+     ],
+     "x_um": [
+      534.492,
+      565.884
+     ]
+    },
+    {
+     "root": "leaf g2 k2 root 1",
+     "t_capture_bits": [
+      2173,
+      2225
+     ],
+     "x_um": [
+      534.588,
+      581.052
+     ]
+    },
+    {
+     "root": "leaf g2 k2 root 2",
+     "t_capture_bits": [
+      2226,
+      2278
+     ],
+     "x_um": [
+      543.708,
+      582.012
+     ]
+    },
+    {
+     "root": "leaf g2 k2 root 3",
+     "t_capture_bits": [
+      2279,
+      2331
+     ],
+     "x_um": [
+      544.764,
+      585.084
+     ]
+    },
+    {
+     "root": "leaf g2 k3 root 0",
+     "t_capture_bits": [
+      2332,
+      2384
+     ],
+     "x_um": [
+      531.42,
+      574.812
+     ]
+    },
+    {
+     "root": "leaf g2 k3 root 1",
+     "t_capture_bits": [
+      2385,
+      2437
+     ],
+     "x_um": [
+      550.62,
+      575.868
+     ]
+    },
+    {
+     "root": "leaf g2 k3 root 2",
+     "t_capture_bits": [
+      2438,
+      2490
+     ],
+     "x_um": [
+      554.652,
+      578.844
+     ]
+    }
+   ]
+  },
+  {
+   "slot": "pq_cnt_4",
+   "master": "ot_s81_pq_rwbc2",
+   "nr": 2,
+   "at_die": [
+    14519.52,
+    17321.04
+   ],
+   "outline": [
+    142.56,
+    38.88
+   ],
+   "n_face_taps": [
+    {
+     "root": "leaf g2 k3 root 3",
+     "t_capture_bits": [
+      2491,
+      2543
+     ],
+     "x_um": [
+      569.82,
+      587.004
+     ]
+    },
+    {
+     "root": "leaf g3 k0 root 3",
+     "t_capture_bits": [
+      2703,
+      2755
+     ],
+     "x_um": [
+      709.308,
+      726.588
+     ]
+    }
+   ]
+  },
+  {
+   "slot": "pq_cnt_5",
+   "master": "ot_s81_pq_rwbc15",
+   "nr": 15,
+   "at_die": [
+    14663.52,
+    17321.04
+   ],
+   "outline": [
+    142.56,
+    38.88
+   ],
+   "n_face_taps": [
+    {
+     "root": "leaf g3 k0 root 0",
+     "t_capture_bits": [
+      2544,
+      2596
+     ],
+     "x_um": [
+      712.476,
+      733.596
+     ]
+    },
+    {
+     "root": "leaf g3 k0 root 1",
+     "t_capture_bits": [
+      2597,
+      2649
+     ],
+     "x_um": [
+      718.236,
+      764.028
+     ]
+    },
+    {
+     "root": "leaf g3 k0 root 2",
+     "t_capture_bits": [
+      2650,
+      2702
+     ],
+     "x_um": [
+      709.02,
+      765.756
+     ]
+    },
+    {
+     "root": "leaf g3 k1 root 0",
+     "t_capture_bits": [
+      2756,
+      2808
+     ],
+     "x_um": [
+      715.164,
+      738.588
+     ]
+    },
+    {
+     "root": "leaf g3 k1 root 1",
+     "t_capture_bits": [
+      2809,
+      2861
+     ],
+     "x_um": [
+      721.308,
+      740.412
+     ]
+    },
+    {
+     "root": "leaf g3 k1 root 2",
+     "t_capture_bits": [
+      2862,
+      2914
+     ],
+     "x_um": [
+      728.412,
+      736.476
+     ]
+    },
+    {
+     "root": "leaf g3 k1 root 3",
+     "t_capture_bits": [
+      2915,
+      2967
+     ],
+     "x_um": [
+      736.572,
+      754.62
+     ]
+    },
+    {
+     "root": "leaf g3 k2 root 0",
+     "t_capture_bits": [
+      2968,
+      3020
+     ],
+     "x_um": [
+      750.492,
+      781.884
+     ]
+    },
+    {
+     "root": "leaf g3 k2 root 1",
+     "t_capture_bits": [
+      3021,
+      3073
+     ],
+     "x_um": [
+      750.588,
+      797.052
+     ]
+    },
+    {
+     "root": "leaf g3 k2 root 2",
+     "t_capture_bits": [
+      3074,
+      3126
+     ],
+     "x_um": [
+      759.708,
+      798.012
+     ]
+    },
+    {
+     "root": "leaf g3 k2 root 3",
+     "t_capture_bits": [
+      3127,
+      3179
+     ],
+     "x_um": [
+      760.764,
+      801.084
+     ]
+    },
+    {
+     "root": "leaf g3 k3 root 0",
+     "t_capture_bits": [
+      3180,
+      3232
+     ],
+     "x_um": [
+      747.42,
+      790.812
+     ]
+    },
+    {
+     "root": "leaf g3 k3 root 1",
+     "t_capture_bits": [
+      3233,
+      3285
+     ],
+     "x_um": [
+      766.62,
+      791.868
+     ]
+    },
+    {
+     "root": "leaf g3 k3 root 2",
+     "t_capture_bits": [
+      3286,
+      3338
+     ],
+     "x_um": [
+      770.652,
+      794.844
+     ]
+    },
+    {
+     "root": "leaf g3 k3 root 3",
+     "t_capture_bits": [
+      3339,
+      3391
+     ],
+     "x_um": [
+      785.82,
+      803.004
+     ]
+    }
+   ]
+  },
+  {
+   "slot": "pq_cnt_6",
+   "master": "ot_s81_pq_rwbc15",
+   "nr": 15,
+   "at_die": [
+    14807.52,
+    17321.04
+   ],
+   "outline": [
+    142.56,
+    38.88
+   ],
+   "n_face_taps": [
+    {
+     "root": "leaf g4 k0 root 0",
+     "t_capture_bits": [
+      3392,
+      3444
+     ],
+     "x_um": [
+      928.476,
+      949.596
+     ]
+    },
+    {
+     "root": "leaf g4 k0 root 1",
+     "t_capture_bits": [
+      3445,
+      3497
+     ],
+     "x_um": [
+      934.236,
+      980.028
+     ]
+    },
+    {
+     "root": "leaf g4 k0 root 2",
+     "t_capture_bits": [
+      3498,
+      3550
+     ],
+     "x_um": [
+      925.02,
+      981.756
+     ]
+    },
+    {
+     "root": "leaf g4 k0 root 3",
+     "t_capture_bits": [
+      3551,
+      3603
+     ],
+     "x_um": [
+      925.308,
+      942.588
+     ]
+    },
+    {
+     "root": "leaf g4 k1 root 0",
+     "t_capture_bits": [
+      3604,
+      3656
+     ],
+     "x_um": [
+      931.164,
+      954.588
+     ]
+    },
+    {
+     "root": "leaf g4 k1 root 1",
+     "t_capture_bits": [
+      3657,
+      3709
+     ],
+     "x_um": [
+      937.308,
+      956.412
+     ]
+    },
+    {
+     "root": "leaf g4 k1 root 2",
+     "t_capture_bits": [
+      3710,
+      3762
+     ],
+     "x_um": [
+      944.412,
+      952.476
+     ]
+    },
+    {
+     "root": "leaf g4 k1 root 3",
+     "t_capture_bits": [
+      3763,
+      3815
+     ],
+     "x_um": [
+      952.572,
+      970.62
+     ]
+    },
+    {
+     "root": "leaf g4 k2 root 0",
+     "t_capture_bits": [
+      3816,
+      3868
+     ],
+     "x_um": [
+      966.492,
+      997.884
+     ]
+    },
+    {
+     "root": "leaf g4 k2 root 1",
+     "t_capture_bits": [
+      3869,
+      3921
+     ],
+     "x_um": [
+      966.588,
+      1013.052
+     ]
+    },
+    {
+     "root": "leaf g4 k2 root 2",
+     "t_capture_bits": [
+      3922,
+      3974
+     ],
+     "x_um": [
+      975.708,
+      1014.012
+     ]
+    },
+    {
+     "root": "leaf g4 k2 root 3",
+     "t_capture_bits": [
+      3975,
+      4027
+     ],
+     "x_um": [
+      976.764,
+      1017.084
+     ]
+    },
+    {
+     "root": "leaf g4 k3 root 0",
+     "t_capture_bits": [
+      4028,
+      4080
+     ],
+     "x_um": [
+      963.42,
+      1006.812
+     ]
+    },
+    {
+     "root": "leaf g4 k3 root 1",
+     "t_capture_bits": [
+      4081,
+      4133
+     ],
+     "x_um": [
+      982.62,
+      1007.868
+     ]
+    },
+    {
+     "root": "leaf g4 k3 root 2",
+     "t_capture_bits": [
+      4134,
+      4186
+     ],
+     "x_um": [
+      986.652,
+      1010.844
+     ]
+    }
+   ]
+  },
+  {
+   "slot": "pq_cnt_7",
+   "master": "ot_s81_pq_rwbc2",
+   "nr": 2,
+   "at_die": [
+    14951.52,
+    17321.04
+   ],
+   "outline": [
+    142.56,
+    38.88
+   ],
+   "n_face_taps": [
+    {
+     "root": "leaf g4 k3 root 3",
+     "t_capture_bits": [
+      4187,
+      4239
+     ],
+     "x_um": [
+      1001.82,
+      1019.004
+     ]
+    },
+    {
+     "root": "leaf g5 k0 root 3",
+     "t_capture_bits": [
+      4399,
+      4451
+     ],
+     "x_um": [
+      1141.308,
+      1158.588
+     ]
+    }
+   ]
+  },
+  {
+   "slot": "pq_cnt_8",
+   "master": "ot_s81_pq_rwbc15",
+   "nr": 15,
+   "at_die": [
+    15095.52,
+    17321.04
+   ],
+   "outline": [
+    142.56,
+    38.88
+   ],
+   "n_face_taps": [
+    {
+     "root": "leaf g5 k0 root 0",
+     "t_capture_bits": [
+      4240,
+      4292
+     ],
+     "x_um": [
+      1144.476,
+      1165.596
+     ]
+    },
+    {
+     "root": "leaf g5 k0 root 1",
+     "t_capture_bits": [
+      4293,
+      4345
+     ],
+     "x_um": [
+      1150.236,
+      1196.028
+     ]
+    },
+    {
+     "root": "leaf g5 k0 root 2",
+     "t_capture_bits": [
+      4346,
+      4398
+     ],
+     "x_um": [
+      1141.02,
+      1197.756
+     ]
+    },
+    {
+     "root": "leaf g5 k1 root 0",
+     "t_capture_bits": [
+      4452,
+      4504
+     ],
+     "x_um": [
+      1147.164,
+      1170.588
+     ]
+    },
+    {
+     "root": "leaf g5 k1 root 1",
+     "t_capture_bits": [
+      4505,
+      4557
+     ],
+     "x_um": [
+      1153.308,
+      1172.412
+     ]
+    },
+    {
+     "root": "leaf g5 k1 root 2",
+     "t_capture_bits": [
+      4558,
+      4610
+     ],
+     "x_um": [
+      1160.412,
+      1168.476
+     ]
+    },
+    {
+     "root": "leaf g5 k1 root 3",
+     "t_capture_bits": [
+      4611,
+      4663
+     ],
+     "x_um": [
+      1168.572,
+      1186.62
+     ]
+    },
+    {
+     "root": "leaf g5 k2 root 0",
+     "t_capture_bits": [
+      4664,
+      4716
+     ],
+     "x_um": [
+      1182.492,
+      1213.884
+     ]
+    },
+    {
+     "root": "leaf g5 k2 root 1",
+     "t_capture_bits": [
+      4717,
+      4769
+     ],
+     "x_um": [
+      1182.588,
+      1229.052
+     ]
+    },
+    {
+     "root": "leaf g5 k2 root 2",
+     "t_capture_bits": [
+      4770,
+      4822
+     ],
+     "x_um": [
+      1191.708,
+      1230.012
+     ]
+    },
+    {
+     "root": "leaf g5 k2 root 3",
+     "t_capture_bits": [
+      4823,
+      4875
+     ],
+     "x_um": [
+      1192.764,
+      1233.084
+     ]
+    },
+    {
+     "root": "leaf g5 k3 root 0",
+     "t_capture_bits": [
+      4876,
+      4928
+     ],
+     "x_um": [
+      1179.42,
+      1222.812
+     ]
+    },
+    {
+     "root": "leaf g5 k3 root 1",
+     "t_capture_bits": [
+      4929,
+      4981
+     ],
+     "x_um": [
+      1198.62,
+      1223.868
+     ]
+    },
+    {
+     "root": "leaf g5 k3 root 2",
+     "t_capture_bits": [
+      4982,
+      5034
+     ],
+     "x_um": [
+      1202.652,
+      1226.844
+     ]
+    },
+    {
+     "root": "leaf g5 k3 root 3",
+     "t_capture_bits": [
+      5035,
+      5087
+     ],
+     "x_um": [
+      1217.82,
+      1235.004
+     ]
+    }
+   ]
+  },
+  {
+   "slot": "pq_cnt_9",
+   "master": "ot_s81_pq_rwbc15",
+   "nr": 15,
+   "at_die": [
+    15239.52,
+    17321.04
+   ],
+   "outline": [
+    142.56,
+    38.88
+   ],
+   "n_face_taps": [
+    {
+     "root": "leaf g6 k0 root 0",
+     "t_capture_bits": [
+      5088,
+      5140
+     ],
+     "x_um": [
+      1360.476,
+      1381.596
+     ]
+    },
+    {
+     "root": "leaf g6 k0 root 1",
+     "t_capture_bits": [
+      5141,
+      5193
+     ],
+     "x_um": [
+      1366.236,
+      1412.028
+     ]
+    },
+    {
+     "root": "leaf g6 k0 root 2",
+     "t_capture_bits": [
+      5194,
+      5246
+     ],
+     "x_um": [
+      1357.02,
+      1413.756
+     ]
+    },
+    {
+     "root": "leaf g6 k0 root 3",
+     "t_capture_bits": [
+      5247,
+      5299
+     ],
+     "x_um": [
+      1357.308,
+      1374.588
+     ]
+    },
+    {
+     "root": "leaf g6 k1 root 0",
+     "t_capture_bits": [
+      5300,
+      5352
+     ],
+     "x_um": [
+      1363.164,
+      1386.588
+     ]
+    },
+    {
+     "root": "leaf g6 k1 root 1",
+     "t_capture_bits": [
+      5353,
+      5405
+     ],
+     "x_um": [
+      1369.308,
+      1388.412
+     ]
+    },
+    {
+     "root": "leaf g6 k1 root 2",
+     "t_capture_bits": [
+      5406,
+      5458
+     ],
+     "x_um": [
+      1376.412,
+      1384.476
+     ]
+    },
+    {
+     "root": "leaf g6 k1 root 3",
+     "t_capture_bits": [
+      5459,
+      5511
+     ],
+     "x_um": [
+      1384.572,
+      1402.62
+     ]
+    },
+    {
+     "root": "leaf g6 k2 root 0",
+     "t_capture_bits": [
+      5512,
+      5564
+     ],
+     "x_um": [
+      1398.492,
+      1429.884
+     ]
+    },
+    {
+     "root": "leaf g6 k2 root 1",
+     "t_capture_bits": [
+      5565,
+      5617
+     ],
+     "x_um": [
+      1398.588,
+      1445.052
+     ]
+    },
+    {
+     "root": "leaf g6 k2 root 2",
+     "t_capture_bits": [
+      5618,
+      5670
+     ],
+     "x_um": [
+      1407.708,
+      1446.012
+     ]
+    },
+    {
+     "root": "leaf g6 k2 root 3",
+     "t_capture_bits": [
+      5671,
+      5723
+     ],
+     "x_um": [
+      1408.764,
+      1449.084
+     ]
+    },
+    {
+     "root": "leaf g6 k3 root 0",
+     "t_capture_bits": [
+      5724,
+      5776
+     ],
+     "x_um": [
+      1395.42,
+      1438.812
+     ]
+    },
+    {
+     "root": "leaf g6 k3 root 1",
+     "t_capture_bits": [
+      5777,
+      5829
+     ],
+     "x_um": [
+      1414.62,
+      1439.868
+     ]
+    },
+    {
+     "root": "leaf g6 k3 root 2",
+     "t_capture_bits": [
+      5830,
+      5882
+     ],
+     "x_um": [
+      1418.652,
+      1442.844
+     ]
+    }
+   ]
+  },
+  {
+   "slot": "pq_cnt_10",
+   "master": "ot_s81_pq_rwbc2",
+   "nr": 2,
+   "at_die": [
+    15383.52,
+    17321.04
+   ],
+   "outline": [
+    142.56,
+    38.88
+   ],
+   "n_face_taps": [
+    {
+     "root": "leaf g6 k3 root 3",
+     "t_capture_bits": [
+      5883,
+      5935
+     ],
+     "x_um": [
+      1433.82,
+      1451.004
+     ]
+    },
+    {
+     "root": "leaf g7 k0 root 3",
+     "t_capture_bits": [
+      6095,
+      6147
+     ],
+     "x_um": [
+      1573.308,
+      1590.588
+     ]
+    }
+   ]
+  },
+  {
+   "slot": "pq_cnt_11",
+   "master": "ot_s81_pq_rwbc15",
+   "nr": 15,
+   "at_die": [
+    15527.52,
+    17321.04
+   ],
+   "outline": [
+    142.56,
+    38.88
+   ],
+   "n_face_taps": [
+    {
+     "root": "leaf g7 k0 root 0",
+     "t_capture_bits": [
+      5936,
+      5988
+     ],
+     "x_um": [
+      1576.476,
+      1597.596
+     ]
+    },
+    {
+     "root": "leaf g7 k0 root 1",
+     "t_capture_bits": [
+      5989,
+      6041
+     ],
+     "x_um": [
+      1582.236,
+      1628.028
+     ]
+    },
+    {
+     "root": "leaf g7 k0 root 2",
+     "t_capture_bits": [
+      6042,
+      6094
+     ],
+     "x_um": [
+      1573.02,
+      1629.756
+     ]
+    },
+    {
+     "root": "leaf g7 k1 root 0",
+     "t_capture_bits": [
+      6148,
+      6200
+     ],
+     "x_um": [
+      1579.164,
+      1602.588
+     ]
+    },
+    {
+     "root": "leaf g7 k1 root 1",
+     "t_capture_bits": [
+      6201,
+      6253
+     ],
+     "x_um": [
+      1585.308,
+      1604.412
+     ]
+    },
+    {
+     "root": "leaf g7 k1 root 2",
+     "t_capture_bits": [
+      6254,
+      6306
+     ],
+     "x_um": [
+      1592.412,
+      1600.476
+     ]
+    },
+    {
+     "root": "leaf g7 k1 root 3",
+     "t_capture_bits": [
+      6307,
+      6359
+     ],
+     "x_um": [
+      1600.572,
+      1618.62
+     ]
+    },
+    {
+     "root": "leaf g7 k2 root 0",
+     "t_capture_bits": [
+      6360,
+      6412
+     ],
+     "x_um": [
+      1614.492,
+      1645.884
+     ]
+    },
+    {
+     "root": "leaf g7 k2 root 1",
+     "t_capture_bits": [
+      6413,
+      6465
+     ],
+     "x_um": [
+      1614.588,
+      1661.052
+     ]
+    },
+    {
+     "root": "leaf g7 k2 root 2",
+     "t_capture_bits": [
+      6466,
+      6518
+     ],
+     "x_um": [
+      1623.708,
+      1662.012
+     ]
+    },
+    {
+     "root": "leaf g7 k2 root 3",
+     "t_capture_bits": [
+      6519,
+      6571
+     ],
+     "x_um": [
+      1624.764,
+      1665.084
+     ]
+    },
+    {
+     "root": "leaf g7 k3 root 0",
+     "t_capture_bits": [
+      6572,
+      6624
+     ],
+     "x_um": [
+      1611.42,
+      1654.812
+     ]
+    },
+    {
+     "root": "leaf g7 k3 root 1",
+     "t_capture_bits": [
+      6625,
+      6677
+     ],
+     "x_um": [
+      1630.62,
+      1655.868
+     ]
+    },
+    {
+     "root": "leaf g7 k3 root 2",
+     "t_capture_bits": [
+      6678,
+      6730
+     ],
+     "x_um": [
+      1634.652,
+      1658.844
+     ]
+    },
+    {
+     "root": "leaf g7 k3 root 3",
+     "t_capture_bits": [
+      6731,
+      6783
+     ],
+     "x_um": [
+      1649.82,
+      1667.004
+     ]
+    }
+   ]
+  }
+ ],
+ "geometry": {
+  "gather_slot": [
+   13942.8,
+   17362.08,
+   1727.976,
+   803.496
+  ],
+  "capture_slot": [
+   13942.8,
+   16757.280000000002,
+   1727.976,
+   561.576
+  ],
+  "seam": "gather S face | capture N face widened 21.6 -> 43.2 um (capture moves down 21.6 in v19 GEN); the 12 count leaves tile it 144 um each under the t_capture pins of the roots they count",
+  "sp_pq": [
+   13942.8,
+   18338.4,
+   1672.248,
+   449.256
+  ],
+  "mdr": "458 b replica word from sp_pq (S face) to all 12 leaves: one die broadcast tree over the gather slab, relays placed by the die hop fix (<= 500 um a stage; ~975 um -> 2 stages)",
+  "ga_q2f": "ga 16 + q2f 1 per leaf (204 b) back to sp_pq ga_i / q2f_i: same corridor, 2 relay stages"
+ },
+ "faces": {
+  "N": "root-word taps at the t_capture x of each counted root (second load on the root word net, capture keeps the first)",
+  "W_E": "mdr chain in / through (458 b, M4) -- or N if the PQ owner prefers a tree; ck / rst on W",
+  "S": "ga[15:0], q2f out toward the side corridor"
+ },
+ "grouping": "x-tiling of the gather S face: groups 15/2/15 repeating (any partition works: the core sums ga over groups, ORs q2f; NR <= 15 = the RWB limit)",
+ "owed": [
+  "PQ owner: count-only RTL ot_s81_pq_rwbc<N> (N = 15 / 2), exact bench vs the reference counts + mutant; then the die assigns exact pins from the RTL ports (--rtl-bind)",
+  "PQ owner + S-FUNC: capacity check of the gather root (S = 8 open (pos,row,n) per root) against the PQ phase programs",
+  "die (me): v19 GEN without the pq_root row (--pq-place off for the root row), seam 43.2, 12 count slots, mdr / ga corridors"
+ ]
+}

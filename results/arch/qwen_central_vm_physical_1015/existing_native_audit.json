@@ -1,0 +1,1168 @@
+{
+ "schema": "opentallas.pinreg_audit.v1",
+ "die": null,
+ "contract": "results/arch/qwen_central_vm_physical_1015/native_audit_contract.json",
+ "contract_version": null,
+ "source_commit": "cd1ee21b7",
+ "schema_note": "v2 (10-13): judged on the pair equation with insertion-compensated clock entry; v1 judged each side against 0.2 T",
+ "rule": {
+  "period_ps": 833.333,
+  "setup_unc_ps": 60.0,
+  "die_skew_ps": 90.0,
+  "wire_ps_per_um": 0.76,
+  "reach_um": 500.0,
+  "pair_available_ps": 683.3,
+  "side_budget_ps": 151.7,
+  "signoff_allow_ps": 516.7,
+  "max_spread_ps": 80.0,
+  "q_pin_ps": 220.0,
+  "p_pin_ps": 190.0,
+  "q_class_ps": 180.0,
+  "p_class_ps": 150.0,
+  "min_delay_ps": 100.0,
+  "hold_margin_ps": 50.0,
+  "skew_ps": 50.0,
+  "reading": "die clock at tile X clock pin = phi - R_X (R = mean boundary-register insertion, the sign-off reference); hop A -> B: o_A + w L + s_B <= T - U - SKEW with o = clk->pin - R, s = setup@pin + R; per tile C = o + s, reach = (T - U - SKEW - C) / w; the sign-off SDC (0.2 T outside) only proves o, s <= signoff_allow each"
+ },
+ "die_clock": {
+  "corner": "tt",
+  "tiles": 3,
+  "reference_min_ps": 47.6,
+  "reference_max_ps": 319.3,
+  "reference_span_ps": 271.7,
+  "deepest": "ot_qfd_vm_bank_t",
+  "shallowest": "qfd_vm_qcommit",
+  "rule": "clock at tile X clock pin = phi - R_X (+ common trunk); the branch to X carries R_max - R_X of added delay",
+  "added_delay_ps": {
+   "qfd_vm_qcommit": 271.7,
+   "ot_qfd_vm_bctl_nx": 265.4,
+   "ot_qfd_vm_bank_t": 0.0
+  },
+  "ocv_skew_ps": {
+   "frac": 0.05,
+   "non_shared_per_side_ps": 319.3,
+   "pair_ps": 31.9,
+   "of_die_skew_ps": 90.0,
+   "note": "every clock pin is matched to the deepest tile, so each side of every hop carries >= R_max of non-shared insertion: 2 x OCV x R_max of the die skew budget is spent before the die tree itself"
+  },
+  "ff_tt_tracking": {
+   "min": 0.763,
+   "max": 0.834,
+   "mistrack_ps": 19.3,
+   "note": "R_ff / R_tt per tile; a fixed-ratio delay line misses the span by this much at the other corner"
+  },
+  "setup_pair_available_ps": 683.3,
+  "setup_worst_pair": {
+   "compensated": {
+    "o_plus_s_ps": 635.1,
+    "src": "ot_qfd_vm_bank_t",
+    "dst": "ot_qfd_vm_bank_t",
+    "wire_left_ps": 48.2
+   },
+   "common_phase": {
+    "o_plus_s_ps": 738.9,
+    "src": "ot_qfd_vm_bank_t",
+    "dst": "qfd_vm_qcommit",
+    "wire_left_ps": -55.6
+   },
+   "note": "potential pairs among the audited cells (connectivity not resolved); common phase adds R_src - R_dst to the pair"
+  },
+  "hold_worst_pair": {
+   "need_ps": 100.0,
+   "compensated": {
+    "margin_ps": 152.9,
+    "src": "ot_qfd_vm_bank_t",
+    "dst": "qfd_vm_qcommit"
+   },
+   "common_phase": {
+    "margin_ps": -53.8,
+    "src": "qfd_vm_qcommit",
+    "dst": "ot_qfd_vm_bank_t"
+   }
+  }
+ },
+ "status": "views post export-SDC fix",
+ "export_sdc": {
+  "corrected": 3,
+  "pre_fix": 0,
+  "pre_fix_views": []
+ },
+ "counts": {
+  "contract_cells": 3,
+  "audited": 3,
+  "not_auditable": 0,
+  "violating": 1,
+  "reach_limited": 1,
+  "clean": 2,
+  "ref_estimated": 0,
+  "alias_bound": 0,
+  "by_flag": {
+   "out_unreg": 1,
+   "in_unreg": 1,
+   "spread": 1
+  },
+  "instances_audited": 3,
+  "instances_not_auditable": 0,
+  "hops_over": null
+ },
+ "ranked_violations": [
+  {
+   "rank": 1,
+   "cell": "ot_qfd_vm_bank_t",
+   "instances": 1,
+   "flags": [
+    "out_unreg",
+    "in_unreg",
+    "spread"
+   ],
+   "view": "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t",
+   "binding": "explicit",
+   "provisional": false,
+   "setup_corner": "tt",
+   "notes": [
+    "reach_limited"
+   ],
+   "fix": [
+    "output pin register missing or far: 4 bits (q), worst q leaves 239 ps after the latest boundary clock = 59 ps over a pin flop (logic, or ~78 um of wire, after the flop): add / move the output register to the pin",
+    "input pin register missing or far: 59 bits (wd, wm), worst wd needs 259 ps before the earliest boundary clock = 109 ps over a pin flop: first flop ~143 um (or logic) behind the pin: register at the pin",
+    "boundary clock spread 137 ps > 80: put the boundary registers on one balanced sub-root (or split the root); every ps is inside o + s (1.3 um of reach per ps)"
+   ],
+   "reference_ps": 319.3,
+   "reference_src": "insertion.json boundary mean",
+   "boundary_spread_ps": 137.0,
+   "comb_bits": 0,
+   "out_over_bits": 463,
+   "in_over_bits": 487,
+   "worst_out_ps": 351.0,
+   "worst_out_bus": "q",
+   "worst_in_ps": 284.1,
+   "worst_in_bus": "wd",
+   "L_min_ps": 96.3,
+   "H_max_ps": -65.7,
+   "min_delay_margin_ps": 162.0,
+   "pins": 1061,
+   "pair_cost_ps": 635.1,
+   "reach_self_um": 63.5,
+   "q_lb_ps": 239.4,
+   "q_lb_bus": "q",
+   "p_lb_ps": 258.7,
+   "p_lb_bus": "wd",
+   "out_unreg_bits": 4,
+   "in_unreg_bits": 59
+  }
+ ],
+ "not_auditable": [],
+ "cross_tile_min_delay": {
+  "note": "potential pairs (connectivity between view cells is not resolved): L_min(src) - H_max(dst) < 100 ps",
+  "pairs": 0,
+  "worst": []
+ },
+ "hops": null,
+ "tiles": [
+  {
+   "cell": "ot_qfd_vm_bctl_nx",
+   "instances": 1,
+   "slots": [
+    "control"
+   ],
+   "kinds": [
+    "tile"
+   ],
+   "binding": "explicit",
+   "view": "physical/ref_tile/qfd_vm_bctl_nx/views/ot_qfd_vm_bctl_nx",
+   "setup_corner": "tt",
+   "hold_corner": "ff",
+   "libs": {
+    "ff": "ot_qfd_vm_bctl_nx_ff.lib",
+    "ss": "ot_qfd_vm_bctl_nx_ss.lib",
+    "tt": "ot_qfd_vm_bctl_nx_tt.lib"
+   },
+   "export_sdc_corrected": "verdict",
+   "committed_before_export_sdc_fix": false,
+   "exported_before_export_sdc_fix": false,
+   "lib_cell": "ot_qfd_vm_bctl_nx",
+   "clocks": {
+    "clk": {
+     "ref_ps": 53.9,
+     "min_ps": 50.0,
+     "max_ps": 55.0,
+     "src": "insertion.json boundary mean",
+     "boundary_min_ps": 53.2,
+     "boundary_max_ps": 55.0,
+     "boundary_spread_ps": 1.8,
+     "boundary_n": 70
+    }
+   },
+   "clocks_ff": {
+    "clk": {
+     "ref_ps": 41.1,
+     "boundary_min_ps": 40.4,
+     "boundary_max_ps": 42.2,
+     "src": "insertion.json boundary mean"
+    }
+   },
+   "die_clock": {
+    "clock_pin": "clk",
+    "corner": "tt",
+    "reference_ps": 53.9,
+    "reference_src": "insertion.json boundary mean",
+    "entry_offset_ps": -53.9,
+    "entry_offset_ff_ps": -41.1,
+    "boundary_min_ps": 53.2,
+    "boundary_max_ps": 55.0,
+    "boundary_spread_ps": 1.8,
+    "boundary_n": 70,
+    "all_sinks_min_ps": 50.0,
+    "all_sinks_max_ps": 55.0,
+    "residual_out_ps": 174.7,
+    "residual_in_ps": 108.5,
+    "balanced_entry_offset_ps": -87.0,
+    "signoff_allow_ps": 516.7,
+    "note": "entry_offset = required die clock arrival at this clock pin relative to the common boundary phase; balanced_entry_offset equalises o and s (hold must then be re-checked: l and h move with it)"
+   },
+   "notes": [],
+   "fix": [],
+   "summary": {
+    "pins": 72,
+    "buses": 14,
+    "comb_bits": 0,
+    "out_over_bits": 35,
+    "in_over_bits": 0,
+    "no_clock_arc_out_bits": 0,
+    "no_setup_arc_in_bits": 2,
+    "worst_out_ps": 174.7,
+    "worst_out_bus": "m_wm",
+    "worst_in_ps": 108.5,
+    "worst_in_bus": "wm",
+    "L_min_ps": 111.3,
+    "L_min_bus": "m_wm",
+    "H_max_ps": -58.7,
+    "H_max_bus": "wm",
+    "min_delay_margin_ps": 170.0,
+    "min_delay_bits_out": 0,
+    "min_delay_bits_in": 0,
+    "pair_cost_ps": 283.2,
+    "reach_self_um": 526.5,
+    "side_budget_ps": 151.7,
+    "pair_available_ps": 683.3,
+    "q_lb_ps": 173.6,
+    "q_lb_bus": "m_wm",
+    "p_lb_ps": 107.8,
+    "p_lb_bus": "wm",
+    "out_unreg_bits": 0,
+    "in_unreg_bits": 0,
+    "out_unreg_buses": [],
+    "in_unreg_buses": [],
+    "clock_out_bits": 0
+   },
+   "flags": [],
+   "buses": {
+    "m_re": {
+     "dir": "output",
+     "bits": 1,
+     "out_ps": 169.0,
+     "in_ps": null,
+     "L_ps": 117.7,
+     "H_ps": null,
+     "comb_bits": 0,
+     "out_over_bits": 1,
+     "in_over_bits": 0,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 0,
+     "comb_from": [],
+     "worst_out_pin": "m_re",
+     "worst_in_pin": null,
+     "clocks": [
+      "clk"
+     ],
+     "q_lb_ps": 167.9,
+     "out_unreg_bits": 0
+    },
+    "m_we": {
+     "dir": "output",
+     "bits": 1,
+     "out_ps": 170.6,
+     "in_ps": null,
+     "L_ps": 118.8,
+     "H_ps": null,
+     "comb_bits": 0,
+     "out_over_bits": 1,
+     "in_over_bits": 0,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 0,
+     "comb_from": [],
+     "worst_out_pin": "m_we",
+     "worst_in_pin": null,
+     "clocks": [
+      "clk"
+     ],
+     "q_lb_ps": 169.5,
+     "out_unreg_bits": 0
+    },
+    "re": {
+     "dir": "input",
+     "bits": 1,
+     "out_ps": null,
+     "in_ps": 107.9,
+     "L_ps": null,
+     "H_ps": -62.4,
+     "comb_bits": 0,
+     "out_over_bits": 0,
+     "in_over_bits": 0,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 0,
+     "comb_from": [],
+     "worst_out_pin": null,
+     "worst_in_pin": "re",
+     "clocks": [
+      "clk"
+     ],
+     "p_lb_ps": 107.2,
+     "in_unreg_bits": 0
+    },
+    "rst_n": {
+     "dir": "input",
+     "bits": 1,
+     "out_ps": null,
+     "in_ps": 103.0,
+     "L_ps": null,
+     "H_ps": -61.3,
+     "comb_bits": 0,
+     "out_over_bits": 0,
+     "in_over_bits": 0,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 0,
+     "comb_from": [],
+     "worst_out_pin": null,
+     "worst_in_pin": "rst_n",
+     "clocks": [
+      "clk"
+     ],
+     "p_lb_ps": 102.3,
+     "in_unreg_bits": 0
+    },
+    "rtg": {
+     "dir": "output",
+     "bits": 1,
+     "out_ps": 171.2,
+     "in_ps": null,
+     "L_ps": 118.9,
+     "H_ps": null,
+     "comb_bits": 0,
+     "out_over_bits": 1,
+     "in_over_bits": 0,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 0,
+     "comb_from": [],
+     "worst_out_pin": "rtg",
+     "worst_in_pin": null,
+     "clocks": [
+      "clk"
+     ],
+     "q_lb_ps": 170.1,
+     "out_unreg_bits": 0
+    },
+    "we": {
+     "dir": "input",
+     "bits": 1,
+     "out_ps": null,
+     "in_ps": 104.5,
+     "L_ps": null,
+     "H_ps": -59.7,
+     "comb_bits": 0,
+     "out_over_bits": 0,
+     "in_over_bits": 0,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 0,
+     "comb_from": [],
+     "worst_out_pin": null,
+     "worst_in_pin": "we",
+     "clocks": [
+      "clk"
+     ],
+     "p_lb_ps": 103.8,
+     "in_unreg_bits": 0
+    },
+    "VDD": {
+     "dir": "input",
+     "bits": 1,
+     "out_ps": null,
+     "in_ps": null,
+     "L_ps": null,
+     "H_ps": null,
+     "comb_bits": 0,
+     "out_over_bits": 0,
+     "in_over_bits": 0,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 1,
+     "comb_from": [],
+     "worst_out_pin": null,
+     "worst_in_pin": null,
+     "clocks": []
+    },
+    "VSS": {
+     "dir": "input",
+     "bits": 1,
+     "out_ps": null,
+     "in_ps": null,
+     "L_ps": null,
+     "H_ps": null,
+     "comb_bits": 0,
+     "out_over_bits": 0,
+     "in_over_bits": 0,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 1,
+     "comb_from": [],
+     "worst_out_pin": null,
+     "worst_in_pin": null,
+     "clocks": []
+    },
+    "m_ra": {
+     "dir": "output",
+     "bits": 8,
+     "out_ps": 172.8,
+     "in_ps": null,
+     "L_ps": 116.1,
+     "H_ps": null,
+     "comb_bits": 0,
+     "out_over_bits": 8,
+     "in_over_bits": 0,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 0,
+     "comb_from": [],
+     "worst_out_pin": "m_ra[2]",
+     "worst_in_pin": null,
+     "clocks": [
+      "clk"
+     ],
+     "q_lb_ps": 171.7,
+     "out_unreg_bits": 0
+    },
+    "m_wl": {
+     "dir": "output",
+     "bits": 8,
+     "out_ps": 172.8,
+     "in_ps": null,
+     "L_ps": 112.9,
+     "H_ps": null,
+     "comb_bits": 0,
+     "out_over_bits": 8,
+     "in_over_bits": 0,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 0,
+     "comb_from": [],
+     "worst_out_pin": "m_wl[6]",
+     "worst_in_pin": null,
+     "clocks": [
+      "clk"
+     ],
+     "q_lb_ps": 171.7,
+     "out_unreg_bits": 0
+    },
+    "m_wm": {
+     "dir": "output",
+     "bits": 16,
+     "out_ps": 174.7,
+     "in_ps": null,
+     "L_ps": 111.3,
+     "H_ps": null,
+     "comb_bits": 0,
+     "out_over_bits": 16,
+     "in_over_bits": 0,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 0,
+     "comb_from": [],
+     "worst_out_pin": "m_wm[14]",
+     "worst_in_pin": null,
+     "clocks": [
+      "clk"
+     ],
+     "q_lb_ps": 173.6,
+     "out_unreg_bits": 0
+    },
+    "ra": {
+     "dir": "input",
+     "bits": 8,
+     "out_ps": null,
+     "in_ps": 106.8,
+     "L_ps": null,
+     "H_ps": -59.5,
+     "comb_bits": 0,
+     "out_over_bits": 0,
+     "in_over_bits": 0,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 0,
+     "comb_from": [],
+     "worst_out_pin": null,
+     "worst_in_pin": "ra[3]",
+     "clocks": [
+      "clk"
+     ],
+     "p_lb_ps": 106.1,
+     "in_unreg_bits": 0
+    },
+    "wl": {
+     "dir": "input",
+     "bits": 8,
+     "out_ps": null,
+     "in_ps": 105.6,
+     "L_ps": null,
+     "H_ps": -59.5,
+     "comb_bits": 0,
+     "out_over_bits": 0,
+     "in_over_bits": 0,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 0,
+     "comb_from": [],
+     "worst_out_pin": null,
+     "worst_in_pin": "wl[5]",
+     "clocks": [
+      "clk"
+     ],
+     "p_lb_ps": 104.9,
+     "in_unreg_bits": 0
+    },
+    "wm": {
+     "dir": "input",
+     "bits": 16,
+     "out_ps": null,
+     "in_ps": 108.5,
+     "L_ps": null,
+     "H_ps": -58.7,
+     "comb_bits": 0,
+     "out_over_bits": 0,
+     "in_over_bits": 0,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 0,
+     "comb_from": [],
+     "worst_out_pin": null,
+     "worst_in_pin": "wm[1]",
+     "clocks": [
+      "clk"
+     ],
+     "p_lb_ps": 107.8,
+     "in_unreg_bits": 0
+    }
+   }
+  },
+  {
+   "cell": "qfd_vm_qcommit",
+   "instances": 1,
+   "slots": [
+    "observer"
+   ],
+   "kinds": [
+    "tile"
+   ],
+   "binding": "explicit",
+   "view": "physical/ref_tile/qfd_vm_qcommit/views/qfd_vm_qcommit",
+   "setup_corner": "tt",
+   "hold_corner": "ff",
+   "libs": {
+    "ff": "qfd_vm_qcommit_ff.lib",
+    "ss": "qfd_vm_qcommit_ss.lib",
+    "tt": "qfd_vm_qcommit_tt.lib"
+   },
+   "export_sdc_corrected": "verdict",
+   "committed_before_export_sdc_fix": false,
+   "exported_before_export_sdc_fix": false,
+   "lib_cell": "qfd_vm_qcommit",
+   "clocks": {
+    "ck": {
+     "ref_ps": 47.6,
+     "min_ps": 44.9,
+     "max_ps": 48.1,
+     "src": "insertion.json boundary mean",
+     "boundary_min_ps": 46.9,
+     "boundary_max_ps": 48.1,
+     "boundary_spread_ps": 1.2,
+     "boundary_n": 51
+    }
+   },
+   "clocks_ff": {
+    "ck": {
+     "ref_ps": 36.2,
+     "boundary_min_ps": 35.4,
+     "boundary_max_ps": 36.6,
+     "src": "insertion.json boundary mean"
+    }
+   },
+   "die_clock": {
+    "clock_pin": "ck",
+    "corner": "tt",
+    "reference_ps": 47.6,
+    "reference_src": "insertion.json boundary mean",
+    "entry_offset_ps": -47.6,
+    "entry_offset_ff_ps": -36.2,
+    "boundary_min_ps": 46.9,
+    "boundary_max_ps": 48.1,
+    "boundary_spread_ps": 1.2,
+    "boundary_n": 51,
+    "all_sinks_min_ps": 44.9,
+    "all_sinks_max_ps": 48.1,
+    "residual_out_ps": 175.3,
+    "residual_in_ps": 116.2,
+    "balanced_entry_offset_ps": -77.2,
+    "signoff_allow_ps": 516.7,
+    "note": "entry_offset = required die clock arrival at this clock pin relative to the common boundary phase; balanced_entry_offset equalises o and s (hold must then be re-checked: l and h move with it)"
+   },
+   "notes": [],
+   "fix": [],
+   "summary": {
+    "pins": 54,
+    "buses": 10,
+    "comb_bits": 0,
+    "out_over_bits": 25,
+    "in_over_bits": 0,
+    "no_clock_arc_out_bits": 0,
+    "no_setup_arc_in_bits": 2,
+    "worst_out_ps": 175.3,
+    "worst_out_bus": "cm",
+    "worst_in_ps": 116.2,
+    "worst_in_bus": "rst_n",
+    "L_min_ps": 110.5,
+    "L_min_bus": "cl",
+    "H_max_ps": -56.6,
+    "H_max_bus": "bank_rst_n",
+    "min_delay_margin_ps": 167.1,
+    "min_delay_bits_out": 0,
+    "min_delay_bits_in": 0,
+    "pair_cost_ps": 291.5,
+    "reach_self_um": 515.6,
+    "side_budget_ps": 151.7,
+    "pair_available_ps": 683.3,
+    "q_lb_ps": 174.8,
+    "q_lb_bus": "cm",
+    "p_lb_ps": 115.5,
+    "p_lb_bus": "rst_n",
+    "out_unreg_bits": 0,
+    "in_unreg_bits": 0,
+    "out_unreg_buses": [],
+    "in_unreg_buses": [],
+    "clock_out_bits": 0
+   },
+   "flags": [],
+   "buses": {
+    "bank_rst_n": {
+     "dir": "input",
+     "bits": 1,
+     "out_ps": null,
+     "in_ps": 94.8,
+     "L_ps": null,
+     "H_ps": -56.6,
+     "comb_bits": 0,
+     "out_over_bits": 0,
+     "in_over_bits": 0,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 0,
+     "comb_from": [],
+     "worst_out_pin": null,
+     "worst_in_pin": "bank_rst_n",
+     "clocks": [
+      "ck"
+     ],
+     "p_lb_ps": 94.1,
+     "in_unreg_bits": 0
+    },
+    "cv": {
+     "dir": "output",
+     "bits": 1,
+     "out_ps": 172.4,
+     "in_ps": null,
+     "L_ps": 119.9,
+     "H_ps": null,
+     "comb_bits": 0,
+     "out_over_bits": 1,
+     "in_over_bits": 0,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 0,
+     "comb_from": [],
+     "worst_out_pin": "cv",
+     "worst_in_pin": null,
+     "clocks": [
+      "ck"
+     ],
+     "q_lb_ps": 171.9,
+     "out_unreg_bits": 0
+    },
+    "rst_n": {
+     "dir": "input",
+     "bits": 1,
+     "out_ps": null,
+     "in_ps": 116.2,
+     "L_ps": null,
+     "H_ps": -65.4,
+     "comb_bits": 0,
+     "out_over_bits": 0,
+     "in_over_bits": 0,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 0,
+     "comb_from": [],
+     "worst_out_pin": null,
+     "worst_in_pin": "rst_n",
+     "clocks": [
+      "ck"
+     ],
+     "p_lb_ps": 115.5,
+     "in_unreg_bits": 0
+    },
+    "we": {
+     "dir": "input",
+     "bits": 1,
+     "out_ps": null,
+     "in_ps": 101.3,
+     "L_ps": null,
+     "H_ps": -58.0,
+     "comb_bits": 0,
+     "out_over_bits": 0,
+     "in_over_bits": 0,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 0,
+     "comb_from": [],
+     "worst_out_pin": null,
+     "worst_in_pin": "we",
+     "clocks": [
+      "ck"
+     ],
+     "p_lb_ps": 100.6,
+     "in_unreg_bits": 0
+    },
+    "VDD": {
+     "dir": "input",
+     "bits": 1,
+     "out_ps": null,
+     "in_ps": null,
+     "L_ps": null,
+     "H_ps": null,
+     "comb_bits": 0,
+     "out_over_bits": 0,
+     "in_over_bits": 0,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 1,
+     "comb_from": [],
+     "worst_out_pin": null,
+     "worst_in_pin": null,
+     "clocks": []
+    },
+    "VSS": {
+     "dir": "input",
+     "bits": 1,
+     "out_ps": null,
+     "in_ps": null,
+     "L_ps": null,
+     "H_ps": null,
+     "comb_bits": 0,
+     "out_over_bits": 0,
+     "in_over_bits": 0,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 1,
+     "comb_from": [],
+     "worst_out_pin": null,
+     "worst_in_pin": null,
+     "clocks": []
+    },
+    "cl": {
+     "dir": "output",
+     "bits": 8,
+     "out_ps": 172.9,
+     "in_ps": null,
+     "L_ps": 110.5,
+     "H_ps": null,
+     "comb_bits": 0,
+     "out_over_bits": 8,
+     "in_over_bits": 0,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 0,
+     "comb_from": [],
+     "worst_out_pin": "cl[3]",
+     "worst_in_pin": null,
+     "clocks": [
+      "ck"
+     ],
+     "q_lb_ps": 172.4,
+     "out_unreg_bits": 0
+    },
+    "cm": {
+     "dir": "output",
+     "bits": 16,
+     "out_ps": 175.3,
+     "in_ps": null,
+     "L_ps": 111.5,
+     "H_ps": null,
+     "comb_bits": 0,
+     "out_over_bits": 16,
+     "in_over_bits": 0,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 0,
+     "comb_from": [],
+     "worst_out_pin": "cm[3]",
+     "worst_in_pin": null,
+     "clocks": [
+      "ck"
+     ],
+     "q_lb_ps": 174.8,
+     "out_unreg_bits": 0
+    },
+    "wl": {
+     "dir": "input",
+     "bits": 8,
+     "out_ps": null,
+     "in_ps": 103.6,
+     "L_ps": null,
+     "H_ps": -58.4,
+     "comb_bits": 0,
+     "out_over_bits": 0,
+     "in_over_bits": 0,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 0,
+     "comb_from": [],
+     "worst_out_pin": null,
+     "worst_in_pin": "wl[6]",
+     "clocks": [
+      "ck"
+     ],
+     "p_lb_ps": 102.9,
+     "in_unreg_bits": 0
+    },
+    "wm": {
+     "dir": "input",
+     "bits": 16,
+     "out_ps": null,
+     "in_ps": 103.6,
+     "L_ps": null,
+     "H_ps": -58.8,
+     "comb_bits": 0,
+     "out_over_bits": 0,
+     "in_over_bits": 0,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 0,
+     "comb_from": [],
+     "worst_out_pin": null,
+     "worst_in_pin": "wm[6]",
+     "clocks": [
+      "ck"
+     ],
+     "p_lb_ps": 102.9,
+     "in_unreg_bits": 0
+    }
+   }
+  },
+  {
+   "cell": "ot_qfd_vm_bank_t",
+   "instances": 1,
+   "slots": [
+    "rowbank"
+   ],
+   "kinds": [
+    "tile"
+   ],
+   "binding": "explicit",
+   "view": "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t",
+   "setup_corner": "tt",
+   "hold_corner": "ff",
+   "libs": {
+    "ff": "ot_qfd_vm_bank_t_ff.lib",
+    "ss": "ot_qfd_vm_bank_t_ss.lib",
+    "tt": "ot_qfd_vm_bank_t_tt.lib"
+   },
+   "export_sdc_corrected": "reexport_1013",
+   "committed_before_export_sdc_fix": false,
+   "exported_before_export_sdc_fix": false,
+   "lib_cell": "ot_qfd_vm_bank_t",
+   "clocks": {
+    "clk": {
+     "ref_ps": 319.3,
+     "min_ps": 223.2,
+     "max_ps": 430.9,
+     "src": "insertion.json boundary mean",
+     "boundary_min_ps": 293.9,
+     "boundary_max_ps": 430.9,
+     "boundary_spread_ps": 137.0,
+     "boundary_n": 1059
+    }
+   },
+   "clocks_ff": {
+    "clk": {
+     "ref_ps": 266.2,
+     "boundary_min_ps": 242.4,
+     "boundary_max_ps": 368.5,
+     "src": "insertion.json boundary mean"
+    }
+   },
+   "die_clock": {
+    "clock_pin": "clk",
+    "corner": "tt",
+    "reference_ps": 319.3,
+    "reference_src": "insertion.json boundary mean",
+    "entry_offset_ps": -319.3,
+    "entry_offset_ff_ps": -266.2,
+    "boundary_min_ps": 293.9,
+    "boundary_max_ps": 430.9,
+    "boundary_spread_ps": 137.0,
+    "boundary_n": 1059,
+    "all_sinks_min_ps": 223.2,
+    "all_sinks_max_ps": 430.9,
+    "residual_out_ps": 351.0,
+    "residual_in_ps": 284.1,
+    "balanced_entry_offset_ps": -352.8,
+    "signoff_allow_ps": 516.7,
+    "note": "entry_offset = required die clock arrival at this clock pin relative to the common boundary phase; balanced_entry_offset equalises o and s (hold must then be re-checked: l and h move with it)"
+   },
+   "notes": [
+    "reach_limited"
+   ],
+   "fix": [
+    "output pin register missing or far: 4 bits (q), worst q leaves 239 ps after the latest boundary clock = 59 ps over a pin flop (logic, or ~78 um of wire, after the flop): add / move the output register to the pin",
+    "input pin register missing or far: 59 bits (wd, wm), worst wd needs 259 ps before the earliest boundary clock = 109 ps over a pin flop: first flop ~143 um (or logic) behind the pin: register at the pin",
+    "boundary clock spread 137 ps > 80: put the boundary registers on one balanced sub-root (or split the root); every ps is inside o + s (1.3 um of reach per ps)"
+   ],
+   "summary": {
+    "pins": 1061,
+    "buses": 10,
+    "comb_bits": 0,
+    "out_over_bits": 463,
+    "in_over_bits": 487,
+    "no_clock_arc_out_bits": 0,
+    "no_setup_arc_in_bits": 2,
+    "worst_out_ps": 351.0,
+    "worst_out_bus": "q",
+    "worst_in_ps": 284.1,
+    "worst_in_bus": "wd",
+    "L_min_ps": 96.3,
+    "L_min_bus": "q",
+    "H_max_ps": -65.7,
+    "H_max_bus": "wd",
+    "min_delay_margin_ps": 162.0,
+    "min_delay_bits_out": 0,
+    "min_delay_bits_in": 0,
+    "pair_cost_ps": 635.1,
+    "reach_self_um": 63.5,
+    "side_budget_ps": 151.7,
+    "pair_available_ps": 683.3,
+    "q_lb_ps": 239.4,
+    "q_lb_bus": "q",
+    "p_lb_ps": 258.7,
+    "p_lb_bus": "wd",
+    "out_unreg_bits": 4,
+    "in_unreg_bits": 59,
+    "out_unreg_buses": [
+     "q"
+    ],
+    "in_unreg_buses": [
+     "wd",
+     "wm"
+    ],
+    "clock_out_bits": 0
+   },
+   "flags": [
+    "out_unreg",
+    "in_unreg",
+    "spread"
+   ],
+   "buses": {
+    "re": {
+     "dir": "input",
+     "bits": 1,
+     "out_ps": null,
+     "in_ps": 165.1,
+     "L_ps": null,
+     "H_ps": -88.6,
+     "comb_bits": 0,
+     "out_over_bits": 0,
+     "in_over_bits": 1,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 0,
+     "comb_from": [],
+     "worst_out_pin": null,
+     "worst_in_pin": "re",
+     "clocks": [
+      "clk"
+     ],
+     "p_lb_ps": 139.7,
+     "in_unreg_bits": 0
+    },
+    "rst_n": {
+     "dir": "input",
+     "bits": 1,
+     "out_ps": null,
+     "in_ps": 145.6,
+     "L_ps": null,
+     "H_ps": -87.6,
+     "comb_bits": 0,
+     "out_over_bits": 0,
+     "in_over_bits": 0,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 0,
+     "comb_from": [],
+     "worst_out_pin": null,
+     "worst_in_pin": "rst_n",
+     "clocks": [
+      "clk"
+     ],
+     "p_lb_ps": 120.2,
+     "in_unreg_bits": 0
+    },
+    "we": {
+     "dir": "input",
+     "bits": 1,
+     "out_ps": null,
+     "in_ps": 167.4,
+     "L_ps": null,
+     "H_ps": -89.5,
+     "comb_bits": 0,
+     "out_over_bits": 0,
+     "in_over_bits": 1,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 0,
+     "comb_from": [],
+     "worst_out_pin": null,
+     "worst_in_pin": "we",
+     "clocks": [
+      "clk"
+     ],
+     "p_lb_ps": 142.0,
+     "in_unreg_bits": 0
+    },
+    "VDD": {
+     "dir": "input",
+     "bits": 1,
+     "out_ps": null,
+     "in_ps": null,
+     "L_ps": null,
+     "H_ps": null,
+     "comb_bits": 0,
+     "out_over_bits": 0,
+     "in_over_bits": 0,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 1,
+     "comb_from": [],
+     "worst_out_pin": null,
+     "worst_in_pin": null,
+     "clocks": []
+    },
+    "VSS": {
+     "dir": "input",
+     "bits": 1,
+     "out_ps": null,
+     "in_ps": null,
+     "L_ps": null,
+     "H_ps": null,
+     "comb_bits": 0,
+     "out_over_bits": 0,
+     "in_over_bits": 0,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 1,
+     "comb_from": [],
+     "worst_out_pin": null,
+     "worst_in_pin": null,
+     "clocks": []
+    },
+    "q": {
+     "dir": "output",
+     "bits": 512,
+     "out_ps": 351.0,
+     "in_ps": null,
+     "L_ps": 96.3,
+     "H_ps": null,
+     "comb_bits": 0,
+     "out_over_bits": 463,
+     "in_over_bits": 0,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 0,
+     "comb_from": [],
+     "worst_out_pin": "q[286]",
+     "worst_in_pin": null,
+     "clocks": [
+      "clk"
+     ],
+     "q_lb_ps": 239.4,
+     "out_unreg_bits": 4
+    },
+    "ra": {
+     "dir": "input",
+     "bits": 8,
+     "out_ps": null,
+     "in_ps": 168.0,
+     "L_ps": null,
+     "H_ps": -83.7,
+     "comb_bits": 0,
+     "out_over_bits": 0,
+     "in_over_bits": 6,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 0,
+     "comb_from": [],
+     "worst_out_pin": null,
+     "worst_in_pin": "ra[3]",
+     "clocks": [
+      "clk"
+     ],
+     "p_lb_ps": 142.6,
+     "in_unreg_bits": 0
+    },
+    "wd": {
+     "dir": "input",
+     "bits": 512,
+     "out_ps": null,
+     "in_ps": 284.1,
+     "L_ps": null,
+     "H_ps": -65.7,
+     "comb_bits": 0,
+     "out_over_bits": 0,
+     "in_over_bits": 462,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 0,
+     "comb_from": [],
+     "worst_out_pin": null,
+     "worst_in_pin": "wd[491]",
+     "clocks": [
+      "clk"
+     ],
+     "p_lb_ps": 258.7,
+     "in_unreg_bits": 58
+    },
+    "wl": {
+     "dir": "input",
+     "bits": 8,
+     "out_ps": null,
+     "in_ps": 165.9,
+     "L_ps": null,
+     "H_ps": -84.2,
+     "comb_bits": 0,
+     "out_over_bits": 0,
+     "in_over_bits": 5,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 0,
+     "comb_from": [],
+     "worst_out_pin": null,
+     "worst_in_pin": "wl[0]",
+     "clocks": [
+      "clk"
+     ],
+     "p_lb_ps": 140.5,
+     "in_unreg_bits": 0
+    },
+    "wm": {
+     "dir": "input",
+     "bits": 16,
+     "out_ps": null,
+     "in_ps": 231.9,
+     "L_ps": null,
+     "H_ps": -70.9,
+     "comb_bits": 0,
+     "out_over_bits": 0,
+     "in_over_bits": 12,
+     "no_clock_arc_bits": 0,
+     "no_setup_arc_bits": 0,
+     "comb_from": [],
+     "worst_out_pin": null,
+     "worst_in_pin": "wm[0]",
+     "clocks": [
+      "clk"
+     ],
+     "p_lb_ps": 206.5,
+     "in_unreg_bits": 1
+    }
+   }
+  }
+ ]
+}

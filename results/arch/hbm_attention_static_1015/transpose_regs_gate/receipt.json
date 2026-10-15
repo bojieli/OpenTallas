@@ -1,0 +1,31 @@
+{
+  "source_commit": "b6bd16bd9",
+  "unit": "oth-ubuntu-697723-1792054949",
+  "host": "ot-epyc1tb",
+  "exit_status": 0,
+  "qualification": false,
+  "status": "PASS explicitpercellFF transpose functional component vs exactcanonical RTL reference",
+  "TD": 32,
+  "DPT": 16,
+  "NL": 2,
+  "half_buffers": 2,
+  "explicit_cells": 1024,
+  "payload_FF_bits_per_tile": 18432,
+  "full32tile_FF_bits": 589824,
+  "covered": [
+    "FP8+FP4 groupformat",
+    "scale/pad/codebits",
+    "bothhalf read/write",
+    "otherhalf refill whilecurrenthalf reads"
+  ],
+  "mutants_detected": [
+    "actualexplicitFFpayload corruption",
+    "actualillegalwritephase"
+  ],
+  "source_sha256": "b6d3f67119a73f42b394b05ee70200a52d6343309efa1b8325194a8a43c08b34",
+  "remaining": [
+    "FullHG1 actualengine binding/golden+mutants",
+    "Actualmappedcell/area/clockroots",
+    "Whole-systemgeometry/physicalqualification"
+  ]
+}

@@ -76,6 +76,52 @@
         "results/rtl/s81_vm_static_1014/wdispatch_macro/run_L14_base.log": "dcfef0f3aadf80415e2d3492aed92e3b2cb8d23e637164c83bc8b230e2ddc725"
       },
       "command": "static_wstage_gate.sh S O tb_dsfd_vm_static_wdispatch128 OT_VM_WDISPATCH_MUT_SLOT dispatch_inputs"
+    },
+    "suhc_map": {
+      "unit": "oth-ubuntu-4097181-1792034743",
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_suhc_fsr.sv": "9b457c76fd5d9af3a3c43789af900948d1a82b7b4234824147026c77baab0896",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_suhc_return_map.sv": "495a7572c4627e34c6e1c84ffdf8807f694e7f75b65fc34c6b06551b6bacad75",
+        "rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_static_suhc_map.sv": "ab38ac03059bb2d600024c2188f614579f96e5d0a9f34bc3c894eb54a12e8ef6"
+      },
+      "log_sha256": {
+        "results/rtl/s81_vm_static_1014/suhc_map/run_L2_base.log": "a16dfe57b56ef9128553a9d5149d739d76c7999b751d466cc07d2f5d3bb8eb00",
+        "results/rtl/s81_vm_static_1014/suhc_map/run_L0_base.log": "eacbc7190909eae314b0924127bf6909fcdf95f25a0d02d7fa8f6448a11c6e31",
+        "results/rtl/s81_vm_static_1014/suhc_map/run_L0_select.log": "cdf1cbc6e1baab8077bd8f2af7ac35e2dcd026ea18159c789fcbdcae9e29d5e9",
+        "results/rtl/s81_vm_static_1014/suhc_map/run_L14_select.log": "f22f2e4cd3c52a7b2508277729947c362b484eb662a8c1b58ce6ae71e365c717",
+        "results/rtl/s81_vm_static_1014/suhc_map/run_L20_base.log": "c1b9ddb9c0571bd278f9e0d8aa5d463c40df0f9cfaff1153d85ed65a08f21989",
+        "results/rtl/s81_vm_static_1014/suhc_map/run_L20_select.log": "1877b36f0c83e0ce57330cc6e39c1896e36145a70020740cd8ede21e881d99de",
+        "results/rtl/s81_vm_static_1014/suhc_map/run_L2_select.log": "fbaa8e2f5ecf6299f953081f9c631821f5dff17ea603ab8a5e3b4746de71987b",
+        "results/rtl/s81_vm_static_1014/suhc_map/run_L14_tag.log": "5a8ddf1c91975d22cec0c98957a2ee615df750c0e5efd4d71485ac4bf609dc52",
+        "results/rtl/s81_vm_static_1014/suhc_map/run_L20_tag.log": "1d1b1dffd102cd1a1e52e0774c6254a65951b4d05688340a5e3305100164fad1",
+        "results/rtl/s81_vm_static_1014/suhc_map/run_L14_base.log": "1cd87d32dd6da00856bfacb57f34d8c9beeea88f460ae9ca6dc1d432e2e99c13",
+        "results/rtl/s81_vm_static_1014/suhc_map/run_L0_tag.log": "024981558147bf9f719c357a99c6c7b507dff77e727ecc98998e761894cbba81",
+        "results/rtl/s81_vm_static_1014/suhc_map/run_L2_tag.log": "b508488c980d81b6855bc5cca5222fa88067d60f5e9469e5682ae364ac38864e"
+      },
+      "native_qualified": false,
+      "scope": "Endpointmapcomponent; externalreturnstimuli,9expectedreadconflicts onL0/L2/L20"
+    },
+    "suhc512": {
+      "unit": "oth-ubuntu-4124834-1792034876",
+      "source_sha256": {
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_suhc_fsr.sv": "9b457c76fd5d9af3a3c43789af900948d1a82b7b4234824147026c77baab0896",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_suhc_return_map.sv": "495a7572c4627e34c6e1c84ffdf8807f694e7f75b65fc34c6b06551b6bacad75",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_scatter.sv": "fbb1ada30aecb7c33a4f84ec7358806a97863ca5556188cb6475c0232dee7c0f",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128.sv": "28b404bc01d8722b2cac8aadf058d48edb4c99d6128f7b8872f971f8dda940d8",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv": "389a09f45fb0543854f96d4d950fd329cb556c88430c1e5fea82147c56034f1e",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_slice128_suhc.sv": "bb50530c6cb8462a39dff6f6d4b258a140a3fc7dff4faa1c063bd904c8621544",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_return.sv": "5201f61b7992c9c330197c82cf84d6a059c13732fd908a804339f90b456022e2",
+        "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static512_suhc.sv": "7248d4fb158ccc439d7b1bf549e84fdb9a0e47f2d8b60c5d599c9735ceb04b1b",
+        "rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_static512_suhc.sv": "4a4f1ad6f3dec118a16eabb245a46d798593994b526d20def2e3018a7b8e6d9c",
+        "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "6f87b48e0860f3645178d2973638322af7867280a6884809be5e2024b2d91828"
+      },
+      "log_sha256": {
+        "results/rtl/s81_vm_static_1014/suhc512/run_base.log": "4f4516cc002864ea88d83b1cecccd7430fa89e74517b8f00440487c27a12710c",
+        "results/rtl/s81_vm_static_1014/suhc512/run_tag.log": "8f68a1d36342e5633bc31f53767d2f91b09755f8458b31402aee09353d3b6ebf",
+        "results/rtl/s81_vm_static_1014/suhc512/run_select.log": "d8a0fc4473d7da56fce4524d17a2a83348ff09b1131594ae85769e6bd496a23f"
+      },
+      "native_qualified": false,
+      "scope": "L14actualSRAMcomponent; otherlayers expectedconflictwitnessonly"
     }
   }
 }

@@ -1,0 +1,223 @@
+{
+  "schema": "ot.qwen.io.packedshape.request.v1",
+  "outline_um": [
+    743.04,
+    1563.816
+  ],
+  "geometry_status": "NONOVERLAP_PROPOSAL_ONLY; die assigned pin/hop/cut checks pending",
+  "old_outline_um": [
+    700.248,
+    1563.816
+  ],
+  "reason": "Sender-credit64/32 SRAM leaves require259.2wide vs oldIBUF4 leaf90.72; keep 43.2um TX/RX channel and47.52um RX/localchannel plus21.6um side margin",
+  "children": [
+    {
+      "instance": "u_sx0",
+      "kit": "qfd_xf_native_tx64",
+      "at": [
+        21.6,
+        43.2
+      ],
+      "outline": [
+        259.2,
+        237.6
+      ],
+      "orient": "R0",
+      "clock_ports": [
+        "sx0_wck",
+        "sx0_rck"
+      ],
+      "boundary_phase": "each domain phi-R from its own routed insertion.json",
+      "physical_qualified": false
+    },
+    {
+      "instance": "u_sr0",
+      "kit": "qfd_xf_native_rx64",
+      "at": [
+        324.0,
+        43.2
+      ],
+      "outline": [
+        90.72,
+        129.6
+      ],
+      "orient": "R0",
+      "clock_ports": [
+        "sr0_wck",
+        "sr0_rck"
+      ],
+      "boundary_phase": "each domain phi-R from its own routed insertion.json",
+      "physical_qualified": false
+    },
+    {
+      "instance": "u_sx1",
+      "kit": "qfd_xf_native_tx64",
+      "at": [
+        21.6,
+        324.0
+      ],
+      "outline": [
+        259.2,
+        237.6
+      ],
+      "orient": "R0",
+      "clock_ports": [
+        "sx1_wck",
+        "sx1_rck"
+      ],
+      "boundary_phase": "each domain phi-R from its own routed insertion.json",
+      "physical_qualified": false
+    },
+    {
+      "instance": "u_sr1",
+      "kit": "qfd_xf_native_rx64",
+      "at": [
+        324.0,
+        324.0
+      ],
+      "outline": [
+        90.72,
+        129.6
+      ],
+      "orient": "R0",
+      "clock_ports": [
+        "sr1_wck",
+        "sr1_rck"
+      ],
+      "boundary_phase": "each domain phi-R from its own routed insertion.json",
+      "physical_qualified": false
+    },
+    {
+      "instance": "u_sx2",
+      "kit": "qfd_xf_native_tx64",
+      "at": [
+        21.6,
+        604.8000000000001
+      ],
+      "outline": [
+        259.2,
+        237.6
+      ],
+      "orient": "R0",
+      "clock_ports": [
+        "sx2_wck",
+        "sx2_rck"
+      ],
+      "boundary_phase": "each domain phi-R from its own routed insertion.json",
+      "physical_qualified": false
+    },
+    {
+      "instance": "u_sr2",
+      "kit": "qfd_xf_native_rx64",
+      "at": [
+        324.0,
+        604.8000000000001
+      ],
+      "outline": [
+        90.72,
+        129.6
+      ],
+      "orient": "R0",
+      "clock_ports": [
+        "sr2_wck",
+        "sr2_rck"
+      ],
+      "boundary_phase": "each domain phi-R from its own routed insertion.json",
+      "physical_qualified": false
+    },
+    {
+      "instance": "u_up",
+      "kit": "qfd_xf_native_tx32",
+      "at": [
+        21.6,
+        885.6000000000001
+      ],
+      "outline": [
+        259.2,
+        237.6
+      ],
+      "orient": "R0",
+      "clock_ports": [
+        "up_wck",
+        "up_rck"
+      ],
+      "boundary_phase": "each domain phi-R from its own routed insertion.json",
+      "physical_qualified": false
+    },
+    {
+      "instance": "u_dp",
+      "kit": "qfd_xf_native_rx64",
+      "at": [
+        324.0,
+        885.6000000000001
+      ],
+      "outline": [
+        90.72,
+        129.6
+      ],
+      "orient": "R0",
+      "clock_ports": [
+        "dp_wck",
+        "dp_rck"
+      ],
+      "boundary_phase": "each domain phi-R from its own routed insertion.json",
+      "physical_qualified": false
+    },
+    {
+      "instance": "u_ur",
+      "kit": "qfd_xf_native_tx32",
+      "at": [
+        21.6,
+        1166.4
+      ],
+      "outline": [
+        259.2,
+        237.6
+      ],
+      "orient": "R0",
+      "clock_ports": [
+        "ur_wck",
+        "ur_rck"
+      ],
+      "boundary_phase": "each domain phi-R from its own routed insertion.json",
+      "physical_qualified": false
+    },
+    {
+      "instance": "u_dr",
+      "kit": "qfd_xf_native_rx32",
+      "at": [
+        324.0,
+        1166.4
+      ],
+      "outline": [
+        90.72,
+        129.6
+      ],
+      "orient": "R0",
+      "clock_ports": [
+        "dr_wck",
+        "dr_rck"
+      ],
+      "boundary_phase": "each domain phi-R from its own routed insertion.json",
+      "physical_qualified": false
+    },
+    {
+      "instance": "u_local",
+      "kit": "qfd_coll_xfifo_native",
+      "at": [
+        462.24,
+        43.2
+      ],
+      "outline": [
+        259.2,
+        432
+      ],
+      "clock_ports": [
+        "ck_local",
+        "ck_seq"
+      ],
+      "physical_qualified": false,
+      "reason": "CK boundary spread169.1ps pending structural clock fix"
+    }
+  ]
+}

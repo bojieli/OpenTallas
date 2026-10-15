@@ -1,0 +1,23 @@
+ot-run: ot-epyc1tb     admits   374 GB (avail 653, growth 215, headroom 64, waiters 0/0 GB) load 96/128 running 23 disk 651 GB 
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/dvm4-xcol
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/dvm4-xcol
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/dvm4-xcol
+ot-run: -> ot-epyc1tb
+ot-heavy: request 48G is charged 13G (class 'vm_replay_xcol_bench.sh' measured peak 4.4G, n=1+0 proved); the cap stays 48G
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-514534-1792033972 after 1 s
+FAIL copy latency delta=15
+FAIL raw replay word=0 got=00000000 expected=80000000
+FAIL raw replay word=1 got=00000000 expected=7f800001
+FAIL raw replay word=2 got=00000000 expected=ff800000
+FAIL raw replay word=3 got=00000000 expected=00000001
+FAIL raw replay word=4 got=00000000 expected=571406c4
+FAIL raw replay word=5 got=00000000 expected=394b8075
+FAIL copy latency delta=15
+FAIL copy latency delta=15
+FAIL copy latency delta=15
+FAIL vm_replay_xcol errors=15324
+- rtl/qwen_sys/vm_nox_20261014/tb_qfd_vm_replay_xcol.sv:595: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 1.225 s; speed 3.357 us/s
+- Verilator: cpu 1.225 s on 1 threads; allocated 17 MB
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-514534-1792033972): exit 1

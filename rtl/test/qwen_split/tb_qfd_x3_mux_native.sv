@@ -11,6 +11,7 @@ module tb_qfd_x3_mux_native;
     integer qs=0,ks=0,qe=0,ke=0,cycles=0,epoch=0,phase=0;
     reg expect_v=0,expect_q=0,prior_v=0,prior_q=0;
     reg fault_phase=0;
+    reg release_phase=0;
     localparam integer N=1024;
     function [511:0] data(input integer isq,input integer seq,input integer ep);
         integer i;
@@ -20,7 +21,9 @@ module tb_qfd_x3_mux_native;
     endfunction
     always @(posedge ck) begin
         if(!rst_n) begin qs=0;ks=0;qe=0;ke=0;cycles=0;expect_v=0;expect_q=0;prior_v=0;prior_q=0; end
-        else begin
+        else if(release_phase) begin
+            if(x3_v || fault)$fatal(1,"activity on the reset release edge");
+        end else begin
             cycles=cycles+1;
             if(q[523])qs=qs+1;
             if(kvn_v)ks=ks+1;
@@ -45,6 +48,12 @@ module tb_qfd_x3_mux_native;
         begin
             @(negedge ck);rst_n=0;q=0;kvn_v=0;slot_v=0;
             repeat(3)@(negedge ck);rst_n=1;
+            // Reset release edge (pin register, +1 edge): a valid Q and KVN word presented on the first edge after
+            // rst_n rises must be ignored. A design that captures it (reset bypass) emits a stale word / faults.
+            release_phase=1;
+            q={1'b1,3'b001,2'b00,1'b0,5'd31,~data(1,0,epoch)};
+            kvn_v=1;kvn_tag={3'b010,2'b01,6'd63};kvn_d=~data(0,0,epoch);
+            @(negedge ck);release_phase=0;
             // Fixed eight-cycle calendar: Q arrives 0,2; KVN arrives 1,3;
             // Q dispatches 2,4; KVN dispatches 3,5. Output captured two edges later (explicit pin input station).
             for(phase=0;phase<4096;phase=phase+1) begin

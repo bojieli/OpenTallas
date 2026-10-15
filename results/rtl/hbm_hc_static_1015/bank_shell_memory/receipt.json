@@ -1,0 +1,17 @@
+{
+  "scope": "Actual combinedshell descriptor->real10SRAM->rawcapture->selectedoutput, no MAC arithmetic or fullSYS1 wrapper",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_bank_shell_static.sv": "923e1e8a19ff482a855bb39efcccf9d32f2ee796aa76f97947183bd16095fda3",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_bank_memory_static.sv": "520ea21fe63c7a3e005914192dda8070afecf9914218ebda3366e6ccfe00d7e1",
+    "rtl/test/tb_hgi_hc_bank_shell_memory_static.sv": "e3ad11e678ef66b6230db4a9eb1d72f6970f7864ae7379ba660b93d60f0472b3",
+    "tools/hbm_hc/run_bank_shell_memory.sh": "241ce8ede2cc83d675da576cc95d0d54681021d75290118dc5e52338accb0c15"
+  },
+  "unit": "oth-ubuntu-1977547-1792062352",
+  "host": "ot-epyc4",
+  "terminal_exit": 0,
+  "positive": "1280pairedreads full2slot128weightrows/640residualwords and32maskedwrites retainwords; descriptor wa[7]slot actualdecode; selectedoutputs exactly4edges after descriptor capture",
+  "mutant": "Finite wrong-slot selection rejected atfirstcheckedword afterslotwarmup",
+  "memory_pipeline": "Actualmacroreadedge n, rawcapture n+1, selectedcapture n+2; d_v captured2edges beforemacroread =>selected4edges afterd_v",
+  "full_MAC_join": false,
+  "physical_qualified": false
+}

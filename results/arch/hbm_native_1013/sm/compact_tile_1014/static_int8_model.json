@@ -1,0 +1,71 @@
+{
+  "schema": "opentallas.smh.static-int8-model.v1",
+  "actual_source": "rtl/hbm_accel/sm/ot_hbm_accel_int8_line.sv",
+  "actual_module": "ot_hbm_accel_int8_line",
+  "actual_parameters": {
+    "PIPE": 1
+  },
+  "workload_coverage": {
+    "Qwen3-8B_HBM": "fmt3 proposal",
+    "DeepSeek-V4.1_HBM": "fmt3 if compiler selects; default bypass",
+    "Qwen3-8B_ROM": "not instantiated",
+    "DeepSeek-V4.1_ROM": "not instantiated"
+  },
+  "replicas": 32,
+  "macs_per_cycle": 0,
+  "conversion_lanes_per_cycle": 64,
+  "input_bytes_per_cycle_average": 64,
+  "input_code_bytes_per_packed_slot": 128,
+  "output_useful_bytes_per_cycle": 128,
+  "input_boundary_bits": 1099,
+  "output_boundary_bits": 1099,
+  "command_boundary_bits": 83,
+  "command_unchanged": true,
+  "scales": "zero converter sidecars; actual row scales applied by SU after FP32 sum",
+  "calendar": "compiler issues packed input no more than once per two edges; low then high output, no ready-controlled issue",
+  "input_edge_to_low_output_edges": 1,
+  "input_edge_to_high_output_edges": 2,
+  "converter_pipeline_register_stages": 2,
+  "tag_rule": "same 10-bit input tag on both output halves",
+  "consumer_ready_constant": 1,
+  "producer_ready": "observation/assertion only, absent from external ABI",
+  "register_bits_upper_bound": 2722,
+  "estimated_ff_area_um2_upper": 1031.85576,
+  "mux_cost": "64 lane 2:1 low/high byte selectors; actual source classify/encode logic unchanged",
+  "control_fanout": 64,
+  "clock_roots_per_replica": 1,
+  "proposed_outline_um": [
+    216.0,
+    181.44
+  ],
+  "proposed_area_mm2_per_replica": 0.03919104,
+  "provisional_faces": {
+    "W": "1099-bit input",
+    "E": "1099-bit output",
+    "N": "clock/reset"
+  },
+  "face_tracks_available": 3446.6666666666665,
+  "face_cut_ratio": 0.3188588007736944,
+  "proposed_pin_pitch_um": 0.144,
+  "proposed_pin_span_um": 158.112,
+  "fixed_hold_and_cts_area": "unmeasured; FF floor is not a placement proof",
+  "full_sm_placement": "UNASSIGNED; no global fit claimed",
+  "actual_pin_reach": "UNMEASURED; <=500um required",
+  "added_token_latency": "must compose compiler operation calendar before adoption; no immutable price changed",
+  "required_gates": [
+    "all signed byte values, both halves, bubbles/reset and repeated tags",
+    "actual arithmetic sign mutant must fail",
+    "calendar overlap must fail",
+    "actual full-shape throughput and native pin timing",
+    "complete 32-SM geometry"
+  ],
+  "status": "MODEL_ONLY_NOT_PHYSICALLY_ADMITTED",
+  "default_off": true,
+  "register_bound_breakdown": {
+    "actual_converter_high_codes": 512,
+    "classify_payload": 1088,
+    "output_payload": 1088,
+    "actual_converter_control": 4,
+    "tag_registers": 30
+  }
+}

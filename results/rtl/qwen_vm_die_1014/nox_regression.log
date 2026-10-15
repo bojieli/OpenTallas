@@ -1,0 +1,8 @@
+ot-run: ot-epyc1tb     skipped: no /srv/opentallas-scratch/codex/dvm4-nox/src
+ot-run: ot-epyc4       admits   392 GB (avail 620, growth 180, headroom 48, waiters 0/0 GB) load 165/128 running 24 disk 709 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/dvm4-nox/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/dvm4-nox/src
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-977659-1792028797 after 0 s
+prod rc=0 PASS qfd_vm_bv_ports NOX=1 NRB=64 SW=64 VL=14 su_reads=60918 row_reads=10615 tuples=0 bursts=2082 land_steps=2069 cycles=40000 maxrss_kb=12636 wall=5.13
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-977659-1792028797): exit 0

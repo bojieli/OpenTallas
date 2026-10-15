@@ -23,7 +23,8 @@ module qfd_xf_ch #(parameter integer W = 1024, parameter integer IBUF = 4, OCRED
         .wclk(wck), .wrst_n(rst_n), .i_v(i_v), .i_d(i_d), .i_cr(i_cr), .w_fault(w_fault),
         .rclk(rck), .rrst_n(rst_n), .o_v(o_v), .o_d(od), .o_cr(o_cr), .r_fault(r_fault));
 `ifdef OT_XF_MUT
-    assign o_d = {od[W-1:518], od[5], od[516:6], od[517], od[4:0]};
+    localparam integer MUTBIT = (W > 517) ? 517 : W-7;
+    assign o_d = {od[W-1:MUTBIT+1], od[5], od[MUTBIT-1:6], od[MUTBIT], od[4:0]};
 `else
     assign o_d = od;
 `endif

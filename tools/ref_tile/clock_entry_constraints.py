@@ -11,14 +11,58 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'hier_contract'))
 import child_lint
+import direct_macro_clock_entries
+
+MODES = ("entries", "hybrid_entries", "multiple_cts_roots")
 
 CORNERS = ('tt', 'ff', 'ss')
 ENTRY_DOMAIN_API_VERSION = 1
 
 
+def signoff_period(spec):
+    """Opt-in leaf signoff period; all existing profiles retain their ABI."""
+    route = spec.get('route', {})
+    value = route.get('signoff_period_ps', 833.333)
+    if 'signoff_period_ps' in route and spec.get('clock') != 'multiple_cts_roots':
+        raise ValueError('signoff_period_ps requires multiple_cts_roots leaf timing ownership')
+    if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value <= 0:
+        raise ValueError('signoff_period_ps must be finite and positive')
+    if 'signoff_period_ps' in route:
+        physical = route.get('period_ps', 770)
+        if isinstance(physical, bool) or not isinstance(physical, (int, float)) or not math.isfinite(physical) or physical <= 0 or physical > value:
+            raise ValueError('route period must be finite, positive and no greater than signoff_period_ps')
+    return float(value)
+
+
+def related_data(spec):
+    """Explicit opt-in to ordinary STA across related leaf roots."""
+    policy = spec.get('clock_data_paths', 'independent')
+    relationship = spec.get('clock_relationship')
+    if policy == 'independent':
+        if relationship is not None:
+            raise ValueError('independent leaf datapaths do not consume a clock_relationship declaration')
+        return False
+    if policy == 'related_pll_ratio':
+        # One die PLL, stream /3 and serial /4 of the VCO, common epoch origin (3 serial = 4 stream cycles): the
+        # serial domain declares ratio 4/3 of the core period.  Ordinary STA times every crossing at the actual
+        # related edge windows (VCO-tick setup window, coincident-edge hold); no exception is generated.
+        if relationship != dict(kind='same_pll_fixed_phase', ratio=[4, 3], phase_ps=0):
+            raise ValueError('related_pll_ratio leaf datapaths require explicit same_pll_fixed_phase ratio4/3 phase0 relationship')
+        return True
+    if policy != 'related_same_frequency' or relationship != dict(kind='same_pll_fixed_phase', ratio=[1, 1], phase_ps=0):
+        raise ValueError('related leaf datapaths require explicit same_pll_fixed_phase ratio1/1 phase0 relationship')
+    return True
+
+
 def domains(spec):
     """Explicit related PLL /3 and /4 clock domains. No exception policy."""
     declared = spec.get('clock_entry_domains')
+    leaf = spec.get('clock') == 'multiple_cts_roots'
+    if leaf:
+        signoff_period(spec)
+        related_data(spec)
+    if leaf and (spec.get('kind') != 'tile' or declared is None or len(spec.get('clock_ports', [])) < 2):
+        raise ValueError('multiple_cts_roots requires a leaf tile, at least two roots and explicit IO domains')
     if declared is None:
         return {'core': dict(ratio=[1, 1], ports=list(spec['clock_ports']),
                              inputs=['*'], outputs=['*'])}
@@ -29,16 +73,22 @@ def domains(spec):
     for name, data in declared.items():
         if not re.fullmatch(r'[A-Za-z][A-Za-z0-9_]*', name):
             raise ValueError('entries: invalid domain name')
-        if set(data) - {'ratio', 'ports', 'inputs', 'outputs'}:
+        if set(data) - {'ratio', 'ports', 'inputs', 'outputs', 'io_budget'}:
             raise ValueError('entries: unsupported domain policy (no clock exceptions)')
         ratio = data.get('ratio')
         if ratio not in ([1, 1], [4, 3]):
             raise ValueError('entries: only related CK1/1 and CKV4/3 are supported')
+        pll = leaf and spec.get('clock_data_paths') == 'related_pll_ratio'
+        if leaf and (ratio != [1, 1] and not (pll and ratio == [4, 3] and name != 'core') or len(data.get('ports', [])) != 1):
+            raise ValueError('multiple_cts_roots requires one actual related phase0 root per domain '
+                             '(samefrequency, or a non-core 4/3 domain under related_pll_ratio)')
         if name == 'core' and ratio != [1, 1]:
             raise ValueError('entries: core ratio must be1/1')
         for field in ('ports', 'inputs', 'outputs'):
             if not isinstance(data.get(field), list) or any(not isinstance(x, str) for x in data[field]):
                 raise ValueError(f'entries: {name}.{field} must be an explicit string list')
+        if leaf and any(not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', x) for f in ('inputs', 'outputs') for x in data[f]):
+            raise ValueError('multiple_cts_roots requires literal base IO names, no wildcard domains')
         if not data['ports']:
             raise ValueError(f'entries: {name} needs at least one actual entry port')
         for port in data['ports']:
@@ -46,6 +96,8 @@ def domains(spec):
                 raise ValueError(f'entries: duplicate domain clock port {port}')
             owners[port] = name
         out[name] = data
+    if leaf and spec.get('clock_data_paths') == 'related_pll_ratio' and not any(d['ratio'] == [4, 3] for d in out.values()):
+        raise ValueError('related_pll_ratio requires at least one actual 4/3 domain (else use related_same_frequency)')
     if set(owners) != set(spec['clock_ports']):
         raise ValueError('entries: domain clock coverage differs from actual source ports')
     if owners[spec['clock_port']] != 'core':
@@ -58,7 +110,7 @@ def virtual_clock(domain):
 
 
 def clocks(spec, period):
-    if spec.get('clock') not in ('entries', 'hybrid_entries'):
+    if spec.get('clock') not in MODES:
         return f"create_clock -name core_clk -period {period} [get_ports {spec['clock_port']}]\n"
     ds = domains(spec)
     owners = {p: name for name, d in ds.items() for p in d['ports']}
@@ -73,16 +125,35 @@ def clocks(spec, period):
     return '\n'.join(lines) + '\n'
 
 
+
+def domain_io_budget(name, d):
+    """(in, out) outside-share fractions of a clock-entry domain's period.  Default 0.2 / 0.2 (the nominal native pin
+    budget).  A domain may carry "io_budget": {"in": f, "out": f} derived from the composed parent hop (wire length +
+    the peer's measured residual); only TIGHTENING (f >= 0.2, f <= 0.8) is accepted, so a child can never be closed
+    against a looser boundary than the nominal one."""
+    io = d.get('io_budget') or {}
+    unknown = set(io) - {'in', 'out'}
+    if unknown:
+        raise ValueError(f'domain {name}: unknown io_budget keys {sorted(unknown)}')
+    vals = []
+    for k in ('in', 'out'):
+        f = float(io.get(k, 0.2))
+        if not (0.2 <= f <= 0.8):
+            raise ValueError(f'domain {name}: io_budget {k} {f} outside [0.2, 0.8] (only tightening is allowed)')
+        vals.append(f)
+    return tuple(vals)
+
 def generate(spec, root):
-    if spec.get('clock') not in ('entries', 'hybrid_entries'):
+    if spec.get('clock') not in MODES:
         return ''
     ds = domains(spec)
-    roots = spec.get('clock_cts_roots', []) if spec.get('clock') == 'hybrid_entries' else []
+    direct = direct_macro_clock_entries.load(spec, root)
+    roots = list(spec['clock_ports']) if spec.get('clock') == 'multiple_cts_roots' else (spec.get('clock_cts_roots', []) if spec.get('clock') == 'hybrid_entries' else [])
     if spec.get('clock') == 'hybrid_entries' and (not isinstance(roots, list) or not roots or
             not all(isinstance(p, str) for p in roots) or len(set(roots)) != len(roots) or not set(roots) < set(spec['clock_ports'])):
         raise ValueError('hybrid_entries requires a nonempty proper subset of distinct clock_cts_roots')
     refs, counts = {}, {}
-    for child in spec['children']:
+    for child in spec.get('children', []):
         view = Path(root) / child['view']
         master = view.name
         counts[master] = counts.get(master, 0) + int(child.get('count', 1))
@@ -120,7 +191,7 @@ def generate(spec, root):
                 if not values[0] <= values[1] <= values[2]:
                     raise ValueError(f'{view}/{pin}/{corner}: inconsistent boundary reference')
                 refs[master][pin][corner] = values
-    expected = sum(counts[m] * len(refs[m]) for m in refs)
+    expected = sum(counts[m] * len(refs[m]) for m in refs) + len(direct['entries'])
     if expected != len(spec['clock_ports']) - len(roots):
         raise ValueError(f'entries: {expected} bound child clock pins, {len(spec["clock_ports"]) - len(roots)} hard source ports')
     rows = []
@@ -132,17 +203,24 @@ def generate(spec, root):
     owner_rows = []
     for name, d in ds.items():
         patterns = lambda names: ' '.join('{' + n + '}' for n in names)
-        domain_rows.append("{" + name + "} {clock " + virtual_clock(name) + " io_budget_ps " + str(round(833.333 * d["ratio"][0] / d["ratio"][1] * 0.2, 3)) + " inputs {" + patterns(d["inputs"]) + "} outputs {" + patterns(d["outputs"]) + "}}")
+        period = signoff_period(spec) * d["ratio"][0] / d["ratio"][1]
+        fin, fout = domain_io_budget(name, d)
+        out_row = '' if fout == 0.2 else " io_budget_out_ps " + str(round(period * fout, 3))
+        domain_rows.append("{" + name + "} {clock " + virtual_clock(name) + " io_budget_ps " + str(round(period * fin, 3)) + out_row + " inputs {" + patterns(d["inputs"]) + "} outputs {" + patterns(d["outputs"]) + "}}")
         owner_rows.extend(f"{{{p}}} {{{name}}}" for p in d['ports'])
+    body = LEAF_BODY if spec.get('clock') == 'multiple_cts_roots' else BODY
+    if direct['entries']:
+        body = direct_body(body, direct)
     return (f'# OT_CLOCK_ENTRY_DOMAIN_API_VERSION {ENTRY_DOMAIN_API_VERSION}\n'
             '# AUTO clock entries: bound insertion.json boundary refs; no ETM arc modification.\n'
+            + (('set ::ot_ce_leaf_roots 1\nset ::ot_ce_related_data ' + str(int(related_data(spec))) + '\n') if spec.get('clock') == 'multiple_cts_roots' else '') +
             'set ::ot_ce_refs [dict create ' + ' '.join(rows) + ']\n'
             'set ::ot_ce_counts [dict create ' + ' '.join(f'{{{m}}} {n}' for m, n in counts.items()) + ']\n'
             'set ::ot_ce_domains [dict create ' + ' '.join(domain_rows) + ']\n'
             'set ::ot_ce_source_domains [dict create ' + ' '.join(owner_rows) + ']\n'
             'set ::ot_ce_explicit_domains ' + str(int(spec.get('clock_entry_domains') is not None)) + '\n'
             'set ::ot_ce_cts_roots {' + ' '.join('{' + p + '}' for p in roots) + '}\n'
-            'set ::ot_ce_ports {' + ' '.join('{' + p + '}' for p in spec['clock_ports']) + '}\n' + BODY)
+            'set ::ot_ce_ports {' + ' '.join('{' + p + '}' for p in spec['clock_ports']) + '}\n' + body)
 
 
 BODY = r'''
@@ -394,6 +472,9 @@ proc ot_ce_apply {} {
     set dlmax [lindex [lsort -real [dict get $domain_high $domain]] end]
     set vc [get_clocks [dict get $info clock]]
     set budget [dict get $info io_budget_ps]
+    # Optional composition-derived output budget (domain "io_budget": {"out": f}, f >= 0.2): the outside share of the
+    # cycle on this domain's outputs; larger = a TIGHTER launch (flop -> pin) inside the child, never a relaxation.
+    set budget_out [expr {[dict exists $info io_budget_out_ps] ? [dict get $info io_budget_out_ps] : $budget}]
     set inputs {}; set outputs {}
     foreach pattern [dict get $info inputs] {
       foreach p [get_ports -quiet $pattern -filter "direction == input"] {
@@ -415,7 +496,7 @@ proc ot_ce_apply {} {
       set_input_delay [expr {$dlmin-$hki}] -min -clock $vc $inputs
     }
     if {[llength $outputs]} {
-      set_output_delay [expr {$budget-$dlmax+$sk}] -max -clock $vc $outputs
+      set_output_delay [expr {$budget_out-$dlmax+$sk}] -max -clock $vc $outputs
       set_output_delay [expr {-$dlmin-$hk}] -min -clock $vc $outputs
     }
     if {[info exists ::env(OT_IO_INTER)] && $::env(OT_IO_INTER) ne ""} {
@@ -426,7 +507,7 @@ proc ot_ce_apply {} {
             set_input_delay [expr {$budget+$dlmax+150}] -max -clock $vc $p
           }
           if {[dict exists $covered_out $n] && [dict get $covered_out $n] eq $domain} {
-            set_output_delay [expr {$budget-$dlmax+150}] -max -clock $vc $p
+            set_output_delay [expr {$budget_out-$dlmax+150}] -max -clock $vc $p
           }
         }
       }
@@ -440,3 +521,239 @@ proc ot_ce_apply {} {
 }
 ot_ce_apply
 '''
+
+
+LEAF_OWNERSHIP = r'''
+# Constants are proved from actual OpenDB connectivity and the loaded Liberty
+# output functions. Cell/port names, case analysis and timing-graph constant
+# pruning are never proofs. A cell output is constant when every loaded corner
+# gives its master the same Liberty function and that function is a literal, or a
+# combinational expression whose every variable is an input pin of the same
+# instance on a net with no input port and exactly one driver that is itself
+# constant (TIEHI/TIELO prove themselves through their literal function; a
+# synthesis buffer/inverter or any gate of constants follows). Registers never
+# qualify; unknown or unparsable functions fail closed.
+proc ot_ce_constant_net {net seen remaining} {
+  if {$remaining <= 0 || $net in {"" NULL}} {return 0}
+  foreach port [$net getBTerms] {if {[$port getIoType] ne "OUTPUT"} {return 0}}
+  set drivers {}
+  foreach pin [$net getITerms] {if {[$pin isOutputSignal]} {lappend drivers $pin}}
+  if {[llength $drivers] != 1} {return 0}
+  return [ot_ce_constant_iterm [lindex $drivers 0] $seen $remaining]
+}
+proc ot_ce_constant_iterm {pin seen remaining} {
+  if {$remaining <= 0 || ![$pin isOutputSignal]} {return 0}
+  set inst [$pin getInst];set name "[$inst getName]/[[$pin getMTerm] getName]"
+  if {[dict exists $seen $name]} {return 0}
+  if {[info exists ::ot_ce_const_memo] && [dict exists $::ot_ce_const_memo $name]} {return [dict get $::ot_ce_const_memo $name]}
+  dict set seen $name 1
+  set result [ot_ce_constant_iterm_eval $inst $pin $seen $remaining]
+  dict set ::ot_ce_const_memo $name $result
+  return $result
+}
+proc ot_ce_constant_iterm_eval {inst pin seen remaining} {
+  if {[info exists ::ot_ce_register_cells] && [dict exists $::ot_ce_register_cells [$inst getName]]} {return 0}
+  set master [[$inst getMaster] getName];set output [[$pin getMTerm] getName]
+  set functions {};set matched 0
+  foreach library [get_libs -quiet *] {
+    set cell [$library find_liberty_cell $master]
+    if {$cell in {"" NULL}} continue
+    set lp [$cell find_liberty_port $output]
+    if {$lp in {"" NULL} || [sta::liberty_port_direction $lp] ne "output"} {return 0}
+    dict set functions [string map {" " "" "\t" "" "\n" ""} [$lp function]] 1
+    incr matched
+  }
+  if {!$matched || [dict size $functions] != 1} {return 0}
+  set function [lindex [dict keys $functions] 0]
+  if {$function in {0 1}} {return 1}
+  if {$function eq "" || ![regexp {^[A-Za-z0-9_!'*&+|^()]+$} $function]} {return 0}
+  set inputs [lsort -unique [regexp -all -inline {[A-Za-z_][A-Za-z0-9_]*} $function]]
+  if {![llength $inputs]} {return 0}
+  foreach input $inputs {
+    set in [$inst findITerm $input]
+    if {$in in {"" NULL} || ![$in isInputSignal]} {return 0}
+    if {![ot_ce_constant_net [$in getNet] $seen [expr {$remaining-1}]]} {return 0}
+  }
+  return 1
+}
+# Timing startpoint -> constant proof. An output-port startpoint is followed to
+# its net driver; an input port is never constant.
+proc ot_ce_constant_cone {start} {
+  set block [ord::get_db_block]
+  if {[sta::object_type $start] eq "Port" || ([sta::object_type $start] eq "Pin" && [$start is_top_level_port])} {
+    set port [$block findBTerm [get_full_name $start]]
+    if {$port in {"" NULL} || [$port getIoType] ne "OUTPUT"} {return 0}
+    return [ot_ce_constant_net [$port getNet] {} 64]
+  }
+  if {[sta::object_type $start] ne "Pin"} {return 0}
+  set inst [$block findInst [get_full_name [$start instance]]]
+  if {$inst in {"" NULL}} {return 0}
+  set pin [$inst findITerm [get_property $start lib_pin_name]]
+  if {$pin in {"" NULL}} {return 0}
+  return [ot_ce_constant_iterm $pin {} 64]
+}
+# A multi-root leaf contains independent synchronous datapaths. Domain declarations
+# are checked against the real synthesized timing graph, not trusted as metadata.
+proc ot_ce_leaf_ownership {inputs outputs} {
+  set expected {}
+  dict for {domain info} $::ot_ce_domains {lappend expected [dict get $info clock]}
+  for {set i 0} {$i < [llength $::ot_ce_ports]} {incr i} {lappend expected ot_entry_$i}
+  set actual {}
+  foreach c [all_clocks] {lappend actual [get_full_name $c]}
+  if {[lsort $actual] ne [lsort $expected]} {error "OT_MULTI_ROOT: undeclared clock alias or relationship"}
+  set cells {}; set clocks {}; set crossing_pairs {}; set domain_roots {}
+  foreach root $::ot_ce_cts_roots {
+    set domain [dict get $::ot_ce_source_domains $root]
+    dict set domain_roots $domain $root
+    set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $root]]
+    foreach pin [all_registers -clock [get_full_name $clock] -clock_pins] {
+      set cell [get_full_name [get_cells -of_objects $pin]]
+      if {[dict exists $cells $cell]} { error "OT_MULTI_ROOT: duplicate clock ownership $cell" }
+      dict set cells $cell $domain
+    }
+  }
+  foreach pin [all_registers -clock_pins] {
+    set cell [get_full_name [get_cells -of_objects $pin]]
+    if {![dict exists $cells $cell]} { error "OT_MULTI_ROOT: unowned register $cell" }
+  }
+  set ::ot_ce_register_cells {}
+  foreach r [all_registers -cells] {dict set ::ot_ce_register_cells [get_full_name $r] 1}
+  set ::ot_ce_const_memo {}
+  # OpenSTA's -data_pins population includes asynchronous clear/preset
+  # controls. Classify these from the actual loaded Liberty sequential arcs,
+  # never from port names or reset_ports. They retain recovery/removal timing;
+  # only ordinary synchronous D/control paths require data-domain ownership.
+  set async_pins {}
+  foreach pin [all_registers -async_pins] {dict set async_pins [get_full_name $pin] 1}
+  foreach pin [all_registers -data_pins] {
+    if {[dict exists $async_pins [get_full_name $pin]]} continue
+    set cell [get_full_name [get_cells -of_objects $pin]]
+    set expected [dict get $cells $cell]
+    foreach start [get_fanin -flat -startpoints_only -to $pin] {
+      set ports [get_ports -quiet [get_full_name $start]]
+      if {[llength $ports]} {
+        set name [get_full_name $start]
+        if {![dict exists $inputs $name] || [dict get $inputs $name] ne $expected} {
+          error "OT_MULTI_ROOT: input $name has wrong domain for $cell"
+        }
+      } else {
+        set source [get_full_name [get_cells -quiet -of_objects $start]]
+        if {![dict exists $cells $source]} {
+          if {[ot_ce_constant_cone $start]} {
+            puts "OT_MULTI_ROOT LIBERTY_CONSTANT [get_full_name $start] -> [get_full_name $pin]"
+            continue
+          }
+          error "OT_MULTI_ROOT: unowned data path $source -> $cell"
+        }
+        set source_domain [dict get $cells $source]
+        if {$source_domain ne $expected} {
+          if {!$::ot_ce_related_data} {error "OT_MULTI_ROOT: cross-domain data path $source -> $cell requires explicit related profile"}
+          dict set crossing_pairs [list $source_domain $expected] 1
+        }
+      }
+    }
+  }
+  dict for {name domain} $outputs {
+    foreach start [get_fanin -flat -startpoints_only -to [get_ports $name]] {
+      # A die-strap tie output (contract v1.2 tie_hi/tie_lo), possibly
+      # synthesis-buffered, has no clock and no data domain to own; it must be
+      # proved constant above. Registers and ports keep their domain checks.
+      if {[sta::object_type $start] eq "Pin" && [$start is_top_level_port]} {
+        if {[ot_ce_constant_cone $start]} {
+          puts "OT_MULTI_ROOT LIBERTY_CONSTANT [get_full_name $start] -> $name"
+          continue
+        }
+        error "OT_MULTI_ROOT: output $name has wrong or unregistered source domain [get_full_name $start]"
+      }
+      set source [get_full_name [get_cells -quiet -of_objects $start]]
+      if {![dict exists $cells $source] && [ot_ce_constant_cone $start]} {
+        puts "OT_MULTI_ROOT LIBERTY_CONSTANT [get_full_name $start] -> $name"
+        continue
+      }
+      if {![dict exists $cells $source] || [dict get $cells $source] ne $domain} {
+        error "OT_MULTI_ROOT: output $name has wrong or unregistered source domain $source"
+      }
+    }
+  }
+  dict for {pair unused} $crossing_pairs {
+    lassign $pair source_domain target_domain
+    set source_root [dict get $domain_roots $source_domain]
+    set target_root [dict get $domain_roots $target_domain]
+    set from [all_registers -clock ot_entry_[lsearch -exact $::ot_ce_ports $source_root] -clock_pins]
+    set to {}
+    foreach pin [all_registers -clock ot_entry_[lsearch -exact $::ot_ce_ports $target_root] -data_pins] {
+      if {![dict exists $async_pins [get_full_name $pin]]} {lappend to $pin}
+    }
+    foreach kind {max min} {
+      set paths [find_timing_paths -from $from -to $to -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
+      if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
+        error "OT_MULTI_ROOT: related crossing lacks actual finite $kind STA path $source_domain -> $target_domain"
+      }
+      puts "OT_MULTI_ROOT RELATED_PATH $source_domain -> $target_domain $kind slack=[get_property [lindex $paths 0] slack] (ordinary synchronous timing retained)"
+    }
+  }
+  puts "OT_MULTI_ROOT OWNERSHIP PASS roots=[llength $::ot_ce_cts_roots] registers=[dict size $cells] inputs=[dict size $inputs] outputs=[dict size $outputs] async_control_pins=[dict size $async_pins]"
+}
+'''
+
+
+def leaf_body():
+    """Extend the proven hard-entry timing algorithm without changing legacy SDC bytes."""
+    body = BODY
+    substitutions = [
+        ('  set found {}\n  foreach cell [get_cells -quiet -hierarchical *] {\n    set master [get_property $cell ref_name]\n    if {![dict exists $::ot_ce_counts $master]} continue\n',
+         r'''  set found {}; set clock_cells {}
+  # Physical-only taps/endcaps have no Liberty association. The clock corner
+  # belongs to actual sequential clock sinks, not every physical instance.
+  foreach pin [all_registers -clock_pins] {
+    set cell [get_cells -quiet -of_objects $pin]
+    if {[llength $cell] != 1 || $cell eq "NULL"} {error "OT_MULTI_ROOT: clock sink lacks one actual sequential cell"}
+    dict set clock_cells [get_full_name $cell] $cell
+  }
+  if {![dict size $clock_cells]} {error "OT_MULTI_ROOT: no actual sequential cells for corner inference"}
+  foreach cell [dict values $clock_cells] {
+    set master [get_property $cell ref_name]
+'''),
+        ('    if {![llength $libcells]} { error "OT_ENTRIES: $master has no loaded Liberty association" }\n',
+         '    if {![llength $libcells] || "NULL" in $libcells} { error "OT_MULTI_ROOT: actual sequential cell $master has no loaded Liberty association" }\n'),
+        ('      if {![regexp -nocase {_(tt|ff|ss)/} $full -> corner]} { error "OT_ENTRIES: unknown actual child Liberty corner $full" }\n',
+         '      if {![regexp -nocase {_(tt|ff|ss)/|_(tt|ff|ss)_} $full -> corner alt]} { error "OT_ENTRIES: unknown actual Liberty corner $full" }\n      if {$corner eq ""} {set corner $alt}\n'),
+        ('      foreach p [get_ports -quiet $pattern -filter "direction == input"] {\n',
+         '      set match [get_ports -quiet $pattern -filter "direction == input"]\n      if {$::ot_ce_leaf_roots && ![llength $match]} {set match [get_ports -quiet [format {%s\\[*\\]} $pattern] -filter "direction == input"]}\n      if {$::ot_ce_leaf_roots && ![llength $match]} {error "OT_MULTI_ROOT: unknown input $pattern"}\n      foreach p $match {\n'),
+        ('      foreach p [get_ports -quiet $pattern -filter "direction == output"] {\n',
+         '      set match [get_ports -quiet $pattern -filter "direction == output"]\n      if {$::ot_ce_leaf_roots && ![llength $match]} {set match [get_ports -quiet [format {%s\\[*\\]} $pattern] -filter "direction == output"]}\n      if {$::ot_ce_leaf_roots && ![llength $match]} {error "OT_MULTI_ROOT: unknown output $pattern"}\n      foreach p $match {\n'),
+        ('  puts "OT_ENTRIES COMP DONE $corner [llength $rows] entries phi=$ref boundary=$lmin..$lmax"\n',
+         '  if {$::ot_ce_leaf_roots} { ot_ce_leaf_ownership $covered_in $covered_out }\n  puts "OT_ENTRIES COMP DONE $corner [llength $rows] entries phi=$ref boundary=$lmin..$lmax"\n'),
+    ]
+    for old, new in substitutions:
+        if body.count(old) != 1:
+            raise ValueError("clock-entry body changed; revalidate multi-root extension")
+        body = body.replace(old, new)
+    return LEAF_OWNERSHIP + body
+
+
+LEAF_BODY = leaf_body()
+
+
+def direct_body(body, direct):
+    """Add explicitly bound raw-memory pin references without changing ETM semantics."""
+    marker = '  # Each glue root owns a real CTS tree.'
+    hook = r'''  foreach row [ot_ce_direct_rows $corner] {
+    set name [get_full_name [lindex $row 0]]
+    if {[dict exists $seen $name]} {error "OT_DIRECT_MACRO: duplicate hard-source ownership $name"}
+    dict set seen $name 1
+    lappend rows $row
+  }
+'''
+    if body.count(marker) != 1:
+        raise ValueError('clock entry body changed; revalidate direct macro extension')
+    body = body.replace(marker, hook + marker)
+    # A parent with only direct raw SRAMs has no routed ETM master from which
+    # to identify the current scene; use its actual linked SRAM libraries too.
+    marker = '    if {![dict exists $::ot_ce_counts $master]} continue'
+    if body.count(marker) != 2:
+        raise ValueError('clock entry corner body changed; revalidate direct macro extension')
+    body = body.replace(marker, '    if {![dict exists $::ot_ce_counts $master] && $master ni $::ot_ce_direct_masters} continue', 1)
+    masters = sorted({e['master'] for e in direct['entries']})
+    return ('set ::ot_ce_direct_masters {' + ' '.join(masters) + '}\n'
+            + direct['bindings_tcl'] + body)

@@ -1,0 +1,50 @@
+{
+  "schema": "ot.qwen.static_io.tx3.unit.v1",
+  "source_commit": "8f46767cb521bb46773bef0f75e94ffa9dca1367",
+  "source_sha256": {
+    "rtl/physical/ot_qfd_static_transport.sv": "da0fcb8d8dc508194e68e1c72a8de0687119ffdda5cdd6ededffb3d8e43a51ca",
+    "rtl/physical/ot_qfd_io_xfifo_static.sv": "572eccedb96536760d1cda089df7a00870f388aab7085bbe640957622946eecf",
+    "rtl/physical/ot_qfd_io_links_static.sv": "bc7ea0fb27e9ff98c86d2f5242e8c08a38031f40875493eabb6f55a5e3269e0e",
+    "rtl/test/tb_qfd_serdes_static.sv": "00364636dde31fee9e5173cb246464d7a31a4c65f73eaedaa4e5c0ca6206c94d",
+    "rtl/test/tb_qfd_ucie_static.sv": "9033b97ded8417fda6386b2f031adf403787659806add468bfec0b04ad3b9413",
+    "rtl/test/tb_qfd_io_static.sv": "68fe0326371f1915e477a382b68a23ae2d7df78a79a867a0193a19d6985e27b7",
+    "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv": "aecc91022dd9e738ce1ef39e6349e3b19a1745b060e7541419a8d7ef03f5851f",
+    "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv": "5af1eb77614de845771413c279de8858017a1e8220407e847d501537b110f43a",
+    "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv": "cf5fb4b1a4a4c5eb297756ddc8745819081e72f0f903b8c6800b69d5dbd706f6",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd"
+  },
+  "qualification": "UNIT_IMPLEMENTATION_ONLY: production source-PC calendar, assigned die pins/sites, native physical codec/CDC timing, observed producer-valid contract, and licensed UCIe capacity binding remain open. Supersedes TX2 unit evidence in static_io_board_1014.",
+  "board": {
+    "words_per_direction": 512,
+    "unique_word_signatures": true,
+    "checks": 1024,
+    "slots": 64,
+    "wraps_per_epoch": 8,
+    "TX": 3,
+    "RX": 1,
+    "PHY": 339,
+    "RD_to_RX_output": 344,
+    "strict_known_zero_normal_faults": "PASS",
+    "crc_mutant": "FAIL_EXPECTED known causes 04/01"
+  },
+  "ucie": {
+    "words_per_channel": 512,
+    "bidirectional_channels": 4,
+    "checks": 2048,
+    "TX": 3,
+    "RX": 1,
+    "PHY": 14,
+    "RD_to_RX_output": 19,
+    "strict_known_zero_normal_faults": "PASS",
+    "simultaneous_subchannel_slots": 0,
+    "PHY_plus_one_mutant": "FAIL_EXPECTED 2048 errors"
+  },
+  "cdc_parent": {
+    "channels": 12,
+    "words": 6144,
+    "read_latency_rck": 3,
+    "normal": "PASS",
+    "actual_RTL_latency_mutant": "FAIL_EXPECTED all 12 channels"
+  },
+  "normal_issue": "Compiler wr/rd/rx_expect commands only. No credit, ready, runtime arbitration, retry, or fault-driven issue delay."
+}

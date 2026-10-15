@@ -1,0 +1,209 @@
+{
+  "name": "dsfd_gth_rw",
+  "orfs_dir": "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/routes/dsfd_gth_rw_pin_repair_1015_pinrepair1_e74771a9c/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -2.1657131643593175e-10 min 5.812744729993824e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/routes/dsfd_gth_rw_pin_repair_1015_pinrepair1_e74771a9c/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/record/views/dsfd_gth_rw:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/src/physical/ref_tile/dsfd_gth_rw_pin_repair_1015/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/cl/eco/pass1/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/src:/src:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/src/physical/s81_ph_views/macros/ot_sram_1r1w_128x66_m1_r2c2:/mv0:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/src/physical/s81_ph_views/macros/ot_sram_1r1w_256x34_m2_r2c2:/mv1:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 2.881181404568167e-10 min 1.5173223788522705e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/routes/dsfd_gth_rw_pin_repair_1015_pinrepair1_e74771a9c/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/record/views/dsfd_gth_rw:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/src/physical/ref_tile/dsfd_gth_rw_pin_repair_1015/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/cl/eco/pass1/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/src:/src:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/src/physical/s81_ph_views/macros/ot_sram_1r1w_128x66_m1_r2c2:/mv0:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/src/physical/s81_ph_views/macros/ot_sram_1r1w_256x34_m2_r2c2:/mv1:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.0346939971483948e-10 min 3.473130116837808e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/routes/dsfd_gth_rw_pin_repair_1015_pinrepair1_e74771a9c/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/record/views/dsfd_gth_rw:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/src/physical/ref_tile/dsfd_gth_rw_pin_repair_1015/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/cl/eco/pass1/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/src:/src:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/src/physical/s81_ph_views/macros/ot_sram_1r1w_128x66_m1_r2c2:/mv0:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/src/physical/s81_ph_views/macros/ot_sram_1r1w_256x34_m2_r2c2:/mv1:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/src/physical/ref_tile/dsfd_gth_rw_pin_repair_1015/signoff.sdc",
+    "sha256": "d50db6f5d3e494350c89e7dc76202bc9d22327613e9bc7c042ea2e51c9a8a5a1",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict",
+    "in_verdict_sequence": true
+  },
+  "verdict": {
+    "json": "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/cl/routed_ioref.a1.json",
+    "sha256": "c3221e5d57f8bd1aa7ffc85a43d8e7000513c0f5e31ef5f20cfd1da1d7d9bd70",
+    "expect_ps": {
+      "tt": 103.47,
+      "ff": 15.17
+    },
+    "tol_ps": 0.05,
+    "work": "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/cl/eco/pass1/orfs",
+    "files": {
+      "/meas/app0_io_ref_routed.sdc": {
+        "host": "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
+        "sha256": "cb2805c3a4a622051ebd24447f6898db2d82fdd6060317692dc3180ef5ac6a7e"
+      },
+      "/src/physical/common_flow/io_ref_routed.sdc": {
+        "host": "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/src/physical/common_flow/io_ref_routed.sdc",
+        "sha256": "cb2805c3a4a622051ebd24447f6898db2d82fdd6060317692dc3180ef5ac6a7e"
+      },
+      "/src/physical/ref_tile/dsfd_gth_rw_pin_repair_1015/signoff.sdc": {
+        "host": "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/src/physical/ref_tile/dsfd_gth_rw_pin_repair_1015/signoff.sdc",
+        "sha256": "d50db6f5d3e494350c89e7dc76202bc9d22327613e9bc7c042ea2e51c9a8a5a1"
+      },
+      "/work/results/asap7/opentallas_dsfd_gth_rw_asap7_ref_dsfd_gth_rw_pin_repair_1015_pinrepair1_e74771a9c/base/6_final.odb": {
+        "host": "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/cl/eco/pass1/orfs/results/asap7/opentallas_dsfd_gth_rw_asap7_ref_dsfd_gth_rw_pin_repair_1015_pinrepair1_e74771a9c/base/6_final.odb",
+        "sha256": "5b99e9ee54066d162087d7c18e2dbbe8769a686eeb3a81624fb1dee79a6c48db"
+      },
+      "/work/results/asap7/opentallas_dsfd_gth_rw_asap7_ref_dsfd_gth_rw_pin_repair_1015_pinrepair1_e74771a9c/base/6_final.sdc": {
+        "host": "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/cl/eco/pass1/orfs/results/asap7/opentallas_dsfd_gth_rw_asap7_ref_dsfd_gth_rw_pin_repair_1015_pinrepair1_e74771a9c/base/6_final.sdc",
+        "sha256": "f8092268282303c4461a242b9858db50cedce65871102202d1556b2fa62cd4a3"
+      },
+      "/work/results/asap7/opentallas_dsfd_gth_rw_asap7_ref_dsfd_gth_rw_pin_repair_1015_pinrepair1_e74771a9c/base/6_final.spef": {
+        "host": "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/cl/eco/pass1/orfs/results/asap7/opentallas_dsfd_gth_rw_asap7_ref_dsfd_gth_rw_pin_repair_1015_pinrepair1_e74771a9c/base/6_final.spef",
+        "sha256": "a13ac05b0eaf2de91f7004a313d0f50b7ad1289a4944d9d613aaa57309178270"
+      }
+    },
+    "check": {
+      "ff": {
+        "export_ps": 15.173223788522705,
+        "verdict_ps": 15.17,
+        "ok": true
+      },
+      "tt": {
+        "export_ps": 103.46939971483948,
+        "verdict_ps": 103.47,
+        "ok": true
+      }
+    }
+  },
+  "sdc_sequence": {
+    "ss": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_dsfd_gth_rw_asap7_ref_dsfd_gth_rw_pin_repair_1015_pinrepair1_e74771a9c/base/6_final.odb",
+        "set ::ot_ce_corner ss",
+        "read_sdc /work/results/asap7/opentallas_dsfd_gth_rw_asap7_ref_dsfd_gth_rw_pin_repair_1015_pinrepair1_e74771a9c/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_dsfd_gth_rw_asap7_ref_dsfd_gth_rw_pin_repair_1015_pinrepair1_e74771a9c/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /src/physical/ref_tile/dsfd_gth_rw_pin_repair_1015/signoff.sdc",
+        "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "ff": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_dsfd_gth_rw_asap7_ref_dsfd_gth_rw_pin_repair_1015_pinrepair1_e74771a9c/base/6_final.odb",
+        "set ::ot_ce_corner ff",
+        "read_sdc /work/results/asap7/opentallas_dsfd_gth_rw_asap7_ref_dsfd_gth_rw_pin_repair_1015_pinrepair1_e74771a9c/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_dsfd_gth_rw_asap7_ref_dsfd_gth_rw_pin_repair_1015_pinrepair1_e74771a9c/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /src/physical/ref_tile/dsfd_gth_rw_pin_repair_1015/signoff.sdc",
+        "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "tt": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_dsfd_gth_rw_asap7_ref_dsfd_gth_rw_pin_repair_1015_pinrepair1_e74771a9c/base/6_final.odb",
+        "set ::ot_ce_corner ss",
+        "read_sdc /work/results/asap7/opentallas_dsfd_gth_rw_asap7_ref_dsfd_gth_rw_pin_repair_1015_pinrepair1_e74771a9c/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_dsfd_gth_rw_asap7_ref_dsfd_gth_rw_pin_repair_1015_pinrepair1_e74771a9c/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /src/physical/ref_tile/dsfd_gth_rw_pin_repair_1015/signoff.sdc",
+        "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    }
+  },
+  "macro_views": [
+    "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/src/physical/s81_ph_views/macros/ot_sram_1r1w_128x66_m1_r2c2",
+    "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c/src/physical/s81_ph_views/macros/ot_sram_1r1w_256x34_m2_r2c2"
+  ],
+  "files": {
+    "dsfd_gth_rw.lef": "938c860677466fa3129d7d2a976518dd7dd8975980be317794b635f8f26ee5d1",
+    "dsfd_gth_rw_ff.lib": "6b9cf8b43727a05cba08cb7e4eeb479cdb6a05d8248833d0e945a831c34b9f03",
+    "dsfd_gth_rw_ss.lib": "81d1496a1d977978aef7441192b53583675b9cd2e4137c8ad7949bfa2827ed46",
+    "dsfd_gth_rw_tt.lib": "16373c987daa9b04484ac20c93665948fbe4a31e61521c4d4cba8c1dc8d90e24"
+  },
+  "ok": true,
+  "checked": true
+}

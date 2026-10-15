@@ -1,0 +1,13 @@
+ot-run: ot-epyc1tb     admits   195 GB (avail 421, growth 139, headroom 64, waiters 0/0 GB) load 44/128 running 14 disk 789 GB 
+ot-run: ot-epyc4       admits   237 GB (avail 464, growth 175, headroom 48, waiters 0/0 GB) load 113/128 running 31 disk 553 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  skipped: load hold: load1 > 1.5 x cores
+ot-run: -> ot-epyc1tb
+ot-heavy: request 16G is charged 13G (class 'vm_replay_xcol_bench.sh' measured peak 4.5G, n=10+0 proved); the cap stays 16G
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-3667861-1792039597 after 0 s
+PASS vm_replay_xcol initial_fill=1 real_replays=3 raw_words=16384 operands=12800 read_to_write=16 chunk_edges=512 macros=0
+- rtl/qwen_sys/vm_nox_20261014/tb_qfd_vm_replay_xcol.sv:602: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.044 s; speed 93.324 us/s
+- Verilator: cpu 0.044 s on 1 threads; allocated 13 MB
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-3667861-1792039597): exit 0

@@ -1,0 +1,2846 @@
+{
+  "scope": "SOURCE_PINNED_PER_PIN_BUDGET_SCREEN_NOT_PARENT_PHYSICAL_QUALIFICATION",
+  "manifest_sha256": "7402e6a82cfffec9649fe228516a570771adf92035ce103f1ad6aaf02cd975f5",
+  "normalization": "pinreg_audit.pin_metrics exactly once: output first-loadpoint max rise/fall minus per-clock R; capture max setup constraints plus R. Boundary extrema addends separate.",
+  "wire_RC_qualified": false,
+  "views": [
+    {
+      "name": "col_mga",
+      "commit": "9991f8339",
+      "view": "physical/ref_tile/qfd_slab_pg_col/views/ot_qwen_slab_pg_col",
+      "corners": {
+        "tt": {
+          "clock_refs": {
+            "clk": {
+              "rise": 227.8,
+              "fall": 248.29494,
+              "min": 193.5965,
+              "max": 321.2204,
+              "src": "insertion.json boundary mean",
+              "bmin": 212.4,
+              "bmax": 245.0,
+              "n": 285
+            }
+          },
+          "launch_bits": 256,
+          "capture_bits": 29,
+          "launch_fail_bits": 256,
+          "capture_fail_bits": 4,
+          "worst_launch": [
+            331.37809999999996,
+            "m5[10]"
+          ],
+          "worst_capture": [
+            197.91113,
+            "cid[0]"
+          ],
+          "buses": {
+            "gre1": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 100.43615000000001
+            },
+            "VSS": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "VDD": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "addr1": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 104.86805000000001
+            },
+            "cid": {
+              "bits": 4,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 4,
+              "max_launch": null,
+              "max_capture": 197.91113
+            },
+            "m5": {
+              "bits": 256,
+              "launch_fail_bits": 256,
+              "capture_fail_bits": 0,
+              "max_launch": 331.37809999999996,
+              "max_capture": null
+            }
+          },
+          "clock_boundary_addends": {
+            "clk": {
+              "launch": 17.19999999999999,
+              "capture": 15.400000000000006
+            }
+          }
+        },
+        "ff": {
+          "clock_refs": {
+            "clk": {
+              "rise": 186.1,
+              "fall": 197.86509499999997,
+              "min": 155.8606,
+              "max": 270.42856,
+              "src": "insertion.json boundary mean",
+              "bmin": 170.5,
+              "bmax": 204.1,
+              "n": 285
+            }
+          },
+          "launch_bits": 256,
+          "capture_bits": 29,
+          "launch_fail_bits": 60,
+          "capture_fail_bits": 0,
+          "worst_launch": [
+            243.84043,
+            "m5[10]"
+          ],
+          "worst_capture": [
+            145.78235,
+            "cid[0]"
+          ],
+          "buses": {
+            "gre1": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 74.56455
+            },
+            "VSS": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "VDD": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "addr1": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 78.73782999999999
+            },
+            "cid": {
+              "bits": 4,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 145.78235
+            },
+            "m5": {
+              "bits": 256,
+              "launch_fail_bits": 60,
+              "capture_fail_bits": 0,
+              "max_launch": 243.84043,
+              "max_capture": null
+            }
+          },
+          "clock_boundary_addends": {
+            "clk": {
+              "launch": 18.0,
+              "capture": 15.599999999999994
+            }
+          }
+        },
+        "ss": {
+          "clock_refs": {
+            "clk": {
+              "rise": 299.9,
+              "fall": 341.983845,
+              "min": 257.27344,
+              "max": 405.01172,
+              "src": "insertion.json boundary mean",
+              "bmin": 284.7,
+              "bmax": 313.8,
+              "n": 285
+            }
+          },
+          "launch_bits": 256,
+          "capture_bits": 29,
+          "launch_fail_bits": 256,
+          "capture_fail_bits": 4,
+          "worst_launch": [
+            501.89584,
+            "m5[227]"
+          ],
+          "worst_capture": [
+            288.62363,
+            "cid[0]"
+          ],
+          "buses": {
+            "gre1": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 139.47961999999998
+            },
+            "VSS": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "VDD": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "addr1": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 145.48181999999997
+            },
+            "cid": {
+              "bits": 4,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 4,
+              "max_launch": null,
+              "max_capture": 288.62363
+            },
+            "m5": {
+              "bits": 256,
+              "launch_fail_bits": 256,
+              "capture_fail_bits": 0,
+              "max_launch": 501.89584,
+              "max_capture": null
+            }
+          },
+          "clock_boundary_addends": {
+            "clk": {
+              "launch": 13.900000000000034,
+              "capture": 15.199999999999989
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "col_mgb",
+      "commit": "622b30874",
+      "view": "physical/ref_tile/qfd_slab_pg_col/views/ot_qwen_slab_pg_col",
+      "corners": {
+        "tt": {
+          "clock_refs": {
+            "clk": {
+              "rise": 228.5,
+              "fall": 250.08225,
+              "min": 193.88171,
+              "max": 354.82483,
+              "src": "insertion.json boundary mean",
+              "bmin": 213.4,
+              "bmax": 244.6,
+              "n": 285
+            }
+          },
+          "launch_bits": 256,
+          "capture_bits": 29,
+          "launch_fail_bits": 256,
+          "capture_fail_bits": 4,
+          "worst_launch": [
+            333.83795,
+            "m5[11]"
+          ],
+          "worst_capture": [
+            200.11893,
+            "cid[0]"
+          ],
+          "buses": {
+            "gre1": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 98.31384
+            },
+            "VSS": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "VDD": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "addr1": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 102.56758
+            },
+            "cid": {
+              "bits": 4,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 4,
+              "max_launch": null,
+              "max_capture": 200.11893
+            },
+            "m5": {
+              "bits": 256,
+              "launch_fail_bits": 256,
+              "capture_fail_bits": 0,
+              "max_launch": 333.83795,
+              "max_capture": null
+            }
+          },
+          "clock_boundary_addends": {
+            "clk": {
+              "launch": 16.099999999999994,
+              "capture": 15.099999999999994
+            }
+          }
+        },
+        "ff": {
+          "clock_refs": {
+            "clk": {
+              "rise": 186.6,
+              "fall": 199.86143500000003,
+              "min": 156.52249,
+              "max": 300.56647,
+              "src": "insertion.json boundary mean",
+              "bmin": 171.3,
+              "bmax": 203.8,
+              "n": 285
+            }
+          },
+          "launch_bits": 256,
+          "capture_bits": 29,
+          "launch_fail_bits": 60,
+          "capture_fail_bits": 0,
+          "worst_launch": [
+            250.82309999999998,
+            "m5[11]"
+          ],
+          "worst_capture": [
+            147.74144,
+            "cid[0]"
+          ],
+          "buses": {
+            "gre1": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 72.28004999999999
+            },
+            "VSS": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "VDD": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "addr1": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 76.24597
+            },
+            "cid": {
+              "bits": 4,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 147.74144
+            },
+            "m5": {
+              "bits": 256,
+              "launch_fail_bits": 60,
+              "capture_fail_bits": 0,
+              "max_launch": 250.82309999999998,
+              "max_capture": null
+            }
+          },
+          "clock_boundary_addends": {
+            "clk": {
+              "launch": 17.200000000000017,
+              "capture": 15.299999999999983
+            }
+          }
+        },
+        "ss": {
+          "clock_refs": {
+            "clk": {
+              "rise": 301.1,
+              "fall": 343.13564,
+              "min": 257.66193,
+              "max": 443.51212,
+              "src": "insertion.json boundary mean",
+              "bmin": 285.9,
+              "bmax": 313.4,
+              "n": 285
+            }
+          },
+          "launch_bits": 256,
+          "capture_bits": 29,
+          "launch_fail_bits": 256,
+          "capture_fail_bits": 4,
+          "worst_launch": [
+            491.77958,
+            "m5[132]"
+          ],
+          "worst_capture": [
+            291.0672,
+            "cid[0]"
+          ],
+          "buses": {
+            "gre1": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 137.64813
+            },
+            "VSS": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "VDD": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "addr1": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 143.48225000000002
+            },
+            "cid": {
+              "bits": 4,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 4,
+              "max_launch": null,
+              "max_capture": 291.0672
+            },
+            "m5": {
+              "bits": 256,
+              "launch_fail_bits": 256,
+              "capture_fail_bits": 0,
+              "max_launch": 491.77958,
+              "max_capture": null
+            }
+          },
+          "clock_boundary_addends": {
+            "clk": {
+              "launch": 12.299999999999955,
+              "capture": 15.200000000000045
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "col_mgc",
+      "commit": "4d9341d03",
+      "view": "physical/ref_tile/qfd_slab_pg_col/views/ot_qwen_slab_pg_col",
+      "corners": {
+        "tt": {
+          "clock_refs": {
+            "clk": {
+              "rise": 226.4,
+              "fall": 248.29275499999997,
+              "min": 194.40637,
+              "max": 370.18808,
+              "src": "insertion.json boundary mean",
+              "bmin": 212.5,
+              "bmax": 244.4,
+              "n": 285
+            }
+          },
+          "launch_bits": 256,
+          "capture_bits": 29,
+          "launch_fail_bits": 256,
+          "capture_fail_bits": 4,
+          "worst_launch": [
+            329.8901000000001,
+            "m5[121]"
+          ],
+          "worst_capture": [
+            196.72258,
+            "cid[0]"
+          ],
+          "buses": {
+            "gre1": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 98.94731
+            },
+            "VSS": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "VDD": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "addr1": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 103.38441
+            },
+            "cid": {
+              "bits": 4,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 4,
+              "max_launch": null,
+              "max_capture": 196.72258
+            },
+            "m5": {
+              "bits": 256,
+              "launch_fail_bits": 256,
+              "capture_fail_bits": 0,
+              "max_launch": 329.8901000000001,
+              "max_capture": null
+            }
+          },
+          "clock_boundary_addends": {
+            "clk": {
+              "launch": 18.0,
+              "capture": 13.900000000000006
+            }
+          }
+        },
+        "ff": {
+          "clock_refs": {
+            "clk": {
+              "rise": 184.7,
+              "fall": 198.60812999999996,
+              "min": 155.82172,
+              "max": 314.1535,
+              "src": "insertion.json boundary mean",
+              "bmin": 170.5,
+              "bmax": 203.7,
+              "n": 285
+            }
+          },
+          "launch_bits": 256,
+          "capture_bits": 29,
+          "launch_fail_bits": 60,
+          "capture_fail_bits": 0,
+          "worst_launch": [
+            245.08616,
+            "m5[14]"
+          ],
+          "worst_capture": [
+            144.58857,
+            "cid[0]"
+          ],
+          "buses": {
+            "gre1": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 73.0773
+            },
+            "VSS": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "VDD": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "addr1": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 77.25386999999999
+            },
+            "cid": {
+              "bits": 4,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 144.58857
+            },
+            "m5": {
+              "bits": 256,
+              "launch_fail_bits": 60,
+              "capture_fail_bits": 0,
+              "max_launch": 245.08616,
+              "max_capture": null
+            }
+          },
+          "clock_boundary_addends": {
+            "clk": {
+              "launch": 19.0,
+              "capture": 14.199999999999989
+            }
+          }
+        },
+        "ss": {
+          "clock_refs": {
+            "clk": {
+              "rise": 298.6,
+              "fall": 340.3862700000001,
+              "min": 258.68951,
+              "max": 461.29404,
+              "src": "insertion.json boundary mean",
+              "bmin": 284.7,
+              "bmax": 313.1,
+              "n": 285
+            }
+          },
+          "launch_bits": 256,
+          "capture_bits": 29,
+          "launch_fail_bits": 256,
+          "capture_fail_bits": 4,
+          "worst_launch": [
+            502.67686000000003,
+            "m5[121]"
+          ],
+          "worst_capture": [
+            287.53339,
+            "cid[0]"
+          ],
+          "buses": {
+            "gre1": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 138.08195000000003
+            },
+            "VSS": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "VDD": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "addr1": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 144.09448000000003
+            },
+            "cid": {
+              "bits": 4,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 4,
+              "max_launch": null,
+              "max_capture": 287.53339
+            },
+            "m5": {
+              "bits": 256,
+              "launch_fail_bits": 256,
+              "capture_fail_bits": 0,
+              "max_launch": 502.67686000000003,
+              "max_capture": null
+            }
+          },
+          "clock_boundary_addends": {
+            "clk": {
+              "launch": 14.5,
+              "capture": 13.900000000000034
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "core",
+      "commit": "6b6747847",
+      "view": "physical/ref_tile/qfd_slab_pg_core/views/ot_qwen_slab_pg_core",
+      "corners": {
+        "tt": {
+          "clock_refs": {
+            "clk": {
+              "rise": 203.8,
+              "fall": 217.98953,
+              "min": 175.60332,
+              "max": 226.71765,
+              "src": "insertion.json boundary mean",
+              "bmin": 189.0,
+              "bmax": 226.7,
+              "n": 3677
+            }
+          },
+          "launch_bits": 1434,
+          "capture_bits": 2244,
+          "launch_fail_bits": 4,
+          "capture_fail_bits": 0,
+          "worst_launch": [
+            303.16225,
+            "core_rs0"
+          ],
+          "worst_capture": [
+            176.01292,
+            "col_m5[730]"
+          ],
+          "buses": {
+            "am_rmax": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 186.30602,
+              "max_capture": null
+            },
+            "am_tv": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 180.91355999999996,
+              "max_capture": null
+            },
+            "core_gre1": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 195.36559,
+              "max_capture": null
+            },
+            "core_rs0": {
+              "bits": 1,
+              "launch_fail_bits": 1,
+              "capture_fail_bits": 0,
+              "max_launch": 303.16225,
+              "max_capture": null
+            },
+            "fault": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 186.86613999999997,
+              "max_capture": null
+            },
+            "o_we": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 190.84058999999996,
+              "max_capture": null
+            },
+            "ov": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 190.96981,
+              "max_capture": null
+            },
+            "p_amax": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 163.20571
+            },
+            "p_last": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 160.19335
+            },
+            "p_mmode": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 162.41764
+            },
+            "p_oen": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 161.8863
+            },
+            "p_rmax": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 163.4649
+            },
+            "p_v": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 108.77672000000001
+            },
+            "p_wsrc": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 161.74931
+            },
+            "rst_n": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 153.52118000000002
+            },
+            "VDD": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "VSS": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "am_top": {
+              "bits": 51,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 197.62651,
+              "max_capture": null
+            },
+            "col_m5": {
+              "bits": 1024,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 176.01292
+            },
+            "core_addr1": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 201.39272,
+              "max_capture": null
+            },
+            "gid": {
+              "bits": 7,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 158.53535
+            },
+            "lane_a": {
+              "bits": 512,
+              "launch_fail_bits": 3,
+              "capture_fail_bits": 0,
+              "max_launch": 225.04582999999997,
+              "max_capture": null
+            },
+            "lane_err": {
+              "bits": 32,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 166.32940000000002
+            },
+            "lane_s": {
+              "bits": 256,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 218.99575,
+              "max_capture": null
+            },
+            "lane_v": {
+              "bits": 16,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 204.10591,
+              "max_capture": null
+            },
+            "lane_vo": {
+              "bits": 16,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 167.99176
+            },
+            "lane_ws": {
+              "bits": 16,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 201.98854,
+              "max_capture": null
+            },
+            "lane_y": {
+              "bits": 512,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 170.55251
+            },
+            "o_addr": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 199.31462,
+              "max_capture": null
+            },
+            "o_data": {
+              "bits": 512,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 206.70081999999996,
+              "max_capture": null
+            },
+            "o_mask": {
+              "bits": 16,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 195.45869999999996,
+              "max_capture": null
+            },
+            "p_lb": {
+              "bits": 19,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 168.62111000000002
+            },
+            "p_nb": {
+              "bits": 19,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 170.07271
+            },
+            "p_nout": {
+              "bits": 19,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 168.08726000000001
+            },
+            "p_oa": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 165.63403
+            },
+            "p_ots": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 163.68034
+            },
+            "p_sbase": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 167.44627000000003
+            },
+            "p_split": {
+              "bits": 4,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 166.13619
+            },
+            "res_in": {
+              "bits": 512,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 163.33318000000003
+            }
+          },
+          "clock_boundary_addends": {
+            "clk": {
+              "launch": 22.899999999999977,
+              "capture": 14.800000000000011
+            }
+          }
+        },
+        "ff": {
+          "clock_refs": {
+            "clk": {
+              "rise": 169.2,
+              "fall": 178.202155,
+              "min": 143.45694,
+              "max": 191.23917,
+              "src": "insertion.json boundary mean",
+              "bmin": 155.3,
+              "bmax": 191.2,
+              "n": 3677
+            }
+          },
+          "launch_bits": 1434,
+          "capture_bits": 2244,
+          "launch_fail_bits": 1,
+          "capture_fail_bits": 0,
+          "worst_launch": [
+            228.89476000000002,
+            "core_rs0"
+          ],
+          "worst_capture": [
+            135.91548999999998,
+            "col_m5[730]"
+          ],
+          "buses": {
+            "am_rmax": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 130.94053000000002,
+              "max_capture": null
+            },
+            "am_tv": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 126.08600999999999,
+              "max_capture": null
+            },
+            "core_gre1": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 137.46721000000002,
+              "max_capture": null
+            },
+            "core_rs0": {
+              "bits": 1,
+              "launch_fail_bits": 1,
+              "capture_fail_bits": 0,
+              "max_launch": 228.89476000000002,
+              "max_capture": null
+            },
+            "fault": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 131.28807,
+              "max_capture": null
+            },
+            "o_we": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 136.38807000000003,
+              "max_capture": null
+            },
+            "ov": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 135.20247,
+              "max_capture": null
+            },
+            "p_amax": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 125.8732
+            },
+            "p_last": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 123.56535
+            },
+            "p_mmode": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 125.36904999999999
+            },
+            "p_oen": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 124.02144999999999
+            },
+            "p_rmax": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 125.81613999999999
+            },
+            "p_v": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 80.34579999999998
+            },
+            "p_wsrc": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 125.10703999999998
+            },
+            "rst_n": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 116.59590999999999
+            },
+            "VDD": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "VSS": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "am_top": {
+              "bits": 51,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 139.50322,
+              "max_capture": null
+            },
+            "col_m5": {
+              "bits": 1024,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 135.91548999999998
+            },
+            "core_addr1": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 141.62968,
+              "max_capture": null
+            },
+            "gid": {
+              "bits": 7,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 122.89719
+            },
+            "lane_a": {
+              "bits": 512,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 161.95353,
+              "max_capture": null
+            },
+            "lane_err": {
+              "bits": 32,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 127.39063999999999
+            },
+            "lane_s": {
+              "bits": 256,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 154.81513999999999,
+              "max_capture": null
+            },
+            "lane_v": {
+              "bits": 16,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 143.3965,
+              "max_capture": null
+            },
+            "lane_vo": {
+              "bits": 16,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 129.59015
+            },
+            "lane_ws": {
+              "bits": 16,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 142.29362000000003,
+              "max_capture": null
+            },
+            "lane_y": {
+              "bits": 512,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 133.0606
+            },
+            "o_addr": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 141.05589000000003,
+              "max_capture": null
+            },
+            "o_data": {
+              "bits": 512,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 147.01341000000002,
+              "max_capture": null
+            },
+            "o_mask": {
+              "bits": 16,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 138.64875,
+              "max_capture": null
+            },
+            "p_lb": {
+              "bits": 19,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 129.52899
+            },
+            "p_nb": {
+              "bits": 19,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 129.60906999999997
+            },
+            "p_nout": {
+              "bits": 19,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 130.12187999999998
+            },
+            "p_oa": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 126.57228999999998
+            },
+            "p_ots": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 124.94163999999998
+            },
+            "p_sbase": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 128.60076999999998
+            },
+            "p_split": {
+              "bits": 4,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 128.02812
+            },
+            "res_in": {
+              "bits": 512,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 125.45455999999999
+            }
+          },
+          "clock_boundary_addends": {
+            "clk": {
+              "launch": 22.0,
+              "capture": 13.899999999999977
+            }
+          }
+        },
+        "ss": {
+          "clock_refs": {
+            "clk": {
+              "rise": 260.8,
+              "fall": 288.62628000000007,
+              "min": 228.03946,
+              "max": 285.53012,
+              "src": "insertion.json boundary mean",
+              "bmin": 244.5,
+              "bmax": 285.5,
+              "n": 3677
+            }
+          },
+          "launch_bits": 1434,
+          "capture_bits": 2244,
+          "launch_fail_bits": 1434,
+          "capture_fail_bits": 2216,
+          "worst_launch": [
+            433.58122999999995,
+            "core_rs0"
+          ],
+          "worst_capture": [
+            232.36343000000002,
+            "col_m5[730]"
+          ],
+          "buses": {
+            "am_rmax": {
+              "bits": 1,
+              "launch_fail_bits": 1,
+              "capture_fail_bits": 0,
+              "max_launch": 285.67222999999996,
+              "max_capture": null
+            },
+            "am_tv": {
+              "bits": 1,
+              "launch_fail_bits": 1,
+              "capture_fail_bits": 0,
+              "max_launch": 279.46782,
+              "max_capture": null
+            },
+            "core_gre1": {
+              "bits": 1,
+              "launch_fail_bits": 1,
+              "capture_fail_bits": 0,
+              "max_launch": 298.97966,
+              "max_capture": null
+            },
+            "core_rs0": {
+              "bits": 1,
+              "launch_fail_bits": 1,
+              "capture_fail_bits": 0,
+              "max_launch": 433.58122999999995,
+              "max_capture": null
+            },
+            "fault": {
+              "bits": 1,
+              "launch_fail_bits": 1,
+              "capture_fail_bits": 0,
+              "max_launch": 286.60881,
+              "max_capture": null
+            },
+            "o_we": {
+              "bits": 1,
+              "launch_fail_bits": 1,
+              "capture_fail_bits": 0,
+              "max_launch": 289.19010999999995,
+              "max_capture": null
+            },
+            "ov": {
+              "bits": 1,
+              "launch_fail_bits": 1,
+              "capture_fail_bits": 0,
+              "max_launch": 292.09635999999995,
+              "max_capture": null
+            },
+            "p_amax": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 1,
+              "max_launch": null,
+              "max_capture": 215.61961000000002
+            },
+            "p_last": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 1,
+              "max_launch": null,
+              "max_capture": 211.92903
+            },
+            "p_mmode": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 1,
+              "max_launch": null,
+              "max_capture": 214.76531
+            },
+            "p_oen": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 1,
+              "max_launch": null,
+              "max_capture": 214.28171
+            },
+            "p_rmax": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 1,
+              "max_launch": null,
+              "max_capture": 215.86519
+            },
+            "p_v": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 154.7493
+            },
+            "p_wsrc": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 1,
+              "max_launch": null,
+              "max_capture": 213.84277
+            },
+            "rst_n": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 1,
+              "max_launch": null,
+              "max_capture": 207.26277000000002
+            },
+            "VDD": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "VSS": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "am_top": {
+              "bits": 51,
+              "launch_fail_bits": 51,
+              "capture_fail_bits": 0,
+              "max_launch": 302.36503999999996,
+              "max_capture": null
+            },
+            "col_m5": {
+              "bits": 1024,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 1024,
+              "max_launch": null,
+              "max_capture": 232.36343000000002
+            },
+            "core_addr1": {
+              "bits": 24,
+              "launch_fail_bits": 24,
+              "capture_fail_bits": 0,
+              "max_launch": 309.44730999999996,
+              "max_capture": null
+            },
+            "gid": {
+              "bits": 7,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 7,
+              "max_launch": null,
+              "max_capture": 211.42200000000003
+            },
+            "lane_a": {
+              "bits": 512,
+              "launch_fail_bits": 512,
+              "capture_fail_bits": 0,
+              "max_launch": 336.21575,
+              "max_capture": null
+            },
+            "lane_err": {
+              "bits": 32,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 32,
+              "max_launch": null,
+              "max_capture": 220.53367
+            },
+            "lane_s": {
+              "bits": 256,
+              "launch_fail_bits": 256,
+              "capture_fail_bits": 0,
+              "max_launch": 332.83500999999995,
+              "max_capture": null
+            },
+            "lane_v": {
+              "bits": 16,
+              "launch_fail_bits": 16,
+              "capture_fail_bits": 0,
+              "max_launch": 312.44883999999996,
+              "max_capture": null
+            },
+            "lane_vo": {
+              "bits": 16,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 16,
+              "max_launch": null,
+              "max_capture": 221.20534
+            },
+            "lane_ws": {
+              "bits": 16,
+              "launch_fail_bits": 16,
+              "capture_fail_bits": 0,
+              "max_launch": 308.75089999999994,
+              "max_capture": null
+            },
+            "lane_y": {
+              "bits": 512,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 486,
+              "max_launch": null,
+              "max_capture": 224.47699
+            },
+            "o_addr": {
+              "bits": 24,
+              "launch_fail_bits": 24,
+              "capture_fail_bits": 0,
+              "max_launch": 304.94920999999994,
+              "max_capture": null
+            },
+            "o_data": {
+              "bits": 512,
+              "launch_fail_bits": 512,
+              "capture_fail_bits": 0,
+              "max_launch": 315.47459999999995,
+              "max_capture": null
+            },
+            "o_mask": {
+              "bits": 16,
+              "launch_fail_bits": 16,
+              "capture_fail_bits": 0,
+              "max_launch": 298.15331,
+              "max_capture": null
+            },
+            "p_lb": {
+              "bits": 19,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 19,
+              "max_launch": null,
+              "max_capture": 222.96640000000002
+            },
+            "p_nb": {
+              "bits": 19,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 19,
+              "max_launch": null,
+              "max_capture": 225.22987
+            },
+            "p_nout": {
+              "bits": 19,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 19,
+              "max_launch": null,
+              "max_capture": 221.74967
+            },
+            "p_oa": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 24,
+              "max_launch": null,
+              "max_capture": 219.61155000000002
+            },
+            "p_ots": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 24,
+              "max_launch": null,
+              "max_capture": 217.48178000000001
+            },
+            "p_sbase": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 24,
+              "max_launch": null,
+              "max_capture": 221.06966
+            },
+            "p_split": {
+              "bits": 4,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 4,
+              "max_launch": null,
+              "max_capture": 219.41664
+            },
+            "res_in": {
+              "bits": 512,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 511,
+              "max_launch": null,
+              "max_capture": 216.62555
+            }
+          },
+          "clock_boundary_addends": {
+            "clk": {
+              "launch": 24.69999999999999,
+              "capture": 16.30000000000001
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "lane",
+      "commit": "42e2bcb1b",
+      "view": "physical/ref_tile/qfd_slab_pg_lanes/views/ot_qwen_slab_pg_lanes",
+      "corners": {
+        "tt": {
+          "clock_refs": {
+            "clk": {
+              "rise": 119.1,
+              "fall": 125.73678000000001,
+              "min": 106.00755,
+              "max": 123.48248,
+              "src": "insertion.json boundary mean",
+              "bmin": 114.9,
+              "bmax": 122.5,
+              "n": 340
+            }
+          },
+          "launch_bits": 140,
+          "capture_bits": 201,
+          "launch_fail_bits": 0,
+          "capture_fail_bits": 0,
+          "worst_launch": [
+            146.17704,
+            "y[98]"
+          ],
+          "worst_capture": [
+            155.36283,
+            "l_ws[1]"
+          ],
+          "buses": {
+            "rs0": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 92.28344999999999
+            },
+            "VDD": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "VSS": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "a": {
+              "bits": 128,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 103.90728
+            },
+            "err": {
+              "bits": 8,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 141.55109000000002,
+              "max_capture": null
+            },
+            "l_v": {
+              "bits": 4,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 98.60692999999999
+            },
+            "l_ws": {
+              "bits": 4,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 155.36283
+            },
+            "s": {
+              "bits": 64,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 103.95235
+            },
+            "vo": {
+              "bits": 4,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 142.99262000000002,
+              "max_capture": null
+            },
+            "y": {
+              "bits": 128,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 146.17704,
+              "max_capture": null
+            }
+          },
+          "clock_boundary_addends": {
+            "clk": {
+              "launch": 3.4000000000000057,
+              "capture": 4.199999999999989
+            }
+          }
+        },
+        "ff": {
+          "clock_refs": {
+            "clk": {
+              "rise": 95.5,
+              "fall": 98.68230500000001,
+              "min": 84.1845,
+              "max": 99.73407,
+              "src": "insertion.json boundary mean",
+              "bmin": 91.4,
+              "bmax": 98.4,
+              "n": 340
+            }
+          },
+          "launch_bits": 140,
+          "capture_bits": 201,
+          "launch_fail_bits": 0,
+          "capture_fail_bits": 0,
+          "worst_launch": [
+            103.38338999999999,
+            "y[98]"
+          ],
+          "worst_capture": [
+            114.82323,
+            "l_ws[1]"
+          ],
+          "buses": {
+            "rs0": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 69.12776
+            },
+            "VDD": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "VSS": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "a": {
+              "bits": 128,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 77.88802
+            },
+            "err": {
+              "bits": 8,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 100.57523,
+              "max_capture": null
+            },
+            "l_v": {
+              "bits": 4,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 73.24234
+            },
+            "l_ws": {
+              "bits": 4,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 114.82323
+            },
+            "s": {
+              "bits": 64,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 76.72581
+            },
+            "vo": {
+              "bits": 4,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 101.52631,
+              "max_capture": null
+            },
+            "y": {
+              "bits": 128,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 103.38338999999999,
+              "max_capture": null
+            }
+          },
+          "clock_boundary_addends": {
+            "clk": {
+              "launch": 2.9000000000000057,
+              "capture": 4.099999999999994
+            }
+          }
+        },
+        "ss": {
+          "clock_refs": {
+            "clk": {
+              "rise": 161.0,
+              "fall": 176.80790000000002,
+              "min": 144.17667,
+              "max": 165.60855,
+              "src": "insertion.json boundary mean",
+              "bmin": 156.1,
+              "bmax": 164.9,
+              "n": 340
+            }
+          },
+          "launch_bits": 140,
+          "capture_bits": 201,
+          "launch_fail_bits": 4,
+          "capture_fail_bits": 4,
+          "worst_launch": [
+            221.67172,
+            "y[98]"
+          ],
+          "worst_capture": [
+            222.49066,
+            "l_ws[1]"
+          ],
+          "buses": {
+            "rs0": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 130.29097000000002
+            },
+            "VDD": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "VSS": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "a": {
+              "bits": 128,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 145.77679
+            },
+            "err": {
+              "bits": 8,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 213.93466,
+              "max_capture": null
+            },
+            "l_v": {
+              "bits": 4,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 139.30139
+            },
+            "l_ws": {
+              "bits": 4,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 4,
+              "max_launch": null,
+              "max_capture": 222.49066
+            },
+            "s": {
+              "bits": 64,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 144.72776
+            },
+            "vo": {
+              "bits": 4,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 216.82146999999998,
+              "max_capture": null
+            },
+            "y": {
+              "bits": 128,
+              "launch_fail_bits": 4,
+              "capture_fail_bits": 0,
+              "max_launch": 221.67172,
+              "max_capture": null
+            }
+          },
+          "clock_boundary_addends": {
+            "clk": {
+              "launch": 3.9000000000000057,
+              "capture": 4.900000000000006
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "head_arg2",
+      "commit": "5f46813ea",
+      "view": "physical/ref_tile/qfd_tt_ctlm_head/views/qfd_tt_ctlm_head",
+      "corners": {
+        "tt": {
+          "clock_refs": {
+            "clk": {
+              "rise": 536.4,
+              "fall": 580.04836,
+              "min": 459.69629,
+              "max": 558.07977,
+              "src": "insertion.json boundary mean",
+              "bmin": 503.8,
+              "bmax": 558.1,
+              "n": 873
+            }
+          },
+          "launch_bits": 634,
+          "capture_bits": 233,
+          "launch_fail_bits": 247,
+          "capture_fail_bits": 104,
+          "worst_launch": [
+            360.11282000000006,
+            "kvd_tiles[8]"
+          ],
+          "worst_capture": [
+            326.2586,
+            "rst_n"
+          ],
+          "buses": {
+            "c_fault": {
+              "bits": 1,
+              "launch_fail_bits": 1,
+              "capture_fail_bits": 0,
+              "max_launch": 231.96212000000003,
+              "max_capture": null
+            },
+            "h_start": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 187.26655
+            },
+            "kv_ok": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 1,
+              "max_launch": null,
+              "max_capture": 196.43136999999996
+            },
+            "kv_write_drained": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 188.93509999999998
+            },
+            "kvd_kindk": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 201.42714999999998,
+              "max_capture": null
+            },
+            "kvd_v": {
+              "bits": 1,
+              "launch_fail_bits": 1,
+              "capture_fail_bits": 0,
+              "max_launch": 275.04983000000004,
+              "max_capture": null
+            },
+            "m_fin_o": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 186.78976,
+              "max_capture": null
+            },
+            "me_clk_en": {
+              "bits": 1,
+              "launch_fail_bits": 1,
+              "capture_fail_bits": 0,
+              "max_launch": 286.06875,
+              "max_capture": null
+            },
+            "me_mem_ok": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 176.78474
+            },
+            "pw_v": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 180.51295
+            },
+            "rst_n": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 1,
+              "max_launch": null,
+              "max_capture": 326.2586
+            },
+            "x_oidle": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 187.21454
+            },
+            "VDD": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "VSS": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "cmd": {
+              "bits": 380,
+              "launch_fail_bits": 174,
+              "capture_fail_bits": 0,
+              "max_launch": 290.78219,
+              "max_capture": null
+            },
+            "kvd_js": {
+              "bits": 24,
+              "launch_fail_bits": 3,
+              "capture_fail_bits": 0,
+              "max_launch": 226.048,
+              "max_capture": null
+            },
+            "kvd_jsh": {
+              "bits": 3,
+              "launch_fail_bits": 1,
+              "capture_fail_bits": 0,
+              "max_launch": 220.80081000000007,
+              "max_capture": null
+            },
+            "kvd_k": {
+              "bits": 18,
+              "launch_fail_bits": 11,
+              "capture_fail_bits": 0,
+              "max_launch": 259.86044000000004,
+              "max_capture": null
+            },
+            "kvd_ks": {
+              "bits": 24,
+              "launch_fail_bits": 10,
+              "capture_fail_bits": 0,
+              "max_launch": 229.64053,
+              "max_capture": null
+            },
+            "kvd_nout": {
+              "bits": 18,
+              "launch_fail_bits": 5,
+              "capture_fail_bits": 0,
+              "max_launch": 235.98129000000006,
+              "max_capture": null
+            },
+            "kvd_pos": {
+              "bits": 18,
+              "launch_fail_bits": 9,
+              "capture_fail_bits": 0,
+              "max_launch": 250.35055,
+              "max_capture": null
+            },
+            "kvd_split": {
+              "bits": 4,
+              "launch_fail_bits": 1,
+              "capture_fail_bits": 0,
+              "max_launch": 233.60793,
+              "max_capture": null
+            },
+            "kvd_tiles": {
+              "bits": 18,
+              "launch_fail_bits": 14,
+              "capture_fail_bits": 0,
+              "max_launch": 360.11282000000006,
+              "max_capture": null
+            },
+            "kvd_ts": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 214.83632999999998,
+              "max_capture": null
+            },
+            "kvd_wbase": {
+              "bits": 24,
+              "launch_fail_bits": 12,
+              "capture_fail_bits": 0,
+              "max_launch": 240.63156000000004,
+              "max_capture": null
+            },
+            "kvd_wcs": {
+              "bits": 24,
+              "launch_fail_bits": 4,
+              "capture_fail_bits": 0,
+              "max_launch": 227.45010000000002,
+              "max_capture": null
+            },
+            "m_fidx_o": {
+              "bits": 18,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 216.14071,
+              "max_capture": null
+            },
+            "m_fval_o": {
+              "bits": 32,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 214.92910000000006,
+              "max_capture": null
+            },
+            "pos": {
+              "bits": 18,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 6,
+              "max_launch": null,
+              "max_capture": 206.53817999999995
+            },
+            "prog_base": {
+              "bits": 12,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 189.17920999999996
+            },
+            "pw_addr": {
+              "bits": 10,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 189.00428
+            },
+            "pw_data": {
+              "bits": 64,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 38,
+              "max_launch": null,
+              "max_capture": 209.74197999999996
+            },
+            "ret": {
+              "bits": 95,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 52,
+              "max_launch": null,
+              "max_capture": 315.38532
+            },
+            "token": {
+              "bits": 18,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 1,
+              "max_launch": null,
+              "max_capture": 191.37619999999998
+            },
+            "x_oacc": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 1,
+              "max_launch": null,
+              "max_capture": 191.04263999999995
+            },
+            "x_oprog": {
+              "bits": 16,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 2,
+              "max_launch": null,
+              "max_capture": 193.55854
+            },
+            "x_orows": {
+              "bits": 16,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 2,
+              "max_launch": null,
+              "max_capture": 191.62653
+            }
+          },
+          "clock_boundary_addends": {
+            "clk": {
+              "launch": 21.700000000000045,
+              "capture": 32.599999999999966
+            }
+          }
+        },
+        "ff": {
+          "clock_refs": {
+            "clk": {
+              "rise": 428.4,
+              "fall": 456.94133999999997,
+              "min": 382.30069,
+              "max": 454.21597,
+              "src": "insertion.json boundary mean",
+              "bmin": 406.7,
+              "bmax": 454.2,
+              "n": 873
+            }
+          },
+          "launch_bits": 634,
+          "capture_bits": 233,
+          "launch_fail_bits": 7,
+          "capture_fail_bits": 14,
+          "worst_launch": [
+            273.10745,
+            "kvd_tiles[8]"
+          ],
+          "worst_capture": [
+            277.46064,
+            "ret[77]"
+          ],
+          "buses": {
+            "c_fault": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 164.33724000000007,
+              "max_capture": null
+            },
+            "h_start": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 147.13209
+            },
+            "kv_ok": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 154.29681999999997
+            },
+            "kv_write_drained": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 150.32813
+            },
+            "kvd_kindk": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 136.38563999999997,
+              "max_capture": null
+            },
+            "kvd_v": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 205.62844000000007,
+              "max_capture": null
+            },
+            "m_fin_o": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 127.32551999999998,
+              "max_capture": null
+            },
+            "me_clk_en": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 213.01327000000003,
+              "max_capture": null
+            },
+            "me_mem_ok": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 137.07626999999997
+            },
+            "pw_v": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 140.79154
+            },
+            "rst_n": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 1,
+              "max_launch": null,
+              "max_capture": 249.46283999999997
+            },
+            "x_oidle": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 147.04803999999996
+            },
+            "VDD": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "VSS": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "cmd": {
+              "bits": 380,
+              "launch_fail_bits": 6,
+              "capture_fail_bits": 0,
+              "max_launch": 229.06349999999998,
+              "max_capture": null
+            },
+            "kvd_js": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 154.18801000000008,
+              "max_capture": null
+            },
+            "kvd_jsh": {
+              "bits": 3,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 162.12892999999997,
+              "max_capture": null
+            },
+            "kvd_k": {
+              "bits": 18,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 192.02407000000005,
+              "max_capture": null
+            },
+            "kvd_ks": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 165.07919000000004,
+              "max_capture": null
+            },
+            "kvd_nout": {
+              "bits": 18,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 168.98091999999997,
+              "max_capture": null
+            },
+            "kvd_pos": {
+              "bits": 18,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 179.3265,
+              "max_capture": null
+            },
+            "kvd_split": {
+              "bits": 4,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 167.98251000000005,
+              "max_capture": null
+            },
+            "kvd_tiles": {
+              "bits": 18,
+              "launch_fail_bits": 1,
+              "capture_fail_bits": 0,
+              "max_launch": 273.10745,
+              "max_capture": null
+            },
+            "kvd_ts": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 148.54397000000006,
+              "max_capture": null
+            },
+            "kvd_wbase": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 168.23708,
+              "max_capture": null
+            },
+            "kvd_wcs": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 158.07168000000001,
+              "max_capture": null
+            },
+            "m_fidx_o": {
+              "bits": 18,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 146.30441000000008,
+              "max_capture": null
+            },
+            "m_fval_o": {
+              "bits": 32,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": 147.18966,
+              "max_capture": null
+            },
+            "pos": {
+              "bits": 18,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 162.19342999999998
+            },
+            "prog_base": {
+              "bits": 12,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 149.73318999999998
+            },
+            "pw_addr": {
+              "bits": 10,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 149.30615999999998
+            },
+            "pw_data": {
+              "bits": 64,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 162.95914
+            },
+            "ret": {
+              "bits": 95,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 13,
+              "max_launch": null,
+              "max_capture": 277.46064
+            },
+            "token": {
+              "bits": 18,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 150.56759999999997
+            },
+            "x_oacc": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 150.85434999999995
+            },
+            "x_oprog": {
+              "bits": 16,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 153.50192999999996
+            },
+            "x_orows": {
+              "bits": 16,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": 151.45585
+            }
+          },
+          "clock_boundary_addends": {
+            "clk": {
+              "launch": 25.80000000000001,
+              "capture": 21.69999999999999
+            }
+          }
+        },
+        "ss": {
+          "clock_refs": {
+            "clk": {
+              "rise": 716.1,
+              "fall": 801.202445,
+              "min": 580.86115,
+              "max": 747.5127,
+              "src": "insertion.json boundary mean",
+              "bmin": 662.9,
+              "bmax": 747.5,
+              "n": 873
+            }
+          },
+          "launch_bits": 634,
+          "capture_bits": 233,
+          "launch_fail_bits": 634,
+          "capture_fail_bits": 233,
+          "worst_launch": [
+            512.4931399999999,
+            "kvd_tiles[8]"
+          ],
+          "worst_capture": [
+            463.1966,
+            "rst_n"
+          ],
+          "buses": {
+            "c_fault": {
+              "bits": 1,
+              "launch_fail_bits": 1,
+              "capture_fail_bits": 0,
+              "max_launch": 354.86704,
+              "max_capture": null
+            },
+            "h_start": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 1,
+              "max_launch": null,
+              "max_capture": 242.73303000000004
+            },
+            "kv_ok": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 1,
+              "max_launch": null,
+              "max_capture": 260.94842
+            },
+            "kv_write_drained": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 1,
+              "max_launch": null,
+              "max_capture": 245.44503000000003
+            },
+            "kvd_kindk": {
+              "bits": 1,
+              "launch_fail_bits": 1,
+              "capture_fail_bits": 0,
+              "max_launch": 322.4495599999999,
+              "max_capture": null
+            },
+            "kvd_v": {
+              "bits": 1,
+              "launch_fail_bits": 1,
+              "capture_fail_bits": 0,
+              "max_launch": 394.42783,
+              "max_capture": null
+            },
+            "m_fin_o": {
+              "bits": 1,
+              "launch_fail_bits": 1,
+              "capture_fail_bits": 0,
+              "max_launch": 296.13131999999996,
+              "max_capture": null
+            },
+            "me_clk_en": {
+              "bits": 1,
+              "launch_fail_bits": 1,
+              "capture_fail_bits": 0,
+              "max_launch": 415.1641599999999,
+              "max_capture": null
+            },
+            "me_mem_ok": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 1,
+              "max_launch": null,
+              "max_capture": 229.70590000000004
+            },
+            "pw_v": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 1,
+              "max_launch": null,
+              "max_capture": 235.57223000000005
+            },
+            "rst_n": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 1,
+              "max_launch": null,
+              "max_capture": 463.1966
+            },
+            "x_oidle": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 1,
+              "max_launch": null,
+              "max_capture": 242.91039
+            },
+            "VDD": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "VSS": {
+              "bits": 1,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 0,
+              "max_launch": null,
+              "max_capture": null
+            },
+            "cmd": {
+              "bits": 380,
+              "launch_fail_bits": 380,
+              "capture_fail_bits": 0,
+              "max_launch": 414.91709000000003,
+              "max_capture": null
+            },
+            "kvd_js": {
+              "bits": 24,
+              "launch_fail_bits": 24,
+              "capture_fail_bits": 0,
+              "max_launch": 360.01437999999996,
+              "max_capture": null
+            },
+            "kvd_jsh": {
+              "bits": 3,
+              "launch_fail_bits": 3,
+              "capture_fail_bits": 0,
+              "max_launch": 320.61143000000004,
+              "max_capture": null
+            },
+            "kvd_k": {
+              "bits": 18,
+              "launch_fail_bits": 18,
+              "capture_fail_bits": 0,
+              "max_launch": 382.74912000000006,
+              "max_capture": null
+            },
+            "kvd_ks": {
+              "bits": 24,
+              "launch_fail_bits": 24,
+              "capture_fail_bits": 0,
+              "max_launch": 345.44503999999995,
+              "max_capture": null
+            },
+            "kvd_nout": {
+              "bits": 18,
+              "launch_fail_bits": 18,
+              "capture_fail_bits": 0,
+              "max_launch": 361.9438200000001,
+              "max_capture": null
+            },
+            "kvd_pos": {
+              "bits": 18,
+              "launch_fail_bits": 18,
+              "capture_fail_bits": 0,
+              "max_launch": 378.11765,
+              "max_capture": null
+            },
+            "kvd_split": {
+              "bits": 4,
+              "launch_fail_bits": 4,
+              "capture_fail_bits": 0,
+              "max_launch": 351.57174999999995,
+              "max_capture": null
+            },
+            "kvd_tiles": {
+              "bits": 18,
+              "launch_fail_bits": 18,
+              "capture_fail_bits": 0,
+              "max_launch": 512.4931399999999,
+              "max_capture": null
+            },
+            "kvd_ts": {
+              "bits": 24,
+              "launch_fail_bits": 24,
+              "capture_fail_bits": 0,
+              "max_launch": 345.65829999999994,
+              "max_capture": null
+            },
+            "kvd_wbase": {
+              "bits": 24,
+              "launch_fail_bits": 24,
+              "capture_fail_bits": 0,
+              "max_launch": 374.04697,
+              "max_capture": null
+            },
+            "kvd_wcs": {
+              "bits": 24,
+              "launch_fail_bits": 24,
+              "capture_fail_bits": 0,
+              "max_launch": 346.5546599999999,
+              "max_capture": null
+            },
+            "m_fidx_o": {
+              "bits": 18,
+              "launch_fail_bits": 18,
+              "capture_fail_bits": 0,
+              "max_launch": 346.23312999999996,
+              "max_capture": null
+            },
+            "m_fval_o": {
+              "bits": 32,
+              "launch_fail_bits": 32,
+              "capture_fail_bits": 0,
+              "max_launch": 340.8005099999999,
+              "max_capture": null
+            },
+            "pos": {
+              "bits": 18,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 18,
+              "max_launch": null,
+              "max_capture": 272.75665000000004
+            },
+            "prog_base": {
+              "bits": 12,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 12,
+              "max_launch": null,
+              "max_capture": 245.41729000000004
+            },
+            "pw_addr": {
+              "bits": 10,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 10,
+              "max_launch": null,
+              "max_capture": 245.40661
+            },
+            "pw_data": {
+              "bits": 64,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 64,
+              "max_launch": null,
+              "max_capture": 277.23635
+            },
+            "ret": {
+              "bits": 95,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 54,
+              "max_launch": null,
+              "max_capture": 371.19683000000003
+            },
+            "token": {
+              "bits": 18,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 12,
+              "max_launch": null,
+              "max_capture": 248.08511000000004
+            },
+            "x_oacc": {
+              "bits": 24,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 24,
+              "max_launch": null,
+              "max_capture": 247.88598000000002
+            },
+            "x_oprog": {
+              "bits": 16,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 16,
+              "max_launch": null,
+              "max_capture": 251.67251000000005
+            },
+            "x_orows": {
+              "bits": 16,
+              "launch_fail_bits": 0,
+              "capture_fail_bits": 16,
+              "max_launch": null,
+              "max_capture": 248.50686000000002
+            }
+          },
+          "clock_boundary_addends": {
+            "clk": {
+              "launch": 31.399999999999977,
+              "capture": 53.200000000000045
+            }
+          }
+        }
+      }
+    }
+  ]
+}

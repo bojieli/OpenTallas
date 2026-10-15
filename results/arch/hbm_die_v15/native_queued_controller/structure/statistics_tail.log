@@ -1,0 +1,80 @@
+6.28. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hbm_svc_native_sector_queued_stack..
+
+6.29. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hbm_svc_native_sector_queued_stack.
+
+6.30. Finished OPT passes. (There is nothing left to do.)
+
+7. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hbm_svc_native_sector_queued_stack..
+
+9. Printing statistics.
+
+=== ot_hbm_svc_native_sector_queued_stack ===
+
+   Number of wires:             176821
+   Number of wire bits:         1065976
+   Number of public wires:       32417
+   Number of public wire bits:  553124
+   Number of ports:                 30
+   Number of port bits:          38659
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:             179878
+     $add                         3648
+     $adff                        4096
+     $adffe                       6433
+     $and                         4640
+     $dffe                        4096
+     $eq                         39103
+     $ge                           320
+     $gt                          1024
+     $le                          2976
+     $logic_and                  24976
+     $logic_not                  10945
+     $logic_or                    3874
+     $lt                          3136
+     $mux                        35920
+     $ne                           416
+     $neg                           32
+     $not                         1504
+     $or                          2624
+     $pmux                        2432
+     $reduce_and                  2432
+     $reduce_bool                11745
+     $reduce_or                   1570
+     $scopeinfo                     32
+     $shift                         64
+     $shiftx                      4160
+     $shl                         1216
+     $sub                         6336
+     $xor                          128
+
+10. Executing JSON backend.
+	Command being timed: "yosys -Q -T -s structure.ys"
+	User time (seconds): 145.92
+	System time (seconds): 4.01
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 2:29.99
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 2341324
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 1560010
+	Voluntary context switches: 118
+	Involuntary context switches: 902
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 468304
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

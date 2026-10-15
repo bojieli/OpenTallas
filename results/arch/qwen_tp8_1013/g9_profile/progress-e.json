@@ -1,0 +1,17 @@
+{
+  "time": "2026-10-14T08:18:30.789900+00:00",
+  "pid": 4119778,
+  "method": "py-spy0.4.2 --nonblocking read-only",
+  "active_function": "bfs",
+  "caller_line": 3356,
+  "repair_idx": "6544",
+  "plan": "ts_ES_6_0",
+  "progress": "Original bounded work/rip-up pass has advanced to its final <=3 retry rounds (caller line3356). Index decrease from6573 to6544 reflects retry pass, not restart or infinite search. No source mutation or duplicate/cancel.",
+  "caller_locals": {
+    "_rnd": "0",
+    "pend": "[6452, 6453, 6454, 6455, 6456, 6457, 6458, 6459, 6460, 6461, 6462, 6463, 6464, 6465, 6466, 6467, 6468, 6469, 6470, 6471, ...]",
+    "got_": null,
+    "rounds": "40",
+    "retry_log": "[]"
+  }
+}

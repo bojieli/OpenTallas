@@ -1,0 +1,118 @@
+{
+ "name": "s81_pq_endpoint_phw10",
+ "top": "ot_s81_pq_command_endpoint",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_static_control/ot_s81_pq_command_endpoint.sv",
+  "physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv"
+ ],
+ "params": {
+  "PHW": 10,
+  "PINREG": 1
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 129.6,
+  "h": 129.6
+ },
+ "pins": {
+  "N": [],
+  "S": [
+   "ck",
+   "rst_n"
+  ],
+  "E": [
+   "c_cmd",
+   "f_desc_pw",
+   "c_done",
+   "c_st",
+   "image_sealed"
+  ],
+  "W": [
+   "t_iss",
+   "f_iss"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 16
+ },
+ "structural_change": "Actual explicit producer/reader inputcapture, fixed +1 calendar and +1 command capture, external command completion35 versus33 baseline. Controllerstate leaf removes35 purecombin ROMaddress bypasses; direct realregisteredproducer wires ownphase/stream ROMaddresses. No timingchecks weakened. Larger slots are independent nativeCTS grants only, not adopted fullparent geometry. | 10-15 S-ELEM-B: native audit of the closed reader view (04adae0ce) failed only rst_n capture 400.2 > 190 ps (port reset drove the flops directly: recovery 288 + R 112). PINREG now routes the port reset through a registered ot_rst_relay (async assert, release +3 edges, initialization only; no production-cycle change).",
+ "slot_change_request": {
+  "name": "s81-expanded-native-PQ-row-1015",
+  "owner": "/root/s_die/mix4_sizing",
+  "outline": [
+   129.6,
+   129.6
+  ],
+  "pin_faces": {
+   "N": [],
+   "S": [
+    "ck",
+    "rst_n"
+   ],
+   "E": [
+    "c_cmd",
+    "f_desc_pw",
+    "c_done",
+    "c_st",
+    "image_sealed"
+   ],
+   "W": [
+    "t_iss",
+    "f_iss"
+   ]
+  },
+  "basis": "10-15 S-ELEM-B: CTS gate in the granted 259.2 square at util 8% gave reg->reg -21.0 ps (f_iss[22]) from sparse placement; same faces in a 129.6 square inside the granted slot (E 133 bits, W 131 bits at 2 tracks = 38 um)."
+ },
+ "job": {
+  "peak_ram_gb": 16,
+  "views_to": "physical/ref_tile/s81_pq_endpoint_phw10/views",
+  "record_to": "results/rtl/ref_tile/s81_pq_endpoint_phw10",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_static_control",
+   "rtl/dsrom_sys/s81_die_bind",
+   "rtl/dsrom_sys/s81_ph/pq",
+   "rtl/test/dsrom_sys",
+   "physical/s81_pq_hier/pinned",
+   "tools/s81",
+   "tools/s81_static_control",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8"
+  ],
+  "benches": [
+   {
+    "name": "actual_produced_component",
+    "cmd": "python3 tools/s81/pq_canonical_pins_gate.py --produced --work {RUN}/produced_exact",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "PRODUCED PASS"
+   },
+   {
+    "name": "actual_phase_source_mutant",
+    "cmd": "python3 tools/s81/pq_canonical_pins_gate.py --produced --mut PHW --work {RUN}/produced_mutant && {RUN}/produced_mutant/obj/Vtb_s81_pq_produced_pins +OT_ROM_DIR={RUN}/produced_mutant",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "PRODUCED FAIL"
+   }
+  ]
+ },
+ "defines": [
+  "OT_PQ_ROM_PORTS"
+ ],
+ "macros": []
+}

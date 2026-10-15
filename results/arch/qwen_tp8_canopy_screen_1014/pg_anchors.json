@@ -1,0 +1,106 @@
+{
+ "phy_EN": {
+  "grid": "pg_m5_0",
+  "following_commands": [
+   "add_pdn_stripe -grid pg_m5_0 -layer M5 -width .504 -pitch 9.091 -offset 5.041",
+   "add_pdn_connect -grid pg_m5_0 -layers {M4 M5}",
+   "add_pdn_connect -grid pg_m5_0 -layers {M5 M8}"
+  ]
+ },
+ "phy_ES": {
+  "grid": "pg_m5_0",
+  "following_commands": [
+   "add_pdn_stripe -grid pg_m5_0 -layer M5 -width .504 -pitch 9.091 -offset 5.041",
+   "add_pdn_connect -grid pg_m5_0 -layers {M4 M5}",
+   "add_pdn_connect -grid pg_m5_0 -layers {M5 M8}"
+  ]
+ },
+ "phy_WN": {
+  "grid": "pg_m5_1",
+  "following_commands": [
+   "add_pdn_stripe -grid pg_m5_1 -layer M5 -width .504 -pitch 9.091 -offset 6.969",
+   "add_pdn_connect -grid pg_m5_1 -layers {M4 M5}",
+   "add_pdn_connect -grid pg_m5_1 -layers {M5 M8}"
+  ]
+ },
+ "phy_WS": {
+  "grid": "pg_m5_1",
+  "following_commands": [
+   "add_pdn_stripe -grid pg_m5_1 -layer M5 -width .504 -pitch 9.091 -offset 6.969",
+   "add_pdn_connect -grid pg_m5_1 -layers {M4 M5}",
+   "add_pdn_connect -grid pg_m5_1 -layers {M5 M8}"
+  ]
+ },
+ "clk_rx": {
+  "grid": "pg_m8_154",
+  "following_commands": [
+   "add_pdn_stripe -grid pg_m8_154 -layer M8 -width .48 -pitch 9.091 -offset 0.471",
+   "add_pdn_connect -grid pg_m8_154 -layers {M7 M8}",
+   "add_pdn_connect -grid pg_m8_154 -layers {M8 M9}"
+  ]
+ },
+ "tt_up4_0": {
+  "grid": "pg_m8_517",
+  "following_commands": [
+   "add_pdn_stripe -grid pg_m8_517 -layer M8 -width .48 -pitch 9.091 -offset 1.632",
+   "add_pdn_connect -grid pg_m8_517 -layers {M7 M8}",
+   "add_pdn_connect -grid pg_m8_517 -layers {M8 M9}"
+  ]
+ },
+ "seq": {
+  "grid": "pg_m8_751",
+  "following_commands": [
+   "add_pdn_stripe -grid pg_m8_751 -layer M8 -width .48 -pitch 9.091 -offset 2.343",
+   "add_pdn_connect -grid pg_m8_751 -layers {M7 M8}",
+   "add_pdn_connect -grid pg_m8_751 -layers {M8 M9}"
+  ]
+ },
+ "sp_band_lanes_1": {
+  "grid": "pg_m8_890",
+  "following_commands": [
+   "add_pdn_stripe -grid pg_m8_890 -layer M8 -width .48 -pitch 9.091 -offset 2.772",
+   "add_pdn_connect -grid pg_m8_890 -layers {M7 M8}",
+   "add_pdn_connect -grid pg_m8_890 -layers {M8 M9}"
+  ]
+ },
+ "pll": {
+  "grid": "pg_m8_1496",
+  "following_commands": [
+   "add_pdn_stripe -grid pg_m8_1496 -layer M8 -width .48 -pitch 9.091 -offset 4.694",
+   "add_pdn_connect -grid pg_m8_1496 -layers {M7 M8}",
+   "add_pdn_connect -grid pg_m8_1496 -layers {M8 M9}"
+  ]
+ },
+ "sp_port_tiles_1_f1": {
+  "grid": "pg_m8_1966",
+  "following_commands": [
+   "add_pdn_stripe -grid pg_m8_1966 -layer M8 -width .48 -pitch 9.091 -offset 6.116",
+   "add_pdn_connect -grid pg_m8_1966 -layers {M7 M8}",
+   "add_pdn_connect -grid pg_m8_1966 -layers {M8 M9}"
+  ]
+ },
+ "sp_port_tiles_1": {
+  "grid": "pg_m8_2148",
+  "following_commands": [
+   "add_pdn_stripe -grid pg_m8_2148 -layer M8 -width .48 -pitch 9.091 -offset 6.710",
+   "add_pdn_connect -grid pg_m8_2148 -layers {M7 M8}",
+   "add_pdn_connect -grid pg_m8_2148 -layers {M8 M9}"
+  ]
+ },
+ "embgw": {
+  "grid": "pg_m8_2211",
+  "following_commands": [
+   "add_pdn_stripe -grid pg_m8_2211 -layer M8 -width .48 -pitch 9.091 -offset 6.901",
+   "add_pdn_connect -grid pg_m8_2211 -layers {M7 M8}",
+   "add_pdn_connect -grid pg_m8_2211 -layers {M8 M9}"
+  ]
+ },
+ "tt_ctlm": {
+  "grid": "pg_m8_2900",
+  "following_commands": [
+   "add_pdn_stripe -grid pg_m8_2900 -layer M8 -width .48 -pitch 9.091 -offset 9.083",
+   "add_pdn_connect -grid pg_m8_2900 -layers {M7 M8}",
+   "add_pdn_connect -grid pg_m8_2900 -layers {M8 M9}"
+  ]
+ }
+}

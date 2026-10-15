@@ -1,0 +1,148 @@
+{
+ "name": "qfd_vm_qcommit",
+ "top": "qfd_vm_qcommit",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv",
+  "rtl/hdc/ot_hdc_delay.sv"
+ ],
+ "params": {
+  "LAW": 8
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n",
+  "bank_rst_n"
+ ],
+ "outline": {
+  "w": 12.96,
+  "h": 30.24,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "W": [
+   "bank_rst_n",
+   "we",
+   "wl",
+   "wm"
+  ],
+  "E": [
+   "cv",
+   "cl",
+   "cm"
+  ],
+  "S": [
+   "ck",
+   "rst_n"
+  ]
+ },
+ "route": {
+  "pd": 0.52,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "m5_pg_pitch": 2.7
+ },
+ "recipe": 2,
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "job": {
+  "owner": "Claude:q_compute_die",
+  "branch": "claude/qwen-split-compute-1014",
+  "tag": "raw2",
+  "purpose": "39real raw SRAM consume observers banks24..62; independent root at each actual macro consumeedge; raw2: M5 PG pitch 2.7 (raw1 CLOSED TT+343.68/FF+28.97 but export child_lint (b) FAIL: 2 M5 stripes/net span 42% < 50% of the 12.96-um width, collect crashed twice)",
+  "views_to": "physical/ref_tile/qfd_vm_qcommit/views",
+  "record_to": "results/rtl/ref_tile/qfd_vm_qcommit",
+  "extra_paths": [
+   "rtl/qwen_sys/vm_nox_20261014",
+   "rtl/qwen_sys/vm_me_20261008",
+   "rtl/qwen_sys/vm_plane_20261013",
+   "rtl/qwen_sys/vm_die_split_20261012",
+   "rtl/qwen_sys/rtl_finish_20261007",
+   "rtl/qwen_sys/dvm_20261014",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/physical/ot_qwen_tree_delay.sv",
+   "rtl/physical/ot_qwen_tree_delay_tiles.sv",
+   "rtl/qwen_split/qfd_su_vm_pack.sv",
+   "tools/qwen_tp8/vm_die_static_bench.sh",
+   "tools/qwen_tp8/vm_attention_commit_gate.sh",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "benches": [
+   {
+    "name": "actual_macro_consumption_and_eight_fault_mutants",
+    "cmd": "bash tools/qwen_tp8/vm_attention_commit_gate.sh {RUN}/bench/raw_commit",
+    "expect": "pass",
+    "pass_regex": "^PASS vm_die_static",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "actual_macro_missing_commit_mutant",
+    "cmd": "ulimit -c 0; {RUN}/bench/raw_commit/obj/Vtb_qfd_vm_die_static +COMMIT_MUT=1",
+    "expect": "fail",
+    "fail_regex": "FAIL",
+    "threads": 1,
+    "peak_ram_gb": 4
+   }
+  ]
+ },
+ "slot_change_request": "Compute die e145a3a9f assigns39homes and exact53pins at12.96x30.24, all448existingclosedVMleaves unchanged; oldQ-filtered observer is not raw-ABI nativequalification.",
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "io_tcl": "physical/ref_tile/qfd_vm_qcommit/assigned_pins.tcl",
+ "pin_ranges": {
+  "bank_rst_n": [
+   5.004,
+   5.004
+  ],
+  "we": [
+   5.484,
+   5.484
+  ],
+  "wl": [
+   5.964,
+   6.636
+  ],
+  "wm": [
+   7.116,
+   8.556
+  ],
+  "cv": [
+   5.004,
+   5.004
+  ],
+  "cl": [
+   5.484,
+   6.156
+  ],
+  "cm": [
+   6.636,
+   8.076
+  ],
+  "ck": [
+   3.036,
+   3.036
+  ],
+  "rst_n": [
+   7.932,
+   7.932
+  ]
+ }
+}

@@ -1,0 +1,247 @@
+{
+  "schema": "opentallas.coordination-coverage-audit.v1",
+  "generated": "2026-10-15T06:50:56.583569+00:00",
+  "origin_main": "cec5f41568df1f051324d30ffcf5a877151754b2",
+  "scope": "Bounded hand-back orphan/source publication audit, not full-goal completion or runtime/native qualification",
+  "method": "Compare actual changed non-result paths against current origin/main; absence of commit ancestry alone is not treated as a gap. Owner direct replies distinguish recovery and supersession.",
+  "sources": [
+    "HANDOFF0ao",
+    "HANDOFF0ak",
+    "CODEX_TAKEOVER HAND-BACKFINAL21:14",
+    "current git objects and origin/main",
+    "current agent direct ownership replies"
+  ],
+  "gaps": [
+    {
+      "gap": "q_dense_controller_program",
+      "priority": 0,
+      "ownership_evidence": "Assigned during audit: q_control_host imports current denseTT01b/8823 actual source and fresh proof; publisher coordinates publication; q_native_compute retains actualmath workload only",
+      "recommended_owner": "q_control_host implementation plus publisher source publication",
+      "next_action": "Actual dense loader, fixed issuer and dense_image generator absent; prepared old publication must preserve current receiver and resolve controller dependencies.",
+      "source_comparisons": [
+        {
+          "commit": "01b82960c",
+          "missing_source_paths": [
+            "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_dense_pw_loader.sv",
+            "rtl/qwen_sys/static_schedule_20261014/DENSE_IMAGE.md",
+            "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv",
+            "tools/qwen_split/check_dense_image.py",
+            "tools/qwen_static_schedule/dense_image.py"
+          ],
+          "changed_source_paths": [
+            "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv",
+            "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+            "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_parent.sv",
+            "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv",
+            "rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_static_s.sv",
+            "rtl/qwen_sys/static_schedule_20261014/tb_qfd_static_head_face.sv",
+            "tools/qwen_split/check_static_internal.py",
+            "tools/qwen_split/static_slot.py",
+            "tools/qwen_split/static_successor.py"
+          ],
+          "identical_source_paths": []
+        }
+      ]
+    },
+    {
+      "gap": "q_embedding_gateway",
+      "priority": 0,
+      "ownership_evidence": "Assigned during audit: native_embedding current controller proof3547a2cc4; publisher/gateway_publication helper owns selective current3221/05abb/4d301 source closure, q_collective controller owner",
+      "recommended_owner": "publisher/gateway_publication with native_embedding/q_collective and q_kv_die reservation input",
+      "next_action": "Selected data images on main do not include gateway/consumer/returnchain source. Rebind current controller3221e4f5e/05abb24df/4d3012900; do not import historical3e07.",
+      "source_comparisons": [
+        {
+          "commit": "44de63ad9",
+          "missing_source_paths": [
+            "rtl/qwen_sys/static_embedding_20261014/ot_qfd_su_embed_static.sv",
+            "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join.sv",
+            "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_map.sv",
+            "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_pc.sv",
+            "rtl/qwen_sys/static_embedding_20261014/test/run_consumer_gate.sh",
+            "rtl/qwen_sys/static_embedding_20261014/test/tb_static_embed_consumer.sv",
+            "tools/qwen_embedding_static_vectors.py"
+          ],
+          "changed_source_paths": [],
+          "identical_source_paths": []
+        },
+        {
+          "commit": "ba6b65503",
+          "missing_source_paths": [
+            "rtl/qwen_sys/static_embedding_20261014/README.md",
+            "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_preload_face.sv",
+            "rtl/qwen_sys/static_embedding_20261014/test/run_controller_gate.sh",
+            "rtl/qwen_sys/static_embedding_20261014/test/run_join_consumer_gate.sh",
+            "rtl/qwen_sys/static_embedding_20261014/test/tb_static_embed_controller.sv",
+            "rtl/qwen_sys/static_embedding_20261014/test/tb_static_embed_join_consumer.sv",
+            "tools/qwen_embedding_static_vectors.py"
+          ],
+          "changed_source_paths": [],
+          "identical_source_paths": []
+        },
+        {
+          "commit": "f6a9279b9",
+          "missing_source_paths": [],
+          "changed_source_paths": [],
+          "identical_source_paths": []
+        },
+        {
+          "commit": "751b5714e",
+          "missing_source_paths": [
+            "rtl/qwen_sys/static_embedding_20261014/test/run_controller_gate.sh",
+            "rtl/qwen_sys/static_embedding_20261014/test/tb_static_embed_controller.sv",
+            "rtl/qwen_sys/static_embedding_20261014/test/tb_static_embed_join_consumer.sv"
+          ],
+          "changed_source_paths": [],
+          "identical_source_paths": []
+        },
+        {
+          "commit": "d1df72ef8",
+          "missing_source_paths": [
+            "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_return_hop.sv",
+            "rtl/qwen_sys/static_embedding_20261014/test/tb_static_embed_return_chain.sv"
+          ],
+          "changed_source_paths": [],
+          "identical_source_paths": []
+        },
+        {
+          "commit": "ef7c07d8c",
+          "missing_source_paths": [
+            "tools/qwen_kv_die/embedding_return_geometry.py"
+          ],
+          "changed_source_paths": [],
+          "identical_source_paths": []
+        }
+      ]
+    },
+    {
+      "gap": "q_static_su_host_context",
+      "priority": 1,
+      "ownership_evidence": "q_control_host active",
+      "recommended_owner": "q_control_host",
+      "next_action": "Author canonical8f683cb87/c8492f8dd/179d incorporates actual SU wrapper/typed contexts; hold oldqfd_seq historical edit. Currentnewbundle pending publication.",
+      "source_comparisons": [
+        {
+          "commit": "4453fac5c",
+          "missing_source_paths": [
+            "rtl/qwen_split/qfd_seq_su_static.sv",
+            "rtl/qwen_sys/static_schedule_20261014/ot_qfd_seq_su_bi_static.sv",
+            "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv",
+            "rtl/test/qwen_split/tb_qfd_su_static_internal.sv",
+            "tools/qwen_split/run_su_static_internal_gate.sh"
+          ],
+          "changed_source_paths": [],
+          "identical_source_paths": []
+        },
+        {
+          "commit": "e0c3e70c4",
+          "missing_source_paths": [
+            "rtl/qwen_sys/context_transport_20261014/README.md",
+            "rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv",
+            "rtl/qwen_sys/context_transport_20261014/tb_qkd_context_records.sv",
+            "rtl/qwen_sys/context_transport_20261014/tb_qkd_program_records.sv",
+            "tools/qwen_split/check_context_records.py"
+          ],
+          "changed_source_paths": [],
+          "identical_source_paths": []
+        }
+      ]
+    },
+    {
+      "gap": "hbm_serdes_hostphy",
+      "priority": 1,
+      "ownership_evidence": "H-DIE direct confirmation: root owns actual HOST digital recovery; dedicated SerDes geometry/source join owner still needed; H-DIE owns full197master32SM candidate only",
+      "recommended_owner": "h_die endpoint owner",
+      "next_action": "Three actual rootedSerDes487 source/bench files absent; source_plan host slot request is proposal, cannot publish with invented slot. Actual R0 endpoint2924x831um does not fit old HOST594x16824/SerDes260x1652 footprint; new shape needs repack.",
+      "source_comparisons": [
+        {
+          "commit": "fe3cbf1e8",
+          "missing_source_paths": [
+            "rtl/hbm_accel/io_native_20261014/hfd_serdes487_rooted.sv",
+            "rtl/hbm_accel/io_native_20261014/run_endpoint_kp4_rooted.sh",
+            "rtl/hbm_accel/io_native_20261014/tb_hbm_endpoint_kp4_rooted.sv"
+          ],
+          "changed_source_paths": [],
+          "identical_source_paths": []
+        }
+      ]
+    },
+    {
+      "gap": "s81_fmt1_predecessor",
+      "priority": 2,
+      "ownership_evidence": "s_static_collective active",
+      "recommended_owner": "s_static_collective",
+      "next_action": "Most actual protocol source superseded/current, but predecessor fullTP4 bench/check_fmt1 absent; ask owner whether intentionallyhistorical; no restore merely because commitnotancestor.",
+      "source_comparisons": [
+        {
+          "commit": "384093197",
+          "missing_source_paths": [
+            "rtl/dsrom_sys/s81_static_collective/tb_s81_static_fmt1_tp4.sv",
+            "tools/s81_static_collective/check_fmt1.py"
+          ],
+          "changed_source_paths": [],
+          "identical_source_paths": [
+            "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_codec.sv",
+            "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_core.sv",
+            "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_gearbox.sv",
+            "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_lane.sv",
+            "rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_rank.sv",
+            "tools/s81_static_collective/calendar.py"
+          ]
+        }
+      ]
+    },
+    {
+      "gap": "s81_embedding_image_verifier",
+      "priority": 1,
+      "ownership_evidence": "native_embedding active",
+      "recommended_owner": "native_embedding",
+      "next_action": "Full released-image verifier source absent; latest6396f761d recovers exact single2SRAM expander, finalmutants running. Audit source branch and publish exactfinalbundle.",
+      "source_comparisons": [
+        {
+          "commit": "5fb647d11",
+          "missing_source_paths": [
+            "tools/s81_embedding/verify_full_images.py"
+          ],
+          "changed_source_paths": [],
+          "identical_source_paths": []
+        }
+      ]
+    },
+    {
+      "gap": "hbm_attention_quant_idx",
+      "priority": 0,
+      "ownership_evidence": "H-ELEM-A explicitly excludes IDX/attention/quant; h_hc_sfu excludes quant/attention; H-ELEM-B completed SU census/TOPK handoff without confirmation of current attention/quant work",
+      "recommended_owner": "dedicated HBM attention/quant owner if H-ELEM-B cannotcover",
+      "next_action": "Old HBM attentionhi/lo fullrepack/VM/quantPAY successors require explicit active ownership beyond SU/TOPK.",
+      "source_comparisons": []
+    },
+    {
+      "gap": "s81_mtp",
+      "priority": 0,
+      "ownership_evidence": "s_func confirmation pending",
+      "recommended_owner": "s_func or dedicated nativeMTP owner",
+      "next_action": "FirstreleaseDeepSeekMTP explicitlyrequired; rootmapsMIX/head to s_func but dedicatedMTP ownership mustbeconfirmed.",
+      "source_comparisons": []
+    },
+    {
+      "gap": "q_attention_hcp_hc_sfu",
+      "priority": 1,
+      "ownership_evidence": "root explicitly assigned q_kv_die/q_func/h_hc_sfu",
+      "recommended_owner": "existing active owners",
+      "next_action": "Nativeattention/controllercalendar, HCP/HC partition and HBMHC/SFU are open but assigned; do not call orphan or duplicate livebuilds.",
+      "source_comparisons": []
+    }
+  ],
+  "ownership_changes_are_completion": false,
+  "followup_as_of": "2026-10-15T07:35:45.069550+00:00",
+  "followup_note": "Original comparisons above are an immutable dated source-orphan snapshot; follow-up ownership does not prove goal completion.",
+  "followup_ownership": {
+    "q_dense": "q_control_host actual current HOST/sequence/dense consumer, source published, outer static sequencer still being repaired",
+    "q_embedding": "gateway/controller dependency closure published2dd60186a; native_embedding current real source/calendar/profile work active",
+    "s81_mtp": "s_mtp explicitly owns first-release native MTP, W/E/K256/cache components published419f74804; complete actual head recursion/accept/reject calendar remains open",
+    "hbm_attention": "h_attention_quant explicitly resumed actual fixed-calendar controller rewrite; static_quant_engine active component source published87e0acece",
+    "hbm_idx": "h_idx actual fixed-pass selector component source published50f6b0b7f; full actual INDEX/VM path qualification remains open",
+    "hbm_hostphy": "root FEC/digital recovery candidate published, actual HOST clock/slot/geometry remains unqualified",
+    "s81_field": "q_native_compute assigned actual released canonical FIELD production composition;1792-pathfinding results do not qualify2417-pair target"
+  }
+}

@@ -1,0 +1,31 @@
+FAIL cyc=1222 x_fault
+FAIL cyc=1223 x_fault
+FAIL cyc=1224 x_fault
+FAIL cyc=1222 x_fault
+FAIL cyc=1223 x_fault
+FAIL cyc=1224 x_fault
+FAIL cyc=1225 x_fault
+FAIL cyc=1226 x_fault
+FAIL cyc=1227 x_fault
+FAIL cyc=1228 x_fault
+FAIL cyc=1229 x_fault
+FAIL cyc=1230 x_fault
+FAIL cyc=1231 x_fault
+FAIL cyc=1232 x_fault
+FAIL cyc=1233 x_fault
+FAIL cyc=1234 x_fault
+FAIL cyc=1235 x_fault
+FAIL cyc=1236 x_fault
+FAIL cyc=1237 x_fault
+FAIL cyc=1238 x_fault
+FAIL cyc=1239 x_fault
+FAIL cyc=1240 x_fault
+FAIL cyc=1241 x_fault
+FAIL errors=1309 checks=4571136
+FAIL errors=1309 checks=4571136
+- rtl/qwen_sys/dvm_20261014/tb_qfd_xdvm_prod.sv:211: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 136.531 s; speed 37.113 ns/s
+- Verilator: cpu 135.640 s on 1 threads; allocated 1043 MB
+ot-heavy: admitted on regular-crane as oth-ubuntu-3705767-1792000893 after 0 s
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3705767-1792000893): exit 0

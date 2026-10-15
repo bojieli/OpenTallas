@@ -1,0 +1,15 @@
+EXTRA die=0 cyc=553
+EXTRA die=1 cyc=553
+EXTRA die=2 cyc=553
+EXTRA die=3 cyc=553
+TP8SL dies=8 latu=37 lats=376 pu=14 ps=339 xu=0 xs=0 msgs=1 drop=-1 corrupt=-1 mismatches=8 extra=8 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=11111111 die_fault=11111111 words_out=2040 meas_lu=36 meas_ls=376 pr_overlap=0 issuer_done=00000000
+DIE 0 code=00100 cdc=00000000000000000001 abort=00000 cause=0000000000
+DIE 1 code=00100 cdc=00000000000000000001 abort=00000 cause=0000000000
+DIE 2 code=00100 cdc=00000000000000000001 abort=00000 cause=0000000000
+DIE 3 code=00100 cdc=00000000000000000001 abort=00000 cause=0000000000
+DIE 4 code=00100 cdc=00000000000000000001 abort=00000 cause=0000000000
+DIE 5 code=00100 cdc=00000000000000000001 abort=00000 cause=0000000000
+DIE 6 code=00100 cdc=00000000000000000001 abort=00000 cause=0000000000
+DIE 7 code=00100 cdc=00000000000000000001 abort=00000 cause=0000000000
+FAIL
+- /srv/opentallas-scratch/codex/qcoll-static-s2-1014/rtl/test/tb_coll_tp8_static_links.sv:351: Verilog $finish

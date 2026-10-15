@@ -1,0 +1,78 @@
+{
+  "schema": "opentallas.hbm.vm-static-ring4-memory.v1",
+  "bank_commit": "0334452c354ae46f8ed1671753f98f8579742711",
+  "source_sha256": {
+    "ot_vms_bank_static.sv": "7828d619da2fd2462cf0253b78c074dad1171e6ca77799bfc21f22987ed72237",
+    "tb_vms_static_ring4_memory.sv": "0bd55bfaa7359b1469fc193c0ed3745bbcc5b0f66e48d5a38934095c1ab42f32",
+    "run_vms_static_ring4_memory.sh": "d51c9a688d932b62a75f79c53d20e91b6250c600f86503270228dca8322f9ac8"
+  },
+  "stop_source": "/home/ubuntu/wt/hbm-vm-static-1014/rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv",
+  "stop_sha256": "02951e1f3e0d06fa2295c4851a9a26b57d639cfc75263e8adba28c2450e05e2a",
+  "macro_sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+  "command": "ot-run --mem 1 --threads 1 --dir /tmp/hbm-static-ring4-memory-input -- bash run_vms_static_ring4_memory.sh /tmp/hbm-static-ring4-memory-run1",
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-2485679-1792046007",
+  "exit": 0,
+  "scope": "Four actual static banks, twelve real physically mapped SRAM macro functional models, eight actual static ring stops; one representative bank0 per quadrant. No ideal on-chip memory or direct mirror payload injection.",
+  "physical_sid_order": [
+    0,
+    1,
+    3,
+    2
+  ],
+  "result": "PASS",
+  "coverage": {
+    "mirror_sources": 4,
+    "remote_actual_macro_commits": 12,
+    "wack": 12,
+    "readbacks": 32,
+    "cycles": 180,
+    "main_words": "distinct per quadrant, unchanged by mirror propagation",
+    "mirror_words": "source changed each transaction, identical on all four actual SRAM readbacks",
+    "ack_counts_per_source": {
+      "dir0": 1,
+      "dir1": 2
+    },
+    "outstanding": "all zero after each transaction",
+    "faults": 0
+  },
+  "compiler_schedule_offsets": {
+    "source_bank_request": 0,
+    "source_bank_egress": 1,
+    "mirror_tx_slot": 2,
+    "mirror_link_out": 3,
+    "cw_neighbor_forward_tx_slot": 4,
+    "neighbor_xq": 5,
+    "neighbor_bank_owner_sample": 6,
+    "far_cw_xq": 7,
+    "far_cw_bank_owner_sample": 8,
+    "neighbor_macro_commit": 9,
+    "neighbor_wko": 10,
+    "far_cw_macro_commit": 11,
+    "neighbor_opposite_wack_tx_slot": 11,
+    "far_cw_wko": 12,
+    "far_cw_opposite_wack_tx_slot": 13,
+    "first_source_ack_both_directions": 14,
+    "wack_transit_tx_slot": 15,
+    "second_source_ack_dir1": 18,
+    "busy_drained_check": 25,
+    "read_mirror": 26,
+    "read_main": 27,
+    "mirror_response": 32,
+    "main_response": 33
+  },
+  "static_selection": "Only explicit phase/sid tx-source table and bank owner table; no observed validity, done or busy chooses execution. xq_done and opposite-stop WACK/ACK cross-connections use real outputs.",
+  "COMMIT_DELAY": 5,
+  "mutant": {
+    "kind": "origin node0 dir0 stop MUT1 corrupts mirror payload bit0",
+    "result": "EXPECTED_FAIL",
+    "cycle": 52,
+    "sid": 1,
+    "failure": "actual SRAM mirror readback differs by one bit"
+  },
+  "peak_rss_kib": {
+    "compile": 15148,
+    "simulate": 10592
+  },
+  "limitations": "Component composition proof. Only representative bank0 instantiated per quadrant. Packet replay/hub and full eight-bank slice plus physical closure remain separate qualification."
+}

@@ -1,0 +1,91 @@
+{
+ "name": "smh_tr_group_beat_w_ref",
+ "top": "ot_smh_tr_group_beat_w",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_compact_transport.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_group_masters.sv"
+ ],
+ "defines": [
+  "OT_SMH_RSTRELAY",
+  "OT_SMH_TRANSPORT_KEEP"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_a"
+ ],
+ "outline": {
+  "w": 216,
+  "h": 216
+ },
+ "pg_layer": "M6",
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "W": [
+   "d"
+  ],
+  "E": [
+   "last"
+  ],
+  "N": [
+   "clk",
+   "rst_a",
+   "north"
+  ],
+  "S": [
+   "south"
+  ]
+ },
+ "io_tcl": "physical/ref_tile_specs/smh/smh_tr_group_beat_w_ref_pins.tcl",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:H-ELEM-A",
+  "branch": "claude/hbm-smcompact-1014",
+  "tag": "keep1",
+  "structural_change": "Replace flat22862-sink compact parent and96tiny physical macros by six actual hardened transport groups, retaining all96logical128-bit/tail slices and exact4transit/1landingedges. Four master types; at most8429 logical clock sinks/root. Explicit20umchannels and actual3705bitface capacities priced before build. No clock/SDC waivers. Gate group1 merged north/south/transit q1 copies: pin_reg_split required >4096 clones and refused. Opt-in KEEP on q1 wires preserves the original distinct launch copies through ot_keep_regs cell-attribute hook; stage1 unused q2 stays unkept and optimized out. No raised splitter limit, clocks or cycles changed.",
+  "purpose": "Production beat_w transport group; source is true128bit/tail register slices with original reset masks/relay. Full original-reference4096cycle bench plus killed latency mutant. Native pin/root/parent packing unqualified until measured.",
+  "benches": [
+   {
+    "name": "group_exact",
+    "expect": "pass",
+    "pass_regex": "COMPACT EXACT PASS",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "cmd": "python3 tools/bench_smh_compact_transport.py --group-transport --verilator --local"
+   },
+   {
+    "name": "group_latency_mutant",
+    "expect": "fail",
+    "fail_regex": "COMPACT EXACT FAIL cycle=9",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "cmd": "python3 tools/bench_smh_compact_transport.py --group-transport --verilator --local --mutant"
+   }
+  ],
+  "views_to": "physical/ref_tile/smh_tr_group_beat_w_ref/views",
+  "record_to": "results/rtl/ref_tile/smh_tr_group_beat_w_ref"
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

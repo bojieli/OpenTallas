@@ -1,0 +1,140 @@
+{
+ "schema": "opentallas.native_pin_audit.single.v1",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one (main)",
+ "generated": "2026-10-14 21:50 PDT",
+ "results": [
+  {
+   "cell": "ot_hgi_idx_ix2_wp",
+   "view": "physical/ref_tile/hgi_ix2_wp/views/ot_hgi_idx_ix2_wp",
+   "job": "hgi_ix2_wp-r6-d1fae7fb6",
+   "R_ps": 252.6,
+   "spread_ps": 31.7,
+   "launch_ps": 197.2,
+   "capture_ps": 218.6,
+   "capture_over": {
+    "d_v": 218.6
+   },
+   "pass": false
+  },
+  {
+   "cell": "ot_hgi_topk_hub_tile",
+   "view": "physical/ref_tile/hgi_topk_hub_rt_j/views/ot_hgi_topk_hub_tile",
+   "job": "hgi_topk_hub_rt_j-j1-b19f38969",
+   "R_ps": 335.5,
+   "spread_ps": 55.8,
+   "launch_ps": 244.9,
+   "launch_over": {
+    "lt_pd_b[*]": [
+     104,
+     244.9
+    ],
+    "lt_pd_a[*]": [
+     54,
+     231.1
+    ],
+    "lt_k_a[*]": [
+     5,
+     222.4
+    ],
+    "out_d[*]": [
+     1,
+     220.7
+    ]
+   },
+   "capture_ps": 473.5,
+   "capture_over": {
+    "cmd_valid": [
+     1,
+     473.5
+    ],
+    "lt_mv_a[*]": [
+     4,
+     446.2
+    ],
+    "lt_mv_b[*]": [
+     4,
+     409.9
+    ],
+    "rst_n": [
+     1,
+     402.2
+    ],
+    "cmd_m[*]": [
+     32,
+     310.0
+    ],
+    "cmd_values": [
+     1,
+     278.9
+    ],
+    "cmd_n[*]": [
+     20,
+     273.5
+    ],
+    "cmd_param[*]": [
+     12,
+     267.2
+    ],
+    "lt_md_a[*]": [
+     66,
+     225.3
+    ],
+    "lt_md_b[*]": [
+     79,
+     219.6
+    ],
+    "lt_q_b[*]": [
+     2,
+     193.9
+    ],
+    "lt_q_a[*]": [
+     2,
+     192.4
+    ],
+    "cmd_unit[*]": [
+     1,
+     190.3
+    ]
+   },
+   "pass": false
+  },
+  {
+   "cell": "ot_hgi_sfu_ctl60lo",
+   "view": "physical/ref_tile/sfu_ctl60lo_ref/views/ot_hgi_sfu_ctl60lo",
+   "job": "sfu_ctl60lo_ref-c5-10c744afc",
+   "R_ps": 561.3,
+   "spread_ps": 85.2,
+   "launch_ps": 251.1,
+   "launch_over": {
+    "q[*]": [
+     9,
+     251.1
+    ],
+    "busy": [
+     1,
+     220.5
+    ]
+   },
+   "capture_ps": 414.2,
+   "capture_over": {
+    "rst_n": [
+     1,
+     414.2
+    ],
+    "tail_d[*]": [
+     60,
+     414.1
+    ],
+    "tail_v": [
+     1,
+     286.9
+    ],
+    "sfu[*]": [
+     3,
+     247.2
+    ]
+   },
+   "pass": false
+  }
+ ]
+}

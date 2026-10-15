@@ -1,0 +1,25 @@
+{
+  "mutant": false,
+  "cases": [
+    {
+      "omit": 0,
+      "rc": 0,
+      "output": "ISSUER PASS omit=0 fault=0 issued=8\n- /srv/opentallas-scratch/codex/qcoll-issuer-1014/rtl/test/tb_coll_cmd_issue.sv:32: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01\n- Verilator: $finish at 285ns; walltime 0.003 s; speed 58.396 us/s\n- Verilator: cpu 0.005 s on 1 threads; alloced 1017 MB\n"
+    },
+    {
+      "omit": 1,
+      "rc": 0,
+      "output": "ISSUER PASS omit=1 fault=1 issued=-1\n- /srv/opentallas-scratch/codex/qcoll-issuer-1014/rtl/test/tb_coll_cmd_issue.sv:32: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01\n- Verilator: $finish at 265ns; walltime 0.003 s; speed 64.171 us/s\n- Verilator: cpu 0.004 s on 1 threads; alloced 1017 MB\n"
+    },
+    {
+      "omit": 2,
+      "rc": 0,
+      "output": "ISSUER PASS omit=2 fault=1 issued=8\n- /srv/opentallas-scratch/codex/qcoll-issuer-1014/rtl/test/tb_coll_cmd_issue.sv:32: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01\n- Verilator: $finish at 265ns; walltime 0.004 s; speed 50.385 us/s\n- Verilator: cpu 0.005 s on 1 threads; alloced 1017 MB\n"
+    }
+  ],
+  "sources": {
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv": "0d533e9a09514840fac0628053fd1aaa501bccbffeaf8913afb6a936d1d994b1",
+    "rtl/rom/ot_coll_cmd_issue.sv": "c5e6e93b466c5901b06e9f84a618ee7bbdc19945a623ffe6d3bb8dae4dddd6fa",
+    "rtl/test/tb_coll_cmd_issue.sv": "207142f8d9515f58704bac8379ac8945b2d5a919c5c0718977a7a9d35a01cf6a"
+  }
+}

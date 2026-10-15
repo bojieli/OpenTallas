@@ -5,15 +5,21 @@ set -euo pipefail
 core=${1:?actual generated object directory with completed PCH}
 output=${2:?fresh probe output directory}
 [[ ! -e "$output" ]];mkdir -p "$output"
+core=$(realpath "$core")
+output=$(realpath "$output")
 pch=Vot_hdc_core_vector_weight_native_candidate__pch.h.fast
 # Flat LV6 needs its huge generated PCH. A hierarchical root is smaller and
 # Verilator does not necessarily emit a PCH: compile that actual header directly.
 pch_flags=()
-if [[ -s "$core/$pch.gch" ]]; then
+if [[ -d "$core/Vot_hdc_fadd" ]]; then
+ # Hierarchical PCHs are compiled with the model's optimization flags and may
+ # be incompatible with this deliberately small read-only probe.
+ :
+elif [[ -s "$core/$pch.gch" ]]; then
  pch_flags=(-Werror=invalid-pch -include "$core/$pch")
  sha256sum "$core/$pch.gch" > "$output/pch.sha256"
 else
- [[ -d "$core/Vot_hdc_fadd" ]] || { echo "flat core requires its generated PCH" >&2; exit 2; }
+ echo "flat core requires its generated PCH" >&2; exit 2
 fi
 vroot=/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator
 sha256sum src/core_instruction_probe.cpp src/core_instruction_probe.hpp "$core/Vot_hdc_core_vector_weight_native_candidate___024root.h" "$core/Vot_hdc_core_vector_weight_native_candidate.h" > "$output/inputs.sha256"

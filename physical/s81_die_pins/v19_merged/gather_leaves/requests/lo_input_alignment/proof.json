@@ -1,0 +1,86 @@
+{
+ "status": "REQUEST_NOT_ASSIGNED",
+ "source_generator_sha256": "3414ba8d4cec5073e3df5eaedd54c6829833bae80eeb4f63d8ac3c7c502e51a5",
+ "parent_assignment_sha256": "6ca6b9b45a2164619aeb7495f51dccc09f1f0dd1f33a10af5d9885ab78c2a4be",
+ "parent_assignment_source": "die owner c1c8cc079; prior data/leaf/control coordinates verified unchanged;133ck_r added",
+ "baseline_parent_assignment_sha256": "3fa9ee13a02e59badd51c4269d2036ceb62d82ccd821af558dc7c44f037119c6",
+ "RTL_mapping_sha256": "a9fac1757af2be78d250ca878ea986c4427880291e895d9a2f9da7aaa4a67bbd",
+ "baseline_accepted_commit": "0ef156eff",
+ "master_audit": {
+  "rw": {
+   "ports": 3423,
+   "changed": 828,
+   "same_layer_signal_overlaps": 0,
+   "same_layer_PG_overlaps": 0,
+   "unchanged_co_bits": 848,
+   "co_own_bits_preserved": 212,
+   "unchanged_clock_reset_status": true
+  },
+  "re": {
+   "ports": 3423,
+   "changed": 828,
+   "same_layer_signal_overlaps": 0,
+   "same_layer_PG_overlaps": 0,
+   "unchanged_co_bits": 848,
+   "co_own_bits_preserved": 212,
+   "unchanged_clock_reset_status": true
+  }
+ },
+ "instances": 32,
+ "whole_signal_bits": 109536,
+ "links": {
+  "clock_entry": {
+   "count": 32,
+   "baseline_max_manhattan_um": 786.978,
+   "requested_max_manhattan_um": 786.978,
+   "requested_max_euclidean_um": 786.396215
+  },
+  "outer_lane": {
+   "count": 8832,
+   "baseline_max_manhattan_um": 22.17,
+   "requested_max_manhattan_um": 22.17,
+   "requested_max_euclidean_um": 15.90925
+  },
+  "chain_seam": {
+   "count": 15264,
+   "baseline_max_manhattan_um": 30.42,
+   "requested_max_manhattan_um": 30.42,
+   "requested_max_euclidean_um": 22.657681
+  },
+  "status_seam": {
+   "count": 48,
+   "baseline_max_manhattan_um": 30.324,
+   "requested_max_manhattan_um": 30.324,
+   "requested_max_euclidean_um": 22.614728
+  },
+  "reset_seam": {
+   "count": 24,
+   "baseline_max_manhattan_um": 30.324,
+   "requested_max_manhattan_um": 30.324,
+   "requested_max_euclidean_um": 22.614728
+  },
+  "capture_boundary": {
+   "count": 6784,
+   "baseline_max_manhattan_um": 100.458,
+   "requested_max_manhattan_um": 100.458,
+   "requested_max_euclidean_um": 72.855205
+  },
+  "lane_seam": {
+   "count": 19872,
+   "baseline_max_manhattan_um": 39.348,
+   "requested_max_manhattan_um": 52.5,
+   "requested_max_euclidean_um": 37.124736
+  }
+ },
+ "failures": [],
+ "projection": "All existing logical per-bit links and parent coordinates preserved. Every leaf endpoint regenerated from its requested master point and accepted native origin. No source or consumed bit order change.",
+ "seam_effect": "EW seam channel horizontal26.004um plus ordinate26.496um =52.500um Manhattan, compared with39.156/39.348um baseline. Faces/layers unchanged; real route cut/PG/slew/reach/hold still owed.",
+ "owed": [
+  "Explicit die owner acceptance before any use",
+  "Actual pin-stage IOP/PG/LEF and native lattice validation",
+  "Placement legalizes staggered real FF D/Q positions; ideal94.998um midpoint is not physical reach proof",
+  "SS60/25/833.333 normalized per-bit setup/output max and hold/min pair budgets",
+  "Existing SS internal EV failure and macro214.4ps slew remain unresolved",
+  "No routed/adopted/qualified claim"
+ ]
+}

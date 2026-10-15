@@ -1,0 +1,30 @@
+{
+  "schema": "ot.qwen.static_io.pin_cmdcap.unit.v1",
+  "source_commit": "9f6e4b1fc0a4960fc9c427f442165fa40047cfa3",
+  "canonical_codec_commit": "5f8109ed6",
+  "source_sha256": {
+    "rtl/physical/ot_qfd_io_links_static.sv": "88e53cea3345d51d8e99ea6ee6bd1b9d3e09fd86338729aa69e2aab56b2660fc",
+    "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv": "3b4d10d5d8f86557f3a6a342d9964ecad6d99579c90fc9438d469b14a5da478c",
+    "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv": "5af1eb77614de845771413c279de8858017a1e8220407e847d501537b110f43a",
+    "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv": "df23697e8d58e67ae3209eac9162d1393bed3a510a6e090149c2694bea9eacd8",
+    "rtl/test/tb_qfd_serdes_static.sv": "1f8c4a6c9409107cd10b6b6714d3c519c08ffc28d1022c6483ff3bb03e661a8b",
+    "rtl/test/tb_qfd_ucie_static.sv": "f180c90baccacdc91133815ef8ba1ea04be6f40bbe00913ada0da59a54eeb6b6"
+  },
+  "TX": 3,
+  "RX": 1,
+  "exceptional_command_metadata_capture_edges": 1,
+  "latency_note": "Ownership/publication fault observation moves one edge later; normal command/data schedule and TX3/RX1 unchanged.",
+  "board": {
+    "normal": "PASS1024 strict known-zero flags",
+    "missing_actual_producer": "FAIL978 causes80/04, compiled reservations unchanged",
+    "PHY": 339,
+    "RD_to_RX_output": 344
+  },
+  "ucie": {
+    "normal": "PASS2048 strict known-zero flags, nonoverlapping logical subchannel slots",
+    "missing_actual_producer": "FAIL1896 causesA80/80 causesB04/04, compiled reservations unchanged",
+    "PHY": 14,
+    "RD_to_RX_output": 19
+  },
+  "qualification": "UNIT_ONLY. Native codec/control, exact source-PC fullshape compiler calendars, distributed die sites and licensed PHY bandwidth remain unqualified. Source supersedes earlier observed-valid unit codec version."
+}

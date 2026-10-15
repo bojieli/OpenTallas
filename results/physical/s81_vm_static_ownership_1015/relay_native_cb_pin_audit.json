@@ -1,0 +1,48 @@
+{
+ "b4_native_cb": {
+  "cell": "dsfd_vm_static_relay128_b4",
+  "view": "physical/ref_tile/dsfd_vm_static_relay128_b4_native_cb/views/dsfd_vm_static_relay128_b4",
+  "lib_cell": "dsfd_vm_static_relay128_b4",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 162.1,
+  "spread_ps": 31.9,
+  "outputs": 1308,
+  "inputs": 1309,
+  "launch_ps": 194.1,
+  "launch_pin": "o_wd[499]",
+  "capture_ps": 148.4,
+  "capture_pin": "i_wd[378]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": ""
+ },
+ "b8_native_cb": {
+  "cell": "dsfd_vm_static_relay128_b8",
+  "view": "physical/ref_tile/dsfd_vm_static_relay128_b8_native_cb/views/dsfd_vm_static_relay128_b8",
+  "lib_cell": "dsfd_vm_static_relay128_b8",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 222.0,
+  "spread_ps": 48.2,
+  "outputs": 2616,
+  "inputs": 2617,
+  "launch_ps": 190.0,
+  "launch_pin": "o_wd[1004]",
+  "capture_ps": 146.5,
+  "capture_pin": "i_wd[1000]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": ""
+ }
+}

@@ -12,6 +12,12 @@
 //     an NCI-deep landing FIFO; one registered credit pulse (in_cr) per beat taken by the engine;
 //   * results: CREDIT link to the E-face FIFO (u_bo): out_v / out_d are registered; one credit (out_cr) comes back per
 //     beat the E-face FIFO delivers; done follows the last delivered beat (all NCO credits home).
+// j2 (Claude group-B6 2026-10-14, native pin audit of CLOSED j1: capture 473.5 ps on cmd_valid, cmd_* 267-310,
+// lt_mv 446 / lt_md 225, rst_n 402): every input now lands in a pin register first -- command = pin registers + a
+// 2-entry landing skid (registered cmd_ready only when the skid is empty and the previous cycle was not ready, so the
+// one transfer the pin stage can still hide always has a slot); merge leaf mv / md / me = pin registers (inside the
+// engine's LANE block); rst_n drives only ot_rst_relay copies.  Command acceptance +1 edge, merge credit round trip
+// 5 -> 6 edges with the lane tile's 6 credits (still full rate, landing FIFO depth 6 still bounds every item).
 // The engine (ot_hgi_idx_topk_hw HUB=1 LANE=1) and the lane interface are unchanged; this module is the wreg boundary of
 // ot_hgi_idx_topk_heap.sv with the two credit links in place of the out_ready / in_ready handshakes.
 module ot_hgi_topk_hub_tile #(
@@ -41,7 +47,17 @@ module ot_hgi_topk_hub_tile #(
  wire [423:0] lt_root = {lt_root_b, lt_root_a}; wire [431:0] lt_md = {lt_md_b, lt_md_a};
  localparam integer IW = 8, W = 8, MAX_K = 2048;
  localparam integer CIW = $clog2(NCI + 1), COW = $clog2(NCO + 1), QA = $clog2(NCI);
- reg active,c_valid,s_valid,q_valid,pending_done,h_v,o_rdy;
+ reg active,c_valid,s_valid,q_valid,pending_done,o_rdy;
+ // ---------------------------------------------------------------- reset relay + command pin landing
+ // j3 (native audit of CLOSED j2: capture 208.6 ps on rst_n = the port fed two relays): the engine's relay is the
+ // ONLY port load; the hub registers take its two exported regions (same release edge as the engine and the lanes).
+ wire [1:0] hr;
+ localparam integer CDW = 4 + 6 + 25 + 32 + 32 + 1;
+ reg cv_q, rdy_q, cmd_rdy; reg [CDW-1:0] cd_q;                       // pin registers
+ reg [CDW-1:0] cs [0:1]; reg cs_w, cs_r; reg [1:0] cs_n;             // landing skid
+ wire acc = cv_q && rdy_q;
+ wire h_v = cs_n != 2'd0;
+ wire [CDW-1:0] csh = cs[cs_r];
  reg [3:0] c_unit; reg [5:0] c_op; reg [24:0] c_param; reg [31:0] c_n,c_m; reg c_values;
  reg [IW*32-1:0] s_score; reg [3:0] s_nw;
  reg [97:0] q_r; reg [97:0] b_r [0:3]; reg [1:0] bw, br; reg [2:0] bn;
@@ -62,7 +78,7 @@ module ot_hgi_topk_hub_tile #(
  wire from_b = q_load && bn != 3'd0, direct = q_load && bn == 3'd0 && push, to_b = push && !direct;
  wire [2:0] bn_nx = bn + to_b - from_b;
  wire q_nx = q_load ? (bn != 3'd0 || push) : 1'b1;
- assign cmd_ready = !h_v;
+ assign cmd_ready = cmd_rdy;
  wire go = h_v && !active && !c_valid && core_cmd_ready && !pending_done && !q_valid && bn == 3'd0;
  reg h_done; reg [3:0] h_err; reg done_p;
  wire drained = !q_valid && !out_v && ocr == COW'(NCO);
@@ -75,9 +91,11 @@ module ot_hgi_topk_hub_tile #(
   .t_k(),.t_op_v(),.t_op_ext(),.t_clr_go(),.t_op_x(),.t_op_cr(8'd0),.t_ext_v(8'd0),
   .t_idle_i(8'd0),.t_ext_d(432'd0),.t_root_key(424'd0),
   .lt_ph(lt_ph),.lt_k(lt_k),.lt_clr(lt_clr),.lt_pv(lt_pv),.lt_mcr(lt_mcr),.lt_pd(lt_pd),.lt_q(lt_q),.lt_x(lt_x),.lt_ok(lt_ok),
-  .lt_mv(lt_mv),.lt_me(lt_me),.lt_root(lt_root),.lt_md(lt_md));
+  .lt_mv(lt_mv),.lt_me(lt_me),.lt_root(lt_root),.lt_md(lt_md),.rr_x(hr));
  always @(posedge clk) begin
-  if(cmd_valid&&cmd_ready)begin c_unit<=cmd_unit;c_op<=cmd_op;c_param<=cmd_param;c_n<=cmd_n;c_m<=cmd_m;c_values<=cmd_values;end
+  cd_q <= {cmd_unit, cmd_op, cmd_param, cmd_n, cmd_m, cmd_values};
+  if (acc) cs[cs_w] <= cd_q;
+  if (go) {c_unit, c_op, c_param, c_n, c_m, c_values} <= csh;
   id_q <= in_d;
   if (iv_q) ilq[ilw] <= id_q;
   if (take) {s_score, s_nw} <= ilh;
@@ -85,9 +103,19 @@ module ot_hgi_topk_hub_tile #(
   if(from_b)q_r<=b_r[br]; else if(direct)q_r<=c_r;
   out_d <= {q_r[31:0], q_r[63:32], q_r[95:64], q_r[96], q_r[97]};
  end
- always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)begin
-   active<=0;c_valid<=0;s_valid<=0;q_valid<=0;pending_done<=0;h_done<=0;h_err<=0;h_v<=0;o_rdy<=0;bw<=0;br<=0;bn<=0;
+ wire [1:0] cs_n_nx = cs_n + 2'(acc) - 2'(go);
+ always @(posedge clk or negedge hr[1])
+  if (!hr[1]) begin cv_q <= 1'b0; rdy_q <= 1'b0; cmd_rdy <= 1'b0; cs_w <= 1'b0; cs_r <= 1'b0; cs_n <= 2'd0; end
+  else begin
+   cv_q <= cmd_valid; rdy_q <= cmd_rdy;
+   if (acc) cs_w <= !cs_w;
+   if (go) cs_r <= !cs_r;
+   cs_n <= cs_n_nx;
+   cmd_rdy <= cs_n_nx == 2'd0 && !cmd_rdy;                           // at most one transfer the pin stage hides
+  end
+ always @(posedge clk or negedge hr[0])begin
+  if(!hr[0])begin
+   active<=0;c_valid<=0;s_valid<=0;q_valid<=0;pending_done<=0;h_done<=0;h_err<=0;o_rdy<=0;bw<=0;br<=0;bn<=0;
    iv_q<=1'b0; ilw<=0; ilr<=0; iln<=0; in_cr<=1'b0; ocr<=COW'(NCO); ocr_q<=1'b0; out_v<=1'b0;
    done<=1'b0; done_p<=1'b0; error<=4'd0;
   end else begin
@@ -98,8 +126,7 @@ module ot_hgi_topk_hub_tile #(
    iln <= iln + CIW'(iv_q) - CIW'(take);
    ocr <= ocr - COW'(pop) + COW'(ocr_q);
    if(c_valid&&core_cmd_ready)c_valid<=0;
-   if(cmd_valid&&cmd_ready)h_v<=1;
-   if(go)begin h_v<=0;active<=1;c_valid<=1;h_err<=0;end
+   if(go)begin active<=1;c_valid<=1;h_err<=0;end
    if(in_ready_i)s_valid<=il_ne;
    q_valid<=q_nx; bn<=bn_nx; if(to_b)bw<=bw+1'b1; if(from_b)br<=br+1'b1;
    o_rdy<=({2'b00,q_valid}+bn+{2'b00,push})<=3'd2;
@@ -113,6 +140,7 @@ module ot_hgi_topk_hub_tile #(
  end
  initial if (NCI < 2 || NCO < 1) $fatal(1, "ot_hgi_topk_hub_tile: NCI >= 2, NCO >= 1");
 `ifndef SYNTHESIS
- always @(posedge clk) if (rst_n && iv_q && iln == CIW'(NCI) && !take) $fatal(1, "TOPK hub: score landing FIFO overflow (credit protocol broken)");
+ always @(posedge clk) if (hr[0] && iv_q && iln == CIW'(NCI) && !take) $fatal(1, "TOPK hub: score landing FIFO overflow (credit protocol broken)");
+ always @(posedge clk) if (hr[1] && acc && cs_n == 2'd2 && !go) $fatal(1, "TOPK hub: command skid overflow");
 `endif
 endmodule

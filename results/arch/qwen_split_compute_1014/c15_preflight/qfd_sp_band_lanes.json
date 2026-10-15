@@ -14,31 +14,36 @@
    "f"
   ],
   "N": [
-   "ck",
    "ty",
+   "ck",
    "tw"
+  ],
+  "S": [
+   "rst_n",
+   "b0",
+   "lnk"
   ]
  },
  "pin_ranges": {
   "tw": [
-   679.692,
-   876.252
+   453.42,
+   846.54
   ],
   "ty": [
-   481.068,
-   677.628
+   33.42,
+   426.54
   ],
   "tt": [
-   113.1,
-   186.876
+   76.188,
+   223.74
   ],
   "pw": [
-   407.724,
-   432.3
+   395.388,
+   444.54
   ],
   "c": [
-   619.404,
-   620.604
+   618.78,
+   621.18
   ],
   "f": [
    699.996,
@@ -47,6 +52,18 @@
   "ck": [
    440.652,
    440.652
+  ],
+  "rst_n": [
+   20.028,
+   20.028
+  ],
+  "b0": [
+   25.02,
+   25.02
+  ],
+  "lnk": [
+   32.028,
+   32.508
   ]
  },
  "ports": {
@@ -55,8 +72,8 @@
    "layer": "M5",
    "bits": 4096,
    "range_um": [
-    679.692,
-    876.252
+    453.42,
+    846.54
    ],
    "bit0_at": "lo",
    "direction": "input",
@@ -67,43 +84,20 @@
    "layer": "M5",
    "bits": 4096,
    "range_um": [
-    481.068,
-    677.628
+    33.42,
+    426.54
    ],
    "bit0_at": "lo",
    "direction": "output",
    "peer": "qfd_port_tiles_0.ty;qfd_port_tiles_1.ty;qfd_port_tiles_2.ty"
-  },
-  "rst_n": {
-   "face": "W",
-   "layer": "M8",
-   "bits": 2,
-   "range_um": [
-    569.076,
-    569.076
-   ],
-   "bit0_at": "lo",
-   "direction": "input",
-   "peer": null,
-   "interior": true,
-   "positions_xy_um": [
-    [
-     437.64,
-     569.076
-    ],
-    [
-     437.64,
-     569.076
-    ]
-   ]
   },
   "tt": {
    "face": "E",
    "layer": "M4",
    "bits": 1538,
    "range_um": [
-    113.1,
-    186.876
+    76.188,
+    223.74
    ],
    "bit0_at": "lo",
    "direction": "input",
@@ -114,8 +108,8 @@
    "layer": "M4",
    "bits": 513,
    "range_um": [
-    407.724,
-    432.3
+    395.388,
+    444.54
    ],
    "bit0_at": "lo",
    "direction": "output",
@@ -126,8 +120,8 @@
    "layer": "M4",
    "bits": 26,
    "range_um": [
-    619.404,
-    620.604
+    618.78,
+    621.18
    ],
    "bit0_at": "lo",
    "direction": "input",
@@ -460,7 +454,45 @@
      708.438
     ]
    ]
+  },
+  "rst_n": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    20.028,
+    20.028
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "b0": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    25.02,
+    25.02
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
+  },
+  "lnk": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 6,
+   "range_um": [
+    32.028,
+    32.508
+   ],
+   "bit0_at": "lo",
+   "direction": "input",
+   "peer": null
   }
  },
- "note": "assigned by the die generator (tools/qwen_tp8/relay_data_run.py --case); a real-view master lists its view pins"
+ "note": "assigned by the die generator (tools/qwen_tp8/relay_data_run.py --case); a real-view master lists its view pins",
+ "signal_cap": "M7",
+ "routing_contract": "Actual native parent cluster signalM2-M7/PGM7; die cannot route through parent on M7. Data and clock entry pins remain M4/M5."
 }

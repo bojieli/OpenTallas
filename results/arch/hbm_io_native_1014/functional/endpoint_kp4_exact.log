@@ -1,0 +1,9 @@
+ot-run: ot-epyc1tb     admits   251 GB (avail 477, growth 85, headroom 64, waiters 0/0 GB) load 54/128 running 18 disk 202 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-3444106-1792036081 after 0 s
+HBM_ENDPOINT_KP4_PASS NS 3 N 128 ERRP 0 cycles 829 replays 0/0 drops 0/0 (0.154 flits/cycle A->B)
+- rtl/hbm_accel/io_native_20261014/tb_hbm_endpoint_kp4.sv:110: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 695ns; walltime 13.954 s; speed 49.844 ns/s
+- Verilator: cpu 13.944 s on 1 threads; alloced 1028 MB
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-3444106-1792036081): exit 0

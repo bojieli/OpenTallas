@@ -1,0 +1,17 @@
+test_actual_frozen_vectors (__main__.InventoryTests) ... ok
+test_actual_mask_mutant (__main__.InventoryTests) ... ok
+test_actual_output_address_mutant (__main__.InventoryTests) ... ERROR
+test_exact_disjoint_and_partial_masks (__main__.InventoryTests) ... ok
+
+======================================================================
+ERROR: test_actual_output_address_mutant (__main__.InventoryTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ubuntu/wt/hbm-group-b6-1014/results/arch/hbm_su_f2_static_1014/program_inventory/test_inventory.py", line 43, in test_actual_output_address_mutant
+    base_lsb = next(lsb for name, lsb, width in module.SB.C.SV.HGI.D_MDESC_FIELDS if name == 'base')
+AttributeError: module 'hgi_seq_vectors' has no attribute 'HGI'
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.303s
+
+FAILED (errors=1)

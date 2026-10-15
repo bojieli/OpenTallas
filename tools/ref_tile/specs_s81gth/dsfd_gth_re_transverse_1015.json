@@ -1,0 +1,276 @@
+{
+ "name": "dsfd_gth_re_transverse_1015",
+ "top": "dsfd_gth_re",
+ "kind": "tile",
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rs"
+ ],
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_root_leaf.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_ret_root_s.sv",
+  "rtl/gpu/ot_fp32_add_rne_deep.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "physical/s81_ph_views/macros/ot_sram_1r1w_128x66_m1_r2c2/ot_sram_1r1w_128x66_m1_r2c2_bb.v",
+  "physical/s81_ph_views/macros/ot_sram_1r1w_256x34_m2_r2c2/ot_sram_1r1w_256x34_m2_r2c2_bb.v"
+ ],
+ "outline": {
+  "w": 190.08,
+  "h": 224.64
+ },
+ "macros": [
+  {
+   "view": "physical/s81_ph_views/macros/ot_sram_1r1w_256x34_m2_r2c2",
+   "count": 1,
+   "at": [
+    22.464,
+    22.8
+   ],
+   "at_exact": true,
+   "inst": "*g_r?0?*u_bm*u_m",
+   "orient": "MY"
+  },
+  {
+   "view": "physical/s81_ph_views/macros/ot_sram_1r1w_128x66_m1_r2c2",
+   "count": 1,
+   "at": [
+    120.096,
+    22.8
+   ],
+   "at_exact": true,
+   "inst": "*g_r?0?*u_qm*u_m"
+  },
+  {
+   "view": "physical/s81_ph_views/macros/ot_sram_1r1w_256x34_m2_r2c2",
+   "count": 1,
+   "at": [
+    22.464,
+    72.048
+   ],
+   "at_exact": true,
+   "inst": "*g_r?1?*u_bm*u_m",
+   "orient": "MY"
+  },
+  {
+   "view": "physical/s81_ph_views/macros/ot_sram_1r1w_128x66_m1_r2c2",
+   "count": 1,
+   "at": [
+    120.096,
+    72.048
+   ],
+   "at_exact": true,
+   "inst": "*g_r?1?*u_qm*u_m"
+  },
+  {
+   "view": "physical/s81_ph_views/macros/ot_sram_1r1w_256x34_m2_r2c2",
+   "count": 1,
+   "at": [
+    22.464,
+    121.296
+   ],
+   "at_exact": true,
+   "inst": "*g_r?2?*u_bm*u_m",
+   "orient": "MY"
+  },
+  {
+   "view": "physical/s81_ph_views/macros/ot_sram_1r1w_128x66_m1_r2c2",
+   "count": 1,
+   "at": [
+    120.096,
+    121.296
+   ],
+   "at_exact": true,
+   "inst": "*g_r?2?*u_qm*u_m"
+  },
+  {
+   "view": "physical/s81_ph_views/macros/ot_sram_1r1w_256x34_m2_r2c2",
+   "count": 1,
+   "at": [
+    22.464,
+    170.544
+   ],
+   "at_exact": true,
+   "inst": "*g_r?3?*u_bm*u_m",
+   "orient": "MY"
+  },
+  {
+   "view": "physical/s81_ph_views/macros/ot_sram_1r1w_128x66_m1_r2c2",
+   "count": 1,
+   "at": [
+    120.096,
+    170.544
+   ],
+   "at_exact": true,
+   "inst": "*g_r?3?*u_qm*u_m"
+  }
+ ],
+ "pins": {
+  "E": [
+   "li"
+  ],
+  "N": [
+   "ck",
+   "rs"
+  ],
+  "S": [
+   "co",
+   "st",
+   "rso"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.05,
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "extra": "-no_obstruction_aware"
+  }
+ },
+ "job": {
+  "owner": "Codex:s81_hard_physical",
+  "branch": "codex/s81-hard-physical-1015",
+  "tag": "transverse1",
+  "purpose": "S81 gather v4 DIRECT leaf (E half) of the gather cluster dsfd_sp_gather_c: 4 roots ot_s81ph_ret_root_s (step B, S = 8 open rows = 2 x the measured real bound 4), queue 128 x 66 + pairing store 256 x 34 arrays per root; the leaf takes only its own 4 lanes and returns only its own 4 results + {busy, fault}; the parent delivers / collects through relay tiles in the channels (no lane or chain passes through a leaf).  Every port a flop at the pin.",
+  "structural_change": "After g7/g8/g9/g10 failed routing across continuous 116um SRAM walls, separate each actual root bank pair by 20.304um transverse routing channels (49.248um pitch, pairing macro height28.944um); leaf height164.16->224.64. Preserves exact source, all494 signal ports and data pin centres, latency, clock period and constraints; N clock/reset follow new boundary. Parent height803.52->1045.44; MIX4 independently confirms PQ/PQROM +86.4um preserves17.28um/86.4um neighbor gaps inside reticle. This is candidate slot grant only, requires native pins/CTS/TT/FF/DRC and full graph adoption. Removes g10 clock-pair retap instead of layering an unproven workaround onto source.",
+  "benches": [
+   {
+    "name": "root_s_lockstep",
+    "cmd": "SSA2=1 CONTROL_STRIP=1 LOCAL_BANKS=1 J=4 S=8 bash rtl/dsrom_sys/s81_ph/test/run_root_s.sh $PWD {RUN}/root_s rtl/dsrom_sys/s81_ph/test/real_order_trace.json",
+    "expect": "pass",
+    "pass_regex": "ROOT_S_GATE PASS \\(([0-9]+) runs\\)",
+    "min_count_regex": "ROOT_S_GATE PASS \\(([0-9]+) runs\\)",
+    "threads": 36,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "gather_cl_gate",
+    "cmd": "SSA2=1 CONTROL_STRIP=1 LOCAL_BANKS=1 DIE_CLOCKS=1 SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gcl rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
+    "expect": "pass",
+    "pass_regex": "GATHER_CL_GATE PASS",
+    "min_count_regex": "GATHER_CL_GATE PASS \\(([0-9]+) runs\\)",
+    "threads": 40,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "gather_cl_neg_chain",
+    "cmd": "SSA2=1 CONTROL_STRIP=1 LOCAL_BANKS=1 DIE_CLOCKS=1 RAW=1 MODES=chain SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gclm rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
+    "expect": "fail",
+    "fail_regex": "GATHER_CL_NEGATIVE FAIL_AS_REQUIRED",
+    "threads": 4,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "gather_cl_neg_ovf",
+    "cmd": "SSA2=1 CONTROL_STRIP=1 LOCAL_BANKS=1 DIE_CLOCKS=1 RAW=1 MODES=ovf SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gclo rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
+    "expect": "fail",
+    "fail_regex": "GATHER_CL_NEGATIVE FAIL_AS_REQUIRED",
+    "threads": 4,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "gather_cl_neg_heap_epoch",
+    "cmd": "SSA2=1 CONTROL_STRIP=1 LOCAL_BANKS=1 DIE_CLOCKS=1 RAW=1 MODES=heap SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gcl_heap rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
+    "expect": "fail",
+    "fail_regex": "GATHER_CL_NEGATIVE FAIL_AS_REQUIRED",
+    "threads": 4,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "gather_cl_neg_rstreg",
+    "cmd": "SSA2=1 CONTROL_STRIP=1 LOCAL_BANKS=1 DIE_CLOCKS=1 RAW=1 MODES=rstreg SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gcl_rst rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
+    "expect": "fail",
+    "fail_regex": "GATHER_CL_NEGATIVE FAIL_AS_REQUIRED",
+    "threads": 4,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/dsrom_sys/s81_ctrl",
+   "rtl/lib",
+   "rtl/common",
+   "rtl/v41rom",
+   "rtl/proto",
+   "rtl/hdc",
+   "rtl/gpu",
+   "tools/s81_ph",
+   "physical/s81_ph_views/macros",
+   "results/rtl/s81_ph_20261006/gather",
+   "physical/s81_die_pins/v18/gather_leaves",
+   "physical/dsrom_window_source",
+   "physical/hbm_accel_die_views/stations/bench",
+   "physical/s81_ph_views/gather/leaf_midpoint",
+   "rtl/dsrom_sys/s81_glue",
+   "physical/s81_ph_views/gather/clock_leaf_candidate",
+   "physical/s81_die_pins/v19",
+   "physical/s81_die_pins/v21_gather_transverse_candidate"
+  ],
+  "views_to": "physical/ref_tile/dsfd_gth_re/views",
+  "record_to": "results/rtl/ref_tile/dsfd_gth_re",
+  "slot_change_request": {
+   "owner": "Codex:s81_hard_physical",
+   "contract": "S81 current gather hub transverse candidate",
+   "old_outline_um": [
+    190.08,
+    164.16
+   ],
+   "new_outline_um": [
+    190.08,
+    224.64
+   ],
+   "parent_outline_um": [
+    1728,
+    1045.44
+   ],
+   "die_owner": "/root/s_die/mix4_sizing",
+   "status": "FEASIBLE_CANDIDATE_NOT_ADOPTED",
+   "neighbor_move_um": {
+    "PQ_and_PQ_ROM_y": 86.4
+   }
+  }
+ },
+ "floorplan_why": "After g7/g8/g9/g10 failed routing across continuous 116um SRAM walls, separate each actual root bank pair by 20.304um transverse routing channels (49.248um pitch, pairing macro height28.944um); leaf height164.16->224.64. Preserves exact source, all494 signal ports and data pin centres, latency, clock period and constraints; N clock/reset follow new boundary. Parent height803.52->1045.44; MIX4 independently confirms PQ/PQROM +86.4um preserves17.28um/86.4um neighbor gaps inside reticle. This is candidate slot grant only, requires native pins/CTS/TT/FF/DRC and full graph adoption. Removes g10 clock-pair retap instead of layering an unproven workaround onto source.",
+ "defines": [
+  "S81PH_GTH_LOCAL_BANKS",
+  "S81PH_GTH_SSA2"
+ ],
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "pre_cts_extra": [
+  "physical/s81_ph_views/gather/clock_leaf_candidate/per_macro.tcl"
+ ],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "io_tcl": "physical/s81_die_pins/v21_gather_transverse_candidate/dsfd_gth_re.tcl"
+}

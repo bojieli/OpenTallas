@@ -1,0 +1,317 @@
+{
+ "name": "qfd_xhead_w",
+ "top": "qfd_xhead_w",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv",
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
+  "rtl/hdc/ot_hdc_delay.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 64.8,
+  "h": 345.6,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "cn_wv",
+   "cn_wep",
+   "cn_cv",
+   "cn_cep",
+   "cn_woff",
+   "cn_wm",
+   "cn_wd",
+   "cn_wctl"
+  ],
+  "S": [
+   "cs_wv",
+   "cs_wep",
+   "cs_cv",
+   "cs_cep",
+   "cs_woff",
+   "cs_wm",
+   "cs_wd",
+   "cs_wctl"
+  ],
+  "W": [
+   "w_d",
+   "n_d",
+   "rn_v",
+   "rn_t",
+   "rn_ep",
+   "rn_p",
+   "qn",
+   "qn_v",
+   "qn_bad",
+   "ck",
+   "rst_n",
+   "fault_i"
+  ],
+  "E": [
+   "e_d",
+   "s_d",
+   "rs_v",
+   "rs_t",
+   "rs_ep",
+   "rs_p",
+   "qs",
+   "qs_v",
+   "qs_bad",
+   "tids",
+   "fault"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
+ },
+ "pin_ranges": {
+  "cn_wv": [
+   1.5,
+   1.8
+  ],
+  "cs_wv": [
+   1.5,
+   1.8
+  ],
+  "cn_wep": [
+   1.9,
+   2.2
+  ],
+  "cs_wep": [
+   1.9,
+   2.2
+  ],
+  "cn_woff": [
+   2.3,
+   2.9
+  ],
+  "cs_woff": [
+   2.3,
+   2.9
+  ],
+  "cn_wm": [
+   3.0,
+   7.0
+  ],
+  "cs_wm": [
+   3.0,
+   7.0
+  ],
+  "cn_wd": [
+   7.1,
+   57.5
+  ],
+  "cs_wd": [
+   7.1,
+   57.5
+  ],
+  "cn_wctl": [
+   57.6,
+   62.6
+  ],
+  "cs_wctl": [
+   57.6,
+   62.6
+  ],
+  "cn_cv": [
+   62.7,
+   62.9
+  ],
+  "cs_cv": [
+   62.7,
+   62.9
+  ],
+  "cn_cep": [
+   63.0,
+   63.2
+  ],
+  "cs_cep": [
+   63.0,
+   63.2
+  ],
+  "n_d": [
+   4.0,
+   54.0
+  ],
+  "w_d": [
+   56.0,
+   207.0
+  ],
+  "ck": [
+   210.0,
+   211.0
+  ],
+  "rst_n": [
+   212.0,
+   213.0
+  ],
+  "rn_v": [
+   300.0,
+   300.5
+  ],
+  "rn_t": [
+   300.6,
+   301.1
+  ],
+  "rn_ep": [
+   301.2,
+   301.7
+  ],
+  "rn_p": [
+   301.8,
+   313.0
+  ],
+  "qn": [
+   313.2,
+   339.0
+  ],
+  "qn_v": [
+   339.2,
+   339.7
+  ],
+  "qn_bad": [
+   339.8,
+   340.3
+  ],
+  "rs_v": [
+   4.0,
+   4.5
+  ],
+  "rs_t": [
+   4.6,
+   5.1
+  ],
+  "rs_ep": [
+   5.2,
+   5.7
+  ],
+  "rs_p": [
+   5.8,
+   17.0
+  ],
+  "qs": [
+   17.2,
+   43.0
+  ],
+  "qs_v": [
+   43.2,
+   43.7
+  ],
+  "qs_bad": [
+   43.8,
+   44.3
+  ],
+  "tids": [
+   46.0,
+   72.0
+  ],
+  "s_d": [
+   74.0,
+   124.0
+  ],
+  "e_d": [
+   126.0,
+   277.0
+  ],
+  "fault_i": [
+   209.0,
+   209.5
+  ],
+  "fault": [
+   279.0,
+   279.5
+  ]
+ },
+ "pin_source": "chain faces N / S on the leaf's ranges (abutted head-to-leaf); W: N corridor, head row (w), N-chain read buses at the N end; E: S-chain read buses at the S end, tids, S corridor, head row (e); fault toward the tap",
+ "slot_change_request": "el1014-qwen-dvm-build.log 16:15 r3 / el1014-qwen-split-compute.log (DVM builder -> compute die lead): the column slot 64.8 x 1,313.28 holds a die-placed N-S STACK, not a hardened cluster (20-um child channels / edges cannot fit 64.8 um): 4 x qfd_xs_leaf 64.8 x 120.96 (N chain, R0) / qfd_xhead_e|w 64.8 x 345.6 / 4 x qfd_xs_leaf (S chain, MX), chain faces abutted pin to pin; pins re-gated against the die lead's assigned file when it exists.",
+ "job": {
+  "owner": "Claude:el1014-qwen-dvm-build",
+  "branch": "claude/qwen-dvm-1014",
+  "tag": "xh1",
+  "purpose": "Qwen TP8 distributed x slice COLUMN HEAD r3 (owner 08:20 PT 10-14; el1014-qwen-dvm-build.log 16:15): head-row station (onward copy = input pin registers) for {fill, ib, go}, column slice control (epochs, 16 tile windows from the tids strap, pooled pairs, leaf write control), serial-read TDM sequencer, N / S corridor launch, fault chain inward; one clock root.",
+  "benches": [
+   {
+    "name": "native_core_exact",
+    "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/core tb_qfd_xdvm_prod -GNATIVE_AFFINE=1 -GSTATIC_SCHEDULE=1 -GNW=18 -GNCOL=4 -GNLAYER=1 -GNRAND=6",
+    "expect": "pass",
+    "pass_regex": "^PASS xdvm_prod",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "native_wrapper_composition",
+    "cmd": "bash tools/qwen_tp8/vm_replay_xcol_bench.sh {RUN}/bench/xcol",
+    "expect": "pass",
+    "pass_regex": "^PASS vm_replay_xcol",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "native_wrapper_composition_macro",
+    "cmd": "bash tools/qwen_tp8/vm_replay_xcol_bench.sh {RUN}/bench/xcolm -GMEM=1",
+    "expect": "pass",
+    "pass_regex": "^PASS vm_replay_xcol",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "native_core_head_window_w_plus_1",
+    "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/hm7 tb_qfd_xdvm_prod -GNATIVE_AFFINE=1 -GSTATIC_SCHEDULE=1 -GNW=18 -GNCOL=4 -GNLAYER=1 -GNRAND=6 -GHEAD_MUT=7",
+    "expect": "fail",
+    "pass_regex": "^PASS xdvm_prod",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "native_wrapper_head_wrong_station",
+    "cmd": "bash tools/qwen_tp8/vm_replay_xcol_bench.sh {RUN}/bench/xh3 -GHEAD_MUT=3",
+    "expect": "fail",
+    "pass_regex": "^PASS vm_replay_xcol",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/hdc",
+   "rtl/proto",
+   "rtl/qwen_sys",
+   "rtl/physical",
+   "rtl/qwen_split",
+   "tools/qwen_tp8/vm_replay_xcol_bench.sh",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "views_to": "physical/ref_tile/qfd_xhead_w/views",
+  "record_to": "results/rtl/ref_tile/qfd_xhead_w"
+ }
+}

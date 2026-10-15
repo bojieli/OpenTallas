@@ -1,0 +1,22 @@
+{
+  "schema": "opentallas.quant.transport_gate_review.v1",
+  "source_manifest_sha256": "2cd557a1376451bd2de9763d13bf290f5148be3f1239317c525af086bd74d118",
+  "raw_gate_verdict": "WARN",
+  "review_verdict": "FAIL",
+  "setup_tt_placement_ps": -541.4562131988987,
+  "clock_tt_max_ps": 559.9,
+  "clock_tt_spread_ps": 121.1,
+  "clock_limits_ps": [
+    300,
+    80
+  ],
+  "actual_flops": 4181,
+  "synth_std_area_um2": 3088.87506,
+  "actual_boundary_fail": "1572input\u2192register endpoints>3levels; worsty94\u2192wq6levels",
+  "fanout_fail": {
+    "sp_last_bit1": 4783,
+    "sp_last_bit0": 4358
+  },
+  "route_admitted": false,
+  "required_structure": "real registered rr/y boundary and replicated local bank-select state; constant-index perbank wiring; all additional pipelineedges priced and actualVMslots shifted"
+}

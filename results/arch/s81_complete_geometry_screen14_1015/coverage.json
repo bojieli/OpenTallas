@@ -1,0 +1,246 @@
+{
+ "scope": "COMPLETE_CONSTRUCTION_BEFORE_HOP_SIGNOFF_NOT_NATIVE",
+ "plan_sha256": "049b9b25858e6c973032871bdc4481f23ef479005f120f7783c268858cd9f6e0",
+ "unbound_supplemental_reservations": [
+  {
+   "name": "sp_hcx_south0",
+   "master": "ot_s81_hcx_projection_leaf",
+   "at_um": [
+    9417.6,
+    24624.0
+   ],
+   "outline": {
+    "w": 1728.0,
+    "h": 1296.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
+   "ROM": {
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "COARSE_FULL2417_CANDIDATE: native46root size/pins/cuts and physical calendar not proven",
+   "master_candidate": "ot_s81_hcx_projection_partition",
+   "source_structural_defect": "bank rotation traverses shell combinationally: registered rotation boundary redesign required before native adoption"
+  },
+  {
+   "name": "sp_hcx_south1",
+   "master": "ot_s81_hcx_projection_leaf",
+   "at_um": [
+    11232.0,
+    24624.0
+   ],
+   "outline": {
+    "w": 1728.0,
+    "h": 1296.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
+   "ROM": {
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "COARSE_FULL2417_CANDIDATE: native46root size/pins/cuts and physical calendar not proven",
+   "master_candidate": "ot_s81_hcx_projection_partition",
+   "source_structural_defect": "bank rotation traverses shell combinationally: registered rotation boundary redesign required before native adoption"
+  },
+  {
+   "name": "sp_hcx_north0",
+   "master": "ot_s81_hcx_projection_leaf",
+   "at_um": [
+    13046.400000000001,
+    24624.0
+   ],
+   "outline": {
+    "w": 1728.0,
+    "h": 1296.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
+   "ROM": {
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "COARSE_FULL2417_CANDIDATE: native46root size/pins/cuts and physical calendar not proven",
+   "master_candidate": "ot_s81_hcx_projection_partition",
+   "source_structural_defect": "bank rotation traverses shell combinationally: registered rotation boundary redesign required before native adoption"
+  },
+  {
+   "name": "sp_hcx_north1",
+   "master": "ot_s81_hcx_projection_leaf",
+   "at_um": [
+    14860.800000000001,
+    24624.0
+   ],
+   "outline": {
+    "w": 1728.0,
+    "h": 1296.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
+   "ROM": {
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "COARSE_FULL2417_CANDIDATE: native46root size/pins/cuts and physical calendar not proven",
+   "master_candidate": "ot_s81_hcx_projection_partition",
+   "source_structural_defect": "bank rotation traverses shell combinationally: registered rotation boundary redesign required before native adoption"
+  },
+  {
+   "name": "sp_hcx_west0",
+   "master": "ot_s81_hcx_projection_leaf",
+   "at_um": [
+    16675.2,
+    24624.0
+   ],
+   "outline": {
+    "w": 1728.0,
+    "h": 1296.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
+   "ROM": {
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "COARSE_FULL2417_CANDIDATE: native46root size/pins/cuts and physical calendar not proven",
+   "master_candidate": "ot_s81_hcx_projection_partition",
+   "source_structural_defect": "bank rotation traverses shell combinationally: registered rotation boundary redesign required before native adoption"
+  },
+  {
+   "name": "sp_hcx_west1",
+   "master": "ot_s81_hcx_projection_leaf",
+   "at_um": [
+    18489.6,
+    24624.0
+   ],
+   "outline": {
+    "w": 1728.0,
+    "h": 1296.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
+   "ROM": {
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "COARSE_FULL2417_CANDIDATE: native46root size/pins/cuts and physical calendar not proven",
+   "master_candidate": "ot_s81_hcx_projection_partition",
+   "source_structural_defect": "bank rotation traverses shell combinationally: registered rotation boundary redesign required before native adoption"
+  }
+ ],
+ "selected_hub_masters": {
+  "sp_su_s": "dsfd_sp_su_c",
+  "sp_vm": "dsfd_sp_vm",
+  "sp_capture": "dsfd_sp_capture_c",
+  "sp_gather": "dsfd_sp_gather_c"
+ },
+ "static_production_scope_gaps": [
+  "Generator sp_vm masterdsfd_sp_vm is NOT final328staticcore+150writeedge+cap/CDCactualcomposition",
+  "SixHCPreservations remain explicitlyunbound/native46rootmissing",
+  "CurrentBFstaticprogramme/source and SUstaticprogramme81stagehomes require authoritativebinding",
+  "Completeconstruction describes generatorgraphcoverage, not completeproductionhardwareclosure"
+ ]
+}

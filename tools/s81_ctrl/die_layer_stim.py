@@ -28,6 +28,11 @@ those rows have landed; eng.add at its end writes the golden post-Engram h rows 
 rows in coef.mem, as the hcx ops land the golden coefficient rows); H_LOAD depends on eng.add and its f_inp waits on
 that write, so the real HC master's attn hc_pre / hc_post consume the post-Engram h.
 
+With --mix-snap, eng.hh/dot/gate/add collapse onto one actual MIX4 descriptor command.
+Only key/weight/value operands are booted; H comes from the input producer, and
+no post-Engram oracle rows are written to coef.mem. The overall bench still uses
+ideal VM and fixture producers, so this mode does not qualify a native layer.
+
 Files (<out>/): prog.txt (port arg dur np p0..p3 ph cmsg wrow), stim.txt (field phases), coll_msg.txt (mode nrec),
 coll_own.mem (record r, die d at line 4r+d), y_gold.mem (the all-reduce words the HC must receive, in order),
 vm_boot.mem (gain rows), coef.mem (row data written by hcx ops: "@row" + data), payload.mem (640 h rows),
@@ -279,6 +284,7 @@ def main():
                     'job kind become jobs of the production slab on the golden operands (tools/s81_ftok/su_layer.py), '
                     'their chain members are aliased to the job, the SU ops with no job kind move to the behavioural port '
                     f'{SUX_PORT} (su.x) at program duration')
+    ap.add_argument('--mix-snap', type=Path, help='real MIX4 operands; collapse eng.* onto one actual master command')
     ap.add_argument('--program-layer', default=None, help='take the stage program of this backbone layer (e.g. L0) '
                     'for --layer (its op ids renamed): a DSpark stage row (M<st>R<i>, tools/s81_ftok/mtp_golden.py) runs '
                     'on the sliding layer\'s program (window attention + MoE, the same op graph), its own chain and SU '
@@ -359,9 +365,50 @@ def main():
     # ------------------------------------------------------------------ program rewrite (by name, then topological)
     eng_ops = [o['id'] for o in src if o['id'].startswith(f'{a.layer}.eng.')]
     assert bool(eng_ops) == (eng_rows is not None), (a.layer, eng_ops, 'Engram ops need an Engram chain fixture')
-    if eng_ops:
+    if eng_ops and not a.mix_snap:
         for q, row in enumerate(eng_rows):
             coef[(EH_BASE if a.h_stream else H_BASE) + q] = row
+    mix_meta = None
+    if a.mix_snap:
+        assert eng_ops and not a.h_stream, 'MIX4 currently requires in-place H layout'
+        es = pickle.loads(a.mix_snap.read_bytes())
+        assert all(es['checks'].values())
+        assert np.array_equal(HG.u32(es['h']).reshape(-1), HG.u32(ch['h_in']).reshape(-1)), 'MIX input != layer entry'
+        assert np.array_equal(HG.u32(es['out']).reshape(-1), HG.u32(ch['h']).reshape(-1)), 'MIX oracle != HC input'
+        # The producer boundary supplies K/W/V operands, never MIX result rows.
+        # H is supplied only by the existing package landing producer.
+        kb, wb, vb, db = 9000, 10280, 11560, 11880
+        for name, base in [('key', kb), ('wgt', wb), ('value', vb)]:
+            words = HG.u32(es[name]).reshape(-1, 16)
+            for q, row in enumerate(words):
+                vm_boot[base + q] = HG.pack(row, 32)
+                boot_ok.append(base + q)
+        vm_boot[db] = HG.pack([H_BASE, kb, wb, vb, H_BASE,
+                              int(HG.u32([es['eps']])[0]), int(HG.u32([es['scale']])[0])], 32)
+        boot_ok.append(db)
+        sys.path.insert(0, str(ROOT/'tools/s81_static_control'))
+        from program import encode_program, issuer_done_row
+        # Issuer row semantics (ot_s81_fixed_issue): 'issue' is the age whose edge loads the command
+        # register (command pin = issue+1); 'done' is the age whose edge samples the completion pin.
+        # MIX4's measured command-pin -> done-pin latency is 772 (component gate), so
+        # done = issue + 1 + 772. issue+772 (=1428) misses the completion by one edge: issuer
+        # fault code 8 at stream cycle 2681 (tb_s81_engram_mix4_fixed reproduces it).
+        MIX_ISSUE, MIX_PIN_TO_PIN = 656, 772
+        mix_done = issuer_done_row(MIX_ISSUE, MIX_PIN_TO_PIN)
+        mc = encode_program([dict(engine=10,arg=db,issue=MIX_ISSUE,done=mix_done,pin_to_pin=MIX_PIN_TO_PIN),
+                             dict(engine=15,arg=0,issue=mix_done+4,done=0)],stage=0,phase=3)
+        mc['hardware_nops']=2
+        mc['seal_to_arm_stream_cycles']=3
+        (a.out/'mix_program.mem').write_text(''.join(f"{w['word']:09x}\n" for w in mc['writes']))
+        (a.out/'mix_calendar.json').write_text(json.dumps(dict(calendar=mc,op_base=2,
+            reset_stream_cycle=1000,job_stream_cycle=1250,header_stream_cycle=1250,
+            source_context=dict(user=0,pos=0,tok=1000,token_header_bits='146:126'),
+            landing_last_write_pin=1892,real_vm_commit_bound=1903,
+            actual_vm_scope='ideal row write consumption in this component vehicle',
+            physical_clock_phase_qualified=False,full_native_qualified=False),indent=2)+'\n')
+        mix_meta = dict(native_qualified=False, master='dsfd_engram_mix4_c', descriptor=db,
+                        operand_sha256=HG.sha(a.mix_snap), golden_output_injection=False,
+                        scope='actual arithmetic endpoint; ideal VM and fixture producers remain')
     nodes = {}
 
     def add(name, port, dur, preds, arg=None, cmsg=-1, wrow=-1, eng='', order=0.0):
@@ -392,6 +439,11 @@ def main():
     for i, o in enumerate(src):
         nm = o['id']
         blk = nm.split('.')[1]
+        if blk == 'eng' and a.mix_snap:
+            if nm == f'{L}.eng.add':
+                external = [p for x in src if x['id'] in eng_ops for p in x['preds_id'] if p in names and p not in eng_ops]
+                add(nm, ENG_PORT, 0, external, db, wrow=H_BASE, eng='mix4', order=i)
+            continue
         if blk == 'eng':               # behavioural Engram (port 10): eng.add lands the golden post-Engram h rows
             assert o['port'] == ENG_PORT and o['eng'] == 'eng', o
             add(nm, ENG_PORT, o['dur'], [p for p in o['preds_id'] if p in names],
@@ -541,14 +593,14 @@ def main():
                               argument_provenance='native endpoint descriptor' if o['eng'] in ('su', 'hc') else 'fixture program argument; native binding unproven',
                               preds=o['preds']) for k, o in enumerate(prog)],
                 cases_sha256=HG.sha(a.cases), coef_split=bool(a.coef_split), h_stream=bool(a.h_stream), su_sched=sched,
-                dur_override=dur_ov or None, su_real=su_meta)
+                dur_override=dur_ov or None, su_real=su_meta, mix4=mix_meta)
     if fx is not None:
         meta.update(chain_fixture_sha256=HG.sha(a.chain), chain_schema=fx['schema'], chain_checks=fx['checks'],
                     shard=fx['shard'], shard_sha256=fx['shard_sha256'], golden_checks_vs_pickle=0,
                     golden_checks_vs_shard=4, payload='layer-entry h (shard h_in)',
-                    engram=dict(ops=eng_ops, port=ENG_PORT, hosting='BEHAVIOURAL at program duration (not Engram RTL)',
-                                h_rows_written_by=f'{L}.eng.add at its end: {len(eng_rows)} golden post-Engram h rows '
-                                                  f'(shard {L}.engram) over VM rows {H_BASE}..{H_BASE + len(eng_rows) - 1}',
+                    engram=dict(ops=eng_ops, port=ENG_PORT, hosting=('actual MIX4 endpoint' if a.mix_snap else 'BEHAVIOURAL at program duration (not Engram RTL)'),
+                                h_rows_written_by=('MIX4 actual write ports' if a.mix_snap else f'{L}.eng.add at its end: {len(eng_rows)} golden post-Engram h rows '
+                                                  f'(shard {L}.engram) over VM rows {H_BASE}..{H_BASE + len(eng_rows) - 1}'),
                                 h_load_pred=f'{L}.eng.add') if eng_ops else None)
     (a.out / 'meta.json').write_text(json.dumps(meta, indent=1) + '\n')
     print(f"{a.layer}: {len(prog)} ops, {nph} field phases, {len(msgs)} coll messages ({len(own)} records, "

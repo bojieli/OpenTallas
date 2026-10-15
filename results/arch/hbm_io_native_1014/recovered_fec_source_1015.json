@@ -1,0 +1,20 @@
+{
+  "scope": "Recovered exact opt-in FEC source only. Historical same-clock arithmetic equivalence is not native timing. No HOST endpoint, site, clock phase or die adoption claimed.",
+  "source_commit": "fe3cbf1e8",
+  "source_sha256": {
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_enc_rooted.sv": "f6c0ab6832cadd0f5caf3de18164fdec6335cdbd513107231a8ba1d4000588fa",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv": "15923b429259c028375c48d617189468528b3089047ecab648208c5c0cbd4d10",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_encode52_map.sv": "401ecc4c70ebfc04a624faee5540fc625c4c7bddc8a3f4c6bc48ba30d22b81a3",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_syndrome55_map.sv": "ade2e0bbf131d65d979f693ea4347c6431f9d7cfb420d9273c04849a57fbc27c",
+    "rtl/hbm_accel/io_native_20261014/hfd_serdes487_rooted.sv": "8432f10e78584936ff54fcfd7bceef5408899acb1bdc7d81506b6f4b4a1b67da",
+    "rtl/hbm_accel/io_native_20261014/tb_hbm_kp4_rooted_eq.sv": "3961f2984d44f45bde7cd7725144e0a3ccc5422f8dfc4a9c460d911619fd8a8d",
+    "rtl/hbm_accel/io_native_20261014/run_kp4_rooted_eq.sh": "58e56e270cb9367f662636a61503300491552e614bdc7a68c2cc1a445b68602c",
+    "results/arch/hbm_io_native_1014/fec_clock_request.json": "1018800fd56c6dddacf48500b40ebcd68a50c69832c5480d189df47d4f6f9115",
+    "results/arch/hbm_io_native_1014/gf_cones.json": "4b23a1c047a9f1fefbdb7fc83ccfbabf700d27d4070d1afc127f822e301d96ba"
+  },
+  "next": [
+    "Measure actual mapped flop clock ownership and area",
+    "Decompose physical roots into legal leaves if required",
+    "Source-pinned HOST digital protocol and strip packing; historical credit endpoint is not a static production successor"
+  ]
+}

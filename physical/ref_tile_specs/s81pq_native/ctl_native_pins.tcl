@@ -488,6 +488,8 @@ place_pin -pin_name {aqi_o[7]} -layer M3 -location {3.465 77.760} -pin_size {0.0
 place_pin -pin_name {aqi_o[8]} -layer M5 -location {3.372 77.760} -pin_size {0.024 0.192} -force_to_die_boundary
 place_pin -pin_name {aqi_o[9]} -layer M3 -location {3.609 77.760} -pin_size {0.018 0.144} -force_to_die_boundary
 place_pin -pin_name {ba_v_o} -layer M5 -location {3.516 77.760} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {ba_wv_o[0]} -layer M5 -location {2.124 77.760} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {ba_wv_o[1]} -layer M5 -location {2.268 77.760} -pin_size {0.024 0.192} -force_to_die_boundary
 place_pin -pin_name {ba_blk_o[0]} -layer M3 -location {3.753 77.760} -pin_size {0.018 0.144} -force_to_die_boundary
 place_pin -pin_name {ba_blk_o[1]} -layer M5 -location {3.660 77.760} -pin_size {0.024 0.192} -force_to_die_boundary
 place_pin -pin_name {ba_blk_o[2]} -layer M3 -location {3.933 77.760} -pin_size {0.018 0.144} -force_to_die_boundary

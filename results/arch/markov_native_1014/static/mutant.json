@@ -1,0 +1,15 @@
+{
+  "mutant": true,
+  "rc": 1,
+  "stdout": "FATAL: rtl/test/dsrom_markov_20261008/tb_markov_static.sv:25: nonexact n=0 got=c17e310b golden=c19248af\n       Time: 1860000  Scope: tb_markov_static\n",
+  "source_sha256": {
+    "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+    "rtl/v41rom/ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+    "rtl/v41rom/ot_dsrom_bmul3.sv": "753636fd6fdc34a2229b492c46b71d130ed41d95cf97665cac5d1df6daa27498",
+    "rtl/v41rom/ot_v41_fadd.sv": "9062c07e99f3baedf2b4e6399d5e12e2501be1db2d99bf71a73c2437bf3a5b91",
+    "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv": "b7aafc02678b46018ff83128ec3e278c75f4af27747912ffdec8c6d325fb958f",
+    "rtl/experimental/dsrom_markov_20261008/ot_s81_markov_k256_native.sv": "b6e93a3e4792bee734434984c00e7bb6c2655a5a650b6fc9c59663019c3762d0",
+    "rtl/experimental/dsrom_markov_20261008/ot_s81_markov_k256_static.sv": "7e5d1e0fd2fecf97fcb568e0ed39c70c1eb336793f2113a0171360100601c3b5",
+    "rtl/test/dsrom_markov_20261008/tb_markov_static.sv": "757540f5b2c19a7c6e944cbd0780e27e0836dba85bddb5b42692b19caacfec9b"
+  }
+}

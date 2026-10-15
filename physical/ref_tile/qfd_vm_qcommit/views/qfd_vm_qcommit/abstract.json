@@ -1,0 +1,187 @@
+{
+  "name": "qfd_vm_qcommit",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_qcommit-raw2-ff602c0d7/routes/qfd_vm_qcommit_raw2_ff602c0d7/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 2.552422440071922e-10 min 7.215363029278166e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_qcommit-raw2-ff602c0d7/routes/qfd_vm_qcommit_raw2_ff602c0d7/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_qcommit-raw2-ff602c0d7/record/views/qfd_vm_qcommit:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_qcommit-raw2-ff602c0d7/src/physical/ref_tile/qfd_vm_qcommit/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_qcommit-raw2-ff602c0d7/routes/qfd_vm_qcommit_raw2_ff602c0d7/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_qcommit-raw2-ff602c0d7/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_qcommit-raw2-ff602c0d7/cl/routed_ioref.a1_meas:/meas:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 3.941027504339445e-10 min 2.8937692519992453e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_qcommit-raw2-ff602c0d7/routes/qfd_vm_qcommit_raw2_ff602c0d7/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_qcommit-raw2-ff602c0d7/record/views/qfd_vm_qcommit:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_qcommit-raw2-ff602c0d7/src/physical/ref_tile/qfd_vm_qcommit/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_qcommit-raw2-ff602c0d7/routes/qfd_vm_qcommit_raw2_ff602c0d7/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_qcommit-raw2-ff602c0d7/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_qcommit-raw2-ff602c0d7/cl/routed_ioref.a1_meas:/meas:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 3.438025697466429e-10 min 5.185016305198076e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_qcommit-raw2-ff602c0d7/routes/qfd_vm_qcommit_raw2_ff602c0d7/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_qcommit-raw2-ff602c0d7/record/views/qfd_vm_qcommit:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_qcommit-raw2-ff602c0d7/src/physical/ref_tile/qfd_vm_qcommit/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_qcommit-raw2-ff602c0d7/routes/qfd_vm_qcommit_raw2_ff602c0d7/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_qcommit-raw2-ff602c0d7/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_qcommit-raw2-ff602c0d7/cl/routed_ioref.a1_meas:/meas:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_qcommit-raw2-ff602c0d7/src/physical/ref_tile/qfd_vm_qcommit/signoff.sdc",
+    "sha256": "a04c41e9adb88f836bee89612d7790123f939d5674fe1162e204e2291664d1f6",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict",
+    "in_verdict_sequence": true
+  },
+  "verdict": {
+    "json": "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_qcommit-raw2-ff602c0d7/cl/routed_ioref.a1.json",
+    "sha256": "d84eab41c22898deb204ae4ed3c8912f825e84beb345316e4fedefa7d1dc3a5e",
+    "expect_ps": {
+      "tt": 343.8,
+      "ff": 28.94
+    },
+    "tol_ps": 0.05,
+    "work": "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_qcommit-raw2-ff602c0d7/routes/qfd_vm_qcommit_raw2_ff602c0d7/work/orfs",
+    "files": {
+      "/meas/app0_io_ref_routed.sdc": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_qcommit-raw2-ff602c0d7/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
+        "sha256": "cb2805c3a4a622051ebd24447f6898db2d82fdd6060317692dc3180ef5ac6a7e"
+      },
+      "/work/results/asap7/opentallas_qfd_vm_qcommit_asap7_ref_qfd_vm_qcommit_raw2_ff602c0d7/base/6_final.odb": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_qcommit-raw2-ff602c0d7/routes/qfd_vm_qcommit_raw2_ff602c0d7/work/orfs/results/asap7/opentallas_qfd_vm_qcommit_asap7_ref_qfd_vm_qcommit_raw2_ff602c0d7/base/6_final.odb",
+        "sha256": "83bf219e1ffa991ef71a2eb3241490391410025ab73e67df9035c214af0286da"
+      },
+      "/work/results/asap7/opentallas_qfd_vm_qcommit_asap7_ref_qfd_vm_qcommit_raw2_ff602c0d7/base/6_final.sdc": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_qcommit-raw2-ff602c0d7/routes/qfd_vm_qcommit_raw2_ff602c0d7/work/orfs/results/asap7/opentallas_qfd_vm_qcommit_asap7_ref_qfd_vm_qcommit_raw2_ff602c0d7/base/6_final.sdc",
+        "sha256": "8e0bbc1a3d5b9e9e8cc4846dd8a8cac14e6bafa90ce7c310d1f74df2b2968989"
+      },
+      "/work/results/asap7/opentallas_qfd_vm_qcommit_asap7_ref_qfd_vm_qcommit_raw2_ff602c0d7/base/6_final.spef": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_qcommit-raw2-ff602c0d7/routes/qfd_vm_qcommit_raw2_ff602c0d7/work/orfs/results/asap7/opentallas_qfd_vm_qcommit_asap7_ref_qfd_vm_qcommit_raw2_ff602c0d7/base/6_final.spef",
+        "sha256": "e392ad4e9d60969ee39b2a92b44b737ff59c615f45db403e9f5fc03946760ca5"
+      },
+      "/work/w18_extra.sdc": {
+        "host": "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_qcommit-raw2-ff602c0d7/routes/qfd_vm_qcommit_raw2_ff602c0d7/work/orfs/w18_extra.sdc",
+        "sha256": "a04c41e9adb88f836bee89612d7790123f939d5674fe1162e204e2291664d1f6"
+      }
+    },
+    "check": {
+      "ff": {
+        "export_ps": 28.937692519992453,
+        "verdict_ps": 28.94,
+        "ok": true
+      },
+      "tt": {
+        "export_ps": 343.8025697466429,
+        "verdict_ps": 343.8,
+        "ok": true
+      }
+    }
+  },
+  "sdc_sequence": {
+    "ss": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_qfd_vm_qcommit_asap7_ref_qfd_vm_qcommit_raw2_ff602c0d7/base/6_final.odb",
+        "set ::ot_ce_corner ss",
+        "read_sdc /work/results/asap7/opentallas_qfd_vm_qcommit_asap7_ref_qfd_vm_qcommit_raw2_ff602c0d7/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_qfd_vm_qcommit_asap7_ref_qfd_vm_qcommit_raw2_ff602c0d7/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "ff": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_qfd_vm_qcommit_asap7_ref_qfd_vm_qcommit_raw2_ff602c0d7/base/6_final.odb",
+        "set ::ot_ce_corner ff",
+        "read_sdc /work/results/asap7/opentallas_qfd_vm_qcommit_asap7_ref_qfd_vm_qcommit_raw2_ff602c0d7/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_qfd_vm_qcommit_asap7_ref_qfd_vm_qcommit_raw2_ff602c0d7/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "tt": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_qfd_vm_qcommit_asap7_ref_qfd_vm_qcommit_raw2_ff602c0d7/base/6_final.odb",
+        "set ::ot_ce_corner ss",
+        "read_sdc /work/results/asap7/opentallas_qfd_vm_qcommit_asap7_ref_qfd_vm_qcommit_raw2_ff602c0d7/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_qfd_vm_qcommit_asap7_ref_qfd_vm_qcommit_raw2_ff602c0d7/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "qfd_vm_qcommit.lef": "a468d3e62f4f218be7c264727f5ed32cbf29705d4fb8c6af5c2e196c004349bf",
+    "qfd_vm_qcommit_ff.lib": "fec232207b448e2207dacf4902b6d428ac2b3e97d65307de87f3e3bf4dd299cc",
+    "qfd_vm_qcommit_ss.lib": "fc2f29b93f848790515471570f0394af04f898e45c6e381c729a30b3cda8f5e8",
+    "qfd_vm_qcommit_tt.lib": "19f9c89fd3e9a747f2cfc398d4ce984db8704c165c0fe56b5e76626be59793cc"
+  },
+  "ok": true,
+  "checked": true
+}

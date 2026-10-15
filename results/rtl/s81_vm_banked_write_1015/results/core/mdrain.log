@@ -1,0 +1,13 @@
+FIRST FAULT cy 1089: wsched own 010 dflt 0000 sflt 00000000000000000000000000000000 | mem 0000 | land 000 pq 0 out 0 op 0 rsched 0 | seq flt 00000000000
+READ DATA MISMATCH cy 1249 port 12 row 992
+MX DATA MISMATCH cy 1492 lane 9 row 960 ver 2 wr_cy -100 got 000bf10a exp 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c8f41
+READ DATA MISMATCH cy 1697 port 16 row 832
+PQ DATA MISMATCH cy 2179 row 992
+UNEXPECTED FAULT vm_fault 1 c_st 11: wsched own 010 dflt 0000 sflt 00000000000000000000000000000000 | mem 0000 | land 000 pq 0 out 0 op 0 rsched 0 | seq flt 10000000000
+TB_VMCORE RESULT mode 0 cycles 2210 commits 67664 K 11 reads 9813 pq 252 mix_reads 1998 mix_writes 500 rows_checked 12819 dones 4 cmds 4 bad 5
+COMMIT COUNT 67664
+TB_VMCORE FAIL mode 0
+- /srv/opentallas-scratch/codex-s81-vm-banked-write-1015/flat_core/tb_dsfd_vm_static_core.sv:296: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 13.118 s; speed 140.693 ns/s
+- Verilator: cpu 13.115 s on 1 threads; allocated 52 MB

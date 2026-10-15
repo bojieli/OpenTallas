@@ -1,0 +1,35 @@
+{
+  "checks": [
+    {
+      "top": "SW",
+      "returncode": 0,
+      "missing_undriven_multidriver_latch_width": []
+    },
+    {
+      "top": "SE",
+      "returncode": 0,
+      "missing_undriven_multidriver_latch_width": []
+    },
+    {
+      "top": "NW",
+      "returncode": 0,
+      "missing_undriven_multidriver_latch_width": []
+    },
+    {
+      "top": "NE",
+      "returncode": 0,
+      "missing_undriven_multidriver_latch_width": []
+    }
+  ],
+  "source_sha256": {
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7828d619da2fd2462cf0253b78c074dad1171e6ca77799bfc21f22987ed72237",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv": "364b6a3601b5042344513810a4fb6de6f25259c2de7d386d630b62fc807b5cf9",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv": "6320eb4fe8d7cd7a0caa7b22bfe818c11c05f9a45bc7ac6b114edd09e496b102",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv": "88f974c7bc36e635774ff2e9edc093f3c3a3963644f5e5141823c1ec07404991",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv": "56537844cc350ec0bb3141fa2a7ae866fd9c8c5e8e4040830ae89a4d915679d4",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv": "876f0d732dec5a9d1edb5844d49f168cc9b744d6eadc7b943e62f7273bebb293",
+    "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv": "245612df8d04a05b058272472bcac14219ba71fd4002f96f0fa66d5c9ee48ed3",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380"
+  },
+  "scope": "Full actual child hierarchy resolved for all four static quadrant shapes; no source omissions, missing pins, unconnected child pins, undriven signals, multidrivers, latches or width diagnostics. Native physical closure remains unqualified."
+}

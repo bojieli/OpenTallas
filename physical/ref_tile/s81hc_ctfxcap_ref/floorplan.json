@@ -29,19 +29,19 @@
   "cap_basis": "contract"
  },
  "pins": {
+  "W": [
+   "clk"
+  ],
   "N": [
+   "fd_in",
    "fv_in",
-   "fd_in"
+   "rst_in"
   ],
   "S": [
-   "fv",
    "fdx",
+   "fv",
    "fv_local",
    "fdx_local"
-  ],
-  "W": [
-   "clk",
-   "rst_in"
   ]
  },
  "clock_port": "clk",

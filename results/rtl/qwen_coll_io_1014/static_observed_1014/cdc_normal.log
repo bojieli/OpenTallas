@@ -1,0 +1,9 @@
+ot-run: ot-epyc1tb     admits   520 GB (avail 746, growth 103, headroom 64, waiters 0/0 GB) load 102/128 running 23 disk 833 GB 
+ot-run: ot-epyc4       admits   171 GB (avail 481, growth 262, headroom 48, waiters 0/0 GB) load 98/128 running 25 disk 659 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/qcoll-1834
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/qcoll-1834
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2740651-1792032694 after 1 s
+PASS static_io channels=12 words=6144 exact_read_latency=3rck no_runtime_credit_or_backpressure
+/srv/opentallas-scratch/codex/qcoll-1834/rtl/test/tb_qfd_io_static.sv:225: $finish called at 2162700 (1ps)
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2740651-1792032694): exit 0

@@ -1,0 +1,52 @@
+{
+  "scope": "one static eight-bank VM shared LG tap; three-station main-memory production bench",
+  "shape": {
+    "banks": 8,
+    "read_record_bits": 17,
+    "write_record_bits": 281,
+    "return_record_bits": 257,
+    "tap_count": 3,
+    "VM_banks": 8,
+    "VM_SRAMs_1024x256": 24,
+    "bank_RG": 3,
+    "bank_WG": 1
+  },
+  "boundary_bits": {
+    "local_rq": 136,
+    "far_rq": 136,
+    "near_rq": 136,
+    "local_wq": 2248,
+    "far_wq": 2248,
+    "near_wq": 2248,
+    "near_rr": 2056,
+    "local_rr": 2056,
+    "far_rr": 2056,
+    "near_done": 8,
+    "local_done": 8,
+    "far_done": 8,
+    "compiler_local_read_select": 8,
+    "compiler_local_write_select": 8
+  },
+  "compute_MACs_per_cycle": 0,
+  "memory_bytes_per_cycle": {
+    "read": 256,
+    "write": 256
+  },
+  "replication_cost": "three8lane2:1read/write muxes; twoedge forward and reverse pipeline per tap; fixedrequest-valid reservation shifts; payloadflopsunreset",
+  "latency_edges": {
+    "one_tap_forward": 2,
+    "one_tap_reverse": 2,
+    "bank_sample_to_read_response": 6,
+    "bank_sample_to_write_commit": 3,
+    "near_SU_local_read": 10,
+    "middle_SFU_local_read": 14,
+    "far_HC_local_read": 18,
+    "near_SU_local_write": 7,
+    "middle_SFU_local_write": 11,
+    "far_HC_local_write": 15
+  },
+  "schedule": "one source perbank percycle compilerreserved. local_read/write selectlocal vsfar; unselectedactivelocalrequest andfar/localcollision fault. Returnlocalvalidfixedreservation; missingVMresponsefaultneverwaits. Returnvalidstrippedfromfarwhenlocalexpected. Noqueuescreditsreadygrantsarbitration.",
+  "throughput": "Measured3072writes/384issuecycles and3072exactreads/384issuecycles=8sectors/cycle aggregate. Allthreeproducers issue8bankwaves together every3cycles;forward2/4/6edges packbankarrivalphases2/1/0mod3. Addeddraincyclesreportedseparatelyfromissuebudget.",
+  "physical": "newunclosedleaf. Row/track/capacity/outlinependingphysicalslotassignment beforeanyroute; no physicalfitclaim.",
+  "consumer_phase_gap": "SFUexistingwordoperandportsneedlocalprefetchbuffer; cannotdirectbind14edgeVMresponse to1edgeoperandport. HC18edgeVMproduceralsoseparatefromML2weightaperturereads."
+}

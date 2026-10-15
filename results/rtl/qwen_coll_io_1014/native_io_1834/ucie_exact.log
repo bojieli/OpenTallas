@@ -1,0 +1,9 @@
+ot-run: ot-epyc1tb     admits   452 GB (avail 679, growth 143, headroom 64, waiters 0/0 GB) load 124/128 running 27 disk 874 GB 
+ot-run: ot-epyc4       admits   370 GB (avail 596, growth 163, headroom 48, waiters 0/0 GB) load 179/128 running 23 disk 707 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/qcoll-1834
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/qcoll-1834
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1208579-1792028873 after 1 s
+RATE qfd_link_adp512 RXD=512 LAT=223 SRAM=1 rate=497/1000 words-per-cycle (min 0)
+PASS romio_slots exact  W=1024 RXD=512 LAT=223 words=1500 each way cycles=3269
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1208579-1792028873): exit 0

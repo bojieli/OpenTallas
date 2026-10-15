@@ -36,7 +36,8 @@ for L in $LAYERS; do
   CH=""; case $L in L0|L2) ;; *) [ -n "$CHAINS" ] && CH="--chain ${CHAINS//%L/$L}";; esac
   case $L in M*) CH="$CH --program-layer ${PROGL:-L0}";; esac
   SS=""; if [ -n "${SUSNAP:-}" ]; then f=${SUSNAP//%L/$L}; case $L in L*) f=${f//%N/$(printf %02d ${L#L})};; esac; SS="--su-snap $f"; fi
-  python3 $SRC/tools/s81_ctrl/die_layer_stim.py $OUT/stim_$L --cases $CASES --layer $L --ng $NG $CH $SS ${STIMX:-} > $OUT/stim_$L.log 2>&1 \
+  MX=""; if [ -n "${MIXSNAP:-}" ]; then f=${MIXSNAP//%L/$L}; case $L in L*) f=${f//%N/$(printf %02d ${L#L})};; esac; MX="--mix-snap $f"; fi
+  python3 $SRC/tools/s81_ctrl/die_layer_stim.py $OUT/stim_$L --cases $CASES --layer $L --ng $NG $CH $SS $MX ${STIMX:-} > $OUT/stim_$L.log 2>&1 \
     || { echo "DIE_LAYER_GATE FAIL stim $L: $(tail -2 $OUT/stim_$L.log)" | tee $OUT/verdicts.log; exit 1; }
 done
 FPF="rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv"
@@ -60,7 +61,7 @@ LIST="rtl/lib/ot_reset_sync.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_skid_buffer.s
  rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv
  rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv rtl/dsrom_sys/s81_ph/ot_s81ph_coll_rstc.sv rtl/dsrom_sys/s81_ph/ot_s81_pll_bb.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv
  rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv
- rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_collective_c.sv rtl/dsrom_sys/s81_ph/coll/dsfd_coll_job.sv rtl/dsrom_sys/s81_ctrl/ot_s81_coll_job.sv
+ rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_collective_c.sv rtl/dsrom_sys/s81_ph/coll/dsfd_coll_job.sv rtl/dsrom_sys/s81_ctrl/ot_s81_coll_job.sv rtl/dsrom_sys/s81_ph/coll/dsfd_coll_xc.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv
  rtl/rom/ot_w15_rom_oneshot_px_acceptedpop.sv rtl/link/ot_fifo_sram_fwft.sv rtl/link/ot_link_crc32.sv rtl/common/ot_link_credit.sv
  rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/ot_dsrom_link_chan.sv
  physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v
@@ -71,6 +72,10 @@ LIST="rtl/lib/ot_reset_sync.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_skid_buffer.s
 if [ -n "${SUSNAP:-}" ]; then
   SUL=$(cd $SRC && python3 -c "import sys; sys.path.insert(0,'tools/s81_suhc'); import su_gate as G; print(' '.join(dict.fromkeys(G.RTL + G.HIER)))")
   LIST="$SUL $LIST"
+fi
+if [ -n "${MIXSNAP:-}" ]; then
+  [ "$FP" = rtl ] || { echo "MIX4 integration requires FP=rtl"; exit 1; }
+  LIST="$LIST rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv"
 fi
 # the hierarchical HC slab modules dsfd_sp_hc.sv names since 10-12 (HIER generate; the bench keeps HIER 0): without them the build fails
 FILES=$( (for f in $LIST; do echo $SRC/$f; done; ls $SRC/rtl/dsrom_sys/s81_suhc/hier/*.sv) | awk '!seen[$0]++')
@@ -83,10 +88,11 @@ sha256sum $FILES $SRC/tools/s81_ctrl/die_layer_stim.py $SRC/tools/s81_suhc/hc_ga
 SUD=""; [ -n "${SUSNAP:-}" ] && SUD="+define+TB_SU_REAL"
 [ -n "${SUSNAP:-}" ] && for L in $LAYERS; do f=${SUSNAP//%L/$L}; case $L in L*) f=${f//%N/$(printf %02d ${L#L})};; esac; sha256sum $f; done >> $OUT/sources.sha256
 [ -n "$CHAINS" ] && sha256sum $SRC/tools/s81_ctrl/die_layer_chain.py $(for L in $LAYERS; do f=${CHAINS//%L/$L}; [ -f "$f" ] && echo $f; done | sort -u) >> $OUT/sources.sha256
+[ -n "${MIXSNAP:-}" ] && SUD="$SUD +define+TB_MIX4_REAL"
 SPL="+define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP"
 HX=""; [ $HCH = 1 ] && HX="+define+TB_HC_HIER -GHIER=1 -GHALF=1 -GCSPLIT=1 -GTAIL_SPLIT=2 -GCNL_PIN=1 -GCHAIN_STEP=6 -GHEAD_ROWS=$([ $NG = 256 ] && echo 10 || echo 2)"
 for m in $MODES; do
-  case $m in base) X="";; nom) X="-GEPER=0";; mut_ep) X="-GMUT=2";; mut_drop) X="-GMUT=4";; mut_hc) X="-GHMUT=1";; mut_coll) X="+define+OT_S81PH_MUT_TREP";; mut_inp) X="-GINP1=1";; mut_pd) X="-GPIPE=1 -GPIPE_PD=0";; mut_hl) X="-GHST=1 -GHLMUT=1";; mut_tx) X="-GHTX=3";; mut_su) X="-GSUMUT=4";; mut_sux) X="-GSUXMUT=3";; mut_rw) X="-GSUXMUT=4";;
+  case $m in base) X="";; nom) X="-GEPER=0";; mut_ep) X="-GMUT=2";; mut_drop) X="-GMUT=4";; mut_hc) X="-GHMUT=1";; mut_coll) X="+define+OT_S81PH_MUT_TREP";; mut_inp) X="-GINP1=1";; mut_pd) X="-GPIPE=1 -GPIPE_PD=0";; mut_hl) X="-GHST=1 -GHLMUT=1";; mut_tx) X="-GHTX=3";; mut_su) X="-GSUMUT=4";; mut_sux) X="-GSUXMUT=3";; mut_rw) X="-GSUXMUT=4";; mut_mix) X="-GMXMUT=2";;
     seqc) X="+define+TB_SEQC -GTMAX=110000";; mut_seqc) X="+define+TB_SEQC +define+OT_SSEQC_MUT_DROP_START -GTMAX=110000";; esac
   RUNL=$LAYERS; [ $m = base ] || [ $m = nom ] || [ $m = seqc ] || RUNL=$(echo $LAYERS | awk '{print $1}')
   XGM=""; for g in ${XG:-}; do n=${g%%=*}; case " $X " in *" $n="*) ;; *) XGM="$XGM $g";; esac; done

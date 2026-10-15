@@ -1,0 +1,2 @@
+PASS ring4 actual SRAM: physical sid order0,1,3,2; four banks twelve real macros eight stops; 4 mirrors,12 remote commits,12 WACK,32 main/mirror exact reads; read+6 commit+3; no faults, all outstanding drained; cycles=180
+tb_vms_static_ring4_memory.sv:118: $finish called at 1830000 (1ps)

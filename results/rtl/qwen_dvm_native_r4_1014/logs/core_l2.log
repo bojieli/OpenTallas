@@ -1,0 +1,28 @@
+ot-run: ot-epyc1tb     admits   490 GB (avail 716, growth 56, headroom 64, waiters 0/0 GB) load 92/128 running 13 disk 765 GB 
+ot-run: ot-epyc4       admits   321 GB (avail 548, growth 161, headroom 48, waiters 0/0 GB) load 121/128 running 31 disk 553 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  skipped: load hold: load1 > 1.5 x cores
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-3750827-1792040240 after 0 s
+FAIL cyc=264 tile 2 element 0 ref bed9c895 (operand beda) dvm bfaa0000
+FAIL cyc=264 tile 2 element 1 ref 3e558000 (operand 3e56) dvm 3f6a0000
+FAIL cyc=264 tile 2 element 2 ref bedd03b7 (operand bedd) dvm c01e0000
+FAIL cyc=264 tile 2 element 3 ref befff253 (operand bf00) dvm bef60000
+FAIL cyc=264 tile 3 element 0 ref be4494a1 (operand be45) dvm 3f420000
+FAIL cyc=264 tile 3 element 1 ref 3ee4e20c (operand 3ee5) dvm bf870000
+FAIL cyc=264 tile 3 element 2 ref bfd374ef (operand bfd3) dvm be300000
+FAIL cyc=264 tile 3 element 3 ref beca8545 (operand becb) dvm 40a50000
+FAIL cyc=264 tile 6 element 0 ref 3e8df0df (operand 3e8e) dvm 3fe30000
+FAIL cyc=264 tile 6 element 1 ref 3e43a6f3 (operand 3e44) dvm 3f4c0000
+FAIL cyc=264 tile 6 element 2 ref c07b6478 (operand c07b) dvm 401e0000
+FAIL cyc=264 tile 6 element 3 ref 3e938000 (operand 3e94) dvm 3ea50000
+FAIL cyc=264 tile 7 element 0 ref bffb8336 (operand bffc) dvm 40320000
+FAIL cyc=264 tile 7 element 1 ref 3e92f54e (operand 3e93) dvm c0af0000
+FAIL cyc=264 tile 7 element 2 ref be8fec0d (operand be90) dvm be680000
+FAIL cyc=264 tile 7 element 3 ref 3e74d058 (operand 3e75) dvm be910000
+FAIL cyc=264 tile 10 element 0 ref bf2c994c (operand bf2d) dvm 3fd50000
+FAIL cyc=264 tile 10 element 1 ref bf3c0744 (operand bf3c) dvm c0dd0000
+FAIL cyc=264 tile 10 element 2 ref c0ce8492 (operand c0cf) dvm be4f0000
+FAIL cyc=264 tile 10 element 3 ref bfc64141 (operand bfc6) dvm c0210000
+FAIL errors=51128 checks=159744
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-3750827-1792040240): exit 0

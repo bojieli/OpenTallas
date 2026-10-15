@@ -1,0 +1,8 @@
+{
+  "runner": "ot-run --mem 2 --threads 1 --dir /var/tmp/hbm-vm-lg-static-tap-1015 -- bash inputs/run_lg_static_tap.sh gate_v2 inputs",
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-2966085-1792047439",
+  "result": "RAN exit 0",
+  "actual_bank_source_commit": "0334452c354ae46f8ed1671753f98f8579742711",
+  "mutant": "known wrongsource zero payload committed intoactualSRAM; first read got00000000 vs9e3779b9"
+}

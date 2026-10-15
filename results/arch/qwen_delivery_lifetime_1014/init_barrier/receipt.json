@@ -1,0 +1,72 @@
+{
+  "scope": "DEFAULT_OFF_INITIALIZATION_COMPONENT_NOT_PHYSICAL_OR_GLOBAL_PEER_BINDING",
+  "sources": {
+    "tb_qwen_xdelivery_init_disabled.sv": "4a74d93d8c6ec714841fa9edacec52df2bcaf6c0917193c9866fa662493bcef2",
+    "tb_qwen_xdelivery_init_barrier.sv": "63b58779f2bc03009747dd974f6f5bf472c2cb0f668bd4a85314b790ee666816",
+    "ot_qwen_xdelivery_lifetime.sv": "26ed989248805d7857850beea48e83dee9945667dda3a8a5d302f6f005e36ffa",
+    "ot_qwen_xdelivery_init_barrier.sv": "92dbcf7ed02e274753f4cb8dfbe60bb2ca9e74f8612f851d1daab80d02e3a280",
+    "tb_qwen_xdelivery_init_bank.sv": "eb60a9532e9dd41f99fa9402f4b2517ef56b8cdc1525ab318b72f7eee3b09aee"
+  },
+  "cases": [
+    {
+      "case": "disabled",
+      "exit": 0,
+      "output": "PASS initialization controller default disabled\ntb_qwen_xdelivery_init_disabled.sv:19: $finish called at 210 (1s)",
+      "source_sha256": "92dbcf7ed02e274753f4cb8dfbe60bb2ca9e74f8612f851d1daab80d02e3a280"
+    },
+    {
+      "case": "controller",
+      "exit": 0,
+      "output": "PASS initialization controller delays missing/stale receipts, early accept, reset and full matching cohort\ntb_qwen_xdelivery_init_barrier.sv:29: $finish called at 650 (1s)",
+      "source_sha256": "92dbcf7ed02e274753f4cb8dfbe60bb2ca9e74f8612f851d1daab80d02e3a280"
+    },
+    {
+      "case": "actual_bank",
+      "exit": 0,
+      "output": "PASS actual vector-bank initialization receipt, retained identity, ACK, query retirement and collision suppression\ntb_qwen_xdelivery_init_bank.sv:22: $finish called at 180 (1s)",
+      "source_sha256": "92dbcf7ed02e274753f4cb8dfbe60bb2ca9e74f8612f851d1daab80d02e3a280"
+    },
+    {
+      "case": "barrier_bypass",
+      "exit": 1,
+      "output": "FATAL: tb_qwen_xdelivery_init_barrier.sv:18: dispatch before bank initialization\n       Time: 60  Scope: tb_qwen_xdelivery_init_barrier",
+      "source_sha256": "a557f53eb8a2832be513dd0e14f466357a48bb606f222131218f426ad2119ca2"
+    },
+    {
+      "case": "context_bypass",
+      "exit": 1,
+      "output": "FATAL: tb_qwen_xdelivery_init_barrier.sv:24: stale initialization context escaped\n       Time: 400  Scope: tb_qwen_xdelivery_init_barrier",
+      "source_sha256": "6fda0e2fb079c55b35399a1d314e30970ba1812d6528aaa69acd59f15bfa441d"
+    },
+    {
+      "case": "version_bypass",
+      "exit": 1,
+      "output": "FATAL: tb_qwen_xdelivery_init_barrier.sv:25: stale initialization version escaped\n       Time: 460  Scope: tb_qwen_xdelivery_init_barrier",
+      "source_sha256": "b465d1301f4817f3d837f5deb267ea78a4dafb31112f86344161fc5165226665"
+    },
+    {
+      "case": "participant_bypass",
+      "exit": 1,
+      "output": "FATAL: tb_qwen_xdelivery_init_barrier.sv:26: wrong initialization participants escaped\n       Time: 520  Scope: tb_qwen_xdelivery_init_barrier",
+      "source_sha256": "a12b61eb5ed5435ff1b04f29542a93dcb056084a57052c85b3dc11a92293e40c"
+    },
+    {
+      "case": "early_receipt",
+      "exit": 1,
+      "output": "FATAL: tb_qwen_xdelivery_init_bank.sv:13: receipt before actual bank BEGIN\n       Time: 20  Scope: tb_qwen_xdelivery_init_bank",
+      "source_sha256": "dfb7c31c4a5c3cb21d5ff71e207f438f58ea1f5565cba2c71499f9ea5f540b1f"
+    },
+    {
+      "case": "fault_receipt",
+      "exit": 1,
+      "output": "FATAL: tb_qwen_xdelivery_init_bank.sv:20: receipt certified BEGIN/event collision\n       Time: 170  Scope: tb_qwen_xdelivery_init_bank",
+      "source_sha256": "26e2499b1d84596530f8f240dd0af1cf2221658d0138048534b69580bf2b5008"
+    },
+    {
+      "case": "receipt_drop",
+      "exit": 1,
+      "output": "FATAL: tb_qwen_xdelivery_init_bank.sv:17: receipt not retained until ACK\n       Time: 40  Scope: tb_qwen_xdelivery_init_bank",
+      "source_sha256": "1851f38f54d8face01944645252cb7114bdd591dd16c43b95352b276064fa66f"
+    }
+  ]
+}

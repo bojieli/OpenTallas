@@ -1,0 +1,172 @@
+{
+  "name": "qfd_xf_native_rx64",
+  "top": "qfd_xf_ch",
+  "kind": "tile",
+  "params": {
+    "W": 546,
+    "IBUF": 4,
+    "OCRED": 64,
+    "IBMEM": 0
+  },
+  "sources": [
+    "rtl/physical/ot_qwen_xfifo_slots.sv",
+    "rtl/physical/ot_qwen_die_cdc_ch.sv",
+    "rtl/physical/ot_qwen_async_fifo_w.sv",
+    "rtl/lib/ot_async_fifo.sv",
+    "rtl/lib/ot_reset_sync.sv"
+  ],
+  "clock_port": "wck",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 90.72,
+    "h": 129.6
+  },
+  "layer_cap": "M5",
+  "macros": [],
+  "recipe": 2,
+  "pins": {
+    "W": [
+      "i_v",
+      "i_d",
+      "i_cr",
+      "w_fault"
+    ],
+    "E": [
+      "o_v",
+      "o_d",
+      "o_cr",
+      "r_fault"
+    ],
+    "N": [
+      "wck",
+      "rck",
+      "rst_n"
+    ]
+  },
+  "pin_ranges": {
+    "i_d": [
+      8,
+      115
+    ],
+    "i_v": [
+      117,
+      117.4
+    ],
+    "i_cr": [
+      118.4,
+      118.8
+    ],
+    "w_fault": [
+      119.8,
+      120.2
+    ],
+    "o_d": [
+      8,
+      115
+    ],
+    "o_v": [
+      117,
+      117.4
+    ],
+    "o_cr": [
+      118.4,
+      118.8
+    ],
+    "r_fault": [
+      119.8,
+      120.2
+    ],
+    "wck": [
+      24,
+      24.4
+    ],
+    "rst_n": [
+      43,
+      43.4
+    ],
+    "rck": [
+      62,
+      62.4
+    ]
+  },
+  "refglob": "*g_ipr.pd*",
+  "sdc_extra": [
+    "physical/qwen_romio_slots/qfd_xf_ch.sdc"
+  ],
+  "io_flop_at_pins": {
+    "cols": 6,
+    "allow_none": true
+  },
+  "orfs_vars": {
+    "OT_OFLOP_GAP": "4.5"
+  },
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "pin_h": "M4",
+    "pin_v": "M5",
+    "hold_margin_ns": 0.03,
+    "pin_balance": {
+      "group_max": 1,
+      "h": "M4",
+      "v": "M5"
+    },
+    "cts_sink": {
+      "size": 60,
+      "diameter_um": 60
+    }
+  },
+  "structural_change": "Native TP8 partition: die lead accepted TWO UCIe P/R channels in each direction plus three SerDes directions,10 hardened W546 leaves. P and SerDes546, R514 zero-padded32, unchanged credit CDC PIPE2, own writer/reader roots, kept pin capture/launch. No serializer, lost bit, clock relaxation or repricing. Dense86.4x129.6 leaf targets<=15000sinks/root; CTS gate required. n1 terminal FLOORPLAN_MARGIN hold-buffer area67.1%; n2 grows width to90.72um (hold allowance63.7%) without changing RTL or port ranges.",
+  "slot_change_request": "Compute die lead approved native credits 2026-10-14 18:22: TX IBUF64/32, RX OCRED64/32, adapter-side4. Old IBUF4 view incompatible. TX leaves request259.2x237.6 and RX90.72x129.6, ten channel region replan pending die assigned child pins.",
+  "job": {
+    "owner": "Codex:qwen-coll-io-1014",
+    "branch": "claude/qwen-coll-io-1014",
+    "tag": "nc2",
+    "purpose": "Native TP8 W546 credit CDC leaf for10-channel IO partition; die-approved UCIeP/R split",
+    "extra_paths": [
+      "physical/qwen_romio_slots",
+      "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1",
+      "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
+      "physical/asap7_memory_macros/ot_sram_1r1w2c_256x517_m1"
+    ],
+    "benches": [
+      {
+        "name": "production_io_native",
+        "cmd": "bash physical/qwen_romio_slots/bench_io_xfifo.sh {RUN}/bench/io exact",
+        "expect": "pass",
+        "pass_regex": "^PASS qfd_io_xfifo 10 concurrent",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "production_io_data_mutant",
+        "cmd": "bash physical/qwen_romio_slots/bench_io_xfifo.sh {RUN}/bench/mut mutant",
+        "expect": "fail",
+        "fail_regex": "^FAIL qfd_io_xfifo failed=3ff",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "iverilog"
+        ]
+      }
+    ],
+    "views_to": "physical/ref_tile/qfd_xf_native_rx64/views",
+    "record_to": "results/rtl/ref_tile/qfd_xf_native_rx64",
+    "structural_change": "Input sender-credit queue in registered-read SRAM; per-direction credit depth matches real sender and receiver, no obsolete closed IBUF4 substitution"
+  },
+  "reroute_reason": {
+    "kind": "param_change",
+    "params": {
+      "W": 546,
+      "IBUF": 4,
+      "OCRED": 64,
+      "IBMEM": 0
+    }
+  }
+}

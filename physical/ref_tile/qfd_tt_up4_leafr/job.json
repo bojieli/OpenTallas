@@ -1,0 +1,155 @@
+{
+ "name": "qfd_tt_up4_leafr-r1-COMMIT",
+ "block": "ot_qfd_band_upper",
+ "ref_tile": true,
+ "owner": "Claude:q14-compute-elements",
+ "purpose": "Qwen TP8 tree-top upper leaf ot_qfd_band_upper (NL4 NB3 LG12 LNK0 DLY1) native successor: reset pin register RPIN 1 (native audit of CLOSED lf1-421afad00: rst_n capture 324.1, tt_ty launch 225.2 > 220 on 17 pins) + kept output pin regs; die binds it as 4 leaves of qfd_tt_up4_w (two-level slot, zero added data edges, reset release +1 edge).",
+ "threads": 16,
+ "peak_ram_gb": 64,
+ "source": {
+  "branch": "claude/q14-r11-x3rst",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "rtl/hdc",
+   "rtl/physical/ot_qwen_spine_lane.sv",
+   "rtl/physical/ot_qwen_tt_up4_cluster.sv",
+   "rtl/test/qwen_lane_band"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_qfd_band_upper #(.NL(4), .NB(3), .LNK(0), .DLY(1), .TREE_LAT(7), .TCUT(7), .LG(12), .RPIN(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/lane_band_20261008/ot_qfd_band_lanes.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv rtl/hdc/ot_qwen_me_spine_h_w12.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_qwen_w12_arith.sv rtl/hdc/ot_qwen_w12_matvec.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_sfu.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "bl_tp8_exact",
+    "cmd": "mkdir -p {RUN}/bench && JOBS=8 bash rtl/test/qwen_lane_band/run_band_lanes.sh {RUN}/bench/bl_tp8_exact -GNBP=3",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS qfd_band_lanes"
+   },
+   {
+    "name": "bl_tp8_mut3_bandidx",
+    "cmd": "mkdir -p {RUN}/bench && JOBS=8 bash rtl/test/qwen_lane_band/run_band_lanes.sh {RUN}/bench/bl_tp8_mut3_bandidx -GNBP=3 -GMUT=3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qfd_band_lanes"
+   },
+   {
+    "name": "up4w_rpin_exact",
+    "cmd": "mkdir -p {RUN}/bench && JOBS=8 bash rtl/test/qwen_lane_band/run_band_lanes.sh {RUN}/bench/up4w_rpin_exact -GNBP=3 -GNL=16 -GLNK=0 -GCL=2 -GCDLY=1 -GRPIN=1 -GRSTX=1",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS qfd_band_lanes"
+   },
+   {
+    "name": "up4w_rpin_bypass",
+    "cmd": "mkdir -p {RUN}/bench && JOBS=8 bash rtl/test/qwen_lane_band/run_band_lanes.sh {RUN}/bench/up4w_rpin_bypass -GNBP=3 -GNL=16 -GLNK=0 -GCL=2 -GCDLY=1 -GRPIN=2 -GRSTX=1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qfd_band_lanes leaf reset"
+   },
+   {
+    "name": "up4w_wire_mutant",
+    "cmd": "mkdir -p {RUN}/bench && JOBS=8 VDEF=+define+OT_QFD_UP4_MUT bash rtl/test/qwen_lane_band/run_band_lanes.sh {RUN}/bench/up4w_wire_mutant -GNBP=3 -GNL=16 -GLNK=0 -GCL=2 -GCDLY=1 -GRPIN=1 -GRSTX=1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qfd_band_lanes [0-9]+ mismatching"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_tt_up4_leafr/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_tt_up4_leafr/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 64
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_tt_up4_leafr --out {RUN}/record/views/ot_qfd_band_upper  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_tt_up4_leafr/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_tt_up4_tp8/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_tt_up4_leafr/qfd_tt_up4_leafr-r1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "r11: RPIN 1 reset pin register + kept pin regs (native audit lf1-421afad00: rst_n 324.1, tt_ty launch 225.2); same faces/outline",
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/rtl/qwen_r11_pin_audit_1014/tt_up4_tp8_band_upper.json",
+  "cell": "ot_qfd_band_upper",
+  "launch_ps": 225.16,
+  "capture_ps": 324.1,
+  "fix": "RTL reset pin register (RPIN 1) in ot_qfd_band_upper: rst_n lands in one kept flop, the leaf resets from it; keep_pin_regs for the tt_ty output stage; same outline 64.8 x 205.2, faces S in / N out / W ctl, recipe 2"
+ }
+}

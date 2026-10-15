@@ -25,7 +25,7 @@ CAP_MODE = 'asbuilt'
 HARD_IP = ('ot_hbm3e_phy', 'qfd_io_serdes', 'qfd_io_ucie', 'qkd_pll', 'qfd_clkrx')
 # coordinator DECISION 2026-10-12 12:15: qfd_tile_nk / h3c / h3s is a CLUSTER slot (hard ROM/SRAM/leaf children, M2-M7,
 # PG M7): the die routes over it on M8+ only, so for the die cut model it counts like hard IP (die layer only).
-CLUSTER = ('qfd_tile_nk', 'qfd_tile_h3c', 'qfd_tile_h3s')
+CLUSTER = ('qfd_tile_nk', 'qfd_tile_nl', 'qfd_tile_h3c', 'qfd_tile_h3s')
 # layer plan B (coordinator 2026-10-12 relaxation, evaluated): tile_nk capped at M6 (leaves M5 incl. PG; tile PG strap
 # + horizontal ROM-band crossing on M6) -> the die owns M7 + M8 (+M9) over the cluster.  CLUSTER_PLAN 'B' adds M7 (75 %)
 # to vertical-wire (horizontal-cut) capacity over CLUSTER blocks; horizontal wires still see M8 only (M6 is the tile's).

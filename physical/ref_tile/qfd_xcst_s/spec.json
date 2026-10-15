@@ -1,0 +1,142 @@
+{
+ "name": "qfd_xcst_s",
+ "top": "qfd_xcst_s",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv",
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
+  "rtl/hdc/ot_hdc_delay.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 52.68,
+  "h": 103.656,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "a_d",
+   "ck",
+   "rst_n",
+   "sidx",
+   "tie_hi",
+   "tie_lo"
+  ],
+  "S": [
+   "b_d"
+  ],
+  "W": [
+   "tap_d"
+  ]
+ },
+ "route": {
+  "pd": 0.55,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "macro_halo_um": 5.4
+ },
+ "slot_change_request": "el1014-qwen-split-compute.log (qwen-dvm-build request): replaces qfd_cst_s (384) for the distributed x slice: corridor 516 b (508 + 8 TDM tag), tap to the tile 508 b unchanged, strap sidx[2:0]; same outline as qfd_cst_s.",
+ "job": {
+  "owner": "Codex:el1014-qwen-dvm-build",
+  "branch": "claude/qwen-dvm-1014",
+  "tag": "xs7",
+  "purpose": "Qwen TP8 corridor station with the tile's x hold (distributed x slice, owner 08:20 PT 10-14): onward + tap flops as qfd_cst_s, + TDM capture of its own tagged line and the tuple hold register (IL 8, XOFF 3) driving the tile's xl pins. r3: no tap ready (the tile never back-pressures; DIE_BUS_AUDIT row 10).",
+  "benches": [
+   {
+    "name": "dvm_array_exact",
+    "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/pos tb_qwen_me_dvm_w12 -GNCOL=2 -GNH=8 -GSMIN=4 -GSMAX=7 -GNOPS=40 -GSEED=3 -GGAP=0",
+    "expect": "pass",
+    "pass_regex": "^PASS dvm",
+    "threads": 12,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "dvm_array_wrong_station",
+    "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/neg tb_qwen_me_dvm_w12 -GNCOL=2 -GNH=8 -GSMIN=4 -GSMAX=7 -GNOPS=12 -GSEED=3 -GGAP=0 -GHEAD_MUT=3",
+    "expect": "fail",
+    "pass_regex": "^PASS dvm",
+    "threads": 12,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/hdc",
+   "rtl/proto",
+   "rtl/qwen_sys/dvm_20261014"
+  ],
+  "views_to": "physical/ref_tile/qfd_xcst_s/views",
+  "record_to": "results/rtl/ref_tile/qfd_xcst_s"
+ },
+ "pin_ranges": {
+  "a_d": [
+   1.404,
+   51.9
+  ],
+  "b_d": [
+   0.732,
+   51.324
+  ],
+  "tap_d": [
+   26.94,
+   77.436
+  ],
+  "ck": [
+   51.98,
+   52.16
+  ],
+  "rst_n": [
+   52.28,
+   52.46
+  ],
+  "sidx": [
+   0.2,
+   0.8
+  ],
+  "tie_hi": [
+   0.85,
+   1.05
+  ],
+  "tie_lo": [
+   1.1,
+   1.3
+  ]
+ },
+ "pin_source": "die-assigned pin file of the master it replaces (c3_codex out/pins/qfd_cst_s.json, relay_data_run.py --case, src b723ed282): corridor and tap ranges taken verbatim; +8 TDM tag bits share the corridor range; pin_balance M3+M5 (516 b on the assigned 50.5-um M5 range alone overflow by one PPL group: gate pin_fit 11:3x)",
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "Register corridor tag/data at the existing b_q face before selection; forward selected registered data into the fixed hold deadline, retaining historical cap when no tag matches. Fix measured native capture256.8/247.2ps without an added schedule edge.",
+ "reroute_reason": {
+  "kind": "rtl_change"
+ }
+}

@@ -1,0 +1,175 @@
+{
+  "defines": [],
+  "elaboration_diagnostics": "%Warning-WIDTHCONCAT: /home/ubuntu/wt/s-static-channels-1014/rtl/link/ot_link_crc32.sv:29:26: More than a 8k bit replication is probably wrong: 18016\n   29 |             masks = {32*W{1'b0}};\n      |                          ^\n                      ... Use \"/* verilator lint_off WIDTHCONCAT */\" and lint_on around source to disable this message.\n",
+  "ports": {
+    "clk": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "fault": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "host_completion": {
+      "bits": 65,
+      "direction": "input"
+    },
+    "host_rx": {
+      "bits": 516,
+      "direction": "output"
+    },
+    "host_status": {
+      "bits": 11,
+      "direction": "input"
+    },
+    "host_tx_valid": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "phy_rx_data": {
+      "bits": 2560,
+      "direction": "input"
+    },
+    "phy_rx_valid": {
+      "bits": 5,
+      "direction": "input"
+    },
+    "phy_tx_data": {
+      "bits": 2560,
+      "direction": "output"
+    },
+    "phy_tx_valid": {
+      "bits": 5,
+      "direction": "output"
+    },
+    "rst_n": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "rx_beat_slot": {
+      "bits": 5,
+      "direction": "input"
+    },
+    "rx_expected_last": {
+      "bits": 5,
+      "direction": "input"
+    },
+    "rx_expected_seq": {
+      "bits": 50,
+      "direction": "input"
+    },
+    "rx_frame_slot": {
+      "bits": 5,
+      "direction": "input"
+    },
+    "rx_kind": {
+      "bits": 10,
+      "direction": "input"
+    },
+    "rx_phase": {
+      "bits": 10,
+      "direction": "input"
+    },
+    "rx_slot": {
+      "bits": 5,
+      "direction": "input"
+    },
+    "tx_beat_slot": {
+      "bits": 5,
+      "direction": "input"
+    },
+    "tx_frame_slot": {
+      "bits": 5,
+      "direction": "input"
+    },
+    "tx_kind": {
+      "bits": 10,
+      "direction": "input"
+    },
+    "tx_phase": {
+      "bits": 10,
+      "direction": "input"
+    },
+    "tx_seq": {
+      "bits": 50,
+      "direction": "input"
+    },
+    "tx_slot": {
+      "bits": 5,
+      "direction": "input"
+    },
+    "vm_rx_channel": {
+      "bits": 3,
+      "direction": "output"
+    },
+    "vm_rx_last": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "vm_rx_payload": {
+      "bits": 552,
+      "direction": "output"
+    },
+    "vm_rx_valid": {
+      "bits": 1,
+      "direction": "output"
+    },
+    "vm_tx_channel": {
+      "bits": 3,
+      "direction": "input"
+    },
+    "vm_tx_last": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "vm_tx_payload": {
+      "bits": 552,
+      "direction": "input"
+    },
+    "vm_tx_valid": {
+      "bits": 1,
+      "direction": "input"
+    },
+    "wfc_rx": {
+      "bits": 514,
+      "direction": "output"
+    },
+    "wfc_tx": {
+      "bits": 514,
+      "direction": "input"
+    }
+  },
+  "qualification": "elaborated source port widths only; physical and native behavior unqualified",
+  "schema": "opentallas.source-width-census.v1",
+  "self_checks": {
+    "exact_replay": true,
+    "historical_host514_rejected": true,
+    "mismatch": [
+      {
+        "actual": {
+          "bits": 516,
+          "direction": "output"
+        },
+        "expected": {
+          "bits": 514,
+          "direction": "output"
+        },
+        "port": "host_rx"
+      }
+    ]
+  },
+  "source_sha256": {
+    "/home/ubuntu/wt/s-static-channels-1014/rtl/dsrom_sys/s81_ph/coll/dsfd_coll_static_channels.sv": "12c2bcf55caca4c1a909ebf37f1d551f902ede41b2b27ef24df3a689b7e4c131",
+    "/home/ubuntu/wt/s-static-channels-1014/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_channels.sv": "c58460b6549408a6773cfd9d4c3e3960f871d67f1cd9a701b2a0194107d19dd4",
+    "/home/ubuntu/wt/s-static-channels-1014/rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_gearbox.sv": "42d3c37f9db7a4ae1a6fcb03d42313ced946fcc9760e4d96538308e0f592b5e2",
+    "/home/ubuntu/wt/s-static-channels-1014/rtl/dsrom_sys/s81_static_collective/s81_static_phy_digital.sv": "b0bf36eee6f37a07f6467b52a1d6c3facf43367d7cdf79a339c98ac3b5184b87",
+    "/home/ubuntu/wt/s-static-channels-1014/rtl/dsrom_sys/s81_static_collective/s81_static_raw_fmt1_codec.sv": "feb23026c65ca9c83825a5363d79d3d07503231d656c9f30c78cd7cf88ae1deb",
+    "/home/ubuntu/wt/s-static-channels-1014/rtl/dsrom_sys/s81_static_collective/s81_static_raw_fmt1_lane.sv": "c6a7c7e50b5001a858675a991c5598516699f112c4b982b52fee4489bc983c34",
+    "/home/ubuntu/wt/s-static-channels-1014/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_endpoint.sv": "80216add00fb826a414cdcc3cb85dc3676186b431ccae9fdb953dd597699ef62",
+    "/home/ubuntu/wt/s-static-channels-1014/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_rank.sv": "11918bee7fb76affe1599fb18f1979aa2a74c9898adad33a25a424dd9523502b",
+    "/home/ubuntu/wt/s-static-channels-1014/rtl/dsrom_sys/s81_static_collective/s81_static_tp4_vm_producer.sv": "d057a98110f00a48ef8a1607d340914577c7cd4f52d5db4c07ddf924a2b635e1",
+    "/home/ubuntu/wt/s-static-channels-1014/rtl/link/ot_link_crc32.sv": "2ce3961b122aec70a8a509e4f5638904363d72f6bc90db93e5ff1a35b71e4c97"
+  },
+  "top": "s81_static_fmt1_channels",
+  "total_port_bits": 8043
+}

@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_suhc_fsr.sv": "9b457c76fd5d9af3a3c43789af900948d1a82b7b4234824147026c77baab0896",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_suhc_return_map.sv": "495a7572c4627e34c6e1c84ffdf8807f694e7f75b65fc34c6b06551b6bacad75",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_scatter.sv": "fbb1ada30aecb7c33a4f84ec7358806a97863ca5556188cb6475c0232dee7c0f",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128.sv": "28b404bc01d8722b2cac8aadf058d48edb4c99d6128f7b8872f971f8dda940d8",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv": "389a09f45fb0543854f96d4d950fd329cb556c88430c1e5fea82147c56034f1e",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_slice128_suhc.sv": "bb50530c6cb8462a39dff6f6d4b258a140a3fc7dff4faa1c063bd904c8621544",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_return.sv": "5201f61b7992c9c330197c82cf84d6a059c13732fd908a804339f90b456022e2",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static512_suhc.sv": "7248d4fb158ccc439d7b1bf549e84fdb9a0e47f2d8b60c5d599c9735ceb04b1b",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "6f87b48e0860f3645178d2973638322af7867280a6884809be5e2024b2d91828",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wdispatch128.sv": "28bd561ffe0bf79ccd9de80b657f5ac04c1f2678741233eb6f19240c4d82ea81",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wstage128.sv": "effa6053cf176b39cc7e237045c8505c4ee8343ea979cd22ef3bc542cd989457",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wsched.sv": "42ac434cd3e7e807e7c61a7b509d71cd3622f195799c251a8abd7801ac74eae9",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_rsched.sv": "67f8701be2d9c7e44ba2c007f9ac04f3de9845797e5ddc04ac0ffd25950f171d",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_landing.sv": "ab60f5b07f1770627e867562d8851e3d2125ef49df895d18a850d67899709af7",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_seq_static.sv": "de3f8c011bdf9e9eeb4bcdbd80e5eac3c2888c156c5cba38c428da77081a19af",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_core.sv": "3f34ad57751b7694b93392bfb1a54dc37e7deec2d1504b09bcff512ba128178f",
+    "rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_static_core.sv": "1f90a6b96aea7cd592c7e11b5350bc8ba88b0677e563032378c8a5df30741518"
+  },
+  "seeds": 2,
+  "reads_per_seed": 1000,
+  "fault_witnesses": 6,
+  "mutants_killed": 5,
+  "commits_per_seed": 67696,
+  "pin_read_latency": 12,
+  "pin_command_done_latency": 6,
+  "native_shape": "128 actual SRAM models; SU16R16W,HC2R8W,PQ4R,MIX20R4W,collective4W1R",
+  "source_snapshot": "/srv/opentallas-scratch/claude/s81-static-core-s2-20261015",
+  "unit": "oth-ubuntu-928269-1792046009",
+  "physical_qualification": false
+}

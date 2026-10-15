@@ -1,0 +1,40 @@
+{
+ "schema": "opentallas.hgi_unitrate.su_prod_vec.v1",
+ "program": "hbm-sim Qwen3-8B TP4 P8191 rank 0 layer 0",
+ "seed": 20261010,
+ "cases": [
+  {
+   "tag": "swiglu",
+   "unit": "SFU",
+   "priced": 120.0,
+   "priced_how": "GLU fast path (width 0.5)",
+   "stage_sectors": 769,
+   "drain_sectors": 384,
+   "roles": {
+    "A": [
+     168960,
+     172031,
+     3072
+    ],
+    "B": [
+     172032,
+     175103,
+     3072
+    ],
+    "C": [
+     12672,
+     12672,
+     1
+    ],
+    "O": [
+     175104,
+     178175,
+     3072
+    ]
+   },
+   "vm_in_sectors": 1153,
+   "vm_out_words": 3072,
+   "vm_out_sectors": 384
+  }
+ ]
+}

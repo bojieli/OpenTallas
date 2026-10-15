@@ -1,0 +1,141 @@
+{
+  "schema": "ot.qwen.static_cdc.pin_request.v1",
+  "master": "qfd_static_ch546",
+  "rtl": "rtl/physical/ot_qfd_static_transport.sv",
+  "sources": [
+    "rtl/physical/ot_qfd_static_transport.sv",
+    "rtl/lib/ot_reset_sync.sv"
+  ],
+  "outline_request_um": [
+    216,
+    151.2
+  ],
+  "ports": {
+    "wck": {
+      "direction": "input",
+      "width": 1
+    },
+    "rck": {
+      "direction": "input",
+      "width": 1
+    },
+    "rst_n": {
+      "direction": "input",
+      "width": 1
+    },
+    "w_slot": {
+      "direction": "input",
+      "width": 1
+    },
+    "w_addr": {
+      "direction": "input",
+      "width": 6
+    },
+    "w_version": {
+      "direction": "input",
+      "width": 1
+    },
+    "i_valid": {
+      "direction": "input",
+      "width": 1
+    },
+    "i_data": {
+      "direction": "input",
+      "width": 546
+    },
+    "r_slot": {
+      "direction": "input",
+      "width": 1
+    },
+    "r_addr": {
+      "direction": "input",
+      "width": 6
+    },
+    "r_version": {
+      "direction": "input",
+      "width": 1
+    },
+    "o_valid": {
+      "direction": "output",
+      "width": 1
+    },
+    "o_data": {
+      "direction": "output",
+      "width": 546
+    },
+    "w_fault": {
+      "direction": "output",
+      "width": 1
+    },
+    "r_fault": {
+      "direction": "output",
+      "width": 1
+    }
+  },
+  "macro": {
+    "instance": "u_mem",
+    "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
+    "outline_um": [
+      178.632,
+      81
+    ],
+    "at_request_um": [
+      19.44,
+      34.56
+    ]
+  },
+  "clock_entries": [
+    "wck",
+    "rck"
+  ],
+  "provisional_faces": {
+    "W": [
+      "i_data",
+      "i_valid",
+      "w_slot",
+      "w_addr",
+      "w_version",
+      "w_fault"
+    ],
+    "E": [
+      "o_data",
+      "o_valid",
+      "r_slot",
+      "r_addr",
+      "r_version",
+      "r_fault"
+    ],
+    "N": [
+      "wck",
+      "rck",
+      "rst_n"
+    ]
+  },
+  "pin_layers": {
+    "W": "M4",
+    "E": "M4",
+    "N": "M5"
+  },
+  "signal_cap": "M5",
+  "timing_contract": {
+    "write_slot_to_SRAM_commit_wck": 1,
+    "read_slot_to_output_rck": 3,
+    "reset_deassert_guard": "twoedgesindomain afterrawreset; allowthirdedge beforecalendarwork",
+    "version_visibility": "two readeredgesafterwrittenversionpublication; compilerreservesreadaccordingly"
+  },
+  "placement_status": "REQUEST_ONLY; no finalshape/assignedpins/physicalgate/nativequalification",
+  "role_instances": [
+    "up",
+    "dp",
+    "ur",
+    "dr",
+    "sx0",
+    "sr0",
+    "sx1",
+    "sr1",
+    "sx2",
+    "sr2",
+    "seq",
+    "cq"
+  ]
+}

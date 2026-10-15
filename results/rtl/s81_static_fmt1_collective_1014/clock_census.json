@@ -1,0 +1,804 @@
+{
+  "schema": "s81-static-fmt1-clock-census-v1",
+  "source_tar_sha256": "c1caae2838f4641c6390e19fa1a82eebdbdaeacf9bcbe52d8bb0df22c84926e6",
+  "yosys_json_sha256": "a15d84a94a002b6d5c697cab37acbc1a48723bb40d3365409d84b072b33db7c4",
+  "modules": {
+    "$paramod\\ot_link_crc32\\W=s32'00000000000000000000001000110011": {
+      "register_bits": 0,
+      "register_types": {},
+      "ports": {
+        "d": {
+          "direction": "input",
+          "bits": 563
+        },
+        "crc": {
+          "direction": "output",
+          "bits": 32
+        }
+      }
+    },
+    "$paramod\\s81_static_fmt1_codec\\PEER=s32'00000000000000000000000000000001": {
+      "register_bits": 2440,
+      "register_types": {
+        "$adffe": 1,
+        "$adff": 2439
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tx_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tx_record": {
+          "direction": "input",
+          "bits": 569
+        },
+        "tx_frame_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "tx_frame": {
+          "direction": "output",
+          "bits": 595
+        },
+        "rx_frame_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rx_frame": {
+          "direction": "input",
+          "bits": 595
+        },
+        "rx_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "rx_record": {
+          "direction": "output",
+          "bits": 569
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    "$paramod\\s81_static_fmt1_codec\\PEER=s32'00000000000000000000000000000010": {
+      "register_bits": 2440,
+      "register_types": {
+        "$adffe": 1,
+        "$adff": 2439
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tx_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tx_record": {
+          "direction": "input",
+          "bits": 569
+        },
+        "tx_frame_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "tx_frame": {
+          "direction": "output",
+          "bits": 595
+        },
+        "rx_frame_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rx_frame": {
+          "direction": "input",
+          "bits": 595
+        },
+        "rx_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "rx_record": {
+          "direction": "output",
+          "bits": 569
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    "$paramod\\s81_static_fmt1_codec\\PEER=s32'00000000000000000000000000000011": {
+      "register_bits": 2441,
+      "register_types": {
+        "$adffe": 1,
+        "$adff": 2440
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tx_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tx_record": {
+          "direction": "input",
+          "bits": 569
+        },
+        "tx_frame_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "tx_frame": {
+          "direction": "output",
+          "bits": 595
+        },
+        "rx_frame_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rx_frame": {
+          "direction": "input",
+          "bits": 595
+        },
+        "rx_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "rx_record": {
+          "direction": "output",
+          "bits": 569
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    "$paramod\\s81_static_fmt1_core\\RANK=s32'00000000000000000000000000000000": {
+      "register_bits": 5700,
+      "register_types": {
+        "$adff": 5700
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "issue_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "src_valid": {
+          "direction": "input",
+          "bits": 1
+        },
+        "src_data": {
+          "direction": "input",
+          "bits": 512
+        },
+        "tag": {
+          "direction": "input",
+          "bits": 32
+        },
+        "seq": {
+          "direction": "input",
+          "bits": 16
+        },
+        "last": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rankmask": {
+          "direction": "input",
+          "bits": 4
+        },
+        "commit_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "commit_tag": {
+          "direction": "input",
+          "bits": 32
+        },
+        "commit_seq": {
+          "direction": "input",
+          "bits": 16
+        },
+        "commit_last": {
+          "direction": "input",
+          "bits": 1
+        },
+        "commit_rankmask": {
+          "direction": "input",
+          "bits": 4
+        },
+        "commit_rows": {
+          "direction": "input",
+          "bits": 60
+        },
+        "tx_valid": {
+          "direction": "output",
+          "bits": 1
+        },
+        "tx_frame": {
+          "direction": "output",
+          "bits": 569
+        },
+        "remote_v": {
+          "direction": "input",
+          "bits": 4
+        },
+        "remote_frame": {
+          "direction": "input",
+          "bits": 2276
+        },
+        "vm_we": {
+          "direction": "output",
+          "bits": 4
+        },
+        "vm_rows": {
+          "direction": "output",
+          "bits": 60
+        },
+        "vm_data": {
+          "direction": "output",
+          "bits": 2048
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    "$paramod\\s81_static_fmt1_lane\\PEER=s32'00000000000000000000000000000001": {
+      "register_bits": 0,
+      "register_types": {},
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tx_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tx_record": {
+          "direction": "input",
+          "bits": 569
+        },
+        "rx_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "rx_record": {
+          "direction": "output",
+          "bits": 569
+        },
+        "tx_beat_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tx_phase": {
+          "direction": "input",
+          "bits": 2
+        },
+        "tx_frame_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rx_beat_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rx_phase": {
+          "direction": "input",
+          "bits": 2
+        },
+        "rx_frame_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "phy_tx_valid": {
+          "direction": "output",
+          "bits": 1
+        },
+        "phy_tx_data": {
+          "direction": "output",
+          "bits": 512
+        },
+        "phy_rx_valid": {
+          "direction": "input",
+          "bits": 1
+        },
+        "phy_rx_data": {
+          "direction": "input",
+          "bits": 512
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    "$paramod\\s81_static_fmt1_lane\\PEER=s32'00000000000000000000000000000010": {
+      "register_bits": 0,
+      "register_types": {},
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tx_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tx_record": {
+          "direction": "input",
+          "bits": 569
+        },
+        "rx_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "rx_record": {
+          "direction": "output",
+          "bits": 569
+        },
+        "tx_beat_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tx_phase": {
+          "direction": "input",
+          "bits": 2
+        },
+        "tx_frame_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rx_beat_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rx_phase": {
+          "direction": "input",
+          "bits": 2
+        },
+        "rx_frame_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "phy_tx_valid": {
+          "direction": "output",
+          "bits": 1
+        },
+        "phy_tx_data": {
+          "direction": "output",
+          "bits": 512
+        },
+        "phy_rx_valid": {
+          "direction": "input",
+          "bits": 1
+        },
+        "phy_rx_data": {
+          "direction": "input",
+          "bits": 512
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    "$paramod\\s81_static_fmt1_lane\\PEER=s32'00000000000000000000000000000011": {
+      "register_bits": 0,
+      "register_types": {},
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tx_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tx_record": {
+          "direction": "input",
+          "bits": 569
+        },
+        "rx_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "rx_record": {
+          "direction": "output",
+          "bits": 569
+        },
+        "tx_beat_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tx_phase": {
+          "direction": "input",
+          "bits": 2
+        },
+        "tx_frame_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rx_beat_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rx_phase": {
+          "direction": "input",
+          "bits": 2
+        },
+        "rx_frame_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "phy_tx_valid": {
+          "direction": "output",
+          "bits": 1
+        },
+        "phy_tx_data": {
+          "direction": "output",
+          "bits": 512
+        },
+        "phy_rx_valid": {
+          "direction": "input",
+          "bits": 1
+        },
+        "phy_rx_data": {
+          "direction": "input",
+          "bits": 512
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    "$paramod\\s81_static_tp4_endpoint\\RANK=s32'00000000000000000000000000000000": {
+      "register_bits": 2680,
+      "register_types": {
+        "$adffe": 1,
+        "$adff": 2679
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "issue_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "src_valid": {
+          "direction": "input",
+          "bits": 1
+        },
+        "src_data": {
+          "direction": "input",
+          "bits": 512
+        },
+        "tag": {
+          "direction": "input",
+          "bits": 32
+        },
+        "seq": {
+          "direction": "input",
+          "bits": 16
+        },
+        "last": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rankmask": {
+          "direction": "input",
+          "bits": 4
+        },
+        "tx_valid": {
+          "direction": "output",
+          "bits": 1
+        },
+        "tx_frame": {
+          "direction": "output",
+          "bits": 569
+        },
+        "commit_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rx_valid": {
+          "direction": "input",
+          "bits": 4
+        },
+        "rx_frame": {
+          "direction": "input",
+          "bits": 2276
+        },
+        "commit_tag": {
+          "direction": "input",
+          "bits": 32
+        },
+        "commit_seq": {
+          "direction": "input",
+          "bits": 16
+        },
+        "commit_last": {
+          "direction": "input",
+          "bits": 1
+        },
+        "commit_rankmask": {
+          "direction": "input",
+          "bits": 4
+        },
+        "commit_rows": {
+          "direction": "input",
+          "bits": 60
+        },
+        "vm_we": {
+          "direction": "output",
+          "bits": 4
+        },
+        "vm_rows": {
+          "direction": "output",
+          "bits": 60
+        },
+        "vm_data": {
+          "direction": "output",
+          "bits": 2048
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    "s81_static_fmt1_gearbox": {
+      "register_bits": 2107,
+      "register_types": {
+        "$adffe": 2104,
+        "$adff": 3
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tx_beat_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tx_phase": {
+          "direction": "input",
+          "bits": 2
+        },
+        "tx_frame_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tx_frame_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tx_frame": {
+          "direction": "input",
+          "bits": 595
+        },
+        "phy_tx_valid": {
+          "direction": "output",
+          "bits": 1
+        },
+        "phy_tx_data": {
+          "direction": "output",
+          "bits": 512
+        },
+        "rx_beat_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rx_phase": {
+          "direction": "input",
+          "bits": 2
+        },
+        "rx_frame_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "phy_rx_valid": {
+          "direction": "input",
+          "bits": 1
+        },
+        "phy_rx_data": {
+          "direction": "input",
+          "bits": 512
+        },
+        "rx_frame_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "rx_frame": {
+          "direction": "output",
+          "bits": 595
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    "s81_static_fmt1_rank": {
+      "register_bits": 0,
+      "register_types": {},
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "issue_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "src_valid": {
+          "direction": "input",
+          "bits": 1
+        },
+        "src_data": {
+          "direction": "input",
+          "bits": 512
+        },
+        "tag": {
+          "direction": "input",
+          "bits": 32
+        },
+        "seq": {
+          "direction": "input",
+          "bits": 16
+        },
+        "last": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rankmask": {
+          "direction": "input",
+          "bits": 4
+        },
+        "commit_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "commit_tag": {
+          "direction": "input",
+          "bits": 32
+        },
+        "commit_seq": {
+          "direction": "input",
+          "bits": 16
+        },
+        "commit_last": {
+          "direction": "input",
+          "bits": 1
+        },
+        "commit_rankmask": {
+          "direction": "input",
+          "bits": 4
+        },
+        "commit_rows": {
+          "direction": "input",
+          "bits": 60
+        },
+        "tx_beat_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tx_phase": {
+          "direction": "input",
+          "bits": 2
+        },
+        "tx_frame_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rx_beat_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rx_phase": {
+          "direction": "input",
+          "bits": 2
+        },
+        "rx_frame_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "phy_tx_valid": {
+          "direction": "output",
+          "bits": 3
+        },
+        "phy_tx_data": {
+          "direction": "output",
+          "bits": 1536
+        },
+        "phy_rx_valid": {
+          "direction": "input",
+          "bits": 3
+        },
+        "phy_rx_data": {
+          "direction": "input",
+          "bits": 1536
+        },
+        "vm_we": {
+          "direction": "output",
+          "bits": 4
+        },
+        "vm_rows": {
+          "direction": "output",
+          "bits": 60
+        },
+        "vm_data": {
+          "direction": "output",
+          "bits": 2048
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    }
+  },
+  "source_archive": "ot-epyc1tb:/srv/opentallas-scratch/codex/s81-static-fmt1-census-1014/source-v2.tgz",
+  "scope": "Exact refactored transport hierarchy 384093197; excludes later VM service join"
+}

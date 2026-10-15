@@ -1,0 +1,51 @@
+#!/bin/bash
+set -euo pipefail
+mkdir -p "$OUT"
+mapfile -t sources < results/arch/hbm_native_1013/sfu_native_quarter/r2_sources.txt
+manifest=results/arch/hbm_native_1013/sfu_native_quarter/closed_ae5899467.sha256
+frozen="${SFU_FROZEN_DIR:-$OUT/frozen}"
+if [ -z "${SFU_FROZEN_DIR:-}" ];then
+while read -r digest path;do
+ mkdir -p "$frozen/$(dirname "$path")"
+ git show "ae5899467:physical/ref_tile/sfu_lane_ring3_rt/src/$path" > "$frozen/$path"
+done < "$manifest"
+fi
+frozen=$(realpath "$frozen")
+(cd "$frozen" && sha256sum -c "$OLDPWD/$manifest")
+declare -A closed_paths
+while read -r digest path;do closed_paths["$path"]=1;done < "$manifest"
+for i in "${!sources[@]}";do
+ if [ "${closed_paths[${sources[$i]}]:-0}" = 1 ];then sources[$i]="$frozen/${sources[$i]}";fi
+done
+sources+=(rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_quarter.sv rtl/test/hbm_accel/generic/tb_hgi_sfu_programmed_engine.sv)
+python3 - "$OUT/image.hex" <<'PYCODE'
+import sys
+from pathlib import Path
+sys.path.insert(0,'tools/hbm_static')
+from sfu_vector_calendar import compile_vector
+from sfu_control_image import encode
+words=encode(compile_vector(words=28672,bases=(0,0,0,0,0)))
+assert len(words)==1846
+Path(sys.argv[1]).write_text(''.join(f'{word:0436x}\n' for word in words))
+PYCODE
+M=physical/asap7_memory_macros
+sources+=(rtl/hbm_accel/generic/peers/ot_hgi_sfu_programmed_engine.sv
+ rtl/hbm_accel/generic/peers/ot_hgi_sfu_calendar_paged_static.sv
+ rtl/hbm_accel/generic/peers/ot_hgi_sfu_program_stripe_static.sv
+ rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_engine.sv
+ rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv
+ rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv
+ "$M/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v"
+ "$M/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v"
+ "$M/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v")
+defs=("-DSFU_IMAGE=\"$OUT/image.hex\"")
+if [ "${MUT_PHASE:-0}" = 1 ];then defs+=(-DOT_SFU_STATIC_PHASE_MUTANT);fi
+"${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}" --binary --timing -O2 -j 8 -CFLAGS -O0 -Wno-fatal -Wno-TIMESCALEMOD "${defs[@]}" --top-module tb_hgi_sfu_programmed_engine --Mdir "$OUT/obj" "${sources[@]}" > "$OUT/build.log" 2>&1
+"$OUT/obj/Vtb_hgi_sfu_programmed_engine" > "$OUT/run.log" 2>&1
+cat "$OUT/run.log"
+set +e
+"$OUT/obj/Vtb_hgi_sfu_programmed_engine" +MUT_DROP > "$OUT/mutant.log" 2>&1
+mut_rc=$?
+set -e
+if [ "$mut_rc" = 0 ] || ! grep -q 'ENGINE_WORD' "$OUT/mutant.log";then cat "$OUT/mutant.log";exit 1;fi
+printf 'PASS independent vector compiler actual suppressed-issue mutant rc=%s\n' "$mut_rc"

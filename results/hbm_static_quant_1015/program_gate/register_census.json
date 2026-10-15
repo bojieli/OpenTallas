@@ -1,0 +1,21 @@
+{
+  "transport": {
+    "FF_bits_by_cell": {
+      "$adffe": 1,
+      "$dff": 4190,
+      "$adff": 94
+    },
+    "clock_sinks": 4285,
+    "macro_and_decoder_internals_excluded": true
+  },
+  "program": {
+    "FF_bits_by_cell": {
+      "$adffe": 53,
+      "$sdff": 48,
+      "$adff": 37,
+      "$dff": 675
+    },
+    "clock_sinks": 813,
+    "macro_and_decoder_internals_excluded": true
+  }
+}

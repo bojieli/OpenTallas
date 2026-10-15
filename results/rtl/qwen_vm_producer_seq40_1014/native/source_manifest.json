@@ -1,0 +1,21 @@
+{
+  "legacy_dependency_commit": "9110bda97",
+  "scope": "NativeROW binding only; handshaken fixture loader, not postedSUwriter",
+  "sources": {
+    "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv": "31ec2d3d9b5d33780357698bbbedf66fbd36b3e8d572657c10dd9dcc2f32cea3",
+    "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_region_quarter.sv": "02a0f49b766c299b8de5371671afd33314a09a929c1b5a2a0c93c7532919d989",
+    "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_answer_tiles.sv": "993d2f31e2741755a9aba8ff44c29d6b0df8562764797ad3a31806bbbec4ddac",
+    "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_xfifo8_t.sv": "17fc7ce6995bdf41f0dcd1ae3abced60b1a0f86dcb5ded98b1b95e3660383421",
+    "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv": "e8cc62d896270e78ed65c81c888958e885be50623fff552658e84b2c8d37123d",
+    "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv": "2ec29c19e804843e0e6819e173c0e30f2bc47abff14b383046036c077ec16f25",
+    "rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv": "58cf023e623627da6790d20bb0cae2611c491ebc9a4251e491ba629b245dac17",
+    "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv": "8dbb5752657f157d2c81aaf47bec486c19b55994a2f8d0d763cbcc07743b2853",
+    "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv": "51145388077b85b2e19c71c71dc959c40097d963a9c3fc8eba00d5137d2bfcb1",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/physical/ot_qwen_tree_delay.sv": "c9ab39febd24fbf11181d223b55d2e6718feabbc016b5ba85eb97a7b613f6c1b",
+    "rtl/physical/ot_qwen_tree_delay_tiles.sv": "e0bcd2f85cd5fd854f4f3d6c0d1acfa85bbeb7328e550427baf154fab406ca3f",
+    "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease_seq40.sv": "09342e3e812a693a026c9bf5abcf09ec71e3ab8f9de82e9465e7062c6c012ca3",
+    "rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_producer_row_lease_seq40.sv": "6a56ee6140fb8aab6fb5d0d1d0ce5d0b45c3bfc2a5b3a50d4f6ebfa346df25cf",
+    "rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_producer_disabled_seq40.sv": "201ca5110ecc2169762654cd22a3ca91cf58983e2749be3344a681a1a5cbd244"
+  }
+}

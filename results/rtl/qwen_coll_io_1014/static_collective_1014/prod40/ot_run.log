@@ -1,0 +1,9 @@
+ot-run: ot-epyc4       admits   426 GB (avail 653, growth 131, headroom 48, waiters 0/0 GB) load 78/128 running 18 disk 560 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-336499-1792040022 after 1 s
+case qwen_ar_256w kind=pos latu=19 lats=40 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=2048 compiled_span=391
+case qwen_layer_2x256w kind=pos latu=19 lats=40 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=4096 compiled_span=647
+case qwen_argmax_1w kind=pos latu=19 lats=40 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=64 compiled_span=74
+case qwen_layer_2x256w_argmax kind=pos latu=19 lats=40 xu=0 xs=0 mutant=- PASS mismatches=0 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=4160 compiled_span=655
+COLL_TP8S PASS cases=4 latu=19 lats=40
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-336499-1792040022): exit 0

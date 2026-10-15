@@ -1,0 +1,5 @@
+%Warning-DECLFILENAME: /home/ubuntu/wt/hbm-vm-static-1014/rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv:3:8: Filename 'hfd_hgi_vm_calendar_static' does not match MODULE name: 'hfd_hgi_vm_calendar_SW'
+    3 | module hfd_hgi_vm_calendar_SW (
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/DECLFILENAME?v=5.050
+                       ... Use "/* verilator lint_off DECLFILENAME */" and lint_on around source to disable this message.

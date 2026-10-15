@@ -1,0 +1,103 @@
+{
+  "scope": "COMPONENT_AND_GENERIC_CENSUS_ONLY",
+  "runs": [
+    {
+      "unit": "oth-ubuntu-1649381-1791965584",
+      "host": "ot-epyc1tb",
+      "mem_GB": 1,
+      "threads": 1,
+      "exit": 0,
+      "role": "positive plus4 mutants"
+    },
+    {
+      "unit": "oth-ubuntu-1735618-1791966295",
+      "host": "ot-epyc1tb",
+      "mem_GB": 1,
+      "threads": 1,
+      "exit": 0,
+      "role": "expanded positive plus6 mutants"
+    },
+    {
+      "unit": "oth-ubuntu-1224398-1791966074",
+      "host": "ot-epyc4",
+      "mem_GB": 4,
+      "threads": 1,
+      "exit": 0,
+      "role": "bank census",
+      "yosys_peak_MB": 1615.86
+    },
+    {
+      "unit": "oth-ubuntu-1224399-1791966074",
+      "host": "ot-epyc4",
+      "mem_GB": 4,
+      "threads": 1,
+      "exit": 0,
+      "role": "controller census",
+      "yosys_peak_MB": 26.18
+    },
+    {
+      "unit": "oth-ubuntu-1786042-1791967384",
+      "host": "ot-epyc1tb",
+      "mem_GB": 1,
+      "threads": 1,
+      "exit": 0,
+      "role": "actual-granularity scalar+vector positive/mutants"
+    },
+    {
+      "unit": "oth-ubuntu-1786073-1791967384",
+      "host": "ot-epyc1tb",
+      "mem_GB": 4,
+      "threads": 1,
+      "exit": 0,
+      "role": "48-recipient scalar bank census"
+    },
+    {
+      "unit": "oth-ubuntu-1786072-1791967384",
+      "host": "ot-epyc1tb",
+      "mem_GB": 4,
+      "threads": 1,
+      "exit": 0,
+      "role": "48-recipient vector bank census"
+    },
+    {
+      "unit": "oth-ubuntu-1786041-1791967384",
+      "host": "ot-epyc1tb",
+      "mem_GB": 4,
+      "threads": 1,
+      "exit": 0,
+      "role": "controller current-source census"
+    },
+    {
+      "unit": "oth-ubuntu-1408830-1791968306",
+      "host": "ot-epyc4",
+      "mem_GB": 1,
+      "threads": 1,
+      "exit": 0,
+      "role": "seq40/count7 scalar+vector gates12cases"
+    },
+    {
+      "unit": "oth-ubuntu-1408832-1791968306",
+      "host": "ot-epyc4",
+      "mem_GB": 4,
+      "threads": 1,
+      "exit": 0,
+      "role": "seq40/count7 scalar bank census"
+    },
+    {
+      "unit": "oth-ubuntu-1408829-1791968306",
+      "host": "ot-epyc4",
+      "mem_GB": 4,
+      "threads": 1,
+      "exit": 0,
+      "role": "seq40/count7 vector bank census"
+    },
+    {
+      "unit": "oth-ubuntu-1408831-1791968306",
+      "host": "ot-epyc4",
+      "mem_GB": 4,
+      "threads": 1,
+      "exit": 0,
+      "role": "controller current-source census"
+    }
+  ]
+}

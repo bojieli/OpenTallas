@@ -1,0 +1,7 @@
+RANK die=0 msg=0 word=0 rank=4
+MISMATCH die=0 msg=0 word=0 mode=1
+RANK die=1 msg=0 word=0 rank=4
+MISMATCH die=1 msg=0 word=0 mode=1
+TP8S dies=8 latu=19 lats=344 xu=0 xs=0 msgs=4 inject=-1 tagbad=-1 drop=-1 late=-1 conf=0 mismatches=2112 extra=0 out_err=0 fault=00000000 code=0000000000000000000000000000000000000000 words_out=1024 first=41 last=538
+FAIL
+- /srv/opentallas-scratch/claude/qcoll-static-1014/src/rtl/test/tb_coll_tp8_static.sv:204: Verilog $finish

@@ -1,0 +1,9 @@
+ot-run: ot-epyc1tb     admits   338 GB (avail 564, growth 88, headroom 64, waiters 0/0 GB) load 85/128 running 16 disk 690 GB 
+ot-run: ot-epyc4       admits   432 GB (avail 658, growth 129, headroom 48, waiters 0/0 GB) load 67/128 running 23 disk 767 GB 
+ot-run: ot-pve1        admits   156 GB (avail 203, growth 9, headroom 32, waiters 0/0 GB) load 37/28 running 3 disk 1307 GB 
+ot-run: ot-agidock128  admits    53 GB (avail 84, growth 17, headroom 24, waiters 0/0 GB) load 18/64 running 5 disk 87 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-2360058-1792045619 after 1 s
+COMPACT EXACT PASS cycles=4096 checks=4087 width_r=818 width_b=2069 stages=4
+tb_hbm_smh_compact_transport.sv:42: $finish called at 3416491 (1ps)
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-2360058-1792045619): exit 0

@@ -599,6 +599,7 @@ endmodule
 // (dsfd_vm_bgq: NSTG + 1).  Requires EP >= 1 (the lead is the E1 + E2 rungs).
 // ---------------------------------------------------------------------------------------------------------------
 module dsfd_vm_bgr #(
+    parameter integer WCOMMIT = 0,
     parameter integer NP = 28,
     parameter integer NB = 32,
     parameter integer NBL = 8,
@@ -613,6 +614,8 @@ module dsfd_vm_bgr #(
     input  wire [0:0]          ck,
     input  wire [0:0]          rs,
     input  wire [$clog2(NB/NBL)-1:0] grp,
+    input wire [15:0] i_wtag, output wire [15:0] f_wtag,
+    output wire [NBL*28-1:0] write_commit,
     input  wire [NP-1:0]       i_v,
     input  wire [NP-1:0]       i_we,
     input  wire [NP*($clog2(NB)+9)-1:0] i_row,
@@ -669,6 +672,8 @@ module dsfd_vm_bgr #(
     reg [NP-1:0]    rb_we [0:NR-1];
     reg [NP*RA-1:0] rb_row[0:NR-1];
     reg [NP*MW-1:0] rb_m  [0:NR-1];
+    reg [15:0] rb_tag [0:NR-1];
+    assign f_wtag=rb_tag[FS];
     reg [NP*DW-1:0] rb_d  [0:NR-1];
     integer s;
     always @(posedge clk or negedge rst_i)
@@ -678,8 +683,10 @@ module dsfd_vm_bgr #(
             for (s = 1; s < NR; s = s + 1) rb_v[s] <= rb_v[s-1];
         end
     always @(posedge clk) begin : p_rb integer s;
+        rb_tag[0] <= WCOMMIT ? i_wtag : 16'd0;
         rb_we[0] <= i_we; rb_row[0] <= i_row; rb_m[0] <= i_mask; rb_d[0] <= i_d;
         for (s = 1; s < NR; s = s + 1) begin
+            rb_tag[s] <= rb_tag[s-1];
             rb_we[s] <= rb_we[s-1]; rb_row[s] <= rb_row[s-1]; rb_m[s] <= rb_m[s-1]; rb_d[s] <= rb_d[s-1];
         end
     end
@@ -739,6 +746,7 @@ module dsfd_vm_bgr #(
         wire [NP*RA-1:0] z_row = rb_row[gs+2];
         wire [NP*MW-1:0] z_m = rb_m[gs+2];
         wire [NP*DW-1:0] z_d = rb_d[gs+2];
+        wire [15:0] z_tag=rb_tag[gs+2];
         // per-stage group-id copy (register chain)
         reg [GW-1:0] sg;
         if (gs == 0) begin : g_sg0
@@ -800,6 +808,7 @@ module dsfd_vm_bgr #(
             wire [BB+GW:0] gqw = gq * NBL + LBI;
             wire [BB-1:0] gidq = gqw[BB-1:0];
             reg [QD-1:0] q_we;
+            reg [7:0] q_tag [0:QD-1];
             reg [PW-1:0] q_p [0:QD-1];
             reg [8:0]    q_r [0:QD-1];
             reg [MW-1:0] q_m [0:QD-1];
@@ -904,6 +913,7 @@ module dsfd_vm_bgr #(
                     w_d[j4] = w_d[j4] | ({DW{e_sel[j4][p4]}} & z_d[p4*DW +: DW]);
                 end
             end
+            wire [7:0] k_tag[0:QD-1];
             wire [QD-1:0] k_v, k_we;
             wire [PW-1:0] k_p [0:QD-1];
             wire [8:0]    k_r [0:QD-1];
@@ -912,9 +922,11 @@ module dsfd_vm_bgr #(
             if (EP == 1) begin : g_k1
                 assign k_v = w_v; assign k_we = w_we; assign cnt_a = e_cnt;
                 for (gc = 0; gc < QD; gc = gc + 1) begin : g_kw
+                    assign k_tag[gc]=w_p[gc]==3 ? z_tag[7:0] : w_p[gc]==4 ? z_tag[15:8] : 8'd0;
                     assign k_p[gc] = w_p[gc]; assign k_r[gc] = w_r[gc]; assign k_m[gc] = w_m[gc]; assign k_d[gc] = w_d[gc];
                 end
             end else begin : g_k2
+                reg [7:0] y_tag[0:QD-1];
                 reg [QD-1:0] y_v, y_we;
                 reg [PW-1:0] y_p [0:QD-1];
                 reg [8:0]    y_r [0:QD-1];
@@ -928,11 +940,13 @@ module dsfd_vm_bgr #(
                 always @(posedge clk) begin
                     y_we <= w_we;
                     for (j5 = 0; j5 < QD; j5 = j5 + 1) begin
+                        y_tag[j5]<=w_p[j5]==3 ? z_tag[7:0] : w_p[j5]==4 ? z_tag[15:8] : 8'd0;
                         y_p[j5] <= w_p[j5]; y_r[j5] <= w_r[j5]; y_m[j5] <= w_m[j5]; y_d[j5] <= w_d[j5];
                     end
                 end
                 assign k_v = y_v; assign k_we = y_we; assign cnt_a = y_cnt;
                 for (gc = 0; gc < QD; gc = gc + 1) begin : g_kw
+                    assign k_tag[gc]=y_tag[gc];
                     assign k_p[gc] = y_p[gc]; assign k_r[gc] = y_r[gc]; assign k_m[gc] = y_m[gc]; assign k_d[gc] = y_d[gc];
                 end
             end
@@ -940,6 +954,7 @@ module dsfd_vm_bgr #(
             always @(posedge clk)
                 for (j6 = 0; j6 < QD; j6 = j6 + 1)
                     if (k_v[j6] && occ - serve + j6 < QD) begin
+                        q_tag[(qt + j6) & (QD-1)] <= k_tag[j6];
                         q_we[(qt + j6) & (QD-1)] <= k_we[j6];
                         q_p [(qt + j6) & (QD-1)] <= k_p[j6];
                         q_r [(qt + j6) & (QD-1)] <= k_r[j6];
@@ -951,6 +966,7 @@ module dsfd_vm_bgr #(
             assign b_occ[gb] = occ;
             // serve register -> macro pins
             reg          s_we, s_re;
+            reg [7:0] s_tag;
             reg [PW-1:0] s_p;
             reg [8:0]    s_r;
             reg [DW-1:0] s_dd, s_bm;
@@ -959,6 +975,7 @@ module dsfd_vm_bgr #(
                 if (!rst_i) begin s_we <= 1'b0; s_re <= 1'b0; end
                 else begin s_we <= serve & q_we[qh]; s_re <= serve & ~q_we[qh]; end
             always @(posedge clk) begin
+                s_tag<=q_tag[qh];
                 s_p <= q_p[qh]; s_r <= q_r[qh];
                 for (e = 0; e < NW; e = e + 1) s_dd[32*e +: 32] <= q_dd[qhr[e]][32*e +: 32];
                 for (e = 0; e < MW; e = e + 1)
@@ -968,6 +985,14 @@ module dsfd_vm_bgr #(
                     s_bm[32*e +: 32] <= {32{q_m[qh][e]}};
 `endif
             end
+            // Registered event samples the very edge that writes the actual SRAM.
+            // No timing prediction or queue-admission token substitutes for this edge.
+            reg [27:0] commit_q;
+            always @(posedge clk or negedge rst_i)
+                if (!rst_i) commit_q<=0;
+                else commit_q <= {WCOMMIT && s_we && (s_p==3 || s_p==4), s_p==4,
+                                  s_bm[96],s_bm[64],s_bm[32],s_bm[0],s_r,gidq,s_tag};
+            assign write_commit[28*LBI+:28]=commit_q;
             wire [DW-1:0] rd;
             for (gc = 0; gc < NC; gc = gc + 1) begin : g_m
                 if (MACRO) begin : g_sram

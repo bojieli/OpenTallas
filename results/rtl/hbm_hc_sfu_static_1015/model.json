@@ -1,0 +1,149 @@
+{
+  "unit": "ot_hgi_sfu_static_quarter",
+  "uarch_model": "tools/uarch_model.py BASE su_lanes=16 sfu_lanes=8 historical; actual candidate 16 physical SFU lanes; no system speedup claimed",
+  "lanes": 16,
+  "replicas_for64lanes": 4,
+  "word_bits": 32,
+  "operands_per_lane": 4,
+  "max_operand_bytes_per_edge": 256,
+  "index_bytes_per_edge": 64,
+  "result_bytes_per_edge": 64,
+  "compiler_control_bits_per_edge": 1742,
+  "extra_pin_register_edges": 1,
+  "lane_map_edges": 4,
+  "throughput_items_per_edge": 16,
+  "mapped_memories_inside": 0,
+  "memory": "external physical local-store/VM adapter required; no cache allocation claimed",
+  "fixed_control_buffer_bits_4096edges": 7135232,
+  "physical_qualification": false,
+  "full_layer_calendar": false,
+  "outline_fit": "unmeasured; existing immutable arithmetic lanes reused; added1742pinFF and existingmapper logic only; no route launched",
+  "operand_store_candidate": {
+    "module": "ot_hgi_sfu_static_operand_store",
+    "LWB": 15,
+    "lanes": 16,
+    "groups": 5,
+    "SRAMs": 80,
+    "SRAM_macro": "ot_sram_1r1w_256x256_m2_r2c2",
+    "capacity_bytes": 655360,
+    "stage_bytes_per_edge": 256,
+    "operand_bytes_per_edge": 256,
+    "output_bytes_per_edge": 64,
+    "index_service": "external/unbound",
+    "source_selection": "VM only; nonVM faults",
+    "physical_area_fit": "unmeasured; no route launched",
+    "VM_read_return_edges": 14,
+    "store_word_read_edges": 1,
+    "prefetch_policy": "compiler reserves sector arrivals before vector launch; no runtime wait",
+    "production_qualified": false,
+    "SRAM_macro_dimensions_um": [
+      172.8,
+      41.04
+    ],
+    "SRAM_macro_area_um2_total": 567336.96,
+    "area_excludes": "control/crossbar cells, halos, routing, clock roots; not slot fit"
+  },
+  "programme_candidate": {
+    "issuers": 8,
+    "protected_payload_bits": [
+      223,
+      223,
+      223,
+      223,
+      223,
+      223,
+      223,
+      181
+    ],
+    "real_macro": "ot_sram_1r1w_1024x256_m2_r2c2",
+    "storage_bytes": 262144,
+    "macro_dimensions_um": [
+      174.744,
+      70.47
+    ],
+    "macro_area_um2_total": 98513.67744,
+    "instructions_max": 1024,
+    "full7168_sigmoid_cycles": 624,
+    "full4x7168_sigmoid_cycles": 1968,
+    "fullbatch_limit": "does not fit1k raw-word programme; no truncated or collapsed batch claim",
+    "native_physical_qualification": false,
+    "dependency_commit": "3d7520a5f"
+  },
+  "paged_programme_candidate": {
+    "PAGE_AW": 1,
+    "real_1024x256_SRAMs": 16,
+    "capacity_instructions": 2048,
+    "payload_widths": [
+      222,
+      222,
+      222,
+      222,
+      222,
+      222,
+      222,
+      188
+    ],
+    "protected_PC_bits": 11,
+    "full4x7168_sigmoid_image_words": 1968,
+    "optional_PAGE_AW2": {
+      "real_SRAMs": 32,
+      "capacity_instructions": 4096,
+      "payload_widths": [
+        221,
+        221,
+        221,
+        221,
+        221,
+        221,
+        221,
+        195
+      ],
+      "full8x7168_sigmoid_image_words": 3760
+    },
+    "no_programme_truncation": true,
+    "physical_qualified": false,
+    "arithmetic_join": false
+  },
+  "programmed_engine_candidate": {
+    "module": "ot_hgi_sfu_programmed_engine",
+    "default_programme_capacity": 2048,
+    "default_real_SRAMs": 96,
+    "default_local_storage_bytes": 655360,
+    "default_programme_storage_bytes": 524288,
+    "actual_C12_lanes": 16,
+    "full4x7168_passthrough_image_words": 1846,
+    "full4x7168_sigmoid_image_words": 1968,
+    "VM_prefetch_join": false,
+    "native_physical_qualification": false
+  },
+  "scalar_side_contract": "KIND1 hardware does not implement sqrt/rsqrt/softplus/egate; compiler refuses these, engine faults on raw selected opcodes. Requires real KIND2 dispatch, not external-side pin binding.",
+  "real_native_IO_programme_candidate": {
+    "module": "ot_hgi_sfu_scheduled_engine",
+    "IO_width": 471,
+    "IO_payloads_default": [
+      222,
+      222,
+      27
+    ],
+    "IO_real1024x256_SRAMs": 6,
+    "memory_target_namespace": "128+4*quadrant+stripe (3planes); reserved withHVM",
+    "Qswiglu_IO_rows": 800,
+    "Qswiglu_arithmetic_rows": 368,
+    "component_real_SRAMs_including_VM24": 126,
+    "one_runtime_start": true,
+    "arith_start_IOedge": 210,
+    "IO_drain_range": [
+      587,
+      779
+    ],
+    "full4x7168_IO_rows_estimate": 5500,
+    "host_PC_capacity_max": 4096,
+    "full4x7168_IO_qualification": false,
+    "fullbatch_next": "must compile proven splitphase programme or obtainactualversionedhostPC13 support; noPCtruncation/no8192claim",
+    "wholekernel_native_qualified": false,
+    "physical_qualified": false,
+    "throughput_qualified": false,
+    "immutable_Qswiglu_price": 120.0,
+    "diagnostic_800cycle_to_price_ratio": 6.666666666666667
+  }
+}

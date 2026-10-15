@@ -1,0 +1,41 @@
+{
+ "source_matches_main": true,
+ "sources": {
+  "rtl/test/dsrom_sys/tb_dsrom_1m_head_bundle.sv": {
+   "measured_sha256": "d7713c02c5494464e16db19ea560adebd62f35a82d0a53b13f267e3b44a9b635",
+   "main_sha256": "d7713c02c5494464e16db19ea560adebd62f35a82d0a53b13f267e3b44a9b635"
+  },
+  "rtl/v41rom/ot_dsrom_head_bundle.sv": {
+   "measured_sha256": "a24a454205fcc4a474dd21a38a99f0eee40fa0c0224dbd917980b5d23b328bac",
+   "main_sha256": "a24a454205fcc4a474dd21a38a99f0eee40fa0c0224dbd917980b5d23b328bac"
+  },
+  "rtl/v41rom/ot_dsrom_head_elem.sv": {
+   "measured_sha256": "915f06d0423c66f72210132673040c8db4dfc7967aa4f184f7f232bb45506fef",
+   "main_sha256": "915f06d0423c66f72210132673040c8db4dfc7967aa4f184f7f232bb45506fef"
+  },
+  "rtl/v41rom/ot_v41_fadd.sv": {
+   "measured_sha256": "9062c07e99f3baedf2b4e6399d5e12e2501be1db2d99bf71a73c2437bf3a5b91",
+   "main_sha256": "9062c07e99f3baedf2b4e6399d5e12e2501be1db2d99bf71a73c2437bf3a5b91"
+  },
+  "rtl/common/ot_prefix.sv": {
+   "measured_sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+   "main_sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc"
+  },
+  "rtl/v41rom/ot_v41_bmul2.sv": {
+   "measured_sha256": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+   "main_sha256": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6"
+  },
+  "rtl/v41rom/ot_dsrom_bmul3.sv": {
+   "measured_sha256": "753636fd6fdc34a2229b492c46b71d130ed41d95cf97665cac5d1df6daa27498",
+   "main_sha256": "753636fd6fdc34a2229b492c46b71d130ed41d95cf97665cac5d1df6daa27498"
+  },
+  "rtl/hdc/ot_hdc_delay.sv": {
+   "measured_sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+   "main_sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+  },
+  "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v": {
+   "measured_sha256": "57823a0353236533a2b15a669025480c61930874cde8af6e77f7fca372f6fada",
+   "main_sha256": "57823a0353236533a2b15a669025480c61930874cde8af6e77f7fca372f6fada"
+  }
+ }
+}

@@ -1,0 +1,9270 @@
+{
+  "schema": "qwen.tp8.cache.recipient-expectation.v1",
+  "binding_status": "CANDIDATE_EXPECTATION_NOT_EXISTING_DIE_STRAPS_OR_ADOPTED_SOURCE32_ABI",
+  "source_map_commit": "e0e968a94",
+  "source_map_sha256": "414b9709b682734ed879ebfc5287c6fb82893deba8ef0fce2ac9eb65e48642ba",
+  "GT": 3072,
+  "tiles": 768,
+  "root_assignment_candidate": "tile_id %32",
+  "phase_assignment_candidate": "(tile_id %(split/4))//32",
+  "recipient_count_per_root_phase_by_pc": {
+    "1": 6,
+    "16": 12,
+    "19": 24,
+    "23": 12
+  },
+  "ACK_rule": "Each root+phase ACK requires every listed recipient accepted the exact token/context/version/epoch payload AND old source/replay/consumer returns quiescent; a single load_v does not certify aggregate completion.",
+  "rows": [
+    {
+      "instance": "t_0_0",
+      "tile_id_expected": 0,
+      "gbase_expected": 0,
+      "root_candidate": 0,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_0_1",
+      "tile_id_expected": 1,
+      "gbase_expected": 4,
+      "root_candidate": 1,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_0_2",
+      "tile_id_expected": 2,
+      "gbase_expected": 8,
+      "root_candidate": 2,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_0_3",
+      "tile_id_expected": 3,
+      "gbase_expected": 12,
+      "root_candidate": 3,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_0_4",
+      "tile_id_expected": 4,
+      "gbase_expected": 16,
+      "root_candidate": 4,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_0_5",
+      "tile_id_expected": 5,
+      "gbase_expected": 20,
+      "root_candidate": 5,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_0_6",
+      "tile_id_expected": 6,
+      "gbase_expected": 24,
+      "root_candidate": 6,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_0_7",
+      "tile_id_expected": 7,
+      "gbase_expected": 28,
+      "root_candidate": 7,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_0_8",
+      "tile_id_expected": 8,
+      "gbase_expected": 32,
+      "root_candidate": 8,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_0_9",
+      "tile_id_expected": 9,
+      "gbase_expected": 36,
+      "root_candidate": 9,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_0_10",
+      "tile_id_expected": 10,
+      "gbase_expected": 40,
+      "root_candidate": 10,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_0_11",
+      "tile_id_expected": 11,
+      "gbase_expected": 44,
+      "root_candidate": 11,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_0_12",
+      "tile_id_expected": 12,
+      "gbase_expected": 48,
+      "root_candidate": 12,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_0_13",
+      "tile_id_expected": 13,
+      "gbase_expected": 52,
+      "root_candidate": 13,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_0_14",
+      "tile_id_expected": 14,
+      "gbase_expected": 56,
+      "root_candidate": 14,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_0_15",
+      "tile_id_expected": 15,
+      "gbase_expected": 60,
+      "root_candidate": 15,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_1_0",
+      "tile_id_expected": 16,
+      "gbase_expected": 64,
+      "root_candidate": 16,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_1_1",
+      "tile_id_expected": 17,
+      "gbase_expected": 68,
+      "root_candidate": 17,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_1_2",
+      "tile_id_expected": 18,
+      "gbase_expected": 72,
+      "root_candidate": 18,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_1_3",
+      "tile_id_expected": 19,
+      "gbase_expected": 76,
+      "root_candidate": 19,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_1_4",
+      "tile_id_expected": 20,
+      "gbase_expected": 80,
+      "root_candidate": 20,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_1_5",
+      "tile_id_expected": 21,
+      "gbase_expected": 84,
+      "root_candidate": 21,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_1_6",
+      "tile_id_expected": 22,
+      "gbase_expected": 88,
+      "root_candidate": 22,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_1_7",
+      "tile_id_expected": 23,
+      "gbase_expected": 92,
+      "root_candidate": 23,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_1_8",
+      "tile_id_expected": 24,
+      "gbase_expected": 96,
+      "root_candidate": 24,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_1_9",
+      "tile_id_expected": 25,
+      "gbase_expected": 100,
+      "root_candidate": 25,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_1_10",
+      "tile_id_expected": 26,
+      "gbase_expected": 104,
+      "root_candidate": 26,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_1_11",
+      "tile_id_expected": 27,
+      "gbase_expected": 108,
+      "root_candidate": 27,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_1_12",
+      "tile_id_expected": 28,
+      "gbase_expected": 112,
+      "root_candidate": 28,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_1_13",
+      "tile_id_expected": 29,
+      "gbase_expected": 116,
+      "root_candidate": 29,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_1_14",
+      "tile_id_expected": 30,
+      "gbase_expected": 120,
+      "root_candidate": 30,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_1_15",
+      "tile_id_expected": 31,
+      "gbase_expected": 124,
+      "root_candidate": 31,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_2_0",
+      "tile_id_expected": 32,
+      "gbase_expected": 128,
+      "root_candidate": 0,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_2_1",
+      "tile_id_expected": 33,
+      "gbase_expected": 132,
+      "root_candidate": 1,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_2_2",
+      "tile_id_expected": 34,
+      "gbase_expected": 136,
+      "root_candidate": 2,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_2_3",
+      "tile_id_expected": 35,
+      "gbase_expected": 140,
+      "root_candidate": 3,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_2_4",
+      "tile_id_expected": 36,
+      "gbase_expected": 144,
+      "root_candidate": 4,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_2_5",
+      "tile_id_expected": 37,
+      "gbase_expected": 148,
+      "root_candidate": 5,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_2_6",
+      "tile_id_expected": 38,
+      "gbase_expected": 152,
+      "root_candidate": 6,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_2_7",
+      "tile_id_expected": 39,
+      "gbase_expected": 156,
+      "root_candidate": 7,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_2_8",
+      "tile_id_expected": 40,
+      "gbase_expected": 160,
+      "root_candidate": 8,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_2_9",
+      "tile_id_expected": 41,
+      "gbase_expected": 164,
+      "root_candidate": 9,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_2_10",
+      "tile_id_expected": 42,
+      "gbase_expected": 168,
+      "root_candidate": 10,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_2_11",
+      "tile_id_expected": 43,
+      "gbase_expected": 172,
+      "root_candidate": 11,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_2_12",
+      "tile_id_expected": 44,
+      "gbase_expected": 176,
+      "root_candidate": 12,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_2_13",
+      "tile_id_expected": 45,
+      "gbase_expected": 180,
+      "root_candidate": 13,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_2_14",
+      "tile_id_expected": 46,
+      "gbase_expected": 184,
+      "root_candidate": 14,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_2_15",
+      "tile_id_expected": 47,
+      "gbase_expected": 188,
+      "root_candidate": 15,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_3_0",
+      "tile_id_expected": 48,
+      "gbase_expected": 192,
+      "root_candidate": 16,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_3_1",
+      "tile_id_expected": 49,
+      "gbase_expected": 196,
+      "root_candidate": 17,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_3_2",
+      "tile_id_expected": 50,
+      "gbase_expected": 200,
+      "root_candidate": 18,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_3_3",
+      "tile_id_expected": 51,
+      "gbase_expected": 204,
+      "root_candidate": 19,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_3_4",
+      "tile_id_expected": 52,
+      "gbase_expected": 208,
+      "root_candidate": 20,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_3_5",
+      "tile_id_expected": 53,
+      "gbase_expected": 212,
+      "root_candidate": 21,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_3_6",
+      "tile_id_expected": 54,
+      "gbase_expected": 216,
+      "root_candidate": 22,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_3_7",
+      "tile_id_expected": 55,
+      "gbase_expected": 220,
+      "root_candidate": 23,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_3_8",
+      "tile_id_expected": 56,
+      "gbase_expected": 224,
+      "root_candidate": 24,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_3_9",
+      "tile_id_expected": 57,
+      "gbase_expected": 228,
+      "root_candidate": 25,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_3_10",
+      "tile_id_expected": 58,
+      "gbase_expected": 232,
+      "root_candidate": 26,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_3_11",
+      "tile_id_expected": 59,
+      "gbase_expected": 236,
+      "root_candidate": 27,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_3_12",
+      "tile_id_expected": 60,
+      "gbase_expected": 240,
+      "root_candidate": 28,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_3_13",
+      "tile_id_expected": 61,
+      "gbase_expected": 244,
+      "root_candidate": 29,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_3_14",
+      "tile_id_expected": 62,
+      "gbase_expected": 248,
+      "root_candidate": 30,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_3_15",
+      "tile_id_expected": 63,
+      "gbase_expected": 252,
+      "root_candidate": 31,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_4_0",
+      "tile_id_expected": 64,
+      "gbase_expected": 256,
+      "root_candidate": 0,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_4_1",
+      "tile_id_expected": 65,
+      "gbase_expected": 260,
+      "root_candidate": 1,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_4_2",
+      "tile_id_expected": 66,
+      "gbase_expected": 264,
+      "root_candidate": 2,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_4_3",
+      "tile_id_expected": 67,
+      "gbase_expected": 268,
+      "root_candidate": 3,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_4_4",
+      "tile_id_expected": 68,
+      "gbase_expected": 272,
+      "root_candidate": 4,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_4_5",
+      "tile_id_expected": 69,
+      "gbase_expected": 276,
+      "root_candidate": 5,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_4_6",
+      "tile_id_expected": 70,
+      "gbase_expected": 280,
+      "root_candidate": 6,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_4_7",
+      "tile_id_expected": 71,
+      "gbase_expected": 284,
+      "root_candidate": 7,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_4_8",
+      "tile_id_expected": 72,
+      "gbase_expected": 288,
+      "root_candidate": 8,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_4_9",
+      "tile_id_expected": 73,
+      "gbase_expected": 292,
+      "root_candidate": 9,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_4_10",
+      "tile_id_expected": 74,
+      "gbase_expected": 296,
+      "root_candidate": 10,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_4_11",
+      "tile_id_expected": 75,
+      "gbase_expected": 300,
+      "root_candidate": 11,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_4_12",
+      "tile_id_expected": 76,
+      "gbase_expected": 304,
+      "root_candidate": 12,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_4_13",
+      "tile_id_expected": 77,
+      "gbase_expected": 308,
+      "root_candidate": 13,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_4_14",
+      "tile_id_expected": 78,
+      "gbase_expected": 312,
+      "root_candidate": 14,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_4_15",
+      "tile_id_expected": 79,
+      "gbase_expected": 316,
+      "root_candidate": 15,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_5_0",
+      "tile_id_expected": 80,
+      "gbase_expected": 320,
+      "root_candidate": 16,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_5_1",
+      "tile_id_expected": 81,
+      "gbase_expected": 324,
+      "root_candidate": 17,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_5_2",
+      "tile_id_expected": 82,
+      "gbase_expected": 328,
+      "root_candidate": 18,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_5_3",
+      "tile_id_expected": 83,
+      "gbase_expected": 332,
+      "root_candidate": 19,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_5_4",
+      "tile_id_expected": 84,
+      "gbase_expected": 336,
+      "root_candidate": 20,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_5_5",
+      "tile_id_expected": 85,
+      "gbase_expected": 340,
+      "root_candidate": 21,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_5_6",
+      "tile_id_expected": 86,
+      "gbase_expected": 344,
+      "root_candidate": 22,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_5_7",
+      "tile_id_expected": 87,
+      "gbase_expected": 348,
+      "root_candidate": 23,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_5_8",
+      "tile_id_expected": 88,
+      "gbase_expected": 352,
+      "root_candidate": 24,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_5_9",
+      "tile_id_expected": 89,
+      "gbase_expected": 356,
+      "root_candidate": 25,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_5_10",
+      "tile_id_expected": 90,
+      "gbase_expected": 360,
+      "root_candidate": 26,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_5_11",
+      "tile_id_expected": 91,
+      "gbase_expected": 364,
+      "root_candidate": 27,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_5_12",
+      "tile_id_expected": 92,
+      "gbase_expected": 368,
+      "root_candidate": 28,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_5_13",
+      "tile_id_expected": 93,
+      "gbase_expected": 372,
+      "root_candidate": 29,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_5_14",
+      "tile_id_expected": 94,
+      "gbase_expected": 376,
+      "root_candidate": 30,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_5_15",
+      "tile_id_expected": 95,
+      "gbase_expected": 380,
+      "root_candidate": 31,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_6_0",
+      "tile_id_expected": 96,
+      "gbase_expected": 384,
+      "root_candidate": 0,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_6_1",
+      "tile_id_expected": 97,
+      "gbase_expected": 388,
+      "root_candidate": 1,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_6_2",
+      "tile_id_expected": 98,
+      "gbase_expected": 392,
+      "root_candidate": 2,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_6_3",
+      "tile_id_expected": 99,
+      "gbase_expected": 396,
+      "root_candidate": 3,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_6_4",
+      "tile_id_expected": 100,
+      "gbase_expected": 400,
+      "root_candidate": 4,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_6_5",
+      "tile_id_expected": 101,
+      "gbase_expected": 404,
+      "root_candidate": 5,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_6_6",
+      "tile_id_expected": 102,
+      "gbase_expected": 408,
+      "root_candidate": 6,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_6_7",
+      "tile_id_expected": 103,
+      "gbase_expected": 412,
+      "root_candidate": 7,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_6_8",
+      "tile_id_expected": 104,
+      "gbase_expected": 416,
+      "root_candidate": 8,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_6_9",
+      "tile_id_expected": 105,
+      "gbase_expected": 420,
+      "root_candidate": 9,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_6_10",
+      "tile_id_expected": 106,
+      "gbase_expected": 424,
+      "root_candidate": 10,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_6_11",
+      "tile_id_expected": 107,
+      "gbase_expected": 428,
+      "root_candidate": 11,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_6_12",
+      "tile_id_expected": 108,
+      "gbase_expected": 432,
+      "root_candidate": 12,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_6_13",
+      "tile_id_expected": 109,
+      "gbase_expected": 436,
+      "root_candidate": 13,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_6_14",
+      "tile_id_expected": 110,
+      "gbase_expected": 440,
+      "root_candidate": 14,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_6_15",
+      "tile_id_expected": 111,
+      "gbase_expected": 444,
+      "root_candidate": 15,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_7_0",
+      "tile_id_expected": 112,
+      "gbase_expected": 448,
+      "root_candidate": 16,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_7_1",
+      "tile_id_expected": 113,
+      "gbase_expected": 452,
+      "root_candidate": 17,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_7_2",
+      "tile_id_expected": 114,
+      "gbase_expected": 456,
+      "root_candidate": 18,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_7_3",
+      "tile_id_expected": 115,
+      "gbase_expected": 460,
+      "root_candidate": 19,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_7_4",
+      "tile_id_expected": 116,
+      "gbase_expected": 464,
+      "root_candidate": 20,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_7_5",
+      "tile_id_expected": 117,
+      "gbase_expected": 468,
+      "root_candidate": 21,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_7_6",
+      "tile_id_expected": 118,
+      "gbase_expected": 472,
+      "root_candidate": 22,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_7_7",
+      "tile_id_expected": 119,
+      "gbase_expected": 476,
+      "root_candidate": 23,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_7_8",
+      "tile_id_expected": 120,
+      "gbase_expected": 480,
+      "root_candidate": 24,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_7_9",
+      "tile_id_expected": 121,
+      "gbase_expected": 484,
+      "root_candidate": 25,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_7_10",
+      "tile_id_expected": 122,
+      "gbase_expected": 488,
+      "root_candidate": 26,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_7_11",
+      "tile_id_expected": 123,
+      "gbase_expected": 492,
+      "root_candidate": 27,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_7_12",
+      "tile_id_expected": 124,
+      "gbase_expected": 496,
+      "root_candidate": 28,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_7_13",
+      "tile_id_expected": 125,
+      "gbase_expected": 500,
+      "root_candidate": 29,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_7_14",
+      "tile_id_expected": 126,
+      "gbase_expected": 504,
+      "root_candidate": 30,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_7_15",
+      "tile_id_expected": 127,
+      "gbase_expected": 508,
+      "root_candidate": 31,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_8_0",
+      "tile_id_expected": 128,
+      "gbase_expected": 512,
+      "root_candidate": 0,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_8_1",
+      "tile_id_expected": 129,
+      "gbase_expected": 516,
+      "root_candidate": 1,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_8_2",
+      "tile_id_expected": 130,
+      "gbase_expected": 520,
+      "root_candidate": 2,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_8_3",
+      "tile_id_expected": 131,
+      "gbase_expected": 524,
+      "root_candidate": 3,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_8_4",
+      "tile_id_expected": 132,
+      "gbase_expected": 528,
+      "root_candidate": 4,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_8_5",
+      "tile_id_expected": 133,
+      "gbase_expected": 532,
+      "root_candidate": 5,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_8_6",
+      "tile_id_expected": 134,
+      "gbase_expected": 536,
+      "root_candidate": 6,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_8_7",
+      "tile_id_expected": 135,
+      "gbase_expected": 540,
+      "root_candidate": 7,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_8_8",
+      "tile_id_expected": 136,
+      "gbase_expected": 544,
+      "root_candidate": 8,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_8_9",
+      "tile_id_expected": 137,
+      "gbase_expected": 548,
+      "root_candidate": 9,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_8_10",
+      "tile_id_expected": 138,
+      "gbase_expected": 552,
+      "root_candidate": 10,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_8_11",
+      "tile_id_expected": 139,
+      "gbase_expected": 556,
+      "root_candidate": 11,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_8_12",
+      "tile_id_expected": 140,
+      "gbase_expected": 560,
+      "root_candidate": 12,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_8_13",
+      "tile_id_expected": 141,
+      "gbase_expected": 564,
+      "root_candidate": 13,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_8_14",
+      "tile_id_expected": 142,
+      "gbase_expected": 568,
+      "root_candidate": 14,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_8_15",
+      "tile_id_expected": 143,
+      "gbase_expected": 572,
+      "root_candidate": 15,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_9_0",
+      "tile_id_expected": 144,
+      "gbase_expected": 576,
+      "root_candidate": 16,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_9_1",
+      "tile_id_expected": 145,
+      "gbase_expected": 580,
+      "root_candidate": 17,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_9_2",
+      "tile_id_expected": 146,
+      "gbase_expected": 584,
+      "root_candidate": 18,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_9_3",
+      "tile_id_expected": 147,
+      "gbase_expected": 588,
+      "root_candidate": 19,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_9_4",
+      "tile_id_expected": 148,
+      "gbase_expected": 592,
+      "root_candidate": 20,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_9_5",
+      "tile_id_expected": 149,
+      "gbase_expected": 596,
+      "root_candidate": 21,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_9_6",
+      "tile_id_expected": 150,
+      "gbase_expected": 600,
+      "root_candidate": 22,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_9_7",
+      "tile_id_expected": 151,
+      "gbase_expected": 604,
+      "root_candidate": 23,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_9_8",
+      "tile_id_expected": 152,
+      "gbase_expected": 608,
+      "root_candidate": 24,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_9_9",
+      "tile_id_expected": 153,
+      "gbase_expected": 612,
+      "root_candidate": 25,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_9_10",
+      "tile_id_expected": 154,
+      "gbase_expected": 616,
+      "root_candidate": 26,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_9_11",
+      "tile_id_expected": 155,
+      "gbase_expected": 620,
+      "root_candidate": 27,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_9_12",
+      "tile_id_expected": 156,
+      "gbase_expected": 624,
+      "root_candidate": 28,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_9_13",
+      "tile_id_expected": 157,
+      "gbase_expected": 628,
+      "root_candidate": 29,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_9_14",
+      "tile_id_expected": 158,
+      "gbase_expected": 632,
+      "root_candidate": 30,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_9_15",
+      "tile_id_expected": 159,
+      "gbase_expected": 636,
+      "root_candidate": 31,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_10_0",
+      "tile_id_expected": 160,
+      "gbase_expected": 640,
+      "root_candidate": 0,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_10_1",
+      "tile_id_expected": 161,
+      "gbase_expected": 644,
+      "root_candidate": 1,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_10_2",
+      "tile_id_expected": 162,
+      "gbase_expected": 648,
+      "root_candidate": 2,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_10_3",
+      "tile_id_expected": 163,
+      "gbase_expected": 652,
+      "root_candidate": 3,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_10_4",
+      "tile_id_expected": 164,
+      "gbase_expected": 656,
+      "root_candidate": 4,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_10_5",
+      "tile_id_expected": 165,
+      "gbase_expected": 660,
+      "root_candidate": 5,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_10_6",
+      "tile_id_expected": 166,
+      "gbase_expected": 664,
+      "root_candidate": 6,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_10_7",
+      "tile_id_expected": 167,
+      "gbase_expected": 668,
+      "root_candidate": 7,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_10_8",
+      "tile_id_expected": 168,
+      "gbase_expected": 672,
+      "root_candidate": 8,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_10_9",
+      "tile_id_expected": 169,
+      "gbase_expected": 676,
+      "root_candidate": 9,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_10_10",
+      "tile_id_expected": 170,
+      "gbase_expected": 680,
+      "root_candidate": 10,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_10_11",
+      "tile_id_expected": 171,
+      "gbase_expected": 684,
+      "root_candidate": 11,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_10_12",
+      "tile_id_expected": 172,
+      "gbase_expected": 688,
+      "root_candidate": 12,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_10_13",
+      "tile_id_expected": 173,
+      "gbase_expected": 692,
+      "root_candidate": 13,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_10_14",
+      "tile_id_expected": 174,
+      "gbase_expected": 696,
+      "root_candidate": 14,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_10_15",
+      "tile_id_expected": 175,
+      "gbase_expected": 700,
+      "root_candidate": 15,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_11_0",
+      "tile_id_expected": 176,
+      "gbase_expected": 704,
+      "root_candidate": 16,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_11_1",
+      "tile_id_expected": 177,
+      "gbase_expected": 708,
+      "root_candidate": 17,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_11_2",
+      "tile_id_expected": 178,
+      "gbase_expected": 712,
+      "root_candidate": 18,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_11_3",
+      "tile_id_expected": 179,
+      "gbase_expected": 716,
+      "root_candidate": 19,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_11_4",
+      "tile_id_expected": 180,
+      "gbase_expected": 720,
+      "root_candidate": 20,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_11_5",
+      "tile_id_expected": 181,
+      "gbase_expected": 724,
+      "root_candidate": 21,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_11_6",
+      "tile_id_expected": 182,
+      "gbase_expected": 728,
+      "root_candidate": 22,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_11_7",
+      "tile_id_expected": 183,
+      "gbase_expected": 732,
+      "root_candidate": 23,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_11_8",
+      "tile_id_expected": 184,
+      "gbase_expected": 736,
+      "root_candidate": 24,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_11_9",
+      "tile_id_expected": 185,
+      "gbase_expected": 740,
+      "root_candidate": 25,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_11_10",
+      "tile_id_expected": 186,
+      "gbase_expected": 744,
+      "root_candidate": 26,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_11_11",
+      "tile_id_expected": 187,
+      "gbase_expected": 748,
+      "root_candidate": 27,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_11_12",
+      "tile_id_expected": 188,
+      "gbase_expected": 752,
+      "root_candidate": 28,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_11_13",
+      "tile_id_expected": 189,
+      "gbase_expected": 756,
+      "root_candidate": 29,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_11_14",
+      "tile_id_expected": 190,
+      "gbase_expected": 760,
+      "root_candidate": 30,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_11_15",
+      "tile_id_expected": 191,
+      "gbase_expected": 764,
+      "root_candidate": 31,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_12_0",
+      "tile_id_expected": 192,
+      "gbase_expected": 768,
+      "root_candidate": 0,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_12_1",
+      "tile_id_expected": 193,
+      "gbase_expected": 772,
+      "root_candidate": 1,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_12_2",
+      "tile_id_expected": 194,
+      "gbase_expected": 776,
+      "root_candidate": 2,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_12_3",
+      "tile_id_expected": 195,
+      "gbase_expected": 780,
+      "root_candidate": 3,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_12_4",
+      "tile_id_expected": 196,
+      "gbase_expected": 784,
+      "root_candidate": 4,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_12_5",
+      "tile_id_expected": 197,
+      "gbase_expected": 788,
+      "root_candidate": 5,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_12_6",
+      "tile_id_expected": 198,
+      "gbase_expected": 792,
+      "root_candidate": 6,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_12_7",
+      "tile_id_expected": 199,
+      "gbase_expected": 796,
+      "root_candidate": 7,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_12_8",
+      "tile_id_expected": 200,
+      "gbase_expected": 800,
+      "root_candidate": 8,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_12_9",
+      "tile_id_expected": 201,
+      "gbase_expected": 804,
+      "root_candidate": 9,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_12_10",
+      "tile_id_expected": 202,
+      "gbase_expected": 808,
+      "root_candidate": 10,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_12_11",
+      "tile_id_expected": 203,
+      "gbase_expected": 812,
+      "root_candidate": 11,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_12_12",
+      "tile_id_expected": 204,
+      "gbase_expected": 816,
+      "root_candidate": 12,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_12_13",
+      "tile_id_expected": 205,
+      "gbase_expected": 820,
+      "root_candidate": 13,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_12_14",
+      "tile_id_expected": 206,
+      "gbase_expected": 824,
+      "root_candidate": 14,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_12_15",
+      "tile_id_expected": 207,
+      "gbase_expected": 828,
+      "root_candidate": 15,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_13_0",
+      "tile_id_expected": 208,
+      "gbase_expected": 832,
+      "root_candidate": 16,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_13_1",
+      "tile_id_expected": 209,
+      "gbase_expected": 836,
+      "root_candidate": 17,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_13_2",
+      "tile_id_expected": 210,
+      "gbase_expected": 840,
+      "root_candidate": 18,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_13_3",
+      "tile_id_expected": 211,
+      "gbase_expected": 844,
+      "root_candidate": 19,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_13_4",
+      "tile_id_expected": 212,
+      "gbase_expected": 848,
+      "root_candidate": 20,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_13_5",
+      "tile_id_expected": 213,
+      "gbase_expected": 852,
+      "root_candidate": 21,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_13_6",
+      "tile_id_expected": 214,
+      "gbase_expected": 856,
+      "root_candidate": 22,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_13_7",
+      "tile_id_expected": 215,
+      "gbase_expected": 860,
+      "root_candidate": 23,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_13_8",
+      "tile_id_expected": 216,
+      "gbase_expected": 864,
+      "root_candidate": 24,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_13_9",
+      "tile_id_expected": 217,
+      "gbase_expected": 868,
+      "root_candidate": 25,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_13_10",
+      "tile_id_expected": 218,
+      "gbase_expected": 872,
+      "root_candidate": 26,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_13_11",
+      "tile_id_expected": 219,
+      "gbase_expected": 876,
+      "root_candidate": 27,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_13_12",
+      "tile_id_expected": 220,
+      "gbase_expected": 880,
+      "root_candidate": 28,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_13_13",
+      "tile_id_expected": 221,
+      "gbase_expected": 884,
+      "root_candidate": 29,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_13_14",
+      "tile_id_expected": 222,
+      "gbase_expected": 888,
+      "root_candidate": 30,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_13_15",
+      "tile_id_expected": 223,
+      "gbase_expected": 892,
+      "root_candidate": 31,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_14_0",
+      "tile_id_expected": 224,
+      "gbase_expected": 896,
+      "root_candidate": 0,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_14_1",
+      "tile_id_expected": 225,
+      "gbase_expected": 900,
+      "root_candidate": 1,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_14_2",
+      "tile_id_expected": 226,
+      "gbase_expected": 904,
+      "root_candidate": 2,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_14_3",
+      "tile_id_expected": 227,
+      "gbase_expected": 908,
+      "root_candidate": 3,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_14_4",
+      "tile_id_expected": 228,
+      "gbase_expected": 912,
+      "root_candidate": 4,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_14_5",
+      "tile_id_expected": 229,
+      "gbase_expected": 916,
+      "root_candidate": 5,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_14_6",
+      "tile_id_expected": 230,
+      "gbase_expected": 920,
+      "root_candidate": 6,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_14_7",
+      "tile_id_expected": 231,
+      "gbase_expected": 924,
+      "root_candidate": 7,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_14_8",
+      "tile_id_expected": 232,
+      "gbase_expected": 928,
+      "root_candidate": 8,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_14_9",
+      "tile_id_expected": 233,
+      "gbase_expected": 932,
+      "root_candidate": 9,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_14_10",
+      "tile_id_expected": 234,
+      "gbase_expected": 936,
+      "root_candidate": 10,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_14_11",
+      "tile_id_expected": 235,
+      "gbase_expected": 940,
+      "root_candidate": 11,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_14_12",
+      "tile_id_expected": 236,
+      "gbase_expected": 944,
+      "root_candidate": 12,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_14_13",
+      "tile_id_expected": 237,
+      "gbase_expected": 948,
+      "root_candidate": 13,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_14_14",
+      "tile_id_expected": 238,
+      "gbase_expected": 952,
+      "root_candidate": 14,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_14_15",
+      "tile_id_expected": 239,
+      "gbase_expected": 956,
+      "root_candidate": 15,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_15_0",
+      "tile_id_expected": 240,
+      "gbase_expected": 960,
+      "root_candidate": 16,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_15_1",
+      "tile_id_expected": 241,
+      "gbase_expected": 964,
+      "root_candidate": 17,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_15_2",
+      "tile_id_expected": 242,
+      "gbase_expected": 968,
+      "root_candidate": 18,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_15_3",
+      "tile_id_expected": 243,
+      "gbase_expected": 972,
+      "root_candidate": 19,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_15_4",
+      "tile_id_expected": 244,
+      "gbase_expected": 976,
+      "root_candidate": 20,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_15_5",
+      "tile_id_expected": 245,
+      "gbase_expected": 980,
+      "root_candidate": 21,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_15_6",
+      "tile_id_expected": 246,
+      "gbase_expected": 984,
+      "root_candidate": 22,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_15_7",
+      "tile_id_expected": 247,
+      "gbase_expected": 988,
+      "root_candidate": 23,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_15_8",
+      "tile_id_expected": 248,
+      "gbase_expected": 992,
+      "root_candidate": 24,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_15_9",
+      "tile_id_expected": 249,
+      "gbase_expected": 996,
+      "root_candidate": 25,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_15_10",
+      "tile_id_expected": 250,
+      "gbase_expected": 1000,
+      "root_candidate": 26,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_15_11",
+      "tile_id_expected": 251,
+      "gbase_expected": 1004,
+      "root_candidate": 27,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_15_12",
+      "tile_id_expected": 252,
+      "gbase_expected": 1008,
+      "root_candidate": 28,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_15_13",
+      "tile_id_expected": 253,
+      "gbase_expected": 1012,
+      "root_candidate": 29,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_15_14",
+      "tile_id_expected": 254,
+      "gbase_expected": 1016,
+      "root_candidate": 30,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_15_15",
+      "tile_id_expected": 255,
+      "gbase_expected": 1020,
+      "root_candidate": 31,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_16_0",
+      "tile_id_expected": 256,
+      "gbase_expected": 1024,
+      "root_candidate": 0,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_16_1",
+      "tile_id_expected": 257,
+      "gbase_expected": 1028,
+      "root_candidate": 1,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_16_2",
+      "tile_id_expected": 258,
+      "gbase_expected": 1032,
+      "root_candidate": 2,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_16_3",
+      "tile_id_expected": 259,
+      "gbase_expected": 1036,
+      "root_candidate": 3,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_16_4",
+      "tile_id_expected": 260,
+      "gbase_expected": 1040,
+      "root_candidate": 4,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_16_5",
+      "tile_id_expected": 261,
+      "gbase_expected": 1044,
+      "root_candidate": 5,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_16_6",
+      "tile_id_expected": 262,
+      "gbase_expected": 1048,
+      "root_candidate": 6,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_16_7",
+      "tile_id_expected": 263,
+      "gbase_expected": 1052,
+      "root_candidate": 7,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_16_8",
+      "tile_id_expected": 264,
+      "gbase_expected": 1056,
+      "root_candidate": 8,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_16_9",
+      "tile_id_expected": 265,
+      "gbase_expected": 1060,
+      "root_candidate": 9,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_16_10",
+      "tile_id_expected": 266,
+      "gbase_expected": 1064,
+      "root_candidate": 10,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_16_11",
+      "tile_id_expected": 267,
+      "gbase_expected": 1068,
+      "root_candidate": 11,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_16_12",
+      "tile_id_expected": 268,
+      "gbase_expected": 1072,
+      "root_candidate": 12,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_16_13",
+      "tile_id_expected": 269,
+      "gbase_expected": 1076,
+      "root_candidate": 13,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_16_14",
+      "tile_id_expected": 270,
+      "gbase_expected": 1080,
+      "root_candidate": 14,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_16_15",
+      "tile_id_expected": 271,
+      "gbase_expected": 1084,
+      "root_candidate": 15,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_17_0",
+      "tile_id_expected": 272,
+      "gbase_expected": 1088,
+      "root_candidate": 16,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_17_1",
+      "tile_id_expected": 273,
+      "gbase_expected": 1092,
+      "root_candidate": 17,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_17_2",
+      "tile_id_expected": 274,
+      "gbase_expected": 1096,
+      "root_candidate": 18,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_17_3",
+      "tile_id_expected": 275,
+      "gbase_expected": 1100,
+      "root_candidate": 19,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_17_4",
+      "tile_id_expected": 276,
+      "gbase_expected": 1104,
+      "root_candidate": 20,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_17_5",
+      "tile_id_expected": 277,
+      "gbase_expected": 1108,
+      "root_candidate": 21,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_17_6",
+      "tile_id_expected": 278,
+      "gbase_expected": 1112,
+      "root_candidate": 22,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_17_7",
+      "tile_id_expected": 279,
+      "gbase_expected": 1116,
+      "root_candidate": 23,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_17_8",
+      "tile_id_expected": 280,
+      "gbase_expected": 1120,
+      "root_candidate": 24,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_17_9",
+      "tile_id_expected": 281,
+      "gbase_expected": 1124,
+      "root_candidate": 25,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_17_10",
+      "tile_id_expected": 282,
+      "gbase_expected": 1128,
+      "root_candidate": 26,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_17_11",
+      "tile_id_expected": 283,
+      "gbase_expected": 1132,
+      "root_candidate": 27,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_17_12",
+      "tile_id_expected": 284,
+      "gbase_expected": 1136,
+      "root_candidate": 28,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_17_13",
+      "tile_id_expected": 285,
+      "gbase_expected": 1140,
+      "root_candidate": 29,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_17_14",
+      "tile_id_expected": 286,
+      "gbase_expected": 1144,
+      "root_candidate": 30,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_17_15",
+      "tile_id_expected": 287,
+      "gbase_expected": 1148,
+      "root_candidate": 31,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_18_0",
+      "tile_id_expected": 288,
+      "gbase_expected": 1152,
+      "root_candidate": 0,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_18_1",
+      "tile_id_expected": 289,
+      "gbase_expected": 1156,
+      "root_candidate": 1,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_18_2",
+      "tile_id_expected": 290,
+      "gbase_expected": 1160,
+      "root_candidate": 2,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_18_3",
+      "tile_id_expected": 291,
+      "gbase_expected": 1164,
+      "root_candidate": 3,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_18_4",
+      "tile_id_expected": 292,
+      "gbase_expected": 1168,
+      "root_candidate": 4,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_18_5",
+      "tile_id_expected": 293,
+      "gbase_expected": 1172,
+      "root_candidate": 5,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_18_6",
+      "tile_id_expected": 294,
+      "gbase_expected": 1176,
+      "root_candidate": 6,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_18_7",
+      "tile_id_expected": 295,
+      "gbase_expected": 1180,
+      "root_candidate": 7,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_18_8",
+      "tile_id_expected": 296,
+      "gbase_expected": 1184,
+      "root_candidate": 8,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_18_9",
+      "tile_id_expected": 297,
+      "gbase_expected": 1188,
+      "root_candidate": 9,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_18_10",
+      "tile_id_expected": 298,
+      "gbase_expected": 1192,
+      "root_candidate": 10,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_18_11",
+      "tile_id_expected": 299,
+      "gbase_expected": 1196,
+      "root_candidate": 11,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_18_12",
+      "tile_id_expected": 300,
+      "gbase_expected": 1200,
+      "root_candidate": 12,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_18_13",
+      "tile_id_expected": 301,
+      "gbase_expected": 1204,
+      "root_candidate": 13,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_18_14",
+      "tile_id_expected": 302,
+      "gbase_expected": 1208,
+      "root_candidate": 14,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_18_15",
+      "tile_id_expected": 303,
+      "gbase_expected": 1212,
+      "root_candidate": 15,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_19_0",
+      "tile_id_expected": 304,
+      "gbase_expected": 1216,
+      "root_candidate": 16,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_19_1",
+      "tile_id_expected": 305,
+      "gbase_expected": 1220,
+      "root_candidate": 17,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_19_2",
+      "tile_id_expected": 306,
+      "gbase_expected": 1224,
+      "root_candidate": 18,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_19_3",
+      "tile_id_expected": 307,
+      "gbase_expected": 1228,
+      "root_candidate": 19,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_19_4",
+      "tile_id_expected": 308,
+      "gbase_expected": 1232,
+      "root_candidate": 20,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_19_5",
+      "tile_id_expected": 309,
+      "gbase_expected": 1236,
+      "root_candidate": 21,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_19_6",
+      "tile_id_expected": 310,
+      "gbase_expected": 1240,
+      "root_candidate": 22,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_19_7",
+      "tile_id_expected": 311,
+      "gbase_expected": 1244,
+      "root_candidate": 23,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_19_8",
+      "tile_id_expected": 312,
+      "gbase_expected": 1248,
+      "root_candidate": 24,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_19_9",
+      "tile_id_expected": 313,
+      "gbase_expected": 1252,
+      "root_candidate": 25,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_19_10",
+      "tile_id_expected": 314,
+      "gbase_expected": 1256,
+      "root_candidate": 26,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_19_11",
+      "tile_id_expected": 315,
+      "gbase_expected": 1260,
+      "root_candidate": 27,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_19_12",
+      "tile_id_expected": 316,
+      "gbase_expected": 1264,
+      "root_candidate": 28,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_19_13",
+      "tile_id_expected": 317,
+      "gbase_expected": 1268,
+      "root_candidate": 29,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_19_14",
+      "tile_id_expected": 318,
+      "gbase_expected": 1272,
+      "root_candidate": 30,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_19_15",
+      "tile_id_expected": 319,
+      "gbase_expected": 1276,
+      "root_candidate": 31,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_20_0",
+      "tile_id_expected": 320,
+      "gbase_expected": 1280,
+      "root_candidate": 0,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_20_1",
+      "tile_id_expected": 321,
+      "gbase_expected": 1284,
+      "root_candidate": 1,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_20_2",
+      "tile_id_expected": 322,
+      "gbase_expected": 1288,
+      "root_candidate": 2,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_20_3",
+      "tile_id_expected": 323,
+      "gbase_expected": 1292,
+      "root_candidate": 3,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_20_4",
+      "tile_id_expected": 324,
+      "gbase_expected": 1296,
+      "root_candidate": 4,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_20_5",
+      "tile_id_expected": 325,
+      "gbase_expected": 1300,
+      "root_candidate": 5,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_20_6",
+      "tile_id_expected": 326,
+      "gbase_expected": 1304,
+      "root_candidate": 6,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_20_7",
+      "tile_id_expected": 327,
+      "gbase_expected": 1308,
+      "root_candidate": 7,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_20_8",
+      "tile_id_expected": 328,
+      "gbase_expected": 1312,
+      "root_candidate": 8,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_20_9",
+      "tile_id_expected": 329,
+      "gbase_expected": 1316,
+      "root_candidate": 9,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_20_10",
+      "tile_id_expected": 330,
+      "gbase_expected": 1320,
+      "root_candidate": 10,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_20_11",
+      "tile_id_expected": 331,
+      "gbase_expected": 1324,
+      "root_candidate": 11,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_20_12",
+      "tile_id_expected": 332,
+      "gbase_expected": 1328,
+      "root_candidate": 12,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_20_13",
+      "tile_id_expected": 333,
+      "gbase_expected": 1332,
+      "root_candidate": 13,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_20_14",
+      "tile_id_expected": 334,
+      "gbase_expected": 1336,
+      "root_candidate": 14,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_20_15",
+      "tile_id_expected": 335,
+      "gbase_expected": 1340,
+      "root_candidate": 15,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_21_0",
+      "tile_id_expected": 336,
+      "gbase_expected": 1344,
+      "root_candidate": 16,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_21_1",
+      "tile_id_expected": 337,
+      "gbase_expected": 1348,
+      "root_candidate": 17,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_21_2",
+      "tile_id_expected": 338,
+      "gbase_expected": 1352,
+      "root_candidate": 18,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_21_3",
+      "tile_id_expected": 339,
+      "gbase_expected": 1356,
+      "root_candidate": 19,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_21_4",
+      "tile_id_expected": 340,
+      "gbase_expected": 1360,
+      "root_candidate": 20,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_21_5",
+      "tile_id_expected": 341,
+      "gbase_expected": 1364,
+      "root_candidate": 21,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_21_6",
+      "tile_id_expected": 342,
+      "gbase_expected": 1368,
+      "root_candidate": 22,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_21_7",
+      "tile_id_expected": 343,
+      "gbase_expected": 1372,
+      "root_candidate": 23,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_21_8",
+      "tile_id_expected": 344,
+      "gbase_expected": 1376,
+      "root_candidate": 24,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_21_9",
+      "tile_id_expected": 345,
+      "gbase_expected": 1380,
+      "root_candidate": 25,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_21_10",
+      "tile_id_expected": 346,
+      "gbase_expected": 1384,
+      "root_candidate": 26,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_21_11",
+      "tile_id_expected": 347,
+      "gbase_expected": 1388,
+      "root_candidate": 27,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_21_12",
+      "tile_id_expected": 348,
+      "gbase_expected": 1392,
+      "root_candidate": 28,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_21_13",
+      "tile_id_expected": 349,
+      "gbase_expected": 1396,
+      "root_candidate": 29,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_21_14",
+      "tile_id_expected": 350,
+      "gbase_expected": 1400,
+      "root_candidate": 30,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_21_15",
+      "tile_id_expected": 351,
+      "gbase_expected": 1404,
+      "root_candidate": 31,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_22_0",
+      "tile_id_expected": 352,
+      "gbase_expected": 1408,
+      "root_candidate": 0,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_22_1",
+      "tile_id_expected": 353,
+      "gbase_expected": 1412,
+      "root_candidate": 1,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_22_2",
+      "tile_id_expected": 354,
+      "gbase_expected": 1416,
+      "root_candidate": 2,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_22_3",
+      "tile_id_expected": 355,
+      "gbase_expected": 1420,
+      "root_candidate": 3,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_22_4",
+      "tile_id_expected": 356,
+      "gbase_expected": 1424,
+      "root_candidate": 4,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_22_5",
+      "tile_id_expected": 357,
+      "gbase_expected": 1428,
+      "root_candidate": 5,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_22_6",
+      "tile_id_expected": 358,
+      "gbase_expected": 1432,
+      "root_candidate": 6,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_22_7",
+      "tile_id_expected": 359,
+      "gbase_expected": 1436,
+      "root_candidate": 7,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_22_8",
+      "tile_id_expected": 360,
+      "gbase_expected": 1440,
+      "root_candidate": 8,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_22_9",
+      "tile_id_expected": 361,
+      "gbase_expected": 1444,
+      "root_candidate": 9,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_22_10",
+      "tile_id_expected": 362,
+      "gbase_expected": 1448,
+      "root_candidate": 10,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_22_11",
+      "tile_id_expected": 363,
+      "gbase_expected": 1452,
+      "root_candidate": 11,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_22_12",
+      "tile_id_expected": 364,
+      "gbase_expected": 1456,
+      "root_candidate": 12,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_22_13",
+      "tile_id_expected": 365,
+      "gbase_expected": 1460,
+      "root_candidate": 13,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_22_14",
+      "tile_id_expected": 366,
+      "gbase_expected": 1464,
+      "root_candidate": 14,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_22_15",
+      "tile_id_expected": 367,
+      "gbase_expected": 1468,
+      "root_candidate": 15,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_23_0",
+      "tile_id_expected": 368,
+      "gbase_expected": 1472,
+      "root_candidate": 16,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_23_1",
+      "tile_id_expected": 369,
+      "gbase_expected": 1476,
+      "root_candidate": 17,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_23_2",
+      "tile_id_expected": 370,
+      "gbase_expected": 1480,
+      "root_candidate": 18,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_23_3",
+      "tile_id_expected": 371,
+      "gbase_expected": 1484,
+      "root_candidate": 19,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_23_4",
+      "tile_id_expected": 372,
+      "gbase_expected": 1488,
+      "root_candidate": 20,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_23_5",
+      "tile_id_expected": 373,
+      "gbase_expected": 1492,
+      "root_candidate": 21,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_23_6",
+      "tile_id_expected": 374,
+      "gbase_expected": 1496,
+      "root_candidate": 22,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_23_7",
+      "tile_id_expected": 375,
+      "gbase_expected": 1500,
+      "root_candidate": 23,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_23_8",
+      "tile_id_expected": 376,
+      "gbase_expected": 1504,
+      "root_candidate": 24,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_23_9",
+      "tile_id_expected": 377,
+      "gbase_expected": 1508,
+      "root_candidate": 25,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_23_10",
+      "tile_id_expected": 378,
+      "gbase_expected": 1512,
+      "root_candidate": 26,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_23_11",
+      "tile_id_expected": 379,
+      "gbase_expected": 1516,
+      "root_candidate": 27,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_23_12",
+      "tile_id_expected": 380,
+      "gbase_expected": 1520,
+      "root_candidate": 28,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_23_13",
+      "tile_id_expected": 381,
+      "gbase_expected": 1524,
+      "root_candidate": 29,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_23_14",
+      "tile_id_expected": 382,
+      "gbase_expected": 1528,
+      "root_candidate": 30,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_23_15",
+      "tile_id_expected": 383,
+      "gbase_expected": 1532,
+      "root_candidate": 31,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_24_0",
+      "tile_id_expected": 384,
+      "gbase_expected": 1536,
+      "root_candidate": 0,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_24_1",
+      "tile_id_expected": 385,
+      "gbase_expected": 1540,
+      "root_candidate": 1,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_24_2",
+      "tile_id_expected": 386,
+      "gbase_expected": 1544,
+      "root_candidate": 2,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_24_3",
+      "tile_id_expected": 387,
+      "gbase_expected": 1548,
+      "root_candidate": 3,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_24_4",
+      "tile_id_expected": 388,
+      "gbase_expected": 1552,
+      "root_candidate": 4,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_24_5",
+      "tile_id_expected": 389,
+      "gbase_expected": 1556,
+      "root_candidate": 5,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_24_6",
+      "tile_id_expected": 390,
+      "gbase_expected": 1560,
+      "root_candidate": 6,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_24_7",
+      "tile_id_expected": 391,
+      "gbase_expected": 1564,
+      "root_candidate": 7,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_24_8",
+      "tile_id_expected": 392,
+      "gbase_expected": 1568,
+      "root_candidate": 8,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_24_9",
+      "tile_id_expected": 393,
+      "gbase_expected": 1572,
+      "root_candidate": 9,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_24_10",
+      "tile_id_expected": 394,
+      "gbase_expected": 1576,
+      "root_candidate": 10,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_24_11",
+      "tile_id_expected": 395,
+      "gbase_expected": 1580,
+      "root_candidate": 11,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_24_12",
+      "tile_id_expected": 396,
+      "gbase_expected": 1584,
+      "root_candidate": 12,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_24_13",
+      "tile_id_expected": 397,
+      "gbase_expected": 1588,
+      "root_candidate": 13,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_24_14",
+      "tile_id_expected": 398,
+      "gbase_expected": 1592,
+      "root_candidate": 14,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_24_15",
+      "tile_id_expected": 399,
+      "gbase_expected": 1596,
+      "root_candidate": 15,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_25_0",
+      "tile_id_expected": 400,
+      "gbase_expected": 1600,
+      "root_candidate": 16,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_25_1",
+      "tile_id_expected": 401,
+      "gbase_expected": 1604,
+      "root_candidate": 17,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_25_2",
+      "tile_id_expected": 402,
+      "gbase_expected": 1608,
+      "root_candidate": 18,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_25_3",
+      "tile_id_expected": 403,
+      "gbase_expected": 1612,
+      "root_candidate": 19,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_25_4",
+      "tile_id_expected": 404,
+      "gbase_expected": 1616,
+      "root_candidate": 20,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_25_5",
+      "tile_id_expected": 405,
+      "gbase_expected": 1620,
+      "root_candidate": 21,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_25_6",
+      "tile_id_expected": 406,
+      "gbase_expected": 1624,
+      "root_candidate": 22,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_25_7",
+      "tile_id_expected": 407,
+      "gbase_expected": 1628,
+      "root_candidate": 23,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_25_8",
+      "tile_id_expected": 408,
+      "gbase_expected": 1632,
+      "root_candidate": 24,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_25_9",
+      "tile_id_expected": 409,
+      "gbase_expected": 1636,
+      "root_candidate": 25,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_25_10",
+      "tile_id_expected": 410,
+      "gbase_expected": 1640,
+      "root_candidate": 26,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_25_11",
+      "tile_id_expected": 411,
+      "gbase_expected": 1644,
+      "root_candidate": 27,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_25_12",
+      "tile_id_expected": 412,
+      "gbase_expected": 1648,
+      "root_candidate": 28,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_25_13",
+      "tile_id_expected": 413,
+      "gbase_expected": 1652,
+      "root_candidate": 29,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_25_14",
+      "tile_id_expected": 414,
+      "gbase_expected": 1656,
+      "root_candidate": 30,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_25_15",
+      "tile_id_expected": 415,
+      "gbase_expected": 1660,
+      "root_candidate": 31,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_26_0",
+      "tile_id_expected": 416,
+      "gbase_expected": 1664,
+      "root_candidate": 0,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_26_1",
+      "tile_id_expected": 417,
+      "gbase_expected": 1668,
+      "root_candidate": 1,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_26_2",
+      "tile_id_expected": 418,
+      "gbase_expected": 1672,
+      "root_candidate": 2,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_26_3",
+      "tile_id_expected": 419,
+      "gbase_expected": 1676,
+      "root_candidate": 3,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_26_4",
+      "tile_id_expected": 420,
+      "gbase_expected": 1680,
+      "root_candidate": 4,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_26_5",
+      "tile_id_expected": 421,
+      "gbase_expected": 1684,
+      "root_candidate": 5,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_26_6",
+      "tile_id_expected": 422,
+      "gbase_expected": 1688,
+      "root_candidate": 6,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_26_7",
+      "tile_id_expected": 423,
+      "gbase_expected": 1692,
+      "root_candidate": 7,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_26_8",
+      "tile_id_expected": 424,
+      "gbase_expected": 1696,
+      "root_candidate": 8,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_26_9",
+      "tile_id_expected": 425,
+      "gbase_expected": 1700,
+      "root_candidate": 9,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_26_10",
+      "tile_id_expected": 426,
+      "gbase_expected": 1704,
+      "root_candidate": 10,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_26_11",
+      "tile_id_expected": 427,
+      "gbase_expected": 1708,
+      "root_candidate": 11,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_26_12",
+      "tile_id_expected": 428,
+      "gbase_expected": 1712,
+      "root_candidate": 12,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_26_13",
+      "tile_id_expected": 429,
+      "gbase_expected": 1716,
+      "root_candidate": 13,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_26_14",
+      "tile_id_expected": 430,
+      "gbase_expected": 1720,
+      "root_candidate": 14,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_26_15",
+      "tile_id_expected": 431,
+      "gbase_expected": 1724,
+      "root_candidate": 15,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_27_0",
+      "tile_id_expected": 432,
+      "gbase_expected": 1728,
+      "root_candidate": 16,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_27_1",
+      "tile_id_expected": 433,
+      "gbase_expected": 1732,
+      "root_candidate": 17,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_27_2",
+      "tile_id_expected": 434,
+      "gbase_expected": 1736,
+      "root_candidate": 18,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_27_3",
+      "tile_id_expected": 435,
+      "gbase_expected": 1740,
+      "root_candidate": 19,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_27_4",
+      "tile_id_expected": 436,
+      "gbase_expected": 1744,
+      "root_candidate": 20,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_27_5",
+      "tile_id_expected": 437,
+      "gbase_expected": 1748,
+      "root_candidate": 21,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_27_6",
+      "tile_id_expected": 438,
+      "gbase_expected": 1752,
+      "root_candidate": 22,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_27_7",
+      "tile_id_expected": 439,
+      "gbase_expected": 1756,
+      "root_candidate": 23,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_27_8",
+      "tile_id_expected": 440,
+      "gbase_expected": 1760,
+      "root_candidate": 24,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_27_9",
+      "tile_id_expected": 441,
+      "gbase_expected": 1764,
+      "root_candidate": 25,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_27_10",
+      "tile_id_expected": 442,
+      "gbase_expected": 1768,
+      "root_candidate": 26,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_27_11",
+      "tile_id_expected": 443,
+      "gbase_expected": 1772,
+      "root_candidate": 27,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_27_12",
+      "tile_id_expected": 444,
+      "gbase_expected": 1776,
+      "root_candidate": 28,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_27_13",
+      "tile_id_expected": 445,
+      "gbase_expected": 1780,
+      "root_candidate": 29,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_27_14",
+      "tile_id_expected": 446,
+      "gbase_expected": 1784,
+      "root_candidate": 30,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_27_15",
+      "tile_id_expected": 447,
+      "gbase_expected": 1788,
+      "root_candidate": 31,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_28_0",
+      "tile_id_expected": 448,
+      "gbase_expected": 1792,
+      "root_candidate": 0,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_28_1",
+      "tile_id_expected": 449,
+      "gbase_expected": 1796,
+      "root_candidate": 1,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_28_2",
+      "tile_id_expected": 450,
+      "gbase_expected": 1800,
+      "root_candidate": 2,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_28_3",
+      "tile_id_expected": 451,
+      "gbase_expected": 1804,
+      "root_candidate": 3,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_28_4",
+      "tile_id_expected": 452,
+      "gbase_expected": 1808,
+      "root_candidate": 4,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_28_5",
+      "tile_id_expected": 453,
+      "gbase_expected": 1812,
+      "root_candidate": 5,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_28_6",
+      "tile_id_expected": 454,
+      "gbase_expected": 1816,
+      "root_candidate": 6,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_28_7",
+      "tile_id_expected": 455,
+      "gbase_expected": 1820,
+      "root_candidate": 7,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_28_8",
+      "tile_id_expected": 456,
+      "gbase_expected": 1824,
+      "root_candidate": 8,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_28_9",
+      "tile_id_expected": 457,
+      "gbase_expected": 1828,
+      "root_candidate": 9,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_28_10",
+      "tile_id_expected": 458,
+      "gbase_expected": 1832,
+      "root_candidate": 10,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_28_11",
+      "tile_id_expected": 459,
+      "gbase_expected": 1836,
+      "root_candidate": 11,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_28_12",
+      "tile_id_expected": 460,
+      "gbase_expected": 1840,
+      "root_candidate": 12,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_28_13",
+      "tile_id_expected": 461,
+      "gbase_expected": 1844,
+      "root_candidate": 13,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_28_14",
+      "tile_id_expected": 462,
+      "gbase_expected": 1848,
+      "root_candidate": 14,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_28_15",
+      "tile_id_expected": 463,
+      "gbase_expected": 1852,
+      "root_candidate": 15,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_29_0",
+      "tile_id_expected": 464,
+      "gbase_expected": 1856,
+      "root_candidate": 16,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_29_1",
+      "tile_id_expected": 465,
+      "gbase_expected": 1860,
+      "root_candidate": 17,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_29_2",
+      "tile_id_expected": 466,
+      "gbase_expected": 1864,
+      "root_candidate": 18,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_29_3",
+      "tile_id_expected": 467,
+      "gbase_expected": 1868,
+      "root_candidate": 19,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_29_4",
+      "tile_id_expected": 468,
+      "gbase_expected": 1872,
+      "root_candidate": 20,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_29_5",
+      "tile_id_expected": 469,
+      "gbase_expected": 1876,
+      "root_candidate": 21,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_29_6",
+      "tile_id_expected": 470,
+      "gbase_expected": 1880,
+      "root_candidate": 22,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_29_7",
+      "tile_id_expected": 471,
+      "gbase_expected": 1884,
+      "root_candidate": 23,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_29_8",
+      "tile_id_expected": 472,
+      "gbase_expected": 1888,
+      "root_candidate": 24,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_29_9",
+      "tile_id_expected": 473,
+      "gbase_expected": 1892,
+      "root_candidate": 25,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_29_10",
+      "tile_id_expected": 474,
+      "gbase_expected": 1896,
+      "root_candidate": 26,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_29_11",
+      "tile_id_expected": 475,
+      "gbase_expected": 1900,
+      "root_candidate": 27,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_29_12",
+      "tile_id_expected": 476,
+      "gbase_expected": 1904,
+      "root_candidate": 28,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_29_13",
+      "tile_id_expected": 477,
+      "gbase_expected": 1908,
+      "root_candidate": 29,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_29_14",
+      "tile_id_expected": 478,
+      "gbase_expected": 1912,
+      "root_candidate": 30,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_29_15",
+      "tile_id_expected": 479,
+      "gbase_expected": 1916,
+      "root_candidate": 31,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_30_0",
+      "tile_id_expected": 480,
+      "gbase_expected": 1920,
+      "root_candidate": 0,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_30_1",
+      "tile_id_expected": 481,
+      "gbase_expected": 1924,
+      "root_candidate": 1,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_30_2",
+      "tile_id_expected": 482,
+      "gbase_expected": 1928,
+      "root_candidate": 2,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_30_3",
+      "tile_id_expected": 483,
+      "gbase_expected": 1932,
+      "root_candidate": 3,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_30_4",
+      "tile_id_expected": 484,
+      "gbase_expected": 1936,
+      "root_candidate": 4,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_30_5",
+      "tile_id_expected": 485,
+      "gbase_expected": 1940,
+      "root_candidate": 5,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_30_6",
+      "tile_id_expected": 486,
+      "gbase_expected": 1944,
+      "root_candidate": 6,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_30_7",
+      "tile_id_expected": 487,
+      "gbase_expected": 1948,
+      "root_candidate": 7,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_30_8",
+      "tile_id_expected": 488,
+      "gbase_expected": 1952,
+      "root_candidate": 8,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_30_9",
+      "tile_id_expected": 489,
+      "gbase_expected": 1956,
+      "root_candidate": 9,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_30_10",
+      "tile_id_expected": 490,
+      "gbase_expected": 1960,
+      "root_candidate": 10,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_30_11",
+      "tile_id_expected": 491,
+      "gbase_expected": 1964,
+      "root_candidate": 11,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_30_12",
+      "tile_id_expected": 492,
+      "gbase_expected": 1968,
+      "root_candidate": 12,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_30_13",
+      "tile_id_expected": 493,
+      "gbase_expected": 1972,
+      "root_candidate": 13,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_30_14",
+      "tile_id_expected": 494,
+      "gbase_expected": 1976,
+      "root_candidate": 14,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_30_15",
+      "tile_id_expected": 495,
+      "gbase_expected": 1980,
+      "root_candidate": 15,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_31_0",
+      "tile_id_expected": 496,
+      "gbase_expected": 1984,
+      "root_candidate": 16,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_31_1",
+      "tile_id_expected": 497,
+      "gbase_expected": 1988,
+      "root_candidate": 17,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_31_2",
+      "tile_id_expected": 498,
+      "gbase_expected": 1992,
+      "root_candidate": 18,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_31_3",
+      "tile_id_expected": 499,
+      "gbase_expected": 1996,
+      "root_candidate": 19,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_31_4",
+      "tile_id_expected": 500,
+      "gbase_expected": 2000,
+      "root_candidate": 20,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_31_5",
+      "tile_id_expected": 501,
+      "gbase_expected": 2004,
+      "root_candidate": 21,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_31_6",
+      "tile_id_expected": 502,
+      "gbase_expected": 2008,
+      "root_candidate": 22,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_31_7",
+      "tile_id_expected": 503,
+      "gbase_expected": 2012,
+      "root_candidate": 23,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_31_8",
+      "tile_id_expected": 504,
+      "gbase_expected": 2016,
+      "root_candidate": 24,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_31_9",
+      "tile_id_expected": 505,
+      "gbase_expected": 2020,
+      "root_candidate": 25,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_31_10",
+      "tile_id_expected": 506,
+      "gbase_expected": 2024,
+      "root_candidate": 26,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_31_11",
+      "tile_id_expected": 507,
+      "gbase_expected": 2028,
+      "root_candidate": 27,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_31_12",
+      "tile_id_expected": 508,
+      "gbase_expected": 2032,
+      "root_candidate": 28,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_31_13",
+      "tile_id_expected": 509,
+      "gbase_expected": 2036,
+      "root_candidate": 29,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_31_14",
+      "tile_id_expected": 510,
+      "gbase_expected": 2040,
+      "root_candidate": 30,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_31_15",
+      "tile_id_expected": 511,
+      "gbase_expected": 2044,
+      "root_candidate": 31,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_32_0",
+      "tile_id_expected": 512,
+      "gbase_expected": 2048,
+      "root_candidate": 0,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_32_1",
+      "tile_id_expected": 513,
+      "gbase_expected": 2052,
+      "root_candidate": 1,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_32_2",
+      "tile_id_expected": 514,
+      "gbase_expected": 2056,
+      "root_candidate": 2,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_32_3",
+      "tile_id_expected": 515,
+      "gbase_expected": 2060,
+      "root_candidate": 3,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_32_4",
+      "tile_id_expected": 516,
+      "gbase_expected": 2064,
+      "root_candidate": 4,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_32_5",
+      "tile_id_expected": 517,
+      "gbase_expected": 2068,
+      "root_candidate": 5,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_32_6",
+      "tile_id_expected": 518,
+      "gbase_expected": 2072,
+      "root_candidate": 6,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_32_7",
+      "tile_id_expected": 519,
+      "gbase_expected": 2076,
+      "root_candidate": 7,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_32_8",
+      "tile_id_expected": 520,
+      "gbase_expected": 2080,
+      "root_candidate": 8,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_32_9",
+      "tile_id_expected": 521,
+      "gbase_expected": 2084,
+      "root_candidate": 9,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_32_10",
+      "tile_id_expected": 522,
+      "gbase_expected": 2088,
+      "root_candidate": 10,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_32_11",
+      "tile_id_expected": 523,
+      "gbase_expected": 2092,
+      "root_candidate": 11,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_32_12",
+      "tile_id_expected": 524,
+      "gbase_expected": 2096,
+      "root_candidate": 12,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_32_13",
+      "tile_id_expected": 525,
+      "gbase_expected": 2100,
+      "root_candidate": 13,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_32_14",
+      "tile_id_expected": 526,
+      "gbase_expected": 2104,
+      "root_candidate": 14,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_32_15",
+      "tile_id_expected": 527,
+      "gbase_expected": 2108,
+      "root_candidate": 15,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_33_0",
+      "tile_id_expected": 528,
+      "gbase_expected": 2112,
+      "root_candidate": 16,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_33_1",
+      "tile_id_expected": 529,
+      "gbase_expected": 2116,
+      "root_candidate": 17,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_33_2",
+      "tile_id_expected": 530,
+      "gbase_expected": 2120,
+      "root_candidate": 18,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_33_3",
+      "tile_id_expected": 531,
+      "gbase_expected": 2124,
+      "root_candidate": 19,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_33_4",
+      "tile_id_expected": 532,
+      "gbase_expected": 2128,
+      "root_candidate": 20,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_33_5",
+      "tile_id_expected": 533,
+      "gbase_expected": 2132,
+      "root_candidate": 21,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_33_6",
+      "tile_id_expected": 534,
+      "gbase_expected": 2136,
+      "root_candidate": 22,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_33_7",
+      "tile_id_expected": 535,
+      "gbase_expected": 2140,
+      "root_candidate": 23,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_33_8",
+      "tile_id_expected": 536,
+      "gbase_expected": 2144,
+      "root_candidate": 24,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_33_9",
+      "tile_id_expected": 537,
+      "gbase_expected": 2148,
+      "root_candidate": 25,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_33_10",
+      "tile_id_expected": 538,
+      "gbase_expected": 2152,
+      "root_candidate": 26,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_33_11",
+      "tile_id_expected": 539,
+      "gbase_expected": 2156,
+      "root_candidate": 27,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_33_12",
+      "tile_id_expected": 540,
+      "gbase_expected": 2160,
+      "root_candidate": 28,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_33_13",
+      "tile_id_expected": 541,
+      "gbase_expected": 2164,
+      "root_candidate": 29,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_33_14",
+      "tile_id_expected": 542,
+      "gbase_expected": 2168,
+      "root_candidate": 30,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_33_15",
+      "tile_id_expected": 543,
+      "gbase_expected": 2172,
+      "root_candidate": 31,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_34_0",
+      "tile_id_expected": 544,
+      "gbase_expected": 2176,
+      "root_candidate": 0,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_34_1",
+      "tile_id_expected": 545,
+      "gbase_expected": 2180,
+      "root_candidate": 1,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_34_2",
+      "tile_id_expected": 546,
+      "gbase_expected": 2184,
+      "root_candidate": 2,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_34_3",
+      "tile_id_expected": 547,
+      "gbase_expected": 2188,
+      "root_candidate": 3,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_34_4",
+      "tile_id_expected": 548,
+      "gbase_expected": 2192,
+      "root_candidate": 4,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_34_5",
+      "tile_id_expected": 549,
+      "gbase_expected": 2196,
+      "root_candidate": 5,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_34_6",
+      "tile_id_expected": 550,
+      "gbase_expected": 2200,
+      "root_candidate": 6,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_34_7",
+      "tile_id_expected": 551,
+      "gbase_expected": 2204,
+      "root_candidate": 7,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_34_8",
+      "tile_id_expected": 552,
+      "gbase_expected": 2208,
+      "root_candidate": 8,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_34_9",
+      "tile_id_expected": 553,
+      "gbase_expected": 2212,
+      "root_candidate": 9,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_34_10",
+      "tile_id_expected": 554,
+      "gbase_expected": 2216,
+      "root_candidate": 10,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_34_11",
+      "tile_id_expected": 555,
+      "gbase_expected": 2220,
+      "root_candidate": 11,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_34_12",
+      "tile_id_expected": 556,
+      "gbase_expected": 2224,
+      "root_candidate": 12,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_34_13",
+      "tile_id_expected": 557,
+      "gbase_expected": 2228,
+      "root_candidate": 13,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_34_14",
+      "tile_id_expected": 558,
+      "gbase_expected": 2232,
+      "root_candidate": 14,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_34_15",
+      "tile_id_expected": 559,
+      "gbase_expected": 2236,
+      "root_candidate": 15,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_35_0",
+      "tile_id_expected": 560,
+      "gbase_expected": 2240,
+      "root_candidate": 16,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_35_1",
+      "tile_id_expected": 561,
+      "gbase_expected": 2244,
+      "root_candidate": 17,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_35_2",
+      "tile_id_expected": 562,
+      "gbase_expected": 2248,
+      "root_candidate": 18,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_35_3",
+      "tile_id_expected": 563,
+      "gbase_expected": 2252,
+      "root_candidate": 19,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_35_4",
+      "tile_id_expected": 564,
+      "gbase_expected": 2256,
+      "root_candidate": 20,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_35_5",
+      "tile_id_expected": 565,
+      "gbase_expected": 2260,
+      "root_candidate": 21,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_35_6",
+      "tile_id_expected": 566,
+      "gbase_expected": 2264,
+      "root_candidate": 22,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_35_7",
+      "tile_id_expected": 567,
+      "gbase_expected": 2268,
+      "root_candidate": 23,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_35_8",
+      "tile_id_expected": 568,
+      "gbase_expected": 2272,
+      "root_candidate": 24,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_35_9",
+      "tile_id_expected": 569,
+      "gbase_expected": 2276,
+      "root_candidate": 25,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_35_10",
+      "tile_id_expected": 570,
+      "gbase_expected": 2280,
+      "root_candidate": 26,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_35_11",
+      "tile_id_expected": 571,
+      "gbase_expected": 2284,
+      "root_candidate": 27,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_35_12",
+      "tile_id_expected": 572,
+      "gbase_expected": 2288,
+      "root_candidate": 28,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_35_13",
+      "tile_id_expected": 573,
+      "gbase_expected": 2292,
+      "root_candidate": 29,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_35_14",
+      "tile_id_expected": 574,
+      "gbase_expected": 2296,
+      "root_candidate": 30,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_35_15",
+      "tile_id_expected": 575,
+      "gbase_expected": 2300,
+      "root_candidate": 31,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_36_0",
+      "tile_id_expected": 576,
+      "gbase_expected": 2304,
+      "root_candidate": 0,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_36_1",
+      "tile_id_expected": 577,
+      "gbase_expected": 2308,
+      "root_candidate": 1,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_36_2",
+      "tile_id_expected": 578,
+      "gbase_expected": 2312,
+      "root_candidate": 2,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_36_3",
+      "tile_id_expected": 579,
+      "gbase_expected": 2316,
+      "root_candidate": 3,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_36_4",
+      "tile_id_expected": 580,
+      "gbase_expected": 2320,
+      "root_candidate": 4,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_36_5",
+      "tile_id_expected": 581,
+      "gbase_expected": 2324,
+      "root_candidate": 5,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_36_6",
+      "tile_id_expected": 582,
+      "gbase_expected": 2328,
+      "root_candidate": 6,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_36_7",
+      "tile_id_expected": 583,
+      "gbase_expected": 2332,
+      "root_candidate": 7,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_36_8",
+      "tile_id_expected": 584,
+      "gbase_expected": 2336,
+      "root_candidate": 8,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_36_9",
+      "tile_id_expected": 585,
+      "gbase_expected": 2340,
+      "root_candidate": 9,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_36_10",
+      "tile_id_expected": 586,
+      "gbase_expected": 2344,
+      "root_candidate": 10,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_36_11",
+      "tile_id_expected": 587,
+      "gbase_expected": 2348,
+      "root_candidate": 11,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_36_12",
+      "tile_id_expected": 588,
+      "gbase_expected": 2352,
+      "root_candidate": 12,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_36_13",
+      "tile_id_expected": 589,
+      "gbase_expected": 2356,
+      "root_candidate": 13,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_36_14",
+      "tile_id_expected": 590,
+      "gbase_expected": 2360,
+      "root_candidate": 14,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_36_15",
+      "tile_id_expected": 591,
+      "gbase_expected": 2364,
+      "root_candidate": 15,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_37_0",
+      "tile_id_expected": 592,
+      "gbase_expected": 2368,
+      "root_candidate": 16,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_37_1",
+      "tile_id_expected": 593,
+      "gbase_expected": 2372,
+      "root_candidate": 17,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_37_2",
+      "tile_id_expected": 594,
+      "gbase_expected": 2376,
+      "root_candidate": 18,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_37_3",
+      "tile_id_expected": 595,
+      "gbase_expected": 2380,
+      "root_candidate": 19,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_37_4",
+      "tile_id_expected": 596,
+      "gbase_expected": 2384,
+      "root_candidate": 20,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_37_5",
+      "tile_id_expected": 597,
+      "gbase_expected": 2388,
+      "root_candidate": 21,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_37_6",
+      "tile_id_expected": 598,
+      "gbase_expected": 2392,
+      "root_candidate": 22,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_37_7",
+      "tile_id_expected": 599,
+      "gbase_expected": 2396,
+      "root_candidate": 23,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_37_8",
+      "tile_id_expected": 600,
+      "gbase_expected": 2400,
+      "root_candidate": 24,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_37_9",
+      "tile_id_expected": 601,
+      "gbase_expected": 2404,
+      "root_candidate": 25,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_37_10",
+      "tile_id_expected": 602,
+      "gbase_expected": 2408,
+      "root_candidate": 26,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_37_11",
+      "tile_id_expected": 603,
+      "gbase_expected": 2412,
+      "root_candidate": 27,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_37_12",
+      "tile_id_expected": 604,
+      "gbase_expected": 2416,
+      "root_candidate": 28,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_37_13",
+      "tile_id_expected": 605,
+      "gbase_expected": 2420,
+      "root_candidate": 29,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_37_14",
+      "tile_id_expected": 606,
+      "gbase_expected": 2424,
+      "root_candidate": 30,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_37_15",
+      "tile_id_expected": 607,
+      "gbase_expected": 2428,
+      "root_candidate": 31,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_38_0",
+      "tile_id_expected": 608,
+      "gbase_expected": 2432,
+      "root_candidate": 0,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_38_1",
+      "tile_id_expected": 609,
+      "gbase_expected": 2436,
+      "root_candidate": 1,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_38_2",
+      "tile_id_expected": 610,
+      "gbase_expected": 2440,
+      "root_candidate": 2,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_38_3",
+      "tile_id_expected": 611,
+      "gbase_expected": 2444,
+      "root_candidate": 3,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_38_4",
+      "tile_id_expected": 612,
+      "gbase_expected": 2448,
+      "root_candidate": 4,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_38_5",
+      "tile_id_expected": 613,
+      "gbase_expected": 2452,
+      "root_candidate": 5,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_38_6",
+      "tile_id_expected": 614,
+      "gbase_expected": 2456,
+      "root_candidate": 6,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_38_7",
+      "tile_id_expected": 615,
+      "gbase_expected": 2460,
+      "root_candidate": 7,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_38_8",
+      "tile_id_expected": 616,
+      "gbase_expected": 2464,
+      "root_candidate": 8,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_38_9",
+      "tile_id_expected": 617,
+      "gbase_expected": 2468,
+      "root_candidate": 9,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_38_10",
+      "tile_id_expected": 618,
+      "gbase_expected": 2472,
+      "root_candidate": 10,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_38_11",
+      "tile_id_expected": 619,
+      "gbase_expected": 2476,
+      "root_candidate": 11,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_38_12",
+      "tile_id_expected": 620,
+      "gbase_expected": 2480,
+      "root_candidate": 12,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_38_13",
+      "tile_id_expected": 621,
+      "gbase_expected": 2484,
+      "root_candidate": 13,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_38_14",
+      "tile_id_expected": 622,
+      "gbase_expected": 2488,
+      "root_candidate": 14,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_38_15",
+      "tile_id_expected": 623,
+      "gbase_expected": 2492,
+      "root_candidate": 15,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_39_0",
+      "tile_id_expected": 624,
+      "gbase_expected": 2496,
+      "root_candidate": 16,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_39_1",
+      "tile_id_expected": 625,
+      "gbase_expected": 2500,
+      "root_candidate": 17,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_39_2",
+      "tile_id_expected": 626,
+      "gbase_expected": 2504,
+      "root_candidate": 18,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_39_3",
+      "tile_id_expected": 627,
+      "gbase_expected": 2508,
+      "root_candidate": 19,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_39_4",
+      "tile_id_expected": 628,
+      "gbase_expected": 2512,
+      "root_candidate": 20,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_39_5",
+      "tile_id_expected": 629,
+      "gbase_expected": 2516,
+      "root_candidate": 21,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_39_6",
+      "tile_id_expected": 630,
+      "gbase_expected": 2520,
+      "root_candidate": 22,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_39_7",
+      "tile_id_expected": 631,
+      "gbase_expected": 2524,
+      "root_candidate": 23,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_39_8",
+      "tile_id_expected": 632,
+      "gbase_expected": 2528,
+      "root_candidate": 24,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_39_9",
+      "tile_id_expected": 633,
+      "gbase_expected": 2532,
+      "root_candidate": 25,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_39_10",
+      "tile_id_expected": 634,
+      "gbase_expected": 2536,
+      "root_candidate": 26,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_39_11",
+      "tile_id_expected": 635,
+      "gbase_expected": 2540,
+      "root_candidate": 27,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_39_12",
+      "tile_id_expected": 636,
+      "gbase_expected": 2544,
+      "root_candidate": 28,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_39_13",
+      "tile_id_expected": 637,
+      "gbase_expected": 2548,
+      "root_candidate": 29,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_39_14",
+      "tile_id_expected": 638,
+      "gbase_expected": 2552,
+      "root_candidate": 30,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_39_15",
+      "tile_id_expected": 639,
+      "gbase_expected": 2556,
+      "root_candidate": 31,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_40_0",
+      "tile_id_expected": 640,
+      "gbase_expected": 2560,
+      "root_candidate": 0,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_40_1",
+      "tile_id_expected": 641,
+      "gbase_expected": 2564,
+      "root_candidate": 1,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_40_2",
+      "tile_id_expected": 642,
+      "gbase_expected": 2568,
+      "root_candidate": 2,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_40_3",
+      "tile_id_expected": 643,
+      "gbase_expected": 2572,
+      "root_candidate": 3,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_40_4",
+      "tile_id_expected": 644,
+      "gbase_expected": 2576,
+      "root_candidate": 4,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_40_5",
+      "tile_id_expected": 645,
+      "gbase_expected": 2580,
+      "root_candidate": 5,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_40_6",
+      "tile_id_expected": 646,
+      "gbase_expected": 2584,
+      "root_candidate": 6,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_40_7",
+      "tile_id_expected": 647,
+      "gbase_expected": 2588,
+      "root_candidate": 7,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_40_8",
+      "tile_id_expected": 648,
+      "gbase_expected": 2592,
+      "root_candidate": 8,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_40_9",
+      "tile_id_expected": 649,
+      "gbase_expected": 2596,
+      "root_candidate": 9,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_40_10",
+      "tile_id_expected": 650,
+      "gbase_expected": 2600,
+      "root_candidate": 10,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_40_11",
+      "tile_id_expected": 651,
+      "gbase_expected": 2604,
+      "root_candidate": 11,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_40_12",
+      "tile_id_expected": 652,
+      "gbase_expected": 2608,
+      "root_candidate": 12,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_40_13",
+      "tile_id_expected": 653,
+      "gbase_expected": 2612,
+      "root_candidate": 13,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_40_14",
+      "tile_id_expected": 654,
+      "gbase_expected": 2616,
+      "root_candidate": 14,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_40_15",
+      "tile_id_expected": 655,
+      "gbase_expected": 2620,
+      "root_candidate": 15,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_41_0",
+      "tile_id_expected": 656,
+      "gbase_expected": 2624,
+      "root_candidate": 16,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_41_1",
+      "tile_id_expected": 657,
+      "gbase_expected": 2628,
+      "root_candidate": 17,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_41_2",
+      "tile_id_expected": 658,
+      "gbase_expected": 2632,
+      "root_candidate": 18,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_41_3",
+      "tile_id_expected": 659,
+      "gbase_expected": 2636,
+      "root_candidate": 19,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_41_4",
+      "tile_id_expected": 660,
+      "gbase_expected": 2640,
+      "root_candidate": 20,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_41_5",
+      "tile_id_expected": 661,
+      "gbase_expected": 2644,
+      "root_candidate": 21,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_41_6",
+      "tile_id_expected": 662,
+      "gbase_expected": 2648,
+      "root_candidate": 22,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_41_7",
+      "tile_id_expected": 663,
+      "gbase_expected": 2652,
+      "root_candidate": 23,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_41_8",
+      "tile_id_expected": 664,
+      "gbase_expected": 2656,
+      "root_candidate": 24,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_41_9",
+      "tile_id_expected": 665,
+      "gbase_expected": 2660,
+      "root_candidate": 25,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_41_10",
+      "tile_id_expected": 666,
+      "gbase_expected": 2664,
+      "root_candidate": 26,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_41_11",
+      "tile_id_expected": 667,
+      "gbase_expected": 2668,
+      "root_candidate": 27,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_41_12",
+      "tile_id_expected": 668,
+      "gbase_expected": 2672,
+      "root_candidate": 28,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_41_13",
+      "tile_id_expected": 669,
+      "gbase_expected": 2676,
+      "root_candidate": 29,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_41_14",
+      "tile_id_expected": 670,
+      "gbase_expected": 2680,
+      "root_candidate": 30,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_41_15",
+      "tile_id_expected": 671,
+      "gbase_expected": 2684,
+      "root_candidate": 31,
+      "phase_candidate_by_pc": {
+        "1": 0,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_42_0",
+      "tile_id_expected": 672,
+      "gbase_expected": 2688,
+      "root_candidate": 0,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_42_1",
+      "tile_id_expected": 673,
+      "gbase_expected": 2692,
+      "root_candidate": 1,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_42_2",
+      "tile_id_expected": 674,
+      "gbase_expected": 2696,
+      "root_candidate": 2,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_42_3",
+      "tile_id_expected": 675,
+      "gbase_expected": 2700,
+      "root_candidate": 3,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_42_4",
+      "tile_id_expected": 676,
+      "gbase_expected": 2704,
+      "root_candidate": 4,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_42_5",
+      "tile_id_expected": 677,
+      "gbase_expected": 2708,
+      "root_candidate": 5,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_42_6",
+      "tile_id_expected": 678,
+      "gbase_expected": 2712,
+      "root_candidate": 6,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_42_7",
+      "tile_id_expected": 679,
+      "gbase_expected": 2716,
+      "root_candidate": 7,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_42_8",
+      "tile_id_expected": 680,
+      "gbase_expected": 2720,
+      "root_candidate": 8,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_42_9",
+      "tile_id_expected": 681,
+      "gbase_expected": 2724,
+      "root_candidate": 9,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_42_10",
+      "tile_id_expected": 682,
+      "gbase_expected": 2728,
+      "root_candidate": 10,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_42_11",
+      "tile_id_expected": 683,
+      "gbase_expected": 2732,
+      "root_candidate": 11,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_42_12",
+      "tile_id_expected": 684,
+      "gbase_expected": 2736,
+      "root_candidate": 12,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_42_13",
+      "tile_id_expected": 685,
+      "gbase_expected": 2740,
+      "root_candidate": 13,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_42_14",
+      "tile_id_expected": 686,
+      "gbase_expected": 2744,
+      "root_candidate": 14,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_42_15",
+      "tile_id_expected": 687,
+      "gbase_expected": 2748,
+      "root_candidate": 15,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_43_0",
+      "tile_id_expected": 688,
+      "gbase_expected": 2752,
+      "root_candidate": 16,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_43_1",
+      "tile_id_expected": 689,
+      "gbase_expected": 2756,
+      "root_candidate": 17,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_43_2",
+      "tile_id_expected": 690,
+      "gbase_expected": 2760,
+      "root_candidate": 18,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_43_3",
+      "tile_id_expected": 691,
+      "gbase_expected": 2764,
+      "root_candidate": 19,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_43_4",
+      "tile_id_expected": 692,
+      "gbase_expected": 2768,
+      "root_candidate": 20,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_43_5",
+      "tile_id_expected": 693,
+      "gbase_expected": 2772,
+      "root_candidate": 21,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_43_6",
+      "tile_id_expected": 694,
+      "gbase_expected": 2776,
+      "root_candidate": 22,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_43_7",
+      "tile_id_expected": 695,
+      "gbase_expected": 2780,
+      "root_candidate": 23,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_43_8",
+      "tile_id_expected": 696,
+      "gbase_expected": 2784,
+      "root_candidate": 24,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_43_9",
+      "tile_id_expected": 697,
+      "gbase_expected": 2788,
+      "root_candidate": 25,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_43_10",
+      "tile_id_expected": 698,
+      "gbase_expected": 2792,
+      "root_candidate": 26,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_43_11",
+      "tile_id_expected": 699,
+      "gbase_expected": 2796,
+      "root_candidate": 27,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_43_12",
+      "tile_id_expected": 700,
+      "gbase_expected": 2800,
+      "root_candidate": 28,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_43_13",
+      "tile_id_expected": 701,
+      "gbase_expected": 2804,
+      "root_candidate": 29,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_43_14",
+      "tile_id_expected": 702,
+      "gbase_expected": 2808,
+      "root_candidate": 30,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_43_15",
+      "tile_id_expected": 703,
+      "gbase_expected": 2812,
+      "root_candidate": 31,
+      "phase_candidate_by_pc": {
+        "1": 1,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_44_0",
+      "tile_id_expected": 704,
+      "gbase_expected": 2816,
+      "root_candidate": 0,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_44_1",
+      "tile_id_expected": 705,
+      "gbase_expected": 2820,
+      "root_candidate": 1,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_44_2",
+      "tile_id_expected": 706,
+      "gbase_expected": 2824,
+      "root_candidate": 2,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_44_3",
+      "tile_id_expected": 707,
+      "gbase_expected": 2828,
+      "root_candidate": 3,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_44_4",
+      "tile_id_expected": 708,
+      "gbase_expected": 2832,
+      "root_candidate": 4,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_44_5",
+      "tile_id_expected": 709,
+      "gbase_expected": 2836,
+      "root_candidate": 5,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_44_6",
+      "tile_id_expected": 710,
+      "gbase_expected": 2840,
+      "root_candidate": 6,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_44_7",
+      "tile_id_expected": 711,
+      "gbase_expected": 2844,
+      "root_candidate": 7,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_44_8",
+      "tile_id_expected": 712,
+      "gbase_expected": 2848,
+      "root_candidate": 8,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_44_9",
+      "tile_id_expected": 713,
+      "gbase_expected": 2852,
+      "root_candidate": 9,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_44_10",
+      "tile_id_expected": 714,
+      "gbase_expected": 2856,
+      "root_candidate": 10,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_44_11",
+      "tile_id_expected": 715,
+      "gbase_expected": 2860,
+      "root_candidate": 11,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_44_12",
+      "tile_id_expected": 716,
+      "gbase_expected": 2864,
+      "root_candidate": 12,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_44_13",
+      "tile_id_expected": 717,
+      "gbase_expected": 2868,
+      "root_candidate": 13,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_44_14",
+      "tile_id_expected": 718,
+      "gbase_expected": 2872,
+      "root_candidate": 14,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_44_15",
+      "tile_id_expected": 719,
+      "gbase_expected": 2876,
+      "root_candidate": 15,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_45_0",
+      "tile_id_expected": 720,
+      "gbase_expected": 2880,
+      "root_candidate": 16,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_45_1",
+      "tile_id_expected": 721,
+      "gbase_expected": 2884,
+      "root_candidate": 17,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_45_2",
+      "tile_id_expected": 722,
+      "gbase_expected": 2888,
+      "root_candidate": 18,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_45_3",
+      "tile_id_expected": 723,
+      "gbase_expected": 2892,
+      "root_candidate": 19,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_45_4",
+      "tile_id_expected": 724,
+      "gbase_expected": 2896,
+      "root_candidate": 20,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_45_5",
+      "tile_id_expected": 725,
+      "gbase_expected": 2900,
+      "root_candidate": 21,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_45_6",
+      "tile_id_expected": 726,
+      "gbase_expected": 2904,
+      "root_candidate": 22,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_45_7",
+      "tile_id_expected": 727,
+      "gbase_expected": 2908,
+      "root_candidate": 23,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_45_8",
+      "tile_id_expected": 728,
+      "gbase_expected": 2912,
+      "root_candidate": 24,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_45_9",
+      "tile_id_expected": 729,
+      "gbase_expected": 2916,
+      "root_candidate": 25,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_45_10",
+      "tile_id_expected": 730,
+      "gbase_expected": 2920,
+      "root_candidate": 26,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_45_11",
+      "tile_id_expected": 731,
+      "gbase_expected": 2924,
+      "root_candidate": 27,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_45_12",
+      "tile_id_expected": 732,
+      "gbase_expected": 2928,
+      "root_candidate": 28,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_45_13",
+      "tile_id_expected": 733,
+      "gbase_expected": 2932,
+      "root_candidate": 29,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_45_14",
+      "tile_id_expected": 734,
+      "gbase_expected": 2936,
+      "root_candidate": 30,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_45_15",
+      "tile_id_expected": 735,
+      "gbase_expected": 2940,
+      "root_candidate": 31,
+      "phase_candidate_by_pc": {
+        "1": 2,
+        "16": 0,
+        "19": 0,
+        "23": 0
+      }
+    },
+    {
+      "instance": "t_46_0",
+      "tile_id_expected": 736,
+      "gbase_expected": 2944,
+      "root_candidate": 0,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_46_1",
+      "tile_id_expected": 737,
+      "gbase_expected": 2948,
+      "root_candidate": 1,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_46_2",
+      "tile_id_expected": 738,
+      "gbase_expected": 2952,
+      "root_candidate": 2,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_46_3",
+      "tile_id_expected": 739,
+      "gbase_expected": 2956,
+      "root_candidate": 3,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_46_4",
+      "tile_id_expected": 740,
+      "gbase_expected": 2960,
+      "root_candidate": 4,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_46_5",
+      "tile_id_expected": 741,
+      "gbase_expected": 2964,
+      "root_candidate": 5,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_46_6",
+      "tile_id_expected": 742,
+      "gbase_expected": 2968,
+      "root_candidate": 6,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_46_7",
+      "tile_id_expected": 743,
+      "gbase_expected": 2972,
+      "root_candidate": 7,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_46_8",
+      "tile_id_expected": 744,
+      "gbase_expected": 2976,
+      "root_candidate": 8,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_46_9",
+      "tile_id_expected": 745,
+      "gbase_expected": 2980,
+      "root_candidate": 9,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_46_10",
+      "tile_id_expected": 746,
+      "gbase_expected": 2984,
+      "root_candidate": 10,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_46_11",
+      "tile_id_expected": 747,
+      "gbase_expected": 2988,
+      "root_candidate": 11,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_46_12",
+      "tile_id_expected": 748,
+      "gbase_expected": 2992,
+      "root_candidate": 12,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_46_13",
+      "tile_id_expected": 749,
+      "gbase_expected": 2996,
+      "root_candidate": 13,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_46_14",
+      "tile_id_expected": 750,
+      "gbase_expected": 3000,
+      "root_candidate": 14,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_46_15",
+      "tile_id_expected": 751,
+      "gbase_expected": 3004,
+      "root_candidate": 15,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_47_0",
+      "tile_id_expected": 752,
+      "gbase_expected": 3008,
+      "root_candidate": 16,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_47_1",
+      "tile_id_expected": 753,
+      "gbase_expected": 3012,
+      "root_candidate": 17,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_47_2",
+      "tile_id_expected": 754,
+      "gbase_expected": 3016,
+      "root_candidate": 18,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_47_3",
+      "tile_id_expected": 755,
+      "gbase_expected": 3020,
+      "root_candidate": 19,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_47_4",
+      "tile_id_expected": 756,
+      "gbase_expected": 3024,
+      "root_candidate": 20,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_47_5",
+      "tile_id_expected": 757,
+      "gbase_expected": 3028,
+      "root_candidate": 21,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_47_6",
+      "tile_id_expected": 758,
+      "gbase_expected": 3032,
+      "root_candidate": 22,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_47_7",
+      "tile_id_expected": 759,
+      "gbase_expected": 3036,
+      "root_candidate": 23,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_47_8",
+      "tile_id_expected": 760,
+      "gbase_expected": 3040,
+      "root_candidate": 24,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_47_9",
+      "tile_id_expected": 761,
+      "gbase_expected": 3044,
+      "root_candidate": 25,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_47_10",
+      "tile_id_expected": 762,
+      "gbase_expected": 3048,
+      "root_candidate": 26,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_47_11",
+      "tile_id_expected": 763,
+      "gbase_expected": 3052,
+      "root_candidate": 27,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_47_12",
+      "tile_id_expected": 764,
+      "gbase_expected": 3056,
+      "root_candidate": 28,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_47_13",
+      "tile_id_expected": 765,
+      "gbase_expected": 3060,
+      "root_candidate": 29,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_47_14",
+      "tile_id_expected": 766,
+      "gbase_expected": 3064,
+      "root_candidate": 30,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    },
+    {
+      "instance": "t_47_15",
+      "tile_id_expected": 767,
+      "gbase_expected": 3068,
+      "root_candidate": 31,
+      "phase_candidate_by_pc": {
+        "1": 3,
+        "16": 1,
+        "19": 0,
+        "23": 1
+      }
+    }
+  ],
+  "actual_source_hashes": {
+    "rtl/physical/ot_qwen_tile_tp8_cached_split.sv": "cc97d5b10517f19f2fdccd48c301dc635d9e204e8a0d223e02b1c4e5e9c97e7a",
+    "rtl/physical/ot_qwen_xcache_split32.sv": "a3561646dbc56381d6791bd1c2cd82b934e29eb91f63142f8aa033ace4baf5a6",
+    "rtl/physical/ot_qwen_xcontext_protocol.sv": "9927d3cb7c8ac48357a36479d89fd337fc1346ef6303da5a0ff33a07af360188"
+  },
+  "actual_ports": {
+    "load": [
+      "load_clk",
+      "rst_n",
+      "clear",
+      "j_repeat",
+      "load_v",
+      "load_epoch[20:0]",
+      "load_x[127:0]"
+    ],
+    "request": [
+      "x_re[3:0]",
+      "x_addr[95:0]",
+      "x_epoch[20:0]"
+    ],
+    "response": [
+      "q_x[127:0] (internal registered response)",
+      "cache_fault",
+      "cache_hit (combinational, unqualified physical status)"
+    ],
+    "accepted_load_output": null,
+    "response_capture_ACK_output": null,
+    "epoch_quiescent_output": null,
+    "context_or_version_cache_tag": null
+  },
+  "missing_output_semantics": {
+    "accepted_load": "Requires registered pulse/tag matching exact actual store write (rst_n&&!clear&&load_v at load edge); currently inputs only, no output ACK.",
+    "response_capture": "Requires registered exact request/context tag at coherent core response edge; this is cache capture, not arithmetic retirement.",
+    "epoch_quiescent": "Requires source/transport/cache responses and old core request/pipeline drained; neither core_ready nor cache_hit certify this. Production u_me idle currently discarded; whole-frame aggregation absent."
+  }
+}

@@ -44,26 +44,26 @@
  "why_floorplan": "drop-in for the closed ctfx centre strip (576.72 x 12.96, cth_nt sub-layout row y 365.04): ctfx's 1,135 pin flops + the scale lane pin flop (33) + the partial lane pin flop / merge (275) + a ctq replica; ~1,500 pins per N/S face over the full width | r2 2026-10-14: h 12.96 -> 25.92: at 12.96 (core 8.64 um, 32 rows) the recipe-2 pin flops + pin hold stages of both ~1,500-2,200-pin N/S faces leave no legal rows (CTS gate DPL-0033: 3,462 fixed cells, 7,900 site-alignment / 445 overlap violations at 36.6% overall util); the passing sibling ctfs_nt is 25.92. Slot change requested from the S81 die lead (cth_nt sub-layout).",
  "macros": [],
  "pins": {
+  "W": [
+   "clk"
+  ],
   "N": [
-   "fv_in",
    "fd_in",
+   "fv_in",
+   "rst_in",
    "dl_in",
+   "ul_out",
    "cs_n",
-   "ul_out"
+   "tid"
   ],
   "S": [
-   "fv",
    "fdx",
+   "fv",
    "dl_out",
-   "cs_s",
    "ul_in",
+   "cs_s",
    "fv_local",
    "fdx_local"
-  ],
-  "W": [
-   "clk",
-   "rst_in",
-   "tid"
   ]
  },
  "refglob": "*",
@@ -76,10 +76,10 @@
  },
  "job": {
   "benches_from": "tools/s81_suhc/hc_owned_nt_benches.json",
-  "owner": "Codex:S-NORM",
+  "owner": "Claude:S-NORM",
   "branch": "claude/s81-norm-tree-1014",
-  "tag": "v3-owned-epoch",
-  "structural_change": "Physical leaf owns all local broadcast state; local M3 pin layer aligns input-to-local-output wires, removing668-net horizontal crosscut caused by all-M5 pin collision fallback. Same clocks/reset/epochs/constraints/outline.",
+  "tag": "v6-hb4pad",
+  "structural_change": "Hold-pad structure (measured 2026-10-15 on the v5 CTS run): the pin flops' clock is NOT the cause (FF pin-flop arrival 227-248 ps, spread 21 ps, reference median 241); the contract hold demand (~75 ps per registered boundary bit at FF incl. 25 ps uncertainty, +30 guard) is conserved through every single-register relay, and rsz could only pad with BUFx2 (asap7 DONT_USE '*xp*' bars HBn cells): 3,384 boundary bits x ~4-5 BUFx2 = 14k-19k cells in one 115-um pin span (GRT overflow 26,013, every overflow gcell at the S face). physical/common_flow/hold_pad_hb4.tcl lets repair_timing -hold (only) pad with HB4xp67: 2.4x the delay per cell, ~2.4x fewer pad cells/nets for the same delay. Same RTL, cycles, outline, pins, clocks, SDC, margins and acceptance.",
   "no_bench_reason": "bit-exactness is gated on the HC slab composition with dsfd_sp_hc NTREE 1 (tools/s81_suhc/hc_ntree_bench.sh: NG 256 production shape exact PASS + mutant 3 FAIL; tools/s81_suhc/hc_gate.py --ntree 1 NG 256 exact 0/1940 x3 + per-tile mutants); the tile alone has no golden",
   "purpose": "el1014-s81-norm-tree (owner 10-14 ~06:55: NORM tree = PARALLEL default-off variant with NEW master names; replaces the serial-chain HC NORM only when all variant tiles close and the composition is exact): ot_s81_hc_ctfx_nt: the half-octet broadcast source with the NORM-tree lanes (r from the bottom replaces the bus r; the far half injects its octet's 4-bank chunk sum into the south lane)",
   "views_to": "physical/ref_tile/s81hc_ctfxnt_ref/views",
@@ -99,7 +99,7 @@
   ],
   "reroute_reason": {
    "kind": "rtl_change",
-   "fix": "Move unplaced cth_nt wrapper localFV7/FD1128 capture flops into this physical strip, with die-assigned registered output pins; same cycle/reset semantics."
+   "fix": "v5 CTS/route failed DPL-0033 / GRT-0116 from a 14k BUFx2 hold-pad flood in the S pin span; v6 pads with HB4 (2.4x delay per cell)"
   }
  },
  "params": {
@@ -123,8 +123,17 @@
  "io_tcl": "physical/s81_die_pins/v20_hc_capture/ot_s81_hc_ctfx_nt.tcl",
  "assigned_pins": {
   "file": "physical/s81_die_pins/v20_hc_capture/ot_s81_hc_ctfx_nt.json",
-  "source": "S81 die lead 6cae93a72; original M5 rectangles kept, local M3 register pins vertically aligned with input captures and clamped to actual CPL reach",
+  "source": "S81 die lead433f0d8f0 reset N M3x45.036 and9f93f743d static TID N M3x45.132..45.804. All original UL/DL/dataM5 rectangles preserved.",
   "layout": "physical/s81_die_pins/v19_ntree/layout.json"
  },
- "slot_change_request": "S81 die lead 2495f77a6 accepted serial/NTREE captured strip 576.72x25.92; enclosing cth751.68, rowshifts12.96"
+ "slot_change_request": "S81 die lead 2495f77a6 accepted serial/NTREE captured strip 576.72x25.92; enclosing cth751.68, rowshifts12.96",
+ "boundary_tcl": [
+  "physical/common_flow/hold_pad_hb4.tcl",
+  "physical/ref_tile/s81hc_ctfxnt_ref/local_clock_tap.tcl",
+  "physical/ref_tile/s81hc_ctfxnt_ref/capture_driver_size.tcl"
+ ],
+ "native_capture_repair": "(1) clock net split per sink cluster before CTS (clock_split.tcl: NORM lanes x 40-176 / data rows x 178-343, one BUFx24 each; spread 75 -> 19.5 ps on the gate placement); (2) every BUFx2 driving a >20 um net in an fd_in capture cone -> BUFx4f after CTS hold repair (160 fd_in/fdx crossing pairs). Same RTL, pins, clocks, SDC, budgets.",
+ "pre_cts_extra": [
+  "physical/ref_tile/s81hc_ctfxnt_ref/clock_split.tcl"
+ ]
 }

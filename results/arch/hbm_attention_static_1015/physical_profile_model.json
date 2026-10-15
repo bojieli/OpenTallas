@@ -1,0 +1,191 @@
+{
+  "schema": "opentallas.hbm_attention.physical_profile.v1",
+  "source_sha256": "13dfe762acd2c4daa5f05f9d405e01b12d2e07790789725fbf1b78ab8a964975",
+  "closed_leaf_source": "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_m8_phys.sv:46 ot_attn_hgrp_m6h1",
+  "params": {
+    "H": 16,
+    "D": 512,
+    "TD": 32,
+    "NL": 2,
+    "PWORDS": 2,
+    "FPL": 6,
+    "FML": 8,
+    "F12": 1,
+    "TILE_S": 1,
+    "NBANKP": 5,
+    "ILV": 0,
+    "REPL": 0,
+    "SRAM_MACRO": 1,
+    "PHYS": 0,
+    "HG": 1
+  },
+  "physical_tile_pairs": 32,
+  "logical_full_tiles": 32,
+  "MACs_per_cycle": 16384,
+  "clock_period_ps": 833.333,
+  "source_query_prefetch_edges": 128,
+  "kv8_source_bytes_per_row": 544,
+  "source_bandwidth_one32PCstack_Bper_edge": 791.667,
+  "source_BW_lower_bound_cycles": {
+    "128": 87.95617349213748,
+    "640": 439.7808674606874
+  },
+  "qualification": false,
+  "remaining": [
+    "Root confirms per-quadrant row and price ownership; no historical H4NL4 price transfer",
+    "Exacthalfparentinserted register ages and clock phi-R binding",
+    "ActualregisteredPSrow producer storage/source allocation and finalnativeprogramme",
+    "FullH16TD32NL2FPL6FML8 exact golden+mutant proof",
+    "Actualcontroller/gather/staging footprint and physicalclosure"
+  ],
+  "staging_memory": {
+    "row_lanes": 2,
+    "words_per_lane_required": 320,
+    "slices_per_lane": 17,
+    "macro": "ot_sram_1r1w_1024x256_m2_r2c2",
+    "macro_count": 34,
+    "allocated_bits": 8912896,
+    "useful_payload_bits": 2713600,
+    "latency_edges": 1,
+    "physical_fit_qualified": false,
+    "reason": "Inherited 256-row macro helper cannot represent T640/NL2; no depth truncation allowed.",
+    "macro_bbox_um": [
+      174.744,
+      70.47
+    ],
+    "macro_area_total_um2": 418683.12912,
+    "source_legacy_NL4_256macro_area_um2": 482236.416,
+    "source_note": "Only256/1024x256 real library masters exist; macro storage area is smaller than previous68x256 allocation but placement and route remain unqualified.",
+    "instances_per_full_H16_engine": 34,
+    "view_versions": [
+      {
+        "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+        "sha256": "bfb2797e8af014b88bea9717847ae66d67eb8038ec63bc00ab4543f2a913a3a4",
+        "bbox_um": [
+          174.744,
+          70.47
+        ],
+        "role": "functionalproof sourcehistoricalLEF"
+      },
+      {
+        "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+        "read_from": "/home/ubuntu/OpenTallas/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+        "sha256": "bf6dcf70da6aa07d62dbf642e266663c58034b2a938b7277c2fbc558a1e868a9",
+        "bbox_um": [
+          174.744,
+          70.488
+        ],
+        "role": "New systemgeometry physicalcandidate; v1functionalRTL to v2physical port/source equivalence pending"
+      }
+    ],
+    "successor_packing": {
+      "source_commit": "fff63f04e",
+      "source": "rtl/hdc/v41x/static/ot_hbm_attn_staging_grouped.sv",
+      "same_macro_count": 34,
+      "per_lane": "16codebanks\u00d7256bits+one144bitmetadata",
+      "code_bits": "originalgroup[255:0], includesFP4scale128..143 whenfmt1",
+      "metadata_bits": "originalgroup[264:256] scale8+format1",
+      "external_ABI": "unchanged interleaved265\u00d716\u00d72=8480bits",
+      "read_edges": 1,
+      "qualification": "Groupedsource componentproof supplied geometryowner; fulltarget source/profile/physical qualification remainsOPEN"
+    }
+  },
+  "headgroup_source_inventory": {
+    "functional_full_tile_count": 32,
+    "headgroups_per_functional_tile": 16,
+    "closed_headgroup_wrapper": "ot_attn_hgrp_m6h1",
+    "heads_per_hard_group": 1,
+    "full_H16_headgroups": 512,
+    "mapping_to_quadrant_half_parents": "pending exact H-DIE instance inventory; no additional physical replication authorized",
+    "inflight_6656d5af7": "HG4 functional organization; proves arithmetic/control only",
+    "quad_heads": {
+      "0": [
+        0,
+        1,
+        4,
+        5
+      ],
+      "2": [
+        2,
+        3,
+        6,
+        7
+      ],
+      "8": [
+        8,
+        9,
+        12,
+        13
+      ],
+      "10": [
+        10,
+        11,
+        14,
+        15
+      ]
+    },
+    "hard_quads_per_half": 2,
+    "hard_quads_per_pair": 4,
+    "hard_quads_total": 128,
+    "baseline_hard_quad": {
+      "master": "ot_attn_tile_m6h1q",
+      "lef": "physical/hbm_attn_tile_r/quad_b_tc/04424cd9f_pka/view/ot_attn_tile_m6h1q.lef",
+      "lef_sha256": "ac510d59eafc85b5b516f40e21227e532fbe63527e23d772e5ebc357cf6b89f4",
+      "bbox_um": [
+        514.89,
+        562.95
+      ],
+      "qualification": "Current baseline hard macro; exactnewnativepipeline/profile binding stillopen"
+    },
+    "standalone_HG1_views": "No substitution authority; geometry must match exact source/view hash and area, not arbitrary fmax variant"
+  },
+  "functional_native_boundary": {
+    "source": "rtl/hdc/v41x/static/ot_hbm_attention_physical_static_engine.sv",
+    "query_rq_bits": 136,
+    "query_rr_bits": 2056,
+    "KV_payload_bits_per_edge": 8480,
+    "KV_rows_per_edge": 2,
+    "P_payload_bits_per_edge": 1024,
+    "QK_payload_bits_per_edge": 1024,
+    "QK_fault_bits_per_edge": 32,
+    "PV_payload_bits_per_edge": 16384,
+    "PV_fault_bits_per_edge": 512,
+    "PV_dimension_beats_per_H16_D512_record": 16,
+    "VM_write_payload_bits_per_edge": 2048,
+    "PV_VM_commit_edges_min": 128,
+    "QK_VM_commit_edges_min": {
+      "128": 32,
+      "640": 160
+    },
+    "PV_native_layout": "pending canonical output layout from H-VM; actualsource index tile*H+head withdim=tile*16+pv_c",
+    "mapped_cell_count": null,
+    "clock_sink_count": null,
+    "candidate_bbox": null,
+    "qualification": false
+  },
+  "system_geometry_direction": "User requests whole-system grouping/rearrangement; historical54child translations onlylocalbaseline. Newowner /root/geometry_hbm_system",
+  "transpose_state": {
+    "source": "rtl/hdc/v41x/ot_hdc_v41x_attn.sv:899 ot_hdc_v41x_attn_tr",
+    "state_kind": "Current source inferredpayload registerarray; sourceexact explicitpercellFF successor required before nativequalification",
+    "per_tile_bits": 18432,
+    "tile_count": 32,
+    "total_payload_bits": 589824,
+    "per_tile_write_values_per_edge": 32,
+    "per_tile_read_values_per_edge": 32,
+    "per_tile_write_data_bits_per_edge": 576,
+    "per_tile_read_data_bits_per_edge": 576,
+    "source_packed_group_input_bits_per_edge": 530,
+    "minimum_clockroots_15k_payload_sinks": 40,
+    "candidate_clockroots": 64,
+    "candidate_roots_per_tile": 2,
+    "mapped_area_um2": null,
+    "qualification": false
+  },
+  "KV8_internal_format": {
+    "source_bytes_per_row": 544,
+    "numeric_code_scale_bytes": 528,
+    "format_flag_bits": 16,
+    "packed_bits": 4240,
+    "packed_bytes": 530
+  }
+}

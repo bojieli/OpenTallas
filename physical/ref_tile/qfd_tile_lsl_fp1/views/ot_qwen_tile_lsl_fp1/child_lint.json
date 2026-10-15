@@ -1,0 +1,76 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas/claude/closure-loop/qfd_tile_lsl_fp1r-r1-953045312/record/views/ot_qwen_tile_lsl_fp1/ot_qwen_tile_lsl_fp1.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [
+  "(f) face-pin access: 265 of 465 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. lfault[0] M4 (99.217,104.208), lfault[1] M4 (99.217,104.208), lfault[2] M4 (99.217,104.208))"
+ ],
+ "summary": "ot_qwen_tile_lsl_fp1 99.792 x 140.4: PG M6 VDD 13 stripes (92% spread, 100% cov) / VSS 13 stripes (92% spread, 100% cov); strap M7; face pins 465 blocked-above 0 blocked-same 0; clock clk insertion 189 ps; pockets M6 0 (closed)",
+ "info": {
+  "cell": "ot_qwen_tile_lsl_fp1",
+  "W": 99.792,
+  "H": 140.4,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M6",
+     "stripes": 13,
+     "dir": "H",
+     "spread": 0.923,
+     "coverage": 1.0,
+     "shapes_on_top": 13
+    },
+    "VSS": {
+     "top_layer": "M6",
+     "stripes": 13,
+     "dir": "H",
+     "spread": 0.923,
+     "coverage": 1.0,
+     "shapes_on_top": 13
+    }
+   },
+   "top_layer": "M6",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M6",
+  "strap_layer": "M7",
+  "cap": null,
+  "face": {
+   "face_pins": 465,
+   "blocked_above": 0,
+   "covered_below": 12,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 265,
+   "band_examples": [
+    "lfault[0] M4 (99.217,104.208)",
+    "lfault[1] M4 (99.217,104.208)",
+    "lfault[2] M4 (99.217,104.208)",
+    "lfault[3] M4 (99.217,104.208)",
+    "lfault[4] M4 (99.217,104.208)",
+    "lfault[5] M4 (99.217,104.208)"
+   ]
+  },
+  "clock_insertion": {
+   "clk": {
+    "max_ps": 188.56,
+    "min_ps": 149.53
+   }
+  },
+  "pockets": {
+   "layer": "M6",
+   "d_um": 2.048,
+   "marker": {
+    "layer": "M6",
+    "d_um": 2.048,
+    "added": 545
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

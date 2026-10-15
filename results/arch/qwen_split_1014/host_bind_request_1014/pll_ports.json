@@ -1,0 +1,56 @@
+{
+  "module": "qkd_pll_analog_model",
+  "file": "rtl/qwen_sys/split_20261014/qkd_pll_analog_model.sv",
+  "ports": {
+    "refclk": [
+      "refclk"
+    ],
+    "por_n": [
+      "por_n"
+    ],
+    "locked": [
+      "locked"
+    ],
+    "pll_WS": [
+      "pll_WS"
+    ],
+    "pll_WN": [
+      "pll_WN"
+    ],
+    "pll_ES": [
+      "pll_ES"
+    ],
+    "pll_EN": [
+      "pll_EN"
+    ],
+    "pll_c": [
+      "pll_c"
+    ],
+    "pll_fwd": [
+      "pll_fwd"
+    ],
+    "pll_hbm_WS": [
+      "pll_hbm_WS"
+    ],
+    "pll_hbm_WN": [
+      "pll_hbm_WN"
+    ],
+    "pll_hbm_ES": [
+      "pll_hbm_ES"
+    ],
+    "pll_hbm_EN": [
+      "pll_hbm_EN"
+    ],
+    "pll_host": [
+      "pll_host"
+    ],
+    "pll_ingest": [
+      "pll_ingest"
+    ],
+    "pll_phy": [
+      "pll_phy"
+    ]
+  },
+  "classed": {},
+  "hard_phy_analog": true
+}

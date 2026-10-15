@@ -1,0 +1,28 @@
+{
+  "source_commit": "56687c7a2",
+  "immutable_execution_root": "ot-epyc4:/srv/opentallas-scratch/codex/dvm4-vmcurrent",
+  "effective_profile": {
+    "USE_MACRO": 0,
+    "USE_LEAF_CLOCKS": 1,
+    "NRB": 64,
+    "NB": 3,
+    "SQD": 32,
+    "RV": 1,
+    "RO": 1
+  },
+  "positive": {
+    "verdict": "PASS",
+    "Q_epochs": 2,
+    "Q_rows": 64,
+    "Q_words": 1024,
+    "attention_rows": 32,
+    "credit_returns": 32,
+    "real_SU_producer": "qfd_su_vm_pack"
+  },
+  "mutants": {
+    "OBS_MUT1": "FAIL missing final actual commit coverage never opens Q fence",
+    "PACK_MUT1": "FAIL wrong SU write stride raises actual VM fault"
+  },
+  "nox_regression": "PASS60918SU reads/10615rows/2082bursts; latency14/RO1 preserved; aw input idle",
+  "scope": "Functional real VM-wrapper composition only. Native macro mode1 proof is separately live; physical region/control/observer closure, assigned pins, reset distribution and phi-R compensation remain unqualified. Scalar449 clock entries are connected to one bench clock for functional proof. No die or physical closure is claimed."
+}

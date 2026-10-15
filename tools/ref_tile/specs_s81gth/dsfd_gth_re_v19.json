@@ -1,250 +1,254 @@
 {
-  "name": "dsfd_gth_re_v19",
-  "top": "dsfd_gth_re",
-  "kind": "tile",
-  "params": {},
-  "clock_port": "ck",
-  "reset_ports": [
-    "rs"
-  ],
-  "sources": [
-    "rtl/dsrom_sys/s81_ph/ot_s81ph_root_leaf.sv",
-    "rtl/dsrom_sys/s81_ph/ot_s81ph_ret_root_s.sv",
-    "rtl/gpu/ot_fp32_add_rne_deep.sv",
-    "rtl/hdc/ot_hdc_prefix.sv",
-    "physical/s81_ph_views/macros/ot_sram_1r1w_128x66_m1_r2c2/ot_sram_1r1w_128x66_m1_r2c2_bb.v",
-    "physical/s81_ph_views/macros/ot_sram_1r1w_256x34_m2_r2c2/ot_sram_1r1w_256x34_m2_r2c2_bb.v"
-  ],
-  "outline": {
-    "w": 190.08,
-    "h": 164.16
+ "name": "dsfd_gth_re_v19",
+ "top": "dsfd_gth_re",
+ "kind": "tile",
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rs"
+ ],
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_root_leaf.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_ret_root_s.sv",
+  "rtl/gpu/ot_fp32_add_rne_deep.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "physical/s81_ph_views/macros/ot_sram_1r1w_128x66_m1_r2c2/ot_sram_1r1w_128x66_m1_r2c2_bb.v",
+  "physical/s81_ph_views/macros/ot_sram_1r1w_256x34_m2_r2c2/ot_sram_1r1w_256x34_m2_r2c2_bb.v"
+ ],
+ "outline": {
+  "w": 190.08,
+  "h": 164.16
+ },
+ "macros": [
+  {
+   "view": "physical/s81_ph_views/macros/ot_sram_1r1w_256x34_m2_r2c2",
+   "count": 1,
+   "at": [
+    22.464,
+    22.8
+   ],
+   "at_exact": true,
+   "inst": "*g_r?0?*u_bm*u_m",
+   "orient": "MY"
   },
-  "macros": [
-    {
-      "view": "physical/s81_ph_views/macros/ot_sram_1r1w_256x34_m2_r2c2",
-      "count": 1,
-      "at": [
-        80.784,
-        22.8
-      ],
-      "at_exact": true,
-      "inst": "*g_r?0?*u_bm*u_m"
-    },
-    {
-      "view": "physical/s81_ph_views/macros/ot_sram_1r1w_128x66_m1_r2c2",
-      "count": 1,
-      "at": [
-        22.464,
-        22.8
-      ],
-      "at_exact": true,
-      "inst": "*g_r?0?*u_qm*u_m"
-    },
-    {
-      "view": "physical/s81_ph_views/macros/ot_sram_1r1w_256x34_m2_r2c2",
-      "count": 1,
-      "at": [
-        80.784,
-        51.744
-      ],
-      "at_exact": true,
-      "inst": "*g_r?1?*u_bm*u_m"
-    },
-    {
-      "view": "physical/s81_ph_views/macros/ot_sram_1r1w_128x66_m1_r2c2",
-      "count": 1,
-      "at": [
-        22.464,
-        50.928
-      ],
-      "at_exact": true,
-      "inst": "*g_r?1?*u_qm*u_m"
-    },
-    {
-      "view": "physical/s81_ph_views/macros/ot_sram_1r1w_256x34_m2_r2c2",
-      "count": 1,
-      "at": [
-        80.784,
-        80.688
-      ],
-      "at_exact": true,
-      "inst": "*g_r?2?*u_bm*u_m"
-    },
-    {
-      "view": "physical/s81_ph_views/macros/ot_sram_1r1w_128x66_m1_r2c2",
-      "count": 1,
-      "at": [
-        22.464,
-        79.056
-      ],
-      "at_exact": true,
-      "inst": "*g_r?2?*u_qm*u_m"
-    },
-    {
-      "view": "physical/s81_ph_views/macros/ot_sram_1r1w_256x34_m2_r2c2",
-      "count": 1,
-      "at": [
-        80.784,
-        109.632
-      ],
-      "at_exact": true,
-      "inst": "*g_r?3?*u_bm*u_m"
-    },
-    {
-      "view": "physical/s81_ph_views/macros/ot_sram_1r1w_128x66_m1_r2c2",
-      "count": 1,
-      "at": [
-        22.464,
-        107.184
-      ],
-      "at_exact": true,
-      "inst": "*g_r?3?*u_qm*u_m"
-    }
+  {
+   "view": "physical/s81_ph_views/macros/ot_sram_1r1w_128x66_m1_r2c2",
+   "count": 1,
+   "at": [
+    120.096,
+    22.8
+   ],
+   "at_exact": true,
+   "inst": "*g_r?0?*u_qm*u_m"
+  },
+  {
+   "view": "physical/s81_ph_views/macros/ot_sram_1r1w_256x34_m2_r2c2",
+   "count": 1,
+   "at": [
+    22.464,
+    51.744
+   ],
+   "at_exact": true,
+   "inst": "*g_r?1?*u_bm*u_m",
+   "orient": "MY"
+  },
+  {
+   "view": "physical/s81_ph_views/macros/ot_sram_1r1w_128x66_m1_r2c2",
+   "count": 1,
+   "at": [
+    120.096,
+    50.928
+   ],
+   "at_exact": true,
+   "inst": "*g_r?1?*u_qm*u_m"
+  },
+  {
+   "view": "physical/s81_ph_views/macros/ot_sram_1r1w_256x34_m2_r2c2",
+   "count": 1,
+   "at": [
+    22.464,
+    80.688
+   ],
+   "at_exact": true,
+   "inst": "*g_r?2?*u_bm*u_m",
+   "orient": "MY"
+  },
+  {
+   "view": "physical/s81_ph_views/macros/ot_sram_1r1w_128x66_m1_r2c2",
+   "count": 1,
+   "at": [
+    120.096,
+    79.056
+   ],
+   "at_exact": true,
+   "inst": "*g_r?2?*u_qm*u_m"
+  },
+  {
+   "view": "physical/s81_ph_views/macros/ot_sram_1r1w_256x34_m2_r2c2",
+   "count": 1,
+   "at": [
+    22.464,
+    109.632
+   ],
+   "at_exact": true,
+   "inst": "*g_r?3?*u_bm*u_m",
+   "orient": "MY"
+  },
+  {
+   "view": "physical/s81_ph_views/macros/ot_sram_1r1w_128x66_m1_r2c2",
+   "count": 1,
+   "at": [
+    120.096,
+    107.184
+   ],
+   "at_exact": true,
+   "inst": "*g_r?3?*u_qm*u_m"
+  }
+ ],
+ "pins": {
+  "E": [
+   "li"
   ],
-  "pins": {
-    "E": [
-      "li"
-    ],
-    "N": [
-      "ck",
-      "rs"
-    ],
-    "S": [
-      "co",
-      "st",
-      "rso"
+  "N": [
+   "ck",
+   "rs"
+  ],
+  "S": [
+   "co",
+   "st",
+   "rso"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.05,
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "extra": "-no_obstruction_aware"
+  }
+ },
+ "job": {
+  "owner": "Claude:S-GATHER",
+  "branch": "claude/s81-gather-r3-1014",
+  "tag": "g9",
+  "purpose": "S81 gather v4 DIRECT leaf (E half) of the gather cluster dsfd_sp_gather_c: 4 roots ot_s81ph_ret_root_s (step B, S = 8 open rows = 2 x the measured real bound 4), queue 128 x 66 + pairing store 256 x 34 arrays per root; the leaf takes only its own 4 lanes and returns only its own 4 results + {busy, fault}; the parent delivers / collects through relay tiles in the channels (no lane or chain passes through a leaf).  Every port a flop at the pin.",
+  "structural_change": "Banks face each other across ONE central logic channel (r4 2026-10-14): pairing-store bank 256x34 MY at the W band, queue bank 128x66 R0 at x 120.096 (E li band widened 20.1 -> 30.5 um) (its secondary wd_in-hi face toward the li pins); main pin faces (rd_out / wd_in-lo / addr / ce / clk) of both banks open onto a 69.3-um channel that holds the root logic, co pins (x 72-110) and the N clock entry.  g7 (both banks R0, main faces W) split each root between two regions separated by a 116-um macro wall (rw: 347 channel<->W-logic nets + 411 queue-face nets in a 21.8-um channel; re: queue main faces on the 20-um W edge band, two walls from the logic) -> GRT-0183 boxed nets and CTS hold stalls (re g4/g5). Same outline, RTL, v19 assigned pins, S = 8. g9: g8 re crashed GRT-0183 twice in the incremental (repair_design) re-route of a li-derived net (NOR2 at the E pin band 185.1,60.1 -> p_v flop 120.1,33.3): every li-derived net must detour round the queue-bank wall end and the 20-um E band also holds 276 li pin flops + hold stages + 4x98 queue back-face ties; g9 widens that band by 10.4 um (channel 69.3 -> 59.0 um). Initial g8 GRT had zero overflow (usage 17.0%, WL 339.5 mm vs g7 478 mm). rw g8 (same topology, 20-um band) passed GRT.",
+  "benches": [
+   {
+    "name": "root_s_lockstep",
+    "cmd": "SSA2=1 CONTROL_STRIP=1 LOCAL_BANKS=1 J=4 S=8 bash rtl/dsrom_sys/s81_ph/test/run_root_s.sh $PWD {RUN}/root_s rtl/dsrom_sys/s81_ph/test/real_order_trace.json",
+    "expect": "pass",
+    "pass_regex": "ROOT_S_GATE PASS \\(([0-9]+) runs\\)",
+    "min_count_regex": "ROOT_S_GATE PASS \\(([0-9]+) runs\\)",
+    "threads": 36,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
     ]
-  },
-  "route": {
-    "pd": 0.5,
-    "threads": 16,
-    "peak_ram_gb": 48,
-    "hold_margin_ns": 0.05,
-    "macro_halo_um": 5.4,
-    "cts_sink": {
-      "extra": "-no_obstruction_aware"
-    }
-  },
-  "job": {
-    "owner": "Codex:S-GATHER",
-    "branch": "claude/s81-gather-r3-1014",
-    "tag": "g7",
-    "purpose": "S81 gather v4 DIRECT leaf (E half) of the gather cluster dsfd_sp_gather_c: 4 roots ot_s81ph_ret_root_s (step B, S = 8 open rows = 2 x the measured real bound 4), queue 128 x 66 + pairing store 256 x 34 arrays per root; the leaf takes only its own 4 lanes and returns only its own 4 results + {busy, fault}; the parent delivers / collects through relay tiles in the channels (no lane or chain passes through a leaf).  Every port a flop at the pin.",
-    "structural_change": "Die-assigned v19 face registration: li 276 bits match the closed lane relay o-pin pattern; co 212 bits align with mean capture bus x pattern; ck/rs N, st/rso S. Same outline and RTL. Required top-down pin assignment replaces face-region pins of g5/g6.",
-    "benches": [
-      {
-        "name": "root_s_lockstep",
-        "cmd": "SSA2=1 CONTROL_STRIP=1 LOCAL_BANKS=1 J=4 S=8 bash rtl/dsrom_sys/s81_ph/test/run_root_s.sh $PWD {RUN}/root_s rtl/dsrom_sys/s81_ph/test/real_order_trace.json",
-        "expect": "pass",
-        "pass_regex": "ROOT_S_GATE PASS \\(([0-9]+) runs\\)",
-        "min_count_regex": "ROOT_S_GATE PASS \\(([0-9]+) runs\\)",
-        "threads": 36,
-        "peak_ram_gb": 32,
-        "needs": [
-          "verilator"
-        ]
-      },
-      {
-        "name": "gather_cl_gate",
-        "cmd": "SSA2=1 CONTROL_STRIP=1 LOCAL_BANKS=1 DIE_CLOCKS=1 SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gcl rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
-        "expect": "pass",
-        "pass_regex": "GATHER_CL_GATE PASS",
-        "min_count_regex": "GATHER_CL_GATE PASS \\(([0-9]+) runs\\)",
-        "threads": 40,
-        "peak_ram_gb": 64,
-        "needs": [
-          "verilator"
-        ]
-      },
-      {
-        "name": "gather_cl_neg_chain",
-        "cmd": "SSA2=1 CONTROL_STRIP=1 LOCAL_BANKS=1 DIE_CLOCKS=1 RAW=1 MODES=chain SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gclm rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
-        "expect": "fail",
-        "fail_regex": "GATHER_CL_NEGATIVE FAIL_AS_REQUIRED",
-        "threads": 4,
-        "peak_ram_gb": 32,
-        "needs": [
-          "verilator"
-        ]
-      },
-      {
-        "name": "gather_cl_neg_ovf",
-        "cmd": "SSA2=1 CONTROL_STRIP=1 LOCAL_BANKS=1 DIE_CLOCKS=1 RAW=1 MODES=ovf SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gclo rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
-        "expect": "fail",
-        "fail_regex": "GATHER_CL_NEGATIVE FAIL_AS_REQUIRED",
-        "threads": 4,
-        "peak_ram_gb": 32,
-        "needs": [
-          "verilator"
-        ]
-      },
-      {
-        "name": "gather_cl_neg_heap_epoch",
-        "cmd": "SSA2=1 CONTROL_STRIP=1 LOCAL_BANKS=1 DIE_CLOCKS=1 RAW=1 MODES=heap SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gcl_heap rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
-        "expect": "fail",
-        "fail_regex": "GATHER_CL_NEGATIVE FAIL_AS_REQUIRED",
-        "threads": 4,
-        "peak_ram_gb": 32,
-        "needs": [
-          "verilator"
-        ]
-      },
-      {
-        "name": "gather_cl_neg_rstreg",
-        "cmd": "SSA2=1 CONTROL_STRIP=1 LOCAL_BANKS=1 DIE_CLOCKS=1 RAW=1 MODES=rstreg SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gcl_rst rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
-        "expect": "fail",
-        "fail_regex": "GATHER_CL_NEGATIVE FAIL_AS_REQUIRED",
-        "threads": 4,
-        "peak_ram_gb": 32,
-        "needs": [
-          "verilator"
-        ]
-      }
-    ],
-    "extra_paths": [
-      "rtl/dsrom_sys/s81_ph",
-      "rtl/dsrom_sys/s81_ctrl",
-      "rtl/lib",
-      "rtl/common",
-      "rtl/v41rom",
-      "rtl/proto",
-      "rtl/hdc",
-      "rtl/gpu",
-      "tools/s81_ph",
-      "physical/s81_ph_views/macros",
-      "results/rtl/s81_ph_20261006/gather",
-      "physical/s81_die_pins/v18/gather_leaves",
-      "physical/dsrom_window_source",
-      "physical/hbm_accel_die_views/stations/bench",
-      "physical/s81_ph_views/gather/leaf_midpoint",
-      "rtl/dsrom_sys/s81_glue",
-      "physical/s81_ph_views/gather/clock_leaf_candidate",
-      "physical/s81_die_pins/v19"
-    ],
-    "views_to": "physical/ref_tile/dsfd_gth_re/views",
-    "record_to": "results/rtl/ref_tile/dsfd_gth_re"
-  },
-  "floorplan_why": "gather v4 direct leaf, 190.08 x 164.16 (slot grid unchanged).  The leaf carries ONLY its own traffic: li 276 b (4 lanes) on the E face, co 212 + st 2 + rso on S, ck + rs on N (494 signal pins; v3 3,423).  8 arrays as two abutted N-S stacks (pins W / E only) at y 22.8..138.5, pushed to the face WITHOUT pins so a 68.5-um band behind the li face is free of macros: the 276 lane bits reach the 4 roots without crossing an array (v3: 1,932 W-E crossings through 44 um of M2/M4 beside 116-um macro walls -> GRT-0116 on g2 and g3).  Cut: li 276 b over the 164-um face = 1.7 b/um vs ~25 M2+M4 tracks/um; results 214 b leave S over 190 um.  Std ~8.4k um2 + arrays 8.7k um2 in 29.7k um2 core = 0.575.",
-  "defines": [
-    "S81PH_GTH_LOCAL_BANKS",
-    "S81PH_GTH_SSA2"
+   },
+   {
+    "name": "gather_cl_gate",
+    "cmd": "SSA2=1 CONTROL_STRIP=1 LOCAL_BANKS=1 DIE_CLOCKS=1 SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gcl rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
+    "expect": "pass",
+    "pass_regex": "GATHER_CL_GATE PASS",
+    "min_count_regex": "GATHER_CL_GATE PASS \\(([0-9]+) runs\\)",
+    "threads": 40,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "gather_cl_neg_chain",
+    "cmd": "SSA2=1 CONTROL_STRIP=1 LOCAL_BANKS=1 DIE_CLOCKS=1 RAW=1 MODES=chain SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gclm rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
+    "expect": "fail",
+    "fail_regex": "GATHER_CL_NEGATIVE FAIL_AS_REQUIRED",
+    "threads": 4,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "gather_cl_neg_ovf",
+    "cmd": "SSA2=1 CONTROL_STRIP=1 LOCAL_BANKS=1 DIE_CLOCKS=1 RAW=1 MODES=ovf SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gclo rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
+    "expect": "fail",
+    "fail_regex": "GATHER_CL_NEGATIVE FAIL_AS_REQUIRED",
+    "threads": 4,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "gather_cl_neg_heap_epoch",
+    "cmd": "SSA2=1 CONTROL_STRIP=1 LOCAL_BANKS=1 DIE_CLOCKS=1 RAW=1 MODES=heap SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gcl_heap rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
+    "expect": "fail",
+    "fail_regex": "GATHER_CL_NEGATIVE FAIL_AS_REQUIRED",
+    "threads": 4,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "gather_cl_neg_rstreg",
+    "cmd": "SSA2=1 CONTROL_STRIP=1 LOCAL_BANKS=1 DIE_CLOCKS=1 RAW=1 MODES=rstreg SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gcl_rst rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
+    "expect": "fail",
+    "fail_regex": "GATHER_CL_NEGATIVE FAIL_AS_REQUIRED",
+    "threads": 4,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   }
   ],
-  "children": [],
-  "inter": [],
-  "recipe": 2,
-  "pre_cts_extra": [
-    "physical/s81_ph_views/gather/clock_leaf_candidate/per_macro.tcl"
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/dsrom_sys/s81_ctrl",
+   "rtl/lib",
+   "rtl/common",
+   "rtl/v41rom",
+   "rtl/proto",
+   "rtl/hdc",
+   "rtl/gpu",
+   "tools/s81_ph",
+   "physical/s81_ph_views/macros",
+   "results/rtl/s81_ph_20261006/gather",
+   "physical/s81_die_pins/v18/gather_leaves",
+   "physical/dsrom_window_source",
+   "physical/hbm_accel_die_views/stations/bench",
+   "physical/s81_ph_views/gather/leaf_midpoint",
+   "rtl/dsrom_sys/s81_glue",
+   "physical/s81_ph_views/gather/clock_leaf_candidate",
+   "physical/s81_die_pins/v19"
   ],
-  "io_flop_at_pins": {
-    "cols": 4,
-    "allow_none": true
-  },
-  "inhold": true,
-  "outhold": true,
-  "keep_pin_regs": true,
-  "pin_reg_split": true,
-  "hold_pad": {
-    "cell": "HB2xp67_ASAP7_75t_R"
-  },
-  "io_tcl": "physical/s81_die_pins/v19/dsfd_gth_re.tcl"
+  "views_to": "physical/ref_tile/dsfd_gth_re/views",
+  "record_to": "results/rtl/ref_tile/dsfd_gth_re"
+ },
+ "floorplan_why": "gather v4 direct leaf, 190.08 x 164.16 (slot grid unchanged).  The leaf carries ONLY its own traffic: li 276 b (4 lanes) on the E face, co 212 + st 2 + rso on S, ck + rs on N (494 signal pins; v3 3,423).  8 arrays as two abutted N-S stacks (pins W / E only) at y 22.8..138.5, pushed to the face WITHOUT pins so a 68.5-um band behind the li face is free of macros: the 276 lane bits reach the 4 roots without crossing an array (v3: 1,932 W-E crossings through 44 um of M2/M4 beside 116-um macro walls -> GRT-0116 on g2 and g3).  Cut: li 276 b over the 164-um face = 1.7 b/um vs ~25 M2+M4 tracks/um; results 214 b leave S over 190 um.  Std ~8.4k um2 + arrays 8.7k um2 in 29.7k um2 core = 0.575.",
+ "defines": [
+  "S81PH_GTH_LOCAL_BANKS",
+  "S81PH_GTH_SSA2"
+ ],
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "pre_cts_extra": [
+  "physical/s81_ph_views/gather/clock_leaf_candidate/per_macro.tcl"
+ ],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "io_tcl": "physical/s81_die_pins/v19/dsfd_gth_re.tcl"
 }

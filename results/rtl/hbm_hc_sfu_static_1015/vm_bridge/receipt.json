@@ -1,0 +1,26 @@
+{
+  "source_commit": "aac41accb",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv": "86205841c6e0d84995cdb1c1d824055b213ad66ddf569b37cf04330f1a213522",
+    "rtl/test/hbm_accel/generic/tb_hgi_sfu_vm_static_bridge.sv": "2915b894cf6d570ecc048204f21b439a9038ed9dc62825feb508966f460e06fa",
+    "tools/hgi_unit_tput/run_sfu_vm_static_bridge.sh": "0cf69cce9268a2a5cf5c346fbe55074bb0ba331865ff4c2d013b7dbc8f98f100",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv": "16d38219117e35990fbea969776490d27832f2d7643cd1dd66233547bdf88160",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_tap.sv": "cc7c0d00ead994fb66360a00da7acd4b70e8a2f9f6e2a3b8013a9672d1ab29de",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53"
+  },
+  "gate": "PASS",
+  "actual_VM_SRAMs": 24,
+  "actual_local_SRAMs": 80,
+  "checked_words": 1280,
+  "prefetch_sectors_per_edge": 8,
+  "local_word_latency": 1,
+  "native_tap_read_return": 14,
+  "store_capture_edge": 15,
+  "native_tap_write_return": 11,
+  "adapter_write_commit_observation": "one output register edge+tapcapture11edges+sampling edge; proved actual returned phase",
+  "output_words_reloaded_from_actual_committed_VM": 256,
+  "mutant": "actual VMresponse valid suppressed bank0; FAIL BRIDGE_FAULT",
+  "arithmetic_join": false,
+  "whole_layer_native_qualified": false,
+  "physical_qualified": false
+}

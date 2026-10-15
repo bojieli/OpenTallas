@@ -1,0 +1,16 @@
+ot-run: ot-epyc1tb     admits   464 GB (avail 690, growth 74, headroom 64, waiters 0/0 GB) load 107/128 running 20 disk 861 GB 
+ot-run: ot-epyc4       admits   245 GB (avail 472, growth 124, headroom 48, waiters 0/0 GB) load 84/128 running 17 disk 691 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/snorm-pipe1-da2bd6831/tools/s81_suhc
+ot-run: ot-agidock128  admits    45 GB (avail 83, growth 41, headroom 24, waiters 0/0 GB) load 35/64 running 9 disk 181 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-890818-1792030366 after 0 s
+golden_L0_L2 20 jobs 1940 rows checks 8 [{'src': 'L0', 'attn_to_ffn_consistent': True}, {'src': 'L2', 'attn_to_ffn_consistent': True}]
+stress_0 20 jobs 1940 rows checks 0 [{'src': 'stress0', 'attn_to_ffn_consistent': None}, {'src': 'stress1', 'attn_to_ffn_consistent': None}]
+stress_1 20 jobs 1940 rows checks 0 [{'src': 'stress2', 'attn_to_ffn_consistent': None}, {'src': 'stress3', 'attn_to_ffn_consistent': None}]
+golden_L0_L2 FAIL 1940 / 1940 fault 0 cyc 30199
+stress_0 FAIL 1940 / 1940 fault 0 cyc 30199
+stress_1 FAIL 1940 / 1940 fault 0 cyc 30199
+/srv/opentallas-scratch/codex/snorm-pipe1-da2bd6831/tools/s81_suhc/hc_gate.py:551: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  rec = dict(schema="opentallas.s81_suhc.hc_gate.run.v1", generated_utc=datetime.datetime.utcnow().isoformat() + "Z",
+RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_pipe40_nt67_tm-ot_s81_hc_ctfx_nt fail
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-890818-1792030366): exit 1

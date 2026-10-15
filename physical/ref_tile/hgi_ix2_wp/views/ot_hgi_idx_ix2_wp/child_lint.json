@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas/claude/closure-loop/hgi_ix2_wp-r6-d1fae7fb6/record/views/ot_hgi_idx_ix2_wp/ot_hgi_idx_ix2_wp.lef",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/hgi_ix2_wp-r7-02e21eaba/record/views/ot_hgi_idx_ix2_wp/ot_hgi_idx_ix2_wp.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [
-  "(f) face-pin access: 2709 of 2709 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M4 (0.060,51.216), d_base_i[0] M4 (0.060,51.216), d_base_i[10] M4 (0.060,51.216))"
+  "(f) face-pin access: 2709 of 2709 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M4 (0.060,37.296), d_base_i[0] M4 (0.060,37.296), d_base_i[10] M4 (0.060,37.296))"
  ],
- "summary": "ot_hgi_idx_ix2_wp 259.2 x 75.6: PG M5 VDD 48 stripes (98% spread, 100% cov) / VSS 48 stripes (98% spread, 100% cov); strap M6; face pins 2709 blocked-above 0 blocked-same 0; clock clk insertion 286 ps; pockets M5 0 (closed)",
+ "summary": "ot_hgi_idx_ix2_wp 259.2 x 75.6: PG M5 VDD 48 stripes (98% spread, 100% cov) / VSS 48 stripes (98% spread, 100% cov); strap M6; face pins 2709 blocked-above 0 blocked-same 0; clock clk insertion 291 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "ot_hgi_idx_ix2_wp",
   "W": 259.2,
@@ -40,24 +40,24 @@
   "face": {
    "face_pins": 2709,
    "blocked_above": 0,
-   "covered_below": 1278,
+   "covered_below": 1316,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
    "band_same": 2709,
    "band_examples": [
-    "clk M4 (0.060,51.216)",
-    "d_base_i[0] M4 (0.060,51.216)",
-    "d_base_i[10] M4 (0.060,51.216)",
-    "d_base_i[11] M4 (0.060,51.216)",
-    "d_base_i[12] M4 (0.060,51.216)",
-    "d_base_i[13] M4 (0.060,51.216)"
+    "clk M4 (0.060,37.296)",
+    "d_base_i[0] M4 (0.060,37.296)",
+    "d_base_i[10] M4 (0.060,37.296)",
+    "d_base_i[11] M4 (0.060,37.296)",
+    "d_base_i[12] M4 (0.060,37.296)",
+    "d_base_i[13] M4 (0.060,37.296)"
    ]
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 285.76,
-    "min_ps": 222.38
+    "max_ps": 290.52,
+    "min_ps": 232.14
    }
   },
   "pockets": {
@@ -66,7 +66,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 3466
+    "added": 3715
    },
    "count": 0,
    "area_um2": 0,

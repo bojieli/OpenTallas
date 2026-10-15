@@ -1,0 +1,26 @@
+{
+  "schema": "ot.qwen.static_io.observed.unit.v1",
+  "source_commit": "1ece35c64dc4bc681f36b94196b79417fc335aa5",
+  "source_sha256": {
+    "rtl/physical/ot_qfd_io_links_static.sv": "88e53cea3345d51d8e99ea6ee6bd1b9d3e09fd86338729aa69e2aab56b2660fc",
+    "rtl/physical/ot_qfd_static_transport.sv": "f4513fa8c2cf85f6d44e4bd6f0a8e00ada3cd29ffe0bf287d2f04101accb1fa3",
+    "rtl/test/tb_qfd_serdes_static.sv": "1f8c4a6c9409107cd10b6b6714d3c519c08ffc28d1022c6483ff3bb03e661a8b",
+    "rtl/test/tb_qfd_ucie_static.sv": "f180c90baccacdc91133815ef8ba1ea04be6f40bbe00913ada0da59a54eeb6b6",
+    "rtl/test/tb_qfd_io_static.sv": "26ce857f8cb46ef748fde04e7e6e9d2fedbf259c18fec76ea265c8ee898892f3",
+    "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv": "5e3899e10df5816022d224c723fafd0da5b335bfb60c98ad19a205d848f92211"
+  },
+  "positive_ucie_source_note": "Positive run at4f3968eb8 differs from latest fixture only in failed-run diagnostic display, no DUT or normal checker change.",
+  "qualification": "UNIT_ONLY. Native physical timing, actual fullshape producer-PC/latency compiler calendar and die distributed site assignment remain open. Peer further metadata pin-capture change pending.",
+  "normal": {
+    "board": "PASS1024 unique512 per direction TX3 RX1 PHY339 with strict known-zero flags",
+    "ucie": "PASS2048 P546/R514 both directions TX3 RX1 PHY14, strict known-zero flags, nonoverlapping logical PHY slots",
+    "cdc": "PASS12channels6144 words write1/read3 with strict known-zero flags"
+  },
+  "negative": {
+    "board_missing_producer": "FAIL979errors causes80/04; second-lap word7 actual observed-valid suppressed and stale first-lap payload, compiled writes/reads unchanged",
+    "ucie_missing_producer": "FAIL1900errors causesA80/80 B04/04; second-lap word7 withheld separately on P/R with unchanged compiled commands",
+    "cdc_unknown_producer": "FAIL channelmask008 with actual i_valid=X at reserved word123; checker rejects unknown actual valid, data timeline unchanged",
+    "cdc_RTL_latency": "FAIL channelmaskfff"
+  },
+  "normal_schedule": "No credits, ready, arbitration or fault-dependent normal issue. Observed-valid is an observation, never the command."
+}

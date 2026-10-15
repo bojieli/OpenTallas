@@ -1,0 +1,133 @@
+{
+  "name": "coll_col_d64_a-d2-e18711936",
+  "status": "NEEDS_RTL",
+  "reason": "TT 71.31 / FF -3.56 ps / DRC 0 (line TT >= +0 / FF >= +0 / DRC 0); hold ECO missed (rc=9): least-bad pass 1 TT 64.6 / FF 21.58 ps / DRC 1",
+  "metrics": {
+    "corner_sta": [
+      "/srv/opentallas-scratch/claude/closure-loop/coll_col_d64_a-d2-e18711936/routes/coll_col_d64_a_d2_e18711936/corner_sta.json"
+    ],
+    "drc_metrics": [
+      "/srv/opentallas-scratch/claude/closure-loop/coll_col_d64_a-d2-e18711936/routes/coll_col_d64_a_d2_e18711936/work/orfs/logs/asap7/opentallas_ot_coll_col_tile_d64_asap7_ref_coll_col_d64_a_d2_e18711936/base/5_2_route.json"
+    ],
+    "ff_ps": -3.56,
+    "clock_periods_ps": {
+      "core_clk": 833.333
+    },
+    "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/coll_col_d64_a-d2-e18711936/routes/coll_col_d64_a_d2_e18711936/work/orfs",
+    "post_sdc": [
+      "physical/common_flow/io_ref_routed.sdc"
+    ],
+    "sdc_name": "6_final.sdc",
+    "setup_post_sdc": [],
+    "ss_sensitivity_ps": -191.73,
+    "ss_sensitivity_tns_ps": -41707.9,
+    "setup_corner": "tt",
+    "corner_sta_tt": "/srv/opentallas-scratch/claude/closure-loop/coll_col_d64_a-d2-e18711936/routes/coll_col_d64_a_d2_e18711936/corner_sta.json",
+    "ss_ps": 71.31,
+    "ss_tns_ps": 0.0,
+    "errors": [],
+    "drc": 0,
+    "routed_ioref": {
+      "key": "1|/srv/opentallas-scratch/claude/closure-loop/coll_col_d64_a-d2-e18711936/routes/coll_col_d64_a_d2_e18711936/work/orfs|0|ae0410",
+      "at": "2026-10-14T17:53:19-07:00",
+      "available": true,
+      "ioref_edge": {
+        "tt": {
+          "core_clk": {
+            "boundary": 1514,
+            "negedge": 0,
+            "noarc": 0,
+            "inverted": 0
+          }
+        },
+        "ff": {
+          "core_clk": {
+            "boundary": 1514,
+            "negedge": 0,
+            "noarc": 0,
+            "inverted": 0
+          }
+        }
+      },
+      "tt": 71.31,
+      "ff": -3.56,
+      "errors": [],
+      "ioref": {
+        "tt": {
+          "ot_lb_v_core_clk": {
+            "clock": "core_clk",
+            "mean": 244.2,
+            "min": 218.8,
+            "max": 299.2,
+            "n": 1514,
+            "kind": "boundary"
+          }
+        },
+        "ff": {
+          "ot_lb_v_core_clk": {
+            "clock": "core_clk",
+            "mean": 204.4,
+            "min": 180.3,
+            "max": 256.2,
+            "n": 1514,
+            "kind": "boundary"
+          }
+        }
+      },
+      "tt_i2r": 332.15,
+      "tt_out": 279.33,
+      "ff_i2r": 32.6,
+      "ff_out": 19.82,
+      "ff_r2r": -3.56,
+      "json": "/srv/opentallas-scratch/claude/closure-loop/coll_col_d64_a-d2-e18711936/cl/routed_ioref.a1.json",
+      "registers": 3840,
+      "registers_clocked": 3840
+    },
+    "route_sdc_clock": {
+      "ss_ps": 71.31,
+      "ff_ps": -3.56
+    }
+  },
+  "eco": {
+    "tried": true,
+    "rb": "/srv/opentallas-scratch/claude/closure-loop/coll_col_d64_a-d2-e18711936/routes/coll_col_d64_a_d2_e18711936/work/orfs/results/asap7/opentallas_ot_coll_col_tile_d64_asap7_ref_coll_col_d64_a_d2_e18711936/base",
+    "ob": "/srv/opentallas-scratch/claude/closure-loop/coll_col_d64_a-d2-e18711936/routes/coll_col_d64_a_d2_e18711936/work/orfs/results/asap7/opentallas_ot_coll_col_tile_d64_asap7_ref_coll_col_d64_a_d2_e18711936/base",
+    "out": "/srv/opentallas-scratch/claude/closure-loop/coll_col_d64_a-d2-e18711936/cl/eco",
+    "post_sdc": [
+      "physical/ref_tile/coll_col_d64_a/signoff.sdc",
+      "physical/common_flow/io_ref_routed.sdc"
+    ],
+    "sdc_name": "6_final.sdc",
+    "setup_post_sdc": [],
+    "pre": {
+      "ss_ps": 71.31,
+      "ff_ps": -3.56
+    },
+    "started": "2026-10-14T18:09:17-07:00",
+    "keepwires": false,
+    "result": {
+      "ss_ps": 64.6,
+      "tt_ps": 64.6,
+      "ff_ps": 21.58,
+      "drc": 1,
+      "sdc_name": "6_final.sdc",
+      "setup_post_sdc": [],
+      "setup_corner": "tt",
+      "ss_sensitivity_ps": -211.39,
+      "cells_added": 207,
+      "errors": [],
+      "pass": 1,
+      "session": "mm",
+      "window": "endpoints_below_hm 210 fixable 210 tight 0 infeasible 0 nodata 0 (hm 30.0 filt 40 accept_ss 0.0 accept_ff 0.0 r 2.4)",
+      "route_strategy": [
+        "incremental_original_guides"
+      ],
+      "score": -1000000000.0,
+      "rank": -978.42,
+      "chosen": "least_bad"
+    },
+    "rc": 9,
+    "completed_at": "2026-10-14T19:44:21-07:00"
+  },
+  "finished_at": "2026-10-14T19:45:20-07:00"
+}

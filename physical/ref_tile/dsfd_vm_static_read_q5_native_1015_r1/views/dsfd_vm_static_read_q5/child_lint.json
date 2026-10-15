@@ -1,0 +1,76 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas/claude/closure-loop/dsfd_vm_static_read_q5_native_1015_r1-native1-9e72690a9/record/views/dsfd_vm_static_read_q5/dsfd_vm_static_read_q5.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [
+  "(f) face-pin access: 799 of 799 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck M5 (77.520,235.463), rst_n M5 (77.520,235.463), fault M4 (154.465,6.432))"
+ ],
+ "summary": "dsfd_vm_static_read_q5 155.52 x 237.6: PG M5 VDD 28 stripes (94% spread, 100% cov) / VSS 28 stripes (94% spread, 100% cov); strap M6; face pins 799 blocked-above 0 blocked-same 0; clock ck insertion 238 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "dsfd_vm_static_read_q5",
+  "W": 155.52,
+  "H": 237.6,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 28,
+     "dir": "V",
+     "spread": 0.938,
+     "coverage": 1.0,
+     "shapes_on_top": 28
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 28,
+     "dir": "V",
+     "spread": 0.937,
+     "coverage": 1.0,
+     "shapes_on_top": 28
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 799,
+   "blocked_above": 0,
+   "covered_below": 0,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 799,
+   "band_examples": [
+    "ck M5 (77.520,235.463)",
+    "rst_n M5 (77.520,235.463)",
+    "fault M4 (154.465,6.432)",
+    "o_data[0] M4 (154.465,6.432)",
+    "o_data[100] M4 (154.465,6.432)",
+    "o_data[101] M4 (154.465,6.432)"
+   ]
+  },
+  "clock_insertion": {
+   "ck": {
+    "max_ps": 238.13,
+    "min_ps": 160.85
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 149
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

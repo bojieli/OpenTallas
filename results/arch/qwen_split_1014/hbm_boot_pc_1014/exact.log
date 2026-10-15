@@ -1,0 +1,5 @@
+PASS real qkd_ctrl_pc boot roundtrip good/corrupt: writes4 reads4
+- /srv/opentallas-scratch/codex/q-host-bind-1014/rtl/test/qwen_kv_die/tb_qkd_hbm_boot_pc_controller.sv:51: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 755ns; walltime 0.006 s; speed 124.616 us/s
+- Verilator: cpu 0.006 s on 1 threads; allocated 7 MB

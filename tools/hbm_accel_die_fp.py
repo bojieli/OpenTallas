@@ -1070,6 +1070,8 @@ def build_r25gq_net(variant):
         bv['split_x_new_port_band'] = dict(bv.get('split_x_new_port_band') or {}, **V['split_x_new_port_band'])
     if V.get('ctl_leaf_w'):
         bv['ctl_leaf_w'] = V['ctl_leaf_w']
+    if V.get('sm_native_abi'):
+        bv['sm_native_abi'] = True
     if V.get('dense_face_masters'):     # dense faces are spread whole: no fixed ck / rst centres inside them
         bv['pin_centre'] = {k_: v_ for k_, v_ in (bv.get('pin_centre') or {}).items() if k_[0] not in V['dense_face_masters']}
     if V.get('svc_split'):      # [svc-ep] 10-10: the native-endpoint segment records (split_psn, h = 500.04): lq / lr / kc
@@ -2574,7 +2576,7 @@ def build_r25gq_net(variant):
                     n_dead += 1         # only loads already found unreachable: reported, not tried again
                     nb_.append(b_)
                     continue
-                if bits > RLY_CLASSES[-1] and V.get('rly_family') and bid not in fcl_ and all(e[0] in by for e in eps) and \
+                if bits > RLY_CLASSES[-1] and V.get('rly_family') and bid not in fcl_ and bid not in fclk_new_ and all(e[0] in by for e in eps) and \
                         all((by[e[0]].master.startswith('hfd_stn_q') and port_base(e[1]) in ('a', 'b') or
                              by[e[0]].master.startswith('hfd_stn_lg') and mcount_[by[e[0]].master] == 1
                              if by[e[0]].kind == 'waypoint' else mcount_[by[e[0]].master] == 1) for e in eps):
@@ -2587,6 +2589,8 @@ def build_r25gq_net(variant):
                                 stnf_[nm2_] = dict(stnf_[it_.master])
                             it_.master = nm2_
                             mcount_[nm2_] = 1
+                    # (H-DIE 10-14: a segment forwarded after the fcl_ snapshot (fclk_new_) is never sliced into common-clock
+                    #  tiles: the slices carried its forwarded-clock positions as data, 5 phantom bits at the launch)
                     # v13 r7: a bus wider than the widest family tile (1,136 b) travels as that many tile-wide slices,
                     # each on its own chain of single tiles (109 x 21.6 um).  One strip of tiles side by side (2,068 b
                     # = 229 um, 4,206 b = 458 um) found no site in the hub channels; tiles of one bus need not abut.
@@ -5543,6 +5547,15 @@ def buses(m):
     if V.get('ctl_leaf_w'):         # R25GQ 10-10 N4 (hgi-1010 + d): the SM control leaf from ot_hgi_sm_record is 112 b
         wctl = V['ctl_leaf_w']
     ctl_up = 4 if V.get('sm_desc') else 3                            # busy / arrive / released (+ d_ready)
+    wres = W_RES
+    if V.get('sm_native_abi'):
+        # H-DIE 10-14 (SM ABI root handed to H-DIE): the control leaf is the record's per-SM ABI, read from source
+        # (rtl/hbm_accel/generic/adapters/ot_hgi_sm_record.sv sm_cmd / sm_ret, CW = 106): 106 b down {start, op_rows 13,
+        # op_c 16, op_g 8, op_gs, op_fmt 2, op_xb 7, d_valid, d_base 32, d_lines 24, release_in} + 4 b up {start_ready,
+        # d_ready, arrive, fault} + the record's sm_cg_en (production OT_SMH_CG wake input of every SM) = 111 b (the
+        # 112-b setting carried invented bits); the SM's single fault pin rides the control leaf to its only RTL
+        # consumer, so the result leaf is rv / rrow 12 / rdata 256 = 269 b
+        wctl, ctl_up, wres = 111, 4, W_RES - 1
     wline = W_LINE - 1 if V.get('sm_rtl_w') else W_LINE              # r15: no rsp_ready pin
     wreq = 44 if V.get('sm_rtl_w') else W_REQ
 
@@ -5761,27 +5774,27 @@ def buses(m):
         gy = (r1.y + r1.h * 0.3) if side == 'S' else (r1.y + r1.h * 0.7)
         gs = {}
         for c in (0, 3, 1, 2):
-            nb = W_RES * 2 * {0: 1, 3: 1, 1: 2, 2: 4}[c]
+            nb = wres * 2 * {0: 1, 3: 1, 1: 2, 2: 4}[c]
             fa = {0: 'W', 1: 'W', 2: 'E', 3: 'E'}[c]
             gs[c] = station(cxs[rch(c)], gy, f'rg{st}{c}', nb, fa, 'N' if side == 'S' else 'S', False, kind='gath',
-                            extra=(up((nb + 2 * W_RES) * 0.048 * 1.1 + 24, GX), up((nb + 2 * W_RES) * 0.048 * 1.1 + 24, GY)),
-                            fifo_bits=W_RES * 4 if (fwd and c == 2) else 0)
+                            extra=(up((nb + 2 * wres) * 0.048 * 1.1 + 24, GX), up((nb + 2 * wres) * 0.048 * 1.1 + 24, GY)),
+                            fifo_bits=wres * 4 if (fwd and c == 2) else 0)
             if fwd:     # r15: gather stations launch from their column half's local clock
                 m.setdefault('clocked', {})[gs[c].name] = 'stream'
             faces[gs[c].master].update(t0='E' if my else 'W', t1='E' if my else 'W', a2='W')
             for r_ in (0, 1):
                 s = by_rc[(r_, c)]
-                B.append((f'rl_{s.name}', 'result_leaf', W_RES, [(s.name, 'r'), (gs[c].name, f't{r_}')]))
-        B.append((f'rh_{st}_0', 'result_trunk', W_RES * 2, [(gs[0].name, 'b'), (gs[1].name, 'a')]))
-        B.append((f'rh_{st}_3', 'result_trunk', W_RES * 2, [(gs[3].name, 'b'), (gs[2].name, 'a')]))
-        B.append((f'rh_{st}_1', 'result_trunk', fcw(f'rh_{st}_1', W_RES * 4, W_RES * 4), [(gs[1].name, 'b'), (gs[2].name, 'a2')]))
+                B.append((f'rl_{s.name}', 'result_leaf', wres, [(s.name, 'r'), (gs[c].name, f't{r_}')]))
+        B.append((f'rh_{st}_0', 'result_trunk', wres * 2, [(gs[0].name, 'b'), (gs[1].name, 'a')]))
+        B.append((f'rh_{st}_3', 'result_trunk', wres * 2, [(gs[3].name, 'b'), (gs[2].name, 'a')]))
+        B.append((f'rh_{st}_1', 'result_trunk', fcw(f'rh_{st}_1', wres * 4, wres * 4), [(gs[1].name, 'b'), (gs[2].name, 'a2')]))
         tgt = _cxy(su, 'W' if half == 'W' else 'E', 0.3 if side == 'S' else 0.7) if False else \
             _cxy(su, 'S' if side == 'S' else 'N', 0.3 + 0.4 * (half == 'E'))
         g2 = gs[2]
         yr_ = ylane(side, 'rt', ych[side] - 40.0 * sgn)
         pts = [(g2.x + g2.w / 2, g2.y + g2.h / 2), (cc + 40.0, g2.y + g2.h / 2), (cc + 40.0, yr_), (tgt[0], yr_), tgt]
-        chain(f'rt_{st}', 'result_trunk', W_RES * 8, (g2.name, 'b'), (su.name, 'r' if pf else f'r{st}'), pts,
-              fc=(W_RES * 8,))
+        chain(f'rt_{st}', 'result_trunk', wres * 8, (g2.name, 'b'), (su.name, 'r' if pf else f'r{st}'), pts,
+              fc=(wres * 8,))
         tr = [b[0] for b in B if b[0].startswith(f'rt_{st}_')]
         up_arm = {0: [f'rh_{st}_0', f'rh_{st}_1'], 1: [f'rh_{st}_1'], 3: [f'rh_{st}_3'], 2: []}
         for s in sms:
@@ -7993,6 +8006,8 @@ def r25gq_v14():
         reset is staged down the same tree."""
     v = r25gq_v13()
     v['p2p'] = True
+    # H-DIE 10-14: SM die master = native ot_hbm_accel_smh, control leaf = the record ABI (111 b), result leaf 269 b
+    v['sm_native_abi'] = True
     v['fwd_master_split'] = True
     # the attention -> SU chains tr_SW0 / tr_SW1 ran through the SW COLL slot: re-placed around it, SU pins unchanged
     # (tools/hbm_die_v14_att_relays.py; tr_SW0 +6 cycles, recorded)

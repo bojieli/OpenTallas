@@ -1,0 +1,16 @@
+ot-run: ot-epyc1tb     admits   375 GB (avail 602, growth 130, headroom 64, waiters 0/0 GB) load 91/128 running 21 disk 782 GB 
+ot-run: ot-epyc4       admits   266 GB (avail 492, growth 118, headroom 48, waiters 0/0 GB) load 61/128 running 18 disk 662 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-3150206-1792033330 after 0 s
+golden_L0_L2 20 jobs 1940 rows checks 8 [{'src': 'L0', 'attn_to_ffn_consistent': True}, {'src': 'L2', 'attn_to_ffn_consistent': True}]
+stress_0 20 jobs 1940 rows checks 0 [{'src': 'stress0', 'attn_to_ffn_consistent': None}, {'src': 'stress1', 'attn_to_ffn_consistent': None}]
+stress_1 20 jobs 1940 rows checks 0 [{'src': 'stress2', 'attn_to_ffn_consistent': None}, {'src': 'stress3', 'attn_to_ffn_consistent': None}]
+golden_L0_L2 PASS 0 / 1940 fault 0 cyc 5548
+stress_0 PASS 0 / 1940 fault 0 cyc 5548
+stress_1 PASS 0 / 1940 fault 0 cyc 5548
+/srv/opentallas-scratch/codex/snorm-return-59b4/tools/s81_suhc/hc_gate.py:553: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  rec = dict(schema="opentallas.s81_suhc.hc_gate.run.v1", generated_utc=datetime.datetime.utcnow().isoformat() + "Z",
+TILE ot_s81_hc_ctra ok instances 64 routed [{'NG': 256, 'D': 5120, 'NCOL': 3, 'GS': 8, 'S_RD': 2, 'S_RT': 4, 'ML': 5, 'AL': 4, 'CHAIN_STEP': 6, 'READ_STAGE': 1}]
+TILE ot_s81_hc_ctrb ok instances 64 routed [{'NG': 256, 'D': 5120, 'NCOL': 3, 'GS': 8, 'S_RD': 2, 'S_RT': 4, 'ML': 5, 'AL': 4, 'CHAIN_STEP': 6, 'READ_STAGE': 1}]
+RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_pipe40_probe pass
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-3150206-1792033330): exit 0

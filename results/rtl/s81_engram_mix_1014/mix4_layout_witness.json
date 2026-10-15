@@ -1,0 +1,33 @@
+{
+ "schema": "opentallas.s81.mix4.physical_view.v1",
+ "native_qualified": false,
+ "integration_ready": false,
+ "physical_row_formula": "(address<<5)|(color^(address&31))",
+ "bank_formula": "row[4:0] XOR {row[7:5],2b00}",
+ "copies": 4,
+ "beats_per_copy": 160,
+ "occupied_rows": 3520,
+ "descriptor_row": 20,
+ "reduction_reads_per_edge": 20,
+ "add_reads_per_edge": 6,
+ "packed_writes_per_edge": 4,
+ "V_copies": 1,
+ "V_rows": "320 rows: address 160..319, colors 1,2 (read once by cluster0 lanes1,2, broadcast in dsfd_engram_mix4_c)",
+ "vm_service": {
+  "read_lanes": 20,
+  "write_lanes": 4,
+  "reduce_edge_reads": 20,
+  "add_edge_reads": 6,
+  "edge_writes": 4,
+  "bank_rule": "each edge: <=1 read and <=1 write per bank (1R1W); proven per beat above"
+ },
+ "HC_logical_view": "row n maps to address=n%160,color=5*(n//160); aligned2/8-row bursts have distinct banks",
+ "read_return_slot": "logical_color XOR (address&3); inverse fixed delayed rotation",
+ "max_physical_row": 10238,
+ "missing": [
+  "actual field/constant/HOP ingress translators (V written once: no replication)",
+  "actual HC/HCP consumer row translators",
+  "MIX20 native request/return mapper and compile-time lane map",
+  "source-pinned fixed service/commit/calendar and physical phases"
+ ]
+}

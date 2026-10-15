@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81pq_ctl_native-w108-1134df4f0/record/views/ot_s81_pq_ctl_fixed_native/ot_s81_pq_ctl_fixed_native.lef",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81pq_ctl_native-wv1-e5fb93eff/record/views/ot_s81_pq_ctl_fixed_native/ot_s81_pq_ctl_fixed_native.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [
-  "(f) face-pin access: 1720 of 1772 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. aq_vin M3 (2.664,75.695), aqi_o[1] M3 (2.664,75.695), aqi_o[3] M3 (2.664,75.695))"
+  "(f) face-pin access: 1724 of 1774 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. aq_vin M3 (2.664,77.504), aqi_o[1] M3 (2.664,77.504), aqi_o[3] M3 (2.664,77.504))"
  ],
- "summary": "ot_s81_pq_ctl_fixed_native 108.0 x 77.76: PG M5 VDD 20 stripes (95% spread, 100% cov) / VSS 20 stripes (95% spread, 100% cov); strap M6; face pins 1772 blocked-above 0 blocked-same 0; clock clk insertion 206 ps; pockets M5 0 (closed)",
+ "summary": "ot_s81_pq_ctl_fixed_native 108.0 x 77.76: PG M5 VDD 20 stripes (95% spread, 100% cov) / VSS 20 stripes (95% spread, 100% cov); strap M6; face pins 1774 blocked-above 0 blocked-same 0; clock clk insertion 214 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "ot_s81_pq_ctl_fixed_native",
   "W": 108.0,
@@ -38,26 +38,26 @@
   "strap_layer": "M6",
   "cap": null,
   "face": {
-   "face_pins": 1772,
+   "face_pins": 1774,
    "blocked_above": 0,
-   "covered_below": 294,
+   "covered_below": 659,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
-   "band_same": 1720,
+   "band_same": 1724,
    "band_examples": [
-    "aq_vin M3 (2.664,75.695)",
-    "aqi_o[1] M3 (2.664,75.695)",
-    "aqi_o[3] M3 (2.664,75.695)",
-    "aqi_o[5] M3 (2.664,75.695)",
-    "aqi_o[7] M3 (2.664,75.695)",
-    "aqi_o[9] M3 (2.664,75.695)"
+    "aq_vin M3 (2.664,77.504)",
+    "aqi_o[1] M3 (2.664,77.504)",
+    "aqi_o[3] M3 (2.664,77.504)",
+    "aqi_o[5] M3 (2.664,77.504)",
+    "aqi_o[7] M3 (2.664,77.504)",
+    "aqi_o[9] M3 (2.664,77.504)"
    ]
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 205.54,
-    "min_ps": 158.67
+    "max_ps": 214.16,
+    "min_ps": 160.65
    }
   },
   "pockets": {
@@ -66,7 +66,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 660
+    "added": 705
    },
    "count": 0,
    "area_um2": 0,

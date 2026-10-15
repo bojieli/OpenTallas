@@ -1,0 +1,51 @@
+{
+ "job": {
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-3957797-1792061940",
+  "mem_GB": 12,
+  "threads": 1,
+  "exit": 0,
+  "admission": "ot-run RAN exit0",
+  "remote": "/srv/opentallas-scratch/codex-geometry-s81-complete-audit-1015"
+ },
+ "candidate": {
+  "scope": "COMPLETE_CONSTRUCTION_BEFORE_HOP_SIGNOFF_NOT_NATIVE",
+  "instances": 78183,
+  "buses": 145748,
+  "resolved_edges": 155534,
+  "missing_edges": 17,
+  "max_pin_hop_um": 2026.2000000000025,
+  "over500_bits": 73630,
+  "alignment_failures": 13
+ },
+ "calendar_comparison": {
+  "roots": 128,
+  "max_x_stations_before": 136,
+  "max_x_stations_after": 95,
+  "sum_root_x_flights_before": 9099,
+  "sum_root_x_flights_after": 7234,
+  "root2": {
+   "root": 2,
+   "half": "E",
+   "x_stations_before": 136,
+   "x_stations_after": 95,
+   "x_station_delta": -41,
+   "x_path_before_um": 51349.85199999999,
+   "x_path_after_um": 35999.651999999995,
+   "return_stations_before": 113,
+   "return_stations_after": 113
+  },
+  "changed_return_roots": 1
+ },
+ "source_scope": "Constructioncomplete currentgenerator; legacyVMhub and6unboundHCP explicit incoverage.json; NOTfinalproductionphysicalqualification",
+ "comparison_limits": "Wholepinwire/classlane14includesnewhub/controlnets absentfrompartial12. x_lane islocalclass notisolatedbroadcasttransport. Uniquechaincutdiagnostic fixes rawpathbacktracking inflation; bothleaveclock/PG/controldirectbusesexcluded.",
+ "frozen_driver_sha256": "f1892238c09f4f1cb041ba1d682db39673d704e310c8797b70d088d2542ac929",
+ "guide_cut_comparison": {
+  "unique_chain_peak_before": 1.7507920227920228,
+  "unique_chain_peak_after": 1.6939031339031339,
+  "raw_peak_before": 1.8401367521367522,
+  "raw_peak_after": 1.7114074074074075,
+  "excluded_nonrectilinear_segments": 4,
+  "scope": "Knownrectilinearchainportiononly; nofullnativecut proof"
+ }
+}

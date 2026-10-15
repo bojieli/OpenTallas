@@ -1,0 +1,152 @@
+{
+ "name": "qfd_xs_tap",
+ "top": "qfd_xs_tap",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv",
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
+  "rtl/hdc/ot_hdc_delay.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 216.0,
+  "h": 216.0,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "ck",
+   "hw_d"
+  ],
+  "S": [
+   "aw"
+  ],
+  "W": [
+   "sw"
+  ],
+  "E": [
+   "gi",
+   "xpf",
+   "he_d",
+   "fault",
+   "rst_n",
+   "hw_f",
+   "he_f"
+  ]
+ },
+ "route": {
+  "pd": 0.52,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "slot_change_request": "Official assigned216square within reserved345.6 envelope; source f7574712e exact pin artifact.",
+ "job": {
+  "owner": "Claude:el1014-qwen-dvm-build",
+  "branch": "claude/qwen-dvm-1014",
+  "tag": "xt3",
+  "purpose": "Qwen TP8 distributed x slice FILL TAP r3: taps the VM write stream (SU 64 + attention-return 16 lanes) inside the armed x range, rounds to the consumer's BF16 operand, and emits the head-row word {fill, ib, go} to BOTH roots from two kept register copies: go / ib (gi from the tree top) ride the fill's own pipeline (fill-before-go); root fault chains in.",
+  "benches": [
+   {
+    "name": "dvm_array_exact",
+    "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/pos tb_qwen_me_dvm_w12 -GNCOL=2 -GNH=8 -GSMIN=4 -GSMAX=7 -GNOPS=40 -GSEED=3 -GGAP=0",
+    "expect": "pass",
+    "pass_regex": "^PASS dvm",
+    "threads": 12,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "dvm_array_no_rounding",
+    "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/neg tb_qwen_me_dvm_w12 -GNCOL=2 -GNH=8 -GSMIN=4 -GSMAX=7 -GNOPS=12 -GSEED=3 -GGAP=0 -GTAP_MUT=1",
+    "expect": "fail",
+    "pass_regex": "^PASS dvm",
+    "threads": 12,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/hdc",
+   "rtl/proto",
+   "rtl/qwen_sys/dvm_20261014",
+   "physical/ref_tile/qfd_xs_tap/assigned_pins.tcl"
+  ],
+  "views_to": "physical/ref_tile/qfd_xs_tap/views",
+  "record_to": "results/rtl/ref_tile/qfd_xs_tap"
+ },
+ "pin_ranges": {
+  "gi": [
+   192.78,
+   210.972
+  ],
+  "xpf": [
+   186.348,
+   189.756
+  ],
+  "ck": [
+   12.972,
+   12.972
+  ],
+  "hw_d": [
+   32.796,
+   183.132
+  ],
+  "he_d": [
+   32.796,
+   183.132
+  ],
+  "sw": [
+   5.436,
+   210.492
+  ],
+  "aw": [
+   94.764,
+   121.26
+  ],
+  "fault": [
+   2.028,
+   2.028
+  ],
+  "rst_n": [
+   4.044,
+   4.044
+  ],
+  "hw_f": [
+   6.012,
+   6.012
+  ],
+  "he_f": [
+   8.028,
+   8.028
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "io_tcl": "physical/ref_tile/qfd_xs_tap/assigned_pins.tcl",
+ "reroute_reason": "Previously only unqualified CTS candidate; re-gate against newly published actual die assigned216square pins f7574712e; prior pin assignment obsolete."
+}

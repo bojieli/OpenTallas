@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.qwen-native-static-memory-abi.v1",
   "status": "RTL_CANDIDATE_UNQUALIFIED_PHYSICAL",
-  "source_base_commit": "727c50b1a2be6ac147b6a6e6d1cd3cfb875d83a6",
+  "source_base_commit": "f715e6259ba61c7379591a81d2d490df91e26a73",
   "sources": [
     {
       "path": "rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory.sv",
@@ -9,7 +9,7 @@
     },
     {
       "path": "rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv",
-      "sha256": "754d0cc8beb41e8b0a1fe0ad3dcf604f612e5034d006800413ef5e0847f3ad6d"
+      "sha256": "01d61e0a937b55af5e45989500092710517343d6a4e956aef20fed4d3d12f409"
     },
     {
       "path": "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv",
@@ -613,5 +613,33 @@
     "native_reset_and_clock_qualification": false,
     "closure": false,
     "compiler_requirement": "failclosed for production qualification while physical latency/phase or commit deadlines remain unspecified; RTL diagnostic schedules allowed with explicitunqualified scope"
+  },
+  "observer_physical_leaf": {
+    "top": "qfd_vm_qcommit",
+    "count": 32,
+    "LAW": 8,
+    "QLINE": 13,
+    "outline_um": [
+      12.96,
+      30.24
+    ],
+    "status": "CTS_TIMING_PASS_NATIVE_PINS_UNASSIGNED",
+    "ports": {
+      "inputs": [
+        "ck",
+        "rst_n",
+        "bank_rst_n",
+        "we",
+        "wl8",
+        "wm16"
+      ],
+      "outputs": [
+        "cm16"
+      ]
+    },
+    "TT_insertion_ps": 48.3,
+    "TT_boundary_spread_ps": 0.4,
+    "TT_setup_slack_ps": 282.52,
+    "FF_hold_slack_ps": 27.35
   }
 }

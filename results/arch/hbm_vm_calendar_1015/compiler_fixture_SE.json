@@ -1,0 +1,127 @@
+{
+  "schema": "opentallas.hbm.native-calendar-programme.v1",
+  "layout": {
+    "quadrant": "SE",
+    "params": {
+      "NC": 0,
+      "RG": 5,
+      "WG": 1,
+      "CW": 1,
+      "RB": 3,
+      "WB": 3
+    },
+    "fields": [
+      {
+        "name": "client_seq",
+        "bits": 2,
+        "lo": 0
+      },
+      {
+        "name": "response_enable",
+        "bits": 1,
+        "lo": 2
+      },
+      {
+        "name": "response_seq",
+        "bits": 2,
+        "lo": 3
+      },
+      {
+        "name": "bank_enable",
+        "bits": 8,
+        "lo": 5
+      },
+      {
+        "name": "bank_client",
+        "bits": 8,
+        "lo": 13
+      },
+      {
+        "name": "hub_ring_enable",
+        "bits": 2,
+        "lo": 21
+      },
+      {
+        "name": "hub_ring_client",
+        "bits": 2,
+        "lo": 23
+      },
+      {
+        "name": "rslot_v",
+        "bits": 8,
+        "lo": 25
+      },
+      {
+        "name": "wslot_v",
+        "bits": 8,
+        "lo": 33
+      },
+      {
+        "name": "rslot",
+        "bits": 24,
+        "lo": 41
+      },
+      {
+        "name": "wslot",
+        "bits": 24,
+        "lo": 65
+      },
+      {
+        "name": "ring_tx_enable",
+        "bits": 2,
+        "lo": 89
+      },
+      {
+        "name": "ring_tx_source",
+        "bits": 6,
+        "lo": 91
+      },
+      {
+        "name": "replay_enable",
+        "bits": 1,
+        "lo": 97
+      },
+      {
+        "name": "replay_source",
+        "bits": 1,
+        "lo": 98
+      },
+      {
+        "name": "lg_local_read",
+        "bits": 24,
+        "lo": 99
+      },
+      {
+        "name": "lg_local_write",
+        "bits": 24,
+        "lo": 123
+      }
+    ],
+    "bits": 147,
+    "startup_edges": 4,
+    "sustained_calendars_per_edge": 1
+  },
+  "configuration_writes": [
+    {
+      "addr": 7,
+      "data": "c7a100070000000000000000000000000000000000000000db6db601fe000000"
+    },
+    {
+      "addr": 8,
+      "data": "c7a10008000000000000000000000000000000000000000124924801fe000000"
+    },
+    {
+      "addr": 9,
+      "data": "c7a1000900000000000000000000000000000000000000000000000000000000"
+    }
+  ],
+  "start": {
+    "base": 7,
+    "limit": 10,
+    "loops": 3
+  },
+  "output_edges": 9,
+  "first_output_after_start": 4,
+  "configuration": "Writes and launch are consumed by real input pin registers; no ready/credit path",
+  "limits": "Caller must prove these calendars against actual producer requests, transport latency and response identities."
+}

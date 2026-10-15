@@ -1,0 +1,110 @@
+{
+ "name": "qkd_kv_static_writer_native_r1-r3-7489b1528",
+ "block": "qkd_kv_static_writer_native",
+ "ref_tile": true,
+ "owner": "Claude:el1014-qwen-kvsys-elements",
+ "purpose": "Actual fixed-slot KV writer 649 functional inputs / 1360 outputs, exact fresh slot/pins from KV die lead. No credit or ACK scheduling. Full-sector intent retained and validated by source-bound wrapper face/semantic assertions. r3 (Claude kvsys-elements 10-15): structural reset distribution: r2 gate textbook.high_fanout rst_n 1,812 async-reset loads -> 12 reset regions (control/ident, faults/expected/shared es address, half_data x2, es half-lane x8; each <= 256 flops) each driven by its own ot_rst_relay copy (async assert, sync release 2+1 edges); rst_n port now loads 2 sync + 12 relay flops (pin capture flop = native reset check). es bank/column/row/s_v/s_we were 4 identical lane copies -> one shared 31-bit register (same es vector). Cost: reset release +3 edges (boot schedule: first word slot >= 3 edges after port release; normal timing unchanged), ~-90 flops. Includes r2 (512-bit half_data enable = compiled slot only). Old-vs-new random equivalence (20k cohorts, mid-run resets) PASS for MUT0..6, direct and relayed. Also fixes r2's route crash (DRT-0255 'cannot find path of net ck / rst_n' at the S face): the die pin file put ck/rst_n at 57.624/115.224 = 36 nm off the ASAP7 M5 track lattice (.060 + .192k); snapped to 57.660/115.260 in the official static_io pin file + generator tools/qwen_kv_die/static_io_pins.py.",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/qwen-kvsys-el-r5-1015",
+  "commit": "7489b1528",
+  "extra_paths": [
+   "rtl/test/qwen_static_kv",
+   "tools/qwen_static_kv",
+   "physical/qwen_kv_die_native_static_pins"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_kv_static_writer_native u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/physical/ot_qkd_kv_static_writer_native.sv rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "writer_native_shape",
+    "cmd": "bash tools/qwen_static_kv/run_native_writer_gate.sh {RUN}/bench/native",
+    "expect": "pass",
+    "pass_regex": "^PASS all36stages/all8192positions",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "writer_native_mutant_data_strict",
+    "cmd": "NATIVE_WRITER_STRICT_MUT=1 bash tools/qwen_static_kv/run_native_writer_gate.sh {RUN}/bench/strict1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_kv_static_writer_native_r1/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_kv_static_writer_native_r1/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_kv_static_writer_native_r1 --out {RUN}/record/views/qkd_kv_static_writer_native  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_kv_static_writer_native_r1/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_kv_static_writer_native_r1/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_kv_static_writer_native_r1/qkd_kv_static_writer_native_r1-r3-7489b1528"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "r3: reset distribution tree (12x ot_rst_relay regional copies) replaces the 1,812-load rst_n port net; shared es address register; S-face ck/rst_n on the M5 track lattice; r2: half_data 512-flop enable = compiled slot only"
+}

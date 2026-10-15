@@ -1,0 +1,6 @@
+GATE FAIL macro_edge: ot_sram_1r1w2c_64x546_m1#0 17.3 um from the W core edge (< 20 um, a pin face)  -> FIX: move the macro inward / to a face without pins (sliver + pin-access blockage)
+GATE FAIL macro_edge: ot_sram_1r1w2c_64x546_m1#0 15.8 um from the E core edge (< 20 um, a pin face)  -> FIX: move the macro inward / to a face without pins (sliver + pin-access blockage)
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO oflop: E face 10.5 pins/um (o_data): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (kit OT_OFLOP_GAP=4.5)
+GATE INFO oflop: W face 10.5 pins/um (i_data): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 6 columns (kit OT_OFLOP_GAP=4.5)
+PRE_ROUTE_GATE: FAIL (2 fail, 0 warn)

@@ -1,0 +1,33 @@
+{
+  "name": "s81hc_ctfxnt_ref-v3-owned-epoch-631a20a94",
+  "status": "EARLY_FAIL_CONGESTION",
+  "run": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctfxnt_ref-v3-owned-epoch-631a20a94",
+  "host": "ot-epyc4",
+  "reason": "global route finished with congestion (GRT-0116): s81hc_ctfxnt_ref_v3_owned_epoch_631a20a94/flow.log: [ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer. [step do-5_1_grt]",
+  "events": [
+    "2026-10-14T19:32:18-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/s81hc_ctfxnt_ref-v3-owned-epoch-631a20a94.json",
+    "2026-10-14T19:32:19-07:00 CLOSED-STANDS PASS: ot_s81_hc_ctfx_nt is CLOSED with a published view (s81hc_ctfxnt_ref-v2-native-86b6ec42b @ 86b6ec42b and 1 more); reroute_reason rtl_change: 2 of 31 RTL source file(s) differ from 86b6ec42b: rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv, rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ntree.sv (verified)",
+    "2026-10-14T19:32:19-07:00 MACRO_GRID WARN (refuse): MACRO_GRID WARN: macro placement ['physical/ref_tile/s81hc_ctfxnt_ref/pre_gpl.tcl'] but no macro LEF resolved from the commands",
+    "2026-10-14T19:32:23-07:00 CLOCK-RULE at submit: 2,850 sinks on the largest root <= 15,000; measured TT insertion 310.1 ps, leaf spread 65.9 ps",
+    "2026-10-14T19:32:23-07:00 ref gate PASS: pre-route gate PASS",
+    "2026-10-14T19:32:34-07:00 benches run in parallel with calibrate/route (3 benches; spec bench_first opts out)",
+    "2026-10-14T19:32:56-07:00 git-mirror sync 631a20a940b8 via upstream in 1s + extract 13s; 3469 views / 6.0 GB hard-linked from the host view store",
+    "2026-10-14T19:33:00-07:00 source 631a20a940b8 synced to ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctfxnt_ref-v3-owned-epoch-631a20a94/src",
+    "2026-10-14T19:33:02-07:00 bench track: launched bench_lint (bench_lint.a1b1) beside None",
+    "2026-10-14T19:33:14-07:00 launched route (attempt 1) on ot-epyc4",
+    "2026-10-14T19:33:25-07:00 bench track: bench_lint PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+    "2026-10-14T19:33:28-07:00 bench track: launched bench_hc_ntree_tmut_ot_s81_hc_ctfx_nt (bench_hc_ntree_tmut_ot_s81_hc_ctfx_nt.a1b1) beside route",
+    "2026-10-14T19:44:23-07:00 TEXTBOOK-LINT route.a1: WARN ot_s81_hc_ctfx_nt cells 6,402 flops 2,850 depth 146.7 ps util 0.1185 reach 54.8 um (0.1 s) || INFO clock_roots max_root_sinks=2850 root=port:clk rule=PASS: 2,850 sinks on the largest root <= 15,000; measured TT insertion 310.1 ps, leaf spread 65.9 ps || WARN util_channel: utilisation 11.9% outside 45%-65% (std 1465 + macro 0 um2 in 12364 um2): shrink the outline (long wires / sparse placement)",
+    "2026-10-14T19:47:27-07:00 EARLY_FAIL_CONGESTION: global route finished with congestion (GRT-0116): s81hc_ctfxnt_ref_v3_owned_epoch_631a20a94/flow.log: [ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer. [step do-5_1_grt]",
+    "2026-10-14T19:50:21-07:00 auto-react: block ot_s81_hc_ctfx_nt has a live or closed sibling job; no action"
+  ],
+  "benches": {
+    "bench_lint": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 7.713 MB sources in 127 modules, into 0.008 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.136 s (elab=0.047, cvt=0.005, bld=0.000); cpu 0.136 s on 1 threads; allocated 56.387 MB\nlint-ok\n",
+      "track": "parallel"
+    }
+  }
+}

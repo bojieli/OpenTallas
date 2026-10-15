@@ -1,0 +1,75 @@
+{
+  "schema": "opentallas.hbm.lg-parent-escape-proof.v1",
+  "result": "PASS_DIAGNOSTIC_PARENT_ESCAPE_NOT_WHOLE_DIE_ADOPTION",
+  "child_commit": "93dd47d9e",
+  "child_LEF_sha256": "d17a8eaf341e68f21359a6dd9eabbfd8a7df0b8126adff45ae76ad1f99aa6c72",
+  "child_route_ODB_sha256": "0143fe140de8e80779f85319b878a5b154f92b968d23ebf4a85598124f26b88d",
+  "child_route_retained": "ot-epyc1tb:/srv/opentallas-scratch/codex/lg-native-route-1015/routes/lg_native_route_1015/work/orfs/results/asap7/opentallas_ot_hbm_vm_lg_static_bank_asap7_ref_lg_native_route_1015/base/6_final.odb",
+  "parent_route_ODB_sha256": "a95551174bde857c83232bfa443fb8461375b2cd5a8b4e9010e1bf6080fe9517",
+  "parent_ODB_archive": "evidence/positive-final.odb.gz",
+  "diagnosis": {
+    "warned_pins": 1665,
+    "warning": "Shared same-layer OBS edge bands partly overlap payload PORTs; unlike eight single-pin own stubs, these bands are retained unchanged and are not assigned to a signal net.",
+    "geometric_min_outer_apron_um": 0.016,
+    "pin_apron_scope": "Descriptive geometry only; not an assumed via landing or physical fit proof. Actual route below establishes access in this harness.",
+    "own_stub_postprocess": "Eight single-pin own-net stubs transferred into PORT under published exporter; no leaf ODB/source/timing changed."
+  },
+  "actual_parent": {
+    "netlist": "parent.v",
+    "shape_um": [
+      247.104,
+      250.56
+    ],
+    "child_origin_um": [
+      48.384,
+      49.68
+    ],
+    "orientation": "R0",
+    "signal_routing_layers": "M4..M6",
+    "ports": 1673,
+    "signal_nets_all_connected_and_routed": 1673,
+    "pin_access": "PASS",
+    "detailed_route_DRC": 0,
+    "actual_final_connectivity_bad": 0,
+    "source_leaf_BTerms_internal_connected_and_routed": 1673,
+    "leaf_missing_internal_or_route": 0
+  },
+  "negative": {
+    "change": "Only abstractOBS on M3/M4/M5 nearWfacefar_rq access, same RTL/pins/Liberty",
+    "blocked_LEF_sha256": "1f0c428ffebedb0c169ad3ee7d0f89f90e1e46eeb16f4e5e3cf87d291b50ed44",
+    "result": "Actual OpenROAD DRT-0073 no access point u_leaf/far_rq[1]",
+    "not_a_timeout_or_compile_failure": true
+  },
+  "jobs": {
+    "positive": "oth-ubuntu-1351750-1792062927 exit0",
+    "negative": "oth-ubuntu-1352462-1792062955 wrapperexit0 expectedactualDRTerror",
+    "parent_connectivity": "oth-ubuntu-1356186-1792063058 exit0",
+    "leaf_connectivity": "oth-ubuntu-1363809-1792063167 exit0"
+  },
+  "scope_limits": [
+    "Simple parent escape harness with48.384umW/E and49.68umN/S streets; not actual96leaf homes or station geometry",
+    "No parent PG delivery/IR/EM qualification",
+    "No parent timing or childclockphase/reach qualification",
+    "No flattened parentpluschild fullgeometryDRC claim; childroute and parentabstractroute DRC independentlychecked",
+    "Near/middle parameter-specific timingviews not covered"
+  ],
+  "files_sha256": {
+    "run.tcl": "2889066cc9adefc1d5ffff2051a578bdbaf1d15b744b43b6ae55f153a2b9ed23",
+    "pins.tcl": "f73e019c681f9a924d4bb2461638a0d44b47e9aec8247db444b61d7ec5c0c3ee",
+    "leaf_connectivity.tcl": "9db95f45fd0f63a52824ad7da8e1de9fde79f71ba308e9898e088b1c0c896e60",
+    "parent.v": "0e174d0b22a5617b42d1b019f2aca10353d697848ff0148dee6d6022936f681b",
+    "manifest.json": "f64137d6cf75b7da71fa9800d541d3e54d98a6d673514c7d6933bdce37785e3d",
+    "free_pin_aprons.json": "82c5287347737079af951a8c36b2e26ca7cf9162fb5f1701ee304d574f1de080",
+    "run_negative.sh": "1c6db659331661ecfd339ffbdbf2b13f077b719235827e74b6385383131fa985",
+    "connectivity.tcl": "b416812ad1298b354273fd171adec89574f5ffd5f0defd72328039b31f9cf723",
+    "evidence/positive-drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/connectivity.tsv": "6a5e817df9d93910e24ca3b63daf75a9df93cbc82c34bc7313209d1004e91353",
+    "evidence/blocked.log": "5fabaec440c694d2d9e118515514055ab9fd478b81e925a6d7fc2024f0692d2e",
+    "evidence/positive.log": "b0f38920eeabf876f395e1b5d5289fa238853368972965ecabbbefb11706df46",
+    "evidence/leaf_connectivity.tsv": "918a0ab01dfad8888ba3223728a028a27841a9cfa7ff88ebf8883c66e2999995",
+    "evidence/connectivity.log": "bf793494658122ab43c51203a20a244376c8e38d13f0f2e1701aec9a58445fe9",
+    "evidence/leaf_connectivity.log": "5d451bb5d71bb34ef90f4b3f39a732dcdbae3c8f19389386732e5626c439b03a",
+    "evidence/blocked.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "evidence/positive-final.odb.gz": "332f927f1dd7b002233af2c8ec4c707b125cd96356ef1f4d77e5928bbcd10d51"
+  }
+}

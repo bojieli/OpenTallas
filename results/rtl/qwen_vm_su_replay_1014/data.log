@@ -1,0 +1,19 @@
+ot-run: ot-epyc1tb     admits   517 GB (avail 744, growth 67, headroom 64, waiters 0/0 GB) load 83/128 running 19 disk 835 GB 
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/dvm4-replay
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/dvm4-replay
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/dvm4-replay
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1345270-1792032625 after 0 s
+FAIL raw replay word=0 got=80000001 expected=80000000
+FAIL raw replay word=64 got=80000001 expected=80000000
+FAIL raw replay word=128 got=80000001 expected=80000000
+FAIL raw replay word=192 got=80000001 expected=80000000
+FAIL raw replay word=256 got=80000001 expected=80000000
+FAIL raw replay word=320 got=80000001 expected=80000000
+FAIL raw replay word=384 got=80000001 expected=80000000
+FAIL vm_su_replay errors=192
+- rtl/qwen_sys/vm_nox_20261014/tb_qfd_vm_su_replay.sv:551: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.026 s; speed 68.302 us/s
+- Verilator: cpu 0.026 s on 1 threads; allocated 13 MB
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1345270-1792032625): exit 1

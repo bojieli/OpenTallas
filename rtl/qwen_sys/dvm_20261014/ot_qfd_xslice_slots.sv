@@ -1,7 +1,10 @@
 `timescale 1ns/1ps
 // Qwen TP8 compute die, distributed x slices (el1014-qwen-dvm-build.log): the slot-shaped die masters, each hardened
-// ONCE under its die name (same convention as ot_qwen_die_station_slots.sv: a bundle x is the pair x_d (data, flow
-// direction) + x_r (ready, against the flow) on the bundle's face).
+// ONCE under its die name.  STATIC SCHEDULE (owner 2026-10-14 18:59): the die masters carry NO ready / back-pressure
+// port: a bundle is its data word x_d only; the compiler reserves every slot, faults travel on the fault chain.  The
+// core ot_qfd_* modules keep their (constant-1) readiness inputs for the array benches; the wrappers tie them inside.
+// Strap masters (xcst sidx, xcol tids / fault_i terminus) expose tie_hi / tie_lo outputs (contract v1.2) so the die
+// never writes a literal.
 //
 // r3 (16:15 PT 10-14), the compute die lead's four requests (11:51) + the column slot fit:
 //   * tile ids: strap tids[255:0] = 16 x 16-b reference ids (N stations 0..7 outward, then S 8..15 outward);
@@ -29,13 +32,18 @@ module qfd_xcst_s #(parameter integer NW = 18, parameter integer AW = 24, parame
     input  wire          rst_n,
     input  wire [2:0]    sidx,
     input  wire [1+(3*NW+13*AW+13)+128+8-1:0] a_d,
-    output wire          a_r,
     output wire [1+(3*NW+13*AW+13)+128+8-1:0] b_d,
-    input  wire          b_r,
-    output wire [1+(3*NW+13*AW+13)+128-1:0] tap_d
+    output wire [1+(3*NW+13*AW+13)+128-1:0] tap_d,
+    output wire          tie_hi,
+    output wire          tie_lo
 );
-    ot_qfd_xcst #(.AW(AW), .NW(NW), .XOFF(XOFF)) u_st (.ck(ck), .rst_n(rst_n), .sidx(sidx), .a_d(a_d), .a_r(a_r),
-        .b_d(b_d), .b_r(b_r), .tap_d(tap_d));
+    // die strap ties (contract v1.2): the die wires every strap / terminus bit of this instance to these two outputs
+    (* keep *) wire tie_hi_w = 1'b1;
+    (* keep *) wire tie_lo_w = 1'b0;
+    assign tie_hi = tie_hi_w;
+    assign tie_lo = tie_lo_w;
+    ot_qfd_xcst #(.AW(AW), .NW(NW), .XOFF(XOFF)) u_st (.ck(ck), .rst_n(rst_n), .sidx(sidx), .a_d(a_d), .a_r(),
+        .b_d(b_d), .b_r(1'b1), .tap_d(tap_d));
 endmodule
 
 module qfd_xcst_n #(parameter integer NW = 18, parameter integer AW = 24, parameter integer XOFF = 3) (
@@ -43,18 +51,24 @@ module qfd_xcst_n #(parameter integer NW = 18, parameter integer AW = 24, parame
     input  wire          rst_n,
     input  wire [2:0]    sidx,
     input  wire [1+(3*NW+13*AW+13)+128+8-1:0] b_d,
-    output wire          b_r,
     output wire [1+(3*NW+13*AW+13)+128+8-1:0] a_d,
-    input  wire          a_r,
-    output wire [1+(3*NW+13*AW+13)+128-1:0] tap_d
+    output wire [1+(3*NW+13*AW+13)+128-1:0] tap_d,
+    output wire          tie_hi,
+    output wire          tie_lo
 );
-    ot_qfd_xcst #(.AW(AW), .NW(NW), .XOFF(XOFF)) u_st (.ck(ck), .rst_n(rst_n), .sidx(sidx), .a_d(b_d), .a_r(b_r),
-        .b_d(a_d), .b_r(a_r), .tap_d(tap_d));
+    // die strap ties (contract v1.2): the die wires every strap / terminus bit of this instance to these two outputs
+    (* keep *) wire tie_hi_w = 1'b1;
+    (* keep *) wire tie_lo_w = 1'b0;
+    assign tie_hi = tie_hi_w;
+    assign tie_lo = tie_lo_w;
+    ot_qfd_xcst #(.AW(AW), .NW(NW), .XOFF(XOFF)) u_st (.ck(ck), .rst_n(rst_n), .sidx(sidx), .a_d(b_d), .a_r(),
+        .b_d(a_d), .b_r(1'b1), .tap_d(tap_d));
 endmodule
 
 // x tap die master.  Bundles (LSB first): sw = {sw_d 2048, sw_m 64, sw_a 24, sw_v} (2,137 b), aw = {aw_d 512, aw_m 16,
 // aw_a 24, aw_v} (553 b), xpf = {round, k NW, split 4, xks 12, xcs 12, xbase 24, v} (72 b at NW 18), gi = {ib, go}.
-module qfd_xs_tap #(parameter integer NW = 18, parameter integer AW = 24, parameter integer XCW = 12) (
+module qfd_xs_tap #(parameter integer NW = 18, parameter integer AW = 24, parameter integer XCW = 12,
+    parameter integer MUT = 0) (   // bench-only mutant (1: no rounding); the die instantiates the default
     input  wire          ck,
     input  wire          rst_n,
     input  wire [1+AW+64+2048-1:0] sw,
@@ -62,45 +76,40 @@ module qfd_xs_tap #(parameter integer NW = 18, parameter integer AW = 24, parame
     input  wire [1+AW+2*XCW+4+NW+1-1:0] xpf,
     input  wire [3*NW+13*AW+13:0]  gi,
     output wire [1+(3*NW+13*AW+13)+(2+AW+2*XCW+4+NW+1)+(2+(AW-6)+6+64+1024)-1:0] hw_d,
-    input  wire          hw_r,
     output wire [1+(3*NW+13*AW+13)+(2+AW+2*XCW+4+NW+1)+(2+(AW-6)+6+64+1024)-1:0] he_d,
-    input  wire          he_r,
     input  wire          hw_f,
     input  wire          he_f,
     output wire          fault
 );
-    // hw_r / he_r: the head row never back-pressures the tap (lockstep broadcast); the ready is registered and folded
-    // into the fault (a root that is not ready while the die runs is a fault, not a stall)
-    reg hr_q, hr_seen;
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin hr_q <= 1'b0; hr_seen <= 1'b0; end
-        else begin hr_q <= hw_r & he_r; if (hr_q) hr_seen <= 1'b1; end
+    // the head row is a lockstep broadcast on compiler-reserved slots: no ready port (static schedule); a root's
+    // faults arrive on hw_f / he_f
     wire tf;
-    ot_qfd_xs_tap #(.AW(AW), .NW(NW), .XCW(XCW),.STATIC_SCHEDULE(1),.NATIVE_AFFINE(1)) u_tap (.clk(ck), .rst_n(rst_n),
+    // One physical reset-capture edge at the tap boundary. The compiler boot
+    // contract must release this local reset before any scheduled input.
+    (* keep *) reg local_rst_n;
+    always @(posedge ck) local_rst_n <= rst_n;
+    ot_qfd_xs_tap #(.AW(AW), .NW(NW), .XCW(XCW),.STATIC_SCHEDULE(1),.NATIVE_AFFINE(1),.MUT(MUT)) u_tap (.clk(ck), .rst_n(local_rst_n),
         .xpf_v(xpf[0]), .xpf_xbase(xpf[1 +: AW]), .xpf_xcs(xpf[1+AW +: XCW]), .xpf_xks(xpf[1+AW+XCW +: XCW]),
         .xpf_split(xpf[1+AW+2*XCW +: 4]), .xpf_k(xpf[1+AW+2*XCW+4 +: NW]), .xpf_round(xpf[1+AW+2*XCW+4+NW]),
         .sw_v(sw[0]), .sw_a(sw[1 +: AW]), .sw_m(sw[1+AW +: 64]), .sw_d(sw[1+AW+64 +: 2048]),
         .aw_v(aw[0]), .aw_a(aw[1 +: AW]), .aw_m(aw[1+AW +: 16]), .aw_d(aw[1+AW+16 +: 512]),
         .gi(gi), .hw(hw_d), .he(he_d), .fw_i(hw_f), .fe_i(he_f), .fault(tf));
-    assign fault = tf | (hr_seen & ~hr_q);
+    assign fault = tf;
 endmodule
 
 // column head die masters (stack plan).  Chains: c{n,s}_* = the write word to leaf N0 / S0 (N / S face), reads
 // r{n,s}_* / q{n,s}* = the four read buses of that chain's leaves (W / E faces with the corridors and the head row).
-module ot_qfd_xhead_m #(parameter integer NW = 18, parameter integer AW = 24, parameter integer XCW = 12) (
+module ot_qfd_xhead_m #(parameter integer NW = 18, parameter integer AW = 24, parameter integer XCW = 12,
+    parameter integer MUT = 0) (   // bench-only head mutant (ot_qfd_xhead MUT); the die instantiates the default
     input  wire          ck,
     input  wire          rst_n,
     input  wire [255:0]  tids,
     input  wire          fault_i,
     output wire          fault,
     input  wire [1+(3*NW+13*AW+13)+(2+AW+2*XCW+4+NW+1)+(2+(AW-6)+6+64+1024)-1:0] h_in,
-    output wire          h_in_r,
     output wire [1+(3*NW+13*AW+13)+(2+AW+2*XCW+4+NW+1)+(2+(AW-6)+6+64+1024)-1:0] h_out,
-    input  wire          h_out_r,
     output wire [1+(3*NW+13*AW+13)+128+8-1:0] n_d,
-    input  wire          n_r,
     output wire [1+(3*NW+13*AW+13)+128+8-1:0] s_d,
-    input  wire          s_r,
     output wire          cn_wv, cn_wep, cn_cv, cn_cep,
     output wire [5:0]    cn_woff,
     output wire [63:0]   cn_wm,
@@ -125,8 +134,8 @@ module ot_qfd_xhead_m #(parameter integer NW = 18, parameter integer AW = 24, pa
     wire [127:0] lw_m;
     wire [2047:0] lw_d;
     wire [143:0] lw_ctl;
-    ot_qfd_xhead #(.AW(AW), .NW(NW), .XCW(XCW), .NH(8),.NATIVE_AFFINE(1)) u_head (.ck(ck), .rst_n(rst_n), .tids(tids), .fault_i(fault_i),
-        .a_d(h_in), .a_r(h_in_r), .b_d(h_out), .b_r(h_out_r), .n_d(n_d), .n_r(n_r), .s_d(s_d), .s_r(s_r),
+    ot_qfd_xhead #(.AW(AW), .NW(NW), .XCW(XCW), .NH(8),.NATIVE_AFFINE(1),.MUT(MUT)) u_head (.ck(ck), .rst_n(rst_n), .tids(tids), .fault_i(fault_i),
+        .a_d(h_in), .a_r(), .b_d(h_out), .b_r(1'b1), .n_d(n_d), .n_r(1'b1), .s_d(s_d), .s_r(1'b1),
         .lw_v(lw_v), .lw_ep(lw_ep), .lw_off(lw_off), .lw_m(lw_m), .lw_d(lw_d), .lw_ctl(lw_ctl),
         .lc_v(lc_v), .lc_ep(lc_ep),
         .lr_v({rs_v, rn_v}), .lr_t({rs_t, rn_t}), .lr_ep({rs_ep, rn_ep}), .lr_p({rs_p, rn_p}),
@@ -137,20 +146,16 @@ module ot_qfd_xhead_m #(parameter integer NW = 18, parameter integer AW = 24, pa
     assign cs_woff = lw_off[11:6]; assign cs_wm = lw_m[127:64]; assign cs_wd = lw_d[2047:1024]; assign cs_wctl = lw_ctl[143:72];
 endmodule
 
-module qfd_xhead_e (
+module qfd_xhead_e #(parameter integer MUT = 0) (   // bench-only head mutant; the die / cluster use the default
     input  wire          ck,
     input  wire          rst_n,
     input  wire [255:0]  tids,
     input  wire          fault_i,
     output wire          fault,
     input  wire [1+379+73+1114-1:0] w_d,
-    output wire          w_r,
     output wire [1+379+73+1114-1:0] e_d,
-    input  wire          e_r,
     output wire [1+379+128+8-1:0] n_d,
-    input  wire          n_r,
     output wire [1+379+128+8-1:0] s_d,
-    input  wire          s_r,
     output wire          cn_wv, cn_wep, cn_cv, cn_cep,
     output wire [5:0]    cn_woff,
     output wire [63:0]   cn_wm,
@@ -170,8 +175,8 @@ module qfd_xhead_e (
     input  wire [255:0]  qs,
     input  wire [3:0]    qs_v, qs_bad
 );
-    ot_qfd_xhead_m u_h (.ck(ck), .rst_n(rst_n), .tids(tids), .fault_i(fault_i), .fault(fault),
-        .h_in(w_d), .h_in_r(w_r), .h_out(e_d), .h_out_r(e_r), .n_d(n_d), .n_r(n_r), .s_d(s_d), .s_r(s_r),
+    ot_qfd_xhead_m #(.MUT(MUT)) u_h (.ck(ck), .rst_n(rst_n), .tids(tids), .fault_i(fault_i), .fault(fault),
+        .h_in(w_d), .h_out(e_d), .n_d(n_d), .s_d(s_d),
         .cn_wv(cn_wv), .cn_wep(cn_wep), .cn_cv(cn_cv), .cn_cep(cn_cep), .cn_woff(cn_woff), .cn_wm(cn_wm), .cn_wd(cn_wd),
         .cn_wctl(cn_wctl), .cs_wv(cs_wv), .cs_wep(cs_wep), .cs_cv(cs_cv), .cs_cep(cs_cep), .cs_woff(cs_woff),
         .cs_wm(cs_wm), .cs_wd(cs_wd), .cs_wctl(cs_wctl), .rn_v(rn_v), .rn_t(rn_t), .rn_ep(rn_ep), .rn_p(rn_p),
@@ -179,20 +184,16 @@ module qfd_xhead_e (
         .qs_v(qs_v), .qs_bad(qs_bad));
 endmodule
 
-module qfd_xhead_w (
+module qfd_xhead_w #(parameter integer MUT = 0) (   // bench-only head mutant; the die / cluster use the default
     input  wire          ck,
     input  wire          rst_n,
     input  wire [255:0]  tids,
     input  wire          fault_i,
     output wire          fault,
     input  wire [1+379+73+1114-1:0] e_d,
-    output wire          e_r,
     output wire [1+379+73+1114-1:0] w_d,
-    input  wire          w_r,
     output wire [1+379+128+8-1:0] n_d,
-    input  wire          n_r,
     output wire [1+379+128+8-1:0] s_d,
-    input  wire          s_r,
     output wire          cn_wv, cn_wep, cn_cv, cn_cep,
     output wire [5:0]    cn_woff,
     output wire [63:0]   cn_wm,
@@ -212,8 +213,8 @@ module qfd_xhead_w (
     input  wire [255:0]  qs,
     input  wire [3:0]    qs_v, qs_bad
 );
-    ot_qfd_xhead_m u_h (.ck(ck), .rst_n(rst_n), .tids(tids), .fault_i(fault_i), .fault(fault),
-        .h_in(e_d), .h_in_r(e_r), .h_out(w_d), .h_out_r(w_r), .n_d(n_d), .n_r(n_r), .s_d(s_d), .s_r(s_r),
+    ot_qfd_xhead_m #(.MUT(MUT)) u_h (.ck(ck), .rst_n(rst_n), .tids(tids), .fault_i(fault_i), .fault(fault),
+        .h_in(e_d), .h_out(w_d), .n_d(n_d), .s_d(s_d),
         .cn_wv(cn_wv), .cn_wep(cn_wep), .cn_cv(cn_cv), .cn_cep(cn_cep), .cn_woff(cn_woff), .cn_wm(cn_wm), .cn_wd(cn_wd),
         .cn_wctl(cn_wctl), .cs_wv(cs_wv), .cs_wep(cs_wep), .cs_cv(cs_cv), .cs_cep(cs_cep), .cs_woff(cs_woff),
         .cs_wm(cs_wm), .cs_wd(cs_wd), .cs_wctl(cs_wctl), .rn_v(rn_v), .rn_t(rn_t), .rn_ep(rn_ep), .rn_p(rn_p),
@@ -222,20 +223,16 @@ module qfd_xhead_w (
 endmodule
 
 // one column as ONE RTL module: xhead + 8 x qfd_xs_leaf (two write chains), one clock port per hardened child
-module ot_qfd_xcol (
+module ot_qfd_xcol #(parameter integer HEAD_MUT = 0, parameter integer EAST = 1) (
     input  wire          ck0, ck1, ck2, ck3, ck4, ck5, ck6, ck7, ck8,
     input  wire          rst_n,
     input  wire [255:0]  tids,
     input  wire          fault_i,
     output wire          fault,
     input  wire [1+379+73+1114-1:0] h_in,
-    output wire          h_in_r,
     output wire [1+379+73+1114-1:0] h_out,
-    input  wire          h_out_r,
     output wire [1+379+128+8-1:0] n_d,
-    input  wire          n_r,
-    output wire [1+379+128+8-1:0] s_d,
-    input  wire          s_r
+    output wire [1+379+128+8-1:0] s_d
 );
     wire [8:0] ck = {ck8, ck7, ck6, ck5, ck4, ck3, ck2, ck1, ck0};
     wire       cw_v [0:1][0:4], cw_ep [0:1][0:4], cc_v [0:1][0:4], cc_ep [0:1][0:4];
@@ -246,14 +243,36 @@ module ot_qfd_xcol (
     wire [3:0] r_v [0:1], r_t [0:1], r_ep [0:1], q_v [0:1], q_bad [0:1];
     wire [111:0] r_p [0:1];
     wire [255:0] q [0:1];
-    ot_qfd_xhead_m u_h (.ck(ck0), .rst_n(rst_n), .tids(tids), .fault_i(fault_i), .fault(fault),
-        .h_in(h_in), .h_in_r(h_in_r), .h_out(h_out), .h_out_r(h_out_r), .n_d(n_d), .n_r(n_r), .s_d(s_d), .s_r(s_r),
+    // the column's hard children by their die names: head qfd_xhead_e (EAST) / qfd_xhead_w, leaves qfd_xs_leaf
+    generate if (EAST) begin : g_he
+`ifndef OT_QFD_XS_HARD
+    qfd_xhead_e #(.MUT(HEAD_MUT)) u_h (
+`else
+    qfd_xhead_e u_h (
+`endif
+        .ck(ck0), .rst_n(rst_n), .tids(tids), .fault_i(fault_i), .fault(fault),
+        .w_d(h_in), .e_d(h_out), .n_d(n_d), .s_d(s_d),
         .cn_wv(cw_v[0][0]), .cn_wep(cw_ep[0][0]), .cn_cv(cc_v[0][0]), .cn_cep(cc_ep[0][0]), .cn_woff(cw_off[0][0]),
         .cn_wm(cw_m[0][0]), .cn_wd(cw_d[0][0]), .cn_wctl(cw_ctl[0][0]),
         .cs_wv(cw_v[1][0]), .cs_wep(cw_ep[1][0]), .cs_cv(cc_v[1][0]), .cs_cep(cc_ep[1][0]), .cs_woff(cw_off[1][0]),
         .cs_wm(cw_m[1][0]), .cs_wd(cw_d[1][0]), .cs_wctl(cw_ctl[1][0]),
         .rn_v(r_v[0]), .rn_t(r_t[0]), .rn_ep(r_ep[0]), .rn_p(r_p[0]), .qn(q[0]), .qn_v(q_v[0]), .qn_bad(q_bad[0]),
         .rs_v(r_v[1]), .rs_t(r_t[1]), .rs_ep(r_ep[1]), .rs_p(r_p[1]), .qs(q[1]), .qs_v(q_v[1]), .qs_bad(q_bad[1]));
+    end else begin : g_hw
+`ifndef OT_QFD_XS_HARD
+    qfd_xhead_w #(.MUT(HEAD_MUT)) u_h (
+`else
+    qfd_xhead_w u_h (
+`endif
+        .ck(ck0), .rst_n(rst_n), .tids(tids), .fault_i(fault_i), .fault(fault),
+        .e_d(h_in), .w_d(h_out), .n_d(n_d), .s_d(s_d),
+        .cn_wv(cw_v[0][0]), .cn_wep(cw_ep[0][0]), .cn_cv(cc_v[0][0]), .cn_cep(cc_ep[0][0]), .cn_woff(cw_off[0][0]),
+        .cn_wm(cw_m[0][0]), .cn_wd(cw_d[0][0]), .cn_wctl(cw_ctl[0][0]),
+        .cs_wv(cw_v[1][0]), .cs_wep(cw_ep[1][0]), .cs_cv(cc_v[1][0]), .cs_cep(cc_ep[1][0]), .cs_woff(cw_off[1][0]),
+        .cs_wm(cw_m[1][0]), .cs_wd(cw_d[1][0]), .cs_wctl(cw_ctl[1][0]),
+        .rn_v(r_v[0]), .rn_t(r_t[0]), .rn_ep(r_ep[0]), .rn_p(r_p[0]), .qn(q[0]), .qn_v(q_v[0]), .qn_bad(q_bad[0]),
+        .rs_v(r_v[1]), .rs_t(r_t[1]), .rs_ep(r_ep[1]), .rs_p(r_p[1]), .qs(q[1]), .qs_v(q_v[1]), .qs_bad(q_bad[1]));
+    end endgenerate
     genvar h, j;
     generate for (h = 0; h < 2; h = h + 1) begin : g_ch
         for (j = 0; j < 4; j = j + 1) begin : g_leaf
@@ -273,42 +292,48 @@ module ot_qfd_xcol (
     end endgenerate
 endmodule
 
-module qfd_xcol_e (
+module qfd_xcol_e #(parameter integer HEAD_MUT = 0) (   // bench-only; the die instantiates the default
     input  wire          ck0, ck1, ck2, ck3, ck4, ck5, ck6, ck7, ck8,
     input  wire          rst_n,
     input  wire [255:0]  tids,
     input  wire          fault_i,
     output wire          fault,
     input  wire [1+379+73+1114-1:0] w_d,
-    output wire          w_r,
     output wire [1+379+73+1114-1:0] e_d,
-    input  wire          e_r,
     output wire [1+379+128+8-1:0] n_d,
-    input  wire          n_r,
     output wire [1+379+128+8-1:0] s_d,
-    input  wire          s_r
+    output wire          tie_hi,
+    output wire          tie_lo
 );
-    ot_qfd_xcol u_c (.ck0(ck0), .ck1(ck1), .ck2(ck2), .ck3(ck3), .ck4(ck4), .ck5(ck5), .ck6(ck6), .ck7(ck7), .ck8(ck8),
-        .rst_n(rst_n), .tids(tids), .fault_i(fault_i), .fault(fault), .h_in(w_d), .h_in_r(w_r), .h_out(e_d),
-        .h_out_r(e_r), .n_d(n_d), .n_r(n_r), .s_d(s_d), .s_r(s_r));
+    // die strap ties (contract v1.2): the die wires tids[255:0] and a terminus fault_i to these two outputs
+    (* keep *) wire tie_hi_w = 1'b1;
+    (* keep *) wire tie_lo_w = 1'b0;
+    assign tie_hi = tie_hi_w;
+    assign tie_lo = tie_lo_w;
+    ot_qfd_xcol #(.HEAD_MUT(HEAD_MUT), .EAST(1)) u_c (.ck0(ck0), .ck1(ck1), .ck2(ck2), .ck3(ck3), .ck4(ck4), .ck5(ck5), .ck6(ck6), .ck7(ck7), .ck8(ck8),
+        .rst_n(rst_n), .tids(tids), .fault_i(fault_i), .fault(fault), .h_in(w_d), .h_out(e_d),
+        .n_d(n_d), .s_d(s_d));
 endmodule
 
-module qfd_xcol_w (
+module qfd_xcol_w #(parameter integer HEAD_MUT = 0) (   // bench-only; the die instantiates the default
     input  wire          ck0, ck1, ck2, ck3, ck4, ck5, ck6, ck7, ck8,
     input  wire          rst_n,
     input  wire [255:0]  tids,
     input  wire          fault_i,
     output wire          fault,
     input  wire [1+379+73+1114-1:0] e_d,
-    output wire          e_r,
     output wire [1+379+73+1114-1:0] w_d,
-    input  wire          w_r,
     output wire [1+379+128+8-1:0] n_d,
-    input  wire          n_r,
     output wire [1+379+128+8-1:0] s_d,
-    input  wire          s_r
+    output wire          tie_hi,
+    output wire          tie_lo
 );
-    ot_qfd_xcol u_c (.ck0(ck0), .ck1(ck1), .ck2(ck2), .ck3(ck3), .ck4(ck4), .ck5(ck5), .ck6(ck6), .ck7(ck7), .ck8(ck8),
-        .rst_n(rst_n), .tids(tids), .fault_i(fault_i), .fault(fault), .h_in(e_d), .h_in_r(e_r), .h_out(w_d),
-        .h_out_r(w_r), .n_d(n_d), .n_r(n_r), .s_d(s_d), .s_r(s_r));
+    // die strap ties (contract v1.2): the die wires tids[255:0] and a terminus fault_i to these two outputs
+    (* keep *) wire tie_hi_w = 1'b1;
+    (* keep *) wire tie_lo_w = 1'b0;
+    assign tie_hi = tie_hi_w;
+    assign tie_lo = tie_lo_w;
+    ot_qfd_xcol #(.HEAD_MUT(HEAD_MUT), .EAST(0)) u_c (.ck0(ck0), .ck1(ck1), .ck2(ck2), .ck3(ck3), .ck4(ck4), .ck5(ck5), .ck6(ck6), .ck7(ck7), .ck8(ck8),
+        .rst_n(rst_n), .tids(tids), .fault_i(fault_i), .fault(fault), .h_in(e_d), .h_out(w_d),
+        .n_d(n_d), .s_d(s_d));
 endmodule

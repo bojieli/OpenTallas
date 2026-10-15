@@ -1,0 +1,34 @@
+{
+  "source_commit": "5c8fa2604",
+  "unit": "ot-epyc1tb/oth-ubuntu-414002-1792049325",
+  "real_SRAMs": 12,
+  "frames": [
+    {
+      "keys": 10928,
+      "kind": "random"
+    },
+    {
+      "keys": 10928,
+      "kind": "all equal:lower ID tie"
+    },
+    {
+      "keys": 4100,
+      "kind": "partial"
+    }
+  ],
+  "selected_each": 512,
+  "fixed_cycles_each": 865,
+  "first_emit_each": 832,
+  "positive_errors": 0,
+  "mutants": [
+    "MUT1 retain too many threshold ties: actualfail",
+    "MUT2 corrupt emitted ID: actualfail"
+  ],
+  "scope": "Static selector component only; no wholeINDEX rate/nativephysical qualification",
+  "sha256": {
+    "rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv": "1978569113639eb3bbfbea8a95cd1ffcbb864f7316270a2e4bd483b32572e97e",
+    "rtl/test/hbm_idx_static/tb_selector_static.sv": "a07e27b05b05bf8d8e46316fbe0b49f3930982dc26178025f0c212979382360d",
+    "tools/hbm_idx_static_selector_vectors.py": "d646a3b5769c59944331c94be4f9159aaf33338ebcaa656c24351d70be468cbd",
+    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d"
+  }
+}

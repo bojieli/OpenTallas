@@ -1,0 +1,164 @@
+{
+ "name": "qfd_xs_tap",
+ "top": "qfd_xs_tap",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv",
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
+  "rtl/hdc/ot_hdc_delay.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 259.2,
+  "h": 259.2,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "sw"
+  ],
+  "S": [
+   "aw",
+   "xpf",
+   "gi",
+   "fault",
+   "ck",
+   "rst_n"
+  ],
+  "W": [
+   "hw_d",
+   "hw_f"
+  ],
+  "E": [
+   "he_d",
+   "he_f"
+  ]
+ },
+ "route": {
+  "pd": 0.52,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
+ },
+ "slot_change_request": "el1014-qwen-split-compute.log 11:51 slot qfd_xs_tap 345.6 x 345.6 at the VM N face; r3 tile 259.2 x 259.2 inside it (345.6: TT insertion 445 ps, 216: boundary spread 86 ps > 80) (r3: gi in, two registered head words hw_d / he_d, root fault chains hw_f / he_f); sw from the SU on N, aw / xpf / gi on S, roots W / E.",
+ "job": {
+  "owner": "Claude:el1014-qwen-dvm-build",
+  "branch": "claude/qwen-dvm-1014",
+  "tag": "xt3",
+  "purpose": "Qwen TP8 distributed x slice FILL TAP r3: taps the VM write stream (SU 64 + attention-return 16 lanes) inside the armed x range, rounds to the consumer's BF16 operand, and emits the head-row word {fill, ib, go} to BOTH roots from two kept register copies: go / ib (gi from the tree top) ride the fill's own pipeline (fill-before-go); root fault chains in.",
+  "benches": [
+   {
+    "name": "native_core_exact",
+    "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/core tb_qfd_xdvm_prod -GNATIVE_AFFINE=1 -GSTATIC_SCHEDULE=1 -GNW=18 -GNCOL=4 -GNLAYER=1 -GNRAND=6",
+    "expect": "pass",
+    "pass_regex": "^PASS xdvm_prod",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "native_wrapper_composition",
+    "cmd": "bash tools/qwen_tp8/vm_replay_xcol_bench.sh {RUN}/bench/xcol",
+    "expect": "pass",
+    "pass_regex": "^PASS vm_replay_xcol",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "native_wrapper_composition_macro",
+    "cmd": "bash tools/qwen_tp8/vm_replay_xcol_bench.sh {RUN}/bench/xcolm -GMEM=1",
+    "expect": "pass",
+    "pass_regex": "^PASS vm_replay_xcol",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "native_wrapper_tap_no_rounding",
+    "cmd": "bash tools/qwen_tp8/vm_replay_xcol_bench.sh {RUN}/bench/xtap1 -GTAP_MUT=1",
+    "expect": "fail",
+    "pass_regex": "^PASS vm_replay_xcol",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/hdc",
+   "rtl/proto",
+   "rtl/qwen_sys",
+   "rtl/physical",
+   "rtl/qwen_split",
+   "tools/qwen_tp8/vm_replay_xcol_bench.sh",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "views_to": "physical/ref_tile/qfd_xs_tap/views",
+  "record_to": "results/rtl/ref_tile/qfd_xs_tap"
+ },
+ "pin_ranges": {
+  "sw": [
+   8.0,
+   251.0
+  ],
+  "aw": [
+   8.0,
+   100.0
+  ],
+  "xpf": [
+   102.0,
+   116.0
+  ],
+  "gi": [
+   118.0,
+   200.0
+  ],
+  "fault": [
+   202.0,
+   203.0
+  ],
+  "ck": [
+   205.0,
+   206.0
+  ],
+  "rst_n": [
+   207.0,
+   208.0
+  ],
+  "hw_d": [
+   8.0,
+   245.0
+  ],
+  "hw_f": [
+   247.0,
+   247.5
+  ],
+  "he_d": [
+   8.0,
+   245.0
+  ],
+  "he_f": [
+   247.0,
+   247.5
+  ]
+ }
+}

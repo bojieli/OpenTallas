@@ -1,0 +1,3 @@
+LOCAL_THROUGHPUT PASS responses=2000 issue_cycles=1000 packets_per_cycle=2.000 roundtrip_edges=10
+FATAL: rtl/hbm_accel/generic/vm/static/tb_vms_hub_static.sv:153: calendar mismatch: missing ack stalled return
+       Time: 10490000  Scope: tb_vms_hub_static.bench

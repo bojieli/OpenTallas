@@ -1,0 +1,15 @@
+{
+ "schema": "opentallas.qwen_d2d_static_link_receipt.v1",
+ "stream": "Q-LINK (el1015-qwen-link.log)",
+ "phy_word": {"both_dies": 583, "payload": 548, "frame_bits": 19, "crc": "CRC16/CCITT", "retired": ["KV-die 548-wide FDI net", "compute 548+35 LLR header (credit, historical under 0ah)"]},
+ "normal_mode": "compiler calendars (TX/RX per end, 32-b entries) -> per-port fixed codec delay -> real SRAM/CRC slot link; no credit/ready/arrival selects a cycle; any violation aborts the epoch",
+ "measured_latency": {"TXL_slot_to_pin_at_codec1": 6, "phy_model": 5, "rx_pin_to_end_output": 2, "typed_codec_rx": 1},
+ "exceptional_mode": {"sequence": "abort -> halt -> DRAIN 32 quiet -> HOST link reset (both PHYs, forwarded link-reset bump) -> retrain -> HOST clear -> forwarded epoch strobe (3-cycle bump) -> both ends epoch+1 on the same cycle -> HOST replays the layer/token",
+                      "measured_kv_abort_to_epoch_begin_cycles": 116, "bench_phy_retrain_cycles": 16, "note": "PHY train time is the behavioural model's UP=16; a real UCIe retrain is longer; exceptional mode only"},
+ "benches": {
+  "component": {"tb": "rtl/test/qwen_split/tb_qwen_d2d_static.sv", "run": "rtl/test/qwen_split/run_d2d_static.sh OUT MUT", "baseline": "PASS 6 layers x (33 C->S + 33 S->C) frames exact cycle/bit-exact, 6 kind-15 results, 6 HOST-service checks, CRC fault -> recovery -> exact replay",
+   "mutants_fail": {"1": "compute write slot +1 -> KV slot fault", "2": "KV RX demux swap -> codec fault", "3": "producer 1 cycle late -> codec time fault + ownership", "4": "calendar compiled with TXL-1 -> missing-frame abort", "5": "stale kind-15 status reported drained -> collector check"}},
+  "die_name": {"tb": "rtl/test/qwen_split/tb_qwen_d2d_dies.sv", "run": "rtl/test/qwen_split/run_d2d_dies.sh OUT MUT", "baseline": "PASS qfd_d2d_static + qkd_d2d_static: same + 24 KVN words from the real qfd_kvn_static_transport to the KV writer face", "mutants_fail": ["1", "2", "3", "4"]}
+ },
+ "not_claimed": ["physical timing/area of the ends (calendar tables are flops: 2 x 128 x 32 b per end)", "die netlist binding (die leads)", "full-shape calendar of the real 36-layer program (compiler profile is the LINK.md layer message set)", "PLL/SerDes native binding with the HOST"]
+}

@@ -1,0 +1,77 @@
+{
+  "add_pipeline": "ot_s81ph_fp32_add_rne_preexp SPLIT=7 KS=1",
+  "add_register_stages": 8,
+  "adders_alone_clock_sinks": 30768,
+  "adoption": false,
+  "fp32_add_replicas": 48,
+  "fp32_adds_per_issue": 48,
+  "fp32_lanes_per_record": 16,
+  "hc_row_bits": 8192,
+  "input_average_bytes_per_cycle": 48,
+  "input_bytes_per_issue": 256,
+  "input_payload_bits_per_issue": 2048,
+  "input_register_stages": 1,
+  "inputs_sha256": {
+    "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_xc.sv": "02a54ca89d333466ebea43b07e7886aab0822529937d1425ab954ae8366c3fe0",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_fp32_add_rne_preexp.sv": "bcd4b251ecdddf7740cf652a1198950d2790e06d3618bc9c537a8a7257bb36af",
+    "rtl/rom/ot_w15_rom_oneshot_px_acceptedpop.sv": "a30655802d0d4fde9a1073fb9ec67ae8b0c923af637384eb6e9de3f332497bac",
+    "tools/uarch_model.py": "2abb4a6639f8bf9548ea1dadb42656e2dbee94fab9c78c76032a463477c4b9b3"
+  },
+  "isolated_adder_clocked_bits_measured_yosys": 641,
+  "macs_per_cycle": 0,
+  "min_last_word_to_emit_edge_delta": 2,
+  "mux_demux": "16x512b static indexed assembly write; 8192b registered emit; no arbitration",
+  "open_gates": [
+    "real compiler HC source reservations and six-value/rank packing",
+    "production throughput and whole-layer price composition",
+    "die slot outline, faces, tracks, area and registered pin placement",
+    "TT setup/FF hold, SS sensitivity, DRC, insertion and phi-R bindings"
+  ],
+  "outline": "UNASSIGNED: die-owned slot request required before any synthesis/route",
+  "output_average_bytes_per_cycle": 12,
+  "output_bytes_per_record": 64,
+  "output_payload_bits_per_record": 512,
+  "output_register_stages": 1,
+  "pack_control": "compiler index4, tag32, complete bitmap16, explicit emit slot; no queue or ready",
+  "pack_output_register_bits": 8192,
+  "pack_storage_bits": 8192,
+  "pack_words": 16,
+  "peak_input_bytes_per_cycle": 256,
+  "peak_output_bytes_per_cycle": 64,
+  "physical_clock_partition": {
+    "actual_independent_clock_pins": "clk_lane[15:0],clk_control",
+    "arithmetic_leaf": "s81_static_hc_scalar_reduce",
+    "assembly_leaf": "s81_static_hc_scalar_assemble",
+    "clock_delivery": "PENDING: real slots, control-to-leaf pin registration, insertion, boundary spread and phi-R; common epoch required",
+    "compatibility_wrapper": "single clk tied across native pins for functional tests only",
+    "lane_roots": 16,
+    "measured_clocked_bits_per_lane_root": 3110,
+    "measured_scalar_assemble_clocked_bits": 1024,
+    "measured_scalar_reduce_clocked_bits": 2086,
+    "metadata_control_roots": 1,
+    "native_interfaces": [
+      "s81_static_hc_reduce_clocked",
+      "s81_static_hc_assemble_clocked"
+    ],
+    "payload_register_bits_per_lane": {
+      "assembly": 512,
+      "hc_row_output": 512,
+      "rank_input": 128,
+      "result": 32
+    }
+  },
+  "rank_fanout": "each rank scalar reaches one input adder; inner outputs reach one outer adder",
+  "ranks": 4,
+  "records_per_16_cycles": 3,
+  "reduction_order": "RN(RN(p0+p1)+RN(p2+p3))",
+  "replica_count_per_die": 1,
+  "routing_tracks_and_area": "UNMEASURED: 16 lane pipelines plus assembly; source component only",
+  "scope": "SOURCE_COMPONENT_UNQUALIFIED",
+  "source_cadence_cycles": [
+    4,
+    4,
+    8
+  ],
+  "word_pipeline_register_stages": 18,
+  "word_sample_to_result_edge_delta": 17
+}

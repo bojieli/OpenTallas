@@ -1,0 +1,113 @@
+`timescale 1ns/1ps
+// Minimum composition: fixed controller -> actual registered pin owner ->
+// declared-boundary fixed memory stimulus -> actual RX head arithmetic -> pins.
+// Every binary32 lane is actual RTL. This is an RX component gate, not a native
+// VM/full-SU/full-layer gate. Reads use 12 SAME-CLOCK edges in this component.
+module tb_s81_su_static_rx;
+    parameter integer MUT=0, RS_MUT=0, EXPECT_FAULT=0, WRITE_EDGE=38, NROWS=24;
+    reg clk=0,rst_n=0,arm=0;
+    integer response_mutant;
+    initial response_mutant=$test$plusargs("DROP_RESPONSE");
+    always #5 clk=~clk;
+    wire [31:0] cycle;
+    reg [1023:0] cw;
+    wire [15:0] rq_v,rs_v,wv,cv,dnv;
+    wire [223:0] rq_a,wa;
+    wire [255:0] wm;
+    wire [8191:0] rs_d,wd,dnd;
+    wire [15:0] ctl_rv;
+    wire [223:0] ctl_ra;
+    wire st; wire [3:0] kind; wire [1:0] gs; wire fp4; wire [7:0] jid;
+    wire done,flt,run; wire[7:0]tag;wire[3:0]fc;
+    wire xv,xv2,xf,xo,alive;wire[13:0]xa,xa2;wire[15:0]xm;wire[511:0]xd,xd2;
+    ot_s81_su_calendar_ctl ctl(.clk(clk),.rst_n(rst_n),.arm(arm),
+        .calendar_valid(1'b1),.calendar_cycle(cycle),.calendar_word(cw),.cycle(cycle),
+        .rq_v(ctl_rv),.rq_row(ctl_ra),.rs_v(rs_v),.wq_v(wv),.wq_row(wa),.wq_mask(wm),
+        .dn_st(st),.dn_kind(kind),.dn_gsel(gs),.dn_fp4(fp4),.dn_jid(jid),
+        .done(done),.done_tag(tag),.up_fu(xf),.up_fo(xo),.up_alive(alive),
+        .up_den(1'b1),.up_rdy(1'b0),.up_rjid(8'd0),.fault(flt),.fault_code(fc),.running(run));
+    wire [15:0] prv,puv;wire[479:0]prf;
+    ot_s81_su_pin #(.KR(16),.KW(16)) po(.clk(clk),.rst_in(rst_n),
+        .rq_v(rq_v),.rq_row(rq_a),.rs_v(rs_v),.rs_d(rs_d),
+        .wq_v(wv),.wq_row(wa),.wq_mask(wm),.wq_d(wd),
+        .dn_v(dnv),.dn_d(dnd),.up_v({15'd0,xv}),.up_a({210'd0,xa}),
+        .up_m({240'd0,xm}),.up_d({7680'd0,xd}),.c_rq_v(ctl_rv),.c_rq_row(ctl_ra),
+        .c_rv(prv),.c_rf(prf),.c_uv(puv));
+    ot_s81_su_rxt #(.S_RD(16),.XMUT(MUT),.QW(2)) rx(.clk(clk),.rst_in(rst_n),
+        .dn_st_i(st),.dn_kind_i(kind),.dn_jid_i(jid),.dn_v_i(dnv),.dn_d_i(dnd),
+        .o_v(xv),.o_a(xa),.o_m(xm),.o_d(xd),.o_v2(xv2),.o_a2(xa2),.o_d2(xd2),
+        .o_fu(xf),.o_fo(xo),.o_alive(alive),.o_den(),.o_rdy(),.o_rjid());
+    reg[15:0] pv[0:11];reg[223:0]pa[0:11];
+    assign rs_v=pv[11] & (((RS_MUT!=0 || response_mutant!=0) && cycle==30) ? 16'hfffe : 16'hffff);
+    function automatic [31:0] xs(input integer lane);
+        case(lane%6)
+            0:xs=32'h3f800000; 1:xs=32'hbf800000; 2:xs=32'h3f000000;
+            3:xs=32'h3f800000; 4:xs=32'h3f800000; default:xs=32'h80000000;
+        endcase
+    endfunction
+    function automatic [31:0] bs(input integer lane);
+        case(lane%6)
+            0,1:bs=32'h40000000; 2:bs=32'h3e800000;
+            3:bs=32'h33800000; 4:bs=32'h34400000; default:bs=0;
+        endcase
+    endfunction
+    function automatic [31:0] ys(input integer lane);
+        case(lane%6)
+            0:ys=32'h40400000; 1:ys=32'h3f800000; 2:ys=32'h3f400000;
+            3:ys=32'h3f800000; 4:ys=32'h3f800002; default:ys=0;
+        endcase
+    endfunction
+
+    genvar s,l;
+    generate for(s=0;s<16;s=s+1)begin:g_s
+        for(l=0;l<16;l=l+1)begin:g_l
+            // Descriptor obase=1024, cnt16, ibase256; all operands are declared
+            // external input stimuli. No internal arithmetic is supplied.
+            wire[13:0]a=pa[11][14*s+:14];
+            if(l==0)assign rs_d[512*s+32*l+:32]=(a==0)?32'd1024:((a[0])?bs(l):xs(l));
+            else if(l==1)assign rs_d[512*s+32*l+:32]=(a==0)?32'd256:((a[0])?bs(l):xs(l));
+            else if(l==2)assign rs_d[512*s+32*l+:32]=(a==0)?32'(NROWS):((a[0])?bs(l):xs(l));
+            else assign rs_d[512*s+32*l+:32]=(a==0)?32'd0:((a[0])?bs(l):xs(l));
+        end
+    end endgenerate
+    integer i,j,nw=0,errors=0,nd=0,first=-1,last=-1;
+    always @(posedge clk) begin
+        if(!rst_n)for(i=0;i<12;i=i+1)begin pv[i]<=0;pa[i]<=0;end
+        else begin
+            pv[0]<=rq_v;pa[0]<=rq_a;
+            for(i=1;i<12;i=i+1)begin pv[i]<=pv[i-1];pa[i]<=pa[i-1];end
+            if(wv)begin
+                if(first<0)first=cycle;
+                last=cycle;
+                $display("RX_WRITE cycle=%0d row=%0d value=%h",cycle,wa[13:0],wd[31:0]);
+                if(wv!=1 || wa[13:0]!=1024+nw || wm[15:0]!=16'hffff)errors=errors+1;
+                for(j=0;j<16;j=j+1)if(wd[32*j+:32]!==ys(j))errors=errors+1;
+                nw=nw+1;
+            end
+            if(done)begin nd=nd+1; if(cycle!=101 || tag!=42)errors=errors+1;end
+        end
+    end
+    always @*begin
+        cw=0;
+        if(cycle==0)begin cw[752]=1;cw[756:753]=9;cw[767:760]=8'd7;end
+        if(cycle==8)begin cw[0]=1;cw[29:16]=0;end
+        if(cycle>=10 && cycle<10+NROWS)begin
+            cw[1:0]=3;cw[29:16]=256+2*(cycle-10);cw[43:30]=257+2*(cycle-10);
+        end
+        // Pin-owner request capture is two edges; VM is twelve more.
+        if(cycle==23)cw[240]=1;
+        if(cycle>=25 && cycle<25+NROWS)cw[241:240]=3;
+        if(WRITE_EDGE!=0 && cycle>=WRITE_EDGE && cycle<WRITE_EDGE+NROWS)begin
+            cw[256]=1;cw[285:272]=1024+cycle-WRITE_EDGE;cw[511:496]=16'hffff;
+        end
+        if(cycle==100)begin cw[768]=1;cw[776:769]=8'd42;end
+    end
+    initial begin
+        repeat(8)@(negedge clk);rst_n=1;
+        repeat(8)@(negedge clk);arm=1;@(negedge clk);arm=0;
+        repeat(120)@(negedge clk);
+        $display("STATIC_RX nw=%0d errors=%0d done=%0d first=%0d last=%0d fault=%0d code=%0d cycle=%0d",nw,errors,nd,first,last,flt,fc,cycle);
+        if(nw!=NROWS || errors || nd!=1 || (EXPECT_FAULT==0 && flt))$fatal(1,"STATIC_RX FAIL");
+        $display("STATIC_RX PASS");$finish;
+    end
+endmodule

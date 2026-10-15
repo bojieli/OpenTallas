@@ -1,0 +1,158 @@
+{
+ "schema": "opentallas.s81.assigned_pins.v1",
+ "master": "dsfd_rly_9_WE",
+ "case": "v19_gather_v4",
+ "outline_um": [
+  15.12,
+  15.12
+ ],
+ "adopted_closed_view": "physical/ref_tile/s81_rly_9_we/views/dsfd_rly_9_WE/dsfd_rly_9_WE.lef",
+ "source": "tools/s81/v19_pins_1014.py (die lead r6): CLOSED view pins adopted as the assignment (closed tiles stand)",
+ "rule": "gather v4 strip child, CLOSED (g4 / gth4)",
+ "ports": {
+  "ck": {
+   "bits": 1,
+   "uniform": false,
+   "per_bit": [
+    [
+     "N",
+     "M5",
+     7.74,
+     0.192
+    ]
+   ]
+  },
+  "i": {
+   "bits": 9,
+   "uniform": false,
+   "per_bit": [
+    [
+     "W",
+     "M4",
+     6.684,
+     0.192
+    ],
+    [
+     "W",
+     "M4",
+     6.78,
+     0.192
+    ],
+    [
+     "W",
+     "M4",
+     6.876,
+     0.192
+    ],
+    [
+     "W",
+     "M4",
+     6.972,
+     0.192
+    ],
+    [
+     "W",
+     "M4",
+     7.068,
+     0.192
+    ],
+    [
+     "W",
+     "M4",
+     7.164,
+     0.192
+    ],
+    [
+     "W",
+     "M4",
+     7.26,
+     0.192
+    ],
+    [
+     "W",
+     "M4",
+     7.356,
+     0.192
+    ],
+    [
+     "W",
+     "M4",
+     7.452,
+     0.192
+    ]
+   ]
+  },
+  "o": {
+   "bits": 9,
+   "uniform": false,
+   "per_bit": [
+    [
+     "E",
+     "M4",
+     7.644,
+     0.192
+    ],
+    [
+     "E",
+     "M4",
+     7.74,
+     0.192
+    ],
+    [
+     "E",
+     "M4",
+     7.836,
+     0.192
+    ],
+    [
+     "E",
+     "M4",
+     7.932,
+     0.192
+    ],
+    [
+     "E",
+     "M4",
+     8.028,
+     0.192
+    ],
+    [
+     "E",
+     "M4",
+     8.124,
+     0.192
+    ],
+    [
+     "E",
+     "M4",
+     8.22,
+     0.192
+    ],
+    [
+     "E",
+     "M4",
+     8.316,
+     0.192
+    ],
+    [
+     "E",
+     "M4",
+     8.412,
+     0.192
+    ]
+   ]
+  },
+  "rs": {
+   "bits": 1,
+   "uniform": false,
+   "per_bit": [
+    [
+     "N",
+     "M5",
+     7.836,
+     0.192
+    ]
+   ]
+  }
+ }
+}

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Production core lockstep vs the original parameterized flop buffer tiles.
 
-The native DUT contains the real 36 macro models. The reference substitutes
+The native DUT contains actual macro models; count is profile-dependent.
+The fully split canonical profile has44 SRAMs (8AQ+4QB+32IX). The reference substitutes
 only unchanged IX/QB tiles; control, quantisers, ROM model and external twelve
 group count stimulus are shared. This gate covers core integration, separately
 from the storage adversarial gates and the still-required physical die gates.
@@ -31,11 +32,12 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--work", type=Path, required=True)
     ap.add_argument("--jobs", type=int, default=8)
-    ap.add_argument("--mut", choices=["IX", "QB", "CONSUME", "BC", "AQPIN", "AQPAR", "AQMEM", "AQMAX", "QBBANK", "QBHEAD", "QBPRE", "FAULT", "QBX", "QBW"])
+    ap.add_argument("--mut", choices=["IX", "QB", "CONSUME", "BC", "AQPIN", "AQPAR", "AQMEM", "AQMAX", "QBBANK", "QBHEAD", "QBPRE", "FAULT", "QBX", "QBW", "WV"])
     ap.add_argument("--aq-pin", action="store_true")
     ap.add_argument("--aq-split", action="store_true")
     ap.add_argument("--qb-split", action="store_true")
     ap.add_argument("--qb-mut-bank", type=int, choices=range(4), default=0)
+    ap.add_argument("--qb-pipe", action="store_true", help="opt-in QB +2 physical pipeline; independent feedback timing comparison")
     ap.add_argument("--qb-one", action="store_true", help="QB with ONE bank master placed four times (ot_s81_pq_qb_one_native.sv)")
     ap.add_argument("--ix-pins", action="store_true")
     ap.add_argument("--ix-split", action="store_true")
@@ -45,13 +47,16 @@ def main():
     ap.add_argument("--bc-sliced", action="store_true")
     ap.add_argument("--bc-mut-slice", type=int, choices=range(4), default=0)
     a = ap.parse_args(); a.ix_split = a.ix_split or a.ix_bank_split; w = a.work.resolve(); w.mkdir(parents=True, exist_ok=True)
+    if a.qb_pipe: a.qb_split=True
     src = CORE.read_text()
     ref = src.replace("module ot_s81_pq_core_native", "module ot_s81_pq_core_ref", 1)
     ref = ref.replace("ot_s81_pq_qb_sram u_qb", "ot_v41_pqc_qb #(.KMAX(6144)) u_qb")
     ref = ref.replace(",\n        .fault(storage_fault[4])", "")
     ref = ref.replace("ot_s81_pq_ix_sram u_ix", "ot_v41_pqc_ix #(.KMAX(6144), .VRD(64)) u_ix")
+    # the reference IX (pinned ot_v41_pqc_ix) still compares its parity: give it the tie it was built with
+    ref = ref.replace(".ba_wv(ba_wv[g >= 2])", ".par(g >= 2), .ba_v(ba_v)")
     ref = ref.replace(", .fault(storage_fault[g])", "")
-    ref = ref.replace(".consume(q_consume), ", "").replace(".consume(b_consume), ", "")
+    ref = ref.replace(".consume(q_consume), ", "").replace(".consume(b_consume), ", "").replace(".consume(b_consume),\n", "\n")
     ref = ref.replace("wire [4:0] storage_fault;", "wire [4:0] storage_fault = 5'd0;")
     # Each model builds separately, so the common fault leaf is defined once.
     (w / "reference.sv").write_text(ref)
@@ -69,6 +74,7 @@ def main():
             ROOT / "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_sram.sv",
             ROOT / "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_split_native.sv",
             ROOT / "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_one_native.sv",
+            ROOT / "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pipe_native.sv",
             ROOT / "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_fixed_native.sv"])
         defs = ["+define+OT_PQ_ROM_PORTS", "+define+OT_PQ_BENCH_TELEMETRY"]
         if name == "dut" and a.aq_pin: defs += ["+define+OT_PQ_AQ_PIN_LAUNCH"]
@@ -77,6 +83,7 @@ def main():
         if name == "dut" and a.ix_bank_split: defs += ["+define+OT_PQ_IX_BANK_SPLIT"]
         if name == "dut" and a.aq_split: defs += ["+define+OT_PQ_AQ_PHYS_SPLIT"]
         if name == "dut" and a.qb_split: defs += ["+define+OT_PQ_QB_PHYS_SPLIT"]
+        if name == "dut" and a.qb_pipe: defs += ["+define+OT_PQ_QB_PIPE"]
         if name == "dut" and a.qb_one: defs += ["+define+OT_PQ_QB_ONE_BANK"]
         if name == "dut" and a.ix_pins: defs += ["+define+OT_PQ_IX_PIN_VARIANTS"]
         if name == "dut" and a.ctl_fixed: defs += ["+define+OT_PQ_CTL_FIXED"]
@@ -94,7 +101,7 @@ def main():
             w / f"{name}.make.log")
         libs.append(md / f"V{name}__ALL.a")
     run(["g++","-std=c++20","-O2",f"-I{vroot}/include",f"-I{vroot}/include/vltstd",f"-I{w/'ref'}",f"-I{w/'dut'}",
-         ROOT / "rtl/test/dsrom_sys/tb_s81_pq_core_native.cpp",*libs,
+         ROOT / ("rtl/test/dsrom_sys/tb_s81_pq_core_pipe.cpp" if a.qb_pipe else "rtl/test/dsrom_sys/tb_s81_pq_core_native.cpp"),*libs,
          f"{vroot}/include/verilated.cpp",f"{vroot}/include/verilated_threads.cpp","-pthread","-o",w / "bench"],w / "link.log")
     run([w / "bench"],w / "run.log")
     print((w / "run.log").read_text(), flush=True)

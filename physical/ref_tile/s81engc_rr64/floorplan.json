@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  17.28,
-  12.96
+  43.2,
+  8.64
  ],
  "core": [
   2.16,
   2.16,
-  15.120000000000001,
-  10.8
+  41.040000000000006,
+  6.48
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -37,7 +37,7 @@
   ],
   "W": [
    "ck",
-   "rst_n"
+   "rst"
   ]
  },
  "clock_port": "ck",
@@ -66,6 +66,7 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/s81_die_pins/v19_engram_hl/ot_engc_rr64.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/dsrom_window_source/leaf_iohold.tcl",

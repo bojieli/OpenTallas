@@ -1,0 +1,23 @@
+	Command being timed: "iverilog -g2012 -s tb_hbm_staging_vm_static -Ptb_hbm_staging_vm_static.MUT=0 -o /var/tmp/hbm-staging-vm-static-1015/gate_prod/m0.vvp /var/tmp/hbm-staging-vm-static-1015/inputs/ot_hbm_svc_static_vm_delivery.sv /var/tmp/hbm-staging-vm-static-1015/inputs/ot_hbm_svc_static_landing.sv /var/tmp/hbm-staging-vm-static-1015/inputs/ot_vms_bank_static.sv /var/tmp/hbm-staging-vm-static-1015/inputs/ot_sram_1r1w_128x256_m1_r2c2.v /var/tmp/hbm-staging-vm-static-1015/inputs/ot_sram_1r1w_1024x256_m2_r2c2.v /var/tmp/hbm-staging-vm-static-1015/inputs/tb_hbm_staging_vm_static.sv"
+	User time (seconds): 0.07
+	System time (seconds): 0.00
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.08
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 24764
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 5128
+	Voluntary context switches: 8
+	Involuntary context switches: 0
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 4096
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
