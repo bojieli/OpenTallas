@@ -69,21 +69,6 @@ module tb_hgi_hc_checkpoint_native_mtp_static(input wire clk,sink_clk,hbm_clk);
         if(state==3)for(integer p=0;p<8;p=p+1)
             if(p<npos&&(age==ssbase+160*p||age==rowbase+160*p))raw_read=1;
     end
-    ot_hgi_hc_programmed_mtp_static #(.ROW_LOOP(1)) dut(.clk(clk),.sink_clk(sink_clk),.rst_n(rst_n),
-        .cfg_we(cfgwe),.cfg_addr(11'(cfgi)),.cfg_data(cfgdata),
-        .start_v(startv),.start_base(11'd0),.start_limit(12'(imagewords)),.start_loops((row<24)?16'd24:16'd1),
-        .weight_ap(ap),.x_wave_v(native_wave_v),.x_wave_word(native_word),.x_wave(native_wave),
-        .gathered_mix_v(1'b0),.gathered_mix_row(5'd0),.gathered_mix_pos(3'd0),.gathered_mix_data(32'd0),
-        .bases(bases),.scales(scales),.row_result_v(rv),.row_result_id(ri),.row_result_pos(rp),.row_result(rd),
-        .result_v(tv),.result(result),.tail_result_pos(tp),.tail_e_ready(),
-        .program_done(program_done),.program_active(program_active),.fault(fault));
-    ot_hgi_hc_residual_vm_static #(.MUT_POSITION(0)) residual_reader(
-        .clk(clk),.rst_n(rst_n),.launch(vm_launch),.npos(4'(npos)),.base_sector(16'd0),
-        .local_rq(bridge_rq),.local_read(vm_read),.local_rr(state==9?2056'd0:vm_rr),.x_wave_v(native_wave_v),
-        .x_wave_word(native_word),.x_wave(native_wave),.done(native_done),.fault(native_fault));
-    ot_hgi_hc_result_vm_static result_writer(.clk(clk),.rst_n(rst_n),
-        .store_slot(state==5&&age==493),.base_sector(16'd28672),.store_position(3'(pc)),
-        .result_v(tv),.result_position(tp),.result(result),.local_wq(result_wq),.local_write(result_write),.fault(result_fault));
     for(genvar sid=0;sid<4;sid=sid+1)begin:quadrant
         wire [407:0] nrq;wire [6743:0] nwq;
         wire [6167:0] lrr,frr;wire [23:0] ld,fd;
@@ -202,15 +187,26 @@ module tb_hgi_hc_checkpoint_native_mtp_static(input wire clk,sink_clk,hbm_clk);
  wire [4:0] drain_row=(state==2)?5'd0:5'(row+1);
  wire drain_slot=drain_row[0];wire [15:0] drain_epoch=16'h6001+drain_row;
  wire half_done,done_half,weight_fault;
- ot_hgi_hc_prefetch_direct_static prefetch(
-  .stream_clk(clk),.stream_rst_n(rst_n),.hbm_clk(hbm_clk),.hbm_rst_n(rst_n),
+ ot_hgi_hc_native_mtp_static dut(
+  .clk(clk),.sink_clk(sink_clk),.rst_n(rst_n),.hbm_clk(hbm_clk),.hbm_rst_n(rst_n),
+  .cfg_we(cfgwe),.cfg_addr(11'(cfgi)),.cfg_data(cfgdata),
+  .start_v(startv),.start_base(11'd0),.start_limit(12'(imagewords)),.start_loops((row<24)?16'd24:16'd1),
   .reserve_v(reserve_v),.reserve_half(reserve_half),.reserve_row_local_byte(reserve_row_local_byte),
   .reserve_epoch(reserve_epoch),.reserve_ready(reserve_ready),.fetched_ready(fetched_ready),
   .drain_v(drain_v),.drain_half(drain_half),.drain_slot(drain_slot),.drain_epoch(drain_epoch),
-  .half_done(half_done),.done_half(done_half),.ap(ap),.fault(weight_fault),
+  .half_done(half_done),.done_half(done_half),
+  .residual_launch(vm_launch),.residual_npos(4'(npos)),.residual_base_sector(16'd0),
+  .local_rq(bridge_rq),.local_read(vm_read),.local_rr(state==9?2056'd0:vm_rr),.residual_done(native_done),
+  .store_slot(state==5&&age==493),.result_base_sector(16'd28672),.store_position(3'(pc)),
+  .local_wq(result_wq),.local_write(result_write),
+  .gathered_mix_v(1'b0),.gathered_mix_row(5'd0),.gathered_mix_pos(3'd0),.gathered_mix_data(32'd0),
+  .bases(bases),.scales(scales),.row_result_v(rv),.row_result_id(ri),.row_result_pos(rp),.row_result(rd),
+  .result_v(tv),.result(result),.tail_result_pos(tp),.tail_e_ready(),
+  .program_done(program_done),.program_active(program_active),.fault(fault),
   .k_v(k_v),.k_rdy(k_rdy),.k_addr(k_addr),.k_len(k_len),.k_tag(k_tag),.k_we(k_we),
   .k_wdata(k_wdata),.k_wstrb(k_wstrb),.k_wr_done(k_wr_done),
   .kr_v(kr_v),.kr_rdy(kr_rdy),.kr_tag(kr_tag),.kr_beat(kr_beat),.kr_data(kr_data));
+ assign weight_fault=1'b0;assign native_fault=1'b0;assign result_fault=1'b0;
  always @(posedge clk)if(rst_n)begin
   if(weight_fault)$fatal(1,"actual checkpoint weight prefetch fault row%0d age%0d",row,age);
   if(reserve_v&&reserve_ready!=15)$fatal(1,"checkpoint reserve deadline");

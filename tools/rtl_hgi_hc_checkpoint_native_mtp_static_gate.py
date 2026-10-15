@@ -53,7 +53,8 @@ def main():
         words,_=lower('tail',first_consumer_cycle=7,sink_divisor=7,sink_phase=0,tail_position=position)
         words.extend((0xc7a1<<240)|(pc<<223) for pc in range(len(words),500))
         (run/f'tail_p{position}.mem').write_text(''.join(f'{w:064x}\n' for w in words))
-    files=['rtl/hbm_accel/generic/peers/hc_prefetch_static/ot_hgi_hc_prefetch_direct_static.sv',
+    files=['rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_native_mtp_static.sv',
+        'rtl/hbm_accel/generic/peers/hc_prefetch_static/ot_hgi_hc_prefetch_direct_static.sv',
         'rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_block_cdc.sv',
         'rtl/hbm_accel/ingest/ot_hbm_loader_kport_address.sv',
         'rtl/lib/ot_reset_sync.sv','rtl/lib/ot_async_fifo.sv',
