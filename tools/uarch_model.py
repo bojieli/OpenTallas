@@ -16218,3 +16218,18 @@ def hbm_qdq_dedicated_face_ff_model():
             "clock_sink_estimate":823,"replicas":4,"shape_um":[129.6,71.28],
             "launch_bits_per_cycle":190,"MACs_per_cycle":0,"memory_bytes_per_cycle":0,
             "default_off":True,"actual_pin_requirement":"P190/Q220 and per-pairL-H100"}
+
+
+def hbm_smh_staticfront_stage_local_model():
+    """Pre-build actual static-SM frontend partition; no immutable price changes.
+
+    The helper records every new clock root, communication width and candidate
+    face cut. Its unassigned placement/reach gates prohibit physical adoption.
+    """
+    import importlib.util
+    from pathlib import Path
+    path = Path(__file__).with_name('hbm_smh_staticfront_model.py')
+    spec = importlib.util.spec_from_file_location('_hbm_smh_staticfront_model', path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.model()

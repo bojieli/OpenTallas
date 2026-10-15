@@ -1,0 +1,160 @@
+{
+  "schema": "opentallas.actual-sm-staticfront-stage-local-model.v1",
+  "objective": "Replace dynamiclegacyfront while preserving full32SM arithmetic and exact83/1099 ABI",
+  "explicit_clocks": 106,
+  "notes": "All rootclocks are independently delivered physical pins; functionalbench drives onelogicalclock.",
+  "new_master_classes": [
+    {
+      "master": "ot_smh_static_xw256",
+      "replicas": 80,
+      "bits": 256,
+      "register_bits": 256,
+      "captures": 1,
+      "outline_um": [
+        43.2,
+        43.2
+      ],
+      "pin_faces": {
+        "W": {
+          "data_in": 256
+        },
+        "E": {
+          "data_out": 256
+        },
+        "N": {
+          "clk": 1
+        }
+      },
+      "clock_roots_per_replica": 1,
+      "maximum_sinks_per_root": 256,
+      "layout": "8 byte-preserving256-bit slices \u00d710 existing one-edge stages; no bit truncation",
+      "schedule": [
+        "wl1",
+        "wm2",
+        "w0_3",
+        "fx4",
+        "Wa4",
+        "Wm5",
+        "Wo6",
+        "Ea4",
+        "Em5",
+        "Eo6"
+      ],
+      "face_cut": {
+        "layer": "M4",
+        "track_pitch_um": 0.048,
+        "reserved_edge_guard_um": 8.0,
+        "usable_um": 27.200000000000003,
+        "available_tracks": 566.6666666666667,
+        "bits": 256,
+        "ratio": 0.4517647058823529,
+        "limit": 0.6,
+        "pin_pitch_um": 0.096,
+        "pin_span_um": 24.48,
+        "passes": true
+      },
+      "flop_area_upper_um2": 97.04448,
+      "outline_area_um2": 1866.2400000000002
+    },
+    {
+      "master": "ot_smh_static_row818",
+      "replicas": 8,
+      "bits": 818,
+      "register_bits": 818,
+      "captures": 1,
+      "role": "4 row0 existing registers plus4 row3 existing registers",
+      "clock_roots_per_replica": 1,
+      "maximum_sinks_per_root": 818,
+      "outline_um": [
+        69.12,
+        103.68
+      ],
+      "pin_faces": {
+        "W": {
+          "bundle_in": 818
+        },
+        "E": {
+          "bundle_out": 818
+        },
+        "N": {
+          "clk": 1,
+          "rst_n": 1
+        }
+      },
+      "face_cut_ratio": 0.4478102189781022,
+      "face_cut_limit": 0.6,
+      "single_layer_pin_span_um": 78.432,
+      "single_layer_pin_fits": true,
+      "admitted": true
+    }
+  ],
+  "control": {
+    "raw15_roots": 1,
+    "raw15_bits": 15,
+    "capture_decode_roots": 1,
+    "capture_decode_bits": 36,
+    "capture_decode_edges": 2,
+    "input_capture_then_decode": true,
+    "relay21_roots": 7,
+    "relay21_bits": 147,
+    "maximum_sinks_per_root": 36,
+    "note": "Controluses existingedges1,2+3,4fx,4/5/6W/E; no newedges"
+  },
+  "feed": {
+    "master": "ot_smh_static_feed",
+    "roots": 1,
+    "register_bits": 4474,
+    "maximum_sinks_per_root": 4474,
+    "command_bits": 83,
+    "packet_bits": 1099,
+    "output_bits": 3360,
+    "capture_edges": 2,
+    "sustained_packets_per_edge": 1,
+    "physical_outline": "PENDING pin assignment"
+  },
+  "results": {
+    "roots": 1,
+    "register_bits": 4775,
+    "maximum_sinks_per_root": 4775,
+    "note": "368landing +3864seven-edge column deskew +542output +fault1; inherited row3path separate",
+    "physical_outline": "PENDING pin assignment"
+  },
+  "preserved": {
+    "roots": 7,
+    "masters": [
+      "fc_xl",
+      "fc_t\u00d72",
+      "fc_xr\u00d72",
+      "fc_b\u00d72"
+    ],
+    "clock_rule": "Accepted originals stand; do not infer current slot or root closure from cell area"
+  },
+  "new_register_bits": 36471,
+  "new_flop_area_upper_um2": 13825.426679999999,
+  "data_slice_outline_total_um2": 149299.2,
+  "memory_macros_in_new_front": 0,
+  "programme_macros_per_SM": 1,
+  "programme_macro": "actual1024x256, placement/insertion outstanding",
+  "arithmetic_MACs_per_edge": "Unchanged original8columns\u00d74rows; this partition changes no arithmetic",
+  "boundary_bits_per_edge": {
+    "command": 83,
+    "packet": 1099,
+    "xwrite": 2063,
+    "row_bundles_out": 6544,
+    "xwrite_bundles_out": 8276,
+    "result_lanes_in": 368,
+    "result_out": 269
+  },
+  "latency_added_edges": 0,
+  "immutable_price_changed": false,
+  "topological_proof": "Each existing xwrite/row register becomes its own physicalstage without changing registerorder.",
+  "placement_gates": {
+    "assigned_pins": false,
+    "actual_reach_under500um": false,
+    "all_faces_cut_le_06": false,
+    "child_lint": false,
+    "physical_timing": false,
+    "throughput_price": false
+  },
+  "status": "MODEL_NOT_ADMITTED: dense_pack must assign all107stage/master locations inclprogramme and exactpins; physicalplacements/reach and all otherfrontpinfaces remain unassigned"
+}
