@@ -55532,6 +55532,29 @@
    "owner": "H-ELEM-A (VM slice)"
   }
  ],
+ "flow_control_boundaries": {
+  "rule": "HANDOFF 0az: off-die boundaries keep link-level flow control; on-die fixed-slot from buffer-block ready",
+  "off_die_flow_control_allowed": [
+   {
+    "boundary": "HBM stack / PHY controller",
+    "ports": "phy_<q> <-> svc_<q>_s* pc fields (k_rdy/kr_rdy etc.)",
+    "note": "edges carry allowed_exception; on-die side starts at the landing buffer block ready"
+   },
+   {
+    "boundary": "die-to-die / package SerDes incl. cross-die collectives",
+    "ports": "hb_coll_<q> tx_pin_v/tx_pin_flit/rx_pin_v/rx_pin_flit/phy_up/retry_requested",
+    "note": "link CRC/retry and link credit allowed here only; quadrant ring pr_cw/pr_ccw is on-die = fixed slot"
+   },
+   {
+    "boundary": "host link",
+    "ports": "HOST/SerDes digital (not yet a v15 instance; root owns)",
+    "note": "same rule"
+   }
+  ],
+  "on_die": "every edge between v15 instances: ready_or_credit must be False (checked by this generator)",
+  "closed_blocks": "closed tiles with purely local never-stalling handshakes stand; no rework",
+  "redesign_scope": "remove credits on die-level links and in engines being redesigned only"
+ },
  "registered_station_masters": [
   {
    "master": "hfd_stn_v15_cc2224",
@@ -75698,7 +75721,7 @@
    "port": "phy_up",
    "direction": "input",
    "bits": 3,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 3,
    "unbound_ranges_half_open": [
@@ -75714,7 +75737,7 @@
    "port": "tx_pin_v",
    "direction": "output",
    "bits": 3,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 3,
    "unbound_ranges_half_open": [
@@ -75730,7 +75753,7 @@
    "port": "tx_pin_flit",
    "direction": "output",
    "bits": 1788,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 1788,
    "unbound_ranges_half_open": [
@@ -75746,7 +75769,7 @@
    "port": "rx_pin_v",
    "direction": "input",
    "bits": 3,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 3,
    "unbound_ranges_half_open": [
@@ -75762,7 +75785,7 @@
    "port": "rx_pin_flit",
    "direction": "input",
    "bits": 1788,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 1788,
    "unbound_ranges_half_open": [
@@ -75778,7 +75801,7 @@
    "port": "retry_requested",
    "direction": "output",
    "bits": 3,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 3,
    "unbound_ranges_half_open": [
@@ -76162,7 +76185,7 @@
    "port": "phy_up",
    "direction": "input",
    "bits": 2,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 2,
    "unbound_ranges_half_open": [
@@ -76178,7 +76201,7 @@
    "port": "tx_pin_v",
    "direction": "output",
    "bits": 2,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 2,
    "unbound_ranges_half_open": [
@@ -76194,7 +76217,7 @@
    "port": "tx_pin_flit",
    "direction": "output",
    "bits": 1192,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 1192,
    "unbound_ranges_half_open": [
@@ -76210,7 +76233,7 @@
    "port": "rx_pin_v",
    "direction": "input",
    "bits": 2,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 2,
    "unbound_ranges_half_open": [
@@ -76226,7 +76249,7 @@
    "port": "rx_pin_flit",
    "direction": "input",
    "bits": 1192,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 1192,
    "unbound_ranges_half_open": [
@@ -76242,7 +76265,7 @@
    "port": "retry_requested",
    "direction": "output",
    "bits": 2,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 2,
    "unbound_ranges_half_open": [
@@ -76626,7 +76649,7 @@
    "port": "phy_up",
    "direction": "input",
    "bits": 2,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 2,
    "unbound_ranges_half_open": [
@@ -76642,7 +76665,7 @@
    "port": "tx_pin_v",
    "direction": "output",
    "bits": 2,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 2,
    "unbound_ranges_half_open": [
@@ -76658,7 +76681,7 @@
    "port": "tx_pin_flit",
    "direction": "output",
    "bits": 1192,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 1192,
    "unbound_ranges_half_open": [
@@ -76674,7 +76697,7 @@
    "port": "rx_pin_v",
    "direction": "input",
    "bits": 2,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 2,
    "unbound_ranges_half_open": [
@@ -76690,7 +76713,7 @@
    "port": "rx_pin_flit",
    "direction": "input",
    "bits": 1192,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 1192,
    "unbound_ranges_half_open": [
@@ -76706,7 +76729,7 @@
    "port": "retry_requested",
    "direction": "output",
    "bits": 2,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 2,
    "unbound_ranges_half_open": [
@@ -77090,7 +77113,7 @@
    "port": "phy_up",
    "direction": "input",
    "bits": 2,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 2,
    "unbound_ranges_half_open": [
@@ -77106,7 +77129,7 @@
    "port": "tx_pin_v",
    "direction": "output",
    "bits": 2,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 2,
    "unbound_ranges_half_open": [
@@ -77122,7 +77145,7 @@
    "port": "tx_pin_flit",
    "direction": "output",
    "bits": 1192,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 1192,
    "unbound_ranges_half_open": [
@@ -77138,7 +77161,7 @@
    "port": "rx_pin_v",
    "direction": "input",
    "bits": 2,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 2,
    "unbound_ranges_half_open": [
@@ -77154,7 +77177,7 @@
    "port": "rx_pin_flit",
    "direction": "input",
    "bits": 1192,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 1192,
    "unbound_ranges_half_open": [
@@ -77170,7 +77193,7 @@
    "port": "retry_requested",
    "direction": "output",
    "bits": 2,
-   "required_owner": "actual VM programme SRAM calendar issuer",
+   "required_owner": "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)",
    "bound_bits": 0,
    "unbound_bits": 2,
    "unbound_ranges_half_open": [

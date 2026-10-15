@@ -25,9 +25,9 @@ module ot_qwen_d2d_recovery #(
     input  wire       end_fault,
     input  wire       p_tx_up,
     input  wire       p_tx_v, p_rx_v,
-    input  wire       reset_req,      // MASTER: HOST link-reset request (level, sampled in DRAINED)
-    input  wire       recovery_clear, // MASTER: HOST clear after retrained (pulse)
-    input  wire       boot_begin,     // MASTER: HOST first epoch after boot (pulse) ; FOLLOWER: unused
+    input  wire       reset_req,      // MASTER: HOST lifecycle link_reset_request (level, sampled in DRAINED)
+    input  wire       recovery_clear, // MASTER: HOST recovery_complete after retrained (pulse)
+    input  wire       boot_begin,     // MASTER: HOST boot_go (level; its rising edge starts the first epoch); FOLLOWER: unused
     input  wire       fwd_epoch_i,    // FOLLOWER: forwarded epoch strobe from the bump
     output wire       fwd_epoch_o,    // MASTER: forwarded epoch strobe to the bump (registered)
     output wire       fwd_link_rst_n, // MASTER: forwarded link reset to the compute die PHY (registered)
@@ -43,7 +43,7 @@ module ot_qwen_d2d_recovery #(
     output reg  [31:0] recovery_cycles // measured length of the last exceptional episode (abort -> epoch_begin)
 );
     localparam [2:0] S_RUN = 0, S_DRAIN = 1, S_DRAINED = 2, S_RST = 3, S_TRAIN = 4, S_READY = 5;
-    reg [2:0] st; reg [15:0] n; reg seen, lrst, fep;
+    reg [2:0] st; reg [15:0] n; reg seen, lrst, fep, bq;
     reg [BUMP-1:0] eq;            // MASTER local copy of the forwarded strobe delay
     reg [BUMP-1:0] fq;            // FOLLOWER capture flops
     reg counting;
@@ -61,16 +61,16 @@ module ot_qwen_d2d_recovery #(
         else if (epoch_begin) epoch <= epoch + 8'd1;
     always @(posedge ck or negedge rst_n) begin
         if (!rst_n) begin
-            st <= S_RUN; n <= 0; seen <= 0; lrst <= 0; fep <= 0; eq <= 0; fq <= 0; epoch_begin <= 0;
+            st <= S_RUN; n <= 0; seen <= 0; lrst <= 0; fep <= 0; eq <= 0; fq <= 0; epoch_begin <= 0; bq <= 0;
             transport_fault <= 0; counting <= 0; recovery_cycles <= 0;
         end else begin
-            fep <= 1'b0; epoch_begin <= begin_now;
+            fep <= 1'b0; epoch_begin <= begin_now; bq <= boot_begin;
             eq <= {eq, fep}; fq <= {fq, fwd_epoch_i};
             if (counting) recovery_cycles <= recovery_cycles + 1;
             if (begin_now) begin st <= S_RUN; seen <= 0; counting <= 0; transport_fault <= 0; end
             case (st)
             S_RUN: begin
-                if (MASTER && boot_begin) fep <= 1'b1;
+                if (MASTER && boot_begin && !bq) fep <= 1'b1;
                 if (abort && !epoch_begin) begin
                     st <= MASTER ? S_DRAIN : S_READY; n <= 0; counting <= 1; recovery_cycles <= 0;
                     transport_fault <= fault_cause | {end_fault, 7'd0};

@@ -34,6 +34,23 @@ RECORD_DISPOSITION = {
     ('SW','dma'): 'PENDING: DMA owner decides (static DMA back uses RG1)',
     ('SW','argmax'): 'OPEN: needed for MTP; no static argmax RTL yet; owner H-IDX',
 }
+# OWNER rule refinement (HANDOFF 0az, 2026-10-15): link-level flow control stays at every OFF-DIE
+# boundary; everything on-die is fixed-slot from 'buffer block ready'. Credits are removed only on
+# die-level links and in engines being redesigned; closed blocks are not reworked for purely local,
+# never-stalling handshakes.
+FLOW_CONTROL_BOUNDARIES = dict(
+    rule='HANDOFF 0az: off-die boundaries keep link-level flow control; on-die fixed-slot from buffer-block ready',
+    off_die_flow_control_allowed=[
+        dict(boundary='HBM stack / PHY controller', ports='phy_<q> <-> svc_<q>_s* pc fields (k_rdy/kr_rdy etc.)',
+             note='edges carry allowed_exception; on-die side starts at the landing buffer block ready'),
+        dict(boundary='die-to-die / package SerDes incl. cross-die collectives',
+             ports='hb_coll_<q> tx_pin_v/tx_pin_flit/rx_pin_v/rx_pin_flit/phy_up/retry_requested',
+             note='link CRC/retry and link credit allowed here only; quadrant ring pr_cw/pr_ccw is on-die = fixed slot'),
+        dict(boundary='host link', ports='HOST/SerDes digital (not yet a v15 instance; root owns)', note='same rule'),
+    ],
+    on_die='every edge between v15 instances: ready_or_credit must be False (checked by this generator)',
+    closed_blocks='closed tiles with purely local never-stalling handshakes stand; no rework',
+    redesign_scope='remove credits on die-level links and in engines being redesigned only')
 VM_ABI_CHANGE_REQUESTS = [
     dict(change='SW NC 7 -> 3 (keep idx, argmax, dma-pending; drop su/sfu/coll/hc)', source='H-IDX 40e9f801e', owner='H-ELEM-A (VM slice)'),
     dict(change='remove IDX read group in SE/NW/NE (RG 5->4 SE, 7->6 NW/NE); IDX reads only SW group 4',
@@ -261,6 +278,9 @@ def generate(out):
             pcs=[p for rec in service['instances'] if rec['quadrant']==q for p in rec['physical_pc_ids']]
             assert sorted(pcs)==list(range(32)),(q,'duplicate or missing actual PHY PC')
             connected.update(('phy_'+q,f) for f in service['phy']['pc_fields'])
+    for e in edges:
+        if e.get('ready_or_credit'):
+            assert e.get('allowed_exception','').startswith('actual HBM PHY'),(e['name'],'on-die credit/ready forbidden (HANDOFF 0az)')
     roots=[]
     for name,mod in modules.items():
         if name=='hb_ckgen':continue
@@ -281,7 +301,9 @@ def generate(out):
             if name=='hb_ckgen':
                 if port in ('refclk','por_n'):continue # actual declared external bump boundary
                 if port.startswith(('pll_','por_')):continue # other actual die domains; outside this subnet
-            if name=='hb_attn_pv':
+            if name.startswith('hb_coll_') and port in ('tx_pin_v','tx_pin_flit','rx_pin_v','rx_pin_flit','phy_up','retry_requested'):
+                owner='OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)'
+            elif name=='hb_attn_pv':
                 owner='actual HG1 PV producer / attention drain calendar (H-ATTQ)'
             elif name.startswith('hb_su_'):
                 owner='actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)'
@@ -343,6 +365,7 @@ def generate(out):
                 instances=modules,known_actual_edges=edges,clock_roots=roots,vm_slice_bind=slice_bind,
                 engine_lg_port_group_rule=engine_rule,floorplan_direction='HBM D local PV (owner-approved 2026-10-15)',
                 long_returns=long_returns,vm_abi_change_requests=VM_ABI_CHANGE_REQUESTS,
+                flow_control_boundaries=FLOW_CONTROL_BOUNDARIES,
                 registered_station_masters=generated,logical_constant_requests=logical_constants,unbound_ports=unresolved,
                 boundary_gaps=['actual 1.024ns PHY to 0.833333ns stream block CDC absent',
                                'actual mapped PHY address/endian/PC striping proof required',
