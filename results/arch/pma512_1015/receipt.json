@@ -1,0 +1,56 @@
+{
+  "timestamp": "2026-10-15T09:15:34.030791+00:00",
+  "base_commit": "f9faac989e1af533e271d2ab2920fcd935d24f6a",
+  "physical_qualified": false,
+  "endpoint613_composed": false,
+  "fec_complete_composition": {
+    "positive": true,
+    "delivered_words": 2048,
+    "decoded_words": 2376,
+    "age_fec_edges": 151,
+    "injected_physical_bit_errors": true,
+    "forney_mutant_rejected": true,
+    "positive_unit": "oth-ubuntu-1513192-1792055628",
+    "mutant_unit": "oth-ubuntu-1513515-1792055635",
+    "remote_root": "ot-epyc4:/srv/opentallas-scratch/codex/pma-544-512-1015"
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/io_static_20261015/tb_pma_544_512.sv": "11739ef83770227fcce5e972ff27703363aa7fa2ec48cf90a4dac362e0f9b684",
+    "rtl/hbm_accel/io_static_20261015/hfd_serdes487_phy512_static_window.sv": "6331e5cfe79c7065523dda4f078468cb6556d3857c8ca6f7b3d78dd76f4df461",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_word_cdc.sv": "ad94b9faac315ceab60a97cfbc6c3242ab0872031b252132bb7f72b769182d0e",
+    "rtl/hbm_accel/io_static_20261015/tb_static_word_cdc.sv": "9a2af327232e4d73a7e827bdbb73328d17bbebb1ef02372232863ea819ab7b09",
+    "rtl/hbm_accel/io_static_20261015/tb_fec_static_window.sv": "807c4191428b39972aad796bf196c9d47f4e9e39b190f33c4aa39f3ea844530d",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_frame_transport.sv": "605472ebab23abb6230d9787e6836f9e54c8a7f86defaff75d078db18961a7f8",
+    "rtl/hbm_accel/io_static_20261015/hfd_serdes487_static_window.sv": "98749b360c86041a02ff88c42e048bbee34ea1f4bede7f37a61198f864d601aa",
+    "rtl/hbm_accel/io_static_20261015/tb_static_gearbox.sv": "97280369c6b8c5c5d74afb53f0b75f10cb30f1cf1d7282ea9a7c95fddafb2d3d",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_pma_block_gearbox.sv": "f1088a53729847bfcf1bd6436a0c96c61083a86cee48941170d3aa72123ebe04",
+    "rtl/hbm_accel/io_static_20261015/tb_static_frame_transport.sv": "bf7102fc1eb476f3e84a59234a9cb2c213f2303b22725458a3c40731aa9ee83f",
+    "rtl/hbm_accel/io_static_20261015/tb_legacy_idle_collision.sv": "10c707418b2f9e1d036d7234e397dc864a2192e11c803ea7f5af4a4762f8dbe6",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_gearbox.sv": "3ca4eccbd1c00f04e57adf7b596e35d3fae26ad5c7441d5c256ef3cfbfaef5f0",
+    "rtl/hbm_accel/io_static_20261015/tb_fec_pma512.sv": "70a2ea21373adf2cdc5ac721bb78195e8848d07f7cfe271013c53ee763b8ea62",
+    "tools/hbm_io/run_fec_pma512.sh": "8319faf20e1e576c68c5a1a1686d4eb1875afaa7a6ef0c8d7267ac6445bfcd42",
+    "tools/hbm_io/run_pma512_component.sh": "a3288121cd8a1710d49da61aad54ef294c3acd76190cd99c876f4e8a61b13dd0",
+    "tools/hbm_io/pma512_capacity.py": "721c191ea45e66d12a4317b7e5cd06ca38cc965515f5d3d2ad9d3947ea6a0e12",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_encode52_map.sv": "401ecc4c70ebfc04a624faee5540fc625c4c7bddc8a3f4c6bc48ba30d22b81a3",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_enc_rooted.sv": "f6c0ab6832cadd0f5caf3de18164fdec6335cdbd513107231a8ba1d4000588fa",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_syndrome55_map.sv": "ade2e0bbf131d65d979f693ea4347c6431f9d7cfb420d9273c04849a57fbc27c",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_kp4_dec_rooted.sv": "15923b429259c028375c48d617189468528b3089047ecab648208c5c0cbd4d10",
+    "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv": "467abe1090a24cffad29443edd4dce5ab33eeebff98bf2bc98de7d9d19556c41",
+    "rtl/dsrom_sys/s81_link/ot_s81_gf1024.svh": "0c1d1e94f6a2a360da1f1b23b1cd7847958450c3b642b9978b0c13faead4b855"
+  },
+  "component": {
+    "words": 4096,
+    "all_544_bits_checked": true,
+    "tail_bit_mutant_rejected": true,
+    "early_epoch_mutant_rejected": true,
+    "unit": "oth-ubuntu-1516409-1792055707"
+  },
+  "physical_boundary_source": {
+    "path": "physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.lef",
+    "sha256": "aeb0e6cd6283c90678fd857d79b0e44dc6242dec9dc4df638a90501b8f0bd67d",
+    "tx_pins": 512,
+    "rx_pins": 512,
+    "analog_line_rate_bound": false,
+    "package_rank_map_bound": false
+  }
+}
