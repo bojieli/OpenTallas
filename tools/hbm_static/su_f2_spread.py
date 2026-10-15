@@ -58,6 +58,13 @@ SLICE_WORDS = 1 << 16
 # Exit-order (checkpoint) rule of the insertion lines: an issue may not leave the pipe before the issue before it.
 SFU_LANES_PER_Q, SIDE_FNS = 32, (2, 3, 6, 7)
 SW_ONLY_READERS = ('IDX',)                        # units whose VM face reads only SID 0 (SW)
+# BALANCED TAIL (H-ELEM-B 10-15, DS T640): a row longer than 512 positions whose last block is partial (640 = 512 + 128)
+# issues that tail block on TAIL/4 lanes of EVERY quarter (tail position 512k + (TAIL/4) q + j -> lane 128 q + j) instead
+# of the first TAIL lanes (all on quarter 0). Per-quarter lane bases are affine (base + q * TAIL/4), the SFU sub-issue
+# walk already covers 32 lanes per quarter, and the reducer is scratch-addressed, so the golden reduction order is
+# unchanged; the SM side gets 160/160/160/160 KV rows per quadrant instead of 256/128/128/128.
+BALANCED_TAIL = False
+DS_LAYER = 0
 
 
 def depths(mlat=3, alat=3):
@@ -128,6 +135,12 @@ def accesses(raw, rot=0, pin0=False):
                     continue
             else:
                 o, i = outer, inner + lane
+                tail = ni - inner
+                if BALANCED_TAIL and tail < 512 and tail % 4 == 0:
+                    tq = tail // 4
+                    if lane % 128 >= tq:
+                        continue
+                    i = inner + (lane // 128) * tq + lane % 128
                 if i >= ni:
                     continue
             q = 0 if (side or pin0) else (lane // 128 + rot) % 4   # compiler-chosen executing quarter (rotation)
@@ -171,7 +184,7 @@ def canonical_trace(design, ds_program):
         from hgi_sim.records import decode_one
         dd = json.loads(Path(ds_program).read_text())
         recs = []
-        for x in dd['layers'][0]['records']:
+        for x in dd['layers'][DS_LAYER]['records']:
             r, _ = decode_one(bytes.fromhex(x['hex']), 0)
             r.tag = x['tag']
             recs.append(r)
@@ -620,12 +633,16 @@ def main():
     ap.add_argument('--vehicle', help='write the RTL vehicle images with this path stem')
     ap.add_argument('--mlat', type=int, choices=[3, 4], default=3, help='lane multiplier latency build (3 baseline, 4 = LAT4)')
     ap.add_argument('--map', type=Path, help='write the per-quarter address map hand-off (h_vm allocator + producers)')
+    ap.add_argument('--ds-layer', type=int, default=0, help='DeepSeek program layer (0 T128 window; 3 T640 sparse)')
+    ap.add_argument('--balanced-tail', action='store_true', help='issue a partial last 512-block on TAIL/4 lanes of every quarter')
     a = ap.parse_args()
+    global BALANCED_TAIL, DS_LAYER
+    BALANCED_TAIL, DS_LAYER = a.balanced_tail, a.ds_layer
     DEPTHS.update(depths(a.mlat))
     trace = canonical_trace(a.design, a.ds_program)
     res = compile_design(a.vectors, trace)
     report = dict(schema='opentallas.hbm.su_f2_spread.v1', tool='tools/hbm_static/su_f2_spread.py',
-                  design=a.design, qualification=False,
+                  design=a.design, qualification=False, ds_layer=a.ds_layer, balanced_tail=a.balanced_tail,
                   kind='compiler placement + static transport calendar; transport re-executed on RTL by the vehicle',
                   constants=dict(VM_RD=VM_RD, VM_WR=VM_WR, LS_WR=LS_WR, LS_RD=LS_RD, ARITH=DEPTHS['arith'], RED_DEP=RED_DEP,
                                  MLAT=a.mlat, ALAT=3, DIV_EXTRA=DEPTHS['div_extra'], S_DEPTH=DEPTHS['s'],
