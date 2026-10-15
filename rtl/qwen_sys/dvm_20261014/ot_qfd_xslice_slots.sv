@@ -54,7 +54,8 @@ endmodule
 
 // x tap die master.  Bundles (LSB first): sw = {sw_d 2048, sw_m 64, sw_a 24, sw_v} (2,137 b), aw = {aw_d 512, aw_m 16,
 // aw_a 24, aw_v} (553 b), xpf = {round, k NW, split 4, xks 12, xcs 12, xbase 24, v} (72 b at NW 18), gi = {ib, go}.
-module qfd_xs_tap #(parameter integer NW = 18, parameter integer AW = 24, parameter integer XCW = 12) (
+module qfd_xs_tap #(parameter integer NW = 18, parameter integer AW = 24, parameter integer XCW = 12,
+    parameter integer MUT = 0) (   // bench-only mutant (1: no rounding); the die instantiates the default
     input  wire          ck,
     input  wire          rst_n,
     input  wire [1+AW+64+2048-1:0] sw,
@@ -76,7 +77,7 @@ module qfd_xs_tap #(parameter integer NW = 18, parameter integer AW = 24, parame
         if (!rst_n) begin hr_q <= 1'b0; hr_seen <= 1'b0; end
         else begin hr_q <= hw_r & he_r; if (hr_q) hr_seen <= 1'b1; end
     wire tf;
-    ot_qfd_xs_tap #(.AW(AW), .NW(NW), .XCW(XCW),.STATIC_SCHEDULE(1),.NATIVE_AFFINE(1)) u_tap (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_tap #(.AW(AW), .NW(NW), .XCW(XCW),.STATIC_SCHEDULE(1),.NATIVE_AFFINE(1),.MUT(MUT)) u_tap (.clk(ck), .rst_n(rst_n),
         .xpf_v(xpf[0]), .xpf_xbase(xpf[1 +: AW]), .xpf_xcs(xpf[1+AW +: XCW]), .xpf_xks(xpf[1+AW+XCW +: XCW]),
         .xpf_split(xpf[1+AW+2*XCW +: 4]), .xpf_k(xpf[1+AW+2*XCW+4 +: NW]), .xpf_round(xpf[1+AW+2*XCW+4+NW]),
         .sw_v(sw[0]), .sw_a(sw[1 +: AW]), .sw_m(sw[1+AW +: 64]), .sw_d(sw[1+AW+64 +: 2048]),
@@ -87,7 +88,8 @@ endmodule
 
 // column head die masters (stack plan).  Chains: c{n,s}_* = the write word to leaf N0 / S0 (N / S face), reads
 // r{n,s}_* / q{n,s}* = the four read buses of that chain's leaves (W / E faces with the corridors and the head row).
-module ot_qfd_xhead_m #(parameter integer NW = 18, parameter integer AW = 24, parameter integer XCW = 12) (
+module ot_qfd_xhead_m #(parameter integer NW = 18, parameter integer AW = 24, parameter integer XCW = 12,
+    parameter integer MUT = 0) (   // bench-only head mutant (ot_qfd_xhead MUT); the die instantiates the default
     input  wire          ck,
     input  wire          rst_n,
     input  wire [255:0]  tids,
@@ -125,7 +127,7 @@ module ot_qfd_xhead_m #(parameter integer NW = 18, parameter integer AW = 24, pa
     wire [127:0] lw_m;
     wire [2047:0] lw_d;
     wire [143:0] lw_ctl;
-    ot_qfd_xhead #(.AW(AW), .NW(NW), .XCW(XCW), .NH(8),.NATIVE_AFFINE(1)) u_head (.ck(ck), .rst_n(rst_n), .tids(tids), .fault_i(fault_i),
+    ot_qfd_xhead #(.AW(AW), .NW(NW), .XCW(XCW), .NH(8),.NATIVE_AFFINE(1),.MUT(MUT)) u_head (.ck(ck), .rst_n(rst_n), .tids(tids), .fault_i(fault_i),
         .a_d(h_in), .a_r(h_in_r), .b_d(h_out), .b_r(h_out_r), .n_d(n_d), .n_r(n_r), .s_d(s_d), .s_r(s_r),
         .lw_v(lw_v), .lw_ep(lw_ep), .lw_off(lw_off), .lw_m(lw_m), .lw_d(lw_d), .lw_ctl(lw_ctl),
         .lc_v(lc_v), .lc_ep(lc_ep),
@@ -222,7 +224,7 @@ module qfd_xhead_w (
 endmodule
 
 // one column as ONE RTL module: xhead + 8 x qfd_xs_leaf (two write chains), one clock port per hardened child
-module ot_qfd_xcol (
+module ot_qfd_xcol #(parameter integer HEAD_MUT = 0) (
     input  wire          ck0, ck1, ck2, ck3, ck4, ck5, ck6, ck7, ck8,
     input  wire          rst_n,
     input  wire [255:0]  tids,
@@ -246,7 +248,7 @@ module ot_qfd_xcol (
     wire [3:0] r_v [0:1], r_t [0:1], r_ep [0:1], q_v [0:1], q_bad [0:1];
     wire [111:0] r_p [0:1];
     wire [255:0] q [0:1];
-    ot_qfd_xhead_m u_h (.ck(ck0), .rst_n(rst_n), .tids(tids), .fault_i(fault_i), .fault(fault),
+    ot_qfd_xhead_m #(.MUT(HEAD_MUT)) u_h (.ck(ck0), .rst_n(rst_n), .tids(tids), .fault_i(fault_i), .fault(fault),
         .h_in(h_in), .h_in_r(h_in_r), .h_out(h_out), .h_out_r(h_out_r), .n_d(n_d), .n_r(n_r), .s_d(s_d), .s_r(s_r),
         .cn_wv(cw_v[0][0]), .cn_wep(cw_ep[0][0]), .cn_cv(cc_v[0][0]), .cn_cep(cc_ep[0][0]), .cn_woff(cw_off[0][0]),
         .cn_wm(cw_m[0][0]), .cn_wd(cw_d[0][0]), .cn_wctl(cw_ctl[0][0]),
@@ -273,7 +275,7 @@ module ot_qfd_xcol (
     end endgenerate
 endmodule
 
-module qfd_xcol_e (
+module qfd_xcol_e #(parameter integer HEAD_MUT = 0) (   // bench-only; the die instantiates the default
     input  wire          ck0, ck1, ck2, ck3, ck4, ck5, ck6, ck7, ck8,
     input  wire          rst_n,
     input  wire [255:0]  tids,
@@ -288,12 +290,12 @@ module qfd_xcol_e (
     output wire [1+379+128+8-1:0] s_d,
     input  wire          s_r
 );
-    ot_qfd_xcol u_c (.ck0(ck0), .ck1(ck1), .ck2(ck2), .ck3(ck3), .ck4(ck4), .ck5(ck5), .ck6(ck6), .ck7(ck7), .ck8(ck8),
+    ot_qfd_xcol #(.HEAD_MUT(HEAD_MUT)) u_c (.ck0(ck0), .ck1(ck1), .ck2(ck2), .ck3(ck3), .ck4(ck4), .ck5(ck5), .ck6(ck6), .ck7(ck7), .ck8(ck8),
         .rst_n(rst_n), .tids(tids), .fault_i(fault_i), .fault(fault), .h_in(w_d), .h_in_r(w_r), .h_out(e_d),
         .h_out_r(e_r), .n_d(n_d), .n_r(n_r), .s_d(s_d), .s_r(s_r));
 endmodule
 
-module qfd_xcol_w (
+module qfd_xcol_w #(parameter integer HEAD_MUT = 0) (   // bench-only; the die instantiates the default
     input  wire          ck0, ck1, ck2, ck3, ck4, ck5, ck6, ck7, ck8,
     input  wire          rst_n,
     input  wire [255:0]  tids,
@@ -308,7 +310,7 @@ module qfd_xcol_w (
     output wire [1+379+128+8-1:0] s_d,
     input  wire          s_r
 );
-    ot_qfd_xcol u_c (.ck0(ck0), .ck1(ck1), .ck2(ck2), .ck3(ck3), .ck4(ck4), .ck5(ck5), .ck6(ck6), .ck7(ck7), .ck8(ck8),
+    ot_qfd_xcol #(.HEAD_MUT(HEAD_MUT)) u_c (.ck0(ck0), .ck1(ck1), .ck2(ck2), .ck3(ck3), .ck4(ck4), .ck5(ck5), .ck6(ck6), .ck7(ck7), .ck8(ck8),
         .rst_n(rst_n), .tids(tids), .fault_i(fault_i), .fault(fault), .h_in(e_d), .h_in_r(e_r), .h_out(w_d),
         .h_out_r(w_r), .n_d(n_d), .n_r(n_r), .s_d(s_d), .s_r(s_r));
 endmodule
