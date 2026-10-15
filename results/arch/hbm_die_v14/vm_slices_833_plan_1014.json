@@ -1,0 +1,52 @@
+{
+ "schema": "opentallas.hbm.die_variant_plan.v1",
+ "date": "2026-10-14T21:55-07:00",
+ "author": "Claude H-DIE",
+ "decision": "OWNER 21:35 PT 10-14 (coordinator relay): the 4 VM slices hfd_hgi_vms_{SW,SE,NW,NE} may move 1,111 -> 833.333 ps (one die clock, C/V CDC crossers removed) for SU.VOP 32 sectors/engine edge; H-ELEM-B builds/closes the 833 variants; swap only once closed",
+ "die_clock": {
+  "tree": "clk_stream (833.333 ps, existing PLL output of hb_ckgen)",
+  "new_die_clock": false,
+  "new_die_bits": 0,
+  "cut_change": false,
+  "finding": "the v14 die model already clocks every slice pin hb_vms_<q>/ck from clk_stream (run23 clock plan EPYC1 hbmdie-v14/run23/sta/clock/plan.json: hb_vms_SW/ck region clk_stream_ck_stream_4682:HUB-C, SE 7133, NW 6071, NE 8427; die-level probe insertion 62.2-63.0 ps). No clk_serial / VM-domain pin reaches any slice in the die netlist, so a 1,111-ps slice could not have been bound as built; the 833 variant is the one the die delivers.",
+  "per_slice_entry": "die delivers phi - R at hb_vms_<q>/ck, R = the closed 833 view boundary insertion (TT, FF) from its insertion.json; recorded in the die child clock table when the view closes",
+  "sink_rule": "one clock root per slice with <= 15,000 sinks, else measured insertion <= 300 ps and spread <= 80 ps (owner 10-13); 32 ot_hgi_vm_wide_bank + glue",
+  "sdc": "slice <-> ring stations (2,148 b 2x2 ring), VM8 and lg* lane stations are clk_stream same-domain: fully timed, no exceptions; the removed C/V crossers delete their async groups; the SU-side ratio crossing stays inside the SU (unchanged)"
+ },
+ "slots": {
+  "changed": false,
+  "wh_um": [
+   950.4,
+   1684.8
+  ],
+  "xy_um": {
+   "SW": [
+    13400.0,
+    9000.0
+   ],
+   "SE": [
+    17770.0,
+    9000.0
+   ],
+   "NW": [
+    13400.0,
+    15200.0
+   ],
+   "NE": [
+    17770.0,
+    15200.0
+   ]
+  },
+  "pins": "same die ports and faces as the v14 assigned pin files (no new bits); a re-closed variant re-pins only if die STA/window names it",
+  "open_slot_issue": "grt23_g1/grt24_v2g1 terminal generation FAILED on VM_SW N-face pin capacity 1,075.9/1,080.8 > 946.3 um: the 833 variant must not add N-face pins; the face plan fix is H-DIE work independent of the clock change"
+ },
+ "schedule": "static cycle schedule (owner 18:59): if the 833 bank access needs +1 bank pipeline edge, the compiler/throughput model must carry it before the swap; no ready/credit stretching in production",
+ "swap_gates": [
+  "exact full-shape slice bench + observed failing mutant at 833",
+  "TT setup >= 0 / FF hold >= 0 / DRC 0 (SS sensitivity only)",
+  "native pin / reset / clock (phi - R) audit PASS",
+  "die port-bind: real RTL under hfd_hgi_vms_<q> (today pin-only), every die net on a real port",
+  "measured SU.VOP ratio vs price on the native 4-quarter vehicle"
+ ],
+ "owner_of_build": "H-ELEM-B"
+}
