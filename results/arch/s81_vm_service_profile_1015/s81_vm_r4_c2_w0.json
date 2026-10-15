@@ -1,0 +1,53 @@
+{
+ "vm_service_profile": {
+  "name": "s81_vm_r4_c2_w0",
+  "rtl_tuple": {
+   "READ_PIPE": 4,
+   "CAP_PIPE": 2,
+   "WSCATTER_PIPE": 0
+  },
+  "evidence": [
+   {
+    "path": "results/rtl/s81_vm_master_current_scatter_20261015/record.json",
+    "sha256": "5dab5cf5e2b5d2901f66c4df7af450aa21d7e24d7ea5f1a4c8338d9b63821ce1"
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv",
+    "sha256": "dba394f251a80fb1093fdfb60808f0cee690d1580c46642365df57a5aa9b1edc"
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_core.sv",
+    "sha256": "61e5685984773281c7d35c78bd8bd320bb6908ecf7a27a1a6f01fb60880eac70"
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static512_suhc.sv",
+    "sha256": "50d632c275bd907dd50bc678d0b0e78ba792130d9b4b214a75bfa72f3fcaea17"
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_slice128_suhc.sv",
+    "sha256": "7bb0f565b11d05657a120679018d515ad54a4cc882d8f6f9aa380160c800c883"
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_scatter_b8_out.sv",
+    "sha256": "ef9762480f9df47aa0af2fce692435811086c67bcedd9c2315c10c0379d6dd4c"
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128.sv",
+    "sha256": "28b404bc01d8722b2cac8aadf058d48edb4c99d6128f7b8872f971f8dda940d8"
+   },
+   {
+    "path": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_router_p.sv",
+    "sha256": "5f1df549483375af1779aebffc4debb08e55533fd543285825fdc7806296ab9a"
+   }
+  ]
+ },
+ "calendar": {
+  "read_raw": 7,
+  "read_return": 16,
+  "write_raw": 9,
+  "write_return": 11,
+  "max_lane": 2
+ },
+ "rule": "exact stream edges from the VM pin edge P (equality); dependent read Q needs raw read Q+read_raw > raw write P+write_raw+lane; producer done fence = returned commit",
+ "use": "merge into a static_vm_reservations contract; checker validates evidence hashes (stale source = invalid)"
+}
