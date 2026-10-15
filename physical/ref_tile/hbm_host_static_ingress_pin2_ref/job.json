@@ -1,5 +1,5 @@
 {
- "name": "hbm_host_static_ingress_pin2_ref-pin2-COMMIT",
+ "name": "hbm_host_static_ingress_pin2_ref-pin2-4e16b003e",
  "block": "ot_hbm_host_static_ingress",
  "ref_tile": true,
  "owner": "Codex:/root/hbm_host_join_1417",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "codex/hbm-host-join-1417",
-  "commit": "COMMIT",
+  "commit": "4e16b003e",
   "extra_paths": [
    "rtl/hbm_accel/host_static_20261015",
    "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
@@ -122,7 +122,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hbm_host_static_ingress_pin2_ref/hbm_host_static_ingress_pin2_ref-pin2-COMMIT"
+   "to": "results/rtl/ref_tile/hbm_host_static_ingress_pin2_ref/hbm_host_static_ingress_pin2_ref-pin2-4e16b003e"
   }
  ],
  "cycles_added": 0,
