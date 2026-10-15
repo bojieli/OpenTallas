@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  259.2,
-  151.2
+  220.32,
+  177.12
  ],
  "core": [
   2.16,
   2.16,
-  257.03999999999996,
-  149.04
+  218.16,
+  174.96
  ],
- "why": "spec outline",
- "std_area_um2": null,
+ "why": "util 0.52 of std 389 + macros 15083 um2",
+ "std_area_um2": 389,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -75,15 +75,22 @@
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": null,
    "idx": 0,
-   "x": 42.336,
-   "y": 41.04,
+   "x": 22.896,
+   "y": 54.0,
    "w": 174.744,
    "h": 70.488,
    "orient": "R0",
    "offtrack": 0
   }
  ],
- "findings": [],
+ "findings": [
+  [
+   "WARN",
+   "util",
+   "utilisation 34% outside 45%-60% (std 389 + macro 12317 in core 37325 um2)",
+   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  ]
+ ],
  "referenced": [
   "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv",
   "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv",

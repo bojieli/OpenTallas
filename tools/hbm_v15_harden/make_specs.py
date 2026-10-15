@@ -17,6 +17,7 @@ def bench(script,mut_list,passre,countre=None,ram=4):
     if countre:b[0]['min_count_regex']=countre
     for m in mut_list:b.append(dict(name=f'mutant{m}',cmd=f'bash tools/hbm_v15_harden/{script} {{RUN}}/bench/mut{m} {m}',expect='fail',threads=1,peak_ram_gb=ram,needs=['iverilog']))
     return b
+AREA={'hv15_svc_pc':502,'hv15_vm_status4':83,'hv15_vm_cal_sw':389,'hv15_vm_cal_se':362,'hv15_vm_cal_nw':378,'hv15_vm_cal_ne':362}
 def spec(name,top,sources,faces,macros,outline,purpose,benches,params=None,extra=()):
     p=ports(sources[0],top,params)
     planned=[x for f in faces.values() for x in f]
@@ -24,11 +25,13 @@ def spec(name,top,sources,faces,macros,outline,purpose,benches,params=None,extra
     assert not missing and not extra_p,(name,missing,extra_p)
     bits={f:sum(p[x][1] for x in v) for f,v in faces.items()}
     s=dict(name=name,top=top,kind='tile',sources=sources,clock_port='clk',reset_ports=['rst_n'],pins=faces,
-           outline=outline,layer_cap='M5',recipe=2,macros=macros,
+           layer_cap='M5',recipe=2,macros=macros,
            route=dict(pd=0.5,period_ps=833.333,threads=8,peak_ram_gb=24,hold_margin_ns=0.03),
            job=dict(owner='Claude:HBM-V15-HARDEN',branch='claude/hbm-v15-harden-1015',tag='hv15',purpose=purpose,
                     extra_paths=COMMON_EXTRA+list(extra),record_to=f'results/rtl/ref_tile/{name}',benches=benches))
     if params:s['params']=params
+    if name in AREA:s['std_area_um2']=AREA[name]
+    else:s['outline']=outline
     (OUT/f'{name}.json').write_text(json.dumps(s,indent=1)+'\n')
     print(name,top,'face bits',bits,'ports',len(p))
 OUT.mkdir(parents=True,exist_ok=True)
@@ -62,3 +65,10 @@ for k in range(4):
      [dict(view=SR128,count=8)],dict(w=432.0,h=302.4),
      f'v15.1 hb_dbk_{("SW","SE","NW","NE")[k]}: static scheduled DMA STORE back engine, STK={k}, eight real landing SRAMs, VM RG1 direct (bank n+1/n+7), fixed cycles.',
      bench('bench_dma_back.sh',[1,2],r'PASS DMA static actual production',ram=8),params=dict(STK=k),extra=['rtl/hbm_accel/generic/vm/static'])
+dl='rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_vm_delivery.sv'
+spec('hv15_vm_delivery','ot_hbm_svc_static_vm_delivery',[dl,'rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_landing.sv',SR128+'/ot_sram_1r1w_128x256_m1_r2c2_bb.v'],
+ dict(S=['fill_v','fill_bank','fill_slot','fill_epoch','fill_data'],N=['dq'],
+      W=['clk','rst_n','begin_v','begin_bank','begin_epoch','block_ready','start','start_bank','start_epoch','start_base_sector','busy','fault']),
+ [dict(view=SR128,count=32)],dict(w=691.2,h=432.0),
+ 'v15.1 delivery_<q> (4 inst, one master): 32 real PC landing SRAMs + compiler-allocated 8-bank dq stream into the VM (sample next edge, commit +3), no response arbitration/credits; begin/fill are PHY-boundary operations.',
+ bench('bench_delivery.sh',[1,2],r'STATIC_VM_DELIVERY PASS',r'sectors=(\d+)',ram=8))
