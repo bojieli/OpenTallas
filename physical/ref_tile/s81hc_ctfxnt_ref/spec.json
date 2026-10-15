@@ -45,8 +45,7 @@
  "macros": [],
  "pins": {
   "W": [
-   "clk",
-   "tid"
+   "clk"
   ],
   "N": [
    "fd_in",
@@ -54,7 +53,8 @@
    "rst_in",
    "dl_in",
    "ul_out",
-   "cs_n"
+   "cs_n",
+   "tid"
   ],
   "S": [
    "fdx",
@@ -79,7 +79,7 @@
   "owner": "Codex:S-NORM",
   "branch": "claude/s81-norm-tree-1014",
   "tag": "v4-owned-pads",
-  "structural_change": "Complete multi-D configured input pad before all data D fanouts; die-owned reset N M3 pin at45.036um joins actual localclock cluster (old W reset caused longclockreturn). Dedicated existing same-root local clockleaf tap for measured ul_out15 clone, only insideCTS, later replay verifies without mutation. Same arithmetic, cycles, outline, data pin rectangles and IO/clock timing budgets.",
+  "structural_change": "Complete multi-D configured input pad before all data D fanouts; die-owned reset N M3 pin at45.036um joins actual localclock cluster (old W reset caused longclockreturn). Dedicated existing same-root local clockleaf tap for measured ul_out15 clone, only insideCTS, later replay verifies without mutation. Same arithmetic, cycles, outline, data pin rectangles and IO/clock timing budgets. Static production TID pins moved fromW into the same N45um clock neighborhood to remove measured oct/farq312.8ps return clock branch.",
   "no_bench_reason": "bit-exactness is gated on the HC slab composition with dsfd_sp_hc NTREE 1 (tools/s81_suhc/hc_ntree_bench.sh: NG 256 production shape exact PASS + mutant 3 FAIL; tools/s81_suhc/hc_gate.py --ntree 1 NG 256 exact 0/1940 x3 + per-tile mutants); the tile alone has no golden",
   "purpose": "el1014-s81-norm-tree (owner 10-14 ~06:55: NORM tree = PARALLEL default-off variant with NEW master names; replaces the serial-chain HC NORM only when all variant tiles close and the composition is exact): ot_s81_hc_ctfx_nt: the half-octet broadcast source with the NORM-tree lanes (r from the bottom replaces the bus r; the far half injects its octet's 4-bank chunk sum into the south lane)",
   "views_to": "physical/ref_tile/s81hc_ctfxnt_ref/views",
@@ -123,7 +123,7 @@
  "io_tcl": "physical/s81_die_pins/v20_hc_capture/ot_s81_hc_ctfx_nt.tcl",
  "assigned_pins": {
   "file": "physical/s81_die_pins/v20_hc_capture/ot_s81_hc_ctfx_nt.json",
-  "source": "S81 die lead433f0d8f0 reset N M3x45.036; unchanged original data/UL rectangles and vertically aligned localM3 captures",
+  "source": "S81 die lead433f0d8f0 reset N M3x45.036 and9f93f743d static TID N M3x45.132..45.804. All original UL/DL/dataM5 rectangles preserved.",
   "layout": "physical/s81_die_pins/v19_ntree/layout.json"
  },
  "slot_change_request": "S81 die lead 2495f77a6 accepted serial/NTREE captured strip 576.72x25.92; enclosing cth751.68, rowshifts12.96",

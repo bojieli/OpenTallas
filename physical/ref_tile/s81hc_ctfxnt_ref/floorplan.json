@@ -30,8 +30,7 @@
  },
  "pins": {
   "W": [
-   "clk",
-   "tid"
+   "clk"
   ],
   "N": [
    "fd_in",
@@ -39,7 +38,8 @@
    "rst_in",
    "dl_in",
    "ul_out",
-   "cs_n"
+   "cs_n",
+   "tid"
   ],
   "S": [
    "fdx",
