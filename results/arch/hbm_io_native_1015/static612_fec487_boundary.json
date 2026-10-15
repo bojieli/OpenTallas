@@ -1,0 +1,33 @@
+{
+  "scope": "proposed boundary composition, same core-cycle frequency; no integration inferred",
+  "fec_payload_bits_per_cycle": 487,
+  "endpoint_frame_bits": 612,
+  "requested_frames_per_cycle": "1",
+  "ideal_packed_max_frames_per_cycle": "487/612",
+  "ideal_packed_superframe": {
+    "frames": 487,
+    "transport_cycles": 612
+  },
+  "necessary_capacity_pass": false,
+  "direct_wires_compatible": false,
+  "qualified": false,
+  "open": [
+    "Actual fixed-cycle gearbox and exact reservation calendar",
+    "Valid/idle representation, framing, epoch and reset alignment",
+    "Source-bound link clock ratios and immutable production bandwidth",
+    "Actual FEC/recovered-clock, SRAM, retry and HOST composition",
+    "Assigned slots, registered boundary pins and routed TT/FF/DRC"
+  ],
+  "limits": "Ideal bit packing only; framing/idle overhead can lower capacity. A different clock ratio needs an explicit separate proof.",
+  "source": {
+    "rtl/hbm_accel/io_native_20261014/hfd_serdes487_rooted.sv": {
+      "revision": "cbd4a9fb7",
+      "sha256": "8432f10e78584936ff54fcfd7bceef5408899acb1bdc7d81506b6f4b4a1b67da"
+    },
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_link_seq.sv": {
+      "revision": "b8cf4feda",
+      "sha256": "87af49ebf15625f6e58c912168512066428727c311f9b62bce86406afdf1ce7c"
+    }
+  },
+  "checker_sha256": "f2250f0bba0d00c1dd7f6e390b7ac924c61c361ee9c7e1e39e8c6f110b0d0dec"
+}
