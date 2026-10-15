@@ -24,6 +24,8 @@ def compile_vector(*, words: int, bases: tuple[int, int, int, int, int],
         raise ValueError('vector length must fit 24-bit nonzero lane count')
     if len(bases) != 5 or any(not 0 <= base <= (1 << 24)-words for base in bases):
         raise ValueError('five contiguous regions must fit the 24-bit address space')
+    if any(not isinstance(value, int) or not 0 <= value < 1 << 32 for value in (imm1, imm2, imm3)):
+        raise ValueError('immediates must be exact unsigned FP32 bit patterns')
     if sfu not in SFU_DEPTH:
         raise ValueError('scalar side operations require actual side-unit lowering')
     if not 0 <= m1 <= 6 or not 0 <= m2 <= 2 or not 0 <= ad <= 5 or not 0 <= e1 <= 4 or not 0 <= e2 <= 2:

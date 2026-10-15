@@ -22,5 +22,7 @@ class LoweringTest(unittest.TestCase):
         for sfu in (2,3,6,7):
             with self.assertRaises(ValueError): compile_vector(words=7168,bases=(0,)*5,sfu=sfu)
         with self.assertRaises(ValueError): compile_vector(words=7168,bases=(0,0,0,0,0xffff00))
+        for bad in (-1,1<<32):
+            with self.assertRaises(ValueError): compile_vector(words=7168,bases=(0,)*5,imm3=bad)
 
 if __name__=='__main__':unittest.main()
