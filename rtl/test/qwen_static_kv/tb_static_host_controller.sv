@@ -9,14 +9,15 @@ module tb_static_host_controller;
  reg owner=0;reg [42:0] cmd=0;reg reserved=0;
  reg [287:0] es=0;reg [288:0] pi=0;
  wire [327:0] po[0:1];wire [293:0] co[0:1];wire [260:0] er[0:1];wire [1:0] fault,cv,cw,cf;
- reg slots[0:CYCLES-1];
+ reg slots[0:CYCLES-1],rawslots[0:CYCLES-1];
+ reg rawslot=0;wire [15:0] out_epoch[0:1];
  genvar g;
  generate for(g=0;g<2;g++)begin:controllers
   qkd_ctrl_pc_host_static #(.PROFILE(g==0?1:0))dut(
    .pll_hbm(ck),.hrst(rst[g]),.ck(ck),.rsi(rst[g]),.pc(5'd13),.ci(319'b0),.co(co[g]),
    .es(es),.er(er[g]),.po(po[g]),.pi(pi),.ki(33'b0),.ko(),.fi(1'b0),.fo(fault[g]),
    .static_cmd_owner(owner),.static_cmd(cmd),.reserved_rd(reserved),
-   .completion_v(cv[g]),.completion_we(cw[g]),.completion_fault(cf[g]));
+   .static_epoch(16'd7),.expected_raw_valid(rawslot),.corrected_epoch(out_epoch[g]),.completion_v(cv[g]),.completion_we(cw[g]),.completion_fault(cf[g]));
  end endgenerate
  function automatic [255:0] data(input integer row,sector);
   for(integer i=0;i<8;i++)data[32*i+:32]=32'h981ac500^32'(row*65537)^32'(sector*71+i*31);
@@ -61,10 +62,12 @@ module tb_static_host_controller;
     if(phase==1&&mode==1&&t>0)reserved=slots[t-1];
     if(phase==1&&mode==2&&t==1300)cmd[42:33]=10'd513;
     pi={word[t],due[t]};
+    rawslot=phase==0?due[t]:rawslots[t];
+    if(phase==0)rawslots[t]=due[t];
     if(phase==1&&mode==3&&t==400)pi[0]=0;
     @(posedge ck);
     // Wrapper has two RD reservation pin stages ahead of its actual core.
-    if(phase==0&&t>=2)slots[t-2]=controllers[0].dut.u_ctl.core.legal_rd;
+    if(phase==0&&t>=2)slots[t-2]=controllers[0].dut.u_ctl.core.on.legal_rd;
     if(po[phase][0]&&po[phase][3:1]==3'd1)openrow[po[phase][8:4]]=po[phase][27:9];
     if(po[phase][28])begin
      automatic integer bank=po[phase][34:30];
@@ -78,7 +81,7 @@ module tb_static_host_controller;
     if(co[phase][0])begin
      automatic integer expected_sector=landed<256?landed:512+landed-256;
      automatic integer sec={co[phase][11:9],co[phase][7:1]};
-     if(sec!=expected_sector||co[phase][281:26]!==data(67,expected_sector))bad($sformatf("KV row phase%0d index%0d sec%0d",phase,landed,sec));
+     if(out_epoch[phase]!=7||sec!=expected_sector||co[phase][281:26]!==data(67,expected_sector))bad($sformatf("KV row phase%0d index%0d sec%0d",phase,landed,sec));
      landed++;
     end
     if(er[phase][0])begin

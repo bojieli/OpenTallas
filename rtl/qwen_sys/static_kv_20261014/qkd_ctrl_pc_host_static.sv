@@ -30,6 +30,8 @@ module qkd_ctrl_pc_host_static #(
     input  wire         fi,
     output reg          fo,
     input wire static_cmd_owner,input wire [42:0] static_cmd,input wire reserved_rd,
+    input wire [15:0] static_epoch,input wire expected_raw_valid,
+    output wire [15:0] corrected_epoch,
     output wire completion_v,completion_we,completion_fault
 );
     localparam integer LW  = CVL + 1;              // column delay in front of the pcport
@@ -76,7 +78,10 @@ module qkd_ctrl_pc_host_static #(
     always @(posedge hclk) begin wsec_q <= ci[27:4]; csec_q <= ci[52:29]; cdata_q <= ci[308:53]; ctag_q <= ci[317:309]; end
 
     // ---- E-face pin flops (PHY return) -------------------------------------------------------------------------------
-    (* keep *) reg         rv_q;
+    (* keep *) reg         rv_q,rawslot_q;
+    (* keep *) reg [15:0] epoch_q;
+    always @(posedge hclk)epoch_q<=static_epoch;
+    always @(posedge hclk or negedge h_rn)if(!h_rn)rawslot_q<=0;else rawslot_q<=expected_raw_valid;
     (* keep *) reg [287:0] rd_q;
     always @(posedge hclk or negedge h_rn) if (!h_rn) rv_q <= 1'b0; else rv_q <= pi[0];
     always @(posedge hclk) rd_q <= pi[288:1];
@@ -184,19 +189,19 @@ module qkd_ctrl_pc_host_static #(
 
     // ---- read tags: {open row, j} per KV RD, in order ----------------------------------------------------------------
     reg  [7:0]  brow [0:31];
-    reg  [17:0] tq [0:31];
+    reg  [33:0] tq [0:31];
     reg  [5:0]  tw, tr;
     reg         f_tag;
     wire        rd_kv   = col_v && !col_we && !col_sr;
     wire [9:0]  rj      = {col_bank[4:2], col_col, col_bank[1:0]};
     wire        t_empty = tw == tr;
     wire        t_full  = tw[4:0] == tr[4:0] && tw[5] != tr[5];
-    wire [17:0] t_head  = tq[tr[4:0]];
+    wire [33:0] t_head  = tq[tr[4:0]];
     wire [9:0]  t_j     = (MUT == 3) ? {t_head[9:2], t_head[0], t_head[1]} : t_head[9:0];
     wire [7:0]  t_layer = t_head[17:10] - 8'(ROW0);
     always @(posedge hclk) begin
         if (row_v && row_op == 3'd1) brow[row_bank] <= row_row[7:0];
-        if (rd_kv) tq[tw[4:0]] <= {brow[col_bank], rj};
+        if (rd_kv) tq[tw[4:0]] <= {epoch_q,brow[col_bank], rj};
     end
     always @(posedge hclk or negedge h_rn)
         if (!h_rn) begin tw <= 6'd0; tr <= 6'd0; f_tag <= 1'b0; end
@@ -213,6 +218,9 @@ module qkd_ctrl_pc_host_static #(
     ot_qfd_kv_landing_ecc #(.ENABLE(1), .INTERLEAVED(1)) u_ecc (
         .hclk(hclk), .h_rst_n(h_rn), .i_v(kv_v), .i_code(kv_d), .i_sec({t_layer[5:0], t_j[9:7], 1'b0, t_j[6:0]}), .i_row(t_head[17:10]),
         .o_v(l_v), .o_data(l_data), .o_sec(l_sec), .o_row(l_row), .ce(), .ue(), .fault(ecc_fault), .ce_count());
+    reg [15:0] ep0,ep1,ep2;
+    always @(posedge hclk)begin ep0<=t_head[33:18];ep1<=ep0;ep2<=ep1;end
+    assign corrected_epoch=ep2;
     assign co = {at_s[WDS], av_s[WDS], wcon_q, hand_q, l_data, l_row, l_sec, l_v};
     // Dedicated raw PHY pin stage: all command and write-data bits move
     // together, preserving JEDEC spacings and CWL alignment. Physical static
@@ -244,7 +252,7 @@ module qkd_ctrl_pc_host_static #(
     // ---- sticky fault chain, S -> N ----------------------------------------------------------------------------------
     always @(posedge hclk or negedge h_rn)
         if (!h_rn) fo <= 1'b0;
-        else fo <= fi | ctl_fault | port_fault | ecc_fault | hf_q | f_ecdc | f_late | f_cmd | f_early | f_wmis | f_tag;
+        else fo <= fo | fi | ctl_fault | port_fault | ecc_fault | hf_q | f_ecdc | f_late | f_cmd | f_early | f_wmis | f_tag | (rv_q!=rawslot_q);
     qkd_ctrl_static_commit #(.WDONE(WDONE),.MUT(EVMUT)) u_static_commit(
         .hclk(hclk),.hrst_n(h_rn),.ck(ck),.rst_n(rs_q),
         .col_v(po[28]),.col_we(po[29]),.col_sr(physical_col_sr),
