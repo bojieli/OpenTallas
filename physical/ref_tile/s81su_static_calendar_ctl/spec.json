@@ -1,0 +1,139 @@
+{
+ "name": "s81su_static_calendar_ctl",
+ "kind": "tile",
+ "top": "ot_s81_su_calendar_ctl",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_calendar_ctl.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 129.6,
+  "h": 129.6,
+  "exact": true
+ },
+ "util": 0.5,
+ "layer_cap": "M5",
+ "recipe": 2,
+ "pins": {
+  "N": [
+   "calendar_word"
+  ],
+  "S": [
+   "rq_v",
+   "rq_row",
+   "dn_st",
+   "dn_kind",
+   "dn_gsel",
+   "dn_fp4",
+   "dn_jid",
+   "moe_v",
+   "moe_row",
+   "done",
+   "done_tag"
+  ],
+  "W": [
+   "rs_v",
+   "wq_v",
+   "wq_row",
+   "wq_mask"
+  ],
+  "E": [
+   "calendar_valid",
+   "calendar_cycle",
+   "cycle",
+   "arm",
+   "up_fu",
+   "up_fo",
+   "up_alive",
+   "up_den",
+   "up_rdy",
+   "up_rjid",
+   "fault",
+   "fault_code",
+   "running",
+   "clk",
+   "rst_n"
+  ]
+ },
+ "io_tcl": "physical/s81_die_pins/static_su_1103/ot_s81_su_calendar_ctl.tcl",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "pin_v": "M3 M5",
+  "pin_h": "M4",
+  "pin_min_tracks": 1,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "why_floorplan": "S-DIE independent candidate grant129.6um square;1024calendar pins need longNface, allincidentparenthomes remainOPEN; no inherited insertion.",
+ "slot_change_request": {
+  "kind": "new_independent_leaf",
+  "source": "results/arch/s81_su_static_1015/calendar_ctl_slot_request.json",
+  "die_owner": "s81_die_1103",
+  "outline_um": [
+   129.6,
+   129.6
+  ],
+  "parent_binding": "OPEN"
+ },
+ "structural_change": "First genuine independent static SU calendar controller leaf; actual1024b/edge mapped default4096x1024 programme component proof, no ideal programme. Fullparent clock/relay/placement remainsOPEN.",
+ "job": {
+  "owner": "Codex:s81-su-static-1103",
+  "branch": "codex/s81-engram-takeover-1103",
+  "tag": "full128-1146",
+  "purpose": "Independent SU fixed calendar controller, default real128SRAM component proof; parent notqualified",
+  "hold_merge": "Current SUstatic parent clock/programme/3:4 phase/incident geometry remainsOPEN; root review before any standalone view adoption.",
+  "benches": [
+   {
+    "name": "calendar_full128",
+    "cmd": "python3 tools/s81_suhc/static_calendar_store_full_gate.py --out {RUN}/full128",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog",
+     "vvp"
+    ],
+    "pass_regex": "PASS SU_CALENDAR_FULL128 exact4096x1024 real_mutants4 availability_fault_reset"
+   },
+   {
+    "name": "calendar_actual_control_mutant",
+    "cmd": "vvp {RUN}/full128/control_row/dut",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "vvp"
+    ],
+    "fail_regex": "controller request mismatch"
+   }
+  ],
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_suhc",
+   "rtl/hdc",
+   "tools/s81_suhc",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
+  ],
+  "views_to": "physical/ref_tile/s81su_static_calendar_ctl/views",
+  "record_to": "results/rtl/ref_tile/s81su_static_calendar_ctl"
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
