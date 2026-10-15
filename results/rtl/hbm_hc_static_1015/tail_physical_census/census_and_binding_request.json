@@ -1,0 +1,285 @@
+{
+  "scope": "Source-exact HC static-tail physical binding census/request only; no new numerical simulation, route, prototype, clock choice or performance repricing",
+  "source_pins": [
+    {
+      "path": "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_static.sv",
+      "commit": "d8ed3949f",
+      "sha256": "2c46f5896bf69561d0b3c4d3e08dd8c7a67bdaf03297559a9de17be7e5984c69"
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+      "commit": "d8ed3949f",
+      "sha256": "ba413bc2e2295ad66de4f187bf8b8476242bda002e9199f073783fd2432dfd90"
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+      "commit": "d8ed3949f",
+      "sha256": "aa99d671592f8f3896f09e368d544a6e3f380e184e7b0cde994bb809c32642a3"
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+      "commit": "d8ed3949f",
+      "sha256": "8a25d38991d44354c6701683019adfcdbf1e520874b72a40810b2aecde876142"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fastfp.sv",
+      "commit": "d8ed3949f",
+      "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+      "commit": "d8ed3949f",
+      "sha256": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b"
+    }
+  ],
+  "actual_tail_instances": {
+    "core_clock": {
+      "port": "clk",
+      "proposed_core_period_ns": 0.8333333333333334,
+      "instances": {
+        "ot_hdc_fp32_mul_fast": {
+          "latency_edges": 3
+        },
+        "ot_hdc_fp32_add_fast": {
+          "latency_edges": 3
+        },
+        "ot_hdc_v41x_exp": {
+          "LM": 3,
+          "LA": 3,
+          "latency_edges": 49
+        },
+        "ot_hdc_v41x_fdiv": {
+          "latency_edges": 19
+        }
+      },
+      "physical_master_bindings": "NONE established source/parameter/boundary exact"
+    },
+    "sink_clock": {
+      "port": "sink_clk",
+      "instance": "ot_hdc_sinkhorn",
+      "ITERS": 20,
+      "EPS": "358637bd",
+      "latency_accept_to_out_valid_edges": 41,
+      "mechanism_bench_core_divisor": 7,
+      "mechanism_bench_period_ns_at_1p2GHz": 5.833333333333334,
+      "assigned_physical_period_ns": null
+    }
+  },
+  "historical_sinkhorn_records": [
+    {
+      "record": {
+        "path": "results/physical_abi3/asap7/hdc/v41/ot_hdc_sinkhorn/physical.json",
+        "commit": "a7faf16ba55a6252adb7659996528560db85fec7",
+        "sha256": "3b85a8c972bbd49062a8d43c4fc0b0a57d9c470f19eb36335b6edec2a5e50d6c"
+      },
+      "recorded_source_commit": "b11b6cfa4f2da1fc8df58c108ec5505689d41620",
+      "corner": "TT",
+      "clock_period_ns": 4.0,
+      "setup_wns_ns": -2.5848000000000004,
+      "hold_wns_ns": 0.0520807,
+      "DRC": 0,
+      "closed": false,
+      "status": "not_met",
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "io_false_pathed": true,
+      "sources": [
+        {
+          "path": "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+          "measured_sha256": "ba413bc2e2295ad66de4f187bf8b8476242bda002e9199f073783fd2432dfd90",
+          "actual_tail_dependency_sha256": "ba413bc2e2295ad66de4f187bf8b8476242bda002e9199f073783fd2432dfd90",
+          "source_exact": true
+        },
+        {
+          "path": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+          "measured_sha256": "aa99d671592f8f3896f09e368d544a6e3f380e184e7b0cde994bb809c32642a3",
+          "actual_tail_dependency_sha256": "aa99d671592f8f3896f09e368d544a6e3f380e184e7b0cde994bb809c32642a3",
+          "source_exact": true
+        },
+        {
+          "path": "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+          "measured_sha256": "8a25d38991d44354c6701683019adfcdbf1e520874b72a40810b2aecde876142",
+          "actual_tail_dependency_sha256": "8a25d38991d44354c6701683019adfcdbf1e520874b72a40810b2aecde876142",
+          "source_exact": true
+        }
+      ],
+      "constraint": {
+        "path": "results/physical_abi3/asap7/hdc/v41/ot_hdc_sinkhorn/physical_artifacts/constraint.sdc",
+        "commit": "a7faf16ba55a6252adb7659996528560db85fec7",
+        "sha256": "82446eed2085e24368d3bf2b046342e97460ec397fcc0d95cc026184c5a4369e"
+      },
+      "insertion_receipt": null,
+      "SS_setup": null,
+      "FF_hold": null
+    },
+    {
+      "record": {
+        "path": "results/physical_abi3/asap7/hdc/v41/ot_hdc_sinkhorn_7ns/physical.json",
+        "commit": "a7faf16ba55a6252adb7659996528560db85fec7",
+        "sha256": "e5f6624aec7f64fcdfbad98dd3bcdc23cb7b25c2a266754d9a83089998ff36c6"
+      },
+      "recorded_source_commit": "b11b6cfa4f2da1fc8df58c108ec5505689d41620",
+      "corner": "TT",
+      "clock_period_ns": 7.0,
+      "setup_wns_ns": 0.188986,
+      "hold_wns_ns": 0.0522127,
+      "DRC": 0,
+      "closed": false,
+      "status": "not_met",
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 2,
+        "max_slew_violations": 17
+      },
+      "io_false_pathed": true,
+      "sources": [
+        {
+          "path": "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+          "measured_sha256": "ba413bc2e2295ad66de4f187bf8b8476242bda002e9199f073783fd2432dfd90",
+          "actual_tail_dependency_sha256": "ba413bc2e2295ad66de4f187bf8b8476242bda002e9199f073783fd2432dfd90",
+          "source_exact": true
+        },
+        {
+          "path": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+          "measured_sha256": "aa99d671592f8f3896f09e368d544a6e3f380e184e7b0cde994bb809c32642a3",
+          "actual_tail_dependency_sha256": "aa99d671592f8f3896f09e368d544a6e3f380e184e7b0cde994bb809c32642a3",
+          "source_exact": true
+        },
+        {
+          "path": "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+          "measured_sha256": "8a25d38991d44354c6701683019adfcdbf1e520874b72a40810b2aecde876142",
+          "actual_tail_dependency_sha256": "8a25d38991d44354c6701683019adfcdbf1e520874b72a40810b2aecde876142",
+          "source_exact": true
+        }
+      ],
+      "constraint": {
+        "path": "results/physical_abi3/asap7/hdc/v41/ot_hdc_sinkhorn_7ns/physical_artifacts/constraint.sdc",
+        "commit": "a7faf16ba55a6252adb7659996528560db85fec7",
+        "sha256": "420aa3db98c1ea0ac23b6eb03939588cc920e09cfcb4c12775664cc47db22500"
+      },
+      "insertion_receipt": null,
+      "SS_setup": null,
+      "FF_hold": null
+    }
+  ],
+  "historical_6p58_interpretation": {
+    "basis": "4ns target minus(-2.5848ns) setup slack =6.5848ns inferred required cycle at one TT routed point",
+    "inferred_ns": 6.5848,
+    "accepted_clock": false,
+    "note": "Neither this inference nor the7ns record establishes a qualified master, bound I/O, SS/FF corners or source-exact5.833ns clock."
+  },
+  "existing_SFU_chain_candidate": {
+    "master": "ot_hdc_v41x_sfu_chain",
+    "pins": [
+      {
+        "path": "physical/ref_tile/sfu_chain_rta/spec.json",
+        "commit": "a7faf16ba55a6252adb7659996528560db85fec7",
+        "sha256": "3666fdb52248475d32aa568f10518aa506fa7419c0040cf6f2e3fbac2dea628d"
+      },
+      {
+        "path": "physical/ref_tile/sfu_chain_rta/clock.sdc",
+        "commit": "a7faf16ba55a6252adb7659996528560db85fec7",
+        "sha256": "f3f7cc58d7d3eddb5db709bccb650088ec9bb327cf38304fa134e7bf4cd78250"
+      },
+      {
+        "path": "physical/ref_tile/sfu_chain_rta/signoff.sdc",
+        "commit": "a7faf16ba55a6252adb7659996528560db85fec7",
+        "sha256": "e608db409ea4f515557a5e49659093d3be0c6e2163119dd0e61a218f393b9194"
+      },
+      {
+        "path": "physical/ref_tile/sfu_chain_rta/views/ot_hdc_v41x_sfu_chain/insertion.json",
+        "commit": "a7faf16ba55a6252adb7659996528560db85fec7",
+        "sha256": "2d36bbaa6ccf8604943de411d6da0a4cdd02136f57d7d765283ab9ae0aa3d45f"
+      },
+      {
+        "path": "physical/ref_tile/sfu_chain_rta/views/ot_hdc_v41x_sfu_chain/child_lint.json",
+        "commit": "a7faf16ba55a6252adb7659996528560db85fec7",
+        "sha256": "1937a6a889aef5f1d6c93ce8aa15ecadedb61fe7e6e3c82d7cba1594bf489a97"
+      }
+    ],
+    "source": {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv",
+      "commit": "a7faf16ba55a6252adb7659996528560db85fec7",
+      "sha256": "c8c65c8db9c1e9ca58e4b3c944704c0c91dbae5668bffa0809ce769ed8cf135e"
+    },
+    "hardened_parameters": {
+      "MLAT": 6,
+      "ALAT": 6,
+      "DDIV": 21,
+      "DENR": 1,
+      "DRING": 4,
+      "K": 1
+    },
+    "exp_internal_depth": 94,
+    "divider_module": "ot_dsrom_fdiv_f12",
+    "divider_internal_depth": 21,
+    "tail_vs_c12_modules": {
+      "ot_hdc_v41x_exp": {
+        "module_body_identical": true,
+        "tail_body_sha256": "42bf292e13d9f4ea407e89a7f76265d00dbe1572d25ecc1ff687297907c873f9",
+        "c12_body_sha256": "42bf292e13d9f4ea407e89a7f76265d00dbe1572d25ecc1ff687297907c873f9"
+      },
+      "ot_hdc_v41x_fdiv": {
+        "module_body_identical": false,
+        "tail_body_sha256": "2d680995ed07928954e31bdf20e5fde9f0044e971018d611aaaf900ad285d643",
+        "c12_body_sha256": "ddc46b15e6afde9615837c42dcf98a4b5e7c00de075153bd3e7dd1c22fc843f9"
+      }
+    },
+    "route_clock_period_ps": 770,
+    "signoff_clock_period_ps": 833.333,
+    "clock_insertion_ps": {
+      "tt": {
+        "n": 104,
+        "mean": 206.4,
+        "min": 194.1,
+        "max": 214.1
+      },
+      "ss": {
+        "n": 104,
+        "mean": 271.4,
+        "min": 257.7,
+        "max": 279.7
+      },
+      "ff": {
+        "n": 104,
+        "mean": 168.4,
+        "min": 156.9,
+        "max": 175.7
+      }
+    },
+    "source_exact_tail_replacement": false,
+    "mismatch": "Even identical exp module body is specializedLM6/LA6(depth94), with wrapper input/output registers; actual tail usesLM3/LA3(depth49). Chain divider is a different21-edge module versus actual19-edge fdiv. Current tail control/tags cannot inherit chain views or latency."
+  },
+  "legacy_hfd_hc_eng": {
+    "source": {
+      "path": "physical/hbm_accel_die_views/hc_eng_hgi/rtl/hfd_hc_eng.sv",
+      "commit": "a7faf16ba55a6252adb7659996528560db85fec7",
+      "sha256": "15ff40ad43683c1d29cc2a2cd2240b53d202dabb3c9f93ffe9b359863edb0984"
+    },
+    "source_exact_tail_replacement": false,
+    "mismatch": "Wrapper instantiatesot_hgi_hc_eng_station D5120 for fused HC_POST/HC_PRE_NORM lane-local processing, not coefficient sigmoid/Sinkhorn tail."
+  },
+  "binding_request": {
+    "id": "HBM_HC_STATIC_TAIL_SOURCE_EXACT_PHYSICAL_V1",
+    "status": "REQUESTED_NOT_GRANTED",
+    "owner": "h_hc_sfu with h_die physical assignment",
+    "clock_ports": [
+      "clk",
+      "sink_clk"
+    ],
+    "required": [
+      "Assign source-exact hard masters or bounded new partition for actual3/3/49/19 core arithmetic and41-edge Sinkhorn; preserve golden operations/latency or regenerate explicit fixed calendars after measured changes.",
+      "Provide actual raw TT setup/FF hold/DRC and source/parameter hashes, insertion.json per real root, registered boundary pins, <=500um reach, phi-R and related-clock phase window.",
+      "Qualify a measured Sinkhorn physical clock/phase contract; current divide7 benchmark is5.833ns, unqualified. No automatic divide8 or slower-clock adoption.",
+      "If existing SFU-chain hardware is proposed, measure/prove a source-exact new tail binding and rederive every affected tag/op/capture/loop slot; standalone chain closure is insufficient."
+    ],
+    "outlines_um": null,
+    "clock_root_count": null,
+    "prototype_authorized": false,
+    "route_submitted": false
+  },
+  "full_native_physical_qualified": false
+}
