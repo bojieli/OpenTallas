@@ -3,7 +3,7 @@
   "verdict": "FAIL",
   "release_qualified": false,
   "scope": "Full canonical layer die; source candidates do not substitute for emitted netlist connections or native views.",
-  "requirements_sha256": "2a6a898b38483b22f23f47e7b9cb42d720b27a94c99a96dbe84e77be92cf0e23",
+  "requirements_sha256": "b65c35f9ce895b7580f3fbf2ac601f8deb37e462e82ef8a4fc5700684b4e3a47",
   "manifest_sha256": "27293f4b64a4231e641e177c47977e7d87651becac22e455a67936b1d9142eec",
   "die_sha256": null,
   "canonical_required": {
@@ -22,6 +22,7 @@
     "operation:field_pq_command",
     "operation:field_pq_datapath",
     "operation:bf_operand_transport",
+    "operation:bf_static_execution",
     "operation:field_gather",
     "operation:field_capture",
     "operation:static_collective",
@@ -428,6 +429,25 @@
       "binding_findings": [
         "source_not_selected_in_manifest",
         "required_master_not_in_emitted_die"
+      ],
+      "verdict": "FAIL"
+    },
+    {
+      "operation": "bf_static_execution",
+      "module": "dsfd_bf_front_static",
+      "source": null,
+      "owner": "S-ELEM/BF-static-core",
+      "required_ports": {
+        "f_prog": 38
+      },
+      "static_semantics_evidence": null,
+      "emitted_die_instances": 0,
+      "native_qualified": false,
+      "binding_findings": [
+        "actual_source_module_missing",
+        "required_port_width:f_prog:None!=38",
+        "required_master_not_in_emitted_die",
+        "static_semantics_evidence_missing"
       ],
       "verdict": "FAIL"
     },
