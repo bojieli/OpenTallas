@@ -1,0 +1,28 @@
+{
+  "status": "PASS actual retained route measurement only",
+  "unit": "oth-ubuntu-3732778-1792078464",
+  "host": "ot-epyc1tb",
+  "job": "qvm_bank_entries_my_native-ne2-8e2cd3d55",
+  "TT_setup_ps": 140.37,
+  "FF_hold_ps": 26.15,
+  "registers_clocked": "9of9",
+  "drc": 0,
+  "physical_reroute": false,
+  "original_orfs_and_source_mounts": "read-only",
+  "fix": "Translate explicit ot_ce_corner ss/{ss} tott together with actualTTlibraries; retainstrictactualLibertyscene guard. Invalidate stale cache byIOREF_VERSION bump.",
+  "unit_tests": "10PASS includingFFunmodified/nonliteralsetterpreserved",
+  "source_sha256": {
+    "tools/closure_loop/meas_resta.py": "983f0a6887fd2289698e01649a55acc5839a0f00bb498b722134753a92beab72",
+    "tools/closure_loop/closure_loop.py": "bfc24fb374fd324c43580902e44e3f6645b02b4b0820043d411f42896a1d80ed",
+    "tools/closure_loop/test_meas_resta_corner.py": "327f709fc5c16203f3e0e65a176d904d074e7f40b3e2b1f81b1d970e179c332f"
+  },
+  "files_sha256": {
+    "fixed_ff.log": "054f4abc6d4af70437367ecdbfdffe9062779e6f4ad5fcdd269ddb90378369f8",
+    "fixed_tt.tcl": "c7d3e8b3db45e396654e330ab6bd0ffeec19653d280461ae75fc53a887767ffc",
+    "old_mislabeled.json": "118813f14977037c6b7fa25745819cf6729d8a779f4153d0967dd915da9340ea",
+    "fixed.json": "6572217ad0bcd33178548ae666e8fe95bd61f7b0777ae8cb44702e4d1e1467be",
+    "fixed_tt.log": "8a494bd0365297d2b7c6711e6dea5bcdceed4184ac803e0897bbf684b641c300",
+    "fixed_ff.tcl": "291386e7d97c3cb92be01463dd1ef3bd0cb4a5cf26bc57044c4b5746be36a168"
+  },
+  "native_view_export": "stillrequiresnormalrecollect andnativeaudit; noCLOSEDclaim"
+}

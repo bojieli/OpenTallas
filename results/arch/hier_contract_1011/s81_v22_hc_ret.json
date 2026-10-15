@@ -19149,6 +19149,26 @@
    "die_cost": "at the swap: +19.44 um per cth row vs serial v20 (sp_hc_s +194.4, sp_hc_t +233.28); not in GEN18 geometry"
   }
  },
+ "hbm_flow_boundary": {
+  "rule": "OWNER 10-14 18:59 + HANDOFF 0az (10-15): credit-free on die; the HBM stack / PHY (HBM-backed KV cache and any other HBM/PHY) keeps an elastic buffer / link-level flow control; after \"buffer block ready\" everything is fixed-slot",
+  "elastic_side": {
+   "instances": [
+    "phy_SW (ot_hbm3e_phy_v41x_aw30_e8p5)",
+    "ctrl_SW (dsfd_ctrl)",
+    "svc_SW (dsfd_svc_c)"
+   ],
+   "ports": [
+    "phy.k_rdy",
+    "phy.kr_rdy",
+    "phy.w_rdy",
+    "phy.wr_rdy",
+    "phy.w_room"
+   ],
+   "buffer": "svc_SW native ingress staging (sub_layouts.dsfd_svc_c_native_ingress): one ready per buffer block, compiler prefetch / double-buffer ahead"
+  },
+  "fixed_slot_side": "every svc_SW -> VM/selector/collector/SU/HC transfer and all other die nets",
+  "audit": "tools/s81/flow_control_seams.py: GEN17 die.v FAIL (vm.tcs, hc_s.y_rdy, collective.f_hc_yr); GEN18p pass0 PASS (5 PHY boundary ports only); glue: 169 meso FIFO r_rdy tied 1"
+ },
  "v22_hc_return_columns": {
   "status": "CANDIDATE_SCREEN_NOT_GRANTED",
   "request": "el1011-s81die.log 2026-10-15 07:15:19 IDLE-S",

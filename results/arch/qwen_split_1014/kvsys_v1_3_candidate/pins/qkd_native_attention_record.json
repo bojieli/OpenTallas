@@ -1,0 +1,200 @@
+{
+  "schema": "opentallas.die_assigned_leaf_pins.v1",
+  "master": "qkd_native_attention_record",
+  "parameters": {
+    "KV_SIDE": 1,
+    "MUT": 0
+  },
+  "contract": "Qwen KV/system v1.3 candidate",
+  "outline": {
+    "w": 216,
+    "h": 172.8
+  },
+  "slot": {
+    "parent": "qkd_d2d",
+    "x": 237.6,
+    "y": 291.6,
+    "orient": "R0",
+    "qualification": "Assigned slot only; mapped area/native timing unmeasured"
+  },
+  "pins": {
+    "N": [
+      "tx_valid",
+      "tx_payload",
+      "rx_event",
+      "rx_payload"
+    ],
+    "S": [
+      "tx_data",
+      "rx_data"
+    ],
+    "W": [
+      "tx_event",
+      "tx_expected",
+      "tx_kind",
+      "tx_expected_kind",
+      "tx_epoch",
+      "tx_expected_epoch",
+      "tx_layer",
+      "tx_expected_layer",
+      "tx_beat",
+      "tx_expected_beat",
+      "rx_expected",
+      "rx_expected_kind"
+    ],
+    "E": [
+      "rx_expected_epoch",
+      "rx_expected_layer",
+      "rx_expected_beat",
+      "rx_valid",
+      "rx_kind",
+      "rx_epoch",
+      "rx_layer",
+      "rx_beat",
+      "fault",
+      "fault_cause",
+      "ck",
+      "rst_n"
+    ]
+  },
+  "pin_ranges": {
+    "tx_valid": [
+      3,
+      4
+    ],
+    "tx_payload": [
+      8,
+      90
+    ],
+    "rx_event": [
+      103,
+      104
+    ],
+    "rx_payload": [
+      110,
+      192
+    ],
+    "tx_data": [
+      8,
+      90
+    ],
+    "rx_data": [
+      110,
+      192
+    ],
+    "tx_event": [
+      5,
+      14
+    ],
+    "tx_expected": [
+      17,
+      26
+    ],
+    "tx_kind": [
+      29,
+      38
+    ],
+    "tx_expected_kind": [
+      41,
+      50
+    ],
+    "tx_epoch": [
+      53,
+      62
+    ],
+    "tx_expected_epoch": [
+      65,
+      74
+    ],
+    "tx_layer": [
+      77,
+      86
+    ],
+    "tx_expected_layer": [
+      89,
+      98
+    ],
+    "tx_beat": [
+      101,
+      110
+    ],
+    "tx_expected_beat": [
+      113,
+      122
+    ],
+    "rx_expected": [
+      125,
+      134
+    ],
+    "rx_expected_kind": [
+      137,
+      146
+    ],
+    "rx_expected_epoch": [
+      5,
+      14
+    ],
+    "rx_expected_layer": [
+      17,
+      26
+    ],
+    "rx_expected_beat": [
+      29,
+      38
+    ],
+    "rx_valid": [
+      41,
+      50
+    ],
+    "rx_kind": [
+      53,
+      62
+    ],
+    "rx_epoch": [
+      65,
+      74
+    ],
+    "rx_layer": [
+      77,
+      86
+    ],
+    "rx_beat": [
+      89,
+      98
+    ],
+    "fault": [
+      101,
+      110
+    ],
+    "fault_cause": [
+      113,
+      122
+    ],
+    "ck": [
+      125,
+      134
+    ],
+    "rst_n": [
+      137,
+      146
+    ]
+  },
+  "route": {
+    "pin_h": "M4",
+    "pin_v": "M5"
+  },
+  "clock_contract": {
+    "root": "ck",
+    "sink_upper_bound_from_output_state": 1098,
+    "sink_count_qualification": "Unmapped estimate only; synthesized census required"
+  },
+  "normal_latency_edges": {
+    "tx": 1,
+    "rx": 1
+  },
+  "notes": [
+    "Slot fits static five-leaf cluster within original777.6x518.4 parent; no bank/control overlap.",
+    "Compiler metadata pins mandatory; no tied inputs.",
+    "Raw548 payload TX connects four real static SRAM-bank write faces; RX from actual staticctl."
+  ]
+}

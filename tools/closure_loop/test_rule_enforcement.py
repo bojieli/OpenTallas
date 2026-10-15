@@ -184,6 +184,74 @@ class StructureRepeat(unittest.TestCase):
         cl.structure_repeat_at_submit(j, hist)
         return j
 
+    def serial_bench_failure(self):
+        j = hjob("serial", "NEEDS_RTL", "02:00", reason="bench_exact expected PASS but rc=0")
+        j.update(attempt=1, retries_used=0, bench_par=False, stage_idx=0,
+                 stage_key="bench_exact", stage_tag="bench_exact.a1",
+                 benches={"bench_exact": {"expect": "pass", "rc": 0, "ok": False}},
+                 events=["2026-10-12T01:00 ingested from fixture.json",
+                         "2026-10-12T01:01 launched bench_exact (attempt 1) on ot-epyc4",
+                         "2026-10-12T01:02 NEEDS_RTL: bench_exact expected PASS but rc=0"])
+        j["spec"].update(bench_first=True, stages={"bench": [{"name": "exact"}], "route": {"cmd": "route"}})
+        return j
+
+    def test_proved_serial_bench_failure_does_not_count_as_route(self):
+        j = self.serial_bench_failure()
+        self.assertFalse(cl.terminal_route_failure(j))
+        self.assertEqual(self.run_([hjob("physical", "NEEDS_RTL", "01:00"), j])["status"], "QUEUED")
+
+    def test_ambiguous_or_physical_bench_failure_still_counts(self):
+        import copy
+        base = self.serial_bench_failure()
+        variants = []
+        for key in ("bench_par", "attempt", "retries_used", "stage_idx", "stage_key", "stage_tag", "benches", "events"):
+            j = copy.deepcopy(base)
+            j.pop(key)
+            variants.append(("missing " + key, j))
+        for changes in ({"bench_par": True}, {"attempt": 2}, {"retries_used": 1},
+                        {"stage_key": "route", "stage_tag": "route.a1"},
+                        {"ctrack": {"state": "done"}}, {"metrics": {"tt": -1}},
+                        {"crashes": [{"stage": "route"}]}, {"status": "EARLY_FAIL_SETUP"}):
+            j = copy.deepcopy(base)
+            j.update(changes)
+            variants.append((str(changes), j))
+        j = copy.deepcopy(base)
+        j["events"].insert(1, "2026-10-12T01:00 launched route (attempt 1) on ot-epyc4")
+        variants.append(("mixed route/bench", j))
+        j = copy.deepcopy(base)
+        j["events"] = j["events"][1:]
+        variants.append(("truncated history", j))
+        j = copy.deepcopy(base)
+        j["benches"]["bench_exact"]["track"] = "parallel"
+        variants.append(("parallel receipt", j))
+        for why, j in variants:
+            with self.subTest(why=why):
+                self.assertTrue(cl.terminal_route_failure(j))
+
+    def test_actual_parallel_bench_cancelled_routes_and_fail_closed_mutants(self):
+        import copy
+        fixtures = sorted((HERE / "testdata" / "bench_cancelled_routes").glob("*.json"))
+        self.assertEqual(len(fixtures), 2)
+        hist = [json.loads(p.read_text()) for p in fixtures]
+        for j in hist:
+            self.assertFalse(cl.terminal_route_failure(j))
+            for key in ("bench_par", "events", "textbook_seen", "btrack", "benches", "stage_tag"):
+                bad = copy.deepcopy(j)
+                bad.pop(key)
+                self.assertTrue(cl.terminal_route_failure(bad), key)
+            for field, value in (("metrics", {"tt_ps": -1}), ("early_fail", {"verdict": "EARLY_FAIL_HOLD"}),
+                                 ("crashes", [{"stage": "route"}]), ("status", "EARLY_FAIL_SETUP")):
+                bad = copy.deepcopy(j)
+                bad[field] = value
+                self.assertTrue(cl.terminal_route_failure(bad), field)
+            for event in ("route crashed twice", "route done (rc=0)", "EARLY_FAIL_SETUP: failed",
+                          "bench failed: could not stop route", "launched signoff (attempt 1) on ot-epyc4"):
+                bad = copy.deepcopy(j)
+                bad["events"].insert(-2, "2026-10-15T08:08:00-07:00 " + event)
+                self.assertTrue(cl.terminal_route_failure(bad), event)
+        # Actual delivery successor no longer needs a fabricated structural change.
+        self.assertEqual(self.run_(hist, block=hist[0]["spec"]["block"])["status"], "QUEUED")
+
     def test_two_failures_refuse(self):
         j = self.run_([hjob("a", "NEEDS_RTL", "01:00"), hjob("b", "EARLY_FAIL_SETUP", "02:00")])
         self.assertEqual(j["status"], "REFUSED")

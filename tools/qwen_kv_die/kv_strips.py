@@ -39,7 +39,8 @@ NPC, NGRP, NENG = 32, 8, 8
 LAND_GROUP_ORDER = (4, 5, 0, 1, 2, 3, 6, 7)
 PC_PITCH = 378.0
 HOP_UM = 450.0
-W_LI, W_ES, W_ER, W_RQ, W_RS, W_LT, W_KN, W_EM = 282, 288, 261, 16, 1025, 21, 1047, 530
+W_LI, W_ES, W_ER, W_RQ, W_RS, W_LT, W_KN = 282, 288, 261, 17, 1025, 21, 1047
+W_EMF, W_EMR = 289, 521  # compact gateway word + its reverse credit
 
 
 def land_depths():
@@ -59,7 +60,7 @@ def land_ports():
     for e in range(NENG):
         p[f'rq{e}'] = [f'rq{e}']
         p[f'rs{e}'] = [f'rs{e}']
-    p.update(lt=['lt'], kvn=['kvi', 'kvi_cr'], kvo=['kvo', 'kvo_cr'], emf=['emf'], emr=['emr'], mf=['mf'],
+    p.update(lt=['lt'], kvn=['kvi', 'kvi_cr'], kvo=['kvo', 'kvo_cr'], emf=['emf', 'emf_cr'], emr=['emr', 'emr_cr'], mf=['mf'],
              wfault=['wf'], kf=['kf'], rst_n=['rst_n'])
     return p
 
@@ -155,8 +156,8 @@ def emit_land():
     for e in range(NENG):
         hdr += [f'    input  wire [{W_RQ - 1}:0]   rq{e},', f'    output wire [{W_RS - 1}:0] rs{e},']
     hdr += [f'    input  wire [{W_LT - 1}:0]   lt,', f'    input  wire [{W_KN - 1}:0] kvi,', '    output wire          kvi_cr,',
-            f'    output wire [{W_KN - 1}:0] kvo,', '    input  wire          kvo_cr,', f'    input  wire [{W_EM - 1}:0]  emf,',
-            f'    output wire [{W_EM - 1}:0]  emr,', '    output wire          mf,', '    input  wire          wf,',
+            f'    output wire [{W_KN - 1}:0] kvo,', '    input  wire          kvo_cr,', '    input  wire [287:0]  emf,', '    output wire          emf_cr,',
+            '    output wire [519:0]  emr,', '    input  wire          emr_cr,', '    output wire          mf,', '    input  wire          wf,',
             '    input  wire          kf']
     a('module qkd_land_strip_s (')
     L += hdr
@@ -194,11 +195,11 @@ def emit_land():
     for i in range(NGRP):
         g = LAND_GROUP_ORDER[i]
         b = 4 * i
-        a(f'    qkd_land_grp u_g{i} (.ck(ck_g[{i}]), .rst_n(rst_n), .g(3\'d{g}), .s(st), '
+        a(f'    qkd_land_grp_epoch u_g{i} (.ck(ck_g[{i}]), .rst_n(rst_n), .g(3\'d{g}), .s(st), '
           + ' '.join(f'.gw{q}(gw[{b + q}]), .gc{q}(gc[{b + q}]),' for q in range(4))
           + f' .rq(rq{g}), .rs(rs{g}), .lt(tap[{i}][{W - 1}:{W_KN}]), .kn(tap[{i}][{W_KN - 1}:0]), .fi(gf[{i}]), '
           f'.fo(gf[{i + 1}]));')
-    a(f'    qkd_land_emb u_emb (.ck(ck_e), .rst_n(rst_n), .st(st), .emf(emf), .emr(emr), .dno(dn[{NPC}]), .upi(up[{NPC}]), '
+    a(f'    qkd_land_emb_ifw u_emb (.ck(ck_e), .rst_n(rst_n), .st(st), .emf(emf), .emf_cr(emf_cr), .emr(emr), .emr_cr(emr_cr), .dno(dn[{NPC}]), .upi(up[{NPC}]), '
       f'.cri(cr[{NPC}]), .fi(pf[{NPC}]), .gfi(gf[{NGRP}]), .mf(mf));')
     a('endmodule')
     return '\n'.join(L)
