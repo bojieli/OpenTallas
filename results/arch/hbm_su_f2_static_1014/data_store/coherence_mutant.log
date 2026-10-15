@@ -1,0 +1,6 @@
+ERR bank=0 readclass=5 row=85 got=00000000 expected=00015401
+ERR bank=1 readclass=5 row=85 got=00000000 expected=00015402
+ERR bank=2 readclass=5 row=85 got=00000000 expected=00015403
+ERR bank=3 readclass=5 row=85 got=00000000 expected=00015404
+FATAL: tb_hbm_su_static_data_store.sv:48: SU_STATIC_STORE FAIL banks=512 replicas=3072 checks=1579008 errors=263168
+       Time: 10266000  Scope: tb_hbm_su_static_data_store
