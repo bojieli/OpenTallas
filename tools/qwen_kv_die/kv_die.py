@@ -250,8 +250,9 @@ SPLIT_BINDINGS = dict(
     # form with 5 lane bits tied = the port-bind MISMATCH)
     qkd_kvwq_ctl_bin=dict(module='qkd_kvwq_ctl_bin', file='rtl/physical/ot_qwen_kv_slot_wrappers.sv',
                           ports=dict(kvn=['kvn_d', 'kvn_cr'], f0=['f0'], f1=['f1'], f2=['f2'], f3=['f3'], r0=['r0'],
-                                     r1=['r1'], r2=['r2'], r3=['r3'], durable=['durable'], fault=['fault'], ck=['ck'],
-                                     rst_n=['rst_n']), classed={}),
+                                     r1=['r1'], r2=['r2'], r3=['r3'], fault=['fault'], ck=['ck'], rst_n=['rst_n']),
+                          classed={'durable': 'by_design (v1.2): the write-retire word {rw_v, rw_id}, unread on the KV/system '
+                                              'die (flow control = the kvn credit; no consumer RTL)'}),
     # v1.1: the write leaf is the CLOSED slot qkd_kvwq_leaf_s_w129_m (route qkd_kvwq_leaf_s_w129_m-sl1-4df79ee4f, view with
     # insertion.json); same bit order as ot_qkvd_kv_wq_leaf's split fields
     qkd_kvwq_leaf_s_w129_m=dict(module='qkd_kvwq_leaf_s_w129_m', file='rtl/qwen_sys/kv_die_20261009/qkd_kvwq_leaf_slot.sv',
