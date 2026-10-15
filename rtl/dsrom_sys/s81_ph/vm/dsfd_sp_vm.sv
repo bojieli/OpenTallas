@@ -473,6 +473,7 @@ endmodule
 
 // ================================================================================================ front end
 module dsfd_vm_fe #(
+    parameter integer WCOMMIT = 0,
     parameter integer NS = 4,           // bit-sliced memory columns (128 b each)
     parameter integer VF = 13,          // WFC kit link stations (dsfd_vm_wfc_ep VF / VR)
     parameter integer VR = 13,
@@ -510,6 +511,7 @@ module dsfd_vm_fe #(
     input  wire [0:0]    vwe, input wire [13:0] vwa, input wire [511:0] vwd,
     input  wire [0:0]    vre, input wire [13:0] vra,
     output wire         vready,
+    input wire [15:0] vwm, input wire [7:0] vwt, output wire [15:0] m_wtag,
     // dsfd_sp_ctrl engine channel (stream domain)
     input  wire [0:0]    cv, input wire [83:0] cd, output wire [0:0] dv, output wire [7:0] dt,
     // landing producers (no back-pressure into the VM; the collective by t_cts room):
@@ -585,23 +587,25 @@ module dsfd_vm_fe #(
     wire cap_src_flt = cq_p[3];
 
     // ---------------------------------------------------------------- ctrl VM port: stream pins -> 2 ratio CDC FIFOs
+    reg [15:0] s_wm; reg [7:0] s_wt;
     reg s_we, s_re, s_tg; reg [13:0] s_wa, s_ra; reg [511:0] s_wd;
     always @(posedge cks[0]) begin
         if (!rns) begin s_we <= 1'b0; s_re <= 1'b0; end else begin s_we <= vwe[0]; s_re <= vre[0]; end
+        s_wm <= WCOMMIT ? vwm : 16'hffff; s_wt <= WCOMMIT ? vwt : 8'd0;
         s_wa <= vwa; s_ra <= vra; s_wd <= vwd;
     end
     // up to two ops a stream cycle (a write and a read: the write is ordered first).  Ops alternate between the two
     // FIFOs (s_tg = the FIFO of the next op); the serial side drains <= 2 a cycle, so the controller's VM op rate must
     // stay <= 1.5 a stream cycle on average (8-entry FIFOs); beyond -> sticky overflow fault (fail closed).
-    wire [526:0] s_wo = {1'b1, s_wa, s_wd}, s_ro = {1'b0, s_ra, 512'd0};   // {we, row, data}
+    wire [550:0] s_wo = {s_wt,s_wm,1'b1, s_wa, s_wd}, s_ro = {24'd0,1'b0, s_ra, 512'd0};   // {we, row, data}
     wire s_f = s_we | s_re;                       // first op of the cycle
     wire s_s = s_we & s_re;                       // second op (the read)
-    wire [526:0] s_fd = s_we ? s_wo : s_ro;
+    wire [550:0] s_fd = s_we ? s_wo : s_ro;
     wire [1:0] sw_v = {(s_f && s_tg) || (s_s && !s_tg), (s_f && !s_tg) || (s_s && s_tg)};
-    wire [526:0] sw_d0 = (s_f && !s_tg) ? s_fd : s_ro;
-    wire [526:0] sw_d1 = (s_f && s_tg) ? s_fd : s_ro;
+    wire [550:0] sw_d0 = (s_f && !s_tg) ? s_fd : s_ro;
+    wire [550:0] sw_d1 = (s_f && s_tg) ? s_fd : s_ro;
     always @(posedge cks[0]) if (!rns) s_tg <= 1'b0; else if (s_f && !s_s) s_tg <= ~s_tg;
-    wire [1:0] cw_rdy, cr_v, cw_live; wire [526:0] cr_d0, cr_d1; reg [1:0] cr_take; reg s_ovf;
+    wire [1:0] cw_rdy, cr_v, cw_live; wire [550:0] cr_d0, cr_d1; reg [1:0] cr_take; reg s_ovf;
     generate if (CCA != 0) begin : g_cca
         // el1013-s81-vmfe/B8 (coordinator decision 10-13 (b)): with ot_ratio_cdc_fifo every storage bit crossed EVERY read
         // cycle (mem[i] (cks tree) -> sh[i] (ck tree), 2 x 8 x 527 flop -> flop arcs) and had to meet the 277.8-ps window AND
@@ -619,14 +623,14 @@ module dsfd_vm_fe #(
         (* keep = 1 *) reg [1:0] xw_t; (* keep = 1 *) reg [1:0] xr_t;
         always @(posedge cks[0] or negedge xw0) if (!xw0) xw_t <= 2'b00; else xw_t <= 2'b11;
         always @(posedge clk or negedge xr0) if (!xr0) xr_t <= 2'b00; else xr_t <= 2'b11;
-        ot_async_fifo #(.WIDTH(527), .DEPTH(16), .EXT_RST(1)
+        ot_async_fifo #(.WIDTH(551), .DEPTH(16), .EXT_RST(1)
 `ifdef OT_VMFE_FCC_PIPE
             , .FIFO_PIPE(1)
 `endif
             ) u_cc0 (.wr_clk(cks[0]), .wr_rst_n(xw_t[0]), .wr_valid(sw_v[0]),
             .wr_ready(cw_rdy[0]), .wr_data(sw_d0), .wr_overflow(), .rd_clk(clk), .rd_rst_n(xr_t[0]), .rd_valid(xr_v[0]),
             .rd_ready(cr_take[0]), .rd_data(cr_d0), .rd_underflow());
-        ot_async_fifo #(.WIDTH(527), .DEPTH(16), .EXT_RST(1)
+        ot_async_fifo #(.WIDTH(551), .DEPTH(16), .EXT_RST(1)
 `ifdef OT_VMFE_FCC_PIPE
             , .FIFO_PIPE(1)
 `endif
@@ -636,9 +640,9 @@ module dsfd_vm_fe #(
         assign cr_v = rn ? xr_v : 2'b00;        // nothing is popped while the serial order registers are in reset
         assign cw_live = 2'b11;
     end else begin : g_ncca
-        ot_ratio_cdc_fifo #(.W(527), .DEPTH(8)) u_cc0 (.wclk(cks[0]), .wrst_n(rns), .w_v(sw_v[0]), .w_rdy(cw_rdy[0]), .w_d(sw_d0),
+        ot_ratio_cdc_fifo #(.W(551), .DEPTH(8)) u_cc0 (.wclk(cks[0]), .wrst_n(rns), .w_v(sw_v[0]), .w_rdy(cw_rdy[0]), .w_d(sw_d0),
             .rclk(clk), .rrst_n(rn), .r_v(cr_v[0]), .r_rdy(cr_take[0]), .r_d(cr_d0), .w_live(cw_live[0]), .r_live());
-        ot_ratio_cdc_fifo #(.W(527), .DEPTH(8)) u_cc1 (.wclk(cks[0]), .wrst_n(rns), .w_v(sw_v[1]), .w_rdy(cw_rdy[1]), .w_d(sw_d1),
+        ot_ratio_cdc_fifo #(.W(551), .DEPTH(8)) u_cc1 (.wclk(cks[0]), .wrst_n(rns), .w_v(sw_v[1]), .w_rdy(cw_rdy[1]), .w_d(sw_d1),
             .rclk(clk), .rrst_n(rn), .r_v(cr_v[1]), .r_rdy(cr_take[1]), .r_d(cr_d1), .w_live(cw_live[1]), .r_live());
     end endgenerate
     // One request can enter only with both pin stages empty. No intervening
@@ -648,7 +652,7 @@ module dsfd_vm_fe #(
         else if ((sw_v[0] && !cw_rdy[0]) || (sw_v[1] && !cw_rdy[1])) s_ovf <= 1'b1;   // incl. ops before the crossing is up
     // serial side: pop in alternation order, <= 2 a cycle: first -> lane A (p3), second -> lane B (p4)
     reg c_nx;                           // FIFO holding the next op
-    reg ca_v, cb_v; reg [526:0] ca_d, cb_d;
+    reg ca_v, cb_v; reg [550:0] ca_d, cb_d;
     always @* begin
         cr_take = 2'b00;
         if (cr_v[c_nx]) begin
@@ -915,6 +919,7 @@ module dsfd_vm_fe #(
     end
 
     // ---------------------------------------------------------------- stage B: the order register (all ports)
+    reg [15:0] b_tag;
     reg [NP-1:0] b_v, b_we; reg [NP*RA-1:0] b_row; reg [NP*16-1:0] b_m; reg [NP*512-1:0] b_d;
 
     always @(posedge clk) begin
@@ -931,6 +936,9 @@ module dsfd_vm_fe #(
                              x_row2, e1_row[13:0], e_row[13:0]};
         b_row[NP*RA-1:CP*RA] <= cl_row;
         b_m[CP*16-1:0] <= {CP{16'hffff}};
+        b_m[3*16+:16] <= WCOMMIT ? ca_d[542:527] : 16'hffff;
+        b_m[4*16+:16] <= WCOMMIT ? cb_d[542:527] : 16'hffff;
+        b_tag<={cb_d[550:543],ca_d[550:543]};
         b_m[NP*16-1:CP*16] <= cl_m;
         b_d[CP*512-1:0] <= {lp_d, {508'd0, x_bus[4]}, {508'd0, x_bus[3]}, {508'd0, x_bus[1]}, {508'd0, x_bus[0]},
                             {420'd0, r_id, r_ex, r_sh, r_last, r_w}, cb_d[511:0], ca_d[511:0], {508'd0, x_bus[2]}, 512'd0, e_d};
@@ -976,6 +984,12 @@ module dsfd_vm_fe #(
         dsfd_vm_fsr_hard_frl_mismatch u_err ();    // elaboration error: the hardened dsfd_vm_fsr is FRL 2 (two stages)
     end
 `endif
+    reg [15:0] tag_pipe[0:FRL]; integer ti;
+    always @(posedge clk) begin
+        tag_pipe[0]<=b_tag;
+        for(ti=1;ti<=FRL;ti=ti+1) tag_pipe[ti]<=tag_pipe[ti-1];
+    end
+    assign m_wtag=tag_pipe[FRL];
     integer s;
     genvar gsl, gp;
     generate for (gsl = 0; gsl < NS; gsl = gsl + 1) begin : g_sl
@@ -1881,6 +1895,7 @@ endmodule
 // dsfd_sp_vm_m: the exact composition netlist (bench + composition record): FE, NS x 4 dsfd_vm_bgq (NSTG 2, NP 24,
 // NPR 8), BE.  The die places the FE, the 16 tiles and the BE by abutment (physical/s81_ph_views/vm_master/).
 module dsfd_sp_vm_m #(
+    parameter integer WCOMMIT = 0,
     parameter integer NS = 4, parameter integer NSTG = 2, parameter integer QD = 4, parameter integer MACRO = 1,
     parameter integer VF = 13, parameter integer VR = 13, parameter integer NSLOT = 4, parameter integer P2D = 40,
     parameter integer CQD = 4, parameter integer LA = 12, parameter integer LTO = 16,
@@ -1895,6 +1910,8 @@ module dsfd_sp_vm_m #(
     input  wire [0:0]    vwe, input wire [13:0] vwa, input wire [511:0] vwd,
     input  wire [0:0]    vre, input wire [13:0] vra, output wire [0:0] vrv, output wire [511:0] vrq,
     output wire         vready,
+    input wire [15:0] vwm, input wire [7:0] vwt,
+    output wire vwv, output wire [7:0] vack_tag, output wire [15:0] vack_mask,
     input  wire [0:0]    cv, input wire [83:0] cd, output wire [0:0] dv, output wire [7:0] dt,
     input  wire [NSVC*1027-1:0] f_svc, input wire [2099:0] f_coll, output wire [2:0] t_cts,
     input  wire [514:0]  f_sel, input wire [514:0] f_col, input wire [1025:0] f_hc,
@@ -1934,16 +1951,17 @@ module dsfd_sp_vm_m #(
                                         // el1011-ds-vm/fe: FE order register -> slice pin relay stages (shifts f_* and o_*
                                         // alike: MD, the tile-3 f_* -> o_* skew, is unchanged)
     localparam integer MD = 4 * NSTG + QD + 9 - 4 * (NSTG + 1) + ED;
+    wire [15:0] mtag; wire [NS*NT*8*28-1:0] commits;
     wire [NS*NP-1:0] mv, mwe; wire [NS*NP*RA-1:0] mrow; wire [NS*NP*4-1:0] mm; wire [NS*NP*128-1:0] md;
     wire [NS*4-1:0] mrf; wire [15:0] fe_flt;
     wire p2c;
     wire [NS*NP-1:0] fmv, fmwe; wire [NS*NP*RA-1:0] fmrow; wire [NS*NP*4-1:0] fmm; wire [NS*NP*128-1:0] fmd;
     wire [NS*4-1:0] fmrf; wire [15:0] f_flt;
     wire [0:0] f_swg, f_srg, f_dv, f_cwv; wire [52:0] f_ks; wire [7:0] f_dt; wire [2:0] f_cts; wire [9:0] f_cwd; wire [NSLOT-1:0] f_rdy;
-    dsfd_vm_fe #(.NS(NS), .VF(VF), .VR(VR), .NSLOT(NSLOT), .P2D(P2D), .CQD(CQD), .LA(LA), .LTO(LTO), .NSVC(NSVC), .LD(LD),
-                 .NLP(NLP), .LMACRO(LMACRO), .FRL(FRL), .KD(FKD), .LAL(FLAL), .LGL(FLGL), .LDL(FLDL), .DVR(FDVR), .LVX(FLVX), .XRT(FXRT), .CCA(FCCA)) u_fe (
+    dsfd_vm_fe #(.WCOMMIT(WCOMMIT), .NS(NS), .VF(VF), .VR(VR), .NSLOT(NSLOT), .P2D(P2D), .CQD(CQD), .LA(LA), .LTO(LTO), .NSVC(NSVC), .LD(LD),
+                 .NLP(NLP), .LMACRO(LMACRO), .FRL(FRL), .KD(FKD), .LAL(FLAL), .LGL(FLGL), .LDL(FLDL), .DVR(FDVR), .LVX(FLVX), .XRT(FXRT), .CCA(WCOMMIT ? 1 : FCCA)) u_fe (
         .ck(ck), .rst(rst), .cks(cks), .rss(rss), .f_swv(f_swv), .f_swd(f_swd), .t_swg(f_swg), .f_srv(f_srv), .f_srd(f_srd),
-        .t_srg(f_srg), .t_ks(f_ks), .f_cap(f_cap), .vwe(vwe), .vwa(vwa), .vwd(vwd), .vre(vre), .vra(vra), .vready(vready),
+        .t_srg(f_srg), .t_ks(f_ks), .f_cap(f_cap), .vwe(vwe), .vwa(vwa), .vwd(vwd), .vre(vre), .vra(vra), .vready(vready), .vwm(vwm), .vwt(vwt), .m_wtag(mtag),
         .cv(cv), .cd(cd), .dv(f_dv), .dt(f_dt), .f_svc(f_svc), .f_coll(f_coll), .t_cts(f_cts), .f_sel(f_sel), .f_col(f_col), .f_hc(f_hc),
         .c_wv(f_cwv), .c_wd(f_cwd), .c_wr(c_wr), .t_rdy(f_rdy), .f_p2c(p2c),
         .m_v(fmv), .m_we(fmwe), .m_row(fmrow), .m_mask(fmm), .m_d(fmd), .m_rf(fmrf), .fe_flt(f_flt));
@@ -1982,6 +2000,8 @@ module dsfd_sp_vm_m #(
         wire [NPR-1:0] cov [0:NT];
         wire [NP*RA-1:0] crow [0:NT]; wire [NP*4-1:0] cm [0:NT]; wire [NP*128-1:0] cd_ [0:NT];
         wire [NPR*128-1:0] cod [0:NT];
+        wire [15:0] tags[0:NT];
+        assign tags[0]=mtag;
         wire [3:0] cof [0:NT]; wire [OW-1:0] coo [0:NT];
         assign cv_[0] = mv[h*NP +: NP]; assign cwe[0] = mwe[h*NP +: NP]; assign crow[0] = mrow[h*NP*RA +: NP*RA];
         assign cm[0] = mm[h*NP*4 +: NP*4]; assign cd_[0] = md[h*NP*128 +: NP*128];
@@ -2004,8 +2024,9 @@ module dsfd_sp_vm_m #(
             // = dsfd_vm_bgq28 (the hard tile) at the default parameters
             // v4 (el1011-ds-vm/bgq28 2026-10-12): dsfd_vm_bgr, 4 bank-pair stages + 2-stage control lead (hop 6); its
             // o_* -> f_* skew is HL + 1 = QD + 5 + ED, the MD below (NSTG-independent), so the BE is unchanged
-            dsfd_vm_bgr #(.NP(NP), .NPR(NPR), .NB(32), .NBL(8), .QD(QD), .RQ(8), .MACRO(MACRO), .DW(128), .NSTG(4), .EP(EP)) u_bg (
-                .ck(ck), .rs(rst), .grp(gid),
+            dsfd_vm_bgr #(.WCOMMIT(WCOMMIT), .NP(NP), .NPR(NPR), .NB(32), .NBL(8), .QD(QD), .RQ(8), .MACRO(MACRO), .DW(128), .NSTG(4), .EP(EP)) u_bg (
+                .ck(ck), .rs(WCOMMIT ? (rst & rss) : rst), .grp(gid),
+                .i_wtag(tags[t]), .f_wtag(tags[t+1]), .write_commit(commits[28*8*(h*NT+t)+:28*8]),
                 .i_v(cv_[t]), .i_we(cwe[t]), .i_row(crow[t]), .i_mask(cm[t]), .i_d(cd_[t]),
                 .f_v(cv_[t+1]), .f_we(cwe[t+1]), .f_row(crow[t+1]), .f_mask(cm[t+1]), .f_d(cd_[t+1]),
                 .r_v(cov[t]), .r_d(cod[t]), .r_f(cof[t]), .r_o(coo[t]),
@@ -2049,4 +2070,11 @@ module dsfd_sp_vm_m #(
         , .rst_ack(be_rst_ack), .rst_ack_s(be_rst_ack_s)
 `endif
         );
+    generate if(WCOMMIT) begin:g_commit
+        dsfd_vm_write_ack #(.NS(NS),.NT(NT)) u_ack(.ck(ck[0]),.rst_n(rst[0]),.cks(cks[0]),.rss_n(rss[0]),
+          .records(commits),.ack_v(vwv),.ack_tag(vack_tag),.ack_mask(vack_mask));
+    end else begin:g_no_commit
+        assign vwv=1'b0; assign vack_tag=0; assign vack_mask=0;
+    end endgenerate
+
 endmodule

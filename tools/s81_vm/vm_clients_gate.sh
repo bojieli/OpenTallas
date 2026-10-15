@@ -12,8 +12,9 @@ F="$S/rtl/dsrom_sys/s81_ph/relays/dsfd_die_relays.sv $S/rtl/dsrom_sys/s81_ph/vm/
    $S/rtl/common/ot_ratio_cdc_fifo.sv
    $S/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v
    $S/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v
-   $S/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_clients.sv $S/rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_clients.sv"
-verilator --binary --timing -O1 -Wno-UNOPTFLAT -Wno-fatal -Wno-lint -Wno-style -j 8 --top-module tb_dsfd_vm_clients -I$S/rtl/dsrom_sys/s81_ph/vm --Mdir $O/obj -o tb $F > $O/build.log 2>&1 || exit 2
+   $S/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_write_ack.sv $S/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_clients.sv $S/rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_clients.sv"
+DEF=${4:-}
+verilator $DEF --binary --timing -O1 -Wno-UNOPTFLAT -Wno-fatal -Wno-lint -Wno-style -j 8 --top-module tb_dsfd_vm_clients -I$S/rtl/dsrom_sys/s81_ph/vm --Mdir $O/obj -o tb $F > $O/build.log 2>&1 || exit 2
 (cd $O && timeout 3000 ./obj/tb > run.log 2>&1)
 cat $O/run.log
 grep -qx PASS $O/run.log
