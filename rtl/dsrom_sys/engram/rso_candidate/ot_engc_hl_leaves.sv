@@ -58,12 +58,17 @@ module ot_engc_ctl_x (
     ot_engc_hl_rsync u_rst_pb0  (.clk(ck), .async_rst_n(rst), .sync_rst_n(rst_pb0_n));
     ot_engc_hl_rsync u_rst_pb2  (.clk(ck), .async_rst_n(rst), .sync_rst_n(rst_pb2_n));
     assign states_x = {rst_pb2_n, rst_pb0_n, rst_pb1_n, rst_io_n};
+    // transit: only the 6 one-hot write enables carry a reset (they qualify the word); the 328 address / data bits are
+    // plain registers (gate 21:5x: one reset conditioner driving 334 flops = 337 loads > 256)
+    ot_engc_hl_pipe #(.W(6)) u_xtrans_pb0 (.clk(ck), .rst_n(rst_pb0_n), .d(x_oh), .q(x_oh_q));
+    (* keep = "true", dont_touch = "true" *) reg [327:0] xt_q;
+    always @(posedge ck)
 `ifdef OT_ENGC_HL_MUT_CTL
-    // negative control: the transit's address LSB is lost (bank 0 writes land on the wrong row)
-    ot_engc_hl_pipe #(.W(334)) u_xtrans_pb0 (.clk(ck), .rst_n(rst_pb0_n), .d({x_oh, x_a[7:1], 1'b0, x_d}), .q({x_oh_q, x_a_q, x_d_q}));
+        xt_q <= {x_a[7:1], 1'b0, x_d};       // negative control: the transit's address LSB is lost (bank 0 writes land on the wrong row)
 `else
-    ot_engc_hl_pipe #(.W(334)) u_xtrans_pb0 (.clk(ck), .rst_n(rst_pb0_n), .d({x_oh, x_a, x_d}), .q({x_oh_q, x_a_q, x_d_q}));
+        xt_q <= {x_a, x_d};
 `endif
+    assign {x_a_q, x_d_q} = xt_q;
     (* keep = "true", dont_touch = "true" *) reg ack_q;
     always @(posedge ck or negedge rst)
         if (!rst) ack_q <= 1'b0;
@@ -93,13 +98,13 @@ module ot_engc_ctl_s (
     ot_engc_hl_rsync u_rst_lkp  (.clk(ck), .async_rst_n(rst), .sync_rst_n(rst_lkp_n));
     ot_engc_hl_rsync u_rst_sink (.clk(ck), .async_rst_n(rst), .sync_rst_n(rst_sink_n));
     assign states_s = {rst_sink_n, rst_lkp_n, rst_ws_n, rst_win_n};
-`ifdef OT_ENGC_HL_MUT_CTLS
-    // negative control: slot-ready bits 0 and 1 swapped in the status pipe (done reported on the wrong slot)
-    ot_engc_hl_pipe #(.W(16)) u_status_win (.clk(ck), .rst_n(rst_win_n), .d({s_perr, s_rdy[7:2], s_rdy[0], s_rdy[1]}), .q({s_perr_q, s_rdy_q}));
-`else
     ot_engc_hl_pipe #(.W(16)) u_status_win (.clk(ck), .rst_n(rst_win_n), .d({s_perr, s_rdy}), .q({s_perr_q, s_rdy_q}));
-`endif
+`ifdef OT_ENGC_HL_MUT_CTLS
+    // negative control: the consumer's slot release (vrel[0] = rel_v) never reaches the sink (slots never free)
+    ot_engc_hl_pipe #(.W(4)) u_release_sink (.clk(ck), .rst_n(rst_sink_n), .d({vrel[3:1], 1'b0}), .q(vrel_q));
+`else
     ot_engc_hl_pipe #(.W(4)) u_release_sink (.clk(ck), .rst_n(rst_sink_n), .d(vrel), .q(vrel_q));
+`endif
     (* keep = "true", dont_touch = "true" *) reg ack_q;
     always @(posedge ck or negedge rst)
         if (!rst) ack_q <= 1'b0;
