@@ -727,7 +727,7 @@ def hbm_coll_static_quadrant_model(npt=3, inject=2, deliver=4, flit_bits=545, pe
     if npt not in (2, 3):
         raise ValueError("production quadrant has two or three rail links")
     sources = inject + npt + deliver + 1  # SU, rail, VM, ring result
-    sinks = npt + 3 * deliver + 2  # rail, SU, RGX, TKM, TKW, ring partial
+    sinks = npt + 3 * deliver + 1  # rail, SU, RGX, TKM, ring partial
     select_bits = (sources - 1).bit_length()
     controls = sources + sinks * (select_bits + 1)
     return dict(source_lanes=sources, sink_lanes=sinks, flit_bits=flit_bits,
