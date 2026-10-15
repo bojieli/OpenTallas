@@ -531,7 +531,9 @@
     },
     "missing_exact_delay_view_instances": 176,
     "main_residual_instances": 1,
-    "qualification_limit": "199 pass the stated native pin screen, not199 fully placed/source-qualified/hop-qualified closures; remaining5 selected module/parameter bindings still required. Closed views are retained; no blind reroute.",
-    "concrete_active_work": "New9root actual bank with exact+2mutants passed; control35FF route READY qvm_bank_ctrl_native-np1-c9bb6b00d and data256 pin-plan repair gate65384 live."
+    "qualification_limit": "All eight existing source-view family module/parameter bindings are verified; six source-bound families/199 entries pass stated native pin screen. Actual per-hop timing, placement and global clock integration remain required. Two storage families112, exact delay views176 and main residual1 still require structural/native work. Closed views retained; no blind reroutes.",
+    "concrete_active_work": "New9root actual bank with exact+2mutants passed; control35FF route READY qvm_bank_ctrl_native-np1-c9bb6b00d and data256 pin-plan repair gate65384 live.",
+    "remaining_module_source_equivalence_ref": "2f9adbb2d",
+    "all_eight_existing_module_families_source_bound": true
   }
 }
