@@ -8,24 +8,23 @@
    "REAL": 36,
    "NO_CONTRACT_INSTANCE": 71,
    "PARTITION": 76,
-   "INCOMPLETE": 5,
-   "SYNTH": 7
+   "INCOMPLETE": 1,
+   "SYNTH": 11
   },
   "area_mm2_by_status": {
    "REAL": 53.3,
    "NO_CONTRACT_INSTANCE": 376.0,
    "PARTITION": 98.7,
-   "INCOMPLETE": 4.5,
-   "SYNTH": 2.7
+   "INCOMPLETE": 0.7,
+   "SYNTH": 6.5
   },
   "instances": 83,
   "instances_by_view": {
-   "SYNTH": 30,
+   "SYNTH": 33,
    "REAL_COMPOSED": 34,
    "REAL": 9,
-   "NONE": 4,
    "RUNNING": 5,
-   "SYNTH_COARSE_ONLY": 1
+   "NONE": 2
   }
  },
  "rule": "REAL = closed LEF + TT/FF ETM; SYNTH = current-source mapped netlist + real outline (estimate); no stub, no pin-only shell",
@@ -472,7 +471,7 @@
   },
   "vmh_SW": {
    "kind": "vmh",
-   "status": "INCOMPLETE",
+   "status": "SYNTH",
    "contract_instances": [
     "calendar_SW",
     "delivery_SW",
@@ -925,7 +924,7 @@
   },
   "vmh_SE": {
    "kind": "vmh",
-   "status": "INCOMPLETE",
+   "status": "SYNTH",
    "contract_instances": [
     "calendar_SE",
     "delivery_SE",
@@ -1410,7 +1409,7 @@
   },
   "vmh_NW": {
    "kind": "vmh",
-   "status": "INCOMPLETE",
+   "status": "SYNTH",
    "contract_instances": [
     "calendar_NW",
     "delivery_NW",
@@ -1863,7 +1862,7 @@
   },
   "vmh_NE": {
    "kind": "vmh",
-   "status": "INCOMPLETE",
+   "status": "SYNTH",
    "contract_instances": [
     "calendar_NE",
     "delivery_NE",
@@ -2572,7 +2571,16 @@
   },
   "lg_SW_2": {
    "master": "ot_hbm_vm_lg_static_split_term",
-   "view": "NONE"
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_term_18_15",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 3113.39862
+    }
+   ]
   },
   "calendar_SE": {
    "master": "hfd_hgi_vm_calendar_SE",
@@ -2677,7 +2685,16 @@
   },
   "lg_SE_2": {
    "master": "ot_hbm_vm_lg_static_split_term",
-   "view": "NONE"
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_term_18_15",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 3113.39862
+    }
+   ]
   },
   "calendar_NW": {
    "master": "hfd_hgi_vm_calendar_NW",
@@ -2782,7 +2799,16 @@
   },
   "lg_NW_2": {
    "master": "ot_hbm_vm_lg_static_split_term",
-   "view": "NONE"
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_term_18_15",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 3113.39862
+    }
+   ]
   },
   "calendar_NE": {
    "master": "hfd_hgi_vm_calendar_NE",
@@ -2887,7 +2913,16 @@
   },
   "lg_NE_2": {
    "master": "ot_hbm_vm_lg_static_split_term",
-   "view": "NONE"
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "lg_term_18_15",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 3113.39862
+    }
+   ]
   },
   "vm_status4": {
    "master": "ot_vms_status4_static",
@@ -3173,44 +3208,12 @@
    ]
   },
   "hb_idx": {
-   "master": "ot_hbm_idx_client_static",
-   "view": "SYNTH_COARSE_ONLY",
-   "runs": [
-    {
-     "host": "ot-epyc1tb",
-     "run": "idx_glue",
-     "state": "RUNNING_OR_FAILED",
-     "mode": "mapped",
-     "std_area_um2": 0.0
-    },
-    {
-     "host": "ot-epyc4",
-     "run": "idx_glue_c",
-     "state": "NETLIST",
-     "mode": "coarse",
-     "std_area_um2": 0.0
-    }
-   ]
+   "master": "ot_hbm_idx_client_static_sw",
+   "view": "NONE"
   },
   "hb_argmax": {
-   "master": "ot_hbm_argmax_static",
-   "view": "SYNTH",
-   "runs": [
-    {
-     "host": "ot-epyc1tb",
-     "run": "argmax",
-     "state": "NETLIST",
-     "mode": "mapped",
-     "std_area_um2": 6203.55672
-    },
-    {
-     "host": "ot-epyc4",
-     "run": "argmax",
-     "state": "NETLIST",
-     "mode": "mapped",
-     "std_area_um2": 6203.55672
-    }
-   ]
+   "master": "ot_hbm_argmax_static_sw",
+   "view": "NONE"
   },
   "hb_quant_NW": {
    "master": "ot_hgi_qdq_host_static",
