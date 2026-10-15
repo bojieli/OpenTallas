@@ -5,6 +5,16 @@
 // calendar is reservation-only; production physical phases/source/token OPEN.
 module qkd_full128_return_cell #(parameter integer PC=0, STACK=0, DISCOVERY=0)(output reg done=0, output wire [327:0] phy_command, output wire phy_clk);
  localparam CYCLES=2600,RL=23;
+ // Source qkd_ctrl_pc_host_static: pc_q and dsel run throughout reset;
+ // hr_q takes the release edge, then dcnt needs dtab[pc]+1 edges to hgo.
+ // The first scheduler-active edge is max(dtab)+2. HOST requests start there.
+ function automatic integer max_strap_delay();
+  integer m,r,d;begin m=0;
+   for(integer p=0;p<32;p++)begin r=(p*118)/32;d=r+((r+p)%2);if(d>m)m=d;end
+   return m;
+  end
+ endfunction
+ localparam integer MAX_STRAP=max_strap_delay(),PROGRAM_SHIFT=MAX_STRAP+2-100;
  string fixture_root; string fixture_file; integer fixture_fd;
  
  integer core_phase_ps=137;real CORE_FIRST;
@@ -91,7 +101,7 @@ module qkd_full128_return_cell #(parameter integer PC=0, STACK=0, DISCOVERY=0)(o
   if(errors<12)$display("BAD pc%0d stack%0d %s",PC,STACK,message);errors++;
  endtask
  task automatic drive(input integer edge_index);
-  integer t;t=edge_index-40;
+  integer t;t=edge_index-PROGRAM_SHIFT;
   es=0;cmd=0;owner=t>=220;
   if(t==100)es={1'b1,1'b1,5'd5,5'd7,19'd24427,data(24427,157),1'b1};
   if(t==160)es={1'b0,1'b0,5'd5,5'd7,19'd24427,256'b0,1'b1};
@@ -122,13 +132,13 @@ module qkd_full128_return_cell #(parameter integer PC=0, STACK=0, DISCOVERY=0)(o
     drive(t);
     if(phase==0)begin reserved=0;sr_reserved=0;wr_reserved=0;end
     else begin reserved=slots[t];sr_reserved=srslots[t];wr_reserved=wrslots[t];end
-    sr_read_reserved=sr_reserved && t>=190 && mode!=8;
+    sr_read_reserved=sr_reserved && t>=150+PROGRAM_SHIFT && mode!=8;
     if(phase==1&&mode==1&&t>0)reserved=slots[t-1];
-    if(phase==1&&mode==2&&t==1340)cmd[42:33]=10'd513;
+    if(phase==1&&mode==2&&t==1300+PROGRAM_SHIFT)cmd[42:33]=10'd513;
     pi={word[t],due[t]};
     rawslot=phase==0?due[t]:rawslots[t];
     if(phase==0)rawslots[t]=due[t];
-    if(phase==1&&mode==3&&t==440)pi[0]=0;
+    if(phase==1&&mode==3&&t==400+PROGRAM_SHIFT)pi[0]=0;
     @(posedge ck);
     // Wrapper has two RD reservation pin stages ahead of its actual core.
     if(phase==0&&t>=2)begin
