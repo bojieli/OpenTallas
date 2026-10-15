@@ -20,6 +20,9 @@ module ot_hgi_sfu_programmed_engine #(
  input wire [15:0] start_loops,
  output wire programme_active,programme_done,
  output wire [31:0] programme_ordinal,
+ input wire [3:0] scalar_load,scalar_enable,
+ input wire [95:0] scalar_addr,
+ input wire [127:0] scalar_data,
  input wire [7:0] stage_v,
  input wire [15:0] stage_group,
  input wire [8*LWB-1:0] stage_addr,
@@ -46,7 +49,8 @@ module ot_hgi_sfu_programmed_engine #(
   .active(programme_active),.done(programme_done),.fault(program_fault));
  ot_hgi_sfu_static_engine #(.LWB(LWB)) u_engine(
   .clk(clk),.rst_n(rst_n),.clk_lane(clk_lane),.clk_map(clk_map),.rst_lane_n(rst_lane_n),.rst_map_n(rst_map_n),
-  .compiler_control(control),.stage_v(stage_v),.stage_group(stage_group),.stage_addr(stage_addr),.stage_mask(stage_mask),.stage_data(stage_data),
+  .compiler_control(control),.scalar_load(scalar_load),.scalar_enable(scalar_enable),.scalar_addr(scalar_addr),.scalar_data(scalar_data),
+  .stage_v(stage_v),.stage_group(stage_group),.stage_addr(stage_addr),.stage_mask(stage_mask),.stage_data(stage_data),
   .drain_v(drain_v),.drain_addr(drain_addr),.drain_data(drain_data),.drain_result_v(drain_result_v),
   .vi_re(vi_re),.vi_addr(vi_addr),.vi_q(vi_q),.side_y(side_y),.ro_v(ro_v),.ro_x(ro_x),.side_v(side_v),.side_x(side_x),
   .kv_we(kv_we),.kv_waddr(kv_waddr),.kv_wdata(kv_wdata),.fault(engine_fault));

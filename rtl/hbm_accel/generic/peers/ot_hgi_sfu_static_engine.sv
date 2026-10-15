@@ -11,6 +11,9 @@ module ot_hgi_sfu_static_engine #(parameter integer LWB=15)(
  input wire clk,rst_n,
  input wire [15:0] clk_lane,clk_map,rst_lane_n,rst_map_n,
  input wire [1741:0] compiler_control,
+ input wire [3:0] scalar_load,scalar_enable,
+ input wire [95:0] scalar_addr,
+ input wire [127:0] scalar_data,
  input wire [7:0] stage_v,
  input wire [15:0] stage_group,
  input wire [8*LWB-1:0] stage_addr,
@@ -46,6 +49,7 @@ module ot_hgi_sfu_static_engine #(parameter integer LWB=15)(
  ot_hgi_sfu_static_operand_store #(.LWB(LWB)) u_memory(
   .clk(clk),.rst_n(rst_n),.rd_re(rd_re),.rd_addr(rd_addr),.rd_src(rd_src),.rd_q(rd_q),
   .vm_we(vm_we),.vm_waddr(vm_addr),.vm_wdata(vm_data),
+  .scalar_load(scalar_load),.scalar_enable(scalar_enable),.scalar_addr(scalar_addr),.scalar_data(scalar_data),
   .stage_v(stage_v),.stage_group(stage_group),.stage_addr(stage_addr),.stage_mask(stage_mask),.stage_data(stage_data),
   .drain_v(drain_v),.drain_addr(drain_addr),.drain_data(drain_data),.drain_result_v(drain_result_v),.fault(store_fault));
  always @(posedge clk or negedge rst_n)

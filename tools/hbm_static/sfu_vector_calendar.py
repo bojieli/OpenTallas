@@ -2,7 +2,7 @@
 """Lower one contiguous elementwise SFU operation to fixed control words.
 
 The accepted instruction class is explicit: independent vector elements with
-four contiguous operands and contiguous VM output. Gather, reductions, scalar
+four contiguous/scalar operands and contiguous VM output. Gather, reductions, scalar
 side operations and overlap are refused. Those need their own real lowering;
 this routine never silently changes their memory or arithmetic contract.
 Each of the four arithmetic opcode groups remains stable through a full drain,
@@ -19,7 +19,7 @@ def compile_vector(*, words: int, bases: tuple[int, int, int, int, int],
                    e1: int=0, e2: int=0, imm1: int=0x3f800000,
                    imm2: int=0x3f800000, imm3: int=0x3f800000,
                    arnd: int=0, arelu: int=0, amin: int=0, cclip: int=0,
-                   rnd: int=0) -> dict:
+                   rnd: int=0, strides: tuple[int,int,int,int,int]=(1,1,1,1,1)) -> dict:
     if not isinstance(words, int) or not 1 <= words < 1 << 24:
         raise ValueError('vector length must fit 24-bit nonzero lane count')
     if len(bases) != 5 or any(not 0 <= base <= (1 << 24)-words for base in bases):
@@ -30,9 +30,11 @@ def compile_vector(*, words: int, bases: tuple[int, int, int, int, int],
         raise ValueError('scalar side operations require actual side-unit lowering')
     if not 0 <= m1 <= 6 or not 0 <= m2 <= 2 or not 0 <= ad <= 5 or not 0 <= e1 <= 4 or not 0 <= e2 <= 2:
         raise ValueError('reserved arithmetic opcode')
+    if len(strides)!=5 or any(stride not in (0,1) for stride in strides) or strides[4]!=1:
+        raise ValueError('operand strides are contiguous1 or actual scalar-broadcast0; output must be contiguous')
     # 5 stream offsets, ten hardware term positions per stream. Only four
     # positions are used by sixteen lanes. Offsets are loaded before emitting.
-    terms = sum((1 << bit) << (24*(stream*10+bit)) for stream in range(5) for bit in range(4))
+    terms = sum((strides[stream] << bit) << (24*(stream*10+bit)) for stream in range(5) for bit in range(4))
     imm3_key = (~imm3 & 0xffffffff) if imm3 >> 31 else imm3 | 0x80000000
     fields = dict(ld_bank=0, bank=0, no=1, ni=words, ls=4, lvw=4, ld_c=terms,
                   dst=1, cx_arnd=arnd, cx_arelu=arelu, cx_amin=amin, cx_cclip=cclip,
@@ -50,7 +52,7 @@ def compile_vector(*, words: int, bases: tuple[int, int, int, int, int],
     rows = []
     for cycle in range(lead+beats+horizon):
         beat = max(0, min(cycle-lead, beats-1))
-        bases_now = sum((base+16*beat) << (24*i) for i,base in enumerate(bases))
+        bases_now = sum((base+16*beat*strides[i]) << (24*i) for i,base in enumerate(bases))
         row = dict(fields, ld=int(cycle == 0), emit=int(lead <= cycle < lead+beats),
                    i_v=16*beat, vb=bases_now)
         rows.append(dict(cycle=cycle, fields=row))
