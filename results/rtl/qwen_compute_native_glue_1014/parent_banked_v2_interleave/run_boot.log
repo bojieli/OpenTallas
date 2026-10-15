@@ -1,0 +1,5 @@
+PASS actual full old-parent staged-reference vs58bank TX198 checks3559 output264 node445 nonzero264
+- physical/qwen_tile_glue_banks_1015/tb_parent_banked_boot16_v2.sv:38: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 36us; walltime 36.922 s; speed 981.472 ns/s
+- Verilator: cpu 36.883 s on 1 threads; alloced 1035 MB

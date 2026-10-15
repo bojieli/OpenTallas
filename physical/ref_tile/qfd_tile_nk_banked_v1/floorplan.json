@@ -1784,6 +1784,8 @@
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
   "physical/ref_tile/qfd_tile_nk_banked_v1/assigned_pins.tcl",
+  "physical/common_flow/macro_channel_block.tcl",
+  "physical/common_flow/post_resize_relocate.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/dsrom_window_source/leaf_iohold.tcl",
