@@ -12,7 +12,7 @@
  },
  "source_contract": {
   "file": "results/arch/hbm_die_v15/source_contract/contract.json",
-  "sha256": "73bef525789f9a15c2cf7250f2a886243c9120c2aef9343f8cd201013af3c663"
+  "sha256": "7c2e3838442da6c4cd5a1e4802890ecf15696fe1da27ba529620b3a9b09b5829"
  },
  "rules": {
   "step_um_per_bit": 0.096,
@@ -99876,636 +99876,783 @@
  ],
  "request_slots": [
   {
-   "name": "hb_su_SW_top",
-   "cell": null,
-   "rtl_pending": "H-ELEM-B: whole static SU top (VM ports + 512 lanes + data store + reducer + RF) as ONE master, 4 bank-pair LG port groups (floorplan condition: SW/SE 4 groups, not 5)",
-   "port_groups": [
-    {
-     "name": "su_SW0",
-     "origin": {
-      "x": 9763.2,
-      "y": 6050.16
+   "name": "hb_su_SW",
+   "cell": "ot_hbm_su_static_quarter",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_quarter.sv",
+   "params": {
+    "QID": 0,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1
+   },
+   "grant_status": "UNASSIGNED_REAL_BODY_FOOTPRINT",
+   "outline": null,
+   "origin": null,
+   "composition": {
+    "slices": [
+     {
+      "name": "hb_su_SW0",
+      "cell": "ot_hbm_su_static_pgslice",
+      "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+      "params": {
+       "QID": 0,
+       "READ_RETURN": 10,
+       "WRITE_RETURN": 7,
+       "FETCH_EXTRA_EDGES": 2,
+       "MLAT": 4,
+       "ALAT": 3,
+       "LEAF": 1,
+       "G": 0
+      },
+      "outline": null,
+      "origin": null,
+      "former_port_only_box": {
+       "x": 9761.3,
+       "y": 6049.4,
+       "w": 266.224,
+       "h": 266.224
+      },
+      "vm_bank_pair": [
+       0,
+       1
+      ],
+      "store_banks": 32,
+      "store_sram_macros": 192,
+      "lanes": {
+       "LIGHT": 16,
+       "SFU": 15,
+       "FULL": 1
+      },
+      "requirement": "actual child outlines, all source pins/roots, local bank/lane/control paths, 3:4 phase bridge and LG-facing pin cut required before grant"
      },
-     "outline": {
-      "w": 267.84,
-      "h": 267.84
+     {
+      "name": "hb_su_SW1",
+      "cell": "ot_hbm_su_static_pgslice",
+      "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+      "params": {
+       "QID": 0,
+       "READ_RETURN": 10,
+       "WRITE_RETURN": 7,
+       "FETCH_EXTRA_EDGES": 2,
+       "MLAT": 4,
+       "ALAT": 3,
+       "LEAF": 1,
+       "G": 1
+      },
+      "outline": null,
+      "origin": null,
+      "former_port_only_box": {
+       "x": 6825.6,
+       "y": 6131.6,
+       "w": 266.224,
+       "h": 266.224
+      },
+      "vm_bank_pair": [
+       2,
+       3
+      ],
+      "store_banks": 32,
+      "store_sram_macros": 192,
+      "lanes": {
+       "LIGHT": 16,
+       "SFU": 16,
+       "FULL": 0
+      },
+      "requirement": "actual child outlines, all source pins/roots, local bank/lane/control paths, 3:4 phase bridge and LG-facing pin cut required before grant"
      },
-     "links": [
-      {
-       "face": "S",
-       "cls": "LG_SU",
-       "peer": "vmb_SW0",
-       "bits": 556,
-       "offset": 105.3
+     {
+      "name": "hb_su_SW2",
+      "cell": "ot_hbm_su_static_pgslice",
+      "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+      "params": {
+       "QID": 0,
+       "READ_RETURN": 10,
+       "WRITE_RETURN": 7,
+       "FETCH_EXTRA_EDGES": 2,
+       "MLAT": 4,
+       "ALAT": 3,
+       "LEAF": 1,
+       "G": 2
       },
-      {
-       "face": "W",
-       "cls": "LG_SU",
-       "peer": "vmb_SW1",
-       "bits": 556,
-       "offset": 105.3
+      "outline": null,
+      "origin": null,
+      "former_port_only_box": {
+       "x": 6440.8,
+       "y": 6601.7,
+       "w": 266.224,
+       "h": 266.224
       },
-      {
-       "face": "W",
-       "cls": "SU_CORE",
-       "peer": "su_SW1",
-       "bits": 256,
-       "offset": 161.4
+      "vm_bank_pair": [
+       4,
+       5
+      ],
+      "store_banks": 32,
+      "store_sram_macros": 192,
+      "lanes": {
+       "LIGHT": 32,
+       "SFU": 0,
+       "FULL": 0
       },
-      {
-       "face": "W",
-       "cls": "SU_CORE",
-       "peer": "su_SW3",
-       "bits": 256,
-       "offset": 187.0
-      },
-      {
-       "face": "W",
-       "cls": "SU_CORE",
-       "peer": "su_SW2",
-       "bits": 256,
-       "offset": 240.6
-      }
-     ]
-    },
-    {
-     "name": "su_SW1",
-     "origin": {
-      "x": 6825.6,
-      "y": 6132.24
+      "requirement": "actual child outlines, all source pins/roots, local bank/lane/control paths, 3:4 phase bridge and LG-facing pin cut required before grant"
      },
-     "outline": {
-      "w": 267.84,
-      "h": 267.84
+     {
+      "name": "hb_su_SW3",
+      "cell": "ot_hbm_su_static_pgslice",
+      "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+      "params": {
+       "QID": 0,
+       "READ_RETURN": 10,
+       "WRITE_RETURN": 7,
+       "FETCH_EXTRA_EDGES": 2,
+       "MLAT": 4,
+       "ALAT": 3,
+       "LEAF": 1,
+       "G": 3
+      },
+      "outline": null,
+      "origin": null,
+      "former_port_only_box": {
+       "x": 7786.9,
+       "y": 6169.4,
+       "w": 266.224,
+       "h": 266.224
+      },
+      "vm_bank_pair": [
+       6,
+       7
+      ],
+      "store_banks": 32,
+      "store_sram_macros": 192,
+      "lanes": {
+       "LIGHT": 32,
+       "SFU": 0,
+       "FULL": 0
+      },
+      "requirement": "actual child outlines, all source pins/roots, local bank/lane/control paths, 3:4 phase bridge and LG-facing pin cut required before grant"
+     }
+    ],
+    "core": {
+     "name": "hb_sucore_SW",
+     "cell": "ot_hbm_su_static_qcore",
+     "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
+     "params": {
+      "MUT": 0
      },
-     "links": [
-      {
-       "face": "S",
-       "cls": "LG_SU",
-       "peer": "vmb_SW2",
-       "bits": 556,
-       "offset": 105.3
-      },
-      {
-       "face": "N",
-       "cls": "LG_SU",
-       "peer": "vmb_SW3",
-       "bits": 556,
-       "offset": 117.8
-      },
-      {
-       "face": "E",
-       "cls": "SU_CORE",
-       "peer": "su_SW0",
-       "bits": 256,
-       "offset": 79.2
-      }
-     ]
-    },
-    {
-     "name": "su_SW2",
-     "origin": {
-      "x": 6441.12,
-      "y": 6603.12
-     },
-     "outline": {
-      "w": 267.84,
-      "h": 267.84
-     },
-     "links": [
-      {
-       "face": "S",
-       "cls": "LG_SU",
-       "peer": "vmb_SW5",
-       "bits": 556,
-       "offset": 99.6
-      },
-      {
-       "face": "S",
-       "cls": "LG_SU",
-       "peer": "vmb_SW4",
-       "bits": 556,
-       "offset": 155.2
-      },
-      {
-       "face": "E",
-       "cls": "SU_CORE",
-       "peer": "su_SW0",
-       "bits": 256,
-       "offset": 0.0
-      }
-     ]
-    },
-    {
-     "name": "su_SW3",
-     "origin": {
-      "x": 7788.96,
-      "y": 6171.12
-     },
-     "outline": {
-      "w": 267.84,
-      "h": 267.84
-     },
-     "links": [
-      {
-       "face": "S",
-       "cls": "LG_SU",
-       "peer": "vmb_SW6",
-       "bits": 556,
-       "offset": 105.3
-      },
-      {
-       "face": "E",
-       "cls": "SU_CORE",
-       "peer": "su_SW0",
-       "bits": 256,
-       "offset": 60.3
-      },
-      {
-       "face": "E",
-       "cls": "LG_SU",
-       "peer": "vmb_SW7",
-       "bits": 556,
-       "offset": 106.2
-      }
-     ]
+     "outline": null,
+     "origin": null,
+     "rf_banks": 64,
+     "reducer_sram_macros": 2
     }
-   ],
-   "compute_reservation": null
+   },
+   "declared_clock_ports": {
+    "pg_clk": 4,
+    "clk_lane": 1024,
+    "clk_insert": 512,
+    "clk_bcast": 16,
+    "clk_bank": 128,
+    "clk_bank_macro": 768,
+    "clk_rf": 64,
+    "clk_ctl": 4,
+    "clk_core": 1,
+    "clk_red": 1,
+    "clk_side": 6
+   },
+   "domains": {
+    "pg_clk": "stream833.333ps",
+    "arithmetic_bank_rf_control": "serial1111.111ps",
+    "crossing": "UNRESOLVED fixed 3:4 phase calendar"
+   },
+   "rf_routes": "16 source->destination routes x41bits in ot_hbm_su_static_top; RF_RELAY8 component proof only, actual die stage count/homes absent"
   },
   {
-   "name": "hb_su_SE_top",
-   "cell": null,
-   "rtl_pending": "H-ELEM-B: whole static SU top (VM ports + 512 lanes + data store + reducer + RF) as ONE master, 4 bank-pair LG port groups (floorplan condition: SW/SE 4 groups, not 5)",
-   "port_groups": [
-    {
-     "name": "su_SE0",
-     "origin": {
-      "x": 25604.64,
-      "y": 6611.76
+   "name": "hb_su_SE",
+   "cell": "ot_hbm_su_static_quarter",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_quarter.sv",
+   "params": {
+    "QID": 1,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1
+   },
+   "grant_status": "UNASSIGNED_REAL_BODY_FOOTPRINT",
+   "outline": null,
+   "origin": null,
+   "composition": {
+    "slices": [
+     {
+      "name": "hb_su_SE0",
+      "cell": "ot_hbm_su_static_pgslice",
+      "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+      "params": {
+       "QID": 1,
+       "READ_RETURN": 10,
+       "WRITE_RETURN": 7,
+       "FETCH_EXTRA_EDGES": 2,
+       "MLAT": 4,
+       "ALAT": 3,
+       "LEAF": 1,
+       "G": 0
+      },
+      "outline": null,
+      "origin": null,
+      "former_port_only_box": {
+       "x": 25603.6,
+       "y": 6610.2,
+       "w": 266.224,
+       "h": 266.224
+      },
+      "vm_bank_pair": [
+       0,
+       1
+      ],
+      "store_banks": 32,
+      "store_sram_macros": 192,
+      "lanes": {
+       "LIGHT": 16,
+       "SFU": 16,
+       "FULL": 0
+      },
+      "requirement": "actual child outlines, all source pins/roots, local bank/lane/control paths, 3:4 phase bridge and LG-facing pin cut required before grant"
      },
-     "outline": {
-      "w": 267.84,
-      "h": 267.84
+     {
+      "name": "hb_su_SE1",
+      "cell": "ot_hbm_su_static_pgslice",
+      "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+      "params": {
+       "QID": 1,
+       "READ_RETURN": 10,
+       "WRITE_RETURN": 7,
+       "FETCH_EXTRA_EDGES": 2,
+       "MLAT": 4,
+       "ALAT": 3,
+       "LEAF": 1,
+       "G": 1
+      },
+      "outline": null,
+      "origin": null,
+      "former_port_only_box": {
+       "x": 25166.6,
+       "y": 5737.7,
+       "w": 266.224,
+       "h": 266.224
+      },
+      "vm_bank_pair": [
+       2,
+       3
+      ],
+      "store_banks": 32,
+      "store_sram_macros": 192,
+      "lanes": {
+       "LIGHT": 16,
+       "SFU": 16,
+       "FULL": 0
+      },
+      "requirement": "actual child outlines, all source pins/roots, local bank/lane/control paths, 3:4 phase bridge and LG-facing pin cut required before grant"
      },
-     "links": [
-      {
-       "face": "S",
-       "cls": "SU_CORE",
-       "peer": "su_SE1",
-       "bits": 256,
-       "offset": 0.0
+     {
+      "name": "hb_su_SE2",
+      "cell": "ot_hbm_su_static_pgslice",
+      "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+      "params": {
+       "QID": 1,
+       "READ_RETURN": 10,
+       "WRITE_RETURN": 7,
+       "FETCH_EXTRA_EDGES": 2,
+       "MLAT": 4,
+       "ALAT": 3,
+       "LEAF": 1,
+       "G": 2
       },
-      {
-       "face": "S",
-       "cls": "LG_SU",
-       "peer": "vmb_SE0",
-       "bits": 556,
-       "offset": 154.5
+      "outline": null,
+      "origin": null,
+      "former_port_only_box": {
+       "x": 25503.2,
+       "y": 10374.5,
+       "w": 266.224,
+       "h": 266.224
       },
-      {
-       "face": "S",
-       "cls": "LG_SU",
-       "peer": "vmb_SE1",
-       "bits": 556,
-       "offset": 210.1
+      "vm_bank_pair": [
+       4,
+       5
+      ],
+      "store_banks": 32,
+      "store_sram_macros": 192,
+      "lanes": {
+       "LIGHT": 32,
+       "SFU": 0,
+       "FULL": 0
       },
-      {
-       "face": "N",
-       "cls": "SU_CORE",
-       "peer": "su_SE2",
-       "bits": 256,
-       "offset": 70.1
-      },
-      {
-       "face": "W",
-       "cls": "SU_CORE",
-       "peer": "su_SE3",
-       "bits": 256,
-       "offset": 0.0
-      }
-     ]
-    },
-    {
-     "name": "su_SE1",
-     "origin": {
-      "x": 25168.32,
-      "y": 5739.12
+      "requirement": "actual child outlines, all source pins/roots, local bank/lane/control paths, 3:4 phase bridge and LG-facing pin cut required before grant"
      },
-     "outline": {
-      "w": 267.84,
-      "h": 267.84
+     {
+      "name": "hb_su_SE3",
+      "cell": "ot_hbm_su_static_pgslice",
+      "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+      "params": {
+       "QID": 1,
+       "READ_RETURN": 10,
+       "WRITE_RETURN": 7,
+       "FETCH_EXTRA_EDGES": 2,
+       "MLAT": 4,
+       "ALAT": 3,
+       "LEAF": 1,
+       "G": 3
+      },
+      "outline": null,
+      "origin": null,
+      "former_port_only_box": {
+       "x": 23769.8,
+       "y": 6130.2,
+       "w": 266.224,
+       "h": 266.224
+      },
+      "vm_bank_pair": [
+       6,
+       7
+      ],
+      "store_banks": 32,
+      "store_sram_macros": 192,
+      "lanes": {
+       "LIGHT": 32,
+       "SFU": 0,
+       "FULL": 0
+      },
+      "requirement": "actual child outlines, all source pins/roots, local bank/lane/control paths, 3:4 phase bridge and LG-facing pin cut required before grant"
+     }
+    ],
+    "core": {
+     "name": "hb_sucore_SE",
+     "cell": "ot_hbm_su_static_qcore",
+     "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
+     "params": {
+      "MUT": 0
      },
-     "links": [
-      {
-       "face": "N",
-       "cls": "LG_SU",
-       "peer": "vmb_SE2",
-       "bits": 556,
-       "offset": 26.3
-      },
-      {
-       "face": "N",
-       "cls": "SU_CORE",
-       "peer": "su_SE0",
-       "bits": 256,
-       "offset": 240.6
-      },
-      {
-       "face": "S",
-       "cls": "LG_SU",
-       "peer": "vmb_SE3",
-       "bits": 556,
-       "offset": 210.6
-      }
-     ]
-    },
-    {
-     "name": "su_SE2",
-     "origin": {
-      "x": 25505.28,
-      "y": 10376.64
-     },
-     "outline": {
-      "w": 267.84,
-      "h": 267.84
-     },
-     "links": [
-      {
-       "face": "N",
-       "cls": "LG_SU",
-       "peer": "vmb_SE4",
-       "bits": 556,
-       "offset": 105.3
-      },
-      {
-       "face": "E",
-       "cls": "LG_SU",
-       "peer": "vmb_SE5",
-       "bits": 556,
-       "offset": 105.3
-      },
-      {
-       "face": "S",
-       "cls": "SU_CORE",
-       "peer": "su_SE0",
-       "bits": 256,
-       "offset": 170.5
-      }
-     ]
-    },
-    {
-     "name": "su_SE3",
-     "origin": {
-      "x": 23770.8,
-      "y": 6132.24
-     },
-     "outline": {
-      "w": 267.84,
-      "h": 267.84
-     },
-     "links": [
-      {
-       "face": "E",
-       "cls": "LG_SU",
-       "peer": "vmb_SE6",
-       "bits": 556,
-       "offset": 185.0
-      },
-      {
-       "face": "E",
-       "cls": "SU_CORE",
-       "peer": "su_SE0",
-       "bits": 256,
-       "offset": 240.6
-      },
-      {
-       "face": "S",
-       "cls": "LG_SU",
-       "peer": "vmb_SE7",
-       "bits": 556,
-       "offset": 210.6
-      }
-     ]
+     "outline": null,
+     "origin": null,
+     "rf_banks": 64,
+     "reducer_sram_macros": 2
     }
-   ],
-   "compute_reservation": null
+   },
+   "declared_clock_ports": {
+    "pg_clk": 4,
+    "clk_lane": 1024,
+    "clk_insert": 512,
+    "clk_bcast": 16,
+    "clk_bank": 128,
+    "clk_bank_macro": 768,
+    "clk_rf": 64,
+    "clk_ctl": 4,
+    "clk_core": 1,
+    "clk_red": 1,
+    "clk_side": 6
+   },
+   "domains": {
+    "pg_clk": "stream833.333ps",
+    "arithmetic_bank_rf_control": "serial1111.111ps",
+    "crossing": "UNRESOLVED fixed 3:4 phase calendar"
+   },
+   "rf_routes": "16 source->destination routes x41bits in ot_hbm_su_static_top; RF_RELAY8 component proof only, actual die stage count/homes absent"
   },
   {
-   "name": "hb_su_NW_top",
-   "cell": null,
-   "rtl_pending": "H-ELEM-B: whole static SU top (VM ports + 512 lanes + data store + reducer + RF) as ONE master, 4 bank-pair LG port groups (floorplan condition: SW/SE 4 groups, not 5)",
-   "port_groups": [
-    {
-     "name": "su_NW0",
-     "origin": {
-      "x": 8914.32,
-      "y": 19191.6
+   "name": "hb_su_NW",
+   "cell": "ot_hbm_su_static_quarter",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_quarter.sv",
+   "params": {
+    "QID": 2,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1
+   },
+   "grant_status": "UNASSIGNED_REAL_BODY_FOOTPRINT",
+   "outline": null,
+   "origin": null,
+   "composition": {
+    "slices": [
+     {
+      "name": "hb_su_NW0",
+      "cell": "ot_hbm_su_static_pgslice",
+      "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+      "params": {
+       "QID": 2,
+       "READ_RETURN": 10,
+       "WRITE_RETURN": 7,
+       "FETCH_EXTRA_EDGES": 2,
+       "MLAT": 4,
+       "ALAT": 3,
+       "LEAF": 1,
+       "G": 0
+      },
+      "outline": null,
+      "origin": null,
+      "former_port_only_box": {
+       "x": 8913.8,
+       "y": 19189.5,
+       "w": 266.271,
+       "h": 266.271
+      },
+      "vm_bank_pair": [
+       0,
+       1
+      ],
+      "store_banks": 32,
+      "store_sram_macros": 192,
+      "lanes": {
+       "LIGHT": 16,
+       "SFU": 16,
+       "FULL": 0
+      },
+      "requirement": "actual child outlines, all source pins/roots, local bank/lane/control paths, 3:4 phase bridge and LG-facing pin cut required before grant"
      },
-     "outline": {
-      "w": 267.84,
-      "h": 267.84
+     {
+      "name": "hb_su_NW1",
+      "cell": "ot_hbm_su_static_pgslice",
+      "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+      "params": {
+       "QID": 2,
+       "READ_RETURN": 10,
+       "WRITE_RETURN": 7,
+       "FETCH_EXTRA_EDGES": 2,
+       "MLAT": 4,
+       "ALAT": 3,
+       "LEAF": 1,
+       "G": 1
+      },
+      "outline": null,
+      "origin": null,
+      "former_port_only_box": {
+       "x": 6571.9,
+       "y": 19570.9,
+       "w": 266.271,
+       "h": 266.271
+      },
+      "vm_bank_pair": [
+       2,
+       3
+      ],
+      "store_banks": 32,
+      "store_sram_macros": 192,
+      "lanes": {
+       "LIGHT": 16,
+       "SFU": 16,
+       "FULL": 0
+      },
+      "requirement": "actual child outlines, all source pins/roots, local bank/lane/control paths, 3:4 phase bridge and LG-facing pin cut required before grant"
      },
-     "links": [
-      {
-       "face": "N",
-       "cls": "LG_SU",
-       "peer": "vmb_NW0",
-       "bits": 556,
-       "offset": 73.3
+     {
+      "name": "hb_su_NW2",
+      "cell": "ot_hbm_su_static_pgslice",
+      "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+      "params": {
+       "QID": 2,
+       "READ_RETURN": 10,
+       "WRITE_RETURN": 7,
+       "FETCH_EXTRA_EDGES": 2,
+       "MLAT": 4,
+       "ALAT": 3,
+       "LEAF": 1,
+       "G": 2
       },
-      {
-       "face": "W",
-       "cls": "LG_SU",
-       "peer": "vmb_NW1",
-       "bits": 556,
-       "offset": 97.3
+      "outline": null,
+      "origin": null,
+      "former_port_only_box": {
+       "x": 7742.3,
+       "y": 19384.8,
+       "w": 266.271,
+       "h": 266.271
       },
-      {
-       "face": "W",
-       "cls": "SU_CORE",
-       "peer": "su_NW2",
-       "bits": 256,
-       "offset": 215.1
+      "vm_bank_pair": [
+       4,
+       5
+      ],
+      "store_banks": 32,
+      "store_sram_macros": 192,
+      "lanes": {
+       "LIGHT": 32,
+       "SFU": 0,
+       "FULL": 0
       },
-      {
-       "face": "W",
-       "cls": "SU_CORE",
-       "peer": "su_NW1",
-       "bits": 256,
-       "offset": 240.7
-      },
-      {
-       "face": "E",
-       "cls": "SU_CORE",
-       "peer": "su_NW3",
-       "bits": 256,
-       "offset": 161.0
-      }
-     ]
-    },
-    {
-     "name": "su_NW1",
-     "origin": {
-      "x": 6572.88,
-      "y": 19571.76
+      "requirement": "actual child outlines, all source pins/roots, local bank/lane/control paths, 3:4 phase bridge and LG-facing pin cut required before grant"
      },
-     "outline": {
-      "w": 267.84,
-      "h": 267.84
+     {
+      "name": "hb_su_NW3",
+      "cell": "ot_hbm_su_static_pgslice",
+      "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+      "params": {
+       "QID": 2,
+       "READ_RETURN": 10,
+       "WRITE_RETURN": 7,
+       "FETCH_EXTRA_EDGES": 2,
+       "MLAT": 4,
+       "ALAT": 3,
+       "LEAF": 1,
+       "G": 3
+      },
+      "outline": null,
+      "origin": null,
+      "former_port_only_box": {
+       "x": 9468.1,
+       "y": 19270.9,
+       "w": 266.271,
+       "h": 266.271
+      },
+      "vm_bank_pair": [
+       6,
+       7
+      ],
+      "store_banks": 32,
+      "store_sram_macros": 192,
+      "lanes": {
+       "LIGHT": 32,
+       "SFU": 0,
+       "FULL": 0
+      },
+      "requirement": "actual child outlines, all source pins/roots, local bank/lane/control paths, 3:4 phase bridge and LG-facing pin cut required before grant"
+     }
+    ],
+    "core": {
+     "name": "hb_sucore_NW",
+     "cell": "ot_hbm_su_static_qcore",
+     "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
+     "params": {
+      "MUT": 0
      },
-     "links": [
-      {
-       "face": "W",
-       "cls": "LG_SU",
-       "peer": "vmb_NW2",
-       "bits": 556,
-       "offset": 118.2
-      },
-      {
-       "face": "S",
-       "cls": "LG_SU",
-       "peer": "vmb_NW3",
-       "bits": 556,
-       "offset": 16.8
-      },
-      {
-       "face": "E",
-       "cls": "SU_CORE",
-       "peer": "su_NW0",
-       "bits": 256,
-       "offset": 0.0
-      }
-     ]
-    },
-    {
-     "name": "su_NW2",
-     "origin": {
-      "x": 7743.6,
-      "y": 19386.0
-     },
-     "outline": {
-      "w": 267.84,
-      "h": 267.84
-     },
-     "links": [
-      {
-       "face": "W",
-       "cls": "LG_SU",
-       "peer": "vmb_NW5",
-       "bits": 556,
-       "offset": 51.1
-      },
-      {
-       "face": "W",
-       "cls": "LG_SU",
-       "peer": "vmb_NW4",
-       "bits": 556,
-       "offset": 197.6
-      },
-      {
-       "face": "E",
-       "cls": "SU_CORE",
-       "peer": "su_NW0",
-       "bits": 256,
-       "offset": 22.7
-      }
-     ]
-    },
-    {
-     "name": "su_NW3",
-     "origin": {
-      "x": 9469.44,
-      "y": 19271.52
-     },
-     "outline": {
-      "w": 267.84,
-      "h": 267.84
-     },
-     "links": [
-      {
-       "face": "N",
-       "cls": "LG_SU",
-       "peer": "vmb_NW6",
-       "bits": 556,
-       "offset": 105.3
-      },
-      {
-       "face": "N",
-       "cls": "LG_SU",
-       "peer": "vmb_NW7",
-       "bits": 556,
-       "offset": 160.9
-      },
-      {
-       "face": "W",
-       "cls": "SU_CORE",
-       "peer": "su_NW0",
-       "bits": 256,
-       "offset": 79.6
-      }
-     ]
+     "outline": null,
+     "origin": null,
+     "rf_banks": 64,
+     "reducer_sram_macros": 2
     }
-   ],
-   "compute_reservation": null
+   },
+   "declared_clock_ports": {
+    "pg_clk": 4,
+    "clk_lane": 1024,
+    "clk_insert": 512,
+    "clk_bcast": 16,
+    "clk_bank": 128,
+    "clk_bank_macro": 768,
+    "clk_rf": 64,
+    "clk_ctl": 4,
+    "clk_core": 1,
+    "clk_red": 1,
+    "clk_side": 6
+   },
+   "domains": {
+    "pg_clk": "stream833.333ps",
+    "arithmetic_bank_rf_control": "serial1111.111ps",
+    "crossing": "UNRESOLVED fixed 3:4 phase calendar"
+   },
+   "rf_routes": "16 source->destination routes x41bits in ot_hbm_su_static_top; RF_RELAY8 component proof only, actual die stage count/homes absent"
   },
   {
-   "name": "hb_su_NE_top",
-   "cell": null,
-   "rtl_pending": "H-ELEM-B: whole static SU top (VM ports + 512 lanes + data store + reducer + RF) as ONE master, 4 bank-pair LG port groups (floorplan condition: SW/SE 4 groups, not 5)",
-   "port_groups": [
-    {
-     "name": "su_NE0",
-     "origin": {
-      "x": 22349.52,
-      "y": 19830.96
+   "name": "hb_su_NE",
+   "cell": "ot_hbm_su_static_quarter",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_quarter.sv",
+   "params": {
+    "QID": 3,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7,
+    "FETCH_EXTRA_EDGES": 2,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1
+   },
+   "grant_status": "UNASSIGNED_REAL_BODY_FOOTPRINT",
+   "outline": null,
+   "origin": null,
+   "composition": {
+    "slices": [
+     {
+      "name": "hb_su_NE0",
+      "cell": "ot_hbm_su_static_pgslice",
+      "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+      "params": {
+       "QID": 3,
+       "READ_RETURN": 10,
+       "WRITE_RETURN": 7,
+       "FETCH_EXTRA_EDGES": 2,
+       "MLAT": 4,
+       "ALAT": 3,
+       "LEAF": 1,
+       "G": 0
+      },
+      "outline": null,
+      "origin": null,
+      "former_port_only_box": {
+       "x": 22348.3,
+       "y": 19829.9,
+       "w": 266.271,
+       "h": 266.271
+      },
+      "vm_bank_pair": [
+       0,
+       1
+      ],
+      "store_banks": 32,
+      "store_sram_macros": 192,
+      "lanes": {
+       "LIGHT": 16,
+       "SFU": 16,
+       "FULL": 0
+      },
+      "requirement": "actual child outlines, all source pins/roots, local bank/lane/control paths, 3:4 phase bridge and LG-facing pin cut required before grant"
      },
-     "outline": {
-      "w": 267.84,
-      "h": 267.84
+     {
+      "name": "hb_su_NE1",
+      "cell": "ot_hbm_su_static_pgslice",
+      "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+      "params": {
+       "QID": 3,
+       "READ_RETURN": 10,
+       "WRITE_RETURN": 7,
+       "FETCH_EXTRA_EDGES": 2,
+       "MLAT": 4,
+       "ALAT": 3,
+       "LEAF": 1,
+       "G": 1
+      },
+      "outline": null,
+      "origin": null,
+      "former_port_only_box": {
+       "x": 24977.4,
+       "y": 19589.7,
+       "w": 266.271,
+       "h": 266.271
+      },
+      "vm_bank_pair": [
+       2,
+       3
+      ],
+      "store_banks": 32,
+      "store_sram_macros": 192,
+      "lanes": {
+       "LIGHT": 16,
+       "SFU": 16,
+       "FULL": 0
+      },
+      "requirement": "actual child outlines, all source pins/roots, local bank/lane/control paths, 3:4 phase bridge and LG-facing pin cut required before grant"
      },
-     "links": [
-      {
-       "face": "S",
-       "cls": "LG_SU",
-       "peer": "vmb_NE0",
-       "bits": 556,
-       "offset": 131.1
+     {
+      "name": "hb_su_NE2",
+      "cell": "ot_hbm_su_static_pgslice",
+      "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+      "params": {
+       "QID": 3,
+       "READ_RETURN": 10,
+       "WRITE_RETURN": 7,
+       "FETCH_EXTRA_EDGES": 2,
+       "MLAT": 4,
+       "ALAT": 3,
+       "LEAF": 1,
+       "G": 2
       },
-      {
-       "face": "S",
-       "cls": "LG_SU",
-       "peer": "vmb_NE1",
-       "bits": 556,
-       "offset": 186.7
+      "outline": null,
+      "origin": null,
+      "former_port_only_box": {
+       "x": 21695.6,
+       "y": 19515.5,
+       "w": 266.271,
+       "h": 266.271
       },
-      {
-       "face": "E",
-       "cls": "SU_CORE",
-       "peer": "su_NE1",
-       "bits": 256,
-       "offset": 0.3
+      "vm_bank_pair": [
+       4,
+       5
+      ],
+      "store_banks": 32,
+      "store_sram_macros": 192,
+      "lanes": {
+       "LIGHT": 32,
+       "SFU": 0,
+       "FULL": 0
       },
-      {
-       "face": "W",
-       "cls": "SU_CORE",
-       "peer": "su_NE2",
-       "bits": 256,
-       "offset": 0.0
-      },
-      {
-       "face": "W",
-       "cls": "SU_CORE",
-       "peer": "su_NE3",
-       "bits": 256,
-       "offset": 25.6
-      }
-     ]
-    },
-    {
-     "name": "su_NE1",
-     "origin": {
-      "x": 24978.24,
-      "y": 19591.2
+      "requirement": "actual child outlines, all source pins/roots, local bank/lane/control paths, 3:4 phase bridge and LG-facing pin cut required before grant"
      },
-     "outline": {
-      "w": 267.84,
-      "h": 267.84
+     {
+      "name": "hb_su_NE3",
+      "cell": "ot_hbm_su_static_pgslice",
+      "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
+      "params": {
+       "QID": 3,
+       "READ_RETURN": 10,
+       "WRITE_RETURN": 7,
+       "FETCH_EXTRA_EDGES": 2,
+       "MLAT": 4,
+       "ALAT": 3,
+       "LEAF": 1,
+       "G": 3
+      },
+      "outline": null,
+      "origin": null,
+      "former_port_only_box": {
+       "x": 18984.4,
+       "y": 18516.5,
+       "w": 266.271,
+       "h": 266.271
+      },
+      "vm_bank_pair": [
+       6,
+       7
+      ],
+      "store_banks": 32,
+      "store_sram_macros": 192,
+      "lanes": {
+       "LIGHT": 32,
+       "SFU": 0,
+       "FULL": 0
+      },
+      "requirement": "actual child outlines, all source pins/roots, local bank/lane/control paths, 3:4 phase bridge and LG-facing pin cut required before grant"
+     }
+    ],
+    "core": {
+     "name": "hb_sucore_NE",
+     "cell": "ot_hbm_su_static_qcore",
+     "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
+     "params": {
+      "MUT": 0
      },
-     "links": [
-      {
-       "face": "S",
-       "cls": "LG_SU",
-       "peer": "vmb_NE2",
-       "bits": 556,
-       "offset": 105.3
-      },
-      {
-       "face": "E",
-       "cls": "LG_SU",
-       "peer": "vmb_NE3",
-       "bits": 556,
-       "offset": 105.3
-      },
-      {
-       "face": "W",
-       "cls": "SU_CORE",
-       "peer": "su_NE0",
-       "bits": 256,
-       "offset": 240.4
-      }
-     ]
-    },
-    {
-     "name": "su_NE2",
-     "origin": {
-      "x": 21697.2,
-      "y": 19515.6
-     },
-     "outline": {
-      "w": 267.84,
-      "h": 267.84
-     },
-     "links": [
-      {
-       "face": "N",
-       "cls": "LG_SU",
-       "peer": "vmb_NE4",
-       "bits": 556,
-       "offset": 105.3
-      },
-      {
-       "face": "S",
-       "cls": "LG_SU",
-       "peer": "vmb_NE5",
-       "bits": 556,
-       "offset": 105.3
-      },
-      {
-       "face": "E",
-       "cls": "SU_CORE",
-       "peer": "su_NE0",
-       "bits": 256,
-       "offset": 240.7
-      }
-     ]
-    },
-    {
-     "name": "su_NE3",
-     "origin": {
-      "x": 18986.4,
-      "y": 18517.68
-     },
-     "outline": {
-      "w": 267.84,
-      "h": 267.84
-     },
-     "links": [
-      {
-       "face": "S",
-       "cls": "LG_SU",
-       "peer": "vmb_NE6",
-       "bits": 556,
-       "offset": 105.3
-      },
-      {
-       "face": "N",
-       "cls": "LG_SU",
-       "peer": "vmb_NE7",
-       "bits": 556,
-       "offset": 105.3
-      },
-      {
-       "face": "E",
-       "cls": "SU_CORE",
-       "peer": "su_NE0",
-       "bits": 256,
-       "offset": 240.7
-      }
-     ]
+     "outline": null,
+     "origin": null,
+     "rf_banks": 64,
+     "reducer_sram_macros": 2
     }
-   ],
-   "compute_reservation": null
+   },
+   "declared_clock_ports": {
+    "pg_clk": 4,
+    "clk_lane": 1024,
+    "clk_insert": 512,
+    "clk_bcast": 16,
+    "clk_bank": 128,
+    "clk_bank_macro": 768,
+    "clk_rf": 64,
+    "clk_ctl": 4,
+    "clk_core": 1,
+    "clk_red": 1,
+    "clk_side": 6
+   },
+   "domains": {
+    "pg_clk": "stream833.333ps",
+    "arithmetic_bank_rf_control": "serial1111.111ps",
+    "crossing": "UNRESOLVED fixed 3:4 phase calendar"
+   },
+   "rf_routes": "16 source->destination routes x41bits in ot_hbm_su_static_top; RF_RELAY8 component proof only, actual die stage count/homes absent"
+  },
+  {
+   "name": "su_programme",
+   "cell": "ot_hbm_su_programme",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv",
+   "grant_status": "UNASSIGNED_SOURCE_COMPONENT",
+   "outline": null,
+   "origin": null,
+   "measured_component_sram_count": 302,
+   "macro_count_scope": "source30117b8ea compiled full-shape programme component; production 3:4 split planes and native phase integration OPEN",
+   "requirement": "actual loaded programme params/dictionary, hierarchical macro/select/control leaves, clocks and 3:4 output planes; no 302-macro placeholder abstract"
   }
  ],
  "shared_master_plans": {

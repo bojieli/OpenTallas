@@ -1,0 +1,76 @@
+{
+ "schema": "opentallas.hbm.current-die-readiness.1103",
+ "status": "NOT_NATIVE_COMPLETE",
+ "public_candidate_grants_main": "38c9e94a2",
+ "local_source_prerequisites": [
+  "957c06a0b HELD: delivery LAT2 seed23 FAILcycle5352; no band suite",
+  "30117b8ea whole SU body MLAT4/ALAT3/LEAF1; sameclock component not production3:4",
+  "27aef8834/520529555/1cb7265c9 four-real-root SFU source",
+  "726ad8642 noATT NE RG5/WG2",
+  "8b18a1a39 distinct opt-in FT VM bank source"
+ ],
+ "partial_inventory": {
+  "instances": 83,
+  "masters": 38,
+  "actual_edges": 695,
+  "declared_source_clock_bits": 12939,
+  "unbound_ports": 1790,
+  "coverage_scope": "PARTIAL on-die source inventory (VM/LG/service/selected clients); excludes native 32SM attention parent, HC, CP, host/SerDes digital and full programme/control integration; not a complete die master census"
+ },
+ "bind": {
+  "verdict": "FAIL",
+  "summary": {
+   "masters": 38,
+   "instances": 83,
+   "unbound_masters": 0,
+   "stub_masters": 0,
+   "ambiguous_masters": 0,
+   "port_not_in_rtl": 0,
+   "width_mismatch": 0,
+   "input_unconnected": 0,
+   "input_tied": 4,
+   "unparsed_connections": 0,
+   "undriven_net_bits": 0,
+   "multi_driven_net_bits": 0,
+   "top_assigns": 0,
+   "params_not_in_rtl": 0,
+   "strap_ports": 0
+  },
+  "remaining": "IDX/ARGMAX sid and12LG far_rq/far_wq logical constant requests; no straps granted",
+  "scope": "Structural port check on an explicit-boundary partial subnet; external boundaries do not establish real producer, reset or clock delivery"
+ },
+ "physical_blockers": [
+  "whole SU 16slices+4cores require measured child packing; old1.1mm2 placeholder invalid; known existing leaf-outline sum34.752mm2 before heavy/RF/control/channels",
+  "SFU macro-only838249.573um2 exceeds old400121.856um2 parent by2.095x before logic",
+  "new VMbank/LG proposals have63collisions at inherited origins; coherent functional-strip requests required",
+  "SU/SFU serial1111.111ps vs stream833.333ps phase calendar/planes and reset epoch unqualified",
+  "source-exact staged reset tree absent; calendar reset229..268ps not exempt",
+  "RF41 actual physical-stage counts/homes/native-view incidents unassigned; historical8stage proof insufficient",
+  "PCnative L409/C508/spread105ps and delivery candidate functional failure block service route adoption",
+  "DMAparent432x360.72 rejected after real20um interchild channels; controller successor proof pending",
+  "native32SM attention parent,HC,CP,host/SerDes and full programme integration outside inventory"
+ ],
+ "chain": {
+  "current_full_real_view_grt_sta": "NOT_STARTED: above source/geometry/native-view prerequisites unresolved",
+  "historical_grt27": {
+   "source": "0cf8f68d2",
+   "process_rc": 0,
+   "engineering_status": "FAIL",
+   "overflow": 51123,
+   "wirelength_um": 211429144,
+   "scope": "historical undersized model; no qualification inherited"
+  },
+  "corners": "TTsetup/FFhold/DRC0; SSsensitivity only"
+ },
+ "independent_work": {
+  "metadata": "firstroute TT+356.68ps/FFhold-6.28ps/DRC0; normal near-miss finishing pending; notCLOSED",
+  "coll_writer": "live source-bound CTS E1unit1149800; native timing/IOP pending",
+  "coll_state": "32typed51.84square candidate reservations sourcec827, final IOP/CTS unqualified",
+  "vm_stage6": "source-functional candidate33eb6ea45; one SWnative6root CTS being measured; no parent/view adoption"
+ },
+ "files": {
+  "results/arch/hbm_die_v15/source_contract/contract.json": "7c2e3838442da6c4cd5a1e4802890ecf15696fe1da27ba529620b3a9b09b5829",
+  "results/arch/hbm_die_v15/current_bind_1103/partial_all/hbm_v15_partial_all_1103.v": "629f3a054fc2ec803861cc685aae63f939064ed7bc10733a92ba7156c616ef90",
+  "results/arch/hbm_die_v15/current_bind_1103/partial_all/bind.json": "62655fa6f8b186bdcedf4e58ca4136e0292a41bbceadf69a02c2d7e80fa980a0"
+ }
+}

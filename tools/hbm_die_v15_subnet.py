@@ -55,11 +55,7 @@ def main():
                     ports.append(f'input wire {src}')
                 conns.append(f".{port}({{{w}{{{src}}}}})" if w > 1 else f".{port}({src})")
                 continue
-            if port == 'rst_n':
-                if 'input wire rst_n' not in ports:
-                    ports.append('input wire rst_n')
-                conns.append('.rst_n(rst_n)')
-                continue
+            # Reset is an explicit boundary unless actual contract edges drive it.
             if (name, port) in consts:
                 conns.append(f".{port}({w}'d{consts[(name, port)]['value']})")
                 continue

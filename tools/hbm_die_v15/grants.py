@@ -149,6 +149,37 @@ def place_pins(outline, faces_ports, clock_ports, ctl_face):
     return (w, h), pins, util, entry
 
 
+
+def su_body_requests(blocks, instances):
+    """Current real SU hierarchy; none of the old 266um port boxes is a body grant."""
+    requests=[]
+    base='rtl/hbm_accel/generic/adapters/static_su/top/'
+    for qi,q in enumerate(SID):
+        i=instances['hb_su_'+q]
+        assert i['master']=='ot_hbm_su_static_quarter', 'whole SU source inventory prerequisite'
+        slices=[]
+        for g in range(4):
+            b=blocks[f'su_{q}{g}']
+            heavy=16 if g<2 else 0
+            slices.append(dict(name=f'hb_su_{q}{g}',cell='ot_hbm_su_static_pgslice',source=base+'ot_hbm_su_static_pgslice.sv',
+                params=dict(i['params'],G=g),outline=None,origin=None,
+                former_port_only_box={k:b[k] for k in ('x','y','w','h')},
+                vm_bank_pair=[2*g,2*g+1],store_banks=32,store_sram_macros=192,
+                lanes=dict(LIGHT=32-heavy,SFU=heavy-(qi==0 and g==0),FULL=int(qi==0 and g==0)),
+                requirement='actual child outlines, all source pins/roots, local bank/lane/control paths, 3:4 phase bridge and LG-facing pin cut required before grant'))
+        requests.append(dict(name='hb_su_'+q,cell=i['master'],source=i['source'],params=i['params'],
+            grant_status='UNASSIGNED_REAL_BODY_FOOTPRINT',outline=None,origin=None,
+            composition=dict(slices=slices,core=dict(name='hb_sucore_'+q,cell='ot_hbm_su_static_qcore',source=base+'ot_hbm_su_static_qcore.sv',
+                params=dict(MUT=0),outline=None,origin=None,rf_banks=64,reducer_sram_macros=2)),
+            declared_clock_ports={p:r['bits'] for p,r in i['ports'].items() if p.endswith('_clk') or p.startswith('clk_')},
+            domains=dict(pg_clk='stream833.333ps',arithmetic_bank_rf_control='serial1111.111ps',crossing='UNRESOLVED fixed 3:4 phase calendar'),
+            rf_routes='16 source->destination routes x41bits in ot_hbm_su_static_top; RF_RELAY8 component proof only, actual die stage count/homes absent'))
+    requests.append(dict(name='su_programme',cell='ot_hbm_su_programme',source='rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv',
+        grant_status='UNASSIGNED_SOURCE_COMPONENT',outline=None,origin=None,
+        measured_component_sram_count=302,macro_count_scope='source30117b8ea compiled full-shape programme component; production 3:4 split planes and native phase integration OPEN',
+        requirement='actual loaded programme params/dictionary, hierarchical macro/select/control leaves, clocks and 3:4 output planes; no 302-macro placeholder abstract'))
+    return requests
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--synth', required=True)
@@ -479,19 +510,8 @@ def main():
         reloc.append(dict(slot=nm, moved_um=round(math.hypot(x - B[nm]['x'], y - B[nm]['y'])), reason='follows the relocated scorer row'))
         slot(nm, cell, src, {}, 'tile', wh2, (x, y), pins, util, entry, dict(synth=sy, need_um2=round(area)))
 
-    # ------------------------------------------------------------------ whole static SU per quadrant: REQUEST slots
-    su_req = []
-    for q in SID:
-        groups = [k for k in B if re.fullmatch(f'su_{q}\\d', k)]
-        x0 = min(B[g]['x'] for g in groups); y0 = min(B[g]['y'] for g in groups)
-        su_req.append(dict(name=f'hb_su_{q}_top', cell=None, rtl_pending='H-ELEM-B: whole static SU top (VM ports + 512 lanes + '
-                           'data store + reducer + RF) as ONE master, 4 bank-pair LG port groups (floorplan condition: SW/SE 4 groups, '
-                           'not 5)', port_groups=[dict(name=g, origin=dict(x=snap(B[g]['x']), y=snap(B[g]['y'])),
-                                                       outline=dict(w=snap(B[g]['w']), h=snap(B[g]['h'])),
-                                                       links=[dict(face=f, cls=p['cls'], peer=p['peer'], bits=p['bits'],
-                                                                   offset=round(p['offset_um'], 1)) for f, xx in B[g]['faces'].items()
-                                                              for p in xx['pins']]) for g in sorted(groups)],
-                           compute_reservation=None))
+    # The whole body is now actual RTL, but has no source-current physical outline.
+    su_req = su_body_requests(B, inst)
     # ------------------------------------------------------------------ one pin layout per master cell
     # A physical view has ONE pin plan: slots that share a cell take the plan of the largest instance and a mirror
     # orientation (R0 / MX = N<->S / MY = E<->W / R180) chosen to put the most bits on the faces their own peers want.

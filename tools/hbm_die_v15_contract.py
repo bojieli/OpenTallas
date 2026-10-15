@@ -25,7 +25,7 @@ ARGMAX_SOURCE = 'rtl/hbm_accel/generic/ot_hbm_argmax_static.sv'                #
 QUANT_SOURCE = 'rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv'       # H-ATTQ 07:47: QUANT host top on NW RG 'quant' / WG 'quant'
 # ATTENTION: H-ATTQ verdict 2026-10-15T07:47 under owner 10:30/10:45/10:55 = ADOPT B (QK/PV on SM engines at SM 1.0x +
 # SU softmax). Dedicated ATT tiles, attention RG/WG, ATT LG groups and the PV return are DROPPED from v15.
-SU_SOURCE = 'rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv'  # LG near tap 10/7, 4 bank-pair groups
+SU_SOURCE = 'rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_quarter.sv'  # actual 4 pgslices + RF/reducer, source30117b8ea
 SID = ('SW','SE','NW','NE')
 # H-IDX answer 2026-10-15 (main 40e9f801e): SW record clients 7 -> 3.
 RECORD_DISPOSITION = {
@@ -62,7 +62,7 @@ VM_ABI_CHANGE_REQUESTS = [
          status='APPLIED 2026-10-15 H-ELEM-A: condition met (H-ELEM-B main 9505d6569, scores_bias lands in SW); IDX was the last group so COLL stays RG3 (S) / RG5 (N); compiler fixtures re-packed with the 8 IDX bank slots/fixture removed'),
     dict(change='remove NE attention read group and write group (RG 6->5, WG 3->2 NE); drop ATT LG port-group row',
          condition='MET: H-ATTQ ATT-vs-SM verdict B (2026-10-15T07:47, owner 10:30/10:45/10:55); coordinator 09:25 adopted T_band2__npg4_s5 (no ATT)',
-         source='el1015-hbm-attq.log COLLECT-ATTCMP', owner='H-ELEM-A (VM slice)', status='READY_TO_APPLY'),
+         source='el1015-hbm-attq.log COLLECT-ATTCMP + actual noATT ABI726ad8642', owner='H-ELEM-A (VM slice)', status='APPLIED: NE RG5/WG2, HC RG3/WG1, COLL RG4; source-exact 24SRAM proof + response-group mutant'),
 ]
 # ATTENTION on the SM engines (H-ATTQ verdict B 2026-10-15T07:47, owner 10:45 adopt; floorplan T_band2__npg4_s5 adopted
 # 09:25). There is NO attention instance, ATT tile, attention VM group, ATT LG group or PV return in this die. Attention
@@ -87,8 +87,8 @@ ATTENTION_ON_SM = dict(
     owners=dict(sm='H-SM-ATT / H-ELEM-A', su='H-ELEM-B', compiler='H-ATTQ', floorplan='GLOBAL-FP-H (adopted)'))
 # Groups the die no longer needs: bound to nothing on purpose, removed by the VM ABI change above.
 RETIRED_GROUPS = {
-    ('NE','read','attention'):'RETIRE (VM ABI change pending H-ELEM-A): ATT dropped, verdict B',
-    ('NE','write','attention'):'RETIRE (VM ABI change pending H-ELEM-A): ATT dropped, verdict B',
+    ('NE','read','attention'):'REMOVED from actual NE ABI (726ad8642): ATT dropped, verdict B',
+    ('NE','write','attention'):'REMOVED from actual NE ABI (726ad8642): ATT dropped, verdict B',
 }
 
 
@@ -138,8 +138,8 @@ def generate(out):
         module('hb_dbk_'+q,DBK_SOURCE,'ot_hgi_dma_back_static',dict(STK=SID.index(q)))
         # Adopted floorplan T_band2__npg4_s5 (coordinator 2026-10-15 ~09:25) condition: SW/SE engines use 4 bank-pair
         # port groups like NW/NE (not 5): NPG 4, BANK_GROUP 0x33221100 in every quadrant.
-        module('hb_su_'+q,SU_SOURCE,'ot_hbm_su_static_vm_ports',dict(QID=SID.index(q),READ_RETURN=10,WRITE_RETURN=7,
-               NPG=4,BANK_GROUP=0x33221100))
+        module('hb_su_'+q,SU_SOURCE,'ot_hbm_su_static_quarter',dict(QID=SID.index(q),READ_RETURN=10,WRITE_RETURN=7,
+               FETCH_EXTRA_EDGES=2,MLAT=4,ALAT=3,LEAF=1))
     module('hb_idx',IDX_SOURCE,'ot_hbm_idx_client_static')
     module('hb_argmax',ARGMAX_SOURCE,'ot_hbm_argmax_static')
     module('hb_quant_NW',QUANT_SOURCE,'ot_hgi_qdq_host_static',dict(RL=7,WC=4,COMPACT=1))
@@ -194,7 +194,7 @@ def generate(out):
             index=('SW','SE','NW','NE').index(q)
             slice_edge('status_'+q,(vm,'vmstat',0),('vm_status4','quadrant_status',19*index),19)
         if coll in modules:
-            group=3 if q.startswith('S') else 5
+            group=abi['clients'][q]['read'].index('COLL')
             assert abi['quadrants'][q]['params']['RG']>group,(q,'COLL native read-group expansion missing')
             slice_edge('coll_vm_rq_'+q,(coll,'vm_rq',0),(vm,'rq',136*group),136)
             slice_edge('coll_vm_rr_'+q,(vm,'rr',2056*group),(coll,'vm_rr',0),2056)
@@ -287,8 +287,7 @@ def generate(out):
                 status='OPEN: no pin/leaf plan yet' if inst else 'OPEN: engine not yet bound in contract')
             if eng=='SU':
                 rec=engine_rule['engines'][f'SU_{q}'];rec['physical_port_groups']=need
-                rec['status']=('SOURCE MET (%d pg_clk groups, db4f2facb)%s; pins open'%(need,
-                               '' if need==4 else ', BANK_GROUP 0x43221100 provisional (bank 7 alone) pending GEO-H RG5 readback'))
+                rec['status']='SOURCE BODY PRESENT: 4 actual pgslices (3072 store SRAMs die total) plus qcore; actual outlines/pins/multirate calendar OPEN'
     # H-ATTQ request 2026-10-15T07:17: other LG-attached engines carry the same rule.
     # QUANT lives on NW (quadrant_abi sid 2, H-ATTQ 07:47:59 ABI note), direct RG/WG 'quant', not an LG tap.
     engine_rule['engines']['QUANT_NW']=dict(tap=None,instance='hb_quant_NW',owner='H-ATTQ',required_port_groups=4,
@@ -332,10 +331,17 @@ def generate(out):
                 for bit in range(rec['bits']):
                     roots.append(dict(instance=name,port=port,bit=bit,source=['hb_ckgen','pll_stream'],
                                       physical_insertion_reference=None,status='NEEDS_REAL_CTS_VIEW'))
-                    if name.startswith(('svc_','phy_')):roots[-1]['source']=['hb_ckgen','pll_hbm']
+                    domain='stream'
+                    if name.startswith(('svc_','phy_')): domain='hbm'
+                    elif name.startswith('hb_su_') and port!='pg_clk': domain='serial'
+                    elif name.startswith('hb_sfu_') and port!='clk_lg': domain='serial'
+                    roots[-1].update(source=['hb_ckgen','pll_'+domain],domain=domain,
+                        period_ps={'stream':833.333333,'serial':1111.111111,'hbm':1024.0}[domain],
+                        count_scope='declared source clock bit; physical sink existence/count and phase require actual elaboration/CTS')
                 connected.add((name,port))
-            if port=='rst_n':
-                connected.add((name,port))
+            # Reset headers do not establish a physical reset producer/tree.
+            # Keep every reset bit unbound until actual source-exact staged
+            # delivery and fixed initialization/launch epoch are connected.
     unresolved=[]
     for name,mod in modules.items():
         for port,rec in mod['ports'].items():
@@ -353,7 +359,9 @@ def generate(out):
                 owner=('actual host/CP loader (NW target 48)' if port.startswith(('cfg_','desc_','launch'))
                        else 'calendar fault aggregation / CP status')
             elif name.startswith('hb_su_'):
-                owner='actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)'
+                owner=('actual serial/stream reset epoch delivery' if port.startswith('rst_') else
+                       'actual 16 source-exact RF write relay routes from ot_hbm_su_static_top (RF_RELAY=8 is component-only; physical stages unassigned)' if port.startswith(('rf_w','red_')) else
+                       'actual mapped-SRAM programme / 3:4 static SU-to-LG calendar producer; same-clock component does not qualify production')
             elif name.startswith('hb_sfu_'):
                 owner=('actual SFU operand SRAM / SU join' if port.startswith(('vi_','ro_','side_','kv_'))
                        else 'actual SFU programme loader / CP and lane reset tree')
@@ -407,6 +415,10 @@ def generate(out):
                 source_sha256=sources,dependency_inventory_sha256=dependency_hashes,
                 dependency_inventory_scope='all static VM/service RTL including benches; not a substitute for hierarchy elaboration',
                 hierarchy_elaboration_required=True,
+                coverage_scope='PARTIAL on-die source inventory (VM/LG/service/selected clients); excludes native 32SM attention parent, HC, CP, host/SerDes digital and full programme/control integration; not a complete die master census',
+                source_successors_not_adopted=dict(delivery_native='ot_hbm_svc_static_vm_delivery_split_native: 8 clocks, LAT2; source957 HELD after seed23 FAIL cycle5352 (earlier20k seed passed); no band suite or new delivery route qualification; native clocks/status crossing and producer calendar OPEN',
+                    dma_back_vp='ot_hgi_dma_back_static_vp: DESC_LAT2 command lead, native clock/descriptor paths OPEN',
+                    su='ot_hbm_su_static_quarter source30117b8ea MLAT4/ALAT3/LEAF1 body inventoried; full qualification remains false'),
                 service_qualification_rejections=service['qualification_rejections'] if service else [],
                 abi_sha256=hashlib.sha256(abi_path.read_bytes()).hexdigest(),
                 instances=modules,known_actual_edges=edges,clock_roots=roots,vm_slice_bind=slice_bind,
@@ -415,7 +427,13 @@ def generate(out):
                 long_returns=long_returns,vm_abi_change_requests=VM_ABI_CHANGE_REQUESTS,
                 flow_control_boundaries=FLOW_CONTROL_BOUNDARIES,
                 registered_station_masters=generated,logical_constant_requests=logical_constants,unbound_ports=unresolved,
-                boundary_gaps=['actual 1.024ns PHY to 0.833333ns stream block CDC absent',
+                reset_qualification=dict(status='UNBOUND_RESET_DELIVERY',available_source='hfd_ckgen has real por_stream/serial/hbm/link 2FF releases',
+                    missing='actual staged reset-tree RTL/ports/homes, per-domain release/capture timing and common programme launch epoch; no reset port is marked connected merely by name'),
+                boundary_gaps=['reset ports are not driven by a source-exact staged reset tree; calendar reset recovery/setup229..268ps and launch epoch remain OPEN',
+                               'SU/SFU serial 1111.111ps to LG/VM stream 833.333ps fixed 3:4 phase/capture calendar absent; same-clock component benches do not qualify',
+                               'SU physical 16 RF write routes and actual stage count absent (RF_RELAY8 is not a die reach proof)',
+                               'SU programme SRAM producer exists as source component but is not connected in this partial production die inventory',
+                               'actual 1.024ns PHY to 0.833333ns stream block CDC absent',
                                'actual mapped PHY address/endian/PC striping proof required',
                                'historical PC leaf rejected for address/clock semantics; actual block CDC replacement required'],
                 unbound_count=len(unresolved),pin_only_placeholder_count=0,

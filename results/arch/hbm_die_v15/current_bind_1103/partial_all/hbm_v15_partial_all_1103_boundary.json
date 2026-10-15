@@ -1,0 +1,8506 @@
+{
+ "keep": ".*",
+ "instances": [
+  "calendar_NE",
+  "calendar_NW",
+  "calendar_SE",
+  "calendar_SW",
+  "delivery_NE",
+  "delivery_NW",
+  "delivery_SE",
+  "delivery_SW",
+  "hb_argmax",
+  "hb_ckgen",
+  "hb_coll_NE",
+  "hb_coll_NW",
+  "hb_coll_SE",
+  "hb_coll_SW",
+  "hb_dbk_NE",
+  "hb_dbk_NW",
+  "hb_dbk_SE",
+  "hb_dbk_SW",
+  "hb_idx",
+  "hb_quant_NW",
+  "hb_sfu_NE",
+  "hb_sfu_NW",
+  "hb_sfu_SE",
+  "hb_sfu_SW",
+  "hb_su_NE",
+  "hb_su_NW",
+  "hb_su_SE",
+  "hb_su_SW",
+  "hb_vms_NE",
+  "hb_vms_NW",
+  "hb_vms_SE",
+  "hb_vms_SW",
+  "lg_NE_0",
+  "lg_NE_1",
+  "lg_NE_2",
+  "lg_NW_0",
+  "lg_NW_1",
+  "lg_NW_2",
+  "lg_SE_0",
+  "lg_SE_1",
+  "lg_SE_2",
+  "lg_SW_0",
+  "lg_SW_1",
+  "lg_SW_2",
+  "phy_NE",
+  "phy_NW",
+  "phy_SE",
+  "phy_SW",
+  "svc_NE_s0",
+  "svc_NE_s1",
+  "svc_NE_s2",
+  "svc_NE_s3",
+  "svc_NE_s4",
+  "svc_NE_s5",
+  "svc_NE_s6",
+  "svc_NE_s7",
+  "svc_NE_s8",
+  "svc_NW_s0",
+  "svc_NW_s1",
+  "svc_NW_s2",
+  "svc_NW_s3",
+  "svc_NW_s4",
+  "svc_NW_s5",
+  "svc_NW_s6",
+  "svc_NW_s7",
+  "svc_SE_s0",
+  "svc_SE_s1",
+  "svc_SE_s2",
+  "svc_SE_s3",
+  "svc_SE_s4",
+  "svc_SE_s5",
+  "svc_SE_s6",
+  "svc_SE_s7",
+  "svc_SE_s8",
+  "svc_SW_s0",
+  "svc_SW_s1",
+  "svc_SW_s2",
+  "svc_SW_s3",
+  "svc_SW_s4",
+  "svc_SW_s5",
+  "svc_SW_s6",
+  "svc_SW_s7",
+  "vm_status4"
+ ],
+ "boundary_inputs": [
+  {
+   "instance": "hb_vms_SW",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_vms_SW__rst_n_0_1"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "cq",
+   "lo": 338,
+   "hi": 676,
+   "top_port": "x_hb_vms_SW__cq_338_676"
+  },
+  {
+   "instance": "hb_vms_SW",
+   "port": "rq",
+   "lo": 272,
+   "hi": 408,
+   "top_port": "x_hb_vms_SW__rq_272_408"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_delivery_SW__rst_n_0_1"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "begin_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_delivery_SW__begin_v_0_1"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "begin_bank",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_delivery_SW__begin_bank_0_1"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "begin_epoch",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_delivery_SW__begin_epoch_0_16"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_delivery_SW__fill_v_0_32"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_delivery_SW__fill_bank_0_32"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 192,
+   "top_port": "x_delivery_SW__fill_slot_0_192"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 512,
+   "top_port": "x_delivery_SW__fill_epoch_0_512"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 8192,
+   "top_port": "x_delivery_SW__fill_data_0_8192"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "start",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_delivery_SW__start_0_1"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "start_bank",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_delivery_SW__start_bank_0_1"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "start_epoch",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_delivery_SW__start_epoch_0_16"
+  },
+  {
+   "instance": "delivery_SW",
+   "port": "start_base_sector",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_delivery_SW__start_base_sector_0_16"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_vms_SE__rst_n_0_1"
+  },
+  {
+   "instance": "hb_vms_SE",
+   "port": "rq",
+   "lo": 272,
+   "hi": 408,
+   "top_port": "x_hb_vms_SE__rq_272_408"
+  },
+  {
+   "instance": "delivery_SE",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_delivery_SE__rst_n_0_1"
+  },
+  {
+   "instance": "delivery_SE",
+   "port": "begin_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_delivery_SE__begin_v_0_1"
+  },
+  {
+   "instance": "delivery_SE",
+   "port": "begin_bank",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_delivery_SE__begin_bank_0_1"
+  },
+  {
+   "instance": "delivery_SE",
+   "port": "begin_epoch",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_delivery_SE__begin_epoch_0_16"
+  },
+  {
+   "instance": "delivery_SE",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_delivery_SE__fill_v_0_32"
+  },
+  {
+   "instance": "delivery_SE",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_delivery_SE__fill_bank_0_32"
+  },
+  {
+   "instance": "delivery_SE",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 192,
+   "top_port": "x_delivery_SE__fill_slot_0_192"
+  },
+  {
+   "instance": "delivery_SE",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 512,
+   "top_port": "x_delivery_SE__fill_epoch_0_512"
+  },
+  {
+   "instance": "delivery_SE",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 8192,
+   "top_port": "x_delivery_SE__fill_data_0_8192"
+  },
+  {
+   "instance": "delivery_SE",
+   "port": "start",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_delivery_SE__start_0_1"
+  },
+  {
+   "instance": "delivery_SE",
+   "port": "start_bank",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_delivery_SE__start_bank_0_1"
+  },
+  {
+   "instance": "delivery_SE",
+   "port": "start_epoch",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_delivery_SE__start_epoch_0_16"
+  },
+  {
+   "instance": "delivery_SE",
+   "port": "start_base_sector",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_delivery_SE__start_base_sector_0_16"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_vms_NW__rst_n_0_1"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "cq",
+   "lo": 0,
+   "hi": 1352,
+   "top_port": "x_hb_vms_NW__cq_0_1352"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "rq",
+   "lo": 272,
+   "hi": 544,
+   "top_port": "x_hb_vms_NW__rq_272_544"
+  },
+  {
+   "instance": "hb_vms_NW",
+   "port": "wq",
+   "lo": 2248,
+   "hi": 4496,
+   "top_port": "x_hb_vms_NW__wq_2248_4496"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_delivery_NW__rst_n_0_1"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "begin_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_delivery_NW__begin_v_0_1"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "begin_bank",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_delivery_NW__begin_bank_0_1"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "begin_epoch",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_delivery_NW__begin_epoch_0_16"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_delivery_NW__fill_v_0_32"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_delivery_NW__fill_bank_0_32"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 192,
+   "top_port": "x_delivery_NW__fill_slot_0_192"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 512,
+   "top_port": "x_delivery_NW__fill_epoch_0_512"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 8192,
+   "top_port": "x_delivery_NW__fill_data_0_8192"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "start",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_delivery_NW__start_0_1"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "start_bank",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_delivery_NW__start_bank_0_1"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "start_epoch",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_delivery_NW__start_epoch_0_16"
+  },
+  {
+   "instance": "delivery_NW",
+   "port": "start_base_sector",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_delivery_NW__start_base_sector_0_16"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_vms_NE__rst_n_0_1"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "rq",
+   "lo": 272,
+   "hi": 544,
+   "top_port": "x_hb_vms_NE__rq_272_544"
+  },
+  {
+   "instance": "hb_vms_NE",
+   "port": "wq",
+   "lo": 2248,
+   "hi": 4496,
+   "top_port": "x_hb_vms_NE__wq_2248_4496"
+  },
+  {
+   "instance": "delivery_NE",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_delivery_NE__rst_n_0_1"
+  },
+  {
+   "instance": "delivery_NE",
+   "port": "begin_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_delivery_NE__begin_v_0_1"
+  },
+  {
+   "instance": "delivery_NE",
+   "port": "begin_bank",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_delivery_NE__begin_bank_0_1"
+  },
+  {
+   "instance": "delivery_NE",
+   "port": "begin_epoch",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_delivery_NE__begin_epoch_0_16"
+  },
+  {
+   "instance": "delivery_NE",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_delivery_NE__fill_v_0_32"
+  },
+  {
+   "instance": "delivery_NE",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_delivery_NE__fill_bank_0_32"
+  },
+  {
+   "instance": "delivery_NE",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 192,
+   "top_port": "x_delivery_NE__fill_slot_0_192"
+  },
+  {
+   "instance": "delivery_NE",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 512,
+   "top_port": "x_delivery_NE__fill_epoch_0_512"
+  },
+  {
+   "instance": "delivery_NE",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 8192,
+   "top_port": "x_delivery_NE__fill_data_0_8192"
+  },
+  {
+   "instance": "delivery_NE",
+   "port": "start",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_delivery_NE__start_0_1"
+  },
+  {
+   "instance": "delivery_NE",
+   "port": "start_bank",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_delivery_NE__start_bank_0_1"
+  },
+  {
+   "instance": "delivery_NE",
+   "port": "start_epoch",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_delivery_NE__start_epoch_0_16"
+  },
+  {
+   "instance": "delivery_NE",
+   "port": "start_base_sector",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_delivery_NE__start_base_sector_0_16"
+  },
+  {
+   "instance": "hb_ckgen",
+   "port": "refclk",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_ckgen__refclk_0_1"
+  },
+  {
+   "instance": "hb_ckgen",
+   "port": "por_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_ckgen__por_n_0_1"
+  },
+  {
+   "instance": "svc_SW_s0",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_SW_s0__rst_n_0_1"
+  },
+  {
+   "instance": "svc_SW_s0",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s0__open_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s0",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s0__open_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s0",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s0__open_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s0",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 28,
+   "top_port": "x_svc_SW_s0__open_count_0_28"
+  },
+  {
+   "instance": "svc_SW_s0",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s0__fill_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s0",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s0__fill_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s0",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s0__fill_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s0",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_SW_s0__fill_slot_0_24"
+  },
+  {
+   "instance": "svc_SW_s0",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 1024,
+   "top_port": "x_svc_SW_s0__fill_data_0_1024"
+  },
+  {
+   "instance": "svc_SW_s0",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s0__read_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s0",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s0__read_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s0",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s0__read_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s0",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_SW_s0__read_slot_0_24"
+  },
+  {
+   "instance": "svc_SW_s0",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s0__retire_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s0",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s0__retire_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s0",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s0__retire_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s0",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s0__cmd_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s0",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s0__cmd_write_0_4"
+  },
+  {
+   "instance": "svc_SW_s0",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s0__cmd_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s0",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s0__cmd_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s0",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_SW_s0__cmd_addr_0_120"
+  },
+  {
+   "instance": "svc_SW_s0",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_SW_s0__cmd_step_0_120"
+  },
+  {
+   "instance": "svc_SW_s1",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_SW_s1__rst_n_0_1"
+  },
+  {
+   "instance": "svc_SW_s1",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SW_s1__open_v_0_5"
+  },
+  {
+   "instance": "svc_SW_s1",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SW_s1__open_bank_0_5"
+  },
+  {
+   "instance": "svc_SW_s1",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_SW_s1__open_epoch_0_80"
+  },
+  {
+   "instance": "svc_SW_s1",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 35,
+   "top_port": "x_svc_SW_s1__open_count_0_35"
+  },
+  {
+   "instance": "svc_SW_s1",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SW_s1__fill_v_0_5"
+  },
+  {
+   "instance": "svc_SW_s1",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SW_s1__fill_bank_0_5"
+  },
+  {
+   "instance": "svc_SW_s1",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_SW_s1__fill_epoch_0_80"
+  },
+  {
+   "instance": "svc_SW_s1",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 30,
+   "top_port": "x_svc_SW_s1__fill_slot_0_30"
+  },
+  {
+   "instance": "svc_SW_s1",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 1280,
+   "top_port": "x_svc_SW_s1__fill_data_0_1280"
+  },
+  {
+   "instance": "svc_SW_s1",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SW_s1__read_v_0_5"
+  },
+  {
+   "instance": "svc_SW_s1",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SW_s1__read_bank_0_5"
+  },
+  {
+   "instance": "svc_SW_s1",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_SW_s1__read_epoch_0_80"
+  },
+  {
+   "instance": "svc_SW_s1",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 30,
+   "top_port": "x_svc_SW_s1__read_slot_0_30"
+  },
+  {
+   "instance": "svc_SW_s1",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SW_s1__retire_v_0_5"
+  },
+  {
+   "instance": "svc_SW_s1",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SW_s1__retire_bank_0_5"
+  },
+  {
+   "instance": "svc_SW_s1",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_SW_s1__retire_epoch_0_80"
+  },
+  {
+   "instance": "svc_SW_s1",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SW_s1__cmd_v_0_5"
+  },
+  {
+   "instance": "svc_SW_s1",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SW_s1__cmd_write_0_5"
+  },
+  {
+   "instance": "svc_SW_s1",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SW_s1__cmd_bank_0_5"
+  },
+  {
+   "instance": "svc_SW_s1",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_SW_s1__cmd_epoch_0_80"
+  },
+  {
+   "instance": "svc_SW_s1",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 150,
+   "top_port": "x_svc_SW_s1__cmd_addr_0_150"
+  },
+  {
+   "instance": "svc_SW_s1",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 150,
+   "top_port": "x_svc_SW_s1__cmd_step_0_150"
+  },
+  {
+   "instance": "svc_SW_s2",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_SW_s2__rst_n_0_1"
+  },
+  {
+   "instance": "svc_SW_s2",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s2__open_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s2",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s2__open_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s2",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s2__open_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s2",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 28,
+   "top_port": "x_svc_SW_s2__open_count_0_28"
+  },
+  {
+   "instance": "svc_SW_s2",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s2__fill_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s2",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s2__fill_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s2",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s2__fill_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s2",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_SW_s2__fill_slot_0_24"
+  },
+  {
+   "instance": "svc_SW_s2",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 1024,
+   "top_port": "x_svc_SW_s2__fill_data_0_1024"
+  },
+  {
+   "instance": "svc_SW_s2",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s2__read_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s2",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s2__read_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s2",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s2__read_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s2",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_SW_s2__read_slot_0_24"
+  },
+  {
+   "instance": "svc_SW_s2",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s2__retire_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s2",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s2__retire_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s2",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s2__retire_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s2",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s2__cmd_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s2",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s2__cmd_write_0_4"
+  },
+  {
+   "instance": "svc_SW_s2",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s2__cmd_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s2",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s2__cmd_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s2",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_SW_s2__cmd_addr_0_120"
+  },
+  {
+   "instance": "svc_SW_s2",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_SW_s2__cmd_step_0_120"
+  },
+  {
+   "instance": "svc_SW_s3",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_SW_s3__rst_n_0_1"
+  },
+  {
+   "instance": "svc_SW_s3",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s3__open_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s3",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s3__open_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s3",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s3__open_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s3",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 28,
+   "top_port": "x_svc_SW_s3__open_count_0_28"
+  },
+  {
+   "instance": "svc_SW_s3",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s3__fill_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s3",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s3__fill_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s3",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s3__fill_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s3",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_SW_s3__fill_slot_0_24"
+  },
+  {
+   "instance": "svc_SW_s3",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 1024,
+   "top_port": "x_svc_SW_s3__fill_data_0_1024"
+  },
+  {
+   "instance": "svc_SW_s3",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s3__read_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s3",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s3__read_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s3",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s3__read_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s3",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_SW_s3__read_slot_0_24"
+  },
+  {
+   "instance": "svc_SW_s3",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s3__retire_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s3",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s3__retire_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s3",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s3__retire_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s3",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s3__cmd_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s3",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s3__cmd_write_0_4"
+  },
+  {
+   "instance": "svc_SW_s3",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s3__cmd_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s3",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s3__cmd_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s3",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_SW_s3__cmd_addr_0_120"
+  },
+  {
+   "instance": "svc_SW_s3",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_SW_s3__cmd_step_0_120"
+  },
+  {
+   "instance": "svc_SW_s4",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_SW_s4__rst_n_0_1"
+  },
+  {
+   "instance": "svc_SW_s4",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_SW_s4__open_v_0_3"
+  },
+  {
+   "instance": "svc_SW_s4",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_SW_s4__open_bank_0_3"
+  },
+  {
+   "instance": "svc_SW_s4",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 48,
+   "top_port": "x_svc_SW_s4__open_epoch_0_48"
+  },
+  {
+   "instance": "svc_SW_s4",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 21,
+   "top_port": "x_svc_SW_s4__open_count_0_21"
+  },
+  {
+   "instance": "svc_SW_s4",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_SW_s4__fill_v_0_3"
+  },
+  {
+   "instance": "svc_SW_s4",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_SW_s4__fill_bank_0_3"
+  },
+  {
+   "instance": "svc_SW_s4",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 48,
+   "top_port": "x_svc_SW_s4__fill_epoch_0_48"
+  },
+  {
+   "instance": "svc_SW_s4",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_svc_SW_s4__fill_slot_0_18"
+  },
+  {
+   "instance": "svc_SW_s4",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 768,
+   "top_port": "x_svc_SW_s4__fill_data_0_768"
+  },
+  {
+   "instance": "svc_SW_s4",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_SW_s4__read_v_0_3"
+  },
+  {
+   "instance": "svc_SW_s4",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_SW_s4__read_bank_0_3"
+  },
+  {
+   "instance": "svc_SW_s4",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 48,
+   "top_port": "x_svc_SW_s4__read_epoch_0_48"
+  },
+  {
+   "instance": "svc_SW_s4",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_svc_SW_s4__read_slot_0_18"
+  },
+  {
+   "instance": "svc_SW_s4",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_SW_s4__retire_v_0_3"
+  },
+  {
+   "instance": "svc_SW_s4",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_SW_s4__retire_bank_0_3"
+  },
+  {
+   "instance": "svc_SW_s4",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 48,
+   "top_port": "x_svc_SW_s4__retire_epoch_0_48"
+  },
+  {
+   "instance": "svc_SW_s4",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_SW_s4__cmd_v_0_3"
+  },
+  {
+   "instance": "svc_SW_s4",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_SW_s4__cmd_write_0_3"
+  },
+  {
+   "instance": "svc_SW_s4",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_SW_s4__cmd_bank_0_3"
+  },
+  {
+   "instance": "svc_SW_s4",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 48,
+   "top_port": "x_svc_SW_s4__cmd_epoch_0_48"
+  },
+  {
+   "instance": "svc_SW_s4",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 90,
+   "top_port": "x_svc_SW_s4__cmd_addr_0_90"
+  },
+  {
+   "instance": "svc_SW_s4",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 90,
+   "top_port": "x_svc_SW_s4__cmd_step_0_90"
+  },
+  {
+   "instance": "svc_SW_s5",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_SW_s5__rst_n_0_1"
+  },
+  {
+   "instance": "svc_SW_s5",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s5__open_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s5",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s5__open_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s5",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s5__open_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s5",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 28,
+   "top_port": "x_svc_SW_s5__open_count_0_28"
+  },
+  {
+   "instance": "svc_SW_s5",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s5__fill_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s5",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s5__fill_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s5",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s5__fill_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s5",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_SW_s5__fill_slot_0_24"
+  },
+  {
+   "instance": "svc_SW_s5",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 1024,
+   "top_port": "x_svc_SW_s5__fill_data_0_1024"
+  },
+  {
+   "instance": "svc_SW_s5",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s5__read_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s5",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s5__read_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s5",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s5__read_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s5",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_SW_s5__read_slot_0_24"
+  },
+  {
+   "instance": "svc_SW_s5",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s5__retire_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s5",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s5__retire_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s5",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s5__retire_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s5",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s5__cmd_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s5",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s5__cmd_write_0_4"
+  },
+  {
+   "instance": "svc_SW_s5",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s5__cmd_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s5",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s5__cmd_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s5",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_SW_s5__cmd_addr_0_120"
+  },
+  {
+   "instance": "svc_SW_s5",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_SW_s5__cmd_step_0_120"
+  },
+  {
+   "instance": "svc_SW_s6",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_SW_s6__rst_n_0_1"
+  },
+  {
+   "instance": "svc_SW_s6",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s6__open_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s6",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s6__open_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s6",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s6__open_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s6",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 28,
+   "top_port": "x_svc_SW_s6__open_count_0_28"
+  },
+  {
+   "instance": "svc_SW_s6",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s6__fill_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s6",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s6__fill_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s6",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s6__fill_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s6",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_SW_s6__fill_slot_0_24"
+  },
+  {
+   "instance": "svc_SW_s6",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 1024,
+   "top_port": "x_svc_SW_s6__fill_data_0_1024"
+  },
+  {
+   "instance": "svc_SW_s6",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s6__read_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s6",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s6__read_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s6",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s6__read_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s6",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_SW_s6__read_slot_0_24"
+  },
+  {
+   "instance": "svc_SW_s6",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s6__retire_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s6",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s6__retire_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s6",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s6__retire_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s6",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s6__cmd_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s6",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s6__cmd_write_0_4"
+  },
+  {
+   "instance": "svc_SW_s6",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s6__cmd_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s6",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s6__cmd_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s6",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_SW_s6__cmd_addr_0_120"
+  },
+  {
+   "instance": "svc_SW_s6",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_SW_s6__cmd_step_0_120"
+  },
+  {
+   "instance": "svc_SW_s7",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_SW_s7__rst_n_0_1"
+  },
+  {
+   "instance": "svc_SW_s7",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s7__open_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s7",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s7__open_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s7",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s7__open_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s7",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 28,
+   "top_port": "x_svc_SW_s7__open_count_0_28"
+  },
+  {
+   "instance": "svc_SW_s7",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s7__fill_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s7",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s7__fill_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s7",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s7__fill_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s7",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_SW_s7__fill_slot_0_24"
+  },
+  {
+   "instance": "svc_SW_s7",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 1024,
+   "top_port": "x_svc_SW_s7__fill_data_0_1024"
+  },
+  {
+   "instance": "svc_SW_s7",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s7__read_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s7",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s7__read_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s7",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s7__read_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s7",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_SW_s7__read_slot_0_24"
+  },
+  {
+   "instance": "svc_SW_s7",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s7__retire_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s7",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s7__retire_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s7",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s7__retire_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s7",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s7__cmd_v_0_4"
+  },
+  {
+   "instance": "svc_SW_s7",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s7__cmd_write_0_4"
+  },
+  {
+   "instance": "svc_SW_s7",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SW_s7__cmd_bank_0_4"
+  },
+  {
+   "instance": "svc_SW_s7",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SW_s7__cmd_epoch_0_64"
+  },
+  {
+   "instance": "svc_SW_s7",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_SW_s7__cmd_addr_0_120"
+  },
+  {
+   "instance": "svc_SW_s7",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_SW_s7__cmd_step_0_120"
+  },
+  {
+   "instance": "svc_NW_s0",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_NW_s0__rst_n_0_1"
+  },
+  {
+   "instance": "svc_NW_s0",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s0__open_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s0",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s0__open_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s0",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s0__open_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s0",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 28,
+   "top_port": "x_svc_NW_s0__open_count_0_28"
+  },
+  {
+   "instance": "svc_NW_s0",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s0__fill_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s0",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s0__fill_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s0",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s0__fill_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s0",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_NW_s0__fill_slot_0_24"
+  },
+  {
+   "instance": "svc_NW_s0",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 1024,
+   "top_port": "x_svc_NW_s0__fill_data_0_1024"
+  },
+  {
+   "instance": "svc_NW_s0",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s0__read_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s0",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s0__read_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s0",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s0__read_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s0",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_NW_s0__read_slot_0_24"
+  },
+  {
+   "instance": "svc_NW_s0",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s0__retire_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s0",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s0__retire_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s0",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s0__retire_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s0",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s0__cmd_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s0",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s0__cmd_write_0_4"
+  },
+  {
+   "instance": "svc_NW_s0",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s0__cmd_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s0",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s0__cmd_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s0",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_NW_s0__cmd_addr_0_120"
+  },
+  {
+   "instance": "svc_NW_s0",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_NW_s0__cmd_step_0_120"
+  },
+  {
+   "instance": "svc_NW_s1",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_NW_s1__rst_n_0_1"
+  },
+  {
+   "instance": "svc_NW_s1",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NW_s1__open_v_0_5"
+  },
+  {
+   "instance": "svc_NW_s1",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NW_s1__open_bank_0_5"
+  },
+  {
+   "instance": "svc_NW_s1",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_NW_s1__open_epoch_0_80"
+  },
+  {
+   "instance": "svc_NW_s1",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 35,
+   "top_port": "x_svc_NW_s1__open_count_0_35"
+  },
+  {
+   "instance": "svc_NW_s1",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NW_s1__fill_v_0_5"
+  },
+  {
+   "instance": "svc_NW_s1",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NW_s1__fill_bank_0_5"
+  },
+  {
+   "instance": "svc_NW_s1",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_NW_s1__fill_epoch_0_80"
+  },
+  {
+   "instance": "svc_NW_s1",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 30,
+   "top_port": "x_svc_NW_s1__fill_slot_0_30"
+  },
+  {
+   "instance": "svc_NW_s1",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 1280,
+   "top_port": "x_svc_NW_s1__fill_data_0_1280"
+  },
+  {
+   "instance": "svc_NW_s1",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NW_s1__read_v_0_5"
+  },
+  {
+   "instance": "svc_NW_s1",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NW_s1__read_bank_0_5"
+  },
+  {
+   "instance": "svc_NW_s1",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_NW_s1__read_epoch_0_80"
+  },
+  {
+   "instance": "svc_NW_s1",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 30,
+   "top_port": "x_svc_NW_s1__read_slot_0_30"
+  },
+  {
+   "instance": "svc_NW_s1",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NW_s1__retire_v_0_5"
+  },
+  {
+   "instance": "svc_NW_s1",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NW_s1__retire_bank_0_5"
+  },
+  {
+   "instance": "svc_NW_s1",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_NW_s1__retire_epoch_0_80"
+  },
+  {
+   "instance": "svc_NW_s1",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NW_s1__cmd_v_0_5"
+  },
+  {
+   "instance": "svc_NW_s1",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NW_s1__cmd_write_0_5"
+  },
+  {
+   "instance": "svc_NW_s1",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NW_s1__cmd_bank_0_5"
+  },
+  {
+   "instance": "svc_NW_s1",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_NW_s1__cmd_epoch_0_80"
+  },
+  {
+   "instance": "svc_NW_s1",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 150,
+   "top_port": "x_svc_NW_s1__cmd_addr_0_150"
+  },
+  {
+   "instance": "svc_NW_s1",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 150,
+   "top_port": "x_svc_NW_s1__cmd_step_0_150"
+  },
+  {
+   "instance": "svc_NW_s2",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_NW_s2__rst_n_0_1"
+  },
+  {
+   "instance": "svc_NW_s2",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s2__open_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s2",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s2__open_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s2",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s2__open_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s2",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 28,
+   "top_port": "x_svc_NW_s2__open_count_0_28"
+  },
+  {
+   "instance": "svc_NW_s2",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s2__fill_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s2",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s2__fill_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s2",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s2__fill_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s2",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_NW_s2__fill_slot_0_24"
+  },
+  {
+   "instance": "svc_NW_s2",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 1024,
+   "top_port": "x_svc_NW_s2__fill_data_0_1024"
+  },
+  {
+   "instance": "svc_NW_s2",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s2__read_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s2",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s2__read_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s2",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s2__read_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s2",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_NW_s2__read_slot_0_24"
+  },
+  {
+   "instance": "svc_NW_s2",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s2__retire_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s2",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s2__retire_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s2",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s2__retire_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s2",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s2__cmd_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s2",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s2__cmd_write_0_4"
+  },
+  {
+   "instance": "svc_NW_s2",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s2__cmd_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s2",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s2__cmd_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s2",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_NW_s2__cmd_addr_0_120"
+  },
+  {
+   "instance": "svc_NW_s2",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_NW_s2__cmd_step_0_120"
+  },
+  {
+   "instance": "svc_NW_s3",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_NW_s3__rst_n_0_1"
+  },
+  {
+   "instance": "svc_NW_s3",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s3__open_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s3",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s3__open_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s3",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s3__open_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s3",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 28,
+   "top_port": "x_svc_NW_s3__open_count_0_28"
+  },
+  {
+   "instance": "svc_NW_s3",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s3__fill_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s3",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s3__fill_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s3",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s3__fill_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s3",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_NW_s3__fill_slot_0_24"
+  },
+  {
+   "instance": "svc_NW_s3",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 1024,
+   "top_port": "x_svc_NW_s3__fill_data_0_1024"
+  },
+  {
+   "instance": "svc_NW_s3",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s3__read_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s3",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s3__read_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s3",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s3__read_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s3",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_NW_s3__read_slot_0_24"
+  },
+  {
+   "instance": "svc_NW_s3",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s3__retire_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s3",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s3__retire_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s3",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s3__retire_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s3",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s3__cmd_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s3",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s3__cmd_write_0_4"
+  },
+  {
+   "instance": "svc_NW_s3",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s3__cmd_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s3",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s3__cmd_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s3",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_NW_s3__cmd_addr_0_120"
+  },
+  {
+   "instance": "svc_NW_s3",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_NW_s3__cmd_step_0_120"
+  },
+  {
+   "instance": "svc_NW_s4",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_NW_s4__rst_n_0_1"
+  },
+  {
+   "instance": "svc_NW_s4",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_NW_s4__open_v_0_3"
+  },
+  {
+   "instance": "svc_NW_s4",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_NW_s4__open_bank_0_3"
+  },
+  {
+   "instance": "svc_NW_s4",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 48,
+   "top_port": "x_svc_NW_s4__open_epoch_0_48"
+  },
+  {
+   "instance": "svc_NW_s4",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 21,
+   "top_port": "x_svc_NW_s4__open_count_0_21"
+  },
+  {
+   "instance": "svc_NW_s4",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_NW_s4__fill_v_0_3"
+  },
+  {
+   "instance": "svc_NW_s4",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_NW_s4__fill_bank_0_3"
+  },
+  {
+   "instance": "svc_NW_s4",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 48,
+   "top_port": "x_svc_NW_s4__fill_epoch_0_48"
+  },
+  {
+   "instance": "svc_NW_s4",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_svc_NW_s4__fill_slot_0_18"
+  },
+  {
+   "instance": "svc_NW_s4",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 768,
+   "top_port": "x_svc_NW_s4__fill_data_0_768"
+  },
+  {
+   "instance": "svc_NW_s4",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_NW_s4__read_v_0_3"
+  },
+  {
+   "instance": "svc_NW_s4",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_NW_s4__read_bank_0_3"
+  },
+  {
+   "instance": "svc_NW_s4",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 48,
+   "top_port": "x_svc_NW_s4__read_epoch_0_48"
+  },
+  {
+   "instance": "svc_NW_s4",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_svc_NW_s4__read_slot_0_18"
+  },
+  {
+   "instance": "svc_NW_s4",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_NW_s4__retire_v_0_3"
+  },
+  {
+   "instance": "svc_NW_s4",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_NW_s4__retire_bank_0_3"
+  },
+  {
+   "instance": "svc_NW_s4",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 48,
+   "top_port": "x_svc_NW_s4__retire_epoch_0_48"
+  },
+  {
+   "instance": "svc_NW_s4",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_NW_s4__cmd_v_0_3"
+  },
+  {
+   "instance": "svc_NW_s4",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_NW_s4__cmd_write_0_3"
+  },
+  {
+   "instance": "svc_NW_s4",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_NW_s4__cmd_bank_0_3"
+  },
+  {
+   "instance": "svc_NW_s4",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 48,
+   "top_port": "x_svc_NW_s4__cmd_epoch_0_48"
+  },
+  {
+   "instance": "svc_NW_s4",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 90,
+   "top_port": "x_svc_NW_s4__cmd_addr_0_90"
+  },
+  {
+   "instance": "svc_NW_s4",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 90,
+   "top_port": "x_svc_NW_s4__cmd_step_0_90"
+  },
+  {
+   "instance": "svc_NW_s5",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_NW_s5__rst_n_0_1"
+  },
+  {
+   "instance": "svc_NW_s5",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s5__open_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s5",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s5__open_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s5",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s5__open_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s5",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 28,
+   "top_port": "x_svc_NW_s5__open_count_0_28"
+  },
+  {
+   "instance": "svc_NW_s5",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s5__fill_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s5",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s5__fill_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s5",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s5__fill_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s5",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_NW_s5__fill_slot_0_24"
+  },
+  {
+   "instance": "svc_NW_s5",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 1024,
+   "top_port": "x_svc_NW_s5__fill_data_0_1024"
+  },
+  {
+   "instance": "svc_NW_s5",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s5__read_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s5",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s5__read_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s5",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s5__read_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s5",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_NW_s5__read_slot_0_24"
+  },
+  {
+   "instance": "svc_NW_s5",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s5__retire_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s5",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s5__retire_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s5",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s5__retire_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s5",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s5__cmd_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s5",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s5__cmd_write_0_4"
+  },
+  {
+   "instance": "svc_NW_s5",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s5__cmd_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s5",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s5__cmd_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s5",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_NW_s5__cmd_addr_0_120"
+  },
+  {
+   "instance": "svc_NW_s5",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_NW_s5__cmd_step_0_120"
+  },
+  {
+   "instance": "svc_NW_s6",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_NW_s6__rst_n_0_1"
+  },
+  {
+   "instance": "svc_NW_s6",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s6__open_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s6",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s6__open_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s6",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s6__open_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s6",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 28,
+   "top_port": "x_svc_NW_s6__open_count_0_28"
+  },
+  {
+   "instance": "svc_NW_s6",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s6__fill_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s6",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s6__fill_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s6",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s6__fill_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s6",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_NW_s6__fill_slot_0_24"
+  },
+  {
+   "instance": "svc_NW_s6",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 1024,
+   "top_port": "x_svc_NW_s6__fill_data_0_1024"
+  },
+  {
+   "instance": "svc_NW_s6",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s6__read_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s6",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s6__read_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s6",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s6__read_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s6",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_NW_s6__read_slot_0_24"
+  },
+  {
+   "instance": "svc_NW_s6",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s6__retire_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s6",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s6__retire_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s6",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s6__retire_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s6",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s6__cmd_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s6",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s6__cmd_write_0_4"
+  },
+  {
+   "instance": "svc_NW_s6",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s6__cmd_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s6",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s6__cmd_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s6",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_NW_s6__cmd_addr_0_120"
+  },
+  {
+   "instance": "svc_NW_s6",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_NW_s6__cmd_step_0_120"
+  },
+  {
+   "instance": "svc_NW_s7",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_NW_s7__rst_n_0_1"
+  },
+  {
+   "instance": "svc_NW_s7",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s7__open_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s7",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s7__open_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s7",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s7__open_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s7",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 28,
+   "top_port": "x_svc_NW_s7__open_count_0_28"
+  },
+  {
+   "instance": "svc_NW_s7",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s7__fill_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s7",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s7__fill_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s7",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s7__fill_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s7",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_NW_s7__fill_slot_0_24"
+  },
+  {
+   "instance": "svc_NW_s7",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 1024,
+   "top_port": "x_svc_NW_s7__fill_data_0_1024"
+  },
+  {
+   "instance": "svc_NW_s7",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s7__read_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s7",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s7__read_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s7",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s7__read_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s7",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_NW_s7__read_slot_0_24"
+  },
+  {
+   "instance": "svc_NW_s7",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s7__retire_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s7",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s7__retire_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s7",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s7__retire_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s7",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s7__cmd_v_0_4"
+  },
+  {
+   "instance": "svc_NW_s7",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s7__cmd_write_0_4"
+  },
+  {
+   "instance": "svc_NW_s7",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NW_s7__cmd_bank_0_4"
+  },
+  {
+   "instance": "svc_NW_s7",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NW_s7__cmd_epoch_0_64"
+  },
+  {
+   "instance": "svc_NW_s7",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_NW_s7__cmd_addr_0_120"
+  },
+  {
+   "instance": "svc_NW_s7",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_NW_s7__cmd_step_0_120"
+  },
+  {
+   "instance": "svc_SE_s0",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_SE_s0__rst_n_0_1"
+  },
+  {
+   "instance": "svc_SE_s0",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s0__open_v_0_4"
+  },
+  {
+   "instance": "svc_SE_s0",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s0__open_bank_0_4"
+  },
+  {
+   "instance": "svc_SE_s0",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SE_s0__open_epoch_0_64"
+  },
+  {
+   "instance": "svc_SE_s0",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 28,
+   "top_port": "x_svc_SE_s0__open_count_0_28"
+  },
+  {
+   "instance": "svc_SE_s0",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s0__fill_v_0_4"
+  },
+  {
+   "instance": "svc_SE_s0",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s0__fill_bank_0_4"
+  },
+  {
+   "instance": "svc_SE_s0",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SE_s0__fill_epoch_0_64"
+  },
+  {
+   "instance": "svc_SE_s0",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_SE_s0__fill_slot_0_24"
+  },
+  {
+   "instance": "svc_SE_s0",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 1024,
+   "top_port": "x_svc_SE_s0__fill_data_0_1024"
+  },
+  {
+   "instance": "svc_SE_s0",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s0__read_v_0_4"
+  },
+  {
+   "instance": "svc_SE_s0",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s0__read_bank_0_4"
+  },
+  {
+   "instance": "svc_SE_s0",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SE_s0__read_epoch_0_64"
+  },
+  {
+   "instance": "svc_SE_s0",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_SE_s0__read_slot_0_24"
+  },
+  {
+   "instance": "svc_SE_s0",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s0__retire_v_0_4"
+  },
+  {
+   "instance": "svc_SE_s0",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s0__retire_bank_0_4"
+  },
+  {
+   "instance": "svc_SE_s0",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SE_s0__retire_epoch_0_64"
+  },
+  {
+   "instance": "svc_SE_s0",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s0__cmd_v_0_4"
+  },
+  {
+   "instance": "svc_SE_s0",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s0__cmd_write_0_4"
+  },
+  {
+   "instance": "svc_SE_s0",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s0__cmd_bank_0_4"
+  },
+  {
+   "instance": "svc_SE_s0",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SE_s0__cmd_epoch_0_64"
+  },
+  {
+   "instance": "svc_SE_s0",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_SE_s0__cmd_addr_0_120"
+  },
+  {
+   "instance": "svc_SE_s0",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_SE_s0__cmd_step_0_120"
+  },
+  {
+   "instance": "svc_SE_s1",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_SE_s1__rst_n_0_1"
+  },
+  {
+   "instance": "svc_SE_s1",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SE_s1__open_v_0_5"
+  },
+  {
+   "instance": "svc_SE_s1",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SE_s1__open_bank_0_5"
+  },
+  {
+   "instance": "svc_SE_s1",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_SE_s1__open_epoch_0_80"
+  },
+  {
+   "instance": "svc_SE_s1",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 35,
+   "top_port": "x_svc_SE_s1__open_count_0_35"
+  },
+  {
+   "instance": "svc_SE_s1",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SE_s1__fill_v_0_5"
+  },
+  {
+   "instance": "svc_SE_s1",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SE_s1__fill_bank_0_5"
+  },
+  {
+   "instance": "svc_SE_s1",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_SE_s1__fill_epoch_0_80"
+  },
+  {
+   "instance": "svc_SE_s1",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 30,
+   "top_port": "x_svc_SE_s1__fill_slot_0_30"
+  },
+  {
+   "instance": "svc_SE_s1",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 1280,
+   "top_port": "x_svc_SE_s1__fill_data_0_1280"
+  },
+  {
+   "instance": "svc_SE_s1",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SE_s1__read_v_0_5"
+  },
+  {
+   "instance": "svc_SE_s1",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SE_s1__read_bank_0_5"
+  },
+  {
+   "instance": "svc_SE_s1",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_SE_s1__read_epoch_0_80"
+  },
+  {
+   "instance": "svc_SE_s1",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 30,
+   "top_port": "x_svc_SE_s1__read_slot_0_30"
+  },
+  {
+   "instance": "svc_SE_s1",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SE_s1__retire_v_0_5"
+  },
+  {
+   "instance": "svc_SE_s1",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SE_s1__retire_bank_0_5"
+  },
+  {
+   "instance": "svc_SE_s1",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_SE_s1__retire_epoch_0_80"
+  },
+  {
+   "instance": "svc_SE_s1",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SE_s1__cmd_v_0_5"
+  },
+  {
+   "instance": "svc_SE_s1",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SE_s1__cmd_write_0_5"
+  },
+  {
+   "instance": "svc_SE_s1",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SE_s1__cmd_bank_0_5"
+  },
+  {
+   "instance": "svc_SE_s1",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_SE_s1__cmd_epoch_0_80"
+  },
+  {
+   "instance": "svc_SE_s1",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 150,
+   "top_port": "x_svc_SE_s1__cmd_addr_0_150"
+  },
+  {
+   "instance": "svc_SE_s1",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 150,
+   "top_port": "x_svc_SE_s1__cmd_step_0_150"
+  },
+  {
+   "instance": "svc_SE_s2",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_SE_s2__rst_n_0_1"
+  },
+  {
+   "instance": "svc_SE_s2",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s2__open_v_0_4"
+  },
+  {
+   "instance": "svc_SE_s2",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s2__open_bank_0_4"
+  },
+  {
+   "instance": "svc_SE_s2",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SE_s2__open_epoch_0_64"
+  },
+  {
+   "instance": "svc_SE_s2",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 28,
+   "top_port": "x_svc_SE_s2__open_count_0_28"
+  },
+  {
+   "instance": "svc_SE_s2",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s2__fill_v_0_4"
+  },
+  {
+   "instance": "svc_SE_s2",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s2__fill_bank_0_4"
+  },
+  {
+   "instance": "svc_SE_s2",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SE_s2__fill_epoch_0_64"
+  },
+  {
+   "instance": "svc_SE_s2",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_SE_s2__fill_slot_0_24"
+  },
+  {
+   "instance": "svc_SE_s2",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 1024,
+   "top_port": "x_svc_SE_s2__fill_data_0_1024"
+  },
+  {
+   "instance": "svc_SE_s2",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s2__read_v_0_4"
+  },
+  {
+   "instance": "svc_SE_s2",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s2__read_bank_0_4"
+  },
+  {
+   "instance": "svc_SE_s2",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SE_s2__read_epoch_0_64"
+  },
+  {
+   "instance": "svc_SE_s2",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_SE_s2__read_slot_0_24"
+  },
+  {
+   "instance": "svc_SE_s2",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s2__retire_v_0_4"
+  },
+  {
+   "instance": "svc_SE_s2",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s2__retire_bank_0_4"
+  },
+  {
+   "instance": "svc_SE_s2",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SE_s2__retire_epoch_0_64"
+  },
+  {
+   "instance": "svc_SE_s2",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s2__cmd_v_0_4"
+  },
+  {
+   "instance": "svc_SE_s2",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s2__cmd_write_0_4"
+  },
+  {
+   "instance": "svc_SE_s2",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s2__cmd_bank_0_4"
+  },
+  {
+   "instance": "svc_SE_s2",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SE_s2__cmd_epoch_0_64"
+  },
+  {
+   "instance": "svc_SE_s2",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_SE_s2__cmd_addr_0_120"
+  },
+  {
+   "instance": "svc_SE_s2",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_SE_s2__cmd_step_0_120"
+  },
+  {
+   "instance": "svc_SE_s3",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_SE_s3__rst_n_0_1"
+  },
+  {
+   "instance": "svc_SE_s3",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SE_s3__open_v_0_5"
+  },
+  {
+   "instance": "svc_SE_s3",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SE_s3__open_bank_0_5"
+  },
+  {
+   "instance": "svc_SE_s3",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_SE_s3__open_epoch_0_80"
+  },
+  {
+   "instance": "svc_SE_s3",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 35,
+   "top_port": "x_svc_SE_s3__open_count_0_35"
+  },
+  {
+   "instance": "svc_SE_s3",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SE_s3__fill_v_0_5"
+  },
+  {
+   "instance": "svc_SE_s3",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SE_s3__fill_bank_0_5"
+  },
+  {
+   "instance": "svc_SE_s3",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_SE_s3__fill_epoch_0_80"
+  },
+  {
+   "instance": "svc_SE_s3",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 30,
+   "top_port": "x_svc_SE_s3__fill_slot_0_30"
+  },
+  {
+   "instance": "svc_SE_s3",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 1280,
+   "top_port": "x_svc_SE_s3__fill_data_0_1280"
+  },
+  {
+   "instance": "svc_SE_s3",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SE_s3__read_v_0_5"
+  },
+  {
+   "instance": "svc_SE_s3",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SE_s3__read_bank_0_5"
+  },
+  {
+   "instance": "svc_SE_s3",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_SE_s3__read_epoch_0_80"
+  },
+  {
+   "instance": "svc_SE_s3",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 30,
+   "top_port": "x_svc_SE_s3__read_slot_0_30"
+  },
+  {
+   "instance": "svc_SE_s3",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SE_s3__retire_v_0_5"
+  },
+  {
+   "instance": "svc_SE_s3",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SE_s3__retire_bank_0_5"
+  },
+  {
+   "instance": "svc_SE_s3",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_SE_s3__retire_epoch_0_80"
+  },
+  {
+   "instance": "svc_SE_s3",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SE_s3__cmd_v_0_5"
+  },
+  {
+   "instance": "svc_SE_s3",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SE_s3__cmd_write_0_5"
+  },
+  {
+   "instance": "svc_SE_s3",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_SE_s3__cmd_bank_0_5"
+  },
+  {
+   "instance": "svc_SE_s3",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_SE_s3__cmd_epoch_0_80"
+  },
+  {
+   "instance": "svc_SE_s3",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 150,
+   "top_port": "x_svc_SE_s3__cmd_addr_0_150"
+  },
+  {
+   "instance": "svc_SE_s3",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 150,
+   "top_port": "x_svc_SE_s3__cmd_step_0_150"
+  },
+  {
+   "instance": "svc_SE_s4",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_SE_s4__rst_n_0_1"
+  },
+  {
+   "instance": "svc_SE_s4",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s4__open_v_0_4"
+  },
+  {
+   "instance": "svc_SE_s4",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s4__open_bank_0_4"
+  },
+  {
+   "instance": "svc_SE_s4",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SE_s4__open_epoch_0_64"
+  },
+  {
+   "instance": "svc_SE_s4",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 28,
+   "top_port": "x_svc_SE_s4__open_count_0_28"
+  },
+  {
+   "instance": "svc_SE_s4",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s4__fill_v_0_4"
+  },
+  {
+   "instance": "svc_SE_s4",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s4__fill_bank_0_4"
+  },
+  {
+   "instance": "svc_SE_s4",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SE_s4__fill_epoch_0_64"
+  },
+  {
+   "instance": "svc_SE_s4",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_SE_s4__fill_slot_0_24"
+  },
+  {
+   "instance": "svc_SE_s4",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 1024,
+   "top_port": "x_svc_SE_s4__fill_data_0_1024"
+  },
+  {
+   "instance": "svc_SE_s4",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s4__read_v_0_4"
+  },
+  {
+   "instance": "svc_SE_s4",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s4__read_bank_0_4"
+  },
+  {
+   "instance": "svc_SE_s4",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SE_s4__read_epoch_0_64"
+  },
+  {
+   "instance": "svc_SE_s4",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_SE_s4__read_slot_0_24"
+  },
+  {
+   "instance": "svc_SE_s4",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s4__retire_v_0_4"
+  },
+  {
+   "instance": "svc_SE_s4",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s4__retire_bank_0_4"
+  },
+  {
+   "instance": "svc_SE_s4",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SE_s4__retire_epoch_0_64"
+  },
+  {
+   "instance": "svc_SE_s4",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s4__cmd_v_0_4"
+  },
+  {
+   "instance": "svc_SE_s4",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s4__cmd_write_0_4"
+  },
+  {
+   "instance": "svc_SE_s4",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s4__cmd_bank_0_4"
+  },
+  {
+   "instance": "svc_SE_s4",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SE_s4__cmd_epoch_0_64"
+  },
+  {
+   "instance": "svc_SE_s4",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_SE_s4__cmd_addr_0_120"
+  },
+  {
+   "instance": "svc_SE_s4",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_SE_s4__cmd_step_0_120"
+  },
+  {
+   "instance": "svc_SE_s5",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_SE_s5__rst_n_0_1"
+  },
+  {
+   "instance": "svc_SE_s5",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s5__open_v_0_4"
+  },
+  {
+   "instance": "svc_SE_s5",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s5__open_bank_0_4"
+  },
+  {
+   "instance": "svc_SE_s5",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SE_s5__open_epoch_0_64"
+  },
+  {
+   "instance": "svc_SE_s5",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 28,
+   "top_port": "x_svc_SE_s5__open_count_0_28"
+  },
+  {
+   "instance": "svc_SE_s5",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s5__fill_v_0_4"
+  },
+  {
+   "instance": "svc_SE_s5",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s5__fill_bank_0_4"
+  },
+  {
+   "instance": "svc_SE_s5",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SE_s5__fill_epoch_0_64"
+  },
+  {
+   "instance": "svc_SE_s5",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_SE_s5__fill_slot_0_24"
+  },
+  {
+   "instance": "svc_SE_s5",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 1024,
+   "top_port": "x_svc_SE_s5__fill_data_0_1024"
+  },
+  {
+   "instance": "svc_SE_s5",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s5__read_v_0_4"
+  },
+  {
+   "instance": "svc_SE_s5",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s5__read_bank_0_4"
+  },
+  {
+   "instance": "svc_SE_s5",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SE_s5__read_epoch_0_64"
+  },
+  {
+   "instance": "svc_SE_s5",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_SE_s5__read_slot_0_24"
+  },
+  {
+   "instance": "svc_SE_s5",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s5__retire_v_0_4"
+  },
+  {
+   "instance": "svc_SE_s5",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s5__retire_bank_0_4"
+  },
+  {
+   "instance": "svc_SE_s5",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SE_s5__retire_epoch_0_64"
+  },
+  {
+   "instance": "svc_SE_s5",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s5__cmd_v_0_4"
+  },
+  {
+   "instance": "svc_SE_s5",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s5__cmd_write_0_4"
+  },
+  {
+   "instance": "svc_SE_s5",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_SE_s5__cmd_bank_0_4"
+  },
+  {
+   "instance": "svc_SE_s5",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_SE_s5__cmd_epoch_0_64"
+  },
+  {
+   "instance": "svc_SE_s5",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_SE_s5__cmd_addr_0_120"
+  },
+  {
+   "instance": "svc_SE_s5",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_SE_s5__cmd_step_0_120"
+  },
+  {
+   "instance": "svc_SE_s6",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_SE_s6__rst_n_0_1"
+  },
+  {
+   "instance": "svc_SE_s6",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_SE_s6__open_v_0_3"
+  },
+  {
+   "instance": "svc_SE_s6",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_SE_s6__open_bank_0_3"
+  },
+  {
+   "instance": "svc_SE_s6",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 48,
+   "top_port": "x_svc_SE_s6__open_epoch_0_48"
+  },
+  {
+   "instance": "svc_SE_s6",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 21,
+   "top_port": "x_svc_SE_s6__open_count_0_21"
+  },
+  {
+   "instance": "svc_SE_s6",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_SE_s6__fill_v_0_3"
+  },
+  {
+   "instance": "svc_SE_s6",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_SE_s6__fill_bank_0_3"
+  },
+  {
+   "instance": "svc_SE_s6",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 48,
+   "top_port": "x_svc_SE_s6__fill_epoch_0_48"
+  },
+  {
+   "instance": "svc_SE_s6",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_svc_SE_s6__fill_slot_0_18"
+  },
+  {
+   "instance": "svc_SE_s6",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 768,
+   "top_port": "x_svc_SE_s6__fill_data_0_768"
+  },
+  {
+   "instance": "svc_SE_s6",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_SE_s6__read_v_0_3"
+  },
+  {
+   "instance": "svc_SE_s6",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_SE_s6__read_bank_0_3"
+  },
+  {
+   "instance": "svc_SE_s6",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 48,
+   "top_port": "x_svc_SE_s6__read_epoch_0_48"
+  },
+  {
+   "instance": "svc_SE_s6",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_svc_SE_s6__read_slot_0_18"
+  },
+  {
+   "instance": "svc_SE_s6",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_SE_s6__retire_v_0_3"
+  },
+  {
+   "instance": "svc_SE_s6",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_SE_s6__retire_bank_0_3"
+  },
+  {
+   "instance": "svc_SE_s6",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 48,
+   "top_port": "x_svc_SE_s6__retire_epoch_0_48"
+  },
+  {
+   "instance": "svc_SE_s6",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_SE_s6__cmd_v_0_3"
+  },
+  {
+   "instance": "svc_SE_s6",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_SE_s6__cmd_write_0_3"
+  },
+  {
+   "instance": "svc_SE_s6",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_SE_s6__cmd_bank_0_3"
+  },
+  {
+   "instance": "svc_SE_s6",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 48,
+   "top_port": "x_svc_SE_s6__cmd_epoch_0_48"
+  },
+  {
+   "instance": "svc_SE_s6",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 90,
+   "top_port": "x_svc_SE_s6__cmd_addr_0_90"
+  },
+  {
+   "instance": "svc_SE_s6",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 90,
+   "top_port": "x_svc_SE_s6__cmd_step_0_90"
+  },
+  {
+   "instance": "svc_SE_s7",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_SE_s7__rst_n_0_1"
+  },
+  {
+   "instance": "svc_SE_s7",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_svc_SE_s7__open_v_0_2"
+  },
+  {
+   "instance": "svc_SE_s7",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_svc_SE_s7__open_bank_0_2"
+  },
+  {
+   "instance": "svc_SE_s7",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_svc_SE_s7__open_epoch_0_32"
+  },
+  {
+   "instance": "svc_SE_s7",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 14,
+   "top_port": "x_svc_SE_s7__open_count_0_14"
+  },
+  {
+   "instance": "svc_SE_s7",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_svc_SE_s7__fill_v_0_2"
+  },
+  {
+   "instance": "svc_SE_s7",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_svc_SE_s7__fill_bank_0_2"
+  },
+  {
+   "instance": "svc_SE_s7",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_svc_SE_s7__fill_epoch_0_32"
+  },
+  {
+   "instance": "svc_SE_s7",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 12,
+   "top_port": "x_svc_SE_s7__fill_slot_0_12"
+  },
+  {
+   "instance": "svc_SE_s7",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 512,
+   "top_port": "x_svc_SE_s7__fill_data_0_512"
+  },
+  {
+   "instance": "svc_SE_s7",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_svc_SE_s7__read_v_0_2"
+  },
+  {
+   "instance": "svc_SE_s7",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_svc_SE_s7__read_bank_0_2"
+  },
+  {
+   "instance": "svc_SE_s7",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_svc_SE_s7__read_epoch_0_32"
+  },
+  {
+   "instance": "svc_SE_s7",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 12,
+   "top_port": "x_svc_SE_s7__read_slot_0_12"
+  },
+  {
+   "instance": "svc_SE_s7",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_svc_SE_s7__retire_v_0_2"
+  },
+  {
+   "instance": "svc_SE_s7",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_svc_SE_s7__retire_bank_0_2"
+  },
+  {
+   "instance": "svc_SE_s7",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_svc_SE_s7__retire_epoch_0_32"
+  },
+  {
+   "instance": "svc_SE_s7",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_svc_SE_s7__cmd_v_0_2"
+  },
+  {
+   "instance": "svc_SE_s7",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_svc_SE_s7__cmd_write_0_2"
+  },
+  {
+   "instance": "svc_SE_s7",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_svc_SE_s7__cmd_bank_0_2"
+  },
+  {
+   "instance": "svc_SE_s7",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_svc_SE_s7__cmd_epoch_0_32"
+  },
+  {
+   "instance": "svc_SE_s7",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 60,
+   "top_port": "x_svc_SE_s7__cmd_addr_0_60"
+  },
+  {
+   "instance": "svc_SE_s7",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 60,
+   "top_port": "x_svc_SE_s7__cmd_step_0_60"
+  },
+  {
+   "instance": "svc_SE_s8",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_SE_s8__rst_n_0_1"
+  },
+  {
+   "instance": "svc_SE_s8",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_SE_s8__open_v_0_1"
+  },
+  {
+   "instance": "svc_SE_s8",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_SE_s8__open_bank_0_1"
+  },
+  {
+   "instance": "svc_SE_s8",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_svc_SE_s8__open_epoch_0_16"
+  },
+  {
+   "instance": "svc_SE_s8",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 7,
+   "top_port": "x_svc_SE_s8__open_count_0_7"
+  },
+  {
+   "instance": "svc_SE_s8",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_SE_s8__fill_v_0_1"
+  },
+  {
+   "instance": "svc_SE_s8",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_SE_s8__fill_bank_0_1"
+  },
+  {
+   "instance": "svc_SE_s8",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_svc_SE_s8__fill_epoch_0_16"
+  },
+  {
+   "instance": "svc_SE_s8",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 6,
+   "top_port": "x_svc_SE_s8__fill_slot_0_6"
+  },
+  {
+   "instance": "svc_SE_s8",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_svc_SE_s8__fill_data_0_256"
+  },
+  {
+   "instance": "svc_SE_s8",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_SE_s8__read_v_0_1"
+  },
+  {
+   "instance": "svc_SE_s8",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_SE_s8__read_bank_0_1"
+  },
+  {
+   "instance": "svc_SE_s8",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_svc_SE_s8__read_epoch_0_16"
+  },
+  {
+   "instance": "svc_SE_s8",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 6,
+   "top_port": "x_svc_SE_s8__read_slot_0_6"
+  },
+  {
+   "instance": "svc_SE_s8",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_SE_s8__retire_v_0_1"
+  },
+  {
+   "instance": "svc_SE_s8",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_SE_s8__retire_bank_0_1"
+  },
+  {
+   "instance": "svc_SE_s8",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_svc_SE_s8__retire_epoch_0_16"
+  },
+  {
+   "instance": "svc_SE_s8",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_SE_s8__cmd_v_0_1"
+  },
+  {
+   "instance": "svc_SE_s8",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_SE_s8__cmd_write_0_1"
+  },
+  {
+   "instance": "svc_SE_s8",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_SE_s8__cmd_bank_0_1"
+  },
+  {
+   "instance": "svc_SE_s8",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_svc_SE_s8__cmd_epoch_0_16"
+  },
+  {
+   "instance": "svc_SE_s8",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 30,
+   "top_port": "x_svc_SE_s8__cmd_addr_0_30"
+  },
+  {
+   "instance": "svc_SE_s8",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 30,
+   "top_port": "x_svc_SE_s8__cmd_step_0_30"
+  },
+  {
+   "instance": "svc_NE_s0",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_NE_s0__rst_n_0_1"
+  },
+  {
+   "instance": "svc_NE_s0",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s0__open_v_0_4"
+  },
+  {
+   "instance": "svc_NE_s0",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s0__open_bank_0_4"
+  },
+  {
+   "instance": "svc_NE_s0",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NE_s0__open_epoch_0_64"
+  },
+  {
+   "instance": "svc_NE_s0",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 28,
+   "top_port": "x_svc_NE_s0__open_count_0_28"
+  },
+  {
+   "instance": "svc_NE_s0",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s0__fill_v_0_4"
+  },
+  {
+   "instance": "svc_NE_s0",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s0__fill_bank_0_4"
+  },
+  {
+   "instance": "svc_NE_s0",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NE_s0__fill_epoch_0_64"
+  },
+  {
+   "instance": "svc_NE_s0",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_NE_s0__fill_slot_0_24"
+  },
+  {
+   "instance": "svc_NE_s0",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 1024,
+   "top_port": "x_svc_NE_s0__fill_data_0_1024"
+  },
+  {
+   "instance": "svc_NE_s0",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s0__read_v_0_4"
+  },
+  {
+   "instance": "svc_NE_s0",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s0__read_bank_0_4"
+  },
+  {
+   "instance": "svc_NE_s0",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NE_s0__read_epoch_0_64"
+  },
+  {
+   "instance": "svc_NE_s0",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_NE_s0__read_slot_0_24"
+  },
+  {
+   "instance": "svc_NE_s0",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s0__retire_v_0_4"
+  },
+  {
+   "instance": "svc_NE_s0",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s0__retire_bank_0_4"
+  },
+  {
+   "instance": "svc_NE_s0",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NE_s0__retire_epoch_0_64"
+  },
+  {
+   "instance": "svc_NE_s0",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s0__cmd_v_0_4"
+  },
+  {
+   "instance": "svc_NE_s0",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s0__cmd_write_0_4"
+  },
+  {
+   "instance": "svc_NE_s0",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s0__cmd_bank_0_4"
+  },
+  {
+   "instance": "svc_NE_s0",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NE_s0__cmd_epoch_0_64"
+  },
+  {
+   "instance": "svc_NE_s0",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_NE_s0__cmd_addr_0_120"
+  },
+  {
+   "instance": "svc_NE_s0",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_NE_s0__cmd_step_0_120"
+  },
+  {
+   "instance": "svc_NE_s1",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_NE_s1__rst_n_0_1"
+  },
+  {
+   "instance": "svc_NE_s1",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NE_s1__open_v_0_5"
+  },
+  {
+   "instance": "svc_NE_s1",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NE_s1__open_bank_0_5"
+  },
+  {
+   "instance": "svc_NE_s1",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_NE_s1__open_epoch_0_80"
+  },
+  {
+   "instance": "svc_NE_s1",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 35,
+   "top_port": "x_svc_NE_s1__open_count_0_35"
+  },
+  {
+   "instance": "svc_NE_s1",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NE_s1__fill_v_0_5"
+  },
+  {
+   "instance": "svc_NE_s1",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NE_s1__fill_bank_0_5"
+  },
+  {
+   "instance": "svc_NE_s1",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_NE_s1__fill_epoch_0_80"
+  },
+  {
+   "instance": "svc_NE_s1",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 30,
+   "top_port": "x_svc_NE_s1__fill_slot_0_30"
+  },
+  {
+   "instance": "svc_NE_s1",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 1280,
+   "top_port": "x_svc_NE_s1__fill_data_0_1280"
+  },
+  {
+   "instance": "svc_NE_s1",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NE_s1__read_v_0_5"
+  },
+  {
+   "instance": "svc_NE_s1",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NE_s1__read_bank_0_5"
+  },
+  {
+   "instance": "svc_NE_s1",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_NE_s1__read_epoch_0_80"
+  },
+  {
+   "instance": "svc_NE_s1",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 30,
+   "top_port": "x_svc_NE_s1__read_slot_0_30"
+  },
+  {
+   "instance": "svc_NE_s1",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NE_s1__retire_v_0_5"
+  },
+  {
+   "instance": "svc_NE_s1",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NE_s1__retire_bank_0_5"
+  },
+  {
+   "instance": "svc_NE_s1",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_NE_s1__retire_epoch_0_80"
+  },
+  {
+   "instance": "svc_NE_s1",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NE_s1__cmd_v_0_5"
+  },
+  {
+   "instance": "svc_NE_s1",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NE_s1__cmd_write_0_5"
+  },
+  {
+   "instance": "svc_NE_s1",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NE_s1__cmd_bank_0_5"
+  },
+  {
+   "instance": "svc_NE_s1",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_NE_s1__cmd_epoch_0_80"
+  },
+  {
+   "instance": "svc_NE_s1",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 150,
+   "top_port": "x_svc_NE_s1__cmd_addr_0_150"
+  },
+  {
+   "instance": "svc_NE_s1",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 150,
+   "top_port": "x_svc_NE_s1__cmd_step_0_150"
+  },
+  {
+   "instance": "svc_NE_s2",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_NE_s2__rst_n_0_1"
+  },
+  {
+   "instance": "svc_NE_s2",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s2__open_v_0_4"
+  },
+  {
+   "instance": "svc_NE_s2",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s2__open_bank_0_4"
+  },
+  {
+   "instance": "svc_NE_s2",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NE_s2__open_epoch_0_64"
+  },
+  {
+   "instance": "svc_NE_s2",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 28,
+   "top_port": "x_svc_NE_s2__open_count_0_28"
+  },
+  {
+   "instance": "svc_NE_s2",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s2__fill_v_0_4"
+  },
+  {
+   "instance": "svc_NE_s2",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s2__fill_bank_0_4"
+  },
+  {
+   "instance": "svc_NE_s2",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NE_s2__fill_epoch_0_64"
+  },
+  {
+   "instance": "svc_NE_s2",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_NE_s2__fill_slot_0_24"
+  },
+  {
+   "instance": "svc_NE_s2",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 1024,
+   "top_port": "x_svc_NE_s2__fill_data_0_1024"
+  },
+  {
+   "instance": "svc_NE_s2",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s2__read_v_0_4"
+  },
+  {
+   "instance": "svc_NE_s2",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s2__read_bank_0_4"
+  },
+  {
+   "instance": "svc_NE_s2",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NE_s2__read_epoch_0_64"
+  },
+  {
+   "instance": "svc_NE_s2",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_NE_s2__read_slot_0_24"
+  },
+  {
+   "instance": "svc_NE_s2",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s2__retire_v_0_4"
+  },
+  {
+   "instance": "svc_NE_s2",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s2__retire_bank_0_4"
+  },
+  {
+   "instance": "svc_NE_s2",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NE_s2__retire_epoch_0_64"
+  },
+  {
+   "instance": "svc_NE_s2",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s2__cmd_v_0_4"
+  },
+  {
+   "instance": "svc_NE_s2",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s2__cmd_write_0_4"
+  },
+  {
+   "instance": "svc_NE_s2",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s2__cmd_bank_0_4"
+  },
+  {
+   "instance": "svc_NE_s2",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NE_s2__cmd_epoch_0_64"
+  },
+  {
+   "instance": "svc_NE_s2",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_NE_s2__cmd_addr_0_120"
+  },
+  {
+   "instance": "svc_NE_s2",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_NE_s2__cmd_step_0_120"
+  },
+  {
+   "instance": "svc_NE_s3",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_NE_s3__rst_n_0_1"
+  },
+  {
+   "instance": "svc_NE_s3",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NE_s3__open_v_0_5"
+  },
+  {
+   "instance": "svc_NE_s3",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NE_s3__open_bank_0_5"
+  },
+  {
+   "instance": "svc_NE_s3",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_NE_s3__open_epoch_0_80"
+  },
+  {
+   "instance": "svc_NE_s3",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 35,
+   "top_port": "x_svc_NE_s3__open_count_0_35"
+  },
+  {
+   "instance": "svc_NE_s3",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NE_s3__fill_v_0_5"
+  },
+  {
+   "instance": "svc_NE_s3",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NE_s3__fill_bank_0_5"
+  },
+  {
+   "instance": "svc_NE_s3",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_NE_s3__fill_epoch_0_80"
+  },
+  {
+   "instance": "svc_NE_s3",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 30,
+   "top_port": "x_svc_NE_s3__fill_slot_0_30"
+  },
+  {
+   "instance": "svc_NE_s3",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 1280,
+   "top_port": "x_svc_NE_s3__fill_data_0_1280"
+  },
+  {
+   "instance": "svc_NE_s3",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NE_s3__read_v_0_5"
+  },
+  {
+   "instance": "svc_NE_s3",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NE_s3__read_bank_0_5"
+  },
+  {
+   "instance": "svc_NE_s3",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_NE_s3__read_epoch_0_80"
+  },
+  {
+   "instance": "svc_NE_s3",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 30,
+   "top_port": "x_svc_NE_s3__read_slot_0_30"
+  },
+  {
+   "instance": "svc_NE_s3",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NE_s3__retire_v_0_5"
+  },
+  {
+   "instance": "svc_NE_s3",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NE_s3__retire_bank_0_5"
+  },
+  {
+   "instance": "svc_NE_s3",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_NE_s3__retire_epoch_0_80"
+  },
+  {
+   "instance": "svc_NE_s3",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NE_s3__cmd_v_0_5"
+  },
+  {
+   "instance": "svc_NE_s3",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NE_s3__cmd_write_0_5"
+  },
+  {
+   "instance": "svc_NE_s3",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 5,
+   "top_port": "x_svc_NE_s3__cmd_bank_0_5"
+  },
+  {
+   "instance": "svc_NE_s3",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 80,
+   "top_port": "x_svc_NE_s3__cmd_epoch_0_80"
+  },
+  {
+   "instance": "svc_NE_s3",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 150,
+   "top_port": "x_svc_NE_s3__cmd_addr_0_150"
+  },
+  {
+   "instance": "svc_NE_s3",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 150,
+   "top_port": "x_svc_NE_s3__cmd_step_0_150"
+  },
+  {
+   "instance": "svc_NE_s4",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_NE_s4__rst_n_0_1"
+  },
+  {
+   "instance": "svc_NE_s4",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s4__open_v_0_4"
+  },
+  {
+   "instance": "svc_NE_s4",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s4__open_bank_0_4"
+  },
+  {
+   "instance": "svc_NE_s4",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NE_s4__open_epoch_0_64"
+  },
+  {
+   "instance": "svc_NE_s4",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 28,
+   "top_port": "x_svc_NE_s4__open_count_0_28"
+  },
+  {
+   "instance": "svc_NE_s4",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s4__fill_v_0_4"
+  },
+  {
+   "instance": "svc_NE_s4",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s4__fill_bank_0_4"
+  },
+  {
+   "instance": "svc_NE_s4",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NE_s4__fill_epoch_0_64"
+  },
+  {
+   "instance": "svc_NE_s4",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_NE_s4__fill_slot_0_24"
+  },
+  {
+   "instance": "svc_NE_s4",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 1024,
+   "top_port": "x_svc_NE_s4__fill_data_0_1024"
+  },
+  {
+   "instance": "svc_NE_s4",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s4__read_v_0_4"
+  },
+  {
+   "instance": "svc_NE_s4",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s4__read_bank_0_4"
+  },
+  {
+   "instance": "svc_NE_s4",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NE_s4__read_epoch_0_64"
+  },
+  {
+   "instance": "svc_NE_s4",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_NE_s4__read_slot_0_24"
+  },
+  {
+   "instance": "svc_NE_s4",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s4__retire_v_0_4"
+  },
+  {
+   "instance": "svc_NE_s4",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s4__retire_bank_0_4"
+  },
+  {
+   "instance": "svc_NE_s4",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NE_s4__retire_epoch_0_64"
+  },
+  {
+   "instance": "svc_NE_s4",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s4__cmd_v_0_4"
+  },
+  {
+   "instance": "svc_NE_s4",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s4__cmd_write_0_4"
+  },
+  {
+   "instance": "svc_NE_s4",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s4__cmd_bank_0_4"
+  },
+  {
+   "instance": "svc_NE_s4",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NE_s4__cmd_epoch_0_64"
+  },
+  {
+   "instance": "svc_NE_s4",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_NE_s4__cmd_addr_0_120"
+  },
+  {
+   "instance": "svc_NE_s4",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_NE_s4__cmd_step_0_120"
+  },
+  {
+   "instance": "svc_NE_s5",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_NE_s5__rst_n_0_1"
+  },
+  {
+   "instance": "svc_NE_s5",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s5__open_v_0_4"
+  },
+  {
+   "instance": "svc_NE_s5",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s5__open_bank_0_4"
+  },
+  {
+   "instance": "svc_NE_s5",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NE_s5__open_epoch_0_64"
+  },
+  {
+   "instance": "svc_NE_s5",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 28,
+   "top_port": "x_svc_NE_s5__open_count_0_28"
+  },
+  {
+   "instance": "svc_NE_s5",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s5__fill_v_0_4"
+  },
+  {
+   "instance": "svc_NE_s5",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s5__fill_bank_0_4"
+  },
+  {
+   "instance": "svc_NE_s5",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NE_s5__fill_epoch_0_64"
+  },
+  {
+   "instance": "svc_NE_s5",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_NE_s5__fill_slot_0_24"
+  },
+  {
+   "instance": "svc_NE_s5",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 1024,
+   "top_port": "x_svc_NE_s5__fill_data_0_1024"
+  },
+  {
+   "instance": "svc_NE_s5",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s5__read_v_0_4"
+  },
+  {
+   "instance": "svc_NE_s5",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s5__read_bank_0_4"
+  },
+  {
+   "instance": "svc_NE_s5",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NE_s5__read_epoch_0_64"
+  },
+  {
+   "instance": "svc_NE_s5",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_svc_NE_s5__read_slot_0_24"
+  },
+  {
+   "instance": "svc_NE_s5",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s5__retire_v_0_4"
+  },
+  {
+   "instance": "svc_NE_s5",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s5__retire_bank_0_4"
+  },
+  {
+   "instance": "svc_NE_s5",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NE_s5__retire_epoch_0_64"
+  },
+  {
+   "instance": "svc_NE_s5",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s5__cmd_v_0_4"
+  },
+  {
+   "instance": "svc_NE_s5",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s5__cmd_write_0_4"
+  },
+  {
+   "instance": "svc_NE_s5",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_svc_NE_s5__cmd_bank_0_4"
+  },
+  {
+   "instance": "svc_NE_s5",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 64,
+   "top_port": "x_svc_NE_s5__cmd_epoch_0_64"
+  },
+  {
+   "instance": "svc_NE_s5",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_NE_s5__cmd_addr_0_120"
+  },
+  {
+   "instance": "svc_NE_s5",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 120,
+   "top_port": "x_svc_NE_s5__cmd_step_0_120"
+  },
+  {
+   "instance": "svc_NE_s6",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_NE_s6__rst_n_0_1"
+  },
+  {
+   "instance": "svc_NE_s6",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_NE_s6__open_v_0_3"
+  },
+  {
+   "instance": "svc_NE_s6",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_NE_s6__open_bank_0_3"
+  },
+  {
+   "instance": "svc_NE_s6",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 48,
+   "top_port": "x_svc_NE_s6__open_epoch_0_48"
+  },
+  {
+   "instance": "svc_NE_s6",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 21,
+   "top_port": "x_svc_NE_s6__open_count_0_21"
+  },
+  {
+   "instance": "svc_NE_s6",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_NE_s6__fill_v_0_3"
+  },
+  {
+   "instance": "svc_NE_s6",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_NE_s6__fill_bank_0_3"
+  },
+  {
+   "instance": "svc_NE_s6",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 48,
+   "top_port": "x_svc_NE_s6__fill_epoch_0_48"
+  },
+  {
+   "instance": "svc_NE_s6",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_svc_NE_s6__fill_slot_0_18"
+  },
+  {
+   "instance": "svc_NE_s6",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 768,
+   "top_port": "x_svc_NE_s6__fill_data_0_768"
+  },
+  {
+   "instance": "svc_NE_s6",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_NE_s6__read_v_0_3"
+  },
+  {
+   "instance": "svc_NE_s6",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_NE_s6__read_bank_0_3"
+  },
+  {
+   "instance": "svc_NE_s6",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 48,
+   "top_port": "x_svc_NE_s6__read_epoch_0_48"
+  },
+  {
+   "instance": "svc_NE_s6",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_svc_NE_s6__read_slot_0_18"
+  },
+  {
+   "instance": "svc_NE_s6",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_NE_s6__retire_v_0_3"
+  },
+  {
+   "instance": "svc_NE_s6",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_NE_s6__retire_bank_0_3"
+  },
+  {
+   "instance": "svc_NE_s6",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 48,
+   "top_port": "x_svc_NE_s6__retire_epoch_0_48"
+  },
+  {
+   "instance": "svc_NE_s6",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_NE_s6__cmd_v_0_3"
+  },
+  {
+   "instance": "svc_NE_s6",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_NE_s6__cmd_write_0_3"
+  },
+  {
+   "instance": "svc_NE_s6",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_svc_NE_s6__cmd_bank_0_3"
+  },
+  {
+   "instance": "svc_NE_s6",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 48,
+   "top_port": "x_svc_NE_s6__cmd_epoch_0_48"
+  },
+  {
+   "instance": "svc_NE_s6",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 90,
+   "top_port": "x_svc_NE_s6__cmd_addr_0_90"
+  },
+  {
+   "instance": "svc_NE_s6",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 90,
+   "top_port": "x_svc_NE_s6__cmd_step_0_90"
+  },
+  {
+   "instance": "svc_NE_s7",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_NE_s7__rst_n_0_1"
+  },
+  {
+   "instance": "svc_NE_s7",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_svc_NE_s7__open_v_0_2"
+  },
+  {
+   "instance": "svc_NE_s7",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_svc_NE_s7__open_bank_0_2"
+  },
+  {
+   "instance": "svc_NE_s7",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_svc_NE_s7__open_epoch_0_32"
+  },
+  {
+   "instance": "svc_NE_s7",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 14,
+   "top_port": "x_svc_NE_s7__open_count_0_14"
+  },
+  {
+   "instance": "svc_NE_s7",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_svc_NE_s7__fill_v_0_2"
+  },
+  {
+   "instance": "svc_NE_s7",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_svc_NE_s7__fill_bank_0_2"
+  },
+  {
+   "instance": "svc_NE_s7",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_svc_NE_s7__fill_epoch_0_32"
+  },
+  {
+   "instance": "svc_NE_s7",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 12,
+   "top_port": "x_svc_NE_s7__fill_slot_0_12"
+  },
+  {
+   "instance": "svc_NE_s7",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 512,
+   "top_port": "x_svc_NE_s7__fill_data_0_512"
+  },
+  {
+   "instance": "svc_NE_s7",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_svc_NE_s7__read_v_0_2"
+  },
+  {
+   "instance": "svc_NE_s7",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_svc_NE_s7__read_bank_0_2"
+  },
+  {
+   "instance": "svc_NE_s7",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_svc_NE_s7__read_epoch_0_32"
+  },
+  {
+   "instance": "svc_NE_s7",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 12,
+   "top_port": "x_svc_NE_s7__read_slot_0_12"
+  },
+  {
+   "instance": "svc_NE_s7",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_svc_NE_s7__retire_v_0_2"
+  },
+  {
+   "instance": "svc_NE_s7",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_svc_NE_s7__retire_bank_0_2"
+  },
+  {
+   "instance": "svc_NE_s7",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_svc_NE_s7__retire_epoch_0_32"
+  },
+  {
+   "instance": "svc_NE_s7",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_svc_NE_s7__cmd_v_0_2"
+  },
+  {
+   "instance": "svc_NE_s7",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_svc_NE_s7__cmd_write_0_2"
+  },
+  {
+   "instance": "svc_NE_s7",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_svc_NE_s7__cmd_bank_0_2"
+  },
+  {
+   "instance": "svc_NE_s7",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_svc_NE_s7__cmd_epoch_0_32"
+  },
+  {
+   "instance": "svc_NE_s7",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 60,
+   "top_port": "x_svc_NE_s7__cmd_addr_0_60"
+  },
+  {
+   "instance": "svc_NE_s7",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 60,
+   "top_port": "x_svc_NE_s7__cmd_step_0_60"
+  },
+  {
+   "instance": "svc_NE_s8",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_NE_s8__rst_n_0_1"
+  },
+  {
+   "instance": "svc_NE_s8",
+   "port": "open_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_NE_s8__open_v_0_1"
+  },
+  {
+   "instance": "svc_NE_s8",
+   "port": "open_bank",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_NE_s8__open_bank_0_1"
+  },
+  {
+   "instance": "svc_NE_s8",
+   "port": "open_epoch",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_svc_NE_s8__open_epoch_0_16"
+  },
+  {
+   "instance": "svc_NE_s8",
+   "port": "open_count",
+   "lo": 0,
+   "hi": 7,
+   "top_port": "x_svc_NE_s8__open_count_0_7"
+  },
+  {
+   "instance": "svc_NE_s8",
+   "port": "fill_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_NE_s8__fill_v_0_1"
+  },
+  {
+   "instance": "svc_NE_s8",
+   "port": "fill_bank",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_NE_s8__fill_bank_0_1"
+  },
+  {
+   "instance": "svc_NE_s8",
+   "port": "fill_epoch",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_svc_NE_s8__fill_epoch_0_16"
+  },
+  {
+   "instance": "svc_NE_s8",
+   "port": "fill_slot",
+   "lo": 0,
+   "hi": 6,
+   "top_port": "x_svc_NE_s8__fill_slot_0_6"
+  },
+  {
+   "instance": "svc_NE_s8",
+   "port": "fill_data",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_svc_NE_s8__fill_data_0_256"
+  },
+  {
+   "instance": "svc_NE_s8",
+   "port": "read_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_NE_s8__read_v_0_1"
+  },
+  {
+   "instance": "svc_NE_s8",
+   "port": "read_bank",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_NE_s8__read_bank_0_1"
+  },
+  {
+   "instance": "svc_NE_s8",
+   "port": "read_epoch",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_svc_NE_s8__read_epoch_0_16"
+  },
+  {
+   "instance": "svc_NE_s8",
+   "port": "read_slot",
+   "lo": 0,
+   "hi": 6,
+   "top_port": "x_svc_NE_s8__read_slot_0_6"
+  },
+  {
+   "instance": "svc_NE_s8",
+   "port": "retire_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_NE_s8__retire_v_0_1"
+  },
+  {
+   "instance": "svc_NE_s8",
+   "port": "retire_bank",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_NE_s8__retire_bank_0_1"
+  },
+  {
+   "instance": "svc_NE_s8",
+   "port": "retire_epoch",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_svc_NE_s8__retire_epoch_0_16"
+  },
+  {
+   "instance": "svc_NE_s8",
+   "port": "cmd_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_NE_s8__cmd_v_0_1"
+  },
+  {
+   "instance": "svc_NE_s8",
+   "port": "cmd_write",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_NE_s8__cmd_write_0_1"
+  },
+  {
+   "instance": "svc_NE_s8",
+   "port": "cmd_bank",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_svc_NE_s8__cmd_bank_0_1"
+  },
+  {
+   "instance": "svc_NE_s8",
+   "port": "cmd_epoch",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_svc_NE_s8__cmd_epoch_0_16"
+  },
+  {
+   "instance": "svc_NE_s8",
+   "port": "cmd_addr",
+   "lo": 0,
+   "hi": 30,
+   "top_port": "x_svc_NE_s8__cmd_addr_0_30"
+  },
+  {
+   "instance": "svc_NE_s8",
+   "port": "cmd_step",
+   "lo": 0,
+   "hi": 30,
+   "top_port": "x_svc_NE_s8__cmd_step_0_30"
+  },
+  {
+   "instance": "phy_SW",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_phy_SW__rst_n_0_1"
+  },
+  {
+   "instance": "phy_SW",
+   "port": "w_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_phy_SW__w_v_0_1"
+  },
+  {
+   "instance": "phy_SW",
+   "port": "w_addr",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_phy_SW__w_addr_0_24"
+  },
+  {
+   "instance": "phy_SW",
+   "port": "w_len",
+   "lo": 0,
+   "hi": 6,
+   "top_port": "x_phy_SW__w_len_0_6"
+  },
+  {
+   "instance": "phy_SW",
+   "port": "w_tag",
+   "lo": 0,
+   "hi": 10,
+   "top_port": "x_phy_SW__w_tag_0_10"
+  },
+  {
+   "instance": "phy_SW",
+   "port": "wr_rdy",
+   "lo": 0,
+   "hi": 8,
+   "top_port": "x_phy_SW__wr_rdy_0_8"
+  },
+  {
+   "instance": "phy_SE",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_phy_SE__rst_n_0_1"
+  },
+  {
+   "instance": "phy_SE",
+   "port": "w_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_phy_SE__w_v_0_1"
+  },
+  {
+   "instance": "phy_SE",
+   "port": "w_addr",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_phy_SE__w_addr_0_24"
+  },
+  {
+   "instance": "phy_SE",
+   "port": "w_len",
+   "lo": 0,
+   "hi": 6,
+   "top_port": "x_phy_SE__w_len_0_6"
+  },
+  {
+   "instance": "phy_SE",
+   "port": "w_tag",
+   "lo": 0,
+   "hi": 10,
+   "top_port": "x_phy_SE__w_tag_0_10"
+  },
+  {
+   "instance": "phy_SE",
+   "port": "wr_rdy",
+   "lo": 0,
+   "hi": 8,
+   "top_port": "x_phy_SE__wr_rdy_0_8"
+  },
+  {
+   "instance": "phy_NW",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_phy_NW__rst_n_0_1"
+  },
+  {
+   "instance": "phy_NW",
+   "port": "w_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_phy_NW__w_v_0_1"
+  },
+  {
+   "instance": "phy_NW",
+   "port": "w_addr",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_phy_NW__w_addr_0_24"
+  },
+  {
+   "instance": "phy_NW",
+   "port": "w_len",
+   "lo": 0,
+   "hi": 6,
+   "top_port": "x_phy_NW__w_len_0_6"
+  },
+  {
+   "instance": "phy_NW",
+   "port": "w_tag",
+   "lo": 0,
+   "hi": 10,
+   "top_port": "x_phy_NW__w_tag_0_10"
+  },
+  {
+   "instance": "phy_NW",
+   "port": "wr_rdy",
+   "lo": 0,
+   "hi": 8,
+   "top_port": "x_phy_NW__wr_rdy_0_8"
+  },
+  {
+   "instance": "phy_NE",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_phy_NE__rst_n_0_1"
+  },
+  {
+   "instance": "phy_NE",
+   "port": "w_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_phy_NE__w_v_0_1"
+  },
+  {
+   "instance": "phy_NE",
+   "port": "w_addr",
+   "lo": 0,
+   "hi": 24,
+   "top_port": "x_phy_NE__w_addr_0_24"
+  },
+  {
+   "instance": "phy_NE",
+   "port": "w_len",
+   "lo": 0,
+   "hi": 6,
+   "top_port": "x_phy_NE__w_len_0_6"
+  },
+  {
+   "instance": "phy_NE",
+   "port": "w_tag",
+   "lo": 0,
+   "hi": 10,
+   "top_port": "x_phy_NE__w_tag_0_10"
+  },
+  {
+   "instance": "phy_NE",
+   "port": "wr_rdy",
+   "lo": 0,
+   "hi": 8,
+   "top_port": "x_phy_NE__wr_rdy_0_8"
+  },
+  {
+   "instance": "calendar_SW",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_calendar_SW__rst_n_0_1"
+  },
+  {
+   "instance": "calendar_SW",
+   "port": "cfg_we",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_calendar_SW__cfg_we_0_1"
+  },
+  {
+   "instance": "calendar_SW",
+   "port": "cfg_addr",
+   "lo": 0,
+   "hi": 10,
+   "top_port": "x_calendar_SW__cfg_addr_0_10"
+  },
+  {
+   "instance": "calendar_SW",
+   "port": "cfg_data",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_calendar_SW__cfg_data_0_256"
+  },
+  {
+   "instance": "calendar_SW",
+   "port": "start_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_calendar_SW__start_v_0_1"
+  },
+  {
+   "instance": "calendar_SW",
+   "port": "start_base",
+   "lo": 0,
+   "hi": 10,
+   "top_port": "x_calendar_SW__start_base_0_10"
+  },
+  {
+   "instance": "calendar_SW",
+   "port": "start_limit",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_calendar_SW__start_limit_0_11"
+  },
+  {
+   "instance": "calendar_SW",
+   "port": "start_loops",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_calendar_SW__start_loops_0_16"
+  },
+  {
+   "instance": "lg_SW_0",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_lg_SW_0__rst_n_0_1"
+  },
+  {
+   "instance": "lg_SW_1",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_lg_SW_1__rst_n_0_1"
+  },
+  {
+   "instance": "lg_SW_2",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_lg_SW_2__rst_n_0_1"
+  },
+  {
+   "instance": "lg_SW_2",
+   "port": "local_rq",
+   "lo": 0,
+   "hi": 136,
+   "top_port": "x_lg_SW_2__local_rq_0_136"
+  },
+  {
+   "instance": "lg_SW_2",
+   "port": "local_wq",
+   "lo": 0,
+   "hi": 2248,
+   "top_port": "x_lg_SW_2__local_wq_0_2248"
+  },
+  {
+   "instance": "calendar_SE",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_calendar_SE__rst_n_0_1"
+  },
+  {
+   "instance": "calendar_SE",
+   "port": "cfg_we",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_calendar_SE__cfg_we_0_1"
+  },
+  {
+   "instance": "calendar_SE",
+   "port": "cfg_addr",
+   "lo": 0,
+   "hi": 10,
+   "top_port": "x_calendar_SE__cfg_addr_0_10"
+  },
+  {
+   "instance": "calendar_SE",
+   "port": "cfg_data",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_calendar_SE__cfg_data_0_256"
+  },
+  {
+   "instance": "calendar_SE",
+   "port": "start_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_calendar_SE__start_v_0_1"
+  },
+  {
+   "instance": "calendar_SE",
+   "port": "start_base",
+   "lo": 0,
+   "hi": 10,
+   "top_port": "x_calendar_SE__start_base_0_10"
+  },
+  {
+   "instance": "calendar_SE",
+   "port": "start_limit",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_calendar_SE__start_limit_0_11"
+  },
+  {
+   "instance": "calendar_SE",
+   "port": "start_loops",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_calendar_SE__start_loops_0_16"
+  },
+  {
+   "instance": "lg_SE_0",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_lg_SE_0__rst_n_0_1"
+  },
+  {
+   "instance": "lg_SE_1",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_lg_SE_1__rst_n_0_1"
+  },
+  {
+   "instance": "lg_SE_2",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_lg_SE_2__rst_n_0_1"
+  },
+  {
+   "instance": "lg_SE_2",
+   "port": "local_rq",
+   "lo": 0,
+   "hi": 136,
+   "top_port": "x_lg_SE_2__local_rq_0_136"
+  },
+  {
+   "instance": "lg_SE_2",
+   "port": "local_wq",
+   "lo": 0,
+   "hi": 2248,
+   "top_port": "x_lg_SE_2__local_wq_0_2248"
+  },
+  {
+   "instance": "calendar_NW",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_calendar_NW__rst_n_0_1"
+  },
+  {
+   "instance": "calendar_NW",
+   "port": "cfg_we",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_calendar_NW__cfg_we_0_1"
+  },
+  {
+   "instance": "calendar_NW",
+   "port": "cfg_addr",
+   "lo": 0,
+   "hi": 10,
+   "top_port": "x_calendar_NW__cfg_addr_0_10"
+  },
+  {
+   "instance": "calendar_NW",
+   "port": "cfg_data",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_calendar_NW__cfg_data_0_256"
+  },
+  {
+   "instance": "calendar_NW",
+   "port": "start_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_calendar_NW__start_v_0_1"
+  },
+  {
+   "instance": "calendar_NW",
+   "port": "start_base",
+   "lo": 0,
+   "hi": 10,
+   "top_port": "x_calendar_NW__start_base_0_10"
+  },
+  {
+   "instance": "calendar_NW",
+   "port": "start_limit",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_calendar_NW__start_limit_0_11"
+  },
+  {
+   "instance": "calendar_NW",
+   "port": "start_loops",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_calendar_NW__start_loops_0_16"
+  },
+  {
+   "instance": "lg_NW_0",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_lg_NW_0__rst_n_0_1"
+  },
+  {
+   "instance": "lg_NW_1",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_lg_NW_1__rst_n_0_1"
+  },
+  {
+   "instance": "lg_NW_2",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_lg_NW_2__rst_n_0_1"
+  },
+  {
+   "instance": "lg_NW_2",
+   "port": "local_rq",
+   "lo": 0,
+   "hi": 136,
+   "top_port": "x_lg_NW_2__local_rq_0_136"
+  },
+  {
+   "instance": "lg_NW_2",
+   "port": "local_wq",
+   "lo": 0,
+   "hi": 2248,
+   "top_port": "x_lg_NW_2__local_wq_0_2248"
+  },
+  {
+   "instance": "calendar_NE",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_calendar_NE__rst_n_0_1"
+  },
+  {
+   "instance": "calendar_NE",
+   "port": "cfg_we",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_calendar_NE__cfg_we_0_1"
+  },
+  {
+   "instance": "calendar_NE",
+   "port": "cfg_addr",
+   "lo": 0,
+   "hi": 10,
+   "top_port": "x_calendar_NE__cfg_addr_0_10"
+  },
+  {
+   "instance": "calendar_NE",
+   "port": "cfg_data",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_calendar_NE__cfg_data_0_256"
+  },
+  {
+   "instance": "calendar_NE",
+   "port": "start_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_calendar_NE__start_v_0_1"
+  },
+  {
+   "instance": "calendar_NE",
+   "port": "start_base",
+   "lo": 0,
+   "hi": 10,
+   "top_port": "x_calendar_NE__start_base_0_10"
+  },
+  {
+   "instance": "calendar_NE",
+   "port": "start_limit",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_calendar_NE__start_limit_0_11"
+  },
+  {
+   "instance": "calendar_NE",
+   "port": "start_loops",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_calendar_NE__start_loops_0_16"
+  },
+  {
+   "instance": "lg_NE_0",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_lg_NE_0__rst_n_0_1"
+  },
+  {
+   "instance": "lg_NE_1",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_lg_NE_1__rst_n_0_1"
+  },
+  {
+   "instance": "lg_NE_2",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_lg_NE_2__rst_n_0_1"
+  },
+  {
+   "instance": "lg_NE_2",
+   "port": "local_rq",
+   "lo": 0,
+   "hi": 136,
+   "top_port": "x_lg_NE_2__local_rq_0_136"
+  },
+  {
+   "instance": "lg_NE_2",
+   "port": "local_wq",
+   "lo": 0,
+   "hi": 2248,
+   "top_port": "x_lg_NE_2__local_wq_0_2248"
+  },
+  {
+   "instance": "vm_status4",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_vm_status4__rst_n_0_1"
+  },
+  {
+   "instance": "hb_coll_SW",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_coll_SW__rst_n_0_1"
+  },
+  {
+   "instance": "hb_coll_SW",
+   "port": "qid",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_hb_coll_SW__qid_0_2"
+  },
+  {
+   "instance": "hb_coll_SW",
+   "port": "hgi_start",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_coll_SW__hgi_start_0_1"
+  },
+  {
+   "instance": "hb_coll_SW",
+   "port": "hgi_start_pc",
+   "lo": 0,
+   "hi": 6,
+   "top_port": "x_hb_coll_SW__hgi_start_pc_0_6"
+  },
+  {
+   "instance": "hb_coll_SW",
+   "port": "program_cfg",
+   "lo": 0,
+   "hi": 37,
+   "top_port": "x_hb_coll_SW__program_cfg_0_37"
+  },
+  {
+   "instance": "hb_coll_SW",
+   "port": "inj_d",
+   "lo": 0,
+   "hi": 1024,
+   "top_port": "x_hb_coll_SW__inj_d_0_1024"
+  },
+  {
+   "instance": "hb_coll_SW",
+   "port": "rc_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_coll_SW__rc_v_0_1"
+  },
+  {
+   "instance": "hb_coll_SW",
+   "port": "rc_tag",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_hb_coll_SW__rc_tag_0_3"
+  },
+  {
+   "instance": "hb_coll_SW",
+   "port": "rc_d",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_hb_coll_SW__rc_d_0_256"
+  },
+  {
+   "instance": "hb_coll_SW",
+   "port": "phy_up",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_hb_coll_SW__phy_up_0_3"
+  },
+  {
+   "instance": "hb_coll_SW",
+   "port": "rx_pin_v",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_hb_coll_SW__rx_pin_v_0_3"
+  },
+  {
+   "instance": "hb_coll_SW",
+   "port": "rx_pin_flit",
+   "lo": 0,
+   "hi": 1788,
+   "top_port": "x_hb_coll_SW__rx_pin_flit_0_1788"
+  },
+  {
+   "instance": "hb_coll_SE",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_coll_SE__rst_n_0_1"
+  },
+  {
+   "instance": "hb_coll_SE",
+   "port": "qid",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_hb_coll_SE__qid_0_2"
+  },
+  {
+   "instance": "hb_coll_SE",
+   "port": "hgi_start",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_coll_SE__hgi_start_0_1"
+  },
+  {
+   "instance": "hb_coll_SE",
+   "port": "hgi_start_pc",
+   "lo": 0,
+   "hi": 6,
+   "top_port": "x_hb_coll_SE__hgi_start_pc_0_6"
+  },
+  {
+   "instance": "hb_coll_SE",
+   "port": "program_cfg",
+   "lo": 0,
+   "hi": 37,
+   "top_port": "x_hb_coll_SE__program_cfg_0_37"
+  },
+  {
+   "instance": "hb_coll_SE",
+   "port": "inj_d",
+   "lo": 0,
+   "hi": 1024,
+   "top_port": "x_hb_coll_SE__inj_d_0_1024"
+  },
+  {
+   "instance": "hb_coll_SE",
+   "port": "rc_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_coll_SE__rc_v_0_1"
+  },
+  {
+   "instance": "hb_coll_SE",
+   "port": "rc_tag",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_hb_coll_SE__rc_tag_0_3"
+  },
+  {
+   "instance": "hb_coll_SE",
+   "port": "rc_d",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_hb_coll_SE__rc_d_0_256"
+  },
+  {
+   "instance": "hb_coll_SE",
+   "port": "phy_up",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_hb_coll_SE__phy_up_0_2"
+  },
+  {
+   "instance": "hb_coll_SE",
+   "port": "rx_pin_v",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_hb_coll_SE__rx_pin_v_0_2"
+  },
+  {
+   "instance": "hb_coll_SE",
+   "port": "rx_pin_flit",
+   "lo": 0,
+   "hi": 1192,
+   "top_port": "x_hb_coll_SE__rx_pin_flit_0_1192"
+  },
+  {
+   "instance": "hb_coll_NW",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_coll_NW__rst_n_0_1"
+  },
+  {
+   "instance": "hb_coll_NW",
+   "port": "qid",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_hb_coll_NW__qid_0_2"
+  },
+  {
+   "instance": "hb_coll_NW",
+   "port": "hgi_start",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_coll_NW__hgi_start_0_1"
+  },
+  {
+   "instance": "hb_coll_NW",
+   "port": "hgi_start_pc",
+   "lo": 0,
+   "hi": 6,
+   "top_port": "x_hb_coll_NW__hgi_start_pc_0_6"
+  },
+  {
+   "instance": "hb_coll_NW",
+   "port": "program_cfg",
+   "lo": 0,
+   "hi": 37,
+   "top_port": "x_hb_coll_NW__program_cfg_0_37"
+  },
+  {
+   "instance": "hb_coll_NW",
+   "port": "inj_d",
+   "lo": 0,
+   "hi": 1024,
+   "top_port": "x_hb_coll_NW__inj_d_0_1024"
+  },
+  {
+   "instance": "hb_coll_NW",
+   "port": "rc_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_coll_NW__rc_v_0_1"
+  },
+  {
+   "instance": "hb_coll_NW",
+   "port": "rc_tag",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_hb_coll_NW__rc_tag_0_3"
+  },
+  {
+   "instance": "hb_coll_NW",
+   "port": "rc_d",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_hb_coll_NW__rc_d_0_256"
+  },
+  {
+   "instance": "hb_coll_NW",
+   "port": "phy_up",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_hb_coll_NW__phy_up_0_2"
+  },
+  {
+   "instance": "hb_coll_NW",
+   "port": "rx_pin_v",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_hb_coll_NW__rx_pin_v_0_2"
+  },
+  {
+   "instance": "hb_coll_NW",
+   "port": "rx_pin_flit",
+   "lo": 0,
+   "hi": 1192,
+   "top_port": "x_hb_coll_NW__rx_pin_flit_0_1192"
+  },
+  {
+   "instance": "hb_coll_NE",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_coll_NE__rst_n_0_1"
+  },
+  {
+   "instance": "hb_coll_NE",
+   "port": "qid",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_hb_coll_NE__qid_0_2"
+  },
+  {
+   "instance": "hb_coll_NE",
+   "port": "hgi_start",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_coll_NE__hgi_start_0_1"
+  },
+  {
+   "instance": "hb_coll_NE",
+   "port": "hgi_start_pc",
+   "lo": 0,
+   "hi": 6,
+   "top_port": "x_hb_coll_NE__hgi_start_pc_0_6"
+  },
+  {
+   "instance": "hb_coll_NE",
+   "port": "program_cfg",
+   "lo": 0,
+   "hi": 37,
+   "top_port": "x_hb_coll_NE__program_cfg_0_37"
+  },
+  {
+   "instance": "hb_coll_NE",
+   "port": "inj_d",
+   "lo": 0,
+   "hi": 1024,
+   "top_port": "x_hb_coll_NE__inj_d_0_1024"
+  },
+  {
+   "instance": "hb_coll_NE",
+   "port": "rc_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_coll_NE__rc_v_0_1"
+  },
+  {
+   "instance": "hb_coll_NE",
+   "port": "rc_tag",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_hb_coll_NE__rc_tag_0_3"
+  },
+  {
+   "instance": "hb_coll_NE",
+   "port": "rc_d",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_hb_coll_NE__rc_d_0_256"
+  },
+  {
+   "instance": "hb_coll_NE",
+   "port": "phy_up",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_hb_coll_NE__phy_up_0_2"
+  },
+  {
+   "instance": "hb_coll_NE",
+   "port": "rx_pin_v",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_hb_coll_NE__rx_pin_v_0_2"
+  },
+  {
+   "instance": "hb_coll_NE",
+   "port": "rx_pin_flit",
+   "lo": 0,
+   "hi": 1192,
+   "top_port": "x_hb_coll_NE__rx_pin_flit_0_1192"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_sfu_SW__rst_n_0_1"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "rst_lg_n",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_hb_sfu_SW__rst_lg_n_0_4"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "rst_lane_n",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_sfu_SW__rst_lane_n_0_16"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "rst_map_n",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_sfu_SW__rst_map_n_0_16"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "cfg_we",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_sfu_SW__cfg_we_0_1"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "cfg_stripe",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_hb_sfu_SW__cfg_stripe_0_3"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "cfg_addr",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_hb_sfu_SW__cfg_addr_0_11"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "cfg_data",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_hb_sfu_SW__cfg_data_0_256"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "start_base",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_hb_sfu_SW__start_base_0_11"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "start_limit",
+   "lo": 0,
+   "hi": 12,
+   "top_port": "x_hb_sfu_SW__start_limit_0_12"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "start_loops",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_sfu_SW__start_loops_0_16"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "io_cfg_we",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_sfu_SW__io_cfg_we_0_1"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "io_cfg_stripe",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_hb_sfu_SW__io_cfg_stripe_0_2"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "io_cfg_addr",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_hb_sfu_SW__io_cfg_addr_0_11"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "io_cfg_data",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_hb_sfu_SW__io_cfg_data_0_256"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "io_start_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_sfu_SW__io_start_v_0_1"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "io_start_base",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_hb_sfu_SW__io_start_base_0_11"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "io_start_limit",
+   "lo": 0,
+   "hi": 12,
+   "top_port": "x_hb_sfu_SW__io_start_limit_0_12"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "io_start_loops",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_sfu_SW__io_start_loops_0_16"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "vi_q",
+   "lo": 0,
+   "hi": 512,
+   "top_port": "x_hb_sfu_SW__vi_q_0_512"
+  },
+  {
+   "instance": "hb_sfu_SW",
+   "port": "side_y",
+   "lo": 0,
+   "hi": 512,
+   "top_port": "x_hb_sfu_SW__side_y_0_512"
+  },
+  {
+   "instance": "hb_dbk_SW",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_dbk_SW__rst_n_0_1"
+  },
+  {
+   "instance": "hb_dbk_SW",
+   "port": "cycle",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_hb_dbk_SW__cycle_0_32"
+  },
+  {
+   "instance": "hb_dbk_SW",
+   "port": "mv_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_dbk_SW__mv_v_0_1"
+  },
+  {
+   "instance": "hb_dbk_SW",
+   "port": "mv",
+   "lo": 0,
+   "hi": 227,
+   "top_port": "x_hb_dbk_SW__mv_0_227"
+  },
+  {
+   "instance": "hb_dbk_SW",
+   "port": "issue_at",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_hb_dbk_SW__issue_at_0_32"
+  },
+  {
+   "instance": "hb_dbk_SW",
+   "port": "drain_at",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_hb_dbk_SW__drain_at_0_32"
+  },
+  {
+   "instance": "hb_dbk_SW",
+   "port": "mv_wb_bank",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_dbk_SW__mv_wb_bank_0_1"
+  },
+  {
+   "instance": "hb_dbk_SW",
+   "port": "mv_wb_epoch",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_dbk_SW__mv_wb_epoch_0_16"
+  },
+  {
+   "instance": "hb_dbk_SW",
+   "port": "wb_ready",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_dbk_SW__wb_ready_0_1"
+  },
+  {
+   "instance": "hb_dbk_SW",
+   "port": "wa",
+   "lo": 0,
+   "hi": 12,
+   "top_port": "x_hb_dbk_SW__wa_0_12"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "rst_lane_n",
+   "lo": 0,
+   "hi": 128,
+   "top_port": "x_hb_su_SW__rst_lane_n_0_128"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "rst_bcast_n",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_su_SW__rst_bcast_n_0_16"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_su_SW__rst_n_0_1"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "control",
+   "lo": 0,
+   "hi": 1742,
+   "top_port": "x_hb_su_SW__control_0_1742"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "vmr_cmd",
+   "lo": 0,
+   "hi": 240,
+   "top_port": "x_hb_su_SW__vmr_cmd_0_240"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "vmw_cmd",
+   "lo": 0,
+   "hi": 312,
+   "top_port": "x_hb_su_SW__vmw_cmd_0_312"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "rf_rd_cmd",
+   "lo": 0,
+   "hi": 54,
+   "top_port": "x_hb_su_SW__rf_rd_cmd_0_54"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "red_cmd",
+   "lo": 0,
+   "hi": 74,
+   "top_port": "x_hb_su_SW__red_cmd_0_74"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "rf_wv",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_hb_su_SW__rf_wv_0_4"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "rf_wa",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_hb_su_SW__rf_wa_0_32"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "rf_wd",
+   "lo": 0,
+   "hi": 128,
+   "top_port": "x_hb_su_SW__rf_wd_0_128"
+  },
+  {
+   "instance": "hb_sfu_SE",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_sfu_SE__rst_n_0_1"
+  },
+  {
+   "instance": "hb_sfu_SE",
+   "port": "rst_lg_n",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_hb_sfu_SE__rst_lg_n_0_4"
+  },
+  {
+   "instance": "hb_sfu_SE",
+   "port": "rst_lane_n",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_sfu_SE__rst_lane_n_0_16"
+  },
+  {
+   "instance": "hb_sfu_SE",
+   "port": "rst_map_n",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_sfu_SE__rst_map_n_0_16"
+  },
+  {
+   "instance": "hb_sfu_SE",
+   "port": "cfg_we",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_sfu_SE__cfg_we_0_1"
+  },
+  {
+   "instance": "hb_sfu_SE",
+   "port": "cfg_stripe",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_hb_sfu_SE__cfg_stripe_0_3"
+  },
+  {
+   "instance": "hb_sfu_SE",
+   "port": "cfg_addr",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_hb_sfu_SE__cfg_addr_0_11"
+  },
+  {
+   "instance": "hb_sfu_SE",
+   "port": "cfg_data",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_hb_sfu_SE__cfg_data_0_256"
+  },
+  {
+   "instance": "hb_sfu_SE",
+   "port": "start_base",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_hb_sfu_SE__start_base_0_11"
+  },
+  {
+   "instance": "hb_sfu_SE",
+   "port": "start_limit",
+   "lo": 0,
+   "hi": 12,
+   "top_port": "x_hb_sfu_SE__start_limit_0_12"
+  },
+  {
+   "instance": "hb_sfu_SE",
+   "port": "start_loops",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_sfu_SE__start_loops_0_16"
+  },
+  {
+   "instance": "hb_sfu_SE",
+   "port": "io_cfg_we",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_sfu_SE__io_cfg_we_0_1"
+  },
+  {
+   "instance": "hb_sfu_SE",
+   "port": "io_cfg_stripe",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_hb_sfu_SE__io_cfg_stripe_0_2"
+  },
+  {
+   "instance": "hb_sfu_SE",
+   "port": "io_cfg_addr",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_hb_sfu_SE__io_cfg_addr_0_11"
+  },
+  {
+   "instance": "hb_sfu_SE",
+   "port": "io_cfg_data",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_hb_sfu_SE__io_cfg_data_0_256"
+  },
+  {
+   "instance": "hb_sfu_SE",
+   "port": "io_start_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_sfu_SE__io_start_v_0_1"
+  },
+  {
+   "instance": "hb_sfu_SE",
+   "port": "io_start_base",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_hb_sfu_SE__io_start_base_0_11"
+  },
+  {
+   "instance": "hb_sfu_SE",
+   "port": "io_start_limit",
+   "lo": 0,
+   "hi": 12,
+   "top_port": "x_hb_sfu_SE__io_start_limit_0_12"
+  },
+  {
+   "instance": "hb_sfu_SE",
+   "port": "io_start_loops",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_sfu_SE__io_start_loops_0_16"
+  },
+  {
+   "instance": "hb_sfu_SE",
+   "port": "vi_q",
+   "lo": 0,
+   "hi": 512,
+   "top_port": "x_hb_sfu_SE__vi_q_0_512"
+  },
+  {
+   "instance": "hb_sfu_SE",
+   "port": "side_y",
+   "lo": 0,
+   "hi": 512,
+   "top_port": "x_hb_sfu_SE__side_y_0_512"
+  },
+  {
+   "instance": "hb_dbk_SE",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_dbk_SE__rst_n_0_1"
+  },
+  {
+   "instance": "hb_dbk_SE",
+   "port": "cycle",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_hb_dbk_SE__cycle_0_32"
+  },
+  {
+   "instance": "hb_dbk_SE",
+   "port": "mv_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_dbk_SE__mv_v_0_1"
+  },
+  {
+   "instance": "hb_dbk_SE",
+   "port": "mv",
+   "lo": 0,
+   "hi": 227,
+   "top_port": "x_hb_dbk_SE__mv_0_227"
+  },
+  {
+   "instance": "hb_dbk_SE",
+   "port": "issue_at",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_hb_dbk_SE__issue_at_0_32"
+  },
+  {
+   "instance": "hb_dbk_SE",
+   "port": "drain_at",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_hb_dbk_SE__drain_at_0_32"
+  },
+  {
+   "instance": "hb_dbk_SE",
+   "port": "mv_wb_bank",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_dbk_SE__mv_wb_bank_0_1"
+  },
+  {
+   "instance": "hb_dbk_SE",
+   "port": "mv_wb_epoch",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_dbk_SE__mv_wb_epoch_0_16"
+  },
+  {
+   "instance": "hb_dbk_SE",
+   "port": "wb_ready",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_dbk_SE__wb_ready_0_1"
+  },
+  {
+   "instance": "hb_dbk_SE",
+   "port": "wa",
+   "lo": 0,
+   "hi": 12,
+   "top_port": "x_hb_dbk_SE__wa_0_12"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "rst_lane_n",
+   "lo": 0,
+   "hi": 128,
+   "top_port": "x_hb_su_SE__rst_lane_n_0_128"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "rst_bcast_n",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_su_SE__rst_bcast_n_0_16"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_su_SE__rst_n_0_1"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "control",
+   "lo": 0,
+   "hi": 1742,
+   "top_port": "x_hb_su_SE__control_0_1742"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "vmr_cmd",
+   "lo": 0,
+   "hi": 240,
+   "top_port": "x_hb_su_SE__vmr_cmd_0_240"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "vmw_cmd",
+   "lo": 0,
+   "hi": 312,
+   "top_port": "x_hb_su_SE__vmw_cmd_0_312"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "rf_rd_cmd",
+   "lo": 0,
+   "hi": 54,
+   "top_port": "x_hb_su_SE__rf_rd_cmd_0_54"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "red_cmd",
+   "lo": 0,
+   "hi": 74,
+   "top_port": "x_hb_su_SE__red_cmd_0_74"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "rf_wv",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_hb_su_SE__rf_wv_0_4"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "rf_wa",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_hb_su_SE__rf_wa_0_32"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "rf_wd",
+   "lo": 0,
+   "hi": 128,
+   "top_port": "x_hb_su_SE__rf_wd_0_128"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_sfu_NW__rst_n_0_1"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "rst_lg_n",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_hb_sfu_NW__rst_lg_n_0_4"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "rst_lane_n",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_sfu_NW__rst_lane_n_0_16"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "rst_map_n",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_sfu_NW__rst_map_n_0_16"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "cfg_we",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_sfu_NW__cfg_we_0_1"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "cfg_stripe",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_hb_sfu_NW__cfg_stripe_0_3"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "cfg_addr",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_hb_sfu_NW__cfg_addr_0_11"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "cfg_data",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_hb_sfu_NW__cfg_data_0_256"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "start_base",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_hb_sfu_NW__start_base_0_11"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "start_limit",
+   "lo": 0,
+   "hi": 12,
+   "top_port": "x_hb_sfu_NW__start_limit_0_12"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "start_loops",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_sfu_NW__start_loops_0_16"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "io_cfg_we",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_sfu_NW__io_cfg_we_0_1"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "io_cfg_stripe",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_hb_sfu_NW__io_cfg_stripe_0_2"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "io_cfg_addr",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_hb_sfu_NW__io_cfg_addr_0_11"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "io_cfg_data",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_hb_sfu_NW__io_cfg_data_0_256"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "io_start_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_sfu_NW__io_start_v_0_1"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "io_start_base",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_hb_sfu_NW__io_start_base_0_11"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "io_start_limit",
+   "lo": 0,
+   "hi": 12,
+   "top_port": "x_hb_sfu_NW__io_start_limit_0_12"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "io_start_loops",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_sfu_NW__io_start_loops_0_16"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "vi_q",
+   "lo": 0,
+   "hi": 512,
+   "top_port": "x_hb_sfu_NW__vi_q_0_512"
+  },
+  {
+   "instance": "hb_sfu_NW",
+   "port": "side_y",
+   "lo": 0,
+   "hi": 512,
+   "top_port": "x_hb_sfu_NW__side_y_0_512"
+  },
+  {
+   "instance": "hb_dbk_NW",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_dbk_NW__rst_n_0_1"
+  },
+  {
+   "instance": "hb_dbk_NW",
+   "port": "cycle",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_hb_dbk_NW__cycle_0_32"
+  },
+  {
+   "instance": "hb_dbk_NW",
+   "port": "mv_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_dbk_NW__mv_v_0_1"
+  },
+  {
+   "instance": "hb_dbk_NW",
+   "port": "mv",
+   "lo": 0,
+   "hi": 227,
+   "top_port": "x_hb_dbk_NW__mv_0_227"
+  },
+  {
+   "instance": "hb_dbk_NW",
+   "port": "issue_at",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_hb_dbk_NW__issue_at_0_32"
+  },
+  {
+   "instance": "hb_dbk_NW",
+   "port": "drain_at",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_hb_dbk_NW__drain_at_0_32"
+  },
+  {
+   "instance": "hb_dbk_NW",
+   "port": "mv_wb_bank",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_dbk_NW__mv_wb_bank_0_1"
+  },
+  {
+   "instance": "hb_dbk_NW",
+   "port": "mv_wb_epoch",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_dbk_NW__mv_wb_epoch_0_16"
+  },
+  {
+   "instance": "hb_dbk_NW",
+   "port": "wb_ready",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_dbk_NW__wb_ready_0_1"
+  },
+  {
+   "instance": "hb_dbk_NW",
+   "port": "wa",
+   "lo": 0,
+   "hi": 12,
+   "top_port": "x_hb_dbk_NW__wa_0_12"
+  },
+  {
+   "instance": "hb_su_NW",
+   "port": "rst_lane_n",
+   "lo": 0,
+   "hi": 128,
+   "top_port": "x_hb_su_NW__rst_lane_n_0_128"
+  },
+  {
+   "instance": "hb_su_NW",
+   "port": "rst_bcast_n",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_su_NW__rst_bcast_n_0_16"
+  },
+  {
+   "instance": "hb_su_NW",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_su_NW__rst_n_0_1"
+  },
+  {
+   "instance": "hb_su_NW",
+   "port": "control",
+   "lo": 0,
+   "hi": 1742,
+   "top_port": "x_hb_su_NW__control_0_1742"
+  },
+  {
+   "instance": "hb_su_NW",
+   "port": "vmr_cmd",
+   "lo": 0,
+   "hi": 240,
+   "top_port": "x_hb_su_NW__vmr_cmd_0_240"
+  },
+  {
+   "instance": "hb_su_NW",
+   "port": "vmw_cmd",
+   "lo": 0,
+   "hi": 312,
+   "top_port": "x_hb_su_NW__vmw_cmd_0_312"
+  },
+  {
+   "instance": "hb_su_NW",
+   "port": "rf_rd_cmd",
+   "lo": 0,
+   "hi": 54,
+   "top_port": "x_hb_su_NW__rf_rd_cmd_0_54"
+  },
+  {
+   "instance": "hb_su_NW",
+   "port": "red_cmd",
+   "lo": 0,
+   "hi": 74,
+   "top_port": "x_hb_su_NW__red_cmd_0_74"
+  },
+  {
+   "instance": "hb_su_NW",
+   "port": "rf_wv",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_hb_su_NW__rf_wv_0_4"
+  },
+  {
+   "instance": "hb_su_NW",
+   "port": "rf_wa",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_hb_su_NW__rf_wa_0_32"
+  },
+  {
+   "instance": "hb_su_NW",
+   "port": "rf_wd",
+   "lo": 0,
+   "hi": 128,
+   "top_port": "x_hb_su_NW__rf_wd_0_128"
+  },
+  {
+   "instance": "hb_sfu_NE",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_sfu_NE__rst_n_0_1"
+  },
+  {
+   "instance": "hb_sfu_NE",
+   "port": "rst_lg_n",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_hb_sfu_NE__rst_lg_n_0_4"
+  },
+  {
+   "instance": "hb_sfu_NE",
+   "port": "rst_lane_n",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_sfu_NE__rst_lane_n_0_16"
+  },
+  {
+   "instance": "hb_sfu_NE",
+   "port": "rst_map_n",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_sfu_NE__rst_map_n_0_16"
+  },
+  {
+   "instance": "hb_sfu_NE",
+   "port": "cfg_we",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_sfu_NE__cfg_we_0_1"
+  },
+  {
+   "instance": "hb_sfu_NE",
+   "port": "cfg_stripe",
+   "lo": 0,
+   "hi": 3,
+   "top_port": "x_hb_sfu_NE__cfg_stripe_0_3"
+  },
+  {
+   "instance": "hb_sfu_NE",
+   "port": "cfg_addr",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_hb_sfu_NE__cfg_addr_0_11"
+  },
+  {
+   "instance": "hb_sfu_NE",
+   "port": "cfg_data",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_hb_sfu_NE__cfg_data_0_256"
+  },
+  {
+   "instance": "hb_sfu_NE",
+   "port": "start_base",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_hb_sfu_NE__start_base_0_11"
+  },
+  {
+   "instance": "hb_sfu_NE",
+   "port": "start_limit",
+   "lo": 0,
+   "hi": 12,
+   "top_port": "x_hb_sfu_NE__start_limit_0_12"
+  },
+  {
+   "instance": "hb_sfu_NE",
+   "port": "start_loops",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_sfu_NE__start_loops_0_16"
+  },
+  {
+   "instance": "hb_sfu_NE",
+   "port": "io_cfg_we",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_sfu_NE__io_cfg_we_0_1"
+  },
+  {
+   "instance": "hb_sfu_NE",
+   "port": "io_cfg_stripe",
+   "lo": 0,
+   "hi": 2,
+   "top_port": "x_hb_sfu_NE__io_cfg_stripe_0_2"
+  },
+  {
+   "instance": "hb_sfu_NE",
+   "port": "io_cfg_addr",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_hb_sfu_NE__io_cfg_addr_0_11"
+  },
+  {
+   "instance": "hb_sfu_NE",
+   "port": "io_cfg_data",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_hb_sfu_NE__io_cfg_data_0_256"
+  },
+  {
+   "instance": "hb_sfu_NE",
+   "port": "io_start_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_sfu_NE__io_start_v_0_1"
+  },
+  {
+   "instance": "hb_sfu_NE",
+   "port": "io_start_base",
+   "lo": 0,
+   "hi": 11,
+   "top_port": "x_hb_sfu_NE__io_start_base_0_11"
+  },
+  {
+   "instance": "hb_sfu_NE",
+   "port": "io_start_limit",
+   "lo": 0,
+   "hi": 12,
+   "top_port": "x_hb_sfu_NE__io_start_limit_0_12"
+  },
+  {
+   "instance": "hb_sfu_NE",
+   "port": "io_start_loops",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_sfu_NE__io_start_loops_0_16"
+  },
+  {
+   "instance": "hb_sfu_NE",
+   "port": "vi_q",
+   "lo": 0,
+   "hi": 512,
+   "top_port": "x_hb_sfu_NE__vi_q_0_512"
+  },
+  {
+   "instance": "hb_sfu_NE",
+   "port": "side_y",
+   "lo": 0,
+   "hi": 512,
+   "top_port": "x_hb_sfu_NE__side_y_0_512"
+  },
+  {
+   "instance": "hb_dbk_NE",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_dbk_NE__rst_n_0_1"
+  },
+  {
+   "instance": "hb_dbk_NE",
+   "port": "cycle",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_hb_dbk_NE__cycle_0_32"
+  },
+  {
+   "instance": "hb_dbk_NE",
+   "port": "mv_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_dbk_NE__mv_v_0_1"
+  },
+  {
+   "instance": "hb_dbk_NE",
+   "port": "mv",
+   "lo": 0,
+   "hi": 227,
+   "top_port": "x_hb_dbk_NE__mv_0_227"
+  },
+  {
+   "instance": "hb_dbk_NE",
+   "port": "issue_at",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_hb_dbk_NE__issue_at_0_32"
+  },
+  {
+   "instance": "hb_dbk_NE",
+   "port": "drain_at",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_hb_dbk_NE__drain_at_0_32"
+  },
+  {
+   "instance": "hb_dbk_NE",
+   "port": "mv_wb_bank",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_dbk_NE__mv_wb_bank_0_1"
+  },
+  {
+   "instance": "hb_dbk_NE",
+   "port": "mv_wb_epoch",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_dbk_NE__mv_wb_epoch_0_16"
+  },
+  {
+   "instance": "hb_dbk_NE",
+   "port": "wb_ready",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_dbk_NE__wb_ready_0_1"
+  },
+  {
+   "instance": "hb_dbk_NE",
+   "port": "wa",
+   "lo": 0,
+   "hi": 12,
+   "top_port": "x_hb_dbk_NE__wa_0_12"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "rst_lane_n",
+   "lo": 0,
+   "hi": 128,
+   "top_port": "x_hb_su_NE__rst_lane_n_0_128"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "rst_bcast_n",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_su_NE__rst_bcast_n_0_16"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_su_NE__rst_n_0_1"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "control",
+   "lo": 0,
+   "hi": 1742,
+   "top_port": "x_hb_su_NE__control_0_1742"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "vmr_cmd",
+   "lo": 0,
+   "hi": 240,
+   "top_port": "x_hb_su_NE__vmr_cmd_0_240"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "vmw_cmd",
+   "lo": 0,
+   "hi": 312,
+   "top_port": "x_hb_su_NE__vmw_cmd_0_312"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "rf_rd_cmd",
+   "lo": 0,
+   "hi": 54,
+   "top_port": "x_hb_su_NE__rf_rd_cmd_0_54"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "red_cmd",
+   "lo": 0,
+   "hi": 74,
+   "top_port": "x_hb_su_NE__red_cmd_0_74"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "rf_wv",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_hb_su_NE__rf_wv_0_4"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "rf_wa",
+   "lo": 0,
+   "hi": 32,
+   "top_port": "x_hb_su_NE__rf_wa_0_32"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "rf_wd",
+   "lo": 0,
+   "hi": 128,
+   "top_port": "x_hb_su_NE__rf_wd_0_128"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "program_we",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_idx__program_we_0_1"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "program_addr",
+   "lo": 0,
+   "hi": 8,
+   "top_port": "x_hb_idx__program_addr_0_8"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "program_data",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_hb_idx__program_data_0_256"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "start",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_idx__start_0_1"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "length",
+   "lo": 0,
+   "hi": 12,
+   "top_port": "x_hb_idx__length_0_12"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_idx__rst_n_0_1"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "weight_sector",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_idx__weight_sector_0_16"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "query_sector",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_idx__query_sector_0_16"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "rank",
+   "lo": 0,
+   "hi": 7,
+   "top_port": "x_hb_idx__rank_0_7"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "gbase",
+   "lo": 0,
+   "hi": 8,
+   "top_port": "x_hb_idx__gbase_0_8"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "nkeys",
+   "lo": 0,
+   "hi": 14,
+   "top_port": "x_hb_idx__nkeys_0_14"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "keep_en",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_idx__keep_en_0_1"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "keep_bitmap",
+   "lo": 0,
+   "hi": 1368,
+   "top_port": "x_hb_idx__keep_bitmap_0_1368"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "key_lines",
+   "lo": 0,
+   "hi": 35168,
+   "top_port": "x_hb_idx__key_lines_0_35168"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_go",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_idx__topk_go_0_1"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_k",
+   "lo": 0,
+   "hi": 4,
+   "top_port": "x_hb_idx__topk_k_0_4"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_order",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_idx__topk_order_0_1"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_n",
+   "lo": 0,
+   "hi": 20,
+   "top_port": "x_hb_idx__topk_n_0_20"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_m",
+   "lo": 0,
+   "hi": 20,
+   "top_port": "x_hb_idx__topk_m_0_20"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_a_mirror",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_idx__topk_a_mirror_0_1"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_a_base",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_idx__topk_a_base_0_18"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_a_str",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_idx__topk_a_str_0_18"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_o_mirror",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_idx__topk_o_mirror_0_1"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_o_base",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_idx__topk_o_base_0_18"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_o_str",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_idx__topk_o_str_0_18"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_has_r",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_idx__topk_has_r_0_1"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_r_base",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_idx__topk_r_base_0_18"
+  },
+  {
+   "instance": "hb_idx",
+   "port": "topk_r_str",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_idx__topk_r_str_0_18"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_argmax__rst_n_0_1"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "die_id",
+   "lo": 0,
+   "hi": 8,
+   "top_port": "x_hb_argmax__die_id_0_8"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "go",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_argmax__go_0_1"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "mode",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_argmax__mode_0_1"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "imm_a",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_argmax__imm_a_0_18"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "a_mirror",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_argmax__a_mirror_0_1"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "a_base",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_argmax__a_base_0_18"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "n",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_argmax__n_0_18"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "o_base",
+   "lo": 0,
+   "hi": 18,
+   "top_port": "x_hb_argmax__o_base_0_18"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "o_is",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_argmax__o_is_0_16"
+  },
+  {
+   "instance": "hb_argmax",
+   "port": "am_stream",
+   "lo": 0,
+   "hi": 523,
+   "top_port": "x_hb_argmax__am_stream_0_523"
+  },
+  {
+   "instance": "hb_quant_NW",
+   "port": "rst_n",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_quant_NW__rst_n_0_1"
+  },
+  {
+   "instance": "hb_quant_NW",
+   "port": "cfg_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_quant_NW__cfg_v_0_1"
+  },
+  {
+   "instance": "hb_quant_NW",
+   "port": "cfg_target",
+   "lo": 0,
+   "hi": 8,
+   "top_port": "x_hb_quant_NW__cfg_target_0_8"
+  },
+  {
+   "instance": "hb_quant_NW",
+   "port": "cfg_addr",
+   "lo": 0,
+   "hi": 12,
+   "top_port": "x_hb_quant_NW__cfg_addr_0_12"
+  },
+  {
+   "instance": "hb_quant_NW",
+   "port": "cfg_data",
+   "lo": 0,
+   "hi": 256,
+   "top_port": "x_hb_quant_NW__cfg_data_0_256"
+  },
+  {
+   "instance": "hb_quant_NW",
+   "port": "desc_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_quant_NW__desc_v_0_1"
+  },
+  {
+   "instance": "hb_quant_NW",
+   "port": "desc_base",
+   "lo": 0,
+   "hi": 12,
+   "top_port": "x_hb_quant_NW__desc_base_0_12"
+  },
+  {
+   "instance": "hb_quant_NW",
+   "port": "desc_limit",
+   "lo": 0,
+   "hi": 13,
+   "top_port": "x_hb_quant_NW__desc_limit_0_13"
+  },
+  {
+   "instance": "hb_quant_NW",
+   "port": "desc_loops",
+   "lo": 0,
+   "hi": 16,
+   "top_port": "x_hb_quant_NW__desc_loops_0_16"
+  },
+  {
+   "instance": "hb_quant_NW",
+   "port": "launch_v",
+   "lo": 0,
+   "hi": 1,
+   "top_port": "x_hb_quant_NW__launch_v_0_1"
+  }
+ ],
+ "boundary_input_bits": 176347,
+ "sources": {
+  "hb_vms_SW": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv",
+  "delivery_SW": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_vm_delivery.sv",
+  "hb_vms_SE": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv",
+  "delivery_SE": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_vm_delivery.sv",
+  "hb_vms_NW": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv",
+  "delivery_NW": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_vm_delivery.sv",
+  "hb_vms_NE": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv",
+  "delivery_NE": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_vm_delivery.sv",
+  "hb_ckgen": "rtl/hbm_accel/control/hfd_ckgen.sv",
+  "svc_SW_s0": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s0.sv",
+  "svc_SW_s1": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s1.sv",
+  "svc_SW_s2": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s2.sv",
+  "svc_SW_s3": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s3.sv",
+  "svc_SW_s4": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s4.sv",
+  "svc_SW_s5": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s5.sv",
+  "svc_SW_s6": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s6.sv",
+  "svc_SW_s7": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s7.sv",
+  "svc_NW_s0": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s0.sv",
+  "svc_NW_s1": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s1.sv",
+  "svc_NW_s2": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s2.sv",
+  "svc_NW_s3": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s3.sv",
+  "svc_NW_s4": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s4.sv",
+  "svc_NW_s5": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s5.sv",
+  "svc_NW_s6": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s6.sv",
+  "svc_NW_s7": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SW_s7.sv",
+  "svc_SE_s0": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s0.sv",
+  "svc_SE_s1": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s1.sv",
+  "svc_SE_s2": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s2.sv",
+  "svc_SE_s3": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s3.sv",
+  "svc_SE_s4": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s4.sv",
+  "svc_SE_s5": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s5.sv",
+  "svc_SE_s6": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s6.sv",
+  "svc_SE_s7": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s7.sv",
+  "svc_SE_s8": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s8.sv",
+  "svc_NE_s0": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s0.sv",
+  "svc_NE_s1": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s1.sv",
+  "svc_NE_s2": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s2.sv",
+  "svc_NE_s3": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s3.sv",
+  "svc_NE_s4": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s4.sv",
+  "svc_NE_s5": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s5.sv",
+  "svc_NE_s6": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s6.sv",
+  "svc_NE_s7": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s7.sv",
+  "svc_NE_s8": "physical/hbm_accel_die_views/svc/v15/rtl/hfd_svc_v15_SE_s8.sv",
+  "phy_SW": "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5_bb.v",
+  "phy_SE": "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5_bb.v",
+  "phy_NW": "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5_bb.v",
+  "phy_NE": "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5_bb.v",
+  "calendar_SW": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv",
+  "lg_SW_0": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv",
+  "lg_SW_1": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv",
+  "lg_SW_2": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv",
+  "calendar_SE": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv",
+  "lg_SE_0": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv",
+  "lg_SE_1": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv",
+  "lg_SE_2": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv",
+  "calendar_NW": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv",
+  "lg_NW_0": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv",
+  "lg_NW_1": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv",
+  "lg_NW_2": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv",
+  "calendar_NE": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv",
+  "lg_NE_0": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv",
+  "lg_NE_1": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv",
+  "lg_NE_2": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv",
+  "vm_status4": "rtl/hbm_accel/generic/vm/static/ot_vms_status4_static.sv",
+  "hb_coll_SW": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv",
+  "hb_coll_SE": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv",
+  "hb_coll_NW": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv",
+  "hb_coll_NE": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv",
+  "hb_sfu_SW": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv",
+  "hb_dbk_SW": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv",
+  "hb_su_SW": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_quarter.sv",
+  "hb_sfu_SE": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv",
+  "hb_dbk_SE": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv",
+  "hb_su_SE": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_quarter.sv",
+  "hb_sfu_NW": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv",
+  "hb_dbk_NW": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv",
+  "hb_su_NW": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_quarter.sv",
+  "hb_sfu_NE": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv",
+  "hb_dbk_NE": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv",
+  "hb_su_NE": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_quarter.sv",
+  "hb_idx": "rtl/hbm_accel/index/ot_hbm_idx_client_static.sv",
+  "hb_argmax": "rtl/hbm_accel/generic/ot_hbm_argmax_static.sv",
+  "hb_quant_NW": "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv"
+ }
+}
