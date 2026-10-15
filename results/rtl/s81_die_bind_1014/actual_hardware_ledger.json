@@ -3,7 +3,7 @@
   "verdict": "FAIL",
   "release_qualified": false,
   "scope": "Full canonical layer die; source candidates do not substitute for emitted netlist connections or native views.",
-  "requirements_sha256": "c865dd069842c99829ed089e29e08adf4ef9d65a584e7475bdb67c6fef6a32ae",
+  "requirements_sha256": "3fdda54fdcacfa025ebb8bf7ee6e2272aeaae4b62b6e2de64964a6c5d987266d",
   "manifest_sha256": "27293f4b64a4231e641e177c47977e7d87651becac22e455a67936b1d9142eec",
   "die_sha256": null,
   "canonical_required": {
@@ -198,6 +198,10 @@
       "module": "ot_s81_pq_command_endpoint",
       "source": "rtl/dsrom_sys/s81_static_control/ot_s81_pq_command_endpoint.sv",
       "owner": "S-COMPILE",
+      "required_ports": {
+        "f_iss": 93
+      },
+      "candidate_ref": "aa258dbad",
       "source_sha256": "555a600cb42a3b7156170202c26c7bc7b2c1cae448dc23bb6b069e8d4f97ff1b",
       "ports": {
         "ck": {
@@ -241,6 +245,7 @@
       "native_qualified": false,
       "binding_findings": [
         "source_not_selected_in_manifest",
+        "required_port_width:f_iss:92!=93",
         "required_master_not_in_emitted_die"
       ],
       "verdict": "FAIL"
@@ -253,6 +258,13 @@
       "required_defines": [
         "DSFD_PQ_STATIC_X2"
       ],
+      "required_ports": {
+        "f_iss": 93,
+        "t_iss": 39,
+        "xw": 1101,
+        "xe": 1101
+      },
+      "candidate_ref": "claude/s81-elemB6-pq@b54bde671",
       "source_sha256": "dda2821fa599e5e13486d05e4bd29f51c64926da1807560693ea25ed0d2da744",
       "ports": {
         "ck_ctl": {
@@ -367,6 +379,9 @@
       "emitted_die_instances": 0,
       "native_qualified": false,
       "binding_findings": [
+        "required_port_width:f_iss:92!=93",
+        "required_port_width:xw:565!=1101",
+        "required_port_width:xe:565!=1101",
         "missing_build_define:DSFD_PQ_STATIC_X2",
         "required_master_not_in_emitted_die"
       ],
@@ -377,6 +392,10 @@
       "module": "ot_s81_static_column_ingress",
       "source": "rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_ingress.sv",
       "owner": "S-BIND",
+      "required_ports": {
+        "i": 1102,
+        "o": 1101
+      },
       "source_sha256": "d99c13f8668a7f45bc8f035bec780bb9f4ccdb2114ec961d353bc7954685518c",
       "ports": {
         "f_ck": {
@@ -612,10 +631,18 @@
       "source": "rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv",
       "owner": "S-COLL",
       "candidate_ref": "codex/s81-static-collective-1014@eca67dfcc",
+      "required_ports": {
+        "t_hc_tag": 32,
+        "t_vm": 2204,
+        "t_crq": 15
+      },
       "emitted_die_instances": 0,
       "native_qualified": false,
       "binding_findings": [
         "actual_source_module_missing",
+        "required_port_width:t_hc_tag:None!=32",
+        "required_port_width:t_vm:None!=2204",
+        "required_port_width:t_crq:None!=15",
         "required_master_not_in_emitted_die"
       ],
       "verdict": "FAIL"
@@ -825,6 +852,13 @@
       "required_defines": [
         "DSFD_SP_VM_MIX4"
       ],
+      "required_ports": {
+        "f_collective": 2204,
+        "f_crq": 15,
+        "t_crs": 513,
+        "f_mx_rqv": 20,
+        "t_mx_rs": 10240
+      },
       "source_sha256": "09122b0ecf087ec719ca698c1349a2b79d4181bca8f551b9411a9867390e9eb3",
       "ports": {
         "ck": {
@@ -1032,6 +1066,12 @@
       "module": "dsfd_engram_mix4_c",
       "source": "rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv",
       "owner": "S-FUNC",
+      "required_ports": {
+        "ck": 133,
+        "rq_v": 20,
+        "rq_row": 280,
+        "rs_d": 10240
+      },
       "source_sha256": "de784fe3a95c6271d1a101a00497f644711ab1f7ad3a20647a744bebdf0f3e3d",
       "ports": {
         "ck": {

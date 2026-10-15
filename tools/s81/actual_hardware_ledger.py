@@ -54,6 +54,9 @@ def audit(requirements, manifest, die=None, bind_record=None, shape=None):
             if mod.port_parse_errors:fail.append('source_header_parse_error')
             if any(p['bits'] is None for p in row['ports'].values()):fail.append('unevaluated_port_width')
             if not any(Path(f).resolve()==Path(mod.path).resolve() for f in files):fail.append('source_not_selected_in_manifest')
+        for pn,width in item.get('required_ports',{}).items():
+            actual=row.get('ports',{}).get(pn,{}).get('bits')
+            if actual!=width:fail.append('required_port_width:'+pn+':'+str(actual)+'!='+str(width))
         for d in item.get('required_defines',[]):
             if d not in defines:fail.append('missing_build_define:'+d)
         row['emitted_die_instances']=emitted[name]

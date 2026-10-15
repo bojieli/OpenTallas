@@ -17,7 +17,11 @@
       "operation": "field_pq_command",
       "module": "ot_s81_pq_command_endpoint",
       "source": "rtl/dsrom_sys/s81_static_control/ot_s81_pq_command_endpoint.sv",
-      "owner": "S-COMPILE"
+      "owner": "S-COMPILE",
+      "required_ports": {
+        "f_iss": 93
+      },
+      "candidate_ref": "aa258dbad"
     },
     {
       "operation": "field_pq_datapath",
@@ -26,13 +30,24 @@
       "owner": "S-ELEM/S-BIND",
       "required_defines": [
         "DSFD_PQ_STATIC_X2"
-      ]
+      ],
+      "required_ports": {
+        "f_iss": 93,
+        "t_iss": 39,
+        "xw": 1101,
+        "xe": 1101
+      },
+      "candidate_ref": "claude/s81-elemB6-pq@b54bde671"
     },
     {
       "operation": "bf_operand_transport",
       "module": "ot_s81_static_column_ingress",
       "source": "rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_ingress.sv",
-      "owner": "S-BIND"
+      "owner": "S-BIND",
+      "required_ports": {
+        "i": 1102,
+        "o": 1101
+      }
     },
     {
       "operation": "field_gather",
@@ -51,7 +66,12 @@
       "module": "dsfd_sp_collective_static_c",
       "source": "rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv",
       "owner": "S-COLL",
-      "candidate_ref": "codex/s81-static-collective-1014@eca67dfcc"
+      "candidate_ref": "codex/s81-static-collective-1014@eca67dfcc",
+      "required_ports": {
+        "t_hc_tag": 32,
+        "t_vm": 2204,
+        "t_crq": 15
+      }
     },
     {
       "operation": "su_executable",
@@ -80,13 +100,26 @@
       "owner": "S-VM",
       "required_defines": [
         "DSFD_SP_VM_MIX4"
-      ]
+      ],
+      "required_ports": {
+        "f_collective": 2204,
+        "f_crq": 15,
+        "t_crs": 513,
+        "f_mx_rqv": 20,
+        "t_mx_rs": 10240
+      }
     },
     {
       "operation": "engram_mix4",
       "module": "dsfd_engram_mix4_c",
       "source": "rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv",
-      "owner": "S-FUNC"
+      "owner": "S-FUNC",
+      "required_ports": {
+        "ck": 133,
+        "rq_v": 20,
+        "rq_row": 280,
+        "rs_d": 10240
+      }
     },
     {
       "operation": "engram_lookup",
