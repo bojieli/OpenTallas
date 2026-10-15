@@ -37,10 +37,10 @@
  "reset_ports": [],
  "outline": {
   "w": 142.56,
-  "h": 95.04,
+  "h": 99.36,
   "exact": true
  },
- "why_floorplan": "Fixed published norm-lane slot, lane3 statically gathered payload288bits per read port, pure pin captures and static lane decode/taps; exact CHAIN_STEP6/mixAL4. No slot growth.",
+ "why_floorplan": "S-DIE granted 142.56x99.36 main18d960bdc, v20_hc_inherited exact assigned pins; +4.32um height meets <=60% floorplan margin without any timing or constraint relaxation.",
  "macros": [],
  "pins": {
   "N": [
@@ -89,7 +89,7 @@
  "job": {
   "owner": "Codex:s_norm_native_leaves",
   "branch": "codex-s81-norm-native-leaves-1014",
-  "tag": "np1",
+  "tag": "np2-granted",
   "purpose": "Actual native boundary repair of inherited ctnl_l3; strict launch220/capture190/spread80; same RTL arithmetic and reset epoch; immutable published predecessor remains separate",
   "no_bench_reason": "Source-bound PIPE1 full-shape numerical exact and prior observed within-leaf mutant receipts reused with all source/module SHA checks in results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/inherited_boundary/source_reuse.json. Physical mapped reset/clone equivalence and native timing are independent adoption gates; no full-native claim.",
   "views_to": "physical/ref_tile/s81hc_ctnl_l3_native_ref/views",
@@ -118,7 +118,7 @@
   "capture_ps": 196.6,
   "fix": "Replace unanchored/shared boundary topology with recipe2 dedicated output-flop cloning and pure capture endpoint anchoring, with exact die-assigned original pin positions. No RTL, clock, SDC, reset or edge changes."
  },
- "structural_change": "Replace unanchored/shared boundary topology with recipe2 dedicated output-flop cloning and pure capture endpoint anchoring, with exact die-assigned original pin positions. No RTL, clock, SDC, reset or edge changes.",
+ "structural_change": "Replace unanchored/shared boundary topology with recipe2 dedicated output-flop cloning and pure capture endpoint anchoring, with exact die-assigned original pin positions. No RTL, clock, SDC, reset or edge changes. Die-approved height growth95.04->99.36um; exact N-face pin rectangles shifted+4.32um per published grant.",
  "io_flop_at_pins": {
   "cols": 4,
   "allow_none": true
