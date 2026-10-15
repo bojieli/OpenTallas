@@ -25,10 +25,10 @@ module ot_hgi_coll_control256_program #(
  output reg [12:0] control_cycle
 );
  initial if(NBANKS<1 || NBANKS>32)$fatal(1,"control256 NBANKS1..32 fits actual12b hostframe address");
- reg cv,dv,lv;reg [7:0] target_q;reg [11:0] address_q,base_q;
+ reg cv,dv,lv;reg active_q;reg [7:0] target_q;reg [11:0] address_q,base_q;
  reg [12:0] limit_q;reg [15:0] loops_q;reg [255:0] data_q;
  always @(posedge clk_control)begin
-  target_q<=cfg_target;address_q<=cfg_addr;data_q<=cfg_data;
+  target_q<=cfg_target;address_q<=cfg_addr;data_q<=cfg_data;active_q<=program_active;
   base_q<=desc_base;limit_q<=desc_limit;loops_q<=desc_loops;
  end
  reg [511:0] assembly,write_data,selected_word_data;
@@ -99,7 +99,7 @@ module ot_hgi_coll_control256_program #(
     if(pc==limit-1'b1)begin busy<=0;done<=1;end
    end
    if(cv && target_q==TARGET)begin
-    if(program_active || busy || control_v || checking || write_guard || lv || dv || fault ||
+    if(active_q || busy || control_v || checking || write_guard || lv || dv || fault ||
       address_q[11:1]>=WORDS || loaded[address_q[11:1]] ||
       (seen!=0 && selected_word!=address_q[11:1]) || seen[address_q[0]])fault<=1;
     else begin
@@ -115,7 +115,7 @@ module ot_hgi_coll_control256_program #(
     end
    end
    if(dv && target_q==TARGET)begin
-    if(program_active || busy || control_v || checking || write_guard || seen!=0 || lv || cv || fault ||
+    if(active_q || busy || control_v || checking || write_guard || seen!=0 || lv || cv || fault ||
        loops_q!=1 || base_q[0]!=0 || limit_q<={1'b0,base_q} || limit_q>WORDS*2)fault<=1;
     else begin
      base<={1'b0,base_q};limit<=limit_q;first_word<=WW'(base_q/2);
@@ -124,7 +124,7 @@ module ot_hgi_coll_control256_program #(
     end
    end
    if(lv && configured)begin
-    if(program_active || busy || control_v || checking || write_guard || seen!=0 || cv || dv || fault)fault<=1;
+    if(active_q || busy || control_v || checking || write_guard || seen!=0 || cv || dv || fault)fault<=1;
     else begin
      busy<=1;word_index<=first_word;pc<=base;fetching<=first_word<last_word;next_fetch_word<=first_word+1'b1;fetch_phase<=0;
      read_v[first_word>>6]<=1;read_row<=6'(first_word);read_bank<=BW'(first_word>>6);read_high<=!(first_word==last_word && limit[0]);
