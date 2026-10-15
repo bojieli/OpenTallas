@@ -182,7 +182,14 @@
   }
  },
  "outhold": false,
- "reroute_reason": "composed native hop table (results/physical/s81_vm_static_ownership_1015/routed_local_hops.json) names this master's outputs: launch residual >220 ps on every output bit; structural IO-budget correction, not a retry",
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/physical/s81_vm_static_ownership_1015/routed_local_hops.json",
+  "cell": "dsfd_vm_static_relay128_b4",
+  "launch_ps": 370.9,
+  "capture_ps": 139.3,
+  "fix": "composed-budget output stage: the unconditional FIRM BUF-HB2-BUF outhold (140 ps, probe o_sd[321]) is removed (route hold repair keeps the 50+25 ps sender min; composed hold is carried by receiver input pads), and both output domains take a 0.6T outside budget so the pin flop + driver close at launch <= ~196 ps (<= 220 native); same RTL, outline, pin faces, two roots"
+ },
  "params": {},
  "children": [],
  "inter": [],
