@@ -1,0 +1,7 @@
+OK rly0 expect=PASS got=PASS | RGXMEM PASS rows 200 list 100 vm_sectors 1000 hbm_sectors 240 cycles 2216
+OK rly6 expect=PASS got=PASS | RGXMEM PASS rows 200 list 100 vm_sectors 1000 hbm_sectors 240 cycles 2213
+OK rly20 expect=PASS got=PASS | RGXMEM PASS rows 200 list 100 vm_sectors 1000 hbm_sectors 240 cycles 2507
+OK crd4 expect=PASS got=PASS | RGXMEM PASS rows 200 list 100 vm_sectors 1000 hbm_sectors 240 cycles 3108
+OK mut_snk1 expect=FAIL got=FAIL | FATAL: lane 3 carries bank 2
+OK mut_snk2 expect=FAIL got=FAIL | FATAL: HBM flit 8 half 0
+OK mut_crd expect=FAIL got=FAIL | [400018000] %Fatal: tb_hgi_coll_rgx_wtx.sv:166: Assertion failed in tb_hgi_coll_rgx_wtx.flits: FATAL: credits never home

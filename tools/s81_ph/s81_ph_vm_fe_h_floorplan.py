@@ -25,6 +25,9 @@ import argparse, importlib.util, json, re, sys
 from pathlib import Path
 import numpy as np
 import hashlib
+import os
+# FE (a) capture-slice locality (claude s81-grpA r5): capture bundle (fxs b, segment s) lands on fsr b (RTL OT_SPVM_SLOC)
+SLOC = os.environ.get('OT_FE_SLOC', '0') == '1'
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools' / 'hier_contract'))
@@ -245,8 +248,12 @@ class Plan:
                 src = [x for j in range(4) for x in v('s_o', (4 * j + s) * 147, (4 * j + s) * 147 + 147)]
                 rin = [x for j in range(4) for x in v('i', 146 * j, 146 * j + 146) + v('i_v', j)]
                 rout = [x for j in range(4) for x in v('o', 146 * j, 146 * j + 146) + v('o_v', j)]
-                dst = [x for j in range(4) for x in fsr_port(12 + 4 * b + j)]
-                self.chain(f'c{b}s{s}', 'dsfd_vm_fxr', [(f'fxs{b}', src)], rin, rout, f'fsr{s}', dst)
+                if SLOC:                                 # FE (a) (OT_SPVM_SLOC): segment s of fxs b -> fsr b, ports 12 + 4 j + s
+                    dst = [x for j in range(4) for x in fsr_port(12 + 4 * j + s)]
+                    self.chain(f'c{b}s{s}', 'dsfd_vm_fxr', [(f'fxs{b}', src)], rin, rout, f'fsr{b}', dst)
+                else:
+                    dst = [x for j in range(4) for x in fsr_port(12 + 4 * b + j)]
+                    self.chain(f'c{b}s{s}', 'dsfd_vm_fxr', [(f'fxs{b}', src)], rin, rout, f'fsr{s}', dst)
             self.ext_hop('m_*', 'S', f'fsr{s}', [p for p in MP['dsfd_vm_fsr'][2] if p.startswith('o_')], drive_in=False)
         # ---- bundle 4 (fcw ports 0, 1 + fcc ports 3, 4 -> fxa) and bundle 5 (fcn ports 2, 5 .. 9, rf, tags + fld ports 10, 11 -> fxb)
         fs_d = lambda P, n=128: v('i_d', 128 * P, 128 * P + n)
@@ -393,9 +400,10 @@ class Plan:
                 r = (u[y, x] + bits) / max(cap[y, x], 1e-6); t += 1.0 + (50.0 * (r - 0.5) if r > 0.5 else 0.0) + (1e3 if r > 1.0 else 0.0)
             return t
 
-        segs = []
+        segs = []; seg_cls = []
         for cls, a, b, A, B in self.hops:           # split every hop into pieces of <= 64 neighbouring bits
             for k in range(0, len(A), 64):
+                seg_cls.append(f'{cls} {a}->{b}')
                 pa, pb = A[k:k + 64], B[k:k + 64]
                 segs.append((len(pa), np.mean([p[0] for p in pa]), np.mean([p[1] for p in pa]), np.mean([p[0] for p in pb]), np.mean([p[1] for p in pb])))
         chosen = [None] * len(segs)
@@ -432,6 +440,7 @@ class Plan:
         return {'gcell_um': G, 'window_um': G * WIN,
                 'routing_model': 'finite L/Z plus full-slot legal detours; every blocked crossing retained',
                 'unroutable_bundle_segments': len(unresolved),
+                'unroutable_hops': sorted({seg_cls[i] for i in unresolved}),
                 'route_segments_over_500_um': sum(len(c)*G > HOP_MAX for c in chosen),
                 'longest_grid_route_um': max(len(c)*G for c in chosen),
                 'blocked_interior_cells': int(((capH <= 1e-6) & (useH > 0)).sum() + ((capV <= 1e-6) & (useV > 0)).sum()),

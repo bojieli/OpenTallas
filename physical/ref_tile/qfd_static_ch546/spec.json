@@ -145,7 +145,7 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "Actual compiler-scheduled dualclock64x546 SRAM; expanded width233.28 preserves official613e09f09 local y assignments and moves macro to27.216/34.56 for >=20um W/E edge clearance. Twelve actual channels fit inside existing C14 io_xfifo700.248x1563.816 envelope. Physical child/domain phases and compiler endpoint binding remain to qualify.",
+ "structural_change": "Actual compiler-scheduled dualclock64x546 SRAM; expanded width233.28 preserves official613e09f09 local y assignments and moves macro to27.216/34.56 for >=20um W/E edge clearance. Twelve actual channels fit inside existing C14 io_xfifo700.248x1563.816 envelope. Physical child/domain phases and compiler endpoint binding remain to qualify. Read reset second stage has two kept copies:256 publication syncflops and6 controlflops; release remains2rck.",
  "job": {
   "owner": "Codex:q_compute_elem",
   "branch": "claude/q14-r6-compute",

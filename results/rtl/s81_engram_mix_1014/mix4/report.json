@@ -1,0 +1,45 @@
+{
+ "schema": "opentallas.s81.engram_mix4.v1",
+ "top": "dsfd_engram_mix4_c",
+ "status": "PASS",
+ "fp": "rtl (every FP operator target RTL: hc_gate FP[rtl]; zero DPI sources in the build list, sources_rtl.json)",
+ "fixtures": {
+  "L01": "d8919d852845c50c6650a0768cfed83d122ad99d97b0418e256daa72c64c7199",
+  "L14": "657807bcc42906616d9901da1133f11d16a952d7a8cc138500aead0a403593c9"
+ },
+ "positive": {
+  "L01": "PASS 20480/20480 BF16 words, 640 writes, 4161 reads, cycles 772",
+  "L14": "PASS 20480/20480, cycles 772"
+ },
+ "mutants": {
+  "m1 key->1.0 in every multiplier leaf": [
+   "L01 FAIL 20471 words",
+   "L14 FAIL 20480 words"
+  ],
+  "m2 cluster3 reads copy2 H rows": "L01 FAIL 5106 words",
+  "m3 stale V broadcast to clusters1..3": "L01 FAIL 6611 words"
+ },
+ "cycles": {
+  "mix4": 772,
+  "sequential_dsfd_engram_mix_c": 2982,
+  "price": 871.2,
+  "ratio_vs_price": 0.8861,
+  "write_span": "601..760 after command"
+ },
+ "structure": "4 identical copy clusters ot_s81_engram_mixq (unchanged exact ot_s81_engram_mix leaf + static row sequencer, own 33 clock roots each, ck[1+33q+:33]); top on ck[0]: one descriptor read, registered BC=2 broadcast of start+descriptor, V read once on cluster0 lanes1,2 and broadcast (no V replication), 20R/4W, fixed four-done join; mismatched done/lockstep/latency = sticky fault; no credit/ready/backpressure in the master",
+ "boundary": "VM is a fixed-latency 20R/4W bench port (declared component boundary, ideal banking); command pins via shared ot_s81_slab_ep (its inherited adapter credit is owned by the static control stream)",
+ "native_qualified": false,
+ "open": [
+  "S-VM: MIX20R/4W service profile + bank mapping (layout witness e9f0a7945 assumed V replication; MIX4 now needs ONE V copy: re-derive the witness for 4H+2V ADD reads)",
+  "S-DIE: slot + pin file for dsfd_engram_mix4_c (ports: ck[132:0], rq 20 lanes, rs 20x512, wq 4 lanes; previous v20 functional slot is the 5R1W single endpoint)",
+  "S-COMPILE: price/schedule node uses 772 cycles at fixed descriptor->done; eng.* program ops on port 10 lower to one MIX command",
+  "physical: cluster leaves kits/gates (area 4x per-copy leaf set; per-copy census 262,080 flops, max root 11,519 sinks)",
+  "layer/token integration: replace behavioural eng.* in tb_s81_die_layer with this master"
+ ],
+ "sources_sha256": {
+  "rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv": "de784fe3a95c6271d1a101a00497f644711ab1f7ad3a20647a744bebdf0f3e3d",
+  "rtl/dsrom_sys/engram/mix/tb_s81_engram_mix4_c.sv": "f707f23512bda90a4c1f1e6860a2202b57cf2b0e34f885b82310245076dbfe08",
+  "rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv": "7e2e89f78d62acf8529228973edf5cee2a91da9c9881ce852e89d6b9ee5e9810",
+  "tools/s81_engram_mix/gate.py": "9ba491d3b5e5749ab34cb5803025bb890c4ef9c67090d2936f3fc05558421dcb"
+ }
+}
