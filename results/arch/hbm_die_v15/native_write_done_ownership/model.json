@@ -1,0 +1,8 @@
+{
+  "kind": "SOURCE_OWNERSHIP_ONLY_ZERO_HARDWARE_CHANGE",
+  "baseline_commit": "340cfd747",
+  "change": "Packedoutputregk_wr_done isrewrittenasoutputwirewithonecontinuousbitassignmentfromlocalregpc_write_doneownedbyeachpc_clk. Reset/updateconditionsunchanged.",
+  "FF_SRAM_logic_clock_root_delta": 0,
+  "purpose": "RemoveMULTIDRIVENlintartifactfromvectorwrittenby32separateclockedprocesses; oneactualstateownerperbitexplicit",
+  "validation": "Exactsource-normalizationequivalence plusVerilatorelaboration/lint; actualcontrollerfunctionalproof remainsprofile340cfd historyuntilnewcompositionpinned."
+}
