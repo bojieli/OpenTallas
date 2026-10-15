@@ -58,8 +58,8 @@ def main():
   elif role=='tc':x,y=strip(1219.968+20.736*int(v['instance'].split('_')[-1]))
   else:x,y=strip(1219.968)
   base=ROOT/v['view'];lp=base/(v['master']+'.lef');ip=base/'insertion.json';w,h,pp=lef(lp);ins=json.loads(ip.read_text());assert(w,h)==(15.12,15.12)
-  clock=pp['ck'];ss=ins['ss']['boundary'];tt=ins['tt']['boundary']
-  children.append({**v,'origin_um':[round(x,3),round(y,3)],'outline_um':[w,h],'orient':'R0','lef':str(lp.relative_to(ROOT)),'lef_sha256':sha(lp),'insertion':str(ip.relative_to(ROOT)),'insertion_sha256':sha(ip),'pins':{n:{**p,'x':round(x+p['x'],3),'y':round(y+p['y'],3)} for n,p in pp.items()},'clock_entry':{'port':f"ck_r[{v['clock_index']}]",'domain':'serial' if role=='f_cd' else 'stream','child_pin':v['instance']+'/ck','location_um':[round(x+clock['x'],3),round(y+clock['y'],3)],'source_latency_ps':{'SS':-ss['mean'],'TT':-tt['mean']},'boundary_spread_ps':{'SS':ss['max']-ss['min'],'TT':tt['max']-tt['min']}}})
+  clock=pp['ck'];ss=ins['ss']['boundary'];tt=ins['tt']['boundary'];ff=ins['ff']['boundary']
+  children.append({**v,'origin_um':[round(x,3),round(y,3)],'outline_um':[w,h],'orient':'R0','lef':str(lp.relative_to(ROOT)),'lef_sha256':sha(lp),'insertion':str(ip.relative_to(ROOT)),'insertion_sha256':sha(ip),'pins':{n:{**p,'x':round(x+p['x'],3),'y':round(y+p['y'],3)} for n,p in pp.items()},'clock_entry':{'port':f"ck_r[{v['clock_index']}]",'domain':'serial' if role=='f_cd' else 'stream','child_pin':v['instance']+'/ck','location_um':[round(x+clock['x'],3),round(y+clock['y'],3)],'source_latency_ps':{'SS':-ss['mean'],'TT':-tt['mean'],'FF':-ff['mean']},'boundary_spread_ps':{'SS':ss['max']-ss['min'],'TT':tt['max']-tt['min'],'FF':ff['max']-ff['min']}}})
  hops=[]
  for v in children:
   if v['stage']==0:continue
