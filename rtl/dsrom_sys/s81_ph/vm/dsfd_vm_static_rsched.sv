@@ -53,18 +53,18 @@ module dsfd_vm_static_rsched (
             qms[5*i +: 5] = {(i < 16) ? 3'(i >> 2) : 3'd5, qmr[14*i +: 2]};
 `endif
     end
-    always @(posedge ck) begin
-        if (!rn) begin qv <= 18'd0; qav <= 12'd0; grp <= 3'd0; qmv <= 20'd0; end
-        else begin qv <= {hc_v, su_v}; qav <= aux_v; grp <= grp + 3'd1; qmv <= mx_v; end
-        qr <= {hc_row, su_row}; qar <= aux_row; qmr <= mx_row;
-    end
+    // Native1b: the request merge/slot logic now runs on the PIN side and its results are the registered stage
+    // (same edge the q registers used to capture): every die output n_* / a_* is a flop (measured reg->out -10.1/-5.2 ps
+    // through the merge after the q registers).  Zero cycles; the descriptor chain and faults keep their edges.
+    always @(posedge ck) if (!rn) grp <= 3'd0; else grp <= grp + 3'd1;
+    always @* begin qv = {hc_v, su_v}; qav = aux_v; qmv = mx_v; qr = {hc_row, su_row}; qar = aux_row; qmr = mx_row; end
     // MIX merge onto the 30 logical ports (fixed function of the compiled slots).
     // Native1 structural repair (measured rsched CTS: reg->out n_row -10.1 ps TT placement at 770; the 20-deep
     // last-writer-wins chain of runtime-indexed writes sat between the q registers and the die pins): each MIX lane's
     // target port is decoded in parallel and every port takes a one-hot AND-OR of its lanes.  Identical for every legal
     // compiled schedule; a collision (two writers on one port, or a writer on an occupied port) is the unchanged sticky
     // m_bad fault and its row value is then the OR of the writers (a fault, never a production value).  Zero cycles.
-    reg [17:0] pv; reg [251:0] pr; reg [11:0] pav; reg [167:0] par; reg [29:0] mo; reg m_bad;
+    reg [17:0] pv_n; reg [251:0] pr_n; reg [11:0] pav_n; reg [167:0] par_n; reg [29:0] mo_n; reg m_bad;
     reg [4:0] mport [0:19];
     always @* begin : p_port integer i; reg [4:0] s; reg hc0;
         hc0 = 1'b0;
@@ -76,37 +76,37 @@ module dsfd_vm_static_rsched (
         end
     end
     always @* begin : p_merge integer i, port; reg [13:0] row; reg any; reg [29:0] hits;
-        m_bad = 1'b0; mo = 30'd0;
+        m_bad = 1'b0; mo_n = 30'd0;
         for (port = 0; port < 30; port = port + 1) begin
             any = 1'b0; row = 14'd0; hits[port] = 1'b0;
             for (i = 0; i < 20; i = i + 1) if (qmv[i] && mport[i] == port[4:0]) begin
                 if (any) m_bad = 1'b1;
                 any = 1'b1; row = row | qmr[14*i +: 14];
             end
-            mo[port] = any;
+            mo_n[port] = any;
             if (port < 18) begin
                 if (any && qv[port]) m_bad = 1'b1;
-                pv[port] = qv[port] | any; pr[14*port +: 14] = any ? row : qr[14*port +: 14];
+                pv_n[port] = qv[port] | any; pr_n[14*port +: 14] = any ? row : qr[14*port +: 14];
             end else begin
                 if (any && qav[port-18]) m_bad = 1'b1;
-                pav[port-18] = qav[port-18] | any; par[14*(port-18) +: 14] = any ? row : qar[14*(port-18) +: 14];
+                pav_n[port-18] = qav[port-18] | any; par_n[14*(port-18) +: 14] = any ? row : qar[14*(port-18) +: 14];
             end
         end
         for (i = 0; i < 20; i = i + 1) if (qmv[i] && qms[5*i +: 2] != qmr[14*i +: 2]) m_bad = 1'b1;  // slot lane = row[1:0]
     end
 
-    reg [89:0] slot;
+    reg [89:0] slot_n;
     always @* begin : p_slot integer p; reg [1:0] l0, l1;
-        for (p = 2; p < 16; p = p + 1) slot[5*p +: 5] = p[4:0];
-        l0 = pr[0 +: 2]; l1 = pr[14 +: 2];
-        slot[0 +: 5] = {3'd0, l0};
+        for (p = 2; p < 16; p = p + 1) slot_n[5*p +: 5] = p[4:0];
+        l0 = pr_n[0 +: 2]; l1 = pr_n[14 +: 2];
+        slot_n[0 +: 5] = {3'd0, l0};
 `ifdef OT_VM_RSCHED_MUT_SLOT
-        slot[5 +: 5] = {3'd0, l1};                      // MUTANT: SU1 never moves off a taken slot
+        slot_n[5 +: 5] = {3'd0, l1};                      // MUTANT: SU1 never moves off a taken slot
 `else
-        slot[5 +: 5] = ((pv[0] && l0 == l1) || (pv[2] && l1 == 2'd2) || (pv[3] && l1 == 2'd3)) ? {3'd1, l1} : {3'd0, l1};
+        slot_n[5 +: 5] = ((pv_n[0] && l0 == l1) || (pv_n[2] && l1 == 2'd2) || (pv_n[3] && l1 == 2'd3)) ? {3'd1, l1} : {3'd0, l1};
 `endif
-        slot[80 +: 5] = {3'd4, pr[14*16 +: 2]};
-        slot[85 +: 5] = {3'd4, pr[14*17 +: 2]};
+        slot_n[80 +: 5] = {3'd4, pr_n[14*16 +: 2]};
+        slot_n[85 +: 5] = {3'd4, pr_n[14*17 +: 2]};
     end
     // every MIX request must land on exactly its compiler slot (SU0 / SU1 / HC slot functions included)
     reg s_bad;
@@ -115,10 +115,18 @@ module dsfd_vm_static_rsched (
         for (i = 0; i < 20; i = i + 1) if (qmv[i]) begin
             s = qms[5*i +: 5];
             if (s < 5'd16) port = s; else if (s < 5'd20) begin port = hc0 ? 17 : 16; hc0 = 1'b1; end else port = 18 + (s - 20);
-            if (port < 18 && slot[5*port +: 5] != s) s_bad = 1'b1;
+            if (port < 18 && slot_n[5*port +: 5] != s) s_bad = 1'b1;
         end
     end
-    always @(posedge ck) if (!rn) sched_fault <= 1'b0; else if (m_bad || s_bad) sched_fault <= 1'b1;
+    // registered request stage (the die pin registers of n_* / a_*)
+    reg [17:0] pv; reg [251:0] pr; reg [11:0] pav; reg [167:0] par; reg [29:0] mo; reg [89:0] slot;
+    reg [19:0] qmv_r; reg [99:0] qms_r; reg bad0;
+    always @(posedge ck) begin
+        if (!rn) begin pv <= 18'd0; pav <= 12'd0; mo <= 30'd0; qmv_r <= 20'd0; bad0 <= 1'b0; end
+        else begin pv <= pv_n; pav <= pav_n; mo <= mo_n; qmv_r <= qmv; bad0 <= m_bad || s_bad; end
+        pr <= pr_n; par <= par_n; slot <= slot_n; qms_r <= qms;
+    end
+    always @(posedge ck) if (!rn) sched_fault <= 1'b0; else if (bad0) sched_fault <= 1'b1;
 
     // FSR pin feed (registered: the FSR's own pin stage samples these at P+1 -- this stage is the die pin register)
     always @* begin n_v = pv; n_row = pr; n_slot = slot; n_group = grp; a_v = pav; a_row = par; end
@@ -143,7 +151,7 @@ module dsfd_vm_static_rsched (
     always @(posedge ck) begin : p_chain integer k;
         if (!rn) for (k = 1; k <= 11; k = k + 1) begin dv[k] <= 18'd0; da[k] <= 12'd0; dm[k] <= 30'd0; dxv[k] <= 20'd0; end
         else begin
-            dv[1] <= pv; ds[1] <= slot; dg[1] <= grp; da[1] <= pav; dm[1] <= mo; dxv[1] <= qmv; dxs[1] <= qms;
+            dv[1] <= pv; ds[1] <= slot; dg[1] <= grp; da[1] <= pav; dm[1] <= mo; dxv[1] <= qmv_r; dxs[1] <= qms_r;
             for (k = 2; k <= 10; k = k + 1) begin dv[k] <= dv[k-1]; ds[k] <= ds[k-1]; dg[k] <= dg[k-1]; da[k] <= da[k-1]; end
             for (k = 2; k <= 11; k = k + 1) begin dm[k] <= dm[k-1]; dxv[k] <= dxv[k-1]; dxs[k] <= dxs[k-1]; end
             dv[11] <= dv[10]; ds[11] <= ds[10]; da[11] <= da[10];
