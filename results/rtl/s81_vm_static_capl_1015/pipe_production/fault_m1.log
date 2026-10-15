@@ -1,0 +1,6 @@
+ROW MISMATCH tk 204 lane 1 row 321 mask 000c exp ffff seen 0
+TIME MISMATCH row 321 tk 204 exp 188
+ROW MISMATCH tk 205 lane 1 row 337 mask 000c exp ffff seen 0
+TIME MISMATCH row 337 tk 205 exp 191
+TB_VMCAP PASS mode 1 (fault 1 lanes 00000000000000000080)
+/srv/opentallas-scratch/codex/cap-pipe-production-1015/tb_dsfd_vm_static_cap.sv:136: $finish called at 860142 (1ps)
