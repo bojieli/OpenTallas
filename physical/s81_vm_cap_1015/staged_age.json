@@ -1,0 +1,37 @@
+{
+  "schema": "opentallas.s81.cap16.staged-age.v1",
+  "status": "SOURCE_PROVEN_NATIVE_PENDING",
+  "source": "de6ef76d6",
+  "proof": "d5cc42bdb",
+  "default_PIPE": 0,
+  "candidate_PIPE": 1,
+  "serial_edge_delta": 1,
+  "II": 1,
+  "row_rate_per_lane_per_serial_edge": 1,
+  "x34": {
+    "legacy_q": "P+2",
+    "staged_q": "P+3",
+    "first_visibility": "4*floor(q/3)+2+(q%3)",
+    "existing_stream_output_checker_offset": 1,
+    "phase_stream_edge_delta": [
+      1,
+      1,
+      2
+    ]
+  },
+  "roots": {
+    "clock": "ck",
+    "reset": "rn",
+    "reset_epoch": "actual parent rq[1] synchronous serial release; same interface"
+  },
+  "geometry": "fdca7e391 unchanged 1387pins 172.8x259.2um",
+  "estimated_FF": 5711,
+  "actual_new_area_um2": null,
+  "qualification": false,
+  "open": [
+    "Actual native setup/hold/DRC/clock",
+    "Full parent consumer/calendar integration",
+    "Canonical immutable-price throughput composition"
+  ],
+  "policy": "833.333ps signoff /770ps route unchanged; no runtime flow or price relaxation"
+}
