@@ -1,0 +1,115 @@
+{
+  "name": "hbm_hc_weight_quarter_static",
+  "top": "ot_hgi_hc_weight_quarter_static",
+  "kind": "tile",
+  "sources": [
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_weight_quarter_static.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 204.336,
+    "h": 194.4,
+    "exact": true
+  },
+  "macros": [
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "inst": "slot[0].u_weight",
+      "at": [
+        55.296,
+        23.76
+      ],
+      "orient": "MY"
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "inst": "slot[1].u_weight",
+      "at": [
+        55.296,
+        100.44
+      ],
+      "orient": "MY"
+    }
+  ],
+  "pins": {
+    "W": [
+      "weight_ap"
+    ],
+    "N": [
+      "clk",
+      "rst_n",
+      "expected_bank_id",
+      "expected_quarter_id",
+      "read_v",
+      "read_slot",
+      "read_row"
+    ],
+    "E": [
+      "weight_data",
+      "write_done",
+      "read_valid",
+      "fault"
+    ]
+  },
+  "io_tcl": "physical/hbm_hc/HC_weight_quarter_exact_source_place.tcl",
+  "layer_cap": "M5",
+  "recipe": 2,
+  "route": {
+    "pd": 0.5,
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4
+  },
+  "job": {
+    "owner": "Codex:/root/h_hc_physical",
+    "branch": "codex/hc-physical-1015",
+    "tag": "native1",
+    "purpose": "Primary structuralHC localweightquarter:2actualSRAM/1059sourceFF, exact553geometryassignedpins, static bank/quarterIDs, unchangedTML3; closesclockspan defect of10SRAM500umroot; full92rootparentnotqualified",
+    "structural_change": "Replace500um10SRAMmonolithclockroot with172.8x194.4twoSRAMlocalquarterroot; exactsourcepinplans andpublishedlegalFFpacking, unchangedreadpipeline",
+    "extra_paths": [
+      "physical/hbm_hc",
+      "rtl/test/tb_hgi_hc_weight_quarter_static.sv",
+      "rtl/test/tb_hgi_hc_residual_half_static.sv",
+      "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_residual_half_static.sv",
+      "tools/hbm_hc/run_memory_partition.sh",
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
+    ],
+    "benches": [
+      {
+        "name": "all32_staticIDs_exact",
+        "cmd": "bash tools/hbm_hc/run_memory_partition.sh {RUN}/mem",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ],
+        "pass_regex": "WEIGHT_QUARTER PASS",
+        "min_count_regex": "checks=(\\d+)"
+      },
+      {
+        "name": "wrongID_mutant",
+        "cmd": "bash tools/hbm_hc/run_memory_partition.sh {RUN}/mut && vvp {RUN}/mut/weight.vvp +bank=3 +quarter=2 +wrong_id=1",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "WEIGHT_QUARTER mismatch"
+      }
+    ],
+    "views_to": "physical/ref_tile/hbm_hc_weight_quarter_static/views",
+    "record_to": "results/rtl/ref_tile/hbm_hc_weight_quarter_static"
+  },
+  "pin_hook_before_flops": [
+    "physical/hbm_hc/HC_weight_quarter_exact_source_audit.tcl"
+  ]
+}
