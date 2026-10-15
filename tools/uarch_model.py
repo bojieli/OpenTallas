@@ -16232,3 +16232,9 @@ def s81_static_raw_vm_rows_model():
 def s81_static_collective_slab_model():
     from uarch_model_s81_static_slab import s81_static_collective_slab_model as model
     return model()
+
+
+def s81_static_collective_control_rom_model(cycles=2400):
+    """Actual three-macro immutable control page; contextual price remains open."""
+    from s81_static_collective.control_rom_model import price
+    return price(cycles, ROOT)
