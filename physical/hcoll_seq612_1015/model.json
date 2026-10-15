@@ -1,0 +1,105 @@
+{
+  "source_commit": "0ea9d7869",
+  "qualification": "planning and exact RTL leaf only; no physical closure yet",
+  "replicas_per_endpoint": 4,
+  "MACs_per_cycle": 0,
+  "ports": {
+    "input_bits": 154,
+    "output_bits": 141,
+    "clock_bits": 1,
+    "payload_bits_per_cycle_each_direction": 141,
+    "bytes_per_cycle_each_direction": 17.625,
+    "native_sram_word_bits": 512,
+    "native_write_mask_active_bits": 141
+  },
+  "state": {
+    "registered_bits_standalone_W141": 443,
+    "macro_bits": 32768,
+    "used_storage_bits": 9024
+  },
+  "floorplan": {
+    "leaf_um": [
+      207.36,
+      129.6
+    ],
+    "macro_um": [
+      171.288,
+      77.76
+    ],
+    "macro_location_um": [
+      18.036,
+      25.92
+    ],
+    "halo_um": 12.96,
+    "core_inset_um": 2.16,
+    "candidate_endpoint_um": [
+      655.6,
+      279.2
+    ],
+    "control_candidate_um": [
+      200.88,
+      200.88
+    ],
+    "channel_um": 20,
+    "east_cavity_width_um": 763.2,
+    "candidate_only": true
+  },
+  "routing": {
+    "layers": "M2-M7",
+    "input_face": "S",
+    "output_face": "N",
+    "clock_face": "W",
+    "Hpin_layers": [
+      "M4",
+      "M6"
+    ],
+    "Vpin_layers": [
+      "M5",
+      "M7"
+    ],
+    "pin_tracks_min": 2,
+    "pins_per_um_per_layer_S": 0.38623595505617975,
+    "pins_per_um_per_layer_N": 0.35363162118780095,
+    "cut_lower_bound_tracks": 282,
+    "capacity_requires_flow_lint": true,
+    "worst_leaf_manhattan_um": 336.96
+  },
+  "latency": {
+    "read_reservation_to_dout_edges": 1,
+    "macro_read_capture": "same reservation edge; dout next edge",
+    "write_pin_to_macro_commit_edges": 1,
+    "parent_TX_edges": 3,
+    "parent_RX_edges": 1,
+    "extra_cycles": 0,
+    "token_price": "unchanged component baseline; no full-model throughput qualification"
+  },
+  "source_faces": {
+    "we": [
+      "wq D"
+    ],
+    "wa[5:0]": [
+      "aq[5:0] D"
+    ],
+    "din[140:0]": [
+      "dq[140:0] D"
+    ],
+    "ra[5:0]": [
+      "rq[5:0] D",
+      "u_sram.r_addr_in raw combin boundary"
+    ],
+    "dout[140:0]": "registered Q from bypass or macro rd_out",
+    "u_leaf\u2192ctl": "dout FFQ -> u_ctl q_data -> q_pin FF",
+    "ctl\u2192u_leaf": "padded wr_flit, wr_seq low6, rd_seq low6 raw wrapper pins; issue_write is wr_v && !epoch_abort && !abort_in && !epoch_begin combin wrapper gate"
+  },
+  "blocking_limitations": [
+    "Controller launch face is not registered for issue_write/addresses/data in frozen baseline.",
+    "Native macro r_addr input takes raw ra; leaf explicit rq is for bypass tag.",
+    "W141 leaf closure cannot qualify whole endpoint or successor with added pin stages.",
+    "No gearbox/FEC/PHY claim."
+  ],
+  "source_sha256": {
+    "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv": "df23697e8d58e67ae3209eac9162d1393bed3a510a6e090149c2694bea9eacd8",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_link_seq.sv": "87af49ebf15625f6e58c912168512066428727c311f9b62bce86406afdf1ce7c",
+    "physical/hcoll_seq612_1015/store141.sv": "1a5128d70e32e0ad55d2e4ec55c2320c6938ee5cfbc4bd6b65fd484b1cdee312"
+  }
+}
