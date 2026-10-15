@@ -1,0 +1,97 @@
+{
+ "name": "s81pq_rwbc15_native",
+ "top": "ot_s81_pq_rwbc15",
+ "kind": "tile",
+ "sources": [
+  "physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv",
+  "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_delay.sv",
+  "physical/s81_pq_hier/pinned/rtl/v41rom/ot_v41_kreg.sv",
+  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_rwbc.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 142.56,
+  "h": 19.44
+ },
+ "pins": {
+  "N": [
+   "r_v",
+   "r_tag",
+   "r_e",
+   "g_flt",
+   "ga",
+   "q2f"
+  ],
+  "E": [
+   "live"
+  ],
+  "W": [
+   "live_o"
+  ],
+  "S": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:s81-elemB",
+  "branch": "claude/s81-elemB5-1014",
+  "tag": "c1",
+  "purpose": "S81 PQ count-only return leaf (topology G, die D3) NR=15: slot pq_count_slots.json 142.56 x 19.44; provisional faces (N root-word taps + ga/q2f corridor, E live in, W live_o chain, S clk/rst); die assigns exact pins by --rtl-bind",
+  "benches": [
+   {
+    "name": "rwbc_exact",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/pq/test/run_rwbc_gate.sh {RUN}/rwbc_exact",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "RWBC_GATE PASS"
+   },
+   {
+    "name": "rwbc_mutant_ga",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/pq/test/run_rwbc_gate.sh {RUN}/rwbc_mut_ga +define+OT_S81_PQ_RWBC_MUT_GA",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "RWBC_GATE FAIL"
+   }
+  ],
+  "views_to": "physical/ref_tile/s81pq_rwbc15_native/views",
+  "record_to": "results/rtl/ref_tile/s81pq_rwbc15_native"
+ },
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "slot_change_request": "S81 die lead 2026-10-14 18:55: shrink count seam leaf height to 19.44, preserve 17.28 relay row"
+}
