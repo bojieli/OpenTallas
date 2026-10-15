@@ -71,6 +71,9 @@ def collect(a):
     ew=words(m['e']['row'],m['e']['count'],32).reshape(nv,16,16)
     e=ew.transpose(1,0,2).reshape(16,nv*16)[:,:T].copy()
     result=dict(e_bits=e)
+    # Native SVC type14 frame payload: natural row order, sixteen FP32 heads.
+    # The real SVC ingress performs BF16 RNE; host-rounded P remains diagnostic.
+    (d/'native_e.hex').write_text(''.join(f'{sum(int(e[h,t]) << (32*h) for h in range(16)):0128x}\n' for t in range(T)))
     # RNE conversion is a declared simulation-boundary bridge. It must not be
     # mistaken for proof that a native converter exists in the integrated die.
     p=((e.astype(np.uint64)+0x7fff+((e>>16)&1))>>16).astype(np.uint16)
