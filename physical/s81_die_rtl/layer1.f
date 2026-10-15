@@ -45,6 +45,9 @@ rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv
 # PQ's pinned-only modules come from its pinned tree; the repo copies of the shared float modules are supersets whose
 # default parameters are the pinned behaviour (el1011-q-sp: L = 3 = the original adders), so they serve both.
 +define+OT_PQ_ROM_PORTS
+# S-DIE r2 2026-10-15 (S-ELEM-B dc28161fa): stream ROM = 4 die macros pqrom2a..d (ra2 12 shared, rc2[3:0], rq2[191:0]);
+# select = ot_s81_pq_stream_rom4_sel inside dsfd_sp_pq_n (gates results/rtl/s81_pq_rom4_bind_1015); generator pq_rom4() reads this
++define+DSFD_PQ_ROM4
 rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv
 rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_core_native.sv
 rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_native.sv
@@ -139,6 +142,12 @@ rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv
 rtl/dsrom_sys/s81_ph/ot_s81ph_coll_rstc.sv
 rtl/dsrom_sys/s81_ph/ot_s81_pll_bb.sv
 rtl/dsrom_sys/s81_static_collective/s81_static_vm_boundary.sv
+# S-BIND r6 2026-10-15: static host face (completion pulses queued for the compiled host tx slot) and the static layer-die
+# host master dsfd_host_c (+DSFD_HOST_C_STATIC: no t_cr / h_crn credit bits, f_collective 515 / t_collective 77, lane
+# faults f_lf); gates tools/s81_static_collective/run_slab_gate.sh, rtl/dsrom_sys/s81_ingest/test/run_host_c_static_gate.sh
+rtl/dsrom_sys/s81_static_collective/s81_static_host_queue.sv
++define+DSFD_HOST_C_STATIC
+rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv
 
 # S-BIND 2026-10-15 --suhc-static-issue: SU / HC endpoints issue on the compiler command edge (no f_inp die pin)
 +define+DSFD_SUHC_STATIC_ISSUE

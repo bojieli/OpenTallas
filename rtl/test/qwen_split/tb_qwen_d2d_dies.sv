@@ -13,7 +13,7 @@
 // MUT: 1 compute write slot +1, 2 KV RX demux swap, 3 producer fires 1 cycle late, 4 calendar compiled with a wrong TXL
 //      (run script), 5 kind-15 status levels forced stale (fresh gating mutant in the bench reference) -> must FAIL.
 module tb_qwen_d2d_dies;
-    parameter integer MUT = 0, TXL = 6, PHY = 5, P = 100, NLAY = 6, BAD_LAYER = 4;
+    parameter integer MUT = 0, PR = 1, TXL = 6, PHY = 5, P = 110, NLAY = 6, BAD_LAYER = 4;
     parameter CALDIR = "cal";
     localparam integer FW = 548, PW = 583;
     reg ck = 0; always #0.4167 ck = ~ck;
@@ -65,8 +65,12 @@ module tb_qwen_d2d_dies;
         eword = {20'(32'hE0000 + w), 16'h3f80, word(77, 6, w)};
     endfunction
     always @(posedge ck) begin k_emb_v <= k_emb_slot; k_emb_p <= k_emb_slot ? eword(k_tk == 4'd7 ? 32 + k_tb : k_tb) : 548'd0; end
-    wire c_eb = u_c.eb, k_eb = u_k.eb; wire [7:0] c_ep = u_c.ep, k_ep = u_k.ep;
-    qfd_d2d_static #(.MUT(MUT == 1 ? 1 : 0)) u_c (.ck(ck), .por_n(por_n), .rst_n(rst_n),
+    wire c_eb = u_c.u_core.eb, k_eb = u_k.u_core.eb; wire [7:0] c_ep = u_c.u_core.ep, k_ep = u_k.u_core.ep;
+    // pin-registered masters (PR): producers see their slot 2 edges after cal_start (cal_start pin flop + slot pin
+    // flop); a consumer sees a frame 4 edges later than the unregistered end (net TX +1, PHY pin flops +2, RX pin flop +1)
+    localparam integer LEAD = 2 * PR, XL = TXL + PHY + 4 * PR,
+                       XS = TXL + PHY + 2 * PR;   // compute STATUS codec is inside the master: no slot/payload pin flops
+    qfd_d2d_static #(.MUT(MUT == 1 ? 1 : 0), .PR(PR)) u_c (.ck(ck), .por_n(por_n), .rst_n(rst_n),
         .cfg_tx_we(cfg_c_tx), .cfg_rx_we(cfg_c_rx), .cfg_addr({cfg_hi, cfg_a}), .cfg_data(cfg_dc), .cal_start(cstart), .cal_seg(cseg),
         .fwd_epoch(bump_ep[2]), .fwd_link_rst_n(bump_lr[2]),
         .native_tx_slot(c_txs0), .native_tx_slot_kind(c_tk), .native_tx_slot_beat(c_tb), .native_tx_v(c_tv0),
@@ -81,7 +85,7 @@ module tb_qwen_d2d_dies;
         .result_gen(2'(lay)), .result_token(18'(lay * 1001)), .result_value(32'(lay * 77)), .result_cycles(32'(lay * 1052)),
         .fdi_tx_up(c_up), .fdi_tx_v(c_ptx_v), .fdi_tx_flit(c_ptx), .fdi_rx_v(c_prx_v), .fdi_rx_flit(c_prx),
         .phy_rst_n(c_phy_rst_n), .epoch_abort(c_abort), .transport_fault(c_tf), .fault(c_f));
-    qkd_d2d_static #(.MUT(MUT == 2 ? 2 : 0)) u_k (.ck(ck), .por_n(por_n), .rst_n(rst_n),
+    qkd_d2d_static #(.MUT(MUT == 2 ? 2 : 0), .PR(PR)) u_k (.ck(ck), .por_n(por_n), .rst_n(rst_n),
         .cfg_tx_we(cfg_k_tx), .cfg_rx_we(cfg_k_rx), .cfg_addr({cfg_hi, cfg_a}), .cfg_data(cfg_dk), .cal_start(cstart), .cal_seg(cseg),
         .host_link_reset_req(host_reset_req), .host_recovery_clear(host_clear), .host_boot_begin(host_boot),
         .fwd_epoch(fwd_ep), .fwd_link_rst_n(fwd_lrst_n),
@@ -145,7 +149,7 @@ module tb_qwen_d2d_dies;
         .fault(ka_f), .fault_cause(ka_fc));
     assign st_res = (lay >= 0 && rel == 20) || (tok && trel == 0);
     wire c_endf = c_f, k_endf = k_f, cs_f = 1'b0, ks_f = 1'b0;
-    always @(negedge ck) corrupt <= bad_armed && lay >= 0 && rel == 3 + 7 + TXL;
+    always @(negedge ck) corrupt <= bad_armed && lay >= 0 && rel == 3 + 7 + TXL + 2 * PR;
     // ---------------- exact-cycle checks ----------------
     integer errs = 0, frames_ck = 0, frames_kc = 0, statuses = 0, results = 0, normal_aborts = 0;
     integer aborted_layer = -1;
@@ -153,13 +157,13 @@ module tb_qwen_d2d_dies;
     // token run (segment 1): terminal RESULT C->S at token cycle 2, embedding row S->C words 0..63 from cycle 20
     always @(posedge ck) if (tok && rst_n) begin
         if (c_emb_v) begin
-            if (!c_emb_s || trel - 2 - TXL - PHY - 20 < 0 || trel - 2 - TXL - PHY - 20 > 63 ||
-                (c_rk == 4'd7 ? 32 + c_rb : c_rb) != trel - 2 - TXL - PHY - 20 || c_rxp !== eword(trel - 2 - TXL - PHY - 20)) begin
+            if (!c_emb_s || trel - 2 - XL - 20 < 0 || trel - 2 - XL - 20 > 63 ||
+                (c_rk == 4'd7 ? 32 + c_rb : c_rb) != trel - 2 - XL - 20 || c_rxp !== eword(trel - 2 - XL - 20)) begin
                 errs = errs + 1; $display("ERR embedding word trel %0d kind %0d beat %0d", trel, c_rk, c_rb); end
             else emb_ok = emb_ok + 1;
         end
         if (s_rv) begin
-            if (trel != 2 + TXL + PHY + 3 || s_rtok !== 18'(lay * 1001) || s_rval !== 32'(lay * 77) || !s_rd) begin
+            if (trel != 2 + XS + 3 || s_rtok !== 18'(lay * 1001) || s_rval !== 32'(lay * 77) || !s_rd) begin
                 errs = errs + 1; $display("ERR token result trel %0d", trel); end
             else tok_res = tok_res + 1;
         end
@@ -170,31 +174,31 @@ module tb_qwen_d2d_dies;
     always @(posedge ck) if (lay >= 0 && rst_n) begin
         // compute codec output at arrival + 3 (end rx at +2, codec register +1): RESULT beats + STATUS
         if (ca_rv) begin
-            if (!((rel - 3 - TXL - PHY >= 50 && rel - 3 - TXL - PHY < 82) || rel - 3 - TXL - PHY == 83)) begin
+            if (!((rel - 3 - XL >= 50 && rel - 3 - XL < 82) || rel - 3 - XL == 83)) begin
                 errs = errs + 1; $display("ERR compute rx at unplanned rel %0d", rel); end
-            else if (ca_rd !== (rel - 3 - TXL - PHY == 83 ? {507'd0, 5'b01001} : word(lay, 3, rel - 3 - TXL - PHY - 50))) begin
+            else if (ca_rd !== (rel - 3 - XL == 83 ? {507'd0, 5'b01001} : word(lay, 3, rel - 3 - XL - 50))) begin
                 errs = errs + 1; $display("ERR compute rx data rel %0d", rel); end
             else if (aborted_layer != lay) frames_kc = frames_kc + 1;
         end
         if (ka_rv) begin
-            if (!(rel - 3 - TXL - PHY >= 2 && rel - 3 - TXL - PHY < 35)) begin errs = errs + 1; $display("ERR kv rx unplanned rel %0d", rel); end
-            else if (ka_rd !== (rel - 3 - TXL - PHY == 2 ? {493'd0, 5'd0, 13'(lay * 7 + 5), 1'b1} : word(lay, 2, rel - 3 - TXL - PHY - 3))) begin
+            if (!(rel - 3 - XL >= 2 && rel - 3 - XL < 35)) begin errs = errs + 1; $display("ERR kv rx unplanned rel %0d", rel); end
+            else if (ka_rd !== (rel - 3 - XL == 2 ? {493'd0, 5'd0, 13'(lay * 7 + 5), 1'b1} : word(lay, 2, rel - 3 - XL - 3))) begin
                 errs = errs + 1; $display("ERR kv rx data rel %0d", rel); end
             else if (aborted_layer != lay) frames_ck = frames_ck + 1;
         end
         if (s_rv) begin
-            if (rel != 40 + TXL + PHY + 3 || s_rtok !== 18'(lay * 1001) || s_rval !== 32'(lay * 77) ||
+            if (rel != 40 + XS + 3 || s_rtok !== 18'(lay * 1001) || s_rval !== 32'(lay * 77) ||
                 s_rcyc !== 32'(lay * 1052) || s_rt !== 59'(lay * 4093 + 11) || s_rg !== 2'(lay) || !s_rd) begin
                 errs = errs + 1; $display("ERR status result rel %0d tok %0d", rel, s_rtok); end
             else if (aborted_layer != lay) results = results + 1;
         end
         if (kw_v) begin
-            if (rel != 42 + (kw_idx) + 2 - 1 + TXL + PHY + 3 || kw_tag !== {3'd2, 8'(kw_idx)} || kw_data !== word(lay, 5, kw_idx) ||
+            if (rel != 42 + (kw_idx) + 2 - 1 + XL + 3 || kw_tag !== {3'd2, 8'(kw_idx)} || kw_data !== word(lay, 5, kw_idx) ||
                 kw_id !== op_tag || kw_gen !== 2'(lay) || !kw_slot) begin
                 errs = errs + 1; $display("ERR kvn word rel %0d idx %0d", rel, kw_idx); end
             else if (aborted_layer != lay) kvn_ok = kvn_ok + 1;
         end
-        if (rel == P - 2 && aborted_layer != lay) begin
+        if (rel == P - 2 - LEAD && aborted_layer != lay) begin
             if (h_vmd !== lay[0] || h_cod !== ~lay[0] || h_cb !== lay[1] || h_ar !== (lay[0] ^ lay[1]) || !h_ea ||
                 h_ad !== {1'b1, ~lay[0], lay[0], 1'b1} || h_lu !== 2'b11 || h_tf !== 0) begin
                 errs = errs + 1; $display("ERR host services lay %0d vm%b co%b cb%b ar%b ad%b lu%b", lay, h_vmd, h_cod, h_cb, h_ar, h_ad, h_lu); end
@@ -215,7 +219,7 @@ module tb_qwen_d2d_dies;
     task run_layer(input integer L);
         begin
             $display("layer %0d start cyc %0d epoch %0d/%0d", L, cyc + 1, c_ep, k_ep);
-            lay = L; lstart = cyc + 1; cstart = 1; first_after_eb = (aborted_layer == 99 && L == BAD_LAYER); tick(1); cstart = 0; tick(P - 1);   // L0 follows the token run (fresh status)
+            lay = L; lstart = cyc + 1 + LEAD; cstart = 1; first_after_eb = (aborted_layer == 99 && L == BAD_LAYER); tick(1); cstart = 0; tick(P - 1);   // L0 follows the token run (fresh status)
         end
     endtask
     initial begin
@@ -237,7 +241,7 @@ module tb_qwen_d2d_dies;
         host_boot = 1; tick(1); host_boot = 0; wait (k_eb); tick(10);
         if (!(c_ep == k_ep && c_ep == 1)) begin errs = errs + 1; $display("ERR boot epochs %0d %0d", c_ep, k_ep); end
         // token run (segment 1) before layer 0
-        tok = 1; tstart = cyc + 1; cstart = 1; cseg = 1; tick(1); cstart = 0; cseg = 0; tick(P - 1); tok = 0;
+        tok = 1; tstart = cyc + 1 + LEAD; cstart = 1; cseg = 1; tick(1); cstart = 0; cseg = 0; tick(P - 1); tok = 0;
         $display("token run: embedding words %0d, terminal results %0d", emb_ok, tok_res);
         for (l = 0; l < NLAY; l = l + 1) begin
             if (l == BAD_LAYER && aborted_layer < 0) begin

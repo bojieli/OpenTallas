@@ -1,0 +1,156 @@
+{
+ "schema": "opentallas.qwen.vm_writeback.receipt.v1",
+ "owner": "Q-VMWB (Claude) 2026-10-15",
+ "status": "COMPONENT_EXACT_WITH_REJECTING_MUTANTS",
+ "qualified": false,
+ "decision": "O4: 3 parallel band lanes into the VM (existing rb0..rb2 face, PAR_RB=1) + row-compressed slots (NS = port bframe active prefix) + one-burst band lag",
+ "why": "cheapest structure <= 5 % e2e: same serializer banks/FF (-27 FF/band), no new VM port or face bits (rb face already 3 x 551 b, cut unchanged), VM gains a per-bank 3-lane AND-OR (~80 banks x 548 b AO222, ~0.006 mm2 est.); O3 (3 lanes, 8 slots) 5.11 %, O5 (2 lanes) 5.32 %, O2 (1 lane compressed) 9.47 % exceed 5 %; O6 (6 lanes wide beats) 0.26 % but doubles the rb face (3,306 b) and needs 6 rows/edge on 16-bank replicas",
+ "options_e2e": {
+  "O1_train24_1lane_24slots": {
+   "face_cycles_per_layer": 1445,
+   "face_cycles_per_layer_token_ops": 1284,
+   "e2e_loss_pct_incl_pc11": 17.257,
+   "e2e_loss_pct_token_ops": 15.634
+  },
+  "O2_1lane_compressed": {
+   "face_cycles_per_layer": 725,
+   "face_cycles_per_layer_token_ops": 564,
+   "e2e_loss_pct_incl_pc11": 9.473,
+   "e2e_loss_pct_token_ops": 7.527
+  },
+  "O3_3lanes_8slots": {
+   "face_cycles_per_layer": 373,
+   "face_cycles_per_layer_token_ops": 324,
+   "e2e_loss_pct_incl_pc11": 5.108,
+   "e2e_loss_pct_token_ops": 4.467
+  },
+  "O4_3lanes_compressed": {
+   "face_cycles_per_layer": 148,
+   "face_cycles_per_layer_token_ops": 99,
+   "e2e_loss_pct_incl_pc11": 2.091,
+   "e2e_loss_pct_token_ops": 1.409
+  },
+  "O5_2lanes_compressed": {
+   "face_cycles_per_layer": 389,
+   "face_cycles_per_layer_token_ops": 292,
+   "e2e_loss_pct_incl_pc11": 5.316,
+   "e2e_loss_pct_token_ops": 4.044
+  },
+  "O6_6lanes_wide_beats_compressed": {
+   "face_cycles_per_layer": 18,
+   "face_cycles_per_layer_token_ops": 9,
+   "e2e_loss_pct_incl_pc11": 0.259,
+   "e2e_loss_pct_token_ops": 0.13
+  }
+ },
+ "measured_last_landing_after_go": {
+  "pos": {
+   "PC1": 311,
+   "PC11": 1334,
+   "PC12": 347,
+   "PC16": 563,
+   "PC20": 411
+  },
+  "base": {
+   "PC1": 483,
+   "PC11": 1446,
+   "PC12": 819,
+   "PC16": 675,
+   "PC20": 851
+  },
+  "o3": {
+   "PC1": 371,
+   "PC11": 1334,
+   "PC12": 451,
+   "PC16": 563,
+   "PC20": 483
+  }
+ },
+ "bench_convention": "tb_vmwb edge index (one rq register after the ports, +1 vs tb_sertrade); model wb_calendar.py reproduces every landing (pos/base/o3) exactly after the +1",
+ "face_cycles_per_layer": {
+  "train24": 1445,
+  "successor": 148,
+  "successor_token_ops": 99
+ },
+ "e2e_loss_pct": {
+  "successor_incl_pc11_all_layers_at_once": 2.091,
+  "successor_token_ops": 1.409,
+  "ledger_rows_sum": 2.122,
+  "train24": 17.257
+ },
+ "positives": {
+  "PC1": "PASS",
+  "PC11": "PASS",
+  "PC12": "PASS",
+  "PC16": "PASS",
+  "PC20": "PASS"
+ },
+ "mutants": {
+  "smut1 no band lag (concurrent rows same bank)": {
+   "PC1": "FAIL",
+   "PC11": "FAIL",
+   "PC12": "FAIL",
+   "PC16": "FAIL",
+   "PC20": "FAIL"
+  },
+  "smut2 end on slot 0 (premature landing)": {
+   "PC1": "FAIL",
+   "PC11": "FAIL",
+   "PC12": "FAIL",
+   "PC16": "FAIL",
+   "PC20": "FAIL"
+  },
+  "imut1 train_start one edge late": {
+   "PC1": "FAIL",
+   "PC11": "FAIL",
+   "PC12": "FAIL",
+   "PC16": "FAIL",
+   "PC20": "FAIL"
+  },
+  "imut3 slot_count halved (rows outside reserved slots)": {
+   "PC1": "FAIL",
+   "PC11": "FAIL",
+   "PC12": "FAIL",
+   "PC16": "FAIL",
+   "PC20": "FAIL"
+  },
+  "vpmut1 VM lane 1 takes lane 2 data": {
+   "PC1": "FAIL",
+   "PC11": "PASS",
+   "PC12": "FAIL",
+   "PC16": "FAIL",
+   "PC20": "FAIL"
+  }
+ },
+ "mutant_note": "vpmut1 PC11 passes: PC11 (mmode lane-vector writes) bands 1 and 2 carry identical data words in this stimulus; the mutant is rejected on PC1/12/16/20",
+ "pc11": "included: 8 captures, 192 we rows (128 mask-0), NS 8; charged to attn_kv in the ledger",
+ "checks": [
+  "every we row read back from the real VM (svr row read, 13 edges) lane-by-lane vs the port-order golden image",
+  "land_cnt == bursts and each end beat only after all rows of bursts <= n",
+  "serializer/issuer/VM faults 0 (VM static_conflict covers lane/lane, lane/SU, lane/skid)",
+  "row law of the compiler == actual 24-port RTL rows (rows/*.log)",
+  "bank-conflict-free proof mod 16 and mod 64 for every edge (calendar.json)"
+ ],
+ "rtl": [
+  "rtl/qwen_split/qfd_res_train_par.sv",
+  "rtl/qwen_split/qfd_res_train_issue.sv",
+  "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv (PAR_RB, PMUT)",
+  "rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory.sv (PAR_RB pass-through)",
+  "rtl/qwen_split/qfd_native_compute_join_961w.sv"
+ ],
+ "compiler": "tools/qwen_vmwb/wb_calendar.py",
+ "area": {
+  "serializer_ff_per_band": {
+   "train24": 120054,
+   "successor": 120027
+  },
+  "issuer_ff": 725,
+  "vm_logic": "per-bank 3-lane AND-OR, no FF"
+ },
+ "limits": [
+  "component scope: one rank (24 ports, soft-mul variant of the same port source), one ME op per run; no physical views; die relays fold into TRAIN_EDGES (die-assigned, -1 refuses)",
+  "VM conflict-freedom against other writers (SU/seq/mx/attention rows) remains the layer calendar's duty (static_conflict faults)",
+  "full join: lint only (native_join_961w/fullhier/receipt.json)"
+ ],
+ "host": "ot-epyc1tb, ot-run, run2"
+}

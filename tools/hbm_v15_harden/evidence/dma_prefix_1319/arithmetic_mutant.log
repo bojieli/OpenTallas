@@ -1,0 +1,6 @@
+BAD a=00000000 b=00000001 c=00000000 got=00000000 want=00000001
+BAD a=00000000 b=00000001 c=00000001 got=00000001 want=00000000
+BAD a=ffffffff b=00000001 c=ffffffff got=00000000 want=00000001
+DMA_PREFIX_EXACT checks=32896 errors=32896
+FATAL: rtl/hbm_accel/generic/peers/static/tb_dma_counter_prefix.sv:12: prefix arithmetic mismatch
+       Time: 0 Scope: tb

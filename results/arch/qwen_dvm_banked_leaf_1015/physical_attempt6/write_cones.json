@@ -1,0 +1,491 @@
+{
+ "schema": "opentallas.qwen.dvm.actual_write_cone.v1",
+ "odb": "/work/results/asap7/opentallas_ot_qfd_xs_leaf_asap7_ref_gate/base/4_cts.odb",
+ "banks": [
+  {
+   "bank": 0,
+   "storage_flops": 544,
+   "write_cone_cells": 3146,
+   "write_shared_cells": 1143,
+   "write_unique_cells": 2003,
+   "combined_read_plus_unique_write_cells": 2865,
+   "combined_area_um2": 374.85180000001077
+  },
+  {
+   "bank": 1,
+   "storage_flops": 544,
+   "write_cone_cells": 3145,
+   "write_shared_cells": 1115,
+   "write_unique_cells": 2030,
+   "combined_read_plus_unique_write_cells": 2858,
+   "combined_area_um2": 374.5602000000111
+  },
+  {
+   "bank": 2,
+   "storage_flops": 544,
+   "write_cone_cells": 3178,
+   "write_shared_cells": 1109,
+   "write_unique_cells": 2069,
+   "combined_read_plus_unique_write_cells": 2897,
+   "combined_area_um2": 378.4968000000117
+  },
+  {
+   "bank": 3,
+   "storage_flops": 544,
+   "write_cone_cells": 3289,
+   "write_shared_cells": 1204,
+   "write_unique_cells": 2085,
+   "combined_read_plus_unique_write_cells": 2913,
+   "combined_area_um2": 379.25496000001226
+  },
+  {
+   "bank": 4,
+   "storage_flops": 544,
+   "write_cone_cells": 3244,
+   "write_shared_cells": 1179,
+   "write_unique_cells": 2065,
+   "combined_read_plus_unique_write_cells": 2894,
+   "combined_area_um2": 378.90504000001124
+  },
+  {
+   "bank": 5,
+   "storage_flops": 544,
+   "write_cone_cells": 3263,
+   "write_shared_cells": 1186,
+   "write_unique_cells": 2077,
+   "combined_read_plus_unique_write_cells": 2905,
+   "combined_area_um2": 379.3132800000117
+  },
+  {
+   "bank": 6,
+   "storage_flops": 544,
+   "write_cone_cells": 3291,
+   "write_shared_cells": 1171,
+   "write_unique_cells": 2120,
+   "combined_read_plus_unique_write_cells": 2948,
+   "combined_area_um2": 382.60836000001245
+  },
+  {
+   "bank": 7,
+   "storage_flops": 544,
+   "write_cone_cells": 3266,
+   "write_shared_cells": 1156,
+   "write_unique_cells": 2110,
+   "combined_read_plus_unique_write_cells": 2937,
+   "combined_area_um2": 379.83816000001224
+  }
+ ],
+ "shared_write_cells": 2772,
+ "cut_y_um": 29.97,
+ "cut_counts": {
+  "combinational": 1872,
+  "registered_data": 462,
+  "storage_data_or_enable": 356,
+  "input_hold_to_captures": 1096,
+  "clock": 25
+ },
+ "examples": {
+  "combinational": [
+   {
+    "net": "_00008_",
+    "drivers": [
+     "_50531_"
+    ],
+    "loads": [
+     "q[17]$_DFF_P_"
+    ]
+   },
+   {
+    "net": "_00009_",
+    "drivers": [
+     "_50529_"
+    ],
+    "loads": [
+     "q[18]$_DFF_P_"
+    ]
+   },
+   {
+    "net": "_00010_",
+    "drivers": [
+     "_50527_"
+    ],
+    "loads": [
+     "q[19]$_DFF_P_"
+    ]
+   },
+   {
+    "net": "_00012_",
+    "drivers": [
+     "_50525_"
+    ],
+    "loads": [
+     "q[20]$_DFF_P_"
+    ]
+   },
+   {
+    "net": "_00013_",
+    "drivers": [
+     "_50523_"
+    ],
+    "loads": [
+     "q[21]$_DFF_P_"
+    ]
+   },
+   {
+    "net": "_00014_",
+    "drivers": [
+     "_50521_"
+    ],
+    "loads": [
+     "q[22]$_DFF_P_"
+    ]
+   },
+   {
+    "net": "_00015_",
+    "drivers": [
+     "_50519_"
+    ],
+    "loads": [
+     "q[23]$_DFF_P_"
+    ]
+   },
+   {
+    "net": "_00016_",
+    "drivers": [
+     "_50517_"
+    ],
+    "loads": [
+     "q[24]$_DFF_P_"
+    ]
+   }
+  ],
+  "registered_data": [
+   {
+    "net": "_00066_",
+    "drivers": [
+     "g_t[1].wo[0]$_DFF_P_"
+    ],
+    "loads": [
+     "place7218",
+     "_29937_"
+    ]
+   },
+   {
+    "net": "_00068_",
+    "drivers": [
+     "g_t[1].wo[2]$_DFF_P_"
+    ],
+    "loads": [
+     "place7214"
+    ]
+   },
+   {
+    "net": "_00069_",
+    "drivers": [
+     "g_t[1].wo[3]$_DFF_P_"
+    ],
+    "loads": [
+     "place7211",
+     "place7209"
+    ]
+   },
+   {
+    "net": "_00232_",
+    "drivers": [
+     "g_t[0].g_e[64].m[15]$_DFFE_PP_"
+    ],
+    "loads": [
+     "_47200_",
+     "_44028_"
+    ]
+   },
+   {
+    "net": "_00239_",
+    "drivers": [
+     "g_t[0].g_e[61].v$_SDFFE_PP0P_"
+    ],
+    "loads": [
+     "_44393_",
+     "_44015_"
+    ]
+   },
+   {
+    "net": "_00242_",
+    "drivers": [
+     "g_t[0].g_e[60].v$_SDFFE_PP0P_"
+    ],
+    "loads": [
+     "_44395_",
+     "_44009_"
+    ]
+   },
+   {
+    "net": "_00244_",
+    "drivers": [
+     "g_t[0].g_e[60].m[15]$_DFFE_PP_"
+    ],
+    "loads": [
+     "_48276_",
+     "_44005_"
+    ]
+   },
+   {
+    "net": "_00373_",
+    "drivers": [
+     "g_t[0].g_e[48].v$_SDFFE_PP0P_"
+    ],
+    "loads": [
+     "_44384_",
+     "_43760_"
+    ]
+   }
+  ],
+  "storage_data_or_enable": [
+   {
+    "net": "_07080_",
+    "drivers": [
+     "_33331_"
+    ],
+    "loads": [
+     "g_t[0].g_e[3].m[4]$_DFFE_PP_"
+    ]
+   },
+   {
+    "net": "_07081_",
+    "drivers": [
+     "_33333_"
+    ],
+    "loads": [
+     "g_t[0].g_e[3].m[3]$_DFFE_PP_"
+    ]
+   },
+   {
+    "net": "_07082_",
+    "drivers": [
+     "_33335_"
+    ],
+    "loads": [
+     "g_t[0].g_e[3].m[2]$_DFFE_PP_"
+    ]
+   },
+   {
+    "net": "_07090_",
+    "drivers": [
+     "_33367_"
+    ],
+    "loads": [
+     "g_t[0].g_e[4].m[9]$_DFFE_PP_"
+    ]
+   },
+   {
+    "net": "_07131_",
+    "drivers": [
+     "_33489_"
+    ],
+    "loads": [
+     "g_t[0].g_e[7].m[13]$_DFFE_PP_"
+    ]
+   },
+   {
+    "net": "_07132_",
+    "drivers": [
+     "_33491_"
+    ],
+    "loads": [
+     "g_t[0].g_e[7].m[12]$_DFFE_PP_"
+    ]
+   },
+   {
+    "net": "_07135_",
+    "drivers": [
+     "_33498_"
+    ],
+    "loads": [
+     "g_t[0].g_e[7].m[9]$_DFFE_PP_"
+    ]
+   },
+   {
+    "net": "_07138_",
+    "drivers": [
+     "_33504_"
+    ],
+    "loads": [
+     "g_t[0].g_e[7].m[6]$_DFFE_PP_"
+    ]
+   }
+  ],
+  "input_hold_to_captures": [
+   {
+    "net": "ot_ihdrv_n00000",
+    "drivers": [
+     "ot_ihdrv_00000"
+    ],
+    "loads": [
+     "co_ep$_DFF_P_",
+     "ot_prs_00000_ff"
+    ]
+   },
+   {
+    "net": "ot_ihdrv_n00001",
+    "drivers": [
+     "ot_ihdrv_00001"
+    ],
+    "loads": [
+     "co_v$_DFF_PN0_",
+     "ot_prs_00001_ff"
+    ]
+   },
+   {
+    "net": "ot_ihdrv_n00074",
+    "drivers": [
+     "ot_ihdrv_00074"
+    ],
+    "loads": [
+     "wo_d[0]$_DFF_P_",
+     "ot_prs_00002_ff"
+    ]
+   },
+   {
+    "net": "ot_ihdrv_n00075",
+    "drivers": [
+     "ot_ihdrv_00075"
+    ],
+    "loads": [
+     "wo_d[1000]$_DFF_P_",
+     "ot_prs_00003_ff"
+    ]
+   },
+   {
+    "net": "ot_ihdrv_n00076",
+    "drivers": [
+     "ot_ihdrv_00076"
+    ],
+    "loads": [
+     "wo_d[1001]$_DFF_P_",
+     "ot_prs_00004_ff"
+    ]
+   },
+   {
+    "net": "ot_ihdrv_n00077",
+    "drivers": [
+     "ot_ihdrv_00077"
+    ],
+    "loads": [
+     "wo_d[1002]$_DFF_P_",
+     "ot_prs_00005_ff"
+    ]
+   },
+   {
+    "net": "ot_ihdrv_n00078",
+    "drivers": [
+     "ot_ihdrv_00078"
+    ],
+    "loads": [
+     "wo_d[1003]$_DFF_P_",
+     "ot_prs_00006_ff"
+    ]
+   },
+   {
+    "net": "ot_ihdrv_n00079",
+    "drivers": [
+     "ot_ihdrv_00079"
+    ],
+    "loads": [
+     "wo_d[1004]$_DFF_P_",
+     "ot_prs_00007_ff"
+    ]
+   }
+  ],
+  "clock": [
+   {
+    "net": "clknet_leaf_1_clk",
+    "drivers": [
+     "clkbuf_leaf_1_clk"
+    ],
+    "loads": [
+     "g_t[0].g_e[4].m[13]$_DFFE_PP_",
+     "g_t[0].g_e[6].m[14]$_DFFE_PP_",
+     "g_t[0].g_e[0].m[6]$_DFFE_PP_"
+    ]
+   },
+   {
+    "net": "clknet_leaf_2_clk",
+    "drivers": [
+     "clkbuf_leaf_2_clk"
+    ],
+    "loads": [
+     "clkload24",
+     "g_t[0].g_e[1].m[12]$_DFFE_PP_",
+     "g_t[0].g_e[2].m[1]$_DFFE_PP_"
+    ]
+   },
+   {
+    "net": "clknet_leaf_3_clk",
+    "drivers": [
+     "clkbuf_leaf_3_clk"
+    ],
+    "loads": [
+     "clkload25",
+     "g_t[0].g_e[5].m[1]$_DFFE_PP_",
+     "g_t[0].g_e[6].m[7]$_DFFE_PP_"
+    ]
+   },
+   {
+    "net": "clknet_leaf_4_clk",
+    "drivers": [
+     "clkbuf_leaf_4_clk"
+    ],
+    "loads": [
+     "clkload26",
+     "g_t[0].g_e[38].m[7]$_DFFE_PP_",
+     "g_t[0].g_e[32].m[15]$_DFFE_PP_"
+    ]
+   },
+   {
+    "net": "clknet_leaf_188_clk",
+    "drivers": [
+     "clkbuf_leaf_188_clk"
+    ],
+    "loads": [
+     "clkload96",
+     "g_t[0].g_e[29].m[10]$_DFFE_PP_",
+     "g_t[0].g_e[29].m[14]$_DFFE_PP_"
+    ]
+   },
+   {
+    "net": "clknet_leaf_190_clk",
+    "drivers": [
+     "clkbuf_leaf_190_clk"
+    ],
+    "loads": [
+     "clkload98",
+     "g_t[0].g_e[30].m[1]$_DFFE_PP_",
+     "g_t[0].g_e[30].m[3]$_DFFE_PP_"
+    ]
+   },
+   {
+    "net": "clknet_leaf_191_clk",
+    "drivers": [
+     "clkbuf_leaf_191_clk"
+    ],
+    "loads": [
+     "clkload99",
+     "q[11]$_DFF_P_",
+     "q[12]$_DFF_P_"
+    ]
+   },
+   {
+    "net": "clknet_leaf_209_clk",
+    "drivers": [
+     "clkbuf_leaf_209_clk"
+    ],
+    "loads": [
+     "g_t[0].g_e[29].v$_SDFFE_PP0P_",
+     "g_t[0].g_e[27].m[11]$_DFFE_PP_",
+     "g_t[0].g_e[25].m[11]$_DFFE_PP_"
+    ]
+   }
+  ]
+ },
+ "route_admitted": false
+}

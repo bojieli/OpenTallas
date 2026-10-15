@@ -413,7 +413,8 @@ def claim_ram(spec):
     return sized_ram(spec, spec.get("peak_ram_gb", 32))
 
 
-def sized_ram(spec, ram):
+def measured_peak_gb(spec):
+    """Largest recorded actual process peak for this block class, or zero if unknown."""
     p = Path(__file__).resolve().parent / "measured_peaks.json"
     try:
         mt = p.stat().st_mtime
@@ -422,7 +423,12 @@ def sized_ram(spec, ram):
         m = _MEASURED_PEAKS[1].get(measured_block(spec.get("name", "")))
         peak = float(m["peak_gb"]) if m else 0
     except (OSError, ValueError, KeyError, TypeError, AttributeError):
-        return ram
+        return 0
+    return peak if math.isfinite(peak) and peak > 0 else 0
+
+
+def sized_ram(spec, ram):
+    peak = measured_peak_gb(spec)
     if spec.get("measured_ram", True) is False or peak <= 0 or not isinstance(ram, (int, float)) or ram < 2 * peak:
         return ram
     return math.ceil(max(1.25 * peak, peak + 4))
@@ -960,7 +966,7 @@ def _only_serial_bench_failed(j):
     if (j.get("stage_key") != key or j.get("stage_tag") != f"{key}.a1"
             or receipt.get("ok") is not False or receipt.get("track") is not None
             or "rc" not in receipt
-            or j.get("reason") != f"{key} expected {str(receipt.get('expect')).upper()} but rc={receipt['rc']}"):
+            or not _bench_reason_is(j.get("reason"), key, receipt)):
         return False
     launches = [str(e).split(" launched ", 1)[1] for e in events if " launched " in str(e)]
     if not launches or not any(e.startswith(f"{key} (attempt 1) on ") for e in launches):
@@ -970,6 +976,13 @@ def _only_serial_bench_failed(j):
             and not any(re.search(r"\b(?:route|calibrate|signoff|eco)[.-]a?\d|launched (?:route|calibrate|signoff)\b",
                                   str(e)) for e in events))
 
+
+
+def _bench_reason_is(reason, key, receipt):
+    """The bench verdict reason, with or without the bench_why() cause suffix."""
+    base = f"{key} expected {str(receipt.get('expect')).upper()} but rc={receipt['rc']}"
+    reason = str(reason or "")
+    return reason == base or reason.startswith(base + " (")
 
 
 def _bench_cancelled_physical_track(j):
@@ -992,7 +1005,7 @@ def _bench_cancelled_physical_track(j):
     failed = []
     for key, receipt in (j.get("benches") or {}).items():
         if (receipt.get("ok") is False and receipt.get("track") == "parallel" and "rc" in receipt
-                and why == f"{key} expected {str(receipt.get('expect')).upper()} but rc={receipt['rc']}"):
+                and _bench_reason_is(why, key, receipt)):
             failed.append(key)
     if len(failed) != 1:
         return False
@@ -3183,6 +3196,11 @@ def launch_stage(j, st, cmd):
         # calibrate runs in parallel: the IO SDC the calibrate stage would have generated is made here from the
         # assumed (or, on a re-route, measured) insertion in calib.env
         cmd = f"( {j['ctrack']['sdc_cmd']} ) || exit 5\n" + cmd
+    if j.get("export_lint_recovery") and st["key"] == "collect":
+        from export_lint_recovery import stage_script
+        before, after = stage_script(j["export_lint_recovery"], j.get("stage_source", j["run"] + "/src"))
+        env += before
+        cmd = f"( {cmd} )\n_ot_export_rc=$?\n{after}exit $_ot_export_rc\n"
     cmd = tt_overlay_fallback(cmd)
     body = f"#!/bin/bash\n# closure-loop {j['name']} stage {st['key']} attempt {j['attempt']}\nset -o pipefail\n{env}{subst(cmd, j)}\n"
     run = j["run"]
@@ -3247,6 +3265,22 @@ def bench_outcome(j, st, rc, ok_extra=True):
     return expected_fail_seen(st, rc, full)
 
 
+def bench_why(j, st, rc, ok_extra=True):
+    """Why a bench with expect PASS was judged not passed, for the verdict reason.  rc=0 alone read as 'expected PASS
+    but rc=0' (5 jobs 2026-10-15: pass_regex not matching the bench's actual verdict line, or a min_count_regex the
+    bench never prints) and was triaged as a flow bug."""
+    if st.get("expect") != "pass" or rc != 0:
+        return ""
+    if not ok_extra:
+        return " (ok check failed)"
+    note = (j.get("bench_work") or {}).get(st["key"], "")
+    if note.startswith("vacuous"):
+        return f" ({note})"
+    if st.get("pass_regex"):
+        return f" (pass_regex {st['pass_regex']!r} not matched in the bench log)"
+    return ""
+
+
 def expected_fail_seen(st, rc, full):
     """expect FAIL (negative control): the log's own verdict decides, regardless of rc -- a mutant bench that prints
     FAIL but exits 0 was read as "expected FAIL but rc=0" (LOOP-GAPS 2026-10-08).  With fail_regex: it must match (a
@@ -3278,8 +3312,19 @@ def bench_work(log, min_count_regex=None):
     return True, f"work: {m[:6]}"
 
 
+# A stage cmd that sends its tool output to its own file ('... > {RUN}/record/route/export.log 2>&1', every ref_tile
+# collect) leaves cl/<tag>.log empty: 14 S81 fill collects went NEEDS_HUMAN 'collect crashed twice (rc=1)' on 2026-10-15
+# with an empty tail and no first error, while export.log held the child_lint FAIL.  Tail those redirect targets too.
+REDIRECT_LOG_RE = re.compile(r"(?<![<>&0-9])>\s*([^\s;&|<>]+)\s+2>&1")
+
+
+def stage_logs(j, st):
+    logs = list(st.get("logs", [])) + [m for m in REDIRECT_LOG_RE.findall(st.get("cmd") or "") if m not in st.get("logs", [])]
+    return [subst(x, j) for x in logs]
+
+
 def stage_tail(j, st, n=40):
-    extra = " ".join(subst(x, j) for x in st.get("logs", []))
+    extra = " ".join(stage_logs(j, st))
     r = ssh(j["host"], f"tail -n {n} {j['run']}/cl/{j['stage_tag']}.log 2>/dev/null; for f in {extra}; do "
                        f"[ -f \"$f\" ] && tail -n {n} \"$f\"; done; true", timeout=60)
     return r.stdout
@@ -3666,6 +3711,8 @@ def publish(j, metrics):
                        checks=j.get("checks", {}), submit_checks=j.get("submit_checks"), calibration=j.get("calibration"), route_overlay_plan=j.get("route_overlay_plan"), cycles_added=spec.get("cycles_added"), status="CLOSED",
                        closed_at=now_iso(), job_spec=spec, io_budget=(j.get("rebudget") or {}).get("rb") or "link_budget_consistent (fixed split)",
                        rebudget=j.get("rebudget"))
+        if j.get("export_lint_recovery"):
+            verdict["export_lint_recovery"] = j["export_lint_recovery"]
         (cwt / rec_dir / "verdict.json").write_text(json.dumps(verdict, indent=1) + "\n")
         git("add", "--sparse", "--", *tos, cwd=cwt)
         staged = sh(["git", "-C", str(cwt), "diff", "--cached", "--name-only"], timeout=120).stdout.split()
@@ -4514,7 +4561,7 @@ def bench_track(j, fleet, stl):
         j["benches"][k] = dict(expect=st["expect"], rc=rc, ok=passed, tail=tail[-600:], track="parallel")
         if not passed:
             stop_main_for_bench(j)
-            finish(j, "NEEDS_RTL", f"{k} expected {st['expect'].upper()} but rc={rc}",
+            finish(j, "NEEDS_RTL", f"{k} expected {st['expect'].upper()} but rc={rc}{bench_why(j, st, rc, ok_extra)}",
                    f"NEEDS_RTL: bench {k} expected {st['expect'].upper()}, got rc={rc} (parallel track; route stopped)\n" +
                    "\n".join(tail.strip().splitlines()[-5:]))
             return False
@@ -5153,7 +5200,7 @@ def step(j, fleet):
             passed = bench_outcome(j, st, rc, ok_extra)
             j["benches"][st["key"]] = dict(expect=st["expect"], rc=rc, ok=passed, tail=tail[-600:])
             if not passed:
-                finish(j, "NEEDS_RTL", f"{st['key']} expected {st['expect'].upper()} but rc={rc}",
+                finish(j, "NEEDS_RTL", f"{st['key']} expected {st['expect'].upper()} but rc={rc}{bench_why(j, st, rc, ok_extra)}",
                        f"NEEDS_RTL: bench {st['key']} expected {st['expect'].upper()}, got rc={rc}\n" +
                        "\n".join(tail.strip().splitlines()[-5:]))
                 return
@@ -5784,13 +5831,29 @@ def eco_post_sdcs(j, m, what="ECO"):
     return post_sdcs
 
 
+def hold_eco_resources(j):
+    """Size from the completed route and recorded block class, with an 8 GB ECO floor.
+
+    Small retained routes need not claim the old universal 32 GB (and 200 GB
+    disk floor). Larger or unknown routes keep at least that legacy request;
+    no ECO may underclaim its effective route request or a known class peak.
+    """
+    route = next((st for st in stage_list(j["spec"]) if st["kind"] == "route"), None)
+    route_ram = route["ram"] if route else claim_ram(j["spec"])
+    peak = measured_peak_gb(j["spec"])
+    measured = math.ceil(max(1.25 * peak, peak + 4)) if peak else 0
+    ram = math.ceil(max(8, route_ram, measured))
+    return 8, max(32, ram) if ram > LIGHT_STAGE_RAM_GB else ram
+
+
 def start_hold_eco(j, fleet, m):
     rb, ob = eco_paths(j, m)
     if not rb:
         return False
-    ok, why = fleet.fits(j["host"], 8, 32)
+    threads, ram = hold_eco_resources(j)
+    ok, why = fleet.fits(j["host"], threads, ram)
     if not ok:
-        event(j, f"hold ECO waiting for capacity: {why}")
+        event(j, f"hold ECO waiting for capacity ({threads} threads / {ram} GB): {why}")
         return True            # stays at the verdict stage; the next tick retries
     v, he = j["spec"].get("verdict", {}), j["spec"].get("hold_eco") or {}
     # rev 2 (2026-10-07): post-route hold goal +18 (coordinator: die-context margin over the +15 line), endpoint filter, sign-off-exact constraints per corner,
@@ -5800,7 +5863,7 @@ def start_hold_eco(j, fleet, m):
           f"HM={he.get('hold_margin_ps', 18)} SM={he.get('setup_margin_ps', 40)} FILT={he.get('setup_filter_ps', 40)} " \
           f"PASSES={he.get('passes', 2)} RESAWARE={int(he.get('resistance_aware', True))} HOLDCELLS={int(he.get('hold_cells', True))} " \
           f"ACC_SS={SS_MIN} ACC_FF={FF_MIN} SETUP_LIB={SETUP_LIB} KEEPCLK={he.get('keep_clock', 0)} BUF={he.get('max_buffer_percent', 30)} " \
-          f"MACROS={shlex.quote(' '.join(verdict_macros(j)))} THREADS=8"
+          f"MACROS={shlex.quote(' '.join(verdict_macros(j)))} THREADS={threads}"
     keepwires = bool(he.get("keep_wires") or j.get("auto_react_keepwires"))
     if keepwires:
         # LOOP-AUTO class a: narrow re-route -- every net the ECO did not touch keeps its detailed wires (hold_eco.sh
@@ -5832,9 +5895,9 @@ def start_hold_eco(j, fleet, m):
     ship_helpers(j["host"], j["run"], j)
     j["eco"] = dict(tried=True, rb=rb, ob=ob, out=out, post_sdc=post_sdcs, sdc_name=m.get("sdc_name") or "6_final.sdc",
                     setup_post_sdc=list(m.get("setup_post_sdc") or []), pre=dict(ss_ps=m["ss_ps"], ff_ps=m["ff_ps"]), started=now_iso(),
-                    keepwires=keepwires)
-    st = dict(key="hold_eco", kind="hold_eco", threads=8, ram=32)
-    launch_token = fleet.reserve_launch(j["host"], 8, 32)
+                    keepwires=keepwires, resources=dict(threads=threads, ram=ram))
+    st = dict(key="hold_eco", kind="hold_eco", threads=threads, ram=ram)
+    launch_token = fleet.reserve_launch(j["host"], threads, ram)
     try:
         launch_stage(j, st, cmd)
     finally:
@@ -6703,9 +6766,46 @@ try:
     src_ok = bool(a.get("src_commit")) and open(os.path.join(R, "src", "SOURCE_COMMIT")).read().strip() == a["src_commit"]
 except OSError:
     pass
+def snap_commit(tp):
+    try:
+        return open(os.path.join(tp, "SOURCE_COMMIT")).read().strip()
+    except OSError:
+        return ""
+def trim_snapshot(tp):
+    # disk-1015: a git snapshot (src/, bench_src_a*/) at the job's commit is re-created by git archive; a receipt that
+    # names a file or sub-directory inside it keeps THAT path, not the whole 4-5 GB tree (the old whole-tree keep left
+    # ~590 GB of snapshots on AGIdock); a receipt naming the snapshot root itself is satisfied by SOURCE_COMMIT
+    keep = [r for r in hard if r.startswith(tp + "/")]
+    kdirs = [r for r in keep if os.path.isdir(r) and not os.path.islink(r)]
+    kfiles = set(keep) | {os.path.join(tp, "SOURCE_COMMIT")}
+    b = 0
+    for dp, dn, fn in os.walk(tp):
+        if any(dp == k or dp.startswith(k + "/") for k in kdirs):
+            dn[:] = []
+            continue
+        for f in fn:
+            p = os.path.join(dp, f)
+            if p not in kfiles:
+                b += rm_file(p)
+    if APPLY:
+        for dp, dn, fn in os.walk(tp, topdown=False):
+            if dp != tp:
+                try:
+                    os.rmdir(dp)
+                except OSError:
+                    pass
+        with open(os.path.join(tp, "TRIMMED_SOURCE_SNAPSHOT"), "w") as f:
+            f.write("source snapshot trimmed by deep release; git archive %s re-creates it; receipt paths kept\n" % a["src_commit"])
+    return b
 for top in sorted(os.listdir(R)):
     tp = os.path.join(R, top)
-    if not os.path.isdir(tp) or os.path.islink(tp) or prot(tp) or anc(tp):
+    if not os.path.isdir(tp) or os.path.islink(tp):
+        continue
+    snap = top == "src" or top.startswith("bench_src")
+    if prot(tp) or anc(tp):
+        if snap and mode in ("closed", "fail") and a.get("src_commit") and snap_commit(tp) == a["src_commit"] \
+                and not os.path.exists(os.path.join(tp, ".keep")):
+            freed += trim_snapshot(tp)
         continue
     if top == "src" and mode in ("closed", "fail") and src_ok:
         freed += rm_tree(tp)
@@ -6804,6 +6904,17 @@ def closure_on_main(j, ev):
     return j["name"] in ev["files"] or j["name"] in ev["recs"]
 
 
+def collect_crash_after_closed_verdict(j):
+    """ROOT 2026-10-15 (peer review 11:00): a route that finished and was judged CLOSED, then stopped NEEDS_HUMAN in
+    collect / export / record (30 S81 fill routes, collect crashed twice on a child_lint bug; 17 run dirs were released
+    or deleted before the lint fix), is evidence awaiting re-collection (retry --at collect): never deep-released while
+    it stays there.  Cancelling the job or a successful re-collect ends the retention."""
+    if j.get("status") != "NEEDS_HUMAN" or j.get("stage_key") not in ("collect", "export", "record"):
+        return False
+    ev = " ".join(j.get("events") or [])
+    return "route done (rc=0)" in ev and "-> CLOSED" in ev
+
+
 def deep_release_mode(j, closed, ev, now=None):
     """closed | fail | nearmiss | None (keep) for one job (DEEP RELEASE)"""
     if j.get("deep_released") or not j.get("host") or not j.get("run") or j["status"] not in TERMINAL:
@@ -6819,6 +6930,8 @@ def deep_release_mode(j, closed, ev, now=None):
             return "closed" if closure_on_main(j, ev) else None
         return "fail"                                   # revoked closure: a failure on its element
     if j["status"] not in DEEP_RELEASE_FAIL:
+        return None
+    if collect_crash_after_closed_verdict(j):
         return None
     if near_miss(j, closed) or (j.get("near_miss_retained") and j["spec"].get("block") not in closed):
         return "nearmiss"
@@ -7027,6 +7140,69 @@ def release_deep(jobs, now=None):
             event(j, f"deep release ({mode}, {m.group(1)} MB): kept {kept}, receipt-referenced paths, logs/reports/json")
             save_job(j)
     return n
+
+
+def snapshot_trim(jobs, limit=200, now=None):
+    """SNAPSHOT-TRIM (disk-1015): AGIdock fell to 18 GB free with ~590 GB of src/ + bench_src_a*/ git snapshots left in
+    deep-released run dirs -- DEEP_RELEASE_PY kept a whole 4-5 GB snapshot whenever one main receipt named a single
+    file inside it (signoff.sdc, a bench gate script) or the snapshot root.  Deep release now keeps only the named paths;
+    this pass re-applies the same DEEP_RELEASE_PY, at the recorded mode, to jobs deep-released before that fix.  Run by
+    the hourly cron guard (`closure_loop.py snapshot-trim`) and safe to repeat: every deep-release guard is re-checked
+    (live process, sibling jobs sharing the run dir, receipt refs, .keep, collect-crash retention, source mismatch)."""
+    closed = closed_blocks(jobs)
+    sources = release_source_index(jobs)
+    hosts = {h["name"] for h in hosts_table()}
+    shared = {}
+    for x in jobs:
+        if x.get("run") and x.get("host"):
+            shared.setdefault((x["host"], x["run"].rstrip("/")), []).append(x)
+    ev = _main_evidence()
+    if not ev:
+        return 0, 0
+    n = freed = 0
+    for x in jobs:
+        dr = x.get("deep_released") or {}
+        if n >= limit or not dr or x.get("snapshot_trimmed") or dr.get("mode") not in ("closed", "fail") \
+                or x.get("host") not in hosts or x["status"] not in TERMINAL:
+            continue
+        probe = dict(x, deep_released=None)
+        if deep_release_mode(probe, closed, ev, now) != dr["mode"] or source_mismatch_retained(x, sources) \
+                or helper_provenance_retained(x):
+            continue
+        run = x["run"].rstrip("/")
+        if any(y["status"] not in TERMINAL or _terminal_age_h(y, now) < DEEP_RELEASE_AGE_H
+               for y in shared.get((x["host"], run), [])):
+            continue
+        with job_lock(x["name"]):
+            j = load_job(x["name"])
+            if j.get("snapshot_trimmed") or j["status"] not in TERMINAL:
+                continue
+            commit = j.get("commit_full") or (j["spec"].get("source") or {}).get("commit") or ""
+            if commit and subprocess.run(["git", "-C", str(REPO), "cat-file", "-e", commit + "^{commit}"],
+                                         capture_output=True, timeout=60).returncode != 0:
+                commit = ""
+            if not commit:
+                continue
+            mode = dr["mode"]
+            arg = dict(run=run, mode=mode, src_commit=commit, refs=[r for r in ev["refs"] if r.startswith(run + "/")],
+                       final_dirs=[(j.get("metrics") or {}).get("orfs_dir")] if mode == "closed" and (j.get("metrics") or {}).get("orfs_dir") else [])
+            r = ssh(j["host"], f"OT_DR={shlex.quote(json.dumps(arg))} python3 - <<'DRPY'\n{DEEP_RELEASE_PY}\nDRPY\n", timeout=1800)
+            n += 1
+            m = re.search(r"DEEP_FREED (\d+)", r.stdout)
+            if r.returncode != 0 or not m:
+                continue
+            j["snapshot_trimmed"] = dict(at=now_iso(), freed_mb=int(m.group(1)))
+            event(j, f"snapshot trim ({mode}, {m.group(1)} MB): src/bench_src snapshots cut to receipt-referenced paths")
+            save_job(j)
+            freed += int(m.group(1))
+    return n, freed
+
+
+def cmd_snapshot_trim(a):
+    n, freed = snapshot_trim(all_jobs(), limit=a.limit)
+    msg = f"SNAPSHOT-TRIM: {n} run dirs visited, {freed / 1024:.1f} GB freed"
+    log(msg)
+    print(msg)
 
 
 # ------------------------------------------------------------------------------------------------ AUTO-REACT / READY_NEXT
@@ -8456,6 +8632,28 @@ def cmd_recover_eco_overlays(a):
 
 
 @locked_job_command
+def cmd_recover_export_lint(a):
+    """Attach an explicit main-pinned lint-only recovery, leaving retry to the operator."""
+    import base64
+    from export_lint_recovery import eligible
+    j = load_job(a.name)
+    eligible(j)
+    head = _ovl_head()
+    rel = "tools/hier_contract/child_lint.py"
+    data = subprocess.run(["git", "-C", str(REPO), "show", f"{head}:{rel}"],
+                          capture_output=True, check=True).stdout
+    request = dict(job=j, helper_commit=head, helper_b64=base64.b64encode(data).decode(),
+                   helper_sha256=hashlib.sha256(data).hexdigest(),
+                   guard_b64=base64.b64encode((HERE / "export_lint_recovery.py").read_bytes()).decode())
+    r = ssh(j["host"], "python3 - prepare " + shlex.quote(json.dumps(request)),
+            input=(HERE / "export_lint_recovery.py").read_text(), timeout=120, check=True)
+    j["export_lint_recovery"] = dict(json.loads(r.stdout), requested=now_iso())
+    event(j, f"explicit collect-only lint recovery pinned to main {head}; frozen helpers and route retained")
+    save_job(j)
+    print(json.dumps(j["export_lint_recovery"]))
+
+
+@locked_job_command
 def cmd_restore_cancelled(a):
     """Recover pre-lock cancellation lost to a stale save. Never stop remote work."""
     j = load_job(a.name)
@@ -8512,7 +8710,10 @@ def main():
     ks.add_argument("--orfs")
     rc = sub.add_parser("restore-cancelled"); rc.add_argument("name")
     er = sub.add_parser("recover-eco-overlays"); er.add_argument("name")
+    el = sub.add_parser("recover-export-lint"); el.add_argument("name")
     mg = sub.add_parser("migrate"); mg.add_argument("name"); mg.add_argument("host")
+    st = sub.add_parser("snapshot-trim", help="hourly guard: cut src/bench_src snapshots of deep-released jobs to receipt paths")
+    st.add_argument("--limit", type=int, default=200)
     a = ap.parse_args()
     if a.cmd == "daemon":
         cmd_daemon(a)
@@ -8545,8 +8746,12 @@ def main():
         cmd_hold_stop(a)
     elif a.cmd == "recover-eco-overlays":
         cmd_recover_eco_overlays(a)
+    elif a.cmd == "recover-export-lint":
+        cmd_recover_export_lint(a)
     elif a.cmd == "restore-cancelled":
         cmd_restore_cancelled(a)
+    elif a.cmd == "snapshot-trim":
+        cmd_snapshot_trim(a)
     elif a.cmd == "migrate":     # executed by the daemon at its next tick (no race with the job's poller)
         (STATE / "migrate_requests").mkdir(parents=True, exist_ok=True)
         (STATE / "migrate_requests" / f"{a.name}.json").write_text(json.dumps(dict(name=a.name, host=a.host)))

@@ -1,0 +1,283 @@
+{
+ "binds": [
+  {
+   "instance": "hb_vms_SW",
+   "master": "hfd_hgi_vms_static_SW",
+   "params": {},
+   "run": "vms_SW_m",
+   "blackboxes": []
+  },
+  {
+   "instance": "delivery_SW",
+   "master": "ot_hbm_svc_static_vm_delivery",
+   "params": {},
+   "run": "delivery",
+   "blackboxes": []
+  },
+  {
+   "instance": "hb_vms_SE",
+   "master": "hfd_hgi_vms_static_SE",
+   "params": {},
+   "run": "vms_SE_m",
+   "blackboxes": []
+  },
+  {
+   "instance": "delivery_SE",
+   "master": "ot_hbm_svc_static_vm_delivery",
+   "params": {},
+   "run": "delivery",
+   "blackboxes": []
+  },
+  {
+   "instance": "hb_vms_NW",
+   "master": "hfd_hgi_vms_static_NW",
+   "params": {},
+   "run": "vms_NW_m",
+   "blackboxes": []
+  },
+  {
+   "instance": "delivery_NW",
+   "master": "ot_hbm_svc_static_vm_delivery",
+   "params": {},
+   "run": "delivery",
+   "blackboxes": []
+  },
+  {
+   "instance": "hb_vms_NE",
+   "master": "hfd_hgi_vms_static_NE",
+   "params": {},
+   "run": "vms_NE_m",
+   "blackboxes": []
+  },
+  {
+   "instance": "delivery_NE",
+   "master": "ot_hbm_svc_static_vm_delivery",
+   "params": {},
+   "run": "delivery",
+   "blackboxes": []
+  },
+  {
+   "instance": "lg_SW_0",
+   "master": "ot_hbm_vm_lg_static_split",
+   "params": {
+    "READ_RETURN": "0",
+    "WRITE_RETURN": "7"
+   },
+   "run": "lg_10_7",
+   "blackboxes": []
+  },
+  {
+   "instance": "lg_SW_1",
+   "master": "ot_hbm_vm_lg_static_split",
+   "params": {
+    "READ_RETURN": "4",
+    "WRITE_RETURN": "1"
+   },
+   "run": "lg_14_11",
+   "blackboxes": []
+  },
+  {
+   "instance": "lg_SW_2",
+   "master": "ot_hbm_vm_lg_static_split_term",
+   "params": {
+    "READ_RETURN": "8",
+    "WRITE_RETURN": "5"
+   },
+   "run": "lg_term_18_15",
+   "blackboxes": []
+  },
+  {
+   "instance": "lg_SE_0",
+   "master": "ot_hbm_vm_lg_static_split",
+   "params": {
+    "READ_RETURN": "0",
+    "WRITE_RETURN": "7"
+   },
+   "run": "lg_10_7",
+   "blackboxes": []
+  },
+  {
+   "instance": "lg_SE_1",
+   "master": "ot_hbm_vm_lg_static_split",
+   "params": {
+    "READ_RETURN": "4",
+    "WRITE_RETURN": "1"
+   },
+   "run": "lg_14_11",
+   "blackboxes": []
+  },
+  {
+   "instance": "lg_SE_2",
+   "master": "ot_hbm_vm_lg_static_split_term",
+   "params": {
+    "READ_RETURN": "8",
+    "WRITE_RETURN": "5"
+   },
+   "run": "lg_term_18_15",
+   "blackboxes": []
+  },
+  {
+   "instance": "lg_NW_0",
+   "master": "ot_hbm_vm_lg_static_split",
+   "params": {
+    "READ_RETURN": "0",
+    "WRITE_RETURN": "7"
+   },
+   "run": "lg_10_7",
+   "blackboxes": []
+  },
+  {
+   "instance": "lg_NW_1",
+   "master": "ot_hbm_vm_lg_static_split",
+   "params": {
+    "READ_RETURN": "4",
+    "WRITE_RETURN": "1"
+   },
+   "run": "lg_14_11",
+   "blackboxes": []
+  },
+  {
+   "instance": "lg_NW_2",
+   "master": "ot_hbm_vm_lg_static_split_term",
+   "params": {
+    "READ_RETURN": "8",
+    "WRITE_RETURN": "5"
+   },
+   "run": "lg_term_18_15",
+   "blackboxes": []
+  },
+  {
+   "instance": "lg_NE_0",
+   "master": "ot_hbm_vm_lg_static_split",
+   "params": {
+    "READ_RETURN": "0",
+    "WRITE_RETURN": "7"
+   },
+   "run": "lg_10_7",
+   "blackboxes": []
+  },
+  {
+   "instance": "lg_NE_1",
+   "master": "ot_hbm_vm_lg_static_split",
+   "params": {
+    "READ_RETURN": "4",
+    "WRITE_RETURN": "1"
+   },
+   "run": "lg_14_11",
+   "blackboxes": []
+  },
+  {
+   "instance": "lg_NE_2",
+   "master": "ot_hbm_vm_lg_static_split_term",
+   "params": {
+    "READ_RETURN": "8",
+    "WRITE_RETURN": "5"
+   },
+   "run": "lg_term_18_15",
+   "blackboxes": []
+  }
+ ],
+ "missing": [],
+ "mapped_runs": {
+  "vms_SW_m": {
+   "artifact_sha256": {
+    ".ys": "9aa9b0a80b966b484da8adc947360847ffc476248429a887fe41cf964f6084c1",
+    ".files.json": "ed7affc5b2aa9c176a95eb85447ff92077e881ad2a7ab2110a2f340b7f9182fa",
+    ".netlist.v": "3c973c75006157c30ca37167bad3dc2f0614bb55e32e1f4f167d165a03e26fec",
+    ".stat": "160f1654258d6645424570684f8e91730db6729813a1ffcbac5697f49ae0cec7"
+   },
+   "blackboxes": []
+  },
+  "delivery": {
+   "artifact_sha256": {
+    ".ys": "d2d6fbb7fbd6a9eaad4ec39c03ff9cac826d55435a5489c24a11caa765363f75",
+    ".files.json": "303e6f1b813a562d5fe496ab393818534d81a109bdb98d7f86a435a64fb0f006",
+    ".netlist.v": "29c97cd3df52a092efa22cdcd0c27fa6158a8d417dec885e8c9e8184e4c30e24",
+    ".stat": "14e41bd49a47439396cc1a3371ef67e1462ca4fdea19e44e1b64eca1009175b1"
+   },
+   "blackboxes": []
+  },
+  "vms_SE_m": {
+   "artifact_sha256": {
+    ".ys": "7f731361f4ad0f520137b6b6baeee59b15f647d35881f72106bb26f7dad23c80",
+    ".files.json": "a2deb7eddb8367ab32ceae6256429442b36246bf45f1c292c6eefedb50dd5df8",
+    ".netlist.v": "74a1eb62df305edbb0c65c5de949b3750857d18fc792dae1c3de7e80c258e8a2",
+    ".stat": "9ba2570534346c3ee3e843de3f5cecfb66306c2a8c8ca3e67115f47545788c54"
+   },
+   "blackboxes": []
+  },
+  "vms_NW_m": {
+   "artifact_sha256": {
+    ".ys": "540f27af14ff8c2ae5f08dda6277605a8ebcd72e846a788da145228c47c542e3",
+    ".files.json": "ecbcf1c73a58f6bd1ee5a1ca3222f6925606cd060339ad714f91f085cd283c3e",
+    ".netlist.v": "21ef4d3d7726ff8f92cdfa02a463c9fb907a742edd043a55dce809cdf93fe9aa",
+    ".stat": "b67df88a4f9e301a71b7267e1a6f74657300df9e48d99bce0c67f69bb4615e9f"
+   },
+   "blackboxes": []
+  },
+  "vms_NE_m": {
+   "artifact_sha256": {
+    ".ys": "788c8f11ec585d5abfdd465917e3631b7008fec1b2de6ccc2ec4863df321180a",
+    ".files.json": "d781f9b2855d0875fac44bb6c0f0e88f8e88a294a7ea99285dfbd8f669f03c58",
+    ".netlist.v": "0a188a0b8691eeb759fc656f311e7d96e007b94552c67d559ba52af728f3b227",
+    ".stat": "4ded32154409794b947af3d88e8e73411e44c005642fe36c15447f329c7fb962"
+   },
+   "blackboxes": []
+  },
+  "lg_10_7": {
+   "artifact_sha256": {
+    ".ys": "2f445fece0177894957d86557b8f861451b9e3b67702bfbe4c0750a05c3b3b04",
+    ".files.json": "42530b09e300ae542a1d441a4fe02f4148f96c7d9c8b803c4cde3f424d340118",
+    ".netlist.v": "b6901d7590e7dc32267887943a3934295281b8d26ee525b08e3a2324a6ef67be",
+    ".stat": "bf48265573aecdd354092a1e3dab45d2cea43fc631ecfd87c43e81bdd00fa9c7"
+   },
+   "blackboxes": []
+  },
+  "lg_14_11": {
+   "artifact_sha256": {
+    ".ys": "37f95fcd8814a138ccdd6f481f8c3fbb484f738df327cc87eb450db826a0657e",
+    ".files.json": "42530b09e300ae542a1d441a4fe02f4148f96c7d9c8b803c4cde3f424d340118",
+    ".netlist.v": "a3b2edd8042d2690f5a7c73baea670a1e480e862b4a5af79ef13895dcf0f22e3",
+    ".stat": "be2271db69ac1c4e900d2139240b6a2e58ccc3c5ce2dfa9c390fc527fc0c4971"
+   },
+   "blackboxes": []
+  },
+  "lg_term_18_15": {
+   "artifact_sha256": {
+    ".ys": "f53a8e2127fde2abb56236d64a75a87ad2f6a5cfcc2245554b8f58eb3e47e56f",
+    ".files.json": "518c4e355c348be7b0b97e545033bed76877182ea0348423279098acec9ef29a",
+    ".netlist.v": "4b1871076675bf41020c7d08de230e3c66aed9b07bce7c958fa5b45250e5a4e1",
+    ".stat": "2e301d260a160892c1b05d796db0f88199be7f5857d50d510628f69c741d965f"
+   },
+   "blackboxes": []
+  }
+ },
+ "frozen_rtl_sha256": {
+  "rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv": "364b6a3601b5042344513810a4fb6de6f25259c2de7d386d630b62fc807b5cf9",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv": "6320eb4fe8d7cd7a0caa7b22bfe818c11c05f9a45bc7ac6b114edd09e496b102",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv": "88f974c7bc36e635774ff2e9edc093f3c3a3963644f5e5141823c1ec07404991",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv": "56537844cc350ec0bb3141fa2a7ae866fd9c8c5e8e4040830ae89a4d915679d4",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv": "876f0d732dec5a9d1edb5844d49f168cc9b744d6eadc7b943e62f7273bebb293",
+  "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv": "d42e083d5f7680cc6be3ae634cea0b1daf1834f6290eb5a2b6e74a97b569a03c",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v": "d5e85b370f1d8ae53306c35faf463d328a9b20181f5cf27fa381da779b5b4676",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_landing.sv": "0c3122d06032896c52c97a11c3e65bf041ae5f420259671868e1f2ef988fab25",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_vm_delivery.sv": "91b0265ba4c0ce452cffbfd7776d25922dc6747de8a0a34b28c7b2e54354f3f2",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c",
+  "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv": "31acf6679c2fcd95c2abd3897daae041710f7c7a5f318d9d2e1f8541c8b377a4",
+  "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv": "7530908d1cccb63586654d293cf5e073995ed2e31b70f8ae89173d0b371e7123",
+  "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv": "a531865c61e55476aef9b13ccbff4d8389ae33f6a836edc95d1e33f5502f1245",
+  "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split_term.sv": "535499a9426194b4d29fd0df34134375d96e2ea6927e78d5f477a4f5b48682ed"
+ },
+ "log_tail": "   hfd_hgi_vms_static_SW__vms_SW_m\n        4   ot_hbm_svc_static_vm_delivery__delivery\n        4   ot_hbm_vm_lg_static_split__lg_10_7\n        4   ot_hbm_vm_lg_static_split__lg_14_11\n        4   ot_hbm_vm_lg_static_split_term__lg_term_18_15\n\nEnd of script. Logfile hash: 48d2e42c8a, time: 71.58s, user: 72.92s, system: 1.65s, MEM: 6534.02 MB peak\nYosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)\nTime spent: 94% 22x read_verilog (67 sec), 2% 1x check (1 sec), ...\n",
+ "schema": "opentallas.hbm_v15.mapped_composition.v1",
+ "time": "2026-10-15T13:45:01.270365-07:00",
+ "current_source_ref": "98ca51cf9c015b508993d439002226fbca5125bc",
+ "source_drift": [],
+ "scope": "20 actual VM+delivery+LG instances; mapped connectivity only, no CTS/physical/native qualification",
+ "remote_host": "ot-epyc1tb",
+ "remote_dir": "/srv/opentallas-scratch/claude/hdie-v15c/compose_vmdl_term_1319",
+ "explicit_boundary_inputs": 168,
+ "explicit_boundary_input_bits": 87971,
+ "qualification": "CONNECTIVITY_PASS_SOURCE_MATCH"
+}

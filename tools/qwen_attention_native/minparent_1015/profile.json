@@ -1,0 +1,45 @@
+{
+  "stack_cp": {
+    "wrapper": "ot_qwen_tp8_attention_native_stack_cp_c",
+    "instances": 4,
+    "parameters": {
+      "QK_ISSUE_AGE": 34,
+      "ROW_RETURN_LAT": 22,
+      "Z_STRIDE": 16
+    }
+  },
+  "pair0": {
+    "wrapper": "ot_qwen_tp8_pv256_pair_c",
+    "parameters": {
+      "PAIR": 0,
+      "TREE": 1,
+      "STATIC_SCHEDULE": 1,
+      "FIRST_INPUT_AGE": 148
+    }
+  },
+  "pair1": {
+    "wrapper": "ot_qwen_tp8_pv256_pair_b",
+    "parameters": {
+      "PAIR": 1,
+      "TREE": 1,
+      "STATIC_SCHEDULE": 1,
+      "FIRST_INPUT_AGE": 148
+    }
+  },
+  "hub": {
+    "wrapper": "ot_qkd_ahub_static_die_cal_3",
+    "parameters": {
+      "Z_IN_STRIDE": 16,
+      "Z_LEVEL_GAP": 10,
+      "ZW_RLY": 0,
+      "ZR_RLY": 0,
+      "RX_RLY": 1,
+      "RY_RLY": 1
+    }
+  },
+  "final": {
+    "wrapper": "ot_qwen_tp8_pv256_finalize_static_cal_8",
+    "parameters": "original defaults; runtime cal pins unchanged"
+  },
+  "clocks": "All original named pin expressions preserved; common phase clk from original TB always #1, timescale 1ns/1ps; cycle evidence only"
+}

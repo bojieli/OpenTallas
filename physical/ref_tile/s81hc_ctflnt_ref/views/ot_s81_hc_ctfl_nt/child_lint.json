@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctflnt_ref-s3-ck4-175e7ac3c/record/views/ot_s81_hc_ctfl_nt/ot_s81_hc_ctfl_nt.lef",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctflnt_ref-s5-centre-7babf39ca/record/views/ot_s81_hc_ctfl_nt/ot_s81_hc_ctfl_nt.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [
-  "(f) face-pin access: 2272 of 2272 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M4 (0.060,6.096), rst_in M4 (0.060,6.096), fdx[0] M5 (227.280,23.749))"
+  "(f) face-pin access: 2270 of 2272 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. fdx[0] M5 (227.280,23.893), fdx[1000] M5 (227.280,23.893), fdx[1001] M5 (227.280,23.893))"
  ],
- "summary": "ot_s81_hc_ctfl_nt 576.72 x 25.92: PG M5 VDD 106 stripes (98% spread, 100% cov) / VSS 106 stripes (98% spread, 100% cov); strap M6; face pins 2272 blocked-above 0 blocked-same 0; clock clk insertion 340 ps; pockets M5 0 (closed)",
+ "summary": "ot_s81_hc_ctfl_nt 576.72 x 25.92: PG M5 VDD 106 stripes (98% spread, 100% cov) / VSS 106 stripes (98% spread, 100% cov); strap M6; face pins 2272 blocked-above 0 blocked-same 0; clock clk insertion 122 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "ot_s81_hc_ctfl_nt",
   "W": 576.72,
@@ -40,24 +40,24 @@
   "face": {
    "face_pins": 2272,
    "blocked_above": 0,
-   "covered_below": 954,
+   "covered_below": 351,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
-   "band_same": 2272,
+   "band_same": 2270,
    "band_examples": [
-    "clk M4 (0.060,6.096)",
-    "rst_in M4 (0.060,6.096)",
-    "fdx[0] M5 (227.280,23.749)",
-    "fdx[1000] M5 (227.280,23.749)",
-    "fdx[1001] M5 (227.280,23.749)",
-    "fdx[1002] M5 (227.280,23.749)"
+    "fdx[0] M5 (227.280,23.893)",
+    "fdx[1000] M5 (227.280,23.893)",
+    "fdx[1001] M5 (227.280,23.893)",
+    "fdx[1002] M5 (227.280,23.893)",
+    "fdx[1003] M5 (227.280,23.893)",
+    "fdx[1004] M5 (227.280,23.893)"
    ]
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 340.19,
-    "min_ps": 246.49
+    "max_ps": 121.86,
+    "min_ps": 87.89
    }
   },
   "pockets": {
@@ -66,7 +66,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 327
+    "added": 281
    },
    "count": 0,
    "area_um2": 0,

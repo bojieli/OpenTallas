@@ -1,0 +1,65 @@
+{
+  "scope": "Explicit V1 qslots structural candidate at full actual q3/q2 shapes; component equivalence only, no parent adoption or physical/throughput qualification",
+  "status": "PASS",
+  "unit": "ot-epyc1tb:oth-ubuntu-1190582-1792090772",
+  "suite_exit": 0,
+  "source_sha256": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv": "4fc382d585026bc8fc23464ea90b9d5b86ad7bbec34acef0dccc65e3eb9d88f3",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots_partitioned_v1.sv": "87abed0f7006eac84ba419dbe2979d15cf76fc6e7f03da936ef30816ed0699d1",
+    "tools/hbm_coll_static/tb_qslots_partitioned_v1.sv": "7e834e927f8da5ae39fc0a5f51809461d8fa8ee75822c77cf62f49f6a9bc5177",
+    "tools/hbm_coll_static/run_qslots_partition_gate.sh": "2feb4c69d9157c302ca39ab99ee0819efd0fbc5575fe46b2a6ae283671960cb1",
+    "tools/hbm_coll_static/run_qslots_partition_suite.sh": "ee21d79ce6bc47b51b4fb9d0e5c7ef084bd33146dbdf46d61e73f6f929587847"
+  },
+  "cases": [
+    {
+      "npt": 3,
+      "kind": "positive",
+      "expected_outcome_observed": true,
+      "log": "qualified/q3_positive.log",
+      "log_sha256": "282780de3a3542061f6dbfb3f077a5939e61b0f622ec60741ebf786d35351bd5"
+    },
+    {
+      "npt": 3,
+      "kind": "select",
+      "expected_outcome_observed": true,
+      "log": "qualified/q3_select.log",
+      "log_sha256": "99b0dc0add782fee7b9a8863bc12e744716f5fe4f4d33606962d8392a27d998e"
+    },
+    {
+      "npt": 3,
+      "kind": "latency",
+      "expected_outcome_observed": true,
+      "log": "qualified/q3_latency.log",
+      "log_sha256": "485398a8032039384823e470d349545431a11917268afa0e01a33338382f2969"
+    },
+    {
+      "npt": 2,
+      "kind": "positive",
+      "expected_outcome_observed": true,
+      "log": "qualified/q2_positive.log",
+      "log_sha256": "6c9374096670cfdddb26716ba12715b6429f007fe842baa23b815820584f908a"
+    },
+    {
+      "npt": 2,
+      "kind": "select",
+      "expected_outcome_observed": true,
+      "log": "qualified/q2_select.log",
+      "log_sha256": "5ddc169ce3b12b47f58285f1d732200e44449d5d9b83d64a1671d2db90731ad5"
+    },
+    {
+      "npt": 2,
+      "kind": "latency",
+      "expected_outcome_observed": true,
+      "log": "qualified/q2_latency.log",
+      "log_sha256": "79493eacd0ce1e58061e249b931c48eb369e040d820d31fb37f68d1d50405dd3"
+    }
+  ],
+  "proof": "192 cycles per actual NS10/ND16 and NS9/ND15; scheduled clean warmup; nominal fault0 and isolated capture1,availability4,selector2 assertions; compares every published payload, validity, sticky faults and fault kinds vs actual current native RTL; selector and input-latency hardware mutants fail first published payload at cycle3 with fault kinds0/0",
+  "initial_diagnostic": "Initial suite matched both RTLs but asserted sinks during reset retirement, causing an availability fault. Later clean inline suite passed, but ot-run expanded inline brace variables and overwrote case paths. Their remaining logs are diagnostic only. The final external suite script preserves six distinct qualified logs. No candidate DUT RTL changed during these fixture/evidence corrections.",
+  "clock_abi": "Candidate has NS capture clocks and18output clocks per parent; actual source adoption/clock delivery remains explicit and OPEN.",
+  "model": "results/arch/hcoll_physical_1103/qslots_partition_model.json",
+  "added_cycles": 0,
+  "added_ff_die": 7020,
+  "added_physical_clock_pins_die": 101,
+  "physical_dependency": "Five explicit typed masters (one capture and four q2/q3 output width specializations), source-exact grants, measured footprints/pins/clocks and full parent incident-path proof remain required."
+}

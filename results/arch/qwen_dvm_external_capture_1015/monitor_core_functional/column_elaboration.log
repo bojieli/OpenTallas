@@ -1,0 +1,7 @@
+ot-run: ot-epyc4       admits   651 GB (avail 878, growth 103, headroom 48, waiters 0/0 GB) load 38/128 running 19 disk 439 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1978378-1792062382 after 0 s
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 0.417 MB sources in 23 modules, into 0.000 MB in 0 C++ files needing 0.000 MB
+- Verilator: Walltime 0.110 s (elab=0.042, cvt=0.011, bld=0.000); cpu 0.110 s on 1 threads; alloced 25.078 MB
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1978378-1792062382): exit 0

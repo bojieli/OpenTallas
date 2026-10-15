@@ -212,18 +212,23 @@ module ot_s81_pq_qb_align_native (
  input wire clk,rst_n,input wire[609:0] bc_hr,input wire[1023:0] bt_d,
  output wire[609:0] bc_hr_q,output wire[1023:0] bt_d_q
 );
- // Reset fan-out: 1,220 reset flops (2 x 610) split into 5 relay regions of 122 bits x 2 stages = 244 loads
- // each (<= 256, textbook high-fanout rule; one registered relay copy per region). Initialization only.
+ // Reset fan-out: 610 reset flops (hr0 only since p3) in 5 relay regions of 122 loads each (one registered relay
+ // copy per region). Initialization only.
  wire[4:0] rst_l;
  ot_rst_relay #(.REGIONS(5),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rr
  (.clk(clk),.rst_n_in(rst_n),.rst_n(rst_l));
  reg[1023:0] bt0,bt1;
  genvar gr;
  generate for(gr=0;gr<5;gr=gr+1) begin:g_hr
+ // p3 (native launch fix): the output stage hr1 carries no reset. p2 audit: 47 bc_hr_q launches up to 274.3 ps
+ // (> 220) = 163 ps clock + 115 ps DFFASRHQNx1 clk->QN (149 ps slew into the pin wire) + hold pads. A plain DFF
+ // output register is ~2x faster; hr1 still reads 0 one edge after reset assertion (hr0 is reset, clock runs
+ // through the 3-edge relay release), so the output is zero before any consumer leaves reset. Same 2 edges.
  reg[121:0] hr0,hr1;
  always @(posedge clk or negedge rst_l[gr])
- if(!rst_l[gr]) begin hr0<=0;hr1<=0;end
- else begin hr0<=bc_hr[122*gr+:122];hr1<=hr0;end
+ if(!rst_l[gr]) hr0<=0;
+ else hr0<=bc_hr[122*gr+:122];
+ always @(posedge clk) hr1<=hr0;
  assign bc_hr_q[122*gr+:122]=hr1;
  end endgenerate
  always @(posedge clk) begin bt0<=bt_d;bt1<=bt0;end

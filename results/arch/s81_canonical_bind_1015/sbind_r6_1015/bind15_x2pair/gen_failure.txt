@@ -1,0 +1,2 @@
+FLAGS --static-coll --suhc-static-issue --bf-static-prog --pq-cnt physical/s81_die_pins/v19_merged/pq_count_slots.json --bf-x2-static --bf-x2-pair
+AssertionError: ('dsfd_sstn_e0c0sinf_x2', 'N', 'xb', 'no room beside the pinned groups', {'face_um': 172.776, 'demand_um': 113.568, 'pinned': [('x2', (86.38799999999992, 1))], 'ports': [('e0', 2, 3), ('c0', 2, 3), ('cc', 15, 3), ('xa', 283, 3), ('xb', 266, 3), ('x2', 536, 3), ('si', 2, 3)]})

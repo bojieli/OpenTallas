@@ -1,0 +1,47 @@
+{
+  "source_commit": "8f5cdf11fd985635c2797aaf8842a5094f48ae00",
+  "source_manifest": "results/hbm_sm_attention_1015/recovered_r3/snapshot_8f5cdf11f.json",
+  "scope": "same-source full Qwen8192 positive and4 semantic negative controls; numerical component only; no actual static-parent/HBM-PC/COLL qualification",
+  "gates": [
+    {
+      "name": "qwen_m0",
+      "rc": 0,
+      "semantic_gate_pass": true
+    },
+    {
+      "name": "qwen_kv2",
+      "rc": 1,
+      "semantic_gate_pass": true
+    },
+    {
+      "name": "qwen_kv4",
+      "rc": 1,
+      "semantic_gate_pass": true
+    },
+    {
+      "name": "qwen_pv1",
+      "rc": 1,
+      "semantic_gate_pass": true
+    },
+    {
+      "name": "qwen_pv2",
+      "rc": 1,
+      "semantic_gate_pass": true
+    }
+  ],
+  "receipt_sha256": {
+    "qwen_kv4.json": "6336854f02e5b1e18348afceb209af8e1205c0951a6cffea4f6293db5be177f3",
+    "fleet_bundle.log": "932ebdc23f6081c1fb683be7b34d23b083cec6d260e5a53894d166dadd9f1061",
+    "qwen_pv2.log": "61b741e0cc250c317954ca9c7ad17721f0ffd99e615f4cdf1a3b84117f0e586e",
+    "qwen_kv2.log": "c01d64cfd01eb58a644d9f4e090e06a25f175f8261e399743abfd4e50ec62624",
+    "gates.json": "3d809ab7c55b00f76538dd7c09e67024ab0cc9f974e5731597d88a342a7fd015",
+    "qwen_m0.log": "f01036e90b97402f6e623934d6aa6195e0f4337c6e245bac31b3a3b977abb6c5",
+    "qwen_kv2.json": "48750d1fab1f3fe55c7ffc00561889f94cb219e72d35f90a2ab58ebe2e34c3d2",
+    "qwen_pv2.json": "6b388f4a5122080c751b09614b76cd728a185df045ee58b816138119b2b2eee8",
+    "memory.log": "19c4e28b2f54ea8f217db4e622b0a5c758efa7b77ce2dc0394b6d159568c0b2e",
+    "qwen_pv1.json": "8217e0f688527193310ba7e0fd724cffd2644eac9418e2ab57fb185727026a8d",
+    "qwen_kv4.log": "e641f08f9b8e365a609b1a8501e63a153660fd003c67ecb5eac5b96db0c359d9",
+    "qwen_m0.json": "736a151a64694ef030f1e748a79b7308ac710f17b62f15e36779581eb85ad50a",
+    "qwen_pv1.log": "a3a343ea0f7afdf7e3c61fe27afe74495df76694148a2ff8ca098bb7a6b78c2a"
+  }
+}

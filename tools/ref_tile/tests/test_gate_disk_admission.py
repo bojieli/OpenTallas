@@ -54,7 +54,7 @@ class DiskBudget(unittest.TestCase):
 
 
 class RemoteAdmission(unittest.TestCase):
-    def exercise(self, host='auto', disk=None, reject=False):
+    def exercise(self, host='auto', disk=None, reject=False, held=False):
         with tempfile.TemporaryDirectory() as td, contextlib.ExitStack() as stack:
             root = Path(td)
             kd = root / 'physical/kit'
@@ -72,15 +72,18 @@ class RemoteAdmission(unittest.TestCase):
             stack.enter_context(patch.object(PG, 'gate_consumed', return_value={}))
             analyse = stack.enter_context(patch.object(PG, 'analyse_remote'))
             calls = []
+            sleeps = stack.enter_context(patch.object(PG.time, 'sleep'))
             def run(cmd, **kwargs):
                 calls.append(cmd)
                 if '--pick' in cmd:
+                    if held and len(calls) == 1:
+                        return subprocess.CompletedProcess(cmd, 75, '', 'ot-run: load hold')
                     return subprocess.CompletedProcess(cmd, 1 if reject else 0,
                                                        '' if reject else 'ot-test\n', 'disk too small' if reject else '')
                 return subprocess.CompletedProcess(cmd, 0, b'', b'')
             stack.enter_context(patch.object(PG.subprocess, 'run', side_effect=run))
             gate = PG.Gate()
-            PG.remote(gate, kd, {'name': 'test', 'top': 'top', 'clock_port': 'ck', 'gate_disk_gb': 30},
+            PG.remote(gate, kd, {'name': 'test', 'top': 'top', 'clock_port': 'ck', 'gate_disk_gb': 30, 'route': {'threads': 4}},
                       host, 60, 16, True, disk)
             if reject:
                 self.assertEqual(gate.verdict, 'FAIL')
@@ -89,13 +92,19 @@ class RemoteAdmission(unittest.TestCase):
             else:
                 self.assertEqual(gate.source_binding['disk_admission']['reserve_gb'], 30 if disk is None else 7)
                 analyse.assert_called_once()
+            if held:
+                sleeps.assert_called_once_with(60)
+                self.assertNotEqual(gate.verdict, 'FAIL')
+                self.assertEqual(sum('--pick' in c for c in calls), 2)
+                self.assertEqual(sum(c[0] == 'ssh' for c in calls), 3)
             return calls
 
     def test_auto_checks_staging_before_upload_and_extraction_at_runtime(self):
         calls = self.exercise()
         pick, runtime = calls[0], calls[-1]
-        self.assertEqual(pick, ['ot-run', '--mem', '16', '--disk', '32',
+        self.assertEqual(pick, ['ot-run', '--mem', '16', '--threads', '4', '--disk', '32',
                                 '--dir', '/srv/opentallas-scratch', '--pick'])
+        self.assertEqual(runtime[runtime.index('--threads') + 1], '4')
         self.assertIn('--disk', runtime)
         self.assertEqual(runtime[runtime.index('--disk') + 1], '32')
         self.assertEqual(runtime[runtime.index('--hosts') + 1], 'ot-test')
@@ -106,6 +115,11 @@ class RemoteAdmission(unittest.TestCase):
         self.assertEqual(calls[0][-2:], ['--hosts', 'ot-test'])
         self.assertEqual(calls[0][calls[0].index('--disk') + 1], '9')
         self.assertEqual(calls[-1][calls[-1].index('--disk') + 1], '9')
+
+    def test_load_held_pick_waits_before_any_upload_without_hardware_failure(self):
+        calls = self.exercise(held=True)
+        self.assertEqual(calls[0], calls[1])
+        self.assertEqual(calls[2][0], 'ssh')
 
     def test_no_disk_qualifying_host_does_not_ship_or_run(self):
         self.exercise(reject=True)

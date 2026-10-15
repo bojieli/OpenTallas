@@ -121,7 +121,11 @@ module qfd_rstsync (
         if (!arst_n) begin s <= 2'b00; f <= 1'b0; end
         else begin s <= {s[0], 1'b1}; f <= s[1]; end
     assign rso_d = s[1];
+`ifdef OT_QFD_RSTSYNC_MUT
+    assign rso_f = s[1];                // bench mutant: forwarded release one edge early (skips the f stage)
+`else
     assign rso_f = f;
+`endif
 endmodule
 
 module qfd_rstseq #(
@@ -152,6 +156,19 @@ module qfd_rstseq #(
             rso_f    <= s[1] && n >= FLUSH + STEP;
             rso_s    <= s[1] && n >= FLUSH + 2 * STEP;
             rso_ctlm <= s[1] && n >= FLUSH + 3 * STEP;
+`ifdef OT_QFD_RSTSEQ_MUT
+            rso_seq  <= s[1] && n >= FLUSH + 3 * STEP;   // bench mutant: sequencer released with the tree top
+`else
             rso_seq  <= s[1] && n >= FLUSH + 4 * STEP;
+`endif
         end
+endmodule
+
+// single-signal package bump receiver = HARD-MACRO MODEL (port-bind --allow-model qfd_sigbump): an off-chip signal of
+// the KV/system die (Q-LINK static link: forwarded epoch strobe, forwarded link reset) arriving on a bump pad; the far
+// die is not a net of this die.  Simulation behaviour: drives its reset value (RV) until a bench forces it.
+module qfd_sigbump #(parameter integer RV = 0) (
+    output wire o
+);
+    assign o = RV[0];
 endmodule

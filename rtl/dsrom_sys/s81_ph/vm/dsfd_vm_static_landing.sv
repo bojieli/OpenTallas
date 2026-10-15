@@ -30,19 +30,30 @@ module dsfd_vm_static_landing #(parameter integer PINREG=1) (
     output reg  [1023:0] o_d01, output reg [1023:0] o_d23,
     output reg  [2:0]    fault
 );
-    reg [1:0] rr;
-    always @(posedge ck or negedge rst_n) if (!rst_n) rr <= 2'b00; else rr <= {rr[0], 1'b1};
-    wire rn = rr[1];
+    // r4 (S-ELEM-A 2026-10-15, PINREG=1): rst_n is captured in a plain pin flop (a data input with its fixed hold stage)
+    // and the release chain is synchronous: r3 routed FF -4.4 was rst_n -> rr RESETN removal (async pin path, no hold
+    // stage possible) and larm_v -> its sync-reset pin flop (reset AND in front of D, so no pin hold stage).  Every
+    // landing register was already synchronously reset by rn; assertion/release now take one more edge (init only).
+    reg [1:0] rr; wire rn = rr[1];
+    generate if (PINREG != 0) begin : g_rst
+        reg rst_q;
+        always @(posedge ck) rst_q <= rst_n;
+        always @(posedge ck) if (!rst_q) rr <= 2'b00; else rr <= {rr[0], 1'b1};
+    end else begin : g_rst_async
+        always @(posedge ck or negedge rst_n) if (!rst_n) rr <= 2'b00; else rr <= {rr[0], 1'b1};
+    end endgenerate
     // pin stage (PINREG=1): control flops reset by rn, payload flops plain
     wire q_larm_v; wire [3:0] q_larm_g; wire [13:0] q_larm_base; wire [3:0] q_i_v; wire [1023:0] q_d01, q_d23;
     generate if (PINREG != 0) begin : g_pin
-        reg p_larm_v; reg [3:0] p_larm_g; reg [13:0] p_larm_base; reg [3:0] p_i_v; reg [1023:0] p_d01, p_d23;
+        // every pin flop is plain (D straight from the port, fixed hold stage); the reset qualification of the two
+        // valid groups is applied after the flop with rn delayed one edge (same values as the former rn-gated D).
+        reg p_larm_v; reg [3:0] p_larm_g; reg [13:0] p_larm_base; reg [3:0] p_i_v; reg [1023:0] p_d01, p_d23; reg rn_d;
         always @(posedge ck) begin
-            if (!rn) begin p_larm_v <= 1'b0; p_i_v <= 4'd0; end else begin p_larm_v <= larm_v; p_i_v <= i_v; end
+            rn_d <= rn; p_larm_v <= larm_v; p_i_v <= i_v;
             p_larm_g <= larm_g; p_larm_base <= larm_base; p_d01 <= i_d01; p_d23 <= i_d23;
         end
-        assign q_larm_v = p_larm_v; assign q_larm_g = p_larm_g; assign q_larm_base = p_larm_base;
-        assign q_i_v = p_i_v; assign q_d01 = p_d01; assign q_d23 = p_d23;
+        assign q_larm_v = p_larm_v & rn_d; assign q_larm_g = p_larm_g; assign q_larm_base = p_larm_base;
+        assign q_i_v = p_i_v & {4{rn_d}}; assign q_d01 = p_d01; assign q_d23 = p_d23;
     end else begin : g_direct
         assign q_larm_v = larm_v; assign q_larm_g = larm_g; assign q_larm_base = larm_base;
         assign q_i_v = i_v; assign q_d01 = i_d01; assign q_d23 = i_d23;

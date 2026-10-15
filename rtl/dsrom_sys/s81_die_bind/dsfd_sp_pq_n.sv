@@ -80,10 +80,20 @@ module dsfd_sp_pq_n (
     output wire [19:0]   t_vm,
     input  wire [2048:0] f_vm,
     output wire [11:0]   ra0, ra1,
+`ifdef DSFD_PQ_ROM4
+    // S-ELEM-B 10-15 (S-BIND strict port-bind: die ra2 12 vs RTL 14): the 16,384-row stream ROM is FOUR die macros
+    // ot_rom_4096x72_m8 (pqrom2a..d); ra2 = shared 12-bit address, rc2[b] = macro b enable, rq2[48b+:48] = macro b rd_out[47:0]
+    output wire [11:0]   ra2,
+    output wire          rc0, rc1,
+    output wire [3:0]    rc2,
+    input  wire [63:0]   rq0, rq1,
+    input  wire [191:0]  rq2,
+`else
     output wire [13:0]   ra2,
     output wire          rc0, rc1, rc2,
     input  wire [63:0]   rq0, rq1,
     input  wire [47:0]   rq2,
+`endif
     output wire [457:0]  t_cnt,
     input  wire [203:0]  f_cnt,
 `ifdef DSFD_PQ_STATIC_X2
@@ -134,15 +144,25 @@ module dsfd_sp_pq_n (
     // ROM macros: address MSBs / enables are constant ties (phase rows2048..4095 unused; stream addr14 selects four real4096 banks)
     assign ra0 = {1'b0, pa0};
     assign ra1 = {1'b0, pa1};
+`ifdef DSFD_PQ_ROM4
+    // bank select = the benched reference leaf (tools/s81/pq_stream_rom4_gate.sh): ce decode of sa[13:12] before the macro
+    // pins, bank index registered on the macro sample edge, 4:1 response select inside the two-cycle ROM contract (0 cycles)
+    wire [47:0] rq2s;
+    ot_s81_pq_stream_rom4_sel u_rom4 (.clk(ck_ctl), .sa(sa), .a(ra2), .ce(rc2),
+        .rd0(rq2[47:0]), .rd1(rq2[95:48]), .rd2(rq2[143:96]), .rd3(rq2[191:144]), .sq(rq2s));
+    assign {rc0, rc1} = 2'b11;
+`else
+    wire [47:0] rq2s = rq2;
     assign ra2 = sa;
     assign {rc0, rc1, rc2} = 3'b111;
+`endif
 `ifdef DSFD_PQ_ROM_MUT_REG
     // negative control only: a relay stage on the ROM data (three-cycle ROM) must FAIL the die-slot bench
     reg [63:0] pq0_q, pq1_q; reg [47:0] sq_q;
-    always @(posedge ck_lane) begin pq0_q <= rq0; pq1_q <= rq1; sq_q <= rq2; end
+    always @(posedge ck_lane) begin pq0_q <= rq0; pq1_q <= rq1; sq_q <= rq2s; end
     assign pq0 = pq0_q; assign pq1 = pq1_q; assign sq = sq_q;
 `else
-    assign pq0 = rq0; assign pq1 = rq1; assign sq = rq2;
+    assign pq0 = rq0; assign pq1 = rq1; assign sq = rq2s;
 `endif
     dsfd_pq_lx u_lane (.ck(ck_lane), .rst(rst), .f_bus(f_bus), .f_fault(f_iss[92]), .xws(xws), .xes(xes),
         .xw(xw), .xe(xe), .f_fault_c(f_fault_c)

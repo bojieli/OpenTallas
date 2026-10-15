@@ -1,0 +1,327 @@
+{
+  "created": "2026-10-15T18:26:42.316202+00:00",
+  "source_commit": "a5d2fbf669c41b01f3d6c4e7e0e4e78ba463f63e",
+  "lease": {
+    "owner": "codex",
+    "since": "2026-10-15T11:03:01-07:00",
+    "until": "2026-10-15T14:01:00-07:00"
+  },
+  "request_mem_gb": 160,
+  "threads": 4,
+  "mlat": 4,
+  "alat": 3,
+  "leaf": 1,
+  "edges": 7116,
+  "macro_count": 3478,
+  "clock_scope": "common-clock component proof; production3:4OPEN",
+  "replaces": {
+    "source_commit": "30117b8ea485e99952861a767b3779e4bc0b7401",
+    "local_otrun_pid": 1215296,
+    "remote_waiter_pid": 1059049,
+    "outcome": "UNSTARTED waiter cancelled: NOT RUN",
+    "original_log": "/home/ubuntu/claude-takeover-20261007/hbm-su-native-composed-1103/ot_run.log",
+    "cancel_log": "ot-run: ot-epyc1tb     admits  -502 GB (avail 108, growth 225, headroom 64, waiters 5/321 GB) load 53/128 running 17 disk 686 GB \not-run: ot-epyc4       admits  -382 GB (avail 239, growth 219, headroom 48, waiters 21/354 GB) load 113/128 running 34 disk 756 GB \not-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores\not-run: ot-agidock128  skipped: load hold: load1 > 1.5 x cores\not-run: -> ot-epyc4 (will queue: admits -382 GB < 160 GB)\not-heavy: waiting for memory on regular-crane: need 160 GB, admissible -28 GB: available 239 GB, growth charged 219 GB, young 0 GB, headroom 48 GB, real floor 227 GB\not-run: interrupted (signal 15) while waiting for memory on ot-epyc4; waiter cancelled: NOT RUN\n"
+  },
+  "qualification": "Common-clock512lane fullprogramme+nativeVM composition; production3:4domaincrossingOPEN; admitted160GBjobactive",
+  "observed": "2026-10-15T18:27:48.200331+00:00",
+  "state": "ADMITTED; compiling; not fullcompositionPASS",
+  "local_launch_pid": 1258329,
+  "local_otrun_pid": 1262562,
+  "exec_session": 31855,
+  "remote_host": "ot-epyc1tb",
+  "remote_unit": "oth-ubuntu-996581-1792088825",
+  "remote_waiter_tag": "otrun-ubuntu-1262562-88825470",
+  "remote_dir": "/home/ubuntu/hbm-su-native-composed-1103-a5d2fbf669c41b01f3d6c4e7e0e4e78ba463f63e",
+  "archive_sha256": "d09db128050845ee5abfc7b50db283dfb724c1700b43ce005d1f28c5ef27a7cc",
+  "admission_log": "ot-run: ot-epyc1tb     admits   255 GB (avail 482, growth 161, headroom 64, waiters 0/0 GB) load 82/128 running 22 disk 685 GB \not-run: ot-epyc4       admits  -247 GB (avail 237, growth 221, headroom 48, waiters 16/214 GB) load 116/128 running 34 disk 756 GB \not-run: ot-pve1        skipped: no /home/ubuntu/hbm-su-native-composed-1103-a5d2fbf669c41b01f3d6c4e7e0e4e78ba463f63e\not-run: ot-agidock128  skipped: no /home/ubuntu/hbm-su-native-composed-1103-a5d2fbf669c41b01f3d6c4e7e0e4e78ba463f63e\not-run: -> ot-epyc1tb\not-heavy: admitted on ot-epyc1tb as oth-ubuntu-996581-1792088825 after 0 s\n",
+  "programme_manifest": {
+    "schema": "opentallas.hbm.su_programme.sram.v1",
+    "qualified": false,
+    "scope": "standalone programme producer; whole SU integration and physical closure unproven",
+    "source": "/home/ubuntu/hbm-su-native-composed-1103-a5d2fbf669c41b01f3d6c4e7e0e4e78ba463f63e/run/vec/prog.mem",
+    "source_sha256": "9de4e4f95c9899ceea6f94f2d5fd84ae0648ca030bbb5a24eece5d6c88e6257e",
+    "edges": 7116,
+    "line_bits": 9752,
+    "columns": 39,
+    "index_groups": 3,
+    "index_banks": 56,
+    "dictionary_banks": [
+      3,
+      10,
+      9,
+      13,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      10,
+      9,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      3,
+      10,
+      9,
+      13,
+      1,
+      1,
+      1,
+      1,
+      1,
+      3,
+      2,
+      10,
+      1,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "dictionary_entries": [
+      339,
+      1153,
+      1036,
+      1601,
+      133,
+      3,
+      3,
+      2,
+      2,
+      79,
+      133,
+      1153,
+      1057,
+      193,
+      67,
+      2,
+      2,
+      2,
+      7,
+      330,
+      1153,
+      1036,
+      1601,
+      67,
+      3,
+      3,
+      2,
+      2,
+      384,
+      130,
+      1153,
+      98,
+      129,
+      5,
+      2,
+      2,
+      2,
+      8,
+      3
+    ],
+    "total_macros": 302,
+    "allocated_bits": 9895936,
+    "uncompressed_bits": 69395232,
+    "config_transactions": 34428,
+    "startup_present_edges": 3,
+    "startup_consumer_edges": 4,
+    "command_interval_edges": 1,
+    "first_dictionary_bank": 168,
+    "extra_source": "/home/ubuntu/hbm-su-native-composed-1103-a5d2fbf669c41b01f3d6c4e7e0e4e78ba463f63e/run/vec/cal.mem",
+    "extra_sha256": "d03c107efd6f119ba0c056682a96b98577d46feb628945e38e69a76da2c3d277",
+    "memory_model": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "clock_roots": {
+      "controller": "clk",
+      "macros": 302,
+      "index_groups": [
+        {
+          "first_macro": 0,
+          "count": 56
+        },
+        {
+          "first_macro": 56,
+          "count": 56
+        },
+        {
+          "first_macro": 112,
+          "count": 56
+        }
+      ],
+      "dictionary_columns": [
+        {
+          "first_macro": 168,
+          "count": 3
+        },
+        {
+          "first_macro": 171,
+          "count": 10
+        },
+        {
+          "first_macro": 181,
+          "count": 9
+        },
+        {
+          "first_macro": 190,
+          "count": 13
+        },
+        {
+          "first_macro": 203,
+          "count": 2
+        },
+        {
+          "first_macro": 205,
+          "count": 1
+        },
+        {
+          "first_macro": 206,
+          "count": 1
+        },
+        {
+          "first_macro": 207,
+          "count": 1
+        },
+        {
+          "first_macro": 208,
+          "count": 1
+        },
+        {
+          "first_macro": 209,
+          "count": 1
+        },
+        {
+          "first_macro": 210,
+          "count": 2
+        },
+        {
+          "first_macro": 212,
+          "count": 10
+        },
+        {
+          "first_macro": 222,
+          "count": 9
+        },
+        {
+          "first_macro": 231,
+          "count": 2
+        },
+        {
+          "first_macro": 233,
+          "count": 1
+        },
+        {
+          "first_macro": 234,
+          "count": 1
+        },
+        {
+          "first_macro": 235,
+          "count": 1
+        },
+        {
+          "first_macro": 236,
+          "count": 1
+        },
+        {
+          "first_macro": 237,
+          "count": 1
+        },
+        {
+          "first_macro": 238,
+          "count": 3
+        },
+        {
+          "first_macro": 241,
+          "count": 10
+        },
+        {
+          "first_macro": 251,
+          "count": 9
+        },
+        {
+          "first_macro": 260,
+          "count": 13
+        },
+        {
+          "first_macro": 273,
+          "count": 1
+        },
+        {
+          "first_macro": 274,
+          "count": 1
+        },
+        {
+          "first_macro": 275,
+          "count": 1
+        },
+        {
+          "first_macro": 276,
+          "count": 1
+        },
+        {
+          "first_macro": 277,
+          "count": 1
+        },
+        {
+          "first_macro": 278,
+          "count": 3
+        },
+        {
+          "first_macro": 281,
+          "count": 2
+        },
+        {
+          "first_macro": 283,
+          "count": 10
+        },
+        {
+          "first_macro": 293,
+          "count": 1
+        },
+        {
+          "first_macro": 294,
+          "count": 2
+        },
+        {
+          "first_macro": 296,
+          "count": 1
+        },
+        {
+          "first_macro": 297,
+          "count": 1
+        },
+        {
+          "first_macro": 298,
+          "count": 1
+        },
+        {
+          "first_macro": 299,
+          "count": 1
+        },
+        {
+          "first_macro": 300,
+          "count": 1
+        },
+        {
+          "first_macro": 301,
+          "count": 1
+        }
+      ]
+    },
+    "source_pins": {
+      "tools/hbm_static/su_top_compile.py": "d615417861609445d71e9dda447e3864edf25fc41f5e113b72da71f8cc37435f",
+      "tools/hbm_static/su_arith_compile.py": "38aefcc25822364df2a1777c41f577d6a8de00d6541777e552fafca91dba592b",
+      "tools/hbm_static/su_programme_compile.py": "b865a9893ad0e967414864d6770defa31714df0965ef7ef3adf3e3be67579403",
+      "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv": "f8c2762960eb0c90ba2c8466cdb42341ead8d4071a22cc535478ef7c05e2d0ef",
+      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
+    }
+  },
+  "remote_verilator_sha256": "f980ec3509df4d73370eb3fa37b46a9a0f2a52b00755650855cf00016f4b1637",
+  "remote_numpy": "2.3.5"
+}
