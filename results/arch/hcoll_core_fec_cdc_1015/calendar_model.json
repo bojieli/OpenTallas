@@ -1,0 +1,508 @@
+{
+  "model": {
+    "core_GHz": 1.2,
+    "FEC_GHz": 1.1294117647058823,
+    "core_period_ticks": 16,
+    "FEC_period_ticks": 17,
+    "core_period_ps": 833.333333333,
+    "FEC_period_ps": 885.416666667,
+    "tick_ps": 52.083333333,
+    "words": 2048,
+    "CDC_entries": 16,
+    "Gray_sync_stages": 2,
+    "actual_CDC_payload_register_bits": 15584,
+    "actual_CDC_read_face_register_bits": 974,
+    "control_root_register_bits_upper_bound_per_domain": 9000,
+    "clock_groups": [
+      "core1.2:TXstorage+RXread",
+      "FEC16/17:RXstorage+TXread"
+    ],
+    "TX_word_steps": [
+      511,
+      2685
+    ],
+    "TX_CDC_writes": [
+      512,
+      2686
+    ],
+    "TX_CDC_FEC_reads": [
+      488,
+      2535
+    ],
+    "FEC_input_edges": [
+      489,
+      2536
+    ],
+    "FEC_age_edges": 151,
+    "FEC_capture_edges": [
+      640,
+      2687
+    ],
+    "internal_FEC_CDC_reads": [
+      648,
+      2695
+    ],
+    "RX_CDC_FEC_writes": [
+      649,
+      2696
+    ],
+    "RX_CDC_core_reads": [
+      697,
+      2871
+    ],
+    "RX_gearbox_core_steps": [
+      698,
+      2872
+    ],
+    "frame_acceptance": "511+floor(17*floor(613*j/487)/16)",
+    "endpoint_read": "A-7",
+    "endpoint_write": "A-11",
+    "endpoint_RX_capture": "700+floor(17*(ceil(613*(j+1)/487)-1)/16)",
+    "endpoint_RX_publish": "702+floor(17*(ceil(613*(j+1)/487)-1)/16)",
+    "stop_contract": "word_step=0 outside finite2048word reservations; core may continue local decode/store afterwindow; no missingword fault on unreserved edges",
+    "bandwidth_application_bytes_per_core_cycle": 47.85414067747817,
+    "scope": "model before new stepgearbox/real CDC RTL; actualclockphase/drift/physical and wholeintegration tests pending"
+  },
+  "safe": [
+    {
+      "direction": "tx",
+      "phase_ticks": -8.0,
+      "relative_FEC_ppm": -500,
+      "words_checked": 2048,
+      "min_read_observed_fill": 1,
+      "max_write_observed_fill": 8,
+      "max_actual_occupancy": 7,
+      "faults": [],
+      "fault_count": 0
+    },
+    {
+      "direction": "tx",
+      "phase_ticks": -8.0,
+      "relative_FEC_ppm": 0,
+      "words_checked": 2048,
+      "min_read_observed_fill": 1,
+      "max_write_observed_fill": 8,
+      "max_actual_occupancy": 7,
+      "faults": [],
+      "fault_count": 0
+    },
+    {
+      "direction": "tx",
+      "phase_ticks": -8.0,
+      "relative_FEC_ppm": 500,
+      "words_checked": 2048,
+      "min_read_observed_fill": 1,
+      "max_write_observed_fill": 9,
+      "max_actual_occupancy": 8,
+      "faults": [],
+      "fault_count": 0
+    },
+    {
+      "direction": "tx",
+      "phase_ticks": 0.0,
+      "relative_FEC_ppm": -500,
+      "words_checked": 2048,
+      "min_read_observed_fill": 1,
+      "max_write_observed_fill": 8,
+      "max_actual_occupancy": 7,
+      "faults": [],
+      "fault_count": 0
+    },
+    {
+      "direction": "tx",
+      "phase_ticks": 0.0,
+      "relative_FEC_ppm": 0,
+      "words_checked": 2048,
+      "min_read_observed_fill": 1,
+      "max_write_observed_fill": 8,
+      "max_actual_occupancy": 7,
+      "faults": [],
+      "fault_count": 0
+    },
+    {
+      "direction": "tx",
+      "phase_ticks": 0.0,
+      "relative_FEC_ppm": 500,
+      "words_checked": 2048,
+      "min_read_observed_fill": 1,
+      "max_write_observed_fill": 10,
+      "max_actual_occupancy": 9,
+      "faults": [],
+      "fault_count": 0
+    },
+    {
+      "direction": "tx",
+      "phase_ticks": 8.0,
+      "relative_FEC_ppm": -500,
+      "words_checked": 2048,
+      "min_read_observed_fill": 1,
+      "max_write_observed_fill": 9,
+      "max_actual_occupancy": 8,
+      "faults": [],
+      "fault_count": 0
+    },
+    {
+      "direction": "tx",
+      "phase_ticks": 8.0,
+      "relative_FEC_ppm": 0,
+      "words_checked": 2048,
+      "min_read_observed_fill": 1,
+      "max_write_observed_fill": 9,
+      "max_actual_occupancy": 8,
+      "faults": [],
+      "fault_count": 0
+    },
+    {
+      "direction": "tx",
+      "phase_ticks": 8.0,
+      "relative_FEC_ppm": 500,
+      "words_checked": 2048,
+      "min_read_observed_fill": 1,
+      "max_write_observed_fill": 10,
+      "max_actual_occupancy": 9,
+      "faults": [],
+      "fault_count": 0
+    },
+    {
+      "direction": "rx",
+      "phase_ticks": -8.0,
+      "relative_FEC_ppm": -500,
+      "words_checked": 2048,
+      "min_read_observed_fill": 1,
+      "max_write_observed_fill": 10,
+      "max_actual_occupancy": 9,
+      "faults": [],
+      "fault_count": 0
+    },
+    {
+      "direction": "rx",
+      "phase_ticks": -8.0,
+      "relative_FEC_ppm": 0,
+      "words_checked": 2048,
+      "min_read_observed_fill": 1,
+      "max_write_observed_fill": 9,
+      "max_actual_occupancy": 8,
+      "faults": [],
+      "fault_count": 0
+    },
+    {
+      "direction": "rx",
+      "phase_ticks": -8.0,
+      "relative_FEC_ppm": 500,
+      "words_checked": 2048,
+      "min_read_observed_fill": 1,
+      "max_write_observed_fill": 9,
+      "max_actual_occupancy": 8,
+      "faults": [],
+      "fault_count": 0
+    },
+    {
+      "direction": "rx",
+      "phase_ticks": 0.0,
+      "relative_FEC_ppm": -500,
+      "words_checked": 2048,
+      "min_read_observed_fill": 1,
+      "max_write_observed_fill": 10,
+      "max_actual_occupancy": 9,
+      "faults": [],
+      "fault_count": 0
+    },
+    {
+      "direction": "rx",
+      "phase_ticks": 0.0,
+      "relative_FEC_ppm": 0,
+      "words_checked": 2048,
+      "min_read_observed_fill": 1,
+      "max_write_observed_fill": 9,
+      "max_actual_occupancy": 8,
+      "faults": [],
+      "fault_count": 0
+    },
+    {
+      "direction": "rx",
+      "phase_ticks": 0.0,
+      "relative_FEC_ppm": 500,
+      "words_checked": 2048,
+      "min_read_observed_fill": 1,
+      "max_write_observed_fill": 8,
+      "max_actual_occupancy": 7,
+      "faults": [],
+      "fault_count": 0
+    },
+    {
+      "direction": "rx",
+      "phase_ticks": 8.0,
+      "relative_FEC_ppm": -500,
+      "words_checked": 2048,
+      "min_read_observed_fill": 1,
+      "max_write_observed_fill": 9,
+      "max_actual_occupancy": 8,
+      "faults": [],
+      "fault_count": 0
+    },
+    {
+      "direction": "rx",
+      "phase_ticks": 8.0,
+      "relative_FEC_ppm": 0,
+      "words_checked": 2048,
+      "min_read_observed_fill": 1,
+      "max_write_observed_fill": 8,
+      "max_actual_occupancy": 7,
+      "faults": [],
+      "fault_count": 0
+    },
+    {
+      "direction": "rx",
+      "phase_ticks": 8.0,
+      "relative_FEC_ppm": 500,
+      "words_checked": 2048,
+      "min_read_observed_fill": 1,
+      "max_write_observed_fill": 8,
+      "max_actual_occupancy": 7,
+      "faults": [],
+      "fault_count": 0
+    }
+  ],
+  "unsafe_drift": [
+    {
+      "direction": "tx",
+      "phase_ticks": 0.0,
+      "relative_FEC_ppm": -10000,
+      "words_checked": 2048,
+      "min_read_observed_fill": 0,
+      "max_write_observed_fill": 31,
+      "max_actual_occupancy": 31,
+      "faults": [
+        [
+          "read_ownership",
+          0,
+          488,
+          0
+        ],
+        [
+          "read_ownership",
+          1,
+          489,
+          0
+        ],
+        [
+          "read_ownership",
+          2,
+          490,
+          0
+        ],
+        [
+          "read_ownership",
+          3,
+          491,
+          0
+        ],
+        [
+          "read_ownership",
+          4,
+          492,
+          0
+        ],
+        [
+          "read_ownership",
+          5,
+          493,
+          0
+        ],
+        [
+          "read_ownership",
+          6,
+          494,
+          0
+        ],
+        [
+          "read_ownership",
+          7,
+          495,
+          0
+        ]
+      ],
+      "fault_count": 5050
+    },
+    {
+      "direction": "tx",
+      "phase_ticks": 0.0,
+      "relative_FEC_ppm": 10000,
+      "words_checked": 2048,
+      "min_read_observed_fill": 1,
+      "max_write_observed_fill": 31,
+      "max_actual_occupancy": 31,
+      "faults": [
+        [
+          "write_ownership",
+          254,
+          781,
+          16
+        ],
+        [
+          "write_ownership",
+          255,
+          782,
+          16
+        ],
+        [
+          "write_ownership",
+          267,
+          795,
+          16
+        ],
+        [
+          "write_ownership",
+          268,
+          796,
+          16
+        ],
+        [
+          "write_ownership",
+          269,
+          797,
+          16
+        ],
+        [
+          "write_ownership",
+          270,
+          798,
+          16
+        ],
+        [
+          "write_ownership",
+          271,
+          799,
+          16
+        ],
+        [
+          "write_ownership",
+          281,
+          810,
+          16
+        ]
+      ],
+      "fault_count": 4557
+    },
+    {
+      "direction": "rx",
+      "phase_ticks": 0.0,
+      "relative_FEC_ppm": -10000,
+      "words_checked": 2048,
+      "min_read_observed_fill": 0,
+      "max_write_observed_fill": 31,
+      "max_actual_occupancy": 31,
+      "faults": [
+        [
+          "write_ownership",
+          64,
+          713,
+          16
+        ],
+        [
+          "write_ownership",
+          65,
+          714,
+          16
+        ],
+        [
+          "write_ownership",
+          66,
+          715,
+          16
+        ],
+        [
+          "write_ownership",
+          80,
+          729,
+          16
+        ],
+        [
+          "write_ownership",
+          81,
+          730,
+          16
+        ],
+        [
+          "write_ownership",
+          82,
+          731,
+          16
+        ],
+        [
+          "write_ownership",
+          83,
+          732,
+          16
+        ],
+        [
+          "write_ownership",
+          84,
+          733,
+          16
+        ]
+      ],
+      "fault_count": 4922
+    },
+    {
+      "direction": "rx",
+      "phase_ticks": 0.0,
+      "relative_FEC_ppm": 10000,
+      "words_checked": 2048,
+      "min_read_observed_fill": 0,
+      "max_write_observed_fill": 31,
+      "max_actual_occupancy": 31,
+      "faults": [
+        [
+          "read_ownership",
+          0,
+          697,
+          0
+        ],
+        [
+          "read_ownership",
+          1,
+          698,
+          31
+        ],
+        [
+          "read_ownership",
+          2,
+          699,
+          31
+        ],
+        [
+          "read_ownership",
+          3,
+          700,
+          31
+        ],
+        [
+          "read_ownership",
+          4,
+          701,
+          31
+        ],
+        [
+          "read_ownership",
+          5,
+          702,
+          31
+        ],
+        [
+          "read_ownership",
+          6,
+          703,
+          31
+        ],
+        [
+          "read_ownership",
+          7,
+          704,
+          31
+        ]
+      ],
+      "fault_count": 5084
+    }
+  ]
+}

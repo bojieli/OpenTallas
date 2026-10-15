@@ -1,0 +1,48 @@
+{
+  "source_sha256": {
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_core_fec_word_window.sv": "268a267d80284b5ccfad46967dce7fe816962a1cbc73519b4674d6a8b43b5071",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_word_cdc.sv": "ad94b9faac315ceab60a97cfbc6c3242ab0872031b252132bb7f72b769182d0e",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_gearbox_step.sv": "8e46150b7c03250a472282f2dcc411513aa74d84822c5fd05488c2f5ad6a581c",
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_frame_transport_step.sv": "e59bb8a2a6408757b899cab2ae8793677ac3d61791f8fbcd41e96e29588e62cb",
+    "rtl/hbm_accel/io_static_20261015/tb_core_fec_word_window.sv": "29532e83ff8ed6a9dad85a83d9bb54bb7240cb8b0d0af13d0e638860c965968f",
+    "tools/hbm_io/core_fec_calendar.py": "924d07d2005eb2be70c688dbe3131d47e9bccb6861f55126b01f93861bce50fa",
+    "tools/hbm_io/run_core_fec_cdc_gate.sh": "2e04fd47096a83d0cc5ee3c94342b9973b47904b17f2924027a28d28fcea9067"
+  },
+  "safe_profiles": 9,
+  "phase_ticks": [
+    -8,
+    0,
+    8
+  ],
+  "relative_FEC_drift_ppm": [
+    -500,
+    0,
+    500
+  ],
+  "actual_words_per_direction": 2048,
+  "actual_word_bits": 487,
+  "unsafe_drift_rejected_ppm": [
+    -10000,
+    10000
+  ],
+  "native_mutants": [
+    "write13drop",
+    "RXreadbitflip"
+  ],
+  "results": {
+    "p0_d-10000_m0.log": "CORE_FEC_CDC_DRIFT_REJECTED ppm-10000 txfault2270 rxfault2049",
+    "p0_d500_m0.log": "CORE_FEC_CDC_PASS actual487words4096 core1.2 FEC16:17 phase0 ppm500",
+    "p-8_d500_m0.log": "CORE_FEC_CDC_PASS actual487words4096 core1.2 FEC16:17 phase-8 ppm500",
+    "p0_d10000_m0.log": "CORE_FEC_CDC_DRIFT_REJECTED ppm10000 txfault1879 rxfault2204",
+    "p8_d-500_m0.log": "CORE_FEC_CDC_PASS actual487words4096 core1.2 FEC16:17 phase8 ppm-500",
+    "p0_d0_m2.log": "CORE_FEC_CDC_MUTANT_REJECTED m2 errors2048",
+    "p-8_d-500_m0.log": "CORE_FEC_CDC_PASS actual487words4096 core1.2 FEC16:17 phase-8 ppm-500",
+    "p-8_d0_m0.log": "CORE_FEC_CDC_PASS actual487words4096 core1.2 FEC16:17 phase-8 ppm0",
+    "p0_d0_m1.log": "CORE_FEC_CDC_MUTANT_REJECTED m1 errors1",
+    "p8_d0_m0.log": "CORE_FEC_CDC_PASS actual487words4096 core1.2 FEC16:17 phase8 ppm0",
+    "p0_d0_m0.log": "CORE_FEC_CDC_PASS actual487words4096 core1.2 FEC16:17 phase0 ppm0",
+    "p0_d-500_m0.log": "CORE_FEC_CDC_PASS actual487words4096 core1.2 FEC16:17 phase0 ppm-500",
+    "p8_d500_m0.log": "CORE_FEC_CDC_PASS actual487words4096 core1.2 FEC16:17 phase8 ppm500"
+  },
+  "qualification": "Actual finiteRTLCDC numerical relativeclock/phase/drift proof only; physicalmetastability/clockphase/timing and actualsteppedgearbox+FECwholegate pending"
+}
