@@ -37,3 +37,24 @@ remain OPEN. Config/launch ports are explicit, not tied: cfgwe/addr10/data256,
 startv/base10/limit11/loops16. Programme, transport and all three decoder children have separate phi-R
 clock entries. No native wholechip/full unit qualification claim. Local SID0 operand
 relocation reproduces historical B2 component scope, not full multi-SID binding.
+
+NATIVE HOST/NW COMPONENT UPDATE: actual AXI F-window overlay + unchanged actual
+loader CP LCP71 + typed target48 PCW10 (PC12 outer ABI) + actual Quant and NW
+programme SRAMs now composed. Actual NW W187 calendar drives all bank read/write
+selectors, not request-derived gates. Four VM programme macros + Quant programme
+macro +24 actual data macros. All104 issues exact at LCP+9+i, actual macro commit
+151 elapsed cycles versus immutable168 / historical184. Five mutants killed:
+input sector permutation, output lane, late response, wrong bank calendar owner,
+and missing host target binding. Programme root1477 FF plus mapped macro;
+transport4285 FF; five explicit roots, all new roots below15k (not CTS closure).
+Native decoded HGI record lowerer emits byte-identical proved programme; unsupported
+residency/dynamic/predicate/partial-overlap/capacity cases fail closed. Historical
+fixture SID0 relocation is explicit; actual full-chip residency allocation remains
+open. Host dependency frozen619da76cd and exact hashes pinned in native_host_gate.
+
+Still OPEN: compact timestamped record controller/resident profiles for the real
+full-token dependency calendar. The gapless component store is not a whole-token
+schedule; padding inter-unit gaps is not viable and compressor-die expansion can
+exceed1024 words (native_record_census contains representative source evidence and
+explicitly marked1040-beat capacity inference). No new physical closure or full
+native token/layer claim follows from this component proof.
