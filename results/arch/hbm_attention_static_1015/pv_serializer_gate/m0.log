@@ -1,0 +1,5 @@
+PASS PV_SERIALIZER actual_H16_D512 records3 words24576 flags24576 readbeats384 actual_SRAM128 epochs2
+- rtl/test/hbm_accel/generic/tb_hbm_attn_pv_serializer.sv:44: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.008 s; speed 241.047 us/s
+- Verilator: cpu 0.008 s on 1 threads; allocated 7 MB
