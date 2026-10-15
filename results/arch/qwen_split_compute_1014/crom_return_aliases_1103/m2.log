@@ -1,0 +1,6 @@
+E3_MISMATCH cycle=9
+E3_MISMATCH cycle=10
+E3_MISMATCH cycle=11
+CROM_RETURN3_ALIAS checks=484 errors=482
+FATAL: rtl/test/qwen_split/tb_crom_return3_aliases.sv:30: real return alias latency/identity mismatch
+       Time: 1001010 Scope: tb_crom_return3_aliases

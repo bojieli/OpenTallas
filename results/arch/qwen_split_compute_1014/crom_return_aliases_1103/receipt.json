@@ -1,0 +1,39 @@
+{
+  "status": "PASS_COMPONENT_ONLY",
+  "native_qualified": false,
+  "source_sha256": {
+    "rtl/qwen_split/qfd_native_crom8_r3_tp8.sv": "7648175b1d8ffccde0706eb7db56ef9d82db9b31de7ddfb43a4cdb0a2f25be2a",
+    "rtl/physical/qfd_crom_return3_aliases.sv": "cd5be0ff82922025b72f9440ffc4ccdcad58bb1f99eab99514aaa88483c45af2",
+    "rtl/test/qwen_split/tb_crom_return3_aliases.sv": "2ffd049f76f1ab1973be4c548a5ccfd16d107da50dfb59a5c6c91da8d916f689"
+  },
+  "runs": [
+    {
+      "mut": 0,
+      "exit": 0,
+      "binary_sha256": "aad073041594ecd3e2fc495167a9dcbdab1f2be71e85e8f3fb132764f10039b6",
+      "log_sha256": "ecf7d12a1f76df867b5b547a579f26412b44b95b39f0fa18b6f441b88ced92e3"
+    },
+    {
+      "mut": 1,
+      "exit": 1,
+      "binary_sha256": "b25e43b9f5398fe3d4d22841b145e8b0f7780ab13b2e231b7124356ef8926ce0",
+      "log_sha256": "57bcfcab8fa6cdbc69f9a0303fd4eb4510a28a2d5e7cf07a085ad28960af86c1"
+    },
+    {
+      "mut": 2,
+      "exit": 1,
+      "binary_sha256": "e4d51765559f638b6f8c65b8c5475a40df7efd65e68f80db8eb35c3243ff914d",
+      "log_sha256": "57bcfcab8fa6cdbc69f9a0303fd4eb4510a28a2d5e7cf07a085ad28960af86c1"
+    }
+  ],
+  "checks_per_run": 484,
+  "actual_pipeline_edges": 3,
+  "reset_pin_release_edges": 1,
+  "roots_per_leaf": 1,
+  "ff_bits_per_leaf": 1540,
+  "aliases": [
+    "qfd_crom_return3_above",
+    "qfd_crom_return3_below"
+  ],
+  "scope": "Distinct real RTL physical leaf names have exact canonical pin-register pipeline body. Independent expected E3 shifts, two reset epochs and random513-bit words; actual above/below final-stage-bypass mutants must fail. No routing/view/PG/MX grant or native timing qualification."
+}
