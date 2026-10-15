@@ -154,7 +154,7 @@
     "owner": "Claude:H-ATTQ",
     "branch": "main",
     "tag": "sw125progr5",
-    "purpose": "R4b native ETM (CTS placement-RC): 22 launch fails command[18..31]/command_v/ordinal 220.6..250.8 > 220 ps. Cause: clk pin on the N face WEST half (top:4-107) and command pins at the BOTTOM of the E face (right:4-66): the output launch flops sit in the leaf corner farthest from the clock entry (command clk 221..256, mean 250 vs boundary mean R 226.7). Structural pin-geometry fix: clk to the N face EAST half, output pins ordered so command/command_v/ordinal occupy the TOP of the E face next to the clock entry; inputs (capture margin 57 ps) take the later clock. No RTL, cycle or threshold change; same 220.32x129.6 outline and macro location.",
+    "purpose": "R4b native ETM (CTS placement-RC): 22 launch fails command[18..31]/command_v/ordinal 220.6..250.8 > 220 ps. Cause: clk pin on the N face WEST half (top:4-107) and command pins at the BOTTOM of the E face (right:4-66): the output launch flops sit in the leaf corner farthest from the clock entry (command clk 221..256, mean 250 vs boundary mean R 226.7). Structural pin-geometry fix: clk to the N face EAST half, output pins ordered so command/command_v/ordinal occupy the TOP of the E face next to the clock entry; inputs (capture margin 57 ps) take the later clock. No RTL, cycle or threshold change; same 220.32x129.6 outline and macro location. The r4 command pad-trio removal hook is dropped (it breaks OT_ANCHOR_PACK: 'recorded anchor is not one actual FIRM standard cell ot_ohdrv_00001_0'); all outputs keep the standard FF-hold trio.",
     "benches": [
       {
         "name": "SW125_native_component_exact",
@@ -198,9 +198,6 @@
     "allow_none": true,
     "cols": 4
   },
-  "pin_hook_before_flops": [
-    "physical/ref_tile/qdq_sw125_programme_command_pad_r4.tcl"
-  ],
   "children": [],
   "inter": [],
   "inhold": true,
@@ -210,5 +207,5 @@
   "hold_pad": {
     "cell": "HB2xp67_ASAP7_75t_R"
   },
-  "structural_change": "R4b native ETM (CTS placement-RC): 22 launch fails command[18..31]/command_v/ordinal 220.6..250.8 > 220 ps. Cause: clk pin on the N face WEST half (top:4-107) and command pins at the BOTTOM of the E face (right:4-66): the output launch flops sit in the leaf corner farthest from the clock entry (command clk 221..256, mean 250 vs boundary mean R 226.7). Structural pin-geometry fix: clk to the N face EAST half, output pins ordered so command/command_v/ordinal occupy the TOP of the E face next to the clock entry; inputs (capture margin 57 ps) take the later clock. No RTL, cycle or threshold change; same 220.32x129.6 outline and macro location."
+  "structural_change": "R4b native ETM (CTS placement-RC): 22 launch fails command[18..31]/command_v/ordinal 220.6..250.8 > 220 ps. Cause: clk pin on the N face WEST half (top:4-107) and command pins at the BOTTOM of the E face (right:4-66): the output launch flops sit in the leaf corner farthest from the clock entry (command clk 221..256, mean 250 vs boundary mean R 226.7). Structural pin-geometry fix: clk to the N face EAST half, output pins ordered so command/command_v/ordinal occupy the TOP of the E face next to the clock entry; inputs (capture margin 57 ps) take the later clock. No RTL, cycle or threshold change; same 220.32x129.6 outline and macro location. The r4 command pad-trio removal hook is dropped (it breaks OT_ANCHOR_PACK: 'recorded anchor is not one actual FIRM standard cell ot_ohdrv_00001_0'); all outputs keep the standard FF-hold trio."
 }
