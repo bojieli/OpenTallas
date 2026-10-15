@@ -1,5 +1,5 @@
 {
- "name": "qfd_tile_nl_banked_v1-nl53a-COMMIT",
+ "name": "qfd_tile_nl_banked_v1-nl53a-8e7dc4ac3",
  "block": "qfd_tile_nl_banked_v1",
  "ref_tile": true,
  "owner": "Claude:q_compute_elem r13 NL helper",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/q15-nl-banked",
-  "commit": "COMMIT",
+  "commit": "8e7dc4ac3",
   "extra_paths": [
    "physical/qwen_tile_glue_banks_1015",
    "rtl/qwen_sys/tile_parent_banked_20261015",
@@ -94,7 +94,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_tile_nl_banked_v1/qfd_tile_nl_banked_v1-nl53a-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_tile_nl_banked_v1/qfd_tile_nl_banked_v1-nl53a-8e7dc4ac3"
   }
  ],
  "cycles_added": 2,
