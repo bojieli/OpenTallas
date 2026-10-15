@@ -31,7 +31,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import v19_pins_1014 as V  # noqa: E402
 
 SRC = R / 'physical/s81_die_pins/v22_hc_local_split'
-OUT = R / 'physical/s81_die_pins/v23_hc_norm_straight_candidate'
+SPREAD = '--spread' in sys.argv                     # v24: even pin density + clock/reset at the face centre
+OUT = R / ('physical/s81_die_pins/v24_hc_norm_spread_candidate' if SPREAD else 'physical/s81_die_pins/v23_hc_norm_straight_candidate')
+XC = 286.044                                        # centre M3 track for clk / reset pins (v24)
 W, HS = 576.72, 25.92
 M5 = lambda n: round(.012 + .048 * n, 3)          # ASAP7 M3 / M5 vertical track centres (same grid as v22)
 LANES = (38.0, 88.0)                               # NORM dl / ul / cs lane window (x 40.03-86.06) kept free
@@ -88,6 +90,30 @@ def main():
     east = [tracks[int(k * step)] for k in range(need)]
     assert all(b - a >= .095 for a, b in zip(east, east[1:]))
     xmap = xfd + east                              # bit i -> x
+    if SPREAD:
+        # v24 (ctfs_nt v4 GRT-0116 1,175 overflow, M3 807 / M5 311 over x 225-575: 9.8 bits/um of stacked straight
+        # relays exceed the vertical tracks): ONE even pitch over the whole usable width; bits 0..1127 take the central
+        # block of slots in ctfxs_nt.fdx x order (monotone stretch), 1128.. continue east, then west of the block
+        # (descending), so the ctfn y-shift stays local except one wrap.
+        xdx = xs(fx, 'fdx')
+        keep = xfv
+        trk = [M5(n) for n in range(0, int((W - 1.2) / .048) + 1)
+               if (1.0 <= M5(n) <= 38.0 or 88.0 <= M5(n) <= W - 1.2) and all(abs(M5(n) - k) > .1 for k in keep)]
+        slots = [trk[int(k * len(trk) / NB)] for k in range(NB)]
+        assert all(b - a >= .095 for a, b in zip(slots, slots[1:]))
+        cen = sum(xdx) / NX
+        k0 = min(range(NB - NX + 1), key=lambda k: abs((slots[k] + slots[k + NX - 1]) / 2 - cen))
+        block = slots[k0:k0 + NX]; right = slots[k0 + NX:]; left = slots[:k0][::-1]
+        xmap = [0.0] * NB
+        for r, b in enumerate(sorted(range(NX), key=lambda b: (xdx[b], b))):
+            xmap[b] = block[r]
+        for r, x in enumerate(right + left):
+            xmap[NX + r] = x
+        lat = max(abs(xmap[b] - xdx[b]) for b in range(NX))
+        assert lat + Y_XS <= 500, ('ctfs -> ctfxs seam over reach', lat)
+        rep['spread'] = dict(pitch_um=round((slots[-1] - slots[0]) / (NB - 1), 4), block=[block[0], block[-1]],
+                             right=[right[0], right[-1]] if right else None, left=[left[-1], left[0]] if left else None,
+                             max_lateral_to_ctfxs_fdx_um=round(lat, 3), bits_per_um=round(NB / (len(trk) * .048), 2))
     assert len(xmap) == NB and len(set(xmap)) == NB
     rep['order'] = dict(bits_0_1127='ctfxs_nt.fd_in granted x (unchanged)', span_0_1127=[min(xfd), max(xfd)],
                         bits_1128_2919='monotone east', span_1128_2919=[east[0], east[-1]],
@@ -147,7 +173,7 @@ def main():
         ctfn=dict(v23_through=cut(list(zip(xmap, xmap))), v23_yshift=cut(ysh),
                   v22_through=cut(list(zip(xs(fn, 'fd_in'), xs(fn, 'fdm')))),
                   v22_yshift=cut([(xs(fn, 'fd_in')[O_D + j + GT32], xs(fn, 'fdm')[O_D + j]) for j in range(NB - O_D - GT32)])),
-        ctfxs_nt='unchanged (fd_in / fdx / fv_in granted v22)')
+        ctfxs_nt='see rep["ctfxs_nt"] (fd_in / fv_in re-pinned straight)')
     gap_xs, gap_fn = Y_XS, Y_FN                     # ctfs(k-1) S face = cth(k) N edge (abutted cth rows)
     seam = lambda a, b, dy: [abs(p - q) + dy for p, q in zip(a, b)]
     s = dict(
@@ -170,8 +196,36 @@ def main():
               'coincide with ctfxs_nt.fd_in (same x), bits 1128..2919 move east (x %.2f..%.2f, was %.2f..%.2f): S-DIE to '
               're-measure the crootr legs' % (east[0], east[-1], min(xs(fn, 'fd_in')), max(xs(fn, 'fd_in'))),
         last='last cth fd_out: same consumers as before (chain end), S-DIE to re-measure')
+    # ---- ctfxs_nt straight (one flop per bit between fd_in N and fdx S: s1 native fd_in 214 / fdx 124 pins over with
+    # up to 83.8 um lateral): fd_in / fv_in at the fdx / fv x of the same bit; fdx (CLOSED ctnl / ctfl consumers) and
+    # the NORM lanes unchanged.  The ctfs_nt(k-1).fd_out -> ctfxs_nt(k).fd_in die seam takes the jog (<= 365.04 + 84).
+    px = {p: [list(b) for b in v['per_bit']] for p, v in fx['ports'].items()}
+    # second CTS root for the NORM lanes (dl / ul / cs / tid / reset capture, x 40-86): clk_l on the W face 12 um above clk
+    px['clk_l'] = [['W', 'M4', round(fx['ports']['clk']['per_bit'][0][2] + 12.0, 3), fx['ports']['clk']['per_bit'][0][3]]]
+    for port, src in (('fd_in', 'fdx'), ('fv_in', 'fv')):
+        px[port] = [['N', 'M5', b[2], a[3]] for a, b in zip(fx['ports'][port]['per_bit'], fx['ports'][src]['per_bit'])]
+    rep['ctfxs_nt'] = dict(rule='fd_in / fv_in at the fdx / fv x (straight feed-through); fdx, lanes unchanged',
+                           internal_v23=cut(list(zip([q[2] for q in px['fd_in'] + px['fv_in']], xs(fx, 'fdx') + xs(fx, 'fv')))),
+                           internal_v22=cut(list(zip(xs(fx, 'fd_in') + xs(fx, 'fv_in'), xs(fx, 'fdx') + xs(fx, 'fv')))),
+                           seam_ctfs_to_ctfxs_max_um=round(max(seam(xmap[:NX] + xfv, [q[2] for q in px['fd_in'] + px['fv_in']],
+                                                                    gap_xs)), 3))
+    write('ot_s81_hc_ctfxs_nt', px, extra := dict(clock_entries={'stream': ['clk', 'clk_l']}, rule='S-NORM candidate 2026-10-15: one fd/fv bit order for producer + '
+                                                        'all consumers (see report.json)'))
     rep['cost'] = dict(cycles=0, area_um2=0, rtl='unchanged', masters_repinned=['ot_s81_hc_ctfn', 'ot_s81_hc_ctfs_nt',
-                       'ot_s81_hc_ctfl_nt'], unchanged=['ot_s81_hc_ctfxs_nt'])
+                       'ot_s81_hc_ctfl_nt', 'ot_s81_hc_ctfxs_nt (fd_in / fv_in only)'])
+    if SPREAD:
+        M3c = lambda x: round(.012 + .048 * round((x - .012) / .048), 3)
+        pn['clk'] = [['N', 'M3', M3c(XC), .084]]; pn['rst_in'] = [['N', 'M3', M3c(XC + .192), .084]]
+        pn['rst_c'] = [['N', 'M3', M3c(XC + .384), .084]]
+        ps['clk'] = [['N', 'M3', M3c(XC), .084]]; ps['rst_in'] = [['N', 'M3', M3c(XC + .192), .084]]
+        pl['clk'] = [['N', 'M3', M3c(XC), .084]]; pl['rst_in'] = [['S', 'M3', M3c(XC + .384), .084]]
+        px['clk'] = [['N', 'M3', M3c(XC), .084]]; px['clk_l'] = [['N', 'M3', M3c(68.2), .084]]
+        rep['clock_reset'] = dict(rule='clk (and the reset pin captures) at the N-face centre M3 track of the sink span, not '
+                                       'the W corner (CTS root at the pin; ctfn gate TT 372-492, ctfl s4 spread 60.8 / rst '
+                                       'capture 257.9); ctfn.rst_c N meets ctfl.rst_in S (abutted rows); ctfxs clk_l at the '
+                                       'NORM lanes x 68.2', x_um=M3c(XC))
+        write('ot_s81_hc_ctfxs_nt', px, dict(clock_entries={'stream': ['clk', 'clk_l']},
+                                             rule='S-NORM v24 candidate (see report.json)'))
     extra = dict(rule='S-NORM candidate 2026-10-15: one fd/fv bit order for producer + all consumers (see report.json)')
     write('ot_s81_hc_ctfn', pn, extra)
     write('ot_s81_hc_ctfs_nt', ps, extra)

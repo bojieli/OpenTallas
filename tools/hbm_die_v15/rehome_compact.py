@@ -126,10 +126,15 @@ def main():
                 bad.append((n, m))
     C['slots'] = [die] + keep
     C['version'] = int(C.get('version', 1)) + 1
-    C['floorplan'] = dict(file=str(pd / 'compact.P.json'), candidate='compact660', adopted='owner 2026-10-15 12:05 (660 mm2 compact)',
+    C['floorplan'] = dict(file=str(pd / 'compact.P.json'), candidate=pd.name, adopted='owner 2026-10-15 12:05 (660 mm2 compact)' + ('' if pd.name == 'compact660' else '; H-DIE r2 cut fix (tall hub, 2.0 mm band, 0.6 mm channels, scorer relay rows)'),
                           die_um=[round(W, 3), round(H, 3)], metrics=M['metrics'], previous=C.get('floorplan'))
-    C['request_slots'] = [r for r in C.get('request_slots', []) if not r['name'].startswith('hb_sfu_')] + requests
+    new = {r['name'] for r in requests}
+    C['request_slots'] = [r for r in C.get('request_slots', []) if r['name'] not in new] + requests
     for r in C['request_slots']:
+        if r['name'].startswith('hb_sfu_') and r.get('groups'):       # re-run on an already converted contract
+            for g in r['groups']:
+                b = P[g['name']]
+                g['origin'] = dict(x=b['x'], y=b['y']); g['outline'] = dict(w=b['w'], h=b['h'])
         if r['name'].startswith('hb_su_') and r.get('port_groups'):
             q = r['name'][6:8]
             for g in r['port_groups']:
