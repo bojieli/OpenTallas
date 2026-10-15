@@ -1,0 +1,83 @@
+{
+  "job": "dsfd_vm_static_bank128_m4_v20-v20std2-977ea3ed7",
+  "source_commit": "977ea3ed7c784f4dc4d579fce7ec4e2228886acf",
+  "closure_record": "f87c197e135650c9125671937037129febae6b35",
+  "native_pin_audit": {
+    "cell": "dsfd_vm_static_bank128",
+    "view": "physical/ref_tile/dsfd_vm_static_bank128_m4_v20/views/dsfd_vm_static_bank128",
+    "lib_cell": "dsfd_vm_static_bank128",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 222.0,
+    "spread_ps": 26.7,
+    "outputs": 159,
+    "inputs": 169,
+    "launch_ps": 191.7,
+    "launch_pin": "o_rd[69]",
+    "capture_ps": 165.5,
+    "capture_pin": "i_wd[89]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+  },
+  "benches": {
+    "bench_lint": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.071 MB sources in 4 modules, into 0.009 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.005 s (elab=0.000, cvt=0.002, bld=0.000); cpu 0.005 s on 1 threads; allocated 33.387 MB\nlint-ok\n",
+      "track": "parallel"
+    },
+    "bench_exact_bank": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "RESULT reads20000 writes20512 bad0\nPASS\n- rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_static_bank128.sv:37: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 82us; walltime 0.031 s; speed 2.671 ms/s\n- Verilator: cpu 0.029 s on 1 threads; allocated 7 MB\n",
+      "track": "parallel"
+    },
+    "bench_neg_mask": {
+      "expect": "fail",
+      "rc": 0,
+      "ok": true,
+      "tail": "RESULT reads20000 writes20512 bad18353\nFAIL\n- rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_static_bank128.sv:37: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 82us; walltime 0.029 s; speed 2.799 ms/s\n- Verilator: cpu 0.029 s on 1 threads; allocated 7 MB\n",
+      "track": "parallel"
+    }
+  },
+  "source_comparisons": {
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128.sv": {
+      "routed_source_sha256": "28b404bc01d8722b2cac8aadf058d48edb4c99d6128f7b8872f971f8dda940d8",
+      "current_source_sha256": "28b404bc01d8722b2cac8aadf058d48edb4c99d6128f7b8872f971f8dda940d8",
+      "identical": true
+    },
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v": {
+      "routed_source_sha256": "a8fb2509a28f91a30c9b28184fd9be11f30eea9f847797cb8c5435f8870c6128",
+      "current_source_sha256": "a8fb2509a28f91a30c9b28184fd9be11f30eea9f847797cb8c5435f8870c6128",
+      "identical": true
+    }
+  },
+  "view_sha256": {
+    "dsfd_vm_static_bank128_tt.lib": "75c68d8088af0eacfa23675a1d7907c62c1363af8b08db988a699f11e700559d",
+    "export_tt.tcl": "a0c52656b3d69c64824e24ad699407307143ad0c78c855fde413b2e2f579dd0e",
+    "signal_layer_audit_ff.json": "1fec6122108a066c2cb9d7c45088d6828b7f76c21ef295122b8ec04c6e5731e5",
+    "abstract.json": "633a59b99792fba981cb8eb2d275c9e9e38cd032755d72b0a1962482f611ab7e",
+    "dsfd_vm_static_bank128_ss.lib": "960a41b972b94acce7b52a41c12fbd54909b8becdb7cd25e9fbd071b15c0f575",
+    "dsfd_vm_static_bank128.lef": "370cbe78d316b6cf9f1830d0e40cc61c8c3252c8b953be5e6c46513641303748",
+    "export_ff.tcl": "67e5f165b5a0e32ad2ee37fb1630494d2119192a66083bc3f63c528736a7d95d",
+    "insertion.json": "de199682d2deb423681dce6eb3aab5ce524a8eba3c9a45eb4d7131b5dd4d35de",
+    "export_tt.log": "4b4c4fdf92cdfc970eb29907e7f311d92ff40664bc1c01c9eb7cbd81d330462f",
+    "export_ss.log": "5375f789f40c6f1ec0d42f8c02c73f058efd053d18f45a05bb23c1d7c94c8e27",
+    "signal_layer_audit_tt.json": "1fec6122108a066c2cb9d7c45088d6828b7f76c21ef295122b8ec04c6e5731e5",
+    "export_ff.log": "9ec1298e888a449819425aad28e14c29c5a28f056c51debd29c00e0959d65974",
+    "signal_layer_audit_ss.json": "1fec6122108a066c2cb9d7c45088d6828b7f76c21ef295122b8ec04c6e5731e5",
+    "dsfd_vm_static_bank128_ff.lib": "7dbf72ac8003f66754fc8cb3c97ce3bb68abe0e26071d99e235fe40cf6419a79",
+    "export_ss.tcl": "8c2e97ee8d360a64a3322832bccb4d175e254503bc862d6ceddc12d8ea995f50",
+    "child_lint.json": "81eff1648375c37631059f296618c89b1fd1a2e74f6bef0b99a120ca163f570f"
+  },
+  "clock_obligation": "Parent must drive each bank clock phi minus222.0ps; actual die phase/calendar binding and production throughput remain unverified.",
+  "qualification": "TT setup/FF hold/DRC and native boundary PASS only. No full native die qualification."
+}
