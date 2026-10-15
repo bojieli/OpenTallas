@@ -206,18 +206,27 @@ class Run:
         import dsrom_su_softmax as SM
         Hh, lph = self.sh["SM_H"], self.sh["SM_LPH"]
         T = s_raw.shape[1]
-        nv = T // lph
+        if T < 1 or s_raw.shape[0] != Hh or not np.isfinite(scale) or scale <= 0:
+            raise ValueError("softmax requires nonempty scores, the target head count, and positive finite scale")
+        nv = (T + lph - 1) // lph
+        if nv > self.sh["SM_NVMAX"]:
+            raise ValueError("softmax score row exceeds the physical score store")
         lt = int(np.ceil(np.log2(nv))) if nv > 1 else 0
         SM.H, SM.ROW = Hh, 512
         ref = SM.reference(s_raw, scale, sink, pv, cos, sin)
 
         def lanes(m, v):
             return np.concatenate([m[h, v * lph:(v + 1) * lph] for h in range(Hh)])
-        a = self.put([r for v in range(nv) for r in rows_of(lanes(s_raw, v))])
+        # Partial vectors have -Inf inactive scores. Real RTL retains these in
+        # max and masks the exp output to +0 (exp's -87 clamp is NOT a mask).
+        padded = np.full((Hh, nv * lph), -np.inf, F)
+        padded[:, :T] = s_raw
+        a = self.put([r for v in range(nv) for r in rows_of(lanes(padded, v))])
         out = self.alloc(nv * Hh * lph // 16)
         sinkrow = rows_of(np.concatenate([sink, np.zeros((-len(sink)) % 16, F)]))
         self.job("SE", 1, self.desc(out, a, nv, int(u32([scale])[0]), lt, prow=sinkrow))
-        e = np.asarray(ref["e"], F)
+        e = np.zeros((Hh, nv * lph), F)
+        e[:, :T] = np.asarray(ref["e"], F)
         self.expect(out, [r for v in range(nv) for r in rows_of(lanes(e, v))])
         b = self.put([r for uu in range(512 // lph) for r in rows_of(lanes(pv, uu))])
         out2 = self.alloc((512 // lph) * Hh * lph // 32)
@@ -367,7 +376,7 @@ def build_run(sh, rng, gold=None):
     if jx is not None:
         r.jexp[len(r.prog) - 1] = jx
     Hh = sh["SM_H"]
-    for T in (128, 640):
+    for T in (128, 133, 640):
         s_raw = (rng.normal(0, 1, (Hh, T)) * rng.choice([1, 30, 1e3], (Hh, T))).astype(F)
         s_raw[:, 5] = s_raw.max(axis=1)
         pv = (rng.normal(0, 1, (Hh, 512)) * rng.choice([1e-3, 1, 50], (Hh, 512))).astype(F)
