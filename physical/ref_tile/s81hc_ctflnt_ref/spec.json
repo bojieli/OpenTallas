@@ -69,8 +69,8 @@
   "benches_from": "tools/s81_suhc/hc_owned_nt_benches.json",
   "owner": "Claude:S-NORM",
   "branch": "claude/s81-norm-tree-1014",
-  "tag": "s2-granted",
-  "structural_change": "New LOCAL_SPLIT relay master (RTL e5c3f968d): the ctfx_nt local re-register on its own pin faces; 0 cycles.",
+  "tag": "s3-ck4",
+  "structural_change": "New LOCAL_SPLIT relay master (RTL e5c3f968d): the ctfx_nt local re-register on its own pin faces; 0 cycles. + per-cluster clock roots (clock_split_x.tcl, K=4): single-root gate TT spread was 87-132 ps over the full-span pins.",
   "no_bench_reason": "bit-exactness is gated on the HC slab composition with dsfd_sp_hc NTREE 1 (tools/s81_suhc/hc_ntree_bench.sh: NG 256 production shape exact PASS + mutant 3 FAIL; tools/s81_suhc/hc_gate.py --ntree 1 NG 256 exact 0/1940 x3 + per-tile mutants); the tile alone has no golden",
   "purpose": "el1014-s81-norm-tree LOCAL_SPLIT: fdx_local relay strip",
   "views_to": "physical/ref_tile/s81hc_ctflnt_ref/views",
@@ -117,5 +117,11 @@
   "file": "physical/s81_die_pins/v22_hc_local_split/ot_s81_hc_ctfl_nt.json",
   "source": "S81 die lead r11 grant main 5c3c7fd7a / bb1b07c55 (tools/s81/hc_local_split_pins.py)",
   "layout": "physical/s81_die_pins/v22_hc_local_split/layout.json"
+ },
+ "pre_cts_extra": [
+  "physical/common_flow/clock_split_x.tcl"
+ ],
+ "orfs_vars": {
+  "OT_CKS_K": "4"
  }
 }
