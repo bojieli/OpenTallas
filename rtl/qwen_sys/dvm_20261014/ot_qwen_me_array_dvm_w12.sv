@@ -32,7 +32,8 @@ module ot_qwen_me_array_dvm_w12 #(
     parameter integer HB = 2,
     parameter integer LEAF_FILL_PIPE = 0,
     parameter integer LEAF_BANK_PIPE = 0,
-    parameter integer DX = 10 + LEAF_BANK_PIPE + (NH/2-1)*LEAF_FILL_PIPE,
+    parameter integer REQ_PIPE = 0,
+    parameter integer DX = 10 + LEAF_BANK_PIPE + REQ_PIPE + (NH/2-1)*LEAF_FILL_PIPE,
     parameter integer FILL_LEAD = 2 + (NH/2-1)*LEAF_FILL_PIPE,
     parameter integer TIDM = 1,
     parameter integer XOFF = 3,
@@ -169,7 +170,7 @@ module ot_qwen_me_array_dvm_w12 #(
     wire [NT-1:0]   go_t;
     wire [NT*IBW-1:0] ib_t;
     ot_qfd_xdvm_fabric #(.AW(AW), .NW(NW), .XCW(XCW), .IL(IL), .NCOL(NCOL), .NH(NH), .TG(TG), .SMIN(SMIN), .SMAX(SMAX),
-        .HB(HB), .LEAF_FILL_PIPE(LEAF_FILL_PIPE), .LEAF_BANK_PIPE(LEAF_BANK_PIPE), .DX(DX), .FILL_LEAD(FILL_LEAD), .TIDM(TIDM), .XOFF(XOFF), .NATIVE_AFFINE(NATIVE_AFFINE),.STATIC_SCHEDULE(STATIC_SCHEDULE),.TAP_MUT(TAP_MUT), .LEAF_MUT(LEAF_MUT),
+        .HB(HB), .LEAF_FILL_PIPE(LEAF_FILL_PIPE), .LEAF_BANK_PIPE(LEAF_BANK_PIPE), .REQ_PIPE(REQ_PIPE), .DX(DX), .FILL_LEAD(FILL_LEAD), .TIDM(TIDM), .XOFF(XOFF), .NATIVE_AFFINE(NATIVE_AFFINE),.STATIC_SCHEDULE(STATIC_SCHEDULE),.TAP_MUT(TAP_MUT), .LEAF_MUT(LEAF_MUT),
         .HEAD_MUT(HEAD_MUT)) u_fab (
         .clk(clk), .rst_n(rst_n), .go_acc(go && ready), .ib(ib),
         .xpf_v(xpf_v), .xpf_xbase(xpf_xbase), .xpf_xcs(xpf_xcs), .xpf_xks(xpf_xks), .xpf_split(xpf_split),
@@ -243,7 +244,8 @@ module ot_qfd_xdvm_fabric #(
     parameter integer HB = 2,
     parameter integer LEAF_FILL_PIPE = 0,
     parameter integer LEAF_BANK_PIPE = 0,
-    parameter integer DX = 10 + LEAF_BANK_PIPE + (NH/2-1)*LEAF_FILL_PIPE,
+    parameter integer REQ_PIPE = 0,
+    parameter integer DX = 10 + LEAF_BANK_PIPE + REQ_PIPE + (NH/2-1)*LEAF_FILL_PIPE,
     parameter integer FILL_LEAD = 2 + (NH/2-1)*LEAF_FILL_PIPE,
     parameter integer TIDM = 1,
     parameter integer XOFF = 3,
@@ -339,7 +341,7 @@ module ot_qfd_xdvm_fabric #(
             localparam integer TJ = tid(c, j);
             assign tids[16*j +: 16] = TJ;
         end
-        ot_qfd_xhead #(.AW(AW), .NW(NW), .XCW(XCW), .TG(TG), .IL(IL), .NH(NH), .SMIN(SMIN), .SMAX(SMAX), .LEAF_BANK_PIPE(LEAF_BANK_PIPE), .DX(DX),
+        ot_qfd_xhead #(.AW(AW), .NW(NW), .XCW(XCW), .TG(TG), .IL(IL), .NH(NH), .SMIN(SMIN), .SMAX(SMAX), .LEAF_BANK_PIPE(LEAF_BANK_PIPE), .REQ_PIPE(REQ_PIPE), .DX(DX),
             .FILL_LEAD(FILL_LEAD),.NATIVE_AFFINE(NATIVE_AFFINE), .MUT(HEAD_MUT)) u_head (.ck(clk), .rst_n(rst_n), .tids(tids), .fault_i(fch[c+1]),
             .a_d(hw), .a_r(), .b_d(), .b_r(1'b1),
             .n_d(cn), .n_r(1'b1), .s_d(cs), .s_r(1'b1),

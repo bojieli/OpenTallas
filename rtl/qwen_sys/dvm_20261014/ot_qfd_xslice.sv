@@ -652,7 +652,9 @@ module ot_qfd_xhead #(
     parameter integer SMAX = 11,
     parameter integer NATIVE_AFFINE = 0,
     parameter integer LEAF_BANK_PIPE = 0, // candidate real leaf pipeline, one extra read edge
-    parameter integer DX   = 10 + LEAF_BANK_PIPE,         // FILL_LEAD + 8 (lr register 1, leaf 5, answer pin register 1, launch 1)
+    parameter integer REQ_PIPE = 0,       // read-request relay stages after lr (flat column: head -> far leaf ~650 um
+                                          // in one edge fails TT; +REQ_PIPE read edges, compiler-visible through DX)
+    parameter integer DX   = 10 + LEAF_BANK_PIPE + REQ_PIPE, // FILL_LEAD + 8 (lr register 1, leaf 5, answer pin register 1, launch 1)
     parameter integer FILL_LEAD = 2,     // the tap's two-entry attention-write queue (a queued beat can trail a go by 2)
     parameter integer MUT  = 0           // 3: the TDM sends each line to the wrong station (wrong line);
                                          // 4: reads the other epoch (stale buffer); 6: pooled line without its B half
@@ -678,10 +680,10 @@ module ot_qfd_xhead #(
     output reg  [NH*18-1:0] lw_ctl,
     output reg  [1:0]    lc_v,
     output reg  [1:0]    lc_ep,
-    output reg  [NH-1:0] lr_v,
-    output reg  [NH-1:0] lr_t,
-    output reg  [NH-1:0] lr_ep,
-    output reg  [NH*28-1:0] lr_p,
+    output wire [NH-1:0] lr_v,
+    output wire [NH-1:0] lr_t,
+    output wire [NH-1:0] lr_ep,
+    output wire [NH*28-1:0] lr_p,
     input  wire [NH*64-1:0] lq,
     input  wire [NH-1:0] lq_v,
     input  wire [NH-1:0] lq_bad,
@@ -696,7 +698,7 @@ module ot_qfd_xhead #(
     localparam integer CW   = 1 + IBW + 128 + 8;
     localparam integer NR   = 2 * NH;            // rows (tiles) of the column
     localparam integer NE   = NH / 2;            // TDM edges a tuple
-    localparam integer QD   = 7 + LEAF_BANK_PIPE;                 // read issue -> answer usable: lr 1, leaf 5, answer pin register 1
+    localparam integer QD   = 7 + LEAF_BANK_PIPE + REQ_PIPE;      // read issue -> answer usable: lr 1, (relay), leaf 5, answer pin register 1
     // leaf / tile of row r: N station s in N leaf s / 2 (tile s mod 2), S station s in S leaf (NH-1-s) / 2 (tile
     // (NH-1-s) mod 2): a pooled pair (N s, S NH-1-s) sits at the SAME chain depth, and every read at TDM edge e is of
     // a leaf at depth <= e + 2 (the far leaves are read last: a fill reaches depth d d edges after depth 0)
@@ -980,7 +982,13 @@ module ot_qfd_xhead #(
                 end
             end
     end
-    always @(posedge ck) begin lr_t <= rt; lr_ep <= {NH{rep_now}}; lr_p <= rp; end
+    reg  [NH-1:0]    lr0_v, lr0_t, lr0_ep;
+    reg  [NH*28-1:0] lr0_p;
+    always @(posedge ck) begin lr0_t <= rt; lr0_ep <= {NH{rep_now}}; lr0_p <= rp; end
+    // read-request relay (REQ_PIPE stages; 0 = the lr register drives the leaf pins directly)
+    ot_hdc_delay #(.W(NH), .D(REQ_PIPE), .RESET(1)) u_lrv (.clk(ck), .rst_n(rst_n), .d(lr0_v), .q(lr_v));
+    ot_hdc_delay #(.W(2*NH+NH*28), .D(REQ_PIPE)) u_lrd (.clk(ck), .rst_n(rst_n), .d({lr0_t, lr0_ep, lr0_p}),
+        .q({lr_t, lr_ep, lr_p}));
 
     // ---- answers -> corridor launch (the leaf q pins feed the corridor's output flops through one mux) ----
     // the answer of a read issued at TDM edge e is usable QD edges later: carry the edge and the mode along
@@ -1036,10 +1044,10 @@ module ot_qfd_xhead #(
     reg flt;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin
-            st[0] <= 2'd0; st[1] <= 2'd0; ep_rd <= 1'b0; busy <= 1'b0; flt <= 1'b0; lr_v <= {NH{1'b0}};
+            st[0] <= 2'd0; st[1] <= 2'd0; ep_rd <= 1'b0; busy <= 1'b0; flt <= 1'b0; lr0_v <= {NH{1'b0}};
             ph <= 3'd0; rep <= 1'b0; fault <= 1'b0;
         end else begin
-            lr_v <= rv;
+            lr0_v <= rv;
             fault <= flt | fi_q;
             // descriptor: claim the epoch
             if (d_v) begin
