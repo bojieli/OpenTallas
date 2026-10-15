@@ -52,8 +52,8 @@ class GeometryTests(unittest.TestCase):
 
     def test_internal_group_positions_preserved(self):
         m=self.model()
-        self.assertTrue(m.legal({'left':(0,50),'move':(0,50)}))
-        mm=m.metrics(m.edges,{'left':(0,50),'move':(0,50)})
+        self.assertTrue(m.legal({'left':(50,50),'move':(50,50)}))
+        mm=m.metrics(m.edges,{'left':(50,50),'move':(50,50)})
         left=next(e for e in mm['top20_routes'] if e['bus']=='leftwide')
         self.assertAlmostEqual(left['sum_bit_um'],400.)
 

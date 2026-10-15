@@ -60,7 +60,7 @@ class Model:
         boxes={n:(it.x+moves.get(n,(0,0))[0],it.y+moves.get(n,(0,0))[1],it.w,it.h) for n,it in self.insts.items()}
         for n in moves:
             x,y,w,h=boxes[n]
-            if x<0 or y<0 or x+w>self.die[0]+1e-6 or y+h>self.die[1]+1e-6:return False
+            if x<self.halo-1e-6 or y<self.halo-1e-6 or x+w>self.die[0]-self.halo+1e-6 or y+h>self.die[1]-self.halo+1e-6:return False
             for m in boxes:
                 if n==m or moves.get(n)==moves.get(m):continue
                 if intersects(boxes[n],boxes[m],self.halo):return False
