@@ -17,7 +17,8 @@ module ot_hbm_p_native_producer_static #(
  output wire[135:0]local_rq,input wire[2055:0]local_rr,
  output wire[2247:0]local_wq,input wire[7:0]local_w_done,
  output wire scalar_valid,output wire[31:0]scalar_tag,scalar_fp32,
- output wire programme_done,io_done,output wire fault
+ output wire programme_done,io_done,output wire fault,
+ output wire calendar_v,output wire[31:0]calendar_ordinal
 );
  wire[135:0]sfu_rq;wire[2247:0]sfu_wq,scalar_wq;
  wire[2055:0]sfu_rr,reduce_rr;
@@ -33,6 +34,8 @@ module ot_hbm_p_native_producer_static #(
  wire[2:0]command_op,publish_word;
  wire[31:0]constant_operand,command_tag,expected_tag;
  wire[181:0]aux=aux_valid?aux_word:182'd0;
+ assign calendar_v=aux_valid;
+ assign calendar_ordinal=aux_ordinal;
  assign {reduce_fill_burst,reduce_fetch_sector,reduce_fetch_v,publish_word,publish_sector,expected_tag,publish_slot,
          command_tag,constant_operand,command_dst,command_b,command_a,command_op,source_word,source_operand,command_v}=aux;
  ot_hgi_sfu_program_stripe_static #(.PAGE_AW(PAGE_AW),.W(182)) u_aux(
