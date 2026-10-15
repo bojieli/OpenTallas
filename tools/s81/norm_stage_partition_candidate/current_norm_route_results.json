@@ -1,0 +1,46 @@
+{
+  "scope": "Current actual route/native audit; no new physical submission or die adoption",
+  "ctfn_k8": {
+    "job": "s81hc_ctfn_native_k8_ref-np4-ck8-175e7ac3c",
+    "status": "CLOSED",
+    "source_commit": "175e7ac3ccbf329a9227a66fa576adaf3dca0e8a",
+    "record_commit": "33349036fc2e20c476e18222fc7c285c393ffe64",
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctfn_native_k8_ref-np4-ck8-175e7ac3c",
+    "TT_setup_ps": 142.4,
+    "FF_hold_ps": 3.39,
+    "DRC": 0,
+    "native_audit": "ctfn_k8_routed_native_audit.json",
+    "record_view_sha256": {
+      "ot_s81_hc_ctfn.lef": "cd957b02e68ca9ca2ed3a62d72681c55a26d4d4cff43fd90a475b8a8ad901097",
+      "insertion.json": "9a67d721c5d23737c6b5d62f90917e14b1908df7164e61ce413cc5242200b850",
+      "ot_s81_hc_ctfn_tt.lib": "eb963426b4ed29facdea1d9151487fddd89a6315f9c5244ed404d61da3985dee"
+    }
+  },
+  "ctfs_k4": {
+    "job": "s81hc_ctfsnt_ref-v3-ck4-cbddac3f6",
+    "status": "EARLY_FAIL_CONGESTION",
+    "source_commit": "cbddac3f618b48a0514fc250c7133be214b644d3",
+    "host": "ot-epyc1tb",
+    "run": "/srv/opentallas/claude/closure-loop/s81hc_ctfsnt_ref-v3-ck4-cbddac3f6",
+    "reason": "global route finished with congestion (GRT-0116): s81hc_ctfsnt_ref_v3_ck4_cbddac3f6/flow.log: [ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer. [step do-5_1_grt]",
+    "congestion": {
+      "M2_usage_percent": 104.99,
+      "M2_overflow": 122020,
+      "M3_usage_percent": 58.01,
+      "M3_overflow": 2381,
+      "M4_usage_percent": 87.59,
+      "M4_overflow": 104102,
+      "M5_usage_percent": 31.2,
+      "M5_overflow": 785,
+      "total_overflow": 229288,
+      "wirelength_um": 854151,
+      "routed_nets": 43008,
+      "horizontal_layers": [
+        "M2",
+        "M4"
+      ]
+    },
+    "classification": "Horizontal through-bus/pad/clock wiring congestion. Native DRT and final timing absent. No unchanged re-tuning retry."
+  }
+}

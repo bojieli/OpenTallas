@@ -22,7 +22,7 @@ No physical kit or route is submitted for this candidate. The diagram uses actua
 
 The CTFL one-stage case cannot use this existing-stage split: its input/output columns differ and there is no spare data stage. It needs actual producer/consumer repinning, a wider leaf spanning its actual pin pairs, or an explicitly priced added stage. Do not copy this CTFN candidate into CTFL and call it equivalent.
 
-All current CTfnK8 / CTfs native routes stand and are preserved. The failing current K4 native audit is the reason for this bounded source study, not permission to retune or reroute an unrelated CLOSED element. NT swap, overall die changes, compiler calendar qualification, real PHY/input pin contracts, and complete token qualification remain open.
+The current CTfnK8 route is terminal CLOSED (record33349036f, TT+142.40 / FF+3.39 / DRC0), but its independently audited actual record view fails native launch249.7 (718 pins) and capture236.0 (1798 pins), R462.9/spread67.6. The current CTfsK4 job is terminal EARLY_FAIL_CONGESTION, with 229288 GRT overflow dominated by horizontal M2/M4. Current state supersedes the initial live-job observations; immutable jobs and caches are preserved. See current_norm_route_results.json and ctfn_k8_routed_native_audit.json. The failing current K4 native audit is the reason for this bounded source study, not permission to retune or reroute an unrelated CLOSED element. NT swap, overall die changes, compiler calendar qualification, real PHY/input pin contracts, and complete token qualification remain open.
 
 ## Reproduction
 
