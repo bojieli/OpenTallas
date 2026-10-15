@@ -77,8 +77,14 @@ def generate(out: Path) -> dict:
     for c, t in per.items():
         (d / f"{NAME}_{c}.lib").write_text(write_liberty(NAME, t, plist, w * h, None, comment))
     (d / f"{NAME}_bb.v").write_text(blackbox_verilog(NAME, plist, comment))
-    (d / f"{NAME}_model.sv").write_text(G.model_sv(NAME, FW, LAT["typical"]).replace(
-        "tools/qwen_missing/link_phy_gen.py", "tools/qwen_kv_die/phy_gen.py"))
+    model = G.model_sv(NAME, FW, LAT["typical"]).replace(
+        "tools/qwen_missing/link_phy_gen.py", "tools/qwen_kv_die/phy_gen.py")
+    # Benches also exercise the legacy adapter-only word. Keep FW configurable
+    # in the behavioural model; the published hard-macro ports remain exactly 583.
+    model = model.replace("parameter integer UP = 16", f"parameter integer UP = 16, parameter integer FW = {FW}")
+    model = model.replace(f"[{FW - 1}:0]", "[FW-1:0]")
+    model = model.replace(f"LAT*{FW + 1}", "LAT*(FW+1)").replace(f"-: {FW + 1}", "-: (FW+1)")
+    (d / f"{NAME}_model.sv").write_text(model)
     sheet = dict(schema="opentallas.qwen-kv-die.link-phy-abstract.v1", generator="tools/qwen_kv_die/phy_gen.py",
                  name=NAME, footprint=dict(width_um=w, height_um=h, area_mm2=round(w * h / 1e6, 4), edge_um=w),
                  fdi=dict(clock_ghz=FDI_GHZ, flit_bits=FW, latency_fdi_cycles_one_way=LAT),
