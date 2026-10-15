@@ -16291,6 +16291,76 @@ def hbm_qdq_dedicated_face_ff_model():
             "default_off":True,"actual_pin_requirement":"P190/Q220 and per-pairL-H100"}
 
 
+def s81_hcx_resident_native_model():
+    """F12 coefficient home: shared HBM arithmetic, real resident native memory.
+
+    This sizes the actual implemented W32 source, not an adopted die/rate claim.
+    Shared projection arithmetic is ot_hdc_v41x_hcp from ot_hgi_hc_unit; tail
+    instantiates the actual unit with constant HC_MIX_POST records. Production
+    requires real VM/collective slots and measured physical relay calendars.
+    """
+    rom_area = 121.824 * 62.910
+    x_area = 94.824 * 41.040
+    mac = 256 * UNIT['fp32_mac_um2']
+    return dict(schema='opentallas.s81-hcx-resident-native.v1',
+        scope='candidate real RTL and native component evidence; not die qualification',
+        arithmetic='unchanged shared ot_hdc_v41x_hcp W32 and ot_hgi_hc_unit HC_MIX_POST',
+        per_rank_outputs=6, ranks=4, outputs=24, K=20480,
+        clock=dict(serial_GHz=0.9, fast_GHz=1.2, ratio=[4,3]),
+        each_projection=dict(macs_per_cycle=256,
+            weight_port_bytes_per_cycle=8*32*4,
+            x_port_bytes_per_cycle=8*32*2,
+            rom_macros=64, rom_macro='ot_rom_4096x266_m8', payload_bits=256,
+            rom_area_um2=64*rom_area,
+            fn_payload_bits=43*2*20480*32, fn_sets=['attn','ffn'],
+            resident_layer_sets=43, resident_layer_map='main0..39,MTP40..42',
+            rom_payload_capacity_bits=64*4096*256, physical_rom_bits=64*4096*266,
+            rom_addresses=dict(formula='80*(2*layer_idx+ffn)+run',range=[0,6879],pages=2),
+            macro_SS_clk_to_q_ps=739.210334475635,
+            rejected_8192_option=dict(macros=32,area_um2=32*122.256*119.34,SS_clk_to_q_ps=999.324702151268,reason='Only5percent area saving, materially less serial SS timing margin'),
+            x_sram_macros=16, x_sram_macro='ot_sram_1r1w_128x256_m1_r2c2',
+            x_sram_area_um2=16*x_area, x_payload_bits=20480*16,
+            mac_cell_area_estimate_um2=mac,
+            footprint_lower_bound_um2=mac/.55+64*rom_area+16*x_area,
+            estimate_excludes='tree/scalar/tag/clock/hold/pin logic; actual synthesis required',
+            assigned_outline_um=[1728,864],
+            slot_resize='S-DIE f7cc8be24 measuredclear six slots; old128ROM fits only25layers',
+            native_cmd_to_pin_result_cycles=264,
+            pin_register_cost_cycles=2,
+            native_result_source='results/rtl/s81_hcx_home_1014/projection_pin_L00.log',
+            clock_sinks='actual synthesis/CTS census required; >15k needs measured R<=300ps/spread<=80ps or partition'),
+        prefetch=dict(rows=640, bytes_per_row=64, reserved_read_ports=8,
+            native_rows_per_cycle=8, beats=80, payload_bits_per_beat=4096,
+            payload_multicast_sinks=6, replicated_link_bit_demand=6*4096,
+            reservation='real bankmod32 calendar plus capture/SU/field clients; not assigned by this model',
+            producer='actual HC H_STORE export after attention POST required for FFN h; fixture H_BASE is insufficient'),
+        projection_raw_link=dict(words_per_rank=6, bits_per_rank=192,
+            collective='real TP4 all-gather of four padded16-word records, then actual static24-word gatherpack',
+            gatherpack=dict(module='ot_s81_hcx_gatherpack',clock_GHz=1.2,actual_FF_bits=3384,
+                input_record_bits=512,parallel_input_bits=2048,records=4,meaningful_words_per_record=6,
+                native_output_rows=2,native_output_mask=65535,
+                fixed_issue_formula='max(R_CYC)+2,+3',fixed_public_done_formula='max(R_CYC)+WL+5',
+                production_calendar='unbound actual collectives, physical pins and VM writevisibility'),
+            raw_vm_rows=dict(attn=2624,ffn=2640)),
+        native_tail=dict(parameter_rom_macros=4, parameter_rom_area_um2=4*38.016*62.910,
+            arithmetic='actual ot_hgi_hc_unit op2, RMAX2 PMAX2',
+            shared_gain=dict(module='ot_s81_hcx_post_gain_native',
+                clock_roots_added=0,storage_macros_added=0,
+                parameter_addresses=[0,343],gain_addresses=[512,1151],
+                words_per_vector=320,rom_read_bits_per_cycle=256,
+                vm_write_bits_per_cycle=512,vm_write_mask_bits=16,
+                measured_gain_serial_cycles=326,public_start_to_done_serial_cycles=327,vm_commit_latency=4,
+                ownership='fixed compiler mode; post/gain conflicts fault, never arbitrate/wait',
+                qualification='native six-job post/gain/post component PASS; same-binary ROM sign-bit mutant FAIL; physical/liveVM open'),
+            memory='native FP32 rawmix reads, comb/pre/post/eps/reserved output layout',
+            output_rows=dict(attn=2560,ffn=2576), words_per_output_region=32,
+            completion='fixed compiled deadline; actual arithmetic/VM commit checks never reschedule',
+            status='actualcore531..537 observed free-running Sinkhorn phase; fixed540serial budget, public541 exactL00attn+FFNPASS'),
+        immutable_prices_fast_cycles=dict(fn=229,sumsq=253.6,rsqrt=197.3,pre_post=212.3,sinkhorn=637.2),
+        rate_qualification='open: native H export, VM8 reservation, real all-gather, CDC phase/hops, TT/FF/DRC and clock roots',
+        adoption=False)
+
+
 def s81_native_functional_homes_1014_model():
     """Real missing functional homes, unchanged prices, explicit physical debt.
 
