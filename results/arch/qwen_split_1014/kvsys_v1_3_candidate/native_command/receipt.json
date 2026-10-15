@@ -1,0 +1,30 @@
+{
+  "scope": "component only; no native provider or physical qualification",
+  "sources": {
+    "rtl/qwen_sys/split_20261014/qkd_native59_command_guard.sv": "d0d111ef6d9ab4d99722279fad879e1e31089a6a553ea9b4dd3863c27348baf9",
+    "rtl/test/qwen_split/tb_native59_command_guard.sv": "a64e5508523cd22bae80eb72d1fb48ec3236b8c469053a38520ce71672b6282f",
+    "results/arch/qwen_split_1014/kvsys_v1_3_candidate/native_command/native380_template.json": "95e38d7b62b96e5a0f59290d151152ca33b89c725f70a221e4adf4d910521fd3"
+  },
+  "cases": [
+    {
+      "mutant": 0,
+      "exit_code": 0,
+      "observed": "PASS"
+    },
+    {
+      "mutant": 1,
+      "exit_code": 1,
+      "observed": "FAIL"
+    },
+    {
+      "mutant": 2,
+      "exit_code": 1,
+      "observed": "FAIL"
+    },
+    {
+      "mutant": 3,
+      "exit_code": 1,
+      "observed": "FAIL"
+    }
+  ]
+}
