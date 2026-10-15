@@ -1,0 +1,225 @@
+{
+  "scope": "Actual P and DEN/PV-DIV-RNE component; actual QK/PV upstream and canonical allocation unbound",
+  "formula": {
+    "DEN": "FP32(exp(SINK-MB)+SE)",
+    "OUT": "BF16_RNE(FP32(PV/DEN))"
+  },
+  "input_boundaries": [
+    "rawSC",
+    "rawPV",
+    "SINK"
+  ],
+  "internal_actual_only": [
+    "scaledSC",
+    "MB",
+    "rawE",
+    "SE",
+    "EB",
+    "DEN"
+  ],
+  "programme_sources": [
+    "tools/hbm_static/make_p_producer_calendar.py",
+    "tools/hbm_static/prepare_p_norm_cases.py"
+  ],
+  "RTL_source_pin": "07f6eb52b",
+  "oracle_directed_pin": "74ceb8016",
+  "external_PV_fixture": "HATT /tmp/ATT-PV-DEN-canonical, EB\u00d7storedKV chunk8 golden only",
+  "SRAM_inventory_unchanged": {
+    "SFU_operand": 80,
+    "arithmetic_programme": 32,
+    "IO_programme": 12,
+    "aux_programme": 4,
+    "reduction_source_scratch": 10,
+    "diagnostic_VM": 24
+  },
+  "clock_input_ports": 33,
+  "physical_pin_faces_qualified": false,
+  "native_WQ": "8x281 {valid1,sector16,data256,wordmask8}",
+  "native_RQ": "8x17 {valid1,sector16}",
+  "native_RR": "8x257 {valid1,data256}",
+  "actual_vm_path": "diagnosticSID0 RG3/WG1 via LG14 read /11 write, not ATT SID3NE",
+  "per_head_activity": {
+    "SE_scalar_fetch": 1,
+    "SINK_scalar_fetch": 1,
+    "DEN_sector_write": 1,
+    "PV_sector_read": 64,
+    "DEN_scalar_read": 1,
+    "OUT_sector_write": 64
+  },
+  "diagnostic_layout": {
+    "PV": "sector2304+head*64+dim//8",
+    "SINK": "sector7840+head//8 word head%8",
+    "DEN": "sector7904+head*8 word0, private padding",
+    "OUT": "sector4608+head*64+dim//8"
+  },
+  "normalization_scalar_operand_addresses": {
+    "MB_B": 12672,
+    "SE_C": 12688,
+    "DEN_B": 12704,
+    "SINK_A": 12720
+  },
+  "directed_ties": {
+    "T128": {
+      "even": 16,
+      "odd": 16
+    },
+    "T640": {
+      "even": 16,
+      "odd": 16
+    }
+  },
+  "mutants": [
+    "real E1_ADDC disabled",
+    "real M1_DIVB disabled cp/cm",
+    "real output co_rnd disabled"
+  ],
+  "physical_qualified": false,
+  "native_whole_kernel_qualified": false,
+  "production_throughput_qualified": false,
+  "programme": {
+    "128": {
+      "arithmetic_rows": 1107,
+      "frame_IO_rows": 1215,
+      "H16_IO_edges": 19440,
+      "events": {
+        "arithmetic_start": 28,
+        "scaled_last_drain": 113,
+        "max_start": 148,
+        "max_scalar": 323,
+        "mb_prefetch": 338,
+        "exp_start": 358,
+        "raw_e_last_drain": 537,
+        "eb_last_drain": 546,
+        "sum_start": 572,
+        "sum_scalar": 763,
+        "se_prefetch": 779,
+        "sink_prefetch": 780,
+        "den_start": 801,
+        "den_drain": 966,
+        "pv_prefetch": 982,
+        "den_prefetch": 1014,
+        "norm_start": 1034,
+        "norm_drain": 1151
+      }
+    },
+    "640": {
+      "arithmetic_rows": 2499,
+      "frame_IO_rows": 2639,
+      "H16_IO_edges": 42224,
+      "events": {
+        "arithmetic_start": 60,
+        "scaled_last_drain": 209,
+        "max_start": 252,
+        "max_scalar": 939,
+        "mb_prefetch": 954,
+        "exp_start": 974,
+        "raw_e_last_drain": 1217,
+        "eb_last_drain": 1258,
+        "sum_start": 1260,
+        "sum_scalar": 2187,
+        "se_prefetch": 2203,
+        "sink_prefetch": 2204,
+        "den_start": 2225,
+        "den_drain": 2390,
+        "pv_prefetch": 2406,
+        "den_prefetch": 2438,
+        "norm_start": 2458,
+        "norm_drain": 2575
+      }
+    }
+  },
+  "fixture_authority": {
+    "scope": "Golden rawPV external component boundary, actualMachine-derivedEB + actualcanonicalstoredKV randomrecipe20261015; NOT actualPV RTL producer ornativeallocation qualification",
+    "H": 16,
+    "D": 512,
+    "T": [
+      128,
+      640
+    ],
+    "precision": "canonical chunk8 FP32 golden_dot over unchangedBF16 EB and exactstoredFP8/FP4dequantization",
+    "input_sha256": {
+      "EB640.hex": "edfbd4e27ea5b71c00200d44d91a85c2780e2745f6946e22535bcf369b622941",
+      "EB128.hex": "6f28bf0a019c2c9e143a641c0ed5c7abba124a2ff2dbc3b7bf461627b4da04b3"
+    },
+    "output_sha256": {
+      "SINK640.hex": "146de0e524f577951dbe12a9db9f6a24cf276a6560b8b37a1aa0cbc5811776a0",
+      "PV128.hex": "efbdd5cc7cb361d92c1f0584ac5233534fb7a4348808f2919560357bb1710d25",
+      "SINK128.hex": "146de0e524f577951dbe12a9db9f6a24cf276a6560b8b37a1aa0cbc5811776a0",
+      "PV640.hex": "6ff81cb6f1c6a5e70f1cf3d1dee90dc28c6b98098c6180ebbb5149b579628176"
+    }
+  },
+  "case_file_sha256": {
+    "canonical_T128": {
+      "aux.hex": "f9b4e3e89d600d364d68c430a3089c4884264e09180967c6124f71c7c46b05a2",
+      "calendar.json": "98f9ea5b241bd7cea145c1b742fdeb69c2675955c901fc0ca9b23a06698b1575",
+      "raw_sc_sectors.hex": "2aeac4acaff75560d286d20a2434ceeba2f82e08b42285989df5d11e334ccdce",
+      "model.json": "ae26ac0549ddd8d6f5c5d5aa3dcbc84ae64cc2a5b93cc6122bd0a20980635454",
+      "expected_e.hex": "3a5d8a778fe28b01cb56c493f36147ba86001dd684086b73cef12384ccf138e1",
+      "arithmetic.hex": "8cf999ea87bb52114e3f392b3c00909f7804137b8e923c9a4c7d2620e999a429",
+      "io.hex": "fb345a971c979fb35f9572e37d7b0f5fdc9fab27192650315490b3590fbede67",
+      "expected_se.hex": "e5894b408be467c364e0df8ec48bec0c2b1be11c4348c8d0e71ca4a761d57ae8",
+      "expected_scaled.hex": "92dc059ac4411bf80101d53c6823630d4045c737b0d33f7d34f8cd4d8c99c1dd",
+      "sink_sectors.hex": "50fab0b135fb49fbda5c08c5435ce8ff41ae5a3059adfd21090952a577e5d84a",
+      "expected_den.hex": "e5894b408be467c364e0df8ec48bec0c2b1be11c4348c8d0e71ca4a761d57ae8",
+      "config.txt": "b88d0d24f2e2cfdb126e461784ad9d50b4341fa23617a9ce0ea332ef263f59c4",
+      "raw_pv_sectors.hex": "d9040bf26b7d9adcd89f48b1847162ba42cf84f9c342daeab713fbc510caed8c",
+      "expected_norm.hex": "74f313f19cdf6031878e9aa3f398b5176cf07b60a600d21fce1f64687133c91a",
+      "expected_eb.hex": "6f28bf0a019c2c9e143a641c0ed5c7abba124a2ff2dbc3b7bf461627b4da04b3",
+      "expected_mb.hex": "44cfac6e803b4e72e799cbe117d6cdc972d2452a23bbb9ad2a128d2c8a793dd6"
+    },
+    "canonical_T640": {
+      "aux.hex": "420d1ecd3862797d37b76fdd9dd53578e342c23ecfcc67d059a74c45a0e84bc1",
+      "calendar.json": "b8dd70ce70361e39ebbf31fa47a03f547c68016f697e534009427939d04e840a",
+      "raw_sc_sectors.hex": "f9b39afd4ba01aa31b3e6a319d2f169e60e6da36a1aff451225ce232bb854b72",
+      "model.json": "daa99e9cd384aefa9721a415b29bf0fc861ccf775ddb00dfd7cf4f47d9ad2052",
+      "expected_e.hex": "57daa8701265f5c18d756475411c2e25bffdc86762d22720668697c7c5ff705a",
+      "arithmetic.hex": "30fadb45b9c84d6e0ba2c769e78368852ea7b43f61e7c560732dc03b284f56a6",
+      "io.hex": "682d802775e1cfd15487ee87991ee62299c75abaa4376eff7e889c3c49de19fc",
+      "expected_se.hex": "e5894b408be467c364e0df8ec48bec0c2b1be11c4348c8d0e71ca4a761d57ae8",
+      "expected_scaled.hex": "540b7e27974cfd149aabc118b1b9c63f4447a79b424ea931e6d6cddd3fc99272",
+      "sink_sectors.hex": "50fab0b135fb49fbda5c08c5435ce8ff41ae5a3059adfd21090952a577e5d84a",
+      "expected_den.hex": "e5894b408be467c364e0df8ec48bec0c2b1be11c4348c8d0e71ca4a761d57ae8",
+      "config.txt": "f688433cd4e33845baa0d6ec5ebae1e78c04f1bbd36140fdf43b6d82985b4479",
+      "raw_pv_sectors.hex": "c0a4729fe2f643a71807749a8d41264b77b9c3ac10cb2345283ad5d3871072c1",
+      "expected_norm.hex": "689afd3d569774ae9133a819d5aa4fc5ddfdcbe7a773be74631fa18a14a7d4a4",
+      "expected_eb.hex": "edfbd4e27ea5b71c00200d44d91a85c2780e2745f6946e22535bcf369b622941",
+      "expected_mb.hex": "4cf919f5f3a0c872ec7c551d01a5a6fdbcdebd23160bf88d0ba7a374b1fdc424"
+    },
+    "directed_ties_T128": {
+      "aux.hex": "f9b4e3e89d600d364d68c430a3089c4884264e09180967c6124f71c7c46b05a2",
+      "calendar.json": "98f9ea5b241bd7cea145c1b742fdeb69c2675955c901fc0ca9b23a06698b1575",
+      "raw_sc_sectors.hex": "2e36a8e5b51eb40476fa26ca98b7b46eb03943b1f6772b61547949946484c36b",
+      "model.json": "2148a112f754723e4e1b8587f2e17e5659d05b824f2d6b0ad6560a3be8f913e4",
+      "expected_e.hex": "aee65f163b3c44e5471bbd07687ca8694e4e296ffb527fc127dca1e7eef932c6",
+      "arithmetic.hex": "8cf999ea87bb52114e3f392b3c00909f7804137b8e923c9a4c7d2620e999a429",
+      "io.hex": "fb345a971c979fb35f9572e37d7b0f5fdc9fab27192650315490b3590fbede67",
+      "expected_se.hex": "7ab451763de1c85cc59cb713b403c04343976fece6bd347fa9cc5445e79eef53",
+      "expected_scaled.hex": "1530cb363279e42f75dc54a999563111d3486c0a4e1dc4ad74d5c6a3bcf1548a",
+      "sink_sectors.hex": "326223d55c2ed56f241ba6cb7f53726390162f37954c109c8b853b6a9093d850",
+      "expected_den.hex": "fc94be97423ea29103725503df98746ef4224f7690bea19bd81c9b5a9a2c596f",
+      "config.txt": "b88d0d24f2e2cfdb126e461784ad9d50b4341fa23617a9ce0ea332ef263f59c4",
+      "raw_pv_sectors.hex": "cc47aae264d27132154c953293a1bb272f8cfe98bf8dff77d4c0c88920f60f2f",
+      "expected_norm.hex": "28f80bf36258851a566749f049f92c911501e65cf621cecbefea192edd790e76",
+      "expected_eb.hex": "668be2da69a39296a090735fe3fe29ddaa5481238a27152048c0bbd5c742e05b",
+      "expected_mb.hex": "292f9229837db14ea044d7db98a4f74191207ecb83b8f966635e2c209391da8a"
+    },
+    "directed_ties_T640": {
+      "aux.hex": "420d1ecd3862797d37b76fdd9dd53578e342c23ecfcc67d059a74c45a0e84bc1",
+      "calendar.json": "b8dd70ce70361e39ebbf31fa47a03f547c68016f697e534009427939d04e840a",
+      "raw_sc_sectors.hex": "8a10ddffd376349cc2b14e11939756db83f47d7ca8fd2017539abbb10b4c470f",
+      "model.json": "514827b094dc43c09dbe1eaed2aed10f46e04c2f6e3c4c9d73d84ab30b989a97",
+      "expected_e.hex": "65fc40f460921d05622014a9c1d9714d13143c353b1b10096a9322cc9c628a58",
+      "arithmetic.hex": "30fadb45b9c84d6e0ba2c769e78368852ea7b43f61e7c560732dc03b284f56a6",
+      "io.hex": "682d802775e1cfd15487ee87991ee62299c75abaa4376eff7e889c3c49de19fc",
+      "expected_se.hex": "85a6764b7c71b0f9f37d6fb92b572b1259e8a877ab73d0e20ce17b5cb6c7a0b2",
+      "expected_scaled.hex": "79d704b41e73d464f8b55b4583a2e649360baf4edc2958bf4f44dee4cf2df978",
+      "sink_sectors.hex": "326223d55c2ed56f241ba6cb7f53726390162f37954c109c8b853b6a9093d850",
+      "expected_den.hex": "808e4e28b144b0cc4c022ab9a8ead41034451264d0b80b235c34532bf2efa81f",
+      "config.txt": "f688433cd4e33845baa0d6ec5ebae1e78c04f1bbd36140fdf43b6d82985b4479",
+      "raw_pv_sectors.hex": "38dd2783c835ce8441f25f4b8a7b15165669524679c2209591a137eb9941017f",
+      "expected_norm.hex": "843ca9a1c042eae1e614468695493b0267c3fc2f1ac935ef07e75b2bd0a3ec69",
+      "expected_eb.hex": "38db2ad99c70e609070068880bd348d9b82a255a511aa2b89b2f36e4f848003d",
+      "expected_mb.hex": "099d5beb88f4e736cd98b710145c95a8eb7d299f47cc54eeec1f1ae1f1d320fb"
+    }
+  }
+}
