@@ -1,0 +1,37 @@
+{
+  "controller_ports": 3535,
+  "mapped_clock_sinks": 4421,
+  "outline_um": [
+    324,
+    216
+  ],
+  "outline_area_um2": 69984,
+  "N_face_bits": 1141,
+  "S_face_bits": 1157,
+  "E_face_bits": 1157,
+  "W_face_bits": 80,
+  "exact_N_min_spacing_um": 0.24,
+  "layer_cap": "M5",
+  "route_period_ps": 833.333,
+  "setup": "TT>=0",
+  "hold": "FF>=0",
+  "SS": "sensitivity only",
+  "per_interleaf_wire_limit_um": 500,
+  "geometric_purpose": "wide enough for exact perbit bank pairing; area is a priced pin/hop footprint, not a claimed area-efficient core",
+  "slot_fit": "new topdown candidate needing HOST/H-DIE actual slot binding; no stale200.88 square assumption",
+  "synthesized_std_area_um2": 2965,
+  "CTS": {
+    "TT_mean_ps": 363.8,
+    "TT_min_ps": 345.4,
+    "TT_max_ps": 390.5,
+    "TT_spread_ps": 45.1,
+    "FF_mean_ps": 300.5,
+    "SS_mean_ps": 465.8
+  },
+  "placement_diagnostic": {
+    "reg_reg_setup_ps": -33.5,
+    "in_reg_setup_ps": 155.5,
+    "reg_out_setup_ps": 260.6,
+    "hold_ps": 25.533
+  }
+}
