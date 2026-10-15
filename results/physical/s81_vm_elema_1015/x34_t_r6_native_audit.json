@@ -1,0 +1,4 @@
+{"job": "ot_s81_vm_x34_t_w542_1015_r6-bal6-526697023", "route": "CLOSED TT +74.30 / FF +4.55 / DRC 0",
+ "view": "physical/ref_tile/ot_s81_vm_x34_t_w542_1015_r6/views/ot_s81_vm_x34_t", "tool": "tools/hier_contract/native_pin_audit.audit_one",
+ "R_ps": 271.1, "spread_ps": 59.9, "launch_ps": 159.4, "launch_pin": "o_v", "capture_ps": 190.0, "capture_pin": "b2[79]", "capture_over_pins_rounded": 1, "comb_pins": 0, "pass": true,
+ "note": "PASS at the capture limit (190.0 ps on b2[79], 1 pin within 0.05 ps of 190); r5 (BAL=0) routed FF -9.69 on output ports"}
