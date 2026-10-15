@@ -2614,6 +2614,10 @@ def case(m, work):
     guarded = """set ot_bbox 0
 if {[info exists ::env(OT_PDN_BBOX_OBS)] && $::env(OT_PDN_BBOX_OBS) eq "1"} {
   source /work/pdn_bbox_obs.tcl
+  # Preflight the entire actual KV master set before any PDN geometry work.
+  ot_pdn_bbox::begin /work
+  ot_pdn_bbox::restore
+  puts "OT_PDN_BBOX PREFLIGHT PASS actual KV pins, outline, PG, containment and detailed OBS restoration"
   ot_pdn_bbox::begin /work
   set ot_bbox 1
 }
