@@ -1,0 +1,253 @@
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45:      : Port 9 (near_rq) of ot_hbm_vm_lg_static_tap is connected to nrq[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45:      : Port 10 (near_wq) of ot_hbm_vm_lg_static_tap is connected to nwq[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 13 (local_rr) of ot_hbm_vm_lg_static_tap is connected to lrr[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 14 (far_rr) of ot_hbm_vm_lg_static_tap is connected to frr[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 15 (local_w_done) of ot_hbm_vm_lg_static_tap is connected to ld[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 16 (far_w_done) of ot_hbm_vm_lg_static_tap is connected to fd[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Bit select expressions must be constant.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : This msb expression violates the rule: ((sid)*('sd3))+(st)
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45:      : Port 9 (near_rq) of ot_hbm_vm_lg_static_tap is connected to nrq[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45:      : Port 10 (near_wq) of ot_hbm_vm_lg_static_tap is connected to nwq[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 13 (local_rr) of ot_hbm_vm_lg_static_tap is connected to lrr[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 14 (far_rr) of ot_hbm_vm_lg_static_tap is connected to frr[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 15 (local_w_done) of ot_hbm_vm_lg_static_tap is connected to ld[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 16 (far_w_done) of ot_hbm_vm_lg_static_tap is connected to fd[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Bit select expressions must be constant.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : This msb expression violates the rule: ((sid)*('sd3))+(st)
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45:      : Port 9 (near_rq) of ot_hbm_vm_lg_static_tap is connected to nrq[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45:      : Port 10 (near_wq) of ot_hbm_vm_lg_static_tap is connected to nwq[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 13 (local_rr) of ot_hbm_vm_lg_static_tap is connected to lrr[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 14 (far_rr) of ot_hbm_vm_lg_static_tap is connected to frr[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 15 (local_w_done) of ot_hbm_vm_lg_static_tap is connected to ld[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 16 (far_w_done) of ot_hbm_vm_lg_static_tap is connected to fd[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Bit select expressions must be constant.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : This msb expression violates the rule: ((sid)*('sd3))+(st)
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45:      : Port 9 (near_rq) of ot_hbm_vm_lg_static_tap is connected to nrq[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45:      : Port 10 (near_wq) of ot_hbm_vm_lg_static_tap is connected to nwq[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 13 (local_rr) of ot_hbm_vm_lg_static_tap is connected to lrr[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 14 (far_rr) of ot_hbm_vm_lg_static_tap is connected to frr[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 15 (local_w_done) of ot_hbm_vm_lg_static_tap is connected to ld[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 16 (far_w_done) of ot_hbm_vm_lg_static_tap is connected to fd[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Bit select expressions must be constant.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : This msb expression violates the rule: ((sid)*('sd3))+(st)
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45:      : Port 9 (near_rq) of ot_hbm_vm_lg_static_tap is connected to nrq[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45:      : Port 10 (near_wq) of ot_hbm_vm_lg_static_tap is connected to nwq[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 13 (local_rr) of ot_hbm_vm_lg_static_tap is connected to lrr[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 14 (far_rr) of ot_hbm_vm_lg_static_tap is connected to frr[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 15 (local_w_done) of ot_hbm_vm_lg_static_tap is connected to ld[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 16 (far_w_done) of ot_hbm_vm_lg_static_tap is connected to fd[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Bit select expressions must be constant.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : This msb expression violates the rule: ((sid)*('sd3))+(st)
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45:      : Port 9 (near_rq) of ot_hbm_vm_lg_static_tap is connected to nrq[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45:      : Port 10 (near_wq) of ot_hbm_vm_lg_static_tap is connected to nwq[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 13 (local_rr) of ot_hbm_vm_lg_static_tap is connected to lrr[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 14 (far_rr) of ot_hbm_vm_lg_static_tap is connected to frr[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 15 (local_w_done) of ot_hbm_vm_lg_static_tap is connected to ld[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 16 (far_w_done) of ot_hbm_vm_lg_static_tap is connected to fd[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Bit select expressions must be constant.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : This msb expression violates the rule: ((sid)*('sd3))+(st)
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45:      : Port 9 (near_rq) of ot_hbm_vm_lg_static_tap is connected to nrq[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45:      : Port 10 (near_wq) of ot_hbm_vm_lg_static_tap is connected to nwq[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 13 (local_rr) of ot_hbm_vm_lg_static_tap is connected to lrr[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 14 (far_rr) of ot_hbm_vm_lg_static_tap is connected to frr[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 15 (local_w_done) of ot_hbm_vm_lg_static_tap is connected to ld[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 16 (far_w_done) of ot_hbm_vm_lg_static_tap is connected to fd[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Bit select expressions must be constant.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : This msb expression violates the rule: ((sid)*('sd3))+(st)
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45:      : Port 9 (near_rq) of ot_hbm_vm_lg_static_tap is connected to nrq[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45:      : Port 10 (near_wq) of ot_hbm_vm_lg_static_tap is connected to nwq[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 13 (local_rr) of ot_hbm_vm_lg_static_tap is connected to lrr[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 14 (far_rr) of ot_hbm_vm_lg_static_tap is connected to frr[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 15 (local_w_done) of ot_hbm_vm_lg_static_tap is connected to ld[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 16 (far_w_done) of ot_hbm_vm_lg_static_tap is connected to fd[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Bit select expressions must be constant.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : This msb expression violates the rule: ((sid)*('sd3))+(st)
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45:      : Port 9 (near_rq) of ot_hbm_vm_lg_static_tap is connected to nrq[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45:      : Port 10 (near_wq) of ot_hbm_vm_lg_static_tap is connected to nwq[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 13 (local_rr) of ot_hbm_vm_lg_static_tap is connected to lrr[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 14 (far_rr) of ot_hbm_vm_lg_static_tap is connected to frr[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 15 (local_w_done) of ot_hbm_vm_lg_static_tap is connected to ld[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 16 (far_w_done) of ot_hbm_vm_lg_static_tap is connected to fd[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Bit select expressions must be constant.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : This msb expression violates the rule: ((sid)*('sd3))+(st)
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45:      : Port 9 (near_rq) of ot_hbm_vm_lg_static_tap is connected to nrq[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45:      : Port 10 (near_wq) of ot_hbm_vm_lg_static_tap is connected to nwq[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 13 (local_rr) of ot_hbm_vm_lg_static_tap is connected to lrr[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 14 (far_rr) of ot_hbm_vm_lg_static_tap is connected to frr[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 15 (local_w_done) of ot_hbm_vm_lg_static_tap is connected to ld[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 16 (far_w_done) of ot_hbm_vm_lg_static_tap is connected to fd[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Bit select expressions must be constant.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : This msb expression violates the rule: ((sid)*('sd3))+(st)
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45:      : Port 9 (near_rq) of ot_hbm_vm_lg_static_tap is connected to nrq[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45:      : Port 10 (near_wq) of ot_hbm_vm_lg_static_tap is connected to nwq[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 13 (local_rr) of ot_hbm_vm_lg_static_tap is connected to lrr[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 14 (far_rr) of ot_hbm_vm_lg_static_tap is connected to frr[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 15 (local_w_done) of ot_hbm_vm_lg_static_tap is connected to ld[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 16 (far_w_done) of ot_hbm_vm_lg_static_tap is connected to fd[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Bit select expressions must be constant.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : This msb expression violates the rule: ((sid)*('sd3))+(st)
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45:      : Port 9 (near_rq) of ot_hbm_vm_lg_static_tap is connected to nrq[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:45:      : Port 10 (near_wq) of ot_hbm_vm_lg_static_tap is connected to nwq[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 13 (local_rr) of ot_hbm_vm_lg_static_tap is connected to lrr[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 14 (far_rr) of ot_hbm_vm_lg_static_tap is connected to frr[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 15 (local_w_done) of ot_hbm_vm_lg_static_tap is connected to ld[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Output port expression must support continuous assignment.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : Port 16 (far_w_done) of ot_hbm_vm_lg_static_tap is connected to fd[st]
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: A reference to a wire or reg (`st') is not allowed in a constant expression.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47: error: Bit select expressions must be constant.
+/srv/opentallas-scratch/claude/codex-hc-vm-e278-1015/rtl/test/tb_hgi_hc_residual_vm_static.sv:47:      : This msb expression violates the rule: ((sid)*('sd3))+(st)
+168 error(s) during elaboration.
