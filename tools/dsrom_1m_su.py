@@ -270,7 +270,13 @@ def cmd_golden(a):
                               row_rope=dict(x=kv_rope[1]["args"][0], cs=kv_rope[1]["args"][1], out=kv_rope[1]["out"]))
         if yarn and L == m.idx_of[L]:
             iq = [e for e in ropes if np.asarray(e["args"][0]).shape == (m.ih, m.ihd)]
-            rec["idx_q"] = dict(x=iq[0]["args"][0], cs=iq[0]["args"][1], out=iq[0]["out"])
+            iw = _pick(log, "linear_bf16", lambda e: e["args"][0] is lw("attn.indexer.weights_proj.weight"))
+            assert len(iw) == 1, (L, "indexer head-weight projection count", len(iw))
+            weight_input = np.asarray(iw[0]["out"], F).copy()
+            assert weight_input.shape == (m.ih,) and same(V.to_bf16(weight_input), weight_input)
+            rec["idx_q"] = dict(x=iq[0]["args"][0], cs=iq[0]["args"][1], out=iq[0]["out"],
+                                weight_input=weight_input, weight_scale=F(m.index_w_scale),
+                                weight_output=V.to_bf16(V.mul(weight_input, F(m.index_w_scale))))
         # ---- the router and the experts
         gate = _pick(log, "mv", lambda e: e["args"][0] is lw("ffn.gate.weight"))
         raw = gate[0]["out"]

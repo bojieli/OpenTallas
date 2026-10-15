@@ -1,0 +1,38 @@
+{
+ "scope": "Actual released-checkpoint model operands at declared QI component input; not an on-chip native field producer binding",
+ "native_qualified": false,
+ "snapshot_sha256": "bd5344266871848764200fb13539e178f25e8aa768301e6c02a7713bfb92b9f4",
+ "source_sha256": "40605f5fd35354695ab8eba1f7ef287c1b7ef4979efd3a2f3858edc18d3ab76d",
+ "checks": {
+  "h_out": true,
+  "pre_out": true,
+  "L2.attn_norm": true,
+  "L2.attn": true,
+  "L2.router": true,
+  "L2.ffn_norm": true,
+  "L2.ffn": true,
+  "router_recomputed": true,
+  "experts": true
+ },
+ "shape": {
+  "x": [
+   32,
+   128
+  ],
+  "cs": [
+   2,
+   32
+  ],
+  "out": [
+   32,
+   128
+  ],
+  "weight_input": [
+   32
+  ],
+  "weight_scale": [],
+  "weight_output": [
+   32
+  ]
+ }
+}
