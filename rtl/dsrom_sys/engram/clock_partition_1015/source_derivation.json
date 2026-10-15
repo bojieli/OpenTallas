@@ -1,0 +1,18 @@
+{
+  "schema": "opentallas.s81.engram_clock_partition.v1",
+  "reference_source_sha256": {
+    "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv": "86749dce384ec65ec1ac3dd99e34848161c1ddc8931b69ee3c5688c953fb4a98",
+    "rtl/dsrom_sys/engram/ot_dsrom_engram_lookup.sv": "f0438ddac6c9056b238c7fd82840a9dc9c73fb634c2573eac369588438ab09de",
+    "rtl/dsrom_sys/engram/dsfd_engram_lkp.sv": "0a7390bfae1e161def62f335e8ebdda9812a8bc572394fdbe5c619edd72969be"
+  },
+  "roots": {
+    "core": 1,
+    "hash_columns": 6,
+    "row_buffers": 6
+  },
+  "column_group_columns": 8,
+  "row_buffer_bits_per_root": 2304,
+  "clock_contract": "All13 roots same1.2GHz/1:1/phase0 at boundary registers with actual phi-R delivery; full min/max cross-root timing, no falsepaths.",
+  "scope": "Structural component candidate; no proof/count/physical/production qualification yet.",
+  "unchanged": "All48hash columns,6x9x256 payload bits, arithmetic, all pipeline stages,272B8scale format. Existing source modules unchanged."
+}

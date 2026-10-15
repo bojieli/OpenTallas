@@ -196,7 +196,14 @@ def _pair_mirror_hs(m, keep_rows=(7, 8)):
         else:
             i.x = round(nx + TW, 4)
         moved_s += 1
-    return dict(scheme='PM-H-S', kept_rows=list(keep_rows), inner_um=INNER, gapL_um=GAPL, gapR_um=64.8,
+    # relay corridor lanes (the relay planner's per-column station lane): even columns W of the MY tile (64.776),
+    # odd columns E of the R0 tile (64.800); head rows 7 / 8 keep the old station x (their hop costs the +1 stage)
+    lanes = []
+    for x in xs:
+        nx, o, side = newx[x]
+        lanes.append((round(nx - GAPL, 4), GAPL) if side == 'L' else (round(nx + TW, 4), 64.8))
+    m['corridor_lanes'] = lanes
+    return dict(scheme='PM-H-S', kept_rows=list(keep_rows), corridor_lanes_um=[64.776, 64.8], inner_um=INNER, gapL_um=GAPL, gapR_um=64.8,
                 my_station_shift_nm=-30, mirrored_tiles=sum(1 for i in tiles if i.orient == 'MY'),
                 moved_tiles=moved_t, moved_stations=moved_s, source='GEO-Q pmh_legality.py (main 48fab3baf)')
 

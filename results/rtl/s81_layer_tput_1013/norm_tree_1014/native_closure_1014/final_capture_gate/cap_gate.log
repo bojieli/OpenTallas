@@ -1,0 +1,19 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc4 for 24 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_s81hc_ctfxcap_ref_20261014-205412.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_s81hc_ctfxcap_ref_20261014-205412.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/s81hc_ctfxcap_ref-20261014-205412
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc4 in 18 s (gate total 109 s)
+GATE WARN util: synthesized std area 763 um2 + macros 0 in core 12364: util 6%  -> FIX: set "std_area_um2": 763 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN ot_s81_hc_ctfx_cap cells 4,543 flops 2,271 depth 11.7 ps util 0.0617 reach 54.8 um (0.0 s)
+GATE WARN textbook.util_channel: utilisation 6.2% outside 45%-65% (std 763 + macro 0 um2 in 12364 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 304.7..325.6 ps (spread 20.9), boundary mean 315.3; tt insertion all 240.8..259.4 ps (spread 18.6), boundary mean 249.8; ff insertion all 200.1..217.4 ps (spread 17.3), boundary mean 208.2; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/s81hc_ctfxcap_ref/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->out      260 paths, worst slack 339.6 ps (e.g. fdx[816])
+GATE INFO path_classes: in->reg        47 paths, worst slack 347.8 ps (e.g. ot_prs_00017_ff/D)
+GATE INFO path_classes: reg->reg       14 paths, worst slack 628.2 ps (e.g. fv[6]$_DFF_PN0_/RESETN)
+GATE INFO path_classes: setup WNS 3.3957289757857723e-10 hold WNS -5.14183418065528e-11
+GATE INFO clock_rule: root port:clk: 2,271 sinks on the largest root <= 15,000; measured TT insertion 259.4 ps, leaf spread 18.6 ps
+PRE_ROUTE_GATE: WARN (0 fail, 2 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/s81-norm-tree-1014/physical/ref_tile/s81hc_ctfxcap_ref/source_binding_history/7688b8a9493030b1d00a86642e2bc127e55c51c813e607b71fdd8966aebaf15b.json
+GATE: s81hc_ctfxcap_ref/gate_result.json written (exact staged source binding; commit it with the kit)

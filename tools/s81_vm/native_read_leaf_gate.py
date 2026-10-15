@@ -64,10 +64,12 @@ endmodule
 elif kind=='v':
  nv=8 if g==1 else 5 if g==5 else np
  ports=['.ck(ck)','.rst_n(rst)','.i_expected(exp)','.i_slot(slot)','.i_partial_valid(pv)',".i_fault(8'd0)",'.o_valid(ov)','.fault(fault)']
+ sb,svn=(0,8)if g<=1 else(4*g,4)
+ if pinreg:ports+=['.i_slot_valid(sv)']
  if g==0:ports+=['.i_peer_valid(peer)']
  sv=f'''`timescale 1ns/1ps
 module tb;reg ck=0,rst=0;always #0.417 ck=~ck;
-reg[{np-1}:0]exp=0;reg[{5*np-1}:0]slot=0;reg[{8*np-1}:0]pv=0;reg[7:0]peer=0;wire[{nv-1}:0]ov;wire fault;
+reg[{np-1}:0]exp=0;reg[{5*np-1}:0]slot=0;reg[{8*np-1}:0]pv=0;reg[7:0]peer=0;reg[{4*svn-1}:0]sv=0;reg[{np-1}:0]effv=0;integer kk,ss;wire[{nv-1}:0]ov;wire fault;
 dsfd_vm_static_read_v{g}{SFX} dut({','.join(ports)});
 integer cy=0,bad=0,checks=0,j,p,b,seed=1;reg[{np-1}:0]oldexp=0;reg oldalt=0;reg[{nv-1}:0]ev[0:600];reg[{np-1}:0]hexp[0:600];reg halt[0:600];
 initial for(integer k=0;k<=600;k=k+1)begin ev[k]=0;hexp[k]=0;halt[k]=0;end
@@ -86,12 +88,21 @@ initial begin
  if g==1:sv+=" slot[0+:5]=5'((cy%2)*4+(cy+seed)%4);for(p=1;p<=4;p=p+1)slot[5*p+:5]=5'(3+p);\n"
  if g in(2,3,5):sv+=f" for(p=0;p<4;p=p+1)slot[5*p+:5]=5'({4*g}+p);\n"
  if g>=6:sv+=f" for(p=0;p<4;p=p+1)slot[5*p+:5]=5'({4*g}+p);\n"
- if g==1:sv+=f'ev[cy+{L}]=exp[8:1];\n'
- elif g==5:sv+=f'ev[cy+{L}]={{exp[7:4],&exp[3:0]}};\n'
- else:sv+=f'ev[cy+{L}]=exp;\n'
+ # the memory group's slot-valid bits: present exactly for the expected slots (all four stripe pairs)
+ eff='exp'
+ if pinreg:
+  # every 7th cycle one stripe pair (k=1) lacks the valid bit of the last partial's slot: completeness must drop
+  # for every partial on that slot (proves o_valid reads the slot-valid bits; mutant OT_VM_READ_MUT_SVIGNORE)
+  sv+=f" sv=0;for(p=0;p<{np};p=p+1)if(exp[p])begin ss=slot[5*p+:5];if(ss>={sb}&&ss<{sb+svn})for(kk=0;kk<4;kk=kk+1)sv[{svn}*kk+ss-{sb}]=1'b1;end\n"
+  sv+=f" if(cy%7==3)sv[{svn}+slot[5*{np-1}+:5]-{sb}]=1'b0;\n"
+  sv+=f" for(p=0;p<{np};p=p+1)begin ss=slot[5*p+:5];effv[p]=exp[p]&&(ss>={sb})&&(ss<{sb+svn});if(effv[p])for(kk=0;kk<4;kk=kk+1)effv[p]=effv[p]&&sv[{svn}*kk+ss-{sb}];end\n"
+  eff='effv'
+ if g==1:sv+=f'ev[cy+{L}]={eff}[8:1];\n'
+ elif g==5:sv+=f'ev[cy+{L}]={{{eff}[7:4],&{eff}[3:0]}};\n'
+ else:sv+=f'ev[cy+{L}]={eff};\n'
  sv+=f'''hexp[cy]=exp;halt[cy]=cy%2;
  end
- repeat({L})begin @(negedge ck);cy=cy+1;exp=0;oldexp=cy>={L}?hexp[cy-{L}]:0;oldalt=cy>={L}?halt[cy-{L}]:0;for(b=0;b<8;b=b+1)begin pv[{np}*b+:{np}]=oldexp;
+ repeat({L})begin @(negedge ck);cy=cy+1;exp=0;sv=0;oldexp=cy>={L}?hexp[cy-{L}]:0;oldalt=cy>={L}?halt[cy-{L}]:0;for(b=0;b<8;b=b+1)begin pv[{np}*b+:{np}]=oldexp;
 '''
  if g==0:sv+=f' pv[{np}*b+1]=oldexp[1]&&!oldalt;peer[b]=oldexp[1]&&oldalt;\n'
  if g==1:sv+=f' pv[{np}*b]=oldexp[0]&&oldalt;\n'
@@ -101,11 +112,13 @@ initial begin
 end endmodule
 '''
  src=r/'dsfd_vm_static_read_valid.sv'
- if mode=='mutant':
+ if mode=='mutant'and pinreg:defines=['-DOT_VM_READ_MUT_SVIGNORE']
+ elif mode=='mutant':
   body=src.read_text();old='o_valid[0]<=&complete[3:0]'if g==5 else'o_valid[p]<=complete[p+(G==1?1:0)]';assert body.count(old)==1
   new='o_valid[0]<=~(&complete[3:0])'if g==5 else old+' ^ (p==0)'
   src=out/'mut_valid.sv';src.write_text(body.replace(old,new))
- files=[src,r/('dsfd_vm_static_read_valid_quartets_p.sv'if pinreg else'dsfd_vm_static_read_valid_quartets.sv')];defines=[]
+ files=[src,r/('dsfd_vm_static_read_valid_quartets_p.sv'if pinreg else'dsfd_vm_static_read_valid_quartets.sv')]
+ if not(mode=='mutant'and pinreg):defines=[]
 else:raise SystemExit('kind must q or v')
 bench=out/'tb.sv';bench.write_text(sv)
 subprocess.run(['iverilog','-g2012',*defines,'-s','tb','-o',str(out/'sim'),*map(str,files),str(bench)],check=True)

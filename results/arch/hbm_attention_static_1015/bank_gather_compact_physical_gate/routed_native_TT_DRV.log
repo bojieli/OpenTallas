@@ -1,0 +1,117 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+QDM reference pin bank_data[0]$_DFFE_PP_/CLK clock arrival max 223.336349 min 207.088196 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+OT_CORNER tt
+OT_WS 2.4526475295161276e-10
+OT_TNS 0.0
+Startpoint: rst_n (input port clocked by core_clk)
+Endpoint: output_v$_DFF_PN0_ (recovery check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+ 480.00  480.00 ^ input external delay
+   0.00  480.00 ^ rst_n (in)
+  41.20  521.20 ^ hold8727/Y (BUFx2_ASAP7_75t_R)
+  17.94  539.14 ^ hold5647/Y (BUFx2_ASAP7_75t_R)
+  26.06  565.20 ^ input6/Y (BUFx3_ASAP7_75t_R)
+  44.70  609.90 ^ place5059/Y (BUFx2_ASAP7_75t_R)
+  32.82  642.72 ^ wire5149/Y (BUFx12_ASAP7_75t_R)
+  32.14  674.87 ^ output_v$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+         674.87   data arrival time
+
+ 833.33  833.33   clock core_clk (rise edge)
+   0.00  833.33   clock source latency
+   0.00  833.33 ^ clk (in)
+  49.50  882.83 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  27.98  910.81 ^ clkbuf_1_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  29.75  940.56 ^ clkbuf_2_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  40.88  981.44 ^ clkbuf_4_4_0_clk/Y (BUFx24_ASAP7_75t_R)
+  39.12 1020.56 ^ clkbuf_leaf_112_clk/Y (BUFx24_ASAP7_75t_R)
+   0.74 1021.30 ^ output_v$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -60.00  961.30   clock uncertainty
+   0.00  961.30   clock reconvergence pessimism
+  23.75  985.05   library recovery time
+         985.05   data required time
+---------------------------------------------------------
+         985.05   data required time
+        -674.87   data arrival time
+---------------------------------------------------------
+         310.19   slack (MET)
+
+
+Startpoint: block_select[0] (input port clocked by core_clk)
+Endpoint: select_q[4]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+ 480.00  480.00 v input external delay
+   0.00  480.00 v block_select[0] (in)
+  48.85  528.85 v hold5730/Y (BUFx2_ASAP7_75t_R)
+  25.12  553.97 v input3/Y (BUFx2_ASAP7_75t_R)
+  30.00  583.97 v wire5285/Y (BUFx12_ASAP7_75t_R)
+  49.42  633.39 ^ _6433_/Y (INVx1_ASAP7_75t_R)
+  51.74  685.13 ^ _6436_/Y (AND3x1_ASAP7_75t_R)
+   7.11  692.24 ^ select_q[4]$_DFF_P_/D (DFFHQNx2_ASAP7_75t_R)
+         692.24   data arrival time
+
+ 833.33  833.33   clock core_clk (rise edge)
+   0.00  833.33   clock source latency
+   0.00  833.33 ^ clk (in)
+  49.50  882.83 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  27.92  910.75 ^ clkbuf_1_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  30.09  940.84 ^ clkbuf_2_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  33.79  974.63 ^ clkbuf_4_15_0_clk/Y (BUFx24_ASAP7_75t_R)
+  41.37 1016.01 ^ clkbuf_leaf_52_clk/Y (BUFx24_ASAP7_75t_R)
+   0.63 1016.64 ^ select_q[4]$_DFF_P_/CLK (DFFHQNx2_ASAP7_75t_R)
+ -60.00  956.64   clock uncertainty
+   0.00  956.64   clock reconvergence pessimism
+ -19.14  937.50   library setup time
+         937.50   data required time
+---------------------------------------------------------
+         937.50   data required time
+        -692.24   data arrival time
+---------------------------------------------------------
+         245.26   slack (MET)
+
+
+OT_VIOL_D_PINS 0
+OT_WS_REG_D 245.264755
+OT_WS_OUT 272.777313
+OT_WS_R2R 280.471436
+OT_WS_I2R 245.264755
+NATIVE_DRV_BEGIN
+max slew
+
+Pin                                    Limit    Slew   Slack
+------------------------------------------------------------
+_5392_/B2                             260.00  305.65  -45.65 (VIOLATED)
+_5912_/B2                             260.00  302.81  -42.81 (VIOLATED)
+_5398_/B2                             260.00  302.58  -42.58 (VIOLATED)
+_5572_/B2                             260.00  297.99  -37.99 (VIOLATED)
+_6044_/B2                             260.00  260.23   -0.23 (VIOLATED)
+
+NATIVE_DRV_END
