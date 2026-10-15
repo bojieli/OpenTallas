@@ -50,3 +50,25 @@ boundaries. Production phase-ROM addresses, operand producers, full native
 VM service calendars, physical phases/slots and layer throughput remain
 unqualified. The compiler refuses absent bindings; no production calendar is
 created from random phase fixtures or historical252-command opaque patterns.
+
+The Markov embedding successor `ot_dsrom_markov_embed_static` replaces its old
+PP lookup's runtime credits/FIFO with sixteen fixed reads and responses. Its
+253 real paired masters instantiate506 actual4096x274 mask ROMs; each preserves
+256 payload bits per word and the released129280x256 BF16 Etable. The upper18
+ROM bits remain unused. The physical pair and group clocks are explicit270
+entries. No runtime input changes a read or response edge. Prefix token and
+caller identity are captured at the real request; invalid token/overlap/missing
+pair output faults are diagnostic and never shift the output slots.
+
+`markov_static_image.py` copies the entire66,191,360-byte released tensor into
+all506 physical via masks; only unused cells above the released token bound
+are zero. The admitted full-shape gate checks160 beats from10 boundary tokens,
+sixteen invalid-token slots, and independently decodes every released row from
+the physical via maps back to the source hash. A second admitted run flips one
+actual via cell with the same binary and unchanged scoreboard; it fails on
+beat0. The original masks stay unchanged. The gate uses the real ROM model's
+744ps SS read delay at833ps, as functional capture evidence. It does not prove
+physical setup/hold or the full head path. Output pins launch at request+6..21;
+the kernel receives them at+7..22, so its start is sampled at request+6. Actual
+Wtable/head-logit producers and prefix pairing are separate native callers;
+head logits are never stored as immutable descriptor values.
