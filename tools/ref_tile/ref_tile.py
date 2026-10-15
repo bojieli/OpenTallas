@@ -434,6 +434,17 @@ def layer_contract(s: dict, slot: dict | None) -> dict:
             if out["pg_layer"] not in ok:
                 raise SpecError(f"layer contract: tile cap/PG {out['pg_layer']} != contract slot layer_cap "
                                 f"{slot.get('layer_cap') or slot.get('pg_layer')}")
+        # An explicit lower signal ceiling does not move the PG mesh or its
+        # parent strap. Never use this field to widen an existing route cap.
+        sig = s.get("signal_max_layer")
+        if sig is not None:
+            limit = metal(out["rlayers"][1])
+            slot_sig = metal((slot or {}).get("signal_max_layer"))
+            if slot_sig is not None:
+                limit = min(limit, slot_sig)
+            if metal(sig) is None or not 2 <= metal(sig) <= limit:
+                raise SpecError(f"tile signal_max_layer {sig!r} must be M2..M{limit}; it cannot loosen the layer contract")
+            out.update(rlayers=("M2", sig), signal_max_layer=sig)
         return out
     for ch in s["children"]:
         m = read_view_lef(ch["view"])
@@ -457,16 +468,23 @@ def layer_contract(s: dict, slot: dict | None) -> dict:
 def pin_layers(s: dict, lc: dict) -> tuple[str, str]:
     """(IO_PLACER_H, IO_PLACER_V) for the kit; every pin layer must be <= the tile's cap (no pin on the parent strap)."""
     r = s["route"]
-    cap = lc.get("layer_cap")
+    cap = lc["rlayers"][1]
     dh, dv = PIN_LAYERS.get(cap if cap in PIN_LAYERS else "M6")
     if lc.get("cap_basis", "").startswith("legacy"):
         dh, dv = PIN_LAYERS["M6"]
+    if s.get("signal_max_layer"):
+        if metal(cap) == 4:
+            dh, dv = "M4", "M3"
+        elif metal(cap) == 3:
+            dh, dv = "M2", "M3"
+        elif metal(cap) < 3:
+            dh, dv = cap, cap
     h, v = r.get("pin_h", dh), r.get("pin_v", dv)
     if s["kind"] == "tile":
         pb = r.get("pin_balance") or {}
         used = (h + " " + v + " " + pb.get("h", "") + " " + pb.get("v", "")).split()
         over = sorted({x for x in used if (metal(x) or 0) > metal(lc["rlayers"][1])})
-        if over and not (over == ["M6"] and lc.get("m6_pin_grant")):
+        if over and not (over == ["M6"] and lc.get("m6_pin_grant") and cap == "M5"):
             raise SpecError(f"layer contract: pin layers {over} above the tile's signal cap {lc['rlayers'][1]} "
                             f"(pins on M4/M5 under the M5 cap; the parent reaches them from M6)")
     return h, v
@@ -703,16 +721,16 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
     if "ANY" in pin_faces:
         pin_faces = set(FACES)
     x0c, y0c, x1c, y1c = CORE_MARGIN, CORE_MARGIN, W - CORE_MARGIN, H - CORE_MARGIN
-    # abut_plan (2026-10-13, Qwen VM lane bays): a PROBE cluster of wires + hard tiles placed at a planned channel narrower
+    # abut_plan: a held diagnostic tile/cluster at a planned channel narrower
     # than CHANNEL_UM, routed to MEASURE that channel.  {"channel_um": c, "edge_um": e, "why": "..."}: tile-tile gaps >= c
     # and tile-edge distances >= e pass as WARN "abut_plan"; only on a cluster whose job carries "hold_merge" (a probe is
     # never a closure candidate), so the 20-um rule still judges every block that can merge.
     ab = s.get("abut_plan") or None
     ab_n = {"channel": 0, "macro_edge": 0}
     if ab is not None:
-        if s.get("kind") != "cluster" or not (s.get("job") or {}).get("hold_merge") or not ab.get("why"):
-            out.append(("FAIL", "abut_plan", "abut_plan is for a probe cluster only: kind cluster, job.hold_merge and a 'why'",
-                        "drop abut_plan, or make the job a probe (job.hold_merge)"))
+        if s.get("kind") not in ("tile", "cluster") or not (s.get("job") or {}).get("hold_merge") or not ab.get("why"):
+            out.append(("FAIL", "abut_plan", "abut_plan requires a held diagnostic tile/cluster and a 'why'",
+                        "drop abut_plan, or make the job a probe (job.hold_merge); production keeps the20um rule"))
             ab = None
     ch_min = float(ab["channel_um"]) if ab else CHANNEL_UM
     edge_min = float(ab.get("edge_um", ab["channel_um"])) if ab else None
@@ -1008,6 +1026,10 @@ def gen_hooks(s: dict, kd: str) -> dict:
         # add before GRT, remove after DRT (the wrapper picks the mode from its caller); the hold ECO re-applies it
         pre_grt.append(f"source /src/{MACRO_EDGE_GUARD_TCL}")
         post_drt.append(f"source /src/{MACRO_EDGE_GUARD_TCL}")
+    if s["kind"] == "tile" and s.get("signal_max_layer"):
+        lc = layer_contract(s, contract_slot(s))
+        post_drt += ["source /src/tools/ref_tile/signal_layer_audit.tcl",
+                     f"ot_ref_audit_signal_layers {lc['rlayers'][1]} {lc['pg_layer']} [file join $::env(RESULTS_DIR) signal_layer_audit.json]"]
     corridor = s.get("pin_access", {}).get("corridor")
     if corridor:
         for post, hook in ((0, pre_grt), (1, post_drt)):
@@ -1266,6 +1288,8 @@ def referenced_paths(s: dict, kd: str) -> list:
            "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl", "physical/common_flow/grt_macro_top_layer.tcl"]
     if macro_edge_guard(s):
         out += [MACRO_EDGE_GUARD_TCL, "physical/common_flow/macro_edge_via_guard.tcl"]
+    if s["kind"] == "tile" and s.get("signal_max_layer"):
+        out.append("tools/ref_tile/signal_layer_audit.tcl")
     if s.get("forwarded_clock"):
         out.append("physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
     if s.get("io_tcl"):
@@ -1507,6 +1531,10 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
     o.mkdir(parents=True, exist_ok=True)
     cmd = [sys.executable, str(ROOT / "tools/tt_views/view_export.py"), "--orfs-dir", orfs_dir, "--name", top,
            "--out", str(o), "--interface-sdc", str(ROOT / kit / "signoff.sdc"), "--corners", "ss,ff,tt"]
+    lc = fp.get("layer_contract", {})
+    if lc.get("signal_max_layer"):
+        cmd += ["--signal-max-layer", lc["signal_max_layer"], "--pg-max-layer", lc["pg_layer"],
+                "--signal-audit-tcl", str(ROOT / "tools/ref_tile/signal_layer_audit.tcl")]
     # EXPORT-SDC (2026-10-13): view_export replays the route's VERDICT constraint sequence (closure-loop run: routed
     # 6_final.sdc, SPEF, post-SDCs, io_ref_routed.sdc last) and fails when its TT / FF slack differs from the verdict.
     # Outside a loop run there is no verdict to replay: the same order from the kit (never signoff.sdc INSTEAD of the
