@@ -16328,3 +16328,18 @@ def hbm_idx_static_vm_model():
         compiler='reserve read group per bank, reject remote main addresses, reserve capture edge n+8',
         price='immutable INDEX price unchanged; full engine rate must be measured',
         qualification='OPEN real-SRAM composition, engine binding, physical and production-rate proof')
+
+
+def hbm_idx_static_query_model():
+    """Query quantisation successor: fixed block and head emit slots."""
+    return dict(schema='opentallas.hbm-idx-static-query.v1',
+        macs_per_cycle=0, input_bytes_per_cycle=128,
+        production=dict(heads=32,blocks_per_head=4,input_beats=128,output_beats=32),
+        boundary_bits=dict(input=1048,output=571),
+        storage_bits=dict(codes=16384,scales=1024,weights=512,seen=128),
+        clock_roots=7, clock_sink_estimate='8-head bank retains4608bits; quant roots distinct',
+        quant_pipeline_edges=13, emit_pin_edges=1,
+        routing='four8-head retained banks, explicit emit selection; physical cuts UNASSIGNED',
+        scheduling='compiler issues every block and head slot; missing/duplicate/early slot faults, no waiting',
+        price='immutable query/INDEX prices unchanged; fixed compiler transport still must be measured',
+        qualification='OPEN real query exactness + mutants, CTS, slot, native parent composition')
