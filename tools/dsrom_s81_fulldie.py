@@ -5195,6 +5195,7 @@ PIN_SEG = 100.0                 #   on die interfaces (last segment <= 100 um)
 PIN_NEED = False                # --pin-need (hbmdie-1011, compact199): a column net's relay count / path end at a q element
                                 # is measured to that port's LEF pin centroid, not the 510 x 221 um element centre (gt: seq ->
                                 # go_tag pins on the element S face ~150 um, centre 238 um > the 214 um rule)
+HSTN_POSEDGE = False            # --hstn-posedge (FILL-S 2026-10-15): common-clock stations as plain posedge flops on ck
 SSTN_CCPAD = False              # --sstn-ccpad (hbmdie-1011, compact199): a --lane-equal pad on a cc net driven by a slot
                                 # station is N extra cc registers INSIDE that station (master dsfd_sstn_<pins>_cp<N>), not a
                                 # floating relay on the ~40 um station -> sequencer hop (no site exists between them)
@@ -9313,6 +9314,15 @@ def glue_rtl(m):
                      '.r_live(rl), .w_fault(wf), .r_fault(rf_));',
                      f'    reg [{w - 1}:0] orr; always @(posedge ck[0]) orr <= {{rq, rv & rl, rsync}};',
                      '    assign o = orr;']
+        elif mst.startswith('dsfd_hstn') and HSTN_POSEDGE:
+            # --hstn-posedge: the same function (dq(t+1) = di(t) at the rising ck edge, 0 cycles) as plain posedge flops.
+            # The INV + negedge form below puts every sink behind an inverted clock: the ref_tile IO reference / link
+            # budget then reads the FALLING edge (struct-close 10-09 dsfd_hstnh_515_pe; FILL-S 10-15 gates: 'OT_LINK_BUDGET
+            # no latency for core_clk', median sink arrival 462.7 ps on all 54 stations), so no station hardens.
+            w = ports['di'][1]
+            body.append(f'    reg [{w - 1}:0] q;   // common-clock station: every di bit captured at the rising edge of ck')
+            body.append('    always @(posedge ck[0]) q <= di;')
+            body.append('    assign dq = q;')
         elif mst.startswith('dsfd_hstn'):
             w = ports['di'][1]
             body.append('    wire fck;   // common clock: the stage captures on negedge fclk_i = posedge ck')
@@ -9700,6 +9710,9 @@ def die_options(ap):
                     'own column tree (pin cr); fixes the FF xa/xb -> first relay hold class (sta_v6)')
     ap.add_argument('--pin-need', action='store_true', help='column relay need / path to q element ports measured at the '
                     'real LEF pin centroid (not the element centre)')
+    ap.add_argument('--hstn-posedge', action='store_true', help='common-clock stations dsfd_hstn{h,v}_<W> as plain posedge '
+                    'flops on ck (same function, 0 cycles) instead of INV + negedge ot_fwd_link_stage: the inverted sinks '
+                    'defeat the tile IO reference (FILL-S 2026-10-15, physical/ref_tile/s81fill_hstn*)')
     ap.add_argument('--sstn-ccpad', action='store_true', help='--lane-equal cc padding as extra cc registers in the '
                     'driving slot station (no floating pad relay)')
     ap.add_argument('--rt-strip', type=float, default=0.0, help='return-tree relays may use a UM-high strip above their '
@@ -10000,8 +10013,9 @@ def apply_options(a):
     global RELAY_PROGRESS, RT_STRIP
     RELAY_PROGRESS = bool(getattr(a, 'relay_progress', False))
     RT_STRIP = float(getattr(a, 'rt_strip', 0.0) or 0.0)
-    global SSTN_CCPAD
+    global SSTN_CCPAD, HSTN_POSEDGE
     SSTN_CCPAD = bool(getattr(a, 'sstn_ccpad', False))
+    HSTN_POSEDGE = bool(getattr(a, 'hstn_posedge', False))
     global PIN_NEED
     PIN_NEED = bool(getattr(a, 'pin_need', False))
     global VM_FACE_MM2
