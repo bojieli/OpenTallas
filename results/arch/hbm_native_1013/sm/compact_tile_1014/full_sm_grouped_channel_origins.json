@@ -1,0 +1,484 @@
+{
+  "schema": "opentallas.smh.full_sm_planned_origins.v1",
+  "alternative": "grouped_channel",
+  "qualification": "UNQUALIFIED_GEOMETRY_ONLY; tile dimensions are planned, no tile parent routed view. Thirtytwo completeSM count retained.",
+  "source_commit": "1e2405586950ac12681c995e0cf1ab5f9243c449",
+  "source_origins_sha256": "f1372a9634e8f37c71c7b3ff5e6bf56804fe40aab79907c673eadd142ccb711c",
+  "retained_sm_count": 32,
+  "retained_tile_count_per_sm": 16,
+  "retained_non_tile_children_per_sm": 19,
+  "tile_outline_um": [
+    630.72,
+    1036.8
+  ],
+  "frame_outline_um": [
+    6013.44,
+    2177.28
+  ],
+  "frame_area_mm2": 13.0929426432,
+  "all32_sm_frame_area_mm2": 418.9741645824,
+  "children": [
+    {
+      "name": "g_c[0].g_be_e.u_be",
+      "cell": "ot_hbm_accel_smh_be_eg",
+      "x": 0.0,
+      "y": 0,
+      "orient": "R0",
+      "outline_um": [
+        319.68,
+        77.76
+      ],
+      "status": "CLOSED_TT_FF_PHYSICAL_NATIVE_ADOPTION_PENDING",
+      "view_job": "smn_be_eg_ref-r2-b9a29ac93"
+    },
+    {
+      "name": "g_c[0].g_p[0].g_tw.u_t",
+      "cell": "ot_hbm_accel_smh_tile_wg",
+      "x": 0.0,
+      "y": 1131.84,
+      "orient": "R0",
+      "outline_um": [
+        630.72,
+        1036.8
+      ],
+      "status": "PLANNED_UNBUILT",
+      "view_job": null
+    },
+    {
+      "name": "g_c[0].g_p[1].g_tw.u_t",
+      "cell": "ot_hbm_accel_smh_tile_wg",
+      "x": 0.0,
+      "y": 86.4,
+      "orient": "R0",
+      "outline_um": [
+        630.72,
+        1036.8
+      ],
+      "status": "PLANNED_UNBUILT",
+      "view_job": null
+    },
+    {
+      "name": "g_c[1].g_be_e.u_be",
+      "cell": "ot_hbm_accel_smh_be_eg",
+      "x": 639.36,
+      "y": 0,
+      "orient": "R0",
+      "outline_um": [
+        319.68,
+        77.76
+      ],
+      "status": "CLOSED_TT_FF_PHYSICAL_NATIVE_ADOPTION_PENDING",
+      "view_job": "smn_be_eg_ref-r2-b9a29ac93"
+    },
+    {
+      "name": "g_c[1].g_p[0].g_tw.u_t",
+      "cell": "ot_hbm_accel_smh_tile_wg",
+      "x": 639.36,
+      "y": 1131.84,
+      "orient": "R0",
+      "outline_um": [
+        630.72,
+        1036.8
+      ],
+      "status": "PLANNED_UNBUILT",
+      "view_job": null
+    },
+    {
+      "name": "g_c[1].g_p[1].g_tw.u_t",
+      "cell": "ot_hbm_accel_smh_tile_wg",
+      "x": 639.36,
+      "y": 86.4,
+      "orient": "R0",
+      "outline_um": [
+        630.72,
+        1036.8
+      ],
+      "status": "PLANNED_UNBUILT",
+      "view_job": null
+    },
+    {
+      "name": "g_c[2].g_be_e.u_be",
+      "cell": "ot_hbm_accel_smh_be_eg",
+      "x": 1278.72,
+      "y": 0,
+      "orient": "R0",
+      "outline_um": [
+        319.68,
+        77.76
+      ],
+      "status": "CLOSED_TT_FF_PHYSICAL_NATIVE_ADOPTION_PENDING",
+      "view_job": "smn_be_eg_ref-r2-b9a29ac93"
+    },
+    {
+      "name": "g_c[2].g_p[0].g_tw.u_t",
+      "cell": "ot_hbm_accel_smh_tile_wg",
+      "x": 1278.72,
+      "y": 1131.84,
+      "orient": "R0",
+      "outline_um": [
+        630.72,
+        1036.8
+      ],
+      "status": "PLANNED_UNBUILT",
+      "view_job": null
+    },
+    {
+      "name": "g_c[2].g_p[1].g_tw.u_t",
+      "cell": "ot_hbm_accel_smh_tile_wg",
+      "x": 1278.72,
+      "y": 86.4,
+      "orient": "R0",
+      "outline_um": [
+        630.72,
+        1036.8
+      ],
+      "status": "PLANNED_UNBUILT",
+      "view_job": null
+    },
+    {
+      "name": "g_c[3].g_be_e.u_be",
+      "cell": "ot_hbm_accel_smh_be_eg",
+      "x": 1918.08,
+      "y": 0,
+      "orient": "R0",
+      "outline_um": [
+        319.68,
+        77.76
+      ],
+      "status": "CLOSED_TT_FF_PHYSICAL_NATIVE_ADOPTION_PENDING",
+      "view_job": "smn_be_eg_ref-r2-b9a29ac93"
+    },
+    {
+      "name": "g_c[3].g_p[0].g_tw.u_t",
+      "cell": "ot_hbm_accel_smh_tile_wg",
+      "x": 1918.08,
+      "y": 1131.84,
+      "orient": "R0",
+      "outline_um": [
+        630.72,
+        1036.8
+      ],
+      "status": "PLANNED_UNBUILT",
+      "view_job": null
+    },
+    {
+      "name": "g_c[3].g_p[1].g_tw.u_t",
+      "cell": "ot_hbm_accel_smh_tile_wg",
+      "x": 1918.08,
+      "y": 86.4,
+      "orient": "R0",
+      "outline_um": [
+        630.72,
+        1036.8
+      ],
+      "status": "PLANNED_UNBUILT",
+      "view_job": null
+    },
+    {
+      "name": "g_c[4].g_be_w.u_be",
+      "cell": "ot_hbm_accel_smh_be_wg",
+      "x": 3464.64,
+      "y": 0,
+      "orient": "R0",
+      "outline_um": [
+        319.68,
+        77.76
+      ],
+      "status": "HISTORICAL_CLOSED_VIEW_NATIVE_CHILD_LINT_TT_EXPORT_OPEN",
+      "view_job": "hbm_smh_be_wg_cg-80412d770-tc-np-r2-tcfix-cl"
+    },
+    {
+      "name": "g_c[4].g_p[0].g_te.u_t",
+      "cell": "ot_hbm_accel_smh_tile_eg",
+      "x": 3464.64,
+      "y": 1131.84,
+      "orient": "R0",
+      "outline_um": [
+        630.72,
+        1036.8
+      ],
+      "status": "PLANNED_UNBUILT",
+      "view_job": null
+    },
+    {
+      "name": "g_c[4].g_p[1].g_te.u_t",
+      "cell": "ot_hbm_accel_smh_tile_eg",
+      "x": 3464.64,
+      "y": 86.4,
+      "orient": "R0",
+      "outline_um": [
+        630.72,
+        1036.8
+      ],
+      "status": "PLANNED_UNBUILT",
+      "view_job": null
+    },
+    {
+      "name": "g_c[5].g_be_w.u_be",
+      "cell": "ot_hbm_accel_smh_be_wg",
+      "x": 4104.0,
+      "y": 0,
+      "orient": "R0",
+      "outline_um": [
+        319.68,
+        77.76
+      ],
+      "status": "HISTORICAL_CLOSED_VIEW_NATIVE_CHILD_LINT_TT_EXPORT_OPEN",
+      "view_job": "hbm_smh_be_wg_cg-80412d770-tc-np-r2-tcfix-cl"
+    },
+    {
+      "name": "g_c[5].g_p[0].g_te.u_t",
+      "cell": "ot_hbm_accel_smh_tile_eg",
+      "x": 4104.0,
+      "y": 1131.84,
+      "orient": "R0",
+      "outline_um": [
+        630.72,
+        1036.8
+      ],
+      "status": "PLANNED_UNBUILT",
+      "view_job": null
+    },
+    {
+      "name": "g_c[5].g_p[1].g_te.u_t",
+      "cell": "ot_hbm_accel_smh_tile_eg",
+      "x": 4104.0,
+      "y": 86.4,
+      "orient": "R0",
+      "outline_um": [
+        630.72,
+        1036.8
+      ],
+      "status": "PLANNED_UNBUILT",
+      "view_job": null
+    },
+    {
+      "name": "g_c[6].g_be_w.u_be",
+      "cell": "ot_hbm_accel_smh_be_wg",
+      "x": 4743.36,
+      "y": 0,
+      "orient": "R0",
+      "outline_um": [
+        319.68,
+        77.76
+      ],
+      "status": "HISTORICAL_CLOSED_VIEW_NATIVE_CHILD_LINT_TT_EXPORT_OPEN",
+      "view_job": "hbm_smh_be_wg_cg-80412d770-tc-np-r2-tcfix-cl"
+    },
+    {
+      "name": "g_c[6].g_p[0].g_te.u_t",
+      "cell": "ot_hbm_accel_smh_tile_eg",
+      "x": 4743.36,
+      "y": 1131.84,
+      "orient": "R0",
+      "outline_um": [
+        630.72,
+        1036.8
+      ],
+      "status": "PLANNED_UNBUILT",
+      "view_job": null
+    },
+    {
+      "name": "g_c[6].g_p[1].g_te.u_t",
+      "cell": "ot_hbm_accel_smh_tile_eg",
+      "x": 4743.36,
+      "y": 86.4,
+      "orient": "R0",
+      "outline_um": [
+        630.72,
+        1036.8
+      ],
+      "status": "PLANNED_UNBUILT",
+      "view_job": null
+    },
+    {
+      "name": "g_c[7].g_be_w.u_be",
+      "cell": "ot_hbm_accel_smh_be_wg",
+      "x": 5382.72,
+      "y": 0,
+      "orient": "R0",
+      "outline_um": [
+        319.68,
+        77.76
+      ],
+      "status": "HISTORICAL_CLOSED_VIEW_NATIVE_CHILD_LINT_TT_EXPORT_OPEN",
+      "view_job": "hbm_smh_be_wg_cg-80412d770-tc-np-r2-tcfix-cl"
+    },
+    {
+      "name": "g_c[7].g_p[0].g_te.u_t",
+      "cell": "ot_hbm_accel_smh_tile_eg",
+      "x": 5382.72,
+      "y": 1131.84,
+      "orient": "R0",
+      "outline_um": [
+        630.72,
+        1036.8
+      ],
+      "status": "PLANNED_UNBUILT",
+      "view_job": null
+    },
+    {
+      "name": "g_c[7].g_p[1].g_te.u_t",
+      "cell": "ot_hbm_accel_smh_tile_eg",
+      "x": 5382.72,
+      "y": 86.4,
+      "orient": "R0",
+      "outline_um": [
+        630.72,
+        1036.8
+      ],
+      "status": "PLANNED_UNBUILT",
+      "view_job": null
+    },
+    {
+      "name": "g_fd.u_fc.u_bc",
+      "cell": "ot_hbm_accel_smh_fc_bc",
+      "x": 2812.32,
+      "y": 254.88,
+      "orient": "R0",
+      "outline_um": [
+        388.8,
+        479.52
+      ],
+      "status": "INHERITED_CLOSED_VIEW_NATIVE_SEAMS_OPEN",
+      "view_job": "smh_fcbc_ref_p40-r1-a9afd2404-lf"
+    },
+    {
+      "name": "g_fd.u_fc.u_be",
+      "cell": "ot_hbm_accel_smh_fc_b",
+      "x": 3235.68,
+      "y": 250.56,
+      "orient": "MY",
+      "outline_um": [
+        218.16,
+        302.4
+      ],
+      "status": "INHERITED_CLOSED_VIEW_NATIVE_SEAMS_OPEN",
+      "view_job": "smh_fcb_ref_p45-r1-a9afd2404-lf"
+    },
+    {
+      "name": "g_fd.u_fc.u_bw",
+      "cell": "ot_hbm_accel_smh_fc_b",
+      "x": 2561.76,
+      "y": 250.56,
+      "orient": "R0",
+      "outline_um": [
+        218.16,
+        302.4
+      ],
+      "status": "INHERITED_CLOSED_VIEW_NATIVE_SEAMS_OPEN",
+      "view_job": "smh_fcb_ref_p45-r1-a9afd2404-lf"
+    },
+    {
+      "name": "g_fd.u_fc.u_is",
+      "cell": "ot_hbm_accel_smh_fc_is",
+      "x": 2812.32,
+      "y": 745.2,
+      "orient": "R0",
+      "outline_um": [
+        388.8,
+        280.8
+      ],
+      "status": "INHERITED_CLOSED_VIEW_NATIVE_SEAMS_OPEN",
+      "view_job": "smh_fcis_ref_p45-r1-a9afd2404-lf"
+    },
+    {
+      "name": "g_fd.u_fc.u_re",
+      "cell": "ot_hbm_accel_smh_fc_xr",
+      "x": 3235.68,
+      "y": 768.96,
+      "orient": "MY",
+      "outline_um": [
+        218.16,
+        151.2
+      ],
+      "status": "INHERITED_CLOSED_VIEW_NATIVE_SEAMS_OPEN",
+      "view_job": "smh_fcxr_ref_p35-r1-a9afd2404-lf"
+    },
+    {
+      "name": "g_fd.u_fc.u_rw",
+      "cell": "ot_hbm_accel_smh_fc_xr",
+      "x": 2561.76,
+      "y": 768.96,
+      "orient": "R0",
+      "outline_um": [
+        218.16,
+        151.2
+      ],
+      "status": "INHERITED_CLOSED_VIEW_NATIVE_SEAMS_OPEN",
+      "view_job": "smh_fcxr_ref_p35-r1-a9afd2404-lf"
+    },
+    {
+      "name": "g_fd.u_fc.u_te",
+      "cell": "ot_hbm_accel_smh_fc_t",
+      "x": 3235.68,
+      "y": 1123.2,
+      "orient": "MY",
+      "outline_um": [
+        218.16,
+        216.0
+      ],
+      "status": "INHERITED_CLOSED_VIEW_NATIVE_SEAMS_OPEN",
+      "view_job": "smh_fct_ref_p45-r1-a9afd2404-lf"
+    },
+    {
+      "name": "g_fd.u_fc.u_tw",
+      "cell": "ot_hbm_accel_smh_fc_t",
+      "x": 2561.76,
+      "y": 1123.2,
+      "orient": "R0",
+      "outline_um": [
+        218.16,
+        216.0
+      ],
+      "status": "INHERITED_CLOSED_VIEW_NATIVE_SEAMS_OPEN",
+      "view_job": "smh_fct_ref_p45-r1-a9afd2404-lf"
+    },
+    {
+      "name": "g_fd.u_fc.u_xl",
+      "cell": "ot_hbm_accel_smh_fc_xl",
+      "x": 2855.52,
+      "y": 1036.8,
+      "orient": "R0",
+      "outline_um": [
+        302.4,
+        298.08
+      ],
+      "status": "INHERITED_CLOSED_VIEW_NATIVE_SEAMS_OPEN",
+      "view_job": "smh_fcxl_ref_p45-r1-a9afd2404-lf"
+    },
+    {
+      "name": "g_fd.u_fn",
+      "cell": "ot_hbm_accel_smh_front_n",
+      "x": 2790.72,
+      "y": 1347.84,
+      "orient": "R0",
+      "outline_um": [
+        432.0,
+        354.24
+      ],
+      "status": "HISTORICAL_CLOSED_VIEW_NATIVE_CHILD_LINT_TT_EXPORT_OPEN",
+      "view_job": "hbm_smh_front_n_tt_f170efb96"
+    },
+    {
+      "name": "g_fd.u_fs",
+      "cell": "ot_hbm_accel_smh_front_s",
+      "x": 2790.72,
+      "y": 0,
+      "orient": "R0",
+      "outline_um": [
+        432.0,
+        241.92
+      ],
+      "status": "HISTORICAL_CLOSED_VIEW_NATIVE_CHILD_LINT_TT_EXPORT_OPEN",
+      "view_job": "hbm_smh_front_s_vq-933923316-tc-hm010-cl"
+    }
+  ],
+  "overlaps": [],
+  "pin_face_constraints": {
+    "R0_MX_MY": "Original noR90 retained. Tile W/E3705bitrow+beat bundles onM4/M6; N152inputs pluscontrol/clock,S200resultoutputs onM5; original tile front/outputedges and nearest-neighbor order unchanged.",
+    "grouped_children": "M4 Wdata/Elast andM5 Nfirst / Nnorth / Ssouth only; all groups actualslot plan20umchannels. Compact parent still has original ten computeviews.",
+    "clock": "Each grouped hardleaf owns a root, source96logical slices; pin phase and parent clockdelivery unqualified.",
+    "reach": "Provisionalgeometry cannot qualify inter-tile500um/pin-flopwire. Mustmeasure realparent views, then solveglobalfloorplan."
+  }
+}
