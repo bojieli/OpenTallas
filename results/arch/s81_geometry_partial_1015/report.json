@@ -1,0 +1,2221 @@
+{
+ "scope": "PARTIAL_GENERATOR_NOT_RELEASE",
+ "source_pins": {
+  "partial_exact_pins.lef.gz": "2742da6825b8aea15f04e35184f88afd0bbd73843fcc0c0f2cbeecdce1994249",
+  "capacity.json": "b7c9c87f9f4b16b600cc3788f1e41feef45d57593307de26a4f8a2af90325c3e",
+  "port_aliases_screen7.json": "bdf9f6a8c87acf961b224ecde210b7647bcef501cdc92abe00bc1ceec9827207",
+  "canonical_partial_finalized.json.gz": "3e04a0ce604c5bb743a1fd8d56aec1d5034fd939f55f521d3cb7c75eb3635834",
+  "audit.py": "e0f50d6a3b3d7c1971dfc5069275db67dd1db2e342e5ab5a0ea74f7c7c0f473e",
+  "port_aliases_screen7.sources.json": "845dad283aff08e2c6284048b4f56e607df9c204c9acf3e09a065df15077028f"
+ },
+ "actual_instances": 71559,
+ "supplemental_hcp_obstacles": [
+  {
+   "name": "sp_hcx_south0",
+   "master": "ot_s81_hcx_projection_leaf",
+   "at_um": [
+    9417.6,
+    24624.0
+   ],
+   "outline": {
+    "w": 1728.0,
+    "h": 1296.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
+   "ROM": {
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "COARSE_FULL2417_CANDIDATE: native46root size/pins/cuts and physical calendar not proven",
+   "master_candidate": "ot_s81_hcx_projection_partition",
+   "source_structural_defect": "bank rotation traverses shell combinationally: registered rotation boundary redesign required before native adoption"
+  },
+  {
+   "name": "sp_hcx_south1",
+   "master": "ot_s81_hcx_projection_leaf",
+   "at_um": [
+    11232.0,
+    24624.0
+   ],
+   "outline": {
+    "w": 1728.0,
+    "h": 1296.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
+   "ROM": {
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "COARSE_FULL2417_CANDIDATE: native46root size/pins/cuts and physical calendar not proven",
+   "master_candidate": "ot_s81_hcx_projection_partition",
+   "source_structural_defect": "bank rotation traverses shell combinationally: registered rotation boundary redesign required before native adoption"
+  },
+  {
+   "name": "sp_hcx_north0",
+   "master": "ot_s81_hcx_projection_leaf",
+   "at_um": [
+    13046.400000000001,
+    24624.0
+   ],
+   "outline": {
+    "w": 1728.0,
+    "h": 1296.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
+   "ROM": {
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "COARSE_FULL2417_CANDIDATE: native46root size/pins/cuts and physical calendar not proven",
+   "master_candidate": "ot_s81_hcx_projection_partition",
+   "source_structural_defect": "bank rotation traverses shell combinationally: registered rotation boundary redesign required before native adoption"
+  },
+  {
+   "name": "sp_hcx_north1",
+   "master": "ot_s81_hcx_projection_leaf",
+   "at_um": [
+    14860.800000000001,
+    24624.0
+   ],
+   "outline": {
+    "w": 1728.0,
+    "h": 1296.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
+   "ROM": {
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "COARSE_FULL2417_CANDIDATE: native46root size/pins/cuts and physical calendar not proven",
+   "master_candidate": "ot_s81_hcx_projection_partition",
+   "source_structural_defect": "bank rotation traverses shell combinationally: registered rotation boundary redesign required before native adoption"
+  },
+  {
+   "name": "sp_hcx_west0",
+   "master": "ot_s81_hcx_projection_leaf",
+   "at_um": [
+    16675.2,
+    24624.0
+   ],
+   "outline": {
+    "w": 1728.0,
+    "h": 1296.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
+   "ROM": {
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "COARSE_FULL2417_CANDIDATE: native46root size/pins/cuts and physical calendar not proven",
+   "master_candidate": "ot_s81_hcx_projection_partition",
+   "source_structural_defect": "bank rotation traverses shell combinationally: registered rotation boundary redesign required before native adoption"
+  },
+  {
+   "name": "sp_hcx_west1",
+   "master": "ot_s81_hcx_projection_leaf",
+   "at_um": [
+    18489.6,
+    24624.0
+   ],
+   "outline": {
+    "w": 1728.0,
+    "h": 1296.0
+   },
+   "clock": "serial_0p9",
+   "geometry": "xsp7_screen full56444-instance rectangle audit:0overlaps; six new homes pairwise disjoint and clear of MIX/embedding/controller reservations",
+   "ROM": {
+    "macro": "ot_rom_4096x266_m8",
+    "count": 64,
+    "pages": 2,
+    "resident_sets": 43,
+    "used_linear_rows": 6880,
+    "used_payload_bits_per_word": 256,
+    "phase_rows": "80attn+80ffn per resident layer; cmd_layer[5:0] selects0..42",
+    "physical_area_mm2": 0.49049266,
+    "weight_payload_bits": 56360960,
+    "physical_payload_bits": 67108864
+   },
+   "MAC": {
+    "count": 256,
+    "cell_area_estimate_mm2": 0.299210496,
+    "logic_utilization_target": 0.55
+   },
+   "X_stage": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 16
+   },
+   "qualification": "COARSE_FULL2417_CANDIDATE: native46root size/pins/cuts and physical calendar not proven",
+   "master_candidate": "ot_s81_hcx_projection_partition",
+   "source_structural_defect": "bank rotation traverses shell combinationally: registered rotation boundary redesign required before native adoption"
+  }
+ ],
+ "resolved_edges": 145908,
+ "missing_edges": [],
+ "missing_master_incidence": {},
+ "baseline": {
+  "sum_bit_um": 1724979867.3709521,
+  "max_um": 590.1860000000033,
+  "alignment_failures": 2,
+  "over_reach_bits": 56098,
+  "relay_bit_stage_lower_bound": 56098,
+  "top20_routes": [
+   {
+    "bus": "cxE_edge51_d0",
+    "ends": [
+     [
+      "f_cxE_edge28_4",
+      "do0"
+     ],
+     [
+      "f_cxE_edge51_1",
+      "di0"
+     ]
+    ],
+    "bits": 566,
+    "sum_bit_um": 242089.56000000192,
+    "max_um": 436.6799999999985,
+    "alignment": {
+     "bits": 566,
+     "face": [
+      "E",
+      "N"
+     ],
+     "layer": [
+      "M4",
+      "M5"
+     ],
+     "len_max": 436.68,
+     "len_mean": 427.72,
+     "kind": "uturn",
+     "order": "n/a",
+     "verdict": "WARN",
+     "why": [
+      "u-turn: driver face E, load face N"
+     ]
+    }
+   },
+   {
+    "bus": "cxE_edge66_d0",
+    "ends": [
+     [
+      "f_cxE_edge42_3",
+      "do0"
+     ],
+     [
+      "f_cxE_edge66_1",
+      "di0"
+     ]
+    ],
+    "bits": 566,
+    "sum_bit_um": 242089.56000000192,
+    "max_um": 436.6799999999985,
+    "alignment": {
+     "bits": 566,
+     "face": [
+      "E",
+      "N"
+     ],
+     "layer": [
+      "M4",
+      "M5"
+     ],
+     "len_max": 436.68,
+     "len_mean": 427.72,
+     "kind": "uturn",
+     "order": "n/a",
+     "verdict": "WARN",
+     "why": [
+      "u-turn: driver face E, load face N"
+     ]
+    }
+   },
+   {
+    "bus": "cxE_edge83_d0",
+    "ends": [
+     [
+      "f_cxE_edge58_3",
+      "do0"
+     ],
+     [
+      "f_cxE_edge83_1",
+      "di0"
+     ]
+    ],
+    "bits": 566,
+    "sum_bit_um": 242089.56000000192,
+    "max_um": 436.6799999999985,
+    "alignment": {
+     "bits": 566,
+     "face": [
+      "E",
+      "N"
+     ],
+     "layer": [
+      "M4",
+      "M5"
+     ],
+     "len_max": 436.68,
+     "len_mean": 427.72,
+     "kind": "uturn",
+     "order": "n/a",
+     "verdict": "WARN",
+     "why": [
+      "u-turn: driver face E, load face N"
+     ]
+    }
+   },
+   {
+    "bus": "cxE_edge96_d0",
+    "ends": [
+     [
+      "f_cxE_edge74_3",
+      "do0"
+     ],
+     [
+      "f_cxE_edge96_1",
+      "di0"
+     ]
+    ],
+    "bits": 566,
+    "sum_bit_um": 242089.56000000192,
+    "max_um": 436.6799999999985,
+    "alignment": {
+     "bits": 566,
+     "face": [
+      "E",
+      "N"
+     ],
+     "layer": [
+      "M4",
+      "M5"
+     ],
+     "len_max": 436.68,
+     "len_mean": 427.72,
+     "kind": "uturn",
+     "order": "n/a",
+     "verdict": "WARN",
+     "why": [
+      "u-turn: driver face E, load face N"
+     ]
+    }
+   },
+   {
+    "bus": "cxE_edge108_d0",
+    "ends": [
+     [
+      "f_cxE_edge88_3",
+      "do0"
+     ],
+     [
+      "f_cxE_edge108_1",
+      "di0"
+     ]
+    ],
+    "bits": 566,
+    "sum_bit_um": 242089.56000000192,
+    "max_um": 436.6799999999985,
+    "alignment": {
+     "bits": 566,
+     "face": [
+      "E",
+      "N"
+     ],
+     "layer": [
+      "M4",
+      "M5"
+     ],
+     "len_max": 436.68,
+     "len_mean": 427.72,
+     "kind": "uturn",
+     "order": "n/a",
+     "verdict": "WARN",
+     "why": [
+      "u-turn: driver face E, load face N"
+     ]
+    }
+   },
+   {
+    "bus": "cxE_edge11_d0",
+    "ends": [
+     [
+      "f_cxE_edge2_4",
+      "do0"
+     ],
+     [
+      "f_cxE_edge11_1",
+      "di0"
+     ]
+    ],
+    "bits": 566,
+    "sum_bit_um": 242089.56000000087,
+    "max_um": 436.67999999999665,
+    "alignment": {
+     "bits": 566,
+     "face": [
+      "E",
+      "N"
+     ],
+     "layer": [
+      "M4",
+      "M5"
+     ],
+     "len_max": 436.68,
+     "len_mean": 427.72,
+     "kind": "uturn",
+     "order": "n/a",
+     "verdict": "WARN",
+     "why": [
+      "u-turn: driver face E, load face N"
+     ]
+    }
+   },
+   {
+    "bus": "cxE_edge20_d0",
+    "ends": [
+     [
+      "f_cxE_edge8_3",
+      "do0"
+     ],
+     [
+      "f_cxE_edge20_1",
+      "di0"
+     ]
+    ],
+    "bits": 566,
+    "sum_bit_um": 242089.56000000087,
+    "max_um": 436.67999999999665,
+    "alignment": {
+     "bits": 566,
+     "face": [
+      "E",
+      "N"
+     ],
+     "layer": [
+      "M4",
+      "M5"
+     ],
+     "len_max": 436.68,
+     "len_mean": 427.72,
+     "kind": "uturn",
+     "order": "n/a",
+     "verdict": "WARN",
+     "why": [
+      "u-turn: driver face E, load face N"
+     ]
+    }
+   },
+   {
+    "bus": "cxE_edge27_d0",
+    "ends": [
+     [
+      "f_cxE_edge12_4",
+      "do0"
+     ],
+     [
+      "f_cxE_edge27_1",
+      "di0"
+     ]
+    ],
+    "bits": 566,
+    "sum_bit_um": 242089.56000000087,
+    "max_um": 436.67999999999665,
+    "alignment": {
+     "bits": 566,
+     "face": [
+      "E",
+      "N"
+     ],
+     "layer": [
+      "M4",
+      "M5"
+     ],
+     "len_max": 436.68,
+     "len_mean": 427.72,
+     "kind": "uturn",
+     "order": "n/a",
+     "verdict": "WARN",
+     "why": [
+      "u-turn: driver face E, load face N"
+     ]
+    }
+   },
+   {
+    "bus": "cxE_edge31_d0",
+    "ends": [
+     [
+      "f_cxE_edge14_3",
+      "do0"
+     ],
+     [
+      "f_cxE_edge31_1",
+      "di0"
+     ]
+    ],
+    "bits": 566,
+    "sum_bit_um": 242089.56000000087,
+    "max_um": 436.67999999999665,
+    "alignment": {
+     "bits": 566,
+     "face": [
+      "E",
+      "N"
+     ],
+     "layer": [
+      "M4",
+      "M5"
+     ],
+     "len_max": 436.68,
+     "len_mean": 427.72,
+     "kind": "uturn",
+     "order": "n/a",
+     "verdict": "WARN",
+     "why": [
+      "u-turn: driver face E, load face N"
+     ]
+    }
+   },
+   {
+    "bus": "cxE_edge40_d0",
+    "ends": [
+     [
+      "f_cxE_edge22_3",
+      "do0"
+     ],
+     [
+      "f_cxE_edge40_1",
+      "di0"
+     ]
+    ],
+    "bits": 566,
+    "sum_bit_um": 242089.56000000087,
+    "max_um": 436.67999999999665,
+    "alignment": {
+     "bits": 566,
+     "face": [
+      "E",
+      "N"
+     ],
+     "layer": [
+      "M4",
+      "M5"
+     ],
+     "len_max": 436.68,
+     "len_mean": 427.72,
+     "kind": "uturn",
+     "order": "n/a",
+     "verdict": "WARN",
+     "why": [
+      "u-turn: driver face E, load face N"
+     ]
+    }
+   },
+   {
+    "bus": "cxE_edge47_d0",
+    "ends": [
+     [
+      "f_cxE_edge24_3",
+      "do0"
+     ],
+     [
+      "f_cxE_edge47_1",
+      "di0"
+     ]
+    ],
+    "bits": 566,
+    "sum_bit_um": 242089.56000000087,
+    "max_um": 436.67999999999665,
+    "alignment": {
+     "bits": 566,
+     "face": [
+      "E",
+      "N"
+     ],
+     "layer": [
+      "M4",
+      "M5"
+     ],
+     "len_max": 436.68,
+     "len_mean": 427.72,
+     "kind": "uturn",
+     "order": "n/a",
+     "verdict": "WARN",
+     "why": [
+      "u-turn: driver face E, load face N"
+     ]
+    }
+   },
+   {
+    "bus": "cxE_edge57_d0",
+    "ends": [
+     [
+      "f_cxE_edge32_3",
+      "do0"
+     ],
+     [
+      "f_cxE_edge57_1",
+      "di0"
+     ]
+    ],
+    "bits": 566,
+    "sum_bit_um": 242089.56000000087,
+    "max_um": 436.67999999999665,
+    "alignment": {
+     "bits": 566,
+     "face": [
+      "E",
+      "N"
+     ],
+     "layer": [
+      "M4",
+      "M5"
+     ],
+     "len_max": 436.68,
+     "len_mean": 427.72,
+     "kind": "uturn",
+     "order": "n/a",
+     "verdict": "WARN",
+     "why": [
+      "u-turn: driver face E, load face N"
+     ]
+    }
+   },
+   {
+    "bus": "cxE_edge61_d0",
+    "ends": [
+     [
+      "f_cxE_edge36_3",
+      "do0"
+     ],
+     [
+      "f_cxE_edge61_1",
+      "di0"
+     ]
+    ],
+    "bits": 566,
+    "sum_bit_um": 242089.56000000087,
+    "max_um": 436.67999999999665,
+    "alignment": {
+     "bits": 566,
+     "face": [
+      "E",
+      "N"
+     ],
+     "layer": [
+      "M4",
+      "M5"
+     ],
+     "len_max": 436.68,
+     "len_mean": 427.72,
+     "kind": "uturn",
+     "order": "n/a",
+     "verdict": "WARN",
+     "why": [
+      "u-turn: driver face E, load face N"
+     ]
+    }
+   },
+   {
+    "bus": "cxE_edge73_d0",
+    "ends": [
+     [
+      "f_cxE_edge48_3",
+      "do0"
+     ],
+     [
+      "f_cxE_edge73_1",
+      "di0"
+     ]
+    ],
+    "bits": 566,
+    "sum_bit_um": 242089.56000000087,
+    "max_um": 436.67999999999665,
+    "alignment": {
+     "bits": 566,
+     "face": [
+      "E",
+      "N"
+     ],
+     "layer": [
+      "M4",
+      "M5"
+     ],
+     "len_max": 436.68,
+     "len_mean": 427.72,
+     "kind": "uturn",
+     "order": "n/a",
+     "verdict": "WARN",
+     "why": [
+      "u-turn: driver face E, load face N"
+     ]
+    }
+   },
+   {
+    "bus": "cxE_edge77_d0",
+    "ends": [
+     [
+      "f_cxE_edge53_4",
+      "do0"
+     ],
+     [
+      "f_cxE_edge77_1",
+      "di0"
+     ]
+    ],
+    "bits": 566,
+    "sum_bit_um": 242089.56000000087,
+    "max_um": 436.67999999999665,
+    "alignment": {
+     "bits": 566,
+     "face": [
+      "E",
+      "N"
+     ],
+     "layer": [
+      "M4",
+      "M5"
+     ],
+     "len_max": 436.68,
+     "len_mean": 427.72,
+     "kind": "uturn",
+     "order": "n/a",
+     "verdict": "WARN",
+     "why": [
+      "u-turn: driver face E, load face N"
+     ]
+    }
+   },
+   {
+    "bus": "cxE_edge78_d0",
+    "ends": [
+     [
+      "f_cxE_edge54_3",
+      "do0"
+     ],
+     [
+      "f_cxE_edge78_1",
+      "di0"
+     ]
+    ],
+    "bits": 566,
+    "sum_bit_um": 242089.56000000087,
+    "max_um": 436.67999999999665,
+    "alignment": {
+     "bits": 566,
+     "face": [
+      "E",
+      "N"
+     ],
+     "layer": [
+      "M4",
+      "M5"
+     ],
+     "len_max": 436.68,
+     "len_mean": 427.72,
+     "kind": "uturn",
+     "order": "n/a",
+     "verdict": "WARN",
+     "why": [
+      "u-turn: driver face E, load face N"
+     ]
+    }
+   },
+   {
+    "bus": "cxE_edge87_d0",
+    "ends": [
+     [
+      "f_cxE_edge62_3",
+      "do0"
+     ],
+     [
+      "f_cxE_edge87_1",
+      "di0"
+     ]
+    ],
+    "bits": 566,
+    "sum_bit_um": 242089.56000000087,
+    "max_um": 436.67999999999665,
+    "alignment": {
+     "bits": 566,
+     "face": [
+      "E",
+      "N"
+     ],
+     "layer": [
+      "M4",
+      "M5"
+     ],
+     "len_max": 436.68,
+     "len_mean": 427.72,
+     "kind": "uturn",
+     "order": "n/a",
+     "verdict": "WARN",
+     "why": [
+      "u-turn: driver face E, load face N"
+     ]
+    }
+   },
+   {
+    "bus": "cxE_edge91_d0",
+    "ends": [
+     [
+      "f_cxE_edge68_3",
+      "do0"
+     ],
+     [
+      "f_cxE_edge91_1",
+      "di0"
+     ]
+    ],
+    "bits": 566,
+    "sum_bit_um": 242089.56000000087,
+    "max_um": 436.67999999999665,
+    "alignment": {
+     "bits": 566,
+     "face": [
+      "E",
+      "N"
+     ],
+     "layer": [
+      "M4",
+      "M5"
+     ],
+     "len_max": 436.68,
+     "len_mean": 427.72,
+     "kind": "uturn",
+     "order": "n/a",
+     "verdict": "WARN",
+     "why": [
+      "u-turn: driver face E, load face N"
+     ]
+    }
+   },
+   {
+    "bus": "cxE_edge100_d0",
+    "ends": [
+     [
+      "f_cxE_edge79_4",
+      "do0"
+     ],
+     [
+      "f_cxE_edge100_1",
+      "di0"
+     ]
+    ],
+    "bits": 566,
+    "sum_bit_um": 242089.56000000087,
+    "max_um": 436.6799999999971,
+    "alignment": {
+     "bits": 566,
+     "face": [
+      "E",
+      "N"
+     ],
+     "layer": [
+      "M4",
+      "M5"
+     ],
+     "len_max": 436.68,
+     "len_mean": 427.72,
+     "kind": "uturn",
+     "order": "n/a",
+     "verdict": "WARN",
+     "why": [
+      "u-turn: driver face E, load face N"
+     ]
+    }
+   },
+   {
+    "bus": "cxE_edge101_d0",
+    "ends": [
+     [
+      "f_cxE_edge80_3",
+      "do0"
+     ],
+     [
+      "f_cxE_edge101_1",
+      "di0"
+     ]
+    ],
+    "bits": 566,
+    "sum_bit_um": 242089.56000000087,
+    "max_um": 436.67999999999665,
+    "alignment": {
+     "bits": 566,
+     "face": [
+      "E",
+      "N"
+     ],
+     "layer": [
+      "M4",
+      "M5"
+     ],
+     "len_max": 436.68,
+     "len_mean": 427.72,
+     "kind": "uturn",
+     "order": "n/a",
+     "verdict": "WARN",
+     "why": [
+      "u-turn: driver face E, load face N"
+     ]
+    }
+   }
+  ]
+ },
+ "by_class": {
+  "x_lane": {
+   "bundles": 14654,
+   "bits": 4022523,
+   "sum_bit_um": 666314700.2161189,
+   "max_um": 346.6240000000016
+  },
+  "x_ctl": {
+   "bundles": 5331,
+   "bits": 79965,
+   "sum_bit_um": 11584008.750000348,
+   "max_um": 507.8800000000065
+  },
+  "cfg": {
+   "bundles": 8630,
+   "bits": 268628,
+   "sum_bit_um": 19313027.08799785,
+   "max_um": 157.8320000000026
+  },
+  "go": {
+   "bundles": 4834,
+   "bits": 4834,
+   "sum_bit_um": 326555.66399999696,
+   "max_um": 156.9760000000024
+  },
+  "rom_a": {
+   "bundles": 16919,
+   "bits": 203028,
+   "sum_bit_um": 38064558.672001235,
+   "max_um": 342.46800000000167
+  },
+  "rom_ce": {
+   "bundles": 16919,
+   "bits": 16919,
+   "sum_bit_um": 3200064.4200002532,
+   "max_um": 344.4360000000015
+  },
+  "rom_q": {
+   "bundles": 16919,
+   "bits": 812112,
+   "sum_bit_um": 156216468.5760072,
+   "max_um": 379.6200000000008
+  },
+  "stat": {
+   "bundles": 18532,
+   "bits": 31974,
+   "sum_bit_um": 4018388.127999436,
+   "max_um": 590.1860000000033
+  },
+  "ret_leaf": {
+   "bundles": 30488,
+   "bits": 1920744,
+   "sum_bit_um": 388551030.6120761,
+   "max_um": 583.9620000000041
+  },
+  "ret_tree": {
+   "bundles": 5956,
+   "bits": 393096,
+   "sum_bit_um": 36489345.072000206,
+   "max_um": 370.6920000000009
+  },
+  "col_ret": {
+   "bundles": 1634,
+   "bits": 107844,
+   "sum_bit_um": 20393012.83199989,
+   "max_um": 553.0980000000036
+  },
+  "bfh": {
+   "bundles": 2076,
+   "bits": 806526,
+   "sum_bit_um": 1129042.9800003443,
+   "max_um": 58.746000000001004
+  },
+  "local": {
+   "bundles": 8,
+   "bits": 2591,
+   "sum_bit_um": 207626.5680000033,
+   "max_um": 192.55199999999968
+  },
+  "lane": {
+   "bundles": 3008,
+   "bits": 1077568,
+   "sum_bit_um": 379172037.7919914,
+   "max_um": 527.0959999999991
+  }
+ },
+ "top20_long_hops": [
+  {
+   "bus": "so_18_9_y0",
+   "ends": [
+    [
+     "t18_9",
+     "so"
+    ],
+    [
+     "y_so_18_9_0",
+     "i"
+    ]
+   ],
+   "bits": 2,
+   "sum_bit_um": 1180.3240000000078,
+   "max_um": 590.1860000000033,
+   "alignment": {
+    "bits": 2,
+    "face": [
+     "S",
+     "N"
+    ],
+    "layer": [
+     "M5",
+     "M5"
+    ],
+    "len_max": 590.186,
+    "len_mean": 590.162,
+    "kind": "straight",
+    "axis": "y",
+    "gap": 540.746,
+    "jog_max": 49.44,
+    "jog_mean": 49.416,
+    "jog_min": 49.392,
+    "order": "preserved",
+    "cross_share": 0.0,
+    "jog_cross": 2,
+    "jog_cut": 0.0001,
+    "cap_tracks": 17039.1,
+    "window_share": 0.0004,
+    "verdict": "WARN",
+    "why": [
+     "jog 49.4 um > 20"
+    ]
+   }
+  },
+  {
+   "bus": "so_19_9_y0",
+   "ends": [
+    [
+     "t19_9",
+     "so"
+    ],
+    [
+     "y_so_19_9_0",
+     "i"
+    ]
+   ],
+   "bits": 2,
+   "sum_bit_um": 1180.3240000000078,
+   "max_um": 590.1860000000033,
+   "alignment": {
+    "bits": 2,
+    "face": [
+     "S",
+     "N"
+    ],
+    "layer": [
+     "M5",
+     "M5"
+    ],
+    "len_max": 590.186,
+    "len_mean": 590.162,
+    "kind": "straight",
+    "axis": "y",
+    "gap": 540.746,
+    "jog_max": 49.44,
+    "jog_mean": 49.416,
+    "jog_min": 49.392,
+    "order": "preserved",
+    "cross_share": 0.0,
+    "jog_cross": 2,
+    "jog_cut": 0.0001,
+    "cap_tracks": 17039.1,
+    "window_share": 0.0004,
+    "verdict": "WARN",
+    "why": [
+     "jog 49.4 um > 20"
+    ]
+   }
+  },
+  {
+   "bus": "so_38_9_y0",
+   "ends": [
+    [
+     "t38_9",
+     "so"
+    ],
+    [
+     "y_so_38_9_0",
+     "i"
+    ]
+   ],
+   "bits": 2,
+   "sum_bit_um": 1180.3240000000042,
+   "max_um": 590.1860000000033,
+   "alignment": {
+    "bits": 2,
+    "face": [
+     "S",
+     "N"
+    ],
+    "layer": [
+     "M5",
+     "M5"
+    ],
+    "len_max": 590.186,
+    "len_mean": 590.162,
+    "kind": "straight",
+    "axis": "y",
+    "gap": 540.746,
+    "jog_max": 49.44,
+    "jog_mean": 49.416,
+    "jog_min": 49.392,
+    "order": "preserved",
+    "cross_share": 0.0,
+    "jog_cross": 2,
+    "jog_cut": 0.0001,
+    "cap_tracks": 17039.1,
+    "window_share": 0.0004,
+    "verdict": "WARN",
+    "why": [
+     "jog 49.4 um > 20"
+    ]
+   }
+  },
+  {
+   "bus": "so_88_9_y0",
+   "ends": [
+    [
+     "t88_9",
+     "so"
+    ],
+    [
+     "y_so_88_9_0",
+     "i"
+    ]
+   ],
+   "bits": 2,
+   "sum_bit_um": 1180.3240000000042,
+   "max_um": 590.1860000000033,
+   "alignment": {
+    "bits": 2,
+    "face": [
+     "S",
+     "N"
+    ],
+    "layer": [
+     "M5",
+     "M5"
+    ],
+    "len_max": 590.186,
+    "len_mean": 590.162,
+    "kind": "straight",
+    "axis": "y",
+    "gap": 540.746,
+    "jog_max": 49.44,
+    "jog_mean": 49.416,
+    "jog_min": 49.392,
+    "order": "preserved",
+    "cross_share": 0.0,
+    "jog_cross": 2,
+    "jog_cut": 0.0001,
+    "cap_tracks": 17039.1,
+    "window_share": 0.0004,
+    "verdict": "WARN",
+    "why": [
+     "jog 49.4 um > 20"
+    ]
+   }
+  },
+  {
+   "bus": "so_2_9_y0",
+   "ends": [
+    [
+     "t2_9",
+     "so"
+    ],
+    [
+     "y_so_2_9_0",
+     "i"
+    ]
+   ],
+   "bits": 2,
+   "sum_bit_um": 1180.3240000000014,
+   "max_um": 590.186000000002,
+   "alignment": {
+    "bits": 2,
+    "face": [
+     "S",
+     "N"
+    ],
+    "layer": [
+     "M5",
+     "M5"
+    ],
+    "len_max": 590.186,
+    "len_mean": 590.162,
+    "kind": "straight",
+    "axis": "y",
+    "gap": 540.746,
+    "jog_max": 49.44,
+    "jog_mean": 49.416,
+    "jog_min": 49.392,
+    "order": "preserved",
+    "cross_share": 0.0,
+    "jog_cross": 2,
+    "jog_cut": 0.0001,
+    "cap_tracks": 17039.1,
+    "window_share": 0.0004,
+    "verdict": "WARN",
+    "why": [
+     "jog 49.4 um > 20"
+    ]
+   }
+  },
+  {
+   "bus": "so_15_9_y0",
+   "ends": [
+    [
+     "t15_9",
+     "so"
+    ],
+    [
+     "y_so_15_9_0",
+     "i"
+    ]
+   ],
+   "bits": 2,
+   "sum_bit_um": 1180.324000000005,
+   "max_um": 590.186000000002,
+   "alignment": {
+    "bits": 2,
+    "face": [
+     "S",
+     "N"
+    ],
+    "layer": [
+     "M5",
+     "M5"
+    ],
+    "len_max": 590.186,
+    "len_mean": 590.162,
+    "kind": "straight",
+    "axis": "y",
+    "gap": 540.746,
+    "jog_max": 49.44,
+    "jog_mean": 49.416,
+    "jog_min": 49.392,
+    "order": "preserved",
+    "cross_share": 0.0,
+    "jog_cross": 2,
+    "jog_cut": 0.0001,
+    "cap_tracks": 17039.1,
+    "window_share": 0.0004,
+    "verdict": "WARN",
+    "why": [
+     "jog 49.4 um > 20"
+    ]
+   }
+  },
+  {
+   "bus": "so_91_9_y0",
+   "ends": [
+    [
+     "t91_9",
+     "so"
+    ],
+    [
+     "y_so_91_9_0",
+     "i"
+    ]
+   ],
+   "bits": 2,
+   "sum_bit_um": 1180.3240000000014,
+   "max_um": 590.186000000002,
+   "alignment": {
+    "bits": 2,
+    "face": [
+     "S",
+     "N"
+    ],
+    "layer": [
+     "M5",
+     "M5"
+    ],
+    "len_max": 590.186,
+    "len_mean": 590.162,
+    "kind": "straight",
+    "axis": "y",
+    "gap": 540.746,
+    "jog_max": 49.44,
+    "jog_mean": 49.416,
+    "jog_min": 49.392,
+    "order": "preserved",
+    "cross_share": 0.0,
+    "jog_cross": 2,
+    "jog_cut": 0.0001,
+    "cap_tracks": 17039.1,
+    "window_share": 0.0004,
+    "verdict": "WARN",
+    "why": [
+     "jog 49.4 um > 20"
+    ]
+   }
+  },
+  {
+   "bus": "so_16_9_y0",
+   "ends": [
+    [
+     "t16_9",
+     "so"
+    ],
+    [
+     "y_so_16_9_0",
+     "i"
+    ]
+   ],
+   "bits": 2,
+   "sum_bit_um": 1180.3240000000042,
+   "max_um": 590.1860000000015,
+   "alignment": {
+    "bits": 2,
+    "face": [
+     "S",
+     "N"
+    ],
+    "layer": [
+     "M5",
+     "M5"
+    ],
+    "len_max": 590.186,
+    "len_mean": 590.162,
+    "kind": "straight",
+    "axis": "y",
+    "gap": 540.746,
+    "jog_max": 49.44,
+    "jog_mean": 49.416,
+    "jog_min": 49.392,
+    "order": "preserved",
+    "cross_share": 0.0,
+    "jog_cross": 2,
+    "jog_cut": 0.0001,
+    "cap_tracks": 17039.1,
+    "window_share": 0.0004,
+    "verdict": "WARN",
+    "why": [
+     "jog 49.4 um > 20"
+    ]
+   }
+  },
+  {
+   "bus": "so_20_9_y0",
+   "ends": [
+    [
+     "t20_9",
+     "so"
+    ],
+    [
+     "y_so_20_9_0",
+     "i"
+    ]
+   ],
+   "bits": 2,
+   "sum_bit_um": 1180.3240000000005,
+   "max_um": 590.1860000000015,
+   "alignment": {
+    "bits": 2,
+    "face": [
+     "S",
+     "N"
+    ],
+    "layer": [
+     "M5",
+     "M5"
+    ],
+    "len_max": 590.186,
+    "len_mean": 590.162,
+    "kind": "straight",
+    "axis": "y",
+    "gap": 540.746,
+    "jog_max": 49.44,
+    "jog_mean": 49.416,
+    "jog_min": 49.392,
+    "order": "preserved",
+    "cross_share": 0.0,
+    "jog_cross": 2,
+    "jog_cut": 0.0001,
+    "cap_tracks": 17039.1,
+    "window_share": 0.0004,
+    "verdict": "WARN",
+    "why": [
+     "jog 49.4 um > 20"
+    ]
+   }
+  },
+  {
+   "bus": "so_32_9_y0",
+   "ends": [
+    [
+     "t32_9",
+     "so"
+    ],
+    [
+     "y_so_32_9_0",
+     "i"
+    ]
+   ],
+   "bits": 2,
+   "sum_bit_um": 1180.3240000000042,
+   "max_um": 590.1860000000015,
+   "alignment": {
+    "bits": 2,
+    "face": [
+     "S",
+     "N"
+    ],
+    "layer": [
+     "M5",
+     "M5"
+    ],
+    "len_max": 590.186,
+    "len_mean": 590.162,
+    "kind": "straight",
+    "axis": "y",
+    "gap": 540.746,
+    "jog_max": 49.44,
+    "jog_mean": 49.416,
+    "jog_min": 49.392,
+    "order": "preserved",
+    "cross_share": 0.0,
+    "jog_cross": 2,
+    "jog_cut": 0.0001,
+    "cap_tracks": 17039.1,
+    "window_share": 0.0004,
+    "verdict": "WARN",
+    "why": [
+     "jog 49.4 um > 20"
+    ]
+   }
+  },
+  {
+   "bus": "so_56_9_y0",
+   "ends": [
+    [
+     "t56_9",
+     "so"
+    ],
+    [
+     "y_so_56_9_0",
+     "i"
+    ]
+   ],
+   "bits": 2,
+   "sum_bit_um": 1180.3240000000005,
+   "max_um": 590.1860000000015,
+   "alignment": {
+    "bits": 2,
+    "face": [
+     "S",
+     "N"
+    ],
+    "layer": [
+     "M5",
+     "M5"
+    ],
+    "len_max": 590.186,
+    "len_mean": 590.162,
+    "kind": "straight",
+    "axis": "y",
+    "gap": 540.746,
+    "jog_max": 49.44,
+    "jog_mean": 49.416,
+    "jog_min": 49.392,
+    "order": "preserved",
+    "cross_share": 0.0,
+    "jog_cross": 2,
+    "jog_cut": 0.0001,
+    "cap_tracks": 17039.1,
+    "window_share": 0.0004,
+    "verdict": "WARN",
+    "why": [
+     "jog 49.4 um > 20"
+    ]
+   }
+  },
+  {
+   "bus": "so_89_9_y0",
+   "ends": [
+    [
+     "t89_9",
+     "so"
+    ],
+    [
+     "y_so_89_9_0",
+     "i"
+    ]
+   ],
+   "bits": 2,
+   "sum_bit_um": 1180.3240000000005,
+   "max_um": 590.1860000000015,
+   "alignment": {
+    "bits": 2,
+    "face": [
+     "S",
+     "N"
+    ],
+    "layer": [
+     "M5",
+     "M5"
+    ],
+    "len_max": 590.186,
+    "len_mean": 590.162,
+    "kind": "straight",
+    "axis": "y",
+    "gap": 540.746,
+    "jog_max": 49.44,
+    "jog_mean": 49.416,
+    "jog_min": 49.392,
+    "order": "preserved",
+    "cross_share": 0.0,
+    "jog_cross": 2,
+    "jog_cut": 0.0001,
+    "cap_tracks": 17039.1,
+    "window_share": 0.0004,
+    "verdict": "WARN",
+    "why": [
+     "jog 49.4 um > 20"
+    ]
+   }
+  },
+  {
+   "bus": "so_90_9_y0",
+   "ends": [
+    [
+     "t90_9",
+     "so"
+    ],
+    [
+     "y_so_90_9_0",
+     "i"
+    ]
+   ],
+   "bits": 2,
+   "sum_bit_um": 1180.3240000000005,
+   "max_um": 590.1860000000015,
+   "alignment": {
+    "bits": 2,
+    "face": [
+     "S",
+     "N"
+    ],
+    "layer": [
+     "M5",
+     "M5"
+    ],
+    "len_max": 590.186,
+    "len_mean": 590.162,
+    "kind": "straight",
+    "axis": "y",
+    "gap": 540.746,
+    "jog_max": 49.44,
+    "jog_mean": 49.416,
+    "jog_min": 49.392,
+    "order": "preserved",
+    "cross_share": 0.0,
+    "jog_cross": 2,
+    "jog_cut": 0.0001,
+    "cap_tracks": 17039.1,
+    "window_share": 0.0004,
+    "verdict": "WARN",
+    "why": [
+     "jog 49.4 um > 20"
+    ]
+   }
+  },
+  {
+   "bus": "so_92_9_y0",
+   "ends": [
+    [
+     "t92_9",
+     "so"
+    ],
+    [
+     "y_so_92_9_0",
+     "i"
+    ]
+   ],
+   "bits": 2,
+   "sum_bit_um": 1180.3240000000005,
+   "max_um": 590.1860000000015,
+   "alignment": {
+    "bits": 2,
+    "face": [
+     "S",
+     "N"
+    ],
+    "layer": [
+     "M5",
+     "M5"
+    ],
+    "len_max": 590.186,
+    "len_mean": 590.162,
+    "kind": "straight",
+    "axis": "y",
+    "gap": 540.746,
+    "jog_max": 49.44,
+    "jog_mean": 49.416,
+    "jog_min": 49.392,
+    "order": "preserved",
+    "cross_share": 0.0,
+    "jog_cross": 2,
+    "jog_cut": 0.0001,
+    "cap_tracks": 17039.1,
+    "window_share": 0.0004,
+    "verdict": "WARN",
+    "why": [
+     "jog 49.4 um > 20"
+    ]
+   }
+  },
+  {
+   "bus": "so_106_9_y0",
+   "ends": [
+    [
+     "t106_9",
+     "so"
+    ],
+    [
+     "y_so_106_9_0",
+     "i"
+    ]
+   ],
+   "bits": 2,
+   "sum_bit_um": 1180.3240000000005,
+   "max_um": 590.1860000000015,
+   "alignment": {
+    "bits": 2,
+    "face": [
+     "S",
+     "N"
+    ],
+    "layer": [
+     "M5",
+     "M5"
+    ],
+    "len_max": 590.186,
+    "len_mean": 590.162,
+    "kind": "straight",
+    "axis": "y",
+    "gap": 540.746,
+    "jog_max": 49.44,
+    "jog_mean": 49.416,
+    "jog_min": 49.392,
+    "order": "preserved",
+    "cross_share": 0.0,
+    "jog_cross": 2,
+    "jog_cut": 0.0001,
+    "cap_tracks": 17039.1,
+    "window_share": 0.0004,
+    "verdict": "WARN",
+    "why": [
+     "jog 49.4 um > 20"
+    ]
+   }
+  },
+  {
+   "bus": "so_50_9_y0",
+   "ends": [
+    [
+     "t50_9",
+     "so"
+    ],
+    [
+     "y_so_50_9_0",
+     "i"
+    ]
+   ],
+   "bits": 2,
+   "sum_bit_um": 1180.3240000000021,
+   "max_um": 590.1860000000011,
+   "alignment": {
+    "bits": 2,
+    "face": [
+     "S",
+     "N"
+    ],
+    "layer": [
+     "M5",
+     "M5"
+    ],
+    "len_max": 590.186,
+    "len_mean": 590.162,
+    "kind": "straight",
+    "axis": "y",
+    "gap": 540.746,
+    "jog_max": 49.44,
+    "jog_mean": 49.416,
+    "jog_min": 49.392,
+    "order": "preserved",
+    "cross_share": 0.0,
+    "jog_cross": 2,
+    "jog_cut": 0.0001,
+    "cap_tracks": 17039.1,
+    "window_share": 0.0004,
+    "verdict": "WARN",
+    "why": [
+     "jog 49.4 um > 20"
+    ]
+   }
+  },
+  {
+   "bus": "so_52_9_y0",
+   "ends": [
+    [
+     "t52_9",
+     "so"
+    ],
+    [
+     "y_so_52_9_0",
+     "i"
+    ]
+   ],
+   "bits": 2,
+   "sum_bit_um": 1180.3240000000021,
+   "max_um": 590.1860000000011,
+   "alignment": {
+    "bits": 2,
+    "face": [
+     "S",
+     "N"
+    ],
+    "layer": [
+     "M5",
+     "M5"
+    ],
+    "len_max": 590.186,
+    "len_mean": 590.162,
+    "kind": "straight",
+    "axis": "y",
+    "gap": 540.746,
+    "jog_max": 49.44,
+    "jog_mean": 49.416,
+    "jog_min": 49.392,
+    "order": "preserved",
+    "cross_share": 0.0,
+    "jog_cross": 2,
+    "jog_cut": 0.0001,
+    "cap_tracks": 17039.1,
+    "window_share": 0.0004,
+    "verdict": "WARN",
+    "why": [
+     "jog 49.4 um > 20"
+    ]
+   }
+  },
+  {
+   "bus": "so_33_9_y0",
+   "ends": [
+    [
+     "t33_9",
+     "so"
+    ],
+    [
+     "y_so_33_9_0",
+     "i"
+    ]
+   ],
+   "bits": 2,
+   "sum_bit_um": 1180.3240000000005,
+   "max_um": 590.1859999999997,
+   "alignment": {
+    "bits": 2,
+    "face": [
+     "S",
+     "N"
+    ],
+    "layer": [
+     "M5",
+     "M5"
+    ],
+    "len_max": 590.186,
+    "len_mean": 590.162,
+    "kind": "straight",
+    "axis": "y",
+    "gap": 540.746,
+    "jog_max": 49.44,
+    "jog_mean": 49.416,
+    "jog_min": 49.392,
+    "order": "preserved",
+    "cross_share": 0.0,
+    "jog_cross": 2,
+    "jog_cut": 0.0001,
+    "cap_tracks": 17039.1,
+    "window_share": 0.0004,
+    "verdict": "WARN",
+    "why": [
+     "jog 49.4 um > 20"
+    ]
+   }
+  },
+  {
+   "bus": "so_35_9_y0",
+   "ends": [
+    [
+     "t35_9",
+     "so"
+    ],
+    [
+     "y_so_35_9_0",
+     "i"
+    ]
+   ],
+   "bits": 2,
+   "sum_bit_um": 1180.3240000000005,
+   "max_um": 590.1859999999997,
+   "alignment": {
+    "bits": 2,
+    "face": [
+     "S",
+     "N"
+    ],
+    "layer": [
+     "M5",
+     "M5"
+    ],
+    "len_max": 590.186,
+    "len_mean": 590.162,
+    "kind": "straight",
+    "axis": "y",
+    "gap": 540.746,
+    "jog_max": 49.44,
+    "jog_mean": 49.416,
+    "jog_min": 49.392,
+    "order": "preserved",
+    "cross_share": 0.0,
+    "jog_cross": 2,
+    "jog_cut": 0.0001,
+    "cap_tracks": 17039.1,
+    "window_share": 0.0004,
+    "verdict": "WARN",
+    "why": [
+     "jog 49.4 um > 20"
+    ]
+   }
+  },
+  {
+   "bus": "so_55_9_y0",
+   "ends": [
+    [
+     "t55_9",
+     "so"
+    ],
+    [
+     "y_so_55_9_0",
+     "i"
+    ]
+   ],
+   "bits": 2,
+   "sum_bit_um": 1180.3239999999994,
+   "max_um": 590.1859999999997,
+   "alignment": {
+    "bits": 2,
+    "face": [
+     "S",
+     "N"
+    ],
+    "layer": [
+     "M5",
+     "M5"
+    ],
+    "len_max": 590.186,
+    "len_mean": 590.162,
+    "kind": "straight",
+    "axis": "y",
+    "gap": 540.746,
+    "jog_max": 49.44,
+    "jog_mean": 49.416,
+    "jog_min": 49.392,
+    "order": "preserved",
+    "cross_share": 0.0,
+    "jog_cross": 2,
+    "jog_cut": 0.0001,
+    "cap_tracks": 17039.1,
+    "window_share": 0.0004,
+    "verdict": "WARN",
+    "why": [
+     "jog 49.4 um > 20"
+    ]
+   }
+  }
+ ],
+ "alignment_failure_routes": [
+  {
+   "bus": "cr9_de",
+   "ends": [
+    [
+     "f_cr9_24",
+     "do0"
+    ],
+    [
+     "hr_W0",
+     "di0"
+    ]
+   ],
+   "bits": 70,
+   "sum_bit_um": 196.5600000002305,
+   "max_um": 2.808000000006359,
+   "alignment": {
+    "bits": 70,
+    "face": [
+     "E",
+     "W"
+    ],
+    "layer": [
+     "M4",
+     "M4"
+    ],
+    "len_max": 2.808,
+    "len_mean": 2.808,
+    "kind": "straight",
+    "axis": "x",
+    "gap": 0.744,
+    "jog_max": 2.064,
+    "jog_mean": 2.064,
+    "jog_min": 2.064,
+    "order": "preserved",
+    "cross_share": 0.0,
+    "jog_cross": 44,
+    "jog_cut": null,
+    "cap_tracks": 23.4,
+    "window_share": 0.008,
+    "verdict": "FAIL",
+    "why": [
+     "abutted faces (gap 0.744 um) with a jog of 2.064 um"
+    ]
+   }
+  },
+  {
+   "bus": "cr30_de",
+   "ends": [
+    [
+     "f_cr30_45",
+     "do0"
+    ],
+    [
+     "hr_W2",
+     "di1"
+    ]
+   ],
+   "bits": 70,
+   "sum_bit_um": 2955.1200000000026,
+   "max_um": 42.21600000000035,
+   "alignment": {
+    "bits": 70,
+    "face": [
+     "W",
+     "E"
+    ],
+    "layer": [
+     "M4",
+     "M4"
+    ],
+    "len_max": 42.216,
+    "len_mean": 42.216,
+    "kind": "straight",
+    "axis": "x",
+    "gap": 2.472,
+    "jog_max": 39.744,
+    "jog_mean": 39.744,
+    "jog_min": 39.744,
+    "order": "preserved",
+    "cross_share": 0.0,
+    "jog_cross": 70,
+    "jog_cut": 0.8987,
+    "cap_tracks": 77.9,
+    "window_share": 0.0128,
+    "verdict": "FAIL",
+    "why": [
+     "jog cut 0.90 > 0.6: 70 jog wires in a 2.5 um channel (78 tracks): the jog spills onto the die's over-tile tracks (1.3% of a 260-um cut window)",
+     "jog 39.7 um > 20"
+    ]
+   }
+  }
+ ],
+ "groups": {
+  "sp_su_s": [
+   "sp_su_s"
+  ],
+  "sp_pq": [
+   "sp_pq"
+  ],
+  "sp_wfc": [
+   "sp_wfc"
+  ],
+  "sp_sseq": [
+   "sp_sseq"
+  ],
+  "sp_collective": [
+   "sp_collective"
+  ],
+  "sp_host": [
+   "sp_host"
+  ],
+  "sp_hc_s": [
+   "sp_hc_s"
+  ],
+  "sp_hc_t": [
+   "sp_hc_t"
+  ]
+ },
+ "groups_without_data_incidence": [
+  "sp_su_s",
+  "sp_wfc",
+  "sp_sseq",
+  "sp_collective",
+  "sp_host",
+  "sp_hc_s",
+  "sp_hc_t"
+ ],
+ "candidates": [],
+ "groups_blocked": [],
+ "geometric_tradeoffs": [],
+ "cross_half_frames": [
+  {
+   "root": "2",
+   "logical_half": "W",
+   "physical_half": "E",
+   "x": 31473.36,
+   "y": 279.2
+  },
+  {
+   "root": "20",
+   "logical_half": "W",
+   "physical_half": "E",
+   "x": 31473.36,
+   "y": 4247.12
+  },
+  {
+   "root": "23",
+   "logical_half": "W",
+   "physical_half": "E",
+   "x": 19558.8,
+   "y": 279.2
+  },
+  {
+   "root": "24",
+   "logical_half": "W",
+   "physical_half": "E",
+   "x": 19558.8,
+   "y": 4262.24
+  },
+  {
+   "root": "26",
+   "logical_half": "W",
+   "physical_half": "E",
+   "x": 19558.8,
+   "y": 8245.28
+  },
+  {
+   "root": "27",
+   "logical_half": "W",
+   "physical_half": "E",
+   "x": 19558.8,
+   "y": 12228.32
+  },
+  {
+   "root": "28",
+   "logical_half": "W",
+   "physical_half": "E",
+   "x": 19558.8,
+   "y": 16211.36
+  },
+  {
+   "root": "29",
+   "logical_half": "W",
+   "physical_half": "E",
+   "x": 19558.8,
+   "y": 20194.4
+  },
+  {
+   "root": "38",
+   "logical_half": "W",
+   "physical_half": "E",
+   "x": 31473.36,
+   "y": 8215.04
+  },
+  {
+   "root": "56",
+   "logical_half": "W",
+   "physical_half": "E",
+   "x": 31473.36,
+   "y": 12182.96
+  },
+  {
+   "root": "63",
+   "logical_half": "W",
+   "physical_half": "E",
+   "x": 20750.256,
+   "y": 279.2
+  },
+  {
+   "root": "68",
+   "logical_half": "E",
+   "physical_half": "W",
+   "x": 6284.304,
+   "y": 10677.416
+  },
+  {
+   "root": "76",
+   "logical_half": "E",
+   "physical_half": "W",
+   "x": 7475.76,
+   "y": 3320.456
+  },
+  {
+   "root": "85",
+   "logical_half": "E",
+   "physical_half": "W",
+   "x": 7475.76,
+   "y": 6998.936
+  },
+  {
+   "root": "93",
+   "logical_half": "E",
+   "physical_half": "W",
+   "x": 2709.936,
+   "y": 10677.416
+  },
+  {
+   "root": "94",
+   "logical_half": "E",
+   "physical_half": "W",
+   "x": 2709.936,
+   "y": 14371.016
+  },
+  {
+   "root": "102",
+   "logical_half": "E",
+   "physical_half": "W",
+   "x": 7475.76,
+   "y": 10677.416
+  },
+  {
+   "root": "110",
+   "logical_half": "E",
+   "physical_half": "W",
+   "x": 2709.936,
+   "y": 3320.456
+  },
+  {
+   "root": "112",
+   "logical_half": "E",
+   "physical_half": "W",
+   "x": 2709.936,
+   "y": 18338.936
+  },
+  {
+   "root": "119",
+   "logical_half": "E",
+   "physical_half": "W",
+   "x": 2709.936,
+   "y": 6998.936
+  }
+ ],
+ "limitations": [
+  "Partial canonical generated graph; missing return routes and hubs prevent release conclusions",
+  "Missing incident pins block affected group optimization",
+  "No traffic/critical-path weighting or routed congestion/timing proof",
+  "HCP keepouts supplied explicitly from canonical capacity; no HCP native edge claims"
+ ]
+}
