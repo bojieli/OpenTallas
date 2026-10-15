@@ -74,7 +74,7 @@ module tb_dsfd_vm_static_core;
         .t_hc_rs(hc_rs), .f_hc_wqv(hc_wqv), .f_hc_wq(hc_wq), .f_hc_wqm(hc_wqm), .f_hc_wqd(hc_wqd), .f_pqx(pqx), .t_pqx(pq_o), .x_av({4'd0, (crq[0] ? (4'b1 << crq[2:1]) : 4'd0)}), .x_ar({56'd0, {4{crq[14:1]}}}), .x_rv(xv), .x_rd(xd), .nf_v(), .nf_d(),
         .f_mx_rqv(mx_rqv), .f_mx_rq(mx_rq), .t_mx_rsv(mx_rsv), .t_mx_rs(mx_rs),
         .f_mx_wqv(mx_wqv), .f_mx_wq(mx_wq), .f_mx_wqm(mx_wqm), .f_mx_wqd(mx_wqd),
-        .l_v(l_v), .l_d(l_d), .cp_v(16'd0), .cp_row(224'd0), .cp_m(256'd0), .cp_d(8192'd0), .cl_t(clt), .cl_v(clv), .cl_row(clr), .cl_m(clm), .cl_d(cld), .wf_v(1'b0), .wf_row(14'd0), .wf_d(512'd0), .x_flt(1'b0), .vm_fault(vm_fault));
+        .l_v(l_v), .l_d(l_d), .cp_v(16'd0), .cp_row(224'd0), .cp_m(256'd0), .cp_d(8192'd0), .cl_t(clt), .cl_v(clv), .cl_row(clr), .cl_m(clm), .cl_d(cld), .wf_v(1'b0), .wf_row(14'd0), .wf_d(512'd0), .x_al(3'd0), .x_hdr(9'd0), .edge_f(3'd0), .vm_fault(vm_fault));
 
     localparam integer RL = 12+READ_PIPE, DL = 6;      // Exact elapsed edges from command/read sampling to output.
     integer cy = 0, bad = 0, mode = 0, seed = 1, nreads = 4000, K = -1, commits = 0, reads = 0, rows_checked = 0;
@@ -132,8 +132,8 @@ module tb_dsfd_vm_static_core;
         end
         if (vm_fault && !fault_seen) begin fault_seen = 1;
             $display("FIRST FAULT cy %0d: wsched own %b dflt %h sflt %h | mem %h | land %b pq %b out %b op %b rsched %b | seq flt %b",
-                cy, dut.u_ws.own, dut.u_ws.dflt, dut.u_ws.sflt, dut.m_flt, dut.l_flt, dut.pq_bad, dut.o_bad, dut.op_bad,
-                dut.r_flt, dut.u_seq.flt); end
+                cy, dut.u_ws.own, dut.u_ws.dflt, dut.u_ws.sflt, dut.m_flt, dut.l_flt, dut.u_seq.pq_bad, dut.u_seq.o_bad, dut.u_seq.op_bad,
+                dut.r_flt, dut.u_seq.u_seq.flt); end
         if (crs[0] !== cr_exp[cy]) begin bad = bad + 1; if (bad < 10) $display("CRS MISMATCH cy %0d", cy); end
         if (cr_exp[cy]) begin
             if (crs[512:1] !== rowdata(cr_row[cy], ver[cr_row[cy]])) begin bad = bad + 1; if (bad < 10) $display("CRS DATA MISMATCH cy %0d", cy); end
@@ -299,8 +299,8 @@ module tb_dsfd_vm_static_core;
             case (mode)
                 1: chk_pin = dut.u_ws.own[0] && !dut.u_ws.own[1];
                 2: chk_pin = dut.u_ws.own[1] && !dut.u_ws.own[0];
-                3: chk_pin = dut.pq_bad;
-                4: chk_pin = dut.op_bad;
+                3: chk_pin = dut.u_seq.pq_bad;
+                4: chk_pin = dut.u_seq.op_bad;
                 5: chk_pin = dut.m_flt[0] && !dut.w_flt;
                 6: chk_pin = dut.r_flt;
                 default: chk_pin = 0;
@@ -315,8 +315,8 @@ module tb_dsfd_vm_static_core;
         if (mode == 0) begin
         if (mode == 0 && (vm_fault || c_st[0])) begin bad = bad + 1;
             $display("UNEXPECTED FAULT vm_fault %b c_st %b: wsched own %b dflt %h sflt %h | mem %h | land %b pq %b out %b op %b rsched %b | seq flt %b",
-                vm_fault, c_st, dut.u_ws.own, dut.u_ws.dflt, dut.u_ws.sflt, dut.m_flt, dut.l_flt, dut.pq_bad, dut.o_bad, dut.op_bad,
-                dut.r_flt, dut.u_seq.flt); end
+                vm_fault, c_st, dut.u_ws.own, dut.u_ws.dflt, dut.u_ws.sflt, dut.m_flt, dut.l_flt, dut.u_seq.pq_bad, dut.u_seq.o_bad, dut.u_seq.op_bad,
+                dut.r_flt, dut.u_seq.u_seq.flt); end
         $display("TB_VMCORE RESULT mode %0d cycles %0d commits %0d K %0d reads %0d pq %0d mix_reads %0d mix_writes %0d rows_checked %0d dones %0d cmds %0d bad %0d",
                  mode, cy, commits, K, reads, pqreads, mxreads, mxwrites, rows_checked, dones, cmds, bad);
         if (commits != 4 * (16384 + 24 + 16 + mxwrites)) begin bad = bad + 1; $display("COMMIT COUNT %0d", commits); end

@@ -15,12 +15,16 @@ module dsfd_vm_static512_suhc(
  input wire [31:0] wq_v,input wire [447:0] wq_row,input wire [511:0] wq_mask,
  input wire [16383:0] wq_data,input wire [255:0] wq_tag,
  input wire release_v,input wire [2:0] release_group,input wire [31:0] release_mask,
+ // Same compiled descriptor one edge early (rsched stage9): each return lane registers it
+ // and applies its E10 release state from that register (native5 return lanes).
+ input wire prepare_v,input wire [2:0] prepare_group,input wire [31:0] prepare_mask,
  input wire [17:0] native_expected_v,input wire [89:0] native_release_slot,
  output wire [71:0] native_v,output wire [9215:0] native_data,
  output wire [127:0] group_v,output wire [16383:0] group_data,output wire [11:0] group_id,
  output wire [127:0] commit_v,output wire [1151:0] commit_addr,
  output wire [511:0] commit_mask,output wire [1023:0] commit_tag,
- output wire [27:0] fault
+ // per slice s: [10s+:5] slice, [10s+5+:4] the four return lanes, [10s+9] native map
+ output wire [39:0] fault
 );
  localparam integer NROW=32,SLOT_BITS=5;
  genvar s,q;generate for(s=0;s<4;s=s+1)begin:slice
@@ -38,13 +42,18 @@ module dsfd_vm_static512_suhc(
    .wq_v(wq_v),.wq_row(wq_row),.wq_mask(wm),.wq_data(wd),.wq_tag(wq_tag),
    .rs_v(rv),.rs_data(rd),.rs_tag(rt),.commit_v(commit_v[32*s+:32]),
    .commit_addr(commit_addr[288*s+:288]),.commit_mask(commit_mask[128*s+:128]),
-   .commit_tag(commit_tag[256*s+:256]),.fault(fault[7*s+:5]));
-  dsfd_vm_static_return #(.NROW(NROW)) u_return(.ck(ck_return[s]),.rst_n(rst_return_n[s]),.i_v(rv),.i_tag(rt),.i_data(rd),
+   .commit_tag(commit_tag[256*s+:256]),.fault(fault[10*s+:5]));
+  // Four hardened return lanes (8 banks / 8 slots each) on the slice's return clock root;
+  // completion tokens are exchanged lane-to-lane inside the wrapper (wires only).
+  wire [11:0] lane_group;
+  dsfd_vm_static_return32_native_lanes u_return(.ck({4{ck_return[s]}}),.rst_n({4{rst_return_n[s]}}),.i_v(rv),.i_tag(rt),.i_data(rd),
    .release_v(release_v),.release_group(release_group),.release_mask(release_mask),
-   .o_v(group_v[NROW*s+:NROW]),.o_data(gd),.o_group(group_id[(8-SLOT_BITS)*s+:8-SLOT_BITS]),.fault(fault[7*s+5]));
+   .prepare_v(prepare_v),.prepare_group(prepare_group),.prepare_mask(prepare_mask),
+   .o_v(group_v[NROW*s+:NROW]),.o_data(gd),.o_group(lane_group),.fault(fault[10*s+5+:4]));
+  assign group_id[(8-SLOT_BITS)*s+:8-SLOT_BITS]=lane_group[2:0];
   dsfd_vm_static_suhc_return_map u_native(.i_v(group_v[32*s+:32]),.i_data(gd),
    .expected_v(native_expected_v),.release_slot(native_release_slot),
-   .o_v(native_v[18*s+:18]),.o_data(nd),.fault(fault[7*s+6]));
+   .o_v(native_v[18*s+:18]),.o_data(nd),.fault(fault[10*s+9]));
   for(q=0;q<18;q=q+1)begin:native_rows
    assign native_data[512*q+128*s+:128]=nd[128*q+:128];
   end

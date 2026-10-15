@@ -1,0 +1,12 @@
+{
+ "schema": "opentallas.s81.wfc_static_die_form.v1",
+ "master": "dsfd_wfc_stg (die name of dsfd_wfc_stg_cl under +define+DSFD_WFC_STG_CL_DIE) with +define+DSFD_WFC_STG_STATIC (physical/s81_die_rtl/layer1.f)",
+ "port_delta": {"removed": ["t_lir (output, inbound grant)", "f_lor (input, outbound grant)"], "added": [], "parameter": "TX_OFF = 272 (compiler constant)"},
+ "behaviour": "RX: every calendar arrival written into a 32-flit static buffer (no ready); lost arrival = sticky fault t_ft[2]. TX: 64-flit static buffer; a JOB message whose last RX flit arrives at edge a leaves on consecutive edges from a + TX_OFF; underflow / overlap / full release queue / full TX buffer = sticky fault. DRAFT messages produce no TX slot.",
+ "gate": "tools/dsrom_wfc_static_bench.py: WFC_STATIC_GATE PASS (static_gate_summary.json): static_vmnat P300/O272 PASS (RX-last->TX-header 274 every job), slow calendar P600 PASS; negatives FAIL as required: alternate-edge drain (TX gap), TX_OFF 256 (underflow), calendar P250 (backlog underflow)",
+ "grant_form_unchanged": "same bench, no define, lo_r=1: PASS 40 jobs 12,023 edges, RX-last->TX-header 241..244",
+ "port_bind": "die_port_bind on S-BIND bind5 construction_pass0_die.v, same source snapshot: base FAIL dsfd_wfc_stg in_unconn=f_lor (input_unconnected 10); static: dsfd_wfc_stg no longer listed (input_unconnected 9), every other master unchanged (port_bind_base.log / port_bind_static.log)",
+ "cost": {"added_latency_fast_edges_per_stage_handoff": 33, "throughput": "unchanged (calendar 300 edges/job vs grant form 300.6; minimum 298)", "area": "49,248 b buffer (flops in RTL; map to ot_sram_1r1w_64x512 at hardening)"},
+ "model": "tools/uarch_model.py dsrom_wfc_static_link_price()",
+ "not_claimed": ["no hardened static kit yet (closed dsfd_wfc_stg views are of the grant form)", "TX_OFF measured at the bench stage-core time T_CORE 80: production stage programme value pending", "internal tokpipe grants / VM write credits remain inside the master"]
+}

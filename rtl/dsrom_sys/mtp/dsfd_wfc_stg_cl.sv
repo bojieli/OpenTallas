@@ -397,14 +397,24 @@ endmodule
 // (+define+DSFD_WFC_STG_CL_DIE: physical/s81_die_rtl/layer1.f) and the cluster carries the stage hand-off engine's
 // endpoint (engine 7 hop, ADAPTER_CONTRACT_1011 pins c_cmd / c_done / c_st): child dsfd_wfc_hop_ep below.
 `ifdef DSFD_WFC_STG_CL_DIE
-module dsfd_wfc_stg (
+module dsfd_wfc_stg
 `else
-module dsfd_wfc_stg_cl (
+module dsfd_wfc_stg_cl
 `endif
+`ifdef DSFD_WFC_STG_STATIC
+    #(parameter integer TX_OFF = 272)      // compiler constant: TX slot of a job = its last RX arrival edge + TX_OFF
+                                           // (272 = measured min 264 at the PRICED stage shape + 8 margin; set per stage programme)
+`endif
+    (
     input  wire [0:0] ck, ckv, rst, rsv,
     input  wire [84:0] c_cmd, output wire [8:0] c_done, output wire [1:0] c_st,   // engine 7 (hop) endpoint
+`ifdef DSFD_WFC_STG_STATIC
+    input  wire [0:0] f_liv, input  wire [512:0] f_lid,
+    output wire [0:0] t_lov, output wire [512:0] t_lod,
+`else
     input  wire [0:0] f_liv, input  wire [512:0] f_lid, output wire [0:0] t_lir,
     output wire [0:0] t_lov, output wire [512:0] t_lod, input  wire [0:0] f_lor,
+`endif
     output wire [0:0] t_swv, output wire [526:0] t_swd, input wire [0:0] f_swr, input wire [0:0] f_swa,
     output wire [0:0] t_srv, output wire [30:0] t_srd, input wire [0:0] f_srr,
     input  wire [1025:0] f_srq,
@@ -421,6 +431,108 @@ module dsfd_wfc_stg_cl (
     wire core_busy_nc, tok_valid_nc, wf_issue_nc, wf_reject_nc, wf_squash_nc;
     wire [9:0] tok_user_nc, users_done_nc; wire [20:0] tok_pos_nc, tok_id_nc; wire [512:0] dw_nc;
     wire clk = ck[0];
+`ifdef DSFD_WFC_STG_STATIC
+    // STATIC die form (S-VM F7 2026-10-15, owner rule 2026-10-14T18:59): the static collective
+    // (dsfd_sp_collective_static_c / dsfd_coll_static_channels) moves WFC link flits on compiler calendar edges with
+    // no ready, grant or credit in either direction.  Link out: the output skid is drained every edge (internal
+    // f_lor = 1); the compiler places the collective's WFC TX slots on the WFC's fixed output edges and the collective
+    // faults on any mismatch (bad |= wfc_tx[0] != slot); outbound messages leave contiguously (one flit per edge).
+    // Link in: every calendar arrival is written into the static RX buffer below (no ready); a lost arrival is a
+    // SCHEDULE FAULT (sticky, t_ft[2] with the link fault), never a stall.  Cost: RXB x 513 b buffer + 1 fast edge of
+    // inbound latency (buffer register); the grant pins t_lir / f_lor are removed from the die boundary.
+    wire [0:0] t_lir;
+    wire [0:0] f_lor;          // internal: the link's output skid -> static TX buffer fill (inside this master)
+    wire [0:0] lnk_ov; wire [512:0] lnk_od;
+    // Inbound static RX buffer (RXB flits x 513 b, statically sized: measured max occupancy 14 at the production
+    // calendar P 300 / TX_OFF 272, 32 = 2.3x): every calendar
+    // arrival is written on its edge (no ready); the link drains it through its own 2-entry skid.  An arrival when
+    // the buffer is full, or any arrival before the buffer is live, is a sticky schedule fault (lost flit).
+    localparam integer RXB = 32, RXA = 5;
+    reg [1:0] st_rs; always @(posedge clk or negedge rst[0]) if (!rst[0]) st_rs <= 2'b00; else st_rs <= {st_rs[0], 1'b1};
+    wire st_live = st_rs[1];
+    reg [512:0] rxb [0:RXB-1];
+    reg [RXA:0] rxb_w, rxb_r;
+    wire [RXA:0] rxb_occ = rxb_w - rxb_r;
+    wire rxb_full = rxb_occ == RXB, rxb_empty = rxb_w == rxb_r;
+    wire rxb_v = !rxb_empty; wire [512:0] rxb_q = rxb[rxb_r[RXA-1:0]];
+    wire rxb_pop = rxb_v && t_lir[0];
+    reg st_ov;
+    always @(posedge clk) if (st_live && f_liv[0] && !rxb_full) rxb[rxb_w[RXA-1:0]] <= f_lid;
+    always @(posedge clk or negedge st_live) if (!st_live) begin rxb_w <= 0; rxb_r <= 0; end else begin
+        if (f_liv[0] && !rxb_full) rxb_w <= rxb_w + 1'b1;
+        if (rxb_pop) rxb_r <= rxb_r + 1'b1;
+    end
+    always @(posedge clk or negedge rst[0]) if (!rst[0]) st_ov <= 1'b0;
+        else if (f_liv[0] && (!st_live || rxb_full)) st_ov <= 1'b1;
+    // RX message tracking: the first flit after a message end is a header; a JOB message (header type 1) ending at
+    // edge a schedules its outbound message at edge a + TX_OFF (the compiler's reserved TX slots, consecutive edges).
+    localparam integer HDR_TYPE = 16;
+    reg [31:0] st_edge; reg rx_hdr; reg rx_job;
+    reg [31:0] rel_t [0:15]; reg [4:0] rel_w, rel_r;
+    wire rx_wr = st_live && f_liv[0] && !rxb_full;
+    always @(posedge clk or negedge st_live) if (!st_live) begin st_edge <= 0; rx_hdr <= 1'b1; rx_job <= 1'b0; rel_w <= 0; end
+    else begin
+        st_edge <= st_edge + 1'b1;
+        if (rx_wr) begin
+            if (rx_hdr) rx_job <= f_lid[HDR_TYPE +: 4] == 4'd1;
+            rx_hdr <= f_lid[512];
+            if (f_lid[512] && (rx_hdr ? f_lid[HDR_TYPE +: 4] == 4'd1 : rx_job)) begin
+                rel_t[rel_w[3:0]] <= st_edge + TX_OFF; rel_w <= rel_w + 1'b1;
+            end
+        end
+    end
+    // Static TX buffer (TXB flits x 513 b; 64 >= one whole outbound message of 1 + XWORDS 46, so any TX_OFF up to a
+    // full message is admissible; measured max occupancy 9 at TX_OFF 272): filled from the link's output skid inside the master; drained ONLY on the
+    // scheduled edges, one flit per edge from the release edge to the message's last flit.  Underflow (a scheduled
+    // edge with the flit not yet present), a release while a message is still leaving, a full release queue or a full
+    // TX buffer (the link's output would wait) is a sticky schedule fault.
+    localparam integer TXB = 64, TXA = 6;
+    reg [512:0] txb [0:TXB-1];
+    reg [TXA:0] txb_w, txb_r; reg tx_on, tx_ft;
+    wire [TXA:0] txb_occ = txb_w - txb_r;
+    wire txb_empty = txb_w == txb_r, txb_full = txb_occ == TXB;
+`ifdef DSFD_WFC_STG_STATIC_MUT
+    reg mut_ph; always @(posedge clk or negedge st_live) if (!st_live) mut_ph <= 1'b0; else mut_ph <= ~mut_ph;
+    wire tx_go = tx_on && mut_ph;       // negative control: the message leaves on alternate edges only
+`else
+    wire tx_go = tx_on;
+`endif
+    wire rel_now = (rel_w != rel_r) && st_edge == rel_t[rel_r[3:0]];
+    assign f_lor = !txb_full;
+    always @(posedge clk) if (lnk_ov[0] && !txb_full) txb[txb_w[TXA-1:0]] <= lnk_od;
+    reg tlov; reg [512:0] tlod;
+    always @(posedge clk or negedge st_live) if (!st_live) begin
+        txb_w <= 0; txb_r <= 0; tx_on <= 1'b0; tx_ft <= 1'b0; rel_r <= 0; tlov <= 1'b0; tlod <= 0;
+    end else begin
+        if (lnk_ov[0] && !txb_full) txb_w <= txb_w + 1'b1;
+        if (rel_now) begin rel_r <= rel_r + 1'b1; if (tx_on) tx_ft <= 1'b1; end
+        if (rel_w - rel_r == 5'd16 && rx_wr) tx_ft <= 1'b1;
+        if (lnk_ov[0] && txb_full) tx_ft <= 1'b1;   // the fill side would wait: the TX_OFF exceeds the buffer (schedule fault)
+        tlov <= 1'b0;
+        if ((rel_now && !tx_on) || tx_go) begin
+            if (txb_empty) tx_ft <= 1'b1;
+            else begin
+                tlov <= 1'b1; tlod <= txb[txb_r[TXA-1:0]]; txb_r <= txb_r + 1'b1;
+                tx_on <= !txb[txb_r[TXA-1:0]][512];
+            end
+        end
+    end
+    assign t_lov = tlov; assign t_lod = tlod;
+`ifdef DSFD_WFC_STG_STATIC_DBG
+    always @(posedge clk) if (st_live) begin
+        if (f_liv[0] && rxb_full) $display("STATIC_DBG rx overflow edge %0d", st_edge);
+        if (rel_now && tx_on) $display("STATIC_DBG release while sending edge %0d", st_edge);
+        if (((rel_now && !tx_on) || tx_go) && txb_empty) $display("STATIC_DBG tx underflow edge %0d rel_now %b tx_on %b", st_edge, rel_now, tx_on);
+        if (lnk_ft_raw) $display("STATIC_DBG link fault edge %0d", st_edge);
+        if (dbg_rx_occ > dbg_rx_max) dbg_rx_max = dbg_rx_occ;
+        if (dbg_tx_occ > dbg_tx_max) dbg_tx_max = dbg_tx_occ;
+    end
+    wire [7:0] dbg_rx_occ = rxb_occ, dbg_tx_occ = txb_occ;
+    integer dbg_rx_max = 0, dbg_tx_max = 0;
+    final $display("STATIC_DBG occupancy rx_max=%0d tx_max=%0d", dbg_rx_max, dbg_tx_max);
+`endif
+    wire lnk_ft_raw; assign lnk_ft = lnk_ft_raw | st_ov | tx_ft;
+`endif
     ot_dsrom_wfc_tokpipe_stg u_wfc (
         .clk(clk), .rst_n(rst[0]), .cfg_users(10'd0), .cfg_prompt_len(21'd0), .cfg_gen_len(21'd0),
         .in_valid(w_in_valid), .in_ready(w_in_ready), .in_data(w_in_data), .in_last(w_in_last),
@@ -432,10 +544,23 @@ module dsfd_wfc_stg_cl (
         .core_busy(core_busy_nc), .tok_valid(tok_valid_nc), .tok_user(tok_user_nc), .tok_pos(tok_pos_nc), .tok_id(tok_id_nc),
         .users_done(users_done_nc), .proto_fault(proto_fault), .wf_issue(wf_issue_nc), .wf_reject(wf_reject_nc),
         .wf_squash(wf_squash_nc));
+`ifdef DSFD_WFC_STG_STATIC
+    dsfd_wfc_lnk u_lnk (.ck(ck), .rst(rst), .f_liv(rxb_v), .f_lid(rxb_q), .t_lir(t_lir),
+`else
     dsfd_wfc_lnk u_lnk (.ck(ck), .rst(rst), .f_liv(f_liv), .f_lid(f_lid), .t_lir(t_lir),
+`endif
         .t_wiv(w_in_valid), .t_wid({w_in_last, w_in_data}), .f_wig(w_in_ready),
         .f_wov(w_out_valid), .f_wod({w_out_last, w_out_data}), .t_wog(w_out_ready),
-        .t_lov(t_lov), .t_lod(t_lod), .f_lor(f_lor), .t_dw(dw_nc), .f_vc(vc_ret), .t_ft(lnk_ft));
+`ifdef DSFD_WFC_STG_STATIC
+        .t_lov(lnk_ov), .t_lod(lnk_od), .f_lor(f_lor), .t_dw(dw_nc), .f_vc(vc_ret),
+`else
+        .t_lov(t_lov), .t_lod(t_lod), .f_lor(f_lor), .t_dw(dw_nc), .f_vc(vc_ret),
+`endif
+`ifdef DSFD_WFC_STG_STATIC
+        .t_ft(lnk_ft_raw));
+`else
+        .t_ft(lnk_ft));
+`endif
     dsfd_wfc_vmx_p u_vp (.ck(ck), .ckv(ckv), .rst(rst), .rsv(rsv),
         .f_vw({vm_we, vm_waddr, vm_wdata}), .f_cs({core_start, core_user, core_token, core_pos}),
         .f_vr({vm_re, vm_raddr}), .t_vq(vm_rq), .t_cd(cd), .t_vc(vc_ret), .f_pf(proto_fault), .f_lf(lnk_ft),

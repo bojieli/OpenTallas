@@ -1,0 +1,5 @@
+MISMATCH mode0 check1024 ovffffffff nv00000000 of0 nff
+MISMATCH mode0 check1025 ovffffffff nvffffffff of0 nff
+RETURN_BANK8 groups1014 words20233 checks1025 atomic_missing4 errors2
+RETURN_BANK8 FAIL
+rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_static_return_bank8.sv:84: $finish called at 4478100 (1ps)
