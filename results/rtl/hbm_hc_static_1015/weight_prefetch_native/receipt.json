@@ -1,0 +1,175 @@
+{
+  "schema": "opentallas.hc.real-stripe4-prefetch-static.v1",
+  "status": "ACTUAL_CHECKPOINT_ROW_COMPONENT_PASS_NATIVE_CHIP_OPEN",
+  "source_commit": "abf838372",
+  "actual_compiled_source_sha256": {
+    "ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "ot_async_fifo.sv": "e091268202e1c6bcc18c8eb83304730c5a29bc10e0a6c52a4dcfc19c177e882e",
+    "ot_hgi_hc_aperture_static.sv": "7e14e88870dd131e8f558970dc7929175d1a76fd0317bfd24e0a71587d7419ae",
+    "ot_hbm_svc_prefetch_block_cdc.sv": "8ff360f8a67f41240df645def3e4d2c5a35df716ed452f720e6ee0d9d1ce134d",
+    "ot_hbm_loader_kport_address.sv": "b6eea0ffce657114439b555d6d4eee5ee6ad7efa4c6d226e94aa8697d539898b",
+    "ot_hgi_hc_prefetch_static.sv": "36696eefac6f8021bbbde8a202392e74339239d1acc2069d7db1b3bc08de5bf2",
+    "ot_hgi_hc_aperture_bridge_static.sv": "83854cc00c31a0db4477ef94ac62809b2d6fbf73703e35a7370598cec01c288b",
+    "ot_hbm_svc_static_landing.sv": "0c3122d06032896c52c97a11c3e65bf041ae5f420259671868e1f2ef988fab25",
+    "ot_hbm_svc_static_vm_delivery.sv": "91b0265ba4c0ce452cffbfd7776d25922dc6747de8a0a34b28c7b2e54354f3f2",
+    "tb_hgi_hc_prefetch_static.sv": "1231fa4384e6f9bb3b9d791d1da205c17f22b485ca12b44672b3aa347207b847",
+    "ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+  },
+  "compiled_hashes_verified_against_committed_source": 11,
+  "scope": "released layer0 hc_attn_fn row0 real20GiB STRIPE4 HBM native read/CDC to static landing/bridge and actual HC aperture SRAM; standalone component only",
+  "inputs": {
+    "schema": "opentallas.hc.stripe4.checkpoint-row.v1",
+    "layer": 0,
+    "which": "attn",
+    "row": 0,
+    "rank": 3,
+    "local_base": 21474836480,
+    "local_row_bytes": 81920,
+    "source_words": 20480,
+    "production_layout": "bank k -> stack k%4, local base+k*10240; 320 sectors per bank",
+    "source_sha256": "c91f65ab488fc844552e20500f43262b33c1d7e7301015ee9a1f94db3ef27770",
+    "provenance": {
+      "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+      "tensor": "layers.0.hc_attn_fn",
+      "tensor_metadata": {
+        "dtype": "F32",
+        "shape": [
+          24,
+          20480
+        ],
+        "data_offsets": [
+          3424,
+          1969504
+        ]
+      },
+      "checkpoint_header_sha256": "a3db007cbd9a68d4ba9e67ded10c8507abdb3d23bdf6a0340384ae1de6e658e6",
+      "raw_checkpoint_row_sha256": "e8de1d644f023d77a0d6cf63d3f57682160fecd330e53f2aca3f1d4790536652"
+    },
+    "segments": [
+      {
+        "bank": 0,
+        "stack": 0,
+        "local_byte": 21474836480,
+        "sectors": 320,
+        "image_offset": 0
+      },
+      {
+        "bank": 1,
+        "stack": 1,
+        "local_byte": 21474846720,
+        "sectors": 320,
+        "image_offset": 10240
+      },
+      {
+        "bank": 2,
+        "stack": 2,
+        "local_byte": 21474856960,
+        "sectors": 320,
+        "image_offset": 20480
+      },
+      {
+        "bank": 3,
+        "stack": 3,
+        "local_byte": 21474867200,
+        "sectors": 320,
+        "image_offset": 30720
+      },
+      {
+        "bank": 4,
+        "stack": 0,
+        "local_byte": 21474877440,
+        "sectors": 320,
+        "image_offset": 40960
+      },
+      {
+        "bank": 5,
+        "stack": 1,
+        "local_byte": 21474887680,
+        "sectors": 320,
+        "image_offset": 51200
+      },
+      {
+        "bank": 6,
+        "stack": 2,
+        "local_byte": 21474897920,
+        "sectors": 320,
+        "image_offset": 61440
+      },
+      {
+        "bank": 7,
+        "stack": 3,
+        "local_byte": 21474908160,
+        "sectors": 320,
+        "image_offset": 71680
+      }
+    ],
+    "destination": {
+      "positions_per_bank": 512,
+      "source_positions": 320,
+      "zero_padding_positions": [
+        320,
+        512
+      ],
+      "service_deliveries": 2,
+      "delivery_sectors": 2048,
+      "native_full_chip_qualified": false
+    }
+  },
+  "measured": {
+    "PHY_read_requests": 5120,
+    "PHY_read_responses": 5120,
+    "actual_HC_SRAM_sectors_readback": 8192,
+    "HC_slots": 2,
+    "stream_cycles": 14384,
+    "stream_period_ps": 833.332,
+    "hbm_period_ps": 1024,
+    "prefetch_delivery_II": 8,
+    "source_sectors_per_slot": 2560,
+    "explicit_zero_padding_sectors_per_slot": 1536,
+    "service_delivery_blocks_per_slot": 2
+  },
+  "SRAMs": {
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "prefetch": 128,
+    "landing": 32,
+    "HC_aperture": 64,
+    "total": 224,
+    "total_bytes": 917504,
+    "parent_join_parameter": "INTERNAL_APERTURE=0 omits64 standalone HC SRAMs; ap drives actual engine store"
+  },
+  "mutant": {
+    "type": "corrupt HCbank5 source position319 before landing",
+    "result": "FAIL at actual aperture SRAM readback slot0 bank5position319"
+  },
+  "runtime": {
+    "host": "ot-epyc4",
+    "scope": "oth-ubuntu-1634236-1792057990",
+    "session": 34044,
+    "terminal_exit": 0,
+    "remote": "/srv/opentallas-scratch/claude/codex-hc-prefetch-checkpoint-1015"
+  },
+  "preserved_diagnostics": [
+    {
+      "remote": "ot-epyc1tb:/srv/opentallas-scratch/claude/codex-hc-prefetch-1015",
+      "failure": "missing frozen sources, compile failed"
+    },
+    {
+      "remote": "ot-epyc1tb:/srv/opentallas-scratch/claude/codex-hc-prefetch-1015-v2",
+      "failure": "bench delta-cycle reserve_ready check before changed half settled"
+    },
+    {
+      "remote": "ot-epyc1tb:/srv/opentallas-scratch/claude/codex-hc-prefetch-1015-v3",
+      "result": "synthetic fullshape PASS + observable mutant FAIL"
+    }
+  ],
+  "limitations": [
+    "external component control pulses not actual fullchip compiler/sequencer join",
+    "PHYdevice response is declared external model",
+    "one actualcheckpoint row exported and tested; all24 rows exported but not yet consumed by arithmetic nativejoin",
+    "full43-layer2064row image not exported/installed",
+    "loader installation/ACK unproven",
+    "extra896KiB staging/store physical slot and throughput cost unqualified",
+    "no physical timing/clock/route proof",
+    "native fullchip qualification false"
+  ]
+}

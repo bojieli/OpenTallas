@@ -1,0 +1,2359 @@
+{
+  "schema": "opentallas.hc.stripe4.tensor.v1",
+  "rows": [
+    {
+      "schema": "opentallas.hc.stripe4.checkpoint-row.v1",
+      "layer": 0,
+      "which": "attn",
+      "row": 0,
+      "rank": 3,
+      "local_base": 21474836480,
+      "local_row_bytes": 81920,
+      "source_words": 20480,
+      "production_layout": "bank k -> stack k%4, local base+k*10240; 320 sectors per bank",
+      "source_sha256": "c91f65ab488fc844552e20500f43262b33c1d7e7301015ee9a1f94db3ef27770",
+      "provenance": {
+        "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+        "tensor": "layers.0.hc_attn_fn",
+        "tensor_metadata": {
+          "dtype": "F32",
+          "shape": [
+            24,
+            20480
+          ],
+          "data_offsets": [
+            3424,
+            1969504
+          ]
+        },
+        "checkpoint_header_sha256": "a3db007cbd9a68d4ba9e67ded10c8507abdb3d23bdf6a0340384ae1de6e658e6",
+        "raw_checkpoint_row_sha256": "e8de1d644f023d77a0d6cf63d3f57682160fecd330e53f2aca3f1d4790536652"
+      },
+      "segments": [
+        {
+          "bank": 0,
+          "stack": 0,
+          "local_byte": 21474836480,
+          "sectors": 320,
+          "image_offset": 0
+        },
+        {
+          "bank": 1,
+          "stack": 1,
+          "local_byte": 21474846720,
+          "sectors": 320,
+          "image_offset": 10240
+        },
+        {
+          "bank": 2,
+          "stack": 2,
+          "local_byte": 21474856960,
+          "sectors": 320,
+          "image_offset": 20480
+        },
+        {
+          "bank": 3,
+          "stack": 3,
+          "local_byte": 21474867200,
+          "sectors": 320,
+          "image_offset": 30720
+        },
+        {
+          "bank": 4,
+          "stack": 0,
+          "local_byte": 21474877440,
+          "sectors": 320,
+          "image_offset": 40960
+        },
+        {
+          "bank": 5,
+          "stack": 1,
+          "local_byte": 21474887680,
+          "sectors": 320,
+          "image_offset": 51200
+        },
+        {
+          "bank": 6,
+          "stack": 2,
+          "local_byte": 21474897920,
+          "sectors": 320,
+          "image_offset": 61440
+        },
+        {
+          "bank": 7,
+          "stack": 3,
+          "local_byte": 21474908160,
+          "sectors": 320,
+          "image_offset": 71680
+        }
+      ],
+      "destination": {
+        "positions_per_bank": 512,
+        "source_positions": 320,
+        "zero_padding_positions": [
+          320,
+          512
+        ],
+        "service_deliveries": 2,
+        "delivery_sectors": 2048,
+        "native_full_chip_qualified": false
+      }
+    },
+    {
+      "schema": "opentallas.hc.stripe4.checkpoint-row.v1",
+      "layer": 0,
+      "which": "attn",
+      "row": 1,
+      "rank": 7,
+      "local_base": 21474918400,
+      "local_row_bytes": 81920,
+      "source_words": 20480,
+      "production_layout": "bank k -> stack k%4, local base+k*10240; 320 sectors per bank",
+      "source_sha256": "53855789b0ad6ada05517a791c981959cdd8537e4bf3654cb141831cfdff0856",
+      "provenance": {
+        "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+        "tensor": "layers.0.hc_attn_fn",
+        "tensor_metadata": {
+          "dtype": "F32",
+          "shape": [
+            24,
+            20480
+          ],
+          "data_offsets": [
+            3424,
+            1969504
+          ]
+        },
+        "checkpoint_header_sha256": "a3db007cbd9a68d4ba9e67ded10c8507abdb3d23bdf6a0340384ae1de6e658e6",
+        "raw_checkpoint_row_sha256": "4d01cb58865951c2b5d9759c4e51068392a5b0bf694f03942635dce9bee5fd54"
+      },
+      "segments": [
+        {
+          "bank": 0,
+          "stack": 0,
+          "local_byte": 21474918400,
+          "sectors": 320,
+          "image_offset": 0
+        },
+        {
+          "bank": 1,
+          "stack": 1,
+          "local_byte": 21474928640,
+          "sectors": 320,
+          "image_offset": 10240
+        },
+        {
+          "bank": 2,
+          "stack": 2,
+          "local_byte": 21474938880,
+          "sectors": 320,
+          "image_offset": 20480
+        },
+        {
+          "bank": 3,
+          "stack": 3,
+          "local_byte": 21474949120,
+          "sectors": 320,
+          "image_offset": 30720
+        },
+        {
+          "bank": 4,
+          "stack": 0,
+          "local_byte": 21474959360,
+          "sectors": 320,
+          "image_offset": 40960
+        },
+        {
+          "bank": 5,
+          "stack": 1,
+          "local_byte": 21474969600,
+          "sectors": 320,
+          "image_offset": 51200
+        },
+        {
+          "bank": 6,
+          "stack": 2,
+          "local_byte": 21474979840,
+          "sectors": 320,
+          "image_offset": 61440
+        },
+        {
+          "bank": 7,
+          "stack": 3,
+          "local_byte": 21474990080,
+          "sectors": 320,
+          "image_offset": 71680
+        }
+      ],
+      "destination": {
+        "positions_per_bank": 512,
+        "source_positions": 320,
+        "zero_padding_positions": [
+          320,
+          512
+        ],
+        "service_deliveries": 2,
+        "delivery_sectors": 2048,
+        "native_full_chip_qualified": false
+      }
+    },
+    {
+      "schema": "opentallas.hc.stripe4.checkpoint-row.v1",
+      "layer": 0,
+      "which": "attn",
+      "row": 2,
+      "rank": 11,
+      "local_base": 21475000320,
+      "local_row_bytes": 81920,
+      "source_words": 20480,
+      "production_layout": "bank k -> stack k%4, local base+k*10240; 320 sectors per bank",
+      "source_sha256": "3f3fc1253566d06abdacdfab7053f09f0e97729cdabe1dbf87d449c4b4178c60",
+      "provenance": {
+        "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+        "tensor": "layers.0.hc_attn_fn",
+        "tensor_metadata": {
+          "dtype": "F32",
+          "shape": [
+            24,
+            20480
+          ],
+          "data_offsets": [
+            3424,
+            1969504
+          ]
+        },
+        "checkpoint_header_sha256": "a3db007cbd9a68d4ba9e67ded10c8507abdb3d23bdf6a0340384ae1de6e658e6",
+        "raw_checkpoint_row_sha256": "0c251fc325d4976e3a2b6b15426adc2edce2d61b31200fb3e7155a1c093ea2d1"
+      },
+      "segments": [
+        {
+          "bank": 0,
+          "stack": 0,
+          "local_byte": 21475000320,
+          "sectors": 320,
+          "image_offset": 0
+        },
+        {
+          "bank": 1,
+          "stack": 1,
+          "local_byte": 21475010560,
+          "sectors": 320,
+          "image_offset": 10240
+        },
+        {
+          "bank": 2,
+          "stack": 2,
+          "local_byte": 21475020800,
+          "sectors": 320,
+          "image_offset": 20480
+        },
+        {
+          "bank": 3,
+          "stack": 3,
+          "local_byte": 21475031040,
+          "sectors": 320,
+          "image_offset": 30720
+        },
+        {
+          "bank": 4,
+          "stack": 0,
+          "local_byte": 21475041280,
+          "sectors": 320,
+          "image_offset": 40960
+        },
+        {
+          "bank": 5,
+          "stack": 1,
+          "local_byte": 21475051520,
+          "sectors": 320,
+          "image_offset": 51200
+        },
+        {
+          "bank": 6,
+          "stack": 2,
+          "local_byte": 21475061760,
+          "sectors": 320,
+          "image_offset": 61440
+        },
+        {
+          "bank": 7,
+          "stack": 3,
+          "local_byte": 21475072000,
+          "sectors": 320,
+          "image_offset": 71680
+        }
+      ],
+      "destination": {
+        "positions_per_bank": 512,
+        "source_positions": 320,
+        "zero_padding_positions": [
+          320,
+          512
+        ],
+        "service_deliveries": 2,
+        "delivery_sectors": 2048,
+        "native_full_chip_qualified": false
+      }
+    },
+    {
+      "schema": "opentallas.hc.stripe4.checkpoint-row.v1",
+      "layer": 0,
+      "which": "attn",
+      "row": 3,
+      "rank": 15,
+      "local_base": 21475082240,
+      "local_row_bytes": 81920,
+      "source_words": 20480,
+      "production_layout": "bank k -> stack k%4, local base+k*10240; 320 sectors per bank",
+      "source_sha256": "61c68cf6a38b048ac7d57c6c01b46598d0d461b561f449100d1e3c4cafba10fe",
+      "provenance": {
+        "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+        "tensor": "layers.0.hc_attn_fn",
+        "tensor_metadata": {
+          "dtype": "F32",
+          "shape": [
+            24,
+            20480
+          ],
+          "data_offsets": [
+            3424,
+            1969504
+          ]
+        },
+        "checkpoint_header_sha256": "a3db007cbd9a68d4ba9e67ded10c8507abdb3d23bdf6a0340384ae1de6e658e6",
+        "raw_checkpoint_row_sha256": "ab85f21b0273a05fca789c331498dfbf398ca9d41426bd35d4aaa209930a1471"
+      },
+      "segments": [
+        {
+          "bank": 0,
+          "stack": 0,
+          "local_byte": 21475082240,
+          "sectors": 320,
+          "image_offset": 0
+        },
+        {
+          "bank": 1,
+          "stack": 1,
+          "local_byte": 21475092480,
+          "sectors": 320,
+          "image_offset": 10240
+        },
+        {
+          "bank": 2,
+          "stack": 2,
+          "local_byte": 21475102720,
+          "sectors": 320,
+          "image_offset": 20480
+        },
+        {
+          "bank": 3,
+          "stack": 3,
+          "local_byte": 21475112960,
+          "sectors": 320,
+          "image_offset": 30720
+        },
+        {
+          "bank": 4,
+          "stack": 0,
+          "local_byte": 21475123200,
+          "sectors": 320,
+          "image_offset": 40960
+        },
+        {
+          "bank": 5,
+          "stack": 1,
+          "local_byte": 21475133440,
+          "sectors": 320,
+          "image_offset": 51200
+        },
+        {
+          "bank": 6,
+          "stack": 2,
+          "local_byte": 21475143680,
+          "sectors": 320,
+          "image_offset": 61440
+        },
+        {
+          "bank": 7,
+          "stack": 3,
+          "local_byte": 21475153920,
+          "sectors": 320,
+          "image_offset": 71680
+        }
+      ],
+      "destination": {
+        "positions_per_bank": 512,
+        "source_positions": 320,
+        "zero_padding_positions": [
+          320,
+          512
+        ],
+        "service_deliveries": 2,
+        "delivery_sectors": 2048,
+        "native_full_chip_qualified": false
+      }
+    },
+    {
+      "schema": "opentallas.hc.stripe4.checkpoint-row.v1",
+      "layer": 0,
+      "which": "attn",
+      "row": 4,
+      "rank": 19,
+      "local_base": 21475164160,
+      "local_row_bytes": 81920,
+      "source_words": 20480,
+      "production_layout": "bank k -> stack k%4, local base+k*10240; 320 sectors per bank",
+      "source_sha256": "603b4ce737ef5b8737880abb6d621678e20612aca860c946ce53b364727efe11",
+      "provenance": {
+        "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+        "tensor": "layers.0.hc_attn_fn",
+        "tensor_metadata": {
+          "dtype": "F32",
+          "shape": [
+            24,
+            20480
+          ],
+          "data_offsets": [
+            3424,
+            1969504
+          ]
+        },
+        "checkpoint_header_sha256": "a3db007cbd9a68d4ba9e67ded10c8507abdb3d23bdf6a0340384ae1de6e658e6",
+        "raw_checkpoint_row_sha256": "71b056c09a123cb44e4fb43cf22545c157ba06c6670ab3872f2508fffd5a2ff5"
+      },
+      "segments": [
+        {
+          "bank": 0,
+          "stack": 0,
+          "local_byte": 21475164160,
+          "sectors": 320,
+          "image_offset": 0
+        },
+        {
+          "bank": 1,
+          "stack": 1,
+          "local_byte": 21475174400,
+          "sectors": 320,
+          "image_offset": 10240
+        },
+        {
+          "bank": 2,
+          "stack": 2,
+          "local_byte": 21475184640,
+          "sectors": 320,
+          "image_offset": 20480
+        },
+        {
+          "bank": 3,
+          "stack": 3,
+          "local_byte": 21475194880,
+          "sectors": 320,
+          "image_offset": 30720
+        },
+        {
+          "bank": 4,
+          "stack": 0,
+          "local_byte": 21475205120,
+          "sectors": 320,
+          "image_offset": 40960
+        },
+        {
+          "bank": 5,
+          "stack": 1,
+          "local_byte": 21475215360,
+          "sectors": 320,
+          "image_offset": 51200
+        },
+        {
+          "bank": 6,
+          "stack": 2,
+          "local_byte": 21475225600,
+          "sectors": 320,
+          "image_offset": 61440
+        },
+        {
+          "bank": 7,
+          "stack": 3,
+          "local_byte": 21475235840,
+          "sectors": 320,
+          "image_offset": 71680
+        }
+      ],
+      "destination": {
+        "positions_per_bank": 512,
+        "source_positions": 320,
+        "zero_padding_positions": [
+          320,
+          512
+        ],
+        "service_deliveries": 2,
+        "delivery_sectors": 2048,
+        "native_full_chip_qualified": false
+      }
+    },
+    {
+      "schema": "opentallas.hc.stripe4.checkpoint-row.v1",
+      "layer": 0,
+      "which": "attn",
+      "row": 5,
+      "rank": 23,
+      "local_base": 21475246080,
+      "local_row_bytes": 81920,
+      "source_words": 20480,
+      "production_layout": "bank k -> stack k%4, local base+k*10240; 320 sectors per bank",
+      "source_sha256": "97adcab6b4da6b8368938b6f92f478aafcf2366d4103a00a4cd5e881a19a4f05",
+      "provenance": {
+        "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+        "tensor": "layers.0.hc_attn_fn",
+        "tensor_metadata": {
+          "dtype": "F32",
+          "shape": [
+            24,
+            20480
+          ],
+          "data_offsets": [
+            3424,
+            1969504
+          ]
+        },
+        "checkpoint_header_sha256": "a3db007cbd9a68d4ba9e67ded10c8507abdb3d23bdf6a0340384ae1de6e658e6",
+        "raw_checkpoint_row_sha256": "e7ba7fe719aab44dbe058b6639b2372f92b96fe60087cca944cf0d694837aa02"
+      },
+      "segments": [
+        {
+          "bank": 0,
+          "stack": 0,
+          "local_byte": 21475246080,
+          "sectors": 320,
+          "image_offset": 0
+        },
+        {
+          "bank": 1,
+          "stack": 1,
+          "local_byte": 21475256320,
+          "sectors": 320,
+          "image_offset": 10240
+        },
+        {
+          "bank": 2,
+          "stack": 2,
+          "local_byte": 21475266560,
+          "sectors": 320,
+          "image_offset": 20480
+        },
+        {
+          "bank": 3,
+          "stack": 3,
+          "local_byte": 21475276800,
+          "sectors": 320,
+          "image_offset": 30720
+        },
+        {
+          "bank": 4,
+          "stack": 0,
+          "local_byte": 21475287040,
+          "sectors": 320,
+          "image_offset": 40960
+        },
+        {
+          "bank": 5,
+          "stack": 1,
+          "local_byte": 21475297280,
+          "sectors": 320,
+          "image_offset": 51200
+        },
+        {
+          "bank": 6,
+          "stack": 2,
+          "local_byte": 21475307520,
+          "sectors": 320,
+          "image_offset": 61440
+        },
+        {
+          "bank": 7,
+          "stack": 3,
+          "local_byte": 21475317760,
+          "sectors": 320,
+          "image_offset": 71680
+        }
+      ],
+      "destination": {
+        "positions_per_bank": 512,
+        "source_positions": 320,
+        "zero_padding_positions": [
+          320,
+          512
+        ],
+        "service_deliveries": 2,
+        "delivery_sectors": 2048,
+        "native_full_chip_qualified": false
+      }
+    },
+    {
+      "schema": "opentallas.hc.stripe4.checkpoint-row.v1",
+      "layer": 0,
+      "which": "attn",
+      "row": 6,
+      "rank": 27,
+      "local_base": 21475328000,
+      "local_row_bytes": 81920,
+      "source_words": 20480,
+      "production_layout": "bank k -> stack k%4, local base+k*10240; 320 sectors per bank",
+      "source_sha256": "b43fee47b177b2b49f7bdeec5674b68fa78f1a1b83b3b4ca2da544c64c46bbcd",
+      "provenance": {
+        "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+        "tensor": "layers.0.hc_attn_fn",
+        "tensor_metadata": {
+          "dtype": "F32",
+          "shape": [
+            24,
+            20480
+          ],
+          "data_offsets": [
+            3424,
+            1969504
+          ]
+        },
+        "checkpoint_header_sha256": "a3db007cbd9a68d4ba9e67ded10c8507abdb3d23bdf6a0340384ae1de6e658e6",
+        "raw_checkpoint_row_sha256": "82d1df02b793eb1b9e7738fa3ba67f49bcd78ce91f793b06daaf5b98daab7d9b"
+      },
+      "segments": [
+        {
+          "bank": 0,
+          "stack": 0,
+          "local_byte": 21475328000,
+          "sectors": 320,
+          "image_offset": 0
+        },
+        {
+          "bank": 1,
+          "stack": 1,
+          "local_byte": 21475338240,
+          "sectors": 320,
+          "image_offset": 10240
+        },
+        {
+          "bank": 2,
+          "stack": 2,
+          "local_byte": 21475348480,
+          "sectors": 320,
+          "image_offset": 20480
+        },
+        {
+          "bank": 3,
+          "stack": 3,
+          "local_byte": 21475358720,
+          "sectors": 320,
+          "image_offset": 30720
+        },
+        {
+          "bank": 4,
+          "stack": 0,
+          "local_byte": 21475368960,
+          "sectors": 320,
+          "image_offset": 40960
+        },
+        {
+          "bank": 5,
+          "stack": 1,
+          "local_byte": 21475379200,
+          "sectors": 320,
+          "image_offset": 51200
+        },
+        {
+          "bank": 6,
+          "stack": 2,
+          "local_byte": 21475389440,
+          "sectors": 320,
+          "image_offset": 61440
+        },
+        {
+          "bank": 7,
+          "stack": 3,
+          "local_byte": 21475399680,
+          "sectors": 320,
+          "image_offset": 71680
+        }
+      ],
+      "destination": {
+        "positions_per_bank": 512,
+        "source_positions": 320,
+        "zero_padding_positions": [
+          320,
+          512
+        ],
+        "service_deliveries": 2,
+        "delivery_sectors": 2048,
+        "native_full_chip_qualified": false
+      }
+    },
+    {
+      "schema": "opentallas.hc.stripe4.checkpoint-row.v1",
+      "layer": 0,
+      "which": "attn",
+      "row": 7,
+      "rank": 31,
+      "local_base": 21475409920,
+      "local_row_bytes": 81920,
+      "source_words": 20480,
+      "production_layout": "bank k -> stack k%4, local base+k*10240; 320 sectors per bank",
+      "source_sha256": "2248f718135a3e79f5df3d52c055d918abd8c153f9833ed4d883201cb3fd169f",
+      "provenance": {
+        "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+        "tensor": "layers.0.hc_attn_fn",
+        "tensor_metadata": {
+          "dtype": "F32",
+          "shape": [
+            24,
+            20480
+          ],
+          "data_offsets": [
+            3424,
+            1969504
+          ]
+        },
+        "checkpoint_header_sha256": "a3db007cbd9a68d4ba9e67ded10c8507abdb3d23bdf6a0340384ae1de6e658e6",
+        "raw_checkpoint_row_sha256": "7b736bd6ab2135b10476810ae6854b9f0424da450df734e81ac7c597c75d0929"
+      },
+      "segments": [
+        {
+          "bank": 0,
+          "stack": 0,
+          "local_byte": 21475409920,
+          "sectors": 320,
+          "image_offset": 0
+        },
+        {
+          "bank": 1,
+          "stack": 1,
+          "local_byte": 21475420160,
+          "sectors": 320,
+          "image_offset": 10240
+        },
+        {
+          "bank": 2,
+          "stack": 2,
+          "local_byte": 21475430400,
+          "sectors": 320,
+          "image_offset": 20480
+        },
+        {
+          "bank": 3,
+          "stack": 3,
+          "local_byte": 21475440640,
+          "sectors": 320,
+          "image_offset": 30720
+        },
+        {
+          "bank": 4,
+          "stack": 0,
+          "local_byte": 21475450880,
+          "sectors": 320,
+          "image_offset": 40960
+        },
+        {
+          "bank": 5,
+          "stack": 1,
+          "local_byte": 21475461120,
+          "sectors": 320,
+          "image_offset": 51200
+        },
+        {
+          "bank": 6,
+          "stack": 2,
+          "local_byte": 21475471360,
+          "sectors": 320,
+          "image_offset": 61440
+        },
+        {
+          "bank": 7,
+          "stack": 3,
+          "local_byte": 21475481600,
+          "sectors": 320,
+          "image_offset": 71680
+        }
+      ],
+      "destination": {
+        "positions_per_bank": 512,
+        "source_positions": 320,
+        "zero_padding_positions": [
+          320,
+          512
+        ],
+        "service_deliveries": 2,
+        "delivery_sectors": 2048,
+        "native_full_chip_qualified": false
+      }
+    },
+    {
+      "schema": "opentallas.hc.stripe4.checkpoint-row.v1",
+      "layer": 0,
+      "which": "attn",
+      "row": 8,
+      "rank": 35,
+      "local_base": 21475491840,
+      "local_row_bytes": 81920,
+      "source_words": 20480,
+      "production_layout": "bank k -> stack k%4, local base+k*10240; 320 sectors per bank",
+      "source_sha256": "850a9cf32e275a5bd9f6440838fe9f77a6ce69c429bf1f0a276a908603467154",
+      "provenance": {
+        "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+        "tensor": "layers.0.hc_attn_fn",
+        "tensor_metadata": {
+          "dtype": "F32",
+          "shape": [
+            24,
+            20480
+          ],
+          "data_offsets": [
+            3424,
+            1969504
+          ]
+        },
+        "checkpoint_header_sha256": "a3db007cbd9a68d4ba9e67ded10c8507abdb3d23bdf6a0340384ae1de6e658e6",
+        "raw_checkpoint_row_sha256": "ee22181ae7f8f55009777045042eb83e0283dcbaeeda4e6f52beb035847669c8"
+      },
+      "segments": [
+        {
+          "bank": 0,
+          "stack": 0,
+          "local_byte": 21475491840,
+          "sectors": 320,
+          "image_offset": 0
+        },
+        {
+          "bank": 1,
+          "stack": 1,
+          "local_byte": 21475502080,
+          "sectors": 320,
+          "image_offset": 10240
+        },
+        {
+          "bank": 2,
+          "stack": 2,
+          "local_byte": 21475512320,
+          "sectors": 320,
+          "image_offset": 20480
+        },
+        {
+          "bank": 3,
+          "stack": 3,
+          "local_byte": 21475522560,
+          "sectors": 320,
+          "image_offset": 30720
+        },
+        {
+          "bank": 4,
+          "stack": 0,
+          "local_byte": 21475532800,
+          "sectors": 320,
+          "image_offset": 40960
+        },
+        {
+          "bank": 5,
+          "stack": 1,
+          "local_byte": 21475543040,
+          "sectors": 320,
+          "image_offset": 51200
+        },
+        {
+          "bank": 6,
+          "stack": 2,
+          "local_byte": 21475553280,
+          "sectors": 320,
+          "image_offset": 61440
+        },
+        {
+          "bank": 7,
+          "stack": 3,
+          "local_byte": 21475563520,
+          "sectors": 320,
+          "image_offset": 71680
+        }
+      ],
+      "destination": {
+        "positions_per_bank": 512,
+        "source_positions": 320,
+        "zero_padding_positions": [
+          320,
+          512
+        ],
+        "service_deliveries": 2,
+        "delivery_sectors": 2048,
+        "native_full_chip_qualified": false
+      }
+    },
+    {
+      "schema": "opentallas.hc.stripe4.checkpoint-row.v1",
+      "layer": 0,
+      "which": "attn",
+      "row": 9,
+      "rank": 39,
+      "local_base": 21475573760,
+      "local_row_bytes": 81920,
+      "source_words": 20480,
+      "production_layout": "bank k -> stack k%4, local base+k*10240; 320 sectors per bank",
+      "source_sha256": "3a290dca7fd76b8bc52e8a6f8af40be8253a5914cafbffe9bee890b7da58da00",
+      "provenance": {
+        "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+        "tensor": "layers.0.hc_attn_fn",
+        "tensor_metadata": {
+          "dtype": "F32",
+          "shape": [
+            24,
+            20480
+          ],
+          "data_offsets": [
+            3424,
+            1969504
+          ]
+        },
+        "checkpoint_header_sha256": "a3db007cbd9a68d4ba9e67ded10c8507abdb3d23bdf6a0340384ae1de6e658e6",
+        "raw_checkpoint_row_sha256": "10b38deabbe145bd72f8636b17c89636c69a42f4bf469fbf1fec4db1f079c8b0"
+      },
+      "segments": [
+        {
+          "bank": 0,
+          "stack": 0,
+          "local_byte": 21475573760,
+          "sectors": 320,
+          "image_offset": 0
+        },
+        {
+          "bank": 1,
+          "stack": 1,
+          "local_byte": 21475584000,
+          "sectors": 320,
+          "image_offset": 10240
+        },
+        {
+          "bank": 2,
+          "stack": 2,
+          "local_byte": 21475594240,
+          "sectors": 320,
+          "image_offset": 20480
+        },
+        {
+          "bank": 3,
+          "stack": 3,
+          "local_byte": 21475604480,
+          "sectors": 320,
+          "image_offset": 30720
+        },
+        {
+          "bank": 4,
+          "stack": 0,
+          "local_byte": 21475614720,
+          "sectors": 320,
+          "image_offset": 40960
+        },
+        {
+          "bank": 5,
+          "stack": 1,
+          "local_byte": 21475624960,
+          "sectors": 320,
+          "image_offset": 51200
+        },
+        {
+          "bank": 6,
+          "stack": 2,
+          "local_byte": 21475635200,
+          "sectors": 320,
+          "image_offset": 61440
+        },
+        {
+          "bank": 7,
+          "stack": 3,
+          "local_byte": 21475645440,
+          "sectors": 320,
+          "image_offset": 71680
+        }
+      ],
+      "destination": {
+        "positions_per_bank": 512,
+        "source_positions": 320,
+        "zero_padding_positions": [
+          320,
+          512
+        ],
+        "service_deliveries": 2,
+        "delivery_sectors": 2048,
+        "native_full_chip_qualified": false
+      }
+    },
+    {
+      "schema": "opentallas.hc.stripe4.checkpoint-row.v1",
+      "layer": 0,
+      "which": "attn",
+      "row": 10,
+      "rank": 43,
+      "local_base": 21475655680,
+      "local_row_bytes": 81920,
+      "source_words": 20480,
+      "production_layout": "bank k -> stack k%4, local base+k*10240; 320 sectors per bank",
+      "source_sha256": "3f7042718fc2193112bfacc310311bcdda9fbfb1c653676d0f325daedc8d3d14",
+      "provenance": {
+        "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+        "tensor": "layers.0.hc_attn_fn",
+        "tensor_metadata": {
+          "dtype": "F32",
+          "shape": [
+            24,
+            20480
+          ],
+          "data_offsets": [
+            3424,
+            1969504
+          ]
+        },
+        "checkpoint_header_sha256": "a3db007cbd9a68d4ba9e67ded10c8507abdb3d23bdf6a0340384ae1de6e658e6",
+        "raw_checkpoint_row_sha256": "3e3e73eaedd4d4690ff5e91f248620ac852eb7632a0ebe2d27b87e47eb4aa8bc"
+      },
+      "segments": [
+        {
+          "bank": 0,
+          "stack": 0,
+          "local_byte": 21475655680,
+          "sectors": 320,
+          "image_offset": 0
+        },
+        {
+          "bank": 1,
+          "stack": 1,
+          "local_byte": 21475665920,
+          "sectors": 320,
+          "image_offset": 10240
+        },
+        {
+          "bank": 2,
+          "stack": 2,
+          "local_byte": 21475676160,
+          "sectors": 320,
+          "image_offset": 20480
+        },
+        {
+          "bank": 3,
+          "stack": 3,
+          "local_byte": 21475686400,
+          "sectors": 320,
+          "image_offset": 30720
+        },
+        {
+          "bank": 4,
+          "stack": 0,
+          "local_byte": 21475696640,
+          "sectors": 320,
+          "image_offset": 40960
+        },
+        {
+          "bank": 5,
+          "stack": 1,
+          "local_byte": 21475706880,
+          "sectors": 320,
+          "image_offset": 51200
+        },
+        {
+          "bank": 6,
+          "stack": 2,
+          "local_byte": 21475717120,
+          "sectors": 320,
+          "image_offset": 61440
+        },
+        {
+          "bank": 7,
+          "stack": 3,
+          "local_byte": 21475727360,
+          "sectors": 320,
+          "image_offset": 71680
+        }
+      ],
+      "destination": {
+        "positions_per_bank": 512,
+        "source_positions": 320,
+        "zero_padding_positions": [
+          320,
+          512
+        ],
+        "service_deliveries": 2,
+        "delivery_sectors": 2048,
+        "native_full_chip_qualified": false
+      }
+    },
+    {
+      "schema": "opentallas.hc.stripe4.checkpoint-row.v1",
+      "layer": 0,
+      "which": "attn",
+      "row": 11,
+      "rank": 47,
+      "local_base": 21475737600,
+      "local_row_bytes": 81920,
+      "source_words": 20480,
+      "production_layout": "bank k -> stack k%4, local base+k*10240; 320 sectors per bank",
+      "source_sha256": "cc77f69f29846bfd8e7c98d8fb5c2dd0bd536ae39dd82b0f9920a0b152534b16",
+      "provenance": {
+        "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+        "tensor": "layers.0.hc_attn_fn",
+        "tensor_metadata": {
+          "dtype": "F32",
+          "shape": [
+            24,
+            20480
+          ],
+          "data_offsets": [
+            3424,
+            1969504
+          ]
+        },
+        "checkpoint_header_sha256": "a3db007cbd9a68d4ba9e67ded10c8507abdb3d23bdf6a0340384ae1de6e658e6",
+        "raw_checkpoint_row_sha256": "0e5072bf3b6b3c05a6f3341a36547f59370a4f4c9c4aea2f5c9e5adef6dfb2e4"
+      },
+      "segments": [
+        {
+          "bank": 0,
+          "stack": 0,
+          "local_byte": 21475737600,
+          "sectors": 320,
+          "image_offset": 0
+        },
+        {
+          "bank": 1,
+          "stack": 1,
+          "local_byte": 21475747840,
+          "sectors": 320,
+          "image_offset": 10240
+        },
+        {
+          "bank": 2,
+          "stack": 2,
+          "local_byte": 21475758080,
+          "sectors": 320,
+          "image_offset": 20480
+        },
+        {
+          "bank": 3,
+          "stack": 3,
+          "local_byte": 21475768320,
+          "sectors": 320,
+          "image_offset": 30720
+        },
+        {
+          "bank": 4,
+          "stack": 0,
+          "local_byte": 21475778560,
+          "sectors": 320,
+          "image_offset": 40960
+        },
+        {
+          "bank": 5,
+          "stack": 1,
+          "local_byte": 21475788800,
+          "sectors": 320,
+          "image_offset": 51200
+        },
+        {
+          "bank": 6,
+          "stack": 2,
+          "local_byte": 21475799040,
+          "sectors": 320,
+          "image_offset": 61440
+        },
+        {
+          "bank": 7,
+          "stack": 3,
+          "local_byte": 21475809280,
+          "sectors": 320,
+          "image_offset": 71680
+        }
+      ],
+      "destination": {
+        "positions_per_bank": 512,
+        "source_positions": 320,
+        "zero_padding_positions": [
+          320,
+          512
+        ],
+        "service_deliveries": 2,
+        "delivery_sectors": 2048,
+        "native_full_chip_qualified": false
+      }
+    },
+    {
+      "schema": "opentallas.hc.stripe4.checkpoint-row.v1",
+      "layer": 0,
+      "which": "attn",
+      "row": 12,
+      "rank": 51,
+      "local_base": 21475819520,
+      "local_row_bytes": 81920,
+      "source_words": 20480,
+      "production_layout": "bank k -> stack k%4, local base+k*10240; 320 sectors per bank",
+      "source_sha256": "eb550c532fe37802586ccf9c97df215950421739c0726c45ccef518403a51078",
+      "provenance": {
+        "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+        "tensor": "layers.0.hc_attn_fn",
+        "tensor_metadata": {
+          "dtype": "F32",
+          "shape": [
+            24,
+            20480
+          ],
+          "data_offsets": [
+            3424,
+            1969504
+          ]
+        },
+        "checkpoint_header_sha256": "a3db007cbd9a68d4ba9e67ded10c8507abdb3d23bdf6a0340384ae1de6e658e6",
+        "raw_checkpoint_row_sha256": "faec665773d86db50ba3a081f25cf3b50551342679d1bf4dbe7d9a0cd8bf0372"
+      },
+      "segments": [
+        {
+          "bank": 0,
+          "stack": 0,
+          "local_byte": 21475819520,
+          "sectors": 320,
+          "image_offset": 0
+        },
+        {
+          "bank": 1,
+          "stack": 1,
+          "local_byte": 21475829760,
+          "sectors": 320,
+          "image_offset": 10240
+        },
+        {
+          "bank": 2,
+          "stack": 2,
+          "local_byte": 21475840000,
+          "sectors": 320,
+          "image_offset": 20480
+        },
+        {
+          "bank": 3,
+          "stack": 3,
+          "local_byte": 21475850240,
+          "sectors": 320,
+          "image_offset": 30720
+        },
+        {
+          "bank": 4,
+          "stack": 0,
+          "local_byte": 21475860480,
+          "sectors": 320,
+          "image_offset": 40960
+        },
+        {
+          "bank": 5,
+          "stack": 1,
+          "local_byte": 21475870720,
+          "sectors": 320,
+          "image_offset": 51200
+        },
+        {
+          "bank": 6,
+          "stack": 2,
+          "local_byte": 21475880960,
+          "sectors": 320,
+          "image_offset": 61440
+        },
+        {
+          "bank": 7,
+          "stack": 3,
+          "local_byte": 21475891200,
+          "sectors": 320,
+          "image_offset": 71680
+        }
+      ],
+      "destination": {
+        "positions_per_bank": 512,
+        "source_positions": 320,
+        "zero_padding_positions": [
+          320,
+          512
+        ],
+        "service_deliveries": 2,
+        "delivery_sectors": 2048,
+        "native_full_chip_qualified": false
+      }
+    },
+    {
+      "schema": "opentallas.hc.stripe4.checkpoint-row.v1",
+      "layer": 0,
+      "which": "attn",
+      "row": 13,
+      "rank": 55,
+      "local_base": 21475901440,
+      "local_row_bytes": 81920,
+      "source_words": 20480,
+      "production_layout": "bank k -> stack k%4, local base+k*10240; 320 sectors per bank",
+      "source_sha256": "5d44fa4dae8d52784453ecf258b39ae37e9f80c3dcff0c825791c6106e4d7a69",
+      "provenance": {
+        "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+        "tensor": "layers.0.hc_attn_fn",
+        "tensor_metadata": {
+          "dtype": "F32",
+          "shape": [
+            24,
+            20480
+          ],
+          "data_offsets": [
+            3424,
+            1969504
+          ]
+        },
+        "checkpoint_header_sha256": "a3db007cbd9a68d4ba9e67ded10c8507abdb3d23bdf6a0340384ae1de6e658e6",
+        "raw_checkpoint_row_sha256": "d760f2d324ee49e819b3b6161c7908b9776649f090220f6d95da4f5ceb9ade2b"
+      },
+      "segments": [
+        {
+          "bank": 0,
+          "stack": 0,
+          "local_byte": 21475901440,
+          "sectors": 320,
+          "image_offset": 0
+        },
+        {
+          "bank": 1,
+          "stack": 1,
+          "local_byte": 21475911680,
+          "sectors": 320,
+          "image_offset": 10240
+        },
+        {
+          "bank": 2,
+          "stack": 2,
+          "local_byte": 21475921920,
+          "sectors": 320,
+          "image_offset": 20480
+        },
+        {
+          "bank": 3,
+          "stack": 3,
+          "local_byte": 21475932160,
+          "sectors": 320,
+          "image_offset": 30720
+        },
+        {
+          "bank": 4,
+          "stack": 0,
+          "local_byte": 21475942400,
+          "sectors": 320,
+          "image_offset": 40960
+        },
+        {
+          "bank": 5,
+          "stack": 1,
+          "local_byte": 21475952640,
+          "sectors": 320,
+          "image_offset": 51200
+        },
+        {
+          "bank": 6,
+          "stack": 2,
+          "local_byte": 21475962880,
+          "sectors": 320,
+          "image_offset": 61440
+        },
+        {
+          "bank": 7,
+          "stack": 3,
+          "local_byte": 21475973120,
+          "sectors": 320,
+          "image_offset": 71680
+        }
+      ],
+      "destination": {
+        "positions_per_bank": 512,
+        "source_positions": 320,
+        "zero_padding_positions": [
+          320,
+          512
+        ],
+        "service_deliveries": 2,
+        "delivery_sectors": 2048,
+        "native_full_chip_qualified": false
+      }
+    },
+    {
+      "schema": "opentallas.hc.stripe4.checkpoint-row.v1",
+      "layer": 0,
+      "which": "attn",
+      "row": 14,
+      "rank": 59,
+      "local_base": 21475983360,
+      "local_row_bytes": 81920,
+      "source_words": 20480,
+      "production_layout": "bank k -> stack k%4, local base+k*10240; 320 sectors per bank",
+      "source_sha256": "2b728c26d4cca20cd237ef64e464559f1c2b4c5889f3e4ace9800ff5ce7420c1",
+      "provenance": {
+        "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+        "tensor": "layers.0.hc_attn_fn",
+        "tensor_metadata": {
+          "dtype": "F32",
+          "shape": [
+            24,
+            20480
+          ],
+          "data_offsets": [
+            3424,
+            1969504
+          ]
+        },
+        "checkpoint_header_sha256": "a3db007cbd9a68d4ba9e67ded10c8507abdb3d23bdf6a0340384ae1de6e658e6",
+        "raw_checkpoint_row_sha256": "945bf3f4357d02430292836d71c687ae36b766846ef80d4853196f656e84da9d"
+      },
+      "segments": [
+        {
+          "bank": 0,
+          "stack": 0,
+          "local_byte": 21475983360,
+          "sectors": 320,
+          "image_offset": 0
+        },
+        {
+          "bank": 1,
+          "stack": 1,
+          "local_byte": 21475993600,
+          "sectors": 320,
+          "image_offset": 10240
+        },
+        {
+          "bank": 2,
+          "stack": 2,
+          "local_byte": 21476003840,
+          "sectors": 320,
+          "image_offset": 20480
+        },
+        {
+          "bank": 3,
+          "stack": 3,
+          "local_byte": 21476014080,
+          "sectors": 320,
+          "image_offset": 30720
+        },
+        {
+          "bank": 4,
+          "stack": 0,
+          "local_byte": 21476024320,
+          "sectors": 320,
+          "image_offset": 40960
+        },
+        {
+          "bank": 5,
+          "stack": 1,
+          "local_byte": 21476034560,
+          "sectors": 320,
+          "image_offset": 51200
+        },
+        {
+          "bank": 6,
+          "stack": 2,
+          "local_byte": 21476044800,
+          "sectors": 320,
+          "image_offset": 61440
+        },
+        {
+          "bank": 7,
+          "stack": 3,
+          "local_byte": 21476055040,
+          "sectors": 320,
+          "image_offset": 71680
+        }
+      ],
+      "destination": {
+        "positions_per_bank": 512,
+        "source_positions": 320,
+        "zero_padding_positions": [
+          320,
+          512
+        ],
+        "service_deliveries": 2,
+        "delivery_sectors": 2048,
+        "native_full_chip_qualified": false
+      }
+    },
+    {
+      "schema": "opentallas.hc.stripe4.checkpoint-row.v1",
+      "layer": 0,
+      "which": "attn",
+      "row": 15,
+      "rank": 63,
+      "local_base": 21476065280,
+      "local_row_bytes": 81920,
+      "source_words": 20480,
+      "production_layout": "bank k -> stack k%4, local base+k*10240; 320 sectors per bank",
+      "source_sha256": "52f7488b0d6b88ab9eb8771f35deee8addd76bd77b059a9566a1cbce9c60c943",
+      "provenance": {
+        "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+        "tensor": "layers.0.hc_attn_fn",
+        "tensor_metadata": {
+          "dtype": "F32",
+          "shape": [
+            24,
+            20480
+          ],
+          "data_offsets": [
+            3424,
+            1969504
+          ]
+        },
+        "checkpoint_header_sha256": "a3db007cbd9a68d4ba9e67ded10c8507abdb3d23bdf6a0340384ae1de6e658e6",
+        "raw_checkpoint_row_sha256": "93278a0d6db1d275ca87ad61276153334fd977c3a8ffb1f22ad33961bf7af11d"
+      },
+      "segments": [
+        {
+          "bank": 0,
+          "stack": 0,
+          "local_byte": 21476065280,
+          "sectors": 320,
+          "image_offset": 0
+        },
+        {
+          "bank": 1,
+          "stack": 1,
+          "local_byte": 21476075520,
+          "sectors": 320,
+          "image_offset": 10240
+        },
+        {
+          "bank": 2,
+          "stack": 2,
+          "local_byte": 21476085760,
+          "sectors": 320,
+          "image_offset": 20480
+        },
+        {
+          "bank": 3,
+          "stack": 3,
+          "local_byte": 21476096000,
+          "sectors": 320,
+          "image_offset": 30720
+        },
+        {
+          "bank": 4,
+          "stack": 0,
+          "local_byte": 21476106240,
+          "sectors": 320,
+          "image_offset": 40960
+        },
+        {
+          "bank": 5,
+          "stack": 1,
+          "local_byte": 21476116480,
+          "sectors": 320,
+          "image_offset": 51200
+        },
+        {
+          "bank": 6,
+          "stack": 2,
+          "local_byte": 21476126720,
+          "sectors": 320,
+          "image_offset": 61440
+        },
+        {
+          "bank": 7,
+          "stack": 3,
+          "local_byte": 21476136960,
+          "sectors": 320,
+          "image_offset": 71680
+        }
+      ],
+      "destination": {
+        "positions_per_bank": 512,
+        "source_positions": 320,
+        "zero_padding_positions": [
+          320,
+          512
+        ],
+        "service_deliveries": 2,
+        "delivery_sectors": 2048,
+        "native_full_chip_qualified": false
+      }
+    },
+    {
+      "schema": "opentallas.hc.stripe4.checkpoint-row.v1",
+      "layer": 0,
+      "which": "attn",
+      "row": 16,
+      "rank": 67,
+      "local_base": 21476147200,
+      "local_row_bytes": 81920,
+      "source_words": 20480,
+      "production_layout": "bank k -> stack k%4, local base+k*10240; 320 sectors per bank",
+      "source_sha256": "9c04afd9b51541967d8298438562a6ee22ca2a4572084c4409d18d10558d2f32",
+      "provenance": {
+        "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+        "tensor": "layers.0.hc_attn_fn",
+        "tensor_metadata": {
+          "dtype": "F32",
+          "shape": [
+            24,
+            20480
+          ],
+          "data_offsets": [
+            3424,
+            1969504
+          ]
+        },
+        "checkpoint_header_sha256": "a3db007cbd9a68d4ba9e67ded10c8507abdb3d23bdf6a0340384ae1de6e658e6",
+        "raw_checkpoint_row_sha256": "04657d65e938e4ce39555781f7985181a502e7d225c2ed49c945c9af1edecff7"
+      },
+      "segments": [
+        {
+          "bank": 0,
+          "stack": 0,
+          "local_byte": 21476147200,
+          "sectors": 320,
+          "image_offset": 0
+        },
+        {
+          "bank": 1,
+          "stack": 1,
+          "local_byte": 21476157440,
+          "sectors": 320,
+          "image_offset": 10240
+        },
+        {
+          "bank": 2,
+          "stack": 2,
+          "local_byte": 21476167680,
+          "sectors": 320,
+          "image_offset": 20480
+        },
+        {
+          "bank": 3,
+          "stack": 3,
+          "local_byte": 21476177920,
+          "sectors": 320,
+          "image_offset": 30720
+        },
+        {
+          "bank": 4,
+          "stack": 0,
+          "local_byte": 21476188160,
+          "sectors": 320,
+          "image_offset": 40960
+        },
+        {
+          "bank": 5,
+          "stack": 1,
+          "local_byte": 21476198400,
+          "sectors": 320,
+          "image_offset": 51200
+        },
+        {
+          "bank": 6,
+          "stack": 2,
+          "local_byte": 21476208640,
+          "sectors": 320,
+          "image_offset": 61440
+        },
+        {
+          "bank": 7,
+          "stack": 3,
+          "local_byte": 21476218880,
+          "sectors": 320,
+          "image_offset": 71680
+        }
+      ],
+      "destination": {
+        "positions_per_bank": 512,
+        "source_positions": 320,
+        "zero_padding_positions": [
+          320,
+          512
+        ],
+        "service_deliveries": 2,
+        "delivery_sectors": 2048,
+        "native_full_chip_qualified": false
+      }
+    },
+    {
+      "schema": "opentallas.hc.stripe4.checkpoint-row.v1",
+      "layer": 0,
+      "which": "attn",
+      "row": 17,
+      "rank": 71,
+      "local_base": 21476229120,
+      "local_row_bytes": 81920,
+      "source_words": 20480,
+      "production_layout": "bank k -> stack k%4, local base+k*10240; 320 sectors per bank",
+      "source_sha256": "dd25c2b54f3239231687bd3b1b65b0718d223da697e08a3e7a0a9fc15c5703bc",
+      "provenance": {
+        "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+        "tensor": "layers.0.hc_attn_fn",
+        "tensor_metadata": {
+          "dtype": "F32",
+          "shape": [
+            24,
+            20480
+          ],
+          "data_offsets": [
+            3424,
+            1969504
+          ]
+        },
+        "checkpoint_header_sha256": "a3db007cbd9a68d4ba9e67ded10c8507abdb3d23bdf6a0340384ae1de6e658e6",
+        "raw_checkpoint_row_sha256": "b860a7276b97416534a7816d7a1d68be99596f3d9a501bf746ee3e91239b4bd6"
+      },
+      "segments": [
+        {
+          "bank": 0,
+          "stack": 0,
+          "local_byte": 21476229120,
+          "sectors": 320,
+          "image_offset": 0
+        },
+        {
+          "bank": 1,
+          "stack": 1,
+          "local_byte": 21476239360,
+          "sectors": 320,
+          "image_offset": 10240
+        },
+        {
+          "bank": 2,
+          "stack": 2,
+          "local_byte": 21476249600,
+          "sectors": 320,
+          "image_offset": 20480
+        },
+        {
+          "bank": 3,
+          "stack": 3,
+          "local_byte": 21476259840,
+          "sectors": 320,
+          "image_offset": 30720
+        },
+        {
+          "bank": 4,
+          "stack": 0,
+          "local_byte": 21476270080,
+          "sectors": 320,
+          "image_offset": 40960
+        },
+        {
+          "bank": 5,
+          "stack": 1,
+          "local_byte": 21476280320,
+          "sectors": 320,
+          "image_offset": 51200
+        },
+        {
+          "bank": 6,
+          "stack": 2,
+          "local_byte": 21476290560,
+          "sectors": 320,
+          "image_offset": 61440
+        },
+        {
+          "bank": 7,
+          "stack": 3,
+          "local_byte": 21476300800,
+          "sectors": 320,
+          "image_offset": 71680
+        }
+      ],
+      "destination": {
+        "positions_per_bank": 512,
+        "source_positions": 320,
+        "zero_padding_positions": [
+          320,
+          512
+        ],
+        "service_deliveries": 2,
+        "delivery_sectors": 2048,
+        "native_full_chip_qualified": false
+      }
+    },
+    {
+      "schema": "opentallas.hc.stripe4.checkpoint-row.v1",
+      "layer": 0,
+      "which": "attn",
+      "row": 18,
+      "rank": 75,
+      "local_base": 21476311040,
+      "local_row_bytes": 81920,
+      "source_words": 20480,
+      "production_layout": "bank k -> stack k%4, local base+k*10240; 320 sectors per bank",
+      "source_sha256": "d32a11ea6d63b795a343d50f6de84d2bb4e915558a0c26357f99dc5e2da13afc",
+      "provenance": {
+        "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+        "tensor": "layers.0.hc_attn_fn",
+        "tensor_metadata": {
+          "dtype": "F32",
+          "shape": [
+            24,
+            20480
+          ],
+          "data_offsets": [
+            3424,
+            1969504
+          ]
+        },
+        "checkpoint_header_sha256": "a3db007cbd9a68d4ba9e67ded10c8507abdb3d23bdf6a0340384ae1de6e658e6",
+        "raw_checkpoint_row_sha256": "0005f82833148cbaec25407c732c5d175e8290a73cd1172ca8caaa3b8cf53859"
+      },
+      "segments": [
+        {
+          "bank": 0,
+          "stack": 0,
+          "local_byte": 21476311040,
+          "sectors": 320,
+          "image_offset": 0
+        },
+        {
+          "bank": 1,
+          "stack": 1,
+          "local_byte": 21476321280,
+          "sectors": 320,
+          "image_offset": 10240
+        },
+        {
+          "bank": 2,
+          "stack": 2,
+          "local_byte": 21476331520,
+          "sectors": 320,
+          "image_offset": 20480
+        },
+        {
+          "bank": 3,
+          "stack": 3,
+          "local_byte": 21476341760,
+          "sectors": 320,
+          "image_offset": 30720
+        },
+        {
+          "bank": 4,
+          "stack": 0,
+          "local_byte": 21476352000,
+          "sectors": 320,
+          "image_offset": 40960
+        },
+        {
+          "bank": 5,
+          "stack": 1,
+          "local_byte": 21476362240,
+          "sectors": 320,
+          "image_offset": 51200
+        },
+        {
+          "bank": 6,
+          "stack": 2,
+          "local_byte": 21476372480,
+          "sectors": 320,
+          "image_offset": 61440
+        },
+        {
+          "bank": 7,
+          "stack": 3,
+          "local_byte": 21476382720,
+          "sectors": 320,
+          "image_offset": 71680
+        }
+      ],
+      "destination": {
+        "positions_per_bank": 512,
+        "source_positions": 320,
+        "zero_padding_positions": [
+          320,
+          512
+        ],
+        "service_deliveries": 2,
+        "delivery_sectors": 2048,
+        "native_full_chip_qualified": false
+      }
+    },
+    {
+      "schema": "opentallas.hc.stripe4.checkpoint-row.v1",
+      "layer": 0,
+      "which": "attn",
+      "row": 19,
+      "rank": 79,
+      "local_base": 21476392960,
+      "local_row_bytes": 81920,
+      "source_words": 20480,
+      "production_layout": "bank k -> stack k%4, local base+k*10240; 320 sectors per bank",
+      "source_sha256": "73365688e37dc8185766a300f27808855556f633f6c02f59758e91168f655255",
+      "provenance": {
+        "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+        "tensor": "layers.0.hc_attn_fn",
+        "tensor_metadata": {
+          "dtype": "F32",
+          "shape": [
+            24,
+            20480
+          ],
+          "data_offsets": [
+            3424,
+            1969504
+          ]
+        },
+        "checkpoint_header_sha256": "a3db007cbd9a68d4ba9e67ded10c8507abdb3d23bdf6a0340384ae1de6e658e6",
+        "raw_checkpoint_row_sha256": "7cf1f5268f29693eb4e3ea8f4b3edc64d4ffd9ce883a5711ae09afffea024026"
+      },
+      "segments": [
+        {
+          "bank": 0,
+          "stack": 0,
+          "local_byte": 21476392960,
+          "sectors": 320,
+          "image_offset": 0
+        },
+        {
+          "bank": 1,
+          "stack": 1,
+          "local_byte": 21476403200,
+          "sectors": 320,
+          "image_offset": 10240
+        },
+        {
+          "bank": 2,
+          "stack": 2,
+          "local_byte": 21476413440,
+          "sectors": 320,
+          "image_offset": 20480
+        },
+        {
+          "bank": 3,
+          "stack": 3,
+          "local_byte": 21476423680,
+          "sectors": 320,
+          "image_offset": 30720
+        },
+        {
+          "bank": 4,
+          "stack": 0,
+          "local_byte": 21476433920,
+          "sectors": 320,
+          "image_offset": 40960
+        },
+        {
+          "bank": 5,
+          "stack": 1,
+          "local_byte": 21476444160,
+          "sectors": 320,
+          "image_offset": 51200
+        },
+        {
+          "bank": 6,
+          "stack": 2,
+          "local_byte": 21476454400,
+          "sectors": 320,
+          "image_offset": 61440
+        },
+        {
+          "bank": 7,
+          "stack": 3,
+          "local_byte": 21476464640,
+          "sectors": 320,
+          "image_offset": 71680
+        }
+      ],
+      "destination": {
+        "positions_per_bank": 512,
+        "source_positions": 320,
+        "zero_padding_positions": [
+          320,
+          512
+        ],
+        "service_deliveries": 2,
+        "delivery_sectors": 2048,
+        "native_full_chip_qualified": false
+      }
+    },
+    {
+      "schema": "opentallas.hc.stripe4.checkpoint-row.v1",
+      "layer": 0,
+      "which": "attn",
+      "row": 20,
+      "rank": 83,
+      "local_base": 21476474880,
+      "local_row_bytes": 81920,
+      "source_words": 20480,
+      "production_layout": "bank k -> stack k%4, local base+k*10240; 320 sectors per bank",
+      "source_sha256": "07fb20731164c76ca1480262d211ebaea990ed09f16683214e5e837b0b04d5d0",
+      "provenance": {
+        "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+        "tensor": "layers.0.hc_attn_fn",
+        "tensor_metadata": {
+          "dtype": "F32",
+          "shape": [
+            24,
+            20480
+          ],
+          "data_offsets": [
+            3424,
+            1969504
+          ]
+        },
+        "checkpoint_header_sha256": "a3db007cbd9a68d4ba9e67ded10c8507abdb3d23bdf6a0340384ae1de6e658e6",
+        "raw_checkpoint_row_sha256": "2bf922ed63ed7fdbe13c83cfdee4003ee018b26ae02aab19a1f001fe9b089a81"
+      },
+      "segments": [
+        {
+          "bank": 0,
+          "stack": 0,
+          "local_byte": 21476474880,
+          "sectors": 320,
+          "image_offset": 0
+        },
+        {
+          "bank": 1,
+          "stack": 1,
+          "local_byte": 21476485120,
+          "sectors": 320,
+          "image_offset": 10240
+        },
+        {
+          "bank": 2,
+          "stack": 2,
+          "local_byte": 21476495360,
+          "sectors": 320,
+          "image_offset": 20480
+        },
+        {
+          "bank": 3,
+          "stack": 3,
+          "local_byte": 21476505600,
+          "sectors": 320,
+          "image_offset": 30720
+        },
+        {
+          "bank": 4,
+          "stack": 0,
+          "local_byte": 21476515840,
+          "sectors": 320,
+          "image_offset": 40960
+        },
+        {
+          "bank": 5,
+          "stack": 1,
+          "local_byte": 21476526080,
+          "sectors": 320,
+          "image_offset": 51200
+        },
+        {
+          "bank": 6,
+          "stack": 2,
+          "local_byte": 21476536320,
+          "sectors": 320,
+          "image_offset": 61440
+        },
+        {
+          "bank": 7,
+          "stack": 3,
+          "local_byte": 21476546560,
+          "sectors": 320,
+          "image_offset": 71680
+        }
+      ],
+      "destination": {
+        "positions_per_bank": 512,
+        "source_positions": 320,
+        "zero_padding_positions": [
+          320,
+          512
+        ],
+        "service_deliveries": 2,
+        "delivery_sectors": 2048,
+        "native_full_chip_qualified": false
+      }
+    },
+    {
+      "schema": "opentallas.hc.stripe4.checkpoint-row.v1",
+      "layer": 0,
+      "which": "attn",
+      "row": 21,
+      "rank": 87,
+      "local_base": 21476556800,
+      "local_row_bytes": 81920,
+      "source_words": 20480,
+      "production_layout": "bank k -> stack k%4, local base+k*10240; 320 sectors per bank",
+      "source_sha256": "0d15a0476fb6b6cd0796158702abcbb6f758f80f6e0775cd2bc94d8b42072583",
+      "provenance": {
+        "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+        "tensor": "layers.0.hc_attn_fn",
+        "tensor_metadata": {
+          "dtype": "F32",
+          "shape": [
+            24,
+            20480
+          ],
+          "data_offsets": [
+            3424,
+            1969504
+          ]
+        },
+        "checkpoint_header_sha256": "a3db007cbd9a68d4ba9e67ded10c8507abdb3d23bdf6a0340384ae1de6e658e6",
+        "raw_checkpoint_row_sha256": "a3773f8d8657c1216bbb489496818d561d48f2194e1a452863cb31eea1fa4519"
+      },
+      "segments": [
+        {
+          "bank": 0,
+          "stack": 0,
+          "local_byte": 21476556800,
+          "sectors": 320,
+          "image_offset": 0
+        },
+        {
+          "bank": 1,
+          "stack": 1,
+          "local_byte": 21476567040,
+          "sectors": 320,
+          "image_offset": 10240
+        },
+        {
+          "bank": 2,
+          "stack": 2,
+          "local_byte": 21476577280,
+          "sectors": 320,
+          "image_offset": 20480
+        },
+        {
+          "bank": 3,
+          "stack": 3,
+          "local_byte": 21476587520,
+          "sectors": 320,
+          "image_offset": 30720
+        },
+        {
+          "bank": 4,
+          "stack": 0,
+          "local_byte": 21476597760,
+          "sectors": 320,
+          "image_offset": 40960
+        },
+        {
+          "bank": 5,
+          "stack": 1,
+          "local_byte": 21476608000,
+          "sectors": 320,
+          "image_offset": 51200
+        },
+        {
+          "bank": 6,
+          "stack": 2,
+          "local_byte": 21476618240,
+          "sectors": 320,
+          "image_offset": 61440
+        },
+        {
+          "bank": 7,
+          "stack": 3,
+          "local_byte": 21476628480,
+          "sectors": 320,
+          "image_offset": 71680
+        }
+      ],
+      "destination": {
+        "positions_per_bank": 512,
+        "source_positions": 320,
+        "zero_padding_positions": [
+          320,
+          512
+        ],
+        "service_deliveries": 2,
+        "delivery_sectors": 2048,
+        "native_full_chip_qualified": false
+      }
+    },
+    {
+      "schema": "opentallas.hc.stripe4.checkpoint-row.v1",
+      "layer": 0,
+      "which": "attn",
+      "row": 22,
+      "rank": 91,
+      "local_base": 21476638720,
+      "local_row_bytes": 81920,
+      "source_words": 20480,
+      "production_layout": "bank k -> stack k%4, local base+k*10240; 320 sectors per bank",
+      "source_sha256": "d1b5cbeb7136680f974f81da3d6204e92a1098f6d67114711682f50eea4a5254",
+      "provenance": {
+        "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+        "tensor": "layers.0.hc_attn_fn",
+        "tensor_metadata": {
+          "dtype": "F32",
+          "shape": [
+            24,
+            20480
+          ],
+          "data_offsets": [
+            3424,
+            1969504
+          ]
+        },
+        "checkpoint_header_sha256": "a3db007cbd9a68d4ba9e67ded10c8507abdb3d23bdf6a0340384ae1de6e658e6",
+        "raw_checkpoint_row_sha256": "2d24622d564ff5358298173bd1b5a54940a25220be811ea1a8889b955efdcaa6"
+      },
+      "segments": [
+        {
+          "bank": 0,
+          "stack": 0,
+          "local_byte": 21476638720,
+          "sectors": 320,
+          "image_offset": 0
+        },
+        {
+          "bank": 1,
+          "stack": 1,
+          "local_byte": 21476648960,
+          "sectors": 320,
+          "image_offset": 10240
+        },
+        {
+          "bank": 2,
+          "stack": 2,
+          "local_byte": 21476659200,
+          "sectors": 320,
+          "image_offset": 20480
+        },
+        {
+          "bank": 3,
+          "stack": 3,
+          "local_byte": 21476669440,
+          "sectors": 320,
+          "image_offset": 30720
+        },
+        {
+          "bank": 4,
+          "stack": 0,
+          "local_byte": 21476679680,
+          "sectors": 320,
+          "image_offset": 40960
+        },
+        {
+          "bank": 5,
+          "stack": 1,
+          "local_byte": 21476689920,
+          "sectors": 320,
+          "image_offset": 51200
+        },
+        {
+          "bank": 6,
+          "stack": 2,
+          "local_byte": 21476700160,
+          "sectors": 320,
+          "image_offset": 61440
+        },
+        {
+          "bank": 7,
+          "stack": 3,
+          "local_byte": 21476710400,
+          "sectors": 320,
+          "image_offset": 71680
+        }
+      ],
+      "destination": {
+        "positions_per_bank": 512,
+        "source_positions": 320,
+        "zero_padding_positions": [
+          320,
+          512
+        ],
+        "service_deliveries": 2,
+        "delivery_sectors": 2048,
+        "native_full_chip_qualified": false
+      }
+    },
+    {
+      "schema": "opentallas.hc.stripe4.checkpoint-row.v1",
+      "layer": 0,
+      "which": "attn",
+      "row": 23,
+      "rank": 95,
+      "local_base": 21476720640,
+      "local_row_bytes": 81920,
+      "source_words": 20480,
+      "production_layout": "bank k -> stack k%4, local base+k*10240; 320 sectors per bank",
+      "source_sha256": "b3d8030dcd1a1b221f5f36e0b31692c223b85ee2b385339e3809c849968563c9",
+      "provenance": {
+        "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+        "tensor": "layers.0.hc_attn_fn",
+        "tensor_metadata": {
+          "dtype": "F32",
+          "shape": [
+            24,
+            20480
+          ],
+          "data_offsets": [
+            3424,
+            1969504
+          ]
+        },
+        "checkpoint_header_sha256": "a3db007cbd9a68d4ba9e67ded10c8507abdb3d23bdf6a0340384ae1de6e658e6",
+        "raw_checkpoint_row_sha256": "c5c4f77c2244b5de4dfabb1774a9c049e87737799a13f777aa949148f46edfae"
+      },
+      "segments": [
+        {
+          "bank": 0,
+          "stack": 0,
+          "local_byte": 21476720640,
+          "sectors": 320,
+          "image_offset": 0
+        },
+        {
+          "bank": 1,
+          "stack": 1,
+          "local_byte": 21476730880,
+          "sectors": 320,
+          "image_offset": 10240
+        },
+        {
+          "bank": 2,
+          "stack": 2,
+          "local_byte": 21476741120,
+          "sectors": 320,
+          "image_offset": 20480
+        },
+        {
+          "bank": 3,
+          "stack": 3,
+          "local_byte": 21476751360,
+          "sectors": 320,
+          "image_offset": 30720
+        },
+        {
+          "bank": 4,
+          "stack": 0,
+          "local_byte": 21476761600,
+          "sectors": 320,
+          "image_offset": 40960
+        },
+        {
+          "bank": 5,
+          "stack": 1,
+          "local_byte": 21476771840,
+          "sectors": 320,
+          "image_offset": 51200
+        },
+        {
+          "bank": 6,
+          "stack": 2,
+          "local_byte": 21476782080,
+          "sectors": 320,
+          "image_offset": 61440
+        },
+        {
+          "bank": 7,
+          "stack": 3,
+          "local_byte": 21476792320,
+          "sectors": 320,
+          "image_offset": 71680
+        }
+      ],
+      "destination": {
+        "positions_per_bank": 512,
+        "source_positions": 320,
+        "zero_padding_positions": [
+          320,
+          512
+        ],
+        "service_deliveries": 2,
+        "delivery_sectors": 2048,
+        "native_full_chip_qualified": false
+      }
+    }
+  ],
+  "source_bytes": 1966080,
+  "native_full_chip_qualified": false
+}

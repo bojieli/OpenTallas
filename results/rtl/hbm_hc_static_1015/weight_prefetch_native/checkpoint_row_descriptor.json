@@ -1,0 +1,98 @@
+{
+  "schema": "opentallas.hc.stripe4.checkpoint-row.v1",
+  "layer": 0,
+  "which": "attn",
+  "row": 0,
+  "rank": 3,
+  "local_base": 21474836480,
+  "local_row_bytes": 81920,
+  "source_words": 20480,
+  "production_layout": "bank k -> stack k%4, local base+k*10240; 320 sectors per bank",
+  "source_sha256": "c91f65ab488fc844552e20500f43262b33c1d7e7301015ee9a1f94db3ef27770",
+  "provenance": {
+    "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+    "tensor": "layers.0.hc_attn_fn",
+    "tensor_metadata": {
+      "dtype": "F32",
+      "shape": [
+        24,
+        20480
+      ],
+      "data_offsets": [
+        3424,
+        1969504
+      ]
+    },
+    "checkpoint_header_sha256": "a3db007cbd9a68d4ba9e67ded10c8507abdb3d23bdf6a0340384ae1de6e658e6",
+    "raw_checkpoint_row_sha256": "e8de1d644f023d77a0d6cf63d3f57682160fecd330e53f2aca3f1d4790536652"
+  },
+  "segments": [
+    {
+      "bank": 0,
+      "stack": 0,
+      "local_byte": 21474836480,
+      "sectors": 320,
+      "image_offset": 0
+    },
+    {
+      "bank": 1,
+      "stack": 1,
+      "local_byte": 21474846720,
+      "sectors": 320,
+      "image_offset": 10240
+    },
+    {
+      "bank": 2,
+      "stack": 2,
+      "local_byte": 21474856960,
+      "sectors": 320,
+      "image_offset": 20480
+    },
+    {
+      "bank": 3,
+      "stack": 3,
+      "local_byte": 21474867200,
+      "sectors": 320,
+      "image_offset": 30720
+    },
+    {
+      "bank": 4,
+      "stack": 0,
+      "local_byte": 21474877440,
+      "sectors": 320,
+      "image_offset": 40960
+    },
+    {
+      "bank": 5,
+      "stack": 1,
+      "local_byte": 21474887680,
+      "sectors": 320,
+      "image_offset": 51200
+    },
+    {
+      "bank": 6,
+      "stack": 2,
+      "local_byte": 21474897920,
+      "sectors": 320,
+      "image_offset": 61440
+    },
+    {
+      "bank": 7,
+      "stack": 3,
+      "local_byte": 21474908160,
+      "sectors": 320,
+      "image_offset": 71680
+    }
+  ],
+  "destination": {
+    "positions_per_bank": 512,
+    "source_positions": 320,
+    "zero_padding_positions": [
+      320,
+      512
+    ],
+    "service_deliveries": 2,
+    "delivery_sectors": 2048,
+    "native_full_chip_qualified": false
+  }
+}
