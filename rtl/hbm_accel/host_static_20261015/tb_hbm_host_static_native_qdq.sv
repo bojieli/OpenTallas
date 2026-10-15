@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 module tb_hbm_host_static_native_qdq;
 parameter integer MUT=0,FACE=1;
-integer rows=1024,seen=0,cy=0,lastcy=-1,txn=0,launches=0;reg measure=0;
+integer rows=1024,seen=0,cy=0,lastcy=-1,txn=0,launches=0,launchcy=-1,install_startcy=0,install_endcy=0;reg measure=0,done_seen=0;
 wire program_ready,program_active,program_done,configured,program_fault,ingress_fault,command_v;wire[47:0]command;wire[31:0]ordinal;
 reg clk=0,rst_n=0,rx_valid=0,tx_ready=0;reg [511:0]rx_packet=0;wire rx_ready,tx_valid,protocol_fault;wire[511:0]tx_packet;
 integer checks=0,errors=0,k,waits;reg[511:0] saved;
@@ -196,8 +196,10 @@ assign h[405]=fault;
  expected_command={beat==3,16'(row*32+beat*4),16'(row*16+beat*4),8'(row),6'd4,1'b1};end endfunction
  always @(negedge clk)begin
  cy=cy+1;
- if(dut.lv)launches=launches+1;
+ if(dut.lv)begin launches=launches+1;launchcy=cy;end
+ if(measure&&program_done)done_seen=1;
  if(measure&&command_v)begin
+ if(seen==0&&cy-launchcy!=13)$fatal(1,"HOST_NATIVE_QDQ first phase got=%0d expected13",cy-launchcy);
  if(command!==expected_command(seen)||ordinal!==seen)$fatal(1,"HOST_NATIVE_QDQ exact command n=%0d got=%h expected=%h ord=%d",seen,command,expected_command(seen),ordinal);
  if(lastcy>=0&&cy!=lastcy+1)$fatal(1,"HOST_NATIVE_QDQ runtime gap n=%0d",seen);
  lastcy=cy;seen=seen+1;
@@ -221,19 +223,19 @@ assign h[405]=fault;
  if($value$plusargs("ROWS=%d",rows))begin end
  reset_dut();write32(12'hf30,1,15,2);
  if(!ingress_fault||launches!=0||!local_faults[3])$fatal(1,"HOST_NATIVE_QDQ premature launch");
- reset_dut();write32(12'hf20,48,15,0);
+ reset_dut();install_startcy=cy;write32(12'hf20,48,15,0);
  for(integer row=0;row<rows;row=row+1)begin
  word=0;word[255:240]=16'hc7a1;word[233:224]=10'(row);
  word[31:0]=32'(8+row*4);word[47:32]=4;word[63:48]=16'(row*16);word[79:64]=16'(row*32);word[85:80]=4;word[93:86]=8'(row);
  for(integer piece=0;piece<8;piece=piece+1)write32(12'hf24,word[piece*32+:32],15,0);
  end
- write32(12'hf28,32'(rows<<12),15,0);write32(12'hf2c,1,15,0);
+ write32(12'hf28,32'(rows<<12),15,0);write32(12'hf2c,1,15,0);install_endcy=cy;
  repeat(rows+12)tick;
  if(!program_ready||program_fault||ingress_fault||protocol_fault)$fatal(1,"HOST_NATIVE_QDQ installed ready/fault");
- seen=0;lastcy=-1;measure=1;write32(12'hf30,1,15,0);
- waits=0;while(!program_done&&waits<rows*4+2000)begin tick;waits=waits+1;end
+ seen=0;lastcy=-1;done_seen=0;measure=1;write32(12'hf30,1,15,0);
+ waits=0;while(!done_seen&&waits<rows*4+2000)begin tick;waits=waits+1;end
  repeat(4)tick;
- if(seen!=rows*4||program_fault||ingress_fault||protocol_fault)$fatal(1,"HOST_NATIVE_QDQ body seen=%d expected=%d pf=%b hf=%b lf=%b",seen,rows*4,program_fault,ingress_fault,local_faults);
+ if(!done_seen||seen!=rows*4||program_fault||ingress_fault||protocol_fault)$fatal(1,"HOST_NATIVE_QDQ body seen=%d expected=%d pf=%b hf=%b lf=%b",seen,rows*4,program_fault,ingress_fault,local_faults);
  measure=0;
  // Missing installed SRAM rows, bad target, partial frame and unsupported
  // compact loop all fail through actual host error/readiness/fault paths.
@@ -246,6 +248,6 @@ assign h[405]=fault;
  reset_dut();write32(12'hf20,48,15,0);write32(12'hf28,1<<12,15,0);write32(12'hf2c,2,15,0);
  repeat(8)tick;if(program_ready||!program_fault)$fatal(1,"HOST_NATIVE_QDQ compact loop accepted");
  if(errors)$fatal(1,"HOST_NATIVE_QDQ external link errors=%d",errors);
- $display("HBM_HOST_STATIC_NATIVE_QDQ_PASS rows=%0d records=%0d commands=%0d gapless=1 target48_compact1=1 real_UCIe_retry_landing_SRAM=1 BRESP=1 negatives=6",rows,rows,seen);$finish;
+ $display("HBM_HOST_STATIC_NATIVE_QDQ_PASS rows=%0d records=%0d commands=%0d gapless=1 target48_compact1=1 real_UCIe_retry_landing_SRAM=1 BRESP=1 negatives=6 first_command_after_launch=13 install_edges=%0d",rows,rows,seen,install_endcy-install_startcy);$finish;
  end
 endmodule
