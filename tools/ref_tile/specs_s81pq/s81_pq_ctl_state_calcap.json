@@ -218,5 +218,10 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "CALCAP: closed INCAP view (182180c59) fails the native pin audit (capture 386 > 190 on calendar/go, launch 264 > 220 on consume/idle); pin-capture wrapper + registered consume/idle",
+  "source": "results/rtl/s81_pq_native_audit_1015/ctl_state_incap_r1.json"
  }
 }
