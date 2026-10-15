@@ -1,0 +1,90 @@
+{
+  "schema": "opentallas.s81.bf_physical_profile.v1",
+  "status": "UNQUALIFIED_PHYSICAL_SUCCESSOR",
+  "canonical_capacity": {
+    "pair_count": 2417,
+    "bf_pair_count": 519,
+    "phase_width": 10,
+    "capacity_source": "tools/s81/canonical_capacity.py"
+  },
+  "CPIN": {
+    "default": 0,
+    "candidate": 1,
+    "added_fixed_cycles": 1,
+    "field_pair_stage": "front->column egress before existing ingress stage",
+    "bits_per_face": 776,
+    "faces": 2,
+    "clock": "free clk; no runtime feedback",
+    "fields_high_to_low": [
+      "issue:1",
+      "a_ctr:14",
+      "i1_v:1",
+      "i1_bk:1",
+      "i1_bf:1",
+      "i1_t:17",
+      "i2x_q0:256",
+      "i2x_e0:10",
+      "i2x_q1:256",
+      "i2x_e1:10",
+      "ze_d:1",
+      "so_idx:40",
+      "so_n:40",
+      "so_row:128"
+    ]
+  },
+  "actual_component_timeline": {
+    "rows": 456,
+    "cycle_ns": 0.833,
+    "baseline_lag_ns": {
+      "min": 5.831,
+      "max": 14.994,
+      "mean": 9.09
+    },
+    "candidate_lag_ns": {
+      "min": 6.664,
+      "max": 15.827,
+      "mean": 9.923
+    },
+    "delta_ns": 0.833,
+    "scope": "same historical numerical-ROM component workload; not full native memory or total throughput proof"
+  },
+  "source_inputs": {
+    "cfg": "cfg_v/5-bit cfg_a/48-bit cfg_d",
+    "go": "go,go_bf",
+    "fp_stream": "xs_v,p[7:0],b[2:0],sv[1:0],q0/q1[255:0],e0/e1[9:0],pos[2:0]",
+    "bf_stream": "xb_v,b[2:0],sv[3:0],u[31:0],d[1023:0],pos[2:0]",
+    "pipeline": "PINREG input capture -> coreQPIPE boundary -> coreFAST input stage (cfg bypasses FAST extra stage) -> actual arithmetic/issue pipelines -> CPIN1 -> existing column ingress1"
+  },
+  "production_gaps": [
+    "actual BF front_core availability-driven issue/walker must be replaced by parent s_elements static programme",
+    "actual compiler fullstage PHW10/CFG7/images/ROM functional models not qualified by this component bench",
+    "BF front and column child_lint above-layer OBS defects",
+    "column ingress p_lb215.7ps on35pins requires actual physical repair",
+    "53,495sink column rebuild needs root/leaf split or measured300ps/80ps exception; old tree does not meet new-build insertion"
+  ],
+  "closed_native_audits": {
+    "front": {
+      "reference_tt_ps": 278.1,
+      "spread_tt_ps": 56.5,
+      "launch_q_lb_ps": 293.4,
+      "capture_p_lb_ps": 165.8,
+      "out_defect_bits": 7,
+      "blocked_above_pins": 367
+    },
+    "column": {
+      "reference_tt_ps": 535.0,
+      "spread_tt_ps": 63.4,
+      "launch_q_lb_ps": 170.6,
+      "capture_p_lb_ps": 215.7,
+      "in_defect_bits": 35,
+      "blocked_above_pins": 96
+    }
+  },
+  "next_gate": {
+    "session": 75030,
+    "source_commit": "8598faf90",
+    "log": "/tmp/bf-front-cpin1-cts.log",
+    "remote": "ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/s81_bf_front_cpin1-20261015-013620",
+    "target": "actual M5 recipe2 front100.224x198.72 exact original pin plan; no route submitted"
+  }
+}
