@@ -20,7 +20,7 @@ def fixture(consumer='gather_vm',count=1,raw=False):
     final_commit=issue_edges[-1]+11
     final_write=final_commit+19
     final_emit=final_write+1
-    done_edge={'gather_vm':final_commit+2,'reduce_vm':final_write+2,'reduce_vm_hc':final_emit+2}[consumer]
+    done_edge={'gather_vm':final_commit+4,'reduce_vm':final_write+3,'reduce_vm_hc':final_emit+3}[consumer]
     blank=lambda:dict.fromkeys([n for n,_ in FIELDS],0)
     cycles=[dict(edge=e,cmd_valid=0,cmd84=0,transport_tag=0,done_valid=0,done_tag=0,controls=blank()) for e in range(done_edge+1)]
     mode=int(consumer=='gather_vm');cmd=(1<<83)|(((mode<<16)|count)<<7)|5
@@ -71,7 +71,7 @@ def fixture_page():
 
 class Check(unittest.TestCase):
     def test_image_and_rejections(self):
-        request=fixture(raw=True);self.assertEqual(len(compile_image(request,ROOT)),28)
+        request=fixture(raw=True);self.assertEqual(len(compile_image(request,ROOT)),30)
         mutations=[lambda r:r['cycles'][14]['controls'].update(seq=1024),
                    lambda r:r['cycles'][0].update(cmd84=(1<<83)|(1025<<7)|5),
                    lambda r:r['cycles'][0]['controls'].update(read_slot=0),
@@ -93,8 +93,21 @@ class Check(unittest.TestCase):
             r=copy.deepcopy(request);mutate(r)
             with self.assertRaises((ValueError,KeyError)):compile_image(r,ROOT)
 
+    def test_pincap_visible_completion_and_profile(self):
+        request=fixture()
+        old=copy.deepcopy(request)
+        old['latencies']['gather_to_vm_source_edges']=1
+        with self.assertRaisesRegex(ValueError,'latency profile'):
+            compile_image(old,ROOT)
+        early=copy.deepcopy(request)
+        early['cycles'][-1].update(done_valid=0,done_tag=0)
+        early['cycles'][-2].update(done_valid=1,done_tag=133)
+        with self.assertRaisesRegex(ValueError,'final scheduled output'):
+            compile_image(early,ROOT)
+        compile_image(request,ROOT)
+
     def test_reduced_word_consumers(self):
-        reduced=fixture('reduce_vm');self.assertEqual(len(compile_image(reduced,ROOT)),47)
+        reduced=fixture('reduce_vm');self.assertEqual(len(compile_image(reduced,ROOT)),48)
         # A single reduced word needs no16wordHCassembly consumer.
         self.assertFalse(any(c['controls']['hc_assemble_slot'] for c in reduced['cycles']))
         early=copy.deepcopy(reduced);early['cycles'][30].update(done_valid=1,done_tag=133)

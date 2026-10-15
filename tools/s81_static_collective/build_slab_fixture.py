@@ -29,7 +29,7 @@ command(0,44,1,0x123,5,'gather_vm')
 command(320,320,0,0x456,6,'reduce_vm_hc')
 for j in range(44):record(j,64,44,0x123,0)
 for j in range(320):record(j,400,320,0x456,1)
-cycles[305].update(done_valid=1,done_tag=133)
+cycles[307].update(done_valid=1,done_tag=133)
 cycles[2133].update(done_valid=1,done_tag=134)
 # Global peer PHY calendar. All beats, including idle beats, are explicit.
 for e,c in enumerate(cycles):

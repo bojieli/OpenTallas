@@ -138,7 +138,7 @@ module tb_s81_static_collective_slab;
     if(writes[551+:551]!=={8'h27,471'd0,raw_metadata,16'h0003,14'd7001,1'b1})$fatal(1,"raw metadata VM pins");
    end
    for(k=0;k<4;k=k+1)if(writes[k*551]!==expected_mask[k])$fatal(1,"VM write calendar edge%0d port%0d got%b expect%b",e,k,writes[k*551],expected_mask[k]);
-   if(done[8])begin if((e!=306||done[7:0]!=133)&&(e!=2134||done[7:0]!=134))$fatal(1,"done edge%0d tag%h",e,done);got_done=got_done+1;end
+   if(done[8])begin if((e!=308||done[7:0]!=133)&&(e!=2134||done[7:0]!=134))$fatal(1,"done edge%0d tag%h",e,done);got_done=got_done+1;end
    if(hc_v)begin
     if(got_hc>=20)$fatal(1,"extra HC row");
     j=got_hc*16+15;
