@@ -113,6 +113,10 @@ export function detail(data, n, { links = true } = {}) {
   const p = P(data);
   const c = p.cls[n.cls] || {};
   const rows = [];
+  if (n.native) rows.push(h('div', { class: 'tp-cov' },
+    h('b', {}, n.native.native_qualified ? 'Native physical chain qualified' : 'Native physical chain incomplete'),
+    h('div', { class: 'tp-dm' }, `actual program operations: ${(n.native.operations || []).join(', ') || 'no current operation mapping'}`),
+    ...(n.native.defects || []).map(d => h('div', { class: 'tp-covr' }, `${d.edge}: ${d.reason}`))));
   rows.push(h('div', { class: 'tp-dt' }, h('span', { class: 'tp-sw', style: `background:${c.color}` }), h('b', {}, n.label)));
   rows.push(h('div', { class: 'tp-dm' }, `${c.label || n.cls} · group ${p.groups[n.group]?.label || n.group}`));
   rows.push(h('div', { class: 'tp-kv' },
