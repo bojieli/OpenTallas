@@ -204,7 +204,7 @@
     "necessary_hop_screen_over500": 0,
     "necessary_hop_max_um": 442.8,
     "production_floorplan_checks": [],
-    "status": "NOT_ADOPTED; actual per-bit pins/phi-R/cuts/capture/staging fit/real views pending",
+    "status": "REJECT_FOR_NATIVE_ADOPTION exact83,712signal-bit pins audit over500; rectangle-only screen insufficient",
     "next_owner": "S-VM physical with S-DIE canonical placement; no unchanged route retry",
     "relay_pin_options": "physical/s81_die_pins/v20_vm_static_transport_options/receipt.json",
     "actual_pin_bits": [
@@ -247,5 +247,6 @@
       "actualnativepin-seam assignment and CTS/timing/DRC",
       "fullVMphysical placement and producer calendar"
     ]
-  }
+  },
+  "structural_next": "8b4quarters+4b8bridges per32bank slice, same2req/2rsp stages, more actual clock roots/perimeter; reprove actual128SRAMcalendars"
 }
