@@ -1,0 +1,47 @@
+{
+ "original_odb_sha256": "c4e2fdc9aa11aa49939384382f0641dfb557a44274086cda0712e4dea9cfd6f3",
+ "preserved_original_signal_pins": 568,
+ "added_clock_pins": 6,
+ "source_abi": "PASS",
+ "existing_pin_coordinates": "BYTE_EQUIVALENT",
+ "pitch_and_bounds": "PASS",
+ "placements": [
+  {
+   "pin": "clk_rom[0]",
+   "face": "W",
+   "y_um": 26.748,
+   "reason": "nearest free track to actual ROM0 clock y 26.700"
+  },
+  {
+   "pin": "clk_rom[1]",
+   "face": "W",
+   "y_um": 113.148,
+   "reason": "nearest free track to actual ROM1 clock y 113.100"
+  },
+  {
+   "pin": "clk_rom[2]",
+   "face": "W",
+   "y_um": 199.548,
+   "reason": "nearest free track to actual ROM2 clock y 199.500"
+  },
+  {
+   "pin": "clk_outputs[0]",
+   "face": "E",
+   "y_um": 38.364,
+   "reason": "nearest free track to actual owned output-pin median 28.764"
+  },
+  {
+   "pin": "clk_outputs[1]",
+   "face": "E",
+   "y_um": 48.348,
+   "reason": "nearest free track to actual owned output-pin median 46.716"
+  },
+  {
+   "pin": "clk_outputs[2]",
+   "face": "E",
+   "y_um": 115.164,
+   "reason": "nearest free track to actual owned output-pin median 110.988"
+  }
+ ],
+ "stale_source_mutant": "REJECTED before output emission"
+}
