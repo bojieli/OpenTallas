@@ -11,6 +11,8 @@ def model():
   'descriptor_validation_scan_edges':64,'host_descriptor_to_launch_gap_edges':66,
   'metadata_flow_storage_bits':896,'metadata_rule':'every nonhalt next and active repeat target within descriptor; lastrow must halt',
   'descriptor_units':'instructions; base<limit<=64; loops must equal1; native metadata32b loops retained',
+  'assembler_muxes':{'input_demux':'6x256b segments plus64b metadata','drain':'48to1x32b registered cfg data','metadata_scan':'64to1x14b'},
+  'replicas_per_die':4,'assembler_registered_output_bits':47,
   'fixed_execution_uops_per_cycle':1, 'execution_extra_cycles':2,
   'macs_per_cycle':0, 'memory':{'native_issuer_macros':3,'macro':'ot_sram_1r1w_64x512_m1_r2c2','read_bytes_per_macro_per_cycle':64,'total_read_bytes_per_cycle':192,'init_cfg_bits_per_cycle':37},
   'boundary_bits':{'host_cfg':277,'host_desc':42,'launch':1,'issuer_cfg':37,'issuer_start':7,'issuer_status_inputs':9},
