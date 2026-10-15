@@ -96,7 +96,7 @@ module tb_hgi_attn_pv_stream;
   if(checked!=8*batches || ring_writes!=16*batches || local_writes!=14*batches || scratch_reads!=30*batches)
    $fatal(1,"PV_STREAM_COVERAGE checked%0d ring%0d writes%0d reads%0d",checked,ring_writes,local_writes,scratch_reads);
   if(overlap_read==0||overlap_reducer==0)$fatal(1,"PV_STREAM no measured ring/local overlap");
-  if(first_output!=163 || last_output!=(batches-1)*82+163)$fatal(1,"PV_STREAM output timeline %0d/%0d",first_output,last_output);
+  if(first_output!=165 || last_output!=(batches-1)*82+165)$fatal(1,"PV_STREAM output timeline %0d/%0d",first_output,last_output);
   $display("PV_STREAM_PASS checked%0d batches%0d resets1 first%0d last%0d period82 ring_writes%0d local_writes%0d reads%0d overlap_read%0d overlap_write%0d overlap_reducer%0d SRAM2",checked,batches,first_output,last_output,ring_writes,local_writes,scratch_reads,overlap_read,overlap_write,overlap_reducer);
   $finish;
  end

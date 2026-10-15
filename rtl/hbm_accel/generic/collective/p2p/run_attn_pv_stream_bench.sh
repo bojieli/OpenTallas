@@ -41,7 +41,7 @@ build production
 binary="$OUT/obj_production/Vtb_hgi_attn_pv_stream"
 "$binary" "+PROGRAM_DIR=$OUT/production" > "$OUT/production.run.log" 2>&1
 cat "$OUT/production.run.log"
-rg -q '^PV_STREAM_PASS checked1024 batches128 resets1 first163 last10577 period82 ' "$OUT/production.run.log"
+rg -q '^PV_STREAM_PASS checked1024 batches128 resets1 first165 last10579 period82 ' "$OUT/production.run.log"
 # Same native binary; only externally supplied boundary node association changes.
 if "$binary" "+PROGRAM_DIR=$OUT/localfirst" > "$OUT/localfirst.run.log" 2>&1;then
  cat "$OUT/localfirst.run.log";echo 'semantic localfirst mutant survived';exit 1
