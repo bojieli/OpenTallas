@@ -1,0 +1,500 @@
+
+-- Running command `read_verilog -sv rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv; hierarchy -top qkd_static_kv_return_cdc -chparam DEPTH 8; proc; memory; opt; flatten; opt; write_json return_cdc_depth8.json; stat' --
+
+1. Executing Verilog-2005 frontend: rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv' to AST representation.
+Generating RTLIL representation for module `\qkd_static_kv_return_cdc'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/lib/ot_async_fifo.sv
+Parsing SystemVerilog input from `rtl/lib/ot_async_fifo.sv' to AST representation.
+Generating RTLIL representation for module `\ot_async_fifo'.
+Warning: Replacing memory \mem with list of registers. See rtl/lib/ot_async_fifo.sv:162
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: rtl/lib/ot_reset_sync.sv
+Parsing SystemVerilog input from `rtl/lib/ot_reset_sync.sv' to AST representation.
+Generating RTLIL representation for module `\ot_reset_sync'.
+Successfully finished Verilog frontend.
+
+4. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \DEPTH = 8
+
+5. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_static_kv_return_cdc'.
+Parameter \DEPTH = 8
+Generating RTLIL representation for module `$paramod\qkd_static_kv_return_cdc\DEPTH=s32'00000000000000000000000000001000'.
+
+5.1. Analyzing design hierarchy..
+Top module:  \qkd_static_kv_return_cdc
+Used module:     \ot_async_fifo
+Used module:         \ot_reset_sync
+Parameter \WIDTH = 288
+Parameter \DEPTH = 8
+Parameter \EXT_RST = 1
+
+5.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_async_fifo'.
+Parameter \WIDTH = 288
+Parameter \DEPTH = 8
+Parameter \EXT_RST = 1
+Generating RTLIL representation for module `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo'.
+Warning: Replacing memory \mem with list of registers. See rtl/lib/ot_async_fifo.sv:162
+
+5.3. Analyzing design hierarchy..
+Top module:  \qkd_static_kv_return_cdc
+Used module:     $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo
+
+5.4. Analyzing design hierarchy..
+Top module:  \qkd_static_kv_return_cdc
+Used module:     $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo
+Removing unused module `\ot_reset_sync'.
+Removing unused module `\ot_async_fifo'.
+Removing unused module `$paramod\qkd_static_kv_return_cdc\DEPTH=s32'00000000000000000000000000001000'.
+Removed 3 unused modules.
+
+6. Executing PROC pass (convert processes to netlists).
+
+6.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:35$114'.
+Removing empty process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:35$114'.
+Cleaned up 1 empty switch.
+
+6.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:22$62 in module qkd_static_kv_return_cdc.
+Marked 1 switch rules as full_case in process $proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:26$65 in module qkd_static_kv_return_cdc.
+Marked 1 switch rules as full_case in process $proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:31$67 in module qkd_static_kv_return_cdc.
+Marked 1 switch rules as full_case in process $proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:34$73 in module qkd_static_kv_return_cdc.
+Removed 1 dead cases from process $proc$rtl/lib/ot_async_fifo.sv:139$111 in module $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.
+Marked 1 switch rules as full_case in process $proc$rtl/lib/ot_async_fifo.sv:139$111 in module $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.
+Marked 1 switch rules as full_case in process $proc$rtl/lib/ot_async_fifo.sv:170$109 in module $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.
+Marked 3 switch rules as full_case in process $proc$rtl/lib/ot_async_fifo.sv:142$101 in module $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.
+Removed a total of 1 dead cases.
+
+6.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 19 redundant assignments.
+Promoted 11 assignments to connections.
+
+6.4. Executing PROC_INIT pass (extract init attributes).
+
+6.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \hr in `\qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:22$62'.
+Found async reset \rs in `\qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:26$65'.
+Found async reset \hr in `\qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:31$67'.
+Found async reset \rs in `\qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:34$73'.
+Found async reset \rd_domain_rst_n in `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:170$109'.
+Found async reset \wr_domain_rst_n in `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:142$101'.
+
+6.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~5 debug messages>
+
+6.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:17$59'.
+Creating decoders for process `\qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:18$60'.
+Creating decoders for process `\qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:21$61'.
+Creating decoders for process `\qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:22$62'.
+     1/1: $0\hv[0:0]
+Creating decoders for process `\qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:25$64'.
+Creating decoders for process `\qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:26$65'.
+     1/1: $0\slot[0:0]
+Creating decoders for process `\qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:31$67'.
+     1/1: $0\fault_hbm[0:0]
+Creating decoders for process `\qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:33$72'.
+Creating decoders for process `\qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:34$73'.
+     1/2: $0\actual_valid[0:0]
+     2/2: $0\fault_core[0:0]
+Creating decoders for process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:139$111'.
+     1/1: $1$mem2reg_rd$\mem$rtl/lib/ot_async_fifo.sv:139$81_DATA[287:0]$113
+Creating decoders for process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:170$109'.
+     1/9: $0\rd_empty[0:0]
+     2/9: $0\rd_gray[3:0]
+     3/9: $0\rd_bin[3:0]
+     4/9: $0\wr_gray_r2[3:0]
+     5/9: $0\wr_gray_r1[3:0]
+     6/9: $0\wr_online_r2[0:0]
+     7/9: $0\wr_online_r1[0:0]
+     8/9: $0\rd_online[0:0]
+     9/9: $0\rd_underflow[0:0]
+Creating decoders for process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:142$101'.
+     1/21: $2$mem2reg_wr$\mem$rtl/lib/ot_async_fifo.sv:162$82_ADDR[2:0]$107
+     2/21: $2$mem2reg_wr$\mem$rtl/lib/ot_async_fifo.sv:162$82_DATA[287:0]$108
+     3/21: $0\wr_full[0:0]
+     4/21: $0\wr_gray[3:0]
+     5/21: $0\wr_bin[3:0]
+     6/21: $1$mem2reg_wr$\mem$rtl/lib/ot_async_fifo.sv:162$82_DATA[287:0]$106
+     7/21: $1$mem2reg_wr$\mem$rtl/lib/ot_async_fifo.sv:162$82_ADDR[2:0]$105
+     8/21: $0\rd_gray_w2[3:0]
+     9/21: $0\rd_gray_w1[3:0]
+    10/21: $0\rd_online_w2[0:0]
+    11/21: $0\rd_online_w1[0:0]
+    12/21: $0\wr_online[0:0]
+    13/21: $0\mem[7][287:0]
+    14/21: $0\mem[6][287:0]
+    15/21: $0\mem[5][287:0]
+    16/21: $0\mem[4][287:0]
+    17/21: $0\mem[3][287:0]
+    18/21: $0\mem[2][287:0]
+    19/21: $0\mem[1][287:0]
+    20/21: $0\mem[0][287:0]
+    21/21: $0\wr_overflow[0:0]
+
+6.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$mem2reg_rd$\mem$rtl/lib/ot_async_fifo.sv:139$81_DATA' from process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:139$111'.
+
+6.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\qkd_static_kv_return_cdc.\hr' using process `\qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:17$59'.
+  created $dff cell `$procdff$202' with positive edge clock.
+Creating register for signal `\qkd_static_kv_return_cdc.\rs' using process `\qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:18$60'.
+  created $dff cell `$procdff$203' with positive edge clock.
+Creating register for signal `\qkd_static_kv_return_cdc.\hd' using process `\qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:21$61'.
+  created $dff cell `$procdff$204' with positive edge clock.
+Creating register for signal `\qkd_static_kv_return_cdc.\hv' using process `\qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:22$62'.
+  created $adff cell `$procdff$209' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_static_kv_return_cdc.\meta' using process `\qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:25$64'.
+  created $dff cell `$procdff$210' with positive edge clock.
+Creating register for signal `\qkd_static_kv_return_cdc.\slot' using process `\qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:26$65'.
+  created $adff cell `$procdff$215' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_static_kv_return_cdc.\fault_hbm' using process `\qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:31$67'.
+  created $adff cell `$procdff$220' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_static_kv_return_cdc.\actual_sector' using process `\qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:33$72'.
+  created $dff cell `$procdff$221' with positive edge clock.
+Creating register for signal `\qkd_static_kv_return_cdc.\actual_epoch' using process `\qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:33$72'.
+  created $dff cell `$procdff$222' with positive edge clock.
+Creating register for signal `\qkd_static_kv_return_cdc.\actual_layer' using process `\qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:33$72'.
+  created $dff cell `$procdff$223' with positive edge clock.
+Creating register for signal `\qkd_static_kv_return_cdc.\actual_data' using process `\qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:33$72'.
+  created $dff cell `$procdff$224' with positive edge clock.
+Creating register for signal `\qkd_static_kv_return_cdc.\actual_valid' using process `\qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:34$73'.
+  created $adff cell `$procdff$229' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_static_kv_return_cdc.\fault_core' using process `\qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:34$73'.
+  created $adff cell `$procdff$234' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.\rd_underflow' using process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:170$109'.
+  created $adff cell `$procdff$239' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.\rd_bin' using process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:170$109'.
+  created $adff cell `$procdff$244' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.\rd_gray' using process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:170$109'.
+  created $adff cell `$procdff$249' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.\wr_gray_r1' using process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:170$109'.
+  created $adff cell `$procdff$254' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.\wr_gray_r2' using process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:170$109'.
+  created $adff cell `$procdff$259' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.\rd_online' using process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:170$109'.
+  created $adff cell `$procdff$264' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.\wr_online_r1' using process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:170$109'.
+  created $adff cell `$procdff$269' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.\wr_online_r2' using process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:170$109'.
+  created $adff cell `$procdff$274' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.\rd_empty' using process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:170$109'.
+  created $adff cell `$procdff$279' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.\wr_overflow' using process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:142$101'.
+  created $adff cell `$procdff$284' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.\wr_bin' using process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:142$101'.
+  created $adff cell `$procdff$289' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.\wr_gray' using process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:142$101'.
+  created $adff cell `$procdff$294' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.\rd_gray_w1' using process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:142$101'.
+  created $adff cell `$procdff$299' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.\rd_gray_w2' using process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:142$101'.
+  created $adff cell `$procdff$304' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.\wr_online' using process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:142$101'.
+  created $adff cell `$procdff$309' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.\rd_online_w1' using process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:142$101'.
+  created $adff cell `$procdff$314' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.\rd_online_w2' using process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:142$101'.
+  created $adff cell `$procdff$319' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.\wr_full' using process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:142$101'.
+  created $adff cell `$procdff$324' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.\mem[0]' using process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:142$101'.
+  created $dff cell `$procdff$331' with positive edge clock.
+Creating register for signal `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.\mem[1]' using process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:142$101'.
+  created $dff cell `$procdff$338' with positive edge clock.
+Creating register for signal `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.\mem[2]' using process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:142$101'.
+  created $dff cell `$procdff$345' with positive edge clock.
+Creating register for signal `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.\mem[3]' using process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:142$101'.
+  created $dff cell `$procdff$352' with positive edge clock.
+Creating register for signal `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.\mem[4]' using process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:142$101'.
+  created $dff cell `$procdff$359' with positive edge clock.
+Creating register for signal `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.\mem[5]' using process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:142$101'.
+  created $dff cell `$procdff$366' with positive edge clock.
+Creating register for signal `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.\mem[6]' using process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:142$101'.
+  created $dff cell `$procdff$373' with positive edge clock.
+Creating register for signal `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.\mem[7]' using process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:142$101'.
+  created $dff cell `$procdff$380' with positive edge clock.
+Creating register for signal `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$mem2reg_wr$\mem$rtl/lib/ot_async_fifo.sv:162$82_ADDR' using process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:142$101'.
+  created $adff cell `$procdff$385' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$mem2reg_wr$\mem$rtl/lib/ot_async_fifo.sv:162$82_DATA' using process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:142$101'.
+  created $adff cell `$procdff$390' with positive edge clock and positive level reset.
+
+6.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+6.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:17$59'.
+Removing empty process `qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:18$60'.
+Removing empty process `qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:21$61'.
+Removing empty process `qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:22$62'.
+Removing empty process `qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:25$64'.
+Removing empty process `qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:26$65'.
+Found and cleaned up 1 empty switch in `\qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:31$67'.
+Removing empty process `qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:31$67'.
+Removing empty process `qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:33$72'.
+Found and cleaned up 1 empty switch in `\qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:34$73'.
+Removing empty process `qkd_static_kv_return_cdc.$proc$rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_cdc.sv:34$73'.
+Found and cleaned up 1 empty switch in `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:139$111'.
+Removing empty process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:139$111'.
+Removing empty process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:170$109'.
+Found and cleaned up 2 empty switches in `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:142$101'.
+Removing empty process `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.$proc$rtl/lib/ot_async_fifo.sv:142$101'.
+Cleaned up 5 empty switches.
+
+6.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qkd_static_kv_return_cdc.
+<suppressed ~10 debug messages>
+Optimizing module $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.
+<suppressed ~60 debug messages>
+
+7. Executing MEMORY pass.
+
+7.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+7.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+7.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+7.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+7.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qkd_static_kv_return_cdc..
+Finding unused cells or wires in module $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo..
+Removed 44 unused cells and 152 unused wires.
+<suppressed ~47 debug messages>
+
+7.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+7.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+7.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qkd_static_kv_return_cdc..
+Finding unused cells or wires in module $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo..
+
+7.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+7.11. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+8. Executing OPT pass (performing simple optimizations).
+
+8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qkd_static_kv_return_cdc.
+Optimizing module $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.
+
+8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qkd_static_kv_return_cdc'.
+Computing hashes of 25 cells of `\qkd_static_kv_return_cdc'.
+Finding duplicate cells in `\qkd_static_kv_return_cdc'.
+Finding identical cells in module `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo'.
+Computing hashes of 82 cells of `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo'.
+Finding duplicate cells in `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo'.
+Removed a total of 0 cells.
+
+8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \qkd_static_kv_return_cdc..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~38 debug messages>
+
+8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \qkd_static_kv_return_cdc.
+  Optimizing cells in module $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.
+Performed a total of 0 changes.
+
+8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qkd_static_kv_return_cdc'.
+Computing hashes of 25 cells of `\qkd_static_kv_return_cdc'.
+Finding duplicate cells in `\qkd_static_kv_return_cdc'.
+Finding identical cells in module `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo'.
+Computing hashes of 82 cells of `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo'.
+Finding duplicate cells in `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo'.
+Removed a total of 0 cells.
+
+8.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$220 ($adff) from module qkd_static_kv_return_cdc (D = 1'1, Q = \fault_hbm).
+Adding EN signal on $procdff$234 ($adff) from module qkd_static_kv_return_cdc (D = 1'1, Q = \fault_core).
+Adding EN signal on $procdff$373 ($dff) from module $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo (D = \wr_data, Q = \mem[6]).
+Adding EN signal on $procdff$331 ($dff) from module $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo (D = \wr_data, Q = \mem[0]).
+Handling D = Q on $procdff$284 ($adff) from module $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo (removing D path).
+Handling D = Q on $procdff$239 ($adff) from module $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo (removing D path).
+Adding EN signal on $procdff$345 ($dff) from module $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo (D = \wr_data, Q = \mem[2]).
+Adding EN signal on $procdff$359 ($dff) from module $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo (D = \wr_data, Q = \mem[4]).
+Adding EN signal on $procdff$338 ($dff) from module $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo (D = \wr_data, Q = \mem[1]).
+Adding EN signal on $procdff$380 ($dff) from module $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo (D = \wr_data, Q = \mem[7]).
+Adding EN signal on $procdff$352 ($dff) from module $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo (D = \wr_data, Q = \mem[3]).
+Adding EN signal on $procdff$366 ($dff) from module $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo (D = \wr_data, Q = \mem[5]).
+Setting constant 0-bit at position 0 on $procdff$239 ($dlatch) from module $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.
+Setting constant 0-bit at position 0 on $procdff$284 ($dlatch) from module $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.
+
+8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qkd_static_kv_return_cdc..
+Finding unused cells or wires in module $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo..
+Removed 26 unused cells and 26 unused wires.
+<suppressed ~28 debug messages>
+
+8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qkd_static_kv_return_cdc.
+Optimizing module $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.
+
+8.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \qkd_static_kv_return_cdc..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~2 debug messages>
+
+8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \qkd_static_kv_return_cdc.
+  Optimizing cells in module $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.
+Performed a total of 0 changes.
+
+8.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qkd_static_kv_return_cdc'.
+Computing hashes of 23 cells of `\qkd_static_kv_return_cdc'.
+Finding duplicate cells in `\qkd_static_kv_return_cdc'.
+Finding identical cells in module `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo'.
+Computing hashes of 64 cells of `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo'.
+Finding duplicate cells in `$paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo'.
+Removed a total of 0 cells.
+
+8.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qkd_static_kv_return_cdc..
+Finding unused cells or wires in module $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo..
+
+8.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qkd_static_kv_return_cdc.
+Optimizing module $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.
+
+8.16. Finished fast OPT passes. (There is nothing left to do.)
+
+9. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$4891b79f62938b2bdca2b4e551b08bee668ed445\ot_async_fifo.
+<suppressed ~1 debug messages>
+
+10. Executing OPT pass (performing simple optimizations).
+
+10.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qkd_static_kv_return_cdc.
+<suppressed ~2 debug messages>
+
+10.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qkd_static_kv_return_cdc'.
+Computing hashes of 85 cells of `\qkd_static_kv_return_cdc'.
+Finding duplicate cells in `\qkd_static_kv_return_cdc'.
+Computing hashes of 84 cells of `\qkd_static_kv_return_cdc'.
+Finding duplicate cells in `\qkd_static_kv_return_cdc'.
+<suppressed ~3 debug messages>
+Removed a total of 1 cells.
+
+10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \qkd_static_kv_return_cdc..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~2 debug messages>
+
+10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \qkd_static_kv_return_cdc.
+Performed a total of 0 changes.
+
+10.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qkd_static_kv_return_cdc'.
+Computing hashes of 84 cells of `\qkd_static_kv_return_cdc'.
+Finding duplicate cells in `\qkd_static_kv_return_cdc'.
+Removed a total of 0 cells.
+
+10.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qkd_static_kv_return_cdc..
+Removed 0 unused cells and 3 unused wires.
+<suppressed ~1 debug messages>
+
+10.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qkd_static_kv_return_cdc.
+
+10.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+10.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \qkd_static_kv_return_cdc..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~2 debug messages>
+
+10.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \qkd_static_kv_return_cdc.
+Performed a total of 0 changes.
+
+10.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qkd_static_kv_return_cdc'.
+Computing hashes of 84 cells of `\qkd_static_kv_return_cdc'.
+Finding duplicate cells in `\qkd_static_kv_return_cdc'.
+Removed a total of 0 cells.
+
+10.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+10.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qkd_static_kv_return_cdc..
+
+10.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qkd_static_kv_return_cdc.
+
+10.16. Finished fast OPT passes. (There is nothing left to do.)
+
+11. Executing JSON backend.
+
+12. Printing statistics.
+
+=== qkd_static_kv_return_cdc ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      111 wires
+     4250 wire bits
+       76 public wires
+     4214 public wire bits
+       17 ports
+      638 port bits
+       84 cells
+        2   $add
+       19   $adff
+        2   $adffe
+        8   $dff
+        8   $dffe
+       16   $eq
+        8   $logic_and
+        6   $logic_not
+        1   $logic_or
+        1   $ne
+        1   $not
+        1   $pmux
+        8   $reduce_and
+        1   $scopeinfo
+        2   $xor
+
