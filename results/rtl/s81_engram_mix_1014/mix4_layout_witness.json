@@ -1,0 +1,24 @@
+{
+ "schema": "opentallas.s81.mix4.physical_view.v1",
+ "native_qualified": false,
+ "integration_ready": false,
+ "physical_row_formula": "(address<<5)|(color^(address&31))",
+ "bank_formula": "row[4:0] XOR {row[7:5],2b00}",
+ "copies": 4,
+ "beats_per_copy": 160,
+ "occupied_rows": 4480,
+ "descriptor_row": 20,
+ "reduction_reads_per_edge": 20,
+ "add_reads_per_edge": 12,
+ "packed_writes_per_edge": 4,
+ "V_replication": "Actual shared V producer must write four physical copies:1280rows; no duplicate fixture preload qualifies",
+ "HC_logical_view": "row n maps to address=n%160,color=5*(n//160); aligned2/8-row bursts have distinct banks",
+ "read_return_slot": "logical_color XOR (address&3); inverse fixed delayed rotation",
+ "max_physical_row": 10238,
+ "missing": [
+  "actual field/constant/HOP ingress translators and V replication hardware",
+  "actual HC/HCP consumer row translators",
+  "MIX20 native request/return mapper and compile-time lane map",
+  "source-pinned fixed service/commit/calendar and physical phases"
+ ]
+}
