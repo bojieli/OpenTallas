@@ -67,12 +67,12 @@ module dsfd_sp_pq_produced (
     wire calendar_active;
     // A zero-valued ACCEPT tag0 row is meaningful only together with the
     // fixed GO edge. Idle rows cannot cause an accept without GO.
-    wire calendar_v=calendar_active || (|calendar_action);
-    ot_s81_pq_command_endpoint #(.PHW(10)) u_command (
+    wire calendar_v=calendar_primed || calendar_active || (|calendar_action);
+    ot_s81_pq_command_endpoint #(.PHW(10),.PINREG(1)) u_command (
       .ck(ck_cmd),.rst_n(rst),.c_cmd(c_cmd),.f_desc_pw(f_desc_pw),
       .t_iss(t_iss),.f_iss(f_iss),.c_done(c_done),.c_st(c_st),
       .image_sealed(image_sealed));
-    ot_s81_pq_calendar_rom #(.ACTION_BITS(75)) u_calendar (
+    ot_s81_pq_calendar_rom #(.ACTION_BITS(75),.PINREG(1)) u_calendar (
       .ck(ck_calendar),.rst_n(rst),.prime(calendar_prime),.stage_start(stage_start),
       .base(calendar_base),.length(calendar_length),.action(calendar_action),
       .active(calendar_active),.primed(calendar_primed),.fault(calendar_fault));

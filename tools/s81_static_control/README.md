@@ -93,3 +93,15 @@ with the real eight total ROM macros and36 SRAMs, fixed command completion33,
 and rejects a dropped physical calendar CFG cell and source phase-MSB mutant.
 Its zero phase/stream images prove connectivity and pin epochs only; they do
 not implement the canonical model numerical programme.
+
+The canonical produced successor enables PINREG=1 on the endpoint and calendar
+reader. Every command/PW/status and calendar input now has an explicit capture
+flop; ROM fetch metadata becomes three stages. The actual produced component
+measures GO+2 and external command-to-completion35 (descriptor internal age34).
+The input captures preserve fixed execution; they do not poll readiness. The
+control-state hard leaf `ot_s81_pq_ctl_state_phw10` omits35 pure combinational
+ROM-address output bits. Its wire-only parent drives phase addresses from the
+actual registered command phase and stream addresses from actual registered
+calendar bits. Full VM calendars and model programmes must adopt these exact
+source latencies; old unit deadlines or zero-read component tests are not
+production schedule evidence. Historical PINREG=0 behavior remains explicit.

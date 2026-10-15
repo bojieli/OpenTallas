@@ -20,7 +20,9 @@ if a.produced:
  for name,words in [('action',[w&((1<<72)-1) for w in packed]),('time',[w>>72 for w in packed])]:
   (a.work/f'pq_calendar_{name}.viamap.hex').write_text(viamap(words))
 defs=['OT_PQ_ROM_PORTS','OT_PQ_CTL_STATIC','OT_PQ_QB_PIPE','OT_PQ_QB_PHYS_SPLIT','OT_PQ_AQ_PHYS_SPLIT','OT_PQ_IX_PHYS_SPLIT','OT_PQ_IX_BANK_SPLIT','OT_PQ_BC_SLICED','DSFD_PQ_STATIC_X2']
+if a.produced:defs.append('OT_PQ_CTL_STATE_PINS')
 if a.mut:defs.append('OT_S81_PQ_STATIC_MUT_'+a.mut)
+if a.produced and a.mut=='PHW':defs.append('OT_S81_PQ_PRODUCER_MUT_PHW')
 cmd=[v,'--binary','--timing','--top-module',('tb_s81_pq_produced_pins' if a.produced else 'tb_s81_pq_canonical_pins'),'--Mdir',str(a.work.resolve()/'obj'),'-j','8','-Wno-fatal','-Wno-lint','-Wno-style',*[f'+define+{d}' for d in defs],*src]
 with (a.work/'build.log').open('w') as f:subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT,check=True)
 with (a.work/'run.log').open('w') as f:rc=subprocess.run([str(a.work.resolve()/('obj/Vtb_s81_pq_produced_pins' if a.produced else 'obj/Vtb_s81_pq_canonical_pins')), *(['+OT_ROM_DIR='+str(a.work.resolve())] if a.produced else [])],stdout=f,stderr=subprocess.STDOUT).returncode
