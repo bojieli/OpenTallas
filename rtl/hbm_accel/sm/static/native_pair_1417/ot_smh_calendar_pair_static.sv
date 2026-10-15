@@ -94,7 +94,7 @@ module ot_smh_calendar_pair_static #(
    calendar_v<=0;active<=0;done<=0;fault<=0;
   end else begin
    cfg_ack_v<=cfg_any;cfg_ack_kind<=begin_q?2'd1:commit_q?2'd2:2'd0;
-   cfg_ack_addr<=cfg_addr_q;cfg_ack_epoch<=cfg_epoch_q;
+   cfg_ack_addr<=we_q?cfg_addr_q:11'd0;cfg_ack_epoch<=cfg_epoch_q;
    cfg_ack_resp<=(begin_ok||write_ok||commit_ok)?2'd0:2'd2;
    if(cfg_any&&!(begin_ok||write_ok||commit_ok))fault<=1;
    if(begin_ok)begin
