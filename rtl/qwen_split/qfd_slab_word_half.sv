@@ -18,7 +18,7 @@ module qfd_slab_word_half #(
     wire [7:0] bw_ck = {ck_bw7,ck_bw6,ck_bw5,ck_bw4,ck_bw3,ck_bw2,ck_bw1,ck_bw0};
     wire [3:0] pair_ck = {ck_pair3,ck_pair2,ck_pair1,ck_pair0};
     wire [8*514-1:0] captured;
-    genvar i,p,l;
+    genvar i,p;
     generate for(i=0;i<8;i=i+1) begin:g_root
         (* keep *) reg [513:0] q;
         (* keep *) reg reset_q;
@@ -31,27 +31,14 @@ module qfd_slab_word_half #(
     end endgenerate
     wire [2047:0] summed;
     wire [3:0] pv,pf;
+    // q15: each pair is the hardened leaf qfd_slab_pair_add on its own clock entry (same logic and latency).
     generate for(p=0;p<4;p=p+1) begin:g_pair
         localparam integer IA = MUTANT ? p : 2*p;
         localparam integer IB = MUTANT ? p+4 : 2*p+1;
-        (* keep *) reg reset_q;
-        always @(posedge pair_ck[p]) reset_q <= rst_n;
-        wire valid_in = captured[514*IA+512] & captured[514*IB+512];
-        wire [15:0] lv;
-        wire [31:0] le;
-        for(l=0;l<16;l=l+1) begin:g_lane
-            ot_hdc_fp32_add_lat #(.LAT(ADD_LAT),.DRST(0)) u_add (
-                .clk(pair_ck[p]), .rst_n(reset_q), .valid_in(valid_in),
-                .a(captured[514*IA+32*l +: 32]), .b(captured[514*IB+32*l +: 32]),
-                .y(summed[512*p+32*l +: 32]), .err(le[2*l +: 2]), .valid_out(lv[l]));
-        end
-        reg mismatch;
-        always @(posedge pair_ck[p])
-            if(!reset_q) mismatch <= 1'b0;
-            else mismatch <= mismatch | (captured[514*IA+512] ^ captured[514*IB+512])
-                | captured[514*IA+513] | captured[514*IB+513];
-        assign pv[p] = lv[0];
-        assign pf[p] = mismatch | (lv[0] & (|le)) | (|(lv ^ {16{lv[0]}}));
+        qfd_slab_pair_add #(.ADD_LAT(ADD_LAT)) u_pair (
+            .ck(pair_ck[p]), .rst_n(rst_n),
+            .wa(captured[514*IA +: 514]), .wb(captured[514*IB +: 514]),
+            .y(summed[512*p +: 512]), .pv(pv[p]), .pf(pf[p]));
     end endgenerate
     (* keep *) reg [2049:0] output_q;
     always @(posedge ck) begin
