@@ -71,6 +71,25 @@ MASTERS = {
              "need a > 600-um clock root for no reason, so the block is compact at that end (slot change request)",
         benches=[("c8_wrapper_and_128row_issuer", "pass", "pass"), ("vm_absent_mutant", "mut_vm_absent", "fail"),
                  ("issuer_timing_mutant", "mut_issuer", "fail")]),
+    "s81fill2_host_c": dict(
+        master="dsfd_host_c", top="dsfd_host_c", params={"NS": 1}, defines=["DSFD_HOST_C_STATIC"],
+        sources=["rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv", "rtl/lib/ot_async_fifo.sv", "rtl/lib/ot_reset_sync.sv",
+                 "rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv", "rtl/lib/ot_rst_relay.sv", "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv",
+                 "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv", "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv",
+                 "physical/rom_host_ingest/rtl/dsfd_host.sv", "rtl/hdc/ingest/ot_rom_host_ingest.sv", "rtl/link/ot_link_afifo.sv",
+                 "rtl/hdc/ingest/ot_hdc_kv_ingest.sv", "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv"],
+        extra=["rtl/dsrom_sys/s81_ingest", "rtl/lib", "rtl/hdc/ingest", "rtl/link", "rtl/dsrom_sys/s81_ctrl", "physical/rom_host_ingest/rtl",
+               "tools/die_port_bind.py", "tools/s81/fill2_host_bench.sh", "physical/s81_fill2", PIN_DIR],
+        clock="ck", resets=["rst", "ckv", "rsv"], inst=1, size="density", std_um2=15000, majority=True,
+        extra_spec={"sdc_extra": ["physical/s81_fill2/host_ser_ref.sdc"], "boundary_tcl": ["physical/s81_fill2/host_ser_ref.tcl"]},
+        bench="tools/s81/fill2_host_bench.sh", bench_tag="HOST", bench_mode_in_pass=True,
+        what="static layer-die host (+DSFD_HOST_C_STATIC, S-BIND r6: no credit bits, collective host face 515/77, lane-fault "
+             "fold; host ingest + per-stack writes; program words cross ck->ckv). The generator reservation 1727.976 x "
+             "129.576 puts hw/hc/f_lf at its W end and the collective/sequencer faces at its E end with the clocks spread "
+             "848..1624 um: one compact block (no > 600-um clock root) and the die relays the 292-b host-write lane "
+             "(slot change request)",
+        benches=[("host_static_base", "base", "pass"), ("program_drop_mutant", "mut1", "fail"),
+                 ("lane_fault_fold_mutant", "mut4", "fail")]),
     "s81fill2_cfg7_seq_bf": dict(
         master="ot_s81_cfg7_seq_bf", top="ot_s81_cfg7_seq_bf", params={}, sources=CFG7_SRC, extra=CFG7_EXTRA,
         clock="clk", resets=["rst_n"], inst=519,
@@ -207,7 +226,7 @@ def main() -> int:
         (ROOT / PIN_DIR / f'{d["master"]}{"_pd" if d.get("size") == "density" and not d.get("majority") else ""}.tcl').write_text('\n'.join(tcl) + '\n')
         bsh, btag = d.get('bench', BENCH), d.get('bench_tag', 'CFG7')
         benches = [{'name': bn, 'cmd': f'bash {bsh} {mode} {{RUN}}/bench_{mode}', 'expect': exp,
-                    **({'pass_regex': f'{btag} BENCH PASS' + (f' {mode}' if btag == 'CFG7' else '')} if exp == 'pass' else {'fail_regex': f'{btag} BENCH FAIL {mode}'}),
+                    **({'pass_regex': f'{btag} BENCH PASS' + (f' {mode}' if btag == 'CFG7' or d.get('bench_mode_in_pass') else '')} if exp == 'pass' else {'fail_regex': f'{btag} BENCH FAIL {mode}'}),
                     'threads': 4, 'peak_ram_gb': 4, 'needs': ['verilator']} for bn, mode, exp in d['benches']]
         spec = {
             'name': name, 'top': d['top'], 'kind': 'tile', 'sources': d['sources'], 'params': d['params'],
@@ -215,7 +234,7 @@ def main() -> int:
             'outline': {'w': dw, 'h': dh, 'exact': True}, 'layer_cap': 'M5',
             'pins': {f: sorted(v) for f, v in sorted(faces.items())},
             'io_tcl': f'{PIN_DIR}/{d["master"]}{"_pd" if d.get("size") == "density" and not d.get("majority") else ""}.tcl',
-            'recipe': 2, 'outhold': False, **d.get('extra_spec', {}),
+            'recipe': 2, 'outhold': False, **d.get('extra_spec', {}), **({'defines': d['defines']} if d.get('defines') else {}),
             'route': {'pd': 0.5, 'threads': 4, 'peak_ram_gb': 8, 'pin_h': 'M4', 'pin_v': 'M3 M5', 'm5_pg_pitch': 2.7},
             **({'slot_change_request': {'reason': f'outline from pin density (<= {BPU} b/um/layer, face cut <= 0.6) and '
                                        f'content (~{d["std_um2"]} um2 std + recipe-2 cells at util ~0.5) instead of the '
