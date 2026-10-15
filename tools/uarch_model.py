@@ -16146,7 +16146,7 @@ def s81_hcx_resident_native_model():
     instantiates the actual unit with constant HC_MIX_POST records. Production
     requires real VM/collective slots and measured physical relay calendars.
     """
-    rom_area = 38.016 * 62.910
+    rom_area = 121.824 * 62.910
     x_area = 94.824 * 41.040
     mac = 256 * UNIT['fp32_mac_um2']
     return dict(schema='opentallas.s81-hcx-resident-native.v1',
@@ -16157,16 +16157,21 @@ def s81_hcx_resident_native_model():
         each_projection=dict(macs_per_cycle=256,
             weight_port_bytes_per_cycle=8*32*4,
             x_port_bytes_per_cycle=8*32*2,
-            rom_macros=128, rom_macro='ot_rom_4096x72_m8', payload_bits=64,
-            rom_area_um2=128*rom_area,
-            fn_payload_bits=2*20480*32, fn_sets=['attn','ffn'],
-            rom_addresses=dict(attn=[0,79],ffn=[128,207]),
+            rom_macros=64, rom_macro='ot_rom_4096x266_m8', payload_bits=256,
+            rom_area_um2=64*rom_area,
+            fn_payload_bits=43*2*20480*32, fn_sets=['attn','ffn'],
+            resident_layer_sets=43, resident_layer_map='main0..39,MTP40..42',
+            rom_payload_capacity_bits=64*4096*256, physical_rom_bits=64*4096*266,
+            rom_addresses=dict(formula='80*(2*layer_idx+ffn)+run',range=[0,6879],pages=2),
+            macro_SS_clk_to_q_ps=739.210334475635,
+            rejected_8192_option=dict(macros=32,area_um2=32*122.256*119.34,SS_clk_to_q_ps=999.324702151268,reason='Only5percent area saving, materially less serial SS timing margin'),
             x_sram_macros=16, x_sram_macro='ot_sram_1r1w_128x256_m1_r2c2',
             x_sram_area_um2=16*x_area, x_payload_bits=20480*16,
             mac_cell_area_estimate_um2=mac,
-            footprint_lower_bound_um2=mac/.55+128*rom_area+16*x_area,
+            footprint_lower_bound_um2=mac/.55+64*rom_area+16*x_area,
             estimate_excludes='tree/scalar/tag/clock/hold/pin logic; actual synthesis required',
-            assigned_outline_um=[864,1296],
+            previous_outline_um=[864,1296],
+            slot_resize='S-DIE requested after full43set capacity audit; old128ROM fits only25layers',
             native_cmd_to_pin_result_cycles=264,
             pin_register_cost_cycles=2,
             native_result_source='results/rtl/s81_hcx_home_1014/projection_pin_L00.log',
@@ -16179,12 +16184,12 @@ def s81_hcx_resident_native_model():
         projection_raw_link=dict(words_per_rank=6, bits_per_rank=192,
             collective='real TP4 all-gather to 24 canonical FP32 mixes, fixed native phases',
             raw_vm_rows=dict(attn=2624,ffn=2640)),
-        native_tail=dict(parameter_rom_macros=4, parameter_rom_area_um2=4*rom_area,
+        native_tail=dict(parameter_rom_macros=4, parameter_rom_area_um2=4*38.016*62.910,
             arithmetic='actual ot_hgi_hc_unit op2, RMAX2 PMAX2',
             memory='native FP32 rawmix reads, comb/pre/post/eps/reserved output layout',
             output_rows=dict(attn=2560,ffn=2576), words_per_output_region=32,
             completion='fixed compiled deadline; actual arithmetic/VM commit checks never reschedule',
-            status='single-job observation535 serial cycles; repeated-job exact/timing gate still open'),
+            status='core534+0..6 free-running Sinkhorn phase; fixed540serial budget proposed, repeated-job gate pending'),
         immutable_prices_fast_cycles=dict(fn=229,sumsq=253.6,rsqrt=197.3,pre_post=212.3,sinkhorn=637.2),
         rate_qualification='open: native H export, VM8 reservation, real all-gather, CDC phase/hops, TT/FF/DRC and clock roots',
         adoption=False)

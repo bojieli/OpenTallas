@@ -7,8 +7,9 @@ module tb_s81_hcx_post_native;
  reg[RL-1:0]readv=0;reg[511:0]readd[0:RL-1];
  reg[WL-1:0]writev=0;reg[13:0]writea[0:WL-1];reg[15:0]writem[0:WL-1];reg[511:0]writed[0:WL-1];
  integer cyc=0,t0,cost=0,fd;string dir;bit calibrate;
- reg fq=0;
+ reg fq=0;reg[4:0]prevstate=31;
  always @(negedge clk)begin
+  if(u.core.st!=prevstate)begin $display("HCX_POST_STATE cycle%0d st%0d adapterbusy%0d iss%0d jobdone%0d inflight%0d flt%0d",cyc,u.core.st,u.core.u_rec.busy,u.core.u_rec.iss,u.core.job_done,u.core.outst,u.core.flt);prevstate=u.core.st;end
   if(start)$display("HCX_POST_START cycle%0d ffn%0d ready%0d raw_v%0d busy%0d iss%0d",cyc,ffn,u.ready,u.core.u_rec.raw_v,u.core.u_rec.busy,u.core.u_rec.iss);
   if(u.core.job_v)$display("HCX_POST_JOB cycle%0d ready%0d state%0d",cyc,u.core.job_rdy,u.core.st);
   if(u.actual_done)$display("HCX_POST_ACTUAL_DONE cycle%0d relative%0d",cyc,cyc-t0);
@@ -20,7 +21,7 @@ module tb_s81_hcx_post_native;
 `else
  localparam integer MUT=0;
 `endif
- ot_s81_hcx_post_native #(.RL(RL),.WL(WL),.MUT_POST(MUT))u(.clk(clk),.rst_n(rn),.start(start),.ffn(ffn),.raw_base_row(14'd2624),.coef_base_row(14'd2560),.norm_eps(eps[0]),.compiled_cycles(budget),.done(done),.rq_v(rv),.rq_row(ra),.rs_v(readv[RL-1]),.rs_d(readd[RL-1]),.wq_v(wv),.wq_row(wa),.wq_mask(wm),.wq_d(wd),.wq_commit(writev[WL-1]),.fault(f));
+ ot_s81_hcx_post_native #(.RL(RL),.WL(WL),.MUT_POST(MUT))u(.clk(clk),.rst_n(rn),.start(start),.ffn(ffn),.layer_idx(6'd0),.raw_base_row(14'd2624),.coef_base_row(14'd2560),.norm_eps(eps[0]),.compiled_cycles(budget),.done(done),.rq_v(rv),.rq_row(ra),.rs_v(readv[RL-1]),.rs_d(readd[RL-1]),.wq_v(wv),.wq_row(wa),.wq_mask(wm),.wq_d(wd),.wq_commit(writev[WL-1]),.fault(f));
  always @(posedge clk)begin
   cyc<=cyc+1;readv[0]<=rv;readd[0]<=ffn?raw1[ra-2624]:raw0[ra-2624];
   for(integer i=1;i<RL;i=i+1)begin readv[i]<=readv[i-1];readd[i]<=readd[i-1];end

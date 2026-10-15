@@ -3,15 +3,21 @@ module tb_s81_hcx_projection_leaf;
  reg clk=0;always #5 clk=~clk;
  reg rn=0,sb=0,sv=0,cv=0,ffn=0;reg[6:0]a=0;reg[4095:0]d=0;wire ov,f;wire[31:0]od;
  reg[4095:0]x0[0:79],x1[0:79];reg[31:0]expectm[0:1],eps[0:0];
- string dir;integer cyc=0,t0,lat=-1,got=0,errors=0;
+ reg[5:0]layer=0;integer layer_arg;string dir;integer cyc=0,t0,lat=-1,got=0,errors=0;
 `ifdef MUT_BANK
  localparam integer MUT=1;
 `else
  localparam integer MUT=0;
 `endif
- ot_s81_hcx_projection_leaf #(.MUT_BANK(MUT))u(.clk(clk),.rst_n(rn),.stage_begin(sb),.stage_v(sv),.stage_word(a),.stage_d(d),.cmd_v(cv),.cmd_ffn(ffn),.norm_eps(eps[0]),.o_v(ov),.o_d(od),.fault(f));
+`ifdef MUT_PAGE
+ localparam integer MPAGE=1;
+`else
+ localparam integer MPAGE=0;
+`endif
+ ot_s81_hcx_projection_leaf #(.MUT_BANK(MUT),.MUT_PAGE(MPAGE))u(.clk(clk),.rst_n(rn),.stage_begin(sb),.stage_v(sv),.stage_word(a),.stage_d(d),.cmd_v(cv),.cmd_ffn(ffn),.cmd_layer(layer),.norm_eps(eps[0]),.o_v(ov),.o_d(od),.fault(f));
  always @(posedge clk)cyc<=cyc+1;
  initial begin
+  if($value$plusargs("LAYER=%d",layer_arg))layer=6'(layer_arg);
   if(!$value$plusargs("DIR=%s",dir))$fatal(1,"DIR required");
   $readmemh({dir,"/x0.mem"},x0);$readmemh({dir,"/x1.mem"},x1);$readmemh({dir,"/expected.mem"},expectm);$readmemh({dir,"/eps.mem"},eps);
   repeat(3)@(negedge clk);rn=1;

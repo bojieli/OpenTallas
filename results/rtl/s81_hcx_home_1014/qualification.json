@@ -33,9 +33,53 @@
     "Native VM8 calendar and real payload multicast/relay phases",
     "Actual four-rank raw24 allgather into native VM",
     "Intermediate post-attn HC H_STORE before FFN projection",
-    "Native op2 repeated-job exact and fixed-time gate",
-    "All40+MTP native content mapping and complete functional token gate",
+    "Native op2 fixed540phasepadded repeated-job gate running; /7physicalclock obligation explicit",
+    "All43fullresidentimages row0boundarychecked only; 2640prior-content checks notfullnativefunctional token",
     "All leaf/controller physical synthesis CTS timing DRC and clock-root closure"
   ],
-  "adopted": false
+  "adopted": false,
+  "projection_fullresident": {
+    "scope": "actual64ROM two-page43set source, row0 selectedboundarycontexts",
+    "exact_FP32_outputs": 14,
+    "cases": [
+      "L00",
+      "L24",
+      "L25",
+      "L39",
+      "M0R0",
+      "M1R0",
+      "M2R4"
+    ],
+    "cycles": 264,
+    "positive": "resident_boundary_row0.log",
+    "negative": "resident_page1_mut_L25.log",
+    "negative_result": "L25attnPASS,L25FFNFAIL atsame264cycle, FFNrun crossesphysicalpage4096",
+    "source_sha256": {
+      "rtl/dsrom_sys/s81_hcx/ot_s81_hcx_projection_leaf.sv": "0881d8f133ec18d24dbb7c292fd24255337bc19fea1aa2e39a3e0c68789057fc",
+      "rtl/dsrom_sys/s81_hcx/test/tb_s81_hcx_projection_leaf.sv": "8574032c1a0c6458a4999ac6d895d582c3880011d39cdad449a87fbfbd737f8d",
+      "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv": "eac33983ff7fb15706851dbc14dc89cb6986bfa0abdfd98c850b3c7379dee474",
+      "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v": "a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b"
+    }
+  },
+  "projection_content_sweep": {
+    "scope": "prior128ROM singlecase-image vehicle, same shared HCPW32 arithmetic; doesnotqualifyfullresidentmapping",
+    "cases": 55,
+    "projection_rows": 1320,
+    "exact_FP32_outputs": 2640,
+    "log": "projection_all55_all24.log"
+  },
+  "gatherpack": {
+    "scope": "realtransportcompaction, syntheticidentitypayload, notfulltoken",
+    "words": 24,
+    "VM_fullrows": 2,
+    "positive": "gatherpack_nom.log",
+    "negative": "gatherpack_missing_rank_mut.log",
+    "fixed_write_edges_test": [
+      16,
+      17
+    ],
+    "fixed_completion_test": 23,
+    "census": "gatherpack_census.json",
+    "production_R_CYC_WL": "unboundactualcollective/VMcalendar"
+  }
 }

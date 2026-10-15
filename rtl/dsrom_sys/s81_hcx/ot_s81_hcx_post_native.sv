@@ -6,9 +6,12 @@
 // Normal execution has no ready/credit/backpressure. compiled_cycles is the
 // measured compiler price for this exact implementation, not a trace duration.
 // Completion fires there unconditionally; core completion is checked, not gated.
-module ot_s81_hcx_post_native #(parameter integer RL=4,WL=4,MUT_POST=0,parameter string IMAGE="hcx_post")(
+// Shared core Sinkhorn /7 step phase needs fixed worst6-edge padding. A540
+// serial compiled budget covers measured534base+0..6phase, no runtime waiting.
+module ot_s81_hcx_post_native #(parameter integer RL=4,WL=4,MUT_POST=0,parameter IMAGE="hcx_post")(
  input wire clk,rst_n,start,ffn,
  input wire [13:0] raw_base_row,coef_base_row,
+ input wire [5:0] layer_idx,
  input wire [31:0] norm_eps,
  input wire [15:0] compiled_cycles,
  output reg done,
@@ -26,13 +29,13 @@ module ot_s81_hcx_post_native #(parameter integer RL=4,WL=4,MUT_POST=0,parameter
  wire ready,actual_done,core_fault,halted,transport_fault;
  wire [337:0]vmq;wire[273:0]vmr;
  wire hq;wire[34:0]ha;wire[2:0]hl;wire[4:0]ht;
- reg busy,pbusy;reg[15:0]age,limit;reg[1:0]beat;reg[4:0]tag;
+ reg busy,pbusy,observed_done;reg[15:0]age,limit;reg[1:0]beat;reg[4:0]tag;
  reg [34:0]base;
  wire[287:0]pq;
  reg hv;reg[1:0]hb;reg[4:0]htag;
  wire[255:0]hd={pq[216+:64],pq[144+:64],pq[72+:64],pq[0+:64]};
  wire[255:0]a=256'h100018000000000001 | (256'(raw_base_row)<<12);
- wire[255:0]b=256'h1000000000004 | (256'(ffn)<<15);
+ wire[255:0]b=256'h1000000000004 | (256'(8*layer_idx+4*ffn)<<13);
  wire[255:0]o=256'h18000000000001 | (256'(coef_base_row)<<12);
  ot_hgi_hc_unit #(.W(32),.RMAX(2),.PMAX(2),.MUT_POST(MUT_POST))core(
   .clk(clk),.rst_n(rst_n),.cfg_norm_eps(norm_eps),.rec_v(start),.rec_rdy(ready),
@@ -53,20 +56,20 @@ module ot_s81_hcx_post_native #(parameter integer RL=4,WL=4,MUT_POST=0,parameter
    .clk(clk),.ce_in(pbusy),.addr_in(12'(base+beat)),.rd_out(pq[72*m+:72]));
  end endgenerate
  always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)begin busy<=0;pbusy<=0;age<=0;done<=0;fault<=0;hv<=0;beat<=0;end
+  if(!rst_n)begin busy<=0;pbusy<=0;observed_done<=0;age<=0;done<=0;fault<=0;hv<=0;beat<=0;end
   else begin
    done<=0;hv<=pbusy;hb<=beat;htag<=tag;
    if(start)begin
-    if(busy||!ready||compiled_cycles==0||raw_base_row[3:0]!=0)fault<=1;
-    busy<=1;age<=0;limit<=compiled_cycles;
+    if(busy||!ready||compiled_cycles==0||raw_base_row[3:0]!=0||layer_idx>42)fault<=1;
+    busy<=1;observed_done<=0;age<=0;limit<=compiled_cycles;
    end
    if(busy)begin
     age<=age+1'b1;
-    if(age+1'b1==limit)begin done<=1;busy<=0;if(!actual_done)fault<=1;end
+    if(age+1'b1==limit)begin done<=1;busy<=0;if(!(actual_done||observed_done))fault<=1;end
    end
-   if(actual_done && (!busy || age+1'b1!=limit))fault<=1;
+   if(actual_done)begin observed_done<=1;if(!busy || age+1'b1>limit)fault<=1;end
    if(hq)begin
-    if(pbusy||hl!=4||ht[4:1]!=8||ha>4)fault<=1;
+    if(pbusy||hl!=4||ht[4:1]!=8||ha>340 || ha[1:0]!=0)fault<=1;
     pbusy<=1;beat<=0;base<=ha;tag<=ht;
    end else if(pbusy)begin
     beat<=beat+1'b1;if(beat==3)pbusy<=0;

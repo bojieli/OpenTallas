@@ -23,11 +23,11 @@
     "fp32_fn_bits_per_layer_attention_plus_ffn": 31457280,
     "current_fn_price_cycles": 229,
     "current_fn_price_evidence": "token_path_20261008/ds_rom.json hc.fn source grade modelled, no measured patch",
-    "rom_slot_assigned": true,
+    "rom_slot_assigned": false,
     "native_vm_bound": false,
     "production_throughput_measured": false,
     "physical_closed": false,
-    "rom_slot_evidence": "v20_functional projection six864x1296 homes; middle2 require die relay relocation"
+    "rom_slot_evidence": "Old128ROM slot assigned864x1296; full43set64ROM4096x266 successor requires S-DIE resize, pending"
   },
   "normal_execution": "No runtime ready, credit, backpressure, queue arbitration or commit-gated completion",
   "historical_dynamic_bridge": {

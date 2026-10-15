@@ -1,0 +1,7928 @@
+{
+  "scope": "native projection components only",
+  "binary_sha256": "c0a6f595853c5bc19d32eb2a8d2875fd2ec60ddb25e09863e2e8436819c48b9e",
+  "cases": 55,
+  "rows": [
+    {
+      "case": "L00",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L00",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L00",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L00",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L00",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L00",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L00",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L00",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L00",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L00",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L00",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L00",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L00",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L00",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L00",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L00",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L00",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L00",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L00",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L00",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L00",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L00",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L00",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L00",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L01",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L01",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L01",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L01",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L01",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L01",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L01",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L01",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L01",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L01",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L01",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L01",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L01",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L01",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L01",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L01",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L01",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L01",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L01",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L01",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L01",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L01",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L01",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L01",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L02",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L02",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L02",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L02",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L02",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L02",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L02",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L02",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L02",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L02",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L02",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L02",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L02",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L02",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L02",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L02",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L02",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L02",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L02",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L02",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L02",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L02",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L02",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L02",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L03",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L03",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L03",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L03",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L03",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L03",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L03",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L03",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L03",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L03",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L03",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L03",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L03",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L03",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L03",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L03",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L03",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L03",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L03",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L03",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L03",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L03",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L03",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L03",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L04",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L04",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L04",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L04",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L04",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L04",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L04",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L04",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L04",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L04",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L04",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L04",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L04",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L04",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L04",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L04",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L04",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L04",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L04",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L04",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L04",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L04",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L04",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L04",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L05",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L05",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L05",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L05",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L05",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L05",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L05",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L05",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L05",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L05",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L05",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L05",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L05",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L05",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L05",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L05",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L05",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L05",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L05",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L05",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L05",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L05",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L05",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L05",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L06",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L06",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L06",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L06",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L06",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L06",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L06",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L06",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L06",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L06",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L06",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L06",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L06",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L06",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L06",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L06",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L06",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L06",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L06",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L06",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L06",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L06",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L06",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L06",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L07",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L07",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L07",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L07",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L07",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L07",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L07",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L07",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L07",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L07",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L07",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L07",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L07",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L07",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L07",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L07",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L07",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L07",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L07",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L07",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L07",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L07",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L07",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L07",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L08",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L08",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L08",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L08",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L08",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L08",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L08",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L08",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L08",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L08",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L08",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L08",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L08",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L08",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L08",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L08",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L08",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L08",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L08",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L08",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L08",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L08",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L08",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L08",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L09",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L09",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L09",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L09",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L09",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L09",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L09",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L09",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L09",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L09",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L09",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L09",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L09",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L09",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L09",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L09",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L09",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L09",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L09",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L09",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L09",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L09",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L09",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L09",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L10",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L10",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L10",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L10",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L10",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L10",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L10",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L10",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L10",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L10",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L10",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L10",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L10",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L10",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L10",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L10",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L10",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L10",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L10",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L10",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L10",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L10",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L10",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L10",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L11",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L11",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L11",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L11",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L11",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L11",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L11",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L11",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L11",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L11",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L11",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L11",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L11",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L11",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L11",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L11",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L11",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L11",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L11",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L11",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L11",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L11",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L11",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L11",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L12",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L12",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L12",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L12",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L12",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L12",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L12",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L12",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L12",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L12",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L12",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L12",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L12",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L12",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L12",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L12",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L12",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L12",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L12",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L12",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L12",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L12",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L12",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L12",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L13",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L13",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L13",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L13",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L13",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L13",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L13",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L13",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L13",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L13",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L13",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L13",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L13",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L13",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L13",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L13",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L13",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L13",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L13",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L13",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L13",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L13",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L13",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L13",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L14",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L14",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L14",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L14",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L14",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L14",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L14",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L14",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L14",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L14",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L14",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L14",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L14",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L14",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L14",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L14",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L14",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L14",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L14",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L14",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L14",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L14",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L14",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L14",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L15",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L15",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L15",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L15",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L15",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L15",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L15",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L15",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L15",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L15",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L15",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L15",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L15",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L15",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L15",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L15",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L15",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L15",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L15",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L15",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L15",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L15",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L15",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L15",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L16",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L16",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L16",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L16",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L16",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L16",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L16",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L16",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L16",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L16",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L16",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L16",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L16",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L16",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L16",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L16",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L16",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L16",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L16",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L16",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L16",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L16",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L16",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L16",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L17",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L17",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L17",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L17",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L17",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L17",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L17",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L17",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L17",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L17",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L17",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L17",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L17",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L17",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L17",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L17",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L17",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L17",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L17",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L17",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L17",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L17",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L17",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L17",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L18",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L18",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L18",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L18",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L18",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L18",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L18",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L18",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L18",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L18",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L18",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L18",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L18",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L18",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L18",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L18",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L18",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L18",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L18",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L18",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L18",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L18",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L18",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L18",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L19",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L19",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L19",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L19",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L19",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L19",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L19",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L19",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L19",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L19",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L19",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L19",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L19",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L19",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L19",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L19",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L19",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L19",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L19",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L19",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L19",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L19",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L19",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L19",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L20",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L20",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L20",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L20",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L20",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L20",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L20",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L20",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L20",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L20",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L20",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L20",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L20",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L20",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L20",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L20",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L20",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L20",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L20",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L20",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L20",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L20",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L20",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L20",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L21",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L21",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L21",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L21",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L21",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L21",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L21",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L21",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L21",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L21",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L21",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L21",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L21",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L21",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L21",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L21",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L21",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L21",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L21",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L21",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L21",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L21",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L21",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L21",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L22",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L22",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L22",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L22",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L22",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L22",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L22",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L22",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L22",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L22",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L22",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L22",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L22",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L22",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L22",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L22",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L22",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L22",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L22",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L22",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L22",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L22",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L22",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L22",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L23",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L23",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L23",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L23",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L23",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L23",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L23",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L23",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L23",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L23",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L23",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L23",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L23",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L23",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L23",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L23",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L23",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L23",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L23",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L23",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L23",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L23",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L23",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L23",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L24",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L24",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L24",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L24",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L24",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L24",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L24",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L24",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L24",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L24",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L24",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L24",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L24",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L24",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L24",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L24",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L24",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L24",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L24",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L24",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L24",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L24",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L24",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L24",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L25",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L25",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L25",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L25",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L25",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L25",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L25",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L25",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L25",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L25",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L25",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L25",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L25",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L25",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L25",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L25",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L25",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L25",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L25",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L25",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L25",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L25",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L25",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L25",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L26",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L26",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L26",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L26",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L26",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L26",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L26",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L26",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L26",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L26",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L26",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L26",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L26",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L26",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L26",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L26",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L26",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L26",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L26",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L26",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L26",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L26",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L26",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L26",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L27",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L27",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L27",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L27",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L27",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L27",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L27",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L27",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L27",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L27",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L27",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L27",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L27",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L27",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L27",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L27",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L27",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L27",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L27",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L27",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L27",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L27",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L27",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L27",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L28",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L28",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L28",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L28",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L28",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L28",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L28",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L28",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L28",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L28",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L28",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L28",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L28",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L28",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L28",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L28",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L28",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L28",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L28",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L28",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L28",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L28",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L28",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L28",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L29",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L29",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L29",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L29",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L29",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L29",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L29",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L29",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L29",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L29",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L29",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L29",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L29",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L29",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L29",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L29",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L29",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L29",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L29",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L29",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L29",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L29",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L29",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L29",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L30",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L30",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L30",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L30",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L30",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L30",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L30",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L30",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L30",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L30",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L30",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L30",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L30",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L30",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L30",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L30",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L30",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L30",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L30",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L30",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L30",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L30",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L30",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L30",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L31",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L31",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L31",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L31",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L31",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L31",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L31",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L31",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L31",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L31",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L31",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L31",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L31",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L31",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L31",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L31",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L31",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L31",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L31",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L31",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L31",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L31",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L31",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L31",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L32",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L32",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L32",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L32",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L32",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L32",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L32",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L32",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L32",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L32",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L32",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L32",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L32",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L32",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L32",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L32",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L32",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L32",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L32",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L32",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L32",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L32",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L32",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L32",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L33",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L33",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L33",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L33",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L33",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L33",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L33",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L33",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L33",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L33",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L33",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L33",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L33",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L33",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L33",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L33",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L33",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L33",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L33",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L33",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L33",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L33",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L33",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L33",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L34",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L34",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L34",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L34",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L34",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L34",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L34",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L34",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L34",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L34",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L34",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L34",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L34",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L34",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L34",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L34",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L34",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L34",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L34",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L34",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L34",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L34",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L34",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L34",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L35",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L35",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L35",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L35",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L35",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L35",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L35",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L35",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L35",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L35",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L35",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L35",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L35",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L35",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L35",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L35",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L35",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L35",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L35",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L35",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L35",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L35",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L35",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L35",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L36",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L36",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L36",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L36",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L36",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L36",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L36",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L36",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L36",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L36",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L36",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L36",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L36",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L36",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L36",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L36",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L36",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L36",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L36",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L36",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L36",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L36",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L36",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L36",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L37",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L37",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L37",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L37",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L37",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L37",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L37",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L37",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L37",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L37",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L37",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L37",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L37",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L37",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L37",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L37",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L37",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L37",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L37",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L37",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L37",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L37",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L37",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L37",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L38",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L38",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L38",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L38",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L38",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L38",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L38",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L38",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L38",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L38",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L38",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L38",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L38",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L38",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L38",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L38",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L38",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L38",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L38",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L38",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L38",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L38",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L38",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L38",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L39",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L39",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L39",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L39",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L39",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L39",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L39",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L39",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L39",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L39",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L39",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L39",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L39",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L39",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L39",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L39",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L39",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L39",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L39",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L39",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L39",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L39",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L39",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "L39",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R0",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R0",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R0",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R0",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R0",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R0",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R0",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R0",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R0",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R0",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R0",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R0",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R0",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R0",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R0",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R0",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R0",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R0",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R0",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R0",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R0",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R0",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R0",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R0",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R1",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R1",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R1",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R1",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R1",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R1",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R1",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R1",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R1",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R1",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R1",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R1",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R1",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R1",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R1",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R1",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R1",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R1",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R1",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R1",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R1",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R1",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R1",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R1",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R2",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R2",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R2",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R2",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R2",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R2",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R2",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R2",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R2",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R2",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R2",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R2",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R2",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R2",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R2",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R2",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R2",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R2",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R2",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R2",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R2",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R2",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R2",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R2",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R3",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R3",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R3",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R3",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R3",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R3",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R3",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R3",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R3",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R3",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R3",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R3",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R3",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R3",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R3",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R3",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R3",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R3",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R3",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R3",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R3",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R3",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R3",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R3",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R4",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R4",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R4",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R4",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R4",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R4",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R4",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R4",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R4",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R4",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R4",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R4",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R4",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R4",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R4",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R4",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R4",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R4",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R4",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R4",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R4",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R4",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R4",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M0R4",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R0",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R0",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R0",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R0",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R0",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R0",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R0",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R0",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R0",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R0",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R0",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R0",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R0",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R0",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R0",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R0",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R0",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R0",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R0",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R0",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R0",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R0",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R0",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R0",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R1",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R1",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R1",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R1",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R1",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R1",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R1",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R1",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R1",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R1",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R1",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R1",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R1",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R1",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R1",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R1",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R1",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R1",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R1",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R1",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R1",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R1",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R1",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R1",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R2",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R2",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R2",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R2",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R2",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R2",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R2",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R2",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R2",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R2",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R2",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R2",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R2",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R2",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R2",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R2",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R2",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R2",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R2",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R2",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R2",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R2",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R2",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R2",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R3",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R3",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R3",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R3",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R3",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R3",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R3",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R3",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R3",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R3",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R3",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R3",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R3",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R3",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R3",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R3",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R3",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R3",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R3",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R3",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R3",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R3",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R3",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R3",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R4",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R4",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R4",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R4",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R4",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R4",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R4",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R4",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R4",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R4",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R4",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R4",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R4",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R4",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R4",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R4",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R4",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R4",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R4",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R4",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R4",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R4",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R4",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M1R4",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R0",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R0",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R0",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R0",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R0",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R0",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R0",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R0",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R0",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R0",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R0",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R0",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R0",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R0",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R0",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R0",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R0",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R0",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R0",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R0",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R0",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R0",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R0",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R0",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R1",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R1",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R1",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R1",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R1",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R1",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R1",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R1",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R1",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R1",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R1",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R1",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R1",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R1",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R1",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R1",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R1",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R1",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R1",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R1",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R1",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R1",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R1",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R1",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R2",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R2",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R2",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R2",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R2",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R2",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R2",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R2",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R2",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R2",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R2",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R2",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R2",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R2",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R2",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R2",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R2",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R2",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R2",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R2",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R2",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R2",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R2",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R2",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R3",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R3",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R3",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R3",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R3",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R3",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R3",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R3",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R3",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R3",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R3",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R3",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R3",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R3",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R3",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R3",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R3",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R3",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R3",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R3",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R3",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R3",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R3",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R3",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R4",
+      "row": 0,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R4",
+      "row": 1,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R4",
+      "row": 2,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R4",
+      "row": 3,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R4",
+      "row": 4,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R4",
+      "row": 5,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R4",
+      "row": 6,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R4",
+      "row": 7,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R4",
+      "row": 8,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R4",
+      "row": 9,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R4",
+      "row": 10,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R4",
+      "row": 11,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R4",
+      "row": 12,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R4",
+      "row": 13,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R4",
+      "row": 14,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R4",
+      "row": 15,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R4",
+      "row": 16,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R4",
+      "row": 17,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R4",
+      "row": 18,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R4",
+      "row": 19,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R4",
+      "row": 20,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R4",
+      "row": 21,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R4",
+      "row": 22,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    },
+    {
+      "case": "M2R4",
+      "row": 23,
+      "exact_fp32_outputs": 2,
+      "native_serial_cycles": 264
+    }
+  ],
+  "exact_outputs": 2640
+}

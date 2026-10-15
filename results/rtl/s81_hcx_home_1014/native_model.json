@@ -18,36 +18,46 @@
     "macs_per_cycle": 256,
     "weight_port_bytes_per_cycle": 1024,
     "x_port_bytes_per_cycle": 512,
-    "rom_macros": 128,
-    "rom_macro": "ot_rom_4096x72_m8",
-    "payload_bits": 64,
-    "rom_area_um2": 306123.07967999997,
-    "fn_payload_bits": 1310720,
+    "rom_macros": 64,
+    "rom_macro": "ot_rom_4096x266_m8",
+    "payload_bits": 256,
+    "rom_area_um2": 490492.66176,
+    "fn_payload_bits": 56360960,
     "fn_sets": [
       "attn",
       "ffn"
     ],
+    "resident_layer_sets": 43,
+    "resident_layer_map": "main0..39,MTP40..42",
+    "rom_payload_capacity_bits": 67108864,
+    "physical_rom_bits": 69730304,
     "rom_addresses": {
-      "attn": [
+      "formula": "80*(2*layer_idx+ffn)+run",
+      "range": [
         0,
-        79
+        6879
       ],
-      "ffn": [
-        128,
-        207
-      ]
+      "pages": 2
+    },
+    "macro_SS_clk_to_q_ps": 739.210334475635,
+    "rejected_8192_option": {
+      "macros": 32,
+      "area_um2": 466880.99328,
+      "SS_clk_to_q_ps": 999.324702151268,
+      "reason": "Only5percent area saving, materially less serial SS timing margin"
     },
     "x_sram_macros": 16,
     "x_sram_macro": "ot_sram_1r1w_128x256_m1_r2c2",
     "x_sram_area_um2": 62265.23136,
     "x_payload_bits": 327680,
     "mac_cell_area_estimate_um2": 299210.49600000004,
-    "footprint_lower_bound_um2": 912407.3946763636,
+    "footprint_lower_bound_um2": 1096776.9767563636,
     "estimate_excludes": "tree/scalar/tag/clock/hold/pin logic; actual synthesis required",
-    "assigned_outline_um": [
+    "previous_outline_um": [
       864,
       1296
     ],
+    "slot_resize": "S-DIE requested after full43set capacity audit; old128ROM fits only25layers",
     "native_cmd_to_pin_result_cycles": 264,
     "pin_register_cost_cycles": 2,
     "native_result_source": "results/rtl/s81_hcx_home_1014/projection_pin_L00.log",

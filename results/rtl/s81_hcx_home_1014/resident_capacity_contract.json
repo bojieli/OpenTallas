@@ -1,0 +1,22 @@
+{
+  "scope": "Full43layer resident HCfn candidate; source and capacity implemented, boundary physical qualification pending",
+  "supersedes": "128x4096x72 per-output single-layer-image candidate: fullresident capacity only25layers",
+  "layers": {"main": [0,39], "MTP": [40,42], "MTP_row": "R0..R4 share stageweights; input H is row-specific"},
+  "arithmetic": "Unchanged shared ot_hdc_v41x_hcp W32: canonical chunk8 fn dot, H sumsq, rsqrt and scale",
+  "native_weight_address": "80*(2*cmd_layer+cmd_ffn)+run, run0..79, address0..6879",
+  "physical_page": "address[12], two actual4096-row pages",
+  "macros_per_output_leaf": 64,
+  "macro": "ot_rom_4096x266_m8",
+  "mapping": "2pages x8canonicalbanks x4macros; each macro256FP32payloadbits,10 definedzero sparebits",
+  "full_weight_bits_per_leaf": 56360960,
+  "physical_payload_capacity_bits_per_leaf": 67108864,
+  "physical_ROM_area_um2_per_leaf": 490492.66176,
+  "SS_ROM_clk_to_q_ps": 739.210334475635,
+  "candidate_native_serial_GHz": 0.9,
+  "command_argument": {"bit0":"ffn", "bits14:1":"H base native row", "bits20:15":"layer index0..42", "bits23:21":"reservedzero"},
+  "tail_parameter_address": "8*layer_idx+4*ffn+beat, beat0..3;4actual4096x72residentROMs",
+  "old_outline_um": [864,1296],
+  "area_lower_bound_um2": 1096776.9767563636,
+  "area_lower_bound_excludes": "reductiontree,scalar,tag,clock,hold,pin logic; S-DIE resize and actualsynthesis required",
+  "qualification": "OPEN actual page-boundary native exact+mutant, native transport composition, TT/SS/FF timing/DRC/clock roots"
+}

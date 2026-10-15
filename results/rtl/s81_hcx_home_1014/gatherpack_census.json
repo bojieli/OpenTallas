@@ -1,0 +1,13 @@
+{
+  "scope": "actualYosys proc/opt flopcensus, not physicaltiming",
+  "clock": "clk fast1.2GHz",
+  "flopbits": {
+    "$adffe": 16,
+    "$dffe": 1052,
+    "$sdffce": 256,
+    "$adff": 9,
+    "$dff": 514
+  },
+  "total": 1847,
+  "source_sha256": "0aefe08c113065280d32f021a92d6e23411d30611a15594b0b238f5d25ee0cf5"
+}

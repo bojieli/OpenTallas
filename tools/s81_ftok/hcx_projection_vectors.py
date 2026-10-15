@@ -28,7 +28,7 @@ def build(src,out,row):
     G.set_arith('chunk8')
     out.mkdir(parents=True,exist_ok=True)
     vm,rom,eps,cases=load(src)
-    masks=[[[0]*512 for _ in range(16)] for _ in range(8)]
+    masks=[[[[0]*512 for _ in range(2)] for _ in range(4)] for _ in range(8)]
     wants=[]
     for block,line in enumerate(cases):
         d=int(line[56:],16)
@@ -45,11 +45,11 @@ def build(src,out,row):
                     w=(rom[sec]>>(32*(lane%8)))&0xffffffff
                     fn[8*(run*32+lane)+bank]=w
                     words.append(w)
-                addr=block*128+run
-                for m in range(16):
-                    payload=words[2*m]|words[2*m+1]<<32
-                    for bit in range(64):
-                        if payload>>bit&1:masks[bank][m][addr//8]|=1<<(bit*8+addr%8)
+                addr=block*80+run
+                for m in range(4):
+                    payload=sum(words[8*m+j]<<(32*j) for j in range(8))
+                    for bit in range(256):
+                        if payload>>bit&1:masks[bank][m][addr>>12][(addr&4095)//8]|=1<<(bit*8+addr%8)
         xf=x.view(np.float32);ff=fn.view(np.float32)
         r=G.rsqrt(G.add(G.div(G.split_sum(G.mul(xf,xf),G.HC_SS_SPLIT),np.float32(20480)),G.from_bits(eps)))
         want=np.asarray(G.mul(G.matvec_c(ff[None,:],xf,G.HC_SPLIT,cls='he'),r),np.float32).view(np.uint32)[0]
@@ -59,11 +59,12 @@ def build(src,out,row):
                 word=sum(int(x[run*256+i]>>16)<<(16*i) for i in range(256))
                 f.write(f'{word:01024x}\n')
     for bank in range(8):
-        for m in range(16):
-            (out/f'hcx_r0_b{bank}_l{m}.viamap.hex').write_text(''.join(f'{r:0144x}\n' for r in masks[bank][m]))
+        for m in range(4):
+            for pg in range(2):
+                (out/f'hcx_r0_b{bank}_l{m}_p{pg}.viamap.hex').write_text(''.join(f'{r:0532x}\n' for r in masks[bank][m][pg]))
     (out/'expected.mem').write_text(''.join(f'{w:08x}\n' for w in wants))
     (out/'eps.mem').write_text(f'{eps:08x}\n')
-    (out/'metadata.json').write_text(json.dumps(dict(source=str(src),row=row,outputs=wants,shape=[2,20480],macros=128,payload_bits_per_macro=64),indent=2)+'\n')
+    (out/'metadata.json').write_text(json.dumps(dict(source=str(src),row=row,outputs=wants,shape=[2,20480],macros=64,payload_bits_per_macro=256),indent=2)+'\n')
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)

@@ -22,6 +22,7 @@ module ot_s81_hcx_controller #(
  output wire [6:0] stage_word,
  output wire leaf_cmd_v,
  output reg leaf_ffn,
+ output reg [5:0]leaf_layer,
  input wire [5:0] leaf_v,leaf_fault,
  input wire [191:0] leaf_d,
  output reg t_raw_v,
@@ -63,8 +64,8 @@ module ot_s81_hcx_controller #(
    sreq1<=req_toggle;sreq2<=sreq1;t_raw_v<=0;
    if(event_s)begin
     sseen<=sreq2;
-    if(native_busy || cmd_box[30:22]!=0)sfault<=1;
-    stag<={cmd_box[83],cmd_box[6:0]};leaf_ffn<=cmd_box[7];native_busy<=1;
+    if(native_busy || cmd_box[30:28]!=0 || cmd_box[27:22]>42)sfault<=1;
+    stag<={cmd_box[83],cmd_box[6:0]};leaf_ffn<=cmd_box[7];leaf_layer<=cmd_box[27:22];native_busy<=1;
    end
    if(leaf_cmd_v)begin run<=1;age<=0;end
    if(leaf_v!=expected)sfault<=1;

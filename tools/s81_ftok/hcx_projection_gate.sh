@@ -12,7 +12,7 @@ src=(
  rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv
  rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41/ot_hdc_fsqrt.sv rtl/hdc/v41/ot_hdc_fdiv.sv
  rtl/hdc/v41/ot_hdc_softplus.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/v41x/ot_hdc_v41x_hcp.sv
- physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v
+ physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v
  physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
  rtl/dsrom_sys/s81_hcx/ot_s81_hcx_projection_leaf.sv rtl/dsrom_sys/s81_hcx/test/tb_s81_hcx_projection_leaf.sv
 )
