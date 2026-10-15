@@ -3,7 +3,8 @@
  "top": "ot_hbm_native_bounded_cdc",
  "kind": "tile",
  "sources": [
-  "physical/hbm_native_bounded_cdc_1014/ot_hbm_native_bounded_cdc.sv"
+  "physical/hbm_native_bounded_cdc_1014/ot_hbm_native_bounded_cdc.sv",
+  "rtl/lib/ot_rst_relay.sv"
  ],
  "params": {
   "W": 16,

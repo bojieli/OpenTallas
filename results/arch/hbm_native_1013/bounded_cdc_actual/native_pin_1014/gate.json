@@ -6,12 +6,13 @@
     "physical/hbm_native_bounded_cdc_1014/source_manifest.json": "e134446d519375437b4c096bd245e9e6498e1a7ff075bb2a1a1b515146b946d5",
     "physical/hbm_native_bounded_cdc_1014/related_domains.sdc": "2a27ce4af93a16468c365b2003df1fcf9cd03aa5f77f272005d48ffb9a80c59f",
     "physical/hbm_native_bounded_cdc_1014/suite.py": "cc94dd9c06832261ce2e6b934353a1acfdf511b7fcd1b32e836bb503584f2adf",
+    "physical/hbm_native_bounded_cdc_1014/cdc_arcs.sdc": "32b484f913f0c467adee2336e0e3a4273762ed092a582f13214d059ffefc4f0e",
     "physical/hbm_native_bounded_cdc_1014/census.py": "0a87e9223aa719e0525b7085a0c6d3ecd895bd86b39b8e9d364728baec74b4e9",
     "physical/hbm_native_bounded_cdc_1014/tb_bounded_cdc.sv": "fa7e4c43b24da33a4c71d1f36a7b3e70bda54c31f1d3bebd5f59977c126fd758",
     "physical/hbm_native_bounded_cdc_1014/physical_boundary.tcl": "8af6dda33af2f3f8dbd52fcc0077d3d71c517235183aefc3e922fb4f019ebe25",
     "physical/hbm_native_bounded_cdc_1014/w1_spec.json": "dd2f21a4f5287d2c9e77685ab3191d73d77152ca0b42d835545b0cc20442eac0",
-    "physical/hbm_native_bounded_cdc_1014/ot_hbm_native_bounded_cdc.sv": "f7085732e2adfcff76c781a094f56fb3990a92eb6e5132fe27940f518bf75ecd",
-    "physical/hbm_native_bounded_cdc_1014/bench.sh": "ddf4a79f2a5293699b4211a7353cd84f872f8f459562cf7ad6b96a6b2ea0d863"
+    "physical/hbm_native_bounded_cdc_1014/ot_hbm_native_bounded_cdc.sv": "d49c05463663f6682b2e239f6529cf315b70674da0ce90028af9d7e8eefa4380",
+    "physical/hbm_native_bounded_cdc_1014/bench.sh": "16443ce819213aad5735a31ecfce3d5a3d4fa0b1ad49c6d15f286e2580dc8eb5"
   },
   "cases": [
     {
@@ -24,7 +25,7 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC PASS W=16 AW=4 phase=61 reverse=0 mode=0 words=384 full_stalls=1285 empty_stalls=423 held=958 issues=384 landings=384 first_accept=4 first_sram_read=7 first_publish=8 first_visible_r=11 first_access_ps=9088.785 ce_checks=0\n",
+      "output": "SRAM_CDC PASS W=16 AW=4 phase=61 reverse=0 mode=0 words=384 full_stalls=1285 empty_stalls=426 held=955 issues=384 landings=384 first_accept=8 first_sram_read=11 first_publish=12 first_visible_r=14 first_access_ps=9088.785 ce_checks=0\n",
       "first_access_ps": 9088.785
     },
     {
@@ -37,8 +38,8 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC PASS W=16 AW=4 phase=61 reverse=1 mode=0 words=384 full_stalls=548 empty_stalls=443 held=942 issues=384 landings=384 first_accept=4 first_sram_read=7 first_publish=8 first_visible_r=16 first_access_ps=9366.563 ce_checks=0\n",
-      "first_access_ps": 9366.563
+      "output": "SRAM_CDC PASS W=16 AW=4 phase=61 reverse=1 mode=0 words=384 full_stalls=548 empty_stalls=445 held=940 issues=384 landings=384 first_accept=6 first_sram_read=9 first_publish=10 first_visible_r=18 first_access_ps=8811.007 ce_checks=0\n",
+      "first_access_ps": 8811.007
     },
     {
       "case": "exact_w16_p487_r0",
@@ -50,7 +51,7 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC PASS W=16 AW=4 phase=487 reverse=0 mode=0 words=384 full_stalls=1278 empty_stalls=423 held=958 issues=384 landings=384 first_accept=3 first_sram_read=6 first_publish=7 first_visible_r=11 first_access_ps=9237.007 ce_checks=0\n",
+      "output": "SRAM_CDC PASS W=16 AW=4 phase=487 reverse=0 mode=0 words=384 full_stalls=1278 empty_stalls=426 held=955 issues=384 landings=384 first_accept=7 first_sram_read=10 first_publish=11 first_visible_r=14 first_access_ps=9237.007 ce_checks=0\n",
       "first_access_ps": 9237.007
     },
     {
@@ -63,7 +64,7 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC PASS W=16 AW=4 phase=487 reverse=1 mode=0 words=384 full_stalls=549 empty_stalls=441 held=944 issues=384 landings=384 first_accept=3 first_sram_read=6 first_publish=7 first_visible_r=15 first_access_ps=9237.007 ce_checks=0\n",
+      "output": "SRAM_CDC PASS W=16 AW=4 phase=487 reverse=1 mode=0 words=384 full_stalls=549 empty_stalls=445 held=940 issues=384 landings=384 first_accept=6 first_sram_read=9 first_publish=10 first_visible_r=19 first_access_ps=9237.007 ce_checks=0\n",
       "first_access_ps": 9237.007
     },
     {
@@ -76,7 +77,7 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC PASS W=1 AW=4 phase=61 reverse=0 mode=0 words=384 full_stalls=1285 empty_stalls=423 held=958 issues=384 landings=384 first_accept=4 first_sram_read=7 first_publish=8 first_visible_r=11 first_access_ps=9088.785 ce_checks=0\n",
+      "output": "SRAM_CDC PASS W=1 AW=4 phase=61 reverse=0 mode=0 words=384 full_stalls=1285 empty_stalls=426 held=955 issues=384 landings=384 first_accept=8 first_sram_read=11 first_publish=12 first_visible_r=14 first_access_ps=9088.785 ce_checks=0\n",
       "first_access_ps": 9088.785
     },
     {
@@ -89,8 +90,8 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC PASS W=1 AW=4 phase=61 reverse=1 mode=0 words=384 full_stalls=548 empty_stalls=443 held=942 issues=384 landings=384 first_accept=4 first_sram_read=7 first_publish=8 first_visible_r=16 first_access_ps=9366.563 ce_checks=0\n",
-      "first_access_ps": 9366.563
+      "output": "SRAM_CDC PASS W=1 AW=4 phase=61 reverse=1 mode=0 words=384 full_stalls=548 empty_stalls=445 held=940 issues=384 landings=384 first_accept=6 first_sram_read=9 first_publish=10 first_visible_r=18 first_access_ps=8811.007 ce_checks=0\n",
+      "first_access_ps": 8811.007
     },
     {
       "case": "exact_w1_p487_r0",
@@ -102,7 +103,7 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC PASS W=1 AW=4 phase=487 reverse=0 mode=0 words=384 full_stalls=1278 empty_stalls=423 held=958 issues=384 landings=384 first_accept=3 first_sram_read=6 first_publish=7 first_visible_r=11 first_access_ps=9237.007 ce_checks=0\n",
+      "output": "SRAM_CDC PASS W=1 AW=4 phase=487 reverse=0 mode=0 words=384 full_stalls=1278 empty_stalls=426 held=955 issues=384 landings=384 first_accept=7 first_sram_read=10 first_publish=11 first_visible_r=14 first_access_ps=9237.007 ce_checks=0\n",
       "first_access_ps": 9237.007
     },
     {
@@ -115,7 +116,7 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC PASS W=1 AW=4 phase=487 reverse=1 mode=0 words=384 full_stalls=549 empty_stalls=441 held=944 issues=384 landings=384 first_accept=3 first_sram_read=6 first_publish=7 first_visible_r=15 first_access_ps=9237.007 ce_checks=0\n",
+      "output": "SRAM_CDC PASS W=1 AW=4 phase=487 reverse=1 mode=0 words=384 full_stalls=549 empty_stalls=445 held=940 issues=384 landings=384 first_accept=6 first_sram_read=9 first_publish=10 first_visible_r=19 first_access_ps=9237.007 ce_checks=0\n",
       "first_access_ps": 9237.007
     },
     {
@@ -128,7 +129,7 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC PASS W=16 AW=4 phase=0 reverse=0 mode=0 words=384 full_stalls=1285 empty_stalls=423 held=958 issues=384 landings=384 first_accept=4 first_sram_read=7 first_publish=8 first_visible_r=11 first_access_ps=9027.785 ce_checks=0\n",
+      "output": "SRAM_CDC PASS W=16 AW=4 phase=0 reverse=0 mode=0 words=384 full_stalls=1285 empty_stalls=426 held=955 issues=384 landings=384 first_accept=8 first_sram_read=11 first_publish=12 first_visible_r=14 first_access_ps=9027.785 ce_checks=0\n",
       "first_access_ps": 9027.785
     },
     {
@@ -141,7 +142,7 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC PASS W=16 AW=4 phase=61 reverse=0 mode=1 words=384 full_stalls=1285 empty_stalls=423 held=958 issues=384 landings=384 first_accept=4 first_sram_read=7 first_publish=8 first_visible_r=11 first_access_ps=9088.785 ce_checks=2\n",
+      "output": "SRAM_CDC PASS W=16 AW=4 phase=61 reverse=0 mode=1 words=384 full_stalls=1285 empty_stalls=426 held=955 issues=384 landings=384 first_accept=8 first_sram_read=11 first_publish=12 first_visible_r=14 first_access_ps=9088.785 ce_checks=2\n",
       "first_access_ps": 9088.785
     },
     {
@@ -190,7 +191,7 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC_BOUNDARY PASS source control rail fail closed\nSRAM_CDC PASS W=16 AW=4 phase=487 reverse=0 mode=3 words=384 full_stalls=1278 empty_stalls=424 held=958 issues=384 landings=384 first_accept=3 first_sram_read=6 first_publish=7 first_visible_r=11 first_access_ps=9237.007 ce_checks=0\n",
+      "output": "SRAM_CDC_BOUNDARY PASS source control rail fail closed\nSRAM_CDC PASS W=16 AW=4 phase=487 reverse=0 mode=3 words=384 full_stalls=1278 empty_stalls=427 held=955 issues=384 landings=384 first_accept=7 first_sram_read=10 first_publish=11 first_visible_r=14 first_access_ps=9237.007 ce_checks=0\n",
       "first_access_ps": 9237.007
     },
     {
@@ -275,7 +276,7 @@
       "expect": "fail",
       "returncode": 1,
       "expectation_met": true,
-      "output": "FATAL: physical/hbm_native_bounded_cdc_1014/tb_bounded_cdc.sv:81: LOGICAL_CAPACITY accepted=17 consumed=0 D=16\n       Time: 20416683 Scope: tb_sram_cdc\n"
+      "output": "FATAL: physical/hbm_native_bounded_cdc_1014/tb_bounded_cdc.sv:81: LOGICAL_CAPACITY accepted=17 consumed=0 D=16\n       Time: 23750019 Scope: tb_sram_cdc\n"
     }
   ],
   "model_price_184_inherited": false,

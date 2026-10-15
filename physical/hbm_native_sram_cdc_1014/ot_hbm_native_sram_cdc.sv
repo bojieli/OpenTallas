@@ -66,6 +66,11 @@ module ot_hbm_native_sram_cdc #(parameter integer W=280,AW=4,MUT=0)(
  always @(posedge rclk)begin
   for(integer landing=0;landing<8;landing=landing+1)landed_slots[landing]<=slots[landing];
  end
+ // reset ports drive only a relay each (async assert, synchronous release, 2 kept region copies <= ~150 loads):
+ // native audit of npin2: wrst_n / rrst_n capture 232-293 ps fanning straight out to 298 flops
+ wire [1:0] wr,rr;
+ ot_rst_relay #(.REGIONS(2)) u_wrst(.clk(wclk),.rst_n_in(wrst_n),.rst_n(wr));
+ ot_rst_relay #(.REGIONS(2)) u_rrst(.clk(rclk),.rst_n_in(rrst_n),.rst_n(rr));
  // pin flops (data: no reset; valid: reset)
  reg we_p;reg [W-1:0] wdata_p;reg [31:0] wepoch_p,repoch_p;
  reg [W-1:0] sk_d0,sk_d1;
@@ -76,7 +81,7 @@ module ot_hbm_native_sram_cdc #(parameter integer W=280,AW=4,MUT=0)(
  assign rdata=out_data;assign empty=empty_q;assign r_fault=r_fault_q;
  always @(posedge wclk)begin wdata_p<=wdata;wepoch_p<=wepoch;end
  always @(posedge rclk)repoch_p<=repoch;
- always @(posedge wclk or negedge wrst_n)if(!wrst_n)we_p<=1'b0;else we_p<=we&&!full_q;
+ always @(posedge wclk or negedge wr[1])if(!wr[1])we_p<=1'b0;else we_p<=we&&!full_q;
  // ---------------- source (write) domain ----------------
  wire [PW-1:0] ack_gray=gray(rb),pub_gray=gray(publish_seq);
  wire [PW-1:0] released=graybin(ack2);
@@ -141,8 +146,8 @@ module ot_hbm_native_sram_cdc #(parameter integer W=280,AW=4,MUT=0)(
  wire w_fault_x=wf_x||wbad;
  wire full_x=w_fault_x||!ack_ok_x||!src_ep_ok_x||(sk_v_x!=2'b00)||(occ_x>=D-1);
  wire [CW-1:0] store_rd;
- always @(posedge wclk or negedge wrst_n)begin
-  if(!wrst_n)begin
+ always @(posedge wclk or negedge wr[0])begin
+  if(!wr[0])begin
    wb<=0;wb_n<='1;commit_seq<=0;commit_n<='1;fetch_seq<=0;fetch_n<='1;publish_seq<=0;publish_n<='1;freed<=0;freed_n<='1;
    enc_addr<=0;enc_addr_n<='1;read_addr<=0;read_addr_n<='1;enc_v<=0;enc_v_n<=1;read_v<=0;read_v_n<=1;wf<=0;wf_n<=1;
    w_epoch<=0;w_epoch_n<='1;ack1<=0;ack2<=0;ackn1<='1;ackn2<='1;re1<=0;re2<=0;ren1<=0;ren2<=0;sk_v<=2'b00;sk_v_n<=2'b11;
@@ -202,8 +207,8 @@ module ot_hbm_native_sram_cdc #(parameter integer W=280,AW=4,MUT=0)(
   end
  end
  wire dest_ok_x=(we1==~wen1)&&(we1==r_epoch_x)&&(repoch_p==r_epoch_x);
- always @(posedge rclk or negedge rrst_n)begin
-  if(!rrst_n)begin
+ always @(posedge rclk or negedge rr[0])begin
+  if(!rr[0])begin
    rb<=0;rb_n<='1;rfp<=0;rfp_n<='1;rx_v<=0;rx_v_n<=1;dec_v<=0;dec_v_n<=1;out_v<=0;out_v_n<=1;rf<=0;rf_n<=1;
    r_epoch<=0;r_epoch_n<='1;pub1<=0;pub2<=0;pubn1<='1;pubn2<='1;we1<=0;we2<=0;wen1<=0;wen2<=0;
    empty_q<=1'b1;r_fault_q<=1'b0;

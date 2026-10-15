@@ -69,6 +69,7 @@
  "referenced": [
   "physical/hbm_native_sram_cdc_1014/ot_hbm_native_sram_cdc.sv",
   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+  "rtl/lib/ot_rst_relay.sv",
   "physical/hbm_native_sram_cdc_1014/deep_boundary.tcl",
   "physical/ref_tile/hbm_native_sram_cdc_w280_1014/kit.env",
   "physical/ref_tile/hbm_native_sram_cdc_w280_1014/clock.sdc",

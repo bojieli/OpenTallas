@@ -6,11 +6,11 @@
     "physical/hbm_native_sram_cdc_1014/suite.py": "2bb1b9c00db8d2caaefd368a622bf726d1b0c1ddaa1931ad40fb3fcaeb081890",
     "physical/hbm_native_sram_cdc_1014/w256_spec.json": "167a76c16249294e289393f8d4e364b952ae4f9eba71737530a1dedbf0720e33",
     "physical/hbm_native_sram_cdc_1014/tb_sram_cdc.sv": "546c59c6fb1b082fab1fea119568490cf863782f2d1cb92b09364882d6a73ada",
-    "physical/hbm_native_sram_cdc_1014/ot_hbm_native_sram_cdc.sv": "e309b720297155eed6c191b548db69d8b12b3673db28d25377c7291a0c6ae99a",
+    "physical/hbm_native_sram_cdc_1014/ot_hbm_native_sram_cdc.sv": "302a1e8a8c70e38084ab7e064cda42d37979840b44e8336360f6284700d41e0f",
     "physical/hbm_native_sram_cdc_1014/w280_spec.json": "df527408ca2aa3cf45b3886fd1ba9755050a6e5b001b2efc754097df3e80a22e",
     "physical/hbm_native_sram_cdc_1014/deep_related_domains.sdc": "be48e209e2fb2f892ec7b88bf4989f22bc5513c7490cd60389447675d36379ff",
     "physical/hbm_native_sram_cdc_1014/deep_boundary.tcl": "ee68564ef12a9fa4a7d21589918a99dafa1aa765aa8bdf4f1a74c0d637d2b75c",
-    "physical/hbm_native_sram_cdc_1014/bench.sh": "0822b9dba7955ed68586527d4e768975e5b0c3061477a6e8c66953de2be7fdd9"
+    "physical/hbm_native_sram_cdc_1014/bench.sh": "d0bdc32d5dca312c8ba5bacb20ea183f3767526649b9cf3469e95e92b93ce943"
   },
   "macro_descriptor_sha256": "6d516bd39f8d4b0b43970c35014bf855febd57e7d80157b6fd39fed3e61a362a",
   "macro_claim_boundary": "abstract views from a calibrated analytical model on measured ASAP7 bitcells and ASAP7 standard-cell FO4; no transistor layout, no SPICE of the macro, not silicon; ASAP7 is a predictive PDK and nothing here is a foundry N7 number",
@@ -25,7 +25,7 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC PASS W=16 AW=4 phase=61 reverse=0 mode=0 words=384 full_stalls=1285 empty_stalls=423 held=958 issues=384 landings=384 first_accept=4 first_sram_read=7 first_publish=8 first_visible_r=11 first_access_ps=9088.785 ce_checks=0\n",
+      "output": "SRAM_CDC PASS W=16 AW=4 phase=61 reverse=0 mode=0 words=384 full_stalls=1285 empty_stalls=426 held=955 issues=384 landings=384 first_accept=8 first_sram_read=11 first_publish=12 first_visible_r=14 first_access_ps=9088.785 ce_checks=0\n",
       "first_access_ps": 9088.785
     },
     {
@@ -38,8 +38,8 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC PASS W=16 AW=4 phase=61 reverse=1 mode=0 words=384 full_stalls=548 empty_stalls=443 held=942 issues=384 landings=384 first_accept=4 first_sram_read=7 first_publish=8 first_visible_r=16 first_access_ps=9366.563 ce_checks=0\n",
-      "first_access_ps": 9366.563
+      "output": "SRAM_CDC PASS W=16 AW=4 phase=61 reverse=1 mode=0 words=384 full_stalls=548 empty_stalls=445 held=940 issues=384 landings=384 first_accept=6 first_sram_read=9 first_publish=10 first_visible_r=18 first_access_ps=8811.007 ce_checks=0\n",
+      "first_access_ps": 8811.007
     },
     {
       "case": "exact_w16_p487_r0",
@@ -51,7 +51,7 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC PASS W=16 AW=4 phase=487 reverse=0 mode=0 words=384 full_stalls=1278 empty_stalls=423 held=958 issues=384 landings=384 first_accept=3 first_sram_read=6 first_publish=7 first_visible_r=11 first_access_ps=9237.007 ce_checks=0\n",
+      "output": "SRAM_CDC PASS W=16 AW=4 phase=487 reverse=0 mode=0 words=384 full_stalls=1278 empty_stalls=426 held=955 issues=384 landings=384 first_accept=7 first_sram_read=10 first_publish=11 first_visible_r=14 first_access_ps=9237.007 ce_checks=0\n",
       "first_access_ps": 9237.007
     },
     {
@@ -64,7 +64,7 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC PASS W=16 AW=4 phase=487 reverse=1 mode=0 words=384 full_stalls=549 empty_stalls=441 held=944 issues=384 landings=384 first_accept=3 first_sram_read=6 first_publish=7 first_visible_r=15 first_access_ps=9237.007 ce_checks=0\n",
+      "output": "SRAM_CDC PASS W=16 AW=4 phase=487 reverse=1 mode=0 words=384 full_stalls=549 empty_stalls=445 held=940 issues=384 landings=384 first_accept=6 first_sram_read=9 first_publish=10 first_visible_r=19 first_access_ps=9237.007 ce_checks=0\n",
       "first_access_ps": 9237.007
     },
     {
@@ -77,7 +77,7 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC PASS W=280 AW=4 phase=61 reverse=0 mode=0 words=384 full_stalls=1285 empty_stalls=423 held=958 issues=384 landings=384 first_accept=4 first_sram_read=7 first_publish=8 first_visible_r=11 first_access_ps=9088.785 ce_checks=0\n",
+      "output": "SRAM_CDC PASS W=280 AW=4 phase=61 reverse=0 mode=0 words=384 full_stalls=1285 empty_stalls=426 held=955 issues=384 landings=384 first_accept=8 first_sram_read=11 first_publish=12 first_visible_r=14 first_access_ps=9088.785 ce_checks=0\n",
       "first_access_ps": 9088.785
     },
     {
@@ -90,8 +90,8 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC PASS W=280 AW=4 phase=61 reverse=1 mode=0 words=384 full_stalls=548 empty_stalls=443 held=942 issues=384 landings=384 first_accept=4 first_sram_read=7 first_publish=8 first_visible_r=16 first_access_ps=9366.563 ce_checks=0\n",
-      "first_access_ps": 9366.563
+      "output": "SRAM_CDC PASS W=280 AW=4 phase=61 reverse=1 mode=0 words=384 full_stalls=548 empty_stalls=445 held=940 issues=384 landings=384 first_accept=6 first_sram_read=9 first_publish=10 first_visible_r=18 first_access_ps=8811.007 ce_checks=0\n",
+      "first_access_ps": 8811.007
     },
     {
       "case": "exact_w280_p487_r0",
@@ -103,7 +103,7 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC PASS W=280 AW=4 phase=487 reverse=0 mode=0 words=384 full_stalls=1278 empty_stalls=423 held=958 issues=384 landings=384 first_accept=3 first_sram_read=6 first_publish=7 first_visible_r=11 first_access_ps=9237.007 ce_checks=0\n",
+      "output": "SRAM_CDC PASS W=280 AW=4 phase=487 reverse=0 mode=0 words=384 full_stalls=1278 empty_stalls=426 held=955 issues=384 landings=384 first_accept=7 first_sram_read=10 first_publish=11 first_visible_r=14 first_access_ps=9237.007 ce_checks=0\n",
       "first_access_ps": 9237.007
     },
     {
@@ -116,7 +116,7 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC PASS W=280 AW=4 phase=487 reverse=1 mode=0 words=384 full_stalls=549 empty_stalls=441 held=944 issues=384 landings=384 first_accept=3 first_sram_read=6 first_publish=7 first_visible_r=15 first_access_ps=9237.007 ce_checks=0\n",
+      "output": "SRAM_CDC PASS W=280 AW=4 phase=487 reverse=1 mode=0 words=384 full_stalls=549 empty_stalls=445 held=940 issues=384 landings=384 first_accept=6 first_sram_read=9 first_publish=10 first_visible_r=19 first_access_ps=9237.007 ce_checks=0\n",
       "first_access_ps": 9237.007
     },
     {
@@ -129,7 +129,7 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC PASS W=256 AW=4 phase=61 reverse=0 mode=0 words=384 full_stalls=1285 empty_stalls=423 held=958 issues=384 landings=384 first_accept=4 first_sram_read=7 first_publish=8 first_visible_r=11 first_access_ps=9088.785 ce_checks=0\n",
+      "output": "SRAM_CDC PASS W=256 AW=4 phase=61 reverse=0 mode=0 words=384 full_stalls=1285 empty_stalls=426 held=955 issues=384 landings=384 first_accept=8 first_sram_read=11 first_publish=12 first_visible_r=14 first_access_ps=9088.785 ce_checks=0\n",
       "first_access_ps": 9088.785
     },
     {
@@ -142,8 +142,8 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC PASS W=256 AW=4 phase=61 reverse=1 mode=0 words=384 full_stalls=548 empty_stalls=443 held=942 issues=384 landings=384 first_accept=4 first_sram_read=7 first_publish=8 first_visible_r=16 first_access_ps=9366.563 ce_checks=0\n",
-      "first_access_ps": 9366.563
+      "output": "SRAM_CDC PASS W=256 AW=4 phase=61 reverse=1 mode=0 words=384 full_stalls=548 empty_stalls=445 held=940 issues=384 landings=384 first_accept=6 first_sram_read=9 first_publish=10 first_visible_r=18 first_access_ps=8811.007 ce_checks=0\n",
+      "first_access_ps": 8811.007
     },
     {
       "case": "exact_w256_p487_r0",
@@ -155,7 +155,7 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC PASS W=256 AW=4 phase=487 reverse=0 mode=0 words=384 full_stalls=1278 empty_stalls=423 held=958 issues=384 landings=384 first_accept=3 first_sram_read=6 first_publish=7 first_visible_r=11 first_access_ps=9237.007 ce_checks=0\n",
+      "output": "SRAM_CDC PASS W=256 AW=4 phase=487 reverse=0 mode=0 words=384 full_stalls=1278 empty_stalls=426 held=955 issues=384 landings=384 first_accept=7 first_sram_read=10 first_publish=11 first_visible_r=14 first_access_ps=9237.007 ce_checks=0\n",
       "first_access_ps": 9237.007
     },
     {
@@ -168,7 +168,7 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC PASS W=256 AW=4 phase=487 reverse=1 mode=0 words=384 full_stalls=549 empty_stalls=441 held=944 issues=384 landings=384 first_accept=3 first_sram_read=6 first_publish=7 first_visible_r=15 first_access_ps=9237.007 ce_checks=0\n",
+      "output": "SRAM_CDC PASS W=256 AW=4 phase=487 reverse=1 mode=0 words=384 full_stalls=549 empty_stalls=445 held=940 issues=384 landings=384 first_accept=6 first_sram_read=9 first_publish=10 first_visible_r=19 first_access_ps=9237.007 ce_checks=0\n",
       "first_access_ps": 9237.007
     },
     {
@@ -181,7 +181,7 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC PASS W=1 AW=4 phase=61 reverse=0 mode=0 words=384 full_stalls=1285 empty_stalls=423 held=958 issues=384 landings=384 first_accept=4 first_sram_read=7 first_publish=8 first_visible_r=11 first_access_ps=9088.785 ce_checks=0\n",
+      "output": "SRAM_CDC PASS W=1 AW=4 phase=61 reverse=0 mode=0 words=384 full_stalls=1285 empty_stalls=426 held=955 issues=384 landings=384 first_accept=8 first_sram_read=11 first_publish=12 first_visible_r=14 first_access_ps=9088.785 ce_checks=0\n",
       "first_access_ps": 9088.785
     },
     {
@@ -194,8 +194,8 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC PASS W=1 AW=4 phase=61 reverse=1 mode=0 words=384 full_stalls=548 empty_stalls=443 held=942 issues=384 landings=384 first_accept=4 first_sram_read=7 first_publish=8 first_visible_r=16 first_access_ps=9366.563 ce_checks=0\n",
-      "first_access_ps": 9366.563
+      "output": "SRAM_CDC PASS W=1 AW=4 phase=61 reverse=1 mode=0 words=384 full_stalls=548 empty_stalls=445 held=940 issues=384 landings=384 first_accept=6 first_sram_read=9 first_publish=10 first_visible_r=18 first_access_ps=8811.007 ce_checks=0\n",
+      "first_access_ps": 8811.007
     },
     {
       "case": "exact_w1_p487_r0",
@@ -207,7 +207,7 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC PASS W=1 AW=4 phase=487 reverse=0 mode=0 words=384 full_stalls=1278 empty_stalls=423 held=958 issues=384 landings=384 first_accept=3 first_sram_read=6 first_publish=7 first_visible_r=11 first_access_ps=9237.007 ce_checks=0\n",
+      "output": "SRAM_CDC PASS W=1 AW=4 phase=487 reverse=0 mode=0 words=384 full_stalls=1278 empty_stalls=426 held=955 issues=384 landings=384 first_accept=7 first_sram_read=10 first_publish=11 first_visible_r=14 first_access_ps=9237.007 ce_checks=0\n",
       "first_access_ps": 9237.007
     },
     {
@@ -220,7 +220,7 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC PASS W=1 AW=4 phase=487 reverse=1 mode=0 words=384 full_stalls=549 empty_stalls=441 held=944 issues=384 landings=384 first_accept=3 first_sram_read=6 first_publish=7 first_visible_r=15 first_access_ps=9237.007 ce_checks=0\n",
+      "output": "SRAM_CDC PASS W=1 AW=4 phase=487 reverse=1 mode=0 words=384 full_stalls=549 empty_stalls=445 held=940 issues=384 landings=384 first_accept=6 first_sram_read=9 first_publish=10 first_visible_r=19 first_access_ps=9237.007 ce_checks=0\n",
       "first_access_ps": 9237.007
     },
     {
@@ -233,7 +233,7 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC PASS W=280 AW=4 phase=0 reverse=0 mode=0 words=384 full_stalls=1285 empty_stalls=423 held=958 issues=384 landings=384 first_accept=4 first_sram_read=7 first_publish=8 first_visible_r=11 first_access_ps=9027.785 ce_checks=0\n",
+      "output": "SRAM_CDC PASS W=280 AW=4 phase=0 reverse=0 mode=0 words=384 full_stalls=1285 empty_stalls=426 held=955 issues=384 landings=384 first_accept=8 first_sram_read=11 first_publish=12 first_visible_r=14 first_access_ps=9027.785 ce_checks=0\n",
       "first_access_ps": 9027.785
     },
     {
@@ -246,7 +246,7 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC PASS W=280 AW=4 phase=61 reverse=0 mode=1 words=384 full_stalls=1285 empty_stalls=423 held=958 issues=384 landings=384 first_accept=4 first_sram_read=7 first_publish=8 first_visible_r=11 first_access_ps=9088.785 ce_checks=2\n",
+      "output": "SRAM_CDC PASS W=280 AW=4 phase=61 reverse=0 mode=1 words=384 full_stalls=1285 empty_stalls=426 held=955 issues=384 landings=384 first_accept=8 first_sram_read=11 first_publish=12 first_visible_r=14 first_access_ps=9088.785 ce_checks=2\n",
       "first_access_ps": 9088.785
     },
     {
@@ -295,7 +295,7 @@
       "expect": "pass",
       "returncode": 0,
       "expectation_met": true,
-      "output": "SRAM_CDC_BOUNDARY PASS source control rail fail closed\nSRAM_CDC PASS W=280 AW=4 phase=487 reverse=0 mode=3 words=384 full_stalls=1278 empty_stalls=424 held=958 issues=384 landings=384 first_accept=3 first_sram_read=6 first_publish=7 first_visible_r=11 first_access_ps=9237.007 ce_checks=0\n",
+      "output": "SRAM_CDC_BOUNDARY PASS source control rail fail closed\nSRAM_CDC PASS W=280 AW=4 phase=487 reverse=0 mode=3 words=384 full_stalls=1278 empty_stalls=427 held=955 issues=384 landings=384 first_accept=7 first_sram_read=10 first_publish=11 first_visible_r=14 first_access_ps=9237.007 ce_checks=0\n",
       "first_access_ps": 9237.007
     },
     {
@@ -380,7 +380,7 @@
       "expect": "fail",
       "returncode": 1,
       "expectation_met": true,
-      "output": "FATAL: physical/hbm_native_sram_cdc_1014/tb_sram_cdc.sv:81: LOGICAL_CAPACITY accepted=17 consumed=0 D=16\n       Time: 20416683 Scope: tb_sram_cdc\n"
+      "output": "FATAL: physical/hbm_native_sram_cdc_1014/tb_sram_cdc.sv:81: LOGICAL_CAPACITY accepted=17 consumed=0 D=16\n       Time: 23750019 Scope: tb_sram_cdc\n"
     }
   ],
   "model_price_184_inherited": false,

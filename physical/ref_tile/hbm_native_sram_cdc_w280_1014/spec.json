@@ -4,7 +4,8 @@
  "kind": "tile",
  "sources": [
   "physical/hbm_native_sram_cdc_1014/ot_hbm_native_sram_cdc.sv",
-  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+  "rtl/lib/ot_rst_relay.sv"
  ],
  "params": {
   "W": 280,

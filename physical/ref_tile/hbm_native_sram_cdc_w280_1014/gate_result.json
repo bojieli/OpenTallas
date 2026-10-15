@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "hbm_native_sram_cdc_w280_1014",
  "verdict": "WARN",
- "generated": "2026-10-14T17:14:04-0700",
- "host": "ot-epyc4",
+ "generated": "2026-10-14T17:47:02-0700",
+ "host": "ot-epyc1tb",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "c0d1749132be494e3dee78a3832280e7161923c8",
+  "start_commit": "4daadb4622bfd18355094002e3954195eeac3e7f",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "37318f2cac2699001998056a8988e36d281a7617540827cb45bb12d2de2b3c61",
-  "manifest_sha256": "acb21181b7a23d61c84a0ddb81247c73934c73b8e6dbdc55c26c30ae00a520a0",
+  "archive_sha256": "47ed37f5005a4fd02091b54081e2e2f01a330fffd495858f65ad754366ec82e0",
+  "manifest_sha256": "a56af6258bba00020f4c919c06d2fce9752322c9416beab1ddabdef2a12f0fff",
   "files": [
    {
     "path": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.json",
@@ -645,6 +645,14 @@
     "kind": "file",
     "sha256": "ddf4a79f2a5293699b4211a7353cd84f872f8f459562cf7ad6b96a6b2ea0d863",
     "git_blob": "47c7e34a41c6bcc86bc576a662d09ff57e31e015",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/hbm_native_bounded_cdc_1014/cdc_arcs.sdc",
+    "kind": "file",
+    "sha256": "32b484f913f0c467adee2336e0e3a4273762ed092a582f13214d059ffefc4f0e",
+    "git_blob": "12504d6e8337ac63a674c1b5c7981ef80115333d",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -18011,16 +18019,16 @@
    {
     "path": "physical/ref_tile/hbm_native_sram_cdc_w280_1014/clock.sdc",
     "kind": "file",
-    "sha256": "69a91fe0c8b81d633bcdbb523c125024aaf732a383279c11261e2b8d30a5ec16",
-    "git_blob": "ae8651c58c427867790b3750154b0123ea0366e4",
+    "sha256": "f678bef6564e34b5c8a5e0eff27a26c71aab69dedd6dd5d3ded90a49644d5b4b",
+    "git_blob": "71c1b9c6dc7d13f0ab1584a8f4f557f1c1c67ee6",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/hbm_native_sram_cdc_w280_1014/floorplan.json",
     "kind": "file",
-    "sha256": "8f3cadd073015ee6ad1942ae59969052cdc5a47da0a1aeae0054c4519ca066f8",
-    "git_blob": "38ba405610622ad43e777ccba2a7cca2af8199d6",
+    "sha256": "9a097511bcf52f0a0f350e96c98463fbff8e8a81d23dce11bfc3d1c907cc8038",
+    "git_blob": "b619ba6ed49fa46137095d464b60ddb7280f256d",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -18067,8 +18075,8 @@
    {
     "path": "physical/ref_tile/hbm_native_sram_cdc_w280_1014/post_drt.tcl",
     "kind": "file",
-    "sha256": "0472dd119c0cf56e2a18da82c7555473cb78db3fde88cac4db5d2c19b50679fb",
-    "git_blob": "b78d43aabea8bd3cc7fc739a32973d2a7f08f448",
+    "sha256": "9d9fed2b29d8c339f99afde168f70dc8e5eac24e8c2356bf06e0de0633e17cbd",
+    "git_blob": "f6312295461b1e097d757164fac87c8c134f5fad",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -18131,24 +18139,24 @@
    {
     "path": "physical/ref_tile/hbm_native_sram_cdc_w280_1014/pre_grt.tcl",
     "kind": "file",
-    "sha256": "b3c2d8c42345e293e3a4881604b0478937656d7893a0b24895ca094ba9388e16",
-    "git_blob": "5e1f2e4d1b02a4367688e3932f0e89548c097a78",
+    "sha256": "c9f7bef5342e4a46bf0962e30e25f4903e5574dc4c7e39ab867c62ccd956312a",
+    "git_blob": "48aadf69e1ba39f7267f05f2f4b59c2af8cf6965",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/hbm_native_sram_cdc_w280_1014/signoff.sdc",
     "kind": "file",
-    "sha256": "5d7262c31c91e21f68de954806567a13046e540bf77a8f9c714c5fb56ad50185",
-    "git_blob": "6d349fc3d3957f34e5f7b6dc8cbeefca88d49190",
+    "sha256": "0f40330bcd71f1ce5b28ce6382ecd40e9b0482f1cf4a42f1ba700a13dcd5a99a",
+    "git_blob": "de2d3d7687814115f3a71498864e3deb6ad25313",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/hbm_native_sram_cdc_w280_1014/spec.json",
     "kind": "file",
-    "sha256": "3985bb441459f6434d491080d42cc5ec2d53e3b5ac1006f67362f0da4d6eb083",
-    "git_blob": "dbd4c7d4190554a0181e8455fb2f70be2985e238",
+    "sha256": "fa06f71525d5595cd713c54eb8242383ae42c4ca091fb54dc9673b6d9262d6c0",
+    "git_blob": "0914e21e9376e47ed01540d8cb172bdbeb125250",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -116331,7 +116339,7 @@
   ],
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "df38ffc3987440140c031547c3f175da285b06c7",
+   "origin_main": "f412d09b4b4e4506c9b6c96b0532649054a3b639",
    "content_sha256": "3aa06e8a1032dc99d562bed65137a274b594aaf57a13b24cb79440b848b5e115",
    "files": [
     {
@@ -116704,11 +116712,11 @@
     }
    ]
   },
-  "captured": "2026-10-14T16:40:50-0700",
-  "remote_script_sha256": "184770b3a8b69691eb131289a3e3f3868149583faf146605cffefd252d48dbe3",
+  "captured": "2026-10-14T17:30:11-0700",
+  "remote_script_sha256": "b3493e69a7a6351ed59798cad7f1ce64a2161754e27046f23708d55939ee1501",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc4",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_native_sram_cdc_w280_1014-20261014-164022",
+  "remote_host": "ot-epyc1tb",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_native_sram_cdc_w280_1014-20261014-172948",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -116719,8 +116727,8 @@
   "max_root_sinks": 4952,
   "root": "port:rclk",
   "cts": true,
-  "tt_insertion_ps": 276.7,
-  "tt_spread_ps": 38.1,
+  "tt_insertion_ps": 273.4,
+  "tt_spread_ps": 39.0,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
@@ -116734,30 +116742,30 @@
     "tt": {
      "boundary": {
       "n": 611,
-      "mean": 291.3,
-      "min": 263.0,
-      "max": 354.3
+      "mean": 286.4,
+      "min": 255.4,
+      "max": 339.8
      },
      "all": {
       "n": 4679,
-      "mean": 286.9,
-      "min": 250.9,
-      "max": 354.9
+      "mean": 283.1,
+      "min": 251.3,
+      "max": 344.6
      },
      "errors": [],
      "macros": {
       "n": 1,
       "nets": 1,
       "max_per_net": 1,
-      "reg_mean": 286.9,
-      "max_slew": 14.0,
-      "max_late": -15.1,
+      "reg_mean": 283.1,
+      "max_slew": 14.4,
+      "max_late": -14.0,
       "pins": [
        {
         "pin": "u_sram/clk",
-        "arr": 271.8,
-        "slew": 14.0,
-        "late": -15.1,
+        "arr": 269.1,
+        "slew": 14.4,
+        "late": -14.0,
         "net": "clknet_1_0__leaf_wclk"
        }
       ]
@@ -116771,15 +116779,15 @@
     "tt": {
      "boundary": {
       "n": 554,
-      "mean": 257.7,
-      "min": 239.8,
-      "max": 270.6
+      "mean": 253.1,
+      "min": 239.3,
+      "max": 264.0
      },
      "all": {
       "n": 5232,
-      "mean": 254.0,
-      "min": 238.6,
-      "max": 276.7
+      "mean": 250.4,
+      "min": 234.4,
+      "max": 273.4
      },
      "errors": [],
      "macros": null,
@@ -116789,7 +116797,7 @@
   ],
   "measured_clock": "vm_clk",
   "verdict": "PASS",
-  "text": "4,952 sinks on the largest root <= 15,000; measured TT insertion 276.7 ps, leaf spread 38.1 ps"
+  "text": "4,952 sinks on the largest root <= 15,000; measured TT insertion 273.4 ps, leaf spread 39.0 ps"
  },
  "items": [
   {
@@ -116813,7 +116821,7 @@
   {
    "severity": "WARN",
    "check": "textbook.util_channel",
-   "message": "utilisation 38.0% outside 45%-65% (std 5623 + macro 13319 um2 in 49857 um2): shrink the outline (long wires / sparse placement)",
+   "message": "utilisation 38.0% outside 45%-65% (std 5621 + macro 13319 um2 in 49857 um2): shrink the outline (long wires / sparse placement)",
    "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
   }
  ]
