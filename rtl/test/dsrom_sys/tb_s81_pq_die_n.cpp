@@ -103,9 +103,9 @@ int main(int argc,char**argv){
             pa0=r.rom_pa0;pa1=r.rom_pa1;sa=r.rom_sa;
             if(c>=32){
                 compared++;
-                const uint32_t* ti=d.t_iss.data();
-                bool mm=bits(ti,0,1)!=r.ready||bits(ti,1,1)!=r.idle||bits(ti,2,1)!=r.fault||bits(ti,3,32)!=r.phase_cycles
-                    ||bits(ti,35,1)!=r.ev_go||bits(ti,36,1)!=r.ev_end||bits(ti,37,2)!=r.ev_tag
+                uint64_t ti=d.t_iss;
+                bool mm=(ti&1)!=r.ready||((ti>>1)&1)!=r.idle||((ti>>2)&1)!=r.fault||((ti>>3)&0xffffffffull)!=r.phase_cycles
+                    ||((ti>>35)&1)!=r.ev_go||((ti>>36)&1)!=r.ev_end||((ti>>37)&3)!=r.ev_tag
                     ||(d.t_vm&1)!=r.x_re||((d.t_vm>>1)&0x7ffff)!=r.x_addr
                     ||(d.ra0&1023)!=r.rom_pa0||(d.ra1&1023)!=r.rom_pa1||(d.ra2&2047)!=r.rom_sa||(d.ra0>>10)||(d.ra1>>10)||(d.ra2>>11)
                     ||!d.rc0||!d.rc1||!d.rc2||std::memcmp(r.mdr_o.data(),d.t_cnt.data(),14*4)||bits(r.mdr_o.data(),448,10)!=bits(d.t_cnt.data(),448,10);
