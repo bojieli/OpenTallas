@@ -1,0 +1,5 @@
+FULL_EMBED token0 rows640 hops641 cycles1377 PASS
+FULL_EMBED token12 rows640 hops641 cycles1377 PASS
+[37360000] %Fatal: tb_s81_embed_full_table.sv:36: Assertion failed in tb_s81_embed_full_table: native result mismatch token25 row384 age972
+%Error: /srv/opentallas-scratch/codex/s81-full-embedding-1014/src/rtl/dsrom_sys/s81_embedding/tb_s81_embed_full_table.sv:36: Verilog $stop
+Aborting...

@@ -1,0 +1,18 @@
+FULL_EMBED token0 rows640 hops641 cycles1377 PASS
+FULL_EMBED token12 rows640 hops641 cycles1377 PASS
+FULL_EMBED token25 rows640 hops641 cycles1377 PASS
+FULL_EMBED token10777 rows640 hops641 cycles1377 PASS
+FULL_EMBED token21555 rows640 hops641 cycles1377 PASS
+FULL_EMBED token32319 rows640 hops641 cycles1377 PASS
+FULL_EMBED token32320 rows640 hops641 cycles1377 PASS
+FULL_EMBED token64640 rows640 hops641 cycles1377 PASS
+FULL_EMBED token96960 rows640 hops641 cycles1377 PASS
+FULL_EMBED token129279 rows640 hops641 cycles1377 PASS
+FULL_EMBED token16754 rows640 hops641 cycles1377 PASS
+FULL_EMBED token21946 rows640 hops641 cycles1377 PASS
+FULL_EMBED token128799 rows640 hops641 cycles1377 PASS
+S81_FULL_EMBED PASS actual5052residentROMs allvocab boundary identities
+- /srv/opentallas-scratch/codex/s81-full-embedding-1014/src/rtl/dsrom_sys/s81_embedding/tb_s81_embed_full_table.sv:46: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 179us; walltime 426.801 s; speed 420.445 ns/s
+- Verilator: cpu 426.762 s on 1 threads; alloced 2430 MB

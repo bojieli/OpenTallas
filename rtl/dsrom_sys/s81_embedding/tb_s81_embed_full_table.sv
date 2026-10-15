@@ -3,7 +3,7 @@ module tb_s81_embed_full_table #(parameter integer MUTANT=0);
  reg clk=0,rst_n=0,start=0;
  reg [16:0] token=0;
  reg [13:0] vm_base=17;
- reg [511:0] header=512'h1234;
+ reg [511:0] header=512'h0;
  wire busy,done,fault,vm_v,hop_v,hop_last;
  wire [13:0] vm_row;
  wire [511:0] vm_d,hop_d;
