@@ -106,10 +106,13 @@ module tb_hbm_kp4_linear_eq;
                 if (nerr_of[cur_f] <= 15) begin if (cur_bad || cur_unc) bad = bad + 1; else ok_fr = ok_fr + 1; if (cur_ne != nerr_of[cur_f] && !cur_unc) nerr_bad = nerr_bad + 1; end
                 else if (cur_unc) unc_ok = unc_ok + 1; else if (cur_bad) miscorr = miscorr + 1; else ok_fr = ok_fr + 1;
             end
-            // frame index from the sequence (frames go out in order; the first decoded frame fixes the 256-window)
+            // An explicitly uncorrectable frame carries invalid metadata. Require
+            // exact sequence for corrected/clean frames; compare ALL metadata
+            // against unchanged legacy RTL every edge above, including unc.
+            // Frame order fixes the expected index independently of bad metadata.
             if (base < 0) base = q_seq;
             cur_f = (of < 0) ? q_seq : cur_f + 1;
-            if (of >= 0 && (cur_f % 256) != q_seq) begin bad = bad + 1; $display("ERR sequence %0d expected %0d", q_seq, cur_f % 256); end
+            if (of >= 0 && !q_unc && (cur_f % 256) != q_seq) begin bad = bad + 1; $display("ERR sequence %0d expected %0d", q_seq, cur_f % 256); end
             of = of + 1; ob_ = 0; cur_unc = q_unc; cur_ne = q_nerr; cur_bad = 0; frames_out = frames_out + 1;
         end
         if (q_d !== sent[10 * cur_f + ob_]) cur_bad = 1;
