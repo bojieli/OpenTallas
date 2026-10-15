@@ -1,0 +1,114 @@
+{
+  "source_module": "ot_hgi_coll_control256_program",
+  "source_sha256": "25dcd51a52b5ff57aac1804725844f707db9d953a1e4895eaf3c3af4a3659bcc",
+  "parameters": {
+    "NBANKS": 19,
+    "QID": 0,
+    "TARGET": 120
+  },
+  "ports": {
+    "clk_control": {
+      "direction": "input",
+      "width": 1
+    },
+    "clk_mem": {
+      "direction": "input",
+      "width": 19
+    },
+    "clk_capture": {
+      "direction": "input",
+      "width": 19
+    },
+    "rst_n": {
+      "direction": "input",
+      "width": 1
+    },
+    "cfg_v": {
+      "direction": "input",
+      "width": 1
+    },
+    "cfg_target": {
+      "direction": "input",
+      "width": 8
+    },
+    "cfg_addr": {
+      "direction": "input",
+      "width": 12
+    },
+    "cfg_data": {
+      "direction": "input",
+      "width": 256
+    },
+    "desc_v": {
+      "direction": "input",
+      "width": 1
+    },
+    "desc_base": {
+      "direction": "input",
+      "width": 12
+    },
+    "desc_limit": {
+      "direction": "input",
+      "width": 13
+    },
+    "desc_loops": {
+      "direction": "input",
+      "width": 16
+    },
+    "launch_v": {
+      "direction": "input",
+      "width": 1
+    },
+    "program_active": {
+      "direction": "input",
+      "width": 1
+    },
+    "configured": {
+      "direction": "output",
+      "width": 1
+    },
+    "init_busy": {
+      "direction": "output",
+      "width": 1
+    },
+    "busy": {
+      "direction": "output",
+      "width": 1
+    },
+    "done": {
+      "direction": "output",
+      "width": 1
+    },
+    "fault": {
+      "direction": "output",
+      "width": 1
+    },
+    "control_v": {
+      "direction": "output",
+      "width": 1
+    },
+    "control": {
+      "direction": "output",
+      "width": 256
+    },
+    "control_cycle": {
+      "direction": "output",
+      "width": 13
+    }
+  },
+  "input_bits_excluding_clock_reset": 321,
+  "output_bits": 275,
+  "clock_pins": {
+    "clk_control": 1,
+    "clk_mem": 19,
+    "clk_capture": 19
+  },
+  "clock_roots": 39,
+  "root_sink_bounds": {
+    "controller": 5216,
+    "native_memory_leaf_each": "512FFplus1hardmacroclock",
+    "capture_leaf_each": 512
+  },
+  "rawhost_type": "sameactual320bitF20cfg/descriptor/launchbroadcast plusactualprogram_active",
+  "physical_qualification": "no mappedarea/pinslot/clockinsertion/TTFFroute claim"
+}

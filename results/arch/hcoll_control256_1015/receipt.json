@@ -1,0 +1,81 @@
+{
+  "source_commit": "79037c152",
+  "source_sha256": "25dcd51a52b5ff57aac1804725844f707db9d953a1e4895eaf3c3af4a3659bcc",
+  "module": "ot_hgi_coll_control256_program",
+  "typed_targets": [
+    120,
+    121,
+    122,
+    123
+  ],
+  "normative_operation": "explicitopt-in ENGRAMcontrol256, notoldG25A.HBM/HBMEG_STG/EG_LIST alias",
+  "shape": {
+    "actual_native_64x512_macros": 19,
+    "actual_input_capture_leaves": 19,
+    "logical_clock_roots": 39,
+    "capacity_controls": 2432,
+    "operation_bits": 256,
+    "meaningful_bits": 238,
+    "zero_reserved_bits_each": 18
+  },
+  "initialization": "raw256 hostframes addrcontrolordinal=512word*2+half;completepairs,evenbase,exclusive13bitlimit,loops1;1216edgevalidscan,1218descriptorgap,2wordgap",
+  "runtime_measured_from_raw_launch_capture": {
+    "first_control_output": 6,
+    "first_consumer_capture": 7,
+    "sustained_controls_per_edge": 1,
+    "done": "exactlastcontrol",
+    "outsidevalid": "registeredzero"
+  },
+  "LCP_timeline_analytical": {
+    "LCPproducerFFQ": "afterP",
+    "overlaylaunchFFQ": "afterP+1",
+    "rawtargetcapture": "P+2",
+    "firstcontrolFFQ": "afterP+8",
+    "firstconsumer": "P+9"
+  },
+  "final_source_exact_controls": {
+    "synthetic_and_tail": 12639,
+    "actual18images": 75744,
+    "total": 88383,
+    "exact_bits": 22626048
+  },
+  "actual_images": "layer1+layer14,n0..8,2424usedopsandbase640 replay;all2432framesloaded/8tailpaddingzero; raw/packedsha256 inactual_engram_inputs.json",
+  "protocol_faults": 17,
+  "mutants": [
+    "bit0outputcorruption rejected intendedCONTROLmismatch",
+    "swapped256bhalves rejected intendedCONTROLmismatch"
+  ],
+  "source_exact_terminal_runs": [
+    {
+      "unit": "oth-ubuntu-3848618-1792057103",
+      "host": "ot-agidock128",
+      "exit": 0,
+      "scope": "finalsource full19bank positive+17faults+2mutants"
+    },
+    {
+      "unit": "oth-ubuntu-3850618-1792057202",
+      "host": "ot-agidock128",
+      "exit": 0,
+      "scope": "finalsource 18actualimages+2423odd+1op+2424"
+    }
+  ],
+  "memory": "8GB admittedbuild,4GB admittedruns; simulationreported7MB, cgrouppeaknotretained; no peakclaim",
+  "independent_host_serializer_receipt": "h_vm commitf260df5f7 results/arch/hbm_vm_calendar_1015/engram_native_host_frames.json:actual18images43776rawcontrolsCSRroundtrip; separateAXI/kernelgate notclaimed",
+  "physical": "sourcepinheader39roots/input321/output275,controllerbound5216/nativeleaf512FF+macro/capture512FF; no area/slot/TTFFroute qualification",
+  "remaining": [
+    "actual9node packetizer/FEC/CDC/receiver arithmetic integration ownedstatic_ring",
+    "canonicalENGRAM_FETCH_ROWS8 lowering andactualWKVconsumer binding",
+    "productionlayer/tokenratequalification",
+    "actualfullhostoverlayLCP numericaljoin",
+    "physicaltiming/geometry/clockinsertion"
+  ],
+  "sha256": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_control256_program.sv": "25dcd51a52b5ff57aac1804725844f707db9d953a1e4895eaf3c3af4a3659bcc",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer.sv": "bcc5a2ca21788b0a312266a5a4b8533b652081c16695897bc8f9152b52362f42",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_control256_program.sv": "6ed554a1285cfe7a8163142b8959cb6e2b840fac0f8398b18bf2fa86b7a24627",
+    "rtl/hbm_accel/generic/collective/p2p/run_control256_program_bench.sh": "1957fc4313dcb77a187d826f1a1f2f501f74626c254c1ac8422338c27504afb9",
+    "rtl/hbm_accel/generic/collective/p2p/run_control256_program_mutants.sh": "e4449534d627145ff02ac04029a457b52e04e2ff4e4713672851a2c9d5723371",
+    "rtl/hbm_accel/generic/collective/p2p/control256_layout.json": "064e3069f1546e189f10202b1bf9280ac73a856661aa330dd0c903fd290a67a3",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145"
+  }
+}

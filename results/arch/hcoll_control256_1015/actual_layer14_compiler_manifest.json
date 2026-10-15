@@ -1,0 +1,122 @@
+{
+  "status": "PRELIMINARY_TYPED_EXTENSION",
+  "layer": 14,
+  "target": 120,
+  "version": "Engramcontrol256",
+  "banks": 19,
+  "operations_per_word": 2,
+  "launch": 399,
+  "first_consumer": 406,
+  "limit": 2424,
+  "cycles": 2833,
+  "checks": {
+    "status": "PASS compiledtypedfieldaudit",
+    "hops": 540,
+    "packets": 120,
+    "sectors": 216
+  },
+  "fields": {
+    "capture": {
+      "lsb": 0,
+      "width": 10
+    },
+    "sink": {
+      "lsb": 10,
+      "width": 16
+    },
+    "select": {
+      "lsb": 26,
+      "width": 64
+    },
+    "wr": {
+      "lsb": 90,
+      "width": 1
+    },
+    "wrseq": {
+      "lsb": 91,
+      "width": 16
+    },
+    "rd": {
+      "lsb": 107,
+      "width": 1
+    },
+    "rdseq": {
+      "lsb": 108,
+      "width": 16
+    },
+    "rx": {
+      "lsb": 124,
+      "width": 1
+    },
+    "rxseq": {
+      "lsb": 125,
+      "width": 16
+    },
+    "bridge": {
+      "lsb": 141,
+      "width": 49
+    },
+    "srcread": {
+      "lsb": 190,
+      "width": 1
+    },
+    "srcrow": {
+      "lsb": 191,
+      "width": 5
+    },
+    "srcsector": {
+      "lsb": 196,
+      "width": 4
+    },
+    "pkt_expect": {
+      "lsb": 200,
+      "width": 1
+    },
+    "pkt_low": {
+      "lsb": 201,
+      "width": 1
+    },
+    "pkt_pub": {
+      "lsb": 202,
+      "width": 1
+    },
+    "pkt_row": {
+      "lsb": 203,
+      "width": 5
+    },
+    "pkt_pair": {
+      "lsb": 208,
+      "width": 3
+    },
+    "asm_expect": {
+      "lsb": 211,
+      "width": 1
+    },
+    "asm_row": {
+      "lsb": 212,
+      "width": 5
+    },
+    "asm_pair": {
+      "lsb": 217,
+      "width": 3
+    },
+    "asm_home": {
+      "lsb": 220,
+      "width": 8
+    },
+    "consumer_read": {
+      "lsb": 228,
+      "width": 1
+    },
+    "consumer_row": {
+      "lsb": 229,
+      "width": 5
+    },
+    "consumer_sector": {
+      "lsb": 234,
+      "width": 4
+    }
+  },
+  "source_sha256": "1183e7e4c63a55be8a73d9864562a528ca0156b68bf890a8fd0c4a70cac8ff73",
+  "qualification": "Actual two-rate crossing proof and native8source/1consumer chain run pending; not unchangedG25A/HBM join or physical qualification"
+}
