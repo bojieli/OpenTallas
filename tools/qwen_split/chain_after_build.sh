@@ -15,7 +15,9 @@ cat SOURCE_COMMIT > $R/case_r22k/SOURCE_COMMIT
 # ~2 s per instance grid: the r5 case PDN of C3 ran > 5 h); the r5 file is kept beside it
 if [ "${OT_PDN_REV:-r7}" = r7 ]; then
   cp $R/case_r22k/pdn.tcl $R/case_r22k/pdn_r5.tcl
-  python3 tools/qwen_split/pdn_regroup.py $R/case_r22k --skip-prefix rly_ --skip-prefix up4_sel_ --pos ../out/rom_tp8b.json --out pdn.tcl > $R/pdn_r7.json || { echo pdn regroup failed; exit 10; }
+# licensed link-PHY abstracts (io_serdes*, io_ucie) carry their own M4 PG straps under a full M1-M5 OBS: no die macro
+# grid reaches them (PDN-0006); their PG hookup is the PHY IP integration, recorded open (OT_PGCHECK reports it)
+  python3 tools/qwen_split/pdn_regroup.py $R/case_r22k --skip-prefix rly_ --skip-prefix up4_sel_ --skip-prefix io_serdes --skip-prefix io_ucie --pos ../out/rom_tp8b.json --out pdn.tcl > $R/pdn_r7.json || { echo pdn regroup failed; exit 10; }
 fi
 # owner no-stub gate (08:05): the chain still runs for the die timing diagnosis, but its result is labelled by this verdict
 bash tools/qwen_split/port_bind_compute.sh $R/case_r22k/die.v $R/port_bind > $R/port_bind.line 2>&1; pb=$?
