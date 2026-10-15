@@ -1,0 +1,18 @@
+# dsfd_hstnv_8: die generator pin centres (GEN18r construction_pass0 (EPYC4 s81-die-r10/gen18r), pins.lef); outline 17.256 x 17.256 (= generator slot)
+place_pin -pin_name {di[0]} -layer M5 -location {8.460000 0.144000} -force_to_die_boundary
+place_pin -pin_name {di[1]} -layer M5 -location {8.508000 0.144000} -force_to_die_boundary
+place_pin -pin_name {di[2]} -layer M5 -location {8.556000 0.144000} -force_to_die_boundary
+place_pin -pin_name {di[3]} -layer M5 -location {8.604000 0.144000} -force_to_die_boundary
+place_pin -pin_name {di[4]} -layer M5 -location {8.652000 0.144000} -force_to_die_boundary
+place_pin -pin_name {di[5]} -layer M5 -location {8.700000 0.144000} -force_to_die_boundary
+place_pin -pin_name {di[6]} -layer M5 -location {8.748000 0.144000} -force_to_die_boundary
+place_pin -pin_name {di[7]} -layer M5 -location {8.796000 0.144000} -force_to_die_boundary
+place_pin -pin_name {dq[0]} -layer M5 -location {8.460000 17.112000} -force_to_die_boundary
+place_pin -pin_name {dq[1]} -layer M5 -location {8.508000 17.112000} -force_to_die_boundary
+place_pin -pin_name {dq[2]} -layer M5 -location {8.556000 17.112000} -force_to_die_boundary
+place_pin -pin_name {dq[3]} -layer M5 -location {8.604000 17.112000} -force_to_die_boundary
+place_pin -pin_name {dq[4]} -layer M5 -location {8.652000 17.112000} -force_to_die_boundary
+place_pin -pin_name {dq[5]} -layer M5 -location {8.700000 17.112000} -force_to_die_boundary
+place_pin -pin_name {dq[6]} -layer M5 -location {8.748000 17.112000} -force_to_die_boundary
+place_pin -pin_name {dq[7]} -layer M5 -location {8.796000 17.112000} -force_to_die_boundary
+place_pin -pin_name {ck} -layer M4 -location {0.144000 8.604000} -force_to_die_boundary
