@@ -1,0 +1,42 @@
+{
+  "schema": "opentallas.s81.rxh_direct.collection.v1",
+  "generated_utc": "2026-10-15T06:47:17.757371+00:00",
+  "status": "pass",
+  "scope": "Native arithmetic RX cluster component, not full native layer/token integration.",
+  "schedule": "Fixed one row/cycle RA; score+bias pair/cycle RB; two rope rows/cycle QR; no credits or ready-driven issue.",
+  "latency_definition": "First/last output cycle minus first rising-edge operand sample cycle. Relative RXH-vs-RXT deltas use matching cycles.",
+  "measurements": {
+    "RA": {
+      "first_output_delta_cycles": 3,
+      "last_output_delta_cycles": 3,
+      "rxh_first": 130,
+      "rxt_first": 127,
+      "rows": 6,
+      "output_cycles": 6
+    },
+    "RB": {
+      "first_output_delta_cycles": 3,
+      "last_output_delta_cycles": 3,
+      "rxh_first": 11,
+      "rxt_first": 8,
+      "rows": 24,
+      "output_cycles": 24
+    },
+    "QR": {
+      "first_output_delta_cycles": 4,
+      "last_output_delta_cycles": 4,
+      "rxh_first": 18,
+      "rxt_first": 14,
+      "rows": 64,
+      "output_cycles": 32
+    }
+  },
+  "mutant_errors": [
+    0,
+    6,
+    24,
+    64
+  ],
+  "source_commit": "00185343b",
+  "collector_sha256": "44b81b92fa13044311714f1ab32a5ae726ce6424e7f856f9753eae33337f80a4"
+}

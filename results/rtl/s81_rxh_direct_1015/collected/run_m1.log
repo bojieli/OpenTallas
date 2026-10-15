@@ -1,0 +1,16 @@
+MISMATCH job=0 d=0 row=0 cyc=150 got=402b6997403683c94047489740c64f923bb32e573d0593313da855513d8f42154031cf6a3df118e83be7decd3ab707fc3b5b27874006e6703fd9abc63e06c5a3 exp=3fd17ab53fd828283fe1de58401f52a93d9771913e38eb5f3e92c9ad3e876a123fd55a513eafabe33dac46f03d190fe33d6cdca13fb9d59e3fa6eb373eb9bf04 addr=1024
+MISMATCH job=0 d=0 row=1 cyc=151 got=40db4d0740acd1ca3ffce3a84084f0fa3d8a2c3640096c173d0df41740d2425b40b0b05d40105a473c89b2483ff26d17409a1911408f5bea3bdfdccc3fcc86e0 exp=40278ae64014bb1f3fb3ea8a400272803e84fd373fbb90463e3ea17a40240d68401663043fc03c263e04c27c3fb027a7400c71ae400776463da946af3fa1ccf5 addr=1025
+MISMATCH job=0 d=0 row=2 cyc=152 got=3f92224c3ebf9a2240ae9c794038d1803be7ee263c3ea6043cb6378d40140f793acc6704401d0028406d10b6408885644081a7be3d05e4a43d41d62b40d5d81f exp=3f88c44b3f1c9ad540157ffd3fd984443dac4ca43ddcebbc3e18b8a33fc2b02a3d21c05a3fc87ad53ff659cd400431204000d3313e3923b73e5ec2a5402571ee addr=1026
+MISMATCH job=0 d=0 row=3 cyc=153 got=3e5326153da06aeb3f98e04e40cce7c74022383840c9cb4c3ba27f1e3f35b8083f4526723bf9463d4026101d40dc70013b2f71cb404641c4408c62ef40b7b4a3 exp=3ee87ece3e8f4b863f8be2df4021f3453fcbc8e44020b74f3d9038743f57af5e3f60a8023db2a02a3fce2f464027f9e83d53edc23fe1493540060cdd40195803 addr=1027
+MISMATCH job=0 d=0 row=4 cyc=154 got=3f6501ba3dfd27414076c6043cb897a740dd19a3400d54b8405278cb3e87553b3ab7a44e3fcf4cf83e3b546b3b0f4ad7402cd2d040d715a93bc1f10b40b2f289 exp=3f7220a43eb402943ffb582c3e19b6a540283a7d3fbe36593fe81f533f039d8b3d1951323fa2e4e33edafd523d3f87143fd256fa4025ec963d9d8ed940175849 addr=1028
+MISMATCH job=0 d=0 row=5 cyc=155 got=40ae2fa540b84eb63e617c003f15f2fc3eb7c17d3ecc01b43ef5f71e408a91a83ec0f1633e15c4e6402ab5763ed6cde1403eb3103ffd44f13eaea66b3f5fb812 exp=4015515f401998433ef042193f43ed0c3f195d603f21983f3f316fa240052e003f1d26dd3ec3ceee3fd10c883f25d0e43fdcf34b3fb40d223f15843f3f6f50db addr=1029
+RXDIRECT job=0 d=0 rows=6 first=150 last=155 issue=20 first_latency=130 last_latency=135
+RXDIRECT job=0 d=1 rows=6 first=147 last=152 issue=20 first_latency=127 last_latency=132
+RXDIRECT job=1 d=0 rows=24 first=301 last=324 issue=290 first_latency=11 last_latency=34
+RXDIRECT job=1 d=1 rows=24 first=298 last=321 issue=290 first_latency=8 last_latency=31
+RXDIRECT job=2 d=0 rows=64 first=596 last=627 issue=578 first_latency=18 last_latency=49
+RXDIRECT job=2 d=1 rows=64 first=592 last=623 issue=578 first_latency=14 last_latency=45
+RXDIRECT mut=1 errors=6
+[8690000] %Fatal: tb_rxh_direct.sv:53: Assertion failed in tb_rxh_direct: RXDIRECT FAIL
+%Error: /srv/opentallas-scratch/codex/su-rxh-direct-1015/m1/tb_rxh_direct.sv:53: Verilog $stop
+Aborting...

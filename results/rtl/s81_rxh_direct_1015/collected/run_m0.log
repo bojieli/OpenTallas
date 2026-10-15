@@ -1,0 +1,12 @@
+RXDIRECT job=0 d=0 rows=6 first=150 last=155 issue=20 first_latency=130 last_latency=135
+RXDIRECT job=0 d=1 rows=6 first=147 last=152 issue=20 first_latency=127 last_latency=132
+RXDIRECT job=1 d=0 rows=24 first=301 last=324 issue=290 first_latency=11 last_latency=34
+RXDIRECT job=1 d=1 rows=24 first=298 last=321 issue=290 first_latency=8 last_latency=31
+RXDIRECT job=2 d=0 rows=64 first=596 last=627 issue=578 first_latency=18 last_latency=49
+RXDIRECT job=2 d=1 rows=64 first=592 last=623 issue=578 first_latency=14 last_latency=45
+RXDIRECT mut=0 errors=0
+RXDIRECT PASS
+- /srv/opentallas-scratch/codex/su-rxh-direct-1015/run/tb_rxh_direct.sv:54: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 9us; walltime 8.351 s; speed 1.041 us/s
+- Verilator: cpu 8.351 s on 1 threads; allocated 42 MB
