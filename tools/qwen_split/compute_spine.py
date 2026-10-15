@@ -654,6 +654,9 @@ def place(v, m, G):
         if os.environ.get('OT_SPLIT_RES_TRAIN', '1') != '0':
             from qwen_split.res_train_bind import apply as res_train_apply
             rec['res_train_bind'] = res_train_apply(m)
+    # Freeze pre-pin source identity: later master installation adds derived pin receipts.
+    from qwen_split.gfp_homes import source_fingerprint
+    m['gfp_source_fingerprint'] = source_fingerprint(m)
     # Source-pinned complete block placement; subsequent pins, relays, clocks and cuts use these homes.
     if os.environ.get('OT_SPLIT_HOMES'):
         from qwen_split.gfp_homes import apply as gfp_homes_apply
