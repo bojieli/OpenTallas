@@ -1,5 +1,5 @@
 {
- "name": "s81hc_ctfn_native_ref-np2-hb4-hm30-432072b5f",
+ "name": "s81hc_ctfn_native_ref-np3-fullspan-COMMIT",
  "block": "ot_s81_hc_ctfn",
  "ref_tile": true,
  "owner": "Claude:S-NORM",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/s81-norm-tree-1014",
-  "commit": "432072b5fe6d8996830dbe1c210ed735bf1be11c"
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_ctfn_native_ref/s81hc_ctfn_native_ref-np2-hb4-hm30-432072b5f"
+   "to": "results/rtl/ref_tile/s81hc_ctfn_native_ref/s81hc_ctfn_native_ref-np3-fullspan-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -82,13 +82,13 @@
  "merge_target": null,
  "no_bench_reason": "Source-bound PIPE1 full-shape numerical exact and prior observed within-leaf mutant receipts reused with all source/module SHA checks in results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/inherited_boundary/source_reuse.json. Physical mapped reset/clone equivalence and native timing are independent adoption gates; no full-native claim.",
  "hold_merge": "Held physical-only native boundary candidate: source-bound numerical proof is reused separately; actual mapped clone/reset equivalence, immutable rectangles and native timing/CTS must pass before any adoption.",
- "structural_change": "np2 (S-NORM 2026-10-15): np1 routed FF -12.44 i2r after CTS/GRT hold repair at margin 10 (route moved the pin-flop clock ~22 ps; FF boundary arrival 264-328); margin 30 was dropped in np1 because BUFx2 padding floods. Hold pads are now HB4xp67 (common_flow/hold_pad_hb4.tcl, 2.4x delay per cell: gate ws -86 -> +10 with 3,340 cells) so the recipe-2 30 ps margin is restored. Tried and rejected on the gate: a 4-way x clock split (TT spread 53 -> 71 ps, insertion +40). Same RTL, cycles, pins, clocks, SDC, acceptance.",
+ "structural_change": "np3 (S-NORM 2026-10-15): np2 GRT-0116 2,450 overflow, all at the S face (2,920 fdm pins in x 77-455). S-DIE grant (bb1b07c55): fdm is one straight M5 bus over the full strip x 1.02-575.48 (1.5x span), bit i at the same x as ctfs_nt.fdm (re-pinned). HB4 hold pads + margin 30 kept. Same RTL/cycles/SDC.",
  "reroute_reason": {
   "kind": "pin_register",
   "source": "results/rtl/s81_layer_tput_1013/norm_tree_1014/native_closure_1014/inherited_boundary/native_audit.json",
   "cell": "ot_s81_hc_ctfn",
   "launch_ps": 296.0,
   "capture_ps": 378.2,
-  "fix": "np2 (S-NORM 2026-10-15): np1 routed FF -12.44 i2r after CTS/GRT hold repair at margin 10 (route moved the pin-flop clock ~22 ps; FF boundary arrival 264-328); margin 30 was dropped in np1 because BUFx2 padding floods. Hold pads are now HB4xp67 (common_flow/hold_pad_hb4.tcl, 2.4x delay per cell: gate ws -86 -> +10 with 3,340 cells) so the recipe-2 30 ps margin is restored. Tried and rejected on the gate: a 4-way x clock split (TT spread 53 -> 71 ps, insertion +40). Same RTL, cycles, pins, clocks, SDC, acceptance."
+  "fix": "np3 (S-NORM 2026-10-15): np2 GRT-0116 2,450 overflow, all at the S face (2,920 fdm pins in x 77-455). S-DIE grant (bb1b07c55): fdm is one straight M5 bus over the full strip x 1.02-575.48 (1.5x span), bit i at the same x as ctfs_nt.fdm (re-pinned). HB4 hold pads + margin 30 kept. Same RTL/cycles/SDC."
  }
 }
