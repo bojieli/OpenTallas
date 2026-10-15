@@ -72,10 +72,12 @@ class Physical(unittest.TestCase):
     def run_flow(self,mutant='',generated=False):
         with tempfile.TemporaryDirectory() as d:
             w=Path(d);s=spec();s.update(params={},route={},macros=[])
-            kd='physical/generated_two_roots'
+            # Mount the fixture on an existing source directory beneath the read-only repo.
+            kd='tools/ref_tile/tests'
             if generated:
                 for name,text in RT.gen_hooks(s,kd).items():(w/name).write_text(text)
                 (w/'signoff.sdc').write_text(RT.gen_signoff(s,'*','none_*'))
+            if mutant=='declared_reset':s['reset_ports']=['req']
             if mutant=='wrong_input':
                 s['clock_entry_domains']['core']['inputs']=['rsp'];s['clock_entry_domains']['response']['inputs']=['req']
             if mutant=='wrong_output':
@@ -137,6 +139,10 @@ puts "MULTI_ROOT_RESULT PASS"
         for a,b in zip(refs[:2],refs[2:]):
             self.assertEqual(a[0],b[0])
             for x,y in zip(a[1:],b[1:]):self.assertAlmostEqual(float(x),float(y),places=8)
+    def test_reset_declaration_does_not_waive_or_reclassify_data(self):
+        rc,out=self.run_flow('declared_reset');self.assertEqual(rc,0,out[-7000:])
+        self.assertIn('OWNERSHIP PASS',out)
+
     def test_generated_hooks_and_signoff_replay(self):
         rc,out=self.run_flow(generated=True);self.assertEqual(rc,0,out[-7000:])
         self.assertGreaterEqual(out.count('OT_MULTI_ROOT OWNERSHIP PASS'),9)
