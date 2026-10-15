@@ -289,6 +289,7 @@ endmodule
 //   line is the OR of the two tiles' answers).  q_bad: an enabled element was not written in this epoch.
 // --------------------------------------------------------------------------------------------------------------------
 module ot_qfd_xs_leaf #(
+    parameter integer FILL_PIPE = 0,     // opt-in: separate input/output fill registers (+1 edge per leaf hop)
     parameter integer BANK_PIPE = 0,     // opt-in: four local32-entry banks, registered before final4:1 (+1 read edge)
     parameter integer NCH = 4,           // leaves in a chain
     parameter integer MUT = 0            // 2: tile 1's reads return tile 0's data (swapped tile) -- must FAIL
@@ -357,9 +358,29 @@ module ot_qfd_xs_leaf #(
     always @(posedge clk) begin
         wep <= w_ep; woff <= w_off; wm <= w_m; wd <= w_d; wctl <= w_ctl; cep <= c_ep;
     end
+    generate if(FILL_PIPE==0)begin : g_fill_one_edge
     assign wo_v = wv; assign wo_ep = wep; assign wo_off = woff; assign wo_m = wm; assign wo_d = wd;
     assign wo_ctl = {{(2*CTW){1'b0}}, wctl[NCH*2*CTW-1:2*CTW]};
     assign co_v = cv; assign co_ep = cep;
+    end else begin : g_fill_two_edges
+        // One actual register at each face. The former aliased one-edge
+        // pass-through required a raw S-input net to drive a cloned N flop,
+        // in parallel with the bank capture (1096 cut-crossing raw nets).
+        reg pv,pcv,pep,pcep;
+        reg [5:0] poff;
+        reg [63:0] pm;
+        reg [1023:0] pd;
+        reg [NCH*2*CTW-1:0] pctl;
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)begin pv<=0;pcv<=0;end
+            else begin pv<=wv;pcv<=cv;end
+        always @(posedge clk)begin
+            pep<=wep;pcep<=cep;poff<=woff;pm<=wm;pd<=wd;
+            pctl<={{(2*CTW){1'b0}},wctl[NCH*2*CTW-1:2*CTW]};
+        end
+        assign wo_v=pv;assign wo_ep=pep;assign wo_off=poff;assign wo_m=pm;assign wo_d=pd;assign wo_ctl=pctl;
+        assign co_v=pcv;assign co_ep=pcep;
+    end endgenerate
     wire [63:0] tf;                                     // p >= w_off: the rotated beat word holds beat fb there
     genvar gp;
     generate for (gp = 0; gp < 64; gp = gp + 1) begin : g_tf
@@ -505,6 +526,64 @@ module ot_qfd_xs_leaf #(
     always @(posedge clk) q <= {l3, asm_d[ft]};
 endmodule
 
+
+
+// Fixed production candidate master: no runtime/parent parameter overrides.
+// Qualified only with its own physical view and compiler+clock profile.
+module qfd_xs_leaf_banked (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire          w_v,
+    input  wire          w_ep,
+    input  wire [5:0]    w_off,
+    input  wire [63:0]   w_m,
+    input  wire [1023:0] w_d,
+    input  wire [72-1:0] w_ctl,         // 2 tiles x CTW = 18 b a leaf
+    input  wire          c_v,
+    input  wire          c_ep,
+    output wire          wo_v,
+    output wire          wo_ep,
+    output wire [5:0]    wo_off,
+    output wire [63:0]   wo_m,
+    output wire [1023:0] wo_d,
+    output wire [72-1:0] wo_ctl,
+    output wire          co_v,
+    output wire          co_ep,
+    input  wire          r_v,
+    input  wire          r_t,
+    input  wire          r_ep,
+    input  wire [27:0]   r_p,
+    output wire           q_v,
+    output wire  [63:0]   q,
+    output wire           q_bad
+);
+    ot_qfd_xs_leaf #(.NCH(4),.BANK_PIPE(1),.FILL_PIPE(1)) u_leaf (
+        .clk(clk),
+        .rst_n(rst_n),
+        .w_v(w_v),
+        .w_ep(w_ep),
+        .w_off(w_off),
+        .w_m(w_m),
+        .w_d(w_d),
+        .w_ctl(w_ctl),
+        .c_v(c_v),
+        .c_ep(c_ep),
+        .wo_v(wo_v),
+        .wo_ep(wo_ep),
+        .wo_off(wo_off),
+        .wo_m(wo_m),
+        .wo_d(wo_d),
+        .wo_ctl(wo_ctl),
+        .co_v(co_v),
+        .co_ep(co_ep),
+        .r_v(r_v),
+        .r_t(r_t),
+        .r_ep(r_ep),
+        .r_p(r_p),
+        .q_v(q_v),
+        .q(q),
+        .q_bad(q_bad));
+endmodule
 
 // --------------------------------------------------------------------------------------------------------------------
 // ot_qfd_xhead: column head with the column's x slice control (r3, el1014-qwen-dvm-build.log).

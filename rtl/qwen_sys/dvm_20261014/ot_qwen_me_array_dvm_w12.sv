@@ -30,9 +30,10 @@ module ot_qwen_me_array_dvm_w12 #(
     parameter integer SMAX = 5,
     parameter integer TCUT = 3,
     parameter integer HB = 2,
+    parameter integer LEAF_FILL_PIPE = 0,
     parameter integer LEAF_BANK_PIPE = 0,
-    parameter integer DX = 10 + LEAF_BANK_PIPE,
-    parameter integer FILL_LEAD = 2,
+    parameter integer DX = 10 + LEAF_BANK_PIPE + (NH/2-1)*LEAF_FILL_PIPE,
+    parameter integer FILL_LEAD = 2 + (NH/2-1)*LEAF_FILL_PIPE,
     parameter integer TIDM = 1,
     parameter integer XOFF = 3,
     parameter integer NWS = 0,
@@ -168,7 +169,7 @@ module ot_qwen_me_array_dvm_w12 #(
     wire [NT-1:0]   go_t;
     wire [NT*IBW-1:0] ib_t;
     ot_qfd_xdvm_fabric #(.AW(AW), .NW(NW), .XCW(XCW), .IL(IL), .NCOL(NCOL), .NH(NH), .TG(TG), .SMIN(SMIN), .SMAX(SMAX),
-        .HB(HB), .LEAF_BANK_PIPE(LEAF_BANK_PIPE), .DX(DX), .FILL_LEAD(FILL_LEAD), .TIDM(TIDM), .XOFF(XOFF), .NATIVE_AFFINE(NATIVE_AFFINE),.STATIC_SCHEDULE(STATIC_SCHEDULE),.TAP_MUT(TAP_MUT), .LEAF_MUT(LEAF_MUT),
+        .HB(HB), .LEAF_FILL_PIPE(LEAF_FILL_PIPE), .LEAF_BANK_PIPE(LEAF_BANK_PIPE), .DX(DX), .FILL_LEAD(FILL_LEAD), .TIDM(TIDM), .XOFF(XOFF), .NATIVE_AFFINE(NATIVE_AFFINE),.STATIC_SCHEDULE(STATIC_SCHEDULE),.TAP_MUT(TAP_MUT), .LEAF_MUT(LEAF_MUT),
         .HEAD_MUT(HEAD_MUT)) u_fab (
         .clk(clk), .rst_n(rst_n), .go_acc(go && ready), .ib(ib),
         .xpf_v(xpf_v), .xpf_xbase(xpf_xbase), .xpf_xcs(xpf_xcs), .xpf_xks(xpf_xks), .xpf_split(xpf_split),
@@ -240,9 +241,10 @@ module ot_qfd_xdvm_fabric #(
     parameter integer SMIN = 3,
     parameter integer SMAX = 5,
     parameter integer HB = 2,
+    parameter integer LEAF_FILL_PIPE = 0,
     parameter integer LEAF_BANK_PIPE = 0,
-    parameter integer DX = 10 + LEAF_BANK_PIPE,
-    parameter integer FILL_LEAD = 2,
+    parameter integer DX = 10 + LEAF_BANK_PIPE + (NH/2-1)*LEAF_FILL_PIPE,
+    parameter integer FILL_LEAD = 2 + (NH/2-1)*LEAF_FILL_PIPE,
     parameter integer TIDM = 1,
     parameter integer XOFF = 3,
     parameter integer NATIVE_AFFINE=0,
@@ -359,13 +361,23 @@ module ot_qfd_xdvm_fabric #(
             assign woff[0] = lw_off[6*h +: 6]; assign wm[0] = lw_m[64*h +: 64]; assign wd[0] = lw_d[1024*h +: 1024]; assign wc[0] = lw_ctl[h*NCH*18 +: NCH*18];
             for (j = 0; j < NCH; j = j + 1) begin : g_leaf
                 localparam integer LF = h * NCH + j;
-                ot_qfd_xs_leaf #(.BANK_PIPE(LEAF_BANK_PIPE), .NCH(NCH), .MUT(LEAF_MUT)) u_leaf (.clk(clk), .rst_n(rst_n),
+                if(LEAF_BANK_PIPE!=0 && LEAF_FILL_PIPE!=0 && NH==8 && LEAF_MUT==0)begin : g_fixed_leaf
+                    qfd_xs_leaf_banked u_leaf (.clk(clk), .rst_n(rst_n),
                     .w_v(wv[j]), .w_ep(wep[j]), .w_off(woff[j]), .w_m(wm[j]), .w_d(wd[j]), .w_ctl(wc[j]),
                     .c_v(cv[j]), .c_ep(cep[j]),
                     .wo_v(wv[j+1]), .wo_ep(wep[j+1]), .wo_off(woff[j+1]), .wo_m(wm[j+1]), .wo_d(wd[j+1]), .wo_ctl(wc[j+1]),
                     .co_v(cv[j+1]), .co_ep(cep[j+1]),
                     .r_v(lr_v[LF]), .r_t(lr_t[LF]), .r_ep(lr_ep[LF]), .r_p(lr_p[28*LF +: 28]),
                     .q_v(lq_v[LF]), .q(lq[64*LF +: 64]), .q_bad(lq_bad[LF]));
+                end else begin : g_parameter_leaf
+                ot_qfd_xs_leaf #(.FILL_PIPE(LEAF_FILL_PIPE), .BANK_PIPE(LEAF_BANK_PIPE), .NCH(NCH), .MUT(LEAF_MUT)) u_leaf (.clk(clk), .rst_n(rst_n),
+                    .w_v(wv[j]), .w_ep(wep[j]), .w_off(woff[j]), .w_m(wm[j]), .w_d(wd[j]), .w_ctl(wc[j]),
+                    .c_v(cv[j]), .c_ep(cep[j]),
+                    .wo_v(wv[j+1]), .wo_ep(wep[j+1]), .wo_off(woff[j+1]), .wo_m(wm[j+1]), .wo_d(wd[j+1]), .wo_ctl(wc[j+1]),
+                    .co_v(cv[j+1]), .co_ep(cep[j+1]),
+                    .r_v(lr_v[LF]), .r_t(lr_t[LF]), .r_ep(lr_ep[LF]), .r_p(lr_p[28*LF +: 28]),
+                    .q_v(lq_v[LF]), .q(lq[64*LF +: 64]), .q_bad(lq_bad[LF]));
+                end
             end
         end
         for (h = 0; h < 2; h = h + 1) begin : g_cor
