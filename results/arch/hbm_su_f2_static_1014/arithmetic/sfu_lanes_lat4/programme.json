@@ -1,0 +1,60 @@
+{
+  "qualified": false,
+  "ops": [
+    {
+      "op": "EXP",
+      "sfu_lanes_only": true,
+      "issue_to_output": 84,
+      "extra_vs_light": 56
+    },
+    {
+      "op": "EXP_SCALE_SUBB",
+      "sfu_lanes_only": true,
+      "issue_to_output": 84,
+      "extra_vs_light": 56
+    },
+    {
+      "op": "SIGM",
+      "sfu_lanes_only": true,
+      "issue_to_output": 106,
+      "extra_vs_light": 78
+    },
+    {
+      "op": "SILU",
+      "sfu_lanes_only": true,
+      "issue_to_output": 106,
+      "extra_vs_light": 78
+    },
+    {
+      "op": "SILU_E1C_E2B",
+      "sfu_lanes_only": true,
+      "issue_to_output": 106,
+      "extra_vs_light": 78
+    },
+    {
+      "op": "DIVB",
+      "sfu_lanes_only": true,
+      "issue_to_output": 43,
+      "extra_vs_light": 15
+    },
+    {
+      "op": "DIVIMM",
+      "sfu_lanes_only": true,
+      "issue_to_output": 43,
+      "extra_vs_light": 15
+    },
+    {
+      "op": "BYP_LIGHT",
+      "sfu_lanes_only": false,
+      "issue_to_output": 28,
+      "extra_vs_light": 0
+    }
+  ],
+  "MLAT": 4,
+  "ALAT": 3,
+  "LEAF": 1,
+  "issues_per_op": 64,
+  "cycles_per_op": 256,
+  "live_outputs": 90112,
+  "source": "independent hdc_golden exp + NumPy IEEE float32 division, canonical +0; full real N512/M128"
+}

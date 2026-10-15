@@ -52,9 +52,11 @@ FLOW_CONTROL_BOUNDARIES = dict(
     closed_blocks='closed tiles with purely local never-stalling handshakes stand; no rework',
     redesign_scope='remove credits on die-level links and in engines being redesigned only')
 VM_ABI_CHANGE_REQUESTS = [
-    dict(change='SW NC 7 -> 3 (keep idx, argmax, dma-pending; drop su/sfu/coll/hc)', source='H-IDX 40e9f801e', owner='H-ELEM-A (VM slice)'),
+    dict(change='SW NC 7 -> 3 (keep idx, argmax, dma-pending; drop su/sfu/coll/hc)', source='H-IDX 40e9f801e', owner='H-ELEM-A (VM slice)',
+         status='APPLIED 2026-10-15 H-ELEM-A: gen_hbm_static_vm_wrappers.py PARAMS/clients, quadrant_abi.json, hfd_hgi_vms_static.sv, calendar wrappers; SW records argmax/dma/idx (idx = client 2)'),
     dict(change='remove IDX read group in SE/NW/NE (RG 5->4 SE, 7->6 NW/NE); IDX reads only SW group 4',
-         condition='SU route.scores_bias.O must be REPL (H-ELEM-B)', source='H-IDX 40e9f801e', owner='H-ELEM-A (VM slice)'),
+         condition='SU route.scores_bias.O must be REPL (H-ELEM-B)', source='H-IDX 40e9f801e', owner='H-ELEM-A (VM slice)',
+         status='APPLIED 2026-10-15 H-ELEM-A: condition met (H-ELEM-B main 9505d6569, scores_bias lands in SW); IDX was the last group so COLL stays RG3 (S) / RG5 (N); compiler fixtures re-packed with the 8 IDX bank slots/fixture removed'),
 ]
 
 
