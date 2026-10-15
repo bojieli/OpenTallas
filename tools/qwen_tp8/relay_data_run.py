@@ -113,6 +113,9 @@ if '--case' in sys.argv:
     if m.get('static_link_bind'):
         from qwen_split.static_link_bind import validate_case_masters
         validate_case_masters(M, m)
+    if m.get('res_train_bind'):
+        from qwen_split.res_train_bind import validate_case_masters as validate_res_train
+        validate_res_train(M, m)
     pw = v.port_widths(m, 1)
     peer = {}
     for bid, cl, bits, eps in m['buses']:

@@ -121,7 +121,11 @@ def main() -> int:
     ap.add_argument('--branch', default='claude/el1015-s81-net-static')
     ap.add_argument('--tag', default='n1')
     ap.add_argument('--gen', action='store_true')
+    ap.add_argument('--size', help='JSON {master: {std_um2}} (synthesized area: gate logs or flop-count estimate): hend / '
+                    'xstg outlines sized to util <= UTIL and face cut <= 0.6, pins spread evenly (tools/ref_tile/'
+                    'spread_face_pins.py: M3/M5 N/S, M4 W/E, clock at face centre), no output hold pads')
     a = ap.parse_args()
+    sizes = json.loads(Path(a.size).read_text()) if a.size else {}
     pin_dir = f'physical/s81_die_pins/snet_{a.case}'
     glue_txt = Path(a.glue).read_text()
     glue_sha = hashlib.sha256(glue_txt.encode()).hexdigest()
@@ -144,12 +148,29 @@ def main() -> int:
             assert 'ot_meso_fifo' not in txt and 'ot_ratio_cdc_fifo' not in txt, f'{mst}: render the glue with --hend-static'
         mac = macs[mst]
         dw, dh = K.snap(mac['w']), K.snap(mac['h'])
+        spread = kd in ('hend', 'xstg') and mst in sizes
+        if spread:
+            # S-NET n3 (verdicts 12:43 FLOORPLAN_MARGIN util 63 %, 12:49 EARLY_FAIL_CONGESTION on the 291-b lane): size
+            # from the measured demand, not the generator slot.  Face cut <= 0.6: N/S pins alternate M3/M5 (0.072 um a
+            # pin) -> 0.12 um a pin; W/E M4 (0.096 um, 2 tracks) -> 0.16 um a pin; util <= 0.55 on the core.
+            cnt = {}
+            for p in mac['pins']:
+                cnt[p['face']] = cnt.get(p['face'], 0) + 1
+            need_w = max(cnt.get('N', 0), cnt.get('S', 0)) * 0.12 + 2 * 4.32
+            need_h = max(cnt.get('W', 0), cnt.get('E', 0)) * 0.16 + 2 * 4.32
+            dw, dh = K.snap(max(dw, need_w)), K.snap(max(dh, need_h))
+            core = sizes[mst]['std_um2'] / 0.55
+            while (dw - 2 * K.MARGIN) * (dh - 2 * K.MARGIN) < core:
+                if dh <= dw:
+                    dh = K.snap(dh + 2.16)
+                else:
+                    dw = K.snap(dw + 2.16)
         sha = hashlib.sha256(txt.encode()).hexdigest()
         (ROOT / RTL_DIR / f'{mst}.sv').write_text('`timescale 1ns/1ps\n' + txt)
         scalar = set(re.findall(r'wire \[0:0\] (\w+)', txt))
         tcl = [f'# {mst}: die generator pin centres ({a.case} pins.lef); outline {dw} x {dh} (slot {mac["w"]} x {mac["h"]} '
                'rounded up to the 2.16-um lattice; N / E pins follow their face)']
-        faces = {}
+        faces, votes = {}, {}
         for p in mac['pins']:
             x, y = p['x'], p['y']
             if p['face'] == 'E':
@@ -160,7 +181,9 @@ def main() -> int:
             pname = re.sub(r'\[0\]$', '', p['pin']) if base in scalar else p['pin']
             tcl.append(f'place_pin -pin_name {{{pname}}} -layer {p["layer"]} -location {{{x:.6f} {y:.6f}}} '
                        '-force_to_die_boundary')
-            faces.setdefault(p['face'], set()).add(base)
+            votes.setdefault(base, []).append(p['face'])
+        for base, fs in votes.items():   # one face per port (a corner pin is nearer the other face): the port's majority
+            faces.setdefault(max(set(fs), key=fs.count), set()).add(base)
         ports = re.findall(r'(?:input|output) wire \[\d+:0\] (\w+)', txt)
         missing = [q for q in ports if q not in {b for v in faces.values() for b in v}]
         assert not missing, (mst, missing)
@@ -256,12 +279,26 @@ def main() -> int:
             spec['sdc_extra'] = [f'{HEND_DIR}/{mst}.sdc']
             spec['boundary_tcl'] = [f'{HEND_DIR}/{mst}_boundary.tcl']
             spec['inhold'] = True
-            spec['outhold'] = True
+            spec['outhold'] = not spread
+        if spread:
+            spec['structural_change'] += (f' | n3 sizing: std {sizes[mst]["std_um2"]:.0f} um2 -> util <= 0.55, faces at cut <= 0.6 '
+                                          f'(outline {dw} x {dh} vs generator slot {mac["w"]} x {mac["h"]}); pins spread '
+                                          'evenly per face (spread_face_pins.py, clock at face centre), no output hold pads '
+                                          '(die receivers carry input hold stages)')
+            spec['slot_change_request'] = {'reason': 'S-NET n3: measured std area / pin cut', 'outline': [dw, dh],
+                                           'generator_slot': [mac['w'], mac['h']], 'pins': spec['io_tcl']}
+            if kd == 'xstg':
+                spec['outhold'] = False
         if kd == 'xstg':
             spec['sdc_extra'] = ['physical/s81_static_net/xstg/dsfd_xstg_515.sdc']
             spec['boundary_tcl'] = ['physical/s81_static_net/xstg/dsfd_xstg_515_boundary.tcl']
         p = ROOT / SPEC_DIR / f'{name}.json'
         p.write_text(json.dumps(spec, indent=1) + '\n')
+        if spread:   # explicit even spread on the sized outline (the die adopts this pin file + footprint)
+            r = subprocess.run([sys.executable, str(ROOT / 'tools/ref_tile/spread_face_pins.py'), str(p), str(ROOT / pin_dir / f'{mst}.tcl')],
+                               capture_output=True, text=True, cwd=ROOT)
+            if r.returncode:
+                raise SystemExit(f'{mst}: spread_face_pins: {(r.stdout + r.stderr)[-300:]}')
         print(f'{mst:28s} n={n:<5d} slot {mac["w"]}x{mac["h"]} -> {dw}x{dh}  {name}')
         if a.gen:
             r = subprocess.run([sys.executable, str(ROOT / 'tools/ref_tile/ref_tile.py'), 'gen', str(p)],

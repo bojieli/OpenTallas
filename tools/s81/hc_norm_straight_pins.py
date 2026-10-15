@@ -39,8 +39,9 @@ M5 = lambda n: round(.012 + .048 * n, 3)          # ASAP7 M3 / M5 vertical track
 LANES = (38.0, 88.0)                               # NORM dl / ul / cs lane window (x 40.03-86.06) kept free
 REACH = 499.8
 NB, NX, O_D, GT32 = 2920, 1128, 104, 128
-# cth_nt rows (N offset, um; H 777.60 with ctfl): ctfxs 365.04, ctfl 390.96, ctfn 416.88, ctfs_nt 751.68
-H, Y_XS, Y_FL, Y_FN, Y_FS = 777.6, 365.04, 390.96, 416.88, 751.68
+# Current literal NT replacement of v22 return columns and four ctnl99.36 reservations.
+# Candidate810.00, explicitly coordinated with S-DIE1103; whole-slab first/last anchors remain open.
+H, Y_XS, Y_FL, Y_FN, Y_FS = 810.0, 386.64, 412.56, 438.48, 781.92
 
 
 def load(m):
@@ -132,8 +133,8 @@ def main():
     assert ps['rst_out'][0][2] not in xmap
     # ---- ctfl_nt: straight where the CTPL reach allows
     _, cpl = V.lef_bits('physical/ref_tile/s81hc_ctpl_ref/views/ot_s81_hc_ctpl/ot_s81_hc_ctpl.lef')
-    sy = H - (Y_FL + HS)
-    rows = [(g, h, 144.72 * g, H - y - 118.8) for g in range(4) for h, y in enumerate((203.04, 416.88 + HS))]
+    sy = H - (Y_FL + HS) + .042
+    rows = [(g, h, 144.72 * g, H - y - 118.8) for g in range(4) for h, y in enumerate((211.68, 464.4))]
     pl = {p: [list(b) for b in v['per_bit']] for p, v in fl['ports'].items()}
     moved, used, proof = [], set(), []
     for port, src in (('fdx_local', 'fdx'), ('fv_local', 'fv')):
@@ -174,22 +175,23 @@ def main():
                   v22_through=cut(list(zip(xs(fn, 'fd_in'), xs(fn, 'fdm')))),
                   v22_yshift=cut([(xs(fn, 'fd_in')[O_D + j + GT32], xs(fn, 'fdm')[O_D + j]) for j in range(NB - O_D - GT32)])),
         ctfxs_nt='see rep["ctfxs_nt"] (fd_in / fv_in re-pinned straight)')
-    gap_xs, gap_fn = Y_XS, Y_FN                     # ctfs(k-1) S face = cth(k) N edge (abutted cth rows)
+    spare = H - (Y_FS + HS)                       # unused row footer above the next abutted cth
+    gap_xs, gap_fn = Y_XS + spare + .084, Y_FN + spare + .084  # actual N/S pin centres (.042 inset each)
     seam = lambda a, b, dy: [abs(p - q) + dy for p, q in zip(a, b)]
     s = dict(
         fd_ctfs_to_ctfxs=dict(v23=max(seam(xmap[:NX], xfd, gap_xs)), v22=max(seam(xs(fs, 'fd_out')[:NX], xfd, gap_xs))),
         fd_ctfs_to_ctfn=dict(v23=max(seam(xmap, xmap, gap_fn)), v22=max(seam(xs(fs, 'fd_out'), xs(fn, 'fd_in'), gap_fn))),
-        fdm_ctfn_to_ctfs=dict(v23=max(seam(xmap, xmap, Y_FS - Y_FN - HS)),
-                              v22=max(seam(xs(fn, 'fdm'), xs(fs, 'fdm'), Y_FS - Y_FN - HS))),
+        fdm_ctfn_to_ctfs=dict(v23=max(seam(xmap, xmap, Y_FS - Y_FN - HS + .084)),
+                              v22=max(seam(xs(fn, 'fdm'), xs(fs, 'fdm'), Y_FS - Y_FN - HS + .084))),
         fv_ctfs_to_ctfxs=dict(v23=max(seam(xfv, xfv, gap_xs)), v22=max(seam(xs(fs, 'fv_out'), xfv, gap_xs))),
         fv_ctfs_to_ctfn=dict(v23=max(seam(xfv, xfv, gap_fn)), v22=max(seam(xs(fs, 'fv_out'), xs(fn, 'fv_in'), gap_fn))),
-        fvm_ctfn_to_ctfs=dict(v23=max(seam(xfv, xfv, Y_FS - Y_FN - HS)),
-                              v22=max(seam(xs(fn, 'fvm'), xs(fs, 'fvm'), Y_FS - Y_FN - HS))))
+        fvm_ctfn_to_ctfs=dict(v23=max(seam(xfv, xfv, Y_FS - Y_FN - HS + .084)),
+                              v22=max(seam(xs(fn, 'fvm'), xs(fs, 'fvm'), Y_FS - Y_FN - HS + .084))))
     for k, v in s.items():
         v.update(v23=round(v['v23'], 3), v22=round(v['v22'], 3))
     s['over500_v23'] = sum(1 for k, v in s.items() if isinstance(v, dict) and v['v23'] > 500)
-    s['geometry'] = ('abutted cth_nt rows; ctfs_nt S face of half-tile k-1 = N edge of half-tile k; rows ctfxs 365.04, '
-                     'ctfl 390.96, ctfn 416.88, ctfs_nt 751.68 (N offsets, H 777.60). Lower bound Manhattan, pin to pin.')
+    s['geometry'] = ('abutted cth_nt rows; ctfs_nt S face of half-tile k-1 = N edge of half-tile k; rows ctfxs 386.64, '
+                     'ctfl 412.56, ctfn 438.48, ctfs_nt 781.92 (N offsets, H 810.00). Lower bound Manhattan, pin to pin.')
     rep['seams_max_um'] = s
     rep['chain_anchors'] = dict(
         first='crootr.ch_fd -> first cth ctfn.fd_in + ctfxs_nt.fd_in: ctfxs side unchanged; ctfn.fd_in bits 0..1127 now '
@@ -209,6 +211,10 @@ def main():
                            internal_v22=cut(list(zip(xs(fx, 'fd_in') + xs(fx, 'fv_in'), xs(fx, 'fdx') + xs(fx, 'fv')))),
                            seam_ctfs_to_ctfxs_max_um=round(max(seam(xmap[:NX] + xfv, [q[2] for q in px['fd_in'] + px['fv_in']],
                                                                     gap_xs)), 3))
+    s['fd_ctfs_to_ctfxs']['v23'] = rep['ctfxs_nt']['seam_ctfs_to_ctfxs_max_um']
+    s['fv_ctfs_to_ctfxs']['v23'] = round(max(seam(xfv, [q[2] for q in px['fv_in']], gap_xs)), 3)
+    s['over500_v23'] = sum(1 for v in s.values() if isinstance(v, dict) and v.get('v23', 0) > 500)
+    s['pin_centres'] = dict(inset_um=.042, abutted_cth_footer_um=round(spare, 3), first_last_anchors='OPEN with S-DIE')
     write('ot_s81_hc_ctfxs_nt', px, extra := dict(clock_entries={'stream': ['clk', 'clk_l']}, rule='S-NORM candidate 2026-10-15: one fd/fv bit order for producer + '
                                                         'all consumers (see report.json)'))
     rep['cost'] = dict(cycles=0, area_um2=0, rtl='unchanged', masters_repinned=['ot_s81_hc_ctfn', 'ot_s81_hc_ctfs_nt',

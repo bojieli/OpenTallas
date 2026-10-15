@@ -1,0 +1,151 @@
+{
+  "status": "FINAL_ABI_CANDIDATE_PHYSICAL_QUALIFICATION_REQUIRED",
+  "module": "qkd_kv_native_programme",
+  "source": "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv",
+  "source_sha256": "b50da24fa0ebd9cce161e44af8028cfd76e47538c2494b594e8ce11d5a0bd60c",
+  "clock": "ck",
+  "reset": "rst_n",
+  "clock_period_ps": 833.334,
+  "proposed_outline_um": [
+    86.4,
+    194.4
+  ],
+  "physical_site": null,
+  "inputs": {
+    "cfg_we": {
+      "bits": 1,
+      "direct_ff_D_only": true
+    },
+    "cfg_addr": {
+      "bits": 8,
+      "direct_ff_D_only": true
+    },
+    "cfg_data": {
+      "bits": 64,
+      "direct_ff_D_only": true
+    },
+    "start": {
+      "bits": 1,
+      "direct_ff_D_only": true
+    },
+    "stage": {
+      "bits": 6,
+      "direct_ff_D_only": true
+    },
+    "epoch": {
+      "bits": 16,
+      "direct_ff_D_only": true
+    },
+    "token": {
+      "bits": 18,
+      "direct_ff_D_only": true
+    },
+    "position": {
+      "bits": 13,
+      "direct_ff_D_only": true
+    },
+    "generation": {
+      "bits": 2,
+      "direct_ff_D_only": true
+    }
+  },
+  "outputs": {
+    "compiled_word_slot": {
+      "bits": 1,
+      "direct_ff_Q": true
+    },
+    "compiled_word_index": {
+      "bits": 2,
+      "direct_ff_Q": true
+    },
+    "compiled_identity": {
+      "bits": 59,
+      "direct_ff_Q": true
+    },
+    "compiled_generation": {
+      "bits": 2,
+      "direct_ff_Q": true
+    },
+    "kvn_word_slot": {
+      "bits": 1,
+      "direct_ff_Q": true
+    },
+    "configured": {
+      "bits": 1,
+      "direct_ff_Q": true
+    },
+    "active": {
+      "bits": 1,
+      "direct_ff_Q": true
+    },
+    "done": {
+      "bits": 1,
+      "direct_ff_Q": true
+    },
+    "fault": {
+      "bits": 1,
+      "direct_ff_Q": true
+    },
+    "cycle": {
+      "bits": 32,
+      "direct_ff_Q": true
+    },
+    "expected_valid": {
+      "bits": 4,
+      "direct_ff_Q": true
+    },
+    "expected_pc": {
+      "bits": 20,
+      "direct_ff_Q": true
+    },
+    "expected_stack": {
+      "bits": 2,
+      "direct_ff_Q": true
+    },
+    "expected_identity": {
+      "bits": 59,
+      "direct_ff_Q": true
+    },
+    "expected_generation": {
+      "bits": 2,
+      "direct_ff_Q": true
+    },
+    "expected_address": {
+      "bits": 29,
+      "direct_ff_Q": true
+    }
+  },
+  "functional_input_bits": 129,
+  "functional_output_bits": 217,
+  "total_functional_boundary_bits": 346,
+  "total_pins_with_clock_reset": 348,
+  "logical_FF_bits": 6292,
+  "pin_capture_FF_bits": 129,
+  "slot_output_FF_bits": 4,
+  "boot": {
+    "writes": 181,
+    "bytes": 1448,
+    "pin_capture_edges": 1,
+    "final_flush_edges": 1,
+    "seal_address": 180,
+    "seal_hex": "514b565052473336"
+  },
+  "start": {
+    "external_capture": "E0: start and independently compiled context captured at pin FFs",
+    "internal_accept": "E1: select timing roots and capture transaction TAG59/generation, active=1 and cycle=0",
+    "origin": "E1 binds actual segment0 core-start; compiler launches external start one edge earlier"
+  },
+  "slots": {
+    "output_FF": true,
+    "predecode": "cycle+1",
+    "interval_shift_edges": 0,
+    "writer_added_capture_edges": 0
+  },
+  "expected_descriptor_edges": 2,
+  "evidence": "pin_faces.json and report.json",
+  "qualification": "Writer candidate only; no technology mapped timing/area, controller/front/ring or full-token qualification",
+  "reset_pin_FF_bits": 1,
+  "external_reset_sink_count": 1,
+  "reset_pin_release_edges": 1,
+  "minimum_reset_fill_edges": 5
+}
