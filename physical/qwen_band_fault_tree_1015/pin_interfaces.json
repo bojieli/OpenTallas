@@ -1,0 +1,117 @@
+{
+  "schema": "opentallas.band-fault-tree-semantic-pins.v1",
+  "masters": {
+    "ot_qfd_band_fault_q4": {
+      "clock": "clk",
+      "inputs": {
+        "reset_q": 1,
+        "rawlnk": 6,
+        "lf": 4,
+        "lpv": 4
+      },
+      "output": {
+        "q": 5
+      },
+      "q_bits": {
+        "0": "local_fault",
+        "1": "local_valid_mismatch",
+        "2": "representative_valid",
+        "3": "bad_lnk",
+        "4": "reset"
+      },
+      "instances": 4,
+      "expected_ff_per_instance": 5,
+      "total_signal_pins_per_instance": 21,
+      "async_reset_ports": [],
+      "pin_layers": null,
+      "pin_XY_um": null
+    },
+    "ot_qfd_band_fault_join": {
+      "clock": "clk",
+      "inputs": {
+        "d": 20
+      },
+      "output": {
+        "q": 9
+      },
+      "d_bits": {
+        "0": "quarter0.local_fault",
+        "1": "quarter0.local_valid_mismatch",
+        "2": "quarter0.representative_valid",
+        "3": "quarter0.bad_lnk",
+        "4": "quarter0.reset",
+        "5": "quarter1.local_fault",
+        "6": "quarter1.local_valid_mismatch",
+        "7": "quarter1.representative_valid",
+        "8": "quarter1.bad_lnk",
+        "9": "quarter1.reset",
+        "10": "quarter2.local_fault",
+        "11": "quarter2.local_valid_mismatch",
+        "12": "quarter2.representative_valid",
+        "13": "quarter2.bad_lnk",
+        "14": "quarter2.reset",
+        "15": "quarter3.local_fault",
+        "16": "quarter3.local_valid_mismatch",
+        "17": "quarter3.representative_valid",
+        "18": "quarter3.bad_lnk",
+        "19": "quarter3.reset"
+      },
+      "q_bits": {
+        "0": "quarter_pv[0]",
+        "1": "quarter_pv[1]",
+        "2": "quarter_pv[2]",
+        "3": "quarter_pv[3]",
+        "4": "quarter_fault[0]",
+        "5": "quarter_fault[1]",
+        "6": "quarter_fault[2]",
+        "7": "quarter_fault[3]",
+        "8": "globalf"
+      },
+      "instances": 1,
+      "expected_ff_per_instance": 9,
+      "total_signal_pins_per_instance": 30,
+      "async_reset_ports": [],
+      "pin_layers": null,
+      "pin_XY_um": null
+    },
+    "ot_qfd_band_fault_output": {
+      "clock": "clk",
+      "inputs": {
+        "d": 9
+      },
+      "output": {
+        "q": 9
+      },
+      "d_q_bits": {
+        "0": "quarter_pv[0]",
+        "1": "quarter_pv[1]",
+        "2": "quarter_pv[2]",
+        "3": "quarter_pv[3]",
+        "4": "quarter_fault[0]",
+        "5": "quarter_fault[1]",
+        "6": "quarter_fault[2]",
+        "7": "quarter_fault[3]",
+        "8": "globalf"
+      },
+      "instances": 1,
+      "expected_ff_per_instance": 9,
+      "total_signal_pins_per_instance": 19,
+      "async_reset_ports": [],
+      "pin_layers": null,
+      "pin_XY_um": null
+    }
+  },
+  "top_data_input_bits": 39,
+  "top_data_output_bits": 9,
+  "top_scalar_clock_inputs": [
+    "ck_q0",
+    "ck_q1",
+    "ck_q2",
+    "ck_q3",
+    "ck_join",
+    "ck_out"
+  ],
+  "top_total_signal_pins": 54,
+  "geometry_status": "No dimensions/XY/layers invented; await quarter/lane geometry and nativekit review",
+  "reset_data_source": "reset_q duplicated to eachlocal, captured once; four equal-age reset fields masked atjoin; no localreset3packetrelay"
+}
