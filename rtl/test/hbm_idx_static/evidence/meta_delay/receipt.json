@@ -88,33 +88,7 @@
     "recommended_outline_um": [
       51.84,
       51.84
-    ],
-    "current_kit": "physical/ref_tile/hidx_meta_static_1015b",
-    "final_geometry_cts": {
-      "outline_um": [
-        51.84,
-        51.84
-      ],
-      "gate_result": "physical/ref_tile/hidx_meta_static_1015b/gate_result.json",
-      "actual_bit_pin_plan": "rtl/hbm_accel/index/static_1015/meta_leaf_actual_io_1015.json",
-      "verdict": "PASS",
-      "fails": 0,
-      "warnings": 0,
-      "synth_std_area_um2": 1033,
-      "core_area_um2": 2258,
-      "synth_core_utilization": 0.4575,
-      "tt_boundary_mean_ps": 118.7,
-      "tt_max_ps": 119.8,
-      "tt_spread_ps": 6.1,
-      "ff_boundary_mean_ps": 95.0,
-      "ff_spread_ps": 6.3,
-      "ss_boundary_mean_ps": 161.3,
-      "ss_spread_ps": 6.1,
-      "diagnostic_tt_setup_slack_ps": 353.68,
-      "diagnostic_tt_hold_slack_ps": 12.99,
-      "qualification": false,
-      "note": "Measured CTS at final51.84geometry only; actual routed TT/FF/DRC pending"
-    }
+    ]
   },
   "underlying_master": "ot_hdc_delay"
 }
