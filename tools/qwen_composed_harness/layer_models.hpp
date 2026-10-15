@@ -51,6 +51,13 @@ struct Rank {
   if(const char*e=std::getenv("OT_SPLIT_LINK_LATENCY"))receiver.link_latency=unsigned(std::stoul(e));
   core.clk=front.clk=kernel.clk=sector.clk=0;core.rst_n=front.rst_n=kernel.rst_n=sector.rst_n=0;
   core.start=0;core.token=0;core.pos=layer.position;front.epoch=layer.epoch;front.layer=layer.number;front.pos=layer.position;front.token=0;front.epoch_begin=0;front.fused_program_capability=1;
+#ifdef OT_CORE_HIERARCHICAL
+  // Hierarchical children are registered lazily by the first eval. Construct
+  // them serially at time zero, before worker phases advance the shared time.
+  // Clock and reset are low, so this adds no functional clock edge.
+  if(context.time()!=0)throw std::runtime_error("hierarchical rank initialization requires time zero");
+  core.eval();
+#endif
   enqueue_history();
  }
  // Input-memoised core evaluation: a Verilated eval whose 28 input ports all

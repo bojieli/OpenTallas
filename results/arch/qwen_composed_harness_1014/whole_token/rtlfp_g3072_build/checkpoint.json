@@ -1,0 +1,36 @@
+{
+  "scope": "Completed production-shape core RTL arithmetic build and source-matched probe; numerical run pending",
+  "native_full_token": false,
+  "build": {
+    "host": "ot-epyc4",
+    "path": "/srv/opentallas-scratch/claude/qwen-wholetoken-1014/lv6_hier/g3072_rtlfp_O3",
+    "exit": 0,
+    "seconds": 21668.89466449403
+  },
+  "probe": {
+    "unit": "oth-ubuntu-876983-1792045475",
+    "exit": 0,
+    "pch": "omitted for hierarchical root; original PCH attempt failed because compiler settings differ",
+    "manifest_note": "absolute object digest additionally recorded for existing compiled probe"
+  },
+  "limitations": [
+    "Core arithmetic only; C++ memories and modelled links remain",
+    "Attention still historical C-DPI kernel in this vehicle",
+    "Full static SU and native memory/service integration owned by other streams",
+    "No numerical RTL-FP layer PASS at collection time"
+  ],
+  "preserved_failures": {
+    "pch_probe_exit": 1,
+    "missing_staged_host_header_exit": 1,
+    "duplicated_runtime_link_exit": 1,
+    "late_hierarchy_registration_exit": 134
+  },
+  "numerical_run": {
+    "host": "ot-epyc4",
+    "scope": "oth-ubuntu-893471-1792045705",
+    "directory": "/srv/opentallas-scratch/claude/qwen-wholetoken-1014/qfunc_rtlfp_2328",
+    "positive": "positive_v4",
+    "mutant_after_positive": "mutant_v4",
+    "state": "linking; neither numerical verdict claimed"
+  }
+}
