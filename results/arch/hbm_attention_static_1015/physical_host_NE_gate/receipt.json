@@ -1,0 +1,37 @@
+{
+  "source_commit": "8f5d180da",
+  "dependency_commit": "619da76cd",
+  "unit": "oth-ubuntu-1303887-1792052385",
+  "host": "ot-epyc4",
+  "exit_status": 0,
+  "qualification": false,
+  "status": "PASS exact32pair-profile target49/host/CPloader/NEbank-calendar/query producer component",
+  "profile": {
+    "H": 16,
+    "D": 512,
+    "TD": 32,
+    "NL": 2,
+    "FPL": 6,
+    "FML": 8,
+    "PWORDS": 2
+  },
+  "resident_config_words": 339,
+  "event_words": [
+    81,
+    83,
+    337,
+    339
+  ],
+  "actual_event_macro": "ot_sram_1r1w_1024x256_m2_r2c2",
+  "query_words": 16384,
+  "mutants_detected": [
+    "reserved instruction bit",
+    "wrong programme profile",
+    "wrong actual NE read owner"
+  ],
+  "remaining": [
+    "Full exact-profile arithmetic run",
+    "Actual PS/P/drain producers and immutable throughput",
+    "Hard-parent source pipeline/physical timing/cut/route closure"
+  ]
+}
