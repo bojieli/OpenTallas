@@ -264,7 +264,7 @@ module tb_dsfd_vm_static_core;
                 1: begin wsrc(0, 64, 1, 0); wsrc(1, 64 + 256, 1, 1); wsrc(2, 64 + 512, 1, 2); wsrc(3, 64 + 768, 1, 3); end
                 2: begin wsrc(0, 64, 1, 0); wsrc(1, 64 + 256, 1, 1); step; wsrc(0, 64 + 512, 1, 0); end
                 3: pqx = {19'(16 * 4 + 16), 1'b1};
-                4: cmd({3'd5, 21'd0});
+                4: cmd({3'd6, 4'd7, 17'd0});
                 6: begin mx_rqv[0] = 1; mx_rq[0 +: 14] = 14'd64; su_rqv[0] = 1; su_rq[0 +: 14] = 14'd128; end
                 5: begin su_rqv[2] = 1; su_rq[28 +: 14] = 14'd2; su_rqv[6] = 1; su_rq[84 +: 14] = 14'd258; end
                 default: ;
