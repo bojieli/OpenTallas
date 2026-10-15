@@ -120,7 +120,7 @@ module qfd_seq_su_static (
     wire [2:0]  i_ad, i_sfu;
     wire [31:0] i_imm1, i_imm2;
     ot_qfd_seq_su_bi_static #(.RRG(1), .PCUT(1), .G(3072), .D(D), .PSRAM(1), .HQ2(1), .CRED(0), .RLY(2)) u_seq (
-        .clk(ck),.ck_sched(ck_sched), .rst_n(rsi),.program_obs(program_obs),.descriptor_obs(descriptor_obs),.cfg_image_ready(cfg_image_ready),
+        .clk(ck),.ck_sched(ck_sched), .rst_n(rsi),.program_obs(program_obs),.descriptor_obs(descriptor_obs),.cfg_image_ready(body_cfg_ready),
         .h_start(dh[42]), .stage_in(dh[41:36]), .tp_token(dh[35:18]), .tp_pos(dh[17:0]), .kv_write_drained(dh[43]),
         .pw_v(dh[118]), .pw_addr(dh[117:108]), .pw_data(dh[107:44]),
         .dw_v(dh[186]), .dw_addr(dh[185:183]), .dw_data(dh[182:119]),
@@ -149,9 +149,10 @@ module qfd_seq_su_static (
     // rom_fault leaves from a flop: the body's rom_fault OR the constant-buffer groups' sticky fault (+1 edge, flag only)
     reg rom_fault_q;
     always @(posedge ck or negedge rsi) if (!rsi) rom_fault_q <= 1'b0; else rom_fault_q <= rom_fault | cb_flt_q;
-    wire coll_issue_fault;
+    wire coll_issue_fault,coll_cfg_ready,body_cfg_ready;
+    assign cfg_image_ready=body_cfg_ready&&coll_cfg_ready;
     qfd_seq_su_collective_calendar u_coll_calendar(.ck(ck_sched),.rsi(rsi),.dh(dh),
-      .cmd_free(coll_cmd_free),.cmd(coll_cmd),.fault(coll_issue_fault));
+      .cmd_free(coll_cmd_free),.cmd(coll_cmd),.cfg_ready(coll_cfg_ready),.fault(coll_issue_fault));
     assign dc   = {rom_fault_q | coll_issue_fault, kv_write_flush, coll_busy, core_fault, s_fault, s_done, seq_ntok, seq_nval};
     assign kvd  = {kvd_v, kvd_kindk, kvd_pos, kvd_wbase};
     assign cd_d = {c_valid, c_tag, c_mode, c_last, c_data};

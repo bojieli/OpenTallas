@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 module tb_qfd_seq_su_collective_calendar;
  reg ck=0;always #5 ck=~ck;
- reg rsi=0;reg[186:0]dh=0;reg cmd_free=1;wire[49:0]cmd;wire fault;
+ reg rsi=0;reg[186:0]dh=0;reg cmd_free=1;wire[49:0]cmd;wire fault,cfg_ready;
  integer omit=0,block=0,seen=0,elapsed=-1,issued=-1,image;
  qfd_seq_su_collective_calendar dut(.*);
  task wr(input[9:0]a,input[63:0]d);
@@ -18,10 +18,11 @@ module tb_qfd_seq_su_collective_calendar;
  if($value$plusargs("BLOCK=%d",block))begin end
  repeat(3)@(negedge ck);rsi=1;cmd_free=!block;
  for(image=0;image<2;image=image+1)begin
- wr(0,0);
+ wr(0,0);if(cfg_ready)$fatal(1,"stale collective seal after genuinePW0");
  if(omit!=1)wr(944,(64'd256<<32)|8);
  if(omit!=2)wr(945,64'h12345678);
  wr(946,(64'd1<<49)|12);wr(947,0);wr(960,(64'h434c<<48)|(64'd2<<32)|12);
+ if(cfg_ready!==(omit==0))$fatal(1,"collective seal completeness");
  @(negedge ck);dh[42]=1;@(negedge ck);dh[42]=0;
  repeat(18)@(negedge ck);
  if(fault!==(omit!=0||block!=0))$fatal(1,"calendar integrity fault %0d %0d %b",omit,block,fault);

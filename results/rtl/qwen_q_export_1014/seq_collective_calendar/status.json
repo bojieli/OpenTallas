@@ -1,12 +1,12 @@
 {
   "scope": "actual sequencer dh PW/start leaf, actual issuer and fixed issue core; full sequencer body not simulated by this mechanism test; production layer calendar/physical D_seq remain open",
   "sources": {
-    "rtl/test/tb_qfd_seq_su_collective_calendar.sv": "60f3ffe23ac8b188c8eb7be224ad707254b4263a294b76f611e62d2d38dbf6fa",
-    "rtl/qwen_split/qfd_seq_su_collective_calendar.sv": "2c0bccc7cde60f44715f853f994175e48fbe186c92eb9543ef4716194e686f29",
-    "rtl/rom/ot_coll_cmd_issue.sv": "ac047a9b44343cbab053763b0a3695f5898544c1f90a075cd3e06d68299daa33",
+    "rtl/test/tb_qfd_seq_su_collective_calendar.sv": "41ea9dc9323a2f74f468d2120e311db348613b89f44ff234df85fa9a0c958b19",
+    "rtl/qwen_split/qfd_seq_su_collective_calendar.sv": "773c2402b6948f8eed2787bbda9924de18570df6db9d76d011543fa9e768c2c8",
+    "rtl/rom/ot_coll_cmd_issue.sv": "22e08d8e69f7b449fffda8880cd6c0458d59e99403bdebc0b0b8a450da267a11",
     "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv": "0d533e9a09514840fac0628053fd1aaa501bccbffeaf8913afb6a936d1d994b1",
-    "rtl/qwen_split/qfd_seq_su_static.sv": "7119c0cd0f744548d9db6ff389ccc332726e557c8062c5a990210ce4a1d745ab",
-    "tools/qwen_static_schedule/collective.py": "5a83cc90284aaa66b31faadaaf2828bd11700b4f4f186e2b7f2afe95db1f59f5"
+    "rtl/qwen_split/qfd_seq_su_static.sv": "d2516bf6f876b0e5cbbb3c9c9a764bf5e12a9df2a952eca0887db66bd9280d7c",
+    "tools/qwen_static_schedule/collective.py": "13357a6b262f2cbd19ae6167c5ba2a114a0552fa506deabc9bd85e9585423d48"
   },
   "command_issue_cycle": 8,
   "stop_cycle": 12,
