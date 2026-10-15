@@ -87,11 +87,11 @@
   "macro_halo_um": 5.4
  },
  "why_floorplan": "shell control leaf (419 ports, ~0.4k FF), mid-row between payload columns 1 and 2; one clock root per leaf (<=11,519 sinks); 1 per cluster x 4 clusters",
- "structural_change": "Shell split (S-ELEM-C 2026-10-15): the flat shell (6,472 FF, one root over 742 um, native insertion 534.1 / spread 93.3 ps FAIL) becomes control leaf + 4 payload column leaves with the same registers and cycles (808-cycle MIX4 calendar, 0 added edges); each leaf has a local root.",
+ "structural_change": "Native capture fix (S-ELEM-C 10-15): start no longer enables the 224-bit descriptor register (IDLE samples desc each edge). 0 cycles, 0 FF. | Shell split (S-ELEM-C 2026-10-15): the flat shell (6,472 FF, one root over 742 um, native insertion 534.1 / spread 93.3 ps FAIL) becomes control leaf + 4 payload column leaves with the same registers and cycles (808-cycle MIX4 calendar, 0 added edges); each leaf has a local root.",
  "job": {
   "owner": "Claude:s81-surx-engram-1015",
-  "branch": "claude/s81-engram-shsplit-1015",
-  "tag": "shsplit",
+  "branch": "claude/s81-engram-c810-1015",
+  "tag": "c810nat",
   "purpose": "S81 Engram MIX4 split-shell leaf ot_s81_engram_mixq_shctl (control + 4 payload columns)",
   "benches": [
    {
@@ -103,7 +103,7 @@
     "needs": [
      "verilator"
     ],
-    "pass_regex": "PASS native Engram MIX4.*cycles=808"
+    "pass_regex": "PASS native Engram MIX4.*cycles=810\\b"
    },
    {
     "name": "mix4_mut1_key",
@@ -126,6 +126,17 @@
      "verilator"
     ],
     "fail_regex": "FAIL [0-9]+ words"
+   },
+   {
+    "name": "mix4_mut22_boundary_valid",
+    "cmd": "python3 tools/s81_engram_mix/gate.py --mix4 --fp rtl --snap results/rtl/s81_engram_mix_1014/fixtures/engram_L01.pkl --mut 22 --out {RUN}/mix4_m22",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "endpoint fault cyc=78"
    }
   ],
   "views_to": "physical/ref_tile/s81engm_shctl/views",
@@ -153,5 +164,9 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "reason": "CLOSED shsplit-0955 view (TT +194.2/FF +22.8) FAILS the native pin audit: start capture 246.4 > 190 ps (start was the load enable of 224 descriptor flops). RTL: dsc samples desc every IDLE edge, start only steers ns/fault; 0 cycles."
  }
 }
