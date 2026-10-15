@@ -1,0 +1,7 @@
+{
+ "source": "572ed9389",
+ "positive": "FULL32VM/128SRAM MAIN+MIRROR2561each173fencePASS;31cases1921checks6790beats",
+ "qualification": "NOTqualified: mutant2 survived",
+ "cause": "Newminissue/drain11 masked old rangevalidation badcases stillgap10; isolatedrangefailingmutantcannotbeclaimed",
+ "fix": "Giveeverymalformeddescriptor otherwise-valid11edgedeadline; keepone explicitshortdrain10case. Preserveoldpositive/source/negativeevidence."
+}

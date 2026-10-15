@@ -29,6 +29,7 @@ a='$signed(cd-ci)>=10';assert s.count(a)==1
 s=(d/'tb_dma_back_vp4_banks_equiv.sv').read_text()
 s=s.replace('ot_hgi_dma_back_static_vp4_banks dut','ot_hgi_dma_back_static_vp4_banks_ic dut')
 s=s.replace('drain_at=cycle+16+delay','drain_at=cycle+17+delay')
+s=s.replace(',6,10)',',6,11)').replace(',2,10)',',2,11)')
 s=s.replace('bad_case(descriptor(8,1),6,9)','bad_case(descriptor(8,1),6,10)')
 (o/'equiv_tb.sv').write_text(s)
 PYEQ
