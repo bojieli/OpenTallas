@@ -12,7 +12,10 @@
   "new_physical_groups": 3,
   "old_physical_groups": 1,
   "tile_children_after_split": 18,
-  "independent_clock_roots_each_max_sinks": 2070,
+  "independent_clock_roots_max_sinks": {
+    "transit2edge": 4157,
+    "landing1edge": 2070
+  },
   "masters": [
     {
       "kind": "transit2edge",
@@ -37,7 +40,7 @@
       "input_pin_pitch_um": 0.096,
       "pin_span_um": 198.528,
       "guard_um": 8.736000000000004,
-      "qualification": "NEWsource2edge? Actually1edge2070FFinclusive reset relay; needsactualgate"
+      "qualification": "NEWoneedge2070FFinclusive resetrelay; needsactualgate"
     },
     {
       "kind": "south_landing1edge",
