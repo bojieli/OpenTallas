@@ -1,0 +1,18 @@
+FIRST FAULT cy 1087: wsched own 00 dflt 1111 sflt 00000000000000000000000000000000 | mem 0000 | land 000 pq 0 out 0 op 0 rsched 0 | seq flt 00000000000
+COMMIT MISMATCH cy 1096 row 1792 slice 0 exp_c 120 K 11
+COMMIT MISMATCH cy 1096 row 1792 slice 1 exp_c 120 K 11
+COMMIT MISMATCH cy 1096 row 1792 slice 2 exp_c 120 K 11
+COMMIT MISMATCH cy 1096 row 1792 slice 3 exp_c 120 K 11
+COMMIT MISMATCH cy 1100 row 1824 slice 0 exp_c 122 K 11
+COMMIT MISMATCH cy 1100 row 1824 slice 1 exp_c 122 K 11
+COMMIT MISMATCH cy 1100 row 1824 slice 2 exp_c 122 K 11
+COMMIT MISMATCH cy 1100 row 1824 slice 3 exp_c 122 K 11
+COMMIT MISMATCH cy 1104 row 1856 slice 0 exp_c 124 K 11
+UNEXPECTED FAULT vm_fault 1 c_st 11: wsched own 00 dflt ffff sflt 00000000000000000000000000000000 | mem 0000 | land 000 pq 0 out 0 op 0 rsched 0 | seq flt 10000000000
+TB_VMCORE RESULT mode 0 cycles 2210 commits 67632 K 11 reads 9813 pq 252 mix_reads 1998 mix_writes 500 rows_checked 12819 dones 4 cmds 4 bad 52
+COMMIT COUNT 67632
+TB_VMCORE FAIL mode 0
+- /srv/opentallas-scratch/codex-s81-vm-lane-scatter-1015/flat_core2/tb_dsfd_vm_static_core.sv:296: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 13.098 s; speed 140.912 ns/s
+- Verilator: cpu 13.097 s on 1 threads; allocated 53 MB

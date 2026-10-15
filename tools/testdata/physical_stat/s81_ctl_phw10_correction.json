@@ -1,0 +1,96 @@
+{
+  "schema": "physical-stat-correction-v1",
+  "qualification": "Reporting correction only. No new synthesis, CTS, routing, timing or source qualification. Original reports remain immutable.",
+  "unit": "oth-ubuntu-1400030-1792063759",
+  "host": "ot-epyc1tb",
+  "original_record": {
+    "path": "/srv/opentallas-scratch/codex/s81-field-produced-native-v1/mapped-TT/ot_s81_pq_ctl_static_native.json",
+    "sha256": "907de1967343c843d4d4422a37af71a4c997581d1fc92619a02a350f7837498b",
+    "synthesis": {
+      "abc_delay_target_ps": 833.333,
+      "cell_area_um2": 3665.786,
+      "cell_count": 25864,
+      "cell_types_used": 33,
+      "chip_area_um2": 1825.6347,
+      "combinational_cell_count": 9994,
+      "dont_use_cell_count": 81,
+      "liberty_cell_count": 202,
+      "macro_count": 12934,
+      "netlist_normalization": {
+        "normalized_netlist_sha256": "f161c518f4f40c5ad07647bad70df7718d0f678bce9523a9153c586590f5132e",
+        "raw_netlist_sha256": "f161c518f4f40c5ad07647bad70df7718d0f678bce9523a9153c586590f5132e",
+        "signed_declarations_stripped": 0
+      },
+      "sequential_area_um2": 915.974,
+      "sequential_cell_count": 2936,
+      "unmapped_cell_types": [
+        "$paramod$f9dc3049c203e713aa54c4ae9bf06b459459fa3a\\ot_v41_kreg",
+        "ot_s81_pq_ctl_static_native",
+        "submodules"
+      ]
+    }
+  },
+  "original_sources": [
+    {
+      "path": "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_static_native.sv",
+      "sha256": "a4f01d78af4489951ff372235899b05a41ec5e012efe01326d1f5f877c1979ab",
+      "size_bytes": 19915
+    },
+    {
+      "path": "physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv",
+      "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "size_bytes": 2883
+    },
+    {
+      "path": "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_delay.sv",
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "size_bytes": 1395
+    },
+    {
+      "path": "physical/s81_pq_hier/pinned/rtl/v41die/ot_v41_pqc_tiles.sv",
+      "sha256": "f6c45bff4f75c10441765ecff25aba83e800c8c9ec72e48b493a9eba2f74a78a",
+      "size_bytes": 20320
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_kreg.sv",
+      "sha256": "e4e16decaed5dc98f811ad0bc3769633a6a6546865194fddab2d9d98beeffeca",
+      "size_bytes": 1505
+    },
+    {
+      "path": "rtl/common/ot_prefix.sv",
+      "sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+      "size_bytes": 2757
+    }
+  ],
+  "original_netlist": {
+    "normalized_netlist_sha256": "f161c518f4f40c5ad07647bad70df7718d0f678bce9523a9153c586590f5132e",
+    "raw_netlist_sha256": "f161c518f4f40c5ad07647bad70df7718d0f678bce9523a9153c586590f5132e",
+    "signed_declarations_stripped": 0
+  },
+  "raw_stat": {
+    "path": "/srv/opentallas-scratch/codex/s81-field-produced-native-v1/mapped-TT/ot_s81_pq_ctl_static_native-work/stat.txt",
+    "sha256": "9e8a7d54a4e073bd9f3c1107375bf39d93a3e4a8dac8e77c38fbc233f59b4324"
+  },
+  "corrected_synthesis": {
+    "cell_count": 12930,
+    "cell_area_um2": 1829.01726,
+    "chip_area_um2": 1829.01726,
+    "sequential_cell_count": 2936,
+    "sequential_area_um2": 915.97392,
+    "combinational_cell_count": 9994,
+    "macro_count": 0,
+    "unmapped_cell_count": 0,
+    "unmapped_cell_types": [],
+    "unknown_area_cell_types": [],
+    "cell_types_used": 30,
+    "stat_selection": {
+      "section": "design hierarchy",
+      "top": "ot_s81_pq_ctl_static_native",
+      "cell_count": 12930,
+      "basis": "design hierarchy leaf cells"
+    },
+    "cell_area_basis": "Liberty area times count; stat area only for unknown cells"
+  },
+  "parser_sha256": "f2026367b4892ab9cf846a8e3b2d3edd653f833845c9fc83d3ead26bca94507c",
+  "library_metadata": "library_cell_metadata.json"
+}

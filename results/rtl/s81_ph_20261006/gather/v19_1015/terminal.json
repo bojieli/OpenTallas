@@ -1,0 +1,134 @@
+{
+  "dsfd_gth_rw_v19-g8-996350cb8": {
+    "name": "dsfd_gth_rw_v19-g8-996350cb8",
+    "status": "CLOSED",
+    "reason": "CLOSED TT +96.64 / FF +9.53 ps DRC 0; SS sensitivity -224.37 ps | record claude/s81-gather-r3-1014 e8d4a81f2 (19 files) | AUTO-MERGED into main c7f2a7d70",
+    "commit_full": "996350cb8273d4e40699016b1c4a7df0986966f4",
+    "finished_at": "2026-10-15T00:42:09-07:00",
+    "metrics": {
+      "corner_sta": [
+        "/srv/opentallas-scratch2/claude/closure-loop/dsfd_gth_rw_v19-g8-996350cb8/routes/dsfd_gth_rw_v19_g8_996350cb8/corner_sta.json"
+      ],
+      "drc_metrics": [
+        "/srv/opentallas-scratch2/claude/closure-loop/dsfd_gth_rw_v19-g8-996350cb8/routes/dsfd_gth_rw_v19_g8_996350cb8/work/orfs/logs/asap7/opentallas_dsfd_gth_rw_asap7_ref_dsfd_gth_rw_v19_g8_996350cb8/base/5_2_route.json"
+      ],
+      "ff_ps": 9.53,
+      "clock_periods_ps": {},
+      "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_gth_rw_v19-g8-996350cb8/cl/eco/pass2/orfs",
+      "post_sdc": [
+        "physical/ref_tile/dsfd_gth_rw_v19/signoff.sdc",
+        "physical/common_flow/io_ref_routed.sdc"
+      ],
+      "sdc_name": "6_final.sdc",
+      "setup_post_sdc": [],
+      "ss_sensitivity_ps": -224.37,
+      "ss_sensitivity_tns_ps": -8779.8,
+      "setup_corner": "tt",
+      "corner_sta_tt": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_gth_rw_v19-g8-996350cb8/routes/dsfd_gth_rw_v19_g8_996350cb8/corner_sta.json",
+      "ss_ps": 96.64,
+      "ss_tns_ps": 0.0,
+      "errors": [],
+      "drc": 0,
+      "eco": {
+        "ss_ps": 96.64,
+        "tt_ps": 96.64,
+        "ff_ps": 9.53,
+        "drc": 0,
+        "sdc_name": "6_final.sdc",
+        "setup_post_sdc": [],
+        "setup_corner": "tt",
+        "ss_sensitivity_ps": -224.37,
+        "cells_added": 15477,
+        "errors": [],
+        "pass": 2,
+        "session": "mm",
+        "window": "endpoints_below_hm 10771 fixable 10771 tight 0 infeasible 0 nodata 0 (hm 38.0 filt 40 accept_ss 0.0 accept_ff 0.0 r 2.4)",
+        "route_strategy": [
+          "incremental_original_guides"
+        ],
+        "score": 9.53,
+        "rank": 9.53
+      },
+      "routed_ioref": {
+        "key": "1|/srv/opentallas-scratch2/claude/closure-loop/dsfd_gth_rw_v19-g8-996350cb8/cl/eco/pass2/orfs|1|ae0410",
+        "at": "2026-10-15T00:36:30-07:00",
+        "available": true,
+        "ioref_edge": {
+          "tt": {
+            "core_clk": {
+              "boundary": 493,
+              "negedge": 0,
+              "noarc": 0,
+              "inverted": 0
+            }
+          },
+          "ff": {
+            "core_clk": {
+              "boundary": 493,
+              "negedge": 0,
+              "noarc": 0,
+              "inverted": 0
+            }
+          }
+        },
+        "tt": 96.64,
+        "ff": 9.53,
+        "errors": [],
+        "ioref": {
+          "tt": {
+            "ot_lb_v_core_clk": {
+              "clock": "core_clk",
+              "mean": 259.9,
+              "min": 236.3,
+              "max": 280.0,
+              "n": 493,
+              "kind": "boundary"
+            }
+          },
+          "ff": {
+            "ot_lb_v_core_clk": {
+              "clock": "core_clk",
+              "mean": 213.4,
+              "min": 191.0,
+              "max": 232.2,
+              "n": 493,
+              "kind": "boundary"
+            }
+          }
+        },
+        "tt_i2r": 373.74,
+        "tt_out": 260.69,
+        "ff_i2r": 9.53,
+        "ff_out": 57.11,
+        "ff_r2r": 15.82,
+        "json": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_gth_rw_v19-g8-996350cb8/cl/routed_ioref.a1.json",
+        "registers": 11627,
+        "registers_clocked": 11627
+      },
+      "route_sdc_clock": {
+        "ss_ps": 96.64,
+        "ff_ps": 9.53
+      }
+    },
+    "publish": {
+      "record_branch": "codex/closure-record-dsfd_gth_rw_v19-g8-996350cb8",
+      "branch_commit": "e8d4a81f2159451088b26254232251049b1f2b6b",
+      "files": 19,
+      "merge": "AUTO-MERGED into main c7f2a7d70"
+    }
+  },
+  "dsfd_gth_re_v19-g9-0f7620385": {
+    "name": "dsfd_gth_re_v19-g9-0f7620385",
+    "status": "EARLY_FAIL_HOLD",
+    "reason": "5_1_grt hold repair not converging: WNS gained +0.00 ps and TNS +0.0% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -30.6 ps (start -50.06), 2890 it / 6715 buffers, 11240 endpoints in margin, 0.9 h in step, HM guard present",
+    "commit_full": "0f762038570a54d787e06a1c4282a8b222771e48",
+    "finished_at": "2026-10-15T00:12:32-07:00",
+    "metrics": null,
+    "publish": null,
+    "early_fail_summary": {
+      "verdict": "EARLY_FAIL_HOLD",
+      "why": "5_1_grt hold repair not converging: WNS gained +0.00 ps and TNS +0.0% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -30.6 ps (start -50.06), 2890 it / 6715 buffers, 11240 endpoints in margin, 0.9 h in step, HM guard present",
+      "at": "2026-10-15T00:12:31-07:00"
+    }
+  }
+}

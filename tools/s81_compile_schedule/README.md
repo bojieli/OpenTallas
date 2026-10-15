@@ -85,3 +85,64 @@ cycles. The original write visibility deadlines are missing, so these remain
 **diagnostic demand itineraries**. Production rebasing can change conflicts.
 Actual staging RTL, physical paths, and compiled consumer/commit fences must be
 verified before any of these tables become executable native programs.
+
+`canonical_execution_join.py` joins the literal source operation catalogue to
+all 324 canonical stage/rank programmes. It checks template identities, actual
+elaborated engine and SU/VM instances, independently emitted literal operation
+home assignments, pinned programmes/contracts, and exact
+source coverage, then invokes the existing native fixed-calendar compiler.
+Fused operations require explicit rounding/order proof; provider homes and
+parent reservations cannot supply native leaf homes. An incomplete join emits
+no partial programmes. Even a complete **local** join cannot enable chip
+execution: global transport/producer-consumer, native RTL replay, physical and
+throughput gates remain separate and mandatory.
+
+The source replay in `results/arch/s81_canonical_execution_1015` verifies an
+expected rejection of the actual screen14/2654-operation catalogue: all324
+rank programmes are missing and its literal SU scopes contain no MTP operations.
+The 10616 rank-operation obligations are 2654 source operations times TP4,
+not 10616 distinct physical elements. The fourteen mechanism tests exercise a
+synthetic positive and missing/stale/wrong-home/calendar/fusion mutants. They
+qualify this compiler join mechanism only. The replay does not qualify a single
+native canonical programme or the required MTP continuation.
+
+Actual native instances are identified by `(die_id, instance)`. Repeated real
+hierarchy names on distinct rank dies are legal; inventing globally prefixed
+hierarchy names is unnecessary. Independent operation-home assignments still
+select the exact physical die and implementing engine.
+
+`source_locality_assignment.py` is a new compiler design pass. It builds literal
+symbolic producer/consumer edges from the pinned canonical demand, joins actual
+FIELD fragment-stage alternatives, and proposes non-FIELD operation homes with
+integer alpha-expansion graph cuts. It preserves independent write bursts such
+as W1/W3 and in-place versions; runtime expert alternatives use worst-case
+boundary counts. Unanchored operations and missing input producers stay visible.
+It does not use provider2L, catalogue position, fixture addresses or prices.
+
+The first full-source candidate preserves all4778 instructions/7925 dependency
+edges and1149 FIELD anchors;2654 SU instructions have10616 TP4 candidate homes
+across42 stages. The equal-weight symbolic stage-boundary objective goes from
+2818 to2282. This is a source graph metric, **not** a measured reduction in wiring,
+bandwidth, latency or token time. Ten admitted mechanism tests cover real
+producer grouping, source mutations and graph-cut correctness against a small
+exhaustive binary optimum. The candidate provides no native physical instance,
+programme, epoch or cycle. Native fusion/replication/capacity constraints and
+explicit no-op programmes on unused stages still need implementation; the raw
+candidate may split existing fused kernels and must not be adopted as-is.
+MTP auxiliary programme coverage remains separate and unbound.
+
+`--group-private-su` adds conservative same-tag colocation constraints along
+private symbolic SU dependencies. This keeps the source MOE six-add chain and
+QN/KV norm chains together. Groups may contain several implemented kernels;
+colocation does not establish fusion equivalence or remove hardware/area.
+The source replay in `locality_grouped0` constrains448 groups covering2010 SU
+operations. All2654 SU operations still receive TP4 candidate assignments across
+42 stages, with symbolic objective2391 instead of the unconstrained2282. This
+is the stronger source planning candidate. Actual native kernel boundaries,
+physical homes and programme/calendar gates remain open.
+
+`verify_locality_candidate.py` independently checks literal template/rank
+coverage, groups and the objective against the original source graph and FIELD
+alternatives. The full candidate passes; changed templates, missing source-rank
+operations, a fabricated objective improvement and a split colocation group all
+fail. These are source design proofs; they do not establish native execution.

@@ -14,6 +14,10 @@
 // Cycle counts at the wrapper ports are v1's with RF = 5 (one y relay at mid-height; dsfd_sp_hc passes the comb the
 // matching RF), except the tree's add-fault flag, which reaches s_rv one cycle later (event-based).
 // The y slice of a POST beat is requested at the forward capture (p_req) and lands (p_y) 3 cycles after p_req.
+// PQ 1 (2026-10-13 r10, pin-register form of T_fwd; production default): p_req is LC bits, one pin flop per y slice
+// leaf (ot_s81_hc_cryys k takes p_req[k]), fed from the FIRST fv relay (the W-face capture of f_fv), so the request
+// leaves one cycle later than in the PQ 0 form; the cycle is taken back from the mid-height y relay (RF - 5 relays, 0 at
+// RF 5): the y slice runs N pin flop -> chain output flop inside the tile.  Wrapper-port cycle counts are unchanged.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_crootr #(
     parameter integer NG = 256, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, AL = 4, C = 0,
@@ -22,7 +26,7 @@ module ot_s81_hc_crootr #(
     input  wire                 sk,
     input  wire                 srs,
     // the pin / FIFO tile above
-    output wire                 p_req,
+    output wire [LC-1:0]        p_req,                    // one copy per y slice leaf
     input  wire [YS-1:0]        p_y,
     output wire [4*WSL-1:0]     p_w,
     input  wire                 p_flt,
@@ -118,13 +122,15 @@ endmodule
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_crootr_f #(
     parameter integer NG = 256, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, AL = 4, C = 0,
-    parameter integer RF = 5, RT = 1, RW = 1
+    parameter integer RF = 5, RT = 1, RW = 1,
+    parameter integer PQ = 1,                             // 1 pin-register form (routed); 0 the v2 form (lockstep reference)
+    parameter integer NPR = 16                            // PQ 1: kept replicas of the POST select (pop) at the chain output flop
 ) (
     input  wire                 sk,
     input  wire                 srs,
     input  wire [FVW-1:0]       f_fv,
     input  wire [FSW-1:0]       f_fd,
-    output reg                  p_req,
+    (* keep = "true" *) output reg [LC-1:0] p_req,        // LC pin flops, copy k at the p_req pin of y slice leaf k
     input  wire [YS-1:0]        p_y,
     output wire                 ch_rst,
     output reg  [FVW-1:0]       ch_fv,
@@ -181,30 +187,70 @@ module ot_s81_hc_crootr_f #(
     always @(posedge sk) rr <= {rr[0], srs};
     wire rs_n = rr[1];                                   // tile-local reset relay: no flop of the tile sees the srs pin
     assign ch_rst = rr[1];
+`ifndef SYNTHESIS
+    initial if (PQ != 0 && RF < 5) $fatal(1, "ot_s81_hc_crootr_f: PQ 1 needs RF >= 5 (request pin flop + y pin flop + RF-5 relays)");
+`endif
     reg  [YS-1:0] ydq;
-    always @(posedge sk) ydq <= p_y;
+    always @(posedge sk) ydq <= p_y;                              // y pin flop (N face)
     wire [YS-1:0] yr;
-    ot_hdc_delay #(.W(YS), .D(RF - 4)) u_ry (.clk(sk), .rst_n(rs_n), .d(ydq), .q(yr));   // mid-height y relay(s)
-    wire [FVW-1:0] fv_r;
+    ot_hdc_delay #(.W(YS), .D(RF - 4 - (PQ != 0 ? 1 : 0))) u_ry (.clk(sk), .rst_n(rs_n), .d(ydq), .q(yr));   // y relay(s); none at PQ 1 / RF 5
+    wire [FVW-1:0] fv_1, fv_r;
     wire [FSW-1:0] fd_r;
-    ot_hdc_delay #(.W(FVW), .D(RF), .RESET(1)) u_rfv (.clk(sk), .rst_n(rs_n), .d(f_fv), .q(fv_r));
+    ot_hdc_delay #(.W(FVW), .D(1), .RESET(1)) u_rfv0 (.clk(sk), .rst_n(rs_n), .d(f_fv), .q(fv_1));          // W-face capture
     ot_hdc_delay #(.W(FSW), .D(RF)) u_rfd (.clk(sk), .rst_n(rs_n), .d(f_fd), .q(fd_r));
+    // v5 (2026-10-14, s81-elemB): the POST select fanned out from ONE line flop to the FDD-bit chain output mux across the
+    // 276-um S face (routed v4: SS -325 ps u_rfv.line -> ch_fd).  At PQ 1 the last fv relay stage also writes NPR kept
+    // copies of the select bit (same cycle, same reset); copy k selects the k-th contiguous FDD/NPR slice of ch_fd.
+    localparam integer NPQ = (PQ != 0) ? NPR : 1;
+    wire [NPQ-1:0] popv;
+    generate
+        if (PQ != 0) begin : g_popr
+            wire [FVW-1:0] fv_m;
+            ot_hdc_delay #(.W(FVW), .D(RF - 2), .RESET(1)) u_rfv (.clk(sk), .rst_n(rs_n), .d(fv_1), .q(fv_m));
+            reg [FVW-1:0] fv_l;
+            (* keep = "true" *) reg [NPQ-1:0] popq;
+            always @(posedge sk or negedge rs_n)
+                if (!rs_n) begin fv_l <= {FVW{1'b0}}; popq <= {NPQ{1'b0}}; end
+`ifdef OT_S81_HC_CRRF_MUT3
+                else begin fv_l <= fv_m; popq <= {NPQ{fv_m[S_RD]}} & ~({{(NPQ-1){1'b0}}, 1'b1} << (NPQ - 1)); end   // negative control: last replica stuck
+`else
+                else begin fv_l <= fv_m; popq <= {NPQ{fv_m[S_RD]}}; end
+`endif
+            assign fv_r = fv_l;
+            assign popv = popq;
+        end else begin : g_pop1
+            ot_hdc_delay #(.W(FVW), .D(RF - 1), .RESET(1)) u_rfv (.clk(sk), .rst_n(rs_n), .d(fv_1), .q(fv_r));
+            assign popv = fv_r[S_RD];
+        end
+    endgenerate
     wire pop = fv_r[S_RD];                                        // a POST beat: the chain's y slice joins it
+    wire [FDD-1:0] dsel;                                          // the chain output data field: y slice at POST, else fd
+    genvar gi;
+    generate
+        for (gi = 0; gi < FDD; gi = gi + 1) begin : g_dsel
+            wire yb = (gi < YS) ? yr[(gi < YS) ? gi : 0] : 1'b0;
+            wire fb = (gi < S_RD * 512) ? fd_r[O_D + ((gi < S_RD * 512) ? gi : 0)] : 1'b0;
+            assign dsel[gi] = popv[(gi * NPQ) / FDD] ? yb : fb;
+        end
+    endgenerate
+`ifdef OT_S81_HC_CRRF_MUT1
+    wire prq_d = f_fv[S_RD];                                      // negative control: the request one cycle early
+`else
+    wire prq_d = (PQ != 0) ? fv_1[S_RD] : f_fv[S_RD];             // PQ 1: from the W-face capture, registered at the pins
+`endif
     always @(posedge sk or negedge rs_n)
-        if (!rs_n) begin ch_fv <= 0; p_req <= 1'b0; end
+        if (!rs_n) begin ch_fv <= 0; p_req <= {LC{1'b0}}; end
         else begin
             ch_fv <= fv_r;
-            p_req <= f_fv[S_RD];                                  // the slice arrives (p_y, ydq, yr) RF cycles on
+`ifdef OT_S81_HC_CRRF_MUT2
+            p_req <= {LC{prq_d}} & ~((PQ != 0 ? {{(LC-1){1'b0}}, 1'b1} : {LC{1'b0}}) << (LC / 2));   // negative control (PQ 1 only): one slice never asked
+`else
+            p_req <= {LC{prq_d}};                                 // the slice arrives (p_y, ydq[, yr]) RF cycles after f_fv
+`endif
         end
     always @(posedge sk) begin
         ch_fd[O_D-1:0] <= fd_r[O_D-1:0];
-        begin : dfield
-            reg [FDD-1:0] t;
-            t = {FDD{1'b0}};
-            if (pop) t[YS-1:0] = yr;
-            else t[S_RD*512-1:0] = fd_r[O_D +: S_RD * 512];
-            ch_fd[O_D +: FDD] <= t;
-        end
+        ch_fd[O_D +: FDD] <= dsel;
     end
 endmodule
 

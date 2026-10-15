@@ -1,0 +1,482 @@
+
+-- Running command `read_verilog -sv rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv; hierarchy -top ot_hgi_qdq_native_program_leaf; proc; opt; flatten; opt; write_json native_program.json; stat' --
+
+1. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_qdq_native_program_leaf'.
+Generating RTLIL representation for module `\ot_hgi_qdq_host_static'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv' to AST representation.
+Generating RTLIL representation for module `\ot_static_program_target'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv' to AST representation.
+Generating RTLIL representation for module `\ot_vms_calendar_static'.
+Successfully finished Verilog frontend.
+
+4. Executing HIERARCHY pass (managing design hierarchy).
+
+4.1. Analyzing design hierarchy..
+Top module:  \ot_hgi_qdq_native_program_leaf
+Used module:     \ot_vms_calendar_static
+Used module:     \ot_static_program_target
+Parameter \W = 48
+
+4.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_vms_calendar_static'.
+Parameter \W = 48
+Generating RTLIL representation for module `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000'.
+Parameter \TARGET = 8'00110000
+Parameter \PCW = 10
+
+4.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_static_program_target'.
+Parameter \TARGET = 8'00110000
+Parameter \PCW = 10
+Generating RTLIL representation for module `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010'.
+
+4.4. Analyzing design hierarchy..
+Top module:  \ot_hgi_qdq_native_program_leaf
+Used module:     $paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000
+Used module:     $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010
+
+4.5. Analyzing design hierarchy..
+Top module:  \ot_hgi_qdq_native_program_leaf
+Used module:     $paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000
+Used module:     $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010
+Removing unused module `\ot_vms_calendar_static'.
+Removing unused module `\ot_static_program_target'.
+Removing unused module `\ot_hgi_qdq_host_static'.
+Removed 3 unused modules.
+
+5. Executing PROC pass (convert processes to netlists).
+
+5.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:0$117'.
+Removing empty process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:0$117'.
+Found and cleaned up 1 empty switch in `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$99'.
+Found and cleaned up 1 empty switch in `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:0$137'.
+Removing empty process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:0$137'.
+Cleaned up 3 empty switches.
+
+5.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 4 switch rules as full_case in process $proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$99 in module $paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.
+Marked 1 switch rules as full_case in process $proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:34$72 in module $paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.
+Marked 4 switch rules as full_case in process $proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$119 in module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.
+Removed a total of 0 dead cases.
+
+5.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 14 redundant assignments.
+Promoted 18 assignments to connections.
+
+5.4. Executing PROC_INIT pass (extract init attributes).
+
+5.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$99'.
+Found async reset \rst_n in `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:34$72'.
+Found async reset \rst_n in `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$119'.
+
+5.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~13 debug messages>
+
+5.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$99'.
+     1/14: $0\done[0:0]
+     2/14: $0\active[0:0]
+     3/14: $0\calendar_v[0:0]
+     4/14: $0\last1[0:0]
+     5/14: $0\last0[0:0]
+     6/14: $0\valid1[0:0]
+     7/14: $0\valid0[0:0]
+     8/14: $0\issued[31:0]
+     9/14: $0\loops_left[15:0]
+    10/14: $0\pc[9:0]
+    11/14: $0\running[0:0]
+    12/14: $0\limit[10:0]
+    13/14: $0\base[9:0]
+    14/14: $0\fault[0:0]
+Creating decoders for process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:57$96'.
+Creating decoders for process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:34$72'.
+     1/2: $0\start_v_q[0:0]
+     2/2: $0\cfg_we_q[0:0]
+Creating decoders for process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:30$71'.
+Creating decoders for process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$119'.
+     1/15: $0\program_start_v[0:0]
+     2/15: $0\program_cfg_we[0:0]
+     3/15: $0\lv[0:0]
+     4/15: $0\dv[0:0]
+     5/15: $0\cv[0:0]
+     6/15: $0\stored_loops[15:0]
+     7/15: $0\stored_limit[10:0]
+     8/15: $0\stored_base[9:0]
+     9/15: $0\program_start_loops[15:0]
+    10/15: $0\program_start_limit[10:0]
+    11/15: $0\program_start_base[9:0]
+    12/15: $0\program_cfg_data[255:0]
+    13/15: $0\program_cfg_addr[9:0]
+    14/15: $0\fault[0:0]
+    15/15: $0\configured[0:0]
+Creating decoders for process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:36$118'.
+
+5.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+5.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.\active' using process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$99'.
+  created $adff cell `$procdff$277' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.\done' using process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$99'.
+  created $adff cell `$procdff$282' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.\fault' using process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$99'.
+  created $adff cell `$procdff$287' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.\base' using process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$99'.
+  created $adff cell `$procdff$292' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.\limit' using process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$99'.
+  created $adff cell `$procdff$297' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.\calendar_v' using process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$99'.
+  created $adff cell `$procdff$302' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.\running' using process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$99'.
+  created $adff cell `$procdff$307' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.\pc' using process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$99'.
+  created $adff cell `$procdff$312' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.\loops_left' using process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$99'.
+  created $adff cell `$procdff$317' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.\issued' using process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$99'.
+  created $adff cell `$procdff$322' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.\valid0' using process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$99'.
+  created $adff cell `$procdff$327' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.\valid1' using process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$99'.
+  created $adff cell `$procdff$332' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.\last0' using process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$99'.
+  created $adff cell `$procdff$337' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.\last1' using process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$99'.
+  created $adff cell `$procdff$342' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.\ordinal' using process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:57$96'.
+  created $dff cell `$procdff$343' with positive edge clock.
+Creating register for signal `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.\calendar' using process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:57$96'.
+  created $dff cell `$procdff$344' with positive edge clock.
+Creating register for signal `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.\pc0' using process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:57$96'.
+  created $dff cell `$procdff$345' with positive edge clock.
+Creating register for signal `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.\pc1' using process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:57$96'.
+  created $dff cell `$procdff$346' with positive edge clock.
+Creating register for signal `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.\ord0' using process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:57$96'.
+  created $dff cell `$procdff$347' with positive edge clock.
+Creating register for signal `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.\ord1' using process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:57$96'.
+  created $dff cell `$procdff$348' with positive edge clock.
+Creating register for signal `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.\captured' using process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:57$96'.
+  created $dff cell `$procdff$349' with positive edge clock.
+Creating register for signal `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.\cfg_we_q' using process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:34$72'.
+  created $adff cell `$procdff$354' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.\start_v_q' using process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:34$72'.
+  created $adff cell `$procdff$359' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.\cfg_addr_q' using process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:30$71'.
+  created $dff cell `$procdff$360' with positive edge clock.
+Creating register for signal `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.\start_base_q' using process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:30$71'.
+  created $dff cell `$procdff$361' with positive edge clock.
+Creating register for signal `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.\cfg_data_q' using process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:30$71'.
+  created $dff cell `$procdff$362' with positive edge clock.
+Creating register for signal `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.\start_limit_q' using process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:30$71'.
+  created $dff cell `$procdff$363' with positive edge clock.
+Creating register for signal `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.\start_loops_q' using process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:30$71'.
+  created $dff cell `$procdff$364' with positive edge clock.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\configured' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$119'.
+  created $adff cell `$procdff$369' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\fault' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$119'.
+  created $adff cell `$procdff$374' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\program_cfg_we' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$119'.
+  created $adff cell `$procdff$379' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\program_cfg_addr' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$119'.
+  created $dff cell `$procdff$386' with positive edge clock.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\program_cfg_data' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$119'.
+  created $dff cell `$procdff$393' with positive edge clock.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\program_start_v' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$119'.
+  created $adff cell `$procdff$398' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\program_start_base' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$119'.
+  created $dff cell `$procdff$405' with positive edge clock.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\program_start_limit' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$119'.
+  created $dff cell `$procdff$412' with positive edge clock.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\program_start_loops' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$119'.
+  created $dff cell `$procdff$419' with positive edge clock.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\cv' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$119'.
+  created $adff cell `$procdff$424' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\dv' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$119'.
+  created $adff cell `$procdff$429' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\lv' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$119'.
+  created $adff cell `$procdff$434' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\stored_base' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$119'.
+  created $dff cell `$procdff$441' with positive edge clock.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\stored_limit' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$119'.
+  created $dff cell `$procdff$448' with positive edge clock.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\stored_loops' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$119'.
+  created $dff cell `$procdff$455' with positive edge clock.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\address' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:36$118'.
+  created $dff cell `$procdff$456' with positive edge clock.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\base' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:36$118'.
+  created $dff cell `$procdff$457' with positive edge clock.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\limit' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:36$118'.
+  created $dff cell `$procdff$458' with positive edge clock.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\loops' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:36$118'.
+  created $dff cell `$procdff$459' with positive edge clock.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\target' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:36$118'.
+  created $dff cell `$procdff$460' with positive edge clock.
+Creating register for signal `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.\data_q' using process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:36$118'.
+  created $dff cell `$procdff$461' with positive edge clock.
+
+5.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+5.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 7 empty switches in `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$99'.
+Removing empty process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:63$99'.
+Removing empty process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:57$96'.
+Removing empty process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:34$72'.
+Removing empty process `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.$proc$rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv:30$71'.
+Found and cleaned up 6 empty switches in `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$119'.
+Removing empty process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:40$119'.
+Removing empty process `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.$proc$rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv:36$118'.
+Cleaned up 13 empty switches.
+
+5.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.
+<suppressed ~35 debug messages>
+Optimizing module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.
+<suppressed ~31 debug messages>
+Optimizing module ot_hgi_qdq_native_program_leaf.
+
+6. Executing OPT pass (performing simple optimizations).
+
+6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.
+<suppressed ~1 debug messages>
+Optimizing module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.
+Optimizing module ot_hgi_qdq_native_program_leaf.
+
+6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000'.
+<suppressed ~57 debug messages>
+Finding identical cells in module `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010'.
+<suppressed ~48 debug messages>
+Finding identical cells in module `\ot_hgi_qdq_native_program_leaf'.
+Removed a total of 35 cells.
+
+6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_hgi_qdq_native_program_leaf..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+<suppressed ~26 debug messages>
+
+6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.
+  Optimizing cells in module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.
+  Optimizing cells in module \ot_hgi_qdq_native_program_leaf.
+Performed a total of 0 changes.
+
+6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000'.
+Finding identical cells in module `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010'.
+Finding identical cells in module `\ot_hgi_qdq_native_program_leaf'.
+Removed a total of 0 cells.
+
+6.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$322 ($adff) from module $paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000 (D = $procmux$143_Y, Q = \issued).
+Adding EN signal on $procdff$292 ($adff) from module $paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000 (D = \start_base_q, Q = \base).
+Adding EN signal on $procdff$297 ($adff) from module $paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000 (D = \start_limit_q, Q = \limit).
+Adding SRST signal on $procdff$344 ($dff) from module $paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000 (D = \captured [47:0], Q = \calendar, rval = 48'000000000000000000000000000000000000000000000000).
+Adding EN signal on $procdff$441 ($dff) from module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010 (D = \base [9:0], Q = \stored_base).
+Adding EN signal on $procdff$369 ($adff) from module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010 (D = 1'1, Q = \configured).
+Adding EN signal on $procdff$419 ($dff) from module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010 (D = \stored_loops, Q = \program_start_loops).
+Adding EN signal on $procdff$386 ($dff) from module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010 (D = \address [9:0], Q = \program_cfg_addr).
+Adding EN signal on $procdff$393 ($dff) from module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010 (D = \data_q, Q = \program_cfg_data).
+Adding EN signal on $procdff$448 ($dff) from module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010 (D = \limit [10:0], Q = \stored_limit).
+Adding EN signal on $procdff$455 ($dff) from module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010 (D = \loops, Q = \stored_loops).
+Adding EN signal on $procdff$405 ($dff) from module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010 (D = \stored_base, Q = \program_start_base).
+Adding EN signal on $procdff$412 ($dff) from module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010 (D = \stored_limit, Q = \program_start_limit).
+
+6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000..
+Finding unused cells or wires in module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010..
+Finding unused cells or wires in module \ot_hgi_qdq_native_program_leaf..
+Removed 35 unused cells and 210 unused wires.
+<suppressed ~39 debug messages>
+
+6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.
+Optimizing module $paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.
+<suppressed ~1 debug messages>
+Optimizing module ot_hgi_qdq_native_program_leaf.
+
+6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module $paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_hgi_qdq_native_program_leaf..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+<suppressed ~14 debug messages>
+
+6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.
+  Optimizing cells in module $paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.
+  Optimizing cells in module \ot_hgi_qdq_native_program_leaf.
+Performed a total of 0 changes.
+
+6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010'.
+<suppressed ~33 debug messages>
+Finding identical cells in module `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000'.
+<suppressed ~6 debug messages>
+Finding identical cells in module `\ot_hgi_qdq_native_program_leaf'.
+Removed a total of 13 cells.
+
+6.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010..
+Finding unused cells or wires in module $paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000..
+Finding unused cells or wires in module \ot_hgi_qdq_native_program_leaf..
+Removed 0 unused cells and 13 unused wires.
+<suppressed ~2 debug messages>
+
+6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.
+Optimizing module $paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.
+Optimizing module ot_hgi_qdq_native_program_leaf.
+
+6.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module $paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \ot_hgi_qdq_native_program_leaf..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+<suppressed ~14 debug messages>
+
+6.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.
+  Optimizing cells in module $paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.
+  Optimizing cells in module \ot_hgi_qdq_native_program_leaf.
+Performed a total of 0 changes.
+
+6.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010'.
+Finding identical cells in module `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000'.
+Finding identical cells in module `\ot_hgi_qdq_native_program_leaf'.
+Removed a total of 0 cells.
+
+6.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010..
+Finding unused cells or wires in module $paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000..
+Finding unused cells or wires in module \ot_hgi_qdq_native_program_leaf..
+
+6.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.
+Optimizing module $paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.
+Optimizing module ot_hgi_qdq_native_program_leaf.
+
+6.23. Finished OPT passes. (There is nothing left to do.)
+
+7. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010.
+Deleting now unused module $paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000.
+<suppressed ~2 debug messages>
+
+8. Executing OPT pass (performing simple optimizations).
+
+8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_qdq_native_program_leaf.
+
+8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_qdq_native_program_leaf'.
+Removed a total of 0 cells.
+
+8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_hgi_qdq_native_program_leaf..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~14 debug messages>
+
+8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_hgi_qdq_native_program_leaf.
+Performed a total of 0 changes.
+
+8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hgi_qdq_native_program_leaf'.
+Removed a total of 0 cells.
+
+8.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_qdq_native_program_leaf..
+
+8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_qdq_native_program_leaf.
+
+8.9. Finished OPT passes. (There is nothing left to do.)
+
+9. Executing JSON backend.
+
+10. Printing statistics.
+
+=== ot_hgi_qdq_native_program_leaf ===
+
+   Number of wires:                191
+   Number of wire bits:           3486
+   Number of public wires:         102
+   Number of public wire bits:    3081
+   Number of ports:                 18
+   Number of port bits:            407
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                146
+     $add                            3
+     $adff                          19
+     $adffe                          4
+     $dff                           17
+     $dffe                           8
+     $eq                             5
+     $ge                             1
+     $gt                             2
+     $le                             2
+     $logic_and                     16
+     $logic_not                      7
+     $logic_or                       9
+     $mux                           32
+     $ne                             1
+     $not                            4
+     $or                             3
+     $reduce_and                     6
+     $reduce_bool                    2
+     $scopeinfo                      2
+     $sdff                           1
+     $sub                            1
+     ot_sram_1r1w_1024x256_m2_r2c2      1
+

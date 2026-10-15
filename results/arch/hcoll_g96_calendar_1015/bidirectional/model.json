@@ -1,0 +1,82 @@
+{
+  "schema": "hcoll.g96.native.calendar.v1",
+  "operation": {
+    "kind": "GROUP_REDUCE_MCAST",
+    "G": 96,
+    "subgroup": 8,
+    "n_FP32_per_rank": 1024,
+    "n_BF16_per_rank_output": 12288,
+    "quadrants": 4,
+    "FP32_flits_per_quadrant": 16,
+    "BF16_flits_per_subgroup_per_quadrant": 8,
+    "BF16_flits_output_per_quadrant": 96,
+    "exact_tree": {
+      "subgroup0": [
+        [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        [
+          [
+            4,
+            5
+          ],
+          [
+            6,
+            7
+          ]
+        ]
+      ],
+      "rounding": "FP32 native RNE after each pair; BF16 RNE exactly once at final root, two native16lane tags per publication"
+    },
+    "immutable_price_cycles": 1325.9,
+    "immutable_price_110percent": 1458.4900000000002
+  },
+  "primitive_mutants_rejected": [
+    "early publication",
+    "wrong exact operand",
+    "occupied tag",
+    "replay64 overwrite",
+    "sequence wrap",
+    "qslot conflict",
+    "ring conflict",
+    "unbound route"
+  ],
+  "sources": {
+    "V2_parent": "cc6d946ad (originala84885466)",
+    "transport": "359252cc2",
+    "reducer": "bd81c1706",
+    "golden": "tools/hgi_sim/machine.py:u_coll_group_reduce_mcast; tools/hgi_sim/lib.py:pairwise"
+  },
+  "native_edges": {
+    "qslot_capture_to_reducer_input": 3,
+    "reduce_read_to_add_issue": 1,
+    "add_latency": 8,
+    "earliest_pub_read_after_add_issue": 9,
+    "pub_read_to_issue": 1,
+    "publication_to_qslot_capture": 1,
+    "sequence_metadata_lead": 1
+  },
+  "endpoint": {
+    "frame_reservation_bits": 613,
+    "word_bits_per_coreedge": 487,
+    "period_edges": 613,
+    "reserved_frames_per_period": 487,
+    "idle_slots_real": true,
+    "accept": "17+floor(613*j/487)",
+    "TX_edges": 5,
+    "endpoint_read": "A-6",
+    "endpoint_write": "A-10",
+    "endpoint_receive_publication": "24+ceil(613*(j+1)/487)-1"
+  },
+  "status": "CANDIDATE_STATIC_CALENDAR_RESOURCE_PASS; not actual RTL/physical qualification",
+  "price_ratio": 2.591447318802323,
+  "verified_physical_directed_links": 768,
+  "cycles": 3436
+}

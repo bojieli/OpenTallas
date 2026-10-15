@@ -1,0 +1,512 @@
+{
+  "scope": "Operational requirement/successor map, not qualification or automatic retirement. Samecelldifferentparams mustremainseparate. Historicalfailures retained, no reroutefromregistry alone.",
+  "canonical_binding": "2417/BF519/PHW10 allhardware fixedcycles, actualdieparentandcurrentHCP46homes govern.",
+  "groups": {
+    "ctfxcap": {
+      "match": "s81hc_ctfxcap",
+      "required": "serial HC default owned local-epoch capture",
+      "successor": "s81hc_ctfxcap_margin_ref",
+      "owner": "/root/s_norm_gather",
+      "next": "collect durable51.84umCTS then actualdieparentpin/hop slotintegration/fullFFholdroute/native",
+      "retirement": "none; earlierCLOSEDnon-ownedctfx doesnotreplaceownedcapture",
+      "historical_registry": [
+        {
+          "name": "s81hc_ctfxcap_ref-v1-owned-epoch-631a20a94",
+          "block": null,
+          "status": "EARLY_FAIL_CONGESTION",
+          "reason": "global route finished with congestion (GRT-0116): s81hc_ctfxcap_ref_v1_owned_epoch_631a20a94/flow.log: [ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer. [step do-5_1_grt]",
+          "commit_full": "631a20a940b893b029e7766db8dca261608f20ed",
+          "host": "ot-epyc4",
+          "run": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctfxcap_ref-v1-owned-epoch-631a20a94"
+        },
+        {
+          "name": "s81hc_ctfxcap_ref-v3-assigned-reset-d9f350600",
+          "block": null,
+          "status": "EARLY_FAIL_HOLD",
+          "reason": "4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.0% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -41.4 ps (start -41.43), 8960 it / 16293 buffers, 3342 endpoints in margin, 0.3 h in step, HM guard present",
+          "commit_full": "d9f3506000e614feb40f98ade966fbf343b86b31",
+          "host": "ot-epyc1tb",
+          "run": "/srv/opentallas/claude/closure-loop/s81hc_ctfxcap_ref-v3-assigned-reset-d9f350600"
+        },
+        {
+          "name": "s81hc_ctfxcap_ref-v4-rr-epoch-539178932",
+          "block": null,
+          "status": "NEEDS_HUMAN",
+          "reason": "route crashed twice (rc=1 ok-check failed;; first error: s81hc_ctfxcap_ref_v4_rr_epoch_539178932/flow.log: [ERROR DPL-0033] detailed placement checks failed during check placement. [step do-4_1_cts]; resource=False)",
+          "commit_full": "539178932673f3ff71d2341f654699d9874a98df",
+          "host": "ot-epyc1tb",
+          "run": "/srv/opentallas/claude/closure-loop/s81hc_ctfxcap_ref-v4-rr-epoch-539178932"
+        }
+      ]
+    },
+    "ctfxnt": {
+      "match": "s81hc_ctfxnt",
+      "required": "NTREE variant final9th native tile,defaultOFFuntilqualified",
+      "successor": "s81hc_ctfxnt_margin_ref",
+      "owner": "/root/s_norm_gather",
+      "next": "collect durable51.84umCTS then actualdieparentpin/hop slotintegration/fullFFholdroute/native",
+      "retirement": "none; nativefailedCLOSEDv2 remainshistoricalonly",
+      "historical_registry": [
+        {
+          "name": "s81hc_ctfxnt_ref-v5-ck-split-8ebd28fd2",
+          "block": null,
+          "status": "NEEDS_RTL",
+          "reason": "bench_hc_ntree_tmut_ot_s81_hc_ctfx_nt expected FAIL but rc=1",
+          "commit_full": "8ebd28fd206e6103c9bef8efe9edb391e49538ff",
+          "host": "ot-epyc1tb",
+          "run": "/srv/opentallas/claude/closure-loop/s81hc_ctfxnt_ref-v5-ck-split-8ebd28fd2"
+        },
+        {
+          "name": "s81hc_ctfxnt_ref-v1-c3c730d75",
+          "block": null,
+          "status": "CLOSED",
+          "reason": "CLOSED TT +250.34 / FF +14.42 ps DRC 0; SS sensitivity +107.65 ps | record claude/s81-norm-tree-1014 ed2389184 (19 files) | AUTO-MERGED into main 89e7c083d",
+          "commit_full": "c3c730d750adee62eba6b8d8637feebd4cbf402b",
+          "host": "ot-pve1",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/s81hc_ctfxnt_ref-v1-c3c730d75"
+        },
+        {
+          "name": "s81hc_ctfxnt_ref-v5-ck-split-a31110236",
+          "block": null,
+          "status": "NEEDS_HUMAN",
+          "reason": "route crashed twice (rc=1 ok-check failed;; first error: s81hc_ctfxnt_ref_v5_ck_split_a31110236/flow.log: [ERROR DPL-0033] detailed placement checks failed during check placement. [step do-4_1_cts]; resource=False)",
+          "commit_full": "a311102368b10b1415e6dfcdfbacaeea4af3737d",
+          "host": "ot-epyc1tb",
+          "run": "/srv/opentallas/claude/closure-loop/s81hc_ctfxnt_ref-v5-ck-split-a31110236"
+        },
+        {
+          "name": "s81hc_ctfxnt_ref-v2-native-86b6ec42b",
+          "block": null,
+          "status": "CLOSED",
+          "reason": "CLOSED TT +192.08 / FF +12.56 ps DRC 0; SS sensitivity +20.70 ps | record claude/s81-norm-tree-1014 188d2ae65 (19 files) | AUTO-MERGED into main aa712a015",
+          "commit_full": "86b6ec42b0165dea332d8d9366f2f4e2600dd2a5",
+          "host": "ot-epyc1tb",
+          "run": "/srv/opentallas/claude/closure-loop/s81hc_ctfxnt_ref-v2-native-86b6ec42b"
+        },
+        {
+          "name": "s81hc_ctfxnt_ref-v3-owned-epoch-631a20a94",
+          "block": null,
+          "status": "EARLY_FAIL_CONGESTION",
+          "reason": "global route finished with congestion (GRT-0116): s81hc_ctfxnt_ref_v3_owned_epoch_631a20a94/flow.log: [ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer. [step do-5_1_grt]",
+          "commit_full": "631a20a940b893b029e7766db8dca261608f20ed",
+          "host": "ot-epyc4",
+          "run": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctfxnt_ref-v3-owned-epoch-631a20a94"
+        }
+      ]
+    },
+    "ctnl_l2": {
+      "match": "s81hc_ctnl_l2",
+      "required": "inheritedHCCTNLnative L2",
+      "successor": "s81hc_ctnl_l2_native_ref-np2-granted-57b4f1931",
+      "owner": "/root/s_norm_gather/native_leaves",
+      "next": "collect actualroute then nativeclone/resetpins",
+      "historical_registry": [
+        {
+          "name": "s81hc_ctnl_l2_ref-fixed-lane-2f4ed494d",
+          "block": null,
+          "status": "CLOSED",
+          "reason": "CLOSED TT +58.82 / FF +25.98 ps DRC 0; SS sensitivity -291.25 ps | record codex/s81hc-physical-20261012 acc613161 (19 files) | AUTO-MERGE skipped: no behavioral positive bench (lint alone is not exactness)",
+          "commit_full": "2f4ed494da29ee1f1a4a8a02b872721aeb5c50e4",
+          "host": "ot-epyc1tb",
+          "run": "/srv/opentallas/claude/closure-loop/s81hc_ctnl_l2_ref-fixed-lane-2f4ed494d"
+        },
+        {
+          "name": "s81hc_ctnl_l2_native_ref-np2-granted-57b4f1931",
+          "block": null,
+          "status": "RUNNING",
+          "reason": null,
+          "commit_full": "57b4f1931001e59ea6e1b6501ff388c07be6fded",
+          "host": "ot-epyc1tb",
+          "run": "/srv/opentallas/claude/closure-loop/s81hc_ctnl_l2_native_ref-np2-granted-57b4f1931"
+        },
+        {
+          "name": "s81hc_ctnl_l2_native_ref-np1-75905c4bb",
+          "block": null,
+          "status": "FLOORPLAN_MARGIN",
+          "reason": "util: utilisation 60.2% > 60% (std 7547 + macro 0 um2 in 12541 um2): grow the outline to <= 55-60%",
+          "commit_full": "75905c4bb930028be6b774593c3204a9f8cd2dcb",
+          "host": "ot-epyc4",
+          "run": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctnl_l2_native_ref-np1-75905c4bb"
+        }
+      ]
+    },
+    "ctnl_l3": {
+      "match": "s81hc_ctnl_l3",
+      "required": "inheritedHCCTNLnative L3",
+      "successor": "s81hc_ctnl_l3_native_ref-np2-granted-57b4f1931",
+      "owner": "/root/s_norm_gather/native_leaves",
+      "next": "collect actualroute then nativeclone/resetpins",
+      "historical_registry": [
+        {
+          "name": "s81hc_ctnl_l3_native_ref-np2-granted-57b4f1931",
+          "block": null,
+          "status": "RUNNING",
+          "reason": null,
+          "commit_full": "57b4f1931001e59ea6e1b6501ff388c07be6fded",
+          "host": "ot-epyc1tb",
+          "run": "/srv/opentallas/claude/closure-loop/s81hc_ctnl_l3_native_ref-np2-granted-57b4f1931"
+        },
+        {
+          "name": "s81hc_ctnl_l3_ref-fixed-lane-2f4ed494d",
+          "block": null,
+          "status": "CLOSED",
+          "reason": "CLOSED TT +70.53 / FF +23.10 ps DRC 0; SS sensitivity -279.72 ps | record codex/s81hc-physical-20261012 56dd47b5c (19 files) | AUTO-MERGE skipped: no behavioral positive bench (lint alone is not exactness)",
+          "commit_full": "2f4ed494da29ee1f1a4a8a02b872721aeb5c50e4",
+          "host": "ot-epyc4",
+          "run": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctnl_l3_ref-fixed-lane-2f4ed494d"
+        },
+        {
+          "name": "s81hc_ctnl_l3_native_ref-np1-75905c4bb",
+          "block": null,
+          "status": "FLOORPLAN_MARGIN",
+          "reason": "util: utilisation 60.2% > 60% (std 7554 + macro 0 um2 in 12541 um2): grow the outline to <= 55-60%",
+          "commit_full": "75905c4bb930028be6b774593c3204a9f8cd2dcb",
+          "host": "ot-epyc4",
+          "run": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctnl_l3_native_ref-np1-75905c4bb"
+        }
+      ]
+    },
+    "ctfn": {
+      "match": "s81hc_ctfn",
+      "required": "inheritedHCCTFNnative broadcast",
+      "successor": "s81hc_ctfn_native_ref-np1-75905c4bb",
+      "owner": "/root/s_norm_gather/native_leaves",
+      "next": "preserve liveECO244013 then nativeclone/resetpins",
+      "historical_registry": [
+        {
+          "name": "s81hc_ctfn_ref-v1-4c6ea9b8c",
+          "block": null,
+          "status": "CLOSED",
+          "reason": "CLOSED TT +148.41 / FF +17.65 ps DRC 0; SS sensitivity +42.05 ps | record claude/el1011-s81hc-ctile 938794460 (19 files) | AUTO-MERGED into main 796667e28",
+          "commit_full": "4c6ea9b8c5a85de9bbf974ed38bcfcc87e47c3b9",
+          "host": "ot-epyc1tb",
+          "run": "/srv/opentallas/claude/closure-loop/s81hc_ctfn_ref-v1-4c6ea9b8c"
+        },
+        {
+          "name": "s81hc_ctfn_native_ref-np1-75905c4bb",
+          "block": null,
+          "status": "ECO",
+          "reason": null,
+          "commit_full": "75905c4bb930028be6b774593c3204a9f8cd2dcb",
+          "host": "ot-epyc4",
+          "run": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctfn_native_ref-np1-75905c4bb"
+        },
+        {
+          "name": "s81hc_ctfn_ref-v1-a9cfb97b9",
+          "block": null,
+          "status": "NEEDS_HUMAN",
+          "reason": "collect crashed twice (rc=1; resource=False)",
+          "commit_full": "a9cfb97b96ad8e09181b71697593042b93cdebb6",
+          "host": "ot-agidock128",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/s81hc_ctfn_ref-v1-a9cfb97b9"
+        }
+      ]
+    },
+    "crrfw": {
+      "match": "s81hc_crrfw",
+      "required": "C0westforwardHCroot, distinct fromC2east samecell",
+      "successor": "s81hc_crrfw_local_ref",
+      "owner": "/root/s_norm_gather/returns",
+      "next": "nativegate+canonicalparentpeerhomes/realrelaystages; legacyv20all2920hops>500 cannotzeroepochadopt",
+      "historical_registry": [
+        {
+          "name": "s81hc_crrfw_ref-v1-d71bc15c1",
+          "block": null,
+          "status": "FLOORPLAN_MARGIN",
+          "reason": "pin_density: pin density > 12.0 bits/um/layer over 100 um: N/M5 20.1 b/um @55, S/M5 20.0 b/um @50: spread over the face (target <= 6.0) / more layers / a longer edge",
+          "commit_full": "d71bc15c122f0264331cdabbfbb2232713210b2a",
+          "host": "ot-epyc1tb",
+          "run": "/srv/opentallas/claude/closure-loop/s81hc_crrfw_ref-v1-d71bc15c1"
+        },
+        {
+          "name": "s81hc_crrfw_ref-v4-sc-c845e1137",
+          "block": null,
+          "status": "NEEDS_RTL",
+          "reason": "TT -83.7 / FF -39.36 ps / DRC 0 (line TT >= +0 / FF >= +0 / DRC 0)",
+          "commit_full": "c845e1137a8b73c0e029ea893bef600804c9c0b1",
+          "host": "ot-epyc1tb",
+          "run": "/srv/opentallas/claude/closure-loop/s81hc_crrfw_ref-v4-sc-c845e1137"
+        },
+        {
+          "name": "s81hc_crrfw_ref-v2-pinplan-f41de6496",
+          "block": null,
+          "status": "CLOSED",
+          "reason": "CLOSED TT +21.59 / FF +1.64 ps DRC 0; SS sensitivity -76.41 ps | record claude/s81hc-1013 06cb96286 (19 files) | AUTO-MERGED into main d4f1f0008",
+          "commit_full": "f41de6496c4f084fd4efc9e0272e187c3988d94c",
+          "host": "ot-epyc4",
+          "run": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_crrfw_ref-v2-pinplan-f41de6496"
+        },
+        {
+          "name": "s81hc_crrfw_ref-v6-056c994dd",
+          "block": null,
+          "status": "NEEDS_HUMAN",
+          "reason": "route crashed twice (rc=1 ok-check failed;; first error: s81hc_crrfw_ref_v6_056c994dd/flow.log: [ERROR GPL-0305] RePlAce diverged during gradient descent calculation, resulting in an invalid step length (Inf or NaN). This is often caused by numerical instability or high placement density. Consider reducing placement density to potenti [step do-3_3_place_gp]; resource=False)",
+          "commit_full": "056c994dd58df69111f09d1945458fe8b2e258a2",
+          "host": "ot-epyc1tb",
+          "run": "/srv/opentallas/claude/closure-loop/s81hc_crrfw_ref-v6-056c994dd"
+        }
+      ]
+    },
+    "ctra": {
+      "match": "s81hc_ctra",
+      "required": "HCreturnaddress logic",
+      "successor": "pending4columnactualcaptures/flagsmergedtile structuraldesign",
+      "owner": "/root/s_norm_gather/returns",
+      "next": "implementrealnativeinputcapture/localcolumnarlogic preservingpricedepochs",
+      "historical_registry": [
+        {
+          "name": "s81hc_ctra_ref-v1-a9cfb97b9",
+          "block": null,
+          "status": "EARLY_FAIL_CONGESTION",
+          "reason": "global route finished with congestion (GRT-0116): s81hc_ctra_ref_v1_a9cfb97b9/flow.log: [ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer. [step do-5_1_grt]",
+          "commit_full": "a9cfb97b96ad8e09181b71697593042b93cdebb6",
+          "host": "ot-epyc4",
+          "run": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctra_ref-v1-a9cfb97b9"
+        }
+      ]
+    },
+    "ctrb": {
+      "match": "s81hc_ctrb",
+      "required": "HCreturndata logic",
+      "successor": "pending4columnactualcaptures/flagsmergedtile structuraldesign",
+      "owner": "/root/s_norm_gather/returns",
+      "next": "implementrealnativeinputcapture/localcolumnarlogic preservingpricedepochs",
+      "historical_registry": [
+        {
+          "name": "s81hc_ctrb_ref-v1-a9cfb97b9",
+          "block": null,
+          "status": "EARLY_FAIL_CONGESTION",
+          "reason": "GRT extra iteration 22/30: congestion markers 10002 -> 10000 -> 10002 -> 10000 (iterations 5, 10, 15, 20): not decreasing",
+          "commit_full": "a9cfb97b96ad8e09181b71697593042b93cdebb6",
+          "host": "ot-epyc4",
+          "run": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctrb_ref-v1-a9cfb97b9"
+        }
+      ]
+    },
+    "gather_rw": {
+      "match": "dsfd_gth_rw",
+      "required": "assignedpinwestgatherrootleaf",
+      "successor": "g8CLOSEDTT96.64FF9.53DRC0 thennativeclockretaprepair",
+      "owner": "/root/s_norm_gather/gather",
+      "next": "nativeco178221psclockbranchrepair;guardedCTSactive, closedstandslegitimatenativerepairadmissionneeded",
+      "historical_registry": [
+        {
+          "name": "dsfd_gth_rw-g4-6cb5bd842-arg2",
+          "block": null,
+          "status": "CANCELLED",
+          "reason": "cancelled by a human (superseded by dsfd_gth_rw-g5-1d22b075f: arg1 of the same kit closed timing (TT +169 / FF +19.5) but DRC 7 all at the SRAM faces (macro-edge class); the kit lacks the macro-edge VIA guard, g5 has it)",
+          "commit_full": "6cb5bd8424d36c067e2b50e0e86160e239444ee7",
+          "host": "ot-agidock128",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/dsfd_gth_rw-g4-6cb5bd842-arg2"
+        },
+        {
+          "name": "dsfd_gth_rw_v19-g8-14be85ce3",
+          "block": null,
+          "status": "REFUSED",
+          "reason": "SUBMIT_LINT REF_GATE: source_binding: gate result is legacy, unverified, or differs from the route source/daemon overlay (gate-executed daemon overlay changed: tools/fp_margin_lint.py) (fix: preserve original as unqualified; regenerate the gate for this exact source)",
+          "commit_full": null,
+          "host": null,
+          "run": null
+        },
+        {
+          "name": "dsfd_gth_rw-g2-33ce4a63b",
+          "block": null,
+          "status": "EARLY_FAIL_CONGESTION",
+          "reason": "global route finished with congestion (GRT-0116): dsfd_gth_rw_g2_33ce4a63b/flow.log: [ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer. [step do-5_1_grt]",
+          "commit_full": "33ce4a63b9da0a73ea9a83a24672a481de70d60a",
+          "host": "ot-epyc1tb",
+          "run": "/srv/opentallas/claude/closure-loop/dsfd_gth_rw-g2-33ce4a63b"
+        },
+        {
+          "name": "dsfd_gth_rw-g4-6cb5bd842",
+          "block": null,
+          "status": "NEEDS_RTL",
+          "reason": "TT 193.18 / FF -46.04 ps / DRC 4 (line TT >= +0 / FF >= +0 / DRC 0)",
+          "commit_full": "6cb5bd8424d36c067e2b50e0e86160e239444ee7",
+          "host": "ot-epyc1tb",
+          "run": "/srv/opentallas/claude/closure-loop/dsfd_gth_rw-g4-6cb5bd842"
+        },
+        {
+          "name": "dsfd_gth_rw-g5-1d22b075f",
+          "block": null,
+          "status": "CLOSED",
+          "reason": "CLOSED TT +145.73 / FF +26.12 ps DRC 0; SS sensitivity -125.02 ps | record claude/s81-gather-1014 130d5cba8 (19 files) | AUTO-MERGE CONFLICT (1 files: tools/s81_ph/gather_parent_spec.py)",
+          "commit_full": "1d22b075f010f641b620939b8f6dcfc93d0fded1",
+          "host": "ot-epyc4",
+          "run": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_gth_rw-g5-1d22b075f"
+        },
+        {
+          "name": "dsfd_gth_rw_v19-g8-996350cb8",
+          "block": null,
+          "status": "CLOSED",
+          "reason": "CLOSED TT +96.64 / FF +9.53 ps DRC 0; SS sensitivity -224.37 ps | record claude/s81-gather-r3-1014 e8d4a81f2 (19 files) | AUTO-MERGED into main c7f2a7d70",
+          "commit_full": "996350cb8273d4e40699016b1c4a7df0986966f4",
+          "host": "ot-epyc4",
+          "run": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_gth_rw_v19-g8-996350cb8"
+        },
+        {
+          "name": "dsfd_gth_rw-g3-a4322fe6a",
+          "block": null,
+          "status": "REFUSED",
+          "reason": "SUBMIT_LINT REF_GATE: source_binding: gate result is legacy, unverified, or differs from the route source/daemon overlay (fix: preserve original as unqualified; regenerate the gate for this exact source)",
+          "commit_full": null,
+          "host": null,
+          "run": null
+        },
+        {
+          "name": "dsfd_gth_rw_v19-g7-2d1996f77",
+          "block": null,
+          "status": "NEEDS_HUMAN",
+          "reason": "route crashed twice (rc=1 ok-check failed;; first error: dsfd_gth_rw_v19_g7_2d1996f77/flow.log: [ERROR GRT-0183] Net _02831_: the 3D maze router ran out of legal paths (heap underflow) - the net is boxed in by local congestion or blockages. [step do-5_1_grt]; resource=False)",
+          "commit_full": "2d1996f775cdd7ac007ba87f397cb2fd41e12d13",
+          "host": "ot-epyc1tb",
+          "run": "/srv/opentallas/claude/closure-loop/dsfd_gth_rw_v19-g7-2d1996f77"
+        },
+        {
+          "name": "dsfd_gth_rw-g1-4b2921f8b",
+          "block": null,
+          "status": "FLOORPLAN_MARGIN",
+          "reason": "util: utilisation 71.6% > 60% (std 9899 + macro 11369 um2 in 29692 um2): grow the outline to <= 55-60%",
+          "commit_full": "4b2921f8b10599861de58302aa9542f5d1d5e77a",
+          "host": "ot-epyc1tb",
+          "run": "/srv/opentallas/claude/closure-loop/dsfd_gth_rw-g1-4b2921f8b"
+        },
+        {
+          "name": "dsfd_gth_rw-g4-6cb5bd842-arg1",
+          "block": null,
+          "status": "NEEDS_RTL",
+          "reason": "TT 169.27 / FF 19.53 ps / DRC 7 (line TT >= +0 / FF >= +0 / DRC 0)",
+          "commit_full": "6cb5bd8424d36c067e2b50e0e86160e239444ee7",
+          "host": "ot-epyc4",
+          "run": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_gth_rw-g4-6cb5bd842-arg1"
+        },
+        {
+          "name": "dsfd_gth_rw-g3-540d66abd",
+          "block": null,
+          "status": "EARLY_FAIL_CONGESTION",
+          "reason": "global route finished with congestion (GRT-0116): dsfd_gth_rw_g3_540d66abd/flow.log: [ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer. [step do-5_1_grt]",
+          "commit_full": "540d66abdf75f3b4b33d176d20d70590deb4a0b5",
+          "host": "ot-epyc4",
+          "run": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_gth_rw-g3-540d66abd"
+        }
+      ]
+    },
+    "gather_re": {
+      "match": "dsfd_gth_re",
+      "required": "assignedpineastgatherrootleaf",
+      "successor": "dsfd_gth_re_v19-g10-c3e6bccc9",
+      "owner": "/root/s_norm_gather/gather",
+      "next": "actualroute+nativepins sharedlocala3/a4clocktopology",
+      "historical_registry": [
+        {
+          "name": "dsfd_gth_re-g2-33ce4a63b",
+          "block": null,
+          "status": "EARLY_FAIL_CONGESTION",
+          "reason": "global route finished with congestion (GRT-0116): dsfd_gth_re_g2_33ce4a63b/flow.log: [ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer. [step do-5_1_grt]",
+          "commit_full": "33ce4a63b9da0a73ea9a83a24672a481de70d60a",
+          "host": "ot-epyc4",
+          "run": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_gth_re-g2-33ce4a63b"
+        },
+        {
+          "name": "dsfd_gth_re_v19-g8-996350cb8",
+          "block": null,
+          "status": "NEEDS_HUMAN",
+          "reason": "route crashed twice (rc=1 ok-check failed;; first error: dsfd_gth_re_v19_g8_996350cb8/flow.log: [ERROR GRT-0183] Net u_l.g_r\\[0\\].u_root.i_v: the 3D maze router ran out of legal paths (heap underflow) - the net is boxed in by local congestion or blockages. [step do-5_1_grt]; resource=False)",
+          "commit_full": "996350cb8273d4e40699016b1c4a7df0986966f4",
+          "host": "ot-epyc4",
+          "run": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_gth_re_v19-g8-996350cb8"
+        },
+        {
+          "name": "dsfd_gth_re-g3-a4322fe6a",
+          "block": null,
+          "status": "REFUSED",
+          "reason": "SUBMIT_LINT REF_GATE: source_binding: gate result is legacy, unverified, or differs from the route source/daemon overlay (fix: preserve original as unqualified; regenerate the gate for this exact source)",
+          "commit_full": null,
+          "host": null,
+          "run": null
+        },
+        {
+          "name": "dsfd_gth_re_v19-g7-2d1996f77",
+          "block": null,
+          "status": "NEEDS_HUMAN",
+          "reason": "route crashed twice (rc=1 ok-check failed;; first error: dsfd_gth_re_v19_g7_2d1996f77/flow.log: [ERROR GRT-0183] Net net5875: the 3D maze router ran out of legal paths (heap underflow) - the net is boxed in by local congestion or blockages. [step do-5_1_grt]; resource=False)",
+          "commit_full": "2d1996f775cdd7ac007ba87f397cb2fd41e12d13",
+          "host": "ot-epyc1tb",
+          "run": "/srv/opentallas/claude/closure-loop/dsfd_gth_re_v19-g7-2d1996f77"
+        },
+        {
+          "name": "dsfd_gth_re_v19-g8-14be85ce3",
+          "block": null,
+          "status": "REFUSED",
+          "reason": "SUBMIT_LINT REF_GATE: source_binding: gate result is legacy, unverified, or differs from the route source/daemon overlay (gate-executed daemon overlay changed: tools/fp_margin_lint.py) (fix: preserve original as unqualified; regenerate the gate for this exact source)",
+          "commit_full": null,
+          "host": null,
+          "run": null
+        },
+        {
+          "name": "dsfd_gth_re_v19-g9-0f7620385",
+          "block": null,
+          "status": "EARLY_FAIL_HOLD",
+          "reason": "5_1_grt hold repair not converging: WNS gained +0.00 ps and TNS +0.0% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -30.6 ps (start -50.06), 2890 it / 6715 buffers, 11240 endpoints in margin, 0.9 h in step, HM guard present",
+          "commit_full": "0f762038570a54d787e06a1c4282a8b222771e48",
+          "host": "ot-epyc4",
+          "run": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_gth_re_v19-g9-0f7620385"
+        },
+        {
+          "name": "dsfd_gth_re-g5-1d22b075f",
+          "block": null,
+          "status": "EARLY_FAIL_HOLD",
+          "reason": "4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.0% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -23.6 ps (start -46.58), 3680 it / 7488 buffers, 11834 endpoints in margin, 0.3 h in step, HM guard present",
+          "commit_full": "1d22b075f010f641b620939b8f6dcfc93d0fded1",
+          "host": "ot-epyc1tb",
+          "run": "/srv/opentallas/claude/closure-loop/dsfd_gth_re-g5-1d22b075f"
+        },
+        {
+          "name": "dsfd_gth_re-g1-4b2921f8b",
+          "block": null,
+          "status": "FLOORPLAN_MARGIN",
+          "reason": "util: utilisation 71.6% > 60% (std 9899 + macro 11369 um2 in 29692 um2): grow the outline to <= 55-60%",
+          "commit_full": "4b2921f8b10599861de58302aa9542f5d1d5e77a",
+          "host": "ot-epyc1tb",
+          "run": "/srv/opentallas/claude/closure-loop/dsfd_gth_re-g1-4b2921f8b"
+        },
+        {
+          "name": "dsfd_gth_re-g4-6cb5bd842",
+          "block": null,
+          "status": "EARLY_FAIL_HOLD",
+          "reason": "4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.0% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -23.6 ps (start -46.58), 5400 it / 10498 buffers, 9627 endpoints in margin, 0.4 h in step, HM guard present",
+          "commit_full": "6cb5bd8424d36c067e2b50e0e86160e239444ee7",
+          "host": "ot-epyc4",
+          "run": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_gth_re-g4-6cb5bd842"
+        },
+        {
+          "name": "dsfd_gth_re-g6-e17a2d893",
+          "block": null,
+          "status": "NEEDS_RTL",
+          "reason": "TT 140.01 / FF -59.91 ps / DRC 1 (line TT >= +0 / FF >= +0 / DRC 0)",
+          "commit_full": "e17a2d8933a3cb8f08d854c181c4f6b60273eca0",
+          "host": "ot-epyc1tb",
+          "run": "/srv/opentallas/claude/closure-loop/dsfd_gth_re-g6-e17a2d893"
+        },
+        {
+          "name": "dsfd_gth_re-g3-540d66abd",
+          "block": null,
+          "status": "EARLY_FAIL_CONGESTION",
+          "reason": "global route finished with congestion (GRT-0116): dsfd_gth_re_g3_540d66abd/flow.log: [ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer. [step do-5_1_grt]",
+          "commit_full": "540d66abdf75f3b4b33d176d20d70590deb4a0b5",
+          "host": "ot-epyc4",
+          "run": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_gth_re-g3-540d66abd"
+        },
+        {
+          "name": "dsfd_gth_re_v19-g10-c3e6bccc9",
+          "block": null,
+          "status": "RUNNING",
+          "reason": null,
+          "commit_full": "c3e6bccc949e4d5dc8dcda024579ed457e224f34",
+          "host": "ot-epyc1tb",
+          "run": "/srv/opentallas/claude/closure-loop/dsfd_gth_re_v19-g10-c3e6bccc9"
+        }
+      ]
+    }
+  }
+}

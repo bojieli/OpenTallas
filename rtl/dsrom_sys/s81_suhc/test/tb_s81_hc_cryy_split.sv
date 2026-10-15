@@ -13,7 +13,7 @@ module tb_s81_hc_cryy_split #(parameter integer C = 0, NCYC = 60000);
     reg [YS-1:0] y_s;  reg yacc, p_req;
     wire [YS-1:0] r_y, n_y;  wire r_f, n_f;
     ot_s81_hc_crooty_y #(.C(C), .FIFO_SLICE(256)) u_ref (.sk(clk), .srs(srs), .y_s(y_s), .yacc(yacc), .p_req(p_req), .p_y(r_y), .p_flt(r_f));
-    ot_s81_hc_crooty_yl #(.C(C)) u_new (.sk(clk), .srs(srs), .y_s(y_s), .yacc(yacc), .p_req(p_req), .p_y(n_y), .p_flt(n_f));
+    ot_s81_hc_crooty_yl #(.C(C)) u_new (.sk(clk), .srs(srs), .y_s(y_s), .yacc(yacc), .p_req({11{p_req}}), .p_y(n_y), .p_flt(n_f));
     integer cyc = 0, bad = 0, chk = 0, occ = 0, mode = 0, left = 0, i;
     integer n_push = 0, n_pop = 0, n_both = 0, n_full = 0, n_byp = 0, n_arr = 0, c_flt = 0, n_nz = 0, slices = 0;
     reg [10:0] sl_seen = 0;

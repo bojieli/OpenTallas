@@ -119,15 +119,15 @@
   "pd": 0.5,
   "threads": 16,
   "peak_ram_gb": 48,
-  "hold_margin_ns": 0.03,
+  "hold_margin_ns": 0.05,
   "macro_halo_um": 5.4
  },
  "job": {
   "owner": "Claude:el1013-s81-gather",
   "branch": "claude/s81-gather-1014",
-  "tag": "g4",
+  "tag": "g5",
   "purpose": "S81 gather v4 DIRECT leaf (W half) of the gather cluster dsfd_sp_gather_c: 4 roots ot_s81ph_ret_root_s (step B, S = 8 open rows = 2 x the measured real bound 4), queue 128 x 66 + pairing store 256 x 34 arrays per root; the leaf takes only its own 4 lanes and returns only its own 4 results + {busy, fault}; the parent delivers / collects through relay tiles in the channels (no lane or chain passes through a leaf).  Every port a flop at the pin.",
-  "structural_change": "g4 after g2 / g3 GRT-0116 (same 2 x 4 array stacks): the through-leaf lane chain (li 1104 -> lo 828, W -> E across both array stacks) and column chain (ci 636 -> co 848) are REMOVED from the leaf: v4 direct delivery (li 276, co 212 + st 2), lanes / results relayed by dsfd_rly_276_WE/EW / dsfd_rly_214_NS tiles in the parent's channels; array stacks moved to the face without pins (free ingress band); forward-FF anchor hooks dropped; recipe-2 pin flops + hold pads.  Registered reset tree and per-macro clock leaves kept.",
+  "structural_change": "g5 after g4 TT +193 / FF -46 / DRC 4 (M4 short + spacing at the 256x34 SRAM pin face x 108.576; loop finishing variants of the same kit stall at 9-13 DRT markers): the routing structure at every SRAM edge changes -- macro-edge VIA guard (main fb67ed629, physical/common_flow/macro_edge_via_guard.tcl via sram_edge_guard.tcl, pre-GRT add / post-DRT remove) takes the top routing layer out of the GCells straddling each of the 8 macro faces so no net gets an over-macro track it can only leave by an M4 jog through the macro OBS (the g4 DRC shape); route hold margin 50 ps (the arg1 finishing variant of the same RTL converged CTS + GRT hold to FF +50). Same RTL, outline, pins, macro placement.",
   "benches": [
    {
     "name": "root_s_lockstep",

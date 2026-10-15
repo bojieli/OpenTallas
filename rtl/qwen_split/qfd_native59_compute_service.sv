@@ -30,9 +30,20 @@ module qfd_native59_compute_service #(
  output wire[519:0]vm_ar,
  input wire[38:0]write_commit_v,input wire[311:0]write_commit_line,input wire[623:0]write_commit_mask,
  input wire visibility_slot,
- input wire complete_slot,output wire completed,output wire[94:0]native_ret,
+ input wire complete_slot,output wire completed,output reg[94:0]native_ret,
  output wire fault
 );
+ // Physical status face is a true ck_service pin register. This adds exactly
+ // one OBSERVATION edge; internal request/commit/completion slots are unchanged.
+ // No combinational decode or fault OR follows the exported native_ret flops.
+ wire [94:0] service_ret_raw;
+`ifdef QFD_NATIVE_RET_MUT_BYPASS
+ always @* native_ret=service_ret_raw;
+`else
+ always @(posedge ck_service or negedge rst_n)
+  if(!rst_n)native_ret<=95'd0;
+  else native_ret<=service_ret_raw;
+`endif
  wire vm_write_v;wire[19:0]vm_write_word;wire[4:0]vm_write_beat;
  wire[58:0]vm_write_tag;wire[511:0]vm_write_data;
  // No additional edge or generated handshake: this is the actual registered
@@ -123,7 +134,7 @@ module qfd_native59_compute_service #(
  .result_slot(result_slot),.result_slot_beat(result_slot_beat),.result_v(result_v),.result_beat(result_beat),.result_tag(result_tag),.result_data(result_data),
  .vm_write_v(vm_write_v),.vm_write_word(vm_write_word),.vm_write_beat(vm_write_beat),.vm_write_tag(vm_write_tag),.vm_write_data(vm_write_data),
  .vm_commit_v(vm_commit_v),.vm_commit_beat(vm_commit_beat),.vm_commit_tag(vm_commit_tag),.kernel_done(kernel_done),.kernel_done_tag(kernel_done_tag),
- .complete_slot(complete_slot),.completed(completed),.active(active),.fault(svc_fault),.native_ret(native_ret));
+ .complete_slot(complete_slot),.completed(completed),.active(active),.fault(svc_fault),.native_ret(service_ret_raw));
  qfd_native59_record_endpoint #(.CODEC_MUT(CODEC_MUT))u_record(
  .ck(ck_record),.rst_n(rst_n),.operation_tag(operation_tag),.kernel_request_v(req_v),.kernel_request_tag(req_tag),
  .kernel_q_v(kq_v),.kernel_q_beat(kq_beat),.kernel_q_tag(kq_tag),.kernel_q_data(kq_data),

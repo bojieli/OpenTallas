@@ -1,0 +1,422 @@
+{
+  "name": "qfd_sp_band_lanes_quarter",
+  "top": "qfd_sp_band_lanes",
+  "kind": "cluster",
+  "clock": "hybrid_entries",
+  "clock_port": "ck",
+  "clock_ports": [
+    "ck",
+    "ck_l0",
+    "ck_l1",
+    "ck_l2",
+    "ck_l3",
+    "ck_l4",
+    "ck_l5",
+    "ck_l6",
+    "ck_l7",
+    "ck_l8",
+    "ck_l9",
+    "ck_l10",
+    "ck_l11",
+    "ck_l12",
+    "ck_l13",
+    "ck_l14",
+    "ck_l15"
+  ],
+  "outline": {
+    "w": 881.28,
+    "h": 1131.84
+  },
+  "children": [
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[0].u_lane",
+      "at": [
+        25.92,
+        25.92
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[1].u_lane",
+      "at": [
+        311.04,
+        25.92
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[2].u_lane",
+      "at": [
+        596.16,
+        25.92
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[3].u_lane",
+      "at": [
+        25.92,
+        203.04
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[4].u_lane",
+      "at": [
+        311.04,
+        203.04
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[5].u_lane",
+      "at": [
+        596.16,
+        203.04
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[6].u_lane",
+      "at": [
+        25.92,
+        380.16
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[7].u_lane",
+      "at": [
+        311.04,
+        380.16
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[8].u_lane",
+      "at": [
+        596.16,
+        380.16
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[9].u_lane",
+      "at": [
+        25.92,
+        557.28
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[10].u_lane",
+      "at": [
+        311.04,
+        557.28
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[11].u_lane",
+      "at": [
+        596.16,
+        557.28
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[12].u_lane",
+      "at": [
+        25.92,
+        734.4
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[13].u_lane",
+      "at": [
+        311.04,
+        734.4
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[14].u_lane",
+      "at": [
+        596.16,
+        734.4
+      ],
+      "orient": "R0"
+    },
+    {
+      "view": "physical/ref_tile/qfd_bl_lane_rr/views/qfd_bl_lane",
+      "count": 1,
+      "inst": "g_lane[15].u_lane",
+      "at": [
+        25.92,
+        911.52
+      ],
+      "orient": "R0"
+    }
+  ],
+  "required_hybrid_roots": {
+    "standard_cell_cts": [
+      "ck"
+    ],
+    "hard_child_entry": {
+      "ck_l0": "g_lane[0].u_lane/ck",
+      "ck_l1": "g_lane[1].u_lane/ck",
+      "ck_l2": "g_lane[2].u_lane/ck",
+      "ck_l3": "g_lane[3].u_lane/ck",
+      "ck_l4": "g_lane[4].u_lane/ck",
+      "ck_l5": "g_lane[5].u_lane/ck",
+      "ck_l6": "g_lane[6].u_lane/ck",
+      "ck_l7": "g_lane[7].u_lane/ck",
+      "ck_l8": "g_lane[8].u_lane/ck",
+      "ck_l9": "g_lane[9].u_lane/ck",
+      "ck_l10": "g_lane[10].u_lane/ck",
+      "ck_l11": "g_lane[11].u_lane/ck",
+      "ck_l12": "g_lane[12].u_lane/ck",
+      "ck_l13": "g_lane[13].u_lane/ck",
+      "ck_l14": "g_lane[14].u_lane/ck",
+      "ck_l15": "g_lane[15].u_lane/ck"
+    }
+  },
+  "clock_cts_roots": [
+    "ck"
+  ],
+  "sources": [
+    "rtl/physical/ot_qwen_band_lanes_slots.sv"
+  ],
+  "defines": [
+    "OT_QFD_BL_HARD"
+  ],
+  "hard_define": "OT_QFD_BL_HARD",
+  "layer_cap": "M7",
+  "recipe": 2,
+  "reset_ports": [
+    "rst_n"
+  ],
+  "keep_pin_regs": true,
+  "pin_reg_split": true,
+  "inhold": true,
+  "outhold": true,
+  "io_flop_at_pins": {
+    "cols": 8
+  },
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 8.64
+  },
+  "pins": {
+    "E": [
+      "pw",
+      "f",
+      "c",
+      "f_up",
+      "pw_l0",
+      "pw_l1",
+      "pw_l2",
+      "pw_l3",
+      "tt",
+      "ck_l5",
+      "ck_l8",
+      "ck_l11",
+      "ck_l14"
+    ],
+    "S": [
+      "rst_n",
+      "b0",
+      "lnk",
+      "ck_l1",
+      "ck_l4",
+      "ck_l2"
+    ],
+    "N": [
+      "ty",
+      "ck",
+      "tw",
+      "ck_l15",
+      "ck_l13"
+    ],
+    "W": [
+      "ck_l0",
+      "ck_l3",
+      "ck_l6",
+      "ck_l9",
+      "ck_l12",
+      "ck_l7",
+      "ck_l10"
+    ]
+  },
+  "structural_change": "Actual source adds per-quarter pw_l0..3[128:0] and f_up[3:0] to replace invalid shared-valid physical fanout for four direct upper leaves. Exact31ports10815bits,17clockentryXY preserved, literalclock/reset/strapcoords. Nativechildarithmeticunchanged; quartervalid andfaultregistered at same priorresponseedge; source568773954/mainquarterpincontract latest. Existing26portBANDgate preserved, never reused as31portqualification.",
+  "reroute_reason": {
+    "kind": "rtl_change",
+    "source": "results/rtl/qwen_compute_native_glue_1014/band_pin_edges.json",
+    "cell": "qfd_sp_band_lanes",
+    "why": "Actualparentregisteredfaces+separatechildclockroots. Legacyflatfourlaneview is not actual16leafparent; CLOSEDleaves reused."
+  },
+  "job": {
+    "owner": "Codex:q_compute_elem",
+    "branch": "codex/q-compute-native-parents-1014",
+    "tag": "q1",
+    "purpose": "Actual17clock bandnativeparent",
+    "extra_paths": [
+      "rtl/test/qwen_lane_band",
+      "rtl/qwen_sys/lane_band_20261008",
+      "rtl/hdc",
+      "rtl/physical/ot_qwen_tt_up4_cluster.sv",
+      "rtl/physical/ot_qwen_spine_lane.sv",
+      "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "physical/qwen_band_native_1014",
+      "results/rtl/qwen_compute_native_glue_1014/band_native_io",
+      "tools/qwen_split/run_up4_faces_bench.sh",
+      "rtl/test/qwen_split/tb_qfd_upper_faces.sv"
+    ],
+    "benches": [
+      {
+        "name": "lint",
+        "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_sp_band_lanes u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -DSYNTHESIS -DOT_QFD_BL_HARD --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/physical/ot_qwen_band_lanes_slots.sv physical/qwen_band_native_1014/qfd_bl_lane_bb.v && echo lint-ok",
+        "expect": "pass",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "actual16lane_3band_native",
+        "cmd": "bash physical/qwen_band_native_1014/bench.sh {RUN}/bench/native_band 1",
+        "expect": "pass",
+        "pass_regex": "^PASS qfd_band_lanes ops=1537.*words=188112",
+        "threads": 8,
+        "peak_ram_gb": 24,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "actual16lane_wrong_lnk",
+        "cmd": "bash physical/qwen_band_native_1014/bench.sh {RUN}/bench/wrong_lnk 2",
+        "expect": "fail",
+        "fail_regex": "^FAIL qfd_band_lanes finite-phase fault|^FAIL qfd_band_lanes.*mismatching",
+        "threads": 8,
+        "peak_ram_gb": 24,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "quarter_valid_fault_registers",
+        "cmd": "bash tools/qwen_split/run_up4_faces_bench.sh {RUN}/bench/quarter_faces",
+        "expect": "pass",
+        "pass_regex": "UPPER_FACES fault-drop mutant rejected",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ]
+      }
+    ],
+    "views_to": "physical/ref_tile/qfd_sp_band_lanes_quarter/views",
+    "record_to": "results/rtl/ref_tile/qfd_sp_band_lanes_quarter"
+  },
+  "child_lattice_um": 2.16,
+  "pin_ranges": {
+    "tt": [
+      676.188,
+      823.74
+    ],
+    "pw": [
+      325.404,
+      374.556
+    ],
+    "f": [
+      399.996,
+      399.996
+    ],
+    "c": [
+      428.796,
+      431.19599999999997
+    ],
+    "f_up": [
+      459.85200000000003,
+      460.14000000000004
+    ],
+    "pw_l0": [
+      494.7,
+      506.988
+    ],
+    "pw_l1": [
+      507.468,
+      519.756
+    ],
+    "pw_l2": [
+      520.236,
+      532.524
+    ],
+    "pw_l3": [
+      533.0039999999999,
+      545.2919999999999
+    ],
+    "rst_n": [
+      20.028,
+      20.028
+    ],
+    "b0": [
+      25.02,
+      25.02
+    ],
+    "lnk": [
+      32.028,
+      32.508
+    ],
+    "ty": [
+      33.42,
+      426.54
+    ],
+    "ck": [
+      440.652,
+      440.652
+    ],
+    "tw": [
+      453.42,
+      846.54
+    ]
+  },
+  "io_tcl": "physical/ref_tile/qfd_sp_band_lanes_quarter/assigned_pins.tcl"
+}

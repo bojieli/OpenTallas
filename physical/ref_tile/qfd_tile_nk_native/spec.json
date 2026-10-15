@@ -34,7 +34,7 @@
    "ck_rp0": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_hd.u_rp/clk",
    "ck_rp1": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_hd.u_rp/clk",
    "ck_rp2": "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_hd.u_rp/clk",
-   "ck_node": "u_tile.u_tile.u_logic.g_ndh.u_node/clk",
+   "ck_node": "u_tile.u_tile.u_logic.genblk4.g_ndh.u_node/clk",
    "ck_lsl0": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh/clk",
    "ck_lsl4": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh/clk",
    "ck_lsl1": "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh/clk",
@@ -129,7 +129,7 @@
   {
    "view": "physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node",
    "count": 1,
-   "inst": "u_tile.u_tile.u_logic.g_ndh.u_node",
+   "inst": "u_tile.u_tile.u_logic.genblk4.g_ndh.u_node",
    "at": [
     22.464,
     345.6

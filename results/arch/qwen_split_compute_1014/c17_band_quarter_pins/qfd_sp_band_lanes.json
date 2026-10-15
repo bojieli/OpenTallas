@@ -1,0 +1,551 @@
+{
+ "schema": "opentallas.qwen-tp8.assigned-pins.v1",
+ "master": "qfd_sp_band_lanes",
+ "outline": {
+  "w": 881.28,
+  "h": 1131.84
+ },
+ "pins": {
+  "E": [
+   "pw",
+   "f",
+   "c",
+   "f_up",
+   "pw_l0",
+   "pw_l1",
+   "pw_l2",
+   "pw_l3",
+   "tt"
+  ],
+  "S": [
+   "rst_n",
+   "b0",
+   "lnk"
+  ],
+  "N": [
+   "ty",
+   "ck",
+   "tw"
+  ]
+ },
+ "pin_ranges": {
+  "tt": [
+   676.188,
+   823.74
+  ],
+  "pw": [
+   325.404,
+   374.556
+  ],
+  "f": [
+   399.996,
+   399.996
+  ],
+  "c": [
+   428.796,
+   431.19599999999997
+  ],
+  "f_up": [
+   459.85200000000003,
+   460.14000000000004
+  ],
+  "pw_l0": [
+   494.7,
+   506.988
+  ],
+  "pw_l1": [
+   507.468,
+   519.756
+  ],
+  "pw_l2": [
+   520.236,
+   532.524
+  ],
+  "pw_l3": [
+   533.0039999999999,
+   545.2919999999999
+  ],
+  "rst_n": [
+   20.028,
+   20.028
+  ],
+  "b0": [
+   25.02,
+   25.02
+  ],
+  "lnk": [
+   32.028,
+   32.508
+  ],
+  "ty": [
+   33.42,
+   426.54
+  ],
+  "ck": [
+   440.652,
+   440.652
+  ],
+  "tw": [
+   453.42,
+   846.54
+  ]
+ },
+ "ports": {
+  "tt": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 1538,
+   "range_um": [
+    676.188,
+    823.74
+   ],
+   "direction": "input",
+   "bit0_at": "lo"
+  },
+  "pw": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 513,
+   "range_um": [
+    325.404,
+    374.556
+   ],
+   "direction": "output",
+   "bit0_at": "lo"
+  },
+  "f": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 1,
+   "range_um": [
+    399.996,
+    399.996
+   ],
+   "direction": "output",
+   "bit0_at": "lo"
+  },
+  "c": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 26,
+   "range_um": [
+    428.796,
+    431.19599999999997
+   ],
+   "direction": "input",
+   "bit0_at": "lo"
+  },
+  "f_up": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 4,
+   "range_um": [
+    459.85200000000003,
+    460.14000000000004
+   ],
+   "direction": "output",
+   "bit0_at": "lo"
+  },
+  "pw_l0": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 129,
+   "range_um": [
+    494.7,
+    506.988
+   ],
+   "direction": "output",
+   "bit0_at": "lo"
+  },
+  "pw_l1": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 129,
+   "range_um": [
+    507.468,
+    519.756
+   ],
+   "direction": "output",
+   "bit0_at": "lo"
+  },
+  "pw_l2": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 129,
+   "range_um": [
+    520.236,
+    532.524
+   ],
+   "direction": "output",
+   "bit0_at": "lo"
+  },
+  "pw_l3": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 129,
+   "range_um": [
+    533.0039999999999,
+    545.2919999999999
+   ],
+   "direction": "output",
+   "bit0_at": "lo"
+  },
+  "rst_n": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    20.028,
+    20.028
+   ],
+   "direction": "input",
+   "bit0_at": "lo"
+  },
+  "b0": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    25.02,
+    25.02
+   ],
+   "direction": "input",
+   "bit0_at": "lo"
+  },
+  "lnk": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 6,
+   "range_um": [
+    32.028,
+    32.508
+   ],
+   "direction": "input",
+   "bit0_at": "lo"
+  },
+  "ty": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 4096,
+   "range_um": [
+    33.42,
+    426.54
+   ],
+   "direction": "output",
+   "bit0_at": "lo"
+  },
+  "ck_l0": {
+   "face": "W",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    177.078,
+    177.078
+   ],
+   "direction": "input",
+   "bit0_at": "lo",
+   "interior": true,
+   "positions_xy_um": [
+    [
+     122.94,
+     177.078
+    ]
+   ]
+  },
+  "ck_l3": {
+   "face": "W",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    354.198,
+    354.198
+   ],
+   "direction": "input",
+   "bit0_at": "lo",
+   "interior": true,
+   "positions_xy_um": [
+    [
+     122.94,
+     354.198
+    ]
+   ]
+  },
+  "ck_l6": {
+   "face": "W",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    531.318,
+    531.318
+   ],
+   "direction": "input",
+   "bit0_at": "lo",
+   "interior": true,
+   "positions_xy_um": [
+    [
+     122.94,
+     531.318
+    ]
+   ]
+  },
+  "ck_l9": {
+   "face": "W",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    708.438,
+    708.438
+   ],
+   "direction": "input",
+   "bit0_at": "lo",
+   "interior": true,
+   "positions_xy_um": [
+    [
+     122.94,
+     708.438
+    ]
+   ]
+  },
+  "ck_l12": {
+   "face": "W",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    885.558,
+    885.558
+   ],
+   "direction": "input",
+   "bit0_at": "lo",
+   "interior": true,
+   "positions_xy_um": [
+    [
+     122.94,
+     885.558
+    ]
+   ]
+  },
+  "ck_l15": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    122.94,
+    122.94
+   ],
+   "direction": "input",
+   "bit0_at": "lo",
+   "interior": true,
+   "positions_xy_um": [
+    [
+     122.94,
+     1062.678
+    ]
+   ]
+  },
+  "ck_l1": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    408.06,
+    408.06
+   ],
+   "direction": "input",
+   "bit0_at": "lo",
+   "interior": true,
+   "positions_xy_um": [
+    [
+     408.06,
+     177.078
+    ]
+   ]
+  },
+  "ck_l4": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    408.06,
+    408.06
+   ],
+   "direction": "input",
+   "bit0_at": "lo",
+   "interior": true,
+   "positions_xy_um": [
+    [
+     408.06,
+     354.198
+    ]
+   ]
+  },
+  "ck_l7": {
+   "face": "W",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    531.318,
+    531.318
+   ],
+   "direction": "input",
+   "bit0_at": "lo",
+   "interior": true,
+   "positions_xy_um": [
+    [
+     408.06,
+     531.318
+    ]
+   ]
+  },
+  "ck_l10": {
+   "face": "W",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    708.438,
+    708.438
+   ],
+   "direction": "input",
+   "bit0_at": "lo",
+   "interior": true,
+   "positions_xy_um": [
+    [
+     408.06,
+     708.438
+    ]
+   ]
+  },
+  "ck_l13": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    408.06,
+    408.06
+   ],
+   "direction": "input",
+   "bit0_at": "lo",
+   "interior": true,
+   "positions_xy_um": [
+    [
+     408.06,
+     885.558
+    ]
+   ]
+  },
+  "ck": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    440.652,
+    440.652
+   ],
+   "direction": "input",
+   "bit0_at": "lo"
+  },
+  "tw": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 4096,
+   "range_um": [
+    453.42,
+    846.54
+   ],
+   "direction": "input",
+   "bit0_at": "lo"
+  },
+  "ck_l2": {
+   "face": "S",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    693.18,
+    693.18
+   ],
+   "direction": "input",
+   "bit0_at": "lo",
+   "interior": true,
+   "positions_xy_um": [
+    [
+     693.18,
+     177.078
+    ]
+   ]
+  },
+  "ck_l5": {
+   "face": "E",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    354.198,
+    354.198
+   ],
+   "direction": "input",
+   "bit0_at": "lo",
+   "interior": true,
+   "positions_xy_um": [
+    [
+     693.18,
+     354.198
+    ]
+   ]
+  },
+  "ck_l8": {
+   "face": "E",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    531.318,
+    531.318
+   ],
+   "direction": "input",
+   "bit0_at": "lo",
+   "interior": true,
+   "positions_xy_um": [
+    [
+     693.18,
+     531.318
+    ]
+   ]
+  },
+  "ck_l11": {
+   "face": "E",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    708.438,
+    708.438
+   ],
+   "direction": "input",
+   "bit0_at": "lo",
+   "interior": true,
+   "positions_xy_um": [
+    [
+     693.18,
+     708.438
+    ]
+   ]
+  },
+  "ck_l14": {
+   "face": "E",
+   "layer": "M5",
+   "bits": 1,
+   "range_um": [
+    885.558,
+    885.558
+   ],
+   "direction": "input",
+   "bit0_at": "lo",
+   "interior": true,
+   "positions_xy_um": [
+    [
+     693.18,
+     885.558
+    ]
+   ]
+  }
+ },
+ "overlapping_pin_pairs": 0,
+ "source_rtl": "rtl/physical/ot_qwen_band_lanes_slots.sv",
+ "note": "Source-exact unclosed parent assignment. Child clock entries at published XY. Physical qualification still required."
+}

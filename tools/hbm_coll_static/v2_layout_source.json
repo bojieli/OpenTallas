@@ -1,0 +1,421 @@
+{
+  "schema": "hcoll.static.microop.v2",
+  "width": 1536,
+  "fields": {
+    "capture_slot": {
+      "lsb": 0,
+      "width": 10
+    },
+    "sink_slot": {
+      "lsb": 10,
+      "width": 16
+    },
+    "sink_select": {
+      "lsb": 26,
+      "width": 64
+    },
+    "inj_rd": {
+      "lsb": 90,
+      "width": 2
+    },
+    "inj_idx": {
+      "lsb": 92,
+      "width": 32
+    },
+    "inj_addr": {
+      "lsb": 124,
+      "width": 160
+    },
+    "inj_meta": {
+      "lsb": 284,
+      "width": 66
+    },
+    "lk_wr_v": {
+      "lsb": 350,
+      "width": 3
+    },
+    "lk_wr_slot": {
+      "lsb": 353,
+      "width": 18
+    },
+    "lk_rd_v": {
+      "lsb": 371,
+      "width": 3
+    },
+    "lk_rd_slot": {
+      "lsb": 374,
+      "width": 18
+    },
+    "lk_rx_expect": {
+      "lsb": 392,
+      "width": 3
+    },
+    "lk_rx_slot": {
+      "lsb": 395,
+      "width": 18
+    },
+    "lk_epoch_begin": {
+      "lsb": 413,
+      "width": 3
+    },
+    "lk_epoch": {
+      "lsb": 416,
+      "width": 8
+    },
+    "rgx_addr": {
+      "lsb": 424,
+      "width": 160
+    },
+    "rgx_vm": {
+      "lsb": 584,
+      "width": 1
+    },
+    "vm_ingress_slot": {
+      "lsb": 585,
+      "width": 5
+    },
+    "vm_slot_valid": {
+      "lsb": 590,
+      "width": 8
+    },
+    "vm_slot_owner": {
+      "lsb": 598,
+      "width": 32
+    },
+    "ring": {
+      "lsb": 630,
+      "width": 88
+    },
+    "tkm_start": {
+      "lsb": 718,
+      "width": 1
+    },
+    "tkm_del_slot": {
+      "lsb": 719,
+      "width": 4
+    },
+    "tkm_cfg_n": {
+      "lsb": 723,
+      "width": 12
+    },
+    "tkm_cfg_k": {
+      "lsb": 735,
+      "width": 13
+    },
+    "tkm_cfg_nout": {
+      "lsb": 748,
+      "width": 13
+    },
+    "tkm_cfg_g": {
+      "lsb": 761,
+      "width": 8
+    },
+    "tkm_cfg_gbase": {
+      "lsb": 769,
+      "width": 8
+    },
+    "tkm_cfg_pf": {
+      "lsb": 777,
+      "width": 16
+    },
+    "tkm_cfg_obase": {
+      "lsb": 793,
+      "width": 40
+    },
+    "tkm_cfg_rbase": {
+      "lsb": 833,
+      "width": 40
+    },
+    "tkm_cfg_has_r": {
+      "lsb": 873,
+      "width": 1
+    },
+    "del_obase": {
+      "lsb": 874,
+      "width": 160
+    },
+    "vm_rq": {
+      "lsb": 1034,
+      "width": 136
+    },
+    "vm_meta": {
+      "lsb": 1170,
+      "width": 132
+    },
+    "iter_vm_step": {
+      "lsb": 1302,
+      "width": 16
+    },
+    "iter_rgx_step": {
+      "lsb": 1318,
+      "width": 16
+    },
+    "iter_inj_idx_step": {
+      "lsb": 1334,
+      "width": 16
+    },
+    "iter_del_step": {
+      "lsb": 1350,
+      "width": 16
+    },
+    "iter_inj_addr_step": {
+      "lsb": 1366,
+      "width": 16
+    },
+    "tkm_done_slot": {
+      "lsb": 1382,
+      "width": 1
+    },
+    "vm_pair_select": {
+      "lsb": 1383,
+      "width": 24
+    },
+    "iter_link_slot_step": {
+      "lsb": 1407,
+      "width": 8
+    },
+    "lk_wr_seq_high": {
+      "lsb": 1415,
+      "width": 30
+    },
+    "lk_rd_seq_high": {
+      "lsb": 1445,
+      "width": 30
+    },
+    "lk_rx_seq_high": {
+      "lsb": 1475,
+      "width": 30
+    },
+    "ar_low": {
+      "lsb": 1505,
+      "width": 31
+    },
+    "ar_high": {
+      "lsb": 688,
+      "width": 24
+    },
+    "capture_arg": {
+      "lsb": 712,
+      "width": 1
+    },
+    "reduce_clear": {
+      "lsb": 713,
+      "width": 1
+    }
+  },
+  "reserved_lsb": null,
+  "ring_fields": {
+    "lp_we": {
+      "lsb": 0,
+      "width": 1
+    },
+    "lp_tag": {
+      "lsb": 1,
+      "width": 3
+    },
+    "state_read_add": {
+      "lsb": 4,
+      "width": 1
+    },
+    "state_add_tag": {
+      "lsb": 5,
+      "width": 3
+    },
+    "state_add_src": {
+      "lsb": 8,
+      "width": 2
+    },
+    "state_add_rhs_acc": {
+      "lsb": 10,
+      "width": 1
+    },
+    "state_read_tx": {
+      "lsb": 11,
+      "width": 1
+    },
+    "state_tx_tag": {
+      "lsb": 12,
+      "width": 3
+    },
+    "state_tx_acc": {
+      "lsb": 15,
+      "width": 1
+    },
+    "state_read_rr": {
+      "lsb": 16,
+      "width": 1
+    },
+    "state_rr_tag": {
+      "lsb": 17,
+      "width": 3
+    },
+    "add_v": {
+      "lsb": 20,
+      "width": 1
+    },
+    "add_tag": {
+      "lsb": 21,
+      "width": 3
+    },
+    "add_src": {
+      "lsb": 24,
+      "width": 2
+    },
+    "add_rhs_acc": {
+      "lsb": 26,
+      "width": 1
+    },
+    "tx_inject": {
+      "lsb": 27,
+      "width": 2
+    },
+    "tx_forward": {
+      "lsb": 29,
+      "width": 2
+    },
+    "tx_tag": {
+      "lsb": 31,
+      "width": 3
+    },
+    "tx_dst": {
+      "lsb": 34,
+      "width": 2
+    },
+    "tx_result": {
+      "lsb": 36,
+      "width": 1
+    },
+    "tx_acc": {
+      "lsb": 37,
+      "width": 1
+    },
+    "rx_slot": {
+      "lsb": 38,
+      "width": 2
+    },
+    "rx_kind": {
+      "lsb": 40,
+      "width": 4
+    },
+    "rx_src": {
+      "lsb": 44,
+      "width": 4
+    },
+    "rx_tag": {
+      "lsb": 48,
+      "width": 6
+    },
+    "rr_local": {
+      "lsb": 54,
+      "width": 1
+    },
+    "rr_local_tag": {
+      "lsb": 55,
+      "width": 3
+    }
+  },
+  "ring_reserved_lsb": 58,
+  "source_order": "SU0,SU1,rail0..NPT-1,VM0..VM3,reduce,ARG (ARGinvalidonq2)",
+  "sink_order": "rail0..NPT-1,SU0..3,RGX0..3,TKM/ARG0..3,reduce",
+  "notes": [
+    "Sink instruction C+1 selects captured source C; registered sink changes C+2.",
+    "VM RQ eight bank minor tuples {valid,sector16}; iteration*vmstep added to each sector; VM metadata 4x33 accompanies request.",
+    "RGX and delivery address offsets add iteration*their respective steps; injection idx and low16 metadata bits add iteration*injidxstep; each40b injection address adds iteration*injaddrstep.",
+    "Source metadata33 bits opaque flit header matching endpoint ABI; compiler must set real source/index/mode.",
+    "Program is actual static lowered ISA; full normative record compiler/entry producer join remains required.",
+    "vm_pair_select four6b entries {high_bank3,low_bank3}, explicit input sector assembly. Parent raw input capture then assembly output register adds2edges; registered VMrequest P gives qslots VMcapture P+10.",
+    "Ring fields0..57 retain V1 semantics. Ring bits58..81 are ARhigh,82 capture_arg,83 reduce_clear;84..87 remain reserved zero.",
+    "Each logical sequence16 is {high10,low6}+iteration*iter_link_slot_step. Overflow>=65536 faults; physicalslotseq[5:0] reuses64SRAMslots afterreadconsume; no normalepochdrain.",
+    "SWcapturemask={capture_arg,capture_slot10}; q2capturemask=capture_slot10 andARGsource9mustremain0. Selectorwidth4 staysfixed.",
+    "Reduce input from last qslots sink; compiled load_v/add_read validates actual incomingflit. Read/addissue and pubread/pubissue are one edge apart.",
+    "ARGmode statically routes four formerTKMsinks toARG; TKMvalid andslot0 inARGmode. ARGout independent qslots source, no reduction/ARG outputdata mux.",
+    "V1 596 source remains frozen for existing native proof; V2 operation/program/physical qualification remains separate.",
+    "V2 endpoint sequence metadata is registered: emit all wr/rd/rx full-sequence fields one edge before the corresponding reservation bits; extended overflow is retained with metadata and faults on consumption."
+  ],
+  "reserved_ranges": [
+    {
+      "lsb": 714,
+      "width": 4
+    }
+  ],
+  "ar_fields": {
+    "load_v": {
+      "lsb": 0,
+      "width": 1
+    },
+    "load_tag": {
+      "lsb": 1,
+      "width": 4
+    },
+    "add_read": {
+      "lsb": 5,
+      "width": 1
+    },
+    "read_tag": {
+      "lsb": 6,
+      "width": 4
+    },
+    "add_issue": {
+      "lsb": 10,
+      "width": 1
+    },
+    "pub_read": {
+      "lsb": 11,
+      "width": 1
+    },
+    "pub_tag_a": {
+      "lsb": 12,
+      "width": 4
+    },
+    "pub_tag_b": {
+      "lsb": 16,
+      "width": 4
+    },
+    "pub_bf16": {
+      "lsb": 20,
+      "width": 1
+    },
+    "pub_release": {
+      "lsb": 21,
+      "width": 1
+    },
+    "pub_issue": {
+      "lsb": 22,
+      "width": 1
+    },
+    "pub_src": {
+      "lsb": 23,
+      "width": 8
+    },
+    "pub_index": {
+      "lsb": 31,
+      "width": 16
+    },
+    "arg_mode": {
+      "lsb": 47,
+      "width": 1
+    },
+    "arg_start": {
+      "lsb": 48,
+      "width": 1
+    },
+    "arg_flush": {
+      "lsb": 49,
+      "width": 1
+    },
+    "arg_publish": {
+      "lsb": 50,
+      "width": 1
+    },
+    "arg_in_slot": {
+      "lsb": 51,
+      "width": 4
+    }
+  },
+  "ar_encoding": {
+    "low31": "word[1535:1505]",
+    "high24": "word[711:688] (formerly reserved ring[81:58])",
+    "reduction_publication_meta": "{1,8hFF,pub_src8,pub_index16}",
+    "ARG_configuration": "cfg_g/gbase use tkm_cfg_g/gbase, rank at start uses pub_src; mutually exclusive sink mode with TKM"
+  }
+}

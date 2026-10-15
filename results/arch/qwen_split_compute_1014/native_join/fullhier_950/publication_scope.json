@@ -1,0 +1,28 @@
+{
+  "qualified": false,
+  "full_native_qualified": false,
+  "physical_qualified": false,
+  "scope": "Actual seven-master950-root full-hierarchy lint elaboration PASS for exact frozen116-input manifest only; no functional execution or timing qualification.",
+  "matching_current_source_entries": 114,
+  "total_measured_source_entries": 116,
+  "preserved_profile_differences": {
+    "rtl/physical/ot_qfd_collective_static_io.sv": {
+      "measured_sha256": "573ef50bb76d8eaf0dbcbe87cd3eb18714061119f0d4e6b55d372f1c8aeff0ca",
+      "measured_ref": "8d92a8870",
+      "current_sha256": "aa5c4f37295dbc55fc72cc6cf2892f3791bc6fa2214e3b728a55aa0a32169bc2"
+    },
+    "rtl/physical/ot_qfd_coll_static_face.sv": {
+      "measured_sha256": "514584ea3103da9a516372e8c25b2e4316eda0b1c904d2432d36114fe3dd1be5",
+      "measured_ref": "8d92a8870",
+      "current_sha256": "09ac11db5f0810a6e5c0de9a33df7aaf655fbb75ce742d3120881ccef61819c4"
+    }
+  },
+  "intentional_IO_profile": "Measured8d92a8870 LU47/LS376/R5/0/0/5 predates current selected shared-capacity IO and subsequent6:5 gearbox. Current IO source preserved; latest wholejoin elaboration requires re-exported ABI and a fresh owner gate.",
+  "owner": "q_compute_integration",
+  "remaining": [
+    "Current IO profile full-hierarchy successor",
+    "All recorded width/UNOPTFLAT/PINMISSING warning review",
+    "Actual functional execution/native programme",
+    "Per-root physical clock/pin and route ages"
+  ]
+}

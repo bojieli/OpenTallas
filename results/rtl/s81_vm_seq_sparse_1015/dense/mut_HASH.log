@@ -1,0 +1,14 @@
+TB_VMSS schedule: mode 0 seed 1 jobs 1500 commands 3287 commits 426043 cycles 7487
+TB_VMSS ERROR cycle 36 t_inp {hc,su} 00 expected 10
+TB_VMSS ERROR cycle 36 c_st 11 flt 00000000001
+TB_VMSS ERROR cycle 37 t_inp {hc,su} 00 expected 10
+TB_VMSS ERROR cycle 37 c_st 11 flt 00000000001
+TB_VMSS ERROR cycle 38 t_inp {hc,su} 00 expected 10
+TB_VMSS ERROR cycle 38 c_st 11 flt 00000000001
+TB_VMSS ERROR cycle 39 t_inp {hc,su} 00 expected 10
+TB_VMSS ERROR cycle 39 c_st 11 flt 00000000001
+TB_VMSS ERROR cycle 40 c_st 11 flt 00000000001
+TB_VMSS ERROR fault vector 00000000001 expected 00000000000
+TB_VMSS RESULT mode 0 cycles 7511 commands 3287 dones 3287 commits 426043 inp_cycles 6678 errors 11036
+TB_VMSS FAIL mode 0
+rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_seq_static.sv:206: $finish called at 6270429 (1ps)

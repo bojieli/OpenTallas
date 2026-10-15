@@ -46,7 +46,7 @@ def score(leaves, by):
                 critical_roundtrip_relays=max(incoming)+returning)
 
 
-def propose(dump):
+def propose(dump, flip_band1=False):
     original = copy.deepcopy(dump['insts'])
     by = {i['n']: i for i in original}
     parent = by['tt_up4_0']
@@ -80,6 +80,15 @@ def propose(dump):
     # E-half tracks the W-half port slot. It keeps R0: source face pins need
     # an independent exact reroute/assignment before production adoption.
     ix['sp_port_tiles_0_f1']['y'] = port['y']
+    if flip_band1:
+        # Owner-approved successor: same stack envelope, with upper outputs
+        # facing the upper leaves. Local plans remain source coordinates;
+        # every physical pin/clock is transformed by the real MX orientation.
+        lane1,port1,res1=[ix[f'sp_{k}_1'] for k in ('band_lanes','port_tiles','res_ser')]
+        bottom1=min(i['y'] for i in (lane1,port1,res1))
+        for i,y in ((res1,bottom1),(port1,bottom1+522.72),(lane1,bottom1+2989.44)):
+            i['y']=round(y,4);i['o']='MX'
+        ix['sp_port_tiles_1_f1']['y']=port1['y']
     flip_score = score([parent], ix)
     fixed = [i for i in modified if i['n'] != parent['n']]
     vm = ix['sp_vector_memory']
@@ -112,6 +121,7 @@ def propose(dump):
     return dict(schema='opentallas.qwen.placement-repack-projection.v1',
                 evidence_scope='legal source rectangle proposal; geometric lower bounds only',
                 die=dump['die'], baseline=baseline, band0_flip_only=flip_score,
+                band1_mirrored=flip_band1,
                 central_translation_um=round(delta,4), routing_gap_before_um=round(old_gap,4),
                 routing_gap_after_um=round(ix['sp_vector_memory']['x']-f1right0,4),
                 candidate=metrics, candidate_leaves=leaves, placements=changed, retired=['tt_up4_0'],
@@ -134,7 +144,8 @@ def apply(v, m):
     dump = dict(die=copy.deepcopy(m['die']), insts=[
         dict(n=i.name, m=i.master, x=i.x, y=i.y, w=i.w, h=i.h, o=i.orient)
         for i in m['insts']])
-    result = propose(dump)
+    import os
+    result = propose(dump,flip_band1=os.environ.get('OT_SPLIT_BAND1_FLIP','1')!='0')
     if result['candidate_geometry_errors']:
         raise ValueError(f'placement repack invalid: {result["candidate_geometry_errors"][:8]}')
     by = {i.name: i for i in m['insts']}

@@ -1,0 +1,16 @@
+{
+  "netlist_sha256": "a1c12502c2a12e34b6672536bbcdcf21e6e27e8dd8483f6b4e939741f41116e8",
+  "module": "dsfd_vm_static_suhc_fsr_split",
+  "roots": {
+    "ck[0]": 690,
+    "ck[1]": 690,
+    "ck[2]": 690,
+    "ck[3]": 690
+  },
+  "unique_clocks": 4,
+  "FF": 2760,
+  "max_FF_per_root": 690,
+  "reset_pins": {
+    "rst_n": 4
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "source_commit": "adf0ef9d5",
+  "qualification": false,
+  "physical_qualified": false,
+  "full_native_qualified": false,
+  "H": 16,
+  "D": 512,
+  "macro_count": 2048,
+  "epochs": 2,
+  "VM_SID": 3,
+  "VM_WG": 1,
+  "VM_RG": 3,
+  "VM_bank_sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+  "VM_frozen_commit": "9b6420df2",
+  "added_output_edges": 2,
+  "VM_commit_edges_per_record": 128,
+  "bank_commit_latency": 3,
+  "registered_gather_leaf_FF": 4757,
+  "registered_gather_leaf_area_um2": 2487.59586,
+  "registered_gather_leaf_pins": 4759,
+  "nominal_source_bankroot_endpoints": 11445,
+  "clock_scope": "Actual standalone hardenedleaf clock inventory; CTS and physicalclock/gate/signalbuffer/skew/pin/cut/routing unqualified. Wholeflat optimizer may prune unusedleaf output_v, so do not mixcensuses.",
+  "native_allocation": "Explicit componentfixture only; actualarithmetic/CP/globalcalendar open",
+  "remaining": [
+    "Realnative PV arithmetic producer join",
+    "Compiled +2 producerconsumer global calendar and immutable price",
+    "Actual registeredleaf pinfaces/PG/cuts/clock and routing",
+    "Fullsystem sourcebandwidth/residency/geometry"
+  ],
+  "unit": "oth-ubuntu-1660220-1792058453",
+  "host": "ot-epyc4",
+  "exit_status": 0,
+  "records": 3,
+  "epoch_order": [
+    0,
+    1,
+    0
+  ],
+  "native_words_read_back": 24576,
+  "actual_bank_commit_edges": 384,
+  "drain_inputs": "384consecutiveedge requests with changingrecordtags, nointerrecordbubble",
+  "capture": "Next16beat capture overlapsprior128beatdrain; epoch0reuse ofthirdrecord",
+  "retire": "Threeactualfinalmacrocommits, correct delayedrecordtags, stickyflagnegative retained acrossrecords",
+  "source_sha256": {
+    "rtl/hdc/v41x/static/ot_hbm_attn_pv_serializer_local.sv": "1acef905baf503c6488107b4465c393a519245a809718c4b9039cf37ec789918",
+    "rtl/hdc/v41x/static/ot_hbm_attn_pv_group_gather_registered.sv": "400f4613930d48b856637f6ff36648d62603069df8e032cc9f1317280bf78f0a",
+    "rtl/hdc/v41x/static/ot_hbm_attn_pv_serializer_local_registered.sv": "10295539b55b33a8c70745faab64f9a6861bace16dc6a844824662a584a8290f",
+    "rtl/hdc/v41x/static/ot_hbm_attn_pv_native_output_local_registered.sv": "448295dc7b884b5cc068d77fe85f58c917644601e973f867e0eae4b9aab1a025",
+    "rtl/test/hbm_accel/generic/tb_hbm_attn_pv_native_output_local_registered_overlap.sv": "2b27a27f2b2f8076cbb75837e78d4f35f03f46c7e263a0834c88d89102c9022f",
+    "tools/hbm_static_attention/run_pv_native_output_local_registered_overlap.sh": "fe9de0fefae3b2821d842d03885b72e4396b967695429774de0ccd60027f1d21"
+  }
+}

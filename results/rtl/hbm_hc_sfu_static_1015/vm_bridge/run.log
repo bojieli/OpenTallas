@@ -1,0 +1,5 @@
+PASS SFU real VM24SRAM tap14 bridge local80SRAM exact_words=1280 prefetch=8sectors_per_edge drain=2sectors_per_edge commit=11 no_credits=1
+- rtl/test/hbm_accel/generic/tb_hgi_sfu_vm_static_bridge.sv:111: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 155ns; walltime 0.055 s; speed 2.802 us/s
+- Verilator: cpu 0.055 s on 1 threads; allocated 11 MB

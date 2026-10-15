@@ -1,0 +1,51 @@
+{
+  "schema": "opentallas.hbm.engram.fetch_program.v1",
+  "status": "pass",
+  "target": 124,
+  "cfg_meaningful_bits": 224,
+  "ops_per_word": 7,
+  "op_width": 32,
+  "native_words": 128,
+  "pc_width": 10,
+  "max_cycles": 896,
+  "descriptor_launch_guard": 130,
+  "first_instruction_age": 5,
+  "first_consumer_age": 6,
+  "fixed_kernel_done_after_fetch_consumer": 18945,
+  "inactive_global_C10": true,
+  "unrelated_descriptor_isolation": true,
+  "explicit_disable_descriptor": {
+    "base": 0,
+    "limit": 0,
+    "loops": 0
+  },
+  "retained_catalogue_reselect": true,
+  "runs": [
+    {
+      "name": "baseline",
+      "returncode": 0,
+      "output": "PASS target124 real128x256SRAM seven32bitops raw224 42instructions firstage5 consumer6 guard130 fixedkernel18945 CIDcapture unconfiguredC10 disableC10 reselect\nfetch_program_descriptor_isolation/tb.sv:80: $finish called at 16076265861 (1fs)"
+    },
+    {
+      "name": "early_launch",
+      "returncode": 0,
+      "output": "PASS early129descriptorlaunchfault\nfetch_program_descriptor_isolation/tb.sv:65: $finish called at 132086439 (1fs)"
+    },
+    {
+      "name": "opcode_mutant",
+      "returncode": 1,
+      "output": "FATAL: fetch_program_descriptor_isolation/tb.sv:27: actualmacroinstructiondata rel5\n       Time: 137085443  Scope: tb.check"
+    },
+    {
+      "name": "descriptor_target_mutant",
+      "returncode": 1,
+      "output": "FATAL: fetch_program_descriptor_isolation/tb.sv:58: unrelateddescriptorchangedtarget124\n       Time: 132086439  Scope: tb"
+    }
+  ],
+  "home_status_modeled": true,
+  "scope": "Programme SRAM/issuer component only; actual homekernel and wholeoperation must compose, no fullnative/physical/performance claim",
+  "source_sha256": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_fetch_program.sv": "b6492ec5c60a92098ce5448e41da1ef86b77295fc67bb4c05ebd5e17c7715031"
+  }
+}
