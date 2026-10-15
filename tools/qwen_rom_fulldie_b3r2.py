@@ -3540,6 +3540,19 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         ipads, irep = _TS.arrival_pads(S_, E_)
         tpads.update(ipads)
         m['tp8_inline_pads'] = dict(irep, pads=len(ipads), pad_relays=sum(ipads.values()))
+    # Reconcile the allocator's mutable occupancy with the exact frames that
+    # will be emitted after repair/rip-up/jog/pre-pad trimming. Every inline
+    # arrival pad must see ALL surviving frames, not a stale search grid.
+    # An existing collision is a structural plan failure, never a legal site.
+    grid.clear()
+    for it in m['insts']:
+        add_rect((it.x, it.y, it.x + it.w, it.y + it.h))
+    for idx, pl in sorted(plans.items()):
+        for fk, f in enumerate(pl['frames']):
+            rr = (f[0], f[1], f[0] + f[2] + v.SHAVE, f[1] + f[3] + v.SHAVE)
+            if not free(rr):
+                raise ValueError(f"relay occupancy: {pl['bid']} frame {fk} overlaps a surviving frame before inline pads")
+            add_rect(rr)
     pad_done = {}
     if tpads:
         bidx = {bid: idx for idx, (bid, cl, bits, eps) in buses}
