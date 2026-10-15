@@ -2,7 +2,7 @@
 // op0 LOAD dst<-operand; op1 ADD_EXT dst<-scratch[a]+operand;
 // op2 ADD_TREE dst<-scratch[a]+scratch[b]; op3 MAX_EXT;
 // op4 EXPORT scratch[a] to scalar; op5 MAX_TREE scratch[a]/scratch[b].
-// All commits and scalar outputs issue+9 edges: command sampled at issue, native SRAM read, ONE registered operand stage
+// All commits and scalar outputs issue+9 edges: command pin ingress, native SRAM read, registered operand stage
 // (r1, H-ELEM-B 10-15: the r0 SRAM clk->Q -> word select -> adder/compare path missed TT setup by 90.8 ps at 833 ps), LAT6
 // add. Same-address dependent issue distance 10 (was 9); independent issue interval 1. Arithmetic, operand order and the
 // compiler's reduction tree are unchanged (bit-exact), only the fixed latency grows by one edge.
