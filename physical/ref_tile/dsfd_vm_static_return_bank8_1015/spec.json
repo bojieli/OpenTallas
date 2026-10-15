@@ -1,0 +1,113 @@
+{
+ "name": "dsfd_vm_static_return_bank8_1015",
+ "top": "dsfd_vm_static_return_bank8",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_return_bank8.sv"
+ ],
+ "params": {
+  "DW": 128,
+  "LANE": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 129.6,
+  "h": 129.6,
+  "exact": true
+ },
+ "std_area_um2": 5000,
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "i_data",
+   "i_v",
+   "i_tag"
+  ],
+  "S": [
+   "o_data",
+   "o_v",
+   "o_group",
+   "fault"
+  ],
+  "E": [
+   "release_v",
+   "release_group",
+   "release_mask",
+   "prepare_v",
+   "prepare_group",
+   "prepare_mask"
+  ],
+  "W": [
+   "ck",
+   "rst_n",
+   "peer_token",
+   "completion_token"
+  ]
+ },
+ "io_tcl": "physical/s81_vm_return_bank8_1015/pins.tcl",
+ "recipe": 2,
+ "route": {
+  "pd": 0.45,
+  "period_ps": 770,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "assigned_pin_grant": {
+  "source": "physical/s81_vm_return_bank8_1015/pins.json",
+  "sha256": "577d17eb77c9d3038839b5597f1e74df3d76aa32feeca7cb7e42126811f0172d",
+  "commit": "af4f082a3"
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "job": {
+  "owner": "Codex:S_VM/return_store",
+  "branch": "codex/s81-return-lanes-1015",
+  "tag": "native1",
+  "purpose": "Actual eightbank/eightslot return structuralrepair, parentglobalreach and sourceclocks open",
+  "benches": [
+   {
+    "name": "return_exact",
+    "cmd": "bash tools/s81_vm/return_bank8_gate.sh {RUN}/return_exact base",
+    "expect": "pass",
+    "pass_regex": "RETURN_BANK8 PASS",
+    "min_count_regex": "groups([0-9]+)",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "negative_atomic",
+    "cmd": "bash tools/s81_vm/return_bank8_gate.sh {RUN}/negative_atomic local",
+    "expect": "fail",
+    "fail_regex": "RETURN_BANK8 FAIL",
+    "threads": 1,
+    "peak_ram_gb": 4
+   }
+  ]
+ },
+ "structural_change": "Replace one32slot globalleaf with four8bank/8slot leaves; early registered groupcompletion tokens maintain same E9store E10release ages and globalmissing suppression; no parentlogic",
+ "open_points": [
+  "std_area5000um2 is sizing assumption; actual mapper must replace it",
+  "candidate exactpins split i_data N/E and o_data S/W to reduce face density",
+  "no route or globalgeometry claim",
+  "parent stage9 prepare calendar must be implemented/tested"
+ ]
+}

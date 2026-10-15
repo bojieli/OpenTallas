@@ -28,7 +28,8 @@ module tb_hgi_coll_tkm_static;
    if(slotmut!=0&&dut.tick==8)valids[0]=0;
   end
  end
- always @(negedge clk)if(rst_n&&wv)begin
+ // An expected-fault case checks the fault only (as tb_hgi_coll_qtkm): its golden O/R are not defined.
+ always @(negedge clk)if(rst_n&&wv&&cfg[6]==0&&slotmut==0)begin
   for(integer j=0;j<16;j=j+1)if(wm[j])begin:check_word
    integer ix;ix=int'(wa)+j;
    if(ix>=OB&&ix<OB+NOUT)begin

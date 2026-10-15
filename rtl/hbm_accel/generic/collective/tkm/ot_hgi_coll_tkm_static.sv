@@ -92,7 +92,10 @@ module ot_hgi_coll_tkm_static #(parameter integer KMAX=2048, MUT=0)(
    if(vv==32'hffffffff||32'(irel>>3)*4+32'(lane)>=32'(flits))raw[s]=0;
    sorted[s]=0;
   end
-  if(buf_valid)for(integer s=0;s<4;s=s+1)raw[s]=tinv(buf_data[85*s+:85]);
+  // pass-2 re-read: the buffer holds ELEMENT form with the region bit (e[84]) set at capture (buf_wdata below), so it
+  // re-enters directly; tinv() here mapped the region-1 element back to region 0 (pass 2 re-sorted by value, O came
+  // out in value order: KMAX2048 syn_sel 512/512 mismatches, 2026-10-15).
+  if(buf_valid)for(integer s=0;s<4;s=s+1)raw[s]=buf_data[85*s+:85];
   for(integer s=0;s<4;s=s+1)begin:rank_sort
    integer rank_s;rank_s=0;
    for(integer j_=0;j_<4;j_=j_+1)if(key2(raw[j_])>key2(raw[s])||(key2(raw[j_])==key2(raw[s])&&j_<s))rank_s=rank_s+1;

@@ -1,0 +1,20 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc1tb for 8 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qwen_tx_rne_r1_20261015-045524.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qwen_tx_rne_r1_20261015-045524.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/qwen_tx_rne_r1-20261015-045524
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc1tb in 17 s (gate total 74 s)
+GATE WARN util: synthesized std area 126 um2 + macros 0 in core 653: util 19%  -> FIX: set "std_area_um2": 126 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN qwen_tx_rne_r1 cells 833 flops 202 depth 11.7 ps util 0.2059 reach 34.4 um (0.0 s)
+GATE WARN textbook.boundary: 50 input->register endpoint(s) > 3 levels (worst d[61]->capture.q[63]$_DFF_PN0_/D 4 lv, d[61]->capture.q[62]$_DFF_PN0_/D 4 lv, d[60]->capture.q[61]$_DFF_PN0_/D 4 lv): register the boundary (pin flops / registered outputs)  -> FIX: register every boundary: pin flop in, flop out; never an ICG enable from a port
+GATE WARN textbook.util_channel: utilisation 20.6% outside 45%-65% (std 135 + macro 0 um2 in 653 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 98.4..101.2 ps (spread 2.8), boundary mean 99.9; tt insertion all 72.3..74.9 ps (spread 2.6), boundary mean 73.7; ff insertion all 57.1..59.9 ps (spread 2.8), boundary mean 58.7; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/qwen_tx_rne_r1/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: in->reg       106 paths, worst slack 229.6 ps (e.g. capture.q[47]$_DFF_PN0_/D)
+GATE INFO path_classes: reg->out      198 paths, worst slack 276.0 ps (e.g. q[180])
+GATE INFO path_classes: reg->reg      198 paths, worst slack 491.1 ps (e.g. capture.q[192]$_DFF_PN0_/RESETN)
+GATE INFO path_classes: setup WNS 2.2957380441113173e-10 hold WNS 2.6715643586250337e-11
+GATE INFO clock_rule: root port:clk: 202 sinks on the largest root <= 15,000; measured TT insertion 74.9 ps, leaf spread 2.6 ps
+PRE_ROUTE_GATE: WARN (0 fail, 3 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/q-compute-parent-prune-1015/physical/ref_tile/qwen_tx_rne_r1/source_binding_history/398c937c1a01f126b97e13c204d5af9bd1e49d65bb779ce65148150f30119018.json
+GATE: qwen_tx_rne_r1/gate_result.json written (exact staged source binding; commit it with the kit)

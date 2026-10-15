@@ -183,7 +183,9 @@ EARLY_FAIL_*, or a NEEDS_HUMAN route crash) takes a new job only when the spec c
 
 See /home/ubuntu/claude-takeover-20261007/ref-flow-1011.log (cases, numbers, job names).
 
-For a fleet-selected synthesis or CTS gate, use `--remote auto`. The gate asks `ot-run --pick` for a host with measured headroom, ships the inputs there, then runs through `ot-run --hosts <chosen>` with one resource reservation. An explicit host keeps the existing `ot-heavy` path.
+For a fleet-selected synthesis or CTS gate, use `--remote auto`. The gate asks `ot-run --pick` for a host with measured headroom, ships the inputs there, then runs through `ot-run --hosts <chosen>` with one resource reservation. An explicit host uses the same admission checks restricted to that host.
+
+The default work/output disk reserve is 20 GiB. Set a positive finite `gate_disk_gb` in the tile spec, or override it with `--disk GB`. Host selection checks the scratch filesystem and adds the measured compressed snapshot size, its estimated unpacked allocation, and 1 GiB for metadata and rounding. Runtime admission checks again after upload, adding extraction space to the work/output reserve. Both integer GiB thresholds and snapshot sizes are recorded in `source_binding.disk_admission`. These checks do not reserve disk against concurrent jobs; a runtime refusal preserves the uploaded snapshot and does not start synthesis.
 
 CTS gates measure every external clock from the actual CTS SDC. The measured clock exception uses the insertion and spread of the largest synthesized root's own source port. A secondary root cannot use the primary clock's measurement; an unmatched root has no measured exception.
 
@@ -243,6 +245,15 @@ does not apply the legacy single-clock IO shim. The pre-route gate requires
 `--cts`, exact per-source measurement coverage, and the clock rule on each
 actual root separately. `ck_insertion.py --all-clocks --raw-source` and exported
 multi-clock insertion records preserve the physical per-pin references.
+
+A leaf whose roots are the die PLL's related stream (core, P) and serial (4P/3) clocks
+declares `"clock_data_paths":"related_pll_ratio"`, `"clock_relationship":{"kind":"same_pll_fixed_phase","ratio":[4,3],"phase_ps":0}`
+and ratio `[4,3]` on each non-core serial domain (the core domain stays `[1,1]`). Crossings keep ordinary STA at the
+actual related edges: the binding window is one VCO tick, P/3 = 277.8 ps at 833.333 ps (256.7 ps at the 770 ps route
+period), in both directions, less the 60+90 ps inter-entry setup reserve. Measured on the fixture (TT, abutted, no
+logic): DFFHQNx1 flop->flop -35/-55 ps, DFFHQNx3 +2.8/-17.2 ps. A 3:4 crossing with any logic or wire between its
+launch and capture flops therefore cannot close natively; it needs a slower common (epoch) capture root, not a
+relaxed check.
 
 `tests/test_multiple_cts_roots.py` exercises two actual OpenROAD CTS trees,
 differing insertion references, source compensation, generated hooks, and

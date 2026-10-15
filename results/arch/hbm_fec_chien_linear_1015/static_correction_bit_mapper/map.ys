@@ -1,0 +1,7 @@
+read_json /srv/opentallas-scratch/codex/fec-chien-linear-1015/static_correction_census_0/netlist.json
+hierarchy -check -top hfd_serdes487_static_correction_window
+techmap
+opt
+check -assert
+stat
+write_json /srv/opentallas-scratch/codex/fec-chien-linear-1015/static_correction_bit_mapper_0/bit_netlist.json

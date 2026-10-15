@@ -18,10 +18,11 @@ module dsfd_vm_static_landing (
     input  wire          ck, rst_n,
     input  wire          larm_v, input wire [3:0] larm_g, input wire [13:0] larm_base,
     input  wire [3:0]    i_v,                  // lanes: 0/1 scan service rows a0/a1, 2 selector, 3 collector
-    input  wire [2047:0] i_d,
+    // row payload per lane pair (separate ports so each pair has its own pin face): 01 = scan service, 23 = sel/col
+    input  wire [1023:0] i_d01, input wire [1023:0] i_d23,
     output reg  [3:0]    o_v,
     output reg  [55:0]   o_row,
-    output reg  [2047:0] o_d,
+    output reg  [1023:0] o_d01, output reg [1023:0] o_d23,
     output reg  [2:0]    fault
 );
     reg [1:0] rr;
@@ -48,6 +49,6 @@ module dsfd_vm_static_landing (
             end
         end
     end
-    always @(posedge ck) o_d <= i_d;
+    always @(posedge ck) begin o_d01 <= i_d01; o_d23 <= i_d23; end
 endmodule
 `default_nettype wire

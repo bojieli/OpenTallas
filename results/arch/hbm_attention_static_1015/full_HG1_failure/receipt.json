@@ -1,0 +1,31 @@
+{
+  "status": "FULL_ARITHMETIC_GATE_FAILED",
+  "unit": "oth-ubuntu-536305-1792052717",
+  "terminal_exit": 1,
+  "source": "167ae518e frozen original raw-staging/inferred-transpose profile; not new local profile",
+  "hardware": "H16/D512/TD32/NL2/FPL6/FML8/PWORDS2/32physicalpairs/512HG1",
+  "QK_T128": {
+    "status": "CASE_PASS",
+    "exact_scores": 2048,
+    "launch_to_last_result": 175,
+    "golden_faults": 0
+  },
+  "PV_T128": {
+    "status": "OUTPUT_COUNT_FAIL",
+    "observed_words": 512,
+    "expected_words": 8192,
+    "numerical_mismatch_before_stop": false
+  },
+  "T640": "NOT_REACHED",
+  "build_seconds": 14179.184,
+  "diagnostic": {
+    "status": "LOGGING_ONLY_NOT_RTL_PROOF",
+    "base_preserved": true,
+    "source_arithmetic_unchanged": true,
+    "issued_PV_beats": 64,
+    "final_tag_columns": 16,
+    "observed_final_PV_beats": 1,
+    "next": "Trace every merge-level valid/fin/live in separate logging-only clone"
+  },
+  "full_native": false
+}

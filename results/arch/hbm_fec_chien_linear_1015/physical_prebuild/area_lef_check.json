@@ -1,0 +1,19 @@
+{
+  "scope": "REAL_ASAP7_RVT_TT_AREA_VS_ACTUAL_1X_LEF_UNIT_CHECK_ONLY",
+  "image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "lef_image_path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef",
+  "libraries_sha256": {
+    "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+    "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+    "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+    "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+  },
+  "audit_tool_sha256": "2a5713efc7cf3bbd7b03cdadfa63d43c42f102c4840786158e2b859c2dd383b6",
+  "physical_qualified": false,
+  "note": "Cell footprint unit check only; no placement, whitespace, CTS, buffering or route area.",
+  "lef_sha256": "4eb73f825720d95eba4da455c7b2e7a28e444e88e9d8595d13492cf5eecfc0d1",
+  "all_library_cells_match_actual_lef_area": true,
+  "checked_library_cells": 202,
+  "library_area_to_cell_footprint_um2_scale": 1
+}

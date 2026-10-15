@@ -1,0 +1,163 @@
+[
+  {
+    "cell": "ot_s81_hc_ctfn",
+    "view": "physical/ref_tile/s81hc_ctfn_ref/views/ot_s81_hc_ctfn",
+    "lib_cell": "ot_s81_hc_ctfn",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 351.3,
+    "spread_ps": 78.5,
+    "outputs": 2928,
+    "inputs": 2928,
+    "launch_ps": 296.0,
+    "launch_pin": "fvm[2]",
+    "capture_ps": 378.2,
+    "capture_pin": "fv_in[2]",
+    "launch_over": 1,
+    "capture_over": 162,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": false,
+    "fail_why": "launch 296.0 > 220 (1 pins); capture 378.2 > 190 (162 pins)"
+  },
+  {
+    "cell": "ot_s81_hc_ctpl",
+    "view": "physical/ref_tile/s81hc_ctpl_ref/views/ot_s81_hc_ctpl",
+    "lib_cell": "ot_s81_hc_ctpl",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 187.8,
+    "spread_ps": 17.4,
+    "outputs": 53,
+    "inputs": 1326,
+    "launch_ps": 156.9,
+    "launch_pin": "hov",
+    "capture_ps": 137.1,
+    "capture_pin": "fdx[37]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+  },
+  {
+    "cell": "ot_s81_hc_ctrn",
+    "view": "physical/ref_tile/s81hc_ctrn_ref/views/ot_s81_hc_ctrn",
+    "lib_cell": "ot_s81_hc_ctrn",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 350.1,
+    "spread_ps": 43.1,
+    "outputs": 2164,
+    "inputs": 2165,
+    "launch_ps": 194.8,
+    "launch_pin": "rd_out[785]",
+    "capture_ps": 175.0,
+    "capture_pin": "rdm[256]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+  },
+  {
+    "cell": "ot_s81_hc_ctnl_l0",
+    "view": "physical/ref_tile/s81hc_ctnl_l0_ref/views/ot_s81_hc_ctnl_l0",
+    "lib_cell": "ot_s81_hc_ctnl_l0",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 196.9,
+    "spread_ps": 30.5,
+    "outputs": 432,
+    "inputs": 788,
+    "launch_ps": 165.2,
+    "launch_pin": "hrq[109]",
+    "capture_ps": 125.9,
+    "capture_pin": "wb_d[34]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+  },
+  {
+    "cell": "ot_s81_hc_ctnl_l1",
+    "view": "physical/ref_tile/s81hc_ctnl_l1_ref/views/ot_s81_hc_ctnl_l1",
+    "lib_cell": "ot_s81_hc_ctnl_l1",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 188.8,
+    "spread_ps": 24.7,
+    "outputs": 432,
+    "inputs": 852,
+    "launch_ps": 191.3,
+    "launch_pin": "sq_out[13]",
+    "capture_ps": 155.0,
+    "capture_pin": "acc_in[27]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+  },
+  {
+    "cell": "ot_s81_hc_ctnl_l2",
+    "view": "physical/ref_tile/s81hc_ctnl_l2_ref/views/ot_s81_hc_ctnl_l2",
+    "lib_cell": "ot_s81_hc_ctnl_l2",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 199.0,
+    "spread_ps": 24.6,
+    "outputs": 432,
+    "inputs": 980,
+    "launch_ps": 228.5,
+    "launch_pin": "sq_out[24]",
+    "capture_ps": 178.0,
+    "capture_pin": "wb_d[51]",
+    "launch_over": 8,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": false,
+    "fail_why": "launch 228.5 > 220 (8 pins)"
+  },
+  {
+    "cell": "ot_s81_hc_ctnl_l3",
+    "view": "physical/ref_tile/s81hc_ctnl_l3_ref/views/ot_s81_hc_ctnl_l3",
+    "lib_cell": "ot_s81_hc_ctnl_l3",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 190.9,
+    "spread_ps": 25.6,
+    "outputs": 432,
+    "inputs": 852,
+    "launch_ps": 224.1,
+    "launch_pin": "acc_out[14]",
+    "capture_ps": 196.6,
+    "capture_pin": "fdx[45]",
+    "launch_over": 3,
+    "capture_over": 3,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": false,
+    "fail_why": "launch 224.1 > 220 (3 pins); capture 196.6 > 190 (3 pins)"
+  }
+]

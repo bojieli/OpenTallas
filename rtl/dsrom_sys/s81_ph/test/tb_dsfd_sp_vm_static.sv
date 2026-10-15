@@ -14,6 +14,19 @@
 // 4 unsupported LARM7, 5 aux lane collision, 6 WFC range, 7 WFC pair lane,
 // 8 capture alignment. Each requires its named sticky fault AND top-level c_st[0].
 module tb_dsfd_sp_vm_static;
+`ifdef OT_VM_NATIVE_READ_PINREG
+    localparam integer READ_PIPE=2;
+`elsif OT_VM_NATIVE_READ
+    localparam integer READ_PIPE=1;
+`else
+    localparam integer READ_PIPE=0;
+`endif
+`ifdef OT_VM_NATIVE_CAP
+    localparam integer CAP_PIPE=1;
+`else
+    localparam integer CAP_PIPE=0;
+`endif
+
     reg s_ck = 1, t_ck = 1, rst = 0, rss = 0;
     always #556 s_ck = ~s_ck;
     always #417 t_ck = ~t_ck;
@@ -26,7 +39,27 @@ module tb_dsfd_sp_vm_static;
     reg [2203:0] fcol = 0; reg [14:0] crq = 0; wire [512:0] crs;
     reg [514:0] sel = 0, col = 0; reg [1026:0] asw = 0;
     wire [511:0] tgat; reg [10:0] xgo = 0; wire [512:0] qsw; reg [2:0] qsws = 3'b011;
-    dsfd_sp_vm dut (.ck(s_ck), .rst(rst), .cks(t_ck), .rss(rss), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st),
+    dsfd_sp_vm #(.CAP_PIPE(CAP_PIPE), .READ_PIPE(READ_PIPE)) dut (
+        .ck_read_data_t({64{t_ck}}), .ck_read_valid_t({8{t_ck}}), .rss_read_data_t({64{rss}}), .rss_read_valid_t({8{rss}}),
+        .ck_core_t(t_ck), .ck_rsched_t(t_ck), .ck_seq_t(t_ck), .ck_landing_t(t_ck),
+        .ck_mem_fsr_t({16{t_ck}}), .ck_mem_return_t({4{t_ck}}), .ck_mem_bank_t({128{t_ck}}),
+        .ck_mem_wcapture_t({128{t_ck}}), .ck_mem_wscatter_t({16{t_ck}}),
+        .ck_mem_relay_req_t({48{t_ck}}), .ck_mem_relay_rsp_t({48{t_ck}}),
+        .ck_write_control_t(t_ck), .ck_write_header_t(t_ck), .ck_write_payload_t({4{t_ck}}),
+        .ck_write_dispatch_t({16{t_ck}}), .ck_write_stage_t({128{t_ck}}),
+        .ck_landing_x34_s({3{s_ck}}), .ck_landing_x34_t({3{t_ck}}),
+        .rss_core_t(rss), .rss_rsched_t(rss), .rss_seq_t(rss), .rss_landing_t(rss),
+        .rss_mem_fsr_t({16{rss}}), .rss_mem_return_t({4{rss}}), .rss_mem_bank_t({128{rss}}),
+        .rss_mem_wcapture_t({128{rss}}), .rss_mem_wscatter_t({16{rss}}), .rss_mem_relay_t({48{rss}}),
+        .rss_write_control_t(rss), .rss_write_header_t(rss), .rss_write_payload_t({4{rss}}),
+        .rss_write_dispatch_t({16{rss}}), .rss_write_stage_t({128{rss}}),
+        .rst_landing_x34_s({3{rst}}), .rss_landing_x34_t({3{rss}}),
+        .ck_cap_control_s(s_ck), .rst_cap_control_s(rst), .ck_cap_lane_s({16{s_ck}}),
+        .ck_cap_x34_s({16{s_ck}}), .ck_cap_x34_t({16{t_ck}}), .rst_cap_x34_s({16{rst}}), .rss_cap_x34_t({16{rss}}),
+        .ck_wfc_control_s(s_ck), .ck_wfc_control_t(t_ck), .ck_wfc_x34_s(s_ck), .ck_wfc_x34_t(t_ck), .ck_wfc_x43_s(s_ck), .ck_wfc_x43_t(t_ck),
+        .rst_wfc_control_s(rst), .rss_wfc_control_t(rss), .rst_wfc_x34_s(rst), .rss_wfc_x34_t(rss), .rst_wfc_x43_s(rst), .rss_wfc_x43_t(rss),
+        .ck_xio_control_s(s_ck), .ck_xio_control_t(t_ck), .ck_xio_x43_s({2{s_ck}}), .ck_xio_x43_t({2{t_ck}}),
+        .rst_xio_control_s(rst), .rss_xio_control_t(rss), .rst_xio_x43_s({2{rst}}), .rss_xio_x43_t({2{rss}}), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st),
         .t_inp_su(t_inp_su), .t_inp_hc(t_inp_hc),
         .f_su_rqv(su_rqv), .f_su_rq(su_rq), .t_su_rsv(su_rsv), .t_su_rs(su_rs),
         .f_su_wqv(su_wqv), .f_su_wq(su_wq), .f_su_wqm(su_wqm), .f_su_wqd(su_wqd),
@@ -73,10 +106,10 @@ module tb_dsfd_sp_vm_static;
             issue(3'd4, {1'b0, 1'(dest), 14'(base), 5'(n - 1)});
             I = E + 3;
             for (k = 0; k < n; k = k + 1) begin
-                while (I % 4 == 2) I = I + 1;
+                while (I % 4 == (2-READ_PIPE)) I = I + 1;
                 d = mem[base + k];
-                if (dest == 0) e_q[x43_serial(I + 15)] = {d, 1'b1};
-                else e_g[x43_serial(I + 15)] = {d[510:0], 1'b1};
+                if (dest == 0) e_q[x43_serial(I + 15+READ_PIPE)] = {d, 1'b1};
+                else e_g[x43_serial(I + 15+READ_PIPE)] = {d[510:0], 1'b1};
                 I = I + 1;
             end
         end
@@ -121,7 +154,7 @@ module tb_dsfd_sp_vm_static;
         end
         if (tk >= 300 && tk < 332) begin
             r = 1024 + tk - 300; crq = {14'(r), 1'b1};
-            e_tc[tk + 1 + 12] = {mem[r], 1'b1};
+            e_tc[tk + 1 + 12+READ_PIPE] = {mem[r], 1'b1};
         end
         // Invalid STREAM destination is a schedule-fault witness.
         if (mode == 1 && tk == 360) issue(3'd4, {2'd2, 14'd1024, 5'd0});
@@ -137,29 +170,30 @@ module tb_dsfd_sp_vm_static;
         if (mode == 5 && tk == 520) begin                                  // two units, same lane, same edge
             stream(0, 1100, 2);
         end
-        if (mode == 5 && tk == 521) stream(1, 1101, 2);
+        // READ_PIPE 2 blocks issue phase 0 instead of 1, which shifts Q's rows one edge: G then starts on Q's lane.
+        if (mode == 5 && tk == 521) stream(1, (READ_PIPE == 2) ? 1100 : 1101, 2);
         // gather go: the bench (gather) pulses xgo for each posted phase, in order, ~60 edges after the post
         if (tk >= 560 && tk < 564) begin xgo = {1'b1, gphase[tk - 560]}; if (mode == 2 && tk == 562) xgo[0] = ~xgo[0]; end
         // R: SU read-back of the collective landing rows (one a stream edge, port 4 + row[1:0])
         if (tk >= 600 && tk < 600 + 160) begin
             r = 2048 + (tk - 600);
             if (memv[r]) begin
-                su_rqv[4 + r % 4] = 1'b1; su_rq[14*(4 + r % 4) +: 14] = 14'(r); e_su_row[tk + 1 + 12] = r;
+                su_rqv[4 + r % 4] = 1'b1; su_rq[14*(4 + r % 4) +: 14] = 14'(r); e_su_row[tk + 1 + 12+READ_PIPE] = r;
             end
         end
         if (tk >= 2100 && tk < 2116) begin
             k = tk - 2100;
             r = (k < 4) ? 7000 + k : (k < 8) ? 7200 + k - 4 : 7400 + k - 8;
-            su_rqv[4 + r % 4] = 1'b1; su_rq[14*(4 + r % 4) +: 14] = 14'(r); e_su_row[tk + 1 + 12] = r;
+            su_rqv[4 + r % 4] = 1'b1; su_rq[14*(4 + r % 4) +: 14] = 14'(r); e_su_row[tk + 1 + 12+READ_PIPE] = r;
         end
         // R: SU read-back of the WFC rows and the capture rows (after both landed)
         if (tk >= 1800 && tk < 1800 + 64) begin
             r = 4096 + (tk - 1800);
-            su_rqv[4 + r % 4] = 1'b1; su_rq[14*(4 + r % 4) +: 14] = 14'(r); e_su_row[tk + 1 + 12] = r;
+            su_rqv[4 + r % 4] = 1'b1; su_rq[14*(4 + r % 4) +: 14] = 14'(r); e_su_row[tk + 1 + 12+READ_PIPE] = r;
         end
         if (tk >= 1900 && tk < 1900 + 64) begin
             r = 6144 + (tk - 1900);
-            if (memv[r]) begin su_rqv[4 + r % 4] = 1'b1; su_rq[14*(4 + r % 4) +: 14] = 14'(r); e_su_row[tk + 1 + 12] = r; end
+            if (memv[r]) begin su_rqv[4 + r % 4] = 1'b1; su_rq[14*(4 + r % 4) +: 14] = 14'(r); e_su_row[tk + 1 + 12+READ_PIPE] = r; end
         end
     end
     // ---------------------------------------------------------------- serial program (WFC kit, capture)
@@ -179,7 +213,7 @@ module tb_dsfd_sp_vm_static;
             r = 4096 + 2 * (sk - 200);
             fwfc[528] = 1'b1; fwfc[543:529] = 15'(r); fwfc[558:544] = 15'(r + 1); fwfc[559] = 1'b1;
             if (mode == 7 && sk == 210) fwfc[558:544] = 15'(r + 4);
-            e_w[sk + 1 + 15] = {1'b1, mem[r + 1], 1'b1, mem[r]};
+            e_w[sk + 1 + 15+3*((READ_PIPE+3)/4)] = {1'b1, mem[r + 1], 1'b1, mem[r]};
         end
         if (sk >= 130 && sk < 134) begin
             r = 7000 + sk - 130; sel = {1'b0, 1'b1, rowdata(r, 6), 1'b1}; mem[r] = rowdata(r, 6); memv[r] = 1;

@@ -1,0 +1,330 @@
+{
+  "owner": "/root/s81_field_native",
+  "scope": "Source and measured mapped area for real top-down physical placement. Missing die homes and assigned pin faces remain explicit, not proposed accepted contracts.",
+  "masters": [
+    {
+      "master": "ot_s81_pq_ctl_static_native",
+      "source": "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_static_native.sv",
+      "sha256": "a4f01d78af4489951ff372235899b05a41ec5e012efe01326d1f5f877c1979ab",
+      "parameters": {},
+      "actual_tt_top_stdcell_area_um2": 1829.01726,
+      "actual_generic_ff": 2936,
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "width": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "width": 1
+        },
+        "q_consume": {
+          "direction": "output",
+          "width": 1
+        },
+        "b_consume": {
+          "direction": "output",
+          "width": 1
+        },
+        "aq_vin": {
+          "direction": "output",
+          "width": 1
+        },
+        "aqf": {
+          "direction": "input",
+          "width": 2
+        },
+        "aqi_o": {
+          "direction": "output",
+          "width": 10
+        },
+        "ba_v_o": {
+          "direction": "output",
+          "width": 1
+        },
+        "ba_wv_o": {
+          "direction": "output",
+          "width": 2
+        },
+        "ba_blk_o": {
+          "direction": "output",
+          "width": 8
+        },
+        "hw_o": {
+          "direction": "output",
+          "width": 48
+        },
+        "h_hi_o": {
+          "direction": "output",
+          "width": 36
+        },
+        "h_b0_o": {
+          "direction": "output",
+          "width": 16
+        },
+        "h_b1_o": {
+          "direction": "output",
+          "width": 16
+        },
+        "mdr_o": {
+          "direction": "output",
+          "width": 458
+        },
+        "q2f_i": {
+          "direction": "input",
+          "width": 12
+        },
+        "ga_i": {
+          "direction": "input",
+          "width": 192
+        },
+        "bc_hr_o": {
+          "direction": "output",
+          "width": 610
+        },
+        "calendar_v": {
+          "direction": "input",
+          "width": 1
+        },
+        "calendar_action": {
+          "direction": "input",
+          "width": 75
+        },
+        "go": {
+          "direction": "input",
+          "width": 1
+        },
+        "i_ph": {
+          "direction": "input",
+          "width": 10
+        },
+        "i_np": {
+          "direction": "input",
+          "width": 3
+        },
+        "i_xbase": {
+          "direction": "input",
+          "width": 19
+        },
+        "i_xps": {
+          "direction": "input",
+          "width": 19
+        },
+        "i_obase": {
+          "direction": "input",
+          "width": 19
+        },
+        "i_ops": {
+          "direction": "input",
+          "width": 19
+        },
+        "i_fmt": {
+          "direction": "input",
+          "width": 2
+        },
+        "ready": {
+          "direction": "output",
+          "width": 1
+        },
+        "idle": {
+          "direction": "output",
+          "width": 1
+        },
+        "x_re": {
+          "direction": "output",
+          "width": 1
+        },
+        "x_addr": {
+          "direction": "output",
+          "width": 19
+        },
+        "x_rv": {
+          "direction": "input",
+          "width": 1
+        },
+        "f_fault": {
+          "direction": "input",
+          "width": 1
+        },
+        "fault": {
+          "direction": "output",
+          "width": 1
+        },
+        "phase_cycles": {
+          "direction": "output",
+          "width": 32
+        },
+        "ev_go": {
+          "direction": "output",
+          "width": 1
+        },
+        "ev_end": {
+          "direction": "output",
+          "width": 1
+        },
+        "stream_end_v": {
+          "direction": "output",
+          "width": 1
+        },
+        "stream_end_tag": {
+          "direction": "output",
+          "width": 2
+        },
+        "ev_tag": {
+          "direction": "output",
+          "width": 2
+        },
+        "rom_pa0": {
+          "direction": "output",
+          "width": 11
+        },
+        "rom_pa1": {
+          "direction": "output",
+          "width": 11
+        },
+        "rom_pq0": {
+          "direction": "input",
+          "width": 64
+        },
+        "rom_pq1": {
+          "direction": "input",
+          "width": 64
+        },
+        "rom_sa": {
+          "direction": "output",
+          "width": 14
+        },
+        "rom_sq": {
+          "direction": "input",
+          "width": 48
+        }
+      },
+      "assigned_die_home": null,
+      "assigned_outline_um": null,
+      "assigned_pin_faces": null,
+      "native_CTS_qualified": false
+    },
+    {
+      "master": "ot_s81_pq_command_endpoint",
+      "source": "rtl/dsrom_sys/s81_static_control/ot_s81_pq_command_endpoint.sv",
+      "sha256": "7dae6a54acb4166971cef8c3556dd8dfe3979fccc766522824f0bd74e2691ba4",
+      "parameters": {
+        "PHW": 10
+      },
+      "actual_tt_top_stdcell_area_um2": 4740.06006,
+      "actual_generic_ff": 8158,
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "width": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "width": 1
+        },
+        "c_cmd": {
+          "direction": "input",
+          "width": 85
+        },
+        "f_desc_pw": {
+          "direction": "input",
+          "width": 36
+        },
+        "t_iss": {
+          "direction": "input",
+          "width": 39
+        },
+        "f_iss": {
+          "direction": "output",
+          "width": 93
+        },
+        "c_done": {
+          "direction": "output",
+          "width": 9
+        },
+        "c_st": {
+          "direction": "output",
+          "width": 2
+        },
+        "image_sealed": {
+          "direction": "output",
+          "width": 1
+        }
+      },
+      "assigned_die_home": null,
+      "assigned_outline_um": null,
+      "assigned_pin_faces": null,
+      "native_CTS_qualified": false
+    },
+    {
+      "master": "ot_s81_pq_calendar_reader",
+      "source": "rtl/dsrom_sys/s81_static_control/ot_s81_pq_calendar_reader.sv",
+      "sha256": "7711d9b77f8777437d83a289aa24295d157316cd87d96da63359fbe3f6c1be61",
+      "parameters": {
+        "ACTION_BITS": 75
+      },
+      "actual_tt_top_stdcell_area_um2": 374.79348,
+      "actual_generic_ff": 595,
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "width": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "width": 1
+        },
+        "prime": {
+          "direction": "input",
+          "width": 1
+        },
+        "stage_start": {
+          "direction": "input",
+          "width": 1
+        },
+        "base": {
+          "direction": "input",
+          "width": 12
+        },
+        "length": {
+          "direction": "input",
+          "width": 13
+        },
+        "rom_addr": {
+          "direction": "output",
+          "width": 12
+        },
+        "rom_action": {
+          "direction": "input",
+          "width": 72
+        },
+        "rom_time": {
+          "direction": "input",
+          "width": 72
+        },
+        "action": {
+          "direction": "output",
+          "width": 75
+        },
+        "active": {
+          "direction": "output",
+          "width": 1
+        },
+        "primed": {
+          "direction": "output",
+          "width": 1
+        },
+        "fault": {
+          "direction": "output",
+          "width": 1
+        }
+      },
+      "assigned_die_home": null,
+      "assigned_outline_um": null,
+      "assigned_pin_faces": null,
+      "native_CTS_qualified": false
+    }
+  ],
+  "controller_N_only_outputs_pin_lower_bound_um": 208.96,
+  "all_release_qualified": false
+}

@@ -8,7 +8,8 @@ module tb_dsfd_vm_static_wsched_roots;
  reg [N-1:0] iv=0;reg[14*N-1:0] ir=0;reg[16*N-1:0] im=0;reg[512*N-1:0] id=0;reg[8*N-1:0] it=0;
  wire[31:0] ov;wire[447:0] orow;wire[511:0] om;wire[16383:0] od;wire[255:0] ot;wire fault;
  dsfd_vm_static_wsched #(.NSRC(N)) u(.ck_control(ck),.ck_header(ck),.ck_payload({ck,ck,ck,payload0}),
- .ck_dispatch({16{ck}}),.ck_stage({128{ck}}),.rst_n(rst_n),.i_v(iv),.i_row(ir),.i_mask(im),.i_data(id),.i_tag(it),
+ .ck_dispatch({16{ck}}),.ck_stage({128{ck}}),
+ .rst_control_n(rst_n),.rst_header_n(rst_n),.rst_payload_n({4{rst_n}}),.rst_dispatch_n({16{rst_n}}),.rst_stage_n({128{rst_n}}),.i_v(iv),.i_row(ir),.i_mask(im),.i_data(id),.i_tag(it),
  .wq_v(ov),.wq_row(orow),.wq_mask(om),.wq_data(od),.wq_tag(ot),.fault(fault));
  reg[31:0] xv[0:END+20];reg[447:0] xr[0:END+20];reg[511:0] xm[0:END+20];
  reg[16383:0] xd[0:END+20];reg[255:0] xt[0:END+20];

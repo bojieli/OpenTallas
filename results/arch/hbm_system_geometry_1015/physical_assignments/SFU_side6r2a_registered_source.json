@@ -1,0 +1,153 @@
+{
+  "status": "SOURCE_BOUND_REGISTERED_FACE_SUCCESSOR_SOURCE_PROOF_PASS_NATIVECTS_PENDING",
+  "qualified": false,
+  "module": "ot_hbm_su_static_side_native6r2a",
+  "outline_um": [
+    864,
+    648
+  ],
+  "orientation": "R0",
+  "sources": [
+    {
+      "path": "/home/ubuntu/wt/hbm-hard-physical-1015/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side.sv",
+      "sha256": "2e6c4f37354ca789ae7178eac57dc6b5c1abdf7a12858812200e10fb93f04a44"
+    },
+    {
+      "path": "/home/ubuntu/wt/hbm-hard-physical-1015/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side_native6.sv",
+      "sha256": "6e26a39f7cdc0da705b62d023d3659ef72c5ecc8b4b64d48909ffa0ceed3249d"
+    },
+    {
+      "path": "/home/ubuntu/wt/hbm-hard-physical-1015/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side_native6r2a.sv",
+      "sha256": "c711cb7b5e98b2bf5dad6efe3329599905946090e411cb8d95276101fcd5be13"
+    }
+  ],
+  "pins": {
+    "W": [
+      "v",
+      "fn",
+      "x",
+      "fn_out"
+    ],
+    "E": [
+      "y",
+      "fault"
+    ],
+    "S": [
+      "ck0",
+      "ck1",
+      "ck2",
+      "ck3",
+      "ck4",
+      "ck5",
+      "rst_n"
+    ]
+  },
+  "actual_literal_ports": {
+    "ck0": {
+      "direction": "input",
+      "bits": 1
+    },
+    "ck1": {
+      "direction": "input",
+      "bits": 1
+    },
+    "ck2": {
+      "direction": "input",
+      "bits": 1
+    },
+    "ck3": {
+      "direction": "input",
+      "bits": 1
+    },
+    "ck4": {
+      "direction": "input",
+      "bits": 1
+    },
+    "ck5": {
+      "direction": "input",
+      "bits": 1
+    },
+    "rst_n": {
+      "direction": "input",
+      "bits": 1
+    },
+    "v": {
+      "direction": "input",
+      "bits": 1
+    },
+    "fn": {
+      "direction": "input",
+      "bits": 3
+    },
+    "fn_out": {
+      "direction": "input",
+      "bits": 3
+    },
+    "x": {
+      "direction": "input",
+      "bits": 32
+    },
+    "y": {
+      "direction": "output",
+      "bits": 32
+    },
+    "fault": {
+      "direction": "output",
+      "bits": 1
+    }
+  },
+  "face_bits": {
+    "W": 39,
+    "E": 33,
+    "S": 7
+  },
+  "literal_bits": 79,
+  "clock_ports": [
+    "ck0",
+    "ck1",
+    "ck2",
+    "ck3",
+    "ck4",
+    "ck5"
+  ],
+  "roots": 6,
+  "root_FF_census": null,
+  "macro_count": 0,
+  "excludes": [
+    "19rootfullKIND2head",
+    "separate6SRAMbank"
+  ],
+  "current_blocker": "physicalnativeCTS/pinPG/ordinarycrossrootpaths pending; fullheadcalendaradoption open",
+  "required_resolution": [
+    "actual shiftedgolden andDUTmutants terminalPASS",
+    "actualsource-specific6rootcensus",
+    "ordinarysamePLLrelatedphase0crossrootconstraints andphi-R",
+    "actual nativeCTS/route and all79pinPGcutreadback",
+    "fullhead/compiler SIDEcalendar integration charges+2edges/allfunctions"
+  ],
+  "forbidden": "no asyncfalsepaths, renamed aliases or timing waiver",
+  "native_clock_phase_and_global_home": "must source-bind actualphase and upstreamSUo/phi-R before parent placement; wholeconsumer home unassigned",
+  "additional_FF": 75,
+  "additional_SIDE_edges": 2,
+  "registered_interfaces": {
+    "ingress_ck0": 39,
+    "selector_alignment_ck0": 3,
+    "egress_ck0": 33
+  },
+  "sourceproof_unit": "2107581-1792064134",
+  "nativegate_handle": "session59643 admissionpending",
+  "supersedes": "failedinitialnative6r2 retained asdiagnostic",
+  "sourceproof_result": "FULLPASS16384shiftedgolden+16384postNBAoriginalequivalence; function/sign/clockdisconnect/missingselector mutants rejected",
+  "predecessor_actual_mapped_root_sinks": [
+    6171,
+    1855,
+    8814,
+    8623,
+    6185,
+    10167
+  ],
+  "predecessor_count_scope": "baselineSIDE only, source-qualified postmapactualSDCclockgraph; NOT actualr2a count",
+  "r2a_actual_mapped_sinks": null,
+  "phase_authority": "42a source contract allsix related1:1phase0, actualheadbench tiesrootsoneclock; actualPLL/physical delivery remains fullDIE obligation",
+  "additional_FF_scope": "75declared sourceFF only; newmap maymerge, actualr2a census required"
+}

@@ -1,0 +1,25 @@
+{
+  "source_commit": "ed4415cb2",
+  "dependency_commit": "619da76cd",
+  "unit": "oth-ubuntu-648833-1792054218",
+  "host": "ot-epyc1tb",
+  "exit_status": 0,
+  "qualification": false,
+  "status": "PASS sourceexact query VMlanding/gather component with nativeBF16grid fault contract",
+  "query_words": 16384,
+  "epochs": 2,
+  "query_macros": 64,
+  "VM_macros": 24,
+  "mutants_detected": [
+    "actualsource bank/lane swap",
+    "queryhead wrong",
+    "actualresponse late",
+    "actualFP32source low16nonzero withunchangedupper16"
+  ],
+  "precision": "Exactexisting FP32upper16 extraction withlow16nonzero rejected asoriginal ot_hgi_att_unit",
+  "remaining": [
+    "Fullnativehostprofile updatedsource/faultpropagation binding",
+    "Fullactualarithmetic/PS/P/outputprogramme",
+    "Physicalclock/cut/route andimmutablethroughput"
+  ]
+}

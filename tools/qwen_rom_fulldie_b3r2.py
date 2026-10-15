@@ -720,6 +720,8 @@ def _tp8_io(v, m):
 
     def masters(model, k=1, port_bits=None):
         o = base(model, k, port_bits)
+        if 'qfd_io_collective' not in o:
+            return o        # split compute static IO bind: credit IO masters retired
         C = o['qfd_io_collective']
         for q in range(1, n):
             for p0 in ('s', 'sr'):
@@ -1102,7 +1104,13 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
                 v.V5_FINAL_MASTERS(model, o, k)
                 return o
             v.masters = _mfinal
-        _relays(v, m, relay_pitch)
+        _corr0 = v.CORR
+        if m.get('corridor_lanes'):
+            v.CORR = min(w_ for _, w_ in m['corridor_lanes'])
+        try:
+            _relays(v, m, relay_pitch)
+        finally:
+            v.CORR = _corr0
         if getattr(v, 'RELAY_REACH_GATE', False):   # tp8b (die timing by construction)
             _reset_tree(v, m)     # after the relays: legalised against the FINAL placement
         if before_relays is not None:
@@ -1216,6 +1224,12 @@ def _su_vm_bus(v, m, a_bits=None, q_bits=None):
     def masters(model, k=1, port_bits=None):
         out = base(model, k, port_bits)
         s, q = out['qfd_sp_su64_sfu'], out['qfd_sp_vector_memory']
+        if model.get('native_control_contract'):
+            # Native controller retired the legacy VM request/ready service.
+            # These are unbound abstract pins, not a reusable physical view.
+            for retired in ('xd', 'xr'):
+                q.ports.pop(retired, None)
+                q.order[:] = [x_ for x_ in q.order if x_ != retired]   # not 'p': py3.12+ inlined comprehension
         for M_, f, mine in ((s, 'S' if north else 'N', ('va', 'vq')), (q, 'N' if north else 'S', ('sa', 'sq'))):
             for pn in mine:                 # the base wrapper's default pin group for the new bus: replaced here
                 if pn in M_.ports:
@@ -1754,7 +1768,9 @@ def _emb_hbm(v, m):
 
 
 # ------------------------------------------------------------------------------------------------ r21 die relays
-RELAY_SKIP = ('clock_trunk', 'reset', 'tap', 'kv_land', 'cdc_core', 'hbm_cdc', 'phy_dfi')
+# coll_fdi (Qwen split compute static IO, 2026-10-15): the collective <-> PHY FDI words; their relay registers are
+# inside the static collective RTL (RU / RS relay_ck roots), a die relay would be an unscheduled stage
+RELAY_SKIP = ('clock_trunk', 'reset', 'tap', 'kv_land', 'cdc_core', 'hbm_cdc', 'phy_dfi', 'coll_fdi')
 # the standard corridor relay frame (52.68 x 30.24, faces at one track: 520 x 0.048 + 4 = 29 um of a 52.68-um face)
 # holds up to 520 b (split compute C7: 514-b tree words {fault, valid, 512}, 516-b DVM corridor word)
 RELAY_STD_BITS = 520
@@ -1813,6 +1829,11 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     COLS = v.COLS
     cx_list = [m['col_x'](c) + v.TILE_BODY_W + v.CORR / 2 for c in range(COLS)]
     corr_x0 = [m['col_x'](c) + v.TILE_BODY_W for c in range(COLS)]
+    if m.get('corridor_lanes'):
+        # split compute PM-H-S: per-column station lanes (even W of its MY tile, odd E of its R0 tile); v.CORR is the
+        # lane width for the whole relay plan (set by the caller)
+        corr_x0 = [x0 for x0, _ in m['corridor_lanes']]
+        cx_list = [x0 + v.CORR / 2 for x0 in corr_x0]
     fields = [r['rect'] for r in m['regions'] if r['kind'] == 'tile_field']
     fw, fe = fields[0], fields[1]
 
@@ -2816,6 +2837,10 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     # net is never planned by itself: it rides the forward chain's relay frames (one registered hop each way per frame,
     # the closed station family ot_qwen_die_station TAP=0), relay ports a_d / a_r (upstream face) and b_d / b_r
     pair = dict(m.get('bus_pair') or {})          # forward bid -> reverse bid
+    # static schedule (owner 10-14): a static DVM corridor has no ready net any more; a pair whose reverse bus is gone
+    # is an ordinary forward bus
+    _names = {b_[0] for b_ in m['buses']}
+    pair = {f_: r_ for f_, r_ in pair.items() if r_ in _names}
     rev_idx = {b_[0]: j_ for j_, b_ in enumerate(m['buses']) if b_[0] in set(pair.values())}
     feedback = []        # it24: (bid, max hop before, after, accepted)
     plans = {}
@@ -4466,7 +4491,9 @@ def _r18_masters(v, m):
             vm.ports['em'] = ('face', v.IO_BITS, 'N', 'M5', vm.w * 0.2, 2)
         xf = None
         iox = model['io']['xfifo']
-        out['qfd_io_xfifo'] = v.Master('qfd_io_xfifo', iox.w, iox.h, 3, 'IO-band CDC cluster: sequencer -> collective '
+        # split compute static IO bind: io_xfifo retired (its CDC is inside the static collective)
+        xf_live = any(i_ is iox for i_ in model['insts'])
+        out['qfd_io_xfifo'] = None if not xf_live else v.Master('qfd_io_xfifo', iox.w, iox.h, 3, 'IO-band CDC cluster: sequencer -> collective '
                                        'ratio FIFO, collective <-> UCIe / SerDes link-clock async FIFOs')
         # CDC cluster data ports: one pin group per crossing on the face toward its other endpoint; sp_xfifo groups
         # level with the peer's group across the 30 um gap where they fit (r18c i5: M6 1.15 between the SU64 / VM
@@ -4479,7 +4506,9 @@ def _r18_masters(v, m):
                                  ('qfd_io_serdes', 'r', 1350.0)):
             if mst_ in out and port_ in out[mst_].ports and out[mst_].ports[port_][0] == 'face':
                 out[mst_].ports[port_] = out[mst_].ports[port_][:4] + (yc_,) + out[mst_].ports[port_][5:]
-        for X in (iox,):
+        if not xf_live:
+            out.pop('qfd_io_xfifo')
+        for X in ((iox,) if xf_live else ()):
             M = out[X.master]
             want = []
             for bid, cl, nb, eps in model['buses']:
@@ -5489,6 +5518,8 @@ def _io_faces(v):
 
     def masters(model, k=1, port_bits=None):
         out = base(model, k, port_bits)
+        if 'qfd_io_collective' not in out or 'qfd_io_serdes' not in out:
+            return out      # split compute static IO bind: the credit IO masters are retired (native_static_io_bind)
         col, ser = out['qfd_io_collective'], out['qfd_io_serdes']
         kind, w, face, layer, centre, pitch = col.ports['u']
         col.ports['s'] = ('face', col.ports['s'][1], 'E', 'M4', centre + 400.0, 2)

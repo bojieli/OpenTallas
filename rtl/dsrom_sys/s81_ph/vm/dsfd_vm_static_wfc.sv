@@ -26,9 +26,11 @@
 // (decode 1 + core 13 + return 1) lands every response on sample index 2 / 3 / 0 of ot_s81_vm_x43 (never 1).
 // Mutant OT_VM_WFC_MUT_PAIR: row1's response is returned in the rq slot (pair swapped): must FAIL.
 // ---------------------------------------------------------------------------------------------------------------
-module dsfd_vm_static_wfc #(parameter integer RLAT = 13) (
-    input  wire          ck, rst,               // serial
-    input  wire          cks, rss,              // stream
+module dsfd_vm_static_wfc #(parameter integer RLAT = 13, parameter integer RESPONSE_PAD = 0) (
+    input wire ck_control_s, ck_control_t,
+    input wire ck_x34_s, ck_x34_t, ck_x43_s, ck_x43_t,
+    input wire rst_control_s, rss_control_t,
+    input wire rst_x34_s, rss_x34_t, rst_x43_s, rss_x43_t,
     input  wire [559:0]  f_wfc,
     output wire [1028:0] t_wfc,
     // stream side to / from dsfd_vm_static_core
@@ -38,12 +40,15 @@ module dsfd_vm_static_wfc #(parameter integer RLAT = 13) (
     input  wire          vm_fault,                              // stream level
     output wire          fault                                  // stream level (this endpoint's own faults)
 );
+    // Every category pin is a real, separately delivered root. No scalar
+    // root is copied to child CDC domains. Physical phases remain related3:4
+    // and must preserve existing input/decode/return sample edges.
     // ---------------------------------------------------------------- serial -> stream
     wire xv; wire [559:0] xd; wire x34f;
-    ot_s81_vm_x34 #(.W(560)) u_xi (.s_ck(ck), .s_rst_n(rst), .s_v(f_wfc[0] | f_wfc[528]), .s_d(f_wfc),
-        .t_ck(cks), .t_rst_n(rss), .o_v(xv), .o_d(xd), .fault(x34f));
+    ot_s81_vm_x34 #(.W(560)) u_xi (.s_ck(ck_x34_s), .s_rst_n(rst_x34_s), .s_v(f_wfc[0] | f_wfc[528]), .s_d(f_wfc),
+        .t_ck(ck_x34_t), .t_rst_n(rss_x34_t), .o_v(xv), .o_d(xd), .fault(x34f));
     reg [1:0] tq;
-    always @(posedge cks or negedge rss) if (!rss) tq <= 2'b00; else tq <= {tq[0], 1'b1};
+    always @(posedge ck_control_t or negedge rss_control_t) if (!rss_control_t) tq <= 2'b00; else tq <= {tq[0], 1'b1};
     wire tn = tq[1];
     wire        q_wv  = xv && xd[0];
     wire [14:0] q_wa  = xd[527:513];
@@ -55,7 +60,7 @@ module dsfd_vm_static_wfc #(parameter integer RLAT = 13) (
     reg err;
     // ---------------------------------------------------------------- decode register (edge X + 1)
     reg [RLAT:0] dv0, dv1; reg [1:0] dl0 [0:RLAT]; reg [1:0] dl1 [0:RLAT];
-    always @(posedge cks) begin : p_dec integer k; reg r0ok, r1ok;
+    always @(posedge ck_control_t) begin : p_dec integer k; reg r0ok, r1ok;
         if (!tn) begin w_v <= 1'b0; a_v <= 4'd0; err <= 1'b0; dv0 <= '0; dv1 <= '0; end
         else begin
             w_v <= q_wv && q_wa < 15'd16384;
@@ -77,7 +82,7 @@ module dsfd_vm_static_wfc #(parameter integer RLAT = 13) (
     reg [1025:0] r_q; reg r_bad;
     wire        e0 = dv0[RLAT], e1 = dv1[RLAT];
     wire [1:0]  l0 = dl0[RLAT], l1 = dl1[RLAT];
-    always @(posedge cks) begin
+    always @(posedge ck_control_t) begin
         if (!tn) begin r_q <= 1026'd0; r_bad <= 1'b0; end
         else begin
 `ifdef OT_VM_WFC_MUT_PAIR
@@ -89,15 +94,28 @@ module dsfd_vm_static_wfc #(parameter integer RLAT = 13) (
             if (e_v != ((e0 ? (4'd1 << l0) : 4'd0) | (e1 ? (4'd1 << l1) : 4'd0))) r_bad <= 1'b1;
         end
     end
+    // A +1core return stage needs +3actual stream response registers to preserve
+    // all three legal x43 sample slots. Together this is one 4:3 epoch (+3serial).
+    wire [1025:0] serial_q;
+    generate if (RESPONSE_PAD == 0) begin : no_pad
+        assign serial_q=r_q;
+    end else begin : fixed_pad
+        reg [1025:0] pad [0:RESPONSE_PAD-1]; integer k;
+        always @(posedge ck_control_t) begin
+            if (!tn) for (k=0;k<RESPONSE_PAD;k=k+1) pad[k]<=1026'd0;
+            else begin pad[0]<=r_q; for(k=1;k<RESPONSE_PAD;k=k+1) pad[k]<=pad[k-1]; end
+        end
+        assign serial_q=pad[RESPONSE_PAD-1];
+    end endgenerate
     // ---------------------------------------------------------------- stream -> serial
     wire ov; wire [1025:0] od; wire x43f;
-    ot_s81_vm_x43 #(.W(1026)) u_xo (.t_ck(cks), .t_rst_n(rss), .s_v(r_q[512] | r_q[1025]), .s_d(r_q),
-        .s_ck(ck), .s_rst_n(rst), .o_v(ov), .o_d(od), .fault(x43f));
+    ot_s81_vm_x43 #(.W(1026)) u_xo (.t_ck(ck_x43_t), .t_rst_n(rss_x43_t), .s_v(serial_q[512] | serial_q[1025]), .s_d(serial_q),
+        .s_ck(ck_x43_s), .s_rst_n(rst_x43_s), .o_v(ov), .o_d(od), .fault(x43f));
     // serial outputs: grants = serial live, t_err = sticky (registered in the serial domain from stream levels)
-    reg [1:0] sq; always @(posedge ck or negedge rst) if (!rst) sq <= 2'b00; else sq <= {sq[0], 1'b1};
+    reg [1:0] sq; always @(posedge ck_control_s or negedge rst_control_s) if (!rst_control_s) sq <= 2'b00; else sq <= {sq[0], 1'b1};
     reg g_q, e_q;
     wire own = err | r_bad | x34f;
-    always @(posedge ck) begin g_q <= sq[1]; e_q <= sq[1] && (own | x43f | vm_fault); end
+    always @(posedge ck_control_s) begin g_q <= sq[1]; e_q <= sq[1] && (own | x43f | vm_fault); end
     assign t_wfc = {e_q, od, g_q, g_q};
     assign fault = own | x43f;
 endmodule

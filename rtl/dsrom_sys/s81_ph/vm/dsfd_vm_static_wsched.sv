@@ -20,10 +20,14 @@
 // A functional scalar tie is allowed for simulation only; native parent must deliver every leaf phi-R.
 // ---------------------------------------------------------------------------------------------------------------
 module dsfd_vm_static_wsched #(parameter integer NSRC = 48) (
-    input  wire                 ck_control, ck_header, rst_n,
+    input  wire                 ck_control, ck_header,
     input  wire [3:0]           ck_payload,
     input  wire [15:0]          ck_dispatch,
     input  wire [127:0]         ck_stage,
+    input  wire                 rst_control_n, rst_header_n,
+    input  wire [3:0]           rst_payload_n,
+    input  wire [15:0]          rst_dispatch_n,
+    input  wire [127:0]         rst_stage_n,
     input  wire [NSRC-1:0]      i_v,
     input  wire [14*NSRC-1:0]   i_row,
     input  wire [16*NSRC-1:0]   i_mask,
@@ -41,7 +45,7 @@ module dsfd_vm_static_wsched #(parameter integer NSRC = 48) (
     wire [512*NSRC-1:0] pd; wire [8*NSRC-1:0] pt;
     wire [2:0] header_epoch; wire [11:0] payload_epoch;
     dsfd_vm_static_w0_header #(.NSRC(NSRC)) u_header (
-        .ck(ck_header), .rst_n(rst_n), .i_v(i_v), .i_row(i_row), .i_tag(i_tag),
+        .ck(ck_header), .rst_n(rst_header_n), .i_v(i_v), .i_row(i_row), .i_tag(i_tag),
         .o_v(pv), .o_row(pr), .o_tag(pt), .o_epoch(header_epoch));
     genvar ps, pc;
     generate for (ps=0; ps<4; ps=ps+1) begin : w0_payload
@@ -53,12 +57,12 @@ module dsfd_vm_static_wsched #(parameter integer NSRC = 48) (
             assign pd[512*pc+128*ps +: 128] = dout[128*pc +: 128];
         end
         dsfd_vm_static_w0_payload #(.NSRC(NSRC)) u_payload (
-            .ck(ck_payload[ps]), .rst_n(rst_n), .i_mask(mi), .i_data(di),
+            .ck(ck_payload[ps]), .rst_n(rst_payload_n[ps]), .i_mask(mi), .i_data(di),
             .o_mask(mo), .o_data(dout), .o_epoch(payload_epoch[3*ps +: 3]));
     end endgenerate
     wire [2*NSRC-1:0] lane; wire [NSRC-1:0] lv; wire [2:0] own;
     dsfd_vm_static_wcontrol #(.NSRC(NSRC)) u_control (
-        .ck_control(ck_control), .rst_n(rst_n), .pv(pv), .pr(pr), .cap_v(cap_v[95:0]),
+        .ck_control(ck_control), .rst_n(rst_control_n), .pv(pv), .pr(pr), .cap_v(cap_v[95:0]),
         .header_epoch(header_epoch), .payload_epoch(payload_epoch),
         .lane(lane), .lv(lv), .dr_v(dr_v), .dr_s(dr_s), .own(own));
 
@@ -79,7 +83,7 @@ module dsfd_vm_static_wsched #(parameter integer NSRC = 48) (
         wire [95:0] cv; wire [191:0] cs; wire [1343:0] cr; wire [383:0] cm; wire [12287:0] cd; wire [767:0] ct;
         for (z = 0; z < 4; z = z + 1) begin : quarter
             dsfd_vm_static_wdispatch128 #(.NSRC(NSRC), .NBANK(8), .BANK_BASE(8*z)) u_d (
-                .ck(ck_dispatch[4*s+z]), .rst_n(rst_n), .i_v(lv), .i_row(pr), .i_mask(m4), .i_data(d128), .i_tag(pt),
+                .ck(ck_dispatch[4*s+z]), .rst_n(rst_dispatch_n[4*s+z]), .i_v(lv), .i_row(pr), .i_mask(m4), .i_data(d128), .i_tag(pt),
                 .i_capture_lane(lane), .i_storage_slot(lane),
                 .o_v(cv[24*z +: 24]), .o_slot(cs[48*z +: 48]), .o_row(cr[336*z +: 336]), .o_mask(cm[96*z +: 96]),
                 .o_data(cd[3072*z +: 3072]), .o_tag(ct[192*z +: 192]), .fault(dflt[4*s + z]));
@@ -88,7 +92,7 @@ module dsfd_vm_static_wsched #(parameter integer NSRC = 48) (
         for (b = 0; b < 32; b = b + 1) begin : bank
             wire [13:0] orow; wire [7:0] otag;
             dsfd_vm_static_wstage128 #(.DEPTH(3)) u_w (
-                .ck(ck_stage[32*s+b]), .rst_n(rst_n),
+                .ck(ck_stage[32*s+b]), .rst_n(rst_stage_n[32*s+b]),
                 .capture_v(cv[3*b +: 3]), .capture_slot(cs[6*b +: 6]), .capture_row(cr[42*b +: 42]),
                 .capture_mask(cm[12*b +: 12]), .capture_data(cd[384*b +: 384]), .capture_tag(ct[24*b +: 24]),
                 .drain_v(dr_v[b]), .drain_slot(dr_s[2*b +: 2]),

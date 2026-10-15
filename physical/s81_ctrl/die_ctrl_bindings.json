@@ -22,19 +22,20 @@
    "masters": [
     "dsfd_sp_su_c"
    ],
-   "note": "s81die-1011/ctrl: dsfd_sp_su (main 28e66b4d4, full shape 3/3 exact, mutants FAIL) behind c_cmd/c_done/c_st (rtl/dsrom_sys/s81_suhc/dsfd_sp_su_c.sv) in su_s; f_inp = VM row-completion dependency net (vm t_inp_su); dsfd_sp_su_h replaces it with the same pins"
+   "note": "s81die-1011/ctrl: dsfd_sp_su (main 28e66b4d4, full shape 3/3 exact, mutants FAIL) behind c_cmd/c_done/c_st (rtl/dsrom_sys/s81_suhc/dsfd_sp_su_c.sv) in su_s; f_inp = VM row-completion dependency net (vm t_inp_su); dsfd_sp_su_h replaces it with the same pins; S-BIND 2026-10-15: under --suhc-static-issue (define DSFD_SUHC_STATIC_ISSUE) there is no f_inp: issue on the compiler command edge (static rule)"
   },
   "hc": {
    "masters": [
     "dsfd_sp_hc_c"
    ],
-   "note": "s81die-1011/ctrl: dsfd_sp_hc (s81-suhc-1011 hc_gate PASS) behind c_cmd/c_done/c_st (rtl/dsrom_sys/s81_suhc/dsfd_sp_hc_c.sv) in hc_s; f_inp = VM row-completion dependency net (vm t_inp_hc)"
+   "note": "s81die-1011/ctrl: dsfd_sp_hc (s81-suhc-1011 hc_gate PASS) behind c_cmd/c_done/c_st (rtl/dsrom_sys/s81_suhc/dsfd_sp_hc_c.sv) in hc_s; f_inp = VM row-completion dependency net (vm t_inp_hc); S-BIND 2026-10-15: under --suhc-static-issue (define DSFD_SUHC_STATIC_ISSUE) there is no f_inp: issue on the compiler command edge (static rule)"
   },
   "coll": {
    "masters": [
-    "dsfd_sp_collective_c"
+    "dsfd_sp_collective_c",
+    "dsfd_sp_collective_static_c"
    ],
-   "note": "s81-ctl-1011 ot_s81_coll_job; split3cr / MTP-lane variants pending"
+   "note": "s81-ctl-1011 ot_s81_coll_job; split3cr / MTP-lane variants pending; S-BIND 2026-10-15: dsfd_sp_collective_static_c (static calendar controller, rtl/dsrom_sys/s81_static_collective) under --static-coll"
   },
   "svc": {
    "masters": [

@@ -65,28 +65,59 @@ module dsfd_vm_static_capl #(parameter integer E = 8) (
     // next-state (combinational) per entry
     reg [E-1:0] nV, full; reg [9:0] nK [0:E-1]; reg [15:0] nM [0:E-1]; reg [511:0] nD [0:E-1];
     reg f_alias, f_dup;
-    always @* begin : p_merge integer e, k, w; reg hit; reg [9:0] kk;
+    // Alignment proves ew[k][3:1] == k/2 for every eok[k]. A word
+    // therefore has exactly two possible producers, the two inputs of its root.
+    // Select the entry key once, then use two fixed data candidates per word.
+    // This avoids a blocking 16-input merge chain on every 512-bit entry.
+    always @* begin : p_merge
+        integer e, k, w;
+        reg hit, a, b;
+        reg [9:0] kk;
+        reg [15:0] targeted, first, accepted;
         f_alias = 1'b0; f_dup = 1'b0;
         for (e = 0; e < E; e = e + 1) begin
-            nV[e] = V[e]; nK[e] = KEY[e]; nM[e] = MSK[e]; nD[e] = DAT[e];
-            hit = 1'b0; kk = KEY[e];
-            for (k = 0; k < 16; k = k + 1) if (eok[k] && ek[k][EB-1:0] == e[EB-1:0]) begin
-                if (!nV[e] && !hit) begin kk = ek[k]; end
-                if ((nV[e] || hit) && kk != ek[k]) f_alias = 1'b1;
-                else begin
-                    for (w = 0; w < 16; w = w + 1) if (ew[k] == w[3:0]) begin
-                        if (nM[e][w]) f_dup = 1'b1;
-                        nM[e][w] = 1'b1; nD[e][32*w +: 32] = ed[k];
-                    end
-                    hit = 1'b1;
+            for (k = 0; k < 16; k = k + 1)
+                targeted[k] = eok[k] && ek[k][EB-1:0] == e[EB-1:0];
+            // Parallel prefix priority: each candidate tests a CONSTANT prefix
+            // mask. The key is an OR reduction of one-hot candidates, avoiding
+            // sixteen cascaded 10-bit priority muxes on the data path.
+            for (k = 0; k < 16; k = k + 1)
+                first[k] = targeted[k] && !(|(targeted & ((16'h1 << k) - 16'd1)));
+            kk = 10'd0;
+            for (k = 0; k < 16; k = k + 1)
+                kk = kk | (ek[k] & {10{first[k]}});
+            if (V[e]) kk = KEY[e];
+            accepted = 16'd0;
+            for (k = 0; k < 16; k = k + 1) begin
+                if (eok[k] && ek[k][EB-1:0] == e[EB-1:0]) begin
+                    if (ek[k] != kk) f_alias = 1'b1;
+                    else accepted[k] = rn;
                 end
             end
-            if (hit) begin nV[e] = 1'b1; nK[e] = kk; end
+            hit = |accepted;
+            nV[e] = V[e] || hit;
+            nK[e] = hit ? kk : KEY[e];
+            for (w = 0; w < 16; w = w + 1) begin
+                a = accepted[2*(w/2)] && ew[2*(w/2)] == w[3:0];
+                b = accepted[2*(w/2)+1] && ew[2*(w/2)+1] == w[3:0];
+                if ((MSK[e][w] && (a || b)) || (a && b)) f_dup = 1'b1;
+                nM[e][w] = MSK[e][w] || a || b;
+                // Match the original ascending-k blocking merge: last wins.
+                nD[e][32*w +: 32] = b ? ed[2*(w/2)+1] :
+                                      a ? ed[2*(w/2)] : DAT[e][32*w +: 32];
+            end
             full[e] = nV[e] && nM[e] == 16'hffff;
         end
     end
     // ------------------------------------------------------------------ write selection (registered output)
     always @(posedge ck) begin : p_out integer e; reg [EB:0] nf; reg sel; reg two; integer fe;
+        // DAT/KEY are control-valid state: rn must gate the small per-word
+        // acceptance signals, not become a separate enable on all 4176 bits.
+        // accepted==0 while reset holds makes nD/nK equal their old values, so
+        // even the otherwise invalid data bits retain the historical behavior.
+        for (e = 0; e < E; e = e + 1) begin
+            DAT[e] <= nD[e]; KEY[e] <= nK[e];
+        end
         if (!rn) begin
             V <= {E{1'b0}}; o_v <= 1'b0; flt <= 5'd0; fl_on <= 1'b0; fl_c <= '0;
             for (e = 0; e < E; e = e + 1) MSK[e] <= 16'd0;
@@ -98,7 +129,7 @@ module dsfd_vm_static_capl #(parameter integer E = 8) (
             else if (fl_on && sel && nV[fl_c - 1] && nM[fl_c - 1] != 16'd0 && fe != fl_c - 1) two = 1'b1;
             for (e = 0; e < E; e = e + 1) begin
                 V[e] <= nV[e] && !(sel && fe == e);
-                KEY[e] <= nK[e]; MSK[e] <= (sel && fe == e) ? 16'd0 : nM[e]; DAT[e] <= nD[e];
+                MSK[e] <= (sel && fe == e) ? 16'd0 : nM[e];
             end
             o_v <= sel;
             if (sel) begin o_row <= {nK[fe], gid}; o_m <= nM[fe]; o_d <= nD[fe]; end

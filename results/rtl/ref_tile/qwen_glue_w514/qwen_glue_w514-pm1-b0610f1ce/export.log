@@ -1,0 +1,4 @@
+{"name": "qwen_glue_w514", "ok": true, "checked": true, "files": {"qwen_glue_w514.lef": "2537c6479bb10eeeb00364eaa681be590863522bfcb0387ba13181764c5e1472", "qwen_glue_w514_ff.lib": "2d9ce373ae766e8da96704917775e67463463ff791a2956d657167b91795784d", "qwen_glue_w514_ss.lib": "55e4717cb9e2ecc450abcba26fe5c364246ead6e2b98ed24b757bdc62b041025", "qwen_glue_w514_tt.lib": "1f98518cb3334b7b1b030ac9921a4b9a3661f69f08e68b9783ab51b6a8604fbd"}}
+CK_SS_MEAN=130 CK_SS_ALL_MEAN=130 CK_SS_MIN=124 CK_SS_ALL_MIN=124 CK_SS_MAX=135 CK_SS_ALL_MAX=135 CK_TT_MEAN=99 CK_TT_ALL_MEAN=99 CK_TT_MIN=94 CK_TT_ALL_MIN=94 CK_TT_MAX=104 CK_TT_ALL_MAX=104 CK_FF_MEAN=81 CK_FF_ALL_MEAN=81 CK_FF_MIN=76 CK_FF_ALL_MIN=76 CK_FF_MAX=86 CK_FF_ALL_MAX=86 CK_ROUTE_REF=SS
+pinstub: 2 OBS rects moved into 2 pins: clk, rst_n; pockets: 56 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)
+REF_TILE export qwen_glue_w514: views rc=0 child_lint PASS 
