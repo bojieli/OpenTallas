@@ -1,0 +1,90 @@
+{
+  "qualification": false,
+  "physical_qualified": false,
+  "full_native_qualified": false,
+  "source_closure": "Actual source dependencies present; four formerly absent source modules recovered from09e/0dab. WB2 cutthrough selection restores measured a31 profile while WB0/WB1 unchanged.",
+  "measured_profile": "a31ecfea7 native DMA STORE cold148/warm149 vs272. Historical bank7828; current bank7b2 does not inherit measurement.",
+  "exact_sources": {
+    "ot_dma_command_dram_fixture.sv": "rtl/hbm_accel/generic/peers/static/ot_dma_command_dram_fixture.sv",
+    "ot_hbm_svc_native_sector_queued_stack.sv": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_queued_stack.sv",
+    "ot_hbm_svc_phy_mux.sv": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_phy_mux.sv",
+    "ot_hbm_svc_wb_block_cdc.sv": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_block_cdc.sv",
+    "ot_hbm_svc_wb_cutthrough_cdc.sv": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_cutthrough_cdc.sv",
+    "ot_hbm_svc_wb_pipeline_cdc.sv": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_pipeline_cdc.sv",
+    "ot_hdc_hbm_model.sv": "rtl/hdc/kv/ot_hdc_hbm_model.sv",
+    "ot_hdc_v41x_idx_hbm.sv": "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
+    "ot_hgi_b2_swap_disp_static.sv": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_disp_static.sv",
+    "ot_hgi_b2_swap_grp_static.sv": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_grp_static.sv",
+    "ot_hgi_b2_swap_wb_grp_static.sv": "rtl/hbm_accel/generic/peers/static/ot_hgi_b2_swap_wb_grp_static.sv",
+    "ot_hgi_dma_back_static.sv": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv",
+    "ot_sram_1r1w_128x256_m1_r2c2.v": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "run_dma_native_controller_static.sh": "rtl/hbm_accel/generic/peers/static/run_dma_native_controller_static.sh",
+    "tb_dma_native_controller_static.sv": "rtl/hbm_accel/generic/peers/static/tb_dma_native_controller_static.sv"
+  },
+  "separate_or_changed_profiles": {
+    "ot_async_fifo.sv": [
+      "physical/ref_tile/val_bad_ctile5db/src/rtl/lib/ot_async_fifo.sv",
+      "physical/ref_tile/val_good_clt6/src/rtl/lib/ot_async_fifo.sv",
+      "results/rtl/dma_core_issue_prefix_2240/peer_vehicle/rtl/lib/ot_async_fifo.sv",
+      "results/rtl/dma_core_lookahead_2240/peer_vehicle/rtl/lib/ot_async_fifo.sv",
+      "results/rtl/dma_hold_window_2240/peer_vehicle/rtl/lib/ot_async_fifo.sv",
+      "rtl/lib/ot_async_fifo.sv"
+    ],
+    "ot_chip_v41x_hbm3e_phy.sv": [
+      "results/rtl/w17_window_core_remaining_terminal_archive_20261002/archive/canonical_sources/rtl/chip/ot_chip_v41x_hbm3e_phy.sv",
+      "results/uarch/w17_D1_current_core_probe_20261002/source_authority/rtl/chip/ot_chip_v41x_hbm3e_phy.sv",
+      "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_hbm3e_phy.sv",
+      "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_chip_v41x_hbm3e_phy.sv",
+      "rtl/chip/ot_chip_v41x_hbm3e_phy.sv",
+      "rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_hbm3e_phy.sv"
+    ],
+    "ot_hbm_accel_cdc_fifo.sv": [
+      "results/rtl/dma_hold_window_2240/peer_vehicle/rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+      "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv"
+    ],
+    "ot_hbm_r14_stream_pc.sv": [
+      "physical/ref_tile/qfd_ctrl_pc_00_m5/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv",
+      "physical/ref_tile/qfd_ctrl_pc_06_m5/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv",
+      "physical/ref_tile/qfd_ctrl_pc_11_m5/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv",
+      "physical/ref_tile/qfd_ctrl_pc_14_m5/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv",
+      "physical/ref_tile/qfd_ctrl_pc_16_m5/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv",
+      "physical/ref_tile/qfd_ctrl_pc_17_m5/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv",
+      "physical/ref_tile/qfd_ctrl_pc_19_m5/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv",
+      "physical/ref_tile/qfd_ctrl_pc_20_m5/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv",
+      "physical/ref_tile/qfd_ctrl_pc_31_m5/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv",
+      "physical/ref_tile/qfd_ctrl_ready_00_m5/src/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv",
+      "results/rtl/qwen_rom_runtime_pc_context_20261005/inputs/ot_hbm_r14_stream_pc.sv",
+      "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv"
+    ],
+    "ot_reset_sync.sv": [
+      "physical/ref_tile/val_bad_ctile5db/src/rtl/lib/ot_reset_sync.sv",
+      "physical/ref_tile/val_good_clt6/src/rtl/lib/ot_reset_sync.sv",
+      "results/rtl/dma_core_issue_prefix_2240/peer_vehicle/rtl/lib/ot_reset_sync.sv",
+      "results/rtl/dma_core_lookahead_2240/peer_vehicle/rtl/lib/ot_reset_sync.sv",
+      "results/rtl/dma_hold_window_2240/peer_vehicle/rtl/lib/ot_reset_sync.sv",
+      "rtl/lib/ot_reset_sync.sv"
+    ],
+    "ot_sram_1r1w_1024x256_m2_r2c2.v": [
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+      "results/rtl/dma_core_issue_prefix_2240/peer_vehicle/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+      "results/rtl/dma_core_lookahead_2240/peer_vehicle/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+      "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_sram_1r1w_1024x256_m2_r2c2.v"
+    ],
+    "ot_vms_bank_static.sv": [
+      "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv"
+    ],
+    "run_dma_wb_phy_static.sh": [
+      "rtl/hbm_accel/generic/peers/static/run_dma_wb_phy_static.sh"
+    ],
+    "tb_dma_wb_phy_static.sv": [
+      "rtl/hbm_accel/generic/peers/static/tb_dma_wb_phy_static.sv"
+    ]
+  },
+  "scope_limits": [
+    "NativeDMA source/profile retained; current7b2 reproof owned by HVM/service_native",
+    "WB PHY predecessor helper TB/runner records are separate from a31 runner actual source list",
+    "Controller12,623FF/root census applies only measured queued predecessor; no newer read32 count inheritance",
+    "No read-price, protection, physical, whole-chip or overall performance qualification"
+  ]
+}

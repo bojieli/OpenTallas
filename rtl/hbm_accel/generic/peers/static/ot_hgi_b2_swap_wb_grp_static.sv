@@ -46,8 +46,14 @@ module ot_hgi_b2_swap_wb_grp_static #(
    .fill_done(wb_fill_done[q]),.done_v(wb_done_v[q]),.done_bank(returned_bank),.done_epoch(returned_epoch),.done_sectors(returned_sectors),.bank_owned(owned),.fault(wb_fault[q]),
    .k_v(k_v[q*32+:32]),.k_rdy(k_rdy[q*32+:32]),.k_addr(k_addr[q*960+:960]),.k_len(k_len[q*128+:128]),.k_tag(k_tag[q*544+:544]),.k_we(k_we[q*32+:32]),
    .k_wdata(k_wdata[q*8192+:8192]),.k_wstrb(k_wstrb[q*1024+:1024]),.k_wr_done(k_wr_done[q*32+:32]));
-  end else begin:PIPELINED_WB
+  end else if(WB_PIPELINE==1)begin:PIPELINED_WB
   ot_hbm_svc_wb_pipeline_cdc #(.STACK(2'(q))) wb(.stream_fifo_clk({4{stream_clk}}),.stream_clk(stream_clk),.stream_rst_n(stream_reset),.hbm_clk(hbm_clk),.hbm_rst_n(hbm_rst_n),
+   .reserve_v(reserve[q]),.reserve_ready(reserve_ready[q]),.reserve_bank(reserve_bank[q]),.reserve_epoch(reserve_epoch[q*16+:16]),.reserve_base(reserve_base[q*32+:32]),.reserve_total(reserve_total[q*12+:12]),
+   .fill_start(fill_start[q]),.fill_start_bank(fill_bank[q]),.fill_start_epoch(fill_epoch[q*16+:16]),.wd(wd[q*2312+:2312]),
+   .fill_done(wb_fill_done[q]),.done_v(wb_done_v[q]),.done_bank(returned_bank),.done_epoch(returned_epoch),.done_sectors(returned_sectors),.bank_owned(owned),.fault(wb_fault[q]),
+   .k_v(k_v[q*32+:32]),.k_rdy(k_rdy[q*32+:32]),.k_addr(k_addr[q*960+:960]),.k_len(k_len[q*128+:128]),.k_tag(k_tag[q*544+:544]),.k_we(k_we[q*32+:32]),
+   .k_wdata(k_wdata[q*8192+:8192]),.k_wstrb(k_wstrb[q*1024+:1024]),.k_wr_done(k_wr_done[q*32+:32]));  end else begin:CUTTHROUGH_WB
+  ot_hbm_svc_wb_cutthrough_cdc #(.STACK(2'(q))) wb(.stream_fifo_clk({4{stream_clk}}),.stream_clk(stream_clk),.stream_rst_n(stream_reset),.hbm_clk(hbm_clk),.hbm_rst_n(hbm_rst_n),
    .reserve_v(reserve[q]),.reserve_ready(reserve_ready[q]),.reserve_bank(reserve_bank[q]),.reserve_epoch(reserve_epoch[q*16+:16]),.reserve_base(reserve_base[q*32+:32]),.reserve_total(reserve_total[q*12+:12]),
    .fill_start(fill_start[q]),.fill_start_bank(fill_bank[q]),.fill_start_epoch(fill_epoch[q*16+:16]),.wd(wd[q*2312+:2312]),
    .fill_done(wb_fill_done[q]),.done_v(wb_done_v[q]),.done_bank(returned_bank),.done_epoch(returned_epoch),.done_sectors(returned_sectors),.bank_owned(owned),.fault(wb_fault[q]),
