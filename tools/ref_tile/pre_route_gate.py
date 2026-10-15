@@ -2,7 +2,7 @@
 """Pre-route gate (tools/ref_tile, ref-flow-1011 2026-10-11): reject the known flow / structure pitfalls in minutes,
 before a multi-hour route.  Clear PASS / WARN / FAIL with the fix for every finding.
 
-    pre_route_gate.py KIT_DIR_OR_SPEC [--job JOB.json] [--remote HOST [--cts] [--synth-cap S] [--mem GB]] [--json OUT]
+    pre_route_gate.py KIT_DIR_OR_SPEC [--job JOB.json] [--remote HOST [--cts] [--synth-cap S] [--mem GB] [--disk GB]] [--json OUT]
     pre_route_gate.py --job JOB.json                 (any closure-loop spec: source-sync + generic checks only)
 
 LOCAL (seconds; also run by the closure loop at submit for "ref_tile": true jobs):
@@ -700,23 +700,36 @@ def gate_route_clock_hooks(script: str, spec: dict) -> str:
     return script.replace(marker, marker + "export OT_CTS_FIX_HOOKS=" + shlex.quote(RT.clock_fix_hooks(spec)) + "\n", 1)
 
 
-def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bool):
+def gate_disk_budget(spec: dict, data: bytes, override=None) -> dict:
+    """GiB required before shipping and before unpacking; ot-run accepts integer GiB.
+
+    Keep the ordinary 20 GiB work/output reserve. Add the actual compressed
+    snapshot and an upper estimate of its unpacked 4 KiB allocation before
+    choosing a host. A further GiB covers metadata and integer df rounding.
+    This is an admission check, not a disk reservation against other jobs.
+    """
+    import io
+    import tarfile
+    value = override if override is not None else spec.get("gate_disk_gb", 20)
+    if (isinstance(value, bool) or not isinstance(value, (int, float))
+            or not math.isfinite(value) or value <= 0):
+        raise RT.SpecError("gate_disk_gb / --disk must be a positive finite number of GiB")
+    reserve = math.ceil(value)
+    with tarfile.open(fileobj=io.BytesIO(data), mode="r:gz") as tf:
+        unpacked = sum(((m.size + 4095) // 4096) * 4096 + 4096 for m in tf)
+    gib = 1024 ** 3
+    return {"reserve_gb": reserve, "archive_bytes": len(data), "unpacked_bytes": unpacked,
+            "pick_gb": reserve + math.ceil((len(data) + unpacked) / gib) + 1,
+            "runtime_gb": reserve + math.ceil(unpacked / gib) + 1}
+
+
+def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bool, disk=None):
     fp = json.loads((kd / "floorplan.json").read_text())
     absent = absent_working_inputs(set(fp["referenced"]))
     if absent:
         g.add("FAIL", "sources", f"{len(absent)} committed input(s) absent from the working-tree archive: {absent[:8]}",
               "materialize the referenced files in the sparse checkout before rerunning the gate")
         return
-    if host == "auto":
-        picked = subprocess.run(["ot-run", "--mem", str(mem), "--pick"], capture_output=True, text=True)
-        if picked.returncode or not picked.stdout.strip():
-            g.add("FAIL", "remote", "fleet admission could not choose a host: " + picked.stderr[-500:], "read ot-run --status")
-            return
-        host = picked.stdout.strip()
-        g.add("INFO", "remote", f"ot-run selected {host} for {mem} GB; inputs ship there before admission")
-        auto = True
-    else:
-        auto = False
     ref = set(fp["referenced"])
     # Ship the same transitive Tcl/shell dependencies checked by the local gate.
     # A custom PRE_GLOBAL_PLACE hook may source helpers outside its own folder.
@@ -730,7 +743,23 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     daemon_commit = SB.git_head(DAEMON_TREE)
     route_plan, overlay_payloads = HO.capture_plan(DAEMON_TREE, ROOT)
     data = ship_tar(dirs, overlay_payloads, {f["path"]: f["mode"] for f in route_plan["files"]})
+    budget = gate_disk_budget(spec, data, disk)
+    auto = host == "auto"
+    # Probe the actual scratch filesystem, not / (the two can be different).
+    # This parent already exists before the per-run directory is uploaded.
+    pick_cmd = ["ot-run", "--mem", str(mem), "--disk", str(budget["pick_gb"]),
+                "--dir", "/srv/opentallas-scratch", "--pick"]
+    if not auto:
+        pick_cmd += ["--hosts", host]
+    picked = subprocess.run(pick_cmd, capture_output=True, text=True)
+    if picked.returncode or not picked.stdout.strip():
+        g.add("FAIL", "remote", "fleet admission could not choose a host: " + picked.stderr[-500:], "read ot-run --status")
+        return
+    host = picked.stdout.strip()
+    g.add("INFO", "remote", f"ot-run selected {host} for {mem} GB memory; disk pick {budget['pick_gb']} GiB, "
+          f"runtime {budget['runtime_gb']} GiB includes {budget['reserve_gb']} GiB work reserve plus snapshot staging")
     binding = SB.snapshot(data, ROOT, start_commit, DAEMON_TREE, daemon_commit, SHIP_HELPERS)
+    binding["disk_admission"] = budget
     binding["route_overlay_plan"] = route_plan
     binding["consumed"] = gate_consumed(data, kd, spec, ref, binding["files"])
     binding["captured"] = time.strftime("%Y-%m-%dT%H:%M:%S%z")
@@ -759,14 +788,11 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     if up.returncode:
         g.add("FAIL", "remote", f"cannot ship to {host}: {up.stderr[-200:]!r}", "pick another host")
         return
-    if auto:
-        # Exactly one ot-heavy reservation, inside ot-run; never nest guards.
-        p = subprocess.run(["ot-run", "--mem", str(mem), "--hosts", host,
-                            "--dir", str(Path(R).parent), "--", "bash", script],
-                           stdin=subprocess.DEVNULL, capture_output=True)
-    else:
-        cmd = f"ot-heavy --mem {mem} -- bash {script}"
-        p = subprocess.run(["ssh", host, cmd], stdin=subprocess.DEVNULL, capture_output=True)
+    # Exactly one ot-heavy reservation, inside ot-run; never nest guards.
+    # Recheck after upload, reserving enough for extraction as well as outputs.
+    p = subprocess.run(["ot-run", "--mem", str(mem), "--disk", str(budget["runtime_gb"]), "--hosts", host,
+                        "--dir", str(Path(R).parent), "--", "bash", script],
+                       stdin=subprocess.DEVNULL, capture_output=True)
     out = p.stdout.decode(errors="replace")
     logp = Path(os.environ.get("TMPDIR", "/tmp")) / f"ref_gate_{spec['name']}_{ts}.log"   # never into the kit (dirty tree)
     logp.write_text(out + "\n--- stderr\n" + p.stderr.decode(errors="replace")[-4000:])
@@ -1061,6 +1087,7 @@ def main(argv=None) -> int:
     ap.add_argument("--cts", action="store_true", help="with --remote: continue through CTS, report insertion + paths")
     ap.add_argument("--synth-cap", type=int, default=2700, help="synthesis time cap, s (default 2700; <=0 means unlimited)")
     ap.add_argument("--mem", type=int, default=24, help="ot-heavy GB (< 32 = small slot, no big-slot wait)")
+    ap.add_argument("--disk", type=float, help="work/output disk reserve in GiB (spec gate_disk_gb, default 20); snapshot staging is added")
     ap.add_argument("--json")
     a = ap.parse_args(argv)
     g = Gate()
@@ -1081,7 +1108,7 @@ def main(argv=None) -> int:
                 job = json.loads((kd / "job.json").read_text())
             spec = check_kit(g, kd, job, a.commit)
             if a.remote and g.verdict != "FAIL":
-                remote(g, kd, spec, a.remote, a.synth_cap, a.mem, a.cts)
+                remote(g, kd, spec, a.remote, a.synth_cap, a.mem, a.cts, a.disk)
             elif a.remote:
                 g.add("INFO", "remote", "skipped: local FAIL first")
         elif job is not None:

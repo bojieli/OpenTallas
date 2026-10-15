@@ -1,0 +1,160 @@
+{
+  "qualified": false,
+  "baseline_source": "fd6fc0b26",
+  "candidate": {
+    "LN": 7,
+    "KIND": 0,
+    "MLAT": 4,
+    "ALAT": 3,
+    "LEAF": 1,
+    "FETCH_EXTRA_EDGES": 2
+  },
+  "trigger": {
+    "actual_TT_input_to_offset_setup_ps": -769.4,
+    "actual_TT_multiplier_reg_to_reg_ps": -177.4
+  },
+  "changes": "Existing native optional three-edge setup offset prefix trees plus registered leaf boundary and native LAT4 multiplier; no frozen source edits",
+  "shape": "384 required LIGHT replicas, retains1921-port general lane ABI; candidate leaf measurement is not whole512 adoption",
+  "clock_period_ps": 1111.111111,
+  "uncertainty_ps": {
+    "setup": 60,
+    "hold": 25
+  },
+  "arithmetic_rounding": "Existing native LAT4 multiplier contract, separately needs new actual exact gate; no FP reassociation",
+  "latency": {
+    "baseline_raw_emit_to_OUT": 23,
+    "candidate_raw_emit_to_OUT": 28,
+    "additional_light_edges": 5,
+    "setup_load_edges": 3,
+    "II": 1,
+    "scalar_SFU_composition": "not qualified; SIDE parameters would need actual matching join"
+  },
+  "state": {
+    "explicit_extra_setup_register_bits": 604,
+    "explicit_extra_leaf_register_bits": 308,
+    "multiplier_delta": "measure native source before CTS",
+    "roots": "seven live stage roots; all actual counts must be re-censused"
+  },
+  "geometry": {
+    "outline_um": [
+      216,
+      216
+    ],
+    "pin_face_bits": {
+      "N": 852,
+      "S": 562,
+      "W": 192,
+      "E": 315
+    },
+    "routing": "M2-M5 signal, M5 PG; source-qualified prototype only"
+  },
+  "adoption": "No main125/normRoPE/global timing price claim before full new exact/calendar/throughput/physical gates",
+  "full_grid_candidate": {
+    "quarters": 4,
+    "lanes": 512,
+    "FULL": 1,
+    "SFU": 127,
+    "LIGHT": 384,
+    "SRAM_macros": 3072,
+    "per_quarter_control_bits": 1742,
+    "operand_read_bytes_per_cycle": 8192,
+    "operand_index_bytes_per_cycle": 2048,
+    "result_bytes_per_cycle": 2048,
+    "source_shape_unchanged": true,
+    "planned_arithmetic_cases": 31,
+    "planned_outputs": 1015808,
+    "expected_output_cycles": [
+      36,
+      99
+    ],
+    "raw_issue_cycles": [
+      8,
+      71
+    ],
+    "expected_II": 1,
+    "full_DIV_EXP_SIDE_binding_qualified": false,
+    "adopted": false,
+    "actual_register_bits": 7541174
+  },
+  "actual_register_census": [
+    {
+      "kind": 0,
+      "clock_sink_upper_bound": {
+        "clk_stage[0]": 2241,
+        "clk_stage[1]": 1276,
+        "clk_stage[2]": 1940,
+        "clk_stage[3]": 578,
+        "clk_stage[4]": 0,
+        "clk_stage[5]": 1266,
+        "clk_stage[6]": 896,
+        "clk_stage[7]": 148,
+        "clk_insert[0]": 0,
+        "clk_insert[1]": 0,
+        "clk_insert[2]": 0,
+        "clk_insert[3]": 0
+      },
+      "unknown": [],
+      "max_sink": 2241,
+      "all_under_15000": true
+    },
+    {
+      "kind": 1,
+      "clock_sink_upper_bound": {
+        "clk_stage[0]": 2241,
+        "clk_stage[1]": 4960,
+        "clk_stage[2]": 1940,
+        "clk_stage[3]": 578,
+        "clk_stage[4]": 12317,
+        "clk_stage[5]": 1266,
+        "clk_stage[6]": 896,
+        "clk_stage[7]": 148,
+        "clk_insert[0]": 5808,
+        "clk_insert[1]": 3630,
+        "clk_insert[2]": 0,
+        "clk_insert[3]": 0
+      },
+      "unknown": [],
+      "max_sink": 12317,
+      "all_under_15000": true
+    },
+    {
+      "kind": 2,
+      "clock_sink_upper_bound": {
+        "clk_stage[0]": 2241,
+        "clk_stage[1]": 4960,
+        "clk_stage[2]": 1940,
+        "clk_stage[3]": 578,
+        "clk_stage[4]": 12317,
+        "clk_stage[5]": 1266,
+        "clk_stage[6]": 896,
+        "clk_stage[7]": 148,
+        "clk_insert[0]": 5808,
+        "clk_insert[1]": 5808,
+        "clk_insert[2]": 5808,
+        "clk_insert[3]": 4356
+      },
+      "unknown": [],
+      "max_sink": 12317,
+      "all_under_15000": true
+    }
+  ],
+  "actual_KIND0_mapping": {
+    "abc_delay_target_ps": 1111.111111,
+    "cell_area_um2": 7207.419,
+    "cell_count": 58498,
+    "cell_types_used": 40,
+    "chip_area_um2": 7207.0398,
+    "combinational_cell_count": 51066,
+    "dont_use_cell_count": 81,
+    "liberty_cell_count": 202,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "e533ec674b71edc6ef1309fd66e0efd897bd5b16c07781dcdb9562015fbeace4",
+      "raw_netlist_sha256": "e533ec674b71edc6ef1309fd66e0efd897bd5b16c07781dcdb9562015fbeace4",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 2211.814,
+    "sequential_cell_count": 7432,
+    "unmapped_cell_types": []
+  }
+}

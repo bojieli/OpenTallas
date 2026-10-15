@@ -1,0 +1,13 @@
+CRS MISMATCH cy 0
+CRS MISMATCH cy 0
+CRS MISMATCH cy 1
+CRS MISMATCH cy 2
+CRS MISMATCH cy 3
+CRS MISMATCH cy 4
+CRS MISMATCH cy 5
+CRS MISMATCH cy 6
+CRS MISMATCH cy 7
+FIRST FAULT cy 10: wsched own 010 dflt 0000 sflt 00000000000000000000000000000000 | mem 0000000 | land 000 pq 0 out 0 op 0 rsched 0 | seq flt 00000000000
+TB_VMCORE FAULT mode 2 vm_fault 1 c_st 11 own_source 1
+TB_VMCORE PASS mode 2
+src/tb_dsfd_vm_static_core.sv:309: $finish called at 32536 (1ps)

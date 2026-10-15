@@ -1,0 +1,642 @@
+{
+  "schema": "opentallas.qwen.dvm-gap-audit.v1",
+  "scope": "Nonrelay geometry side-clearance only",
+  "columns": [
+    {
+      "instance": "h_0",
+      "sides": {
+        "W": {
+          "clearance_um": 0.0,
+          "neighbor": "t_0_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_1_7"
+        }
+      }
+    },
+    {
+      "instance": "h_1",
+      "sides": {
+        "W": {
+          "clearance_um": 0.0,
+          "neighbor": "t_1_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_2_7"
+        }
+      }
+    },
+    {
+      "instance": "h_2",
+      "sides": {
+        "W": {
+          "clearance_um": 0.0,
+          "neighbor": "t_2_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_3_7"
+        }
+      }
+    },
+    {
+      "instance": "h_3",
+      "sides": {
+        "W": {
+          "clearance_um": 0.0,
+          "neighbor": "t_3_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_4_7"
+        }
+      }
+    },
+    {
+      "instance": "h_4",
+      "sides": {
+        "W": {
+          "clearance_um": 0.0,
+          "neighbor": "t_4_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_5_7"
+        }
+      }
+    },
+    {
+      "instance": "h_5",
+      "sides": {
+        "W": {
+          "clearance_um": 0.0,
+          "neighbor": "t_5_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_6_7"
+        }
+      }
+    },
+    {
+      "instance": "h_6",
+      "sides": {
+        "W": {
+          "clearance_um": 0.0,
+          "neighbor": "t_6_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_7_7"
+        }
+      }
+    },
+    {
+      "instance": "h_7",
+      "sides": {
+        "W": {
+          "clearance_um": -0.0,
+          "neighbor": "t_7_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_8_7"
+        }
+      }
+    },
+    {
+      "instance": "h_8",
+      "sides": {
+        "W": {
+          "clearance_um": -0.0,
+          "neighbor": "t_8_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_9_7"
+        }
+      }
+    },
+    {
+      "instance": "h_9",
+      "sides": {
+        "W": {
+          "clearance_um": -0.0,
+          "neighbor": "t_9_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_10_7"
+        }
+      }
+    },
+    {
+      "instance": "h_10",
+      "sides": {
+        "W": {
+          "clearance_um": 0.0,
+          "neighbor": "t_10_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_11_7"
+        }
+      }
+    },
+    {
+      "instance": "h_11",
+      "sides": {
+        "W": {
+          "clearance_um": -0.0,
+          "neighbor": "t_11_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_12_7"
+        }
+      }
+    },
+    {
+      "instance": "h_12",
+      "sides": {
+        "W": {
+          "clearance_um": 0.0,
+          "neighbor": "t_12_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_13_7"
+        }
+      }
+    },
+    {
+      "instance": "h_13",
+      "sides": {
+        "W": {
+          "clearance_um": -0.0,
+          "neighbor": "t_13_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_14_7"
+        }
+      }
+    },
+    {
+      "instance": "h_14",
+      "sides": {
+        "W": {
+          "clearance_um": 0.0,
+          "neighbor": "t_14_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_15_7"
+        }
+      }
+    },
+    {
+      "instance": "h_15",
+      "sides": {
+        "W": {
+          "clearance_um": 0.0,
+          "neighbor": "t_15_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_16_7"
+        }
+      }
+    },
+    {
+      "instance": "h_16",
+      "sides": {
+        "W": {
+          "clearance_um": -0.0,
+          "neighbor": "t_16_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_17_7"
+        }
+      }
+    },
+    {
+      "instance": "h_17",
+      "sides": {
+        "W": {
+          "clearance_um": 0.0,
+          "neighbor": "t_17_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_18_7"
+        }
+      }
+    },
+    {
+      "instance": "h_18",
+      "sides": {
+        "W": {
+          "clearance_um": 0.0,
+          "neighbor": "t_18_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_19_7"
+        }
+      }
+    },
+    {
+      "instance": "h_19",
+      "sides": {
+        "W": {
+          "clearance_um": 0.0,
+          "neighbor": "t_19_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_20_7"
+        }
+      }
+    },
+    {
+      "instance": "h_20",
+      "sides": {
+        "W": {
+          "clearance_um": -0.0,
+          "neighbor": "t_20_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_21_7"
+        }
+      }
+    },
+    {
+      "instance": "h_21",
+      "sides": {
+        "W": {
+          "clearance_um": 0.0,
+          "neighbor": "t_21_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_22_7"
+        }
+      }
+    },
+    {
+      "instance": "h_22",
+      "sides": {
+        "W": {
+          "clearance_um": 0.0,
+          "neighbor": "t_22_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_23_7"
+        }
+      }
+    },
+    {
+      "instance": "h_23",
+      "sides": {
+        "W": {
+          "clearance_um": 0.0,
+          "neighbor": "t_23_7"
+        },
+        "E": {
+          "clearance_um": 108.648,
+          "neighbor": "sp_port_tiles_1"
+        }
+      }
+    },
+    {
+      "instance": "h_24",
+      "sides": {
+        "W": {
+          "clearance_um": -0.0,
+          "neighbor": "t_24_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_25_7"
+        }
+      }
+    },
+    {
+      "instance": "h_25",
+      "sides": {
+        "W": {
+          "clearance_um": -0.0,
+          "neighbor": "t_25_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_26_7"
+        }
+      }
+    },
+    {
+      "instance": "h_26",
+      "sides": {
+        "W": {
+          "clearance_um": 0.0,
+          "neighbor": "t_26_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_27_7"
+        }
+      }
+    },
+    {
+      "instance": "h_27",
+      "sides": {
+        "W": {
+          "clearance_um": 0.0,
+          "neighbor": "t_27_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_28_7"
+        }
+      }
+    },
+    {
+      "instance": "h_28",
+      "sides": {
+        "W": {
+          "clearance_um": 0.0,
+          "neighbor": "t_28_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_29_7"
+        }
+      }
+    },
+    {
+      "instance": "h_29",
+      "sides": {
+        "W": {
+          "clearance_um": -0.0,
+          "neighbor": "t_29_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_30_7"
+        }
+      }
+    },
+    {
+      "instance": "h_30",
+      "sides": {
+        "W": {
+          "clearance_um": -0.0,
+          "neighbor": "t_30_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_31_7"
+        }
+      }
+    },
+    {
+      "instance": "h_31",
+      "sides": {
+        "W": {
+          "clearance_um": -0.0,
+          "neighbor": "t_31_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_32_7"
+        }
+      }
+    },
+    {
+      "instance": "h_32",
+      "sides": {
+        "W": {
+          "clearance_um": -0.0,
+          "neighbor": "t_32_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_33_7"
+        }
+      }
+    },
+    {
+      "instance": "h_33",
+      "sides": {
+        "W": {
+          "clearance_um": -0.0,
+          "neighbor": "t_33_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_34_7"
+        }
+      }
+    },
+    {
+      "instance": "h_34",
+      "sides": {
+        "W": {
+          "clearance_um": 0.0,
+          "neighbor": "t_34_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_35_7"
+        }
+      }
+    },
+    {
+      "instance": "h_35",
+      "sides": {
+        "W": {
+          "clearance_um": 0.0,
+          "neighbor": "t_35_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_36_7"
+        }
+      }
+    },
+    {
+      "instance": "h_36",
+      "sides": {
+        "W": {
+          "clearance_um": 0.0,
+          "neighbor": "t_36_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_37_7"
+        }
+      }
+    },
+    {
+      "instance": "h_37",
+      "sides": {
+        "W": {
+          "clearance_um": -0.0,
+          "neighbor": "t_37_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_38_7"
+        }
+      }
+    },
+    {
+      "instance": "h_38",
+      "sides": {
+        "W": {
+          "clearance_um": -0.0,
+          "neighbor": "t_38_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_39_7"
+        }
+      }
+    },
+    {
+      "instance": "h_39",
+      "sides": {
+        "W": {
+          "clearance_um": -0.0,
+          "neighbor": "t_39_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_40_7"
+        }
+      }
+    },
+    {
+      "instance": "h_40",
+      "sides": {
+        "W": {
+          "clearance_um": -0.0,
+          "neighbor": "t_40_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_41_7"
+        }
+      }
+    },
+    {
+      "instance": "h_41",
+      "sides": {
+        "W": {
+          "clearance_um": -0.0,
+          "neighbor": "t_41_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_42_7"
+        }
+      }
+    },
+    {
+      "instance": "h_42",
+      "sides": {
+        "W": {
+          "clearance_um": 0.0,
+          "neighbor": "t_42_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_43_7"
+        }
+      }
+    },
+    {
+      "instance": "h_43",
+      "sides": {
+        "W": {
+          "clearance_um": 0.0,
+          "neighbor": "t_43_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_44_7"
+        }
+      }
+    },
+    {
+      "instance": "h_44",
+      "sides": {
+        "W": {
+          "clearance_um": -0.0,
+          "neighbor": "t_44_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_45_7"
+        }
+      }
+    },
+    {
+      "instance": "h_45",
+      "sides": {
+        "W": {
+          "clearance_um": -0.0,
+          "neighbor": "t_45_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_46_7"
+        }
+      }
+    },
+    {
+      "instance": "h_46",
+      "sides": {
+        "W": {
+          "clearance_um": -0.0,
+          "neighbor": "t_46_7"
+        },
+        "E": {
+          "clearance_um": 0.648,
+          "neighbor": "t_47_7"
+        }
+      }
+    },
+    {
+      "instance": "h_47",
+      "sides": {
+        "W": {
+          "clearance_um": -0.0,
+          "neighbor": "t_47_7"
+        },
+        "E": {
+          "clearance_um": null,
+          "neighbor": null
+        }
+      }
+    }
+  ],
+  "qualification": false,
+  "findings": [
+    "Column is placed flush against the west neighboring field tile; the 0.648um remainder is on the east side, not split equally.",
+    "No new widened leaf/column physical pin or obstruction view provided; historical 64.8um leaf spec cannot establish access for 72.36um successor.",
+    "Existing leaf recipe has macro_halo_um 5.4 for internal macro placement; applicability at this die boundary is not established. This audit neither invents a die halo nor waives one.",
+    "Do not count the lateral sliver as a relay-placement corridor. Actual allocator site dimensions, upper-metal crossings, pin escape and cut capacity must be demonstrated.",
+    "Abutting outlines are not automatically impossible: registered face pins and permitted upper-metal crossing may work, but require actual views."
+  ],
+  "sha256": {
+    "/tmp/qwen-c17-wide.json": "f8f13d4895927bdbc9d0912f60df44bd08e47b72a5cf1e6a7976c4bdb7054fc2",
+    "/home/ubuntu/wt/qwen-split-compute-1014/results/arch/qwen_split_compute_1014/dvm_column_candidate/geometry.json": "50790beb009b1393ce8a097be4cf8fff94b4d6236e3dcbb2efd092e79945c967"
+  }
+}

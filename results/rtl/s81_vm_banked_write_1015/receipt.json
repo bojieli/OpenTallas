@@ -110,5 +110,10 @@
     "Allactualnewleaves need sourceboundmappedarea/pins/nativeCTS/TTFFDRC0/phiR and canonical2417/BF519/PHW10 productionprice"
   ],
   "physical_qualified": false,
-  "canonical_production_qualified": false
+  "canonical_production_qualified": false,
+  "remote_source_verification": {
+    "host": "ot-epyc1tb",
+    "files": 50,
+    "exact_match": true
+  }
 }

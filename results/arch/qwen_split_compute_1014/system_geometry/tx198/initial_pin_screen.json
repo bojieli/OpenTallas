@@ -1,0 +1,1462 @@
+{
+  "screened_payload_pairs": 31504,
+  "excluded_payload_pairs": 0,
+  "excluded": [],
+  "min_margin_ps": 15.44948,
+  "failing_groups": [],
+  "worst_by_group": [
+    {
+      "group": "face_n_a_to_stage",
+      "bit": 444,
+      "source": [
+        "face_n_a",
+        "q[444]"
+      ],
+      "sink": [
+        "node_stage_n_a",
+        "d[444]"
+      ],
+      "source_master": "qwen_glue_v514",
+      "sink_master": "qwen_glue_v514",
+      "source_xy": [
+        26.904,
+        646.806
+      ],
+      "sink_xy": [
+        209.184,
+        455.7
+      ],
+      "distance_um": 373.386,
+      "margin_ps": 81.80646
+    },
+    {
+      "group": "face_n_b_to_stage",
+      "bit": 444,
+      "source": [
+        "face_n_b",
+        "q[444]"
+      ],
+      "sink": [
+        "node_stage_n_b",
+        "d[444]"
+      ],
+      "source_master": "qwen_glue_v514",
+      "sink_master": "qwen_glue_v514",
+      "source_xy": [
+        53.904,
+        702.822
+      ],
+      "sink_xy": [
+        236.184,
+        696.0
+      ],
+      "distance_um": 189.102,
+      "margin_ps": 221.8623
+    },
+    {
+      "group": "stage_n_y_to_face",
+      "bit": 444,
+      "source": [
+        "node_stage_n_y",
+        "q[444]"
+      ],
+      "sink": [
+        "face_n_y",
+        "d[444]"
+      ],
+      "source_master": "qwen_glue_v514",
+      "sink_master": "qwen_glue_v514",
+      "source_xy": [
+        230.592,
+        696.0
+      ],
+      "sink_xy": [
+        26.904,
+        732.72
+      ],
+      "distance_um": 240.408,
+      "margin_ps": 182.86974
+    },
+    {
+      "group": "stage_t_out_to_face",
+      "bit": 444,
+      "source": [
+        "node_stage_t_out",
+        "q[444]"
+      ],
+      "sink": [
+        "face_t_out",
+        "d[444]"
+      ],
+      "source_master": "qwen_glue_v514",
+      "sink_master": "qwen_glue_v514",
+      "source_xy": [
+        257.592,
+        848.01
+      ],
+      "sink_xy": [
+        26.904,
+        813.744
+      ],
+      "distance_um": 264.954,
+      "margin_ps": 164.21478
+    },
+    {
+      "group": "n_a_bank_node_data",
+      "bit": 444,
+      "source": [
+        "node_stage_n_a",
+        "q[444]"
+      ],
+      "sink": [
+        "u_tile.u_tile.u_logic.genblk4.g_ndh.u_node",
+        "a[444]"
+      ],
+      "source_master": "qwen_glue_v514",
+      "sink_master": "ot_qwen_tile_node",
+      "source_xy": [
+        230.592,
+        455.7
+      ],
+      "sink_xy": [
+        372.642,
+        507.564
+      ],
+      "distance_um": 193.914,
+      "margin_ps": 178.25341
+    },
+    {
+      "group": "n_b_bank_node_data",
+      "bit": 21,
+      "source": [
+        "node_stage_n_b",
+        "q[21]"
+      ],
+      "sink": [
+        "u_tile.u_tile.u_logic.genblk4.g_ndh.u_node",
+        "b[21]"
+      ],
+      "source_master": "qwen_glue_v514",
+      "sink_master": "ot_qwen_tile_node",
+      "source_xy": [
+        257.592,
+        642.576
+      ],
+      "sink_xy": [
+        372.642,
+        525.996
+      ],
+      "distance_um": 231.63,
+      "margin_ps": 153.24078
+    },
+    {
+      "group": "rp3_to_rqr_north",
+      "bit": 313,
+      "source": [
+        "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_hd.u_rp",
+        "r_q[313]"
+      ],
+      "sink": [
+        "rqr_north_1",
+        "d[57]"
+      ],
+      "source_master": "ot_qwen_tile_rpair",
+      "sink_master": "qkh_packet_h256",
+      "source_xy": [
+        156.252,
+        153.318
+      ],
+      "sink_xy": [
+        113.604,
+        310.056
+      ],
+      "distance_um": 199.386,
+      "margin_ps": 105.47005
+    },
+    {
+      "group": "rp4_to_rqr_north",
+      "bit": 313,
+      "source": [
+        "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_hd.u_rp",
+        "r_q[313]"
+      ],
+      "sink": [
+        "rqr_north_1",
+        "d[57]"
+      ],
+      "source_master": "ot_qwen_tile_rpair",
+      "sink_master": "qkh_packet_h256",
+      "source_xy": [
+        156.252,
+        304.518
+      ],
+      "sink_xy": [
+        113.604,
+        310.056
+      ],
+      "distance_um": 48.186,
+      "margin_ps": 220.38205
+    },
+    {
+      "group": "rp0_to_rqr_south",
+      "bit": 313,
+      "source": [
+        "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_hd.u_rp",
+        "r_q[313]"
+      ],
+      "sink": [
+        "rqr_south_1",
+        "d[57]"
+      ],
+      "source_master": "ot_qwen_tile_rpair",
+      "sink_master": "qkh_packet_h256",
+      "source_xy": [
+        156.252,
+        952.872
+      ],
+      "sink_xy": [
+        113.604,
+        1087.926
+      ],
+      "distance_um": 177.702,
+      "margin_ps": 121.94989
+    },
+    {
+      "group": "rp1_to_rqr_south",
+      "bit": 313,
+      "source": [
+        "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_hd.u_rp",
+        "r_q[313]"
+      ],
+      "sink": [
+        "rqr_south_1",
+        "d[57]"
+      ],
+      "source_master": "ot_qwen_tile_rpair",
+      "sink_master": "qkh_packet_h256",
+      "source_xy": [
+        156.252,
+        1108.392
+      ],
+      "sink_xy": [
+        113.604,
+        1087.926
+      ],
+      "distance_um": 63.114,
+      "margin_ps": 209.03677
+    },
+    {
+      "group": "rp2_to_rqr_south",
+      "bit": 313,
+      "source": [
+        "u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_hd.u_rp",
+        "r_q[313]"
+      ],
+      "sink": [
+        "rqr_south_1",
+        "d[57]"
+      ],
+      "source_master": "ot_qwen_tile_rpair",
+      "sink_master": "qkh_packet_h256",
+      "source_xy": [
+        156.252,
+        1259.592
+      ],
+      "sink_xy": [
+        113.604,
+        1087.926
+      ],
+      "distance_um": 214.314,
+      "margin_ps": 94.12477
+    },
+    {
+      "group": "tx0_r0_r1",
+      "bit": 279,
+      "source": [
+        "tx0_r0_lo",
+        "q[135]"
+      ],
+      "sink": [
+        "tx0_r1_lo",
+        "d[135]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        20.424,
+        478.686
+      ],
+      "sink_xy": [
+        59.496,
+        364.476
+      ],
+      "distance_um": 153.282,
+      "margin_ps": 267.74243
+    },
+    {
+      "group": "tx0_r1_to_lsl",
+      "bit": 52,
+      "source": [
+        "tx0_r1_lo",
+        "q[20]"
+      ],
+      "sink": [
+        "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh",
+        "x_d[52]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "ot_qwen_tile_lsl_fp1",
+      "source_xy": [
+        74.424,
+        340.092
+      ],
+      "sink_xy": [
+        103.715,
+        417.472
+      ],
+      "distance_um": 106.671,
+      "margin_ps": 291.07375
+    },
+    {
+      "group": "tx1_r0_r1",
+      "bit": 279,
+      "source": [
+        "tx1_r0_lo",
+        "q[135]"
+      ],
+      "sink": [
+        "tx1_r1_lo",
+        "d[135]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        74.424,
+        586.686
+      ],
+      "sink_xy": [
+        59.496,
+        434.676
+      ],
+      "distance_um": 166.938,
+      "margin_ps": 257.36387
+    },
+    {
+      "group": "tx1_r1_to_lsl",
+      "bit": 52,
+      "source": [
+        "tx1_r1_lo",
+        "q[20]"
+      ],
+      "sink": [
+        "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh",
+        "x_d[52]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "ot_qwen_tile_lsl_fp1",
+      "source_xy": [
+        74.424,
+        410.292
+      ],
+      "sink_xy": [
+        103.715,
+        569.482
+      ],
+      "distance_um": 188.481,
+      "margin_ps": 228.89815
+    },
+    {
+      "group": "tx2_r0_r1",
+      "bit": 279,
+      "source": [
+        "tx2_r0_lo",
+        "q[135]"
+      ],
+      "sink": [
+        "tx2_r1_lo",
+        "d[135]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        74.424,
+        668.496
+      ],
+      "sink_xy": [
+        59.496,
+        820.506
+      ],
+      "distance_um": 166.938,
+      "margin_ps": 257.36387
+    },
+    {
+      "group": "tx2_r1_to_lsl",
+      "bit": 145,
+      "source": [
+        "tx2_r1_lo",
+        "q[65]"
+      ],
+      "sink": [
+        "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh",
+        "w_d[17]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "ot_qwen_tile_lsl_fp1",
+      "source_xy": [
+        74.424,
+        805.674
+      ],
+      "sink_xy": [
+        103.722,
+        644.352
+      ],
+      "distance_um": 190.62,
+      "margin_ps": 231.23116
+    },
+    {
+      "group": "tx3_r0_r1",
+      "bit": 279,
+      "source": [
+        "tx3_r0_lo",
+        "q[135]"
+      ],
+      "sink": [
+        "tx3_r1_lo",
+        "d[135]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        74.424,
+        738.696
+      ],
+      "sink_xy": [
+        59.496,
+        890.706
+      ],
+      "distance_um": 166.938,
+      "margin_ps": 257.36387
+    },
+    {
+      "group": "tx3_r1_to_lsl",
+      "bit": 145,
+      "source": [
+        "tx3_r1_lo",
+        "q[65]"
+      ],
+      "sink": [
+        "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh",
+        "w_d[17]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "ot_qwen_tile_lsl_fp1",
+      "source_xy": [
+        74.424,
+        875.874
+      ],
+      "sink_xy": [
+        103.722,
+        796.362
+      ],
+      "distance_um": 108.81,
+      "margin_ps": 293.40676
+    },
+    {
+      "group": "tx4_r0_r1",
+      "bit": 279,
+      "source": [
+        "tx4_r0_lo",
+        "q[135]"
+      ],
+      "sink": [
+        "tx4_r1_lo",
+        "d[135]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        440.544,
+        516.486
+      ],
+      "sink_xy": [
+        425.616,
+        364.476
+      ],
+      "distance_um": 166.938,
+      "margin_ps": 257.36387
+    },
+    {
+      "group": "tx4_r1_to_lsl",
+      "bit": 52,
+      "source": [
+        "tx4_r1_lo",
+        "q[20]"
+      ],
+      "sink": [
+        "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh",
+        "x_d[52]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "ot_qwen_tile_lsl_fp1",
+      "source_xy": [
+        440.544,
+        340.092
+      ],
+      "sink_xy": [
+        365.437,
+        417.472
+      ],
+      "distance_um": 152.487,
+      "margin_ps": 256.25359
+    },
+    {
+      "group": "tx5_r0_r1",
+      "bit": 279,
+      "source": [
+        "tx5_r0_lo",
+        "q[135]"
+      ],
+      "sink": [
+        "tx5_r1_lo",
+        "d[135]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        440.544,
+        586.686
+      ],
+      "sink_xy": [
+        425.616,
+        434.676
+      ],
+      "distance_um": 166.938,
+      "margin_ps": 257.36387
+    },
+    {
+      "group": "tx5_r1_to_lsl",
+      "bit": 52,
+      "source": [
+        "tx5_r1_lo",
+        "q[20]"
+      ],
+      "sink": [
+        "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
+        "x_d[52]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "ot_qwen_tile_lsl_fp1",
+      "source_xy": [
+        440.544,
+        410.292
+      ],
+      "sink_xy": [
+        365.437,
+        569.482
+      ],
+      "distance_um": 234.297,
+      "margin_ps": 194.07799
+    },
+    {
+      "group": "tx6_r0_r1",
+      "bit": 279,
+      "source": [
+        "tx6_r0_lo",
+        "q[135]"
+      ],
+      "sink": [
+        "tx6_r1_lo",
+        "d[135]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        224.112,
+        820.506
+      ],
+      "sink_xy": [
+        425.616,
+        820.506
+      ],
+      "distance_um": 201.504,
+      "margin_ps": 231.09371
+    },
+    {
+      "group": "tx6_r1_to_lsl",
+      "bit": 145,
+      "source": [
+        "tx6_r1_lo",
+        "q[65]"
+      ],
+      "sink": [
+        "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh",
+        "w_d[17]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "ot_qwen_tile_lsl_fp1",
+      "source_xy": [
+        440.544,
+        805.674
+      ],
+      "sink_xy": [
+        365.43,
+        644.352
+      ],
+      "distance_um": 236.436,
+      "margin_ps": 196.411
+    },
+    {
+      "group": "tx7_r0_r1",
+      "bit": 279,
+      "source": [
+        "tx7_r0_lo",
+        "q[135]"
+      ],
+      "sink": [
+        "tx7_r1_lo",
+        "d[135]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        440.544,
+        738.696
+      ],
+      "sink_xy": [
+        425.616,
+        890.706
+      ],
+      "distance_um": 166.938,
+      "margin_ps": 257.36387
+    },
+    {
+      "group": "tx7_r1_to_lsl",
+      "bit": 145,
+      "source": [
+        "tx7_r1_lo",
+        "q[65]"
+      ],
+      "sink": [
+        "u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh",
+        "w_d[17]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "ot_qwen_tile_lsl_fp1",
+      "source_xy": [
+        440.544,
+        875.874
+      ],
+      "sink_xy": [
+        365.43,
+        796.362
+      ],
+      "distance_um": 154.626,
+      "margin_ps": 258.5866
+    },
+    {
+      "group": "rqr_south_to_return",
+      "bit": 80,
+      "source": [
+        "rqr_south_0",
+        "q[80]"
+      ],
+      "sink": [
+        "return_south_0",
+        "d[80]"
+      ],
+      "source_master": "qkh_packet_h256",
+      "sink_master": "qkh_packet_h256",
+      "source_xy": [
+        48.252,
+        1102.854
+      ],
+      "sink_xy": [
+        48.252,
+        932.406
+      ],
+      "distance_um": 170.448,
+      "margin_ps": 246.39106
+    },
+    {
+      "group": "rqr_south_to_mq_wrom",
+      "bit": 80,
+      "source": [
+        "return_south_0",
+        "q[80]"
+      ],
+      "sink": [
+        "mq_wrom_0",
+        "d[80]"
+      ],
+      "source_master": "qkh_packet_h256",
+      "sink_master": "qkh_packet_h256",
+      "source_xy": [
+        48.252,
+        947.334
+      ],
+      "sink_xy": [
+        55.812,
+        532.266
+      ],
+      "distance_um": 422.628,
+      "margin_ps": 54.73426
+    },
+    {
+      "group": "rqr_north_to_return",
+      "bit": 245,
+      "source": [
+        "rqr_north_0",
+        "q[245]"
+      ],
+      "sink": [
+        "return_north_0",
+        "d[245]"
+      ],
+      "source_master": "qkh_packet_h256",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        83.196,
+        324.984
+      ],
+      "sink_xy": [
+        5.496,
+        572.166
+      ],
+      "distance_um": 324.882,
+      "margin_ps": 136.69157
+    },
+    {
+      "group": "rqr_north_to_mq_wrom",
+      "bit": 391,
+      "source": [
+        "return_north_1",
+        "q[135]"
+      ],
+      "sink": [
+        "mq_wrom_1",
+        "d[135]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        47.424,
+        434.676
+      ],
+      "sink_xy": [
+        38.976,
+        861.006
+      ],
+      "distance_um": 434.778,
+      "margin_ps": 53.80547
+    },
+    {
+      "group": "mq_wrom_to_s2_w",
+      "bit": 481,
+      "source": [
+        "mq_wrom_1",
+        "q[225]"
+      ],
+      "sink": [
+        "s2_word_0",
+        "d[481]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qwen_glue_v514",
+      "source_xy": [
+        53.904,
+        880.062
+      ],
+      "sink_xy": [
+        209.184,
+        551.886
+      ],
+      "distance_um": 483.456,
+      "margin_ps": 15.44948
+    },
+    {
+      "group": "s2_w_to_tx0_r0",
+      "bit": "772:340",
+      "source": [
+        "s2_word_1",
+        "q[260]"
+      ],
+      "sink": [
+        "tx0_r0_lo",
+        "d[164]"
+      ],
+      "source_master": "qwen_glue_v514",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        257.592,
+        523.95
+      ],
+      "sink_xy": [
+        5.496,
+        484.83
+      ],
+      "distance_um": 291.216,
+      "margin_ps": 153.6162
+    },
+    {
+      "group": "s2_w_to_tx1_r0",
+      "bit": "572:316",
+      "source": [
+        "s2_word_1",
+        "q[60]"
+      ],
+      "sink": [
+        "tx1_r0_lo",
+        "d[156]"
+      ],
+      "source_master": "qwen_glue_v514",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        257.592,
+        498.702
+      ],
+      "sink_xy": [
+        59.496,
+        591.102
+      ],
+      "distance_um": 290.496,
+      "margin_ps": 154.46149
+    },
+    {
+      "group": "s2_w_to_tx2_r0",
+      "bit": "604:316",
+      "source": [
+        "s2_word_1",
+        "q[92]"
+      ],
+      "sink": [
+        "tx2_r0_lo",
+        "d[156]"
+      ],
+      "source_master": "qwen_glue_v514",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        257.592,
+        502.734
+      ],
+      "sink_xy": [
+        59.496,
+        672.912
+      ],
+      "distance_um": 368.274,
+      "margin_ps": 93.47082
+    },
+    {
+      "group": "s2_w_to_tx3_r0",
+      "bit": "612:276",
+      "source": [
+        "s2_word_1",
+        "q[100]"
+      ],
+      "sink": [
+        "tx3_r0_lo",
+        "d[132]"
+      ],
+      "source_master": "qwen_glue_v514",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        257.592,
+        503.742
+      ],
+      "sink_xy": [
+        59.496,
+        738.072
+      ],
+      "distance_um": 432.426,
+      "margin_ps": 42.4217
+    },
+    {
+      "group": "s2_w_to_tx4_r0",
+      "bit": "388:212",
+      "source": [
+        "s2_word_0",
+        "q[388]"
+      ],
+      "sink": [
+        "tx4_r0_lo",
+        "d[100]"
+      ],
+      "source_master": "qwen_glue_v514",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        230.592,
+        540.126
+      ],
+      "sink_xy": [
+        425.616,
+        509.046
+      ],
+      "distance_um": 226.104,
+      "margin_ps": 201.53014
+    },
+    {
+      "group": "s2_w_to_tx5_r0",
+      "bit": "188:188",
+      "source": [
+        "s2_word_0",
+        "q[188]"
+      ],
+      "sink": [
+        "tx5_r0_lo",
+        "d[92]"
+      ],
+      "source_master": "qwen_glue_v514",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        230.592,
+        514.878
+      ],
+      "sink_xy": [
+        425.616,
+        577.566
+      ],
+      "distance_um": 257.712,
+      "margin_ps": 184.81097
+    },
+    {
+      "group": "s2_w_to_tx6_r0",
+      "bit": "708:276",
+      "source": [
+        "s2_word_1",
+        "q[196]"
+      ],
+      "sink": [
+        "tx6_r0_lo",
+        "d[132]"
+      ],
+      "source_master": "qwen_glue_v514",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        257.592,
+        515.886
+      ],
+      "sink_xy": [
+        209.184,
+        819.882
+      ],
+      "distance_um": 352.404,
+      "margin_ps": 110.847
+    },
+    {
+      "group": "s2_w_to_tx7_r0",
+      "bit": "251:187",
+      "source": [
+        "s2_word_0",
+        "q[251]"
+      ],
+      "sink": [
+        "tx7_r0_lo",
+        "d[91]"
+      ],
+      "source_master": "qwen_glue_v514",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        230.592,
+        522.846
+      ],
+      "sink_xy": [
+        425.616,
+        729.384
+      ],
+      "distance_um": 401.562,
+      "margin_ps": 74.45278
+    },
+    {
+      "group": "tap_to_xl_q",
+      "bit": 4,
+      "source": [
+        "face_tap",
+        "q[384]"
+      ],
+      "sink": [
+        "xdelay_0",
+        "d[132]"
+      ],
+      "source_master": "qwen_glue_v508",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        454.776,
+        709.488
+      ],
+      "sink_xy": [
+        461.256,
+        293.652
+      ],
+      "distance_um": 422.316,
+      "margin_ps": 53.65771
+    },
+    {
+      "group": "xl_q_to_xdelay0",
+      "bit": 7,
+      "source": [
+        "xdelay_0",
+        "q[135]"
+      ],
+      "sink": [
+        "xdelay_0",
+        "d[7]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        476.184,
+        294.276
+      ],
+      "sink_xy": [
+        461.256,
+        267.156
+      ],
+      "distance_um": 42.048,
+      "margin_ps": 352.07062
+    },
+    {
+      "group": "xdelay8_to_mq_x",
+      "bit": 111,
+      "source": [
+        "xdelay_7",
+        "q[111]"
+      ],
+      "sink": [
+        "xdelay_6",
+        "d[239]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_h256",
+      "source_xy": [
+        26.904,
+        359.388
+      ],
+      "sink_xy": [
+        89.508,
+        496.896
+      ],
+      "distance_um": 200.112,
+      "margin_ps": 233.27815
+    },
+    {
+      "group": "mq_x_to_s2_x",
+      "bit": 124,
+      "source": [
+        "xdelay_6",
+        "q[252]"
+      ],
+      "sink": [
+        "s2_x_full",
+        "d[124]"
+      ],
+      "source_master": "qkh_packet_h256",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        92.244,
+        511.824
+      ],
+      "sink_xy": [
+        80.016,
+        584.334
+      ],
+      "distance_um": 84.738,
+      "margin_ps": 322.46502
+    },
+    {
+      "group": "s2_x_to_tx0_r0",
+      "bit": "119:123",
+      "source": [
+        "s2_x_full",
+        "q[119]"
+      ],
+      "sink": [
+        "tx0_r0_lo",
+        "d[59]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        94.944,
+        583.278
+      ],
+      "sink_xy": [
+        5.496,
+        462.606
+      ],
+      "distance_um": 210.12,
+      "margin_ps": 226.54975
+    },
+    {
+      "group": "s2_x_to_tx1_r0",
+      "bit": "119:123",
+      "source": [
+        "s2_x_full",
+        "q[119]"
+      ],
+      "sink": [
+        "tx1_r0_lo",
+        "d[59]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        94.944,
+        583.278
+      ],
+      "sink_xy": [
+        59.496,
+        570.606
+      ],
+      "distance_um": 48.12,
+      "margin_ps": 349.66975
+    },
+    {
+      "group": "s2_x_to_tx2_r0",
+      "bit": "1:28",
+      "source": [
+        "s2_x_full",
+        "q[1]"
+      ],
+      "sink": [
+        "tx2_r0_lo",
+        "d[12]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        94.944,
+        558.318
+      ],
+      "sink_xy": [
+        59.496,
+        642.432
+      ],
+      "distance_um": 119.562,
+      "margin_ps": 298.9299
+    },
+    {
+      "group": "s2_x_to_tx3_r0",
+      "bit": "1:28",
+      "source": [
+        "s2_x_full",
+        "q[1]"
+      ],
+      "sink": [
+        "tx3_r0_lo",
+        "d[12]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        94.944,
+        558.318
+      ],
+      "sink_xy": [
+        59.496,
+        712.632
+      ],
+      "distance_um": 189.762,
+      "margin_ps": 245.5779
+    },
+    {
+      "group": "s2_x_to_tx4_r0",
+      "bit": "119:123",
+      "source": [
+        "s2_x_full",
+        "q[119]"
+      ],
+      "sink": [
+        "tx4_r0_lo",
+        "d[59]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        94.944,
+        583.278
+      ],
+      "sink_xy": [
+        425.616,
+        500.406
+      ],
+      "distance_um": 413.544,
+      "margin_ps": 71.94751
+    },
+    {
+      "group": "s2_x_to_tx5_r0",
+      "bit": "119:123",
+      "source": [
+        "s2_x_full",
+        "q[119]"
+      ],
+      "sink": [
+        "tx5_r0_lo",
+        "d[59]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        94.944,
+        583.278
+      ],
+      "sink_xy": [
+        425.616,
+        570.606
+      ],
+      "distance_um": 343.344,
+      "margin_ps": 125.29951
+    },
+    {
+      "group": "s2_x_to_tx6_r0",
+      "bit": "1:28",
+      "source": [
+        "s2_x_full",
+        "q[1]"
+      ],
+      "sink": [
+        "tx6_r0_lo",
+        "d[12]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        94.944,
+        558.318
+      ],
+      "sink_xy": [
+        209.184,
+        794.442
+      ],
+      "distance_um": 350.364,
+      "margin_ps": 123.52038
+    },
+    {
+      "group": "s2_x_to_tx7_r0",
+      "bit": "1:28",
+      "source": [
+        "s2_x_full",
+        "q[1]"
+      ],
+      "sink": [
+        "tx7_r0_lo",
+        "d[12]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        94.944,
+        558.318
+      ],
+      "sink_xy": [
+        425.616,
+        712.632
+      ],
+      "distance_um": 484.986,
+      "margin_ps": 21.20766
+    },
+    {
+      "group": "xdelay_0_1",
+      "bit": 2,
+      "source": [
+        "xdelay_0",
+        "q[2]"
+      ],
+      "sink": [
+        "xdelay_3",
+        "d[2]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        476.184,
+        266.1
+      ],
+      "sink_xy": [
+        425.616,
+        245.58
+      ],
+      "distance_um": 71.088,
+      "margin_ps": 336.16777
+    },
+    {
+      "group": "xdelay_1_2",
+      "bit": 2,
+      "source": [
+        "xdelay_3",
+        "q[2]"
+      ],
+      "sink": [
+        "xdelay_1",
+        "d[2]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_h256",
+      "source_xy": [
+        440.544,
+        245.58
+      ],
+      "sink_xy": [
+        390.3,
+        310.056
+      ],
+      "distance_um": 114.72,
+      "margin_ps": 303.06767
+    },
+    {
+      "group": "xdelay_2_3",
+      "bit": 80,
+      "source": [
+        "xdelay_1",
+        "q[80]"
+      ],
+      "sink": [
+        "xdelay_2",
+        "d[80]"
+      ],
+      "source_master": "qkh_packet_h256",
+      "sink_master": "qkh_packet_h256",
+      "source_xy": [
+        406.812,
+        324.984
+      ],
+      "sink_xy": [
+        361.236,
+        289.536
+      ],
+      "distance_um": 81.024,
+      "margin_ps": 314.3533
+    },
+    {
+      "group": "xdelay_3_4",
+      "bit": 122,
+      "source": [
+        "xdelay_2",
+        "q[122]"
+      ],
+      "sink": [
+        "xdelay_extra",
+        "d[122]"
+      ],
+      "source_master": "qkh_packet_h256",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        370.116,
+        304.464
+      ],
+      "sink_xy": [
+        32.496,
+        361.692
+      ],
+      "distance_um": 394.848,
+      "margin_ps": 84.28658
+    },
+    {
+      "group": "xdelay_4_5",
+      "bit": 2,
+      "source": [
+        "xdelay_extra",
+        "q[2]"
+      ],
+      "sink": [
+        "xdelay_4",
+        "d[2]"
+      ],
+      "source_master": "qkh_packet_v256",
+      "sink_master": "qkh_packet_h256",
+      "source_xy": [
+        47.424,
+        336.3
+      ],
+      "sink_xy": [
+        31.74,
+        476.376
+      ],
+      "distance_um": 155.76,
+      "margin_ps": 271.87727
+    },
+    {
+      "group": "xdelay_5_6",
+      "bit": 80,
+      "source": [
+        "xdelay_4",
+        "q[80]"
+      ],
+      "sink": [
+        "xdelay_5",
+        "d[80]"
+      ],
+      "source_master": "qkh_packet_h256",
+      "sink_master": "qkh_packet_h256",
+      "source_xy": [
+        48.252,
+        491.304
+      ],
+      "sink_xy": [
+        329.052,
+        310.056
+      ],
+      "distance_um": 462.048,
+      "margin_ps": 24.77506
+    },
+    {
+      "group": "xdelay_6_7",
+      "bit": 80,
+      "source": [
+        "xdelay_5",
+        "q[80]"
+      ],
+      "sink": [
+        "xdelay_6",
+        "d[80]"
+      ],
+      "source_master": "qkh_packet_h256",
+      "sink_master": "qkh_packet_h256",
+      "source_xy": [
+        329.052,
+        324.984
+      ],
+      "sink_xy": [
+        55.812,
+        496.896
+      ],
+      "distance_um": 445.152,
+      "margin_ps": 37.61602
+    },
+    {
+      "group": "xdelay_7_8",
+      "bit": 16,
+      "source": [
+        "xdelay_6",
+        "q[16]"
+      ],
+      "sink": [
+        "xdelay_7",
+        "d[16]"
+      ],
+      "source_master": "qkh_packet_h256",
+      "sink_master": "qkh_packet_v256",
+      "source_xy": [
+        42.276,
+        511.824
+      ],
+      "sink_xy": [
+        11.976,
+        339.276
+      ],
+      "distance_um": 202.848,
+      "margin_ps": 224.00089
+    }
+  ],
+  "qualification": false,
+  "schema": "opentallas.qwen.semantic-tile-pin-screen.v1",
+  "input_sha256": {
+    "results/arch/qwen_split_compute_1014/system_geometry/tx198/inventory.json": "c90b2e9275eee372dafb1b72ddacbed0fa44422da1ba78bef4ae8662c10c124b",
+    "results/arch/qwen_split_compute_1014/system_geometry/tx198/semantic_payload_pairs.json.gz": "146eefa8465c533f5aa7f30fd082f2abe2294e43f263b81d2cecc84a11fbf283",
+    "results/arch/qwen_split_compute_1014/system_geometry/compressed_source_bundle.json.gz": "67eb2443d3ee661a44acc15e898257ce4e868379ca4af5bd53757f8745d8d564"
+  },
+  "remaining": [
+    "Original unmatched source endpoints, parentouterpins/reset/metadata/control",
+    "Source/semantic packing equivalence and exact compiler ages",
+    "Residual core home and real parent clocks/route TTFFDRC",
+    "Complete actual die hardware fit, DVM/SU/IO/KV criticalcuts"
+  ]
+}

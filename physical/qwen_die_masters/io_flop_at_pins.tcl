@@ -47,6 +47,15 @@ set ot_au_cols_h 1.5
 set ot_au_depth_max 0.45
 set ot_hops [expr {[info exists ::env(OT_OFLOP_HOPS)] && $::env(OT_OFLOP_HOPS) ne "" ? $::env(OT_OFLOP_HOPS) : 4}]
 set ot_allow_none [expr {[info exists ::env(OT_OFLOP_ALLOW_NONE)] && $::env(OT_OFLOP_ALLOW_NONE) eq "1"}]
+# Optional source-bound hard-face audit. The sourced audit must inspect every
+# actual boundary endpoint and rehash its registered leaf/view binding. A count
+# is produced by that audit, never accepted from a caller-supplied environment
+# boolean. Own standard-cell endpoints continue through the ordinary anchoring.
+set ot_verified_hard_faces 0
+if {[info exists ::env(OT_OFLOP_HARD_FACE_AUDIT)]} {
+  source $::env(OT_OFLOP_HARD_FACE_AUDIT)
+  if {$ot_verified_hard_faces <= 0} { error "OT_IOFLOP: hard-face audit verified no ports" }
+}
 proc ot_of_drv {net} {
   foreach it [$net getITerms] { if {[$it isOutputSignal]} { return $it } }
   return ""
@@ -161,6 +170,9 @@ foreach bt [$ot_blk getBTerms] {
   set fn [$ff getName]
   if {[dict exists $ot_seen $fn]} continue
   dict set ot_seen $fn 1
+  # el1013-smh-r14 2026-10-13: a pin flop the kit already fixed at its own station (FIRM before global placement: the SM
+  # tile cluster's strap stage 0 and reset pin flop, placed by its POST_TAPCELL stations) stays there (ODB-0359 otherwise)
+  if {[$ff isFixed]} { if {![info exists ot_kept]} { set ot_kept 0 }; incr ot_kept; continue }
   set bb [$bt getBBox]
   set px [expr {double([$bb xMin] + [$bb xMax]) / 2.0 / $ot_dbu}]
   set py [expr {double([$bb yMin] + [$bb yMax]) / 2.0 / $ot_dbu}]
@@ -224,6 +236,7 @@ foreach c $cand {
     B { set x $px; set y [expr {$cy0 + $sg + $col * $h}] }
     T { set x $px; set y [expr {$cy1 - $sg - ($col + 1) * $h}] }
   }
+  if {[[$ff getMaster] isBlock]} {error {standard cell placement refuses BLOCK}}
   $ff setLocation [expr {round($x * $ot_dbu)}] [expr {round($y * $ot_dbu)}]
   $ff setPlacementStatus FIRM
   lappend ot_list [$ff getName]
@@ -306,6 +319,7 @@ if {[llength $ot_extra]} {
     if {$best eq ""} { error "OT_IOFLOP: no legal capture site for $name ($port)" }
     lassign $best ri x y orient
     $ff setOrient $orient
+    if {[[$ff getMaster] isBlock]} {error {standard cell placement refuses BLOCK}}
     $ff setLocation $x $y
     $ff setPlacementStatus FIRM
     dict lappend ot_occupied $ri [list $x [expr {$x + $width}]]
@@ -366,6 +380,7 @@ if {[info exists ::env(OT_MPFLOP_PINS)] && $::env(OT_MPFLOP_PINS) ne ""} {
       } elseif {$dbo == $dm} { set x $px; set y [expr {$my0 - $mgap - $h}]
       } else { set x $px; set y [expr {$my1 + $mgap}] }
       set x [expr {max($cx0, min($x, $cx1 - $w))}]; set y [expr {max($cy0, min($y, $cy1 - $h))}]
+      if {[[$ff getMaster] isBlock]} {error {standard cell placement refuses BLOCK}}
       $ff setLocation [expr {round($x * $ot_dbu)}] [expr {round($y * $ot_dbu)}]
       $ff setPlacementStatus FIRM
       lappend ot_list $fn
@@ -376,8 +391,23 @@ if {[info exists ::env(OT_MPFLOP_PINS)] && $::env(OT_MPFLOP_PINS) ne ""} {
   puts "OT_MPFLOP fixed $ot_nm macro-input-pin flops beside their pins ($mskip pins not flop-driven)"
   if {$ot_nm == 0} { error "OT_MPFLOP: OT_MPFLOP_PINS=$::env(OT_MPFLOP_PINS) matched no flop-driven macro pin (netlist changed?)" }
 }
+# Resolve actual FIRM overlaps without changing the native boundary circuit.
+# The hold hooks record exactly the cells they own; unrelated FIRM cells and
+# hard macros are obstacles, not candidates for movement.
+set ot_pack_names $ot_list
+set ot_pack_record $::env(RESULTS_DIR)/ot_inhold_firm.txt
+if {[file exists $ot_pack_record]} {
+  set ot_pack_file [open $ot_pack_record r]
+  foreach ot_pack_name [split [read $ot_pack_file] \n] {
+    if {$ot_pack_name ne ""} {lappend ot_pack_names $ot_pack_name}
+  }
+  close $ot_pack_file
+}
+source /src/physical/common_flow/anchor_row_packing.tcl
+ot_anchor_pack::repair $ot_blk $ot_pack_names
 set fh [open $::env(RESULTS_DIR)/ot_out_flop_at_pins.txt w]
 foreach n $ot_list { puts $fh $n }
 close $fh
 puts "OT_IOFLOP fixed $ot_n output-port and $ot_ni input-port flops at their pins ($ot_skip ports not single-flop)"
-if {$ot_n + $ot_ni == 0 && !$ot_allow_none} { error "OT_IOFLOP: no pin flop found (netlist changed?)" }
+if {[info exists ot_kept]} { puts "OT_IOFLOP kept $ot_kept pin flops the kit had already fixed at their own stations" }
+if {$ot_n + $ot_ni == 0 && !$ot_allow_none && $ot_verified_hard_faces == 0} { error "OT_IOFLOP: no pin flop found (netlist changed?)" }

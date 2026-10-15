@@ -33,12 +33,16 @@
         "dsfd_vm_bgq28"
       ],
       "required_successors": [
-        "dsfd_vm_static_scatter",
         "dsfd_vm_static_return",
-        "dsfd_vm_static_relay128_b16",
         "dsfd_vm_static_relay128_b8",
         "dsfd_vm_static_wdispatch128",
-        "dsfd_vm_static_wstage128"
+        "dsfd_vm_static_wstage128",
+        "dsfd_vm_static_relay128_b4",
+        "dsfd_vm_static_write_capture128",
+        "dsfd_vm_static_scatter_b8_out",
+        "dsfd_vm_static_w0_header",
+        "dsfd_vm_static_w0_payload",
+        "dsfd_vm_static_wcontrol"
       ],
       "reason": "Fixed indexed request/return/write transport replaces dynamic bank-group queues; published views never transfer by name",
       "state": "OPEN physical closure; historical parent must not be rerouted as surrogate"
@@ -65,9 +69,9 @@
         "dsfd_vm_frg"
       ],
       "required_successors": [
-        "dsfd_vm_static_relay128_b16",
         "dsfd_vm_static_relay128_b8",
-        "dsfd_vm_seq_static"
+        "dsfd_vm_seq_static",
+        "dsfd_vm_static_relay128_b4"
       ],
       "reason": "Legacy grant/address relays not production endpoints; fixed transport/control with actual pin-to-pin budget replaces them",
       "state": "OPEN physical closure; historical parent must not be rerouted as surrogate"
@@ -248,15 +252,58 @@
       "fullVMphysical placement and producer calendar"
     ]
   },
-  "structural_next": "actual188smallgroup source/gatesPASS, exact83,712bank/relaybit reachPASS max486.3; nativeCTS/TTFFDRC and globalendpointdistribution/fullproducer calendar next",
-  "current_actual_source": "cd1242953",
+  "structural_next": "Actual682clock618reset sourceintegration andL13/CAP_PIPE1 core/masterproofPASS3a6025831. Collectnativecap4,b0/q0/q1/v0CTS andonce-submittedcaptureE/scatterB0routes. Active return_store implements real4lane/128slice storage partition andlookaheadcompletion. Parent owns true3:4CDC/globaltree/clock/reset/canonicalprogramme integration; old27344bank/relayTTfailures remain.",
+  "current_actual_source": "4305ce06f",
   "current_required_core_masters": {
     "dsfd_vm_static_bank128": 128,
     "dsfd_vm_static_relay128_b4": 32,
     "dsfd_vm_static_relay128_b8": 16,
-    "dsfd_vm_static_suhc_fsr": 4,
-    "dsfd_vm_static_scatter": 4,
-    "dsfd_vm_static_return_NROW32": 4
+    "dsfd_vm_static_suhc_fsr": 0,
+    "dsfd_vm_static_return_NROW32": 4,
+    "dsfd_vm_static_write_capture128": 128,
+    "dsfd_vm_static_scatter_b8_out_BANK_BASE_0_8_16_24": 16,
+    "dsfd_vm_static_fsr_bank8": 16,
+    "dsfd_vm_static_read_q0_to_q7": 64,
+    "dsfd_vm_static_read_v0_to_v7": 8
   },
-  "current_native_geometry": "physical/s81_die_pins/v20_vm_static_small_groups/layout_option.json"
+  "current_native_geometry": "Bprimary/Cfallback; current562memory/write/readleaves plus49cap/CDC/controlboundaries; old470/478placementretainedonlyforunchangedgeometry, newFSR/read/return/capCDC/globalcutsOPEN",
+  "current_actual_source_receipt": "results/rtl/s81_vm_banked_write_1015/receipt.json",
+  "current_required_write_edge_masters": {
+    "dsfd_vm_static_w0_payload": 4,
+    "dsfd_vm_static_w0_header": 1,
+    "dsfd_vm_static_wcontrol": 1,
+    "dsfd_vm_static_wdispatch128_NSRC53_NBANK8": 16,
+    "dsfd_vm_static_wstage128_DEPTH3": 128
+  },
+  "current_source_qualification": {
+    "functional": "PASS combinedcore/master atREAD_PIPE1/CAP_PIPE1 proof3a6025831",
+    "required_leaf_instances": 562,
+    "required_leaf_roots": 610,
+    "physical": false,
+    "canonical_production": false,
+    "read_age": 13,
+    "returned_commit_observation_age": 11,
+    "done_elapsed_age": 6,
+    "additional_cap_CDC_control_boundaries": 49,
+    "outer_clock_pins": 682,
+    "outer_raw_reset_pins": 618
+  },
+  "native_route_jobs": [
+    "dsfd_vm_static_relay128_b4_native_option-nativepin1-e12206107",
+    "dsfd_vm_static_relay128_b8_native_option-nativepin1-e12206107"
+  ],
+  "superseded_candidates": {
+    "164": "actual pin capacity/reach rejected",
+    "188": "bank/relay local83712bits max486.3um PASS only; original global scatter box too small",
+    "200lane": "all functional gates pass but interleaved widewrite distribution superseded by actualbank-local328candidate"
+  },
+  "current_active_audit": "results/physical/s81_vm_static_ownership_1015/active_ownership_audit.json",
+  "historical_fields_notice": "required_gates/die_slot/live_preserved preserve old snapshots; current_active_audit and current_* fields supersede pending/running entries",
+  "routed_hop_rejection": {
+    "bits": 83712,
+    "TT_failing": 27344,
+    "min_setup_ps": -109.453,
+    "source": "dc8607b3d+76378b01b",
+    "endpoint_probe": "endpoint_probe/receipt.json"
+  }
 }

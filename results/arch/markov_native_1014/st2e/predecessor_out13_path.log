@@ -1,0 +1,78 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+Startpoint: out_bits[13]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: out_bits[13] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+Fanout       Cap      Slew     Delay      Time   Description
+-------------------------------------------------------------------------------------
+                              0.0000    0.0000   clock core_clk (rise edge)
+                              0.0000    0.0000   clock source latency
+     1    5.6819    0.0000    0.0000    0.0000 ^ clk (in)
+                                                 clk (net)
+                    5.8714    1.8522    1.8522 ^ clkbuf_0_clk/A (BUFx16f_ASAP7_75t_R)
+     4   13.5855   15.4363   19.2490   21.1012 ^ clkbuf_0_clk/Y (BUFx16f_ASAP7_75t_R)
+                                                 clknet_0_clk (net)
+                   16.6843    2.2998   23.4010 ^ clkbuf_2_2__f_clk/A (BUFx16f_ASAP7_75t_R)
+     9   25.7834   23.7805   26.4206   49.8216 ^ clkbuf_2_2__f_clk/Y (BUFx16f_ASAP7_75t_R)
+                                                 clknet_2_2__leaf_clk (net)
+                   25.4263    3.3234   53.1450 ^ clkbuf_leaf_20_clk/A (BUFx24_ASAP7_75t_R)
+    30   17.0416   16.9418   30.4860   83.6310 ^ clkbuf_leaf_20_clk/Y (BUFx24_ASAP7_75t_R)
+                                                 clknet_leaf_20_clk (net)
+                   18.7959    2.8858   86.5168 ^ out_bits[13]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.6310   17.5484   49.3597  135.8765 v out_bits[13]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+                                                 _0295_ (net)
+                   17.5485    0.0232  135.8997 v _1315_/A (INVx1_ASAP7_75t_R)
+     1   13.1870  131.6883   51.2985  187.1982 ^ _1315_/Y (INVx1_ASAP7_75t_R)
+                                                 out_bits[13] (net)
+                  140.8457   18.4959  205.6941 ^ ot_ohdrv_00550_0/A (BUFx4f_ASAP7_75t_R)
+     1    0.6331   10.8441   37.7073  243.4014 ^ ot_ohdrv_00550_0/Y (BUFx4f_ASAP7_75t_R)
+                                                 ot_outhold_n00550_0 (net)
+                   10.8443    0.0549  243.4563 ^ ot_outhold_00550_1/A (HB2xp67_ASAP7_75t_R)
+     1    1.4198   25.3572   34.4494  277.9058 ^ ot_outhold_00550_1/Y (HB2xp67_ASAP7_75t_R)
+                                                 ot_outhold_n00550_1 (net)
+                   25.3626    0.1684  278.0742 ^ ot_ohdrv_00550_2/A (BUFx4f_ASAP7_75t_R)
+     1    0.5508    6.1463   20.1344  298.2086 ^ ot_ohdrv_00550_2/Y (BUFx4f_ASAP7_75t_R)
+                                                 ot_outhold_p00550 (net)
+                    6.1464    0.0207  298.2293 ^ output743/A (BUFx2_ASAP7_75t_R)
+     1    0.5721    6.9746   15.5279  313.7572 ^ output743/Y (BUFx2_ASAP7_75t_R)
+                                                 out_bits[13]742 (net)
+                    6.9775    0.0673  313.8244 ^ out_bits[13] (out)
+                                      313.8244   data arrival time
+
+                            770.0000  770.0000   clock core_clk (rise edge)
+                              0.0000  770.0000   clock network delay (propagated)
+                            -60.0000  710.0000   clock uncertainty
+                              0.0000  710.0000   clock reconvergence pessimism
+                           -166.6670  543.3330   output external delay
+                                      543.3330   data required time
+-------------------------------------------------------------------------------------
+                                      543.3330   data required time
+                                     -313.8244   data arrival time
+-------------------------------------------------------------------------------------
+                                      229.5085   slack (MET)
+
+
+CHAIN output743 BUFx2_ASAP7_75t_R 9882 30780
+CHAIN ot_ohdrv_00550_2 BUFx4f_ASAP7_75t_R 9396 30780
+CHAIN ot_outhold_00550_1 HB2xp67_ASAP7_75t_R 10422 29970
+CHAIN ot_ohdrv_00550_0 BUFx4f_ASAP7_75t_R 10260 30780
+CHAIN _1315_ INVx1_ASAP7_75t_R 52704 9180
+CHAIN out_bits\[13\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R 51624 9180

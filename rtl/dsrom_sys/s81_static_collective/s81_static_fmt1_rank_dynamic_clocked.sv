@@ -4,7 +4,7 @@
 // Protocol-compatible normal-mode successor. Compiler beat period4 and three
 // records/group produce source issues4,4,8cycles. ZeroPHYflight component
 // source issue->gather11cycles; actual relays/flight require static alignment.
-module s81_static_fmt1_rank_dynamic_clocked(
+module s81_static_fmt1_rank_dynamic_clocked #(parameter integer LOCAL_RESET_SYNC=0)(
  input wire [1:0] rank,input wire clk_core,input wire[2:0]clk_lane,input wire rst_n,issue_slot,src_valid,input wire[511:0]src_data,
  input wire[31:0]tag,input wire[15:0]seq,input wire last,input wire[3:0]rankmask,
  input wire commit_slot,input wire[31:0]commit_tag,input wire[15:0]commit_seq,
@@ -39,7 +39,14 @@ module s81_static_fmt1_rank_dynamic_clocked(
  genvar g;
  generate for(g=0;g<3;g=g+1)begin:L
   wire[1:0]peer=rank_q ^ 2'(g+1);
-  s81_static_fmt1_lane_dynamic lane(.peer(peer),.clk(clk_lane[g]),.rst_n(rst_n),.tx_v(txv),.tx_record(txf),
+  wire lane_rst_n;
+  if(LOCAL_RESET_SYNC)begin:reset_lane
+   reg[1:0]rr;
+   always @(posedge clk_lane[g] or negedge rst_n)if(!rst_n)rr<=0;else rr<={rr[0],1'b1};
+   assign lane_rst_n=rr[1];
+  end else begin:reset_compat assign lane_rst_n=rst_n;end
+
+  s81_static_fmt1_lane_dynamic lane(.peer(peer),.clk(clk_lane[g]),.rst_n(lane_rst_n),.tx_v(txv),.tx_record(txf),
    .rx_v(lane_rx_v[g]),.rx_record(lane_rx_record[g*569+:569]),
    .tx_beat_slot(tx_beat_slot),.tx_phase(tx_phase),.tx_frame_slot(tx_frame_slot),
    .rx_beat_slot(rx_beat_slot),.rx_phase(rx_phase),.rx_frame_slot(rx_frame_slot),

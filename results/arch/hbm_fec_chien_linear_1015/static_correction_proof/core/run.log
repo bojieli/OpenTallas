@@ -1,0 +1,5 @@
+PASS static correction vectors=16144 all16phases ev/hit/CW basis +random
+- rtl/hbm_accel/io_native_20261014/tb_static_correction.sv:32: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 16us; walltime 0.021 s; speed 721.004 us/s
+- Verilator: cpu 0.022 s on 1 threads; alloced 1017 MB

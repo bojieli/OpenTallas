@@ -30,7 +30,7 @@ class _Clocks(tuple):
         return tuple.__contains__(self, p) or bool(re.fullmatch(r'(ck|hk)_[a-z]\d{0,2}', str(p)))   # hk_*: v1.2 HBM-clock entries
 
 
-CLOCKS = _Clocks(('ck', 'ckx', 'cks', 'cku', 'ckd', 'clk', 'hclk') + tuple(f'ck{i}' for i in range(9)) + ('ck_pin',))   # + per-child clock entries (qwen split compute C5: xcol ck0..8, tt_up4 ck_pin / ck_l0..3)
+CLOCKS = _Clocks(('ck', 'ckx', 'cks', 'cku', 'ckd', 'clk', 'hclk') + tuple(f'ck{i}' for i in range(9)) + ('ck_pin','ck_head','ck_tree','ck_xpf','ck_me_sched','ck_sched'))   # + per-child clock entries (qwen split compute C5: xcol ck0..8, tt_up4 ck_pin / ck_l0..3)
 CORNERS = dict(  # setup, hold, clk->q base, ps/fF output slope, output transition base, ps/fF, input cap fF (ASSUMED)
     ss=dict(setup=30.0, hold=5.0, cq=75.0, k=0.9, tr=25.0, tk=1.6, cin=0.7, volt=0.63, temp=100),
     ff=dict(setup=12.0, hold=12.0, cq=32.0, k=0.35, tr=10.0, tk=0.7, cin=0.6, volt=0.77, temp=0))
