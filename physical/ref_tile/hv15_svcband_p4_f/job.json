@@ -1,5 +1,5 @@
 {
- "name": "hv15_svcband_p4_f-hv15b-COMMIT",
+ "name": "hv15_svcband_p4_f-hv15b-e20173c18",
  "block": "hfd_svc_v15_SW_s0",
  "ref_tile": true,
  "owner": "Claude:HBM-V15-HARDEN",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/hbm-v15-harden-1015b",
-  "commit": "COMMIT",
+  "commit": "e20173c18",
   "extra_paths": [
    "tools/hbm_v15_harden",
    "physical/hbm_accel_die_views/svc/v15/rtl",
@@ -112,7 +112,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hv15_svcband_p4_f/hv15_svcband_p4_f-hv15b-COMMIT"
+   "to": "results/rtl/ref_tile/hv15_svcband_p4_f/hv15_svcband_p4_f-hv15b-e20173c18"
   }
  ],
  "cycles_added": 0,
