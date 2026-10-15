@@ -1,6 +1,10 @@
 # NL (r13 NL helper): generated from hard_face_binding.tcl for qfd_tile_nl_banked_v1 (53 banks, 13 children).
 # Frozen registered packet-source and CLOSED view binding; exact SHA256 bytes.
 set qce_face_hashes {
+ {rtl/qwen_sys/tile_glue_banks_20261015/qwen_glue_w514.sv} cbbe89fbcc1b1729b75ff685f1327c4bdc4e814730c68f6f5fa3819724a06644
+ {physical/ref_tile/qwen_glue_w514/views/qwen_glue_w514/qwen_glue_w514.lef} ab9ca44207f15614df391331b4c9f78ae397216853eafee250715049581db3f3
+ {physical/ref_tile/qwen_glue_w514/views/qwen_glue_w514/qwen_glue_w514_tt.lib} 1f98518cb3334b7b1b030ac9921a4b9a3661f69f08e68b9783ab51b6a8604fbd
+ {physical/ref_tile/qwen_glue_w514/views/qwen_glue_w514/insertion.json} 5d24d152b0e7eb06eeeb94fe7f864ebba61b8d2d693afff239ad12077758ede9
  {rtl/qwen_sys/head_staging_20261015/ot_qkh_packet_stage.sv} 36c2283ba650704e94e7c17815f88d9c65b69e03f94d2803cffdb9ab55d8e8b1
  {rtl/qwen_sys/head_staging_20261015/qkh_packet_masters.sv} d64775658550748872760041f06ee0c233e4f76aaedb91ee8796844fc7c6d4fd
  {rtl/qwen_sys/tile_glue_banks_20261015/qwen_glue_face_masters.sv} 9c2dd4afab4ded9943b3bb9f72b78cae5605f404d12b66862c1da685c4eb8d0c

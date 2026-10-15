@@ -1,0 +1,115 @@
+{
+ "name": "qfd_tile_nl_banked_v2-nl53pm-COMMIT",
+ "block": "qfd_tile_nl_banked_v2",
+ "ref_tile": true,
+ "owner": "Claude:q_compute_elem r13 NL helper",
+ "purpose": "NL PM-H-S v2: qwen_glue_w514 t_out face on the interleaved TB slots; otherwise NL banked v1",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/q15-nl-banked",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/qwen_tile_glue_banks_1015",
+   "rtl/qwen_sys/tile_parent_banked_20261015",
+   "rtl/qwen_sys/tile_parent_nl_banked_20261015",
+   "results/rtl/qwen_compute_native_glue_1014/parent_nl_banked_v1",
+   "physical/common_flow"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -DSYNTHESIS -DOT_QWEN_LSL_FP1 --top-module qfd_tile_nl_banked_v2 rtl/physical/ot_qwen_rom_tile_die.sv rtl/hdc/kv/ot_qwen_kv_land_merge.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_matvec.sv rtl/hdc/ot_qwen_me_array_w12.sv rtl/hdc/ot_qwen_rom_tile_w12.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_qwen_w12_matvec.sv rtl/hdc/ot_qwen_w12_arith.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_fp32_add_lat_nr.sv rtl/physical/ot_qwen_rom_tile_nk.sv physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v rtl/physical/bb/ot_qwen_tile_rpair_bb.v rtl/physical/bb/ot_qwen_tile_lsl_fp1_bb.v rtl/qwen_sys/tile_parent_banked_20261015/ot_qwen_w12_matvec_part_banked_v1.sv rtl/qwen_sys/tile_parent_nl_banked_20261015/ot_qwen_rom_tile_logic_nl_banked_v1.sv rtl/qwen_sys/tile_parent_nl_banked_20261015/qfd_tile_nl_banked_v2.sv rtl/qwen_sys/tile_glue_banks_20261015/ot_qwen_tx198.sv physical/qwen_tile_glue_banks_1015/parent_banks_bb.v && echo lint-ok"
+   },
+   {
+    "name": "actual_parent_source_oracle",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "cmd": "python3 physical/qwen_tile_glue_banks_1015/verify_parent_receipt_nl.py",
+    "pass_regex": "^PASS exact real NL parent numerical receipt"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_tile_nl_banked_v2/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_tile_nl_banked_v2/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_tile_nl_banked_v2 --out {RUN}/record/views/qfd_tile_nl_banked_v2 --macro-view physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair --macro-view physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1 --macro-view physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256 --macro-view physical/ref_tile/qkh_packet_v16/views/qkh_packet_v16 --macro-view physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256 --macro-view physical/ref_tile/qwen_glue_v508/views/qwen_glue_v508 --macro-view physical/ref_tile/qwen_glue_v514/views/qwen_glue_v514 --macro-view physical/ref_tile/qwen_glue_w514/views/qwen_glue_w514 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_tile_nl_banked_v2/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
+   "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+   "physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256",
+   "physical/ref_tile/qkh_packet_v16/views/qkh_packet_v16",
+   "physical/ref_tile/qkh_packet_v256/views/qkh_packet_v256",
+   "physical/ref_tile/qwen_glue_v508/views/qwen_glue_v508",
+   "physical/ref_tile/qwen_glue_v514/views/qwen_glue_v514",
+   "physical/ref_tile/qwen_glue_w514/views/qwen_glue_w514"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_tile_nl_banked_v2/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_tile_nl_banked_v2/qfd_tile_nl_banked_v2-nl53pm-COMMIT"
+  }
+ ],
+ "cycles_added": 2,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "hold_merge": "PROBE like NK bp58c: sub-20um channels are hard-blocked by macro_channel_block.tcl but ref_tile floorplan_checks does not yet credit blocked channels; merge only after that rule/tool decision and native gates",
+ "structural_change": "Old flat NL (14,006 sinks one glue root, boundary R 991 ps, spread 182 ps, TT -299 RPAIR2->south RQR) replaced by the NK banked local clock-root partition: 53 independent CLOSED data banks (to_reg = the TOREG edge as a bank), 11 three-edge reset roots, 13 unchanged CLOSED children; ROM return +1 / xdelay9 / TX198 shared with NK; t_out age identical to NK. Channels < 20 um blocked, repair buffers off macros. v2: PM-H-S face_t_out=qwen_glue_w514 at (5.4,699.84), t_out on TB slots 705.132+0.192k.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "source": "rtl/qwen_sys/tile_parent_nl_banked_20261015/qfd_tile_nl_banked_v2.sv",
+  "cell": "qfd_tile_nl_banked_v1",
+  "why": "new banked source (local clock roots); no prior route of this cell"
+ }
+}
