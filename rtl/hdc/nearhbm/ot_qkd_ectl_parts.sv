@@ -283,7 +283,7 @@ module ot_qkd_ectl_part #(
         else if (start) begin schedule_age <= 0; schedule_active <= 1; end
         else if (schedule_active && schedule_age != 16'hffff) schedule_age <= schedule_age + 1'b1;
     initial begin
-        if (STATIC_QK && (HEADS != 1 || QK_ISSUE_AGE < 1 || ROW_RETURN_LAT < 1 || DQ != 128))
+        if (STATIC_QK && (HEADS != 1 || QK_ISSUE_AGE < 2 || ROW_RETURN_LAT < 1 || DQ != 128))
             $fatal(1, "invalid static QK profile");
     end
 
@@ -427,7 +427,8 @@ module ot_qkd_ectl_part #(
         // All copies advance the same reserved pointers, even on a missing response.
         ot_qkd_static_row_ring #(.W(RWD), .DATA(PART != 3)) u_rows (
             .clk(clk), .rst_n(rc), .clear(start), .write_slot(row_slot), .write_valid(rsp_valid),
-            .din(rsp_data), .consume_slot(consume), .dout(row), .nonempty(row_ne), .fault(ring_fault));
+            .din(rsp_data), .read_slot(c_started && !c_fin && schedule_age >= QK_ISSUE_AGE-2),
+            .consume_slot(consume), .dout(row), .nonempty(row_ne), .fault(ring_fault));
         assign e_word = 64'd0;
         assign e_ne = 1'b0;
     end else if (PART != 3) begin : g_rows2
@@ -970,11 +971,11 @@ endmodule
 `endif
 
 // Compiler-reserved 128-row ring. No demand refill, bypass, ready or credit path.
-// A read is issued on every edge for the NEXT consume pointer; the current SRAM
+// Reads occupy the compiler-reserved QK window for the NEXT consume pointer; the current SRAM
 // output is captured by S1 on the consume edge. Writes must precede that read.
 module ot_qkd_static_row_ring #(parameter integer W=512, parameter integer DATA=1) (
     input wire clk, rst_n, clear, write_slot, write_valid,
-    input wire [W-1:0] din, input wire consume_slot,
+    input wire [W-1:0] din, input wire read_slot, consume_slot,
     output wire [W-1:0] dout, output wire nonempty, output reg fault
 );
     reg [6:0] wp, rp;
@@ -986,7 +987,7 @@ module ot_qkd_static_row_ring #(parameter integer W=512, parameter integer DATA=
         if (!rst_n) begin wp<=0; rp<=0; occupancy<=0; fault<=0; read_visible<=0; end
         else if (clear) begin wp<=0; rp<=0; occupancy<=0; fault<=0; read_visible<=0; end
         else begin
-            read_visible <= occupancy > (consume_slot ? 8'd1 : 8'd0);
+            if (read_slot) read_visible <= occupancy > (consume_slot ? 8'd1 : 8'd0);
             if (write_slot) wp <= wp + 1'b1;
             if (consume_slot) rp <= rp + 1'b1;
             occupancy <= occupancy + (write_slot ? 8'd1 : 8'd0) - (consume_slot ? 8'd1 : 8'd0);
@@ -998,7 +999,7 @@ module ot_qkd_static_row_ring #(parameter integer W=512, parameter integer DATA=
         wire [NM*256-1:0] padded = {{(NM*256-W){1'b0}},din};
         wire [NM*256-1:0] rd;
         for (genvar m=0;m<NM;m=m+1) begin : g_macro
-            ot_sram_1r1w_128x256_m1_r2c2 u_s (.clk(clk), .r_ce_in(1'b1), .r_addr_in(read_addr),
+            ot_sram_1r1w_128x256_m1_r2c2 u_s (.clk(clk), .r_ce_in(read_slot), .r_addr_in(read_addr),
                 .rd_out(rd[m*256+:256]), .w_ce_in(write_slot && !clear), .w_addr_in(wp),
                 .wd_in(padded[m*256+:256]), .w_mask_in({256{1'b1}}),
                 .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
