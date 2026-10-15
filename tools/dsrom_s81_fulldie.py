@@ -3019,6 +3019,12 @@ FRAME_H8 = SLOTS8 * SLOT_H8
 
 def slot_geometry(elem_frame_h=None, field_margin=None):
     global ELEM_FRAME_H, SLOT_H8, SLOTS8, FIELD_MARGIN, FRAME_H8
+    if CANONICAL_LAYOUT is not None:
+        # Canonical frames carry their exact packed slot heights independently.
+        # Keep the established hub scaffold; never derive a symmetric field
+        # or crop these frames through the historical uniform-slot count.
+        SLOTS8 = max(f['packed_slots'] for f in CANONICAL_LAYOUT['placements'])
+        return SLOT_H8, SLOTS8
     if elem_frame_h:
         ELEM_FRAME_H = float(elem_frame_h)
     if field_margin is not None:
