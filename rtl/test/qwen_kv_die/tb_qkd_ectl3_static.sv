@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // Control/mapped-SRAM proof at the native TP8 QK shape; head arithmetic is a separate owner proof.
 module tb_qkd_ectl3_static;
-    parameter integer MUT=0;
+    parameter integer MUT=0, RETURN_LAT=9;
     reg ck=0,rst_n=0;
     always #0.5 ck=~ck;
     reg [633:0] si=0;
@@ -9,7 +9,7 @@ module tb_qkd_ectl3_static;
     wire [424:0] so;
     wire [16:0] rq;
     wire [1558:0] t0,t1;
-    qkd_ectl3_epoch_direct_s #(.STATIC_QK(1),.QK_ISSUE_AGE(34),.ROW_RETURN_LAT(9)) dut (
+    qkd_ectl3_epoch_direct_s #(.STATIC_QK(1),.QK_ISSUE_AGE(34),.ROW_RETURN_LAT(RETURN_LAT)) dut (
         .ck({3{ck}}),.rst_n(rst_n),.cfg(5'b01101),.e0(),.e1(),.e2(),.e3(),
         .s0(34'd0),.s1(34'd0),.s2(34'd0),.s3(34'd0),.t0(t0),.t1(t1),.rq(rq),.rs(rs),.si(si),.so(so));
     function automatic [1023:0] rowf(input integer n);
