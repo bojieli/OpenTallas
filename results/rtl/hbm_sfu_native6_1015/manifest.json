@@ -1,0 +1,17 @@
+{
+  "rows": 20681,
+  "functions": {
+    "2": 37,
+    "3": 31,
+    "6": 162,
+    "7": 104
+  },
+  "exact_words": 16384,
+  "words_per_function": 4096,
+  "golden_sources": {
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_golden_v41.py": "1bf8f3dd95228cabb0b717ea96d0b2ec903c88d0c85c5834a56c5fc8466373d4"
+  },
+  "arithmetic": "G.rsqrt,V.sqrt,V.sqrt(V.softplus),projectMachine.su.egate=V.sigmoid(sign*V.sqrt(max(abs(x),1e-6)))",
+  "schedule": "compiler checkpoint ordered; output due issue+fixedDepth-1 post-edge; no outputcollisions"
+}
