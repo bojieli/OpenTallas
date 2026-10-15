@@ -39,17 +39,14 @@
     "threads": 8,
     "peak_ram_gb": 8,
     "m5_pg_pitch": 2.7,
-    "pin_balance": {
-      "group_max": 32,
-      "h": "M4 M5",
-      "v": "M4 M5"
-    }
+    "pin_h": "M4",
+    "pin_v": "M5"
   },
   "slot_change_request": "Nine-root bank structural split after full-width pin-strip GPL divergence. Real256-bit data leaves and35FF control; unchanged bank cycles and macros; parent global fit pending.",
   "job": {
     "owner": "Codex:q_vm_physical",
     "branch": "codex/q-vm-physical-1015",
-    "tag": "np1",
+    "tag": "np2",
     "purpose": "Actual bank nine-root successor with256-bit data-stage halves; full actual2SRAM miter/mutants; preserve old CLOSED full-width bank.",
     "views_to": "physical/ref_tile/qvm_bank_ctrl_native/views",
     "record_to": "results/rtl/ref_tile/qvm_bank_ctrl_native",
@@ -96,7 +93,7 @@
         ]
       }
     ],
-    "structural_change": "Halve every data face512\u2192256 and isolate35FF command/control. Two rawmacro entries plus7 true leafroots; no unchanged full-width retry."
+    "structural_change": "Halve every data face512\u2192256 and isolate35FF command/control. Two rawmacro entries plus7 true leafroots; no unchanged full-width retry. np1 GRT-0209 actualwm14 pin outside die using mixed M4/M5 balanced faces; replace with legal horizontalM4 pin shapes on W/E like passing data256 plan, preserve exact35FF source."
   },
   "pin_ranges": {}
 }
