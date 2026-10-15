@@ -1,0 +1,89 @@
+{
+  "schema": "opentallas.hbm.engram.wkv_source_contract.v1",
+  "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+  "catalogue_commit": "25631b8754f4ec295d5d6415ca85e75f38564664",
+  "catalogue_sha256": "f12a0f305b2397dc13912dbd986cab9862f002ca89b37dd78ef29fa43e330be5",
+  "contract_commit": "a9d1fad2835d96e4c0585a150b6a9d484b9791cc",
+  "contract_sha256": "0d144979e62c903e0c543237fb5952e4a0b2df6aee12f9c51080a2981c9257b9",
+  "tensors": {
+    "layers.1.engram.wkv.weight": {
+      "shape": [
+        25600,
+        6144
+      ],
+      "dtype": "F8_E4M3",
+      "shard": "model-00047-of-00048.safetensors",
+      "absolute_file_offsets": [
+        101377710936,
+        101534997336
+      ],
+      "stored_bytes": 157286400,
+      "header_sha256": "e5c5c7fc900caec400644bef07aa5d7e28fc6ca941c8c47592b393963b218242"
+    },
+    "layers.1.engram.wkv.scale": {
+      "shape": [
+        800,
+        192
+      ],
+      "dtype": "F8_E8M0",
+      "shard": "model-00047-of-00048.safetensors",
+      "absolute_file_offsets": [
+        101534997336,
+        101535150936
+      ],
+      "stored_bytes": 153600,
+      "header_sha256": "e5c5c7fc900caec400644bef07aa5d7e28fc6ca941c8c47592b393963b218242"
+    },
+    "layers.14.engram.wkv.weight": {
+      "shape": [
+        25600,
+        6144
+      ],
+      "dtype": "F8_E4M3",
+      "shard": "model-00048-of-00048.safetensors",
+      "absolute_file_offsets": [
+        101380486640,
+        101537773040
+      ],
+      "stored_bytes": 157286400,
+      "header_sha256": "5d8fa4697d7a071c31baeee6947d493c08ea3243261c5d0f79c355ad191b8222"
+    },
+    "layers.14.engram.wkv.scale": {
+      "shape": [
+        800,
+        192
+      ],
+      "dtype": "F8_E8M0",
+      "shard": "model-00048-of-00048.safetensors",
+      "absolute_file_offsets": [
+        101537773040,
+        101537926640
+      ],
+      "stored_bytes": 153600,
+      "header_sha256": "5d8fa4697d7a071c31baeee6947d493c08ea3243261c5d0f79c355ad191b8222"
+    }
+  },
+  "operation": {
+    "N": 25600,
+    "K": 6144,
+    "K_blocks32": 192,
+    "weight_scale_granularity": [
+      32,
+      32
+    ],
+    "activation": "24 original rows x256 BF16, flattened in original column order; BF16 toFP32 is exact zero-extension",
+    "golden": "Model.engram_layer calls linear_q(wkv,rows), quant_fp8 per32-wide K block; exact quantized dot rounded once toFP32, scaled, sequential blocks accumulated and outputBF16",
+    "expected_native_format": "DeepSeek quantized activation/weight route; concrete fmt/NC/home/addresses require actual native compiler binding"
+  },
+  "native_VM_home": null,
+  "native_weight96_partition": null,
+  "actual_SM_consumer_module": null,
+  "whole_token_programme": null,
+  "native_qualified": false,
+  "scope": "Actual released tensor identity/shape/dtype and mathematical boundary only. HistoricalTP4 image views grant no native96 mapping. Header reads do not rehash or qualify full weight payload/physical SRAM/VM placement/throughput.",
+  "source_sha256": {
+    "tools/hdc_golden_v41.py": "1bf8f3dd95228cabb0b717ea96d0b2ec903c88d0c85c5834a56c5fc8466373d4",
+    "tools/hgi_sim/ds_native.py": "5ad0bdab07f3b99fad6ad119896a830d9bb2fa33efb678df35c0874854d56e0f",
+    "tools/hbm_engram_wkv_source_contract.py": "791108dc2c14a48355e38d4d77cbc79af51d7285293aa68a9ccaaae04267612a"
+  }
+}

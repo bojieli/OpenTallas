@@ -69,11 +69,14 @@
     "sample_fetch_core_edges": 8228,
     "universally_admitted_fetch_core_edges": null,
     "original_performance_contract_waived": false,
-    "known_common_source_gap": "old c664/r14 allows samebank PRE/RD overlap under another gapped profile; singular-family repair/reproof pending",
+    "known_common_source_gap": "Original c664/r14 PRE/RD overlap retained in sampled receipts; guarded common repair cbd92c1cc is committed and Engram strict-oracle reproving is in progress.",
     "staging_SRAMs_per_home": 2,
     "staging_macro_bits": 32768,
     "epoch_banks": 1,
-    "overlap_rule": "next EPOCH after every prior home COLL read; ping-pong SRAM needed if whole-token throughput requires overlap"
+    "overlap_rule": "next EPOCH after every prior home COLL read; ping-pong SRAM needed if whole-token throughput requires overlap",
+    "maximum_requests_per_PC": 32,
+    "maximum_grouped_physical_row_visits_per_PC": 4,
+    "address_bound_receipt": "results/arch/hbm_die_v15/native_column_close_guard/grouped_address_bound.json"
   },
   "source_read": {
     "input": [
@@ -119,7 +122,8 @@
     "blocks_per_row": 8,
     "numerical_component_qualified": true,
     "architectural_WKV_consumer_module": null,
-    "architectural_consumer_join_qualified": false
+    "architectural_consumer_join_qualified": false,
+    "released_WKV_source_contract": "results/arch/hbm_engram_partition_1015/wkv_source_contract.json"
   },
   "hardware": {
     "frontend_logical_FF_by_clock_per_home": {
@@ -152,6 +156,9 @@
     "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_home_fetch_grouped.sv": "7489252bf3122cdce08fc4b6f59a50a66d6898ac4c3064512ec3f4c43df101c4",
     "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_row_store_decode.sv": "e450c13fee2e85d1c5099f225875af1914075ba7154894c5b50659e46505df2d",
     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_pipeline_stack.sv": "e64cfb071eb16aca278f75bb0a5bdba6793b8fb74e4928c1a5d217f87697e65d",
-    "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv": "36ab8140f3a9f14d4098729f79f5091f1e67156409997dc2d6276387a23315c8"
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv": "36ab8140f3a9f14d4098729f79f5091f1e67156409997dc2d6276387a23315c8",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_guarded_stack.sv": "a38dae243ea6cb4167b1a75e484c37237819c15624c9fbb09aba6d6933be0992",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_stream_pc.sv": "f18b70157a6502526b56227ebba05d252897cce1d09a80cc08f7fc67bb713bde",
+    "tools/hbm_engram_grouped_address_bound.py": "b1b76d8a86f5d8368b641d9bdcba6e3a4e423e99da68d7bd5757a26fa0162617"
   }
 }
