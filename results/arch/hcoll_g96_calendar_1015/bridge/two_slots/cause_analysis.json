@@ -1,0 +1,26 @@
+{
+  "cycles": 2205,
+  "immutable_price": 1325.9,
+  "ratio": 1.6630213439927595,
+  "arithmetic_last_safe_read": 309,
+  "first_BF16_pub_issue": 220,
+  "last_BF16_pub_issue": 2042,
+  "critical_multicast": {
+    "group": 11,
+    "q": 3,
+    "pair": 7,
+    "pub_read": 2041,
+    "pub_issue": 2042,
+    "last_delivery": 2205
+  },
+  "critical_multicast_pub_to_final_delivery": 163,
+  "native_link_read_after_write": {
+    "minimum_required": 4,
+    "additional_slack_min": 0,
+    "additional_slack_max": 16,
+    "additional_slack_sum_over_hops": 45936,
+    "nonzero_hops": 17698
+  },
+  "physical_flight": "Each endpoint follows actual TX5/RX1 and613/487 reservations, but current three-word flight is a component bench assumption; actual full FEC/clock/board latency unbound. Do not attribute modeled flight to qualified physical ports.",
+  "interpretation": "Additional link slack includes rational frame alignment, occupied reservations and native write/read sequence ordering. It is scheduler/resource overhead, not extra physical FEC flight. Critical multicast includes actual qslot and registered quarter bridge stages when present."
+}
