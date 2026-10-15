@@ -24,7 +24,7 @@
    },
    {
     "name": "exact_bank_E",
-    "cmd": "mkdir -p {RUN}/exact_bank_E && verilator --binary --timing -O1 -Wno-fatal -j 2 --top-module tb_dsfd_vm_static_bank128 --Mdir {RUN}/exact_bank_E/obj -o tb +define+OT_BANK_DUT=dsfd_vm_static_bank128_E rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128.sv rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128_profiles.sv rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_static_bank128.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v > {RUN}/exact_bank_E/build.log 2>&1 && {RUN}/exact_bank_E/obj/tb",
+    "cmd": "mkdir -p {RUN}/exact_bank_E && verilator --binary --timing -O1 -Wno-fatal -j 2 --top-module tb_dsfd_vm_static_bank128 --Mdir {RUN}/exact_bank_E/obj -o tb +define+OT_BANK_DUT=dsfd_vm_static_bank128_E +define+OT_BANK_LEAF=u.u_leaf rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128.sv rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128_profiles.sv rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_static_bank128.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v > {RUN}/exact_bank_E/build.log 2>&1 && {RUN}/exact_bank_E/obj/tb",
     "expect": "pass",
     "threads": 2,
     "peak_ram_gb": 4,
@@ -35,7 +35,7 @@
    },
    {
     "name": "neg_mask_E",
-    "cmd": "mkdir -p {RUN}/neg_mask_E && verilator --binary --timing -O1 -Wno-fatal -j 2 --top-module tb_dsfd_vm_static_bank128 --Mdir {RUN}/neg_mask_E/obj -o tb +define+OT_BANK_DUT=dsfd_vm_static_bank128_E +define+OT_VM_BANK_MUT_MASK rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128.sv rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128_profiles.sv rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_static_bank128.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v > {RUN}/neg_mask_E/build.log 2>&1 && {RUN}/neg_mask_E/obj/tb",
+    "cmd": "mkdir -p {RUN}/neg_mask_E && verilator --binary --timing -O1 -Wno-fatal -j 2 --top-module tb_dsfd_vm_static_bank128 --Mdir {RUN}/neg_mask_E/obj -o tb +define+OT_BANK_DUT=dsfd_vm_static_bank128_E +define+OT_BANK_LEAF=u.u_leaf +define+OT_VM_BANK_MUT_MASK rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128.sv rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_bank128_profiles.sv rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_static_bank128.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v > {RUN}/neg_mask_E/build.log 2>&1 && {RUN}/neg_mask_E/obj/tb",
     "expect": "fail",
     "threads": 2,
     "peak_ram_gb": 4,
