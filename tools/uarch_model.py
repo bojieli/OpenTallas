@@ -17319,3 +17319,29 @@ def hbm_host_static_ingress_model():
       area_slot_um=[432,432], slot_area_um2=186624,
       sink_bound='under700 source registers, no programme SRAM inside ingress; mapped area and CTS still required',
       scope='component ingress only; actual host packet/landing join, heterogeneous target adapters, all-ready reduction, fullchip binding and performance remain OPEN')
+
+
+def hbm_su_stream_calendar6_pin_model():
+    """Actual opt-in six-SRAM stream producer; physical slot remains unassigned."""
+    return dict(schema='opentallas.hbm.su-stream-calendar6-pin.v1',
+      source='ot_hbm_su_stream_calendar6_pin:2f70b32ca',
+      logical_edges=9489, command_bits=64, index_pack=16,
+      actual_storage=dict(index_macros=5, dictionary_macros=1,
+                          macro_depth=128, macro_width=256, total_bits=196608),
+      config_writes=598, previous_unpacked_macros=76,
+      boundary=dict(functional_input_bits=298, functional_output_bits=84,
+                    raw_macro_clock_roots=6, CTS_control_roots=1,
+                    added_input_register_bits=298),
+      clock_relationship='same PLL, fixed 1:1 phase; related data paths checked',
+      latency=dict(config_start_reset_added_edges=1,
+                   start_to_present_edges=4, start_to_consumer_edges=5,
+                   reset_bootstrap_min_edges=2, initiation_interval=1),
+      memory_bytes_per_cycle=8, macs_per_cycle=0,
+      proposed_outline_um=[369.36,151.2],
+      actual_macro_area_um2=6*94.824*41.040,
+      component_proof='9489 edges x2 restarts, DATA/ADDR/PHASE/CLOCK reject; 36 raw-clock ownership checks and COLLAPSE/SWAP reject',
+      physical_qualified=False, parent_adopted=False,
+      open=['H-DIE legal per-bit grant and six actual macro positions',
+            'mapped area, clock sinks, strict ODB readback, TT/FF/DRC/native budgets',
+            'installer/configuration lead and production full-SU composition',
+            'full 512-lane RF36 arithmetic source-exact multirate proof'])
