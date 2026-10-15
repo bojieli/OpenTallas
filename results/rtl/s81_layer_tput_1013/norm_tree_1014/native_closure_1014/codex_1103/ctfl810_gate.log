@@ -1,0 +1,18 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc1tb for 24 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_s81hc_ctflnt_ref_20261015-112522.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_s81hc_ctflnt_ref_20261015-112522.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/s81hc_ctflnt_ref-20261015-112522
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc1tb in 24 s (gate total 108 s)
+GATE WARN util: synthesized std area 382 um2 + macros 0 in core 12364: util 3%  -> FIX: set "std_area_um2": 382 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN ot_s81_hc_ctfl_nt cells 2,273 flops 1,136 depth 11.7 ps util 0.0309 reach 38.2 um (0.0 s)
+GATE WARN textbook.util_channel: utilisation 3.1% outside 45%-65% (std 382 + macro 0 um2 in 12364 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 124.7..140.4 ps (spread 15.7), boundary mean 132.4; tt insertion all 90.8..105.5 ps (spread 14.7), boundary mean 98.1; ff insertion all 71.6..86.3 ps (spread 14.7), boundary mean 78.6; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/s81hc_ctflnt_ref/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->out      300 paths, worst slack 289.1 ps (e.g. fdx_local[997])
+GATE INFO path_classes: reg->reg        7 paths, worst slack 635.0 ps (e.g. fv_local[3]$_DFF_PN0_/RESETN)
+GATE INFO path_classes: setup WNS 2.891227257606488e-10 hold WNS 6.236340610588087e-11
+GATE INFO clock_rule: root port:clk: 1,136 sinks on the largest root <= 15,000; measured TT insertion 105.5 ps, leaf spread 14.7 ps
+PRE_ROUTE_GATE: WARN (0 fail, 2 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/codex-s81-norm-1103/physical/ref_tile/s81hc_ctflnt_ref/source_binding_history/2aaeaa6870843ad55850e0e315aedea0821b2e7e44262c1b65dc1ab730138d74.json
+GATE: s81hc_ctflnt_ref/gate_result.json written (exact staged source binding; commit it with the kit)

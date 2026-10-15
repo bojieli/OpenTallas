@@ -1,0 +1,4 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE WARN sources: 2 referenced file(s) do not exist: ['physical/dsrom_window_source/leaf_inhold.tcl', 'physical/dsrom_window_source/leaf_inhold_release.tcl']  -> FIX: commit them / fix the path
+GATE FAIL sources: 2 committed input(s) absent from the working-tree archive: ['physical/dsrom_window_source/leaf_inhold.tcl', 'physical/dsrom_window_source/leaf_inhold_release.tcl']  -> FIX: materialize the referenced files in the sparse checkout before rerunning the gate
+PRE_ROUTE_GATE: FAIL (1 fail, 1 warn)

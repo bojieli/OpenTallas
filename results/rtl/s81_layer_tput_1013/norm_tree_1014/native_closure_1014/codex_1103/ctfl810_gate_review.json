@@ -1,0 +1,52 @@
+{
+  "source": "e77433377",
+  "source_binding_valid": true,
+  "source_binding_note": "gate-consumed source and gate-executed overlays match",
+  "verdict": "WARN",
+  "clock": {
+    "max_root_sinks": 1136,
+    "root": "port:clk",
+    "cts": true,
+    "tt_insertion_ps": 105.5,
+    "tt_spread_ps": 14.7,
+    "declared_clock": null,
+    "limits": {
+      "sinks": 15000,
+      "insertion_ps": 300.0,
+      "spread_ps": 80.0
+    },
+    "clock_measurements": [
+      {
+        "source": "clk",
+        "clock": "core_clk",
+        "tt": {
+          "boundary": {
+            "n": 1136,
+            "mean": 98.1,
+            "min": 90.8,
+            "max": 105.5
+          },
+          "all": {
+            "n": 1136,
+            "mean": 98.1,
+            "min": 90.8,
+            "max": 105.5
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        }
+      }
+    ],
+    "measured_clock": "core_clk",
+    "verdict": "PASS",
+    "text": "1,136 sinks on the largest root <= 15,000; measured TT insertion 105.5 ps, leaf spread 14.7 ps"
+  },
+  "production_context": {
+    "HM": "0.03",
+    "OT_ROUTE_HOLD_CORNERS": "mm",
+    "OT_MM_FF_SDC": "physical/ref_tile/s81hc_ctflnt_ref/signoff.sdc"
+  },
+  "receipt_sha256": "7a783c3835d7538c3568685b26df83a21cfbfaaaaa57dc66dc57d425538d1a06",
+  "scope": "Fresh necessary placement/CTS measurement after actual810 receiver-pin correction; no native/routed/global-die signoff. Full exact proof and mutants still live source28dd; RTL byteidentical. Both expected util warnings reflect assigned unchangedoutline."
+}

@@ -2,11 +2,14 @@
   "source": "28dd8dbda",
   "archive_sha256": "2a41fc51797cc561040869e06fd36465451a2e2728ddf038f9ed81dccd97a709",
   "full_proof": {
-    "status": "memory_queued_no_PASS",
-    "local_pid": 1144499,
-    "session": 39862,
-    "host": "ot-epyc4",
-    "tag": "otrun-ubuntu-1144499-87968899",
+    "status": "live_Verilator_elaboration",
+    "source": "28dd8dbda",
+    "local_pid": 1239435,
+    "session": 16035,
+    "host": "ot-epyc1tb",
+    "tag": "otrun-ubuntu-1239435-88660491",
+    "remote_hc_gate_pid": 969536,
+    "remote_verilator_pid": 969543,
     "path": "/srv/opentallas-scratch/codex/s81-norm-1103",
     "memory_gb": 40,
     "threads": 16
@@ -23,5 +26,33 @@
     "K8_hold_pid": 663812,
     "K4_openroad_pid": 763675
   },
-  "next": "Collect retained gate native metrics; finish full proof; obtain die current allincident geometry grant; productionHM30/MM equivalence before any newroute."
+  "next": "Collect retained gate native metrics; finish full proof; obtain die current allincident geometry grant; productionHM30/MM equivalence before any newroute.",
+  "superseded_unstarted_waiter": {
+    "status": "memory_queued_no_PASS",
+    "local_pid": 1144499,
+    "session": 39862,
+    "host": "ot-epyc4",
+    "tag": "otrun-ubuntu-1144499-87968899",
+    "path": "/srv/opentallas-scratch/codex/s81-norm-1103",
+    "memory_gb": 40,
+    "threads": 16,
+    "terminal": "143 waiting cancelled NOT RUN; SOURCE_COMMIT absent confirmed; migrated under root instruction"
+  },
+  "fresh_ctfl810_gate": {
+    "status": "terminal_WARN0fail2warn",
+    "source": "e77433377",
+    "local_gate_pid": 1247687,
+    "local_otrun_pid": 1254944,
+    "session": 98492,
+    "host": "ot-epyc1tb",
+    "remote_path": "/srv/opentallas-scratch/claude/ref_gate/s81hc_ctflnt_ref-20261015-112522",
+    "tag": "otrun-ubuntu-1254944-88773422",
+    "prior_local_failure": "First invocation never shipped or ran CTS: two sparse helper files absent. Materialized before single physical run.",
+    "TT_mean_range_spread_ps": [
+      98.1,
+      90.8,
+      105.5,
+      14.7
+    ]
+  }
 }
