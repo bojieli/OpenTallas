@@ -1,0 +1,16 @@
+{
+  "status": "PREBUILD_OPT_IN_CANDIDATE_NOT_QUALIFIED",
+  "baseline_commit": "340cfd747",
+  "problem": "AQ ACT candidate computed fromoldopen may recapturebankwhoseACTisalreadycommittedthisedge. Registeredcandidate laterfailsopen revalidation and canwastearowslot.",
+  "change": "Opt-in USE_COMMITTED_OPEN usesopen_nx onlyforqueuedACTcandidateexclusion. Actualcolumneligibility remainsoldopen+closeguard; ACTissue stillrevalidatesopen/blk/aok/RRDL/RRDS/FAW/REFguards.",
+  "FF_SRAM_clock_root_delta": 0,
+  "logic_delta": "32candidateclosedbanktests nowusesameexisting32bitopen_nx; no counter/timing/queuechanges",
+  "validation": [
+    "sameedgecommittedACTexcludedfromnextcandidate",
+    "PREsameedge mayproducecandidate butACTissue remainsblockedbyactualaok/tRP",
+    "ACToldclosedcannotissuecolumnonACTedge",
+    "strictcanonical23all4cases;640unchanged84.7,2048134.2 gates",
+    "parameterdefaultOFF; sourcevariantpreservesallpriorreceipts"
+  ],
+  "physical": "PC0baselineexact13650rootpins; all32censusstilllive. NoSSFFtiming/physicalclaim."
+}
