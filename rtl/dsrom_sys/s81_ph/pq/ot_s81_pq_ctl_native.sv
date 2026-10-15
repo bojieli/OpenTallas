@@ -28,6 +28,7 @@ module ot_s81_pq_ctl_native #(
     input  wire [1:0]        aqf,             // T_AQ fault
     output wire [$clog2(KMAX/32)+1:0] aqi_o,  // T_QB: {v, block, parity} at AQL - 2
     output wire              ba_v_o,          // T_IX: BF16 write stage A
+    output reg  [1:0]        ba_wv_o,         // T_IX: stage A write enable per block parity (ba_v && ba_blk[0] == p), same edge
     output wire [((2*KMAX/VRD) > 1 ? $clog2(2*KMAX/VRD) : 1)-1:0] ba_blk_o,
     output wire [47:0]       hw_o,            // T_IX / T_QB: the streamer head (registers)
     output wire [35:0]       h_hi_o,
@@ -587,7 +588,7 @@ module ot_s81_pq_ctl_native #(
             t_gap <= '0; t_g1 <= '0; t_g2 <= '0; gap_ok <= 1'b1; guard_ok <= 1'b1;
             cfg_rem <= 6'd0; cfg_ok <= 1'b0;
             bufbusy[0] <= 1'b0; bufbusy[1] <= 1'b0; ev_go <= 1'b0; ev_end <= 1'b0; ev_tag <= 2'd0;
-            a_v <= 1'b0; a_v2 <= 1'b0; bw_v <= 1'b0; ba_v <= 1'b0;
+            a_v <= 1'b0; a_v2 <= 1'b0; bw_v <= 1'b0; ba_v <= 1'b0; ba_wv_o <= 2'b00;
             rd_run <= 1'b0; cred <= 4'(FD); r0_v <= 1'b0; ra_v <= 1'b0; r1_v <= 1'b0; r2_v <= 1'b0; r3_v <= 1'b0;
             qrp <= 3'd0; qwp <= 3'd0; qcnt <= 4'd0; hv <= 1'b0;
             for (ks = 0; ks < 4; ks = ks + 1) begin
@@ -663,6 +664,11 @@ module ot_s81_pq_ctl_native #(
                 else ld_k <= ld_kn;
             end
             ba_v <= rq_v && rq_fam; ba_par <= rq_par; ba_k <= rq_k;
+`ifdef OT_S81_PQ_WV_MUT_ROW
+            ba_wv_o <= {2{rq_v && rq_fam}} & {~bw_blk_n[0], bw_blk_n[0]};   // negative control: parities swapped
+`else
+            ba_wv_o <= {2{rq_v && rq_fam}} & {bw_blk_n[0], ~bw_blk_n[0]};
+`endif
             bw_v <= ba_v; bw_par <= ba_par; bw_k <= ba_k;
             have[0] <= have_n[0]; have[1] <= have_n[1];
             clr_q[0] <= (ld_st0 && ldt[0] == 1'b0) || (!ld_st0 && ld_st1 && (ld_tag[0] ^ ~ld_pos[0]) == 1'b0);
