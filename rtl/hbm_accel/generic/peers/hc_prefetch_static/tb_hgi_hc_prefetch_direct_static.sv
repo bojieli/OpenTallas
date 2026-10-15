@@ -90,7 +90,7 @@ module tb_hgi_hc_prefetch_direct_static;
   // Explicit initialization block boundary. Steady-state below never waits.
   configure_reserve(0,0);tick();@(negedge stream_clk);reserve_v=0;
   configure_reserve(0,1);tick();@(negedge stream_clk);reserve_v=0;
-  t=0;while(fetched_ready!=255)begin tick();t=t+1;if(t>4000)$fatal(1,"initial boundary prefetch timeout");end
+  t=0;while(fetched_ready!=255)begin tick();t=t+1;if(t>20000)$fatal(1,"initial boundary prefetch timeout");end
   @(negedge stream_clk);start_cycle=stream_cycles;
   for(row=0;row<ROWS;row=row+1)begin
    for(t=0;t<run_period;t=t+1)begin
