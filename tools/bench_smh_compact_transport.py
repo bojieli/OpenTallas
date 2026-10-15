@@ -13,7 +13,8 @@ files={'reference.sv':original.encode()}
 for f in ['rtl/hbm_accel/sm/ot_hbm_smh_compact_transport.sv','rtl/test/tb_hbm_smh_compact_transport.sv','rtl/lib/ot_hdly.sv','rtl/lib/ot_rst_relay.sv']:
  files[Path(f).name]=(ROOT/f).read_bytes()
 if a.hard_transport:
- files['ot_hbm_smh_transport_masters.sv']=(ROOT/'rtl/hbm_accel/sm/ot_hbm_smh_transport_masters.sv').read_bytes()
+ for f in ['ot_hbm_smh_transport_masters.sv','ot_hbm_smh_transport_hard.sv']:
+  files[f]=(ROOT/'rtl/hbm_accel/sm'/f).read_bytes()
 stream=io.BytesIO()
 with tarfile.open(fileobj=stream,mode='w') as t:
  for name,data in files.items():
