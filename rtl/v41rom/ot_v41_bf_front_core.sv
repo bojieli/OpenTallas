@@ -1121,6 +1121,9 @@ module ot_v41_bf_front_core #(
         if (tr_fd != 0 && go) begin tr_go = tr_cyc; $fwrite(tr_fd, "G %0d %0d %0d\n", tr_cyc, go_bf, tr_go); end
         if (tr_fd != 0 && issue_available)
             $fwrite(tr_fd, "I %0d %0d %0d %0d %0d %0d %0d %0d\n", tr_cyc, tr_cyc - tr_go, a_ctr, programme_operand, w_s, w_h, w_cnt, go_bf);
+        if (tr_fd != 0 && STATIC_PROGRAM != 0 && prog_issue_pin)
+            $fwrite(tr_fd, "P %0d %0d %0d %0d %0d %0d %0d %0d bad=%0d avail=%0d\n", tr_cyc, tr_cyc - tr_go, prog_addr_pin, prog_operand_pin,
+                    prog_segment_pin, prog_half_pin, prog_chain_pin, go_bf, programme_bad, issue_available);
     end
 `endif
     wire [NB-1:0] bk_fault;

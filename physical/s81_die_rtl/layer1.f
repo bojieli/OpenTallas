@@ -151,3 +151,10 @@ rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv
 +define+DSFD_PQ_STATIC_X2
 rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross.sv
 rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_ingress.sv
+
+# S-BIND 2026-10-15 --bf-static-prog: static BF front (compiled programme f_prog 38 + io_clk) and the BF sequencer with
+# the programme producer (descriptor in the cfg ROM spare columns); gates: tools/s81/bf_txn_bench.py --die-pair
+# --static-prog 0 (real BF bench, TXN MATCH, mutants), rtl/v41die/test/run_cfg7_bfp_gate.sh
+rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv
+rtl/v41die/ot_s81_cfg7_seq_bfp.sv
+rtl/dsrom_sys/s81_die_bind/ot_s81_bf_prog_seq.sv
