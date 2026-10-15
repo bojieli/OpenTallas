@@ -2,7 +2,7 @@
 import argparse,os,subprocess
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
-p=argparse.ArgumentParser();p.add_argument('--work',type=Path,required=True);p.add_argument('--mut',choices=['PHW','SAW']);p.add_argument('--produced',action='store_true');a=p.parse_args();a.work.mkdir(parents=True,exist_ok=True)
+p=argparse.ArgumentParser();p.add_argument('--work',type=Path,required=True);p.add_argument('--mut',choices=['PHW','SAW','CALGO']);p.add_argument('--calcap',action='store_true');p.add_argument('--produced',action='store_true');a=p.parse_args();a.work.mkdir(parents=True,exist_ok=True)
 v=os.environ.get('OT_VERILATOR',str(Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator'))
 src=[str(p) for p in (ROOT/'physical/s81_pq_hier/pinned').rglob('*.sv') if p.name!='ot_sram_1r1w_128x256_m1_r2c2.sv']
 src += [str(p) for p in (ROOT/'rtl/dsrom_sys/s81_ph/pq').glob('*.sv')]
@@ -21,7 +21,9 @@ if a.produced:
   (a.work/f'pq_calendar_{name}.viamap.hex').write_text(viamap(words))
 defs=['OT_PQ_ROM_PORTS','OT_PQ_CTL_STATIC','OT_PQ_QB_PIPE','OT_PQ_QB_PHYS_SPLIT','OT_PQ_AQ_PHYS_SPLIT','OT_PQ_IX_PHYS_SPLIT','OT_PQ_IX_BANK_SPLIT','OT_PQ_BC_SLICED','DSFD_PQ_STATIC_X2']
 if a.produced:defs+=['OT_PQ_CTL_STATE_PINS','OT_PQ_CTL_INCAP','OT_PQ_AQ_PIN_LAUNCH']  # captured-input ctl leaf; AQ leaves launch from its registered aq_vin
-if a.mut:defs.append('OT_S81_PQ_STATIC_MUT_'+a.mut)
+if a.calcap:defs.append('OT_PQ_CTL_CALCAP')
+if a.mut=='CALGO':defs.append('OT_S81_PQ_CALCAP_MUT_GO')
+elif a.mut:defs.append('OT_S81_PQ_STATIC_MUT_'+a.mut)
 if a.produced and a.mut=='PHW':defs.append('OT_S81_PQ_PRODUCER_MUT_PHW')
 cmd=[v,'--binary','--timing','--top-module',('tb_s81_pq_produced_pins' if a.produced else 'tb_s81_pq_canonical_pins'),'--Mdir',str(a.work.resolve()/'obj'),'-j','8','-Wno-fatal','-Wno-lint','-Wno-style',*[f'+define+{d}' for d in defs],*src]
 with (a.work/'build.log').open('w') as f:subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT,check=True)

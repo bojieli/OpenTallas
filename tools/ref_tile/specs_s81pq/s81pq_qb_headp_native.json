@@ -7,7 +7,7 @@
  ],
  "outline": {
   "w": 142.56,
-  "h": 86.4
+  "h": 95.04
  },
  "pins": {
   "N": [
@@ -68,12 +68,12 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "10-15 S-ELEM-B: canonical QB +2 pipeline head (physical_request.json): the 6,144 mutable metadata bits (4 banks x 96 rows x 16 b) move from the bank SRAM leaves into the head beside the registered read index (read address capture + SRAM output register = +2 fixed cycles, already in the canonical ABI); bank writes commit one cycle later under the loader contract. Legacy headw slot 73.44x34.56 cannot hold ~7.3k flops: outline = the bank master width 142.56 (rd_data 1024 b on the N face over the four bank N faces), height from the gate's synthesized area.",
+ "structural_change": "10-15 S-ELEM-B: canonical QB +2 pipeline head (physical_request.json): the 6,144 mutable metadata bits (4 banks x 96 rows x 16 b) move from the bank SRAM leaves into the head beside the registered read index (read address capture + SRAM output register = +2 fixed cycles, already in the canonical ABI); bank writes commit one cycle later under the loader contract. Legacy headw slot 73.44x34.56 cannot hold ~7.3k flops: outline = the bank master width 142.56 (rd_data 1024 b on the N face over the four bank N faces), height from the gate's synthesized area. | gate p1 (142.56x86.4: std 6,618 um2, util 58%) REFUSED: one reset relay drove 8,103 loads (meta enables held in reset) and aq_e/aq_p ports fanned out to 391-418 loads. Fix: metadata flops carry no reset; written[] per bank on its own relay region (5 regions); AQ metadata word + write rows/enables re-captured once per bank (4 copies) and the head-local metadata commits one edge after the bank data (bank outputs unchanged; QB pipe bench PASS, 772 packets, +0.24% vs baseline as before). Height 86.4 -> 95.04 for the ~190 added flops (util ~54%). | gate p2 (util 57%, WARN): i0/i1[2:1] drove ~3,600 read-mux loads (reg->reg +75, reg->out +88 pre-route): per-bank 7-bit read-row register copies on the same edge (0 cycles), i0/i1 pins keep their own flops.",
  "slot_change_request": {
   "name": "s81pq_qb_headp_native-1015",
   "outline": [
    142.56,
-   86.4
+   95.04
   ],
   "pin_faces": {
    "N": [

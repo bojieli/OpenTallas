@@ -66,13 +66,13 @@
    "width_mismatch": {},
    "unparsed_conn": []
   },
-  "ot_hbm_idx_scheduled_static": {
+  "ot_hbm_idx_client_static": {
    "verdict": "FAIL",
    "fails": [
     "INPUT_TIED"
    ],
    "instances": 1,
-   "rtl": "rtl/hbm_accel/index/ot_hbm_idx_scheduled_static.sv",
+   "rtl": "rtl/hbm_accel/index/ot_hbm_idx_client_static.sv",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
@@ -254,7 +254,7 @@
  "multi_driven_nets": {},
  "top_assigns": [],
  "params_not_in_rtl": [],
- "die_sha256": "6658271b1e8858693cabdf7d8aefd25f138947cd199bfe9f3011efc88bd7cca1",
+ "die_sha256": "ef090b2e62c7c31a46c9ba6918755c5fef25fab8377789b0a75ac4209bcda383",
  "straps_declared": [],
  "params_file": null,
  "rtl_roots": [
