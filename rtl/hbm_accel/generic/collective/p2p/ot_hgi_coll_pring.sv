@@ -1,4 +1,6 @@
 `timescale 1ns/1ps
+// HISTORICAL (OWNER 2026-10-14T23:16 HANDOFF 0an): credit/ready flow control on an on-chip HBM path. Diagnostic/component
+// evidence only; NOT the production schedule. Being replaced by compiler-assigned fixed transfer slots (H-COLL plan, el1014-hbm-p2p-coll.log).
 `default_nettype none
 // ot_hgi_coll_pring (HBM peer-to-peer step 1, owner approval 2026-10-14 09:00 PT): one stop of the 2 x 2 registered
 // COLL peer ring between the four quadrant collective engines.  The ring carries NO wide vector traffic: only

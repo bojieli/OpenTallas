@@ -1,4 +1,6 @@
 `timescale 1ns/1ps
+// HISTORICAL (OWNER 2026-10-14T23:16 HANDOFF 0an): credit/ready flow control on an on-chip HBM path. Diagnostic/component
+// evidence only; NOT the production schedule. Being replaced by compiler-assigned fixed transfer slots (H-COLL plan, el1014-hbm-p2p-coll.log).
 `default_nettype none
 // ot_hgi_coll_rgx_wtx + ot_hgi_coll_rgx_snkm (HBM peer-to-peer step 1, 2026-10-14): the ROW_GATHER write path of the SW
 // quadrant engine split at the die net, so that the VM W2 group client (ot_hgi_coll_rgx_snk, unchanged) sits AT its lane
