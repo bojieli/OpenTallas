@@ -10,11 +10,11 @@ class PQStageTest(unittest.TestCase):
  def test_real_slot_and_boot_interfaces(self):
   x=self.compile(base=17);self.assertEqual(x['engine'],13)
   q=[r for r in x['host_packets']if r['data']&255==0x12]
-  self.assertEqual(len(q),9)
+  self.assertEqual(len(q),10)
   raw=lambda r:((r['data']>>96)&127)<<28|((r['data']>>32)&((1<<28)-1))
   self.assertEqual(raw(q[0]),(6<<25)|(1<<12)|17)
   self.assertEqual(raw(q[-1]),5<<25)
-  self.assertEqual([raw(r)for r in q[1:-1]],x['descriptor_words'])
+  self.assertEqual([raw(r)for r in q[2:-1]],x['descriptor_words'])
   self.assertFalse(x['dispatch_eligible']);self.assertFalse(x['qualified'])
  def test_legacy_engine_identity_not_reused(self):
   for wrong in [0,8,9,10,11,12]:
@@ -38,6 +38,10 @@ class PQStageTest(unittest.TestCase):
   self.assertTrue(all(b-a>=8 for a,b in zip(ts,ts[1:])))
   self.assertGreaterEqual(ts[-1]-ts[-2],208)
   self.assertGreaterEqual(x['earliest_job_host_stream_cycle']-ts[-1],208)
+ def test_fixed_reprime_period_is_compiler_owned(self):
+  x=self.compile();self.assertEqual(x['reprime_edges'],46);self.assertEqual(x['job_period_stream_edges'],60)
+  with self.assertRaisesRegex(ValueError,'period'):self.compile(job_period=56)
+  with self.assertRaisesRegex(ValueError,'phase4'):self.compile(job_period=59)
  def test_payload35_must_not_truncate(self):
   for w in [-1,1<<35]:
    with self.assertRaises(ValueError):host_word(0x12,w)

@@ -14,7 +14,7 @@ def host_word(opcode,word):
     if type(word)is not int or not 0<=word<1<<35:raise ValueError('actual PW payload35 required')
     return opcode|((word&((1<<28)-1))<<32)|((word>>28)<<96)
 
-def compile_stage(rows,descriptors,events,stage,phase,base=0):
+def compile_stage(rows,descriptors,events,stage,phase,base=0,job_period=None):
     if type(base)is not int or not 0<=base<4096:raise ValueError('calendar base12')
     pq=[r for r in rows if r['engine']==PQ_ENGINE]
     if not pq:raise ValueError('actual PQ engine13 row required')
@@ -25,6 +25,14 @@ def compile_stage(rows,descriptors,events,stage,phase,base=0):
         if r['native_tag']!=d['native_tag'] or r['pin_to_pin']!=d['observed_end_edges']+2:
             raise ValueError('PHW10 PINREG endpoint: done is observed-END duration plus2 registered launch/input-capture edges')
     words=compile_events(events,pq,action_bits=75,pq_engine=PQ_ENGINE)
+    # Reader phase_end action pin = launch + timestamp +2. Re-prime at
+    # timestamp+4 leaves two fixed edges beyond that action; next job must
+    # leave the reader's four-row/three-edge prefetch plus status capture.
+    reprime=events[-1]['timestamp']+4
+    minimum_period=max(reprime+12, next(r['issue']for r in rows if r['engine']==15)+2)
+    if job_period is None:job_period=(minimum_period+3)//4*4
+    if type(job_period)is not int or job_period<minimum_period or job_period%4:
+        raise ValueError('job period must cover fixed phase_end/reprime/prefetch and preserve phase4')
     if base+len(words)>4096:raise ValueError('actual paired calendar ROM capacity')
     issuer=encode_program(rows,stage,phase)
     # Host packets occupy fixed stream edges >=8 apart: slower than the
@@ -37,6 +45,7 @@ def compile_stage(rows,descriptors,events,stage,phase,base=0):
     emit(0x11,len(rows))
     for w in issuer['writes']:emit(0x10,w['word'])
     emit(HOST_PQ_CSR,(6<<25)|((len(words)-1)<<12)|base)
+    emit(HOST_PQ_CSR,(1<<28)|(6<<25)|reprime)
     for w in desc_words:emit(HOST_PQ_CSR,w)
     # NDesc64 scan + endpoint pin capture + FIFO/mailbox crossing and
     # skew-independent boot margin. These edges are initialization only.
@@ -49,6 +58,8 @@ def compile_stage(rows,descriptors,events,stage,phase,base=0):
                 calendar_action_viamap=viamap([w&((1<<72)-1)for w in padded]),
                 calendar_time_viamap=viamap([w>>72 for w in padded]),
                 host_packets=packets,earliest_job_host_stream_cycle=arm,
+                job_period_stream_edges=job_period,reprime_edges=reprime,
+                calendar_pin_origin='job launch J; timestamp T action at J+T+2; command issue R at J+R+1',
                 clock_ratio_stream_to_serial='4:3 frequency',
                 memory=dict(existing_descriptor_rows=64,existing_descriptor_bits=117,
                             existing_calendar_macros=2,calendar_macro_shape='4096x72',

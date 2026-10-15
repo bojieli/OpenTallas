@@ -37,7 +37,7 @@ module tb_s81_pq_sequenced_pins;
   end
  end
  always @(posedge ckv)begin serial=serial+1;#0.1;if(kit_done[53])nkits=nkits+1;end
- always @(negedge ckv)begin ks=0;if(serial==1003)ks={1'b1,10'd37,21'd21946,21'd1048575};end
+ always @(negedge ckv)begin ks=0;if(serial==1003||serial==1048||serial==1093)ks={1'b1,10'd37,21'd21946,21'd1048575};end
  always @(posedge clk)begin
   fast=fast+1;
   if(start)begin launch_edge=fast;nstarts=nstarts+1;end
@@ -53,9 +53,9 @@ module tb_s81_pq_sequenced_pins;
    valids=valids+1;
    if(xw[561:552]!==10'd514||!xw[551])$fatal(1,"SEQUENCED FAIL native PHW10 payload");
   end
-  if(fast==1500)begin
+  if(fast==1650)begin
    $display("S81_PQ_SEQUENCED host=%0d boot=%0d prime=%0d start=%0d cmd=%0d done=%0d KIT=%0d valid=%0d J=%0d C=%0d D=%0d seq=%h endpoint=%h cal=%b core=%b hostfault=%b",packet_index,boot_seen,prime_seen,nstarts,ncommands,ndone,nkits,valids,launch_edge,cmd_edge,done_edge,seq_status,command_status,calendar_fault,status[2],host_out[75]);
-   if(packet_index!=packet_count||boot_seen!=7||prime_seen!=1||nstarts!=1||ncommands!=1||ndone!=1||nkits!=1||valids!=1||done_edge!=cmd_edge+37||seq_status[5]||calendar_fault||command_status[0]||status[2]||host_out[75])$fatal(1,"SEQUENCED FAIL real host->c9->PHW10/mappedROM timeline");
+   if(packet_index!=packet_count||boot_seen!=7||prime_seen!=4||nstarts!=3||ncommands!=3||ndone!=3||nkits!=3||valids!=3||done_edge!=cmd_edge+37||seq_status[5]||calendar_fault||command_status[0]||status[2]||host_out[75])$fatal(1,"SEQUENCED FAIL real host->c9->PHW10/mappedROM timeline");
    $display("S81_PQ_SEQUENCED PASS actual host CSR->asyncFIFO->c9 mailbox->engine13->PQ mapped memory; component data zero ROM");$finish;
   end
  end
