@@ -16417,3 +16417,15 @@ def hbm_idx_static_topk_link_model():
         latency='finalselector scan fused; fixed flush then16fourflit beats each8edges; physical pipeline OPEN',
         slot='UNASSIGNED successor SRAM and root footprint; no historical view alias',
         qualification='OPEN real selector-to-staging-to-TKM source proof, physical timing, composed price')
+
+
+def hbm_idx_static_candidate_model():
+    """L20 blockmax/newest stream, fixed capacity1368 >=1366 local blocks."""
+    return dict(schema='opentallas.hbm-idx-static-candidate.v1',
+        input_scores_per_edge=64,output_blocks_per_edge=8,fixed_scan_edges=171,
+        result_bits_per_edge=8*36,comparators=4*2*7,tree_edges=3,
+        retained_result_capacity=1368,global_TOPK_capacity=2048,
+        semantics='max BF16 per8keys, literalglobalnewest forced+inf, allminusinf lv0; exact IDs',
+        schedule='each score beat has fixed3edge candidate return, no queues or credit',
+        slot='newsource no assignedphysicalroot/cut; downstream actualK2048 collective join OPEN',
+        qualification='OPEN golden max/newest/allmasked/partial mutants, physical and global2048 price')
