@@ -539,8 +539,15 @@ module ot_qfd_su_cbuf_g_tp8 (
 `endif
     reg [2:0] grp_q;                           // strap pin flop
     always @(posedge clk) grp_q <= grp;
+    // q14 r10 (2026-10-14): reset pin register.  Native pin audit of the CLOSED TP8 view qfd_su_cbuf_g_tp8-tp8-55b451d97
+    // (TT R 365.9): rst_n capture 336.5 ps > 190 -- the port fanned out to the three kept region relay copies (rr_q) and
+    // the synchronizer, spread over the tile.  The port now lands in ONE flop at the pin (async assert, registered
+    // deassert one edge later); the relay resets from it.  Release is 4 clk edges after the rst_n pin (was 3); inputs
+    // are ignored until then (the die holds reset >= 4 edges before traffic; static schedule: reset release +1 edge).
+    (* keep = "true", dont_touch = "true" *) reg rs_q;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rs_q <= 1'b0; else rs_q <= 1'b1;
     ot_qfd_crom_lbuf #(.TP(8), .SW(8), .SRAM(2), .FLP(11), .PINREG(1), .FLS(1), .FLMAX(31), .FLW(5), .RSTR(1), .MUT(`OT_CBUF_G_MUT)) u_b (
-        .clk(clk), .rst_n(rst_n), .crom_re(crom_re), .crom_addr(crom_addr),
+        .clk(clk), .rst_n(rs_q), .crom_re(crom_re), .crom_addr(crom_addr),
         .crom_stage(crom_stage), .crom_q(crom_q), .stage(stage), .tok_start(tok_start), .tpos(tpos),
         .lane_base({18'd0, grp_q, 3'd0}), .st_rdy(st_rdy), .st_rdy_stage(st_rdy_stage), .f_re(f_re), .f_addr(f_addr), .f_stage(f_stage), .f_q(f_q),
         .f_fault(f_fault), .f_lat(f_lat), .fault(fault), .fault_code(fault_code));
