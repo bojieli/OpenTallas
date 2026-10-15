@@ -1,0 +1,548 @@
+{
+  "schema": "opentallas.engram-native-vm-allocation.v1",
+  "authority": {
+    "encoded_program_sha256": {
+      "results/arch/hgi_sim_20261010/g25_proof/ds_rank0_program.json": "43c1652f3c2348fd711c770c4769e041caa51a63209c34670c9993ccbbbe4d1d",
+      "tools/hgi_sim/records.py": "d9df1f9b8c69359c088aab1425bc7837d793d65081fa00b2ae74ce221772169e",
+      "tools/hbm_generic_iface.py": "2721564a014e4e7e4ba0f52e420b70bb98aec312f5cc9a38ddb03843f628b9e3"
+    },
+    "inventory_sha256": "881630723fcba24e44131a4da4ea79c74372132c60f5c3e29ab1654507bf8533",
+    "exact_record_refs": [
+      {
+        "layer": 1,
+        "ordinal": 146,
+        "tag": "engram.decode",
+        "record_sha256": "85cc5136f27e30cef6fcaaf5fb0e130b4f8c3425922c192a86755d18ac4dd4b8",
+        "operands": {
+          "A": {
+            "descriptor": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 114560,
+              "n": 32,
+              "m": 192,
+              "stride": 32,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "allocation": {
+              "status": "static source range, no relocation granted",
+              "word_begin": 114560,
+              "word_end": 120704,
+              "sector_begin": 14320,
+              "sector_end": 15088,
+              "sids": [
+                1
+              ],
+              "first_bank": 0,
+              "element_word_bytes": 4,
+              "layout_note": "native VM32-bit word slots; BF16-valued words are not silently packed"
+            }
+          },
+          "B": {
+            "descriptor": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 120704,
+              "n": 32,
+              "m": 192,
+              "stride": 1,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 1,
+              "indexed": 0
+            },
+            "allocation": {
+              "status": "static source range, no relocation granted",
+              "word_begin": 120704,
+              "word_end": 120896,
+              "sector_begin": 15088,
+              "sector_end": 15112,
+              "sids": [
+                1
+              ],
+              "first_bank": 0,
+              "element_word_bytes": 4,
+              "layout_note": "native VM32-bit word slots; BF16-valued words are not silently packed"
+            }
+          },
+          "O": {
+            "descriptor": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 187072,
+              "n": 32,
+              "m": 192,
+              "stride": 32,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "allocation": {
+              "status": "static source range, no relocation granted",
+              "word_begin": 187072,
+              "word_end": 193216,
+              "sector_begin": 23384,
+              "sector_end": 24152,
+              "sids": [
+                2
+              ],
+              "first_bank": 0,
+              "element_word_bytes": 4,
+              "layout_note": "native VM32-bit word slots; BF16-valued words are not silently packed"
+            }
+          }
+        }
+      },
+      {
+        "layer": 1,
+        "ordinal": 147,
+        "tag": "engram.rows_gather.eg_rows",
+        "record_sha256": "38b795bc415315c6a4d1b920a91647424aefbc459eaef4c199129e85179bba92",
+        "operands": {
+          "A": {
+            "descriptor": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 187072,
+              "n": 6144,
+              "m": 1,
+              "stride": 0,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "allocation": {
+              "status": "static source range, no relocation granted",
+              "word_begin": 187072,
+              "word_end": 193216,
+              "sector_begin": 23384,
+              "sector_end": 24152,
+              "sids": [
+                2
+              ],
+              "first_bank": 0,
+              "element_word_bytes": 4,
+              "layout_note": "native VM32-bit word slots; BF16-valued words are not silently packed"
+            }
+          },
+          "O": {
+            "descriptor": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 187072,
+              "n": 6144,
+              "m": 1,
+              "stride": 0,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "allocation": {
+              "status": "static source range, no relocation granted",
+              "word_begin": 187072,
+              "word_end": 193216,
+              "sector_begin": 23384,
+              "sector_end": 24152,
+              "sids": [
+                2
+              ],
+              "first_bank": 0,
+              "element_word_bytes": 4,
+              "layout_note": "native VM32-bit word slots; BF16-valued words are not silently packed"
+            }
+          }
+        }
+      },
+      {
+        "layer": 1,
+        "ordinal": 148,
+        "tag": "engram.wkv",
+        "record_sha256": "12adfbdfc929c3ccd705b5bc3a36fe9b56ad5ef36f35734dc22b8121591af07d",
+        "operands": {
+          "A": {
+            "descriptor": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 187072,
+              "n": 6144,
+              "m": 1,
+              "stride": 0,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "allocation": {
+              "status": "static source range, no relocation granted",
+              "word_begin": 187072,
+              "word_end": 193216,
+              "sector_begin": 23384,
+              "sector_end": 24152,
+              "sids": [
+                2
+              ],
+              "first_bank": 0,
+              "element_word_bytes": 4,
+              "layout_note": "native VM32-bit word slots; BF16-valued words are not silently packed"
+            }
+          },
+          "O": {
+            "descriptor": {
+              "space": "VM",
+              "fmt": "BF16",
+              "base": 161472,
+              "n": 266,
+              "m": 1,
+              "stride": 0,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "allocation": {
+              "status": "static source range, no relocation granted",
+              "word_begin": 161472,
+              "word_end": 161738,
+              "sector_begin": 20184,
+              "sector_end": 20218,
+              "sids": [
+                2
+              ],
+              "first_bank": 0,
+              "element_word_bytes": 4,
+              "layout_note": "native VM32-bit word slots; BF16-valued words are not silently packed"
+            }
+          }
+        }
+      },
+      {
+        "layer": 14,
+        "ordinal": 1529,
+        "tag": "engram.decode",
+        "record_sha256": "85cc5136f27e30cef6fcaaf5fb0e130b4f8c3425922c192a86755d18ac4dd4b8",
+        "operands": {
+          "A": {
+            "descriptor": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 114560,
+              "n": 32,
+              "m": 192,
+              "stride": 32,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "allocation": {
+              "status": "static source range, no relocation granted",
+              "word_begin": 114560,
+              "word_end": 120704,
+              "sector_begin": 14320,
+              "sector_end": 15088,
+              "sids": [
+                1
+              ],
+              "first_bank": 0,
+              "element_word_bytes": 4,
+              "layout_note": "native VM32-bit word slots; BF16-valued words are not silently packed"
+            }
+          },
+          "B": {
+            "descriptor": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 120704,
+              "n": 32,
+              "m": 192,
+              "stride": 1,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 1,
+              "indexed": 0
+            },
+            "allocation": {
+              "status": "static source range, no relocation granted",
+              "word_begin": 120704,
+              "word_end": 120896,
+              "sector_begin": 15088,
+              "sector_end": 15112,
+              "sids": [
+                1
+              ],
+              "first_bank": 0,
+              "element_word_bytes": 4,
+              "layout_note": "native VM32-bit word slots; BF16-valued words are not silently packed"
+            }
+          },
+          "O": {
+            "descriptor": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 187072,
+              "n": 32,
+              "m": 192,
+              "stride": 32,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "allocation": {
+              "status": "static source range, no relocation granted",
+              "word_begin": 187072,
+              "word_end": 193216,
+              "sector_begin": 23384,
+              "sector_end": 24152,
+              "sids": [
+                2
+              ],
+              "first_bank": 0,
+              "element_word_bytes": 4,
+              "layout_note": "native VM32-bit word slots; BF16-valued words are not silently packed"
+            }
+          }
+        }
+      },
+      {
+        "layer": 14,
+        "ordinal": 1531,
+        "tag": "engram.rows_gather.eg_rows",
+        "record_sha256": "38b795bc415315c6a4d1b920a91647424aefbc459eaef4c199129e85179bba92",
+        "operands": {
+          "A": {
+            "descriptor": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 187072,
+              "n": 6144,
+              "m": 1,
+              "stride": 0,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "allocation": {
+              "status": "static source range, no relocation granted",
+              "word_begin": 187072,
+              "word_end": 193216,
+              "sector_begin": 23384,
+              "sector_end": 24152,
+              "sids": [
+                2
+              ],
+              "first_bank": 0,
+              "element_word_bytes": 4,
+              "layout_note": "native VM32-bit word slots; BF16-valued words are not silently packed"
+            }
+          },
+          "O": {
+            "descriptor": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 187072,
+              "n": 6144,
+              "m": 1,
+              "stride": 0,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "allocation": {
+              "status": "static source range, no relocation granted",
+              "word_begin": 187072,
+              "word_end": 193216,
+              "sector_begin": 23384,
+              "sector_end": 24152,
+              "sids": [
+                2
+              ],
+              "first_bank": 0,
+              "element_word_bytes": 4,
+              "layout_note": "native VM32-bit word slots; BF16-valued words are not silently packed"
+            }
+          }
+        }
+      },
+      {
+        "layer": 14,
+        "ordinal": 1532,
+        "tag": "engram.wkv",
+        "record_sha256": "20c9a6540ccea997009b3cae2f3c7e3302ff7a693b52222170aba6d3eab63f39",
+        "operands": {
+          "A": {
+            "descriptor": {
+              "space": "VM",
+              "fmt": "FP32",
+              "base": 187072,
+              "n": 6144,
+              "m": 1,
+              "stride": 0,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "allocation": {
+              "status": "static source range, no relocation granted",
+              "word_begin": 187072,
+              "word_end": 193216,
+              "sector_begin": 23384,
+              "sector_end": 24152,
+              "sids": [
+                2
+              ],
+              "first_bank": 0,
+              "element_word_bytes": 4,
+              "layout_note": "native VM32-bit word slots; BF16-valued words are not silently packed"
+            }
+          },
+          "O": {
+            "descriptor": {
+              "space": "VM",
+              "fmt": "BF16",
+              "base": 161472,
+              "n": 266,
+              "m": 1,
+              "stride": 0,
+              "istride": 0,
+              "lstride": 0,
+              "dyn_sel": 0,
+              "dyn_mul": 0,
+              "n_sel": 0,
+              "l1stride": 0,
+              "ibcast": 0,
+              "indexed": 0
+            },
+            "allocation": {
+              "status": "static source range, no relocation granted",
+              "word_begin": 161472,
+              "word_end": 161738,
+              "sector_begin": 20184,
+              "sector_end": 20218,
+              "sids": [
+                2
+              ],
+              "first_bank": 0,
+              "element_word_bytes": 4,
+              "layout_note": "native VM32-bit word slots; BF16-valued words are not silently packed"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "native_successor": {
+    "profile": "slot160_21_ordered_drain5",
+    "native_transport_receipt_commit": "49212e5f9",
+    "scope": "actual L1 eight-home mechanism,192 decoded32BF16 blocks; no96rank/WKV/host claim"
+  },
+  "allocation": {
+    "tensor": "eg_rows",
+    "word_base": 187072,
+    "word_count": 6144,
+    "word_end_exclusive": 193216,
+    "sector_base": 23384,
+    "sector_end_exclusive": 24152,
+    "SID": 2,
+    "quadrant": "NW",
+    "shape": [
+      24,
+      256
+    ],
+    "native_word_format": "BF16 expanded exactly as {bf16,16zero} in FP32 word slot"
+  },
+  "actual_write_boundary": {
+    "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv",
+    "sha256": "592a461b693ad5a57539f7fd96056e682c1acf8e23549eb2b85e21dcd7ecb4c0",
+    "master": "hfd_hgi_vms_static_NW",
+    "ports": "kq[2247:0],kq_done[7:0]",
+    "bank_source_sha256": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+    "bank_RG": 7,
+    "bank_WG": 3,
+    "compiled_wslot_owner": 3,
+    "existing_port": "COLL kq; no new W port/group",
+    "lanes": 8,
+    "payload_bits_per_lane": 256,
+    "required_lanes_per_decode_beat": 4,
+    "decoder_input_bits_per_valid": 512,
+    "expanded_payload_bits_per_valid": 1024,
+    "sector_formula": "23384+row*32+block*4+i, i=0..3",
+    "bank_formula": "sector[2:0]; base aligned8, block parity selects bank0..3 or4..7",
+    "wq_packing": "{valid,sector16,data256,mask8}; mask=8hff"
+  },
+  "read_consumer": {
+    "operation": "engram.wkv",
+    "descriptor_n": 6144,
+    "format": "actual FP8 quantized activation,32wide AQ blocks then NC8/SUB4 fmt1 fragments",
+    "current_actual_activation_proof": "K5120 only; K6144 source extension and P1/NC8 semantics require real binding"
+  },
+  "calendar": {
+    "actual_decoder_trace": "requested from source owner; no fabricated issue timestamps",
+    "reservation_requirement": "reserve those four physical bank W slots on each actual registered writer launch, account real commit before activation prefetch",
+    "conflicts": "COLL existing kq owner must be compiler-exclusive against other kq producers; one physical W perbank across all owners",
+    "decoder_to_vm_adapter": "OPEN: actual lossless4sector writer and realbank commit proof required",
+    "global_epoch": "OPEN: actual native host/canonical full operation admission not yet bound"
+  },
+  "wholekernel_qualified": false
+}
