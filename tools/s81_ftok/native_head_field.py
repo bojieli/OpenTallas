@@ -94,7 +94,8 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--work',type=Path,required=True)
     p.add_argument('--xf',type=Path,required=True,help='native HC xf.npy, float32 BF16-exact [5120]')
-    p.add_argument('--xf-provenance',type=Path,required=True)
+    p.add_argument('--xf-provenance',type=Path)
+    p.add_argument('--component-input',action='store_true',help='declared external fixture boundary only; never native chain qualification')
     p.add_argument('--snapshot',type=Path,default=H.SNAP)
     p.add_argument('--ranks',default='0,1,2,3')
     p.add_argument('--groups',type=int,help='diagnostic only: first N groups of each rank')
@@ -105,9 +106,10 @@ def main():
     xf=np.load(a.xf)
     if xf.shape!=(5120,) or xf.dtype!=np.float32 or (xf.view(np.uint32)&65535).any() or not np.isfinite(xf).all():
         raise ValueError('native xf must be finite BF16-exact float32 [5120]')
-    provenance=json.loads(a.xf_provenance.read_text())
+    if not a.component_input and a.xf_provenance is None: p.error('native chaining requires --xf-provenance')
+    provenance=(json.loads(a.xf_provenance.read_text()) if a.xf_provenance else {'producer':'declared external component fixture'})
     actual_mem=''.join(f'{int(v):04x}\n' for v in (xf.view(np.uint32)>>16)).encode()
-    if (provenance.get('gate') != 'PASS' or not provenance.get('rtl_sources')
+    if not a.component_input and (provenance.get('gate') != 'PASS' or not provenance.get('rtl_sources')
             or provenance.get('actual_output_sha256') != hashlib.sha256(actual_mem).hexdigest()):
         raise ValueError('xf does not match passing native RTL producer provenance')
     H.setup_gate(); H.SK=11  # CUT511 + production SPLIT9 => eleven stages; skew follows
@@ -147,7 +149,8 @@ def main():
     complete=(set(ranks)==set(range(4)) and a.groups is None)
     record=dict(schema='opentallas.s81.native_head_field.v1',scope='replicated hardware component; VM delivery and die timing unqualified',
                 complete_rows=complete,groups=len(summary),bad=total_bad,mutant=a.mutant,
-                xf_sha256=sha(a.xf),xf_provenance=provenance,xf_provenance_sha256=sha(a.xf_provenance),
+                xf_sha256=sha(a.xf),xf_provenance=provenance,xf_provenance_sha256=sha(a.xf_provenance) if a.xf_provenance else None,
+                native_xf_chained=not a.component_input,
                 source=json.loads((a.work/'build.json').read_text()),checkpoint_header_sha256=ck.pins,
                 b_root_format='root1024 padded with two RTL +0 stages',static_group_cycles=sorted({r['rtl_result']['cycle'] for r in summary}))
     (a.work/'record.json').write_text(json.dumps(record,indent=2)+'\n')
