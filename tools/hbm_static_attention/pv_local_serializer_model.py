@@ -35,7 +35,7 @@ result=dict(schema='opentallas.hbm_attn.pv_local_D_model.v1',qualification=False
  status=dict(storage_FF=16384,read_pipeline_FF=8192,per_tile_storage_FF=512,
   per_tile_read_FF=256,per_tile_macro_clock_pins=64),
  clocks=dict(explicit_bank_clock_ports=4,global_control_clock_ports=1,
-  nominal_tile_sequential_clock_endpoints=832,nominal_bankroot_endpoints=6656,
+  nominal_tile_sequential_clock_endpoints=836,nominal_bankroot_endpoints=6688,
   contract='All5 clock inputs synchronous and phase matched; actual clock gates/buffers/tree/delay/skew not yet synthesized or qualified'),
  audit=dict(full8192word_bijection=True,all16phases128distinctwrites=True,
   all128drains64distinctreads=True,bankcapture_tile_local=True,
