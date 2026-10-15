@@ -523,7 +523,9 @@ module ot_s81_pq_ctl_native #(
     // stage A: per group of 8 regions and per tag, a popcount; stage B: groups of four summed; stage C: total
     // v13: stage C is two stages (C1 pairs of B summed, C2 total; gb -> rc was +46 ps at 833), so a row is counted
     // one cycle later -- the same cycle its write leaves (+1 row-write stage), keeping idle >= the last row write
-    localparam integer NCA = (R + 7) / 8;
+    // The return leaves expose NGR counters, regardless of their region
+    // partition. A fixed 8-region assumption reads beyond ga_i for RG=11.
+    localparam integer NCA = NGR;
     localparam integer NCB = (NCA + 3) / 4;
     localparam integer NCP = (NCB + 1) / 2;
     reg [7:0] gp [0:NCP-1][0:3];
