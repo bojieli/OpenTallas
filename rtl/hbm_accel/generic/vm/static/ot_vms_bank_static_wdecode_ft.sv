@@ -237,8 +237,9 @@ module ot_vms_bank_static_wdecode_ft #(
         s1r_p <= 4'(read_owner); s1r_row <= rd_decode[10:0]; s1r_tag <= rd_tag;
         // Dedicated boundary state: invalid egress payload is unspecified.
         // A qualified capture prevents merging it into the internal S1 data.
-        if (selected_write && int'(wslot_d) < WG && wr_decode[274] && !wr_decode[275])
-            eg_d <= wr_decode[274:0];
+        // Unconditional capture (H-ELEM-A 2026-10-15: gate reg->reg -81 / -228 ps ended at the eg_d enable decode):
+        // eg_v alone qualifies the egress beat; the payload register carries no enable from the slot/ECC decode.
+        eg_d <= wr_decode[274:0];
     end
     // ------------------------------------------------------------------ S2: macro pins
     reg [9:0] m_ra, m_wa; reg m_rA, m_rC, m_rB, m_wA, m_wB, m_wC; reg [311:0] m_wd; reg [7:0] m_mA, m_mC; reg [15:0] m_mB;
@@ -350,17 +351,18 @@ module ot_vms_bank_static_wdecode_ft #(
             sat_ce_add = (low[4] && (&count[15:4])) ? 16'hffff : {upper,low[3:0]};
         end
     endfunction
-    reg [15:0] ce; reg ue;
+    reg [15:0] ce; reg ue; reg ce_v_q, ue_q; reg [3:0] ce_n_q;
     always @(posedge clk or negedge rn)
-        if (!rn) begin rr_v <= '0; pr_v <= 1'b0; ce <= 16'd0; ue <= 1'b0; status <= 18'd0; end
+        if (!rn) begin rr_v <= '0; pr_v <= 1'b0; ce <= 16'd0; ue <= 1'b0; status <= 18'd0; ce_v_q <= 1'b0; ce_n_q <= 4'd0; ue_q <= 1'b0; end
         else begin
             for (integer g = 0; g < RG; g = g + 1) rr_v[g] <= d_v && d_p == 4'(g);
             // a packet read (d_p == RG) and a packet write echo are never on the same edge (one packet op a cycle)
             pr_v <= (d_v && d_p == 4'(RG)) || dw_v;
-            if (d_v) begin
-                ce <= sat_ce_add(ce,nce);
-                if (nue) ue <= 1'b1;
-            end
+            // CE/UE accounting one registered edge after the syndrome decode (H-ELEM-A 2026-10-15: gate reg->reg
+            // -135 ps ended at ce through syndrome match -> population -> saturating add).  Diagnostic status only.
+            ce_v_q <= d_v; ce_n_q <= nce; ue_q <= d_v && nue;
+            if (ce_v_q) ce <= sat_ce_add(ce,ce_n_q);
+            if (ue_q) ue <= 1'b1;
             status <= {flt, ue, ce};
         end
     always @(posedge clk) begin

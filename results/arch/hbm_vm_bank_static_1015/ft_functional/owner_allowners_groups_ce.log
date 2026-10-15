@@ -1,0 +1,40 @@
+PASS static bank exact memory masks main/mirror ECC owner timing: reads=221 writes=240 egress=34 cycles=362 read=n+6 commit=n+3 egress=n+1 II=1
+FATAL: tb_bank_wdecode_ft.sv:90: read valid timing cycle 34 lane 0 got 0 expected 1
+       Time: 406000 Scope: tb_bank_wdecode_ft.tick
+FATAL: tb_bank_wdecode_ft.sv:91: read payload cycle 34 lane 0
+       Time: 406000 Scope: tb_bank_wdecode_ft.tick
+FATAL: tb_bank_wdecode_ft.sv:128: last-word CE population mismatch status=00001
+       Time: 2980000 Scope: tb_bank_wdecode_ft
+VM_ALLGROUPS_STATIC PASS RG=7 WG=3 banks=8 SRAMs=24 DMAwrites=1024 exactwide_reads=7168 eachgroup_reads=1024 packet_reads=8 sectors_per_cycle=8 return_edges=6 conflict_fault_no_arbitration=1
+FATAL: tb_hbm_vm_allgroups_wdecode_ft.sv:74: actual bank response group mismatch RG=7 cycle=145 bank=0 group=0
+FATAL: tb_hbm_vm_allgroups_wdecode_ft.sv:74: actual bank response group mismatch RG=7 cycle=145 bank=0 group=0
+       Time: 1487000 Scope: tb_hbm_vm_allgroups_wdecode_ft.tick
+FATAL: tb_hbm_vm_allgroups_wdecode_ft.sv:76: actual SRAM readback mismatch
+FATAL: tb_hbm_vm_allgroups_wdecode_ft.sv:76: actual SRAM readback mismatch
+       Time: 1487000 Scope: tb_hbm_vm_allgroups_wdecode_ft.tick
+VM_ALLGROUPS_STATIC PASS RG=5 WG=1 banks=8 SRAMs=24 DMAwrites=1024 exactwide_reads=5120 eachgroup_reads=1024 packet_reads=8 sectors_per_cycle=8 return_edges=6 conflict_fault_no_arbitration=1
+FATAL: tb_hbm_vm_allgroups_wdecode_ft.sv:74: actual bank response group mismatch RG=5 cycle=145 bank=0 group=0
+FATAL: tb_hbm_vm_allgroups_wdecode_ft.sv:74: actual bank response group mismatch RG=5 cycle=145 bank=0 group=0
+       Time: 1487000 Scope: tb_hbm_vm_allgroups_wdecode_ft.tick
+FATAL: tb_hbm_vm_allgroups_wdecode_ft.sv:76: actual SRAM readback mismatch
+FATAL: tb_hbm_vm_allgroups_wdecode_ft.sv:76: actual SRAM readback mismatch
+       Time: 1487000 Scope: tb_hbm_vm_allgroups_wdecode_ft.tick
+PASS static bank exact memory masks main/mirror ECC owner timing: reads=231 writes=244 egress=33 cycles=366 read=n+6 commit=n+3 egress=n+1 II=1
+FATAL: tb_bank_wdecode_ft_allowners.sv:91: read payload cycle 38 lane 0
+FATAL: tb_bank_wdecode_ft_allowners.sv:91: read payload cycle 38 lane 0
+       Time: 446000 Scope: tb_bank_wdecode_ft_allowners.tick
+FATAL: tb_bank_wdecode_ft_allowners.sv:128: last-word CE population mismatch status=00001
+FATAL: tb_bank_wdecode_ft_allowners.sv:128: last-word CE population mismatch status=00001
+       Time: 3120000 Scope: tb_bank_wdecode_ft_allowners
+PASS static bank exact memory masks main/mirror ECC owner timing: reads=227 writes=236 egress=2 cycles=364 read=n+6 commit=n+3 egress=n+1 II=1
+FATAL: tb_bank_wdecode_ft_allowners.sv:91: read payload cycle 30 lane 0
+FATAL: tb_bank_wdecode_ft_allowners.sv:91: read payload cycle 30 lane 0
+       Time: 366000 Scope: tb_bank_wdecode_ft_allowners.tick
+FATAL: tb_bank_wdecode_ft_allowners.sv:128: last-word CE population mismatch status=00001
+FATAL: tb_bank_wdecode_ft_allowners.sv:128: last-word CE population mismatch status=00001
+       Time: 3000000 Scope: tb_bank_wdecode_ft_allowners
+CE_POPULATION PASS masks=256 seeds=4 syndrome_codes=128 positions=8 cases=2048 force_only_scope=1
+FATAL: tb_bank_ce_population.sv:20: CE population decoder mismatch expected=1 actual=0
+FATAL: tb_bank_ce_population.sv:20: CE population decoder mismatch expected=1 actual=0
+       Time: 1351000 Scope: tb_bank_ce_population.check_count
+BANK_CE_PREFIX PASS states=65536 increments=16 cases=1048576 exact_saturation=1 unchanged_edge=1
