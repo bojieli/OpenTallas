@@ -29,7 +29,12 @@ module qfd_static_ch546 (
  always @(posedge rck or negedge rst_n) begin
   if(!rst_n) begin rp<=0;rv<=0;read_pipe<=0;o_valid<=0;r_fault<=0;pub_meta<=0;pub_sync<=0;seen_meta<=0;seen_sync<=0;end
   else begin
-   rp<=r_slot;rv<=r_version;read_pipe<={read_pipe[1:0],r_slot};o_valid<=read_pipe[2];
+   rp<=r_slot;rv<=r_version;read_pipe<={read_pipe[1:0],r_slot};
+`ifdef OT_STATIC_MUT_LATENCY
+   o_valid<=read_pipe[1];
+`else
+   o_valid<=read_pipe[2];
+`endif
    pub_meta<=published;pub_sync<=pub_meta;seen_meta<=seen;seen_sync<=seen_meta;
    r_fault<=r_fault | (rp && (!seen_sync[ra] || pub_sync[ra] != rv));
   end
