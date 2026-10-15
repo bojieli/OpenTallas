@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81_pq_reader75-capture-r1-0aff42a1c/record/views/ot_s81_pq_calendar_reader/ot_s81_pq_calendar_reader.lef",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81_pq_reader75-rstrelay-r3-182180c59/record/views/ot_s81_pq_calendar_reader/ot_s81_pq_calendar_reader.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [
-  "(f) face-pin access: 263 of 263 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. action[0] M4 (0.060,40.464), action[10] M4 (0.060,40.464), action[11] M4 (0.060,40.464))"
+  "(f) face-pin access: 263 of 263 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. action[0] M4 (0.060,59.664), action[10] M4 (0.060,59.664), action[11] M4 (0.060,59.664))"
  ],
- "summary": "ot_s81_pq_calendar_reader 108.0 x 108.0: PG M5 VDD 20 stripes (95% spread, 100% cov) / VSS 20 stripes (95% spread, 100% cov); strap M6; face pins 263 blocked-above 0 blocked-same 0; clock ck insertion 129 ps; pockets M5 0 (closed)",
+ "summary": "ot_s81_pq_calendar_reader 108.0 x 108.0: PG M5 VDD 20 stripes (95% spread, 100% cov) / VSS 20 stripes (95% spread, 100% cov); strap M6; face pins 263 blocked-above 0 blocked-same 0; clock ck insertion 125 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "ot_s81_pq_calendar_reader",
   "W": 108.0,
@@ -40,24 +40,24 @@
   "face": {
    "face_pins": 263,
    "blocked_above": 0,
-   "covered_below": 37,
+   "covered_below": 34,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
    "band_same": 263,
    "band_examples": [
-    "action[0] M4 (0.060,40.464)",
-    "action[10] M4 (0.060,40.464)",
-    "action[11] M4 (0.060,40.464)",
-    "action[12] M4 (0.060,40.464)",
-    "action[13] M4 (0.060,40.464)",
-    "action[14] M4 (0.060,40.464)"
+    "action[0] M4 (0.060,59.664)",
+    "action[10] M4 (0.060,59.664)",
+    "action[11] M4 (0.060,59.664)",
+    "action[12] M4 (0.060,59.664)",
+    "action[13] M4 (0.060,59.664)",
+    "action[14] M4 (0.060,59.664)"
    ]
   },
   "clock_insertion": {
    "ck": {
-    "max_ps": 129.04,
-    "min_ps": 95.67
+    "max_ps": 124.96,
+    "min_ps": 93.99
    }
   },
   "pockets": {
@@ -66,7 +66,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 90
+    "added": 80
    },
    "count": 0,
    "area_um2": 0,
