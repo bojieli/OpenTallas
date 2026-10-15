@@ -40,8 +40,16 @@ class GeometryTests(unittest.TestCase):
         m=self.model(p)
         self.assertEqual(len(m.missing),1)
         self.assertIsNone(m.proposal('move',{'move':(-50,0)}))
-        result,blocked=G.search(m,{'move':['move']},100,50)
+        result,blocked,tradeoffs=G.search(m,{'move':['move']},100,50)
         self.assertEqual(blocked,['move']);self.assertEqual(result,[])
+    def test_wire_saving_with_new_long_hop_is_only_a_tradeoff(self):
+        m=G.Model(plan(),[lef()],[500,500],reach=220.)
+        p=m.proposal('move',{'move':(-50,0)})
+        self.assertIn('over_reach_bits',p['geometric_regressions'])
+        candidates,blocked,tradeoffs=G.search(m,{'move':['move']},50,50)
+        self.assertEqual(candidates,[])
+        self.assertTrue(tradeoffs)
+
     def test_internal_group_positions_preserved(self):
         m=self.model()
         self.assertTrue(m.legal({'left':(0,50),'move':(0,50)}))

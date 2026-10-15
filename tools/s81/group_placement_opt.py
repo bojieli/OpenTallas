@@ -67,15 +67,15 @@ class Model:
         return True
 
     def metrics(self,edges,moves=None):
-        moves=moves or {}; total=0.;worst=0.;fail=0;extra=0;routes=[]
+        moves=moves or {}; total=0.;worst=0.;fail=0;extra=0;over=0;routes=[]
         for e in edges:
             aa,bb=([tuple(v+delta for v,delta in zip(p[:2],moves.get(n,(0,0))))+tuple(p[2:]) for p in ps] for (n,_),ps in zip(e['ends'],e['points']))
             ll=[abs(a[0]-b[0])+abs(a[1]-b[1]) for a,b in zip(aa,bb)]
             s=sum(ll);mx=max(ll);q=PA.bundle(aa,bb)
-            total+=s;worst=max(worst,mx);fail+=q['verdict']=='FAIL'
+            total+=s;worst=max(worst,mx);fail+=q['verdict']=='FAIL';over+=sum(v>self.reach+1e-6 for v in ll)
             extra+=e['bits']*max(0,math.ceil(mx/self.reach)-1)
             routes.append(dict(bus=e['bus'],ends=e['ends'],bits=e['bits'],sum_bit_um=s,max_um=mx,alignment=q))
-        return dict(sum_bit_um=total,max_um=worst,alignment_failures=fail,relay_bit_stage_lower_bound=extra,
+        return dict(sum_bit_um=total,max_um=worst,alignment_failures=fail,over_reach_bits=over,relay_bit_stage_lower_bound=extra,
                     top20_routes=sorted(routes,key=lambda x:x['sum_bit_um'],reverse=True)[:20])
 
     def proposal(self,label,moves):
@@ -85,14 +85,16 @@ class Model:
         if missing or not incident:return None # Never optimize a favorable subset of a group.
         before=self.metrics(incident);after=self.metrics(incident,moves)
         if after['sum_bit_um']>=before['sum_bit_um']-1e-6:return None
+        regressions=[k for k in ['alignment_failures','over_reach_bits','relay_bit_stage_lower_bound'] if after[k]>before[k]]
         return dict(label=label,before=before,after=after,saved_bit_um=before['sum_bit_um']-after['sum_bit_um'],
+                    geometric_regressions=regressions,
                     moves={n:list(d) for n,d in sorted(moves.items())},
                     placement_patch=[dict(instance=n,x_um=self.insts[n].x+d[0],y_um=self.insts[n].y+d[1],orientation=self.insts[n].orient) for n,d in sorted(moves.items())],
                     status='GEOMETRIC_PROPOSAL_ONLY: no aggregate cuts/obstacle-aware wire paths/clock delivery or routing/timing proof')
 
 
 def search(model,groups,radius,step):
-    out=[];blocked=[]
+    out=[];blocked=[];tradeoffs=[]
     for label,names in groups.items():
         if any(any(n in names for n,_ in e['ends']) for e in model.missing):
             blocked.append(label);continue
@@ -101,6 +103,8 @@ def search(model,groups,radius,step):
         for ix,iy in itertools.product(range(-extent,extent+1),repeat=2):
             if ix==iy==0:continue
             p=model.proposal(label,{n:(ix*step,iy*step) for n in names})
+            if p and p['geometric_regressions']:
+                tradeoffs.append(p);continue
             if p and (best is None or p['saved_bit_um']>best['saved_bit_um']):best=p
         if best:out.append(best)
     for (la,aa),(lb,bb) in itertools.combinations(groups.items(),2):
@@ -109,8 +113,9 @@ def search(model,groups,radius,step):
         xb=min(model.insts[n].x for n in bb);yb=min(model.insts[n].y for n in bb)
         moves={**{n:(xb-xa,yb-ya) for n in aa},**{n:(xa-xb,ya-yb) for n in bb}}
         p=model.proposal(la+' <-> '+lb,moves)
-        if p:out.append(p)
-    return sorted(out,key=lambda p:p['saved_bit_um'],reverse=True),blocked
+        if p and p['geometric_regressions']:tradeoffs.append(p)
+        elif p:out.append(p)
+    return sorted(out,key=lambda p:p['saved_bit_um'],reverse=True),blocked,sorted(tradeoffs,key=lambda p:p['saved_bit_um'],reverse=True)[:20]
 
 
 def main():
@@ -129,13 +134,13 @@ def main():
         names=[n for n in model.insts if any(n.startswith(p) for p in prefixes)]
         if not names:ap.error('empty group '+name)
         groups[name]=names
-    candidates,blocked=search(model,groups,a.radius,a.step)
+    candidates,blocked,tradeoffs=search(model,groups,a.radius,a.step)
     files=[a.plan,*a.lef]
     report=dict(schema='opentallas.s81.group_geometry.v1',scope=a.scope,
                 input_sha256={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in files},
                 die_um=a.die,halo_um=a.halo,reach_lower_bound_um=a.reach,groups=groups,
                 missing=model.missing,groups_blocked_by_missing_pins=blocked,baseline=model.metrics(model.edges),
-                candidates=candidates,
+                candidates=candidates,tradeoffs_with_geometric_regressions=tradeoffs,
                 limitations=['Candidates are independent alternatives, not cumulative patches',
                              'Bit-distance is unweighted by traffic or schedule criticality',
                              '500um stage counts are lower bounds; source pin timing can reduce reach',
