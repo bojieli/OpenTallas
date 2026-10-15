@@ -1,0 +1,42 @@
+{
+  "2": {
+    "source_lanes": 9,
+    "sink_lanes": 16,
+    "flit_bits": 545,
+    "capture_edges": 1,
+    "output_edges": 1,
+    "latency_edges": 1,
+    "bits_per_cycle_in": 4905,
+    "bits_per_cycle_out": 8720,
+    "payload_flops": 13625,
+    "control_flops": 89,
+    "clock_roots_required": 2,
+    "largest_root_sinks": 8809,
+    "select_cost_bits": 78480,
+    "period_ps": 833.3,
+    "elastic_entries": 0,
+    "compiler_rule": "each enabled sink selects a source reserved on the preceding capture edge",
+    "routing_rule": "sources may multicast; distinct sources cannot own the same sink edge",
+    "status": "SIZED transport only; no physical closure or complete collective price"
+  },
+  "3": {
+    "source_lanes": 10,
+    "sink_lanes": 17,
+    "flit_bits": 545,
+    "capture_edges": 1,
+    "output_edges": 1,
+    "latency_edges": 1,
+    "bits_per_cycle_in": 5450,
+    "bits_per_cycle_out": 9265,
+    "payload_flops": 14715,
+    "control_flops": 95,
+    "clock_roots_required": 2,
+    "largest_root_sinks": 9360,
+    "select_cost_bits": 92650,
+    "period_ps": 833.3,
+    "elastic_entries": 0,
+    "compiler_rule": "each enabled sink selects a source reserved on the preceding capture edge",
+    "routing_rule": "sources may multicast; distinct sources cannot own the same sink edge",
+    "status": "SIZED transport only; no physical closure or complete collective price"
+  }
+}
