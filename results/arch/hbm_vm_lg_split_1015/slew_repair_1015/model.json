@@ -1,0 +1,31 @@
+{
+  "scope": "Two independent measured LG native masters; local same-edge drive repair, not new storage or rerouting closed HC",
+  "source_commit": "f3fa747d8",
+  "baseline_proof": "506e762c6",
+  "affected_nets": {
+    "SU10_7": "u_core.rr_d[244]",
+    "SFU14_11": "u_core.rr_d[235]"
+  },
+  "actual_loads_per_net": 2,
+  "repair": "one INVx1/2 to INVx4, actual master widths and area delta asserted/logged by ODB hook before GRT",
+  "additional_registers": 0,
+  "additional_cycles": 0,
+  "macros": 0,
+  "ports_and_clock_roots": "unchanged1673/one root each",
+  "outline_um": [
+    150.336,
+    151.2
+  ],
+  "baseline_slew_ps": {
+    "SU": 265.29,
+    "SFU": 261.96
+  },
+  "limit_ps": 260,
+  "requirements": [
+    "Preserve baseline ODB/SPEF",
+    "No SDC/uncertainty/phase relaxation",
+    "Re-route, extract and actual TT/FF/SS audit",
+    "Final pin/PG/clock/view checks before closure"
+  ],
+  "physical_qualified": false
+}
