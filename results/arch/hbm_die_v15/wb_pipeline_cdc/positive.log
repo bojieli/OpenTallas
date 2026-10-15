@@ -1,0 +1,8 @@
+WB_FILL bank=0 sectors=640 fixed_edges=80 begin_ps=7917.663 end_ps=74584.303 elapsed_ps=66666.640
+WB_FILL bank=1 sectors=2048 fixed_edges=256 begin_ps=77084.302 end_ps=290417.550 elapsed_ps=213333.248
+WB_TIMING bank=0 first_accept_ps=79533.000 last_accept_ps=129709.000 last_real_ack_ps=307885.000 returned_ack_ps=312083.208
+WB_TIMING bank=1 first_accept_ps=316077.000 last_accept_ps=481965.000 last_real_ack_ps=955053.000 returned_ack_ps=958749.616
+WB_PIPELINE_CDC PASS production640_fixedcycles=80 max2048_fixedcycles=256 sectors=2688 real_acks=2688 input_cycles=336 blocks=2 stream_period_ps=833.333 hbm_period_ps=1024 hbm_phase_ps=173
+WB_PIPELINE_OUTSTANDING max=55 simultaneous_done_accept=297
+WB_COPY reads=2688 max_parallel=32 overlapped_read_enqueue=2624
+WB_CLOCK_EDGES stream=1146 hbm=932 finish_ps=959583.949 fifo_full_stream_edges=240
