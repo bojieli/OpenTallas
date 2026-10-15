@@ -871,7 +871,7 @@ class Elements:
             self.log('elements md: %s' % e)
 
 def public(r):
-    return {k: ([public(x) for x in v] if k == 'replica_records' else v)
+    return {k: ([public(x) for x in v] if k == 'replica_records' else public(v) if k == 'candidate_component_record' else v)
             for k, v in r.items() if not k.startswith('_')}
 
 def change_key(d):
