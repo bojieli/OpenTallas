@@ -31,7 +31,7 @@ module tb_hbm_attn_transpose_regs;
     @(negedge clk);rh=1'(h);rc=8'(c);
     if(round_>0)begin we=1;wh=1'(1-h);wc=8'(c);pad=2'(c%4);fillword(round_*100+h*16+c);end
     if(mut==1&&round_==0&&h==0&&c==0)force dut.g_row[0].g_half[0].g_dim[0].value=18'h3ffff;
-    if(mut==2&&round_==0&&h==0&&c==0)wc=16;
+    if(mut==2&&round_==0&&h==0&&c==0)begin we=1;wc=16;end
    end
   end
   @(negedge clk);we=0;
