@@ -31,7 +31,7 @@ class NativeControlContract(unittest.TestCase):
         self.assertIn('cp_active',r['missing_input_endpoints'])
         self.assertIsNone(r['XPF_TRANSPORT_EDGES']);self.assertFalse(r['qualified'])
         M={'qfd_tt_ctlm':Master('qfd_tt_ctlm',777.6,1814.4,7,'')}
-        N.install_master(M,m,Master);q=M[N.MASTER]
+        N.install_master(M,m,Master);N.install_master(M,m,Master);q=M[N.MASTER]
         self.assertEqual(len({tuple(q.ports[f'uf_l{k}'][3][0])for k in range(4)}),4)
         self.assertIn('xpf',q.ports);self.assertIn('xflt',q.ports)
         points=[]

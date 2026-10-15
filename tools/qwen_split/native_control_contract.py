@@ -53,7 +53,7 @@ def install_master(M,model,Master):
     if 'native_control_contract'not in model:return
     inst=next(i for i in model['insts']if i.name=='tt_ctlm')
     ports=rtl_ports(ROOT/SOURCE,MASTER)
-    old=M['qfd_tt_ctlm']
+    old=M.get('qfd_tt_ctlm') or M[MASTER]
     q=Master(MASTER,inst.w,inst.h,7,'Actual static controller ABI; NEW assigned unclosed parent')
     faces={f:[]for f in 'WENS'}
     for p,(n,d)in ports.items():
