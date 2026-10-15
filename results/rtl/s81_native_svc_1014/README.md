@@ -22,7 +22,7 @@ Reproduce on an admitted fleet host from repository root:
 bash rtl/dsrom_sys/s81_ph/svc/test/run_probability_pack.sh OUT
 ```
 
-Recorded final admission: ot-epyc4 `oth-ubuntu-638387-1792031882`, exit 0.
+Recorded final admission: ot-epyc4 `oth-ubuntu-1424220-1792032172`, exit 0.
 Only the current `probability_*` logs establish this final source's result.
 Earlier p0/p1/p2 logs are historical development receipts.
 
@@ -51,5 +51,10 @@ peer rows and use the PC controller model. Their arithmetic/component results
 must not be presented as native token qualification. The new converter is a real child but has no CLOSED physical view yet.
 The die lead assigned its 129.6 x 86.4 slot and exact v20 pins in
 `physical/s81_die_pins/v20_svc_native/ingress_layout.json` (d69e94ef3),
-with job/IO orientation MX and two short native joins. Assigned-pin CTS
-pre-route gate is live; full native top composition/reset/clock remains open.
+with job/IO orientation MX and two short native joins. Assigned-pin CTS pre-route gate completed with zero failures. It measures
+2,363 sinks, TT maximum insertion 171.4 ps and spread 20.7 ps, placement
+setup +185.5 ps and hold +26.9 ps. Reset-conditioned payload-enable fanout
+was removed; remaining warnings concern the assigned slot's 13% utilization
+(1,291 um2 logic). Full native top composition/reset/clock remains open.
+Exact gate source binding is `physical/ref_tile/s81_svc_probability_native_ref/gate_result.json`;
+TT/FF routed pin qualification and DRC remain required.

@@ -40,6 +40,12 @@ module ot_s81_svc_probability_frame #(parameter integer MUT=0) (
         rewritten[511:508]=4'd5;
         rewritten[491:480]=(id[491:480]+12'd1)>>1;
     end
+    // Payload capture has no reset-dependent enable. Only pass_v controls
+    // visibility; keeping reset off this 514-bit data path avoids fanout.
+    always @(posedge clk) begin
+        if(header) pass_d<=native_header?{pin_q[514:513],rewritten}:pin_q[514:1];
+        else if(iv&&!probability) pass_d<=pin_q[514:1];
+    end
     always @(posedge clk or negedge rst_n) begin
         if(!rst_n)begin in_frame<=0;probability<=0;left<=0;row<=0;meta<=0;pass_v<=0;fault<=0;end
         else begin
@@ -50,11 +56,11 @@ module ot_s81_svc_probability_frame #(parameter integer MUT=0) (
                 in_frame<=id[491:480]!=0;left<=id[491:480];
                 probability<=native_header;row<=0;meta<=pin_q[514:513];
                 if(native_header)begin
-                    pass_d<={pin_q[514:513],rewritten};pass_v<=1;
+                    pass_v<=1;
                     if(id[491:480]==0||id[491:480]>640)fault<=1;
-                end else begin pass_d<=pin_q[514:1];pass_v<=iv;end
+                end else pass_v<=iv;
             end else if(iv)begin
-                if(!probability)begin pass_d<=pin_q[514:1];pass_v<=iv;end
+                if(!probability)pass_v<=iv;
                 if(probability)row<=row+10'd1;
                 left<=left-12'd1;
                 if(left==1)in_frame<=0;
