@@ -5,26 +5,25 @@
 // (H-SM-ATT 2026-10-15, owner-adopted option B: ATT.QK / ATT.PV run on the SM matvec datapath, the dedicated ATT tiles
 // are retired).  Arithmetic contract: tools/hgi_sim/lib.py att_qk / att_pv (csum8) == tools/hdc_golden_v41.py dots().
 //
-// KV ROW LAYOUT IN HBM (4 lines of 136 B per row, CHUNK-POSITION-MAJOR, written by the KV writer with this permutation):
-//   line i (0..3) holds the two operand beats t = 2i + h (h = 0, 1); beat t lane j (0..63) = head dim 8j + t, so lane j
-//   holds golden chunk j (dims 8j .. 8j+7) and the beat index is the position inside the chunk (tc column semantics).
-//   SM-KV8 (window rows: E4M3 code x 2^(e - 127), UE8M0 e per 32 dims; tools/hdc_golden_v41.py qdq_fp8):
-//       bits [8(64h + j) +: 8] = E4M3 code of dim 8j + 2i + h;  lane j's block is j/4 for every beat.
-//       line 0 bits [1024 + 8b +: 8] = e of block b (0..7), line 1 = blocks 8..15; lines 2, 3 spare bits zero.
-//   SM-KV4 (compressed rows: E2M1 code x E4M3 scale per 16 dims; qdq_fp4_e4m3):
-//       bits [4(64h + j) +: 4] = E2M1 code of dim 8j + 2i + h;  lane j's block is j/2 for every beat.
-//       bits [512 + 8b +: 8] = E4M3 scale of block b (0..31), in EVERY line (the converter latches line 0's copy).
-// Every dequantised element is exact in BF16 (KV8: 4 significant bits; KV4: <= 6), so the SM's exact BF16 x BF16 -> FP32
-// products equal the golden's products of the BF16-stored qdq values.
+// KV ROWS IN HBM = THE CANONICAL PACKED ROWS (no writer-side permutation, no byte expansion): rows of an op lie back to
+// back in the SM's own stack (window ring segment / top-k list-order store) and arrive as the contiguous 136-B line
+// stream of the 64-b KV descriptor port.
+//   KV8 (window rows, tools/hdc_golden_v41.py qdq_fp8): 528 B = bytes 0..511 E4M3 codes in dim order, 512..527 UE8M0 e
+//       of the 16 blocks of 32 dims (value = code x 2^(e - 127)).
+//   KV4 (top-k compressed rows, qdq_fp4_e4m3): 288 B = bytes 0..255 E2M1 codes in dim order (dim 2i low nibble, 2i+1 high,
+//       sign bit 3), 256..287 E4M3 scales of the 32 blocks of 16 dims.
+//   Rows 0 .. cfg_n8-1 of the op are KV8, the rest KV4 (one QK op covers a SM's window and top-k rows).
+// A qword REALIGNER (96 x 64 b) cuts the line stream into rows; each row is written BEAT-MAJOR into the 8 wave banks in
+// one edge (bank t word = the 64 codes of dims 8j + t, j = 0..63: lane j holds golden chunk j, beat t its position),
+// so every operand beat is one bank word.  Every dequantised element is exact in BF16 (KV8: 4 significant bits;
+// KV4: <= 6): the SM's exact BF16 x BF16 -> FP32 products equal the golden's products of the BF16-stored qdq values.
 //
-// ORDER.  Rows arrive row-major (row r lines 0..3, rows in list order: the SM streams its own HBM stack's rows through its
-// KV descriptor port).  Rows are grouped in WAVES of up to 8 (the 8 slots of the tc column's circulating FP32 ring):
+// ORDER.  Rows are grouped in WAVES of up to 8 (the 8 slots of the tc column's circulating FP32 ring):
 //   cfg_qk = 1 (QK): a wave's beats leave t-major, slot-minor: (t0 s0) (t0 s1) .. (t0 s7) (t1 s0) ..  -- slot s = row s
 //            of the wave, step t: the BF16 matvec issue order (score of row s = csum8 over its 512 dims, tree in column).
-//   cfg_qk = 0 (PV): row-major, beat-minor: row s beats 0..7 -- slot b = beat b (64 dims each), step = token.
-// A wave is emitted only when its 8 rows (4 lines each) are in the WAVE BUFFER (two waves, 2 x 64x512 1R1W macros =
-// real mapped SRAM), because a QK beat needs line t/2 of all rows of the wave and every KV8 beat needs both scale lines.
-// The writer fills one wave while the reader drains the other: 32 lines in per 64 beats out (input 0.5 line / cycle).
+//   cfg_qk = 0 (PV): row-major, beat-minor: row s beats 0..7 -- slot b = beat b (64 dims: lane j = dim 8j + b), step = token.
+// Two waves (8 banks x 16 words of the 8 x 64x512 1R1W macros = real mapped SRAM): the realigner fills one wave while
+// the reader drains the other.  Line demand: KV8 3.9 lines / 8 beats, KV4 2.1 lines / 8 beats.
 //
 // HEAD DIM 128 (cfg_h128, Qwen3 GQA on HBM; KV = per-element FP8 E4M3, the writer stores UE8M0 127 = scale 1):
 //   SM-KV8-128 row = ONE line: byte [16t + j] (t 0..7, j 0..15) = E4M3 code of dim 8j + t; bytes 128..131 = UE8M0 of the
@@ -36,7 +35,7 @@
 //   PV: a row's line gives 2 beats (half h = bytes 64h .. 64h+63: lane j = dim 8 (j % 16) + 4h + j / 16).
 // Faults (sticky, fail closed where the golden value would not be a normal number): KV8 NaN code (S.1111.111), e = 255,
 // a non-zero dequantised value outside the BF16 normal range; KV4 negative or NaN scale; a beat requested while idle.
-// Mutants (bench negative controls): MUT 1 = KV8 lane j uses block j/2 (wrong scale); MUT 2 = wrong beat half (beat t reads
+// Mutants (bench negative controls): MUT 1 = KV8 lane j uses block j/2 (wrong scale); MUT 2 = wrong beat (beat t reads
 // the codes of beat t ^ 1); MUT 3 = KV4 E2M1 subnormal code read as normal; MUT 4 = head-dim-128 QK beat
 // takes its 4 rows in reverse sub-row order.
 // ---------------------------------------------------------------------------------------------------------------------
@@ -87,21 +86,34 @@ module ot_hbm_sm_kv_line #(
     reg [12:0] wleft;
     wire [12:0] wleft_m1 = wleft - 13'd1;
     wire [12:0] wcap = tq ? 13'd32 : 13'd8;
-    assign s_ready = act && (wleft != 13'd0) && !full[wb];
+    // ---- 512-dim rows: qword realigner ----
+    reg  [96*64-1:0] bb;                 // pending bytes of the line stream, oldest at bit 0
+    reg  [6:0]       fill;               // qwords in bb
+    wire [6:0]       rqw = wf4 ? 7'd36 : 7'd66;            // qwords of the next row (KV4 288 B / KV8 528 B)
+    wire             emit = act && !h128 && (wleft != 13'd0) && !full[wb] && (fill >= rqw);
+    wire [6:0]       fill_e = fill - (emit ? rqw : 7'd0);
+    wire             room = ({1'b0, fill_e} + 8'd17 <= 8'd96);
+    assign s_ready = act && (wleft != 13'd0) && (h128 ? !full[wb] : room);
     wire wacc = s_valid && s_ready;
-    wire wrow_end = wacc && (h128 || wl == 2'd3);
+    wire wrow_end = h128 ? wacc : emit;
     wire wwave_end = wrow_end && ({1'b0, wr} == wn - 6'd1);
+    wire [66*64-1:0] row = bb[66*64-1:0];
+    reg  [96*64-1:0] bb_n;
+    always @(*) begin
+        bb_n = emit ? (wf4 ? (bb >> (36*64)) : (bb >> (66*64))) : bb;
+        if (wacc && !h128) bb_n[fill_e*64 +: 1088] = s_data;
+    end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             wb <= 1'b0; wr <= 5'd0; wl <= 2'd0; wn <= 6'd0; wleft <= 13'd0; full <= 2'b00; flast <= 2'b00; wri <= 13'd0;
+            fill <= 7'd0;
         end else begin
             if (cfg_v && !act) begin
-                wb <= 1'b0; wr <= 5'd0; wl <= 2'd0; wleft <= cfg_rows; wri <= 13'd0;
+                wb <= 1'b0; wr <= 5'd0; wl <= 2'd0; wleft <= cfg_rows; wri <= 13'd0; fill <= 7'd0;
                 wn <= (cfg_rows > ((cfg_h128 && cfg_qk) ? 13'd32 : 13'd8)) ? ((cfg_h128 && cfg_qk) ? 6'd32 : 6'd8) : cfg_rows[5:0];
-            end else if (wacc) begin
-                wl <= wl + 2'd1;
+            end else begin
+                if (!h128) fill <= fill_e + (wacc ? 7'd17 : 7'd0);
                 if (wrow_end) begin
-                    wl <= 2'd0;
                     wr <= wr + 5'd1;
                     wleft <= wleft - 13'd1;
                     wri <= wri + 13'd1;
@@ -117,26 +129,33 @@ module ot_hbm_sm_kv_line #(
             if (rwave_end) full[rb] <= 1'b0;
         end
     end
-    always @(posedge clk)
-        if (wacc) begin
-            if (!h128 && !wf4 && wl == 2'd0) sc[{wb, wr[2:0]}][63:0]   <= s_data[1087:1024];
-            if (!h128 && !wf4 && wl == 2'd1) sc[{wb, wr[2:0]}][127:64] <= s_data[1087:1024];
-            if (!h128 && wf4 && wl == 2'd0)  sc[{wb, wr[2:0]}]         <= s_data[767:512];
-            if (!h128 && wl == 2'd0)         rf[{wb, wr[2:0]}]         <= wf4;
-            if (h128) sc1[{wb, wr}] <= s_data[1055:1024];
+    always @(posedge clk) begin
+        bb <= bb_n;
+        if (emit) begin
+            sc[{wb, wr[2:0]}] <= wf4 ? row[8*256 +: 256] : {128'd0, row[8*512 +: 128]};
+            rf[{wb, wr[2:0]}] <= wf4;
         end
+        if (wacc && h128) sc1[{wb, wr}] <= s_data[1055:1024];
+    end
     // ---------------- wave buffer: eight 64x512 1R1W macros ----------------
-    //   row-major modes: bank 0 / 1 = line bits 0..511 / 512..1023 at {wave, row, line}
+    //   512-dim rows: bank t word {0, 0, wave, row} = beat t of the row (written from the realigner in one edge)
     //   tq: bank t = the 16 step-t bytes of 4 rows at {0, 0, wave, slot}, segment row % 4 (masked write)
+    //   h128 PV: bank 0 / 1 = line bits 0..511 / 512..1023 at {wave, row, 0}
     reg  [5:0] raddr;
     reg        rce;
     wire [4095:0] rdat;
-    genvar k;
+    genvar k, jw;
     generate for (k = 0; k < 8; k = k + 1) begin : g_bank
-        wire        we = wacc && (tq || k < 2);
-        wire [5:0]  wa = tq ? {2'b00, wb, wr[4:2]} : {wb, wr[2:0], wl};
-        wire [511:0] wd = tq ? {4{s_data[128*k +: 128]}} : s_data[512*(k % 2) +: 512];
-        wire [511:0] wm = tq ? ({384'd0, {128{1'b1}}} << (128 * wr[1:0])) : {512{1'b1}};
+        wire [511:0] bw8, bw4;           // beat k of the 512-dim row being emitted, KV8 / KV4
+        for (jw = 0; jw < 64; jw = jw + 1) begin : g_w
+            assign bw8[8*jw +: 8] = row[8*(8*jw + k) +: 8];
+            assign bw4[4*jw +: 4] = row[8*(4*jw + k/2) + 4*(k%2) +: 4];
+        end
+        assign bw4[511:256] = 256'd0;
+        wire        we = emit || (wacc && (tq || (h128 && k < 2)));
+        wire [5:0]  wa = emit ? {2'b00, wb, wr[2:0]} : tq ? {2'b00, wb, wr[4:2]} : {wb, wr[2:0], 2'b00};
+        wire [511:0] wd = emit ? (wf4 ? bw4 : bw8) : tq ? {4{s_data[128*k +: 128]}} : s_data[512*(k % 2) +: 512];
+        wire [511:0] wm = (tq && !emit) ? ({384'd0, {128{1'b1}}} << (128 * wr[1:0])) : {512{1'b1}};
         ot_sram_1r1w_64x512_m1_r2c2 u_b (.clk(clk), .r_ce_in(rce), .r_addr_in(raddr), .rd_out(rdat[512*k +: 512]),
             .w_ce_in(we), .w_addr_in(wa), .wd_in(wd), .w_mask_in(wm),
             .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
@@ -182,8 +201,8 @@ module ot_hbm_sm_kv_line #(
         end
     end
     always @(posedge clk) begin
-        if (can_rd) raddr <= tq ? {2'b00, rb, rs} : (h128 ? {rb, rs, 2'b00} : {rb, rs, rt[2:1]});
-        p1_h <= (MUT == 2) ? ~(h128 ? rt[0] : rt[0]) : rt[0];
+        if (can_rd) raddr <= h128 && !tq ? {rb, rs, 2'b00} : {2'b00, rb, rs};
+        p1_h <= (MUT == 2) ? ~rt[0] : rt[0];
         p1_s <= rs; p1_t <= rt; p1_n <= rn; p1_last <= op_done_rd; p1_we <= rlast_beat;
         p1_sc <= sc[{rb, rs}]; p1_k4 <= rf[{rb, rs}];
         p1_sc1 <= tq ? {sc1[{rb, rs, 2'd3}], sc1[{rb, rs, 2'd2}], sc1[{rb, rs, 2'd1}], sc1[{rb, rs, 2'd0}]}
@@ -236,7 +255,8 @@ module ot_hbm_sm_kv_line #(
             end
         end
     endfunction
-    wire [511:0] tqd = rdat[512*p2_t +: 512];         // tq: the step's bank word (4 rows x 16 codes)
+    wire [2:0]   bsel = (MUT == 2 && !h128) ? (p2_t ^ 3'd1) : p2_t;
+    wire [511:0] tqd = rdat[512*bsel +: 512];         // the beat's bank word (512-dim: 64 codes; tq: 4 rows x 16 codes)
     wire [1023:0] bf;
     wire [63:0]   lf;
     genvar j;
@@ -244,9 +264,8 @@ module ot_hbm_sm_kv_line #(
         localparam integer B8 = (MUT == 1) ? (j / 2) % 16 : j / 4;
         localparam integer Q = (MUT == 4) ? 3 - j / 16 : j / 16, JJ = j % 16;   // MUT 4: rows of a 4-row beat reversed
         wire [7:0] c8 = p2_h ? rdat[512 + 8*j +: 8] : rdat[8*j +: 8];
-        wire [3:0] c4 = p2_h ? rdat[256 + 4*j +: 4] : rdat[4*j +: 4];
-        wire [16:0] r8 = dq8(c8, p2_sc[8*B8 +: 8]);
-        wire [16:0] r4 = dq4(c4, p2_sc[8*(j/2) +: 8]);
+        wire [16:0] r8 = dq8(tqd[8*j +: 8], p2_sc[8*B8 +: 8]);
+        wire [16:0] r4 = dq4(tqd[4*j +: 4], p2_sc[8*(j/2) +: 8]);
         // head dim 128
         wire        qv = ({p2_s, 2'b00} + Q) < {1'b0, p2_n};          // tq: row 4s + q exists
         wire [16:0] rq = dq8(tqd[128*Q + 8*JJ +: 8], p2_sc1[32*Q + 8*(JJ/4) +: 8]);

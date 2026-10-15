@@ -106,26 +106,19 @@ def kv4_row(x):
     return codes, scodes, deq
 
 
-def pack_lines(codes, scales, kv4):
-    """SM-KV layout: line i, beat half h, lane j holds dim 8j + 2i + h."""
-    out = []
-    for i in range(4):
-        w = 0
-        for h in range(2):
-            for j in range(64):
-                d = 8 * j + 2 * i + h
-                if kv4:
-                    w |= int(codes[d]) << (4 * (64 * h + j))
-                else:
-                    w |= int(codes[d]) << (8 * (64 * h + j))
-        if kv4:
-            for b in range(32):
-                w |= int(scales[b]) << (512 + 8 * b)
-        elif i < 2:
-            for b in range(8):
-                w |= int(scales[8 * i + b]) << (1024 + 8 * b)
-        out.append(w)
-    return out
+def canon_row(codes, scales, kv4):
+    """Canonical packed row bytes: KV8 528 B (512 E4M3 codes in dim order + 16 UE8M0); KV4 288 B (256 B of E2M1 nibbles in
+    dim order, dim 2i low / 2i+1 high, + 32 E4M3 scales)."""
+    if kv4:
+        c = np.asarray(codes, dtype=np.uint8)
+        return bytes((c[0::2] & 15) | ((c[1::2] & 15) << 4)) + bytes(np.asarray(scales, dtype=np.uint8))
+    return bytes(np.asarray(codes, dtype=np.uint8)) + bytes(np.asarray(scales, dtype=np.uint8))
+
+
+def stream_lines(blob):
+    """The contiguous row bytes as 136-B lines (bit 8i of a line = byte i), last line zero-padded."""
+    blob = blob + bytes(-len(blob) % 136)
+    return [int.from_bytes(blob[i:i + 136], "little") for i in range(0, len(blob), 136)]
 
 
 # ---------------- record generation ----------------
@@ -178,10 +171,11 @@ def op_vectors(rec, op, d):
     if rec.get("qwen"):
         return qwen_vectors(rec, op, d)
     T8 = len(rec["rows8"])
-    lines = []
+    blob = b""
     for r in rows:
         codes, sc, _ = rec["rows4"][r - T8] if r >= T8 else rec["rows8"][r]
-        lines += pack_lines(codes, sc, 1 if r >= T8 else 0)
+        blob += canon_row(codes, sc, 1 if r >= T8 else 0)
+    lines = stream_lines(blob)
     if kind == "qk":
         qb = bf16b(rec["q"])
         xs = [sum(int(qb[8 * j + t]) << (16 * j) for j in range(64)) for t in range(8)]
