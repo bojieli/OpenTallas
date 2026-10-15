@@ -1,0 +1,30 @@
+{
+  "schema": "opentallas.s81.markov.fixed-calendar.v1",
+  "kernel": "ot_s81_markov_k256_static",
+  "control_master": "ot_s81_markov_ctl_static",
+  "clock_period_ps": 833.333,
+  "edges_relative_to_start_capture": {
+    "start": 0,
+    "head_latched": 1,
+    "head_launch": 2,
+    "first_payload": 1,
+    "last_payload": 16,
+    "result_pin": 177
+  },
+  "measured_start_to_result_cycles_in_bench": 178,
+  "minimum_command_interval_cycles": 179,
+  "payload_beats": 16,
+  "bits_per_payload": {
+    "weight": 256,
+    "embedding": 256
+  },
+  "head_bits": 32,
+  "result_bits": 32,
+  "reset_release_guard_edges": 4,
+  "response": "one-cycle pulse, no ready/credit/wait/held result; all slots predetermined",
+  "all_arithmetic_leaves": "existing pc2 views, no cycle changes",
+  "status": "source exact+mutant verified; ctl physical gate in flight. Canonical cmd85 descriptor endpoint and ROM provider, die adoption and full MTP x5 composition remain OPEN",
+  "unit_scope": "40 released-weight pairs +8 stress fullK256 rows, 768 beats, poison invalid payloads, result timing fixed across all48 rows, command II179",
+  "five_sweeps_cost": "No end-to-end performance claim: provider/vocab/sweep scheduler not composed. Native arithmetic latency unchanged.",
+  "payload_provenance": "results/rtl/dsrom_markov_row_20261008/record.json pins checkpointdba1be0a40aa45a94ad051997016db3960a90277 and tensor headers. head_logit is dynamic LM-head input; fixture head.hex is not an immutable production ROM descriptor."
+}

@@ -33,6 +33,16 @@ class Preamble(unittest.TestCase):
         self.assertIn("RVT_TT_nldm", t)
         self.assertIn("rom_tt.lib", t)
 
+    def test_corner_metadata_before_sdc(self):
+        # The current signoff scripts set the corner after read_db. Cutting
+        # at that assignment drops the SDC/SPEF and refuses a valid route.
+        script = TCL.replace("read_sdc /work/", "set ::ot_ce_corner tt\nread_sdc /work/", 1)
+        p = X.preamble(script)
+        self.assertIn("set ::ot_ce_corner tt", p)
+        self.assertIn("read_spef /work/results/asap7/x/base/6_final.spef", p)
+        self.assertIn("read_sdc /src/physical/signoff.sdc", p)
+        self.assertNotIn('puts "OT_CORNER', p)
+
     def test_needs_db_and_spef(self):
         with self.assertRaises(SystemExit):
             X.preamble("read_lef a\nread_db b\nputs x\n")
