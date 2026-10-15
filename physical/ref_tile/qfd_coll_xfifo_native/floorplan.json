@@ -7,13 +7,13 @@
   0,
   0,
   259.2,
-  328.32
+  432.0
  ],
  "core": [
   2.16,
   2.16,
   257.03999999999996,
-  326.15999999999997
+  429.84
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -60,7 +60,7 @@
    "inst": "*u_sq*g_mm*g_64x546*u_m",
    "idx": 0,
    "x": 41.04,
-   "y": 123.12,
+   "y": 166.32,
    "w": 178.632,
    "h": 81.0,
    "orient": "R0",
@@ -86,7 +86,7 @@
    "inst": "*u_sq*g_ib_mem*u_ib",
    "idx": 0,
    "x": 41.04,
-   "y": 224.64,
+   "y": 311.04,
    "w": 177.768,
    "h": 81.0,
    "orient": "R0",
@@ -135,6 +135,7 @@
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/ref_tile/qfd_coll_xfifo_native/pre_gpl.tcl",
   "physical/ref_tile/qfd_coll_xfifo_native/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl",
   "physical/common_flow/clock_spine.tcl",
   "physical/ref_tile/qfd_coll_xfifo_native/spine_ins.tcl",
   "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
