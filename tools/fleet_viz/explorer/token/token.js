@@ -28,12 +28,16 @@ export function defaultGeometry(base) {
 const T_CSS = `
 .tp-x{display:flex;flex-direction:column;gap:0;min-width:0;overflow-wrap:anywhere;height:100%;min-height:0}
 .tp-x .workspace{display:grid;grid-template-columns:220px minmax(0,1fr);flex:1;min-height:0}
-.tp-x .stage-nav{overflow:auto;border-right:1px solid #1b2540;background:#0b1020;padding:12px 8px;scrollbar-width:thin}
-.tp-x .nav-title{font:700 10.5px ui-monospace,Menlo,monospace;color:#8a97b8;letter-spacing:.12em;text-transform:uppercase;padding:4px 8px 12px}
-.tp-x .stage-nav button{display:flex;align-items:center;gap:8px;width:100%;background:none;border:1px solid transparent;color:#c3cbe0;text-align:left;padding:8px;border-radius:6px;cursor:pointer;font:12px Inter,system-ui,sans-serif}
-.tp-x .stage-nav button:hover{background:#16244a}
-.tp-x .stage-nav button[aria-pressed=true]{background:#16244a;border-color:#2a3a63;color:#5ee7ff}
-.tp-x .stage-nav button small{margin-left:auto;color:#8a97b8;font:10px ui-monospace,Menlo,monospace;white-space:nowrap}
+.tp-x .stage-nav{overflow:auto;border-right:1px solid #1b2540;background:#0b1020;padding:8px 0;scrollbar-width:thin}
+.tp-x .nav-title{font:700 10px ui-monospace,Menlo,monospace;color:#8a97b8;letter-spacing:.12em;text-transform:uppercase;padding:4px 12px 8px}
+.tp-x .stage-nav button{display:flex;align-items:center;gap:5px;width:100%;min-width:0;background:none;border:0;color:#c3cbe0;text-align:left;padding:3px 8px;min-height:24px;cursor:pointer;font:11.5px ui-monospace,Menlo,monospace}
+.tp-x .stage-nav button:hover,.tp-x .stage-nav button:focus-visible{background:#16244a;outline:1px solid #2a3a63;outline-offset:-1px}
+.tp-x .stage-nav button[aria-selected=true]{background:#16244a;color:#5ee7ff;box-shadow:inset 2px 0 #5ee7ff}
+.tp-x .stage-nav .tree-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.tp-x .stage-nav .tree-arrow{width:10px;flex:none;color:#8a97b8;font-size:9px}
+.tp-x .stage-nav button small{margin-left:auto;color:#8a97b8;font:10px ui-monospace,Menlo,monospace;white-space:nowrap;padding-left:4px}
+.tp-x .stage-nav .tree-folder{font-family:Inter,system-ui,sans-serif;font-weight:600;color:#8a97b8}
+.tp-x .stage-nav [role=group]{margin-left:10px;border-left:1px solid #1b2540}
 .tp-x .content{overflow:auto;min-width:0;padding:14px;display:flex;flex-direction:column;gap:14px;scrollbar-width:thin}
 .tp-x .toolbar{padding:10px 14px;border-bottom:1px solid #1b2540;background:#070b16}
 .tp-x .overview{background:#03050b!important}
@@ -57,7 +61,8 @@ const T_CSS = `
 .tp-x .metricline{display:flex;gap:8px 20px;align-items:baseline;flex-wrap:wrap;margin-bottom:12px}
 .tp-x .metricline b{font:700 22px Inter,system-ui,sans-serif;color:#e8eefc}
 .tp-x .metricline span{font:11px ui-monospace,Menlo,monospace;color:#8a97b8}
-@media(max-width:760px){.tp-x .workspace{grid-template-columns:1fr}.tp-x .stage-nav{max-height:150px;border-right:0;border-bottom:1px solid #1b2540;padding:8px;display:flex;flex-wrap:wrap;gap:4px}.tp-x .stage-nav .nav-title{width:100%;padding:0 4px 4px}.tp-x .stage-nav button{width:auto;padding:6px 8px}.tp-x .stage-nav button small{display:none}.tp-x .content{padding:10px}.tp-x .overview .fl{max-height:55vh;overflow:auto}.tp-x .toolbar{padding:8px 10px}}
+@media(max-width:760px){.tp-x .workspace{grid-template-columns:1fr;grid-template-rows:minmax(70px,135px) minmax(0,1fr)}.tp-x .stage-nav{max-height:135px;border-right:0;border-bottom:1px solid #1b2540;padding:4px 0}.tp-x .stage-nav .nav-title{padding:2px 10px 4px}.tp-x .stage-nav button{min-height:24px}.tp-x .content{padding:10px}.tp-x .overview .fl{max-height:55vh;overflow:auto}.tp-x .toolbar{padding:8px 10px}}
+
 
 .tp-x .bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .tp-x .tab{background:#0b1020;color:#c3cbe0;border:1px solid #1b2540;border-radius:999px;padding:5px 12px;font:600 12px Inter,system-ui,sans-serif;cursor:pointer}
@@ -138,9 +143,21 @@ export async function mountTokenExplorer(el, opts = {}) {
 
   let covV = null, covErr = null, covPending = false;
   let renderRevision = 0;
+  const expandedStages = new Set();
+  function scrollContentTo(panel, inset = 0) {
+    const content = panel?.closest('.content');
+    if (content) content.scrollTop += panel.getBoundingClientRect().top - content.getBoundingClientRect().top - inset;
+  }
+  function navigateStage(gid) {
+    tip(null); state.group = gid;
+    return render(null, gid ? 'stage' : 'whole');
+  }
   const loading = (label, hint = 'Fetching the flow graph and hardware details…') => h('div', { class: 'loading-state', role: 'status', 'aria-live': 'polite' },
     h('span', { class: 'spinner', 'aria-hidden': 'true' }), h('div', {}, label, h('small', {}, hint)));
-  async function render(keepT = null) {
+  async function render(keepT = null, navigation = null) {
+    const previousScroll = root.querySelector('.content')?.scrollTop || 0;
+    const previousNavScroll = root.querySelector('.stage-nav')?.scrollTop || 0;
+    const previousTreeFocus = root.contains(document.activeElement) ? document.activeElement?.dataset?.treeId : null;
     const revision = ++renderRevision;
     root.setAttribute('aria-busy', 'true');
     const current = cache[state.design];
@@ -152,19 +169,21 @@ export async function mountTokenExplorer(el, opts = {}) {
       root.replaceChildren(target);
     }
     target.replaceChildren(loading(label));
+    if (navigation === 'stage') { scrollContentTo(target); target.tabIndex = -1; target.focus({preventScroll:true}); }
+    else if (navigation === 'whole') { const content = root.querySelector('.content'); if (content) content.scrollTop = 0; }
     try {
-      await renderContent(keepT, revision);
+      await renderContent(keepT, revision, navigation, previousScroll, previousNavScroll, previousTreeFocus);
     } catch (e) {
       if (revision !== renderRevision) return;
       const destination = root.querySelector('.inspector') || target;
       destination.replaceChildren(h('div', { class: 'loading-state load-error', role: 'alert' },
         h('div', {}, 'Unable to load this view.', h('small', {}, e.message)),
-        h('button', { onclick: () => render(keepT) }, 'Retry')));
+        h('button', { onclick: () => render(keepT, navigation) }, 'Retry')));
     } finally {
       if (revision === renderRevision) root.setAttribute('aria-busy', 'false');
     }
   }
-  async function renderContent(keepT, revision) {
+  async function renderContent(keepT, revision, navigation, previousScroll, previousNavScroll, previousTreeFocus) {
     clock.pause();
     const arData = cache[state.design] ||= await loadRecord(o.base + state.design + '.json');
     if (revision !== renderRevision) return;
@@ -193,12 +212,12 @@ export async function mountTokenExplorer(el, opts = {}) {
     clock.scope(t0, t1, g ? 12 : 24);
     // tabs
     const modeSw = h('div', { class: 'mode', role: 'group', 'aria-label': 'decode mode' },
-      h('button', { 'aria-pressed': String(!mtp), onclick: () => { if (mtp) { state.mode = 'ar'; state.group = null; render(); } } }, 'AR'),
+      h('button', { 'aria-pressed': String(!mtp), onclick: () => { if (mtp) { state.mode = 'ar'; state.group = null; render(null, 'whole'); } } }, 'AR'),
       h('button', { 'aria-pressed': String(mtp), title: mtpInfo.available ? 'MTP: one speculative verify step (draft → verify → accept)' : mtpInfo.reason,
         ...(mtpInfo.available ? {} : { disabled: '' }),
-        onclick: () => { if (!mtp && mtpInfo.available) { state.mode = 'mtp'; state.group = null; render(); } } }, 'MTP'));
+        onclick: () => { if (!mtp && mtpInfo.available) { state.mode = 'mtp'; state.group = null; render(null, 'whole'); } } }, 'MTP'));
     const tabs = h('div', { class: 'bar toolbar', role: 'group', 'aria-label': 'design' },
-      ...DESIGNS.map((d) => h('button', { class: 'tab', 'aria-pressed': String(d.id === state.design), onclick: () => { state.design = d.id; state.group = null; render(); } }, d.label)), modeSw);
+      ...DESIGNS.map((d) => h('button', { class: 'tab', 'aria-pressed': String(d.id === state.design), onclick: () => { state.design = d.id; state.group = null; render(null, 'whole'); } }, d.label)), modeSw);
     // provenance banner
     const hd = data.headline, tt = data.totals;
     const grades = Object.entries(tt.by_grade);
@@ -226,14 +245,11 @@ export async function mountTokenExplorer(el, opts = {}) {
     const speed = h('select', { 'aria-label': 'replay length', onchange: () => { clock.seconds = Number(speed.value); } },
       ...[6, 12, 24, 60, 120].map((s) => h('option', { value: s, ...(s === clock.seconds ? { selected: '' } : {}) }, `${s} s replay`)));
     slider.addEventListener('input', () => clock.seek(t0 + (t1 - t0) * slider.value / 1000));
-    const openStage = (gid) => { tip(null); state.group = gid; render(); };
+    const openStage = navigateStage;
     const crumb = h('div', { class: 'scopebar' },
       h('button', { onclick: () => openStage(null), 'aria-label': 'Back to whole token' }, g ? '← Back to whole token' : 'Whole token overview'),
       h('span', {}, g ? `Whole token / ${g.label}` : 'Select a stage to inspect its operators. The full path stays visible.'));
-    const stageNav = h('nav', { class: 'stage-nav', 'aria-label': 'Token stages' },
-      h('div', { class: 'nav-title' }, 'Token stages'),
-      h('button', { 'aria-pressed': String(!g), onclick: () => openStage(null) }, 'Whole token', h('small', {}, `${data.groups.filter(x => x.critical).length} stages`)),
-      ...data.groups.filter(x => x.critical).map(x => h('button', { 'aria-pressed': String(x.id === state.group), onclick: () => openStage(x.id), title: x.label }, x.label, h('small', {}, fmtPct(x.share)))));
+    const stageNav = stageTree(data, state, expandedStages, openStage);
     const ctl = h('div', { class: 'ctl' }, playB, speed, slider, tread);
     clock.subs.clear();
     clock.on((t) => {
@@ -256,7 +272,7 @@ export async function mountTokenExplorer(el, opts = {}) {
     legend.append(covCtl);
     // panels
     const flowP = h('section', { class: 'panel overview', 'aria-label': 'Whole token flow' },
-      h('div', { class: 'pt' }, h('b', {}, mtp ? 'Flow graph of one MTP step: draft → verify → accept' : 'Flow graph by stage'), h('span', {}, 'Whole token · always visible')),
+      h('div', { class: 'pt' }, h('b', {}, mtp ? 'Flow graph of one MTP step: draft → verify → accept' : 'Flow graph by stage'), h('span', {}, 'Whole token · stage overview')),
       h('div', { class: 'metricline' }, h('b', {}, `${hd.tok_s.toLocaleString(undefined, { maximumFractionDigits: 1 })} tok/s`), h('span', {}, `${fmtCyc(tt.cycles)} · ${fmtUs(tt.cycles)} · ${mtp ? 'MTP step' : 'AR token'}`), h('span', {}, 'Historical numerical / priced scope · native ' + (native.native_qualified ? 'qualified' : 'incomplete'))),
       ctl, h('div', { class: 'fl', style: 'margin-top:12px' }), legend);
     const stageP = g ? h('div', { class: 'panel stage-flow' }, h('div', { class: 'pt' }, h('b', {}, `Operators of ${g.label}`), h('span', {}, `${fmtCyc(g.cycles)} · ${fmtPct(g.share)} of token`)), h('div', { class: 'fl' })) : null;
@@ -265,9 +281,9 @@ export async function mountTokenExplorer(el, opts = {}) {
     const dieBox = h('div', {}, loading('Loading floorplan…', 'Fetching the die geometry…'));
     const dieP = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, 'Floorplan replay'), h('span', {}, 'lit = instances of the running operators · line = data moving')), dieBox);
     const selP = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, 'Selected operator')), sel);
-    const shareP = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, mtp ? 'Share of the MTP step' : 'Share of the token latency'), h('span', {}, 'by stage and by element class')), shareTables(data, p, (gid) => { state.group = gid; render(); }));
+    const shareP = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, mtp ? 'Share of the MTP step' : 'Share of the token latency'), h('span', {}, 'by stage and by element class')), shareTables(data, p, openStage));
     const notes = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, 'How the numbers are built')), h('ul', { class: 'notes' }, ...data.notes.map((n) => h('li', {}, n))));
-    const inspector = h('section', { class: 'panel inspector', 'aria-label': 'Stage inspector' }, crumb,
+    const inspector = h('section', { class: 'panel inspector', 'aria-label': 'Stage inspector', tabindex: -1 }, crumb,
       ...(g ? [stageP] : [h('div', { class: 'kv' }, 'Inspect a stage from the flow graph or the stage list. Select an operator to see its timing, source and hardware mapping.')]),
       h('div', { class: 'two' }, dieP, selP));
     const evidence = h('details', { class: 'evidence' }, h('summary', {}, 'Timing provenance, accounting and source records'), banner);
@@ -276,6 +292,20 @@ export async function mountTokenExplorer(el, opts = {}) {
     content.append(shareP, evidence, notes, nativePanel);
     views.forEach((v) => v && v.destroy && v.destroy()); views = [];
     root.replaceChildren(tabs, h('div', { class: 'workspace' }, stageNav, content));
+    const restoreView = () => {
+      if (revision !== renderRevision) return;
+      if (navigation === 'stage' && g) { scrollContentTo(inspector); inspector.focus({ preventScroll: true }); }
+      else content.scrollTop = navigation === 'whole' ? 0 : previousScroll;
+      stageNav.scrollTop = previousNavScroll;
+      if (navigation === 'stage') {
+        const selected = stageNav.querySelector('[aria-selected=true]');
+        if (selected) { const r = selected.getBoundingClientRect(), v = stageNav.getBoundingClientRect(); if (r.top < v.top || r.bottom > v.bottom) stageNav.scrollTop += r.top - v.top - 30; }
+      } else if (!navigation && previousTreeFocus) {
+        [...stageNav.querySelectorAll('[role=treeitem]')].find(b => b.dataset.treeId === previousTreeFocus)?.focus({preventScroll:true});
+      }
+    };
+    restoreView();
+    requestAnimationFrame(restoreView);
     const onSelect = (n) => {
       sel.replaceChildren(detail(data, n));
       if (data.program && n.rec != null) {
@@ -284,6 +314,8 @@ export async function mountTokenExplorer(el, opts = {}) {
         programRecord(data, n).then((t) => { box.querySelector('pre').textContent = t || 'record not in the listing'; }, (e) => { box.querySelector('pre').textContent = 'listing: ' + e.message; });
       }
       views.forEach((v) => v && v.select && v.select(n.id));
+      const bounds = selP.getBoundingClientRect(), viewport = content.getBoundingClientRect();
+      if (bounds.top < viewport.top || bounds.top + 80 > viewport.bottom) scrollContentTo(selP, 100);
     };
     views.push(mountFlow(flowP.querySelector('.fl'), data, { clock, group: null, onSelect, onDrill: openStage }));
     if (stageP) views.push(mountFlow(stageP.querySelector('.fl'), data, { clock, group: state.group, onSelect }));
@@ -292,7 +324,7 @@ export async function mountTokenExplorer(el, opts = {}) {
       const box = flowP.querySelectorAll('.gbox')[i];
       if (box) { box.classList.add('inspected'); box.setAttribute('aria-current', 'step'); }
     }
-    views.push(mountGantt(ganttP.querySelector('.gn'), data, { clock, range: [t0, t1], onSelect, onZoom: (gid) => { state.group = gid; render(); } }));
+    views.push(mountGantt(ganttP.querySelector('.gn'), data, { clock, range: [t0, t1], onSelect, onZoom: openStage }));
     let gurls = o.geometryUrl && o.geometryUrl(state.design, data);
     gurls = gurls ? [].concat(gurls) : [];
     let geo = null, gsrc = null, gerr = [];
@@ -313,7 +345,7 @@ export async function mountTokenExplorer(el, opts = {}) {
     clock.seek(keepT != null && keepT >= t0 && keepT <= t1 ? keepT : t0);
   }
   function rerender() { return render(clock.t); }
-  await render();
+  await render(null, state.group ? 'stage' : 'whole');
   // the ledgers change under the view: re-map when /api/coverage/version moves (deferred while the replay plays)
   clock.on(() => { if (covPending && !clock.playing) { covPending = false; rerender(); } });
   setInterval(async () => {
@@ -322,7 +354,76 @@ export async function mountTokenExplorer(el, opts = {}) {
       if (v && covV && v !== covV) { covV = v; for (const k in cache) if (cache[k]) cache[k]._cov = null; if (clock.playing) covPending = true; else rerender(); }
     } catch (e) { /* server restart */ }
   }, 30000);
-  return { clock, show(design, group = null, mode = state.mode) { state.design = canonDesign(design); state.group = group; state.mode = mode; return render(); }, state };
+  return { clock, show(design, group = null, mode = state.mode) { state.design = canonDesign(design); state.group = group; state.mode = mode; return render(null, group ? 'stage' : 'whole'); }, state };
+}
+
+/** Compact, keyboard navigable hierarchy of the actual program's stage groups. */
+function stageTree(data, state, expanded, openStage) {
+  const namespace = `${state.design}/${state.mode}/`;
+  const groups = data.groups.filter(g => g.critical);
+  const root = { id: 'path', label: 'Token path', children: [] };
+  function folder(parent, id, label) {
+    let item = parent.children.find(x => x.id === id);
+    if (!item) { item = { id, label, children: [] }; parent.children.push(item); }
+    return item;
+  }
+  for (const g of groups) {
+    let parent = root;
+    const phase = g.phase || (/^D[.0-9H]/.test(g.id) || /^Draft/i.test(g.label) ? 'draft' : /^V[.]/.test(g.id) || /^Verify/i.test(g.label) ? 'verify' : /^(A|acc)$/.test(g.id) ? 'accept' : null);
+    if (phase) parent = folder(parent, phase, PHASE[phase]?.label || phase);
+    const layer = g.label.match(/\blayer\s+(\d+)/i);
+    const category = layer ? 'layers' : /head|argmax|accept|commit/i.test(g.label) ? 'decode' : /embed|prologue/i.test(g.label) ? 'input' : 'stages';
+    parent = folder(parent, parent.id + '/' + category, { layers:'Layers', decode:'Head / output', input:'Input', stages:'Pipeline stages' }[category]);
+    // HBM attention and FFN are distinct stage groups of the same real layer.
+    if (layer && groups.some(x => x.id !== g.id && x.label.match(/\blayer\s+(\d+)/i)?.[1] === layer[1] && (x.phase || '') === (g.phase || '') && x.id.split('.')[0] === g.id.split('.')[0])) {
+      parent = folder(parent, parent.id + '/L' + layer[1], 'Layer ' + layer[1]);
+    }
+    parent.children.push({ id: 'stage/' + g.id, label: g.label, stage: g });
+  }
+  // Expand selected ancestors when navigating from the canvas, timeline or table.
+  // Visit every branch rather than stopping after the first selected descendant.
+  function revealAll(item) { if (!item.children) return item.stage?.id === state.group; const hits = item.children.map(revealAll); if (hits.some(Boolean)) expanded.add(namespace + item.id); return hits.some(Boolean); }
+  revealAll(root);
+  if (!expanded.has(namespace + 'initialized')) { expanded.add(namespace + 'initialized'); expanded.add(namespace + 'path'); for (const child of root.children) expanded.add(namespace + child.id); }
+  const nav = h('nav', { class: 'stage-nav', 'aria-label': 'Token stages' });
+  const tree = h('div', { role: 'tree', 'aria-label': 'Token stage hierarchy' });
+  nav.append(h('div', { class: 'nav-title' }, 'Token stages'), tree);
+  function draw(focusId = null) {
+    let selectedButton = null;
+    function row(item, level, parentId = '') {
+      const isFolder = !!item.children, isOpen = expanded.has(namespace + item.id);
+      const childId = 'tp-tree-' + encodeURIComponent(namespace + item.id);
+      const button = h('button', { role: 'treeitem', 'aria-level': level, 'data-tree-id': item.id, 'data-parent-id': parentId,
+        ...(isFolder ? { class:'tree-folder', 'aria-expanded': String(isOpen), ...(isOpen ? { 'aria-owns': childId } : {}) } : { 'aria-selected': String((item.stage?.id || null) === state.group) }), tabindex: -1, title: item.label,
+        onclick: () => { if (isFolder) { isOpen ? expanded.delete(namespace + item.id) : expanded.add(namespace + item.id); draw(item.id); } else openStage(item.stage?.id || null); } },
+        h('span', { class:'tree-arrow', 'aria-hidden':'true' }, isFolder ? isOpen ? '▾' : '▸' : '·'),
+        h('span', { class:'tree-label' }, item.label), h('small', {}, isFolder ? String(item.children.length) : item.stage ? fmtPct(item.stage.share) : `${groups.length}`));
+      if (!isFolder && (item.stage?.id || null) === state.group) selectedButton = button;
+      const branch = h('div', { role:'none' }, button);
+      if (isFolder && isOpen) branch.append(h('div', { role:'group', id: childId }, ...item.children.map(x => row(x, level + 1, item.id))));
+      return branch;
+    }
+    tree.replaceChildren(row({id:'whole', label:'Whole token'}, 1), row(root, 1));
+    const buttons = [...tree.querySelectorAll('[role=treeitem]')];
+    const focus = buttons.find(b => b.dataset.treeId === focusId) || selectedButton || buttons[0];
+    focus.tabIndex = 0;
+    if (focusId) focus.focus({preventScroll:true});
+  }
+  tree.addEventListener('focusin', e => { const item = e.target.closest('[role=treeitem]'); if (item) for (const button of tree.querySelectorAll('[role=treeitem]')) button.tabIndex = button === item ? 0 : -1; });
+  tree.addEventListener('keydown', e => {
+    const item = e.target.closest('[role=treeitem]'); if (!item) return;
+    const buttons = [...tree.querySelectorAll('[role=treeitem]')], index = buttons.indexOf(item);
+    let next;
+    if (e.key === 'ArrowDown') next = buttons[Math.min(index + 1, buttons.length - 1)];
+    else if (e.key === 'ArrowUp') next = buttons[Math.max(index - 1, 0)];
+    else if (e.key === 'Home') next = buttons[0];
+    else if (e.key === 'End') next = buttons.at(-1);
+    else if (e.key === 'ArrowRight') { if (item.getAttribute('aria-expanded') === 'false') item.click(); else if (item.getAttribute('aria-expanded') === 'true') next = buttons[index + 1]; }
+    else if (e.key === 'ArrowLeft') { if (item.getAttribute('aria-expanded') === 'true') item.click(); else next = buttons.find(b => b.dataset.treeId === item.dataset.parentId); }
+    else return;
+    e.preventDefault(); if (next) { next.focus({preventScroll:true}); next.scrollIntoView({block:'nearest'}); }
+  });
+  draw(); return nav;
 }
 
 /** banner line: critical cycles on operators whose coverage rows have gaps (under the current overlay filter) */
