@@ -1,0 +1,276 @@
+{
+  "schema": "opentallas.qwen.native-controller-graph-proof.v1",
+  "qualified": false,
+  "instances": 1637,
+  "buses": 3406,
+  "geometry_errors": [],
+  "nonclock_reset_endpoint_bit_mismatches": [],
+  "source_ports": 53,
+  "geometry_sha256": "655ce7b541f85e97e03177e084afb78a2ac3ce94a5302b892b9bdb13f48ea7e5",
+  "native_control_contract": {
+    "master": "qfd_tt_ctlm_static_s",
+    "source": "rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_static_s.sv",
+    "source_sha256": "a853e0fafc343256b8fafdd43e54a42f344b6077e734e988024ab8ac1aaab71c",
+    "retired_master": "qfd_tt_ctlm",
+    "removed_obsolete_buses": [
+      "tt_xd",
+      "tt_xr"
+    ],
+    "source_ports": {
+      "ck_xpf": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "ck_me_sched": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "cp_active": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "cp": {
+        "bits": 56,
+        "direction": "output"
+      },
+      "su_image_ready": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "control_stores_ready": {
+        "bits": 1,
+        "direction": "output"
+      },
+      "program_obs": {
+        "bits": 76,
+        "direction": "output"
+      },
+      "layer_context_v": {
+        "bits": 1,
+        "direction": "output"
+      },
+      "native_tok": {
+        "bits": 18,
+        "direction": "output"
+      },
+      "native_pos": {
+        "bits": 18,
+        "direction": "output"
+      },
+      "native_cmd": {
+        "bits": 380,
+        "direction": "output"
+      },
+      "native_ret": {
+        "bits": 95,
+        "direction": "input"
+      },
+      "command_stage": {
+        "bits": 6,
+        "direction": "output"
+      },
+      "ib": {
+        "bits": 380,
+        "direction": "output"
+      },
+      "su_observe": {
+        "bits": 16,
+        "direction": "input"
+      },
+      "xpf": {
+        "bits": 72,
+        "direction": "output"
+      },
+      "mer0": {
+        "bits": 1,
+        "direction": "output"
+      },
+      "mer1": {
+        "bits": 1,
+        "direction": "output"
+      },
+      "mer2": {
+        "bits": 1,
+        "direction": "output"
+      },
+      "mer3": {
+        "bits": 1,
+        "direction": "output"
+      },
+      "mer4": {
+        "bits": 1,
+        "direction": "output"
+      },
+      "mer5": {
+        "bits": 1,
+        "direction": "output"
+      },
+      "rf0": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "rf1": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "rf2": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "xflt": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "ck_head": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "ck_tree": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "c0": {
+        "bits": 341,
+        "direction": "output"
+      },
+      "f0": {
+        "bits": 104,
+        "direction": "input"
+      },
+      "lc0": {
+        "bits": 26,
+        "direction": "output"
+      },
+      "c1": {
+        "bits": 341,
+        "direction": "output"
+      },
+      "f1": {
+        "bits": 104,
+        "direction": "input"
+      },
+      "lc1": {
+        "bits": 26,
+        "direction": "output"
+      },
+      "c2": {
+        "bits": 341,
+        "direction": "output"
+      },
+      "f2": {
+        "bits": 104,
+        "direction": "input"
+      },
+      "lc2": {
+        "bits": 26,
+        "direction": "output"
+      },
+      "ld": {
+        "bits": 16,
+        "direction": "input"
+      },
+      "mee": {
+        "bits": 8,
+        "direction": "output"
+      },
+      "meok": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "mx": {
+        "bits": 553,
+        "direction": "output"
+      },
+      "pw": {
+        "bits": 75,
+        "direction": "input"
+      },
+      "rsi": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "sel": {
+        "bits": 26,
+        "direction": "output"
+      },
+      "st": {
+        "bits": 49,
+        "direction": "input"
+      },
+      "uf": {
+        "bits": 4,
+        "direction": "input"
+      },
+      "xm": {
+        "bits": 92,
+        "direction": "output"
+      },
+      "xs": {
+        "bits": 57,
+        "direction": "input"
+      },
+      "kok": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "kwd": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "fab": {
+        "bits": 1,
+        "direction": "input"
+      },
+      "cf": {
+        "bits": 1,
+        "direction": "output"
+      },
+      "ovf": {
+        "bits": 1,
+        "direction": "output"
+      }
+    },
+    "clocks": [
+      "ck_head",
+      "ck_tree",
+      "ck_xpf",
+      "ck_me_sched"
+    ],
+    "missing_input_endpoints": [
+      "cp_active",
+      "fab",
+      "kok",
+      "kwd",
+      "native_ret",
+      "su_image_ready",
+      "su_observe"
+    ],
+    "unread_outputs": [
+      "cf",
+      "command_stage",
+      "control_stores_ready",
+      "cp",
+      "layer_context_v",
+      "mer3",
+      "mer4",
+      "mer5",
+      "native_cmd",
+      "native_pos",
+      "native_tok",
+      "ovf",
+      "program_obs"
+    ],
+    "XPF_TRANSPORT_EDGES": null,
+    "physical_evidence": "NEW assigned parent pins only; no routed view, child roots, insertion or compensated phase inherited",
+    "qualified": false
+  },
+  "staged_run": {
+    "unit": "oth-ubuntu-1455048-1792054705",
+    "exit_code": 0,
+    "remote": "/srv/opentallas-scratch/codex/q-system-pins-1015/src",
+    "kind": "metadata-only OT_RELAY_SKIP",
+    "source": "current57c5ce3da tools/actualstaticcontroller plus exactcurrent sourcepin header/clockmanifest overlay; retained frozen oldphysicalviews remain unqualified"
+  },
+  "historical_STA_rootcause": "C16s qfd_xcst_s has no ck physical LEF pin; get_pins ck and ck[0] both absent. Current source fixes real M3 clock location, but no route qualification inherited.",
+  "source_generator_gap": "Existing static_slot.py requires XPF markers absent in its declared physical source input; direct checked-in real static controller SHA used. Source owner notified; no regeneration claim."
+}
