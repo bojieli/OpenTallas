@@ -463,7 +463,8 @@ module ot_s81_hc_cnrsq #(
     input  wire                 tflt,
     input  wire [2:0]           cflt,
     output reg  [3*33-1:0]      ul,
-    output reg                  flt
+    output reg                  flt,
+    output reg                  ngo             // physical owner of the cntree norm-go launch flop
 );
     localparam integer O_RK = 0, O_RS = 2, O_RG = 3, O_RC = 5, O_PB = O_RC + S_RD * 16, O_NG = O_PB + 20,
                        O_NV = O_NG + 6, O_R = O_NV + 8, O_HS = O_R + 32, O_D = O_HS + 1;
@@ -477,6 +478,8 @@ module ot_s81_hc_cnrsq #(
     reg [1:0] rsr;
     always @(posedge sk) rsr <= {rsr[0], srs};
     wire rs_n = rsr[1];
+    always @(posedge sk or negedge rs_n)
+        if (!rs_n) ngo <= 1'b0; else ngo <= f_fv[S_RD + 1];
     reg [S_RD+4:0]     fvq;
     reg [O_D-1:0]      fcq;
     reg [S_RD*32-1:0]  epq;
@@ -607,10 +610,7 @@ module ot_s81_hc_cnbot #(
     wire [NE1*32-1:0] x1 = xf[1][NE1*32-1:0];
     wire [NE2*32-1:0] x2 = xf[2][NE2*32-1:0];
     wire [7:0] p0 = pc[0], p1 = pc[1], p2 = pc[2];
-    reg [1:0] rsr;
-    always @(posedge sk) rsr <= {rsr[0], srs};
-    reg ngo;                                             // the norm go leaving chain 0's far tile (pin flop)
-    always @(posedge sk or negedge rsr[1]) if (!rsr[1]) ngo <= 1'b0; else ngo <= f_fv[S_RD + 1];
+    wire ngo; // cnrsq owns this registered launch; the region wrapper contains no state.
     wire        ss_v, tflt;
     wire [31:0] ss;
     ot_s81_hc_cntree #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL),
@@ -618,7 +618,7 @@ module ot_s81_hc_cnbot #(
         .sk(sk), .srs(srs), .w_rvt(rv[0]), .e_rvt(rv[2]), .w_pi(p0), .e_pi(p2), .w_ex(x0), .e_ex(x2),
         .c_rvt(rv[1]), .c_pi(p1), .c_ex(x1), .ngo_i(ngo), .ss_v(ss_v), .ss(ss), .tflt(tflt));
     ot_s81_hc_cnrsq #(.NG(NG), .D(D), .S_RD(S_RD), .ML(ML), .AL(AL)) u_rsq (.sk(sk), .srs(srs), .f_fv(f_fv[0 +: FVW]),
-        .f_fc(f_fc0), .f_eps(f_eps0), .ss_v(ss_v), .ss(ss), .tflt(tflt), .cflt(cf), .ul(ul), .flt(flt));
+        .f_fc(f_fc0), .f_eps(f_eps0), .ss_v(ss_v), .ss(ss), .tflt(tflt), .cflt(cf), .ul(ul), .flt(flt), .ngo(ngo));
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------
