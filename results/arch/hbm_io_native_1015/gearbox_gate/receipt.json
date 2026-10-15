@@ -1,0 +1,39 @@
+{
+  "scope": "actual digital gearbox component; source-frame external stimuli, no endpoint/FEC integration",
+  "positive": {
+    "frames": 2922,
+    "epochs": 2,
+    "periods_per_epoch": 3,
+    "cycles_per_period": 612,
+    "frames_per_period": 487,
+    "log": "m0.log"
+  },
+  "mutants": {
+    "m1.log": "TX bit corruption detected at cycle2",
+    "m2.log": "RX off-by-one bit shift detected at cycle3",
+    "m3.log": "wrong frame reservation detected at cycle19"
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/io_static_20261015/ot_hbm_static_gearbox.sv": "3ca4eccbd1c00f04e57adf7b596e35d3fae26ad5c7441d5c256ef3cfbfaef5f0",
+    "rtl/hbm_accel/io_static_20261015/tb_static_gearbox.sv": "7602811232d5484fb7f3d786cfbd44d24f1464e2f08a83232af54713f7aebdba",
+    "tools/hbm_io/gearbox_calendar.py": "efc8ff9775470522594121f2a7b4fcda746c5535137398cb05ea1ede1e3fc357",
+    "tools/hbm_io/make_gearbox_vectors.py": "2ac8ca60f28c494c1b2ba8d08b3662d7ba1c88f2c70d22541c7d3e0022e1a999",
+    "tools/hbm_io/run_gearbox_gate.sh": "41718c05b92396ae5dc4abfe78f8a655c4477aa8fa478b44be4812521caf80b4"
+  },
+  "run": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-3697528-1792050092",
+    "terminal_exit": 0,
+    "admitted_mem_gb": 2,
+    "threads": 1
+  },
+  "native_qualified": false,
+  "physical_qualified": false,
+  "open": [
+    "Actual static612 replay endpoint producer/consumer join",
+    "Actual FEC local/recovered clock and rate-match join",
+    "Compiled epoch alignment/latency including idle/reset/retry",
+    "Production collective throughput against immutable price",
+    "Synthesis partition and registered pin/clock/TT/FF/DRC qualification"
+  ]
+}
