@@ -166,7 +166,7 @@ module dsfd_engram_c_hl #(
         .x_oh(), .x_a(), .x_do(), .r_oh(r2_oh), .r_a(r2_a), .r_d(rd2w));
 
     // Same-edge return relay leaves at the bank source pins (reset by the IO conditioner, as before).
-    ot_engc_rr256 u_rr0 (.ck(ck[0]), .rst_n(rst_io_n), .d(rd0), .q(read_return_pipe[255:0]));
+    ot_engc_rr256 u_rr0 (.ck(ck[0]), .rst(rst[0]), .d(rd0), .q(read_return_pipe[255:0]));      // own conditioner
     ot_engc_rr256w u_rr1 (.ck(ck[0]), .rst_n(rst_io_n), .d(rd1), .q(read_return_pipe[511:256]));
     ot_engc_rr64   u_rr2 (.ck(ck[0]), .rst(rst[0]), .d(rd2w[63:0]), .q(read_return_pipe[575:512]));   // own conditioner
 

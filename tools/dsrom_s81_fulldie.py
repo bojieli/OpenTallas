@@ -3641,6 +3641,7 @@ def build_r8(variant=None):
     global HOP_PLAN
     if HOP_FIX and HOP_PLAN is None:
         HOP_PLAN = {}
+        ALIGN_EXT[0] = False     # r8: planning passes align single stations only (the r7 rule)
         m0 = build_r8(variant)
         finalize_r8(m0)
         HOP_PLAN = hop_plan(m0)
@@ -3659,6 +3660,7 @@ def build_r8(variant=None):
             if not add_:
                 break
             HOP_PLAN.update(add_)
+        ALIGN_EXT[0] = True      # the built die: rigid runs / partial moves / spread entry (all re-judged, <= 450 um)
     variant = dict(variant or {})
     W, H = DIE
     insts, regions, notes = [], [], []
@@ -7479,6 +7481,9 @@ def finalize_r8(m):
 
 
 STATION_KINDS = ('stn', 'hstn', 'sstn', 'xstg')
+ALIGN_EXT = [True]             # r8: align-jogs extensions (aligned runs, partial moves, spread entry) on the final build only:
+                               # r8b screen applied them in the hop-plan passes too, so the plan saw a spread / shifted chain
+                               # the final build did not reproduce (tf2 d8: 3,056 b at 799 um, 11,377 bits over 500)
 ALIGN_STN_REACH_UM = 450.0     # r7: a station->station hop moved by --align-jogs stays <= 450 um a bit (hop gate 500)
 
 
@@ -7530,20 +7535,28 @@ def align_station_jogs(m, rounds=2):
             out.append(None if q is None else PA.place(it, w, h, q))
         return out
 
-    def worsens_hop(it, nx, ny):
+    def worsens_hop(it, nx, ny, group=None):
         """True when moving `it` to (nx, ny) is not safe for one of its connected data hops.  A hop may not get longer,
         EXCEPT a station-to-station hop (both ends generated stations, registered at both ends): it may lengthen up to
         ALIGN_STN_REACH_UM per bit provided the re-judged bundle is not a pin_align FAIL (r7 10-14: the never-lengthen
         rule left jog9's 5 hub station chains (hb_collective_vm d10/d16, hb_hc_s_hc_t d8, hc_t t_sr1, hr_W2 -> gather)
         with 84-255 um jogs in 4.6-86 um channels: moving the station onto its jogged peer adds the same y to a long
-        straight hop of its other side, which only spreads the jog over a longer channel)."""
+        straight hop of its other side, which only spreads the jog over a longer channel).
+        `group` (r8): the other stations moved rigidly with `it` by the same offset; hops between two group members
+        keep their geometry and are not judged."""
         ox, oy = it.x, it.y
+        dx_, dy_ = nx - ox, ny - oy
+        grp = group or {}
+        saved = {g_.name: (g_.x, g_.y) for g_ in grp.values()}
         try:
             for (an, ap), (bn, bp), bits in incident.get(it.name, []):
+                other = bn if an == it.name else an
+                if other in grp:
+                    continue
                 it.x, it.y = ox, oy
                 A0, B0 = pts(by[an], ap, bits), pts(by[bn], bp, bits)
                 if any(q is None for q in A0 + B0):
-                    return True  # no evidence that moving this hop is safe
+                    return 'no_pin:' + other
                 it.x, it.y = nx, ny
                 A1, B1 = pts(by[an], ap, bits), pts(by[bn], bp, bits)
                 L0 = [abs(a[0] - b[0]) + abs(a[1] - b[1]) for a, b in zip(A0, B0)]
@@ -7551,13 +7564,63 @@ def align_station_jogs(m, rounds=2):
                 if all(l1 <= l0 + 1e-6 for l0, l1 in zip(L0, L1)):
                     continue
                 if by[an].kind not in STATION_KINDS or by[bn].kind not in STATION_KINDS:
-                    return True  # pair limits of hard ends may be below 500: never lengthen
-                if max(L1) > ALIGN_STN_REACH_UM or PA.bundle(A1, B1)['verdict'] == 'FAIL':
-                    return True
+                    return 'lengthens_hard_end:' + other  # pair limits of hard ends may be below 500: never lengthen
+                if max(L1) > ALIGN_STN_REACH_UM:
+                    return 'reach:%s:%.1f' % (other, max(L1))
+                if PA.bundle(A1, B1)['verdict'] == 'FAIL':
+                    return 'other_hop_fail:' + other
             return False
         finally:
             it.x, it.y = ox, oy
+            for n_, (x_, y_) in saved.items():
+                by[n_].x, by[n_].y = x_, y_
 
+    def aligned_run(nm, ax):
+        """r8 2026-10-14: the stations reachable from `nm` through station-station hops whose two ends stand at the same
+        coordinate on the move axis (a straight aligned column / row of the same chain, jog 0): moved rigidly, their
+        internal hops keep their geometry.  jog10's d8 (hb_hc_s_hc_t _1 -> _2) and d10 (hb_collective_vm _10 -> _11)
+        FAILs sit between two such runs: a single station move lengthened the other side past the 450-um reach."""
+        c_ = lambda i_: (i_.x + i_.w / 2, i_.y + i_.h / 2)[ax]
+        run, todo = {nm: by[nm]}, [nm]
+        while todo:
+            cur_ = todo.pop()
+            for (an, _ap), (bn, _bp), _bits in incident.get(cur_, []):
+                o_ = bn if an == cur_ else an
+                if o_ in run or o_ in moved or by[o_].kind not in STATION_KINDS:
+                    continue
+                if abs(c_(by[o_]) - c_(by[cur_])) > 0.5:
+                    continue
+                run[o_] = by[o_]
+                todo.append(o_)
+        return run
+
+    def try_move(members, dx, dy):
+        """members {name: inst} moved rigidly by (dx, dy) (snapped): '' on success, else the refusal reason"""
+        boxes = {}
+        for n_, it_ in members.items():
+            nx, ny = up(it_.x + dx, GX), up(it_.y + dy, GY)
+            boxes[n_] = (nx, ny, nx + it_.w, ny + it_.h)
+        for n_, bx in boxes.items():
+            if bx[0] < 0 or bx[1] < 0 or bx[2] > DIE[0] or bx[3] > DIE[1]:
+                return 'outside:' + n_
+        for n_, it_ in members.items():
+            grp = {k_: v_ for k_, v_ in members.items() if k_ != n_}
+            why = worsens_hop(it_, boxes[n_][0], boxes[n_][1], grp)
+            if why:
+                return why
+        for o in m['insts']:
+            if o.name in members:
+                continue
+            for n_, bx in boxes.items():
+                if o.x < bx[2] - 1e-6 and bx[0] < o.x + o.w - 1e-6 and o.y < bx[3] - 1e-6 and bx[1] < o.y + o.h - 1e-6:
+                    return 'overlap:%s<-%s' % (n_, o.name)
+        for n_, it_ in members.items():
+            moved[n_] = (round(boxes[n_][0] - it_.x, 3), round(boxes[n_][1] - it_.y, 3), cur_bus[0])
+            it_.x, it_.y = boxes[n_][0], boxes[n_][1]
+        return ''
+
+    refused = {}
+    cur_bus = ['']
     for _ in range(rounds):
         rec = PA.analyze(m['insts'], m['buses'], die_lef_texts(m), names)
         todo = [r for r in rec['flagged'] if r['verdict'] == 'FAIL' and r.get('kind') == 'straight']
@@ -7568,25 +7631,135 @@ def align_station_jogs(m, rounds=2):
             fa = r['face'][0]
             ax = 0 if fa in 'NS' else 1
             d = r['at'][2 + ax] - r['at'][ax]
+            cur_bus[0] = r['bus']
+            why_ = []
+            cands = []
             for nm, sg in ((r['drv'], 1.0), (r['load'], -1.0)):
                 it = by.get(nm)
                 if it is None or it.kind not in STATION_KINDS or nm in moved:
+                    why_.append('%s:not_movable' % nm)
                     continue
-                dx, dy = (sg * d, 0.0) if ax == 0 else (0.0, sg * d)
-                nx, ny = up(it.x + dx, GX), up(it.y + dy, GY)
-                if worsens_hop(it, nx, ny):
+                cands.append(({nm: it}, sg))
+            for nm, sg in (((r['load'], -1.0), (r['drv'], 1.0)) if ALIGN_EXT[0] else ()):   # r8: aligned runs
+                it = by.get(nm)
+                if it is None or it.kind not in STATION_KINDS or nm in moved:
                     continue
-                bx = (nx, ny, nx + it.w, ny + it.h)
+                run = aligned_run(nm, ax)
+                if len(run) > 1:
+                    cands.append((run, sg))
+            tgt = [h_ for h_ in incident.get(r['drv'], []) if h_[0][0] == r['drv'] and h_[1][0] == r['load']]
+
+            def tgt_ok():
+                """the flagged bundle itself, re-judged at the current positions: not a FAIL"""
+                if len(tgt) != 1:
+                    return False
+                (an, ap), (bn, bp), bits = tgt[0]
+                A_, B_ = pts(by[an], ap, bits), pts(by[bn], bp, bits)
+                return not any(q is None for q in A_ + B_) and PA.bundle(A_, B_)['verdict'] != 'FAIL'
+            ok_ = False
+            # r8: the full jog first, then partial moves: a FAIL needs only jog_cut <= 0.6, i.e. the jog shortened
+            # until its crossing wires fit the channel (jog10 d10: 2,100 b, 108 um in 86.7 um; <= ~78 um suffices)
+            for frac in ((1.0, 0.75, 0.6, 0.45, 0.3) if ALIGN_EXT[0] else (1.0,)):
+                for members, sg in cands:
+                    dd = up(frac * d, GX if ax == 0 else GY) if d > 0 else -up(-frac * d, GX if ax == 0 else GY)
+                    dx, dy = (sg * dd, 0.0) if ax == 0 else (0.0, sg * dd)
+                    snap = {n_: (i_.x, i_.y) for n_, i_ in members.items()}
+                    mv0 = dict(moved)
+                    w_ = try_move(members, dx, dy)
+                    if not w_ and (frac == 1.0 or tgt_ok()):
+                        ok_ = True
+                        break
+                    if not w_:          # moved but the bundle is still a FAIL: undo
+                        for n_, (x_, y_) in snap.items():
+                            by[n_].x, by[n_].y = x_, y_
+                        moved.clear()
+                        moved.update(mv0)
+                        w_ = 'partial_still_fail'
+                    why_.append('%s[%d]@%.2f:%s' % (next(iter(members)), len(members), frac, w_))
+                if ok_:
+                    why_ = []
+                    break
+            if why_:
+                refused[r['bus']] = why_
+        if len(moved) == n0:
+            break
+    # r8 2026-10-14 SPREAD ENTRY: a straight FAIL whose driver is a generated hstn station facing a hard load port
+    # whose per-bit pins are spread along the face far beyond the station's face (jog10: g_hr_W2_o_d1 -> sp_gather.rW2,
+    # 759 b in a 43-um station vs three lane bands over 388 um: jog 255 in a 21-um channel; no position of a compact
+    # station can fix it).  The die owns the station (top-down): it becomes a dedicated master spanning the load pins,
+    # every dq bit exactly opposite its load pin and di at the same coordinate on the input face, so the fan-out is
+    # made on the input side in the wide channel toward the previous station (re-judged: not a FAIL, <= 450 um a bit).
+    # Same register stage, no cycle added; RTL is the generated hstn glue (one ot_fwd_link_stage per 512 bits).
+    if refused and ALIGN_EXT[0]:
+        rec = PA.analyze(m['insts'], m['buses'], die_lef_texts(m), names)
+        spread = m.setdefault('spread_stations', {})
+        for r in [r for r in rec['flagged'] if r['verdict'] == 'FAIL' and r.get('kind') == 'straight']:
+            it = by.get(r['drv'])
+            ld = by.get(r['load'])
+            if it is None or ld is None or it.kind != 'hstn' or ld.kind in STATION_KINDS:
+                continue
+            horiz = it.master.startswith('dsfd_hstnh')
+            fa = r['face'][0]
+            if horiz != (fa in 'EW') or it.orient not in (('R0', 'MY') if horiz else ('R0', 'MX')):
+                continue
+            hop_out = [(a_, b_, n_) for a_, b_, n_ in incident.get(it.name, []) if a_[0] == it.name and b_[0] == ld.name]
+            hop_in = [(a_, b_, n_) for a_, b_, n_ in incident.get(it.name, []) if b_[0] == it.name]
+            if len(hop_out) != 1 or len(hop_in) != 1:
+                continue
+            (_, (ln, lp), bits), ((pn, pp), _, _) = hop_out[0], hop_in[0]
+            B = pts(ld, lp, bits)
+            A = pts(by[pn], pp, bits)
+            if any(q is None for q in A + B):
+                continue
+            al = 1 if horiz else 0                      # coordinate along the face
+            lo, hi = min(q[al] for q in B), max(q[al] for q in B)
+            g0 = GY if horiz else GX
+            start = math.floor((lo - 0.5) / g0) * g0
+            span = math.ceil((hi + 0.5 - start) / g0) * g0
+            thick = it.w if horiz else it.h
+            toward = 1.0 if fa in 'EN' else -1.0       # the load lies in +axis direction from the driver face
+            lc = (ld.x if toward > 0 else ld.x + ld.w) if horiz else (ld.y if toward > 0 else ld.y + ld.h)
+            g1 = GX if horiz else GY
+            base = (lc - thick - 1.0) if toward > 0 else (lc + 1.0)
+            cands = [up(base - toward * g1 * k, g1) if toward > 0 else up(base + g1 * k, g1) for k in range(0, 140)]
+            done_ = None
+            for c0 in cands:
+                bx = (c0, start, c0 + thick, start + span) if horiz else (start, c0, start + span, c0 + thick)
                 if bx[0] < 0 or bx[1] < 0 or bx[2] > DIE[0] or bx[3] > DIE[1]:
                     continue
                 if any(o is not it and o.x < bx[2] - 1e-6 and bx[0] < o.x + o.w - 1e-6 and o.y < bx[3] - 1e-6
                        and bx[1] < o.y + o.h - 1e-6 for o in m['insts']):
                     continue
-                moved[nm] = (round(nx - it.x, 3), round(ny - it.y, 3), r['bus'])
-                it.x, it.y = nx, ny
+                # per-bit pins: dq on the load-facing face, di on the opposite face, same along-coordinate
+                fo_ = bx[2] if (horiz and toward > 0) else bx[0] if horiz else (bx[3] if toward > 0 else bx[1])
+                fi_ = bx[0] if (horiz and toward > 0) else bx[2] if horiz else (bx[1] if toward > 0 else bx[3])
+                ly_ = 'M4' if horiz else 'M5'
+                fq_ = ('E' if toward > 0 else 'W') if horiz else ('N' if toward > 0 else 'S')
+                fd_ = dict(E='W', W='E', N='S', S='N')[fq_]
+                Dq = [((fo_, q[1], fq_, ly_) if horiz else (q[0], fo_, fq_, ly_)) for q in B]
+                Di = [((fi_, q[1], fd_, ly_) if horiz else (q[0], fi_, fd_, ly_)) for q in B]
+                bi = PA.bundle(A, Di)
+                if bi['verdict'] == 'FAIL' or max(abs(a[0] - b[0]) + abs(a[1] - b[1]) for a, b in zip(A, Di)) > ALIGN_STN_REACH_UM:
+                    continue
+                if PA.bundle(Dq, B)['verdict'] == 'FAIL':
+                    continue
+                done_ = (bx, [q[al] - start for q in B], bi['verdict'])
                 break
-        if len(moved) == n0:
-            break
+            if done_ is None:
+                refused[r['bus']] = refused.get(r['bus'], []) + ['spread:no_position']
+                continue
+            bx, loc, vin = done_
+            old = it.master
+            it.master = '%s_sp%d' % (old, len(spread))
+            m['pdir'][it.master] = dict(m['pdir'][old])
+            it.x, it.y, it.w, it.h = bx[0], bx[1], bx[2] - bx[0], bx[3] - bx[1]
+            spread[it.master] = dict(along=[round(v, 4) for v in loc], horiz=horiz, out_face=(
+                ('E' if toward > 0 else 'W') if horiz else ('N' if toward > 0 else 'S')), orient=it.orient)
+            moved[it.name] = ('spread', it.master, r['bus'], round(span, 2), vin)
+            refused.pop(r['bus'], None)
+    m['station_jog_refused'] = refused
+    if refused:
+        print('OT_ALIGN_JOGS refused %d bundles: %s' % (len(refused), json.dumps(refused)[:1500]), file=sys.stderr)
     m['station_jog_moves'] = moved
     print('OT_ALIGN_JOGS moved %d stations: %s' % (len(moved), json.dumps(moved)[:600]), file=sys.stderr)
 
@@ -7994,6 +8167,24 @@ def _faces_r8(m, Mx, it, ports):
         _lay(Mx, fo, P_(['o']), 'M4' if fo in 'EW' else 'M5', gap=0.0)
         cf_ = [f_ for f_ in 'NSEW' if f_ not in (fi, fo)][0]
         _lay(Mx, cf_, P_(['ck', 'rs']), 'M4' if cf_ in 'EW' else 'M5')
+    elif kind == 'hstn' and mst in m.get('spread_stations', {}):
+        # r8 spread-entry station (align_station_jogs): di / dq per bit at the load pin's coordinate along the face
+        sp_ = m['spread_stations'][mst]
+        horiz = sp_['horiz']
+        ly_ = 'M4' if horiz else 'M5'
+        d_ = 0.192
+        for p_, f_ in (('di', 'W' if horiz else 'S'), ('dq', 'E' if horiz else 'N')):
+            assert ports[p_][1] == len(sp_['along']), (mst, p_, ports[p_], len(sp_['along']))
+            rects = []
+            for i, c in enumerate(sp_['along']):
+                assert 0.2 <= c <= (Mx.h if horiz else Mx.w) - 0.2, (mst, p_, i, c)
+                in_ = FACE_PIN_INSET
+                rect = {'N': (c - .012, Mx.h - d_ - in_, c + .012, Mx.h - in_), 'S': (c - .012, in_, c + .012, d_ + in_),
+                        'W': (in_, c - .012, d_ + in_, c + .012), 'E': (Mx.w - d_ - in_, c - .012, Mx.w - in_, c + .012)}[f_]
+                rects.append((f'{p_}[{i}]', ly_, rect))
+            Mx.ports[p_] = ('rects', rects)
+            Mx.order.append(p_)
+        _lay(Mx, 'N' if horiz else 'W', P_(['ck']), 'M5' if horiz else 'M4')
     elif kind == 'hstn':
         horiz = mst.startswith('dsfd_hstnh')
         _lay(Mx, 'W' if horiz else 'S', P_(['di']), 'M4' if horiz else 'M5', gap=0.0)

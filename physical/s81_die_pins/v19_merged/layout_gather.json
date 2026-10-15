@@ -1,0 +1,540 @@
+{
+ "schema": "opentallas.s81.subslots.v1",
+ "parent": "dsfd_sp_gather_c (gather v4 direct, slot outline unchanged)",
+ "case": "v19_gather_v4",
+ "owner": "S81 die lead r6",
+ "request": "el1011-s81die.log 2026-10-14 11:36 (s81-gather r2)",
+ "relays": {
+  "u_rq_W0_2_0": {
+   "master": "dsfd_rly_276_WE",
+   "at": [
+    204.048,
+    101.952
+   ],
+   "clock": "ck_q[0]"
+  },
+  "u_rq_W0_3_0": {
+   "master": "dsfd_rly_276_WE",
+   "at": [
+    204.048,
+    155.232
+   ],
+   "clock": "ck_q[1]"
+  },
+  "u_rq_W0_3_1": {
+   "master": "dsfd_rly_276_WE",
+   "at": [
+    420.048,
+    101.952
+   ],
+   "clock": "ck_q[2]"
+  },
+  "u_rq_W1_2_0": {
+   "master": "dsfd_rly_276_WE",
+   "at": [
+    204.048,
+    286.272
+   ],
+   "clock": "ck_q[3]"
+  },
+  "u_rq_W1_3_0": {
+   "master": "dsfd_rly_276_WE",
+   "at": [
+    204.048,
+    339.552
+   ],
+   "clock": "ck_q[4]"
+  },
+  "u_rq_W1_3_1": {
+   "master": "dsfd_rly_276_WE",
+   "at": [
+    420.048,
+    286.272
+   ],
+   "clock": "ck_q[5]"
+  },
+  "u_rq_W2_2_0": {
+   "master": "dsfd_rly_276_WE",
+   "at": [
+    204.048,
+    470.592
+   ],
+   "clock": "ck_q[6]"
+  },
+  "u_rq_W2_3_0": {
+   "master": "dsfd_rly_276_WE",
+   "at": [
+    204.048,
+    523.872
+   ],
+   "clock": "ck_q[7]"
+  },
+  "u_rq_W2_3_1": {
+   "master": "dsfd_rly_276_WE",
+   "at": [
+    420.048,
+    470.592
+   ],
+   "clock": "ck_q[8]"
+  },
+  "u_rq_W3_2_0": {
+   "master": "dsfd_rly_276_WE",
+   "at": [
+    204.048,
+    654.912
+   ],
+   "clock": "ck_q[9]"
+  },
+  "u_rq_W3_3_0": {
+   "master": "dsfd_rly_276_WE",
+   "at": [
+    204.048,
+    708.192
+   ],
+   "clock": "ck_q[10]"
+  },
+  "u_rq_W3_3_1": {
+   "master": "dsfd_rly_276_WE",
+   "at": [
+    420.048,
+    654.912
+   ],
+   "clock": "ck_q[11]"
+  },
+  "u_rq_E0_2_0": {
+   "master": "dsfd_rly_276_EW",
+   "at": [
+    1500.048,
+    101.952
+   ],
+   "clock": "ck_q[12]"
+  },
+  "u_rq_E0_3_0": {
+   "master": "dsfd_rly_276_EW",
+   "at": [
+    1500.048,
+    155.232
+   ],
+   "clock": "ck_q[13]"
+  },
+  "u_rq_E0_3_1": {
+   "master": "dsfd_rly_276_EW",
+   "at": [
+    1284.048,
+    101.952
+   ],
+   "clock": "ck_q[14]"
+  },
+  "u_rq_E1_2_0": {
+   "master": "dsfd_rly_276_EW",
+   "at": [
+    1500.048,
+    286.272
+   ],
+   "clock": "ck_q[15]"
+  },
+  "u_rq_E1_3_0": {
+   "master": "dsfd_rly_276_EW",
+   "at": [
+    1500.048,
+    339.552
+   ],
+   "clock": "ck_q[16]"
+  },
+  "u_rq_E1_3_1": {
+   "master": "dsfd_rly_276_EW",
+   "at": [
+    1284.048,
+    286.272
+   ],
+   "clock": "ck_q[17]"
+  },
+  "u_rq_E2_2_0": {
+   "master": "dsfd_rly_276_EW",
+   "at": [
+    1500.048,
+    470.592
+   ],
+   "clock": "ck_q[18]"
+  },
+  "u_rq_E2_3_0": {
+   "master": "dsfd_rly_276_EW",
+   "at": [
+    1500.048,
+    523.872
+   ],
+   "clock": "ck_q[19]"
+  },
+  "u_rq_E2_3_1": {
+   "master": "dsfd_rly_276_EW",
+   "at": [
+    1284.048,
+    470.592
+   ],
+   "clock": "ck_q[20]"
+  },
+  "u_rq_E3_2_0": {
+   "master": "dsfd_rly_276_EW",
+   "at": [
+    1500.048,
+    654.912
+   ],
+   "clock": "ck_q[21]"
+  },
+  "u_rq_E3_3_0": {
+   "master": "dsfd_rly_276_EW",
+   "at": [
+    1500.048,
+    708.192
+   ],
+   "clock": "ck_q[22]"
+  },
+  "u_rq_E3_3_1": {
+   "master": "dsfd_rly_276_EW",
+   "at": [
+    1284.048,
+    654.912
+   ],
+   "clock": "ck_q[23]"
+  },
+  "u_rq_c0_2_0": {
+   "master": "dsfd_rly_214_NS",
+   "at": [
+    43.2,
+    226.08
+   ],
+   "clock": "ck_q[24]"
+  },
+  "u_rq_c0_3_0": {
+   "master": "dsfd_rly_214_NS",
+   "at": [
+    108.0,
+    410.4
+   ],
+   "clock": "ck_q[25]"
+  },
+  "u_rq_c0_3_1": {
+   "master": "dsfd_rly_214_NS",
+   "at": [
+    108.0,
+    226.08
+   ],
+   "clock": "ck_q[26]"
+  },
+  "u_rq_c1_2_0": {
+   "master": "dsfd_rly_214_NS",
+   "at": [
+    259.2,
+    226.08
+   ],
+   "clock": "ck_q[27]"
+  },
+  "u_rq_c1_3_0": {
+   "master": "dsfd_rly_214_NS",
+   "at": [
+    324.0,
+    410.4
+   ],
+   "clock": "ck_q[28]"
+  },
+  "u_rq_c1_3_1": {
+   "master": "dsfd_rly_214_NS",
+   "at": [
+    324.0,
+    226.08
+   ],
+   "clock": "ck_q[29]"
+  },
+  "u_rq_c2_2_0": {
+   "master": "dsfd_rly_214_NS",
+   "at": [
+    475.2,
+    226.08
+   ],
+   "clock": "ck_q[30]"
+  },
+  "u_rq_c2_3_0": {
+   "master": "dsfd_rly_214_NS",
+   "at": [
+    540.0,
+    410.4
+   ],
+   "clock": "ck_q[31]"
+  },
+  "u_rq_c2_3_1": {
+   "master": "dsfd_rly_214_NS",
+   "at": [
+    540.0,
+    226.08
+   ],
+   "clock": "ck_q[32]"
+  },
+  "u_rq_c3_2_0": {
+   "master": "dsfd_rly_214_NS",
+   "at": [
+    691.2,
+    226.08
+   ],
+   "clock": "ck_q[33]"
+  },
+  "u_rq_c3_3_0": {
+   "master": "dsfd_rly_214_NS",
+   "at": [
+    756.0,
+    410.4
+   ],
+   "clock": "ck_q[34]"
+  },
+  "u_rq_c3_3_1": {
+   "master": "dsfd_rly_214_NS",
+   "at": [
+    756.0,
+    226.08
+   ],
+   "clock": "ck_q[35]"
+  },
+  "u_rq_c4_2_0": {
+   "master": "dsfd_rly_214_NS",
+   "at": [
+    907.2,
+    226.08
+   ],
+   "clock": "ck_q[36]"
+  },
+  "u_rq_c4_3_0": {
+   "master": "dsfd_rly_214_NS",
+   "at": [
+    972.0,
+    410.4
+   ],
+   "clock": "ck_q[37]"
+  },
+  "u_rq_c4_3_1": {
+   "master": "dsfd_rly_214_NS",
+   "at": [
+    972.0,
+    226.08
+   ],
+   "clock": "ck_q[38]"
+  },
+  "u_rq_c5_2_0": {
+   "master": "dsfd_rly_214_NS",
+   "at": [
+    1123.2,
+    226.08
+   ],
+   "clock": "ck_q[39]"
+  },
+  "u_rq_c5_3_0": {
+   "master": "dsfd_rly_214_NS",
+   "at": [
+    1188.0,
+    410.4
+   ],
+   "clock": "ck_q[40]"
+  },
+  "u_rq_c5_3_1": {
+   "master": "dsfd_rly_214_NS",
+   "at": [
+    1188.0,
+    226.08
+   ],
+   "clock": "ck_q[41]"
+  },
+  "u_rq_c6_2_0": {
+   "master": "dsfd_rly_214_NS",
+   "at": [
+    1339.2,
+    226.08
+   ],
+   "clock": "ck_q[42]"
+  },
+  "u_rq_c6_3_0": {
+   "master": "dsfd_rly_214_NS",
+   "at": [
+    1404.0,
+    410.4
+   ],
+   "clock": "ck_q[43]"
+  },
+  "u_rq_c6_3_1": {
+   "master": "dsfd_rly_214_NS",
+   "at": [
+    1404.0,
+    226.08
+   ],
+   "clock": "ck_q[44]"
+  },
+  "u_rq_c7_2_0": {
+   "master": "dsfd_rly_214_NS",
+   "at": [
+    1555.2,
+    226.08
+   ],
+   "clock": "ck_q[45]"
+  },
+  "u_rq_c7_3_0": {
+   "master": "dsfd_rly_214_NS",
+   "at": [
+    1620.0,
+    410.4
+   ],
+   "clock": "ck_q[46]"
+  },
+  "u_rq_c7_3_1": {
+   "master": "dsfd_rly_214_NS",
+   "at": [
+    1620.0,
+    226.08
+   ],
+   "clock": "ck_q[47]"
+  }
+ },
+ "leaf_origins": {
+  "g0k0": [
+   12.96,
+   61.632
+  ],
+  "g0k1": [
+   12.96,
+   245.952
+  ],
+  "g0k2": [
+   12.96,
+   430.272
+  ],
+  "g0k3": [
+   12.96,
+   614.592
+  ],
+  "g1k0": [
+   228.96,
+   61.632
+  ],
+  "g1k1": [
+   228.96,
+   245.952
+  ],
+  "g1k2": [
+   228.96,
+   430.272
+  ],
+  "g1k3": [
+   228.96,
+   614.592
+  ],
+  "g2k0": [
+   444.96,
+   61.632
+  ],
+  "g2k1": [
+   444.96,
+   245.952
+  ],
+  "g2k2": [
+   444.96,
+   430.272
+  ],
+  "g2k3": [
+   444.96,
+   614.592
+  ],
+  "g3k0": [
+   660.96,
+   61.632
+  ],
+  "g3k1": [
+   660.96,
+   245.952
+  ],
+  "g3k2": [
+   660.96,
+   430.272
+  ],
+  "g3k3": [
+   660.96,
+   614.592
+  ],
+  "g4k0": [
+   876.96,
+   61.632
+  ],
+  "g4k1": [
+   876.96,
+   245.952
+  ],
+  "g4k2": [
+   876.96,
+   430.272
+  ],
+  "g4k3": [
+   876.96,
+   614.592
+  ],
+  "g5k0": [
+   1092.96,
+   61.632
+  ],
+  "g5k1": [
+   1092.96,
+   245.952
+  ],
+  "g5k2": [
+   1092.96,
+   430.272
+  ],
+  "g5k3": [
+   1092.96,
+   614.592
+  ],
+  "g6k0": [
+   1308.96,
+   61.632
+  ],
+  "g6k1": [
+   1308.96,
+   245.952
+  ],
+  "g6k2": [
+   1308.96,
+   430.272
+  ],
+  "g6k3": [
+   1308.96,
+   614.592
+  ],
+  "g7k0": [
+   1524.96,
+   61.632
+  ],
+  "g7k1": [
+   1524.96,
+   245.952
+  ],
+  "g7k2": [
+   1524.96,
+   430.272
+  ],
+  "g7k3": [
+   1524.96,
+   614.592
+  ]
+ },
+ "decisions": [
+  "leaf li window fixed by the closed lane relay o pattern at leaf y + 40.32: the c3 stage-1 relays (channel g1|g2 / g6|g5) move from +66.96 to +40.32; c3 stage 0 keeps +93.6 (relay -> relay jog in its channel)",
+  "co pin x = mean slot pattern; worst row jog 51.5 um",
+  "ck_q entries: nearest slot face; entry wire lengths in the slot file (ck_q_entries)",
+  "strip relays 9_WE / 12_EN and ctl g4 CLOSED: adopted"
+ ],
+ "pin_files": [
+  "physical/s81_die_pins/v19/dsfd_rly_276_WE.json",
+  "physical/s81_die_pins/v19/dsfd_rly_276_EW.json",
+  "physical/s81_die_pins/v19/dsfd_rly_214_NS.json",
+  "physical/s81_die_pins/v19/dsfd_rly_9_WE.json",
+  "physical/s81_die_pins/v19/dsfd_rly_12_EN.json",
+  "physical/s81_die_pins/v19/dsfd_gth_ctl.json",
+  "physical/s81_die_pins/v19/dsfd_gth_rw.json",
+  "physical/s81_die_pins/v19/dsfd_gth_re.json",
+  "physical/s81_die_pins/v19/dsfd_sp_gather_c.json"
+ ]
+}

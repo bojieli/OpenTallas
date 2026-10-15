@@ -60,7 +60,7 @@ LIST="rtl/lib/ot_reset_sync.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_skid_buffer.s
  rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv
  rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv rtl/dsrom_sys/s81_ph/ot_s81ph_coll_rstc.sv rtl/dsrom_sys/s81_ph/ot_s81_pll_bb.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv
  rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv
- rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_collective_c.sv rtl/dsrom_sys/s81_ph/coll/dsfd_coll_job.sv rtl/dsrom_sys/s81_ctrl/ot_s81_coll_job.sv
+ rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_collective_c.sv rtl/dsrom_sys/s81_ph/coll/dsfd_coll_job.sv rtl/dsrom_sys/s81_ctrl/ot_s81_coll_job.sv rtl/dsrom_sys/s81_ph/coll/dsfd_coll_xc.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv
  rtl/rom/ot_w15_rom_oneshot_px_acceptedpop.sv rtl/link/ot_fifo_sram_fwft.sv rtl/link/ot_link_crc32.sv rtl/common/ot_link_credit.sv
  rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/ot_dsrom_link_chan.sv
  physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v
