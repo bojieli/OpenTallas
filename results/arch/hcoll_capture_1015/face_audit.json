@@ -1,0 +1,116 @@
+{
+  "status": "PASS",
+  "top": "ot_hgi_coll_static_link_capture",
+  "all_controller_inputs_first_capture": {
+    "epoch_begin": {
+      "port_bits": 1,
+      "first_capture_D_loads": 1
+    },
+    "epoch": {
+      "port_bits": 8,
+      "first_capture_D_loads": 8
+    },
+    "wr_v": {
+      "port_bits": 1,
+      "first_capture_D_loads": 1
+    },
+    "wr_observed_v": {
+      "port_bits": 1,
+      "first_capture_D_loads": 1
+    },
+    "wr_seq": {
+      "port_bits": 16,
+      "first_capture_D_loads": 16
+    },
+    "wr_flit": {
+      "port_bits": 545,
+      "first_capture_D_loads": 545
+    },
+    "rd_v": {
+      "port_bits": 1,
+      "first_capture_D_loads": 1
+    },
+    "rd_seq": {
+      "port_bits": 16,
+      "first_capture_D_loads": 16
+    },
+    "rx_expect_v": {
+      "port_bits": 1,
+      "first_capture_D_loads": 1
+    },
+    "rx_expect_seq": {
+      "port_bits": 16,
+      "first_capture_D_loads": 16
+    },
+    "phy_up": {
+      "port_bits": 1,
+      "first_capture_D_loads": 1
+    },
+    "rx_pin_v": {
+      "port_bits": 1,
+      "first_capture_D_loads": 1
+    },
+    "rx_pin_flit": {
+      "port_bits": 612,
+      "first_capture_D_loads": 612
+    }
+  },
+  "checks": {
+    "output.tx_pin_v": 1,
+    "output.tx_pin_flit": 607,
+    "output.rx_v": 1,
+    "output.rx_flit": 545,
+    "output.epoch_abort": 1,
+    "output.retry_requested": 1,
+    "output.fault_cause": 11,
+    "bank_we": 1,
+    "bank_wa": 6,
+    "bank_ra": 6,
+    "bank_data": 561,
+    "bank0.dout": 141,
+    "g_bank[0].u_store.we_pin": 1,
+    "g_bank[0].u_store.wa_pin": 6,
+    "g_bank[0].u_store.ra_pin": 6,
+    "g_bank[0].u_store.din_pin": 141,
+    "bank1.dout": 141,
+    "g_bank[1].u_store.we_pin": 1,
+    "g_bank[1].u_store.wa_pin": 6,
+    "g_bank[1].u_store.ra_pin": 6,
+    "g_bank[1].u_store.din_pin": 141,
+    "bank2.dout": 141,
+    "g_bank[2].u_store.we_pin": 1,
+    "g_bank[2].u_store.wa_pin": 6,
+    "g_bank[2].u_store.ra_pin": 6,
+    "g_bank[2].u_store.din_pin": 141,
+    "bank3.dout": 138,
+    "g_bank[3].u_store.we_pin": 1,
+    "g_bank[3].u_store.wa_pin": 6,
+    "g_bank[3].u_store.ra_pin": 6,
+    "g_bank[3].u_store.din_pin": 138,
+    "g_bank[0].u_store.u_native.u_sram.r_addr_in": 6,
+    "g_bank[0].u_store.u_native.u_sram.w_addr_in": 6,
+    "g_bank[0].u_store.u_native.u_sram.w_ce_in": 1,
+    "g_bank[0].u_store.u_native.u_sram.wd_in": 141,
+    "g_bank[1].u_store.u_native.u_sram.r_addr_in": 6,
+    "g_bank[1].u_store.u_native.u_sram.w_addr_in": 6,
+    "g_bank[1].u_store.u_native.u_sram.w_ce_in": 1,
+    "g_bank[1].u_store.u_native.u_sram.wd_in": 141,
+    "g_bank[2].u_store.u_native.u_sram.r_addr_in": 6,
+    "g_bank[2].u_store.u_native.u_sram.w_addr_in": 6,
+    "g_bank[2].u_store.u_native.u_sram.w_ce_in": 1,
+    "g_bank[2].u_store.u_native.u_sram.wd_in": 141,
+    "g_bank[3].u_store.u_native.u_sram.r_addr_in": 6,
+    "g_bank[3].u_store.u_native.u_sram.w_addr_in": 6,
+    "g_bank[3].u_store.u_native.u_sram.w_ce_in": 1,
+    "g_bank[3].u_store.u_native.u_sram.wd_in": 138
+  },
+  "register_bits_per_root": [
+    4421,
+    597,
+    597,
+    597,
+    567
+  ],
+  "actual_macro_count": 4,
+  "scope": "mapped generic gate FF-Q launch/capture and all macro input faces; no route or TT/FF timing claim"
+}
