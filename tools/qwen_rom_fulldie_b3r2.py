@@ -2837,6 +2837,10 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     # net is never planned by itself: it rides the forward chain's relay frames (one registered hop each way per frame,
     # the closed station family ot_qwen_die_station TAP=0), relay ports a_d / a_r (upstream face) and b_d / b_r
     pair = dict(m.get('bus_pair') or {})          # forward bid -> reverse bid
+    # static schedule (owner 10-14): a static DVM corridor has no ready net any more; a pair whose reverse bus is gone
+    # is an ordinary forward bus
+    _names = {b_[0] for b_ in m['buses']}
+    pair = {f_: r_ for f_, r_ in pair.items() if r_ in _names}
     rev_idx = {b_[0]: j_ for j_, b_ in enumerate(m['buses']) if b_[0] in set(pair.values())}
     feedback = []        # it24: (bid, max hop before, after, accepted)
     plans = {}
