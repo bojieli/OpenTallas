@@ -126,7 +126,9 @@ endmodule
 
 module qfd_rstseq #(
     parameter integer FLUSH = 512,      // >= 2 x the longest die relay chain (C3: 149 stages) + margin
-    parameter integer STEP  = 8         // edges between domain releases
+    parameter integer STEP  = 256       // edges between domain releases at the source: > the deepest domain reset
+                                        // tree (C8 build: field 252, io 170, spine 122, tree top 48 cycles), so the
+                                        // releases ARRIVE in order io -> field -> spine -> tree top -> sequencer
 ) (
     input  wire ck,
     input  wire rsi,                    // synchronised forwarded reset (qfd_rstsync rso_f), active low
