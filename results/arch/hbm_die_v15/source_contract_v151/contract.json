@@ -29,6 +29,7 @@
   "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static.sv": "e9fcc0f4d7a1a264cd0acc9a8f88c5ff29212bde184086159b1ccf342b09f223",
   "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv": "fd3c9a703e8de821595e38468f608b97337932aa34f2d8529189ced1102cd991",
   "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv": "11389d87c141c8a0e3c4ba3c1e5f0c2cafd88dce2c48f16c2e4d2356c2ffbf5f",
+  "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv": "977e12fdd31a080540285ad9807f4987de61742207ede098ca510dbff5d4a701",
   "rtl/hbm_accel/index/ot_hbm_idx_scheduled_static.sv": "622f92c2f9eb3f4a7f2eb28c55b00bd71c524be93ac58857112362204f4c423b"
  },
  "dependency_inventory_sha256": {
@@ -10598,6 +10599,69 @@
     }
    }
   },
+  "hb_su_SW": {
+   "master": "ot_hbm_su_static_vm_ports",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv",
+   "params": {
+    "QID": 0,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7
+   },
+   "ports": {
+    "pg_clk": {
+     "direction": "input",
+     "bits": 4
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "su_rq": {
+     "direction": "input",
+     "bits": 136
+    },
+    "su_wq": {
+     "direction": "input",
+     "bits": 2248
+    },
+    "su_rr": {
+     "direction": "output",
+     "bits": 2056
+    },
+    "su_w_done": {
+     "direction": "output",
+     "bits": 8
+    },
+    "lg_rq": {
+     "direction": "output",
+     "bits": 136
+    },
+    "lg_wq": {
+     "direction": "output",
+     "bits": 2248
+    },
+    "lg_read": {
+     "direction": "output",
+     "bits": 8
+    },
+    "lg_write": {
+     "direction": "output",
+     "bits": 8
+    },
+    "lg_rr": {
+     "direction": "input",
+     "bits": 2056
+    },
+    "lg_w_done": {
+     "direction": "input",
+     "bits": 8
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 4
+    }
+   }
+  },
   "hb_sfu_SE": {
    "master": "ot_hgi_sfu_scheduled_engine",
    "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv",
@@ -10895,6 +10959,69 @@
     "wa": {
      "direction": "input",
      "bits": 12
+    }
+   }
+  },
+  "hb_su_SE": {
+   "master": "ot_hbm_su_static_vm_ports",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv",
+   "params": {
+    "QID": 1,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7
+   },
+   "ports": {
+    "pg_clk": {
+     "direction": "input",
+     "bits": 4
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "su_rq": {
+     "direction": "input",
+     "bits": 136
+    },
+    "su_wq": {
+     "direction": "input",
+     "bits": 2248
+    },
+    "su_rr": {
+     "direction": "output",
+     "bits": 2056
+    },
+    "su_w_done": {
+     "direction": "output",
+     "bits": 8
+    },
+    "lg_rq": {
+     "direction": "output",
+     "bits": 136
+    },
+    "lg_wq": {
+     "direction": "output",
+     "bits": 2248
+    },
+    "lg_read": {
+     "direction": "output",
+     "bits": 8
+    },
+    "lg_write": {
+     "direction": "output",
+     "bits": 8
+    },
+    "lg_rr": {
+     "direction": "input",
+     "bits": 2056
+    },
+    "lg_w_done": {
+     "direction": "input",
+     "bits": 8
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 4
     }
    }
   },
@@ -11198,6 +11325,69 @@
     }
    }
   },
+  "hb_su_NW": {
+   "master": "ot_hbm_su_static_vm_ports",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv",
+   "params": {
+    "QID": 2,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7
+   },
+   "ports": {
+    "pg_clk": {
+     "direction": "input",
+     "bits": 4
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "su_rq": {
+     "direction": "input",
+     "bits": 136
+    },
+    "su_wq": {
+     "direction": "input",
+     "bits": 2248
+    },
+    "su_rr": {
+     "direction": "output",
+     "bits": 2056
+    },
+    "su_w_done": {
+     "direction": "output",
+     "bits": 8
+    },
+    "lg_rq": {
+     "direction": "output",
+     "bits": 136
+    },
+    "lg_wq": {
+     "direction": "output",
+     "bits": 2248
+    },
+    "lg_read": {
+     "direction": "output",
+     "bits": 8
+    },
+    "lg_write": {
+     "direction": "output",
+     "bits": 8
+    },
+    "lg_rr": {
+     "direction": "input",
+     "bits": 2056
+    },
+    "lg_w_done": {
+     "direction": "input",
+     "bits": 8
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 4
+    }
+   }
+  },
   "hb_sfu_NE": {
    "master": "ot_hgi_sfu_scheduled_engine",
    "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv",
@@ -11495,6 +11685,69 @@
     "wa": {
      "direction": "input",
      "bits": 12
+    }
+   }
+  },
+  "hb_su_NE": {
+   "master": "ot_hbm_su_static_vm_ports",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv",
+   "params": {
+    "QID": 3,
+    "READ_RETURN": 10,
+    "WRITE_RETURN": 7
+   },
+   "ports": {
+    "pg_clk": {
+     "direction": "input",
+     "bits": 4
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "su_rq": {
+     "direction": "input",
+     "bits": 136
+    },
+    "su_wq": {
+     "direction": "input",
+     "bits": 2248
+    },
+    "su_rr": {
+     "direction": "output",
+     "bits": 2056
+    },
+    "su_w_done": {
+     "direction": "output",
+     "bits": 8
+    },
+    "lg_rq": {
+     "direction": "output",
+     "bits": 136
+    },
+    "lg_wq": {
+     "direction": "output",
+     "bits": 2248
+    },
+    "lg_read": {
+     "direction": "output",
+     "bits": 8
+    },
+    "lg_write": {
+     "direction": "output",
+     "bits": 8
+    },
+    "lg_rr": {
+     "direction": "input",
+     "bits": 2056
+    },
+    "lg_w_done": {
+     "direction": "input",
+     "bits": 8
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 4
     }
    }
   },
@@ -14012,6 +14265,62 @@
    "ready_or_credit": false
   },
   {
+   "name": "hb_su_SW_rq",
+   "bits": 136,
+   "source": [
+    "hb_su_SW",
+    "lg_rq"
+   ],
+   "sink": [
+    "lg_SW_0",
+    "local_rq"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "hb_su_SW_wq",
+   "bits": 2248,
+   "source": [
+    "hb_su_SW",
+    "lg_wq"
+   ],
+   "sink": [
+    "lg_SW_0",
+    "local_wq"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "hb_su_SW_rr",
+   "bits": 2056,
+   "source": [
+    "lg_SW_0",
+    "local_rr"
+   ],
+   "sink": [
+    "hb_su_SW",
+    "lg_rr"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "hb_su_SW_w_done",
+   "bits": 8,
+   "source": [
+    "lg_SW_0",
+    "local_w_done"
+   ],
+   "sink": [
+    "hb_su_SW",
+    "lg_w_done"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
    "name": "hb_dbk_SW_rq",
    "bits": 136,
    "source": [
@@ -14099,6 +14408,62 @@
    "sink": [
     "hb_sfu_SE",
     "local_w_done"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "hb_su_SE_rq",
+   "bits": 136,
+   "source": [
+    "hb_su_SE",
+    "lg_rq"
+   ],
+   "sink": [
+    "lg_SE_0",
+    "local_rq"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "hb_su_SE_wq",
+   "bits": 2248,
+   "source": [
+    "hb_su_SE",
+    "lg_wq"
+   ],
+   "sink": [
+    "lg_SE_0",
+    "local_wq"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "hb_su_SE_rr",
+   "bits": 2056,
+   "source": [
+    "lg_SE_0",
+    "local_rr"
+   ],
+   "sink": [
+    "hb_su_SE",
+    "lg_rr"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "hb_su_SE_w_done",
+   "bits": 8,
+   "source": [
+    "lg_SE_0",
+    "local_w_done"
+   ],
+   "sink": [
+    "hb_su_SE",
+    "lg_w_done"
    ],
    "clock": "stream",
    "ready_or_credit": false
@@ -14196,6 +14561,62 @@
    "ready_or_credit": false
   },
   {
+   "name": "hb_su_NW_rq",
+   "bits": 136,
+   "source": [
+    "hb_su_NW",
+    "lg_rq"
+   ],
+   "sink": [
+    "lg_NW_0",
+    "local_rq"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "hb_su_NW_wq",
+   "bits": 2248,
+   "source": [
+    "hb_su_NW",
+    "lg_wq"
+   ],
+   "sink": [
+    "lg_NW_0",
+    "local_wq"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "hb_su_NW_rr",
+   "bits": 2056,
+   "source": [
+    "lg_NW_0",
+    "local_rr"
+   ],
+   "sink": [
+    "hb_su_NW",
+    "lg_rr"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "hb_su_NW_w_done",
+   "bits": 8,
+   "source": [
+    "lg_NW_0",
+    "local_w_done"
+   ],
+   "sink": [
+    "hb_su_NW",
+    "lg_w_done"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
    "name": "hb_dbk_NW_rq",
    "bits": 136,
    "source": [
@@ -14283,6 +14704,62 @@
    "sink": [
     "hb_sfu_NE",
     "local_w_done"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "hb_su_NE_rq",
+   "bits": 136,
+   "source": [
+    "hb_su_NE",
+    "lg_rq"
+   ],
+   "sink": [
+    "lg_NE_0",
+    "local_rq"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "hb_su_NE_wq",
+   "bits": 2248,
+   "source": [
+    "hb_su_NE",
+    "lg_wq"
+   ],
+   "sink": [
+    "lg_NE_0",
+    "local_wq"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "hb_su_NE_rr",
+   "bits": 2056,
+   "source": [
+    "lg_NE_0",
+    "local_rr"
+   ],
+   "sink": [
+    "hb_su_NE",
+    "lg_rr"
+   ],
+   "clock": "stream",
+   "ready_or_credit": false
+  },
+  {
+   "name": "hb_su_NE_w_done",
+   "bits": 8,
+   "source": [
+    "lg_NE_0",
+    "local_w_done"
+   ],
+   "sink": [
+    "hb_su_NE",
+    "lg_w_done"
    ],
    "clock": "stream",
    "ready_or_credit": false
@@ -27178,6 +27655,50 @@
    "status": "NEEDS_REAL_CTS_VIEW"
   },
   {
+   "instance": "hb_su_SW",
+   "port": "pg_clk",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "pg_clk",
+   "bit": 1,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "pg_clk",
+   "bit": 2,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "pg_clk",
+   "bit": 3,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
    "instance": "hb_sfu_SE",
    "port": "clk",
    "bit": 0,
@@ -27544,6 +28065,50 @@
    "instance": "hb_dbk_SE",
    "port": "clk",
    "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "pg_clk",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "pg_clk",
+   "bit": 1,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "pg_clk",
+   "bit": 2,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "pg_clk",
+   "bit": 3,
    "source": [
     "hb_ckgen",
     "pll_stream"
@@ -27926,6 +28491,50 @@
    "status": "NEEDS_REAL_CTS_VIEW"
   },
   {
+   "instance": "hb_su_NW",
+   "port": "pg_clk",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_NW",
+   "port": "pg_clk",
+   "bit": 1,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_NW",
+   "port": "pg_clk",
+   "bit": 2,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_NW",
+   "port": "pg_clk",
+   "bit": 3,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
    "instance": "hb_sfu_NE",
    "port": "clk",
    "bit": 0,
@@ -28292,6 +28901,50 @@
    "instance": "hb_dbk_NE",
    "port": "clk",
    "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "pg_clk",
+   "bit": 0,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "pg_clk",
+   "bit": 1,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "pg_clk",
+   "bit": 2,
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ],
+   "physical_insertion_reference": null,
+   "status": "NEEDS_REAL_CTS_VIEW"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "pg_clk",
+   "bit": 3,
    "source": [
     "hb_ckgen",
     "pll_stream"
@@ -52503,14 +53156,14 @@
  "vm_slice_bind": {
   "SW": {
    "read_groups": {
-    "0": "lg_SW_0..2 (SU near / SFU hb_sfu_SW mid / HC far)",
+    "0": "lg_SW_0..2 (SU hb_su_SW near / SFU hb_sfu_SW mid / HC far)",
     "1": "hb_dbk_SW",
     "3": "hb_coll_SW",
     "4": "hb_idx",
     "2": "UNBOUND: no static producer for \"SM xload\""
    },
    "write_groups": {
-    "0": "lg_SW_0..2 (SU/SFU hb_sfu_SW/HC)"
+    "0": "lg_SW_0..2 (SU hb_su_SW/SFU hb_sfu_SW/HC)"
    },
    "records": {
     "0": "UNBOUND: record client \"argmax\" has no static cq338/cr274 source",
@@ -52524,20 +53177,20 @@
   },
   "SE": {
    "read_groups": {
-    "0": "lg_SE_0..2 (SU near / SFU hb_sfu_SE mid / HC far)",
+    "0": "lg_SE_0..2 (SU hb_su_SE near / SFU hb_sfu_SE mid / HC far)",
     "1": "hb_dbk_SE",
     "3": "hb_coll_SE",
     "2": "UNBOUND: no static producer for \"SM xload\"",
     "4": "UNBOUND: no static producer for \"IDX\""
    },
    "write_groups": {
-    "0": "lg_SE_0..2 (SU/SFU hb_sfu_SE/HC)"
+    "0": "lg_SE_0..2 (SU hb_su_SE/SFU hb_sfu_SE/HC)"
    },
    "records": {}
   },
   "NW": {
    "read_groups": {
-    "0": "lg_NW_0..2 (SU near / SFU hb_sfu_NW mid / HC far)",
+    "0": "lg_NW_0..2 (SU hb_su_NW near / SFU hb_sfu_NW mid / HC far)",
     "1": "hb_dbk_NW",
     "5": "hb_coll_NW",
     "2": "UNBOUND: no static producer for \"SM xload\"",
@@ -52546,7 +53199,7 @@
     "6": "UNBOUND: no static producer for \"IDX\""
    },
    "write_groups": {
-    "0": "lg_NW_0..2 (SU/SFU hb_sfu_NW/HC)",
+    "0": "lg_NW_0..2 (SU hb_su_NW/SFU hb_sfu_NW/HC)",
     "1": "UNBOUND: no static producer for \"CP\"",
     "2": "UNBOUND: no static producer for \"quant\""
    },
@@ -52559,7 +53212,7 @@
   },
   "NE": {
    "read_groups": {
-    "0": "lg_NE_0..2 (SU near / SFU hb_sfu_NE mid / HC far)",
+    "0": "lg_NE_0..2 (SU hb_su_NE near / SFU hb_sfu_NE mid / HC far)",
     "1": "hb_dbk_NE",
     "5": "hb_coll_NE",
     "2": "UNBOUND: no static producer for \"SM xload\"",
@@ -52568,7 +53221,7 @@
     "6": "UNBOUND: no static producer for \"IDX\""
    },
    "write_groups": {
-    "0": "lg_NE_0..2 (SU/SFU hb_sfu_NE/HC)",
+    "0": "lg_NE_0..2 (SU hb_su_NE/SFU hb_sfu_NE/HC)",
     "1": "UNBOUND: no static producer for \"attention\"",
     "2": "UNBOUND: no static producer for \"HC engine\""
    },
@@ -52587,11 +53240,11 @@
   "engines": {
    "SU_SW": {
     "tap": "lg_SW_0",
-    "instance": null,
+    "instance": "hb_su_SW",
     "owner": "H-ELEM-B (static SU)",
     "required_port_groups": 5,
-    "physical_port_groups": null,
-    "status": "OPEN: engine not yet bound in contract"
+    "physical_port_groups": 4,
+    "status": "OPEN 4 of 5: die lead adds the fifth SW/SE group with H-ELEM-B"
    },
    "SFU_SW": {
     "tap": "lg_SW_1",
@@ -52611,11 +53264,11 @@
    },
    "SU_SE": {
     "tap": "lg_SE_0",
-    "instance": null,
+    "instance": "hb_su_SE",
     "owner": "H-ELEM-B (static SU)",
     "required_port_groups": 5,
-    "physical_port_groups": null,
-    "status": "OPEN: engine not yet bound in contract"
+    "physical_port_groups": 4,
+    "status": "OPEN 4 of 5: die lead adds the fifth SW/SE group with H-ELEM-B"
    },
    "SFU_SE": {
     "tap": "lg_SE_1",
@@ -52635,11 +53288,11 @@
    },
    "SU_NW": {
     "tap": "lg_NW_0",
-    "instance": null,
+    "instance": "hb_su_NW",
     "owner": "H-ELEM-B (static SU)",
     "required_port_groups": 4,
-    "physical_port_groups": null,
-    "status": "OPEN: engine not yet bound in contract"
+    "physical_port_groups": 4,
+    "status": "SOURCE MET (4 pg_clk groups, d66ceb2dd); pins open"
    },
    "SFU_NW": {
     "tap": "lg_NW_1",
@@ -52659,11 +53312,11 @@
    },
    "SU_NE": {
     "tap": "lg_NE_0",
-    "instance": null,
+    "instance": "hb_su_NE",
     "owner": "H-ELEM-B (static SU)",
     "required_port_groups": 4,
-    "physical_port_groups": null,
-    "status": "OPEN: engine not yet bound in contract"
+    "physical_port_groups": 4,
+    "status": "SOURCE MET (4 pg_clk groups, d66ceb2dd); pins open"
    },
    "SFU_NE": {
     "tap": "lg_NE_1",
@@ -71350,70 +72003,6 @@
   },
   {
    "instance": "lg_SW_0",
-   "port": "local_rq",
-   "direction": "input",
-   "bits": 136,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 136,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     136
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_SW_0",
-   "port": "local_wq",
-   "direction": "input",
-   "bits": 2248,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 2248,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     2248
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_SW_0",
-   "port": "local_rr",
-   "direction": "output",
-   "bits": 2056,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 2056,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     2056
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_SW_0",
-   "port": "local_w_done",
-   "direction": "output",
-   "bits": 8,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 8,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     8
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_SW_0",
    "port": "bank_fault",
    "direction": "output",
    "bits": 8,
@@ -71744,70 +72333,6 @@
     [
      0,
      32
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_SE_0",
-   "port": "local_rq",
-   "direction": "input",
-   "bits": 136,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 136,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     136
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_SE_0",
-   "port": "local_wq",
-   "direction": "input",
-   "bits": 2248,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 2248,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     2248
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_SE_0",
-   "port": "local_rr",
-   "direction": "output",
-   "bits": 2056,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 2056,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     2056
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_SE_0",
-   "port": "local_w_done",
-   "direction": "output",
-   "bits": 8,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 8,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     8
     ]
    ],
    "status": "UNBOUND_FAIL"
@@ -72150,70 +72675,6 @@
   },
   {
    "instance": "lg_NW_0",
-   "port": "local_rq",
-   "direction": "input",
-   "bits": 136,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 136,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     136
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_NW_0",
-   "port": "local_wq",
-   "direction": "input",
-   "bits": 2248,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 2248,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     2248
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_NW_0",
-   "port": "local_rr",
-   "direction": "output",
-   "bits": 2056,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 2056,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     2056
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_NW_0",
-   "port": "local_w_done",
-   "direction": "output",
-   "bits": 8,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 8,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     8
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_NW_0",
    "port": "bank_fault",
    "direction": "output",
    "bits": 8,
@@ -72544,70 +73005,6 @@
     [
      0,
      32
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_NE_0",
-   "port": "local_rq",
-   "direction": "input",
-   "bits": 136,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 136,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     136
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_NE_0",
-   "port": "local_wq",
-   "direction": "input",
-   "bits": 2248,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 2248,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     2248
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_NE_0",
-   "port": "local_rr",
-   "direction": "output",
-   "bits": 2056,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 2056,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     2056
-    ]
-   ],
-   "status": "UNBOUND_FAIL"
-  },
-  {
-   "instance": "lg_NE_0",
-   "port": "local_w_done",
-   "direction": "output",
-   "bits": 8,
-   "required_owner": "actual VM programme SRAM calendar issuer",
-   "bound_bits": 0,
-   "unbound_bits": 8,
-   "unbound_ranges_half_open": [
-    [
-     0,
-     8
     ]
    ],
    "status": "UNBOUND_FAIL"
@@ -75557,6 +75954,118 @@
    "status": "UNBOUND_FAIL"
   },
   {
+   "instance": "hb_su_SW",
+   "port": "su_rq",
+   "direction": "input",
+   "bits": 136,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 136,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     136
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "su_wq",
+   "direction": "input",
+   "bits": 2248,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 2248,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     2248
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "su_rr",
+   "direction": "output",
+   "bits": 2056,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 2056,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     2056
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "su_w_done",
+   "direction": "output",
+   "bits": 8,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 8,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     8
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "lg_read",
+   "direction": "output",
+   "bits": 8,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 8,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     8
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "lg_write",
+   "direction": "output",
+   "bits": 8,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 8,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     8
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_SW",
+   "port": "fault",
+   "direction": "output",
+   "bits": 4,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 4,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     4
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
    "instance": "hb_sfu_SE",
    "port": "rst_lane_n",
    "direction": "input",
@@ -76485,6 +76994,118 @@
    "status": "UNBOUND_FAIL"
   },
   {
+   "instance": "hb_su_SE",
+   "port": "su_rq",
+   "direction": "input",
+   "bits": 136,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 136,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     136
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "su_wq",
+   "direction": "input",
+   "bits": 2248,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 2248,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     2248
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "su_rr",
+   "direction": "output",
+   "bits": 2056,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 2056,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     2056
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "su_w_done",
+   "direction": "output",
+   "bits": 8,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 8,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     8
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "lg_read",
+   "direction": "output",
+   "bits": 8,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 8,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     8
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "lg_write",
+   "direction": "output",
+   "bits": 8,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 8,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     8
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_SE",
+   "port": "fault",
+   "direction": "output",
+   "bits": 4,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 4,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     4
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
    "instance": "hb_sfu_NW",
    "port": "rst_lane_n",
    "direction": "input",
@@ -77413,6 +78034,118 @@
    "status": "UNBOUND_FAIL"
   },
   {
+   "instance": "hb_su_NW",
+   "port": "su_rq",
+   "direction": "input",
+   "bits": 136,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 136,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     136
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_NW",
+   "port": "su_wq",
+   "direction": "input",
+   "bits": 2248,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 2248,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     2248
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_NW",
+   "port": "su_rr",
+   "direction": "output",
+   "bits": 2056,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 2056,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     2056
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_NW",
+   "port": "su_w_done",
+   "direction": "output",
+   "bits": 8,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 8,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     8
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_NW",
+   "port": "lg_read",
+   "direction": "output",
+   "bits": 8,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 8,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     8
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_NW",
+   "port": "lg_write",
+   "direction": "output",
+   "bits": 8,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 8,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     8
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_NW",
+   "port": "fault",
+   "direction": "output",
+   "bits": 4,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 4,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     4
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
    "instance": "hb_sfu_NE",
    "port": "rst_lane_n",
    "direction": "input",
@@ -78336,6 +79069,118 @@
     [
      0,
      12
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "su_rq",
+   "direction": "input",
+   "bits": 136,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 136,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     136
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "su_wq",
+   "direction": "input",
+   "bits": 2248,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 2248,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     2248
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "su_rr",
+   "direction": "output",
+   "bits": 2056,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 2056,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     2056
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "su_w_done",
+   "direction": "output",
+   "bits": 8,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 8,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     8
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "lg_read",
+   "direction": "output",
+   "bits": 8,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 8,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     8
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "lg_write",
+   "direction": "output",
+   "bits": 8,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 8,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     8
+    ]
+   ],
+   "status": "UNBOUND_FAIL"
+  },
+  {
+   "instance": "hb_su_NE",
+   "port": "fault",
+   "direction": "output",
+   "bits": 4,
+   "required_owner": "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)",
+   "bound_bits": 0,
+   "unbound_bits": 4,
+   "unbound_ranges_half_open": [
+    [
+     0,
+     4
     ]
    ],
    "status": "UNBOUND_FAIL"
@@ -78666,7 +79511,7 @@
   "actual mapped PHY address/endian/PC striping proof required",
   "historical PC leaf rejected for address/clock semantics; actual block CDC replacement required"
  ],
- "unbound_count": 1615,
+ "unbound_count": 1627,
  "pin_only_placeholder_count": 0,
  "legacy_failures_disposition": "77 legacy station failures remain historical; v15 validates actual source ports independently",
  "qualification": {
