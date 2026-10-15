@@ -1,0 +1,54 @@
+{
+  "schema": "opentallas.hbm.native_K_client_mux.v1",
+  "status": "pass",
+  "clients": 3,
+  "physical_PCs": 32,
+  "read_owner_entries_per_PC": 64,
+  "write_owner_entries_per_PC": 32,
+  "native_read_reservations_per_PC": 32,
+  "original_tag_bits": 17,
+  "burst_read_lengths": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "tested_burst_length": 4,
+  "controller_instances": 1,
+  "controller_profile": {
+    "FAST_IDLE_DESC": 1,
+    "AQ_ROW_LEASE": 1,
+    "COLUMN_CLOSE_GUARD": 1
+  },
+  "wall_seconds": 97.95825789601076,
+  "runs": [
+    {
+      "name": "baseline",
+      "returncode": 0,
+      "output": "PASS actual3client nativeKmux original17tags burst4beats 1024trueWRACK 1536exactRD readowners48 nativeReserved32 REFpb89\nnative3client_mux/tb.sv:82: $finish called at 461314000 (1fs)"
+    },
+    {
+      "name": "wrong_read_owner",
+      "returncode": 1,
+      "output": "FATAL: native3client_mux/tb.sv:60: muxreadownership/tag/beat/data c1 p0 n0 tag10000 beat0\n       Time: 402944000  Scope: tb.SCORE.$ivl_for_loop23"
+    },
+    {
+      "name": "enqueue_ack",
+      "returncode": 1,
+      "output": "FATAL: native3client_mux/tb.sv:68: enqueueACKinsteadphysicalWRcommit p0\n       Time: 4608000  Scope: tb.SCORE.$ivl_for_loop23"
+    },
+    {
+      "name": "non_atomic_burst",
+      "returncode": 1,
+      "output": "FATAL: native3client_mux/tb.sv:60: muxreadownership/tag/beat/data c1 p0 n0 tag10000 beat1\n       Time: 403968000  Scope: tb.SCORE.$ivl_for_loop23"
+    }
+  ],
+  "scope": "Ownership protocol component with actual single native controller/real response SRAMs and strict offchip read/write timing fixture. Request stimuli are synthetic port transactions; no whole Engram/WKV/kernel/performance/physical qualification.",
+  "source_sha256": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_stream_pc_lease.sv": "c16adc653eff8bce34ace00d6b4753b6937e758604b8d809183e14e85ea8be4c",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_owned_stack.sv": "53774057356d0d09c4b6687bcd2760dec8a8a23c6ac02caf522fd72a587869c1",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_command_dram_pipeline_fixture.sv": "3bb69a5cd9d058bfd28df57acee4fb24e2a3d4992b4a468dbb638c4e5c8ade8f",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_native_client_mux.sv": "6ae7f6f612d239ac41f7be5e6196ccdbef76fce0cca73d459b9909224f20116b"
+  }
+}
