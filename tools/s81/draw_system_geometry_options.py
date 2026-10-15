@@ -6,7 +6,7 @@ from pathlib import Path
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--report',type=Path,required=True);ap.add_argument('--capacity',type=Path,required=True);ap.add_argument('--out',type=Path,required=True);a=ap.parse_args()
  p=json.loads(a.report.read_text());cap=json.loads(a.capacity.read_text());scale=.015
- s=['<svg xmlns="http://www.w3.org/2000/svg" width="1670" height="650" viewBox="0 0 1670 650"><rect width="1670" height="650" fill="#f8fafc"/><g font-family="sans-serif" fill="#16243a"><text x="25" y="30" font-size="22">DeepSeek S81: whole-cluster VM / HC rearrangement alternatives</text><text x="25" y="54" font-size="14">Each die is drawn at the same scale: 33 × 26 mm. All 128 field regions / 2,417 pairs remain in their canonical homes.</text>']
+ s=['<svg xmlns="http://www.w3.org/2000/svg" width="1670" height="650" viewBox="0 0 1670 650"><rect width="1670" height="650" fill="#f8fafc"/><g font-family="sans-serif" fill="#16243a"><text x="25" y="30" font-size="22">HISTORICAL — superseded 164-node VM geometry study</text><text x="25" y="54" font-size="14">Each die is drawn at the same scale: 33 × 26 mm. All 128 field regions / 2,417 pairs remain in their canonical homes.</text>']
  def rect(x,y,w,h,fill,stroke='#ffffff',sw=.6):s.append(f'<rect x="{x:.3f}" y="{y:.3f}" width="{w:.3f}" height="{h:.3f}" fill="{fill}" stroke="{stroke}" stroke-width="{sw}"/>')
  labels=['A: expand VM vertically in place','B: compact 2 × 2 VM + move HC','C: VM grouped near two client regions']
  details=['48 rectangle collisions; no reticle overflow','0 rectangle collisions; HC shifts east 324 µm','0 rectangle collisions; distributed service cost open']
