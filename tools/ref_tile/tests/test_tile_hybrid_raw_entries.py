@@ -54,7 +54,7 @@ class Schema(unittest.TestCase):
             with self.subTest(kind=kind),self.assertRaises(ValueError):self.load(s)
 
 
-def probe(out):
+def probe(out, pre_cts=False):
     out=Path(out).resolve();out.mkdir(parents=True,exist_ok=True)
     receipts=[]
     for case in ('pass','macro_on_cts','std_on_raw','wrong_input_domain','wrong_scene'):
@@ -67,6 +67,11 @@ def probe(out):
             f'\n{MASTER} u_m(.clk({"ck" if case=="macro_on_cts" else "rom"}),.r_ce_in(en),.rd_out(qa));\nassign q=q0;endmodule\n')
         (out/'clocks.tcl').write_text(CE.clocks(s,833.333))
         (out/'entries.tcl').write_text('set ::ot_ce_require_wire 1\n'+CE.generate(s,ROOT))
+        (out/'pre_entries.tcl').write_text('set ::ot_ref_pre_cts 1\nset ::ot_ce_require_wire 0\n'+CE.generate(s,ROOT))
+        early = (f'source {{{out/"pre_entries.tcl"}}}\n'
+                 'if {[get_property [get_clocks ot_entry_0] is_propagated]} {error "CTS root must be ideal before CTS"}\n'
+                 'if {![get_property [get_clocks ot_entry_1] is_propagated]} {error "raw macro clock must stay propagated"}\n'
+                 'puts PRE_CTS_STANDARD_IDEAL_RAW_PROPAGATED\n') if pre_cts else ''
         libcorner='ff' if case=='wrong_scene' else 'tt'
         text=f'''
 set_thread_count 2
@@ -91,6 +96,8 @@ foreach i [[ord::get_db_block] getInsts] {{
   }}
 }}
 detailed_placement
+estimate_parasitics -placement
+{early}
 set ::ot_ce_cts_roots {{ck}}
 source /src/physical/common_flow/clock_entries.tcl
 set_propagated_clock [get_clocks ot_entry_*]
@@ -114,4 +121,5 @@ puts TILE_HYBRID_RAW_PASS
 
 if __name__=='__main__':
     if len(sys.argv)>1 and sys.argv[1]=='--openroad-probe':probe(sys.argv[2])
+    elif len(sys.argv)>1 and sys.argv[1]=='--pre-cts-probe':probe(sys.argv[2],pre_cts=True)
     else:unittest.main()

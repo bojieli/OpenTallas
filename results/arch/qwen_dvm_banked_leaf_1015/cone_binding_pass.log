@@ -1,0 +1,20 @@
+ot-run: ot-epyc1tb     skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-epyc4       admits   515 GB (avail 742, growth 85, headroom 48, waiters 0/0 GB) load 53/128 running 20 disk 504 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  skipped: load hold: load1 > 1.5 x cores
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1427814-1792054374 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+BANK_LOCALITY bank=0 cells=1756 flops=567 area_um2=263.5480799999946 util=0.33033625730993477 box_um=6.48,9.18,58.32,24.57 roots=17
+BANK_LOCALITY bank=1 cells=1756 flops=567 area_um2=263.5480799999946 util=0.33033625730993477 box_um=6.48,25.65,58.32,41.04 roots=17
+BANK_LOCALITY bank=2 cells=1757 flops=567 area_um2=263.6209799999946 util=0.3304276315789405 box_um=6.48,42.12,58.32,57.51 roots=17
+BANK_LOCALITY bank=3 cells=1756 flops=567 area_um2=263.5480799999946 util=0.3303362573099349 box_um=6.48,58.589999999999996,58.32,73.97999999999999 roots=17
+BANK_LOCALITY bank=4 cells=1757 flops=567 area_um2=263.6209799999946 util=0.33042763157894084 box_um=6.48,75.06,58.32,90.44999999999999 roots=17
+BANK_LOCALITY bank=5 cells=1740 flops=567 area_um2=263.3147999999946 util=0.33004385964911626 box_um=6.48,91.53,58.32,106.91999999999999 roots=17
+BANK_LOCALITY bank=6 cells=1743 flops=567 area_um2=263.3876999999946 util=0.3301352339181221 box_um=6.48,108.0,58.32,123.38999999999999 roots=17
+BANK_LOCALITY bank=7 cells=1740 flops=567 area_um2=263.34395999999464 util=0.3300804093567187 box_um=6.48,124.47,58.32,139.85999999999999 roots=17
+BANK_LOCALITY PASS banks=8 cells=14005 locality_groups_bound=1 physical_route_admitted=0
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1427814-1792054374): exit 0

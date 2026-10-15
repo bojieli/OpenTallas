@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       admits   681 GB (avail 908, growth 84, headroom 48, waiters 0/0 GB) load 26/128 running 19 disk 458 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1779449-1792060268 after 1 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+detailed_placement [-max_displacement disp|{disp_x disp_y}]
+   [-disallow_one_site_gaps] [-incremental] [-report_file_name file_name]
+   [-use_diamond_legalizer] [-site_search_window sites]
+   [-row_search_window rows] [-drc_penalty penalty] [-disable_window_extension] 
+[WARNING STA-0160] no commands match 'set_detailed_place_options'.
+check_placement write_pin_placement detailed_placement global_placement global_placement_debug improve_placement set_placement_padding placement_cluster filler_placement write_macro_placement
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1779449-1792060268): exit 0

@@ -6,15 +6,15 @@
 module dsfd_bf_front_static #(parameter INSTANCE = "") (
     output wire [775:0] c0,
     output wire [775:0] c1,
-    input  wire [0:0] qy0,
-    input  wire [0:0] qy1,
+    input  wire qy0,
+    input  wire qy1,
     input  wire [282:0] x0,
     input  wire [265:0] x1,
-    input  wire [0:0] go,
+    input  wire go,
     input  wire [53:0] cfg,
     output wire [1:0] st,
-    input  wire [0:0] ck,
-    input  wire [0:0] rs,
+    input  wire ck,
+    input  wire rs,
     input  wire [1067:0] xb,
     input wire [37:0] f_prog,
     input wire io_clk
@@ -1624,8 +1624,8 @@ module dsfd_bf_front_static #(parameter INSTANCE = "") (
     assign c1[773] = w_c1_so_n[37];
     assign c1[774] = w_c1_so_n[38];
     assign c1[775] = w_c1_so_n[39];
-    assign w_c_qy_bkf_in[0] = qy0[0];
-    assign w_c_qy_bkf_in[1] = qy1[0];
+    assign w_c_qy_bkf_in[0] = qy0;
+    assign w_c_qy_bkf_in[1] = qy1;
     assign w_xs_q0[0] = x0[0];
     assign w_xs_q0[1] = x0[1];
     assign w_xs_q0[2] = x0[2];
@@ -2175,7 +2175,7 @@ module dsfd_bf_front_static #(parameter INSTANCE = "") (
     assign w_xs_e1[7] = x1[263];
     assign w_xs_e1[8] = x1[264];
     assign w_xs_e1[9] = x1[265];
-    assign w_go = go[0];
+    assign w_go = go;
     assign w_cfg_a[0] = cfg[0];
     assign w_cfg_a[1] = cfg[1];
     assign w_cfg_a[2] = cfg[2];
@@ -2232,8 +2232,8 @@ module dsfd_bf_front_static #(parameter INSTANCE = "") (
     assign w_cfg_v = cfg[53];
     assign st[0] = w_busy;
     assign st[1] = w_fault;
-    assign w_clk = ck[0];
-    assign w_rst_n = rs[0];
+    assign w_clk = ck;
+    assign w_rst_n = rs;
     assign w_go_bf = xb[0];
     assign w_xb_pos[0] = xb[1];
     assign w_xb_pos[1] = xb[2];

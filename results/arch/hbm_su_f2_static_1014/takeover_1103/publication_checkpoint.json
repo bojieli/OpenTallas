@@ -1,0 +1,86 @@
+{
+  "schema": "opentallas.hbm.su_native_checkpoint.v1",
+  "production_qualified": false,
+  "physical_adopted": false,
+  "source_snapshot": "squashed current-main candidate; source graph of admitted numerical proof is a5d2fbf669c41b01f3d6c4e7e0e4e78ba463f63e",
+  "shape": {
+    "quarters": 4,
+    "port_groups_per_quarter": 4,
+    "lanes": 512,
+    "FULL": 1,
+    "SFU": 127,
+    "LIGHT": 384,
+    "store_banks": 512,
+    "store_SRAMs": 3072,
+    "reducer_SRAMs": 8,
+    "native_VM_banks": 32,
+    "native_VM_SRAMs": 96,
+    "programme_SRAMs": 302,
+    "composed_SRAMs": 3478,
+    "candidate_MLAT": 4,
+    "candidate_ALAT": 3,
+    "candidate_LEAF": 1
+  },
+  "proofs": {
+    "whole_component_original": "takeover_1103/whole_su/m0.log",
+    "whole_component_RTL_mutants": [
+      2,
+      8
+    ],
+    "full512_LAT4": "takeover_1103/lat4_arithmetic/base.log",
+    "SU_internal_SFU_suite": [
+      "takeover_1103/sfu32_m3/base.log",
+      "takeover_1103/sfu32_lat4/base.log"
+    ],
+    "native_VM": "takeover_1103/native_vm/component_gate.log",
+    "programme_pre_clock_split": "programme/component_1103/receipt.json",
+    "final_bank_raw_macro_clocks": "arithmetic/physical/bank_clock7/receipt.json",
+    "current_full_composition": {
+      "status": "ADMITTED_RUNNING_NOT_PASSED",
+      "host": "ot-epyc1tb",
+      "unit": "oth-ubuntu-996581-1792088825",
+      "mem_GB": 160,
+      "source_pin": "a5d2fbf669c41b01f3d6c4e7e0e4e78ba463f63e",
+      "scope": "same-clock synthetic33-op real programme/VM/arithmetic/RF/reducer composition; not production multirate/canonical layer"
+    }
+  },
+  "production_compiler": {
+    "canonical_source": "results/arch/hbm_su_f2_static_1014/arithmetic/canonical/canonical_lowering.json",
+    "canonical_sha256": "cf6a3fceb3bcd9ed145b0d2dd58792e3b1d76ffcd58e279f450301f57e83c2d8",
+    "records": 45,
+    "raw_affine_lowered": 28,
+    "unsupported_records": 17,
+    "unsupported_reasons": {
+      "native_M128_divider_lane_selection_calendar": 5,
+      "native_SFU_or_scalar_side_control_calendar": 8,
+      "MDESC_indexed_scalar_runtime_address_calendar": 6,
+      "native_SFU128_lane_selection_and_variable_depth_calendar": 1
+    },
+    "raw_lowering_is_execution": false,
+    "compiler_and_model_status": "su_top_compile qualified=false; su_f2_spread qualification=false; su_arith_lower execution_qualified=false and explicit unsupported records"
+  },
+  "clock_domains": {
+    "compute_control_bank_RF_reducer_broadcast_SIDE": "serial900MHz1111ps",
+    "LG_VM": "stream1200MHz833.333ps",
+    "existing_common_clock_proof": "component only",
+    "production_3_to_4_bridge_and_calendar": "OPEN; new fixed-slot rational-clock bridge under development",
+    "bank_clock_implementation": "six actual SRAM clock inputs plus independent boundary/select CTS root per bank",
+    "programme_clock_implementation": "302 actual SRAM clock inputs plus controller/select root"
+  },
+  "geometry": {
+    "known_outlined_area_mm2": 34.75133,
+    "area_scope": "incomplete lower bound: excludes127SFU+1FULL+SIDE/RF/control/channels/programme",
+    "actual_granted_homes_pins": "OPEN",
+    "RF_RELAY8": "historical component parameter, not physical; die distances may need>=41..64 stages, unassigned homes",
+    "native_TT_setup_FF_hold_DRC0_launch_capture_spread": "OPEN"
+  },
+  "open": [
+    "native3:4phase/compiler/boundary integration",
+    "fullcanonical45programme lowering/execution incl17unsupported kinds",
+    "realoperand/result producers for integrated layer/token",
+    "actual programme placement/clocks and every incident cut/reach",
+    "LIGHT operand-pin/register path structural repair",
+    "final bank seven-root CTS/route",
+    "real RF relay geometry and measured schedule cost"
+  ]
+}
