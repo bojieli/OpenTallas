@@ -151,8 +151,8 @@ module tb_hgi_coll_p2p;
                     .rc_v(rc_v[d][q]), .rc_rdy(rc_rdy[d][q]), .rc_tag(rc_tag[d][q]), .rc_mode(rc_mode[d][q]), .rc_d(rc_d[d][q]),
                     .rr_v(rr_v[d][q]), .rr_tag(rr_tag[d][q]), .rr_d(rr_d[d][q]),
                     .tk_w_v(), .tk_w_addr(), .tk_w_mask(), .tk_w_data(), .tk_w_rdy(1'b1),
-                    .rgx_xq(), .rgx_xr(514'd0), .rgx_vmq(), .rgx_vmr(274'd0), .rgx_c_req(), .rgx_c_gnt(1'b0), .rgx_c_q(), .rgx_c_cr(32'd0),
-                    .rgx_c_rsp(32'd0), .rgx_xw(), .rgx_xwa(2'd0));
+                    .rgx_xq(), .rgx_xr(514'd0), .rgx_vmq(), .rgx_vmr(274'd0), .rgx_t_v(), .rgx_t_addr(), .rgx_t_data(), .rgx_t_vm(),
+                    .rgx_f_cr(4'd0), .rgx_f_fault(1'b0));   // ROW_GATHER (op 5) is not in these cases: tb_hgi_coll_rgx_wtx
                 if (d < 4) begin : g_dump
                     always @(posedge clk) if (dump_req) `P2P_DUMP(u_q.u_q)
                 end

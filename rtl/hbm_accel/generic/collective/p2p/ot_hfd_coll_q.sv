@@ -14,12 +14,14 @@
 //     all four quadrants retired the record (in order), fault if any did.
 //   * peer ring stop ot_hgi_coll_pring: record credits / completions / faults to HOME and the bit-exact reduction carry
 //     (RED_CARRY, B2 section 4) for the quadrant's SU (rc_* / rr_*).  No wide vector crosses quadrants.
-//   * RGX memory lanes as ot_hfd_coll_r25gq (owner-row source + VM/HBM sink, used by the QSOLO engine).
+//   * RGX memory lanes as ot_hfd_coll_r25gq (owner-row source, used by the QSOLO engine); the ROW_GATHER write sink is
+//     its own master ot_hgi_coll_rgx_snkm beside the SW slice (a client station of the VM lane arbiter can not sit
+//     across relays): rgx_t_* / rgx_f_* credit-flow die nets (2,213 b out, 5 b back) instead of the 8,961-b W2 client.
 // Every die output leaves a flop (ring, ret, session, status); die inputs are captured by the block's input stations.
 module ot_hfd_coll_q #(
     parameter integer NPT = 3,              // links of this quadrant's rail (3 SW, 2 SE / NW / NE)
     parameter integer SWCRED = 32,
-    parameter integer RGX_LQ = 32,
+    parameter integer RGX_CRD = 16,         // ROW_GATHER write credits a delivery lane (= the slice-side FIFO depth)
     parameter integer SESSION_W0 = 47,
     parameter integer INJ = 2,
     parameter integer DEL = 4,
@@ -92,13 +94,13 @@ module ot_hfd_coll_q #(
     input  wire [513:0]         rgx_xr,
     output wire [337:0]         rgx_vmq,
     input  wire [273:0]         rgx_vmr,
-    output wire                 rgx_c_req,
-    input  wire                 rgx_c_gnt,
-    output wire [32*280-1:0]    rgx_c_q,
-    input  wire [31:0]          rgx_c_cr,
-    input  wire [31:0]          rgx_c_rsp,
-    output wire [2*326-1:0]     rgx_xw,
-    input  wire [1:0]           rgx_xwa
+    // ROW_GATHER writes -> ot_hgi_coll_rgx_snkm beside the SW slice (credit flow, any relay count; ot_hgi_coll_rgx_wtx)
+    output wire [DEL-1:0]       rgx_t_v,
+    output wire [DEL*40-1:0]    rgx_t_addr,
+    output wire [DEL*FW-1:0]    rgx_t_data,
+    output wire                 rgx_t_vm,
+    input  wire [DEL-1:0]       rgx_f_cr,
+    input  wire                 rgx_f_fault
 );
     // ---- record queue -------------------------------------------------------------------------------------------
     localparam integer RQW = 967 + 554;      // record without its valid bit, plus recx
@@ -123,7 +125,7 @@ module ot_hfd_coll_q #(
     wire [RQW-1:0] hd = rq[rq_h];
     // ---- body ---------------------------------------------------------------------------------------------------------
     wire ep_fault, snk_fault;
-    wire rg_lq_v, rg_lq_rdy, rg_lr_v, rg_w_vm;
+    wire rg_lq_v, rg_lq_rdy, rg_lr_v, rg_w_vm, rg_w_idle;
     wire [31:0] rg_lq_addr; wire [511:0] rg_lr_data, rg_hr_data;
     wire [1:0] rg_hq_v, rg_hq_rdy, rg_hr_v; wire [69:0] rg_hq_addr; wire [15:0] rg_hq_tag, rg_hr_tag;
     wire [DEL-1:0] rg_w_v, rg_w_rdy; wire [DEL*40-1:0] rg_w_addr; wire [DEL*FW-1:0] rg_w_data;
@@ -139,7 +141,7 @@ module ot_hfd_coll_q #(
         .rg_lq_v(rg_lq_v), .rg_lq_rdy(rg_lq_rdy), .rg_lq_addr(rg_lq_addr), .rg_lr_v(rg_lr_v), .rg_lr_data(rg_lr_data),
         .rg_hq_v(rg_hq_v), .rg_hq_rdy(rg_hq_rdy), .rg_hq_addr(rg_hq_addr), .rg_hq_tag(rg_hq_tag),
         .rg_hr_v(rg_hr_v), .rg_hr_tag(rg_hr_tag), .rg_hr_data(rg_hr_data),
-        .rg_w_v(rg_w_v), .rg_w_addr(rg_w_addr), .rg_w_vm(rg_w_vm), .rg_w_data(rg_w_data), .rg_w_rdy(rg_w_rdy),
+        .rg_w_v(rg_w_v), .rg_w_addr(rg_w_addr), .rg_w_vm(rg_w_vm), .rg_w_data(rg_w_data), .rg_w_rdy(rg_w_rdy), .rg_w_idle(rg_w_idle),
         .hgi_recx(hd[RQW-1 -: 554]), .hgi_inj_addr(hgi_inj_addr),
         .tk_w_v(tk_w_v), .tk_w_addr(tk_w_addr), .tk_w_mask(tk_w_mask), .tk_w_data(tk_w_data), .tk_w_rdy(tk_w_rdy));
     generate if (SOLO_CAP != 0) begin : g_rgx
@@ -148,16 +150,16 @@ module ot_hfd_coll_q #(
             .rg_hr_v(rg_hr_v), .rg_hr_tag(rg_hr_tag), .rg_hr_data(rg_hr_data),
             .rg_lq_v(rg_lq_v), .rg_lq_rdy(rg_lq_rdy), .rg_lq_addr(rg_lq_addr), .rg_lr_v(rg_lr_v), .rg_lr_data(rg_lr_data),
             .xq(rgx_xq), .xr(rgx_xr), .vmq(rgx_vmq), .vmr(rgx_vmr));
-        ot_hgi_coll_rgx_snk #(.DEL(DEL), .FW(FW), .LQ(RGX_LQ)) u_rs (.clk(clk), .rst_n(rst_n),
-            .rg_w_v(rg_w_v), .rg_w_addr(rg_w_addr), .rg_w_vm(rg_w_vm), .rg_w_data(rg_w_data), .rg_w_rdy(rg_w_rdy),
-            .c_req(rgx_c_req), .c_gnt(rgx_c_gnt), .c_q(rgx_c_q), .c_cr(rgx_c_cr), .c_rsp(rgx_c_rsp),
-            .xw(rgx_xw), .xwa(rgx_xwa), .fault(snk_fault));
+        ot_hgi_coll_rgx_wtx #(.DEL(DEL), .FW(FW), .CRD(RGX_CRD)) u_rw (.clk(clk), .rst_n(rst_n),
+            .rg_w_v(rg_w_v), .rg_w_addr(rg_w_addr), .rg_w_vm(rg_w_vm), .rg_w_data(rg_w_data), .rg_w_rdy(rg_w_rdy), .idle(rg_w_idle),
+            .t_v(rgx_t_v), .t_addr(rgx_t_addr), .t_data(rgx_t_data), .t_vm(rgx_t_vm), .f_cr(rgx_f_cr), .f_fault(rgx_f_fault),
+            .fault(snk_fault));
     end else begin : g_norgx
         // never QSOLO: the body issues no RGX request (qrec solo = 0), so the memory lanes do not exist on this master
         assign rg_hq_rdy = 2'b00; assign rg_hr_v = 2'b00; assign rg_hr_tag = 16'd0; assign rg_hr_data = 512'd0;
-        assign rg_lq_rdy = 1'b0; assign rg_lr_v = 1'b0; assign rg_lr_data = 512'd0; assign rg_w_rdy = {DEL{1'b0}};
+        assign rg_lq_rdy = 1'b0; assign rg_lr_v = 1'b0; assign rg_lr_data = 512'd0; assign rg_w_rdy = {DEL{1'b0}}; assign rg_w_idle = 1'b1;
         assign snk_fault = 1'b0;
-        assign rgx_xq = 76'd0; assign rgx_vmq = 338'd0; assign rgx_c_req = 1'b0; assign rgx_c_q = '0; assign rgx_xw = '0;
+        assign rgx_xq = 76'd0; assign rgx_vmq = 338'd0; assign rgx_t_v = '0; assign rgx_t_addr = '0; assign rgx_t_data = '0; assign rgx_t_vm = 1'b0;
     end endgenerate
     wire [31:0] sess_w;
     ot_hgi_cfg_rx #(.W0(SESSION_W0), .NW(1), .RST(32'd0)) u_sess (.clk(clk), .rst_n(rst_n), .bus(hgi_cfg), .act(sess_w));

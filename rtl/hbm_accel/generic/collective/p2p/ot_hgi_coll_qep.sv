@@ -6,7 +6,8 @@
 //   * the delivery formatter's table holds {end, start} per rank (sliced gathers: lanes = min(16, end - w), the rank's
 //     sub-slice end instead of the next rank's start) or a gi offset (whole-row gathers: gi' = gi + table[src - gbase],
 //     the global flit index), in the classic and the pipelined (per-epoch) formatter alike;
-//   * NPT is the quadrant's rail (3 SW / 2 SE, NW, NE), the SU inject is the local SU quarter only.
+//   * NPT is the quadrant's rail (3 SW / 2 SE, NW, NE), the SU inject is the local SU quarter only;
+//   * ROW_GATHER drained also waits for rg_w_idle (the write sink is a separate master behind credit flow).
 // Everything else (endpoint, PIPE epochs, parking, RGX, TKM, ARGMAX) is the central block's logic, unchanged.
 // HGI-1 collective block body (hgi-takeover 2026-10-09): the TU endpoint (ot_hbm_accel_tu_endpoint_psg, group sizes,
 // GROUP_REDUCE_MCAST, done / fault handshake) driven either by the legacy config word {go, pf, rank} or by a normative
@@ -90,6 +91,7 @@ module ot_hgi_coll_qep #(
     output wire               rg_w_vm,       // the run's O space (0 HBM bytes, 1 VM words)
     output wire [DEL*FW-1:0]  rg_w_data,
     input  wire [DEL-1:0]     rg_w_rdy,
+    input  wire               rg_w_idle,     // P2P: every ROW_GATHER write reached the slice-side sink (credits home)
     // hardware TOPK_MERGE (TKM = 1; unused otherwise): the record's B / R descriptors {n_R, n_B, desc_R, desc_B}
     // (ot_hgi_cp_die coll_recx), the inject addresses of every inject lane {hi half (8 words), lo half (8 words)} as VM
     // word addresses (TKM run: lo = A + 8 f values, hi = B + 8 f ids; any other run: lo = A + 16 f, hi = lo + 8), and
@@ -207,7 +209,8 @@ module ot_hgi_coll_qep #(
             .cfg_nflit(rg_nflit), .cfg_k(rg_k), .cfg_discard(rg_rrel >= rg_dests), .cfg_obase(rg_obase), .cfg_ostride(rg_ostride),
             .cfg_ovm(rg_ovm), .del_reserve(rgx_now ? rg_reserve : {DEL{1'b0}}), .del_permit(rg_permit),
             .del_valid(rgx_run ? e_dv : {DEL{1'b0}}), .del_flit(e_df), .w_v(rg_w_v), .w_x(), .w_f(), .w_addr(rg_w_addr),
-            .w_data(rg_w_data), .w_rdy(rg_w_rdy), .drained(rg_drained), .fault(rg_sink_fault));
+            .w_data(rg_w_data), .w_rdy(rg_w_rdy), .drained(rg_drained_s), .fault(rg_sink_fault));
+        wire rg_drained_s; assign rg_drained = rg_drained_s & rg_w_idle;
         reg ovm_q; always @(posedge clk) if (rg_start) ovm_q <= rg_ovm;
         assign rg_w_vm = ovm_q;
     end else begin : g_norgx

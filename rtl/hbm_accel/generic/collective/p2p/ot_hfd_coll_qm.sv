@@ -4,7 +4,8 @@
 // Both are ot_hfd_coll_q; they differ only in what the die must bind, so that no die port of either is tied off:
 //   ot_hfd_coll_q3  SW quadrant, links S0-S2 (NPT 3).  HOME (the only engine that answers the command processor: hgi_ret)
 //                   and QSOLO (ARGMAX_MERGE / TOPK_MERGE / ROW_GATHER run whole here): carries the TOPK record extension
-//                   hgi_recx, the RGX memory lanes and, with TKM = 1 (the die value), the TOPK_MERGE merge sink with its
+//                   hgi_recx, the RGX memory lanes (ROW_GATHER writes by credit flow to ot_hgi_coll_rgx_snkm, a master
+//                   beside the SW slice) and, with TKM = 1 (the die value), the TOPK_MERGE merge sink with its
 //                   32-tile systolic array as a child cluster (KMAX 2,048 is exact only as ONE array: the four quadrants
 //                   cannot each own 8 tiles, see el1014-hbm-p2p-coll.log 07:50).  The quadrant strap is fixed at 0.
 //   ot_hfd_coll_q2  SE (S3-S4), NW (N0-N1), NE (N2-N3) quadrants, NPT 2, strap qid 1 / 2 / 3 (a die strap like the TKM
@@ -61,13 +62,12 @@ module ot_hfd_coll_q3 #(
     input  wire [513:0]      rgx_xr,
     output wire [337:0]      rgx_vmq,
     input  wire [273:0]      rgx_vmr,
-    output wire              rgx_c_req,
-    input  wire              rgx_c_gnt,
-    output wire [32*280-1:0] rgx_c_q,
-    input  wire [31:0]       rgx_c_cr,
-    input  wire [31:0]       rgx_c_rsp,
-    output wire [2*326-1:0]  rgx_xw,
-    input  wire [1:0]        rgx_xwa
+    output wire [3:0]        rgx_t_v,       // ROW_GATHER writes -> ot_hgi_coll_rgx_snkm beside the SW slice
+    output wire [159:0]      rgx_t_addr,
+    output wire [2047:0]     rgx_t_data,
+    output wire              rgx_t_vm,
+    input  wire [3:0]        rgx_f_cr,
+    input  wire              rgx_f_fault
 );
     ot_hfd_coll_q #(.NPT(3), .HOME(0), .QSOLO(0), .SOLO_CAP(1), .TKM(TKM), .TKM_KMAX(TKM_KMAX),
                     .MUT_Q(MUT_Q), .MUT_CARRY(MUT_CARRY), .MUT_ORDER(MUT_ORDER)) u_q (
@@ -80,8 +80,8 @@ module ot_hfd_coll_q3 #(
         .pr_cw_i(pr_cw_i), .pr_cw_o(pr_cw_o), .pr_ccw_i(pr_ccw_i), .pr_ccw_o(pr_ccw_o),
         .rc_v(rc_v), .rc_rdy(rc_rdy), .rc_tag(rc_tag), .rc_mode(rc_mode), .rc_d(rc_d), .rr_v(rr_v), .rr_tag(rr_tag), .rr_d(rr_d),
         .tk_w_v(tk_w_v), .tk_w_addr(tk_w_addr), .tk_w_mask(tk_w_mask), .tk_w_data(tk_w_data), .tk_w_rdy(tk_w_rdy),
-        .rgx_xq(rgx_xq), .rgx_xr(rgx_xr), .rgx_vmq(rgx_vmq), .rgx_vmr(rgx_vmr), .rgx_c_req(rgx_c_req), .rgx_c_gnt(rgx_c_gnt),
-        .rgx_c_q(rgx_c_q), .rgx_c_cr(rgx_c_cr), .rgx_c_rsp(rgx_c_rsp), .rgx_xw(rgx_xw), .rgx_xwa(rgx_xwa));
+        .rgx_xq(rgx_xq), .rgx_xr(rgx_xr), .rgx_vmq(rgx_vmq), .rgx_vmr(rgx_vmr), .rgx_t_v(rgx_t_v), .rgx_t_addr(rgx_t_addr),
+        .rgx_t_data(rgx_t_data), .rgx_t_vm(rgx_t_vm), .rgx_f_cr(rgx_f_cr), .rgx_f_fault(rgx_f_fault));
 endmodule
 
 module ot_hfd_coll_q2 #(
@@ -139,7 +139,7 @@ module ot_hfd_coll_q2 #(
         .pr_cw_i(pr_cw_i), .pr_cw_o(pr_cw_o), .pr_ccw_i(pr_ccw_i), .pr_ccw_o(pr_ccw_o),
         .rc_v(rc_v), .rc_rdy(rc_rdy), .rc_tag(rc_tag), .rc_mode(rc_mode), .rc_d(rc_d), .rr_v(rr_v), .rr_tag(rr_tag), .rr_d(rr_d),
         .tk_w_v(), .tk_w_addr(), .tk_w_mask(), .tk_w_data(), .tk_w_rdy(1'b0),
-        .rgx_xq(), .rgx_xr(514'd0), .rgx_vmq(), .rgx_vmr(274'd0), .rgx_c_req(), .rgx_c_gnt(1'b0), .rgx_c_q(), .rgx_c_cr(32'd0),
-        .rgx_c_rsp(32'd0), .rgx_xw(), .rgx_xwa(2'd0));
+        .rgx_xq(), .rgx_xr(514'd0), .rgx_vmq(), .rgx_vmr(274'd0), .rgx_t_v(), .rgx_t_addr(), .rgx_t_data(), .rgx_t_vm(),
+        .rgx_f_cr(4'd0), .rgx_f_fault(1'b0));
 endmodule
 `default_nettype wire
