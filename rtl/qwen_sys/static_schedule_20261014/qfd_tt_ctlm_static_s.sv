@@ -3,6 +3,8 @@
 module qfd_tt_ctlm_static_s #(parameter integer XPF_TRANSPORT_EDGES=0) (
     input wire ck_xpf,
     input wire ck_me_sched,
+    input wire cp_active,output wire [55:0] cp,
+    output wire layer_context_v,output wire [17:0] native_tok,native_pos,
     output wire [379:0] native_cmd,
     input wire [94:0] native_ret,
     output wire [5:0] command_stage,
@@ -177,6 +179,8 @@ module qfd_tt_ctlm_static_s #(parameter integer XPF_TRANSPORT_EDGES=0) (
        .xpf(xpf),.fault(xpf_schedule_fault),.active(xpf_active),.cycle(xpf_cycle));
     ot_qfd_tt_ctlm_static_parent u_body (
         .ck_me_sched(ck_me_sched),
+        .cp_active(cp_active),.cp(cp),
+        .layer_context_v(layer_context_v),.native_tok(native_tok),.native_pos(native_pos),
         .native_cmd(native_cmd),.native_ret(native_ret),.command_stage(command_stage),
         .me_observe(actual_me_observe),
         .rom_cmd(ib),

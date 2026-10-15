@@ -66,7 +66,7 @@ def qwen_static_native_parent_model():
     xpf_bits = xpf['declared_register_bits'] - (64*6+7+7+1) + 32
     return dict(schema='opentallas.qwen-static-native-parent.v1',
         opt_in_default=False, replicas=1, SRAM_macros_added=0,
-        additional_declared_register_bits=xpf_bits+643+6+9,
+        additional_declared_register_bits=xpf_bits+643+6+9+173+56+37+1+1,
         issue_store='actual ME8x47 FF rows plus consumer/control; published Yosys census643FF',
         parent_state='6bit CALS stage plus sticky relocation1/native select1/native fault1',
         removed_logic='entire private tree shadow head; area/FF savings unmeasured',
@@ -74,11 +74,11 @@ def qwen_static_native_parent_model():
         engine_enable='normal1; no memory/status gate; stage cycles fixed by compiler calendar',
         command_latency='existing actual head GO station1; classify/relocate0; existing tree station latency retained',
         observer_latency='actual head identity station1 aligned with cmdGO, xpf capture1',
-        added_data_tracks=380+95+6-53-1,
-        track_contract='new nativecmd380/native_ret95/stage6; obsolete VMxd53/xr1 removed',
+        added_data_tracks=380+95+6-53-1+56+1+37,
+        track_contract='nativecmd380/native_ret95/stage6/CP56/copy_active1/accepted_context37; obsolete VMxd53/xr1 removed',
         outline_um=[777.6,1814.4],
         slot_fit='assigned parent envelope; actual area/pins/CTS and placement remain open',
-        CP56='three typed replay slots and payload store pending compiler integration; excluded from current census',
+        CP56='three56b rows+valid3+index2=173 state bits; head CP56/context37/programfault1/copyactive observer1 included; actual mapping open',
         price_policy='immutable prices unchanged; no physical or layer-rate qualification')
 
 

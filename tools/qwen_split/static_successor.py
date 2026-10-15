@@ -13,6 +13,7 @@ s=s.replace('    input  wire              start,','''    input  wire            
     // Calendar pulses replace INTERNAL issue/fin. Status never gates them.
     input wire fixed_issue, input wire fixed_end,
     input wire [1:0] fixed_unit, input wire fixed_fault,
+    output wire accepted_start,
     output wire candidate_v, output wire [PAW-1:0] candidate_pc,
     output wire [1:0] candidate_unit,
     output wire candidate_available, output wire candidate_end_ok,''',1)
@@ -22,6 +23,7 @@ s=s[:a]+'''    wire issue = fixed_issue;
     assign me_go = issue && (fixed_unit == 2'd1);
     assign su_go = issue && (fixed_unit == 2'd2);
     wire fin = fixed_end;
+    assign accepted_start=start&&(st==S_IDLE);
     assign candidate_v=(st==S_RUN)&&nx_v&&(own||d_unit==0);
     assign candidate_pc=pc;
     assign candidate_unit=d_unit;
@@ -41,14 +43,28 @@ p=d/'ot_qwen_rom_core_ctrl_static.sv';p.write_text('`timescale 1ns/1ps\n// Stati
 # Successor head/tree circuits have explicit distinct names. Archived source untouched.
 src2=root/'rtl/physical/ot_qfd_tt_ctlm_split.sv';s=src2.read_text();s=s[:s.index('module ot_qfd_tt_ctlm_split #(')]
 s=s.replace('qfd_tt_ctlm_head','qfd_tt_ctlm_head_static').replace('qfd_tt_ctlm_tree','qfd_tt_ctlm_tree_static').replace('ot_qwen_rom_core_ctrl_x_i','ot_qwen_rom_core_ctrl_static')
-s=s.replace('    input wire  clk,','    input wire clk,\n    input wire ck_sched,',1)
+s=s.replace('    input wire  clk,','    input wire clk,\n    input wire ck_sched,\n    input wire cp_active,\n    output reg [55:0] cp,\n    output reg layer_context_v,\n    output reg [17:0] native_tok,native_pos,',1)
 s=s.replace('        .start(q_h_start),','''        .start(q_h_start),
-        .fixed_issue(fixed_issue),.fixed_end(fixed_end),.fixed_unit(fixed_unit),.fixed_fault(schedule_fault),
-        .candidate_v(candidate_v),.candidate_pc(candidate_pc),.candidate_unit(candidate_unit),
+        .fixed_issue(fixed_issue),.fixed_end(fixed_end),.fixed_unit(fixed_unit),.fixed_fault(schedule_fault|program_load_fault),
+        .accepted_start(accepted_start),.candidate_v(candidate_v),.candidate_pc(candidate_pc),.candidate_unit(candidate_unit),
         .candidate_available(candidate_available),.candidate_end_ok(candidate_end_ok),''',1)
-a=s.index('    wire s_me_ready,');s=s[:a]+'''    wire fixed_issue,fixed_end,schedule_fault,candidate_v,candidate_available,candidate_end_ok;
+a=s.index('    wire s_me_ready,');s=s[:a]+'''    wire fixed_issue,fixed_end,schedule_fault,candidate_v,candidate_available,candidate_end_ok,cp_v,accepted_start,schedule_active;\n    wire [55:0] cp_cmd;
     wire [11:0] candidate_pc,fixed_pc;
     wire [1:0] candidate_unit,fixed_unit;
+    reg cp_active_q;
+    always @(posedge ck_sched or negedge rst_n)
+      if(!rst_n)cp_active_q<=0;
+      else cp_active_q<=cp_active;
+    reg program_load_fault;
+    always @(posedge clk or negedge rst_n)
+      if(!rst_n)program_load_fault<=0;
+      else if(q_pw_v && q_pw_addr<976 && schedule_active)program_load_fault<=1;
+    always @(posedge clk or negedge rrv[6])
+      if(!rrv[6])begin layer_context_v<=0;native_tok<=0;native_pos<=0;end
+      else begin
+        layer_context_v<=accepted_start && q_prog_base==0;
+        if(accepted_start)begin native_tok<=q_token;native_pos<=q_pos;end
+      end
     reg [5:0] schedule_stage;
     always @(posedge ck_sched or negedge rst_n)
       if(!rst_n) schedule_stage<=0;
@@ -59,9 +75,9 @@ a=s.index('    wire s_me_ready,');s=s[:a]+'''    wire fixed_issue,fixed_end,sche
       .clk(ck_sched),.rst_n(rsv[1]),.pw_v(q_pw_v),.pw_addr(q_pw_addr),.pw_data(q_pw_data),
       .start(q_h_start && q_prog_base==0),.stage(schedule_stage),
       .candidate_v(candidate_v),.candidate_pc(q_prog_base+candidate_pc),.candidate_unit(candidate_unit),
-      .available(candidate_available),.end_ok(candidate_end_ok),
-      .issue_v(fixed_issue),.end_v(fixed_end),.issue_pc(fixed_pc),.issue_unit(fixed_unit),
-      .active(),.done(),.cycle(),.fault(schedule_fault));
+      .available(candidate_available),.end_ok(candidate_end_ok),.cp_available(!cp_active_q),
+      .issue_v(fixed_issue),.end_v(fixed_end),.cp_cmd(cp_cmd),.cp_v(cp_v),.issue_pc(fixed_pc),.issue_unit(fixed_unit),
+      .active(schedule_active),.done(),.cycle(),.fault(schedule_fault));
 '''+s[a:]
 # Remove entire tree private shadow-control circuit and dynamic ICG.
 a=s.index('    wire local_en, ec;');b=s.index('    wire up_fault_c',a)
@@ -74,7 +90,7 @@ s='`timescale 1ns/1ps\n// NEW static physical masters; archived closed head/tree
 # Observe actual accepted identity at the exact same registered stage as cmdGO.
 s=s.replace('    output wire [379:0] cmd,','    output wire [379:0] cmd,\n    output reg [15:0] me_observe,',1)
 a=s.index('    assign cmd = ')
-s=s[:a]+"    always @(posedge clk or negedge rrv[6])\n      if(!rrv[6])me_observe<=0;\n      else me_observe<={fixed_issue,candidate_v,fixed_unit,q_prog_base+candidate_pc};\n"+s[a:]
+s=s[:a]+"    always @(posedge clk or negedge rrv[6])\n      if(!rrv[6])begin me_observe<=0;cp<=0;end\n      else begin me_observe<={fixed_issue||cp_v,candidate_v,fixed_unit,q_prog_base+candidate_pc};cp<=cp_cmd;end\n"+s[a:]
 # Shadow-only interface pins have no remaining receiver in the static tree.
 a=s.index('module qfd_tt_ctlm_tree_static');h,b=s[a:].split('\n);',1)
 for n in ['me_mem_ok','h_start','token','pos','prog_base','pw_v','pw_addr','pw_data','x_oacc','x_oidle','x_oprog','x_orows','kv_ok','kv_write_drained']:

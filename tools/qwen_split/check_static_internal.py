@@ -13,11 +13,21 @@ def run():
  with tempfile.TemporaryDirectory(prefix='q_static_internal_') as tmp:
   program_local=Path(tmp)/'head_rank7.hex';program_local.write_bytes(program_bytes)
   exe=str(Path(tmp)/'sim')
-  for name,params,success in [('actual_head',[],True),('unavailable_fault_timeline',['AVAIL_FALSE=1'],True),('row18_boundary',['ROW_HIGH=1'],True),('row18_mutant',['ROW_HIGH=1','MUT_DROP_ROW_HIGH=1'],False)]:
+  for name,params,success in [('actual_head',[],True),('typed_cp_head',['USE_COPY=1'],True),('typed_cp_busy_fault_timeline',['USE_COPY=1','CP_BUSY=1'],True),('missing_cp_payload_mutant',['USE_COPY=1','MUT_MISSING_CP=1'],False),('unavailable_fault_timeline',['AVAIL_FALSE=1'],True),('row18_boundary',['ROW_HIGH=1'],True),('row18_mutant',['ROW_HIGH=1','MUT_DROP_ROW_HIGH=1'],False)]:
    cmd=['iverilog','-g2012','-s','tb_qfd_static_internal_issue','-o',exe]+['-Ptb_qfd_static_internal_issue.'+x for x in params]+src
    subprocess.run(cmd,cwd=ROOT,check=True);r=subprocess.run(['vvp',exe,'+PROGRAM='+str(program_local)],cwd=ROOT,capture_output=True,text=True)
    (out/(name+'.log')).write_text(r.stdout+r.stderr)
    if (r.returncode==0)!=success:raise RuntimeError(name+': '+r.stdout+r.stderr)
+  headsrc=[str(D/f) for f in ['ot_qwen_rom_core_ctrl_static.sv','ot_qfd_tt_ctlm_split_static.sv','ot_qwen_fixed_issue.sv','ot_qwen_fixed_issue_pw.sv','tb_qfd_static_head_face.sv']]+['rtl/hdc/ot_hdc_dyn_ttiles.sv','rtl/hdc/ot_hdc_delay.sv','rtl/hdc/ot_hdc_prefix.sv','rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv','rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv','rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv','rtl/physical/ot_qfd_tt_ctlm_split.sv']
+  for name,mut in [('actual_head_face',False),('head_context_mutant',True)]:
+   paths=headsrc.copy()
+   if mut:
+    newhead=Path(tmp)/'head.sv';newhead.write_text((ROOT/D/'ot_qfd_tt_ctlm_split_static.sv').read_text().replace('if(accepted_start)begin native_tok','if(1\'b1)begin native_tok'));paths[1]=str(newhead)
+   compiled=subprocess.run(['iverilog','-g2012','-s','tb_qfd_static_head_face','-o',exe]+paths,cwd=ROOT,capture_output=True,text=True)
+   (out/(name+'_compile.log')).write_text(compiled.stdout+compiled.stderr)
+   if compiled.returncode:raise RuntimeError(compiled.stderr)
+   r=subprocess.run(['vvp',exe,'+PROGRAM='+str(program_local)],cwd=ROOT,capture_output=True,text=True);(out/(name+'.log')).write_text(r.stdout+r.stderr)
+   if (r.returncode==0)==mut:raise RuntimeError(name+': '+r.stdout+r.stderr)
   route=ROOT/D/'ot_qfd_native_cmd_route.sv';tb=str(D/'tb_qfd_native_cmd_route.sv')
   for name,mut in [('native_route',False),('native_route_mutant',True)]:
    p=Path(tmp)/'route.sv';s=route.read_text()
@@ -25,7 +35,7 @@ def run():
    p.write_text(s);subprocess.run(['iverilog','-g2012','-s','tb_qfd_native_cmd_route','-o',exe,str(p),tb],cwd=ROOT,check=True)
    r=subprocess.run(['vvp',exe],cwd=ROOT,capture_output=True,text=True);(out/(name+'.log')).write_text(r.stdout+r.stderr)
    if (r.returncode==0)==mut:raise RuntimeError(name+': '+r.stdout+r.stderr)
- status={'scope':'Actual production decoder+PW FF issuer internal mechanism, explicit engine-response stimuli; not native end-to-end qualification','source_sha256':{s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in src+[str(D/'ot_qfd_native_cmd_route.sv'),tb]},'program_source':str(program),'program_sha256':hashlib.sha256(program_bytes).hexdigest(),'fixed_issue_cycles':[40,60,80,100],'fixed_END_cycle':120,'clock_enable':'normal1; mem_ok0 leaves clocks unchanged','row18_boundary_variant':'Actual ISA bit898 set1 in four head ME words','remaining':['actual endpoint/status and parent composition','physical phase/reset/pin/cost qualification','real fullstage compiler calendar']}
+ status={'scope':'Actual production decoder+PW FF issuer internal mechanism, explicit engine-response stimuli; not native end-to-end qualification','source_sha256':{s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in list(dict.fromkeys(src+headsrc+[str(D/'ot_qfd_native_cmd_route.sv'),tb]))},'program_source':str(program),'program_sha256':hashlib.sha256(program_bytes).hexdigest(),'fixed_issue_cycles':[40,60,80,100],'fixed_END_cycle':120,'typed_CP_profile':{'ME':[40,180,320,460],'CP':[60,200,340],'END':600,'scope':'real PW CPstore+source head/decoder; explicit engine stimuli'},'head_face_gate':'actual program PW writes, IS1/GO1/CP1, PSRAM0 FF profile, real accepted context vs future raw input pins; physical SRAM mode/clock root qualification remain open','clock_enable':'normal1; mem_ok0 leaves clocks unchanged','row18_boundary_variant':'Actual ISA bit898 set1 in four head ME words','remaining':['actual endpoint/status and parent composition','physical phase/reset/pin/cost qualification','real fullstage compiler calendar']}
  (out/'status.json').write_text(json.dumps(status,indent=2)+'\n')
- print('PASS actual decoder/PW/internal numeric fold, availability fault timeline and native route; row18/route mutants observed FAIL')
+ print('PASS actual decoder/head face/PW CPstores/numeric fold and fault-only timelines; row18/context/missingCP/route mutants observed FAIL')
 if __name__=='__main__':run()

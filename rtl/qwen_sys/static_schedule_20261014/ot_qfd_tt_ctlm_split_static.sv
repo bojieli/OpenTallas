@@ -29,6 +29,10 @@ module qfd_tt_ctlm_head_static #(
 ) (
     input wire clk,
     input wire ck_sched,
+    input wire cp_active,
+    output reg [55:0] cp,
+    output reg layer_context_v,
+    output reg [17:0] native_tok,native_pos,
     input wire  rst_n,
     input wire  h_start,
     input wire [18-1:0] token,
@@ -189,9 +193,24 @@ module qfd_tt_ctlm_head_static #(
     wire [1-1:0] c_me_am_any, u_me_am_any;
     wire [16-1:0] c_me_progress, u_me_progress;
     wire [1-1:0] c_me_fault, u_me_fault;
-    wire fixed_issue,fixed_end,schedule_fault,candidate_v,candidate_available,candidate_end_ok;
+    wire fixed_issue,fixed_end,schedule_fault,candidate_v,candidate_available,candidate_end_ok,cp_v,accepted_start,schedule_active;
+    wire [55:0] cp_cmd;
     wire [11:0] candidate_pc,fixed_pc;
     wire [1:0] candidate_unit,fixed_unit;
+    reg cp_active_q;
+    always @(posedge ck_sched or negedge rst_n)
+      if(!rst_n)cp_active_q<=0;
+      else cp_active_q<=cp_active;
+    reg program_load_fault;
+    always @(posedge clk or negedge rst_n)
+      if(!rst_n)program_load_fault<=0;
+      else if(q_pw_v && q_pw_addr<976 && schedule_active)program_load_fault<=1;
+    always @(posedge clk or negedge rrv[6])
+      if(!rrv[6])begin layer_context_v<=0;native_tok<=0;native_pos<=0;end
+      else begin
+        layer_context_v<=accepted_start && q_prog_base==0;
+        if(accepted_start)begin native_tok<=q_token;native_pos<=q_pos;end
+      end
     reg [5:0] schedule_stage;
     always @(posedge ck_sched or negedge rst_n)
       if(!rst_n) schedule_stage<=0;
@@ -202,16 +221,16 @@ module qfd_tt_ctlm_head_static #(
       .clk(ck_sched),.rst_n(rsv[1]),.pw_v(q_pw_v),.pw_addr(q_pw_addr),.pw_data(q_pw_data),
       .start(q_h_start && q_prog_base==0),.stage(schedule_stage),
       .candidate_v(candidate_v),.candidate_pc(q_prog_base+candidate_pc),.candidate_unit(candidate_unit),
-      .available(candidate_available),.end_ok(candidate_end_ok),
-      .issue_v(fixed_issue),.end_v(fixed_end),.issue_pc(fixed_pc),.issue_unit(fixed_unit),
-      .active(),.done(),.cycle(),.fault(schedule_fault));
+      .available(candidate_available),.end_ok(candidate_end_ok),.cp_available(!cp_active_q),
+      .issue_v(fixed_issue),.end_v(fixed_end),.cp_cmd(cp_cmd),.cp_v(cp_v),.issue_pc(fixed_pc),.issue_unit(fixed_unit),
+      .active(schedule_active),.done(),.cycle(),.fault(schedule_fault));
     wire s_me_ready, s_me_idle; wire [15:0] s_me_progress; wire m_fin; wire [18-1:0] m_fidx; wire [31:0] m_fval;
     ot_qwen_rom_core_ctrl_static #(.OWN(1), .XW(XW), .XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(16), .G((TPMUT == 2) ? 6144 : G), .DG((TPMUT != 0) ? 6144 : G), .AW(24), .NW(18), .PAW(12), .SU_VEC(1), .SW(64), .LV(7), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(((AUD & 64) != 0) ? 0 : 1), .MEREG(MEREG), .PCUT(PCUT), .FKS(((AUD & 512) != 0) ? 2 : ((AUD & 128) != 0) ? 1 : 0), .HRC(((AUD & 1024) != 0) ? 32 : 0), .HRCM(((AUD & 16384) != 0) ? 1 : 0), .SMIN(7), .SMAX(11), .TCUT(7), .FQ_HEAD((HQ2 >= 2) ? 3 : (HQ2 != 0) ? 2 : 1)) u_ctrl_me (
         .clk(clk),
         .rst_n(rsv[1]),
         .start(q_h_start),
-        .fixed_issue(fixed_issue),.fixed_end(fixed_end),.fixed_unit(fixed_unit),.fixed_fault(schedule_fault),
-        .candidate_v(candidate_v),.candidate_pc(candidate_pc),.candidate_unit(candidate_unit),
+        .fixed_issue(fixed_issue),.fixed_end(fixed_end),.fixed_unit(fixed_unit),.fixed_fault(schedule_fault|program_load_fault),
+        .accepted_start(accepted_start),.candidate_v(candidate_v),.candidate_pc(candidate_pc),.candidate_unit(candidate_unit),
         .candidate_available(candidate_available),.candidate_end_ok(candidate_end_ok),
         .token(q_token),
         .pos(q_pos),
@@ -437,8 +456,8 @@ module qfd_tt_ctlm_head_static #(
     ot_tt_ce_delay #(.W(16), .D(1), .RESET(1)) u_su_me_progress (.clk(clk), .en(me_clk_en), .rst_n(rrv[2]), .d(u_me_progress), .q(c_me_progress));
     ot_tt_ce_delay #(.W(1), .D(1), .RESET(1)) u_su_me_fault (.clk(clk), .en(me_clk_en), .rst_n(rrv[3]), .d(u_me_fault), .q(c_me_fault));
     always @(posedge clk or negedge rrv[6])
-      if(!rrv[6])me_observe<=0;
-      else me_observe<={fixed_issue,candidate_v,fixed_unit,q_prog_base+candidate_pc};
+      if(!rrv[6])begin me_observe<=0;cp<=0;end
+      else begin me_observe<={fixed_issue||cp_v,candidate_v,fixed_unit,q_prog_base+candidate_pc};cp<=cp_cmd;end
     assign cmd = {u_me_i_mbase, u_me_i_rmax, u_me_i_amax, u_me_i_oen, u_me_i_mmode, u_me_i_ojs, u_me_i_ots, u_me_i_obase, u_me_i_round, u_me_i_wcs, u_me_i_split, u_me_i_jsh, u_me_i_xcs, u_me_i_xjs, u_me_i_xks, u_me_i_xbase, u_me_i_js, u_me_i_ks, u_me_i_ts, u_me_i_wbase, u_me_i_wsrc, u_me_i_k, u_me_i_tiles, u_me_i_nout, u_me_go};
     assign {u_me_fault, u_me_progress, u_me_am_any, u_me_am_val, u_me_am_idx, u_me_wrom_addr, u_me_wrom_re, u_me_idle, u_me_ready} = ret;
     ot_hdc_delay #(.W(1),.D(OS),.RESET(1)) u_os_fin (.clk(clk),.rst_n(rsv[4]),.d(m_fin),.q(m_fin_o));

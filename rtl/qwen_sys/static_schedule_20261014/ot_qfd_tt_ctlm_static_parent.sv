@@ -2,6 +2,8 @@
 // No native command reaches the ROM tree; native completion comes from endpoint.
 module ot_qfd_tt_ctlm_static_parent (
     input wire ck_me_sched,
+    input wire cp_active,output wire [55:0] cp,
+    output wire layer_context_v,output wire [17:0] native_tok,native_pos,
     output wire [379:0] rom_cmd,
     output wire [5:0] command_stage,
     output wire [379:0] native_cmd,
@@ -85,7 +87,8 @@ module ot_qfd_tt_ctlm_static_parent (
       .clk(ck_head),.rst_n(rst_n),.cmd(cmd),.rom_ret(rom_ret),.native_ret(native_ret),
       .rom_cmd(local_rom_cmd),.native_cmd(native_cmd),.ret(ret));
     qfd_tt_ctlm_head_static u_head (
-        .me_observe(me_observe),
+        .me_observe(me_observe),.cp_active(cp_active),.cp(cp),
+        .layer_context_v(layer_context_v),.native_tok(native_tok),.native_pos(native_pos),
 
         .clk(ck_head),
         .ck_sched(ck_me_sched),

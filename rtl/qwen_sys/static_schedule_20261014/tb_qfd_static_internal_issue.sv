@@ -3,18 +3,20 @@
 // real PW FF calendar, INTERNAL issue/fin and numeric argmax fold. Engine
 // responses below are explicit endpoint stimuli, not a native end-to-end claim.
 module tb_qfd_static_internal_issue;
- parameter MUT_NUMERIC=0, ROW_HIGH=0, MUT_DROP_ROW_HIGH=0, AVAIL_FALSE=0;
+ parameter MUT_NUMERIC=0, ROW_HIGH=0, MUT_DROP_ROW_HIGH=0, AVAIL_FALSE=0,USE_COPY=0,CP_BUSY=0,MUT_MISSING_CP=0;
  reg clk=0;always #0.5 clk=~clk;
  reg rst_n=0,start=0,pv=0;reg[9:0]pa=0;reg[63:0]pd=0;
  wire re;wire[11:0]ra;reg[1023:0]rq=0,rom[0:7];
+ wire copy_v;wire[55:0]copy_cmd;
+ localparam[55:0]COPY={7'd64,24'd8192,24'd8192,1'b1};
  wire cv,av,eo,iv,ev,cf,done,go,ce;wire[11:0]cp,ip;wire[1:0]cu,iu;
  wire[17:0]fidx;wire[31:0]fval;
  reg[17:0]amidx=0;reg[31:0]amval=0;reg amany=0;
- integer c,seen=0;reg[1023:0]w;reg[17:0]expected_idx;string path;
+ integer c,seen=0,copies=0;reg[1023:0]w;reg[17:0]expected_idx;string path;
  always @(posedge clk)if(re)rq<=rom[ra[2:0]];
  ot_qwen_fixed_issue_pw #(.OWN(1))cal(.clk(clk),.rst_n(rst_n),.pw_v(pv),.pw_addr(pa),.pw_data(pd),
  .start(start),.stage(6'd37),.candidate_v(cv),.candidate_pc(cp),.candidate_unit(cu),
- .available(av),.end_ok(eo),.issue_v(iv),.end_v(ev),.issue_pc(ip),.issue_unit(iu),
+ .available(av),.end_ok(eo),.cp_available(!CP_BUSY),.cp_v(copy_v),.cp_cmd(copy_cmd),.issue_v(iv),.end_v(ev),.issue_pc(ip),.issue_unit(iu),
  .active(),.done(),.cycle(),.fault(cf));
  ot_qwen_rom_core_ctrl_static #(.OWN(1),.G(3072),.DG(3072),.NW(18),.AW(24),.PAW(12),.PRL(1),
  .SU_VEC(1),.SW(64),.SMIN(7),.QWEN_FULLSHAPE(MUT_DROP_ROW_HIGH?0:1),.HID(4096),.HD(128),.HALF(64))core(
@@ -36,6 +38,21 @@ module tb_qfd_static_internal_issue;
  if(ROW_HIGH)for(c=3;c<=6;c=c+1)rom[c][898]=1;
  w=rom[5];expected_idx={w[899:898],w[896:881]}+18'd9;
  repeat(3)tick();rst_n=1;
+ if(USE_COPY)begin
+ pw(1016,{32'h43414c31,32'd600});
+ pw(976,{17'd0,1'b0,2'd1,12'd3,32'd40});
+ pw(977,{17'd0,1'b0,2'd3,12'd4,32'd60});
+ pw(978,{17'd0,1'b0,2'd1,12'd4,32'd180});
+ pw(979,{17'd0,1'b0,2'd3,12'd5,32'd200});
+ pw(980,{17'd0,1'b0,2'd1,12'd5,32'd320});
+ pw(981,{17'd0,1'b0,2'd3,12'd6,32'd340});
+ pw(982,{17'd0,1'b0,2'd1,12'd6,32'd460});
+ pw(983,{17'd0,1'b1,2'd0,12'd7,32'd600});
+ pw(1019,{8'd0,COPY});
+ if(!MUT_MISSING_CP)pw(1020,{8'd0,COPY});
+ pw(1021,{8'd0,COPY});
+ pw(1017,{32'h43414c53,4'd0,10'd8,6'd37,6'd1,6'd8});
+ end else begin
  pw(1016,{32'h43414c31,32'd120});
  pw(976,{17'd0,1'b0,2'd1,12'd3,32'd40});
  pw(977,{17'd0,1'b0,2'd1,12'd4,32'd60});
@@ -43,9 +60,16 @@ module tb_qfd_static_internal_issue;
  pw(979,{17'd0,1'b0,2'd1,12'd6,32'd100});
  pw(980,{17'd0,1'b1,2'd0,12'd7,32'd120});
  pw(1017,{32'h43414c53,4'd0,10'd8,6'd37,6'd1,6'd5});
+ end
  repeat(3)tick();@(negedge clk);start=1;tick();@(negedge clk);start=0;
- for(c=0;c<125;c=c+1)begin
+ for(c=0;c<(USE_COPY?605:125);c=c+1)begin
+   if(copy_v)begin
+     if(go||iv||ev||!cv||cu!=1||cp!=ip||copy_cmd!==COPY)$fatal(1,"typed copy changed decoder/ME issue or lost payload");
+     if(c!=60+140*copies)$fatal(1,"typed copy timeline drift");
+     copies=copies+1;
+   end
    if(iv)begin
+     if(c!=40+(USE_COPY?140:20)*seen)$fatal(1,"ME timeline drift");
      if(!go||!cv||cp!=ip||cu!=iu)$fatal(1,"fixed pulse missed INTERNAL issue");
      seen=seen+1;
    end
@@ -56,8 +80,8 @@ module tb_qfd_static_internal_issue;
    if(seen==4)begin amidx=11;amval=32'h3f800000;end
    @(negedge clk);
  end
- if(cf!== (AVAIL_FALSE!=0)||seen!=4||!done||!ce)$fatal(1,"fixed internal source composition fault");
+ if(cf!== ((AVAIL_FALSE!=0)||(USE_COPY&&CP_BUSY))||seen!=4||copies!=(USE_COPY?3:0)||!done||!ce)$fatal(1,"fixed internal source composition fault");
  if(fidx!==expected_idx+(MUT_NUMERIC?1:0)||fval!==32'h40000000)$fatal(1,"real signed argmax/full18bit row fold mismatch got%0d expected%0d",fidx,expected_idx);
- $display("PASS actual rank7 head decoder, PW47 fixed INTERNAL issue/fin, clock independent of memok0, signed argmax row18=%0d",fidx);$finish;
+ $display("PASS actual rank7 head decoder, PW47 fixed INTERNAL issue/fin, clock independent of memok0, signed argmax row18=%0d typedCP=%0d",fidx,copies);$finish;
  end
 endmodule

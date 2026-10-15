@@ -93,6 +93,7 @@ module ot_qwen_rom_core_ctrl_static #(
     // Calendar pulses replace INTERNAL issue/fin. Status never gates them.
     input wire fixed_issue, input wire fixed_end,
     input wire [1:0] fixed_unit, input wire fixed_fault,
+    output wire accepted_start,
     output wire candidate_v, output wire [PAW-1:0] candidate_pc,
     output wire [1:0] candidate_unit,
     output wire candidate_available, output wire candidate_end_ok,
@@ -595,6 +596,7 @@ localparam integer W_ME_AMC = 1;
     assign me_go = issue && (fixed_unit == 2'd1);
     assign su_go = issue && (fixed_unit == 2'd2);
     wire fin = fixed_end;
+    assign accepted_start=start&&(st==S_IDLE);
     assign candidate_v=(st==S_RUN)&&nx_v&&(own||d_unit==0);
     assign candidate_pc=pc;
     assign candidate_unit=d_unit;
