@@ -125,6 +125,20 @@ proc ot_ce_apply {} {
   # Wires-only parents have no CTS tree to set this flag for us.
   # Ideal clocks silently report zero network arrival despite real entry wires.
   set_propagated_clock [get_clocks ot_entry_*]
+  # Before CTS, a standard-cell root is still one unbuffered high-fanout
+  # net. Propagating that net invents multi-ns skew and clock-pin slew;
+  # its delay is not the tree that CTS will build. Keep only these declared
+  # CTS roots ideal during the explicit pre-CTS diagnostic. Raw macro and
+  # hardened-child entries retain actual entry-wire propagation. Routed
+  # require-wire checks always propagate and measure every physical root.
+  if {[info exists ::ot_ref_pre_cts] && $::ot_ref_pre_cts &&
+      (![info exists ::ot_ce_require_wire] || !$::ot_ce_require_wire)} {
+    foreach name $::ot_ce_cts_roots {
+      set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $name]]
+      unset_propagated_clock $clock
+      puts "OT_ENTRIES PRE_CTS_IDEAL_CTS_ROOT $name"
+    }
+  }
   set sources {}; set names {}
   foreach c [get_clocks ot_entry_*] {
     foreach p [get_property $c sources] { lappend sources $p; lappend names [get_full_name $p] }
@@ -276,6 +290,9 @@ proc ot_ce_apply {} {
     set dlmax [lindex [lsort -real [dict get $domain_high $domain]] end]
     set vc [get_clocks [dict get $info clock]]
     set budget [dict get $info io_budget_ps]
+    # Optional composition-derived output budget (domain "io_budget": {"out": f}, f >= 0.2): the outside share of the
+    # cycle on this domain's outputs; larger = a TIGHTER launch (flop -> pin) inside the child, never a relaxation.
+    set budget_out [expr {[dict exists $info io_budget_out_ps] ? [dict get $info io_budget_out_ps] : $budget}]
     set inputs {}; set outputs {}
     foreach pattern [dict get $info inputs] {
       foreach p [get_ports -quiet $pattern -filter "direction == input"] {
@@ -297,7 +314,7 @@ proc ot_ce_apply {} {
       set_input_delay [expr {$dlmin-$hki}] -min -clock $vc $inputs
     }
     if {[llength $outputs]} {
-      set_output_delay [expr {$budget-$dlmax+$sk}] -max -clock $vc $outputs
+      set_output_delay [expr {$budget_out-$dlmax+$sk}] -max -clock $vc $outputs
       set_output_delay [expr {-$dlmin-$hk}] -min -clock $vc $outputs
     }
     if {[info exists ::env(OT_IO_INTER)] && $::env(OT_IO_INTER) ne ""} {
@@ -308,7 +325,7 @@ proc ot_ce_apply {} {
             set_input_delay [expr {$budget+$dlmax+150}] -max -clock $vc $p
           }
           if {[dict exists $covered_out $n] && [dict get $covered_out $n] eq $domain} {
-            set_output_delay [expr {$budget-$dlmax+150}] -max -clock $vc $p
+            set_output_delay [expr {$budget_out-$dlmax+150}] -max -clock $vc $p
           }
         }
       }

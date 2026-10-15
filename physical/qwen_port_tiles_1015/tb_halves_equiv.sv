@@ -7,6 +7,7 @@ module tb_halves_equiv;
     parameter integer MUT = 0;
     parameter integer CYC = 3000;
     parameter integer BANDP = 1, HALFP = 1;   // strap coverage: pt_id = 8*BANDP+4*HALFP+q
+    parameter integer AMD = 4;                // r2: port-leaf argmax levels split (APIPE 4'b1111): new am[50:0] = old am[50:0] AMD edges later
     reg ck=0; always #1 ck=~ck;
     reg rst_n=0;
     reg [8*514-1:0] bw; reg [340:0] tc; reg [2047:0] ty;
@@ -17,6 +18,10 @@ module tb_halves_equiv;
         .ck_pair0(ck),.ck_pair1(ck),.ck_pair2(ck),.ck_pair3(ck),.rst_n(rst_n),.bw(bw),.cw(cw_n));
     qfd_slab_result_half_old #(.BAND(BANDP),.HALF(HALFP)) ro (.ck(ck),.rst_n(rst_n),.ck_col({16{ck}}),.ck_mul({16{ck}}),.ck_group({4{ck}}),.tc(tc),.ty(ty),.rq(rq_o),.am(am_o));
     qfd_slab_result_half #(.BAND(BANDP),.HALF(MUT==2 ? 1-HALFP : HALFP)) rn (.ck(ck),.rst_n(rst_n),.ck_col({16{ck}}),.ck_mul({16{ck}}),.ck_group({4{ck}}),.tc(tc),.ty(ty),.rq(rq_n),.am(am_n));
+    reg [50:0] am_od [0:15];
+    integer di;
+    always @(posedge ck) begin am_od[0] <= am_o[50:0]; for (di = 1; di < 16; di = di + 1) am_od[di] <= am_od[di-1]; end
+    wire [50:0] am_oref = (AMD == 0) ? am_o[50:0] : am_od[AMD-1];
     function [31:0] rf(input integer s); begin rf = {$random(s)} ; end endfunction
     integer cyc=0, err=0, seed=7, i, act=0, ract=0, rfl=0;
     reg [31:0] r;
@@ -39,7 +44,7 @@ module tb_halves_equiv;
         if (cyc>16) begin
             if (cw_o!==cw_n) begin err=err+1; if(err<4) $display("MISMATCH cw cyc %0d",cyc); end
             if (rq_o!==rq_n) begin err=err+1; if(err<4) $display("MISMATCH rq cyc %0d",cyc); end
-            if (am_o!==am_n) begin err=err+1; if(err<4) $display("MISMATCH am cyc %0d",cyc); end
+            if (cyc>16+AMD && (am_oref!==am_n[50:0] || am_o[51]!==am_n[51])) begin err=err+1; if(err<4) $display("MISMATCH am cyc %0d",cyc); end
             if (cw_o[2048]) act=act+1;
             if ((|rq_o[2211:2208]) | am_o[50] | (|rq_o[2047:0])) ract=ract+1;
             if (am_o[51]) rfl=rfl+1;

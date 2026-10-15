@@ -12,6 +12,6 @@ if [ $K = reg512 ]; then
 fi
 awk '/^module ot_qwen_slab_pg_rcopy/,/^endmodule/; /^module ot_qwen_slab_pg_lanes/,/^endmodule/' rtl/physical/ot_qwen_slab_port_group.sv > $O/lanes.sv
 SRC="rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_qwen_w12_arith.sv rtl/hdc/ot_qwen_w12_matvec.sv rtl/hdc/ot_qwen_me_spine_h_w12.sv $O/lanes.sv physical/qwen_port_tiles_1015/col_stub_sim.sv rtl/qwen_split/qfd_slab_pair_add.sv rtl/qwen_split/qfd_slab_port_leaf.sv rtl/qwen_split/qfd_slab_word_half.sv rtl/qwen_split/qfd_slab_result_half.sv physical/qwen_port_tiles_1015/reference/qfd_slab_word_half_old.sv physical/qwen_port_tiles_1015/reference/qfd_slab_result_half_old.sv physical/qwen_port_tiles_1015/tb_halves_equiv.sv"
-verilator --binary -j 4 --top-module tb_halves_equiv -GMUT=$M -GCYC=3000 -GBANDP=$BP -GHALFP=$HP -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --Mdir $O/obj $SRC > $O/build.log 2>&1 || { tail -20 $O/build.log; exit 2; }
+verilator --binary -j 4 --top-module tb_halves_equiv -GMUT=$M -GAMD=${AMD:-4} -GCYC=3000 -GBANDP=$BP -GHALFP=$HP -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --Mdir $O/obj $SRC > $O/build.log 2>&1 || { tail -20 $O/build.log; exit 2; }
 $O/obj/Vtb_halves_equiv > $O/run.log; grep -E "EQUIV|MISMATCH" $O/run.log | head -4
 grep -q "^EQUIV .* PASS$" $O/run.log
