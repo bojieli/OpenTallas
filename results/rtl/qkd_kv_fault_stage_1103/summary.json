@@ -1,0 +1,19 @@
+{
+  "status": "PASS_COMPONENT_ONLY",
+  "normal_words": 20000,
+  "mutants_rejected": [
+    "missing stage: changed before observation edge word1",
+    "bitflip: observation mismatch word0"
+  ],
+  "fault_observation_edges": 1,
+  "normal_payload_edges": 0,
+  "physical_status": "KIT_PREPARED_NOT_ROUTED",
+  "parent_status": "OPEN",
+  "source_sha256": {
+    "rtl/physical/qkd_kv_fault_stage.sv": "d3766611254a08f65eaafce5098afe5e009782df8bf9b19a93ed52e036f61068",
+    "rtl/test/qwen_static_kv/tb_qkd_kv_fault_stage.sv": "5430677918c37f626f2a58f5601ae5062471f83fba08a6c393de65ca1472ee27",
+    "tools/qwen_kv_die/run_fault_stage_bench.py": "8865f0f647360348b02a27325591ab3b424a321230ebe617d894b876c016f1fc",
+    "physical/ref_tile/qkd_kv_fault_stage/spec.json": "963d05a86b4a9626722bfeac641b230770750b41be05e5e1ed61253e3e5ec93d",
+    "physical/ref_tile/qkd_kv_fault_stage/io_pins.tcl": "4d67468655688b2d94b085b5e029922823b0b39beda580a8cc2e66b3b30b2ff8"
+  }
+}
