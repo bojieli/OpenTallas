@@ -16439,3 +16439,16 @@ def hbm_idx_static_calendar_model():
         issue_II=1,roots=2,latency='start→read0 at+1→registered instruction0 at+2',
         schedule='fixed bounded PC; instruction fields drive actual operand/scorer/selector/link slots; no dataready',
         qualification='OPEN actual nativeparent timeline and physical placement; no price acceptance')
+
+
+def hbm_idx_keypack_static_model():
+    """Canonical cmp.ik_qdq FP32 KR→physicalFP4/E8M0, no re-quantized IK."""
+    return dict(schema='opentallas.hbm-idx-keypack-static.v1',
+        input='actual pre-quant KR FP32,4blocks32features/key',
+        input_bits_per_edge=1024,output_bits_per_key=544,keys_per_edge=.25,
+        quantum='same exact13edge FP4E8M0 pipeline asnativequery; capturedpackedkey oneedge later',
+        retained_bits=512+32+4,metadata_pipeline_bits=13*(2+14+2),roots=3,
+        byte_format='lower512bits 128E2M1nibbles infeatureorder,upper32bits4UE8M0bytes inblockorder',
+        placement='fixed2736localkeys/stack, source128MiBstride, base18.5GiB,fence19GiB; formatversion separatefromlegacy128Brow',
+        slot='UNASSIGNED quantizer/pack/storeproducer actualroots andnewphysicalview required',
+        qualification='OPEN actualSM+SU KRproducer→pack→HBMcommit→service→scorer join and physical/cost')
