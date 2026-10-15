@@ -41,6 +41,12 @@ def main():
     sys_delta=sys_latency-33
     engine_path=Path(os.environ['HC_SYS1_ENGINE_RECEIPT'])
     engine=json.loads(engine_path.read_text())
+    provider_relative='physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v'
+    provider_sha='dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e'
+    if engine.get('source_sha256',{}).get(provider_relative)!=provider_sha:
+        raise RuntimeError('actual SYS1 engine must be re-proven with accepted physical128 provider, not ideal128sim')
+    if hashlib.sha256((ROOT/provider_relative).read_bytes()).hexdigest()!=provider_sha:
+        raise RuntimeError('accepted physical128 provider source mismatch')
     if engine.get('SYS_LAT_candidate')!=sys_latency or any(engine.get(k,{}).get('exit_code')!=0 for k in ('exact6','exact8','exact_early6','exact_early8')) or engine.get('mutant8',{}).get('exit_code',0)==0:
         raise RuntimeError('actual SYS1 arithmetic prerequisite has not passed')
     build_threads=int(os.environ.get('HC_BUILD_THREADS','4'))
@@ -113,7 +119,7 @@ def main():
         'rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_weight_quarter_static.sv',
         'rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_residual_half_static.sv',
         'rtl/hbm_accel/generic/peers/static_hc/ot_hdc_v41x_hcp_sys1_static.sv',
-        'rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv',
+        'physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v',
         'physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v',
         'rtl/hdc/ot_hdc_fastfp.sv','rtl/hdc/ot_hdc_fastfp_lat.sv','rtl/hdc/ot_hdc_delay.sv',
         'rtl/hdc/ot_hdc_fp32_add_lat.sv','rtl/hdc/ot_hdc_fp32_mul_lat.sv','rtl/hdc/ot_hdc_prefix.sv',
@@ -125,7 +131,7 @@ def main():
     pins=files+['tools/hdc_golden.py','tools/hdc_golden_v41.py','tools/rtl_hgi_hc_checkpoint_native_sys1_split_mtp_static_gate.py','tools/rtl_hdc_v41x_hcp_campaign.py','tools/lower_hbm_hc_mtp_static_calendar.py','tools/lower_hbm_hc_tail_loop_calendar.py','tools/lower_hbm_hc_sys1_mtp_static_calendar.py','tools/lower_hbm_hc_native_sys1_component_calendar.py']
     for f in set(pins)&set(engine['source_sha256']):
         if hashlib.sha256((ROOT/f).read_bytes()).hexdigest()!=engine['source_sha256'][f]:raise RuntimeError(f'engine source mismatch: {f}')
-    receipt={'compile_cache_copied_from':compile_cache,'engine_receipt_sha256':hashlib.sha256(engine_path.read_bytes()).hexdigest(),'engine_sources_match':True,'status':'PREPARED_NOT_RUN', 'SYS_LAT':sys_latency,'additional_pipeline_cycles':sys_delta,'residual_base_scales':'synthetic fixture; actual checkpoint FN only','canonical_G25_P1_qualified':False,'projection_clock_pins':91,'arithmetic_clock_roots_with_sink':92,'leaf_source':'473756fb3','additional_residual_write_cycle':1,'additional_read_calendar_cycles':0,'clock_scope':'equalphase functional only; physical clock/pin/reach/timing qualification open','full_native_chip_qualified':False,'scope':'actual paged programme SRAM to SYS1 473756fb3 split32weightquarters/16residualhalves/8controls/32LG8MAC/core projection/tail; actual4SID32bankVM96SRAM and12LGtaps joined plus realresultVMwrites/readback; actual20GiB checkpoint PHY CDC staging128SRAM joined; only offchip PHY data model; no wholechip/physical qualification',
+    receipt={'compile_cache_copied_from':compile_cache,'engine_receipt_sha256':hashlib.sha256(engine_path.read_bytes()).hexdigest(),'engine_sources_match':True,'memory_provider':{'path':provider_relative,'sha256':provider_sha,'engine_source_bound':True},'status':'PREPARED_NOT_RUN', 'SYS_LAT':sys_latency,'additional_pipeline_cycles':sys_delta,'residual_base_scales':'synthetic fixture; actual checkpoint FN only','canonical_G25_P1_qualified':False,'projection_clock_pins':91,'arithmetic_clock_roots_with_sink':92,'leaf_source':'473756fb3','additional_residual_write_cycle':1,'additional_read_calendar_cycles':0,'clock_scope':'equalphase functional only; physical clock/pin/reach/timing qualification open','full_native_chip_qualified':False,'scope':'actual paged programme SRAM to SYS1 473756fb3 split32weightquarters/16residualhalves/8controls/32LG8MAC/core projection/tail; actual4SID32bankVM96SRAM and12LGtaps joined plus realresultVMwrites/readback; actual20GiB checkpoint PHY CDC staging128SRAM joined; only offchip PHY data model; no wholechip/physical qualification',
         'source_sha256':{f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest() for f in pins},
         'fixture_sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in [*run.glob('*.mem'),run/'all24rows.hex']},
         'K':20480,'positions':[6,8],'projection_rows':24,'tail_words_per_position':24,'sink_clock_divisor':7,'checkpoint_fn_sha256':hashlib.sha256(original.read_bytes()).hexdigest(),'actual_SRAMs':306+128*command_native,'command_native':command_native,'build_threads':build_threads,'tail_configuration_words':497,'tail_programme_reconfigure_between_positions':False,'tail_body_period':497,'configuration_words_n6':1577+sys_delta,'configuration_words_n8':1897+sys_delta,'host_reconfigure_between_projection_and_tail':False,'PHY_model':('strict command-only offchipfixture canonical23edge; corrected owned-stacka7b86347d actualcontroller' if command_native else 'published request-level refresh-aware ot_chip_v41x_hbm3e_phy') ,'nominal_row_result_ages':[289+sys_delta+160*p for p in range(8)],'nominal_row_periods':{'6':1100+sys_delta,'8':1420+sys_delta},'early_row_result_ages':[269+sys_delta+160*p for p in range(8)],'early_row_periods':{'6':1080+sys_delta,'8':1400+sys_delta}}
