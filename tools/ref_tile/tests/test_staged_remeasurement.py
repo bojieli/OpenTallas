@@ -31,6 +31,28 @@ class StagedRemeasurement(unittest.TestCase):
             measurement_log_sha256=hashlib.sha256(self.log).hexdigest(),new_measurement_only=True,physical_thresholds='unchanged')
         (self.run/'staged_remeasurement.json').write_text(json.dumps(self.receipt))
     def recover(self):return SB.recover_staged_remeasurement(self.b,self.run,self.script,self.log)
+    def admission(self, binding):
+        import pre_route_gate as PG
+        kd=self.run/'kit';kd.mkdir(exist_ok=True)
+        (kd/PG.CLOCK_RESULT).write_text(json.dumps(dict(source_binding=binding,clock={'cts':True})))
+        why=[]
+        with patch.object(PG.SB,'validate',return_value=(True,'bound')):
+            result=PG.kit_gate_evidence(kd,why=why)
+        return result,why
+    def test_admission_requires_verified_new_log_without_archive_flag(self):
+        b=self.recover();b['staged_measurement_log']=self.log.decode()
+        result,why=self.admission(b);self.assertIsNotNone(result,why)
+        self.assertNotIn('remote_archive_verified',result['source_binding'])
+    def test_admission_rejects_missing_new_log(self):
+        result,why=self.admission(self.recover());self.assertIsNone(result);self.assertIn('persisted log',why[0])
+    def test_admission_rejects_changed_new_log(self):
+        b=self.recover();b['staged_measurement_log']=(self.log+b'changed').decode()
+        result,why=self.admission(b);self.assertIsNone(result);self.assertIn('receipt mismatch',why[0])
+    def test_admission_rejects_changed_receipt(self):
+        b=self.recover();b['staged_measurement_log']=self.log.decode();b['staged_remeasurement']['tool_image_identity']='wrong'
+        self.assertIsNone(self.admission(b)[0])
+    def test_admission_legacy_still_requires_archive(self):
+        self.assertIsNone(self.admission(self.b)[0])
     def test_complete_rehash_accepts_only_new_evidence(self):
         b=self.recover();self.assertNotIn('remote_archive_verified',b)
         self.assertTrue(SB.staged_remeasurement_matches_log(b,self.log))

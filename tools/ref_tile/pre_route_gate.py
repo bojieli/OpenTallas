@@ -773,6 +773,7 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
         if not SB.staged_remeasurement_matches_log(binding, out.encode()):
             g.add("FAIL", "source_binding", "new staged remeasurement receipt/log mismatch", "rehash remote original source and artifacts")
             return
+        binding["staged_measurement_log"] = out  # persisted exact bytes, checked again at route admission
         g.add("INFO", "source_binding", "NEW staged remeasurement: all original staged bytes, script and CTS artifacts rehashed; original archive stdout unavailable")
         # This is new measurement evidence, never historical archive verification.
         if errs or kv.get("GATE_FLOW_RC") not in (None, "0"):
@@ -941,7 +942,11 @@ def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, not
             return no(reason)
         if note is not None:
             note.append(reason)
-        if not binding.get("remote_archive_verified"):
+        if binding.get("staged_remeasurement"):
+            log = binding.get("staged_measurement_log")
+            if not isinstance(log, str) or not SB.staged_remeasurement_matches_log(binding, log.encode()):
+                return no("staged remeasurement persisted log missing or receipt mismatch")
+        elif not binding.get("remote_archive_verified"):
             return no("remote archive verification missing")
         if not isinstance(d.get("clock"), dict):
             return no("gate result carries no clock record (gate ran without --cts?)")
