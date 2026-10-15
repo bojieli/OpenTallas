@@ -22,9 +22,9 @@ with tempfile.TemporaryDirectory(prefix='s81-static-') as td:
      first_commit=slots[0].commit,last_commit=slots[-1].commit,log=log.name))
 # The reservations below check API validation only; no VM capacity claim.
 slots=calendar(2,0)
-events=vm_events(slots,identity=0x78,reservations={(s.seq,r):(0,0) for s in slots for r in range(4)})
+events=vm_events(slots,identity=0x78,reservations={(s.seq,r):(0,0) for s in slots for r in range(4)},drain_delays={(s.seq,r):0 for s in slots for r in range(4)})
 assert len(events)==176 and events[-1]['observation_edge']==187
-try: vm_events(slots,identity=0x78,reservations={})
+try: vm_events(slots,identity=0x78,reservations={},drain_delays={})
 except ValueError: pass
 else: raise AssertionError('missing reservations accepted')
 report=dict(model=model(),source_sha256={str(s.relative_to(repo)):hashlib.sha256(s.read_bytes()).hexdigest() for s in sources},
