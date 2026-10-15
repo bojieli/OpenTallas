@@ -31,11 +31,14 @@ module ot_qwen_tp8_attention_native_stack #(
   .si0(si[0+:634]),.si1(si[634+:634]),.si2(si[1268+:634]),.si3(si[1902+:634]),
   .si4(si[2536+:634]),.si5(si[3170+:634]),.si6(si[3804+:634]),.si7(si[4438+:634]));
  assign fault=astk_fault;
+ // The attached native head tile is hierarchical: its score leaves NRS 1 + NRI 2 + NRK 2 + 3 = 8 edges later than the
+ // flat head the ECTL K-pass tag delay assumes (Q-ATTN r3 2026-10-15, observed one-KV-round tag/score skew at HXK 0).
+ localparam integer HEAD_SCORE_HXK=8;
  genvar engine,head;
  generate for(engine=0;engine<8;engine=engine+1)begin:g_engine
   wire[63:0] e;wire[135:0] scores;wire[1558:0] t0,t1;wire[16:0] rq;
   qkd_ectl3_epoch_direct_s #(.STATIC_QK(1),.QK_ISSUE_AGE(QK_ISSUE_AGE),
-   .ROW_RETURN_LAT(ROW_RETURN_LAT)) u_ectl(
+   .ROW_RETURN_LAT(ROW_RETURN_LAT),.HXK(HEAD_SCORE_HXK)) u_ectl(
    .ck(ck_ectl[3*engine+:3]),.rst_n(rst_n),.cfg({3'(engine),2'(STACK)}),
    .e0(e[0+:16]),.e1(e[16+:16]),.e2(e[32+:16]),.e3(e[48+:16]),
    .s0(scores[0+:34]),.s1(scores[34+:34]),.s2(scores[68+:34]),.s3(scores[102+:34]),

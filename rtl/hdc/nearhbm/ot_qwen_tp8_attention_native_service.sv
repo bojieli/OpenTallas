@@ -58,7 +58,13 @@ module ot_qwen_tp8_attention_native_service #(
  wire [15:0] FINAL_OUT_AGE=LAST_CAPTURE+16'd16;             // ot_qwen_tp8_pv_join16_static_cal OUT_AGE
  wire [15:0] RESULT_AGE=PV_START_AGE+FINAL_OUT_AGE;         // start_qk age of the final out_valid edge
  wire [15:0] END_AGE=RESULT_AGE+16'd33;
- localparam integer ROW_RETURN_LAT=K_EXT+6;   // ECTL tb geometry: L=3 <-> ROW_RETURN_LAT=9
+ // Native QK round trip seen by the ECTL return slots (measured, Q-ATTN r3 2026-10-15): generator rq_valid edge X ->
+ // RQD=2 request relays -> k_req visible in cycle X+2 -> boundary presents the row in cycle X+2+K_EXT -> 3 response pin
+ // stages (A rv1/rv2/rv3; C via A rv2 -> C rv1) -> ring write slot at X+K_EXT+5. Same law as
+ // tools/qwen_kv_die/static_qk_calendar.py (ROW_RETURN_LAT = row_latency + 5). The former K_EXT+6 made every engine's
+ // first row arrive one edge before its reserved write slot (ring fault at engine age 23 -> service FIRST_FAULT age 99).
+ localparam integer QK_REQ_RELAYS=2,QK_RSP_PIN_STAGES=3;
+ localparam integer ROW_RETURN_LAT=K_EXT+QK_REQ_RELAYS+QK_RSP_PIN_STAGES;
 
  // ---------------- fixed calendar control ----------------
  reg [6:0] boot_count;
