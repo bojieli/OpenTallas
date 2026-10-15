@@ -1,5 +1,5 @@
 {
- "name": "s81_pq_reader75-ref-COMMIT",
+ "name": "s81_pq_reader75-ref-e9ac02bec",
  "block": "ot_s81_pq_calendar_reader",
  "ref_tile": true,
  "owner": "Claude:ref-flow",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "main",
-  "commit": "COMMIT",
+  "commit": "e9ac02bec",
   "extra_paths": [
    "rtl/dsrom_sys/s81_static_control",
    "rtl/dsrom_sys/s81_die_bind",
@@ -104,7 +104,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81_pq_reader75/s81_pq_reader75-ref-COMMIT"
+   "to": "results/rtl/ref_tile/s81_pq_reader75/s81_pq_reader75-ref-e9ac02bec"
   }
  ],
  "cycles_added": 0,
