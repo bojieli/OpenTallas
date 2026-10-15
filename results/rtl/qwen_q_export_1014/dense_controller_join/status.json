@@ -56,5 +56,12 @@
     "real fullstage compiler calendar"
   ],
   "runner_sha256": "dcf227e64800cd477fa1ce4d5c693b5a979e23c433564ec09a7327fa68a68ab2",
-  "historical_namespace": "Original static_internal recorded logs and failures remain byte-identical"
+  "historical_namespace": "Original static_internal recorded logs and failures remain byte-identical",
+  "compiler_sources_sha256": {
+    "tools/qwen_static_schedule/dense_image.py": "7b042db8c03d7ab205b525d741bd7c8b647ede09112fb3ef3b55c7ebaaa65352",
+    "tools/qwen_static_schedule/collective.py": "13357a6b262f2cbd19ae6167c5ba2a114a0552fa506deabc9bd85e9585423d48",
+    "tools/qwen_static_schedule/issue_rom.py": "dd772ac1e998f4341d4a5e59525338098d2a8169ea6a69aafeea56e019e1774e",
+    "tools/qwen_split/check_dense_image.py": "e3b6456152b5aae32c135e1031890e61da0f83c5c1a2abcfd7ffbea121450b2f",
+    "tools/qwen_split/check_static_internal.py": "dcf227e64800cd477fa1ce4d5c693b5a979e23c433564ec09a7327fa68a68ab2"
+  }
 }
