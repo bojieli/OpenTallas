@@ -29,7 +29,8 @@ module ot_hgi_coll_park #(
     parameter integer DEL   = 4,
     parameter integer PWT   = 545,
     parameter integer MACRO = 2,        // ot_fifo_sram_fwft MACRO: 2 = ot_sram_1r1w_128x256 (PPK / DEL <= 128)
-    parameter integer MUT_PARK = 0      // bench mutant: 1 = bank index ignored (every lane writes bank 0)
+    parameter integer MUT_PARK = 0,     // bench mutant: 1 = bank index ignored (every lane writes bank 0)
+    parameter [3:0]   PSTAGE_MASK = 4'b0010  // queues with the bank-local push stage (the hard wrappers: Q1 only)
 ) (
     input  wire                         clk,
     input  wire [EQ-1:0]                clk_q,
@@ -63,7 +64,7 @@ module ot_hgi_coll_park #(
           ot_hgi_coll_park_q3 u_q (.clk(HARD_CLOCKS != 0 ? clk_q[q] : clk),.rst_n(rst_n),.pv(pv),.pq(pq),.ps(ps),.pd(pd),.hv(hv[q]),.hd(hd[q*PWT+:PWT]),.pop(pop[q]),.bank_ovf(bank_ovf[q*DEL+:DEL]));
         end
 `else
-        ot_hgi_coll_park_queue #(.EQ(EQ),.QID(q),.PPK(PPK),.DEL(DEL),.PWT(PWT),.MACRO(MACRO),.MUT_PARK(MUT_PARK)) u_q
+        ot_hgi_coll_park_queue #(.EQ(EQ),.QID(q),.PPK(PPK),.DEL(DEL),.PWT(PWT),.MACRO(MACRO),.MUT_PARK(MUT_PARK),.PSTAGE(PSTAGE_MASK[q])) u_q
         (.clk(HARD_CLOCKS != 0 ? clk_q[q] : clk),.rst_n(rst_n),.pv(pv),.pq(pq),.ps(ps),.pd(pd),.hv(hv[q]),.hd(hd[q*PWT+:PWT]),.pop(pop[q]),.bank_ovf(bank_ovf[q*DEL+:DEL]));
 `endif
     end endgenerate
