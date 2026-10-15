@@ -16,6 +16,7 @@ def build(payload_manifest,out):
   if not o['active']:plans.append(dict(sm=o['sm'],active=False,requires_native_idle=True));continue
   source=p.parent/o['file'];raw=source.read_bytes()
   if hashlib.sha256(raw).hexdigest()!=o['sha256']:raise ValueError('actualcheckpointlineSHAchanged')
+  if o['lines']>64:raise ValueError('single-fill component limited to64rows; fullbook requires explicit bank/epoch/refill calendar')
   r=compile_manifest(dict(ops=[dict(rows=o['rows'],c=8,groups=o['groups'],fmt=o['fmt'],gs=True,x_base=0,base_tag=1000,launch_cycle=1)],packet_lines=raw.decode().split()))
   commands=r['commands'];reads=[];expected=[];idx=0
   for command in commands:
