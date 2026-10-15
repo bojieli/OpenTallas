@@ -1,0 +1,5 @@
+HOST_SU_PASS edges=7111 writes=34400 macros=301 replay=1 negatives=5
+- /tmp/host-su-target-1417/image/host_su_tb.sv:76: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2ms; walltime 20.362 s; speed 101.949 us/s
+- Verilator: cpu 20.361 s on 1 threads; allocated 18 MB
