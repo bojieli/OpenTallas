@@ -212,6 +212,54 @@ def sink_unstaged(M, die, dyn, used, prev_vals, agent, two_frame=False):
     return [d for _, d, _, _ in plan], rows, ssec, osec, pre, snk
 
 
+def stripe4_quarter(r, d, q=0):
+    """SU.VOP F2 composition (B2 SPEC 5a / owner 2026-10-14 21:35 option c): the compiler splits an SU record into four
+    per-quadrant sub-records, quarter q working on ITS slice.  -> (sub-record, sub-dispatch, how).  Rows split when the
+    record has >= 4 rows and no whole-record reduction (quarter q takes rows [q*ceil(m/4), ...)); a 1..3-row record
+    without reduction / pair / half-rate operands splits its row words into sector-aligned quarters; anything else
+    stays whole on quarter q (conservative: the real F2 splits it with the ordered 3-hop carry)."""
+    from hgi_sim.records import decode_one
+    eff = list(d['eff'])
+    fl = lambda e, k: C.fld(e, k)
+    ia = C.OPND.index('A')
+    m, n = fl(eff[ia], 'm'), fl(eff[ia], 'n')
+    st = r.sut
+    def put(e, **kw):
+        f = {k: fl(e, k) for k, _, _ in C.SV.G.D_MDESC_FIELDS}
+        f.update(kw)
+        return C.SV.mdesc(**f)
+    how = 'whole'
+    if m >= 4 and not (st.get('red_whole') or st.get('red_tree')):
+        mq = -(-m // 4)
+        r0 = q * mq
+        mq = max(0, min(mq, m - r0))
+        for j, e in enumerate(eff):
+            if e and fl(e, 'm') == m:
+                sd = fl(e, 'stride')
+                sd = sd - (1 << 32) if sd >> 31 else sd
+                eff[j] = put(e, base=fl(e, 'base') + r0 * sd, m=mq)
+        how = f'rows {m}->{mq}'
+    elif m < 4 and not st.get('red') and not st.get('b_half') and not st.get('c_pair'):
+        nq = (-(-n // 4) + 7) // 8 * 8
+        c0 = q * nq
+        nq = max(0, min(nq, n - c0))
+        for j, e in enumerate(eff):
+            if e and fl(e, 'n') == n:
+                ist = 0 if fl(e, 'ibcast') else (fl(e, 'istride') or 1)
+                eff[j] = put(e, base=fl(e, 'base') + c0 * ist, n=nq)
+        how = f'words {n}->{nq}'
+    if how == 'whole':
+        return r, d, how
+    d2 = dict(d)
+    d2['eff'] = eff
+    d2['n'] = [fl(e, 'n') for e in eff]
+    bb = d['hdr'].to_bytes(16, 'little') + d['sut'].to_bytes(32, 'little')
+    bb += b''.join(e.to_bytes(32, 'little') for e in eff if e)
+    r2, _ = decode_one(bb, 0)
+    r2.tag = r.tag
+    return r2, d2, how
+
+
 def spans(r, M, die, L):
     """{role: VM word addresses} of the record's VM operands (b_half B / D at i >> 1)."""
     out = {}
@@ -257,6 +305,9 @@ def main():
     ap.add_argument('--two-frame', action='store_true',
                     help='SINK_UNSTAGED: append a 65,536-word sink at word offset 3 (8,193 sectors: the unit\'s '
                          'two-frame region, D7 / MUT_V 7); needs ~16.4 k free VM sectors')
+    ap.add_argument('--stripe4', type=int, default=None, metavar='Q',
+                    help='F2 composition: keep only quarter Q of every SU record (stripe4_quarter); the manifest price '
+                         'stays the WHOLE record (four quarters run in parallel on their own slices)')
     a = ap.parse_args()
     if a.sink_unstaged is None:
         a.sink_unstaged = bool(a.chain) and a.unit != 'sfu' and not a.tags
@@ -298,6 +349,7 @@ def main():
     wrmask = {}                                             # case index -> word addresses its records write
     used, prev_sinks = set(), []
     chain = []
+    full_prices = {}
     drain_traffic = []
     seen = set()
     for i, (k, L) in enumerate(ex):
@@ -314,6 +366,12 @@ def main():
             break                                           # next layer
         seen.add(r.tag)
         die.dyn[4] = L
+        full_price = None
+        if a.stripe4 is not None and r.unit == 'SU':
+            full_price = T.su_cost(r, dyn, 0)[0]
+            r, d, how4 = stripe4_quarter(r, d, a.stripe4)
+            print(f"stripe4 q{a.stripe4} {r.tag}: {how4}")
+            full_prices[r.tag] = full_price
         M.cur = r
         try:
             sp = spans(r, M, die, L)
@@ -376,6 +434,7 @@ def main():
         for r, d, before, src, snk, sp in chain:
             recl.append(SB.pack_rec(d))
             c = T.cost(r, dyn, 0)[0] if r.unit != 'SU' else T.su_cost(r, dyn, 0)[0]
+            c = full_prices.get(r.tag, c)               # --stripe4: the whole record's price (4 quarters in parallel)
             tot += c
             man.append(dict(tag=r.tag, unit=r.unit, priced=round(float(c), 1),
                             stage_sectors=int(sum(len(np.unique(v >> 3)) for kk, v in sp.items() if kk not in ('O', 'R'))),
