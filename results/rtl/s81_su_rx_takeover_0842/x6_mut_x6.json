@@ -1,0 +1,9 @@
+{
+ "mut": 6,
+ "scope": "actual copied DUT-source fault; production source unchanged",
+ "source": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv",
+ "original_sha256": "22033667f1b92cc1fea05008b983842c9c1fe44661561bc13206a78b1bd5ae6d",
+ "mutated_sha256": "3af65cc6216144676643db93e9531f653b01f93c9ee0b3911ef35a58eb2050fb",
+ "old": "cj <= {8{oi_a[1:0]}};",
+ "new": "cj <= 16'd0;"
+}

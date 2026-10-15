@@ -1,0 +1,33 @@
+{
+ "schema": "opentallas.hbm.sm_attention_contract.v1",
+ "owner": "H-SM-ATT (attention on SM engines); SM RTL integration H-ELEM-A; die contract H-DIE; SU tail H-ELEM-B; cross-SM reduce H-COLL",
+ "decision": "owner-adopted option B 2026-10-15: ATT.QK / ATT.PV run on the SM BF16 datapath at SM 1.0x; dedicated ATT tiles retired",
+ "arithmetic": "tools/hgi_sim/lib.py att_qk (csum8 over head dim) / att_pv (csum8 over positions, +0 padded pairwise) == tools/hdc_golden_v41.py dots(cls=att) in chunk8",
+ "kv_storage": {
+  "placement": "stack-local (T_band2__npg4_s5, main 952c5933c): every SM streams only its own HBM stack's rows through its 64-b KV descriptor port; window ring AND compressed rows replicated in all 4 stacks (+3 + 3 row writes/layer/token)",
+  "row": "4 lines x 136 B, chunk-position-major: line i, half h, lane j = head dim 8j + 2i + h",
+  "SM-KV8": "window rows: byte [64h+j] = E4M3 code; line0 bytes 128..135 = UE8M0 blocks 0..7, line1 = blocks 8..15 (block = 32 dims); lines 2,3 spare = 0",
+  "SM-KV4": "compressed rows: nibble [64h+j] = E2M1 code (sign bit 3); bits 512..767 = 32 E4M3 scales (block = 16 dims) in every line",
+  "writer_obligation": "the KV writer (QUANT / compressor DMA.STORE path) emits this permutation and the scale bytes; DMA ROW_GATHER copies whole rows"
+ },
+ "sm_modes": {
+  "QK": "rows = keys; KV row -> 8 BF16 beats (beat t lane j = dim 8j+t) through ot_hbm_sm_kv_line; existing lanes + 16-lane tree + 4-leaf combine = one FP32 score per row; waves of 8 rows (ring slots); x = q (BF16), NC columns = up to 8 q heads per streamed KV row (GQA native)",
+  "PV": "lanes = dims, slot b = beat b (64 dims), k-step = token, chunk = 8 tokens; tree bypassed; per-lane binary-counter merge (ot_hbm_sm_tcpv_col, barrel by slot residue, 1 FP32 adder/lane, 64x512 stack macro/leaf) -> one 512-wide node per SM over an aligned power-of-two chunk run; x = p[token] (BF16) broadcast",
+  "cross_sm": "SM nodes merged in pairwise SM-index order (quadrant-local pairs first, then across quadrants) by a fixed-slot reduce-scatter; +0 pads may be skipped (exact)"
+ },
+ "rtl": {
+  "converter": "rtl/hbm_accel/sm/attn/ot_hbm_sm_kv_line.sv (wave buffer 2 x ot_sram_1r1w_64x512_m1_r2c2; KV8/KV4 dequant exact; faults fail closed)",
+  "issue": "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_issue.sv (ring-residue issue; x store 4 x ot_sram_1r1w_128x256_m1_r2c2)",
+  "column": "rtl/hbm_accel/sm/attn/ot_hbm_sm_tcpv_col.sv (ot_gpu_tc_col lanes verbatim; QK bit-identical path; PV merge)",
+  "bench": "rtl/test/hbm_accel/sm_attn/tb_hbm_sm_attn.sv + tools/hbm_sm_attention/sm_attn_bench.py"
+ },
+ "smh_integration_for_H-ELEM-A": [
+  "op_fmt 2 -> 3 bits (cmd leaf +1 bit): 4 KV8-QK, 5 KV4-QK, 6 KV8-PV, 7 KV4-PV (0..3 unchanged)",
+  "front_c: ot_hbm_accel_int8_line -> ot_hbm_sm_kv_line superset (keep INT8 path); +2 x 64x512 macros per SM",
+  "issue_pq: QK = BF16 matvec issue with K = 512 (Gn 1, c 8) unchanged; PV = new issue mode (slot = beat, x word per token, run_first / run_last)",
+  "tile: ot_gpu_tc16 -> ot_hbm_sm_tcpv_col (+16 FP32 adders, +1 64x512 macro per leaf; tag +3 bits); needed in the 4 leaves of every x column that serves PV (all 32 leaves for uniform hardened tiles)",
+  "be/result path: PV node = 16 lanes x 32 b per leaf per slot (8 slots per run) -> publish 512 words per SM (model 8 words/cycle)",
+  "KV descriptor port (64 b) feeding row-major KV lines of the SM's own stack"
+ ],
+ "measured_status": "DS T640 + T128 full records exact on the component bench (see results/hbm_sm_attention_1015/bench/); smh integration, Qwen GQA hd128 mapping (QK128 4-row beats with be-tree bypass, PV token streams) open"
+}

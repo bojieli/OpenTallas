@@ -1,0 +1,13 @@
+ERR d word 1 got 13d
+ERR c word 0 got 1ec04d06d9195798483aff
+ERR d word 2 got 12c
+ERR d word 3 got 13c
+ERR s level 00 want 10
+ERR s level 00 want 10
+ERR s level 00 want 10
+ERR s level 00 want 10
+CTRL_LANE_BENCH engine=5 slab=bk_selector c_sent=200 c_recv=626 c_latency=-1 d_sent=200 d_recv=643 d_latency=33 bad=1268 s_latency=-1 s_bad=29 FAIL
+- /tmp/sbind_cl/b8_e5/tb_ctrl_lane.sv:512: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.001 s; speed 949.594 us/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 6 MB
