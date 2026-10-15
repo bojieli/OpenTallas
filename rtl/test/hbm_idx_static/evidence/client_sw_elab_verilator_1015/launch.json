@@ -1,0 +1,23 @@
+{
+  "pid": 3419005,
+  "argv": [
+    "/home/ubuntu/bin/ot-run",
+    "--mem",
+    "192",
+    "--threads",
+    "1",
+    "--hosts",
+    "ot-epyc1tb,ot-epyc4",
+    "--dir",
+    "/srv/opentallas-scratch/codex/hbm-idx-sid0-elab-1424",
+    "--",
+    "bash",
+    "rtl/test/hbm_idx_static/run_client_elab_sw_vl.sh",
+    "/srv/opentallas-scratch/codex/hbm-idx-sid0-elab-1424/out"
+  ],
+  "base_source": "d25e2a2b1924d646ef2d8547a5affdbdde775eaa",
+  "script_commit": "5eb2db0eb",
+  "time": "2026-10-15T21:23:47.285778+00:00",
+  "status": "submitted; no pass yet",
+  "memory_rationale": "Historical generic full hierarchy peaked116GB;192GB guarded reservation leaves65% headroom; current full SID0 wrapper and RF metadata source"
+}

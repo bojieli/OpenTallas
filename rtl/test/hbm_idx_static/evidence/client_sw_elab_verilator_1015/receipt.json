@@ -1,0 +1,46 @@
+{
+  "schema": "opentallas.hbm.idx.sw.full_elaboration.v1",
+  "verdict": "PASS",
+  "scope": "Full ot_hbm_idx_client_static_sw, all2048 hslices and actual children; RTL elaboration only",
+  "source_commit": "5eb2db0eb3f9bca37e4a15d596f6b4d8261ed882",
+  "hardware_base": "d25e2a2b1924d646ef2d8547a5affdbdde775eaa",
+  "wrapper_source_commits": [
+    "83e8d72a9",
+    "74bcaea19"
+  ],
+  "source_binding_all_manifest_bytes_match_commit": true,
+  "manifest_files": 36,
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-1606524-1792099428",
+  "local_ot_run_pid": 3419005,
+  "remote_verilator_pid": 1606559,
+  "memory_guard_GB": 192,
+  "tool": "Verilator5.050 --lint-only -Wall -Wno-fatal",
+  "tool_exit": 0,
+  "ot_run_exit": 0,
+  "errors": 0,
+  "missing_or_notfound_pins": 0,
+  "peak_rss_kbytes": 116015400,
+  "wall_time": "42:29.94",
+  "warnings": {
+    "DECLFILENAME": 11,
+    "PINCONNECTEMPTY": 9,
+    "WIDTHTRUNC": 6,
+    "WIDTHEXPAND": 7,
+    "BLKSEQ": 24,
+    "UNUSEDSIGNAL": 39,
+    "UNUSEDPARAM": 6,
+    "UNUSEDGENVAR": 1,
+    "VARHIDDEN": 2,
+    "LATCH": 8,
+    "SYNCASYNCNET": 133,
+    "MULTIDRIVEN": 6
+  },
+  "warning_disposition": "All warnings retained in vl.log; lint success is not warning-free or physical/native qualification. EightLATCH and sixMULTIDRIVEN are also present in historical generic result.",
+  "historical_results": "Generic d8653653e PASS distinct; prior local SW run SIG15 INCOMPLETE distinct.",
+  "not_proven": [
+    "native physical qualification",
+    "four-scorer/glue parent timing",
+    "full-die correctness/throughput"
+  ]
+}

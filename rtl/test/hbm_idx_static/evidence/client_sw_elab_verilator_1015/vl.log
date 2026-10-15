@@ -1,0 +1,1491 @@
+%Warning-DECLFILENAME: rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv:30:8: Filename 'ot_hgi_idx_tk2' does not match MODULE name: 'ot_hgi_idx_tk2_lane'
+   30 | module ot_hgi_idx_tk2_lane #(
+      |        ^~~~~~~~~~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/DECLFILENAME?v=5.050
+                       ... Use "/* verilator lint_off DECLFILENAME */" and lint_on around source to disable this message.
+%Warning-DECLFILENAME: rtl/hbm_accel/index/ot_hbm_idx_vm_share_static.sv:13:8: Filename 'ot_hbm_idx_vm_share_static' does not match MODULE name: 'ot_hbm_idx_vm_share_leaf'
+   13 | module ot_hbm_idx_vm_share_leaf #(parameter integer MUT = 0)(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:41:42: Instance pin connected by name with empty reference: 'cnt_keys_scored'
+   41 |    .o_score(val[e*64+:64]),.o_fault(pf),.cnt_keys_scored(),.cnt_headsums_fused(),.cnt_faults(),.online(online),.protocol_fault(efault[e]));
+      |                                          ^~~~~~~~~~~~~~~
+                          ... For warning description see https://verilator.org/warn/PINCONNECTEMPTY?v=5.050
+                          ... Use "/* verilator lint_off PINCONNECTEMPTY */" and lint_on around source to disable this message.
+%Warning-PINCONNECTEMPTY: rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:41:61: Instance pin connected by name with empty reference: 'cnt_headsums_fused'
+   41 |    .o_score(val[e*64+:64]),.o_fault(pf),.cnt_keys_scored(),.cnt_headsums_fused(),.cnt_faults(),.online(online),.protocol_fault(efault[e]));
+      |                                                             ^~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:41:83: Instance pin connected by name with empty reference: 'cnt_faults'
+   41 |    .o_score(val[e*64+:64]),.o_fault(pf),.cnt_keys_scored(),.cnt_headsums_fused(),.cnt_faults(),.online(online),.protocol_fault(efault[e]));
+      |                                                                                   ^~~~~~~~~~
+%Warning-DECLFILENAME: rtl/hbm_accel/index/ot_hbm_idx_query_owned_native.sv:6:8: Filename 'ot_hbm_idx_query_owned_native' does not match MODULE name: 'ot_hbm_idx_query_bank_native'
+    6 | module ot_hbm_idx_query_bank_native #(parameter integer BANK=0)(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-DECLFILENAME: rtl/hdc/ot_hdc_fpu.sv:9:8: Filename 'ot_hdc_fpu' does not match MODULE name: 'ot_hdc_fadd'
+    9 | module ot_hdc_fadd (
+      |        ^~~~~~~~~~~
+%Warning-DECLFILENAME: rtl/hdc/v41x/ot_hbm_idx_owned_native.sv:16:8: Filename 'ot_hbm_idx_owned_native' does not match MODULE name: 'ot_hbm_idx_hslice_ready_native'
+   16 | module ot_hbm_idx_hslice_ready_native #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_hbm_idx_owned_native.sv:527:10: Instance pin connected by name with empty reference: 'cnt_keys_scored'
+  527 |         .cnt_keys_scored(),.cnt_headsums_fused(),.cnt_faults());
+      |          ^~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_hbm_idx_owned_native.sv:527:29: Instance pin connected by name with empty reference: 'cnt_headsums_fused'
+  527 |         .cnt_keys_scored(),.cnt_headsums_fused(),.cnt_faults());
+      |                             ^~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_hbm_idx_owned_native.sv:527:51: Instance pin connected by name with empty reference: 'cnt_faults'
+  527 |         .cnt_keys_scored(),.cnt_headsums_fused(),.cnt_faults());
+      |                                                   ^~~~~~~~~~
+%Warning-DECLFILENAME: rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv:11:8: Filename 'ot_hdc_v41x_idx_lat' does not match MODULE name: 'ot_hdc_v41x_idx_chunk_l'
+   11 | module ot_hdc_v41x_idx_chunk_l #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv:483:10: Instance pin connected by name with empty reference: 'cnt_keys_scored'
+  483 |         .cnt_keys_scored(),.cnt_headsums_fused(),.cnt_faults());
+      |          ^~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv:483:29: Instance pin connected by name with empty reference: 'cnt_headsums_fused'
+  483 |         .cnt_keys_scored(),.cnt_headsums_fused(),.cnt_faults());
+      |                             ^~~~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv:483:51: Instance pin connected by name with empty reference: 'cnt_faults'
+  483 |         .cnt_keys_scored(),.cnt_headsums_fused(),.cnt_faults());
+      |                                                   ^~~~~~~~~~
+%Warning-DECLFILENAME: rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv:21:8: Filename 'ot_hdc_v41x_idx_arith_lat' does not match MODULE name: 'ot_hdc_v41x_q4dot_l'
+   21 | module ot_hdc_v41x_q4dot_l #(
+      |        ^~~~~~~~~~~~~~~~~~~
+%Warning-DECLFILENAME: rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv:33:8: Filename 'ot_hdc_v41x_idx_arith' does not match MODULE name: 'ot_hdc_v41x_csa'
+   33 | module ot_hdc_v41x_csa #(
+      |        ^~~~~~~~~~~~~~~
+%Warning-DECLFILENAME: rtl/hdc/ot_hdc_fastfp.sv:22:8: Filename 'ot_hdc_fastfp' does not match MODULE name: 'ot_hdc_ksa'
+   22 | module ot_hdc_ksa #(parameter integer W = 8) (
+      |        ^~~~~~~~~~
+%Warning-DECLFILENAME: rtl/hdc/ot_hdc_prefix.sv:13:8: Filename 'ot_hdc_prefix' does not match MODULE name: 'ot_hdc_ksadd_k'
+   13 | module ot_hdc_ksadd_k #(
+      |        ^~~~~~~~~~~~~~
+%Warning-DECLFILENAME: rtl/hdc/ot_hdc_fp32_add_lat.sv:222:8: Filename 'ot_hdc_fp32_add_lat' does not match MODULE name: 'ot_hdc_w11_cut'
+  222 | module ot_hdc_w11_cut #(parameter integer W = 1, parameter integer CUT = 0, parameter integer VB = -1) (
+      |        ^~~~~~~~~~~~~~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_delay_rf.sv:24:24: Operator VAR 'LAST' expects 7 bits on the Initial value, but Initial value's SUB generates 32 bits.
+                                                     : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].md.delay'
+   24 |     localparam [K-1:0] LAST = N - 1;
+      |                        ^~~~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_add_lat.sv:70:56: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DRST' generates 32 bits.
+                                                         : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine.g_ch[3].u_c.g_col[3].g_s[7].u_s.u_a.g_lat.u'
+   70 |     ot_hdc_w11_cut #(.W(WA + 1), .CUT(CUT_A), .VB(DRST ? -1 : WA - 1)) u_ca (.clk(clk), .rst_n(rst_n), .d({a1_swap, a1}), .q(a2_in));
+      |                                                        ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_add_lat.sv:123:52: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DRST' generates 32 bits.
+                                                          : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine.g_ch[3].u_c.g_col[3].g_s[7].u_s.u_a.g_lat.u'
+  123 |     ot_hdc_w11_cut #(.W(WB), .CUT(CUT_B), .VB(DRST ? -1 : WB - 1)) u_cb (.clk(clk), .rst_n(rst_n),
+      |                                                    ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_add_lat.sv:141:52: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DRST' generates 32 bits.
+                                                          : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine.g_ch[3].u_c.g_col[3].g_s[7].u_s.u_a.g_lat.u'
+  141 |     ot_hdc_w11_cut #(.W(WD), .CUT(CUT_D), .VB(DRST ? -1 : WD - 1)) u_cd (.clk(clk), .rst_n(rst_n),
+      |                                                    ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_add_lat.sv:180:52: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'DRST' generates 32 bits.
+                                                          : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine.g_ch[3].u_c.g_col[3].g_s[7].u_s.u_a.g_lat.u'
+  180 |     ot_hdc_w11_cut #(.W(WC), .CUT(CUT_C), .VB(DRST ? -1 : WC - 1)) u_cc (.clk(clk), .rst_n(rst_n),
+      |                                                    ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_add_lat.sv:225:22: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'CUT' generates 32 bits.
+                                                          : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine.g_ch[3].u_c.g_col[3].g_s[7].u_s.u_a.g_lat.u.u_ca'
+  225 |     generate if (CUT && VB < 0) begin : g_r
+      |                      ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv:232:13: Operator ASSIGNDLY expects 17 bits on the Assign RHS, but Assign RHS's SEL generates 16 bits.
+                                                                      : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine.g_ch[3].u_c.g_col[3].g_s[7].u_s.u_m'
+  232 |         s_q <= xr[32:17] ;
+      |             ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/hbm_accel/index/ot_hbm_idx_query_owned_native.sv:28:28: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 2 bits.
+                                                                                : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query.gbank[3].bank'
+   28 |    if(take&&block_head[4:3]==BANK)begin
+      |                            ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/index/ot_hbm_idx_query_owned_native.sv:32:19: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 2 bits.
+                                                                                : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query.gbank[3].bank'
+   32 |    if(qv&&tag[6:5]==BANK)begin
+      |                   ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv:244:37: Operator ADD expects 12 bits on the RHS, but RHS's ARRAYSEL generates 5 bits.
+                                                                                    : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query.quant'
+  244 |             be = $signed({9'd0, p}) + s10_g[i] - (s10_fp4 ? 12'sd1 : 12'sd3) + s10_e + 12'sd127;
+      |                                     ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv:244:78: Operator ADD expects 12 bits on the RHS, but RHS's VARREF 's10_e' generates 10 bits.
+                                                                                    : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query.quant'
+  244 |             be = $signed({9'd0, p}) + s10_g[i] - (s10_fp4 ? 12'sd1 : 12'sd3) + s10_e + 12'sd127;
+      |                                                                              ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv:246:28: Operator SUB expects 12 bits on the LHS, but LHS's ARRAYSEL generates 5 bits.
+                                                                                    : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query.quant'
+  246 |             shs = s10_g[i] - (s10_fp4 ? 12'sd1 : 12'sd3) + s10_e + 12'sd133;
+      |                            ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv:246:58: Operator ADD expects 12 bits on the RHS, but RHS's VARREF 's10_e' generates 10 bits.
+                                                                                    : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query.quant'
+  246 |             shs = s10_g[i] - (s10_fp4 ? 12'sd1 : 12'sd3) + s10_e + 12'sd133;
+      |                                                          ^
+%Warning-BLKSEQ: rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv:42:13: Blocking assignment '=' in sequential logic process
+                                                                        : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.selector'
+                                                                        : ... Suggest using delayed assignment '<='
+   42 |     allcount=0;for(integer q=0;q<4;q=q+1)allcount=allcount+int'(hist[q][addr[5:0]]);
+      |             ^
+                 ... For warning description see https://verilator.org/warn/BLKSEQ?v=5.050
+                 ... Use "/* verilator lint_off BLKSEQ */" and lint_on around source to disable this message.
+%Warning-BLKSEQ: rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv:42:50: Blocking assignment '=' in sequential logic process
+                                                                        : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.selector'
+                                                                        : ... Suggest using delayed assignment '<='
+   42 |     allcount=0;for(integer q=0;q<4;q=q+1)allcount=allcount+int'(hist[q][addr[5:0]]);
+      |                                                  ^
+%Warning-BLKSEQ: rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv:47:13: Blocking assignment '=' in sequential logic process
+                                                                        : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.selector'
+                                                                        : ... Suggest using delayed assignment '<='
+   47 |       remain=int'(rank_left);
+      |             ^
+%Warning-BLKSEQ: rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv:50:14: Blocking assignment '=' in sequential logic process
+                                                                        : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.selector'
+                                                                        : ... Suggest using delayed assignment '<='
+   50 |        remain=remain-int'(hist[q][addr[5:0]]);if(remain<0)remain=0;
+      |              ^
+%Warning-BLKSEQ: rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv:50:65: Blocking assignment '=' in sequential logic process
+                                                                        : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.selector'
+                                                                        : ... Suggest using delayed assignment '<='
+   50 |        remain=remain-int'(hist[q][addr[5:0]]);if(remain<0)remain=0;
+      |                                                                 ^
+%Warning-BLKSEQ: rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv:112:12: Blocking assignment '=' in sequential logic process
+                                                                         : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.selector'
+                                                                         : ... Suggest using delayed assignment '<='
+  112 |       count=0;
+      |            ^
+%Warning-BLKSEQ: rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv:115:86: Blocking assignment '=' in sequential logic process
+                                                                         : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.selector'
+                                                                         : ... Suggest using delayed assignment '<='
+  115 |         if(in_line[q*LW+l*EW]&&(orderkey(in_line[q*LW+l*EW+1+:16])>>11)==16'(b))count=count+1;
+      |                                                                                      ^
+%Warning-BLKSEQ: rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv:117:70: Blocking assignment '=' in sequential logic process
+                                                                         : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.selector'
+                                                                         : ... Suggest using delayed assignment '<='
+  117 |          ((orderkey(raw[l*EW+1+:16]) >> shift)&binmask)==16'(b))count=count+1;
+      |                                                                      ^
+%Warning-BLKSEQ: rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv:171:17: Blocking assignment '=' in sequential logic process
+                                                                               : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query.quant'
+                                                                               : ... Suggest using delayed assignment '<='
+  171 |             fld = x8[32*i + 23 +: 8];
+      |                 ^
+%Warning-BLKSEQ: rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv:172:17: Blocking assignment '=' in sequential logic process
+                                                                               : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query.quant'
+                                                                               : ... Suggest using delayed assignment '<='
+  172 |             man = x8[32*i +: 23];
+      |                 ^
+%Warning-BLKSEQ: rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv:174:16: Blocking assignment '=' in sequential logic process
+                                                                               : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query.quant'
+                                                                               : ... Suggest using delayed assignment '<='
+  174 |             ev = ((fld == 8'd0) ? -11'sd126 : ($signed({3'b000, fld}) - 11'sd127)) - s8_e;
+      |                ^
+%Warning-BLKSEQ: rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv:175:18: Blocking assignment '=' in sequential logic process
+                                                                               : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query.quant'
+                                                                               : ... Suggest using delayed assignment '<='
+  175 |             mine = s8_fp4 ? 11'sd0 : -11'sd6;
+      |                  ^
+%Warning-BLKSEQ: rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv:176:16: Blocking assignment '=' in sequential logic process
+                                                                               : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query.quant'
+                                                                               : ... Suggest using delayed assignment '<='
+  176 |             dd = mine - ev;
+      |                ^
+%Warning-BLKSEQ: rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv:206:18: Blocking assignment '=' in sequential logic process
+                                                                               : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query.quant'
+                                                                               : ... Suggest using delayed assignment '<='
+  206 |             wide = {s9_sig[i], 27'd0} >> s9_rs[i];
+      |                  ^
+%Warning-BLKSEQ: rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv:207:16: Blocking assignment '=' in sequential logic process
+                                                                               : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query.quant'
+                                                                               : ... Suggest using delayed assignment '<='
+  207 |             tq = wide[50:27];
+      |                ^
+%Warning-BLKSEQ: rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv:208:16: Blocking assignment '=' in sequential logic process
+                                                                               : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query.quant'
+                                                                               : ... Suggest using delayed assignment '<='
+  208 |             gd = wide[26];
+      |                ^
+%Warning-BLKSEQ: rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv:209:16: Blocking assignment '=' in sequential logic process
+                                                                               : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query.quant'
+                                                                               : ... Suggest using delayed assignment '<='
+  209 |             st = (wide[25:0] != 26'd0);
+      |                ^
+%Warning-BLKSEQ: rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv:230:15: Blocking assignment '=' in sequential logic process
+                                                                               : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query.quant'
+                                                                               : ... Suggest using delayed assignment '<='
+  230 |             c = s10_c[i];
+      |               ^
+%Warning-BLKSEQ: rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv:231:16: Blocking assignment '=' in sequential logic process
+                                                                               : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query.quant'
+                                                                               : ... Suggest using delayed assignment '<='
+  231 |             g4 = s10_g[i][3:0];
+      |                ^
+%Warning-BLKSEQ: rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv:243:15: Blocking assignment '=' in sequential logic process
+                                                                               : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query.quant'
+                                                                               : ... Suggest using delayed assignment '<='
+  243 |             p = c[4] ? 3'd4 : c[3] ? 3'd3 : c[2] ? 3'd2 : c[1] ? 3'd1 : 3'd0;
+      |               ^
+%Warning-BLKSEQ: rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv:244:16: Blocking assignment '=' in sequential logic process
+                                                                               : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query.quant'
+                                                                               : ... Suggest using delayed assignment '<='
+  244 |             be = $signed({9'd0, p}) + s10_g[i] - (s10_fp4 ? 12'sd1 : 12'sd3) + s10_e + 12'sd127;
+      |                ^
+%Warning-BLKSEQ: rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv:245:16: Blocking assignment '=' in sequential logic process
+                                                                               : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query.quant'
+                                                                               : ... Suggest using delayed assignment '<='
+  245 |             cn = {3'd0, c} << (3'd7 - p);
+      |                ^
+%Warning-BLKSEQ: rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv:246:17: Blocking assignment '=' in sequential logic process
+                                                                               : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query.quant'
+                                                                               : ... Suggest using delayed assignment '<='
+  246 |             shs = s10_g[i] - (s10_fp4 ? 12'sd1 : 12'sd3) + s10_e + 12'sd133;
+      |                 ^
+%Warning-BLKSEQ: rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv:247:17: Blocking assignment '=' in sequential logic process
+                                                                               : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query.quant'
+                                                                               : ... Suggest using delayed assignment '<='
+  247 |             sub = (shs < 12'sd0) ? 7'd0 : ({2'd0, c} << shs[3:0]);
+      |                 ^
+%Warning-UNUSEDSIGNAL: rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv:56:26: Bits of signal are not used: 'cr'[255:0]
+                                                                          : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.topk'
+   56 |     input  wire [273:0]  cr,          
+      |                          ^~
+                       ... For warning description see https://verilator.org/warn/UNUSEDSIGNAL?v=5.050
+                       ... Use "/* verilator lint_off UNUSEDSIGNAL */" and lint_on around source to disable this message.
+%Warning-UNUSEDSIGNAL: rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv:67:65: Bits of signal are not used: 'n_q'[19:18]
+                                                                          : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.topk'
+   67 |     reg [3:0] k_q; reg order_q, has_r_q, am_q, om_q; reg [19:0] n_q, m_q;
+      |                                                                 ^~~
+%Warning-UNUSEDSIGNAL: rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv:176:18: Bits of signal are not used: 'o_rot'[255:0]
+                                                                           : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.topk'
+  176 |     wire [511:0] o_rot = {o_flat, o_flat} << {o_rb[2:0], 5'd0};
+      |                  ^~~~~
+%Warning-UNUSEDSIGNAL: rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv:177:18: Bits of signal are not used: 'r_rot'[255:0]
+                                                                           : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.topk'
+  177 |     wire [511:0] r_rot = {r_flat, r_flat} << {r_rb[2:0], 5'd0};
+      |                  ^~~~~
+%Warning-UNUSEDSIGNAL: rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv:182:31: Signal is not driven, nor used: 'wsid_bad'
+                                                                           : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.topk'
+  182 |     reg [255:0] w_o, w_r; reg wsid_bad;
+      |                               ^~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/hbm_accel/index/ot_hbm_idx_parent_static.sv:45:53: Signal is not used: 'threshold'
+                                                                            : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent'
+   45 |  wire[3:0]unused_ov;wire[2367:0]unused_ol;wire[15:0]threshold;wire[55:0]selected_count;
+      |                                                     ^~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/hbm_accel/index/ot_hbm_idx_parent_static.sv:45:73: Signal is not used: 'selected_count'
+                                                                            : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent'
+   45 |  wire[3:0]unused_ov;wire[2367:0]unused_ol;wire[15:0]threshold;wire[55:0]selected_count;
+      |                                                                         ^~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/hbm_accel/index/ot_hbm_idx_parent_static.sv:49:11: Signal is not used: 'total'
+                                                                            : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent'
+   49 |  wire[9:0]total;
+      |           ^~~~~
+%Warning-UNUSEDSIGNAL: rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:17:11: Bits of signal are not used: 'last'[3:1]
+                                                                           : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer'
+   17 |  wire[3:0]last;
+      |           ^~~~
+%Warning-UNUSEDSIGNAL: rtl/hbm_accel/index/ot_hbm_idx_score_static.sv:37:8: Signal is not used: 'online'
+                                                                          : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer'
+   37 |   wire online;
+      |        ^~~~~~
+%Warning-UNUSEDSIGNAL: rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv:27:14: Signal is not driven, nor used: 'ntie'
+                                                                              : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.selector'
+   27 |  wire [13:0] ntie[0:3];
+      |              ^~~~
+%Warning-UNUSEDSIGNAL: rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv:58:30: Signal is not used: 'rpass'
+                                                                              : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.selector'
+   58 |   reg rv;reg[3:0]rop;reg[1:0]rpass;reg[7:0]raddr;
+      |                              ^~~~~
+%Warning-UNUSEDSIGNAL: rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv:18:26: Bits of signal are not used: 'row'[31:6]
+                                                                               : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.link'
+   18 |  integer n,nf,count,bank,row;
+      |                          ^~~
+%Warning-UNUSEDSIGNAL: rtl/hbm_accel/index/ot_hbm_idx_query_static.sv:17:60: Signal is not used: 'qy'
+                                                                           : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query'
+   17 |  wire qv,qfault;wire[255:0]q;wire signed[9:0]qe;wire[511:0]qy;
+      |                                                            ^~
+%Warning-UNUSEDPARAM: rtl/hbm_accel/index/ot_hbm_idx_engine_static.sv:29:26: Parameter is not used: 'IH'
+                                                                           : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine'
+   29 |  localparam integer NK=4,IH=32,NB=4,NCH=4,FPL=7,FML=5,QL=5;
+      |                          ^~
+                      ... For warning description see https://verilator.org/warn/UNUSEDPARAM?v=5.050
+                      ... Use "/* verilator lint_off UNUSEDPARAM */" and lint_on around source to disable this message.
+%Warning-UNUSEDPARAM: rtl/hbm_accel/index/ot_hbm_idx_engine_static.sv:29:43: Parameter is not used: 'FPL'
+                                                                           : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine'
+   29 |  localparam integer NK=4,IH=32,NB=4,NCH=4,FPL=7,FML=5,QL=5;
+      |                                           ^~~
+%Warning-UNUSEDPARAM: rtl/hbm_accel/index/ot_hbm_idx_engine_static.sv:29:49: Parameter is not used: 'FML'
+                                                                           : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine'
+   29 |  localparam integer NK=4,IH=32,NB=4,NCH=4,FPL=7,FML=5,QL=5;
+      |                                                 ^~~
+%Warning-UNUSEDPARAM: rtl/hbm_accel/index/ot_hbm_idx_engine_static.sv:29:55: Parameter is not used: 'QL'
+                                                                           : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine'
+   29 |  localparam integer NK=4,IH=32,NB=4,NCH=4,FPL=7,FML=5,QL=5;
+      |                                                       ^~
+%Warning-UNUSEDSIGNAL: rtl/hbm_accel/index/ot_hbm_idx_engine_static.sv:32:27: Bits of signal are not used: 'cv'[3:1]
+                                                                            : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine'
+   32 |     wire [NCH-1:0]        cv;
+      |                           ^~
+%Warning-UNUSEDGENVAR: rtl/hbm_accel/index/ot_hbm_idx_engine_static.sv:36:15: Genvar is not used: 'g'
+                                                                            : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine'
+   36 |     genvar c, g;
+      |               ^
+                       ... For warning description see https://verilator.org/warn/UNUSEDGENVAR?v=5.050
+                       ... Use "/* verilator lint_off UNUSEDGENVAR */" and lint_on around source to disable this message.
+%Warning-UNUSEDSIGNAL: rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv:125:17: Bits of signal are not used: 'prod'[31]
+                                                                                     : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query.quant'
+  125 |     wire [31:0] prod;
+      |                 ^~~~
+%Warning-UNUSEDSIGNAL: rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv:197:22: Bits of signal are not used: 'tq'[23:5]
+                                                                                     : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query.quant'
+  197 |     reg [23:0]       tq;
+      |                      ^~
+%Warning-UNUSEDSIGNAL: rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv:219:23: Bits of signal are not used: 'cn'[7]
+                                                                                     : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query.quant'
+  219 |     reg [7:0]         cn;
+      |                       ^~
+%Warning-UNUSEDSIGNAL: rtl/hdc/v41x/ot_hbm_idx_owned_native.sv:244:38: Bits of signal are not driven, nor used: 't'[383:288,255:192]
+                                                                     : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine.u_t'
+  244 |             wire [(LV+1)*NCH*32-1:0] t;
+      |                                      ^
+%Warning-UNUSEDSIGNAL: rtl/hdc/ot_hdc_fp32_mul_pipe.sv:34:13: Signal is not driven, nor used: 'k'
+                                                            : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query.quant.u_scale.u'
+   34 |     integer k;
+      |             ^
+%Warning-UNUSEDSIGNAL: rtl/hdc/ot_hdc_fp32_mul_pipe.sv:187:24: Bits of signal are not used: 's4_round_index'[11:6]
+                                                             : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query.quant.u_scale.u'
+  187 |     wire signed [11:0] s4_round_index = s3_shift_q - 12'sd1;
+      |                        ^~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/hdc/ot_hdc_fp32_mul_pipe.sv:216:17: Bits of signal are not used: 's5_man'[23]
+                                                             : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query.quant.u_scale.u'
+  216 |     wire [23:0] s5_man = s5_carry ? s4_mant[24:1] : s4_mant[23:0];
+      |                 ^~~~~~
+%Warning-UNUSEDPARAM: rtl/hdc/v41x/ot_hbm_idx_owned_native.sv:48:24: Parameter is not used: 'LAT_T'
+                                                                   : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine.g_ch[3].u_c.g_col[3].g_s[7].u_s'
+   48 |     localparam integer LAT_T  = LAT_SC + 1 + FML;
+      |                        ^~~~~
+%Warning-UNUSEDSIGNAL: rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv:236:17: Bits of signal are not used: 'r'[32,15:0]
+                                                                   : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine.g_ch[3].u_c.g_col[3].g_s[7].u_s.u_sb'
+  236 |     wire [32:0] r = {1'b0, x} + 33'h7FFF + {32'd0, x[16]};
+      |                 ^
+%Warning-UNUSEDPARAM: rtl/lib/ot_rst_relay.sv:25:24: Parameter is not used: 'RELEASE_CYCLES'
+                                                   : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine.g_ch[3].u_c.u_rr'
+   25 |     localparam integer RELEASE_CYCLES = SYNC_STAGES + TREE_STAGES;
+      |                        ^~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv:51:56: Function variable is not used: 'dummy'
+                                                                      : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine.g_ch[3].u_c.g_col[3].g_s[7].u_s.g_blk[3].u_d'
+   51 |     function automatic [128*9-1:0] mktab(input integer dummy);
+      |                                                        ^~~~~
+%Warning-UNUSEDSIGNAL: rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv:128:23: Bits of signal are not used: 'ceb'[9:8]
+                                                                       : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine.g_ch[3].u_c.g_col[3].g_s[7].u_s.g_blk[3].u_d'
+  128 |     wire signed [9:0] ceb;
+      |                       ^~~
+%Warning-UNUSEDSIGNAL: rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv:133:23: Bits of signal are not used: 'mn'[12]
+                                                                       : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine.g_ch[3].u_c.g_col[3].g_s[7].u_s.g_blk[3].u_d'
+  133 |     wire [12:0]       mn = cm << lz;                          
+      |                       ^~
+%Warning-UNUSEDSIGNAL: rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv:240:17: Bits of signal are not used: 'nr'[7]
+                                                                       : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine.g_ch[3].u_c.g_col[3].g_s[7].u_s.u_m'
+  240 |     wire [8:0]  nr = {1'b0, s_pn[15:8]} + ((s_pn[7] && ((|s_pn[6:0]) || s_pn[8])) ? 9'd1 : 9'd0);
+      |                 ^~
+%Warning-UNUSEDSIGNAL: rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv:252:17: Bits of signal are not used: 'fb'[32:31,15:0]
+                                                                       : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine.g_ch[3].u_c.g_col[3].g_s[7].u_s.u_m'
+  252 |     wire [32:0] fb = {9'd0, f} + 33'h7FFF + {32'd0, f[16]};
+      |                 ^~
+%Warning-UNUSEDSIGNAL: rtl/hdc/ot_hdc_delay.sv:11:25: Signal is not used: 'rst_n'
+                                                    : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.query.quant.u_d27'
+   11 |     input  wire         rst_n,
+      |                         ^~~~~
+%Warning-UNUSEDSIGNAL: rtl/hdc/ot_hdc_delay.sv:10:25: Signal is not used: 'clk'
+                                                    : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine.g_ch[3].u_c.g_col[3].g_s[7].u_s.g_skew[1].u_sk'
+   10 |     input  wire         clk,
+      |                         ^~~
+%Warning-UNUSEDSIGNAL: rtl/hdc/ot_hdc_fp32_add_lat.sv:58:17: Signal is not used: 'cmp_s'
+                                                           : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine.g_ch[3].u_c.g_col[3].g_s[7].u_s.u_a.g_lat.u'
+   58 |     wire [30:0] cmp_s;
+      |                 ^~~~~
+%Warning-UNUSEDSIGNAL: rtl/hdc/ot_hdc_fp32_add_lat.sv:61:10: Signal is not used: 'dab_c'
+                                                           : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine.g_ch[3].u_c.g_col[3].g_s[7].u_s.u_a.g_lat.u'
+   61 |     wire dab_c, dba_c;
+      |          ^~~~~
+%Warning-UNUSEDSIGNAL: rtl/hdc/ot_hdc_fp32_add_lat.sv:61:17: Signal is not used: 'dba_c'
+                                                           : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine.g_ch[3].u_c.g_col[3].g_s[7].u_s.u_a.g_lat.u'
+   61 |     wire dab_c, dba_c;
+      |                 ^~~~~
+%Warning-UNUSEDSIGNAL: rtl/hdc/ot_hdc_fp32_add_lat.sv:118:10: Signal is not used: 'sum_c'
+                                                            : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine.g_ch[3].u_c.g_col[3].g_s[7].u_s.u_a.g_lat.u'
+  118 |     wire sum_c, dif_c;
+      |          ^~~~~
+%Warning-UNUSEDSIGNAL: rtl/hdc/ot_hdc_fp32_add_lat.sv:118:17: Signal is not used: 'dif_c'
+                                                            : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine.g_ch[3].u_c.g_col[3].g_s[7].u_s.u_a.g_lat.u'
+  118 |     wire sum_c, dif_c;
+      |                 ^~~~~
+%Warning-UNUSEDSIGNAL: rtl/hdc/ot_hdc_fp32_add_lat.sv:149:17: Bits of signal are not used: 'lz'[5]
+                                                            : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine.g_ch[3].u_c.g_col[3].g_s[7].u_s.u_a.g_lat.u'
+  149 |     wire [5:0]  lz;
+      |                 ^~
+%Warning-UNUSEDSIGNAL: rtl/hdc/ot_hdc_fp32_add_lat.sv:153:10: Signal is not used: 'exp_sub_c'
+                                                            : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine.g_ch[3].u_c.g_col[3].g_s[7].u_s.u_a.g_lat.u'
+  153 |     wire exp_sub_c, exp_add_c;
+      |          ^~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/hdc/ot_hdc_fp32_add_lat.sv:153:21: Signal is not used: 'exp_add_c'
+                                                            : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine.g_ch[3].u_c.g_col[3].g_s[7].u_s.u_a.g_lat.u'
+  153 |     wire exp_sub_c, exp_add_c;
+      |                     ^~~~~~~~~
+%Warning-UNUSEDSIGNAL: rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv:85:30: Bits of signal are not used: 'mj'[13]
+                                                                  : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine.g_ch[3].u_c.g_col[3].g_s[7].u_s.g_blk[3].u_d.u_ca'
+   85 |                 wire [W-1:0] mj = (a & b) | (a & c) | (b & c);
+      |                              ^~
+%Warning-VARHIDDEN: rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv:45:17: Declaration of signal hides declaration in upper scope: 'c'
+                                                               : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine'
+   45 |         integer c, k;
+      |                 ^
+                    rtl/hbm_accel/index/ot_hbm_idx_engine_static.sv:36:12: ... Location of original declaration
+   36 |     genvar c, g;
+      |            ^
+                    ... For warning description see https://verilator.org/warn/VARHIDDEN?v=5.050
+                    ... Use "/* verilator lint_off VARHIDDEN */" and lint_on around source to disable this message.
+%Warning-VARHIDDEN: rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv:60:20: Declaration of signal hides declaration in upper scope: 'c'
+                                                               : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[3].scorer.ge[3].engine'
+   60 |         integer k, c;
+      |                    ^
+                    rtl/hbm_accel/index/ot_hbm_idx_engine_static.sv:36:12: ... Location of original declaration
+   36 |     genvar c, g;
+      |            ^
+%Warning-LATCH: rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv:25:2: Latch inferred for signal 'ot_hbm_idx_client_static_sw.implementation.index.parent.link.record' (not all control paths of combinational always assign a value)
+                                                                       : ... Suggest use of always_latch for intentional latches
+   25 |  always @*begin
+      |  ^~~~~~
+                ... For warning description see https://verilator.org/warn/LATCH?v=5.050
+                ... Use "/* verilator lint_off LATCH */" and lint_on around source to disable this message.
+%Warning-LATCH: rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv:25:2: Latch inferred for signal 'ot_hbm_idx_client_static_sw.implementation.index.parent.link.nf' (not all control paths of combinational always assign a value)
+                                                                       : ... Suggest use of always_latch for intentional latches
+   25 |  always @*begin
+      |  ^~~~~~
+%Warning-LATCH: rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv:25:2: Latch inferred for signal 'ot_hbm_idx_client_static_sw.implementation.index.parent.link.we' (not all control paths of combinational always assign a value)
+                                                                       : ... Suggest use of always_latch for intentional latches
+   25 |  always @*begin
+      |  ^~~~~~
+%Warning-LATCH: rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv:25:2: Latch inferred for signal 'ot_hbm_idx_client_static_sw.implementation.index.parent.link.wa' (not all control paths of combinational always assign a value)
+                                                                       : ... Suggest use of always_latch for intentional latches
+   25 |  always @*begin
+      |  ^~~~~~
+%Warning-LATCH: rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv:25:2: Latch inferred for signal 'ot_hbm_idx_client_static_sw.implementation.index.parent.link.wd' (not all control paths of combinational always assign a value)
+                                                                       : ... Suggest use of always_latch for intentional latches
+   25 |  always @*begin
+      |  ^~~~~~
+%Warning-LATCH: rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv:25:2: Latch inferred for signal 'ot_hbm_idx_client_static_sw.implementation.index.parent.link.flit' (not all control paths of combinational always assign a value)
+                                                                       : ... Suggest use of always_latch for intentional latches
+   25 |  always @*begin
+      |  ^~~~~~
+%Warning-LATCH: rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv:25:2: Latch inferred for signal 'ot_hbm_idx_client_static_sw.implementation.index.parent.link.bank' (not all control paths of combinational always assign a value)
+                                                                       : ... Suggest use of always_latch for intentional latches
+   25 |  always @*begin
+      |  ^~~~~~
+%Warning-LATCH: rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv:25:2: Latch inferred for signal 'ot_hbm_idx_client_static_sw.implementation.index.parent.link.row' (not all control paths of combinational always assign a value)
+                                                                       : ... Suggest use of always_latch for intentional latches
+   25 |  always @*begin
+      |  ^~~~~~
+%Warning-SYNCASYNCNET: rtl/hbm_accel/index/ot_hbm_idx_client_static_sw.sv:14:105: Signal flopped as both synchronous and async: 'rst_n'
+                       rtl/hbm_accel/index/ot_hbm_idx_parent_static.sv:54:7: ... Location of async usage
+   54 |   if(!rst_n)calendar_fault<=0;
+      |       ^~~~~
+                       rtl/hbm_accel/index/ot_hbm_idx_client_static_sw.sv:14:105: ... Location of sync usage
+   14 |  input wire clk_link,input wire[7:0]clk_link_mem,input wire[3:0]clk_pair,input wire clk_topk,input wire rst_n,
+      |                                                                                                         ^~~~~
+                       ... For warning description see https://verilator.org/warn/SYNCASYNCNET?v=5.050
+                       ... Use "/* verilator lint_off SYNCASYNCNET */" and lint_on around source to disable this message.
+%Warning-SYNCASYNCNET: rtl/hdc/v41x/ot_hbm_idx_owned_native.sv:176:10: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.rn'
+                                                                     : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine'
+                       rtl/hdc/ot_hdc_delay.sv:32:26: ... Location of async usage
+   32 |                     if (!rst_n) line <= {(W*D){1'b0}};
+      |                          ^~~~~
+                       rtl/hdc/v41x/ot_hbm_idx_owned_native.sv:182:26: ... Location of sync usage
+  182 |         rql_v <= ql_v && rn; rql_head <= ql_head; rql_codes <= ql_codes; rql_sc <= ql_sc; rql_w <= ql_w;
+      |                          ^~
+%Warning-SYNCASYNCNET: rtl/hdc/v41x/ot_hbm_idx_owned_native.sv:176:10: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.rn'
+                       rtl/hdc/ot_hdc_delay.sv:32:26: ... Location of async usage
+   32 |                     if (!rst_n) line <= {(W*D){1'b0}};
+      |                          ^~~~~
+                       rtl/hdc/v41x/ot_hbm_idx_owned_native.sv:182:26: ... Location of sync usage
+  182 |         rql_v <= ql_v && rn; rql_head <= ql_head; rql_codes <= ql_codes; rql_sc <= ql_sc; rql_w <= ql_w;
+      |                          ^~
+%Warning-SYNCASYNCNET: rtl/hdc/v41x/ot_hbm_idx_owned_native.sv:176:10: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.rn'
+                       rtl/hdc/ot_hdc_delay.sv:32:26: ... Location of async usage
+   32 |                     if (!rst_n) line <= {(W*D){1'b0}};
+      |                          ^~~~~
+                       rtl/hdc/v41x/ot_hbm_idx_owned_native.sv:182:26: ... Location of sync usage
+  182 |         rql_v <= ql_v && rn; rql_head <= ql_head; rql_codes <= ql_codes; rql_sc <= ql_sc; rql_w <= ql_w;
+      |                          ^~
+%Warning-SYNCASYNCNET: rtl/hdc/v41x/ot_hbm_idx_owned_native.sv:176:10: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.rn'
+                       rtl/hdc/ot_hdc_delay.sv:32:26: ... Location of async usage
+   32 |                     if (!rst_n) line <= {(W*D){1'b0}};
+      |                          ^~~~~
+                       rtl/hdc/v41x/ot_hbm_idx_owned_native.sv:182:26: ... Location of sync usage
+  182 |         rql_v <= ql_v && rn; rql_head <= ql_head; rql_codes <= ql_codes; rql_sc <= ql_sc; rql_w <= ql_w;
+      |                          ^~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[3].g_s[7].u_s.u_rr.relay_q'
+                                                    : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[3].g_s[6].u_s.u_rr.relay_q'
+                                                    : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[3].g_s[5].u_s.u_rr.relay_q'
+                                                    : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[3].g_s[4].u_s.u_rr.relay_q'
+                                                    : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[3].g_s[3].u_s.u_rr.relay_q'
+                                                    : ... note: In instance 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[3].g_s[2].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[3].g_s[1].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[3].g_s[0].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[2].g_s[7].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[2].g_s[6].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[2].g_s[5].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[2].g_s[4].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[2].g_s[3].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[2].g_s[2].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[2].g_s[1].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[2].g_s[0].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[1].g_s[7].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[1].g_s[6].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[1].g_s[5].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[1].g_s[4].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[1].g_s[3].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[1].g_s[2].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[1].g_s[1].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[1].g_s[0].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[0].g_s[7].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[0].g_s[6].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[0].g_s[5].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[0].g_s[4].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[0].g_s[3].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[0].g_s[2].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[0].g_s[1].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[3].u_c.g_col[0].g_s[0].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[3].g_s[7].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[3].g_s[6].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[3].g_s[5].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[3].g_s[4].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[3].g_s[3].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[3].g_s[2].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[3].g_s[1].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[3].g_s[0].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[2].g_s[7].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[2].g_s[6].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[2].g_s[5].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[2].g_s[4].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[2].g_s[3].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[2].g_s[2].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[2].g_s[1].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[2].g_s[0].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[1].g_s[7].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[1].g_s[6].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[1].g_s[5].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[1].g_s[4].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[1].g_s[3].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[1].g_s[2].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[1].g_s[1].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[1].g_s[0].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[0].g_s[7].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[0].g_s[6].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[0].g_s[5].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[0].g_s[4].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[0].g_s[3].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[0].g_s[2].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[0].g_s[1].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[2].u_c.g_col[0].g_s[0].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[3].g_s[7].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[3].g_s[6].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[3].g_s[5].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[3].g_s[4].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[3].g_s[3].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[3].g_s[2].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[3].g_s[1].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[3].g_s[0].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[2].g_s[7].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[2].g_s[6].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[2].g_s[5].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[2].g_s[4].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[2].g_s[3].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[2].g_s[2].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[2].g_s[1].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[2].g_s[0].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[1].g_s[7].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[1].g_s[6].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[1].g_s[5].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[1].g_s[4].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[1].g_s[3].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[1].g_s[2].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[1].g_s[1].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[1].g_s[0].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[0].g_s[7].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[0].g_s[6].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[0].g_s[5].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[0].g_s[4].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[0].g_s[3].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[0].g_s[2].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[0].g_s[1].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[1].u_c.g_col[0].g_s[0].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[3].g_s[7].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[3].g_s[6].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[3].g_s[5].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[3].g_s[4].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[3].g_s[3].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[3].g_s[2].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[3].g_s[1].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[3].g_s[0].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[2].g_s[7].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[2].g_s[6].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[2].g_s[5].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[2].g_s[4].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[2].g_s[3].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[2].g_s[2].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[2].g_s[1].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[2].g_s[0].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[1].g_s[7].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[1].g_s[6].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[1].g_s[5].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[1].g_s[4].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[1].g_s[3].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[1].g_s[2].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[1].g_s[1].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[1].g_s[0].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[0].g_s[7].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[0].g_s[6].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[0].g_s[5].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[0].g_s[4].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[0].g_s[3].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[0].g_s[2].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[0].g_s[1].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-SYNCASYNCNET: rtl/lib/ot_rst_relay.sv:36:64: Signal flopped as both synchronous and async: 'ot_hbm_idx_client_static_sw.implementation.index.parent.gscore[0].scorer.ge[0].engine.g_ch[0].u_c.g_col[0].g_s[0].u_s.u_rr.relay_q'
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of async usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+                       rtl/lib/ot_rst_relay.sv:36:64: ... Location of sync usage
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-MULTIDRIVEN: rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv:28:13: Signal has multiple driving blocks with different clocking: 'ot_hbm_idx_client_static_sw.implementation.index.parent.selector.selected'
+                      rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv:108:70: ... Location of first driving block
+  108 |     if(op==1)begin buf_q<=0;fill<=0;wp<=0;tie_rem<=0;comp_started<=0;selected[q]<=0;last_id<=0;end
+      |                                                                      ^~~~~~~~
+                      rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv:108:70: ... Location of other driving block
+  108 |     if(op==1)begin buf_q<=0;fill<=0;wp<=0;tie_rem<=0;comp_started<=0;selected[q]<=0;last_id<=0;end
+      |                                                                      ^~~~~~~~
+                      ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
+                      ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv:25:13: Signal has multiple driving blocks with different clocking: 'ot_hbm_idx_client_static_sw.implementation.index.parent.selector.hist'
+                      rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv:109:41: ... Location of first driving block
+  109 |     if(op==3)for(integer b=0;b<64;b=b+1)hist[q][b]<=0;
+      |                                         ^~~~
+                      rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv:109:41: ... Location of other driving block
+  109 |     if(op==3)for(integer b=0;b<64;b=b+1)hist[q][b]<=0;
+      |                                         ^~~~
+%Warning-MULTIDRIVEN: rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv:29:12: Signal has multiple driving blocks with different clocking: 'ot_hbm_idx_client_static_sw.implementation.index.parent.selector.qfault'
+                      rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv:126:37: ... Location of first driving block
+  126 |      if(selected[q]+chosen_next>512)qfault[q]<=1;
+      |                                     ^~~~~~
+                      rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv:126:37: ... Location of other driving block
+  126 |      if(selected[q]+chosen_next>512)qfault[q]<=1;
+      |                                     ^~~~~~
+%Warning-MULTIDRIVEN: rtl/hbm_accel/index/ot_hbm_idx_parent_static.sv:45:33: Signal has multiple driving blocks with different clocking: 'ot_hbm_idx_client_static_sw.implementation.index.parent.unused_ol'
+                      rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv:136:7: ... Location of first driving block
+  136 |       out_line[q*LW+l*EW+:EW]<=raw[l*EW+:EW];
+      |       ^~~~~~~~
+                      rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv:136:7: ... Location of other driving block
+  136 |       out_line[q*LW+l*EW+:EW]<=raw[l*EW+:EW];
+      |       ^~~~~~~~
+%Warning-MULTIDRIVEN: rtl/hbm_accel/index/ot_hbm_idx_parent_static.sv:31:30: Signal has multiple driving blocks with different clocking: 'ot_hbm_idx_client_static_sw.implementation.index.parent.selected_v'
+                      rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv:106:59: ... Location of first driving block
+  106 |     rv<=re;rop<=op;rpass<=pass;raddr<=addr;out_v[q]<=emit;selected_v[q]<=compact;
+      |                                                           ^~~~~~~~~~
+                      rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv:106:59: ... Location of other driving block
+  106 |     rv<=re;rop<=op;rpass<=pass;raddr<=addr;out_v[q]<=emit;selected_v[q]<=compact;
+      |                                                           ^~~~~~~~~~
+%Warning-MULTIDRIVEN: rtl/hbm_accel/index/ot_hbm_idx_parent_static.sv:31:53: Signal has multiple driving blocks with different clocking: 'ot_hbm_idx_client_static_sw.implementation.index.parent.selected_line'
+                      rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv:107:37: ... Location of first driving block
+  107 |     for(integer l=0;l<W;l=l+1)begin selected_line[q*LW+l*EW+:EW]<=raw[l*EW+:EW];selected_line[q*LW+l*EW]<=compact&&mask_choose[l];end
+      |                                     ^~~~~~~~~~~~~
+                      rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv:107:37: ... Location of other driving block
+  107 |     for(integer l=0;l<W;l=l+1)begin selected_line[q*LW+l*EW+:EW]<=raw[l*EW+:EW];selected_line[q*LW+l*EW]<=compact&&mask_choose[l];end
+      |                                     ^~~~~~~~~~~~~
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 3.808 MB sources in 72 modules, into 4355.593 MB in 4417 C++ files needing 0.000 MB
+- Verilator: Walltime 2549.587 s (elab=25.246, cvt=1947.235, bld=0.000); cpu 2495.683 s on 1 threads; allocated 115796.188 MB
+	Command being timed: "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator --lint-only -Wall -Wno-fatal --top-module ot_hbm_idx_client_static_sw rtl/hbm_accel/index/ot_hbm_idx_client_static.sv rtl/hbm_accel/index/ot_hbm_idx_scheduled_static.sv rtl/hbm_accel/index/ot_hbm_idx_calendar_static.sv rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv rtl/hbm_accel/index/ot_hbm_idx_vm_share_static.sv rtl/hbm_accel/index/ot_hbm_idx_parent_static.sv rtl/hbm_accel/index/ot_hbm_idx_vm_query_static.sv rtl/hbm_accel/index/ot_hbm_idx_vm_static.sv rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv rtl/hbm_accel/index/ot_hbm_idx_score_static.sv rtl/hbm_accel/index/ot_hbm_idx_engine_static.sv rtl/hbm_accel/index/ot_hbm_idx_selector_static.sv rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv rtl/hbm_accel/index/ot_hbm_idx_query_static.sv rtl/hbm_accel/index/ot_hbm_idx_query_owned_native.sv rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/v41x/ot_hbm_idx_owned_native.sv rtl/hdc/v41x/ot_hdc_v41x_idx_hslice.sv rtl/lib/ot_rst_relay.sv rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v rtl/hdc/ot_hdc_delay_rf.sv rtl/hbm_accel/index/ot_hbm_idx_client_static_sw.sv"
+	User time (seconds): 2449.03
+	System time (seconds): 46.96
+	Percent of CPU this job got: 97%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 42:29.94
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 116015400
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 32109332
+	Voluntary context switches: 22
+	Involuntary context switches: 58093
+	Swaps: 0
+	File system inputs: 8
+	File system outputs: 344
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

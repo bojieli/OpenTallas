@@ -1,0 +1,8 @@
+ot-run: ot-epyc1tb     admits    77 GB (avail 304, growth 157, headroom 64, waiters 0/0 GB) load 66/128 running 19 disk 213 GB 
+ot-run: ot-epyc4       admits   209 GB (avail 435, growth 212, headroom 48, waiters 0/0 GB) load 127/128 running 37 disk 369 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1606524-1792099428 after 0 s
+VL rc=0 errors=0 pin_missing_or_notfound=0
+	Maximum resident set size (kbytes): 116015400
+IDX_CLIENT_SW_ELAB_VERILATOR_PASS
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1606524-1792099428): exit 0
