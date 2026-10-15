@@ -397,7 +397,7 @@ module ot_qfd_seq_su_bi_static #(
         .d_su_inflight(q_pi_su_rt_inflight), .d_su_progress(q_pi_su_progress), .d_su_rows(q_pi_su_progress_rows),
         .c_me_ready(), .c_me_idle(), .c_me_progress(),
         .c_su_ready(s_su_ready), .c_su_idle(s_su_idle), .c_su_progress(s_su_progress), .c_su_rows(s_su_progress_rows));
-    wire image_ready_w;
+    wire image_ready_w,segment_image_ready;
     wire fixed_issue,fixed_end,schedule_fault,candidate_v,candidate_available,candidate_end_ok,stage_fault;
     wire [11:0] candidate_pc,fixed_pc;wire[1:0]candidate_unit,fixed_unit;
     ot_qwen_fixed_issue_pw #(.OWN(2),.DENSE_IMAGE(1))u_fixed_issue(
@@ -432,7 +432,7 @@ module ot_qfd_seq_su_bi_static #(
       else begin
        program_obs<={cfg_pw_v,cfg_pw_full,cfg_pw_addr,cfg_pw_data};
        descriptor_obs<={q_dw_v,1'b1,q_dw_addr,q_dw_data};
-       cfg_image_ready<=image_ready_w;
+       cfg_image_ready<=image_ready_w&&segment_image_ready;
       end
     generate if (PSRAM != 0) begin : g_psram
         //: the program store as two 64 x 512 SRAM macros (bit-masked 64-bit slice writes); prog_q = the captured output
@@ -672,9 +672,9 @@ module ot_qfd_seq_su_bi_static #(
         .token(q_tp_token), .pos(q_tp_pos), .st_rdy(q_cb_st_rdy), .st_rdy_stage(q_cb_st_rdy_stage), .go(sg_go),
         .go_token(sg_token), .go_pos(sg_pos), .cur_stage(sg_stage), .tok_start(sg_tok),.fault(stage_fault));
     ot_hdc_delay #(.W(6 + 1 + NW), .D(OS)) u_o_cb (.clk(clk), .rst_n(rsv[6]), .d({sg_stage, sg_tok, q_tp_pos}), .q({cb_stage, cb_tok_start, cb_tpos}));
-    ot_qwen_tp_seq_w12_vrl #(.VRL(IS + OS + ROW_LAT + 2 * RLY), .VARIABLE(0), .STATIC(1), .CRED(CRED), .N((TPMUT == 2) ? 4 : D), .NW(NW), .PAW(PAW), .VWA(VWA), .VM_ADDR_EXT(VWA > 8), .DAW(6), .FW(512), .TAGW(32),
-        .QWEN_FULLSHAPE(1), .ENABLE_AR256(1), .RMUT(RRG >= 2 ? 1 : 0)) u_seq (
-        .clk(clk), .rst_n(rsv[0]), .rst_nw(rsv[1]), .start(sg_go), .token(sg_token), .pos(sg_pos), .done(b_s_done),
+    ot_qwen_tp_seq_calendar #(.VRL(IS + OS + ROW_LAT + 2 * RLY), .N((TPMUT == 2) ? 4 : D), .NW(NW), .PAW(PAW), .VWA(VWA), .DAW(6), .FW(512), .RB(3)) u_seq (
+        .clk(clk), .stage(sg_stage),.pw_v(q_pw_v),.pw_addr(q_pw_addr),.pw_data(q_pw_data),.image_ready(segment_image_ready),
+        .rst_n(rsv[0]), .rst_nw(rsv[1]), .start(sg_go), .token(sg_token), .pos(sg_pos), .done(b_s_done),
         .next_token(b_seq_ntok), .next_val(b_seq_nval), .fault(b_s_fault), .coll_busy(b_coll_busy),
         .core_start(core_start), .core_token(core_tokw), .core_pos(core_pos), .core_done(core_done),
         .core_next_token(core_ntok), .core_next_val(core_nval), .core_fault(core_fault_w), .prog_base(prog_base),

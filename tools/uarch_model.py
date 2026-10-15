@@ -35,6 +35,43 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 
 
+def hbm_static_quant_model():
+    """Fixed RG4/WG2 native QDQ successor; bare-bank proof before placement."""
+    beats = 6*16 + 2*4
+    return dict(schema='opentallas.hbm-static-quant.v1', opt_in_default=False,
+        replicas=1, arithmetic='unchanged ot_hgi_qw_dec3 DXL/DBQ/DAQ',
+        macs_per_cycle=0, input_fp32_per_cycle=32, output_bf16_per_cycle=32,
+        read_bytes_per_cycle=128, write_bytes_per_cycle=128,
+        per_bank_service='one read and one write; 4 of 8 banks active per beat',
+        memory_allocation='NW zero-based RG4 WG2 among RG7/WG3, 8 banks, native rq17 rr257 wq281',
+        intermediate_storage='pipeline registers only; no queues or behavioral SRAM',
+        programme_storage='one actual 1024x256 mapped SRAM, 48 payload bits per beat, no shadow array',
+        programme_command='bit0 valid; op6:1; block14:7; src30:15; dst46:31; last47',
+        programme_load='existing VM calendar source3d7520a5f, host config256 plus PC10, launch39',
+        programme_output_latency=4, engine_capture_after_programme=1,
+        transport_clock_sinks_measured=4285, programme_clock_sinks_measured=813,
+        clock_entries=['ck_transport','ck_program','ck_dxl','ck_dbq','ck_daq'],
+        hierarchy='wires-only programme/engine parents, transport and programme leaves, unchanged decoder leaves',
+        programme_start_to_final_commit_cycles=147,
+        traffic_bits_per_cycle=dict(read_request=136, read_response=2056, write_request=2248,
+                                   beat_command=48),
+        per_bank_boundary_tracks=17+257+281,
+        required_tracks_at_60pct_utilization=(17+257+281)/0.60,
+        replica_mux_cost='4x8 sector lane permutation and 4x8 output placement; static bank map',
+        fanout='metadata local pipeline, no demand arbitration or global ready',
+        bare_bank_response_edges=6, consumer_capture_edges=7,
+        request_pin_edges=1, gather_edges=1, decoder_pipeline_stages=25, decoder_post_input_edges=24,
+        write_pin_edges=1, bank_commit_edges=3,
+        first_command_to_last_commit_model=1+7+1+24+1+1+3,
+        production_beats=beats, immutable_price=168, immutable_wq3_price=184,
+        modeled_cycles=beats+1+7+1+24+1+1+3,
+        latency_policy='station edges added by actual NW contract, not silently zeroed',
+        slot_fit='UNPROVEN: new transport child needs parent assigned slot/pins and synthesis census',
+        route_admission=False,
+        throughput_status='MODEL ONLY until actual SRAM/decoder exact-cycle proof',
+        production_status='OPEN: programme controller/native full layer binding not this component')
+
+
 def qwen_xpf_static_control_model(entries=4, program_words=64):
     """Static compiler arm transport under the real TT parent; no rate claim."""
     record_bits = entries * 188
@@ -58,6 +95,21 @@ def qwen_xpf_static_control_model(entries=4, program_words=64):
                 latency='compiled arm phase includes actual assigned transport+three tap edges; configuration uses existing pw75 before start',
                 fixed_config_edges_max=3*entries+3,
                 qualification='mechanism bench only; actual producer trace/calendar, native pin/reset/clock, area and measured layer cost remain unqualified')
+
+
+def qwen_static_segment_calendar_model():
+    """Replace runtime segment/collective waits with three compiled windows."""
+    return dict(schema='opentallas.qwen-static-segment-calendar.v1',replicas=1,
+        segments=3,PW_first=961,PW_last=975,configuration_bits=3*4*64,
+        existing_transmit_buffer_bits=4*512,MACs_per_cycle=0,
+        max_VM_read_bits_per_cycle=512,max_VM_write_bits_per_cycle=512,
+        command_bits=32,real_descriptor_bits=64,added_memory_macros=0,
+        clock_roots_added=0,configuration_port_bytes_per_cycle=8,
+        fixed_events='core start/end, VM reads, payload TX, return RX, stage stop from compiled cycles',
+        integrity='actual core done/descriptor/VM valid/collective valid check only; no runtime timeline stretching',
+        tag='full token18 + position8 + segment6, no truncation',
+        latency='compiler must include actual native port and physical phase/relay profiles; unknown profiles refuse emission',
+        qualification='source/controller mechanism only until actual stage/region waveform and physical contract gates pass')
 
 
 def qwen_compute_typed_record_model():
@@ -16574,3 +16626,33 @@ def s81_static_collective_control_rom_model(cycles=2400):
     """Actual three-macro immutable control page; contextual price remains open."""
     from s81_static_collective.control_rom_model import price
     return price(cycles, ROOT)
+def hbm_idx_static_score_engine_model():
+    """Exact four-key engine: static launches and returns replace output FIFO."""
+    return dict(schema='opentallas.hbm-idx-static-score-engine.v1',
+        heads=32, keys_per_edge=4, block_dots_per_edge=4*32*4,
+        scalar_products_per_edge=4*32*128,
+        replicas=dict(engines_per_scorer=4,scorers_per_die=4,hslices_per_engine=128),
+        latency_edges=dict(chunk=106,tail=16,pin=1,launch_to_return=123),
+        communication_bits_per_edge=dict(key=2176,query=568,result=72),
+        clock_roots=dict(hslice=128,chunk=4,tail=1,control=1),
+        buffering='none: fixed launch/return slots; retained keep pipeline424bits',
+        arithmetic='unchanged golden32head/fourblock order, BF16 head products and FP32 tree',
+        area='arithmetic census unchanged; remove credit/outputFIFO; physical successor UNQUALIFIED',
+        compiler='query settle and all leaf reset readiness validated as faults, never wait/gate launch',
+        price='INDEX immutable price unchanged; II1 engine necessary but not wholeparent qualification')
+
+
+def hbm_idx_static_selector_model():
+    """Fixed5/5/6-bit score radix, original lower-index tie order."""
+    return dict(schema='opentallas.hbm-idx-static-selector.v1',
+        Q=4,W=16,K=512,production_keys=10928,production_lines=171,
+        memory=dict(macros=12,shape='256x256 1R1W; three perquarter; final compact in-place',bits_per_line=592),
+        clocks=dict(control=1,quarter=4,memory=12),
+        per_edge_bits=dict(ingress=4*592,read=4*592,write=4*592,output=4*592),
+        histogram_bits=4*64*14,compact_buffer_bits=4*32*37,
+        fixed_work=dict(ingest=171,radix_reads=2*171,radix_choose=32+32+64,compact_reads=171,output=32),
+        latency='844 active cycles plus fixed SRAM and phase-drain edges; compiler must price composed score pipeline',
+        arithmetic='BF16 ordered16bit keys; three prefix-conditioned5/5/6-bit histograms (first fused with ingest), global threshold; lower-ID ties by quarter/lane ordered scan',
+        routing='four quarterhist/compact roots and separate registered macro roots; cut/slot UNASSIGNED',
+        schedule='compiler opcode+address slots only; no request queues, credits, readiness or data-dependent scan length',
+        qualification='OPEN exact fullshape golden/mutants, physical closure and native productionrate')
