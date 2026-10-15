@@ -1,0 +1,31 @@
+{
+  "schema": "opentallas.qwen.static_embedding_consumer_evidence.v1",
+  "scope": "native mapped SRAM consumer component, not complete HBM->SU composition or native token",
+  "source_commit": "0c87f5bf55063fe5a442da6c2a6195c97877e67d",
+  "tokens": [
+    0,
+    63,
+    64,
+    511,
+    512,
+    65535,
+    65536,
+    151935
+  ],
+  "fp32_values_compared": 32768,
+  "request_rescheduling": false,
+  "source_sha256": {
+    "rtl/qwen_sys/static_embedding_20261014/ot_qfd_su_embed_static.sv": "f25f5d92846ce96e7a29f6879febd10a244c30c72593978f73702a4881eb73be",
+    "rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv": "2eb902b1979247bb1d6c7d7589955965669b3377ef81b542681a56d17fbca86c",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+    "rtl/qwen_sys/static_embedding_20261014/test/tb_static_embed_consumer.sv": "b6f85bd593296801b3b0c5fe026f1b48d105200d53d4a7af8bad990730b27ad9",
+    "tools/qwen_embedding_static_vectors.py": "c860bba105cebeaa6b9394937d62ba86d963daa38af8b470dcab63fad1a1b2f4"
+  },
+  "negative_controls": {
+    "missing_preload": "FAIL observed",
+    "wrong_token": "FAIL observed",
+    "early_go": "FAIL observed"
+  },
+  "physical_setup_hold_qualified": false,
+  "native_full_token_qualified": false
+}

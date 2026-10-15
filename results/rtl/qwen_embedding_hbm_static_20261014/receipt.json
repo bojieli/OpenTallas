@@ -1,0 +1,56 @@
+{
+  "schema": "opentallas.qwen.static_embedding_composition_evidence.v1",
+  "scope": "component PC read and separate actual join/epoch/SRAM/decode composition, not full128PC or native token",
+  "controller_source_commit": "3e07be80b",
+  "tokens": [
+    0,
+    63,
+    64,
+    511,
+    512,
+    65535,
+    65536,
+    151935
+  ],
+  "consumer_exact_fp32_results": 32768,
+  "controller_code_half_reads": 8,
+  "controller_packed_scale_sector_reads": 1,
+  "controller_clocks": {
+    "core_period_ps": 833.334,
+    "core_phase_ps": 137,
+    "hbm_period_ps": 1024
+  },
+  "controller_calendar": "PROFILE1 compiler process; fresh PROFILE0 process with frozen files",
+  "runtime_rescheduling": false,
+  "negative_controls": [
+    "column slot shifted:FAIL",
+    "core return slot shifted:FAIL",
+    "missing raw PHY valid:FAIL",
+    "join wrong epoch:FAIL",
+    "join missing actual beat:FAIL"
+  ],
+  "remaining": [
+    "full128PC source-bound static transport/calendar",
+    "native die pins/clock phase",
+    "routed closure",
+    "actual SU parent/VM write integration"
+  ],
+  "source_sha256": {
+    "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_map.sv": "70cd3650131f6d57ad10f21b142208a2b976372ae19ca47755a9a34632e71c45",
+    "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_preload_face.sv": "52afe2023dbe64dbfc331c222b4f16db1f4529d438ca1b0f61ba1a5210dd2b55",
+    "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join.sv": "b4031ee0138af2cf4567626e185d81ded805bb1ba274ee03763a74232dc95a49",
+    "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_pc.sv": "b5e9111fc0fe07f580ba611c16ecdc53f603f524505930860d009414f77b5fee",
+    "rtl/qwen_sys/static_embedding_20261014/ot_qfd_su_embed_static.sv": "f25f5d92846ce96e7a29f6879febd10a244c30c72593978f73702a4881eb73be",
+    "rtl/qwen_sys/static_embedding_20261014/test/tb_static_embed_consumer.sv": "b6f85bd593296801b3b0c5fe026f1b48d105200d53d4a7af8bad990730b27ad9",
+    "rtl/qwen_sys/static_embedding_20261014/test/tb_static_embed_join_consumer.sv": "7b8b4c7946a04c9926b088a8dfad9ccc24d58c933bf2c0587b06b805deb6ed45",
+    "rtl/qwen_sys/static_embedding_20261014/test/tb_static_embed_controller.sv": "5facd6158f49f65d2b69b0a5332e871877555a080ba0db7271c380324f364427",
+    "rtl/qwen_sys/static_embedding_20261014/test/run_controller_gate.sh": "64641f4c4e5b6448ad1a6a2fb8016b0c5bdb68dda21a8c83909cd33b7e22d2dc",
+    "rtl/qwen_sys/static_embedding_20261014/test/run_join_consumer_gate.sh": "f189b726a4eb1f138ed37f6d12648f864c1c1802d56d1e11415baf1608fba77d",
+    "rtl/qwen_sys/static_embedding_20261014/test/run_consumer_gate.sh": "fb60f4e443dcd4f7ee3c3557bdade9360e5fb3fd98cddff781491f6b019489f3",
+    "tools/qwen_embedding_static_vectors.py": "800bd07579865ef72df5c4eea5d9d8d2e1c17ac53af4435c68dd84c2f8c60ea1",
+    "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static.sv": "242df8bfbb739598f9e0b7314a81945e410f089803073dfd5ea9d1a634a7492d",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "73c92dbacb2a95a5c1e2782187d48ab5badf82e6d2281f26e210c75846c81f51",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "fc8c30c0d72e3b86abe4d8fda354514611a14a57d1553eeb7bb2a439301fa266"
+  },
+  "native_full_token_qualified": false
+}

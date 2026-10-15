@@ -1,0 +1,1 @@
+Initial bench failure: continuous replay wire had not settled during initial block; frozen calendar load was skipped. Corrected by testing calibrate==0 directly in initial load. No DUT scheduling or timing relaxation. Original compiler/replay logs and frozen files retained. This is a test-harness initialization failure, not a failed physical verdict.
