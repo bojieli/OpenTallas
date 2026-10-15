@@ -4,6 +4,14 @@ here=$(cd -- "$(dirname -- "$0")" && pwd)
 root=$(git -C "$here" rev-parse --show-toplevel)
 build=$(mktemp -d /tmp/hcoll-static-link.XXXXXX)
 trap 'rm -rf "$build"' EXIT
+# Refuse a current source tree whose native dependencies differ from the proven blobs.
+python3 - "$root" "$here/static_link_sources.json" <<'PYVERIFY'
+import json,subprocess,sys
+root,manifest=sys.argv[1:]
+for path,want in json.load(open(manifest))["git_blobs"].items():
+    have=subprocess.check_output(["git","-C",root,"rev-parse","HEAD:"+path],text=True).strip()
+    if have!=want: raise SystemExit("static link native dependency changed: "+path)
+PYVERIFY
 # Read exact shared source blobs; never alter Qwen source or substitute memory.
 rev=4c66b6a95
 paths=(rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv
