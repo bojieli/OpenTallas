@@ -429,7 +429,7 @@ def ticker():
             log('snapshot: %s' % e)
 
 # ---------------------------------------------------------------- http
-STATIC = {'/': ('index.html', 'text/html; charset=utf-8'), '/index.html': ('index.html', 'text/html; charset=utf-8'),
+STATIC = {'/explorer/dataflow.js': ('explorer/dataflow.js', 'text/javascript; charset=utf-8'), '/': ('index.html', 'text/html; charset=utf-8'), '/index.html': ('index.html', 'text/html; charset=utf-8'),
           '/replay': ('index.html', 'text/html; charset=utf-8'), '/explorer': ('explorer.html', 'text/html; charset=utf-8'),
           '/explorer.html': ('explorer.html', 'text/html; charset=utf-8'),
           '/explorer.js': ('explorer.js', 'text/javascript; charset=utf-8'),
@@ -699,6 +699,16 @@ class H(BaseHTTPRequestHandler):
         js = lambda o, code=200: self.send(code, json.dumps(o, separators=(',', ':')).encode(), 'application/json')
         if what == 'meta':
             return js(stamp(EXPLORER.api_meta(safe), safe, explorer=True))
+        if what == 'dataflow':
+            b = EXPLORER.dataflow_bytes(arg('die') or '', safe=safe)
+            if b is None: return js(dict(error='no geometry for this die yet'), 404)
+            if 'gzip' not in (self.headers.get('Accept-Encoding') or ''):
+                import gzip as _gz
+                return self.send(200, _gz.decompress(b), 'application/json')
+            self.send_response(200); self.send_header('Content-Type', 'application/json'); self.send_header('Content-Encoding', 'gzip')
+            self.send_header('Content-Length', str(len(b))); self.send_header('Cache-Control', 'no-store'); self.end_headers()
+            if self.command != 'HEAD': self.wfile.write(b)
+            return
         if what == 'geom':
             b = EXPLORER.geom_bytes(arg('die') or '', safe)
             if b is None: return js(dict(error='no geometry for this die yet'), 404)
