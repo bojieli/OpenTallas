@@ -11,3 +11,42 @@ The wrapper retains the real serial START/PW and stream command clock domains. F
 `program.py:emit_native` consumes the actual native operand/service compiler. Missing native producers, native boot/constant ownership, command ABI integration, stream pin-to-pin timing, immutable context launch cycles or qualified physical clock evidence return an empty dispatch image. Serial endpoints need actual fixed-phase command adapters. Merely copying the mixed fixture programs into PW memory does not satisfy these checks. Every one of the existing 59 physical stage programs is tested to reject absent native owner bindings.
 
 Validation uses `python3 -m unittest discover -s tools/s81_static_control -p 'test_*.py'`. The RTL gate runs through `ot-run ... -- bash tools/s81_static_control/component_gate.sh`; it exercises all 128 program rows, 252 nonzero native commands across two contexts, adjacent and simultaneous issues, KIT/END, nine fault witnesses, and timing/context mutants. Its command data are opaque component patterns; this is not numerical model execution or a native-token pass. A separate wrapper test sends consecutive PW words over modeled 3:4 clocks, checks both native contexts and KIT token returns, and checks sticky engine status outside an issue edge.
+
+The actual PQ producer is now `ot_s81_pq_command_endpoint`. It accepts the
+sequencer's real `c_cmd[84:0]`, returns `c_done[8:0]` and `c_st[1:0]`, and drives
+`dsfd_sp_pq_n.f_iss[91:0]` from an independently sealed PW36 descriptor image.
+The native fields are stored; the bench never supplies `f_iss`. Four explicitly
+selected native tags may overlap. Each descriptor contains native fields90,
+command-sample-to-observed-retire edges24, and native tag2 (116 bits total).
+There are 64 descriptors under one clock root, with 7,424 data-storage flops.
+`pq_descriptors.py` writes five24-bit pages per descriptor. Page7/address0 BEGIN
+or SEAL carries the length8; bit24 distinguishes SEAL. A fixed64-edge scan arms
+the selected image. Reset revokes it. Runtime availability and retire events
+only fault; they cannot move a programmed GO or completion edge. The static
+controller's `t_iss[36]` is the explicit calendar retire pulse and `[38:37]` its
+tag. Global idle does not gate another native tag. The older dynamic core's
+last-stream event does not establish this retire contract.
+
+`ot_s81_pq_calendar_rom` instantiates two real `ot_rom_4096x72_m8` mask-ROMs.
+Their combined row144 is `{reserved48,timestamp24,action72}`. The native action
+ABI in `pq_calendar.py` matches the static controller's exact VM, ROM, config,
+launch and retire fields. Four rows are prefetched at a fixed boot edge before
+`stage_start`. A stage start sampled at E0 produces timestamp0 at the action
+pin at E1; the receiving controller samples that pin at E2. The issuer emits
+rowissue R at command pin R+1, the endpoint emits GO at R+2, and calendar
+ACCEPT timestamp R+1 reaches the action pin at R+2. Both are captured by the
+native controller at R+3. Prime/phase/source gaps fault and never cause waits.
+The compiler must bind the actual boot-prime and stage-start producers before
+native dispatch; component stimulus does not satisfy those obligations.
+
+The admitted component gates (`pq_endpoint_gate.sh`, `pq_calendar_gate.sh`,
+`pq_count_lifetime_gate.sh`) cover 252 hardware-produced commands across four
+tags, real paired-ROM consecutive/sparse events, and the actual 12 count leaves
+with their 15/2/15 partition. Live reaches the farthest leaf12 edges after the
+source pin; a root reaches GA after4 and Q2F after5. The compiler additionally
+needs the static controller's last-count-consume timing and its actual live/tag
+producer. Endpoint status and calendar stimulus remain declared component
+boundaries. Production phase-ROM addresses, operand producers, full native
+VM service calendars, physical phases/slots and layer throughput remain
+unqualified. The compiler refuses absent bindings; no production calendar is
+created from random phase fixtures or historical252-command opaque patterns.
