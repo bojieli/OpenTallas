@@ -1,14 +1,14 @@
 {
  "schema": "opentallas.die_port_bind.v2",
- "die_v": "/tmp/hd/sub/hbm_v15_sw_vm.v",
+ "die_v": "/tmp/hd/sub2/hbm_v15_sw_vm.v",
  "top": "hbm_v15_sw_vm",
  "verdict": "FAIL",
  "failing": [
   "input_tied"
  ],
  "summary": {
-  "masters": 9,
-  "instances": 11,
+  "masters": 10,
+  "instances": 12,
   "unbound_masters": 0,
   "stub_masters": 0,
   "ambiguous_masters": 0,
@@ -86,6 +86,27 @@
    "input_tied": [
     "sid"
    ],
+   "straps": [],
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "ot_hbm_su_static_vm_ports": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hb_su_SW"
+   ],
+   "param_sets": {
+    "{\"QID\": \"0\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
    "straps": [],
    "output_open": [],
    "width_mismatch": {},
@@ -233,15 +254,9 @@
  "multi_driven_nets": {},
  "top_assigns": [],
  "params_not_in_rtl": [],
- "die_sha256": "67747592706ca8316b798d0661b28ede06ad0e5bc836ce0bf971ed7271ec2d6b",
+ "die_sha256": "f42facef4a26392f84d2e3691f653afd6937235ea1dea3e762efa40cf9644c15",
  "straps_declared": [],
  "params_file": null,
- "elab": {
-  "files": 77,
-  "unresolved_modules": [],
-  "top_file": "/tmp/hd/sub/elab/die_top.sv",
-  "file_list": "/tmp/hd/sub/elab/die_top.f"
- },
  "rtl_roots": [
   "rtl",
   "physical/asap7_memory_macros",

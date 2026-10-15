@@ -17,7 +17,7 @@ class CanonicalJoinTests(unittest.TestCase):
         self.canonical = dict(rank_programme_bindings=[dict(stage=s,rank=r,die_id=4*s+r)
                                                        for s in range(81) for r in range(4)])
         self.catalogue = dict(source_SU_nodes=[dict(node='mtp.I0',scope='mtp',template_sha256='1'*64)])
-        self.program = dict(stage='fixture',ops=[dict(id='native_job',eng='su',port=1,start=0,end=10,preds=[])])
+        self.program = dict(stage='fixture',ops=[dict(id='native_job',eng='su',port=1,start=0,end=11,preds=[])])
         self.binding = dict(stage='fixture',tensors={'input':dict(base_row=256,nrows=1,source='external_input',consumers=['native_job'],evidence=self.evidence)},jobs=dict(native_job=dict(engine='su',implementation='native_rtl',
             physical_instance='su0',endpoint='fixture',client='su',tag=0,duration_cycles=10,
             phase_period_stream=1,start_phase_stream=0,evidence=self.evidence,accesses=[dict(kind='read',tensor='input',row_offset=0,slot=0,issue_cycle=1,ingress_cycle=2,bank_enqueue_cycle=2,service_cycle=3,response_cycle=4,deadline_cycle=8)])))
