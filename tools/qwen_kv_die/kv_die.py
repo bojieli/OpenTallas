@@ -789,11 +789,13 @@ def _band(T, side, Wk):
 _PIN_HINT = {}
 
 
-def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq_head=False, kv_wq_wide=False, kv_wq_mirror=False, split=False, reserve_static_memory=False, reserve_native_astk=False, host_v14=None, host_north=None, host_trees=None):
+def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq_head=False, kv_wq_wide=False, kv_wq_mirror=False, split=False, reserve_static_memory=False, reserve_native_astk=False, host_v14=None, host_north=None, host_trees=None, head_source_bands=False):
     """qwen-1010/b 2026-10-10: two passes -- the second plans every relay chain from the pins the first pass drew (a
     shared master's pin is the one its first instance's peers set), so each hop is measured pin to pin on the die."""
     kw = dict(r=r, kv_wq_leaves=kv_wq_leaves, kv_wq_binary=kv_wq_binary, kv_wq_leaf_s=kv_wq_leaf_s, kv_wq_head=kv_wq_head,
-              kv_wq_wide=kv_wq_wide, kv_wq_mirror=kv_wq_mirror, split=split)
+              kv_wq_wide=kv_wq_wide, kv_wq_mirror=kv_wq_mirror, split=split, head_source_bands=head_source_bands)
+    if head_source_bands and not split:
+        raise ValueError("head source bands require the native split die")
     if host_v14 is not None:
         HOST_V14['on'] = bool(host_v14)          # v1.4 (die_top_lint --variant ...,host_v14); None keeps the CLI setting
     if host_north is not None:
@@ -841,12 +843,21 @@ def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq
         repaired = kv_pin_repair.repair(sys.modules[__name__], best[1])
         failures = pin_reach(repaired, masters(repaired, 1))
         if failures['violations']:
-            raise ValueError(f"split KV die has {failures['violations']} unrepaired pin hops: {failures['worst'][:3]}")
+            failure = ValueError(f"split KV die has {failures['violations']} unrepaired pin hops: {failures['worst'][:3]}")
+            if head_source_bands:
+                failure.candidate_plan = repaired
+            raise failure
+        if head_source_bands:
+            import head_source_bands as HSB
+            HSB.lifecycle(repaired,sys.modules[__name__])
         return repaired
+    if head_source_bands:
+        import head_source_bands as HSB
+        HSB.lifecycle(best[1],sys.modules[__name__])
     return best[1]
 
 
-def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq_head=False, kv_wq_wide=False, kv_wq_mirror=False, split=False):
+def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq_head=False, kv_wq_wide=False, kv_wq_mirror=False, split=False, head_source_bands=False):
     kv_wq_wide = kv_wq_wide or kv_wq_mirror
     kv_wq_leaf_s = kv_wq_leaf_s or kv_wq_head or kv_wq_wide
     kv_wq_binary = kv_wq_binary or kv_wq_leaf_s
@@ -991,6 +1002,9 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
         _write_tiles(m, add)
     if slice_w:
         _host_slices(m, add)
+    if head_source_bands:
+        import head_source_bands as HSB
+        HSB.reserve(m, F)
     _buses(m, T, r)
     if kv_wq_leaves:
         _write_buses(m)
@@ -1299,7 +1313,9 @@ def _relays(m):
     below the attention groups and the channels beside them; relays sit on the path at <= RELAY_PITCH (a free spot
     within two grid cells).  Clock / reset trees (CTS / reset tree) and multi-endpoint buses are not relayed."""
     from collections import deque
-    by = {i.name: i for i in m['insts']}
+    # Reservations are allocator obstacles only, never fake die instances/views.
+    obstacles = m['insts'] + m.get('placement_keepouts', [])
+    by = {i.name: i for i in obstacles}
     Wd, Hd = m['die']['w'], m['die']['h']
     # The south-face leaf fits inside the CDC-column gap.  A43.2um occupancy
     # cell falsely merges that gap with the adjacent control tile; half-grid
@@ -1307,7 +1323,7 @@ def _relays(m):
     G = GRID/2 if m['geo'].get('kv_wq_leaf_s') else GRID
     nx, ny = int(Wd // G) + 1, int(Hd // G) + 1
     owner = {}
-    for it in m['insts']:
+    for it in obstacles:
         for gx in range(int(it.x // G), int((it.x + it.w) // G) + 1):
             for gy in range(int(it.y // G), int((it.y + it.h) // G) + 1):
                 owner.setdefault((gx, gy), set()).add(it.name)
@@ -2522,6 +2538,7 @@ def record(m):
                 elastic_boundary=kv_elastic_boundary.inventory(ROOT, m, BINDINGS),
                 static_memory_reservation=dict(enabled=m['geo'].get('static_memory_reservation',False),
                     land_width_um=LAND_W, status='PLAN_ONLY_ACTUAL_ADAPTER_BINDING_REQUIRED' if m['geo'].get('static_memory_reservation') else 'LEGACY_LANDING_PROFILE'),
+                head_source_bands=m.get('head_source_bands'),
                 native_astk_reservation=dict(enabled=ASTK_W>324, parent_width_um=ASTK_W,
                     status='PLAN_ONLY_SELECTED_PROFILE_BINDING_REQUIRED' if ASTK_W>324 else 'LEGACY_FRAME'),
                 masters={k_: dict(n=v_['n'], mm2=round(v_['mm2'], 4)) for k_, v_ in sorted(by_m.items())},
@@ -2588,6 +2605,8 @@ def case(m, work):
     """the die-level case of the r21 Qwen chain (tools/qwen_rom_fulldie.case_real: elements.lef from these masters,
     phy_ew.lef, die.v, place.tcl, run.tcl legality / on-track / pin access, run_pa.tcl PDN), written by the base
     generator's writer with this die's masters and port widths."""
+    if m.get("head_source_bands"):
+        raise ValueError("N3 source bands are plan-only: actual535 view, native T1 gather, clocks/reset, full8192 composition and static calendar proof required")
     if m['geo'].get('static_memory_reservation'):
         raise ValueError('static memory shape reservation is plan-only until actual adapter ports/relays replace old landing binding')
     # qwen-1010/b 2026-10-11: the mirror leaf plan is the ADOPTED write queue (ctl_bin + leaf_s_w129(_m) closed, bound
@@ -2723,6 +2742,7 @@ def main(argv=None):
     ap.add_argument('--split', action='store_true', help='qwen-split 2026-10-14: the KV/SYSTEM die of the two-die split (CONTRACT_KVSYS.md)')
     ap.add_argument('--host-v14', action='store_true', help='kvsys v1.4: real HOST root core + 128 die-placed PC slices + PLL model')
     ap.add_argument('--host-north', action='store_true', help='kvsys v1.4.1: HOST root core directly below the static D2D end')
+    ap.add_argument('--head-source-bands', action='store_true', help='plan-only producer-local N3 source bands,384 capture reservations and fresh relay/reset allocation; no physical adoption')
     ap.add_argument('--host-trees', action='store_true', help='kvsys v1.4.2: HOST reset / boot fan-outs as registered relay trees')
     a = ap.parse_args(argv)
     if a.host_v14:
@@ -2741,11 +2761,19 @@ def main(argv=None):
     a.kv_wq_leaf_s = a.kv_wq_leaf_s or a.kv_wq_head or a.kv_wq_wide
     a.kv_wq_binary = a.kv_wq_binary or a.kv_wq_leaf_s
     a.kv_wq_leaves = a.kv_wq_leaves or a.kv_wq_binary
+    if a.head_source_bands and (not a.split or a.mode == 'case'):
+        ap.error('--head-source-bands is split plan-only until actual N3 physical/composition gates pass')
     if a.mode == 'case' and a.reserve_native_astk:
         ap.error('native ASTK envelope reservation is plan-only until selected profile/clock/pin binding closes')
     if a.mode == 'case' and a.kv_wq_leaves and not a.kv_wq_mirror:
         ap.error('per-PC leaf candidate is plan-only: encoder and closed-view pin/context gates remain open')
-    m = build(a.r, kv_wq_leaves=a.kv_wq_leaves, kv_wq_binary=a.kv_wq_binary, kv_wq_leaf_s=a.kv_wq_leaf_s, kv_wq_head=a.kv_wq_head, kv_wq_wide=a.kv_wq_wide, kv_wq_mirror=a.kv_wq_mirror, split=a.split, reserve_static_memory=a.reserve_static_memory, reserve_native_astk=a.reserve_native_astk)
+    try:
+        m = build(a.r, kv_wq_leaves=a.kv_wq_leaves, kv_wq_binary=a.kv_wq_binary, kv_wq_leaf_s=a.kv_wq_leaf_s, kv_wq_head=a.kv_wq_head, kv_wq_wide=a.kv_wq_wide, kv_wq_mirror=a.kv_wq_mirror, split=a.split, reserve_static_memory=a.reserve_static_memory, reserve_native_astk=a.reserve_native_astk, head_source_bands=a.head_source_bands)
+    except ValueError as failure:
+        if a.head_source_bands and hasattr(failure, "candidate_plan"):
+            import head_source_bands as HSB
+            HSB.write_failure(failure.candidate_plan, sys.modules[__name__], a.out, str(failure))
+        raise
     if a.mode == 'case':
         m['buses'] = [(bid, cls, bits, eps) for bid, cls, bits, eps in m['buses']]
         print(json.dumps(case(m, a.out)))

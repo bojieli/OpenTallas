@@ -12,7 +12,7 @@ def repair(K, m):
     m['assigned_ports'] = {n: {p: list(v) for p, v in mm.ports.items()}
                            for n, mm in M.items() if not n.startswith('qkd_rly')}
     by = {i.name: i for i in m['insts']}
-    additions, buses, unresolved = [], [], []
+    additions, buses, unresolved, detours = [], [], [], []
     for bid, cls, bits, eps in m['buses']:
         if len(eps) != 2 or cls in K.ABUT or cls in ('clock_trunk', 'reset', 'constant'):
             buses.append((bid, cls, bits, eps)); continue
@@ -47,7 +47,7 @@ def repair(K, m):
                 if left > cap or remaining >= distance-1:
                     continue
                 if any(min(x+width+4.32,i.x+i.w)-max(x-4.32,i.x) > .001 and
-                       min(y+height+4.32,i.y+i.h)-max(y-4.32,i.y) > .001 for i in m['insts']+staged):
+                       min(y+height+4.32,i.y+i.h)-max(y-4.32,i.y) > .001 for i in m['insts']+m.get('placement_keepouts',[])+staged):
                     continue
                 choices.append((remaining,x,y,left,out_x,orient))
             if not choices:
@@ -59,6 +59,29 @@ def repair(K, m):
             sbid=bid if not chain else bid+'__pinfix'+str(stage)
             chain.append((sbid,cls,bits,[previous,(name,'a')]))
             previous=(name,'b');ap=(out_x,y+height/2)
+        if abs(ap[0]-bp[0])+abs(ap[1]-bp[1]) > K.PIN_REACH:
+            # A mandatory detour may initially move away from the destination.
+            # Preserve existing behavior outside the explicit N3 candidate.
+            if m.get('head_source_bands'):
+                import channel_detour
+                obstacles=[(i.x,i.y,i.x+i.w,i.y+i.h)
+                    for i in m['insts']+m.get('placement_keepouts',[])]
+                result=channel_detour.route(initial_ap,bp,obstacles,
+                    (m['die']['w'],m['die']['h']),width-K.SHAVE,height-K.SHAVE,
+                    K.GRID/2,K.PIN_REACH-1,
+                    first_reach=299 if a.startswith('wctl_') and bid.startswith('wencoded_') else K.PIN_REACH-1)
+                if result:
+                    chain,staged,previous=[],[],(a,pa)
+                    for index,station in enumerate(result['stages']):
+                        name='rly_pinfix_'+bid.replace('__','_')+'_'+str(index)
+                        staged.append(K.F.Inst(name,f'qkd_rly_{bits}',station['x'],station['y'],
+                            width-K.SHAVE,height-K.SHAVE,station['orient'],kind='relay',region='relay'))
+                        chain.append((bid if not chain else bid+'__pinfix'+str(index),
+                            cls,bits,[previous,(name,'a')]))
+                        previous=(name,'b');ap=tuple(station['output'])
+                    detours.append(dict(bus=bid,source=(a,pa),destination=(b,pb),
+                        pin_budget_um=K.PIN_REACH-1,added_edges=len(staged),witness=result,
+                        native_timing_qualified=False))
         if abs(ap[0]-bp[0])+abs(ap[1]-bp[1]) > K.PIN_REACH:
             unresolved.append(dict(bus=bid,um=abs(initial_ap[0]-bp[0])+abs(initial_ap[1]-bp[1])));
             buses.append((bid,cls,bits,eps)); continue
@@ -79,5 +102,6 @@ def repair(K, m):
             clock=next(j for j,(bid,_,_,_) in enumerate(buses) if bid=='clk_core_c')
         bid,cl,bits,eps=buses[clock];buses[clock]=(bid,cl,bits,list(eps)+[(n,'ck')])
     m['buses']=buses
-    m['pin_repair']=dict(added=additions, unresolved=unresolved, method='fixed master pins; registered channel relay; no leaf traversal')
+    m['pin_repair']=dict(added=additions, unresolved=unresolved, detours=detours,
+        method='fixed master pins; registered channel relay; obstacle-aware fallback only for N3 candidate')
     return m

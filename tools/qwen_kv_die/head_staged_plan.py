@@ -303,7 +303,7 @@ def repack_fronts(plan,leafs,inside_stage=False,widen=False):
     return result
 
 
-def global_stages(insts,repacked,leafs,ectl_leafs,channel_lanes=False,timing=None,n3=False,head_limit=None):
+def global_stages(insts,repacked,leafs,ectl_leafs,channel_lanes=False,timing=None,n3=False,head_limit=None,chunk_homes=None):
     """Actual A/B/C->per-head T1->T2 and score->S1->C; conservative other frames."""
     index={i['name']:i for i in insts};obstacles=[];byname={}
     def reach(src,sp,dst,dp):
@@ -328,6 +328,11 @@ def global_stages(insts,repacked,leafs,ectl_leafs,channel_lanes=False,timing=Non
                 r,o=child_world(instance,[x,0.,*ectl_leafs[c][0]])
                 byname[n+'/'+c]=(r,o);obstacles.append((n+'/'+c,r))
         else:obstacles.append((n,[instance[k]for k in ('x','y','w','h')]))
+    if chunk_homes:
+        for home in chunk_homes:
+            box=[*home['xy'],*home['size_um']]
+            byname[home['name']]=(box,home['orient'])
+            obstacles.append((home['name'],box))
     def points(n,leaf,pin):
         box,o=byname[n];return xf(leaf[1][pin],box[:2],box[2:],o)
     def solve_site(pairs_for_orient,size,margin=0.,fixed_xs=None,y_phase=0.,collect=0):
@@ -388,10 +393,30 @@ def global_stages(insts,repacked,leafs,ectl_leafs,channel_lanes=False,timing=Non
             else:c,p='b',f't{pair}_cl[{bit-1555}]'
             origins.append((f'ti_a[{bit}]',points(group+'/'+c,ectl_leafs[c],p),reach(c,p,'tstage',f'ti_a[{bit}]')))
         origins +=[(f'e_a[{bit}]',points(group+'/c',ectl_leafs['c'],f'e{h}[{bit}]'),reach('c',f'e{h}[{bit}]','tstage',f'e_a[{bit}]'))for bit in range(16)]
+        capture_checks=[]
+        if chunk_homes:
+            import head_ingress_request as ingress
+            for role,nbits in [('a',512),('b',528),('c',535)]:
+                capture_pairs=[]
+                for bit in range(nbits):
+                    producer=ingress.signal(role,bit,h);capture=f'a[{bit}]'
+                    src=points(group+'/'+role,ectl_leafs[role],producer)
+                    dst=points(hname+'/u_ingress/u_'+role,leafs['chunk'],capture)
+                    capture_pairs.append((producer+'->'+capture,src,dst,reach(role,producer,'chunk',capture)))
+                worst_capture=witness(capture_pairs,(0,0))
+                capture_checks.append(dict(role=role,payload_bits=nbits,admitted=worst_capture['effective_um']<=LIMIT,worst=worst_capture))
+            # Source-exact ABC registered outputs, never ECTL bypass/T0 aliases.
+            origins=[]
+            for bit in range(1575):
+                role,cb=ingress.chunk_source_for_tstage(bit)
+                dest=f'ti_a[{bit}]' if bit<1559 else f'e_a[{bit-1559}]'
+                src=f'b[{cb}]'
+                origins.append((dest,points(hname+'/u_ingress/u_'+role,leafs['chunk'],src),
+                                reach('chunk',src,'tstage',dest)))
         targets=[(p,points(hname+'/u_t2',leafs['tstage'],p.replace('_b[','_a[')))
                  for p in leafs['tstage'][1]if p.startswith(('ti_b[','e_b['))]
         def t_pairs(o):
-            return [(f'ECTL->{pin}',xf(leafs['tstage'][1][pin],size=leafs['tstage'][0],orient=o),pts,cap)for pin,pts,cap in origins]+[
+            return [(f'{"ABC" if chunk_homes else "ECTL"}->{pin}',xf(leafs['tstage'][1][pin],size=leafs['tstage'][0],orient=o),pts,cap)for pin,pts,cap in origins]+[
                 (f'{pin}->T2',xf(leafs['tstage'][1][pin],size=leafs['tstage'][0],orient=o),pts,reach('tstage',pin,'tstage',pin.replace('_b[','_a[')))for pin,pts in targets]
         kwargs={}
         if channel_lanes:
@@ -402,7 +427,7 @@ def global_stages(insts,repacked,leafs,ectl_leafs,channel_lanes=False,timing=Non
             phase=(inner['y']+(inner['h']-259.2 if fy else 0))%PITCH
             kwargs=dict(fixed_xs=[xx],y_phase=phase)
         t0=None
-        if n3:
+        if n3 and not chunk_homes:
             # T0 receives the real A/B/C pins. T1 receives T0, never an ideal
             # fanout or transparent copy. Try actual free T0 lattice sites and
             # solve every T1 bit against both actual neighboring stage views.
@@ -448,7 +473,7 @@ def global_stages(insts,repacked,leafs,ectl_leafs,channel_lanes=False,timing=Non
             ss=s['site'];ss['clock_pin_corners_um']=xf(leafs['sstage'][1]['ck'],ss['xy'],ss['size_um'],ss['orient'])
             ss['clock_insertion_source']='physical/ref_tile/qkh_head_sstage/views/qkh_head_sstage/insertion.json'
             obstacles.append((hname+'/u_s1',[*ss['xy'],*ss['size_um']]))
-        results.append(dict(head=hname,ectl=group,tstage0=t0,tstage1=t,sstage1=s))
+        results.append(dict(head=hname,ectl=group,producer_capture=capture_checks,tstage0=t0,tstage1=t,sstage1=s))
     t2sites=[]
     for n,(box,o)in byname.items():
         if n.endswith('/u_t2'):
@@ -459,8 +484,9 @@ def global_stages(insts,repacked,leafs,ectl_leafs,channel_lanes=False,timing=Non
                 placement_origin_pitch_um=PITCH,clearance_um=CLEAR,results=results,evaluated_heads=len(results),required_heads=128,diagnostic_partial=head_limit is not None,
                 witness_coordinate_convention='For movable leaf pins the witness source_corner is that leaf, destination_corner is the fixed peer; logical signal direction is specified in bit label and may be the reverse.',
                 stage2_world_placements=t2sites,
-                clock_counts=dict(head_parent_entries=87,explicit_die_stages_per_head=3 if n3 else 2,total_for128heads=128*(90 if n3 else 89)),
+                clock_counts=dict(head_parent_entries=87,explicit_die_stages_per_head=5 if chunk_homes else 3 if n3 else 2,total_for128heads=128*(92 if chunk_homes else 90 if n3 else 89)),
                 latency_cycles=dict(ectl_to_head=3 if n3 else 2,head_to_ectl=1,layer_added=4 if n3 else 3),
+                producer_local_ABC=bool(chunk_homes), capture_homes=len(chunk_homes or []),
                 placed_tstage0=sum(bool(r['tstage0']and r['tstage0']['site'])for r in results),placed_tstage1=sum(bool(r['tstage1']['site'])for r in results),placed_sstage1=sum(bool(r['sstage1']['site'])for r in results),
                 next='If a leaf has zero reach origins, change source/target geometry. If reach origins exist but none free, grant/rehome the connected cluster. Do not admit missing leaf placements.')
 
@@ -501,12 +527,16 @@ def main():
     ap.add_argument('--global-stages',action='store_true',help='Solve actual T1/S1 in the current whole-die grant; requires --insts')
     ap.add_argument('--head-limit',type=int,help='Diagnostic constructive search only: evaluate firstNheads while retaining all128heads as obstacles; never a complete die grant')
     ap.add_argument('--n3',action='store_true',help='Structural candidate: three real input stages,20um budget margin; bounded constructive T0/T1 search, +1 compiler-visible cycle versusN2')
+    ap.add_argument('--abc-request',type=Path,help='Actual source-band allocation/request containing384common535 homes; requires --n3 and actual --chunk-lef')
+    ap.add_argument('--chunk-lef',type=Path,help='Actual routed common535 LEF with matching TT lib and insertion.json')
     ap.add_argument('--native-timing',action='store_true',help='Constrain every matched bit by actual TT ETM launch/capture and compensated clock-level reach, capped at500um')
     ap.add_argument('--widen108',action='store_true',help='Structural108um/head growth, four real input-stage lanes per inner head, actual generator admission still required')
     ap.add_argument('--widen54',action='store_true',help='Propose54um/head growth with real incident-pin audit; never an actual die grant')
     args = ap.parse_args()
     if args.widen108:
         args.widen54=True
+    if args.abc_request and (not args.n3 or not args.chunk_lef or args.widen54 or args.widen108):
+        ap.error('--abc-request requires --n3 --chunk-lef and actual unchanged-width source bands')
     if args.n3 and not args.native_timing:
         ap.error('--n3 requires --native-timing')
     if args.native_timing and not args.global_stages:
@@ -637,20 +667,36 @@ def main():
             (args.out/'proposed_insts_widen54.json').write_text(json.dumps(insts,indent=2)+'\n')
             chosen=widened
         else:chosen=repacked_inside;proposal=None
+        chunk_homes=None
+        if args.abc_request:
+            request=json.loads(args.abc_request.read_text())
+            chunk_homes=request.get('homes') or request.get('head_source_bands',{}).get('capture_reservations')
+            assert chunk_homes and len(chunk_homes)==384, 'Need all384 actual source-band capture homes'
+            import head_ingress_request as ingress
+            _,_,expected_homes,_=ingress.capture_homes(insts)
+            expected={h['name']:h for h in expected_homes}
+            assert len({h['name']for h in chunk_homes})==384,'Duplicate capture homes'
+            for home in chunk_homes:
+                actual=expected[home['name']]
+                for field in ('xy','size_um','orient','producer','payload_bits'):
+                    assert home[field]==actual[field],('Stale source-band home',home['name'],field)
+            assert not any(h['existing_frame_blockers']for h in expected_homes),'Capture blocked by actual die frame'
+            paths['chunk']=args.chunk_lef.resolve()
+            assert lef(paths['chunk'])[0]==(129.6,21.6),'Common535 outline changed'
         timing=None
         if args.native_timing:
             import sys
             sys.path.insert(0,str(ROOT/'tools/hier_contract'))
             import pinreg_audit as PA
             timing={}
-            for key,path in {**{k:paths[k]for k in ('tstage','sstage','score','front')},**ectl_paths}.items():
+            for key,path in {**{k:paths[k]for k in ('tstage','sstage','score','front')},**ectl_paths,**({'chunk':paths['chunk']}if chunk_homes else {})}.items():
                 libpath=path.with_name(path.stem+'_tt.lib')
                 if not libpath.exists():libpath=Path(str(libpath)+'.gz')
                 lib=PA.parse_lib(libpath);ins=json.loads(path.with_name('insertion.json').read_text())
                 refs=PA.clock_refs(lib,ins,'tt')
                 assert refs,'Missing native compensated clock reference: '+key
                 timing[key]=dict(pins=PA.pin_metrics(lib,refs),R=max(v['rise']for v in refs.values()),spread=max(v['bmax']-v['bmin']for v in refs.values()))
-        global_result=global_stages(insts,chosen,{k:lef(paths[k])for k in ('tstage','sstage','score')},ectl_leafs,args.widen54,timing,args.n3,args.head_limit)
+        global_result=global_stages(insts,chosen,{k:lef(paths[k])for k in (('tstage','sstage','score','chunk')if chunk_homes else ('tstage','sstage','score'))},ectl_leafs,args.widen54,timing,args.n3,args.head_limit,chunk_homes)
         global_result['stage2_native_timing']=None
         if timing:
             pairs=front_connections(lef(paths['front'])[1],tstage[1],chosen,'MX')
@@ -673,14 +719,19 @@ def main():
                 if profile['spread']>80: defects.append(dict(kind='clock_spread',ps=profile['spread']))
                 if defects:global_result['native_view_defects'][key]=defects
         global_result['native_per_bit_timing']=bool(timing)
-        global_result['composition_obligation']='N3requires actual flat90-child RTL integration, full-shape bitexact bench plus failing latency/lt/score mutants, static compiler+1cycle and measured layerprice; these are NOT established by necessary geometry/timing' if args.n3 else 'Existing N2staged RTL and component proof; die placement/clock/allincident proof remains separate'
+        global_result['composition_obligation']='N3requires actual flat92-child ABC or90-child full-wordT0 RTL integration, full-shape bitexact bench plus failing latency/lt/score mutants, static compiler+1cycle and measured layerprice; these are NOT established by necessary geometry/timing' if args.n3 else 'Existing N2staged RTL and component proof; die placement/clock/allincident proof remains separate'
         global_result['timing_rule']='min(500um,(833.334ps-60ps-skew-launch-capture)/0.76ps_per_um), skew90samelevel/150crosslevel, actual TT pin metrics at phi-R' if timing else 'GEOMETRY_ONLY_500UM'
         global_result['native_timing_source_sha256']={}
         if timing:
-            for key,path in {**{k:paths[k]for k in ('tstage','sstage','score','front')},**ectl_paths}.items():
+            for key,path in {**{k:paths[k]for k in ('tstage','sstage','score','front')},**ectl_paths,**({'chunk':paths['chunk']}if chunk_homes else {})}.items():
                 for source in (path.with_name('insertion.json'),path.with_name(path.stem+'_tt.lib')):
                     if not source.exists():source=Path(str(source)+'.gz')
-                    global_result['native_timing_source_sha256'][str(source.relative_to(ROOT))]=hashlib.sha256(source.read_bytes()).hexdigest()
+                    global_result['native_timing_source_sha256'][str(source.relative_to(ROOT)) if source.is_relative_to(ROOT) else str(source)]=hashlib.sha256(source.read_bytes()).hexdigest()
+        if chunk_homes:
+            global_result['abc_request_sha256']=hashlib.sha256(args.abc_request.read_bytes()).hexdigest()
+            global_result['chunk_lef_sha256']=hashlib.sha256(paths['chunk'].read_bytes()).hexdigest()
+            global_result['placed_producer_captures']=sum(x['admitted']for r in global_result['results']for x in r['producer_capture'])
+            global_result['adopted']=False
         global_result['world_proposal']=proposal
         global_result['necessary_routing_capacity']=capacity_cuts()if args.widen54 else None
         global_result['die_grant_source']=str(args.insts)

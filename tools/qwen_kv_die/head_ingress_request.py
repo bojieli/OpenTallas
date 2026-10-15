@@ -22,25 +22,37 @@ def signal(role,bit,h):
         if bit<12:return f't{pair}_cl[{bit+4}]'
         if bit<524:return f't{pair}_row[{bit-12}]'
         return f't{pair}_cl[{bit-524}]'
-    return f't{pair}_q[{bit}]'if bit<519 else f'e{h}[{bit-519}]'
+    if bit<512:return f't{pair}_q[{bit+7}]'
+    if bit<518:return f't{pair}_q[{bit-511}]'
+    if bit==518:return f't{pair}_q[0]'
+    return f'e{h}[{bit-519}]'
 
-def main():
-    ap=argparse.ArgumentParser(description=__doc__)
-    ap.add_argument('--create-bands',action='store_true',help='Source-bound proposal: grow each ECTL intakegap59.4um/side and recenter four-row connected engine groups; relays require regeneration')
-    ap.add_argument('--insts',type=Path,required=True);ap.add_argument('--out',type=Path,required=True);a=ap.parse_args()
-    insts=json.loads(a.insts.read_text())
-    original=json.loads(a.insts.read_text());band_changes=[]
-    if a.create_bands:
-        for i in insts:
-            old=dict(i);name=i['name']
-            if i['master']in('qkd_rhead','qkd_ectl'):
-                parts=name.split('_');e=int(parts[2]);shift=(e%4)*118.8-237.6
-                if i['master']=='qkd_rhead': shift+=118.8 if int(parts[-1])>=2 else 0.
-                else:shift+=59.4
-                i['y']=round(i['y']+shift,6)
-            elif i['master']in('qkd_astk','qkd_astk_n'):
-                i['y']=round(i['y']-237.6,6);i['h']=round(i['h']+475.2,6)
-            if old!=i:band_changes.append(dict(name=name,before=old,after=dict(i)))
+def chunk_source_for_tstage(bit):
+    """Flat T1 input bit0..1574 -> registered ABC output bit, per actual RTL."""
+    if not 0<=bit<1575:raise ValueError('T1 input bit outside1575-bit word')
+    if bit<519:return 'c',bit
+    if bit<531:return 'b',bit-519
+    if bit<1043:return 'a',bit-531
+    if bit<1559:return 'b',bit-1031
+    return 'c',bit-1040
+
+def move_source_bands(insts):
+    """Move connected head/ECTL groups before ANY relay generation."""
+    band_changes=[]
+    for i in insts:
+        old=dict(i);name=i['name']
+        if i['master']in('qkd_rhead','qkd_ectl'):
+            parts=name.split('_');e=int(parts[2]);shift=(e%4)*118.8-237.6
+            if i['master']=='qkd_rhead': shift+=118.8 if int(parts[-1])>=2 else 0.
+            else:shift+=59.4
+            i['y']=round(i['y']+shift,6)
+        elif i['master']in('qkd_astk','qkd_astk_n'):
+            i['y']=round(i['y']-237.6,6);i['h']=round(i['h']+475.2,6)
+        if old!=i:band_changes.append(dict(name=name,before=old,after=dict(i)))
+    return band_changes
+
+def capture_homes(insts):
+    """Exact source-derived homes; proposed pins, never a physical view grant."""
     by={i['name']:i for i in insts};paths=sources();leaves={c:H.lef(p)for c,p in paths.items()}
     pins={}
     for i in range(535):
@@ -82,6 +94,16 @@ def main():
             homes.append(dict(name=head['name']+'/u_ingress/u_'+role,master='qkh_head_chunk_stage',parameters=dict(W=535),xy=[wx,wy],size_um=[129.6,21.6],orient=orient,origin_grid_shift_um=[round(wx-oldxy[0],6),round(wy-oldxy[1],6)],pin_track_lattice='M5x/M4y=.012+.048k checked for mirrored placement',producer=ectl['name']+'/'+role,payload_bits=n,explicit_zero_pad_bits=535-n,producer_to_capture=w,existing_frame_blockers=blockers,clock='independent native phi-R; missing new view, must not inherit old insertion',requested=True,adopted=False))
             all_worst.append(w['um'])
     assert len(homes)==384
+    return paths,pins,homes,all_worst
+
+def main():
+    ap=argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('--create-bands',action='store_true',help='Source-bound proposal: grow each ECTL intakegap59.4um/side and recenter four-row connected engine groups; relays require regeneration')
+    ap.add_argument('--insts',type=Path,required=True);ap.add_argument('--out',type=Path,required=True);a=ap.parse_args()
+    insts=json.loads(a.insts.read_text())
+    original=json.loads(a.insts.read_text());band_changes=[]
+    if a.create_bands:band_changes=move_source_bands(insts)
+    paths,pins,homes,all_worst=capture_homes(insts)
     rec=dict(schema='opentallas.qwen-head-abc-request.v1',qualified=False,adopted=False,master='qkh_head_chunk_stage',parameters=dict(W=535),instances=384,proposed_physical_FF=384*535,payload_FF=128*1575,padding_FF=3840,outline_um=[129.6,21.6],pins=pins,homes=homes,source_sha256={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest()for p in paths.values()},insts_sha256=hashlib.sha256(a.insts.read_bytes()).hexdigest(),max_actual_producer_to_candidate_pin_um=max(all_worst),timing_qualified=False,missing=['actual child route+TT/FF/DRC/native audit+insertion','generator band grants and displacement of named blockers','all chunk-to-T1 actual matched-bit native reach','all128 N3 source binding, clock roots and complete incident cuts','ECTL HXK/HXN/calendar+1 and real8192bit ECTL-head composition+mutants', 'static compiler+1 layer cycle and measured end-to-end cost'],fixed_cycles=dict(ABC_capture=1,T1=1,T2=1,score_return=1,increment_vs_N2=1),track_model=dict(underlying_M5_pitch_um=.048,pin_spacing_um=.192,gross_two_track_fraction=535*.096/129.6,local_two_track_fraction=535*.096/(535*.192),PG_and_OBS_audit='REQUIRED; gross counts do not establish routing'),band_request='Two21.6um capture rows with5.4um gaps on EACH ECTL producer face, total54um per side. Current head/relay blockers are explicitly retained; actual generator must grant/rehome them.')
     if a.create_bands:
         body=[i for i in insts if not i['master'].startswith('qkd_rly')]
