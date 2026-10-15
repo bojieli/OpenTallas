@@ -26,7 +26,7 @@
   ],
   "payload_flop_storage_bits": 19581,
   "physical_qualified": false,
-  "parent_proof": "BUILD_PENDING session69774/unit1681032-1792058911",
+  "parent_proof": "TERMINAL PASSactualproductionwrapper24production6FDIphases+6unit+unsafe-calendarnegative",
   "cases": [
     {
       "modes": [
@@ -85,5 +85,7 @@
       ],
       "compiled_span": 1556
     }
-  ]
+  ],
+  "clock_roots": 108,
+  "evidence": "results/rtl/qwen_coll_io_1014/production_six_five_1015"
 }
