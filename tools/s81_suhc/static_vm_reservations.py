@@ -51,7 +51,7 @@ def check(schedule: dict, contract: dict) -> dict:
         invalid = ['invalid_numeric_contract']
     try:
         bank_of(0, contract)
-    except ValueError:
+    except (ValueError, TypeError, ZeroDivisionError):
         invalid.append('bank_mapping')
     if invalid:
         return dict(status='fail', violations=[dict(kind='invalid_contract', fields=invalid)], qualified=False, events=0)
