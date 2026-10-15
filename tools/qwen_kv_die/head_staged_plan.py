@@ -49,6 +49,9 @@ def xf(points, xy=(0., 0.), size=(0., 0.), orient='R0'):
 
 def coefficients(pairs):
     # For translation t of source, worst Manhattan = max_s(s.t + k_s).
+    if len({len(p[1])for p in pairs})==1 and len({len(p[2])for p in pairs})==1:
+        a=np.array([p[1]for p in pairs]);b=np.array([p[2]for p in pairs])
+        return np.max(np.max(a@SIGNS.T,axis=1)-np.min(b@SIGNS.T,axis=1),axis=0)
     return np.array([max(max(sx*x+sy*y for x, y in a)
                          - min(sx*x+sy*y for x, y in b)
                          for _, a, b in pairs) for sx, sy in SIGNS])
@@ -259,10 +262,109 @@ def repack_fronts(plan,leafs,inside_stage=False):
     return result
 
 
+def global_stages(insts,repacked,leafs,ectl_leafs):
+    """Actual A/B/C->per-head T1->T2 and score->S1->C; conservative other frames."""
+    index={i['name']:i for i in insts};obstacles=[];byname={}
+    def child_world(parent,box,orient='R0'):
+        fx,fy=FLIPS[parent['orient']];lx,ly=FLIPS[orient]
+        x=parent['x']+(parent['w']-box[0]-box[2]if fx else box[0])
+        y=parent['y']+(parent['h']-box[1]-box[3]if fy else box[1])
+        o=next(o for o,v in FLIPS.items()if v==(fx!=lx,fy!=ly))
+        return [x,y,*box[2:]],o
+    for instance in insts:
+        n=instance['name'];m=instance['master']
+        if m=='qkd_rhead':
+            for child,box in repacked['children'].items():
+                r,o=child_world(instance,box,repacked['child_orientations'][child])
+                byname[n+'/'+child]=(r,o);obstacles.append((n+'/'+child,r))
+        elif m=='qkd_ectl':
+            for c,x in [('a',0.),('b',254.88),('c',509.76)]:
+                r,o=child_world(instance,[x,0.,*ectl_leafs[c][0]])
+                byname[n+'/'+c]=(r,o);obstacles.append((n+'/'+c,r))
+        else:obstacles.append((n,[instance[k]for k in ('x','y','w','h')]))
+    def points(n,leaf,pin):
+        box,o=byname[n];return xf(leaf[1][pin],box[:2],box[2:],o)
+    def solve_site(pairs_for_orient,size,margin=0.):
+        best=None;blocked_best=None;counts=dict(reach_origins=0,free_origins=0);lower=[]
+        for orient in FLIPS:
+            pairs=pairs_for_orient(orient);k=coefficients(pairs);cap=LIMIT-margin
+            lp=linprog([0,0,1],A_ub=np.column_stack((SIGNS,-np.ones(4))),b_ub=-k,
+                       bounds=[(None,None),(None,None),(0,None)],method='highs')
+            assert lp.success;lower.append(dict(orient=orient,um=float(lp.fun),xy=lp.x[:2].tolist()))
+            # Signs order --,-+,+-,++. Intersect four exact signed half planes.
+            ps=(k[0]-cap,cap-k[3]);ms=(k[1]-cap,cap-k[2])
+            if ps[0]>ps[1]or ms[0]>ms[1]:continue
+            xmin,xmax=(ps[0]+ms[0])/2,(ps[1]+ms[1])/2
+            ymin,ymax=(ps[0]-ms[1])/2,(ps[1]-ms[0])/2
+            xy=np.array([(round(ix*PITCH,6),round(iy*PITCH,6))
+                         for ix in range(math.ceil(xmin/PITCH),math.floor(xmax/PITCH)+1)
+                         for iy in range(math.ceil(ymin/PITCH),math.floor(ymax/PITCH)+1)]).reshape((-1,2))
+            if not len(xy):continue
+            distance=np.max(xy@SIGNS.T+k,axis=1);keep=distance<=cap+1e-6
+            xy=xy[keep];distance=distance[keep];counts['reach_origins']+=len(xy)
+            free=np.ones(len(xy),dtype=bool);penalty=np.zeros(len(xy));local_obstacles=[]
+            w,h=size
+            for oname,r in obstacles:
+                if r[0]>xmax+w+CLEAR or r[0]+r[2]+CLEAR<xmin or r[1]>ymax+h+CLEAR or r[1]+r[3]+CLEAR<ymin:continue
+                clean=((xy[:,0]+w+CLEAR<=r[0]+1e-6)|(r[0]+r[2]+CLEAR<=xy[:,0]+1e-6)|
+                       (xy[:,1]+h+CLEAR<=r[1]+1e-6)|(r[1]+r[3]+CLEAR<=xy[:,1]+1e-6))
+                free &= clean
+                weight=r[2]*r[3]
+                if '/'not in oname or oname.endswith(('/u_t2','/u_t1','/u_s1')):weight+=1e8
+                penalty+=np.where(clean,0.,weight);local_obstacles.append((oname,r))
+            good=np.flatnonzero(free);counts['free_origins']+=len(good)
+            if len(good):
+                i=good[np.argmin(distance[good])]
+                if best is None or distance[i]<best['worst']['um']:
+                    best=dict(xy=xy[i].tolist(),size_um=size,orient=orient,worst=witness(pairs,xy[i]))
+            if len(xy):
+                i=int(np.argmin(penalty+distance*.01))
+                if blocked_best is None or penalty[i]<blocked_best['blocked_area_cost_um2']:
+                    blocked_best=dict(xy=xy[i].tolist(),orient=orient,size_um=size,
+                                      worst=witness(pairs,xy[i]),blocked_area_cost_um2=float(penalty[i]),
+                                      blockers=[dict(name=n,box=r)for n,r in local_obstacles if overlap((*xy[i],w,h),r)])
+        return dict(site=best,counts=counts,unobstructed_continuous_best=min(lower,key=lambda r:r['um']),
+                    minimally_blocked_actual_site=blocked_best)
+    results=[]
+    for head in (i for i in insts if i['master']=='qkd_rhead'):
+        hname=head['name'];parts=hname.split('_');h=int(parts[-1]);group='ectl_'+'_'.join(parts[1:-1]);pair=h//2
+        origins=[]
+        for bit in range(1559):
+            if bit<512:c,p='c',f't{pair}_q[{bit+7}]'
+            elif bit<518:c,p='c',f't{pair}_q[{bit-511}]'
+            elif bit==518:c,p='c',f't{pair}_q[0]'
+            elif bit<531:c,p='b',f't{pair}_cl[{bit-515}]'
+            elif bit<1043:c,p='a',f't{pair}_row[{bit-531}]'
+            elif bit<1555:c,p='b',f't{pair}_row[{bit-1043}]'
+            else:c,p='b',f't{pair}_cl[{bit-1555}]'
+            origins.append((f'ti_a[{bit}]',points(group+'/'+c,ectl_leafs[c],p)))
+        origins +=[(f'e_a[{bit}]',points(group+'/c',ectl_leafs['c'],f'e{h}[{bit}]'))for bit in range(16)]
+        targets=[(p,points(hname+'/u_t2',leafs['tstage'],p.replace('_b[','_a[')))
+                 for p in leafs['tstage'][1]if p.startswith(('ti_b[','e_b['))]
+        def t_pairs(o):
+            return [(f'ECTL->{pin}',xf(leafs['tstage'][1][pin],size=leafs['tstage'][0],orient=o),pts)for pin,pts in origins]+[
+                (f'{pin}->T2',xf(leafs['tstage'][1][pin],size=leafs['tstage'][0],orient=o),pts)for pin,pts in targets]
+        t=solve_site(t_pairs,leafs['tstage'][0]);
+        if t['site']:obstacles.append((hname+'/u_t1',[*t['site']['xy'],*t['site']['size_um']]))
+        score_inputs=[('s_a[0]','gf_o'),('s_a[1]','sf_o')]+[(f's_a[{i+2}]',f'sc_o[{i}]')for i in range(32)]
+        score_outputs=[('s_b[0]',33),('s_b[1]',32)]+[(f's_b[{i+2}]',i)for i in range(32)]
+        def s_pairs(o):
+            return [(f'score.{p}->S1.{s}',xf(leafs['sstage'][1][s],size=leafs['sstage'][0],orient=o),points(hname+'/score',leafs['score'],p))for s,p in score_inputs]+[
+                (f'S1.{s}->C.s{h}[{i}]',xf(leafs['sstage'][1][s],size=leafs['sstage'][0],orient=o),points(group+'/c',ectl_leafs['c'],f's{h}[{i}]'))for s,i in score_outputs]
+        s=solve_site(s_pairs,leafs['sstage'][0])
+        if s['site']:obstacles.append((hname+'/u_s1',[*s['site']['xy'],*s['site']['size_um']]))
+        results.append(dict(head=hname,ectl=group,tstage1=t,sstage1=s))
+    return dict(qualified=False,scope='All128 actual87-child head repacks and all32 actualECTLA/B/C leaves; other current die instances retained as conservative solid obstacles. Full pin rectangles and source-exact field permutations, no transparent fanout copies.',
+                placement_origin_pitch_um=PITCH,clearance_um=CLEAR,results=results,
+                placed_tstage1=sum(bool(r['tstage1']['site'])for r in results),placed_sstage1=sum(bool(r['sstage1']['site'])for r in results),
+                next='If a leaf has zero reach origins, change source/target geometry. If reach origins exist but none free, grant/rehome the connected cluster. Do not admit missing leaf placements.')
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--insts', type=Path, help='Actual unexpanded current die insts.json for128-copy projection')
+    ap.add_argument('--global-stages',action='store_true',help='Solve actual T1/S1 in the current whole-die grant; requires --insts')
     args = ap.parse_args()
     prefix = ROOT/'physical/ref_tile'
     paths = dict(plan=ROOT/'results/arch/qwen_split_1014/head_native_r4_codex_1014/plan.json',
@@ -376,6 +478,15 @@ def main():
     args.out.mkdir(parents=True,exist_ok=True)
     (args.out/'plan.json').write_text(json.dumps(record,indent=2)+'\n')
     if projected:(args.out/'stage2_die_placements.json').write_text(json.dumps(projected,indent=2)+'\n')
+    if args.global_stages:
+        assert args.insts and repacked_inside['admitted']
+        ectl_paths={c:prefix/f'qkd_ectl_{c}_tp8_direct/views/qkd_ectl_{c}_tp8_direct/qkd_ectl_{c}_tp8_direct.lef'for c in 'abc'}
+        ectl_paths['a']=prefix/'qkd_ectl_a_tp8_direct/views/qkd_ectl_a_tp8_epoch_direct/qkd_ectl_a_tp8_epoch_direct.lef'
+        ectl_leafs={c:lef(p)for c,p in ectl_paths.items()}
+        global_result=global_stages(insts,repacked_inside,{k:lef(paths[k])for k in ('tstage','sstage','score')},ectl_leafs)
+        global_result['source_sha256']={c:hashlib.sha256(p.read_bytes()).hexdigest()for c,p in ectl_paths.items()}
+        (args.out/'global_stages.json').write_text(json.dumps(global_result,indent=2)+'\n')
+        print(json.dumps({k:global_result[k]for k in ('placed_tstage1','placed_sstage1')}))
     print(json.dumps({k:{x:v[x] for x in ('origins','free_origins','reach_pass_origins','admitted','best_free','best_reach_only')} for k,v in alternatives.items()},indent=2))
 
 
