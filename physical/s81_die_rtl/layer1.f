@@ -20,6 +20,9 @@ physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v
 # WFC stage kit: the hardened cluster of the PRICED kit (dsfd_wfc_stg_cl) under the die master name, with the hop
 # endpoint (engine 7)
 +define+DSFD_WFC_STG_CL_DIE
+# STATIC die form (S-VM F7 2026-10-15): no t_lir / f_lor grant pins; static RX / TX message buffers, TX on the
+# compiler's reserved edges (last RX arrival + TX_OFF); gate tools/dsrom_wfc_static_bench.py
++define+DSFD_WFC_STG_STATIC
 rtl/dsrom_sys/mtp/dsfd_wfc_stg_cl.sv
 +libdir+physical/s81_ph_views/mtp/macros
 # BF pair (x512): the CLOSED compact199 views under their die names (tools/s81/gen_bf_die_wrappers.py: die bit i = the

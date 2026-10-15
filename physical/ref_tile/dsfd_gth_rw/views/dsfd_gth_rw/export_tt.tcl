@@ -9,12 +9,12 @@ read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SE
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
 read_liberty /mv0/ot_sram_1r1w_128x66_m1_r2c2_tt.lib
 read_liberty /mv1/ot_sram_1r1w_256x34_m2_r2c2_tt.lib
-read_db /work/results/asap7/opentallas_dsfd_gth_rw_asap7_ref_dsfd_gth_rw_v19_g8_996350cb8/base/6_final.odb
+read_db /work/results/asap7/opentallas_dsfd_gth_rw_asap7_ref_dsfd_gth_rw_pin_repair_1015_pinrepair1_e74771a9c/base/6_final.odb
 set ::ot_ce_corner ss
-read_sdc /work/results/asap7/opentallas_dsfd_gth_rw_asap7_ref_dsfd_gth_rw_v19_g8_996350cb8/base/6_final.sdc
-read_spef /work/results/asap7/opentallas_dsfd_gth_rw_asap7_ref_dsfd_gth_rw_v19_g8_996350cb8/base/6_final.spef
+read_sdc /work/results/asap7/opentallas_dsfd_gth_rw_asap7_ref_dsfd_gth_rw_pin_repair_1015_pinrepair1_e74771a9c/base/6_final.sdc
+read_spef /work/results/asap7/opentallas_dsfd_gth_rw_asap7_ref_dsfd_gth_rw_pin_repair_1015_pinrepair1_e74771a9c/base/6_final.spef
 set_propagated_clock [all_clocks]
-read_sdc /src/physical/ref_tile/dsfd_gth_rw_v19/signoff.sdc
+read_sdc /src/physical/ref_tile/dsfd_gth_rw_pin_repair_1015/signoff.sdc
 read_sdc /src/physical/common_flow/io_ref_routed.sdc
 read_sdc /meas/app0_io_ref_routed.sdc
 puts "OT_WS max [sta::worst_slack_cmd max] min [sta::worst_slack_cmd min]"

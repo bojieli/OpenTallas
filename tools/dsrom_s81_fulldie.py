@@ -4354,6 +4354,8 @@ def build_r8(variant=None):
         for home in CANONICAL_LAYOUT['hcp_homes']:
             xx, yy = home['at_um']; oo = home['outline']
             RSV_RECTS.append((xx, yy, xx + oo['w'], yy + oo['h'], 'canonical_hcp_home'))
+    if PIN_OVERRIDES:
+        variant['pin_overrides'] = PIN_OVERRIDES['record']
     if MIX4_SLOT:
         xx, yy, ww, hh = MIX4_SLOT
         RSV_RECTS.append((xx, yy, xx + ww, yy + hh, 'mix4_home'))
@@ -5249,6 +5251,58 @@ STATIC_HC_TAG = ('collective', 'hc_s', 32, 't_hc_tag', 'y_tag')
 STATIC_COLLECTIVE_MASTER = 'dsfd_sp_collective_static_c'
 STATIC_COLLECTIVE_RTL = 'rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv'
 STATIC_COLLECTIVE = False       # --static-collective: swap the hub collective master (RTL must be on the source tree)
+PIN_OVERRIDES = None            # --pin-overrides (S-DIE r11 10-15): adopted GEO-S face re-assignments, see load_pin_overrides
+PIN_OVERRIDES_APPLIED = {}
+
+
+def load_pin_overrides(path):
+    """{'by_inst': {inst: {port: rule}}, 'by_master': {...}, 'record': ...}; rule = {'shift_um': d} along the port's
+    face, or {'face': F, 'coord_um': c} absolute.  Only candidates with adopted=true enter; every entry names its source."""
+    p = Path(path)
+    p = p if p.is_absolute() else ROOT / p
+    d = json.loads(p.read_text())
+    assert d.get('schema') == 'opentallas.s81.pin_overrides.v1', path
+    out = dict(by_inst={}, by_master={}, record=dict(path=str(path), adopted=[], not_adopted=[]))
+    for c in d['candidates']:
+        (out['record']['adopted'] if c.get('adopted') else out['record']['not_adopted']).append(c['id'])
+        if not c.get('adopted'):
+            continue
+        for e in c['pins']:
+            key, nm = ('by_inst', e['inst']) if 'inst' in e else ('by_master', e['master'])
+            rule = {k: e[k] for k in ('shift_um', 'face', 'coord_um') if k in e}
+            assert rule, e
+            prev = out[key].setdefault(nm, {}).get(e['port'])
+            assert prev is None or prev == rule, ('conflicting pin overrides', nm, e['port'], prev, rule, c['id'])
+            out[key][nm][e['port']] = dict(rule, cand=c['id'])
+    return out
+
+
+def _apply_pin_overrides(Mx, it):
+    """--pin-overrides on one generated master (first instance `it`): shift / place the named ports' face centres."""
+    if not PIN_OVERRIDES:
+        return
+    rules = dict(PIN_OVERRIDES['by_master'].get(Mx.name, {}))
+    rules.update(PIN_OVERRIDES['by_inst'].get(it.name, {}))
+    rec_ = _assigned_record(Mx.name)
+    for port, r in rules.items():
+        assert not (rec_ and port in rec_.get('ports', {})), ('pin override on a die-owned assigned pin: change the pin '
+                                                              'file instead', Mx.name, port, r['cand'])
+        sp_ = Mx.ports.get(port)
+        assert sp_ is not None and sp_[0] == 'face', ('pin override on a port without a generated face pin', Mx.name, port)
+        _, bits, f, ly, c, pt = sp_
+        if 'coord_um' in r:
+            f2 = r.get('face', f)
+            c2 = r['coord_um']
+            ly = ('M5' if f2 in 'NS' else 'M4') if f2 != f else ly
+        else:
+            f2, c2 = f, c + r['shift_um']
+        L = Mx.w if f2 in 'NS' else Mx.h
+        half = max(1, math.ceil(bits / _LAY_K[0])) * _LAY_K[0] * 0.048 * pt / 2
+        assert half <= c2 <= L - half, ('pin override leaves the face', Mx.name, port, f2, round(c2, 3), round(L, 3), r['cand'])
+        Mx.ports[port] = ('face', bits, f2, ly, c2, pt)
+        PIN_OVERRIDES_APPLIED[(Mx.name, port)] = dict(inst=it.name, cand=r['cand'], face=f2, old=round(c, 3), new=round(c2, 3))
+
+
 MIX4_SLOT = None                # --mix4-slot X,Y,W,H: Engram MIX4 home reservation (screen; real master pins pending sizing)
 RTL_BIND = False                # --rtl-bind (s81-die-rtl-bind 2026-10-14)
 # S-BIND 2026-10-15: with --static-collective the rest of the static collective's die ABI is bound too: per-leaf clock
@@ -7073,6 +7127,21 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
                     m.setdefault('south_su_bypass_chains', []).append(name)
                 detour.append(b_)
             path = detour
+        if MIX4_SLOT:
+            # S-DIE r11 10-15: the MIX4 home sits in the VCH south of the VM (x 15714, 771 wide); a vertical VCH lane
+            # through it (GEN17: only the d5_bk_selector ctrl lane at x 16102) steps east of the home for its length
+            mx0, my0, mw, mh = MIX4_SLOT
+            clr = max(stn_dims([lw], True) + stn_dims([lw], False)) + 17.28
+            nb_ = len(m.setdefault('mix4_bypass_chains', []))
+            xb = mx0 + mw + clr + 21.6 * (nb_ % 4)
+            out_ = [path[0]]
+            for a_, b_ in zip(path, path[1:]):
+                if (abs(a_[0] - b_[0]) < 1e-6 and mx0 - clr < a_[0] < mx0 + mw + clr
+                        and min(a_[1], b_[1]) < my0 + mh + clr and max(a_[1], b_[1]) > my0 - clr):
+                    out_ += [(xb, a_[1]), (xb, b_[1])]
+                    m['mix4_bypass_chains'].append(name)
+                out_.append(b_)
+            path = out_
         narrow_service = CANONICAL_LAYOUT and (canonical_access is not None or re.fullmatch(r'(q|a|ix|co)[NS][WE]',name))
         if narrow_service:
             from s81.canonical_layout import service_path
@@ -7735,6 +7804,11 @@ ALIGN_EXT = [True]             # r8: align-jogs extensions (aligned runs, partia
                                # r8b screen applied them in the hop-plan passes too, so the plan saw a spread / shifted chain
                                # the final build did not reproduce (tf2 d8: 3,056 b at 799 um, 11,377 bits over 500)
 ALIGN_STN_REACH_UM = 450.0     # r7: a station->station hop moved by --align-jogs stays <= 450 um a bit (hop gate 500)
+ALIGN_HARD_SHORT_UM = 100.0    # r11 10-15: a pure normal retreat of a station off a hard face may lengthen that short hop by the
+                               # retreat only while every bit stays <= 100 um (below the smallest die pair reach, cc 215 um).
+                               # GEN17: f_crE2_E0_hub_20 -> hr_E2 (2.9-um gap, 28.3-um jog, cut 0.77) and crW0_W0
+                               # edge43_3 -> edge46_1 (abutted, 19.4-um jog) need only a 0.9-4 um wider channel, but every
+                               # retreat candidate carried a tangent move that lengthened a lane jogging the other way.
 
 
 def align_station_jogs(m, rounds=2):
@@ -7785,7 +7859,7 @@ def align_station_jogs(m, rounds=2):
             out.append(None if q is None else PA.place(it, w, h, q))
         return out
 
-    def worsens_hop(it, nx, ny, group=None):
+    def worsens_hop(it, nx, ny, group=None, hard_allow=0.0):
         """True when moving `it` to (nx, ny) is not safe for one of its connected data hops.  A hop may not get longer,
         EXCEPT a station-to-station hop (both ends generated stations, registered at both ends): it may lengthen up to
         ALIGN_STN_REACH_UM per bit provided the re-judged bundle is not a pin_align FAIL (r7 10-14: the never-lengthen
@@ -7814,6 +7888,11 @@ def align_station_jogs(m, rounds=2):
                 if all(l1 <= l0 + 1e-6 for l0, l1 in zip(L0, L1)):
                     continue
                 if by[an].kind not in STATION_KINDS or by[bn].kind not in STATION_KINDS:
+                    if hard_allow > 0 and max(L1) <= ALIGN_HARD_SHORT_UM and all(
+                            l1 <= l0 + hard_allow + 1e-6 for l0, l1 in zip(L0, L1)):
+                        if PA.bundle(A1, B1)['verdict'] == 'FAIL' and other != hard_tgt[0]:
+                            return 'other_hop_fail:' + other
+                        continue
                     return 'lengthens_hard_end:' + other  # pair limits of hard ends may be below 500: never lengthen
                 if max(L1) > ALIGN_STN_REACH_UM:
                     return 'reach:%s:%.1f' % (other, max(L1))
@@ -7844,7 +7923,9 @@ def align_station_jogs(m, rounds=2):
                 todo.append(o_)
         return run
 
-    def try_move(members, dx, dy):
+    hard_tgt = ['']
+
+    def try_move(members, dx, dy, hard_allow=0.0):
         """members {name: inst} moved rigidly by (dx, dy) (snapped): '' on success, else the refusal reason"""
         boxes = {}
         for n_, it_ in members.items():
@@ -7855,7 +7936,7 @@ def align_station_jogs(m, rounds=2):
                 return 'outside:' + n_
         for n_, it_ in members.items():
             grp = {k_: v_ for k_, v_ in members.items() if k_ != n_}
-            why = worsens_hop(it_, boxes[n_][0], boxes[n_][1], grp)
+            why = worsens_hop(it_, boxes[n_][0], boxes[n_][1], grp, hard_allow)
             if why:
                 return why
         for o in m['insts']:
@@ -7900,12 +7981,15 @@ def align_station_jogs(m, rounds=2):
             tgt = [h_ for h_ in incident.get(r['drv'], []) if h_[0][0] == r['drv'] and h_[1][0] == r['load']]
 
             def tgt_ok():
-                """the flagged bundle itself, re-judged at the current positions: not a FAIL"""
-                if len(tgt) != 1:
+                """the flagged bundle and every other lane bundle between the same two instances (r11: a multi-lane
+                station carries one bus per lane, e.g. crE2_E0 de0/de3/de4/de5), re-judged here: none a FAIL"""
+                if not tgt:
                     return False
-                (an, ap), (bn, bp), bits = tgt[0]
-                A_, B_ = pts(by[an], ap, bits), pts(by[bn], bp, bits)
-                return not any(q is None for q in A_ + B_) and PA.bundle(A_, B_)['verdict'] != 'FAIL'
+                for (an, ap), (bn, bp), bits in tgt:
+                    A_, B_ = pts(by[an], ap, bits), pts(by[bn], bp, bits)
+                    if any(q is None for q in A_ + B_) or PA.bundle(A_, B_)['verdict'] == 'FAIL':
+                        return False
+                return True
             ok_ = False
             # r8: the full jog first, then partial moves: a FAIL needs only jog_cut <= 0.6, i.e. the jog shortened
             # until its crossing wires fit the channel (jog10 d10: 2,100 b, 108 um in 86.7 um; <= ~78 um suffices)
@@ -7935,7 +8019,7 @@ def align_station_jogs(m, rounds=2):
             # may stay unchanged even though the normal gap grows. try_move
             # preserves EVERY hard-ended bit length, station reach and legality;
             # tgt_ok rechecks the actual per-bit channel cut (no waiver).
-            if why_ and ALIGN_EXT[0] and len(tgt) == 1:
+            if why_ and ALIGN_EXT[0] and tgt:
                 normal = 1 - ax
                 for members, sg in cands:
                     if len(members) != 1:
@@ -7944,15 +8028,21 @@ def align_station_jogs(m, rounds=2):
                     # Driver moves away from the load; load moves away from
                     # the driver. Opposing straight faces give this sign.
                     away = (-1.0 if fa in 'EN' else 1.0) * sg
+                    other_end = r['load'] if nm == r['drv'] else r['drv']
                     for nstep in range(1, 21):
                         retreat = nstep * (GX if normal == 0 else GY)
-                        for tangent in (retreat, 2 * retreat, 0.5 * retreat):
+                        # r11: the pure retreat first (tangent 0): it only widens the channel; the flagged hop may
+                        # lengthen by the retreat (+ one grid of snap) while short (ALIGN_HARD_SHORT_UM).
+                        for tangent in (0.0, retreat, 2 * retreat, 0.5 * retreat):
                             delta = [0.0, 0.0]
                             delta[normal] = away * retreat
                             delta[ax] = sg * math.copysign(tangent, d)
                             snap = {n_: (i_.x, i_.y) for n_, i_ in members.items()}
                             mv0 = dict(moved)
-                            w_ = try_move(members, *delta)
+                            hard_tgt[0] = other_end if tangent == 0.0 else ''
+                            w_ = try_move(members, *delta, hard_allow=(retreat + (GX if normal == 0 else GY))
+                                          if tangent == 0.0 else 0.0)
+                            hard_tgt[0] = ''
                             if not w_ and tgt_ok():
                                 ok_ = True
                                 why_ = []
@@ -8360,6 +8450,7 @@ def masters_r8(m, k=1):
         Mx = Q.Master(mst, it.w, it.h, 3 if is_glue(mst) or mst in CFG7_MASTERS else 7, f'r8 {it.kind}')
         M[mst] = Mx
         _faces_r8(m, Mx, it, ports)
+        _apply_pin_overrides(Mx, it)
         if k == 1:
             _assigned_physical_pins(Mx, ports)
         if PEER_PIN_POS and it.kind in PEER_PIN_KINDS:
@@ -9494,6 +9585,9 @@ def die_options(ap):
     ap.add_argument('--static-seams', action='store_true', help='S-DIE r11 2026-10-15: static VM<->collective seam (t_vm 2204, t_crq 15, t_crs 513), drop vm.t_collective/tcs credit and hc_s.y_rdy, add collective.t_hc_tag -> hc_s.y_tag')
     ap.add_argument('--static-collective', action='store_true', help='swap the hub collective to dsfd_sp_collective_static_c (needs its RTL in the tree)')
     ap.add_argument('--mix4-slot', help='X,Y,W,H um: Engram MIX4 home reservation (screen)')
+    ap.add_argument('--pin-overrides', help='S-DIE r11: JSON (opentallas.s81.pin_overrides.v1) of adopted die pin re-assignments '
+                    '(GEO-S C1..C7 / D*): per inst or master, port centre shifted along its face (or set absolute); '
+                    'applied to the generated masters before any station search, refused when a pin leaves its face')
     ap.add_argument('--rtl-hub-widths', action='store_true', help='s81die-1011 (die lead decision): W hub column gather -> '
                     'capture -> VM (capture directly above gather) and the hub buses at the RTL widths: gather t_capture 6,947 '
                     '(12 root lanes), capture t_vm 13,376, collective t_vm 2,100, VM -> collective f_vm 592 + ts 3')
@@ -9526,6 +9620,8 @@ def apply_options(a):
     BF_X2_STATIC = bool(getattr(a, 'bf_x2_static', False))
     LSW = X0B + X1B + CCB + (X2B if BF_X2_STATIC else 0)
     MIX4_SLOT = tuple(float(v) for v in a.mix4_slot.split(',')) if getattr(a, 'mix4_slot', None) else None
+    global PIN_OVERRIDES
+    PIN_OVERRIDES = load_pin_overrides(a.pin_overrides) if getattr(a, 'pin_overrides', None) else None
     if STATIC_COLLECTIVE and not STATIC_SEAMS:
         raise ValueError('--static-collective needs --static-seams (its ports are the static seam)')
     CTRL_ADAPTERS = bool(getattr(a, 'ctrl_adapters', False))

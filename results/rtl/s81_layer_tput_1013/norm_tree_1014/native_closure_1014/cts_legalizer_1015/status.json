@@ -1,0 +1,36 @@
+{
+  "owner": "Codex:S-NORM",
+  "source": "a31110236",
+  "serial": "539178932",
+  "state": "diagnostic_terminal_failed_DPL0036",
+  "cause": "Actual post-hold ODB four24um xbins240..336um contain604..632um\u00b2 each vs24x21.6=518.4um\u00b2 capacity,117-122%local raw utilization beforepadding. Global29.1% masks local saturation. x360..576empty. Fixedpin cluster, not globalarea shortage.",
+  "next": "Structural realheightgrowth or pinspread/peer co-design, not legalization tuning. Requested25.92->43.2um with exactpin x kept,new Nface; S-DIE checks actualparentroom. Split localcapture/holdbanks if not feasible.",
+  "diagnostic": {
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-530505-1792052600",
+    "session": 44646,
+    "remote": "/srv/opentallas-scratch/codex/snorm-legalizer-1015",
+    "initial_input": "/srv/opentallas-scratch/claude/ref_gate/s81hc_ctfxnt_ref-20261014-232510",
+    "changed": "Only detailed placement algorithm; all actual FFhold timing repair/constraints kept. Full FFholdMM reinstated for gate replay.",
+    "purpose": "Observation only, never productionfix per owner newmargin directive.",
+    "exit_code": 2,
+    "result": "Classicdiamond also cannotplace actualrepairedcells; fullFFholdbeforelegalization+30ps, confirmscapacityproblem; no alternatelegalizer adopted."
+  },
+  "qualification": "unqualified diagnostic; fullsourceCTS,TT/FF/DRC0,native/reset/phi audit required",
+  "structural_proposal": {
+    "outline_um": [
+      576.72,
+      51.84
+    ],
+    "old_outline_um": [
+      576.72,
+      25.92
+    ],
+    "new_core_height_um": 47.52,
+    "peak_actual_local_density": 0.5545121352413018,
+    "cth_height_delta_um": 25.92,
+    "hc_s_delta_um": 259.2,
+    "hc_t_delta_um": 311.04,
+    "constraints": "Preserve widths,numericcycles,xpinpositions/clock/reset; exactNface shift25.92, localrow allocations regenerate, S-DIE actualparentlayout update required. ActualCTS/routednative remeasurement required. No assumption that densityaloneprovesclosure."
+  }
+}
