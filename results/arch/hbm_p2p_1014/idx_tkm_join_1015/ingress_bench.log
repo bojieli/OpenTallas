@@ -1,0 +1,7 @@
+VM_IDX_INGRESS PASS checks73 actualwidth4x545 fixed2edges_to_downstream_capture
+FATAL: /home/ubuntu/wt/hcoll-static-vmwrite/rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_vm_idx_ingress.sv:16: typed ingress mode/data timing
+       Time: 76000 Scope: tb_hgi_coll_vm_idx_ingress.step
+shared ingress mutant1 rejected
+FATAL: /home/ubuntu/wt/hcoll-static-vmwrite/rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_vm_idx_ingress.sv:29: inactive IDX producer conflict undetected
+       Time: 726000 Scope: tb_hgi_coll_vm_idx_ingress
+shared ingress mutant2 rejected
