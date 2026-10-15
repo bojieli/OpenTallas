@@ -1,0 +1,57 @@
+{
+  "ops": [
+    {
+      "rows": 1,
+      "K": 5120,
+      "fmt": 0,
+      "launch_cycle": 8,
+      "tag": "warm-up (router gate shape)",
+      "load": 1,
+      "groups": 10,
+      "c": 8,
+      "gs": true,
+      "x_base": 0,
+      "base_tag": 0
+    },
+    {
+      "rows": 9,
+      "K": 6144,
+      "fmt": 1,
+      "launch_cycle": 207,
+      "tag": "L0/L1 wq_a-class fp8 K6144 (9 rows)",
+      "load": 1,
+      "groups": 6,
+      "c": 8,
+      "gs": true,
+      "x_base": 0,
+      "base_tag": 0
+    },
+    {
+      "rows": 2,
+      "K": 1280,
+      "fmt": 1,
+      "launch_cycle": 727,
+      "tag": "ratio-2 indexer.wq_b fp8 K1280 (2 rows)",
+      "load": 1,
+      "groups": 2,
+      "c": 8,
+      "gs": true,
+      "x_base": 0,
+      "base_tag": 0
+    },
+    {
+      "rows": 43,
+      "K": 5120,
+      "fmt": 0,
+      "launch_cycle": 863,
+      "tag": "head bf16 K5120 (43 rows)",
+      "load": 1,
+      "groups": 10,
+      "c": 8,
+      "gs": true,
+      "x_base": 0,
+      "base_tag": 0
+    }
+  ],
+  "scope": "immutable priced shapes; no released checkpoint payload"
+}
