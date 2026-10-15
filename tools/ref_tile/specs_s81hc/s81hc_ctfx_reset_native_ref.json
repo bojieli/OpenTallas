@@ -38,7 +38,7 @@
   "job": {
     "owner": "Codex:S81-CTfx-reset-native-0757",
     "branch": "codex/takeover-s81-elements-0757",
-    "tag": "rst3",
+    "tag": "rst3cap1",
     "purpose": "Native reset-only repair for serial HC broadcast: old main view reset capture248.4ps, data launch160.7ps. New async-assert sync3release relay adds2 initialization edges, no token/data edges. Same granted576.72x12.96outline and port faces; adoption requires die alias and fullsource reset calendar.",
     "benches": [
       {
@@ -68,7 +68,8 @@
       "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv",
       "tools/s81_suhc/ctfx_reset_native_proof.py",
       "physical/s81_die_pins/v22_ctfx_reset_native"
-    ]
+    ],
+    "structural_change": "Measured local fixed+movable occupancy119.4% caused GPL divergence. Exact recorded6810 FIRM anchor targets spread2x with legal free-row/site/tap packing, sameports/outline/master/net/clock. Measured legal replay max58.59um, footprint occupancy59.85%; no added datapath cycles."
   },
   "params": {},
   "children": [],
@@ -78,5 +79,6 @@
   "assigned_pins": {
     "file": "physical/s81_die_pins/v22_ctfx_reset_native/ot_s81_hc_ctfx_reset_native.json",
     "case": "exact_current_serial_CTFX_LEF_geometry"
-  }
+  },
+  "anchor_capacity_hook": "physical/ref_tile/s81hc_ctfx_reset_native_ref/anchor_capacity.tcl"
 }

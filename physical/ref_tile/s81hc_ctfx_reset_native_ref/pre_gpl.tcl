@@ -4,3 +4,6 @@
 source /src/physical/common_flow/pin_reg_split.tcl
 source /src/physical/dsrom_window_source/leaf_iohold.tcl
 source /src/physical/qwen_die_masters/io_flop_at_pins.tcl
+
+# Source-bound leaf-local free-capacity repair; see results/physical/s81_ctfx_capacity_1015.
+source /src/physical/ref_tile/s81hc_ctfx_reset_native_ref/anchor_capacity.tcl

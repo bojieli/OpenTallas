@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "scope": "actual copied ODB physical ownership and free-capacity proof only; no placement convergence or native timing",
+  "owned_anchors": 6810,
+  "all_cells": 10672,
+  "unrelated_unchanged": 3862,
+  "native_launch_before_ps": 160.72194,
+  "native_data_capture_before_ps": 132.35901,
+  "maximum_move_um": 58.59,
+  "old_active_band_um": [
+    226.422,
+    343.872
+  ],
+  "new_active_band_um": [
+    167.832,
+    402.192
+  ],
+  "core_height_um": 8.64,
+  "fixed_area_um2": 894.2205599999749,
+  "movable_area_um2": 317.6836200000084,
+  "old_band_aggregate_population_fraction": 1.1942672413792934,
+  "new_band_aggregate_population_fraction": 0.5985095046082866,
+  "fixed_overlap_pairs": 0,
+  "net_signature_sha256": "38d82bdad59db9fd1fab31f7cbf06a8ed102265719fcf06b33c269a97c091111",
+  "port_signature_sha256": "1e20d314c350f947de31cf7849f54ded70528e7a63c26becfb4eecc703e4edbd",
+  "input_sha256": {
+    "after_ports.tsv": "8e8fa71425afe596796db1397ad342153350d82c19cbb76bf4c56ec534bd4bf8",
+    "before_nets.tsv": "8573e84dbeca99819d677049cf2874ba5c32fb6b0be4274c99fdf2b814662a8a",
+    "after_nets.tsv": "8573e84dbeca99819d677049cf2874ba5c32fb6b0be4274c99fdf2b814662a8a",
+    "before_cells.tsv": "b612f94b13299c1b64baf6fb86974b1f3c898e3143e7fe2bcb03737ee4fec4fd",
+    "row_density.tsv": "5f61192270c783b0b62583bb9a3803c8d32b9853c19be5b8b71c89d63dbc692f",
+    "cell_density.tsv": "b47a6bc9046347768153abbcb1464555b371fd925af6f25c9083fd513cf85d97",
+    "rows_exact.tsv": "52d0ccbb2e50b04e9dc448d5ff12ef02a57b8fd31dbd9b9efab311430d55486a",
+    "after_cells.tsv": "ac6b234e45e6f5fd5e9c56ab77c646ea5a03a3f33891720d45962e86430b403b",
+    "before_ports.tsv": "8e8fa71425afe596796db1397ad342153350d82c19cbb76bf4c56ec534bd4bf8"
+  },
+  "executed_hook_sha256": "9d13302181d53eafc032f96f670cd9c2f1a3bd037182a96274b6a0427a7a2229",
+  "original_odb_sha256": "4fcbd82c0989eb843594a42a32a4e7a0a5a4c2495b0f4f95910e672f0f2e8ef8",
+  "candidate_odb_sha256": "44b88f1edc69786fc6e1d32ff41e81f25b4ec5c20d2f56cf659c85ff48b2128a",
+  "unit": "oth-ubuntu-50898-1792078144"
+}
