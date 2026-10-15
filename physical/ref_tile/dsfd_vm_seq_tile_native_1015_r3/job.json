@@ -1,5 +1,5 @@
 {
- "name": "dsfd_vm_seq_tile_native_1015_r3-flt3-COMMIT",
+ "name": "dsfd_vm_seq_tile_native_1015_r3-flt3-017fbf8fe",
  "block": "dsfd_vm_seq_tile",
  "ref_tile": true,
  "owner": "claude:S-ELEM-A S81 VM owner",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/s81-vm-elema-1015",
-  "commit": "COMMIT",
+  "commit": "017fbf8fe",
   "extra_paths": [
    "tools/s81_vm",
    "rtl/dsrom_sys/s81_ph/vm",
@@ -111,7 +111,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_vm_seq_tile_native_1015_r3/dsfd_vm_seq_tile_native_1015_r3-flt3-COMMIT"
+   "to": "results/rtl/ref_tile/dsfd_vm_seq_tile_native_1015_r3/dsfd_vm_seq_tile_native_1015_r3-flt3-017fbf8fe"
   }
  ],
  "cycles_added": 1,
