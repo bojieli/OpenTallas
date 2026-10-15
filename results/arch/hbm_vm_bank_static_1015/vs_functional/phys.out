@@ -6,4 +6,3 @@ VM_ALLGROUPS_STATIC PASS RG=6 WG=3 banks=8 SRAMs=24 DMAwrites=1024 exactwide_rea
 FATAL: /home/ubuntu/wt/hea-r2-main-1015/rtl/hbm_accel/generic/vm/static/physical/tb_hbm_vm_physical_banks_vs.sv:222: actual bank response group mismatch RG=6 cycle=145 bank=0 group=0
 VM_ALLGROUPS_STATIC PASS RG=4 WG=1 banks=8 SRAMs=24 DMAwrites=1024 exactwide_reads=4096 eachgroup_reads=1024 packet_reads=8 sectors_per_cycle=8 return_edges=6 conflict_fault_no_arbitration=1
 FATAL: /home/ubuntu/wt/hea-r2-main-1015/rtl/hbm_accel/generic/vm/static/physical/tb_hbm_vm_physical_banks_vs.sv:222: actual bank response group mismatch RG=4 cycle=145 bank=0 group=0
-rc=0

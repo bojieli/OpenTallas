@@ -1,0 +1,117 @@
+{
+ "name": "hv15_dbk_vp4_ctl_stk0",
+ "top": "ot_hgi_dma_back_static_vp4_controller",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "W": [
+   "mv",
+   "cycle_in",
+   "mv_v",
+   "issue_at",
+   "drain_at",
+   "mv_wb_bank",
+   "mv_wb_epoch"
+  ],
+  "E": [
+   "bank_read_en",
+   "bank_read_slot",
+   "bank_write_slot",
+   "bank_write_en",
+   "bank_output_en",
+   "bank_read_addr",
+   "rr_valid_i"
+  ],
+  "N": [
+   "clk",
+   "rst_n",
+   "wa",
+   "wb_ready",
+   "mv_src",
+   "mv_done",
+   "mv_fault",
+   "quiet",
+   "busy"
+  ],
+  "S": [
+   "rq",
+   "wb_reserve_v",
+   "wb_reserve_bank",
+   "wb_fill_bank",
+   "wb_reserve_epoch",
+   "wb_fill_epoch",
+   "wb_reserve_sectors",
+   "wb_reserve_base",
+   "wb_fill_start"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "macros": [],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03
+ },
+ "job": {
+  "owner": "Claude:HBM-V15-HARDEN",
+  "branch": "codex/hbm-hardening-1103",
+  "tag": "c1",
+  "purpose": "DMA STORE back DESC_LAT4 controller leaf STK=0 (structural successor: cursor -827 ps, vp -412 ps; this gate -59 ps placement-RC, clock 142.5/18.6 ps): measure the routed timing; parent hb_dbk = controller + 8 bank leaves requested from H-DIE.",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "rtl/hbm_accel/generic/peers/static",
+   "rtl/hbm_accel/generic/vm/static",
+   "tools/hbm_v15_harden"
+  ],
+  "record_to": "results/rtl/ref_tile/hv15_dbk_vp4_ctl_stk0",
+  "benches": [
+   {
+    "name": "exact",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "DMA_VP4_BANKS_BENCH_PASS",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "mutant1",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks.sh {RUN}/bench/mut1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mutant2",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks.sh {RUN}/bench/mut2 2",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ },
+ "params": {
+  "STK": 0
+ },
+ "std_area_um2": 2600
+}

@@ -31,8 +31,8 @@
   "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv": "fd3c9a703e8de821595e38468f608b97337932aa34f2d8529189ced1102cd991",
   "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv": "11389d87c141c8a0e3c4ba3c1e5f0c2cafd88dce2c48f16c2e4d2356c2ffbf5f",
   "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv": "00eb5cdc33808a02dbb7a1c9ea272ff6a266521117851ee8ab598581902200ff",
-  "rtl/hbm_accel/index/ot_hbm_idx_client_static.sv": "039f3f6a2d325d95a744d0b68ad4b516dd4d6719c1dd89e7b1c548598122f0f0",
-  "rtl/hbm_accel/generic/ot_hbm_argmax_static.sv": "d71e27266e8044c1a7b0b4d3bc2dc3a06ed063ce0cb11f21658697d4995f1936",
+  "rtl/hbm_accel/index/ot_hbm_idx_client_static_sw.sv": "bfd1189181c2d49065fbc9d1be4f01c5b1793a52766a74504578bc96c1d4cc54",
+  "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw.sv": "3b0691384597890d7f154ba6cf4015c8d71a20528f0a30cddcfb1f497c89e6bb",
   "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv": "73dc5bb8b3c72ff2e193602251d2cd719a5f691d5bd1faef5e5fd32e8de35bea"
  },
  "dependency_inventory_sha256": {
@@ -11672,8 +11672,8 @@
    }
   },
   "hb_idx": {
-   "master": "ot_hbm_idx_client_static",
-   "source": "rtl/hbm_accel/index/ot_hbm_idx_client_static.sv",
+   "master": "ot_hbm_idx_client_static_sw",
+   "source": "rtl/hbm_accel/index/ot_hbm_idx_client_static_sw.sv",
    "params": {},
    "ports": {
     "clk_program": {
@@ -11779,10 +11779,6 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
-    },
-    "sid": {
-     "direction": "input",
-     "bits": 2
     },
     "weight_sector": {
      "direction": "input",
@@ -11947,8 +11943,8 @@
    }
   },
   "hb_argmax": {
-   "master": "ot_hbm_argmax_static",
-   "source": "rtl/hbm_accel/generic/ot_hbm_argmax_static.sv",
+   "master": "ot_hbm_argmax_static_sw",
+   "source": "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw.sv",
    "params": {},
    "ports": {
     "clk": {
@@ -11958,10 +11954,6 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
-    },
-    "sid": {
-     "direction": "input",
-     "bits": 2
     },
     "die_id": {
      "direction": "input",
@@ -53924,28 +53916,7 @@
    "bench_qualified": true
   }
  ],
- "logical_constant_requests": [
-  {
-   "sink": [
-    "hb_idx",
-    "sid"
-   ],
-   "bits": 2,
-   "value": 0,
-   "reason": "INDEX operand face reads the SW slice (sid order SW,SE,NW,NE)",
-   "physical_tie_cells_qualified": false
-  },
-  {
-   "sink": [
-    "hb_argmax",
-    "sid"
-   ],
-   "bits": 2,
-   "value": 0,
-   "reason": "ARGMAX reads/writes the SW slice (sid order SW,SE,NW,NE)",
-   "physical_tie_cells_qualified": false
-  }
- ],
+ "logical_constant_requests": [],
  "unbound_ports": [
   {
    "instance": "hb_vms_SW",

@@ -8,24 +8,23 @@
    "REAL": 36,
    "NO_CONTRACT_INSTANCE": 71,
    "PARTITION": 76,
-   "INCOMPLETE": 5,
-   "SYNTH": 7
+   "INCOMPLETE": 1,
+   "SYNTH": 11
   },
   "area_mm2_by_status": {
    "REAL": 53.3,
    "NO_CONTRACT_INSTANCE": 376.0,
    "PARTITION": 98.7,
-   "INCOMPLETE": 4.5,
-   "SYNTH": 2.7
+   "INCOMPLETE": 0.7,
+   "SYNTH": 6.5
   },
   "instances": 83,
   "instances_by_view": {
-   "SYNTH_COARSE_ONLY": 2,
-   "SYNTH": 30,
-   "NONE": 3,
+   "SYNTH": 33,
    "REAL_COMPOSED": 34,
    "REAL": 9,
-   "RUNNING": 5
+   "RUNNING": 5,
+   "NONE": 2
   }
  },
  "rule": "REAL = closed LEF + TT/FF ETM; SYNTH = current-source mapped netlist + real outline (estimate); no stub, no pin-only shell",
@@ -472,7 +471,7 @@
   },
   "vmh_SW": {
    "kind": "vmh",
-   "status": "INCOMPLETE",
+   "status": "SYNTH",
    "contract_instances": [
     "calendar_SW",
     "delivery_SW",
@@ -925,7 +924,7 @@
   },
   "vmh_SE": {
    "kind": "vmh",
-   "status": "INCOMPLETE",
+   "status": "SYNTH",
    "contract_instances": [
     "calendar_SE",
     "delivery_SE",
@@ -1410,7 +1409,7 @@
   },
   "vmh_NW": {
    "kind": "vmh",
-   "status": "INCOMPLETE",
+   "status": "SYNTH",
    "contract_instances": [
     "calendar_NW",
     "delivery_NW",
@@ -1863,7 +1862,7 @@
   },
   "vmh_NE": {
    "kind": "vmh",
-   "status": "INCOMPLETE",
+   "status": "SYNTH",
    "contract_instances": [
     "calendar_NE",
     "delivery_NE",
@@ -2102,14 +2101,14 @@
  "instances": {
   "hb_vms_SW": {
    "master": "hfd_hgi_vms_static_SW",
-   "view": "SYNTH_COARSE_ONLY",
+   "view": "SYNTH",
    "runs": [
     {
-     "host": "ot-epyc4",
-     "run": "vms_sw2_c",
+     "host": "ot-epyc1tb",
+     "run": "vms_SW_m",
      "state": "NETLIST",
-     "mode": "coarse",
-     "std_area_um2": 0.0
+     "mode": "mapped",
+     "std_area_um2": 41502.7719
     }
    ]
   },
@@ -2135,7 +2134,16 @@
   },
   "hb_vms_SE": {
    "master": "hfd_hgi_vms_static_SE",
-   "view": "NONE"
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "vms_SE_m",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 31449.30786
+    }
+   ]
   },
   "delivery_SE": {
    "master": "ot_hbm_svc_static_vm_delivery",
@@ -2159,7 +2167,16 @@
   },
   "hb_vms_NW": {
    "master": "hfd_hgi_vms_static_NW",
-   "view": "NONE"
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "vms_NW_m",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 46946.18574
+    }
+   ]
   },
   "delivery_NW": {
    "master": "ot_hbm_svc_static_vm_delivery",
@@ -2183,7 +2200,16 @@
   },
   "hb_vms_NE": {
    "master": "hfd_hgi_vms_static_NE",
-   "view": "NONE"
+   "view": "SYNTH",
+   "runs": [
+    {
+     "host": "ot-epyc1tb",
+     "run": "vms_NE_m",
+     "state": "NETLIST",
+     "mode": "mapped",
+     "std_area_um2": 35034.39864
+    }
+   ]
   },
   "delivery_NE": {
    "master": "ot_hbm_svc_static_vm_delivery",
@@ -2544,50 +2570,15 @@
    ]
   },
   "lg_SW_2": {
-   "master": "ot_hbm_vm_lg_static_split",
+   "master": "ot_hbm_vm_lg_static_split_term",
    "view": "SYNTH",
    "runs": [
     {
      "host": "ot-epyc1tb",
-     "run": "lg_10_7",
+     "run": "lg_term_18_15",
      "state": "NETLIST",
      "mode": "mapped",
-     "std_area_um2": 4076.99082
-    },
-    {
-     "host": "ot-epyc1tb",
-     "run": "lg_14_11",
-     "state": "NETLIST",
-     "mode": "mapped",
-     "std_area_um2": 4104.09504
-    },
-    {
-     "host": "ot-epyc1tb",
-     "run": "lg_18_15",
-     "state": "NETLIST",
-     "mode": "mapped",
-     "std_area_um2": 4131.11178
-    },
-    {
-     "host": "ot-epyc4",
-     "run": "lg_10_7",
-     "state": "NETLIST",
-     "mode": "mapped",
-     "std_area_um2": 4076.99082
-    },
-    {
-     "host": "ot-epyc4",
-     "run": "lg_14_11",
-     "state": "NETLIST",
-     "mode": "mapped",
-     "std_area_um2": 4104.09504
-    },
-    {
-     "host": "ot-epyc4",
-     "run": "lg_18_15",
-     "state": "NETLIST",
-     "mode": "mapped",
-     "std_area_um2": 4131.11178
+     "std_area_um2": 3113.39862
     }
    ]
   },
@@ -2693,50 +2684,15 @@
    ]
   },
   "lg_SE_2": {
-   "master": "ot_hbm_vm_lg_static_split",
+   "master": "ot_hbm_vm_lg_static_split_term",
    "view": "SYNTH",
    "runs": [
     {
      "host": "ot-epyc1tb",
-     "run": "lg_10_7",
+     "run": "lg_term_18_15",
      "state": "NETLIST",
      "mode": "mapped",
-     "std_area_um2": 4076.99082
-    },
-    {
-     "host": "ot-epyc1tb",
-     "run": "lg_14_11",
-     "state": "NETLIST",
-     "mode": "mapped",
-     "std_area_um2": 4104.09504
-    },
-    {
-     "host": "ot-epyc1tb",
-     "run": "lg_18_15",
-     "state": "NETLIST",
-     "mode": "mapped",
-     "std_area_um2": 4131.11178
-    },
-    {
-     "host": "ot-epyc4",
-     "run": "lg_10_7",
-     "state": "NETLIST",
-     "mode": "mapped",
-     "std_area_um2": 4076.99082
-    },
-    {
-     "host": "ot-epyc4",
-     "run": "lg_14_11",
-     "state": "NETLIST",
-     "mode": "mapped",
-     "std_area_um2": 4104.09504
-    },
-    {
-     "host": "ot-epyc4",
-     "run": "lg_18_15",
-     "state": "NETLIST",
-     "mode": "mapped",
-     "std_area_um2": 4131.11178
+     "std_area_um2": 3113.39862
     }
    ]
   },
@@ -2842,50 +2798,15 @@
    ]
   },
   "lg_NW_2": {
-   "master": "ot_hbm_vm_lg_static_split",
+   "master": "ot_hbm_vm_lg_static_split_term",
    "view": "SYNTH",
    "runs": [
     {
      "host": "ot-epyc1tb",
-     "run": "lg_10_7",
+     "run": "lg_term_18_15",
      "state": "NETLIST",
      "mode": "mapped",
-     "std_area_um2": 4076.99082
-    },
-    {
-     "host": "ot-epyc1tb",
-     "run": "lg_14_11",
-     "state": "NETLIST",
-     "mode": "mapped",
-     "std_area_um2": 4104.09504
-    },
-    {
-     "host": "ot-epyc1tb",
-     "run": "lg_18_15",
-     "state": "NETLIST",
-     "mode": "mapped",
-     "std_area_um2": 4131.11178
-    },
-    {
-     "host": "ot-epyc4",
-     "run": "lg_10_7",
-     "state": "NETLIST",
-     "mode": "mapped",
-     "std_area_um2": 4076.99082
-    },
-    {
-     "host": "ot-epyc4",
-     "run": "lg_14_11",
-     "state": "NETLIST",
-     "mode": "mapped",
-     "std_area_um2": 4104.09504
-    },
-    {
-     "host": "ot-epyc4",
-     "run": "lg_18_15",
-     "state": "NETLIST",
-     "mode": "mapped",
-     "std_area_um2": 4131.11178
+     "std_area_um2": 3113.39862
     }
    ]
   },
@@ -2991,50 +2912,15 @@
    ]
   },
   "lg_NE_2": {
-   "master": "ot_hbm_vm_lg_static_split",
+   "master": "ot_hbm_vm_lg_static_split_term",
    "view": "SYNTH",
    "runs": [
     {
      "host": "ot-epyc1tb",
-     "run": "lg_10_7",
+     "run": "lg_term_18_15",
      "state": "NETLIST",
      "mode": "mapped",
-     "std_area_um2": 4076.99082
-    },
-    {
-     "host": "ot-epyc1tb",
-     "run": "lg_14_11",
-     "state": "NETLIST",
-     "mode": "mapped",
-     "std_area_um2": 4104.09504
-    },
-    {
-     "host": "ot-epyc1tb",
-     "run": "lg_18_15",
-     "state": "NETLIST",
-     "mode": "mapped",
-     "std_area_um2": 4131.11178
-    },
-    {
-     "host": "ot-epyc4",
-     "run": "lg_10_7",
-     "state": "NETLIST",
-     "mode": "mapped",
-     "std_area_um2": 4076.99082
-    },
-    {
-     "host": "ot-epyc4",
-     "run": "lg_14_11",
-     "state": "NETLIST",
-     "mode": "mapped",
-     "std_area_um2": 4104.09504
-    },
-    {
-     "host": "ot-epyc4",
-     "run": "lg_18_15",
-     "state": "NETLIST",
-     "mode": "mapped",
-     "std_area_um2": 4131.11178
+     "std_area_um2": 3113.39862
     }
    ]
   },
@@ -3322,44 +3208,12 @@
    ]
   },
   "hb_idx": {
-   "master": "ot_hbm_idx_client_static",
-   "view": "SYNTH_COARSE_ONLY",
-   "runs": [
-    {
-     "host": "ot-epyc1tb",
-     "run": "idx_glue",
-     "state": "RUNNING_OR_FAILED",
-     "mode": "mapped",
-     "std_area_um2": 0.0
-    },
-    {
-     "host": "ot-epyc4",
-     "run": "idx_glue_c",
-     "state": "NETLIST",
-     "mode": "coarse",
-     "std_area_um2": 0.0
-    }
-   ]
+   "master": "ot_hbm_idx_client_static_sw",
+   "view": "NONE"
   },
   "hb_argmax": {
-   "master": "ot_hbm_argmax_static",
-   "view": "SYNTH",
-   "runs": [
-    {
-     "host": "ot-epyc1tb",
-     "run": "argmax",
-     "state": "NETLIST",
-     "mode": "mapped",
-     "std_area_um2": 6203.55672
-    },
-    {
-     "host": "ot-epyc4",
-     "run": "argmax",
-     "state": "NETLIST",
-     "mode": "mapped",
-     "std_area_um2": 6203.55672
-    }
-   ]
+   "master": "ot_hbm_argmax_static_sw",
+   "view": "NONE"
   },
   "hb_quant_NW": {
    "master": "ot_hgi_qdq_host_static",
@@ -3374,5 +3228,314 @@
     }
    ]
   }
+ },
+ "descendant_views": {
+  "idx_s0_meta0": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[0]/scorer/ge[0]/md",
+   "parent": "idx_s0",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 2376.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s0_meta1": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[0]/scorer/ge[1]/md",
+   "parent": "idx_s0",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 2592.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s0_meta2": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[0]/scorer/ge[2]/md",
+   "parent": "idx_s0",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 2808.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s0_meta3": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[0]/scorer/ge[3]/md",
+   "parent": "idx_s0",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 3024.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s1_meta0": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[1]/scorer/ge[0]/md",
+   "parent": "idx_s1",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 2376.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s1_meta1": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[1]/scorer/ge[1]/md",
+   "parent": "idx_s1",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 2592.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s1_meta2": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[1]/scorer/ge[2]/md",
+   "parent": "idx_s1",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 2808.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s1_meta3": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[1]/scorer/ge[3]/md",
+   "parent": "idx_s1",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 3024.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s2_meta0": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[2]/scorer/ge[0]/md",
+   "parent": "idx_s2",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 2376.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s2_meta1": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[2]/scorer/ge[1]/md",
+   "parent": "idx_s2",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 2592.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s2_meta2": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[2]/scorer/ge[2]/md",
+   "parent": "idx_s2",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 2808.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s2_meta3": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[2]/scorer/ge[3]/md",
+   "parent": "idx_s2",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 3024.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s3_meta0": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[3]/scorer/ge[0]/md",
+   "parent": "idx_s3",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 2376.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s3_meta1": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[3]/scorer/ge[1]/md",
+   "parent": "idx_s3",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 2592.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s3_meta2": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[3]/scorer/ge[2]/md",
+   "parent": "idx_s3",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 2808.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  },
+  "idx_s3_meta3": {
+   "master": "hidx_meta_w25_d123_r0",
+   "instance": "hb_idx/index/parent/gscore[3]/scorer/ge[3]/md",
+   "parent": "idx_s3",
+   "view": "REAL_CLOSED_DESCENDANT",
+   "reasons": [],
+   "directory": "physical/ref_tile/hidx_meta_static_1015c/views/hidx_meta_w25_d123_r0",
+   "local_origin": {
+    "x": 3024.0,
+    "y": 2894.4,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 68.04,
+    "h": 68.04
+   },
+   "parent_and_die_qualified": false,
+   "scope": "independent routed descendant; full scorer packing, seams, clock and die timing remain OPEN"
+  }
+ },
+ "descendant_summary": {
+  "REAL_CLOSED_DESCENDANT": 16
  }
 }

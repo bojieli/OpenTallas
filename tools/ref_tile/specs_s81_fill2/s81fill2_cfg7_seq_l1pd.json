@@ -1,0 +1,128 @@
+{
+ "name": "s81fill2_cfg7_seq_l1pd",
+ "top": "ot_s81_cfg7_seq",
+ "kind": "tile",
+ "sources": [
+  "rtl/v41die/ot_s81_cfg7_seq.sv"
+ ],
+ "params": {
+  "PQ": 1,
+  "LAYOUT": 1
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 17.28,
+  "h": 41.04,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "E": [
+   "lc",
+   "st"
+  ],
+  "N": [
+   "cfg",
+   "ef",
+   "go_e",
+   "go_tag"
+  ],
+  "S": [
+   "clk",
+   "rst_n"
+  ],
+  "W": [
+   "a",
+   "ce0",
+   "ce1",
+   "ce2",
+   "ce3",
+   "ce4",
+   "ce5",
+   "ce6",
+   "q0",
+   "q1",
+   "q2",
+   "q3",
+   "q4",
+   "q5",
+   "q6"
+  ]
+ },
+ "io_tcl": "physical/s81_die_pins/fill2_gen19b/ot_s81_cfg7_seq_pd.tcl",
+ "recipe": 2,
+ "outhold": false,
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "m5_pg_pitch": 2.7
+ },
+ "slot_change_request": {
+  "reason": "outline from pin density (<= 10.0 b/um/layer, face cut <= 0.6) and content (~230 um2 std + recipe-2 cells at util ~0.5) instead of the generator slot 34.536 x 60.456",
+  "outline": [
+   17.28,
+   41.04
+  ],
+  "generator_slot": [
+   34.536,
+   60.456
+  ]
+ },
+ "structural_change": "First hardening of the S81 die master ot_s81_cfg7_seq (1898 die instances, per-pair configuration sequencer at LAYOUT 1 (STRUCTURAL FIX of the LAYOUT 0 verdict TT -179.46 s81fill2_cfg7_seq-g1-ea607c448: lc -> phase*25 multiply -> add -> bank decode -> ce/a pins; LAYOUT 1 = word k of phase p in macro k%7 row 4p+k/7, a/ce one level from flops or cfg_go, 0 cycles, exact lockstep unchanged), outline from pin density); real RTL rtl/v41die/ot_s81_cfg7_seq.sv (exact lockstep gate rtl/v41die/test/tb_ot_s81_cfg7_seq.sv); 0 cycles; pins = GEN19b construction_pass2 (EPYC4 s81-die-r10/gen19b, pins.lef) order with the shared fixes: even per-face spread (generator packed W-face M4 pins at 0.048 um = 20.8 b/um/layer > 12), clock at face centre, no output hold pads; outline 34.536x60.456 -> 17.28x41.04 (2.16 lattice). Face report {\"W\": {\"pins\": 355, \"pitch_um\": 0.1034, \"b_per_um\": 9.67, \"cut\": 0.464}, \"N\": {\"pins\": 59, \"pitch_um\": 0.2197, \"b_per_um\": 4.55, \"cut\": 0.219}, \"E\": {\"pins\": 17, \"pitch_um\": 2.16, \"b_per_um\": 0.46, \"cut\": 0.022}, \"S\": {\"pins\": 2, \"pitch_um\": 12.96, \"b_per_um\": 0.15, \"cut\": 0.007}}.",
+ "job": {
+  "owner": "Claude:fill-s81-2",
+  "branch": "claude/el1015-fill-s2-1015",
+  "tag": "g1",
+  "purpose": "S81 FILL-S2: die master ot_s81_cfg7_seq (1898 replicas, hardened once): exact lockstep bench + failing mutant; recipe 2, M5 cap, GEN19b pins evenly spread",
+  "views_to": "physical/ref_tile/s81fill2_cfg7_seq_l1pd/views",
+  "record_to": "results/rtl/ref_tile/s81fill2_cfg7_seq_l1pd",
+  "extra_paths": [
+   "rtl/v41die",
+   "physical/dsrom_qx10_parent_context/parent_loader",
+   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "tools/s81/fill2_cfg7_bench.sh",
+   "physical/s81_die_pins/fill2_gen19b"
+  ],
+  "benches": [
+   {
+    "name": "lockstep_il7_pq1",
+    "cmd": "bash tools/s81/fill2_cfg7_bench.sh il7_pq1 {RUN}/bench_il7_pq1",
+    "expect": "pass",
+    "pass_regex": "CFG7 BENCH PASS il7_pq1",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "go_tag_mutant",
+    "cmd": "bash tools/s81/fill2_cfg7_bench.sh il7_mut_tag {RUN}/bench_il7_mut_tag",
+    "expect": "fail",
+    "fail_regex": "CFG7 BENCH FAIL il7_mut_tag",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "phase_row_mutant",
+    "cmd": "bash tools/s81/fill2_cfg7_bench.sh il7_mut_stride {RUN}/bench_il7_mut_stride",
+    "expect": "fail",
+    "fail_regex": "CFG7 BENCH FAIL il7_mut_stride",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ }
+}
