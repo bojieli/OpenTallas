@@ -23,6 +23,8 @@ def inventory():
     for g in range(4):
         group.append(dict(group=g, banks=[2*g,2*g+1], state=f"u_vm.g_lg[{g}]",
                           clock=f"clk_lg[{g}]", reset=f"rst_lg_n[{g}]",
+                          declared_state_bits=1285,
+                          state_count_basis="44x15 metadata +562 write output +36 drain metadata +2x13 completion +1 fault; source bits, not mapped CTS sinks",
                           ports={"local_rq":[34*g,34],"local_wq":[562*g,562],
                                  "local_rr":[514*g,514],"local_w_done":[2*g,2]},
                           granted_outline=None, granted_pin_rectangles=None))
@@ -36,7 +38,7 @@ def inventory():
                 clock_relationship="Same-frequency related roots; no asynchronous CDC contract. Die STA must cover group-to-store and programme-to-group crossings.",
                 groups=group, logical_widths=dict(local_rq=136,local_wq=2248,local_rr=2056,local_w_done=8),
                 read_response_update=14, read_store_sample=15, write_completion_update=11,
-                added_service_edges=0, macros=macros, macro_count=102,
+                added_service_edges=0, additional_group_fault_observer_edges=1, macros=macros, macro_count=102,
                 macro_only_area_um2=lower, old_engine_outline_um=[552.96,723.6],
                 old_outline_area_um2=552.96*723.6, macro_to_old_outline=lower/(552.96*723.6),
                 mapped_logic_area_um2=None, placed_area_um2=None, physical_qualified=False,

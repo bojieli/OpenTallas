@@ -1,5 +1,5 @@
 {
-  "source_commit": "27aef8834 plus private per-group output register refactor in containing commit",
+  "source_commit": "520529555",
   "source_sha256": {
     "rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv": "195776339665673c005bf23751556ab0dec6009a74bb5deae25a7018e73ec6dc",
     "rtl/test/hbm_accel/generic/tb_hgi_sfu_vm_static_bridge.sv": "e3f6f45b9b4a1f3250d2b31d7ddd4671a8f3cded1ce6939586fb00cec5892805",
@@ -36,13 +36,72 @@
     "scratch": "/srv/opentallas-scratch/codex/sfu-lg4-1103/out_r2"
   },
   "scheduled_engine": {
-    "status": "PENDING_ADMISSION_OR_RUNNING",
-    "local_session": 33477,
+    "status": "PASS",
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-965414-1792088628",
+    "exit": 0,
     "scratch": "/srv/opentallas-scratch/codex/sfu-scheduled-lg4-1103-r2",
     "mem_gb": 14,
-    "threads": 8
+    "threads": 8,
+    "actual_C12_lanes": 16,
+    "actual_operand_SRAMs": 80,
+    "actual_arithmetic_programme_SRAMs": 16,
+    "actual_IO_programme_SRAMs": 6,
+    "actual_VM_SRAMs": 24,
+    "total_actual_SRAMs": 126,
+    "exact_committed_VM_words": 3072,
+    "canonical_case": "Qwen swiglu",
+    "arithmetic": "Actual exp/div/multiply/BF16; expected words read unchanged from canonical su_prod_vec VM fixture",
+    "actual_IO_programme_rows": 432,
+    "actual_arithmetic_programme_rows": 368,
+    "one_runtime_start": true,
+    "no_manual_runtime_prefetch_or_drain": true,
+    "read_return_update": 14,
+    "read_store_sample": 15,
+    "write_completion_update": 11,
+    "added_service_edges": 0,
+    "additional_group_fault_observer_edges": 1,
+    "compiler_source_manifest": "scheduled/compiler_sources.sha256",
+    "compiler_source_files": 46,
+    "compiler_source_hash_check": true,
+    "source_archive_sha256": "fb0bfcf9a5c7a70129cb91f462b81c580facc04ce3c14eb90def6c154f1e932b",
+    "fixture_manifest": "scheduled/fixture_manifest.json",
+    "positive_log": "scheduled/run.log",
+    "mutants": {
+      "loaded_IO_prefetch_suppression": {
+        "exit": 1,
+        "log": "scheduled/mutant_io.log"
+      },
+      "missing_LG_root": {
+        "group": 1,
+        "exit": 1,
+        "log": "scheduled/mutant_clock.log"
+      }
+    },
+    "build_seconds": 185.818,
+    "verilator_allocated_MB": 9354.531,
+    "simulation_seconds": 65.537,
+    "multiple_driver_warnings": 0,
+    "immutable_diagnostic_price": 120.0,
+    "measured_IO_edges": 432,
+    "IO_to_price_ratio": 3.6,
+    "fixed_observation_window_edges": 442,
+    "observation_window_to_price_ratio": 3.683333333333333,
+    "native_VM_allocation": "Diagnostic SID0 G0/U1026/route2052/O4096; final native allocator binding open",
+    "whole_layer_native_qualified": false,
+    "full_4x7168_qualified": false,
+    "throughput_qualified": false,
+    "physical_qualified": false
   },
   "physical_qualified": false,
   "throughput_qualified": false,
-  "scope": "Real native 8-bank/SRAM bridge proof; does not establish full arithmetic/production or die reach."
+  "scope": "Source-current native four-bank-pair clock-root proof with actual 16-lane arithmetic and 126 SRAMs; production throughput and physical reach remain open. No route was launched.",
+  "physical_inventory": "tools/hbm_static/sfu_lg_port_inventory.json",
+  "preserved_predecessor_full_native": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-927773-1792088293",
+    "exit": 0,
+    "scratch": "/srv/opentallas-scratch/codex/sfu-scheduled-lg4-1103",
+    "scope": "Before private-output register refactor; positive3072 and bothmutants passed expected outcomes, superseded by final-source receipt above"
+  }
 }

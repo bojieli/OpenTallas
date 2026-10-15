@@ -24,6 +24,8 @@
       "state": "u_vm.g_lg[0]",
       "clock": "clk_lg[0]",
       "reset": "rst_lg_n[0]",
+      "declared_state_bits": 1285,
+      "state_count_basis": "44x15 metadata +562 write output +36 drain metadata +2x13 completion +1 fault; source bits, not mapped CTS sinks",
       "ports": {
         "local_rq": [
           0,
@@ -54,6 +56,8 @@
       "state": "u_vm.g_lg[1]",
       "clock": "clk_lg[1]",
       "reset": "rst_lg_n[1]",
+      "declared_state_bits": 1285,
+      "state_count_basis": "44x15 metadata +562 write output +36 drain metadata +2x13 completion +1 fault; source bits, not mapped CTS sinks",
       "ports": {
         "local_rq": [
           34,
@@ -84,6 +88,8 @@
       "state": "u_vm.g_lg[2]",
       "clock": "clk_lg[2]",
       "reset": "rst_lg_n[2]",
+      "declared_state_bits": 1285,
+      "state_count_basis": "44x15 metadata +562 write output +36 drain metadata +2x13 completion +1 fault; source bits, not mapped CTS sinks",
       "ports": {
         "local_rq": [
           68,
@@ -114,6 +120,8 @@
       "state": "u_vm.g_lg[3]",
       "clock": "clk_lg[3]",
       "reset": "rst_lg_n[3]",
+      "declared_state_bits": 1285,
+      "state_count_basis": "44x15 metadata +562 write output +36 drain metadata +2x13 completion +1 fault; source bits, not mapped CTS sinks",
       "ports": {
         "local_rq": [
           102,
@@ -146,6 +154,7 @@
   "read_store_sample": 15,
   "write_completion_update": 11,
   "added_service_edges": 0,
+  "additional_group_fault_observer_edges": 1,
   "macros": [
     {
       "master": "ot_sram_1r1w_256x256_m2_r2c2",
