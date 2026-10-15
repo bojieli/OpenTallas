@@ -1,0 +1,70 @@
+{
+  "schema": "opentallas.hbm.actual-host-program-join.v1",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_host_static.sv": "d64f4d37cede73a6fed44e59c7cd83b6cee8c21d6ea22d4828905f96c92a05c6",
+    "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv": "0c31136198128d00d69f24795e53c38764e790a5db4cad1ebd261ab0f2b67e3d",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv": "2a3f380c413bef2676087338d00d18cf869562e9bb611fc93c13251f3fb3f197",
+    "rtl/hbm_accel/generic/vm/static/tb_vms_calendar_host_static.sv": "104d2116b3b940ceb0bed5a79238554f780a597190945510ecbbb99f8a621bc9",
+    "rtl/hbm_accel/generic/vm/static/run_calendar_host_static.sh": "f89e828f38c8c90e028935199cbb7fd9d1ab30ac5c7e4f4078a3afe6888e2855",
+    "rtl/hbm_accel/generic/loader/ot_hgi_loader_cp.sv": "b685e7bcf989682639044d1bccd9dce58b6aac5622eb322d677e4400285b8618",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380"
+  },
+  "admission": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-3519198-1792049182",
+    "exit": 0,
+    "memory_gb": 1,
+    "threads": 1
+  },
+  "composition": "Real unchanged ot_hgi_loader_cp produces real LCP71 from C10 host doorbell; new F-window host overlay configures four actual native programme SRAMs and one independent target48 W48 programme SRAM. Local target80 PCW12 proves2053address/2056limit transport without truncation; its fullpagedSFU SRAM/arithmetic proof belongs to owner.",
+  "positive": "15 exact 256bprogrammewords throughhost32bwrites;51gaplesscalendarwords each of5actualprogrammeSRAMs;wordordinals;VMfirstLCP+6/externalfirstLCP+8;MTP Ewindowpass;12bitPC2053 preserved;10bit endpoint rejects2053before SRAMwrite",
+  "mutants": [
+    "quadrant2actualprogrammebit flips -> mismatch firstemittedword",
+    "externaltarget48actualprogrammebit flips -> mismatch firstemittedword"
+  ],
+  "lint": [
+    {
+      "top": "ot_vms_calendar_host_static",
+      "params": [],
+      "rc": 0,
+      "diagnostics": []
+    },
+    {
+      "top": "ot_static_program_target",
+      "params": [],
+      "rc": 0,
+      "diagnostics": []
+    },
+    {
+      "top": "ot_static_program_target",
+      "params": [
+        "-GPCW=8"
+      ],
+      "rc": 0,
+      "diagnostics": []
+    },
+    {
+      "top": "ot_static_program_target",
+      "params": [
+        "-GPCW=11"
+      ],
+      "rc": 0,
+      "diagnostics": []
+    },
+    {
+      "top": "ot_static_program_target",
+      "params": [
+        "-GPCW=12"
+      ],
+      "rc": 0,
+      "diagnostics": []
+    }
+  ],
+  "clock_scope": "Existing preserved die clock nets show loader/CP/VMprogramme onstream833 samephase. Fixed physical station edges and actualHOSTPHY clock/source binding remain required.",
+  "native_join_limits": [
+    "Actual engine arithmetic/bank joint target48 gate is separately inprogress at Quantowner",
+    "Required-target/kernel programme image census not yet complete; namespace reservation is not implementation",
+    "ActualnativeHOSTendpoint/AXIclock, pin/PG/CTS/route and die timing remain unqualified",
+    "No per-cycle ready/credits or data-arrival branch; all configuration happens before launch"
+  ]
+}

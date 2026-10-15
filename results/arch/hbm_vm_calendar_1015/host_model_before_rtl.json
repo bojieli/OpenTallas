@@ -1,0 +1,14 @@
+{
+  "schema": "opentallas.hbm.calendar-host.v1",
+  "replicas": 1,
+  "macs_per_cycle": 0,
+  "storage": "one256b assemblyword plus4x37b launchdescriptors; no additional SRAM",
+  "input": "existinghostAXIlite12baddress/32bdata; existingrealLCP419doorbellbit71",
+  "output": "fourprogrammeconfig256b+addr10+we and4launch(base10,limit11,loops16,v)",
+  "configuration_rate": "eight32bhostwrites per256bprogrammeword; hostboundaryonly, beforelaunch",
+  "execution": "oneglobalexistingCPdoorbell launchesallfourcalendars; nohostcallsinsideprogramme",
+  "map": "newF00-Fff window; existingC/D CP andE MTP windows pass unchanged",
+  "clocks": "hostconfigurationclock mustsharedefinedcompilerphase atlaunch or getexplicitstaticcrossing",
+  "physical": "newnativeproducer requiresdiepin/slot/clock qualification; no closedloaderalias",
+  "qualification": "realexistingloaderCP\u2192LCPdoorbell\u2192real4programmeSRAMs composition test required"
+}

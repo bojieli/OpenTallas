@@ -1,0 +1,579 @@
+{
+  "schema": "opentallas.hbm.static-program-target-map.v1",
+  "transport": "ot_vms_calendar_host_static registered F20 engine frames -> ot_static_program_target local two-rung consumer",
+  "direct_VM_targets": {
+    "SW": 0,
+    "SE": 1,
+    "NW": 2,
+    "NE": 3
+  },
+  "external_targets": {
+    "16": {
+      "owner": "SM",
+      "instance": 0,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "17": {
+      "owner": "SM",
+      "instance": 1,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "18": {
+      "owner": "SM",
+      "instance": 2,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "19": {
+      "owner": "SM",
+      "instance": 3,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "20": {
+      "owner": "SM",
+      "instance": 4,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "21": {
+      "owner": "SM",
+      "instance": 5,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "22": {
+      "owner": "SM",
+      "instance": 6,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "23": {
+      "owner": "SM",
+      "instance": 7,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "24": {
+      "owner": "SM",
+      "instance": 8,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "25": {
+      "owner": "SM",
+      "instance": 9,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "26": {
+      "owner": "SM",
+      "instance": 10,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "27": {
+      "owner": "SM",
+      "instance": 11,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "28": {
+      "owner": "SM",
+      "instance": 12,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "29": {
+      "owner": "SM",
+      "instance": 13,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "30": {
+      "owner": "SM",
+      "instance": 14,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "31": {
+      "owner": "SM",
+      "instance": 15,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "32": {
+      "owner": "SM",
+      "instance": 16,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "33": {
+      "owner": "SM",
+      "instance": 17,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "34": {
+      "owner": "SM",
+      "instance": 18,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "35": {
+      "owner": "SM",
+      "instance": 19,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "36": {
+      "owner": "SM",
+      "instance": 20,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "37": {
+      "owner": "SM",
+      "instance": 21,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "38": {
+      "owner": "SM",
+      "instance": 22,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "39": {
+      "owner": "SM",
+      "instance": 23,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "40": {
+      "owner": "SM",
+      "instance": 24,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "41": {
+      "owner": "SM",
+      "instance": 25,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "42": {
+      "owner": "SM",
+      "instance": 26,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "43": {
+      "owner": "SM",
+      "instance": 27,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "44": {
+      "owner": "SM",
+      "instance": 28,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "45": {
+      "owner": "SM",
+      "instance": 29,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "46": {
+      "owner": "SM",
+      "instance": 30,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "47": {
+      "owner": "SM",
+      "instance": 31,
+      "payload_bits": 83,
+      "source": "ot_hbm_accel_smh_programmed"
+    },
+    "48": {
+      "owner": "QUANT",
+      "payload_bits": 48
+    },
+    "49": {
+      "owner": "ATTENTION",
+      "payload_bits": "owner static programme"
+    },
+    "50": {
+      "owner": "IDX INDEX",
+      "payload_bits": "owner static programme"
+    },
+    "51": {
+      "owner": "IDX TOPK",
+      "payload_bits": "owner static programme"
+    },
+    "52": {
+      "owner": "COLL",
+      "quadrant": "SW",
+      "payload_bits": 1536,
+      "configuration": "actual wide3x512 controller must define256b frame lowering"
+    },
+    "56": {
+      "owner": "DMA",
+      "quadrant": "SW",
+      "payload_bits": 309,
+      "configuration": "actual wide controller must define256b frame lowering"
+    },
+    "64": {
+      "owner": "SU",
+      "quadrant": "SW",
+      "payload_bits": "owner actual arithmetic programme"
+    },
+    "80": {
+      "owner": "SFU",
+      "quadrant": "SW",
+      "plane": 0,
+      "payload_bits": 222,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "81": {
+      "owner": "SFU",
+      "quadrant": "SW",
+      "plane": 1,
+      "payload_bits": 222,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "82": {
+      "owner": "SFU",
+      "quadrant": "SW",
+      "plane": 2,
+      "payload_bits": 222,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "83": {
+      "owner": "SFU",
+      "quadrant": "SW",
+      "plane": 3,
+      "payload_bits": 222,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "84": {
+      "owner": "SFU",
+      "quadrant": "SW",
+      "plane": 4,
+      "payload_bits": 222,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "85": {
+      "owner": "SFU",
+      "quadrant": "SW",
+      "plane": 5,
+      "payload_bits": 222,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "86": {
+      "owner": "SFU",
+      "quadrant": "SW",
+      "plane": 6,
+      "payload_bits": 222,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "87": {
+      "owner": "SFU",
+      "quadrant": "SW",
+      "plane": 7,
+      "payload_bits": 188,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "112": {
+      "owner": "HC",
+      "quadrant": "SW",
+      "payload_bits": 51,
+      "PCW": 11,
+      "scope": "actual PMAX8 paged programme; W44 mechanism historical"
+    },
+    "53": {
+      "owner": "COLL",
+      "quadrant": "SE",
+      "payload_bits": 1536,
+      "configuration": "actual wide3x512 controller must define256b frame lowering"
+    },
+    "57": {
+      "owner": "DMA",
+      "quadrant": "SE",
+      "payload_bits": 309,
+      "configuration": "actual wide controller must define256b frame lowering"
+    },
+    "65": {
+      "owner": "SU",
+      "quadrant": "SE",
+      "payload_bits": "owner actual arithmetic programme"
+    },
+    "88": {
+      "owner": "SFU",
+      "quadrant": "SE",
+      "plane": 0,
+      "payload_bits": 222,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "89": {
+      "owner": "SFU",
+      "quadrant": "SE",
+      "plane": 1,
+      "payload_bits": 222,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "90": {
+      "owner": "SFU",
+      "quadrant": "SE",
+      "plane": 2,
+      "payload_bits": 222,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "91": {
+      "owner": "SFU",
+      "quadrant": "SE",
+      "plane": 3,
+      "payload_bits": 222,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "92": {
+      "owner": "SFU",
+      "quadrant": "SE",
+      "plane": 4,
+      "payload_bits": 222,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "93": {
+      "owner": "SFU",
+      "quadrant": "SE",
+      "plane": 5,
+      "payload_bits": 222,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "94": {
+      "owner": "SFU",
+      "quadrant": "SE",
+      "plane": 6,
+      "payload_bits": 222,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "95": {
+      "owner": "SFU",
+      "quadrant": "SE",
+      "plane": 7,
+      "payload_bits": 188,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "113": {
+      "owner": "HC",
+      "quadrant": "SE",
+      "payload_bits": 51,
+      "PCW": 11,
+      "scope": "actual PMAX8 paged programme; W44 mechanism historical"
+    },
+    "54": {
+      "owner": "COLL",
+      "quadrant": "NW",
+      "payload_bits": 1536,
+      "configuration": "actual wide3x512 controller must define256b frame lowering"
+    },
+    "58": {
+      "owner": "DMA",
+      "quadrant": "NW",
+      "payload_bits": 309,
+      "configuration": "actual wide controller must define256b frame lowering"
+    },
+    "66": {
+      "owner": "SU",
+      "quadrant": "NW",
+      "payload_bits": "owner actual arithmetic programme"
+    },
+    "96": {
+      "owner": "SFU",
+      "quadrant": "NW",
+      "plane": 0,
+      "payload_bits": 222,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "97": {
+      "owner": "SFU",
+      "quadrant": "NW",
+      "plane": 1,
+      "payload_bits": 222,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "98": {
+      "owner": "SFU",
+      "quadrant": "NW",
+      "plane": 2,
+      "payload_bits": 222,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "99": {
+      "owner": "SFU",
+      "quadrant": "NW",
+      "plane": 3,
+      "payload_bits": 222,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "100": {
+      "owner": "SFU",
+      "quadrant": "NW",
+      "plane": 4,
+      "payload_bits": 222,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "101": {
+      "owner": "SFU",
+      "quadrant": "NW",
+      "plane": 5,
+      "payload_bits": 222,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "102": {
+      "owner": "SFU",
+      "quadrant": "NW",
+      "plane": 6,
+      "payload_bits": 222,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "103": {
+      "owner": "SFU",
+      "quadrant": "NW",
+      "plane": 7,
+      "payload_bits": 188,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "114": {
+      "owner": "HC",
+      "quadrant": "NW",
+      "payload_bits": 51,
+      "PCW": 11,
+      "scope": "actual PMAX8 paged programme; W44 mechanism historical"
+    },
+    "55": {
+      "owner": "COLL",
+      "quadrant": "NE",
+      "payload_bits": 1536,
+      "configuration": "actual wide3x512 controller must define256b frame lowering"
+    },
+    "59": {
+      "owner": "DMA",
+      "quadrant": "NE",
+      "payload_bits": 309,
+      "configuration": "actual wide controller must define256b frame lowering"
+    },
+    "67": {
+      "owner": "SU",
+      "quadrant": "NE",
+      "payload_bits": "owner actual arithmetic programme"
+    },
+    "104": {
+      "owner": "SFU",
+      "quadrant": "NE",
+      "plane": 0,
+      "payload_bits": 222,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "105": {
+      "owner": "SFU",
+      "quadrant": "NE",
+      "plane": 1,
+      "payload_bits": 222,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "106": {
+      "owner": "SFU",
+      "quadrant": "NE",
+      "plane": 2,
+      "payload_bits": 222,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "107": {
+      "owner": "SFU",
+      "quadrant": "NE",
+      "plane": 3,
+      "payload_bits": 222,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "108": {
+      "owner": "SFU",
+      "quadrant": "NE",
+      "plane": 4,
+      "payload_bits": 222,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "109": {
+      "owner": "SFU",
+      "quadrant": "NE",
+      "plane": 5,
+      "payload_bits": 222,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "110": {
+      "owner": "SFU",
+      "quadrant": "NE",
+      "plane": 6,
+      "payload_bits": 222,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "111": {
+      "owner": "SFU",
+      "quadrant": "NE",
+      "plane": 7,
+      "payload_bits": 188,
+      "PCW": 11,
+      "scope": "PMAX4 paged; MTP8 PCW12 uses221/195 plane widths"
+    },
+    "115": {
+      "owner": "HC",
+      "quadrant": "NE",
+      "payload_bits": 51,
+      "PCW": 11,
+      "scope": "actual PMAX8 paged programme; W44 mechanism historical"
+    }
+  },
+  "map": "F20={PC12 bits19:8,target8 bits7:0}; F24 eight32b pieces; F28={limit13 bits24:12,base12 bits11:0}; F2c loops16; VM F00/F08 retains10/11 addresses",
+  "first_calendar_edges_after_real_LCP71": {
+    "VM_direct": 6,
+    "external_two_rung_target": 8
+  },
+  "implementation_limits": "Only actual instantiated collars/controllers are consumers. This map reserves identifiers and does not claim missing engines, PHY or placement implemented. Every required target and word plane must be emitted and bound before release.",
+  "external_PCW": "8..12 typed local endpoint; refuses high address/limit bits before any narrow output; no alias"
+}

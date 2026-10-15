@@ -1,0 +1,83 @@
+tb_vms_calendar_host_static.sv:59: warning: Extra digits given for sized hex constant.
+tb_vms_calendar_host_static.sv:59: warning: Numeric constant truncated to 202 bits.
+tb_vms_calendar_host_static.sv:53: error: A reference to a wire or reg (`q') is not allowed in a constant expression.
+tb_vms_calendar_host_static.sv:53: error: indexed part select of calendar must be a constant in this context.
+tb_vms_calendar_host_static.sv:53: error: Output port expression must support continuous assignment.
+tb_vms_calendar_host_static.sv:53:      : Port 10 (calendar) of ot_vms_calendar_static is connected to calendar[(q)*('sd202)+:'sd202]
+tb_vms_calendar_host_static.sv:53: error: A reference to a wire or reg (`q') is not allowed in a constant expression.
+tb_vms_calendar_host_static.sv:53: error: Bit select expressions must be constant.
+tb_vms_calendar_host_static.sv:53:      : This msb expression violates the rule: q
+tb_vms_calendar_host_static.sv:53: error: A reference to a wire or reg (`q') is not allowed in a constant expression.
+tb_vms_calendar_host_static.sv:53: error: indexed part select of ordinal must be a constant in this context.
+tb_vms_calendar_host_static.sv:53: error: Output port expression must support continuous assignment.
+tb_vms_calendar_host_static.sv:53:      : Port 12 (ordinal) of ot_vms_calendar_static is connected to ordinal[(q)*('sd32)+:'sd32]
+tb_vms_calendar_host_static.sv:54: error: A reference to a wire or reg (`q') is not allowed in a constant expression.
+tb_vms_calendar_host_static.sv:54: error: Bit select expressions must be constant.
+tb_vms_calendar_host_static.sv:54:      : This msb expression violates the rule: q
+tb_vms_calendar_host_static.sv:54: error: A reference to a wire or reg (`q') is not allowed in a constant expression.
+tb_vms_calendar_host_static.sv:54: error: Bit select expressions must be constant.
+tb_vms_calendar_host_static.sv:54:      : This msb expression violates the rule: q
+tb_vms_calendar_host_static.sv:54: error: A reference to a wire or reg (`q') is not allowed in a constant expression.
+tb_vms_calendar_host_static.sv:54: error: Bit select expressions must be constant.
+tb_vms_calendar_host_static.sv:54:      : This msb expression violates the rule: q
+tb_vms_calendar_host_static.sv:53: error: A reference to a wire or reg (`q') is not allowed in a constant expression.
+tb_vms_calendar_host_static.sv:53: error: indexed part select of calendar must be a constant in this context.
+tb_vms_calendar_host_static.sv:53: error: Output port expression must support continuous assignment.
+tb_vms_calendar_host_static.sv:53:      : Port 10 (calendar) of ot_vms_calendar_static is connected to calendar[(q)*('sd202)+:'sd202]
+tb_vms_calendar_host_static.sv:53: error: A reference to a wire or reg (`q') is not allowed in a constant expression.
+tb_vms_calendar_host_static.sv:53: error: Bit select expressions must be constant.
+tb_vms_calendar_host_static.sv:53:      : This msb expression violates the rule: q
+tb_vms_calendar_host_static.sv:53: error: A reference to a wire or reg (`q') is not allowed in a constant expression.
+tb_vms_calendar_host_static.sv:53: error: indexed part select of ordinal must be a constant in this context.
+tb_vms_calendar_host_static.sv:53: error: Output port expression must support continuous assignment.
+tb_vms_calendar_host_static.sv:53:      : Port 12 (ordinal) of ot_vms_calendar_static is connected to ordinal[(q)*('sd32)+:'sd32]
+tb_vms_calendar_host_static.sv:54: error: A reference to a wire or reg (`q') is not allowed in a constant expression.
+tb_vms_calendar_host_static.sv:54: error: Bit select expressions must be constant.
+tb_vms_calendar_host_static.sv:54:      : This msb expression violates the rule: q
+tb_vms_calendar_host_static.sv:54: error: A reference to a wire or reg (`q') is not allowed in a constant expression.
+tb_vms_calendar_host_static.sv:54: error: Bit select expressions must be constant.
+tb_vms_calendar_host_static.sv:54:      : This msb expression violates the rule: q
+tb_vms_calendar_host_static.sv:54: error: A reference to a wire or reg (`q') is not allowed in a constant expression.
+tb_vms_calendar_host_static.sv:54: error: Bit select expressions must be constant.
+tb_vms_calendar_host_static.sv:54:      : This msb expression violates the rule: q
+tb_vms_calendar_host_static.sv:53: error: A reference to a wire or reg (`q') is not allowed in a constant expression.
+tb_vms_calendar_host_static.sv:53: error: indexed part select of calendar must be a constant in this context.
+tb_vms_calendar_host_static.sv:53: error: Output port expression must support continuous assignment.
+tb_vms_calendar_host_static.sv:53:      : Port 10 (calendar) of ot_vms_calendar_static is connected to calendar[(q)*('sd202)+:'sd202]
+tb_vms_calendar_host_static.sv:53: error: A reference to a wire or reg (`q') is not allowed in a constant expression.
+tb_vms_calendar_host_static.sv:53: error: Bit select expressions must be constant.
+tb_vms_calendar_host_static.sv:53:      : This msb expression violates the rule: q
+tb_vms_calendar_host_static.sv:53: error: A reference to a wire or reg (`q') is not allowed in a constant expression.
+tb_vms_calendar_host_static.sv:53: error: indexed part select of ordinal must be a constant in this context.
+tb_vms_calendar_host_static.sv:53: error: Output port expression must support continuous assignment.
+tb_vms_calendar_host_static.sv:53:      : Port 12 (ordinal) of ot_vms_calendar_static is connected to ordinal[(q)*('sd32)+:'sd32]
+tb_vms_calendar_host_static.sv:54: error: A reference to a wire or reg (`q') is not allowed in a constant expression.
+tb_vms_calendar_host_static.sv:54: error: Bit select expressions must be constant.
+tb_vms_calendar_host_static.sv:54:      : This msb expression violates the rule: q
+tb_vms_calendar_host_static.sv:54: error: A reference to a wire or reg (`q') is not allowed in a constant expression.
+tb_vms_calendar_host_static.sv:54: error: Bit select expressions must be constant.
+tb_vms_calendar_host_static.sv:54:      : This msb expression violates the rule: q
+tb_vms_calendar_host_static.sv:54: error: A reference to a wire or reg (`q') is not allowed in a constant expression.
+tb_vms_calendar_host_static.sv:54: error: Bit select expressions must be constant.
+tb_vms_calendar_host_static.sv:54:      : This msb expression violates the rule: q
+tb_vms_calendar_host_static.sv:53: error: A reference to a wire or reg (`q') is not allowed in a constant expression.
+tb_vms_calendar_host_static.sv:53: error: indexed part select of calendar must be a constant in this context.
+tb_vms_calendar_host_static.sv:53: error: Output port expression must support continuous assignment.
+tb_vms_calendar_host_static.sv:53:      : Port 10 (calendar) of ot_vms_calendar_static is connected to calendar[(q)*('sd202)+:'sd202]
+tb_vms_calendar_host_static.sv:53: error: A reference to a wire or reg (`q') is not allowed in a constant expression.
+tb_vms_calendar_host_static.sv:53: error: Bit select expressions must be constant.
+tb_vms_calendar_host_static.sv:53:      : This msb expression violates the rule: q
+tb_vms_calendar_host_static.sv:53: error: A reference to a wire or reg (`q') is not allowed in a constant expression.
+tb_vms_calendar_host_static.sv:53: error: indexed part select of ordinal must be a constant in this context.
+tb_vms_calendar_host_static.sv:53: error: Output port expression must support continuous assignment.
+tb_vms_calendar_host_static.sv:53:      : Port 12 (ordinal) of ot_vms_calendar_static is connected to ordinal[(q)*('sd32)+:'sd32]
+tb_vms_calendar_host_static.sv:54: error: A reference to a wire or reg (`q') is not allowed in a constant expression.
+tb_vms_calendar_host_static.sv:54: error: Bit select expressions must be constant.
+tb_vms_calendar_host_static.sv:54:      : This msb expression violates the rule: q
+tb_vms_calendar_host_static.sv:54: error: A reference to a wire or reg (`q') is not allowed in a constant expression.
+tb_vms_calendar_host_static.sv:54: error: Bit select expressions must be constant.
+tb_vms_calendar_host_static.sv:54:      : This msb expression violates the rule: q
+tb_vms_calendar_host_static.sv:54: error: A reference to a wire or reg (`q') is not allowed in a constant expression.
+tb_vms_calendar_host_static.sv:54: error: Bit select expressions must be constant.
+tb_vms_calendar_host_static.sv:54:      : This msb expression violates the rule: q
+56 error(s) during elaboration.
