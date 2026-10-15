@@ -97,7 +97,23 @@ module tb_tt_static_regroup;
   end endtask
   initial begin rst_n=0; rnd; repeat(20) @(negedge clk) rnd; rst_n=1;
     repeat(`NCYC) begin @(negedge clk); rnd; cyc=cyc+1; if(cyc%20000==10000) begin rst_n=0; @(negedge clk); rnd; rst_n=1; end end
-    if(errs==0) $display("REGROUP_PASS cycles=%0d outputs=%0d",cyc,43); else $display("REGROUP_FAIL errs=%0d",errs); $finish; end
+    seam_report;
+    if(errs==0 && (cmd_pair<`MIN_PAIR || ret_pair<`MIN_PAIR)) $display("REGROUP_UNSENSITIZED cmd_pair=%0d ret_pair=%0d min=%0d",cmd_pair,ret_pair,`MIN_PAIR);
+    else if(errs==0) $display("REGROUP_PASS cycles=%0d outputs=%0d cmd_pair=%0d ret_pair=%0d",cyc,43,cmd_pair,ret_pair); else $display("REGROUP_FAIL errs=%0d",errs); $finish; end
+  integer ct[0:379], rt[0:94]; integer cmd_pair=0, ret_pair=0, k; reg [379:0] pc; reg [94:0] pr;
+  initial begin for(k=0;k<380;k=k+1) ct[k]=0; for(k=0;k<95;k=k+1) rt[k]=0; pc=0; pr=0; end
+  always @(posedge clk) if(rst_n) begin
+    for(k=0;k<380;k=k+1) if(u_dut.rom_cmd[k]!==pc[k]) ct[k]=ct[k]+1;
+    for(k=0;k<95;k=k+1) if(u_dut.rom_ret[k]!==pr[k]) rt[k]=rt[k]+1;
+    pc=u_dut.rom_cmd; pr=u_dut.rom_ret;
+    if(u_dut.rom_cmd[`CMD_A]!==u_dut.rom_cmd[`CMD_B]) cmd_pair=cmd_pair+1;
+    if(u_dut.rom_ret[`RET_A]!==u_dut.rom_ret[`RET_B]) ret_pair=ret_pair+1;
+  end
+  task seam_report; begin
+    for(k=0;k<380;k=k+1) if(ct[k]!=0) $display("SEAM_CMD_TOG %0d %0d",k,ct[k]);
+    for(k=0;k<95;k=k+1) if(rt[k]!=0) $display("SEAM_RET_TOG %0d %0d",k,rt[k]);
+    $display("SEAM_PAIR cmd[%0d]/cmd[%0d] differ=%0d ret[%0d]/ret[%0d] differ=%0d",`CMD_A,`CMD_B,cmd_pair,`RET_A,`RET_B,ret_pair);
+  end endtask
   always @(posedge clk) if(rst_n) begin
     if(r_cp!==d_cp) begin errs=errs+1; if(errs<10) $display("MISMATCH cyc=%0d cp",cyc); end
     if(r_me_image_ready!==d_me_image_ready) begin errs=errs+1; if(errs<10) $display("MISMATCH cyc=%0d me_image_ready",cyc); end

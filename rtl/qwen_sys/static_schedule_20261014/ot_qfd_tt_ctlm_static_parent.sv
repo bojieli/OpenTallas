@@ -86,6 +86,7 @@ module ot_qfd_tt_ctlm_static_parent (
         .me_observe(me_observe),
         .native_ret(native_ret),
         .ck_head(ck_head),
+        .ck_pm0(ck_head), .ck_pm1(ck_head),   // same PLL phase; the physical cluster delivers separate entries
         .rst_n(rst_n),
         .h_start(h_start),
         .token(token),

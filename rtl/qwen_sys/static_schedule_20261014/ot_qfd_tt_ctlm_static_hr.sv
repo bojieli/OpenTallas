@@ -2,6 +2,7 @@
 // ot_qfd_tt_ctlm_static_parent body minus the ROM tree (u_head + native route + resident relocation +
 // loaded stage), one hardened leaf with roots ck_head / ck_me_sched. No logic or edge change; the tree
 // return enters as rom_ret_i. Equivalence vs the original parent: physical/qwen_tt_static_cluster_1015.
+// r14 (2026-10-15): the two program SRAMs take explicit raw clock entries ck_pm0/ck_pm1 (qfd_tt_ctlm_head_static_rk).
 // Static successor parent: actual WSRC classification and real native status.
 // No native command reaches the ROM tree; native completion comes from endpoint.
 module ot_qfd_tt_ctlm_static_hr (
@@ -16,6 +17,7 @@ module ot_qfd_tt_ctlm_static_hr (
     output wire [15:0] me_observe,
     input wire [94:0] native_ret,
     input wire ck_head,
+    input wire ck_pm0, ck_pm1,   // r14: raw program-SRAM clock entries (same PLL phase as ck_head)
     input wire  rst_n,
     input wire  h_start,
     input wire [18-1:0] token,
@@ -71,12 +73,13 @@ module ot_qfd_tt_ctlm_static_hr (
     ot_qfd_native_cmd_route u_native_route (
       .clk(ck_head),.rst_n(rst_n),.cmd(cmd),.rom_ret(rom_ret),.native_ret(native_ret),
       .rom_cmd(local_rom_cmd),.native_cmd(native_cmd),.ret(ret));
-    qfd_tt_ctlm_head_static u_head (
+    qfd_tt_ctlm_head_static_rk u_head (
         .me_observe(me_observe),.cp_active(cp_active),.cp(cp),
         .me_image_ready(me_image_ready),.program_obs(program_obs),
         .layer_context_v(layer_context_v),.native_tok(native_tok),.native_pos(native_pos),
 
         .clk(ck_head),
+        .ck_pm({ck_pm1,ck_pm0}),
         .ck_sched(ck_me_sched),
         .rst_n(rst_n),
         .h_start(h_start),
