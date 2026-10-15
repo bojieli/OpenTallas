@@ -1,0 +1,480 @@
+{
+ "schema": "opentallas.hbm_v15.host_ingress_pins.v1",
+ "top": "ot_hbm_host_static_ingress",
+ "source_ref": "b69e85b0e",
+ "source_sha256": "dd598f908d8bd8248aff70b82e1012217f9c4a4f8e9a910a9435c48a06133e8e",
+ "outline_um": [
+  216,
+  216
+ ],
+ "pins": [
+  {
+   "name": "clk",
+   "face": "N",
+   "layer": "M5",
+   "offset": 107.808,
+   "span_um": [
+    107.76,
+    107.856
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "rst_n",
+   "face": "N",
+   "layer": "M5",
+   "offset": 107.904,
+   "span_um": [
+    107.856,
+    107.952
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "block_ready",
+   "face": "N",
+   "layer": "M5",
+   "offset": 108.0,
+   "span_um": [
+    107.952,
+    108.048
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "program_active",
+   "face": "N",
+   "layer": "M5",
+   "offset": 108.096,
+   "span_um": [
+    108.048,
+    108.144
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "program_fault",
+   "face": "N",
+   "layer": "M5",
+   "offset": 108.192,
+   "span_um": [
+    108.144,
+    108.24
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "s_awvalid",
+   "face": "W",
+   "layer": "M4",
+   "offset": 103.056,
+   "span_um": [
+    103.008,
+    103.104
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "s_awready",
+   "face": "W",
+   "layer": "M4",
+   "offset": 103.152,
+   "span_um": [
+    103.104,
+    103.2
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "s_awaddr[11:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 103.776,
+   "span_um": [
+    103.2,
+    104.352
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "s_wvalid",
+   "face": "W",
+   "layer": "M4",
+   "offset": 104.4,
+   "span_um": [
+    104.352,
+    104.448
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "s_wready",
+   "face": "W",
+   "layer": "M4",
+   "offset": 104.496,
+   "span_um": [
+    104.448,
+    104.544
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "s_wdata[31:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 106.08,
+   "span_um": [
+    104.544,
+    107.616
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "s_wstrb[3:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 107.808,
+   "span_um": [
+    107.616,
+    108.0
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "s_bvalid",
+   "face": "W",
+   "layer": "M4",
+   "offset": 108.048,
+   "span_um": [
+    108.0,
+    108.096
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "s_bready",
+   "face": "W",
+   "layer": "M4",
+   "offset": 108.144,
+   "span_um": [
+    108.096,
+    108.192
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "s_bresp[1:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 108.288,
+   "span_um": [
+    108.192,
+    108.384
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "s_arvalid",
+   "face": "W",
+   "layer": "M4",
+   "offset": 108.432,
+   "span_um": [
+    108.384,
+    108.48
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "s_arready",
+   "face": "W",
+   "layer": "M4",
+   "offset": 108.528,
+   "span_um": [
+    108.48,
+    108.576
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "s_araddr[11:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 109.152,
+   "span_um": [
+    108.576,
+    109.728
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "s_rvalid",
+   "face": "W",
+   "layer": "M4",
+   "offset": 109.776,
+   "span_um": [
+    109.728,
+    109.824
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "s_rready",
+   "face": "W",
+   "layer": "M4",
+   "offset": 109.872,
+   "span_um": [
+    109.824,
+    109.92
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "s_rdata[31:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 111.456,
+   "span_um": [
+    109.92,
+    112.992
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "cfg_v",
+   "face": "S",
+   "layer": "M5",
+   "offset": 92.64,
+   "span_um": [
+    92.592,
+    92.688
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "cfg_target[7:0]",
+   "face": "S",
+   "layer": "M5",
+   "offset": 93.072,
+   "span_um": [
+    92.688,
+    93.456
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "cfg_addr[11:0]",
+   "face": "S",
+   "layer": "M5",
+   "offset": 94.032,
+   "span_um": [
+    93.456,
+    94.608
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "cfg_data[255:0]",
+   "face": "S",
+   "layer": "M5",
+   "offset": 106.896,
+   "span_um": [
+    94.608,
+    119.184
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "desc_v",
+   "face": "S",
+   "layer": "M5",
+   "offset": 119.232,
+   "span_um": [
+    119.184,
+    119.28
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "desc_base[11:0]",
+   "face": "S",
+   "layer": "M5",
+   "offset": 119.856,
+   "span_um": [
+    119.28,
+    120.432
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "desc_limit[12:0]",
+   "face": "S",
+   "layer": "M5",
+   "offset": 121.056,
+   "span_um": [
+    120.432,
+    121.68
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "desc_loops[15:0]",
+   "face": "S",
+   "layer": "M5",
+   "offset": 122.448,
+   "span_um": [
+    121.68,
+    123.216
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "launch_v",
+   "face": "S",
+   "layer": "M5",
+   "offset": 123.264,
+   "span_um": [
+    123.216,
+    123.312
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "fault",
+   "face": "S",
+   "layer": "M5",
+   "offset": 123.36,
+   "span_um": [
+    123.312,
+    123.408
+   ],
+   "offset_pending_view": true
+  }
+ ],
+ "pin_ranges": {
+  "clk": [
+   107.76,
+   107.856
+  ],
+  "rst_n": [
+   107.856,
+   107.952
+  ],
+  "block_ready": [
+   107.952,
+   108.048
+  ],
+  "program_active": [
+   108.048,
+   108.144
+  ],
+  "program_fault": [
+   108.144,
+   108.24
+  ],
+  "s_awvalid": [
+   103.008,
+   103.104
+  ],
+  "s_awready": [
+   103.104,
+   103.2
+  ],
+  "s_awaddr": [
+   103.2,
+   104.352
+  ],
+  "s_wvalid": [
+   104.352,
+   104.448
+  ],
+  "s_wready": [
+   104.448,
+   104.544
+  ],
+  "s_wdata": [
+   104.544,
+   107.616
+  ],
+  "s_wstrb": [
+   107.616,
+   108.0
+  ],
+  "s_bvalid": [
+   108.0,
+   108.096
+  ],
+  "s_bready": [
+   108.096,
+   108.192
+  ],
+  "s_bresp": [
+   108.192,
+   108.384
+  ],
+  "s_arvalid": [
+   108.384,
+   108.48
+  ],
+  "s_arready": [
+   108.48,
+   108.576
+  ],
+  "s_araddr": [
+   108.576,
+   109.728
+  ],
+  "s_rvalid": [
+   109.728,
+   109.824
+  ],
+  "s_rready": [
+   109.824,
+   109.92
+  ],
+  "s_rdata": [
+   109.92,
+   112.992
+  ],
+  "cfg_v": [
+   92.592,
+   92.688
+  ],
+  "cfg_target": [
+   92.688,
+   93.456
+  ],
+  "cfg_addr": [
+   93.456,
+   94.608
+  ],
+  "cfg_data": [
+   94.608,
+   119.184
+  ],
+  "desc_v": [
+   119.184,
+   119.28
+  ],
+  "desc_base": [
+   119.28,
+   120.432
+  ],
+  "desc_limit": [
+   120.432,
+   121.68
+  ],
+  "desc_loops": [
+   121.68,
+   123.216
+  ],
+  "launch_v": [
+   123.216,
+   123.312
+  ],
+  "fault": [
+   123.312,
+   123.408
+  ]
+ },
+ "note": "assigned component-local windows: host AXI west, programme south, clock/status north; full host packet/heterogeneous target/CDC joins OPEN"
+}
