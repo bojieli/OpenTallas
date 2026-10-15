@@ -654,6 +654,10 @@
   "views_to": "physical/ref_tile/qfd_io_collective_s4/views",
   "record_to": "results/rtl/ref_tile/qfd_io_collective_s4"
  },
+ "orfs_vars": {
+  "SETUP_MOVE_SEQUENCE": "unbuffer,sizeup,swap,clone"
+ },
+ "why_move_sequence": "OpenROAD rsz Rebuffer failed on this parent three times (S1, S3 Signal 11 in rsz::Rebuffer::insertAssuredOption; s4 gate fbf7b21a5 RSZ-0501 buffering u_coll.srv_q[0] \"area recovery cannot reproduce solution\"): setup repair excludes the buffer/split moves (unbuffer, sizeup, swap, clone remain). Constraints, periods and sign-off unchanged; timing is judged exactly as before.",
  "recipe": 2,
  "io_flop_at_pins": {
   "cols": 4,
