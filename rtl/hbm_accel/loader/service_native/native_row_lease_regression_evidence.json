@@ -1,0 +1,77 @@
+{
+  "schema": "opentallas.native-row-lease-regression.v1",
+  "status": "FUNCTIONAL_PASS_PERFORMANCE_FAIL",
+  "host": "ot-epyc1tb",
+  "unit": "oth-ubuntu-901649-1792059888",
+  "terminal_exit_code": 2,
+  "simulator": "Icarus",
+  "memory_GB": 2,
+  "threads": 1,
+  "directed": "ordinary PRE suppressed; stale/done PRE, forced PRE, due REFpb preserved",
+  "lease0_control_latency": 426.432633,
+  "strict_oracle_unchanged": true,
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_stream_pc_lease.sv": "c16adc653eff8bce34ace00d6b4753b6937e758604b8d809183e14e85ea8be4c",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_lease_stack.sv": "ae0e4d901822d012e2b6cbba4f1ebd37aa8500b91e76b7b9584137840fef1d83",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_native_row_lease.sv": "920778a4dc805f323e5681a5e1f3ae683f2068b0692e6d269671c34c488ee51c",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_prefetch_leased_native.sv": "ee415a9f8aa90c15fb5847968e7e766b4310437ac76b093f17cd5223526f6722",
+    "rtl/hbm_accel/loader/service_native/run_native_row_lease_bench.sh": "276ec8c85ba20d384b541c573c5a760b5ec6e8da4bbc7a75abe22d13ea750d7f",
+    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_command_dram_pipeline_fixture.sv": "3bb69a5cd9d058bfd28df57acee4fb24e2a3d4992b4a468dbb638c4e5c8ade8f",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_swizzled_cdc.sv": "feb489a81eb1592716771c960b74b23f936ba511e03ba140df4b2b666ad97b50",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_swizzled_bank.sv": "2a3628494c9778d1ac9337f2aabee6ac82e2768f2de5dd657847637626e5d935"
+  },
+  "logs": {
+    "phase_137_case_1.log": "PREFETCH_BURST_CDC_CASE epoch=1 base=4099 total=640 bursts=161 responses=640 reserve_to_ready_HBM_cycles=92.773512 reset_release_to_reserve_HBM_cycles=21.383813 reserve_assert_to_accept_HBM_cycles=0.405925 reserve_to_first_request_HBM_cycles=2.116187 last_response_to_ready_HBM_cycles=1.657325 stream_delivery_cycles=80\nPREFETCH_BURST_CDC_RESPONSE_PROFILE epoch=1 response_stalls=163 FIFO_credit_stalls=0 arbitration_conflict_stalls=163 peak_accepted_per_HBM_edge=30 accepted_edges_ge10=29 accepted_edges_ge20=17 accepted_edges_ge28=5\nPREFETCH_BURST_CDC_PERFORMANCE FAIL epoch=1 baseline_HBM_cycles=77.000000 limit_HBM_cycles=84.700000 measured_HBM_cycles=92.773512 overhead_HBM_cycles=15.773512 ratio=1.204851 baseline_edge_convention=previous_posedge_to_response DUT_edge_convention=accepted_reserve_to_ready\nPASS PREFETCH_LEASED_NATIVE native_command_only_DRAM real32SRAM stream_period_ps=833.333334 hbm_period_ps=1024 PHY_CLK_PS=1024 phase=137.000000 exact_vectors=640 requested_sectors=640 fixed_cycles=80 request_stalls=64 response_stalls=163 performance_failures=1\nPREFETCH_BURST_CDC_RESPONSE_PROFILE_TOTAL response_stalls=163 FIFO_credit_stalls=0 arbitration_conflict_stalls=163 peak_accepted_per_HBM_edge=30 accepted_edges_ge10=29 accepted_edges_ge20=17 accepted_edges_ge28=5\nrtl/hbm_accel/loader/service_native/tb_hbm_svc_prefetch_leased_native.sv:224: $finish called at 199166826 (1fs)\n",
+    "phase_773_case_2.log": "PREFETCH_BURST_CDC_CASE epoch=2 base=12295 total=2048 bursts=513 responses=2048 reserve_to_ready_HBM_cycles=168.457166 reset_release_to_reserve_HBM_cycles=20.762720 reserve_assert_to_accept_HBM_cycles=0.405925 reserve_to_first_request_HBM_cycles=2.737280 last_response_to_ready_HBM_cycles=1.719886 stream_delivery_cycles=256\nPREFETCH_BURST_CDC_RESPONSE_PROFILE epoch=2 response_stalls=858 FIFO_credit_stalls=0 arbitration_conflict_stalls=858 peak_accepted_per_HBM_edge=30 accepted_edges_ge10=96 accepted_edges_ge20=75 accepted_edges_ge28=2\nPREFETCH_BURST_CDC_PERFORMANCE FAIL epoch=2 baseline_HBM_cycles=122.000000 limit_HBM_cycles=134.200000 measured_HBM_cycles=168.457166 overhead_HBM_cycles=46.457166 ratio=1.380796 baseline_edge_convention=previous_posedge_to_response DUT_edge_convention=accepted_reserve_to_ready\nPASS PREFETCH_LEASED_NATIVE native_command_only_DRAM real32SRAM stream_period_ps=833.333334 hbm_period_ps=1024 PHY_CLK_PS=1024 phase=773.000000 exact_vectors=2048 requested_sectors=2048 fixed_cycles=256 request_stalls=1647 response_stalls=858 performance_failures=1\nPREFETCH_BURST_CDC_RESPONSE_PROFILE_TOTAL response_stalls=858 FIFO_credit_stalls=0 arbitration_conflict_stalls=858 peak_accepted_per_HBM_edge=30 accepted_edges_ge10=96 accepted_edges_ge20=75 accepted_edges_ge28=2\nrtl/hbm_accel/loader/service_native/tb_hbm_svc_prefetch_leased_native.sv:224: $finish called at 423333672 (1fs)\n",
+    "phase_773_case_1.log": "PREFETCH_BURST_CDC_CASE epoch=1 base=4099 total=640 bursts=161 responses=640 reserve_to_ready_HBM_cycles=93.587314 reset_release_to_reserve_HBM_cycles=20.762720 reserve_assert_to_accept_HBM_cycles=0.405925 reserve_to_first_request_HBM_cycles=2.737280 last_response_to_ready_HBM_cycles=1.850034 stream_delivery_cycles=80\nPREFETCH_BURST_CDC_RESPONSE_PROFILE epoch=1 response_stalls=163 FIFO_credit_stalls=0 arbitration_conflict_stalls=163 peak_accepted_per_HBM_edge=30 accepted_edges_ge10=29 accepted_edges_ge20=17 accepted_edges_ge28=5\nPREFETCH_BURST_CDC_PERFORMANCE FAIL epoch=1 baseline_HBM_cycles=77.000000 limit_HBM_cycles=84.700000 measured_HBM_cycles=93.587314 overhead_HBM_cycles=16.587314 ratio=1.215420 baseline_edge_convention=previous_posedge_to_response DUT_edge_convention=accepted_reserve_to_ready\nPASS PREFETCH_LEASED_NATIVE native_command_only_DRAM real32SRAM stream_period_ps=833.333334 hbm_period_ps=1024 PHY_CLK_PS=1024 phase=773.000000 exact_vectors=640 requested_sectors=640 fixed_cycles=80 request_stalls=64 response_stalls=163 performance_failures=1\nPREFETCH_BURST_CDC_RESPONSE_PROFILE_TOTAL response_stalls=163 FIFO_credit_stalls=0 arbitration_conflict_stalls=163 peak_accepted_per_HBM_edge=30 accepted_edges_ge10=29 accepted_edges_ge20=17 accepted_edges_ge28=5\nrtl/hbm_accel/loader/service_native/tb_hbm_svc_prefetch_leased_native.sv:224: $finish called at 200000160 (1fs)\n",
+    "build.log": "",
+    "control_build.log": "",
+    "lease0.log": "PREFETCH_BURST_CDC_CASE epoch=2 base=12295 total=2048 bursts=513 responses=2048 reserve_to_ready_HBM_cycles=426.432633 reset_release_to_reserve_HBM_cycles=21.383813 reserve_assert_to_accept_HBM_cycles=0.405925 reserve_to_first_request_HBM_cycles=2.116187 last_response_to_ready_HBM_cycles=2.316446 stream_delivery_cycles=256\nPREFETCH_BURST_CDC_RESPONSE_PROFILE epoch=2 response_stalls=739 FIFO_credit_stalls=0 arbitration_conflict_stalls=739 peak_accepted_per_HBM_edge=30 accepted_edges_ge10=96 accepted_edges_ge20=64 accepted_edges_ge28=2\nPREFETCH_BURST_CDC_PERFORMANCE FAIL epoch=2 baseline_HBM_cycles=122.000000 limit_HBM_cycles=134.200000 measured_HBM_cycles=426.432633 overhead_HBM_cycles=304.432633 ratio=3.495349 baseline_edge_convention=previous_posedge_to_response DUT_edge_convention=accepted_reserve_to_ready\nPASS PREFETCH_LEASED_NATIVE native_command_only_DRAM real32SRAM stream_period_ps=833.333334 hbm_period_ps=1024 PHY_CLK_PS=1024 phase=137.000000 exact_vectors=2048 requested_sectors=2048 fixed_cycles=256 request_stalls=1647 response_stalls=739 performance_failures=1\nPREFETCH_BURST_CDC_RESPONSE_PROFILE_TOTAL response_stalls=739 FIFO_credit_stalls=0 arbitration_conflict_stalls=739 peak_accepted_per_HBM_edge=30 accepted_edges_ge10=96 accepted_edges_ge20=64 accepted_edges_ge28=2\n/tmp/prefetch-swizzled-native-20261015/lease-evidence/lease0_tb.sv:224: $finish called at 687500550 (1fs)\n",
+    "directed.log": "NATIVE_ROW_LEASE PASS ordinary_PRE_suppressed stale_done_PRE_preserved forced_PRE_preserved due_REFpb_preserved\nrtl/hbm_accel/loader/service_native/tb_hbm_svc_native_row_lease.sv:26: $finish called at 4101000 (1fs)\n",
+    "phase_137_case_2.log": "PREFETCH_BURST_CDC_CASE epoch=2 base=12295 total=2048 bursts=513 responses=2048 reserve_to_ready_HBM_cycles=168.457166 reset_release_to_reserve_HBM_cycles=21.383813 reserve_assert_to_accept_HBM_cycles=0.405925 reserve_to_first_request_HBM_cycles=2.116187 last_response_to_ready_HBM_cycles=2.340979 stream_delivery_cycles=256\nPREFETCH_BURST_CDC_RESPONSE_PROFILE epoch=2 response_stalls=858 FIFO_credit_stalls=0 arbitration_conflict_stalls=858 peak_accepted_per_HBM_edge=30 accepted_edges_ge10=96 accepted_edges_ge20=75 accepted_edges_ge28=2\nPREFETCH_BURST_CDC_PERFORMANCE FAIL epoch=2 baseline_HBM_cycles=122.000000 limit_HBM_cycles=134.200000 measured_HBM_cycles=168.457166 overhead_HBM_cycles=46.457166 ratio=1.380796 baseline_edge_convention=previous_posedge_to_response DUT_edge_convention=accepted_reserve_to_ready\nPASS PREFETCH_LEASED_NATIVE native_command_only_DRAM real32SRAM stream_period_ps=833.333334 hbm_period_ps=1024 PHY_CLK_PS=1024 phase=137.000000 exact_vectors=2048 requested_sectors=2048 fixed_cycles=256 request_stalls=1647 response_stalls=858 performance_failures=1\nPREFETCH_BURST_CDC_RESPONSE_PROFILE_TOTAL response_stalls=858 FIFO_credit_stalls=0 arbitration_conflict_stalls=858 peak_accepted_per_HBM_edge=30 accepted_edges_ge10=96 accepted_edges_ge20=75 accepted_edges_ge28=2\nrtl/hbm_accel/loader/service_native/tb_hbm_svc_prefetch_leased_native.sv:224: $finish called at 423333672 (1fs)\n"
+  },
+  "log_sha256": {
+    "phase_137_case_1.log": "912132dfc25d4928af7a540e8b55220e3f4edd5c640b559624a1b23c66c8a66e",
+    "phase_773_case_2.log": "1df30db8f33ceace36498ad0ca6e31d6913490ddfd669121e6bbac9ac5cdde38",
+    "phase_773_case_1.log": "52ea6fb19563f554aa6e719feff81bca0f0b2af007bf48e9e647d0702afd79f6",
+    "build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "control_build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "lease0.log": "e67615585956c0c8c2b23205284ee4ff1aa41c61990fdd4b3394d2e34fa3dfce",
+    "directed.log": "3a59946a66aa9c7b5cdc8e7f1a4d5b3e915279c88d6508bbdac6f241be34de8a",
+    "phase_137_case_2.log": "5030b84a816ff2550dc3d8d7e276b7dc2259021a1fa3a925e30a23ccd2858c98"
+  },
+  "cases": [
+    {
+      "phase_ps": 137,
+      "total": 640,
+      "functional": "PASS",
+      "latency_HBM_cycles": 92.773512,
+      "unchanged_gate": 84.7,
+      "performance": "FAIL"
+    },
+    {
+      "phase_ps": 137,
+      "total": 2048,
+      "functional": "PASS",
+      "latency_HBM_cycles": 168.457166,
+      "unchanged_gate": 134.2,
+      "performance": "FAIL"
+    },
+    {
+      "phase_ps": 773,
+      "total": 640,
+      "functional": "PASS",
+      "latency_HBM_cycles": 93.587314,
+      "unchanged_gate": 84.7,
+      "performance": "FAIL"
+    },
+    {
+      "phase_ps": 773,
+      "total": 2048,
+      "functional": "PASS",
+      "latency_HBM_cycles": 168.457166,
+      "unchanged_gate": 134.2,
+      "performance": "FAIL"
+    }
+  ]
+}

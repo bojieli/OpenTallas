@@ -1,0 +1,22 @@
+{
+  "status": "PREBUILD_OPT_IN_CANDIDATE_NOT_QUALIFIED",
+  "baseline_commit": "cbd92c1cc",
+  "baseline_leaf_SHA256": "f18b70157a6502526b56227ebba05d252897cce1d09a80cc08f7fc67bb713bde",
+  "observed_cause": "PC20cyc114 AQempty but ownerunposted20/count20/readreserved32; ordinarywopenPRE chosenbank12;newAQappearsbeforePREfires;guardcorrectlyblocksRD thenbankreopens",
+  "proposal": "Hold write/access-opened banks for same active physical row. Disable ONLY wopen-driven opportunistic PRE in AQ mode. Descriptor-change stale PRE and refresh forced PRE remain unmodified. Owner must retire all queued/read-reserved work before changing active row as already enforced. Existing close-column guard retained.",
+  "state_FF_delta": 0,
+  "SRAM_delta": 0,
+  "clock_root_delta": 0,
+  "capacity": "unchanged32owner/pending/response entriesperPC;32realresponseSRAMperstack",
+  "pins": "unchanged external K,row/column,clockABI;compile-time opt-in parameter only",
+  "combinational_delta": "constant prune ofwopen ordinaryPRE term inAQ_ROW_LEASE1 mode; exactmappedarea/clockcost pending",
+  "performance": "Unchanged64084.7/2048134.2HBMcycle gates. No predictedpass;forcedREFmaydominate. Actualcontroller426baseline preserved.",
+  "correctness_tests_required": [
+    "ordinaryPRE disabledduringactive-row lease",
+    "stale/descriptor-change PRE stillpermitted",
+    "forcedREFdeadline PRE unaffected",
+    "samebankPRE-column exclusion unchanged",
+    "strictcanonical23commandoracle andexactdata all4phase/shape cases",
+    "disablelease mutant establishes measuredbehavior difference;no modeltimingrelax"
+  ]
+}
