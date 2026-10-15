@@ -1,13 +1,16 @@
-"""Pre-RTL complete Engram ROW_GATHER transport/assembly model.
+"""Pre-RTL fixed-resource Engram transport/assembly compiler model.
 
-Source and consumer are real two-macro row stores from0d07ffe3e. Exact link
-profile is the proved logical102edgeFEC+8edgeCDC profile1b3f1c2bb, not PMA512
-qualification. Source SRAM load/service latency is supplied separately.
+Default compiles the selected24-row/120-packet native mechanism. local_slots
+reserves all160 physical sequence frames independent of descriptor ownership;
+that typed application-NOP successor requires a separate native proof.
+Two-rate mode uses the actual TX6/RX2,613/487,core:FEC17:16,151-FEC-edge
+component calendar. Source service, initialization and physical adoption
+remain separate; continuation of core decode does not extend finite word steps.
 """
 import collections,json,pathlib
 class ScheduleFault(ValueError):pass
 
-def compile_calendar(receipt,layer=1,profile_rx_base=614,two_rate=False):
+def compile_calendar(receipt,layer=1,profile_rx_base=614,two_rate=False,local_slots=False):
     rows=[x for x in receipt['rows'] if x['layer']==layer]
     assert [x['list_index'] for x in rows]==list(range(24))
     first=0 if layer==1 else 8;consumer=first+8
@@ -23,10 +26,19 @@ def compile_calendar(receipt,layer=1,profile_rx_base=614,two_rate=False):
         key=(unit,c)
         if key in events and events[key]!=identity:raise ScheduleFault((key,events[key],identity))
         events[key]=identity
-    for row in rows:
-        home=row['rank']-first;rid=row['list_index']
+    schedule_rows=rows
+    if local_slots:
+        schedule_rows=[]
+        for home in range(8):
+            owned=[r for r in rows if r['rank']==first+home]
+            assert len(owned)<=4
+            for slot in range(4):
+                schedule_rows.append(dict(rank=first+home,list_index=owned[slot]['list_index'] if slot<len(owned) else 0,local_slot=slot,present=slot<len(owned)))
+    for row in schedule_rows:
+        home=row['rank']-first;rid=row['list_index'];present=row.get('present',True)
+        local_slot=row.get('local_slot')
         for pair in range(5):
-            identity=rid*5+pair
+            identity=(home*20+local_slot*5+pair) if local_slots else rid*5+pair
             for start in range(486,100000):
                 mark=dict(events);oldh=len(hops);oldw=len(writes);undo=[]
                 try:
@@ -34,7 +46,7 @@ def compile_calendar(receipt,layer=1,profile_rx_base=614,two_rate=False):
                     req=[(start-7,2*pair),(start-6,2*pair+1)] if pair<4 else [(start-6,8)]
                     for c,sector in req:
                         if c<479:raise ScheduleFault('read before staged source ready')
-                        reserve(f'home{home}.read',c,(rid,sector))
+                        reserve(f'home{home}.read',c,(local_slot if local_slots else rid,sector))
                     capture=start;source=0
                     for link in range(home,8):
                         reserve(f'n{link}.qsrc{source}',capture,identity)
@@ -60,9 +72,10 @@ def compile_calendar(receipt,layer=1,profile_rx_base=614,two_rate=False):
                     # qslot outputC+2, assembler inputC+3, outputC+4,
                     # actual consumer row-store samples lowerC+5/upperC+6.
                     for w,sector in [(capture+5,2*pair)]+([] if pair==4 else [(capture+6,2*pair+1)]):
-                        reserve('consumer.write',w,(rid,sector));writes.append(dict(cycle=w,row=rid,sector=sector))
-                    requests.extend(dict(home=home,row=rid,sector=sector,cycle=c) for c,sector in req)
-                    packets.append(dict(index=identity,home=home,row=rid,pair=pair,source_capture=start,consumer_capture=capture+3))
+                        reserve('consumer.write',w,(identity if local_slots else rid,sector));
+                        if present:writes.append(dict(cycle=w,row=rid,sector=sector))
+                    requests.extend(dict(home=home,row=rid,sector=sector,cycle=c,**(dict(local_slot=local_slot,present=present) if local_slots else {})) for c,sector in req)
+                    packets.append(dict(index=identity,home=home,row=rid,pair=pair,source_capture=start,consumer_capture=capture+3,**(dict(local_slot=local_slot,present=present) if local_slots else {})))
                     break
                 except ScheduleFault:
                     events=mark
@@ -70,15 +83,15 @@ def compile_calendar(receipt,layer=1,profile_rx_base=614,two_rate=False):
                     del hops[oldh:];del writes[oldw:]
             else:raise ScheduleFault('no finite resource-safe source schedule')
     assert len(writes)==216 and len({(x['row'],x['sector']) for x in writes})==216
-    finalwrite=max(x['cycle'] for x in writes)
+    finalwrite=max(c for (unit,c) in events if unit=='consumer.write') if local_slots else max(x['cycle'] for x in writes)
     # Actualconsumer commit+1; scale read first, then eight code sectors.
     decode=[dict(cycle=finalwrite+2+row*9+s,row=row,sector=([8]+list(range(8)))[s]) for row in range(24) for s in range(9)]
-    done=decode[-1]['cycle']+4
+    done=max(decode[-1]['cycle']+4,max(p['consumer_capture']+3 for p in packets))
     last_rx=max(x['receive'] for x in hops)
     stop=2877 if two_rate else 2658
     if any((613*(e['ordinal']+1)+486)//487-1>=2048 for e in hops):raise ScheduleFault('payload requiresword beyond2048wordepoch')
-    if done>=stop:raise ScheduleFault(f'operation extends past compiled finite window:done{done} stop{stop}')
-    result=dict(status='PRE_RTL_CALENDAR_RESOURCE_PASS; logical FEC profile only',layer=layer,home_ranks=list(range(first,consumer)),consumer_rank=consumer,rows=24,bytes_per_row=288,sectors=216,packets=120,links=8,requests=requests,packets_calendar=packets,hops=hops,consumer_writes=writes,consumer_reads=decode,last_packet_publication=last_rx,last_consumer_write=finalwrite,done=done,finite_read_last=2871 if two_rate else 2656,finite_window_headroom=stop-1-done,two_rate=two_rate,reserved_resources=len(events),profile=dict(tx=6,rx=2,accept_base=511 if two_rate else 498,rx_publication_base=702 if two_rate else profile_rx_base,word_bits=487,frame_bits=613,fec_age=151 if two_rate else 102,internal_cdc_age_fec=8,window_words=2048,core_period_ticks=16,fec_period_ticks=17 if two_rate else 16,qualification='ExacteventmodelpendingactualRTLproof' if two_rate else 'Provedsameclocklogicalbaseline'),physical='Source-pinned candidate8neighborchain. PMA512, actual clocks/pads and resulting latency are not qualified.')
+    if done>=stop and not local_slots:raise ScheduleFault(f'operation extends past compiled finite window:done{done} stop{stop}')
+    result=dict(status='PRE_RTL_CALENDAR_RESOURCE_PASS',layer=layer,home_ranks=list(range(first,consumer)),consumer_rank=consumer,rows=24,bytes_per_row=288,sectors=216,packets=160 if local_slots else 120,logical_payload_packets=120,application_NOP_packets=40 if local_slots else 0,local_slot_schedule=local_slots,links=8,requests=requests,packets_calendar=packets,hops=hops,consumer_writes=writes,consumer_reads=decode,last_packet_publication=last_rx,last_consumer_write=finalwrite,done=done,finite_read_last=2871 if two_rate else 2656,finite_window_headroom=stop-1-done,two_rate=two_rate,reserved_resources=len(events),profile=dict(tx=6,rx=2,accept_base=511 if two_rate else 498,rx_publication_base=702 if two_rate else profile_rx_base,word_bits=487,frame_bits=613,fec_age=151 if two_rate else 102,internal_cdc_age_fec=8,window_words=2048,core_period_ticks=16,fec_period_ticks=17 if two_rate else 16,qualification='ExacteventmodelpendingactualRTLproof' if two_rate else 'Provedsameclocklogicalbaseline'),physical='Source-pinned candidate8neighborchain. Functional PMA512/16:17 clock component is source-proven; actual pads, board, physical clocks and timing are unqualified.')
     return result
 
 def model():

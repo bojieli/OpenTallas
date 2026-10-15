@@ -1,0 +1,270 @@
+{
+  "status": "PRE_RTL_FIXED_RESOURCE_CALENDAR_PASS",
+  "logical_rows": 24,
+  "logical_sectors": 216,
+  "physical_packets": 160,
+  "selected_payloads": 120,
+  "selected_application_NOPS": 40,
+  "all_token_payload_count": 120,
+  "hops": 720,
+  "done_core_edges": 2978,
+  "first_control_consumer": 406,
+  "control_operations": 2569,
+  "required_native_banks_per_node": 21,
+  "nodes": 9,
+  "programme_native_banks": 189,
+  "largest_frame_ordinal": 1530,
+  "last_physical_word": 1927,
+  "finite_words": 2048,
+  "decode_continues_after_window": true,
+  "ownership_variant_checks": [
+    {
+      "layer": 1,
+      "shift": 0,
+      "counts": [
+        4,
+        4,
+        4,
+        4,
+        3,
+        2,
+        2,
+        1
+      ],
+      "done": 2978
+    },
+    {
+      "layer": 1,
+      "shift": 1,
+      "counts": [
+        1,
+        4,
+        4,
+        4,
+        4,
+        3,
+        2,
+        2
+      ],
+      "done": 2978
+    },
+    {
+      "layer": 1,
+      "shift": 2,
+      "counts": [
+        2,
+        1,
+        4,
+        4,
+        4,
+        4,
+        3,
+        2
+      ],
+      "done": 2978
+    },
+    {
+      "layer": 1,
+      "shift": 3,
+      "counts": [
+        2,
+        2,
+        1,
+        4,
+        4,
+        4,
+        4,
+        3
+      ],
+      "done": 2978
+    },
+    {
+      "layer": 1,
+      "shift": 4,
+      "counts": [
+        3,
+        2,
+        2,
+        1,
+        4,
+        4,
+        4,
+        4
+      ],
+      "done": 2978
+    },
+    {
+      "layer": 1,
+      "shift": 5,
+      "counts": [
+        4,
+        3,
+        2,
+        2,
+        1,
+        4,
+        4,
+        4
+      ],
+      "done": 2978
+    },
+    {
+      "layer": 1,
+      "shift": 6,
+      "counts": [
+        4,
+        4,
+        3,
+        2,
+        2,
+        1,
+        4,
+        4
+      ],
+      "done": 2978
+    },
+    {
+      "layer": 1,
+      "shift": 7,
+      "counts": [
+        4,
+        4,
+        4,
+        3,
+        2,
+        2,
+        1,
+        4
+      ],
+      "done": 2978
+    },
+    {
+      "layer": 14,
+      "shift": 0,
+      "counts": [
+        4,
+        4,
+        4,
+        4,
+        3,
+        2,
+        2,
+        1
+      ],
+      "done": 2978
+    },
+    {
+      "layer": 14,
+      "shift": 1,
+      "counts": [
+        1,
+        4,
+        4,
+        4,
+        4,
+        3,
+        2,
+        2
+      ],
+      "done": 2978
+    },
+    {
+      "layer": 14,
+      "shift": 2,
+      "counts": [
+        2,
+        1,
+        4,
+        4,
+        4,
+        4,
+        3,
+        2
+      ],
+      "done": 2978
+    },
+    {
+      "layer": 14,
+      "shift": 3,
+      "counts": [
+        2,
+        2,
+        1,
+        4,
+        4,
+        4,
+        4,
+        3
+      ],
+      "done": 2978
+    },
+    {
+      "layer": 14,
+      "shift": 4,
+      "counts": [
+        3,
+        2,
+        2,
+        1,
+        4,
+        4,
+        4,
+        4
+      ],
+      "done": 2978
+    },
+    {
+      "layer": 14,
+      "shift": 5,
+      "counts": [
+        4,
+        3,
+        2,
+        2,
+        1,
+        4,
+        4,
+        4
+      ],
+      "done": 2978
+    },
+    {
+      "layer": 14,
+      "shift": 6,
+      "counts": [
+        4,
+        4,
+        3,
+        2,
+        2,
+        1,
+        4,
+        4
+      ],
+      "done": 2978
+    },
+    {
+      "layer": 14,
+      "shift": 7,
+      "counts": [
+        4,
+        4,
+        4,
+        3,
+        2,
+        2,
+        1,
+        4
+      ],
+      "done": 2978
+    }
+  ],
+  "fifth_owned_row_mutant": "rejected",
+  "protocol": "new typed inner-present0 application-NOP; outer613 valid/sequence remains active",
+  "native_successor_proven": false,
+  "physical_qualified": false,
+  "normative_unchanged_programme": false,
+  "source_sha256": "eb53255ddb9d628a4addd522d3e3df34b4b4a134f6c9f826c9063bf391733eb2",
+  "ot_run_unit": "oth-ubuntu-1668631-1792058647",
+  "selected120_regression": "same2424 control operations /2833 finish; committed layer1 images byte-equal (L14 existing19bank proof separate)"
+}

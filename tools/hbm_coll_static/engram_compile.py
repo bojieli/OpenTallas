@@ -11,6 +11,8 @@ FIELDS={'capture':(0,10),'sink':(10,16),'select':(26,64),'wr':(90,1),'wrseq':(91
 FIRST=406;LAUNCH=399;BANKS=19
 
 def lower(cal):
+    if cal.get('local_slot_schedule'):
+        raise ValueError('160-slot successor needs its own native packet/assembler lowering; selected120 ABI cannot encode it')
     limit=max(x['cycle'] for x in cal['consumer_reads'])-FIRST+1
     assert limit<=BANKS*128
     words=[[0]*(BANKS*128) for _ in range(9)]
