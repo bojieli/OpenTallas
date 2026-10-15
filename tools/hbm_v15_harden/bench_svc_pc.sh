@@ -12,3 +12,7 @@ fi
 iverilog -g2012 -s tb_hbm_svc_static_pc -o "$out/sim.vvp" "$mem" "$src" $d/tb_hbm_svc_static_pc.sv
 vvp "$out/sim.vvp" > "$out/sim.log" 2>&1 || { cat "$out/sim.log"; exit 1; }
 cat "$out/sim.log"; grep -q 'STATIC_PC PASS' "$out/sim.log"
+if [ "$mut" = 0 ]; then  # counted block_ready vs the prior all_seen form, every output bit every cycle
+  iverilog -g2012 -s tb_hbm_svc_pc_ready_equiv -Ptb_hbm_svc_pc_ready_equiv.CYCLES=20000 -o "$out/eq.vvp" "$mem" $src $d/split/ot_hbm_svc_static_pc_ref.sv $d/split/tb_hbm_svc_pc_ready_equiv.sv
+  for s in 1 2; do vvp "$out/eq.vvp" +seed=$s > "$out/eq$s.log" 2>&1 || { tail -3 "$out/eq$s.log"; exit 1; }; tail -1 "$out/eq$s.log"; grep -q 'PC_READY_EQUIV PASS' "$out/eq$s.log"; done
+fi

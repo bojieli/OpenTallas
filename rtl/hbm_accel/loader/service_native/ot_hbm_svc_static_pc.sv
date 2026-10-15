@@ -31,7 +31,12 @@ module ot_hbm_svc_static_pc (
  function automatic all_seen(input [63:0] bits,input [6:0] n);
   integer i;begin all_seen=n!=0;for(i=0;i<64;i=i+1)if(i<n&&!bits[i])all_seen=0;end
  endfunction
- assign block_ready={owned[1]&&all_seen(seen[1],count[1]),owned[0]&&all_seen(seen[0],count[0])};
+ // HBM-V15-HARDEN 10-15: block_ready from a per-bank accepted-write count (cycle-identical to all_seen: every
+// accepted write sets a previously clear seen bit below count -- staged fills require !seen and slot<count,
+// prefetch responses run slot 0..count-1 on a bank opened empty with fills blocked -- so popcount == filled).
+// Replaces the 64-bit ordered all_seen reduction on the block_ready output (7 levels reg->out at the gate).
+ reg [6:0] filled[0:1];
+ assign block_ready={owned[1]&&count[1]!=0&&filled[1]==count[1],owned[0]&&count[0]!=0&&filled[0]==count[0]};
  assign bank_owned=owned;
  wire [30:0] next_addr={1'b0,addr_q}+{1'b0,step_q};
  assign busy=state!=IDLE;assign fault=sticky;
@@ -57,14 +62,14 @@ module ot_hbm_svc_static_pc (
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin
    state<=IDLE;owned<=0;epoch[0]<=0;epoch[1]<=0;count[0]<=0;count[1]<=0;
-   seen[0]<=0;seen[1]<=0;bank_q<=0;epoch_q<=0;addr_q<=0;step_q<=0;
+   seen[0]<=0;seen[1]<=0;filled[0]<=0;filled[1]<=0;bank_q<=0;epoch_q<=0;addr_q<=0;step_q<=0;
    slot_q<=0;write_q<=0;sticky<=0;out_v<=0;done<=0;
   end else begin
    done<=0;out_v<=scheduled_read&&!conflict_read;
    if(open_v)begin
     if(owned[open_bank]||open_count==0||open_count>64||
        (cmd_v&&cmd_bank==open_bank))sticky<=1;
-    else begin owned[open_bank]<=1;epoch[open_bank]<=open_epoch;count[open_bank]<=open_count;seen[open_bank]<=0;end
+    else begin owned[open_bank]<=1;epoch[open_bank]<=open_epoch;count[open_bank]<=open_count;seen[open_bank]<=0;filled[open_bank]<=0;end
    end
    if(fill_v&&!staged_fill)sticky<=1;
    if(read_v&&!scheduled_read)sticky<=1;
@@ -75,7 +80,7 @@ module ot_hbm_svc_static_pc (
        (fill_v&&fill_bank==retire_bank)||(cmd_v&&cmd_bank==retire_bank))sticky<=1;
     else owned[retire_bank]<=0;
    end
-   if(wr&&!conflict_write)seen[wb][ws]<=1;
+   if(wr&&!conflict_write)begin seen[wb][ws]<=1;filled[wb]<=filled[wb]+1'b1;end
    if(kr_v&&!response)sticky<=1;
    if(k_wr_done && !(state==WDONE||(state==WREQ&&k_rdy)))sticky<=1;
    if(cmd_v)begin
