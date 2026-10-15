@@ -182,6 +182,8 @@ ECO / ECO_INSTALL / SUMMARY jobs wait up to 6 h for the host before the same req
 ```
 systemctl --user status closure-loop          # daemon; log ~/.local/state/closure_loop/daemon.log
 python3 tools/closure_loop/closure_loop.py status
+python3 tools/closure_loop/closure_loop.py status --active       # all nonterminal jobs, no history
+python3 tools/closure_loop/closure_loop.py status --all --filter qfd  # complete matching history
 cat /tmp/claude-review-20261003/CLOSURE_LOOP_STATUS.md   # rewritten every tick
 cat /tmp/claude-review-20261003/CLOSURE_LOOP_LEDGER.md   # one entry per verdict
 python3 tools/closure_loop/closure_loop.py retry <name>  # human: re-queue a NEEDS_HUMAN job
@@ -190,6 +192,11 @@ python3 tools/closure_loop/closure_loop.py retry <name>  # human: re-queue a NEE
 python3 tools/closure_loop/closure_loop.py cancel <name>
 ```
 Job state lives in `~/.local/state/closure_loop/jobs/<name>.json` (events, metrics, calibration, publish result).
+By default, `status` shows every active job and up to 20 recent results from the last 24 hours, newest first.
+Recent results show the latest submitted attempt per block (and explicit parameter set); earlier attempts and
+cancelled/invalid jobs remain available through `--all`. `--recent-hours N` and `--limit N` adjust the result
+window and count; neither limits active jobs. `--filter TEXT` matches job names, blocks, and owners in any mode.
+These options only change the display; they never remove job state or change scheduling.
 The unit runs from `/home/ubuntu/wt-closure-loop`; `closure-loop.service` here is the installed copy.
 
 ## Host capabilities and stage needs (2026-10-06)

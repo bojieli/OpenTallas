@@ -459,7 +459,7 @@ def cmd_collect(a):
                     ly, j = p[1], int(p[2])
                     for bi, cu in enumerate(p[3:]):
                         c_, u_ = cu.split('/')
-                        c_, u_ = int(c_), int(u_)
+                        c_, u_ = int(float(c_)), int(float(u_))
                         if u_ > c_:
                             bins.append((u_ - c_, ly, bi * 4, j, c_, u_))
         ox, oy = man['window']['die_origin_um']

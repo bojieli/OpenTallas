@@ -22,7 +22,8 @@ wire station_fault;reg expected_station_fault=0;
 wire [0:0] station_reset;
 ot_rst_relay #(.REGIONS(1)) station_reference_reset(.clk(clk),.rst_n_in(rst_n),.rst_n(station_reset));
 ot_hgi_coll_park_fault station_probe(.clk(clk),.rst_n(rst_n),.bank_ovf(injected_fault),.ovf(station_fault));
-always @(posedge clk or negedge station_reset[0]) if(!station_reset[0]) expected_station_fault<=0;else if(|injected_fault) expected_station_fault<=1;
+reg injected_q=0; // the station's bank_ovf pin flops: one edge
+always @(posedge clk or negedge station_reset[0]) if(!station_reset[0]) begin injected_q<=0;expected_station_fault<=0;end else begin injected_q<=|injected_fault;if(injected_q) expected_station_fault<=1;end
 integer seq[EQ],cnt[EQ],lastpop[EQ];
 integer cycle,q,l,n,checked=0,pushed=0,popped=0,errors=0,seed=77;
 reg [31:0] rng=32'h125def;

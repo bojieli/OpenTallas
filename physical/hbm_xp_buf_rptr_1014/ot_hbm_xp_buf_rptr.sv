@@ -59,22 +59,27 @@ module ot_hbm_xp_buf_rptr #(parameter integer TW = 25, parameter integer MUT_LAN
             assign ob_n[gr] = mbf_o[OC] ? 1'b0 : ((gr < 1024) ? m_lo[gr % 1024] : m_hi[gr % 1024]);
         end
     end endgenerate
-    (* keep=1 *) reg [63:0] bf_write,clear_chunk;
-    (* keep=1 *) reg [15:0] flat_lo_write,flat_hi_write;
+    // WRITE DECODE FROM THE PIN FLOPS (A4 HBM group A 2026-10-14, native pin audit of col1b-073480d2d: capture w_v_i 361.2 /
+    // w_t_i 348.2 ps > 190 because w_v_i / w_t_i fed the 160 decoded chunk-enable flops spread over the image): the pins land
+    // ONLY in the w_v / w_t pin flops; the chunk enables are decoded from them combinationally in the same edge that w_d
+    // is written (reg -> reg), so the write timing, the outputs and the cycle count are unchanged.
+    wire [63:0] bf_write,clear_chunk;
+    wire [15:0] flat_lo_write,flat_hi_write;
+    genvar gd, gj;
+    generate for (gd = 0; gd < 8; gd = gd + 1) for (gj = 0; gj < 8; gj = gj + 1) begin : g_dec
+        assign bf_write[gd*8+gj] = w_v && w_t[3] && w_t[8:6] == 3'(gj);
+        assign clear_chunk[gd*8+gj] = w_v && w_t[0] && (!w_t[3] || w_t[8:6] != 3'(gj));
+    end endgenerate
+    generate for (gd = 0; gd < 2; gd = gd + 1) for (gj = 0; gj < 8; gj = gj + 1) begin : g_decf
+        assign flat_lo_write[gd*8+gj] = w_v && !w_t[3] && w_t[4] && (w_t[8:6] ^ 3'(MUT_LANE != 0)) == 3'(gj);
+        assign flat_hi_write[gd*8+gj] = w_v && !w_t[3] && w_t[5] && (w_t[8:6] ^ 3'(MUT_LANE != 0)) == 3'(gj);
+    end endgenerate
     integer c;
     wire [2:0] elast = mbf ? 3'd7 : 3'd3;
     wire start = !e_act && (have_tok || ti_q) && st == 2'd2;
     integer j, t;
     always @(posedge clk) begin
         t0_q <= tok0; ti_q <= tok_i; w_v <= w_v_i; w_t <= w_t_i; w_d <= w_d_i;
-        for(integer dt=0;dt<8;dt=dt+1)for(integer dj=0;dj<8;dj=dj+1)begin
-            bf_write[dt*8+dj] <= w_v_i && w_t_i[3] && w_t_i[8:6]==3'(dj);
-            clear_chunk[dt*8+dj] <= w_v_i && w_t_i[0] && (!w_t_i[3] || w_t_i[8:6]!=3'(dj));
-        end
-        for(integer dh=0;dh<2;dh=dh+1)for(integer dj=0;dj<8;dj=dj+1)begin
-            flat_lo_write[dh*8+dj] <= w_v_i && !w_t_i[3] && w_t_i[4] && (w_t_i[8:6]^3'(MUT_LANE!=0))==3'(dj);
-            flat_hi_write[dh*8+dj] <= w_v_i && !w_t_i[3] && w_t_i[5] && (w_t_i[8:6]^3'(MUT_LANE!=0))==3'(dj);
-        end
         // emission (block-dot 2,048 b a beat, BF16 1,024 b at bit 80)
         ob_v <= 1'b0; ob_d <= 2048'd0; tok_o <= 1'b0;
         if (e_act) begin
@@ -109,7 +114,6 @@ module ot_hbm_xp_buf_rptr #(parameter integer TW = 25, parameter integer MUT_LAN
         end
         if (rs) begin
             ti_q <= 1'b0; w_v <= 1'b0; e_act <= 1'b0; ecnt <= 3'd0; st <= 2'd0; ob_v <= 1'b0; ob_eop <= 1'b0; tok_o <= 1'b0;
-            bf_write<=0;clear_chunk<=0;flat_lo_write<=0;flat_hi_write<=0;
             have_tok <= t0_q; fault <= 1'b0; mbf <= 1'b0; mbf_c <= 9'd0; mlc <= 1'b0;
         end
     end
