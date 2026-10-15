@@ -1,0 +1,37 @@
+{
+  "scope": "Canonical allocator version boundary, no component SID0 reassignment",
+  "authoritative_frozen_records": {
+    "owner": "/root/h_vm",
+    "profile": "G25 rank0 records4120, same bases G24 and input3952",
+    "source_sha_prefix": "43c1652f",
+    "FP32_wordbases": {
+      "Q": 53376,
+      "SC": 53888,
+      "MB": 54528,
+      "E": 54592,
+      "SE": 55232,
+      "EB": 55296,
+      "SINK": 55936,
+      "DEN": 56064,
+      "PV": 56128,
+      "o_own": 57152
+    }
+  },
+  "inspected_current_tool": {
+    "path": "tools/hgi_sim/ds_native.py",
+    "sha256": "5ad0bdab07f3b99fad6ad119896a830d9bb2fa33efb678df35c0874854d56e0f",
+    "FP32_wordbases": {
+      "SC": 53952,
+      "MB": 54592,
+      "E": 54656,
+      "SE": 55296,
+      "EB": 55360,
+      "SINK": 56000,
+      "DEN": 56128,
+      "PV": 56192,
+      "o_own": 57216
+    }
+  },
+  "decision": "Use frozen record allocation authority for canonical binding; current Layout values describe only inspected tool and are not frozen G25 addresses. Component relative dataflow/calendar qualification unchanged.",
+  "canonical_VM_allocation_bound": false
+}
