@@ -1,0 +1,43 @@
+{
+  "kind": "analytical model before RTL",
+  "scope": "one static VM packet hub, NC=4 plus ring replay client",
+  "clock_ps": 833.333,
+  "compute_macs_per_cycle": 0,
+  "communication": {
+    "client_request_bits_per_cycle": 1690,
+    "client_response_bits_per_cycle": 1370,
+    "bank_request_bits_per_cycle": 2280,
+    "bank_response_bits_per_cycle": 2128,
+    "ring_request_bits_per_cycle": 580,
+    "ring_response_bits_per_cycle": 528,
+    "bank_payload_bytes_per_cycle": 256,
+    "client_payload_bytes_per_cycle": 160
+  },
+  "capacity": {
+    "requests_per_client_per_cycle": 1,
+    "requests_per_bank_per_cycle": 1,
+    "requests_per_ring_direction_per_cycle": 1,
+    "responses_per_client_per_cycle": 1,
+    "compiler_tag_slots_per_client": 4,
+    "active_slots_are_identity_checks_not_admission": true,
+    "sustained_packets_per_client_per_cycle": 0.4,
+    "sustained_packets_per_hub_per_cycle": 2.0
+  },
+  "latency_edges": {
+    "client_input_to_bank_output": 2,
+    "bank_input_to_client_output": 2,
+    "bank_fixed_latency": 6,
+    "local_round_trip": 10,
+    "remote_round_trip": "compiler adds stop/hop/remote-bank/return path fixed edge latencies",
+    "response_calendar_input_to_client_output": 2
+  },
+  "resources": {
+    "identity_state_bits": 5600,
+    "selection": "8 x 5:1 x 338b; two 5:1 remote muxes; fixed tag decode returns; no request queue",
+    "replicas_per_die": 4,
+    "physical_slot": "new unclosed successor; no area or slot-fit claim until synthesis and contract assignment",
+    "cut_track_capacity": "not submitted to route; explicit slot assignment required before physical work"
+  },
+  "schedule_contract": "issue all local/remote pieces together; no client slot reuse before response calendar; preserve perclient response order; response_enable/response_seq fix returnedge independent of acks; missingack is sticky fault with no delay or replay; no mirror rebroadcast for replay client",
+  "performance_claim": "Bench issues 2000 exact local packets in 1000 issue cycles at production NC=4 plus replay, then drains the fixed10edge pipeline. Four slots and10edge local roundtrip constrain sustained rate to0.4packet/client/cycle; remote roundtrip remains unmeasured until ring integration."
+}
