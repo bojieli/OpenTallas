@@ -1,0 +1,76 @@
+{
+  "name": "s81hc_ctfx_reset_native_ref",
+  "top": "ot_s81_hc_ctfx_reset_native",
+  "kind": "tile",
+  "sources": [
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ctfx_reset_native.sv",
+    "rtl/lib/ot_rst_relay.sv"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [],
+  "outline": {
+    "w": 576.72,
+    "h": 12.96
+  },
+  "why_floorplan": "centre-band duplicate fv/fd control + slot-data pin flops (1,135 flops), the slot-wide fv/fdx broadcast source: full width for 1,135 pins per N/S face; 12.96 tall (8.64 failed DPL-0033: too few free rows under the pin keepouts)",
+  "macros": [],
+  "pins": {
+    "N": [
+      "fv_in",
+      "fd_in"
+    ],
+    "S": [
+      "fv",
+      "fdx"
+    ],
+    "W": [
+      "clk",
+      "rst_in"
+    ]
+  },
+  "refglob": "*",
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "hold_margin_ns": 0.03
+  },
+  "job": {
+    "owner": "Codex:S81-CTfx-reset-native-0757",
+    "branch": "codex/takeover-s81-elements-0757",
+    "tag": "rst3",
+    "purpose": "Native reset-only repair for serial HC broadcast: old main view reset capture248.4ps, data launch160.7ps. New async-assert sync3release relay adds2 initialization edges, no token/data edges. Same granted576.72x12.96outline and port faces; adoption requires die alias and fullsource reset calendar.",
+    "benches": [
+      {
+        "name": "ctfx_reset_exact",
+        "cmd": "python3 tools/s81_suhc/ctfx_reset_native_proof.py --case positive --out {RUN}/proof_positive",
+        "expect": "pass",
+        "pass_regex": "\"status\": \"PASS\"",
+        "threads": 4,
+        "peak_ram_gb": 4,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "ctfx_reset_data_mutant",
+        "cmd": "python3 tools/s81_suhc/ctfx_reset_native_proof.py --case data_invert --out {RUN}/proof_mutant",
+        "expect": "fail",
+        "fail_regex": "data edge mismatch",
+        "threads": 4,
+        "peak_ram_gb": 4,
+        "needs": [
+          "verilator"
+        ]
+      }
+    ],
+    "extra_paths": [
+      "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv",
+      "tools/s81_suhc/ctfx_reset_native_proof.py"
+    ]
+  },
+  "params": {},
+  "children": [],
+  "inter": [],
+  "recipe": 2
+}

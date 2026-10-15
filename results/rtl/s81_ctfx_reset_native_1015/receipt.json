@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "scope": "component reset protocol: initialization release 1->3 edges, asynchronous assertion including short pulse; data/token latency unchanged; not full reset equivalence or native timing",
+  "sources": {
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ctfx_reset_native.sv": "032d2473fe8378c700233978dc8468432a07a69798034db31502e500d0d0b3e5",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv": "3f8f63d41d8d2a0014b7c966a4b3d9f9b895471779d12f55be99199947ba0f38"
+  },
+  "results": [
+    {
+      "variant": "positive",
+      "returncode": 0,
+      "expected": true
+    },
+    {
+      "variant": "data_invert",
+      "returncode": -6,
+      "expected": true
+    },
+    {
+      "variant": "valid_drop",
+      "returncode": -6,
+      "expected": true
+    },
+    {
+      "variant": "reset_bypass",
+      "returncode": -6,
+      "expected": true
+    }
+  ]
+}
