@@ -30,6 +30,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools'))
 sys.path.insert(0, str(ROOT / 'tools' / 'qwen_kv_die'))
 import kv_die as K  # noqa: E402
+from binding_order import sliced_order
 
 CORNERS = ('tt', 'ff', 'ss')
 RT = 'physical/ref_tile'
@@ -222,7 +223,7 @@ def die_to_rtl(master, die_ports, rtl_w):
         seq = []
         for rp in b['ports'][base]:
             seq += [(rp, i) for i in range(rtl_w[rp])]
-        order = [base] + sorted(d for d in dps if d != base) if base in dps else sorted(dps)
+        order = sliced_order(base, dps)
         k = 0
         for d in order:
             n = die_ports[d]
