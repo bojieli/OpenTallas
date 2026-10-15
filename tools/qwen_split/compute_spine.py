@@ -54,17 +54,17 @@ TIE_STRAP_MASTERS = ('qfd_tile_nk', 'qfd_tile_nl', 'qfd_xcst_n', 'qfd_xcst_s', '
 # the contract straps (results/arch/qwen_split_compute_1014/straps.json): ONLY these are tie-driven; chain-terminus ties
 # (tap_r, a_r, b_r, w_r, e_r, fault_i) stay literals so the port-bind keeps reporting them as INPUT_TIED defects
 STRAP_PORTS = frozenset([('qfd_tile_nk', 'tile_id'), ('qfd_tile_nl', 'tile_id'), ('qfd_xcst_n', 'sidx'), ('qfd_xcst_s', 'sidx'),
-                         ('qfd_xcol_e', 'tids'), ('qfd_xcol_w', 'tids'), ('qfd_su_cbuf_g', 'grp'), ('qfd_su_cbuf_g', 'f_lat'),
+                         ('qfd_xcol_e', 'tids'), ('qfd_xcol_w', 'tids'), ('qfd_xcol_e', 'fault_i'), ('qfd_xcol_w', 'fault_i'), ('qfd_su_cbuf_g', 'grp'), ('qfd_su_cbuf_g', 'f_lat'),
                          ('qfd_crom_g', 'crom_lb'), ('qfd_sp_band_lanes', 'b0'), ('qfd_sp_band_lanes', 'lnk'),
                          ('qfd_sp_band_lanes', 'tt')])
-_ts = os.environ.get('OT_SPLIT_TIE_SELF', 'qfd_tile_nk,qfd_tile_nl').strip()   # tile RTL has tie_hi / tie_lo (q-tile r10)
+_ts = os.environ.get('OT_SPLIT_TIE_SELF', 'qfd_tile_nk,qfd_tile_nl,qfd_xcst_n,qfd_xcst_s,qfd_xcol_e,qfd_xcol_w').strip()   # tile RTL has tie_hi / tie_lo (q-tile r10)
 TIE_SELF = frozenset(TIE_STRAP_MASTERS if _ts == 'all' else [s for s in _ts.split(',') if s])
 assert TIE_SELF <= set(TIE_STRAP_MASTERS), f'OT_SPLIT_TIE_SELF: unknown masters {sorted(TIE_SELF - set(TIE_STRAP_MASTERS))}'
 
 
 # ---- C4 (2026-10-14, compute-die lead r2): owner-adopted distributed x slices (HANDOFF 0aa, el1014-qwen-dvm-build.log)
 DVM = os.environ.get('OT_SPLIT_DVM', '1') != '0'
-XCOL_WH = (64.8, 1313.28)       # qfd_xcol_e/w: xhead + 8 x qfd_xs_leaf (two write chains N / S), in the column corridor,
+XCOL_WH = (64.8, 1434.24)       # qfd_xcol_e/w: xhead + 8 x qfd_xs_leaf (two write chains N / S), in the column corridor,
                                 # centred on the head row; 604.8 N + 103.68 head + 604.8 S (contract v1 slice slots)
 TAP_SLOT_WH = (345.6, 345.6)    # reserved control-stack envelope remains fixed
 TAP_WH = (216.0, 216.0)         # qfd_xs_tap at the VM N face, E of the constant group (SU write tap + attention write tap)
@@ -260,20 +260,8 @@ def _dvm(v, m, put, rec, vm, su, xt, ty=None):
             c, r = (int(q) for q in i.name.split('_')[1:3])
             rows.setdefault(c, []).append(r)
     nr = max(max(q) for q in rows.values()) + 1
-    # chain termini (DVM corridor / head row): the outermost station / column head has no downstream peer: its ready
-    # input is tied 1 (never back-pressured) and its downstream word output is unread -- recorded, not hidden
-    term = []
-    for i in m['insts']:
-        if i.kind == 'station':
-            c, r = (int(q) for q in i.name.split('_')[1:3])
-            if r == 0:
-                term.append((i.name, 'b_r'))
-            elif r == nr - 1:
-                term.append((i.name, 'a_r'))
-    term += [(heads[0].name, 'w_r'), (heads[-1].name, 'e_r')]
-    for i_, p_ in term:
-        ties.append((i_, p_, 1, 1))
-    rec['dvm_termini'] = len(term)
+    # Static DVM has no ready ports or ready terminus ties.
+    rec['dvm_termini'] = 0
     for i in m['insts']:
         if i.kind == 'station':
             c, r = (int(q) for q in i.name.split('_')[1:3])
@@ -297,6 +285,8 @@ def _dvm(v, m, put, rec, vm, su, xt, ty=None):
     roots = {}
     nb = []
     for b, c, n, e in m['buses']:
+        if c in ('corridor', 'head_chain') and n == 1 and any(p.endswith('_r') for _, p in e):
+            continue  # obsolete per-hop ready; compiler assigns every on-chip slot
         if c == 'corridor':
             n = XCOR_D if n > 1 else n
         elif c == 'head_chain':
@@ -536,7 +526,17 @@ def place(v, m, G):
     if os.environ.get('OT_SPLIT_TREE_HOSTS', 'baseline') == 'dp':
         from qwen_split.tree_hosts import apply as tree_hosts_apply
         rec['tree_hosts'] = tree_hosts_apply(v, m, pitch=490.0)
+    # Actual hardened parent outlines have no legacy24-nm shape shave.
+    for parent in m['insts']:
+        if parent.master in ('qfd_tile_nk','qfd_tile_nl'):
+            parent.w, parent.h = 449.28, 1442.88
+        elif parent.master.startswith('qfd_port_tiles_'):
+            parent.w, parent.h = PORT_WH
+        elif parent.master=='qfd_sp_band_lanes':
+            parent.w,parent.h=LANES_WH
     _slab_links(m, rec)
+    from qwen_split.direct_up4 import apply as direct_up4
+    rec['direct_up4'] = direct_up4(v, m)
     _child_clocks(m, rec)
     m['tie_self'] = sorted(TIE_SELF)
     rec['tie_self'] = sorted(TIE_SELF)

@@ -60,6 +60,50 @@ def qwen_xpf_static_control_model(entries=4, program_words=64):
                 qualification='mechanism bench only; actual producer trace/calendar, native pin/reset/clock, area and measured layer cost remain unqualified')
 
 
+def qwen_compute_typed_record_model():
+    """Declared storage/ports for actual two-PW/single-SU-DW record consumer."""
+    return dict(schema='opentallas.qwen-compute-typed-record.v1',replicas=1,
+        strict_image_receipts=2,strict_receipt_ff_each=243,join_ff=169,
+        auth_rx_ff=114,context_rx_ff=144,witness_tx_ff=633,
+        TT_genuine_SU_descriptor_relay_ff=69,slot_fault_ff=1,declared_ff=1616,
+        SRAM_macros_added=0,descriptor_memories_added=0,existing_program_macros=4,
+        independent_program_observer_bits=152,genuine_SU_descriptor_observer_bits=69,
+        cfg_seal_bits=2,record_bits_per_cycle=548,observed_PW_bytes_per_cycle=16,
+        MACs_per_cycle=0,clock_roots=1,
+        latency='metadataRX1; each real consumed-macro observer register1; TT genuineSUdescriptor relay1; join/witness fixed slots require actual route/phase profile',
+        reset_contract='each actual seal loss revokes installed receipt, no automatic re-arm; newBEGIN/AUTH required',
+        slot_fit='physical observer homes and registered transport/clock phases not yet qualified',
+        price_policy='no repricing or native/fullstage qualification from component tests')
+
+
+def qwen_host_typed_record_model():
+    """Exact declared control-storage census before physical record leaf sizing."""
+    return dict(schema='opentallas.qwen-host-typed-record.v1',replicas=1,
+        context_tx_ff=630,auth_tx_ff=665,witness_rx_ff=84,shared_pin_ff=550,
+        declared_ff=1929,clock_roots_added=1,clock_period_fs=833334,
+        payload_bits_per_cycle=548,max_records_per_cycle=1,MACs_per_cycle=0,
+        SRAM_macros_added=0,added_boundary_bits=548*2+8,
+        removed_external_fabricated_commit_bits=1+1+16+64,
+        fixed_edges=dict(tx_codec=1,tx_shared_pin=1,rx_witness=1),
+        slot_fit='distributed HOST root/peer leaf, actual area/pins/CTS/native timing unmeasured',
+        latency='record send/receive slots must include actual digital link/relay phases; no ready-based issue',
+        price_policy='immutable model price unchanged; actual end-to-end token cost still unmeasured')
+
+
+def qwen_seq_collective_calendar_model():
+    """Production TP8 command source reservation; area/physical gates remain open."""
+    return dict(schema='opentallas.qwen-seq-collective-calendar.v1',replicas=1,
+        command_bits_per_cycle=50,command_fault_return_bits=1,
+        pw_config_words=17,pw_first=944,pw_last=960,max_program_instructions=59,
+        calendar_rows=8,command_rows_max=7,descriptor_state_bits=8*(32+16+1+1+32),
+        arithmetic_macs=0,memory_macros_added=0,pw_bytes_per_cycle=8,
+        latency='collective core command edge=start+row_cycle+1+D_seq+1pin; D_seq actual physical relay count required',
+        source='qfd_seq_su dh[42]/PW118/117:108/107:44; ot_coll_cmd_issue owns fixed issue',
+        track_bits=51,slot_fit='inside sequencer; source ABI changed, area/pin/CTS contract unmeasured',
+        replica_fanout='one issuer; one50bit destination command bus; no data mux/ready launch gate',
+        price_policy='no repricing; actual per-layer command times/shape and throughput still required')
+
+
 def qwen_static_native_parent_model():
     """Prephysical census for the actual fixed ME controller successor."""
     xpf = qwen_xpf_static_control_model()
@@ -715,6 +759,33 @@ def hgi_generic_topk_heap_model(n=49152, k=2048, rows=1, iw=1, heaps=2):
                               flop_sorter_priced=n + k + 6),
                 adoption="structural replacement of hgi_idx_topk_full; wide engine (iw 4-8) needs the IDX reader to hand a "
                          "VM sector a cycle (item: TOPK 4.3x)")
+
+
+def hbm_coll_static_quadrant_model(npt=3, inject=2, deliver=4, flit_bits=545, period_ps=833.3):
+    """0an successor transport: compiler reserves every pin sample and output edge.
+
+    One source capture bank, one output-leaf pin capture bank and one registered output bank, no elastic storage.
+    This sizes the transport before RTL; reduction, TOPK and VM service are
+    separately scheduled engines and their latency is not hidden in this row.
+    """
+    if npt not in (2, 3):
+        raise ValueError("production quadrant has two or three rail links")
+    sources = inject + npt + deliver + 1  # SU, rail, VM, ring result
+    sinks = npt + 3 * deliver + 1  # rail, SU, RGX, TKM, ring partial
+    select_bits = (sources - 1).bit_length()
+    controls = sources + sinks * (select_bits + 1)
+    return dict(source_lanes=sources, sink_lanes=sinks, flit_bits=flit_bits,
+                capture_edges=2, output_edges=1, latency_edges=2,
+                bits_per_cycle_in=sources * flit_bits,
+                bits_per_cycle_out=sinks * flit_bits,
+                payload_flops=(2 * sources + sinks) * flit_bits,
+                control_flops=controls, clock_roots_required=2,
+                largest_root_sinks=(sources + sinks) * flit_bits + 2 * controls,
+                select_cost_bits=sinks * sources * flit_bits,
+                period_ps=period_ps, elastic_entries=0,
+                compiler_rule="sink instruction at C+1 selects a source captured C; output pin changes C+2",
+                routing_rule="sources may multicast; distinct sources cannot own the same sink edge",
+                status="SIZED transport only; no physical closure or complete collective price")
 
 
 def hgi_coll_topk_merge_model(G=96, n=512, k=512, kmax=2048, deliver_lanes=4, ser_cycles_per_flit_rank=23.75):
@@ -16279,3 +16350,93 @@ def s81_native_functional_homes_1014_model():
             embedding='physical/s81_die_pins/v20_embedding/home.json: actual2SRAM expander, upstream full table and S000 source role OPEN',
             probability='physical/s81_die_pins/v20_svc_native/ingress_layout.json: actual 1030 closed-pin joins max25.464um; native full parent OPEN',
             capture='physical/s81_die_pins/v20_hc_capture/cpl_geometry.json: 9080 actual CPL joins <=499.782um, first-stage M5 preserved, local capture M3; actual leaf routes pending'))
+
+
+def hbm_vm_static_ring_model():
+    """Compiler slot VM ring successor; pre-RTL structural budget, not a rate claim."""
+    return dict(schema='opentallas.hbm-vm-static-ring.v1', replicas=8,
+                macs_per_cycle=0, link_bits_per_cycle=2224,
+                request_bits_per_cycle=290, response_bits_per_cycle=266,
+                mirror_bits_per_cycle=8*276, memory_bytes_per_cycle=8*32,
+                mux='five explicit compiler sources, one 2224-bit registered output; no scan/arbitration',
+                storage='one pin rung and one output rung; four fixed commit-observation rungs',
+                area='ASSUMED register area; no closed view inherited',
+                route='2224 data tracks each direction, zero credit-return tracks; die reach/cut proof pending',
+                slot_fit='new source successor needs native physical closure; historical closed stop remains untouched',
+                latency_edges=dict(pin_to_output=1,bank_commit_after_xq_sample=3),
+                compiler_requirement='reserve every transit/injection output, packet replay, bank write and ack output cycle',
+                throughput='one flit per direction per edge; mirror local injection carries up to eight sectors',
+                qualification='UNQUALIFIED until real ring4/macro integration, mutants, physical closure and production price')
+
+
+def hbm_vm_static_bank_model():
+    """Return the pre-RTL inventory for the actual static B2 bank successor."""
+    return json.loads((ROOT / 'rtl/hbm_accel/generic/vm/static/bank_static_model.json').read_text())
+
+
+def s81_static_vm_face_model(entries=8):
+    """Static capture/WFC/outbound sizing; physical slots remain unqualified."""
+    from s81_vm.static_face_model import model
+    return model(entries)
+
+
+def s81_static_channels_1014_model():
+    from uarch_model_s81_static_channels import s81_static_channels_1014_model as model
+    return model()
+def hbm_vm_static_calendar_model():
+    """Programme-SRAM calendar issue, before source implementation."""
+    return dict(schema='opentallas.hbm.static-calendar.v1',macs_per_cycle=0,
+        replicas=4,macro='ot_sram_1r1w_1024x256_m2_r2c2',macros_per_quadrant=1,
+        storage_bytes=32768,memory_bytes_per_cycle=dict(read=32,configuration_write=32),
+        calendar_bits=dict(SW=202,SE=147,NW=187,NE=147),
+        datapath='input pin rung, one native macro read each compiler edge, dedicated capture rung, registered calendar outputs',
+        mux='PC increment/wrap of fixed compiler range, finite loop decrement; no data-dependent branches',
+        latency_edges=dict(start_to_first_calendar=4,fetch_to_calendar=2),
+        throughput='one compiler calendar per cycle after startup, no gaps at loop wrap',
+        boundaries='configuration266bits; start38bits; calendar147..202bits plus fixed-cycle ordinal32/valid/done/fault',
+        route='per-quadrant fixed producer; physical slot/pinface/reach/CTS unqualified',
+        floorplan='one actual macro174.744x70.47um plus PC/capture/output control, slot requested from H-DIE',
+        area='macro36942.62904um2 plus unmeasured control; no inherited closure',
+        qualification='actual macro programme bench+mutants required; layer compiler calendar/CP-loader join remain separate')
+
+
+def hbm_vm_static_calendar_host_model():
+    return dict(schema='opentallas.hbm.calendar-host.v1',replicas=1,macs_per_cycle=0,
+      storage='one256b assemblyword plus4x37b launchdescriptors; no additional SRAM',
+      input='existinghostAXIlite12baddress/32bdata; existingrealLCP419doorbellbit71',
+      output='fourprogrammeconfig256b+addr10+we and4launch(base10,limit11,loops16,v)',
+      configuration_rate='eight32bhostwrites per256bprogrammeword; hostboundaryonly, beforelaunch',
+      execution='oneglobalexistingCPdoorbell launchesallfourcalendars; nohostcallsinsideprogramme',
+      map='newF00-Fff window; existingC/D CP andE MTP windows pass unchanged',
+      clocks='hostconfigurationclock mustsharedefinedcompilerphase atlaunch or getexplicitstaticcrossing',
+      physical='newnativeproducer requiresdiepin/slot/clock qualification; no closedloaderalias',
+      qualification='realexistingloaderCP→LCPdoorbell→real4programmeSRAMs composition test required')
+def hgi_coll_tkm_static_calendar(G=96, n=512, k=2048, kmax=2048, has_r=True):
+    """Fixed production TKM calendar; no data-dependent survivor pruning or admission.
+
+    Four lanes each deliver eight pairs every eight edges. Every pair, including
+    padding, owns an insertion slot; four comparators' inputs enter per edge.
+    Two passes reuse the actual 64-position hardened tile arithmetic and SRAM
+    pass buffer. All phase lengths depend only on configuration. The immutable
+    prior price is retained for comparison, never replaced by this schedule.
+    """
+    assert 1 <= G <= 96 and 1 <= n <= 2048 and 1 <= k <= kmax <= 2048
+    flits = G * ((n + 7) // 8)
+    groups = (flits + 3) // 4
+    cells = (min(k, G*n) + 3) // 4
+    tiles = (kmax + 63) // 64
+    settle = 3*tiles + 8  # three registered insertion edges per tile, plus root pipeline
+    ingress = groups*8
+    # Initial clear, ingress, settle, first conveyor+capture, second clear,
+    # SRAM read+insert, settle, final conveyor+pack/drain.
+    cycles = 8 + ingress + settle + cells + 5 + 5 + cells + 6 + settle + cells + 8 + 1
+    return dict(flits=flits, groups=groups, ingress_cycles=ingress,
+                pairs_per_cycle=4, lane_beat_period=8, tile_count=tiles,
+                tile_positions=64, insertion_settle_cycles=settle,
+                selected_cells=cells, pass_buffer_bytes=1024*512//8,
+                ingress_register_bits=4*545, chain_bits_per_cycle=340,
+                root_sink_plan='sequencer, ingress, buffer, packer and each tile own clock roots; phi-R per root',
+                record_cycles=cycles, exact_done_cycle=cycles,
+                output_lines=(min(k,G*n)+15)//16*(2 if has_r else 1),
+                schedule='fixed all-element insertion; fixed value conveyor; fixed SRAM reinsertion; fixed id conveyor',
+                price_comparison='historical estimate retained separately; static throughput remains unqualified until measured')

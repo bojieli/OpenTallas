@@ -59,7 +59,7 @@ def build(base):
     layout['outline']['h'] = round(layout['outline']['h'] + shift, 3)
     layout['note'] = ('v20 native ctnl_l2/l3 grant: four 99.36-um row reservations; '
                       'l0/l1 keep 95.04-um views. Child native pin files must use these origins.')
-    for name, insertion, spread in [('sp_hc_s/crootr_c0/f', 591.7, 77.6),
+    for name, insertion, spread in [('sp_hc_s/crootr_c0/f', 394.9, 78.9),
                                      ('sp_hc_s/crootr_c2/f', 375.6, 59.6)]:
         leaf = slots[name]
         old_h = leaf['outline']['h']
@@ -67,7 +67,7 @@ def build(base):
         leaf['version'] = 20
         leaf['target_insertion_ps'] = insertion
         leaf['clock_evidence'] = {'kind': 'pre_route_cts', 'spread_ps': spread,
-                                  'source': 'el1011-s81die.log 2026-10-14 22:21 v6 gates'}
+                                  'source': 'S-ELEM final v6 gates 056c994dd (west394.9/78.9; east375.6/59.6)'}
         leaf['slot_change'] = {'bottom_anchored': True, 'free_y_channel_um': round(old_h - 345.6, 3),
                                'fixed_cycles_added': 0, 'native_successor_required': True}
     c['version'] = 20

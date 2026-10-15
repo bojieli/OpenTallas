@@ -33,6 +33,7 @@ module ot_coll_cmd_issue #(
     output wire [15:0]     cmd_words,
     output wire [TAGW-1:0] cmd_tag,
     output wire            active, done,
+    output wire            image_ready,   // sealed configuration fact; never gates issue
     output wire            fault
 );
     localparam integer RAW = (DEPTH > 1) ? $clog2(DEPTH) : 1;
@@ -59,9 +60,17 @@ module ot_coll_cmd_issue #(
         else tg[ri] <= pw_data[TAGW-1:0];
     end
     wire run;
+    integer ck_row;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin header_loaded <= 0; tag_loaded <= 0; sealed <= 1'b0; stop_q <= 0; count_q <= 0; cfg_fault <= 1'b0; end
         else begin
+            // Nonzero BASE shares the dense controller image: PW0 begins
+            // a new image. Active images are never replaced mid-timeline.
+            if (BASE != 0 && pw_v && pw_addr == 0) begin
+                if (run) cfg_fault <= 1'b1;
+                else begin header_loaded <= 0; tag_loaded <= 0;
+                    sealed <= 1'b0; count_q <= 0; stop_q <= 0; end
+            end
             if (in_rows) begin
                 if (off[0]) tag_loaded[ri] <= 1'b1; else header_loaded[ri] <= 1'b1;
                 if (sealed || run) cfg_fault <= 1'b1;
@@ -72,6 +81,13 @@ module ot_coll_cmd_issue #(
                     pw_data[37:32] > DEPTH) cfg_fault <= 1'b1;
             end
             if (start && !sealed) cfg_fault <= 1'b1;
+            // Check completeness without consulting uninitialized row contents.
+            // A missing header cannot be diagnosed by reaching its issue cycle.
+            if (seal_w || start) begin
+                for (ck_row = 0; ck_row < DEPTH; ck_row = ck_row + 1)
+                    if (ck_row < (seal_w ? pw_data[37:32] : count_q) &&
+                        loaded[ck_row] !== 1'b1) cfg_fault <= 1'b1;
+            end
         end
     // one-edge synchronous calendar store -> fixed-issue core
     wire slot_re; wire [11:0] slot_addr; reg [46:0] slot_q;
@@ -91,6 +107,7 @@ module ot_coll_cmd_issue #(
         .issue_v(issue_v), .end_v(end_v), .cp_v(cp_v), .cp_index(cp_index), .issue_pc(issue_pc),
         .issue_unit(issue_unit), .active(active), .done(done), .cycle(cycle), .fault(core_fault));
     assign run       = active;
+    assign image_ready = sealed && !cfg_fault;
     assign cmd_v     = issue_v;
     assign cmd_mode  = issue_v ? mde[ip] : 1'b0;
     assign cmd_words = issue_v ? wds[ip] : 16'd0;

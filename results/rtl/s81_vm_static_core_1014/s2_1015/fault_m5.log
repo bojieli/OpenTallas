@@ -1,0 +1,11 @@
+FIRST FAULT cy 7: wsched own 00 dflt 0000 sflt 00000000000000000000000000000000 | mem 1111 | land 000 pq 0 out 0 op 0 rsched 0 | seq flt 00000000000
+TB_VMCORE FAULT mode 5 vm_fault 1 c_st 11 own_source 1
+TB_VMCORE PASS mode 5
+- /srv/opentallas-scratch/claude/s81-static-core-s2-20261015/tb_dsfd_vm_static_core.sv:286: Verilog $finish
+TB_VMCORE RESULT mode 5 cycles 35 commits 0 K -1 reads 0 pq 0 mix_reads 0 mix_writes 0 rows_checked 0 dones 0 cmds 0 bad 0
+COMMIT COUNT 0
+TB_VMCORE FAIL mode 5
+- /srv/opentallas-scratch/claude/s81-static-core-s2-20261015/tb_dsfd_vm_static_core.sv:296: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 32ns; walltime 0.253 s; speed 125.542 ns/s
+- Verilator: cpu 0.253 s on 1 threads; allocated 52 MB

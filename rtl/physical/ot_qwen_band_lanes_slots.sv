@@ -85,6 +85,10 @@ module qfd_sp_band_lanes (
     input  wire [25:0]   c,
     input  wire [1537:0] tt,
     output wire [512:0]  pw,
+    // Direct upper-tree leaves: one independent registered quarter word and
+    // fault per leaf, so the die has point-to-point fixed-cycle links.
+    output wire [128:0] pw_l0, pw_l1, pw_l2, pw_l3,
+    output wire [3:0] f_up,
     output wire [4095:0] ty,
     output wire          f
 );
@@ -136,10 +140,38 @@ module qfd_sp_band_lanes (
         qfd_bl_lane u_lane (.ck(leaf_ck[l]), .rst_n(reset_q), .b0(b0_q), .lnk(leaf_lnk), .tw(ltw), .c(c_q), .tt(ltt), .pw(lpw), .ty(lty), .f(lf[l]));
 `endif
     end endgenerate
+    wire [3:0] quarter_pv, quarter_fault;
+    ot_qfd_band_upper_faces u_upper_faces (.clk(ck),.reset_q(reset_q),.lnk(lnk_q),
+        .lpv(lpv),.lf(lf),.quarter_pv(quarter_pv),.quarter_fault(quarter_fault));
+    assign pw_l0={quarter_pv[0],pw_q[127:0]};
+    assign pw_l1={quarter_pv[1],pw_q[255:128]};
+    assign pw_l2={quarter_pv[2],pw_q[383:256]};
+    assign pw_l3={quarter_pv[3],pw_q[511:384]};
+    assign f_up=quarter_fault;
     assign pw_i[512] = lpv[0];        // every lane carries the same valid copy
     (* keep *) reg f_q;
     always @(posedge ck)
         if (!reset_q) f_q <= 1'b0;
         else f_q <= (&lnk_q) | |lf | (|(lpv ^ {16{lpv[0]}}));
     assign f = f_q;
+endmodule
+
+// Real registered quarter boundary for direct upper leaves. Data registers
+// remain the existing pw_q stations; these status copies observe distinct
+// hardened lane outputs, so they cannot collapse into one remote face pin.
+module ot_qfd_band_upper_faces #(parameter integer MUT=0) (
+    input wire clk,reset_q,input wire [5:0] lnk,
+    input wire [15:0] lpv,lf,
+    output reg [3:0] quarter_pv,quarter_fault
+);
+    genvar u;
+    generate for(u=0;u<4;u=u+1) begin:g_upper_face
+        always @(posedge clk) begin
+            quarter_pv[u] <= reset_q & lpv[4*u];
+            if(!reset_q) quarter_fault[u] <= 1'b0;
+            else quarter_fault[u] <= (&lnk) |
+                ((MUT==1 && u==3) ? 1'b0 : (|lf[4*u +: 4])) |
+                (|(lpv ^ {16{lpv[0]}}));
+        end
+    end endgenerate
 endmodule

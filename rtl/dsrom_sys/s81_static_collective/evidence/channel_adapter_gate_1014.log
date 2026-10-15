@@ -1,0 +1,6 @@
+PASS static channels: all five physical mappings, 552-bit payloads, WFC514, host516, concurrency and schedule faults
+FATAL: /home/ubuntu/wt/s-static-channels-1014/rtl/dsrom_sys/s81_ph/coll/test/tb_static_channels.sv:39: tx payload/calendar lane0 kind0
+       Time: 26000 Scope: tb_static_channels
+PASS: actual DUT payload mutant rejected
+12c2bcf55caca4c1a909ebf37f1d551f902ede41b2b27ef24df3a689b7e4c131  /home/ubuntu/wt/s-static-channels-1014/rtl/dsrom_sys/s81_ph/coll/dsfd_coll_static_channels.sv
+462062a3bb6236b87452a3cb82c5b819cd9381972d4b6a466aefd6d8b7db8637  /home/ubuntu/wt/s-static-channels-1014/rtl/dsrom_sys/s81_ph/coll/test/tb_static_channels.sv

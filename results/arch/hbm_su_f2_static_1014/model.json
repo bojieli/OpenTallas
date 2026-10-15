@@ -1,0 +1,41 @@
+{
+  "status": "implementation candidate, no die or production qualification",
+  "clock_ps": 833.333333,
+  "quarters": 4,
+  "banks_per_quarter": 8,
+  "sector_bits": 256,
+  "read_bytes_per_cycle": 1024,
+  "write_bytes_per_cycle": 1024,
+  "boundary_bits_per_cycle_per_quarter": {
+    "read_request": 136,
+    "read_response": 2056,
+    "write_request": 2248
+  },
+  "replicas": 32,
+  "mux_per_bank": "optional compiler-selected operand broadcast sector versus own lane; no arbitration",
+  "fanout": "broadcast sector replicated to eight registered lane outputs per quarter",
+  "latency_edges": {
+    "link_request": 1,
+    "link_response": 1,
+    "bank_response": "bank n+6 registered result, sampled by link n+7; RD_LAT7"
+  },
+  "throughput": "one sector per bank per edge; compiler owns RG0/WG0, disallows competing traffic",
+  "capacity": "32 fixed request slots, no queues, credits, ready, lease, CDC or backpressure",
+  "placement": "one quarter at each native VM slice; four per-quarter link leaves; no slot assigned, area/route fit unmeasured",
+  "immutable_production_price": {
+    "DeepSeek": 2912,
+    "Qwen": 1548
+  },
+  "qualification_gap": "historical SU head/lane credit scheduler not connected; actual static native whole service and F2 ordered reduction remain required",
+  "retained_register_bits_per_quarter": 4754,
+  "clock_roots": 4,
+  "F2_reduction_frontier": {
+    "rule": "global csum8, each chunk sequential from+0 then globally aligned padded binary tree",
+    "quarter_padding": "forbidden; carry partial chunk accumulator/element count plus binary frontier/chunk index",
+    "max_row_elements": 65535,
+    "max_frontier_levels": 14,
+    "uncompressed_transfer_bits": 529,
+    "hardware": "not implemented; source/model golden identity gate only",
+    "critical_shape": "5120 elements ->1280 perquarter ->160 chunks perquarter not a power of2; independent quarter totals alter rounding tree"
+  }
+}

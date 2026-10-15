@@ -51,6 +51,8 @@ def model() -> dict:
       vm_sram_observation_from_source_pin_cycles=10,
       issue_to_vm_source_pin_cycles=5, issue_to_vm_observation_cycles=15,
       peer_links_per_die=3, local_loop='component bench only',
+      existing_diagnostic_link_rates_bits_per_cycle=dict(package=3864,board=157.58),
+      bandwidth_adoption_gate='New2beat512 framing atspacing4 requires256PHYbits/cycle, abovehistorical157.58 boardbudget; actualPHYwidth/calendar must be reconciled, no native speed credit',
       physical_status='UNQUALIFIED: static successor requires accepted DSCOLL slot/pins, actual lane/PHY width and measured pipeline',
       physical_constraints='Preserve closed masters; no reroute until real RTL change + die-owned window',
       latency_composition='commit=source_issue+4+uniform declared PHY flight; unequal flight requires real RTL alignment stages',
@@ -88,3 +90,37 @@ def vm_events(slots: tuple[Slot, ...], *, identity: int,
                                observation_edge=s.commit+11+drain, sequence=s.seq, rank=r,
                                bank_drain_delay=drain))
     return result
+
+def fmt1_calendar(layer: int, start: int, *, kind: str = 'a') -> tuple[Slot, ...]:
+    """Existing FMT1 protocol:3-in4 gearbox, board beat every4stream cycles.
+
+    128physical bits/cycle < historical157.58boardbudget. Fixed source cadence
+    4,4,8; measured component latency11. Realflight/epoch remain unqualified.
+    """
+    if start < 0: raise ValueError('start')
+    count=6 if kind=='router' else shape(layer)
+    return tuple(Slot(j,start+16*(j//3)+4*(j%3),start+16*(j//3)+4*(j%3)+11,
+                      tuple(landing(layer,j,r,kind) for r in range(4)),j==count-1)
+                 for j in range(count))
+
+def fmt1_cycle_controls(slots: tuple[Slot, ...]) -> tuple[int, ...]:
+    """Compile every beat/phase/frame reservation, including empty PHY slots.
+
+    Bits[7:0]={txbeat,txphase2,txframe,rxbeat,rxphase2,rxframe}.
+    Clock epoch,4cycle beat period and zero external flight match componentRTL.
+    """
+    if not slots or slots[0].issue % 16: raise ValueError('FMT1 phase epoch')
+    start=slots[0].issue;count=len(slots)
+    if [s.issue-start for s in slots] != [16*(j//3)+4*(j%3) for j in range(count)]:
+        raise ValueError('unsupported FMT1 source calendar')
+    end=start+((count+2)//3)*16+24
+    controls=[]
+    for c in range(end):
+        tx=c>=3 and (c-3)%4==0;tp=((c-3)//4)%4
+        tj=3*((c-start-3)//16)+tp
+        tf=tx and c>=start+3 and tp!=3 and 0<=tj<count
+        rx=c>=4 and (c-4)%4==0;rp=((c-4)//4)%4
+        rj=3*((c-start-4)//16)+rp-1
+        rf=rx and c>=start+4 and rp!=0 and 0<=rj<count
+        controls.append((int(tx)<<7)|(tp<<5)|(int(tf)<<4)|(int(rx)<<3)|(rp<<1)|int(rf))
+    return tuple(controls)

@@ -5,10 +5,10 @@ read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_IN
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
-read_db /work/results/asap7/opentallas_ot_hgi_sfu_ctl60lo_asap7_ref_sfu_ctl60lo_ref_c5_10c744afc/base/6_final.odb
+read_db /work/results/asap7/opentallas_ot_hgi_sfu_ctl60lo_asap7_ref_sfu_ctl60lo_ref_c6_e71928976/base/6_final.odb
 set ::ot_ce_corner ss
-read_sdc /work/results/asap7/opentallas_ot_hgi_sfu_ctl60lo_asap7_ref_sfu_ctl60lo_ref_c5_10c744afc/base/6_final.sdc
-read_spef /work/results/asap7/opentallas_ot_hgi_sfu_ctl60lo_asap7_ref_sfu_ctl60lo_ref_c5_10c744afc/base/6_final.spef
+read_sdc /work/results/asap7/opentallas_ot_hgi_sfu_ctl60lo_asap7_ref_sfu_ctl60lo_ref_c6_e71928976/base/6_final.sdc
+read_spef /work/results/asap7/opentallas_ot_hgi_sfu_ctl60lo_asap7_ref_sfu_ctl60lo_ref_c6_e71928976/base/6_final.spef
 set_propagated_clock [all_clocks]
 read_sdc /src/physical/ref_tile/sfu_ctl60lo_ref/signoff.sdc
 read_sdc /src/physical/common_flow/io_ref_routed.sdc

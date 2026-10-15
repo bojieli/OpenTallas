@@ -1,0 +1,21 @@
+{
+  "scope": "immutable actual C15 failure diagnosis and small PA mechanism regression only",
+  "source_commit": "f8d643faf",
+  "source_case": "ot-epyc4:/srv/opentallas-scratch/claude/qwen-split-compute/c15/smoke/case",
+  "run_log_sha256": "8528f937bdc041d69429daba12e7af08696fb585e63bfbcf8bf51191d966480c",
+  "original_recorded_process_exit": 0,
+  "new_effective_exit": 1,
+  "actual_failure_lines": [
+    "OT_LEGAL instances=1630 overlaps=0 outside=0",
+    "OT_ASSERT PASS",
+    "[ERROR DRT-0305] Net one_ of signal type POWER is not routable by TritonRoute. Move to special nets.",
+    "OT_PA FAIL DRT-0305"
+  ],
+  "root_cause": "Unmapped Verilog straps produce implicit POWER one_ and GROUND zero_ nets; real ASAP7 tie mapping creates routable SIGNAL nets.",
+  "structural_fix": "actual TIEHIx1/H and TIELOx1/L with per-load fanout repair, legal standard-cell placement and unchanged hard macros",
+  "limits": [
+    "No full C15 placement/PA/GRT rerun. Frozen input case untouched.",
+    "New standard-cell M1 power rails/upconnect and actual PDN connectivity remain OPEN.",
+    "Microfixture PA success does not qualify native die, timing, power or throughput."
+  ]
+}

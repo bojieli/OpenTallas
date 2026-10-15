@@ -1,0 +1,16 @@
+{
+  "four_state": true,
+  "mutant": true,
+  "cases": [
+    {
+      "omit": 2,
+      "rc": 1,
+      "output": "FATAL: /srv/opentallas-scratch/codex/qcoll-issuer-1014/rtl/test/tb_coll_cmd_issue.sv:30: completeness omit=2 fault=0\n       Time: 260000  Scope: tb_coll_cmd_issue\n"
+    }
+  ],
+  "sources": {
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv": "0d533e9a09514840fac0628053fd1aaa501bccbffeaf8913afb6a936d1d994b1",
+    "rtl/rom/ot_coll_cmd_issue.sv": "eb7f363e2019f84903826e7aec7fb8e35f13f59b93c222447bbc093142796944",
+    "rtl/test/tb_coll_cmd_issue.sv": "207142f8d9515f58704bac8379ac8945b2d5a919c5c0718977a7a9d35a01cf6a"
+  }
+}

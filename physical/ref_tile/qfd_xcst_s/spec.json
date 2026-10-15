@@ -51,7 +51,7 @@
  "job": {
   "owner": "Codex:el1014-qwen-dvm-build",
   "branch": "claude/qwen-dvm-1014",
-  "tag": "xs6",
+  "tag": "xs7",
   "purpose": "Qwen TP8 corridor station with the tile's x hold (distributed x slice, owner 08:20 PT 10-14): onward + tap flops as qfd_cst_s, + TDM capture of its own tagged line and the tuple hold register (IL 8, XOFF 3) driving the tile's xl pins. r3: no tap ready (the tile never back-pressures; DIE_BUS_AUDIT row 10).",
   "benches": [
    {
@@ -135,5 +135,8 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "Repair invalid clock/reset face coordinates: bound ck and rst_n to the actual 52.68um north face, retain data slots and tie face."
+ "structural_change": "Register corridor tag/data at the existing b_q face before selection; forward selected registered data into the fixed hold deadline, retaining historical cap when no tag matches. Fix measured native capture256.8/247.2ps without an added schedule edge.",
+ "reroute_reason": {
+  "kind": "rtl_change"
+ }
 }
