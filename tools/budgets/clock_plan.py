@@ -399,7 +399,7 @@ set -o pipefail
 D=$(cd "$(dirname "$0")" && pwd)
 IMG=${{IMG:-openroad/orfs:latest}}
 CPUS=${{CPUS:-8}}
-TO=${{CTS_TIMEOUT:-300}}
+TO=${{CTS_TIMEOUT:-{max(300, int(0.04 * len(nets)))}}}   # H-DIE 1014: a die tree of 70k segment nets needs > 300 s (v13 34k: 601 s)
 run() {{ docker run --rm --name ckplan_{esc(a.name)}_$1 --cpus=$CPUS -v $D:/work -w /work $IMG bash -lc \\
   "timeout -k 60 $TO /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -threads $CPUS -no_init -exit /work/$1.tcl > /work/$1.log 2>&1; rc=\\$?; chmod -R a+rwX /work; exit \\$rc"; }}
 date -u +%FT%TZ > $D/start

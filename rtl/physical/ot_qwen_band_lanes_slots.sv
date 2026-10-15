@@ -35,8 +35,13 @@ module qfd_bl_lane (
 `else
     localparam integer M = 0;
 `endif
+    // q14 r8 (2026-10-14): reset pin register.  Native pin audit of the CLOSED leaf qfd_bl_lane_ce (TT R 414.2):
+    // rst_n capture 303.6 ps > 190 (the die reset fanned out to every async-reset flop of the lane); the reset now lands
+    // in ONE flop at the pin (async assert, registered deassert one edge later) and the lane resets from it.
+    (* keep *) reg rs_q;
+    always @(posedge ck or negedge rst_n) if (!rst_n) rs_q <= 1'b0; else rs_q <= 1'b1;
     ot_qfd_band_lanes #(.NL(1), .LNK(0), .TREE_LAT(7), .MUT(M), .TCUT(7), .LG(12), .RDMEM(1), .BANR(1), .LNKS(1)) u_l (
-        .clk(ck), .rst_n(rst_n), .lnk(lnk), .b0(b0), .tw(tw), .sel_e(c[12:0]), .tv_e(c[25:13]),
+        .clk(ck), .rst_n(rs_q), .lnk(lnk), .b0(b0), .tw(tw), .sel_e(c[12:0]), .tv_e(c[25:13]),
         .tt_ty(tt[95:0]), .tt_use(tt[96]), .tt_v(tt[97]), .pw(pw[31:0]), .pw_v(pw[32]), .ty(ty), .fault(f));
 endmodule
 
@@ -46,8 +51,10 @@ module qfd_bl_lane_mut (
     input  wire ck, input wire rst_n, input wire b0, input wire [5:0] lnk, input wire [255:0] tw, input wire [25:0] c,
     input  wire [97:0] tt, output wire [32:0] pw, output wire [255:0] ty, output wire f
 );
+    (* keep *) reg rs_q;
+    always @(posedge ck or negedge rst_n) if (!rst_n) rs_q <= 1'b0; else rs_q <= 1'b1;
     ot_qfd_band_lanes #(.NL(1), .LNK(0), .TREE_LAT(7), .MUT(1), .TCUT(7), .LG(12), .RDMEM(1), .BANR(1), .LNKS(1)) u_l (
-        .clk(ck), .rst_n(rst_n), .lnk(lnk), .b0(b0), .tw(tw), .sel_e(c[12:0]), .tv_e(c[25:13]),
+        .clk(ck), .rst_n(rs_q), .lnk(lnk), .b0(b0), .tw(tw), .sel_e(c[12:0]), .tv_e(c[25:13]),
         .tt_ty(tt[95:0]), .tt_use(tt[96]), .tt_v(tt[97]), .pw(pw[31:0]), .pw_v(pw[32]), .ty(ty), .fault(f));
 endmodule
 `endif

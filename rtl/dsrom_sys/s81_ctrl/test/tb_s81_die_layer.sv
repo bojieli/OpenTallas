@@ -52,6 +52,8 @@ module tb_s81_die_layer;
     // (tools/s81_suhc/hc_gate.py --hier 3): HIER 1, HALF 1, CSPLIT 1, TAIL_SPLIT 2, HEAD_ROWS 10, CNL_PIN 1, CHAIN_STEP 6
     // at NG 256; build it with +define+TB_HC_HIER (the probes below then read the slab's sequencer tile).
     parameter integer HIER = 0, HALF = 0, CSPLIT = 0, TAIL_SPLIT = 0, HEAD_ROWS = 10, CNL_PIN = 0, CHAIN_STEP = 4;
+    // NORM tree variant of the hierarchical slab (el1014-s81-norm-tree; XG="-GNTREE=1 -GNT_K=<k>"): default 0 = unchanged
+    parameter integer NTREE = 0, NT_K = 67;
     localparam integer NR = 128, XW = 640, MAXC = 16384, MAXR = 1024, MAXQ = 4096, MAXE = 2048, MAXM = 16, FW = 512,
                        PW = 547, W = 552;
     // LVM: read latency of the bench's behavioural VM (request -> rs_v), <= 63.  A measurement knob for the serial cost of
@@ -173,7 +175,7 @@ module tb_s81_die_layer;
     end endgenerate
     wire [S_WR-1:0] wq_v; wire [S_WR*14-1:0] wq_row; wire [S_WR*16-1:0] wq_mask; wire [S_WR*512-1:0] wq_d;
     dsfd_sp_hc_c #(.NG(NG), .D(5120), .S_RD(S_RD), .S_WR(S_WR), .MUT(HMUT), .HIER(HIER), .HALF(HALF), .CSPLIT(CSPLIT),
-                   .TAIL_SPLIT(TAIL_SPLIT), .HEAD_ROWS(HEAD_ROWS), .CNL_PIN(CNL_PIN), .CHAIN_STEP(CHAIN_STEP), .PIPE(PIPE), .PIPE_PD(PIPE_PD)) u_hc (.ck(ck), .rst(rst), .c_cmd(c[2]),
+                   .TAIL_SPLIT(TAIL_SPLIT), .HEAD_ROWS(HEAD_ROWS), .CNL_PIN(CNL_PIN), .CHAIN_STEP(CHAIN_STEP), .PIPE(PIPE), .PIPE_PD(PIPE_PD), .NTREE(NTREE), .NT_K(NT_K)) u_hc (.ck(ck), .rst(rst), .c_cmd(c[2]),
         .c_done(d[2]), .c_st(est[2]), .f_inp(hc_inp), .y_v(y_v), .y_rdy(y_rdy), .y_d(y_d), .rq_v(rq_v), .rq_row(rq_row),
         .rs_v(hrs_v), .rs_d(hrs_d), .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d));
     wire [3:0] hfcode = u_hc.fcode;      // the fault code is internal to dsfd_sp_hc_c since cdb57463d; the flat engine sits in g_flat
