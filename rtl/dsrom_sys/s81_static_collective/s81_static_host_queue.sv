@@ -9,7 +9,7 @@
 // any other edge), with the current status and either the queued completion {1, d} or {0, 64'd0} (status-only beat).
 // A completion that finds the queue full, or a host slot while the host is not alive, is a sticky fault (the image
 // compiler sizes the host slots to the completion rate); nothing stalls, nothing is retimed.
-// MUT 2 (negative control): the queue never pops -- the completion is never sent.
+// MUT 2 (negative control): a completion pulse is not queued -- the host beat at the slot carries no completion.
 module s81_static_host_queue #(parameter integer DEPTH=16, parameter integer MUT=0)(
  input wire clk, input wire rst_n,
  input wire[76:0] f_host, input wire slot,
@@ -21,9 +21,9 @@ module s81_static_host_queue #(parameter integer DEPTH=16, parameter integer MUT
  always @(posedge clk or negedge rst_n) if(!rst_n) p<=77'd0; else p<=f_host;
  reg[63:0] q[0:DEPTH-1];
  reg[AW:0] n; reg[AW-1:0] wp, rp;
- wire pop = slot && (n!=0) && (MUT!=2);
+ wire pop = slot && (n!=0);
  wire full = (n==DEPTH);
- wire push = p[64] && !(full && !pop);
+ wire push = p[64] && !(full && !pop) && (MUT!=2);
  always @(posedge clk) if(push) q[wp]<=p[63:0];
  always @(posedge clk or negedge rst_n)
   if(!rst_n) begin n<=0; wp<=0; rp<=0; fault<=1'b0; end

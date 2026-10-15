@@ -3,7 +3,7 @@
 # s81_static_vm_boundary leaf + one real dsfd_sp_vm with its 128 SRAM macros). Reproduces the 10-15
 # results/rtl/s81_static_vm_boundary_extract_1015 base/mutant runs from the current source.
 #   run_slab_gate.sh WORK [MUT]    MUT=1: vm_boundary flips t_vm bit 31 on HC writes (must FAIL); MUT=2: the static host
-#   queue never pops (the host completion is never sent: must FAIL)
+#   queue drops the completion pulse (the slot beat carries none: must FAIL)
 set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/../.." && pwd); W=$(mkdir -p "$1" && cd "$1" && pwd); MUT=${2:-0}
 V=${OT_VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
