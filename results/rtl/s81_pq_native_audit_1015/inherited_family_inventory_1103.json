@@ -18,7 +18,19 @@
       "current_owner": "Historical s_elements/bf_physical absent fromliveAPI; inherited parent1103 mapping required",
       "source": "916d74683 staticfront f_prog38/io_clk recoveredmainfc29; programmeconsumerpresent",
       "actual_blocker": "OldCPINgate16824sinks329psFAIL; freshsplitcore/io3269pinplannotgranted; column35captures215.7+96blockedabove; canonicalBF519perpairprogramme source bindingOPEN",
-      "ready_exactslot_independent_leaf": false
+      "ready_exactslot_independent_leaf": false,
+      "pin_plan_source": {
+        "branch": "codex/s81-bf-native-physical-1015",
+        "commit": "5c37003e912d6c9ae560bab6f5b88d9735fe6e1e",
+        "spec": "physical/ref_tile_specs/s81_bf_native_1015/static_front.json",
+        "pins": "physical/ref_tile_specs/s81_bf_native_1015/static_pins/pin_request.json + pins.tcl",
+        "outline_um": [
+          100.224,
+          198.72
+        ],
+        "literal_pins": 3269,
+        "status": "REQUESTED_NOT_GRANTED"
+      }
     },
     {
       "family": "Selector/collector",
@@ -26,7 +38,16 @@
       "source": "Selectorclosed4b0140c9a and9ac26e269;collectorclosed e96dd1e56/cd3337221",
       "actual_blocker": "Publishedchosenviews have TTlibs/abstracts but no insertion.json; fresh actualphiR/nativeaudit needed before inheritance. Actualstaticproducer/peer-rank/calendar integration notproven by oldclosures. No current assignednewleafkit found",
       "latest_closed": "selt_q2 TT5.71/FF6.57; selt_c11.01/10.69;colt_laneSS4.10/FF4.18;mrgSS54.28/22;DRC0",
-      "ready_exactslot_independent_leaf": false
+      "ready_exactslot_independent_leaf": false,
+      "source_paths": [
+        "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_bk_selector_c1.sv",
+        "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_bk_collector_c1.sv"
+      ],
+      "source_obligations": [
+        "selectorfinalTP4(score,index) mode explicitlyOPEN inactualsource",
+        "collectoractualwrapper retainsf_cr/t_cr credit transport; no adoptedstaticproducer proof"
+      ],
+      "candidate_pin_files": "physical/s81_die_pins/v21_geo_s_gen18c/dsfd_bk_{selector,collector}_c1.json (gen18p sibling also exists); geometrycandidate notnewhardkit"
     },
     {
       "family": "WFC staging",
@@ -39,7 +60,7 @@
       "family": "Gather tree",
       "current_owner": "Leafclosurecomplete; /root/s81_die_1103 ownsflattenGEN/seams",
       "source": "RWpinrepair e74771a9c closedmain6c879be51;REtransverse d399415d2 closed56e4857f2;fold46ce57d97/ec4e1ae89",
-      "actual_blocker": "214childflattenGEN andactualperpinseam/reset/clock timing; nohardparentroutebyselectedwires-onlyflatten decision",
+      "actual_blocker": "Die ownerconfirmed actualGEN19b stillaggregate dsfd_sp_gather_c; noflattenflag/call implemented.214childplanonly; DIE1103nowownsactualflattenGEN andclock/seam mapping. Existingclosedviewsstand.",
       "latest_closed": "RWTT103.47/FF15.17/DRC0 nativeclean;RETT187.63/FF19.29/DRC0 nativeclean",
       "ready_exactslot_independent_leaf": false
     },
@@ -47,8 +68,24 @@
       "family": "HC gatherpack",
       "current_owner": "Historical S-FUNC/qfunc notliveAPI; rootfunctionalownership needed",
       "source": "rtl/dsrom_sys/s81_hcx/ot_s81_hcx_gatherpack.sv;home216sq at15600,22770",
-      "actual_blocker": "Noactualhardkit; physicalcut/pin/clock/returnflights R_CYC andVMwriteageWL bindingOPEN. LatestchainmeasureGP_DONE24; noactualproduction physicalbinding",
-      "ready_exactslot_independent_leaf": false
+      "actual_blocker": "Currentmainserial input RTL and parallel4-rank pincontract mismatch; no sourceconsistentphysicalkit. Needrecoverlatestfunctionalparallel source orregenerateaccuratepins, thenbindR_CYC/VMWL/cuts/nativeclock.",
+      "ready_exactslot_independent_leaf": false,
+      "source_pin_mismatch": {
+        "observed_main": "4fae60aa5715db72654f9f7d7a701608a3a9833d",
+        "RTL": "rtl/dsrom_sys/s81_hcx/ot_s81_hcx_gatherpack.sv",
+        "RTL_ports": {
+          "i_d": 512,
+          "i_v": 1,
+          "i_rank": 2
+        },
+        "assigned_pins": "physical/s81_die_pins/v20_functional/ot_s81_hcx_gatherpack.json",
+        "assigned_ports": {
+          "i_d": 2048,
+          "i_v": 4,
+          "i_rank": null
+        },
+        "RTL_sha256": "0aefe08c113065280d32f021a92d6e23411d30611a15594b0b238f5d25ee0cf5"
+      }
     },
     {
       "family": "HC projection",
