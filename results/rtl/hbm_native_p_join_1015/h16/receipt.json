@@ -1,0 +1,49 @@
+{
+  "scope": "Actual one-start H16 component rawSC boundary; no actual QK/PV or canonical SID binding",
+  "profiles": [
+    128,
+    640
+  ],
+  "heads": 16,
+  "external_starts": 1,
+  "between_head_host_configuration_edges": 0,
+  "canonical": "PASS",
+  "directed_actualMachine": "PASS",
+  "actual_programme_mutants": {
+    "head_stride": "REJECTED",
+    "RNE": "REJECTED"
+  },
+  "checks": {
+    "128": 2432,
+    "640": 11648
+  },
+  "EB_words": {
+    "128": 2048,
+    "640": 10240
+  },
+  "actual_scalar_results_per_profile": 32,
+  "io_cycles": {
+    "128": 12720,
+    "640": 35504
+  },
+  "pin_epochs": {
+    "WQ_to_DONE_edges": 12,
+    "ack_errors": 0,
+    "observed_events_per_profile": 442
+  },
+  "native_whole_kernel_qualified": false,
+  "physical_qualified": false,
+  "production_throughput_qualified": false,
+  "source_commit": "b0ea10106",
+  "sha256": {
+    "t640_h16.log": "988e0b3f880bc6d20b34922f1523e1a264a8213dc1f89b6534806d3f83d0b499",
+    "t128_h16.json": "c54d9b075a0e0f489e6a8ee786df4fd8773d5ab45fff04a53fe1e765e8654650",
+    "t128_h16.log": "726cf66890cc23d2e725d00f7dcaa07279f39d17b4573bd74af8078f75a35183",
+    "mutant_head_stride.log": "8f3ea09c4fcaa995966e41c3ed9c99c337604807e5a42802a045c2d8acd9cdbc",
+    "t640_h16.json": "7ff815bb7b16ce18684b75bc92fded9c99dd799d7c4ae77dc4c1ce97210bef5d",
+    "directed/t640_h16.log": "719ce9cc67612676886c9a78ad6905c23d11edeaca141824dc89693445508024",
+    "directed/t128_h16.log": "6c34d2a0d523c2d3bde845a657585b48c7ff22574dcb5e11485c609bef00aab8",
+    "directed/mutant_rne.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "directed/mutant_rne.log": "72931393b4853ddc02d51cde92708166e8a4dea9717855540baa59a67fd2512f"
+  }
+}
