@@ -50,14 +50,14 @@ def main():
   for q in range(8):
    quarter=f'vm_s{s}_quarter{q}';bridge=f'vm_s{s}_bridge{q//2}';off=4*(q%2)
    for p,w in req.items():
-    for k in range4:
+    for k in range(4):
      for bit in range(w):connect('bridge_to_quarter_request',bridge,'o_'+p,(off+k)*w+bit,quarter,'i_'+p,k*w+bit)
    for p,(_,w) in rsp.items():
-    for k in range4:
+    for k in range(4):
      for bit in range(w):connect('quarter_to_bridge_response',quarter,'o_'+p,k*w+bit,bridge,'i_'+p,(off+k)*w+bit)
  for v in stats.values():
   for k,x in v.items():
    if isinstance(x,float):v[k]=round(x,3)
- d=dict(schema='opentallas.s81.actual-routed-local-hop-diagnostic.v1',status='REJECT_NATIVE_ADOPTION' if timing_worst or missing or worst else 'LOCAL_SETUP_PASS_GLOBAL_AND_EXTRACTED_DIE_OPEN',scope='83712 bank-quarter-bridge endpoint bits in old188 local template; proposed328 retains these microcluster relative pins; real clock-domain-specific TT/FF exported arcs, phase compensated per measured boundary R. Linear .76ps/um TT wire is a construction model, not extracted die STA.',rule=dict(T_ps=833.333,setup_unc_ps=60,skew_ps=90,wire_ps_per_um=.76,hold_reserve_ps=100,hold_wire_credit_ps=0),stats=stats,missing_arcs=missing[:100],missing_arc_count=len(missing),over500=worst[:100],worst_setup=sorted(timing_worst,key=lambda e:e['setup_slack_ps'])[:100],view_provenance=provenance,limits=['CLOSED leaf route stands; this diagnostic is no reroute authorization','Classify actual launch residual vs export-source reference before native structural repair','No global cap/CDC/FSR/return/writeedge geometry, no load/slew sweep or extracted die timing','FF reserve uses no minimum wire credit; no FF wire estimate invented'])
+ d=dict(schema='opentallas.s81.actual-routed-local-hop-diagnostic.v1',tool_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),status='REJECT_NATIVE_ADOPTION' if timing_worst or missing or worst else 'LOCAL_SETUP_PASS_GLOBAL_AND_EXTRACTED_DIE_OPEN',scope='83712 bank-quarter-bridge endpoint bits in old188 local template; proposed328 retains these microcluster relative pins; real clock-domain-specific TT/FF exported arcs, phase compensated per measured boundary R. Linear .76ps/um TT wire is a construction model, not extracted die STA.',rule=dict(T_ps=833.333,setup_unc_ps=60,skew_ps=90,wire_ps_per_um=.76,hold_reserve_ps=100,hold_wire_credit_ps=0),stats=stats,missing_arcs=missing[:100],missing_arc_count=len(missing),over500=worst[:100],worst_setup=sorted(timing_worst,key=lambda e:e['setup_slack_ps'])[:100],view_provenance=provenance,limits=['CLOSED leaf route stands; this diagnostic is no reroute authorization','Classify actual launch residual vs export-source reference before native structural repair','No global cap/CDC/FSR/return/writeedge geometry, no load/slew sweep or extracted die timing','FF reserve uses no minimum wire credit; no FF wire estimate invented'])
  out=R/'results/physical/s81_vm_static_ownership_1015/routed_local_hops.json';out.write_text(json.dumps(d,indent=2)+'\n');print(json.dumps(dict(status=d['status'],stats=stats,missing=len(missing))))
 if __name__=='__main__':main()
