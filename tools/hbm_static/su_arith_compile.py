@@ -9,6 +9,8 @@ from pathlib import Path
 import sys
 import numpy as np
 from su_arith_generate import FIELDS
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
+from hdc_golden import add, mul
 
 OPS=[('BYP',{}),('AB',dict(cp_m1=1,cm_m1=1)),('AA',dict(cp_m1=2,cm_m1=2)),
      ('MULIMM',dict(cp_m1=3,cm_m1=3)),('AD_C',dict(ca_ad=2)),
@@ -45,12 +47,12 @@ def main():
     for name,mods in OPS:
         x=a.copy()
         m=mods.get('cp_m1',0)
-        if m:x=np.float32(a*(b if m==1 else a if m==2 else np.float32(1.25)))
-        if mods.get('cm_m2'):x=np.float32(x*c)
+        if m:x=mul(a,(b if m==1 else a if m==2 else np.float32(1.25)))
+        if mods.get('cm_m2'):x=mul(x,c)
         ad=mods.get('ca_ad',0)
-        if ad:x=np.float32(x+(c if ad==2 else -b if ad==3 else d))
-        if mods.get('cs_e1'):x=np.float32(x+np.float32(.375))
-        if mods.get('ce_e2'):x=np.float32(x*b)
+        if ad:x=add(x,(c if ad==2 else -b if ad==3 else d))
+        if mods.get('cs_e1'):x=add(x,np.float32(.375))
+        if mods.get('ce_e2'):x=mul(x,b)
         bits=x.view(np.uint32)
         if mods.get('co_rnd'):bits=(bits+0x7fff+((bits>>16)&1))&0xffff0000
         gold.extend(bits.ravel())
@@ -75,7 +77,7 @@ def main():
     (out/'control.mem').write_text('\n'.join(f'{x:01742x}'for x in images)+'\n')
     (out/'programme.json').write_text(json.dumps(dict(qualified=False,ops=[n for n,_ in OPS],
         issue_words_per_op=32768,issues_per_op=64,cycles_per_op=176,
-        total_words=len(gold),source='independent NumPy FP32 RNE; full real N512/M128',
+        total_words=len(gold),source='independent hdc_golden NumPy FP32 RNE with specified canonical +0; full real N512/M128',
         lowerer_status='baseline fixture only; canonical SU records not yet scheduled',
         SRAM_response_offset=2,normal_fetch_extra_edges=2,gather_extra_edges=4),indent=2)+'\n')
 
