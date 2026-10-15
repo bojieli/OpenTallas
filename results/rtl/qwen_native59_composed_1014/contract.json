@@ -1,0 +1,48 @@
+{
+  "scope": "Selected compute-local static native59 composition; declared SU/VM/HOST/native548 boundary stimuli, not full target/layer/token or physical proof",
+  "source": "rtl/qwen_split/qfd_native59_compute_service.sv",
+  "clock_entries": [
+    "ck_context",
+    "ck_service",
+    "ck_format",
+    "ck_record",
+    "ck_qtag",
+    "ck_x3"
+  ],
+  "schedule": "All begin/request/Q/formatter/x3/TX/RX/visibility/completion slots compiler-fixed. Fault terminates validity; never waits/retries/reschedules. No local KVcommit admission. Remote controller must return actual visibility/identity faults before fixed completion.",
+  "actual_source_context": "HOSTkind12 full tag59/runtime epoch16/gen2/cap; accepted head token18/position18/stage6. HOST token-wide stage0/segment0; layer native stage1..36.",
+  "q_transport": "Actual DVM q_epoch captures identity before physical producer writes. One Q producer goes directly into native548 kind2; x3 holds KVN only with per-word retained TAG59/gen2.",
+  "completion": "Real raw39 SRAM-consume fence48ef95d84 drives all32 registered vm_commit events. Mandatory compiled visibility_slot must follow lastwrite+10 or later. complete_slot must follow visibility_slot by >=1 whole service edge, and kernel_done/error transport must be observed before complete_slot. Missing/late/write identity/line/mask events invalidate fixed completion, no deferred completion.",
+  "vm_latency": {
+    "raw_consume_after_issue_edges": 8,
+    "fence_output_after_issue_edges": 9,
+    "earliest_visibility_after_last_issue_edges": 10,
+    "earliest_completion_after_last_issue_edges": 11
+  },
+  "dependency_proofs": {
+    "actual_VM_macro_and_fence": "e10417cf4",
+    "fence_source": "48ef95d84",
+    "native_codec": "34cfa0d07"
+  },
+  "tests": {
+    "selected_composition": "PASS 4KV words,32Q direct records,32result records,32SRAM-event commits; no duplicate Q",
+    "missing_raw_commit": "PASS rejection at unchanged completion edge",
+    "missing_visibility_slot": "PASS rejection at unchanged completion edge",
+    "stale_remote_epoch": "PASS rejection",
+    "codec_metadata_guard_hardware_mutant": "FAIL as required",
+    "context": "PASS good and wrongHOSTepoch/stage/descriptor/cap/gen2/fullHOSTtag checks",
+    "formatter": "PASS 40epochs10240bytes160fixedwords; early word rejects; mask mutant FAIL",
+    "final_fault": "PASS sourcefault at completion suppresses success",
+    "earlycompletion_hardware_mutant": "FAIL as required"
+  },
+  "physical_qualified": false,
+  "full_target_native_qualified": false,
+  "remaining": [
+    "authoritative HOSTkind12 retainingreceiver + actual head/seq binding",
+    "actual mapped VM raw39 and Q producer binding in compute die",
+    "remote actual persistent writer/read-visibility controller plus fixed fault-return calendar",
+    "compiler complete source-pinned stage/operator/calendar with physical relay/CDC phases",
+    "actual math64RTL/staticembedding fullshape positive+mutants",
+    "six-root mapped area/pins/phase and route qualification"
+  ]
+}

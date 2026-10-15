@@ -1,14 +1,14 @@
 `timescale 1ns/1ps
 module tb_qfd_native59_static_service;
- parameter integer MISSING_COMMIT=0,STALE_Q=0,MUT_EARLY_COMPLETE=0;
+ parameter integer MISSING_COMMIT=0,STALE_Q=0,MUT_EARLY_COMPLETE=0,FINAL_FAULT=0;
  reg ck=0,rst_n=0;always #1 ck=~ck;
  reg begin_slot=0,request_slot=0,q_slot=0,q_v=0,result_slot=0,result_v=0,vm_commit_v=0,kernel_done=0,complete_slot=0;
  reg[58:0]tag=0,qtag=0;reg[4:0]qb=0,rb=0,cb=0;
  reg[511:0]qd=0,rd=0;
  wire[94:0]ret;wire req,qout,wv,completed,active,fault;wire[58:0]reqtag,outqtag,write_tag;wire[4:0]outqb,write_beat;wire[511:0]outqd,write_data;wire[19:0]write_word;
  qfd_native59_static_service #(.MUT_EARLY_COMPLETE(MUT_EARLY_COMPLETE))dut(
- .ck(ck),.rst_n(rst_n),.begin_slot(begin_slot),.begin_tag(tag),.request_slot(request_slot),.request_tag(tag),.result_base_word(20'd3167),
- .qr_committed(1'b1),.qr_tag(tag),.kv_committed(1'b1),.kv_tag(tag),.kernel_request_v(req),.kernel_request_tag(reqtag),
+ .ck(ck),.rst_n(rst_n),.source_fault(FINAL_FAULT&&complete_slot),.begin_slot(begin_slot),.begin_tag(tag),.request_slot(request_slot),.request_tag(tag),.result_base_word(20'd3167),
+ .qr_committed(1'b1),.qr_tag(tag),.kernel_request_v(req),.kernel_request_tag(reqtag),
  .q_slot(q_slot),.q_slot_beat(qb),.q_v(q_v),.q_beat(qb),.q_tag(qtag),.q_data(qd),.kernel_q_v(qout),.kernel_q_beat(outqb),.kernel_q_tag(outqtag),.kernel_q_data(outqd),
  .result_slot(result_slot),.result_slot_beat(rb),.result_v(result_v),.result_beat(rb),.result_tag(tag),.result_data(rd),
  .vm_write_v(wv),.vm_write_word(write_word),.vm_write_beat(write_beat),.vm_write_tag(write_tag),.vm_write_data(write_data),
@@ -39,9 +39,9 @@ module tb_qfd_native59_static_service;
   for(i=0;i<32-MISSING_COMMIT;i=i+1)begin vm_commit_v=1;cb=i;step();if(ret[93:78]!=i+1)errors=errors+1;end
   vm_commit_v=0;kernel_done=1;step();kernel_done=0;
   complete_slot=1;step();complete_slot=0;
-  if(MISSING_COMMIT!=0)begin
+  if(MISSING_COMMIT!=0||FINAL_FAULT!=0)begin
    if(!fault||completed)$fatal(1,"FAIL completion without actual last VMcommit");
-   $display("PASS static59 completion rejects missingactualVMcommit");$finish;
+   $display("PASS static59 completion rejects missingactualVMcommit or finalsourcefault");$finish;
   end
   if(fault||!completed||active||ret[1:0]!=3||ret[93:78]!=32||ret[77:2]!=0)errors=errors+1;
   step();

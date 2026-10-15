@@ -42,7 +42,7 @@ module ot_qfd_su_kv_static_posted #(
   end
  endfunction
  localparam integer VBASE=HEADS*65536, NBYTES=HEADS*256, NWORDS=HEADS*4;
- initial if(HEADS<1||HEADS>2)$error("Only exact one/two-head profiles supported");
+ initial if(HEADS!=1||KV_FP8!=1)$fatal(1,"Static native formatter requires exact TP8 one-head FP8 profile");
  reg active;reg [12:0] pos;
  reg [2:0] issued;
  reg [NBYTES-1:0] seen,seen_n;

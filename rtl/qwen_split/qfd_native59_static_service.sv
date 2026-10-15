@@ -2,16 +2,19 @@
 // Compute-local identity/commit root for the actual statically scheduled
 // remote KV attention service. Every launch/consume/completion cycle comes
 // from the compiler. Missing resource/data is a fault, never a deferred issue.
+// Local CMD does not wait for a KV-commit response. The actual remote
+// controller/landing checks TAG59/generation/mask/address/ticket visibility at
+// compiled read slots and returns real fault/status before completion. The
+// selected compiler must account for that return deadline; no fake ACK exists.
 // This module contains no arithmetic and cannot fabricate Q or result words.
 // TAG59={epoch16,stage6,token18,position13,segment6}; stages1..36.
 module qfd_native59_static_service #(
  parameter integer MUT_EARLY_COMPLETE=0
 )(
- input wire ck,rst_n,
+ input wire ck,rst_n,input wire source_fault,
  input wire begin_slot,input wire [58:0] begin_tag,
  input wire request_slot,input wire [58:0] request_tag,input wire [19:0] result_base_word,
  input wire qr_committed,input wire [58:0] qr_tag,
- input wire kv_committed,input wire [58:0] kv_tag,
  output reg kernel_request_v,output reg [58:0] kernel_request_tag,
  input wire q_slot,input wire [4:0] q_slot_beat,
  input wire q_v,input wire [4:0] q_beat,input wire [58:0] q_tag,input wire [511:0] q_data,
@@ -41,17 +44,18 @@ module qfd_native59_static_service #(
    vm_write_v<=0;vm_write_word<=0;vm_write_beat<=0;vm_write_tag<=0;vm_write_data<=0;
    completed<=0;active<=0;fault<=0;
   end else begin
-   kernel_request_v<=request_slot&&!fault;
-   kernel_q_v<=q_slot&&!fault;
-   vm_write_v<=result_slot&&!fault;
+   kernel_request_v<=request_slot&&!fault&&!source_fault;
+   kernel_q_v<=q_slot&&!fault&&!source_fault;
+   vm_write_v<=result_slot&&!fault&&!source_fault;
    completed<=0;
+   if(source_fault)fault<=1;
    if(begin_slot)begin
     if(active||!legal_tag)fault<=1;
     else begin context_valid<=1;commit_count<=0;tag<=begin_tag;requested<=0;done_seen<=0;q_seen<=0;result_seen<=0;committed<=0;q_count<=0;result_count<=0;end
    end
    if(request_slot)begin
     kernel_request_tag<=request_tag;base<=result_base_word;
-    if(!context_valid||active||requested||request_tag!=tag||!qr_committed||qr_tag!=tag||!kv_committed||kv_tag!=tag||result_base_word>20'hfffe0)fault<=1;
+    if(!context_valid||active||requested||request_tag!=tag||!qr_committed||qr_tag!=tag||result_base_word>20'hfffe0)fault<=1;
     requested<=1;active<=1;
    end
    // An unexpected or absent native producer cannot silently change its slot.
@@ -78,7 +82,7 @@ module qfd_native59_static_service #(
    end
    if(complete_slot)begin
     if(!active||(!complete_ok&&MUT_EARLY_COMPLETE==0))fault<=1;
-    else if(!fault)begin completed<=1;active<=0;end
+    else if(!fault&&!source_fault)begin completed<=1;active<=0;end
    end
   end
  end

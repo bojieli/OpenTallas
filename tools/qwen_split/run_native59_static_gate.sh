@@ -2,10 +2,11 @@
 set -euo pipefail
 root=$(cd "$(dirname "$0")/../.." && pwd)
 out=${1:?fresh output directory};mkdir "$out"
-for mode in positive missing_commit stale_q early_complete_mutant; do
+for mode in positive missing_commit stale_q final_fault early_complete_mutant; do
  p=()
  case "$mode" in
  missing_commit)p=(-Ptb_qfd_native59_static_service.MISSING_COMMIT=1);;
+ final_fault)p=(-Ptb_qfd_native59_static_service.FINAL_FAULT=1);;
  stale_q)p=(-Ptb_qfd_native59_static_service.STALE_Q=1);;
  early_complete_mutant)p=(-Ptb_qfd_native59_static_service.MISSING_COMMIT=1 -Ptb_qfd_native59_static_service.MUT_EARLY_COMPLETE=1);;
  esac

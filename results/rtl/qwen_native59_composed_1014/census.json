@@ -1,0 +1,249 @@
+{
+  "scope": "inferred real FF and port census only; no mapped area/pin/phase qualification",
+  "clock_entries": {
+    "ck_context": 58,
+    "ck_service": 2013,
+    "ck_format": 6605,
+    "ck_record": 1074,
+    "ck_qtag": 239,
+    "ck_x3": 1728
+  },
+  "total_flop_bits": 11717,
+  "unmapped_memories": {},
+  "ports": {
+    "ck_context": {
+      "direction": "input",
+      "bits": 1
+    },
+    "ck_service": {
+      "direction": "input",
+      "bits": 1
+    },
+    "ck_format": {
+      "direction": "input",
+      "bits": 1
+    },
+    "ck_record": {
+      "direction": "input",
+      "bits": 1
+    },
+    "ck_qtag": {
+      "direction": "input",
+      "bits": 1
+    },
+    "ck_x3": {
+      "direction": "input",
+      "bits": 1
+    },
+    "rst_n": {
+      "direction": "input",
+      "bits": 1
+    },
+    "host_epoch_valid": {
+      "direction": "input",
+      "bits": 1
+    },
+    "host_fused_capability": {
+      "direction": "input",
+      "bits": 1
+    },
+    "host_epoch": {
+      "direction": "input",
+      "bits": 16
+    },
+    "host_tag": {
+      "direction": "input",
+      "bits": 59
+    },
+    "host_generation": {
+      "direction": "input",
+      "bits": 2
+    },
+    "layer_context_v": {
+      "direction": "input",
+      "bits": 1
+    },
+    "command_stage": {
+      "direction": "input",
+      "bits": 6
+    },
+    "native_token": {
+      "direction": "input",
+      "bits": 18
+    },
+    "native_position": {
+      "direction": "input",
+      "bits": 18
+    },
+    "native_cmd": {
+      "direction": "input",
+      "bits": 380
+    },
+    "si": {
+      "direction": "input",
+      "bits": 482
+    },
+    "kv_we": {
+      "direction": "input",
+      "bits": 64
+    },
+    "kv_waddr": {
+      "direction": "input",
+      "bits": 1536
+    },
+    "kv_wdata": {
+      "direction": "input",
+      "bits": 2048
+    },
+    "kv_word_slot": {
+      "direction": "input",
+      "bits": 1
+    },
+    "kv_word_index": {
+      "direction": "input",
+      "bits": 2
+    },
+    "kv_x3_slot": {
+      "direction": "input",
+      "bits": 1
+    },
+    "x3": {
+      "direction": "output",
+      "bits": 524
+    },
+    "x3_identity": {
+      "direction": "output",
+      "bits": 59
+    },
+    "x3_generation": {
+      "direction": "output",
+      "bits": 2
+    },
+    "q_epoch": {
+      "direction": "input",
+      "bits": 1
+    },
+    "q_start": {
+      "direction": "input",
+      "bits": 1
+    },
+    "q_committed": {
+      "direction": "input",
+      "bits": 1
+    },
+    "q_fault": {
+      "direction": "input",
+      "bits": 1
+    },
+    "q": {
+      "direction": "input",
+      "bits": 524
+    },
+    "q_slot": {
+      "direction": "input",
+      "bits": 1
+    },
+    "q_slot_beat": {
+      "direction": "input",
+      "bits": 5
+    },
+    "tx_slot": {
+      "direction": "input",
+      "bits": 1
+    },
+    "tx_slot_kind": {
+      "direction": "input",
+      "bits": 4
+    },
+    "tx_slot_beat": {
+      "direction": "input",
+      "bits": 5
+    },
+    "native_tx_v": {
+      "direction": "output",
+      "bits": 1
+    },
+    "native_tx_payload": {
+      "direction": "output",
+      "bits": 548
+    },
+    "native_rx_v": {
+      "direction": "input",
+      "bits": 1
+    },
+    "native_rx_payload": {
+      "direction": "input",
+      "bits": 548
+    },
+    "rx_slot": {
+      "direction": "input",
+      "bits": 1
+    },
+    "rx_slot_kind": {
+      "direction": "input",
+      "bits": 4
+    },
+    "rx_slot_beat": {
+      "direction": "input",
+      "bits": 5
+    },
+    "vm_write_v": {
+      "direction": "output",
+      "bits": 1
+    },
+    "vm_write_word": {
+      "direction": "output",
+      "bits": 20
+    },
+    "vm_write_beat": {
+      "direction": "output",
+      "bits": 5
+    },
+    "vm_write_tag": {
+      "direction": "output",
+      "bits": 59
+    },
+    "vm_write_data": {
+      "direction": "output",
+      "bits": 512
+    },
+    "write_commit_v": {
+      "direction": "input",
+      "bits": 39
+    },
+    "write_commit_line": {
+      "direction": "input",
+      "bits": 312
+    },
+    "write_commit_mask": {
+      "direction": "input",
+      "bits": 624
+    },
+    "visibility_slot": {
+      "direction": "input",
+      "bits": 1
+    },
+    "complete_slot": {
+      "direction": "input",
+      "bits": 1
+    },
+    "completed": {
+      "direction": "output",
+      "bits": 1
+    },
+    "native_ret": {
+      "direction": "output",
+      "bits": 95
+    },
+    "fault": {
+      "direction": "output",
+      "bits": 1
+    }
+  },
+  "physical_qualified": false,
+  "area_um2": null,
+  "source_dependencies": {
+    "VMfence": "48ef95d84",
+    "native548codec": "34cfa0d07"
+  }
+}
