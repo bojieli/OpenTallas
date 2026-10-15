@@ -38,6 +38,27 @@ import check_macro_track_alignment as cmta  # noqa: E402
 MACRO_MOVE_RE = re.compile(r"setLocation|setOrigin|place_macro|\bplace_inst\b")
 TIMEOUT_S = 60
 
+# A move immediately preceded by this runtime check cannot move a BLOCK master.
+# Require the exact receiver, an unconditional literal error, and no intervening
+# command. Other guards, aliases, unresolved calls, or indirect object selection
+# stay conservative. This is independent of filenames and declared macro counts.
+STDCELL_MOVE_RE = re.compile(
+    r'(?m)^[ \t]*if\s+\{\s*\[\[\$(?P<inst>[A-Za-z_]\w*)\s+getMaster\]\s+isBlock\]\s*\}'
+    r'\s*\{\s*error\s+(?:"[^"$\[\\\n]*"|\{[^{}]*\})\s*\}'
+    r'\s*;?\s*\$(?P=inst)\s+(?:setLocation|setOrigin)\b')
+
+
+def has_macro_move(text: str) -> bool:
+    """Unknown placement stays a macro candidate; only locally proven cells skip.
+
+    Leave the arguments and subsequent commands in the text: removing an entire
+    line could hide a second, genuine macro move after a semicolon.
+    """
+    # Tcl folds backslash-newlines even inside comments. A commented guard
+    # must never establish a proof for the next real command.
+    text = re.sub(r"\\\n[ \t]*", " ", text)
+    return bool(MACRO_MOVE_RE.search(STDCELL_MOVE_RE.sub("", text)))
+
 
 # ------------------------------------------------------------------------------------------- shell-ish expansion
 def expand(s: str, env: dict) -> str:
@@ -413,7 +434,7 @@ def check(spec: dict, git, max_list: int = 6) -> dict:
     for p, fam in ji["tcl"].items():
         files: dict = {}
         with_sources(p, git, commit, files)
-        if any(MACRO_MOVE_RE.search(t) for t in files.values()):
+        if any(has_macro_move(t) for t in files.values()):
             scripts[p], sources[p] = fam, files
     if not scripts and not ji["cfg"]:
         return {"verdict": "SKIP", "message": "no macro placement script named by the job"}
