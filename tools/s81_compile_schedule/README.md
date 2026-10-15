@@ -53,3 +53,23 @@ bindings, not that 2,367 native jobs have been implemented. SU/HC snapshot
 addresses and ideal LVM10 response timing cannot be promoted to production
 bindings. The native VM service, field/collective mapping and owner-provided
 operand contracts must be connected before full-native dispatch is possible.
+
+`lower_native_graph.py` now rewrites the actual 2,367 operators using named
+native fusion rules: 704 graph operators fold into existing SU/HC/HCP chains.
+It retains every original operation in exact coverage and inserts 80 required
+HC raw all-gathers and 40 post-attention HSTORE producers before FFN projection.
+The resulting 1,783 jobs are a structural lowering with unbound endpoints and
+unmeasured native durations explicitly visible. They are not a qualified native
+calendar. The normalized HCP implements HC fn/sumsq/rsqrt; the existing HBM op2
+coefficient tail implements pre/post and Sinkhorn. They remain separate jobs
+with the real TP4 gather between them.
+
+`operand_layout.py` assigns the first actual field/SU buffers independently of
+historical fixture/ISA addresses. It joins all 160 released wq_a/wkv/wq_b source
+matrices and 640 rank fragments across 40 layers to QN/KV/QR buffers, preserving
+literal source rank slices and scalar identity. QN/KV input data must arrive
+from actual field roots and the TP4 collective. The allocation is an integration
+contract; the producer packet tags, formats, writes and their fixed calendars
+still need actual native implementation evidence. No tensor values are read or
+generated. These production-layout candidates and full graph witnesses live in
+`results/arch/s81_native_compile_1014/` with explicit incomplete status.
