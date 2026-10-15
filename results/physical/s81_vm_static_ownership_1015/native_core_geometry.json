@@ -1,0 +1,2510 @@
+{
+ "schema": "opentallas.s81.static-vm-native-repack.v1",
+ "scope": "actual164core hard-child geometry only; capture/edge/producer service packing and actual pin/cut/clock/calendar not proved",
+ "parent_outline_um": [
+  1541.784,
+  3952.776
+ ],
+ "nodes": [
+  {
+   "name": "vm_s0_bank0",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    648.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 0,
+   "clock_entry": "ck_bank[0]"
+  },
+  {
+   "name": "vm_s0_bank1",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1209.6,
+    561.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 1,
+   "clock_entry": "ck_bank[1]"
+  },
+  {
+   "name": "vm_s0_bank10",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    820.8,
+    1728.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 10,
+   "clock_entry": "ck_bank[10]"
+  },
+  {
+   "name": "vm_s0_bank11",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1080.0,
+    2980.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 11,
+   "clock_entry": "ck_bank[11]"
+  },
+  {
+   "name": "vm_s0_bank12",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    302.4,
+    2376.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 12,
+   "clock_entry": "ck_bank[12]"
+  },
+  {
+   "name": "vm_s0_bank13",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1080.0,
+    2332.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 13,
+   "clock_entry": "ck_bank[13]"
+  },
+  {
+   "name": "vm_s0_bank14",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    820.8,
+    1339.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 14,
+   "clock_entry": "ck_bank[14]"
+  },
+  {
+   "name": "vm_s0_bank15",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1209.6,
+    43.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 15,
+   "clock_entry": "ck_bank[15]"
+  },
+  {
+   "name": "vm_s0_bank16",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    950.4,
+    561.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 16,
+   "clock_entry": "ck_bank[16]"
+  },
+  {
+   "name": "vm_s0_bank17",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    561.6,
+    1857.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 17,
+   "clock_entry": "ck_bank[17]"
+  },
+  {
+   "name": "vm_s0_bank18",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    561.6,
+    2332.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 18,
+   "clock_entry": "ck_bank[18]"
+  },
+  {
+   "name": "vm_s0_bank19",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    820.8,
+    2721.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 19,
+   "clock_entry": "ck_bank[19]"
+  },
+  {
+   "name": "vm_s0_bank2",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    561.6,
+    3758.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 2,
+   "clock_entry": "ck_bank[2]"
+  },
+  {
+   "name": "vm_s0_bank20",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1209.6,
+    3240.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 20,
+   "clock_entry": "ck_bank[20]"
+  },
+  {
+   "name": "vm_s0_bank21",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1080.0,
+    3499.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 21,
+   "clock_entry": "ck_bank[21]"
+  },
+  {
+   "name": "vm_s0_bank22",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    561.6,
+    2203.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 22,
+   "clock_entry": "ck_bank[22]"
+  },
+  {
+   "name": "vm_s0_bank23",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    820.8,
+    2592.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 23,
+   "clock_entry": "ck_bank[23]"
+  },
+  {
+   "name": "vm_s0_bank24",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    302.4,
+    2505.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 24,
+   "clock_entry": "ck_bank[24]"
+  },
+  {
+   "name": "vm_s0_bank25",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    561.6,
+    820.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 25,
+   "clock_entry": "ck_bank[25]"
+  },
+  {
+   "name": "vm_s0_bank26",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1080.0,
+    1944.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 26,
+   "clock_entry": "ck_bank[26]"
+  },
+  {
+   "name": "vm_s0_bank27",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    302.4,
+    1857.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 27,
+   "clock_entry": "ck_bank[27]"
+  },
+  {
+   "name": "vm_s0_bank28",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    820.8,
+    2851.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 28,
+   "clock_entry": "ck_bank[28]"
+  },
+  {
+   "name": "vm_s0_bank29",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    820.8,
+    3715.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 29,
+   "clock_entry": "ck_bank[29]"
+  },
+  {
+   "name": "vm_s0_bank3",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    561.6,
+    3240.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 3,
+   "clock_entry": "ck_bank[3]"
+  },
+  {
+   "name": "vm_s0_bank30",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    302.4,
+    2635.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 30,
+   "clock_entry": "ck_bank[30]"
+  },
+  {
+   "name": "vm_s0_bank31",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    302.4,
+    3542.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 31,
+   "clock_entry": "ck_bank[31]"
+  },
+  {
+   "name": "vm_s0_bank4",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1080.0,
+    950.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 4,
+   "clock_entry": "ck_bank[4]"
+  },
+  {
+   "name": "vm_s0_bank5",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1080.0,
+    1209.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 5,
+   "clock_entry": "ck_bank[5]"
+  },
+  {
+   "name": "vm_s0_bank6",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    1684.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 6,
+   "clock_entry": "ck_bank[6]"
+  },
+  {
+   "name": "vm_s0_bank7",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    302.4,
+    2764.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 7,
+   "clock_entry": "ck_bank[7]"
+  },
+  {
+   "name": "vm_s0_bank8",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    1814.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 8,
+   "clock_entry": "ck_bank[8]"
+  },
+  {
+   "name": "vm_s0_bank9",
+   "slice": 0,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1080.0,
+    1684.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 9,
+   "clock_entry": "ck_bank[9]"
+  },
+  {
+   "name": "vm_s0_bridge0",
+   "slice": 0,
+   "master": "dsfd_vm_static_relay128_b16",
+   "xy_um": [
+    1425.6,
+    691.2
+   ],
+   "outline_um": [
+    64.8,
+    207.36
+   ],
+   "bank_range": [
+    0,
+    15
+   ]
+  },
+  {
+   "name": "vm_s0_bridge1",
+   "slice": 0,
+   "master": "dsfd_vm_static_relay128_b16",
+   "xy_um": [
+    1425.6,
+    3369.6
+   ],
+   "outline_um": [
+    64.8,
+    207.36
+   ],
+   "bank_range": [
+    16,
+    31
+   ]
+  },
+  {
+   "name": "vm_s0_quarter0",
+   "slice": 0,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    1339.2,
+    1339.2
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    0,
+    7
+   ]
+  },
+  {
+   "name": "vm_s0_quarter1",
+   "slice": 0,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    1425.6,
+    1468.8
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    8,
+    15
+   ]
+  },
+  {
+   "name": "vm_s0_quarter2",
+   "slice": 0,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    1425.6,
+    1209.6
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    16,
+    23
+   ]
+  },
+  {
+   "name": "vm_s0_quarter3",
+   "slice": 0,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    1339.2,
+    1468.8
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    24,
+    31
+   ]
+  },
+  {
+   "name": "vm_s0_read_frontend",
+   "slice": 0,
+   "master": "dsfd_vm_static_suhc_fsr",
+   "xy_um": [
+    43.2,
+    561.6
+   ],
+   "outline_um": [
+    345.6,
+    51.84
+   ],
+   "qualification": "outline provisional until final source area/cuts"
+  },
+  {
+   "name": "vm_s0_return32",
+   "slice": 0,
+   "master": "dsfd_vm_static_return",
+   "xy_um": [
+    820.8,
+    43.2
+   ],
+   "outline_um": [
+    345.6,
+    207.36
+   ],
+   "NROW": 32
+  },
+  {
+   "name": "vm_s0_wscatter",
+   "slice": 0,
+   "master": "dsfd_vm_static_scatter",
+   "xy_um": [
+    432.0,
+    432.0
+   ],
+   "outline_um": [
+    345.6,
+    103.68
+   ]
+  },
+  {
+   "name": "vm_s1_bank0",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    820.8,
+    1080.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 0,
+   "clock_entry": "ck_bank[32]"
+  },
+  {
+   "name": "vm_s1_bank1",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1080.0,
+    2462.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 1,
+   "clock_entry": "ck_bank[33]"
+  },
+  {
+   "name": "vm_s1_bank10",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    302.4,
+    691.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 10,
+   "clock_entry": "ck_bank[42]"
+  },
+  {
+   "name": "vm_s1_bank11",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    302.4,
+    2116.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 11,
+   "clock_entry": "ck_bank[43]"
+  },
+  {
+   "name": "vm_s1_bank12",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    302.4,
+    1080.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 12,
+   "clock_entry": "ck_bank[44]"
+  },
+  {
+   "name": "vm_s1_bank13",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    820.8,
+    2462.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 13,
+   "clock_entry": "ck_bank[45]"
+  },
+  {
+   "name": "vm_s1_bank14",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    820.8,
+    820.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 14,
+   "clock_entry": "ck_bank[46]"
+  },
+  {
+   "name": "vm_s1_bank15",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    907.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 15,
+   "clock_entry": "ck_bank[47]"
+  },
+  {
+   "name": "vm_s1_bank16",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    2332.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 16,
+   "clock_entry": "ck_bank[48]"
+  },
+  {
+   "name": "vm_s1_bank17",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1080.0,
+    1814.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 17,
+   "clock_entry": "ck_bank[49]"
+  },
+  {
+   "name": "vm_s1_bank18",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    777.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 18,
+   "clock_entry": "ck_bank[50]"
+  },
+  {
+   "name": "vm_s1_bank19",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    561.6,
+    1339.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 19,
+   "clock_entry": "ck_bank[51]"
+  },
+  {
+   "name": "vm_s1_bank2",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1209.6,
+    172.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 2,
+   "clock_entry": "ck_bank[34]"
+  },
+  {
+   "name": "vm_s1_bank20",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    820.8,
+    2073.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 20,
+   "clock_entry": "ck_bank[52]"
+  },
+  {
+   "name": "vm_s1_bank21",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    3240.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 21,
+   "clock_entry": "ck_bank[53]"
+  },
+  {
+   "name": "vm_s1_bank22",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    2721.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 22,
+   "clock_entry": "ck_bank[54]"
+  },
+  {
+   "name": "vm_s1_bank23",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    820.8,
+    1468.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 23,
+   "clock_entry": "ck_bank[55]"
+  },
+  {
+   "name": "vm_s1_bank24",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    561.6,
+    2980.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 24,
+   "clock_entry": "ck_bank[56]"
+  },
+  {
+   "name": "vm_s1_bank25",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    820.8,
+    691.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 25,
+   "clock_entry": "ck_bank[57]"
+  },
+  {
+   "name": "vm_s1_bank26",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1080.0,
+    2721.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 26,
+   "clock_entry": "ck_bank[58]"
+  },
+  {
+   "name": "vm_s1_bank27",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    561.6,
+    691.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 27,
+   "clock_entry": "ck_bank[59]"
+  },
+  {
+   "name": "vm_s1_bank28",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    561.6,
+    2721.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 28,
+   "clock_entry": "ck_bank[60]"
+  },
+  {
+   "name": "vm_s1_bank29",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    432.0,
+    561.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 29,
+   "clock_entry": "ck_bank[61]"
+  },
+  {
+   "name": "vm_s1_bank3",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1209.6,
+    302.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 3,
+   "clock_entry": "ck_bank[35]"
+  },
+  {
+   "name": "vm_s1_bank30",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    1555.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 30,
+   "clock_entry": "ck_bank[62]"
+  },
+  {
+   "name": "vm_s1_bank31",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    561.6,
+    2073.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 31,
+   "clock_entry": "ck_bank[63]"
+  },
+  {
+   "name": "vm_s1_bank4",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    302.4,
+    3024.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 4,
+   "clock_entry": "ck_bank[36]"
+  },
+  {
+   "name": "vm_s1_bank5",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    1296.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 5,
+   "clock_entry": "ck_bank[37]"
+  },
+  {
+   "name": "vm_s1_bank6",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    302.4,
+    1468.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 6,
+   "clock_entry": "ck_bank[38]"
+  },
+  {
+   "name": "vm_s1_bank7",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    302.4,
+    2246.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 7,
+   "clock_entry": "ck_bank[39]"
+  },
+  {
+   "name": "vm_s1_bank8",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    820.8,
+    1857.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 8,
+   "clock_entry": "ck_bank[40]"
+  },
+  {
+   "name": "vm_s1_bank9",
+   "slice": 1,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    2203.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 9,
+   "clock_entry": "ck_bank[41]"
+  },
+  {
+   "name": "vm_s1_bridge0",
+   "slice": 1,
+   "master": "dsfd_vm_static_relay128_b16",
+   "xy_um": [
+    1425.6,
+    3628.8
+   ],
+   "outline_um": [
+    64.8,
+    207.36
+   ],
+   "bank_range": [
+    0,
+    15
+   ]
+  },
+  {
+   "name": "vm_s1_bridge1",
+   "slice": 1,
+   "master": "dsfd_vm_static_relay128_b16",
+   "xy_um": [
+    1339.2,
+    691.2
+   ],
+   "outline_um": [
+    64.8,
+    207.36
+   ],
+   "bank_range": [
+    16,
+    31
+   ]
+  },
+  {
+   "name": "vm_s1_quarter0",
+   "slice": 1,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    1425.6,
+    1814.4
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    0,
+    7
+   ]
+  },
+  {
+   "name": "vm_s1_quarter1",
+   "slice": 1,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    1339.2,
+    1209.6
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    8,
+    15
+   ]
+  },
+  {
+   "name": "vm_s1_quarter2",
+   "slice": 1,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    1339.2,
+    1684.8
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    16,
+    23
+   ]
+  },
+  {
+   "name": "vm_s1_quarter3",
+   "slice": 1,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    1425.6,
+    2203.2
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    24,
+    31
+   ]
+  },
+  {
+   "name": "vm_s1_read_frontend",
+   "slice": 1,
+   "master": "dsfd_vm_static_suhc_fsr",
+   "xy_um": [
+    1080.0,
+    1598.4
+   ],
+   "outline_um": [
+    345.6,
+    51.84
+   ],
+   "qualification": "outline provisional until final source area/cuts"
+  },
+  {
+   "name": "vm_s1_return32",
+   "slice": 1,
+   "master": "dsfd_vm_static_return",
+   "xy_um": [
+    43.2,
+    302.4
+   ],
+   "outline_um": [
+    345.6,
+    207.36
+   ],
+   "NROW": 32
+  },
+  {
+   "name": "vm_s1_wscatter",
+   "slice": 1,
+   "master": "dsfd_vm_static_scatter",
+   "xy_um": [
+    820.8,
+    302.4
+   ],
+   "outline_um": [
+    345.6,
+    103.68
+   ]
+  },
+  {
+   "name": "vm_s2_bank0",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    1166.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 0,
+   "clock_entry": "ck_bank[64]"
+  },
+  {
+   "name": "vm_s2_bank1",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    1425.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 1,
+   "clock_entry": "ck_bank[65]"
+  },
+  {
+   "name": "vm_s2_bank10",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    561.6,
+    3110.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 10,
+   "clock_entry": "ck_bank[74]"
+  },
+  {
+   "name": "vm_s2_bank11",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    302.4,
+    1987.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 11,
+   "clock_entry": "ck_bank[75]"
+  },
+  {
+   "name": "vm_s2_bank12",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    820.8,
+    950.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 12,
+   "clock_entry": "ck_bank[76]"
+  },
+  {
+   "name": "vm_s2_bank13",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    2980.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 13,
+   "clock_entry": "ck_bank[77]"
+  },
+  {
+   "name": "vm_s2_bank14",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    3369.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 14,
+   "clock_entry": "ck_bank[78]"
+  },
+  {
+   "name": "vm_s2_bank15",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1080.0,
+    820.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 15,
+   "clock_entry": "ck_bank[79]"
+  },
+  {
+   "name": "vm_s2_bank16",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    2462.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 16,
+   "clock_entry": "ck_bank[80]"
+  },
+  {
+   "name": "vm_s2_bank17",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1080.0,
+    1339.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 17,
+   "clock_entry": "ck_bank[81]"
+  },
+  {
+   "name": "vm_s2_bank18",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1080.0,
+    3369.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 18,
+   "clock_entry": "ck_bank[82]"
+  },
+  {
+   "name": "vm_s2_bank19",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    2592.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 19,
+   "clock_entry": "ck_bank[83]"
+  },
+  {
+   "name": "vm_s2_bank2",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1080.0,
+    691.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 2,
+   "clock_entry": "ck_bank[66]"
+  },
+  {
+   "name": "vm_s2_bank20",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    3758.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 20,
+   "clock_entry": "ck_bank[84]"
+  },
+  {
+   "name": "vm_s2_bank21",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    302.4,
+    1598.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 21,
+   "clock_entry": "ck_bank[85]"
+  },
+  {
+   "name": "vm_s2_bank22",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    561.6,
+    3369.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 22,
+   "clock_entry": "ck_bank[86]"
+  },
+  {
+   "name": "vm_s2_bank23",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    691.2,
+    561.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 23,
+   "clock_entry": "ck_bank[87]"
+  },
+  {
+   "name": "vm_s2_bank24",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    820.8,
+    3585.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 24,
+   "clock_entry": "ck_bank[88]"
+  },
+  {
+   "name": "vm_s2_bank25",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    302.4,
+    1339.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 25,
+   "clock_entry": "ck_bank[89]"
+  },
+  {
+   "name": "vm_s2_bank26",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1080.0,
+    3628.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 26,
+   "clock_entry": "ck_bank[90]"
+  },
+  {
+   "name": "vm_s2_bank27",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    302.4,
+    2894.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 27,
+   "clock_entry": "ck_bank[91]"
+  },
+  {
+   "name": "vm_s2_bank28",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    561.6,
+    1080.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 28,
+   "clock_entry": "ck_bank[92]"
+  },
+  {
+   "name": "vm_s2_bank29",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    302.4,
+    3153.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 29,
+   "clock_entry": "ck_bank[93]"
+  },
+  {
+   "name": "vm_s2_bank3",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    3499.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 3,
+   "clock_entry": "ck_bank[67]"
+  },
+  {
+   "name": "vm_s2_bank30",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    3628.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 30,
+   "clock_entry": "ck_bank[94]"
+  },
+  {
+   "name": "vm_s2_bank31",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1080.0,
+    1468.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 31,
+   "clock_entry": "ck_bank[95]"
+  },
+  {
+   "name": "vm_s2_bank4",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    561.6,
+    1209.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 4,
+   "clock_entry": "ck_bank[68]"
+  },
+  {
+   "name": "vm_s2_bank5",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    561.6,
+    3499.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 5,
+   "clock_entry": "ck_bank[69]"
+  },
+  {
+   "name": "vm_s2_bank6",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    820.8,
+    1598.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 6,
+   "clock_entry": "ck_bank[70]"
+  },
+  {
+   "name": "vm_s2_bank7",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    2851.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 7,
+   "clock_entry": "ck_bank[71]"
+  },
+  {
+   "name": "vm_s2_bank8",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1080.0,
+    2851.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 8,
+   "clock_entry": "ck_bank[72]"
+  },
+  {
+   "name": "vm_s2_bank9",
+   "slice": 2,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    302.4,
+    950.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 9,
+   "clock_entry": "ck_bank[73]"
+  },
+  {
+   "name": "vm_s2_bridge0",
+   "slice": 2,
+   "master": "dsfd_vm_static_relay128_b16",
+   "xy_um": [
+    1339.2,
+    950.4
+   ],
+   "outline_um": [
+    64.8,
+    207.36
+   ],
+   "bank_range": [
+    0,
+    15
+   ]
+  },
+  {
+   "name": "vm_s2_bridge1",
+   "slice": 2,
+   "master": "dsfd_vm_static_relay128_b16",
+   "xy_um": [
+    1425.6,
+    950.4
+   ],
+   "outline_um": [
+    64.8,
+    207.36
+   ],
+   "bank_range": [
+    16,
+    31
+   ]
+  },
+  {
+   "name": "vm_s2_quarter0",
+   "slice": 2,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    1425.6,
+    1944.0
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    0,
+    7
+   ]
+  },
+  {
+   "name": "vm_s2_quarter1",
+   "slice": 2,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    1425.6,
+    1684.8
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    8,
+    15
+   ]
+  },
+  {
+   "name": "vm_s2_quarter2",
+   "slice": 2,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    1425.6,
+    1339.2
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    16,
+    23
+   ]
+  },
+  {
+   "name": "vm_s2_quarter3",
+   "slice": 2,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    1339.2,
+    2203.2
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    24,
+    31
+   ]
+  },
+  {
+   "name": "vm_s2_read_frontend",
+   "slice": 2,
+   "master": "dsfd_vm_static_suhc_fsr",
+   "xy_um": [
+    820.8,
+    3240.0
+   ],
+   "outline_um": [
+    345.6,
+    51.84
+   ],
+   "qualification": "outline provisional until final source area/cuts"
+  },
+  {
+   "name": "vm_s2_return32",
+   "slice": 2,
+   "master": "dsfd_vm_static_return",
+   "xy_um": [
+    43.2,
+    43.2
+   ],
+   "outline_um": [
+    345.6,
+    207.36
+   ],
+   "NROW": 32
+  },
+  {
+   "name": "vm_s2_wscatter",
+   "slice": 2,
+   "master": "dsfd_vm_static_scatter",
+   "xy_um": [
+    820.8,
+    432.0
+   ],
+   "outline_um": [
+    345.6,
+    103.68
+   ]
+  },
+  {
+   "name": "vm_s3_bank0",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    561.6,
+    2592.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 0,
+   "clock_entry": "ck_bank[96]"
+  },
+  {
+   "name": "vm_s3_bank1",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    820.8,
+    3456.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 1,
+   "clock_entry": "ck_bank[97]"
+  },
+  {
+   "name": "vm_s3_bank10",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    3110.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 10,
+   "clock_entry": "ck_bank[106]"
+  },
+  {
+   "name": "vm_s3_bank11",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    561.6,
+    1598.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 11,
+   "clock_entry": "ck_bank[107]"
+  },
+  {
+   "name": "vm_s3_bank12",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1080.0,
+    2592.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 12,
+   "clock_entry": "ck_bank[108]"
+  },
+  {
+   "name": "vm_s3_bank13",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    820.8,
+    3110.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 13,
+   "clock_entry": "ck_bank[109]"
+  },
+  {
+   "name": "vm_s3_bank14",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1080.0,
+    2203.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 14,
+   "clock_entry": "ck_bank[110]"
+  },
+  {
+   "name": "vm_s3_bank15",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    1036.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 15,
+   "clock_entry": "ck_bank[111]"
+  },
+  {
+   "name": "vm_s3_bank16",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    302.4,
+    3672.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 16,
+   "clock_entry": "ck_bank[112]"
+  },
+  {
+   "name": "vm_s3_bank17",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    561.6,
+    1728.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 17,
+   "clock_entry": "ck_bank[113]"
+  },
+  {
+   "name": "vm_s3_bank18",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    561.6,
+    2462.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 18,
+   "clock_entry": "ck_bank[114]"
+  },
+  {
+   "name": "vm_s3_bank19",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    2073.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 19,
+   "clock_entry": "ck_bank[115]"
+  },
+  {
+   "name": "vm_s3_bank2",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    820.8,
+    2203.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 2,
+   "clock_entry": "ck_bank[98]"
+  },
+  {
+   "name": "vm_s3_bank20",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    302.4,
+    3283.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 20,
+   "clock_entry": "ck_bank[116]"
+  },
+  {
+   "name": "vm_s3_bank21",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1209.6,
+    432.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 21,
+   "clock_entry": "ck_bank[117]"
+  },
+  {
+   "name": "vm_s3_bank22",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    561.6,
+    2851.2
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 22,
+   "clock_entry": "ck_bank[118]"
+  },
+  {
+   "name": "vm_s3_bank23",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    302.4,
+    1728.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 23,
+   "clock_entry": "ck_bank[119]"
+  },
+  {
+   "name": "vm_s3_bank24",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    820.8,
+    2332.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 24,
+   "clock_entry": "ck_bank[120]"
+  },
+  {
+   "name": "vm_s3_bank25",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1080.0,
+    3758.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 25,
+   "clock_entry": "ck_bank[121]"
+  },
+  {
+   "name": "vm_s3_bank26",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    43.2,
+    1944.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 26,
+   "clock_entry": "ck_bank[122]"
+  },
+  {
+   "name": "vm_s3_bank27",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    302.4,
+    3412.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 27,
+   "clock_entry": "ck_bank[123]"
+  },
+  {
+   "name": "vm_s3_bank28",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    561.6,
+    3628.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 28,
+   "clock_entry": "ck_bank[124]"
+  },
+  {
+   "name": "vm_s3_bank29",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    820.8,
+    3326.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 29,
+   "clock_entry": "ck_bank[125]"
+  },
+  {
+   "name": "vm_s3_bank3",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1080.0,
+    1080.0
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 3,
+   "clock_entry": "ck_bank[99]"
+  },
+  {
+   "name": "vm_s3_bank30",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    820.8,
+    2980.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 30,
+   "clock_entry": "ck_bank[126]"
+  },
+  {
+   "name": "vm_s3_bank31",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1080.0,
+    3110.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 31,
+   "clock_entry": "ck_bank[127]"
+  },
+  {
+   "name": "vm_s3_bank4",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    820.8,
+    1209.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 4,
+   "clock_entry": "ck_bank[100]"
+  },
+  {
+   "name": "vm_s3_bank5",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    302.4,
+    820.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 5,
+   "clock_entry": "ck_bank[101]"
+  },
+  {
+   "name": "vm_s3_bank6",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    302.4,
+    1209.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 6,
+   "clock_entry": "ck_bank[102]"
+  },
+  {
+   "name": "vm_s3_bank7",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    561.6,
+    950.4
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 7,
+   "clock_entry": "ck_bank[103]"
+  },
+  {
+   "name": "vm_s3_bank8",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    561.6,
+    1468.8
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 8,
+   "clock_entry": "ck_bank[104]"
+  },
+  {
+   "name": "vm_s3_bank9",
+   "slice": 3,
+   "master": "dsfd_vm_static_bank128",
+   "xy_um": [
+    1080.0,
+    2073.6
+   ],
+   "outline_um": [
+    220.32,
+    75.6
+   ],
+   "bank": 9,
+   "clock_entry": "ck_bank[105]"
+  },
+  {
+   "name": "vm_s3_bridge0",
+   "slice": 3,
+   "master": "dsfd_vm_static_relay128_b16",
+   "xy_um": [
+    1339.2,
+    3628.8
+   ],
+   "outline_um": [
+    64.8,
+    207.36
+   ],
+   "bank_range": [
+    0,
+    15
+   ]
+  },
+  {
+   "name": "vm_s3_bridge1",
+   "slice": 3,
+   "master": "dsfd_vm_static_relay128_b16",
+   "xy_um": [
+    1339.2,
+    3369.6
+   ],
+   "outline_um": [
+    64.8,
+    207.36
+   ],
+   "bank_range": [
+    16,
+    31
+   ]
+  },
+  {
+   "name": "vm_s3_quarter0",
+   "slice": 3,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    1425.6,
+    2073.6
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    0,
+    7
+   ]
+  },
+  {
+   "name": "vm_s3_quarter1",
+   "slice": 3,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    1339.2,
+    1944.0
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    8,
+    15
+   ]
+  },
+  {
+   "name": "vm_s3_quarter2",
+   "slice": 3,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    1339.2,
+    2073.6
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    16,
+    23
+   ]
+  },
+  {
+   "name": "vm_s3_quarter3",
+   "slice": 3,
+   "master": "dsfd_vm_static_relay128_b8",
+   "xy_um": [
+    1339.2,
+    1814.4
+   ],
+   "outline_um": [
+    64.8,
+    103.68
+   ],
+   "bank_range": [
+    24,
+    31
+   ]
+  },
+  {
+   "name": "vm_s3_read_frontend",
+   "slice": 3,
+   "master": "dsfd_vm_static_suhc_fsr",
+   "xy_um": [
+    561.6,
+    1987.2
+   ],
+   "outline_um": [
+    345.6,
+    51.84
+   ],
+   "qualification": "outline provisional until final source area/cuts"
+  },
+  {
+   "name": "vm_s3_return32",
+   "slice": 3,
+   "master": "dsfd_vm_static_return",
+   "xy_um": [
+    432.0,
+    43.2
+   ],
+   "outline_um": [
+    345.6,
+    207.36
+   ],
+   "NROW": 32
+  },
+  {
+   "name": "vm_s3_wscatter",
+   "slice": 3,
+   "master": "dsfd_vm_static_scatter",
+   "xy_um": [
+    432.0,
+    302.4
+   ],
+   "outline_um": [
+    345.6,
+    103.68
+   ]
+  }
+ ],
+ "packing_seed": 2,
+ "lattice_um": 43.2,
+ "channel_min_um": 20,
+ "hard_children": 164,
+ "bank_count": 128,
+ "checks": [],
+ "status": "CORE_GEOMETRY_PASS",
+ "qualification": "UNQUALIFIED pins, real views, clock, crossings, endpoint rate and full parent including edges"
+}

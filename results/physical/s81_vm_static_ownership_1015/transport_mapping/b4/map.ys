@@ -1,0 +1,14 @@
+read_verilog -sv -DSYNTHESIS /srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv /srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128_b4.sv /srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128_b8.sv /srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128_b16.sv
+hierarchy -check -top dsfd_vm_static_relay128_b4
+synth -top dsfd_vm_static_relay128_b4 -flatten -noabc
+read_liberty -lib /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib
+read_liberty -lib /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib
+read_liberty -lib /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib
+read_liberty -lib /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -lib /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+dfflibmap -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+abc -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib -D 833
+clean
+check -assert
+stat -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+write_json /srv/opentallas-scratch/codex-s81-vm-transport-sizing-1015/b4_map1/mapped.json

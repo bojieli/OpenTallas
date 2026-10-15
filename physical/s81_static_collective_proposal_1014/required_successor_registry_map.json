@@ -1,0 +1,109 @@
+{
+  "schema": "opentallas.s81.collective-static-successor-map.v1",
+  "registry_scope": "user66-ROM audit: dsfd_coll_ce / dsfd_coll_cesn_pc historical entries; not a claim of66 ROMs in this slab",
+  "historical": [
+    {
+      "master": "dsfd_coll_ce",
+      "state": "REPLACED_BY_REQUIRED_STATIC_SUCCESSOR",
+      "evidence": "rtl/dsrom_sys/s81_ph/coll/dsfd_coll_ceh.sv",
+      "source_sha256": "0bbb651d0f0a156eccbec15c7208c304bd671e78ef8292589dd7f1112ba76ce7",
+      "reason": "credit queues/ready/grant and demand-driven FIFOs prohibited for current on-chip protocol"
+    },
+    {
+      "master": "dsfd_coll_cesn_pc",
+      "state": "HISTORICAL_WIRE_PARENT_RETIRED",
+      "owner_confirmation": "s_elements 2026-10-15: retired D6 into die-direct10children; staticprotocol successor required"
+    }
+  ],
+  "successor": {
+    "top": "dsfd_sp_collective_static_c",
+    "source": "rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv",
+    "source_sha256": "e2a0b394d02742fca19b94f5b5593b3ba2edcf9f9703dbd47ee7256383ca6163",
+    "functional_commit": "7431b0d19",
+    "owned_by": "S81 static collective",
+    "control_roms": 3,
+    "rom_master": "ot_rom_4096x266_m8",
+    "external_vm_sram_count": 128,
+    "vm_owner": "s_vm",
+    "note": "128 SRAMs belong actual external VM composition, not internal collective inventory",
+    "roots": 29,
+    "clock_register_count": 104225,
+    "max_per_root": 8438,
+    "latest_boundary_extract_source": "22b80d3c9"
+  },
+  "evidence": {
+    "behavior": "results/rtl/s81_static_fullslab_1015/receipt.json",
+    "roots": "results/rtl/s81_static_fullslab_1015/clock_root_census29.json",
+    "ports": "physical/s81_static_collective_proposal_1014/fullslab_source_census.json",
+    "model": "results/rtl/s81_static_fullslab_1015/preflight.json"
+  },
+  "physical_required_masters": [
+    {
+      "role": "controller",
+      "master": "s81_static_calendar_controller",
+      "instances": 1,
+      "roms": 3,
+      "root": "ck_control[0]",
+      "physical_status": "UNROUTED_NEW_SLOT_REQUIRED"
+    },
+    {
+      "role": "TP4 endpoint/core",
+      "master": "s81_static_fmt1_core_dynamic",
+      "instances": 1,
+      "root": "ck_control[1]",
+      "physical_status": "UNROUTED_NEW_SLOT_REQUIRED"
+    },
+    {
+      "role": "VM source/return boundary",
+      "master": "s81_static_vm_boundary",
+      "instances": 1,
+      "root": "ck_control[2]",
+      "physical_status": "EXTRACTED_FUNCTIONAL_GATE_PASS_NEW_SLOT_REQUIRED",
+      "leaf_gates": "results/rtl/s81_static_vm_boundary_extract_1015/receipt.json"
+    },
+    {
+      "role": "pass adapter",
+      "master": "dsfd_coll_static_channels",
+      "instances": 1,
+      "root": "ck_control[3]",
+      "physical_status": "UNROUTED_NEW_SLOT_REQUIRED"
+    },
+    {
+      "role": "HC metadata",
+      "master": "native extracted HC metadata leaf",
+      "instances": 1,
+      "root": "ck_control[4]",
+      "physical_status": "EXTRACT_REGISTERED_PHYSICAL_LEAF_FIRST"
+    },
+    {
+      "role": "peer FMT1 lane",
+      "master": "s81_static_fmt1_lane_dynamic",
+      "instances": 3,
+      "root": "ck_lane[0..2]",
+      "physical_status": "UNROUTED_NEW_SLOT_REQUIRED"
+    },
+    {
+      "role": "pass FMT1 lane",
+      "master": "s81_static_raw_fmt1_lane",
+      "instances": 5,
+      "root": "ck_lane[3..7]",
+      "physical_status": "UNROUTED_NEW_SLOT_REQUIRED"
+    },
+    {
+      "role": "HC scalar tree/assembly",
+      "master": "s81_static_hc_scalar_reduce + s81_static_hc_scalar_assemble",
+      "instances": 16,
+      "root": "ck_hc_lane[0..15]",
+      "physical_status": "EXTRACT_COMBINED_REGISTERED_LEAF_FIRST"
+    }
+  ],
+  "next_gates": [
+    "canonical2417/BF519/81stage producer/root metadata allocations from q_native_compute+s_die",
+    "actualstaticcapture/WFC native VMjoin from s_vm; actualHCPOSTconsumer from s_norm_gather",
+    "extract actual pin-registered leaves; measured synth area/outline/pin cuts andclockresetinsertions",
+    "bind real price/current canonical shape; submit only new static masters through ot-run and closure loop",
+    "TTsetup FFhold DRC0 + behavioral gate and actualmutant per physical source"
+  ],
+  "reroute_policy": "DO_NOT_REROUTE obsolete credit masters for current release; preserve old CLOSED views and evidence as historical",
+  "qualified": false
+}

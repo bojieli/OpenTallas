@@ -18,6 +18,14 @@ class LoweringTest(unittest.TestCase):
                 self.assertFalse(any(row['emit'] for row in rows[-program['drain_horizon']:]))
                 for row in rows:self.assertEqual(row['cs_sfu'],sfu)
 
+    def test_actual_scalar_operand_address_and_offsets(self):
+        rows=encode(compile_vector(words=3072,bases=(0,12672,0,0,0),strides=(1,0,1,1,1),sfu=5,e1=1,e2=1,rnd=1))
+        for word in rows:
+            row=unpack(word)
+            if row['emit']:
+                self.assertEqual(row['vb']>>24&0xffffff,12672)
+                self.assertEqual(row['ld_c']>>(24*10)&((1<<(24*10))-1),0)
+
     def test_refuse_missing_side_hardware_or_address_overflow(self):
         for sfu in (2,3,6,7):
             with self.assertRaises(ValueError): compile_vector(words=7168,bases=(0,)*5,sfu=sfu)

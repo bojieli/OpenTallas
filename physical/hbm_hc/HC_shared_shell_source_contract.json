@@ -1,0 +1,182 @@
+{
+  "source_commit": "pending frozen shared-master owner commit",
+  "source": "/home/ubuntu/wt/hc-physical-1015/rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_bank_shell_shared_static.sv",
+  "source_sha256": "c4f5fb132e176e1991182a5c768e67f9ba1df184b05c78afde919b2af8132e7a",
+  "mapped_ff": null,
+  "macro_clock_pins": 10,
+  "clock_sinks": null,
+  "outline_um": [
+    500.04,
+    500.04
+  ],
+  "exact": true,
+  "permitted_platform_snap_um": [
+    501.12,
+    501.12
+  ],
+  "orientation": "R0",
+  "face_bits": {
+    "W": 801,
+    "N": 50,
+    "S": 106,
+    "E": 1539
+  },
+  "face_groups": {
+    "W": "weight_ap and residual writes",
+    "N": "clk/rst_n, descriptor/control inputs and expected_bank_id[2:0]",
+    "S": "descriptor/lane outputs",
+    "E": "memory/status outputs"
+  },
+  "macros": [
+    {
+      "kind": "weight_128x256",
+      "origin_um": [
+        23.76,
+        23.76
+      ],
+      "orientation": "MY",
+      "size_um": [
+        94.824,
+        41.04
+      ]
+    },
+    {
+      "kind": "weight_128x256",
+      "origin_um": [
+        23.76,
+        108.0
+      ],
+      "orientation": "MY",
+      "size_um": [
+        94.824,
+        41.04
+      ]
+    },
+    {
+      "kind": "weight_128x256",
+      "origin_um": [
+        23.76,
+        192.23999999999998
+      ],
+      "orientation": "MY",
+      "size_um": [
+        94.824,
+        41.04
+      ]
+    },
+    {
+      "kind": "weight_128x256",
+      "origin_um": [
+        23.76,
+        276.47999999999996
+      ],
+      "orientation": "MY",
+      "size_um": [
+        94.824,
+        41.04
+      ]
+    },
+    {
+      "kind": "weight_128x256",
+      "origin_um": [
+        144.288,
+        23.76
+      ],
+      "orientation": "MY",
+      "size_um": [
+        94.824,
+        41.04
+      ]
+    },
+    {
+      "kind": "weight_128x256",
+      "origin_um": [
+        144.288,
+        108.0
+      ],
+      "orientation": "MY",
+      "size_um": [
+        94.824,
+        41.04
+      ]
+    },
+    {
+      "kind": "weight_128x256",
+      "origin_um": [
+        144.288,
+        192.23999999999998
+      ],
+      "orientation": "MY",
+      "size_um": [
+        94.824,
+        41.04
+      ]
+    },
+    {
+      "kind": "weight_128x256",
+      "origin_um": [
+        144.288,
+        276.47999999999996
+      ],
+      "orientation": "MY",
+      "size_um": [
+        94.824,
+        41.04
+      ]
+    },
+    {
+      "kind": "residual_1024x256",
+      "origin_um": [
+        261.36,
+        43.2
+      ],
+      "orientation": "MY",
+      "size_um": [
+        174.744,
+        70.47
+      ]
+    },
+    {
+      "kind": "residual_1024x256",
+      "origin_um": [
+        261.36,
+        203.04
+      ],
+      "orientation": "MY",
+      "size_um": [
+        174.744,
+        70.47
+      ]
+    }
+  ],
+  "minimum_core_edge_and_macro_channel_um": 20,
+  "whole_bank_composition": "UNASSIGNED: previous 461.465um sum hop fails 406.491um ETM bound",
+  "clock_period_ps": 833.333333,
+  "roots": 1,
+  "notes": [
+    "Actual combined memory and stage-control shell retains 43-root engine lower bound.",
+    "No replication of existing 64 weight SRAMs as extra HCstore inventory.",
+    "MY allowed only by actual SRAM LEF symmetry; parent remains R0.",
+    "New reusable shared master replaces BANK_ID constant with actual captured3FF static input; source/API change requires new proof and pin/clock admission.",
+    "FF-band-aware geometry is primary in this distinct successor; preserves exact ten SRAM inventory and clearances."
+  ],
+  "status": "SOURCE_BOUND_INDEPENDENT_PROTOTYPE_ONLY",
+  "qualified": false,
+  "global_placement_qualified": false,
+  "acceptance": [
+    "actual pin/PG access and per-face cuts <=0.60",
+    "actual mapped area and macro channels",
+    "native CTS root count, spread and slew",
+    "TT setup >=0 and FF hold >=0",
+    "actual route DRC/access/reach; no inherited timing grant"
+  ],
+  "memory_source": {
+    "path": "/home/ubuntu/wt/hc-physical-1015/rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_bank_memory_shared_static.sv",
+    "sha256": "c636d1c4db55c11f916bb86733047b9fba2f006b6bee25555ac59f3eb788a031"
+  },
+  "previous_measured_ff": 4843,
+  "declared_identity_capture_FF": 3,
+  "census_requirement": "source-specific measured census before admission; previous count is historical only",
+  "proof_requirement": "all8 expected_bank_id values plus wrong-ID/slot DUT tests terminalPASS",
+  "live_predecessor": "BANK_ID0 unit1293263 preserved; no cancellation or view inheritance"
+}

@@ -1,0 +1,170 @@
+ot-run: ot-epyc1tb     admits   294 GB (avail 521, growth 148, headroom 64, waiters 0/0 GB) load 62/128 running 17 disk 708 GB 
+ot-run: ot-epyc4       admits   650 GB (avail 877, growth 52, headroom 48, waiters 0/0 GB) load 44/128 running 17 disk 515 GB 
+ot-run: ot-pve1        admits   156 GB (avail 203, growth 6, headroom 32, waiters 0/0 GB) load 36/28 running 2 disk 1310 GB 
+ot-run: ot-agidock128  admits    44 GB (avail 77, growth 21, headroom 24, waiters 0/0 GB) load 9/64 running 5 disk 43 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3768328-1792053428 after 0 s
+{
+  "status": "MAPPED_AREA_ONLY",
+  "source_commit": "0509f4986",
+  "top": "dsfd_vm_static_relay128_b16",
+  "abc_target_ps": 833,
+  "cell_area_um2": 1761.78888,
+  "cell_count": 10472,
+  "mapped_FF_cells": 5236,
+  "unknown_cells": {},
+  "ports": {
+    "ck_req": {
+      "direction": "input",
+      "bits": 1
+    },
+    "ck_rsp": {
+      "direction": "input",
+      "bits": 1
+    },
+    "rst_n": {
+      "direction": "input",
+      "bits": 1
+    },
+    "i_rv": {
+      "direction": "input",
+      "bits": 16
+    },
+    "i_wv": {
+      "direction": "input",
+      "bits": 16
+    },
+    "i_ra": {
+      "direction": "input",
+      "bits": 144
+    },
+    "i_wa": {
+      "direction": "input",
+      "bits": 144
+    },
+    "i_rt": {
+      "direction": "input",
+      "bits": 128
+    },
+    "i_wt": {
+      "direction": "input",
+      "bits": 128
+    },
+    "i_wm": {
+      "direction": "input",
+      "bits": 64
+    },
+    "i_wd": {
+      "direction": "input",
+      "bits": 2048
+    },
+    "o_rv": {
+      "direction": "output",
+      "bits": 16
+    },
+    "o_wv": {
+      "direction": "output",
+      "bits": 16
+    },
+    "o_ra": {
+      "direction": "output",
+      "bits": 144
+    },
+    "o_wa": {
+      "direction": "output",
+      "bits": 144
+    },
+    "o_rt": {
+      "direction": "output",
+      "bits": 128
+    },
+    "o_wt": {
+      "direction": "output",
+      "bits": 128
+    },
+    "o_wm": {
+      "direction": "output",
+      "bits": 64
+    },
+    "o_wd": {
+      "direction": "output",
+      "bits": 2048
+    },
+    "i_sv": {
+      "direction": "input",
+      "bits": 16
+    },
+    "i_cv": {
+      "direction": "input",
+      "bits": 16
+    },
+    "i_sd": {
+      "direction": "input",
+      "bits": 2048
+    },
+    "i_st": {
+      "direction": "input",
+      "bits": 128
+    },
+    "i_ct": {
+      "direction": "input",
+      "bits": 128
+    },
+    "i_ca": {
+      "direction": "input",
+      "bits": 144
+    },
+    "i_cm": {
+      "direction": "input",
+      "bits": 64
+    },
+    "o_sv": {
+      "direction": "output",
+      "bits": 16
+    },
+    "o_cv": {
+      "direction": "output",
+      "bits": 16
+    },
+    "o_sd": {
+      "direction": "output",
+      "bits": 2048
+    },
+    "o_st": {
+      "direction": "output",
+      "bits": 128
+    },
+    "o_ct": {
+      "direction": "output",
+      "bits": 128
+    },
+    "o_ca": {
+      "direction": "output",
+      "bits": 144
+    },
+    "o_cm": {
+      "direction": "output",
+      "bits": 64
+    }
+  },
+  "candidate_outline_um": [
+    345.6,
+    345.6
+  ],
+  "outline_area_um2": 119439.36000000002,
+  "raw_utilization": 0.014750488281249998,
+  "core_inset_um": 2.16,
+  "inset_core_area_um2": 116472.03840000002,
+  "inset_core_utilization": 0.015126281845858033,
+  "parent_fit_proven": false,
+  "timing_proven": false,
+  "pin_assignment_proven": false,
+  "clock_root_limit": 15000,
+  "adoption_requires": [
+    "exact assigned per-bit pins and pin-capacity check",
+    "CTS insertion/spread and native TT setup/FF hold/DRC",
+    "parent connectivity-aware placement with actual bank face pins",
+    "production static-schedule composition visibility and throughput"
+  ]
+}
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3768328-1792053428): exit 0

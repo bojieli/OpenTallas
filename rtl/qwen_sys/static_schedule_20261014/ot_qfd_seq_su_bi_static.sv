@@ -29,12 +29,26 @@ module ot_qfd_seq_su_bi_static #(
     parameter integer RBW = (D > 1) ? $clog2(D) : 1,
     parameter integer TPMUT = 0
 ) (
+    // Actual external SU operand request -> existing core INT8 decoder -> SU.
+    input wire [SW-1:0] su_va_re,
+    input wire [SW*AW-1:0] su_va_addr,
+    output wire [SW*32-1:0] su_va_q,
+    output wire [SW-1:0] su_vm_va_re,
+    output wire [SW*AW-1:0] su_vm_va_addr,
+    input wire [SW*32-1:0] su_vm_va_q,
+    output wire embed_code_re,
+    output wire [AW-1:0] embed_code_addr,
+    input wire [511:0] embed_code_q,
+    output wire embed_scale_re,
+    output wire [NW-1:0] embed_scale_addr,
+    input wire [15:0] embed_scale_q,
     input wire clk,
     input wire ck_sched,
     // D1 receipts from the actual SRAM/descriptor write edges, not PW admission.
     output reg [75:0] program_obs,
     output reg [68:0] descriptor_obs,
     output reg cfg_image_ready,
+    output wire [15:0] su_observe,
     input  wire rst_n,
     input  wire [1-1:0] h_start,
     input  wire [5:0] stage_in,           // the stage (layer / HEAD) this start runs
@@ -397,7 +411,7 @@ module ot_qfd_seq_su_bi_static #(
         .d_su_inflight(q_pi_su_rt_inflight), .d_su_progress(q_pi_su_progress), .d_su_rows(q_pi_su_progress_rows),
         .c_me_ready(), .c_me_idle(), .c_me_progress(),
         .c_su_ready(s_su_ready), .c_su_idle(s_su_idle), .c_su_progress(s_su_progress), .c_su_rows(s_su_progress_rows));
-    wire image_ready_w,segment_image_ready;
+    wire image_ready_w,segment_image_ready,segment_requires_cbuf;
     wire fixed_issue,fixed_end,schedule_fault,candidate_v,candidate_available,candidate_end_ok,stage_fault;
     wire [11:0] candidate_pc,fixed_pc;wire[1:0]candidate_unit,fixed_unit;
     ot_qwen_fixed_issue_pw #(.OWN(2),.DENSE_IMAGE(1))u_fixed_issue(
@@ -407,6 +421,11 @@ module ot_qfd_seq_su_bi_static #(
      .available(candidate_available),.end_ok(candidate_end_ok),.cp_available(1'b0),
      .issue_v(fixed_issue),.end_v(fixed_end),.issue_pc(fixed_pc),.issue_unit(fixed_unit),
      .active(),.done(),.cycle(),.fault(schedule_fault),.image_ready(image_ready_w),.cp_cmd(),.cp_v());
+    // True source-decoder issue observation, registered at the same source
+    // output edge as the SU command. No expected PC or ready can fabricate it.
+    ot_qfd_su_source_observer u_source_observer(
+      .clk(clk),.rst_n(rsv[3]),.issue(fixed_issue),.candidate_v(candidate_v),
+      .unit(fixed_unit),.program_base(prog_base),.candidate_pc(candidate_pc),.observe(su_observe));
     wire core_start, core_done, core_fault_w; wire [NW-1:0] core_tok, core_pos, core_ntok, core_tokw; wire [31:0] core_nval;
     always @(posedge clk) if (es_re_w) tok_l <= core_tokw;
     assign b_su_tok = tok_l;
@@ -473,6 +492,7 @@ module ot_qfd_seq_su_bi_static #(
             if (prog_re_r) prog_q <= (prog_a_r < 64) ? prog_mem[prog_a_r[5:0]] : 1024'd0;
         end
     end endgenerate
+    assign embed_scale_re = es_re_w;
     wire wrom_re_w; assign b_rom_fault = wrom_re_w; assign b_core_fault = core_fault_w;
     ot_qwen_rom_core_ctrl_su_static #(.OWN(2), .XW(24), .XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SU_VEC(1), .SW(SW), .LV(LV), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(1), .PCUT(PCUT), .OLAG(OLAG), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .FQ_HEAD((HQ2 >= 2) ? 3 : (HQ2 != 0) ? 2 : 1)) u_ctrl (
         .clk(clk),
@@ -500,12 +520,12 @@ module ot_qfd_seq_su_bi_static #(
         .scale_gre(),
         .scale_addr(),
         .scale_q('0),
-        .embed_code_re(),
-        .embed_code_addr(),
-        .embed_code_q('0),
+        .embed_code_re(embed_code_re),
+        .embed_code_addr(embed_code_addr),
+        .embed_code_q(embed_code_q),
         .embed_scale_re(es_re_w),
-        .embed_scale_addr(),
-        .embed_scale_q('0),
+        .embed_scale_addr(embed_scale_addr),
+        .embed_scale_q(embed_scale_q),
         .crom_re(),
         .crom_addr(),
         .crom_q('0),
@@ -515,9 +535,9 @@ module ot_qfd_seq_su_bi_static #(
         .kv_wdata(),
         .kv_write_drained(q_kv_write_drained),
         .kv_write_flush(b_kv_write_flush),
-        .va_re(),
-        .va_addr(),
-        .va_q('0),
+        .va_re(su_vm_va_re),
+        .va_addr(su_vm_va_addr),
+        .va_q(su_vm_va_q),
         .vb_re(),
         .vb_addr(),
         .vb_q('0),
@@ -644,9 +664,9 @@ module ot_qfd_seq_su_bi_static #(
         .po_su_i_rso(b_po_su_i_rso),
         .po_su_i_imm1(b_po_su_i_imm1),
         .po_su_i_imm2(b_po_su_i_imm2),
-        .pi_su_va_re('0),
-        .pi_su_va_addr('0),
-        .po_su_va_q(),
+        .pi_su_va_re(su_va_re),
+        .pi_su_va_addr(su_va_addr),
+        .po_su_va_q(su_va_q),
         .pi_su_wrom_re(q_pi_su_wrom_re),
         .pi_su_wrom_addr(q_pi_su_wrom_addr),
         .pi_su_kv_we(q_pi_su_kv_we),
@@ -669,11 +689,11 @@ module ot_qfd_seq_su_bi_static #(
     ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_cbr (.clk(clk), .rst_n(rsv[6]), .d(cb_st_rdy), .q(q_cb_st_rdy));
     wire sg_go, sg_tok; wire [NW-1:0] sg_token, sg_pos; wire [5:0] sg_stage;
     ot_qfd_stage_gate_static #(.SW_(6), .NW(NW)) u_sgate (.clk(clk), .rst_n(rsv[7]), .h_start(q_h_start), .stage(q_stage_in),
-        .token(q_tp_token), .pos(q_tp_pos), .st_rdy(q_cb_st_rdy), .st_rdy_stage(q_cb_st_rdy_stage), .go(sg_go),
+        .token(q_tp_token), .pos(q_tp_pos), .requires_cbuf(segment_requires_cbuf),.st_rdy(q_cb_st_rdy), .st_rdy_stage(q_cb_st_rdy_stage), .go(sg_go),
         .go_token(sg_token), .go_pos(sg_pos), .cur_stage(sg_stage), .tok_start(sg_tok),.fault(stage_fault));
     ot_hdc_delay #(.W(6 + 1 + NW), .D(OS)) u_o_cb (.clk(clk), .rst_n(rsv[6]), .d({sg_stage, sg_tok, q_tp_pos}), .q({cb_stage, cb_tok_start, cb_tpos}));
     ot_qwen_tp_seq_calendar #(.VRL(IS + OS + ROW_LAT + 2 * RLY), .N((TPMUT == 2) ? 4 : D), .NW(NW), .PAW(PAW), .VWA(VWA), .DAW(6), .FW(512), .RB(3)) u_seq (
-        .clk(clk), .stage(sg_stage),.pw_v(q_pw_v),.pw_addr(q_pw_addr),.pw_data(q_pw_data),.image_ready(segment_image_ready),
+        .clk(clk), .stage(sg_stage),.pw_v(q_pw_v),.pw_addr(q_pw_addr),.pw_data(q_pw_data),.image_ready(segment_image_ready),.requires_cbuf(segment_requires_cbuf),
         .rst_n(rsv[0]), .rst_nw(rsv[1]), .start(sg_go), .token(sg_token), .pos(sg_pos), .done(b_s_done),
         .next_token(b_seq_ntok), .next_val(b_seq_nval), .fault(b_s_fault), .coll_busy(b_coll_busy),
         .core_start(core_start), .core_token(core_tokw), .core_pos(core_pos), .core_done(core_done),
@@ -696,7 +716,7 @@ endmodule
 // postpone the start; the compiler must prefetch the real cache early enough.
 module ot_qfd_stage_gate_static #(parameter integer SW_=6,NW=18)(
  input wire clk,rst_n,h_start,input wire[SW_-1:0]stage,input wire[NW-1:0]token,pos,
- input wire st_rdy,input wire[SW_-1:0]st_rdy_stage,
+ input wire requires_cbuf,st_rdy,input wire[SW_-1:0]st_rdy_stage,
  output wire go,output reg[NW-1:0]go_token,go_pos,output reg[SW_-1:0]cur_stage,
  output wire tok_start,output reg fault
 );
@@ -711,8 +731,19 @@ module ot_qfd_stage_gate_static #(parameter integer SW_=6,NW=18)(
     pend<=1;cur_stage<=stage;go_token<=token;go_pos<=pos;
    end else if(pend)begin
     pend<=0;
-    if(!st_rdy||st_rdy_stage!=cur_stage)fault<=1;
+    if(requires_cbuf&&(!st_rdy||st_rdy_stage!=cur_stage))fault<=1;
    end
   end
  end
+endmodule
+
+// Source pin register for actual SU decoder events. Candidate absence is an
+// integrity failure upstream, never permission to hide the scheduled event.
+module ot_qfd_su_source_observer(
+ input wire clk,rst_n,issue,candidate_v,input wire[1:0]unit,
+ input wire[11:0]program_base,candidate_pc,output reg[15:0]observe
+);
+ always @(posedge clk or negedge rst_n)
+   if(!rst_n)observe<=0;
+   else observe<={issue,candidate_v,unit,12'(program_base+candidate_pc)};
 endmodule

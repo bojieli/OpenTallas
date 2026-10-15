@@ -15,7 +15,7 @@ class MissingPhysicalProfile(ScheduleError):
 def physical_profile(profile, program_bytes):
     required=('period_fs','phase_fs','VM_response_edges','stop_cycle','segments',
               'source_sha256','receipt_path','receipt_sha256')
-    missing=[field for field in required if field not in profile]
+    missing=[field for field in required if profile.get(field)is None]
     if profile.get('physical_profile_status')!='MEASURED':missing.append('physical_profile_status=MEASURED')
     if missing:raise MissingPhysicalProfile(missing)
     pins(ROOT,profile['source_sha256'])
@@ -28,6 +28,15 @@ def physical_profile(profile, program_bytes):
     missing=[key for key in ('clock_tree','reset_release','seq_relay','VM_path','collective_command_route','collective_payload_route','core_completion_path')
              if receipt.get('qualified_paths',{}).get(key,{}).get('status')!='QUALIFIED']
     if missing:raise MissingPhysicalProfile(['receipt.qualified_paths.'+key for key in missing])
+    for name,path in receipt['qualified_paths'].items():
+        if name not in ('clock_tree','reset_release','seq_relay','VM_path','collective_command_route','collective_payload_route','core_completion_path'):continue
+        absent=[key for key in ('age_fs','evidence_path','evidence_sha256')if path.get(key)is None]
+        if absent:raise MissingPhysicalProfile(['receipt.qualified_paths.'+name+'.'+key for key in absent])
+        if not isinstance(path['age_fs'],int)or isinstance(path['age_fs'],bool)or path['age_fs']<0:
+            raise ScheduleError('invalid measured physical path age: '+name)
+        evidence=(ROOT/path['evidence_path']).resolve()
+        if not evidence.is_file()or sha(evidence)!=path['evidence_sha256']:
+            raise ScheduleError('measured physical evidence missing or changed: '+name)
     if receipt.get('status')!='QUALIFIED'or receipt.get('program_sha256')!=hashlib.sha256(program_bytes).hexdigest():
         raise ScheduleError('physical receipt not qualified for actual program bytes')
     for key in ('period_fs','phase_fs','VM_response_edges','stop_cycle','segments','source_sha256'):
@@ -58,8 +67,13 @@ def program_segments(program_bytes, descriptors):
     return result
 
 
+def requires_constant_rom(program_bytes):
+    return any(f['unit']==2 and(f['b_src']or f['c_src'])for f in(ISA.decode_instruction(int(w,16))for w in program_bytes.split()))
+
+
 def pw_image(program_bytes,descriptors,stage,profile):
     segments=program_segments(program_bytes,descriptors)
+    requires_cbuf=requires_constant_rom(program_bytes)
     physical_profile(profile,program_bytes)
     if not 0<=stage<64 or len(profile['segments'])!=len(segments):
         raise ScheduleError('outer calendar does not cover actual program segments')
@@ -109,6 +123,6 @@ def pw_image(program_bytes,descriptors,stage,profile):
     if occupancy:raise ScheduleError('unconsumed actual VM payload at stage end')
     for addr in range(BASE+4*len(segments),973):out.append(dict(address=addr,data_hex='0000000000000000'))
     out.extend([dict(address=973,data_hex=f'{0x53475431<<32|stop:016x}'),
-                dict(address=974,data_hex=f'{0x53475453<<32|stage<<2|len(segments):016x}'),
+                dict(address=974,data_hex=f'{0x53475453<<32|int(requires_cbuf)<<8|stage<<2|len(segments):016x}'),
                 dict(address=975,data_hex='0000000000000000')])
-    return dict(writes=out,segments=segments,queue_high_water=high_water,port_reservations=[dict(resource=r,cycle=c,segment=k,beat=b)for(r,c),(k,b)in sorted(reservations.items())],collective=collective)
+    return dict(writes=out,segments=segments,requires_cbuf=requires_cbuf,queue_high_water=high_water,port_reservations=[dict(resource=r,cycle=c,segment=k,beat=b)for(r,c),(k,b)in sorted(reservations.items())],collective=collective)

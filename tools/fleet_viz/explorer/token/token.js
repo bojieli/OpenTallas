@@ -127,7 +127,7 @@ export async function mountTokenExplorer(el, opts = {}) {
   const o = Object.assign({ base: './data/', design: 'qwen_rom', group: null, onState: null,
     geometryUrl: defaultGeometry(opts.base || './data/') }, opts);
   const state = { design: canonDesign(o.design), group: o.group, mode: o.mode === 'mtp' ? 'mtp' : 'ar' };
-  const cache = {}, gcache = {}, pcache = {};
+  const cache = {}, gcache = {}, pcache = {}, flowCache = {};
   // generic HBM die: the decoded HGI-1 record behind an operator (tools/hgi_sim/listing.py), loaded on first click
   async function programRecord(data, n) {
     const f = data.program && data.program.file;
@@ -279,7 +279,7 @@ export async function mountTokenExplorer(el, opts = {}) {
     const ganttP = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, 'Timeline by element class'), h('span', {}, 'critical chain = cyan line · dbl-click to seek')), h('div', { class: 'gn' }));
     const sel = h('div', { class: 'kv' }, 'Click an operator for its detail and element cards.');
     const dieBox = h('div', {}, loading('Loading floorplan…', 'Fetching the die geometry…'));
-    const dieP = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, 'Floorplan replay'), h('span', {}, 'lit = instances of the running operators · line = data moving')), dieBox);
+    const dieP = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, 'Floorplan replay'), h('span', {}, 'lit = running operators · optional source-backed connection overlay')), dieBox);
     const selP = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, 'Selected operator')), sel);
     const shareP = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, mtp ? 'Share of the MTP step' : 'Share of the token latency'), h('span', {}, 'by stage and by element class')), shareTables(data, p, openStage));
     const notes = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, 'How the numbers are built')), h('ul', { class: 'notes' }, ...data.notes.map((n) => h('li', {}, n))));
@@ -334,7 +334,11 @@ export async function mountTokenExplorer(el, opts = {}) {
     }
     if (revision !== renderRevision) return;
     if (geo) {
-      const rp = new DieReplay(dieBox, geo, data, { clock, group: state.group });
+      const die = DESIGNS.find(x => x.id === state.design)?.die;
+      let dataflow;
+      try { dataflow = flowCache[die] ||= await loadRecord(`/api/explorer/dataflow?die=${encodeURIComponent(die)}`); }
+      catch (e) { dataflow = { error: `Connection metadata unavailable: ${e.message}`, edges: [] }; }
+      const rp = new DieReplay(dieBox, geo, data, { clock, group: state.group, dataflow });
       views.push(rp);
       const dd = DESIGNS.find((x) => x.id === state.design);
       const off = data.classes.filter((c) => data.nodes.some((n) => n.cls === c.id) && !rp.classHits(c.id));

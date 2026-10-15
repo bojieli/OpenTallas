@@ -14,8 +14,8 @@
   "rst_n"
  ],
  "outline": {
-  "w": 64.8,
-  "h": 136.08,
+  "w": 72.36,
+  "h": 149.04,
   "exact": true
  },
  "pins": {
@@ -69,68 +69,68 @@
  },
  "pin_ranges": {
   "w_v": [
-   1.5,
-   1.8
+   5.28,
+   5.58
   ],
   "w_ep": [
-   1.9,
-   2.2
+   5.68,
+   5.98
   ],
   "w_off": [
-   2.3,
-   2.9
+   6.08,
+   6.68
   ],
   "w_m": [
-   3.0,
-   7.0
+   6.78,
+   10.78
   ],
   "w_d": [
-   7.1,
-   57.5
+   10.88,
+   61.28
   ],
   "w_ctl": [
-   57.6,
-   62.6
+   61.38,
+   66.38
   ],
   "c_v": [
-   62.7,
-   62.9
+   66.48,
+   66.68
   ],
   "c_ep": [
-   63.0,
-   63.2
+   66.78,
+   66.98
   ],
   "wo_v": [
-   1.5,
-   1.8
+   5.28,
+   5.58
   ],
   "wo_ep": [
-   1.9,
-   2.2
+   5.68,
+   5.98
   ],
   "wo_off": [
-   2.3,
-   2.9
+   6.08,
+   6.68
   ],
   "wo_m": [
-   3.0,
-   7.0
+   6.78,
+   10.78
   ],
   "wo_d": [
-   7.1,
-   57.5
+   10.88,
+   61.28
   ],
   "wo_ctl": [
-   57.6,
-   62.6
+   61.38,
+   66.38
   ],
   "co_v": [
-   62.7,
-   62.9
+   66.48,
+   66.68
   ],
   "co_ep": [
-   63.0,
-   63.2
+   66.78,
+   66.98
   ],
   "r_v": [
    2.0,
@@ -170,11 +170,11 @@
   ]
  },
  "pin_source": "chain faces N / S on identical ranges (abutted leaf-to-leaf, the same bit at the same x); read bus on E at the low-y end (R0 in the N chain, MX in the S chain: the end nearest the column head, read hop <= ~440 um to the far leaf)",
- "slot_change_request": "Q-COMPUTE-DIE approved 2026-10-14: leaf64.8x136.08, column64.8x1434.24, retain head345.6, four leaves on each side, same center.",
+ "slot_change_request": "Q-COMPUTE-DIE 2026-10-15 actual C17 geometry candidate: 72.36x1537.92 column, head64.8x345.6 centered at x3.78. 48columns/96neareststations moved, zero rectangles overlap/outside; 0.648um horizontal remainder requires actual pin-access proof.",
  "job": {
   "owner": "Codex:el1014-qwen-dvm-build",
   "branch": "claude/qwen-dvm-1014",
-  "tag": "xl6",
+  "tag": "xl7",
   "purpose": "Qwen TP8 distributed x slice LEAF r3 (owner 08:20 PT 10-14; el1014-qwen-dvm-build.log 16:15): 2 tiles x 2 epochs x one 64-position slot of BF16 operands (+ per-element valid), footprints > 64 pooled over a tile pair by the column head; ONE 128:1 x 17-b serial read tree per tile (r2: four 512:1 trees, 2.7x the slot); write chain pin-registered pass-through (18-b control a leaf); answer pin flops at R + 4.",
   "benches": [
    {
@@ -223,5 +223,5 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "Increase leaf height120.96->136.08 at fixed64.8 width for measured4600um2 standard cells, reducing core utilization65.2% to57.7%; retain every register and fixed schedule."
+ "structural_change": "Measured xl6 M3 demand121.51% and M5 104.08%; grow real leaf to72.36x149.04 (+25%core route area), retain64tile storage/schedule, shift N/S chain pin ranges+3.78 to preserve absolute head chain x."
 }

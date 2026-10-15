@@ -1,0 +1,56 @@
+{
+  "status": "LOCAL_PER_BIT_PIN_OPTIONS",
+  "masters": [
+    {
+      "master": "dsfd_vm_static_relay128_b4",
+      "outline_um": [
+        129.6,
+        129.6
+      ],
+      "face_bits": {
+        "W": 639,
+        "N": 672,
+        "S": 672,
+        "E": 636
+      },
+      "face_raw_capacity": 1350,
+      "maximum_face_demand_ratio": 0.49777777777777776,
+      "state": "PIN_BOUNDARY_OPTION_ONLY"
+    },
+    {
+      "master": "dsfd_vm_static_relay128_b8",
+      "outline_um": [
+        172.8,
+        172.8
+      ],
+      "face_bits": {
+        "W": 1275,
+        "N": 1344,
+        "S": 1344,
+        "E": 1272
+      },
+      "face_raw_capacity": 1800,
+      "maximum_face_demand_ratio": 0.7466666666666667,
+      "state": "PIN_BOUNDARY_OPTION_ONLY"
+    },
+    {
+      "master": "dsfd_vm_static_relay128_b16",
+      "outline_um": [
+        345.6,
+        345.6
+      ],
+      "face_bits": {
+        "W": 2547,
+        "N": 2688,
+        "S": 2688,
+        "E": 2544
+      },
+      "face_raw_capacity": 3600,
+      "maximum_face_demand_ratio": 0.7466666666666667,
+      "state": "PIN_BOUNDARY_OPTION_ONLY"
+    }
+  ],
+  "native_pitch_um": 0.096,
+  "no_routed_master_repinned": true,
+  "next": "S-DIE exact native seam assignment; mapping/CTS; revised parent localgroups with measured outlines"
+}

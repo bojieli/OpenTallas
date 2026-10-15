@@ -524,7 +524,7 @@ def canonical_dump(payload: dict[str, Any], path: Path) -> None:
 # --------------------------------------------------------------------------
 
 _CELL_SPLIT = re.compile(r"\n\s*cell\s*\(\s*\"?([A-Za-z0-9_./\\\[\]-]+)\"?\s*\)\s*\{")
-_AREA_RE = re.compile(r"\n\s*area\s*:\s*([0-9.eE+-]+)\s*;")
+_AREA_RE = re.compile(r"\n\s*area\s*:\s*([0-9.eE+-]+)[ \t]*(?:;|$)", re.MULTILINE)
 _SEQ_RE = re.compile(r"\n\s*(?:ff|ff_bank|latch|latch_bank)\s*\(")
 
 
@@ -546,6 +546,7 @@ def scan_liberty(paths: list[Path]) -> dict[str, dict[str, Any]]:
             cells[name] = {
                 "area": float(area_match.group(1)) if area_match else 0.0,
                 "sequential": bool(_SEQ_RE.search("\n" + body)),
+                "macro": bool(re.search(r"\bmemory\s*\(|\bis_macro_cell\s*:\s*true\s*;", body)),
             }
     return cells
 
@@ -593,36 +594,120 @@ _STAT_SUMMARY_ROWS = {
     "memories",
     "processes",
 }
-_STAT_CELL_RE = re.compile(
-    r"^\s+(\d+)\s+(\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)\s+(\S+)\s*$"
-)
 
 
-def parse_stat(text: str) -> dict[str, Any]:
-    """Parse ``stat -liberty`` output into per-cell-type counts and areas.
+def parse_stat(text: str, top: str | None = None) -> dict[str, Any]:
+    """Select one authoritative Yosys cell table, never add hierarchy rows.
 
-    ``stat`` prints summary rows (``wires``, ``ports``, ``cells`` ...) whose
-    area column is ``-``; those are skipped, as is the aggregate ``cells`` row.
+    With preserved submodules, only ``design hierarchy`` contains flattened
+    primitive counts. Its initial indented tree and final submodule summary
+    describe ownership, not additional cells. Multiple stat invocations or
+    partial/ambiguous module-only reports fail closed.
     """
-    per_cell: dict[str, dict[str, float]] = {}
-    chip_area = None
+    sections = []
+    current = None
+    number = r"(?:[0-9]+(?:\.[0-9]*)?(?:[eE][+-]?[0-9]+)?|-)"
+    row_re = re.compile(rf"^\s+(\d+)\s+({number})\s+(\S+)\s*$")
     for line in text.splitlines():
-        area_match = re.match(
-            r"\s*Chip area for module '\\?(\S+)':\s*([0-9.eE+-]+)", line
-        )
-        if area_match:
-            chip_area = float(area_match.group(2))
+        header = re.fullmatch(r"=== (.+) ===", line.strip())
+        if header:
+            current = {"name": header[1].lstrip("\\"), "per_cell": {},
+                       "count": None, "area": None, "area_top": None,
+                       "submodules": False}
+            sections.append(current)
             continue
-        cell_match = _STAT_CELL_RE.match(line)
-        if cell_match:
-            name = cell_match.group(3)
-            if name in _STAT_SUMMARY_ROWS:
-                continue
-            per_cell[name] = {
-                "count": int(cell_match.group(1)),
-                "area": float(cell_match.group(2)),
-            }
-    return {"per_cell": per_cell, "chip_area_um2": chip_area}
+        if current is None:
+            continue
+        area = re.match(r"\s*Chip area for (?:top )?module '([^']+)':\s*([0-9.eE+-]+)", line)
+        if area:
+            if current["area"] is not None:
+                raise FlowError("duplicate chip area in Yosys stat section")
+            current["area"], current["area_top"] = float(area[2]), area[1].lstrip("\\")
+            continue
+        row = row_re.match(line)
+        if not row:
+            continue
+        count, area_text, name = int(row[1]), row[2], row[3]
+        if name == "cells":
+            if current["count"] is not None:
+                raise FlowError("duplicate cell table in Yosys stat section")
+            current["count"] = count
+            continue
+        if name == "submodules":
+            current["submodules"] = True
+        if (current["count"] is None or current["submodules"]
+                or name in _STAT_SUMMARY_ROWS):
+            continue
+        if name in current["per_cell"]:
+            raise FlowError(f"duplicate cell type in Yosys stat: {name}")
+        current["per_cell"][name] = {
+            "count": count, "area": None if area_text == "-" else float(area_text)}
+
+    hierarchy = [section for section in sections if section["name"] == "design hierarchy"]
+    if hierarchy:
+        if len(hierarchy) != 1:
+            raise FlowError("ambiguous multiple design hierarchy stat sections")
+        selected = hierarchy[0]
+    else:
+        if len(sections) != 1:
+            raise FlowError("Yosys stat needs one flat module or one design hierarchy summary")
+        selected = sections[0]
+        if selected["submodules"]:
+            raise FlowError("module-local stat with submodules lacks hierarchy totals")
+    if selected["count"] is None:
+        raise FlowError("Yosys stat has no authoritative cell total")
+    if sum(item["count"] for item in selected["per_cell"].values()) != selected["count"]:
+        raise FlowError("Yosys stat cell table disagrees with authoritative cell total")
+    selected_top = selected["area_top"] or (selected["name"] if not hierarchy else None)
+    if top is not None and selected_top != top.lstrip("\\"):
+        raise FlowError(f"Yosys stat top mismatch: expected {top}, got {selected['area_top']}")
+    return {"per_cell": selected["per_cell"], "chip_area_um2": selected["area"],
+            "selection": {"section": selected["name"], "top": selected_top,
+                          "cell_count": selected["count"],
+                          "basis": "design hierarchy leaf cells" if hierarchy else "flat module cells"}}
+
+
+def summarize_stat(stat: dict[str, Any], cells: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    """Classify library cells; absent library entries remain explicitly unknown.
+
+    Missing library cells are not evidence of hard macros. Known macro identity
+    comes from Liberty memory groups / is_macro_cell, never a name heuristic.
+    """
+    total = seq = macros = unknown_count = 0
+    area = seq_area = 0.0
+    unknown = []
+    unknown_area = []
+    for name, info in sorted(stat["per_cell"].items()):
+        count = info["count"]
+        total += count
+        entry = cells.get(name)
+        if entry is None:
+            unknown.append(name)
+            unknown_count += count
+            if info["area"] is None:
+                unknown_area.append(name)
+            else:
+                area += info["area"]
+            continue
+        cell_area = count * entry["area"]
+        area += cell_area
+        if entry.get("macro", False):
+            macros += count
+        elif entry["sequential"]:
+            seq += count
+            seq_area += cell_area
+    if (not unknown and all(info["area"] is not None for info in stat["per_cell"].values())
+            and stat["chip_area_um2"] is not None
+            and abs(area - stat["chip_area_um2"]) > max(0.00001, abs(area) * 0.000001)):
+        raise FlowError("Yosys chip area disagrees with selected counts and Liberty area")
+    return {"cell_count": total, "cell_area_um2": None if unknown_area else round(area, 6),
+            "chip_area_um2": stat["chip_area_um2"],
+            "sequential_cell_count": seq, "sequential_area_um2": round(seq_area, 6),
+            "combinational_cell_count": total - seq - macros - unknown_count,
+            "macro_count": macros, "unmapped_cell_count": unknown_count,
+            "unmapped_cell_types": unknown, "unknown_area_cell_types": unknown_area,
+            "cell_types_used": len(stat["per_cell"]), "stat_selection": stat["selection"],
+            "cell_area_basis": "Liberty area times count; stat area only for unknown cells"}
 
 
 def w11_controller_endpoint_commands(block: dict[str, Any]) -> list[str]:
@@ -710,26 +795,9 @@ def run_synthesis(
     if not raw_netlist.is_file():
         raise FlowError("yosys produced no mapped netlist")
 
-    stat = parse_stat(stat_path.read_text(encoding="utf-8"))
-    cells = scan_liberty(liberty)
-
-    total_cells = 0
-    total_area = 0.0
-    seq_cells = 0
-    seq_area = 0.0
-    macro_cells = 0
-    unknown: list[str] = []
-    for name, info in sorted(stat["per_cell"].items()):
-        total_cells += info["count"]
-        total_area += info["area"]
-        entry = cells.get(name)
-        if entry is None:
-            macro_cells += info["count"]
-            unknown.append(name)
-            continue
-        if entry["sequential"]:
-            seq_cells += info["count"]
-            seq_area += info["area"]
+    stat = parse_stat(stat_path.read_text(encoding="utf-8"), top=block["top"])
+    summary = summarize_stat(stat, scan_liberty(liberty))
+    seq_cells = summary["sequential_cell_count"]
 
     netlist = work / "mapped.v"
     stripped = normalise_netlist(raw_netlist, netlist)
@@ -751,15 +819,7 @@ def run_synthesis(
     return {
         "netlist": netlist,
         "record": {
-            "cell_count": total_cells,
-            "cell_area_um2": round(total_area, 6),
-            "chip_area_um2": stat["chip_area_um2"],
-            "sequential_cell_count": seq_cells,
-            "sequential_area_um2": round(seq_area, 6),
-            "combinational_cell_count": total_cells - seq_cells - macro_cells,
-            "macro_count": macro_cells,
-            "unmapped_cell_types": unknown,
-            "cell_types_used": len(stat["per_cell"]),
+            **summary,
             "abc_delay_target_ps": delay_target_ps,
             "dont_use_cell_count": len(dont_use),
             "netlist_normalization": {
@@ -4065,7 +4125,7 @@ def _main(args: argparse.Namespace, *, argv: list[str] | None = None) -> int:
     )
     if synth:
         print(
-            f"  synth: cells={synth['cell_count']} area={synth['cell_area_um2']:.3f} um2 "
+            f"  synth: cells={synth['cell_count']} area={synth['cell_area_um2']} um2 "
             f"seq_area={synth['sequential_area_um2']:.3f} um2 macros={synth['macro_count']}"
         )
     if sta:

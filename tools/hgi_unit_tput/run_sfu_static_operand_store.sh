@@ -16,3 +16,17 @@ rc=$?
 set -e
 if [ "$rc" = 0 ] || ! grep -q STORE_WORD "$OUT/mutant.log";then cat "$OUT/mutant.log";exit 1;fi
 printf 'PASS actual bank-address mutant rc=%s\n' "$rc"
+
+set +e
+"$OUT/obj/Vtb_hgi_sfu_static_operand_store" +MUT_SCALAR_ADDR > "$OUT/scalar_mutant.log" 2>&1
+rc=$?
+set -e
+if [ "$rc" = 0 ] || ! grep -q SCALAR_IDENTITY "$OUT/scalar_mutant.log";then cat "$OUT/scalar_mutant.log";exit 1;fi
+printf 'PASS actual scalar-address identity mutant rc=%s\n' "$rc"
+
+set +e
+"$OUT/obj/Vtb_hgi_sfu_static_operand_store" +MUT_RANGE > "$OUT/range_mutant.log" 2>&1
+rc=$?
+set -e
+if [ "$rc" = 0 ] || ! grep -q STORE_FAULT "$OUT/range_mutant.log";then cat "$OUT/range_mutant.log";exit 1;fi
+printf 'PASS actual high-address alias refusal mutant rc=%s\n' "$rc"

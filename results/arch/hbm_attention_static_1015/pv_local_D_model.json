@@ -1,0 +1,60 @@
+{
+  "schema": "opentallas.hbm_attn.pv_local_D_model.v1",
+  "qualification": false,
+  "opt_in": true,
+  "baseline128_unchanged": true,
+  "H": 16,
+  "D": 512,
+  "bank": "(tile*16+c)*4+head//4",
+  "address": "epoch (0 or1)",
+  "lane": "head%4",
+  "physical_memory": {
+    "macro": "ot_sram_1r1w_32x128_m1",
+    "banks": 2048,
+    "banks_per_tile": 64,
+    "allocated_bytes": 1048576,
+    "useful_bytes_two_epochs": 65536,
+    "area_um2": 2188845.71136,
+    "increment_over128_um2": 2052042.8543999998
+  },
+  "capture": {
+    "edges": 16,
+    "selected_banks_per_edge": 128,
+    "payload_bits_per_edge": 16384,
+    "local": "Each tile receives only its16FP32+16flag payload; writes4macros at selected dimension"
+  },
+  "drain": {
+    "edges": 128,
+    "selected_banks_per_edge": 64,
+    "VM_bits_per_edge": 2048,
+    "order": "head0..15,block0..7;4adjacent tiles perblock",
+    "local": "Each selected tile emits sixteenFP32+flags from its sixteen dimension banks"
+  },
+  "status": {
+    "storage_FF": 16384,
+    "read_pipeline_FF": 8192,
+    "per_tile_storage_FF": 512,
+    "per_tile_read_FF": 256,
+    "per_tile_macro_clock_pins": 64
+  },
+  "clocks": {
+    "explicit_bank_clock_ports": 4,
+    "global_control_clock_ports": 1,
+    "nominal_tile_sequential_clock_endpoints": 836,
+    "nominal_bankroot_endpoints": 6688,
+    "contract": "All5 clock inputs synchronous and phase matched; actual clock gates/buffers/tree/delay/skew not yet synthesized or qualified"
+  },
+  "audit": {
+    "full8192word_bijection": true,
+    "all16phases128distinctwrites": true,
+    "all128drains64distinctreads": true,
+    "bankcapture_tile_local": true,
+    "wrong_headgroup_mapping_detected": true
+  },
+  "remaining": [
+    "Actual macro RTL/fullshape,flags,twoepochs,simultaneousreuse and mutants",
+    "Actual WG1/currentbank commit join",
+    "Mapped mux/decoder/control/register and fullclock overhead",
+    "Actual tile placement/pins/cut/routing and native immutable price"
+  ]
+}

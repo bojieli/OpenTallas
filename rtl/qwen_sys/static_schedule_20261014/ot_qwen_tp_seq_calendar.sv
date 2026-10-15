@@ -3,14 +3,14 @@
 // but never choose an issue edge or prolong a segment/stage. PW961..972 carries
 // {start32,end32}, {tx_first32,rx_first32}, {zero32,rx_stride16,tx_stride16},
 // and the EXACT real DW64 descriptor for each segment. PW973={SGT1,stop32},
-// PW974={SGTS,zero24,stage6,count2}, PW975=0. Dense footer1023 seals.
+// PW974={SGTS,zero23,requires_cbuf1,stage6,count2}, PW975=0. Dense footer1023 seals.
 module ot_qwen_tp_seq_calendar #(
  parameter integer VRL=19,N=8,NW=18,PAW=12,VWA=20,DAW=6,FW=512,RB=3
 )(
  input wire clk,rst_n,rst_nw,start,input wire[NW-1:0]token,pos,input wire[5:0]stage,
  input wire pw_v,input wire[9:0]pw_addr,input wire[63:0]pw_data,
  output reg done,output reg[NW-1:0]next_token,output reg[31:0]next_val,
- output wire fault,output wire image_ready,output wire coll_busy,
+ output wire fault,output wire image_ready,output wire requires_cbuf,output wire coll_busy,
  output wire core_start,output wire[NW-1:0]core_token,core_pos,
  input wire core_done,input wire[NW-1:0]core_next_token,input wire[31:0]core_next_val,input wire core_fault,
  output wire[PAW-1:0]prog_base,output wire desc_re,output wire[DAW-1:0]desc_addr,input wire[63:0]desc_q,
@@ -20,7 +20,8 @@ module ot_qwen_tp_seq_calendar #(
  input wire r_valid,input wire[FW-1:0]r_data,input wire r_last,input wire[RB-1:0]r_rank,input wire r_err
 );
  reg[63:0]cfg[0:11];reg[11:0]loaded;reg[31:0]stop_q;reg[1:0]count_q;reg[5:0]stage_q;
- reg header_seen,meta_seen,pad_seen,sealed,cfg_fault;
+ reg header_seen,meta_seen,pad_seen,sealed,cfg_fault;reg cbuf_q;
+ assign requires_cbuf=cbuf_q;
  integer i;reg bad;
  wire begin_cfg=pw_v&&pw_addr==0;
  wire row_w=pw_v&&pw_addr>=961&&pw_addr<=972;
@@ -43,14 +44,14 @@ module ot_qwen_tp_seq_calendar #(
   end
  end
  always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)begin loaded<=0;stop_q<=0;count_q<=0;stage_q<=0;header_seen<=0;meta_seen<=0;pad_seen<=0;sealed<=0;cfg_fault<=0;end
+  if(!rst_n)begin loaded<=0;stop_q<=0;count_q<=0;stage_q<=0;cbuf_q<=0;header_seen<=0;meta_seen<=0;pad_seen<=0;sealed<=0;cfg_fault<=0;end
   else if(begin_cfg)begin
    if(active)cfg_fault<=1;
-   else begin loaded<=0;header_seen<=0;meta_seen<=0;pad_seen<=0;sealed<=0;count_q<=0;stop_q<=0;end
+   else begin loaded<=0;header_seen<=0;meta_seen<=0;pad_seen<=0;sealed<=0;count_q<=0;stop_q<=0;cbuf_q<=0;end
   end else begin
    if(row_w)begin cfg[pw_addr-961]<=pw_data;loaded[pw_addr-961]<=1;if(active||sealed)cfg_fault<=1;end
    if(pw_v&&pw_addr==973)begin stop_q<=pw_data[31:0];header_seen<=1;if(pw_data[63:32]!=32'h53475431||active||sealed)cfg_fault<=1;end
-   if(pw_v&&pw_addr==974)begin count_q<=pw_data[1:0];stage_q<=pw_data[7:2];meta_seen<=1;if(pw_data[63:32]!=32'h53475453||pw_data[31:8]!=0||active||sealed)cfg_fault<=1;end
+   if(pw_v&&pw_addr==974)begin count_q<=pw_data[1:0];stage_q<=pw_data[7:2];cbuf_q<=pw_data[8];meta_seen<=1;if(pw_data[63:32]!=32'h53475453||pw_data[31:9]!=0||active||sealed)cfg_fault<=1;end
    if(pw_v&&pw_addr==975)begin pad_seen<=1;if(pw_data!=0||active||sealed)cfg_fault<=1;end
    if(footer)begin sealed<=1;if(bad||pw_data[63:32]!=32'h58504631||pw_data[31:13]!=0||pw_data[11:6]!=stage_q||pw_data[1:0]!=2||active||sealed)cfg_fault<=1;end
   end

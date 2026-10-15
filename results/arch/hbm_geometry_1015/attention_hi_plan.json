@@ -1,0 +1,56 @@
+{
+  "source_component_sha256": "0090bb4de86122a4c408818e88fdd31a9952852e2c5dbcc9d12cd5bad0055fd8",
+  "baseline_direct_manifest_sha256": "3f821008b7a80ea382e22c9476919536bfa17df540e6e321483b1bf2eb74d4ce",
+  "placement_overrides_um": {
+    "g_y1.g_x[0].u_q": [
+      108.432,
+      105.84
+    ],
+    "g_y1.g_x[0].u_res.gn.g_s[2].g_c[0].g_sn.u_b": [
+      66.096,
+      90.72
+    ],
+    "g_y1.g_x[0].u_res.gn.g_s[3].g_c[0].g_sn.u_b": [
+      200.016,
+      77.76
+    ],
+    "g_y1.g_x[1].u_q": [
+      1152.576,
+      105.84
+    ],
+    "g_y1.g_x[1].u_res.gn.g_s[3].g_c[0].g_sn.u_b": [
+      1703.376,
+      108.0
+    ],
+    "g_y1.u_mid.gn.g_s[0].g_c[0].g_sn.u_b": [
+      804.816,
+      270.0
+    ],
+    "u_fc.gn.g_s[0].g_c[0].g_sn.u_b": [
+      895.104,
+      291.6
+    ],
+    "u_fc.gn.g_s[0].g_c[1].g_sn.u_b": [
+      895.104,
+      401.76
+    ],
+    "u_fc.gn.g_s[0].g_c[2].g_sn.u_b": [
+      895.104,
+      516.24
+    ],
+    "u_pi.gn.g_s[5].g_c[0].g_sn.u_b": [
+      857.088,
+      54.0
+    ]
+  },
+  "qualification": {
+    "unresolved": [
+      "All external data endpoint children fixed; clock/reset pin positions move with children, clock-route proof outstanding.",
+      "No flips without actual LEF symmetry and PG legality evidence.",
+      "Existing pair clearance retained up to 5.4um; no halo is reduced by search.",
+      "No routed congestion, clock, timing, source-native or throughput claim.",
+      "Bounded local translation search, not proof of global optimum.",
+      "Whole-die service, SM, VM, SU and other omitted links are outside this component objective."
+    ]
+  }
+}

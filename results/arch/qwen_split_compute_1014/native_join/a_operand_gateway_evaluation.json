@@ -1,0 +1,98 @@
+{
+  "schema": "opentallas.qwen.a-operand-gateway-evaluation.v1",
+  "adopted": false,
+  "qualified": false,
+  "source": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_su_static.sv",
+  "source_sha256": "27bf02049fee338352c78e1dc534e2ea0e8639d0f383a2265cab13015b271475",
+  "existing_block_lines": [
+    815,
+    866
+  ],
+  "existing_state_bits": {
+    "embed_active": 1,
+    "embed_scale_pending": 1,
+    "embed_scale_hold": 16,
+    "embed_sel": 64,
+    "embed_lanes": 384
+  },
+  "existing_total_state_bits": 466,
+  "existing_combinational_logic": {
+    "int8_decode_lanes": 64,
+    "a_response_mux_bits": 2048
+  },
+  "before_nets": [
+    {
+      "source": "su.external_a_re/addr",
+      "sink": "seq.su_va_re/addr",
+      "bits": 1600
+    },
+    {
+      "source": "seq.su_vm_va_re/addr",
+      "sink": "su.external_vm_a_re/addr",
+      "bits": 1600
+    },
+    {
+      "source": "vm.sq[2047:0]",
+      "sink": "seq.su_vm_va_q",
+      "bits": 2048
+    },
+    {
+      "source": "seq.su_va_q",
+      "sink": "su.external_a_q",
+      "bits": 2048
+    }
+  ],
+  "candidate_after_nets": [
+    {
+      "source": "su.external_a_re/addr",
+      "sink": "gateway.su_va_re/addr",
+      "bits": 1600
+    },
+    {
+      "source": "gateway.va_re/addr",
+      "sink": "su.external_vm_a_re/addr",
+      "bits": 1600
+    },
+    {
+      "source": "vm.sq[2047:0]",
+      "sink": "gateway.va_q",
+      "bits": 2048
+    },
+    {
+      "source": "gateway.su_va_q",
+      "sink": "su.external_a_q",
+      "bits": 2048
+    }
+  ],
+  "upstream_provider_preserved": {
+    "module": "qkd_embedding_static_core_provider",
+    "code_bits": 512,
+    "scale_bits": 16,
+    "row_storage_duplication_required": false
+  },
+  "single_gateway": {
+    "existing_state_relocated": 466,
+    "added_state_bits": 0,
+    "additional_payload_edges": 0,
+    "physical_home": null,
+    "source_equivalence": "REQUIRED; not yet implemented"
+  },
+  "octet_alternative": {
+    "octets": 8,
+    "naive_state_bits": 592,
+    "extra_state_bits": 126,
+    "shared_code_word_bits_per_octet": 512,
+    "narrow_code_slice_allowed": false,
+    "reason": "Each lane indexes an arbitrary 6-bit byte selector; source proof needed before selecting only an octet byte slice."
+  },
+  "control_ownership": "Existing programme FSM/token epoch owner remains seq; explicit local gateway command/status boundary required, no synthetic producer ties.",
+  "open": [
+    "actual workload activity per net/cmd class",
+    "real physical source endpoints/outlines/clock/pin views",
+    "exact extraction with same clock phase/reset and same source edges",
+    "source equivalence and address/scale/epoch mutants",
+    "source fault reduction path timing and live registered boundary",
+    "actual route ages and programme pricing"
+  ],
+  "metric_limits": "No trusted actual seven-master pin lengths exist yet. Widths are source facts; no distance or bandwidth benefit claim."
+}

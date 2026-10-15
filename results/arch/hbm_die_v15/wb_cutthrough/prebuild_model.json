@@ -1,0 +1,35 @@
+{
+  "scope": "pre-build cut-through WB architecture; no performance qualification",
+  "baseline_source_sha256": "abf5662f2ff12c7305e01811206877219614d74b8bd870fc2b855deda4fb854c",
+  "actual_SRAMs": 32,
+  "SRAM_rows": 128,
+  "SRAM_bits": 256,
+  "payload_FIFO_count": 32,
+  "payload_FIFO_width": 288,
+  "payload_FIFO_depth": 4,
+  "root_count_delta": 0,
+  "SRAM_count_delta": 0,
+  "ready_watermark_FF_delta": 24,
+  "first_completed_32sector_row_fill_edges": 4,
+  "baseline_complete_fill_edges_640": 80,
+  "earliest_copy_advance_stream_edges_640": 76,
+  "baseline_complete_fill_edges_2048": 256,
+  "earliest_copy_advance_stream_edges_2048": 252,
+  "ordering": "No SRAM read until complete32sector row or final partial tail is committed; fixed eight-sector ingress, variable stalls confined PHY boundary. True perPC write completions retain ownership until all block sectors posted.",
+  "independent_block_ACK_overlap": false,
+  "qualification": {
+    "unchanged_272_cycle_gate": true,
+    "refresh_model_changes": false,
+    "actual_native_DRAM_controller_join": false,
+    "functional_bench_pending": true,
+    "full_DMA_bench_pending": true
+  },
+  "built_candidate_source_sha256": "0635dc22ba0a625f4bfe861d797a5e2b80450ee7cab442ec71df165b2425de91",
+  "bank_interleave": "logical SRAM ordinal%32; actual PHY PC=sector[6:2]^sector[11:7]^sector[16:12]; all32lane copy/arbitration preserved",
+  "boundary_bits_per_stream_edge": {
+    "ingress": 2312,
+    "maximum_SRAM_payload_copy": 8192,
+    "committed_watermarks": 24
+  },
+  "boundaries": "New watermark is local stream domain; existing real CDC FIFOs and true completion ACK remain. No new crossing."
+}

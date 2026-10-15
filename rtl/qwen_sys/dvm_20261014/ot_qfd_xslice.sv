@@ -972,7 +972,10 @@ module ot_qfd_xcst #(
     end
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin cnt <= 4'd0; run <= 1'b0; end
-        else if (a_d[0]) begin cnt <= XOFF - 1; run <= 1'b1; end
+        // GO is captured by the existing corridor boundary b_q before it
+        // fans into the run/count logic. Compensate that edge in the initial
+        // countdown; the tuple's fixed hold deadline remains unchanged.
+        else if (b_q[0]) begin cnt <= XOFF - 2; run <= 1'b1; end
         else if (run) cnt <= (cnt == 0) ? IL - 1 : cnt - 1'b1;
     // Original cap captured the raw face one edge before the hold deadline.
     // b_q now captures that face; forward its selected line at the same fixed

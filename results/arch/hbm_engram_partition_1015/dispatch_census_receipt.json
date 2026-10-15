@@ -1,0 +1,113 @@
+{
+  "schema": "opentallas.hbm.engram.dispatch_census.v1",
+  "source_sha256": "1132b94038342443ba24380f1a1e697ebb8c7aa7c2fea231d2e83a991f8a94f9",
+  "optimized_register_bits": 150,
+  "bits_by_cell_type": {
+    "$adffe": 147,
+    "$adff": 3
+  },
+  "scope": "Yosys proc/opt/memory_map actual dispatch module only; no technology mapping, no hash/serializer included, not area/CTS/physical qualification",
+  "unit": "oth-ubuntu-1389084-1792053962",
+  "cells": [
+    {
+      "cell": "$auto$ff.cc:266:slice$632",
+      "type": "$adffe",
+      "bits": 5
+    },
+    {
+      "cell": "$auto$ff.cc:266:slice$641",
+      "type": "$adffe",
+      "bits": 5
+    },
+    {
+      "cell": "$auto$ff.cc:266:slice$650",
+      "type": "$adffe",
+      "bits": 5
+    },
+    {
+      "cell": "$auto$ff.cc:266:slice$659",
+      "type": "$adffe",
+      "bits": 5
+    },
+    {
+      "cell": "$auto$ff.cc:266:slice$668",
+      "type": "$adffe",
+      "bits": 5
+    },
+    {
+      "cell": "$auto$ff.cc:266:slice$675",
+      "type": "$adffe",
+      "bits": 5
+    },
+    {
+      "cell": "$auto$ff.cc:266:slice$684",
+      "type": "$adffe",
+      "bits": 5
+    },
+    {
+      "cell": "$auto$ff.cc:266:slice$689",
+      "type": "$adffe",
+      "bits": 5
+    },
+    {
+      "cell": "$auto$ff.cc:266:slice$698",
+      "type": "$adffe",
+      "bits": 20
+    },
+    {
+      "cell": "$auto$ff.cc:266:slice$703",
+      "type": "$adffe",
+      "bits": 1
+    },
+    {
+      "cell": "$auto$ff.cc:266:slice$704",
+      "type": "$adffe",
+      "bits": 5
+    },
+    {
+      "cell": "$auto$ff.cc:266:slice$713",
+      "type": "$adffe",
+      "bits": 5
+    },
+    {
+      "cell": "$auto$ff.cc:266:slice$718",
+      "type": "$adffe",
+      "bits": 7
+    },
+    {
+      "cell": "$auto$ff.cc:266:slice$723",
+      "type": "$adffe",
+      "bits": 5
+    },
+    {
+      "cell": "$auto$ff.cc:266:slice$732",
+      "type": "$adffe",
+      "bits": 1
+    },
+    {
+      "cell": "$auto$ff.cc:266:slice$741",
+      "type": "$adffe",
+      "bits": 37
+    },
+    {
+      "cell": "$auto$ff.cc:266:slice$747",
+      "type": "$adffe",
+      "bits": 26
+    },
+    {
+      "cell": "$procdff$501",
+      "type": "$adff",
+      "bits": 1
+    },
+    {
+      "cell": "$procdff$536",
+      "type": "$adff",
+      "bits": 1
+    },
+    {
+      "cell": "$procdff$546",
+      "type": "$adff",
+      "bits": 1
+    }
+  ]
+}

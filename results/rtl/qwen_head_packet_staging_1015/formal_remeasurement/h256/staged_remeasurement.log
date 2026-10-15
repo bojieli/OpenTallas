@@ -1,0 +1,22 @@
+GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=["openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"]
+RECOVERY_STAGED_REMEASUREMENT
+GATE_IOP_RC=0
+GATE_DUMP_RC=0
+GATE_TB textbook_lint: WARN qkh_packet_h256 cells 777 flops 260 depth 11.7 ps util 0.226 reach 7.5 um (0.0 s)
+GATE_TB textbook_lint: INFO clock_roots max_root_sinks=260 root=port:clk rule=PASS: 260 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+GATE_TB textbook_lint: WARN util_channel: utilisation 22.6% outside 45%-65% (std 148 + macro 0 um2 in 653 um2): shrink the outline (long wires / sparse placement)
+GATE_PORTS {"clk": [1, false], "rst_n": [1, false], "d": [null, true], "q": [null, true]}
+GATE_AREA    Chip area for module '\qkh_packet_h256': 136.220940
+GATE_CTS_RC=0
+RECOVERY_CTS_REUSED_EXISTING_DATABASE
+GATE_GPLD global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+GATE_GPLD [INFO GPL-0023] Placement target density:       0.5000
+GATE_CK_RC=0
+GATE_CK ss insertion all 98.3..102.6 ps (spread 4.3), boundary mean 100.8; tt insertion all 71.9..75.8 ps (spread 3.9), boundary mean 74.0; ff insertion all 56.8..60.5 ps (spread 3.7), boundary mean 58.8; macro_clk flag False
+GATE_CK_DOMAIN {"source": "clk", "clock": "core_clk", "tt": {"boundary": {"n": 260, "mean": 74.0, "min": 71.9, "max": 75.8}, "all": {"n": 260, "mean": 74.0, "min": 71.9, "max": 75.8}, "errors": [], "macros": null, "macro_libs": 0}}
+GATE_PC constraints signoff /src/physical/ref_tile/qkh_packet_h256/signoff.sdc (TT placement RC; diagnostic)
+GATE_PC reg->out      256 paths, worst slack 271.2 ps (e.g. q[180])
+GATE_PC in->reg        48 paths, worst slack 406.7 ps (e.g. u_pipe.q[86]$_DFF_PN0_/D)
+GATE_PC reg->reg      256 paths, worst slack 539.8 ps (e.g. u_pipe.q[20]$_DFF_PN0_/RESETN)
+GATE_PC setup WNS 2.712088054135364e-10 hold WNS 2.6970495281553042e-11
+GATE_DONE

@@ -1,0 +1,47 @@
+{
+  "generated": "2026-10-15T07:35:45.063902+00:00",
+  "current_source_commit": "87e0acece1f988191b8fdbd9e5b487916a4968ef",
+  "profiles": [
+    {
+      "profile": "program_gate",
+      "measured_source_files": 23,
+      "changed_sources": [
+        {
+          "path": "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_static.sv",
+          "measured_profile_sha256": "1012548d4d1f22ebdd1e4e2339323a24a4024e87491905453ea87537dd758d51",
+          "published_candidate_sha256": "67152f9623f8274558ea4e588d4a0f423d1859c063fa62ee832e5731ca5e814d"
+        },
+        {
+          "path": "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_program_static.sv",
+          "measured_profile_sha256": "9f8b2cf90b1ce5b000af5b02fcde95753f0a11303f1c8a23c3404e523913f8fa",
+          "published_candidate_sha256": "db8a6126173b621538fba98a72b20adbfec873b53d6fdbcebdbccad74ee01f2e"
+        },
+        {
+          "path": "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv",
+          "measured_profile_sha256": "7828d619da2fd2462cf0253b78c074dad1171e6ca77799bfc21f22987ed72237",
+          "published_candidate_sha256": "ab58e6eb465390f2e67c4a82496211e69138dab0bda96a11c098d79fa0516776"
+        },
+        {
+          "path": "rtl/test/hbm_accel/generic/tb_hgi_qdq_static.sv",
+          "measured_profile_sha256": "c04a6ab88460af761f34c7729237e18010386f617a54ed5a23efc6a6d004dd2b",
+          "published_candidate_sha256": "58ecc5b33635725ca05c89dacbb4ea0f6e85076e61f0d1ea26cf080560048e9e"
+        }
+      ],
+      "qualification": "Original admitted component receipts qualify their exact recorded snapshot; they do not qualify the current integrated native die."
+    },
+    {
+      "profile": "physical_split_gate",
+      "measured_source_files": 20,
+      "changed_sources": [
+        {
+          "path": "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv",
+          "measured_profile_sha256": "7828d619da2fd2462cf0253b78c074dad1171e6ca77799bfc21f22987ed72237",
+          "published_candidate_sha256": "ab58e6eb465390f2e67c4a82496211e69138dab0bda96a11c098d79fa0516776"
+        }
+      ],
+      "qualification": "Original admitted component receipts qualify their exact recorded snapshot; they do not qualify the current integrated native die."
+    }
+  ],
+  "structural_change": "Current bank uses constant decoded slices from0a0152d46 because historical runtime-indexed mux failed actual ORFS Yosys. New bank all-group/CEUE functional receipts are separate under results/arch/hbm_vm_bank_static_1015/functional_literal_wrappers.",
+  "remaining": "Actual complete Quant/current-bank/static-programme integration, physical views, immutable production performance and die calendar remain unqualified."
+}

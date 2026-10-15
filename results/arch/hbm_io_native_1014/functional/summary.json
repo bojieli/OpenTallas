@@ -1,0 +1,55 @@
+{
+  "schema": "ot.hbm.native_io.functional.v1",
+  "source_commit": "9ea6657083c4196d3948a513adc66643147f4814",
+  "test_scope": "Component implementation only. Native host bench terminates at actual787 loader service ports; entire loader/HBM/core execution is not instantiated or qualified. Source plan gives exact binding request for H-DIE.",
+  "host_packet": {
+    "normal": "PASS1536checks256transactions via exact787-bit face",
+    "payload_mutant": "FAIL32errors",
+    "upstream_boundary": "Declared external packets / actual loader AXI ports; no token/result substitution"
+  },
+  "host_native": {
+    "normal": "PASS448checks64transactions through realpacketcontroller, originalhfd_lk_ep CRC/replay SRAM, real256entrylanding SRAM, actualdigitalUCIe over behaviouralPMA513",
+    "payload_mutant": "FAIL8errors",
+    "clocks": "Functional synchronous link family; phi-R/reset/physical qualification open"
+  },
+  "landing": {
+    "normal": "PASS512words1540checks3084edges; full256two_laps uninitialized real2x256x256SRAM",
+    "address_RTL_mutant": "FAIL1536checks withfault0, proving actual data comparison rather than fault-only detection"
+  },
+  "serdes": {
+    "normal": "PASS512exactbeats with randomsingle-pad-bit errors and300ppm clockoffset, st10/10",
+    "Forney_RTL_mutant": "FAIL514badbeats"
+  },
+  "endpoint_KP4": {
+    "normal": "PASS128flits EACHdirection,829edges including500edge train,0replays/0drops",
+    "receiver_face_RTL_mutant": "FAIL firstflit received1 expected0; fullrunlog preserved separately",
+    "performance": "829includestraining/fill/drain and is not steady-state throughput qualification"
+  },
+  "physical": "No accepted native FEC/host views. New actual controller/landing/tenthendpoint sites and20localclocks+recoveredroot require assigned H-DIE contract and physical gates; old placeholderPHY/slabs do not qualify.",
+  "source_sha256": {
+    "rtl/hbm_accel/io_native_20261014/hfd_host_packet_face.sv": "e80f0fd8bbd181e1a90f926ea8058c51ff36a1b170a4923e60e82197a90b8b52",
+    "rtl/hbm_accel/io_native_20261014/hbm_link_bank9_native.sv": "371002eda178023782ca2fd308d7087cb59b23eeda51ea89cb08c7e64078a804",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_host_landing256.sv": "80aff95681d60189a41e1f74e6837e7476b64da566b6877774e907b8fe5db5e3",
+    "rtl/hbm_accel/io_native_20261014/hfd_serdes487.sv": "81b7ea745a960d84d3f50f1610a6cc5bd22aac0b1847319b0ad11a85d152fa32",
+    "rtl/hbm_accel/io_native_20261014/hfd_host_native.sv": "776ea943b1f244320ffc177af737f1b7f8e4a44359ef270536f23d3b293778b9",
+    "rtl/hbm_accel/io_native_20261014/ot_hbm_host_packet.sv": "fbd67eae2ba2bee4962b29ab178a0850308e1f6f9ffbbf987ba5f6d67329aa41",
+    "rtl/hbm_accel/tu/lk_ep_20261010/ot_lkep_sub.sv": "e365663b2030327808912198074ea29338ff9c7677b3c5f8414b45537b16c0c3",
+    "rtl/hbm_accel/tu/lk_ep_20261010/ot_lkep_rx_shared.sv": "02dab675b7f240161bc7df04943d7c67850a76f7d27da15ba5789fad2bb2552a",
+    "rtl/hbm_accel/tu/lk_ep_20261010/ot_hbm_lk_ep.sv": "5f37246ad26340aa599a8470347d5dc665c5af33f9bf5b1c6fce90d05c9b4203",
+    "rtl/hbm_accel/tu/lk_ep_20261010/ot_lkep_ctrl_phy.sv": "6aa0c04c4b11b792f60c8694d14a17065c7d6875b2cdb1ec9e946eedc532c895",
+    "rtl/hbm_accel/tu/lk_ep_20261010/ot_hbm_lk_ep_shared_golden.sv": "40747a787f6e35308beef0c4d1dd7729723ca3e55b6a37f61fa8442fac9559b1",
+    "rtl/hbm_accel/tu/lk_ep_20261010/ot_lkep_status_shared.sv": "5a598f67d5f59f96ef852abe276ff88e55a53d233df3ddae8d443aae897dd939",
+    "rtl/hbm_accel/tu/lk_ep_20261010/hfd_lk_ep_face_golden.sv": "6e306a85358db8bdc785bf778264703fe18dac25612a162d3fe9852288b6ddc0",
+    "rtl/hbm_accel/tu/lk_ep_20261010/ot_lkep_ctrl_phy_data.sv": "642d726d7361d33980ce300e6321f83eaeec1189727105ab7dfc6854f0486a09",
+    "rtl/hbm_accel/tu/lk_ep_20261010/hfd_lk_ep_face.sv": "84d3ec99a3af9ef82a2ecf8f1a1e6ef688a43ccfb63d874fd2b2bd88f177dc68",
+    "rtl/hbm_accel/tu/lk_ep_20261010/ot_crc_par.sv": "f7735cc5544f67452e3d0b1993a34f67587051b450fd6c94e64d6c2a43db0655",
+    "rtl/hbm_accel/tu/lk_ep_20261010/hfd_lk_ep.sv": "6baf244b268203b250ee1906a5fd420edafe52760e74c9165041435760541ad5",
+    "rtl/hbm_accel/tu/lk_ep_20261010/ot_lkep_tx_shared.sv": "a5001e130406a60179e491b5ecf789c7af6ae45dbcf753061b0d9173f13ea44f",
+    "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv": "467abe1090a24cffad29443edd4dce5ab33eeebff98bf2bc98de7d9d19556c41",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv": "a339db028b9bbf03c1014112e02253faacd02e7bd5b5e1777f0348ddf66070dd",
+    "rtl/dsrom_sys/s81_link/ot_s81_hbm_pcc.sv": "503638aaccfc0af752c6433e48fae06a10b0e7d0ea255739cc71045d76f57974",
+    "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv": "788c6cdaa3fcb111a8baf4756c340a97f6880110ef081327a9df326e4e51f224",
+    "rtl/dsrom_sys/s81_link/ot_hbm3e_phy_v41x_aw30_e8p5.sv": "9b792f8979d729b8e9bc99a3b820e5d020d26f257429e960a606a49e43f2a2e0"
+  },
+  "FEC_candidate_scope": "This functional record uses unchangedlegacyKP4 encoder/decoder; opt-inlinear/rooted candidates have separate equivalence records."
+}

@@ -1,0 +1,84 @@
+{
+  "status": "CANONICAL_NATIVE_PORT_WIDTH_COMPONENT_PASS_PHYSICAL_AND_FULL_MODEL_UNQUALIFIED",
+  "base_commit": "e3107fae2705f39697094488faa8a403be81d395",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_die_bind/dsfd_sp_pq_n.sv": "2296ad9c0f03bd23be8740a54e1c9f35d61338f053621db05f1a47db0969ad8c",
+    "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_core_native.sv": "d7854cf8e094464828261567d3da8e82ebf1edda74eca3aea613274fa3fb38cf",
+    "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_fixed_native.sv": "c00b7766f4c0f677d806258fd2b7b2551e8371e8a513d7c3cda0b8a63ae8b5cc",
+    "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_static_native.sv": "a4f01d78af4489951ff372235899b05a41ec5e012efe01326d1f5f877c1979ab",
+    "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pipe_native.sv": "d66d84cb3f678ee768693471be7485e620e870ae0020815970a3a365a8ac2751",
+    "rtl/test/dsrom_sys/tb_s81_pq_ctl_static.sv": "a141586bb39e1af4b28d4db638b2c072e9f0ef59919f9facff106bef4a338544",
+    "rtl/test/dsrom_sys/tb_s81_pq_canonical_pins.sv": "45e23d36150e4f289335dbdd2df9bf002a8308d15f45a59280e84e389072cac9",
+    "tools/s81/pq_ctl_static_bench.sh": "502f645ec254dcda33012f0f7a495a67cc22150a2a6cfc7d99440f362098c7b3",
+    "tools/s81/pq_canonical_pins_gate.py": "e09e86f8dbcf49c9db5215f3347a5ad6646ac10f6085561984127a947c60fc3d",
+    "tools/s81/pq_static_calendar_abi.json": "794772d7faef9acd60e1a6addaf193a60c320df5e0b29d5e3ad25cc3abac09ff"
+  },
+  "canonical_shape_unchanged": {
+    "pairs": 2417,
+    "BF": 519,
+    "roots": 128,
+    "maximum_phases": 642,
+    "PHW": 10,
+    "SAW": 14
+  },
+  "actual_changes": [
+    "static control calendar75 expands native streamaddress14; all higher fields shift3",
+    "core f_bus1634/phase10/rom_pa11/rom_sa14/bc_hr610",
+    "QB fixed alignment610 not609; BCslice0 grows410 by newcfgbit",
+    "die shape f_iss93 config91 phase10; rawstreamaddress14; phaseROMports12 unchanged",
+    "lane cc already contains10phasebits, so remove historicalzeroextend and retain1101bitstatic transport"
+  ],
+  "controller_gate": {
+    "checks": 2500,
+    "stream_beats": 1152,
+    "phases": [
+      512,
+      555,
+      598,
+      641
+    ],
+    "stream_base": 8192,
+    "positive": "PASS",
+    "fault_only_timeline": [
+      "missingVM PASS",
+      "missingcount PASS"
+    ],
+    "source_mutants": [
+      "wrongconfigtag FAIL",
+      "PHW9truncation FAIL",
+      "SAW11truncation FAIL"
+    ]
+  },
+  "native_wrapper_gate": {
+    "checks": 5280,
+    "phases": "511..642 inclusive",
+    "positive": "PASS",
+    "actual_instantiations": [
+      "ot_s81_pq_ctl_static_native",
+      "four SRAM QB with physical+2 pipeline",
+      "32 IX SRAMs",
+      "actual AQ arithmetic",
+      "slicedBC410/408/408/408",
+      "actualdieSTATIC_X2lane",
+      "two actual4096x72phaseROMmacros",
+      "four actual4096x72streamROMmacros"
+    ],
+    "scope": "widths, fixedtiming, highphase propagation and real14bitprogramROMaddress; zeroROMpayload deliberately has no numerical operand valid",
+    "not_proven": [
+      "native2417/BF519 replicated model or weight payload",
+      "actual sourcecompiler calendar/endpointABI75 adoption",
+      "nativeVMoperand/field/countendtoend composition",
+      "physicalslot fit and signoff",
+      "tokenloss or acceptedcostledger"
+    ],
+    "source_PHW_truncation_mutant": "FAIL phase512 on actual native phase-ROM address pins"
+  },
+  "commands": [
+    "bash tools/s81/pq_ctl_static_bench.sh run",
+    "python3 tools/s81/pq_canonical_pins_gate.py --work core-final",
+    "python3 tools/s81/pq_canonical_pins_gate.py --work core-final-mut --mut PHW"
+  ],
+  "physical_requests": "physical_request.json",
+  "compiler_abi_owner": "q_native_compute; action75 proposal sent, independent source pending. Old action72 cannot qualify these masters.",
+  "obsolete": "PriorPHW9/SAW11 core/control evidence is historical; currentmasters require new sourceconsistent kits/gates."
+}

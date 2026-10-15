@@ -1,0 +1,43 @@
+{
+  "schema": "opentallas.s81.canonical-execution-join-replay.v1",
+  "mechanism_tests_passed": true,
+  "full_source_expected_rejection_verified": true,
+  "native_qualified": false,
+  "literal_SU_operations": 2654,
+  "required_rank_operations": 10616,
+  "missing_rank_programmes": 324,
+  "literal_MTP_operations": 0,
+  "sources": {
+    "tools/s81_compile_schedule/canonical_execution_gate.py": "e636576ac9a66804a69f60611e44bc1ea775b11f4792c7437d278b62b058fdcb",
+    "tools/s81_compile_schedule/canonical_execution_join.py": "979c3a75e968fe3f5ac87720f150fc5ddc0f396c108be6de240aa5e395bd14e2",
+    "tools/s81_compile_schedule/compile_calendar.py": "9f2ebc41ebb9a0df09961bc4b48d7ddd7adff43f75d991d4fda25323750810b2",
+    "tools/s81_compile_schedule/lower_native_graph.py": "1e428009a72faca44959e931e66fa5504ee9d3bdce94d8ef4f3e66d0db1f733d",
+    "tools/s81_compile_schedule/operand_layout.py": "60737f60f478023179d154e55c13d5c553122552965e26d7edfee5a551719974",
+    "tools/s81_compile_schedule/read_packets.py": "397ff87a8bc632563a29460f3f37ec876c9157560d5eab4cca38bb27ae7c42ed",
+    "tools/s81_compile_schedule/test_canonical_execution_join.py": "7691a80958c24f039eb97ddaa6398d6edae10ff44d8b6b1ea427f4864c809883",
+    "tools/s81_compile_schedule/test_compile_calendar.py": "a0a66c0b575e70ad46b80d610c7a24c3a9defe600461fe07de27c6f76408ab8c",
+    "tools/s81_compile_schedule/test_lower_native_graph.py": "1a7faea3e952fcba37f2af6ea490a2b5fec275badb5d312c7991314d7c42fb39",
+    "tools/s81_compile_schedule/test_operand_layout.py": "a4fa956adb7aeaec5ad2843b8a2dc0576acbf4d2a80e402b7f3deb6995890c5f",
+    "tools/s81_compile_schedule/test_persistent_state.py": "060f68da678b836d2152771a0de39bc03bd4f1259de048827d50fadb7fe05d69",
+    "tools/s81_compile_schedule/test_read_packets.py": "282a06c758f0bc7abd8c06e30807e353cbc2c315d83bad72b297c49c4392dc3b",
+    "tools/s81_compile_schedule/test_write_itinerary.py": "f81945d6ebc98f30c7d26b32b6f3f0f847071c17f1eaa71ff525a4822ebba8e7",
+    "tools/s81_compile_schedule/write_itinerary.py": "1d96e496b16e003f9ecda7a0399fd3d738eebdc6c89839069397708e58caa94d",
+    "tools/s81_suhc/static_vm_reservations.py": "2417f5423cdcd09895dd0531ab2e3434dbca1c3c120ae36499ee5818df1d5fd3",
+    "inputs/canonical_source_export.json.gz": "b60f19005d91dec3cd61aa8be4f1b04f735436ca24a71d58db848065baff5866",
+    "inputs/full_su_spatial.json.gz": "a13f93495127ec79177c221b08ceea2aebb7c7e2d177870263f2b24034af84ca"
+  },
+  "mechanism_test_count": 14,
+  "admission": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-2078299-1792063719",
+    "exit_code": 0,
+    "memory_gb": 2,
+    "threads": 1
+  },
+  "input_provenance": {
+    "canonical_export_commit": "18218dc14",
+    "canonical_export_path": "results/arch/s81_canonical_bind_1015/canonical_source_export.json.gz",
+    "SU_catalogue_commit": "8873aa10b",
+    "SU_catalogue_path": "results/rtl/s81_static_su_native_1015/allocation/full_su_spatial.json.gz"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "module": "ot_hgi_dma_back_static",
+  "parameters": {
+    "STK": "0..3",
+    "QID": "local VM slice id, default STK",
+    "MUT": 0
+  },
+  "command": {
+    "mv_v": "pulse, no ready",
+    "mv": "existing real move227",
+    "issue_at": "absolute cycle of first rq output",
+    "drain_at": "absolute first landing SRAM read cycle, >=issue_at+10; chunk i read at drain_at+i after commit at issue_at+i+9",
+    "cycle": "32-bit global compiler clock from static dispatcher",
+    "mv_wb_bank": "compiler-selected physical WB buffer0/1",
+    "mv_wb_epoch": "16-bit compiler transaction identity",
+    "cycle_wrap": "Signed modulo32 scheduling distances; each planned interval <2^31 cycles; exact equality issue slots cross counter wrap"
+  },
+  "vm": {
+    "rq": "8x17 {valid,sec16}",
+    "rr": "8x257 {valid,data256}",
+    "latency": "rq output -> bank sample+1 -> bank rr+7 -> landing SRAM commit+9"
+  },
+  "wb": {
+    "wb_reserve_v": "pulse at command decode",
+    "wb_reserve_base": "global HBM sector32 = byte[36:5]",
+    "wb_reserve_sectors": "12bits, actual valid sectors",
+    "wb_ready": "prior whole WB block reservation accepted, checked once at drain_at (>=issue+10); never gates schedule",
+    "wb_fill_start": "pulse at drain_at+1",
+    "wd": "8x289 {valid,address32,data256}, first output drain_at+2",
+    "wa": "12-bit actual posted sector count per quadrant (group48), may acknowledge whole640/1024-sector block on true PHY completion; fence only",
+    "wb_reserve_bank/epoch": "explicit compiler reservation metadata",
+    "wb_fill_bank/epoch": "same reserved buffer/identity on fill_start",
+    "mapping": "Preserve actual global sector32. Actual PHY PC hash is s[6:2]^s[11:7]^s[16:12]; service handles mapping inside PHY boundary, never assume low5PC."
+  },
+  "retirement": {
+    "mv_src": "all source data committed in actual landing SRAM; VM may be reused",
+    "mv_done": "all accepted writes acknowledged, one pulse",
+    "quiet": "registered no block active and all actual posted ack observed",
+    "busy": "block/landing reservation active, observation only",
+    "mv_fault": "sticky schedule/address/response/ready fault",
+    "pending_counter": "bounded outstanding sector count, not cumulative accepted/ack counts"
+  },
+  "eligible": "Raw FP32/U32 VM->own-stack HBM rows: sourcebase/stride64word aligned; nwhole8words; m>1 requires nwhole64words and dense HBM stride=n*4bytes (every intermediate WB beat full8lanes); <=128chunks/lane; no cross main/mirror/stack bounds",
+  "producer": "ot_hgi_b2_swap_disp_static/group consume real move227 with explicit g_issue_at/g_drain_at/g_wb_bank/g_wb_epoch; dn309={mv227,issue32,drain32,bank1,epoch16,v1}. Actual record source ot_hgi_b2_swap_rec/tools/hgi_b2/mtp_swap.py still needs external compiler calendar binding."
+}

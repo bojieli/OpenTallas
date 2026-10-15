@@ -1,0 +1,19 @@
+{
+  "source_commit": "0e3054d79",
+  "configured_cycles": 2141,
+  "rom_file_nonempty": true,
+  "method": "Yosys proc and opt_clean; real ROM instances treated as hard macro boundaries",
+  "tool": "Yosys0.52",
+  "net": "ck_control",
+  "clock_register_bits": {
+    "sequencer_rom_registers": 578,
+    "tp4_dynamic_core": 8436,
+    "vm_boundary_and_buffers": 3031,
+    "pass_adapter": 4358,
+    "hc_metadata": 965
+  },
+  "total_register_sinks": 17368,
+  "hard_macro_clock_pins": 3,
+  "verdict": "REJECT_SINGLE_ROOT_OVER15000",
+  "required_change": "five distinct control-leaf clock pins plus8transport+16HC clocks; local synchronous reset release"
+}

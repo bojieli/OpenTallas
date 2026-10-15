@@ -1,0 +1,55 @@
+{
+  "schema": "opentallas.hbm.dma-back-static-model.v1",
+  "stage": "PRE_RTL",
+  "method": "Unified microarchitecture dimensions per tools/uarch_model.py; true static successor of ot_hgi_dma_back",
+  "production": {
+    "shape_words": 20480,
+    "quadrants": 4,
+    "words_per_quadrant": 5120,
+    "rows_per_quadrant": 80,
+    "words_per_row": 64,
+    "sectors_per_quadrant": 640,
+    "chunks_per_quadrant": 80
+  },
+  "macs_per_cycle": 0,
+  "memory_bytes_per_cycle": {
+    "VM_read": 256,
+    "landing_write": 256,
+    "landing_read": 256,
+    "HBM_boundary_write": 256
+  },
+  "boundary_bits_per_cycle": {
+    "vm_request": 136,
+    "vm_response": 2056,
+    "write_stream": 2312,
+    "command": 292,
+    "reservation": 13,
+    "ready_per_block": 1,
+    "posted_ack": 4
+  },
+  "replicas": 4,
+  "landing_macros_per_replica": 8,
+  "landing_macro": "ot_sram_1r1w_128x256_m1_r2c2",
+  "landing_capacity_sectors": 1024,
+  "static_reservation": "Whole move <=128 chunks per lane; no queues, no credits, no data-dependent picks. Compiler supplies absolute issue/drain cycles and waits one WB buffer ready checkpoint before deterministic drain. Missing ready faults without rescheduling.",
+  "mux_cost": "one programmed row/chunk generator, no lane group mux; data path one macro/lane",
+  "fanout": "command and absolute cycle to8 lane-local registers; one control region per replica",
+  "routing_tracks": "request136 response2056 output2312 bits; existing per-quadrant peer cut, exact new physical pin contract pending",
+  "area_floorplan": "Same eight real128x256 landing macros as historical per-quadrant DMA back; removes credits and pickers, replaces small queue with full128-row reservations; successor physical fit unqualified",
+  "latency_cycles": {
+    "command_to_issue": "compiler calendar",
+    "rq_output_to_bank_response": 7,
+    "rq_output_to_landing_commit": 9,
+    "rq_output_to_posted_source_retire": 9,
+    "landing_read_to_wd_output": 2
+  },
+  "production_timeline": {
+    "h_issue_cycles": 80,
+    "wholeblock_drain_earliest_offset": 90,
+    "drain_cycles": 80,
+    "last_h_wd_offset": 171,
+    "pre_can_follow": "after prior drain output complete",
+    "posted_ack": "actual HBM boundary, unpredictable; quiet/fence only"
+  },
+  "qualification": "Must prove full20480word production STORE plusPRE, exact macro data and posted-source overwrite, fence after actualack, wrong-address and early-src mutants; no physical closure claim"
+}

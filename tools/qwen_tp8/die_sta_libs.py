@@ -58,6 +58,20 @@ def measured_clock_refs(lib_path, insertion_path, corner):
     return result
 
 
+def assumed_clock_refs(master, ports, physical_ports=None):
+    """Use the exact generated Liberty/LEF names, including one-bit buses.
+
+    The die Verilog connects .ck(net), but a generated LEF may expose ck[0].
+    E.write_lib deliberately preserves that spelling; clock delivery must too.
+    """
+    if physical_ports is not None:
+        missing=[p for p in ports if p in E.CLOCKS and p not in physical_ports]
+        if missing:
+            raise ValueError(f'{master}: clock inputs missing from generated physical LEF: {missing}')
+    return {(f'{p}[0]' if (master, p) in E.IDX else p): 0.0
+            for p in ports if p in E.CLOCKS}
+
+
 def clock_tcl(doms, leaves, corner):
     # Each domain has related shallow / earlier-tap clock objects. Separate
     # domains remain asynchronous; no exception is created between levels.
@@ -140,6 +154,7 @@ def main():
     if (case / 'phy_ew.lef').exists():
         for k, q in E.lef_pins(case / 'phy_ew.lef').items():
             lef.setdefault(k, q)
+    all_physical_ports = dict(lef)
     lef = {k: q for k, q in lef.items() if k not in skip}
     stubs = {mst: {p: [d, 0, set()] for p, d in ports.items()} for mst, ports in dirs.items()}
     for corner in ('tt', 'ff', 'ss'):
@@ -173,7 +188,7 @@ def main():
     # Bound views are never assigned zero insertion when evidence is missing.
     for mst, ports in dirs.items():
         if mst not in leaves:
-            leaves[mst] = {c: {p: 0.0 for p in ports if p in E.CLOCKS} for c in ('tt', 'ff', 'ss')}
+            leaves[mst] = {c: assumed_clock_refs(mst, ports, all_physical_ports.get(mst, {})) for c in ('tt', 'ff', 'ss')}
     leaf_doms = {}
     for net in sorted(sinks):
         for inst, mst, port in sink_pins[net]:

@@ -1,0 +1,179 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-15T10:57:47.448660+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_hbm_su_static_pinned_bank",
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "parameters": {
+      "RB": 9,
+      "READERS": 6
+    },
+    "sources": [
+      {
+        "path": "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv",
+        "sha256": "229d8a8b344ae0db15a77705794cffd00f46bdacbd71d1e22ed9650bf60bce62",
+        "size_bytes": 1402
+      },
+      {
+        "path": "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv",
+        "sha256": "518a27a172633663682a758f469660faa83853515caeb8f09fa39ed52f12ed15",
+        "size_bytes": 2456
+      },
+      {
+        "path": "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+        "sha256": "e494c109a829a081eae4d4f96a0e1e1ee68f08e87f9ac977f3460250ef77db85",
+        "size_bytes": 179956
+      },
+      {
+        "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+        "sha256": "5f736eaf4e9b3ad93fb728861f29a8da6bf626e53d8facb9e1e5e8af738d6571",
+        "size_bytes": 661
+      }
+    ],
+    "top": "ot_hbm_su_static_pinned_bank"
+  },
+  "error": "FlowError: ORFS synthesis failed with exit 2:\n\npython3: can't open file '/src/tools/orfs_hold_mm.py': [Errno 2] No such file or directory\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-15T10:57:47.213065+00:00",
+  "git": {
+    "commit": null,
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--clock-period-ns",
+      "1.111111111",
+      "--clock-uncertainty-ns",
+      "0.060",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--stages",
+      "pnr",
+      "--synth-timeout-seconds",
+      "unlimited",
+      "--flow-timeout-seconds",
+      "unlimited",
+      "--keep-workdir",
+      "/tmp/hbm-su-physical-map-1015/bank_orfs/work",
+      "--output",
+      "/tmp/hbm-su-physical-map-1015/bank_orfs/result.json",
+      "--pnr-stop-after",
+      "floorplan",
+      "--die-area",
+      "0",
+      "0",
+      "364.472",
+      "142.08",
+      "--core-area",
+      "2",
+      "2",
+      "362.472",
+      "140.08",
+      "--macro-place-halo",
+      "10",
+      "10",
+      "--top",
+      "ot_hbm_su_static_pinned_bank",
+      "--clock-port",
+      "clk",
+      "--param",
+      "READERS=6",
+      "--param",
+      "RB=9",
+      "--macro-view",
+      "ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "--source",
+      "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv",
+      "--source",
+      "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv",
+      "--source",
+      "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+      "--source",
+      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+    ],
+    "driver": {
+      "commit": null,
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/tmp/hbm-su-physical-map-1015/source-bank/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "636f1ae6d6a64fe3b6d319ae7a77b66564cf1c39b163a5407ebc872be1e7a34b",
+      "tree": "/tmp/hbm-su-physical-map-1015/source-bank"
+    },
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/tmp/hbm-su-physical-map-1015/source-bank"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 1.111111111,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

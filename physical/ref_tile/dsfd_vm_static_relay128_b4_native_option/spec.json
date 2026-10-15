@@ -1,0 +1,192 @@
+{
+ "name": "dsfd_vm_static_relay128_b4_native_option",
+ "top": "dsfd_vm_static_relay128_b4",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_relay128_b4.sv"
+ ],
+ "clock_port": "ck_req",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 129.6,
+  "h": 129.6,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "i_rv",
+   "i_wv",
+   "i_ra",
+   "i_wa",
+   "i_rt",
+   "i_wt",
+   "i_wm",
+   "i_wd"
+  ],
+  "S": [
+   "o_rv",
+   "o_wv",
+   "o_ra",
+   "o_wa",
+   "o_rt",
+   "o_wt",
+   "o_wm",
+   "o_wd"
+  ],
+  "E": [
+   "o_sv",
+   "o_cv",
+   "o_sd",
+   "o_st",
+   "o_ct",
+   "o_ca",
+   "o_cm"
+  ],
+  "W": [
+   "ck_req",
+   "ck_rsp",
+   "rst_n",
+   "i_sv",
+   "i_cv",
+   "i_sd",
+   "i_st",
+   "i_ct",
+   "i_ca",
+   "i_cm"
+  ]
+ },
+ "macros": [],
+ "io_tcl": "physical/s81_die_pins/v20_vm_static_transport_options/dsfd_vm_static_relay128_b4.tcl",
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 2,
+ "structural_change": "actual pin-count-sized static duplex relay, no credits or demand-driven state; generous area for <=75%nativefacecapacity; two real independentlyhardened roots",
+ "slot_change_request": {
+  "contract": "S81 staticVM local-group option",
+  "version": "cd1242953",
+  "why": "physical perbank split:32b4quarters+16b8bridges preserve2stages but close83,712localbitreachvsoldb8/b16unreachable"
+ },
+ "job": {
+  "owner": "Codex:S_VM physical",
+  "branch": "claude/s81-vm-r9-1014",
+  "tag": "nativepin1",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_ph/vm",
+   "tools/s81_vm",
+   "tools/s81_vm_transport_sizing",
+   "physical/s81_die_pins/v20_vm_static_transport_options"
+  ],
+  "purpose": "Actual native static relay with two related real CTS roots, source-pinned wholeproduction128SRAM fixed-age composition and standalone registered-pin sustained1/cycle exact/mutant benches; native timing remains required",
+  "benches": [
+   {
+    "name": "exact_relay",
+    "cmd": "bash tools/s81_vm/static_relay_gate.sh {RUN}/bench/relay 4 base",
+    "expect": "pass",
+    "pass_regex": "TB_VM_RELAY PASS banks 4 cycles 1000 bitchecks",
+    "min_count_regex": "bitchecks (\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mutant_relay",
+    "cmd": "bash tools/s81_vm/static_relay_gate.sh {RUN}/bench/relay_mut 4 mutant",
+    "expect": "fail",
+    "fail_regex": "TB_VM_RELAY FAIL banks 4 cycles 1000 bad 1000",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ },
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "ck_req",
+  "ck_rsp"
+ ],
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_req"
+   ],
+   "inputs": [
+    "i_rv",
+    "i_wv",
+    "i_ra",
+    "i_wa",
+    "i_rt",
+    "i_wt",
+    "i_wm",
+    "i_wd",
+    "rst_n"
+   ],
+   "outputs": [
+    "o_rv",
+    "o_wv",
+    "o_ra",
+    "o_wa",
+    "o_rt",
+    "o_wt",
+    "o_wm",
+    "o_wd"
+   ]
+  },
+  "response": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_rsp"
+   ],
+   "inputs": [
+    "i_sv",
+    "i_cv",
+    "i_sd",
+    "i_st",
+    "i_ct",
+    "i_ca",
+    "i_cm"
+   ],
+   "outputs": [
+    "o_sv",
+    "o_cv",
+    "o_sd",
+    "o_st",
+    "o_ct",
+    "o_ca",
+    "o_cm"
+   ]
+  }
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
