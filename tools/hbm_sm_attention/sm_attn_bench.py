@@ -272,7 +272,7 @@ def build(work, kvmut, pvmut, ncol=1):
     if exe.exists():
         return exe
     vl = os.environ.get("VERILATOR") or next((c for c in (os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator"),) if os.path.exists(c)), "verilator")
-    cmd = [vl, "--binary", "-j", "8", "-O3", "--x-assign", "fast", "-Wno-fatal", "-Wno-lint", "-Wno-style",
+    cmd = [vl, "--binary", "-j", "16", "-O3", "--x-assign", "fast", "-Wno-fatal", "-Wno-lint", "-Wno-style",
            "-Wno-TIMESCALEMOD", "-Wno-MULTIDRIVEN", "--unroll-count", "128", "--top-module", "tb_hbm_sm_attn",
            f"-GKVMUT={kvmut}", f"-GPVMUT={pvmut}", f"-GNCOL={ncol}", "--Mdir", str(obj)] + [str(ROOT / s) for s in SRC]
     r = subprocess.run(cmd, capture_output=True, text=True)
