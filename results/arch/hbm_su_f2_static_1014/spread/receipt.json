@@ -5,7 +5,7 @@
  "qualification": false,
  "status": "PASS compiler per-quarter VM spread + operand reuse + data-dependence + actual SFU/divider/scalar-side lane schedule; static VM transport re-executed exactly on RTL (Qwen 24,560 / DS 11,544 sector events, mutants FAIL); NOT whole-SU qualification",
  "sources_sha256": {
-  "tools/hbm_static/su_f2_spread.py": "a2333c72cf0a3629765328771da1d75b12b3a747f721ceb4af05eb5b68ca68d7",
+  "tools/hbm_static/su_f2_spread.py": "41d794d55d597b41c2b180efad0621523beb8f5f07d931d8add1eb1f0364aca0",
   "tools/hbm_static/su_spread_vehicle_run.sh": "89ddaea3ed422dca6791725eb0de2dcfbbb1467ee4336cfd78b18911579fadfa",
   "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv": "0dfabc97c63b91db654c393c8f8f79fb6fdc8b9a72087b589e825ea5465f81c9",
   "rtl/hbm_accel/generic/adapters/static_su/tb_hbm_su_static_spread_vehicle.sv": "e046d49d089a29ed8edc3efeebe0c4030021a036e72cb993dfac22cf210e4482",
@@ -509,8 +509,8 @@
  "address_map_handoff": {
   "files": {
    "address_map_qwen.json": "d2f46ebdd044d07a0c16838410686e8d75c81dee1a27b23d68b7d1a5b9fc11d2",
-   "address_map_deepseek.json": "1ba1a3dda11e0c43daf9dc2ba33ec4bebfd088b4bd4fd7f7d21dcd66aa6c32a2",
-   "address_map_deepseek_g25.json": "33a29f7a658b9257bddc3baa20d19e88a9d5ae6a9165d52a2f27127d2fe1454e"
+   "address_map_deepseek.json": "862a1a81011f39253fb9814e91094301a9167540a1714f30927c3ad86fa1aeb9",
+   "address_map_deepseek_g25.json": "f398f2bd70ef5038e7fa70e621c7e66d6637f12e5dd3a3de3b80feb10592b28a"
   },
   "schema": "opentallas.hbm.su_f2_address_map.v1: runs (logical word range -> quarter/SID, slice word, global word, first sector/bank, replica, SU roles, SU writer, external writer/reader dispatches) + per-record per-quarter lane base/issue step/7 lane-bit terms + producer/consumer obligations",
   "g25_crosscheck": "address_map_deepseek_g25 built on the frozen G25 rank-0 programme (sha 43c1652f...) that h_vm 284d8fa0e binds: 91 SU role extents lie inside the allocator static extents, 0 mismatches; 6 route.gather*.A are runtime-indexed in the allocator (fixture-resolved here: NOT final addresses)",
@@ -578,5 +578,37 @@
   "select_ownership": "coordinator 10-15 (main 517963b2f): LG near-tap read/write selects driven ONLY by the VM calendar programme; ot_hbm_su_static_vm_ports no longer has lg_read/lg_write outputs; the vehicle drives local_read/local_write from the compiled calendar image (cal_rd/cal_wr); an off-calendar SU request faults at its return check",
   "port_groups": "per-bank leaves clocked by pg_clk[BANK_GROUP[b]]; NPG 4 (pairs, default map 0x33221100) on NW/NE, NPG 5 on SW/SE with the die lead map; vehicle exercises SW/SE NPG 5 with TEST map 0x43221100 (bank 7 own group) pending H-DIE geometry",
   "vehicle": "PASS Qwen 24,560 / DS 11,544 events; MUT_PG, MUT_LG, MUT_CAL FAIL both designs"
+ },
+ "rev_1015_sw_idx": {
+  "request": "H-IDX (main 40e9f801e): IDX reads only the SW VM slice -> route.scores_bias must be in SW",
+  "change": "compiler: any SU record whose output an SW-only reader (IDX) reads runs entirely on quarter 0 (SID 0 = SW), 128 positions/issue; SW-only words get an SID 0 home; a write of an SW-only word outside quarter 0 is refused. DS route.scores_bias: 384 words now at SW slice (global word 88128.., quarter 0), 3 issues, 55/60 edges.",
+  "totals": {
+   "deepseek": {
+    "priced": 3272.0,
+    "edges": 1896,
+    "ratio": 0.579
+   },
+   "deepseek_lat4": {
+    "priced": 3272.0,
+    "edges": 2094,
+    "ratio": 0.64
+   },
+   "deepseek_g25": {
+    "priced": 3272.0,
+    "edges": 1847,
+    "ratio": 0.564
+   },
+   "qwen": {
+    "priced": 1668.0,
+    "edges": 1795,
+    "ratio": 1.076
+   },
+   "qwen_lat4": {
+    "priced": 1668.0,
+    "edges": 1858,
+    "ratio": 1.114
+   }
+  },
+  "vehicle": "PASS Qwen 24,560 / DS 11,544 events; PG, LG, CAL mutants FAIL"
  }
 }

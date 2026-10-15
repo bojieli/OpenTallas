@@ -139,7 +139,10 @@ module qkd_host_root_integrated #(
  output wire[7:0]accepted_ranks,output wire[255:0]participant_trace,output wire[143:0]participant_token,participant_pos,
  input wire engine_result_v,input wire[58:0]engine_result_tag,input wire[1:0]engine_result_gen,input wire engine_result_done,engine_result_fault,
  input wire[3:0]engine_result_cause,input wire[17:0]engine_result_token,input wire[31:0]engine_result_value,engine_result_cycles,output wire engine_result_cr,
- output wire program_consensus,output wire coordinator_fault,output wire recovery_complete
+ output wire program_consensus,output wire coordinator_fault,output wire recovery_complete,
+ // kvsys v1.4 (2026-10-15, HOST owner = KV die lead; Q-LINK request): the peer protocol's exceptional link-recovery
+ // controls leave the root for the static D2D end qkd_d2d_static (host_link_reset_req / host_recovery_clear)
+ output wire host_link_reset_req,output wire host_recovery_clear
 );
  localparam[2:0]RANK=0;
  wire token_allocator_fault;
@@ -181,6 +184,8 @@ module qkd_host_root_integrated #(
  .tx_v(record_tx_v),.tx_observed_v(record_tx_observed_v),.tx_record(record_tx),.fault(record_fault));
  wire peer_reset_request;
  wire native_recovery_clear;
+ assign host_link_reset_req=peer_reset_request;
+ assign host_recovery_clear=native_recovery_clear;
  wire peer_tx_valid;
  wire[511:0] peer_tx_data;
  wire peer_tx_ready;

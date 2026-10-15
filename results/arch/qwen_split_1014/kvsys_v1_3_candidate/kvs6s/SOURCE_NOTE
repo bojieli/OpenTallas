@@ -1,0 +1,6 @@
+kvs6s = v1.3 DIAGNOSTIC die chain (OT_BIND_DIAGNOSTIC=1, OT_FROM=pdn OT_PDN=skip: GRT without die straps, overflow optimistic).
+NOT A DIE RESULT: strict native port bind FAIL (STUB qkd_host, qkd_pll; MISMATCH UCIe 548 vs 583, SerDes fdi).
+Case src 34dd94b57, 13,410 inst (11,236 expanded CLOSED leaves). GRT overflow 0. TT wns -1388.10, FF hold -56.74 (frame/relay
+placeholders, ideal clock), SS sensitivity only. classes.json = kvsys_classify.py (collected 2026-10-15 by kvsys lead r6).
+kvs6 (same case with die PDN) stopped 2026-10-15 05:10 PDT and deleted: superseded (per-instance macro PDN grids on 13.4k leaves
+is the wrong structure; next contract uses per-region straps).

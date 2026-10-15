@@ -20,10 +20,42 @@ LG_SOURCE = 'rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv'
 # where its source documents the exact VM face it was built and benched against.
 SFU_SOURCE = 'rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv'      # LG mid tap 14/11
 DBK_SOURCE = 'rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static.sv'    # direct RG, bank n+1/n+7
-IDX_SOURCE = 'rtl/hbm_accel/index/ot_hbm_idx_scheduled_static.sv'              # direct RG, bank n+1/n+7
-ATT_PV_SOURCE = 'rtl/hdc/v41x/static/ot_hbm_attn_pv_native_output_quad_local.sv'  # D local PV (owner-approved 10-15)
+IDX_SOURCE = 'rtl/hbm_accel/index/ot_hbm_idx_client_static.sv'                 # H-IDX 40e9f801e: INDEX+TOPK, RG4 + record client 4
+# ATT PV source (D local PV) not bound while attention architecture is under comparison (owner 10:30).
 SU_SOURCE = 'rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv'  # LG near tap 10/7, 4 bank-pair groups
 SID = ('SW','SE','NW','NE')
+# H-IDX answer 2026-10-15 (main 40e9f801e): SW record clients 7 -> 3.
+RECORD_DISPOSITION = {
+    ('SW','idx'): 'hb_idx (ot_hbm_idx_client_static TOPK O/R writes)',
+    ('SW','su'): 'DEAD (static SU uses LG taps): remove from VM ABI',
+    ('SW','sfu'): 'DEAD (static SFU uses LG taps): remove from VM ABI',
+    ('SW','coll'): 'DEAD (static COLL uses RG3/kq): remove from VM ABI',
+    ('SW','hc'): 'DEAD pending HC owner confirmation: remove from VM ABI when confirmed',
+    ('SW','dma'): 'PENDING: DMA owner decides (static DMA back uses RG1)',
+    ('SW','argmax'): 'OPEN: needed for MTP; no static argmax RTL yet; owner H-IDX',
+}
+# OWNER rule refinement (HANDOFF 0az, 2026-10-15): link-level flow control stays at every OFF-DIE
+# boundary; everything on-die is fixed-slot from 'buffer block ready'. Credits are removed only on
+# die-level links and in engines being redesigned; closed blocks are not reworked for purely local,
+# never-stalling handshakes.
+FLOW_CONTROL_BOUNDARIES = dict(
+    rule='HANDOFF 0az: off-die boundaries keep link-level flow control; on-die fixed-slot from buffer-block ready',
+    off_die_flow_control_allowed=[
+        dict(boundary='HBM stack / PHY controller', ports='phy_<q> <-> svc_<q>_s* pc fields (k_rdy/kr_rdy etc.)',
+             note='edges carry allowed_exception; on-die side starts at the landing buffer block ready'),
+        dict(boundary='die-to-die / package SerDes incl. cross-die collectives',
+             ports='hb_coll_<q> tx_pin_v/tx_pin_flit/rx_pin_v/rx_pin_flit/phy_up/retry_requested',
+             note='link CRC/retry and link credit allowed here only; quadrant ring pr_cw/pr_ccw is on-die = fixed slot'),
+        dict(boundary='host link', ports='HOST/SerDes digital (not yet a v15 instance; root owns)', note='same rule'),
+    ],
+    on_die='every edge between v15 instances: ready_or_credit must be False (checked by this generator)',
+    closed_blocks='closed tiles with purely local never-stalling handshakes stand; no rework',
+    redesign_scope='remove credits on die-level links and in engines being redesigned only')
+VM_ABI_CHANGE_REQUESTS = [
+    dict(change='SW NC 7 -> 3 (keep idx, argmax, dma-pending; drop su/sfu/coll/hc)', source='H-IDX 40e9f801e', owner='H-ELEM-A (VM slice)'),
+    dict(change='remove IDX read group in SE/NW/NE (RG 5->4 SE, 7->6 NW/NE); IDX reads only SW group 4',
+         condition='SU route.scores_bias.O must be REPL (H-ELEM-B)', source='H-IDX 40e9f801e', owner='H-ELEM-A (VM slice)'),
+]
 
 
 def generate(out):
@@ -75,8 +107,7 @@ def generate(out):
         swse=q in ('SW','SE')
         module('hb_su_'+q,SU_SOURCE,'ot_hbm_su_static_vm_ports',dict(QID=SID.index(q),READ_RETURN=10,WRITE_RETURN=7,
                NPG=5 if swse else 4,BANK_GROUP=0x43221100 if swse else 0x33221100))
-    module('hb_idx',IDX_SOURCE,'ot_hbm_idx_scheduled_static')
-    module('hb_attn_pv',ATT_PV_SOURCE,'ot_hbm_attn_pv_native_output_quad_local',dict(ACTIVE_HEADS=16))
+    module('hb_idx',IDX_SOURCE,'ot_hbm_idx_client_static')
     edges=[]; connected=set(); parts={}; logical_constants=[]
     def edge(name,src,dst):
         sm,sp=src; dm,dp=dst
@@ -165,21 +196,19 @@ def generate(out):
     slice_edge('idx_vm_rq',('hb_idx','vm_rq',0),('hb_vms_SW','rq',136*g),136)
     slice_edge('idx_vm_rr',('hb_vms_SW','rr',2056*g),('hb_idx','vm_rr',0),2056)
     slice_bind['SW']['read_groups'][str(g)]='hb_idx'
+    # TOPK O/R sector writes through SW record client 'idx'. client_seq stays calendar-owned
+    # (one source for VM schedule signals, as the LG selects); hb_idx.cq_seq is an open duplicate.
+    c=abi['clients']['SW']['records'].index('idx')
+    slice_edge('idx_cq',('hb_idx','cq',0),('hb_vms_SW','cq',338*c),338)
+    slice_edge('idx_cr',('hb_vms_SW','cr',274*c),('hb_idx','cr',0),274)
     logical_constants.append(dict(sink=['hb_idx','sid'],bits=2,value=0,
         reason='INDEX operand face reads the SW slice (sid order SW,SE,NW,NE)',physical_tie_cells_qualified=False))
     connected.add(('hb_idx','sid'))
-    # D local PV (owner-approved floorplan direction 2026-10-15): PV staging is quadrant-local
-    # (128 stores / 2048 32x128 macros, head order per quadrant), but the source has ONE
-    # serializer output wq that commits to the NE slice's canonical 'attention' write group.
-    g=abi['clients']['NE']['write'].index('attention')
-    slice_edge('attn_pv_wq',('hb_attn_pv','wq',0),('hb_vms_NE','wq',2248*g),2248)
-    slice_bind['NE']['write_groups'][str(g)]='hb_attn_pv'
-    long_returns=[dict(name='attn_pv_wq (PV drain -> NE VM WG%d)'%g,bits_per_edge=2248,
-        source='hb_attn_pv serializer (gathers SW/SE/NW/NE quad-local PV stores)',sink='hb_vms_NE wq group %d'%g,
-        reason='VM ABI gives attention a write group on NE only (canonical WG1); D source has one serializer output',
-        cost='OPEN: bit-um / relay stages / compiler edges for the non-NE quadrants pending GEO-H D2 corridor measurement',
-        alternative='per-quadrant attention write group (WG+1 on SW/SE/NW, 4 serializer outputs): bank port/area cost vs removed long drain -> GEO-H + H-ATTQ to price',
-        status='OPEN_LONG_RETURN')]
+    # OWNER 10:30 2026-10-15: attention architecture under comparison (dedicated ATT tiles vs
+    # attention on SM engines + SU/SFU softmax, H-ATTQ). No ATT-specific die resources in v15
+    # until the verdict: no attention instance, write group binding or PV drain/return here.
+    # Placeholder note lives in die_chain_readiness.json only.
+    long_returns=[]
     for q in abi['quadrants']:
         reads=abi['clients'][q]['read'];rec=slice_bind[q]
         for i,name in enumerate(reads):
@@ -188,7 +217,7 @@ def generate(out):
         for i,name in enumerate(writes):
             rec['write_groups'].setdefault(str(i),'UNBOUND: no static producer for "%s"'%name)
         for i,name in enumerate(abi['clients'][q]['records']):
-            rec['records'][str(i)]='UNBOUND: record client "%s" has no static cq338/cr274 source'%name
+            rec['records'][str(i)]=RECORD_DISPOSITION.get((q,name),'UNBOUND: record client "%s" has no static cq338/cr274 source'%name)
     # Coordinator structural rule 2026-10-15 (GEO-H bank<->LG geometry): every SU/SFU/HC
     # engine exposes >=4 LG port groups per quadrant (one per bank pair; 5 on SW/SE) so
     # each LG link stays <500 um at the fixed tap return latencies. A single connection
@@ -209,6 +238,10 @@ def generate(out):
                 rec=engine_rule['engines'][f'SU_{q}'];rec['physical_port_groups']=need
                 rec['status']=('SOURCE MET (%d pg_clk groups, db4f2facb)%s; pins open'%(need,
                                '' if need==4 else ', BANK_GROUP 0x43221100 provisional (bank 7 alone) pending GEO-H RG5 readback'))
+    # H-ATTQ request 2026-10-15T07:17: other LG-attached engines carry the same rule.
+    engine_rule['engines']['QUANT_SW']=dict(tap=None,instance=None,owner='H-ATTQ',required_port_groups=5,
+        physical_port_groups=5,bank_group='0x43221100 (same provisional SW/SE map as SU; H-ATTQ bench PASS 152 cy)',
+        status='RTL groups present (H-ATTQ); physical leaves open; quant not yet a contract instance')
     qs=('SW','SE','NE','NW')
     for i,q in enumerate(qs):
         edge('ring_cw_'+q,('hb_vms_'+q,'cw_out'),('hb_vms_'+qs[(i+1)%4],'cw_in'))
@@ -235,6 +268,9 @@ def generate(out):
             pcs=[p for rec in service['instances'] if rec['quadrant']==q for p in rec['physical_pc_ids']]
             assert sorted(pcs)==list(range(32)),(q,'duplicate or missing actual PHY PC')
             connected.update(('phy_'+q,f) for f in service['phy']['pc_fields'])
+    for e in edges:
+        if e.get('ready_or_credit'):
+            assert e.get('allowed_exception','').startswith('actual HBM PHY'),(e['name'],'on-die credit/ready forbidden (HANDOFF 0az)')
     roots=[]
     for name,mod in modules.items():
         if name=='hb_ckgen':continue
@@ -255,7 +291,9 @@ def generate(out):
             if name=='hb_ckgen':
                 if port in ('refclk','por_n'):continue # actual declared external bump boundary
                 if port.startswith(('pll_','por_')):continue # other actual die domains; outside this subnet
-            if name=='hb_attn_pv':
+            if name.startswith('hb_coll_') and port in ('tx_pin_v','tx_pin_flit','rx_pin_v','rx_pin_flit','phy_up','retry_requested'):
+                owner='OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)'
+            elif name=='hb_attn_pv':
                 owner='actual HG1 PV producer / attention drain calendar (H-ATTQ)'
             elif name.startswith('hb_su_'):
                 owner='actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)'
@@ -315,8 +353,9 @@ def generate(out):
                 service_qualification_rejections=service['qualification_rejections'] if service else [],
                 abi_sha256=hashlib.sha256(abi_path.read_bytes()).hexdigest(),
                 instances=modules,known_actual_edges=edges,clock_roots=roots,vm_slice_bind=slice_bind,
-                engine_lg_port_group_rule=engine_rule,floorplan_direction='HBM D local PV (owner-approved 2026-10-15)',
-                long_returns=long_returns,
+                engine_lg_port_group_rule=engine_rule,floorplan_direction='HBM D local PV (owner-approved 2026-10-15); attention resources ON HOLD (owner 10:30, H-ATTQ comparison)',
+                long_returns=long_returns,vm_abi_change_requests=VM_ABI_CHANGE_REQUESTS,
+                flow_control_boundaries=FLOW_CONTROL_BOUNDARIES,
                 registered_station_masters=generated,logical_constant_requests=logical_constants,unbound_ports=unresolved,
                 boundary_gaps=['actual 1.024ns PHY to 0.833333ns stream block CDC absent',
                                'actual mapped PHY address/endian/PC striping proof required',

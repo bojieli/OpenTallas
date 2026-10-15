@@ -1,0 +1,597 @@
+{
+  "schema": "opentallas.die_assigned_leaf_pins.v1",
+  "master": "qkd_host_lifecycle",
+  "contract": "Qwen KV/system v1.3 candidate",
+  "source_commit": "66b0f75b9",
+  "outline": {
+    "w": 216,
+    "h": 216
+  },
+  "slot": {
+    "parent": "qkd_host",
+    "x": 0,
+    "y": 0,
+    "orient": "R0",
+    "scope": "Reserved lifecycle child only. Existing HOST777.6x518.4 frame is unqualified; full distributed HOST placement remains open."
+  },
+  "pins": {
+    "N": [
+      "warm_ready",
+      "request_valid",
+      "request_ready",
+      "request_token",
+      "request_position",
+      "request_generation",
+      "grant_valid",
+      "grant_ready",
+      "grant_epoch",
+      "grant_token",
+      "grant_position",
+      "grant_generation",
+      "grant_tag",
+      "allocated_valid",
+      "allocated_delivered"
+    ],
+    "S": [
+      "clk",
+      "por_n",
+      "result_valid",
+      "result_done",
+      "result_fault",
+      "result_tag",
+      "result_generation",
+      "post_retired",
+      "post_tag",
+      "post_generation",
+      "post_pending",
+      "acknowledged_tag",
+      "acknowledged_generation",
+      "recovery_start",
+      "link_reset_request",
+      "retraining_request",
+      "recovery_complete",
+      "wrap_locked",
+      "identity_fault",
+      "terminal_accepted",
+      "lifecycle_fault"
+    ],
+    "W": [
+      "participant_tag",
+      "participant_generation",
+      "participant_valid",
+      "participant_accepted",
+      "participant_ready",
+      "engine_admit_ready",
+      "dispatch_valid",
+      "dispatched",
+      "cohort_tag",
+      "cohort_generation",
+      "accepted_ranks"
+    ],
+    "E": [
+      "cancel_tag",
+      "cancel_generation",
+      "cancel_valid",
+      "cancel_done",
+      "cancel_fault",
+      "cancel_accepted",
+      "kv_drained",
+      "vm_drained",
+      "collective_drained",
+      "host_drained",
+      "links_drained",
+      "link_reset_seen",
+      "retraining_done"
+    ]
+  },
+  "pin_ranges": {
+    "warm_ready": [
+      8,
+      11
+    ],
+    "request_valid": [
+      13,
+      16
+    ],
+    "request_ready": [
+      18,
+      21
+    ],
+    "request_token": [
+      23,
+      26
+    ],
+    "request_position": [
+      28,
+      31
+    ],
+    "request_generation": [
+      33,
+      36
+    ],
+    "grant_valid": [
+      38,
+      41
+    ],
+    "grant_ready": [
+      43,
+      46
+    ],
+    "grant_epoch": [
+      48,
+      51
+    ],
+    "grant_token": [
+      53,
+      56
+    ],
+    "grant_position": [
+      58,
+      61
+    ],
+    "grant_generation": [
+      63,
+      66
+    ],
+    "grant_tag": [
+      68,
+      77.44
+    ],
+    "allocated_valid": [
+      79.44,
+      82.44
+    ],
+    "allocated_delivered": [
+      84.44,
+      87.44
+    ],
+    "clk": [
+      8,
+      11
+    ],
+    "por_n": [
+      13,
+      16
+    ],
+    "result_valid": [
+      18,
+      21
+    ],
+    "result_done": [
+      23,
+      26
+    ],
+    "result_fault": [
+      28,
+      31
+    ],
+    "result_tag": [
+      33,
+      42.44
+    ],
+    "result_generation": [
+      44.44,
+      47.44
+    ],
+    "post_retired": [
+      49.44,
+      52.44
+    ],
+    "post_tag": [
+      54.44,
+      63.88
+    ],
+    "post_generation": [
+      65.88,
+      68.88
+    ],
+    "post_pending": [
+      70.88,
+      73.88
+    ],
+    "acknowledged_tag": [
+      75.88,
+      85.32
+    ],
+    "acknowledged_generation": [
+      87.32,
+      90.32
+    ],
+    "recovery_start": [
+      92.32,
+      95.32
+    ],
+    "link_reset_request": [
+      97.32,
+      100.32
+    ],
+    "retraining_request": [
+      102.32,
+      105.32
+    ],
+    "recovery_complete": [
+      107.32,
+      110.32
+    ],
+    "wrap_locked": [
+      112.32,
+      115.32
+    ],
+    "identity_fault": [
+      117.32,
+      120.32
+    ],
+    "terminal_accepted": [
+      122.32,
+      125.32
+    ],
+    "lifecycle_fault": [
+      127.32,
+      130.32
+    ],
+    "participant_tag": [
+      8,
+      83.52
+    ],
+    "participant_generation": [
+      85.52,
+      88.52
+    ],
+    "participant_valid": [
+      90.52,
+      93.52
+    ],
+    "participant_accepted": [
+      95.52,
+      98.52
+    ],
+    "participant_ready": [
+      100.52,
+      103.52
+    ],
+    "engine_admit_ready": [
+      105.52,
+      108.52
+    ],
+    "dispatch_valid": [
+      110.52,
+      113.52
+    ],
+    "dispatched": [
+      115.52,
+      118.52
+    ],
+    "cohort_tag": [
+      120.52,
+      129.96
+    ],
+    "cohort_generation": [
+      131.96,
+      134.96
+    ],
+    "accepted_ranks": [
+      136.96,
+      139.96
+    ],
+    "cancel_tag": [
+      8,
+      83.52
+    ],
+    "cancel_generation": [
+      85.52,
+      88.52
+    ],
+    "cancel_valid": [
+      90.52,
+      93.52
+    ],
+    "cancel_done": [
+      95.52,
+      98.52
+    ],
+    "cancel_fault": [
+      100.52,
+      103.52
+    ],
+    "cancel_accepted": [
+      105.52,
+      108.52
+    ],
+    "kv_drained": [
+      110.52,
+      113.52
+    ],
+    "vm_drained": [
+      115.52,
+      118.52
+    ],
+    "collective_drained": [
+      120.52,
+      123.52
+    ],
+    "host_drained": [
+      125.52,
+      128.52
+    ],
+    "links_drained": [
+      130.52,
+      133.52
+    ],
+    "link_reset_seen": [
+      135.52,
+      138.52
+    ],
+    "retraining_done": [
+      140.52,
+      143.52
+    ]
+  },
+  "ports": {
+    "clk": {
+      "direction": "input",
+      "width": 1
+    },
+    "por_n": {
+      "direction": "input",
+      "width": 1
+    },
+    "warm_ready": {
+      "direction": "input",
+      "width": 1
+    },
+    "request_valid": {
+      "direction": "input",
+      "width": 1
+    },
+    "request_ready": {
+      "direction": "output",
+      "width": 1
+    },
+    "request_token": {
+      "direction": "input",
+      "width": 18
+    },
+    "request_position": {
+      "direction": "input",
+      "width": 18
+    },
+    "request_generation": {
+      "direction": "input",
+      "width": 2
+    },
+    "grant_valid": {
+      "direction": "output",
+      "width": 1
+    },
+    "grant_ready": {
+      "direction": "input",
+      "width": 1
+    },
+    "grant_epoch": {
+      "direction": "output",
+      "width": 16
+    },
+    "grant_token": {
+      "direction": "output",
+      "width": 18
+    },
+    "grant_position": {
+      "direction": "output",
+      "width": 18
+    },
+    "grant_generation": {
+      "direction": "output",
+      "width": 2
+    },
+    "grant_tag": {
+      "direction": "output",
+      "width": 59
+    },
+    "allocated_valid": {
+      "direction": "output",
+      "width": 1
+    },
+    "allocated_delivered": {
+      "direction": "output",
+      "width": 1
+    },
+    "participant_valid": {
+      "direction": "input",
+      "width": 8
+    },
+    "participant_tag": {
+      "direction": "input",
+      "width": 472
+    },
+    "participant_generation": {
+      "direction": "input",
+      "width": 16
+    },
+    "participant_accepted": {
+      "direction": "output",
+      "width": 8
+    },
+    "engine_admit_ready": {
+      "direction": "input",
+      "width": 1
+    },
+    "participant_ready": {
+      "direction": "input",
+      "width": 8
+    },
+    "dispatch_valid": {
+      "direction": "output",
+      "width": 1
+    },
+    "dispatched": {
+      "direction": "output",
+      "width": 1
+    },
+    "cohort_tag": {
+      "direction": "output",
+      "width": 59
+    },
+    "cohort_generation": {
+      "direction": "output",
+      "width": 2
+    },
+    "accepted_ranks": {
+      "direction": "output",
+      "width": 8
+    },
+    "result_valid": {
+      "direction": "input",
+      "width": 1
+    },
+    "result_done": {
+      "direction": "input",
+      "width": 1
+    },
+    "result_fault": {
+      "direction": "input",
+      "width": 1
+    },
+    "result_tag": {
+      "direction": "input",
+      "width": 59
+    },
+    "result_generation": {
+      "direction": "input",
+      "width": 2
+    },
+    "cancel_valid": {
+      "direction": "input",
+      "width": 8
+    },
+    "cancel_done": {
+      "direction": "input",
+      "width": 8
+    },
+    "cancel_fault": {
+      "direction": "input",
+      "width": 8
+    },
+    "cancel_tag": {
+      "direction": "input",
+      "width": 472
+    },
+    "cancel_generation": {
+      "direction": "input",
+      "width": 16
+    },
+    "cancel_accepted": {
+      "direction": "output",
+      "width": 8
+    },
+    "kv_drained": {
+      "direction": "input",
+      "width": 8
+    },
+    "vm_drained": {
+      "direction": "input",
+      "width": 8
+    },
+    "collective_drained": {
+      "direction": "input",
+      "width": 8
+    },
+    "host_drained": {
+      "direction": "input",
+      "width": 8
+    },
+    "post_retired": {
+      "direction": "input",
+      "width": 1
+    },
+    "post_tag": {
+      "direction": "input",
+      "width": 59
+    },
+    "post_generation": {
+      "direction": "input",
+      "width": 2
+    },
+    "post_pending": {
+      "direction": "output",
+      "width": 1
+    },
+    "acknowledged_tag": {
+      "direction": "output",
+      "width": 59
+    },
+    "acknowledged_generation": {
+      "direction": "output",
+      "width": 2
+    },
+    "recovery_start": {
+      "direction": "input",
+      "width": 1
+    },
+    "links_drained": {
+      "direction": "input",
+      "width": 8
+    },
+    "link_reset_seen": {
+      "direction": "input",
+      "width": 8
+    },
+    "retraining_done": {
+      "direction": "input",
+      "width": 8
+    },
+    "link_reset_request": {
+      "direction": "output",
+      "width": 1
+    },
+    "retraining_request": {
+      "direction": "output",
+      "width": 1
+    },
+    "recovery_complete": {
+      "direction": "output",
+      "width": 1
+    },
+    "wrap_locked": {
+      "direction": "output",
+      "width": 1
+    },
+    "identity_fault": {
+      "direction": "output",
+      "width": 1
+    },
+    "terminal_accepted": {
+      "direction": "output",
+      "width": 1
+    },
+    "lifecycle_fault": {
+      "direction": "output",
+      "width": 1
+    }
+  },
+  "route": {
+    "pin_h": "M4",
+    "pin_v": "M5"
+  },
+  "clock": {
+    "port": "clk",
+    "period_ps": 833.334,
+    "sinks": 306,
+    "root_count": 1,
+    "boundary_reference": "die delivers phi - R from measured insertion.json; not yet available"
+  },
+  "reset": {
+    "port": "por_n",
+    "polarity": "active_low",
+    "asynchronous_assert": true,
+    "warm_reset_clears_identity": false,
+    "deassertion_checks": "required before qualification"
+  },
+  "synthesis": {
+    "generic_cells": 5583,
+    "flops": 306,
+    "mapped_area_um2": null,
+    "scope": "generic Yosys synth; not mapped physical area or fit"
+  },
+  "qualification": "UNMEASURED mapped area, boundary input/output timing, native phi-R/reset and TT/FF/DRC. Slot assignment does not certify fit or complete HOST integration.",
+  "normal_execution": "Lifecycle admission/exceptional retirement/recovery only; no runtime credits schedule normal execution."
+}

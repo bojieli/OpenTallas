@@ -66,6 +66,7 @@ def crosscheck(rel, die_v, split=True):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import kv_die as K
+    from binding_order import sliced_order
     import die_port_bind_kv as P
     K._set_geometry(split)
     root = Path(__file__).resolve().parents[2]
@@ -100,7 +101,7 @@ def crosscheck(rel, die_v, split=True):
                 raise ValueError(f'{mst}.{rp}: unresolved RTL width {w}')
             bits += [d] * width
         if base != port:      # k-th slice of the base concatenation (slices in die-port order)
-            sl = [base] + sorted(k for k, v in b['sliced'].items() if v == base)
+            sl = sliced_order(base, [base] + [k for k, v in b['sliced'].items() if v == base])
             n = len(bits) // len(sl)
             k = sl.index(port)
             bits = bits[k * n:(k + 1) * n]
