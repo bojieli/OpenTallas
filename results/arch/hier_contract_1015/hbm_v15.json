@@ -69659,8 +69659,8 @@
    "name": "coll_SW_writer0",
    "cell": "ot_hgi_coll_static_vmwrite",
    "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv",
-   "source_sha256": "ec2cc4de9173c2bc059fbc23aa9d0136e89ab0952ff22cdd8cdda6d98b54897c",
-   "source_prerequisite": "HEAD",
+   "source_sha256": "79902a842064d5c824376236b4cb868bd513c35e2c92c3b73cfcfe7f29427ced",
+   "source_prerequisite": "352ae86a9",
    "params": {
     "MUT": 0
    },
@@ -69861,18 +69861,21 @@
    ],
    "version": 2,
    "leaf_grant_1103": true,
-   "qualification_scope": "typed independent leaf slot; exact offsets adopted from final source-bound view; full parent and all incident registered relay/clock paths OPEN",
+   "qualification_scope": "Typed independent source-v2 leaf at unchanged dimensions/faces. RoutedTT/FF/DRC/native export and fullparent incidentclock/registeredpaths remain OPEN; no prior view inherited.",
    "reservation_basis": "registered VM writer at parent VM-facing edge; qslots/TKM/control placements and seams not yet qualified",
-   "measured_std_um2": 6730.9299,
-   "measured_ff": 6264,
-   "logical_cycles": "capture C, launch C+1/C+2 unchanged"
+   "measured_std_um2": 4289.3048,
+   "measured_ff": 6504,
+   "logical_cycles": "capture C, launch C+1/C+2 unchanged",
+   "source_proof": "7cb9bc5ea",
+   "CTS_receipt": "997bc8554",
+   "source_change": "All producer inputs captured before decode; production captureC/launchC+1,C+2 unchanged; exceptionfault+1edge"
   },
   {
    "name": "coll_SE_writer0",
    "cell": "ot_hgi_coll_static_vmwrite",
    "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv",
-   "source_sha256": "ec2cc4de9173c2bc059fbc23aa9d0136e89ab0952ff22cdd8cdda6d98b54897c",
-   "source_prerequisite": "HEAD",
+   "source_sha256": "79902a842064d5c824376236b4cb868bd513c35e2c92c3b73cfcfe7f29427ced",
+   "source_prerequisite": "352ae86a9",
    "params": {
     "MUT": 0
    },
@@ -70073,18 +70076,21 @@
    ],
    "version": 2,
    "leaf_grant_1103": true,
-   "qualification_scope": "typed independent leaf slot; exact offsets adopted from final source-bound view; full parent and all incident registered relay/clock paths OPEN",
+   "qualification_scope": "Typed independent source-v2 leaf at unchanged dimensions/faces. RoutedTT/FF/DRC/native export and fullparent incidentclock/registeredpaths remain OPEN; no prior view inherited.",
    "reservation_basis": "registered VM writer at parent VM-facing edge; qslots/TKM/control placements and seams not yet qualified",
-   "measured_std_um2": 6730.9299,
-   "measured_ff": 6264,
-   "logical_cycles": "capture C, launch C+1/C+2 unchanged"
+   "measured_std_um2": 4289.3048,
+   "measured_ff": 6504,
+   "logical_cycles": "capture C, launch C+1/C+2 unchanged",
+   "source_proof": "7cb9bc5ea",
+   "CTS_receipt": "997bc8554",
+   "source_change": "All producer inputs captured before decode; production captureC/launchC+1,C+2 unchanged; exceptionfault+1edge"
   },
   {
    "name": "coll_NW_writer0",
    "cell": "ot_hgi_coll_static_vmwrite",
    "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv",
-   "source_sha256": "ec2cc4de9173c2bc059fbc23aa9d0136e89ab0952ff22cdd8cdda6d98b54897c",
-   "source_prerequisite": "HEAD",
+   "source_sha256": "79902a842064d5c824376236b4cb868bd513c35e2c92c3b73cfcfe7f29427ced",
+   "source_prerequisite": "352ae86a9",
    "params": {
     "MUT": 0
    },
@@ -70285,18 +70291,21 @@
    ],
    "version": 2,
    "leaf_grant_1103": true,
-   "qualification_scope": "typed independent leaf slot; exact offsets adopted from final source-bound view; full parent and all incident registered relay/clock paths OPEN",
+   "qualification_scope": "Typed independent source-v2 leaf at unchanged dimensions/faces. RoutedTT/FF/DRC/native export and fullparent incidentclock/registeredpaths remain OPEN; no prior view inherited.",
    "reservation_basis": "registered VM writer at parent VM-facing edge; qslots/TKM/control placements and seams not yet qualified",
-   "measured_std_um2": 6730.9299,
-   "measured_ff": 6264,
-   "logical_cycles": "capture C, launch C+1/C+2 unchanged"
+   "measured_std_um2": 4289.3048,
+   "measured_ff": 6504,
+   "logical_cycles": "capture C, launch C+1/C+2 unchanged",
+   "source_proof": "7cb9bc5ea",
+   "CTS_receipt": "997bc8554",
+   "source_change": "All producer inputs captured before decode; production captureC/launchC+1,C+2 unchanged; exceptionfault+1edge"
   },
   {
    "name": "coll_NE_writer0",
    "cell": "ot_hgi_coll_static_vmwrite",
    "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv",
-   "source_sha256": "ec2cc4de9173c2bc059fbc23aa9d0136e89ab0952ff22cdd8cdda6d98b54897c",
-   "source_prerequisite": "HEAD",
+   "source_sha256": "79902a842064d5c824376236b4cb868bd513c35e2c92c3b73cfcfe7f29427ced",
+   "source_prerequisite": "352ae86a9",
    "params": {
     "MUT": 0
    },
@@ -70497,11 +70506,14 @@
    ],
    "version": 2,
    "leaf_grant_1103": true,
-   "qualification_scope": "typed independent leaf slot; exact offsets adopted from final source-bound view; full parent and all incident registered relay/clock paths OPEN",
+   "qualification_scope": "Typed independent source-v2 leaf at unchanged dimensions/faces. RoutedTT/FF/DRC/native export and fullparent incidentclock/registeredpaths remain OPEN; no prior view inherited.",
    "reservation_basis": "registered VM writer at parent VM-facing edge; qslots/TKM/control placements and seams not yet qualified",
-   "measured_std_um2": 6730.9299,
-   "measured_ff": 6264,
-   "logical_cycles": "capture C, launch C+1/C+2 unchanged"
+   "measured_std_um2": 4289.3048,
+   "measured_ff": 6504,
+   "logical_cycles": "capture C, launch C+1/C+2 unchanged",
+   "source_proof": "7cb9bc5ea",
+   "CTS_receipt": "997bc8554",
+   "source_change": "All producer inputs captured before decode; production captureC/launchC+1,C+2 unchanged; exceptionfault+1edge"
   },
   {
    "name": "idx_s0_meta0",
@@ -110824,5 +110836,14 @@
   "added_outline_mm2": 0.04837294079999998,
   "cycles_added": 0,
   "parent_and_die_qualified": false
+ },
+ "writer_v2_source_refresh_1417": {
+  "source": "352ae86a9",
+  "source_sha256": "79902a842064d5c824376236b4cb868bd513c35e2c92c3b73cfcfe7f29427ced",
+  "replicas": 4,
+  "outline_change": false,
+  "cycles_added_normal": 0,
+  "fault_diagnostic_cycles_added": 1,
+  "physical_qualified": false
  }
 }
