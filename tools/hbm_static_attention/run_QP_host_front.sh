@@ -24,7 +24,7 @@ for m in 1 2 3;do
 done
 echo 'PASS actual AXI host/loaderCP/target49/resident programme/query producer +3 mutations' > "$out/gate"
 
-for m in 4 5;do
+for m in 4 5 6;do
  set +e;"$out/obj/sim" +DIR="$out/vectors" +MUT=$m +PROFILE=1 > "$out/m$m.log" 2>&1;rc=$?;set -e;echo "$rc" > "$out/m$m.rc"
- grep -qE 'ATT_FRONT (source/calendar fault|wrong actual P gather)' "$out/m$m.log"
+ grep -qE 'ATT_FRONT (source/calendar fault|wrong actual P gather|bank fault)' "$out/m$m.log"
 done

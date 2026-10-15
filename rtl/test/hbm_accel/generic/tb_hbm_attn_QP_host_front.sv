@@ -1,5 +1,6 @@
 `timescale 1ns/1ps
 module tb_hbm_attn_QP_host_front;
+ localparam integer VM_SID=3,VM_BASE=VM_SID*8192;
  reg clk=0;always #5 clk=~clk;reg rst_n=0,iv=0;reg[222:0]instruction=0;wire[135:0]rq;wire[2055:0]rr;
  wire[1023:0]pwords;wire ppresent;wire[6:0]events;wire[9:0]phase;wire valid,pv,qv,fault;wire[15:0]rows;wire[8191:0]q;
     reg s_awvalid=0,s_wvalid=0,s_arvalid=0;
@@ -78,7 +79,7 @@ module tb_hbm_attn_QP_host_front;
   wire[7*17-1:0]arq={51'd0,(preload?17'd0:rq[b*17+:17]),51'd0};
   wire[3*281-1:0]awq={562'd0,(preload?pwq[b*281+:281]:281'd0)};
   wire[7*257-1:0]arr;
-  ot_vms_bank_static #(.RG(7),.WG(3))bank(.clk(clk),.rst_n(rst_n),.bid(3'(b)),.sid(2'd0),
+  ot_vms_bank_static #(.RG(7),.WG(3))bank(.clk(clk),.rst_n(rst_n),.bid(3'(b)),.sid(2'(VM_SID)),
    .rslot_v(!preload&&ne_rslot_v[b]),.rslot(ne_rslot[b*3+:3]),.wslot_v(preload&&pwq[b*281+280]),.wslot(3'd0),
    .rq(arq),.rr(arr),.wq(awq),.wq_done(),.dq(281'd0),.dq_done(),.kq(281'd0),.kq_done(),
    .xq(276'd0),.xq_done(),.xq2(276'd0),.xq2_done(),.eg(),.pq(285'd0),.pr(),.status(status[b*18+:18]));
@@ -127,13 +128,13 @@ module tb_hbm_attn_QP_host_front;
   repeat(8)@(negedge clk);rst_n=1;
   for(ep=0;ep<2;ep++)for(h=0;h<16;h++)for(s=0;s<8;s++)begin
    @(negedge clk);pwq=0;
-   for(b=0;b<8;b++)begin pwq[b*281+:281]={1'b1,16'(ep*1024+h*64+s*8+b),256'd0,8'hff};
+   for(b=0;b<8;b++)begin pwq[b*281+:281]={1'b1,16'(VM_BASE+ep*1024+h*64+s*8+b),256'd0,8'hff};
     for(w=0;w<8;w++)pwq[b*281+8+w*32+:32]={word(ep,h,s*64+b*8+w),16'd0};end
   end
   for(ep=0;ep<2;ep++)for(h=0;h<16;h++)for(s=0;s<10;s++)begin
    @(negedge clk);pwq=0;
    for(b=0;b<8;b++)begin
-    pwq[b*281+:281]={1'b1,16'(4096+ep*2048+h*80+s*8+b),256'd0,8'hff};
+    pwq[b*281+:281]={1'b1,16'(VM_BASE+4096+ep*2048+h*80+s*8+b),256'd0,8'hff};
     for(w=0;w<8;w++)pwq[b*281+8+w*32+:32]={word(ep,h,s*64+b*8+w),16'((mut==5&&ep==0&&h==0&&s==0&&b==0&&w==0)?1:0)};
    end
   end
@@ -161,6 +162,7 @@ module tb_hbm_attn_QP_host_front;
     word_[222:0]=(i<339)?cfg[i]:outer[i-339];
     if(mut==1&&i==0)word_[100]=1;
     if(mut==4&&i==339)word_[29]=1;
+    if(mut==6&&i==339)word_[25]=~word_[25];
     if(mut==2&&i==476)word_[5:4]=2'(profile^1);
     for(integer ww=0;ww<8;ww++)write32(12'hf24,word_[ww*32+:32]);
    end
