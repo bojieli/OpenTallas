@@ -1,0 +1,16 @@
+TRACE LMAX cycle=363 ctl_age=350
+TRACE EP0 trigger_cycle=388 local_age=365
+TRACE EP1 trigger_cycle=397 local_age=375
+TRACE EP2 trigger_cycle=407 local_age=386
+TRACE EP3 trigger_cycle=416 local_age=396
+TRACE EP4 trigger_cycle=426 local_age=407
+TRACE EP5 trigger_cycle=435 local_age=417
+TRACE EP6 trigger_cycle=445 local_age=428
+TRACE EP7 trigger_cycle=454 local_age=438
+TRACE Z cycle=913 ctl_age=900
+FAIL counts af=1 lm=4 z=64 done=1 reads=2048 commits=ffff
+FAIL mapped_astk errors=1
+- rtl/test/qwen_kv_die/tb_qkd_astk_native_stack.sv:98: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 7us; walltime 16.874 s; speed 416.857 ns/s
+- Verilator: cpu 16.874 s on 1 threads; allocated 44 MB

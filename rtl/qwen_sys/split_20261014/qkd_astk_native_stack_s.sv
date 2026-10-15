@@ -128,5 +128,9 @@ module qkd_astk_native_stack_s #(
  always @(posedge ck_r or negedge rst_n)
   if(!rst_n)visibility_fault<=0;else if(er_v&&!visibility[er_addr[6:3]])visibility_fault<=1;
  // Arithmetic errors and real SO fault return through EP XO bit0 into CTL.
- assign af=ctl_fault|er_fault|visibility_fault|legacy_fault|(|ep_lane_fault)|(|ex_lane_fault);
+ wire observed_fault=ctl_fault|er_fault|visibility_fault|legacy_fault|(|ep_lane_fault)|(|ex_lane_fault);
+ reg retained_fault;
+ always @(posedge ck_r or negedge rst_n)
+  if(!rst_n)retained_fault<=0;else if(observed_fault)retained_fault<=1;
+ assign af=observed_fault|retained_fault;
 endmodule
