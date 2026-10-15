@@ -104,17 +104,52 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
  """
  road=Roadmap(G,m,cor);allowed=[v for k,v in cor.items() if k.startswith(('cfstreet','rsclane','s14','vch','hcc'))]
  m['chain_paths']=[];calendar={}
- for r,f in sorted(m['frames'].items()):
-  st=starts[f['half']];src=(st.x+st.w/2,st.y+st.h/2);path=road.to_root(f['half'],src,r,'x')
-  cf=next(i for i in m['insts'] if i.name==f'cf{r}');end=(cf.x+cf.w/2,f['street'][1]+79.8)
-  path=G._dedup(path+[(end[0],path[-1][1]),end])
-  sts=CH.run(f'cx{r}',[G.LSW+2],path,allowed,src,forced=[G._poly_len(path)])
-  assert sts,('canonical x chain has no actual station',r)
-  G.chain_nets(CH,f'cx{r}',(st.name,'fo','od'),[i for i,_,_ in sts],[G.LSW+2]);last=sts[-1][0]
-  if G.CFIFO_FALL:
-   G._add_tap(m,last,0,(cf.name,None,'xd'));bus(f'cx{r}_fn','fclk',1,[(last.name,'fn0'),(cf.name,'xf')])
-  else:G._add_tap(m,last,0,(cf.name,'xf','xd'))
-  m.setdefault('x_stages',{})[r]=len(sts);calendar[r]={'root':r,'x_stations':len(sts),'x_path_um':G._poly_len(path),'physical_half':f['half'],'logical_gather':[f['logical_half'],f['logical_tier'],f['logical_col']]}
+ # One real broadcast tree per physical half. Shared road prefixes are
+ # registered once; independent per-root chains would replicate the same
+ # 566-bit stream until the narrow RSC lane is full (measured cx37 failure).
+ for side in 'WE':
+  st=starts[side];source=(st.x+st.w/2,st.y+st.h/2)
+  entries=sorted(road.entry[side],key=lambda n:n[1])
+  for a,b in zip(entries,entries[1:]):road.add(a,b)
+  # Entry candidates include return rows; take an actual x-row as tree root.
+  xentries=[road.rootnode[(r,'x')] for r,f in m['frames'].items() if f['column_index']==(10 if side=='W' else 11)]
+  root=min(xentries,key=lambda n:abs(n[1]-source[1]))
+  rr=next(r for r,f in m['frames'].items() if road.rootnode[(r,'x')]==root)
+  prefix=road.to_root(side,source,rr,'x')
+  # Stop at the S14 entry rather than the inner-column RSC target.
+  entry=next(n for n in entries if n[1]==root[1]);prefix=prefix[:prefix.index(entry)+1] if entry in prefix else G._dedup([source,(entry[0],source[1]),entry])
+  dist={entry:0};parent={entry:None};q=[(0,entry)]
+  while q:
+   cost,n=heapq.heappop(q)
+   if cost!=dist[n]:continue
+   for nxt,wgt in road.graph[n].items():
+    if nxt[0] < m['geo']['x_sp'] and side=='E' or nxt[0] > m['geo']['x_fe'] and side=='W':continue
+    nc=cost+wgt
+    if nc<dist.get(nxt,float('inf')):dist[nxt]=nc;parent[nxt]=n;heapq.heappush(q,(nc,nxt))
+  required=set()
+  for r,f in m['frames'].items():
+   if f['half']!=side:continue
+   n=road.rootnode[(r,'x')]
+   while n is not None:required.add(n);n=parent[n]
+  rootsource=(st.name,'fo','od');tail={};flight={};loc={}
+  pre=CH.run(f'cx{side}_spine',[G.LSW+2],prefix,allowed,source,forced=[G._poly_len(prefix)])
+  G.chain_nets(CH,f'cx{side}_spine',rootsource,[i for i,_,_ in pre],[G.LSW+2]);tail[entry]=(pre[-1][0].name,'fo0','do0') if pre else rootsource
+  loc[entry]=(pre[-1][0].x+pre[-1][0].w/2,pre[-1][0].y+pre[-1][0].h/2) if pre else source;flight[entry]=len(pre)
+  for k,n in enumerate(sorted(required-{entry},key=lambda n:dist[n])):
+   par=parent[n];src=loc[par];path=G._dedup([src,par,n]);name=f'cx{side}_edge{k}'
+   sts=CH.run(name,[G.LSW+2],path,allowed,src,forced=[G._poly_len(path)])
+   G.chain_nets(CH,name,tail[par],[i for i,_,_ in sts],[G.LSW+2]);tail[n]=(sts[-1][0].name,'fo0','do0') if sts else tail[par]
+   loc[n]=(sts[-1][0].x+sts[-1][0].w/2,sts[-1][0].y+sts[-1][0].h/2) if sts else src;flight[n]=flight[par]+len(sts)
+  for r,f in sorted(m['frames'].items()):
+   if f['half']!=side:continue
+   n=road.rootnode[(r,'x')];cf=next(i for i in m['insts'] if i.name==f'cf{r}');src=loc[n];end=(cf.x+cf.w/2,f['street'][1]+79.8)
+   path=G._dedup([src,(end[0],src[1]),end]);sts=CH.run(f'cx{r}',[G.LSW+2],path,allowed,src,forced=[G._poly_len(path)])
+   G.chain_nets(CH,f'cx{r}',tail[n],[i for i,_,_ in sts],[G.LSW+2]);last=sts[-1][0] if sts else next(i for i in m['insts'] if i.name==tail[n][0])
+   if G.CFIFO_FALL:
+    G._add_tap(m,last,0,(cf.name,None,'xd'));bus(f'cx{r}_fn','fclk',1,[(last.name,'fn0'),(cf.name,'xf')])
+   else:G._add_tap(m,last,0,(cf.name,'xf','xd'))
+   count=flight[n]+len(sts);m.setdefault('x_stages',{})[r]=count
+   calendar[r]={'root':r,'x_stations':count,'x_path_um':G._poly_len(prefix)+dist[n]+G._poly_len(path),'physical_half':side,'logical_gather':[f['logical_half'],f['logical_tier'],f['logical_col']]}
  for half in 'WE':
   for t in range(G.TIERS):
    roots=sorted((r for r,f in m['frames'].items() if f['logical_half']==half and f['logical_tier']==t),key=lambda r:m['frames'][r]['logical_col'],reverse=True)
