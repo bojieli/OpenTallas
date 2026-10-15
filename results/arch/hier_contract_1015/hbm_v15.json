@@ -95018,6 +95018,854 @@
    "grant": "hard_macro",
    "notes": "",
    "flow_control": "HBM PHY/controller boundary (0az)"
+  },
+  {
+   "name": "sucore_SW_reducer",
+   "cell": "ot_hbm_su_reduce_static",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static.sv",
+   "source_sha256": "aca19b5b853a5d27109bf4bd08fa035b097a4b089dc37bdf8a1a85a32fb76472",
+   "source_prerequisite": "0987612f8",
+   "params": {
+    "AW": 10
+   },
+   "kind": "tile",
+   "parent": "sucore_SW",
+   "instance_pending": "whole SU qcore RTL hierarchy join OPEN; independent reducer component only",
+   "outline": {
+    "w": 216.0,
+    "h": 151.2
+   },
+   "origin": {
+    "x": 17.28,
+    "y": 21.6,
+    "orient": "R0"
+   },
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "offset": 107.952,
+     "span_um": [
+      107.904,
+      108.0
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "offset": 108.048,
+     "span_um": [
+      108.0,
+      108.096
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "cmd_valid",
+     "face": "W",
+     "layer": "M4",
+     "offset": 70.944,
+     "span_um": [
+      70.896,
+      70.992
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "cmd_op[2:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 71.136,
+     "span_um": [
+      70.992,
+      71.28
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "cmd_a[9:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 71.76,
+     "span_um": [
+      71.28,
+      72.24
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "cmd_b[9:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 72.72,
+     "span_um": [
+      72.24,
+      73.2
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "cmd_dst[9:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 73.68,
+     "span_um": [
+      73.2,
+      74.16
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "operand_fp32[31:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 75.696,
+     "span_um": [
+      74.16,
+      77.232
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "cmd_tag[31:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 78.768,
+     "span_um": [
+      77.232,
+      80.304
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "scalar_valid",
+     "face": "E",
+     "layer": "M4",
+     "offset": 71.712,
+     "span_um": [
+      71.664,
+      71.76
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "scalar_tag[31:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 73.296,
+     "span_um": [
+      71.76,
+      74.832
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "scalar_fp32[31:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 76.368,
+     "span_um": [
+      74.832,
+      77.904
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "scalar_bf16[15:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 78.672,
+     "span_um": [
+      77.904,
+      79.44
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "fault",
+     "face": "E",
+     "layer": "M4",
+     "offset": 79.488,
+     "span_um": [
+      79.44,
+      79.536
+     ],
+     "offset_pending_view": true
+    }
+   ],
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 107.952
+   },
+   "clock_domain": "su_reduce_local_qualification",
+   "clock_period_ps": 833.333333,
+   "architectural_clock_binding": {
+    "intended_serial_period_ps": 1111.111111,
+    "phase_and_static_calendar_qualified": false,
+    "note": "component screened at stricter existing 833.333 ps signoff; this does not establish a serial-to-stream join"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile",
+   "version": 1,
+   "grant": "diagnostic_component_child",
+   "assigned_pin_file": "results/arch/hbm_die_v15/reducer_leaf_pins_1319.json",
+   "assigned_pin_file_sha256": "3b97089fb79c30d365ccbeb52c5e8c4190f859d8fecf24bf58bb48d462baa605",
+   "su_reducer_child_grant_1319": true,
+   "macros": [
+    {
+     "cell": "ot_sram_1r1w_128x256_m1_r2c2",
+     "count": 2
+    }
+   ],
+   "qualification_scope": "independent actual reducer leaf only; complete qcore placement, RF capacity, related clocks and fixed-cycle parent integration OPEN"
+  },
+  {
+   "name": "sucore_SE_reducer",
+   "cell": "ot_hbm_su_reduce_static",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static.sv",
+   "source_sha256": "aca19b5b853a5d27109bf4bd08fa035b097a4b089dc37bdf8a1a85a32fb76472",
+   "source_prerequisite": "0987612f8",
+   "params": {
+    "AW": 10
+   },
+   "kind": "tile",
+   "parent": "sucore_SE",
+   "instance_pending": "whole SU qcore RTL hierarchy join OPEN; independent reducer component only",
+   "outline": {
+    "w": 216.0,
+    "h": 151.2
+   },
+   "origin": {
+    "x": 17.28,
+    "y": 21.6,
+    "orient": "R0"
+   },
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "offset": 107.952,
+     "span_um": [
+      107.904,
+      108.0
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "offset": 108.048,
+     "span_um": [
+      108.0,
+      108.096
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "cmd_valid",
+     "face": "W",
+     "layer": "M4",
+     "offset": 70.944,
+     "span_um": [
+      70.896,
+      70.992
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "cmd_op[2:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 71.136,
+     "span_um": [
+      70.992,
+      71.28
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "cmd_a[9:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 71.76,
+     "span_um": [
+      71.28,
+      72.24
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "cmd_b[9:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 72.72,
+     "span_um": [
+      72.24,
+      73.2
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "cmd_dst[9:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 73.68,
+     "span_um": [
+      73.2,
+      74.16
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "operand_fp32[31:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 75.696,
+     "span_um": [
+      74.16,
+      77.232
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "cmd_tag[31:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 78.768,
+     "span_um": [
+      77.232,
+      80.304
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "scalar_valid",
+     "face": "E",
+     "layer": "M4",
+     "offset": 71.712,
+     "span_um": [
+      71.664,
+      71.76
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "scalar_tag[31:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 73.296,
+     "span_um": [
+      71.76,
+      74.832
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "scalar_fp32[31:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 76.368,
+     "span_um": [
+      74.832,
+      77.904
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "scalar_bf16[15:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 78.672,
+     "span_um": [
+      77.904,
+      79.44
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "fault",
+     "face": "E",
+     "layer": "M4",
+     "offset": 79.488,
+     "span_um": [
+      79.44,
+      79.536
+     ],
+     "offset_pending_view": true
+    }
+   ],
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 107.952
+   },
+   "clock_domain": "su_reduce_local_qualification",
+   "clock_period_ps": 833.333333,
+   "architectural_clock_binding": {
+    "intended_serial_period_ps": 1111.111111,
+    "phase_and_static_calendar_qualified": false,
+    "note": "component screened at stricter existing 833.333 ps signoff; this does not establish a serial-to-stream join"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile",
+   "version": 1,
+   "grant": "diagnostic_component_child",
+   "assigned_pin_file": "results/arch/hbm_die_v15/reducer_leaf_pins_1319.json",
+   "assigned_pin_file_sha256": "3b97089fb79c30d365ccbeb52c5e8c4190f859d8fecf24bf58bb48d462baa605",
+   "su_reducer_child_grant_1319": true,
+   "macros": [
+    {
+     "cell": "ot_sram_1r1w_128x256_m1_r2c2",
+     "count": 2
+    }
+   ],
+   "qualification_scope": "independent actual reducer leaf only; complete qcore placement, RF capacity, related clocks and fixed-cycle parent integration OPEN"
+  },
+  {
+   "name": "sucore_NW_reducer",
+   "cell": "ot_hbm_su_reduce_static",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static.sv",
+   "source_sha256": "aca19b5b853a5d27109bf4bd08fa035b097a4b089dc37bdf8a1a85a32fb76472",
+   "source_prerequisite": "0987612f8",
+   "params": {
+    "AW": 10
+   },
+   "kind": "tile",
+   "parent": "sucore_NW",
+   "instance_pending": "whole SU qcore RTL hierarchy join OPEN; independent reducer component only",
+   "outline": {
+    "w": 216.0,
+    "h": 151.2
+   },
+   "origin": {
+    "x": 17.28,
+    "y": 21.6,
+    "orient": "R0"
+   },
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "offset": 107.952,
+     "span_um": [
+      107.904,
+      108.0
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "offset": 108.048,
+     "span_um": [
+      108.0,
+      108.096
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "cmd_valid",
+     "face": "W",
+     "layer": "M4",
+     "offset": 70.944,
+     "span_um": [
+      70.896,
+      70.992
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "cmd_op[2:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 71.136,
+     "span_um": [
+      70.992,
+      71.28
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "cmd_a[9:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 71.76,
+     "span_um": [
+      71.28,
+      72.24
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "cmd_b[9:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 72.72,
+     "span_um": [
+      72.24,
+      73.2
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "cmd_dst[9:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 73.68,
+     "span_um": [
+      73.2,
+      74.16
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "operand_fp32[31:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 75.696,
+     "span_um": [
+      74.16,
+      77.232
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "cmd_tag[31:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 78.768,
+     "span_um": [
+      77.232,
+      80.304
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "scalar_valid",
+     "face": "E",
+     "layer": "M4",
+     "offset": 71.712,
+     "span_um": [
+      71.664,
+      71.76
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "scalar_tag[31:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 73.296,
+     "span_um": [
+      71.76,
+      74.832
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "scalar_fp32[31:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 76.368,
+     "span_um": [
+      74.832,
+      77.904
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "scalar_bf16[15:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 78.672,
+     "span_um": [
+      77.904,
+      79.44
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "fault",
+     "face": "E",
+     "layer": "M4",
+     "offset": 79.488,
+     "span_um": [
+      79.44,
+      79.536
+     ],
+     "offset_pending_view": true
+    }
+   ],
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 107.952
+   },
+   "clock_domain": "su_reduce_local_qualification",
+   "clock_period_ps": 833.333333,
+   "architectural_clock_binding": {
+    "intended_serial_period_ps": 1111.111111,
+    "phase_and_static_calendar_qualified": false,
+    "note": "component screened at stricter existing 833.333 ps signoff; this does not establish a serial-to-stream join"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile",
+   "version": 1,
+   "grant": "diagnostic_component_child",
+   "assigned_pin_file": "results/arch/hbm_die_v15/reducer_leaf_pins_1319.json",
+   "assigned_pin_file_sha256": "3b97089fb79c30d365ccbeb52c5e8c4190f859d8fecf24bf58bb48d462baa605",
+   "su_reducer_child_grant_1319": true,
+   "macros": [
+    {
+     "cell": "ot_sram_1r1w_128x256_m1_r2c2",
+     "count": 2
+    }
+   ],
+   "qualification_scope": "independent actual reducer leaf only; complete qcore placement, RF capacity, related clocks and fixed-cycle parent integration OPEN"
+  },
+  {
+   "name": "sucore_NE_reducer",
+   "cell": "ot_hbm_su_reduce_static",
+   "source": "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static.sv",
+   "source_sha256": "aca19b5b853a5d27109bf4bd08fa035b097a4b089dc37bdf8a1a85a32fb76472",
+   "source_prerequisite": "0987612f8",
+   "params": {
+    "AW": 10
+   },
+   "kind": "tile",
+   "parent": "sucore_NE",
+   "instance_pending": "whole SU qcore RTL hierarchy join OPEN; independent reducer component only",
+   "outline": {
+    "w": 216.0,
+    "h": 151.2
+   },
+   "origin": {
+    "x": 17.28,
+    "y": 21.6,
+    "orient": "R0"
+   },
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "offset": 107.952,
+     "span_um": [
+      107.904,
+      108.0
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "offset": 108.048,
+     "span_um": [
+      108.0,
+      108.096
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "cmd_valid",
+     "face": "W",
+     "layer": "M4",
+     "offset": 70.944,
+     "span_um": [
+      70.896,
+      70.992
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "cmd_op[2:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 71.136,
+     "span_um": [
+      70.992,
+      71.28
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "cmd_a[9:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 71.76,
+     "span_um": [
+      71.28,
+      72.24
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "cmd_b[9:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 72.72,
+     "span_um": [
+      72.24,
+      73.2
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "cmd_dst[9:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 73.68,
+     "span_um": [
+      73.2,
+      74.16
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "operand_fp32[31:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 75.696,
+     "span_um": [
+      74.16,
+      77.232
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "cmd_tag[31:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 78.768,
+     "span_um": [
+      77.232,
+      80.304
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "scalar_valid",
+     "face": "E",
+     "layer": "M4",
+     "offset": 71.712,
+     "span_um": [
+      71.664,
+      71.76
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "scalar_tag[31:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 73.296,
+     "span_um": [
+      71.76,
+      74.832
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "scalar_fp32[31:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 76.368,
+     "span_um": [
+      74.832,
+      77.904
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "scalar_bf16[15:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 78.672,
+     "span_um": [
+      77.904,
+      79.44
+     ],
+     "offset_pending_view": true
+    },
+    {
+     "name": "fault",
+     "face": "E",
+     "layer": "M4",
+     "offset": 79.488,
+     "span_um": [
+      79.44,
+      79.536
+     ],
+     "offset_pending_view": true
+    }
+   ],
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 107.952
+   },
+   "clock_domain": "su_reduce_local_qualification",
+   "clock_period_ps": 833.333333,
+   "architectural_clock_binding": {
+    "intended_serial_period_ps": 1111.111111,
+    "phase_and_static_calendar_qualified": false,
+    "note": "component screened at stricter existing 833.333 ps signoff; this does not establish a serial-to-stream join"
+   },
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile",
+   "version": 1,
+   "grant": "diagnostic_component_child",
+   "assigned_pin_file": "results/arch/hbm_die_v15/reducer_leaf_pins_1319.json",
+   "assigned_pin_file_sha256": "3b97089fb79c30d365ccbeb52c5e8c4190f859d8fecf24bf58bb48d462baa605",
+   "su_reducer_child_grant_1319": true,
+   "macros": [
+    {
+     "cell": "ot_sram_1r1w_128x256_m1_r2c2",
+     "count": 2
+    }
+   ],
+   "qualification_scope": "independent actual reducer leaf only; complete qcore placement, RF capacity, related clocks and fixed-cycle parent integration OPEN"
   }
  ],
  "sub_layouts": {
@@ -98487,5 +99335,11 @@
   "added_area_mm2": 0.031072896,
   "added_cycles": 0,
   "parent_and_die_qualified": false
+ },
+ "su_reducer_child_grants_1319": {
+  "count": 4,
+  "source_ref": "0987612f8",
+  "outline_area_mm2": 0.1306368,
+  "whole_su_or_die_qualified": false
  }
 }
