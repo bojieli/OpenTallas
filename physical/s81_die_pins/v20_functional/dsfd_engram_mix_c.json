@@ -35,7 +35,12 @@
    "ck[24]",
    "ck[25]",
    "ck[26]",
-   "ck[27]"
+   "ck[27]",
+   "ck[28]",
+   "ck[29]",
+   "ck[30]",
+   "ck[31]",
+   "ck[32]"
   ]
  },
  "source": "tools/s81/v19_pins_1014.py (die lead r6, top-down)",
@@ -19795,7 +19800,7 @@
    ]
   },
   "ck": {
-   "bits": 28,
+   "bits": 33,
    "uniform": false,
    "per_bit": [
     [
@@ -19965,6 +19970,36 @@
      "M4",
      115.776,
      0.192
+    ],
+    [
+     "E",
+     "M4",
+     115.872,
+     0.192
+    ],
+    [
+     "E",
+     "M4",
+     115.968,
+     0.192
+    ],
+    [
+     "E",
+     "M4",
+     116.064,
+     0.192
+    ],
+    [
+     "E",
+     "M4",
+     116.16,
+     0.192
+    ],
+    [
+     "E",
+     "M4",
+     116.256,
+     0.192
     ]
    ]
   },
@@ -19975,11 +20010,11 @@
     [
      "E",
      "M4",
-     116.832,
+     117.312,
      0.192
     ]
    ]
   }
  },
- "adoption": "28 real child clock/reset entries; compiled static VM calendar required"
+ "adoption": "33 real child clock/reset entries; compiled static VM calendar required"
 }
