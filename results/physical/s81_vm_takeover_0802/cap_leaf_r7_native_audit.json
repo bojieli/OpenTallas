@@ -1,0 +1,32 @@
+{
+ "cell": "dsfd_vm_static_cap_leaf",
+ "view": "physical/ref_tile/dsfd_vm_static_cap_leaf_1015_r7/views/dsfd_vm_static_cap_leaf",
+ "lib_cell": "dsfd_vm_static_cap_leaf",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 238.9,
+ "spread_ps": 57.6,
+ "outputs": 548,
+ "inputs": 838,
+ "launch_ps": 199.2,
+ "launch_pin": "o_d[281]",
+ "capture_ps": 177.4,
+ "capture_pin": "f_c[591]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "job": "dsfd_vm_static_cap_leaf_1015_r7-native7-6eabdb3ef",
+ "view_commit": "507606a01e7bdb1546cffffe169d28feb8ee8b32",
+ "input_sha256": {
+  "physical/ref_tile/dsfd_vm_static_cap_leaf_1015_r7/views/dsfd_vm_static_cap_leaf/dsfd_vm_static_cap_leaf_tt.lib": "0461f9f2e91295789e08289ebbe29e24b50225115629fdbec13aece72cad4b28",
+  "physical/ref_tile/dsfd_vm_static_cap_leaf_1015_r7/views/dsfd_vm_static_cap_leaf/insertion.json": "f44f5daf1b259186851307546703ca38b7bef69a642bf78235b7cb3b733998b7"
+ },
+ "route_tt_ps": 33.02,
+ "route_ff_ps": 14.0,
+ "drc": 0
+}
