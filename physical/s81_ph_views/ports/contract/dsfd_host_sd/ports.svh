@@ -1,0 +1,11 @@
+    input wire ck,
+    output wire fault,
+    input wire [17:0] hc,
+    output wire [7:0] host_ack_n,
+    output wire [583:0] hw,
+    input wire [31:0] o_addr,
+    output wire o_cr,
+    input wire [255:0] o_d,
+    input wire o_v,
+    input wire o_we,
+    input wire rst_n

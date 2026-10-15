@@ -21,8 +21,14 @@ BASE = Path('physical/s81_field_spine_h1')
 sys.path.insert(0, str(ROOT/'tools'))
 
 
-def command(R, geom, work, output):
-    binding = json.loads((ROOT/PIN/'source_binding.json').read_text())
+def h1_base(pin):
+    """ds-1010/pqc: a pinned set may carry its own H1 IO budget (pin/h1: the same files with its extra ports)."""
+    return Path(pin)/'h1' if (ROOT/pin/'h1').is_dir() else BASE
+
+
+def command(R, geom, work, output, pin=PIN, xrv=0):
+    base = h1_base(pin)
+    binding = json.loads((ROOT/pin/'source_binding.json').read_text())
     for f in binding['files']:
         if hashlib.sha256((ROOT/f['path']).read_bytes()).hexdigest() != f['sha256']:
             raise ValueError('Pinned input changed: '+f['path'])
@@ -36,15 +42,16 @@ def command(R, geom, work, output):
              '--orfs-var', 'ADDER_MAP_FILE=', '--orfs-var', 'NUM_CORES=16',
              '--orfs-var', 'VERILOG_DEFINES=-DSYNTHESIS -DOT_PQ_ROM_PORTS',
              '--orfs-var', 'SYNTH_KEEP_MODULES=ot_dsrom_aq12m_mul ot_dsrom_aq12m',
-             '--sdc-append', str(BASE/'io_budget_h1.sdc'),
+             '--sdc-append', str(base/'io_budget_h1.sdc'),
              '--slew-margin-percent', '40', '--hold-margin-ns', '.040',
              '--param', 'PQ=1', '--param', f'R={R}', '--stages', 'pnr',
+             *(['--param', 'XRV=1', '--param', f'XCAP={xrv}'] if xrv else []),
              '--synth-timeout-seconds', 'unlimited', '--flow-timeout-seconds', 'unlimited',
-             '--keep-heavy-artifacts', '--nickname-tag', f's81fs_h1_r{R}_{geom}',
+             '--keep-heavy-artifacts', '--nickname-tag', f's81fs_h1_r{R}_{geom}' + (f'_xrv{xrv}' if xrv else ''),
              '--keep-workdir', str(work), '--output', str(output)]
     for stage, name in [('PRE_CTS', 'io_ref_pre_h1.tcl'), ('PRE_GLOBAL_ROUTE', 'io_ref_pre_h1.tcl'),
                         ('POST_CTS', 'io_ref_post_h1.tcl'), ('POST_GLOBAL_ROUTE', 'io_ref_post_h1.tcl')]:
-        args += ['--step-tcl', stage+'='+str(BASE/name)]
+        args += ['--step-tcl', stage+'='+str(base/name)]
     if geom == 'x550':
         model = json.loads((ROOT/PIN/'model.json').read_text())
         args += ['--die-area', '0', '0']+[str(v) for v in model['geometry']['die_um']]
@@ -64,8 +71,10 @@ def main():
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--prepare-only', action='store_true')
     p.add_argument('--pnr-stop-after')
+    p.add_argument('--pin', type=Path, default=PIN, help='pinned source set (ds-1010/pqc: physical/s81_pq_xrv)')
+    p.add_argument('--xrv', type=int, default=0, help='ds-1010/pqc: XCAP of the valid-return VM read (0 = v13b fixed read)')
     a = p.parse_args()
-    args = command(a.R, a.geom, a.work, a.output)
+    args = command(a.R, a.geom, a.work, a.output, a.pin, a.xrv)
     if a.pnr_stop_after:
         args += ['--pnr-stop-after', a.pnr_stop_after]
     import run_abi3_physical as flow
@@ -77,7 +86,7 @@ def main():
     if rc or a.pnr_stop_after:
         return rc
     return subprocess.call([sys.executable, str(ROOT/'tools/w18/corner_sta.py'),
-                            '--orfs-dir', str(a.work/'orfs'), '--post-sdc', str(BASE/'signoff_h1.sdc'),
+                            '--orfs-dir', str(a.work/'orfs'), '--post-sdc', str(h1_base(a.pin)/'signoff_h1.sdc'),
                             '--output', str(a.output.with_name(a.output.stem+'_corner_sta.json'))], cwd=ROOT)
 
 

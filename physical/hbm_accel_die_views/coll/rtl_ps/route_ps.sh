@@ -9,6 +9,8 @@
 #         + the core's SRAM macros, PDN pdn_top.tcl; corner_sta reads EVERY macro view (route_view.sh reads the first).
 # env: OUT, CORES, PD, PER (0.833), HM (0.050), IO_ROUTE_SDC / IO_FF_SDC (port), DIEW/DIEH + PHALO (port outline and
 #      macro halo "x y", default 340x340 / "4 4"), route_view.sh env (top)
+#      CTSA (port CTS_ARGS, default "-apply_ndr none"), PINFLOP=1 (with CAPTURE_ADJACENT=1: also anchor every port's pin
+#      flop beside its pin, physical/qwen_die_masters/io_flop_at_pins.tcl + out_flop_release.tcl)
 # coll-fallback 2026-10-08 (all default to the 8-slice behaviour above):
 #   SLICE   slice top module, ot_hcoll_port (default) or ot_hcoll_port2 (the 4-slice fallback: 2 ports a slice, 36 SRAMs;
 #           rtl/hbm_accel/tu/ot_hcoll_port2.sv is added to the sources)
@@ -27,19 +29,30 @@ if [ "$kind" = port ]; then
   W=${OUT:?}/$lab; mkdir -p $W
   C=${CORES:-8}; DW=${DIEW:-340}; DH=${DIEH:-340}
   interior_args=()
-  if [ "${INTERIOR:-0}" = 1 ]; then
-    interior_args=(--step-tcl POST_MACRO_PLACE=$D/interior_macros.tcl
-                   --step-tcl PRE_IO_PLACEMENT=$D/interior_pins.tcl
+  # el1011-hbm-coll 2026-10-11: INTERIOR=2 = dataflow-ordered rows + banded pin plan (interior_macros_df.tcl /
+  # interior_pins_df.tcl); NOBUFPORTS=1 = DONT_BUFFER_PORTS (with PINFLOP=1 every port lands on its FIRM pin flop; the
+  # resizer's port buffers were inserted after the PRE_GLOBAL_PLACE anchor and GPL left them up to 160 um off the pin:
+  # 76 of the 226 rbsel-7dba707a7 slew violations, e.g. qr_din[174] pin y 148.6, input7960 y 310.2, flop y 148.8).
+  isuf=""; psuf=""; [ "${INTERIOR:-0}" = 2 ] && isuf=_df && psuf=_df; [ "${INTERIOR:-0}" = 3 ] && isuf=_df && psuf=_df3; [ "${INTERIOR:-0}" = 4 ] && isuf=_df4 && psuf=_df4; [ "${INTERIOR:-0}" = 430 ] && isuf=_df4x30 && psuf=_df4; [ "${INTERIOR:-0}" = 436 ] && isuf=_df4x36 && psuf=_df4
+  [ "${NOBUFPORTS:-0}" = 1 ] && interior_args+=(--orfs-var DONT_BUFFER_PORTS=1)
+  if [ "${INTERIOR:-0}" != 0 ]; then
+    interior_args+=(--step-tcl POST_MACRO_PLACE=$D/interior_macros$isuf.tcl
+                   --step-tcl PRE_IO_PLACEMENT=$D/interior_pins$psuf.tcl
                    --orfs-var 'IO_PLACER_H=M4 M6' --orfs-var 'IO_PLACER_V=M3 M5'
                    --orfs-var 'PLACE_PINS_ARGS=-min_distance 4 -min_distance_in_tracks')
   fi
-  if [ "${CAPTURE_ADJACENT:-0}" = 1 ]; then
+  if [ "${CAPTURE_ADJACENT:-0}" = 1 ] && [ "${PINFLOP:-0}" = 1 ]; then
+    # idleA-hcoll 2026-10-10: macro capture flops beside rd_out AND every port's launch / capture flop beside its pin
+    interior_args+=(--step-tcl PRE_GLOBAL_PLACE=$D/capture_adjacent_pinflop.tcl
+                    --step-tcl PRE_DETAIL_PLACE=physical/qwen_die_masters/out_flop_release.tcl)
+  elif [ "${CAPTURE_ADJACENT:-0}" = 1 ]; then
     interior_args+=(--step-tcl PRE_GLOBAL_PLACE=$D/capture_adjacent_place.tcl)
   fi
   export OT_ORFS_NUM_CORES=$C NUM_CORES=$C OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
   SL=${SLICE:-ot_hcoll_port}; SLSRC=""; [ $SL = ot_hcoll_port2 ] && SLSRC="--source rtl/hbm_accel/tu/ot_hcoll_port2.sv"
   echo "kind=port slice=$SL mpt=${MPT:-} pintop=${PINTOP:-} pinbot=${PINBOT:-} die=${DW}x${DH} halo=${PHALO:-4 4} PD=${PD:-0.5} PER=${PER:-0.833} HM=${HM:-0.050} IO_ROUTE_SDC=${IO_ROUTE_SDC:-} IO_FF_SDC=${IO_FF_SDC:-} $*" > $W/args
   cat SOURCE_COMMIT > $W/SOURCE_COMMIT 2>/dev/null
+  GRTH=physical/abi3/v41x_karb_repair_buffer_cap.tcl; if [ -n "${MAXWIRE:-}" ]; then GRTH=$D/grt_drv_maxwire.tcl; elif [ -n "${PK:-}" ]; then GRTH=physical/redesign_ds/coll_split/pin_access_pregrt.tcl; fi
   python3 tools/run_abi3_physical.py --view asap7 --top $SL \
     --source rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv --source rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv --source rtl/hbm_accel/tu/ot_hcoll_port.sv $SLSRC \
     ${MPT:+--orfs-var MACRO_PLACEMENT_TCL=/src/$MPT} ${PINTOP:+--pin-region "$PINTOP=top"} ${PINBOT:+--pin-region "$PINBOT=bottom"} \
@@ -49,9 +62,9 @@ if [ "$kind" = port ]; then
     --sdc-append physical/hbm_contracts_20261007/reset_rst_n.sdc ${IO_ROUTE_SDC:+--sdc-append $IO_ROUTE_SDC} --stages pnr \
     --die-area 0 0 $DW $DH --core-area 1.08 1.08 $(python3 -c "print(round($DW-1.08,3), round($DH-1.08,3))") \
     --place-density ${PD:-0.5} --routing-layers M2 M6 --max-transition-ns library --max-fanout 32 \
-    --orfs-var ADDER_MAP_FILE= --orfs-var "CTS_ARGS=-apply_ndr none" --orfs-var PDN_TCL=/src/$D/pdn_port.tcl \
+    --orfs-var ADDER_MAP_FILE= --orfs-var "CTS_ARGS=${CTSA:--apply_ndr none}" --orfs-var PDN_TCL=/src/$D/pdn_port.tcl \
     --orfs-var "SYNTH_KEEP_MODULES=" \
-    --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
+    --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=$GRTH ${MAXWIRE:+--orfs-var OT_MAXWIRE_UM=$MAXWIRE} ${PK:+--step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=$PK} ${PKA:+--orfs-var OT_PK_ABOVE_ONLY=$PKA} \
     --slew-margin-percent 20 --hold-margin-ns ${HM:-0.050} --purpose signoff_target --nickname-tag hcp_$lab \
     --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited "${interior_args[@]}" "$@" \
     --keep-workdir $W/work --force --output $W/physical.json > $W/run.log 2>&1

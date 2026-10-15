@@ -351,7 +351,14 @@ module ot_rom_oneshot_allreduce #(
     parameter integer RB         = (N > 1) ? $clog2(N) : 1,
     // MARGIN (default 0): the dies are ot_rom_oneshot_die_m (rtl/rom/ot_rom_oneshot_die_m.sv: pin registers, registered
     // FIFO heads, ADD_LAT 7 adders, credit-based local port); the package models each sequencer's credit counter
-    // (IB = 4 credits) so in_valid / in_ready keep their meaning at the package boundary.
+    // (IB = 4 credits) so in_valid / in_ready keep their meaning at the package boundary.  MARGIN 3 = PR 2; MARGIN 4 =
+    // PR 2 + OPQ 1 (operand queues in place of the fold's shift-register skew lines, fill-9 2026-10-10).
+    // MARGIN 9 (qwen-tp8/coll4 2026-10-12) = MARGIN 8 + CT 1 (column datapath in 5 hardened ot_coll_col_tile leaves; +1 tx, +1 out).
+    // MARGIN 8 (el1011-q-coll 10-11 22:40) = MARGIN 7 + IBH 1 (registered look-ahead IB head) + FPIPE 2 (agree/ovf faults registered).
+    // MARGIN 7 (el1011-q-coll) = MARGIN 6 + FSL 1 (all-reduce fold in 4 hardened 128-bit lane slices, seams +2 edges).
+    // MARGIN 6 (el1011-q-coll) = MARGIN 5 + MEMM 1 (source FIFO bodies as ot_sram_1r1w_32x546_m1 macros; DEPTH 32 only,
+    // the bench DEPTH-16 case keeps the flop body).
+    // MARGIN 5 (el1011-q-coll) = PR 2 + TXK 1 (own tx_rec pin register) + FPIPE 1 (reduce-error fault registered), OPQ 0.
     parameter integer MARGIN     = 0
 ) (
     input  wire              clk,
@@ -400,7 +407,7 @@ module ot_rom_oneshot_allreduce #(
             always @(posedge clk or negedge rst_n)
                 if (!rst_n) lcred <= 3'd4;
                 else lcred <= lcred - ((in_valid[s] && in_ready[s]) ? 3'd1 : 3'd0) + (icr ? 3'd1 : 3'd0);
-            ot_rom_oneshot_die_m #(.N(N), .RANK(s), .LANES(LANES), .TAGW(TAGW), .DEPTH(DEPTH), .IB(4), .PR((MARGIN >= 3) ? 2 : (MARGIN >= 2) ? 1 : 0)) u_die (
+            ot_rom_oneshot_die_m #(.N(N), .RANK(s), .LANES(LANES), .TAGW(TAGW), .DEPTH(DEPTH), .IB(4), .PR((MARGIN >= 3) ? 2 : (MARGIN >= 2) ? 1 : 0), .OPQ((MARGIN == 4) ? 1 : 0), .TXK((MARGIN >= 5) ? 1 : 0), .FPIPE((MARGIN >= 8) ? 2 : (MARGIN >= 5) ? 1 : 0), .IBH((MARGIN >= 8) ? 1 : 0), .MEMM((MARGIN >= 6 && DEPTH == 32) ? 1 : 0), .FSL((MARGIN >= 7) ? 1 : 0), .CT((MARGIN >= 9 && DEPTH == 32) ? 1 : 0)) u_die (
                 .clk(clk), .rst_n(rst_n),
                 .in_valid(in_valid[s] && in_ready[s]), .in_cr(icr), .in_data(in_data[s*FW +: FW]),
                 .in_last(in_last[s]), .in_mode(in_mode[s]), .in_tag(in_tag[s*TAGW +: TAGW]),

@@ -10,12 +10,13 @@
 #     a crossing): proves the skew bench sees the failure class;  MUTANT B: the lane negative control must mismatch.
 set -u; q=$1; O=$2; SK=${SK:-0.30}; m=hfd_$q; [ $q = hcp ] && m=hfd_hc; mkdir -p $O
 V=physical/hbm_accel_die_views/$q
-python3 tools/hbm_die_views.py ${VARIANT:+--variant $VARIANT} ports --master $m --out $O/ports > /dev/null
-python3 tools/hbm_hub_quarter_gen.py --quarter $q --ports $O/ports/$m/ports.json --out $O/base > /dev/null 2>&1
-python3 tools/hbm_hub_quarter_gen.py --quarter $q --ports $O/ports/$m/ports.json --out $O/xl --xroot lockup > /dev/null 2>&1
+if [ -n "${PORTS_DIR:-}" ]; then mkdir -p $O/ports && cp -r $PORTS_DIR/$m $O/ports/   # [cg-hc] committed pin plan (reshaped block)
+else python3 tools/hbm_die_views.py ${VARIANT:+--variant $VARIANT} ports --master $m --out $O/ports > /dev/null; fi
+python3 tools/hbm_hub_quarter_gen.py --quarter $q --ports $O/ports/$m/ports.json --out $O/base ${GENARGS:-} > /dev/null 2>&1
+python3 tools/hbm_hub_quarter_gen.py --quarter $q --ports $O/ports/$m/ports.json --out $O/xl --xroot lockup ${GENARGS:-} > /dev/null 2>&1
 fail(){ echo "XROOT_BENCH FAIL: $*"; exit 1; }
-cmp -s $O/xl/$m.sv $V/rtl_xl/$m.sv || fail "committed $V/rtl_xl/$m.sv not reproduced"
-cmp -s $O/xl/macro_place.tcl $V/rtl_xl/macro_place.tcl || fail "rtl_xl/macro_place.tcl not reproduced"
+cmp -s $O/xl/$m.sv $V/${XLD:-rtl_xl}/$m.sv || fail "committed $V/${XLD:-rtl_xl}/$m.sv not reproduced"
+cmp -s $O/xl/macro_place.tcl $V/${XLD:-rtl_xl}/macro_place.tcl || fail "rtl_xl/macro_place.tcl not reproduced"
 if [ $q = hcp ]; then LS="rtl/hdc/v41x/ot_dsrom_su_hcpost_lane_pr.sv rtl/hdc/v41x/ot_dsrom_su_hcpost.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv"
 elif [ $q = hc ]; then LS="rtl/hdc/v41x/ot_dsrom_su_hcpost.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_delay.sv"
 else LS="rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv rtl/hdc/v41x/ot_hdc_v41x_vec_side_c12.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_delay_ring.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/v41/ot_hdc_softplus.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat_c12.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv rtl/hdc/v41x/ot_dsrom_su_f12.sv rtl/hdc/v41/ot_hdc_fsqrt_c12.sv rtl/hdc/v41/ot_hdc_fsqrt.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv"; fi
@@ -29,10 +30,12 @@ skew(){ python3 - "$1" "$2" "$SK" <<'PY'
 import re, sys
 src, par, sk = sys.argv[1], int(sys.argv[2]), float(sys.argv[3])
 t = open(src).read()
-m = re.search(r'\.(ck\d+)\(clk\)', t)
-cks = sorted(set(re.findall(r'\.(ck(\d+))\(clk\)', t)), key=lambda x: int(x[1]))
-decl = ''.join(f'    wire {"#%.3f " % sk if int(n) % 2 == par else ""}k_{c} = clk;\n' for c, n in cks)
-t = re.sub(r'\.(ck\d+)\(clk\)', lambda mm: f'.{mm.group(1)}(k_{mm.group(1)})', t)
+# [cg-hc] split row roots ck<c>e / ck<c>w (R25GQ A): checkerboard parity (row + half) so every E/W half crossing and
+# every row crossing of one half sees skew in one of the two patterns; plain ck<c> roots keep the row parity.
+cks = sorted(set(re.findall(r'\.(ck(\d+)([ew]?))\(clk\)', t)), key=lambda x: (int(x[1]), x[2]))
+if not cks: sys.exit('skew: no ck<n>[ew] clock ports found in ' + src)
+decl = ''.join(f'    wire {"#%.3f " % sk if (int(n) + (h == "w")) % 2 == par else ""}k_{c} = clk;\n' for c, n, h in cks)
+t = re.sub(r'\.(ck\d+[ew]?)\(clk\)', lambda mm: f'.{mm.group(1)}(k_{mm.group(1)})', t)
 t = t.replace('    initial begin', decl + '    initial begin', 1)
 t = t.replace('@(posedge clk); #0.1;', '@(posedge clk); #%.3f;' % (sk + 0.05))
 t = t.replace('repeat (6) @(posedge clk); rst = 0;', 'repeat (6) @(posedge clk); #%.3f rst = 0;' % (sk + 0.05))
@@ -40,7 +43,7 @@ open(src.replace('tb_', 'tbskew%d_' % par), 'w').write(t)
 PY
 }
 run(){ ( cd $O/$1 && iverilog -g2012 -o $2.vvp $3 $4 *_simstub.sv > $2.comp 2>&1 && vvp -n $2.vvp > $2.log 2>&1; echo "rc=$?"; grep -h OT_RESULT $2.log ) ; }
-for d in base xl; do skew $O/$d/tb_$m.sv 0; skew $O/$d/tb_$m.sv 1; done
+for d in base xl; do skew $O/$d/tb_$m.sv 0 || fail "skew tb"; skew $O/$d/tb_$m.sv 1 || fail "skew tb"; done
 st(){ sed -n 's/.*mismatches=\([0-9]*\) settle_cycles=\([0-9]*\).*/\1 \2/p'; }
 read BM BS < <(run base tied tb_$m.sv $m.sv | st)
 echo "baseline tied: mismatches $BM settle $BS"; [ "$BM" = 0 ] || fail "baseline does not pass its own bench"

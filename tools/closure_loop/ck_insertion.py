@@ -17,8 +17,14 @@ TT reference, so CK_SS_* then carry the TT (route-corner) insertion; the SS-libr
 (CK_TT_* always hold the TT values, CK_ROUTE_REF names the reference).  Before this, a TC route referenced its outputs
 to the SS insertion (~190 ps above the TT boundary insertion): the router saw output setup credit sign-off removed
 (orphans-2 hfd_router: route -71.83 -> routed reference -152.67).
+
+MACRO-CLK (macro-clk-1010, 2026-10-10): the same session also measures every memory macro's clock pin (macro liberty read
+from the route's config.mk, /src = the job snapshot): active-edge arrival and slew per corner, and judges outliers
+(macro_outliers): slew above MC_SLEW_PS at any corner, or the FF arrival more than MC_LATE_PS after the register mean
+(the SRAM wd_in / addr hold stall of ds-1010 lcrph: one shallow macro leaf, 165-260 ps slew, ~60 ps late).  The verdict is
+rec["macro_clk"]; the closure loop flags it after CTS and its auto-react class f reads it.
 """
-import argparse, json, re, subprocess, tempfile
+import argparse, json, re, subprocess, tempfile, sys
 from pathlib import Path
 
 PLAT = "/OpenROAD-flow-scripts/flow/platforms/asap7"
@@ -62,32 +68,178 @@ proc ot_ck_arr {p clk} {
 }
 """
 
+# Same clock-source-port treatment as io_ref_routed.sdc. Routed SDCs can
+# accidentally budget a second clock port as data against the first clock.
+# Such a data arrival is not clock insertion and must not enter this record.
+CLOCK_SETUP_TCL = r"""
+set ot_ck_requested {CLOCK_REQUEST}
+set ot_ck_selected [get_clocks -quiet $ot_ck_requested]
+if {![llength $ot_ck_selected]} {
+  set ot_ck_ports [list $ot_ck_requested]
+  if {[regexp {^(.*)\[0\]$} $ot_ck_requested -> ot_ck_base]} {
+    lappend ot_ck_ports $ot_ck_base
+  } else {
+    lappend ot_ck_ports [format {%s[0]} $ot_ck_requested]
+  }
+  foreach c [all_clocks] {
+    foreach s [get_property $c sources] {
+      set ot_ck_source [get_full_name $s]
+      if {$ot_ck_source in $ot_ck_ports && [llength [get_ports -quiet $ot_ck_source]]} {
+        lappend ot_ck_selected $c
+      }
+    }
+  }
+}
+set ot_ck_selected [lsort -unique $ot_ck_selected]
+if {[llength $ot_ck_selected] != 1} {
+  error "CK_INSERTION: clock '$ot_ck_requested' must resolve to one clock, found [llength $ot_ck_selected]"
+}
+puts "OT_CK_SELECTED [get_full_name [lindex $ot_ck_selected 0]]"
+foreach c [all_clocks] {
+  foreach s [get_property $c sources] {
+    set sn [get_full_name $s]
+    if {![llength [get_ports -quiet $sn]]} continue
+    foreach refclk [all_clocks] {
+      unset_input_delay -clock $refclk [get_ports $sn]
+      unset_input_delay -clock $refclk -clock_fall [get_ports $sn]
+    }
+    unset_input_delay [get_ports $sn]
+    puts "OT_CK_CLOCK_PORT $sn: data input delays dropped"
+  }
+}
+"""
 
-def tcl(corner, db, sdc, routed, clock):
+
+# RAW-SOURCE (claude s81-grpA r4, 2026-10-14): the die delivers each tile clock pin at phi - R, R = this record's
+# boundary mean (die clock delivery rule 10-13).  A kit whose SDC models that delivery with set_clock_latency -source
+# -R_k per root (multi-root tiles: dsfd_vm_bgl28_mc5_h1pcs measured core -12.5 ps against a physical 402.8 ps) must
+# not publish the COMPENSATED arrival as R: the die would deliver at phi and every sink would land R late.  --raw-source
+# zeroes the source latency of every clock that has a source pin before measuring, so the record is the physical tree
+# from the tile clock pin (what an ETM arc also excludes).  The closure loop's calibrate keeps the SDC's own reference
+# (its CK_* drive the route IO SDC, which lives in the same compensated time base).
+RAW_SOURCE_TCL = r"""
+foreach c [all_clocks] {
+  if {![llength [get_property $c sources]]} continue
+  set_clock_latency -source 0 $c
+  puts "OT_CK_RAW_SOURCE [get_full_name $c]"
+}
+"""
+
+
+MACRO_CLOCK_SCOPE_TCL = r"""
+proc ot_ck_macro_owned {p selected} {
+  set owners {}
+  foreach c [get_property $p clocks] { lappend owners [get_full_name $c] }
+  set owners [lsort -unique $owners]
+  if {[llength $owners] != 1} {
+    error "CK_INSERTION: macro clock pin '[get_full_name $p]' requires one timing clock, found $owners"
+  }
+  puts "OT_MC_SOURCE [get_full_name $p] [lindex $owners 0]"
+  return [expr {[lindex $owners 0] eq [get_full_name $selected]}]
+}
+"""
+
+
+def tcl(corner, db, sdc, routed, clock, mlibs=(), raw_source=False):
     C = corner.upper()
+    ml = "\n".join(f"read_liberty {l}" for l in mlibs)
     par = "read_spef /base/6_final.spef" if routed else f"source {PLAT}/setRC.tcl\nestimate_parasitics -placement"
     return f"""
 foreach l [glob {PLAT}/lib/NLDM/*RVT_{C}*] {{ read_liberty $l }}
 foreach l [glob {PLAT}/lib/NLDM/*_LVT_{C}_* {PLAT}/lib/NLDM/*_SLVT_{C}_*] {{ if {{![string match *FAKE* $l]}} {{ read_liberty $l }} }}
+{ml}
 read_db /base/{db}
 read_sdc /base/{sdc}
 {par}
 set_propagated_clock [all_clocks]
+{RAW_SOURCE_TCL if raw_source else ''}
+{CLOCK_SETUP_TCL.replace('CLOCK_REQUEST', clock)}
 set regs {{}}
-foreach p [all_registers -clock_pins -clock [get_clocks {{{clock}}}]] {{ set n [get_full_name $p]; dict set regs [regsub {{/[^/]+$}} $n {{}}] $n }}
+foreach p [all_registers -clock_pins -clock $ot_ck_selected] {{ set n [get_full_name $p]; dict set regs [regsub {{/[^/]+$}} $n {{}}] $n }}
 set bnd {{}}
 set din [all_inputs -no_clocks]
 if {{[llength $din]}} {{ foreach pe [find_timing_paths -path_delay max -from $din -to [all_registers -data_pins] -group_path_count 200000 -endpoint_path_count 1] {{ set i [regsub {{/[^/]+$}} [get_full_name [get_property $pe endpoint]] {{}}]; if {{[dict exists $regs $i]}} {{ dict set bnd $i 1 }} }} }}
 foreach pe [find_timing_paths -path_delay max -from [all_registers -clock_pins] -to [all_outputs] -group_path_count 200000 -endpoint_path_count 100000] {{ set i [regsub {{/[^/]+$}} [get_full_name [get_property $pe startpoint]] {{}}]; if {{[dict exists $regs $i]}} {{ dict set bnd $i 1 }} }}
 {ACTIVE_TCL}
-set ot_ck_clk [lindex [get_clocks {{{clock}}}] 0]
+{MACRO_CLOCK_SCOPE_TCL}
+set ot_ck_clk [lindex $ot_ck_selected 0]
 dict for {{i cp}} $regs {{
   set a [ot_ck_arr [get_pins $cp] $ot_ck_clk]
   if {{$a eq "" || $a eq "INF" || $a eq "-INF"}} continue
   puts "OT_CK [expr {{[dict exists $bnd $i] ? 1 : 0}}] $a"
 }}
+foreach inst [[ord::get_db_block] getInsts] {{
+  if {{![[$inst getMaster] isBlock]}} continue
+  foreach it [$inst getITerms] {{
+    set n [$it getNet]
+    if {{$n eq "NULL" || $n eq ""}} continue
+    if {{[[$it getMTerm] getSigType] ne "CLOCK" && [$n getSigType] ne "CLOCK"}} continue
+    set p [get_pins -quiet "[$inst getName]/[[$it getMTerm] getName]"]
+    if {{[llength $p] != 1}} {{ error "CK_INSERTION: unresolved macro clock pin [$inst getName]/[[$it getMTerm] getName]" }}
+    if {{![ot_ck_macro_owned $p $ot_ck_clk]}} continue
+    set a [ot_ck_arr $p $ot_ck_clk]
+    set sl [get_property $p slew_max_rise]
+    if {{![string is double -strict $a] || ![string is double -strict $sl]}} {{ error "CK_INSERTION: missing macro clock arrival/slew [get_full_name $p]" }}
+    puts "OT_MC [get_full_name $p] $a $sl [$n getName]"
+  }}
+}}
 exit
 """
+
+
+MC_SLEW_PS = 120.0    # macro clock-pin slew bound (any corner); register clock pins sit at ~20-50 ps on ASAP7
+MC_LATE_PS = 30.0     # FF macro clock arrival after the register mean: the SRAM data / addr hold deficit grows 1:1
+LIB_RE = re.compile(r"(/src/\S+?)_(ss|tt|ff)\.lib\b")
+
+
+def macro_libs(base, corner):
+    """(host source root, [/src/... macro liberty paths for corner]) from the route's config.mk, else (None, [])"""
+    base = Path(base)
+    cfg = next((p / "config.mk" for p in base.parents if (p / "config.mk").is_file()), None)
+    if cfg is None:
+        return None, []
+    stems = sorted({m.group(1) for m in LIB_RE.finditer(cfg.read_text(errors="replace"))})
+    if not stems:
+        return None, []
+    rel = f"{stems[0][len('/src/'):]}_{corner}.lib"
+    root = next((r for p in base.parents for r in (p / "src", p) if (r / rel).is_file()), None)
+    if root is None:
+        return None, []
+    return root, [f"{x}_{corner}.lib" for x in stems if (root / f"{x[len('/src/'):]}_{corner}.lib").is_file()]
+
+
+def macro_summary(rows, reg_mean):
+    """per-corner macro clock-pin record: rows = [(pin, arrival, slew, net)]"""
+    if not rows:
+        return None
+    pins = [dict(pin=p, arr=round(a, 1), slew=round(sl, 1), late=round(a - reg_mean, 1) if reg_mean is not None else None,
+                 net=n) for p, a, sl, n in rows]
+    nets = {}
+    for x in pins:
+        nets[x["net"]] = nets.get(x["net"], 0) + 1
+    return dict(n=len(pins), nets=len(nets), max_per_net=max(nets.values()), reg_mean=reg_mean,
+                max_slew=max(x["slew"] for x in pins),
+                max_late=max((x["late"] for x in pins if x["late"] is not None), default=None), pins=pins)
+
+
+def macro_outliers(rec, slew_ps=MC_SLEW_PS, late_ps=MC_LATE_PS):
+    """the MACRO-CLK verdict: {"n", "outliers": [{pin, why}], "flag": bool} from the per-corner macro records"""
+    out, n = {}, 0
+    for corner in ("ss", "tt", "ff"):
+        m = (rec.get(corner) or {}).get("macros")
+        if not m:
+            continue
+        n = max(n, m["n"])
+        for x in m["pins"]:
+            why = []
+            if x["slew"] > slew_ps:
+                why.append(f"{corner} slew {x['slew']:.0f} ps > {slew_ps:.0f}")
+            if corner == "ff" and x["late"] is not None and x["late"] > late_ps:
+                why.append(f"ff {x['late']:.0f} ps after the register mean > {late_ps:.0f}")
+            if why:
+                out.setdefault(x["pin"], []).extend(why)
+    return dict(n=n, slew_ps=slew_ps, late_ps=late_ps, flag=bool(out),
+                outliers=[dict(pin=k, why="; ".join(v)) for k, v in sorted(out.items())])
 
 
 def stats(v):
@@ -117,9 +269,42 @@ def main():
     ap.add_argument("--routed", action="store_true")
     ap.add_argument("--image", default="openroad/orfs:latest")
     ap.add_argument("--output", type=Path, required=True)
+    ap.add_argument("--all-clocks", action="store_true", help="measure each external clock in the selected write_sdc, preserving per-pin references")
     ap.add_argument("--route-corner", default="", help="TC/TT: CK_SS_* carry the TT insertion (route-time IO reference)")
+    ap.add_argument("--raw-source", action="store_true",
+                    help="zero every clock's source latency before measuring: the physical insertion R from the tile clock "
+                         "pin that the die compensates (view export, pre-route gate); never the loop calibrate")
     a = ap.parse_args()
     base = a.base.resolve()
+    if a.all_clocks:
+        sdc = "6_final.sdc" if a.routed else next((s for s in ("4_cts.sdc", "3_place.sdc", "2_floorplan.sdc", "1_synth.sdc") if (base / s).exists()), None)
+        if sdc is None:
+            raise SystemExit(f"no CTS SDC under {base}")
+        clocks = re.findall(r"^create_clock\s+-name\s+(\S+)[^\n]*\[get_ports\s+\{([^}]+)\}\]", (base / sdc).read_text(), re.M)
+        if not clocks or any(len(pin.split()) != 1 for name, pin in clocks):
+            raise SystemExit("write_sdc must identify each external clock's single source port")
+        if len({pin for name, pin in clocks}) != len(clocks):
+            raise SystemExit("multiple external clocks on one pin: select their references explicitly")
+        records = {}
+        with tempfile.TemporaryDirectory() as td:
+            for index, (name, pin) in enumerate(clocks):
+                out = Path(td) / f"clock_{index}.json"
+                cmd = [sys.executable, str(Path(__file__).resolve()), "--base", str(base), "--clock", name,
+                       "--image", a.image, "--route-corner", a.route_corner, "--output", str(out)]
+                if a.routed:
+                    cmd.append("--routed")
+                if a.raw_source:
+                    cmd.append("--raw-source")
+                subprocess.run(cmd, check=True)
+                rec = json.loads(out.read_text())
+                rec["lib_clock_pin"] = pin
+                rec["clock_mapping_basis"] = f"{sdc} create_clock -name {name} [get_ports {{{pin}}}]"
+                records[pin] = rec
+        rec = dict(next(iter(records.values())))
+        rec["clock_measurements"] = records
+        rec["raw_source"] = bool(a.raw_source)
+        a.output.write_text(json.dumps(rec, indent=1) + "\n")
+        return
     if a.routed:
         db, sdc = "6_final.odb", "6_final.sdc"
     else:
@@ -128,22 +313,32 @@ def main():
         if not (base / db).exists() or not sdc:
             raise SystemExit(f"no {db} / SDC under {base}")
     rec = dict(schema="opentallas.closure_loop.ck_insertion.v1", base=str(base), db=db, sdc=sdc, clock=a.clock,
-               parasitics="spef" if a.routed else "placement-estimated")
+               parasitics="spef" if a.routed else "placement-estimated", raw_source=bool(a.raw_source))
     env = {}
     need_tt = a.route_corner.upper() in ("TC", "TT")
     for corner in ("ss", "tt", "ff"):
+        sroot, mlibs = macro_libs(base, corner)
         with tempfile.TemporaryDirectory() as td:
-            (Path(td) / "s.tcl").write_text(tcl(corner, db, sdc, a.routed, a.clock))
-            out = subprocess.run(["docker", "run", "--rm", "-v", f"{base}:/base:ro", "-v", f"{td}:/t:ro", a.image, "bash",
-                                  "-lc", "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /t/s.tcl"],
-                                 capture_output=True, text=True).stdout
+            (Path(td) / "s.tcl").write_text(tcl(corner, db, sdc, a.routed, a.clock, mlibs, a.raw_source))
+            mnt = ["-v", f"{sroot}:/src:ro"] if sroot else []
+            result = subprocess.run(["docker", "run", "--rm", "-v", f"{base}:/base:ro", "-v", f"{td}:/t:ro", *mnt, a.image,
+                                  "bash", "-lc",
+                                  "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /t/s.tcl"],
+                                 capture_output=True, text=True)
+            out = result.stdout
+            if result.returncode:
+                raise SystemExit(f"{corner}: clock insertion replay failed ({result.returncode})\n{out[-1500:]}\n{result.stderr[-1500:]}")
         b, al = [], []
         for m in re.finditer(r"^OT_CK (\d) (\S+)", out, re.M):
             x = float(m[2])
             al.append(x)
             if m[1] == "1":
                 b.append(x)
-        rec[corner] = dict(boundary=stats(b), all=stats(al), errors=re.findall(r"\[ERROR[^\n]*", out)[:5])
+        mrows = [(m[1], float(m[2]), float(m[3]), m[4])
+                 for m in re.finditer(r"^OT_MC (\S+) (\S+) (\S+) (\S+)", out, re.M)]
+        rec[corner] = dict(boundary=stats(b), all=stats(al), errors=re.findall(r"\[ERROR[^\n]*", out)[:5],
+                           macros=macro_summary(mrows, round(sum(al) / len(al), 1) if al else None),
+                           macro_libs=len(mlibs))
         if not al and corner == "tt" and not need_tt:
             continue                     # TT is informational for an SS-corner route
         if not al:
@@ -154,6 +349,7 @@ def main():
             env[f"CK_{corner.upper()}_ALL_{k.upper()}"] = round(rec[corner]["all"][k])
     env = route_env(env, a.route_corner)
     rec["route_corner"] = a.route_corner or None
+    rec["macro_clk"] = macro_outliers(rec)
     rec["env"] = env
     a.output.write_text(json.dumps(rec, indent=1) + "\n")
     print(" ".join(f"{k}={v}" for k, v in env.items()))

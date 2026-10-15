@@ -1,0 +1,60 @@
+{
+ "name": "s81hc_crrfw_ref",
+ "top": "ot_s81_hc_crootr_f",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_crootr.sv",
+  "rtl/hdc/ot_hdc_delay.sv"
+ ],
+ "params": {
+  "C": 0
+ },
+ "clock_port": "sk",
+ "reset_ports": [
+  "srs"
+ ],
+ "outline": {
+  "w": 276.48,
+  "h": 597.24
+ },
+ "util": 0.52,
+ "macros": [],
+ "pins": {
+  "N": [
+   "p_req",
+   "p_y"
+  ],
+  "E": [
+   "f_fv",
+   "f_fd"
+  ],
+  "S": [
+   "ch_fv",
+   "ch_fd",
+   "ch_rst"
+  ],
+  "W": [
+   "sk",
+   "srs"
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 16,
+  "peak_ram_gb": 40,
+  "hold_margin_ns": 0.01,
+  "pin_min_tracks": 1
+ },
+ "job": {
+  "benches_from": "tools/s81_suhc/hc_gate_benches.json",
+  "owner": "Claude:s81hc-1013",
+  "branch": "claude/s81hc-1013",
+  "tag": "v2-pinplan",
+  "purpose": "[hc-crootr] crootr v2 4-tile split, C=0 (comb E): forward column (far face, full height): fd relays RF=5, y pin flop + mid-height y relay, chain output flop; 14.2k flops; replaces s81hc_crootrw_ref (one 34.6k-sink root, hold WNS frozen -102 ps); v2 pin plan (tools/s81_suhc/crr_pinplan.py, v1 FLOORPLAN_MARGIN 20 b/um on one layer): N/S buses over the full face on M5+M3 (5.2-5.4 b/um/layer), f_* on M4 at 180-368.4 (6.0); slot unchanged",
+  "no_bench_reason": "bit-exactness is gated on dsfd_sp_hc HIER=1/2 (tools/s81_suhc/hc_gate.py NG64 m0 PASS + m1/m3 FAIL, NG256 HIER=1 m0 PASS); the tile alone has no golden",
+  "views_to": "physical/ref_tile/s81hc_crrfw_ref/views",
+  "record_to": "results/rtl/ref_tile/s81hc_crrfw_ref"
+ },
+ "inhold": true,
+ "io_tcl": "physical/s81_hc_pinplan/crrf_w.tcl"
+}

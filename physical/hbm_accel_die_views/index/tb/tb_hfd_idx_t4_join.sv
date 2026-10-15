@@ -1,10 +1,10 @@
 `timescale 1ps/1fs
-module tb_hfd_idx_t4_join;
+module tb_hfd_idx_t4_join #(parameter integer MEM=0, FE=0);
  reg ck=0; always #5 ck=~ck;
  reg rst=0;
  reg [615:0] taps=0;
  wire [3:0] tc; wire [609:0] s; reg sc=0; wire fault;
- hfd_idx_t4_join dut(.ck(ck),.rst(rst),.taps(taps),.tap_credit(tc),.s(s),.sc(sc),.fault(fault));
+ hfd_idx_t4_join #(.MEM(MEM),.FE(FE)) dut(.ck(ck),.rst(rst),.taps(taps),.tap_credit(tc),.s(s),.sc(sc),.fault(fault));
  integer sent[0:3],credit[0:3],received=0,pending=0,cycle=0;
  function automatic [152:0] word(input integer beat,tap);
    reg [152:0] w;
@@ -66,7 +66,7 @@ module tb_hfd_idx_t4_join;
    @(negedge ck); sc=0; taps=0;
    repeat(8) @(negedge ck);
    if(fault) $fatal(1,"late credit fault");
-   $display("PASS atomic T4 join beats=%0d cycles=%0d depth128 downstreamstall500",received,cycle);
+   $display("PASS atomic T4 join beats=%0d cycles=%0d depth128 downstreamstall500 MEM=%0d FE=%0d",received,cycle,MEM,FE);
    $finish;
  end
 endmodule

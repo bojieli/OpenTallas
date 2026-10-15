@@ -22,6 +22,7 @@ module tb_hgi_vm_core;
  reg [31:0] ref_m [0:32767];               // window: sectors 0..4095 (32,768 words)
  integer pp;
  integer i, c, n, w, nrd = 0, nwr = 0, cycles = 0, seed = 7;
+ initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 7; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
  reg [NC-1:0] acc_c = 0; reg [14:0] psec [0:NC-1]; reg pwe [0:NC-1]; reg [15:0] ptag [0:NC-1];
  reg [255:0] wd; reg [31:0] bm;
  // per-client queue of expected responses, in request order

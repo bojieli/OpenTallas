@@ -1,0 +1,16 @@
+{
+  "grade": "measured",
+  "tt_peer_insertion_ps": 267.0,
+  "ff_peer_insertion_ps": 216.0,
+  "launch_max_ps": 166.6,
+  "launch_min_ps": 25,
+  "capture_max_ps": 166.6,
+  "capture_min_ps": -25,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "launch_phases": [
+    "rise",
+    "fall"
+  ],
+  "source": "closure_loop matched-root calibration"
+}

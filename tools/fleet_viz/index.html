@@ -832,6 +832,7 @@ function elementQualification(q) {
   const st = x => x && x.status || 'unrecorded', e = q.exactness || {};
   return `source ${q.source.commit} · RTL ${st(q.implementation)} · model ${st(q.model)} · exact +${st(e.positive)} / -${st(e.negative)} · physical ${st(q.physical)} · corners ${JSON.stringify(q.physical && q.physical.corners || {})} · dependencies ${(q.dependencies || []).join(', ')} · integration ${st(q.integration)} · ${q.registry_path}`;
 }
+const NOCOUNT = new Set(['superseded']);   // cancellation ends a job, not its outstanding requirement
 function renderElements() {
   if (!ED) return;
   if ($('elPanel').hidden) $('elPanel').hidden = false; lsw('ef', EF);
@@ -839,13 +840,13 @@ function renderElements() {
   const tot = {}; let all = 0;
   let sh = '<tr><th>target</th>' + cats.map(c => `<th><span class="sw" style="background:${ECOL[c]}"></span>${esc(c)}</th>`).join('') + '<th>total</th></tr>';
   for (const t of tg) {
-    const s = ED.summary[t], n = Object.entries(s).reduce((a, [c, v]) => a + (c === 'superseded' ? 0 : v), 0); all += n;
+    const s = ED.summary[t], n = Object.entries(s).reduce((a, [c, v]) => a + (NOCOUNT.has(c) ? 0 : v), 0); all += n;
     sh += `<tr><td>${esc(t)}</td>` + cats.map(c => { tot[c] = (tot[c] || 0) + (s[c] || 0); return `<td class="${s[c] && !SAFE ? 'c' : ''}" data-t="${esc(t)}" data-c="${esc(c)}" style="${s[c] ? 'color:' + ECOL[c] : 'color:var(--faint)'}">${s[c] || '·'}</td>`; }).join('') + `<td><b>${n}</b></td></tr>`;
   }
   sh += '<tr><td><b>all</b></td>' + cats.map(c => `<td class="${tot[c] && !SAFE ? 'c' : ''}" data-t="" data-c="${esc(c)}"><b>${tot[c] || '·'}</b></td>`).join('') + `<td><b>${all}</b></td></tr>`;
   setHTML($('elSum'), sh);
   const closed = cats.filter(c => c.startsWith('closed')).reduce((a, c) => a + (tot[c] || 0), 0);
-  setText($('elNow'), `${closed} of ${all} closed` + (tot['superseded'] ? ` (+${tot['superseded']} superseded, not counted)` : '') + ` · as of ${ago(ED.t)}`);
+  setText($('elNow'), `${closed} of ${all} closed · ${all - closed} open` + ([...NOCOUNT].some(c => tot[c]) ? ` (not counted: ${[...NOCOUNT].filter(c => tot[c]).map(c => tot[c] + ' ' + c).join(', ')})` : '') + ` · as of ${ago(ED.t)}`);
   const rowsOK = !SAFE && ED.rows;
   for (const id of ['elCtl', 'elWrap']) if ($(id).hidden !== !rowsOK) $(id).hidden = !rowsOK;
   if (!rowsOK) return;

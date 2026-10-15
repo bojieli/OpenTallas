@@ -60,7 +60,10 @@ def main():
         n = f"app{i}_{Path(f).name}"
         shutil.copy(f, d / n)
         app.append(n)
-    res = dict(inserted=a.insert, replaced=dict(r.split("=", 1) for r in a.replace), appended=a.append)
+    # orfs: the ORFS dir this verdict was timed in (/work of meas_*.tcl) -- tools/tt_views/view_export.py replays the
+    # verdict's constraint section from there, so the exported view carries exactly the sign-off sequence
+    res = dict(inserted=a.insert, replaced=dict(r.split("=", 1) for r in a.replace), appended=a.append,
+               orfs=str(a.orfs.resolve()))
     for corner, key in (("ss", "setup_tt"), ("ff", "hold_ff")):
         t = a.orfs / f"w18_sta_{corner}.tcl"
         if not t.is_file():
@@ -117,6 +120,13 @@ def main():
                         ioref_edge={m[0]: dict(boundary=int(m[1]), negedge=int(m[2]), noarc=int(m[3]), inverted=int(m[4]))
                                     for m in re.findall(r"^OT_IOREF_EDGE (\S+) boundary (\d+) negedge (\d+) noarc (\d+) "
                                                         r"inverted (\d+)", s, re.M)},
+                        # CLOCK-CLASS 2026-10-13: boundary reference per clock class (io_ref_routed.sdc); the last read's lines
+                        ioref_class={f"{m[0]}:{m[1]}": dict(clock=m[0], cls=int(m[1]), dominant=bool(m[2]), mean=float(m[3]),
+                                                            min=float(m[4]), max=float(m[5]), n=int(m[6]), ports_in=int(m[7]),
+                                                            ports_out=int(m[8]))
+                                     for m in re.findall(r"^OT_IOREF_CLASS (\S+) class (\d+)( dominant)? mean (\S+) min (\S+) "
+                                                         r"max (\S+) n (\d+) ports_in (\d+) ports_out (\d+)", s, re.M)},
+                        ioref_class_mixed=re.findall(r"^OT_IOREF_CLASS (\S+ mixed \d+ ports[^\n]*)", s, re.M)[-2:],
                         errors=re.findall(r"\[ERROR[^\n]*|^Error[^\n]*", s, re.M)[:5], rc=r.returncode,
                         tcl_sha256=hashlib.sha256(text.encode()).hexdigest())
     a.out.write_text(json.dumps(res, indent=1))

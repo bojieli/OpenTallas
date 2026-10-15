@@ -43,6 +43,7 @@ CASES = {
     'p2_lat_lnk0': ('tb_mtp_p2_fixlat', P2, dict(FV=0, RV=0, FC=0, RC=0, NTX=1, START_DELAY=0, NOSTALL=1), [], 'pass'),
     'p2_lat_lnk': ('tb_mtp_p2_fixlat', P2, dict(DRAFTA, NTX=1, START_DELAY=0, NOSTALL=1), [], 'pass'),
     'p2_nogate': ('tb_mtp_p2_fixlat', P2, dict(DRAFTA, SEED=1), ['OT_FIXLAT_MUT_NOGATE'], 'fail'),
+    'p2_noslack': ('tb_mtp_p2_fixlat', P2, dict(DRAFTA, SEED=1), ['OT_S81PH_MUT_P2EP_NOSLACK'], 'fail'),   # s81die-1011: VM end ignores RL 4 in-flight beats
 }
 TAG = {'tb_mtp_partner_ep': 'PEP PASS', 'tb_mtp_p2_fixlat': 'P2FL PASS'}
 

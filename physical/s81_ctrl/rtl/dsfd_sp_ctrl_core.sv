@@ -6,7 +6,7 @@
 // review_queue/ds-control.md): +1 inbound message (skid), +1 outbound message (skid), +1 hop_go pin flop, +1 VM write.
 // Wrappers: dsfd_sp_ctrl (layer die, ROLE 0), dsfd_sp_ctrl_src (stage-0 die: host queue + boot gate, ROLE 1),
 // dsfd_sp_ctrl_h (head-root die: sampler stop, ROLE 2).
-module dsfd_sp_ctrl_core #(parameter integer USE_VM_RVALID=0, OUT_DEPTH=4, ROLE = 0, parameter integer MY_ID = 0,
+module dsfd_sp_ctrl_core #(parameter integer USE_VM_RVALID=0, OUT_DEPTH=4, ROLE = 0, HOP_TX = 1, parameter integer MY_ID = 0,
                            parameter integer SRC_LO = 0, SRC_HI = 0, parameter [15:0] TYPE_MASK = 16'h000A) (
     input  wire          ck,
     input  wire          rs,
@@ -45,7 +45,7 @@ module dsfd_sp_ctrl_core #(parameter integer USE_VM_RVALID=0, OUT_DEPTH=4, ROLE 
     wire c_vwe; wire [13:0] c_vwa; wire [511:0] c_vwd;
     wire f; wire [15:0] fv; wire s; wire [15:0] sn; wire [31:0] j0, t0;
     ot_s81_ctrl #(.USE_VM_RVALID(USE_VM_RVALID), .OUT_DEPTH(OUT_DEPTH), .ROLE(ROLE), .MY_ID(MY_ID), .NW(21), .MAXU(64), .VWA(14), .XW(640), .RXB(0), .TXB(2048), .SIDE_TXB(4096),
-        .SIDE_BASE(8192), .SIDE_USH(6), .NOPS(128), .NENG(12), .QD(8), .SRC_LO(SRC_LO), .SRC_HI(SRC_HI),
+        .SIDE_BASE(8192), .SIDE_USH(6), .NOPS(128), .NENG(12), .QD(8), .HOP_TX(HOP_TX), .SRC_LO(SRC_LO), .SRC_HI(SRC_HI),
         .TYPE_MASK(TYPE_MASK), .LEN_SIDE_MAX(64)) u (
         .clk(ck), .rst_n(rs), .pw_v(pw_v), .pw_a(pw_a), .pw_d(pw_d), .prog_len(prog_len), .cfg_users_static(cu_q),
         .in_valid(si_v), .in_ready(si_r), .in_data(si_d[511:0]), .in_last(si_d[512]),

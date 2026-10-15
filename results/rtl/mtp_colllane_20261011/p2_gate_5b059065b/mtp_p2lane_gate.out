@@ -1,0 +1,8 @@
+p2l_s1    expect pass -> pass OK :: P2L PASS FV=12 RV=14 FC=8 RC=9 transactions=3 rows=240 lane0=480 lane1=240 cycles=26692 abort_latency=94 starts=3
+p2l_s5    expect pass -> pass OK :: P2L PASS FV=12 RV=14 FC=8 RC=9 transactions=3 rows=240 lane0=480 lane1=240 cycles=26544 abort_latency=94 starts=3
+neg_seg   expect fail -> fail OK :: [997000000] %Fatal: tb_mtp_p2_lanes.sv:101: Assertion failed in tb_mtp_p2_lanes: P2L transport lane-1 word 0 mismatch: got id 02c0002000000005678 exp 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000012345678 got lo c10b000080000000 exp lo c10b000080000000
+neg_cred  expect fail -> fail OK :: P2L lane FAULT a=00 p=1 b=0 cycle 8270 | [10177000000] %Fatal: tb_mtp_p2_lanes.sv:130: Assertion failed in tb_mtp_p2_lanes: P2L metadata row 1 (word 9 last 0)
+neg_hol   expect fail -> fail OK :: [19008000000] %Fatal: tb_mtp_p2_lanes.sv:143: Assertion failed in tb_mtp_p2_lanes: P2L abort event late / lost (HOL): sent 1700 arrived 2521 (max 400)
+neg_lat1  expect fail -> fail OK :: 
+MTP_P2LANE_GATE PASS
+rc=0

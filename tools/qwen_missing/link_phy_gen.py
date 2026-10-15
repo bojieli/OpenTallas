@@ -21,6 +21,7 @@ rst_n, tx_up (link trained, slow status), tx_v + tx_flit[FW-1:0] in, rx_v + rx_f
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import math
 import sys
@@ -100,21 +101,26 @@ def pins(fw: int) -> list[Pin]:
             Pin("rx_flit", fw, "output", "data_out")]
 
 
-def write_lef(name: str, w: float, h: float, plist: list[Pin], pitch: float):
+def write_lef(name: str, w: float, h: float, plist: list[Pin], pitch: float, west: bool = False):
     L = [f"# OpenTallas tools/qwen_missing/link_phy_gen.py: {name} hard-macro ABSTRACT (licensed PHY IP; FDI side only)",
          "VERSION 5.7 ;", 'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f"MACRO {name}",
          f"  FOREIGN {name} 0 0 ;", "  SYMMETRY X Y ;", f"  SIZE {w:.3f} BY {h:.3f} ;", "  CLASS BLOCK ;"]
     bits = [(p, b) for p in plist for b in p.bits()]
     span = len(bits) * pitch
-    if span > w - 4.0:
+    if span > (120.0 if west else w - 4.0):
         raise SystemExit(f"{name}: {len(bits)} pins do not fit the {w} um edge at {pitch} um")
     x0 = round((w - span) / 2.0, 3)
     pw, pl = 0.024, 0.192
     for i, (p, b) in enumerate(bits):
         x = x0 + i * pitch
+        y = 600.0 + i * pitch
+        if west and y + pw > h:
+            raise SystemExit(f"{name}: west FDI pin {b} outside the macro")
         L += [f"  PIN {b}", f"    DIRECTION {p.direction.upper()} ;",
               "    USE CLOCK ;" if p.kind == "clock" else "    USE SIGNAL ;", "    SHAPE ABUTMENT ;",
-              "    PORT", "      LAYER M5 ;", f"      RECT {x:.3f} {h - pl:.3f} {x + pw:.3f} {h:.3f} ;", "    END",
+              "    PORT", "      LAYER M4 ;" if west else "      LAYER M5 ;",
+              f"      RECT 0 {y:.3f} {pl:.3f} {y + pw:.3f} ;" if west else
+              f"      RECT {x:.3f} {h - pl:.3f} {x + pw:.3f} {h:.3f} ;", "    END",
               f"  END {b}"]
     sw, sp = 0.288, 2.4
     straps = {"VDD": [], "VSS": []}
@@ -129,11 +135,14 @@ def write_lef(name: str, w: float, h: float, plist: list[Pin], pitch: float):
         L += ["    END", f"  END {net}"]
     L += ["  OBS"]
     for layer in ("M1", "M2", "M3", "M4"):
-        L += [f"    LAYER {layer} ;", f"    RECT 0 0 {w:.3f} {h:.3f} ;"]
-    L += ["    LAYER M5 ;", f"    RECT 0 0 {w:.3f} {h - 0.4:.3f} ;"]
+        xobs = "0.400" if west and layer == "M4" else "0"
+        L += [f"    LAYER {layer} ;", f"    RECT {xobs} 0 {w:.3f} {h:.3f} ;"]
+    L += ["    LAYER M5 ;", f"    RECT {'0.400' if west else '0'} 0 {w:.3f} {h - 0.4:.3f} ;"]
     L += ["  END", f"END {name}", "", "END LIBRARY"]
-    return "\n".join(L) + "\n", dict(signal_pins=len(bits), pin_pitch_um=pitch, pin_layer="M5",
-                                     pin_edge="top (core-facing)", pin_block_x_um=[x0, round(x0 + span, 3)])
+    pin_info = dict(signal_pins=len(bits), pin_pitch_um=pitch, pin_layer="M4" if west else "M5",
+                    pin_edge="west (adapter-facing)" if west else "top (core-facing)")
+    pin_info["pin_block_y_um" if west else "pin_block_x_um"] = [600.0, round(600.0 + span, 3)] if west else [x0, round(x0 + span, 3)]
+    return "\n".join(L) + "\n", pin_info
 
 
 def model_sv(name: str, fw: int, lat: int) -> str:
@@ -160,15 +169,27 @@ endmodule
 """
 
 
-def generate(out: Path) -> dict:
+def generate(out: Path, tp8: bool = False) -> dict:
     cal = asap7.calibration()
     recs = {}
-    for name, s in PHYS.items():
+    specs = copy.deepcopy(PHYS)
+    if tp8:
+        for s in specs.values():
+            s["rxd"] = 512
+            s["assumed"]["fdi_clock"] += "; TP8 adapter RXD 512, 1,043-bit flit"
+        s = specs["ot_qfd_serdes_112g_x12_phy"]
+        s["width_um"], s["height_um"] = 2320.2, 1563.8
+        s["assumed"]["footprint"] = "TP8 die lead's approved frame: at most 2,320.2 x 1,563.8 um, snapped down to the ASAP7 macro grid (nominal 3.629 mm2); licensed-IP area remains ASSUMED"
+        s["derived"]["rx_buffer"] = "RXD 512 selected by the TP8 die lead; receiver SRAM is in the routed adapter, this PHY view encodes its 10-bit credit field"
+    for name, s in specs.items():
         fw = flit_bits(s["rxd"])
         plist = pins(fw)
         w = asap7.snap_up(s["width_um"], asap7.METAL["width_snap_um"])
         h = asap7.snap_up(s["height_um"], asap7.METAL["height_snap_um"])
-        lef, pin_info = write_lef(name, w, h, plist, 0.192)
+        if tp8 and name == "ot_qfd_serdes_112g_x12_phy":
+            w = math.floor(s["width_um"] / asap7.METAL["width_snap_um"]) * asap7.METAL["width_snap_um"]
+            h = math.floor(s["height_um"] / asap7.METAL["height_snap_um"]) * asap7.METAL["height_snap_um"]
+        lef, pin_info = write_lef(name, w, h, plist, 0.048 if tp8 else 0.192, west=tp8)
         per = {}
         for c in asap7.CORNERS:
             k = cal["corners"][c]
@@ -196,6 +217,11 @@ def generate(out: Path) -> dict:
                      assumed=s["assumed"], pins=pin_info, timing={c: asdict(t) for c, t in per.items()},
                      claim_boundary="a placement / connection / timing abstract of licensed IP: no PHY design, no "
                                     "GDS, no SI or bump-map analysis; footprint and boundary timing ASSUMED as stated")
+        if tp8:
+            sheet["tp8_plan"] = dict(authority="el1013-qwen-romio.log, TP8 die lead 2026-10-13 08:45 approval",
+                                    rx_buffer_flits=512, pin_face="W", pin_layer="M4", pin_window_y_um=[600, 720],
+                                    published_view_revision="tp8_1013", signal_pitch_um=0.048,
+                                    signal_spacing_um=0.024, access_strip_um=0.4)
         files = sorted(p.name for p in d.iterdir() if p.name != f"{name}.json")
         sheet["views"] = {f: asap7.sha256_file(d / f) for f in files}
         (d / f"{name}.json").write_text(json.dumps(sheet, indent=2, sort_keys=True) + "\n")
@@ -206,8 +232,9 @@ def generate(out: Path) -> dict:
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path, required=True)
+    ap.add_argument("--tp8", action="store_true", help="approved TP8 RXD512 / west-face M4 FDI frames (write a new view revision)")
     a = ap.parse_args()
-    r = generate(a.out)
+    r = generate(a.out, tp8=a.tp8)
     print(json.dumps({k: dict(v["footprint"], **v["fdi"]) for k, v in r.items()}, indent=1))
 
 

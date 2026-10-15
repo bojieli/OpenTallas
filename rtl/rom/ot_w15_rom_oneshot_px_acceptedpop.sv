@@ -63,6 +63,35 @@ module ot_w15_rom_oneshot_die_px_acceptedpop #(
     // +2 cycles a record from FIFO head to the decision; full rate while the landing queue covers the credit loop.
     parameter integer PULL     = 0,
     parameter integer PULL_D   = 4,
+    // PCOPY (fe-push-ds-1010 2026-10-10, opt-in, PULL only; 0 = byte-identical): per source r, (* keep *) register copies
+    // of the pop-decision state (ppar, s0_v, s0_mode, g_busy, g_cnt, go_v, inflight==0) compute a LOCAL pop_k[r] that
+    // drives only source r: its head[r] parity select (547-bit 2:1 mux), its two landing-queue o_ready and its s0_d[r] /
+    // s0_t[r] load enables (512 + 35 flops).  The single pop / ppar nets otherwise fan out to ~4 x 1,100 loads spread
+    // over the four source groups (hardcore-1010 feasibility (b) for dsfd_coll_ce).  The copies load the same D as the
+    // master registers (identical function), so pop_k[r] == pop every cycle; 0 cycles.
+    parameter integer PCOPY    = 0,
+    // PSL (el1011-ds-coll 2026-10-11, opt-in, PULL+PCOPY only; 1 = byte-identical): PSL kept copies of the pop control
+    // per source, one per FW/PSL-bit slice of s0_d, each enabling only its own slice (ce pre-route crplf -1,799 =
+    // u_pr.rp -> head mux -> head_mode -> pop -> 4 x 547 s0 enables; PCOPY cut it to 547 loads per copy, PSL to
+    // FW/PSL (+ tag on slice 0)).  LQW: the landing queues' WFREE (2 = registered non-empty / write enables).
+    parameter integer PSL      = 1,
+    parameter integer LQW      = 1,
+    // EXTF (el1011-ds-coll 2026-10-11, opt-in, PULL + FIFO_SRAM only; 0 = byte-identical): the REMOTE sources' receive
+    // FIFOs live outside the engine (hardened FIFO tiles, dsfd_coll_cef): for g != RANK the landing queue u_pr is fed
+    // from xl_v / xl_d and returns xl_cr, push / clash / occupancy of those FIFOs are kept by the FIFO tile, and rx_* /
+    // rl_* are unused.  The local source's FIFO stays here (its pushes are this engine's fires).
+    parameter integer EXTF     = 0,
+    // RHOLD (el1011-ds-coll 2026-10-11, opt-in; 0 = byte-identical): reduce pops wait while red_hold is high (the
+    // consumer has no reserved output slot for another reduce word; slow-VM-drain overflow fix), out_rpop = a reduce pop
+    parameter integer RHOLD    = 0,
+    // LSEAM (s81-cesn 2026-10-13, opt-in, PAIRWISE N 4 ADD_LAT 3 only; 0 = byte-identical): the ONE seam-latency switch of
+    // the split lane-slice (dsfd_coll_ces SEAM).  The pairwise FP32 lanes live OUTSIDE the engine in hardened lane leaves
+    // (dsfd_coll_cesl): s0_d / red_in leave on ln_v / ln_d into the leaf's pin flops, the sum returns on ln_y / ln_yv /
+    // ln_ye / ln_pe and lands in flops here, so the reduce path is 2 * ADD_LAT + 2 cycles (ldl follows).  Nothing counts
+    // cycles on that path: inflight (pop_red +1, red_out -1) and the consumer's reserved slots are counts.
+    // XF_D: landing depth of the EXTF queues u_pr (their sender is then a relay leaf with XF_D credits).
+    parameter integer LSEAM    = 0,
+    parameter integer XF_D     = PULL_D,
     parameter integer FW       = 32 * LANES,
     parameter integer PW       = FW + 3 + TAGW, // {tag, mode, last, par, data}
     parameter integer RB       = (N > 1) ? $clog2(N) : 1
@@ -96,13 +125,32 @@ module ot_w15_rom_oneshot_die_px_acceptedpop #(
     output wire              out_last,
     output wire [RB-1:0]     out_rank,
     output wire              out_err,
+    // el1011-ds-coll: unmuxed views of the output (a consumer may register the reduce word without the go_v-steered
+    // GW*FW-bit out_data mux in front of it): out_red = a reduce word this cycle, out_rdat its data, out_gdat the
+    // gather beat (valid when out_valid && !out_red)
+    output wire              out_red,
+    output wire [FW-1:0]     out_rdat,
+    output wire [GW*FW-1:0]  out_gdat,
     output reg               fault,
-    output reg  [2:0]        fault_code       // [0] arithmetic, [1] tag / mode / parity / relay, [2] FIFO overflow
+    output reg  [2:0]        fault_code,      // [0] arithmetic, [1] tag / mode / parity / relay, [2] FIFO overflow
+    // EXTF: landing-queue links of the external FIFOs, [2g + q] = source g parity q (g == RANK unused)
+    input  wire              red_hold,
+    output wire              out_rpop,
+    input  wire [2*N-1:0]    xl_v,
+    input  wire [2*N*PW-1:0] xl_d,
+    output wire [2*N-1:0]    xl_cr,
+    // LSEAM: lane seam (ln_d = {s0_d[3], s0_d[2], s0_d[1], s0_d[0]}; ln_pe = the first-level adders' error, aligned to ln_ye)
+    output wire              ln_v,
+    output wire [N*FW-1:0]   ln_d,
+    input  wire [FW-1:0]     ln_y,
+    input  wire [LANES-1:0]  ln_yv,
+    input  wire [2*LANES-1:0] ln_ye,
+    input  wire [LANES-1:0]  ln_pe
 );
     localparam integer PD = DEPTH / 2;                  // words per (source, parity) FIFO
     localparam integer DB = (PD > 1) ? $clog2(PD) : 1;
     localparam integer CB = $clog2(PD + 1);
-    localparam integer DL = ((PAIRWISE != 0 && N == 4) ? 2 : (N - 1)) * ADD_LAT;
+    localparam integer DL = ((PAIRWISE != 0 && N == 4) ? 2 : (N - 1)) * ADD_LAT + ((LSEAM != 0) ? 2 : 0);
     localparam integer E  = N / GW;                     // gather beats per index
     localparam integer EB = (E > 1) ? $clog2(E) : 1;
     localparam integer MYPKG = RANK / PKG_DIES;
@@ -145,6 +193,8 @@ module ot_w15_rom_oneshot_die_px_acceptedpop #(
     wire [PW-1:0] head [0:N-1];
     wire [PW-1:0] hd [0:2*N-1];
     wire          pop;
+    (* keep = "true" *) reg [N*PSL-1:0] ppar_k;             // PCOPY: per-source copies (constant 0 otherwise)
+    wire [N*PSL-1:0] pop_k;
     generate
         for (g = 0; g < N; g = g + 1) begin : g_src
             wire dpar = rx_rec[g*PW + PAR_B];
@@ -152,14 +202,23 @@ module ot_w15_rom_oneshot_die_px_acceptedpop #(
             wire rl_on = (RELAY != 0) && (g != RANK) && ((g / PKG_DIES) != MYPKG);
             for (q = 0; q < 2; q = q + 1) begin : g_par
                 localparam integer F = 2 * g + q;
-                wire          pd_ = (g == RANK) ? (fire && lpar == q) : (rx_valid[g] && dpar == q);
+                wire          pd_ = (g == RANK) ? (fire && lpar == q) : ((EXTF == 0) && rx_valid[g] && dpar == q);
                 wire          pr_ = rl_on && rl_rx_valid[g] && rpar == q;
                 wire [PW-1:0] rec = (g == RANK) ? tx_rec : (pd_ ? rx_rec[g*PW +: PW] : rl_rx_rec[g*PW +: PW]);
                 assign push[F] = pd_ || pr_;
                 assign clash[F] = pd_ && pr_;
                 if (FIFO_SRAM != 0) begin : g_sram
-                    if (PULL != 0) begin : g_pull
+                    if (PULL != 0 && EXTF != 0 && g != RANK) begin : g_xf
+                        // external FIFO: only the landing queue is here
+                        wire pq_ = (PCOPY != 0) ? (pop_k[g*PSL] && ppar_k[g*PSL] == q) : (pop && ppar == q);
+                        ot_link_credit_rx #(.W(PW), .DEPTH(XF_D), .OREG(0), .WFREE(LQW)) u_pr (.clk(clk), .rst_n(rst_n),
+                            .l_valid(xl_v[F]), .l_data(xl_d[F*PW +: PW]), .l_credit(xl_cr[F]), .o_valid(hvf[F]), .o_ready(pq_),
+                            .o_data(hd[F]), .fault());
+                    end else if (PULL != 0) begin : g_pull
+                        assign xl_cr[F] = 1'b0;
                         wire fhv, f_rdy, lv, lc; wire [PW-1:0] fhd, ld;
+                        // the landing-queue pop: the source's local copy under PCOPY, else the shared pop
+                        wire pq_ = (PCOPY != 0) ? (pop_k[g*PSL] && ppar_k[g*PSL] == q) : (pop && ppar == q);
                         ot_fifo_sram_fwft #(.W(PW), .DEPTH(PD), .MACRO(SRAM_MACRO)) u_f (
                             .clk(clk), .rst_n(rst_n), .push(push[F]), .wdata(rec), .pop(fhv && f_rdy),
                             .hv(fhv), .head(fhd), .ovf());
@@ -168,22 +227,24 @@ module ot_w15_rom_oneshot_die_px_acceptedpop #(
 `ifdef OT_W15_PULL_MUT
                         // bench mutant: the landing queue returns its credit on arrival instead of on pop (overruns)
                         wire lc_m;
-                        ot_link_credit_rx #(.W(PW), .DEPTH(PULL_D), .OREG(0), .WFREE(1)) u_pr (.clk(clk), .rst_n(rst_n),
-                            .l_valid(lv), .l_data(ld), .l_credit(lc_m), .o_valid(hvf[F]), .o_ready(pop && ppar == q),
+                        ot_link_credit_rx #(.W(PW), .DEPTH(PULL_D), .OREG(0), .WFREE(LQW)) u_pr (.clk(clk), .rst_n(rst_n),
+                            .l_valid(lv), .l_data(ld), .l_credit(lc_m), .o_valid(hvf[F]), .o_ready(pq_),
                             .o_data(hd[F]), .fault());
                         reg lc_r; always @(posedge clk or negedge rst_n) if (!rst_n) lc_r <= 1'b0; else lc_r <= lv;
                         assign lc = lc_r;
 `else
-                        ot_link_credit_rx #(.W(PW), .DEPTH(PULL_D), .OREG(0), .WFREE(1)) u_pr (.clk(clk), .rst_n(rst_n),
-                            .l_valid(lv), .l_data(ld), .l_credit(lc), .o_valid(hvf[F]), .o_ready(pop && ppar == q),
+                        ot_link_credit_rx #(.W(PW), .DEPTH(PULL_D), .OREG(0), .WFREE(LQW)) u_pr (.clk(clk), .rst_n(rst_n),
+                            .l_valid(lv), .l_data(ld), .l_credit(lc), .o_valid(hvf[F]), .o_ready(pq_),
                             .o_data(hd[F]), .fault());
 `endif
                     end else begin : g_direct
+                    assign xl_cr[F] = 1'b0;
                     ot_fifo_sram_fwft #(.W(PW), .DEPTH(PD), .MACRO(SRAM_MACRO)) u_f (
                         .clk(clk), .rst_n(rst_n), .push(push[F]), .wdata(rec), .pop(pop && ppar == q),
                         .hv(hvf[F]), .head(hd[F]), .ovf());
                     end
                 end else begin : g_flop
+                    assign xl_cr[F] = 1'b0;
                     reg [PW-1:0] m [0:PD-1];
                     reg [DB-1:0] wp, rp;
                     always @(posedge clk) if (push[F]) m[wp] <= rec;
@@ -198,7 +259,11 @@ module ot_w15_rom_oneshot_die_px_acceptedpop #(
                 end
             end
             assign nonempty[g] = ppar ? hvf[2*g + 1] : hvf[2*g];
-            assign head[g] = ppar ? hd[2*g + 1] : hd[2*g];
+            if (PULL != 0 && PCOPY != 0) begin : g_hk
+                assign head[g] = ppar_k[g*PSL] ? hd[2*g + 1] : hd[2*g];
+            end else begin : g_hm
+                assign head[g] = ppar ? hd[2*g + 1] : hd[2*g];
+            end
             // a record landing from a partner-package source is relayed to the package peer the cycle it lands
             if (RELAY != 0 && g != RANK && (g / PKG_DIES) != MYPKG) begin : g_on
                 assign rl_tx_valid[g] = rx_valid[g];
@@ -226,7 +291,9 @@ module ot_w15_rom_oneshot_die_px_acceptedpop #(
     wire g_idle = !g_busy && !g_first;
     // the head registers are free after this cycle when the emitter is idle or emits the index's last beat now
     wire g_free = g_idle || (g_busy && g_cnt == E - 1) || (g_first && E == 1);
-    wire pop_red = all_ne && g_idle && !head_mode;
+    wire rh = (RHOLD != 0) && red_hold;
+    wire pop_red = all_ne && g_idle && !head_mode && !rh;
+    assign out_rpop = pop && pop_red;
     wire pop_gat = all_ne && head_mode && inflight == 0 && g_free && !(s0_v && !s0_mode);
     assign pop = (pop_red || pop_gat) && !g_stall;
     generate
@@ -253,7 +320,8 @@ module ot_w15_rom_oneshot_die_px_acceptedpop #(
             for (r = 0; r < 2 * N; r = r + 1) begin
                 if ((r / 2) != RANK)
                     cr[r] <= cr[r] - ((fire && (r % 2) == lpar) ? 1'b1 : 1'b0) + (cr_in[r] ? 1'b1 : 1'b0);
-                cnt[r] <= cnt[r] + (push[r] ? 1'b1 : 1'b0) - ((pop && (r % 2) == ppar) ? 1'b1 : 1'b0);
+                if (EXTF == 0 || (r / 2) == RANK)       // EXTF: the FIFO tile keeps the remote FIFOs' occupancy
+                    cnt[r] <= cnt[r] + (push[r] ? 1'b1 : 1'b0) - ((pop && (r % 2) == ppar) ? 1'b1 : 1'b0);
             end
         end
     end
@@ -268,10 +336,30 @@ module ot_w15_rom_oneshot_die_px_acceptedpop #(
         end
     end
     reg [TAGW+1:0] s0_t [0:N-1];                        // {tag, mode, par}
+    generate if (PULL != 0 && PCOPY != 0 && PSL == 1) begin : g_s0k
+        for (g = 0; g < N; g = g + 1) begin : g_r
+            always @(posedge clk) if (pop_k[g]) begin
+                s0_d[g] <= head[g][FW-1:0];
+                s0_t[g] <= {head[g][PW-1 -: TAGW + 1], head[g][PAR_B]};
+            end
+        end
+    end else if (PULL != 0 && PCOPY != 0) begin : g_s0s
+        localparam integer SW = FW / PSL;
+        integer k2;
+        always @(posedge clk)
+            for (k2 = 0; k2 < N * PSL; k2 = k2 + 1) if (pop_k[k2]) begin
+                s0_d[k2 / PSL][(k2 % PSL) * SW +: SW] <= ppar_k[k2] ? hd[2 * (k2 / PSL) + 1][(k2 % PSL) * SW +: SW]
+                                                                     : hd[2 * (k2 / PSL)][(k2 % PSL) * SW +: SW];
+                if (k2 % PSL == 0)
+                    s0_t[k2 / PSL] <= ppar_k[k2] ? {hd[2 * (k2 / PSL) + 1][PW-1 -: TAGW + 1], hd[2 * (k2 / PSL) + 1][PAR_B]}
+                                                 : {hd[2 * (k2 / PSL)][PW-1 -: TAGW + 1], hd[2 * (k2 / PSL)][PAR_B]};
+            end
+    end else begin : g_s0m
     always @(posedge clk) if (pop) for (r = 0; r < N; r = r + 1) begin
         s0_d[r] <= head[r][FW-1:0];
         s0_t[r] <= {head[r][PW-1 -: TAGW + 1], head[r][PAR_B]};
     end
+    end endgenerate
     reg s0_ppar;
     always @(posedge clk) if (pop) s0_ppar <= ppar;
     reg agree;
@@ -290,7 +378,68 @@ module ot_w15_rom_oneshot_die_px_acceptedpop #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) ldl <= 0;
         else ldl <= {ldl[DL-2:0], s0_last};
-    generate if (PAIRWISE != 0 && N == 4) begin : g_pairwise
+    // Dedicated seam launch flops capture the exact same head and enable as
+    // s0_d, in the same cycle. The reset is physically distinct from the internal
+    // unreset head register, so synthesis cannot merge the two owners. Payload
+    // is consumed only with ln_v; adding reset changes no valid epoch or latency.
+`ifdef OT_S81_CES_LNPIN
+    generate for (g = 0; g < N; g = g + 1) begin : g_ln_pin
+        (* keep = 1 *) reg [FW-1:0] d;
+        if (PULL != 0 && PCOPY != 0 && PSL == 1) begin : g_one
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) d <= 0;
+                else if (pop_k[g]) d <= head[g][FW-1:0];
+        end else if (PULL != 0 && PCOPY != 0) begin : g_sliced
+            localparam integer SW = FW / PSL;
+            genvar sl;
+            for (sl = 0; sl < PSL; sl = sl + 1) begin : g_sl
+                always @(posedge clk or negedge rst_n)
+                    if (!rst_n) d[SW*sl +: SW] <= 0;
+                    else if (pop_k[g*PSL+sl])
+                        d[SW*sl +: SW] <= ppar_k[g*PSL+sl]
+                            ? hd[2*g+1][SW*sl +: SW] : hd[2*g][SW*sl +: SW];
+            end
+        end else begin : g_shared
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) d <= 0;
+                else if (pop) d <= head[g][FW-1:0];
+        end
+`ifndef SYNTHESIS
+        always @(negedge clk) if (rst_n && ln_v && d !== s0_d[g])
+            $fatal(1, "CES dedicated seam register diverged at valid epoch");
+`endif
+`ifdef OT_S81_CES_MUT_LNPIN
+        assign ln_d[g*FW +: FW] = d ^ {{(FW-1){1'b0}}, 1'b1};
+`else
+        assign ln_d[g*FW +: FW] = d;
+`endif
+    end endgenerate
+`else
+    generate for (g = 0; g < N; g = g + 1) begin : g_lnd
+        assign ln_d[g*FW +: FW] = s0_d[g];
+    end endgenerate
+`endif
+    // LSEAM: ln_v leaves its OWN flop (register at the pin): lnv_q == s0_v && !s0_mode on every cycle (same enable, the
+    // next value of that product: s0_v <= pop, s0_mode <= head_mode on a pop).  LSEAM 0: the port is unused.
+    reg lnv_q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) lnv_q <= 1'b0;
+        else if (!g_stall) lnv_q <= pop && !head_mode;
+    assign ln_v = (LSEAM != 0) ? lnv_q : red_in;
+`ifndef SYNTHESIS
+    always @(posedge clk) if (rst_n && LSEAM != 0 && lnv_q !== red_in) begin
+        $display("TB_S81PH_COLL_SYS FAIL lane-seam valid flop differs from s0_v && !s0_mode"); $fatal(1, "LSEAM ln_v"); end
+`endif
+    generate if (LSEAM != 0) begin : g_seam
+        // landing flops of the lane leaves' output flops (pin flop both ends)
+        reg [FW-1:0] y_q; reg [LANES-1:0] yv_q, pe_q; reg [2*LANES-1:0] ye_q;
+        always @(posedge clk or negedge rst_n) if (!rst_n) yv_q <= 0; else yv_q <= ln_yv;
+        always @(posedge clk) begin y_q <= ln_y; ye_q <= ln_ye; pe_q <= ln_pe; end
+        assign red_data = y_q;
+        assign red_out = yv_q[0];
+        assign red_err = (|ye_q) || (|pe_q);
+        initial if (!(PAIRWISE != 0 && N == 4 && ADD_LAT == 3 && FPLAT == 0)) $fatal(1, "LSEAM needs PAIRWISE, N 4, ADD_LAT 3");
+    end else if (PAIRWISE != 0 && N == 4) begin : g_pairwise
         wire [FW-1:0] ab, cd, y;
         wire [LANES-1:0] av, cv, yv;
         wire [2*LANES-1:0] ae, ce, ye;
@@ -419,11 +568,56 @@ module ot_w15_rom_oneshot_die_px_acceptedpop #(
         end
     end
 
+    // -- PCOPY: per-source pop copies -----------------------------------------------------------
+    generate if (PULL != 0 && PCOPY != 0) begin : g_pcopy
+        wire [15:0] infl_nx = inflight + ((FIX_ACCEPTED_POP ? (pop && pop_red) : pop_red) ? 1'b1 : 1'b0) - (red_out ? 1'b1 : 1'b0);
+        for (g = 0; g < N * PSL; g = g + 1) begin : g_k
+            (* keep = "true" *) reg s0v_k, s0m_k, gb_k, gov_k, iz_k;
+            (* keep = "true" *) reg [EB-1:0] gc_k;
+            wire ne_k  = ppar_k[g] ? &{hvf[7], hvf[5], hvf[3], hvf[1]} : &{hvf[6], hvf[4], hvf[2], hvf[0]};
+            wire hm_k  = ppar_k[g] ? hd[1][MODE_B] : hd[0][MODE_B];
+            wire gst_k = (OUT_BP != 0) && (GW == N) && gov_k && !out_ready;
+            wire gf_k  = s0v_k && s0m_k;
+            wire gi_k  = !gb_k && !gf_k;
+            wire gfr_k = gi_k || (gb_k && gc_k == E - 1) || (gf_k && E == 1);
+            assign pop_k[g] = ((ne_k && gi_k && !hm_k && !rh) || (ne_k && hm_k && iz_k && gfr_k && !(s0v_k && !s0m_k))) && !gst_k;
+            always @(posedge clk or negedge rst_n) begin
+                if (!rst_n) begin
+                    ppar_k[g] <= 1'b0; s0v_k <= 1'b0; s0m_k <= 1'b0; gb_k <= 1'b0; gc_k <= 0; gov_k <= 1'b0; iz_k <= 1'b1;
+                end else begin
+`ifdef OT_W15_PCOPY_MUT
+                    // bench mutant: source 1's parity copy never returns to 0 at an index's last word
+                    if (pop) ppar_k[g] <= (head_last && g != 1) ? 1'b0 : ~ppar_k[g];
+`else
+                    if (pop) ppar_k[g] <= head_last ? 1'b0 : ~ppar_k[g];
+`endif
+                    if (!g_stall) begin
+                        s0v_k <= pop;
+                        if (pop) s0m_k <= head_mode;
+                        gov_k <= g_busy || g_first;
+                        if (g_busy) begin
+                            if (g_cnt == E - 1) gb_k <= 1'b0; else gc_k <= g_cnt + 1'b1;
+                        end else if (g_first && E > 1) begin
+                            gb_k <= 1'b1; gc_k <= 1;
+                        end
+                    end
+                    iz_k <= (infl_nx == 16'd0);
+                end
+            end
+        end
+    end else begin : g_nocopy
+        always @(*) ppar_k = {N*PSL{1'b0}};
+        assign pop_k = {N*PSL{1'b0}};
+    end endgenerate
+
     assign out_valid = red_out || go_v;
     assign out_data  = go_v ? go_d : {{(GW-1)*FW{1'b0}}, red_data};
     assign out_last  = go_v ? go_last : ldl[DL-1];
     assign out_rank  = go_v ? go_rank : {RB{1'b0}};
     assign out_err   = red_out && red_err;
+    assign out_red   = red_out;
+    assign out_rdat  = red_data;
+    assign out_gdat  = go_d;
 
     // -- faults -------------------------------------------------------------------------------
     reg ovf;

@@ -1020,3 +1020,4 @@ place_pin -pin_name {wo[276]} -layer M4 -location {0.0960 39.7400} -pin_size {0.
 place_pin -pin_name {wo[277]} -layer M6 -location {0.0960 39.8240} -pin_size {0.1920 0.0320}
 place_pin -pin_name {wo[278]} -layer M4 -location {0.0960 39.9320} -pin_size {0.1920 0.0240}
 place_pin -pin_name {wo[279]} -layer M6 -location {0.0960 40.0160} -pin_size {0.1920 0.0320}
+place_pin -pin_name {wo[280]} -layer M4 -location {0.0960 40.1240} -pin_size {0.1920 0.0240}

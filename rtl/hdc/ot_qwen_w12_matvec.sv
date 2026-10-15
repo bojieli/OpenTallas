@@ -217,7 +217,24 @@ module ot_qwen_w12_matvec_part #(
     // LRST = 1: each lane group and each split-tree level takes its own kept reset copy (asserted with rst_n,
     // released one edge later); lanes see their first valid >= 4 edges after any go, so the later release is
     // invisible.  0: the original (rst_n everywhere).
-    parameter integer LRST = 0
+    // LRST = 3 (qwen-1010/c 2026-10-10): LRST 2 plus a second kept copy per LANE and per TREE ADDER, fed by its group /
+    // level copy (released two edges after rst_n, assert still asynchronous): the level copy drove every tree adder's
+    // reset flops through 13 buffer levels (rp1pcl-hm0).  0 cycles.
+    parameter integer LRST = 0,
+    parameter integer TMUT = 0,          // 2: one tree adder's reset copy never released (bench mutant, LRST 3)
+    // HIER = NPL > 0 (el1011-q-tile 2026-10-11, textbook class 1/2/4; PART != 2, LANES, every tree level always adds):
+    // the lanes and the split tree as W / NPL hardened lane-slice leaves (ot_qwen_w12_lane_slice: NPL lane positions
+    // of every group + their whole sub-tree; the tree only adds equal positions across groups).  The leaf's input pin
+    // flops ARE the S3 registers, its output is the tree's last-level register: same edges, 0 cycles.  Each leaf
+    // keeps its own valid line / first line / split delay / reset relay (one local clock tree per leaf).
+    parameter integer HIER = 0,
+    // HIER_HARD = 1 (round 2): each slice is the hardened leaf master ot_qwen_tile_lsl (fixed G 4 / NPL 2 / IL 8 / MUL 8 /
+    // ACC 7 / TREE 7 / LRST 3 / ANR 1; rtl/physical/ot_qwen_tile_lsl.sv in simulation, its blackbox + views in the parent route)
+    parameter integer HIER_HARD = 0,
+    parameter integer LRR = 0,            // el1011-q-tile h3: one reset relay flop per hardened leaf (1-cycle later leaf release)
+    parameter integer XTX = 0,            // el1011-q-tile r3 (HIER_HARD): XTX registered transmit rungs in front of every hardened
+                                          // leaf (v/first/split/w and the ROUNDED x), one kept copy per leaf; +XTX cycles of latency
+    parameter integer ANR = 0            // hardcore-1010 D: lane / tree adders as ot_hdc_fp32_add_lat_nr (0 = unchanged)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -300,7 +317,10 @@ module ot_qwen_w12_matvec_part #(
     localparam integer TA = TREE_LAT;     // split-tree adder: ot_hdc_qadd (rtl/hdc/ot_hdc_fastfp.sv), LATENCY 3, or ot_qwen_w12_ladd
     localparam integer TL = TA + 1;       // split-tree cycles per level: the adder + 1 output register
     localparam integer OD = TL * LG;      // split tree
-    localparam integer XDD = (PART == 2) ? XD : 0;
+    //: XTX (HIER_HARD only): the leaves see their inputs XTX cycles later, so every S3-referenced valid / tag / split
+    //: line that meets the leaves' results is XTX cycles longer (same order, same arithmetic)
+    localparam integer XTD = (HIER > 0 && HIER_HARD != 0) ? XTX : 0;
+    localparam integer XDD = ((PART == 2) ? XD : 0) + XTD;
     localparam integer LV0 = (PART == 2) ? TCUT : 0;   // tree levels LV0+1..LG live here
     localparam integer PRUNE = (SMIN > 0);
     // result-port groups: the only groups a K-split tree can deliver to
@@ -447,14 +467,18 @@ end else begin : g_issue_fast
     localparam [NW-1:0] ONE = 1, TWO = 2;
     //: three stages (the first use is IL >= 3 cycles after the go): the shifted terms, their kept sum, the result
     localparam integer NB_GT = PRW;
+    //: TP-setting bench mutants (qwen-tp8 2026-10-12; TMUT 0 = the real constants, synthesis-identical): 4 = the
+    //: round-step products ts*(GT>>S) / ots*(GT>>S) built from a stale 2*GT (a TP4 constant on a TP8 tile).
+    //: (a stale-2*GT pr_a or e_gm bound was tried as TMUT 5: unobservable -- it only touches groups no result port reads)
+    localparam integer GT_TS = (TMUT == 4) ? (GT << 1) : GT;
     reg [AW+PRW-1:0] tsh [0:NB_GT-1];
     reg [AW+PRW-1:0] osh [0:NB_GT-1];
     reg [NW:0]       kpad_a;
     always @(posedge clk) begin : p_terms
         integer b;
         for (b = 0; b < NB_GT; b = b + 1) begin
-            tsh[b] <= (((GT >> b) & 1) != 0 && b >= split_r) ? ({{PRW{1'b0}}, ts_r} << (b - split_r)) : {(AW+PRW){1'b0}};
-            osh[b] <= (((GT >> b) & 1) != 0 && b >= split_r) ? ({{PRW{1'b0}}, ots_r} << (b - split_r)) : {(AW+PRW){1'b0}};
+            tsh[b] <= (((GT_TS >> b) & 1) != 0 && b >= split_r) ? ({{PRW{1'b0}}, ts_r} << (b - split_r)) : {(AW+PRW){1'b0}};
+            osh[b] <= (((GT_TS >> b) & 1) != 0 && b >= split_r) ? ({{PRW{1'b0}}, ots_r} << (b - split_r)) : {(AW+PRW){1'b0}};
         end
         pr_a <= GT >> split_r;
         kpad_a <= {1'b0, ktot_r} + ((1 << split_r) - 1);
@@ -719,6 +743,7 @@ end endgenerate
     reg [GL*32-1:0]   mq_x;
     reg [GL*W*32-1:0] s2_w, s3_w;
     reg [GL*32-1:0]   s2_x, s3_x;
+    wire [GL*32-1:0]  s3x_d;                       // the x word S3 takes (HIER: the leaves' pin flops take it too)
     reg [G-1:0]      s1_gm, s1b_gm, s2_gm;
     integer l;
     //: the BF16 round of x: x + 0x7FFF + x[16] as a kept prefix add (bit-identical to the flattened `+`)
@@ -744,10 +769,13 @@ end endgenerate
                                               {mq_wrom[16*l +: 16], 16'h0000};
             s2_x <= mq_x;
             s3_w <= s2_w;
-            for (l = 0; l < G; l = l + 1)
-                s3_x[32*l +: 32] <= !s2_gm[l] ? 32'd0 :
-                                    s2_round ? (x_rnd[32*l +: 32] & 32'hFFFF0000) : s2_x[32*l +: 32];
+            s3_x <= s3x_d;
         end
+    end endgenerate
+    genvar xg;
+    generate for (xg = 0; xg < GL; xg = xg + 1) begin : g_s3xd
+        assign s3x_d[32*xg +: 32] = !s2_gm[xg] ? 32'd0 :
+                                    s2_round ? (x_rnd[32*xg +: 32] & 32'hFFFF0000) : s2_x[32*xg +: 32];
     end endgenerate
     wire [TW-1:0] a_tag;
     generate if (PORTS) begin : g_atag
@@ -767,6 +795,8 @@ end endgenerate
     // -- lanes -------------------------------------------------------------------
     wire [GL*W*32-1:0] sum;
     wire [G*W-1:0]    lfault;
+    wire [GI*W*32-1:0] lvl_h;                       // HIER: the leaves' last tree level
+    wire               tfault_h;
     genvar g, gl;
     //: LRST: kept reset copies (async assert, released one edge after rst_n): one per lane group, one per tree level
     wire [G-1:0]  rst_g;
@@ -775,7 +805,7 @@ end endgenerate
     // yosys (0.68) opt_merge folds the identical (* keep *) flops back into ONE (qfd_tile_rp1p / tile_e_rp2np post-CTS:
     // the only startpoint is u_me.g_lrst.rt[0] -> lane multipliers / tree adders, -45..-75 ps TT, fanout tree 200+ ps
     // of wire).  Same reset behaviour (async assert, release one edge after rst_n), 0 cycles.
-    generate if (LRST == 2) begin : g_lrst2
+    generate if (LRST >= 2) begin : g_lrst2
         for (g = 0; g < G; g = g + 1) begin : g_rg
             ot_qwen_lrst_ff u_rg (.clk(clk), .rst_n(rst_n), .q(rst_g[g]));
         end
@@ -793,20 +823,95 @@ end endgenerate
     end else begin : g_nolrst
         assign rst_g = {G{rst_n}}; assign rst_t = {(LG+1){rst_n}};
     end endgenerate
-    generate if (LANES) begin : g_lanes
+    generate if (HIER > 0) begin : g_hier
+`ifndef SYNTHESIS
+        initial if (PART == 2 || !LANES || !(PRUNE && SMIN >= LG) || (W % HIER) != 0 || LG < 2) begin
+            $display("FAIL HIER=%0d needs PART != 2, LANES, every tree level adding (SMIN %0d >= LG %0d), W %% NPL == 0, LG >= 2",
+                     HIER, SMIN, LG);
+            $finish;
+        end
+`endif
+        //: lane-slice leaves (W / HIER of them); lvl[LG] / lfault / tfault come from the leaves
+        localparam integer NS = W / HIER;
+        wire [NS-1:0] stf;
+        wire [W*32-1:0] top;
+        for (g = 0; g < NS; g = g + 1) begin : g_sl
+            wire [G*HIER*32-1:0] w_in;
+            wire [G*HIER-1:0] lf;
+            for (gl = 0; gl < G * HIER; gl = gl + 1) begin : g_wi
+                assign w_in[32*gl +: 32] = s2_w[32*((gl / HIER) * W + g * HIER + (gl % HIER)) +: 32];
+                assign lfault[(gl / HIER) * W + g * HIER + (gl % HIER)] = lf[gl];
+            end
+            if (HIER_HARD != 0) begin : g_hd
+`ifndef SYNTHESIS
+                initial if (G != 4 || HIER != 2 || IL != 8 || MUL_LAT != 8 || ACC_LAT != 7 || TREE_LAT != 7 || LRST != 3 || ANR != 1) begin
+                    $display("FAIL HIER_HARD: engine parameters differ from the hardened leaf ot_qwen_tile_lsl"); $finish;
+                end
+`endif
+                //: LRR: one reset relay flop per leaf (asynchronous assert, release one edge later), so the tile reset port
+                //: drives 8 relay flops instead of every leaf's relays across the frame
+                wire rst_l;
+                if (LRR != 0) begin : g_lrr
+                    (* keep *) reg rq;
+                    always @(posedge clk or negedge rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+                    assign rst_l = rq;
+                end else begin : g_lrn
+                    assign rst_l = rst_n;
+                end
+                //: XTX: registered transmit rungs per leaf (one kept instance per leaf and rung, so Yosys opt_merge cannot
+                //: fold the 8 identical copies back into one broadcast).  Rung 1 takes the ROUNDED / masked x (s3x_d), so the
+                //: BF16 round + mask is the only logic before a register and every later hop is register -> wire ->
+                //: register (<= ~350 um each across the 1,296 um cluster).  Only the valid bit is reset.
+                localparam integer XW = 1 + 1 + 4 + G * HIER * 32 + G * 32;
+                wire [XW-1:0] tx_d = {s2_v, s2_first, s2_tag[TW-6 -: 4], w_in, s3x_d[G*32-1:0]};
+                wire [XW-1:0] tx_q;
+                if (XTX > 0) begin : g_tx
+                    wire [XW*(XTX+1)-1:0] tc;
+                    assign tc[XW-1:0] = tx_d;
+                    genvar rr;
+                    for (rr = 0; rr < XTX; rr = rr + 1) begin : g_r
+                        ot_qwen_tx_ff #(.W(XW)) u_tx (.clk(clk), .rst_n(rst_l), .d(tc[XW*rr +: XW]), .q(tc[XW*(rr+1) +: XW]));
+                    end
+                    assign tx_q = tc[XW*XTX +: XW];
+                end else begin : g_ntx
+                    assign tx_q = tx_d;
+                end
+                ot_qwen_tile_lsl u_lh (.clk(clk), .rst_n(rst_l), .v_d(tx_q[XW-1]), .first_d(tx_q[XW-2]), .split_d(tx_q[XW-3 -: 4]),
+                    .w_d(tx_q[G*32 +: G*HIER*32]), .x_d(tx_q[G*32-1:0]), .t_out(top[HIER*32*g +: HIER*32]), .lfault(lf), .tfault(stf[g]));
+            end else begin : g_sf
+            ot_qwen_w12_lane_slice #(.G(G), .NPL(HIER), .IL(IL), .MUL_LAT(MUL_LAT), .ACC_LAT(ACC_LAT),
+                .TREE_LAT(TREE_LAT), .LRST(LRST), .ANR(ANR), .TMUT((g == 0) ? TMUT : 0)) u_ls (
+                .clk(clk), .rst_n(rst_n), .v_d(s2_v), .first_d(s2_first), .split_d(s2_tag[TW-6 -: 4]),
+                .w_d(w_in), .x_d(s3x_d[G*32-1:0]), .t_out(top[HIER*32*g +: HIER*32]), .lfault(lf), .tfault(stf[g]));
+            end
+        end
+        assign sum = {GL*W*32{1'b0}};
+        assign lvl_h = {{((GI - 1) * W * 32){1'b0}}, top};
+        assign tfault_h = |stf;
+    end else begin : g_flat
+        assign lvl_h = {GI*W*32{1'b0}};
+        assign tfault_h = 1'b0;
+    end endgenerate
+    generate if (LANES && HIER == 0) begin : g_lanes
         for (g = 0; g < G; g = g + 1) begin : g_grp
             for (gl = 0; gl < W; gl = gl + 1) begin : g_lane
                 localparam integer LI = g * W + gl;
+                wire rst_l;                              // LRST 3: the lane's own kept reset copy
+                if (LRST >= 3) begin : g_lr
+                    ot_qwen_lrst_ff u_rl (.clk(clk), .rst_n(rst_g[g]), .q(rst_l));
+                end else begin : g_lg
+                    assign rst_l = rst_g[g];
+                end
                 wire [31:0] prod, fb_pre, acc_in;
                 reg  [31:0] acc_q;
                 wire f0, f1;
                 //: every product is BF16 x BF16 (weights, x rounded; BF16 KV, q and
                 //: probabilities rounded), so every lane has the small exact multiplier
                 if (MUL_LAT == 5) begin : g_legacy_mul
-                    ot_hdc_bmul u_mul (.clk(clk), .rst_n(rst_g[g]), .v(s3_v),
+                    ot_hdc_bmul u_mul (.clk(clk), .rst_n(rst_l), .v(s3_v),
                                      .a(s3_w[32*LI +: 32]), .b(s3_x[32*g +: 32]), .y(prod), .fault(f0));
                 end else begin : g_candidate_mul
-                    ot_qwen_w12_bmul #(.LAT(MUL_LAT)) u_mul (.clk(clk), .rst_n(rst_g[g]), .v(s3_v),
+                    ot_qwen_w12_bmul #(.LAT(MUL_LAT)) u_mul (.clk(clk), .rst_n(rst_l), .v(s3_v),
                                      .a(s3_w[32*LI +: 32]), .b(s3_x[32*g +: 32]), .y(prod), .fault(f0));
                 end
                 // add input at c+8; the circulating sum from IL cycles earlier.
@@ -817,17 +922,17 @@ end endgenerate
                 always @(posedge clk) acc_q <= fl_first[MUL_LAT-1] ? 32'd0 : fb_pre;
                 assign acc_in = acc_q;
                 if (ACC_LAT == 5) begin : g_fadd
-                    ot_hdc_fadd u_add (clk, rst_g[g], vline[MUL_LAT], acc_in, prod,
+                    ot_hdc_fadd u_add (clk, rst_l, vline[MUL_LAT], acc_in, prod,
                                        sum[32*LI +: 32], f1);
                 end else begin : g_ladd
-                    ot_qwen_w12_ladd #(.LAT(ACC_LAT)) u_add (clk, rst_g[g], vline[MUL_LAT], acc_in, prod,
+                    ot_qwen_w12_ladd #(.LAT(ACC_LAT), .ANR(ANR)) u_add (clk, rst_l, vline[MUL_LAT], acc_in, prod,
                                                        sum[32*LI +: 32], f1);
                 end
-                ot_hdc_delay #(.W(32), .D(FB - 1)) u_fb (.clk(clk), .rst_n(rst_g[g]), .d(sum[32*LI +: 32]), .q(fb_pre));
+                ot_hdc_delay #(.W(32), .D(FB - 1)) u_fb (.clk(clk), .rst_n(rst_l), .d(sum[32*LI +: 32]), .q(fb_pre));
                 assign lfault[LI] = f0 | f1;
             end
         end
-    end else begin : g_no_lanes
+    end else if (HIER == 0) begin : g_no_lanes
         assign sum = {GL*W*32{1'b0}};
         assign lfault = {G*W{1'b0}};
     end endgenerate
@@ -854,7 +959,7 @@ end endgenerate
     wire [LG*4+3:0] split_at;                       // split at each level's input
     assign split_at[4*LV0+3 -: 4] = t_split;
     generate
-        for (lv = LV0 + 1; lv <= LG; lv = lv + 1) begin : g_lvl
+        for (lv = LV0 + 1; lv <= ((HIER > 0) ? LV0 : LG); lv = lv + 1) begin : g_lvl
             localparam integer ALWAYS = PRUNE && (SMIN >= lv);
             localparam integer HOLD_TO = PRUNE ? NPG : G;      // held positions [G >> lv, HOLD_TO)
             wire [3:0] sp_sel;                      // split when the level's sums emerge
@@ -883,7 +988,13 @@ end endgenerate
             for (p = 0; p < PAIRS; p = p + 1) begin : g_add
                 localparam integer PW = p / W, PL = p % W;
                 wire [31:0] s_out;
-                ot_qwen_w12_tadd #(.LAT(TREE_LAT)) u_add (clk, rst_t[lv], vline[SD + TL*(lv-1) + XDD] && (split_at[4*lv-1 -: 4] >= lv),
+                wire rst_a;                              // LRST 3: the adder's own kept reset copy
+                if (LRST >= 3) begin : g_ra
+                    ot_qwen_lrst_ff u_ra (.clk(clk), .rst_n((TMUT == 2 && lv == LV0 + 1 && p == 0) ? 1'b0 : rst_t[lv]), .q(rst_a));
+                end else begin : g_rl
+                    assign rst_a = rst_t[lv];
+                end
+                ot_qwen_w12_tadd #(.LAT(TREE_LAT), .ANR(ANR)) u_add (clk, rst_a, vline[SD + TL*(lv-1) + XDD] && (split_at[4*lv-1 -: 4] >= lv),
                                    lvl[lv-1][32*((2*PW)*W + PL) +: 32], lvl[lv-1][32*((2*PW+1)*W + PL) +: 32],
                                    s_out, pf[p]);
                 if (ALWAYS) begin : g_a
@@ -904,10 +1015,14 @@ end endgenerate
             end
             assign tfault[lv] = |pf;
         end
+        if (HIER > 0) begin : g_hlvl
+            assign lvl[LG] = lvl_h;
+            assign tfault[LG:LV0+1] = {{(LG - LV0 - 1){1'b0}}, tfault_h};
+        end
     endgenerate
     // PART 1: the tile's top level and its valid, towards the tree above
     assign t_out = lvl[LG][W*32-1:0];
-    assign t_vout = vline[SD + OD];
+    assign t_vout = vline[SD + OD + XTD];           // XTX: the leaves' results (t_out) are XTD cycles later
     wire [GI*W*32-1:0] raw_res = lvl[LG];
     wire raw_v = vline[SD + OD + XDD];
     wire raw_last, raw_oen, raw_amax, raw_wsrc, raw_mmode;
@@ -1242,7 +1357,7 @@ endmodule
 
 // ot_qwen_w12_ladd #(LAT): ot_hdc_fp32_add_lat (bit-identical to ot_hdc_qadd / ot_hdc_fadd) with the qadd port
 // shape: fault = a valid result's err.
-module ot_qwen_w12_ladd #(parameter integer LAT = 7) (
+module ot_qwen_w12_ladd #(parameter integer LAT = 7, parameter integer ANR = 0) (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        v,
@@ -1253,13 +1368,19 @@ module ot_qwen_w12_ladd #(parameter integer LAT = 7) (
 );
     wire [1:0] err;
     wire vo;
-    ot_hdc_fp32_add_lat #(.LAT(LAT)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
-                                        .valid_out(vo));
+    // ANR = 1 (hardcore-1010 D): ot_hdc_fp32_add_lat_nr (valid-only cut resets + HSPLIT), bit-identical
+    generate if (ANR != 0) begin : g_nr
+        ot_hdc_fp32_add_lat_nr #(.LAT(LAT)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
+                                               .valid_out(vo));
+    end else begin : g_r
+        ot_hdc_fp32_add_lat #(.LAT(LAT)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
+                                            .valid_out(vo));
+    end endgenerate
     assign fault = vo && (err != 2'd0);
 endmodule
 
 // The split-tree pair adder: ot_hdc_qadd at LAT 3 (the legacy netlist), else ot_qwen_w12_ladd #(LAT).
-module ot_qwen_w12_tadd #(parameter integer LAT = 3) (
+module ot_qwen_w12_tadd #(parameter integer LAT = 3, parameter integer ANR = 0) (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        v,
@@ -1271,7 +1392,7 @@ module ot_qwen_w12_tadd #(parameter integer LAT = 3) (
     generate if (LAT == 3) begin : g_q
         ot_hdc_qadd u (clk, rst_n, v, a, b, y, fault);
     end else begin : g_l
-        ot_qwen_w12_ladd #(.LAT(LAT)) u (clk, rst_n, v, a, b, y, fault);
+        ot_qwen_w12_ladd #(.LAT(LAT), .ANR(ANR)) u (clk, rst_n, v, a, b, y, fault);
     end endgenerate
 endmodule
 
@@ -1343,4 +1464,168 @@ endmodule
 (* keep_hierarchy *)
 module ot_qwen_lrst_ff (input wire clk, input wire rst_n, output reg q);
     always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= 1'b1;
+endmodule
+
+
+// el1011-q-tile 2026-10-11 (textbook class 1 / 2 / 4): one hardened lane-slice leaf of ot_qwen_w12_matvec_part HIER.
+// NPL lane positions of each of the G groups (G * NPL lanes: BF16 product + FP32 circulating accumulator) and their
+// whole split tree (every level adds; the tree only combines equal positions across groups, so a position slice is
+// closed under it).  Boundary: the input pins land on flops that ARE the engine's S3 registers (v, first, split, w,
+// x); the output is the last tree level's register; the lane / tree faults are flop-driven ORs.  Own valid line,
+// first line, split delay and reset relay, so the leaf is one small local clock tree with no long control nets.
+module ot_qwen_w12_lane_slice #(
+    parameter integer G = 4,
+    parameter integer NPL = 2,
+    parameter integer IL = 8,
+    parameter integer MUL_LAT = 5,
+    parameter integer ACC_LAT = 5,
+    parameter integer TREE_LAT = 3,
+    parameter integer LRST = 0,
+    parameter integer ANR = 0,
+    parameter integer TMUT = 0
+) (
+    input  wire                 clk,
+    input  wire                 rst_n,
+    input  wire                 v_d,          // S2 valid (the pin flop is S3)
+    input  wire                 first_d,
+    input  wire [3:0]           split_d,
+    input  wire [G*NPL*32-1:0]  w_d,          // lane (g, j) at g * NPL + j
+    input  wire [G*32-1:0]      x_d,          // S3's x word per group
+    output wire [NPL*32-1:0]    t_out,        // the last level: position j at j
+    output wire [G*NPL-1:0]     lfault,
+    output wire                 tfault
+);
+    localparam integer LG = $clog2(G);
+    localparam integer FB = IL - ACC_LAT;
+    localparam integer SD = MUL_LAT + ACC_LAT;
+    localparam integer TA = TREE_LAT;
+    localparam integer TL = TA + 1;
+    localparam integer OD = TL * LG;
+    //: pin flops = S3
+    (* keep *) reg s3_v, s3_first;
+    (* keep *) reg [3:0] s3_split;
+    (* keep *) reg [G*NPL*32-1:0] s3_w;
+    (* keep *) reg [G*32-1:0] s3_x;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) s3_v <= 1'b0; else s3_v <= v_d;
+    always @(posedge clk) begin s3_first <= first_d; s3_split <= split_d; s3_w <= w_d; s3_x <= x_d; end
+    wire [SD+OD:0] vline;
+    ot_hdc_vline #(.D(SD + OD)) u_v (.clk(clk), .rst_n(rst_n), .v(s3_v), .vd(vline));
+    wire [MUL_LAT:0] fl_first;
+    ot_hdc_vline #(.D(MUL_LAT)) u_first (.clk(clk), .rst_n(rst_n), .v(s3_first && s3_v), .vd(fl_first));
+    wire [3:0] t_split;
+    ot_hdc_delay #(.W(4), .D(SD)) u_ts (.clk(clk), .rst_n(rst_n), .d(s3_split), .q(t_split));
+    //: reset relay (LRST semantics of the engine: async assert, release one edge after rst_n)
+    wire [G-1:0] rst_g;
+    wire [LG:0]  rst_t;
+    genvar g, gl, lv, p;
+    generate if (LRST >= 2) begin : g_lrst2
+        for (g = 0; g < G; g = g + 1) begin : g_rg
+            ot_qwen_lrst_ff u_rg (.clk(clk), .rst_n(rst_n), .q(rst_g[g]));
+        end
+        for (g = 0; g <= LG; g = g + 1) begin : g_rt
+            ot_qwen_lrst_ff u_rt (.clk(clk), .rst_n(rst_n), .q(rst_t[g]));
+        end
+    end else if (LRST != 0) begin : g_lrst
+        (* keep *) reg [G-1:0] rg;
+        (* keep *) reg [LG:0]  rt;
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin rg <= {G{1'b0}}; rt <= {(LG+1){1'b0}}; end
+            else begin rg <= {G{1'b1}}; rt <= {(LG+1){1'b1}}; end
+        end
+        assign rst_g = rg; assign rst_t = rt;
+    end else begin : g_nolrst
+        assign rst_g = {G{rst_n}}; assign rst_t = {(LG+1){rst_n}};
+    end endgenerate
+    //: lanes
+    wire [G*NPL*32-1:0] sum;
+    wire [G*NPL-1:0] lf;
+    generate
+        for (g = 0; g < G; g = g + 1) begin : g_grp
+            for (gl = 0; gl < NPL; gl = gl + 1) begin : g_lane
+                localparam integer LI = g * NPL + gl;
+                wire rst_l;
+                if (LRST >= 3) begin : g_lr
+                    ot_qwen_lrst_ff u_rl (.clk(clk), .rst_n(rst_g[g]), .q(rst_l));
+                end else begin : g_lg
+                    assign rst_l = rst_g[g];
+                end
+                wire [31:0] prod, fb_pre, acc_in;
+                reg  [31:0] acc_q;
+                wire f0, f1;
+                if (MUL_LAT == 5) begin : g_legacy_mul
+                    ot_hdc_bmul u_mul (.clk(clk), .rst_n(rst_l), .v(s3_v),
+                                     .a(s3_w[32*LI +: 32]), .b(s3_x[32*g +: 32]), .y(prod), .fault(f0));
+                end else begin : g_candidate_mul
+                    ot_qwen_w12_bmul #(.LAT(MUL_LAT)) u_mul (.clk(clk), .rst_n(rst_l), .v(s3_v),
+                                     .a(s3_w[32*LI +: 32]), .b(s3_x[32*g +: 32]), .y(prod), .fault(f0));
+                end
+                always @(posedge clk) acc_q <= fl_first[MUL_LAT-1] ? 32'd0 : fb_pre;
+                assign acc_in = acc_q;
+                if (ACC_LAT == 5) begin : g_fadd
+                    ot_hdc_fadd u_add (clk, rst_l, vline[MUL_LAT], acc_in, prod, sum[32*LI +: 32], f1);
+                end else begin : g_ladd
+                    ot_qwen_w12_ladd #(.LAT(ACC_LAT), .ANR(ANR)) u_add (clk, rst_l, vline[MUL_LAT], acc_in, prod,
+                                                       sum[32*LI +: 32], f1);
+                end
+                ot_hdc_delay #(.W(32), .D(FB - 1)) u_fb (.clk(clk), .rst_n(rst_l), .d(sum[32*LI +: 32]), .q(fb_pre));
+                assign lf[LI] = f0 | f1;
+            end
+        end
+    endgenerate
+    assign lfault = lf;
+    //: the slice's split tree (every level adds)
+    wire [G*NPL*32-1:0] lvl [0:LG];
+    wire [LG:0] tf;
+    assign lvl[0] = sum;
+    assign tf[0] = 1'b0;
+    wire [LG*4+3:0] split_at;
+    assign split_at[3:0] = t_split;
+    generate
+        for (lv = 1; lv <= LG; lv = lv + 1) begin : g_lvl
+            wire [3:0] sp_sel;
+            ot_hdc_delay #(.W(4), .D(TA)) u_sd (.clk(clk), .rst_n(rst_t[lv]), .d(split_at[4*lv-1 -: 4]), .q(sp_sel));
+            reg  [3:0] sp_out;
+            always @(posedge clk) sp_out <= sp_sel;
+            assign split_at[4*lv+3 -: 4] = sp_out;
+            localparam integer PAIRS = (G >> lv) * NPL;
+            wire [PAIRS-1:0] pf;
+            reg  [PAIRS*32-1:0] lq;
+            for (p = 0; p < PAIRS; p = p + 1) begin : g_add
+                localparam integer PW = p / NPL, PL = p % NPL;
+                wire [31:0] s_out;
+                wire rst_a;
+                if (LRST >= 3) begin : g_ra
+                    ot_qwen_lrst_ff u_ra (.clk(clk), .rst_n((TMUT == 2 && lv == 1 && p == 0) ? 1'b0 : rst_t[lv]), .q(rst_a));
+                end else begin : g_rl
+                    assign rst_a = rst_t[lv];
+                end
+                ot_qwen_w12_tadd #(.LAT(TREE_LAT), .ANR(ANR)) u_add (clk, rst_a, vline[SD + TL*(lv-1)] && (split_at[4*lv-1 -: 4] >= lv),
+                                   lvl[lv-1][32*((2*PW)*NPL + PL) +: 32], lvl[lv-1][32*((2*PW+1)*NPL + PL) +: 32],
+                                   s_out, pf[p]);
+                always @(posedge clk) lq[32*p +: 32] <= s_out;
+            end
+            if (PAIRS < G * NPL) begin : g_lp
+                assign lvl[lv] = {{((G * NPL - PAIRS) * 32){1'b0}}, lq};
+            end else begin : g_lf
+                assign lvl[lv] = lq;
+            end
+            assign tf[lv] = |pf;
+        end
+    endgenerate
+    assign t_out = lvl[LG][NPL*32-1:0];
+    assign tfault = |tf;
+endmodule
+
+//: el1011-q-tile r3: one registered transmit rung (kept hierarchy so identical per-leaf copies survive opt_merge); the
+//: MSB is the valid bit (async reset), the rest is datapath (no reset)
+(* keep_hierarchy *)
+module ot_qwen_tx_ff #(parameter integer W = 8) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire [W-1:0] d,
+    output reg  [W-1:0] q
+);
+    always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+    always @(posedge clk) q[W-2:0] <= d[W-2:0];
 endmodule

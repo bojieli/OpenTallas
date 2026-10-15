@@ -122,6 +122,9 @@ class NativeCost:
             return c, "measured_depth_model", how
         if u == "FUSED" and op.startswith("QDQ"):
             n = r.desc["A"].n
+            # price of record: ceil(n / 32) + 8 (owner 2026-10-11: prices are not adjusted to fit measurements).  The
+            # WIDE unit measures ceil(n / 32) + 49 (decode latency 23 + VM round trip): measured / price 2.7x at n 512,
+            # recorded in results/rtl/hgi_unit_tput_20261010/qdq_wide/report.json for the owner / P&R to resolve
             return math.ceil(n / 32) + 8, "rtl_spec", "DS quantiser: 32 / cycle, latency 8"
         if u == "DMA" and op == "LOAD" and r.desc["A"].indexed and r.desc["A"].n_sel == 63:
             rows = r.desc["O"].m

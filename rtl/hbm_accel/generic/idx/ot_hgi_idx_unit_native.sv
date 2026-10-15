@@ -16,7 +16,10 @@
 //   op 4 (EHASH, not bound here): record fault (fail-closed).
 // Return {fault, done, ready}: ready = no record in flight.
 module ot_hgi_idx_unit_native #(
-    parameter integer MUT = 0           // bench mutants: 1 ascending sort compares scores instead of ids
+    parameter integer MUT = 0,          // bench mutants: 1 ascending sort compares scores instead of ids
+    // hgi-1010/g3 (opt-in, defaults 0 = unchanged): see the IDX.INDEX front below
+    parameter integer NGLOB = 0,
+    parameter integer IKS = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -33,7 +36,9 @@ module ot_hgi_idx_unit_native #(
     output wire          sel_toc,
     input  wire [71:0]   sel_co,
     output wire          sel_coc,
-    input  wire [1:0]    sel_ev
+    input  wire [1:0]    sel_ev,
+    // index-key stream (IKS = 1): the four stacks' svc e beats {payload 127, valid} (ot_hgi_idx_iks_issue); 0 otherwise
+    output wire [511:0]  iks_e
 );
     reg [337:0] vmq_t;
     wire [337:0] vmq_x, vmq_m, vmq_w;
@@ -43,7 +48,7 @@ module ot_hgi_idx_unit_native #(
     reg busy, started, eng_done, eng_err;
     reg [31:0] w_sc;
     reg [11:0] o_k;                      // output index within the row (descending order)
-    reg [127:0] hdr; reg [255:0] dA, dB, dC, dD, dO, dR; reg [19:0] rpos; reg [7:0] rdie;
+    reg [127:0] hdr; reg [255:0] dA, dB, dC, dD, dO, dR; reg [19:0] rpos; reg [7:0] rdie; reg [255:0] dI;
     wire [5:0]  op    = hdr[123:118];
     wire [6:0]  opnd  = hdr[99:93];
     wire [11:0] k     = hdr[75:64];
@@ -69,16 +74,55 @@ module ot_hgi_idx_unit_native #(
         .out_last(e_last), .out_values_valid(e_vv), .done(e_done), .error(e_err));
     // ---------------------------------------------------------------- IDX.INDEX frame adapter (op 0)
     reg x_go; wire x_done, x_fault;
+    // ---- IDX.INDEX front (hgi-1010/g3, opt-in).
+    // NGLOB = 1: the compiler's / simulator's G18 semantics (tools/hgi_sim/machine.py u_idx_index): imm_a = n = the keys
+    //   of the whole group; this die scores the keys of the blocks it owns (block g of 8 keys on rank g mod 96).  The
+    //   frame gets n_die = the owned key count (fs n_die14) and pos = n - 1 (the newest key; its block is the pinned
+    //   candidate), derived over 2 registered stages: d = ceil(n / 8) - 1 - rank, blocks = d div 96 + 1 (d div 96 =
+    //   (d >> 5) div 3, exact as (y x 2,731) >> 13 for y < 2^13), minus the missing keys of a partial last block when
+    //   this rank owns it (d mod 96 = 0).  The adapter / issuer go is delayed 2 cycles to see them.  Legal: 1 <= n <= 2^20.
+    //   NGLOB = 0: n = imm_a taken as the die's own key count and pos = the record's token position (the legacy benches).
+    // IKS = 1: ot_hgi_idx_iks_issue starts the four stacks' key streams at the frame start from operand I (the key
+    //   region: I in HBM, byte address I.base; a record without I issues nothing).  A misaligned I.base (I.base[19:0] != 0 or
+    //   stack bits [36:35] != 0) is illegal (E_RANGE before the frame starts).
+    wire [6:0]  x_rank = rdie >= 8'd192 ? 7'(rdie - 8'd192) : rdie >= 8'd96 ? 7'(rdie - 8'd96) : rdie[6:0];
+    wire [31:0] x_ng = hdr[63:32];
+    wire [28:0] x_nb = x_ng[31:3] + {28'd0, |x_ng[2:0]};
+    wire [28:0] x_d  = x_nb - 29'd1 - {22'd0, x_rank};
+    reg  [11:0] nd_y; reg nd_any, nd_d0; reg [2:0] nd_sh; reg [13:0] x_ndie; reg [19:0] x_newest; reg x_go1, x_go2;
+    wire [24:0] nd_p = {13'd0, nd_y} * 25'd2731;
+    wire [11:0] nd_q = 12'(nd_p >> 13);
+    wire        nd_last = nd_d0 && (nd_y == 12'(nd_q * 12'd3));
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin x_go1 <= 1'b0; x_go2 <= 1'b0; nd_y <= 12'd0; nd_any <= 1'b0; nd_d0 <= 1'b0; nd_sh <= 3'd0;
+            x_ndie <= 14'd0; x_newest <= 20'd0; end
+        else begin
+            x_go1 <= x_go; x_go2 <= x_go1;
+            nd_y <= 12'(x_d >> 5); nd_any <= x_nb > {22'd0, x_rank}; nd_d0 <= x_d[4:0] == 5'd0;
+            nd_sh <= 3'd0 - x_ng[2:0]; x_newest <= 20'(x_ng - 32'd1);
+            x_ndie <= !nd_any ? 14'd0 : 14'({nd_q + 12'd1, 3'd0} - (nd_last ? {12'd0, nd_sh} : 15'd0));
+        end
+    end
+    wire [39:0] x_ikb = dI[47:8];
+    wire x_iks_ok = (IKS == 0) || !opnd[6] || (dI[1:0] == 2'd0 && x_ikb[19:0] == 20'd0 && x_ikb[36:35] == 2'd0);
+    wire x_n_ok = (NGLOB == 0) || (x_ng != 32'd0 && x_ng <= 32'h0010_0000);
+    generate if (IKS != 0) begin : g_iks
+        wire [35:0] iks_blocks; wire iks_fault;
+        ot_hgi_idx_iks_issue u_iks (.clk(clk), .rst_n(rst_n), .go(x_go2 && opnd[6]), .n({18'd0, x_ndie}), .ik_base(x_ikb),
+            .tag(13'd0), .no_credit(1'b0), .e_d(iks_e), .blocks(iks_blocks), .fault(iks_fault));
+    end else begin : g_no_iks
+        assign iks_e = 512'd0;
+    end endgenerate
     wire [17:0] dB_b = dB[25:8], dC_b = dC[25:8], dD_b = dD[25:8], dD_s = dD[105:88];
     // legal: A VM FP32 n*m = 4,096, B VM FP32 >= 32, C VM U32 (keep_en), O VM U32, R VM FP32 (optional), D VM (cand_en)
     wire x_keep = hdr[77], x_cand = hdr[76];
     wire x_legal = opnd[0] && opnd[1] && opnd[4] && dA[1:0] == 2'd1 && dA[4:2] == 3'd0 && a_n * a_m == 20'd4096 &&
                    dB[1:0] == 2'd1 && dB[4:2] == 3'd0 && dO[1:0] == 2'd1 && dO[4:2] == 3'd5 &&
                    (!has_r || (dR[1:0] == 2'd1 && dR[4:2] == 3'd0)) && (!x_keep || (opnd[2] && dC[1:0] == 2'd1 && dC[67:48] != 20'd0 && dC[67:48] <= 20'd2048)) &&
-                   (!x_cand || (opnd[3] && dD[1:0] == 2'd1)) && hdr[88:78] == 11'd0;
-    ot_hgi_idx_index_native #(.MUT(MUT >= 2 ? MUT - 1 : 0)) u_index (.clk(clk), .rst_n(rst_n), .go(x_go), .k(k), .cand_en(x_cand),
-        .keep_en(x_keep), .n(hdr[63:32]), .rank(rdie >= 8'd192 ? 7'(rdie - 8'd192) : rdie >= 8'd96 ? 7'(rdie - 8'd96) : rdie[6:0]),
-        .pos(rpos), .a_base(a_base[17:0]), .b_base(dB_b), .c_base(dC_b), .o_base(o_base[17:0]), .r_base(r_base[17:0]),
+                   (!x_cand || (opnd[3] && dD[1:0] == 2'd1)) && hdr[88:78] == 11'd0 && x_iks_ok && x_n_ok;
+    ot_hgi_idx_index_native #(.MUT(MUT >= 2 ? MUT - 1 : 0)) u_index (.clk(clk), .rst_n(rst_n), .go(NGLOB != 0 ? x_go2 : x_go), .k(k), .cand_en(x_cand),
+        .keep_en(x_keep), .n(NGLOB != 0 ? {18'd0, x_ndie} : hdr[63:32]), .rank(x_rank),
+        .pos(NGLOB != 0 ? x_newest : rpos), .a_base(a_base[17:0]), .b_base(dB_b), .c_base(dC_b), .o_base(o_base[17:0]), .r_base(r_base[17:0]),
         .d_base(dD_b), .d_stride(dD_s), .c_stride(dC[105:88]), .c_n(dC[59:48]), .has_r(has_r), .done(x_done), .fault(x_fault),
         .vmq(vmq_x), .vmr(x_active ? vmr : 274'd0), .fs(sel_fs), .qb(sel_qb), .qbr(sel_qbr), .kin(sel_kin), .to(sel_to),
         .toc(sel_toc), .co(sel_co), .coc(sel_coc), .ev(sel_ev));
@@ -134,7 +178,7 @@ module ot_hgi_idx_unit_native #(
             // record intake
             if (!busy && rec[0]) begin
                 hdr <= rec[128:1]; dA <= rec[384:129]; dB <= rec[640:385]; dC <= rec[896:641]; dD <= rec[1152:897];
-                dO <= rec[1408:1153]; dR <= rec[1664:1409]; rpos <= rec[1810:1791]; rdie <= rec[1818:1811];
+                dO <= rec[1408:1153]; dR <= rec[1664:1409]; rpos <= rec[1810:1791]; rdie <= rec[1818:1811]; dI <= rec[2074:1819];
                 busy <= 1'b1; ret[0] <= 1'b0; e_cmd_v <= 1'b0; r_row <= 20'd0; r_col <= 20'd0; r_done <= 1'b0;
                 c_ok <= 1'b0; w_cnt <= 32'd0; b_v <= 8'd0; b_n <= 4'd0; b_full <= 1'b0; o_k <= 12'd0;
             end else if (busy && !e_cmd_v && r_row == 20'd0 && r_col == 20'd0 && !r_done && !e_in_v && !vm_pend && w_cnt == 32'd0 && !started) begin

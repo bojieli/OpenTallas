@@ -276,7 +276,7 @@ def plan_family(fam):
                 src = ('e', 'e_sdv', 'e_sdd') if i == 0 else (f'pc{Ls[i-1]}', f'pc{Ls[i-1]}_dov', f'pc{Ls[i-1]}_dod')
                 ch(f'c_sd{p}', 62, src[0], src[1], src[2], f'pc{p}', f'pc{p}_div', f'pc{p}_did', 'ps_desc')
                 dst = ('e', f'e_d{side}ok', f'e_d{side}ph') if i == 0 else (f'pc{Ls[i-1]}', f'pc{Ls[i-1]}_dniok', f'pc{Ls[i-1]}_dniph')
-                ch(f'c_dd{p}', 1, f'pc{p}', f'pc{p}_dnook', f'pc{p}_dnoph', dst[0], dst[1], dst[2], 'ps_done')
+                ch(f'c_dd{p}', 2, f'pc{p}', f'pc{p}_dnook', f'pc{p}_dnoph', dst[0], dst[1], dst[2], 'ps_done')   # tputx-svc: drained-stream count mod 4
         for p in range(32):
             o, j = divmod(p, 4)
             ch(f'c_cr{p}', 1, f'gp{o}', f'gp{o}_cr[{j}]', "1'b0", f'pc{p}', f'pc{p}_crv', None, 'ps_cr')
@@ -398,6 +398,29 @@ def phy_expr(b, ix):
 
 # views agent 2026-10-07: SE_s7 aggressive variant (SLOT 3: kept grant copies + one more line register, +1 cycle per line)
 ASM_SLOT = {'hfd_svc_SE_s7': 4, 'hfd_svc_SW_s5': 4}
+
+
+ROB_M, ROB_W, ROB_H = 'ot_sram_1r1w_128x256_m1_r2c2', 94.824, 41.064
+
+
+def rob_place(name, w_um, h_um, pcs):
+    """tputx-svc 2026-10-11: fixed placement of the per-PC reorder-buffer macros (ot_svs_pcs u_rob), one per PC unit,
+    centred on the PC unit's x, 25.92 um above the PHY (S) face (>= 20 um channel), on the (0.432, 2.16) um lattice;
+    matched by instance name (backslashes stripped), as tools/ref_tile place.tcl does."""
+    L = [f'# {name}: per-PC ROB macro placement (gen_svc_seg.py, tputx-svc); halo = MACRO_PLACE_HALO',
+         'set b [ord::get_db_block]', 'set dbu [[ord::get_db_tech] getDbUnitsPerMicron]',
+         'proc ot_rob_strip {n} { return [string map {\\\\ {}} $n] }', 'set nrob 0']
+    for p, x in sorted(pcs):
+        xm = min(max(x - ROB_W / 2, 20.0), w_um - 20.0 - ROB_W)
+        xm = round(round(xm / 0.432) * 0.432, 3)
+        L.append(f'set hit 0; foreach i [$b getInsts] {{ if {{[[$i getMaster] getName] eq "{ROB_M}" && '
+                 f'[string match "*u_pc{p}?u_rob*" [ot_rob_strip [$i getName]]]}} {{ $i setOrient R0; '
+                 f'$i setLocation [expr {{round({xm} * $dbu)}}] [expr {{round(25.92 * $dbu)}}]; $i setPlacementStatus FIRM; '
+                 f'incr hit; incr nrob; puts "ROB place: [$i getName] at {xm} 25.92" }} }}; '
+                 f'if {{$hit != 1}} {{ error "rob_place: u_pc{p}.u_rob matched $hit instances" }}')
+    L.append(f'set nm 0; foreach i [$b getInsts] {{ if {{[[$i getMaster] isBlock]}} {{ incr nm }} }}; '
+             f'if {{$nm != {len(pcs)}}} {{ error "rob_place: expected {len(pcs)} macros, netlist has $nm" }}')
+    return '\n'.join(L) + '\n'
 
 
 def build(pl):
@@ -645,10 +668,10 @@ def build(pl):
                 decl.append(f'  wire pc{p}_iv, pc{p}_k_v, pc{p}_k_rdy, pc{p}_kr_v, pc{p}_bv; wire [50:0] pc{p}_id; '
                             f'wire [29:0] pc{p}_k_addr; wire [3:0] pc{p}_k_len, pc{p}_kr_beat, pc{p}_bb; '
                             f'wire [16:0] pc{p}_k_tag, pc{p}_kr_tag, pc{p}_bt; wire [255:0] pc{p}_kr_data, pc{p}_bd; '
-                            f'wire pc{p}_div, pc{p}_dov, pc{p}_dniok, pc{p}_dniph, pc{p}_dnook, pc{p}_dnoph, pc{p}_crv; '
+                            f'wire pc{p}_div, pc{p}_dov, pc{p}_dniok, pc{p}_dnook, pc{p}_crv; wire [1:0] pc{p}_dniph, pc{p}_dnoph; '
                             f'wire [61:0] pc{p}_did, pc{p}_dod;')
                 if end:
-                    body.append(f"  assign pc{p}_dniok = 1'b0; assign pc{p}_dniph = 1'b0;   // chain end (END = 1)")
+                    body.append(f"  assign pc{p}_dniok = 1'b0; assign pc{p}_dniph = 2'b00;   // chain end (END = 1)")
                 body.append(f'  ot_svs_pcs #(.PCID({p}), .END({end})) u_pc{p} (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .iss_v(pc{p}_iv), '
                             f'.iss_d(pc{p}_id), .k_v(pc{p}_k_v), .k_rdy(pc{p}_k_rdy), .k_addr(pc{p}_k_addr), .k_len(pc{p}_k_len), '
                             f'.k_tag(pc{p}_k_tag), .kr_v(pc{p}_kr_v), .kr_tag(pc{p}_kr_tag), .kr_beat(pc{p}_kr_beat), '
@@ -688,11 +711,11 @@ def build(pl):
             elif u == 'e' and PS:
                 we, ee = int(not pl['ps_lists']['w']), int(not pl['ps_lists']['e'])
                 decl.append('  wire e_ow, e_ok, e_oi, e_bw, e_bk, e_bi; wire [39:0] e_od; wire e_sdv; wire [61:0] e_sdd; '
-                            'wire e_dwok, e_dwph, e_deok, e_deph, e_sgv; wire [12:0] e_sgd;')
+                            'wire e_dwok, e_deok, e_sgv; wire [1:0] e_dwph, e_deph; wire [12:0] e_sgd;')
                 if we:
-                    body.append("  assign e_dwok = 1'b0; assign e_dwph = 1'b0;   // no PC west of the e port")
+                    body.append("  assign e_dwok = 1'b0; assign e_dwph = 2'b00;   // no PC west of the e port")
                 if ee:
-                    body.append("  assign e_deok = 1'b0; assign e_deph = 1'b0;   // no PC east of the e port")
+                    body.append("  assign e_deok = 1'b0; assign e_deph = 2'b00;   // no PC east of the e port")
                 body.append(f'  ot_svs_eps #(.WEMPTY({we}), .EEMPTY({ee})) u_e (.ck(c), .rst(rst[0]), .rn(rn), .e_d(e[127:0]), '
                             '.e_fclk(e[128]), .ow_v(e_ow), .ok_v(e_ok), .oi_v(e_oi), .o_d(e_od), .bw(e_bw), .bk(e_bk), .bi(e_bi), '
                             '.sd_v(e_sdv), .sd_d(e_sdd), .dw_ok(e_dwok), .dw_ph(e_dwph), .de_ok(e_deok), .de_ph(e_deph), .kd(kd), '
@@ -833,6 +856,10 @@ def build(pl):
         (d_ / 'io_place.tcl').write_text(V.io_tcl(r).replace("(tools/hbm_die_views.py ports",
                                                              "(svc/gen_svc_seg.py, derived master; generator"))
         (d_ / 'ws.tcl').write_text('\n'.join(ws) + '\n')
+        if PS:      # tputx-svc 2026-10-11: each PC unit's ROB macro, fixed beside its PC unit (MACRO_PLACEMENT_TCL)
+            (d_ / 'rob_place.tcl').write_text(rob_place(names[j], r['w_um'], pl['H'],
+                [(int(u[2:]), x - segs[j][0]) for u, (x, y) in pl['U'].items()
+                 if u.startswith('pc') and pl['seg_of'](x) == j]))
     # ---------------------------------------------------------------- joined tops (bench vehicles)
     for st in FAM[fam]:
         prec = V.master_record(st)

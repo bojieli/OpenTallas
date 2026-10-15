@@ -176,6 +176,49 @@ set block [ord::get_db_block]
 # strip + fresh GRT + DRT alone took SS +70.18 -> +5.98 and FF -4.20 -> -2.06, i.e. the whole "ECO kills setup" loss
 # was the fresh global route, not the hold buffers.  (Keeping untouched WIRES instead fails in DRT: 1,300-2,800
 # 'pin not visited' + checkConnectivity on untouched nets; keeping clock wires fails checkConnectivity.)
+# FACE-PIN KEEPOUT (hold_eco.sh OT_ECO_PK=1, el1011-ds-misc 2026-10-12): re-apply the route's face-pin keepout, ABOVE ONLY,
+# for this pass's GRT/DRT (stn_pin_keepout.tcl is a toggle: the first source adds the obstructions, the second removes
+# exactly those), so the ECO re-route keeps the layer above every face pin clear as the route did (child_lint (f)).
+set ot_pk_stn /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl
+# Sourced inside a proc: the hook's scratch variables (a b c d f k l x0 ...) stay local and cannot clobber this session's.
+proc ot_pk_toggle {} { source $::ot_pk_stn }
+set ot_eco_pk [expr {[envd OT_ECO_PK 0] && [file exists $ot_pk_stn]}]
+if {$ot_eco_pk} { puts "OT_ECO face-pin keepout: add (above only [envd OT_PK_ABOVE_ONLY 0])"; ot_pk_toggle }
+# LAYER-CAP LEAK REFUSAL (s81su qnq/qbe v2, hrow5_cbe/cbw r5c, 2026-10-13): a route whose kit predates dc5594311 detail-
+# routed on the layer ABOVE its cap (GRT top shadow not restored: 281 / 401 / 350 M6 segments under an M5 cap).  The ECO's
+# GRT has only $lo-$hi, so the first incremental update that removed such a wire indexed a per-layer vector out of range
+# and OpenROAD aborted inside repair_timing (grt::GlobalRouter::removeWireUsage, "hold ECO MISS: no result (rc=9)", three
+# times per job).  Such a route already violates its layer cap (child_lint (c) at collect): no ECO can close it; say so.
+set ot_hi_lvl [[[ord::get_db_tech] findLayer $hi] getRoutingLevel]
+set ot_leak [dict create]
+foreach nt [$block getNets] {
+  if {[$nt getSigType] in {POWER GROUND}} continue
+  set w [$nt getWire]; if {$w eq "NULL"} continue
+  # count wire SEGMENTS only (a point that follows a point on the same path): a via up to a granted pin on the layer
+  # above the cap is not a leak and GRT does not index it
+  set dec [odb::dbWireDecoder]; $dec begin $w
+  set prev 0
+  while {[set op [$dec next]] != $odb::dbWireDecoder_END_DECODE} {
+    if {$op == $odb::dbWireDecoder_POINT || $op == $odb::dbWireDecoder_POINT_EXT} {
+      if {$prev} { set tl [$dec getLayer]; if {[$tl getRoutingLevel] > $ot_hi_lvl} { dict incr ot_leak [$tl getName] } }
+      set prev 1
+    } else { set prev 0 }
+  }
+}
+if {[dict size $ot_leak]} {
+  puts "OT_ECO layer_cap_leak $ot_leak above $hi: the route detail-routed above its layer cap (kit older than dc5594311?)"
+  error "OT_ECO refused: routed signal wire above the route's max routing layer $hi ($ot_leak); regenerate the kit and re-route"
+}
+# MACRO-EDGE VIA GUARD (hold_eco.sh OT_ECO_MEG=1 when the route's hooks carried physical/common_flow/
+# macro_edge_via_guard.tcl): re-apply it for this pass's GRT/DRT, as the face-pin keepout above -- the ECO strips and
+# re-routes nets next to the macro edges, and without the guard its DRT bridges M4 through the macro obstruction again
+# (swe_sp8 ECO pass 1 came back with DRC 3 from a DRC-0 route).
+set ot_meg_tcl /src/physical/common_flow/macro_edge_via_guard.tcl
+if {![file exists $ot_meg_tcl]} { set ot_meg_tcl [envd OT_CL /cl]/macro_edge_via_guard.tcl }
+proc ot_meg_apply {mode} { set ::env(OT_MEG_LAYER) $::hi; set ::env(OT_MEG_MODE) $mode; source $::ot_meg_tcl }
+set ot_eco_meg [envd OT_ECO_MEG 0]
+if {$ot_eco_meg && ![file exists $ot_meg_tcl]} { error "OT_ECO macro-edge guard requested but $ot_meg_tcl is missing" }
+if {$ot_eco_meg} { puts "OT_ECO macro-edge via guard: add"; ot_meg_apply add }
 set guides [expr {[envd OT_GUIDES 1] && [grt::have_routes]}]
 set allow_fresh [envd OT_ALLOW_FRESH_GRT 0]
 puts "OT_ECO route guides from the db: $guides"
@@ -319,6 +362,8 @@ if {$drt_err} {
   global_route -allow_congestion -congestion_iterations 30 {*}$ra
   detailed_route -output_drc $::env(OT_OUT)/eco_drc.rpt -verbose 1
 }
+if {$ot_eco_pk} { puts "OT_ECO face-pin keepout: remove"; ot_pk_toggle }
+if {$ot_eco_meg} { puts "OT_ECO macro-edge via guard: remove"; ot_meg_apply remove }
 # MULTI-VT: one filler pair per VT present (OT_VT); RVT-only fillers leave LVTN/SLVTN implant gaps -> DPL-0050
 # "No fillers found for LVTN" (dshead-ep-r6-60f5a0a90-tt-lvt hold ECO, drive-2041)
 set ot_fill {}

@@ -15,6 +15,7 @@ module tb_fh_margin_ctx;
  ot_hdc_v41_fh_ctx #(`CTXP(0)) ref0(`CTXC,.warm_emit(we0),.leaf_valid(lv0),.result_valid(ov0),.ra_re(re0),.ra_addr(ra0),.r_tag(rt0),.r_v(rv0),.leaf(lf0),.o_we(owe0),.o_addr(oa0),.o_mask(om0),.o_data(od0),.fault(f0),.group_fault(gf0));
  ot_hdc_v41_fh_ctx #(`CTXP(1)) dut(`CTXC,.warm_emit(we1),.leaf_valid(lv1),.result_valid(ov1),.ra_re(re1),.ra_addr(ra1),.r_tag(rt1),.r_v(rv1),.leaf(lf1),.o_we(owe1),.o_addr(oa1),.o_mask(om1),.o_data(od1),.fault(f1),.group_fault(gf1));
  integer i,j,seed=5,fused=0,iw=0;
+ initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 5; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
  initial begin
   {s3_v_in,go_fus,tv_in,ov1_in,rb,wack,tag,res_in,ra_q,i_iaddr,busy_in,o_we1_in,o_addr1_in,o_mask1_in,leaf_mask_in,leaf_row_in,am_idx_in}=0;
   repeat(3)@(negedge clk); rst_n=1;

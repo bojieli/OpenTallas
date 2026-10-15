@@ -181,6 +181,7 @@ module tb_emb_hbm_e2e
     endtask
     integer stop;
     integer gseed = 20261008;
+    initial begin if (!$value$plusargs("SEED=%d", gseed)) gseed = 20261008; $display("SEED=%0d", gseed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     integer errors = 0, early = 0, i, j, t, r, e, nlat = 0, lmin = 1 << 30, lmax = 0, ce_base, w_bad, ue_seen = 0;
     longint lsum = 0, tstart, cyc_ck = 0, t_ready = 0;
     integer lat [0:MAXTOK-1]; integer wmx [0:MAXTOK-1];

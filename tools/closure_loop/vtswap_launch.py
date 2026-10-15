@@ -52,7 +52,7 @@ for name in a.names:
         out = f"{j['run']}/cl/eco-vtswap" + (f"-r{len(j.get('eco_history') or []) + 1}" if j.get("eco_history") or e else "")
         env = (f"TARGET={a.target:g} CAP_PCT={a.cap:g} DRC0={int(drc)} ACC_SS={cl.SS_MIN:g} ACC_FF={cl.FF_MIN:g} SETUP_LIB=TT "
                f"SDC_NAME={shlex.quote(m.get('sdc_name') or '6_final.sdc')} THREADS=8 "
-               f"MACROS={shlex.quote(' '.join((j['spec'].get('verdict') or {}).get('macros', [])))} "
+               f"MACROS={shlex.quote(' '.join(cl.verdict_macros(j)))} "
                f"ORFS_W18={shlex.quote(m.get('orfs_dir') or '')}")
         if m.get("setup_post_sdc"):
             env += f" SETUP_POST_SDC={shlex.quote(' '.join(m['setup_post_sdc']))}"

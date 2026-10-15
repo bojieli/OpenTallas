@@ -8,7 +8,13 @@ source /src/physical/abi3/v41x_karb_repair_buffer_cap.tcl
 set ko_block [ord::get_db_block]
 set ko_tech [ord::get_db_tech]
 set ko_dbu [$ko_block getDbUnitsPerMicron]
-set ko_d [expr {int(0.60 * $ko_dbu)}]
+# [sfu] 10-10: OT_PINKO_LAYERS (default "M3 M5") / OT_PINKO_DEPTH (default 0.60 um).  The hfd_sfu_tile pin-access repro
+# (DRT pin_access on the tile's placed db, eco4 lane abstract) shows the parent reaches these M4 stubs by an UP via (V4 to
+# M5): removing the M5 OBS beside ce_imm1[11] gave it an access point, trimming the M3 OBS did not.  An M5-only keepout
+# keeps the lane's M3 pin escape (the M3+M5 0.60 keepout left 414 lane DRC, all M4 at x < 1 um: b9929dc41).
+set ko_layers [expr {[info exists ::env(OT_PINKO_LAYERS)] && $::env(OT_PINKO_LAYERS) ne "" ? $::env(OT_PINKO_LAYERS) : "M3 M5"}]
+set ko_depth [expr {[info exists ::env(OT_PINKO_DEPTH)] && $::env(OT_PINKO_DEPTH) ne "" ? $::env(OT_PINKO_DEPTH) : 0.60}]
+set ko_d [expr {int($ko_depth * $ko_dbu)}]
 set ko_h [expr {int(0.06 * $ko_dbu)}]
 set ko_die [$ko_block getDieArea]
 set ko_n 0
@@ -27,7 +33,7 @@ foreach ko_bt [$ko_block getBTerms] {
       } else {                                    ;# N edge
         set bx [list [expr {$xc - $ko_h}] [expr {[$ko_die yMax] - $ko_d}] [expr {$xc + $ko_h}] [$ko_die yMax]]
       }
-      foreach ln {M3 M5} {
+      foreach ln $ko_layers {
         set L [$ko_tech findLayer $ln]
         odb::dbObstruction_create $ko_block $L {*}$bx
         incr ko_n
@@ -35,4 +41,4 @@ foreach ko_bt [$ko_block getBTerms] {
     }
   }
 }
-puts "ot lane_pin_keepout: $ko_n M3/M5 obstructions beside signal pins"
+puts "ot lane_pin_keepout: $ko_n obstructions ($ko_layers, depth $ko_depth um) beside signal pins"

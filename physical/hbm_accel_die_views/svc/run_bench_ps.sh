@@ -16,13 +16,13 @@ mkdir -p $O/ps
 for f in $V/rtl/${SEGPS:-seg_ps}/*.sv; do
   sed -E 's/\b(hfd_svc_(SW|SE)_s[0-9]+)\b/\1_ps/g; s/\b(hfd_svc_(SW|SE|NW|NE)_seg)\b/\1_ps/g' $f > $O/ps/$(basename $f .sv)_ps.sv
 done
-LIB="rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv rtl/hbm_accel/service/ot_hbm_kport_map.sv $V/rtl/ot_hbm_svc_core.sv $V/rtl/ot_hbm_svc_seg_lib.sv"
+LIB="physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv rtl/hbm_accel/service/ot_hbm_kport_map.sv $V/rtl/ot_hbm_svc_core.sv $V/rtl/ot_hbm_svc_seg_lib.sv"
 PSLIB=$V/rtl/ot_hbm_svc_ps_lib.sv
 rc=0
 if [ "${2:-}" != quick ] && command -v yosys >/dev/null; then
   for f in $V/rtl/${SEGPS:-seg_ps}/hfd_svc_S[WE]_s[0-9].sv; do
     m=$(basename $f .sv)
-    yosys -q -p "read_verilog -sv $LIB $PSLIB $f; hierarchy -check -top $m; proc; flatten; opt_clean; check -assert" > $O/lint_$m.log 2>&1
+    yosys -q -p "read_verilog -sv ${LIB/ot_sram_1r1w_128x256_m1_r2c2.v/ot_sram_1r1w_128x256_m1_r2c2_bb.v} $PSLIB $f; hierarchy -check -top $m; proc; flatten; opt_clean; check -assert" > $O/lint_$m.log 2>&1
     r=$?; echo "lint_$m rc=$r" >> $O/summary.txt; [ $r -ne 0 ] && rc=1
   done
 fi
@@ -41,8 +41,8 @@ sim() {   # sim <label> <st> <fam> <ps lib file> <defines...>
 }
 # every simulation in parallel (single-threaded each), then the verdicts
 sed 's/wire \[1:0\] slot = bb_r\[1:0\] ^ rr\[1:0\];/wire [1:0] slot = bb_r[1:0];/' $PSLIB > $O/ps_mut_slot.sv
-sed 's/&& pdone && !di_v;/\&\& !di_v;/' $PSLIB > $O/ps_mut_done.sv
-sed 's/mine <= di_d\[PCID\]; act <= di_d\[PCID\];/mine <= di_d[PCID] \&\& PCID == 0; act <= di_d[PCID] \&\& PCID == 0;/' $PSLIB > $O/ps_mut_pc.sv
+sed 's/dno_ok <= (END != 0) ? 1.b1 : (dni_ok \&\& dni_ph == dsc);/dno_ok <= 1'"'"'b1;/' $PSLIB > $O/ps_mut_done.sv
+sed 's/wire \[11:0\] di_nsec = di_d\[PCID\] ?/wire [11:0] di_nsec = (di_d[PCID] \&\& PCID == 0) ?/' $PSLIB > $O/ps_mut_pc.sv
 for m in slot done pc; do cmp -s $O/ps_mut_$m.sv $PSLIB && { echo "$m mutant not applied" >> $O/summary.txt; rc=1; }; done
 sim sim_ps_SW SW SW $PSLIB -DPS_STREAMS & sim sim_ps_NE NE SE $PSLIB -DPS_STREAMS &
 sim ref_SW SW SW $PSLIB -DREFDUT & sim ref_NE NE SE $PSLIB -DREFDUT &

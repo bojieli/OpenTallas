@@ -38,7 +38,7 @@ SRC = [s for s in MS.SRC if s != "rtl/test/tb_hbm_accel_sm_v_seq.sv"] + [
     "rtl/test/tb_hbm_accel_sm_pq_seq.sv"]
 SMH_SRC = ["rtl/hbm_accel/sm/ot_hbm_accel_stack.sv", "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv", "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv",
            "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv",
-           "rtl/hbm_accel/sm/ot_hbm_accel_int8_line.sv", "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv"]   # --smh: the hierarchical element (ot_hbm_accel_smh)
+           "rtl/hbm_accel/sm/ot_hbm_accel_int8_line.sv", "rtl/lib/ot_rst_relay.sv", "rtl/lib/ot_hdly.sv", "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv"]   # --smh: the hierarchical element (ot_hbm_accel_smh)
 XDEPTH = MS.XDEPTH
 NW = 10
 
@@ -129,22 +129,22 @@ def cmd_run(a):
     (d / "seq.hex").write_text("\n".join(f"{v:08x}" for v in seq) + "\n")
     (d / "lines.hex").write_text("\n".join(lines) + "\n")
     (d / "x.hex").write_text("\n".join(xw) + "\n")
-    params = dict(SUB=MS.SUB, LBS=MS.LBS, LSB=MS.LSB, NC=a.nc, XDEPTH=XDEPTH, RMAX=MS.RMAX, LEV=MS.LEV, XB=xb,
+    params = dict(SUB=MS.SUB, LBS=MS.LBS, LSB=MS.LSB, NC=a.nc, XDEPTH=XDEPTH, RMAX=a.rmax, LEV=MS.LEV, XB=xb,
                   HAZ=a.haz, G1ASB=a.g1asb)
     if a.req_credit:
         params["REQCR"] = 1
     if a.int8:
         params["ENABLE_INT8"] = 1
         params["PIPE_INT8"] = a.int8_pipe
-    bdir = Path(a.workdir) / (f"build_pq_{a.sim}_nc{a.nc}_xb{xb}_haz{a.haz}_g{a.g1asb}" + ("_smh" if a.smh else "")
+    bdir = Path(a.workdir) / (f"build_pq_{a.sim}_nc{a.nc}_xb{xb}_haz{a.haz}_g{a.g1asb}" + (f"_rmax{a.rmax}" if a.rmax != MS.RMAX else "") + ("_smh" if a.smh else "")
                               + ("_negflip" if a.neg_flip else "") + ("_muts1w" if a.mut_s1w else "") + ("_mutbf" if a.mut_bfdly else "")
-                              + ("_rc" if a.req_credit else "") + (f"_int8p{a.int8_pipe}" if a.int8 else "") + ("_nobyp" if a.mut_nobyp else "") + ("_movf" if a.mut_reqovf else "") + ("_mleak" if a.mut_reqleak else "")
-                              + ("_cg" if a.cg else "") + ("_cglate" if a.cg_mut_late else "") + ("_cgh0" if a.cg_mut_hold0 else ""))
-    cgdefs = (["-DOT_SMH_CG", "-DOT_SMH_CG_LOCKSTEP"] if a.cg else []) + (["-DOT_SMH_CG_MUT_LATE"] if a.cg_mut_late else []) + (["-DOT_SMH_CG_MUT_HOLD0"] if a.cg_mut_hold0 else [])
+                              + ("_rc" if a.req_credit else "") + (f"_int8p{a.int8_pipe}" if a.int8 else "") + ("_nobyp" if a.mut_nobyp else "") + ("_obdrop" if a.mut_obdrop else "") + ("_movf" if a.mut_reqovf else "") + ("_mleak" if a.mut_reqleak else "")
+                              + ("_cg" if a.cg else "") + ("_cglate" if a.cg_mut_late else "") + ("_cgh0" if a.cg_mut_hold0 else "") + "".join("_" + x.lower() for x in a.define))
+    cgdefs = (["-DOT_SMH_CG", "-DOT_SMH_CG_LOCKSTEP"] if a.cg else []) + (["-DOT_SMH_CG_MUT_LATE"] if a.cg_mut_late else []) + (["-DOT_SMH_CG_MUT_HOLD0"] if a.cg_mut_hold0 else []) + [f"-D{x}" for x in a.define]
     if a.cg and not a.smh:
         raise SystemExit("--cg needs --smh")
     run, cmd = compile_bench(a.sim, params, bdir, a.build_jobs, smh=a.smh, neg=a.neg_flip, mut=a.mut_s1w, mutbf=a.mut_bfdly,
-                             extra_defs=(["-DOT_SMH_MUT_NOBYP"] if a.mut_nobyp else []) + (["-DOT_SMH_MUT_REQOVF"] if a.mut_reqovf else []) + (["-DOT_SMH_MUT_REQLEAK"] if a.mut_reqleak else []) + cgdefs,
+                             extra_defs=(["-DOT_SMH_MUT_NOBYP"] if a.mut_nobyp else []) + (["-DOT_INT8_MUT_OBDROP"] if a.mut_obdrop else []) + (["-DOT_SMH_MUT_REQOVF"] if a.mut_reqovf else []) + (["-DOT_SMH_MUT_REQLEAK"] if a.mut_reqleak else []) + cgdefs,
                              cg=a.cg)
     with (d / "runtime.log").open("w") as log:
         subprocess.run(run + [f"+DIR={d}", f"+NOPS={len(ops)}", f"+GAP={a.cg_gap}"] + (["+REQ_STALLS"] if a.req_stalls else []) + (["+TRACE", f"+TRACE_FROM={a.trace_from}", f"+TRACE_TO={a.trace_to}"] if a.trace else []), check=True, cwd=d,
@@ -187,7 +187,7 @@ def cmd_run(a):
     out = dict(schema="opentallas.dshbm.sm_pq_seq.v1", seq=seqname, serial=a.serial, haz=a.haz, g1_asbuilt=a.g1asb,
                element=("ot_hbm_accel_smh (hierarchical: front / identical leaf tiles / column back ends; pipelined "
                         "issue, G1 select by the producing column)" if a.smh else
-                        "ot_hbm_accel_sm_pq (pipelined issue) on ot_hbm_accel_sm_v ENABLE=1 leaves"), nc=a.nc,
+                        "ot_hbm_accel_sm_pq (pipelined issue) on ot_hbm_accel_sm_v ENABLE=1 leaves"), nc=a.nc, rmax=a.rmax,
                active_columns=a.active, x_beats_per_address=xb, simulator=a.sim, bench_clock_ns=1.0, status=status,
                mismatching_ops=bad, total_cycles=total, timeout=timeout, ops=rows, req_stalls=a.req_stalls,
                generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -235,6 +235,7 @@ def main(argv=None):
     ap.add_argument("step", choices=("run",))
     ap.add_argument("--seq", required=True, help="ar_l20 | p6_l20 | wg | p6_wg | other | p6_other | stress | p6_stress")
     ap.add_argument("--nc", type=int, default=8)
+    ap.add_argument("--rmax", type=int, default=MS.RMAX, help="row/tag capacity; 4096 selects the production default masters (legacy bench default 256)")
     ap.add_argument("--active", type=int, default=1)
     ap.add_argument("--haz", type=int, default=1)
     ap.add_argument("--g1asb", type=int, default=0, help="1 = as-built leaf G1 select (negative test)")
@@ -256,11 +257,13 @@ def main(argv=None):
                     "be cycle-identical to the default build: CF-1)")
     ap.add_argument("--int8-pipe", type=int, default=1)
     ap.add_argument("--mut-nobyp", action="store_true", help="--int8 negative control: DS formats through the adapter")
+    ap.add_argument("--mut-obdrop", action="store_true", help="--int8 --int8-pipe 2 negative control: the output queue ignores its fill")
     ap.add_argument("--trace-from", type=int, default=0)
     ap.add_argument("--trace-to", type=int, default=0)
     ap.add_argument("--sim", choices=("verilator", "iverilog"), default="verilator")
     ap.add_argument("--cg", action="store_true", help="--smh: COARSE CLOCK-GATING LOCKSTEP (redesign-hbm 2026-10-09): a second element with "
                     "gated tiles / back ends on the adapter wake contract, every output compared every cycle (CG_LOCKSTEP line)")
+    ap.add_argument("--define", action="append", default=[], help="extra RTL define (e.g. OT_SMH_CG_ENREG, OT_SMH_XLK: [cg-smt] 2026-10-10)")
     ap.add_argument("--cg-mut-late", action="store_true", help="--cg negative control: the tiles' wake reaches their gate 32 edges late")
     ap.add_argument("--cg-mut-hold0", action="store_true", help="--cg negative control: no drain hold after the wake drops")
     ap.add_argument("--cg-gap", type=int, default=0, help="--cg: fully idle cycles before every op (the gates close; +GAP)")

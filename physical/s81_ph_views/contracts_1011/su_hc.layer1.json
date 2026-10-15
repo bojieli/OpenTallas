@@ -1,0 +1,626 @@
+{
+ "schema": "opentallas.s81.slab-contract.v1",
+ "version": "v1",
+ "slab": "su_hc",
+ "owner": "s81-suhc-1011",
+ "recipe": {
+  "opts": "results/physical/s81_gen_20261010/s81_layer1_full_efs_xbrg_le.opts",
+  "extra": "",
+  "tag": "layer1",
+  "die_um": [
+   33000.0,
+   26000.0
+  ],
+  "q_lef": "physical/s81_die_views/q_elem_qs5f_efs/q_elem.lef.gz",
+  "hub_column_width_um": 1728.0,
+  "ecol_slabs": []
+ },
+ "source_commit": "2a70e35db",
+ "generator": "tools/dsrom_s81_fulldie.py",
+ "tool": "tools/s81_ph/slab_contracts.py",
+ "adapter_contract": "physical/s81_ctrl/ADAPTER_CONTRACT_1011.json",
+ "engines": [
+  "su",
+  "hc"
+ ],
+ "stage_controller": "not in this recipe (--ctrl-slab off): reserved groups face the W hub-column centre; the dsfd_sp_ctrl slab position is fixed when s81-ctl binds it",
+ "rules": [
+  "outline and existing pins are what the die build places: a slab master must keep them (or publish a new contract version) so the generator netlist binds unchanged",
+  "RESERVED groups: pin names are placeholders; widths, face, layer and span are the contract. Each engine adapter (ot_s81_engine_adapter QD 8) sits inside the slab at that face; the die nets are fixed-latency pulse nets (relay stations allowed, every die pin lands in a pin flop)",
+  "clock: slab ck from the die domain tree (domain field); serial_0p9 slabs need the adapter CDC"
+ ],
+ "instances": [
+  {
+   "instance": "sp_su_s",
+   "master": "dsfd_sp_su_s",
+   "domain": "serial_0p9",
+   "outline_um": [
+    1727.976,
+    7410.936
+   ],
+   "die_origin_um": [
+    13942.8,
+    3315.6
+   ],
+   "orient": "R0",
+   "pins": {
+    "t_hc": {
+     "bits": 512,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      4195.392,
+      4219.944
+     ],
+     "nets": [
+      {
+       "net": "hb_su_s_hc_s_d0_g0_f_hb_su_s_hc_s_1",
+       "cls": "hub",
+       "bits": 512,
+       "peers": [
+        "g_hb_su_s_hc_s_d0_f_hb_su_s_hc_s_1_0.di"
+       ]
+      }
+     ]
+    },
+    "f_vm": {
+     "bits": 1024,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      7359.36,
+      7408.488
+     ],
+     "nets": [
+      {
+       "net": "hb_vm_su_s_d7",
+       "cls": "hub",
+       "bits": 1024,
+       "peers": [
+        "f_hb_vm_su_s_7.dq"
+       ]
+      }
+     ]
+    },
+    "ck": {
+     "bits": 1,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      7410.48,
+      7410.504
+     ],
+     "nets": [
+      {
+       "net": "clk_serial",
+       "cls": "clock",
+       "bits": 1,
+       "peers": [
+        "sp_collective.pll_serial",
+        "sp_vm.ck",
+        "sp_su_n.ck",
+        "sp_hc_s.ck"
+       ]
+      }
+     ]
+    },
+    "rst": {
+     "bits": 1,
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      1474.224,
+      1474.248
+     ],
+     "nets": [
+      {
+       "net": "rst_serial",
+       "cls": "reset",
+       "bits": 1,
+       "peers": [
+        "sp_collective.rst_serial",
+        "sp_vm.rst",
+        "sp_su_n.rst",
+        "sp_hc_s.rst"
+       ]
+      }
+     ]
+    }
+   },
+   "reserved_ctrl": {
+    "csu": {
+     "bits": 85,
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      733.872,
+      737.928
+     ],
+     "direction": "in",
+     "carries": "c_cmd_v + c_cmd_d[84] (adapter controller side)",
+     "controller_port": "cv[1] + cd[1*84 +: 84]",
+     "engine": "su",
+     "status": "RESERVED"
+    },
+    "dsu": {
+     "bits": 9,
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      741.936,
+      742.344
+     ],
+     "direction": "out",
+     "carries": "c_done_v + c_done_tag[8] (adapter controller side)",
+     "controller_port": "dv[1] + dt[1*8 +: 8]",
+     "engine": "su",
+     "status": "RESERVED"
+    }
+   }
+  },
+  {
+   "instance": "sp_su_n",
+   "master": "dsfd_sp_su_n",
+   "domain": "serial_0p9",
+   "outline_um": [
+    1727.976,
+    7413.096
+   ],
+   "die_origin_um": [
+    13942.8,
+    15273.36
+   ],
+   "orient": "R0",
+   "pins": {
+    "rst": {
+     "bits": 1,
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      1474.224,
+      1474.248
+     ],
+     "nets": [
+      {
+       "net": "rst_serial",
+       "cls": "reset",
+       "bits": 1,
+       "peers": [
+        "sp_collective.rst_serial",
+        "sp_su_s.rst",
+        "sp_vm.rst",
+        "sp_hc_s.rst"
+       ]
+      }
+     ]
+    },
+    "ck": {
+     "bits": 1,
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      1727.52,
+      1727.544
+     ],
+     "nets": [
+      {
+       "net": "clk_serial",
+       "cls": "clock",
+       "bits": 1,
+       "peers": [
+        "sp_collective.pll_serial",
+        "sp_su_s.ck",
+        "sp_vm.ck",
+        "sp_hc_s.ck"
+       ]
+      }
+     ]
+    },
+    "f_vm": {
+     "bits": 1024,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      0.432,
+      49.56
+     ],
+     "nets": [
+      {
+       "net": "hb_vm_su_n_d16",
+       "cls": "hub",
+       "bits": 1024,
+       "peers": [
+        "f_hb_vm_su_n_16.dq"
+       ]
+      }
+     ]
+    },
+    "t_hc": {
+     "bits": 512,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      1417.632,
+      1442.184
+     ],
+     "nets": [
+      {
+       "net": "hb_su_n_hc_n_d0_g0_f_hb_su_n_hc_n_1",
+       "cls": "hub",
+       "bits": 512,
+       "peers": [
+        "g_hb_su_n_hc_n_d0_f_hb_su_n_hc_n_1_0.di"
+       ]
+      }
+     ]
+    }
+   },
+   "reserved_ctrl": {
+    "csu": {
+     "bits": 85,
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      733.872,
+      737.928
+     ],
+     "direction": "in",
+     "carries": "c_cmd_v + c_cmd_d[84] (adapter controller side)",
+     "controller_port": "cv[1] + cd[1*84 +: 84]",
+     "engine": "su",
+     "status": "RESERVED"
+    },
+    "dsu": {
+     "bits": 9,
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      741.936,
+      742.344
+     ],
+     "direction": "out",
+     "carries": "c_done_v + c_done_tag[8] (adapter controller side)",
+     "controller_port": "dv[1] + dt[1*8 +: 8]",
+     "engine": "su",
+     "status": "RESERVED"
+    }
+   }
+  },
+  {
+   "instance": "sp_hc_s",
+   "master": "dsfd_sp_hc_s",
+   "domain": "serial_0p9",
+   "outline_um": [
+    1727.976,
+    4589.976
+   ],
+   "die_origin_um": [
+    17312.4,
+    6443.28
+   ],
+   "orient": "R0",
+   "pins": {
+    "f_su_s": {
+     "bits": 512,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      1067.712,
+      1092.264
+     ],
+     "nets": [
+      {
+       "net": "hb_su_s_hc_s_d7_g1_sp_hc_s",
+       "cls": "hub",
+       "bits": 512,
+       "peers": [
+        "g_hb_su_s_hc_s_d7_sp_hc_s_0.dq"
+       ]
+      }
+     ]
+    },
+    "f_vm": {
+     "bits": 1024,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      4536.336,
+      4585.464
+     ],
+     "nets": [
+      {
+       "net": "hb_vm_hc_s_d13",
+       "cls": "hub",
+       "bits": 1024,
+       "peers": [
+        "f_hb_vm_hc_s_13.dq"
+       ]
+      }
+     ]
+    },
+    "ck": {
+     "bits": 1,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      4587.504,
+      4587.528
+     ],
+     "nets": [
+      {
+       "net": "clk_serial",
+       "cls": "clock",
+       "bits": 1,
+       "peers": [
+        "sp_collective.pll_serial",
+        "sp_su_s.ck",
+        "sp_vm.ck",
+        "sp_su_n.ck"
+       ]
+      }
+     ]
+    },
+    "rst": {
+     "bits": 1,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      4589.52,
+      4589.544
+     ],
+     "nets": [
+      {
+       "net": "rst_serial",
+       "cls": "reset",
+       "bits": 1,
+       "peers": [
+        "sp_collective.rst_serial",
+        "sp_su_s.rst",
+        "sp_vm.rst",
+        "sp_su_n.rst"
+       ]
+      }
+     ]
+    },
+    "t_n": {
+     "bits": 1024,
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      493.584,
+      542.712
+     ],
+     "nets": [
+      {
+       "net": "hb_hc_s_hc_n_d0_g0_f_hb_hc_s_hc_n_1",
+       "cls": "hub",
+       "bits": 1024,
+       "peers": [
+        "g_hb_hc_s_hc_n_d0_f_hb_hc_s_hc_n_1_0.di"
+       ]
+      }
+     ]
+    },
+    "f_n": {
+     "bits": 1024,
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      1184.784,
+      1233.912
+     ],
+     "nets": [
+      {
+       "net": "hb_hc_n_hc_s_d7",
+       "cls": "hub",
+       "bits": 1024,
+       "peers": [
+        "f_hb_hc_n_hc_s_7.dq"
+       ]
+      }
+     ]
+    }
+   },
+   "reserved_ctrl": {
+    "chc": {
+     "bits": 85,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      2810.064,
+      2814.12
+     ],
+     "direction": "in",
+     "carries": "c_cmd_v + c_cmd_d[84] (adapter controller side)",
+     "controller_port": "cv[2] + cd[2*84 +: 84]",
+     "engine": "hc",
+     "status": "RESERVED"
+    },
+    "dhc": {
+     "bits": 9,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      2818.128,
+      2818.536
+     ],
+     "direction": "out",
+     "carries": "c_done_v + c_done_tag[8] (adapter controller side)",
+     "controller_port": "dv[2] + dt[2*8 +: 8]",
+     "engine": "hc",
+     "status": "RESERVED"
+    }
+   }
+  },
+  {
+   "instance": "sp_hc_n",
+   "master": "dsfd_sp_hc_n",
+   "domain": "serial_0p9",
+   "outline_um": [
+    1727.976,
+    6011.256
+   ],
+   "die_origin_um": [
+    17312.4,
+    12545.28
+   ],
+   "orient": "R0",
+   "pins": {
+    "rst": {
+     "bits": 1,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      0.432,
+      0.456
+     ],
+     "nets": [
+      {
+       "net": "rst_serial",
+       "cls": "reset",
+       "bits": 1,
+       "peers": [
+        "sp_collective.rst_serial",
+        "sp_su_s.rst",
+        "sp_vm.rst",
+        "sp_su_n.rst"
+       ]
+      }
+     ]
+    },
+    "ck": {
+     "bits": 1,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      2.448,
+      2.472
+     ],
+     "nets": [
+      {
+       "net": "clk_serial",
+       "cls": "clock",
+       "bits": 1,
+       "peers": [
+        "sp_collective.pll_serial",
+        "sp_su_s.ck",
+        "sp_vm.ck",
+        "sp_su_n.ck"
+       ]
+      }
+     ]
+    },
+    "t_vm": {
+     "bits": 1024,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      4.512,
+      53.64
+     ],
+     "nets": [
+      {
+       "net": "hb_hc_n_vm_d0_g0_f_hb_hc_n_vm_1",
+       "cls": "hub",
+       "bits": 1024,
+       "peers": [
+        "g_hb_hc_n_vm_d0_f_hb_hc_n_vm_1_0.di"
+       ]
+      }
+     ]
+    },
+    "f_su_n": {
+     "bits": 512,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      4145.712,
+      4170.264
+     ],
+     "nets": [
+      {
+       "net": "hb_su_n_hc_n_d7_g1_sp_hc_n",
+       "cls": "hub",
+       "bits": 512,
+       "peers": [
+        "g_hb_su_n_hc_n_d7_sp_hc_n_0.dq"
+       ]
+      }
+     ]
+    },
+    "f_s": {
+     "bits": 1024,
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      493.584,
+      542.712
+     ],
+     "nets": [
+      {
+       "net": "hb_hc_s_hc_n_d7",
+       "cls": "hub",
+       "bits": 1024,
+       "peers": [
+        "f_hb_hc_s_hc_n_7.dq"
+       ]
+      }
+     ]
+    },
+    "t_s": {
+     "bits": 1024,
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      1184.784,
+      1233.912
+     ],
+     "nets": [
+      {
+       "net": "hb_hc_n_hc_s_d0_g0_f_hb_hc_n_hc_s_1",
+       "cls": "hub",
+       "bits": 1024,
+       "peers": [
+        "g_hb_hc_n_hc_s_d0_f_hb_hc_n_hc_s_1_0.di"
+       ]
+      }
+     ]
+    }
+   },
+   "reserved_ctrl": {
+    "chc": {
+     "bits": 85,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      2095.44,
+      2099.496
+     ],
+     "direction": "in",
+     "carries": "c_cmd_v + c_cmd_d[84] (adapter controller side)",
+     "controller_port": "cv[2] + cd[2*84 +: 84]",
+     "engine": "hc",
+     "status": "RESERVED"
+    },
+    "dhc": {
+     "bits": 9,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      2103.504,
+      2103.912
+     ],
+     "direction": "out",
+     "carries": "c_done_v + c_done_tag[8] (adapter controller side)",
+     "controller_port": "dv[2] + dt[2*8 +: 8]",
+     "engine": "hc",
+     "status": "RESERVED"
+    }
+   }
+  }
+ ],
+ "notes": [
+  "v1 (first publication, 2026-10-11): derived from the efs layer1 recipe of record (198.72 BF frame, hub column 1,728 um) [layer1] and the same recipe + --wfc-kit --wfc-crp --ctrl-role source [layer1srccrp: the WFC slab = dsfd_wfc_cr2]. The MTP-lane dies (layer1srckitm, draftAlnkp2l, draftPs) move slabs (--ecol-slabs) or widen the hub column: their contracts follow in v2 once the hub-column choice is fixed; the outline width of every W-column slab is the hub column width",
+  "collective here = the generic dsfd_sp_collective outline (no --coll-split3); with --coll-split3-cr the slab takes the composition outline physical/s81_ph_views/collective/composition_split3cr*.json (v2)"
+ ]
+}

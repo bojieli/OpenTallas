@@ -1,0 +1,91 @@
+{
+ "name": "s81hc_cpin_ref",
+ "top": "ot_s81_hc_cpin",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cpin.sv"
+ ],
+ "params": {
+  "NG": 256
+ },
+ "clock_port": "sk",
+ "reset_ports": [
+  "srs",
+  "crs"
+ ],
+ "outline": {
+  "w": 575.992,
+  "h": 200.0
+ },
+ "util": 0.52,
+ "macros": [],
+ "pins": {
+  "N": [
+   "c_cmd_v",
+   "c_cmd_d",
+   "c_done_v",
+   "c_done_tag",
+   "inp",
+   "rq_v",
+   "rq_row",
+   "rs_v",
+   "rs_d",
+   "flt",
+   "online",
+   "fcode",
+   "y_v",
+   "y_rdy",
+   "y_s",
+   "cck",
+   "crs",
+   "sk",
+   "srs"
+  ],
+  "S": [
+   "n_cmd_v",
+   "n_cmd_d",
+   "n_done_v",
+   "n_done_tag",
+   "n_inp",
+   "n_rq_v",
+   "n_rq_row",
+   "n_rs_v",
+   "n_rs_d",
+   "n_flt",
+   "n_online",
+   "n_fcode",
+   "n_yacc",
+   "n_y",
+   "n_ypop"
+  ],
+  "W": [
+   "yacc_w"
+  ],
+  "E": [
+   "yacc_e"
+  ]
+ },
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.01
+ },
+ "sdc_extra": [
+  "physical/s81_ph_views/hc_hier/cck_cpin_ref.sdc"
+ ],
+ "job": {
+  "benches_from": "tools/s81_suhc/hc_gate_benches.json",
+  "owner": "Claude:s81-suhc-hier-1011",
+  "branch": "claude/el1011-s81hc-cpin",
+  "tag": "v2",
+  "purpose": "s81-suhc-hier-1011 HC centre pin tile ot_s81_hc_cpin via the reference tile flow (contract_hcc slot 575.992 x 200, M5 layer cap; clocks sk + cck via cck_cpin_ref.sdc): v1-89a4bcc13 TT +117.89 / FF -7.14 / DRC 0, R2R +40.43; FF misses are only boundary pin flops (R2O pin flop->port 71 ps -7.14, I2R port->pin flop 48 ps -2.42), hold ECO -1.61 -> deterministic IO hold stages: inhold (port->HB4->BUF->D) + outhold (Q->BUF->HB4->BUF->port), FIRM at the pins",
+  "no_bench_reason": "bit-exactness is gated on dsfd_sp_hc HIER=1/2 (tools/s81_suhc/hc_gate.py NG64 m0 PASS + m1/m3 FAIL, NG256 HIER=1 m0 PASS); the tile alone has no golden",
+  "views_to": "physical/ref_tile/s81hc_cpin_ref/views",
+  "record_to": "results/rtl/ref_tile/s81hc_cpin_ref"
+ },
+ "inhold": true,
+ "outhold": true,
+ "children": [],
+ "inter": []
+}

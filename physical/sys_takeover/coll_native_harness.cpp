@@ -2,12 +2,16 @@
 // ckd offset by 130 ps; the time step is 1 ps.
 #include "Vtb_qfd_coll_native.h"
 #include "verilated.h"
+#include <cstdlib>
 static double g_t = 0;
 double sc_time_stamp() { return g_t; }
 int main(int argc, char** argv) {
     Verilated::commandArgs(argc, argv);
     Vtb_qfd_coll_native* t = new Vtb_qfd_coll_native;
-    const long PCK = 833333, PCKD = 1111111;   // femtoseconds
+    // NCOLL_CKD_FS (env): sequencer-domain period in fs (default 1111111 = 0.9 GHz; 833333 = the 1.2 GHz lever)
+    const char* e = getenv("NCOLL_CKD_FS");
+    const char* ek = getenv("NCOLL_CK_FS");   // engine-domain period (default 833333 = 1.2 GHz)
+    const long PCK = ek ? atol(ek) : 833333, PCKD = e ? atol(e) : 1111111;   // femtoseconds
     long nck = 0, nckd = 130000;                  // next toggle times (fs)
     t->ck = 0; t->ckd = 0; t->eval();
     while (!Verilated::gotFinish()) {

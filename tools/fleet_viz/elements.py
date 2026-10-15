@@ -16,7 +16,7 @@ twins, _s2/_t/_split/... alternatives) folded into their master. Each element ge
   cancelled only             every job was cancelled
   superseded                 listed in $FLEET_VIZ_SUPERSEDED (default ~/claude-takeover-20261007/superseded_elements.json,
                              {element: {by, reason}}): replaced by another element or not used by any die; overrides every
-                             non-closed category and is excluded from the open counts (summary 'open' = all but closed/superseded)
+                             category (closed included, owner 10-11) and is excluded from totals; cancelled jobs retain the requirement in totals
 
 Overrides from $FLEET_VIZ_OVERRIDES (default ~/claude-takeover-20261007/element_overrides.json):
   variants   {block: {of, kind, reason}}: fold a differently named block into element `of` (checked before the VARIANT
@@ -31,21 +31,29 @@ Sources: ~/.local/state/closure_loop/jobs/*.json (mtime-cached), <repo>/results/
 and tt_restatus_*.json (latest by name), per-job revocations from $FLEET_VIZ_REVOKED (default
 ~/claude-takeover-20261007/revoked_closures.json, {job: {reason, ff_ps, by, at}}; applies to any CLOSED job), descriptions from the repo (die-master .env headers, RTL module headers,
 abstract manifests) falling back to the cleaned job purpose, cached in <state>/element_descriptions.json (entries with
-"src": "manual" are never regenerated). Area comes from the best job's ORFS report (6_report.json, else the route
+"src": "manual" are never regenerated). Hand-written descriptions in <repo>/results/fleet_viz/element_descriptions_manual.json
+({families: {name: blurb}, elements: {el: {summary, about, family}}}) load first and override the cache; rows carry summary, about,
+family and family_about (empty about/family when no manual entry). Throughput qualification (AGENTS.md, owner 2026-10-10) comes from the latest
+<repo>/results/arch/throughput_budget_*/budget.json (working tree, else origin/main): each row gets `throughput`
+(status QUALIFIED / UNMEASURED (a price, no measured ratio) / UNQUALIFIED / UNQUALIFIED_NO_BENCH, worst measured/price ratio, limiting op, owner) and `gate`
+('CLOSED-TIMING, THROUGHPUT-UNQUALIFIED' until the unit's production-shape bench is within 1.10 of its price). Area comes from the best job's ORFS report (6_report.json, else the route
 metrics) fetched over ssh in the background and cached in <state>/element_area.json.
 """
 import collections, datetime, glob, json, os, pathlib, re, subprocess, threading, time
+import flow_state
 
 T0 = datetime.datetime.fromisoformat('2026-10-07T20:45:00-07:00').timestamp()   # option-B (TT) switch
-LIVE = {'QUEUED', 'SYNC', 'READY', 'RUNNING', 'ECO', 'MIGRATING'}
-FAIL = {'NEEDS_RTL', 'NEEDS_HUMAN', 'INVALID', 'NEEDS_BUDGET', 'REFUSED'}
+LIVE = {'QUEUED', 'SYNC', 'READY', 'RUNNING', 'ECO', 'ECO_RESULT', 'ECO_INSTALL', 'SUMMARY', 'MIGRATING'}
+REDESIGN = {'NEEDS_RTL', 'NEEDS_BUDGET', 'FLOORPLAN_MARGIN', 'PREROUTE_MARGIN',
+            'EARLY_FAIL_SETUP', 'EARLY_FAIL_HOLD', 'EARLY_FAIL_CONGESTION', 'EARLY_FAIL_DRC', 'EARLY_FAIL_STALL'}
+FAIL = REDESIGN | {'NEEDS_HUMAN', 'INVALID', 'REFUSED'}
 CATS = ['closed (TT era)', 'closed (TT re-verified)', 'closed (earlier)', 'first trial in flight', 'failed, re-running',
         'revoked, re-running', 'revoked (no live job)', 'needs redesign (no live job)', 'flow failure (no live job)',
         'cancelled only', 'superseded', 'implementation recorded (no physical job)']
 TARGETS = ['Qwen ROM', 'DeepSeek ROM', 'HBM accelerator', 'Other']
 
 # ---------------------------------------------------------------- naming
-STRONG = [('Qwen ROM', re.compile(r'^(qfd|qkd|ot_qwen|ot_qfd|ot_qkvd|qwen)')),   # qkd / ot_qkvd: the KV die (kv-die 2026-10-09)
+STRONG = [('Qwen ROM', re.compile(r'^(qfd|qkd|ot_qwen|ot_qfd|ot_qkvd|qwen|ot_nhb_|ot_qkh_)')),   # qkd / ot_qkvd: the KV die (kv-die 2026-10-09)
           ('HBM accelerator', re.compile(r'^(hfd|ot_hbm|ot_ha2|ot_su\d|ot_attn|hbm|smh|w2_|hgi|ot_hgi|ot_hcoll|ot_gpu_rf_)')),
           ('DeepSeek ROM', re.compile(r'^(dsfd|ot_dsrom|ot_s81|s81|dshead|dsrom|ot_v41_|bf_|pq_|ot_mtp_)'))]
 WEAK = [('Qwen ROM', re.compile(r'qwen')), ('HBM accelerator', re.compile(r'hbm|ha2')),
@@ -122,6 +130,39 @@ class Describer:
         self.repo = pathlib.Path(repo); self.cache_path = pathlib.Path(cache); self.idx = None; self.idx_t = 0
         try: self.cache = json.loads(self.cache_path.read_text())
         except Exception: self.cache = {}
+        # hand-written descriptions committed to the repo (element-desc-1011): loaded first, survive redeploys
+        self.manual_path = self.repo / 'results/fleet_viz/element_descriptions_manual.json'
+        self.manual_t = None; self.manual = {}; self.families = {}
+        self.load_manual()
+
+    def load_manual(self):
+        # working tree first, else origin/main (the shared checkout can lag main)
+        try: t = self.manual_path.stat().st_mtime; src = None
+        except OSError:
+            rel = str(self.manual_path.relative_to(self.repo))
+            try: t = subprocess.run(['git', '-C', str(self.repo), 'rev-parse', 'origin/main:' + rel],
+                                    capture_output=True, text=True, timeout=20).stdout.strip(); src = rel
+            except Exception: return
+            if not t: return
+        if t == self.manual_t: return
+        try:
+            d = json.loads(self.manual_path.read_text() if src is None else subprocess.run(
+                ['git', '-C', str(self.repo), 'show', 'origin/main:' + src], capture_output=True, text=True, timeout=30).stdout)
+        except Exception: return
+        self.manual_t = t; self.manual = d.get('elements', {}); self.families = d.get('families', {})
+        for m, e in self.manual.items():
+            if e.get('summary'):
+                self.cache[m] = dict(text=e['summary'], src='manual', summary=e['summary'],
+                                     about=e.get('about', ''), family=e.get('family', ''))
+
+    def info(self, mname):
+        self.load_manual()
+        c = self.cache.get(mname) or {}
+        if c.get('src') != 'manual': return dict(summary=c.get('text', ''), about='', family='', family_about='')
+        f = c.get('family', '')
+        return dict(summary=c.get('summary') or c.get('text', ''), about=c.get('about', ''), family=f,
+                    family_about=self.families.get(f, ''))
+
 
     def index(self):
         if self.idx is not None and time.time() - self.idx_t < 3600: return self.idx
@@ -215,10 +256,12 @@ class Elements:
         self.state.mkdir(parents=True, exist_ok=True)
         self.ssh_of = ssh_of; self.ctl = ctl; self.md_path = pathlib.Path(md_path); self.log = log
         self.period = period; self.md_period = md_period
+        self.flow = flow_state.FlowState(repo, log)   # flow / version state (ref_tile M5 = current flow)
         self.cache = {}; self.optb = (None, {}); self.rest = (None, {}); self.revk = (None, {}); self.supk = (None, {})
         self.superseded_path = pathlib.Path(os.environ.get('FLEET_VIZ_SUPERSEDED', os.path.expanduser(
             '~/claude-takeover-20261007/superseded_elements.json')))
         self.ovk = (None, {})
+        self.tpk = (None, {})
         self.overrides_path = pathlib.Path(os.environ.get('FLEET_VIZ_OVERRIDES', os.path.expanduser(
             '~/claude-takeover-20261007/element_overrides.json')))
         self.revoked_path = pathlib.Path(os.environ.get('FLEET_VIZ_REVOKED', os.path.expanduser(
@@ -267,7 +310,8 @@ class Elements:
                     closed_t=closed_t, host=j.get('host'), tt_corner=tt,
                     tt=_f(m.get('ss_ps')) if tt else None, ss=_f(m.get('ss_sensitivity_ps')) if tt else _f(m.get('ss_ps')),
                     ff=_f(m.get('ff_ps')), drc=m.get('drc'), has_m=bool(m),
-                    drc_metrics=(m.get('drc_metrics') or [None])[0], orfs_dir=m.get('orfs_dir'))
+                    drc_metrics=(m.get('drc_metrics') or [None])[0], orfs_dir=m.get('orfs_dir'),
+                    ref_tile=bool(s.get('ref_tile')), kit=flow_state.kit_of(((s.get('stages') or {}).get('route') or {}).get('cmd')))
 
     def latest(self, pattern):
         fs = sorted(glob.glob(str(self.repo / pattern)))
@@ -342,6 +386,39 @@ class Elements:
                 if best is None or len(k) > len(best): best = k
         return ov['owner_map'][best] if best else owner
 
+    def throughput(self):
+        """Per-element throughput qualification from the latest committed budget (results/arch/throughput_budget_*/
+        budget.json 'elements'): working tree first, else origin/main (the shared checkout can lag main)."""
+        files = sorted(glob.glob(str(self.repo / 'results/arch/throughput_budget_*/budget.json')))
+        key = None; text = None; src = None
+        try:
+            if files:
+                key = (files[-1], os.stat(files[-1]).st_mtime)
+                if key == self.tpk[0]: return self.tpk[1]
+                text = open(files[-1]).read(); src = os.path.relpath(files[-1], self.repo)
+            else:
+                sha = subprocess.run(['git', '-C', str(self.repo), 'rev-parse', 'origin/main'], capture_output=True,
+                                     text=True, timeout=20).stdout.strip()
+                key = ('origin/main', sha)
+                if key == self.tpk[0]: return self.tpk[1]
+                ls = subprocess.run(['git', '-C', str(self.repo), 'ls-tree', '-r', '--name-only', 'origin/main',
+                                     'results/arch/'], capture_output=True, text=True, timeout=60).stdout.split()
+                cands = sorted(x for x in ls if re.match(r'results/arch/throughput_budget_[^/]+/budget\.json$', x))
+                if cands:
+                    text = subprocess.run(['git', '-C', str(self.repo), 'show', 'origin/main:' + cands[-1]],
+                                          capture_output=True, text=True, timeout=60).stdout
+                    src = 'origin/main:' + cands[-1]
+            d = {}
+            if text:
+                doc = json.loads(text)
+                for e, v in (doc.get('elements') or {}).items():
+                    if isinstance(v, dict) and v.get('status'):
+                        d[e] = dict(honest_throughput(v), budget=src, qualify_ratio=doc.get('qualify_ratio', 1.10))
+        except Exception as e:
+            self.log('elements: throughput budget: %s' % e); d = self.tpk[1]
+        self.tpk = (key, d)
+        return d
+
     def registry(self):
         """Read additive, committed implementation evidence; never infer physical closure."""
         history = collections.defaultdict(list); errors = []
@@ -386,14 +463,19 @@ class Elements:
         js = self.jobs(); ob, rest = self.option_b(); rj = self.revoked_jobs(); sup = self.superseded()
         ov = self.overrides() if hasattr(self, 'overrides_path') else dict(variants={}, owner_map={}, owners={})
         registry, registry_errors = self.registry()
+        tput = self.throughput() if hasattr(self, 'tpk') else {}
         known = {j['block'] for j in js} | set(ob.get('closed', {})) | set(ob.get('revoked', {})) | set(registry)
         vmap = {b: master(v['of'], known) for b, v in ov['variants'].items()}
         vmap = {b: m for b, m in vmap.items() if m not in sup}   # never fold into a superseded parent (it would count nowhere)
-        instances = collections.defaultdict(set)
+        instances = collections.defaultdict(set); tiles = collections.defaultdict(set)
         for b, v in ov['variants'].items():
             # fill-9 2026-10-10: a fold whose parent is superseded is dropped from vmap above; indexing it raised KeyError
             # and froze /api/elements from 11:06 to 16:37 (dsfd_mtp_seq_rtt instance of superseded dsrom_mtp_seq_native_binding)
             if v.get('kind') == 'instance' and b in vmap: instances[vmap[b]].update((b, vmap[b]))   # the master block is an instance too
+            # owner 10-11 two-level rule: kind 'tile' = a hardened tile of a composed element. The element closes when every
+            # tile block has a closure (the composition bench gates adding the fold); the master's own flat jobs do not
+            # block it, but a closure of the master itself (dual-track flat line) still closes it.
+            if v.get('kind') == 'tile' and b in vmap: tiles[vmap[b]].add(b)
         groups = collections.defaultdict(list)
         for j in js: groups[master(j['block'], known, vmap)].append(j)
         for b in ob.get('closed', {}):   # option-B closed blocks with no loop job (routes judged outside the loop)
@@ -403,7 +485,19 @@ class Elements:
             key = master(b, known, vmap); groups.setdefault(key, []); evidence[key].extend(records)
         rows = []
         for m, g in groups.items():
-            r = self.element(m, g, ob, rest, rj)
+            gg = g
+            if tiles.get(m) and not any(j['block'] == m and j['status'] == 'CLOSED' and j['name'] not in rj for j in g):
+                gg = [j for j in g if j['block'] in tiles[m]]
+                closed_blocks = {j['block'] for j in gg if j['status'] == 'CLOSED' and j['name'] not in rj} | set(ob.get('closed', {}))
+                missing = sorted(b for b in tiles[m] if b not in closed_blocks)
+            r = self.element(m, gg or g, ob, rest, rj)
+            if gg is not g and missing:
+                if r['category'].startswith('closed'):
+                    r['category'] = self.element(m, [j for j in gg if j['block'] in missing], ob, rest, rj)['category'] if any(j['block'] in missing for j in gg) else CATS[7]
+                    r['closed_t'] = None
+                r['via'] = 'tiles not closed: %s' % ', '.join(missing)
+            elif gg is not g:
+                r['via'] = 'closed via tiles: %s' % ', '.join(sorted(tiles[m]))
             if r['category'].startswith('closed') and instances.get(m):
                 closed_blocks = {j['block'] for j in g if j['status'] == 'CLOSED' and j['name'] not in rj} | set(ob.get('closed', {}))
                 missing = sorted(b for b in instances[m] if b not in closed_blocks)
@@ -425,16 +519,28 @@ class Elements:
             r['owner'] = ov['owners'].get(m) or self.remap_owner(r['owner'] or '', ov)
             sv = sup.get(m) or next((sup[b] for b in [m] + r['variants'] if b in sup), None)
             r['superseded'] = None
-            if sv and not r['category'].startswith('closed'):
+            r['supersession_source_evidence_missing'] = None
+            if sv:   # owner 10-11: superseded overrides closed too; such rows are not counted anywhere
                 r['category'] = 'superseded'; r['superseded'] = dict(by=sv.get('by'), reason=sv.get('reason'))
+                # Preserve historical declarations, expose their proof gap; never invent a successor.
+                r['supersession_source_evidence_missing'] = not isinstance(sv.get('source_evidence'), dict)
                 r['via'] = 'superseded by %s' % sv.get('by')
+            tq = tput.get(m) or next((tput[b] for b in r['variants'] if b in tput), None)
+            r['throughput'] = tq
+            r['gate'] = gate_text(r['category'], tq)
             rows.append(r)
+        flow = self.flow.annotate(rows, groups, TARGETS)   # r['flow'] / flow_label / die_used / m5_reroute
         rows.sort(key=lambda r: (TARGETS.index(r['target']), CATS.index(r['category']), r['element']))
         summ = collections.defaultdict(lambda: collections.Counter())
-        for r in rows: summ[r['target']][r['category']] += 1
+        tsum = collections.defaultdict(lambda: collections.Counter())
+        for r in rows:
+            summ[r['target']][r['category']] += 1
+            if r['category'].startswith('closed'):
+                tsum[r['target']][(r.get('throughput') or {}).get('status') or 'NO_BUDGET_ROW'] += 1
         self.desc.save()
-        return dict(t=time.time(), rows=rows, cats=CATS, targets=TARGETS,
+        return dict(t=time.time(), rows=rows, cats=CATS, targets=TARGETS, flow=flow,
                     summary={t: dict(summ[t]) for t in TARGETS if t in summ},
+                    throughput_summary={t: dict(tsum[t]) for t in TARGETS if t in tsum},
                     sources=dict(option_b=ob.get('path'), option_b_decided=ob.get('decided'), jobs=len(js),
                                  revoked_jobs=str(self.revoked_path) if rj else None, n_revoked_jobs=len(rj),
                                  registry='results/fleet_viz/element_registry', registry_records=sum(map(len, registry.values())),
@@ -449,7 +555,10 @@ class Elements:
             r = rest.get(j['name'])
             if r and j['tt'] is None:
                 j['tt'] = _f(r.get('setup_verdict_ws_ps') if r.get('setup_verdict_ws_ps') is not None else r.get('ttlb_ws_ps'))
-        live = [j for j in g if j['status'] in LIVE]; failed = [j for j in g if j['status'] in FAIL]
+        live = [j for j in g if j['status'] in LIVE]
+        # An unknown/diagnostic status is a coverage gap, never evidence of cancellation.
+        unclassified = [j for j in g if j['status'] not in LIVE | FAIL | {'CLOSED', 'CANCELLED'}]
+        failed = [j for j in g if j['status'] in FAIL] + unclassified
         closed = [j for j in g if j['status'] == 'CLOSED']
         job_rev = [j for j in closed if j['name'] in rj]   # per-job revocations (any era)
         closed_ok = [j for j in closed if j['name'] not in rj]
@@ -479,8 +588,11 @@ class Elements:
         elif live and not failed: cat = CATS[3]
         elif live: cat = CATS[4]
         elif failed:
-            cat = CATS[7] if any(j['status'] in ('NEEDS_RTL', 'NEEDS_BUDGET') for j in failed) else CATS[8]
-        else: cat = CATS[9]
+            cat = CATS[7] if any(j['status'] in REDESIGN for j in failed) else CATS[8]
+            if unclassified: via = 'unclassified job states: ' + ', '.join(sorted({j['status'] for j in unclassified}))
+        elif g and all(j['status'] == 'CANCELLED' for j in g): cat = CATS[9]
+        else:
+            cat = CATS[8]; via = 'no classified physical job evidence'
         jr = max(job_rev, key=lambda j: j['closed_t'] or 0) if job_rev else None
         if best is None and jr and cat in CATS[5:7]:   # show the revoked closure with its re-timed FF
             best = dict(jr, ff=_f(rj[jr['name']].get('ff_ps')))
@@ -518,6 +630,7 @@ class Elements:
         return dict(element=m, target=target(m, *(next(((j['owner'], j['branch']) for j in g), ('', '')))),
                     variants=[b for b in blocks if b != m], category=cat, via=via,
                     purpose=self.desc.get(m, blocks, [j['purpose'] for j in sorted(g, key=lambda j: j['created'])]),
+                    **self.desc.info(m),
                     jobs=len(g), live=len(live), failed=len(failed), closed_jobs=len(closed),
                     best=tm, area=dict(die=a.get('die'), core=a.get('core'), util=a.get('util')) if 'err' not in a and a else None,
                     revoked=revd, latest=latest,
@@ -575,7 +688,7 @@ class Elements:
     def snapshot(self, safe=False):
         with self.lock: d = self.data; v = self.ver
         if safe:
-            return dict(t=d['t'], safe=True, cats=CATS, targets=TARGETS, summary=d['summary'], v=v)
+            return dict(t=d['t'], safe=True, cats=CATS, targets=TARGETS, summary=d['summary'], flow=d.get('flow'), v=v)
         return dict(d, rows=[public(r) for r in d['rows']], v=v)
 
     # ---- markdown
@@ -594,13 +707,14 @@ class Elements:
             rs = [r for r in d['rows'] if r['target'] == t]
             if not rs: continue
             L += ['', '## %s (%d)' % (t, len(rs)), '',
-                  '| element | status | what it is | qualification | TT | FF | SS | DRC | die µm² | util | jobs live/failed/total | closed | latest |',
-                  '|---|---|---|---|---:|---:|---:|---:|---:|---:|---|---|---|']
+                  '| element | status | throughput | what it is | qualification | TT | FF | SS | DRC | die µm² | util | jobs live/failed/total | closed | latest |',
+                  '|---|---|---|---|---|---:|---:|---:|---:|---:|---:|---|---|---|']
             for r in rs:
                 b = r['best']; a = r['area'] or {}
                 fmt = lambda x: '' if x is None else ('%+.1f' % x)
-                L.append('| %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %d/%d/%d | %s | %s |' % (
+                L.append('| %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %d/%d/%d | %s | %s |' % (
                     r['element'] + (' (+%d variants)' % len(r['variants']) if r['variants'] else ''), r['category'],
+                    _md(throughput_text(r.get('throughput'))),
                     _md(r['purpose'][:120]), _md(qualification_text(r.get('qualification'))), fmt(b['tt']), fmt(b['ff']), fmt(b['ss']), '' if b['drc'] is None else b['drc'],
                     '' if a.get('die') is None else '%.0f' % a['die'], '' if a.get('util') is None else '%.0f%%' % (100 * a['util']),
                     r['live'], r['failed'], r['jobs'],
@@ -619,7 +733,38 @@ def public(r):
 def change_key(d):
     """What makes an element snapshot worth recording now (not the per-minute latest-event churn)."""
     return hash(tuple((r['element'], r['category'], r['live'], r['failed'], r['jobs'], r['best']['job'],
-                       json.dumps(r.get('evidence_history', []), sort_keys=True)) for r in d['rows']))
+                       json.dumps(r.get('evidence_history', []), sort_keys=True),
+                       (r.get('throughput') or {}).get('status'), (r.get('throughput') or {}).get('ratio')) for r in d['rows']))
+
+def honest_throughput(v):
+    """Registry honesty (owner 2026-10-13, el1013-rule-enforcement): a unit with a price but no measured production
+    ratio is UNMEASURED, never QUALIFIED.  Applied to the element entry, its limiting op and every op row of a budget
+    entry as read (the committed budget.json predates the rule; tools/throughput_budget/build.py now writes it too)."""
+    def fix(o):
+        if isinstance(o, dict) and o.get('status') == 'QUALIFIED' and not isinstance(o.get('ratio'), (int, float)):
+            o = dict(o, status='UNMEASURED', status_was='QUALIFIED')
+        return o
+    if not isinstance(v, dict): return v
+    v = dict(v)
+    if isinstance(v.get('ops'), list): v['ops'] = [fix(o) for o in v['ops']]
+    if isinstance(v.get('limiting'), dict): v['limiting'] = fix(v['limiting'])
+    return fix(v)
+
+def gate_text(category, tq):
+    """AGENTS.md throughput qualification: timing closure alone never qualifies a unit."""
+    timing = 'CLOSED-TIMING' if category.startswith('closed') else 'OPEN-TIMING'
+    if not tq: return timing + ', NO-THROUGHPUT-BUDGET-ROW'
+    st = tq.get('status')
+    return timing + (', THROUGHPUT-QUALIFIED' if st == 'QUALIFIED' else ', THROUGHPUT-QUALIFIED-BY-BOUND' if st == 'QUALIFIED_BY_BOUND'
+                     else ', THROUGHPUT-ACCEPTED' if st == 'ACCEPTED' else ', THROUGHPUT-EXEMPT' if st == 'EXEMPT'
+                     else ', THROUGHPUT-UNMEASURED' if st == 'UNMEASURED'
+                     else ', THROUGHPUT-UNQUALIFIED')
+
+def throughput_text(tq):
+    if not tq: return ''
+    lim = tq.get('limiting') or {}
+    r = tq.get('ratio')
+    return '%s%s (%s %s)' % (tq['status'], '' if r is None else ' %.2fx' % r, lim.get('model', ''), lim.get('op', ''))
 
 def qualification_text(q):
     if not q: return ''

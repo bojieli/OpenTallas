@@ -32,7 +32,9 @@ def test_hbm_r25m_mtp_and_loader_wiring():
     for st in ('SW', 'SE', 'NW', 'NE'):
         assert any(f'lq_{st}' in b[0] for b in m['buses']) and any(f'lr_{st}' in b[0] for b in m['buses'])
     assert any(eps[0][0] == 'hb_mtp' or eps[-1][0] == 'hb_mtp' for _, _, _, eps in m['buses'])
-    assert H.margin_lint(m)['verdict'] != 'FAIL'
+    # r25m is a superseded round: its relay chains are checked box to box only (the die rule, pin to pin <= 500 um,
+    # is checked on the contract die: tests/test_fp_pin_hops.py, `check --ds-var r25gqn_v13`)
+    assert H.margin_lint(m, pins=False)['verdict'] != 'FAIL'
 
 
 def test_s81_mtp_options_parse():

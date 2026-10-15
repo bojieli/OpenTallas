@@ -19,7 +19,18 @@
 #ifndef NHB_HD
 #define NHB_HD 128
 #endif
-static const int R = NHB_R, HD = NHB_HD, NH = 8;
+#ifndef NHB_HEADS
+#define NHB_HEADS 2
+#endif
+#ifndef NHB_Q_FP32
+#define NHB_Q_FP32 0
+#endif
+#ifndef NHB_PV_SPLIT
+#define NHB_PV_SPLIT 512
+#endif
+static const int R = NHB_R, HD = NHB_HD, KVH = NHB_HEADS, NH = 4 * KVH;
+static const int QW = NHB_Q_FP32 ? 32 : 16, QLANES = 512 / QW;
+static_assert(KVH == 1 || KVH == 2, "supported KV-head profiles");
 
 template <typename T> static uint64_t gbits(const T& v, int off, int w) { return (uint64_t(v) >> off) & ((w == 64) ? ~0ull : ((1ull << w) - 1)); }
 static uint64_t gbits(const uint32_t* v, int off, int w) {
@@ -50,6 +61,9 @@ int main(int argc, char** argv) {
     std::string dir = argv[1];
     int LAT = argc > 2 ? atoi(argv[2]) : 16;
     int BPC = argc > 3 ? atoi(argv[3]) : 750;
+    int STALL = argc > 5 ? atoi(argv[5]) : 0;
+    std::string MUT = argc > 6 ? argv[6] : "none";
+    if (LAT < 0 || BPC <= 0 || STALL < 0) return 2;
     uint64_t MAXC = argc > 4 ? strtoull(argv[4], 0, 10) : 400000;
     // vectors
     int T = 0;
@@ -59,28 +73,29 @@ int main(int argc, char** argv) {
         size_t p = s.find("\"ctx\":");
         T = atoi(s.c_str() + p + 6);
     }
-    std::vector<uint16_t> q;
-    { std::ifstream f(dir + "/q.hex"); std::string l; while (f >> l) q.push_back((uint16_t)strtoul(l.c_str(), 0, 16)); }
+    std::vector<uint32_t> q;
+    { std::ifstream f(dir + "/q.hex"); std::string l; while (f >> l) q.push_back((uint32_t)strtoul(l.c_str(), 0, 16)); }
     std::vector<std::vector<uint8_t>> kv[2];     // [v][t*2+g] -> HD bytes
     {
         std::ifstream f(dir + "/kv.hex"); std::string l; int n = 0;
         while (f >> l) {
             std::vector<uint8_t> row(HD);
             for (int d = 0; d < HD; d++) row[d] = (uint8_t)strtoul(l.substr(2 * (HD - 1 - d), 2).c_str(), 0, 16);
-            kv[n < 2 * T ? 0 : 1].push_back(row); n++;
+            kv[n < KVH * T ? 0 : 1].push_back(row); n++;
         }
     }
     std::vector<uint32_t> gold;
     { std::ifstream f(dir + "/gold.hex"); std::string l; while (f >> l) gold.push_back((uint32_t)strtoul(l.c_str(), 0, 16)); }
-    if ((int)q.size() != NH * HD || (int)kv[0].size() != 2 * T || (int)kv[1].size() != 2 * T || (int)gold.size() != NH * HD) {
+    if ((int)q.size() != NH * HD || (int)kv[0].size() != KVH * T || (int)kv[1].size() != KVH * T || (int)gold.size() != NH * HD) {
         fprintf(stderr, "bad vectors q=%zu k=%zu v=%zu gold=%zu T=%d\n", q.size(), kv[0].size(), kv[1].size(), gold.size(), T);
         return 2;
     }
 
+    if (T < 1 || T > 8192) return 2;
     Vot_qwen_nearhbm_attn_die_tb* top = new Vot_qwen_nearhbm_attn_die_tb;
     uint64_t cyc = 0;
     auto tick = [&]() { top->clk = 0; top->eval(); top->clk = 1; top->eval(); cyc++; };
-    top->rst_n = 0; top->start = 0; top->T = T; top->q_valid = 0;
+    top->rst_n = 0; top->start = 0; top->T = MUT == "context_length" ? T - 1 : T; top->q_valid = 0;
     for (int i = 0; i < 5; i++) tick();
     top->rst_n = 1; tick();
 
@@ -103,25 +118,26 @@ int main(int argc, char** argv) {
     int fault = 0;
     uint64_t served = 0;
     // start + q beats (32 BF16 per beat)
-    const int NQB = NH * HD * 16 / 512;
+    const int NQB = NH * HD * QW / 512;
     int qb = -1;
     while (cyc - t0 < MAXC && nout < NH * HD) {
         // inputs for this edge
         top->start = (qb == -1);
-        top->q_valid = (qb >= 0 && qb < NQB);
+        top->q_valid = (qb >= 0 && qb < NQB && (!STALL || cyc % 7 != 3));
         if (top->q_valid) {
-            top->q_beat = qb;
-            for (int i = 0; i < 32; i++) sbits(top->q_data, 16 * i, 16, q[32 * qb + i]);
+            top->q_beat = MUT == "group" ? qb + NQB : qb;
+            for (int i = 0; i < QLANES; i++) sbits(top->q_data, QW * i, QW, q[QLANES * (MUT == "q_order" ? (qb ^ 1) : qb) + i]);
         }
-        qb++;
+        if (qb == -1 || top->q_valid) qb++;
         // HBM responses due this edge (one per engine)
         for (int x = 0; x < 4 * R; x++) {
             int s = x / R;
             (void)s;
-            if (!pend[x].empty() && pend[x].front().at <= cyc) {
+            if (!pend[x].empty() && pend[x].front().at <= cyc && (!STALL || (cyc + x) % 11 != 4)) {
                 Rsp r = pend[x].front(); pend[x].pop_front();
                 sbits(top->rsp_valid, x, 1, 1);
-                const std::vector<uint8_t>& row = kv[r.v][2 * r.t + r.g];
+                int mt = MUT == "context" ? (r.t + 1) % T : r.t;
+                const std::vector<uint8_t>& row = kv[r.v][KVH * mt + r.g];
                 for (int d = 0; d < HD; d++) sbits(top->rsp_data, (x * HD + d) * 8, 8, row[d]);
             } else sbits(top->rsp_valid, x, 1, 0);
         }
@@ -131,7 +147,7 @@ int main(int argc, char** argv) {
         for (int x = 0; x < 4 * R; x++)
             if (gbits(top->req_valid, x, 1)) {
                 Req r{(int)gbits(top->req_v, x, 1), (int)gbits(top->req_g, x, 1), (int)gbits(top->req_t, 13 * x, 13)};
-                if (r.t >= T || ((r.t % 512) / 128) != x / R) { fprintf(stderr, "bad request t=%d T=%d x=%d\n", r.t, T, x); return 3; }
+                if (r.t >= T || r.g >= KVH || ((r.t % NHB_PV_SPLIT) / (NHB_PV_SPLIT / 4)) != x / R) { fprintf(stderr, "bad request t=%d T=%d x=%d\n", r.t, T, x); return 3; }
                 rq[x].push_back(r);
             }
         // HBM service: token bucket per stack, round robin over its engines, one row per engine per cycle
@@ -140,7 +156,7 @@ int main(int argc, char** argv) {
             if (tok[s] > BPC + HD) tok[s] = BPC + HD;
             for (int k = 0; k < R; k++) {
                 int x = s * R + (rr[s] + k) % R;
-                if (rq[x].empty() || tok[s] < HD) continue;
+                if (rq[x].empty() || tok[s] < HD || (STALL && (cyc + s) % 13 == 5)) continue;
                 Req r = rq[x].front(); rq[x].pop_front();
                 tok[s] -= HD;
                 pend[x].push_back(Rsp{cyc + (uint64_t)LAT, r.v, r.g, r.t});
@@ -159,6 +175,9 @@ int main(int argc, char** argv) {
         if (top->out_valid) {
             int g = top->out_g, beat = top->out_beat;
             int bph = HD / 16, h = 4 * g + beat / bph, d0 = (beat % bph) * 16;
+            if (g >= KVH || beat >= 4 * bph || h >= NH) {
+                fprintf(stderr, "bad output group=%d beat=%d KVH=%d\n", g, beat, KVH); return 3;
+            }
             for (int l = 0; l < 16; l++) {
                 int i = h * HD + d0 + l;
                 out[i] = (uint32_t)gbits(top->out_data, 32 * l, 32);
@@ -168,8 +187,13 @@ int main(int argc, char** argv) {
             out_last = now;
         }
     }
-    int mism = 0, first_bad = -1;
+    int mism = 0, data_mism = 0, missing = 0, duplicates = 0, first_bad = -1;
     for (int i = 0; i < NH * HD; i++) if (got[i] != 1 || out[i] != gold[i]) { if (first_bad < 0) first_bad = i; mism++; }
+    for (int i = 0; i < NH * HD; i++) {
+        if (!got[i]) missing++;
+        if (got[i] > 1) duplicates++;
+        if (got[i] == 1 && out[i] != gold[i]) data_mism++;
+    }
     // phase marks (latest stack)
     auto mx = [&](int b) { int64_t m = -1; for (int s = 0; s < 4; s++) if (ev_first[s][b] > m) m = ev_first[s][b]; return m; };
     auto mn = [&](int b) { int64_t m = -1; for (int s = 0; s < 4; s++) if (ev_first[s][b] >= 0 && (m < 0 || ev_first[s][b] < m)) m = ev_first[s][b]; return m; };
@@ -180,7 +204,7 @@ int main(int argc, char** argv) {
         if (row_first[s][1] >= 0 && (vf < 0 || row_first[s][1] < vf)) vf = row_first[s][1];
         if (row_last[s][1] > vl) vl = row_last[s][1];
     }
-    printf("{\"ctx\": %d, \"R\": %d, \"HD\": %d, \"hbm_latency\": %d, \"bytes_per_cycle\": %d, "
+    printf("{\"kv_heads\": %d, \"q_fp32\": %d, \"stall\": %d, \"data_mismatches\": %d, \"missing_words\": %d, \"duplicate_words\": %d, \"ctx\": %d, \"R\": %d, \"HD\": %d, \"hbm_latency\": %d, \"bytes_per_cycle\": %d, "
            "\"outputs\": %d, \"mismatches\": %d, \"first_bad\": %d, \"fault\": %d, \"exact\": %s, "
            "\"cycles_total\": %lld, \"rows_served\": %llu, "
            "\"marks\": {\"q_ready\": %lld, \"k_first_issue\": %lld, \"k_rows_served_first\": %lld, \"k_rows_served_last\": %lld, "
@@ -188,7 +212,7 @@ int main(int argc, char** argv) {
            "\"exp_done_g1\": %lld, \"v_first_issue\": %lld, \"v_rows_served_first\": %lld, \"v_rows_served_last\": %lld, "
            "\"v_issued_all\": %lld, \"last_leaf\": %lld, \"pv_first_beat\": %lld, \"hub_M_sent\": %lld, "
            "\"hub_rz_ok_g0\": %lld, \"hub_rz_ok_g1\": %lld, \"out_first\": %lld, \"out_last\": %lld}}\n",
-           T, R, HD, LAT, BPC, nout, mism, first_bad, fault, (mism == 0 && fault == 0 && nout == NH * HD) ? "true" : "false",
+           KVH, NHB_Q_FP32, STALL, data_mism, missing, duplicates, T, R, HD, LAT, BPC, nout, mism, first_bad, fault, (mism == 0 && fault == 0 && nout == NH * HD) ? "true" : "false",
            (long long)out_last, (unsigned long long)served,
            (long long)mx(8), (long long)mn(9), (long long)kf, (long long)kl, (long long)mx(5), (long long)mx(11),
            (long long)mx(12), (long long)mn(13), (long long)mx(6), (long long)mx(7), (long long)mn(10), (long long)vf,

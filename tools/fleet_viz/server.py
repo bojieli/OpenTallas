@@ -9,6 +9,7 @@ Endpoints (bind 127.0.0.1:8765 by default):
   /                 the page            /api/fleet   JSON snapshot
   /replay?from=&to=&speed=   the same page playing a recorded window (/api/replay serves the data)
   /api/elements     per-element (block) closure status table (elements.py; share-safe: summary counts only)
+  /api/layout/<element>/...  routed-geometry tiles for the element page's Layout tab (layout_service.py)
   /api/stream       server-sent events (latest history point only; /api/fleet
                     carries the full 60-minute history)
 Internal view is the default: real host aliases, job and block names, slacks
@@ -19,7 +20,7 @@ headers) or from a non-loopback address are always served share-safe.
 import collections, datetime, json, os, signal, pathlib, re, subprocess, sys, threading, time
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
-import recorder, elements, explorer, coverage, landing
+import recorder, elements, explorer, coverage, landing, elem_shell, layout_service, native_provenance
 
 HERE = pathlib.Path(__file__).resolve().parent
 CFG = json.loads(pathlib.Path(os.environ.get('FLEET_VIZ_HOSTS', HERE / 'fleet_hosts.json')).read_text())
@@ -433,7 +434,8 @@ STATIC = {'/': ('index.html', 'text/html; charset=utf-8'), '/index.html': ('inde
           '/explorer.html': ('explorer.html', 'text/html; charset=utf-8'),
           '/explorer.js': ('explorer.js', 'text/javascript; charset=utf-8'),
           '/explorer_story.js': ('explorer_story.js', 'text/javascript; charset=utf-8'),
-          '/fv_stale.js': ('fv_stale.js', 'text/javascript; charset=utf-8')}
+          '/fv_stale.js': ('fv_stale.js', 'text/javascript; charset=utf-8'),
+          '/fv_flow.js': ('fv_flow.js', 'text/javascript; charset=utf-8')}
 # /explorer/token/...: mount point for the token-path views (a separate stream ships them into explorer/token/)
 TOKEN_DIR = HERE / 'explorer' / 'token'
 TOKEN_TYPES = {'.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8',
@@ -444,19 +446,39 @@ TOKEN_PLACEHOLDER = (b'<!doctype html><meta charset="utf-8"><meta name="viewport
                      b'here (tools/fleet_viz/explorer/token/).</p><p><a style="color:#5ee7ff" href="/explorer">&larr; Chip Explorer</a></p>')
 # /explorer/coverage/...: the coverage matrix view (results/arch/coverage_20261008 ledgers, joined with /api/elements)
 COVERAGE_DIR = HERE / 'explorer' / 'coverage'
+NATIVE = native_provenance.NativeLifecycle(os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas'), TOKEN_DIR, ref=os.environ.get('FLEET_VIZ_NATIVE_REF', 'origin/main'))
 COVERAGE = coverage.Coverage(os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas'), ELEMENTS, TOKEN_DIR, log=log)
 # /explorer/element/...: per-element post-route pages (page + pages.json from the repo; data/ written by
 # tools/explorer_elem_export.py pack, never committed).  Share-safe requests get the data with raw names stripped.
 ELEM_DIR = HERE / 'explorer' / 'element'
+SHELL = elem_shell.Shell(ELEM_DIR, ELEMENTS, EXPLORER, log=log, repo=os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas'))   # page header / tab availability / data-id resolution
 _ELEM_CACHE = {}
 
 def elem_redact(o):
     """share-safe element data: no module / instance / pin / port / job / host / record names"""
+    if str(o.get('schema', '')).startswith('opentallas.elem_trace'):   # data/<element>.trace.json (Replay tab)
+        for k in ('job', 'bench', 'bench_why', 'netlist', 'dut_scope', 'source_commit', 'cell_models'): o[k] = ''
+        o['instances'] = []; o['provenance'] = dict(source=(o.get('provenance') or {}).get('source'))
+        for i, ln in enumerate(o.get('lanes') or []): ln['name'] = 'register %d' % (i + 1); ln['file'] = ln['line'] = None
+        for h in o.get('handshakes') or []: h['name'] = h.get('kind', '')
+        for t in o.get('transactions') or []: t[1] = ''
+        for g in o.get('icgs') or []: g['name'] = ''
+        o['ports'] = {}; o['flops'] = [[f[0], ''] for f in o.get('flops') or []]
+        m = o.get('mapping') or {}; m['netlist_not_in_db'] = []; m['db_not_in_netlist'] = []
+        x = o.get('exactness') or {}; x['bench_markers_gate'] = []
+        return o
+    if str(o.get('schema', '')).startswith('opentallas.explorer_elem.index'):   # data/index.json (export index)
+        for e in (o.get('elements') or {}).values():
+            for k in ('job', 'block', 'reference'): e[k] = ''
+        return o
+    o['reference'] = dict(found=False, note='not shown in the share-safe view') if o.get('reference') else o.get('reference')
+    o['bench'] = {}
     g = o.get('geom', {})
     g['modules'] = ['m%d' % i for i in range(len(g.get('modules', [])))]
     for m in g.get('macros', []): m['name'] = ''
     for p in g.get('ports', []): p[0] = ''
     for k in ('job', 'host', 'db', 'record', 'note', 'block'): o[k] = ''
+    o.pop('golden', None); o.pop('rtl_meta', None); o.pop('rtl_file', None)
     for f in o.get('facts', []): f['src'] = ''
     o['facts'] = [f for f in o.get('facts', []) if f.get('k') not in ('closure job', 'source commit')]
     ct = o.get('clock_tt') or {}
@@ -469,12 +491,54 @@ def elem_redact(o):
             for pt in p['points']: pt[0] = ''
     return o
 
+_TPUT = {'t': 0, 'd': None, 'commit': None, 'err': None}
+TPUT_REL = 'results/arch/throughput_budget_20261010/budget.json'
+
+def _tput_load():
+    """budget.json from origin/main (the shared checkout may sit on a stale HEAD): git fetch at most every 10 min,
+    then git show origin/main:<path>"""
+    now = time.time()
+    if _TPUT['d'] is not None and now - _TPUT['t'] < 600: return
+    repo = os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas')
+    _TPUT['t'] = now
+    try:
+        subprocess.run(['git', '-C', repo, 'fetch', '-q', 'origin', 'main'], timeout=90, capture_output=True)
+        r = subprocess.run(['git', '-C', repo, 'show', 'origin/main:' + TPUT_REL], timeout=30, capture_output=True)
+        if r.returncode:
+            _TPUT.update(d=None, err='not on origin/main yet'); return
+        c = subprocess.run(['git', '-C', repo, 'log', '-1', '--format=%h %cI', 'origin/main', '--', TPUT_REL], timeout=30, capture_output=True, text=True)
+        _TPUT.update(d=json.loads(r.stdout), commit=c.stdout.strip(), err=None)
+    except Exception as e:
+        _TPUT.update(err=str(e)[:200])
+
+def elem_tput(blocks, safe):
+    """throughput qualification of the element page's blocks, read with the budget's exact keys:
+    elements[<block>] = {status, ratio, limiting{op, model, status, ratio, owner, src}, ops[...]} and the token-path
+    classes (rom.<model>.classes[] with elements[]) that list the block"""
+    _tput_load()
+    d = _TPUT['d']
+    if d is None: return dict(status='pending', path=TPUT_REL, error=_TPUT['err'])
+    out = dict(status='present', path=TPUT_REL, commit=_TPUT['commit'], generated_utc=d.get('generated_utc'), rule=d.get('rule'),
+               qualify_ratio=d.get('qualify_ratio'), elements={}, classes={})
+    for b in blocks:
+        out['elements'][b] = elements.honest_throughput((d.get('elements') or {}).get(b))
+        cl = []
+        for model, md in (d.get('rom') or {}).items():
+            for c in (md or {}).get('classes', []) if isinstance(md, dict) else []:
+                if b in (c.get('elements') or []):
+                    cl.append(dict(model='rom.' + model, **{k: c.get(k) for k in ('cls', 'status', 'critical_cycles_per_token', 'share', 'nodes',
+                                                                                  'measured_fraction', 'n_unmeasured', 'unmeasured_nodes', 'basis')}))
+        out['classes'][b] = cl
+    return out
+
 def elem_body(path, safe, gz):
     import gzip as _gz
     st = path.stat(); key = (str(path), st.st_mtime, safe, gz)
     if key in _ELEM_CACHE: return _ELEM_CACHE[key]
     b = path.read_bytes()
-    if safe and path.suffix == '.json' and path.parent.name == 'data':
+    if safe and path.name.endswith('.rtl.json'):
+        b = b'{"redacted":true}'
+    elif safe and path.suffix == '.json' and path.parent.name == 'data':
         b = json.dumps(elem_redact(json.loads(b)), separators=(',', ':')).encode()
     if gz: b = _gz.compress(b, 6)
     for k in [k for k in _ELEM_CACHE if k[0] == str(path)]: _ELEM_CACHE.pop(k)
@@ -483,6 +547,8 @@ def elem_body(path, safe, gz):
     return b
 # /landing/...: the public landing page (landing/index.html + recordings), numbers from committed results at request time
 LANDING_DIR = HERE / 'landing'
+# /api/layout/...: the routed-geometry layout viewer (layout_service.py; packs cut on the fleet host holding each DB)
+LAYOUT = layout_service.Service(log=log)
 LANDING = landing.Landing(os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas'), log=log)
 
 def with_sent(body):
@@ -538,6 +604,10 @@ class H(BaseHTTPRequestHandler):
             return self.send(200, json.dumps(stamp(dict(v=ver, verdicts=rows), safe), separators=(',', ':')).encode(), 'application/json')
         if u.path == '/api/elements':
             return self.send(200, json.dumps(stamp(ELEMENTS.snapshot(safe), safe), separators=(',', ':')).encode(), 'application/json')
+        if u.path == '/api/native/coverage':
+            if safe: return self.send(403, b'{"safe":true,"error":"native provenance is private"}', 'application/json')
+            o = NATIVE.api(q.get('design', [''])[0])
+            return self.send(200, json.dumps(o, separators=(',', ':')).encode(), 'application/json')
         if u.path in ('/api/coverage', '/api/coverage/version', '/api/coverage/token'):
             if safe: return self.send(403, b'{"safe":true,"error":"coverage is not part of the share-safe view"}', 'application/json')
             if u.path == '/api/coverage/version': o = COVERAGE.version()
@@ -555,11 +625,18 @@ class H(BaseHTTPRequestHandler):
         if u.path == '/explorer/coverage' or u.path.startswith('/explorer/coverage/'):
             if u.path == '/explorer/coverage': return self.redirect('/explorer/coverage/')
             return self.static_dir(COVERAGE_DIR, u.path[len('/explorer/coverage'):].lstrip('/') or 'index.html', None)
+        if u.path == '/api/explorer/elem_tput':
+            bl = [b for b in q.get('blocks', [''])[0].split(',') if b]
+            return self.send(200, json.dumps(elem_tput(bl, safe)).encode(), 'application/json')
         if u.path == '/explorer/element' or u.path.startswith('/explorer/element/'):
             if u.path == '/explorer/element': return self.redirect('/explorer/element/' + ('?' + u.query if u.query else ''))
             return self.elem(u.path[len('/explorer/element'):].lstrip('/') or 'index.html', safe)
         if u.path == '/explorer/token' or u.path.startswith('/explorer/token/'):
             return self.token(u.path[len('/explorer/token'):].lstrip('/') or 'index.html')
+        if u.path.startswith('/layout_store/'):
+            return LAYOUT.static(self, u.path[len('/layout_store/'):], safe)
+        if u.path.startswith('/api/layout/'):
+            return LAYOUT.handle(self, u.path[len('/api/layout/'):], q, safe)
         if u.path.startswith('/api/explorer/'):
             return self.explorer(u.path[len('/api/explorer/'):], q, safe)
         if u.path == '/api/stream':
@@ -585,6 +662,8 @@ class H(BaseHTTPRequestHandler):
             ok = p.is_relative_to(ELEM_DIR.resolve()) and p.is_file() and p.suffix in ('.html', '.js', '.css', '.json', '.bin', '.svg', '.png')
         except (OSError, ValueError):
             ok = False
+        if not ok and rel and '/' not in rel and '.' not in rel:   # /explorer/element/<name>: the page itself (deep link)
+            p, ok = ELEM_DIR / 'index.html', True
         if not ok: return self.send(404, b'not found', 'text/plain')
         gz = 'gzip' in (self.headers.get('Accept-Encoding') or '') and p.stat().st_size > 8192
         try:
@@ -635,6 +714,27 @@ class H(BaseHTTPRequestHandler):
                 return js(dict(error='share-safe view: cards open from the map'), 403)
             return js(EXPLORER.card(element=arg('element'), master=arg('master'), die=arg('die'), safe=safe) if not safe
                       else EXPLORER.card_safe_by_index(arg('die'), arg('mi')))
+        if what == 'elem_shell':
+            return js(SHELL.page(arg('e') or '', safe))
+        if what == 'flow':   # flow / version state per element + per-target progress (flow_state.py)
+            d = ELEMENTS.snapshot(safe)
+            fl = d.get('flow') or {}
+            if safe: return js(dict(t=d.get('t'), flow=fl))
+            el = {}
+            for r in d.get('rows', []):
+                e = dict(flow=r.get('flow'), label=r.get('flow_label'), detail=r.get('flow_detail'), die_used=r.get('die_used'),
+                         target=r.get('target'), m5=r.get('m5_reroute'), element=r['element'], category=r.get('category'))
+                el[r['element']] = e
+                mb = r.get('m5_by_block') or {}
+                for b in r.get('variants') or []: el.setdefault(b, dict(e, m5=mb[b]) if b in mb else e)
+                for b, m in mb.items(): el.setdefault(b, dict(e, m5=m))
+            return js(dict(t=d.get('t'), flow=fl, elements=el))
+        if what == 'elem_summaries':
+            return js(dict(t=time.time(), src=SHELL.desc.src, summaries=SHELL.summaries(safe)))
+        if what == 'elem_coverage':
+            c = SHELL.coverage()
+            if safe: c['missing'] = len(c['missing'])
+            return js(c)
         if what == 'story':
             c = EXPLORER.story(arg('id') or '')
             if c and safe: c = {k: v for k, v in c.items() if k not in ('attach', '_file')}

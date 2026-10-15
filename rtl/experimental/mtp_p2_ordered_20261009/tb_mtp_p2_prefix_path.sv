@@ -42,7 +42,10 @@ module tb_mtp_p2_prefix_path #(parameter integer REGB=1, parameter integer ROOTP
  endtask
  initial begin
  $readmemh("inputs.hex",inputs);$readmemh("gold.hex",gold);
- repeat(3)@(negedge clk);rst_n=1;@(negedge clk);sv=1;
+ repeat(3)@(negedge clk);rst_n=1;
+ // tiles synchronise reset and report start_r through registered seams: wait (bounded) for the context
+ w=0;while(!sr&&w<32)begin @(negedge clk);w=w+1;end
+ @(negedge clk);sv=1;
  @(posedge clk);if(!sr)$fatal(1,"PATH atomic start");@(negedge clk);sv=0;
  // Opposite arrival order; the actual producer must preserve E0,E1,E2.
  for(w=0;w<80;w=w+1)pair(w);

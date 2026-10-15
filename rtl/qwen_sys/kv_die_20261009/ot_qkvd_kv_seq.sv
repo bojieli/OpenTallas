@@ -20,6 +20,9 @@ module ot_qkvd_kv_seq #(
     parameter integer R   = 8,                 // row engines per stack
     parameter integer W   = 528,
     parameter integer QD  = 48,                // CTL/Q/KVN/EMBQ input buffers (= credits given to the adapter RX face)
+    parameter integer KDESC = 0,               // qwen-1010/b: 1 = the stream-descriptor issuer (ot_qkvd_kv_desc) on kc_* (default off)
+    parameter integer KD_PMID = 0,             //   static-schedule ATTN spacing seeds (core cycles), 0 = learn from the first gap
+    parameter integer KD_PTOK = 0,
     parameter integer CD  = 4,
     parameter integer KD  = 8,
     parameter integer ED  = 4,
@@ -81,6 +84,8 @@ module ot_qkvd_kv_seq #(
     output wire              tok_v,
     output wire [W-1:0]      tok_d,
     input  wire              tok_cr,
+    output wire [3:0]        kc_v,             // KDESC: stream-command words to the four stacks' controller chains (one copy each)
+    output wire [4*32-1:0]   kc_d,
     output reg               fault,            // to the host interface (status), sticky
     output reg  [8:0]        fault_cause
 );
@@ -165,6 +170,23 @@ module ot_qkvd_kv_seq #(
             kvw_layer <= layer;
         end
     end
+    // ---- KDESC (qwen-1010/b 2026-10-11): stream descriptors to the KV-die HBM controllers, timed ~320 hclk ahead of each
+    // layer's go (ot_qkvd_kv_desc, adopted); attn = the CTL ATTN consumed here, done = the layer's last RES word.  The
+    // words leave on four registered copies (one relay chain per stack); the issuer bounds its outstanding layers, so
+    // each stack's receiving FIFO (in the controller element, hclk) never fills: no ready crosses the die.
+    wire kd_fault;
+    generate if (KDESC != 0) begin : g_kd
+        wire        kd_v; wire [31:0] kd_d;
+        ot_qkvd_kv_desc #(.NL(36)) u_kd (.clk(clk), .rst_n(rst_n), .p_mid_init(20'(KD_PMID)), .p_tok_init(20'(KD_PTOK)),
+            .attn_v(st == S_IDLE && ib_pop[0] && ctl_w[527:524] == 4'd1), .attn_layer(ctl_w[21:16]), .attn_T(ctl_w[13:0]),
+            .done_v(st == S_RUN && ov && r_n == 7'd63), .k_v(kd_v), .k_d(kd_d), .k_ready(1'b1), .fault(kd_fault));
+        reg [3:0] kcv; reg [4*32-1:0] kcd;
+        always @(posedge clk or negedge rst_n) if (!rst_n) kcv <= 4'd0; else kcv <= {4{kd_v}};
+        always @(posedge clk) kcd <= {4{kd_d}};
+        assign kc_v = kcv; assign kc_d = kcd;
+    end else begin : g_nkd
+        assign kc_v = 4'd0; assign kc_d = {4*32{1'b0}}; assign kd_fault = 1'b0;
+    end endgenerate
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             st <= S_IDLE; layer <= 0; kv_n <= 0; q_n <= 0; r_n <= 0; a_start <= 1'b0; a_T <= 14'd0; a_q_valid <= 1'b0;
@@ -211,7 +233,7 @@ module ot_qkvd_kv_seq #(
             if (dfq) f_d2d <= 1'b1;
             fault_cause <= {f_d2d, tk_f, hc_f, ed_f, eq_f, f_kw | f_row | f_pend, f_ord, f_res, f_ib};
             f_row <= f_row | |m_fault; f_pend <= f_pend | a_hub_fault | |a_stk_fault;
-            fault <= |{f_d2d, tk_f, hc_f, ed_f, eq_f, f_kw, f_row, f_pend, f_ord, f_res, f_ib};
+            fault <= |{f_d2d, tk_f, hc_f, ed_f, eq_f, f_kw, f_row, f_pend, f_ord, f_res, f_ib, kd_fault};
         end
     end
 endmodule

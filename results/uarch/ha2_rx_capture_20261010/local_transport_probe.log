@@ -1,0 +1,12 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /macro/ot_sram_1r1w_64x512_m1_r2c2.lef, created 1 library cells
+HA2_CAPTURE_COLLAR anchored 1120 bank-owned capture flops
+OT_IOF fixed 3304 IO pin flops at their pins (B 1122 T 1090 L 0 R 2)
+HA2_SEND_PINS anchored 2 distinct north-face valid flops
+HA2_LOCAL_TRANSPORT anchored1120 write flops with full sink inventory and1120 capture-to-output transport flops
+HA2_LOCAL_TRANSPORT_PROBE_PASS

@@ -1,110 +1,78 @@
 #!/usr/bin/env python3
-"""hgi-1010/g (2026-10-10): ATT unit throughput report from tb_hgi_att_tput runs.
+"""hbm-attn-tput2 (2026-10-12): ATT throughput report from a tb_hgi_att_tput run (run_att_tput.sh <out>).
 
-    python3 tools/hgi_adapters/att_tput_report.py --vec VECDIR --log RUN.log [--vec ... --log ...] --vehicle qwen|ds
-        --out results/rtl/hgi_unit_tput_20261010/att/<veh>_L0_tput/report.json [--meta k=v ...]
-
-Per record: service = ret - max(disp, the previous record's ret) (hgi_sim.e2e_calibration.service), against the
-simulator's price of that record (tput_cases.json).  Qwen: the production shape is T = 8,192 rows; the bench runs
-T = 512 / 1,024 / 2,048 at the production head / lane width, fits service = a + b T per op (least squares; the residual
-is reported) and emits the T = 8,192 records as EXTRAPOLATED rows (flag extrapolated = true, price 660.1) next to the
-measured rows.  The e2e-report schema: pass_, summary.cycles, per_unit.ATT {records, real, exact, rtl_busy,
-sim_cost}, records [{k, unit, op, tag, real, disp, ret, cost, mismatch}].
+Reads <out>/run.log (REC <case> <j> op <op> disp <c> ret <c>; case <c>: ... <n> wrong) and <out>/vec/tput_cases.json.
+Two numbers per record:
+  latency   disp -> ret of the record (handshake to rec_done)
+  service   the retire-to-retire interval to the previous record of the SAME op in the case's stream (records are
+            dispatched as soon as the unit takes them); the first record of an op streak has no service number.
+THE GATE is the steady-state service: every service interval <= 1.10 x the record's simulator price (and 0 wrong).
+usage: att_tput_report.py <out> [--json <file>] [--extra k=v ...]
 """
 import argparse
 import json
 import re
 from pathlib import Path
 
-import numpy as np
-
-
-def parse(vec, log):
-    cases = json.loads((Path(vec) / 'tput_cases.json').read_text())
-    txt = Path(log).read_text(errors='replace')
-    recs = []
-    for m in re.finditer(r'^REC (\d+) (\d+) op (\d+) disp (\d+) ret (\d+)', txt, re.M):
-        c, j, op, d, r = map(int, m.groups())
-        info = cases[c]['records'][j]
-        assert info['op'] == op, (c, j, op)
-        recs.append(dict(case=cases[c]['name'], T=cases[c]['T'], j=j, op=op, tag=info['tag'], disp=d, ret=r,
-                         price=info['price']))
-    wrong = {int(m.group(1)): int(m.group(2)) for m in re.finditer(r'^case (\d+): .* (\d+) wrong', txt, re.M)}
-    passed = 'HGI_ATT_TPUT PASS' in txt and 'FAIL' not in txt
-    for x in recs:
-        ci = next(i for i, c in enumerate(cases) if c['name'] == x['case'])
-        x['mismatch'] = wrong.get(ci, -1)
-    return cases, recs, passed
-
-
-def service(recs):
-    last = {}
-    for x in recs:
-        st = max(x['disp'], last.get(x['case'], -1))
-        x['service'] = x['ret'] - st
-        last[x['case']] = x['ret']
-    return recs
-
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--vec', action='append', required=True)
-    ap.add_argument('--log', action='append', required=True)
-    ap.add_argument('--vehicle', required=True)
-    ap.add_argument('--out', required=True)
-    ap.add_argument('--meta', action='append', default=[])
+    ap.add_argument('out')
+    ap.add_argument('--json')
+    ap.add_argument('--extra', nargs='*', default=[])
     a = ap.parse_args()
-    allr, ok = [], True
-    for v, l in zip(a.vec, a.log):
-        _, recs, p = parse(v, l)
-        ok &= p
-        allr += service(recs)
-    allr = [x for x in allr if x['case'].startswith(a.vehicle) or (a.vehicle == 'ds' and x['case'].startswith('ds'))]
-    measured = [dict(k=i, unit='ATT', op=x['op'], tag=f"{x['case']}:{x['tag']}", real=1, disp=x['disp'], ret=x['ret'],
-                     cost=x['price'], mismatch=x['mismatch'], service=x['service'], T=x['T'],
-                     ratio=round(x['service'] / x['price'], 2)) for i, x in enumerate(allr)]
-    out = dict(pass_=bool(ok and all(x['mismatch'] == 0 for x in measured)), bench='tb_hgi_att_tput.sv',
-               vehicle=a.vehicle, measured_records=measured)
-    for kv in a.meta:
+    out = Path(a.out)
+    meta = json.loads((out / 'vec' / 'tput_cases.json').read_text())
+    log = (out / 'run.log').read_text()
+    recs, wrong = {}, {}
+    for m in re.finditer(r'REC (\d+) (\d+) op (\d+) disp (\d+) ret (\d+)', log):
+        c, j, op, d, r = map(int, m.groups())
+        recs.setdefault(c, {})[j] = (op, d, r)
+    for m in re.finditer(r'case (\d+): \d+ records in \d+ cycles, \d+ words, (\d+) wrong', log):
+        wrong[int(m.group(1))] = int(m.group(2))
+    rows, ok = [], ('HGI_ATT_TPUT PASS' in log and 'FAIL' not in log)
+    for c, cm in enumerate(meta):
+        rs = recs.get(c, {})
+        if len(rs) != len(cm['records']):
+            ok = False
+        for j in sorted(rs):
+            op, d, r = rs[j]
+            info = cm['records'][j]
+            prev = rs.get(j - 1)
+            svc = (r - prev[2]) if prev and prev[0] == op else None
+            row = dict(case=cm['name'], fmt=cm.get('fmt'), T=cm['T'], j=j, op=op, kind=('qk', 'pv')[op],
+                       tag=info['tag'], disp=d, ret=r, latency=r - d, price=info['price'],
+                       latency_ratio=round((r - d) / info['price'], 3), service=svc,
+                       service_ratio=None if svc is None else round(svc / info['price'], 3),
+                       mismatch=wrong.get(c))
+            rows.append(row)
+            if svc is not None and svc > 1.10 * info['price']:
+                ok = False
+        if wrong.get(c, 1) != 0:
+            ok = False
+    summ = {}
+    for r in rows:
+        k = f"{r['case']}.{r['kind']}"
+        s = summ.setdefault(k, dict(T=r['T'], price=r['price'], latency=[], service=[]))
+        s['latency'].append(r['latency'])
+        if r['service'] is not None:
+            s['service'].append(r['service'])
+    for k, s in summ.items():
+        s['latency_max'] = max(s['latency'])
+        s['service_max'] = max(s['service']) if s['service'] else None
+        s['service_ratio_max'] = round(s['service_max'] / s['price'], 3) if s['service'] else None
+        s['latency_ratio_max'] = round(s['latency_max'] / s['price'], 3)
+        print(f"{k:16s} T {s['T']:4d} price {s['price']:7.1f}  latency {s['latency']} (max {s['latency_ratio_max']}x)"
+              f"  service {s['service']} (max {s['service_ratio_max']}x)")
+    rep = dict(pass_=ok, gate='steady-state service (retire-to-retire interval of same-op records in a back-to-back '
+                              'stream, first record of each op excluded) <= 1.10 x price, 0 wrong; latency = disp->ret '
+                              'reported, not gated', summary=summ, records=rows)
+    for kv in a.extra:
         k, v = kv.split('=', 1)
-        out[k] = v
-    if a.vehicle == 'qwen':
-        fit = {}
-        rows, t = [], 0
-        for op, nm in ((0, 'qk'), (1, 'pv')):
-            xs = [(x['T'], x['service']) for x in measured if x['op'] == op]
-            T_ = np.array([p[0] for p in xs], float)
-            S_ = np.array([p[1] for p in xs], float)
-            b, a0 = np.polyfit(T_, S_, 1)
-            res = S_ - (a0 + b * T_)
-            fit[nm] = dict(intercept=round(float(a0), 1), cycles_per_row=round(float(b), 4),
-                           max_abs_residual=round(float(np.max(np.abs(res))), 1), points=xs,
-                           at_8192=round(float(a0 + b * 8192), 1))
-        price = 660.1
-        for op, nm in ((0, 'qk.kv0'), (0, 'qk.kv1'), (1, 'pv.kv0'), (1, 'pv.kv1')):
-            s = fit['qk' if op == 0 else 'pv']['at_8192']
-            rows.append(dict(k=len(rows), unit='ATT', op=op, tag=f'qwen_T8192:{nm}', real=1, disp=t, ret=round(t + s, 1),
-                             cost=price, mismatch=0, extrapolated=True))
-            t = round(t + s, 1)
-        out['fit'] = fit
-        out['records'] = rows
-        out['scaling_note'] = ('production T = 8,192 rows: records EXTRAPOLATED from the linear fit service = a + b T over '
-                               'the measured T (same production head / lane width, engine geometry and HBM lane model); '
-                               'per-row work is row-serial in the unit (fetch / convert / push / score write per row, job '
-                               'overheads per 512-row job), so service is affine in T (residuals in fit)')
-    else:
-        out['records'] = [dict(k=x['k'], unit='ATT', op=x['op'], tag=x['tag'], real=1, disp=x['disp'], ret=x['ret'],
-                               cost=x['cost'], mismatch=x['mismatch']) for x in measured]
-    rr = out['records']
-    busy = sum(x['ret'] - x['disp'] for x in rr)
-    cost = sum(x['cost'] for x in rr)
-    out['per_unit'] = dict(ATT=dict(records=len(rr), real=len(rr), exact=sum(1 for x in rr if x['mismatch'] == 0),
-                                    rtl_busy=round(busy, 1), sim_cost=round(cost, 1)))
-    out['summary'] = dict(cycles=round(max(x['ret'] for x in rr) - min(x['disp'] for x in rr), 1),
-                          ratio=round(busy / cost, 2))
-    Path(a.out).parent.mkdir(parents=True, exist_ok=True)
-    Path(a.out).write_text(json.dumps(out, indent=1) + '\n')
-    print(json.dumps(dict(per_unit=out['per_unit'], summary=out['summary'], fit=out.get('fit')), indent=1))
+        rep[k] = v
+    print('ATT_TPUT_GATE', 'PASS' if ok else 'FAIL')
+    if a.json:
+        Path(a.json).write_text(json.dumps(rep, indent=1) + '\n')
 
 
 if __name__ == '__main__':

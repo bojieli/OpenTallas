@@ -274,59 +274,20 @@ module ot_qwen_slab_port_group #(
     wire r_v = vline[KD + XL];
 
     // ---- scale ROM: column copies (R2), per-bank decode (R3), macros, pin capture (C4) ------------
+    // HIER (qwen-tp8/slab3 2026-10-12): each macro column (R2 copy, 4 x R3 decode + ROM + C4 capture, the M5 merge)
+    // is ONE hardened sub-tile ot_qwen_slab_pg_col (own pin-flop row, own local clock root), replicated COLS times;
+    // its output m5 is registered at its face.  The bank index BK = c*BPC + b is now the column id on cid pins (tied).
     wire [255:0] colq [0:COLS-1];
     genvar c, b, si;
     generate
         for (c = 0; c < COLS; c = c + 1) begin : g_col
-            wire          gre2;
-            wire [AW-1:0] addr2;
-            ot_qwen_slab_pg_rcopy #(.AW(AW)) u_r2 (.clk(clk), .gre(gre1), .addr(addr1), .gre_q(gre2), .addr_q(addr2));
-            wire [255:0] cor [0:BPC];
-            wire [255:0] bterm [0:BPC-1];
-            assign cor[0] = 256'd0;
-            for (b = 0; b < BPC; b = b + 1) begin : g_bank
-                localparam integer BK = c * BPC + b;
-                wire        ce3;
-                wire [11:0] a3;
-                ot_qwen_slab_pg_bdec #(.AW(AW), .BK(BK)) u_r3 (.clk(clk), .gre(gre2), .addr(addr2), .ce_q(ce3), .a_q(a3));
-                reg        sel4, sel5;
-                (* keep *) reg [7:0] sel5c;   // S5_CTL: 8 copies of sel5, 32 loads each
-                reg [255:0] cap4;
-                wire [265:0] rd;
-                always @(posedge clk) begin
-                    sel4 <= ce3;             // with the macro's sampling edge
-                    sel5 <= sel4;            // with the capture
-                    sel5c <= {8{sel4}};
-                    cap4 <= rd[255:0];
-                end
-                ot_rom_4096x266_m8 u_rom (.clk(clk), .ce_in(ce3), .addr_in(a3), .rd_out(rd));
-                wire [255:0] selv;
-                genvar sk;
-                for (sk = 0; sk < 8; sk = sk + 1) begin : g_sel
-                    assign selv[32*sk +: 32] = {32{(S5_CTL != 0) ? sel5c[sk] : sel5}};
-                end
-                assign bterm[b] = cap4 & selv;
-                assign cor[b+1] = cor[b] | bterm[b];
-            end
-            reg [255:0] m5;
-            if (SCALE_PAIR != 0) begin : g_pair
-                // south pair = cor[BPC/2]; north pair = the same chain restarted at BPC/2 (identical OR terms)
-                wire [255:0] nor_ [BPC/2:BPC];
-                assign nor_[BPC/2] = 256'd0;
-                genvar hb;
-                for (hb = BPC/2; hb < BPC; hb = hb + 1) begin : g_h
-                    assign nor_[hb+1] = nor_[hb] | bterm[hb];
-                end
-                reg [255:0] m5s, m5n;
-                always @(posedge clk) begin
-                    m5s <= cor[BPC/2];
-                    m5n <= nor_[BPC];
-                    m5 <= m5s | m5n;
-                end
-            end else begin : g_nopair
-                always @(posedge clk) m5 <= cor[BPC];
-            end
-            assign colq[c] = m5;
+            localparam [3:0] CID = c;
+`ifdef OT_SLAB_PG_HARD
+            ot_qwen_slab_pg_col u_col (.clk(clk), .gre1(gre1), .addr1(addr1), .cid(CID), .m5(colq[c]));
+`else
+            ot_qwen_slab_pg_col #(.AW(AW), .BPC(BPC), .S5_CTL(S5_CTL), .SCALE_PAIR(SCALE_PAIR)) u_col (
+                .clk(clk), .gre1(gre1), .addr1(addr1), .cid(CID), .m5(colq[c]));
+`endif
         end
     endgenerate
     wire [255:0] cacc [0:COLS];
@@ -350,35 +311,32 @@ module ot_qwen_slab_port_group #(
     assign {e_last, e_wsrc, e_mask} = {e_tag[KR-1], e_tag[KR-5], e_tag[KR-7 -: W]};
     wire [W*32-1:0] scaled;
     wire [W-1:0]    mfault;
+    // HIER (qwen-tp8/slab3): the 16 multiplier lanes are 4 hardened lane sub-tiles ot_qwen_slab_pg_lanes (4 lanes each:
+    // reset copy, IN_STAGE operand registers at the face, ot_hdc_fp32_mul_lat), replicated W/4 times.  The per-lane
+    // valid/select copy u_tc stays in the cluster (a register at the sub-tile's face); the operand select moves from the
+    // cluster side of the IN_STAGE register to the sub-tile side (same function, same cycle).
+    localparam integer LN = 4;
+    wire [W-1:0]   l_vv, l_wsv;
+    wire [2*W-1:0] errv;
+    wire [W-1:0]   vov;
     generate
-        for (si = 0; si < W; si = si + 1) begin : g_mul
-            wire [1:0] err;
-            wire       vo, rsm, l_v, l_ws;
-            ot_qwen_slab_pg_rcopy #(.AW(1)) u_rsm (.clk(clk), .gre(rs0), .addr(1'b0), .gre_q(rsm), .addr_q());
+        for (si = 0; si < W; si = si + 1) begin : g_tc
             // == m_v && m_last && m_mask[si] and m_wsrc (vline[KD] = rs ? vline[KD-1] : 0, one edge later)
             ot_qwen_slab_pg_rcopy #(.AW(1)) u_tc (.clk(clk), .gre(rs && vline[KD-1] && e_last && e_mask[si]),
-                .addr(e_wsrc), .gre_q(l_v), .addr_q(l_ws));
-            wire        i_v;
-            wire [31:0] i_a;
-            wire [15:0] i_b;
-            if (IN_STAGE != 0) begin : g_in
-                reg        v_q;
-                reg [31:0] a_q;
-                reg [15:0] b_q;
-                always @(posedge clk) begin
-                    v_q <= l_v;
-                    a_q <= res_q[32*si +: 32];
-                    b_q <= l_ws ? 16'h3F80 : m6[16*si +: 16];
-                end
-                assign i_v = v_q; assign i_a = a_q; assign i_b = b_q;
-            end else begin : g_noin
-                assign i_v = l_v; assign i_a = res_q[32*si +: 32]; assign i_b = l_ws ? 16'h3F80 : m6[16*si +: 16];
-            end
-            ot_hdc_fp32_mul_lat #(.LAT(MUL_LAT), .KCP(MUL_KCP)) u_mul (.clk(clk), .rst_n(rsm),
-                .valid_in(i_v),
-                .a(i_a), .b({i_b, 16'd0}),
-                .y(scaled[32*si +: 32]), .err(err), .valid_out(vo));
-            assign mfault[si] = vo && (err != 2'd0);
+                .addr(e_wsrc), .gre_q(l_vv[si]), .addr_q(l_wsv[si]));
+            assign mfault[si] = vov[si] && (errv[2*si +: 2] != 2'd0);
+        end
+        for (si = 0; si < W / LN; si = si + 1) begin : g_mul
+`ifdef OT_SLAB_PG_HARD
+            ot_qwen_slab_pg_lanes u_ln (.clk(clk), .rs0(rs0), .l_v(l_vv[LN*si +: LN]), .l_ws(l_wsv[LN*si +: LN]),
+                .a(res_q[32*LN*si +: 32*LN]), .s(m6[16*LN*si +: 16*LN]),
+                .y(scaled[32*LN*si +: 32*LN]), .vo(vov[LN*si +: LN]), .err(errv[2*LN*si +: 2*LN]));
+`else
+            ot_qwen_slab_pg_lanes #(.LN(LN), .MUL_LAT(MUL_LAT), .MUL_KCP(MUL_KCP), .IN_STAGE(IN_STAGE)) u_ln (
+                .clk(clk), .rs0(rs0), .l_v(l_vv[LN*si +: LN]), .l_ws(l_wsv[LN*si +: LN]),
+                .a(res_q[32*LN*si +: 32*LN]), .s(m6[16*LN*si +: 16*LN]),
+                .y(scaled[32*LN*si +: 32*LN]), .vo(vov[LN*si +: LN]), .err(errv[2*LN*si +: 2*LN]));
+`endif
         end
     endgenerate
     reg fault_q;
@@ -557,3 +515,139 @@ endmodule
 module ot_qwen_slab_pg_oreg1 (input wire clk, input wire d, output reg q);
     always @(posedge clk) q <= d;
 endmodule
+
+`ifndef OT_SLAB_PG_HARD   // the cluster reads both sub-tiles as hardened views (LEF/LIB) when this is defined
+// ot_qwen_slab_pg_col: one macro column of the scale ROM (hardened sub-tile, replicated COLS = 4 times; qwen-tp8/slab3).
+// gre1/addr1 enter the R2 copy register (the pin-flop row), m5 leaves from its register (registered face).  Bank b of
+// column cid is bank BK = cid*BPC + b of the group (ot_qwen_slab_pg_bdec's constant BK, now a compare against cid).
+module ot_qwen_slab_pg_col #(
+    parameter integer AW = 24,
+    parameter integer BPC = 4,
+    parameter integer S5_CTL = 1,
+    parameter integer SCALE_PAIR = 1,
+    // CID_REG (q14 2026-10-14): register the column-id strap at its pin; cid then reaches the bank decode from a pin
+    // flop (native capture of the closed col_mga view: cid[0] 197.9 ps > 190).  cid is a static strap: no cycle cost.
+    parameter integer CID_REG = 1
+) (
+    input  wire          clk,
+    input  wire          gre1,
+    input  wire [AW-1:0] addr1,
+    input  wire [3:0]    cid,
+    output wire [255:0]  m5
+);
+    wire          gre2;
+    wire [AW-1:0] addr2;
+    wire [3:0]    cid_e;
+    generate if (CID_REG != 0) begin : g_cidq
+        reg [3:0] cid_q;
+        always @(posedge clk) cid_q <= cid;
+        assign cid_e = cid_q;
+    end else begin : g_cidw
+        assign cid_e = cid;
+    end endgenerate
+    ot_qwen_slab_pg_rcopy #(.AW(AW)) u_r2 (.clk(clk), .gre(gre1), .addr(addr1), .gre_q(gre2), .addr_q(addr2));
+    wire [255:0] cor [0:BPC];
+    wire [255:0] bterm [0:BPC-1];
+    assign cor[0] = 256'd0;
+    genvar b;
+    generate
+        for (b = 0; b < BPC; b = b + 1) begin : g_bank
+            localparam [AW-13:0] BB = b;
+            wire        ce3;
+            wire [11:0] a3;
+            reg         ce3_q;
+            reg  [11:0] a3_q;
+            always @(posedge clk) begin
+                ce3_q <= gre2 && (addr2[AW-1:12] == ({{(AW-16){1'b0}}, cid_e} * BPC + BB));
+                a3_q  <= addr2[11:0];
+            end
+            assign ce3 = ce3_q; assign a3 = a3_q;
+            reg        sel4, sel5;
+            (* keep *) reg [7:0] sel5c;   // S5_CTL: 8 copies of sel5, 32 loads each
+            reg [255:0] cap4;
+            wire [265:0] rd;
+            always @(posedge clk) begin
+                sel4 <= ce3;             // with the macro's sampling edge
+                sel5 <= sel4;            // with the capture
+                sel5c <= {8{sel4}};
+                cap4 <= rd[255:0];
+            end
+            ot_rom_4096x266_m8 u_rom (.clk(clk), .ce_in(ce3), .addr_in(a3), .rd_out(rd));
+            wire [255:0] selv;
+            genvar sk;
+            for (sk = 0; sk < 8; sk = sk + 1) begin : g_sel
+                assign selv[32*sk +: 32] = {32{(S5_CTL != 0) ? sel5c[sk] : sel5}};
+            end
+            assign bterm[b] = cap4 & selv;
+            assign cor[b+1] = cor[b] | bterm[b];
+        end
+    endgenerate
+    reg [255:0] m5r;
+    generate if (SCALE_PAIR != 0) begin : g_pair
+        // south pair = cor[BPC/2]; north pair = the same chain restarted at BPC/2 (identical OR terms)
+        wire [255:0] nor_ [BPC/2:BPC];
+        assign nor_[BPC/2] = 256'd0;
+        genvar hb;
+        for (hb = BPC/2; hb < BPC; hb = hb + 1) begin : g_h
+            assign nor_[hb+1] = nor_[hb] | bterm[hb];
+        end
+        reg [255:0] m5s, m5n;
+        always @(posedge clk) begin
+            m5s <= cor[BPC/2];
+            m5n <= nor_[BPC];
+            m5r <= m5s | m5n;
+        end
+    end else begin : g_nopair
+        always @(posedge clk) m5r <= cor[BPC];
+    end endgenerate
+    assign m5 = m5r;
+endmodule
+
+// ot_qwen_slab_pg_lanes: LN post-scale multiplier lanes (hardened sub-tile, replicated W/LN = 4 times; qwen-tp8/slab3).
+// Inputs l_v/l_ws (the cluster's per-lane u_tc copies), a (res_q) and s (m6) are registered at the face (IN_STAGE);
+// y/vo/err are the multiplier's output registers.
+module ot_qwen_slab_pg_lanes #(
+    parameter integer LN = 4,
+    parameter integer MUL_LAT = 7,
+    parameter integer MUL_KCP = 1,
+    parameter integer IN_STAGE = 1
+) (
+    input  wire            clk,
+    input  wire            rs0,
+    input  wire [LN-1:0]   l_v,
+    input  wire [LN-1:0]   l_ws,
+    input  wire [32*LN-1:0] a,
+    input  wire [16*LN-1:0] s,
+    output wire [32*LN-1:0] y,
+    output wire [LN-1:0]   vo,
+    output wire [2*LN-1:0] err
+);
+    genvar si;
+    generate
+        for (si = 0; si < LN; si = si + 1) begin : g_l
+            wire rsm;
+            ot_qwen_slab_pg_rcopy #(.AW(1)) u_rsm (.clk(clk), .gre(rs0), .addr(1'b0), .gre_q(rsm), .addr_q());
+            wire        i_v;
+            wire [31:0] i_a;
+            wire [15:0] i_b;
+            if (IN_STAGE != 0) begin : g_in
+                reg        v_q;
+                reg [31:0] a_q;
+                reg [15:0] b_q;
+                always @(posedge clk) begin
+                    v_q <= l_v[si];
+                    a_q <= a[32*si +: 32];
+                    b_q <= l_ws[si] ? 16'h3F80 : s[16*si +: 16];
+                end
+                assign i_v = v_q; assign i_a = a_q; assign i_b = b_q;
+            end else begin : g_noin
+                assign i_v = l_v[si]; assign i_a = a[32*si +: 32]; assign i_b = l_ws[si] ? 16'h3F80 : s[16*si +: 16];
+            end
+            ot_hdc_fp32_mul_lat #(.LAT(MUL_LAT), .KCP(MUL_KCP)) u_mul (.clk(clk), .rst_n(rsm),
+                .valid_in(i_v),
+                .a(i_a), .b({i_b, 16'd0}),
+                .y(y[32*si +: 32]), .err(err[2*si +: 2]), .valid_out(vo[si]));
+        end
+    endgenerate
+endmodule
+`endif

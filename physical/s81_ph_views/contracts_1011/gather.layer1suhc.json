@@ -1,0 +1,427 @@
+{
+ "schema": "opentallas.s81.slab-contract.v1",
+ "version": "v2",
+ "slab": "gather",
+ "owner": "s81-ctl-1011",
+ "recipe": {
+  "opts": "results/physical/s81_gen_20261011/s81_layer1_full_efs_suhc.opts",
+  "extra": "",
+  "tag": "layer1suhc",
+  "die_um": [
+   33000.0,
+   26000.0
+  ],
+  "q_lef": "physical/s81_die_views/q_elem_qs5f_efs/q_elem.lef.gz",
+  "hub_column_width_um": 1728.0,
+  "ecol_slabs": []
+ },
+ "source_commit": "9590e91a6",
+ "generator": "tools/dsrom_s81_fulldie.py",
+ "tool": "tools/s81_ph/slab_contracts.py",
+ "adapter_contract": "physical/s81_ctrl/ADAPTER_CONTRACT_1011.json",
+ "engines": [
+  "fld"
+ ],
+ "stage_controller": "not in this recipe (--ctrl-slab off): reserved groups face the W hub-column centre; the dsfd_sp_ctrl slab position is fixed when s81-ctl binds it",
+ "rules": [
+  "outline and existing pins are what the die build places: a slab master must keep them (or publish a new contract version) so the generator netlist binds unchanged",
+  "RESERVED groups: pin names are placeholders; widths, face, layer and span are the contract. Each engine adapter (ot_s81_engine_adapter QD 8) sits inside the slab at that face; the die nets are fixed-latency pulse nets (relay stations allowed, every die pin lands in a pin flop)",
+  "clock: slab ck from the die domain tree (domain field); serial_0p9 slabs need the adapter CDC"
+ ],
+ "instances": [
+  {
+   "instance": "sp_gather",
+   "master": "dsfd_sp_gather",
+   "domain": "stream_1p2",
+   "outline_um": [
+    1727.976,
+    803.496
+   ],
+   "die_origin_um": [
+    13942.8,
+    11268.72
+   ],
+   "orient": "R0",
+   "pins": {
+    "rW4": {
+     "bits": 761,
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      0.432,
+      36.936
+     ],
+     "nets": [
+      {
+       "net": "hr_W4_o_d2",
+       "cls": "local",
+       "bits": 761,
+       "peers": [
+        "f_hr_W4_o_2.dq"
+       ]
+      }
+     ]
+    },
+    "ck": {
+     "bits": 1,
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      1727.52,
+      1727.544
+     ],
+     "nets": [
+      {
+       "net": "clk_stream",
+       "cls": "clock",
+       "bits": 1,
+       "peers": [
+        "sp_collective.pll_stream",
+        "cf0.ck",
+        "cf1.ck",
+        "cf2.ck"
+       ]
+      }
+     ]
+    },
+    "rE0": {
+     "bits": 692,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      102.192,
+      135.384
+     ],
+     "nets": [
+      {
+       "net": "hr_E0_o_d4_g1_sp_gather",
+       "cls": "local",
+       "bits": 692,
+       "peers": [
+        "g_hr_E0_o_d4_sp_gather_0.dq"
+       ]
+      }
+     ]
+    },
+    "rE1": {
+     "bits": 761,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      256.032,
+      292.536
+     ],
+     "nets": [
+      {
+       "net": "hr_E1_o_d4_g1_sp_gather",
+       "cls": "local",
+       "bits": 761,
+       "peers": [
+        "g_hr_E1_o_d4_sp_gather_0.dq"
+       ]
+      }
+     ]
+    },
+    "rE2": {
+     "bits": 761,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      415.872,
+      452.376
+     ],
+     "nets": [
+      {
+       "net": "hr_E2_o_d4_g1_sp_gather",
+       "cls": "local",
+       "bits": 761,
+       "peers": [
+        "g_hr_E2_o_d4_sp_gather_0.dq"
+       ]
+      }
+     ]
+    },
+    "rE3": {
+     "bits": 761,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      454.416,
+      490.92
+     ],
+     "nets": [
+      {
+       "net": "hr_E3_o_d6",
+       "cls": "local",
+       "bits": 761,
+       "peers": [
+        "f_hr_E3_o_6.dq"
+       ]
+      }
+     ]
+    },
+    "rE4": {
+     "bits": 761,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      631.872,
+      668.376
+     ],
+     "nets": [
+      {
+       "net": "hr_E4_o_d4_g1_sp_gather",
+       "cls": "local",
+       "bits": 761,
+       "peers": [
+        "g_hr_E4_o_d4_sp_gather_0.dq"
+       ]
+      }
+     ]
+    },
+    "rst": {
+     "bits": 1,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      670.416,
+      670.44
+     ],
+     "nets": [
+      {
+       "net": "rst_stream",
+       "cls": "reset",
+       "bits": 1,
+       "peers": [
+        "sp_collective.rst_stream",
+        "cf0.rst",
+        "cf1.rst",
+        "cf2.rst"
+       ]
+      }
+     ]
+    },
+    "f_pq": {
+     "bits": 508,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      676.08,
+      700.44
+     ],
+     "nets": [
+      {
+       "net": "hb_pq_gather_d17_g1_sp_gather",
+       "cls": "hub",
+       "bits": 508,
+       "peers": [
+        "g_hb_pq_gather_d17_sp_gather_0.dq"
+       ]
+      }
+     ]
+    },
+    "t_pq": {
+     "bits": 192,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      702.432,
+      711.624
+     ],
+     "nets": [
+      {
+       "net": "hb_gather_pq_d0_g0_f_hb_gather_pq_1",
+       "cls": "hub",
+       "bits": 192,
+       "peers": [
+        "g_hb_gather_pq_d0_f_hb_gather_pq_1_0.di"
+       ]
+      }
+     ]
+    },
+    "rE5": {
+     "bits": 692,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      713.664,
+      746.856
+     ],
+     "nets": [
+      {
+       "net": "hr_E5_o_d4_g1_sp_gather",
+       "cls": "local",
+       "bits": 692,
+       "peers": [
+        "g_hr_E5_o_d4_sp_gather_0.dq"
+       ]
+      }
+     ]
+    },
+    "t_capture": {
+     "bits": 576,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      748.896,
+      776.52
+     ],
+     "nets": [
+      {
+       "net": "hb_gather_capture_d0_g0_f_hb_gather_capture_1",
+       "cls": "hub",
+       "bits": 576,
+       "peers": [
+        "g_hb_gather_capture_d0_f_hb_gather_capture_1_0.di"
+       ]
+      }
+     ]
+    },
+    "f_vm": {
+     "bits": 512,
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      778.512,
+      803.064
+     ],
+     "nets": [
+      {
+       "net": "hb_vm_gather_d2_g1_sp_gather",
+       "cls": "hub",
+       "bits": 512,
+       "peers": [
+        "g_hb_vm_gather_d2_sp_gather_0.dq"
+       ]
+      }
+     ]
+    },
+    "rW0": {
+     "bits": 692,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      102.192,
+      135.384
+     ],
+     "nets": [
+      {
+       "net": "hr_W0_o_d1_g1_sp_gather",
+       "cls": "local",
+       "bits": 692,
+       "peers": [
+        "g_hr_W0_o_d1_sp_gather_0.dq"
+       ]
+      }
+     ]
+    },
+    "rW1": {
+     "bits": 761,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      256.032,
+      292.536
+     ],
+     "nets": [
+      {
+       "net": "hr_W1_o_d1_g1_sp_gather",
+       "cls": "local",
+       "bits": 761,
+       "peers": [
+        "g_hr_W1_o_d1_sp_gather_0.dq"
+       ]
+      }
+     ]
+    },
+    "rW2": {
+     "bits": 761,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      441.792,
+      478.296
+     ],
+     "nets": [
+      {
+       "net": "hr_W2_o_d1_g1_sp_gather",
+       "cls": "local",
+       "bits": 761,
+       "peers": [
+        "g_hr_W2_o_d1_sp_gather_0.dq"
+       ]
+      }
+     ]
+    },
+    "rW3": {
+     "bits": 761,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      601.632,
+      638.136
+     ],
+     "nets": [
+      {
+       "net": "hr_W3_o_d1_g1_sp_gather",
+       "cls": "local",
+       "bits": 761,
+       "peers": [
+        "g_hr_W3_o_d1_sp_gather_0.dq"
+       ]
+      }
+     ]
+    },
+    "rW5": {
+     "bits": 692,
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      769.872,
+      803.064
+     ],
+     "nets": [
+      {
+       "net": "hr_W5_o_d3",
+       "cls": "local",
+       "bits": 692,
+       "peers": [
+        "f_hr_W5_o_3.dq"
+       ]
+      }
+     ]
+    }
+   },
+   "reserved_ctrl": {
+    "cfld": {
+     "bits": 85,
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      877.968,
+      882.024
+     ],
+     "direction": "in",
+     "carries": "c_cmd_v + c_cmd_d[84] (adapter controller side)",
+     "controller_port": "cv[0] + cd[0*84 +: 84]",
+     "engine": "fld",
+     "status": "RESERVED"
+    },
+    "dfld": {
+     "bits": 9,
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      886.08,
+      886.488
+     ],
+     "direction": "out",
+     "carries": "c_done_v + c_done_tag[8] (adapter controller side)",
+     "controller_port": "dv[0] + dt[0*8 +: 8]",
+     "engine": "fld",
+     "status": "RESERVED"
+    }
+   }
+  }
+ ]
+}

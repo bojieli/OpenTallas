@@ -32,6 +32,7 @@ module tb_hgi_sm_record;
         $readmemh({dir, "/sm_rec.mem"}, recm); $readmemh({dir, "/sm_ref.mem"}, refm); $readmemh({dir, "/sm_case.mem"}, casem);
     end
     integer errors = 0, cyc = 0, seed = 1;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 1; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     always @(posedge clk) cyc <= cyc + 1;
     reg rst_n = 0;
     reg [937:0] cur; reg rec_v = 0;
@@ -40,13 +41,13 @@ module tb_hgi_sm_record;
     wire [39:0] x_base, pub_base; wire [20:0] x_n; wire [3:0] x_p, pub_p; wire [31:0] x_stride, pub_stride;
     wire [1:0] x_space, x_fmt, pub_space; wire [19:0] pub_m; wire [12:0] pub_q;
     wire [NSM*CW-1:0] sm_cmd; reg [NSM*4-1:0] sm_ret = 0;
-    ot_hgi_sm_record #(.MUT_ROWS(MR), .MUT_EARLY(ME)) u_h (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1),
+    ot_hgi_sm_record #(.MUT_ROWS(MR), .MUT_EARLY(ME), .CR(0)) u_h (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1),
         .rec_v(rec_v), .rec_rdy(rec_rdy), .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]),
         .rec_o(cur[895:640]), .rec_n_a(cur[916:896]), .rec_n_b(cur[937:917]), .rec_done(done), .rec_fault(fault),
         .halted(halted), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base), .x_n(x_n), .x_p(x_p), .x_stride(x_stride),
         .x_space(x_space), .x_fmt(x_fmt), .x_done(x_done), .x_fault(1'b0), .pub_v(pub_v), .pub_rdy(pub_rdy),
         .pub_base(pub_base), .pub_stride(pub_stride), .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q),
-        .pub_p(pub_p), .pub_done(pub_done), .pub_fault(1'b0), .lg_cmd({NSM*CW{1'b0}}), .lg_ret(), .sm_cmd(sm_cmd),
+        .pub_p(pub_p), .pub_bf16(), .pub_done(pub_done), .pub_fault(1'b0), .lg_cmd({NSM*CW{1'b0}}), .lg_ret(), .sm_cmd(sm_cmd),
         .sm_ret(sm_ret), .sm_cg_en(cg_en));
     // coarse clock gate: every start / descriptor beat must leave with the gate open
     wire cg_en; integer cgq, cg_err = 0;
@@ -56,12 +57,12 @@ module tb_hgi_sm_record;
     // ---- legacy-mode identity
     reg [NSM*CW-1:0] lgc; reg [NSM*4-1:0] lgr; wire [NSM*CW-1:0] l_cmd; wire [NSM*4-1:0] l_ret; integer q, lock_n = 0;
     wire l_rdy, l_done, l_fault;
-    ot_hgi_sm_record #(.MUT_ROWS(MR), .MUT_EARLY(ME)) u_l (.clk(clk), .rst_n(rst_n), .hgi_en(1'b0),
+    ot_hgi_sm_record #(.MUT_ROWS(MR), .MUT_EARLY(ME), .CR(0)) u_l (.clk(clk), .rst_n(rst_n), .hgi_en(1'b0),
         .rec_v(1'b1), .rec_rdy(l_rdy), .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]),
         .rec_o(cur[895:640]), .rec_n_a(cur[916:896]), .rec_n_b(cur[937:917]), .rec_done(l_done), .rec_fault(l_fault),
         .halted(), .x_v(), .x_rdy(1'b1), .x_base(), .x_n(), .x_p(), .x_stride(), .x_space(), .x_fmt(), .x_done(1'b1),
         .x_fault(1'b0), .pub_v(), .pub_rdy(1'b1), .pub_base(), .pub_stride(), .pub_space(), .pub_m(), .pub_q(),
-        .pub_p(), .pub_done(1'b1), .pub_fault(1'b0), .lg_cmd(lgc), .lg_ret(l_ret), .sm_cmd(l_cmd), .sm_ret(lgr));
+        .pub_p(), .pub_bf16(), .pub_done(1'b1), .pub_fault(1'b0), .lg_cmd(lgc), .lg_ret(l_ret), .sm_cmd(l_cmd), .sm_ret(lgr));
     always @(posedge clk) begin
         for (q = 0; q < NSM*CW; q = q + 32) lgc[q +: 32] <= $random(seed);
         lgr <= $random(seed);

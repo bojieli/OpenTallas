@@ -775,9 +775,91 @@ module ot_hdc_v41x_ins #(
             for (k = 0; k < K; k = k + 1) if (DEPTHS[16*k +: 16] == p) canbe = 1'b1;
         end
     endfunction
+    // RING 4 eligibility: even DMAX, every depth even, no data reset (otherwise the instance stays RING 3)
+    function automatic r4ok(input integer dummy);
+        integer k;
+        begin
+            r4ok = (DMAX % 2 == 0) && (RESET_DATA == 0);
+            for (k = 0; k < K; k = k + 1) if (DEPTHS[16*k +: 16] % 2 != 0) r4ok = 1'b0;
+        end
+    endfunction
+    localparam integer R4OK = r4ok(0);
     generate
         if (DMAX == 0) begin : g_wire
             assign vo = v; assign q = d; assign coll = 1'b0; assign busy = 1'b0;
+        end else if (RING >= 4 && R4OK != 0) begin : g_ring4
+            // RING 4 (el1011-hbm-sfu 2026-10-11, textbook class 1: the SFU lane's u_l4 wheel was 15,981 of its 47,785
+            // clock sinks): RING 3's valid side (oh / mv / rs / qv / coll / busy, unchanged) with the DATA slots in two
+            // single-port SRAM banks by slot parity (bank = slot[0], row = slot >> 1).  Every edge reads slot e+1 and
+            // writes at most one slot e+DK; with N and every non-zero DK even the two always fall in different banks,
+            // so each 1RW bank does one access per edge (1R1W behaviour).  The SRAM output register is the RING 3 qr.
+            localparam integer N = DMAX;
+            localparam integer NR = N / 2;
+            localparam integer SB = $clog2(N);
+            initial if (canbe(1) || DMAX < 2) $error("ot_hdc_v41x_ins RING 4: depth 1 not supported");
+            reg [N-1:0] oh;
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) oh <= {{(N-1){1'b0}}, 1'b1};
+                else oh <= {oh[N-2:0], oh[N-1]};
+            wire [N-1:0] we;
+            wire [N-1:0] rs;
+            reg  [N-1:0] mv;
+            genvar j, k;
+            for (j = 0; j < N; j = j + 1) begin : g_s
+                localparam integer JR = (j - 1 + N) % N;
+                assign rs[j] = oh[JR];
+                wire [K-1:0] wt;
+                for (k = 0; k < K; k = k + 1) begin : g_k
+                    localparam integer DK = DEPTHS[16*k +: 16];
+                    localparam integer JW = (j - (DK % N) + N) % N;
+                    if (DK != 0) begin : g_d
+                        assign wt[k] = v && sel[k] && oh[JW];
+                    end else begin : g_z
+                        assign wt[k] = 1'b0;
+                    end
+                end
+                assign we[j] = |wt;
+                always @(posedge clk or negedge rst_n)
+                    if (!rst_n) mv[j] <= 1'b0;
+                    else if (we[j]) mv[j] <= 1'b1;
+                    else if (rs[j]) mv[j] <= 1'b0;
+            end
+            // registered slot counters: rp = e+1 (read), wp[k] = e+DK (write of choice k); all wrap at N
+            reg [SB-1:0] rp;
+            reg [SB-1:0] wp [0:K-1];
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) rp <= 1 % N; else rp <= (rp == N - 1) ? {SB{1'b0}} : rp + 1'b1;
+            for (k = 0; k < K; k = k + 1) begin : g_wp
+                localparam integer DK = DEPTHS[16*k +: 16] % N;
+                always @(posedge clk or negedge rst_n)
+                    if (!rst_n) wp[k] <= DK; else wp[k] <= (wp[k] == N - 1) ? {SB{1'b0}} : wp[k] + 1'b1;
+            end
+            reg [SB-1:0] ws;
+            reg wv;
+            integer kk;
+            always @(*) begin
+                ws = {SB{1'b0}}; wv = 1'b0;
+                for (kk = 0; kk < K; kk = kk + 1)
+                    if (DEPTHS[16*kk +: 16] != 0 && v && sel[kk]) begin ws = wp[kk]; wv = 1'b1; end
+            end
+            wire [W-1:0] rd0, rd1;
+            ot_hdc_ins_ram #(.W(W), .R(NR)) u_b0 (.clk(clk), .ce(!rp[0] || (wv && !ws[0])), .we(wv && !ws[0]),
+                .addr(wv && !ws[0] ? ws[SB-1:1] : rp[SB-1:1]), .wd(d), .rd(rd0));
+            ot_hdc_ins_ram #(.W(W), .R(NR)) u_b1 (.clk(clk), .ce(rp[0] || (wv && ws[0])), .we(wv && ws[0]),
+                .addr(wv && ws[0] ? ws[SB-1:1] : rp[SB-1:1]), .wd(d), .rd(rd1));
+            reg rb;
+            always @(posedge clk) rb <= rp[0];
+            wire cw = |(we & mv);
+            wire rdv = |(mv & rs);
+            reg qv;
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) qv <= 1'b0; else qv <= rdv;
+            wire [W-1:0] qr = rb ? rd1 : rd0;
+            wire now = v && has(0, sel);
+            assign vo = now || qv;
+            assign q  = now ? d : qr;
+            assign coll = cw || (now && qv);
+            assign busy = qv || (|mv);
         end else if (RING >= 3) begin : g_ring3
             // RING 3 (hbm-blocks 2026-10-07): RING 2's timing wheel (per-16-bit-chunk slot-pointer copies) with every
             // rotation written as constant generate wiring.  RING 2 calls rot() inside always @(*) blocks once per
@@ -1018,4 +1100,26 @@ module ot_hdc_v41x_ins #(
             assign busy = any;
         end
     endgenerate
+endmodule
+
+// el1011-hbm-sfu 2026-10-11: one parity bank of the RING 4 timing wheel: R rows x W bits of single-port SRAM with a
+// registered read port (one access per edge: ce & we write, ce & !we read; rd holds otherwise).  Synthesis maps it on
+// the compiled ot_sram_1rw_64x128_m1 (R <= 64, W <= 128); simulation uses the same behaviour as a register array.
+module ot_hdc_ins_ram #(parameter integer W = 64, parameter integer R = 64) (
+    input  wire clk, input wire ce, input wire we, input wire [$clog2(R)-1:0] addr, input wire [W-1:0] wd,
+    output wire [W-1:0] rd
+);
+`ifdef SYNTHESIS
+    // compiled macro tools/mem_compiler: ot_sram_1rw_64x128_m1 (TT/SS/FF liberty, physical/asap7_memory_macros/)
+    initial if (R > 64 || W > 128) $error("ot_hdc_ins_ram: R > 64 or W > 128");
+    wire [127:0] rdx;
+    ot_sram_1rw_64x128_m1 u_ram (.clk(clk), .ce_in(ce), .we_in(we), .addr_in({{(6-$clog2(R)){1'b0}}, addr}),
+                                 .wd_in({{(128-W){1'b0}}, wd}), .w_mask_in({128{1'b1}}), .rd_out(rdx));
+    assign rd = rdx[W-1:0];
+`else
+    reg [W-1:0] mem [0:R-1];
+    reg [W-1:0] r;
+    always @(posedge clk) if (ce) begin if (we) mem[addr] <= wd; else r <= mem[addr]; end
+    assign rd = r;
+`endif
 endmodule

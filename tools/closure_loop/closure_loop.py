@@ -27,6 +27,7 @@ NVMe run roots (hosts.json), one route per (block, source commit), it never kill
     closure_loop.py validate <job.json>        # check a spec before dropping it
     closure_loop.py submit-recheck --since ISO [--requeue] [--log F]   # re-judge FLOORPLAN_MARGIN jobs at submit
     closure_loop.py retry <name>               # human: re-queue a NEEDS_HUMAN job from its failed stage
+                                               #   FLOORPLAN_MARGIN: re-lints with the current tools first; requeued if it passes
     closure_loop.py retry-eco <name> [--why]   # human: re-run the hold ECO (current rev) on a hold-only NEEDS_RTL job
     closure_loop.py ioref-rejudge <name>       # human: re-judge a NEEDS_RTL job at its ROUTED clock insertion (no re-route)
     closure_loop.py rebudget-rejudge <name> --rb budget_rbN --sdc F [--dry]   # re-judge under a re-derived die-link IO budget
@@ -61,10 +62,14 @@ from source_archive import build_archive, repo_path
 import git_mirror
 from postroute_recovery import remote_command as postroute_probe_command
 import submit_lint
+import macro_clk
+import helper_overlay as HO
+import status_report
 
 HERE = Path(__file__).resolve().parent
 REPO = Path(os.environ.get("CL_REPO", "/home/ubuntu/OpenTallas"))          # git object store for archive/commit/merge
 STATE = Path(os.environ.get("CL_STATE", str(Path.home() / ".local/state/closure_loop")))
+HELPER_STORE = STATE / "frozen_helpers"   # content-addressed frozen helper bytes (sha256); no cleanup touches STATE
 REVIEW = Path(os.environ.get("CL_REVIEW", "/tmp/claude-review-20261003"))
 DROP = REVIEW / "closure_jobs"
 LEDGER = REVIEW / "CLOSURE_LOOP_LEDGER.md"
@@ -248,6 +253,11 @@ def host_cfg(name):
     return next(h for h in hosts_table() if h["name"] == name)
 
 
+def host_label(name):
+    """Display label; a host retired from hosts.json (EPYC2/3, 10-12) shows its name instead of crashing status."""
+    return next((h["label"] for h in hosts_table() if h["name"] == name), name) if name else "-"
+
+
 # ------------------------------------------------------------------------------------------------- job specs
 def validate(spec: dict) -> list[str]:
     e = []
@@ -283,11 +293,26 @@ def validate(spec: dict) -> list[str]:
     for b in st.get("bench", []) if isinstance(st, dict) else []:
         if b.get("expect") not in ("pass", "fail") or not b.get("cmd") or not b.get("name"):
             e.append(f"bench entry needs name, cmd and expect pass|fail: {b}")
+        mcr = b.get("min_count_regex") if isinstance(b, dict) else None
+        if mcr:
+            try:
+                ng = re.compile(mcr).groups
+            except re.error as x:
+                ng = -1; e.append(f"bench {b.get('name')}: min_count_regex does not compile: {x}")
+            if ng == 0:   # bench_work counts the captured group: without one every pass reads as vacuous (suctlw r2 10-11)
+                e.append(f"bench {b.get('name')}: min_count_regex needs one capture group around the count: {mcr!r}")
     benches = st.get("bench", []) if isinstance(st, dict) else []
+    if spec.get("benched_by") is not None:
+        bspec, berr = expand_benched_by(spec)
+        if berr:
+            e.append(berr)
+        else:
+            benches = bspec["stages"].get("bench", [])
     if not spec.get("no_bench_reason") and not (any(b.get("expect") == "pass" for b in benches)
                                                 and any(b.get("expect") == "fail" for b in benches)):
-        e.append("need >= 1 bench expect=pass and >= 1 expect=fail (or no_bench_reason: e.g. pure re-route of a "
-                 "benched commit, naming the bench record)")
+        e.append("need >= 1 bench expect=pass and >= 1 expect=fail (or benched_by: a composition gate; or "
+                 "no_bench_reason for a job that never merges -- a ref_tile closure candidate is REFUSED without a "
+                 "behavioural bench + mutant, see BENCH-REQUIRED)")
     cal = st.get("calibrate") if isinstance(st, dict) else None
     if cal is None or (cal.get("enabled", True) and not (cal.get("cmd") and cal.get("base"))):
         if not (cal and cal.get("enabled") is False and cal.get("reason")):
@@ -370,12 +395,45 @@ def validate(spec: dict) -> list[str]:
     return e
 
 
+# MEASURED RAM (el1013-loop-sizing, OWNER 2026-10-13: admission is by memory only -- pack more routes per host): spec
+# peak_ram_gb values are agent guesses, 4-7x above the measured ORFS process peaks on 479 of 642 blocks with a finished
+# route (2026-10-13 fleet survey).  measured_peaks.json holds the largest measured peak per block; a calibrate / route
+# estimate at least 2x that peak is admitted at ceil(max(1.25 x peak, peak + 4 GB)).  An unlisted block, or an estimate
+# under 2x its measurement, keeps the spec value (never lowered without a measurement).  Spec opt-out: measured_ram false.
+_MEASURED_PEAKS = [None, None]
+
+
+def measured_block(name):
+    return re.sub(r"_[0-9a-f]{7,10}(_.*)?$", "", str(name).split("-")[0])
+
+
+def claim_ram(spec):
+    """RAM a host choice / move claims for a job before its stage launches: the size its route will be admitted at
+    (el1013-fleet3: claims counted the raw spec guess, 4-7x the measured peak, against every other launch)"""
+    return sized_ram(spec, spec.get("peak_ram_gb", 32))
+
+
+def sized_ram(spec, ram):
+    p = Path(__file__).resolve().parent / "measured_peaks.json"
+    try:
+        mt = p.stat().st_mtime
+        if _MEASURED_PEAKS[0] != mt:
+            _MEASURED_PEAKS[:] = [mt, json.loads(p.read_text()).get("blocks", {})]
+        m = _MEASURED_PEAKS[1].get(measured_block(spec.get("name", "")))
+        peak = float(m["peak_gb"]) if m else 0
+    except (OSError, ValueError, KeyError, TypeError, AttributeError):
+        return ram
+    if spec.get("measured_ram", True) is False or peak <= 0 or not isinstance(ram, (int, float)) or ram < 2 * peak:
+        return ram
+    return math.ceil(max(1.25 * peak, peak + 4))
+
+
 def stage_list(spec):
     st = spec["stages"]
     out = []
     for b in st.get("bench", []):
         t, r = STAGE_DEFAULTS["bench"]
-        out.append(dict(key="bench_" + re.sub(r"[^A-Za-z0-9_-]", "_", b["name"]), kind="bench", cmd=b["cmd"],
+        out.append(dict(key=bench_key(b["name"]), kind="bench", cmd=b["cmd"],
                         expect=b["expect"], ok=b.get("ok"), fail_regex=b.get("fail_regex"), pass_regex=b.get("pass_regex"),
                         min_count_regex=b.get("min_count_regex"), timeout_s=b.get("timeout_s"),
                         threads=b.get("threads", t), ram=b.get("peak_ram_gb", r)))
@@ -394,13 +452,14 @@ def stage_list(spec):
         if cal.get("sdc_cmd"):
             tail += "\n" + cal["sdc_cmd"]
         out.append(dict(key="calibrate", kind="calibrate", cmd=cal["cmd"] + tail, ok=cal.get("ok"), sdc_cmd=cal.get("sdc_cmd"),
-                        threads=cal.get("threads", spec.get("threads", 16)), ram=cal.get("peak_ram_gb", spec.get("peak_ram_gb", 32)),
+                        threads=cal.get("threads", spec.get("threads", 16)), ram=sized_ram(spec, cal.get("peak_ram_gb", spec.get("peak_ram_gb", 32))),
                         logs=cal.get("logs", []), out_dir=cal.get("out_dir"), requires_artifacts=cal.get("requires_artifacts", False)))
     for k in ("route", "signoff"):
         if st.get(k, {}).get("cmd"):
             t, r = STAGE_DEFAULTS[k] or (spec.get("threads", 16), spec.get("peak_ram_gb", 32))
+            r = st[k].get("peak_ram_gb", r)
             out.append(dict(key=k, kind=k, cmd=st[k]["cmd"], ok=st[k].get("ok"),
-                            threads=st[k].get("threads", t), ram=st[k].get("peak_ram_gb", r),
+                            threads=st[k].get("threads", t), ram=sized_ram(spec, r) if k == "route" else r,
                             logs=st[k].get("logs", []), out_dir=st[k].get("out_dir")))
     out.append(dict(key="verdict", kind="verdict"))
     for k in ("collect", "export"):
@@ -766,18 +825,456 @@ def lint_at_submit(j):
                  + (f", util {res['util_est']['util']:.1%}" if res.get("util_est") else "") + ")"
                  + (f"; {res['rtl_boundary']['verdict']} {res['rtl_boundary']['message'][:400]}" if res.get("rtl_boundary") else ""))
     elif v == "FIX":
-        j["spec_submitted"] = j["spec"]
+        j.setdefault("spec_submitted", j["spec"])
         j["spec"] = submit_lint.apply_fix(j["spec"], res, now_iso())
         event(j, f"submit lint FIX {res['fix']}: {res['message'][:500]}; settings added to the route_master stage "
                  f"commands (spec.submit_lint)")
         ledger(j, f"SUBMIT_LINT {res['fix']} applied: {res['message'][:300]}")
     elif v == "REFUSE":
         j["status"] = "REFUSED"
-        kind = "RTL_BOUNDARY" if (res.get("rtl_boundary") or {}).get("verdict") == "REFUSE" else "FLOORPLAN_MARGIN"
+        kind = "RTL_BOUNDARY" if (res.get("rtl_boundary") or {}).get("verdict") == "REFUSE" else (
+            "PIN_TRACK" if (res.get("pin_track") or {}).get("verdict") == "REFUSE" else "FLOORPLAN_MARGIN")
         j["reason"] = f"SUBMIT_LINT {kind}: {res['message']}"[:1500]
         j["submit_lint"] = res
         event(j, j["reason"])
         ledger(j, f"REFUSED at submit (no compute spent): {j['reason'][:400]}")
+
+
+# HIER-LINT + MACRO-GRID (owner 2026-10-11, TOP-DOWN HIERARCHY CONTRACT; tools/hier_contract/):
+#  * hier lint: every hard-child view (LEF + libs) a parent job names must pass tools/hier_contract/child_lint.py
+#    (bloat / full-length PG stripes / strap layer clear / TT-FF-SS libs / face-pin access / clock insertion).  Mode
+#    from STATE/hier_lint.json {"mode": "warn"|"refuse"} (default warn: event + daemon log + j["submit_checks"]["hier_lint"],
+#    which the verdict carries), spec "hier_lint": false | {"mode", "skip"} per job; main flips it without a restart.
+#  * macro grid: macro placement scripts are executed against a mock OpenDB and every placed macro's signal pins must
+#    sit on the asap7 tracks (DRT-0419 -> DRT-0255: hcoll-port g4, hbm_sfu_lane r4mpa/b).  REFUSE by default
+#    (STATE/macro_grid_lint.json {"mode": "warn"|"refuse"}; spec "macro_grid_lint": false opts out).
+def _state_mode(fname, default):
+    try:
+        return str(json.loads((STATE / fname).read_text()).get("mode", default))
+    except (OSError, ValueError, AttributeError):
+        return default
+
+
+def hier_lint_at_submit(j):
+    """run the hierarchy-contract child lint and the macro-grid lint on a freshly ingested QUEUED job"""
+    try:
+        sys.path.insert(0, str(HERE.parent / "hier_contract"))
+        import hier_submit  # noqa: E402
+        import macro_grid_lint  # noqa: E402
+    except Exception as ex:  # noqa: BLE001  (never block intake on the hook's own failure)
+        event(j, f"hier lint skipped: {type(ex).__name__}: {str(ex)[:200]}")
+        return
+    g = hier_submit.Git(REPO)
+    for key, fn, mode in (("macro_grid", macro_grid_lint.check, _state_mode("macro_grid_lint.json", "refuse")),
+                          ("hier_lint", hier_submit.check, _state_mode("hier_lint.json", "warn"))):
+        if j["status"] != "QUEUED" or mode == "off":
+            continue
+        try:
+            res = fn(j["spec"], g) if key == "macro_grid" else fn(j["spec"], g, mode)
+        except Exception as ex:  # noqa: BLE001
+            event(j, f"{key} lint skipped: {type(ex).__name__}: {str(ex)[:200]}")
+            continue
+        v = res.get("verdict")
+        if v == "SKIP":
+            continue
+        if v == "REFUSE" and key == "macro_grid" and mode != "refuse":
+            v = "WARN"
+        j.setdefault("submit_checks", {})[key] = {"verdict": v, "mode": mode, "message": res.get("message", "")[:1500]}
+        if v == "REFUSE":
+            j["status"] = "REFUSED"
+            j["reason"] = f"SUBMIT_LINT {'MACRO_GRID' if key == 'macro_grid' else 'HIER_LINT'}: {res['message']}"[:1500]
+            event(j, j["reason"])
+            ledger(j, f"REFUSED at submit (no compute spent): {j['reason'][:400]}")
+        elif v == "WARN":
+            event(j, f"{key.upper()} WARN ({mode}): {res['message'][:1200]}")
+            log(f"[{j['name']}] {key} WARN: {res['message'][:300]}")
+        else:
+            event(j, f"{key} PASS: {res.get('message', '')[:300]}")
+
+
+# REF-TILE GATE (owner 2026-10-11, agent ref-flow-1011; tools/ref_tile/pre_route_gate.py submit_check): the LOCAL part of
+# the pre-route gate at intake, on the job's source commit.  A spec with "ref_tile": true (generated by
+# tools/ref_tile/ref_tile.py) gets the full kit check (floorplan / layer contract / pin plan vs RTL ports / RTL lint /
+# child_lint on hard children / every referenced file inside the synced source paths); every other job gets the
+# source-sync check only (the hbm-no3 "No rule to make target /src/physical/redesign_ds/..." class).  Modes from
+# STATE/ref_gate.json {"mode": "refuse"|"warn"|"off" (ref_tile jobs, default refuse), "other": ... (default warn)};
+# spec "ref_gate": false opts out.  Never blocks intake on the gate's own error (verdict SKIP).
+def known_clock_sinks(block_jobs):
+    """sinks on the largest clock root of the block's LATEST synthesized design, from the in-flow textbook lint lines the
+    loop keeps on each job (None: no job of the block has lint data)."""
+    best = None
+    for x in block_jobs:
+        lines = (x.get("textbook_lint") or {}).get("lines") or []
+        if not lines:
+            continue
+        n = 0
+        for l in lines:
+            m = re.search(r"clock_roots max_root_sinks=(\d+)", l)
+            if m:
+                n = max(n, int(m.group(1)))
+                continue
+            m = re.search(r"clock_domain: clock root .*?: ([\d,]+) flops > .*?(?:, (\d+) macro clock pins)?[;)]", l)
+            if m:
+                n = max(n, int(m.group(1).replace(",", "")) + int(m.group(2) or 0))
+        t = _job_time(x)
+        if best is None or t > best[0]:
+            best = (t, n)
+    return (best[1] or None) if best else None      # lint lines without a clock count (older lint, small root): unknown
+
+
+def _job_time(j):
+    return str(j.get("finished_at") or j.get("updated") or j.get("created") or "")
+
+
+# STRUCTURE-REPEAT LIMIT (owner 2026-10-13, el1013-rule-enforcement; the Qwen die tile was routed four times as one flat
+# block).  An element (spec "block") with >= STRUCTURE_REPEAT_MAX terminal failed routes since its last CLOSED --
+# NEEDS_RTL, EARLY_FAIL_*, or a NEEDS_HUMAN route crash -- takes a new submission only when the spec says what changed
+# in the structure: "structural_change": "<one sentence>".  Hold-overlay re-runs (name suffix -hs) are exempt.  Mode
+# from STATE/ref_gate.json "structure_repeat": "refuse" (default) | "warn" | "off".
+STRUCTURE_REPEAT_MAX = 2
+HOLD_RERUN_RE = re.compile(r"-hs(-[a-z0-9]{1,4})?$")
+
+
+def terminal_route_failure(j):
+    st, why = j.get("status"), str(j.get("reason") or "")
+    if st == "NEEDS_RTL" or st in EARLY_FAIL:
+        return True
+    return st == "NEEDS_HUMAN" and why.startswith("route crashed") and "LOST:" not in why[:80]
+
+
+def failed_routes_since_closed(block, jobs, exclude=None):
+    mine = [x for x in jobs if x["spec"].get("block") == block and x["name"] != exclude]
+    last = max((str(x.get("finished_at") or _closed_at(x)) for x in mine if x["status"] == "CLOSED"), default="")
+    return sorted(x["name"] for x in mine if terminal_route_failure(x) and _job_time(x)[:16] > last[:16])
+
+
+NEAR_MISS_EXEMPT = "near_miss_finishing"
+AR_NM_VARIANTS = 2          # MAX_ROUTES_PER_KEY - 1: the near-miss parent holds one route of its block@commit
+
+
+def near_miss_variant_of(j):
+    """the near-miss parent's name when j is one of the variants the loop itself dropped for it (the parent's record
+    auto_react["g"] lists j), else None: a spec cannot claim the exemption by its own fields"""
+    spec = j["spec"]
+    parent = spec.get("auto_react_parent")
+    if spec.get("auto_react_class") not in tuple(f"g{i + 1}" for i in range(AR_NM_VARIANTS)) or not parent:
+        return None
+    try:
+        if not jpath(parent).exists():
+            return None
+        pj = load_job(parent)
+    except Exception:  # noqa: BLE001
+        return None
+    listed = (pj.get("auto_react") or {}).get("g")
+    same = (pj["spec"].get("block") == spec.get("block")
+            and str((pj["spec"].get("source") or {}).get("commit"))[:12] == str((spec.get("source") or {}).get("commit"))[:12])
+    return parent if same and isinstance(listed, list) and j["name"] in listed[:AR_NM_VARIANTS] else None
+
+
+def structure_repeat_at_submit(j, jobs=None):
+    spec = j["spec"]
+    if j["status"] != "QUEUED" or "route" not in (spec.get("stages") or {}) or HOLD_RERUN_RE.search(j["name"]):
+        return
+    try:
+        cfg = json.loads((STATE / "ref_gate.json").read_text())
+    except (OSError, ValueError):
+        cfg = {}
+    mode = str(cfg.get("structure_repeat", "refuse"))
+    if mode == "off":
+        return
+    fails = failed_routes_since_closed(spec.get("block"), jobs if jobs is not None else all_jobs(), j["name"])
+    if len(fails) < STRUCTURE_REPEAT_MAX:
+        return
+    nm = near_miss_variant_of(j)
+    if nm:      # NEAR-MISS VARIANT exemption: finishing (PD / HM) of a near miss, not a structure; the loop's own 2 only
+        txt = (f"exemption class {NEAR_MISS_EXEMPT}: loop-submitted finishing variant {spec.get('auto_react_class')} "
+               f"of near miss {nm} (place density / hold margin only, same structure; at most {AR_NM_VARIANTS} per "
+               f"near miss)")
+        j["structure_exempt"] = txt
+        j.setdefault("submit_checks", {})["structure_repeat"] = {"verdict": "EXEMPT", "class": NEAR_MISS_EXEMPT,
+                                                                 "parent": nm, "failed_routes": len(fails)}
+        event(j, f"STRUCTURE-REPEAT: {len(fails)} failed routes of {spec.get('block')} since its last CLOSED; {txt}")
+        log(f"[{j['name']}] structure-repeat: {txt}")
+        return
+    sc = spec.get("structural_change")
+    if isinstance(sc, str) and len(sc.strip()) >= 12:
+        j.setdefault("submit_checks", {})["structure_repeat"] = {"verdict": "PASS", "failed_routes": len(fails),
+                                                                 "structural_change": sc.strip()[:400]}
+        event(j, f"STRUCTURE-REPEAT: {len(fails)} failed routes of {spec.get('block')} since its last CLOSED; "
+                 f"structural_change: {sc.strip()[:300]}")
+        log(f"[{j['name']}] structure-repeat: {len(fails)} failed routes; structural_change: {sc.strip()[:200]}")
+        return
+    msg = (f"{spec.get('block')} has {len(fails)} terminal failed routes since its last CLOSED "
+           f"({', '.join(fails[-4:])}): a new route needs a changed structure (fix: add \"structural_change\": "
+           f"\"<one sentence: what is structurally different from the failed routes>\" to the spec; a re-route of the "
+           f"same structure is not accepted; hold-overlay re-runs (-hs) are exempt)")
+    j.setdefault("submit_checks", {})["structure_repeat"] = {"verdict": "REFUSE" if mode == "refuse" else "WARN",
+                                                             "mode": mode, "failed_routes": len(fails), "message": msg}
+    if mode == "refuse":
+        j["status"] = "REFUSED"
+        j["reason"] = f"SUBMIT_LINT STRUCTURE_REPEAT: {msg}"[:1500]
+        event(j, j["reason"])
+        ledger(j, f"REFUSED at submit (no compute spent): {j['reason'][:400]}")
+    else:
+        event(j, f"STRUCTURE_REPEAT WARN ({mode}): {msg}")
+        log(f"[{j['name']}] structure-repeat WARN: {len(fails)} failed routes, no structural_change")
+
+
+# CLOSED STANDS (owner 2026-10-12 19:00 "M5 cap narrowed"; submit gate 2026-10-13, el1013-rule-enforcement).  128 failed
+# jobs in 24 h ran on 81 blocks that had already closed, 74 of them M5 re-routes of closed tiles.  A block (top module +
+# parameter set) with a counting CLOSED job whose view is published takes a new ROUTE only with spec "reroute_reason"
+# {"kind": die_window | slot_change | param_change | rtl_change | evidence_gap | pin_register, ...}; the gate verifies what it can
+# (cut > 0.6 / GRT overflow + source file, kit outline / pin faces, parameter set, RTL blobs against the closed commit,
+# the closed job's bench + mutant and routed verdict).  Logic: closed_stands.py; rule text + constants:
+# tools/textbook_lint.py.  Loop successors of a job that is not CLOSED are exempt.  Mode from STATE/ref_gate.json
+# "closed_stands": "refuse" (default) | "warn" | "off".
+TAKEOVER_DIR = Path(os.environ.get("CL_TAKEOVER", str(Path.home() / "claude-takeover-20261007")))
+
+
+def closed_stands_mode():
+    try:
+        return str(json.loads((STATE / "ref_gate.json").read_text()).get("closed_stands", "refuse"))
+    except (OSError, ValueError):
+        return "refuse"
+
+
+def closed_stands_check(spec, name, jobs=None):
+    """closed_stands.check on the loop's history and object store; never raises ({"verdict": "SKIP"} on a gate error)"""
+    try:
+        import closed_stands
+        git_ = submit_lint.Git(REPO)
+        commit = str((spec.get("source") or {}).get("commit") or "")
+        rv = revoked_closures()
+
+        def exists(path):
+            q = Path(path)
+            if q.is_absolute():
+                return q.exists()
+            return ((REPO / path).exists() or (TAKEOVER_DIR / path).exists()
+                    or any(git_.blob(c, path) for c in (commit, "origin/main") if c))
+        return closed_stands.check(spec, name, jobs if jobs is not None else all_jobs(), git_.show, git_.blob,
+                                   closure_counts=lambda x: closure_counts(x, rv), bench_gap=bench_evidence_gap,
+                                   exists=exists)
+    except Exception as ex:  # noqa: BLE001
+        return {"verdict": "SKIP", "message": f"gate error {type(ex).__name__}: {str(ex)[:200]}", "closed": [], "kind": None}
+
+
+def closed_stands_at_submit(j, jobs=None):
+    spec = j["spec"]
+    if j["status"] != "QUEUED" or "route" not in (spec.get("stages") or {}):
+        return
+    mode = closed_stands_mode()
+    if mode == "off":
+        return
+    res = closed_stands_check(j.get("spec_submitted") or spec, j["name"], jobs)
+    v, msg = res["verdict"], res.get("message", "")
+    if v == "NA":
+        return
+    if v == "SKIP":
+        event(j, f"closed-stands gate skipped: {msg[:300]}")
+        return
+    if v == "REFUSE" and mode != "refuse":
+        v = "WARN"
+    j.setdefault("submit_checks", {})["closed_stands"] = {
+        "verdict": v, "mode": mode, "kind": res.get("kind"), "closed": res.get("closed", [])[-4:],
+        "facts": res.get("facts") or {}, "message": msg[:1500]}
+    if v == "REFUSE":
+        j["status"] = "REFUSED"
+        j["reason"] = f"SUBMIT_LINT CLOSED_STANDS: {msg}"[:1800]
+        event(j, j["reason"])
+        ledger(j, f"REFUSED at submit (no compute spent): {j['reason'][:400]}")
+    elif v == "WARN":
+        event(j, f"CLOSED_STANDS WARN ({mode}): {msg[:1200]}")
+        log(f"[{j['name']}] closed-stands WARN: {msg[:300]}")
+    else:
+        event(j, f"CLOSED-STANDS {v}: {msg[:600]}")
+
+
+def ref_gate_at_submit(j, jobs=None):
+    if j["status"] != "QUEUED" or j["spec"].get("ref_gate") is False:
+        return
+    try:
+        cfg = json.loads((STATE / "ref_gate.json").read_text())
+    except (OSError, ValueError):
+        cfg = {}
+    mode = str(cfg.get("mode", "refuse") if j["spec"].get("ref_tile") else cfg.get("other", "warn"))
+    if mode == "off":
+        return
+    try:
+        sys.path.insert(0, str(HERE.parent / "ref_tile"))
+        import pre_route_gate  # noqa: E402
+        kw = {}
+        if j["spec"].get("ref_tile"):
+            # MEASURED CLOCK RULE (owner 2026-10-13; constants + rule text in tools/textbook_lint.py).  ref_gate.json
+            # "clock": "refuse" (default) | "warn" | "off".
+            blk, c9 = j["spec"].get("block"), str((j["spec"].get("source") or {}).get("commit", ""))[:9]
+            mine = [x for x in (jobs if jobs is not None else all_jobs()) if x["spec"].get("block") == blk]
+            kw = dict(known_sinks=known_clock_sinks(mine), clock_mode=str(cfg.get("clock", "refuse")),
+                      closed_stands=any(x["status"] == "CLOSED" and
+                                        str((x["spec"].get("source") or {}).get("commit", ""))[:9] == c9 for x in mine))
+        res = pre_route_gate.submit_check(j["spec"], str(REPO), **kw)
+    except Exception as ex:  # noqa: BLE001
+        event(j, f"ref gate skipped: {type(ex).__name__}: {str(ex)[:200]}")
+        return
+    if isinstance(res.get("route_overlay_plan"), dict) and j.get("freeze_helper_overlay"):
+        j["route_overlay_plan"] = res["route_overlay_plan"]
+    if isinstance(res.get("clock"), dict):
+        j["clock_rule"] = dict(res["clock"], mode=kw.get("clock_mode"))      # textbook_cfg() hands it to the in-flow lint
+        event(j, f"CLOCK-RULE at submit: {res['clock'].get('text', '')[:300]}"
+                 + (" (CLOSED tile: stands)" if res["clock"].get("closed_stands") else ""))
+    v = res.get("verdict")
+    if v == "SKIP":
+        event(j, f"ref gate: {res.get('message', '')[:300]}")
+        return
+    if v == "REFUSE" and mode != "refuse":
+        v = "WARN"
+    j.setdefault("submit_checks", {})["ref_gate"] = {"verdict": v, "mode": mode, "message": res.get("message", "")[:1500]}
+    if v == "REFUSE":
+        j["status"] = "REFUSED"
+        j["reason"] = f"SUBMIT_LINT REF_GATE: {res['message']}"[:1500]
+        event(j, j["reason"])
+        ledger(j, f"REFUSED at submit (no compute spent): {j['reason'][:400]}")
+    elif v == "WARN":
+        event(j, f"REF_GATE WARN ({mode}): {res['message'][:1200]}")
+        log(f"[{j['name']}] ref gate WARN: {res['message'][:300]}")
+    else:
+        event(j, f"ref gate PASS: {res.get('message', '')[:200]}")
+
+# BENCH-REQUIRED (owner 2026-10-13, el1013-bench-required): lint-only ref_tile jobs routed for hours, CLOSED on timing and
+# were then refused by the guarded auto-merge ("no behavioral positive + negative mutant": s81su_qnt_cb32,
+# s81su_swe_gfix, s81hc_ctnl_l0/l1/l2, smn FS r1, HC crooty Y v4) -- validate() let them in on a no_bench_reason.
+# ONE definition of the bench evidence, used by the merge guard (auto_merge_guard, on the bench RESULTS) and by the
+# submit gate (bench_gate_at_submit, on the bench stages the spec DECLARES), so the two cannot disagree:
+#   a positive bench (expect pass) whose key is not a lint (LINT_BENCH_RE) + a negative bench (expect fail).
+# Submit: a closure candidate without it is REFUSED before any compute.  Closure candidate = a job whose CLOSED would be
+# offered to main: not spec "auto_merge": false / "hold_merge" (those never merge: physical probes).  "ref_tile": true
+# jobs REFUSE, every other job WARNs (STATE/ref_gate.json {"bench": ..., "bench_other": ...: refuse|warn|off}).
+# A no_bench_reason alone no longer admits a candidate; the only bench-less route is the one the guard itself takes
+# (no bench at all + no_bench_reason + an owner auto_merge_external_bench_prefixes name).
+# benched_by: a sub-tile with no golden of its own names a COMPOSITION gate from tools/ref_tile/composition_gates.json
+# (read from the daemon's main tree, never from the job's branch); the gate's positive bench and mutant are appended to
+# the job as <gate>_<name> and run in the job's own source snapshot, i.e. the composition built from the sub-tile's RTL
+# at its source commit.  The merge guard then sees real behavioural results (and requires every gate bench to be there).
+# Not retroactive: jobs ingested before the gate are untouched, and an auto-react successor of such a job only WARNs.
+LINT_BENCH_RE = re.compile(r"(?:bench_)?lint(?:_.*)?", re.I)
+COMPOSITION_GATES = HERE.parent / "ref_tile" / "composition_gates.json"
+
+
+def bench_key(name):
+    return "bench_" + re.sub(r"[^A-Za-z0-9_-]", "_", str(name))
+
+
+def bench_evidence_gap(expects):
+    """{bench key: expect} -> None when it holds a behavioural positive and a mutant, else the reason it does not"""
+    if not any(x == "pass" for x in expects.values()):
+        return "no positive bench"
+    if not any(x == "pass" and not LINT_BENCH_RE.fullmatch(k) for k, x in expects.items()):
+        return "no behavioral positive bench (lint alone is not exactness)"
+    if not any(x == "fail" for x in expects.values()):
+        return "no negative bench (mutant evidence required)"
+    return None
+
+
+def spec_bench_expects(spec):
+    st = spec.get("stages") if isinstance(spec.get("stages"), dict) else {}
+    return {bench_key(b.get("name")): b.get("expect") for b in st.get("bench") or [] if isinstance(b, dict)}
+
+
+def composition_gates():
+    try:
+        return json.loads(COMPOSITION_GATES.read_text()).get("gates") or {}
+    except (OSError, ValueError):
+        return {}
+
+
+def gate_bench_names(gate):
+    return [f"{gate}_{b['name']}" for b in (composition_gates().get(gate) or {}).get("benches") or []]
+
+
+def expand_benched_by(spec):
+    """(spec with the composition gate's benches appended, error | None); the input spec is not modified"""
+    gate = spec.get("benched_by")
+    if gate is None:
+        return spec, None
+    gates = composition_gates()
+    g = gates.get(gate) if isinstance(gate, str) else None
+    if not isinstance(g, dict):
+        return spec, (f"benched_by {gate!r} is not a composition gate of tools/ref_tile/composition_gates.json on main "
+                      f"(known: {', '.join(sorted(gates)) or 'none'}); add the gate there first")
+    gb = [b for b in g.get("benches") or [] if isinstance(b, dict)]
+    if bench_evidence_gap({bench_key(f"{gate}_{b.get('name')}"): b.get("expect") for b in gb}):
+        return spec, f"composition gate {gate} lacks a behavioural positive bench or a mutant in composition_gates.json"
+    out = json.loads(json.dumps(spec))
+    st = out.get("stages")
+    if not isinstance(st, dict):
+        return spec, None
+    have = {b.get("name") for b in st.get("bench") or [] if isinstance(b, dict)}
+    st["bench"] = list(st.get("bench") or []) + [dict(b, name=f"{gate}_{b['name']}") for b in gb
+                                                 if f"{gate}_{b['name']}" not in have]
+    extra = [x for x in g.get("extra_paths") or [] if x not in (out.get("source") or {}).get("extra_paths", [])]
+    if extra and isinstance(out.get("source"), dict):
+        out["source"]["extra_paths"] = list(out["source"].get("extra_paths", [])) + extra
+    return out, None
+
+
+def bench_gate_check(spec, name=None):
+    """the submit-side bench rule on a (benched_by-expanded) spec: None, or the reason the merge guard would give"""
+    if spec.get("auto_merge") is False or spec.get("hold_merge"):
+        return None                                     # not a closure candidate: its CLOSED is never offered to main
+    expects = spec_bench_expects(spec)
+    if not expects and spec.get("no_bench_reason"):
+        try:
+            waive = json.loads((STATE / "main_publish_owner.json").read_text()).get("auto_merge_external_bench_prefixes") or []
+        except (OSError, ValueError):
+            waive = []
+        if any(str(name or spec.get("name", "")).startswith(w) for w in waive):
+            return None                                 # owner-approved external bench, as in auto_merge_guard
+    if not expects:
+        return "no loop benches"
+    return bench_evidence_gap(expects)
+
+
+BENCH_GATE_FIX = ("add to stages.bench a behavioural bench (expect pass, bit-exact against a golden) and its mutant "
+                  "(expect fail), or name a composition gate with \"benched_by\" (tools/ref_tile/README.md); a job that "
+                  "must never merge says so with \"hold_merge\": \"<reason>\"")
+
+
+def bench_gate_at_submit(j):
+    if j["status"] != "QUEUED":
+        return
+    spec = j["spec"]
+    try:
+        cfg = json.loads((STATE / "ref_gate.json").read_text())
+    except (OSError, ValueError):
+        cfg = {}
+    mode = str(cfg.get("bench", "refuse") if spec.get("ref_tile") else cfg.get("bench_other", "warn"))
+    if mode == "off":
+        return
+    why = bench_gate_check(spec, j["name"])
+    if not why:
+        if spec.get("benched_by"):
+            event(j, f"bench gate PASS: benched_by {spec['benched_by']} ({', '.join(gate_bench_names(spec['benched_by']))})")
+        return
+    parent = spec.get("auto_react_parent")
+    if mode == "refuse" and parent and jpath(parent).exists():
+        try:
+            pj = load_job(parent)
+            if not (pj.get("submit_checks") or {}).get("bench_gate") or pj.get("bench_gate_grandfathered"):
+                j["bench_gate_grandfathered"] = True    # successor of a job ingested before the gate: not retroactive
+                mode = "warn"
+        except Exception:  # noqa: BLE001
+            pass
+    msg = f"{why}: the guarded auto-merge would skip this job's CLOSED (fix: {BENCH_GATE_FIX})"
+    j.setdefault("submit_checks", {})["bench_gate"] = {"verdict": "REFUSE" if mode == "refuse" else "WARN", "mode": mode,
+                                                       "message": msg}
+    if mode == "refuse":
+        j["status"] = "REFUSED"
+        j["reason"] = f"SUBMIT_LINT BENCH_REQUIRED: {msg}"[:1500]
+        event(j, j["reason"])
+        ledger(j, f"REFUSED at submit (no compute spent): {j['reason'][:400]}")
+    else:
+        event(j, f"BENCH_REQUIRED WARN ({mode}): {msg}")
+        log(f"[{j['name']}] bench gate WARN: {why}")
 
 
 def ingest():
@@ -786,6 +1283,7 @@ def ingest():
     except subprocess.TimeoutExpired:
         pass
     keys = route_keys()
+    hist = None
     for origin, spec in load_sources():
         name = spec.get("name") or Path(origin.split(":")[-1]).stem
         policy_path = STATE / 'main_publish_owner.json'
@@ -819,8 +1317,13 @@ def ingest():
                 log(f"INVALID job file {origin}: {spec['_parse_error']}")
             continue
         errs = validate(spec)
+        submitted = spec
+        if not errs and spec.get("benched_by") is not None:
+            spec, _ = expand_benched_by(spec)
         j = dict(name=name, spec=spec, origin=origin, created=now_iso(), status="QUEUED", stage_idx=0, attempt=1,
-                 retries_used=0, benches={}, hosts_tried=[], events=[])
+                 retries_used=0, benches={}, hosts_tried=[], events=[], freeze_helper_overlay=True)
+        if spec is not submitted:
+            j["spec_submitted"] = submitted          # the frozen-spec comparison and successors use the file as written
         if errs:
             j["status"] = "INVALID"
             j["reason"] = "; ".join(errs)
@@ -835,7 +1338,20 @@ def ingest():
                 ledger(j, f"REFUSED: {j['reason']}")
             else:
                 event(j, f"ingested from {origin}")
-                lint_at_submit(j)
+                if hist is None:
+                    hist = all_jobs()                # one read per ingest pass that sees a new job
+                structure_repeat_at_submit(j, hist)  # no compute: job history only
+                if j["status"] == "QUEUED":
+                    closed_stands_at_submit(j, hist)  # history + a few blob ids: a CLOSED tile stands
+                if j["status"] == "QUEUED":
+                    bench_gate_at_submit(j)          # seconds, before the commit-reading lints
+                if j["status"] == "QUEUED":
+                    j.setdefault("submit_checks", {}).setdefault("bench_gate", {"verdict": "PASS"})
+                    lint_at_submit(j)
+                if j["status"] == "QUEUED":
+                    hier_lint_at_submit(j)
+                if j["status"] == "QUEUED":
+                    ref_gate_at_submit(j, hist)
                 if j["status"] == "QUEUED":
                     bench_paths_at_submit(j)
         save_job(j)
@@ -1138,7 +1654,7 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         return True
 
     def _choose(self, spec, exclude=()):
-        threads, ram = spec.get("threads", 16), spec.get("peak_ram_gb", 32)
+        threads, ram = spec.get("threads", 16), claim_ram(spec)
         allh = [h["name"] for h in hosts_table()]
         pref = set(spec.get("hosts") or [])
         # the job's hosts list is a PREFERENCE (coordinator 2026-10-06 21:15); caps/toolchain/per-job limits still apply
@@ -1149,18 +1665,32 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         allh = [h for h in allh if not host_down(h)]       # HOST-DOWN: smoke_only-equivalent while it is down
         order = [h for h in allh if h not in exclude and self.compatible(h, spec)]
 
-        def score(h):
-            """higher = better: free cores and free RAM after this job, both as fractions of the host; spillover-only
-            hosts (EPYC3, die-top) rank after every other host; listed hosts get a small preference"""
+        def cpu_ratio(h):
+            """projected CPU load of h with this job on it, in units of its cores (None: no probe)"""
             info, cfg = self.probe(h), host_cfg(h)
             if info is None:
+                return None
+            return (info["load1"] + self.own_pending(h)[0] + threads) / host_cores(cfg)
+
+        # OWNER 2026-10-13 17:55 (EPYC1 at load 259 on 128 cores while EPYC4 ran at 39): a job goes to the host with the
+        # lowest projected load1 / cores among those that can admit it, so the big hosts fill evenly before either
+        # passes 1.0 x cores; a host with fewer than SMALL_HOST_CORES cores (PVE1, localhost) never gets a job of more
+        # than SMALL_HOST_THREADS threads while a larger host still has cores.  Memory alone decides ADMISSION (fits).
+        ratios = {h: cpu_ratio(h) for h in order}
+        big_has_cores = any(r is not None and r <= 1.0 and host_cores(host_cfg(h)) >= SMALL_HOST_CORES
+                            and not host_cfg(h).get("spillover_only") for h, r in ratios.items())
+
+        def score(h):
+            """higher = better: lowest projected CPU load first (free RAM only breaks near-ties); spillover-only hosts
+            rank after every other host; listed hosts get a small preference"""
+            info, cfg = self.probe(h), host_cfg(h)
+            if info is None or ratios.get(h) is None:
                 return -9e9
             pt, pr = self.own_pending(h)
-            fc = (cfg["cap"] - info["load1"] - pt - threads) / cfg["cap"]
             fr = (info["mem_gb"] - pr - ram) / cfg.get("ram_gb", 1133)
-            # OWNER 2026-10-08: memory is the only ADMISSION limit; ranking sends a job where it runs fastest among hosts
-            # that fit -- free CPU weighs 0.5 (was 0.1: AGIdock sat at load 15/64 with 67 GB free while EPYCs ran 4x over)
-            return fr + 0.5 * max(fc, -1.0) + (0.02 if h in pref else 0) - (10 if cfg.get("spillover_only") else 0)
+            small = host_cores(cfg) < SMALL_HOST_CORES and threads > SMALL_HOST_THREADS and big_has_cores
+            return -ratios[h] + 0.05 * fr + (0.02 if h in pref else 0) - (10 if cfg.get("spillover_only") else 0) \
+                - (5 if small else 0)
         order.sort(key=score, reverse=True)
         why = []
         for h in order:
@@ -1171,7 +1701,14 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         return None, "; ".join(why) or "no compatible host (capabilities/image probe unavailable or mismatched)"
 
 
-TOOL_REF_HOST = "ot-epyc3"
+SMALL_HOST_CORES, SMALL_HOST_THREADS = 48, 8   # see Fleet._choose
+
+
+def host_cores(cfg):
+    return max(1, cfg.get("cores") or cfg.get("cap") or 1)
+
+
+TOOL_REF_HOST = "ot-epyc1tb"  # 10-12: EPYC3 retired; all hosts share orfs image 16470cea1d34
 PROBE_LAST_GOOD_S = 300     # memory/disk/load: a failed probe reuses a good one at most 5 min old
 TOOL_LAST_GOOD_S = 6 * 3600  # image digests / tool versions change only on a deliberate host update
 # LOCALHOST IMAGE (2026-10-07): the fleet image loaded into localhost's overlay2 docker store has another image ID
@@ -1562,7 +2099,12 @@ def publish_measured():
     stamp = STATE / "measured.published"
     if stamp.exists() and time.time() - stamp.stat().st_mtime < 600:
         return
-    with PUBLISH_LOCK:
+    # el1013-fleet3 2026-10-13: the daemon's MAIN thread waited here behind 7 queued record commits and an auto-merge
+    # (PUBLISH_LOCK, minutes each): no tick and no heartbeat for 30 min, 29 READY jobs unlaunched on 448 GB of idle
+    # memory.  Never wait: a busy lock means "next tick".
+    if not PUBLISH_LOCK.acquire(blocking=False):
+        return
+    try:
         if claude_owns_main():
             return  # owner consumes durable measured.dirty / measured_insertion.json; no main push
         if (STATE / "main_integration_hold.json").exists():
@@ -1583,6 +2125,8 @@ def publish_measured():
             if sh(["git", "-C", str(wt), "push", "-q", "origin", "HEAD:refs/heads/main"], timeout=900).returncode == 0:
                 break
         wt_rm(wt)
+    finally:
+        PUBLISH_LOCK.release()
     dirty.unlink(missing_ok=True)
     stamp.write_text(now_iso())
 
@@ -1702,7 +2246,7 @@ def sync_source(j):
     if archive_receipt is not None:
         j["source_archive"] = archive_receipt
         ssh(host, f"cat > {run}/cl/source_archive.json", input=json.dumps(archive_receipt, indent=1), timeout=60, check=True)
-    ship_helpers(host, run)
+    ship_helpers(host, run, j)
     corner_sta_compat(j, host, run, full)
     ssh(host, f"echo {full} > {run}/src/SOURCE_COMMIT && echo {run}/src > {run}/cl/SRC_DIR", timeout=60, check=True)
     ssh(host, f"cat > {run}/cl/run.sh && chmod +x {run}/cl/run.sh", input=RUNNER, timeout=60, check=True)
@@ -1750,13 +2294,18 @@ def mirror_sync(j, host, run, full, paths, receipt):
                 raise RuntimeError(f"push rc={push.returncode}: {push.stderr.strip()[-400:]}")
             how = f"push {git_mirror.pushed_objects(push.stderr)} objects"
         t1 = time.time()
-        ex = ssh(host, git_mirror.extract_script(mirror, full, paths, run, receipt), timeout=1800)
+        # view store (git_mirror.view_store_script): closed .lib/.lef views once per run root, hard-linked into src;
+        # spec source.view_store false opts a job out (it then gets its own full copy, as before)
+        vs = j["spec"]["source"].get("view_store", True) is not False
+        ex = ssh(host, git_mirror.extract_script(mirror, full, paths, run, receipt, view_store=vs), timeout=1800)
         if ex.returncode or "GIT_MIRROR_EXTRACTED" not in ex.stdout:
             raise RuntimeError(f"extract rc={ex.returncode}: {ex.stderr.strip()[-400:]}")
+        views = re.search(r"GIT_MIRROR_VIEWS (\d+) (\d+) MB", ex.stdout)
     except Exception as e:  # noqa: BLE001 -- any mirror fault falls back to the tar transfer
         event(j, f"git-mirror sync failed ({type(e).__name__}: {str(e)[:500]}): tar sync")
         return False
     event(j, f"git-mirror sync {full[:12]} via {how} in {t1 - t0:.0f}s + extract {time.time() - t1:.0f}s"
+             + (f"; {views.group(1)} views / {int(views.group(2)) / 1024:.1f} GB hard-linked from the host view store" if views else "")
              + (" (receipt archive + required_files sha256 verified on host)" if receipt is not None else ""))
     try:
         ssh(host, git_mirror.detached(git_mirror.housekeep_script(mirror)), timeout=60)
@@ -1793,15 +2342,7 @@ def corner_sta_compat(j, host, run, full):
     event(j, f"corner_sta.py replaced by {CORNER_STA_COMPAT_REF}'s (generator passes --sdc-name)")
 
 
-HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "hold_eco_corner.tcl",
-           "hold_eco_sdc.py", "hold_eco_window.tcl", "hold_corners_patch.py", "h1_patch.py", "cal_classify.sh", "resume_patch.py", "resume_check.sh",
-           "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh", "meas_resta.py", "lane_kh_overlay.py",
-           "../../physical/common_flow/io_ref_routed.sdc", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
-           "../preroute_gate.py", "../preroute_gate.tcl", "tt_overlay.py", "vtswap_eco.sh", "vtswap_eco.tcl",
-           "pinflop_overlay.py", "../../physical/qwen_die_masters/pinflop_ref.tcl", "../w18/corner_sta.py", "route_corner_check.py",
-           *(f"../../physical/common_flow/{n}" for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
-                                                          "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc",
-                                                          "macro_sliver_block.tcl", "edge_sliver_block.tcl")))
+HELPERS = HO.HELPERS
 
 # deterministic calibrate (CTS-only) failures: a retry reproduces them, so the job stops at once with an owner action
 CAL_OWNER_ACTION = {
@@ -1821,24 +2362,225 @@ CAL_OWNER_ACTION = {
 }
 
 
-def ship_helpers(host, run):
-    """(re)write the loop's helper scripts into {CL}: jobs synced before a helper existed get it too"""
+def verdict_macros(j):
+    """verdict.macros as src-relative view dirs (macro_views.py).  MACRO-VIEW (el1011-ds-misc 2026-10-11): a bare SRAM
+    master there made every hold ECO / path summary / re-export die ORD-0001 on /src/<name>/<name>.lef.  Resolved
+    against the job's pinned commit (git ls-tree, cached per commit); on failure the raw list is returned with an event
+    and the remote helpers (hold_eco.sh / vtswap_eco.sh / path_summary.py) re-resolve against the snapshot or fail loudly."""
+    raw = list(((j.get("spec") or {}).get("verdict") or {}).get("macros") or [])
+    if not raw:
+        return []
+    commit = str(((j.get("spec") or {}).get("source") or {}).get("commit", ""))
+    c = j.get("macro_views") or {}
+    if c.get("commit") == commit and c.get("in") == raw and c.get("out"):
+        return list(c["out"])
+    if str(HERE) not in sys.path:
+        sys.path.insert(0, str(HERE))
+    import macro_views
+    try:
+        r = sh(["git", "-C", str(REPO), "ls-tree", "-r", "--name-only", commit], timeout=120)
+        if r.returncode:
+            raise macro_views.MacroViewError(f"git ls-tree {commit[:12]} failed rc={r.returncode}")
+        out, rw = macro_views.resolve(raw, r.stdout.splitlines())
+    except Exception as ex:   # noqa: BLE001 -- never block the stage on resolution; the helpers re-check remotely
+        if c.get("error") != str(ex):
+            event(j, f"MACRO-VIEW: verdict.macros {raw} not resolved at the daemon ({ex}); remote helpers re-resolve")
+        j["macro_views"] = dict(commit=commit, error=str(ex))
+        return raw
+    if rw:
+        event(j, "MACRO-VIEW: verdict.macros resolved " + ", ".join(f"{a} -> {b}" for a, b in rw))
+    j["macro_views"] = dict(commit=commit, **{"in": raw, "out": out})
+    return list(out)
+
+
+# OVERLAY-TRACKS-MAIN (el1012-daemon-overlay 2026-10-12): ship_helpers tars HELPERS from the DAEMON's tree (HERE) into every
+# job's {CL}, and stages copy them over the job's synced src (orfs_hold_mm.tcl, io_ref_routed.sdc, link_budget_consistent.sdc,
+# cg_pushdown.tcl, ...).  The daemon tree is a worktree pinned at an old commit, so flow fixes on main (de53a3b7c, e409d530a,
+# 3fd51709d, 1bfd5f1d2) never reached loop routes.  Each helper is now resolved against origin/main (fetched by the loop):
+#   local == main tip                    -> local
+#   local == an OLDER main version       -> main's tip blob (stale daemon copy; logged once per main tip)
+#   local not any main version (daemon-only edit) -> local, with an OVERLAY-DRIFT alert (shared-tool rule: land it on main)
+# overlay_drift_check() logs every differing helper (and the in-process imports) at startup and hourly.
+OVERLAY_CHECK_EXTRA = ("tools/textbook_lint.py", "tools/fp_margin_lint.py", "tools/ref_tile/pre_route_gate.py",
+                       "tools/pin_fit.py", "tools/ref_tile/ref_tile.py",
+                       "tools/closure_loop/submit_lint.py", "tools/closure_loop/macro_views.py")
+_OVL = {"head": None, "head_at": 0.0, "hist": {}, "said": set(), "check_at": 0.0}
+
+
+def _ovl_head():
+    if time.time() - _OVL["head_at"] > 60 or not _OVL["head"]:
+        r = sh(["git", "-C", str(REPO), "rev-parse", "refs/remotes/origin/main"], timeout=60)
+        _OVL["head"] = r.stdout.strip() if r.returncode == 0 else None
+        _OVL["head_at"] = time.time()
+    return _OVL["head"]
+
+
+def _ovl_blob_id(data):
+    import hashlib
+    return hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest()
+
+
+def _ovl_resolve(rel):
+    """Shared effective resolver; preserve daemon logging and cached origin selection."""
+    head = _ovl_head()
+    data, state = HO.resolve_bytes(HERE.parents[1], REPO, rel, head, _OVL["hist"])
+    if state in ("stale", "daemon_only") and (state, rel, head) not in _OVL["said"]:
+        _OVL["said"].add((state, rel, head))
+        log(f"OVERLAY-TRACKS-MAIN: {rel}: {state}; effective origin {str(head)[:9]}")
+    return data, state
+
+
+def overlay_helper_bytes(helper):
+    rel = os.path.normpath(f"tools/closure_loop/{helper}")
+    try:
+        return _ovl_resolve(rel)[0]
+    except Exception as ex:  # noqa: BLE001 -- never block a launch on the resolver: ship the daemon's copy
+        log(f"OVERLAY-TRACKS-MAIN: {rel} unresolved ({type(ex).__name__}: {ex}); shipping the daemon's copy")
+        return (HERE / helper).read_bytes()
+
+
+def overlay_drift_check(force=False):
+    """startup + hourly: log every overlay / in-process file whose daemon copy differs from origin/main"""
+    if not force and time.time() - _OVL["check_at"] < 3600:
+        return
+    _OVL["check_at"] = time.time()
+    try:
+        gfetch("main", timeout=300)
+        _OVL["head_at"] = 0.0
+        rows = []
+        for rel in [os.path.normpath(f"tools/closure_loop/{h}") for h in HELPERS] + list(OVERLAY_CHECK_EXTRA):
+            if not (HERE.parents[1] / rel).is_file():
+                rows.append(f"{rel}: missing in daemon tree"); continue
+            st = _ovl_resolve(rel)[1]
+            if st != "same":
+                rows.append(f"{rel}: {st}")
+        hd = (_OVL["head"] or "?")[:9]
+        if rows:
+            log(f"OVERLAY-DRIFT CHECK vs origin/main {hd}: {len(rows)} file(s) differ (stale = main's copy is shipped; "
+                f"daemon_only = commit to main; in-process imports need a restart): " + "; ".join(rows))
+        else:
+            log(f"OVERLAY-DRIFT CHECK vs origin/main {hd}: all overlay files equal main")
+    except Exception:  # noqa: BLE001
+        log("overlay_drift_check error:\n" + traceback.format_exc())
+
+
+# LOOP-PIN-STUB: stdin script patching a stale ref_tile.py export (pre-ba4d5d136) to run abstract_pin_stub.py before the lint
+PINSTUB_PATCH = r"""import sys
+p = sys.argv[1]
+t = open(p).read()
+a = '    res = child_lint.lint(str(lef), str(o)) if lef.exists() else'
+if "abstract_pin_stub" not in t and t.count(a) == 1:
+    t = t.replace(a, '    if lef.exists():  # LOOP-PIN-STUB (closure loop, = ba4d5d136)\n'
+                     '        subprocess.run([sys.executable, str(ROOT / "tools/hier_contract/abstract_pin_stub.py"), str(lef), str(lef)])\n' + a)
+    open(p, "w").write(t)
+    print("LOOP-PIN-STUB: patched", p)
+"""
+
+
+def installed_helper_receipt(host, run, frozen):
+    """Inspect the executed helper directory without changing a running snapshot."""
+    if is_local(host):
+        return HO.verify_installed_plan(Path(run) / "cl", frozen)
+    code = ("exec(" + repr(Path(HO.__file__).read_text()) + ")\n"
+            "print(json.dumps(verify_installed_plan(" + repr(run + "/cl") + ","
+            + repr(frozen) + ")))\n")
+    result = ssh(host, "python3 -", input=code, timeout=120)
+    if result.returncode:
+        raise ValueError("original remote helper verification failed: " + result.stderr[-1500:])
+    try:
+        return json.loads(result.stdout)
+    except (ValueError, TypeError) as ex:
+        raise ValueError("original remote helper verification receipt unreadable") from ex
+
+
+def ship_helpers(host, run, job=None):
+    """Install new helpers, or verify and reuse an already executed frozen set."""
     # one ssh carrying a tar of all helpers (was one ssh per helper, 13 per launch, made while holding FLEET_LOCK)
     import io, tarfile
+    payloads = None
+    modes = None
+    frozen = None
+    if job is not None and job.get("freeze_helper_overlay"):
+        frozen = job.get("route_overlay_plan")
+        if frozen is None and (job.get("source_synced") or job.get("helper_overlay_installed")
+                               or job.get("helper_overlay_verification")):
+            raise ValueError("FROZEN_HELPER_OVERLAY: original job helper plan is missing; preserve original execution")
+        if frozen is not None:
+            try:
+                receipt = installed_helper_receipt(host, run, frozen)
+                if receipt["status"] == "verified_original":
+                    HO.recover_frozen_payloads(REPO, HELPER_STORE, frozen)
+                    job["helper_overlay_verification"] = dict(receipt, verified_at=now_iso(),
+                                                               host=host, run=run, mutation=False)
+                    return
+                origin = job.get("bench_helper_origin")
+                if origin:
+                    if origin == dict(host=host, run=run):
+                        raise ValueError("bench helper origin must be a different execution location")
+                    original = installed_helper_receipt(origin["host"], origin["run"], frozen)
+                    if original.get("status") != "verified_original":
+                        raise ValueError("bench helper origin has no verified original execution")
+                    payloads = HO.committed_frozen_payloads(REPO, frozen)
+                    modes = {f["path"]: f["mode"] for f in HO.frozen_rows(frozen)}
+                    job["bench_helper_origin_verification"] = dict(original, **origin, verified_at=now_iso())
+                elif job.get("source_synced") or job.get("helper_overlay_installed") or job.get("helper_overlay_verification"):
+                    # FROZEN-HELPER-REINSTALL (el1014-root-frozen-helper, 2026-10-14): an installed job whose run
+                    # directory has NO helpers is a fresh location -- move_to_other_host (AGIdock run root < 200 GB
+                    # -> EPYC1/EPYC4) or a cleaned run root.  Six jobs stopped NEEDS_HUMAN here.  Re-install the
+                    # exact frozen bytes (committed origin tree, else the content-addressed store), each verified
+                    # against the plan; a partially present or changed directory still refuses (verify above).
+                    try:
+                        payloads, source = HO.recover_frozen_payloads(REPO, HELPER_STORE, frozen)
+                    except ValueError as ex:
+                        raise ValueError(f"previously installed frozen helper directory is missing and its exact "
+                                         f"bytes are not recoverable ({ex})") from ex
+                    modes = {f["path"]: f["mode"] for f in HO.frozen_rows(frozen)}
+                    job.setdefault("helper_overlay_reinstalls", []).append(dict(
+                        host=host, run=run, source=source, content_sha256=frozen.get("content_sha256"),
+                        origin_main=frozen.get("origin_main"), verified_at=now_iso()))
+            except (ValueError, OSError, subprocess.SubprocessError) as ex:
+                raise ValueError(f"FROZEN_HELPER_OVERLAY: {ex}; preserve original execution") from ex
+        if payloads is None:
+            current, payloads = HO.capture_plan(HERE.parents[1], REPO, head=_ovl_head(), cache=_OVL["hist"])
+            modes = {f["path"]: f["mode"] for f in current["files"]}
+            frozen = job.setdefault("route_overlay_plan", current)
+            ok, why = HO.compare_plans(frozen, current)
+            if not ok:
+                raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; preserve original job and submit a fresh source-bound gate")
+            HO.store_payloads(HELPER_STORE, frozen, payloads)
     buf = io.BytesIO()
     with tarfile.open(fileobj=buf, mode="w") as tf:
         for helper in HELPERS:
-            tf.add(str(HERE / helper), arcname=Path(helper).name)
+            rel = os.path.normpath(f"tools/closure_loop/{helper}")
+            data = payloads[rel] if payloads is not None else overlay_helper_bytes(helper)
+            ti = tarfile.TarInfo(Path(helper).name); ti.size = len(data); ti.mode = modes[rel] if modes is not None else (HERE / helper).stat().st_mode & 0o777
+            ti.mtime = int(time.time()); tf.addfile(ti, io.BytesIO(data))
+        if frozen is not None:
+            data = (json.dumps(frozen, indent=1) + "\n").encode()
+            ti = tarfile.TarInfo("helper_overlay_plan.json")
+            ti.size = len(data); ti.mode = 0o644
+            tf.addfile(ti, io.BytesIO(data))
     if is_local(host):
         os.makedirs(f"{run}/cl", exist_ok=True)
         with tarfile.open(fileobj=io.BytesIO(buf.getvalue())) as tf:
             tf.extractall(f"{run}/cl")
+        if frozen is not None:
+            job["helper_overlay_installed"] = True
         return
     with transport_command(host) as base:
         r = subprocess.run(base + [f"mkdir -p {run}/cl && tar -xf - -C {run}/cl"],
                            input=buf.getvalue(), capture_output=True, timeout=120)
     if r.returncode:
         raise RuntimeError(f"command failed rc={r.returncode}: ship_helpers {host}:{run}/cl {r.stderr[-300:]!r}")
+    if frozen is not None:
+        job["helper_overlay_installed"] = True
+
+
+def route_cfg_of(rb):
+    """the ORFS config.mk of the route whose base dir is rb (results/asap7/<d>/base -> <orfs>/config.mk): a stacked ECO
+    (hold on a VT-swap / combo base) passes it as ROUTE_CFG so hold_eco.sh keeps the route's layer cap + face keepout"""
+    ps = Path(str(rb)).parents
+    return str((ps[3] if len(ps) > 3 else Path(str(rb))) / "config.mk")
 
 
 def tag(st, j):
@@ -1860,14 +2602,15 @@ for e in ${PATH//:/ }; do
       mkdir -p "$OT_FP_LINT_DIR"; shift
       # PREROUTE-GATE: the pre-route timing gate (ORFS POST DETAIL_PLACE) sees OT_PREROUTE_GATE, writes PREROUTE_FAIL there
       exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} --oom-score-adj ${OT_OOM_SCORE_ADJ:-500} -e LEC_CHECK=0 -e OT_IOREF_INPUT_PF -e OT_FP_LINT -e OT_FP_LINT_ARGS -e OT_PREROUTE_GATE -e OT_PREROUTE_GATE_ARGS \
-        -e OT_ABC_NO_DCH -e OT_HOLD_STOP -e OT_SLIVER_BLOCK -e OT_EDGE_SLIVER_UM -v "$OT_FP_LINT_DIR:/ot_fplint" "$@"
+        -e OT_ABC_NO_DCH -e OT_HOLD_STOP -e OT_SLIVER_BLOCK -e OT_EDGE_SLIVER_UM -e OT_CTS_MACRO_CLUSTER -e OT_CTS_MACRO_SIZE -e OT_CTS_MACRO_DIAM -v "$OT_FP_LINT_DIR:/ot_fplint" "$@"
     fi
+    # MACRO-CLK (macro-clk-1010): OT_CTS_MACRO_CLUSTER / _SIZE / _DIAM reach physical/common_flow/macro_cts_cluster.tcl
     # ABC-NODCH (drive-2155): a recipe exporting OT_ABC_NO_DCH=1 gets &synch2 for &dch (tools/orfs_hold_mm.py)
     # MEM-CAP (drive-0849 2026-10-09): OT_MEM_CAP_GB bounds the flow container's cgroup (see stage_mem_cap)
     # OOM-IN-CONTAINER (drive-1010 2026-10-10): the container's own processes (openroad / yosys) get the loop stage's +500
     # too; at 0 the kernel killed ~20 tiny +500 wrappers first (AGIdock 05:17-05:21) before reaching the 17 GB openroad.
     # The host probe still lowers die containers to -900 after start.
-    if [ "${1:-}" = run ]; then shift; exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} --oom-score-adj ${OT_OOM_SCORE_ADJ:-500} -e LEC_CHECK=0 -e OT_IOREF_INPUT_PF -e OT_ABC_NO_DCH -e OT_HOLD_STOP -e OT_SLIVER_BLOCK -e OT_EDGE_SLIVER_UM "$@"; fi
+    if [ "${1:-}" = run ]; then shift; exec "$e/docker" run ${OT_MEM_CAP_GB:+--memory ${OT_MEM_CAP_GB}g --memory-swap ${OT_MEM_CAP_GB}g} --oom-score-adj ${OT_OOM_SCORE_ADJ:-500} -e LEC_CHECK=0 -e OT_IOREF_INPUT_PF -e OT_ABC_NO_DCH -e OT_HOLD_STOP -e OT_SLIVER_BLOCK -e OT_EDGE_SLIVER_UM -e OT_CTS_MACRO_CLUSTER -e OT_CTS_MACRO_SIZE -e OT_CTS_MACRO_DIAM "$@"; fi
     exec "$e/docker" "$@"
   fi
 done
@@ -1988,10 +2731,11 @@ def snapshot_refresh_sh(run):
 def fp_lint_env(j, t, lint=True, prg=False):
     run, d = j["run"], f"{j['run']}/cl/fplint/{t}"
     env = (f"ship_fpl() {{ for f in fp_margin_lint.py fp_margin_lint.tcl orfs_hold_mm.py orfs_hold_mm.tcl "
-           f"preroute_gate.py preroute_gate.tcl; do "
+           f"preroute_gate.py preroute_gate.tcl textbook_lint.py; do "
            f"[ -f {run}/cl/$f ] && [ -d {run}/src/tools ] && cp -f {run}/cl/$f {run}/src/tools/$f; done; "
            f"{snapshot_refresh_sh(run)}true; }}\nship_fpl\n"
-           f"rm -rf {d} && mkdir -p {d} && chmod a+rwx {d}\nexport OT_FP_LINT_DIR={d}\n")
+           f"rm -rf {d} && mkdir -p {d} && chmod a+rwx {d}\nexport OT_FP_LINT_DIR={d}\n"
+           f"printf '%s\\n' {shlex.quote(json.dumps(textbook_cfg(j)))} > {d}/textbook_cfg.json\n")
     if lint:
         env += (f"export OT_FP_LINT=1 OT_FP_LINT_DIR={d} "
                 f"OT_FP_LINT_ARGS={shlex.quote(gate_args(j['spec'].get('fp_lint', True)))}\n")
@@ -1999,6 +2743,60 @@ def fp_lint_env(j, t, lint=True, prg=False):
         env += (f"export OT_PREROUTE_GATE=1 "
                 f"OT_PREROUTE_GATE_ARGS={shlex.quote(gate_args(j['spec'].get('preroute_gate', True)))}\n")
     return env
+
+
+# TEXTBOOK-LINT (owner 2026-10-11, tools/textbook_lint.py): classic unclosable structures (clock root size, high fanout,
+# unregistered boundaries, logic depth, wire reach, util / channels) checked on the synthesis netlist + floorplan inside
+# the floorplan-lint hook (fp_margin_lint.tcl ot_textbook_lint, ORFS PRE GLOBAL_PLACE).  Config per stage in
+# {CL}/fplint/<tag>/textbook_cfg.json (mounted /ot_fplint): mode from spec "textbook_lint" (false = off, {"mode",
+# "set", "waive"}), else STATE/textbook_lint.json {"mode": "warn"|"refuse", "refuse_checks": [...]} (main flips it to
+# refuse without a restart), else WARN.  WARN: the lines are logged to the job events + daemon log (textbook_note);
+# REFUSE: the hook writes FAIL "FLOORPLAN_MARGIN: textbook_lint: ..." and the job finishes FLOORPLAN_MARGIN as for the
+# floorplan lint (no placement / route spent).
+TEXTBOOK_NOTE_S = 600
+
+
+def textbook_cfg(j):
+    try:
+        cfg = json.loads((STATE / "textbook_lint.json").read_text())
+    except (OSError, ValueError):
+        cfg = {}
+    cfg = {"mode": cfg.get("mode", "warn"), **({"refuse_checks": cfg["refuse_checks"]} if cfg.get("refuse_checks") else {})}
+    sp = j["spec"].get("textbook_lint", True)
+    if sp is False:
+        cfg["mode"] = "off"
+    elif isinstance(sp, dict):
+        cfg.update({k: sp[k] for k in ("mode", "set", "waive", "refuse_checks") if k in sp})
+    cr = j.get("clock_rule")
+    if isinstance(cr, dict):     # measured clock rule: only jobs ingested under it (never an older in-flight job)
+        cfg["clock"] = {"enforce": cr.get("mode") == "refuse" and bool(j["spec"].get("ref_tile")),
+                        "evidence": cr.get("evidence"), "closed_stands": bool(cr.get("closed_stands"))}
+    return cfg
+
+
+def textbook_note(j, force=False):
+    """log the in-flow textbook lint's result for the current stage once (job event + daemon log)"""
+    tag_ = j.get("stage_tag")
+    if not tag_ or not j.get("host") or not j.get("run"):
+        return
+    seen = j.setdefault("textbook_seen", {})
+    if tag_ in seen or (not force and time.time() - j.get("textbook_checked", 0) < TEXTBOOK_NOTE_S):
+        return
+    j["textbook_checked"] = time.time()
+    try:
+        r = ssh(j["host"], f"cat {j['run']}/cl/fplint/{tag_}/TEXTBOOK 2>/dev/null", timeout=60)
+    except Exception:  # noqa: BLE001
+        return
+    lines = [l for l in (r.stdout or "").splitlines() if l.startswith(("textbook_lint:", "TEXTBOOK_LINT:"))]
+    if r.returncode or not lines:
+        return
+    seen[tag_] = lines[0][len("textbook_lint: "):][:120]
+    j["textbook_lint"] = {"tag": tag_, "lines": lines[:12]}
+    head = lines[0]
+    if len(lines) > 1:
+        event(j, f"TEXTBOOK-LINT {tag_}: {head[15:200]} || " + " || ".join(l[15:400] for l in lines[1:8])[:1800])
+    else:
+        event(j, f"TEXTBOOK-LINT {tag_}: {head[15:300]}")
 
 
 def fp_lint_failed(host, run, tag):
@@ -2044,7 +2842,10 @@ def fp_lint_finish(j, tag, text):
            f"report {j['run']}/cl/fplint/{tag}/fp_margin_lint.json)\n" +
            "\n".join(l for l in text.splitlines() if l.startswith("fp_margin_lint:"))[:1500] +
            "\nFIX (REDESIGN_RULES 'floorplan margin targets'): <= 55-60% util, <= 6 bits/um/layer, PDN-clear pin "
-           "columns, channels sized to the crossing nets; spec fp_lint:false opts out")
+           "columns, channels sized to the crossing nets; spec fp_lint:false opts out" +
+           ("\nTEXTBOOK: the textbook lint refused a classic unclosable structure (report "
+            f"{j['run']}/cl/fplint/{tag}/textbook_lint.json; tools/closure_loop/README.md 'Textbook lint'): restructure "
+            "it; spec textbook_lint: {\"waive\": [\"<check>\"]} waives one check" if "textbook_lint" in reasons else ""))
 
 
 # MEM-CAP (drive-0849 2026-10-09, coordinator URGENT "die routes SIGKILLed"): both full-die Qwen r22k GRTs (EPYC3
@@ -2065,6 +2866,33 @@ def stage_mem_cap(j, st):
     return max(MEM_CAP_FACTOR * ram, ram + MEM_CAP_SLACK_GB)
 
 
+# Bench source copy (el1013-fleet3 2026-10-13): 'cp -a --reflink=auto' of {run}/src was a FULL second copy on the ext4
+# run roots (no reflink): 4.9 GB and ~25 s per job at main, 4.0 GB of it closed .lib/.lef views.  Files that mirror_sync
+# hard-linked from the host view store (0444, link count > 1) are hard-linked into the private copy as well; everything
+# else is copied as before.  Benches build inside the private tree and never rewrite a closed view; one that tries gets
+# EACCES instead of silently changing every other job's view.  A src without store links is copied whole, as before.
+_VIEW_FIND = r"-type f -links +1 -perm 444 \( -name '*.lib' -o -name '*.lef' \)"
+
+
+def bench_copy_script(original, private):
+    """shell lines making {private} from {original} under a lock (both already shell-quoted)"""
+    return (f"exec 9>{private}.lock || exit $?\nflock 9 || exit $?\n"
+            f"if [ ! -d {private} ]; then\n"
+            f"  rm -rf {private}.tmp\n"
+            f"  if [ -n \"$(cd {original} && find . {_VIEW_FIND} -print -quit)\" ]; then\n"
+            f"    mkdir {private}.tmp || exit $?\n"
+            f"    ( cd {original} && find . ! \\( {_VIEW_FIND} \\) -print0 | tar --null --no-recursion -T - -cf - ) | "
+            f"tar -xf - -C {private}.tmp || exit $?\n"
+            f"    ( cd {original} && find . {_VIEW_FIND} -print0 | xargs -0 -r sh -c "
+            f"'cp -al --parents -t \"$0\" \"$@\" 2>/dev/null || cp -a --parents -t \"$0\" \"$@\"' {private}.tmp ) || exit $?\n"
+            f"  else\n"
+            f"    cp -a --reflink=auto {original} {private}.tmp || exit $?\n"
+            f"  fi\n"
+            f"  mv {private}.tmp {private} || exit $?\nfi\n"
+            f"flock -u 9; exec 9>&-\n"
+            f"cd {private} || exit $?\n")
+
+
 def launch_stage(j, st, cmd):
     t = tag(st, j)
     if st["kind"] == "bench":
@@ -2083,6 +2911,40 @@ def launch_stage(j, st, cmd):
     # yosys that took the EPYC1 die GRT was one.  Every loop stage raises its own oom_score_adj (inherited by its
     # children; non-root may raise it) so a host OOM picks a loop stage, never a die run (-900) or an interactive job.
     env += f"echo {STAGE_OOM_SCORE_ADJ} > /proc/self/oom_score_adj 2>/dev/null || true\n"
+    if st["kind"] == "bench":
+        # Benches use the fleet's pinned tools (Verilator 5.050, yosys 0.68), the same ones every agent gate runs
+        # under. The non-login ssh PATH picked Debian /usr/bin/verilator 5.032, so loop benches disagreed with the
+        # gates (s81vm-*-e66305b64: gold_s1 PASS under 5.050, FAIL under 5.032 on identical sources).
+        env += ('for _d in "$HOME/.local/opentallas-tools/verilator-5.050/bin" "$HOME/.local/opentallas-tools/yosys-0.68/bin"; '
+                'do [ -d "$_d" ] && export PATH="$_d:$PATH"; done\n')
+    if st["kind"] != "bench" and j["spec"].get("ref_tile"):
+        # LOOP-CHILD-LINT (2026-10-12): ref_tile.py export (collect / hold-ECO re-export) imports child_lint from the job's
+        # synced src, so a job synced before a child_lint fix (888b49460 EDGE_INSET_UM: thin tiles' edge-inset PG stripes)
+        # kept failing export on a lint bug, and every retry re-synced the old commit.  The lint is the loop's gate, not
+        # the design: run the loop's own child_lint (CHILD_LINT_DIR, shipped to {CL}); the job's views stay the input.
+        ship_helpers(j["host"], j["run"], j)
+        _src = j.get("stage_source", f"{j['run']}/src")
+        env += (f"[ -f {_src}/tools/hier_contract/child_lint.py ] && ! [ -f {_src}/tools/hier_contract/child_lint.py.job ] && "
+                f"cp {_src}/tools/hier_contract/child_lint.py {_src}/tools/hier_contract/child_lint.py.job; "
+                f"cp -f {j['run']}/cl/child_lint.py {_src}/tools/hier_contract/child_lint.py; "
+                f"cp -f {j['run']}/cl/m6_pin_grant.py {_src}/tools/hier_contract/m6_pin_grant.py\n")
+        # LOOP-PIN-STUB (2026-10-12): the loop's child_lint (ba4d5d136) refuses a pin's own same-layer route stub written as
+        # OBS; ref_tile export runs abstract_pin_stub.py on the view before the lint, but only from ba4d5d136 on.  A job
+        # synced earlier got the new lint WITHOUT the view fix (smh_fcbc_ref_p40-r1-9214bae8b: 10 stub pins, collect
+        # crashed twice on a route that closed).  The fix and the lint travel together: ship abstract_pin_stub.py (it also
+        # writes atomically now: the exported LEF is root-owned) and add the pre-lint call to a stale ref_tile.py export.
+        env += (f"cp -f {j['run']}/cl/abstract_pin_stub.py {_src}/tools/hier_contract/abstract_pin_stub.py; "
+                f"python3 - {_src}/tools/ref_tile/ref_tile.py <<'OT_PINSTUB_PATCH' || true\n{PINSTUB_PATCH}OT_PINSTUB_PATCH\n")
+        # EXPORT-SDC (2026-10-13): the view export replays the VERDICT's constraint sequence (routed 6_final.sdc, SPEF,
+        # post-SDCs, io_ref_routed.sdc) and fails on a slack that differs from the verdict; a job's synced view_export.py
+        # read the kit signoff.sdc INSTEAD of the routed SDC (s81su SMT: FF -19.69 exported vs +3.66 verdict).  The
+        # export is the loop's publish step, not the design: every ref_tile collect / re-export runs the loop's copy.
+        env += (f"[ -d {_src}/tools/tt_views ] && cp -f {j['run']}/cl/view_export.py {_src}/tools/tt_views/view_export.py; true\n")
+        # GRT-TOP-RESTORE (2026-10-12): grt_macro_top_layer.tcl (d36d0b234) left the block's max routing layer at MAX+1 in
+        # 5_1_grt.odb, so DRT routed M6 under the M5 cap (hgi_topk_heap_rt_m5-h3m5-6d8d554ba: 190 um M6, child_lint (c)
+        # FAIL at collect).  Jobs synced before the fix get the fixed hook + its POST_GLOBAL_ROUTE restore.
+        env += (f"[ -f {_src}/physical/common_flow/grt_macro_top_layer.tcl ] && for f in grt_macro_top_layer.tcl "
+                f"grt_macro_top_layer_post.tcl; do cp -f {j['run']}/cl/$f {_src}/physical/common_flow/$f; done; true\n")
     if st["kind"] != "bench":
         env += docker_lec_off(f"{j['run']}/cl")
         cap = stage_mem_cap(j, st)
@@ -2091,13 +2953,13 @@ def launch_stage(j, st, cmd):
     fpl = st["kind"] in ("calibrate", "route") and j["spec"].get("fp_lint", True) is not False
     prg = preroute_gate_on(j, st["kind"])
     if fpl or prg:
-        ship_helpers(j["host"], j["run"])
+        ship_helpers(j["host"], j["run"], j)
         env += fp_lint_env(j, t, lint=fpl, prg=prg)
     if st["kind"] == "calibrate":
         # UNSTICK (owner 2026-10-08): calibrate measures clock insertion only.  No CTS timing/hold repair
         # (SKIP_CTS_REPAIR_TIMING=1 through hold_corners_patch.py OT_CAL_CTS_ONLY): 40 calibrates sat 4-25 h in CTS hold
         # repair (mm, HM 50) measuring nothing.  Applied to every calibrate, whatever its route_hold_corners.
-        ship_helpers(j["host"], j["run"])
+        ship_helpers(j["host"], j["run"], j)
         env += f"export OT_CAL_CTS_ONLY=1\npython3 {j['run']}/cl/hold_corners_patch.py {j['run']}/src\n"
         if route_ref(j):
             # CALIB-CORNER: CTS at the route corner, insertion referenced to it (ck_insertion.py --route-corner)
@@ -2107,7 +2969,7 @@ def launch_stage(j, st, cmd):
         if j["spec"].get("pinflop_ref", True) is not False:
             # PINFLOP-REF (drive-0849 2026-10-10): route-time IO reference = median input pin flop when no / an unmatched
             # REFGLOB names one (main 6cd79a9f8); overlaid on the snapshot so requeues of older commits get it too
-            ship_helpers(j["host"], j["run"])
+            ship_helpers(j["host"], j["run"], j)
             env += (f"python3 {j['run']}/cl/pinflop_overlay.py {j.get('stage_source', j['run'] + '/src')} "
                     f"{j['run']}/cl/pinflop_ref.tcl || true\n")
             # PINFLOP-INPUT (drive-0849 2026-10-10): the route-time FF hold scene's io_ref_routed.sdc re-references the
@@ -2115,11 +2977,16 @@ def launch_stage(j, st, cmd):
             # recipes); the verdict re-STA and ECO sessions never see this variable
             env += "export OT_IOREF_INPUT_PF=1\n"
             j["pinflop_ref_applied"] = True       # LOOP-AUTO class c: this job's route used the pin-flop reference
+        if j["spec"].get("macro_cts") is False:
+            # MACRO-CLK (macro-clk-1010 2026-10-10): the macro clock clustering default (physical/common_flow/
+            # macro_cts_cluster.tcl via tools/orfs_hold_mm.tcl) is on for every block with 2+ clocked macros; spec
+            # "macro_cts": false keeps TritonCTS's own macro clustering
+            env += "export OT_CTS_MACRO_CLUSTER=0\n"
         if j["spec"].get("sliver_block"):
             # LOOP-AUTO class d (auto-react successor of a sliver-only FLOORPLAN_MARGIN): the macro-to-macro and
             # macro-to-core-edge sliver hard placement blockages run at ORFS PRE GLOBAL_PLACE, before the floorplan lint
             # (tools/orfs_hold_mm.py SLV_CODE); main's hook scripts are shipped into snapshots that predate them
-            ship_helpers(j["host"], j["run"])
+            ship_helpers(j["host"], j["run"], j)
             sdir = f"{j.get('stage_source', j['run'] + '/src')}/physical/common_flow"
             env += (f"mkdir -p {sdir} && for f in macro_sliver_block.tcl edge_sliver_block.tcl; do "
                     f"[ -f {sdir}/$f ] || cp {j['run']}/cl/$f {sdir}/$f; done\nexport OT_SLIVER_BLOCK=1\n")
@@ -2157,7 +3024,7 @@ def launch_stage(j, st, cmd):
         # the snapshot is copied into {SRC}/.ot_mm/ (the flow container mounts only the snapshot).
         rhc = j["spec"].get("route_hold_corners", "mm" if j.get("created", "") >= MM_SINCE else "primary")
         if rhc != "keep":
-            ship_helpers(j["host"], j["run"])
+            ship_helpers(j["host"], j["run"], j)
             env += f"export OT_ROUTE_HOLD_CORNERS={shlex.quote(str(rhc))}\n" \
                    f"python3 {j['run']}/cl/hold_corners_patch.py {j['run']}/src\n"
         if rhc == "mm":
@@ -2225,11 +3092,11 @@ def launch_stage(j, st, cmd):
     if st["kind"] == "bench":
         private = shlex.quote(j["stage_source"])
         original = shlex.quote(f"{j['run']}/src")
-        env += (f"if [ ! -d {private} ]; then\n"
-                f"  test ! -e {private}.tmp || exit 9\n"
-                f"  cp -a --reflink=auto {original} {private}.tmp || exit $?\n"
-                f"  mv {private}.tmp {private} || exit $?\nfi\n"
-                f"cd {private} || exit $?\n")
+        # Parallel bench stages of one attempt share the private copy: serialise the copy with a lock instead of
+        # refusing on an existing .tmp.  A copy that died (ENOSPC on AGIdock, hfd_lk_ep-b46a972cd-cc 10-11) left a
+        # stale .tmp that made every retry exit 9 (NEEDS_RTL with no bench run); under the lock a leftover .tmp is
+        # always stale, so it is removed and the copy redone.
+        env += bench_copy_script(original, private)
         # A few legacy recipes spell {RUN}/src instead of using {SRC}.
         cmd = cmd.replace("{RUN}/src", "{SRC}")
     if st["kind"] == "route" and (j.get("ctrack") or {}).get("sdc_cmd"):
@@ -2353,9 +3220,15 @@ def get_metrics(j, tt_resta=True):
             raise RuntimeError(f"verdict metrics_cmd produced no JSON (command failed rc={r.returncode}): "
                                f"{(r.stderr or r.stdout).strip()[-300:]}")
         m = json.loads(last[-1]) if last else {}
-        return dict(ss_ps=m.get("ss_ps"), ff_ps=m.get("ff_ps"), drc=m.get("drc"), orfs_dir=m.get("orfs_dir"),
-                    setup_corner=m.get("setup_corner"), clock_periods_ps=m.get("clock_periods_ps"),
-                    ss_sensitivity_ps=m.get("ss_sensitivity_ps"), raw=m)
+        out = dict(ss_ps=m.get("ss_ps"), ff_ps=m.get("ff_ps"), drc=m.get("drc"), orfs_dir=m.get("orfs_dir"),
+                   setup_corner=m.get("setup_corner"), clock_periods_ps=m.get("clock_periods_ps"),
+                   ss_sensitivity_ps=m.get("ss_sensitivity_ps"), raw=m)
+        # The post-route hold ECO / re-STA paths read these from the metrics; a custom metrics_cmd that reports them
+        # must not lose them here (W2 station jobs went NEEDS_RTL with no hold ECO ever attempted, el1011-hbm-no3 10-11).
+        for k in ("drc_metrics", "corner_sta", "post_sdc"):
+            if m.get(k) is not None:
+                out[k] = m[k]
+        return out
     py = r"""
 import glob,json,sys,re
 cs=sorted(glob.glob(sys.argv[1])); dm=sorted(glob.glob(sys.argv[2])) if sys.argv[2] else []
@@ -2389,7 +3262,7 @@ print(json.dumps(o))
         m = {"error": (r.stdout + r.stderr)[-400:]}
     if m.get("need_tt") and tt_resta and m.get("orfs_dir") and not m.get("error"):
         with TT_STA_SLOTS:          # TT re-STA of an existing route (option B), at most a few at once fleet-wide
-            ship_helpers(j["host"], j["run"])
+            ship_helpers(j["host"], j["run"], j)
             ssh(j["host"], f"bash {j['run']}/cl/tt_resta.sh {shlex.quote(m['orfs_dir'])} {j['run']}/src "
                            f"{shlex.quote(m['corner_sta_tt'])}", timeout=6000)
         event(j, "option B: TT setup re-STA of the existing route")
@@ -2456,8 +3329,8 @@ def defer_record_merge(j, out, sparse, dry=False):
 
 # AUTO-MERGE (owner 2026-10-10, drive-1010): closures keep reaching main while no agent is alive.  With
 # STATE/main_publish_owner.json {"auto_merge_guarded": true}, a CLOSED job is merged into main by the loop when
-#   - its source branch is claude/*  (Codex / other branches stay with a human),
-#   - its loop benches all ended as expected (every positive PASS, every negative FAIL; at least one bench),
+#   - its source branch is claude/* or codex/* (other namespaces stay with a coordinator),
+#   - its loop benches all ended as expected (every positive PASS, every negative FAIL; behavioral positive and mutant required),
 #   - its spec does not opt out ("auto_merge": false, or "hold_merge": "<reason>"),
 #   - the merge of the VERIFIED source commit (commit_full, not the branch tip) into origin/main is clean, and the
 #     record files (verdict + recorded views) come from the record commit on top.
@@ -2487,8 +3360,8 @@ def auto_merge_guard(j):
     hit = next((h for h in holds if str(spec.get('block', '')).startswith(h) or j['name'].startswith(h)), None)
     if hit:
         return f"held by policy prefix {hit} (gate outside the loop benches)"
-    if not str(spec['source'].get('branch', '')).startswith('claude/'):
-        return f"source branch {spec['source'].get('branch')} is not claude/*"
+    if not str(spec['source'].get('branch', '')).startswith(('claude/', 'codex/')):
+        return f"source branch {spec['source'].get('branch')} is not claude/* or codex/*"
     benches = j.get('benches') or {}
     try:
         waive = json.loads((STATE / 'main_publish_owner.json').read_text()).get('auto_merge_external_bench_prefixes') or []
@@ -2501,8 +3374,14 @@ def auto_merge_guard(j):
     bad = [k for k, v in benches.items() if not (isinstance(v, dict) and v.get('ok') is True)]
     if bad:
         return f"benches not as expected: {', '.join(bad[:4])}"
-    if not any(isinstance(v, dict) and v.get('expect') == 'pass' for v in benches.values()):
-        return "no positive bench"
+    gap = bench_evidence_gap({k: v.get('expect') for k, v in benches.items()})    # the submit gate's own definition
+    if gap:
+        return gap
+    if spec.get('benched_by'):
+        want = [bench_key(n) for n in gate_bench_names(spec['benched_by'])]
+        lost = [k for k in want if k not in benches]
+        if not want or lost:
+            return f"benched_by {spec['benched_by']}: composition gate benches did not run ({', '.join(lost[:4]) or 'unknown gate'})"
     if not j.get('commit_full'):
         return "no verified source commit"
     return None
@@ -2511,6 +3390,8 @@ def auto_merge_guard(j):
 def auto_merge_closure(j, out, record_paths, dry=False):
     """merge commit_full + the record files into main (clean merges only); returns a status string"""
     why = auto_merge_guard(j)
+    attribution = ("Coordinated by: Codex" if str(j["spec"]["source"].get("branch", "")).startswith("codex/")
+                   else "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>")
     if why:
         if why != "auto-merge policy off":
             append_locked(AUTO_MERGE_PENDING, f"- {now_iso()} {j['name']} ({j['spec'].get('block')}): AUTO-MERGE skipped: {why}; "
@@ -2528,7 +3409,7 @@ def auto_merge_closure(j, out, record_paths, dry=False):
             m = sh(["git", "-C", str(mwt), "-c", "user.name=OpenTallas closure-loop", "-c", "user.email=boj@01.me",
                     "merge", "--no-ff", "--no-edit", "-m",
                     f"Merge {j['spec']['source']['branch']} @ {j['commit_full'][:9]} (closure-loop AUTO-MERGE {j['name']}: "
-                    f"{j['spec']['block']} CLOSED, benches as expected)\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+                    f"{j['spec']['block']} CLOSED, benches as expected)\n\n{attribution}",
                     j['commit_full']], timeout=1800)
             if m.returncode:
                 conf = sh(["git", "-C", str(mwt), "diff", "--name-only", "--diff-filter=U"], timeout=120).stdout.split()
@@ -2543,7 +3424,7 @@ def auto_merge_closure(j, out, record_paths, dry=False):
         if sh(["git", "-C", str(mwt), "diff", "--cached", "--quiet"], timeout=120).returncode:
             git("-c", "user.name=OpenTallas closure-loop", "-c", "user.email=boj@01.me", "commit", "-q", "-m",
                 f"closure-loop AUTO-MERGE record {j['name']} ({j['spec']['block']} CLOSED)\n\n"
-                f"Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>", cwd=mwt)
+                f"{attribution}", cwd=mwt)
         head = git("rev-parse", "HEAD", cwd=mwt).stdout.strip()
         if dry:
             status = f"AUTO-MERGE dry-run {head[:9]} (not pushed)"
@@ -2635,6 +3516,9 @@ def schedule_deferred_record_merges():
         _DEFERRED_MERGE_FUTURE = _DEFERRED_MERGE_POOL.submit(retry_deferred_record_merges)
 
 
+RECORD_MAX_FILE_BYTES = 90 << 20
+
+
 def publish(j, metrics):
     """Commit record + view on the job branch (explicit paths), trial-merge into merge_target, push."""
     spec = j["spec"]
@@ -2656,6 +3540,7 @@ def publish(j, metrics):
                 base = source_branch
         gfetch(base, timeout=600)
         wt_add(cwt, f"origin/{base}", sparse)
+        big_remote = []
         for r in spec.get("record", []):
             src = subst(r["from"], j)
             dst = cwt / r["to"]
@@ -2666,10 +3551,30 @@ def publish(j, metrics):
                 remote_shell = [] if is_local(j['host']) else ["-e", shlex.join(base[:-1])]
                 if isdir:
                     dst.mkdir(parents=True, exist_ok=True)
-                    sh(["rsync", "-a", *remote_shell, *excl, rpath(j['host'], src.rstrip('/') + '/'), f"{dst}/"], timeout=1800, check=True)
+                    # never pull files git cannot take: a 3.9 GB record (hbm_vm8bfq_nwe lvt, 10-11) held the single-threaded
+                    # daemon in one rsync at ~0.25 MB/s and stopped all intake; oversized files stay on the run host
+                    sh(["rsync", "-a", f"--max-size={RECORD_MAX_FILE_BYTES}", *remote_shell, *excl,
+                        rpath(j['host'], src.rstrip('/') + '/'), f"{dst}/"], timeout=1800, check=True)
+                    r_big = ssh(j["host"], f"find {shlex.quote(src.rstrip('/'))} -type f -size +{RECORD_MAX_FILE_BYTES // 1024}k "
+                                           f"-printf '%P %s\\n' 2>/dev/null | head -200", timeout=60)
+                    for ln in (r_big.stdout or "").splitlines():
+                        if ln.strip():
+                            big_remote.append(f"{r['to']}/{ln.split()[0]} {ln.split()[-1]} B (kept on {j['host']}:{src})")
                 else:
                     sh(["rsync", "-a", *remote_shell, rpath(j['host'], src), str(dst)], timeout=1800, check=True)
+        # GitHub rejects files > 100 MB (pre-receive hook): drop oversized record files (they stay on the run host) and
+        # list them, so one huge route artefact can never wedge the publish loop.
+        big = list(big_remote)
+        for r in spec.get("record", []):
+            d = cwt / r["to"]
+            for f in ([d] if d.is_file() else (d.rglob("*") if d.is_dir() else [])):
+                if f.is_file() and f.stat().st_size > RECORD_MAX_FILE_BYTES:
+                    big.append(f"{f.relative_to(cwt)} {f.stat().st_size} B (kept on {j['host']}:{j['run']})")
+                    f.unlink()
         (cwt / rec_dir).mkdir(parents=True, exist_ok=True)
+        if big:
+            (cwt / rec_dir / "LARGE_FILES_EXCLUDED.txt").write_text("\n".join(big) + "\n")
+            log(f"[{j['name']}] record: {len(big)} file(s) > {RECORD_MAX_FILE_BYTES >> 20} MB left out of git")
         verdict = dict(schema="opentallas.closure_loop.verdict.v1", job=j["name"], block=spec["block"],
                        owner=spec["owner"], source_branch=source_branch, record_branch=branch, source_commit=j["commit_full"],
                        host=j["host"], run_dir=j["run"], acceptance=dict(setup_corner=setup_corner_label(metrics), setup_min_ps=SS_MIN, ff_min_ps=FF_MIN, drc=0, clock_periods_ps=metrics.get("clock_periods_ps"),
@@ -2678,7 +3583,7 @@ def publish(j, metrics):
                        metrics={k: metrics.get(k) for k in ("ss_ps", "ff_ps", "drc", "ss_tns_ps", "clock_periods_ps", "setup_corner", "ss_sensitivity_ps", "ss_sensitivity_tns_ps", "corner_sta_tt", "post_sdc", "corner_sta",
                                                             "drc_metrics", "drc_skipped")},
                        benches=j.get("benches", {}), no_bench_reason=spec.get("no_bench_reason"),
-                       checks=j.get("checks", {}), calibration=j.get("calibration"), cycles_added=spec.get("cycles_added"), status="CLOSED",
+                       checks=j.get("checks", {}), submit_checks=j.get("submit_checks"), calibration=j.get("calibration"), route_overlay_plan=j.get("route_overlay_plan"), cycles_added=spec.get("cycles_added"), status="CLOSED",
                        closed_at=now_iso(), job_spec=spec, io_budget=(j.get("rebudget") or {}).get("rb") or "link_budget_consistent (fixed split)",
                        rebudget=j.get("rebudget"))
         (cwt / rec_dir / "verdict.json").write_text(json.dumps(verdict, indent=1) + "\n")
@@ -2741,7 +3646,7 @@ def write_status(fleet_note="", fleet=None):
          f"Active {len(act)} | terminal {len(rows) - len(act)} | ledger {LEDGER} | how-to {REVIEW}/CLOSURE_LOOP_HOWTO.md",
          fleet_note, "", "## Active"]
     for r in act:
-        h = host_cfg(r["host"])["label"] if r.get("host") else "-"
+        h = host_label(r.get("host"))
         stage = r.get("stage_key", "-")
         if r["status"] == "READY":
             stages = stage_list(r["spec"])
@@ -2789,10 +3694,96 @@ def finish(j, status, reason, ledger_text):
     j["status"], j["reason"] = status, reason
     j["finished_at"] = now_iso()       # LOOP-AUTO: the auto-react / READY_NEXT pass judges each finish once
     event(j, f"{status}: {reason}")
+    if j.get("structure_exempt") and status not in ("CANCELLED", "REFUSED", "INVALID"):
+        ledger_text = f"{ledger_text}\n[structure-repeat {j['structure_exempt']}]"    # the exemption is in the verdict
+        event(j, f"verdict note: structure-repeat {j['structure_exempt']}")
     ledger(j, ledger_text)
     term = {"CLOSED": "completed: CLOSED", "NEEDS_RTL": "failed: NEEDS_RTL", "NEEDS_HUMAN": "failed: NEEDS_HUMAN",
             "NEEDS_BUDGET": "failed: NEEDS_BUDGET", "CANCELLED": "cancelled"}.get(status, "stopped: " + status)
     experiment(j, f"{term} {reason[:120]}")
+    if status == "CLOSED":
+        try:
+            cancel_queued_siblings(j)
+        except Exception:  # noqa: BLE001
+            log(f"[{j['name']}] sibling cancel error:\n{traceback.format_exc()}")
+        viz_elem_export(j)
+        os.environ.get("CL_CLOSED_ARCHIVE", "1") != "0" and os.path.exists(CLOSED_ARCHIVE_HOOK) and os.system(f"setsid -f {CLOSED_ARCHIVE_HOOK} {shlex.quote(j['name'])} >/dev/null 2>&1 </dev/null")  # closed-archive-1011
+
+
+# SIBLING CANCEL (2026-10-13 finishing recipe: route up to 3 variants in parallel, take the first that closes).  When a
+# job CLOSES, every other job of the same block@commit that has not launched its route (QUEUED / SYNC / READY, no route
+# key taken; a bench track still running ends on its own) is CANCELLED with reason "sibling <name> CLOSED".  Running siblings are
+# left to finish; their data goes as superseded (release_bulk / release_deep: the block is closed).
+def cancel_queued_siblings(j):
+    spec = j["spec"]
+    block, commit = spec.get("block"), str((spec.get("source") or {}).get("commit") or "")[:12]
+    if not block or not commit:
+        return []
+    held = route_keys().get(f"{block}@{commit}", [])
+    out = []
+    for x in all_jobs():
+        xs = x["spec"]
+        if (x["name"] == j["name"] or x["status"] not in ("QUEUED", "SYNC", "READY") or xs.get("block") != block
+                or str((xs.get("source") or {}).get("commit") or "")[:12] != commit or x["name"] in held):
+            continue
+        with job_lock(x["name"]):
+            y = load_job(x["name"])
+            if y["status"] not in ("QUEUED", "SYNC", "READY"):      # RUNNING is the only status with a live stage
+                continue
+            y.update(status="CANCELLED", reason=f"sibling {j['name']} CLOSED", cancelled_at=now_iso())
+            y["finished_at"] = y["cancelled_at"]
+            event(y, f"CANCELLED: sibling {j['name']} CLOSED ({block}@{commit}); route never launched")
+            ledger(y, f"CANCELLED (loop): sibling {j['name']} CLOSED the block at the same commit; no route spent")
+            save_job(y)
+            out.append(y["name"])
+    if out:
+        event(j, f"queued siblings cancelled: {', '.join(out)}")
+    return out
+
+
+# VIZ-ELEM (owner 2026-10-10, viz-elem-1010): every CLOSED job gets its Chip Explorer element page.  finish() starts
+# tools/explorer_elem_export.py auto --job <name> detached (own session, nice 19; the heavy OpenROAD export runs on the
+# job's host under ot-heavy), so a closure never waits on it and an exporter failure only lands in its marker
+# ~/.local/state/viz-elem/<job>.json and VIZ_ELEM_LOG.  Deep release keeps the run dir while the marker says running.
+# CL_VIZ_ELEM=0 disables.  Backlog / retries: explorer_elem_export.py batch.
+VIZ_ELEM_MARKS = Path.home() / ".local/state/viz-elem"
+CLOSED_ARCHIVE_HOOK = "/home/ubuntu/closed_archive/_tools/hook.sh"   # closed-archive-1011: archives every CLOSED job's final files
+VIZ_ELEM_LOG = STATE / "viz_elem.log"
+
+
+def viz_elem_export(j):
+    if os.environ.get("CL_VIZ_ELEM", "1") == "0" or not j.get("host") or not j.get("run"):
+        return
+    tool = HERE.parent / "explorer_elem_export.py"
+    if not tool.exists():
+        return
+    try:
+        VIZ_ELEM_MARKS.mkdir(parents=True, exist_ok=True)
+        (VIZ_ELEM_MARKS / (j["name"] + ".json")).write_text(json.dumps(dict(state="running", queued_by="closure_loop",
+                                                                            updated=now_iso())))
+        with open(VIZ_ELEM_LOG, "a") as lg:
+            lg.write(f"{now_iso()} {j['name']}: export started\n")
+            lg.flush()
+            subprocess.Popen(["nice", "-n", "19", sys.executable, str(tool), "auto", "--job", j["name"]],
+                             stdout=lg, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL, start_new_session=True,
+                             env=dict(os.environ, CL_REPO=str(REPO)))
+        event(j, "viz-elem: element page export started (explorer_elem_export.py auto)")
+        if (lvh := Path.home() / ".local/share/fleet-viz/layout_viewer/lv_post_record.sh").exists(): subprocess.Popen([str(lvh), j["name"]], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)  # layout viewer static export (layout-viewer-1011)
+    except Exception as e:      # never into the caller
+        event(j, f"viz-elem: export not started ({type(e).__name__}: {str(e)[:120]})")
+
+
+def viz_elem_running(j):
+    try:
+        m = json.loads((VIZ_ELEM_MARKS / (j["name"] + ".json")).read_text())
+    except (OSError, ValueError):
+        return False
+    if m.get("state") != "running":
+        return False
+    try:                        # a marker older than 12 h is a dead exporter, not a live one
+        return (dt.datetime.now(dt.timezone.utc) - dt.datetime.fromisoformat(m.get("updated"))).total_seconds() < 12 * 3600
+    except (TypeError, ValueError):
+        return False
 
 
 def preserve_completed_route(j, st, why):
@@ -2933,6 +3924,11 @@ def first_error(j, st):
 
 
 def crash(j, st, fleet, why):
+    if st["kind"] in ("route", "calibrate"):
+        try:
+            textbook_note(j, force=True)
+        except Exception:  # noqa: BLE001
+            pass
     if preserve_completed_route(j, st, why):
         return
     if st["kind"] in ("calibrate", "route") and j.get("stage_tag") and j.get("host"):
@@ -3004,7 +4000,7 @@ def summarize_failure(j, fleet, metrics):
     if not fail_corners or (not base and not orfs):
         return False
     basearg = f"--base $(ls -d {base} | tail -1)" if base else f"--orfs-dir {orfs}"
-    extra = "".join(f" --macro {m}" for m in v.get("macros", [])) + \
+    extra = "".join(f" --macro {m}" for m in verdict_macros(j)) + \
         "".join(f" --post-sdc {p}" for p in v.get("post_sdc", []))
     cmd = (f"python3 {j['run']}/cl/path_summary.py {basearg} --src {j['run']}/src{extra} --corners "
            f"{','.join(fail_corners)} --output {j['run']}/cl/path_summary.json")
@@ -3022,6 +4018,9 @@ def failure_text(j):
     m = j.get("metrics", {})
     head = (f"NEEDS_RTL: {setup_corner_label(m)} {m.get('ss_ps')} / FF {m.get('ff_ps')} ps / DRC {m.get('drc')} "
             f"(line {setup_corner_label(m)} >= +{SS_MIN:g} / FF >= +{FF_MIN:g} / DRC 0){'; checks failed: ' + ', '.join(j['failed_checks']) if j.get('failed_checks') else ''}")
+    note = eco_miss_note(j)
+    if note:
+        head += "; " + note
     lines = [head]
     r = ssh(j["host"], f"cat {j['run']}/cl/path_summary.json 2>/dev/null", timeout=60)
     try:
@@ -3035,6 +4034,49 @@ def failure_text(j):
     except Exception:  # noqa: BLE001
         lines.append("(no path summary: timing passed or the summary failed; see the run dir)")
     return "\n".join(lines)
+
+
+# ECO-MISS IN THE VERDICT (2026-10-13 finishing recipe, item 4).  (i) a hold ECO whose passes all finished unclean
+# (hold_eco.sh rc=9, result.json = its least-bad pass) puts that pass's TT / FF / DRC into the NEEDS_RTL verdict instead
+# of "no result (rc=9)".  (ii) a layer-cap-leak refusal (rc=11: route wire above MAX_ROUTING_LAYER, the kit's GRT macro
+# hook left the top layer raised) says what happens next: one automatic re-route (auto-react class h), also for a kit
+# that predates dc5594311 (the loop copies the fixed grt_macro_top_layer*.tcl into every job snapshot; coordinator
+# 2026-10-13); a successor that leaks again says "regenerate the kit" and gets no further automatic route.
+GRT_CAP_FIX = "dc5594311"
+ECO_RC_LAYER_CAP = 11
+
+
+def kit_has_grt_cap_fix(j):
+    c = j.get("commit_full") or (j["spec"].get("source") or {}).get("commit")
+    if not c:
+        return False
+    try:
+        return sh(["git", "-C", str(REPO), "merge-base", "--is-ancestor", GRT_CAP_FIX, c], timeout=120).returncode == 0
+    except Exception:  # noqa: BLE001
+        return False
+
+
+def eco_layer_cap_refused(j):
+    return any((e or {}).get("rc") == ECO_RC_LAYER_CAP for e in [j.get("eco"), *(j.get("eco_history") or [])])
+
+
+def eco_miss_note(j):
+    e = j.get("eco") or {}
+    if e.get("rc") == ECO_RC_LAYER_CAP:
+        if j["spec"].get("auto_react_parent"):
+            nxt = ("second refusal after the automatic re-route: regenerate the kit (ref_tile.py env/job on current "
+                   "main); no further automatic route")
+        elif kit_has_grt_cap_fix(j):
+            nxt = "one automatic re-route with the current kit recipe follows (auto-react h)"
+        else:
+            nxt = (f"the kit predates {GRT_CAP_FIX}; one automatic re-route follows (auto-react h: the loop ships the "
+                   f"fixed grt_macro_top_layer*.tcl into the job snapshot)")
+        return f"hold ECO refused, route wire above its layer cap (rc=11); {nxt}"
+    res = e.get("result")
+    if isinstance(res, dict) and e.get("rc") not in (None, 0):
+        return (f"hold ECO missed (rc={e['rc']}): {'least-bad' if res.get('chosen') == 'least_bad' else 'best'} pass "
+                f"{res.get('pass')} TT {res.get('tt_ps', res.get('ss_ps'))} / FF {res.get('ff_ps')} ps / DRC {res.get('drc')}")
+    return None
 
 
 def job_held(j):
@@ -3069,6 +4111,25 @@ def yield_to_priority(j, fleet, host=None):
                                if fleet.compatible(h["name"], j["spec"]))
 
 
+def move_to_other_host(j, fleet, spec, stl, reason):
+    """move a job with nothing in flight to another allowed host (fleet.choose excluding the current one): claim the
+    target, re-sync there and restart from the calibrate stage.  Shared by launch_ready's capacity move and
+    handle_transient's ssh-failure move.  Returns True when moved."""
+    h, _ = fleet.choose(spec, exclude=[j["host"]])
+    if not h:
+        return False
+    fleet.launched(h, spec.get("threads", 16), claim_ram(spec), j["name"])  # 2026-10-08: claim, no herd moves
+    event(j, f"{reason}; moving to {host_cfg(h)['label']}")
+    j["hosts_tried"].append(h)
+    j["host"], j["run"], j["status"], j["wait"] = h, f"{host_cfg(h)['base']}/{j['name']}", "SYNC", None
+    j.pop("wait_since", None)
+    cal = next((i for i, x in enumerate(stl) if x["kind"] == "calibrate"), None)
+    if cal is not None and j.get("stage_idx", 0) > cal:
+        j["stage_idx"] = cal
+    experiment(j, f"running: moved to {host_cfg(h)['label']}")
+    return True
+
+
 def launch_ready(j, fleet, spec, stl, st):
     """READY at a remote stage: capacity check + reservation (caller holds FLEET_LOCK); returns the stage to launch
     OUTSIDE the lock (launch_now) or None."""
@@ -3085,16 +4146,7 @@ def launch_ready(j, fleet, spec, stl, st):
             j.setdefault("wait_since", time.time())
         if not ok and not checkpoint_location(j) and st["kind"] in ("calibrate", "route") and time.time() - j["wait_since"] >= 120:
             # nothing of this job is in flight: move it to another allowed host that fits now (re-sync, re-calibrate)
-            h, _ = fleet.choose(spec, exclude=[j["host"]])
-            if h:
-                fleet.launched(h, spec.get("threads", 16), spec.get("peak_ram_gb", 32), j["name"])  # 2026-10-08: claim, no herd moves
-                event(j, f"{st['key']} cannot start on {host_cfg(j['host'])['label']} ({why}); moving to {host_cfg(h)['label']}")
-                j["hosts_tried"].append(h)
-                j["host"], j["run"], j["status"], j["wait"] = h, f"{host_cfg(h)['base']}/{j['name']}", "SYNC", None
-                j.pop("wait_since", None)
-                cal = next((i for i, x in enumerate(stl) if x["kind"] == "calibrate"), None)
-                j["stage_idx"] = cal if cal is not None else j["stage_idx"]
-                experiment(j, f"running: moved to {host_cfg(h)['label']}")
+            if move_to_other_host(j, fleet, spec, stl, f"{st['key']} cannot start on {host_cfg(j['host'])['label']} ({why})"):
                 return
         if not ok:
             if j.get("wait") != why:
@@ -3111,7 +4163,11 @@ def launch_ready(j, fleet, spec, stl, st):
                 return
             if j["name"] not in keys.setdefault(key, []):
                 keys[key].append(j["name"])
-            keys_path().write_text(json.dumps(keys, indent=1) + "\n")
+            # atomic (el1013-fleet4): write_text truncates first, and a reader in another job thread got an empty file
+            # (auto_react JSONDecodeError 10-13 04:21)
+            tmp = keys_path().with_suffix(f".tmp.{threading.get_ident()}")
+            tmp.write_text(json.dumps(keys, indent=1) + "\n")
+            os.replace(tmp, keys_path())
         st["admission_launch_token"] = fleet._launched(j["host"], st["threads"], st["ram"], j["name"], actual=True)  # reservation (replaces the job's claim)
         return st
 
@@ -3218,15 +4274,66 @@ def offload_bench_location(j, fleet, st):
         if not ok:
             continue
         v = dict(j, host=h, run=f"{cfg['base']}/{j['name']}-bench", resume=None, checkpoint_affinity=None)
+        # A new bench directory is not the route's executed helper directory.
+        # Relocate only after read-only verification at the original location;
+        # ship_helpers then installs the original committed payload, never main's
+        # newer bytes, and leaves the original execution untouched.
+        if j.get("freeze_helper_overlay") and j.get("route_overlay_plan"):
+            v["bench_helper_origin"] = dict(host=j["host"], run=j["run"])
         try:
             sync_source(v)
         except Exception as ex:  # noqa: BLE001
             event(j, f"bench offload: source sync to {h} failed: {str(ex)[:200]}")
             continue
+        if v.get("bench_helper_origin_verification"):
+            verification = installed_helper_receipt(h, v["run"], v["route_overlay_plan"])
+            if verification.get("status") != "verified_original":
+                raise ValueError("bench destination helper installation was not verified")
+            j.setdefault("bench_helper_relocations", []).append(dict(
+                origin=v["bench_helper_origin_verification"], destination=dict(host=h, run=v["run"]),
+                verification=verification, verified_at=now_iso()))
         with FLEET_LOCK:
             fleet._launched(h, 0, 0)
         return dict(host=h, run=v["run"], attempt=j["attempt"])
     return None
+
+
+BENCH_MEM_OFFLOAD_WAIT_S = 30 * 60
+
+
+def memory_offload_bench(j, fleet, st, stl, location, why):
+    """HBM group A 2026-10-14 (hgi_xp_bfm-recover1 / hgi_xp_rdc-recover2margin sat READY for hours): a bench whose spec
+    peak_ram_gb does not fit the ARTIFACT host (AGIdock 128 GB, MemAvailable 70-93 GB, bench 96 GB) waited forever --
+    offload_bench_location() only offloaded for missing tools.  After BENCH_MEM_OFFLOAD_WAIT_S of waiting, move the
+    bench chain to a host that fits it now, through the same offload path (source synced to <base>/<name>-bench).
+    Benches that read route products ({RUN}/routes, physical_artifacts) stay on the artifact host.  The chain restarts
+    on the new host: receipts made at the old location are dropped (their build products are not there), as in
+    vanished_bench_location().  Returns the new location or None."""
+    if any("routes/" in (b.get("cmd") or "") or "physical_artifacts" in (b.get("cmd") or "")
+           for b in bench_stages(stl)):
+        return None
+    since = j.get("bwait_since")
+    if not since:
+        return None
+    try:
+        waited = time.time() - dt.datetime.fromisoformat(since).timestamp()
+    except ValueError:
+        return None
+    if waited < BENCH_MEM_OFFLOAD_WAIT_S:
+        return None
+    off = offload_bench_location(j, fleet, st)
+    if off is None:
+        return None
+    tr = j.get("btrack") or {}
+    old = location.get("run")
+    lost = [k for k, e in tr.items() if e.get("run") == old and e.get("state") != "running"]
+    for k in lost:
+        tr.pop(k, None)
+        (j.get("benches") or {}).pop(k, None)
+    j["bench_location"] = off
+    event(j, f"bench track: offloaded to {off['host']}:{off['run']} after {int(waited // 60)} min waiting on "
+             f"{location.get('host')} ({why}); chain restarts there (dropped receipts: {', '.join(lost) or 'none'})")
+    return off
 
 
 def bench_track(j, fleet, stl):
@@ -3234,7 +4341,12 @@ def bench_track(j, fleet, stl):
     if not j.get("bench_par") or j["status"] in TERMINAL or j["status"] in ("QUEUED", "SYNC", "MIGRATING"):
         return True
     tr = j.setdefault("btrack", {})
-    for st in bench_stages(stl):
+    # A relocation can invalidate an earlier artifact receipt while a later
+    # bench is already running. Poll that bench before a pending predecessor;
+    # otherwise the one-at-a-time guard prevents its completion being collected.
+    ordered = sorted(bench_stages(stl),
+                     key=lambda st: tr.get(st["key"], {}).get("state") != "running")
+    for st in ordered:
         k = st["key"]
         if k in j["benches"]:
             continue
@@ -3259,14 +4371,25 @@ def bench_track(j, fleet, stl):
                 event(j, f"bench track: offloaded to {location['host']}:{location['run']} (job host {j['host']} lacks bench tools)")
             host = location["host"]
             fleet.probe(host)
+            launch_token = None
             with FLEET_LOCK:
                 ok, why = fleet.fits(host, st["threads"], st["ram"])
-                if not ok:
+                if ok:
+                    launch_token = fleet._launched(host, st["threads"], st["ram"], actual=True)
+            if not ok:
+                off = memory_offload_bench(j, fleet, st, stl, location, why)
+                if off is None:
                     if j.get("bwait") != why:
                         j["bwait"] = why
+                        j.setdefault("bwait_since", now_iso())
                         event(j, f"bench track: {k} waiting for capacity on artifact host {host}: {why}")
                     return True
-                launch_token = fleet._launched(host, st["threads"], st["ram"], actual=True)
+                location, host = off, off["host"]
+                with FLEET_LOCK:
+                    ok, why = fleet.fits(host, st["threads"], st["ram"])
+                    if not ok:
+                        return True
+                    launch_token = fleet._launched(host, st["threads"], st["ram"], actual=True)
             n = (e or {}).get("n", 0) + 1
             v = dict(j, host=host, run=location["run"], attempt=f"{location['attempt']}b{n}")
             try:
@@ -3276,6 +4399,7 @@ def bench_track(j, fleet, stl):
             j["bench_location"] = location
             tr[k] = dict(state="running", tag=v["stage_tag"], host=host, run=location["run"], n=n, started=now_iso(), stage_source=v.get("stage_source"))
             j["bwait"] = None
+            j.pop("bwait_since", None)
             event(j, f"bench track: launched {k} ({v['stage_tag']}) beside {j.get('stage_key')}")
             return True
         v = _bview(j, e)
@@ -3509,7 +4633,7 @@ def measured_resta(j, m):
         mr["why"] = why
     else:
         with TT_STA_SLOTS:
-            ship_helpers(j["host"], j["run"])
+            ship_helpers(j["host"], j["run"], j)
             r = ssh(j["host"], f"python3 {j['run']}/cl/meas_resta.py --orfs {shlex.quote(orfs)} --src {j['run']}/src "
                                f"--out {j['run']}/cl/meas_resta.a{j['attempt']}.json " + " ".join(shlex.quote(x) for x in args),
                     timeout=12000)
@@ -3564,7 +4688,7 @@ def routed_ioref(j, m):
     rr = dict(key=key, at=now_iso(), available=False)
     out = f"{j['run']}/cl/routed_ioref.a{j['attempt']}" + (f".{rbj['rb']}" if rbj.get("sdc") else "") + ".json"
     with TT_STA_SLOTS:
-        ship_helpers(j["host"], j["run"])
+        ship_helpers(j["host"], j["run"], j)
         ssh(j["host"], f"mkdir -p {j['run']}/src/physical/common_flow && cp {j['run']}/cl/io_ref_routed.sdc "
                        f"{j['run']}/src/{IOREF_SDC}", timeout=60)
         app = f"--append {j['run']}/cl/io_ref_routed.sdc"
@@ -3781,6 +4905,7 @@ def cal_track(j, fleet, stl):
     try:
         cj = json.loads(r.stdout)
         j["calibration"] = {k: cj[k] for k in ("ss", "ff", "env", "db", "clock", "parasitics")}
+        macro_clk_flag(j, cj)
     except (ValueError, KeyError, TypeError) as ex:
         if r.returncode == 255:
             return
@@ -3851,7 +4976,7 @@ def step(j, fleet):
                 if yield_to_priority(j, fleet) else fleet.choose(spec, exclude=[
                     x for x, p in getattr(fleet, "prio_hosts", {}).items() if p > job_priority(j)])
             if h:   # claim capacity now so parallel job threads do not pick the same headroom
-                fleet.launched(h, spec.get("threads", 16), spec.get("peak_ram_gb", 32), j["name"])  # 2026-10-08: claim real size
+                fleet.launched(h, spec.get("threads", 16), claim_ram(spec), j["name"])  # 2026-10-08: claim real size
         if not h:
             if j.get("wait") != why:
                 j["wait"] = why
@@ -3924,6 +5049,8 @@ def step(j, fleet):
                 event(j, f"{j['host']} reachable again; {st['key']} still running")
                 j["unreachable"] = 0
             stuck_watchdog(j, st)
+            if st["kind"] in ("route", "calibrate") and state == "RUNNING" and j["spec"].get("fp_lint", True) is not False:
+                textbook_note(j)
             if st["kind"] == "route" and state == "RUNNING":
                 early_fail_gate(j, st)
             return
@@ -3973,6 +5100,7 @@ def step(j, fleet):
                         raise ValueError(f"artifact read exited {r.returncode}")
                     c = json.loads(r.stdout)
                     j["calibration"] = {k: c[k] for k in ("ss", "ff", "env", "db", "clock", "parasitics")}
+                    macro_clk_flag(j, c)
                     if not isinstance(c["env"], dict):
                         raise ValueError("calibration env must be an object")
                 except (ValueError, KeyError, TypeError) as ex:
@@ -4000,24 +5128,35 @@ def step(j, fleet):
         j["stage_idx"] += 1
         j["status"] = "READY"
         return
-    if s in ("ECO", "ECO_INSTALL"):
-        state, rc = poll_stage(j)
+    if s in ("ECO", "ECO_RESULT", "ECO_INSTALL"):
+        state, rc = ("DONE", j["eco"]["rc"]) if s == "ECO_RESULT" else poll_stage(j)
         if state == "UNREACHABLE" and host_down_requeue(j, s):
             return
         if state in ("RUNNING", "STARTING", "UNREACHABLE"):
             return
-        if s == "ECO":
-            r = ssh(j["host"], f"cat {eco_output(j)}/result.json 2>/dev/null", timeout=60)
-            try:
-                res = json.loads(r.stdout)
-            except Exception:  # noqa: BLE001
-                res = None
-            j["eco"]["result"] = res
-            ok = eco_passes(res, rc)
-            vt = j["eco"].get("kind") == "vtswap"
-            event(j, f"{'VT-swap' if vt else 'hold'} ECO {'PASS' if ok else 'MISS'}: {res if res else 'no result (rc=' + str(rc) + ')'}")
+        if s in ("ECO", "ECO_RESULT"):
+            if s == "ECO":
+                r = ssh(j["host"], f"cat {eco_output(j)}/result.json 2>/dev/null", timeout=60)
+                try:
+                    res = json.loads(r.stdout)
+                except Exception:  # noqa: BLE001
+                    res = None
+                j["eco"]["result"], j["eco"]["rc"] = res, rc
+                j["eco"]["completed_at"] = now_iso()
+                # Consume the terminal receipt before downstream helper validation/launch.
+                # A failed summary launch must never poll or log this completed ECO again.
+                j["status"] = "ECO_RESULT"
+                ok = eco_passes(res, rc)
+                vt = j["eco"].get("kind") == "vtswap"
+                event(j, f"{'VT-swap' if vt else 'hold'} ECO {'PASS' if ok else 'MISS'}: {res if res else 'no result (rc=' + str(rc) + ')'}")
+                save_job(j)
+            else:
+                res = j["eco"].get("result")
+                ok = eco_passes(res, rc)
+                vt = j["eco"].get("kind") == "vtswap"
             if not ok:
-                ledger(j, f"{'VT-SWAP' if vt else 'HOLD'}-ECO missed: before SS {j['eco']['pre']['ss_ps']:+.2f} / FF {j['eco']['pre']['ff_ps']:+.2f}, "
+                if s == "ECO":
+                    ledger(j, f"{'VT-SWAP' if vt else 'HOLD'}-ECO missed: before SS {j['eco']['pre']['ss_ps']:+.2f} / FF {j['eco']['pre']['ff_ps']:+.2f}, "
                           f"after {res}")
                 m = j.get("metrics", {})
                 prev = j["eco"]
@@ -4225,9 +5364,12 @@ def do_verdict(j, fleet, stl):
         elif "OT_HOLD_STALL" in r.stdout:
             j["hold_window"] = r.stdout[-6000:]
             cls = " ".join(f"{a}={b}@{c}" for a, b, c in wins)
-            finish(j, "NEEDS_RTL", f"FF hold {ff:+.1f}: route hold repair stalled; window {cls}"[:300],
+            i2o = feedthrough_window(j)
+            finish(j, "NEEDS_RTL", (f"FF hold {ff:+.1f}: route hold repair stalled; window {cls}"
+                                    + (f"; {PIN_REG_MISSING}" if i2o else ""))[:300],
                    f"NEEDS_RTL: FF hold {ff:+.1f} ps after a STALLED route-time hold repair (hold-stall guard). Window by "
                    f"path class: {cls}. Structural fix per REDESIGN_RULES (pin registers / input-min, H1 SDC); no ECO.\n"
+                   + (f"{PIN_REG_MISSING}: {i2o}; no hold-margin / density variant is routed.\n" if i2o else "")
                    + r.stdout[-2500:])
             return
     if hold_only(j, m, failed, benches_ok) and start_hold_eco(j, fleet, m):
@@ -4369,11 +5511,11 @@ def start_vtswap_eco(j, fleet, m):
     out = f"{j['run']}/cl/eco-vtswap-t{target:g}" + (f"-r{len(j.get('eco_history') or []) + 1}" if j.get("eco_history") else "")
     env = (f"TARGET={target:g} CAP_PCT={cap:g} DRC0={int(m['drc'])} ACC_SS={SS_MIN:g} ACC_FF={FF_MIN:g} SETUP_LIB={SETUP_LIB} "
            f"SDC_NAME={shlex.quote(m.get('sdc_name') or '6_final.sdc')} THREADS=8 "
-           f"MACROS={shlex.quote(' '.join(v.get('macros', [])))} ORFS_W18={shlex.quote(m.get('orfs_dir') or '')}")
+           f"MACROS={shlex.quote(' '.join(verdict_macros(j)))} ORFS_W18={shlex.quote(m.get('orfs_dir') or '')}")
     if m.get("setup_post_sdc"):
         env += f" SETUP_POST_SDC={shlex.quote(' '.join(m['setup_post_sdc']))}"
     cmd = f"{env} bash {{CL}}/vtswap_eco.sh {rb} {ob} {out} {j['spec']['block']} " + " ".join(shlex.quote(p) for p in post_sdcs)
-    ship_helpers(j["host"], j["run"])
+    ship_helpers(j["host"], j["run"], j)
     j["eco"] = dict(tried=True, kind="vtswap", rb=rb, ob=ob, out=out, post_sdc=post_sdcs, sdc_name=m.get("sdc_name") or "6_final.sdc",
                     setup_post_sdc=list(m.get("setup_post_sdc") or []), pre=dict(ss_ps=tt, ff_ps=m["ff_ps"]),
                     started=now_iso(), target_ps=target, lvt_cap_pct=cap, auto=True)
@@ -4415,14 +5557,15 @@ def start_combo_hold_retry(j, fleet, m, prev):
     post = list(prev.get("post_sdc") or [])
     pq = " ".join(shlex.quote(p) for p in post)
     sdcn = shlex.quote(prev.get("sdc_name") or "6_final.sdc")
-    mac = shlex.quote(" ".join(v.get("macros", [])))
+    mac = shlex.quote(" ".join(verdict_macros(j)))
     blk = j["spec"]["block"]
     out = prev["out"] + "-h"
     henv = (f"ECO_SESSION=mm ALLOW_FRESH_GRT=0 HM=0 ALLOW=4 SM=40 FILT=40 PASSES=1 RESAWARE=1 HOLDCELLS=1 ACC_SS={SS_MIN:g} "
             f"ACC_FF={FF_MIN:g} SETUP_LIB={SETUP_LIB} KEEPCLK=0 BUF=30 MACROS={mac} THREADS=8 SDC_NAME={sdcn} ECO_RB_DB=6_final.odb")
     cmd = (f"VB=$(ls -d {prev['out']}/orfs/results/asap7/*/base | head -1); test -f $VB/6_final.odb || {{ echo no combo base; exit 3; }}; "
-           f"[ -f $VB/{sdcn} ] || cp {prev['ob']}/{sdcn} $VB/; {henv} bash {{CL}}/hold_eco.sh $VB $VB {out} {blk} {pq}")
-    ship_helpers(j["host"], j["run"])
+           f"[ -f $VB/{sdcn} ] || cp {prev['ob']}/{sdcn} $VB/; {henv} ROUTE_CFG={shlex.quote(route_cfg_of(prev['rb']))} "
+           f"bash {{CL}}/hold_eco.sh $VB $VB {out} {blk} {pq}")
+    ship_helpers(j["host"], j["run"], j)
     prev["hold_retry"] = True
     j.setdefault("eco_history", []).append(prev)
     j["attempt"] += 1
@@ -4478,7 +5621,7 @@ def start_combo_eco(j, fleet, m):
     n = len(j.get("eco_history") or []) + 1
     outv, out = f"{j['run']}/cl/eco-combo{n}-vt", f"{j['run']}/cl/eco-combo{n}"
     sdcn = shlex.quote(m.get("sdc_name") or "6_final.sdc")
-    mac = shlex.quote(" ".join(v.get("macros", [])))
+    mac = shlex.quote(" ".join(verdict_macros(j)))
     cap = float(he.get("vtswap_cap_pct", VTSWAP_CAP_PCT))
     blk = j["spec"]["block"]
     venv = (f"TARGET=10 CAP_PCT={cap:g} DRC0=1 ACC_SS={SS_MIN:g} ACC_FF={COMBO_FF_FLOOR:g} SETUP_LIB={SETUP_LIB} SDC_NAME={sdcn} "
@@ -4490,8 +5633,8 @@ def start_combo_eco(j, fleet, m):
     cmd = (f"{venv} bash {{CL}}/vtswap_eco.sh {rb} {ob} {outv} {blk} {pq}; "
            f"VB=$(ls -d {outv}/orfs/results/asap7/*/base | head -1); test -f $VB/6_final.odb || {{ echo COMBO: no vtswap base; exit 3; }}; "
            f"[ -f $VB/{sdcn} ] || cp {ob}/{sdcn} $VB/; "
-           f"{henv} bash {{CL}}/hold_eco.sh $VB $VB {out} {blk} {pq}")
-    ship_helpers(j["host"], j["run"])
+           f"{henv} ROUTE_CFG={shlex.quote(route_cfg_of(rb))} bash {{CL}}/hold_eco.sh $VB $VB {out} {blk} {pq}")
+    ship_helpers(j["host"], j["run"], j)
     tt, ff = m["ss_ps"], m["ff_ps"]
     j["eco"] = dict(tried=True, kind="combo", rb=rb, ob=ob, combo_vtswap=outv, out=out, post_sdc=post,
                     sdc_name=m.get("sdc_name") or "6_final.sdc", setup_post_sdc=list(m.get("setup_post_sdc") or []),
@@ -4577,7 +5720,7 @@ def start_hold_eco(j, fleet, m):
           f"HM={he.get('hold_margin_ps', 18)} SM={he.get('setup_margin_ps', 40)} FILT={he.get('setup_filter_ps', 40)} " \
           f"PASSES={he.get('passes', 2)} RESAWARE={int(he.get('resistance_aware', True))} HOLDCELLS={int(he.get('hold_cells', True))} " \
           f"ACC_SS={SS_MIN} ACC_FF={FF_MIN} SETUP_LIB={SETUP_LIB} KEEPCLK={he.get('keep_clock', 0)} BUF={he.get('max_buffer_percent', 30)} " \
-          f"MACROS={shlex.quote(' '.join(v.get('macros', [])))} THREADS=8"
+          f"MACROS={shlex.quote(' '.join(verdict_macros(j)))} THREADS=8"
     keepwires = bool(he.get("keep_wires") or j.get("auto_react_keepwires"))
     if keepwires:
         # LOOP-AUTO class a: narrow re-route -- every net the ECO did not touch keeps its detailed wires (hold_eco.sh
@@ -4606,7 +5749,7 @@ def start_hold_eco(j, fleet, m):
     if recovery:
         env += f" ECO_GUARD={shlex.quote(recovery['guard'])}"
     cmd = f"{env} bash {{CL}}/hold_eco.sh {rb} {ob} {out} {j['spec']['block']} {post}"
-    ship_helpers(j["host"], j["run"])
+    ship_helpers(j["host"], j["run"], j)
     j["eco"] = dict(tried=True, rb=rb, ob=ob, out=out, post_sdc=post_sdcs, sdc_name=m.get("sdc_name") or "6_final.sdc",
                     setup_post_sdc=list(m.get("setup_post_sdc") or []), pre=dict(ss_ps=m["ss_ps"], ff_ps=m["ff_ps"]), started=now_iso(),
                     keepwires=keepwires)
@@ -4651,7 +5794,7 @@ def eco_install_cmd(j):
         lines.append(he["reexport"])                                      # crashed join(); non-str -> the default re-export
     else:
         W = "/".join(rb.split("/")[:-6])     # <route>/work/orfs/results/asap7/<d>/base -> <route>
-        macs = " ".join(f"--macro-view {x}" for x in j["spec"]["verdict"].get("macros", []))
+        macs = " ".join(f"--macro-view {x}" for x in verdict_macros(j))
         isdc = f" --interface-sdc {ob}/6_final.sdc" if ob != rb else ""
         lines.append(f"if [ -f {W}/view/{blk}.lef ]; then mv {W}/view {W}/view.pre_eco; python3 tools/hbm_fmax_attn_abstract.py "
                      f"--orfs-dir {W}/work/orfs --name {blk} --out {W}/view {macs}{isdc} --tmp-dir {W}/abs_eco > {W}/export_eco.log 2>&1; "
@@ -4661,10 +5804,135 @@ def eco_install_cmd(j):
     return "\n".join(lines)
 
 
+# CHILD-LINT GATE (preamble HOLD ECO KEEPOUT, 2026-10-12): a tile / leaf counts as CLOSED only with child_lint (c) strap
+# layer and (f) face-pin access clean on its EXPORTED view.  blocked_pin_sweep.json: the 4 closed tiles with (f) blocked
+# face pins were exactly the 4 hold-ECO'd ones (ECO DRT re-routed over the face pins after the keepout was removed,
+# fixed a804fc09b); nothing checked the exported view before publish.  Applies to every job whose collected record holds
+# a view LEF of its block (a hard child some parent will place); a job without one is not a tile view and passes.
+# spec "hier_lint": {"skip": "f", "why": "..."} skips a check only with a written reason; {"gate": false, "why": ...} all.
+CHILD_LINT_DIR = Path(__file__).resolve().parents[1] / "hier_contract"
+CHILD_LINT_CHECKS = ("c", "f")
+
+
+def child_lint_gate_checks(spec):
+    hl = spec.get("hier_lint") or {}
+    if not str(hl.get("why") or "").strip():
+        return set(CHILD_LINT_CHECKS)
+    if hl.get("gate") is False:
+        return set()
+    return set(CHILD_LINT_CHECKS) - {x.strip() for x in str(hl.get("skip") or "").split(",")}
+
+
+def pick_view_lef(paths, block):
+    """the block's own view among the record's LEFs (not bloat / macro copies of its children)"""
+    cand = [p for p in paths if p.endswith(".lef") and "_bloat" not in p and "/macros/" not in p]
+    return next((p for p in cand if Path(p).stem == block), None)
+
+
+def child_lint_view(lef_text, checks, pin_grant=None, def_text=None, tech_text=None):
+    """child_lint on a view LEF text: (fails restricted to checks, summary)"""
+    if str(CHILD_LINT_DIR) not in sys.path:
+        sys.path.insert(0, str(CHILD_LINT_DIR))
+    import child_lint  # noqa: E402
+    with tempfile.NamedTemporaryFile("w", suffix=".lef", delete=False) as fh:
+        fh.write(lef_text)
+        tmp = fh.name
+    def_path, tech_path = None, None
+    try:
+        if def_text is not None:
+            with tempfile.NamedTemporaryFile("w", suffix=".def", delete=False) as df:
+                df.write(def_text)
+                def_path = df.name
+        if tech_text is not None:
+            with tempfile.NamedTemporaryFile("w", suffix=".lef", delete=False) as tf:
+                tf.write(tech_text)
+                tech_path = tf.name
+        res = child_lint.lint(tmp, skip=set("abcdefg") - set(checks), pin_grant=pin_grant,
+                              cap="M5" if pin_grant else None, routed_def=def_path, tech_lef=tech_path)
+    finally:
+        os.unlink(tmp)
+        if def_path:
+            os.unlink(def_path)
+        if tech_path:
+            os.unlink(tech_path)
+    return [x for x in res["fails"] if x[1:2] in checks], res.get("summary", "")
+
+
+def pin_stub_fix(lef_text):
+    """(text, note): tools/hier_contract/abstract_pin_stub.py applied to a view LEF text; note '' when nothing moved"""
+    with tempfile.TemporaryDirectory() as td:
+        a, b = Path(td) / "in.lef", Path(td) / "out.lef"
+        a.write_text(lef_text)
+        r = subprocess.run([sys.executable, str(CHILD_LINT_DIR / "abstract_pin_stub.py"), str(a), str(b)],
+                           capture_output=True, text=True, timeout=600)
+        m = re.search(r"pinstub: (\d+) OBS rects moved into (\d+) pins", r.stdout or "")
+        if r.returncode != 0 or not m or not b.exists():
+            return lef_text, ""
+        if m.group(1) == "0":
+            return lef_text, ""
+        return b.read_text(), f"{m.group(1)} OBS stubs of {m.group(2)} pins"
+
+
+def child_lint_gate(j):
+    """None = pass / not a tile view; else the (c)/(f) failure text.  Raises on ssh failure (the commit is re-tried)."""
+    checks = child_lint_gate_checks(j["spec"])
+    grant = j["spec"].get("m6_pin_grant")
+    if grant is not None:
+        checks |= {"c", "f"}  # a pin-only grant never authorizes skipping physical evidence
+    if not checks:
+        return None
+    blk = j["spec"]["block"]
+    r = ssh(j["host"], f"find {j['run']}/record -name '*.lef' 2>/dev/null | head -200", timeout=120)
+    if r.returncode != 0 and TRANSIENT_RE.search((r.stderr or "") + (r.stdout or "")):
+        raise RuntimeError(f"child-lint gate: ssh failure: {(r.stderr or '')[-200:]}")
+    lef = pick_view_lef(r.stdout.split(), blk)
+    if not lef:
+        if j["spec"].get("ref_tile"):
+            return f"ref_tile job exported no view LEF {blk}.lef under {{RUN}}/record"
+        return None
+    t = ssh(j["host"], f"cat {shlex.quote(lef)}", timeout=300)
+    if t.returncode != 0 or "MACRO" not in t.stdout:
+        raise RuntimeError(f"child-lint gate: could not read {lef}: {(t.stderr or '')[-200:]}")
+    text, moved = (t.stdout, "") if grant else pin_stub_fix(t.stdout)
+    if moved:
+        # PIN-STUB (73e17f447, ot_qkvd_sbuf DRT-0073): write_abstract_lef writes a face pin's own same-layer route stub
+        # as OBS over the pin; child_lint (f) now refuses that.  Moving the stub into the pin's PORT is the exact view
+        # (in a DRC-clean route, metal touching a pin on its layer is the pin's net), so fix the record's view in place.
+        w = ssh(j["host"], f"cat > {shlex.quote(lef)}.pinstub && mv {shlex.quote(lef)}.pinstub {shlex.quote(lef)}",
+                timeout=300, input=text)
+        if w.returncode != 0:
+            raise RuntimeError(f"child-lint gate: could not write the pin-stub view {lef}: {(w.stderr or '')[-200:]}")
+        event(j, f"child-lint gate: abstract_pin_stub moved {moved} into their pins' PORTs in {lef}")
+    def_text, tech_text = None, None
+    if grant:
+        # Raw routed geometry copied by ref_tile export, not a modified abstract.
+        def_file = str(Path(lef).parent / "pin_only_routed.def")
+        dt = ssh(j["host"], f"cat {shlex.quote(def_file)}", timeout=300)
+        if dt.returncode != 0:
+            return "M6 pin-only grant missing raw routed DEF evidence"
+        def_text = dt.stdout
+        tech_file = str(Path(lef).parent / "pin_only_tech.lef")
+        tt = ssh(j["host"], f"cat {shlex.quote(tech_file)}", timeout=300)
+        tech_text = tt.stdout if tt.returncode == 0 else None
+    fails, summ = child_lint_view(text, checks, grant, def_text, tech_text)
+    j["child_lint"] = dict(lef=lef, checks="".join(sorted(checks)), fails=fails, summary=summ[:400], at=now_iso())
+    return "; ".join(fails) if fails else None
+
+
 def do_commit(j):
     if adoption_held(j):
         return
     m = j["metrics"]
+    if not j.get("spec", {}).get("smoke") and (j.get("child_lint") or {}).get("fails") != []:
+        g = child_lint_gate(j)
+        if g:
+            finish(j, "NEEDS_HUMAN", f"CHILD-LINT: exported view fails {g}"[:300],
+                   f"NEEDS_HUMAN: timing closed ({setup_corner_label(m)} {m.get('ss_ps')} / FF {m.get('ff_ps')} / DRC "
+                   f"{m.get('drc')}) but the exported view fails child_lint -> not CLOSED (a parent cannot reach its "
+                   f"pins / straps). Fix the view (ref_tile.py export) or re-route with the above-only keepout:\n{g}"[:3000])
+            return
+        if j.get("child_lint"):
+            event(j, f"child-lint gate ({j['child_lint']['checks']}) PASS on {j['child_lint']['lef']}")
     try:
         with PUBLISH_LOCK:
             out = publish(j, m)
@@ -4903,7 +6171,7 @@ def migrate_checkpoint(j, dest):
                            capture_output=True, text=True, timeout=7200)
     if p.returncode:
         raise RuntimeError(f"checkpoint transfer failed: {p.stderr[-500:]}")
-    ship_helpers(dest, run)
+    ship_helpers(dest, run, j)
     r = ssh(dest, f"cd {run}/src && python3 {run}/cl/resume_patch.py .", timeout=120)
     if r.returncode:
         raise RuntimeError(f"resume patch failed: {(r.stdout + r.stderr)[-400:]}")
@@ -4971,7 +6239,7 @@ def migrate_overloaded(jobs, fleet):
         j.update(host=h, run=f"{host_cfg(h)['base']}/{j['name']}", status="SYNC", stage_idx=idx, wait=None,
                  attempt=j["attempt"] + 1)
         j.pop("wait_since", None)
-        fleet.launched(h, j["spec"].get("threads", 16), j["spec"].get("peak_ram_gb", 32), j["name"])  # 2026-10-08
+        fleet.launched(h, j["spec"].get("threads", 16), claim_ram(j["spec"]), j["name"])  # 2026-10-08
         event(j, f"LOAD REBALANCE: {old} over cap (load {info['load1']:.0f}, {info['mem_gb']} GB free); pre-CTS job "
                  f"moved to {host_cfg(h)['label']} (resumes at {stl[idx]['key']})")
         experiment(j, f"running: moved {old} -> {host_cfg(h)['label']}")
@@ -4992,7 +6260,7 @@ def is_transient(ex):
 
 def handle_transient(j, fleet, ex):
     """robustness (2026-10-07): transient ssh errors back off (2, 4, 8, 15, 30 min); after 3 at a stage that has
-    nothing in flight on the host (QUEUED / SYNC / READY before the first launch, or READY at calibrate/bench) the job
+    nothing in flight on the host (QUEUED / SYNC / READY before the first launch, or READY at calibrate/route/bench) the job
     moves to another host; a job whose results live on the host (verdict, ECO) keeps backing off and goes NEEDS_HUMAN
     only after 12 consecutive failures (~5 h).  Returns True when handled."""
     n = j.get("transient", 0) + 1
@@ -5001,18 +6269,15 @@ def handle_transient(j, fleet, ex):
     event(j, f"transient ssh/network error #{n} on {j.get('host')} ({type(ex).__name__}: {str(ex)[:160]}); backing off")
     stl = stage_list(j["spec"])
     st = stl[min(j.get("stage_idx", 0), len(stl) - 1)]
-    movable = j["status"] in ("QUEUED", "SYNC") or (j["status"] == "READY" and st["kind"] in ("calibrate", "bench")
-                                                     and not j.get("stage_tag"))
+    # 2026-10-11: READY at calibrate/route is movable as in launch_ready's capacity move (READY = this stage has not
+    # launched; stage_tag is the previous stage's and is never cleared, and the move re-runs calibrate) -- on an
+    # overloaded host (load 500+) the loop's own ssh calls time out, and such a job otherwise backed off there for ever
+    movable = j["status"] in ("QUEUED", "SYNC") or (j["status"] == "READY" and (
+        st["kind"] in ("calibrate", "route") or (st["kind"] == "bench" and not j.get("stage_tag"))))
     if n >= 3 and movable and j.get("host") and not checkpoint_location(j):
-        h, _ = fleet.choose(j["spec"], exclude=[j["host"]])
-        if h:
-            event(j, f"{n} transient errors on {host_cfg(j['host'])['label']}: moving to {host_cfg(h)['label']}")
-            j["hosts_tried"].append(h)
-            j.update(host=h, run=f"{host_cfg(h)['base']}/{j['name']}", status="SYNC", transient=0)
+        if move_to_other_host(j, fleet, j["spec"], stl, f"{n} transient errors on {host_cfg(j['host'])['label']}"):
+            j["transient"] = 0
             j.pop("transient_next", None)
-            cal = next((i for i, x in enumerate(stl) if x["kind"] == "calibrate"), None)
-            if cal is not None and j.get("stage_idx", 0) > cal:
-                j["stage_idx"] = cal
             return True
     if n >= 12:
         return False                     # falls through to the ordinary error accounting
@@ -5028,7 +6293,14 @@ def advance_job(name, fleet):
         if nt and time.time() < nt:
             return                       # backing off after a transient ssh / network error
         try:
+            before = j["status"]
             step(j, fleet)
+            # el1013-fleet4 2026-10-13: a job whose source sync just finished launches its first stage in the same pass.
+            # It used to return at READY and wait for the next tick to be submitted again: 45-100 s on idle hosts
+            # (median ingest -> first launch 157 s over 21 jobs, 04:16-05:30).
+            if before in ("QUEUED", "SYNC") and j["status"] == "READY":
+                save_job(j)
+                step(j, fleet)
             if j.get("transient"):
                 j["transient"] = 0
                 j.pop("transient_next", None)
@@ -5039,7 +6311,7 @@ def advance_job(name, fleet):
             j.setdefault("errors", []).append(f"{now_iso()} {type(ex).__name__}: {str(ex)[:500]}")
             j["errors"] = j["errors"][-10:]
             log(f"[{j['name']}] step error:\n{traceback.format_exc()}")
-            if len(j["errors"]) >= 10 and j["status"] in ("SYNC", "READY"):
+            if len(j["errors"]) >= 10 and j["status"] in ("SYNC", "READY", "ECO_RESULT"):
                 finish(j, "NEEDS_HUMAN", f"10 consecutive loop errors: {str(ex)[:200]}",
                        f"NEEDS_HUMAN: loop errors at {j['status']}: {str(ex)[:300]}")
         save_job(j)
@@ -5059,6 +6331,7 @@ NEAR_MISS_JSON = STATE / "near_miss_retain.json"
 # ORFS objects under the job's ORFS work trees.  Kept: 6_final.*, 5_2_route.odb, every log / report / json (metrics).
 BULK_RELEASE_SH = r"""set -u
 R=%(run)s
+if [ -e "$R/.keep" ]; then echo "RETAIN owner diagnostic .keep"; exit 4; fi
 if [ "${NEAR_MISS_RELEASE:-0}" != 1 ] && python3 - "$R" <<'NMPY'
 import json, os, sys
 r = sys.argv[1].rstrip("/")
@@ -5138,6 +6411,48 @@ def closed_blocks(jobs):
     return {x["spec"].get("block") for x in jobs if closure_counts(x, rv)}
 
 
+def release_source_index(jobs):
+    """Counting closures indexed by immutable revision, not just a reused block name."""
+    rv = revoked_closures()
+    out = {}
+    for x in jobs:
+        if closure_counts(x, rv):
+            commit = x.get("commit_full") or (x.get("spec", {}).get("source") or {}).get("commit") or ""
+            out.setdefault(x["spec"].get("block"), set()).add(commit)
+    return out
+
+
+def source_mismatch_retained(j, index):
+    """An older/different-source closure cannot retire an unclosed candidate's diagnostics.
+
+    Missing or abbreviated closure revisions cannot prove equivalence. Exact source
+    identity is conservative; an owner can retire/archive unique diagnostics explicitly.
+    """
+    if j.get("status") == "CLOSED":
+        return False
+    versions = index.get(j.get("spec", {}).get("block"))
+    if versions is None:
+        return False
+    commit = j.get("commit_full") or (j.get("spec", {}).get("source") or {}).get("commit") or ""
+    return not (re.fullmatch(r"[0-9a-f]{40}", commit) and commit in versions)
+
+
+def helper_provenance_retained(j):
+    """Keep evidence blocked by helper verification; this confers no timing acceptance.
+
+    Only the current failure/last pending error counts. A later explicit design
+    verdict or owner cancellation does not inherit an old provenance failure.
+    """
+    if j.get("status") in ("CLOSED", "CANCELLED", "NEEDS_RTL", *EARLY_FAIL):
+        return False
+    reason = j.get("reason") or ""
+    pending = j.get("status") not in TERMINAL
+    text = ((j.get("errors") or [""])[-1] or reason) if pending else reason
+    return any(tag in text for tag in (
+        "FROZEN_HELPER_OVERLAY", "effective route helper drift", "helper overlay drift",
+        "frozen helper", "frozen-helper", "FROZEN_HELPER_RECOVERY", "original remote helper verification"))
+
+
 def near_miss(j, closed=None):
     """a non-CLOSED job whose route verdict is TT >= NEAR_MISS_PS and FF >= NEAR_MISS_PS (and not both >= the line),
     while its element (spec block) has no counting CLOSED job: its route tree is retained"""
@@ -5156,14 +6471,16 @@ def write_near_miss_retain(jobs, closed=None):
     """STATE/near_miss_retain.json: run dirs (+ ORFS dir) of retained near-miss routes, read by tools/fleet/fleet_sweep.py"""
     closed = closed_blocks(jobs) if closed is None else closed
     rows = []
+    sources = release_source_index(jobs)
     for x in jobs:
-        if x.get("run") and x.get("host") and near_miss(x, closed):
+        mismatch = source_mismatch_retained(x, sources)
+        if x.get("run") and x.get("host") and (near_miss(x, closed) or mismatch or helper_provenance_retained(x)):
             m = x.get("metrics") or {}
             rows.append(dict(job=x["name"], block=x["spec"].get("block"), host=x["host"], run=x["run"],
                              orfs_dir=m.get("orfs_dir"), tt_ps=m.get("ss_ps"), ff_ps=m.get("ff_ps"), drc=m.get("drc"),
-                             status=x["status"]))
+                             status=x["status"], reason="helper provenance blocked" if helper_provenance_retained(x) else "source-mismatched closure" if mismatch else "near miss"))
     body = dict(schema="opentallas.closure_loop.near_miss_retain.v1", generated=now_iso(), threshold_ps=NEAR_MISS_PS,
-                rule="non-closed route with TT >= threshold and FF >= threshold keeps its route tree until its block closes",
+                rule="retain helper-blocked evidence, near misses, and unclosed source revisions not covered by a source-identical closure",
                 jobs=sorted(rows, key=lambda r: r["job"]))
     try:
         tmp = NEAR_MISS_JSON.with_suffix(".tmp")
@@ -5191,6 +6508,7 @@ def release_bulk(jobs):
     """CANCELLED jobs, and terminal jobs superseded by a CLOSED job of the same block, give back their route bulk --
     except a near miss (near_miss()) whose block has not closed: it keeps its route tree (NEAR-MISS RETENTION)."""
     closed = closed_blocks(jobs)
+    sources = release_source_index(jobs)
     write_near_miss_retain(jobs, closed)
     n = 0
     for x in jobs:
@@ -5198,7 +6516,7 @@ def release_bulk(jobs):
             break
         if x.get("bulk_released") or not x.get("host") or not x.get("run") or x["status"] not in TERMINAL:
             continue
-        if bf_exempt(x):
+        if bf_exempt(x) or source_mismatch_retained(x, sources) or helper_provenance_retained(x):
             continue
         if x["status"] == "CLOSED" or not (x["status"] == "CANCELLED" or x["spec"].get("block") in closed):
             continue
@@ -5208,7 +6526,7 @@ def release_bulk(jobs):
             continue
         with job_lock(x["name"]):
             j = load_job(x["name"])
-            if j.get("bulk_released") or j["status"] not in TERMINAL or j["status"] == "CLOSED":
+            if j.get("bulk_released") or j["status"] not in TERMINAL or j["status"] == "CLOSED" or source_mismatch_retained(j, sources) or helper_provenance_retained(j):
                 continue
             # the block is closed (or the job has no near-miss verdict): a near-miss corner_sta may be released
             rel = "NEAR_MISS_RELEASE=1\n" if j["spec"].get("block") in closed else ""
@@ -5377,14 +6695,30 @@ def _main_evidence():
     return c
 
 
+def _on_main(commit, ev):
+    """is <commit> (7-40 hex) an ancestor of ev["sha"]?  One 'git rev-list' per origin/main sha, cached in ev.
+    el1013-fleet3 2026-10-13: the per-job 'git merge-base --is-ancestor' cost 0.7 s x 214 unreleased CLOSED jobs on the
+    daemon's main thread EVERY tick (2.5-6 min before any READY job was looked at)."""
+    if ev.get("anc_sha") != ev["sha"]:
+        out = subprocess.run(["git", "-C", str(REPO), "rev-list", ev["sha"]], capture_output=True, text=True, timeout=600)
+        if out.returncode != 0:
+            return subprocess.run(["git", "-C", str(REPO), "merge-base", "--is-ancestor", commit, ev["sha"]],
+                                  capture_output=True, timeout=120).returncode == 0
+        full = out.stdout.split()
+        by7 = {}
+        for c in full:
+            by7.setdefault(c[:7], []).append(c)
+        ev.update(anc_sha=ev["sha"], anc=by7)
+    return any(c.startswith(commit) for c in ev["anc"].get(commit[:7], ()))
+
+
 def closure_on_main(j, ev):
     """a CLOSED job whose record reached origin/main: its record commit is an ancestor, a merged_closures record or a
     main tree path names it"""
     for e in reversed(j.get("events") or []):
         m = re.search(r"CLOSED:.*record (\S+) ([0-9a-f]{7,40})", e)
         if m:
-            if subprocess.run(["git", "-C", str(REPO), "merge-base", "--is-ancestor", m.group(2), ev["sha"]],
-                              capture_output=True, timeout=120).returncode == 0:
+            if _on_main(m.group(2), ev):
                 return True
             break
     return j["name"] in ev["files"] or j["name"] in ev["recs"]
@@ -5394,9 +6728,11 @@ def deep_release_mode(j, closed, ev, now=None):
     """closed | fail | nearmiss | None (keep) for one job (DEEP RELEASE)"""
     if j.get("deep_released") or not j.get("host") or not j.get("run") or j["status"] not in TERMINAL:
         return None
-    if bf_exempt(j):
+    if bf_exempt(j) or helper_provenance_retained(j):
         return None
     if _terminal_age_h(j, now) < DEEP_RELEASE_AGE_H:
+        return None
+    if viz_elem_running(j):                             # VIZ-ELEM: the element page export still reads the DB
         return None
     if j["status"] == "CLOSED":
         if closure_counts(j):
@@ -5563,6 +6899,7 @@ def mem_guard(jobs, fleet, now=None):
 def release_deep(jobs, now=None):
     """DEEP RELEASE of up to DEEP_RELEASE_PER_TICK terminal jobs (see DEEP_RELEASE_PY)"""
     closed = closed_blocks(jobs)
+    sources = release_source_index(jobs)
     hosts = {h["name"] for h in hosts_table()}
     shared = {}
     for x in jobs:
@@ -5580,7 +6917,7 @@ def release_deep(jobs, now=None):
         if n >= DEEP_RELEASE_PER_TICK:
             break
         mode = deep_release_mode(x, closed, ev, now)
-        if not mode:
+        if not mode or source_mismatch_retained(x, sources) or helper_provenance_retained(x):
             continue
         run = x["run"].rstrip("/")
         if any(y["status"] not in TERMINAL or _terminal_age_h(y, now) < DEEP_RELEASE_AGE_H
@@ -5588,7 +6925,7 @@ def release_deep(jobs, now=None):
             continue                                    # a sibling job still uses the run dir
         with job_lock(x["name"]):
             j = load_job(x["name"])
-            if mode != deep_release_mode(j, closed, ev, now):
+            if mode != deep_release_mode(j, closed, ev, now) or source_mismatch_retained(j, sources) or helper_provenance_retained(j):
                 continue
             commit = j.get("commit_full") or (j["spec"].get("source") or {}).get("commit") or ""
             if commit and subprocess.run(["git", "-C", str(REPO), "cat-file", "-e", commit + "^{commit}"],
@@ -5626,6 +6963,23 @@ def release_deep(jobs, now=None):
 #   d  FLOORPLAN_MARGIN whose only failing lint check is "sliver" -> successor <job>-ard with "sliver_block": true (the
 #      macro + core-edge sliver blockage hooks at PRE GLOBAL_PLACE, before the lint);
 #   e  DRT-0073 (no access point) -> successor <job>-are with the recipe's min-width / pin-keepout knob (DRT_RECIPES).
+#   f  MACRO-CLK (macro-clk-1010): EARLY_FAIL_HOLD, or a NEEDS_RTL FF hold miss, whose CTS built the SRAM-macro clock as
+#      a leaf-less shallow tree (CTS log: macro net with 3+ sinks on 0 leaf buffers, >= 150 um average sink wire) or whose
+#      calibrate flagged macro clock-pin slew / lateness (calib.json macro_clk), and whose CTS ran WITHOUT the macro
+#      clustering default -> successor <job>-arf, same commit: the default (macro_cts_cluster.tcl, shipped into the
+#      snapshot by hold_corners_patch.py) now applies.  Checked before c (the macro clock is the root of the stall).
+#   h  LAYER-CAP LEAK (2026-10-13): the hold ECO refused the route (hold_eco.sh rc=11) -> successor <job>-arh, same
+#      commit, one re-route (a kit older than dc5594311 too: the fixed GRT hook is shipped into the snapshot); if the
+#      successor leaks again the verdict and the owner log say: regenerate the kit.  Checked before a/b.
+#   g  NEAR-MISS FINISHING VARIANTS (2026-10-13 finishing recipe): a ref_tile route (tools/ref_tile/ref_route.sh) ends
+#      NEEDS_RTL inside the near-miss band -- TT >= 0, FF >= -60 ps, DRC <= 20, not clean, no failed check, benches ok,
+#      not itself a successor -- and a/b/f do not apply (their ECO ran, or DRC > 0) -> up to 2 successors <job>-arg1 /
+#      -arg2, same commit, dropped in ONE pass (as many as the block@commit has route slots left: MAX_ROUTES_PER_KEY
+#      minus the holders).  Hold miss: g1 = hold margin max(30 ps, parent + 20 ps), g2 = g1 + 20 ps at place density
+#      - 0.05 (margins capped at 50 ps, never below the parent's).  DRC only: g1 = density - 0.05, g2 = density + 0.05, parent hold margin.  ref_route.sh takes PD / HM
+#      inline; the spec carries route_hold_margin_ns, variant_group and near_miss_variant.  The variants are finishing,
+#      not structure: structure_repeat_at_submit gives exactly these names the exemption class near_miss_finishing
+#      (recorded in submit_checks and in the verdict).  The first sibling to CLOSE cancels the queued one (finish()).
 # A successor is a new spec dropped into DROP: intake (validate, route key, submit lint) applies as for any job.  Never
 # loosens a constraint (no clock / uncertainty / margin / SDC change; hold margins stay the existing defaults).  At most
 # one action per job per class (j["auto_react"] = {class: successor or "in-place"}); a successor (spec
@@ -5640,6 +6994,7 @@ READY_NEXT = Path(os.environ.get("CL_READY_NEXT_DIR", str(TAKEOVER / "READY_NEXT
 AUTO_REACT_FAIL = {"NEEDS_RTL", "NEEDS_HUMAN", "FLOORPLAN_MARGIN", "PREROUTE_MARGIN", *EARLY_FAIL}
 AUTO_REACT_MAX_AGE_H = 6.0          # < DEEP_RELEASE_AGE_H: an in-place ECO needs the route products
 AR_HOLD_FF_FLOOR = -30.0
+AR_MACRO_TT_FLOOR = -45.0           # class f on a NEEDS_RTL: TT no worse than the combo band
 PINFLOP_SINCE = "2026-10-10T03:05"  # PINFLOP-REF overlay deployed (36795a58e): a route started later used it
 FP_LINT_CHECKS = ("bank_distance", "channel", "macro_edge", "pin_density", "pin_width", "sliver", "util")
 # (cmd regex the recipe must match, env knob, repo file at the job commit that must honour it, marker text in that file)
@@ -5768,6 +7123,115 @@ def drt_recipe(j):
     return None
 
 
+AR_NM_FF_FLOOR = -60.0
+AR_NM_DRC_MAX = 20
+AR_NM_HM_MAX = 0.050        # ns: above it CTS / GRT hold repair overloads (HM_LOW_SINCE note); never below the parent's
+REF_ROUTE_RE = re.compile(r"\bbash\s+(\S*tools/ref_tile/ref_route\.sh)\s+(\S+)")
+_INLINE_ENV_RE = r"(?<![\w$])%s=(\S+)\s+(?=(?:\w+=(?:'[^']*'|\S+)\s+)*bash\s+\S*tools/ref_tile/ref_route\.sh)"
+
+
+# FEED-THROUGH WINDOW (2026-10-13, finishing recipe C follow-up): vm_cp_fw3_cx / vm_cp_fe3_cx-cx1-eca45f5dc ended
+# "route hold repair stalled; window I2O=2@-56.2 I2O=2@-49.6" (ck -> qNW[*]: input port to output port, no register in
+# between) and class g routed 4 HM / PD variants that failed the same way at FF -54..-68.  A port-to-port path meets the
+# IO budget on both sides (0.2 T input-min against 0.2 T output hold) only with a register at the pin: delay cells cannot
+# close it, so the tile is a structural defect (owner 10-13: die timing by construction), never a near miss.
+PIN_REG_MISSING = "pin register missing: structural"
+_WIN_ROW_RE = re.compile(r"^([IR]2[OR])\s+(\d+)\s+(-?[\d.]+)", re.M)
+_WIN_TAG_RE = re.compile(r"\b([IR]2[OR])=(\d+)@(-?[\d.]+)")
+
+
+def feedthrough_window(j):
+    """'' or the text of the I2O (input port -> output port) class of the job's stalled hold window, when it violates:
+    from the kept ot_hold_stall_*.rpt rows (j["hold_window"]), else the 'window I2O=2@-56.2' tags of its reason"""
+    rows = _WIN_ROW_RE.findall(str(j.get("hold_window") or "")) or _WIN_TAG_RE.findall(str(j.get("reason") or ""))
+    bad = []
+    for cls, n, worst in rows:
+        try:
+            if cls == "I2O" and int(n) > 0 and float(worst) < FF_MIN:
+                bad.append((int(n), float(worst)))
+        except ValueError:
+            continue
+    if not bad:
+        return ""
+    return (f"{max(n for n, _ in bad)} input-to-output feed-through endpoint(s), worst {min(w for _, w in bad):+.1f} ps "
+            f"in the stalled hold window")
+
+
+def ar_near_miss(j):
+    """class g band: (True, kind "hold"|"drc") / (False, None)"""
+    spec, m = j["spec"], j.get("metrics") or {}
+    tt, ff, drc = m.get("ss_ps"), m.get("ff_ps"), m.get("drc")
+    if j["status"] != "NEEDS_RTL" or not spec.get("ref_tile") or spec.get("auto_react_parent"):
+        return False, None
+    if not all(isinstance(v, (int, float)) and not isinstance(v, bool) for v in (tt, ff, drc)):
+        return False, None
+    if not (tt >= SS_MIN and ff >= AR_NM_FF_FLOOR and 0 <= drc <= AR_NM_DRC_MAX) or (ff >= FF_MIN and drc == 0):
+        return False, None
+    if m.get("errors") or blocking_checks(j) or not _benches_ok(j):
+        return False, None
+    if not REF_ROUTE_RE.search(str(((spec.get("stages") or {}).get("route") or {}).get("cmd") or "")):
+        return False, None
+    return True, "hold" if ff < FF_MIN else "drc"
+
+
+def _route_inline(cmd, var):
+    mm = re.search(_INLINE_ENV_RE % var, cmd)
+    try:
+        return float(mm.group(1).strip("'\"")) if mm else None
+    except ValueError:
+        return None
+
+
+def near_miss_parent_knobs(j):
+    """(place density, hold margin ns) the near-miss route ran with: inline PD / HM in its route cmd, else kit.env PD at
+    the job commit (ref_route.sh default 0.55) and spec route_hold_margin_ns (loop default 0.010)"""
+    spec = j["spec"]
+    cmd = str(spec["stages"]["route"]["cmd"])
+    pd, hm = _route_inline(cmd, "PD"), _route_inline(cmd, "HM")
+    if pd is None:
+        try:
+            body = submit_lint.Git(REPO).show(str(spec["source"]["commit"]), REF_ROUTE_RE.search(cmd).group(2)) or ""
+            mm = re.search(r"^PD=([0-9.]+)\s*$", body, re.M)
+            pd = float(mm.group(1)) if mm else None
+        except Exception:  # noqa: BLE001
+            pd = None
+    if hm is None:
+        v = spec.get("route_hold_margin_ns")
+        hm = float(v) if isinstance(v, (int, float)) and not isinstance(v, bool) else 0.010
+    return (0.55 if pd is None else pd), hm
+
+
+def near_miss_variants(j, kind):
+    """[(class, PD, HM ns, text)] for the 2 finishing variants of a near miss (never a looser hold margin)"""
+    pd, hm = near_miss_parent_knobs(j)
+    lo, hi = round(max(0.30, pd - 0.05), 3), round(min(0.85, pd + 0.05), 3)
+    if kind == "hold":
+        h1 = round(max(hm, min(AR_NM_HM_MAX, max(0.030, hm + 0.020))), 3)
+        rows = [("g1", pd, h1), ("g2", lo, round(max(hm, min(AR_NM_HM_MAX, h1 + 0.020)), 3))]
+    else:
+        rows = [("g1", lo, hm), ("g2", hi, hm)]
+    return [(c, p, h, f"place density {p:g} (parent {pd:g}), route hold margin {h * 1000:g} ps (parent {hm * 1000:g} ps)")
+            for c, p, h in rows]
+
+
+def near_miss_mutate(spec, parent, cls, pd, hm, text):
+    st = spec["stages"]["route"]
+    cmd = re.sub(_INLINE_ENV_RE % "PD", "", re.sub(_INLINE_ENV_RE % "HM", "", st["cmd"]))
+    st["cmd"] = REF_ROUTE_RE.sub(lambda mm: f"PD={pd:g} HM={hm:g} bash {mm.group(1)} {mm.group(2)}", cmd, count=1)
+    spec["route_hold_margin_ns"] = hm
+    spec["variant_group"] = f"{parent}-arg"
+    spec["near_miss_variant"] = dict(parent=parent, cls=cls, place_density=pd, hold_margin_ns=hm)
+    spec.pop("structural_change", None)      # a finishing variant states no structure: the exemption class covers it
+    spec["notes"] = (str(spec.get("notes") or "") + f" [loop near-miss finishing variant {cls} of {parent}: {text}; "
+                     f"same RTL, kit and commit]").strip()
+
+
+def near_miss_slots(j):
+    spec = j["spec"]
+    held = route_keys().get(f"{spec['block']}@{str(spec['source']['commit'])[:12]}", [])
+    return max(0, min(AR_NM_VARIANTS, MAX_ROUTES_PER_KEY - len(set(held) | {j["name"]})))
+
+
 def ar_successor(j, cls, why, mutate):
     """drop <job>-ar<cls> (the submitted spec, same commit, mutated) into DROP; returns its name or None"""
     base = json.loads(json.dumps(j.get("spec_submitted") or j["spec"]))
@@ -5792,14 +7256,89 @@ def _prefix_env(spec, knob):
             st["cmd"] = f"export {knob}=1; " + st["cmd"]
 
 
+def macro_clk_flag(j, calib):
+    """MACRO-CLK after CTS: keep the calibrate's macro clock verdict with the job and flag outliers in its events"""
+    mc = calib.get("macro_clk") if isinstance(calib, dict) else None
+    if not isinstance(mc, dict):
+        return
+    j["calibration"]["macro_clk"] = mc
+    txt = macro_clk.calib_flag_text(mc)
+    if txt:
+        event(j, txt)
+        ledger(j, txt)
+
+
+def macro_clk_sig(j):
+    """macro_clk.signature() of this job's CTS logs (+ calibrate verdict), cached per verdict (one ssh per failure)"""
+    key = str(j.get("finished_at"))
+    c = j.get("macro_clk_sig")
+    if isinstance(c, dict) and c.get("at") == key:
+        return c
+    mc = (j.get("calibration") or {}).get("macro_clk")
+    logs = []
+    if j.get("host") and j.get("run"):
+        try:
+            r = ssh(j["host"], macro_clk.scan_cmd(j["run"]), timeout=120)
+            logs = macro_clk.parse_cts_logs(r.stdout) if r.returncode == 0 else []
+        except Exception as ex:  # noqa: BLE001
+            log(f"[{j['name']}] macro-clk scan failed: {type(ex).__name__}: {str(ex)[:160]}")
+    sig = dict(macro_clk.signature(logs, mc), at=key)
+    j["macro_clk_sig"] = sig
+    return sig
+
+
+def ar_macro_clk(j):
+    """class f applies: (True, detail) / (False, why-not or None when there is no macro clock signature)"""
+    m = j.get("metrics") or {}
+    ff, tt = m.get("ff_ps"), m.get("ss_ps")
+    num = lambda v: isinstance(v, (int, float)) and not isinstance(v, bool)  # noqa: E731
+    # a NEEDS_RTL counts only when hold is its problem (FF < 0, TT within the combo band): a deep setup miss is not
+    hold_fail = j["status"] == "EARLY_FAIL_HOLD" or (
+        j["status"] == "NEEDS_RTL" and num(ff) and ff < FF_MIN and num(tt) and tt >= AR_MACRO_TT_FLOOR)
+    if not hold_fail or j["spec"].get("macro_cts") is False:
+        return False, None
+    sig = macro_clk_sig(j)
+    if not sig["hit"]:
+        return False, None
+    if sig["clustered"]:
+        return False, f"macro clock outlier WITH the clustering default on ({sig['why']}): structural -- launch the SRAM " \
+                      f"inputs from a flop on the macro's leaf / lockup, or re-place the macros"
+    return True, f"macro clock on a shallow leaf-less tree ({sig['why']}) -> requeue under the macro clustering default"
+
+
 def ar_plan(j):
     """(class, kind, detail) for the first recipe that applies, else (None, None, why)"""
     spec = j["spec"]
+    if j["status"] == "NEEDS_RTL" and eco_layer_cap_refused(j):     # before a/b: an in-place ECO would be refused again
+        if spec.get("auto_react_parent"):
+            return None, None, ("layer-cap leak again after the automatic re-route: regenerate the kit and re-route "
+                                "(no further automatic route)")
+        if not kit_has_grt_cap_fix(j):      # coordinator 2026-10-13: the loop ships the fixed hook into old kits too
+            return "h", "successor", (f"hold ECO refused for a layer-cap leak; the kit predates {GRT_CAP_FIX} -> one "
+                                      f"re-route with the fixed grt_macro_top_layer*.tcl shipped into the snapshot")
+        return "h", "successor", "hold ECO refused for a layer-cap leak -> one re-route with the current kit recipe"
     if ar_hold_window(j):
         return "a", "in-place", "hold-only miss within 30 ps -> narrow KEEPWIRES hold ECO"
     if ar_combo_window(j):
         return "b", "in-place", "thin TT and FF miss -> combo ECO"
     succ_ok = not spec.get("auto_react_parent")
+    if j["status"] in ("EARLY_FAIL_HOLD", "NEEDS_RTL"):
+        mf, mwhy = ar_macro_clk(j)
+        if mf and succ_ok:
+            return "f", "successor", mwhy
+        nm, kind = ar_near_miss(j)
+        ft = feedthrough_window(j) if nm else ""
+        if ft:
+            if PIN_REG_MISSING not in str(j.get("reason") or ""):      # a verdict written before this class existed
+                j["reason"] = f"{j.get('reason') or ''}; {PIN_REG_MISSING}"[:300]
+            return None, None, (f"{PIN_REG_MISSING} ({ft}): register the port at the pin (RTL); no finishing variant "
+                                f"can close a port-to-port path")
+        if nm:
+            m = j.get("metrics") or {}
+            return "g", "variants", (f"near miss (TT {m.get('ss_ps')} / FF {m.get('ff_ps')} ps / DRC {m.get('drc')}; "
+                                     f"{kind}) -> finishing variants")
+        if mwhy:
+            return None, None, mwhy if succ_ok else f"auto-react successor (class {spec.get('auto_react_class')}); {mwhy}"
     if j["status"] == "EARLY_FAIL_HOLD":
         if not succ_ok:
             return None, None, "auto-react successor failed again (EARLY_FAIL_HOLD)"
@@ -5963,6 +7502,23 @@ def auto_react(jobs, now=None):
                     ar_reopen(j, cls, detail)
                     done[cls] = "in-place"
                     action = f"{cls}:in-place"
+            elif cls and kind == "variants":
+                slots = near_miss_slots(j)
+                rows = near_miss_variants(j, ar_near_miss(j)[1])[:slots]
+                names = []
+                for vc, pd, hm, text in rows:
+                    nm = ar_successor(j, vc, detail, lambda s, a=(vc, pd, hm, text): near_miss_mutate(s, j["name"], *a))
+                    if nm:
+                        names.append(nm)
+                        event(j, f"auto-react g: {detail}; variant {nm} dropped for intake (same commit): {text}")
+                if names:
+                    done[cls] = names
+                    action = f"g:{','.join(names)}"
+                    ledger(j, f"AUTO-REACT g (loop): {detail}; variants {', '.join(names)} "
+                              f"(structure-repeat exemption class {NEAR_MISS_EXEMPT}; first to CLOSE cancels the queued one)")
+                else:
+                    cls, detail = None, (f"{detail}: no route slot left for the block@commit ({MAX_ROUTES_PER_KEY} routes "
+                                         f"per source commit)" if not slots else f"{detail}: variant names already taken")
             elif cls:
                 if cls == "c":
                     def mut(s):
@@ -5970,6 +7526,14 @@ def auto_react(jobs, now=None):
                 elif cls == "d":
                     def mut(s):
                         s["sliver_block"] = True
+                elif cls == "f":
+                    def mut(s):
+                        s["macro_cts"] = True        # marker only: the clustering default applies to every job
+                elif cls == "h":
+                    def mut(s):
+                        s.setdefault("structural_change", "re-route under the current kit recipe: the GRT macro hook "
+                                     "restores the DRT top layer (dc5594311, shipped into the snapshot for older "
+                                     "kits), so no wire lands above the layer cap")
                 else:
                     knob = drt_recipe(j)
 
@@ -6055,10 +7619,15 @@ def host_down_requeue(j, kind, now=None):
 
 
 def tick(fleet):
+    t_ph = time.time()
+    overlay_drift_check()
+    _slow_phase("overlay_drift_check", t_ph)
+    t_ph = time.time()
     try:
         ingest()
     except Exception:  # noqa: BLE001
         log("ingest error:\n" + traceback.format_exc())
+    _slow_phase("ingest", t_ph)
     own = {}
     for x in all_jobs():
         if x["status"] in ("RUNNING", "ECO", "SUMMARY", "ECO_INSTALL") and x.get("host"):
@@ -6069,22 +7638,13 @@ def tick(fleet):
             if e.get("state") == "running":
                 own[e["host"]] = own.get(e["host"], 0) + 4
     fleet.own_running = own
-    try:
-        release_bulk(all_jobs())
-    except Exception:  # noqa: BLE001
-        log("release_bulk error:\n" + traceback.format_exc())
-    try:
-        release_deep(all_jobs())
-    except Exception:  # noqa: BLE001
-        log("release_deep error:\n" + traceback.format_exc())
+    schedule_housekeeping()     # release_bulk / release_deep / stale24_sweep: background, never ahead of dispatch
+    t_mg = time.time()
     try:
         mem_guard(all_jobs(), fleet)
     except Exception:  # noqa: BLE001
         log("mem guard error:\n" + traceback.format_exc())
-    try:
-        stale24_sweep(all_jobs())
-    except Exception:  # noqa: BLE001
-        log("stale24 sweep error:\n" + traceback.format_exc())
+    _slow_phase("mem_guard", t_mg)
     for req in sorted((STATE / "migrate_requests").glob("*.json")) if (STATE / "migrate_requests").exists() else []:
         try:
             rq = json.loads(req.read_text())
@@ -6144,6 +7704,33 @@ def tick(fleet):
 
 _RECOVERY_POOL = None
 _RECOVERY_FUTURE = None
+_HOUSE_POOL = None
+_HOUSE_FUTURE = None
+SLOW_PHASE_S = 30
+
+
+def _slow_phase(name, t0):
+    """a tick phase on the main thread that took > SLOW_PHASE_S is named in daemon.log (READY jobs wait for it)"""
+    dt = time.time() - t0
+    if dt > SLOW_PHASE_S:
+        log(f"SLOW-TICK: {name} held the dispatch thread {dt:.0f} s")
+
+
+def housekeeping():
+    """disk give-back passes (ssh up to 30 min each, git): one background thread, so a READY job never waits for them"""
+    for name, fn in (("release_bulk", release_bulk), ("release_deep", release_deep), ("stale24 sweep", stale24_sweep)):
+        try:
+            fn(all_jobs())
+        except Exception:  # noqa: BLE001
+            log(f"{name} error:\n" + traceback.format_exc())
+
+
+def schedule_housekeeping():
+    global _HOUSE_POOL, _HOUSE_FUTURE
+    if _HOUSE_POOL is None:
+        _HOUSE_POOL = ThreadPoolExecutor(max_workers=1)
+    if _HOUSE_FUTURE is None or _HOUSE_FUTURE.done():
+        _HOUSE_FUTURE = _HOUSE_POOL.submit(housekeeping)
 
 
 def recover_jobs():
@@ -6218,6 +7805,7 @@ def cmd_daemon(a):
                                      stderr=subprocess.STDOUT)
             log("register reconcile started (hourly)")
         tick(fleet)
+        _slow_phase("tick", t0)
         try:
             publish_measured()
         except Exception:  # noqa: BLE001
@@ -6228,10 +7816,7 @@ def cmd_daemon(a):
 
 
 def cmd_status(a):
-    for r in all_jobs():
-        h = host_cfg(r["host"])["label"] if r.get("host") else "-"
-        print(f"{r['name']:40s} {r['status']:12s} {r.get('stage_key', '-'):16s} {h:8s} "
-              f"{(r.get('reason') or r.get('wait') or '')[:90]}")
+    status_report.print_status(all_jobs(), a, TERMINAL, host_label)
     hb = STATE / "heartbeat"
     print("heartbeat:", hb.read_text().strip() if hb.exists() else "none")
 
@@ -6240,6 +7825,18 @@ def cmd_validate(a):
     spec = json.loads(Path(a.file).read_text())
     errs = validate(spec)
     if not errs:
+        spec, _ = expand_benched_by(spec)
+        why = bench_gate_check(spec)
+        if why and spec.get("ref_tile"):
+            errs.append(f"SUBMIT_LINT BENCH_REQUIRED: the loop would REFUSE this job: {why} (fix: {BENCH_GATE_FIX})")
+        elif why:
+            print(f"BENCH_REQUIRED WARN: {why}: the guarded auto-merge would skip this job's CLOSED")
+        cs = (closed_stands_check(spec, spec.get("name")) if closed_stands_mode() != "off"
+              else {"verdict": "NA"})
+        if cs["verdict"] == "REFUSE" and closed_stands_mode() == "refuse":
+            errs.append(f"SUBMIT_LINT CLOSED_STANDS: the loop would REFUSE this job: {cs['message']}")
+        elif cs["verdict"] != "NA":
+            print(f"closed-stands {cs['verdict']}: {cs.get('message', '')}")
         res = submit_check(spec)
         print(f"submit lint {res['verdict']}: {res.get('message', '')}"
               + (f" (estimate {res.get('est')} b/um, with fix {res.get('est_fix')})" if res.get("est") else ""))
@@ -6326,12 +7923,85 @@ def cmd_submit_recheck(a):
         append_locked(Path(a.log), "".join(f"{now_iso()} [lint-at-submit recheck] {x}\n" for x in out))
 
 
+# RETRY OF A FLOORPLAN_MARGIN JOB (flowfix 2026-10-13).  A job the floorplan / textbook lint stopped could not be retried
+# after the LINT was fixed (qfd_sp_res_ser-c1: the cluster utilisation rule changed, the job had to be re-dropped under a
+# new name).  `retry` now re-runs both lints with the CURRENT tools (origin/main's fp_margin_lint.py / textbook_lint.py,
+# as the loop ships them) on the geometry dump and synthesis netlist the stopped stage left on its host, with the job's
+# own thresholds (spec fp_lint / textbook_lint) and the current loop mode.  PASS -> the job is requeued from the stopped
+# stage and its block@commit route slot is released (it spent no route); FAIL -> it stays FLOORPLAN_MARGIN and the new
+# lint text is printed.  No dump left (run released / deleted): refused unless --force (the stage then starts over and
+# the in-flow lint, shipped from main, judges again).
+FP_RELINT_TOOLS = ("tools/fp_margin_lint.py", "tools/textbook_lint.py")
+
+
+def fp_margin_relint(j):
+    """(verdict, text): PASS | FAIL | ERROR | NODUMP for a FLOORPLAN_MARGIN job, judged with the current lint tools"""
+    import base64
+    host, run, tag_ = j.get("host"), j.get("run"), j.get("stage_tag") or "retry"
+    if not host or not run:
+        return "NODUMP", "the job has no host / run directory"
+    d = f"{run}/cl/fplint/{tag_}/relint"
+    script = f"set -u\nD={shlex.quote(d)}; rm -rf $D; mkdir -p $D || exit 9\n"
+    for rel in FP_RELINT_TOOLS:
+        try:
+            data = _ovl_resolve(rel)[0]
+        except Exception:  # noqa: BLE001  (resolver / git trouble: the daemon tree's copy)
+            data = (HERE.parents[1] / rel).read_bytes()
+        script += f"base64 -d > $D/{Path(rel).name} <<'OT_B64_EOF'\n{base64.encodebytes(data).decode()}OT_B64_EOF\n"
+    cfg = textbook_cfg(j)
+    script += (
+        f"printf '%s\\n' {shlex.quote(json.dumps(cfg))} > $D/textbook_cfg.json\n"
+        f"DUMP=$(find {shlex.quote(run)} -name fp_margin_lint_dump.json -not -path '*/relint/*' -printf '%T@ %p\\n' "
+        f"2>/dev/null | sort -n | tail -1 | cut -d' ' -f2-)\n"
+        "[ -n \"$DUMP\" ] || { echo RELINT_NODUMP; exit 0; }\n"
+        "echo \"RELINT_DUMP=$DUMP\"\n"
+        f"python3 $D/fp_margin_lint.py check \"$DUMP\" --out $D/fp_margin_lint.json {gate_args(j['spec'].get('fp_lint', True))} 2>&1; "
+        "echo \"RELINT_FP_RC=$?\"\n")
+    if cfg.get("mode") != "off":
+        script += (
+            "RD=$(dirname \"$DUMP\"); RES=${RD/\\/reports\\//\\/results\\/}; NET=\n"
+            "for f in $RES/1_2_yosys.v $RES/1_synth.v $RD/textbook_netlist.v; do [ -s $f ] && { NET=$f; break; }; done\n"
+            "if [ -n \"$NET\" ]; then timeout 1800 python3 $D/textbook_lint.py check --netlist $NET --dump \"$DUMP\" "
+            "--out $D/textbook_lint.json --cfg $D/textbook_cfg.json 2>&1; echo \"RELINT_TB_RC=$?\"; "
+            "else echo RELINT_TB_RC=nonetlist; fi\n")
+    try:
+        r = ssh(host, script, timeout=2400)
+    except Exception as ex:  # noqa: BLE001
+        return "ERROR", f"{host} not reachable: {type(ex).__name__}: {str(ex)[:160]}"
+    out = r.stdout or ""
+    if "RELINT_NODUMP" in out:
+        return "NODUMP", f"no fp_margin_lint_dump.json under {host}:{run} (run released or deleted)"
+    kv = dict(re.findall(r"^(RELINT_[A-Z_]+)=(\S+)", out, re.M))
+    lines = [ln for ln in out.splitlines() if ln.startswith(("fp_margin_lint:", "FLOORPLAN_MARGIN:", "TEXTBOOK_LINT:",
+                                                             "textbook_lint: REFUSE"))]
+    fp_rc, tb_rc = kv.get("RELINT_FP_RC"), kv.get("RELINT_TB_RC", "0")
+    fails = [ln for ln in lines if ln.startswith(("FLOORPLAN_MARGIN:", "TEXTBOOK_LINT:"))]
+    if fp_rc == "3" or tb_rc == "3":
+        return "FAIL", " || ".join(fails or lines)[:1500]
+    if fp_rc != "0" or tb_rc not in ("0", "nonetlist"):
+        return "ERROR", (f"lint tool error (fp rc {fp_rc}, textbook rc {tb_rc}; rc {r.returncode}): "
+                         + (out[-400:] or (r.stderr or "")[-400:]).replace("\n", " | "))
+    head = next((ln for ln in lines if ln.startswith("fp_margin_lint:")), "fp_margin_lint: PASS")
+    return "PASS", head[:300] + ("" if tb_rc == "0" else "; textbook lint not re-run (no netlist kept)" if cfg.get("mode") != "off" else "")
+
+
 @locked_job_command
 def cmd_retry(a):
     j = load_job(a.name)
-    if j["status"] not in ("NEEDS_HUMAN", "NEEDS_BUDGET", "PREROUTE_MARGIN", *EARLY_FAIL):
-        sys.exit(f"{a.name} is {j['status']}; only NEEDS_HUMAN / NEEDS_BUDGET / PREROUTE_MARGIN / EARLY_FAIL_* jobs "
-                 f"can be retried")
+    if j["status"] not in ("NEEDS_HUMAN", "NEEDS_BUDGET", "PREROUTE_MARGIN", "FLOORPLAN_MARGIN", *EARLY_FAIL):
+        sys.exit(f"{a.name} is {j['status']}; only NEEDS_HUMAN / NEEDS_BUDGET / PREROUTE_MARGIN / FLOORPLAN_MARGIN / "
+                 f"EARLY_FAIL_* jobs can be retried")
+    if j["status"] == "FLOORPLAN_MARGIN":
+        v, text = fp_margin_relint(j)
+        if v == "FAIL":
+            sys.exit(f"{a.name}: still FLOORPLAN_MARGIN with the current lint, not requeued: {text}")
+        if v == "ERROR" or (v == "NODUMP" and not getattr(a, "force", False)):
+            sys.exit(f"{a.name}: floorplan lint not re-run ({text}); not requeued"
+                     + (" -- `retry --force` starts the stage over (the in-flow lint, shipped from main, judges again)"
+                        if v == "NODUMP" else ""))
+        release_route_key(j)      # it stopped before global placement: its requeue is not a second route of the key
+        event(j, "human retry of FLOORPLAN_MARGIN: " + (f"lint re-run with the current tools PASS ({text})" if v == "PASS"
+                                                        else f"--force, {text}"))
     if j["status"] == "NEEDS_BUDGET" and j.get("budget"):
         j["budget"]["override"] = "human retry after NEEDS_BUDGET"
         j["spec"].setdefault("budget", {})["on_deviation"] = "continue"
@@ -6607,7 +8277,7 @@ def hold_stop_resume(j, stage, buffers, why):
             if "BUSY" not in r.stdout:
                 break
             time.sleep(10)
-    ship_helpers(host, run)
+    ship_helpers(host, run, j)
     r = ssh(host, f"cd {run}/src && python3 {run}/cl/resume_patch.py .", timeout=120)
     if r.returncode:
         raise RuntimeError(f"resume patch failed: {(r.stdout + r.stderr)[-400:]}")
@@ -6738,12 +8408,14 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
     d = sub.add_parser("daemon"); d.add_argument("--interval", type=int, default=60)
-    sub.add_parser("tick"); sub.add_parser("status")
+    sub.add_parser("tick")
+    status_report.add_arguments(sub.add_parser("status", help="active jobs and recent results (--all for history)"))
     v = sub.add_parser("validate"); v.add_argument("file")
     sr = sub.add_parser("submit-recheck"); sr.add_argument("--since", required=True)
     sr.add_argument("--requeue", action="store_true"); sr.add_argument("--log")
     r = sub.add_parser("retry"); r.add_argument("name"); r.add_argument("--at", help="resume at this stage key")
     r.add_argument("--keep-resume", action="store_true", help="keep a pending checkpoint resume / HOLD-STOP caps")
+    r.add_argument("--force", action="store_true", help="FLOORPLAN_MARGIN job whose lint dump is gone: requeue anyway")
     r = sub.add_parser("retry-eco"); r.add_argument("name"); r.add_argument("--why", default="hold_eco rev 2")
     r.add_argument("--stack", action="store_true", help="ECO on top of an installed ECO (its db in the route base)")
     r = sub.add_parser("ioref-rejudge"); r.add_argument("name")

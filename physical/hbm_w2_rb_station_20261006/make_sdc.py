@@ -37,6 +37,8 @@ p.add_argument('--wire-credit-ps', type=float, default=0.0, help='0.112 ps/um x 
 p.add_argument('--hold-relax', action='store_true', help='calibration run: IO hold constraints relaxed (insertion measurement only)')
 p.add_argument('--half', action='store_true', help='half-rate shell: forwarded inverters are w_clk*, core clock is a divide-by-2 generated clock at the ICG AND')
 p.add_argument('--route-ss-hold', action='store_true', help='route SDC: hold windows referenced to the SS insertion (the flow repairs hold at the SS corner; sign-off uses the FF model)')
+p.add_argument('--hold-unc-all-clocks', action='store_true', help='legacy sign-off: the IO hold uncertainty (50) on '
+               '[all_clocks], i.e. internal hold 25 ps above the AGENTS 60/25 policy (reproduces pre-2026-10-11 verdicts)')
 p.add_argument('--skew-ps', type=float, default=150.0)
 p.add_argument('--hold-skew-ps', type=float, default=50.0)
 p.add_argument('--io-ref-period-ps', type=float, default=None, help='sign-off period the IO windows refer to (default: --period-ps)')
@@ -88,6 +90,21 @@ if a.route_ss_hold and not a.hold_relax:
     in_min = a.l_min - a.hold_skew_ps + a.clkq_min_ps
     out_min = -(a.l_min - a.hold_skew_ps)
     hold_unc = 25
+# POLICY-HOLD (el1011-hbm-no3 2026-10-11): AGENTS.md sign-off policy is 60 ps setup / 25 ps hold uncertainty.  The
+# sign-off mode (--l-ff-max) used to put its 50 ps IO hold model on [all_clocks], so every INTERNAL reg2reg / removal
+# hold check was signed off 25 ps above policy while the route (station.sdc, hold 25) repaired to policy: the
+# ~-30..-36 ps FF signature shared by NO2 (pre-ECO -34.56), NO3 and NO3_split (worst path = a 2-cell flop pair across
+# clock leaves, 50 ps uncertainty).  The clock uncertainty is now the policy 25 ps and the approved IO hold model keeps
+# its full 50 ps by moving the difference into the min IO delays -- an identical check on every IO hold path:
+#   input : in_min + path >= L_cap + 50 + th   <=>  (in_min - 25) + path >= L_cap + 25 + th
+#   output: arr >= edge + 50 - out_min          <=>  arr >= edge + 25 - (out_min - 25)
+# --hold-unc-all-clocks reproduces the old (over-policy) sign-off.
+POLICY_HOLD_UNC = 25.0
+if hold_unc > POLICY_HOLD_UNC and not a.hold_unc_all_clocks:
+    io_extra = hold_unc - POLICY_HOLD_UNC
+    in_min -= io_extra
+    out_min -= io_extra
+    hold_unc = POLICY_HOLD_UNC
 L = a.l_max
 lines = [
     f'# W2 rb station receiver clock-root contract ({"LEGACY overlapping split" if a.legacy_split else f"consistent link split S {S:.1f} / R {R:.1f} / link {link:.1f}"}): period {a.period_ps} ps, L SS {a.l_min}..{a.l_max} FFmin {a.l_ff_min} ps, setup skew {a.skew_ps} ps, hold skew {a.hold_skew_ps} ps, IO windows at {a.io_ref_period_ps or a.period_ps} ps',

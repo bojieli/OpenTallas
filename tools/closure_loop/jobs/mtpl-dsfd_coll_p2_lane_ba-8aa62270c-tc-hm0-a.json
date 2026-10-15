@@ -1,0 +1,93 @@
+{
+ "name": "mtpl-dsfd_coll_p2_lane_ba-8aa62270c-tc-hm0-a",
+ "block": "dsfd_coll_p2_lane_ba",
+ "owner": "Claude:mtp-colllane-1011",
+ "purpose": "ds-1010 owner/coordinator decision: DEDICATED MTP link lanes on dsfd_sp_collective (never a pass-through queue in the closed core). P2 dedicated lane adapter, draft die A die-B lane E4 (UCIe, placed MY): RX lane-1 words 604 b in 2 beats, DIRECT (the only class: link-layer credits), output = registered-room FIFO + MTP grant sender onto the die bus (fix of 0ddaf548b TT -141: consumer ready pin fanned to 604-bit enables); abuts the mirrored E4 lane tile. HM 0.000, track a.",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-epyc4"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/mtp-colllane-1011",
+  "commit": "8aa62270c"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "exact_p2l",
+    "cmd": "python3 tools/mtp_p2lane_gate.py --out {RUN}/bench --cases p2l_s1 --raw -j 1",
+    "expect": "pass",
+    "pass_regex": "P2LANE_RAW PASS",
+    "threads": 8,
+    "peak_ram_gb": 16
+   },
+   {
+    "name": "neg_seg",
+    "cmd": "python3 tools/mtp_p2lane_gate.py --out {RUN}/bench --cases neg_seg --raw -j 1",
+    "expect": "fail",
+    "fail_regex": "P2LANE_RAW FAIL",
+    "threads": 8,
+    "peak_ram_gb": 16
+   }
+  ],
+  "calibrate": {
+   "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; HM=0.000 PD=0.40 SRC={SRC} OUT={RUN}/routes CORES=16 NEED=32 SRCS='rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv rtl/common/ot_link_credit.sv' CLK=ck PDN=physical/s81_ph_views/collective/pdn_coll.tcl SDCX=physical/redesign_ds/coll_split/tile.sdc bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_coll_p2_lane_ba rtl/dsrom_sys/s81_ph/coll/dsfd_coll_p2_lane.sv --step-tcl PRE_GLOBAL_PLACE=physical/qwen_die_masters/io_flop_at_pins.tcl --step-tcl PRE_DETAIL_PLACE=physical/qwen_die_masters/out_flop_release.tcl $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+   "threads": 16,
+   "peak_ram_gb": 32
+  },
+  "route": {
+   "cmd": "SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; HM=0.000 PD=0.40 SRC={SRC} OUT={RUN}/routes CORES=16 NEED=32 SRCS='rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv rtl/common/ot_link_credit.sv' CLK=ck PDN=physical/s81_ph_views/collective/pdn_coll.tcl SDCX=physical/redesign_ds/coll_split/tile.sdc bash physical/s81_ph_views/common/route_view.sh {LABEL} contract dsfd_coll_p2_lane_ba rtl/dsrom_sys/s81_ph/coll/dsfd_coll_p2_lane.sv --step-tcl PRE_GLOBAL_PLACE=physical/qwen_die_masters/io_flop_at_pins.tcl --step-tcl PRE_DETAIL_PLACE=physical/qwen_die_masters/out_flop_release.tcl",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/* {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/check.json {RUN}/routes/{LABEL}/args {RUN}/record/ && (cp {CL}/calib.json {RUN}/record/calib.json || true)"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "lef_check_MATCH",
+    "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{LABEL}/check.json'))['verdict'] != 'MATCH')\""
+   }
+  ],
+  "post_sdc": [
+   "physical/s81_ph_views/common/signoff_unc60.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/s81_ph_views/closed/dsfd_coll_p2_lane_ba"
+  }
+ ],
+ "cycles_added": "off the chain (lane-1 words stream ahead of the start)",
+ "merge_target": "main",
+ "budget": {
+  "enabled": false,
+  "reason": "S81-PH tile sheet is grade target (no calibration); routed on the calibrated measured insertion (standard flow, as the coll split3 tiles)."
+ },
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.0,
+ "host_require": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-epyc4"
+ ],
+ "route_corner": "TC"
+}

@@ -37,6 +37,7 @@ Both sit inside the old reservation, at the arrangement with the least bit-weigh
 import copy
 import functools
 import os
+import re
 
 MOVED_KINDS = {'phy', 'ctrl', 'cdc', 'link_fifo', 'hub_element', 'link_station'}
 DROP_CLASSES = {'kv_land', 'link_channel', 'link_spine', 'hbm_cdc', 'cdc_core', 'phy_dfi', 'strip_fan'}
@@ -102,7 +103,9 @@ def surgery(v, m, compact_seq=False):
             i.master = 'qfd_tile_nk'
     dx = g['x_arr_w'] - MARGIN
     xr = g['x_eband']
-    assert min(i.x for i in keep) >= dx - 1e-6 and max(i.x + i.w for i in keep) <= xr + 1e-6, 'kept outside the bands'
+    # qwen-tp8 tp8b (F2): the IO row is longer than the narrower 48-column field until _tp8b_f2 re-places it in the S band
+    chk = [i for i in keep if not (getattr(v, 'BAND_OF', None) and i.kind in ('io', 'xfifo'))]
+    assert min(i.x for i in chk) >= dx - 1e-6 and max(i.x + i.w for i in chk) <= xr + 1e-6, 'kept outside the bands'
     for i in keep:
         i.x = round(i.x - dx, 4)
     W = round(xr - dx + MARGIN, 4)
@@ -115,19 +118,28 @@ def surgery(v, m, compact_seq=False):
               v.up(D2D_H, v.GY) - v.SHAVE, 'R0', kind='d2d', region='io', domain='stream_1p2')
     ck = Inst('clk_rx', 'qfd_clkrx', round(hub.x - dx, 4), hub.y, hub.w, hub.h, 'R0', kind='clock_root',
               region=hub.region, domain='stream_1p2')
-    cb = Inst('ckb_rom', 'qfd_ckbump', round(xc - 43.2 - 4.32, 4), y0, 43.2 - v.SHAVE, 43.2 - v.SHAVE, 'R0', kind='bump',
-              region='io', domain='stream_1p2')
-    insts += [ph, ad, ck, cb]
-    rec['added_instances'] = [i.d() for i in (ph, ad, ck, cb)]
+    # qwendie-1011 (textbook audit class 4): the reset is synchronised AT the bump.  rs_bump (two ot_reset_sync,
+    # async assert / 2-flop sync release on clk_d2d) sits at the W end of the PHY | d2d_rom seam, where the PHY's and
+    # the link end's rst_n pins meet (<= ~300 um, one local net), with the forwarded clock / reset bump cell directly
+    # under it (still W of the PHY, inside its D2D bump band); the synchronised reset reaches clk_rx (die centre) as a
+    # relayed synchronous word (rst_fwd_s), not as one 16 mm unrelayed async net.  pll_fwd stays a clock trunk (the
+    # top segment of the die clock tree, built by die CTS).
+    rs = Inst('rs_bump', 'qfd_rstsync', v.dn(xc - 4.32 - RS_WH[0], v.GX), v.up(ad.y - RS_WH[1] / 2, v.GY),
+              RS_WH[0] - v.SHAVE, RS_WH[1] - v.SHAVE, 'R0', kind='reset_sync', region='io', domain='stream_1p2')
+    cb = Inst('ckb_rom', 'qfd_ckbump', v.dn(rs.x + (RS_WH[0] - 43.2) / 2, v.GX), v.dn(rs.y - 4.32 - 43.2, v.GY),
+              43.2 - v.SHAVE, 43.2 - v.SHAVE, 'R0', kind='bump', region='io', domain='stream_1p2')
+    insts += [ph, ad, ck, cb, rs]
+    rec['added_instances'] = [i.d() for i in (ph, ad, ck, cb, rs)]
     top_free = 6287.76     # r21c spine column M is free up to the sequencer
     assert ad.y + ad.h < top_free, 'd2d_rom does not fit under the sequencer'
     add = [('d2d_fdi', 'd2d_fdi', FDI_BITS, [('d2d_rom', 'fdi'), ('ucie_kv', 'fdi')]),
            ('seq_d2d', 'sequencer', CTL_BITS, [('sp_constants_sequencer', 'dc'), ('d2d_rom', 'dc')]),
            ('d2d_seq', 'sequencer', CTL_BITS, [('d2d_rom', 'dh'), ('sp_constants_sequencer', 'dh')]),
            ('pll_fwd', 'clock_trunk', 1, [('ckb_rom', 'pll_ck'), ('clk_rx', 'pll_fwd')]),
-           ('rst_fwd', 'reset', 1, [('ckb_rom', 'rs'), ('clk_rx', 'rst_fwd')]),
-           ('clk_d2d', 'clock_trunk', 1, [('clk_rx', 'pll_d2d'), ('d2d_rom', 'ck'), ('ucie_kv', 'clk')]),
-           ('rst_d2d', 'spine_local', 1, [('clk_rx', 'rso_d2d'), ('d2d_rom', 'rst_n'), ('ucie_kv', 'rst_n')]),
+           ('rst_fwd', 'reset', 1, [('ckb_rom', 'rs'), ('rs_bump', 'arst_n')]),
+           ('rst_fwd_s', 'spine_local', 1, [('rs_bump', 'rso_f'), ('clk_rx', 'rst_fwd')]),
+           ('clk_d2d', 'clock_trunk', 1, [('clk_rx', 'pll_d2d'), ('d2d_rom', 'ck'), ('ucie_kv', 'clk'), ('rs_bump', 'ck')]),
+           ('rst_d2d', 'spine_local', 1, [('rs_bump', 'rso_d'), ('d2d_rom', 'rst_n'), ('ucie_kv', 'rst_n')]),
            ('rst_seq', 'spine_local', 1, [('clk_rx', 'rso_seq'), ('sp_constants_sequencer', 'rsi')]),
            ('d2d_flt', 'spine_local', 9, [('d2d_rom', 'flt'), ('sp_constants_sequencer', 'dflt')])]   # link-end fault + cause
     nb += add
@@ -293,7 +305,7 @@ def _wrap_masters(v, m):
     def masters(model, k=1, port_bits=None):
         tiles = [i for i in model['insts'] if i.master == 'qfd_tile_nk']
         for i in tiles:
-            i.master = 'qfd_tile_e' if i.name.split('_')[1].isdigit() and int(i.name.split('_')[1]) >= 32 else 'qfd_tile'
+            i.master = 'qfd_tile_e' if i.name.split('_')[1].isdigit() and int(i.name.split('_')[1]) >= v.COLS // 2 else 'qfd_tile'
         sqi = next((i for i in model['insts'] if i.name == 'sp_constants_sequencer'), None)
         sq_wh = (sqi.w, sqi.h) if sqi is not None else None
         if SEQ_COMPACT and sqi is not None and m.get('r22k', {}).get('seq_compact'):
@@ -361,16 +373,29 @@ def _wrap_masters(v, m):
         M['qfd_d2d_rom'] = ad
         c = by['clk_rx']
         cm = Master('qfd_clkrx', c.w, c.h, 7, 'ROM-die clock root (forwarded KV-die PLL clock) + reset synchroniser')
-        j = 0
+        # qwendie-1011: 3.2 um grid (1.6 um < the M8 area-pin shape) and a STABLE slot per port: pll_r<k> -> slot k,
+        # the rest from slot 200 (sorted-list slots shifted when region outputs were added: pll_r107 sat on pll_r15)
+        rest = 200
         for p in sorted(used_ports.get('clk_rx', {})):
-            cm.area(p, 1, min(cm.w - 1.0, max(1.0, cm.w / 2 + ((j % 12) - 6) * 1.6)),
-                    min(cm.h - 1.0, max(1.0, cm.h / 2 + (j // 12 - 5) * 1.6)), 1)
-            j += 1
+            mk_ = re.fullmatch(r'pll_r(\d+)', p)
+            if mk_:
+                j = int(mk_.group(1))
+            else:
+                j, rest = rest, rest + 1
+            cm.area(p, 1, min(cm.w - 1.0, max(1.0, cm.w / 2 + ((j % 16) - 8) * 3.2)),
+                    min(cm.h - 1.0, max(1.0, cm.h / 2 + (j // 16 - 8) * 3.2)), 1)
         M['qfd_clkrx'] = cm
         cbm = Master('qfd_ckbump', 43.2 - v.SHAVE, 43.2 - v.SHAVE, 7, 'forwarded clock / reset bump pair from the KV die (pad cell)')
         cbm.area('pll_ck', 1, 21.0, 21.0, 1)
         cbm.area('rs', 1, 21.0, 18.0, 1)
         M['qfd_ckbump'] = cbm
+        rsm = Master('qfd_rstsync', RS_WH[0] - v.SHAVE, RS_WH[1] - v.SHAVE, 3,
+                     'bump-side reset synchroniser: 2 x rtl/lib/ot_reset_sync (ASYNC_STAGES 2) on clk_d2d')
+        rsm.face('arst_n', 1, 'S', 'M5', rsm.w / 2, 1)         # from the bump cell directly below
+        rsm.face('rso_d', 1, 'E', 'M4', rsm.h / 2, 1)          # PHY | d2d_rom seam (W end), rst_n pins
+        rsm.face('rso_f', 1, 'N', 'M5', rsm.w / 2, 1)          # relayed to clk_rx
+        rsm.area('ck', 1, rsm.w / 2, rsm.h / 2, 1)
+        M['qfd_rstsync'] = rsm
         sq = M.get('qfd_sp_constants_sequencer')        # r22ko4: no sequencer reservation
         cmp_ = bool(SEQ_COMPACT and m.get('r22k', {}).get('seq_compact'))   # compact: the left half of the S face
         if sq is not None:
@@ -562,11 +587,30 @@ def _compact_seq(v, m, rec):
 # (VM -> ctlm), seq_su <-> SU issue 476 / status 133 + accepted count 24.
 O4_CTLM = (777.6, 1814.4)
 O4_UP4 = (345.6, 388.8)
+RS_WH = (54.0, 32.4)            # qfd_rstsync frame (2 x ot_reset_sync + output flops), qwendie-1011
 O4_SEQ = (518.4, 518.4)
 O4_CBUF = (194.4, 216.0)
 O4_CROM = (194.4, 518.4)
 O4_UP4_LOW = os.environ.get('OT_R22KO4_UP4_LOW') == '1'   # study only (see _option4)
+# qwendie-1011 DIE DECISION (textbook audit class 6, el1011-q-sp 08:43): the vector memory's x path (32,768-b bank
+# rotate + 1,008 -> 2,048-word scatter into the 65,536-b x_q) cannot cross a 777.6-um-wide cut (~97k signals vs ~60k
+# tracks).  Same area, near-square: 3 x 777.6 wide, 1/3 of 6,220.8 tall.  The middle spine column widens by the
+# difference (everything east of the VM shifts east; the die widens); the SU (777.6) stays abutted under the VM's S
+# face, centred; the control tile sits on the VM's N face.  None = the r22ko4 slot as first built.
+O4_VM_SQ = (2332.8, 2073.6)
+O4_CTLM_S = dict(xd=100.0, xr=140.0, mx=400.0, ld=549.6)   # the control tile's S-face (VM-side) pin groups
+O4_ME_EN_BITS = 8               # me_en: one registered copy per VM bank-group tile, issued a cycle ahead by tt_ctlm
+O4_CHAN = 64.8                 # qwendie-1011: relay channel between the two constant-buffer rows
+O4_SUCH = 32.4                 # qwendie-1012 (it1 GRT 2D residual): channel between the SU S face and buffer row 0 (was abutted:
+                                #   all 16 cb words jog to their SU pins in one 4.8-um gcell row at y~10,060, cap 45-51 / use 46-53)
 O4_RROW = 64.8                 # relay row between the buffer rows and the ROM row (>= the 60.48-um wide-word relay frame)
+# qwen-1010/A 23:30: the all-reduce data path is the RTL's (ot_qwen_tp_seq_w12_vrl in seq_su reads the VM over seq_vrd /
+# vm_seq_q, streams the words to the collective and writes the result back over seq_vwr): the native sequencer <->
+# collective words through io_xfifo (forward {tag32, mode, last, data512} + valid + credit = 548 b, return {err, rank2,
+# last, data512} + valid + credit = 518 b), and NO VM <-> collective words (coll_tx / coll_rx and the VM ct / cr faces
+# go).  Chosen over a VM-port collective DMA: the all-reduce start (core_done) and the next segment's start both live in
+# seq_su, so a VM-top DMA adds the VM-height crossing for the descriptor and the done (seq_coll 51 vs 40 + ~13 + ~13).
+O4_COLL_BITS = dict(fwd=546 + 2, ret=516 + 2)
 O4_BITS = dict(me_snap=92, su_snap=57, me_start=49, pw=75, kvd=201, kok=1, meok=1, su_iss=476, su_st=133, su_acc=24,
                cb_su_a=8 + 192 + 6, cb_su_q=512, cb_far_a=8 + 192 + 6, cb_far_q=512 + 1, cb_ctl=6 + 1 + 18, cb_rdy=1 + 6 + 3,
                up_pw=128 + 1, up_ty=384, up_ty0=384 + 2, sel=28, up_flt=1)
@@ -580,12 +624,33 @@ O4_REPIN = {
                        'without the accepted count (bv_e{a,b}); the die wants issue / status / accepted count on E, the '
                        'constant ports per group on S',
     'qfd_su_cbuf_g': 'closed plan: SU side (crom_*) BOTTOM, far ROM side (f_*) TOP; the die (SU above) wants SU side N, far '
-                     'side S',
+                     'side S, control / ready (ctl, rdy) on S beside the far side (qwendie-1011)',
+    'qfd_sp_band_lanes': 'die plan r21m: c / f / pw / tt as M8 area pins; r22ko4 (qwendie-1011) wants them on the E face '
+                         '(tt y 150, pw 420, c 620, f 700 um, M4)',
     'qfd_crom_g': 'closed plan: crom_* BOTTOM; the die (its buffer above) wants them N',
-    'qfd_sp_vector_memory': 'VM instruction port ib on its W face; seq_su sits E of the VM -> ib on the E face'}
+    'qfd_sp_vector_memory': 'VM instruction port ib on its W face; seq_su sits E of the VM -> ib on the E face; '
+                            'near-square slot 2,332.8 x 2,073.6 (qwendie-1011): data words on the face toward their '
+                            'peer, tt_ctlm pairs (xd / xr / mx / ld) N in the middle third, me_en (mee, 8 b) N',
+    'qfd_sp_res_ser': 'die plan r21m: o / ok / cr as M8 area pins; r22ko4 near-square VM (qwendie-1011) wants them on '
+                      'the E face (o y 300, ok 340, cr 350 um, M4)'}
 
 
 def surgery_o4(v, m):
+    # qwendie-1011 audit: clock area pins on a 3.2 um grid; a final face-packing pass (outermost) with the abutted
+    # pairs pinned (VM sa / sq <-> SU va / vq, VM N <-> control tile S groups)
+    v.CK_AREA_PITCH = 3.2
+    # el1011-q-tile 2406851bf: the hierarchical tile's power pins are its parent grid's M7 straps (pdn_tile_h2.tcl)
+    # el1011-q-coll qfd_io_collective_pr2h (pdn_icoll_hier.tcl): the hierarchical collective (hard fold slices + source
+    # FIFOs, children xfifo l8n / io_host closed) ends in the same M7 straps (-pins M7) -> same die contract.
+    _m7 = dict(layer='M7', width=.288, spacing=.096, pitch=10.8, offset=1.0)
+    v.PG_STRAPS = {'qfd_tile_nk': _m7, 'qfd_io_collective': _m7}
+    # ctlm_i keeps p_am UNREGISTERED (fixed-latency argmax loop, el1011-q-seq 9d6bfc082).  A terminal-tight last relay
+    # (v.TERMINAL_TIGHT {('tt_ctlm', 'c<b>'): 100}) costs +1 relay on 5 of 6 c* chains (discrete relay sites) = the
+    # same +1 loop latency as a pin flop, so it is NOT enabled: the c* words keep their relay count (last hop ~400 um)
+    # and the die STA with the routed ctlm_i view decides; if it fails, the +1 goes to the ctlm pin flop (class 3).
+    v.FACE_PACK_FINAL = True
+    v.PINNED_FACE_PORTS = ({('qfd_sp_vector_memory', p) for p in ('sa', 'sq', *O4_CTLM_S)} |
+                           {('qfd_sp_su64_sfu', p) for p in ('va', 'vq')} | {('qfd_tt_ctlm', p) for p in O4_CTLM_S})
     surgery(v, m)
     _option4(v, m, m['r22k'])
     _vm_ar(v, m, 'seq_su', 'qfd_seq_su')
@@ -636,12 +701,132 @@ def _vm_ar(v, m, seq, seq_master):
     v.masters = masters
 
 
+def _o4_vm_square(v, m, rec, su, vm):
+    """the near-square VM slot (O4_VM_SQ): widen the middle spine column east of the VM, resize the VM in place (its S
+    face still on the SU's N face), centre the SU under it; returns the control tile's (x, y) on the VM's N face."""
+    g = m['geo']
+    w_old, h_old = vm.w + v.SHAVE, vm.h + v.SHAVE
+    extra = round(O4_VM_SQ[0] - w_old, 4)
+    xs = round(vm.x + vm.w + v.SHAVE, 4)
+    W = _spine_relay_channel(v, m, g, xs, extra, m['die']['w'])
+    H = m['die']['h']
+    m['die'] = dict(m['die'], w=W, mm2=round(W * H / 1e6, 3), margin_mm2=round(858 - W * H / 1e6, 3))
+    if getattr(v, 'SPINE_CHANNEL_X', None):
+        v.SPINE_CHANNEL_X = [round(x + extra, 3) if x >= xs - 1e-3 else x for x in v.SPINE_CHANNEL_X]
+        rec['spine_channel_x'] = v.SPINE_CHANNEL_X
+    vm.w, vm.h = round(O4_VM_SQ[0] - v.SHAVE, 4), round(O4_VM_SQ[1] - v.SHAVE, 4)
+    su.x = round(vm.x + (O4_VM_SQ[0] - (su.w + v.SHAVE)) / 2, 4)
+    rec['vm_square'] = dict(slot_um=list(O4_VM_SQ), old_slot_um=[round(w_old, 3), round(h_old, 3)],
+                            column_extra_um=extra, split_x_um=xs, vm_xy=[vm.x, vm.y], su_xy=[su.x, su.y],
+                            die_w_um=W, die_mm2=m['die']['mm2'], me_en_bits=O4_ME_EN_BITS)
+    return su.x, round(vm.y + O4_VM_SQ[1], 4)
+
+
+O4_VM_FIXED = ('sa', 'sq', 'mee', 'ib', 'svr', 'svq', 'svw')    # placed by their own rules (SU abutment, issuer, seq_su)
+
+
+def _o4_vm_pin_plan(m, vmi):
+    """VM data ports of the near-square slot, from the FINAL placement and the ORIGINAL (pre-relay) buses: each port
+    on the VM face toward its peer, centred on the peer's projection (clamped / separated in _o4_vm_master)."""
+    by = {i.name: i for i in m['insts']}
+    plan = {}
+    for bid, cl, bits, eps in m['buses']:
+        if cl == 'clock_trunk' or cl == 'reset':
+            continue
+        for i, p in eps:
+            if i != vmi.name or p in O4_VM_FIXED or p in O4_CTLM_S or p in plan:
+                continue
+            o = next((by[x] for x, _ in eps if x != vmi.name and x in by), None)
+            if o is None:
+                continue
+            ox, oy = o.x + o.w / 2, o.y + o.h / 2
+            if ox < vmi.x:
+                plan[p] = ('W', round(oy - vmi.y, 3))
+            elif ox > vmi.x + vmi.w:
+                plan[p] = ('E', round(oy - vmi.y, 3))
+            elif oy > vmi.y + vmi.h:
+                plan[p] = ('N', round(ox - vmi.x, 3))
+            else:
+                # the S face is the SU abutment (su_vm_abut: sa / sq only): a word to a peer below leaves W / E
+                plan[p] = ('W' if ox < vmi.x + vmi.w / 2 else 'E', round(oy - vmi.y, 3))
+    return plan
+
+
+def _o4_vm_master(v, Master, vmm, vmi, plan):
+    """the VM abstract at the near-square slot: every port on its face; N / S groups keep their offset from the
+    centred SU / control tile column (+ the column offset), E / W groups keep their height clamped into the shorter
+    face (the inner chain placed them toward their peers from the same instance y); _despan separates overlaps."""
+    off = (O4_VM_SQ[0] - O4_CTLM[0]) / 2
+    n = Master(vmm.name, vmi.w, vmi.h, vmm.obs_top, vmm.note + ' | near-square slot %.1f x %.1f (qwendie-1011)' % O4_VM_SQ)
+    grp = []
+    for p in vmm.order:
+        s = vmm.ports[p]
+        if s[0] == 'area':
+            n.area(p, s[1], n.w / 2 + (s[2] - vmm.w / 2), n.h / 2 + (s[3] - vmm.h / 2), s[4])
+            continue
+        _, bits, f, ly, c, pitch = s
+        half = bits * pitch * 0.048 / 2
+        if p in O4_CTLM_S:
+            f, ly, c = 'N', 'M5', off + O4_CTLM_S[p]   # abutted pair with the control tile's S face group (same x)
+        elif p in plan:
+            f, c = plan[p]
+            ly = 'M4' if f in 'EW' else 'M5'
+            if f in 'NS':
+                # the middle third of N / S is abutted (control tile / SU): other words leave through the outer thirds
+                lo_, hi_ = off - half - 2.0, off + O4_CTLM[0] + half + 2.0
+                if lo_ < c < hi_:
+                    c = lo_ if c - lo_ < hi_ - c else hi_
+                c = min(max(c, half + 2.0), n.w - half - 2.0)
+            else:
+                c = min(max(c, half + 2.0), n.h - half - 2.0)
+        elif f in 'NS':
+            c = c + off
+        else:
+            c = min(max(c, half + 2.0), n.h - half - 2.0)
+        grp.append([p, bits, f, ly, c, pitch, half])
+    grp.append(['mee', O4_ME_EN_BITS, 'N', 'M5', off + 200.0, 2, O4_ME_EN_BITS * 2 * 0.048 / 2])
+    # qwendie-1011: groups clamped to the same face end (rb3-5 / rk3-5 / rc3-5: every peer above the VM) overlapped;
+    # pack each face + layer: sorted by centre, pushed apart by 2 um, then shifted back inside the face if the pack ran
+    # past an end.  Abutted (fixed) groups keep their place; movable groups pack around them.
+    fixed = set(O4_CTLM_S) | {'sa', 'sq'}
+    for (f, ly) in {(g[2], g[3]) for g in grp}:
+        L = sorted((g for g in grp if g[2] == f and g[3] == ly), key=lambda g: g[4])
+        span = n.w if f in 'NS' else n.h
+        for _ in range(4):
+            for a, b in zip(L, L[1:]):
+                need = a[4] + a[6] + 2.0 + b[6]
+                if b[4] < need:
+                    if b[0] in fixed and a[0] not in fixed:
+                        a[4] = b[4] - b[6] - 2.0 - a[6]
+                    else:
+                        b[4] = need
+            over = L[-1][4] + L[-1][6] + 2.0 - span if L else 0.0
+            if over > 0:
+                for g in L:
+                    if g[0] not in fixed:
+                        g[4] -= over
+            under = 2.0 - (L[0][4] - L[0][6]) if L else 0.0
+            if under > 0:
+                for g in L:
+                    if g[0] not in fixed:
+                        g[4] += under
+            L.sort(key=lambda g: g[4])
+        for a, b in zip(L, L[1:]):
+            assert b[4] - b[6] >= a[4] + a[6] + 1.0, f'VM {f}/{ly}: {a[0]} / {b[0]} overlap after packing'
+    for p, bits, f, ly, c, pitch, half in grp:
+        n.face(p, bits, f, ly, round(c, 3), pitch)
+    return n
+
+
 def _option4(v, m, rec):
     by = {i.name: i for i in m['insts']}
     tt, sq, su, vm = by['sp_tree_top'], by['sp_constants_sequencer'], by['sp_su64_sfu'], by['sp_vector_memory']
+    S = v.SHAVE
+    tx, ty = tt.x, tt.y
+    if O4_VM_SQ:
+        tx, ty = _o4_vm_square(v, m, rec, su, vm)
     slab = by['sp_port_tiles_2_f1']
     Inst = type(tt)
-    S = v.SHAVE
     removed = [tt.name, sq.name]
     m['insts'] = [i for i in m['insts'] if i.name not in removed]
     new = []
@@ -653,25 +838,27 @@ def _option4(v, m, rec):
         return i
     if O4_UP4_LOW:
         # study: the upper-tile group at the VM top, the control tile N of it (band words to the old tree-top height)
-        y0 = tt.y
-        ctl = add('tt_ctlm', 'qfd_tt_ctlm', tt.x, v.up(tt.y + 2 * O4_UP4[1] + 2 * v.GY, v.GY), O4_CTLM)
+        y0 = ty
+        ctl = add('tt_ctlm', 'qfd_tt_ctlm', tx, v.up(ty + 2 * O4_UP4[1] + 2 * v.GY, v.GY), O4_CTLM)
     else:
-        ctl = add('tt_ctlm', 'qfd_tt_ctlm', tt.x, tt.y, O4_CTLM)
+        ctl = add('tt_ctlm', 'qfd_tt_ctlm', tx, ty, O4_CTLM)
         # 2 x 2 block N of the control tile: the band words come over the top to the block centre (up4_0's NE corner)
         # and fan out to the four abutted tiles there (<= 400 um, no stage), as the r21b tree top's bw* area pins
         y0 = ctl.y + O4_CTLM[1] + v.GY
-    ups = [add(f'tt_up4_{u}', 'qfd_tt_up4' if u == 0 else 'qfd_tt_up4_g', tt.x + (u % 2) * (O4_UP4[0] + v.GX),
+    ups = [add(f'tt_up4_{u}', 'qfd_tt_up4' if u == 0 else 'qfd_tt_up4_g', tx + (u % 2) * (O4_UP4[0] + v.GX),
                y0 + (u // 2) * (O4_UP4[1] + v.GY), O4_UP4) for u in range(4)]
     seq = add('seq_su', 'qfd_seq_su', slab.x, v.dn(slab.y - O4_SEQ[1] - v.GY, v.GY), O4_SEQ, dom=sq.domain)
     cb, cr = [], []
     for k in range(8):
         col, row = k % 4, k // 4
-        cb.append(add(f'cbuf_g_{k}', 'qfd_su_cbuf_g', su.x + col * O4_CBUF[0], su.y - (row + 1) * O4_CBUF[1], O4_CBUF,
-                      dom=su.domain))
+        # qwendie-1011 (textbook audit class 6): a relay channel (O4_CHAN) between the two buffer rows, so row 0's far
+        # side (S) and row 1's SU side (N) are open faces, not an abutted seam
+        cb.append(add(f'cbuf_g_{k}', 'qfd_su_cbuf_g', su.x + col * O4_CBUF[0],
+                      su.y - O4_SUCH - (row + 1) * O4_CBUF[1] - row * O4_CHAN, O4_CBUF, dom=su.domain))
     # one ROM row at one height, never crossed by a far word (a 518.4-um ROM group is longer than the 504-um reach):
     # groups 4..7 under their buffers in column M, groups 0..3 in the E slot at the same height; a relay row (O4_RROW)
     # between the buffers and the ROM row carries row 0's far words east to the E slot
-    y_rom = v.dn(su.y - 2 * O4_CBUF[1] - O4_RROW - O4_CROM[1], v.GY)
+    y_rom = v.dn(su.y - O4_SUCH - 2 * O4_CBUF[1] - O4_CHAN - O4_RROW - O4_CROM[1], v.GY)
     for k in range(8):
         col = k % 4
         x = (slab.x if k < 4 else su.x) + col * O4_CROM[0]
@@ -683,8 +870,8 @@ def _option4(v, m, rec):
     T = {tt.name: 'tt_ctlm', sq.name: 'seq_su'}
     for bid, cl, bits, eps in m['buses']:
         names = {e[0] for e in eps}
-        if bid in ('tt_si', 'tt_so', 'seq_su', 'seq_sud', 'crom_a', 'crom_q', 'vm_meok') or bid.startswith(('pword_', 'tt_lf')) \
-                or bid == 'tt_ty':
+        if bid in ('tt_si', 'tt_so', 'seq_su', 'seq_sud', 'crom_a', 'crom_q', 'vm_meok', 'coll_tx', 'coll_rx', 'coll_tx_x', 'coll_rx_x') \
+                or bid.startswith(('pword_', 'tt_lf')) or bid == 'tt_ty':
             gone.append(bid)
             continue
         if cl == 'clock_trunk':
@@ -702,23 +889,32 @@ def _option4(v, m, rec):
             continue
         if names & set(T):
             eps = [(T.get(i, i), p) for i, p in eps]
+        if bid == 'seq_coll':
+            bits = O4_COLL_BITS['fwd']
         nb.append((bid, cl, bits, eps))
+    # the return crosses io_xfifo like seq_coll (stream -> sequencer clock domain): collective -> xfifo, xfifo -> seq_su
+    nb += [('coll_seq', 'sequencer', O4_COLL_BITS['ret'], [('io_collective', 'cs'), ('io_xfifo', 'i_coll_seq')]),
+           ('coll_seq_x', 'sequencer', O4_COLL_BITS['ret'], [('io_xfifo', 'o_coll_seq'), ('seq_su', 'cc')])]
     B = O4_BITS
     add_b = [('o4_me_snap', 'sequencer', B['me_snap'], [('tt_ctlm', 'xm'), ('seq_su', 'xm')]),
              ('o4_su_snap', 'sequencer', B['su_snap'], [('seq_su', 'xs'), ('tt_ctlm', 'xs')]),
              ('o4_me_start', 'sequencer', B['me_start'], [('seq_su', 'st'), ('tt_ctlm', 'st')]),
              ('o4_pw', 'sequencer', B['pw'], [('d2d_rom', 'pw'), ('tt_ctlm', 'pw')]),
-             ('o4_kvd', 'sequencer', B['kvd'], [('tt_ctlm', 'kvd'), ('d2d_rom', 'kvd')]),
-             ('o4_kok', 'sequencer', B['kok'], [('d2d_rom', 'kok'), ('tt_ctlm', 'kok')]),
+             # the KV-die launch descriptor leaves seq_su (its SU-side controller decodes every instruction): 25 stages
+             # to the link end, the q word's path, against the control tile's 41 (no ME op on this die waits on kv_ok)
+             ('o4_kvd', 'sequencer', B['kvd'], [('seq_su', 'kvd'), ('d2d_rom', 'kvd')]),
              ('o4_meok', 'spine_local', B['meok'], [('sp_vector_memory', 'mo'), ('tt_ctlm', 'meok')]),
              ('o4_su_iss', 'sequencer', B['su_iss'], [('seq_su', 'su'), ('sp_su64_sfu', 'si')]),
              ('o4_su_st', 'sequencer', B['su_st'], [('sp_su64_sfu', 'sd'), ('seq_su', 'sd')]),
              ('o4_su_acc', 'sequencer', B['su_acc'], [('sp_su64_sfu', 'acc'), ('seq_su', 'acc')]),
              ('rst_seq_ctlm', 'spine_local', 1, [('clk_rx', 'rso_ctlm'), ('tt_ctlm', 'rsi')])]
+    if O4_VM_SQ:
+        # me_en (tt_ctlm me_clk_en) as O4_ME_EN_BITS registered copies, one per VM bank-group tile (die width only)
+        add_b.append(('o4_me_en', 'spine_local', O4_ME_EN_BITS, [('tt_ctlm', 'mee'), ('sp_vector_memory', 'mee')]))
     add_b += [('o4_sel', 'tree_spine', B['sel'], [('tt_ctlm', 'sel'), ('tt_up4_0', 'sel')]),
               ('o4_upf', 'tree_spine', B['up_flt'], [('tt_up4_0', 'flt'), ('tt_ctlm', 'uf')]),
               ('tt_ty', 'tree_spine', 1538, [('tt_up4_0', 'ty'), ('sp_band_lanes_0', 'tt')])]
-    for b in range(6):
+    for b in range(getattr(v, 'NBANDS', 6)):
         add_b += [(f'pword_{b}', 'tree_spine', 513, [(f'sp_band_lanes_{b}', 'pw'), ('tt_up4_0', f'pw{b}')]),
                   (f'tt_lf{b}', 'tree_spine', 1, [(f'sp_band_lanes_{b}', 'f'), ('tt_up4_0', f'lf{b}')])]
     for k in range(8):
@@ -729,12 +925,15 @@ def _option4(v, m, rec):
                   (f'o4_cb_ctl_{k}', 'sequencer', B['cb_ctl'], [('seq_su', f'cbc{k}'), (f'cbuf_g_{k}', 'ctl')]),
                   (f'o4_cb_rdy_{k}', 'sequencer', B['cb_rdy'], [(f'cbuf_g_{k}', 'rdy'), ('seq_su', f'cbr{k}')])]
     m['buses'] = nb + add_b
+    if O4_VM_SQ:
+        rec['vm_square']['pin_plan'] = _o4_vm_pin_plan(m, by['sp_vector_memory'])
     _o4_masters(v, m, [tt, sq])
     rec['option4'] = dict(
         removed_instances=removed, removed_buses=gone, added_instances=[i.d() for i in new],
         added_buses=[(b[0], b[1], b[2], b[3]) for b in add_b], bits=dict(B), repin=O4_REPIN,
         notes=['tt_c<b> / tt_f<b> / tt_lc<b> / tt_xd / tt_xr / tt_mx / tt_land keep their widths, now on tt_ctlm',
-               'seq_ib / seq_coll / seq_d2d / d2d_seq / d2d_flt / rst_seq keep their r22k widths, now on seq_su',
+               'seq_ib / seq_d2d / d2d_seq / d2d_flt / rst_seq keep their r22k widths, now on seq_su; seq_coll carries the '
+               'all-reduce words (548 b, native) and coll_seq returns them (518 b); coll_tx / coll_rx (VM <-> collective) removed',
                'the KV descriptor (kvd_*) and kv_ok leave the sequencer word for the control tile (o4_kvd / o4_kok); '
                'seq_d2d keeps its r22k width (not reduced here)',
                'cbuf stage / tok_start / tpos (o4_cb_ctl) and st_rdy / fault (o4_cb_rdy) have no consumer port in the '
@@ -763,14 +962,14 @@ def _o4_masters(v, m, ghosts):
         # control tile: VM words S (abut the VM top), die control words E (low), band control W, up4 selects N
         c = mk('qfd_tt_ctlm', O4_CTLM, 'ot_qfd_tt_ctlm[_i]: tree-top control tile + ME-side controller + program copy '
                '(cfg qfd_tt_ctlm_a 777.6 x 1,814.4); die pin plan (see r22k.option4.repin)')
-        for p, bits, off in (('xd', 53, 100.0), ('xr', 1, 140.0), ('ld', 16, 549.6), ('mx', 553, 400.0)):
+        for p, bits, off in (('xd', 53, O4_CTLM_S['xd']), ('xr', 1, O4_CTLM_S['xr']), ('ld', 16, O4_CTLM_S['ld']),
+                             ('mx', 553, O4_CTLM_S['mx'])):
             c.face(p, bits, 'S', 'M5', off, 2 if bits < 100 else 1)
         y = 30.0
-        for p, bits in (('st', B['me_start']), ('xs', B['su_snap']), ('xm', B['me_snap']), ('pw', B['pw']),
-                        ('kvd', B['kvd']), ('kok', 1), ('meok', 1)):
+        for p, bits in (('st', B['me_start']), ('xs', B['su_snap']), ('xm', B['me_snap']), ('pw', B['pw']), ('meok', 1)):
             c.face(p, bits, 'E', 'M4', y + bits * 0.096 / 2, 2)
             y += bits * 0.096 + 4.0
-        for b in range(6):
+        for b in range(getattr(v, 'NBANDS', 6)):
             c.face(f'c{b}', 343, 'W', 'M4', 80.0 + b * 290.0, 1)
             c.face(f'f{b}', 107, 'W', 'M4', 80.0 + b * 290.0 + 220.0, 1)
             c.face(f'lc{b}', 28, 'W', 'M4', 80.0 + b * 290.0 + 260.0, 1)
@@ -782,10 +981,17 @@ def _o4_masters(v, m, ghosts):
         # upper tile (closed qfd_tt_up4_b plan: pw / lf W, tt_ty / fault E, sel S)
         u4 = mk('qfd_tt_up4', O4_UP4, 'ot_qfd_band_upper NL 4 (CLOSED qfd_tt_up4_b-618516521: TT +219.95 / FF +18.95)')
         cxy = (O4_UP4[0] - 12.0, O4_UP4[1] - 12.0)          # the 2 x 2 block's centre
-        for b in range(6):
-            u4.area(f'pw{b}', 513, cxy[0] - 60.0 + b * 8.0, cxy[1] - 30.0, 2)
-            u4.area(f'lf{b}', 1, cxy[0] - 60.0 + b * 8.0, cxy[1] - 20.0, 2)
-        u4.area('ty', 1538, cxy[0] - 20.0, cxy[1] - 60.0, 2)
+        # qwendie-1011 (textbook audit class 4): the band words land on tile 0's W face (the closed plan's pw / lf
+        # side), which opens on the L|M relay channel, not as area pins at the 2 x 2 block centre where no relay
+        # site is within reach (r22ko4 tt_lf / pword / tt_ty hops 512-683 um); ty (closed plan: E, abutted by
+        # tile 1) joins them on W.  One M4 track per bit: 4,622 b = 222 um of the 388.8-um face.
+        y = 16.0
+        for b in range(getattr(v, 'NBANDS', 6)):
+            u4.face(f'pw{b}', 513, 'W', 'M4', y + 513 * 0.048 / 2, 1)
+            y += 513 * 0.048 + 1.0
+            u4.face(f'lf{b}', 1, 'W', 'M4', y + 0.5, 1)
+            y += 2.0
+        u4.face('ty', 1538, 'W', 'M4', y + 1.0 + 1538 * 0.048 / 2, 1)
         u4.area('flt', 1, cxy[0] - 4.0, cxy[1] - 4.0, 2)
         u4.face('sel', B['sel'], 'S', 'M5', O4_UP4[0] / 2, 2)
         u4.area('ck', 1, u4.w / 2, u4.h / 2, 1)
@@ -809,10 +1015,18 @@ def _o4_masters(v, m, ghosts):
         s.face('dc', 530, 'S', 'M5', 150.0, 1)
         s.face('dh', 530, 'S', 'M5', 350.0, 1)
         s.face('dflt', 9, 'S', 'M5', 460.0, 2)
-        s.face('cd', 66, 'E', 'M4', 260.0, 2)
+        s.face('kvd', B['kvd'], 'S', 'M5', 30.0, 1)
+        s.face('cd', O4_COLL_BITS['fwd'], 'E', 'M4', 200.0, 1)
+        s.face('cc', O4_COLL_BITS['ret'], 'E', 'M4', 340.0, 1)
         s.area('ck', 1, s.w / 2, s.h / 2, 1)
         s.area('rsi', 1, s.w / 2, s.h / 2 + 12.0, 1)
         M['qfd_seq_su'] = s
+        # VM: no collective words (the all-reduce reads / writes go through seq_su's VM port)
+        vmm = M['qfd_sp_vector_memory']
+        for p in ('ct', 'cr'):
+            if p in vmm.ports:
+                vmm.ports.pop(p)
+                vmm.order.remove(p)
         # SU: issue / status / accepted count E, constants per group S (over each group's column)
         su = M['qfd_sp_su64_sfu']
         for p in ('si', 'sd', 'ca', 'cq'):
@@ -820,7 +1034,7 @@ def _o4_masters(v, m, ghosts):
                 su.ports.pop(p)
                 su.order.remove(p)
         sui, seq_i = ins['sp_su64_sfu'], ins['seq_su']
-        yc = min(sui.h - 60.0, max(60.0, seq_i.y + seq_i.h / 2 - sui.y))      # facing seq_su across the channel
+        yc = min(sui.h - 60.0, max(80.0, seq_i.y + seq_i.h / 2 - sui.y))      # facing seq_su across the channel
         su.face('si', B['su_iss'], 'E', 'M4', yc - 60.0, 1)
         su.face('sd', B['su_st'], 'E', 'M4', yc + 20.0, 1)
         su.face('acc', B['su_acc'], 'E', 'M4', yc + 40.0, 2)
@@ -834,8 +1048,10 @@ def _o4_masters(v, m, ghosts):
         b_.face('sq', B['cb_su_q'], 'N', 'M5', 130.0, 1)
         b_.face('fa', B['cb_far_a'], 'S', 'M5', 50.0, 1)
         b_.face('fq', B['cb_far_q'], 'S', 'M5', 130.0, 1)
-        b_.face('ctl', B['cb_ctl'], 'E', 'M4', 80.0, 2)
-        b_.face('rdy', B['cb_rdy'], 'E', 'M4', 130.0, 2)
+        # qwendie-1011: control / ready on the S face (the E face abuts the next buffer of the row: a seam); S opens on
+        # the buffer-row channel (row 0) or the ROM relay row (row 1), both leading E to the M|E channel and seq_su
+        b_.face('ctl', B['cb_ctl'], 'S', 'M5', 165.0, 1)
+        b_.face('rdy', B['cb_rdy'], 'S', 'M5', 180.0, 1)
         b_.area('ck', 1, b_.w / 2, b_.h / 2, 1)
         M['qfd_su_cbuf_g'] = b_
         r_ = mk('qfd_crom_g', O4_CROM, 'ot_qfd_crom_g (CLOSED qfd_crom_g_a-ff3637ce7, re-pin: answer side N)')
@@ -849,13 +1065,36 @@ def _o4_masters(v, m, ghosts):
             vmm.ports.pop('ib')
             vmm.order.remove('ib')
         vmm.face('ib', 382, 'E', 'M4', 60.0, 1)
+        if O4_VM_SQ:
+            M['qfd_sp_vector_memory'] = _o4_vm_master(v, Master, vmm, ins['sp_vector_memory'],
+                                                      model.get('r22k', {}).get('vm_square', {}).get('pin_plan', {}))
+            c.face('mee', O4_ME_EN_BITS, 'S', 'M5', 200.0, 2)
         d2 = M['qfd_d2d_rom']
         d2.face('pw', B['pw'], 'E', 'M4', 80.0, 2)
         d2.face('kvd', B['kvd'], 'E', 'M4', 150.0, 1)
-        d2.face('kok', 1, 'E', 'M4', 170.0, 2)
+        # qwendie-1011 (textbook audit class 4): the band-lane block's tree words leave on its E face (the L|M relay
+        # channel toward the control / upper tiles), not as M8 area pins 160-400 um inside a 777.6 x 1,131.8 block
+        bl = M.get('qfd_sp_band_lanes')
+        if bl is not None:
+            for pn, yc in (('tt', 150.0), ('pw', 420.0), ('c', 620.0), ('f', 700.0)):
+                if pn in bl.ports:
+                    w_ = bl.ports.pop(pn)[1]
+                    if pn in getattr(bl, 'order', []):
+                        bl.order.remove(pn)
+                    bl.face(pn, w_, 'E', 'M4', yc, 1)
+        # qwendie-1011 (near-square VM): the result serializer's VM-side words (o -> VM rb<b>, ok -> rk<b>, cr <- rc<b>)
+        # leave on its E face (the W|M channel toward the VM), not as area pins 160-280 um inside the 777.6 x 518.4 block
+        # (r22ko4 near-square VM: rk_2's first relay landed 51 um behind the source pin)
+        rs_ = M.get('qfd_sp_res_ser')
+        if rs_ is not None and O4_VM_SQ:
+            for pn, yc in (('o', 300.0), ('ok', 340.0), ('cr', 350.0)):
+                if pn in rs_.ports and rs_.ports[pn][0] == 'area':
+                    w_ = rs_.ports.pop(pn)[1]
+                    rs_.order.remove(pn)
+                    rs_.face(pn, w_, 'E', 'M4', yc, 1)
         cx = M['qfd_clkrx']
         if 'rso_ctlm' not in cx.ports:
-            cx.area('rso_ctlm', 1, cx.w / 2, cx.h / 2 - 8.0, 1)
+            cx.area('rso_ctlm', 1, cx.w / 2, cx.h / 2 + 40.0, 1)   # clear of the 3.2 um pll_r grid
         for name in ('qfd_sp_tree_top', 'qfd_sp_constants_sequencer'):
             M.pop(name, None)
         del saved

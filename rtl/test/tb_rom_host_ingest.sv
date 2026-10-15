@@ -19,6 +19,7 @@ module tb_rom_host_ingest #(
     parameter integer QKV_EN = 1,
     parameter integer RMW_EN = 1,
     parameter integer MUT    = 0,
+    parameter integer QPIPE  = 0,
     parameter integer HP     = 1000,     // clk_h period (ps)
     parameter integer IP     = 1666,     // clk_i period (ps): the die clock / 2
     parameter integer CP     = 833,      // ck period (ps)
@@ -69,7 +70,7 @@ module tb_rom_host_ingest #(
     reg  [255:0] i_rd;
     wire         fault;
     ot_rom_host_ingest #(.AW(AW), .HDMAX(HDMAX), .KVHMAX(KVHMAX), .QKV_EN(QKV_EN), .RMW_EN(RMW_EN), .HFA(HFA),
-                         .OCRED(OCRED), .MUT(MUT)) dut (
+                         .OCRED(OCRED), .MUT(MUT), .QPIPE(QPIPE)) dut (
         .rst_n(rst_n), .clk_h(clk_h), .h_v(h_v), .h_cls(h_cls), .h_d(h_d), .h_crn(h_crn), .t_v(t_v), .t_d(t_d),
         .t_cr(t_cr), .clk_i(clk_i), .ck(ck), .o_v(o_v), .o_we(o_we), .o_addr(o_addr), .o_d(o_d), .o_cr(o_cr),
         .i_rv(i_rv), .i_rd(i_rd), .fault(fault));

@@ -49,7 +49,7 @@ HARD_SRC = ['rtl/hdc/ot_hdc_delay_ring.sv', 'rtl/dsrom_sys/mtp/ot_dsrom_markov_b
 def main(a):
     src = SRC + (HARD_SRC if a.hard else [])
     top = 'ot_dsrom_markov_head_full340_h' if a.hard else 'ot_dsrom_markov_head_full340'
-    hard_params = f',.GLUE_RING({a.glue_ring})' if a.hard else ''
+    hard_params = f',.GLUE_RING({a.glue_ring}),.HBRELAY({a.hbrelay})' if a.hard else ''
     out = a.out.resolve(); out.mkdir(parents=True, exist_ok=False)
     snap, manifest, inp = a.snapshot.resolve(), a.manifest.resolve(), a.input.resolve()
     m = json.loads(manifest.read_text()); die = next(x for x in m['dies'] if x['die'] == a.die)
@@ -171,6 +171,7 @@ if __name__ == '__main__':
     ap.add_argument('--nb', type=int, default=85); ap.add_argument('--ioreg', type=int, default=1); ap.add_argument('--ringdly', type=int, default=1); ap.add_argument('--pinreg', type=int, default=1)
     ap.add_argument('--hard', type=int, default=0, help='1: ot_dsrom_markov_head_full340_h (hardened ot_dsrom_markov_bundle_glue element per bundle)')
     ap.add_argument('--glue-ring', type=int, default=1, help='--hard: glue delay lines as rings (1) or shift lines (0)')
+    ap.add_argument('--hbrelay', type=int, default=0, help='--hard: driver HBRELAY (1 = head rowstream relay stage, 2 = seat-1 late mutant)')
     ap.add_argument('--mutant', type=int, default=0); ap.add_argument('--jobs', type=int, default=8)
     ap.add_argument('--timeout-ns', type=int, default=60000)
     ap.add_argument('--vflags', default='', help='extra Verilator flags (NB=85: -fno-inline bounds elaboration memory)')

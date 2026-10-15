@@ -1,0 +1,243 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "mtp-p2-path-rb4-s-9dda063ff-tc",
+ "block": "ot_mtp_p2_prefix_path",
+ "owner": "Codex:mtp-p2-root",
+ "source_branch": "codex/mtp-p2-root-20261010",
+ "record_branch": "codex/closure-record-mtp-p2-path-rb4-s-9dda063ff-tc",
+ "source_commit": "9dda063ffccdfcfb0aa554283f4e001d95767559",
+ "host": "ot-epyc4",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/mtp-p2-path-rb4-s-9dda063ff-tc",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {},
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 9.91,
+  "ff_ps": 4.49,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {},
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -289.13,
+  "ss_sensitivity_tns_ps": -1121963.6,
+  "corner_sta_tt": "/srv/opentallas-scratch/claude/closure-loop/mtp-p2-path-rb4-s-9dda063ff-tc/routes/mtp_p2_path_rb4_s_9dda063ff_tc/corner_sta.json",
+  "post_sdc": [
+   "physical/mtp_p2_transport/gen/signoff_p2.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/mtp-p2-path-rb4-s-9dda063ff-tc/routes/mtp_p2_path_rb4_s_9dda063ff_tc/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/mtp-p2-path-rb4-s-9dda063ff-tc/routes/mtp_p2_path_rb4_s_9dda063ff_tc/work/orfs/logs/asap7/opentallas_ot_mtp_p2_prefix_path_asap7_mtp_p2_path_rb4_s_9dda063ff_tc/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_p2_rootpipe_gate": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "path OK\norder OK\nprefix OK\ncopy OK\nue OK\nnative OK\npin OK\noverwrite OK\nROOTPIPE GATE PASS 8 cases\n",
+   "track": "parallel"
+  },
+  "bench_p2path_neg_order": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "FATAL: rtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_prefix_path.sv:26: PATH unexpected fault cycle335\n       Time: 278973000  Scope: tb_mtp_p2_prefix_path\n",
+   "track": "parallel"
+  },
+  "bench_p2prefix_neg_copy_first": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "FATAL: rtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_prefix.sv:30: PREFIX +0/-0 first-round mutant detected\n       Time: 11259000  Scope: tb_mtp_p2_prefix\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "routed_at_TT": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 3206,
+    "mean": 695.9,
+    "min": 666.0,
+    "max": 804.8
+   },
+   "all": {
+    "n": 32621,
+    "mean": 689.0,
+    "min": 654.6,
+    "max": 804.8
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 3206,
+    "mean": 437.4,
+    "min": 414.4,
+    "max": 524.3
+   },
+   "all": {
+    "n": 32621,
+    "mean": 431.7,
+    "min": 404.7,
+    "max": 524.3
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 535,
+   "CK_SS_ALL_MEAN": 529,
+   "CK_SS_MIN": 510,
+   "CK_SS_ALL_MIN": 500,
+   "CK_SS_MAX": 632,
+   "CK_SS_ALL_MAX": 632,
+   "CK_TT_MEAN": 535,
+   "CK_TT_ALL_MEAN": 529,
+   "CK_TT_MIN": 510,
+   "CK_TT_ALL_MIN": 500,
+   "CK_TT_MAX": 632,
+   "CK_TT_ALL_MAX": 632,
+   "CK_FF_MEAN": 437,
+   "CK_FF_ALL_MEAN": 432,
+   "CK_FF_MIN": 414,
+   "CK_FF_ALL_MIN": 405,
+   "CK_FF_MAX": 524,
+   "CK_FF_ALL_MAX": 524,
+   "CK_SSLIB_MEAN": 696,
+   "CK_SSLIB_MIN": 666,
+   "CK_SSLIB_MAX": 805,
+   "CK_SSLIB_ALL_MEAN": 689,
+   "CK_SSLIB_ALL_MIN": 655,
+   "CK_SSLIB_ALL_MAX": 805,
+   "CK_ROUTE_REF": "TT"
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": "+238 cycles vs rb3 PATH5954; +725 vs original PATH5467; measured PATH6192 (1280 values). Prefix-only6273; single-flight output capacity1, 1-cycle release-credit bubble; arithmetic order unchanged.",
+ "status": "CLOSED",
+ "closed_at": "2026-10-11T00:21:49-07:00",
+ "job_spec": {
+  "name": "mtp-p2-path-rb4-s-9dda063ff-tc",
+  "block": "ot_mtp_p2_prefix_path",
+  "owner": "Codex:mtp-p2-root",
+  "purpose": "P2 rb4 ROOTPIPE1: statically separated DSTAGE branches, registered corrected-SRAM data/verdict (no decoder cone on 512 accum enables), single-flight native pin station with registered release credit and 19 local occupancy copies; out_r only drives scalar valid/release. Own output payload/valid flops anchored at pins. PATH exact6192 vs rb3 5954; signed-zero/UE/native/order and full-width saturated output/overwrite mutant gates. Generic-IO pathfinding only; no constraint/budget relaxation.",
+  "hosts": [
+   "ot-epyc4",
+   "ot-epyc3",
+   "ot-epyc2",
+   "ot-epyc1tb"
+  ],
+  "host_require": [
+   "ot-epyc4",
+   "ot-epyc3",
+   "ot-epyc2",
+   "ot-epyc1tb"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "source": {
+   "branch": "codex/mtp-p2-root-20261010",
+   "commit": "9dda063ff"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "p2_rootpipe_gate",
+     "cmd": "python3 tools/mtp_p2_rootpipe_gate.py --out {RUN}/bench/rootpipe",
+     "expect": "pass",
+     "pass_regex": "^ROOTPIPE GATE PASS 8 cases",
+     "threads": 1,
+     "peak_ram_gb": 2,
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "p2path_neg_order",
+     "cmd": "mkdir -p {RUN}/bench && (cd {RUN}/bench && python3 {SRC}/tools/mtp_p2_prefix_fixture.py) && iverilog -g2012 -Irtl/common -s tb_mtp_p2_prefix_path -Ptb_mtp_p2_prefix_path.MUT=2 -Ptb_mtp_p2_prefix_path.ROOTPIPE=1 -o {RUN}/bench/order.vvp rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_ordered_rows.sv rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_prefix.sv rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_prefix_native.sv rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_prefix_path.sv rtl/v41rom/ot_v41_fadd.sv rtl/common/ot_prefix.sv rtl/common/ot_secded.sv rtl/common/ot_sc_pfifo.sv rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv rtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_prefix_path.sv && (cd {RUN}/bench && vvp -n {RUN}/bench/order.vvp) | tee {RUN}/bench/order.log; grep -q '^PATH PASS' {RUN}/bench/order.log",
+     "expect": "fail",
+     "threads": 1,
+     "peak_ram_gb": 2,
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "p2prefix_neg_copy_first",
+     "cmd": "mkdir -p {RUN}/bench && (cd {RUN}/bench && python3 {SRC}/tools/mtp_p2_prefix_fixture.py) && iverilog -g2012 -Irtl/common -s tb_mtp_p2_prefix -Ptb_mtp_p2_prefix.MUT_COPY_FIRST=1 -Ptb_mtp_p2_prefix.DSTAGE=1 -Ptb_mtp_p2_prefix.ROOTPIPE=1 -o {RUN}/bench/mut.vvp rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_prefix.sv rtl/v41rom/ot_v41_fadd.sv rtl/common/ot_prefix.sv rtl/common/ot_secded.sv rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv rtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_prefix.sv && (cd {RUN}/bench && vvp -n {RUN}/bench/mut.vvp) | tee {RUN}/bench/mut.log; grep -q '^PREFIX PASS' {RUN}/bench/mut.log",
+     "expect": "fail",
+     "threads": 1,
+     "peak_ram_gb": 2,
+     "needs": [
+      "iverilog"
+     ]
+    }
+   ],
+   "calibrate": {
+    "cmd": "export HM=0.010; export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; P2_ROOTPIPE=1 P2_PATH=1 P2_W=560 P2_H=460 bash physical/mtp_p2_transport/route.sh p2 {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes/{LABEL}_cal $CL_STOP_AFTER --orfs-var SKIP_CTS_REPAIR_TIMING=1",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk"
+   },
+   "route": {
+    "cmd": "export HM=0.010; export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; P2_ROOTPIPE=1 P2_PATH=1 P2_W=560 P2_H=460 bash physical/mtp_p2_transport/route.sh p2 {LABEL} {RUN}/routes/{LABEL}",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/*.lef {RUN}/routes/{LABEL}/view/*.lib {RUN}/routes/{LABEL}/view/export.json {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/MANIFEST {RUN}/record/ && cp physical/mtp_p2_transport/gen/signoff_p2.sdc {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "routed_at_TT",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "macros": [
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+   ],
+   "post_sdc": [
+    "physical/mtp_p2_transport/gen/signoff_p2.sdc"
+   ]
+  },
+  "budget": {
+   "enabled": false,
+   "reason": "ActualA/SU clockplan unavailable, own calibrated generic250ps blockIO pathfinding only. RealSRAMclkq singlecycle/noMC; no production topology closure."
+  },
+  "cycles_added": "+238 cycles vs rb3 PATH5954; +725 vs original PATH5467; measured PATH6192 (1280 values). Prefix-only6273; single-flight output capacity1, 1-cycle release-credit bubble; arithmetic order unchanged.",
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.0,
+  "route_corner": "TC",
+  "merge_target": null,
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "results/rtl/mtp_p2_rootpipe_20261010/routes/mtp-p2-path-rb4-s-9dda063ff-tc"
+   }
+  ]
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

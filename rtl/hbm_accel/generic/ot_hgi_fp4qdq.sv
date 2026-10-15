@@ -29,7 +29,11 @@
 // Stages: S0 input register; S1 |x| and 16 -> 4 per block; S2 4 -> 1; S2b the
 // floor; S3 scale; S4 thresholds; S5 codes; S6 outputs (registers).
 // ---------------------------------------------------------------------------
-module ot_hgi_fp4qdq #(parameter integer PACKED=0) (
+// el1011-hbm-fq track B (2026-10-12): PIPE=1 splits the two 2-level max stages (S0->S1 and S1->S2a) into one 31-bit
+// compare-and-select per stage (+2 edges, LATENCY 10); XEXT=1 takes the S4-aligned element copy from x4_ext (driven by
+// an external staging tile: x delayed PIPE ? 7 : 5 edges after s0_x) instead of the internal line.  Defaults keep the
+// original module bit for bit and cycle for cycle.
+module ot_hgi_fp4qdq #(parameter integer PACKED=0, parameter integer PIPE=0, parameter integer XEXT=0) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          v,
@@ -37,7 +41,8 @@ module ot_hgi_fp4qdq #(parameter integer PACKED=0) (
     output reg           vo,
     output reg  [511:0]  y,
     output reg           fault,
-    output wire [264:0]  packed_word
+    output wire [264:0]  packed_word,
+    input  wire [1023:0] x4_ext
 );
     localparam [30:0] FLOOR = 31'h3c400000;   // float32(6 * 2^-9)
     localparam [30:0] SUBN  = 31'h3dc00000;   // float32(6 * 2^-6): below it s is subnormal E4M3
@@ -88,26 +93,50 @@ module ot_hgi_fp4qdq #(parameter integer PACKED=0) (
         for (i = 0; i < 32; i = i + 1) nf0 = nf0 | (s0_x[32*i + 23 +: 8] == 8'hFF);
         for (i = 0; i < 16; i = i + 1) t8[i] = mx(s0_x[64*i +: 31], s0_x[64*i + 32 +: 31]);
     end
+    // PIPE: t8 / nf0 / v registered (S1p) before the second level
+    reg [30:0] t8q [0:15];
+    reg        s1p_v, s1p_nf;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) s1_v <= 1'b0;
-        else s1_v <= s0_v;
+        if (!rst_n) s1p_v <= 1'b0;
+        else s1p_v <= s0_v;
     end
     always @(posedge clk) begin
-        s1_nf <= nf0;
-        for (i = 0; i < 8; i = i + 1) s1_m[i] <= mx(t8[2*i], t8[2*i+1]);
+        s1p_nf <= nf0;
+        for (i = 0; i < 16; i = i + 1) t8q[i] <= t8[i];
+    end
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) s1_v <= 1'b0;
+        else s1_v <= (PIPE != 0) ? s1p_v : s0_v;
+    end
+    always @(posedge clk) begin
+        s1_nf <= (PIPE != 0) ? s1p_nf : nf0;
+        for (i = 0; i < 8; i = i + 1)
+            s1_m[i] <= (PIPE != 0) ? mx(t8q[2*i], t8q[2*i+1]) : mx(t8[2*i], t8[2*i+1]);
     end
 
     // -- S2: 4 -> 1 per block --------------------------------------------------------------
     reg        s2a_v, s2a_nf;
     reg [30:0] s2a_m [0:1];
+    // PIPE: the first of the two levels registered (S2p)
+    reg [30:0] s2p_m [0:3];
+    reg        s2p_v, s2p_nf;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) s2a_v <= 1'b0;
-        else s2a_v <= s1_v;
+        if (!rst_n) s2p_v <= 1'b0;
+        else s2p_v <= s1_v;
     end
     always @(posedge clk) begin
-        s2a_nf <= s1_nf;
+        s2p_nf <= s1_nf;
+        for (b = 0; b < 4; b = b + 1) s2p_m[b] <= mx(s1_m[2*b], s1_m[2*b+1]);
+    end
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) s2a_v <= 1'b0;
+        else s2a_v <= (PIPE != 0) ? s2p_v : s1_v;
+    end
+    always @(posedge clk) begin
+        s2a_nf <= (PIPE != 0) ? s2p_nf : s1_nf;
         for (b = 0; b < 2; b = b + 1)
-            s2a_m[b] <= mx(mx(s1_m[4*b], s1_m[4*b+1]), mx(s1_m[4*b+2], s1_m[4*b+3]));
+            s2a_m[b] <= (PIPE != 0) ? mx(s2p_m[2*b], s2p_m[2*b+1])
+                                    : mx(mx(s1_m[4*b], s1_m[4*b+1]), mx(s1_m[4*b+2], s1_m[4*b+3]));
     end
 
     // -- S2b: the floor --------------------------------------------------------------------
@@ -199,8 +228,9 @@ module ot_hgi_fp4qdq #(parameter integer PACKED=0) (
             end
         end
     end
-    wire [1023:0] x4;
-    ot_hdc_delay #(.W(1024), .D(5)) u_x (.clk(clk), .rst_n(rst_n), .d(s0_x), .q(x4));
+    wire [1023:0] x4, x4_i;
+    ot_hdc_delay #(.W(1024), .D((XEXT != 0) ? 0 : (PIPE != 0) ? 7 : 5)) u_x (.clk(clk), .rst_n(rst_n), .d(s0_x), .q(x4_i));
+    assign x4 = (XEXT != 0) ? x4_ext : x4_i;
 
     // -- S5: E2M1 codes ------------------------------------------------------------------------
     reg              s5_v, s5_nf;
@@ -221,25 +251,38 @@ module ot_hgi_fp4qdq #(parameter integer PACKED=0) (
             cnt7 = ({1'b0, a} + {1'b0, b2}) + ({1'b0, c} + {2'b0, p[6]});
         end
     endfunction
+    // hgi-1010/c (route f589c9afa: s4_t -> s5_c 28 levels = seven 31-bit compares + the count in one edge): S5A registers
+    // the predicates, S5B counts them (+1 edge; ot_hgi_quant_decode's alignment pipe is one shorter)
+    reg              s5a_v, s5a_nf;
+    reg [6:0]        s5a_p [0:31];
+    reg [31:0]       s5a_sgn;
+    reg [4:0]        s5a_n [0:1];
+    reg signed [9:0] s5a_qs [0:1];
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) s5_v <= 1'b0;
-        else s5_v <= s4_v;
+        if (!rst_n) begin s5a_v <= 1'b0; s5_v <= 1'b0; end
+        else begin s5a_v <= s4_v; s5_v <= s5a_v; end
     end
     always @(posedge clk) begin
-        s5_nf <= s4_nf;
-        for (b = 0; b < 2; b = b + 1) begin s5_n[b] <= s4_n[b]; s5_qs[b] <= s4_qs[b]; end
+        s5a_nf <= s4_nf;
+        for (b = 0; b < 2; b = b + 1) begin s5a_n[b] <= s4_n[b]; s5a_qs[b] <= s4_qs[b]; end
         for (i = 0; i < 32; i = i + 1) begin
             xm = x4[32*i +: 31];
             b = i / 16;
             //: the thresholds increase, so the code is the number passed; on a
             //: threshold the even code wins (midpoint j sits below code j+1)
-            //: hgi-takeover: the seven predicates are evaluated in parallel and counted by a
-            //: balanced tree (same count as the former serial cc = cc + 1 chain)
             for (j = 0; j < 7; j = j + 1)
                 qp = {(!s4_big[7*b + j] && (xm > s4_t[7*b + j] || (xm == s4_t[7*b + j] && (j % 2) == 1))), qp[6:1]};
-            cc = cnt7(qp);
+            s5a_p[i] <= qp;
+            s5a_sgn[i] <= x4[32*i + 31] && (xm != 31'd0);
+        end
+    end
+    always @(posedge clk) begin
+        s5_nf <= s5a_nf; s5_sgn <= s5a_sgn;
+        for (b = 0; b < 2; b = b + 1) begin s5_n[b] <= s5a_n[b]; s5_qs[b] <= s5a_qs[b]; end
+        for (i = 0; i < 32; i = i + 1) begin
+            //: balanced count of the seven predicates (same count as the former serial cc = cc + 1 chain)
+            cc = cnt7(s5a_p[i]);
             s5_c[i] <= cc;
-            s5_sgn[i] <= x4[32*i + 31] && (xm != 31'd0);
         end
     end
 

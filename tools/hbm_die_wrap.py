@@ -86,7 +86,9 @@ def parse_rng(s):
     return port, int(lo), int(hi)
 
 
-TIE_CLASSES = ('debug', 'test', 'by_design')
+# open: an approved functional path whose peer RTL is pending (owner + reason; reported, never a pass for the path);
+# not_adopted: an RTL port of an option the design decided not to use (decision + reason), e.g. the svc DMA stream v2
+TIE_CLASSES = ('debug', 'test', 'by_design', 'open', 'not_adopted')
 
 
 class TieError(SystemExit):
@@ -135,6 +137,11 @@ def _tie_class(spec, key, errors):
     return t
 
 
+def clock_port(spec):
+    """the die port that is the wrapper clock (spec 'clock', default ck[0]): never registered, never a spare bit"""
+    return spec.get('clock', 'ck[0]').split('[')[0]
+
+
 def tie_ledger(spec, used_in, used_out, dirs, fck, rtl_ties, errors):
     """SYS-1 ledger rows: RTL-port ties (cfg / const / expr / fold / open) and spare die bits, each classed from
     spec['ties'] or gap TIED_OFF.  Unclassed rows are appended to errors."""
@@ -163,7 +170,7 @@ def tie_ledger(spec, used_in, used_out, dirs, fck, rtl_ties, errors):
         return None, None
     for direction, used in (('in', used_in), ('out', used_out)):
         for p in sorted(used):
-            if p in ('ck',) or (p == 'rst' and direction == 'in'):
+            if p in ('ck', clock_port(spec)) or (p == 'rst' and direction == 'in'):
                 continue
             spare = [i for i, d in enumerate(dirs[p]) if d == direction and not used[p][i]
                      and not (direction == 'in' and p in fck and i in fck[p])]
@@ -218,7 +225,7 @@ def gen(spec, strict=True):
            '    wire rst_n = ~rst_s[1];']
     # registered die inputs (input bits of every port)
     for p, v in sorted(ports.items()):
-        if p in ('ck',) or (p == 'rst' and spec.get('rst', 'rst[0]') == 'rst[0]'):
+        if p in ('ck', clock_port(spec)) or (p == 'rst' and spec.get('rst', 'rst[0]') == 'rst[0]'):
             continue
         if any(d == 'in' for d in dirs[p]):
             fs = port_in_stages(spec, p)
@@ -345,7 +352,7 @@ def gen(spec, strict=True):
     if errors and strict:
         raise TieError(master, tie_rows, errors)
     # spare bits
-    spare_in = [(p, i) for p in sorted(ports) if p not in ('ck', 'rst') for i, d in enumerate(dirs[p])
+    spare_in = [(p, i) for p in sorted(ports) if p not in ('ck', 'rst', clock_port(spec)) for i, d in enumerate(dirs[p])
                 if d == 'in' and not used_in[p][i] and not (p in fck and i in fck[p])]
     spare_out = [(p, i) for p in sorted(ports) for i, d in enumerate(dirs[p]) if d == 'out' and not used_out[p][i]]
     L_ += sigs
@@ -607,6 +614,8 @@ def gen_tb(spec, cycles=400, seed=20261006):
                     T.append(f"    assign {p}[{i}] = drv_{p}[{i}];")
     T.append('    reg clk = 0; always #0.4165 clk = ~clk;')
     T.append('    always @* ck[0] = clk;' if 'ck' in ports else '')
+    if clock_port(spec) in ports and clock_port(spec) != 'ck':      # a spec 'clock' pin (e.g. ck0[0]) is the bench clock
+        T.append(f'    always @* {clock_port(spec)}[0] = clk;')
     if spec.get('clock') in xin:
         T.append(f"    always @* {spec['clock']} = clk;")
     # one-cycle delayed copies of every input-capable port
@@ -660,7 +669,7 @@ def gen_tb(spec, cycles=400, seed=20261006):
     T += ['    integer err = 0, nchk = 0, cyc;', f'    integer seed = {seed};',
           '    task automatic randomize_inputs; begin']
     for p, v in sorted(ports.items()):
-        if p == 'ck' or v['direction'] == 'output':
+        if p in ('ck', clock_port(spec)) or v['direction'] == 'output':
             continue
         tgt = f'drv_{p}' if v['direction'] == 'inout' else p
         if p == 'rst':

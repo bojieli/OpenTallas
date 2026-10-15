@@ -278,6 +278,9 @@ def cost(r, dyn, L, cfg=None):
         tr = TRANSPORT if (r.param & 3) == 3 else 1.0
         nbytes = n * m * ESZ[b.fmt] * tr
         stream = nbytes / bw
+        # per-SM physical floor (owner 2026-10-12): the busiest SM's rows at its HBM share, bw / 32 = 98.96 B/cycle/SM
+        # (== w19_hbm_token_compose.SM_HBM_BYTES_PER_CYCLE), not only the die-average stream
+        stream = max(stream, -(-m // 32) * n * ESZ[b.fmt] * tr / (bw / 32))
         if "SM.bf16_lines_per_row_k" in MEAS:
             # fmt 0 and fmt 3 issue on the same BF16 lanes (fmt 3: a 128-code line in two 64-code beats)
             R = -(-m // 32)
@@ -311,8 +314,11 @@ def cost(r, dyn, L, cfg=None):
         if op == "LOAD":
             a = r.desc["A"]
             _, n, m, _, _ = eff(a, dyn, L)
-            return first_access() + n * m * ESZ[a.fmt] / bw, ("measured" if "hbm.first_access" in MEAS
-                                                               else "estimate"), "DMA load"
+            # a native B2 group member (header parameter bit 0) streams from ONE stack: a quarter of the die's bytes
+            # a cycle (the four members run in parallel on their own stacks)
+            share = 4 if r.param & 1 else 1
+            return first_access() + n * m * ESZ[a.fmt] * share / bw, ("measured" if "hbm.first_access" in MEAS
+                                                                       else "estimate"), "DMA load"
         if op == "STORE":
             return cv("units", "DMA.store_latency"), "estimate", "posted KV store"
         return cv("units", "DMA.fence"), "estimate", "fence"

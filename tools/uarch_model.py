@@ -603,6 +603,67 @@ def hbm_loader_kport_address_contract_model():
 
 # ---------------------------------------------------------------------------------------------------------
 
+def hgi_generic_topk_heap_model(n=49152, k=2048, rows=1, iw=1, heaps=2):
+    """HGI IDX.TOPK (unit 9 op 2) as W banked-SRAM pipelined min-heaps (hgi-1010/g2 2026-10-10,
+    rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk_heap.sv): the structural successor of the 2,048-cell flop insertion /
+    systolic sorter (feasibility 67b2d0326 item (e)).  Exact: the same 53-bit unique keys, rank-order output.
+
+    A heap holds the top k of its sub-stream (score i -> heap (i / iw) mod (heaps / iw) * iw + i mod iw); one heap level
+    a cycle, one op every 2 cycles a heap; a score below the registered max root is dropped at the front end.  After the
+    row: k ascending extractions a heap into a reverse SRAM run (2k cycles), then a registered heaps-way merge (k cycles).
+    Survivors a heap ~ k (1 + ln(n / (heaps k))) for unordered scores, n / heaps for ascending (worst case).
+    Measured (tb_hgi_idx_topk_heap, Verilator, 1 in 8 input beats idle): n 49,152 k 2,048:
+      iw 1 / 2 heaps 62.5k cycles (random / ascending / ties) vs the flop sorter's n + k + 6 = 51.2k;
+      iw 4 / 4 heaps 23.2k random, 31.5k ascending (2.2x / 1.6x faster); iw 8 / 8 heaps 16.4k / 19.2k (3.1x / 2.7x).
+    """
+    import math
+    assert 1 <= k <= 2048 and 1 <= n <= 1048576 and rows >= 1 and heaps % iw == 0
+    surv = min(n / heaps, k * (1 + math.log(max(n / (heaps * k), 1.0))))
+    fill = max(n / iw, 2 * surv)
+    cyc = fill + 2 * k + k + 30
+    macros_per_heap = dict(sram_128x256=3, sram_256x256=1, sram_1024x256=1)   # levels 7-9, level 10, run buffer
+    return dict(candidates_per_cycle=iw, input_bytes_per_cycle=4 * iw, output_bytes_per_cycle=8, heaps=heaps,
+                key_bits=53, entry_bits=54, heap_levels=12, level_ops_per_cycle_per_heap=0.5,
+                flops_per_heap_upper_bound=32 * 216 + 12 * 120 + 10 * 120 + 16 * 54,
+                macros_per_heap=macros_per_heap, sram_bits_per_heap=(32 + 64 + 128 + 256) * 216 + 512 * 216,
+                widest_select="registered heaps-way merge compare; heap stage = 2 x 53 b compares register to register",
+                cycles_per_row_estimate=round(cyc), token_latency_cycles=round(rows * cyc),
+                measured=dict(n49152_k2048=dict(iw1_h2=62549, iw4_h4_random=23230, iw4_h4_ascending=31450,
+                                                iw8_h8_random=16361, iw8_h8_ascending=19168),
+                              flop_sorter_priced=n + k + 6),
+                adoption="structural replacement of hgi_idx_topk_full; wide engine (iw 4-8) needs the IDX reader to hand a "
+                         "VM sector a cycle (item: TOPK 4.3x)")
+
+
+def hgi_coll_topk_merge_model(G=96, n=512, k=512, kmax=2048, deliver_lanes=4, ser_cycles_per_flit_rank=23.75):
+    """HGI COLL.TOPK_MERGE (unit 6 op 2) in hardware (hgi-1010/k 2026-10-10, rtl/hbm_accel/generic/collective/tkm/
+    ot_hgi_coll_tkm.sv, ot_hgi_coll_ep TKM = 1): a merge sink on the collective's exact gather bypass.
+
+    Every rank injects pf = ceil(M / 8) flits of 8 {value, id} pairs (pad slots past its n); every rank receives the G pf
+    flits on its delivery lanes (credit back-pressured) and keeps the exact top k: survivors (key > tau, tau = the
+    array's k-th key, an exact lower bound) enter a systolic merge array of kmax / 4 cells of 4 sorted elements (one
+    4-element block a cycle); then odd-even transposition by the id key (ceil(k / 4) rounds) and a 4-element-a-cycle
+    shift-out into 16-word O / R lines.  Exact: the 83-bit key {valid, ordered value, ~id, ~rank, ~index} is the golden
+    lexsort's total order.  Survivors ~ k (1 + ln(G n / k)) for unordered values (G n for ascending arrival: worst case,
+    one block of 4 a cycle).
+    """
+    import math
+    assert 1 <= k <= kmax <= 2048 and 1 <= n <= 2048 and 1 <= G <= 96
+    pf = -(-n // 8)
+    flits = G * pf
+    gather = flits / deliver_lanes
+    surv = min(G * n, k * (1 + math.log(max(G * n / k, 1.0))))
+    insert = surv / 4
+    cells = kmax // 4
+    tail = math.ceil(k / 4) * 3 + 20          # drain + id rounds + shift-out + packer / writes
+    return dict(flits_delivered=flits, delivered_elements_per_cycle=8 * deliver_lanes,
+                gather_cycles=round(gather), survivors_estimate=round(surv), insert_cycles=round(insert),
+                tail_cycles=tail, record_cycles_estimate=round(max(gather, insert) + tail),
+                cells=cells, element_bits=84, key_bits=83, comparators_per_cell=16,
+                flops_estimate=cells * 4 * 84 * 2, widest_select="4 x 4 x 83-bit compare + rank + 8:4 one-hot select a cell",
+                price_basis="walk topk_merge(sel) = TU endpoint 1,628.5 + TU 377.6 ns + tail 0.15 us + l20 select 419")
+
+
 def hbm_index_service_model():
     """Full-stack key source geometry and finite return-reservation obligations."""
     from hbm_index_service_model import model
@@ -15463,6 +15524,50 @@ def hgi_token18_fullcore_model():
         exact_gate='matching fullcore TW18 XSEL1 traces + genuine rollback mutant')
 
 
+def dsrom_window_source_pin_anchor_model():
+    """Same MARGIN2 byte-pinned controller; root pin access/anchor successor, +0 cycles."""
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1] /
+        "physical/dsrom_window_source/model_pin_anchor.json").read_text())
+
+
+def dsrom_mtp_grant_rtt_model(forward_hops, return_hops, width=512, depth=None, output_pipe=False):
+    """Reserve every grant until the tx/rx pin stages and actual relays consume it."""
+    import math
+    if min(forward_hops, return_hops) < 0 or width <= 0:
+        raise ValueError("nonnegative actual relay hops and positive payload width required")
+    history = forward_hops + return_hops + 3
+    depth = history + 1 if depth is None else depth
+    if depth < 2:
+        raise ValueError("one-hot receiver FIFO requires depth>=2")
+    count_bits = math.ceil(math.log2(depth + history + 2))
+    rx_ff = width * (depth + 1) + 2 * depth + count_bits + history + 2 + (width + 1 if output_pipe else 0)
+    tx_ff = width + 3
+    relay_ff = forward_hops * (width + 1) + return_hops
+    return dict(block="ot_dsrom_mtp_lrx_rtt", default_ENABLE_RTT=0,
+        MACs_per_cycle=0, compute_intensity=0, communication_intensity_bits=width,
+        forward_hops=forward_hops, return_hops=return_hops,
+        grant_history_cycles=history, fifo_depth=depth,
+        full_rate_depth=history + 1, full_rate_capacity=depth >= history + 1,
+        payload_bytes_per_cycle=width / 8,
+        boundary_bits_per_cycle=width + 2,
+        routing_tracks_needed=width + 2,
+        unreserved_tracks=None, route_fit="pending parent floorplan/physical qualification",
+        replicas=1, mux_entries=depth, one_hot_read_mask_bits=width * depth,
+        receiver_FF=rx_ff, sender_FF=tx_ff, relay_FF=relay_ff,
+        FF_area_floor_um2=(rx_ff + tx_ff + relay_ff) * DFF_UM2,
+        slot_fit="parent slot not yet bound; no physical adoption",
+        first_payload_latency_cycles=forward_hops + 2 + int(output_pipe),
+        registered_elastic_output=bool(output_pipe), output_capacity_flits=int(output_pipe),
+        receiver_latency_added_cycles=int(output_pipe),
+        grant_history_unchanged_reason="Reservation ends at input-pin/queue admission; elastic output slot adds capacity and does not shorten in-flight grant history",
+        initial_grant_return_cycles=return_hops + 2,
+        reservation_roundtrip_cycles=history,
+        added_wire_latency_cycles=forward_hops,
+        total_latency_requires_parent_composition=True,
+        exactness="transaction order and payload preserved; existing module unchanged",
+        physical_closed=False, adopted=False)
 def hgi_idx_owned_g24_model(k=2048, group=96, batch=2):
     """G24 count/map block sizing before RTL; estimates pending physical closure."""
     if not 1 <= k <= 2048 or group not in (1, 2, 4, 8, 96) or not 0 <= batch <= 255:
@@ -15884,3 +15989,150 @@ def qwen_crom_native_group_binding_model():
                         'aggregate_fault_logic': 'new small block needs physical integration/closure; no '
                                                  'in-context claim'},
      'model_before_RTL': True}
+
+
+def ha2_truecredit_capture_collar_model():
+    """Price the local SRAM output capture stage before RTL build."""
+    from tools.ha2_rxs_capture_model import model
+    return model()
+
+
+def ha2_truecredit_capture_return_pin_model():
+    from tools.ha2_rxs_capture_model import return_pin_model
+    return return_pin_model()
+
+
+def ha2_truecredit_local_transport_model():
+    from tools.ha2_rxs_capture_model import local_transport_model
+    return local_transport_model()
+
+
+def hbm_vm8_pin_clock_bank_model(long_taps=48, short_taps=32):
+    """Fanout-bounded VM8 clock proposal, sized from existing full-width pin plans.
+
+    Clock-only partition: arithmetic, data port widths, register depths and token
+    schedule remain unchanged. Clock-tree area and power await physical evidence.
+    """
+    import re
+    from collections import Counter
+    records = []
+    pin_root = ROOT / 'physical/hbm_accel_die_views/vm/vcut8/ports'
+    for pin_file in sorted(pin_root.glob('*/io_place.tcl')):
+        width = 349.056 if pin_file.parent.name.endswith('_w') else 350.760
+        counts, old_counts, faces = Counter(), Counter(), set()
+        for line in pin_file.read_text().splitlines():
+            match = re.search(r'-pin_name \{([^}]+)\}.*-location \{([0-9.]+) ([0-9.]+)\}', line)
+            if not match or match[1].startswith(('ck', 'rst')):
+                continue
+            x, y = float(match[2]), float(match[3])
+            face = 'w' if x < 1 else 'e' if x > width-1 else 's' if y < 1 else 'n'
+            faces.add(face)
+            length, coordinate = (1000.056, y) if face in 'we' else (width, x)
+            n, old_n = (long_taps, 4) if face in 'we' else (short_taps, 2)
+            counts[face, min(n-1, int(coordinate / length * n))] += 1
+            old_counts[face, min(old_n-1, int(coordinate / length * old_n))] += 1
+        tap_count = sum(long_taps if f in 'we' else short_taps for f in faces)
+        max_pin_load = max(counts.values())
+        records.append(dict(master=pin_file.parent.name, pin_source=str(pin_file.relative_to(ROOT)),
+            pin_sha256=hashlib.sha256(pin_file.read_bytes()).hexdigest(),
+            boundary_bits=sum(counts.values()), clock_taps=tap_count,
+            old_clock_taps=sum(4 if f in 'we' else 2 for f in faces),
+            max_pin_registers_per_tap_upper_bound=max_pin_load+1,
+            max_clock_sinks_per_tap_upper_bound=2*max_pin_load+3,
+            old_max_pin_registers_per_tap_upper_bound=max(old_counts.values())+1,
+            long_segment_um=1000.056/long_taps, short_segment_um=width/short_taps,
+            slot_area_um2=width*1000.056, added_flops=0, added_data_muxes=0,
+            added_clock_port_tracks=tap_count, min_clock_pin_spacing_um=min(1000.056/long_taps,width/short_taps),
+            clock_pin_layer='M7', clock_pin_pitch_um=0.064,
+            slot_fit='unchanged outline; regenerate ports and check die clock drops/physical lint'))
+    return dict(schema='opentallas.vm8-pin-clock-bank-model.v1', opt_in_default=False,
+        long_taps=long_taps, short_taps=short_taps, halves=records,
+        clock_taps=sum(r['clock_taps'] for r in records),
+        old_clock_taps=sum(r['old_clock_taps'] for r in records),
+        added_token_cycles=0, added_boundary_data_bits_per_cycle=0,
+        added_memory_bytes_per_cycle=0, added_MACs_per_cycle=0,
+        compute_communication_intensity='unchanged; same full-width transaction pipelines',
+        clock_fanout_upper_bound=max(r['max_clock_sinks_per_tap_upper_bound'] for r in records),
+        additional_register_area_um2=0,
+        physical_clock_area_power='unmeasured; retain candidate status until actual CTS cells and clock power are priced',
+        adoption='all eight TT setup>=0/FF hold>=0/DRC0 plus transaction/negative gates; no latency or gain credit')
+
+
+def qwen_tree_delay_leaf_model(width_bits=512, depth=21, outline_um=(129.6, 259.2)):
+    """Fixed-cycle arrival padding; candidate sizing, no route/ETM qualification."""
+    if width_bits < 1 or depth < 0:
+        raise ValueError('positive width and nonnegative depth required')
+    w, h = outline_um
+    if min(w, h) <= 0:
+        raise ValueError('positive outline required')
+    return dict(schema='opentallas.qwen-tree-delay-leaf-model.v1',
+        width_bits=width_bits, depth=depth, MACs_per_cycle=0,
+        memory_bytes_per_cycle=0, boundary_bits_per_cycle=width_bits,
+        pipeline_storage_bits=width_bits*depth, clock_sinks=width_bits*depth,
+        cycles_added=depth, clock_root_limit=15000,
+        candidate_clock_root_fits=(width_bits*depth <= 15000),
+        outline_um=dict(w=w,h=h), outline_area_um2=w*h,
+        stage_columns=max(1,depth), stage_column_width_um=w/max(1,depth),
+        stage_cut_demand_bits=width_bits, stage_cut_tracks_M4=h/.048*.70,
+        stage_cut_ratio=width_bits/(h/.048*.70),
+        routing_assumption='adjacent serial columns, M4 horizontal pitch0.048um,30%PG reserve; actual cut/GRT must validate',
+        area_gate='use actual synthesis area; no fabricated area or timing view',
+        adoption='exact+mutants; real reference tile TT/FF/DRC/childlint; actual die slot/pin/clock/cut binding')
+
+
+def hbm_vm8_root_checker_bank_model():
+    """VM8 local protection banks, registered seams and unchanged-price gate.
+
+    The machine-readable prebuild precedes the RTL. Real bank area, source-
+    matched transaction timings and native ownership debt qualify the candidate.
+    """
+    return json.loads((ROOT / 'results/physical/vm8_root_checker_20261013/prebuild.json').read_text())
+
+
+def hbm_sm_pub_parent_stations_model():
+    """Production publication hierarchy: extraction retains every existing edge.
+
+    Physical areas and boundary-wire lengths qualify from the station routes;
+    none are inferred from a slice route or credited as timing closure here.
+    """
+    return json.loads((ROOT / 'results/rtl/hgi_sm_pub_parent_stations_20261013/sizing.json').read_text())
+
+
+def hbm_qdq_ordered_one_row_front_model():
+    """Unassigned fast/general frontend slots; immutable 168-cycle price."""
+    return {"price_cycles": 168, "fast_front_edges": 4,
+            "general_front_extra_edges": 1, "records_per_cycle": 1,
+            "retire_slots": 16, "retire_payload_bits": 16 * 190,
+            "retire_ready_bits": 16, "tag_pipeline_bits": 8 * 4,
+            "fast_s2_boundary_bits": 333, "general_boundary_bits": 191,
+            "retire_output_bits": 192, "memory_bytes_per_cycle": 0,
+            "macs_per_cycle": 0,
+            "slot_requests_um": [(129.6, 71.28), (172.8, 103.68)],
+            "parent_pin_clock_pg_status": "unassigned; no native qualification"}
+
+
+def hbm_sfu_native_quarter_model():
+    """Actual c12 source boundaries; native local8 binding remains unqualified."""
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1] / "results/arch/hbm_native_1013/sfu_native_quarter/model.json").read_text())
+
+
+def hbm_qdq_pin_capture_front_model():
+    """S2 emits final payload; early metadata preserves four-edge ordered fast return."""
+    return {"price_cycles": 168, "fast_edges": 4, "general_extra_edges": 2,
+            "records_per_cycle": 1, "slots": 16, "max_inflight_bound": 9,
+            "payload_slot_bits": 3040, "first_capture_payload_bits": 380,
+            "first_capture_control_bits": 3, "fast_launch_bits": 190,
+            "memory_bytes_per_cycle": 0, "macs_per_cycle": 0,
+            "replicas": 4, "slot_requests_um": [(129.6,71.28),(172.8,103.68)],
+            "pin_budget_status": "must measure P190/Q220 and actual per-pair L-H100"}
+
+
+def hbm_qdq_dedicated_face_ff_model():
+    """Repair measured payload139 Q224.6 with independent same-edge launch FFs."""
+    return {"immutable_price":168,"fast_edges":4,"general_extra_edges":2,
+            "launch_FFs":190,"estimated_extra_FFs":32,"estimated_extra_std_um2":24,
+            "clock_sink_estimate":823,"replicas":4,"shape_um":[129.6,71.28],
+            "launch_bits_per_cycle":190,"MACs_per_cycle":0,"memory_bytes_per_cycle":0,
+            "default_off":True,"actual_pin_requirement":"P190/Q220 and per-pairL-H100"}

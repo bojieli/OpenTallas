@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.closure_loop.ck_insertion.v1",
- "base": "/srv/opentallas-data/claude/closure-loop/engram_lkp_crcmat2_a-b17ee03d4-tc/routes/engram_lkp_crcmat2_a_b17ee03d4_tc_cal/work/orfs/results/asap7/opentallas_dsfd_engram_lkp_asap7_s81ph_engram_lkp_crcmat2_a_b17ee03d4_tc_cal/base",
+ "base": "/srv/opentallas-scratch2/claude/closure-loop/el1013-engram-lkp-pk-9c5094e02-tc/routes/el1013_engram_lkp_pk_9c5094e02_tc_cal/work/orfs/results/asap7/opentallas_dsfd_engram_lkp_asap7_s81ph_el1013_engram_lkp_pk_9c5094e02_tc_cal/base",
  "db": "4_1_cts.odb",
  "sdc": "4_cts.sdc",
  "clock": "core_clk",
@@ -18,7 +18,9 @@
    "min": 450.1,
    "max": 465.5
   },
-  "errors": []
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
  },
  "tt": {
   "boundary": {
@@ -33,7 +35,9 @@
    "min": 339.2,
    "max": 352.9
   },
-  "errors": []
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
  },
  "ff": {
   "boundary": {
@@ -48,9 +52,18 @@
    "min": 272.9,
    "max": 285.9
   },
-  "errors": []
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
  },
  "route_corner": "TC",
+ "macro_clk": {
+  "n": 0,
+  "slew_ps": 120.0,
+  "late_ps": 30.0,
+  "flag": false,
+  "outliers": []
+ },
  "env": {
   "CK_SS_MEAN": 347,
   "CK_SS_ALL_MEAN": 347,

@@ -30,6 +30,9 @@ def command(a):
         for k, v in QP.items():
             cmd += ['--param', f'{k}={v}']
         cmd += ['--param', f'BXST={a.bxst}', '--param', f'FXST={a.fxst}']
+        if a.hdly:
+            # bf-hier-1011: HB4 hold-delay stage ahead of the boundary registers, dont_touch from PRE_FLOORPLAN
+            cmd += ['--param', f'HDLY={a.hdly}', '--step-tcl', 'PRE_FLOORPLAN=physical/s81_bf_hier/hdly_dont_touch.tcl']
         pins = ['--pin-region', r'^(pv|pval|prow|pseg|pnseg|perr|ppos|qy_bkf).*=bottom', '--pin-region',
                 r'^(clk|rst_n_pin|ze_d|issue|a_ctr|i1_|i2x_|so_).*=right']
     else:
@@ -38,9 +41,17 @@ def command(a):
         pins = ['--pin-region', r'^c0_.*=left', '--pin-region', r'^(c1_|c_qy_bkf_in).*=right',
                 '--pin-region', r'^xb_d.*=top', '--pin-region',
                 r'^(clk|rst_n|cfg_|go|go_bf|xs_|xb_v|xb_b|xb_sv|xb_u|xb_pos|busy|fault|hph).*=bottom']
+    if a.local_clock_pin and a.block == 'col':
+        # bf-hier-1011 2026-10-10: the right face of the column carries all ~776 abutted inputs, so a clk region there has
+        # no free slot (PPL-0093 at 0.576 AND 4.32 um windows).  The column's LONG face is the top (450 x 220): the single
+        # root enters at the top-face midpoint, which is empty.  The front (100 wide, long faces = the c0 / c1 interfaces)
+        # keeps clk in its bottom control group, as the CLOSED bfh_front280 routes did.
+        pins = [p.replace('^(clk|rst_n_pin|', '^(rst_n_pin|') for p in pins]
+        mid = a.die_w / 2
+        pins += ['--pin-region', f'^clk$=top:{mid-2.16:g}-{mid+2.16:g}']
     ss = a.ins_ss
     io = lambda v: str(round(v / 1000.0, 4))
-    W, H = a.die_w, 190.08
+    W, H = a.die_w, a.die_h
     cmd += ['--clock-period-ns', a.period, '--core-input-delay-min-ns', io(ss), '--core-input-delay-max-ns', io(ss + 250),
             '--output-delay-min-ns', io(-(ss + 50)), '--output-delay-max-ns', io(100 - (ss - 150)), '--false-path-from',
             'rst_n' if a.block == 'front' else 'rst_n_pin',
@@ -48,10 +59,27 @@ def command(a):
             '--hold-corners', 'WC', '--slew-margin-percent', '20', '--hold-margin-ns', a.hm, '--orfs-var', 'PLACE_DENSITY_LB_ADDON=',
             '--step-tcl', 'PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl',
             '--step-tcl', 'PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl'] + pins
+    if a.io_tcl:
+        # s81-bf 2026-10-13: exact pin plan (place_pin file) instead of the face regions: run_abi3_physical writes its own
+        # IO_CONSTRAINTS for any --pin-region AFTER an --orfs-var one, so the regions are dropped (front aligned to the
+        # closed column's E-face pins: tools/s81/bf_front_aligned_pins.py)
+        assert pins and cmd[-len(pins):] == pins, 'pin regions not at the tail'
+        cmd = cmd[:-len(pins)] + ['--orfs-var', f'IO_CONSTRAINTS=/src/{a.io_tcl}']
+    if a.pin_keepout:
+        # s81-bf 2026-10-13: face-pin access for the parent / die (child_lint (f): the aligned front closed with 367 face
+        # pins under its own metal on the layer above).  pin_access_pregrt.tcl = the repair-buffer cap hook + the keepout on
+        # the layer above the outer half of every face pin; the same keepout file removes it after detail route.
+        i = cmd.index('PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl')
+        cmd[i] = 'PRE_GLOBAL_ROUTE=physical/redesign_ds/coll_split/pin_access_pregrt.tcl'
+        cmd += ['--step-tcl', 'POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl',
+                '--orfs-var', 'OT_PK_ABOVE_ONLY=1', '--orfs-var', 'OT_PK_FRAC=0.5']
+    if a.block == 'front' and a.pinlat:
+        cmd += ['--param', f'PINLAT={a.pinlat}']
     cmd += ['--clock-uncertainty-ns', '.060', '--clock-uncertainty-hold-ns', '.025', '--orfs-corner', 'WC',
             '--stages', 'pnr', '--synth-timeout-seconds', 'unlimited', '--flow-timeout-seconds', 'unlimited',
             '--core-utilization', '45', '--place-density', '.60', '--max-transition-ns', '.25',
             '--orfs-var', 'NUM_CORES=16', '--orfs-var', 'ADDER_MAP_FILE=', '--orfs-var', 'OT_BF_HIER=1', '--orfs-var', 'OT_BF_RECUT=1',
+            '--orfs-var', f'OT_BF_HIER_ROM_COUNT={2 if a.block == "col" else 0}',
             '--orfs-var', 'SYNTH_SCRIPT=/src/physical/s81_native_bf/synth.tcl',
             '--orfs-var', 'PDN_TCL=/src/physical/abi3/w10_wake_pdn.tcl',
             '--keep-heavy-artifacts', '--nickname-tag', a.tag, '--keep-workdir', str(a.work), '--output', str(a.output)]
@@ -69,6 +97,12 @@ def main():
     p.add_argument('--work', type=Path, required=True); p.add_argument('--output', type=Path, required=True)
     p.add_argument('--tag', required=True); p.add_argument('--period', default='.730'); p.add_argument('--ins-ss', type=float, default=841.0)
     p.add_argument('--die-w', type=float, default=0.0); p.add_argument('--hm', default='0.000')
+    p.add_argument('--die-h', type=float, default=190.08)
+    p.add_argument('--hdly', type=int, default=0, help='column: HB4 hold-delay cells per input bit (bf-hier-1011)')
+    p.add_argument('--local-clock-pin', action='store_true', help='root at middle of long right face; compact hierarchy model, default off')
+    p.add_argument('--pinlat', type=int, choices=(0,1), default=0)
+    p.add_argument('--io-tcl', default='', help='repo place_pin file replacing the face pin regions (exact abutment pins)')
+    p.add_argument('--pin-keepout', action='store_true', help='face-pin access keepout before GRT, removed after DRT')
     p.add_argument('--bxst', type=int, default=2); p.add_argument('--fxst', type=int, default=2); p.add_argument('--extra', default='')
     a = p.parse_args()
     if not a.die_w:

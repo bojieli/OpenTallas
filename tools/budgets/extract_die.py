@@ -49,6 +49,7 @@ def main():
     ap.add_argument('--s81-opts', default='')
     ap.add_argument('--hbm-variant', default='')
     ap.add_argument('--qwen-recipe', default='r21b')
+    ap.add_argument('--variant', default='', help='qwen_kv: kv_die.build flags (die_top_lint --variant), e.g. kv_wq_mirror')
     ap.add_argument('--out', required=True, type=Path)
     a = ap.parse_args()
     src = a.src.resolve()
@@ -60,6 +61,8 @@ def main():
         L.VARIANT = a.hbm_variant
     if a.die == 'qwen_rom':
         L.QWEN_RECIPE = a.qwen_recipe
+    if a.die == 'qwen_kv':       # kv-die lead 2026-10-12: KV die (generated face anchors, generator clock regions)
+        L.VARIANT = a.variant
     m, pw, M, tool = L.build(a.die)
     by = {it.name: it for it in m['insts']}
     try:
@@ -92,8 +95,8 @@ def main():
             ports[name] = {p: [round(v, 3) for v in xy] for p, xy in pp.items() if xy}
     # real LEF masters: centre of each die port's pin group (generator real-port maps)
     try:
-        if a.die == 'qwen_rom':
-            raise LookupError('qwen_rom: generated face anchors only')
+        if a.die in ('qwen_rom', 'qwen_kv'):
+            raise LookupError('qwen dies: generated face anchors only')
         if a.die == 'hbm':
             L.H._init_real()
             files, rp = dict(L.H.REAL), L.H.real_ports(m)
@@ -115,7 +118,7 @@ def main():
         pass
     except Exception as e:  # noqa: BLE001
         print('real port anchors failed:', repr(e), file=sys.stderr)
-    if a.die == 'qwen_rom':
+    if a.die in ('qwen_rom', 'qwen_kv'):
         regions = [dict(name=r['name'], kind=r.get('kind', 'region'), rect=r['rect']) for r in m.get('clock_regions', [])]
         die_wh = [m['die']['w'], m['die']['h']]
     elif a.die == 'hbm':

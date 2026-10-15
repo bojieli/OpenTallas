@@ -2,7 +2,8 @@
 # exported abstract carries no obstruction there; only M3 / M5 obstructions created by that hook exist in a lane.
 set ko_block [ord::get_db_block]
 set ko_dbu [$ko_block getDbUnitsPerMicron]
-set ko_d [expr {int(0.60 * $ko_dbu)}]
+set ko_depth [expr {[info exists ::env(OT_PINKO_DEPTH)] && $::env(OT_PINKO_DEPTH) ne "" ? $::env(OT_PINKO_DEPTH) : 0.60}]
+set ko_d [expr {int($ko_depth * $ko_dbu)}]
 set ko_w [expr {2 * int(0.06 * $ko_dbu)}]
 set ko_n 0
 foreach ko_ob [$ko_block getObstructions] {

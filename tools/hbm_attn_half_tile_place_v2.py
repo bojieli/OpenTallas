@@ -38,6 +38,8 @@ QSHIFT = V1.QSHIFT
 CH = V1.CH
 DIM = {('sn', 544): (105.84, 11.88), ('ew', 544): (11.88, 105.84), ('sn', 136): (28.08, 11.88), ('ew', 136): (11.88, 28.08)}
 PARAMS = V1.PARAMS
+PIN_GAP = 0.0
+PIN_GAP_EW = None                  # el1011-hbm-attn: E / W face banks' gap (None: PIN_GAP)
 grid = V1.grid
 trk = T.trk
 
@@ -74,6 +76,21 @@ class APlan:
     def put(self, name, kind, bits, orient, x, y, force=False, pin=False):
         """pin: a face pin bank (its outer face is the die edge): only the real box is checked"""
         w, h = DIM[(kind, bits)]
+        gew = PIN_GAP if PIN_GAP_EW is None else PIN_GAP_EW
+        if pin and (PIN_GAP > 0 or gew > 0):
+            # hbm-phys-1010 [att] (half_v2 c6c90ac08 GRT: hi 6,424 s 'finished with congestion', 8.5 k congestion
+            # entries, the top four net classes xp / cf / i / o = the PORT nets of the face pin banks, in the gcells
+            # where a port pin overlaps its bank's M1-M6 OBS; lo's first global_route > 3.5 h): the pin bank stands
+            # PIN_GAP off its face, so every port -> bank wire is a straight stub in free gcells.  The pins stay on the
+            # bank's pin tracks (x for S / N, y for E / W), so the seam / face plan is unchanged.
+            if y < 1.0:
+                y = T.trk(y + PIN_GAP, 0.024)
+            elif y + h > self.ch - 1.0:
+                y = T.trk(y - PIN_GAP, 0.024, True)
+            if x < 1.0:
+                x = T.trk(x + gew)
+            elif x + w > self.cw - 1.0:
+                x = T.trk(x - gew, 0.0, True)
         b = (x, y, x + w, y + h)
         if not force and not self.free(kind, b, zones=not pin):
             raise SystemExit(f'{name}: ({x:.3f}, {y:.3f}) {w} x {h} not free')
@@ -212,7 +229,16 @@ def place_lo(a):
     pins.p['q'] += [(b, 'M4', round(TW - 0.096, 3), round(qy + 0.396 + V1.PITCH * b, 3)) for b in range(544, 582)]
     pins.single('rst', 'E', round(qy + 0.396 + V1.PITCH * 582, 3))
     pins.single('ck', 'E', grid(600.0) + 0.012)
-    root = [P.put(T.bname('u_root', 0, c, False), 'sn', 544, 'R0', x, yN, pin=True) for c, x in enumerate(cix)]
+    V8 = getattr(a, 'lo_v8', False)
+    if V8:
+        # el1011-hbm-attn v8 (physical spec 2026-10-11): the merge root sits at the BOTTOM centre, above the ci pin banks,
+        # where ci / k / ks (S) and q / ri (E, along the bottom strip) land; xp leaves through its own pipe (u_xpp, last
+        # stage = the N pin bank).  The central channel then carries only xp + mid (~3.2 k nets) past the quad rows
+        # instead of every input bus up + rf / mid back down (~9.1-9.5 k; lo_v7 lint y=275.6: 7,069 > 5,683 tracks).
+        xpp = [P.put(T.bname('g_xpp.u_xpp', a.NXP - 1, c, False), 'sn', 544, 'R0', x, yN, pin=True) for c, x in enumerate(cix)]
+        root = [P.snap(T.bname('u_root', 0, c, False), 'sn', 544, 'R0', x + SNW / 2 + a.root_dx, 75.0) for c, x in enumerate(cix)]
+    else:
+        root = [P.put(T.bname('u_root', 0, c, False), 'sn', 544, 'R0', x, yN, pin=True) for c, x in enumerate(cix)]
     pins.run('xp', 'N', cix, 1619)
     # the seam result pin banks sit in the side channels (136-bit banks): v1's E bank (x TW - 140) sat over quad1's top
     # edge, its d pins 4 um above the quad halo; die seam nets follow the half records (ports.json)
@@ -228,6 +254,29 @@ def place_lo(a):
     rcs = rows(P, 'g_y0.g_x\\[{x}\\].u_row', QL_X, QR_X, q_in_y)
     sy = QY_LO + 281.5
     e1s = [side_res(P, hops, f'g_y0.g_x\\[{x}\\].u_res', x, QL_X, QR_X, sy, True, f'res0{x}') for x in (0, 1)]
+    if V8:
+        rfc = cen(pin['rf'])
+        pipe('u_pc', pin['ci'], a.NC, 3, 1, [], rc, 'ci')
+        pipe('u_pk', pin['k'], a.NK, 2, 1, [(cc_x - 200, 60.0)], rc, 'k')
+        pipe('u_pks', pin['ks'], a.NK, 2, 1, [(cc_x + 200, 60.0)], rc, 'ks')
+        pipe('u_pq', pin['q'], a.NK, 1, 1, [(TW - 60.0, 60.0), (cc_x + 230, 60.0)], rc, 'q')
+        pipe('u_pr', pin['ri'], a.NR, 3, 1, [(TW - 200.0, 150.0), (cc_x + 230, 150.0)], rc, 'ri')
+        pipe('u_fr', root, a.NFR, 3, 0, [(cc_x - 230, 150.0), (200.0, 150.0)], rfc, 'rf')
+        # the LAST mid stage lands at the quad input rows' height (a pipe spaces its stages at k/(n+1) toward the sink)
+        my = rc[1] + (q_in_y - 40 - rc[1]) * (a.PMID + 1) / a.PMID
+        mid = pipe('g_y0.u_mid', root, a.PMID, 3, 0, [], (cc_x, my), 'mid0')
+        row_hops(hops, rcs, cen(mid[-1]), 'row0')
+        pipe('g_xpp.u_xpp', root, a.NXP - 1, 3, 0, [(cc_x, q_in_y + 60)], cen(xpp), 'xp')
+        for x in (0, 1):
+            nm = f'g_y0.g_x\\[{x}\\].u_res'
+            pipe(nm, [e1s[x]], a.NLL - 3, 1, 2, [], (xr_x[x] + 14.04, yN), f'res0{x}', bits=136)
+        quads = {'g_y0.g_x\\[0\\].u_q': (QL_X, QY_LO, 'MY'), 'g_y0.g_x\\[1\\].u_q': (QR_X, QY_LO, 'R0')}
+        X0, PITCH = 1062.0, 0.192
+        x1 = round(X0 + 1101 * PITCH, 3)
+        pins.p['ks'] = [(i, 'M5', round(X0 + i * PITCH, 4), 0.096) for i in range(1102)]
+        pins.p['ldk'] = [(0, 'M5', round(x1 + 2.016, 4), 0.096)]
+        pins.p['kq'] = [(i, 'M5', round(x1 + 4.032 + i * 0.384, 4), 0.096) for i in range(2)]
+        return P, hops, pins, quads, dict(cix=cix, xr_x=xr_x)
     # flows into ROOT (up the central channel): straight columns where the pins allow
     pipe('u_pc', pin['ci'], a.NC, 3, 1, [], rc, 'ci')
     pipe('u_pk', pin['k'], a.NK, 2, 1, [(cc_x - 200, 60.0), (cc_x - 200, top)], rc, 'k')
@@ -249,6 +298,8 @@ def place_lo(a):
     x1 = round(X0 + 1101 * PITCH, 3)
     pins.p['ks'] = [(i, 'M5', round(X0 + i * PITCH, 4), 0.096) for i in range(1102)]
     pins.p['ldk'] = [(0, 'M5', round(x1 + 2.016, 4), 0.096)]
+    # el1011-hbm-attn: the PS entry line credit kq = {forwarded clock, v} (audit N9, main 81a0a111c) beside ldk
+    pins.p['kq'] = [(i, 'M5', round(x1 + 4.032 + i * 0.384, 4), 0.096) for i in range(2)]
     return P, hops, pins, quads, dict(cix=cix, xr_x=xr_x)
 
 
@@ -332,15 +383,38 @@ def main():
     ap.add_argument('--out', default='physical/hbm_attn_tile_r/half_v2')
     ap.add_argument('--max-hop', type=float, default=450.0)
     ap.add_argument('--acc', type=float, default=20.0)
+    ap.add_argument('--pin-gap-ew-hi', type=float, default=None, help='hi: E / W face banks gap (corner relays crowd it)')
+    ap.add_argument('--lo-v8', action='store_true', help='lo merge root at the bottom (el1011-hbm-attn v8 physical spec)')
+    ap.add_argument('--NXP', type=int, default=0)
+    ap.add_argument('--lo-shift', type=int, default=2, help='v8: stages moved from every lo input pipe to every output pipe')
+    ap.add_argument('--xpx', type=int, default=0, help='v10: extra lo->hi xp stages (taller lo; reference mirrors them)')
+    ap.add_argument('--lo-extra-um', type=float, default=0.0, help='v8t: taller lo (bottom strip grows; quads move up), rounded to 2.16-um rows')
+    ap.add_argument('--root-dx', type=float, default=0.0, help='v8: root shifted east (ri reach from the E face)')
+    ap.add_argument('--pin-gap', type=float, default=0.0, help='face pin banks this far off their face (um)')
     for k, v in PARAMS.items():
         ap.add_argument(f'--{k}', type=int, default=v)
     a = ap.parse_args()
+    global PIN_GAP
+    PIN_GAP = a.pin_gap
+    global H_LO, QY_LO
+    if a.lo_extra_um:
+        rows = round(a.lo_extra_um / 2.16)
+        H_LO, QY_LO = round(H_LO + 2.16 * rows, 3), round(QY_LO + 2.16 * rows, 3)
+    hi_par = {k: getattr(a, k) for k in ('NK', 'NC', 'NR', 'PMID', 'NFR')}
+    if a.lo_v8:          # lo-only stage shift (latency per path unchanged); hi keeps its parameters
+        S = a.lo_shift
+        a.NK, a.NC, a.NR, a.PMID, a.NFR, a.NXP = a.NK - S, a.NC - S, a.NR - S, a.PMID + S, a.NFR + S, S + a.xpx
+        assert min(a.NK, a.NC, a.NR) >= 0
     P, hops, pins, quads, geo = place_lo(a)
+    for k, v in hi_par.items():
+        setattr(a, k, v)
     V1.check_pins(P, pins)
     rl = write(a.out, 'hfd_attn_half_lo', a, P, hops, pins, quads, 'lo',
                dict(k='input', ci='input', ri='input', q='input', rst='input', ck='input', rf='output', xp='output', xr='output',
-                    ks='input', ldk='input'),
+                    ks='input', ldk='input', kq='output'),
                f'# hfd_attn_half_lo pins (v2): outline {TW} x {H_LO}; every pin on its pin bank', H_LO)
+    global PIN_GAP_EW
+    PIN_GAP_EW = a.pin_gap_ew_hi
     Ph, hh, pinh, qh = place_hi(a, geo)
     V1.check_pins(Ph, pinh)
     rh = write(a.out, 'hfd_attn_half_hi', a, Ph, hh, pinh, qh, 'hi',

@@ -11,6 +11,7 @@ module tb_hgi_ds_mux;
     ot_hgi_ds_mux #(.W(W)) u (.sel(sel), .legacy(lg), .hgi(hg), .q(q));
 `endif
     integer i, k, errors = 0, seed = 1;
+    initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 1; $display("SEED=%0d", seed); end  // runtime seed (+SEED=<n> overrides): Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     always @(posedge clk) begin pin_mux <= q; pin_ref <= sel ? hg : lg; end
     initial begin
         for (k = 0; k < 2; k = k + 1) begin

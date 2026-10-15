@@ -1,0 +1,122 @@
+{
+ "master": "dsfd_coll_p2_lane_ba",
+ "w_um": 345.6,
+ "h_um": 340.2,
+ "domain": "stream_1p2",
+ "orients": [
+  "MY"
+ ],
+ "note": "P2 die-B-lane adapter (placed MY beside the mirrored E4 lane tile): W (local) = the lane tile, N = lane-1 words to dsfd_coll_p2_ep, S = clock / reset",
+ "ports": [
+  [
+   "r_v",
+   1,
+   "output",
+   "N",
+   "M5",
+   1,
+   0.01
+  ],
+  [
+   "r_d",
+   604,
+   "output",
+   "N",
+   "M5",
+   3,
+   0.15
+  ],
+  [
+   "r_r",
+   1,
+   "input",
+   "N",
+   "M5",
+   1,
+   0.3
+  ],
+  [
+   "t_flt",
+   1,
+   "output",
+   "N",
+   "M5",
+   1,
+   0.32
+  ],
+  [
+   "ck",
+   1,
+   "input",
+   "S",
+   "M5",
+   1,
+   0.48
+  ],
+  [
+   "rs",
+   1,
+   "input",
+   "S",
+   "M5",
+   1,
+   0.5
+  ],
+  [
+   "lo_v",
+   1,
+   "output",
+   "W",
+   "M4",
+   "lane E-face y"
+  ],
+  [
+   "lo_r",
+   1,
+   "input",
+   "W",
+   "M4",
+   "lane E-face y"
+  ],
+  [
+   "lo_d",
+   553,
+   "output",
+   "W",
+   "M4",
+   "lane E-face y"
+  ],
+  [
+   "li_v",
+   1,
+   "input",
+   "W",
+   "M4",
+   "lane E-face y"
+  ],
+  [
+   "li_r",
+   1,
+   "output",
+   "W",
+   "M4",
+   "lane E-face y"
+  ],
+  [
+   "li_d",
+   553,
+   "input",
+   "W",
+   "M4",
+   "lane E-face y"
+  ],
+  [
+   "f_lflt",
+   3,
+   "input",
+   "W",
+   "M4",
+   "lane E-face y"
+  ]
+ ]
+}

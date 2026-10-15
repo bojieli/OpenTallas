@@ -10,7 +10,9 @@
    "params": {
     "USE_MACRO": 1,
     "FQCR": 16,
-    "MTP": 2
+    "MTP": 2,
+    "FUSED": 1,
+    "QRW": 1216
    },
    "bind": {
     "clk": "clk",
@@ -21,8 +23,9 @@
     "vmr": "die:f_hgi_vmr[0:274]",
     "vmstat": "die:f_hgi_vmstat[0:19]",
     "coll_rec": "die:t_hgi_coll[0:968]",
+    "coll_recx": "open",
     "coll_ret": "die:f_hgi_coll[0:3]",
-    "quant_rec": "die:t_hgi_quant[0:683]",
+    "quant_rec": "die:t_hgi_quant[0:1216]",
     "quant_ret": "die:f_hgi_quant[0:3]",
     "cfg_bus": "die:t_hgi_cfg_coll[0:40]",
     "ux_v": "fold",
@@ -30,7 +33,7 @@
     "ux_done": "cfg",
     "ux_fault": "cfg",
     "wr_quiet": "die:f_hgi_dma[3:4]",
-    "idx_rec": "die:t_hgi_idx[0:1819]",
+    "idx_rec": "die:t_hgi_idx[0:2075]",
     "idx_ret": "die:f_hgi_idx[0:3]",
     "am_rec": "die:t_hgi_argmax[0:691]",
     "am_ret": "die:f_hgi_argmax[0:3]",
@@ -269,6 +272,58 @@
   "cpd.mh_t_drained": {
    "class": "by_design",
    "reason": "MX1 collar host / provider side (job admission + config, prompt / forced-token reads, emit records, done / abort / drained): not yet on the loader link. PROPOSAL (hgi-1010.log 2026-10-10 hgi-1010/h): bind through ot_hgi_loader_cp -- an AXI-lite MTP window (job config 6 x 32 b + job / gen + START = mh_f_host; status = mh_t_host / abort / drained), the provider read on the loader memory lane from a host-written HBM token array (prompt by p_addr, forced drafts by f_addr), and the emit records into the completion FIFO ({token, pos = idx}, done = a completion with the stop status). Until then inputs ride the cfg chain and outputs fold (logic live, not functional on the die)"
+  },
+  "cpd.coll_recx": {
+   "class": "open",
+   "reason": "owner hbmdie-1011 / hgi-1010/k: COLL.TOPK_MERGE operand sideband {n_R, n_B, desc_R, desc_B} (554 b) is consumed only by ot_hgi_coll_ep TKM=1 (hgi_recx). The die coll view (coll_hgi) builds TKM 0 with no hgi_recx input and the r25gqn hgi_coll net is 968 b, so no die net carries it; it becomes die net t_hgi_coll +554 b when the TOPK_MERGE tiles (16 x ot_hgi_coll_tkm_tile, r25gq hier contract) are composed with coll TKM=1. Until then COLL.TOPK_MERGE on this die runs the TKM=0 (software merge) path."
+  },
+  "die:f_lgEcp_rdn": {
+   "class": "open",
+   "reason": "owner hgi-1010/b (lane stations) + hbmdie-1011: r25gqn lgE KE=4 reserves lane-station slot 0 (CP) on the cmdproc N face (die decision 6840a4ea2: the CP-side wide VM staging client and the ATT record adapter's staging client sit in the CP block). ot_hgi_cp_die has no wide lane client yet (its VM traffic is the narrow hgi_vmq/vmr client), so the station slot is idle: inputs dropped, outputs (request/write lanes) constant 0 = no request, which the VM lane station treats as an empty client. Bind when the CP/ATT wide clients land in ot_hgi_cp_die."
+  },
+  "die:f_lgEcp_wdn": {
+   "class": "open",
+   "reason": "owner hgi-1010/b (lane stations) + hbmdie-1011: r25gqn lgE KE=4 reserves lane-station slot 0 (CP) on the cmdproc N face (die decision 6840a4ea2: the CP-side wide VM staging client and the ATT record adapter's staging client sit in the CP block). ot_hgi_cp_die has no wide lane client yet (its VM traffic is the narrow hgi_vmq/vmr client), so the station slot is idle: inputs dropped, outputs (request/write lanes) constant 0 = no request, which the VM lane station treats as an empty client. Bind when the CP/ATT wide clients land in ot_hgi_cp_die."
+  },
+  "die:t_lgEcp_rup": {
+   "class": "open",
+   "reason": "owner hgi-1010/b (lane stations) + hbmdie-1011: r25gqn lgE KE=4 reserves lane-station slot 0 (CP) on the cmdproc N face (die decision 6840a4ea2: the CP-side wide VM staging client and the ATT record adapter's staging client sit in the CP block). ot_hgi_cp_die has no wide lane client yet (its VM traffic is the narrow hgi_vmq/vmr client), so the station slot is idle: inputs dropped, outputs (request/write lanes) constant 0 = no request, which the VM lane station treats as an empty client. Bind when the CP/ATT wide clients land in ot_hgi_cp_die."
+  },
+  "die:t_lgEcp_wup": {
+   "class": "open",
+   "reason": "owner hgi-1010/b (lane stations) + hbmdie-1011: r25gqn lgE KE=4 reserves lane-station slot 0 (CP) on the cmdproc N face (die decision 6840a4ea2: the CP-side wide VM staging client and the ATT record adapter's staging client sit in the CP block). ot_hgi_cp_die has no wide lane client yet (its VM traffic is the narrow hgi_vmq/vmr client), so the station slot is idle: inputs dropped, outputs (request/write lanes) constant 0 = no request, which the VM lane station treats as an empty client. Bind when the CP/ATT wide clients land in ot_hgi_cp_die."
+  },
+  "die:f_lgEatt_rdn": {
+   "class": "open",
+   "reason": "owner hgi-1010/b (lane stations) + hbmdie-1011: r25gqn lgE KE=4 reserves lane-station slot 1 (ATT) on its W face (die decision 6840a4ea2: the CP-side wide VM staging client and the ATT record adapter's staging client sit in the CP block). ot_hgi_cp_die has no wide lane client yet (its VM traffic is the narrow hgi_vmq/vmr client), so the station slot is idle: inputs dropped, outputs (request/write lanes) constant 0 = no request, which the VM lane station treats as an empty client. Bind when the CP/ATT wide clients land in ot_hgi_cp_die."
+  },
+  "die:f_lgEatt_wdn": {
+   "class": "open",
+   "reason": "owner hgi-1010/b (lane stations) + hbmdie-1011: r25gqn lgE KE=4 reserves lane-station slot 1 (ATT) on its W face (die decision 6840a4ea2: the CP-side wide VM staging client and the ATT record adapter's staging client sit in the CP block). ot_hgi_cp_die has no wide lane client yet (its VM traffic is the narrow hgi_vmq/vmr client), so the station slot is idle: inputs dropped, outputs (request/write lanes) constant 0 = no request, which the VM lane station treats as an empty client. Bind when the CP/ATT wide clients land in ot_hgi_cp_die."
+  },
+  "die:t_lgEatt_rup": {
+   "class": "open",
+   "reason": "owner hgi-1010/b (lane stations) + hbmdie-1011: r25gqn lgE KE=4 reserves lane-station slot 1 (ATT) on its W face (die decision 6840a4ea2: the CP-side wide VM staging client and the ATT record adapter's staging client sit in the CP block). ot_hgi_cp_die has no wide lane client yet (its VM traffic is the narrow hgi_vmq/vmr client), so the station slot is idle: inputs dropped, outputs (request/write lanes) constant 0 = no request, which the VM lane station treats as an empty client. Bind when the CP/ATT wide clients land in ot_hgi_cp_die."
+  },
+  "die:t_lgEatt_wup": {
+   "class": "open",
+   "reason": "owner hgi-1010/b (lane stations) + hbmdie-1011: r25gqn lgE KE=4 reserves lane-station slot 1 (ATT) on its W face (die decision 6840a4ea2: the CP-side wide VM staging client and the ATT record adapter's staging client sit in the CP block). ot_hgi_cp_die has no wide lane client yet (its VM traffic is the narrow hgi_vmq/vmr client), so the station slot is idle: inputs dropped, outputs (request/write lanes) constant 0 = no request, which the VM lane station treats as an empty client. Bind when the CP/ATT wide clients land in ot_hgi_cp_die."
+  },
+  "die:t_hgi_e2SW": {
+   "class": "open",
+   "reason": "owner svc (hbm-phys-1010 svc) + hbmdie-1011: r25gqn att_e2 (9954ced3a) reserves the CP ATT KV STREAM issuer -> svc_SW_s3 'e2' expert-request net (128 b + fclk). ot_hgi_cp_die has no KV STREAM issuer (ATT records have no die record bus on r25gqn: att_rec is classed by_design), so the net is driven 0 = no request. Bind when the ATT record adapter + e2 issuer land in ot_hgi_cp_die."
+  },
+  "die:t_hgi_e2SE": {
+   "class": "open",
+   "reason": "owner svc (hbm-phys-1010 svc) + hbmdie-1011: r25gqn att_e2 (9954ced3a) reserves the CP ATT KV STREAM issuer -> svc_SE_s3 'e2' expert-request net (128 b + fclk). ot_hgi_cp_die has no KV STREAM issuer (ATT records have no die record bus on r25gqn: att_rec is classed by_design), so the net is driven 0 = no request. Bind when the ATT record adapter + e2 issuer land in ot_hgi_cp_die."
+  },
+  "die:t_hgi_e2NW": {
+   "class": "open",
+   "reason": "owner svc (hbm-phys-1010 svc) + hbmdie-1011: r25gqn att_e2 (9954ced3a) reserves the CP ATT KV STREAM issuer -> svc_NW_s3 'e2' expert-request net (128 b + fclk). ot_hgi_cp_die has no KV STREAM issuer (ATT records have no die record bus on r25gqn: att_rec is classed by_design), so the net is driven 0 = no request. Bind when the ATT record adapter + e2 issuer land in ot_hgi_cp_die."
+  },
+  "die:t_hgi_e2NE": {
+   "class": "open",
+   "reason": "owner svc (hbm-phys-1010 svc) + hbmdie-1011: r25gqn att_e2 (9954ced3a) reserves the CP ATT KV STREAM issuer -> svc_NE_s3 'e2' expert-request net (128 b + fclk). ot_hgi_cp_die has no KV STREAM issuer (ATT records have no die record bus on r25gqn: att_rec is classed by_design), so the net is driven 0 = no request. Bind when the ATT record adapter + e2 issuer land in ot_hgi_cp_die."
   }
  }
 }

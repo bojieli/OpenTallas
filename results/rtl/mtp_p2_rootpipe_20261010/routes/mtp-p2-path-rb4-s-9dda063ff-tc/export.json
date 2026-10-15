@@ -1,0 +1,63 @@
+{
+  "name": "ot_mtp_p2_prefix_path",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/mtp-p2-path-rb4-s-9dda063ff-tc/routes/mtp_p2_path_rb4_s_9dda063ff_tc/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-p2-path-rb4-s-9dda063ff-tc/routes/mtp_p2_path_rb4_s_9dda063ff_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-p2-path-rb4-s-9dda063ff-tc/routes/mtp_p2_path_rb4_s_9dda063ff_tc/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-p2-path-rb4-s-9dda063ff-tc/routes/mtp_p2_path_rb4_s_9dda063ff_tc/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-p2-path-rb4-s-9dda063ff-tc/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-p2-path-rb4-s-9dda063ff-tc/routes/mtp_p2_path_rb4_s_9dda063ff_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-p2-path-rb4-s-9dda063ff-tc/routes/mtp_p2_path_rb4_s_9dda063ff_tc/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-p2-path-rb4-s-9dda063ff-tc/routes/mtp_p2_path_rb4_s_9dda063ff_tc/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/mtp-p2-path-rb4-s-9dda063ff-tc/src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "files": {
+    "ot_mtp_p2_prefix_path.lef": "777673cb0b20865229ec4ed92ee6991e32963483a444232a89940a64d5738501",
+    "ot_mtp_p2_prefix_path_ff.lib": "e9fd61924f0c4fcb2c3f18fbe942e8c683ca365434c788d066ddb67af8ec7fc1",
+    "ot_mtp_p2_prefix_path_ss.lib": "b4f23dd9825b9b3255b694683e9e02398738ee5ec8c5fa083a0f3ede365f73d7"
+  },
+  "ok": true
+}

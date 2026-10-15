@@ -38,7 +38,11 @@ import asap7  # noqa: E402
 import behav  # noqa: E402
 from views import Pin, Timing, blackbox_verilog, macro_outline, write_lef, write_liberty  # noqa: E402
 
-PORT_TYPES = ("1rw", "1r1w", "2rw")
+PORT_TYPES = ("1rw", "1r1w", "2rw", "1r1w2c")
+# 1r1w2c (el1011-q-coll 2026-10-11): a 1R1W array with SEPARATE write (wclk) and read (rclk) clocks -- the two-port
+# register file of a dual-clock (Gray-pointer) FIFO.  Area / periphery as 1r1w; w_* / wd / mask / repair pins are timed
+# to wclk, r_* / rd_out to rclk.  The FIFO protocol guarantees no same-slot read during its write.
+PORT_ALIAS = {"1r1w2c": "1r1w"}
 GENERATOR_VERSION = "1.0"
 
 
@@ -92,6 +96,16 @@ def clog2(n: int) -> int:
 
 def pins_for(spec: SramSpec) -> list[Pin]:
     aw, b = spec.addr_bits, spec.bits
+    if spec.ports == "1r1w2c":
+        pins = [Pin("wclk", 1, "input", "clock", "wclk"), Pin("rclk", 1, "input", "clock", "rclk"),
+                Pin("r_ce_in", 1, "input", "control", "rclk"), Pin("r_addr_in", aw, "input", "control", "rclk"),
+                Pin("rd_out", b, "output", "data_out", "rclk"),
+                Pin("w_ce_in", 1, "input", "control", "wclk"), Pin("w_addr_in", aw, "input", "control", "wclk"),
+                Pin("wd_in", b, "input", "data_in", "wclk"), Pin("w_mask_in", b, "input", "data_in", "wclk")]
+        for rp in behav.repair_pins(spec.spare_rows, spec.spare_cols, spec.rows, spec.bits):
+            rp.related = "wclk"
+            pins.append(rp)
+        return pins
     pins = [Pin("clk", 1, "input", "clock")]
     if spec.ports == "1rw":
         pins += [Pin("ce_in", 1, "input", "control"), Pin("we_in", 1, "input", "control"),
@@ -123,7 +137,7 @@ def _geometry_constants(cal: dict[str, Any]) -> dict[str, float]:
 
 def _periphery(spec: SramSpec, g: dict[str, float]) -> dict[str, float]:
     ports_dec = 1 if spec.ports == "1rw" else 2
-    col_mult = {"1rw": 1.0, "1r1w": 1.5, "2rw": 2.0}[spec.ports]
+    col_mult = {"1rw": 1.0, "1r1w": 1.5, "2rw": 2.0}[PORT_ALIAS.get(spec.ports, spec.ports)]
     dec_w = ports_dec * (g["decoder_fixed"] + g["decoder_per_row_bit"] * math.log2(spec.rows_per_bank))
     dec_w += g["fuse_compare_per_spare"] * (spec.spare_rows + spec.spare_cols)
     col_h = col_mult * (g["column_fixed"] + g["column_per_mux_bit"] * math.log2(spec.mux))
@@ -152,7 +166,7 @@ def solve_column_fixed(g: dict[str, float]) -> float:
 
 def area_model(spec: SramSpec, cal: dict[str, Any]) -> dict[str, Any]:
     cells = asap7.bitcells()["sram_6t"]
-    ratio = 1.0 if spec.ports == "1rw" else asap7.ASSUMED["dual_port_cell_area_ratio"]["value"][spec.ports]
+    ratio = 1.0 if spec.ports == "1rw" else asap7.ASSUMED["dual_port_cell_area_ratio"]["value"][PORT_ALIAS.get(spec.ports, spec.ports)]
     col_pitch = cells["col_pitch_um"] * ratio
     row_pitch = cells["row_pitch_um"]
     g = _geometry_constants(cal)
@@ -269,6 +283,10 @@ def behavioural(spec: SramSpec, pins: list[Pin], header: str) -> str:
                  "        if (ce_in && !we_in) rd_out <= word_read(addr_in);",
                  "        if (ce_in && we_in) word_write(addr_in, wd_in, w_mask_in);",
                  "    end"]
+    elif spec.ports == "1r1w2c":
+        body += ["    // dual-clock: write on wclk, registered read on rclk (the FIFO never reads a slot during its write)",
+                 "    always @(posedge wclk) if (w_ce_in) word_write(w_addr_in, wd_in, w_mask_in);",
+                 "    always @(posedge rclk) if (r_ce_in) rd_out <= word_read(r_addr_in);"]
     elif spec.ports == "1r1w":
         body += ["    // read-before-write: a same-address read in the write cycle returns the old word",
                  "    always @(posedge clk) begin",

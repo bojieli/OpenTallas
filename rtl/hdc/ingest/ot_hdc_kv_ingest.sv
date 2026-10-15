@@ -78,7 +78,23 @@ module ot_hdc_kv_ingest #(
     //           more stage in front (ap0_*: group / die / stack / local decomposition and the descriptor fields), then
     //           ap1_rbase = base + stack * stride, then the pitch product / IKEY sums: three bubble edges a row.
     parameter integer QKV    = 1,
-    parameter integer APIPE  = 0
+    parameter integer APIPE  = 0,
+    // QPIPE = 1 (qwen-1010/c 2026-10-10; 0 = unchanged): qfd_io_host preroute -1.2 .. -2.3 ns at clk_i (135 k of 139 k
+    // endpoints): the QKV banks bk / bv (2 x 512 x 128 b of flops) were written through four computed-index 512-entry
+    // decodes and read through 512:1 x 128 b muxes, behind sd[slot] field muxes and the beat's FP8 quantisers in the same
+    // cycle.  QPIPE 1 restructures the QKV path (write-only: an rmw descriptor must be failed closed upstream; the
+    // preload path is absent):
+    //   * the slot's descriptor fields are decoded into registers at dispatch (input side) / drain start (drain side);
+    //   * input: beat + granule walk registered (I0), FP8 codes + lane / word indices registered (I1), bank write (I2):
+    //     +2 edges, one beat a cycle (the walk recurrence reads registered fields only);
+    //   * banks per position lane (16 x 2 slots x WPL words): the write decode is 32 entries a lane;
+    //   * drain: per-lane 32:1 reads registered (E1; K keeps the two addressed bytes a lane), then the 16:1 lane select /
+    //     sector assembly registered into a 4-entry output FIFO (E2): +2 edges, credit-issued, one sector a cycle.
+    //   Completion (done) leaves with the last sector at the write port, as before.  QMUT (bench mutants, must FAIL):
+    //   1 = K granules written to lane t ^ 1; 2 = the drain loads the OTHER slot's (stale) descriptor fields.
+    parameter integer NATIVE_ROWS=0, // Qwen merged native token-row K/V map, QPIPE2 only
+    parameter integer QPIPE  = 0,
+    parameter integer QMUT   = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -108,6 +124,10 @@ module ot_hdc_kv_ingest #(
     localparam integer WPL = BB / 16;              // 16-byte words per lane per slot (a power of two)
     localparam integer LWP = (WPL > 1) ? $clog2(WPL) : 1;
     localparam integer NBW = 2 * 16 * WPL;         // words per bank (2 slots x 16 lanes)
+    // QPIPE 2 macro corner-turn applies at the Qwen die geometry (16 words a lane per slot); other geometries keep QPIPE 1
+    initial if(NATIVE_ROWS&&(QPIPE<2||HDMAX!=128||KVHMAX!=2))
+        $fatal(1,"native ingest requires full32-macro QPIPE2 provider; descriptor may use1/2heads");
+    localparam integer QP2 = (QPIPE >= 2 && BB == 256) ? 1 : 0;
 
     // -- descriptor queue ---------------------------------------------------------
     localparam integer LDQ = $clog2(DQ);
@@ -144,12 +164,13 @@ module ot_hdc_kv_ingest #(
     reg  [7:0]  qi_g;
     reg  [15:0] qi_d;
     wire [255:0] qd = sd[qi_slot];
-    wire [1:0]  q_fmt = qd[5:4];
-    wire [3:0]  q_lhd = qd[171:168];
-    wire [15:0] q_hd  = 16'd1 << q_lhd;
-    wire [7:0]  q_kvh = {4'd0, qd[219:216]};
-    wire [4:0]  q_tlo = qd[228:224];
-    wire [4:0]  q_thi = qd[236:232];
+    reg  [1:0]  qf_fmt; reg [3:0] qf_lhd; reg [15:0] qf_hd; reg [7:0] qf_kvh; reg [4:0] qf_tlo, qf_thi;   // QPIPE
+    wire [1:0]  q_fmt = (QPIPE != 0) ? qf_fmt : qd[5:4];
+    wire [3:0]  q_lhd = (QPIPE != 0) ? qf_lhd : qd[171:168];
+    wire [15:0] q_hd  = (QPIPE != 0) ? qf_hd : 16'd1 << q_lhd;
+    wire [7:0]  q_kvh = (QPIPE != 0) ? qf_kvh : {4'd0, qd[219:216]};
+    wire [4:0]  q_tlo = (QPIPE != 0) ? qf_tlo : qd[228:224];
+    wire [4:0]  q_thi = (QPIPE != 0) ? qf_thi : qd[236:232];
     wire [2:0]  q_gpb = (q_fmt == 2'd0) ? 3'd1 : (q_fmt == 2'd1) ? 3'd2 : 3'd4;   // granules / beat
     // the beat's FP8 codes (FP32: 16, BF16: 32, FP8: 64 elements)
     wire [7:0] cv [0:63];
@@ -206,13 +227,15 @@ module ot_hdc_kv_ingest #(
     reg  [7:0]  qo_g;
     reg  [15:0] qo_s;
     reg  [AW-1:0] qo_hb;                     // this head's tile / V block base
-    wire [255:0] od = sd[qo_slot];
+    wire [255:0] od_s = sd[qo_slot];
+    reg  [255:0] of_d;                       // QPIPE: the draining slot's descriptor, registered at drain start
+    wire [255:0] od = (QPIPE != 0) ? of_d : od_s;
     wire [3:0]  o_lhd = od[171:168];
     wire [15:0] o_hd  = 16'd1 << o_lhd;
     wire [7:0]  o_kvh = {4'd0, od[219:216]};
     wire [4:0]  o_tlo = od[228:224];
     wire [4:0]  o_thi = od[236:232];
-    wire        o_rmw = od[6];
+    wire        o_rmw = (QPIPE != 0) ? 1'b0 : od[6];
     wire [15:0] o_spb = o_hd >> 1;           // sectors per head: 16 x hd bytes / 32
     wire [15:0] o_lane;
     genvar gl;
@@ -248,6 +271,8 @@ module ot_hdc_kv_ingest #(
         end
     end
     wire q_wv = qo_act && !s_pre[qo_slot];
+    wire qp_room;                            // QPIPE: an output-FIFO credit for a sector issued now
+    wire q_iss = (QPIPE != 0) ? (qo_act && qp_room) : (q_wv && w_rdy);
     wire q_hlast = qo_s + 16'd1 >= o_spb;
     wire q_wlast = qo_v && (qo_g + 8'd1 >= o_kvh) && q_hlast;
 
@@ -366,9 +391,14 @@ module ot_hdc_kv_ingest #(
     // Ports
     // =============================================================================
     // the stream path runs only while the QKV path is idle, so they never contend
-    assign w_v    = q_wv || st_wv;
-    assign w_addr = q_wv ? (qo_hb + qo_s) : st_wa;
-    assign w_data = q_wv ? q_sec : st_wd;
+    wire          qp_wv;                     // QPIPE output FIFO head
+    wire [AW-1:0] qp_wa;
+    wire [255:0]  qp_wd;
+    wire          qp_busy;                   // QPIPE: a beat / sector still in the input or drain pipeline
+    wire          qk_wv = (QPIPE != 0) ? qp_wv : q_wv;
+    assign w_v    = qk_wv || st_wv;
+    assign w_addr = qk_wv ? ((QPIPE != 0) ? qp_wa : (qo_hb + qo_s)) : st_wa;
+    assign w_data = qk_wv ? ((QPIPE != 0) ? qp_wd : q_sec) : st_wd;
     wire w_fire = w_v && w_rdy;
     // done / sector-count outputs (APIPE 2: registered write fire, done one edge later)
     reg         done_r, done_q, wf_q;
@@ -390,16 +420,22 @@ module ot_hdc_kv_ingest #(
     wire ra_push = st_act && !st_pad && in_v && (ra_n <= 9'd192) && (st_beats != 0);
     wire pad_take = st_act && st_pad && in_v && (st_beats != 0);
     assign in_rdy = qi_act || (st_act && (st_pad ? (st_beats != 0) : ((ra_n <= 9'd192) && (st_beats != 0))));
-    assign busy = dh_v || qi_act || qo_act || pr_act || (s_pre != 0) || st_act || (s_full != 0);
+    assign busy = dh_v || qi_act || qo_act || pr_act || (s_pre != 0) || st_act || (s_full != 0) || qp_busy;
 
     // dispatch: a QKV descriptor takes the other slot once it is drained (and an
     // RMW descriptor waits for any preload in flight); a stream descriptor starts
     // when the QKV path is idle
     wire nslot = ~qi_slot;
+    reg  [1:0] s_fill;                     // QPIPE: slot dispatched, its last bank write not yet landed
     wire q_disp = (QKV != 0) && dh_v && dh_mode == M_QKV && !qi_act && !st_act && !s_full[nslot] && !s_pre[nslot]
-                  && !(qo_act && qo_slot == nslot) && (!dh[6] || (!pr_act && pr_out == 0 && s_pre == 2'b00));
+                  && !(qo_act && qo_slot == nslot) && (!dh[6] || (!pr_act && pr_out == 0 && s_pre == 2'b00))
+                  && !((QPIPE != 0) && s_fill[nslot]);
     wire s_disp = dh_v && dh_mode != M_QKV && !qi_act && !st_act && !qo_act && s_full == 2'b00 && !pr_act
-                  && s_pre == 2'b00;
+                  && s_pre == 2'b00 && !qp_busy;
+    wire       qp_fset;                    // QPIPE: the slot's last bank write lands (s_full)
+    wire       qp_fslot;
+    wire       qp_dv;                      // QPIPE: a fenced block's last sector left the write port
+    wire [7:0] qp_dtag;
     wire d_pop = q_disp || s_disp;
 
     // -- sequential ---------------------------------------------------------------
@@ -410,7 +446,7 @@ module ot_hdc_kv_ingest #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             dq_n <= 0; dq_rd <= 0; dq_wr <= 0;
-            s_full <= 2'b00; s_pre <= 2'b00; qi_act <= 1'b0; qi_slot <= 1'b0; qo_act <= 1'b0; qo_slot <= 1'b0;
+            s_full <= 2'b00; s_pre <= 2'b00; s_fill <= 2'b00; qi_act <= 1'b0; qi_slot <= 1'b0; qo_act <= 1'b0; qo_slot <= 1'b0;
             pr_act <= 1'b0; pr_out <= 0; st_act <= 1'b0; st_pad <= 1'b0; ra_n <= 0; ra_rp <= 0; ra_wp <= 0;
             done_r <= 1'b0; dtag_r <= 0; nsec_r <= 0; n_beats <= 0;
             qi_t <= 0; qi_g <= 0; qi_d <= 0; qi_v <= 1'b0; qo_v <= 1'b0; qo_g <= 0; qo_s <= 0; qo_hb <= 0;
@@ -419,6 +455,7 @@ module ot_hdc_kv_ingest #(
             st_rem <= 0; st_sec <= 0;
         end else begin
             done_r <= 1'b0;
+            if (QPIPE != 0 && qp_dv) begin done_r <= 1'b1; dtag_r <= qp_dtag; end
             if ((APIPE >= 2) ? wf_q : w_fire) nsec_r <= nsec_r + 1;
             if (q_beat || ra_push || pad_take) n_beats <= n_beats + 1;
             // descriptor queue
@@ -429,7 +466,10 @@ module ot_hdc_kv_ingest #(
             if (q_disp) begin
                 qi_slot <= nslot; sd[nslot] <= dh; qi_act <= 1'b1;
                 qi_t <= dh[228:224]; qi_g <= 0; qi_d <= 0; qi_v <= 1'b0;
-                if (dh[6] && dh[228:224] != 5'd0) begin
+                qf_fmt <= dh[5:4]; qf_lhd <= dh[171:168]; qf_hd <= 16'd1 << dh[171:168]; qf_kvh <= {4'd0, dh[219:216]};
+                qf_tlo <= dh[228:224]; qf_thi <= dh[236:232];
+                if (QPIPE != 0) s_fill[nslot] <= 1'b1;
+                if (QPIPE == 0 && dh[6] && dh[228:224] != 5'd0) begin
                     s_pre[nslot] <= 1'b1;
                     pr_act <= 1'b1; pr_slot <= nslot; pr_v <= 1'b0; pr_g <= 0; pr_s <= 0; pr_hb <= dh[47:16];
                     pt_v <= 1'b0; pt_g <= 0; pt_s <= 0;
@@ -443,17 +483,22 @@ module ot_hdc_kv_ingest #(
             end
 
             // ---- QKV input: the beat's granules into the slot's lane banks
-            if (q_beat) begin
+            if (q_beat && QPIPE == 0) begin
                 for (gi = 0; gi < 4; gi = gi + 1)
                     if (g_use[gi]) begin
                         for (bi = 0; bi < 16; bi = bi + 1) g_word[bi*8 +: 8] = cv[gi*16 + bi];
                         if (!gw_v[gi]) bk[bw_idx(qi_slot, gw_t[gi][3:0], hw_word(gw_g[gi], q_lhd, gw_d[gi]))] <= g_word;
                         else           bv[bw_idx(qi_slot, gw_t[gi][3:0], hw_word(gw_g[gi], q_lhd, gw_d[gi]))] <= g_word;
                     end
-                qi_t <= gw_t[q_gpb]; qi_g <= gw_g[q_gpb]; qi_d <= gw_d[q_gpb]; qi_v <= gw_v[q_gpb];
-                if (q_last) begin qi_act <= 1'b0; s_full[qi_slot] <= 1'b1; end
             end
-            if (qi_act && q_tlo >= q_thi) begin qi_act <= 1'b0; s_full[qi_slot] <= 1'b1; end   // empty payload
+            if (q_beat) begin
+                qi_t <= gw_t[q_gpb]; qi_g <= gw_g[q_gpb]; qi_d <= gw_d[q_gpb]; qi_v <= gw_v[q_gpb];
+                if (q_last) begin qi_act <= 1'b0; if (QPIPE == 0) s_full[qi_slot] <= 1'b1; end
+            end
+            if (qi_act && q_tlo >= q_thi) begin                                                  // empty payload
+                qi_act <= 1'b0; s_full[qi_slot] <= 1'b1; if (QPIPE != 0) s_fill[qi_slot] <= 1'b0;
+            end
+            if (QPIPE != 0 && qp_fset) begin s_full[qp_fslot] <= 1'b1; s_fill[qp_fslot] <= 1'b0; end
 
             // ---- RMW preload: issue, then scatter the returns
             if (pr_act && r_rdy) begin
@@ -501,9 +546,10 @@ module ot_hdc_kv_ingest #(
             // ---- QKV drain, in fill order
             if (!qo_act && s_full[~qo_slot]) begin
                 qo_act <= 1'b1; qo_slot <= ~qo_slot; qo_v <= 1'b0; qo_g <= 0; qo_s <= 0;
-                qo_hb <= sd[~qo_slot][47:16];
+                qo_hb <= sd[(QMUT == 2) ? qo_slot : ~qo_slot][47:16];
+                of_d <= sd[(QMUT == 2) ? qo_slot : ~qo_slot];
             end
-            if (q_wv && w_rdy) begin
+            if (q_iss) begin
                 if (q_hlast) begin
                     qo_s <= 0;
                     if (qo_g + 8'd1 >= o_kvh) begin
@@ -514,7 +560,7 @@ module ot_hdc_kv_ingest #(
                 end else qo_s <= qo_s + 16'd1;
                 if (q_wlast) begin
                     qo_act <= 1'b0; s_full[qo_slot] <= 1'b0;
-                    if (od[7]) begin done_r <= 1'b1; dtag_r <= od[15:8]; end
+                    if (QPIPE == 0 && od[7]) begin done_r <= 1'b1; dtag_r <= od[15:8]; end
                 end
             end
 
@@ -625,4 +671,258 @@ module ot_hdc_kv_ingest #(
         if (APIPE >= 2) begin ap_raddr <= a2_raddr; ap_kcode <= a2_kcode; ap_kscal <= a2_kscal; ap_mine <= ap1_mine; end
         else begin ap_raddr <= s_raddr; ap_kcode <= k_code; ap_kscal <= k_scal; ap_mine <= s_mine; end
     end
+    // =============================================================================
+    // QPIPE QKV path (see the parameter): input I0 / I1 / bank write, per-lane banks, drain E1 / E2 into an output FIFO
+    // =============================================================================
+    localparam integer LBW = LWP + 1;                       // per-lane bank index {slot, word}
+    generate if (QPIPE != 0) begin : g_qp
+        // ---- I0: the beat and its granule walk
+        reg          i0_v, i0_slot, i0_last;
+        reg  [511:0] i0_d;
+        reg  [1:0]   i0_fmt;
+        reg  [3:0]   i0_lhd;
+        reg  [3:0]   i0_use, i0_isv;
+        reg  [3:0]   i0_t [0:3];
+        reg  [7:0]   i0_g [0:3];
+        reg  [15:0]  i0_dd [0:3];
+        integer k;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) i0_v <= 1'b0; else i0_v <= q_beat;
+        always @(posedge clk) if (q_beat) begin
+            i0_slot <= qi_slot; i0_last <= q_last; i0_d <= in_data; i0_fmt <= q_fmt; i0_lhd <= q_lhd;
+            i0_use <= g_use;
+            for (k = 0; k < 4; k = k + 1) begin
+                i0_t[k] <= gw_t[k][3:0]; i0_g[k] <= gw_g[k]; i0_dd[k] <= gw_d[k]; i0_isv[k] <= gw_v[k];
+            end
+        end
+        // ---- I1: FP8 codes, lane and word of each granule
+        wire [7:0] cq [0:63];
+        genvar ge2;
+        for (ge2 = 0; ge2 < 64; ge2 = ge2 + 1) begin : g_cq
+            wire [7:0] c32, cbf;
+            if (ge2 < 16) begin : g32
+                ot_hdc_ingest_fp8q u_q32 (.f(i0_d[ge2*32 +: 32]), .q(c32));
+            end else begin : g32z
+                assign c32 = 8'd0;
+            end
+            if (ge2 < 32) begin : gbf
+                ot_hdc_ingest_fp8q u_qbf (.f({i0_d[ge2*16 +: 16], 16'd0}), .q(cbf));
+            end else begin : gbfz
+                assign cbf = 8'd0;
+            end
+            assign cq[ge2] = (i0_fmt == 2'd0) ? c32 : (i0_fmt == 2'd1) ? cbf : i0_d[ge2*8 +: 8];
+        end
+        reg          i1_v, i1_slot, i1_last;
+        reg  [3:0]   i1_use, i1_isv;
+        reg  [3:0]   i1_lane [0:3];
+        reg  [LWP-1:0] i1_word [0:3];
+        reg  [127:0] i1_code [0:3];
+        reg  [15:0]  hw;
+        integer b;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) i1_v <= 1'b0; else i1_v <= i0_v;
+        always @(posedge clk) if (i0_v) begin
+            i1_slot <= i0_slot; i1_last <= i0_last; i1_use <= i0_use; i1_isv <= i0_isv;
+            for (k = 0; k < 4; k = k + 1) begin
+                hw = hw_word(i0_g[k], i0_lhd, i0_dd[k]);
+                i1_word[k] <= hw[LWP-1:0];
+                i1_lane[k] <= (QMUT == 1 && !i0_isv[k]) ? (i0_t[k] ^ 4'd1) : i0_t[k];
+                for (b = 0; b < 16; b = b + 1) i1_code[k][b*8 +: 8] <= cq[k*16 + b];
+            end
+        end
+        // QPIPE 2 (QP2) state seen by the shared output-FIFO / completion logic; tied off (continuous assigns) otherwise
+        wire [127:0] e1_vs0, e1_vs1;               // the two selected V words (sector halves)
+        wire         s1_v, s2_v;                   // drain read stages in flight (credit accounting)
+        wire         fset_d, fslot_d;              // slot-full flag one edge after its last staged write
+        wire [15:0]  wk_any_q, wv_any_q;           // per-bank staged write enables (busy accounting)
+        assign qp_fset = (QP2 != 0) ? fset_d : (i1_v && i1_last);
+        assign qp_fslot = (QP2 != 0) ? fslot_d : i1_slot;
+        // ---- per-lane banks: write at I2, drain reads E1
+        reg          e1_v, e1_isv, e1_last;
+        reg  [AW-1:0] e1_a;
+        reg  [7:0]   e1_tag;
+        reg  [15:0]  e1_lane;
+        reg  [3:0]   e1_t0, e1_t1;
+        reg  [15:0]  e1_kb [0:15];
+        reg  [127:0] e1_v0 [0:15];
+        reg  [127:0] e1_v1 [0:15];
+        // drain addresses from the registered counters / fields
+        wire [15:0]  kw = hw_word(qo_g, o_lhd, {qo_s[14:0], 1'b0});
+        wire [15:0]  by0 = {qo_s[10:0], 5'd0};
+        wire [15:0]  by1 = {qo_s[10:0], 5'd0} + 16'd16;
+        wire [15:0]  vw0 = hw_word(qo_g, o_lhd, by0 & (o_hd - 16'd1));
+        wire [15:0]  vw1 = hw_word(qo_g, o_lhd, by1 & (o_hd - 16'd1));
+        wire [15:0]  t0w = by0 >> o_lhd;
+        wire [15:0]  t1w = by1 >> o_lhd;
+        wire [3:0] kob = {qo_s[2:0],1'b0};
+        // Original production descriptors use CTX8192,HD128,1/2 heads.
+        // a0 retains original K linear base: L*KVH*32768 + block*64.
+        wire[5:0] native_layer=(o_kvh==1)?od[36:31]:od[37:32];
+        wire[13:0] native_t={1'b0,od[30:22],4'd0}+14'(t0w[3:0]);
+        wire[31:0] native_addr={8'd0,native_layer,qo_v,qo_g[0],native_t[6],native_t[13:9],native_t[5:3],
+                             native_t[8:7],qo_s[1:0],native_t[2:0]};
+        wire native_last=qo_v&&(qo_g+8'd1>=o_kvh)&&(qo_s[1:0]==3)&&(t0w==o_thi-1'b1);
+
+        if (QP2 != 0) begin : g_bm
+            reg  [127:0] e1_vs0_r, e1_vs1_r;
+            reg          s1_v_r, s2_v_r, fset_r, fslot_r;
+            wire [15:0]  wk_any, wv_any;
+            assign e1_vs0 = e1_vs0_r; assign e1_vs1 = e1_vs1_r; assign s1_v = s1_v_r; assign s2_v = s2_v_r;
+            assign fset_d = fset_r; assign fslot_d = fslot_r; assign wk_any_q = wk_any; assign wv_any_q = wv_any;
+            // ---- QPIPE 2 (el1011-q-coll 2026-10-11, textbook class 1: the per-lane mk / mv flop banks were ~131k of
+            // 155,943 clk_i sinks).  Corner-turn in 2 x 16 single-clock 1R1W macros (ot_sram_1r1w_32x128_m1), skewed
+            // bank map  bank = (9 lane + word) mod 16, entry = {slot, lane}:
+            //   * a K drain reads one word of all 16 lanes: 9 is odd, so 9 lane mod 16 is a permutation -> 16 banks;
+            //   * a beat writes 4 consecutive granules (one lane's consecutive words, or a lane crossing with 1 / 2 / 4 /
+            //     8 / 16 words a lane): distinct banks for multiplier 9; a K -> V switch writes the other array;
+            //   * a V sector reads two adjacent words of a lane (hd >= 32: banks differ by 1) or the same word of two
+            //     adjacent lanes (hd = 16: differ by 9).
+            // Write: I1 -> per-bank registered {we, entry, code} (I2) -> macro write (I3); the slot-full flag is delayed
+            // one edge so a drain read never samples a slot in the edge its last word lands.  Read: macros sample at
+            // q_iss; capture flops on every macro output (no logic before them); then byte-select / lane-rotate / V
+            // select into the e1 registers (+2 drain edges; the output FIFO is 8 deep and counts the read stages).
+            genvar gb;
+            reg  [3:0] wbank [0:3];
+            integer wq;
+            always @* for (wq = 0; wq < 4; wq = wq + 1) wbank[wq] = (4'd9 * i1_lane[wq] + i1_word[wq][3:0]);
+            // read addressing (combinational from the drain registers, sampled by the macros at q_iss)
+            wire [3:0] rkw  = kw[3:0];
+            wire [3:0] rbv0 = 4'd9 * t0w[3:0] + vw0[3:0];
+            wire [3:0] rbv1 = 4'd9 * t1w[3:0] + vw1[3:0];
+            wire [127:0] mko [0:15];
+            wire [127:0] mvo [0:15];
+            reg  [127:0] ck_q [0:15];
+            reg  [127:0] cv_q [0:15];
+            for (gb = 0; gb < 16; gb = gb + 1) begin : g_mb
+                localparam [3:0] GB = gb;
+                reg          wk_v, wv_v;
+                reg  [4:0]   wk_a, wv_a;
+                reg  [127:0] wk_d, wv_d;
+                integer w2;
+                always @(posedge clk or negedge rst_n)
+                    if (!rst_n) begin wk_v <= 1'b0; wv_v <= 1'b0; end
+                    else begin
+                        wk_v <= 1'b0; wv_v <= 1'b0;
+                        if (i1_v) for (w2 = 0; w2 < 4; w2 = w2 + 1)
+                            if (i1_use[w2] && wbank[w2] == GB) begin
+                                if (!i1_isv[w2]) wk_v <= 1'b1; else wv_v <= 1'b1;
+                            end
+                    end
+                always @(posedge clk) if (i1_v)
+                    for (w2 = 0; w2 < 4; w2 = w2 + 1)
+                        if (i1_use[w2] && wbank[w2] == GB) begin
+                            if (!i1_isv[w2]) begin wk_a <= {i1_slot, i1_lane[w2]}; wk_d <= i1_code[w2]; end
+                            else             begin wv_a <= {i1_slot, i1_lane[w2]}; wv_d <= i1_code[w2]; end
+                        end
+                assign wk_any[gb] = wk_v; assign wv_any[gb] = wv_v;
+                // K: bank gb holds lane 9 (gb - kw) mod 16 of the drained word (9 is its own inverse mod 16)
+                wire[3:0]rvl=(rbv0==GB)?t0w[3:0]:t1w[3:0];
+                wire[3:0]rkl=NATIVE_ROWS?rvl:4'd9*(GB-rkw);
+                ot_sram_1r1w_32x128_m1 u_mk (.clk(clk), .r_ce_in(q_iss && !qo_v), .r_addr_in({qo_slot, rkl}), .rd_out(mko[gb]),
+                    .w_ce_in(wk_v), .w_addr_in(wk_a), .wd_in(wk_d), .w_mask_in({128{1'b1}}));
+                ot_sram_1r1w_32x128_m1 u_mv (.clk(clk), .r_ce_in(q_iss && qo_v), .r_addr_in({qo_slot, rvl}), .rd_out(mvo[gb]),
+                    .w_ce_in(wv_v), .w_addr_in(wv_a), .wd_in(wv_d), .w_mask_in({128{1'b1}}));
+                always @(posedge clk) begin ck_q[gb] <= mko[gb]; cv_q[gb] <= mvo[gb]; end   // capture flops
+            end
+            // drain side info through the two read stages
+            reg          s1_isv, s1_last, s2_isv, s2_last;
+            reg  [7:0]   s1_tag, s2_tag;
+            reg  [AW-1:0] s1_a, s2_a;
+            reg  [15:0]  s1_lane, s2_lane;
+            reg  [3:0]   s1_t0, s1_t1, s2_t0, s2_t1, s1_kw, s2_kw, s1_kob, s2_kob, s1_b0, s1_b1, s2_b0, s2_b1;
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) begin s1_v_r <= 1'b0; s2_v_r <= 1'b0; e1_v <= 1'b0; fset_r <= 1'b0; end
+                else begin s1_v_r <= q_iss&&(!NATIVE_ROWS||o_lane[t0w[3:0]]); s2_v_r <= s1_v_r; e1_v <= s2_v_r; fset_r <= i1_v && i1_last; end
+            always @(posedge clk) fslot_r <= i1_slot;
+            always @(posedge clk) if (q_iss) begin
+                s1_isv <= qo_v; s1_last <= (NATIVE_ROWS?native_last:q_wlast)&&od[7]; s1_tag <= od[15:8]; s1_a <= NATIVE_ROWS?native_addr:qo_hb+qo_s;
+                s1_lane <= o_lane; s1_t0 <= t0w[3:0]; s1_t1 <= t1w[3:0]; s1_kw <= rkw; s1_kob <= kob; s1_b0 <= rbv0; s1_b1 <= rbv1;
+            end
+            always @(posedge clk) begin
+                s2_isv <= s1_isv; s2_last <= s1_last; s2_tag <= s1_tag; s2_a <= s1_a; s2_lane <= s1_lane;
+                s2_t0 <= s1_t0; s2_t1 <= s1_t1; s2_kw <= s1_kw; s2_kob <= s1_kob; s2_b0 <= s1_b0; s2_b1 <= s1_b1;
+            end
+            integer lq;
+            reg [3:0] kb;
+            always @(posedge clk) if (s2_v_r) begin
+                for (lq = 0; lq < 16; lq = lq + 1) begin
+                    kb = 4'd9 * lq + s2_kw;
+                    e1_kb[lq] <= {ck_q[kb][(s2_kob+1)*8 +: 8], ck_q[kb][s2_kob*8 +: 8]};
+                end
+                e1_vs0_r <= (NATIVE_ROWS&&!s2_isv)?ck_q[s2_b0]:cv_q[s2_b0]; e1_vs1_r <= (NATIVE_ROWS&&!s2_isv)?ck_q[s2_b1]:cv_q[s2_b1];
+                e1_isv <= NATIVE_ROWS||s2_isv; e1_last <= s2_last; e1_tag <= s2_tag; e1_a <= s2_a;
+                e1_lane <= s2_lane; e1_t0 <= s2_t0; e1_t1 <= s2_t1;
+            end
+        end else begin : g_b1
+            assign s1_v = 1'b0; assign s2_v = 1'b0; assign fset_d = 1'b0; assign fslot_d = 1'b0;
+            assign wk_any_q = 16'd0; assign wv_any_q = 16'd0; assign e1_vs0 = 128'd0; assign e1_vs1 = 128'd0;
+        genvar gl2;
+            for (gl2 = 0; gl2 < 16; gl2 = gl2 + 1) begin : g_bank
+                reg [127:0] mk [0:2*WPL-1];
+                reg [127:0] mv [0:2*WPL-1];
+                integer w;
+                always @(posedge clk) if (i1_v)
+                    for (w = 0; w < 4; w = w + 1)
+                        if (i1_use[w] && i1_lane[w] == gl2) begin
+                            if (!i1_isv[w]) mk[{i1_slot, i1_word[w]}] <= i1_code[w];
+                            else            mv[{i1_slot, i1_word[w]}] <= i1_code[w];
+                        end
+                wire [127:0] rk = mk[{qo_slot, kw[LWP-1:0]}];
+                always @(posedge clk) if (q_iss) begin
+                    e1_kb[gl2] <= {rk[(kob+1)*8 +: 8], rk[kob*8 +: 8]};
+                    e1_v0[gl2] <= mv[{qo_slot, vw0[LWP-1:0]}];
+                    e1_v1[gl2] <= mv[{qo_slot, vw1[LWP-1:0]}];
+                end
+            end
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) e1_v <= 1'b0; else e1_v <= q_iss;
+            always @(posedge clk) if (q_iss) begin
+                e1_isv <= qo_v; e1_last <= q_wlast && od[7]; e1_tag <= od[15:8]; e1_a <= qo_hb + qo_s;
+                e1_lane <= o_lane; e1_t0 <= t0w[3:0]; e1_t1 <= t1w[3:0];
+            end
+        end
+        // ---- E2: sector assembly into the output FIFO (4 entries; credit-issued)
+        reg  [255:0]  sec;
+        integer l;
+        always @* begin
+            sec = 256'd0;
+            if (!e1_isv) begin
+                for (l = 0; l < 16; l = l + 1) begin
+                    sec[l*8 +: 8]      = e1_lane[l] ? e1_kb[l][7:0]  : 8'd0;
+                    sec[(16+l)*8 +: 8] = e1_lane[l] ? e1_kb[l][15:8] : 8'd0;
+                end
+            end else begin
+                sec[127:0]   = e1_lane[e1_t0] ? ((QP2 != 0) ? e1_vs0 : e1_v0[e1_t0]) : 128'd0;
+                sec[255:128] = e1_lane[e1_t1] ? ((QP2 != 0) ? e1_vs1 : e1_v1[e1_t1]) : 128'd0;
+            end
+        end
+        localparam integer FQD = (QP2 != 0) ? 8 : 4;    // QPIPE 2: +2 drain edges in flight -> 8 entries
+        localparam integer FQA = (QP2 != 0) ? 3 : 2;
+        reg  [255:0]  fq_d [0:FQD-1];
+        reg  [AW-1:0] fq_a [0:FQD-1];
+        reg  [8:0]    fq_t [0:FQD-1];          // {fenced last, tag}
+        reg  [FQA-1:0] fq_wp, fq_rp;
+        reg  [FQA:0]   fq_n;
+        wire          fq_pop = qp_wv && w_rdy;
+        assign qp_wv = fq_n != 0;
+        assign qp_wa = fq_a[fq_rp];
+        assign qp_wd = fq_d[fq_rp];
+        assign qp_dv = fq_pop && fq_t[fq_rp][8];
+        assign qp_dtag = fq_t[fq_rp][7:0];
+        assign qp_room = ({2'b0, fq_n} + (e1_v ? 5'd1 : 5'd0) + (s1_v ? 5'd1 : 5'd0) + (s2_v ? 5'd1 : 5'd0)) < FQD;
+        assign qp_busy = i0_v || i1_v || e1_v || s1_v || s2_v || fset_d || (|wk_any_q) || (|wv_any_q) || fq_n != 0 || s_fill != 2'b00;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin fq_wp <= 0; fq_rp <= 0; fq_n <= 0; end
+            else begin
+                if (e1_v) fq_wp <= fq_wp + 1'b1;
+                if (fq_pop) fq_rp <= fq_rp + 1'b1;
+                fq_n <= fq_n + (e1_v ? 1'b1 : 1'b0) - (fq_pop ? 1'b1 : 1'b0);
+            end
+        always @(posedge clk) if (e1_v) begin
+            fq_d[fq_wp] <= sec; fq_a[fq_wp] <= e1_a; fq_t[fq_wp] <= {e1_last, e1_tag};
+        end
+    end else begin : g_qn
+        assign qp_room = 1'b0; assign qp_wv = 1'b0; assign qp_wa = {AW{1'b0}}; assign qp_wd = 256'd0;
+        assign qp_busy = 1'b0; assign qp_fset = 1'b0; assign qp_fslot = 1'b0; assign qp_dv = 1'b0; assign qp_dtag = 8'd0;
+    end endgenerate
 endmodule

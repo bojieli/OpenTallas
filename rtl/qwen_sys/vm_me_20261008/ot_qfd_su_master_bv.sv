@@ -29,7 +29,16 @@ module ot_qfd_sp_su64_sfu_bv #(
     parameter integer HID = 4096,
     parameter integer CRD = 4,
     parameter integer VL = 7,               // the banked vector memory's extra read latency (answer at 1 + VL)
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer RSRAM = 0,            // ot_qfd_su_embed_pf RSRAM: the embedding row buffer as an SRAM macro
+    parameter integer LOFF = 0,             // ot_hdc_vstream LOFF: lane offsets formed in the stream unit, 64 identical lanes
+    parameter integer RTREE = 0,            // 1: reset tree -- rs is re-registered per consumer (u_emb here; the stream
+                                            // control and each of the 64 lanes inside ot_hdc_vstream), so the one rs flop
+                                            // drives ~66 registers, not ~780k reset pins; every rs flop deasserts 1 edge later
+    parameter integer LT = 0,               // ot_hdc_vstream LT: each lane a hardened tile (pin flops, own reset / clock tree)
+    parameter integer RD = 2,               // ot_hdc_vstream RD: relay stages each way between the stream unit and a lane tile
+    parameter integer LOREG = 0,            // ot_hdc_vstream LOREG (r6 10-14): lane cluster output register stage
+    parameter integer LIREG = 0             // ot_hdc_vstream LIREG (r7 10-14): lane cluster input register stage
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -95,6 +104,8 @@ module ot_qfd_sp_su64_sfu_bv #(
     localparam integer FI = 2*NW + 1 + 3*AW + 1 + 3*AW + 1 + 3*AW + 2 + 2 + 3 + 3 + 1 + 1 + 2 + 3*AW + 2 + 1 + 2*AW + 64;
     wire rs;
     ot_qfd_rst_stn #(.D(IS)) u_rs (.clk(clk), .rst_n(rst_n), .rst_q(rs));
+    wire rs_e;                              // u_emb's reset (RTREE: its own register, as each vstream lane)
+    ot_qfd_rst_stn #(.D((RTREE != 0) ? 1 : 0)) u_rse (.clk(clk), .rst_n(rs), .rst_q(rs_e));
     // ---- input stations ----
     wire [FI-1:0] f_d = {i_nout, i_nin, i_asrc, i_abase, i_aso, i_asi, i_bsrc, i_bbase, i_bso, i_bsi, i_csrc, i_cbase,
                          i_cso, i_csi, i_ma, i_mb, i_ad, i_sfu, i_mc, i_md, i_dst, i_dbase, i_dso, i_dsi, i_red,
@@ -116,8 +127,8 @@ module ot_qfd_sp_su64_sfu_bv #(
     wire [SW*32-1:0] e_va_q;
     wire e_pend, e_fault, e_v, e_kind;
     wire [AW-1:0] e_addr;
-    ot_qfd_su_embed_pf #(.SW(SW), .AW(AW), .NW(NW), .HID(HID), .CRD(CRD), .FI(FI)) u_emb (
-        .clk(clk), .rst_n(rs), .go_in(go_q), .a_src(asrc_q), .tok(tok_q), .f_in(f_q), .go_out(go_s), .f_out(f_go),
+    ot_qfd_su_embed_pf #(.SW(SW), .AW(AW), .NW(NW), .HID(HID), .CRD(CRD), .FI(FI), .RSRAM(RSRAM)) u_emb (
+        .clk(clk), .rst_n(rs_e), .go_in(go_q), .a_src(asrc_q), .tok(tok_q), .f_in(f_q), .go_out(go_s), .f_out(f_go),
         .pend(e_pend), .su_va_re(s_va_re), .su_va_addr(s_va_addr), .su_va_q(e_va_q), .va_re(e_va_re),
         .va_addr(e_va_addr), .va_q({(SW*32){1'b0}}), .ea_v(e_v), .ea_kind(e_kind), .ea_addr(e_addr), .ea_cr(cr_q),
         .eq_v(eqv_q), .eq_data(eqd_q), .fault(e_fault));
@@ -174,7 +185,7 @@ module ot_qfd_sp_su64_sfu_bv #(
     assign sw_a0 = vm_waddr[0 +: AW];
     assign sw_a1 = vm_waddr[AW +: AW];
     wire [15:0] s_progress, s_rows;
-    ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8), .ML(ML)) u_su (
+    ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8), .ML(ML), .LOFF(LOFF), .RTREE(RTREE), .LT(LT), .RD(RD), .LOREG(LOREG), .LIREG(LIREG)) u_su (
         .clk(clk), .rst_n(rs), .go(go_s), .ready(s_ready), .idle(s_idle),
         .i_nout(q_nout), .i_nin(q_nin),
         .i_asrc(q_asrc), .i_abase(q_abase), .i_aso(q_aso), .i_asi(q_asi),

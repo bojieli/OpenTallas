@@ -1,0 +1,269 @@
+{
+ "tool": "tools/mtp_colllane_gate.py",
+ "defines": [
+  "+define+OT_S81PH_GBX_FMT1",
+  "+define+OT_S81PH_EP_PIPE2",
+  "+define+OT_S81PH_COLL_OQPIPE",
+  "+define+OT_S81PH_COLL_QPIPE",
+  "+define+OT_S81PH_COLL_SPLIT",
+  "+define+OT_S81PH_COLL_CR",
+  "+define+OT_S81PH_LANE_CR",
+  "+define+OT_S81PH_COLL_PULL",
+  "+define+OT_S81PH_COLL_TREP",
+  "+define+OT_S81PH_COLL_MTPL",
+  "+define+TB_MTP"
+ ],
+ "cases": {
+  "base": {
+   "expect": "pass",
+   "passed": true,
+   "built": true,
+   "ok": true,
+   "extra": [
+    "-GNTOK=0",
+    "-GNSEED=0",
+    "-GNACC=0"
+   ],
+   "coll_done": 3011,
+   "dut_last": 3011,
+   "ref_last": 1462,
+   "mtp": [
+    "MTP DIE 0 rx tokens 0 / 0 (peer sent 0) seeds 0 / 0 accepts 0 / 0 errs 0 first_tok_latency 0 last_tok -1 second_half_tokens 0 in 0 cycles",
+    "MTP DIE 1 rx tokens 0 / 0 (peer sent 0) seeds 0 / 0 accepts 0 / 0 errs 0 first_tok_latency 0 last_tok -1 second_half_tokens 0 in 0 cycles",
+    "MTP DIE 2 rx tokens 0 / 0 (peer sent 0) seeds 0 / 0 accepts 0 / 0 errs 0 first_tok_latency 0 last_tok -1 second_half_tokens 0 in 0 cycles",
+    "MTP DIE 3 rx tokens 0 / 0 (peer sent 0) seeds 0 / 0 accepts 0 / 0 errs 0 first_tok_latency 0 last_tok -1 second_half_tokens 0 in 0 cycles"
+   ],
+   "cycles_per_token": null,
+   "tail": []
+  },
+  "pos_rand": {
+   "expect": "pass",
+   "passed": true,
+   "built": true,
+   "ok": true,
+   "extra": [
+    "-GMSTALL=0"
+   ],
+   "coll_done": 3011,
+   "dut_last": 3011,
+   "ref_last": 1462,
+   "mtp": [
+    "MTP DIE 0 rx tokens 300 / 300 (peer sent 300) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 219 last_tok 2827 second_half_tokens 150 in 606 cycles",
+    "MTP DIE 1 rx tokens 300 / 300 (peer sent 300) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 219 last_tok 3004 second_half_tokens 150 in 790 cycles",
+    "MTP DIE 2 rx tokens 300 / 300 (peer sent 300) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 219 last_tok 3009 second_half_tokens 150 in 798 cycles",
+    "MTP DIE 3 rx tokens 300 / 300 (peer sent 300) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 219 last_tok 3009 second_half_tokens 150 in 807 cycles"
+   ],
+   "cycles_per_token": 4.04,
+   "tail": []
+  },
+  "pos_hol": {
+   "expect": "pass",
+   "passed": true,
+   "built": true,
+   "ok": true,
+   "extra": [
+    "-GMSTALL=1"
+   ],
+   "coll_done": 3011,
+   "dut_last": 3011,
+   "ref_last": 1462,
+   "mtp": [
+    "MTP DIE 0 rx tokens 300 / 300 (peer sent 300) seeds 0 / 80 accepts 24 / 24 errs 0 first_tok_latency 219 last_tok 2798 second_half_tokens 150 in 578 cycles",
+    "MTP DIE 1 rx tokens 300 / 300 (peer sent 300) seeds 0 / 80 accepts 24 / 24 errs 0 first_tok_latency 219 last_tok 2815 second_half_tokens 150 in 593 cycles",
+    "MTP DIE 2 rx tokens 300 / 300 (peer sent 300) seeds 0 / 80 accepts 24 / 24 errs 0 first_tok_latency 219 last_tok 2976 second_half_tokens 150 in 762 cycles",
+    "MTP DIE 3 rx tokens 300 / 300 (peer sent 300) seeds 0 / 80 accepts 24 / 24 errs 0 first_tok_latency 219 last_tok 2960 second_half_tokens 150 in 744 cycles"
+   ],
+   "cycles_per_token": 3.853,
+   "tail": []
+  },
+  "pos_block": {
+   "expect": "pass",
+   "passed": true,
+   "built": true,
+   "ok": true,
+   "extra": [
+    "-GMSTALL=2",
+    "-GMTP_HOLD=9000"
+   ],
+   "coll_done": 3011,
+   "dut_last": 3011,
+   "ref_last": 1462,
+   "mtp": [
+    "MTP DIE 0 rx tokens 0 / 300 (peer sent 165) seeds 0 / 80 accepts 24 / 24 errs 0 first_tok_latency -1124 last_tok -1 second_half_tokens 150 in 0 cycles",
+    "MTP DIE 1 rx tokens 0 / 300 (peer sent 165) seeds 0 / 80 accepts 24 / 24 errs 0 first_tok_latency -1124 last_tok -1 second_half_tokens 150 in 0 cycles",
+    "MTP DIE 2 rx tokens 0 / 300 (peer sent 165) seeds 0 / 80 accepts 24 / 24 errs 0 first_tok_latency -1124 last_tok -1 second_half_tokens 150 in 0 cycles",
+    "MTP DIE 3 rx tokens 0 / 300 (peer sent 165) seeds 0 / 80 accepts 24 / 24 errs 0 first_tok_latency -1124 last_tok -1 second_half_tokens 150 in 0 cycles"
+   ],
+   "cycles_per_token": 0.0,
+   "tail": []
+  },
+  "pos_win": {
+   "expect": "pass",
+   "passed": true,
+   "built": true,
+   "ok": true,
+   "extra": [
+    "-GMSTALL=4"
+   ],
+   "coll_done": 3011,
+   "dut_last": 3011,
+   "ref_last": 1462,
+   "mtp": [
+    "MTP DIE 0 rx tokens 300 / 300 (peer sent 300) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 13877 last_tok 16214 second_half_tokens 150 in 722 cycles",
+    "MTP DIE 1 rx tokens 300 / 300 (peer sent 300) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 13877 last_tok 16355 second_half_tokens 150 in 863 cycles",
+    "MTP DIE 2 rx tokens 300 / 300 (peer sent 300) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 13877 last_tok 16349 second_half_tokens 150 in 859 cycles",
+    "MTP DIE 3 rx tokens 300 / 300 (peer sent 300) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 13877 last_tok 16349 second_half_tokens 150 in 857 cycles"
+   ],
+   "cycles_per_token": 4.813,
+   "tail": []
+  },
+  "pos_rate": {
+   "expect": "pass",
+   "passed": true,
+   "built": true,
+   "ok": true,
+   "extra": [
+    "-GMSTALL=3",
+    "-GTGAP=6",
+    "-GNTOK=1000"
+   ],
+   "coll_done": 3011,
+   "dut_last": 3011,
+   "ref_last": 1462,
+   "mtp": [
+    "MTP DIE 0 rx tokens 1000 / 1000 (peer sent 1000) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 219 last_tok 7560 second_half_tokens 500 in 3199 cycles",
+    "MTP DIE 1 rx tokens 1000 / 1000 (peer sent 1000) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 219 last_tok 7731 second_half_tokens 500 in 3201 cycles",
+    "MTP DIE 2 rx tokens 1000 / 1000 (peer sent 1000) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 219 last_tok 7553 second_half_tokens 500 in 3191 cycles",
+    "MTP DIE 3 rx tokens 1000 / 1000 (peer sent 1000) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 219 last_tok 7724 second_half_tokens 500 in 3203 cycles"
+   ],
+   "cycles_per_token": 6.398,
+   "tail": []
+  },
+  "rate_t64": {
+   "expect": "pass",
+   "passed": true,
+   "built": true,
+   "ok": true,
+   "extra": [
+    "-GMSTALL=3",
+    "-GTGAP=6",
+    "-GNTOK=1000",
+    "+define+OT_MTPL_TCRED=64"
+   ],
+   "coll_done": 3011,
+   "dut_last": 3011,
+   "ref_last": 1462,
+   "mtp": [
+    "MTP DIE 0 rx tokens 1000 / 1000 (peer sent 1000) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 219 last_tok 8989 second_half_tokens 500 in 3619 cycles",
+    "MTP DIE 1 rx tokens 1000 / 1000 (peer sent 1000) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 219 last_tok 9280 second_half_tokens 500 in 4071 cycles",
+    "MTP DIE 2 rx tokens 1000 / 1000 (peer sent 1000) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 219 last_tok 9855 second_half_tokens 500 in 4500 cycles",
+    "MTP DIE 3 rx tokens 1000 / 1000 (peer sent 1000) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 219 last_tok 9671 second_half_tokens 500 in 4337 cycles"
+   ],
+   "cycles_per_token": 7.238,
+   "tail": []
+  },
+  "rate_t32": {
+   "expect": "pass",
+   "passed": true,
+   "built": true,
+   "ok": true,
+   "extra": [
+    "-GMSTALL=3",
+    "-GTGAP=6",
+    "-GNTOK=1000",
+    "+define+OT_MTPL_TCRED=32"
+   ],
+   "coll_done": 3011,
+   "dut_last": 3011,
+   "ref_last": 1462,
+   "mtp": [
+    "MTP DIE 0 rx tokens 1000 / 1000 (peer sent 1000) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 219 last_tok 9954 second_half_tokens 500 in 4031 cycles",
+    "MTP DIE 1 rx tokens 1000 / 1000 (peer sent 1000) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 219 last_tok 10089 second_half_tokens 500 in 4108 cycles",
+    "MTP DIE 2 rx tokens 1000 / 1000 (peer sent 1000) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 219 last_tok 10306 second_half_tokens 500 in 4215 cycles",
+    "MTP DIE 3 rx tokens 1000 / 1000 (peer sent 1000) seeds 80 / 80 accepts 24 / 24 errs 0 first_tok_latency 219 last_tok 10266 second_half_tokens 500 in 4264 cycles"
+   ],
+   "cycles_per_token": 8.062,
+   "tail": []
+  },
+  "neg_shared": {
+   "expect": "fail",
+   "passed": false,
+   "built": true,
+   "ok": true,
+   "extra": [
+    "-GMSTALL=1",
+    "-GMTP_HOLD=20000",
+    "+define+OT_MTPL_MUT_SHARED"
+   ],
+   "coll_done": 3011,
+   "dut_last": 3011,
+   "ref_last": 1462,
+   "mtp": [
+    "MTP DIE 0 rx tokens 38 / 300 (peer sent 300) seeds 0 / 80 accepts 1 / 24 errs 0 first_tok_latency 219 last_tok 1437 second_half_tokens 150 in 1438 cycles",
+    "MTP DIE 0 INCOMPLETE",
+    "MTP DIE 1 rx tokens 38 / 300 (peer sent 300) seeds 0 / 80 accepts 1 / 24 errs 0 first_tok_latency 219 last_tok 1437 second_half_tokens 150 in 1438 cycles",
+    "MTP DIE 1 INCOMPLETE",
+    "MTP DIE 2 rx tokens 38 / 300 (peer sent 300) seeds 0 / 80 accepts 1 / 24 errs 0 first_tok_latency 219 last_tok 1437 second_half_tokens 150 in 1438 cycles",
+    "MTP DIE 2 INCOMPLETE",
+    "MTP DIE 3 rx tokens 38 / 300 (peer sent 300) seeds 0 / 80 accepts 1 / 24 errs 0 first_tok_latency 219 last_tok 1437 second_half_tokens 150 in 1438 cycles",
+    "MTP DIE 3 INCOMPLETE"
+   ],
+   "cycles_per_token": 9.587,
+   "tail": [
+    "TB_S81PH_COLL_SYS FAIL errs 4"
+   ]
+  },
+  "neg_cred": {
+   "expect": "fail",
+   "passed": false,
+   "built": true,
+   "ok": true,
+   "extra": [
+    "-GMSTALL=4",
+    "+define+OT_MTPL_MUT_CRED"
+   ],
+   "coll_done": 3011,
+   "dut_last": 3011,
+   "ref_last": 1462,
+   "mtp": [
+    "MTP DIE 2 lane / adapter FAULT",
+    "MTP DIE 2 lane / adapter FAULT",
+    "MTP DIE 1 lane / adapter FAULT",
+    "MTP DIE 2 lane / adapter FAULT",
+    "MTP DIE 0 lane / adapter FAULT",
+    "MTP DIE 1 lane / adapter FAULT",
+    "MTP DIE 2 lane / adapter FAULT",
+    "MTP DIE 0 lane / adapter FAULT",
+    "MTP DIE 1 lane / adapter FAULT",
+    "MTP DIE 1 accept 2 mismatch",
+    "MTP DIE 2 lane / adapter FAULT",
+    "MTP DIE 2 accept 2 mismatch"
+   ],
+   "cycles_per_token": 5.687,
+   "tail": [
+    "TB_S81PH_COLL_SYS FAIL errs 75500"
+   ]
+  },
+  "neg_stale": {
+   "expect": "fail",
+   "passed": false,
+   "built": true,
+   "ok": true,
+   "extra": [
+    "-GMSTALL=4",
+    "+define+OT_MTPL_MUT_STALE"
+   ],
+   "coll_done": null,
+   "dut_last": null,
+   "ref_last": null,
+   "mtp": [],
+   "cycles_per_token": null,
+   "tail": [
+    "LINK_REG FAIL: receive FIFO overflow (a flit arrived without a grant)",
+    "[995000] %Fatal: ot_dsrom_mtp_link_rtt.sv:134: Assertion failed in tb_s81ph_coll_sys.g_die[0].u.u_ma.u_ep.u_t.g_rtt.u_rx: LINK_REG overflow"
+   ]
+  }
+ },
+ "no_block_of_collective": true,
+ "verdict": "PASS"
+}

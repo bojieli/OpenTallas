@@ -1,0 +1,102 @@
+{
+  "schema": "opentallas.physical.ha2_capture_rootcause.v1",
+  "source_job": "ha2_rxs_r-49ac7a13e-tc-rvt-hm10-cl",
+  "source_commit": "49ac7a13e23984271efbbbc468b75379e541f528",
+  "metrics": {
+    "corner_sta": [
+      "/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_rxs_r-49ac7a13e-tc-rvt-hm10-cl/routes/ha2_rxs_r_49ac7a13e_tc_rvt_hm10_cl/corner_sta.json"
+    ],
+    "drc_metrics": [
+      "/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_rxs_r-49ac7a13e-tc-rvt-hm10-cl/routes/ha2_rxs_r_49ac7a13e_tc_rvt_hm10_cl/work/orfs/logs/asap7/opentallas_ot_ha2_truecredit_rx_s_phys_asap7_ha2_tcs_rx/base/5_2_route.json"
+    ],
+    "ff_ps": -6.39,
+    "clock_periods_ps": {},
+    "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_rxs_r-49ac7a13e-tc-rvt-hm10-cl/routes/ha2_rxs_r_49ac7a13e_tc_rvt_hm10_cl/work/orfs",
+    "post_sdc": [
+      "physical/ha2_truecredit_20261007/screening_signoff.sdc",
+      "physical/ha2_truecredit_20261007/rx_check_pins_signal_only.tcl",
+      "physical/common_flow/io_ref_routed.sdc"
+    ],
+    "sdc_name": "6_final.sdc",
+    "setup_post_sdc": [],
+    "ss_sensitivity_ps": -204.49,
+    "ss_sensitivity_tns_ps": -5067.4,
+    "setup_corner": "tt",
+    "corner_sta_tt": "/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_rxs_r-49ac7a13e-tc-rvt-hm10-cl/routes/ha2_rxs_r_49ac7a13e_tc_rvt_hm10_cl/corner_sta.json",
+    "ss_ps": -78.9,
+    "ss_tns_ps": -222.4,
+    "errors": [],
+    "drc": 0,
+    "routed_ioref": {
+      "key": "1|/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_rxs_r-49ac7a13e-tc-rvt-hm10-cl/routes/ha2_rxs_r_49ac7a13e_tc_rvt_hm10_cl/work/orfs|0|ae0410",
+      "at": "2026-10-09T23:04:40-07:00",
+      "available": true,
+      "ioref_edge": {
+        "tt": {
+          "core_clk": {
+            "boundary": 2249,
+            "negedge": 0,
+            "noarc": 0,
+            "inverted": 0
+          }
+        },
+        "ff": {
+          "core_clk": {
+            "boundary": 2249,
+            "negedge": 0,
+            "noarc": 0,
+            "inverted": 0
+          }
+        }
+      },
+      "tt": -78.9,
+      "ff": -6.39,
+      "errors": [],
+      "ioref": {
+        "tt": {
+          "vclk": {
+            "clock": "core_clk",
+            "mean": 578.8,
+            "min": 561.5,
+            "max": 618.0,
+            "n": 2249,
+            "kind": "boundary"
+          }
+        },
+        "ff": {
+          "vclk": {
+            "clock": "core_clk",
+            "mean": 469.3,
+            "min": 453.8,
+            "max": 505.7,
+            "n": 2249,
+            "kind": "boundary"
+          }
+        }
+      },
+      "tt_i2r": 184.04,
+      "tt_out": 37.38,
+      "ff_i2r": -6.39,
+      "ff_out": 3.6,
+      "ff_r2r": -0.56,
+      "json": "/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_rxs_r-49ac7a13e-tc-rvt-hm10-cl/cl/routed_ioref.a1.json"
+    },
+    "route_sdc_clock": {
+      "ss_ps": -78.9,
+      "ff_ps": -34.1
+    }
+  },
+  "failed_verdict_preserved": true,
+  "root_path": {
+    "start": "u_core.g_lane[0].g_ram[1].storage/rd_out[32]",
+    "end": "u_core.g_lane[0].raw_q[544]$_DFF_P_/D",
+    "TT_slack_ps": -78.90477,
+    "macro_clkq_ps": 409.53,
+    "transport_delay_ps": 397.07,
+    "launch_clock_arrival_ps": 582.86,
+    "capture_clock_arrival_ps": 553.21
+  },
+  "root_cause": "Macro read bus transports to the tag/check register over a buffered global wire before its first capture; tag outputs dominate all eight violating data endpoints.",
+  "fix": "New bank-local preserved capture edge beside real rd_out pins; existing raw_q owns transport on the next edge. Added +1 latency edge vs RREG; unchanged requests and credit issue.",
+  "not_adopted": true
+}

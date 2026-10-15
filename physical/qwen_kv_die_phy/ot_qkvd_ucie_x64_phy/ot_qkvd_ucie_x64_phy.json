@@ -8,13 +8,13 @@
   "claim_boundary": "a placement / connection / timing abstract of licensed IP: no PHY design, no GDS, no SI or bump-map analysis; footprint and boundary timing ASSUMED as stated",
   "derived": {
     "energy_pj_per_bit": 0.29,
-    "lanes": "one x64 advanced module, 64 TX + 64 RX lanes at 16 GT/s = 1,024 Gb/s each way; the 548-bit flit at 1.2 GHz is 657.6 Gb/s (64 % of raw, ~70 % after the UCIe flit-format overhead)",
+    "lanes": "one x64 advanced module, 64 TX + 64 RX lanes at 16 GT/s = 1,024 Gb/s each way; the 583-bit flit at 1.2 GHz is 699.6 Gb/s (68.3 % of raw)",
     "latency_best": "< 2 ns (CPMT 2022 spec bound) -> 3 cycles",
     "latency_typical": "3.5 ns FDI-to-FDI (JSSC 2026) = 4.2 -> 5 cycles at 1.2 GHz"
   },
   "fdi": {
     "clock_ghz": 1.2,
-    "flit_bits": 548,
+    "flit_bits": 583,
     "latency_fdi_cycles_one_way": {
       "best": 3,
       "typical": 5,
@@ -31,13 +31,13 @@
   "name": "ot_qkvd_ucie_x64_phy",
   "pins": {
     "pin_block_x_um": [
-      283.104,
-      494.496
+      276.384,
+      501.216
     ],
     "pin_edge": "top (core-facing)",
     "pin_layer": "M5",
     "pin_pitch_um": 0.192,
-    "signal_pins": 1101
+    "signal_pins": 1171
   },
   "published": [
     {
@@ -69,7 +69,7 @@
       "out_r_kohm": 0.31724855211381614,
       "out_slew_intrinsic_ps": 22.165861613333334,
       "pin_cap_ff": 1.367432,
-      "read_energy_fj": 158920.0,
+      "read_energy_fj": 169070.0,
       "setup_ps": 54.24925322666667,
       "temperature": 0.0,
       "voltage": 0.77,
@@ -89,7 +89,7 @@
       "out_r_kohm": 0.7083491406580278,
       "out_slew_intrinsic_ps": 35.38986175375,
       "pin_cap_ff": 1.157532,
-      "read_energy_fj": 158920.0,
+      "read_energy_fj": 169070.0,
       "setup_ps": 86.9870235075,
       "temperature": 100.0,
       "voltage": 0.63,
@@ -109,7 +109,7 @@
       "out_r_kohm": 0.4562575976456151,
       "out_slew_intrinsic_ps": 27.39737815666667,
       "pin_cap_ff": 1.239856,
-      "read_energy_fj": 158920.0,
+      "read_energy_fj": 169070.0,
       "setup_ps": 64.78601631333333,
       "temperature": 25.0,
       "voltage": 0.7,
@@ -117,11 +117,11 @@
     }
   },
   "views": {
-    "ot_qkvd_ucie_x64_phy.lef": "4ad760c3320fb633d8328b33a965f2c6a29fe03e30a72a333ac8965d781b72f0",
-    "ot_qkvd_ucie_x64_phy_bb.v": "00c7d79bb1d9beefab7a38ff677e5f973942d3d3fe7aee0f8c8ecadabfcf5ca0",
-    "ot_qkvd_ucie_x64_phy_ff.lib": "c32388696b93aa202f6bf8f325af91e382b6b7ccf68d81bb27a456ade2d32904",
-    "ot_qkvd_ucie_x64_phy_model.sv": "ba8faac0351ac175dd105592d7ea662791e60557f5765c47cc8012df98d822c7",
-    "ot_qkvd_ucie_x64_phy_ss.lib": "da73aebf931295fef75d67b938f9e0504adbb97f32f16514dae0ff104e851a6c",
-    "ot_qkvd_ucie_x64_phy_tt.lib": "9dcf724f03b47139eeaae45ae183d72586ec8a5aed348ebd2d1c94f5ca5ab047"
+    "ot_qkvd_ucie_x64_phy.lef": "f4a2b22a7479ebcbca2a9dbe676e36b20d933d28ae13aff4b15f8b66c7280f66",
+    "ot_qkvd_ucie_x64_phy_bb.v": "c9699325c5e7134940f41f21b9c8c5d2a65f396f4201ca2d148b1b4d9204c7be",
+    "ot_qkvd_ucie_x64_phy_ff.lib": "a93f474f35cc1b3a72a0e99c6473196d5c30a65c8448230a820861be4585e262",
+    "ot_qkvd_ucie_x64_phy_model.sv": "2b14efcc89a0841eddae12d1ca3c8f5ab7944773b2460887fe7496fd10500066",
+    "ot_qkvd_ucie_x64_phy_ss.lib": "3a2cff90556b744aa79d7564e47fe1560c8fd5ad1a921a5f99b2a798eafac954",
+    "ot_qkvd_ucie_x64_phy_tt.lib": "4537813c653458ff6a9c35be6f3fb4671dc98c124e49be2de00910341c6347dc"
   }
 }

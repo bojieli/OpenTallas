@@ -25,8 +25,12 @@ module ot_hgi_coll_ep #(
     parameter integer PPK = 512,       // parking depth per epoch queue (flits of a gather this rank has not started)
     parameter integer MUT_PIPE = 0,    // bench mutants: 1 tag ignored (oldest epoch's context), 2 no parking (early
                                        //   flits formatted with the oldest context), 3 an epoch completes one flit early
+    parameter integer SWCRED = 256,    // [link] 2026-10-10: switch-ingress credits of each port = the hfd_lk_ep TX queue (32)
     parameter integer RGXHW = 0,       // 1: hardware COLL.ROW_GATHER (G25): owner-row source + list-order sink on this endpoint
-    parameter integer RFMT = 1         // 0: no row formatter (rowfmt ports unbound): ROW_GATHER param[8] = 0 faults
+    parameter integer RFMT = 1,        // 0: no row formatter (rowfmt ports unbound): ROW_GATHER param[8] = 0 faults
+    parameter integer TKM = 0,         // hgi-1010/k: 1 = hardware COLL.TOPK_MERGE: merge sink ot_hgi_coll_tkm on the gather bypass
+    parameter integer TKM_KMAX = 2048, //   its largest k (systolic array of TKM_KMAX / 4 cells)
+    parameter integer MUT_TKM = 0      //   bench mutants of the sink (ot_hgi_coll_tkm MUT)
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -73,7 +77,18 @@ module ot_hgi_coll_ep #(
     output wire [DEL*40-1:0]  rg_w_addr,
     output wire               rg_w_vm,       // the run's O space (0 HBM bytes, 1 VM words)
     output wire [DEL*FW-1:0]  rg_w_data,
-    input  wire [DEL-1:0]     rg_w_rdy
+    input  wire [DEL-1:0]     rg_w_rdy,
+    // hardware TOPK_MERGE (TKM = 1; unused otherwise): the record's B / R descriptors {n_R, n_B, desc_R, desc_B}
+    // (ot_hgi_cp_die coll_recx), the inject addresses of every inject lane {hi half (8 words), lo half (8 words)} as VM
+    // word addresses (TKM run: lo = A + 8 f values, hi = B + 8 f ids; any other run: lo = A + 16 f, hi = lo + 8), and
+    // the sink's O / R line writes (VM, 16-word lines, word mask)
+    input  wire [553:0]       hgi_recx,
+    output wire [INJ*80-1:0]  hgi_inj_addr,
+    output wire               tk_w_v,
+    output wire [39:0]        tk_w_addr,
+    output wire [15:0]        tk_w_mask,
+    output wire [FW-1:0]      tk_w_data,
+    input  wire               tk_w_rdy
 );
     wire [7:0] r_rank, r_mg; wire r_mall, r_byp, r_amx, r_bf16; wire [3:0] r_gsz; wire [15:0] r_pf; wire r_go, r_done_ready;
     wire [39:0] r_abase, r_obase; wire rec_rdy, rec_done, rec_fault;
@@ -88,11 +103,33 @@ module ot_hgi_coll_ep #(
     wire [15:0] rg_astride; wire [6:0] rg_sec; wire [5:0] rg_nflit; wire [31:0] rg_lbase, rg_ostride; wire [39:0] rg_obase;
     wire [15:0] rs_gi; wire [FW-1:0] rs_data; wire [DEL-1:0] rg_permit, rg_reserve;
     reg rgx_run;     // the current collective is a hardware ROW_GATHER: deliveries go to the sink, not the SU quarters
+    // hardware TOPK_MERGE
+    wire r_tkm, tk_start, tk_hr, tk_done, tk_fault; wire [39:0] r_bbase, tk_ob, tk_rb; wire [11:0] tk_n; wire [7:0] tk_g, tk_gb;
+    wire [15:0] tk_pf; wire [12:0] tk_no, tk_ko; wire [DEL-1:0] tk_permit; reg tkm_run;
+    reg tkm_inj;     // the injecting collective is a TOPK_MERGE (8 {value, id} pairs a flit)
     // SU-quarter inject OR (ownership contract: flit i is quarter i mod 4's, the other three drive 0) and the review-1149
     // multi-driver flag: two or more non-zero quarters on one inject lane in a cycle sets a sticky fault (cleared by rst_n only).  The
     // data path is the plain OR (zero cycles); the flag is a parallel OR-reduce per quarter into one flop.
     wire [INJ*FW-1:0] inj_data = inj_q[0 +: INJ*FW] | inj_q[INJ*FW +: INJ*FW] | inj_q[2*INJ*FW +: INJ*FW] | inj_q[3*INJ*FW +: INJ*FW];
     // per inject lane h: the quarters driving a non-zero word on lane h (each quarter drives only the lanes it owns)
+    // TOPK_MERGE source side (TKM run): slot s of flit f is element e = 8 f + s of this rank; e >= n (the record's n, the
+    // stream padded to the group's pf) is sent as the PAD pair {FFFFFFFF, FFFFFFFF}, and every NaN value as the canonical
+    // 7FC00000 (it still faults at every sink), so the sinks tell a pad slot from data without knowing the sender's n
+    reg  [INJ*FW-1:0] inj_tk;
+    wire [11:0] tk_n_w = tk_n;
+    always @* begin : tkpad
+        reg [15:0] f_; reg [31:0] v_;
+        inj_tk = inj_data;
+        for (integer h = 0; h < INJ; h = h + 1) begin
+            f_ = inj_idx[16*h +: 16];
+            for (integer s_ = 0; s_ < 8; s_ = s_ + 1) begin
+                v_ = inj_data[h*FW + 32*s_ +: 32];
+                if ({f_, 3'(s_)} >= 19'(tk_n_w)) begin
+                    inj_tk[h*FW + 32*s_ +: 32] = 32'hFFFF_FFFF; inj_tk[h*FW + 32*(8+s_) +: 32] = 32'hFFFF_FFFF;
+                end else if (v_[30:23] == 8'hFF && v_[22:0] != 23'd0) inj_tk[h*FW + 32*s_ +: 32] = 32'h7FC0_0000;
+            end
+        end
+    end
     reg multi;
     always @* begin : mdet
         reg [3:0] nz;
@@ -107,7 +144,7 @@ module ot_hgi_coll_ep #(
     wire ep_fault;
     wire [31:0] cfg_w46;
     ot_hgi_cfg_rx #(.W0(46), .NW(1), .RST(32'd96)) u_cfg (.clk(clk), .rst_n(rst_n), .bus(hgi_cfg), .act(cfg_w46));
-    ot_hgi_coll_record #(.PIPE(PIPE), .RGXHW(RGXHW), .RFMT(RFMT)) u_rec (.clk(clk), .rst_n(rst_n), .cfg_coll_group_size(cfg_w46[7:0]), .cfg_die_id(hgi_rec[967:960]),
+    ot_hgi_coll_record #(.PIPE(PIPE), .RGXHW(RGXHW), .RFMT(RFMT), .TKM(TKM), .TKM_KMAX(TKM_KMAX)) u_rec (.clk(clk), .rst_n(rst_n), .cfg_coll_group_size(cfg_w46[7:0]), .cfg_die_id(hgi_rec[967:960]),
         .rec_v(hgi_rec[0]), .rec_rdy(rec_rdy), .rec_hdr(hgi_rec[128:1]), .rec_a(hgi_rec[384:129]),
         .rec_o(hgi_rec[640:385]), .rec_i(hgi_rec[896:641]), .rec_n_a(hgi_rec[917:897]), .rec_n_o(hgi_rec[938:918]),
         .rec_n_i(hgi_rec[959:939]), .rec_done(rec_done), .rec_fault(rec_fault),
@@ -121,7 +158,10 @@ module ot_hgi_coll_ep #(
         .ep_start_ready_p(start_ready_p), .pipe_room(p_open < EQ), .pipe_idle(p_open == 0), .ep_pipe(r_pipe),
         .ep_rgx(r_rgx), .ep_rgx_total(r_rtot), .rg_start(rg_start), .rg_k(rg_k), .rg_lb(rg_lb), .rg_g(rg_g), .rg_rrel(rg_rrel),
         .rg_dests(rg_dests), .rg_abase(rg_abase), .rg_astride(rg_astride), .rg_sec(rg_sec), .rg_nflit(rg_nflit),
-        .rg_lbase(rg_lbase), .rg_obase(rg_obase), .rg_ostride(rg_ostride), .rg_ovm(rg_ovm), .rg_drained(rg_drained));
+        .rg_lbase(rg_lbase), .rg_obase(rg_obase), .rg_ostride(rg_ostride), .rg_ovm(rg_ovm), .rg_drained(rg_drained),
+        .rec_b(hgi_recx[255:0]), .rec_r(hgi_recx[511:256]), .rec_n_b(hgi_recx[532:512]), .rec_n_r(hgi_recx[553:533]),
+        .ep_tkm(r_tkm), .ep_b_base(r_bbase), .tk_start(tk_start), .tk_n(tk_n), .tk_g(tk_g), .tk_gbase(tk_gb), .tk_pf(tk_pf),
+        .tk_nout(tk_no), .tk_kout(tk_ko), .tk_obase(tk_ob), .tk_rbase(tk_rb), .tk_has_r(tk_hr), .tk_done(tk_done), .tk_fault(tk_fault));
     reg own_hgi; always @(posedge clk or negedge rst_n) if (!rst_n) own_hgi <= 1'b0;
         else if (r_go) own_hgi <= 1'b1; else if (go) own_hgi <= 1'b0;
     wire sel = r_go | (own_hgi & ~go);
@@ -129,16 +169,19 @@ module ot_hgi_coll_ep #(
     always @(posedge clk or negedge rst_n) if (!rst_n) rgx_run <= 1'b0;
         else if (r_go) rgx_run <= (RGXHW != 0) && r_rgx; else if (go) rgx_run <= 1'b0;
     wire rgx_now = rgx_run | (r_go & r_rgx & (RGXHW != 0));
-    ot_hbm_accel_tu_endpoint_psg #(.ENABLE(1), .REARM(1), .RGX(RGXHW), .DELCRED(RGXHW), .PFMAX(PFMAX), .BF16RT(1), .NOG(NOG), .RXAW(RXAW), .QAW(QAW), .TXAW(TXAW), .NPT(NPT), .INJ(INJ),
-        .DEL(DEL), .LANES(LANES), .PIPE(PIPE)) u_ep (.clk(clk), .rst_n(rst_n), .pclk(pclk), .prst_n(prst_n),
+    always @(posedge clk or negedge rst_n) if (!rst_n) tkm_run <= 1'b0;
+        else if (r_go) tkm_run <= (TKM != 0) && r_tkm; else if (go) tkm_run <= 1'b0;
+    wire tkm_now = tkm_run | (r_go & r_tkm & (TKM != 0));
+    ot_hbm_accel_tu_endpoint_psg #(.ENABLE(1), .REARM(1), .RGX(RGXHW), .DELCRED((RGXHW != 0 || TKM != 0) ? 1 : 0), .PFMAX(PFMAX), .BF16RT(1), .NOG(NOG), .RXAW(RXAW), .QAW(QAW), .TXAW(TXAW), .NPT(NPT), .INJ(INJ),
+        .DEL(DEL), .LANES(LANES), .PIPE(PIPE), .SWCRED(SWCRED)) u_ep (.clk(clk), .rst_n(rst_n), .pclk(pclk), .prst_n(prst_n),
         .rank(sel ? r_rank : rank), .mcast_group_size(sel ? r_mg : 8'd96), .mcast_all(sel & r_mall),
         .gsz(sel ? r_gsz : 4'hF), .byp(sel & r_byp), .res_bf16(sel ? r_bf16 : 1'b1), .pf(sel ? r_pf : pf), .go(r_go | go), .start_ready(start_ready),
         .done_valid(done_valid), .done_ready(done_ready), .fault_ack(1'b0),
-        .inj_idx(inj_idx), .inj_rd(inj_rd), .inj_data(inj_data), .ph_tx_v(ph_tx_v), .ph_tx_flit(ph_tx_flit),
+        .inj_idx(inj_idx), .inj_rd(inj_rd), .inj_data((TKM != 0 && tkm_inj) ? inj_tk : inj_data), .ph_tx_v(ph_tx_v), .ph_tx_flit(ph_tx_flit),
         .sw_cr_ret(sw_cr_ret), .ph_rx_v(ph_rx_v), .ph_rx_flit(ph_rx_flit), .rx_credit(rx_credit),
         .del_valid(e_dv), .del_flit(e_df),
         .rgx(sel & r_rgx), .rgx_total(r_rtot), .rs_v(rs_v), .rs_gi(rs_gi), .rs_data(rs_data), .rs_rdy(rs_rdy), .rs_end(rs_end),
-        .del_permit(rgx_now ? rg_permit : {DEL{1'b1}}), .del_reserve(rg_reserve),
+        .del_permit(rgx_now ? rg_permit : tkm_now ? tk_permit : {DEL{1'b1}}), .del_reserve(rg_reserve),
         .fault(ep_fault), .stat_credit_stall(stat_credit_stall),
         .pipe(r_pipe), .pipe_tag(p_next), .start_ready_p(start_ready_p), .pipe_inj_done(p_inj_done), .pipe_inj_tag(p_inj_tag));
     generate if (RGXHW != 0) begin : g_rgx
@@ -161,11 +204,31 @@ module ot_hgi_coll_ep #(
         assign rg_lq_v = 1'b0; assign rg_lq_addr = 32'd0; assign rg_hq_v = 2'd0; assign rg_hq_addr = 70'd0; assign rg_hq_tag = 16'd0;
         assign rg_w_v = {DEL{1'b0}}; assign rg_w_addr = {DEL*40{1'b0}}; assign rg_w_data = {DEL*FW{1'b0}}; assign rg_w_vm = 1'b0;
     end endgenerate
+    // hardware TOPK_MERGE merge sink (TKM = 1)
+    reg [39:0] b_run;                                          // B base of the injecting collective (latched at go)
+    always @(posedge clk) if (r_go || go) b_run <= r_bbase;
+    always @(posedge clk or negedge rst_n) if (!rst_n) tkm_inj <= 1'b0; else if (r_go) tkm_inj <= (TKM != 0) && r_tkm; else if (go) tkm_inj <= 1'b0;
+    generate if (TKM != 0) begin : g_tkm
+`ifdef OT_TKM_CLUSTER_BENCH
+        ot_hgi_coll_tkm_cluster #(.KMAX(TKM_KMAX), .DEL(DEL), .FW(FW), .PWT(PWT), .MUT(MUT_TKM)) u_tkm (.tile_ck0(clk),.tile_ck1(clk),.tile_ck2(clk),.tile_ck3(clk),.tile_ck4(clk),.tile_ck5(clk),.tile_ck6(clk),.tile_ck7(clk),.tile_ck8(clk),.tile_ck9(clk),.tile_ck10(clk),.tile_ck11(clk),.tile_ck12(clk),.tile_ck13(clk),.tile_ck14(clk),.tile_ck15(clk),.tile_ck16(clk),.tile_ck17(clk),.tile_ck18(clk),.tile_ck19(clk),.tile_ck20(clk),.tile_ck21(clk),.tile_ck22(clk),.tile_ck23(clk),.tile_ck24(clk),.tile_ck25(clk),.tile_ck26(clk),.tile_ck27(clk),.tile_ck28(clk),.tile_ck29(clk),.tile_ck30(clk),.tile_ck31(clk),.lane_ck0(clk),.lane_ck1(clk),.lane_ck2(clk),.lane_ck3(clk), .clk(clk), .rst_n(rst_n),
+`else
+        ot_hgi_coll_tkm #(.KMAX(TKM_KMAX), .DEL(DEL), .FW(FW), .PWT(PWT), .MUT(MUT_TKM)) u_tkm (.clk(clk), .rst_n(rst_n),
+`endif
+            .start(tk_start), .cfg_n(tk_n), .cfg_k(tk_ko), .cfg_g(tk_g), .cfg_gbase(tk_gb), .cfg_pf(tk_pf), .cfg_nout(tk_no),
+            .cfg_obase(tk_ob), .cfg_rbase(tk_rb), .cfg_has_r(tk_hr),
+            .del_reserve(tkm_now ? rg_reserve : {DEL{1'b0}}), .del_permit(tk_permit),
+            .del_valid(tkm_run ? e_dv : {DEL{1'b0}}), .del_flit(e_df),
+            .w_v(tk_w_v), .w_addr(tk_w_addr), .w_mask(tk_w_mask), .w_data(tk_w_data), .w_rdy(tk_w_rdy),
+            .busy(), .done(tk_done), .fault(tk_fault), .stat_cycles(), .stat_ins(), .stat_surv());
+    end else begin : g_notkm
+        assign tk_permit = {DEL{1'b1}}; assign tk_done = 1'b0; assign tk_fault = 1'b0;
+        assign tk_w_v = 1'b0; assign tk_w_addr = 40'd0; assign tk_w_mask = 16'd0; assign tk_w_data = {FW{1'b0}};
+    end endgenerate
     // ARGMAX_MERGE fold on the delivery lanes (pass-through otherwise)
     reg amx_run; always @(posedge clk or negedge rst_n) if (!rst_n) amx_run <= 1'b0;
         else if (r_go) amx_run <= r_amx; else if (go) amx_run <= 1'b0;
     ot_hgi_coll_amerge #(.DEL(DEL), .FW(FW), .PWT(PWT), .MUT_TIE(MUT_TIE)) u_amx (.clk(clk), .rst_n(rst_n),
-        .en(amx_run | (r_go & r_amx)), .start(r_go), .rank(r_rank), .d_v(rgx_run ? {DEL{1'b0}} : e_dv), .d_f(e_df), .ep_done(done_valid),
+        .en(amx_run | (r_go & r_amx)), .start(r_go), .rank(r_rank), .d_v((rgx_run || tkm_run) ? {DEL{1'b0}} : e_dv), .d_f(e_df), .ep_done(done_valid),
         .o_v(a_dv), .o_f(a_df), .done_out(m_done0));
     // F3 delivery formatter (one registered stage on every delivery lane; completion delayed with it): on a sliced
     // gather the delivered flit {1, FF, src q, gi, data} becomes {1, lanes, src, w, data}: w = s_q + 16 (gi - q pf) the
@@ -314,9 +377,14 @@ module ot_hgi_coll_ep #(
         assign hgi_del_obase[l*40 +: 40] = q_dv[l] ? q_ob[l*40 +: 40] : r_obase;
     end
     assign m_done = f_done;
-    assign fault = ep_fault | multi_err | p_flt | rg_src_fault | rg_sink_fault;
+    assign fault = ep_fault | multi_err | p_flt | rg_src_fault | rg_sink_fault | tk_fault;
     assign hgi_ret = {rec_fault | (p_flt && PIPE != 0), rec_done | p_done, rec_rdy};
     assign hgi_rowfmt_o = {rf_ctx, rf_words, rf_rows, rf_d, rf_b, rf_g, rf_dr, rf_sv};
     assign hgi_vmaddr = {r_obase, (PIPE != 0) ? a_run : r_abase};
+    for (genvar i = 0; i < INJ; i = i + 1) begin : g_iaddr
+        wire [39:0] ab = (PIPE != 0 || tkm_inj) ? a_run : r_abase;
+        wire [39:0] lo = tkm_inj ? (ab + {21'd0, inj_idx[16*i +: 16], 3'd0}) : (ab + {20'd0, inj_idx[16*i +: 16], 4'd0});
+        assign hgi_inj_addr[80*i +: 80] = {tkm_inj ? (b_run + {21'd0, inj_idx[16*i +: 16], 3'd0}) : (lo + 40'd8), lo};
+    end
 endmodule
 `default_nettype wire

@@ -69,10 +69,16 @@ module ot_hgi_hc_record #(
                  (hop == 6'd1) ? (no_q == 21'd0 || no_q > 21'd24 || r0 > 32'd23 || r0 + {11'd0, no_q} > 32'd24) :
                                  (no_q != 21'd24 || na_q != 21'd24);
     wire [19:0] am = a_q[87:68], om = o_q[87:68];
+    // hgi-1010/d HC WEIGHT APERTURE (lead decision (b)): B = {space VM, base = 2^18 + 32,768 j} names weight slot j
+    // (j = 0, 1) of the unit's VM-fed window set (filled by DMA.LOAD through the VM unit's aperture route); only
+    // HC_MIX_ROWS (op 1) reads weights from a slot.  Any other VM B base is refused.
+    wire [39:0] bwa = b_q[47:8];
+    wire ap = (b_q[1:0] == 2'd1);
+    wire ap_ok = ap && (bwa[39:16] == 24'd4) && (bwa[14:0] == 15'd0) && (hop == 6'd1) && (no_q == 21'd1);   // a slot = 1 row
     wire bad_p = (am == 20'd0) || (am > PMAX) || (am > 20'd1 && om != am);
     wire bad = bad_p || (hdr_q[127:124] != 4'd10) || (hop > 6'd2) || !opq[0] || !opq[1] || !opq[4] ||
-               (a_q[1:0] != 2'd1) || (o_q[1:0] != 2'd1) || (b_q[1:0] != 2'd0) || (na_q == 21'd0) || (|na_q[2:0]) ||
-               (|na_q[20:18]) || bad_n || (|b_q[12:8]);
+               (a_q[1:0] != 2'd1) || (o_q[1:0] != 2'd1) || !(b_q[1:0] == 2'd0 || ap_ok) || (na_q == 21'd0) ||
+               (|na_q[2:0]) || (|na_q[20:18]) || bad_n || (!ap && |b_q[12:8]);
     // binary32 of K (exact, K < 2^24): exponent 127 + msb, mantissa = K << (23 - msb)
     reg [4:0] msb; integer i;
     always @* begin msb = 5'd0; for (i = 0; i < 21; i = i + 1) if (na_q[i]) msb = i[4:0]; end
@@ -97,7 +103,8 @@ module ot_hgi_hc_record #(
                     busy <= 1'b1; iss <= 1'b1;
                     job_npos <= am[3:0]; job_astr <= a_q[105:88]; job_ostr <= o_q[105:88];
                     // pad bits: {op 2 [201:200], row0 5 [206:202], nrows 5 [211:207]}
-                    job_q <= {17'd0, no_q[4:0], (hop == 6'd1) ? r0[4:0] : 5'd0, hop[1:0], o_q[25:8], nwords, b_q[47:13] /* w_hbm: B.base >> 5 */, a_q[25:8], 16'd0, eps_q, nf,
+                    // {aperture 1 [228], slot 1 [227]} in the pad
+                    job_q <= {ap, bwa[15], 15'd0, no_q[4:0], (hop == 6'd1) ? r0[4:0] : 5'd0, hop[1:0], o_q[25:8], nwords, b_q[47:13] /* w_hbm: B.base >> 5 */, a_q[25:8], 16'd0, eps_q, nf,
                               1'b1, nchunk, 5'd24, 1'b1};
                 end
             end

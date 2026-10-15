@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.qwen-kv-die.plan.v1",
  "generator": "tools/qwen_kv_die/kv_die.py",
- "generator_sha256": "2423b1ee52dd60954d75401ee4b784512ec7a7541d0eecc9aea2f8a528ccf67a",
+ "generator_sha256": "634383f2562883f27360daf531131ab6ea1f4af85ff658b05b06d7edaa014d7d",
  "template": {
   "path": "tools/qwen_kv_die/r21c_band.json",
   "sha256": "3525a39792b7313b1f5cfaa01cae69a88dce7f1ef3febbda43e192650fcf2135"
@@ -11,10 +11,10 @@
   24587.28
  ],
  "die_mm2": 205.806,
- "instances": 1830,
- "buses": 3218,
- "instance_mm2": 124.054,
- "fill": 0.6028,
+ "instances": 1974,
+ "buses": 3366,
+ "instance_mm2": 124.283,
+ "fill": 0.6039,
  "masters": {
   "ot_hbm3e_phy": {
    "n": 4,
@@ -49,8 +49,12 @@
    "mm2": 0.0019
   },
   "qkd_ctrl": {
-   "n": 4,
-   "mm2": 12.0205
+   "n": 2,
+   "mm2": 6.0103
+  },
+  "qkd_ctrl_n": {
+   "n": 2,
+   "mm2": 6.0103
   },
   "qkd_d2d": {
    "n": 1,
@@ -93,12 +97,12 @@
    "mm2": 37.62
   },
   "qkd_rly_1": {
-   "n": 194,
-   "mm2": 0.3087
+   "n": 193,
+   "mm2": 0.3071
   },
   "qkd_rly_10": {
-   "n": 53,
-   "mm2": 0.0843
+   "n": 52,
+   "mm2": 0.0827
   },
   "qkd_rly_1025": {
    "n": 144,
@@ -124,6 +128,10 @@
    "n": 116,
    "mm2": 0.1846
   },
+  "qkd_rly_33": {
+   "n": 150,
+   "mm2": 0.2387
+  },
   "qkd_rly_36": {
    "n": 26,
    "mm2": 0.0414
@@ -133,12 +141,12 @@
    "mm2": 0.0398
   },
   "qkd_rly_530": {
-   "n": 315,
-   "mm2": 0.5012
+   "n": 312,
+   "mm2": 0.4964
   },
   "qkd_rly_540": {
-   "n": 73,
-   "mm2": 0.1161
+   "n": 72,
+   "mm2": 0.1146
   },
   "qkd_rly_563": {
    "n": 26,
@@ -156,8 +164,8 @@
   "edge": "N (abuts the ROM die S edge under spine column M)"
  },
  "relay_stages": {
-  "af_EN": 4,
-  "af_ES": 35,
+  "af_EN": 3,
+  "af_ES": 34,
   "af_WN": 2,
   "af_WS": 34,
   "am_EN": 6,
@@ -171,7 +179,7 @@
   "aq_EN": 2,
   "aq_ES": 33,
   "aq_WN": 3,
-  "aq_WS": 35,
+  "aq_WS": 34,
   "ares": 25,
   "emf_EN": 4,
   "emf_ES": 29,
@@ -179,8 +187,8 @@
   "emf_WS": 31,
   "emr_EN": 5,
   "emr_ES": 31,
-  "emr_WN": 5,
-  "emr_WS": 30,
+  "emr_WN": 4,
+  "emr_WS": 29,
   "hc": 53,
   "hf": 25,
   "hs": 25,
@@ -188,6 +196,10 @@
   "ing_ES": 4,
   "ing_WN": 31,
   "ing_WS": 4,
+  "kc_EN": 9,
+  "kc_ES": 65,
+  "kc_WN": 10,
+  "kc_WS": 66,
   "krq_EN_4": 5,
   "krq_EN_5": 11,
   "krq_EN_6": 11,
@@ -220,7 +232,7 @@
   "krs_WS_5": 11,
   "krs_WS_6": 11,
   "krs_WS_7": 6,
-  "kst": 53,
+  "kst": 52,
   "kvn_EN": 22,
   "kvn_ES": 53,
   "kvn_WN": 23,
@@ -230,10 +242,10 @@
   "lt_WN": 1,
   "lt_WS": 2,
   "mf_EN": 4,
-  "mf_ES": 31,
+  "mf_ES": 32,
   "mf_WN": 4,
   "mf_WS": 30,
-  "tk": 53,
+  "tk": 52,
   "wencoded_EN_0": 15,
   "wencoded_EN_1": 7,
   "wencoded_EN_3": 7,
@@ -262,7 +274,7 @@
  "critical_stages": {
   "d2d_to_seq": 0,
   "seq_to_astk": {
-   "WS": 35,
+   "WS": 34,
    "WN": 3,
    "ES": 33,
    "EN": 2
@@ -294,8 +306,8 @@
    "EN": 4
   },
   "land_to_gw": {
-   "WS": 30,
-   "WN": 5,
+   "WS": 29,
+   "WN": 4,
    "ES": 31,
    "EN": 5
   },
@@ -348,7 +360,12 @@
   "qkd_ctrl": {
    "w": 247.512,
    "h": 12141.336,
-   "ports": 70
+   "ports": 72
+  },
+  "qkd_ctrl_n": {
+   "w": 247.512,
+   "h": 12141.336,
+   "ports": 72
   },
   "qkd_land": {
    "w": 172.776,
@@ -398,7 +415,7 @@
   "qkd_seq": {
    "w": 777.576,
    "h": 518.376,
-   "ports": 29
+   "ports": 33
   },
   "qkd_embgw": {
    "w": 388.776,
@@ -475,6 +492,11 @@
    "h": 56.136,
    "ports": 2
   },
+  "qkd_rly_33": {
+   "w": 52.656,
+   "h": 30.216,
+   "ports": 2
+  },
   "qkd_rly_530": {
    "w": 52.656,
    "h": 30.216,
@@ -541,8 +563,8 @@
    {
     "master": "qkd_seq",
     "module": "ot_qkvd_kv_seq",
-    "rtl_ports": 43,
-    "die_ports": 29,
+    "rtl_ports": 45,
+    "die_ports": 33,
     "classed": {}
    },
    {
@@ -581,12 +603,13 @@
    "qkd_embgw": "ot_qfd_emb_gw + the gateway link side (r21c hub link FIFOs)",
    "qkd_host": "qfd_io_host successor (hing_qfd ingest) + ot_qfd_link_adapter",
    "qkd_pll": "vendor PLL + ot_qwen_sys_rst_seq",
-   "qkd_ctrl": "qfd_ctrl (r21c element; pcport KVW 2: KV write side-band from the CDC completion, no new die port)",
+   "qkd_ctrl": "qfd_ctrl (r21c element; pcport KVW 2: KV write side-band from the CDC completion; kc: the stream-command word from qkd_seq -> async FIFO -> hclk ot_qkvd_kcmd_tap chain -> the 32 per-PC heads)",
+   "qkd_ctrl_n": "as qkd_ctrl, N-stack pin plan (kc on the N face)",
    "qkd_ckbump": "clock / reset bump pair to the ROM die (pad cell, no logic: by design)"
   }
  },
  "pin_reach": {
-  "hops": 1764,
+  "hops": 1912,
   "reach_um": 504.0,
   "violations": 0,
   "worst": []
@@ -1470,7 +1493,7 @@
    "d2d_fdi": 0,
    "d2d_dn": 0,
    "d2d_up": 0,
-   "aq_WS": 35,
+   "aq_WS": 34,
    "lt_WS": 2,
    "ap_WS": 6,
    "am_WS": 7,
@@ -1619,8 +1642,9 @@
    "krq_WS_7": 7,
    "krs_WS_7": 6,
    "kvn_WS": 54,
+   "kc_WS": 66,
    "emf_WS": 31,
-   "emr_WS": 30,
+   "emr_WS": 29,
    "ing_WS": 4,
    "aq_WN": 3,
    "lt_WN": 1,
@@ -1771,8 +1795,9 @@
    "krq_WN_7": 7,
    "krs_WN_7": 6,
    "kvn_WN": 23,
+   "kc_WN": 10,
    "emf_WN": 5,
-   "emr_WN": 5,
+   "emr_WN": 4,
    "ing_WN": 31,
    "aq_ES": 33,
    "lt_ES": 1,
@@ -1923,6 +1948,7 @@
    "krq_ES_7": 6,
    "krs_ES_7": 7,
    "kvn_ES": 53,
+   "kc_ES": 65,
    "emf_ES": 29,
    "emr_ES": 31,
    "ing_ES": 4,
@@ -2075,26 +2101,27 @@
    "krq_EN_7": 6,
    "krs_EN_7": 7,
    "kvn_EN": 22,
+   "kc_EN": 9,
    "emf_EN": 4,
    "emr_EN": 5,
    "ing_EN": 30,
    "ares": 25,
    "hs": 25,
    "d2df": 0,
-   "kst": 53,
+   "kst": 52,
    "hf": 25,
    "af_WS": 34,
    "mf_WS": 30,
    "af_WN": 2,
    "mf_WN": 4,
-   "af_ES": 35,
-   "mf_ES": 31,
-   "af_EN": 4,
+   "af_ES": 34,
+   "mf_ES": 32,
+   "af_EN": 3,
    "mf_EN": 4,
    "gq": 0,
    "gr": 0,
    "hc": 53,
-   "tk": 53,
+   "tk": 52,
    "host_fdi": 0,
    "wdurable_WS": 0,
    "wfault_WS": 0,

@@ -118,6 +118,8 @@ foreach cn $ot_ir_real {
     puts "OT_IOREF clock-port $sn ($cn): data input delays dropped"
   }
 }
+set ot_ir_real_src {}
+foreach cn $ot_ir_real { foreach s [get_property [get_clocks $cn] sources] { lappend ot_ir_real_src [get_full_name $s] } }
 set ot_ir_bnd [dict create]
 set ot_ir_din [all_inputs -no_clocks]
 if {[llength $ot_ir_din]} {
@@ -128,18 +130,70 @@ if {[llength [all_outputs]]} {
   foreach pe [find_timing_paths -path_delay max -from [all_registers -clock_pins] -to [all_outputs] -group_path_count 200000 -endpoint_path_count 100000] {
     dict set ot_ir_bnd [regsub {/[^/]+$} [get_full_name [get_property $pe startpoint]] {}] 1 }
 }
+# CLOCK-CLASS 2026-10-13 (export-sdc; smh_tile_eg r10 diagnosis codex/hbm-sm-cluster 4a8f09870): ONE boundary number per
+# clock is wrong for a block whose boundary registers sit on two clock classes of the same port clock -- smh_tile_eg:
+# 9 flops + the ICG on the raw clk net (0.5 ps) beside 967 flops behind the ICG and the spine (TT 1871..1902): the
+# reference (boundary mean 1425.5; link-budget midrange 950.6) matched no flop and the raw-launched cgo output read a
+# false -1381.5 ps hold, raw-captured cgi a false -1533 setup.  The die delivers each LINK's two ends on matching
+# classes (cgo -> next tile's cgi: raw to raw), so each port is referenced to the class of the registers that launch /
+# capture it:
+#   * the standard-cell boundary registers of a real clock are split into classes wherever two neighbouring arrivals
+#     are more than OT_IOREF_CLASS_GAP apart (default the larger of 0.25 T and 150 ps: far beyond any tree skew);
+#   * the virtual clocks move to the DOMINANT class's mean (most boundary registers; one class = the old behaviour,
+#     bit for bit);
+#   * a port whose registers are all in another class k keeps its clock and has every IO delay on a moved virtual clock
+#     or on the real clock itself (references baked into the value) re-issued at  input: value + (Lk - L0)   output: value - (Lk - L0)  (-min and -max alike) = referenced to Lk;
+#   * a port reaching registers of SEVERAL classes cannot have one reference: it stays on the dominant class and is
+#     reported (OT_IOREF_CLASS mixed ...): that is a real structural finding (smh rst_n -> ICG ENA + gated flops).
+# The applied adjustment is kept in ::ot_cls_adj ("in|out,clock,port"), so a second read of this file (the verdict reads
+# it twice) or physical/common_flow/link_budget_consistent.sdc's own class split before it is not applied twice.
+# OT_IOREF_CLASS=0 (env) disables the split.  Hard-macro clock pins never form a class (their internal insertion is
+# in the view).
+proc ot_ir_env {n d} { expr {[info exists ::env($n)] && $::env($n) ne "" ? $::env($n) : $d} }
+# sorted arrivals -> list of {lo hi} class intervals
+proc ot_ir_split {vals gap} {
+  set out {}; set lo ""; set hi ""
+  foreach v [lsort -real $vals] {
+    if {$lo eq ""} { set lo $v; set hi $v; continue }
+    if {$v - $hi > $gap} { lappend out [list $lo $hi]; set lo $v }
+    set hi $v
+  }
+  if {$lo ne ""} { lappend out [list $lo $hi] }
+  return $out
+}
+proc ot_ir_class_of {v cls} {
+  # nearest class interval
+  set best 0; set bd ""
+  set i 0
+  foreach c $cls {
+    lassign $c lo hi
+    set d [expr {$v < $lo ? $lo - $v : ($v > $hi ? $v - $hi : 0.0)}]
+    if {$bd eq "" || $d < $bd} { set bd $d; set best $i }
+    incr i
+  }
+  return $best
+}
+proc ot_ir_is_std_reg {p} {
+  set c [get_cells -quiet -of_objects $p]
+  if {![llength $c]} { return 0 }
+  regexp {^(DFF|DHL|DLL|SDF|ASYNC|ICG)} [get_property $c ref_name]
+}
 set ot_ir_ins [dict create]
 set ::ot_ir_moved [dict create]
 set ot_ir_nreg [dict create]
+set ot_ir_cls [dict create]    ;# real clock -> {classes dominant {class -> mean lo hi n}}  (only with >= 2 classes)
+set ot_ir_arrof [dict create]  ;# real clock -> {register cell -> clock arrival}
 foreach cn $ot_ir_real {
-  set b {}; set a {}
+  set b {}; set a {}; set ot_ir_bs {}; set ot_ir_bo {}; set ot_ir_ao [dict create]
   array unset ot_ir_e; array set ot_ir_e {neg 0 noarc 0 half 0}
   foreach p [all_registers -clock_pins -clock [get_clocks $cn]] {
     set v [ot_ir_arr $p $cn]
     if {$v eq "" || $v eq "INF" || $v eq "-INF"} continue
     lappend a $v
+    dict set ot_ir_ao [regsub {/[^/]+$} [get_full_name $p] {}] $v
     if {[dict exists $ot_ir_bnd [regsub {/[^/]+$} [get_full_name $p] {}]]} {
       lappend b $v
+      if {[ot_ir_is_std_reg $p]} { lappend ot_ir_bs $v } else { lappend ot_ir_bo $v }
       lassign $::ot_ir_last t sh
       if {$t eq "f"} { incr ot_ir_e(neg) }
       if {$t eq ""} { incr ot_ir_e(noarc) }
@@ -148,6 +202,28 @@ foreach cn $ot_ir_real {
   }
   set use [expr {[llength $b] ? $b : $a}]
   if {![llength $use]} continue
+  dict set ot_ir_arrof $cn $ot_ir_ao
+  if {[ot_ir_env OT_IOREF_CLASS 1] ne "0" && [llength $ot_ir_bs] > 1} {
+    set ot_ir_T [get_property [get_clocks $cn] period]
+    set ot_ir_gap [ot_ir_env OT_IOREF_CLASS_GAP [expr {max(0.25 * $ot_ir_T, 150.0)}]]
+    set ot_ir_cl [ot_ir_split $ot_ir_bs $ot_ir_gap]
+    if {[llength $ot_ir_cl] > 1} {
+      # per class: the standard-cell boundary registers in it; the dominant class also keeps every other boundary sink
+      set ot_ir_m [dict create]
+      foreach v $ot_ir_bs { dict lappend ot_ir_m [ot_ir_class_of $v $ot_ir_cl] $v }
+      set ot_ir_dom 0
+      dict for {k vs} $ot_ir_m { if {[llength $vs] > [llength [dict get $ot_ir_m $ot_ir_dom]]} { set ot_ir_dom $k } }
+      foreach v $ot_ir_bo { dict lappend ot_ir_m $ot_ir_dom $v }
+      set ot_ir_st [dict create]
+      dict for {k vs} $ot_ir_m {
+        set s 0.0; foreach v $vs { set s [expr {$s + $v}] }
+        set u [lsort -real $vs]
+        dict set ot_ir_st $k [list [expr {$s / [llength $vs]}] [lindex $u 0] [lindex $u end] [llength $vs]]
+      }
+      dict set ot_ir_cls $cn [list $ot_ir_cl $ot_ir_dom $ot_ir_st]
+      set use [dict get $ot_ir_m $ot_ir_dom]
+    }
+  }
   set s 0.0; foreach v $use { set s [expr {$s + $v}] }
   set u [lsort -real $use]
   dict set ot_ir_ins $cn [list [expr {$s / [llength $use]}] [lindex $u 0] [lindex $u end] [llength $use] [expr {[llength $b] ? "boundary" : "all"}]]
@@ -189,6 +265,96 @@ foreach c [all_clocks] {
   puts [format "OT_IOREF %s %s mean %.1f min %.1f max %.1f n %d %s" $vn $rc $L $lo $hi $n $kind]
   dict set ::ot_ir_moved $vn [list $L $rc]
 }
+# CLOCK-CLASS: re-reference the ports of the non-dominant classes (see above)
+if {![info exists ::ot_cls_adj]} { set ::ot_cls_adj [dict create] }
+set ot_ir_want [dict create]   ;# "in|out,virtual clock,port" -> adjustment wanted now
+proc ot_ir_port_classes {port dir cn cls arrof} {
+  # classes of the registers of real clock CN that PORT reaches (in) / is launched from (out)
+  set ks [dict create]
+  if {$dir eq "in"} { set pins [get_fanout -from $port -flat -endpoints_only] } else { set pins [get_fanin -to $port -flat -startpoints_only] }
+  foreach q $pins {
+    set n [get_full_name $q]
+    if {[string first / $n] < 0} continue
+    set c [regsub {/[^/]+$} $n {}]
+    if {[dict exists $arrof $c]} { dict set ks [ot_ir_class_of [dict get $arrof $c] $cls] 1 }
+  }
+  return [lsort -integer [dict keys $ks]]
+}
+dict for {ot_ir_rc ot_ir_c} $ot_ir_cls {
+  lassign $ot_ir_c ot_ir_cl ot_ir_dom ot_ir_st
+  set ot_ir_ao [dict get $ot_ir_arrof $ot_ir_rc]
+  set ot_ir_L0 [lindex [dict get $ot_ir_st $ot_ir_dom] 0]
+  set ot_ir_vcs {}
+  # the real clock itself too: a sign-off SDC that bakes the reference into delays on the real clock (ref_tile /
+  # qwen_die_masters io_ref_skew.sdc: input max = 0.2 T + L(median pin flop) + skew on core_clk; smh cgi 2139.4 = the
+  # gated pin-flop median, captured by raw flops) is moved by the same class distance
+  set ot_ir_vcs [list $ot_ir_rc]
+  dict for {vn v} $::ot_ir_moved { if {[lindex $v 1] eq $ot_ir_rc} { lappend ot_ir_vcs $vn } }
+  # candidate ports: those touching a non-dominant boundary register (one fan-in / fan-out sweep per class)
+  set ot_ir_ci [dict create]; set ot_ir_co [dict create]
+  dict for {c v} $ot_ir_ao {
+    if {![dict exists $ot_ir_bnd $c]} continue
+    set k [ot_ir_class_of $v $ot_ir_cl]
+    if {$k == $ot_ir_dom} continue
+    set cell [get_cells -quiet $c]
+    if {![llength $cell] || ![regexp {^(DFF|DHL|DLL|SDF|ASYNC|ICG)} [get_property $cell ref_name]]} continue
+    foreach q [get_pins -quiet -of_objects $cell] {
+      set dq [get_property $q direction]
+      if {$dq eq "input"} {
+        foreach s [get_fanin -to $q -flat -startpoints_only] { set sn [get_full_name $s]; if {[string first / $sn] < 0 && [llength [get_ports -quiet $sn]]} { dict set ot_ir_ci $sn 1 } }
+      } elseif {$dq eq "output"} {
+        foreach s [get_fanout -from $q -flat -endpoints_only] { set sn [get_full_name $s]; if {[string first / $sn] < 0 && [llength [get_ports -quiet $sn]]} { dict set ot_ir_co $sn 1 } }
+      }
+    }
+  }
+  set ot_ir_cnt [dict create]; set ot_ir_mixed {}
+  foreach {dir cand} [list in $ot_ir_ci out $ot_ir_co] {
+    foreach pn [dict keys $cand] {
+      set port [get_ports $pn]
+      if {[get_property $port direction] ne [expr {$dir eq "in" ? "input" : "output"}]} continue
+      if {[lsearch -exact $ot_ir_real_src $pn] >= 0} continue
+      set ks [ot_ir_port_classes $port $dir $ot_ir_rc $ot_ir_cl $ot_ir_ao]
+      if {[llength $ks] != 1} { lappend ot_ir_mixed "$pn\($dir: [join $ks +]\)"; continue }
+      set k [lindex $ks 0]
+      if {$k == $ot_ir_dom} continue
+      set d [expr {[lindex [dict get $ot_ir_st $k] 0] - $ot_ir_L0}]
+      foreach vn $ot_ir_vcs { dict set ot_ir_want "$dir,$vn,$pn" [expr {$dir eq "in" ? $d : -$d}] }
+      dict incr ot_ir_cnt "$k,$dir"
+    }
+  }
+  foreach k [lsort -integer [dict keys $ot_ir_st]] {
+    lassign [dict get $ot_ir_st $k] L lo hi n
+    puts [format "OT_IOREF_CLASS %s class %d%s mean %.1f min %.1f max %.1f n %d ports_in %d ports_out %d" $ot_ir_rc $k \
+      [expr {$k == $ot_ir_dom ? " dominant" : ""}] $L $lo $hi $n \
+      [expr {[dict exists $ot_ir_cnt "$k,in"] ? [dict get $ot_ir_cnt "$k,in"] : 0}] [expr {[dict exists $ot_ir_cnt "$k,out"] ? [dict get $ot_ir_cnt "$k,out"] : 0}]]
+  }
+  if {[llength $ot_ir_mixed]} { puts "OT_IOREF_CLASS $ot_ir_rc mixed [llength $ot_ir_mixed] ports on several classes (kept on the dominant class): [lrange $ot_ir_mixed 0 7]" }
+}
+# apply: every (port, virtual clock) whose wanted adjustment differs from the one already in its delays
+set ot_ir_todo [dict create]
+dict for {k d} $ot_ir_want { if {![dict exists $::ot_cls_adj $k] || abs([dict get $::ot_cls_adj $k] - $d) > 1e-6} { dict set ot_ir_todo $k $d } }
+dict for {k d} $::ot_cls_adj { if {![dict exists $ot_ir_want $k] && abs($d) > 1e-6} { dict set ot_ir_todo $k 0.0 } }
+if {[dict size $ot_ir_todo]} {
+  set ot_ir_tmp [file join [expr {[info exists ::env(TMPDIR)] ? $::env(TMPDIR) : "/tmp"}] "ot_cls_[pid]_[clock clicks].sdc"]
+  write_sdc $ot_ir_tmp
+  set fh [open $ot_ir_tmp r]; set ot_ir_txt [read $fh]; close $fh; file delete $ot_ir_tmp
+  set ot_ir_redo {}; set ot_ir_un [dict create]
+  foreach ln [split $ot_ir_txt "\n"] {
+    if {![regexp {^set_(input|output)_delay\s+(\S+)\s+(.*-clock \[get_clocks \{([^\}]+)\}\].*?)(\[get_ports \{(.+)\}\])\s*$} $ln -> io val mid ck tgt pn]} continue
+    set k "[expr {$io eq "input" ? "in" : "out"}],$ck,$pn"
+    if {![dict exists $ot_ir_todo $k]} continue
+    set prev [expr {[dict exists $::ot_cls_adj $k] ? [dict get $::ot_cls_adj $k] : 0.0}]
+    lappend ot_ir_redo [list $io [expr {$val - $prev + [dict get $ot_ir_todo $k]}] $mid $tgt]
+    dict set ot_ir_un $k [list $io $ck $pn]
+  }
+  dict for {k v} $ot_ir_un {
+    lassign $v io ck pn
+    unset_${io}_delay -clock $ck [get_ports $pn]; unset_${io}_delay -clock $ck -clock_fall [get_ports $pn]
+  }
+  foreach r $ot_ir_redo { lassign $r io val mid tgt; eval "set_${io}_delay $val $mid $tgt" }
+  dict for {k d} $ot_ir_todo { dict set ::ot_cls_adj $k $d }
+  puts [format "OT_IOREF_CLASS %d IO delays re-referenced (%d port/clock pairs)" [llength $ot_ir_redo] [dict size $ot_ir_un]]
+}
 # PINFLOP-INPUT (drive-0849 2026-10-10, coordinator class-1 extension): ROUTE-TIME ONLY (env OT_IOREF_INPUT_PF=1, exported
 # by the closure loop for calibrate / route stages; never set for the verdict re-STA or the post-route ECOs).  The input
 # side of every moved insertion-reference clock is re-referenced from the boundary-register mean L to the mean arrival
@@ -222,16 +388,23 @@ if {[info exists ::env(OT_IOREF_INPUT_PF)] && $::env(OT_IOREF_INPUT_PF) eq "1" &
         set nets $next
       }
     }
-    set ot_pf_v {}
-    set ot_pf_rc [lindex [lindex [dict values $::ot_ir_moved] 0] 1]
-    # svc-fix 2026-10-10 (SE_s3 pspr GRT: 227 "pin flops" mean 329.6 vs boundary 650 -> 3,098 I2R at -299 and a
-    # stalled hold repair; routed I2R hold +18.9): only pin flops clocked by the moved reference clock -- the
-    # forwarded-clock FIFO capture flops (fq / fe / fkq, insertion from their own pins) are not on that tree
-    set ot_pf_pins [lmap p $ot_pf_pins { expr {[lsearch -exact [lmap c [get_property $p clocks] {get_full_name $c}] $ot_pf_rc] >= 0 ? $p : [continue]} }]
-    foreach p $ot_pf_pins { set v [ot_ir_arr $p $ot_pf_rc]; if {$v ne "" && $v ne "INF" && $v ne "-INF" && [string is double -strict $v]} { lappend ot_pf_v $v } }
-    if {[llength $ot_pf_v]} {
-      set s 0.0; foreach v $ot_pf_v { set s [expr {$s + $v}] }
-      set Lpf [expr {$s / [llength $ot_pf_v]}]
+    # mtp-wfc 2026-10-11 (dsfd_wfc_crp, two port clocks ck / ckv): the mean is PER REAL CLOCK.  It was taken over the pin
+    # flops of the FIRST moved clock only (core_clk, 288.8) and applied to every moved clock's inputs: the ser-domain
+    # inputs (vclk_s, boundary mean 215.1) were shifted +73.7 ps late, the FF hold scene saw +10 on f_swa / f_ksrd /
+    # credits and never repaired them, the verdict (no PF) read -33.  Each moved virtual clock now shifts by the pin-flop
+    # mean of ITS real clock (only pin flops on that tree: svc-fix 2026-10-10, forwarded-clock capture flops excluded); a
+    # clock with no pin flops keeps its boundary reference.
+    set ot_pf_rcs [lsort -unique [lmap v [dict values $::ot_ir_moved] {lindex $v 1}]]
+    set ot_pf_m [dict create]
+    foreach rc $ot_pf_rcs {
+      set vs {}
+      foreach p $ot_pf_pins {
+        if {[lsearch -exact [lmap c [get_property $p clocks] {get_full_name $c}] $rc] < 0} continue
+        set v [ot_ir_arr $p $rc]; if {$v ne "" && $v ne "INF" && $v ne "-INF" && [string is double -strict $v]} { lappend vs $v }
+      }
+      if {[llength $vs]} { set s 0.0; foreach v $vs { set s [expr {$s + $v}] }; dict set ot_pf_m $rc [list [expr {$s / [llength $vs]}] [llength $vs]] }
+    }
+    if {[dict size $ot_pf_m]} {
       set ot_pf_tmp [file join [expr {[info exists ::env(TMPDIR)] ? $::env(TMPDIR) : "/tmp"}] "ot_pf_[pid]_[clock clicks].sdc"]
       write_sdc $ot_pf_tmp
       set fh [open $ot_pf_tmp r]; set txt [read $fh]; close $fh; file delete $ot_pf_tmp
@@ -239,13 +412,20 @@ if {[info exists ::env(OT_IOREF_INPUT_PF)] && $::env(OT_IOREF_INPUT_PF) eq "1" &
       foreach ln [split $txt "\n"] {
         if {![regexp {^set_input_delay\s+(\S+)\s+(.*-clock \[get_clocks \{([^\}]+)\}\].*?)(\[get_ports .*\])\s*$} $ln -> val mid ck tgt]} continue
         if {![dict exists $::ot_ir_moved $ck]} continue
-        set d [expr {$Lpf - [lindex [dict get $::ot_ir_moved $ck] 0]}]
+        lassign [dict get $::ot_ir_moved $ck] L rc
+        if {![dict exists $ot_pf_m $rc]} continue
+        # CLOCK-CLASS: a port referenced to its own (non-dominant) class keeps that reference
+        if {[regexp {\[get_ports \{(.+)\}\]} $tgt -> ot_pf_pn] && [dict exists $::ot_cls_adj "in,$ck,$ot_pf_pn"] && abs([dict get $::ot_cls_adj "in,$ck,$ot_pf_pn"]) > 1e-6} continue
+        set d [expr {[lindex [dict get $ot_pf_m $rc] 0] - $L}]
         lappend redo [list [expr {$val + $d}] $mid $tgt]
         dict set ports "$ck|$tgt" [list $ck $tgt]
       }
       dict for {k v} $ports { lassign $v ck tgt; unset_input_delay -clock $ck [subst $tgt]; unset_input_delay -clock $ck -clock_fall [subst $tgt] }
       foreach r $redo { lassign $r val mid tgt; eval "set_input_delay $val $mid $tgt" }
-      puts [format "OT_IOREF_PF input pin flops %d mean %.1f: %d input delays re-referenced (ports %d)" [llength $ot_pf_v] $Lpf [llength $redo] [dict size $ports]]
+      dict for {rc v} $ot_pf_m {
+        puts [format "OT_IOREF_PF %s input pin flops %d mean %.1f" $rc [lindex $v 1] [lindex $v 0]]
+      }
+      puts [format "OT_IOREF_PF %d input delays re-referenced (ports %d)" [llength $redo] [dict size $ports]]
     } else { puts "OT_IOREF_PF no input pin flops: input reference unchanged" }
   } ot_pf_err]} { puts "OT_IOREF_PF WARNING: $ot_pf_err -- input reference unchanged"; if {[info exists ::env(OT_IOREF_PF_DEBUG)]} { puts $::errorInfo } }
 }

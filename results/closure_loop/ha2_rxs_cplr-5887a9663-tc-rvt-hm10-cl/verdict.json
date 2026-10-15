@@ -1,0 +1,237 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "ha2_rxs_cplr-5887a9663-tc-rvt-hm10-cl",
+ "block": "ot_ha2_truecredit_rx_s_phys",
+ "owner": "Claude:hbm-phys-1010 [link]",
+ "source_branch": "claude/hbmphys-ha2-20261010",
+ "record_branch": "codex/closure-record-ha2_rxs_cplr-5887a9663-tc-rvt-hm10-cl",
+ "source_commit": "5887a96639d5db3f4095a8474825345a9ede4dfd",
+ "host": "ot-epyc3",
+ "run_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_rxs_cplr-5887a9663-tc-rvt-hm10-cl",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {},
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 2.61,
+  "ff_ps": 10.97,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {},
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -224.16,
+  "ss_sensitivity_tns_ps": -39705.5,
+  "corner_sta_tt": "/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_rxs_cplr-5887a9663-tc-rvt-hm10-cl/routes/ha2_rxs_cplr_5887a9663_tc_rvt_hm10_cl/corner_sta.json",
+  "post_sdc": [
+   "physical/ha2_truecredit_20261007/screening_signoff.sdc",
+   "physical/ha2_truecredit_20261007/rx_check_pins_signal_only.tcl",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_rxs_cplr-5887a9663-tc-rvt-hm10-cl/routes/ha2_rxs_cplr_5887a9663_tc_rvt_hm10_cl/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_rxs_cplr-5887a9663-tc-rvt-hm10-cl/routes/ha2_rxs_cplr_5887a9663_tc_rvt_hm10_cl/work/orfs/logs/asap7/opentallas_ot_ha2_truecredit_rx_s_phys_asap7_ha2_tcs_rx/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_rxs_rr_exact": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "_r7_c4_d7 PASS\nf7_r7_c16_d20 PASS\nf1_r64_c8_d3 PASS\nf1_r64_c1_d0 PASS\nf1_r64_c4_d7 PASS\nf1_r64_c16_d20 PASS\nf64_r1_c8_d3 PASS\nf64_r1_c1_d0 PASS\nf64_r1_c4_d7 PASS\nf64_r1_c16_d20 PASS\nwrap_tag8 PASS\nmut_ignore_reservations CAUGHT\nmut_corrupt_retire_id CAUGHT\nmut_corrupt_forward_id CAUGHT\nmut_read_addr_off_by_one CAUGHT\nmut_credit_over_issue CAUGHT\nmut_spurious_credit_overflow CAUGHT\nmut_deliver_skips_rreg_stage CAUGHT\nmut_credit_return_dropped CAUGHT\nreset_flight PASS\nreset_long_flight PASS\nreset_return_pipe_removed PASS\nreset_stale_sender_credit PASS\nreset_stale_credit_line PASS\nHA2_RXS PASSED\n",
+   "track": "parallel"
+  },
+  "bench_rxs_rr_neg_skip_rreg": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "HA2_RXS_NEG_DETECTED mutant=9\n",
+   "track": "parallel"
+  },
+  "bench_rxs_rr_neg_credit_dropped": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "HA2_RXS_NEG_DETECTED mutant=8\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {},
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 2251,
+    "mean": 944.8,
+    "min": 925.5,
+    "max": 1002.0
+   },
+   "all": {
+    "n": 5811,
+    "mean": 971.6,
+    "min": 925.2,
+    "max": 1117.3
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 2251,
+    "mean": 611.4,
+    "min": 594.9,
+    "max": 662.8
+   },
+   "all": {
+    "n": 5811,
+    "mean": 631.5,
+    "min": 594.7,
+    "max": 736.6
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 741,
+   "CK_SS_ALL_MEAN": 764,
+   "CK_SS_MIN": 723,
+   "CK_SS_ALL_MIN": 723,
+   "CK_SS_MAX": 794,
+   "CK_SS_ALL_MAX": 886,
+   "CK_TT_MEAN": 741,
+   "CK_TT_ALL_MEAN": 764,
+   "CK_TT_MIN": 723,
+   "CK_TT_ALL_MIN": 723,
+   "CK_TT_MAX": 794,
+   "CK_TT_ALL_MAX": 886,
+   "CK_FF_MEAN": 611,
+   "CK_FF_ALL_MEAN": 632,
+   "CK_FF_MIN": 595,
+   "CK_FF_ALL_MIN": 595,
+   "CK_FF_MAX": 663,
+   "CK_FF_ALL_MAX": 737,
+   "CK_SSLIB_MEAN": 945,
+   "CK_SSLIB_MIN": 926,
+   "CK_SSLIB_MAX": 1002,
+   "CK_SSLIB_ALL_MEAN": 972,
+   "CK_SSLIB_ALL_MIN": 925,
+   "CK_SSLIB_ALL_MAX": 1117,
+   "CK_ROUTE_REF": "TT"
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": 2,
+ "status": "CLOSED",
+ "closed_at": "2026-10-10T22:22:04-07:00",
+ "job_spec": {
+  "name": "ha2_rxs_cplr-5887a9663-tc-rvt-hm10-cl",
+  "block": "ot_ha2_truecredit_rx_s_phys",
+  "owner": "Claude:hbm-phys-1010 [link]",
+  "purpose": "[link] HA2 rx_s cplp = cplh a913e55f1 + 9896e5d5b: send_v / return_v flops drive only their ports (idle reads kept twins) and fault from per-lane registered bads_q. cplh hm0-f9a routed-insertion TT -25.81 (return_v[0] -> port, flop also fed idle, 220 ps wire) / reg2reg -5.12 (lane1 bad -> fault, 125 ps wire); VT-swap reached -5.12. Gate PASS + neg 9 / neg 8 FAIL (EPYC3 /srv/opentallas-scratch/claude/ha2-bench-1010). cplq 33641ee9b: keep on the port flops too (cplp merged return_v/send_v into rv_i/sv_i; TT -546.88 send_data / -128.87 quiet). cplr: + per-lane registered idle (quiet -128.87 class).",
+  "hosts": [
+   "ot-epyc3",
+   "ot-epyc4",
+   "ot-epyc2",
+   "ot-epyc1tb",
+   "ot-pve1"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "source": {
+   "branch": "claude/hbmphys-ha2-20261010",
+   "commit": "5887a96639d5db3f4095a8474825345a9ede4dfd",
+   "paths": [
+    "tools",
+    "rtl",
+    "physical/ha2_truecredit_20261007",
+    "physical/abi3",
+    "physical/common_flow",
+    "tests/test_ha2_truecredit_signal_pins.py",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+    "results/uarch/ha2_rx_capture_20261010"
+   ]
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "rxs_rr_exact",
+     "cmd": "OT_HA2_RXS=ot_ha2_truecredit_rxs_cp python3 tools/ha2_rxs_gate.py --out {RUN}/bench_rxs",
+     "expect": "pass",
+     "pass_regex": "HA2_RXS PASSED",
+     "threads": 1,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "rxs_rr_neg_skip_rreg",
+     "cmd": "OT_HA2_RXS=ot_ha2_truecredit_rxs_cp python3 tools/ha2_rxs_gate.py --out {RUN}/bench_neg9 --neg 9",
+     "expect": "fail",
+     "fail_regex": "HA2_RXS_NEG_DETECTED",
+     "threads": 1,
+     "peak_ram_gb": 2,
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "rxs_rr_neg_credit_dropped",
+     "cmd": "OT_HA2_RXS=ot_ha2_truecredit_rxs_cp python3 tools/ha2_rxs_gate.py --out {RUN}/bench_neg8 --neg 8",
+     "expect": "fail",
+     "fail_regex": "HA2_RXS_NEG_DETECTED",
+     "threads": 1,
+     "peak_ram_gb": 2,
+     "needs": [
+      "iverilog"
+     ]
+    }
+   ],
+   "calibrate": {
+    "cmd": "export HA2_HALO=\"10 10\"; export HA2_CORE_INSET=12; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; HA2_RX_LOCAL_TRANSPORT=1 HA2_HM=0.010 HA2_RX_SOURCES=rx_s_cp_sources.txt python3 tools/ha2_truecredit_rxp_physical.py --variant s --threads 8 --run {RUN}/routes/{LABEL}_cal --cts-only",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "threads": 8,
+    "peak_ram_gb": 24
+   },
+   "route": {
+    "cmd": "export HA2_HALO=\"10 10\"; export HA2_CORE_INSET=12; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; HA2_RX_LOCAL_TRANSPORT=1 HA2_HM=0.010 HA2_RX_SOURCES=rx_s_cp_sources.txt python3 tools/ha2_truecredit_rxp_physical.py --variant s --threads 8 --run {RUN}/routes/{LABEL}",
+    "ok": "test -s {RUN}/routes/{LABEL}/corner_sta.json && test \"$(cat {RUN}/routes/{LABEL}/build.exit)\" = 0 && test \"$(cat {RUN}/routes/{LABEL}/corner.exit)\" = 0",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log",
+     "{RUN}/routes/{LABEL}/corner.log"
+    ],
+    "peak_ram_gb": 24
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/physical.json {RUN}/routes/{LABEL}/launch.json {CL}/calib.json {RUN}/record/"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [],
+   "post_sdc": [
+    "physical/ha2_truecredit_20261007/screening_signoff.sdc",
+    "physical/ha2_truecredit_20261007/rx_check_pins_signal_only.tcl"
+   ],
+   "macros": [
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2"
+   ]
+  },
+  "cycles_added": 2,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "merge_target": null,
+  "cycles_note": "Send +2 edges vs original SRAM receiver /+1vsRREG. Return/credit +3vsoriginal /+2vsRREG;34-bitreturnboundary adds1vsCAP. Fullshape measured send7 return8 II1 both544-bitlanes,CRD8."
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}
