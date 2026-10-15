@@ -49,3 +49,9 @@ Reproduce current exact assigned-pin comparison:
 ```sh
 python3 tools/qwen_split/exact_system_geometry.py results/arch/qwen_split_compute_1014/system_geometry/inputs/current_generated_pins.json.gz results/arch/qwen_split_compute_1014/system_geometry
 ```
+
+## Source-preserving structural SU grouping candidate
+
+The actual hierarchy supplies a coherent starting partition: eight octet clusters. Each contains its eight lane cohorts (head, exp, reciprocal, rsqrt, lane relay/control: 40 roots), their two four-lane alignment groups (2 roots), and the corresponding regional eight-lane reducer (1 root). Thus each octet has 43 roots; eight octets plus the reducer tail and main controller account for all 346. This matches the existing eight-lane broadcast, four-lane alignment and eight-lane reduction hierarchy and preserves arithmetic order. The grouping adds no stages by itself. It is a connectivity partition candidate, with physical homes still absent; source hardening and actual lane/head/SFU pins, glue/alignment outlines, clock insertion and boundary channels must establish a viable arrangement. It is not an area-only fit of 265 known rectangles into an old box.
+
+Conditional wider-NK sensitivity is recorded separately: retaining all 48 field columns and the actual DVM strip while increasing each tile 449.28→481.68 µm adds 1.5552 mm to die width and about 40.338 mm² at current height. The resulting approximately 881.053 mm² exceeds the current 858 mm² budget. A frozen 522.288 µm pitch would leave only 40.608 µm for a proposed 64.8 µm DVM leaf. Therefore any such safer tile requires a joint field/spine/height redesign or an explicit system trade; it cannot be hidden in the old narrow gap.
