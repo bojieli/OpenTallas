@@ -17,6 +17,15 @@ def generate():
                       'input wire clk,rst_n,input wire [2:0] clk_rom,clk_outputs, input wire [84:0] c_cmd,',1)
     assert text.count('u_rom(.clk(clk),')==1
     text=text.replace('u_rom(.clk(clk),','u_rom(.clk(clk_rom[bank]),',1)
+    # Four local release trees replace the single external reset fanout.
+    # Normal data/calendar stages are unchanged; initialization releases3edges later.
+    start=text.index(' localparam integer CB=468,RW=564;')
+    text=text[:start]+re.sub(r'\brst_n\b','rst_state',text[start:])
+    reset=' wire rst_state; wire [2:0] rst_output;\n'
+    reset+=' ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) rst_core(.clk(clk),.rst_n_in(rst_n),.rst_n(rst_state));\n'
+    for i in range(3):
+        reset+=' ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) rst_out'+str(i)+'(.clk(clk_outputs['+str(i)+']),.rst_n_in(rst_n),.rst_n(rst_output['+str(i)+']));\n'
+    text=text[:start]+reset+text[start:]
     groups=[[],[],[]];offset=0
     for name,width in FIELDS:
         group=min(2,offset//156);offset+=width
@@ -29,8 +38,8 @@ def generate():
         text=re.sub(pattern,'',text,count=1)
     blocks=[]
     for group,fields in enumerate(groups):
-        blocks.append(' always @(posedge clk_outputs['+str(group)+'] or negedge rst_n)begin\n'+
-                      '  if(!rst_n)begin '+''.join(name+'<=0;' for name,_,_ in fields)+'end\n'+
+        blocks.append(' always @(posedge clk_outputs['+str(group)+'] or negedge rst_output['+str(group)+'])begin\n'+
+                      '  if(!rst_output['+str(group)+'])begin '+''.join(name+'<=0;' for name,_,_ in fields)+'end\n'+
                       '  else begin\n'+''.join('   '+line+'\n' for _,_,line in fields)+'  end\n end\n')
     assert text.count('endmodule')==1
     text=text.replace('endmodule',''.join(blocks)+'endmodule')
@@ -40,6 +49,6 @@ def generate():
     census=dict(base_sha256=digest,source=str(out.relative_to(ROOT)),source_sha256=hashlib.sha256(out.read_bytes()).hexdigest(),
                 clocks=['clk']+['clk_rom['+str(i)+']' for i in range(3)]+['clk_outputs['+str(i)+']' for i in range(3)],
                 output_groups=[dict(clock='clk_outputs['+str(i)+']',bits=sum(w for _,w,_ in fields),ports=[n for n,_,_ in fields]) for i,fields in enumerate(groups)],
-                added_data_edges=0,added_data_registers=0,rom_macros=3,qualification=False)
+                added_data_edges=0,added_data_registers=0,reset_relays=4,initialization_release_extra_edges=3,rom_macros=3,qualification=False)
     return census
 if __name__=='__main__':print(json.dumps(generate(),indent=2))

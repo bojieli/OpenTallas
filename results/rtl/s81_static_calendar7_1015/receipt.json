@@ -2,12 +2,13 @@
   "base_sha256": "ed584619c336e8340155d839eb0f119c115146b32a4fc83b3d3d68b8c5554490",
   "source": "rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller7.sv",
   "source_sha256": {
-    "tools/s81_static_collective/build_calendar7.py": "84830b7f06330c3c83a94ae3562942166ebd7fc708962c573aeaa325e121456a",
-    "rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller7.sv": "8254a83f87ceee4309d20b98ad9693fa1ddea6e3dcd37f61f218c5c770c557bc",
-    "tools/s81_static_collective/test_controller_image.py": "371d7dce9bfa730c530ed2692bd29a6bf93df0d30d88fd188b9ac7d2ad44ad2e",
+    "tools/s81_static_collective/build_calendar7.py": "52ef7c711c19f025104a9504d70d0f3fd098a2aeba7fe7bff30a4ee2ef20c36e",
+    "rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller7.sv": "6dd4bd25f052e0115ee1d26cfadb5716b0ef1899a35402524ae3ef383311211d",
+    "tools/s81_static_collective/test_controller_image.py": "50841451f493954c72e3f31fe56ca5b88e4b7bfebf7ba2c0922453291e1f9e14",
     "rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller.sv": "ed584619c336e8340155d839eb0f119c115146b32a4fc83b3d3d68b8c5554490",
     "tools/s81_static_collective/controller_image.py": "09c13d1b75f7076313866a5418bb73a16a48968cb85ca9a91682fdb0d7ba7947",
-    "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v": "a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b"
+    "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v": "a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
   },
   "clocks": [
     "clk",
@@ -88,11 +89,13 @@
   ],
   "added_data_edges": 0,
   "added_data_registers": 0,
+  "reset_relays": 4,
+  "initialization_release_extra_edges": 3,
   "rom_macros": 3,
   "qualification": false,
   "proof": {
     "host": "ot-agidock128",
-    "unit": "oth-ubuntu-362685-1792077380",
+    "unit": "oth-ubuntu-376201-1792077701",
     "terminal_exit": 0,
     "command": "python3 -m unittest test_controller_image.Check.test_rtl_calendar7_exact_and_clock_mutant",
     "positive": "All468 registered controls and completion/status compared to compiled actual3ROM image over two complete30-edge replays, including raw channel fields and descriptor/calendar/missingimage/oversize faults.",
@@ -105,6 +108,7 @@
       "stopped output register clock 2"
     ],
     "negative_result": "All six actual DUT clock disconnections cause the exact functional gate to fail.",
-    "scope": "Related-clock, equal phase component proof; no physical/native/die/calendar production qualification."
+    "scope": "Related-clock, equal phase component proof; no physical/native/die/calendar production qualification.",
+    "initialization": "Four actual per-root reset relays release3edges after external reset, before the same compiled command timeline starts."
   }
 }

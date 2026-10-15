@@ -66,6 +66,11 @@ module s81_static_calendar_controller7 #(
  output reg hc_assemble_slot,
  output wire busy
 );
+ wire rst_state; wire [2:0] rst_output;
+ ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) rst_core(.clk(clk),.rst_n_in(rst_n),.rst_n(rst_state));
+ ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) rst_out0(.clk(clk_outputs[0]),.rst_n_in(rst_n),.rst_n(rst_output[0]));
+ ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) rst_out1(.clk(clk_outputs[1]),.rst_n_in(rst_n),.rst_n(rst_output[1]));
+ ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) rst_out2(.clk(clk_outputs[2]),.rst_n_in(rst_n),.rst_n(rst_output[2]));
  localparam integer CB=468,RW=564;
  // Physical immutable controlpage: three actual4096x266 macros in width.
  // Macro q is synchronous, one enabled edge; row0 is fetched during idle,
@@ -79,7 +84,7 @@ module s81_static_calendar_controller7 #(
 `endif
  wire [797:0] macro_data;
  wire [11:0] macro_addr,macro_addr_n;
- wire macro_enable=rst_n && CONFIGURED;
+ wire macro_enable=rst_state && CONFIGURED;
  genvar bank;
  generate for(bank=0;bank<3;bank=bank+1)begin:ROM_BANK
   ot_rom_4096x266_m8
@@ -89,12 +94,12 @@ module s81_static_calendar_controller7 #(
    u_rom(.clk(clk_rom[bank]),.ce_in(macro_enable),.addr_in(macro_addr),.rd_out(macro_data[bank*266+:266]));
  end endgenerate
  reg rom_valid_q;
- always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)rom_valid_q<=0;else rom_valid_q<=macro_enable;
+ always @(posedge clk or negedge rst_state)begin
+  if(!rst_state)rom_valid_q<=0;else rom_valid_q<=macro_enable;
  end
  reg [84:0] c_cmd_q;
- always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)c_cmd_q<=0;else c_cmd_q<=c_cmd;
+ always @(posedge clk or negedge rst_state)begin
+  if(!rst_state)c_cmd_q<=0;else c_cmd_q<=c_cmd;
  end
  reg active,fault,online;reg [AW-1:0] cursor;
  wire [RW-1:0] entry=macro_data[RW-1:0];
@@ -116,11 +121,11 @@ module s81_static_calendar_controller7 #(
 `endif
  assign macro_addr_n=running && !entry[RW-2] && int'(current_row)<CYCLES-1 ?
                    12'(int'(current_row)+1):12'd0;
- wire enabled=rst_n && running && !fault && !datapath_fault && !row_bad;
+ wire enabled=rst_state && running && !fault && !datapath_fault && !row_bad;
  assign busy=active;
  assign c_st={online,fault};
- always @(posedge clk or negedge rst_n) begin
-  if(!rst_n)begin active<=0;fault<=0;online<=0;cursor<=0;c_done<=0;end
+ always @(posedge clk or negedge rst_state) begin
+  if(!rst_state)begin active<=0;fault<=0;online<=0;cursor<=0;c_done<=0;end
   else begin
    online<=CONFIGURED && rom_valid_q && entry[RW-1];
    c_done<=0;
@@ -136,8 +141,8 @@ module s81_static_calendar_controller7 #(
    end
   end
  end
- always @(posedge clk_outputs[0] or negedge rst_n)begin
-  if(!rst_n)begin read_slot<=0;read_row<=0;issue_slot<=0;tag<=0;seq<=0;last<=0;rankmask<=0;commit_slot<=0;commit_tag<=0;commit_seq<=0;commit_last<=0;commit_rankmask<=0;commit_rows<=0;end
+ always @(posedge clk_outputs[0] or negedge rst_output[0])begin
+  if(!rst_output[0])begin read_slot<=0;read_row<=0;issue_slot<=0;tag<=0;seq<=0;last<=0;rankmask<=0;commit_slot<=0;commit_tag<=0;commit_seq<=0;commit_last<=0;commit_rankmask<=0;commit_rows<=0;end
   else begin
    read_slot<=enabled ? entry[0 +: 1] : 1'd0;
    read_row<=enabled ? entry[1 +: 14] : 14'd0;
@@ -154,8 +159,8 @@ module s81_static_calendar_controller7 #(
    commit_rows<=enabled ? entry[123 +: 60] : 60'd0;
   end
  end
- always @(posedge clk_outputs[1] or negedge rst_n)begin
-  if(!rst_n)begin tx_beat_slot<=0;tx_phase<=0;tx_frame_slot<=0;rx_beat_slot<=0;rx_phase<=0;rx_frame_slot<=0;channel_tx_slot<=0;channel_tx_kind<=0;channel_tx_seq<=0;channel_tx_last<=0;channel_rx_slot<=0;channel_rx_kind<=0;channel_rx_seq<=0;end
+ always @(posedge clk_outputs[1] or negedge rst_output[1])begin
+  if(!rst_output[1])begin tx_beat_slot<=0;tx_phase<=0;tx_frame_slot<=0;rx_beat_slot<=0;rx_phase<=0;rx_frame_slot<=0;channel_tx_slot<=0;channel_tx_kind<=0;channel_tx_seq<=0;channel_tx_last<=0;channel_rx_slot<=0;channel_rx_kind<=0;channel_rx_seq<=0;end
   else begin
    tx_beat_slot<=enabled ? entry[183 +: 1] : 1'd0;
    tx_phase<=enabled ? entry[184 +: 2] : 2'd0;
@@ -172,8 +177,8 @@ module s81_static_calendar_controller7 #(
    channel_rx_seq<=enabled ? entry[276 +: 50] : 50'd0;
   end
  end
- always @(posedge clk_outputs[2] or negedge rst_n)begin
-  if(!rst_n)begin channel_rx_last<=0;channel_tx_beat_slot<=0;channel_tx_frame_slot<=0;channel_tx_phase<=0;channel_rx_beat_slot<=0;channel_rx_frame_slot<=0;channel_rx_phase<=0;hc_reduce_slot<=0;hc_write_slot<=0;hc_word_index<=0;hc_expect_seq<=0;hc_expect_last<=0;hc_emit_slot<=0;hc_emit_tag<=0;commit_gather<=0;raw_capture_payload_slot<=0;raw_capture_meta_slot<=0;raw_rx_write_slot<=0;raw_rx_payload_row<=0;raw_rx_meta_row<=0;raw_rx_tag<=0;hc_assemble_slot<=0;end
+ always @(posedge clk_outputs[2] or negedge rst_output[2])begin
+  if(!rst_output[2])begin channel_rx_last<=0;channel_tx_beat_slot<=0;channel_tx_frame_slot<=0;channel_tx_phase<=0;channel_rx_beat_slot<=0;channel_rx_frame_slot<=0;channel_rx_phase<=0;hc_reduce_slot<=0;hc_write_slot<=0;hc_word_index<=0;hc_expect_seq<=0;hc_expect_last<=0;hc_emit_slot<=0;hc_emit_tag<=0;commit_gather<=0;raw_capture_payload_slot<=0;raw_capture_meta_slot<=0;raw_rx_write_slot<=0;raw_rx_payload_row<=0;raw_rx_meta_row<=0;raw_rx_tag<=0;hc_assemble_slot<=0;end
   else begin
    channel_rx_last<=enabled ? entry[326 +: 5] : 5'd0;
    channel_tx_beat_slot<=enabled ? entry[331 +: 5] : 5'd0;

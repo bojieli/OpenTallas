@@ -179,8 +179,9 @@ endmodule
                     if family=='rom':romclocks=stopped
                     else:outclocks=stopped
                 tb=tb.replace('.clk(clk),','.clk(clk),.clk_rom('+romclocks+'),.clk_outputs('+outclocks+'),')
+                tb=tb.replace('rst_n=1;end endtask','rst_n=1;repeat(3)@(negedge clk);end endtask')
             (p/'tb.sv').write_text(tb)
-            subprocess.run(['iverilog','-g2012','-s','tb','-o',str(p/'sim'),str(selected_rtl),str(macro),str(p/'tb.sv')],check=True,capture_output=False)
+            subprocess.run(['iverilog','-g2012','-s','tb','-o',str(p/'sim'),str(selected_rtl),*([str(ROOT/'rtl/lib/ot_rst_relay.sv')] if partitioned else []),str(macro),str(p/'tb.sv')],check=True,capture_output=False)
             if clock_mutant:
                 negative=subprocess.run(['vvp',str(p/'sim')],capture_output=True,text=True)
                 self.assertNotEqual(negative.returncode,0)
