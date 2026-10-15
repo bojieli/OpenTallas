@@ -112,6 +112,24 @@ endmodule
 '''
 
 
+# Nested NBA loops: the INNER loop's blocking index (``i = 1U + i``, header ``i <= 7``) lands in the outer
+# loop's statements; it is a loop counter, not an in-place NBA target (fleet FPs qadd u_rnd.i, coll-park q).
+NESTED = r'''
+module tb;
+  reg clk=0; integer cyc=0; reg [7:0] m [0:3]; integer k, i; reg [31:0] chk=0;
+  initial for (k = 0; k < 4; k = k + 1) m[k] = 8'd0;
+  always #5 clk=~clk;
+  always @(posedge clk) begin
+    for (k = 0; k < 4; k = k + 1)
+      for (i = 0; i <= 7; i = i + 1) m[k][i] <= cyc[0] ^ i[0] ^ k[0];
+    chk <= chk + m[cyc%4];
+    cyc <= cyc + 1;
+    if (cyc==10) begin $display("RESULT %0d", chk); $finish; end
+  end
+endmodule
+'''
+
+
 @unittest.skipUnless(REAL.exists(), 'Verilator 5.050 fleet install required')
 class Guard(unittest.TestCase):
     def build(self, w, src, flags, front=None):
@@ -157,6 +175,18 @@ class Guard(unittest.TestCase):
             self.assertEqual(r['findings'], [])
             self.assertEqual(r['blocking_loops_excluded'], 1)
 
+    def test_nested_inner_loop_counter_is_not_flagged(self):
+        results = []
+        for flags in (['--unroll-count', '1'], []):
+            with tempfile.TemporaryDirectory() as d:
+                w = Path(d)
+                p = self.build(w, NESTED, flags)
+                self.assertEqual(p.returncode, 0, p.stderr[-3000:])
+                results.append(self.sim(w))
+                r = G.scan(str(w / 'obj'))
+                self.assertEqual(r['findings'], [], G.summarize(r))
+        self.assertEqual(results[0], results[1])
+
     def test_value_without_loop_carried_read_is_not_flagged(self):
         with tempfile.TemporaryDirectory() as d:
             w = Path(d)
@@ -198,6 +228,14 @@ class Guard(unittest.TestCase):
         self.assertTrue(G._preserves_exact_word(lhs, '(' + lhs + ' & ~' + bit + ')'))
         self.assertFalse(G._preserves_exact_word(lhs, '(vlSelfRef.tb__DOT__zv[j >> 5U] | ' + bit + ')'))
         self.assertFalse(G._preserves_exact_word(lhs, '(' + lhs + ' + ' + bit + ')'))
+        # constant-masked part-select insert and width-cast scalar bit set (fleet s81 SU ua_q / h0 shapes)
+        ua = 'vlSelfRef.tb__DOT__ua_q[0U]'
+        self.assertTrue(G._preserves_exact_word(ua, '((0xffffc000U & ' + ua + ') | (IData)(vlSelfRef.tb__DOT__rx_a))'))
+        self.assertFalse(G._preserves_exact_word(ua, '((0xffffc000U & ' + ua + ') | vlSelfRef.tb__DOT__ua_q[1U])'))
+        self.assertFalse(G._preserves_exact_word(ua, '((0xffffc000U & ' + ua + ') + vlSelfRef.tb__DOT__rx_a)'))
+        h0 = 'vlSelfRef.tb__DOT__h0'
+        self.assertTrue(G._preserves_exact_word(h0, '((IData)(' + h0 + ') | (0x00ffU & ((IData)(1U) << (7U & e))))'))
+        self.assertFalse(G._preserves_exact_word(h0, '((IData)(' + h0 + ') | (' + h0 + ' >> 1U))'))
         parts = ['tb', 'zv']
         independent = {'tb': ["module tb; reg [127:0] zv; always @(posedge clk) if (s[i]) zv[i] <= 1'b1; endmodule"]}
         dependent = {'tb': ["module tb; reg [127:0] zv; always @(posedge clk) zv[i] <= zv[i-1]; endmodule"]}

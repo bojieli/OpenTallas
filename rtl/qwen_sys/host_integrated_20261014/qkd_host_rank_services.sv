@@ -18,7 +18,8 @@
 module qkd_host_rank_services #(
  parameter T_LINK=200000,T_HBM=200000,WDOG=1<<22,
  parameter ENABLE_SERVICE=0,ENABLE_NATIVE=0,ENABLE_TOKEN=0,
- parameter PHY_MUT=0,QM_MUT=0,ORDER_MUT=0,BRIDGE_MUT=0,HC_MUT=0,PROMPT_MUT=0
+ parameter PHY_MUT=0,QM_MUT=0,ORDER_MUT=0,BRIDGE_MUT=0,HC_MUT=0,PROMPT_MUT=0,
+ parameter NL=6
 )(
  input wire[7:0]ck_phy,input wire ck_pad,ck_phy_rx_w,ck_phy_rx_r,ck_phy_tx_w,ck_phy_tx_r,
  input wire peer_reset_request,native_recovery_clear,input wire ck_peer,input wire peer_tx_valid,input wire[511:0]peer_tx_data,output wire peer_tx_ready,
@@ -55,7 +56,7 @@ module qkd_host_rank_services #(
  output wire[25:0]service_diag_raw,output wire[31:0]service_status,
  input wire[2:0]die_id,input wire por_n,pll_locked,phy_up,phy_rx_v,input wire[1042:0]phy_rx_flit,
  output wire phy_tx_v,output wire[1042:0]phy_tx_flit,
- input wire[5:0]link_up,input wire[7:0]transport_fault,physical_fault,input wire crom_fault,
+ input wire[NL-1:0]link_up,input wire[7:0]transport_fault,physical_fault,input wire crom_fault,
  input wire[92:0]local_tk,input wire[9:0]local_kst,
  input wire program_installed_valid,input wire execution_active,program_commit_v,input wire[15:0]program_commit_epoch,input wire[63:0]program_commit_digest,
  output wire program_ready,output wire[15:0]program_epoch,output wire[63:0]program_digest,
@@ -129,7 +130,7 @@ module qkd_host_rank_services #(
  wire[92:0]native_tk,guarded_tk;wire native_protocol_fault;
  wire[7:0]guarded_physical,guarded_transport,peer_service_ready,peer_pending_ack;wire[127:0]peer_service_epoch;
  wire service_begin_v,pending_advertised,begin_fault;wire[15:0]service_begin_epoch,pending_epoch;
- qkd_host_control_packet_observed #(.ENABLE_TOKEN(ENABLE_TOKEN),.ENABLE_SERVICE(ENABLE_SERVICE),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT))u_control(.peer_reset_request(peer_reset_request),.cq_commit_v(cq_commit_v),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),.cq_kind(cq_kind),.cq_status(cq_status),.step_issue_v(step_issue_v),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),.host_idle(host_idle),.host_observer_fault(host_observer_fault),.step_retire_v(step_retire_v),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),
+ qkd_host_control_packet_observed #(.NL(NL),.ENABLE_TOKEN(ENABLE_TOKEN),.ENABLE_SERVICE(ENABLE_SERVICE),.T_LINK(T_LINK),.T_HBM(T_HBM),.WDOG(WDOG),.HC_MUT(HC_MUT),.PROMPT_MUT(PROMPT_MUT))u_control(.peer_reset_request(peer_reset_request),.cq_commit_v(cq_commit_v),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),.cq_kind(cq_kind),.cq_status(cq_status),.step_issue_v(step_issue_v),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),.host_idle(host_idle),.host_observer_fault(host_observer_fault),.step_retire_v(step_retire_v),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),
  .token_allocator_fault(token_allocator_fault),
  .token_wrap_fence_valid(token_wrap_fence_valid),.token_wrap_drained(token_wrap_drained),.token_wrap_link_reset_seen(token_wrap_link_reset_seen),.token_wrap_retraining_done(token_wrap_retraining_done),
  .package_abort(package_abort),.abort_drained(abort_drained),
