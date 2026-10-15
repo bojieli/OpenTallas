@@ -1,0 +1,164 @@
+{
+  "schema": "native-programme-pair-v1",
+  "format": "c7a1[255:240]; PC[233:224]; reserved239:234 and223 zero; role222:215=A0/A1; data214:0",
+  "raw_protected_payload_bits": 446,
+  "role_bits": 16,
+  "usable_logical_bits": 430,
+  "native_ABI_bits": 291,
+  "fields": {
+    "attention": [
+      0,
+      192
+    ],
+    "read_v": [
+      192,
+      1
+    ],
+    "read_bank": [
+      193,
+      1
+    ],
+    "read_epoch": [
+      194,
+      16
+    ],
+    "read_row": [
+      210,
+      6
+    ],
+    "read_tag": [
+      216,
+      10
+    ],
+    "retire_v": [
+      226,
+      1
+    ],
+    "retire_bank": [
+      227,
+      1
+    ],
+    "retire_epoch": [
+      228,
+      16
+    ],
+    "pv_open": [
+      244,
+      1
+    ],
+    "pv_buffer": [
+      245,
+      1
+    ],
+    "pv_epoch": [
+      246,
+      16
+    ],
+    "pv_block": [
+      262,
+      1
+    ],
+    "pv_write_expect": [
+      263,
+      1
+    ],
+    "pv_read": [
+      264,
+      1
+    ],
+    "pv_read_buffer": [
+      265,
+      1
+    ],
+    "pv_read_block": [
+      266,
+      1
+    ],
+    "pv_head": [
+      267,
+      2
+    ],
+    "pv_half": [
+      269,
+      1
+    ],
+    "pv_group": [
+      270,
+      3
+    ],
+    "pv_retire": [
+      273,
+      1
+    ],
+    "pv_retire_buffer": [
+      274,
+      1
+    ],
+    "pv_retire_epoch": [
+      275,
+      16
+    ]
+  },
+  "targets": [
+    128,
+    159
+  ],
+  "addr": "[11]=0,[10]=plane,[9:0]=PC",
+  "install": "begin epoch -> plane0 then plane1 for everyPC -> commit; each op waits matching actual ACK; plane1 actual write seals pair",
+  "control_registers": "host adapter D4C begin(epoch16,target8), D50 commit, D58 required launch epoch, D20 target8+addr12, D24 eight LE32 chunks/word",
+  "launch": "all participating target readiness/epoch/fault checked before single fixed launch pulse; no ready stalls in execution",
+  "source_profile_scope": "typed byte-preservation programme vehicle; no arithmetic or HBM-service qualification",
+  "shape": {
+    "SMs": 32,
+    "SRAMs_per_SM": 2,
+    "SRAMs_die": 64,
+    "additional_SRAMs_die_vs_single": 32,
+    "SRAM": "actual1024x256 model",
+    "persistent_install_mask_bits_per_SM": 3072,
+    "install_payload_bytes_per_image": 2097152,
+    "host_data_register_writes_per_image": 524288,
+    "host_begin_commit_ops_per_image": 64
+  },
+  "predicted_edges": {
+    "cfg_input_to_macro_commit_and_ACK": 1,
+    "start_input_to_accept": 1,
+    "start_input_to_first_macro_read": 2,
+    "start_input_to_first_calendar": 4,
+    "macro_read_to_calendar": 2,
+    "execution_II": 1
+  },
+  "files_sha256": {
+    "epoch1_plane0.hex": "b060505a64d70081a3627f86da46ce08fcd290599d76d8599ade709fc5d5425d",
+    "epoch1_plane1.hex": "ea0bd1b82f24ecbad27a199f9a2e4876ac4dcbf0ba7f7565dc993485a718d92d",
+    "epoch1_logical.hex": "9d128db763bb33e175c625a78d5a4732ac215151c09fdb1fa61b1a9e717fe107",
+    "epoch2_plane0.hex": "1a29bcb79fd11524390b676c737e548d5df51af32242bc6064fdfaf94e8a599c",
+    "epoch2_plane1.hex": "540ea0ed51a7f5a9af9e158be83afcbac3637ce6bba60440b50fc7641ade457f",
+    "epoch2_logical.hex": "b0aad99668bcf463e630355314d9e6516dcd7fe9faae5e2d8366487a045053e5"
+  },
+  "physical_qualification": false,
+  "fullSM_qualification": false,
+  "status": "SOURCE_FIRST_MODEL_NATIVE_GATE_PENDING",
+  "primary_choice": "parallel two protected SRAM planes; no protected bit borrowed",
+  "alternatives": [
+    {
+      "name": "parallel2word protected calendar PRIMARY",
+      "additional_SRAMs_per_SM": 1,
+      "additional_SRAMs_die": 32,
+      "native_service_plus_programme_SRAMs_die": 608,
+      "with_separate64_PV_stage_SRAMs_die": 672,
+      "install_bytes_die": 2097152,
+      "host_install": "double256-bit programme words; 8LE32data writes perword; begin and full-image commit wait actual tagged ACK. Installation outside block-ready/execution epochs.",
+      "execution": "parallel same-PC reads; predictedII1, first calendar start input+4/read input+2. No multiplexing cycle penalty. Native component gate required.",
+      "area": "two actual1024x256 macros/SM +3072 loaded/sealed mask bits/SM and pin/capture/output/control registers; no mapped/clock/route area claim"
+    },
+    {
+      "name": "one calendar plus separate fixed PV/service context controller",
+      "additional_programme_SRAMs_per_SM": 0,
+      "install_bytes_die_base_calendar": 1048576,
+      "host_install": "additional explicitly configured service/PV descriptors/context. Format, count and installer costs depend on actual source; no zero-byte assumption.",
+      "area": "needs new per-bank epoch/tag/counter and deterministic PV/service dispatch logic or a separately priced context programme; unimplemented and unmapped. Shared PV stager state is required by either alternative and is not counted as an advantage.",
+      "execution": "must prove service reads and PV operations from fixed context/counters while preserving192-bit attention commands. New controller capture/counter/launch cycles and full rates unmeasured; no zero-cycle claim.",
+      "decision": "retain as measured fallback; parallel pair chosen because direct lossless explicit calendar has simple native testable latency."
+    }
+  ]
+}
