@@ -1,19 +1,19 @@
 {
  "schema": "opentallas.ref_tile.floorplan.v1",
- "name": "s81engc_ctl",
- "top": "ot_engc_ctl_leaf",
+ "name": "s81engc_ctl_s",
+ "top": "ot_engc_ctl_s",
  "kind": "tile",
  "die": [
   0,
   0,
-  38.88,
-  43.2
+  43.2,
+  17.28
  ],
  "core": [
   2.16,
   2.16,
-  36.72,
-  41.040000000000006
+  41.040000000000006,
+  15.120000000000001
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -29,38 +29,29 @@
   "cap_basis": "contract"
  },
  "pins": {
-  "W": [
-   "ck",
-   "rst",
-   "child_rso",
-   "states",
-   "rso"
-  ],
-  "N": [
-   "rst_win_n",
-   "rst_io_n",
-   "rst_ws_n",
-   "rst_pb1_n",
-   "rst_pb0_n",
-   "rst_pb2_n",
-   "rst_lkp_n",
-   "rst_sink_n",
+  "E": [
    "s_rdy_q",
    "s_perr_q",
-   "vrel"
+   "vrel",
+   "rst_win_n",
+   "child_rso_s"
   ],
-  "S": [
-   "x_oh",
-   "x_a",
-   "x_d",
+  "W": [
    "s_rdy",
    "s_perr",
-   "vrel_q"
+   "rst_sink_n"
   ],
-  "E": [
-   "x_oh_q",
-   "x_a_q",
-   "x_d_q"
+  "S": [
+   "rst_ws_n",
+   "rst_lkp_n",
+   "vrel_q",
+   "ack_x_i"
+  ],
+  "N": [
+   "ck",
+   "rst",
+   "rso",
+   "states_s"
   ]
  },
  "clock_port": "ck",
@@ -68,18 +59,18 @@
  "findings": [],
  "referenced": [
   "rtl/dsrom_sys/engram/rso_candidate/ot_engc_hl_leaves.sv",
-  "physical/ref_tile/s81engc_ctl/kit.env",
-  "physical/ref_tile/s81engc_ctl/clock.sdc",
-  "physical/ref_tile/s81engc_ctl/signoff.sdc",
-  "physical/ref_tile/s81engc_ctl/pdn.tcl",
-  "physical/ref_tile/s81engc_ctl/pre_cts.tcl",
-  "physical/ref_tile/s81engc_ctl/post_cts.tcl",
-  "physical/ref_tile/s81engc_ctl/post_grt.tcl",
-  "physical/ref_tile/s81engc_ctl/pre_drt.tcl",
-  "physical/ref_tile/s81engc_ctl/pre_fill.tcl",
-  "physical/ref_tile/s81engc_ctl/post_fill.tcl",
-  "physical/ref_tile/s81engc_ctl/pre_grt.tcl",
-  "physical/ref_tile/s81engc_ctl/post_drt.tcl",
+  "physical/ref_tile/s81engc_ctl_s/kit.env",
+  "physical/ref_tile/s81engc_ctl_s/clock.sdc",
+  "physical/ref_tile/s81engc_ctl_s/signoff.sdc",
+  "physical/ref_tile/s81engc_ctl_s/pdn.tcl",
+  "physical/ref_tile/s81engc_ctl_s/pre_cts.tcl",
+  "physical/ref_tile/s81engc_ctl_s/post_cts.tcl",
+  "physical/ref_tile/s81engc_ctl_s/post_grt.tcl",
+  "physical/ref_tile/s81engc_ctl_s/pre_drt.tcl",
+  "physical/ref_tile/s81engc_ctl_s/pre_fill.tcl",
+  "physical/ref_tile/s81engc_ctl_s/post_fill.tcl",
+  "physical/ref_tile/s81engc_ctl_s/pre_grt.tcl",
+  "physical/ref_tile/s81engc_ctl_s/post_drt.tcl",
   "tools/ref_tile/ref_route.sh",
   "physical/qwen_die_masters/io_ref_skew.sdc",
   "physical/qwen_die_masters/io_plain.sdc",
@@ -89,14 +80,15 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/s81_die_pins/v19_engram_hl/ot_engc_ctl_s.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/dsrom_window_source/leaf_iohold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/dsrom_window_source/leaf_inhold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
-  "physical/ref_tile/s81engc_ctl/pre_gpl.tcl",
-  "physical/ref_tile/s81engc_ctl/pre_dpl.tcl",
+  "physical/ref_tile/s81engc_ctl_s/pre_gpl.tcl",
+  "physical/ref_tile/s81engc_ctl_s/pre_dpl.tcl",
   "physical/common_flow/pin_reg_split.tcl"
  ]
 }
