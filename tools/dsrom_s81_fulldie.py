@@ -9226,7 +9226,9 @@ def main(argv=None):
             cg = ctrl_gate(m, 'layer1' if (CTRL_ROLE == 'layer' and DIE_KIND == 'layer1') else CTRL_ROLE)
             m['ctrl_gate'] = cg
             if a.out:
-                Path(str(a.out) + '.ctrl_gate.json').write_text(json.dumps(cg, indent=1, default=str) + '\n')
+                ctrl_record = Path(str(a.out) + '.ctrl_gate.json')
+                ctrl_record.parent.mkdir(parents=True, exist_ok=True)
+                ctrl_record.write_text(json.dumps(cg, indent=1, default=str) + '\n')
             if cg['verdict'] != 'PASS':
                 msg_ = 'DIE_CTRL_GATE FAIL (%d): ' % len(cg['findings']) + '; '.join(cg['findings'][:40])
                 wv_ = os.environ.get('OT_S81_CTRL_GATE_WARN')
