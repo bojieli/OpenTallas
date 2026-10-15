@@ -63,7 +63,7 @@ HIER = ["rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_hctl.sv", "rtl/dsrom_sys/s81_suhc
         "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv", "rtl/hdc/ot_sram_bank.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv",
         "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
         "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_cn_ik.sv", "rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv",
-        "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxt.sv", "rtl/dsrom_sys/s81_suhc/hier/dsfd_sp_su_h.sv"]
+        "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxt.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv", "rtl/dsrom_sys/s81_suhc/hier/dsfd_sp_su_h.sv"]
 u32, f32, pack, bf16bits = H.u32, H.f32, H.pack, H.bf16bits
 
 
