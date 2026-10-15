@@ -17979,6 +17979,802 @@
       "fixed_calendar": null
     }
   ],
+  "a_projection_allgather": {
+    "mode": 1,
+    "records_per_rank": 28,
+    "total_output_rows": 112,
+    "arg24": 65564,
+    "records": [
+      {
+        "source_rank": 0,
+        "source_record": 0,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4096,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 0,
+        "source_record": 1,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4097,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 0,
+        "source_record": 2,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4098,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 0,
+        "source_record": 3,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4099,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 0,
+        "source_record": 4,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4100,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 0,
+        "source_record": 5,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4101,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 0,
+        "source_record": 6,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4102,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 0,
+        "source_record": 7,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4103,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 0,
+        "source_record": 8,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4104,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 0,
+        "source_record": 9,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4105,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 0,
+        "source_record": 10,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4106,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 0,
+        "source_record": 11,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4107,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 0,
+        "source_record": 12,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4108,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 0,
+        "source_record": 13,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4109,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 0,
+        "source_record": 14,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4110,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 0,
+        "source_record": 15,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4111,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 0,
+        "source_record": 16,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4112,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 0,
+        "source_record": 17,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4113,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 0,
+        "source_record": 18,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4114,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 0,
+        "source_record": 19,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4115,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 0,
+        "source_record": 20,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4224,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 0,
+        "source_record": 21,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4225,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 0,
+        "source_record": 22,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4226,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 0,
+        "source_record": 23,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4227,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 0,
+        "source_record": 24,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4228,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 0,
+        "source_record": 25,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4229,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 0,
+        "source_record": 26,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4230,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 0,
+        "source_record": 27,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4231,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 1,
+        "source_record": 0,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4116,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 1,
+        "source_record": 1,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4117,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 1,
+        "source_record": 2,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4118,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 1,
+        "source_record": 3,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4119,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 1,
+        "source_record": 4,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4120,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 1,
+        "source_record": 5,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4121,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 1,
+        "source_record": 6,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4122,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 1,
+        "source_record": 7,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4123,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 1,
+        "source_record": 8,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4124,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 1,
+        "source_record": 9,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4125,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 1,
+        "source_record": 10,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4126,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 1,
+        "source_record": 11,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4127,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 1,
+        "source_record": 12,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4128,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 1,
+        "source_record": 13,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4129,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 1,
+        "source_record": 14,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4130,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 1,
+        "source_record": 15,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4131,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 1,
+        "source_record": 16,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4132,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 1,
+        "source_record": 17,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4133,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 1,
+        "source_record": 18,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4134,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 1,
+        "source_record": 19,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4135,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 1,
+        "source_record": 20,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4232,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 1,
+        "source_record": 21,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4233,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 1,
+        "source_record": 22,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4234,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 1,
+        "source_record": 23,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4235,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 1,
+        "source_record": 24,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4236,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 1,
+        "source_record": 25,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4237,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 1,
+        "source_record": 26,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4238,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 1,
+        "source_record": 27,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4239,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 2,
+        "source_record": 0,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4136,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 2,
+        "source_record": 1,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4137,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 2,
+        "source_record": 2,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4138,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 2,
+        "source_record": 3,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4139,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 2,
+        "source_record": 4,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4140,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 2,
+        "source_record": 5,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4141,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 2,
+        "source_record": 6,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4142,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 2,
+        "source_record": 7,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4143,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 2,
+        "source_record": 8,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4144,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 2,
+        "source_record": 9,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4145,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 2,
+        "source_record": 10,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4146,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 2,
+        "source_record": 11,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4147,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 2,
+        "source_record": 12,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4148,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 2,
+        "source_record": 13,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4149,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 2,
+        "source_record": 14,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4150,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 2,
+        "source_record": 15,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4151,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 2,
+        "source_record": 16,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4152,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 2,
+        "source_record": 17,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4153,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 2,
+        "source_record": 18,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4154,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 2,
+        "source_record": 19,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4155,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 2,
+        "source_record": 20,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4240,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 2,
+        "source_record": 21,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4241,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 2,
+        "source_record": 22,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4242,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 2,
+        "source_record": 23,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4243,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 2,
+        "source_record": 24,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4244,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 2,
+        "source_record": 25,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4245,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 2,
+        "source_record": 26,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4246,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 2,
+        "source_record": 27,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4247,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 3,
+        "source_record": 0,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4156,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 3,
+        "source_record": 1,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4157,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 3,
+        "source_record": 2,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4158,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 3,
+        "source_record": 3,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4159,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 3,
+        "source_record": 4,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4160,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 3,
+        "source_record": 5,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4161,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 3,
+        "source_record": 6,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4162,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 3,
+        "source_record": 7,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4163,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 3,
+        "source_record": 8,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4164,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 3,
+        "source_record": 9,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4165,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 3,
+        "source_record": 10,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4166,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 3,
+        "source_record": 11,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4167,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 3,
+        "source_record": 12,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4168,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 3,
+        "source_record": 13,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4169,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 3,
+        "source_record": 14,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4170,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 3,
+        "source_record": 15,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4171,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 3,
+        "source_record": 16,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4172,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 3,
+        "source_record": 17,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4173,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 3,
+        "source_record": 18,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4174,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 3,
+        "source_record": 19,
+        "destination_tensor": "q_norm_input",
+        "destination_vm_row": 4175,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 3,
+        "source_record": 20,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4248,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 3,
+        "source_record": 21,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4249,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 3,
+        "source_record": 22,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4250,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 3,
+        "source_record": 23,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4251,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 3,
+        "source_record": 24,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4252,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 3,
+        "source_record": 25,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4253,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 3,
+        "source_record": 26,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4254,
+        "word_mask": 65535
+      },
+      {
+        "source_rank": 3,
+        "source_record": 27,
+        "destination_tensor": "kv_norm_input",
+        "destination_vm_row": 4255,
+        "word_mask": 65535
+      }
+    ],
+    "fixed_transport_cycles": null,
+    "historical_fixture_records_per_rank": 12,
+    "historical_fixture_timing_usable": false,
+    "native_endpoint_bound": false
+  },
   "field_quantized_operand_views": {
     "QN": [
       {
