@@ -1,0 +1,92 @@
+[
+ {
+  "cell": "ot_s81_hc_ctfn",
+  "view": "physical/ref_tile/s81hc_ctfn_ref/views/ot_s81_hc_ctfn",
+  "lib_cell": "ot_s81_hc_ctfn",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 351.3,
+  "spread_ps": 78.5,
+  "outputs": 2928,
+  "inputs": 2928,
+  "launch_ps": 296.0,
+  "launch_pin": "fvm[2]",
+  "capture_ps": 378.2,
+  "capture_pin": "fv_in[2]",
+  "launch_over": 1,
+  "capture_over": 162,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "launch 296.0 > 220 (1 pins); capture 378.2 > 190 (162 pins)",
+  "sha256": {
+   "ot_s81_hc_ctfn_tt.lib": "d690dd03fd78a1bc997d244246d3200b60790dd1337253951de03a7a1256de10",
+   "ot_s81_hc_ctfn_ff.lib": "88dbb36ea7f5998562cfa807823e466cd41d12a6993c308e6fa2ff1067cc50e1",
+   "insertion.json": "5875902d1173302f4524b66f470576089b2e7e138d0214fc5566ed74439b7570",
+   "ot_s81_hc_ctfn_ss.lib": "f24df7d65e445aebc817536572855b7fb25cdb8146656c4d6fcefcd948ee4dff",
+   "ot_s81_hc_ctfn.lef": "be9d8e5639cd1697ebac01a1780468c60d72aa92d5a3d2af311c7de93852390a"
+  }
+ },
+ {
+  "cell": "ot_s81_hc_ctnl_l2",
+  "view": "physical/ref_tile/s81hc_ctnl_l2_ref/views/ot_s81_hc_ctnl_l2",
+  "lib_cell": "ot_s81_hc_ctnl_l2",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 199.0,
+  "spread_ps": 24.6,
+  "outputs": 432,
+  "inputs": 980,
+  "launch_ps": 228.5,
+  "launch_pin": "sq_out[24]",
+  "capture_ps": 178.0,
+  "capture_pin": "wb_d[51]",
+  "launch_over": 8,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "launch 228.5 > 220 (8 pins)",
+  "sha256": {
+   "ot_s81_hc_ctnl_l2.lef": "cb5b55bffaa0c15e22c28ed41bb63e2f9a69ee2f63bac3dfe2e0410372b789e3",
+   "ot_s81_hc_ctnl_l2_ss.lib": "e074e860db3a291dc66cd9009987b571e611cc9ce0123ed29c7e864d806a389f",
+   "insertion.json": "f318893e0a791aac33cb403b490725008e8bdd564348472fb8ec2d7e10488bdc",
+   "ot_s81_hc_ctnl_l2_tt.lib": "8fd0bb0199d3077ad642de67bf0cad1168686d742b309f9641d36c2a82605cd4",
+   "ot_s81_hc_ctnl_l2_ff.lib": "493ab23d648a28cece475a6615e9423697ff2bf22bf5b96d44de2de483933133"
+  }
+ },
+ {
+  "cell": "ot_s81_hc_ctnl_l3",
+  "view": "physical/ref_tile/s81hc_ctnl_l3_ref/views/ot_s81_hc_ctnl_l3",
+  "lib_cell": "ot_s81_hc_ctnl_l3",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 190.9,
+  "spread_ps": 25.6,
+  "outputs": 432,
+  "inputs": 852,
+  "launch_ps": 224.1,
+  "launch_pin": "acc_out[14]",
+  "capture_ps": 196.6,
+  "capture_pin": "fdx[45]",
+  "launch_over": 3,
+  "capture_over": 3,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "launch 224.1 > 220 (3 pins); capture 196.6 > 190 (3 pins)",
+  "sha256": {
+   "insertion.json": "a54ccdab6c8068e682d0cacf9a512fbe7eb1082a24c6f5a964642ba08123c1d6",
+   "ot_s81_hc_ctnl_l3_tt.lib": "43c1c12d0f8f385bb0aa9160d0149728a0c2ddaef457ebd87c066b0d408e0d18",
+   "ot_s81_hc_ctnl_l3.lef": "d045b2830e30a36b1a031158e9c8314ccbad241895eeaa9bc5b0f8572d6a385a",
+   "ot_s81_hc_ctnl_l3_ss.lib": "5d00ce0a80ff7ebe6f28b04fe980e22208e9c7a35680203def9aa27ad60b98de",
+   "ot_s81_hc_ctnl_l3_ff.lib": "b9fe6fc383785a86a080372982b7dea55dd3abf72215e20b23d3461a0d1cd133"
+  }
+ }
+]
