@@ -6,6 +6,7 @@ OUT=${1:?output directory};mkdir -p "$OUT"
 p=$ROOT/rtl/hbm_accel/generic/collective/p2p
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 for mode in positive data wrap;do
+ mkdir -p "$OUT/$mode"
  params=();[[ $mode != data ]] || params+=(-GMUT_DATA=1);[[ $mode != wrap ]] || params+=(-GMUT_WRAP=1)
  "$V" --binary --timing -O2 -j "${JOBS:-4}" -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ --top-module tb_hgi_coll_bridge_program_network --Mdir "$OUT/$mode/obj" "${params[@]}" \
  "$p/tb_hgi_coll_bridge_program_network.sv" "$p/ot_hgi_coll_bridge_program.sv" "$p/ot_hgi_coll_quarter_bridge_programmed.sv" \

@@ -19,6 +19,7 @@ def model(banks=2,qid=0):
   'clock_roots':{'controller':1,'native_memory_leaves':banks},'controller_register_upper_bound':4000+64*banks,
   'memory_leaf_registered_output_bits_each':512,'physical_output_control_bits':49,
   'routing':'local49b control registered face; one physical issuer perquarter; no route/slot claim',
+  'programmed_bridge_roots_per_die':55,'programmed_bridge_roots_detail':'4controllers+8nativecatalogue+26bridgeout+9RXfaces+8relay1',
   'replicas_per_die':4,'replicas_for96rank_graph':384,'catalogue_macros_for96rank_graph':384*banks,
   'macs_per_cycle':0,'elastic_queue':0,'runtime_ready_credit':False,
   'area':'native macro abstracts plus controller FF/mux area, not mapped yet',
