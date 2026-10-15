@@ -1,0 +1,156 @@
+{
+  "scope": "Current V1 structural qslots candidate only; no source replacement, physical view or performance qualification",
+  "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv",
+  "candidates": [
+    {
+      "npt": 3,
+      "ns": 10,
+      "nd": 16,
+      "payload_bits": 545,
+      "selw": 4,
+      "original_capture_ff": 5461,
+      "original_output_ff": 14278,
+      "candidate_capture": {
+        "module": "ot_hgi_coll_qslots_capture",
+        "params": {
+          "NS": 1,
+          "PWT": 545
+        },
+        "replicas": 10,
+        "payload_and_slot_ff": 546,
+        "sticky_fault_ff": 1,
+        "actual_port_bits": 1096,
+        "proposed_outline_um": [
+          21.6,
+          103.68
+        ]
+      },
+      "candidate_output": [
+        {
+          "module": "ot_hgi_coll_qslots_output",
+          "params": {
+            "NS": 10,
+            "ND": 16,
+            "PWT": 32,
+            "SELW": 4
+          },
+          "replicas": 17,
+          "ff": 940,
+          "actual_port_bits": 942,
+          "proposed_outline_um": [
+            25.92,
+            103.68
+          ]
+        },
+        {
+          "module": "ot_hgi_coll_qslots_output",
+          "params": {
+            "NS": 10,
+            "ND": 16,
+            "PWT": 1,
+            "SELW": 4
+          },
+          "replicas": 1,
+          "ff": 134,
+          "actual_port_bits": 136,
+          "proposed_outline_um": [
+            25.92,
+            25.92
+          ]
+        }
+      ],
+      "added_capture_fault_ff": 9,
+      "added_output_control_ff": 1836,
+      "added_total_ff": 1845,
+      "added_logical_cycles": 0,
+      "physical_clock_entries": 28,
+      "parent_clock_pin_increase": 26,
+      "clock_delivery": "Each leaf needs explicit same logical phase phi minus measured local insertion; new clock buses are a distinct parent ABI until adopted. No measured delivery/clock area claimed.",
+      "logical_contract": "C source capture -> C+1 output-leaf ingress capture -> C+2 registered destination",
+      "bandwidth_bits_per_cycle": {
+        "source_payload": 5450,
+        "destination_payload": 8720
+      },
+      "controls": "Each output slice has identical compiler slots/selects; validity and sticky faults must agree across slices. Capture faults are OR of actual source-leaf faults.",
+      "physical_status": "CANDIDATE ONLY: outlines are pin/cut estimates, not grants or measured routes; real clock entries, channels, fanout, all incident pins and total parent inventory remain OPEN"
+    },
+    {
+      "npt": 2,
+      "ns": 9,
+      "nd": 15,
+      "payload_bits": 545,
+      "selw": 4,
+      "original_capture_ff": 4915,
+      "original_output_ff": 13181,
+      "candidate_capture": {
+        "module": "ot_hgi_coll_qslots_capture",
+        "params": {
+          "NS": 1,
+          "PWT": 545
+        },
+        "replicas": 9,
+        "payload_and_slot_ff": 546,
+        "sticky_fault_ff": 1,
+        "actual_port_bits": 1096,
+        "proposed_outline_um": [
+          21.6,
+          103.68
+        ]
+      },
+      "candidate_output": [
+        {
+          "module": "ot_hgi_coll_qslots_output",
+          "params": {
+            "NS": 9,
+            "ND": 15,
+            "PWT": 32,
+            "SELW": 4
+          },
+          "replicas": 17,
+          "ff": 869,
+          "actual_port_bits": 871,
+          "proposed_outline_um": [
+            25.92,
+            103.68
+          ]
+        },
+        {
+          "module": "ot_hgi_coll_qslots_output",
+          "params": {
+            "NS": 9,
+            "ND": 15,
+            "PWT": 1,
+            "SELW": 4
+          },
+          "replicas": 1,
+          "ff": 125,
+          "actual_port_bits": 127,
+          "proposed_outline_um": [
+            25.92,
+            25.92
+          ]
+        }
+      ],
+      "added_capture_fault_ff": 8,
+      "added_output_control_ff": 1717,
+      "added_total_ff": 1725,
+      "added_logical_cycles": 0,
+      "physical_clock_entries": 27,
+      "parent_clock_pin_increase": 25,
+      "clock_delivery": "Each leaf needs explicit same logical phase phi minus measured local insertion; new clock buses are a distinct parent ABI until adopted. No measured delivery/clock area claimed.",
+      "logical_contract": "C source capture -> C+1 output-leaf ingress capture -> C+2 registered destination",
+      "bandwidth_bits_per_cycle": {
+        "source_payload": 4905,
+        "destination_payload": 8175
+      },
+      "controls": "Each output slice has identical compiler slots/selects; validity and sticky faults must agree across slices. Capture faults are OR of actual source-leaf faults.",
+      "physical_status": "CANDIDATE ONLY: outlines are pin/cut estimates, not grants or measured routes; real clock entries, channels, fanout, all incident pins and total parent inventory remain OPEN"
+    }
+  ],
+  "die_extra_ff": 7020,
+  "die_capture_replicas": 37,
+  "die_output_replicas": 72,
+  "physical_masters": 5,
+  "die_added_physical_clock_pins": 101,
+  "required_adoption": "Explicit parent/physical clock ABI update plus source-exact positive/mutants and actual typed leaf grants. Do not silently replace current V1 or inherit control256 closure."
+}
