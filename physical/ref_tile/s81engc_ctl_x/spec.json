@@ -64,14 +64,14 @@
    },
    {
     "name": "engram_hl_mut_ctl",
-    "cmd": "python3 tools/s81_svceng/engram_c_gate.py --rso-candidate --top dsfd_engram_c_hl --leaf-mut OT_ENGC_HL_MUT_CTL --out {RUN}/hl_mut",
-    "expect": "pass",
+    "cmd": "python3 tools/s81_svceng/engram_c_gate.py --rso-candidate --top dsfd_engram_c_hl --dut-exit --leaf-mut OT_ENGC_HL_MUT_CTL --out {RUN}/hl_mut",
+    "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 24,
     "needs": [
      "verilator"
     ],
-    "pass_regex": "ENGRAM_C_LEAF_MUT .* FAIL as required"
+    "fail_regex": "ENGRAM_C_GATE FAIL"
    },
    {
     "name": "engram_hl_ack",

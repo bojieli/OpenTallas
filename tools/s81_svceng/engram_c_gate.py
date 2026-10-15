@@ -55,6 +55,8 @@ def main():
     ap.add_argument("--neg", choices=[n for n, _ in NEG])
     ap.add_argument("--top", default="dsfd_engram_c_rso", choices=["dsfd_engram_c_rso", "dsfd_engram_c_hl"],
                     help="with --rso-candidate: the parent under test (dsfd_engram_c_hl = hardened-leaf form, no parent flop)")
+    ap.add_argument("--dut-exit", action="store_true",
+                    help="with --leaf-mut: report as the bench of the mutant DUT (ENGRAM_C_GATE FAIL + exit 1 when the mutant is caught; closure-loop expect=fail bench)")
     ap.add_argument("--leaf-mut", choices=["OT_ENGC_HL_MUT_RR", "OT_ENGC_HL_MUT_RRW", "OT_ENGC_HL_MUT_RR64", "OT_ENGC_HL_MUT_CTL", "OT_ENGC_HL_MUT_CTLS"],
                     help="with --top dsfd_engram_c_hl: build the leaf negative control; exit 0 only when it FAILS the exact bench")
     a = ap.parse_args()
@@ -84,6 +86,9 @@ def main():
         rec = C.run_mode(build(a.out / "obj_leaf_mut", {}), a.out, t, ev, wins, "leaf_mut", STRESS, 200)
         caught = not rec.get("pass")
         print("ENGRAM_C_LEAF_MUT", a.leaf_mut, "FAIL as required" if caught else "MISSED", "element_mismatches", rec.get("element_mismatches"))
+        if a.dut_exit:
+            print("ENGRAM_C_GATE", "FAIL" if caught else "PASS", "(leaf mutant DUT", a.leaf_mut + ")")
+            return 1 if caught else 0
         return 0 if caught else 1
     if a.neg:      # negative-control bench: exit 1 when the mutant FAILS the bench (as required), 0 when missed
         g = dict(NEG)[a.neg]
