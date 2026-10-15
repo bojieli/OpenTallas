@@ -124,3 +124,13 @@ module qkd_program_commit_join #(parameter integer SINKS=2)(
   end
  end
 endmodule
+
+// One fixed observation relay for TT's extra program-bank input register. The
+// input is a genuine descriptor-store consumed-write receipt; this register
+// preserves it verbatim and changes no program-write or compiler-issue edge.
+module qkd_program_descriptor_receipt_relay(
+ input wire ck,rst_n,input wire[68:0]consumed_receipt,
+ output reg[68:0]receipt);
+ always @(posedge ck or negedge rst_n)
+  if(!rst_n)receipt<=0;else receipt<=consumed_receipt;
+endmodule

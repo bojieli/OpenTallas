@@ -1,0 +1,22 @@
+{
+  "status": "PREPARED_NOT_PUBLISHED_ON_CLAUDE_HANDOFF",
+  "dependencies": [
+    "8823a06dd actualTTdensePWobserver+sharedconsumers",
+    "4453fac5c actualSU PW/DWobserver",
+    "3939dfd0f actualSUelaborationrecipe"
+  ],
+  "sourcepins": "source.sha256; local source overlay preserves exact owner blobs",
+  "proof": "realTT/SUPSRAM1 actual1024PW readbacks each;actualSU8descwrite readbacks; actualME/SU/XPFseals; independentauthledger+two-copyjoinPASS; missingTT53/SU53/DW7preventcommit; nativeResetrevokessealsandwitnessPASS",
+  "observation_relay": "real1edge qkd_program_descriptor_receipt_relay neededforTTextraactualbankinputregister; no replay/issue delay",
+  "scope": "configurationwriteproof, no engine start/arithmetic/physical/throughput claim; descriptor sameactualseqdesc_mem",
+  "POST_WIP": "fiveownedobservedfiles+qkd_host_notification_observer.sv untested; not staged or published. notification/DMAhelpers and ports edited; normal/control transport successor drains not yet implemented. qhostbindsource9e072956d/cb2650b96 must be reconciled.",
+  "artifacts": {
+    "copy_0.log": "2b59191093e6693fea3f2cc9674d35769645e3ef0cf81f70e1225949e7345a12",
+    "copy_1.log": "d5a46f12f89a131aa271ed8e609794bef59d2b268659830b11c4cdd2bb7299fa",
+    "source.sha256": "7e63c7dba60438c2b981141762b7a9c65461f10de6b91ea97636630e98bd2015",
+    "dense_head_fixture.hex": "70e8b8ae8821917c87f5b471411bae35662638387616d955ce1cb4ed38197dfd",
+    "build.log": "2600d7f3e1ef9a1a3a63aba2f99871d9de7d5d2275649a1a7598732a8edefbda",
+    "copy_3.log": "ce4d69f6c77888a56d86f8304e3956d336fd63e871853aef7b1e2eb706895768",
+    "copy_2.log": "5cfddd1c6fc80cf83f9b0ba945bbba1f0f21939bdd51c8c427a9790d9bbac46d"
+  }
+}
