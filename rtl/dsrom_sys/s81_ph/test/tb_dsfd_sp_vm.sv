@@ -149,6 +149,13 @@ module tb_dsfd_sp_vm;
             if (b_we[p]) begin
                 old = gm[rw]; nd = b_d[p*512 +: 512];
                 for (e = 0; e < 16; e = e + 1) mk[32*e +: 32] = {32{b_m[p*16 + e]}};
+`ifdef OT_SPVM_SLOC
+                // capture lane (FE (a)): virtual slot e of lane g = actual word 4 (g / 4) + (e % 4) of row {key, g % 4, e / 4}
+                if (p >= CP) begin
+                    for (e = 0; e < 16; e = e + 1) if (b_m[p*16 + e])
+                        gm[(rw / 16) * 16 + 4 * ((p - CP) % 4) + e / 4][32 * (4 * ((p - CP) / 4) + e % 4) +: 32] = nd[32*e +: 32];
+                end else
+`endif
                 gm[rw] = (old & ~mk) | (nd & mk);
             end else if (p == 2 || p >= 6 && p <= 9) begin
                 // X streamer read: expected at its bus lane (id in the data field)
@@ -167,7 +174,11 @@ module tb_dsfd_sp_vm;
                 else begin lan_ops = lan_ops + 1; if (lan_first < 0) lan_first = cyc; lan_last = cyc; end
                 if (p >= CP && rw % 16 != p - CP) begin $display("FAIL cyc %0d: capture lane %0d wrote row %0d", cyc, p - CP, rw); nbad = nbad + 1; end
                 for (e = 0; e < 16; e = e + 1) if (b_m[p*16 + e]) begin
+`ifdef OT_SPVM_SLOC
+                    a = (p >= CP) ? ((rw / 16) * 16 + 4 * ((p - CP) % 4) + e / 4) * 16 + 4 * ((p - CP) / 4) + e % 4 : rw * 16 + e;
+`else
                     a = rw * 16 + e;
+`endif
                     if (!exp_el.exists(a)) begin $display("FAIL cyc %0d: capture element %0d not expected", cyc, a); nbad = nbad + 1; end
                     else if (landed.exists(a)) begin $display("FAIL cyc %0d: capture element %0d written twice", cyc, a); nbad = nbad + 1; end
                     else begin
