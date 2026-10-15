@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.s81.field_sweep_collection.v1",
+ "native_qualified": false,
+ "scope": "Actual ROM-field RTL component with released weights and replayed layer inputs; golden comparisons only. Does not prove continuous layer or physical native producer bindings.",
+ "completed_host_receipts": [
+  "epyc4.json.gz"
+ ],
+ "completed_layers": [
+  2,
+  3,
+  14,
+  17,
+  18,
+  19,
+  22,
+  23,
+  25,
+  26,
+  27
+ ],
+ "pending_hosts": [
+  "ot-epyc1tb",
+  "ot-agidock128"
+ ],
+ "source_sha256": {
+  "tools/s81_ftok/field_all.py": "b97974296e7da2c562e7d1ea3b8ca7cd9357c055c29df58a65050cec6ff80757",
+  "tools/s81_ftok/field_sweep.py": "62142b92e7a3067736da9653c9097b5dcb70c52cdd6f9a78f9245566940c60bc",
+  "tools/dsrom_1m_field.py": "33c15c2abf0a77fbbc2ad3d21128e0290bf89eb76520431fb2eb5e5962261df7"
+ }
+}
