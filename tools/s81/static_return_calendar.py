@@ -170,7 +170,7 @@ def _val(rng):
         return (s << 31) | (e << 23) | m
 
 
-def vectors(win: int, rst: int, seed: int, words: int, collide: bool, out: Path):
+def vectors(win: int, rst: int, seed: int, words: int, collide: bool, out: Path, leaf_a=False, leaf_b=False):
     rng = random.Random(seed)
     A, B = [], []
     occ = {'a': set(), 'b': set()}
@@ -208,8 +208,9 @@ def vectors(win: int, rst: int, seed: int, words: int, collide: bool, out: Path)
                     tA = A + [(na_, ta, _val(rng), 0)]
                     tB = B + [(nb_, tb, _val(rng), 0)]
             elif kind == 'complete':
-                t = _mk(r19, 0, 3, rng.randint(1, 8))
                 side = rng.choice('ab')
+                leaf = leaf_a if side == 'a' else leaf_b
+                t = _mk(r19, 0, 0, 1) if leaf else _mk(r19, 0, 3, rng.randint(1, 8))
                 tA = A + [(base, t, _val(rng), 0)] if side == 'a' else A
                 tB = B + [(base, t, _val(rng), 0)] if side == 'b' else B
             elif kind == 'pad':      # right sibling wholly in +0 padding: promoted unchanged by norm (k grows)
@@ -218,7 +219,7 @@ def vectors(win: int, rst: int, seed: int, words: int, collide: bool, out: Path)
                 tA = A + [(base, t, _val(rng), rng.getrandbits(1))] if side == 'a' else A
                 tB = B + [(base, t, _val(rng), 0)] if side == 'b' else B
             else:                    # single: sibling never arrives at this node
-                t = _mk(r19, 2, 1, 8)
+                t = _mk(r19, 2, 0 if (leaf_a or leaf_b) else 1, 8)
                 side = rng.choice('ab')
                 tA = A + [(base, t, _val(rng), 0)] if side == 'a' else A
                 tB = B + [(base, t, _val(rng), 0)] if side == 'b' else B
@@ -229,8 +230,8 @@ def vectors(win: int, rst: int, seed: int, words: int, collide: bool, out: Path)
         edge += rng.randint(1, 3)
     if collide:                       # F1: two unmerged non-sibling words at the same edge
         e_ = max([w[0] for w in A + B]) + 3
-        A.append((e_, _mk(0x7FF00 | 1, 2, 1, 8), _val(rng), 0))
-        B.append((e_, _mk(0x7FF00 | 2, 2, 1, 8), _val(rng), 0))
+        A.append((e_, _mk(0x7FF00 | 1, 2, 0 if leaf_a else 1, 8), _val(rng), 0))
+        B.append((e_, _mk(0x7FF00 | 2, 2, 0 if leaf_b else 1, 8), _val(rng), 0))
     outw, faults = node(A, B, win, rst)
     T = max(o[0] for o in outw) + 8
     ai = {w[0]: w for w in A}
@@ -238,6 +239,21 @@ def vectors(win: int, rst: int, seed: int, words: int, collide: bool, out: Path)
     oi = {o[0]: o for o in outw}
     dup = {e_ for e_ in oi if sum(1 for o in outw if o[0] == e_) > 1}   # F1 edges: the word left there is not specified
     out.mkdir(parents=True, exist_ok=True)
+
+    def pack(w, leaf):
+        # dsfd_node_<a><b> port formats: leaf L = the q lane's 63 b {ppos[62:60], perr[59], pnseg[58:54], pseg[53:49],
+        # prow[48:33], pval[32:1], pv[0]} (k = 0); node N = {e[65], data[64:33], tag[32:1], v[0]}
+        if w is None:
+            return 0
+        _, t, d, e = w
+        if not leaf:
+            return (e << 65) | (d << 33) | (t << 1) | 1
+        row19, lo, k, n = _f(t)
+        assert k == 0, 'leaf partials are k = 0'
+        return ((row19 >> 16) << 60) | (e << 59) | (n << 54) | (lo << 49) | ((row19 & 0xFFFF) << 33) | (d << 1) | 1
+    with open(out / 'stim_packed.hex', 'w') as f:
+        for n in range(T):
+            f.write('%017x %017x\n' % (pack(ai.get(n), leaf_a), pack(bi.get(n), leaf_b)))
     with open(out / 'stim.hex', 'w') as f:
         for n in range(T):
             a = ai.get(n); b = bi.get(n)
@@ -267,13 +283,15 @@ def main() -> int:
     v.add_argument('--seed', type=int, default=1)
     v.add_argument('--words', type=int, default=400)
     v.add_argument('--collide', action='store_true')
+    v.add_argument('--leaf-a', action='store_true', help='input a is a leaf (q lane 63-b format, k = 0)')
+    v.add_argument('--leaf-b', action='store_true')
     v.add_argument('--out', type=Path, required=True)
     t = sp.add_parser('tree')
     t.add_argument('--calendar', type=Path, required=True)
     t.add_argument('--out', type=Path)
     a = ap.parse_args()
     if a.cmd == 'vectors':
-        vectors(a.win, a.rst, a.seed, a.words, a.collide, a.out)
+        vectors(a.win, a.rst, a.seed, a.words, a.collide, a.out, a.leaf_a, a.leaf_b)
         return 0
     r = tree(json.loads(a.calendar.read_text()))
     s = json.dumps(r, indent=1)
