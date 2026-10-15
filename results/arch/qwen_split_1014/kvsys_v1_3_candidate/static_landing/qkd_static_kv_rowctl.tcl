@@ -1099,8 +1099,8 @@ place_pin -pin_name {rsp_layer[3]} -layer M4 -location {0.000 294.060} -pin_size
 place_pin -pin_name {rsp_layer[4]} -layer M4 -location {0.000 294.252} -pin_size {.144 .024}
 place_pin -pin_name {rsp_layer[5]} -layer M4 -location {0.000 294.396} -pin_size {.144 .024}
 place_pin -pin_name {fault} -layer M4 -location {0.000 296.220} -pin_size {.144 .024}
-place_pin -pin_name {ck} -layer M5 -location {40.524 0.000} -pin_size {.024 .144}
-place_pin -pin_name {rst_n} -layer M5 -location {43.500 0.000} -pin_size {.024 .144}
+place_pin -pin_name {ck} -layer M5 -location {40.572 0.000} -pin_size {.024 .144}
+place_pin -pin_name {rst_n} -layer M5 -location {43.452 0.000} -pin_size {.024 .144}
 place_pin -pin_name {pc_get[0]} -layer M4 -location {86.400 4.092} -pin_size {.144 .024}
 place_pin -pin_name {pc_get[1]} -layer M4 -location {86.400 4.236} -pin_size {.144 .024}
 place_pin -pin_name {pc_get[2]} -layer M4 -location {86.400 4.380} -pin_size {.144 .024}

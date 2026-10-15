@@ -654,10 +654,10 @@ place_pin -pin_name {layer[2]} -layer M4 -location {151.200 130.812} -pin_size {
 place_pin -pin_name {layer[3]} -layer M4 -location {151.200 131.148} -pin_size {.144 .024}
 place_pin -pin_name {layer[4]} -layer M4 -location {151.200 131.484} -pin_size {.144 .024}
 place_pin -pin_name {layer[5]} -layer M4 -location {151.200 131.820} -pin_size {.144 .024}
-place_pin -pin_name {ck} -layer M5 -location {71.004 0.000} -pin_size {.024 .144}
-place_pin -pin_name {rst_n} -layer M5 -location {75.996 0.000} -pin_size {.024 .144}
-place_pin -pin_name {cfg_stack[0]} -layer M5 -location {80.268 0.000} -pin_size {.024 .144}
-place_pin -pin_name {cfg_stack[1]} -layer M5 -location {80.748 0.000} -pin_size {.024 .144}
+place_pin -pin_name {ck} -layer M5 -location {70.908 0.000} -pin_size {.024 .144}
+place_pin -pin_name {rst_n} -layer M5 -location {76.092 0.000} -pin_size {.024 .144}
+place_pin -pin_name {cfg_stack[0]} -layer M5 -location {80.316 0.000} -pin_size {.024 .144}
+place_pin -pin_name {cfg_stack[1]} -layer M5 -location {80.700 0.000} -pin_size {.024 .144}
 place_pin -pin_name {cfg_group[0]} -layer M5 -location {84.156 0.000} -pin_size {.024 .144}
-place_pin -pin_name {cfg_group[1]} -layer M5 -location {84.492 0.000} -pin_size {.024 .144}
-place_pin -pin_name {cfg_group[2]} -layer M5 -location {84.828 0.000} -pin_size {.024 .144}
+place_pin -pin_name {cfg_group[1]} -layer M5 -location {84.540 0.000} -pin_size {.024 .144}
+place_pin -pin_name {cfg_group[2]} -layer M5 -location {84.924 0.000} -pin_size {.024 .144}

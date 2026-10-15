@@ -17,13 +17,15 @@ PHY = {
 }
 
 
-def bind(case):
+def bind(case, only=None):
     import die_port_bind_kv as P
     wires, instances = P.parse_die(case/'die.v')
     text = (case/'die.v').read_text()
     lef = (case/'elements.lef').read_text()
     record = {}
     for master, directory in PHY.items():
+        if only and master not in only:
+            continue
         matches=[(inst,conns) for m,inst,conns in instances if m==master]
         if not matches:
             continue
@@ -81,8 +83,9 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--case',type=Path,required=True)
     parser.add_argument('--libs',type=Path)
+    parser.add_argument('--only',default='',help='comma list of PHY masters (kvsys v1.4: the SerDes binds; UCIe waits for the 583-b static link)')
     args=parser.parse_args()
     if args.libs:
         libraries(args.case,args.libs)
     else:
-        print(json.dumps(bind(args.case)))
+        print(json.dumps(bind(args.case,[x for x in args.only.split(',') if x] or None)))

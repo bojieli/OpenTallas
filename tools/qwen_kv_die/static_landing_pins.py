@@ -15,7 +15,9 @@ def build():
         ids=list(range(n)) if indices is None else indices
         for j,i in enumerate(ids):
             pos=lo+(hi-lo)*(j+.5)/len(ids)
-            pos=.012+.048*round((pos-.012)/.048)
+            # 10-15 (kvsys-elements DRT-0255 on the writer, generator fix b37888273): S / N face pins sit on the ASAP7 M5
+            # track lattice (offset .060, pitch .192); W / E faces stay on the M4 lattice (.012 + .048 k)
+            pos=(.06+.192*round((pos-.06)/.192)) if face in 'SN' else (.012+.048*round((pos-.012)/.048))
             w,h=d['outline'];xy={'W':[0,pos],'E':[w,pos],'S':[pos,0],'N':[pos,h]}[face]
             key=name if n==1 and indices is None else f'{name}[{i}]'
             assert key not in d['pins'];d['pins'][key]=dict(face=face,xy=xy,layer='M4' if face in 'WE' else 'M5')
@@ -31,8 +33,10 @@ def build():
         start=32+64*q
         for name,n,lo,hi in [('pc_valid',1,0,1),('pc_data',256,2,42),('pc_t',14,44,47),('pc_v',1,48,49),('pc_epoch',16,50,53),('pc_layer',6,54,55.5),('pc_fault',1,57,58)]:pins(ctl,name,4*n,'E',start+lo,start+hi,list(range(q*n,(q+1)*n)))
     for width in (38,295):
-        d=master(f'qkd_static_kv_hop{width}',52.68,30.24)
-        pins(d,'a',width,'S',4,48);pins(d,'b',width,'N',4,48);pins(d,'ck',1,'W',8,9);pins(d,'rst_n',1,'W',12,13)
+        # hop295: 295 M5 tracks (.192) need 56.6 um of face -> 69.12 wide (was 52.68: .149-um pin pitch, off-track)
+        hw=69.12 if width>200 else 52.68
+        d=master(f'qkd_static_kv_hop{width}',hw,30.24)
+        pins(d,'a',width,'S',4,hw-4);pins(d,'b',width,'N',4,hw-4);pins(d,'ck',1,'W',8,9);pins(d,'rst_n',1,'W',12,13)
     homes=[dict(name='rowctl',master='qkd_static_kv_rowctl',xy=[0,604.8],orient='R0')]
     req=[(90.72,432),(90.72,777.6),(151.2,777.6),(90.72,907.2)]
     rsp=[(151.2,432),(151.2,820.8),(90.72,864),(90.72,1166.4)]
@@ -71,7 +75,7 @@ def build():
     for name,d in masters.items():
         for face in 'WESN':
             ps=sorted((p['xy'][1 if face in 'WE' else 0],n) for n,p in d['pins'].items() if p['face']==face)
-            assert all(b[0]-a[0]>=.096-1e-6 for a,b in zip(ps,ps[1:])),(name,face)
+            assert all(b[0]-a[0]>=(.192 if face in 'SN' else .096)-1e-6 for a,b in zip(ps,ps[1:])),(name,face)
     OUT.mkdir(parents=True,exist_ok=True)
     for name,d in masters.items():
         lines=[]
