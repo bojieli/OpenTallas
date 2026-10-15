@@ -115,7 +115,13 @@ module dsfd_vm_cl #(
         for (k = 0; k < 16; k = k + 1) if (ev[k]) begin
             if (ea[19*k + 18]) d_frg = 1'b1;
 `ifndef OT_SPVM_MUT_NOALIGN
+`ifdef OT_SPVM_SLOC
+            // VM FE (a) capture-slice locality: lane gid in quadrant gid[3:2] owns words 4 gid[3:2] .. + 3 of rows
+            // {key, gid[1:0], i[2:1]}: address bits {row[3:0], word[3:1]} = {gid[1:0], i[2:1], gid[3:2], i[0]}
+            else if (ea[19*k + 1 +: 7] != {gid[1:0], k[3:2], gid[3:2], k[1]}) d_fal = 1'b1;
+`else
             else if (ea[19*k + 1 +: 7] != {gid, k[3:1]}) d_fal = 1'b1;
+`endif
 `endif
             else d_ok[k] = 1'b1;
         end
@@ -970,13 +976,31 @@ module dsfd_vm_fe #(
     genvar gsl, gp;
     generate for (gsl = 0; gsl < NS; gsl = gsl + 1) begin : g_sl
         wire [NP*4-1:0] cm_s; wire [NP*128-1:0] cd_s;
+        wire [NP-1:0] cv_s, cw_s; wire [NP*RA-1:0] cr_s;
         for (gp = 0; gp < NP; gp = gp + 1) begin : g_p
+`ifdef OT_SPVM_SLOC
+            // VM FE (a) capture-slice locality (claude s81-grpA r5): slice gsl's capture port CP + 4 l + m takes segment m
+            // (virtual words 4m .. 4m+3 = its OWN slice's words) of lane g = 4 gsl + l, row {key, l, m}: the lanes of
+            // quadrant gsl feed only slice gsl (no 4 x 4 crossbar); every other port as before
+            if (gp >= CP && gp < CP + 16) begin : g_c
+                localparam integer LL = (gp - CP) / 4, SG = (gp - CP) % 4, LG = CP + 4 * gsl + LL;
+                localparam [1:0] S2 = SG;
+                assign cv_s[gp] = c_vv[LG]; assign cw_s[gp] = c_we[LG];
+                assign cr_s[gp*RA +: RA] = {c_row[LG*RA + 4 +: RA - 4], c_row[LG*RA +: 2], S2};   // c_row[1:0] = gid[1:0] = L2 when valid
+                assign cm_s[4*gp +: 4] = c_m[LG*16 + 4*SG +: 4];
+                assign cd_s[128*gp +: 128] = c_dd[LG*512 + 128*SG +: 128];
+            end else begin : g_n
+`endif
+            assign cv_s[gp] = c_vv[gp]; assign cw_s[gp] = c_we[gp]; assign cr_s[gp*RA +: RA] = c_row[gp*RA +: RA];
             assign cm_s[4*gp +: 4] = c_m[gp*16 + 4*gsl +: 4];
             assign cd_s[128*gp +: 128] = c_dd[gp*512 + 128*gsl +: 128];
+`ifdef OT_SPVM_SLOC
+            end
+`endif
         end
         localparam integer W0 = NP * (2 + RA + 4 + 128);
         wire [W0-1:0] s0;
-        dsfd_vm_be_kreg #(.W(W0), .ID(600 + gsl)) u_s0 (.clk(clk), .d({rn ? c_vv : {NP{1'b0}}, c_we, c_row, cm_s, cd_s}), .q(s0));
+        dsfd_vm_be_kreg #(.W(W0), .ID(600 + gsl)) u_s0 (.clk(clk), .d({rn ? cv_s : {NP{1'b0}}, cw_s, cr_s, cm_s, cd_s}), .q(s0));
         (* keep = 1 *) reg rr_f;
         always @(posedge clk) rr_f <= rn0;
         reg [3:0] rf_d;

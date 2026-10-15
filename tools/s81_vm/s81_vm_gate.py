@@ -53,6 +53,12 @@ CASES = {
     'tp_trace': dict(params=dict(MODE=1, TP_ROWS=56), defines=['OT_SPVM_BGTRACE'], expect='pass'),
     'gold_s1_trace': dict(params=dict(SEED=1), defines=['OT_SPVM_BGTRACE'], expect='pass'),
 }
+# VM FE (a) capture-slice locality (claude s81-grpA r5, S-DIE v19 decision vm_fe (a)): the root -> address contract is
+# transposed inside each 256-word block so the 4 lanes of quadrant q write only column slice q (no 4 x 4 fxs -> fsr
+# crossbar); same production shapes, same expectations; throughput compared against the default cases
+for _c in ('gold_s1', 'gold_s2', 'tp', 'burst_r128', 'burst_r128_np2', 'burst_r256_skew6', 'align_neg', 'mut_dropw_burst',
+           'mut_noalign', 'mut_np16', 'mut_stale', 'land_attn'):
+    CASES['sl_' + _c] = dict(CASES[_c], defines=CASES[_c].get('defines', []) + ['OT_SPVM_SLOC'])
 # ---- hierarchy dsfd_vm_fe_h (el1013-s81-vmfe): flat reference at the hierarchy's stage counts (ref_*), lockstep with the
 # hierarchy as a shadow (lk_*: every FE output bit-exact every cycle), hierarchy-only mutants (must break lockstep) and
 # every case above with the hierarchy SUBSTITUTED for the flat FE (h_*: same expectation; pass cases also need LOCKSTEP_OK)
@@ -84,6 +90,10 @@ CASES['lk_mut_avbyp'] = dict(params=dict(MODE=4), defines=LK + ['OT_VMFE_MUT_AVB
 CASES['lk_mut_wnqdrop'] = dict(params=dict(SEED=1, NCYC=20000), defines=LK + ['OT_VMFE_MUT_WNQDROP'], expect='fail', regex='LOCKSTEP_BAD')
 for _n, _c in _base.items():
     CASES['h_' + _n] = dict(_c, defines=_c.get('defines', []) + SUB, **({'regex2': 'LOCKSTEP_OK'} if _c['expect'] == 'pass' else {}))
+# FE (a) hierarchy: the flat SLOC FE as reference, the SLOC hierarchy as shadow (sl_lk_*) and substituted (h_sl_*, above)
+for _n in LOCK_SET:
+    CASES['sl_lk_' + _n] = dict(_base[_n], defines=LK + ['OT_SPVM_SLOC'], regex2='LOCKSTEP_OK')
+CASES['sl_lk_mut_fxr1'] = dict(params=dict(SEED=1, NCYC=20000), defines=LK + ['OT_SPVM_SLOC', 'OT_VMFE_MUT_FXR1'], expect='fail', regex='LOCKSTEP_BAD')
 FEH_SRC = 'rtl/dsrom_sys/s81_ph/vm/dsfd_vm_fe_h.sv'
 COVER = ['rd', 'wr', 'drain', 'cap', 'cts_low', 'cw_stall', 'rdy', 'dv', 'ks']   # every bin must be hit over the lockstep set
 

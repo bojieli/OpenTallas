@@ -25,6 +25,9 @@ import argparse, importlib.util, json, re, sys
 from pathlib import Path
 import numpy as np
 import hashlib
+import os
+# FE (a) capture-slice locality (claude s81-grpA r5): capture bundle (fxs b, segment s) lands on fsr b (RTL OT_SPVM_SLOC)
+SLOC = os.environ.get('OT_FE_SLOC', '0') == '1'
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools' / 'hier_contract'))
@@ -245,8 +248,12 @@ class Plan:
                 src = [x for j in range(4) for x in v('s_o', (4 * j + s) * 147, (4 * j + s) * 147 + 147)]
                 rin = [x for j in range(4) for x in v('i', 146 * j, 146 * j + 146) + v('i_v', j)]
                 rout = [x for j in range(4) for x in v('o', 146 * j, 146 * j + 146) + v('o_v', j)]
-                dst = [x for j in range(4) for x in fsr_port(12 + 4 * b + j)]
-                self.chain(f'c{b}s{s}', 'dsfd_vm_fxr', [(f'fxs{b}', src)], rin, rout, f'fsr{s}', dst)
+                if SLOC:                                 # FE (a) (OT_SPVM_SLOC): segment s of fxs b -> fsr b, ports 12 + 4 j + s
+                    dst = [x for j in range(4) for x in fsr_port(12 + 4 * j + s)]
+                    self.chain(f'c{b}s{s}', 'dsfd_vm_fxr', [(f'fxs{b}', src)], rin, rout, f'fsr{b}', dst)
+                else:
+                    dst = [x for j in range(4) for x in fsr_port(12 + 4 * b + j)]
+                    self.chain(f'c{b}s{s}', 'dsfd_vm_fxr', [(f'fxs{b}', src)], rin, rout, f'fsr{s}', dst)
             self.ext_hop('m_*', 'S', f'fsr{s}', [p for p in MP['dsfd_vm_fsr'][2] if p.startswith('o_')], drive_in=False)
         # ---- bundle 4 (fcw ports 0, 1 + fcc ports 3, 4 -> fxa) and bundle 5 (fcn ports 2, 5 .. 9, rf, tags + fld ports 10, 11 -> fxb)
         fs_d = lambda P, n=128: v('i_d', 128 * P, 128 * P + n)
