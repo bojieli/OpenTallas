@@ -182,6 +182,9 @@ module ot_qfd_sp_vector_memory_bv #(
     input  wire [(NRB/8)*56-1:0]    leaf_ck,
     input wire [NRB-1:0] observer_ck,
     output wire [511:0]             qr_commit_mask,
+    output wire [NRB-1:0] write_commit_v,
+    output wire [NRB*LAW-1:0] write_commit_line,
+    output wire [NRB*16-1:0] write_commit_mask,
     input wire aw_v,
     input wire [AW-5:0] aw_row,
     input wire [511:0] aw_data,
@@ -928,7 +931,10 @@ module ot_qfd_sp_vector_memory_bv #(
                 .clk(clk), .rst_n(rst_n), .leaf_ck(leaf_ck[56*g +: 56]), .observer_ck(observer_ck[8*g+:8]),
                 .re(d_re), .ra(d_ra), .we(d_we), .wl(d_wl), .wm(d_wm), .wd(d_wd), .rq(d_rq), .rqb(d_rqb),
                 .sre(d_sre), .sra(d_sra), .sv(d_sv), .swe(d_swe), .swl(d_swl), .swm(d_swm), .swd(d_swd),
-                .qr_commit_mask(qr_masks[512*g +: 512]), .ro(ro_t), .so(so_t));
+                .qr_commit_mask(qr_masks[512*g +: 512]),
+                .write_commit_v(write_commit_v[8*g+:8]),
+                .write_commit_line(write_commit_line[8*LAW*g+:8*LAW]),
+                .write_commit_mask(write_commit_mask[128*g+:128]), .ro(ro_t), .so(so_t));
             assign xo = {8*512{1'b0}};
             assign ovf_t = 1'b0;
 `else
