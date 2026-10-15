@@ -8906,6 +8906,16 @@ def _assigned_record(master):
         rec = json.loads(path.read_text()) if path.exists() else None
         if rec:
             assert rec['master'] == master and rec['schema'] == 'opentallas.s81.assigned_pins.v1', path
+            # Reject an impossible shared origin before constructing thousands
+            # of stations. This never moves assigned pins. The complete
+            # actual-platform track/site gate still owns physical qualification.
+            from s81.assigned_pin_lattice import local_residue_conflicts
+            # Qualified bound views use their measured LEF pins; assigned
+            # records may still supply clock/reset metadata for those views.
+            conflicts = [] if master in bound_views() else local_residue_conflicts(rec)
+            if conflicts:
+                raise ValueError('assigned pins have no common track origin: '
+                                 + str(path) + ': ' + json.dumps(conflicts, sort_keys=True))
         _ASSIGNED_PIN_CACHE[master] = rec
     return _ASSIGNED_PIN_CACHE[master]
 

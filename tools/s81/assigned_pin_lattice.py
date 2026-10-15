@@ -7,6 +7,41 @@ import collections
 import math
 
 
+def local_residue_conflicts(record):
+    """Find impossible common origins independently of track offset/site.
+
+    ASAP7 M1/M3..M9 have one preferred track family per layer. Translation
+    and any non-rotated mirror preserve differences of pin centres, so two
+    different local residues on one such layer can never share an origin.
+    M2 has multiple track offsets and is deliberately left to full platform
+    audit(). Cross-face depth centres depend on the final generated outline,
+    which can differ from a record by the allowed 24nm shave; leave those to
+    the final LEF/platform gate too. A clean result is necessary, not signoff.
+    """
+    periods={'M1':36,'M3':36,'M4':48,'M5':48,'M6':64,'M7':64,'M8':80,'M9':80}
+    groups=collections.defaultdict(lambda:collections.defaultdict(list))
+    for port,spec in record['ports'].items():
+        coords=spec.get('per_bit')
+        if coords is None:
+            at=spec['at']
+            cs=[at[0]+i*at[1] for i in range(spec['bits'])] if spec['uniform'] else at
+            coords=[[spec['face'],spec['layer'],c,spec['depth']] for c in cs]
+        if len(coords)!=spec['bits']:
+            raise ValueError(f'{port}: bit count mismatch')
+        for bit,(face,layer,c,depth) in enumerate(coords):
+            if layer not in periods:
+                continue
+            axis=1 if layer in ('M4','M6','M8') else 0
+            if axis!=(1 if face in 'EW' else 0):
+                continue
+            hw=.009 if layer in ('M1','M3') else .012
+            center2=round((c-hw)*1000)+round((c+hw)*1000)
+            groups[layer][center2%(2*periods[layer])].append(f'{port}[{bit}]')
+    return [dict(layer=layer,period_nm=periods[layer],
+                 centre_residues_x2_nm={str(k):dict(pins=len(v),examples=v[:4]) for k,v in sorted(g.items())})
+            for layer,g in sorted(groups.items()) if len(g)>1]
+
+
 def audit(record, tracks, orient='R0', site=(54,270)):
     if orient not in ('R0','MX','MY','R180'):
         raise ValueError('only non-rotated orientations are supported')

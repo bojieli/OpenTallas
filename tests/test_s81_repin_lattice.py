@@ -7,7 +7,7 @@ import unittest
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'/'s81'))
 from repin_lattice import pack_lattice_face, translation_period_nm
-from assigned_pin_lattice import audit
+from assigned_pin_lattice import audit, local_residue_conflicts
 
 
 def row(start,width,desired,period=48,anchor=False):
@@ -45,16 +45,39 @@ class LatticePacking(unittest.TestCase):
             'c_st':dict(face='E',layer='M4',bits=2,at=[10703.,.048],uniform=True,depth=.192)})
         tracks={'M4':(1,48,{12})}
         self.assertEqual(audit(r,tracks)['status'],'FAIL')
+        self.assertEqual(local_residue_conflicts(r)[0]['layer'],'M4')
         source=copy.deepcopy(r)
         for p,d in [('c_cmd',.396),('c_done',2.252),('c_st',.284)]:
             source['ports'][p]['at'][0]-=d
         self.assertEqual(audit(source,tracks)['status'],'PASS')
+        self.assertEqual(local_residue_conflicts(source),[])
         # Old continuous translations destroy common residues; any permitted
         # translation preserves the actual source's valid common origin.
         for i,p in enumerate(source['ports']):
             source['ports'][p]['at'][0]+=(i+1)*.048
         for orient in ['R0','MX','MY','R180']:
             self.assertEqual(audit(source,tracks,orient)['status'],'PASS')
+
+    def test_generator_refuses_actual_bad_record_before_build_without_mutation(self):
+        root=Path(__file__).resolve().parents[1]
+        sys.path.insert(0,str(root/'tools'))
+        import dsrom_s81_fulldie as G
+        path=root/'physical/s81_die_pins/v21_geo_s_gen18p/dsfd_sp_su_c.json'
+        before=path.read_bytes()
+        old_dirs,old_cache,old_bound=G.ASSIGNED_PINS_DIR,G._ASSIGNED_PIN_CACHE,G.bound_views
+        try:
+            G.ASSIGNED_PINS_DIR=str(path.parent)
+            G._ASSIGNED_PIN_CACHE={}
+            with self.assertRaisesRegex(ValueError,'assigned pins have no common track origin'):
+                G._assigned_record('dsfd_sp_su_c')
+            self.assertNotIn('dsfd_sp_su_c',G._ASSIGNED_PIN_CACHE)
+            self.assertEqual(path.read_bytes(),before)
+            # Bound native LEFs own their pin geometry. Legacy assigned data
+            # can remain unused while clock/reset metadata is consumed.
+            G.bound_views=lambda:{'dsfd_sp_su_c':{'verdict':'QUALIFIED'}}
+            self.assertEqual(G._assigned_record('dsfd_sp_su_c'),json.loads(before))
+        finally:
+            G.ASSIGNED_PINS_DIR,G._ASSIGNED_PIN_CACHE,G.bound_views=old_dirs,old_cache,old_bound
 
     def test_search_uses_lattice_for_real_lef_groups_and_anchor(self):
         from die_link_repin_search import run
