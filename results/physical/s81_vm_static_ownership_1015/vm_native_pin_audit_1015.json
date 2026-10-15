@@ -1081,6 +1081,29 @@
    "comb_first": [],
    "pass": false,
    "fail_why": "capture 218.0 > 190 (22 pins)"
+  },
+  "physical/ref_tile/dsfd_vm_static_cap_ctl_1015_r1/views/dsfd_vm_static_cap_ctl": {
+   "cell": "dsfd_vm_static_cap_ctl",
+   "view": "physical/ref_tile/dsfd_vm_static_cap_ctl_1015_r1/views/dsfd_vm_static_cap_ctl",
+   "lib_cell": "dsfd_vm_static_cap_ctl",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 47.0,
+   "spread_ps": 1.2,
+   "outputs": 3,
+   "inputs": 4,
+   "launch_ps": 203.5,
+   "launch_pin": "flush",
+   "capture_ps": 109.8,
+   "capture_pin": "st_flt",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": ""
   }
  }
 }
