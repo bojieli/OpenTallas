@@ -114,12 +114,10 @@ module ot_qfd_vm_region_nx #(
       if(BANK_BASE+g>=24 && BANK_BASE+g<56 && TOTAL_BANKS==64)begin : g_qbank
         // Q rows856..887 occupy copy0 banks24..55 at line13. Exactly32 actual observer roots are needed.
         wire obs_clk=USE_OBSERVER_CLOCKS ? observer_ck[g] : lc[4*g+2];
-        reg rr,ow;reg [LAW-1:0] ol;reg [15:0] om,cm;
-        always @(posedge obs_clk or negedge rtg[g])if(!rtg[g])rr<=0;else rr<=1;
-        always @(posedge obs_clk or negedge rr)if(!rr)ow<=0;else ow<=g_b[g].m_we;
-        always @(posedge obs_clk)begin ol<=g_b[g].m_wl;om<=g_b[g].m_wm;end
-        always @(posedge obs_clk or negedge rst_n)
-            if(!rst_n)cm<=0;else cm<=(ow && ol==13)?om:16'd0;
+        wire [15:0] cm;
+        qfd_vm_qcommit #(.LAW(LAW),.QLINE(13)) u_obs (
+            .ck(obs_clk),.rst_n(rst_n),.bank_rst_n(rtg[g]),
+            .we(g_b[g].m_we),.wl(g_b[g].m_wl),.wm(g_b[g].m_wm),.cm(cm));
         assign qcm[g]=512'(cm) << (16*(BANK_BASE+g-24));
       end else begin : g_not_q
         assign qcm[g]=512'd0;
@@ -270,4 +268,29 @@ module ot_qfd_vm_rr2_nx #(
             else begin rs1x <= rdc; rs2 <= rs1x; end
         always @(posedge clk) if (rs2[1]) ro[s*32 +: 32] <= (rs2[0] ^ (MUT == 1)) ? t1b[s*32 +: 32] : t1a[s*32 +: 32];
     end endgenerate
+endmodule
+
+// A separate physical leaf for each Q bank. This clones the closed bank's
+// input/reset registers and observes the edge on which its SRAM consumes them.
+// ck is an independent native clock entry compensated by this leaf's measured
+// insertion; it must never be connected to the uncompensated bank clock pin.
+module qfd_vm_qcommit #(
+    parameter integer LAW=8, QLINE=13
+) (
+    input wire ck, rst_n, bank_rst_n,
+    input wire we,
+    input wire [LAW-1:0] wl,
+    input wire [15:0] wm,
+    output reg [15:0] cm
+);
+    reg rr,ow;
+    reg [LAW-1:0] ol;
+    reg [15:0] om;
+    always @(posedge ck or negedge bank_rst_n)
+        if(!bank_rst_n)rr<=0;else rr<=1;
+    always @(posedge ck or negedge rr)
+        if(!rr)ow<=0;else ow<=we;
+    always @(posedge ck)begin ol<=wl;om<=wm;end
+    always @(posedge ck or negedge rst_n)
+        if(!rst_n)cm<=0;else cm<=(ow && ol==QLINE)?om:16'd0;
 endmodule
