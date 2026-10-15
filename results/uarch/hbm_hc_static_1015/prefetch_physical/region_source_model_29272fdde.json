@@ -1,0 +1,180 @@
+{
+  "schema": "opentallas.hc.prefetch.region-physical-model.v1",
+  "status": "SOURCE_EXACT_DIFF_ONLY_AWAIT_FUNCTIONAL_GATE_PASS",
+  "source_pins": [
+    {
+      "commit": "29272fdde3585a83fe803ba2d63166b98b1df016",
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_region_cdc.sv",
+      "sha256": "2dda0c920f3c295bb27507ef08da28e8ab418864e86cef56a68bbf8b7b9a6f96"
+    },
+    {
+      "commit": "29272fdde3585a83fe803ba2d63166b98b1df016",
+      "path": "rtl/hbm_accel/generic/peers/hc_prefetch_static/ot_hgi_hc_prefetch_resident_static.sv",
+      "sha256": "2f48b7acfbc645bb919e3e33b2b90cdb080e24c821b966088e3806d548b603a3"
+    }
+  ],
+  "baseline_receipt_commit": "c1a4069aa",
+  "baseline_is_immutable": true,
+  "functional_gate": {
+    "owner": "/root/h_hc_sfu/hc_static_engine/hc_weight_prefetch",
+    "session": 30658,
+    "state": "AWAIT_VERDICT_FROM_OWNER",
+    "policy": "No heavy successor synthesis or route before actual native320 gate PASS"
+  },
+  "scope": {
+    "supported_candidate_positions": [
+      6,
+      8
+    ],
+    "canonical_P1_qualified": false,
+    "P1_G25_approx_budget_cycles": 355,
+    "four_AP_minimum_data_cycles_per_row": 640,
+    "reason_P1_cannot_qualify": "Four256bit sectors percycle transfer2560sectors/row in640cycles even without HBM stalls;640exceeds~355 budget. Lookahead does not increase onchipAP bandwidth."
+  },
+  "inventory": {
+    "stacks": 4,
+    "regions_per_stack": 8,
+    "sectors_capacity_per_region": 512,
+    "actual_sectors_per_region": 320,
+    "lookahead_rows": 4,
+    "SRAMs_per_stack": 32,
+    "distinct_source_SRAMs_total": 128,
+    "source_bytes_total": 524288,
+    "useful_four_row_payload_bytes": 327680,
+    "HCstore64_overlap_geometry80": true,
+    "canonical_future_macro": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  },
+  "storage_mapping": {
+    "region_bits": "{epoch[1:0],half}",
+    "physical_row9": "{region[0],region[2:1],ordinal[8:3]} = {half,epoch[1:0],row6}",
+    "macro_chip2": "physical_row9[8:7] = {half,epoch[1]}",
+    "macro_row7": "physical_row9[6:0] = {epoch[0],row6}",
+    "read_storage_row9": "{drain_bank[0],drain_bank[2:1],drain_row[5:0]}",
+    "opposite_halves": "half0 selects chips0/1,half1 chips2/3; cannot alias by merely matching epoch low bits",
+    "identity": "Physical region uses low2epoch only; owner/descriptor/response/drain retain FULL16epoch and unique17tag, checks not narrowed",
+    "descriptor_bounds": "nonzero<=512sectors, aligned reserve/interleaved total and stack/address bounds remain"
+  },
+  "ABI_changes": {
+    "helper_master": [
+      "ot_hbm_svc_prefetch_block_cdc",
+      "ot_hbm_svc_prefetch_region_cdc"
+    ],
+    "wrapper_master": [
+      "ot_hgi_hc_prefetch_direct_static",
+      "ot_hgi_hc_prefetch_resident_static"
+    ],
+    "helper_ports_bits": {
+      "reserve_bank": [
+        1,
+        3
+      ],
+      "block_ready": [
+        2,
+        8
+      ],
+      "block_ready_bank": [
+        1,
+        3
+      ],
+      "start_bank": [
+        1,
+        3
+      ],
+      "out_bank": [
+        1,
+        3
+      ]
+    },
+    "wrapper_ports_bits": {
+      "new_resident_ready": [
+        0,
+        32
+      ],
+      "fetched_ready_unchanged": [
+        8,
+        8
+      ]
+    },
+    "fetched_ready": "Combinational selected two-region window from resident_ready using drain_epoch[1:0]; full32resident_ready exposed. Must not mislabel fetched_ready as allregionsready.",
+    "native_K_ports": "UNCHANGED dimensions/identity/routing; existing combinational K request and kr_rdy source pin defects remain",
+    "minimum_MAX_OUTSTANDING": [
+      1,
+      2
+    ],
+    "actual_production_MAX_OUTSTANDING": 8,
+    "DELIVERY_II": 8,
+    "ISSUE_WIDTH": 4,
+    "AP_capture": "UNCHANGED8192capture+2224APoutput FF widths; adds3bitregion_q in wrapper"
+  },
+  "declared_clocked_state_width_deltas_per_helper": {
+    "HBM": {
+      "owner_region_256entries_times2": 512,
+      "active_h_bank_widen1to3": 2,
+      "response_FIFO_memory_8lanes_times4entries_times2": 64,
+      "subtotal": 578
+    },
+    "stream": {
+      "allocated_ready_announced_3arrays_times6": 18,
+      "bank_epoch_6extra_regions_times16": 96,
+      "bank_total_6extra_regions_times12": 72,
+      "received_6extra_regions_times12": 72,
+      "block_ready_bank_widen1to3": 2,
+      "drain_bank_widen1to3": 2,
+      "out_bank_widen1to3": 2,
+      "descriptor_FIFO_memory_4entries_times2": 8,
+      "subtotal": 272
+    },
+    "unchanged_seen_bits": 4096,
+    "seen_repartition": "2x2048 ->8x512, SAME4096bits",
+    "FIFO_pointer_sync_reset_widths": "UNCHANGED: depth4 retained, only payload widths change",
+    "meaning": "Declared clocked state/payload width delta read from literal source; NOT synthesized flop delta. Blocking process temporary variables and combinational arrays are excluded."
+  },
+  "whole_wrapper_declared_state_width_delta": {
+    "HBM_4helpers": 2312,
+    "stream_4helpers_plus_wrapper_region_q3": 1091,
+    "total": 3403,
+    "NOT_A_MEASURED_ROOT_COUNT": true
+  },
+  "source_model_baseline_plus_declared_delta_per_helper": {
+    "HBM": 21714,
+    "stream": 4962,
+    "classification": "Planning estimate ONLY; baseline21136/4690 actualbitmapped + declaredwidth578/272. Optimizer/crosshierarchy differences require new source-exact census AFTER gatePASS."
+  },
+  "new_FIFO_storage_per_helper": {
+    "response_WIDTH": 286,
+    "response_DEPTH": 4,
+    "response_lanes": 8,
+    "response_memory_bits": 9152,
+    "perlane_response_memory_bits": 1144,
+    "descriptor_WIDTH": 63,
+    "descriptor_DEPTH": 4,
+    "descriptor_memory_bits": 252
+  },
+  "cohardening_request": {
+    "status": "NOT_GRANTED",
+    "native_PC_baseline_source_FF": 13649,
+    "native_PC_baseline_mapped_FF": 13617,
+    "native_PC_SRAM_clock_pins": 1,
+    "HC_owner_per_PC_8entries_times48bits": 384,
+    "conservative_combined_sinks_excluding_new_nonowner_controls": 14034,
+    "mapped_native_baseline_plus_unmapped_HC_owner_plus_SRAM": 14002,
+    "region_response_FIFO_memory_perlane": 1144,
+    "policy": "Keep responseFIFO in separate actualroot/hardened leaf; old1136estimate superseded by literalnew286x4=1144. NativePC frozen slot grant does not grant combinedHCsource. Need exact interfaces/registerpins/fanout/clockphase/geometry grant."
+  },
+  "physical_stream_partition": {
+    "HBM": "Prefer request candidate of384ownerFF/PC co-hardened with existing nativePC if granted; helper controls and1144bitresponseFIFO perlane remain separate actualleaves/roots. Preserve commoncontroller state owner, no duplicate controller.",
+    "stream": "Perstack32SRAM+landing/seen/metadata+existing2048capture+556APserializer proposed cohardening; no extra cycles assumed, no assignedoutline/pin/phi-R. PairAP bank(s,s+4) <=500umregisteredhops required.",
+    "unclosed_master_physical_owner": "/root/h_hc_sfu/hc_static_engine/hc_weight_prefetch/prefetch_physical"
+  },
+  "remaining_gates": [
+    "actualsourcefunctionalnative320PASS+mutant",
+    "actual6/8native434numericcompositionPASS+mutant",
+    "newsourceexactrootcensus/bitmapping",
+    "canonicalV2LEF/hash/logicportaudit",
+    "explicitcombinedslot/pinface/clockphasegrant",
+    "registeredboundarypinproof",
+    "CTS/insertion/spread andSSFFDRCsignoff",
+    "immutable6/8throughputmeasurement;P1requiresdifferentbandwidthdesign"
+  ],
+  "physical_qualified": false
+}
