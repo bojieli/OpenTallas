@@ -70,6 +70,7 @@ FRAMES = dict(qkd_ckbump=(43.2, 43.2), qkd_d2d=(777.6, 518.4), qkd_seq=(777.6, 5
 RELAY_PITCH = 430.56
 PIN_REACH = 450.0               # qwen-1010/b: pin-to-pin register hop target (SS reach 504 um)
 REACH_TARGET = 470.0            # every register-to-register segment (nearest frame points) <= this (SS reach 504 um)
+FIRST_REACH = dict(wencoded=300.0)   # v1.3: first relay of the write-queue controller's group words (ctl_bin f<g>, late launch)
 RELAY_TARGET = 320.0            # placement pitch: keeps every segment (nearest frame points) under the 504 um SS reach
 GRID = 43.2                     # relay routing grid (um)
 CHAN = 129.6                    # routing / relay channel beside every column (um)
@@ -1160,19 +1161,27 @@ def _relays(m):
                 return near_d(rect(by[a]), rect(by[b]))
             return d_ep(st_['prev_pt'], b, pb)
 
+        def reach_():
+            # v1.3 (kvs5L TT -17.19: CLOSED ctl_bin launches f<g> late, 413 um to its first relay): a bus whose driver is a
+            # closed view with a late launch takes its FIRST relay within FIRST_REACH of that pin; later hops keep PIN_REACH
+            if st_['prev_pt'] is None:
+                return FIRST_REACH.get(bid.rsplit('_', 2)[0], PIN_REACH)
+            return PIN_REACH
+
         def chain_():
             path_ = st_['path']
-            while remaining_() > PIN_REACH:
+            while remaining_() > reach_():
                 got = None
                 prev_pt_, idx0_ = st_['prev_pt'], st_['idx0']
+                rch = reach_()
                 # the farthest path point (from the previous chain point) with a free spot within reach
-                for idx in range(min(len(path_) - 1, idx0_ + int(PIN_REACH // G) + 2), idx0_, -1):
+                for idx in range(min(len(path_) - 1, idx0_ + int(rch // G) + 2), idx0_, -1):
                     px, py = path_[idx]
                     for dx_, dy_ in (offs_wide if st_.get('wide') else offs):
                         qx, qy = up(px + dx_ - fw / 2, GX), up(py + dy_ - fh / 2, GY)
                         pin_a = (qx, qy + fh / 2)
                         dd = d_ep(pin_a, a, pa) if prev_pt_ is None else abs(pin_a[0] - prev_pt_[0]) + abs(pin_a[1] - prev_pt_[1])
-                        if dd <= PIN_REACH and free(qx, qy, fw, fh):
+                        if dd <= rch and free(qx, qy, fw, fh):
                             got = (qx, qy, idx)
                             break
                     if got:
