@@ -19,6 +19,21 @@ CORNERS = ('tt', 'ff', 'ss')
 ENTRY_DOMAIN_API_VERSION = 1
 
 
+def signoff_period(spec):
+    """Opt-in leaf signoff period; all existing profiles retain their ABI."""
+    route = spec.get('route', {})
+    value = route.get('signoff_period_ps', 833.333)
+    if 'signoff_period_ps' in route and spec.get('clock') != 'multiple_cts_roots':
+        raise ValueError('signoff_period_ps requires multiple_cts_roots leaf timing ownership')
+    if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value <= 0:
+        raise ValueError('signoff_period_ps must be finite and positive')
+    if 'signoff_period_ps' in route:
+        physical = route.get('period_ps', 770)
+        if isinstance(physical, bool) or not isinstance(physical, (int, float)) or not math.isfinite(physical) or physical <= 0 or physical > value:
+            raise ValueError('route period must be finite, positive and no greater than signoff_period_ps')
+    return float(value)
+
+
 def related_data(spec):
     """Explicit opt-in to ordinary STA across related leaf roots."""
     policy = spec.get('clock_data_paths', 'independent')
@@ -37,6 +52,7 @@ def domains(spec):
     declared = spec.get('clock_entry_domains')
     leaf = spec.get('clock') == 'multiple_cts_roots'
     if leaf:
+        signoff_period(spec)
         related_data(spec)
     if leaf and (spec.get('kind') != 'tile' or declared is None or len(spec.get('clock_ports', [])) < 2):
         raise ValueError('multiple_cts_roots requires a leaf tile, at least two roots and explicit IO domains')
@@ -158,7 +174,7 @@ def generate(spec, root):
     owner_rows = []
     for name, d in ds.items():
         patterns = lambda names: ' '.join('{' + n + '}' for n in names)
-        domain_rows.append("{" + name + "} {clock " + virtual_clock(name) + " io_budget_ps " + str(round(833.333 * d["ratio"][0] / d["ratio"][1] * 0.2, 3)) + " inputs {" + patterns(d["inputs"]) + "} outputs {" + patterns(d["outputs"]) + "}}")
+        domain_rows.append("{" + name + "} {clock " + virtual_clock(name) + " io_budget_ps " + str(round(signoff_period(spec) * d["ratio"][0] / d["ratio"][1] * 0.2, 3)) + " inputs {" + patterns(d["inputs"]) + "} outputs {" + patterns(d["outputs"]) + "}}")
         owner_rows.extend(f"{{{p}}} {{{name}}}" for p in d['ports'])
     body = LEAF_BODY if spec.get('clock') == 'multiple_cts_roots' else BODY
     if direct['entries']:
