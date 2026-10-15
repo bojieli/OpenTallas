@@ -17243,20 +17243,30 @@ def hbm_smh_split_west_transport_model():
 
 
 def dsrom_wfc_static_link_price():
-    """S81 WFC stage kit STATIC die form (dsfd_wfc_stg_cl.sv +define DSFD_WFC_STG_STATIC, S-VM F7 2026-10-15): the
-    compiler-scheduled link to the static collective.  Measured on tools/dsrom_wfc_static_bench.py (PRICED stage shape,
-    static VM, RXWORDS 41 / XWORDS 46, 40 jobs) against the grant form on the same bench with an ideal collective."""
-    grant = dict(period_edges=12023 / 40, rx_last_to_tx_header_edges=(241, 244))
-    static = dict(period_edges_min=298, calendar_period_edges=300, tx_off_edges=272, tx_off_min_measured=264,
-                  rx_last_to_tx_header_edges=274, rx_buffer_flits=32, rx_max_occupancy=14,
-                  tx_buffer_flits=64, tx_max_occupancy=9, buffer_bits=(32 + 64) * 513)
-    return dict(schema='opentallas.s81.wfc_static_link_price.v1', clock='fast (stream) edges', grant_form=grant,
-                static_form=static,
-                added_latency_edges_per_stage_handoff=static['rx_last_to_tx_header_edges'] - grant['rx_last_to_tx_header_edges'][0],
-                throughput_change='none: calendar period 300 >= the grant form 300.6 edges/job; 298 measured minimum',
-                compiler_constants=dict(TX_OFF=272, tx_slots='consecutive edges from last RX arrival + TX_OFF',
-                                        rx_slots='any calendar edge; occupancy <= 32 flits'),
-                open=['TX_OFF is measured at the bench stage-core time (T_CORE 80): set per production stage programme',
-                      'internal WFC tokpipe in/out grants and VM write credits stay inside the master (absorbed by the '
-                      'static buffers; any would-be wait at the boundary is a sticky fault)',
-                      'buffers as flops (49,248 b): map to ot_sram_1r1w_64x512 macros at hardening'])
+    """S81 WFC stage kit, STATIC (rtl/dsrom_sys/mtp/dsfd_wfc_stg_static.sv, die name dsfd_wfc_stg; S-VM F7 static-wfc2
+    2026-10-15).  No ready / grant / credit on any production path; every stage at a fixed offset from its scheduling
+    event (RX header, DONE).  Measured on tools/dsrom_wfc_static_bench.py (PRICED stage shape RXW 41 / TXW 46, static VM
+    endpoint behaviour RLAT 17 / WLAT 5, T_CORE 80 serial) and against the grant form (dsfd_wfc_stg_cl) on its own bench.
+    Stage accounting (fast = stream 1.2 GHz edges, serial = 0.9 GHz edges):"""
+    stages = dict(
+        rx_pin_flop=('fast', 1), rx_parse_to_first_write_slot=('fast', 2), writer_out_flop=('fast', 1),
+        x43_transfer=('fast->serial', '1..3 serial (fixed per phase)'), write_copy_pin_flop=('serial', 1),
+        vm_writes=('serial', 41), doorbell=('serial', 1), start_gap=('serial', 4 + 1),
+        stage_core=('serial', 'T_stage (programme)'), done_pin_flop=('serial', 1), read_launch=('serial', 1),
+        reads=('serial', 46), vm_read_latency=('serial', 'RLAT = 17 + die stations'), return_out_flop=('serial', 1),
+        x34_transfer=('serial->fast', '1..3 fast (fixed per phase)'), return_pin_flop=('fast', 1),
+        tx_buffer_write=('fast', 1), tx_header_offset=('fast', 'TXD = (4 (RLAT + 1 + TXW) + 2) / 3 - (TXW - 1) + 3 = 44 at RLAT 17'),
+        tx_launch=('fast', 1))
+    measured = dict(done_to_tx_header_fast=(53, 54), rx_header_to_tx_header_fast_at_tcore80=(232, 233), txd_margin_fast=3,
+                    min_period_fast=175, grant_form_period_fast=12023 / 40, grant_form_rx_last_to_tx_header_fast=(241, 244))
+    return dict(schema='opentallas.s81.wfc_static_kit_price.v2', stages=stages, measured=measured,
+                tx_off_formula='TX header (fast edge) = RX header + 2 + 56 + 5 serial-equivalent + T_stage(L) + 51; i.e. '
+                               'TX_OFF(L) = T_stage(L) + K with K = rx_tx(T_CORE 80) - 80 serial = 233 - 107 = 126 fast edges '
+                               '(T_stage from the stage programme, e.g. results/rtl/s81_functional_token_1014 layer_cycles)',
+                throughput='period >= 175 fast edges / job at T_CORE 80 (grant form 300.6): the next job\'s RX header may '
+                           'arrive once its first write lands on or after the previous job\'s first outbound read',
+                area=dict(macros=['ot_sram_1r1w_64x512 x2 (RX, TX)', 'ot_sram_1r1w_128x256 (position table)',
+                                  'ot_sram_1r1w_512x64 (HEP)'], removed=['tokpipe WFC', 'dsfd_wfc_lnk credits / skids',
+                                  'vmx_p ratio FIFOs, response queue (5 x 128x256), staging banks (2 x 64x512)']),
+                open=['RLAT is a leaf build constant (17 = no stations): the die value = 17 + VM<->WFC station hops',
+                      'START_GAP 4 assumes the static VM write visibility (x34 + decode + core write <= 4 serial)'])
