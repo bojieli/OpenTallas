@@ -14,6 +14,7 @@ module qfd_coll_static_face #(
  output wire rx_valid,output wire[FW-1:0]rx_data,
  input wire phy_up,phy_rx_valid,input wire[PW-1:0]phy_rx,
  output wire phy_tx_valid,output wire[PW-1:0]phy_tx,
+ output wire phy_tx_slot,phy_rx_slot,
  output wire[3:0]cdc_fault,output wire epoch_abort,output wire[7:0]fault_cause
 );
  wire rs_c,rs_l;
@@ -33,6 +34,12 @@ module qfd_coll_static_face #(
  .clk(cal_ck),.lck(cal_lck),.rs_c(rs_c),.rs_l(rs_l),.exp(peer_slot),
  .rx_expect_v(rxe),.rx_expect_slot(rx_slot),.w_slot(rws),.w_addr(rwa),.w_version(rwv),
  .r_slot(rrs),.r_addr(rra),.r_version(rrv));
+ // Expected PHY ownership comes only from compiled calendar reads, never
+ // from observed producer/codec validity. Matches actual codec TX3 boundary.
+ reg[3:0]phy_slots;
+ always @(posedge cal_lck or negedge rs_l)
+ if(!rs_l)phy_slots<=0;else if(epoch_begin)phy_slots<=0;else phy_slots<={phy_slots[2:0],rd_v};
+ assign phy_tx_slot=phy_slots[3];assign phy_rx_slot=rxe;
  wire tx_observed,codec_valid;wire[FW-1:0]tx_word,codec_data;
  wire[545:0]tx_full,rx_full;
  assign tx_word=tx_full[FW-1:0];assign rx_data=rx_full[FW-1:0];

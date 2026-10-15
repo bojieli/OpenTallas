@@ -1,0 +1,43 @@
+{
+  "schema": "opentallas.sfu.scheduled.publication.v1",
+  "selected_source": "c72a3325a",
+  "scope": "Actual SFU source and source-pinned component proofs only; no full native, physical or rate qualification",
+  "tests": "7 focused Python tests PASS; all SFU shell scripts bash-n PASS;41-source dependency hashes verified with one explicit shared SU refresh",
+  "evidence": {
+    "programmed_engine": "9dc66d4dd:28672exact words4x7168,96SRAM;9/9historicalsource hashes match521cad8d4; nonlinear nativeVM not claimed",
+    "qswiglu_vm": "e6a4f4110:3072committedVMwords120SRAM;7/7historicalsource hashes match5fadf773c",
+    "qswiglu_scheduled": "c72a3325a:3072committedVMwords126SRAM,one runtime start and issue mutant;39/41source hashes match8359dc59b,2VMdependency hashes match currentmain"
+  },
+  "open": [
+    "Full4x7168 IO schedule remains unqualified; canonical3072 proof is distinct from28672pass-through programme proof",
+    "800IOedges vs immutable120 price, throughput unqualified",
+    "Native VM address allocation, full layer and physical timing remain open"
+  ],
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_io_calendar_static.sv": "6319394d89bbc82beb8610ff95f842d496f303f922017f4a21fc18be39cfa898",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programmed_engine.sv": "3ac18f43a440a0b8ea6ff89a59d4668ff045f40cadfe75e9e111e046beff9cab",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv": "fd3c9a703e8de821595e38468f608b97337932aa34f2d8529189ced1102cd991",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_engine.sv": "33a0546fc89d8141568eabf87f2cf857aa8763a632db7038b819cf286722982e",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv": "04c4f92245f4a8384e10e11826b93eb0952fb27fda56d42f043f0f97b4832cdf",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_programmed_engine.sv": "f8bb95ea78e532cc62cc8c61c94a2054ec86465752531ed73e2cdbe069849ba1",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv": "ff19a1b829c0e0ac7a40a46c5131462ddb2dfb56c512ebce673a8b30a1be42ed",
+    "rtl/test/hbm_accel/generic/tb_hgi_sfu_programmed_engine.sv": "4246a966bcbbb872496ce00d0d02d6fa1526098224db195144a060a883ecec3e",
+    "rtl/test/hbm_accel/generic/tb_hgi_sfu_qswiglu_scheduled.sv": "3f2e5b4f7331ebba62d62eb3aa83fe0c6c84fb3569cfd6512925e466680634d6",
+    "rtl/test/hbm_accel/generic/tb_hgi_sfu_qswiglu_static.sv": "e7cbb8d3ce284bb53b8c16ec66751886dbe292920ccf0f20454113e21d164607",
+    "rtl/test/hbm_accel/generic/tb_hgi_sfu_qswiglu_vm_static.sv": "127470d44830c1afb24e1d09ddf9fa4686c4dbad6513efe8d682edc5e451501a",
+    "rtl/test/hbm_accel/generic/tb_hgi_sfu_static_engine.sv": "efb791647e455bd2999e8263e9adc19706ecf4ce59c46b56ab866aa00a5c6db8",
+    "rtl/test/hbm_accel/generic/tb_hgi_sfu_static_operand_store.sv": "82369bf1da5993746da9f4d8c69b7e42189c174887c8ff9372643129d6503167",
+    "rtl/test/hbm_accel/generic/tb_hgi_sfu_vm_round_static.sv": "84d93e0db829faefa9a65a7a76521fab1c19ae9da092dde741bc9e08bf6790a4",
+    "rtl/test/hbm_accel/generic/tb_hgi_sfu_vm_static_bridge.sv": "d84333c8c00f191cd62e031f931968dd839caf064ff0b0e56d96f4ddce659fba",
+    "tools/hbm_static/make_qswiglu_gate.py": "7b36c6dab7e372d225663bd553cac4235ccbf63a5a497025f1d8cf8aeb643960",
+    "tools/hbm_static/make_qswiglu_io_calendar.py": "e33c699d971382646269818c61836259e3ec5840fe933268851d9abdfffbf08b",
+    "tools/hbm_static/sfu_vector_calendar.py": "261f7d1ccb8e60be082b4fab8c4a6344f14c0677e6a5bfca6d4f1e6e77c3f0c7",
+    "tools/hbm_static/test_sfu_vector_calendar.py": "a2dcb5df66a736da41480c77d2b1203579b69d01414ec59beab9e370c10c1c01",
+    "tools/hgi_unit_tput/run_sfu_qswiglu_scheduled.sh": "41ad47a698e9e39bffc1d73d072f20e753dada0601a9990be68713e7464e1e6d",
+    "tools/hgi_unit_tput/run_sfu_qswiglu_static.sh": "5d1921ffbd08a40800f9fe424d8edb4cce83b1f86b95038c670924714cad1647",
+    "tools/hgi_unit_tput/run_sfu_qswiglu_vm_static.sh": "d36da05688ec94be8347d92d7195024f4ba2c5a6f5bf203e841eab12e92e8212",
+    "tools/hgi_unit_tput/run_sfu_static_operand_store.sh": "2685190422ecd29306e5d64edcdab6b0015f8dd11783162e970c9ade1ae689d5",
+    "tools/hgi_unit_tput/run_sfu_vm_round_static.sh": "93efad5fed2702550263ae74610b948f0f83bf0d1294f1d53192d9eefb17777c",
+    "tools/hgi_unit_tput/run_sfu_vm_static_bridge.sh": "0cf69cce9268a2a5cf5c346fbe55074bb0ba331865ff4c2d013b7dbc8f98f100"
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "schema": "opentallas.hbm.dma-back-static-receipt.v1",
+  "result": "PASS",
+  "source_base": "03637f961ef734f10b59cdd97841a6c98826d0ef",
+  "source_sha256": {
+    "dma_back_static_abi.json": "65d6d2991fe8ca3f3367e08ed49e61dc49c677bbb9787c4c55bb538b8f5f3ecc",
+    "dma_back_static_model.json": "a2344313b33c341c674c11ce8fd571c46fad3485278a9e3c4b8a212a3069513c",
+    "dma_back_static_model_delta.json": "4977ad32509e59e6d402e8e0c8866256873d22ca3563ce515609a3989c6cc853",
+    "dma_back_static_overlap_model.json": "9b1da8f2914e10ee9dcbfd6c2249ecbe15dc1edebeb691c0d694d6b88521db56",
+    "ot_hgi_b2_swap_disp_static.sv": "2243368018b446800675a95b66f9e95c5b3fcd3342e2144e30d311bfeabed91d",
+    "ot_hgi_b2_swap_grp_static.sv": "18465fe413130b592b7f53849cfd3cad8a9a94f51c54da8308f593d83a82af94",
+    "ot_hgi_dma_back_static.sv": "11389d87c141c8a0e3c4ba3c1e5f0c2cafd88dce2c48f16c2e4d2356c2ffbf5f",
+    "run_dma_back_static.sh": "5defee8f855ec56ddaf4282f6f98e60765d4e16f6c8fa7681fc4fc6bbcce9a09",
+    "tb_dma_back_static.sv": "c3f106c58a47a4100994c294fe3f484c247a1605c59562337915aa56bd341c93",
+    "tb_dma_back_static_guards.sv": "20dfe1e1d195ebb21ca13bb339f369b6fab7a28e71f4db09101cc4a0b3e034f8",
+    "tb_dma_calendar_wrap.sv": "b34571850d7137eda04077b68b301a3f07a5e7147e27cf66cd6f7f825b66640d"
+  },
+  "dependencies": {
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7828d619da2fd2462cf0253b78c074dad1171e6ca77799bfc21f22987ed72237",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/hbm_accel/generic/peers/ot_hgi_dma_back.sv": "6d31dd49801f92ce5043bf33a9a83032b8f26d21cbe4980f562b61bb9df6e9d0",
+    "rtl/hbm_accel/generic/b2/ot_hgi_b2_swap_disp.sv": "42c4b61353ee903c86d9e4e11c22445e04d290f7593c6363a89413abf5015e04",
+    "rtl/hbm_accel/generic/b2/ot_hgi_b2_swap_rec.sv": "41bcf08d950361b638cdbbedc310f15ab1c97aeef2e6c9f2307fa36d49f5c870",
+    "tools/hgi_b2/mtp_swap.py": "bcdeaa9a96b32114baa4d8648fed6fffa502d0dcd0a286d50621a5c7b497f7b0"
+  },
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-3145221-1792048012",
+  "command": "ot-run --mem 1 --threads 1 --dir /tmp/hbm-dma-back-static-input -- bash run_dma_back_static.sh /tmp/hbm-dma-back-static-run7",
+  "exit": 0,
+  "scope": "Full production DMA STORE component composition: real static dispatcher and four real per-quadrant engines;32 realVMbanks/96 physical SRAM macro functional models plus32 real landing macros. Declared HBM boundary is fixed wd stream. Source VM initial stimuli and external HBM posted acknowledgments are test fixtures, with no internal data/memory/arithmetic substitutions.",
+  "production": {
+    "campaigns": [
+      "MAIN",
+      "MIRROR"
+    ],
+    "h_words": 20480,
+    "PRE_words": 8,
+    "exact_sectors_each": 2561,
+    "requests_each": 2561,
+    "acknowledged_sectors_each": 2561,
+    "first_command_to_fence_cycles": 173,
+    "immutable_price_cycles": 248,
+    "ratio": 0.6975806451612904,
+    "gate_limit_cycles": 272,
+    "source_retires_per_quadrant": [
+      2,
+      1,
+      1,
+      1
+    ],
+    "posted_source_overwrite": "all h rows rewritten in actual source macros after true landing commit; fixed outgoing data remains exact",
+    "fence": "one done only after every actual simulated boundary posted acknowledgment",
+    "WB": "explicit bank0/epoch2*campaign for h,bank1/epoch2*campaign+1 forPRE; one wb_ready block checkpoint, never issue gating"
+  },
+  "implemented_timing": {
+    "bank_rq_output_to_bank_response": 7,
+    "bank_rq_output_to_landing_commit": 9,
+    "earliest_fixed_landing_read": 10,
+    "earliest_fixed_wd_output": 12,
+    "h_issue_span": 80,
+    "h_last_source_offset": 88,
+    "h_last_wd_offset": 91,
+    "PRE_command_offset": 94,
+    "PRE_issue_offset": 100,
+    "PRE_drain_offset": 111,
+    "PRE_wd_offset": 113,
+    "external_posted_ack_delay": 40
+  },
+  "mutants": [
+    {
+      "MUT": 1,
+      "kind": "lane1 destination sector+1",
+      "result": "EXPECTED_FAIL",
+      "cycle": 117,
+      "failure": "fixed WB lane/address timeline"
+    },
+    {
+      "MUT": 2,
+      "kind": "source retire at lastissue instead of lastlanding",
+      "result": "EXPECTED_FAIL",
+      "cycle": 184,
+      "expected_source_cycle": 193
+    }
+  ],
+  "descriptor_guards": [
+    "main->mirror crossing",
+    "mirror beyond98304 local words",
+    "wrong ownstack",
+    "cross actual STACK_BYTES",
+    ">128 landing chunks",
+    "non-dense HBM row stride",
+    "partial lanes between multirows"
+  ],
+  "calendar_wrap": "PASS signed modulo32 absolute issue/drain crosses wrap; real landing SRAM output/source/posted fence exact",
+  "lint": {
+    "result": "PASS",
+    "command": "verilator --lint-only -Wall -Wno-UNUSEDSIGNAL -Wno-PINCONNECTEMPTY --top-module ot_hgi_b2_swap_grp_static ...",
+    "excluded": "Unused truncated fields and intentionally unused per-engine done; all structural warnings fatal, none remain"
+  },
+  "peak_rss_kib": {
+    "compile": 52992,
+    "sim": 28004
+  },
+  "history": {
+    "serialized_component": "Initial unnecessarily serialized whole-block schedule253cycles; replaced by actual concurrent1R1W landing stream173cycles. Historical diagnostic log retained, not selected source proof.",
+    "guard_failure": "Earlier guardbench treated invalid payload bits as issued requests; corrected to check valid pins only. Failure preserved; not an RTL waiver."
+  },
+  "limitations": [
+    "Actual HBM WB staging, hash PC mapping, CDC/FIFO and PHY completion composition is owned by H-DIE/service_native; component bench does not qualify that on-chip boundary.",
+    "Actual record/cmdproc sequencer must bind new compiler calendar/buffer/epoch ports to static dispatcher; old ready/credited record adapter is historical.",
+    "No routes submitted; successor physical timing/area/slot and relay latency composition remain unqualified."
+  ]
+}

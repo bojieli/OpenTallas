@@ -1,0 +1,17 @@
+DMA_WB_PHY_THROUGHPUT FAIL actual_full_fence_cycles=1425 limit272 immutable_price248
+DMA_WB_PHY_STACK stack=0 writes=641 realACKs=641 memorychecks=641 firstHBMedge=167 lastHBMedge=1094 lastACKedge=1114
+DMA_WB_PHY_STACK stack=1 writes=640 realACKs=640 memorychecks=640 firstHBMedge=167 lastHBMedge=1185 lastACKedge=1196
+DMA_WB_PHY_STACK stack=2 writes=640 realACKs=640 memorychecks=640 firstHBMedge=167 lastHBMedge=1079 lastACKedge=1090
+DMA_WB_PHY_STACK stack=3 writes=640 realACKs=640 memorychecks=640 firstHBMedge=167 lastHBMedge=1215 lastACKedge=1226
+PASS production   MAIN STORE20480words+PRE8: real32VMbanks/96macros+32landingmacros+128WBmacros+4actualPHY;2561exactsectors,postedsourceoverwrite,fenceafter2561acks;firstcommand->fence=1426cycles
+DMA_WB_PHY_THROUGHPUT FAIL actual_full_fence_cycles=661 limit272 immutable_price248
+DMA_WB_PHY_STACK stack=0 writes=641 realACKs=641 memorychecks=641 firstHBMedge=1404 lastHBMedge=1822 lastACKedge=1833
+DMA_WB_PHY_STACK stack=1 writes=640 realACKs=640 memorychecks=640 firstHBMedge=1404 lastHBMedge=1795 lastACKedge=1806
+DMA_WB_PHY_STACK stack=2 writes=640 realACKs=640 memorychecks=640 firstHBMedge=1404 lastHBMedge=1792 lastACKedge=1803
+DMA_WB_PHY_STACK stack=3 writes=640 realACKs=640 memorychecks=640 firstHBMedge=1404 lastHBMedge=1830 lastACKedge=1841
+PASS production MIRROR STORE20480words+PRE8: real32VMbanks/96macros+32landingmacros+128WBmacros+4actualPHY;2561exactsectors,postedsourceoverwrite,fenceafter2561acks;firstcommand->fence=662cycles
+DMA_WB_PHY_FUNCTIONAL PASS both main/mirror actual mutableHBM no preload;throughput_fail_campaigns=2
+- tb_dma_wb_phy_static.sv:176: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 2us; walltime 0.365 s; speed 5.159 us/s
+- Verilator: cpu 0.368 s on 1 threads; alloced 521 MB
