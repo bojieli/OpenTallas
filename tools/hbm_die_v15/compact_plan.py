@@ -42,9 +42,11 @@ SC_W, SC_H = 3008.88, 3840.48          # IDX scorer, rotated (w x h)
 COLUMN_W = 3100.0
 CHANNEL = 930.0
 EDGE = 120.0
+SC_GAP = 100.0                         # relay row between the two scorers of a die half (cross-column relay homes)
 
 
-def build(G0, area_mm2, channel=CHANNEL):
+def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0):
+    BAND = band or globals()['BAND']
     G = copy.deepcopy(G0)
     N = G['nodes']
     P = {}
@@ -117,19 +119,39 @@ def build(G0, area_mm2, channel=CHANNEL):
         setn(f'sucore_{q}', CORE_W, SU_H, 'SU:ot_hbm_su_static_qcore RF replica + reducer (H-ELEM-B)')
         put(f'sucore_{q}', x, y_band, q)
         x += CORE_W + GAP
-        # COLL then the VM hub column at the CENTRE end of the band: VM ring / COLL ring / COLL endpoint traffic enters
-        # from the centre channel without running along the band (worst-cut driver in the first compact try)
-        setn(f'coll_{q}', COLL_W, COLL_H, 'COLL v15 grant')
-        put(f'coll_{q}', x, y_band + (BAND - COLL_H) / 2, q)
-        x += COLL_W + GAP
-        setn(f'vmh_{q}', HUB, HUB, 'VM hub >= 1.1 mm (T_band2 adoption condition)')
-        put(f'vmh_{q}', x, y_band, q)
-        setn(f'dbk_{q}', DBK_W, DBK_H, 'DMA:ot_hgi_dma_back_static v15 grant (no T_band2 block)')
-        put(f'dbk_{q}', x, y_band + HUB + GAP, q)
-        if q == 'SW':
-            setn('idx_op', 360.72, 317.52, 'IDX:ot_hbm_idx_vm_query_static grant')
-            put('idx_op', x + DBK_W + GAP, y_band + HUB + GAP, q)
-        x += HUB + GAP
+        if hub_w:
+            # TALL HUB (H-DIE r2 cut fix): hub reshaped to hub_w x (BAND - 2 GAP) at the quadrant's inner edge, so its
+            # band-facing (W) and channel-facing (E) faces are ~1.8 mm long (pin density and the face cut both drop by
+            # 1.1/1.76); COLL, DMA back and the IDX operand leaf stack in one column west of the hub.
+            hh = BAND - 2 * GAP
+            hx = EDGE + qw - hub_w
+            cx = hx - GAP - COLL_W
+            slack = cx - GAP - x
+            assert slack >= -1e-6, (q, 'band too long for the tall hub', slack)
+            setn(f'coll_{q}', COLL_W, COLL_H, 'COLL v15 grant')
+            put(f'coll_{q}', cx, y_band + GAP, q)
+            setn(f'dbk_{q}', DBK_W, DBK_H, 'DMA:ot_hgi_dma_back_static v15 grant (no T_band2 block)')
+            put(f'dbk_{q}', cx, y_band + GAP + COLL_H + GAP, q)
+            if q == 'SW':
+                setn('idx_op', 360.72, 317.52, 'IDX:ot_hbm_idx_vm_query_static grant')
+                put('idx_op', cx + DBK_W + GAP, y_band + GAP + COLL_H + GAP, q)
+            setn(f'vmh_{q}', hub_w, hh, f'VM hub reshaped tall {hub_w:.0f} x {hh:.0f} (area >= 1.1 mm square; faces >= 1.1 mm on W/E)')
+            put(f'vmh_{q}', hx, y_band + GAP, q)
+            x = hx + hub_w
+        else:
+            # COLL then the VM hub column at the CENTRE end of the band: VM ring / COLL ring / COLL endpoint traffic
+            # enters from the centre channel without running along the band (worst-cut driver in the first compact try)
+            setn(f'coll_{q}', COLL_W, COLL_H, 'COLL v15 grant')
+            put(f'coll_{q}', x, y_band + (BAND - COLL_H) / 2, q)
+            x += COLL_W + GAP
+            setn(f'vmh_{q}', HUB, HUB, 'VM hub >= 1.1 mm (T_band2 adoption condition)')
+            put(f'vmh_{q}', x, y_band, q)
+            setn(f'dbk_{q}', DBK_W, DBK_H, 'DMA:ot_hgi_dma_back_static v15 grant (no T_band2 block)')
+            put(f'dbk_{q}', x, y_band + HUB + GAP, q)
+            if q == 'SW':
+                setn('idx_op', 360.72, 317.52, 'IDX:ot_hbm_idx_vm_query_static grant')
+                put('idx_op', x + DBK_W + GAP, y_band + HUB + GAP, q)
+            x += HUB + GAP
         assert x <= EDGE + qw + 1e-6, (q, x, EDGE + qw)
     # centre column
     c0 = EDGE + qw + channel
@@ -147,8 +169,8 @@ def build(G0, area_mm2, channel=CHANNEL):
     ys = 20.0 + 2250.216 + GAP
     for i, sc in enumerate(('idx_s0', 'idx_s1')):       # SW, SE stacks from the south half
         setn(sc, SC_W, SC_H, 'IDX scorer: 512 CLOSED hslices 172.8x103.68 + glue (v15 grant, rotated)')
-        P[sc] = dict(x=c0 + (COLUMN_W - SC_W) / 2, y=ys + i * (SC_H + GAP), w=SC_W, h=SC_H, orient='R90')
-    yg = ys + 2 * (SC_H + GAP)
+        P[sc] = dict(x=c0 + (COLUMN_W - SC_W) / 2, y=ys + i * (SC_H + SC_GAP), w=SC_W, h=SC_H, orient='R90')
+    yg = ys + 2 * SC_H + SC_GAP + GAP
     glue = [('idx_q', 449.28, 449.28), ('idx_sel', 1164.24, 317.52), ('idx_link', 745.2, 317.52)]
     gx = c0
     for g, w, h in glue:
@@ -158,8 +180,8 @@ def build(G0, area_mm2, channel=CHANNEL):
     yn = yg + 449.28 + GAP
     for i, sc in enumerate(('idx_s3', 'idx_s2')):       # NE, NW from the north half
         setn(sc, SC_W, SC_H, 'IDX scorer (v15 grant, rotated)')
-        P[sc] = dict(x=c0 + (COLUMN_W - SC_W) / 2, y=yn + i * (SC_H + GAP), w=SC_W, h=SC_H, orient='R90')
-    assert yn + 2 * SC_H + GAP + GAP <= H - 20 - 2250.216 + 1e-6, ('centre column too tall', yn + 2 * SC_H + 2 * GAP, H - 2270)
+        P[sc] = dict(x=c0 + (COLUMN_W - SC_W) / 2, y=yn + i * (SC_H + SC_GAP), w=SC_W, h=SC_H, orient='R90')
+    assert yn + 2 * SC_H + SC_GAP + GAP <= H - 20 - 2250.216 + 1e-6, ('centre column too tall', yn + 2 * SC_H + 2 * GAP, H - 2270)
     return G, P, W, H
 
 
@@ -169,10 +191,21 @@ def main():
     ap.add_argument('--ref', default='results/arch/hbm_globalfp_1015/noatt/ref_sm.json')
     ap.add_argument('--area', type=float, default=660.0)
     ap.add_argument('--channel', type=float, default=CHANNEL)
+    ap.add_argument('--band', type=float, default=BAND, help='VM band height (SM row 2 to row 3 gap) in um')
+    ap.add_argument('--hub-w', type=float, default=0.0, help='tall VM hub of this width (0 = 1.1 mm square hub)')
+    ap.add_argument('--fit', action='store_true', help='grow --area to the smallest outline that fits (10 mm2 steps of 0.1)')
     ap.add_argument('--out', required=True)
     a = ap.parse_args()
     G0 = json.loads((ROOT / a.graph).read_text())
-    G, P, W, H = build(G0, a.area, a.channel)
+    if a.fit:
+        area = a.area
+        while True:
+            try:
+                G, P, W, H = build(G0, area, a.channel, a.band, a.hub_w); break
+            except SystemExit:
+                area = round(area + 0.1, 1)
+    else:
+        G, P, W, H = build(G0, a.area, a.channel, a.band, a.hub_w)
     F.W_DIE, F.H_DIE = W, H
     missing = [i for i in G['nodes'] if i not in P]
     ov = F.overlaps(P)

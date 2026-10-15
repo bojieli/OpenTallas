@@ -30,6 +30,7 @@ from __future__ import annotations
 
 import argparse
 import bisect
+import copy
 import hashlib
 import json
 import math
@@ -4294,8 +4295,12 @@ def build_r8(variant=None):
             romc = up(rc_['w'] + 2 * 8.64, GX)
             wc_ = dn(cw - romc, GX)
             slab('pq', PQ_CORE_H * wc_ / 1e6, x_sp, yy, wc_, master=PQ_RTL_MASTER if RTL_BIND else None)
-            for j in range(PQ_ROMS):
-                insts.append(Inst(f'pqrom{j}', rc_['name'], x_sp + wc_ + 8.64, yy + 8.64 + j * up(rc_['h'] + 17.28, GY),
+            rn_ = pq_rom_names()
+            # ROM4 (6 macros): the largest pitch <= h + 17.28 that keeps the column inside the core slot height
+            pit_ = min(up(rc_['h'] + 17.28, GY), dn((PQ_CORE_H - 2 * 8.64 - rc_['h']) / max(1, len(rn_) - 1), GY))
+            assert pit_ >= rc_['h'] + 2.16, ('PQ ROM column does not fit the core slot', len(rn_), pit_)
+            for j, rn1_ in enumerate(rn_):
+                insts.append(Inst(rn1_, rc_['name'], x_sp + wc_ + 8.64, yy + 8.64 + j * pit_,
                                   rc_['w'], rc_['h'], 'R0', kind='pqrom', region='spine', domain='stream_1p2'))
         else:
             slab(n, centre_area[n], up(x0_ + (w0_ - slab_w.get(n, w0_)) / 2, GX), yy, slab_w.get(n, w0_), dom='serial_0p9' if n == 'vm' else 'stream_1p2',
@@ -5221,10 +5226,16 @@ def buses_r8(m):
             bus(f'hw_{st}', 'host_wr', 512 + 64 + 2, [(hub['host'].name, f'tw{st}'), (tgt, 'hw')])
             bus(f'hc_{st}', 'host_wr', 18, [(tgt, 'hc'), (hub['host'].name, f'fc{st}')])
     if PQ_PLACE:      # PQ core <-> its ROMs (real ot_rom_4096x72 ports), direct: they abut the core's E face
-        for j in range(PQ_ROMS):
+        rn_ = pq_rom_names()
+        for j in range(2 if len(rn_) > PQ_ROMS else PQ_ROMS):
             bus(f'pqra_{j}', 'rom_a', 12, [(hub['pq'].name, f'ra{j}'), (f'pqrom{j}', 'a')])
             bus(f'pqrc_{j}', 'rom_ce', 1, [(hub['pq'].name, f'rc{j}'), (f'pqrom{j}', 'ce')])
             bus(f'pqrq_{j}', 'rom_q', (64 if j < 2 else 48) if RTL_BIND else 48, [(f'pqrom{j}', 'rd'), (hub['pq'].name, f'rq{j}')])
+        if len(rn_) > PQ_ROMS:     # DSFD_PQ_ROM4: one shared address bus to the four stream macros, per-macro ce / rd
+            bus('pqra_2', 'rom_a', 12, [(hub['pq'].name, 'ra2')] + [(n_, 'a') for n_ in rn_[2:]])
+            for b_, n_ in enumerate(rn_[2:]):
+                bus(f'pqrc_2{"abcd"[b_]}', 'rom_ce', 1, [(hub['pq'].name, f'rc2[{b_}:{b_}]'), (n_, 'ce')])
+                bus(f'pqrq_2{"abcd"[b_]}', 'rom_q', 48, [(n_, 'rd'), (hub['pq'].name, f'rq2[{48 * b_}:{48 * b_ + 47}]')])
     if HOP_FIX and HOP_PLAN:
         _hop_fix(m, P)
     if RELAY_PROGRESS:
@@ -5629,6 +5640,18 @@ def pq_rtl_clock_ports(manifest='physical/s81_die_rtl/layer1.f'):
     if 'OT_PQ_IX_PHYS_SPLIT' in defs:
         vec.append(('ck_ix_read', 32 if 'OT_PQ_IX_BANK_SPLIT' in defs else 16))
     return ['ck_ctl', 'ck_qb', 'ck_fault', 'ck_lane'] + [f'{n}[{i}:{i}]' for n, w in vec for i in range(w)]
+
+
+def pq_rom4(manifest='physical/s81_die_rtl/layer1.f'):
+    """S-DIE r2 2026-10-15 (S-ELEM-B dc28161fa): +define+DSFD_PQ_ROM4 in the die manifest = the 16,384-row stream ROM
+    is FOUR ot_rom_4096x72 macros pqrom2a..d (ra2 12 b shared, rc2[b] -> pqrom2<b>.ce, pqrom2<b>.rd[47:0] ->
+    rq2[48b+:48]); one source of truth with tools/die_port_bind.py (the manifest's defines)."""
+    return 'DSFD_PQ_ROM4' in set(re.findall(r'^\+define\+(\w+)', (ROOT / manifest).read_text(), re.M))
+
+
+def pq_rom_names():
+    """die instance names of the PQ ROM column, bottom-up: 2 phase (pqrom0/1) + the stream ROM(s)"""
+    return ['pqrom0', 'pqrom1'] + (['pqrom2a', 'pqrom2b', 'pqrom2c', 'pqrom2d'] if RTL_BIND and pq_rom4() else ['pqrom2'])
 
 
 _RTL_CLOCK_CACHE = {}
@@ -8257,7 +8280,21 @@ def align_station_jogs(m, rounds=2):
             for nm in {eps[0][0], load[0]}:
                 incident.setdefault(nm, []).append(hop)
 
+    # A spread register is placed against these exact load pins. Generated
+    # hub pins otherwise follow the changed peer centroid when LEFs are
+    # emitted again, invalidating the channel just assessed. Retain the full
+    # load map, including neighboring ports and their access rectangles.
+    hard_maps = masters_r8(m) if ALIGN_EXT[0] else {}
     ppins = PA.read_pins(die_lef_texts(m))
+
+    def keep_load_map(load):
+        if load.master in REAL_FILES or load.master in m.get('bound_views', {}):
+            return
+        source = hard_maps.get(load.master)
+        if source is not None:
+            m.setdefault('spread_load_pin_maps', {}).setdefault(load.master, dict(
+                outline=[source.w, source.h], ports=copy.deepcopy(source.ports), order=list(source.order),
+                port_signature=dict(m['pdir'][load.master])))
 
     def pts(it, port, bits):
         w, h, pp = ppins.get(it.master, (0.0, 0.0, {}))
@@ -8538,22 +8575,27 @@ def align_station_jogs(m, rounds=2):
                 # occupied by other chains. Split only across actual gaps in
                 # the hard port's pins; all slices keep the SAME capture edge.
                 # Every bit still uses the real hstn register primitive.
-                if horiz and it.orient == 'R0' and fa == 'E':
+                # S-DIE r2 2026-10-15: and the mirror (MY station east of a hard E input, GEN19b hr_E2_o_d4)
+                side_ = 'W' if (it.orient == 'R0' and fa == 'E') else 'E' if (it.orient == 'MY' and fa == 'W') else ''
+                if horiz and side_:
                     from s81 import banded_terminal as BT
                     ins_ = [b_ for b_ in m['buses'] if len(b_[3]) == 2 and b_[3][1] == (it.name, 'di')]
                     outs_ = [b_ for b_ in m['buses'] if len(b_[3]) == 2 and b_[3][0] == (it.name, 'dq')]
                     if len(ins_) == len(outs_) == 1:
                         obs_ = [(o.name,o.x,o.y,o.w,o.h) for o in m['insts']]
                         split_ = BT.propose(A,B,pts(it,'dq',bits),obs_,it.name,it.w,PA,
-                                            gx=GX,gy=GY,inset=FACE_PIN_INSET,reach=ALIGN_STN_REACH_UM)
+                                            gx=GX,gy=GY,inset=FACE_PIN_INSET,reach=ALIGN_STN_REACH_UM,side=side_,
+                                            hard_short=ALIGN_HARD_SHORT_UM if side_ == 'E' else 0.0)
                         if split_:
                             ch_ = BT.apply(sys.modules[__name__],m,it,split_,ins_[0],outs_[0])
+                            keep_load_map(ld)
                             moved[it.name] = ('band_split',[c_.name for c_ in ch_],r['bus'])
                             refused.pop(r['bus'],None)
                             continue
                 refused[r['bus']] = refused.get(r['bus'], []) + ['spread:no_position']
                 continue
             bx, loc, vin = done_
+            keep_load_map(ld)
             old = it.master
             it.master = '%s_sp%d' % (old, len(spread))
             m['pdir'][it.master] = dict(m['pdir'][old])
@@ -8876,7 +8918,14 @@ def masters_r8(m, k=1):
         ports = pdir.get(mst, {})
         Mx = Q.Master(mst, it.w, it.h, 3 if is_glue(mst) or mst in CFG7_MASTERS else 7, f'r8 {it.kind}')
         M[mst] = Mx
-        _faces_r8(m, Mx, it, ports)
+        saved = m.get('spread_load_pin_maps', {}).get(mst) if k == 1 else None
+        if saved is None:
+            _faces_r8(m, Mx, it, ports)
+        else:
+            assert all(abs(a - b) < 1e-6 for a, b in zip(saved['outline'], (Mx.w, Mx.h))), (mst, 'spread load outline changed')
+            assert saved['port_signature'] == ports, (mst, 'spread load port signature changed')
+            Mx.ports = copy.deepcopy(saved['ports'])
+            Mx.order = list(saved['order'])
         _apply_pin_overrides(Mx, it)
         if k == 1:
             _assigned_physical_pins(Mx, ports)
