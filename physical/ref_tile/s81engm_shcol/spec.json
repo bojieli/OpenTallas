@@ -76,7 +76,7 @@
  "structural_change": "Source-current bank-striped descriptor payload bit18 preserves HC H rows and fixes actual VM slot/bank conflicts; explicit149-clock top exposes all five shell roots per cluster. shcol captures fr/fa in two local boundary FF, eliminating measured322.9ps capture; actual source CTS 1546 FF, same token calendar expected and gated. B row width743.04um remains bounded OptionC candidate only.",
  "job": {
   "owner": "Claude:s81-surx-engram-1015",
-  "branch": "codex/shell-admission-1350",
+  "branch": "codex/s81-elements-shell-1417",
   "tag": "bankv1benchfix-1421",
   "purpose": "S81 Engram MIX4 split-shell leaf ot_s81_engram_mixq_shcol (control + 4 payload columns)",
   "benches": [
