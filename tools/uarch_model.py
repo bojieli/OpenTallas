@@ -60,6 +60,22 @@ def qwen_xpf_static_control_model(entries=4, program_words=64):
                 qualification='mechanism bench only; actual producer trace/calendar, native pin/reset/clock, area and measured layer cost remain unqualified')
 
 
+def qwen_compute_typed_record_model():
+    """Declared storage/ports for actual two-PW/single-SU-DW record consumer."""
+    return dict(schema='opentallas.qwen-compute-typed-record.v1',replicas=1,
+        strict_image_receipts=2,strict_receipt_ff_each=243,join_ff=169,
+        auth_rx_ff=114,context_rx_ff=144,witness_tx_ff=633,
+        TT_genuine_SU_descriptor_relay_ff=69,slot_fault_ff=1,declared_ff=1616,
+        SRAM_macros_added=0,descriptor_memories_added=0,existing_program_macros=4,
+        independent_program_observer_bits=152,genuine_SU_descriptor_observer_bits=69,
+        cfg_seal_bits=2,record_bits_per_cycle=548,observed_PW_bytes_per_cycle=16,
+        MACs_per_cycle=0,clock_roots=1,
+        latency='metadataRX1; each real consumed-macro observer register1; TT genuineSUdescriptor relay1; join/witness fixed slots require actual route/phase profile',
+        reset_contract='each actual seal loss revokes installed receipt, no automatic re-arm; newBEGIN/AUTH required',
+        slot_fit='physical observer homes and registered transport/clock phases not yet qualified',
+        price_policy='no repricing or native/fullstage qualification from component tests')
+
+
 def qwen_host_typed_record_model():
     """Exact declared control-storage census before physical record leaf sizing."""
     return dict(schema='opentallas.qwen-host-typed-record.v1',replicas=1,
