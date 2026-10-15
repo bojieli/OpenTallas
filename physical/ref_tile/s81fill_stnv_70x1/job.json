@@ -1,5 +1,5 @@
 {
- "name": "s81fill_stnv_70x1-f3-COMMIT",
+ "name": "s81fill_stnv_70x1-f3-9240e3057",
  "block": "dsfd_stnv_70x1",
  "ref_tile": true,
  "owner": "Claude:fill-s81",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/el1015-fill-1015",
-  "commit": "COMMIT",
+  "commit": "9240e3057",
   "extra_paths": [
    "rtl/common",
    "rtl/dsrom_sys/s81_station_native/gen18r",
@@ -104,7 +104,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81fill_stnv_70x1/s81fill_stnv_70x1-f3-COMMIT"
+   "to": "results/rtl/ref_tile/s81fill_stnv_70x1/s81fill_stnv_70x1-f3-9240e3057"
   }
  ],
  "cycles_added": 0,
