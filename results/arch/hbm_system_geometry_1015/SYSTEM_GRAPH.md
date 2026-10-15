@@ -58,3 +58,25 @@ The endpoint source owners are also creating a genuine new store contract with r
 ## Remaining work before a whole-system winner
 
 Bind all current logical groups to their actual physical hierarchy and macro hashes; complete SM/SU/SFU/HC/IDX/host/service missing outlines and endpoints; place the actual transposer/flag/decoder/relay and clock state; assign real stack/PC/PHY services and resolve the 544/512 boundary; compare coherent bank-face and ATT feature-group arrangements using production activity; then calculate every global cut, actual launch/capture reach, clock insertion and fixed-calendar cycle cost. Every unresolved item remains in the graph rather than becoming a zero-area or zero-wire assumption.
+
+
+Latest source-bound successors (2026-10-15)
+
+D is the selected local-PV development direction; C remains the smaller storage fallback. D has actual component/current-NE functional proofs and a mapped TT inventory: 2,048 SRAMs, 24,757 FFs, 31,942.5201 µm² standard cells; four bank roots each have 6,688 mapped endpoints and global control has 53. This is not CTS or placement qualification. The exact source, proof receipts and mapped inventory are pinned under `exclusive_successor_profiles` in `global_graph.json`; alternatives are not summed into simultaneous hardware.
+
+The four whole-known-box candidates are in `whole_known_placements.json/.svg`. All preserve 32 complete35 SM frame reservations, 128 attention quads, 34 grouped-KV SRAMs, 192 Q/P SRAMs, 32 VM banks, 96 LG prototypes, nine physical SerDes and endpoint envelopes and four historical PHY reservations. All four have zero rectangle overlaps/outside. C has 665 boxes /453.493792 mm²; D has 2,585 boxes /455.545834 mm². The +2.052043 mm² is the extra 1,920 real SRAM outlines only; it excludes logic/CTS/halo changes. Several source-required areas are missing, including 589,824 transpose FFs, the additional 256-SRAM QK score-store candidate, shared PC controllers, command-PHY successor, serializer logic, HC/SU/SFU/IDX/host/hub/ring, FEC/PMA adapter and clock distribution. Empty spaces are not established capacity.
+
+Current PV affinity comparison, per complete output record:
+
+| Arrangement | Capture Mbit·µm | Drain Mbit·µm | Longest capture / drain µm |
+|---|---:|---:|---:|
+| A central attention |932.439|2341.554|7758.516 /13623.418|
+| B four attention fields |1800.356|2964.002|14380.196 /19423.418|
+| C affinity with four logical-NE bank pairs |808.371|98.560|5654.406 /626.206|
+| D local PV with four logical-NE bank pairs |119.262|858.768|959.280 /5866.858|
+
+These are actual macro/payload-pin endpoint affinities at proposed coordinates, with 262,144 payload-bit transfers per capture and drain record. They bypass real selection/mux/adapter/relay hardware and must not be interpreted as direct timing nets, physical cut widths or a complete objective. D deliberately shortens the wide capture fanout but shifts substantial wiring into its narrow drain. Literal source topology is local four-headgroup/head-lane selectors per tile, then one 512-bit plus16-flag eight-to-one selector per affinity group, then the same two NE banks. Those muxes need real leaf shapes and registered path/calendar qualification; no extra stage is currently priced or granted. The next structural placement comparison must center those group mux/bank pairs among the eight source tiles and include Q/P/KV/HC/control outside paths.
+
+The SW Quant target125 RG6/WG2 candidate keeps NW target48, uses new zero-based RG5/WG1 on the W face, and follows actual SW SU producer and DMA consumer data homes. Its extra VM groups, 2,048 response FFs, transport, programme SRAM, five clocks and provisional child outlines are retained in the exact owner model rather than treated as free ports. The source-backed checkpoint allocation now binds SM stack=SM//8, PCs=4*(SM%8)..+3 and the packed16.25–18.25GiB region; capacity/address proof does not imply image, controller or physical qualification.
+
+HCOLL exact endpoint join now uses all1,180 actual controller/store bit-pin pairs from frozen published inputs. All are below500µm; worst sharedWE is385.988µm. The conservative cross-level budget leaves329.982ps for actual launch+capture on that leg after the wire model. The new store still needs routed/strict native qualification and an actual clock insertion measurement, so this is geometric progress rather than endpoint adoption.

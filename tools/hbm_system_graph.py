@@ -182,7 +182,7 @@ def graph(root):
    nodes[ep]={'role':'endpoint physical group candidate','master':'ot_hgi_coll_static_link_capture','geometry':{'outline_um':capture['composed_outline_um'],'absolute_xy_um':None,'physical_native_qualified':False},'roots':5,'actual_parent_join_proved':False,'status':'three store face pins blocked; HOLD adoption'}
    nodes[ep+'_ctl']={'master':'ot_hgi_coll_static_capture_ctl','parent':ep,'logic_DFF_sinks':4421,'geometry':{'local_xy_um':capture['controller']['bbox_um'][:2],'outline_um':capture['controller']['outline_um'],'coordinate_frame':ep,'requested_pins_only':True},'clock_roots_declared':1}
    for st in capture['stores']:
-    bn=ep+f'_store{st["bank"]}';nodes[bn]={'role':'actual four-SRAM pinreg store','parent':ep,'geometry':{'local_xy_um':st['origin_um'],'outline_um':st['outline_um'],'coordinate_frame':ep,'native_physical_adoption_on_hold':True},'clock_roots_declared':1}
+    bn=ep+f'_store{st["bank"]}';nodes[bn]={'role':'one actual64x512SRAM pinreg store','parent':ep,'geometry':{'local_xy_um':st['origin_um'],'outline_um':st['outline_um'],'coordinate_frame':ep,'native_physical_adoption_on_hold':True},'clock_roots_declared':1}
    nodes[ep+'_FEC']=module(root/'rtl/hbm_accel/io_static_20261015/hfd_serdes487_static_window.sv','hfd_serdes487_static_window');nodes[ep+'_FEC']['parent']=ep
    nodes[ep+'_gearbox']=module(root/'rtl/hbm_accel/io_static_20261015/ot_hbm_static_frame_transport.sv','ot_hbm_static_frame_transport');nodes[ep+'_gearbox']['parent']=ep
    edge(ep+'_frame',[ep,'tx_pin_flit'],[ep+'_gearbox','endpoint_tx_frame'],612,'required_endpoint_frame_transport_UNJOINED')
@@ -203,11 +203,36 @@ def graph(root):
  for rec in eng['intervals']:
   n=f'Engram_L{rec["layer"]}_home{rec["home"]}';nodes[n]={'role':'off_die_memory_extent_candidate','rank':rec['rank'],'stack':rec['stack'],'stack_local_begin':rec['stack_local_begin'],'stack_local_end':rec['stack_local_end'],'geometry':None,'is_on_die_area':False}
   edge(n+'_service',[n,'row_response'],['KV_multistack_service','Engram_dispatch_UNBOUND'],None,'8home_protocol_source_candidate_UNJOINED',bytes_per_row=288)
+ # Keep exclusive architecture successors in separate profiles, never sum
+ # baseline128 and D2048 or duplicate one shared PC controller per client.
+ profiles={}
+ profile_sources={
+  'D_local_PV_model':attroot/'results/arch/hbm_attention_static_1015/pv_local_D_model.json',
+  'D_actual_mapped_TT':attroot/'results/arch/hbm_attention_static_1015/pv_local_D_mapped_TT/record.json',
+  'D_actual_NE_join':attroot/'results/arch/hbm_attention_static_1015/pv_local_D_current7b2_NE_gate/receipt.json',
+  'QK_score_store':attroot/'results/arch/hbm_attention_static_1015/qk_score_serializer_model.json',
+  'SW_Quant_replica':BASE/'hbm-static-quant-engine-1015/results/hbm_static_quant_1015/SW_replica/model_before_RTL.json',
+  'PMA_stream_adapter':BASE/'pma-544-512-1015/results/arch/pma512_stream_1015/receipt.json',
+  'native_checkpoint_address_plan':BASE/'hbm-die-feas-1014/results/arch/hbm_die_v15/full_native_checkpoint_plan/book.json',
+  'HCOLL_actual1180_pin_join':root/'results/arch/hbm_system_geometry_1015/HCOLL_actual_1180_pin_join.json',
+ }
+ for name,path in profile_sources.items():
+  if path.exists():profiles[name]=get(name,path)
+  else:gaps.append({'kind':'missing_owned_profile_export','profile':name,'path':str(path)})
+ profiles['selection_and_limits']={
+  'primary_PV':'D2048 source655f63e8d, functional NE join6d3d380e1; mapped307f0a9cc; physical placement/CTS open',
+  'fallback_PV':'canonical128 XOR C; mutually exclusive payload storage with D',
+  'SW_Quant':'target125 sourcee219c9689 RG6/WG2 count candidate; RG5/WG1 zero-based both W; NW48 preserved',
+  'D_unplaced_critical_logic':['four512b eight-way tile-output muxes','headgroup/lane local selectors','53FF global control','four6688-sink bank clock trees'],
+  'whole_system_qualified':False,
+  'additional_QK_store':'256 real32x128 macros +32768 statusFF +1024 readflagFF; omitted from current known-box figure and must be reserved before full fit',
+  'PMA':'544coded to512PHY ratio16:17 streaming sourceproof; physical oneclk/recovered-clock contract and analog rate remain unbound',
+ }
  # Every unknown remains actionable in one report; no fabricated global count.
  for n,v in nodes.items():
   if v.get('geometry') is None or v.get('geometry',{}).get('xy_um') is None:gaps.append({'kind':'missing_current_physical_placement','node':n})
   if not v.get('native_parent_join_proved',False):v['whole_native_qualification']=False
- return {'schema':'opentallas.hbm.system_geometry.current_graph.v1','complete':False,'adoption_allowed':False,'references':refs,'nodes':nodes,'edges':edges,'gaps':gaps,'ATT_production_activity':activity,'mandatory_transpose_payload_FF_bits':589824,'mandatory_PV_flags_FF_bits':16384,'counts':{'functional_or_physical_records':len(nodes),'edges_including_explicit_required_unjoined':len(edges),'actual_pin_verified_edges':0,'native_service_placements':service['instance_count'],'LG_bank_leaves':96,'SM_full_frames':32,'IDX_literal_parent_clock_roots':nodes['IDX']['clock_roots_declared']},'limits':['Mixed hierarchical container/leaf/obligation graph; do not sum node count as physical instances or area.','Inherited contract connections are port-checked only; new native source joins remain explicit.','Unknown widths are null, never zero-width wires or free services.','No complete global wirelength/cut/clock/performance score while any outside paths or physical views are absent.']}
+ return {'schema':'opentallas.hbm.system_geometry.current_graph.v1','complete':False,'adoption_allowed':False,'references':refs,'nodes':nodes,'edges':edges,'gaps':gaps,'ATT_production_activity':activity,'exclusive_successor_profiles':profiles,'mandatory_transpose_payload_FF_bits':589824,'mandatory_PV_flags_FF_bits':16384,'counts':{'functional_or_physical_records':len(nodes),'edges_including_explicit_required_unjoined':len(edges),'actual_pin_verified_edges':0,'native_service_placements':service['instance_count'],'LG_bank_leaves':96,'SM_full_frames':32,'IDX_literal_parent_clock_roots':nodes['IDX']['clock_roots_declared']},'limits':['Mixed hierarchical container/leaf/obligation graph; do not sum node count as physical instances or area.','Inherited contract connections are port-checked only; new native source joins remain explicit.','Unknown widths are null, never zero-width wires or free services.','No complete global wirelength/cut/clock/performance score while any outside paths or physical views are absent.']}
 
 def main():
  p=argparse.ArgumentParser();p.add_argument('--root',default='.');p.add_argument('--out',required=True);a=p.parse_args();r=graph(Path(a.root).resolve());Path(a.out).write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r['counts']))
