@@ -1,0 +1,43 @@
+{
+  "schema": "opentallas.hbm.full-SM-streamed-checkpoint.v1",
+  "status": "ALL_SOURCE_MATRIX_EXPERT_ASSIGNMENTS_EXPORTED_INSTALL_REQUIRED",
+  "rank": 0,
+  "sm": 0,
+  "stack": 0,
+  "pcs": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "region_row_base": 16640,
+  "region_row_count": 2048,
+  "matrix_count": 545,
+  "active_matrix_expert_blocks": 47640,
+  "idle_matrices": 8,
+  "sectors": 5609640,
+  "records": 1305016,
+  "padded_HBM_bytes": 179508480,
+  "physical_pairs_binary_sha256": "dbd4066689444b5dab91cf39924366977a548aba6ea4a7da9d52b1625f9cc033",
+  "logical_records_binary_sha256": "d97a15967c53baeeeb4ce180f409bc2a8bf087741d29471d434f3b8a37dd8ae3",
+  "operation_manifest_sha256": "77a4674731cfd3a0f631e653ed9acaeecdae0164f9d66325ca1a64d85a25b9e0",
+  "actual_checkpoint_bytes_read": 129809040,
+  "selected_tensor_header_count": 95227,
+  "selected_tensor_header_sha256": "c00f0b1ac34c0204a512d65f96204a457a74e369f8bf724fd0fac3974ae4c43a",
+  "source_buffer_payload_bound_bytes": 257280,
+  "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+  "checkpoint_index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+  "source_sha256": {
+    "results/arch/hbm_die_v15/checkpoint_residency/receipt.json": "4f1475584896cac625b66e28ce603a6f2323ef596959fc2ecb82a75a2dad34d8",
+    "results/arch/hbm_die_v15/full_native_checkpoint_plan/book.json": "980899638942747e8a87131e24f6824346c7027a3b4c20b6c962f967ccc11895",
+    "tools/hbm_checkpoint_native_fullsm.py": "3717f8ae4f3c60a545fe5a963df4e90727cfc08a23a06b8bfaca0652fe33dd4b",
+    "tools/hbm_checkpoint_native_stream.py": "7ad050dcb685efc7791d4c5dbd940e51fbda55d02ddacc34f5afe3c181b7d3fb",
+    "tools/dsrom_checkpoint.py": "1f0ba70f4102aa8fb60e27d4bf4ce0f587fb6c9b1e456b6b35cd7705ba256844",
+    "tools/hbm_checkpoint_native_plan.py": "efb890639c7410d989de05ce3fd3fceb2cd3b2d2bf605c4dc5bbcb22d84121cb"
+  },
+  "actual_HBM_ACK_verified": false,
+  "actual_HBM_readback_verified": false,
+  "native_programme_qualified": false,
+  "performance_qualified": false,
+  "physical_qualified": false
+}
