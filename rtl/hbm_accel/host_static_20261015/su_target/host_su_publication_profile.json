@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.host-su.unpacked-publication-profile.v1",
+  "profile": "RF36 INDEX_PACK1 historical302+76 (opt-in packed6 is separate and unsupported here)",
+  "scope": "AXI installer/local installed-row and index validation plus two actual native programme producers, not wholeSU or parenttransport",
+  "serial": {
+    "edges": 7116,
+    "line_bits": 9688,
+    "macros": 302,
+    "config_words": 34452
+  },
+  "stream": {
+    "edges": 9489,
+    "line_bits": 64,
+    "macros": 76,
+    "config_words": 9493
+  },
+  "image_source": "e74a2e646eb8831a0df455b76e4300ee1e617982",
+  "existing_receipt_scope": "native producer before opt-in packed INDEX_PACK parameter; retained historical evidence only",
+  "publication_base": "6a85caf5a",
+  "current_main_producer_sha256": "404a70ae56d80df5f3bf2eb655ecc4b5cb4babe8c73be95db42c53306bb552ab",
+  "current_main_requalification": "PENDING actual INDEX_PACK1 native pair/AXI reruns; do not silently inherit older producer proof",
+  "physical": "OPEN; actual memorymacros plus38,656serial/9,728stream bitmapFF roots needpartition/CTS/nativephysical,parentclock/reset/sourcejoins"
+}
