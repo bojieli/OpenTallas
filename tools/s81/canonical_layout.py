@@ -203,6 +203,11 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
   xentries=[road.rootnode[(r,'x')] for r,f in m['frames'].items() if f['column_index']==(10 if side=='W' else 11)]
   root=min(xentries,key=lambda n:abs(n[1]-source[1]))
   entry=next(n for n in entries if n[1]==root[1])
+  override=m['canonical_layout'].get('broadcast_entry_overrides',{}).get(side)
+  if override is not None:
+   assert len(override)==2
+   entry=min(entries,key=lambda n:G._mh(n,override))
+   assert G._mh(entry,override)<.001,('broadcast override is not an actual S14 entry',side,override,entry)
   if side=='E':
    cy=G.corr_y(m,'xdn');prefix=G._dedup([source,(source[0],cy),(entry[0],cy),entry])
   else:prefix=G._dedup([source,(entry[0],source[1]),entry])

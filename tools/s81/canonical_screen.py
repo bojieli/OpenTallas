@@ -12,12 +12,27 @@ def main():
   live['m']=m
   # Export the fully populated actual field before trunk placement can fail.
   export(m,'field_before_trunks',False)
-  return old(m)
- def export(m,name,complete):
-  record=dict(scope='COMPLETE_GENERATOR' if complete else 'PARTIAL_GENERATOR_NOT_RELEASE',die=list(G.DIE),insts=[[i.name,i.master,i.x,i.y,i.w,i.h,i.orient,i.kind,i.region] for i in m['insts']],buses=m.get('buses',[]),frames=m['frames'],regions=m['regions'],port_aliases=G.real_ports(),unbound_supplemental_reservations=m.get('canonical_layout',{}).get('hcp_homes',[]),calendar=m.get('canonical_calendar'),rsc_repack=m.get('canonical_rsc_repack'),service_paths=m.get('canonical_service_paths'),chain_paths=m.get('chain_paths'),broadcast_trees=m.get('canonical_broadcast_trees'),injectors=m.get('canonical_injectors'),variant=m['variant'])
+  result=old(m);m['canonical_buses_complete']=True;return result
+ def export(m,name,complete,scope=None):
+  record=dict(scope=scope or ('COMPLETE_GENERATOR' if complete else 'PARTIAL_GENERATOR_NOT_RELEASE'),die=list(G.DIE),insts=[[i.name,i.master,i.x,i.y,i.w,i.h,i.orient,i.kind,i.region] for i in m['insts']],buses=m.get('buses',[]),frames=m['frames'],regions=m['regions'],port_aliases=G.real_ports(),unbound_supplemental_reservations=m.get('canonical_layout',{}).get('hcp_homes',[]),calendar=m.get('canonical_calendar'),rsc_repack=m.get('canonical_rsc_repack'),service_paths=m.get('canonical_service_paths'),chain_paths=m.get('chain_paths'),broadcast_trees=m.get('canonical_broadcast_trees'),injectors=m.get('canonical_injectors'),variant=m['variant'])
   with gzip.open(w/(name+'.json.gz'),'wt') as f:json.dump(record,f,default=list)
   (w/(name+'_legality.json')).write_text(json.dumps(G.legality(m),indent=1))
  G.buses_r8=capture
+ old_finalize=G.finalize_r8;passes=[0]
+ def finalize_capture(m):
+  result=old_finalize(m)
+  if m.get('canonical_buses_complete') and not m.get('_canonical_snapshot_done'):
+   m['_canonical_snapshot_done']=True;name=f'construction_pass{passes[0]}';passes[0]+=1
+   export(m,name+'_plan',True,scope='COMPLETE_CONSTRUCTION_BEFORE_HOP_SIGNOFF_NOT_NATIVE')
+   try:
+    texts=G.die_lef_texts(m)
+    with gzip.open(w/(name+'_pins.lef.gz'),'wt')as f:f.write('\n'.join(texts))
+    G.write_netlist(m,1,w/(name+'_die.v'))
+    (w/(name+'_die_glue.sv')).write_text(G.glue_rtl(m))
+   except Exception as ex:
+    (w/(name+'_export_error.json')).write_text(json.dumps(dict(error=repr(ex),traceback=traceback.format_exc(),native_qualified=False),indent=1))
+  return result
+ G.finalize_r8=finalize_capture
  try:
   m=G.build();G.finalize_r8(m)
   from s81.canonical_layout import trace_calendar
