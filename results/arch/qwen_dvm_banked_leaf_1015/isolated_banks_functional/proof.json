@@ -1,0 +1,33 @@
+{
+  "source": "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
+  "sha256": "30f4e0cf2ec2940a992122ab690349246eb89f99c5260689ef8928a9722d4280",
+  "component": {
+    "pass": true,
+    "checks": 129,
+    "good": 128,
+    "invalid": 1,
+    "added_read_edges": 1,
+    "same_tile_II": 8
+  },
+  "fabric_zero_gap": {
+    "pass": true,
+    "checks": 159744,
+    "operations": 10,
+    "cycles": 1694,
+    "DX": 14,
+    "XVMR": 16,
+    "delta_edges": 1
+  },
+  "early_fill_mutant": {
+    "observed_failure": true,
+    "errors": 939,
+    "tool_exit": 0
+  },
+  "swapped_tile_mutant": {
+    "observed_payload_failure": true,
+    "tool_exit": 1
+  },
+  "physical_qualified": false,
+  "production_calendar_qualified": false,
+  "ledger_changed": false
+}

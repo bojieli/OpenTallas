@@ -1,0 +1,233 @@
+{
+  "schema": "opentallas.qwen.dvm.external_capture_column.v1",
+  "xml_sha256": "f30785b99ca80b7f0a4dbb4dd47179d4ae06c5ab996c566a74c2347d9e5898b3",
+  "compiler": "actual /usr/bin/verilator5.032 ot-epyc4",
+  "hard_instances": [
+    {
+      "hier": "qfd_xcol_extcap_e.u_c.g_he.u_h",
+      "master": "qfd_xhead_extcap_e"
+    },
+    {
+      "hier": "qfd_xcol_extcap_e.u_c.g_ch__BRA__0__KET__.g_leaf__BRA__0__KET__.u_leaf.u_capture0",
+      "master": "qwen_glue_v514"
+    },
+    {
+      "hier": "qfd_xcol_extcap_e.u_c.g_ch__BRA__0__KET__.g_leaf__BRA__0__KET__.u_leaf.u_capture1",
+      "master": "qwen_glue_v514"
+    },
+    {
+      "hier": "qfd_xcol_extcap_e.u_c.g_ch__BRA__0__KET__.g_leaf__BRA__0__KET__.u_leaf.u_core",
+      "master": "qfd_xs_leaf_extcap"
+    },
+    {
+      "hier": "qfd_xcol_extcap_e.u_c.g_ch__BRA__0__KET__.g_leaf__BRA__1__KET__.u_leaf.u_capture0",
+      "master": "qwen_glue_v514"
+    },
+    {
+      "hier": "qfd_xcol_extcap_e.u_c.g_ch__BRA__0__KET__.g_leaf__BRA__1__KET__.u_leaf.u_capture1",
+      "master": "qwen_glue_v514"
+    },
+    {
+      "hier": "qfd_xcol_extcap_e.u_c.g_ch__BRA__0__KET__.g_leaf__BRA__1__KET__.u_leaf.u_core",
+      "master": "qfd_xs_leaf_extcap"
+    },
+    {
+      "hier": "qfd_xcol_extcap_e.u_c.g_ch__BRA__0__KET__.g_leaf__BRA__2__KET__.u_leaf.u_capture0",
+      "master": "qwen_glue_v514"
+    },
+    {
+      "hier": "qfd_xcol_extcap_e.u_c.g_ch__BRA__0__KET__.g_leaf__BRA__2__KET__.u_leaf.u_capture1",
+      "master": "qwen_glue_v514"
+    },
+    {
+      "hier": "qfd_xcol_extcap_e.u_c.g_ch__BRA__0__KET__.g_leaf__BRA__2__KET__.u_leaf.u_core",
+      "master": "qfd_xs_leaf_extcap"
+    },
+    {
+      "hier": "qfd_xcol_extcap_e.u_c.g_ch__BRA__0__KET__.g_leaf__BRA__3__KET__.u_leaf.u_capture0",
+      "master": "qwen_glue_v514"
+    },
+    {
+      "hier": "qfd_xcol_extcap_e.u_c.g_ch__BRA__0__KET__.g_leaf__BRA__3__KET__.u_leaf.u_capture1",
+      "master": "qwen_glue_v514"
+    },
+    {
+      "hier": "qfd_xcol_extcap_e.u_c.g_ch__BRA__0__KET__.g_leaf__BRA__3__KET__.u_leaf.u_core",
+      "master": "qfd_xs_leaf_extcap"
+    },
+    {
+      "hier": "qfd_xcol_extcap_e.u_c.g_ch__BRA__1__KET__.g_leaf__BRA__0__KET__.u_leaf.u_capture0",
+      "master": "qwen_glue_v514"
+    },
+    {
+      "hier": "qfd_xcol_extcap_e.u_c.g_ch__BRA__1__KET__.g_leaf__BRA__0__KET__.u_leaf.u_capture1",
+      "master": "qwen_glue_v514"
+    },
+    {
+      "hier": "qfd_xcol_extcap_e.u_c.g_ch__BRA__1__KET__.g_leaf__BRA__0__KET__.u_leaf.u_core",
+      "master": "qfd_xs_leaf_extcap"
+    },
+    {
+      "hier": "qfd_xcol_extcap_e.u_c.g_ch__BRA__1__KET__.g_leaf__BRA__1__KET__.u_leaf.u_capture0",
+      "master": "qwen_glue_v514"
+    },
+    {
+      "hier": "qfd_xcol_extcap_e.u_c.g_ch__BRA__1__KET__.g_leaf__BRA__1__KET__.u_leaf.u_capture1",
+      "master": "qwen_glue_v514"
+    },
+    {
+      "hier": "qfd_xcol_extcap_e.u_c.g_ch__BRA__1__KET__.g_leaf__BRA__1__KET__.u_leaf.u_core",
+      "master": "qfd_xs_leaf_extcap"
+    },
+    {
+      "hier": "qfd_xcol_extcap_e.u_c.g_ch__BRA__1__KET__.g_leaf__BRA__2__KET__.u_leaf.u_capture0",
+      "master": "qwen_glue_v514"
+    },
+    {
+      "hier": "qfd_xcol_extcap_e.u_c.g_ch__BRA__1__KET__.g_leaf__BRA__2__KET__.u_leaf.u_capture1",
+      "master": "qwen_glue_v514"
+    },
+    {
+      "hier": "qfd_xcol_extcap_e.u_c.g_ch__BRA__1__KET__.g_leaf__BRA__2__KET__.u_leaf.u_core",
+      "master": "qfd_xs_leaf_extcap"
+    },
+    {
+      "hier": "qfd_xcol_extcap_e.u_c.g_ch__BRA__1__KET__.g_leaf__BRA__3__KET__.u_leaf.u_capture0",
+      "master": "qwen_glue_v514"
+    },
+    {
+      "hier": "qfd_xcol_extcap_e.u_c.g_ch__BRA__1__KET__.g_leaf__BRA__3__KET__.u_leaf.u_capture1",
+      "master": "qwen_glue_v514"
+    },
+    {
+      "hier": "qfd_xcol_extcap_e.u_c.g_ch__BRA__1__KET__.g_leaf__BRA__3__KET__.u_leaf.u_core",
+      "master": "qfd_xs_leaf_extcap"
+    }
+  ],
+  "hard_instance_counts": {
+    "heads": 1,
+    "stores": 8,
+    "capture_GWs": 16
+  },
+  "actual_input_clock_ports": [
+    "ck0",
+    "ck1",
+    "ck2",
+    "ck3",
+    "ck4",
+    "ck5",
+    "ck6",
+    "ck7",
+    "ck8",
+    "ck9",
+    "ck10",
+    "ck11",
+    "ck12",
+    "ck13",
+    "ck14",
+    "ck15",
+    "ck16",
+    "ck17",
+    "ck18",
+    "ck19",
+    "ck20",
+    "ck21",
+    "ck22",
+    "ck23",
+    "ck24"
+  ],
+  "actual_elaborated_clock_indices": [
+    {
+      "leaf": 0,
+      "h": 0,
+      "j": 0,
+      "clock_ports": {
+        "clk": "ck1",
+        "clk_wd0": "ck9",
+        "clk_wd1": "ck10"
+      }
+    },
+    {
+      "leaf": 1,
+      "h": 0,
+      "j": 1,
+      "clock_ports": {
+        "clk": "ck2",
+        "clk_wd0": "ck11",
+        "clk_wd1": "ck12"
+      }
+    },
+    {
+      "leaf": 2,
+      "h": 0,
+      "j": 2,
+      "clock_ports": {
+        "clk": "ck3",
+        "clk_wd0": "ck13",
+        "clk_wd1": "ck14"
+      }
+    },
+    {
+      "leaf": 3,
+      "h": 0,
+      "j": 3,
+      "clock_ports": {
+        "clk": "ck4",
+        "clk_wd0": "ck15",
+        "clk_wd1": "ck16"
+      }
+    },
+    {
+      "leaf": 4,
+      "h": 1,
+      "j": 0,
+      "clock_ports": {
+        "clk": "ck5",
+        "clk_wd0": "ck17",
+        "clk_wd1": "ck18"
+      }
+    },
+    {
+      "leaf": 5,
+      "h": 1,
+      "j": 1,
+      "clock_ports": {
+        "clk": "ck6",
+        "clk_wd0": "ck19",
+        "clk_wd1": "ck20"
+      }
+    },
+    {
+      "leaf": 6,
+      "h": 1,
+      "j": 2,
+      "clock_ports": {
+        "clk": "ck7",
+        "clk_wd0": "ck21",
+        "clk_wd1": "ck22"
+      }
+    },
+    {
+      "leaf": 7,
+      "h": 1,
+      "j": 3,
+      "clock_ports": {
+        "clk": "ck8",
+        "clk_wd0": "ck23",
+        "clk_wd1": "ck24"
+      }
+    }
+  ],
+  "head_profile": {
+    "FILL_LEAD": 5,
+    "QD": 8,
+    "DX": 14
+  },
+  "capture_parent_always_processes": 0,
+  "monitor_state_inside_core": true,
+  "flatten_to_physical_siblings_required": true,
+  "parent_fault_OR_is_real_combinational_glue": true,
+  "source_elaboration_pass": true,
+  "native_parent_qualified": false,
+  "geometry_qualified": false
+}
