@@ -1,5 +1,5 @@
 {
- "name": "dsfd_vm_static_landing_native_1015_r3-inhold3-COMMIT",
+ "name": "dsfd_vm_static_landing_native_1015_r3-inhold3-526697023",
  "block": "dsfd_vm_static_landing",
  "ref_tile": true,
  "owner": "claude:S-ELEM-A S81 VM owner",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/s81-vm-elema-1015",
-  "commit": "COMMIT",
+  "commit": "526697023",
   "extra_paths": [
    "tools/s81_vm",
    "rtl/dsrom_sys/s81_ph/vm",
@@ -122,7 +122,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_vm_static_landing_native_1015_r3/dsfd_vm_static_landing_native_1015_r3-inhold3-COMMIT"
+   "to": "results/rtl/ref_tile/dsfd_vm_static_landing_native_1015_r3/dsfd_vm_static_landing_native_1015_r3-inhold3-526697023"
   }
  ],
  "cycles_added": 0,
