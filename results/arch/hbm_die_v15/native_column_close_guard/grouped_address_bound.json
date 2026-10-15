@@ -1,0 +1,43 @@
+{
+  "source_sha256": "7489252bf3122cdce08fc4b6f59a50a66d6898ac4c3064512ec3f4c43df101c4",
+  "source_commit": "616768850",
+  "checked_sector_start_residues": 131072,
+  "sectors_per_released_row": 9,
+  "PC_formula": "((sector>>2)^(sector>>7)^(sector>>12))&31",
+  "physical_row_formula": "sector>>15",
+  "period_argument": "PC uses only sector bits16:2. Adding2^17 leaves PC unchanged and shifts every physical row by4, preserving row-equality classes. All valid30-bit starts reduce to these residues. End-of-capacity crossing remains rejected by actual address bounds.",
+  "crossing_start_residues": 32,
+  "max_sectors_per_PC_per_logical_row": 8,
+  "max_distinct_physical_rows_per_PC_per_logical_row": 1,
+  "counterexample_to_old_16_request_assumption": {
+    "logical_row_start_sector": 2043,
+    "row_is_288B_aligned": true,
+    "PC": 16,
+    "sectors": [
+      2044,
+      2045,
+      2046,
+      2047,
+      2048,
+      2049,
+      2050,
+      2051
+    ]
+  },
+  "four_logical_rows": {
+    "requests_per_PC_max": 32,
+    "physical_row_visits_per_PC_max": 4,
+    "requires": "actual stable-row grouping; no competing clients within reservation"
+  },
+  "timing_bound_status": "NOT_CERTIFIED",
+  "timing_gaps": [
+    "Known PRE/RD overlap requires repaired shared-controller profile and strict timing oracle reproof",
+    "Refresh selection/read queue interaction and bounded progress require checked phase/state analysis; distinct row count is not a time bound",
+    "Fair response arbiter plus finite four-entry CDC must include clock phase, synchronization and registered SRAM read delay"
+  ],
+  "sample_deadlines_core_edges": [
+    2624,
+    8228
+  ],
+  "sample_deadlines_universal": false
+}
