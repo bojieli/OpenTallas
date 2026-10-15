@@ -1,6 +1,7 @@
 {
   "scope": "ANALYTICAL_CAPACITY_ONLY; frozen full128 component fixtures, not production schedule",
   "fixture_revision": "c1b3073f4",
+  "fixture_directory": null,
   "fixture_sha256": {
     "results/rtl/qwen_static_kv_1015/full128_return/true_host_dual_clock/fixtures/p137/pc00_stack0.mem": "3c66f568d131299ac6f7726847a3236253c2a44092cff206121921254eac120e",
     "results/rtl/qwen_static_kv_1015/full128_return/true_host_dual_clock/fixtures/p137/pc00_stack1.mem": "3c66f568d131299ac6f7726847a3236253c2a44092cff206121921254eac120e",
@@ -276,7 +277,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -286,7 +289,9 @@
       "first_request_min_core": 1946,
       "first_request_max_core": 227,
       "feasible": false,
-      "slack_core_edges": -1719
+      "slack_core_edges": -1719,
+      "acquisition_span_core_edges": 521,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -296,7 +301,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -306,7 +313,9 @@
       "first_request_min_core": 1824,
       "first_request_max_core": 231,
       "feasible": false,
-      "slack_core_edges": -1593
+      "slack_core_edges": -1593,
+      "acquisition_span_core_edges": 400,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -316,7 +325,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -326,7 +337,9 @@
       "first_request_min_core": 1989,
       "first_request_max_core": 251,
       "feasible": false,
-      "slack_core_edges": -1738
+      "slack_core_edges": -1738,
+      "acquisition_span_core_edges": 564,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -336,7 +349,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -346,7 +361,9 @@
       "first_request_min_core": 1869,
       "first_request_max_core": 269,
       "feasible": false,
-      "slack_core_edges": -1600
+      "slack_core_edges": -1600,
+      "acquisition_span_core_edges": 438,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -356,7 +373,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -366,7 +385,9 @@
       "first_request_min_core": 1915,
       "first_request_max_core": 322,
       "feasible": false,
-      "slack_core_edges": -1593
+      "slack_core_edges": -1593,
+      "acquisition_span_core_edges": 490,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -376,7 +397,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -386,7 +409,9 @@
       "first_request_min_core": 1932,
       "first_request_max_core": 339,
       "feasible": false,
-      "slack_core_edges": -1593
+      "slack_core_edges": -1593,
+      "acquisition_span_core_edges": 508,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -396,7 +421,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -406,7 +433,9 @@
       "first_request_min_core": 1886,
       "first_request_max_core": 286,
       "feasible": false,
-      "slack_core_edges": -1600
+      "slack_core_edges": -1600,
+      "acquisition_span_core_edges": 455,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -416,7 +445,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -426,7 +457,9 @@
       "first_request_min_core": 1906,
       "first_request_max_core": 306,
       "feasible": false,
-      "slack_core_edges": -1600
+      "slack_core_edges": -1600,
+      "acquisition_span_core_edges": 474,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -436,7 +469,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -446,7 +481,9 @@
       "first_request_min_core": 1946,
       "first_request_max_core": 227,
       "feasible": false,
-      "slack_core_edges": -1719
+      "slack_core_edges": -1719,
+      "acquisition_span_core_edges": 521,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -456,7 +493,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -466,7 +505,9 @@
       "first_request_min_core": 1824,
       "first_request_max_core": 231,
       "feasible": false,
-      "slack_core_edges": -1593
+      "slack_core_edges": -1593,
+      "acquisition_span_core_edges": 400,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -476,7 +517,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -486,7 +529,9 @@
       "first_request_min_core": 1989,
       "first_request_max_core": 251,
       "feasible": false,
-      "slack_core_edges": -1738
+      "slack_core_edges": -1738,
+      "acquisition_span_core_edges": 564,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -496,7 +541,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -506,7 +553,9 @@
       "first_request_min_core": 1869,
       "first_request_max_core": 269,
       "feasible": false,
-      "slack_core_edges": -1600
+      "slack_core_edges": -1600,
+      "acquisition_span_core_edges": 438,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -516,7 +565,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -526,7 +577,9 @@
       "first_request_min_core": 1915,
       "first_request_max_core": 322,
       "feasible": false,
-      "slack_core_edges": -1593
+      "slack_core_edges": -1593,
+      "acquisition_span_core_edges": 490,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -536,7 +589,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -546,7 +601,9 @@
       "first_request_min_core": 1932,
       "first_request_max_core": 339,
       "feasible": false,
-      "slack_core_edges": -1593
+      "slack_core_edges": -1593,
+      "acquisition_span_core_edges": 508,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -556,7 +613,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -566,7 +625,9 @@
       "first_request_min_core": 1886,
       "first_request_max_core": 286,
       "feasible": false,
-      "slack_core_edges": -1600
+      "slack_core_edges": -1600,
+      "acquisition_span_core_edges": 455,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -576,7 +637,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -586,7 +649,9 @@
       "first_request_min_core": 1906,
       "first_request_max_core": 306,
       "feasible": false,
-      "slack_core_edges": -1600
+      "slack_core_edges": -1600,
+      "acquisition_span_core_edges": 474,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -596,7 +661,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -606,7 +673,9 @@
       "first_request_min_core": 1946,
       "first_request_max_core": 227,
       "feasible": false,
-      "slack_core_edges": -1719
+      "slack_core_edges": -1719,
+      "acquisition_span_core_edges": 521,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -616,7 +685,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -626,7 +697,9 @@
       "first_request_min_core": 1824,
       "first_request_max_core": 231,
       "feasible": false,
-      "slack_core_edges": -1593
+      "slack_core_edges": -1593,
+      "acquisition_span_core_edges": 400,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -636,7 +709,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -646,7 +721,9 @@
       "first_request_min_core": 1989,
       "first_request_max_core": 251,
       "feasible": false,
-      "slack_core_edges": -1738
+      "slack_core_edges": -1738,
+      "acquisition_span_core_edges": 564,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -656,7 +733,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -666,7 +745,9 @@
       "first_request_min_core": 1869,
       "first_request_max_core": 269,
       "feasible": false,
-      "slack_core_edges": -1600
+      "slack_core_edges": -1600,
+      "acquisition_span_core_edges": 438,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -676,7 +757,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -686,7 +769,9 @@
       "first_request_min_core": 1915,
       "first_request_max_core": 322,
       "feasible": false,
-      "slack_core_edges": -1593
+      "slack_core_edges": -1593,
+      "acquisition_span_core_edges": 490,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -696,7 +781,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -706,7 +793,9 @@
       "first_request_min_core": 1932,
       "first_request_max_core": 339,
       "feasible": false,
-      "slack_core_edges": -1593
+      "slack_core_edges": -1593,
+      "acquisition_span_core_edges": 508,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -716,7 +805,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -726,7 +817,9 @@
       "first_request_min_core": 1886,
       "first_request_max_core": 286,
       "feasible": false,
-      "slack_core_edges": -1600
+      "slack_core_edges": -1600,
+      "acquisition_span_core_edges": 455,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -736,7 +829,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -746,7 +841,9 @@
       "first_request_min_core": 1906,
       "first_request_max_core": 306,
       "feasible": false,
-      "slack_core_edges": -1600
+      "slack_core_edges": -1600,
+      "acquisition_span_core_edges": 474,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -756,7 +853,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -766,7 +865,9 @@
       "first_request_min_core": 1946,
       "first_request_max_core": 227,
       "feasible": false,
-      "slack_core_edges": -1719
+      "slack_core_edges": -1719,
+      "acquisition_span_core_edges": 521,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -776,7 +877,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -786,7 +889,9 @@
       "first_request_min_core": 1824,
       "first_request_max_core": 231,
       "feasible": false,
-      "slack_core_edges": -1593
+      "slack_core_edges": -1593,
+      "acquisition_span_core_edges": 400,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -796,7 +901,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -806,7 +913,9 @@
       "first_request_min_core": 1989,
       "first_request_max_core": 251,
       "feasible": false,
-      "slack_core_edges": -1738
+      "slack_core_edges": -1738,
+      "acquisition_span_core_edges": 564,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -816,7 +925,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -826,7 +937,9 @@
       "first_request_min_core": 1869,
       "first_request_max_core": 269,
       "feasible": false,
-      "slack_core_edges": -1600
+      "slack_core_edges": -1600,
+      "acquisition_span_core_edges": 438,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -836,7 +949,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -846,7 +961,9 @@
       "first_request_min_core": 1915,
       "first_request_max_core": 322,
       "feasible": false,
-      "slack_core_edges": -1593
+      "slack_core_edges": -1593,
+      "acquisition_span_core_edges": 490,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -856,7 +973,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -866,7 +985,9 @@
       "first_request_min_core": 1932,
       "first_request_max_core": 339,
       "feasible": false,
-      "slack_core_edges": -1593
+      "slack_core_edges": -1593,
+      "acquisition_span_core_edges": 508,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -876,7 +997,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -886,7 +1009,9 @@
       "first_request_min_core": 1886,
       "first_request_max_core": 286,
       "feasible": false,
-      "slack_core_edges": -1600
+      "slack_core_edges": -1600,
+      "acquisition_span_core_edges": 455,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 137,
@@ -896,7 +1021,9 @@
       "first_request_min_core": 514,
       "first_request_max_core": 612,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 137,
@@ -906,7 +1033,9 @@
       "first_request_min_core": 1906,
       "first_request_max_core": 306,
       "feasible": false,
-      "slack_core_edges": -1600
+      "slack_core_edges": -1600,
+      "acquisition_span_core_edges": 474,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -916,7 +1045,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -926,7 +1057,9 @@
       "first_request_min_core": 1945,
       "first_request_max_core": 227,
       "feasible": false,
-      "slack_core_edges": -1718
+      "slack_core_edges": -1718,
+      "acquisition_span_core_edges": 521,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -936,7 +1069,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -946,7 +1081,9 @@
       "first_request_min_core": 1823,
       "first_request_max_core": 230,
       "feasible": false,
-      "slack_core_edges": -1593
+      "slack_core_edges": -1593,
+      "acquisition_span_core_edges": 399,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -956,7 +1093,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -966,7 +1105,9 @@
       "first_request_min_core": 1988,
       "first_request_max_core": 250,
       "feasible": false,
-      "slack_core_edges": -1738
+      "slack_core_edges": -1738,
+      "acquisition_span_core_edges": 564,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -976,7 +1117,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -986,7 +1129,9 @@
       "first_request_min_core": 1868,
       "first_request_max_core": 269,
       "feasible": false,
-      "slack_core_edges": -1599
+      "slack_core_edges": -1599,
+      "acquisition_span_core_edges": 437,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -996,7 +1141,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -1006,7 +1153,9 @@
       "first_request_min_core": 1914,
       "first_request_max_core": 321,
       "feasible": false,
-      "slack_core_edges": -1593
+      "slack_core_edges": -1593,
+      "acquisition_span_core_edges": 490,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -1016,7 +1165,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -1026,7 +1177,9 @@
       "first_request_min_core": 1931,
       "first_request_max_core": 339,
       "feasible": false,
-      "slack_core_edges": -1592
+      "slack_core_edges": -1592,
+      "acquisition_span_core_edges": 507,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -1036,7 +1189,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -1046,7 +1201,9 @@
       "first_request_min_core": 1885,
       "first_request_max_core": 286,
       "feasible": false,
-      "slack_core_edges": -1599
+      "slack_core_edges": -1599,
+      "acquisition_span_core_edges": 454,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -1056,7 +1213,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -1066,7 +1225,9 @@
       "first_request_min_core": 1905,
       "first_request_max_core": 305,
       "feasible": false,
-      "slack_core_edges": -1600
+      "slack_core_edges": -1600,
+      "acquisition_span_core_edges": 474,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -1076,7 +1237,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -1086,7 +1249,9 @@
       "first_request_min_core": 1945,
       "first_request_max_core": 227,
       "feasible": false,
-      "slack_core_edges": -1718
+      "slack_core_edges": -1718,
+      "acquisition_span_core_edges": 521,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -1096,7 +1261,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -1106,7 +1273,9 @@
       "first_request_min_core": 1823,
       "first_request_max_core": 230,
       "feasible": false,
-      "slack_core_edges": -1593
+      "slack_core_edges": -1593,
+      "acquisition_span_core_edges": 399,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -1116,7 +1285,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -1126,7 +1297,9 @@
       "first_request_min_core": 1988,
       "first_request_max_core": 250,
       "feasible": false,
-      "slack_core_edges": -1738
+      "slack_core_edges": -1738,
+      "acquisition_span_core_edges": 564,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -1136,7 +1309,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -1146,7 +1321,9 @@
       "first_request_min_core": 1868,
       "first_request_max_core": 269,
       "feasible": false,
-      "slack_core_edges": -1599
+      "slack_core_edges": -1599,
+      "acquisition_span_core_edges": 437,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -1156,7 +1333,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -1166,7 +1345,9 @@
       "first_request_min_core": 1914,
       "first_request_max_core": 321,
       "feasible": false,
-      "slack_core_edges": -1593
+      "slack_core_edges": -1593,
+      "acquisition_span_core_edges": 490,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -1176,7 +1357,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -1186,7 +1369,9 @@
       "first_request_min_core": 1931,
       "first_request_max_core": 339,
       "feasible": false,
-      "slack_core_edges": -1592
+      "slack_core_edges": -1592,
+      "acquisition_span_core_edges": 507,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -1196,7 +1381,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -1206,7 +1393,9 @@
       "first_request_min_core": 1885,
       "first_request_max_core": 286,
       "feasible": false,
-      "slack_core_edges": -1599
+      "slack_core_edges": -1599,
+      "acquisition_span_core_edges": 454,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -1216,7 +1405,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -1226,7 +1417,9 @@
       "first_request_min_core": 1905,
       "first_request_max_core": 305,
       "feasible": false,
-      "slack_core_edges": -1600
+      "slack_core_edges": -1600,
+      "acquisition_span_core_edges": 474,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -1236,7 +1429,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -1246,7 +1441,9 @@
       "first_request_min_core": 1945,
       "first_request_max_core": 227,
       "feasible": false,
-      "slack_core_edges": -1718
+      "slack_core_edges": -1718,
+      "acquisition_span_core_edges": 521,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -1256,7 +1453,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -1266,7 +1465,9 @@
       "first_request_min_core": 1823,
       "first_request_max_core": 230,
       "feasible": false,
-      "slack_core_edges": -1593
+      "slack_core_edges": -1593,
+      "acquisition_span_core_edges": 399,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -1276,7 +1477,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -1286,7 +1489,9 @@
       "first_request_min_core": 1988,
       "first_request_max_core": 250,
       "feasible": false,
-      "slack_core_edges": -1738
+      "slack_core_edges": -1738,
+      "acquisition_span_core_edges": 564,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -1296,7 +1501,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -1306,7 +1513,9 @@
       "first_request_min_core": 1868,
       "first_request_max_core": 269,
       "feasible": false,
-      "slack_core_edges": -1599
+      "slack_core_edges": -1599,
+      "acquisition_span_core_edges": 437,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -1316,7 +1525,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -1326,7 +1537,9 @@
       "first_request_min_core": 1914,
       "first_request_max_core": 321,
       "feasible": false,
-      "slack_core_edges": -1593
+      "slack_core_edges": -1593,
+      "acquisition_span_core_edges": 490,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -1336,7 +1549,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -1346,7 +1561,9 @@
       "first_request_min_core": 1931,
       "first_request_max_core": 339,
       "feasible": false,
-      "slack_core_edges": -1592
+      "slack_core_edges": -1592,
+      "acquisition_span_core_edges": 507,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -1356,7 +1573,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -1366,7 +1585,9 @@
       "first_request_min_core": 1885,
       "first_request_max_core": 286,
       "feasible": false,
-      "slack_core_edges": -1599
+      "slack_core_edges": -1599,
+      "acquisition_span_core_edges": 454,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -1376,7 +1597,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -1386,7 +1609,9 @@
       "first_request_min_core": 1905,
       "first_request_max_core": 305,
       "feasible": false,
-      "slack_core_edges": -1600
+      "slack_core_edges": -1600,
+      "acquisition_span_core_edges": 474,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -1396,7 +1621,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -1406,7 +1633,9 @@
       "first_request_min_core": 1945,
       "first_request_max_core": 227,
       "feasible": false,
-      "slack_core_edges": -1718
+      "slack_core_edges": -1718,
+      "acquisition_span_core_edges": 521,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -1416,7 +1645,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -1426,7 +1657,9 @@
       "first_request_min_core": 1823,
       "first_request_max_core": 230,
       "feasible": false,
-      "slack_core_edges": -1593
+      "slack_core_edges": -1593,
+      "acquisition_span_core_edges": 399,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -1436,7 +1669,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -1446,7 +1681,9 @@
       "first_request_min_core": 1988,
       "first_request_max_core": 250,
       "feasible": false,
-      "slack_core_edges": -1738
+      "slack_core_edges": -1738,
+      "acquisition_span_core_edges": 564,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -1456,7 +1693,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -1466,7 +1705,9 @@
       "first_request_min_core": 1868,
       "first_request_max_core": 269,
       "feasible": false,
-      "slack_core_edges": -1599
+      "slack_core_edges": -1599,
+      "acquisition_span_core_edges": 437,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -1476,7 +1717,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -1486,7 +1729,9 @@
       "first_request_min_core": 1914,
       "first_request_max_core": 321,
       "feasible": false,
-      "slack_core_edges": -1593
+      "slack_core_edges": -1593,
+      "acquisition_span_core_edges": 490,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -1496,7 +1741,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -1506,7 +1753,9 @@
       "first_request_min_core": 1931,
       "first_request_max_core": 339,
       "feasible": false,
-      "slack_core_edges": -1592
+      "slack_core_edges": -1592,
+      "acquisition_span_core_edges": 507,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -1516,7 +1765,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -1526,7 +1777,9 @@
       "first_request_min_core": 1885,
       "first_request_max_core": 286,
       "feasible": false,
-      "slack_core_edges": -1599
+      "slack_core_edges": -1599,
+      "acquisition_span_core_edges": 454,
+      "nominal_consumer_span_core_edges": 3960
     },
     {
       "phase_ps": 637,
@@ -1536,7 +1789,9 @@
       "first_request_min_core": 513,
       "first_request_max_core": 611,
       "feasible": true,
-      "slack_core_edges": 98
+      "slack_core_edges": 98,
+      "acquisition_span_core_edges": 313,
+      "nominal_consumer_span_core_edges": 255
     },
     {
       "phase_ps": 637,
@@ -1546,7 +1801,9 @@
       "first_request_min_core": 1905,
       "first_request_max_core": 305,
       "feasible": false,
-      "slack_core_edges": -1600
+      "slack_core_edges": -1600,
+      "acquisition_span_core_edges": 474,
+      "nominal_consumer_span_core_edges": 3960
     }
   ],
   "infeasible_groups": 64

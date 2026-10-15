@@ -12,6 +12,7 @@ import io
 import json
 import subprocess
 import tarfile
+from pathlib import Path
 
 ROOT = 'results/rtl/qwen_static_kv_1015/full128_return/true_host_dual_clock/fixtures'
 CORE_FS = 833334
@@ -44,17 +45,25 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--revision', default='c1b3073f4')
     ap.add_argument('--output', required=True)
+    ap.add_argument('--fixture-directory', type=Path, help='Local p137/p637 fixture tree from a separate compiler execution')
     args = ap.parse_args()
-    archive = subprocess.check_output(['git', 'archive', args.revision, ROOT])
     fixtures = {}
     hashes = {}
-    with tarfile.open(fileobj=io.BytesIO(archive)) as tf:
-        for item in tf:
-            if not item.isfile() or not item.name.endswith('.mem'):
-                continue
-            raw = tf.extractfile(item).read()
-            fixtures[item.name] = raw.decode()
-            hashes[item.name] = hashlib.sha256(raw).hexdigest()
+    if args.fixture_directory:
+        for p in args.fixture_directory.rglob('*.mem'):
+            name = ROOT + '/' + p.relative_to(args.fixture_directory).as_posix()
+            raw = p.read_bytes()
+            fixtures[name] = raw.decode()
+            hashes[name] = hashlib.sha256(raw).hexdigest()
+    else:
+        archive = subprocess.check_output(['git', 'archive', args.revision, ROOT])
+        with tarfile.open(fileobj=io.BytesIO(archive)) as tf:
+            for item in tf:
+                if not item.isfile() or not item.name.endswith('.mem'):
+                    continue
+                raw = tf.extractfile(item).read()
+                fixtures[item.name] = raw.decode()
+                hashes[item.name] = hashlib.sha256(raw).hexdigest()
     rows = []
     for phase in (137, 637):
         for stack in range(4):
@@ -67,9 +76,11 @@ def main():
                     hi = min(b[1] for b in bb if b[1] is not None)
                     rows.append(dict(phase_ps=phase, stack=stack, group=group, kind=kind,
                                      first_request_min_core=lo, first_request_max_core=hi,
-                                     feasible=lo <= hi, slack_core_edges=hi - lo))
+                                     feasible=lo <= hi, slack_core_edges=hi - lo,
+                                     acquisition_span_core_edges=max(v[(255 if kind=='K' else 511)]-v[(0 if kind=='K' else 256)] for v in channels),
+                                     nominal_consumer_span_core_edges=(255 if kind=='K' else 3960)))
     out = dict(scope='ANALYTICAL_CAPACITY_ONLY; frozen full128 component fixtures, not production schedule',
-               fixture_revision=args.revision, fixture_sha256=hashes,
+               fixture_revision=(args.revision if not args.fixture_directory else None), fixture_directory=(str(args.fixture_directory) if args.fixture_directory else None), fixture_sha256=hashes,
                calendar_source='4749ff96e', quarter_pc_mapping='fixture PC is physical controller strap: 4*GROUP_ORDER.index(group)+quarter; logical landing PC=group+8*quarter', landing_source='qkd_static_kv_landing_physical_grp: seven edges',
                assumptions=['source-bound nominal common leaf phase; physical insertion unqualified',
                             'K group II1; V group 16 requests spaced8, next burst256',
