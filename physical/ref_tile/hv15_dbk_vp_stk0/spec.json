@@ -1,0 +1,135 @@
+{
+ "name": "hv15_dbk_vp_stk0",
+ "top": "ot_hgi_dma_back_static_vp",
+ "kind": "tile",
+ "params": {
+  "STK": 0
+ },
+ "sources": [
+  "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "W": [
+   "rq",
+   "rr"
+  ],
+  "N": [
+   "wb_reserve_v",
+   "wb_reserve_bank",
+   "wb_fill_bank",
+   "wb_reserve_epoch",
+   "wb_fill_epoch",
+   "wb_reserve_sectors",
+   "wb_reserve_base",
+   "wb_fill_start",
+   "wb_ready",
+   "wd",
+   "wa"
+  ],
+  "E": [
+   "clk",
+   "rst_n",
+   "cycle",
+   "mv_v",
+   "mv",
+   "issue_at",
+   "drain_at",
+   "mv_wb_bank",
+   "mv_wb_epoch",
+   "mv_src",
+   "mv_done",
+   "mv_fault",
+   "quiet",
+   "busy"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 8
+  }
+ ],
+ "outline": {
+  "w": 432.0,
+  "h": 360.72,
+  "exact": true
+ },
+ "slot_change_request": "H-DIE grant hb_dbk_<q> cell ot_hgi_dma_back_static -> ot_hgi_dma_back_static_vp (identical ports; command accepted DESC_LAT=2 cycles later, compiler sends it 2 cycles earlier); granted pin spans not used: at 1 pin/0.096 um they fail the route pin placer (pin_fit 2 tracks/pin: rr 2056 pins in 197 um W, wd 2312 in 222 um N), faces kept, offsets by the placer. HBM-V15-HARDEN el1015-hbm-v15-harden.log",
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:HBM-V15-HARDEN",
+  "branch": "claude/hbm-v15-harden-1015b",
+  "tag": "vp1",
+  "purpose": "hb_dbk_SW DMA STORE back engine STK=0, structural successor for the cursor CTS gate TT -827 ps (33-level descriptor validation in one cycle): 2-stage descriptor pipeline (range-truncated products + static checks) and registered slot cycles; DESC_LAT=2, issue/drain/beat cycles and faults identical to the cursor fed 2 cycles later; to the T_band2 grant 432x360.72.",
+  "extra_paths": [
+   "tools/hbm_v15_harden",
+   "rtl/hbm_accel/generic/peers/static",
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
+  ],
+  "record_to": "results/rtl/ref_tile/hv15_dbk_vp_stk0",
+  "benches": [
+   {
+    "name": "exact",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "DMA_VP_BENCH_PASS",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "mutant1",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp.sh {RUN}/bench/mut1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mutant2",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp.sh {RUN}/bench/mut2 2",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
