@@ -1,0 +1,105 @@
+{
+ "name": "dsfd_vm_static_read_q2_native_1015_r1",
+ "top": "dsfd_vm_static_read_q2",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_leaf.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_read_quartets.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 155.52,
+  "h": 237.6,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "ck",
+   "rst_n"
+  ],
+  "S": [],
+  "E": [
+   "o_partial_valid",
+   "o_data",
+   "fault"
+  ],
+  "W": [
+   "i_data",
+   "i_valid",
+   "i_expected",
+   "i_sel"
+  ]
+ },
+ "io_tcl": "physical/s81_vm_read_native_1015/dsfd_vm_static_read_q2.tcl",
+ "macros": [],
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "period_ps": 770,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 2,
+ "structural_change": "Actual independentlyclocked bounded leaf replaces scalar parent flop/mux ownership; exactstaticpipeline and fullfunctionalpins, no ready or inheritedview. Pinbound generous native shape avoids highface density; originalclock833.333 androute770 unchanged.",
+ "slot_change_request": {
+  "contract": "S81 VM native read/FSR geometry candidate",
+  "version": "aa939e30d/2ca1a96e6/b18f5a9b0",
+  "why": "Actualindependentregistered roots andsource-exact signal pins; diegeometryreservation required beforeparentadoption"
+ },
+ "job": {
+  "owner": "Codex:S_VM read native",
+  "branch": "codex/s81-read-router-1015",
+  "tag": "native1",
+  "extra_paths": [
+   "tools/s81_vm",
+   "rtl/dsrom_sys/s81_ph/vm",
+   "rtl/dsrom_sys/s81_ph/test",
+   "physical/s81_vm_read_native_1015"
+  ],
+  "purpose": "Actualhardmaster ownpayload/control positiveoracle+observedmutant, nativeCTS/pin/reset beforeonevalidatedroute; wholeparentremainsunqualified.",
+  "benches": [
+   {
+    "name": "q2_positive",
+    "cmd": "python3 tools/s81_vm/native_read_leaf_gate.py q 2 positive {RUN}/bench/q2_positive",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "NATIVE_LEAF PASS q2 ",
+    "min_count_regex": "checks (\\d+)"
+   },
+   {
+    "name": "q2_mutant",
+    "cmd": "python3 tools/s81_vm/native_read_leaf_gate.py q 2 mutant {RUN}/bench/q2_mutant",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "NATIVE_LEAF FAIL q2 "
+   }
+  ],
+  "cycles_added": 1
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

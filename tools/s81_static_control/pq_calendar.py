@@ -1,4 +1,11 @@
 """Immutable paired-ROM S81 PQ action calendar; engine status never sets time."""
+import json as _json
+from pathlib import Path as _Path
+# Measured controller latencies (single source: the PQ static calendar ABI).
+ABI=_json.loads((_Path(__file__).resolve().parents[1]/'s81'/'pq_static_calendar_abi.json').read_text())
+_EDGES=ABI['sampled_edge_to_registered_pin_edges']
+MIN_COUNT_DRAIN=_EDGES['root_pin_to_last_consumed_count_edges']   # INCAP: 9 (was 8)
+MIN_BOOT_AFTER_RESET=_EDGES['reset_release_to_first_boot_pw_edges'] # reset relay: 3
 FIELDS={
  'accept_tag':(0,2),'vm_req':(2,1),'vm_addr':(3,19),'vm_resp':(22,1),
  'resp_k':(23,14),'resp_par':(37,1),'resp_fam':(38,1),'stream_req':(39,1),
@@ -67,8 +74,8 @@ def validate_tag_lifetimes(lifetimes,profile):
     if profile.get('source_bound')is not True:raise ValueError('actual count-chain source profile required')
     fill=profile['live_pin_to_farthest_leaf_edges']
     drain=profile['root_pin_to_last_consumed_count_edges']
-    if type(fill)is not int or fill<12 or type(drain)is not int or drain<5:
-        raise ValueError('12-leaf fill and actual root/count drain required')
+    if type(fill)is not int or fill<12 or type(drain)is not int or drain<MIN_COUNT_DRAIN:
+        raise ValueError('12-leaf fill and actual root/count drain (>= %d INCAP edges) required'%MIN_COUNT_DRAIN)
     last={}
     for row in sorted(lifetimes,key=lambda r:r['live_set']):
         tag=row['tag'];start=row['live_set'];first=row['first_root'];end=row['last_root'];clear=row['live_clear']
@@ -76,4 +83,13 @@ def validate_tag_lifetimes(lifetimes,profile):
         if not start+fill<=first<=end<=clear-drain:raise ValueError('count live fill/drain violated')
         if tag in last and start<last[tag]+fill:raise ValueError('native tag reused before live-clear reaches all leaves')
         last[tag]=clear
+    return True
+
+
+def validate_boot_start(reset_release_edge,first_pw_edge):
+    """Reader/endpoint registered reset relay releases 3 edges after the port;
+    the compiler's boot/PW writer must not start earlier (initialization only)."""
+    if type(reset_release_edge)is not int or type(first_pw_edge)is not int:raise ValueError('integer edges required')
+    if first_pw_edge<reset_release_edge+MIN_BOOT_AFTER_RESET:
+        raise ValueError('boot PW before reset-relay release (+%d edges)'%MIN_BOOT_AFTER_RESET)
     return True

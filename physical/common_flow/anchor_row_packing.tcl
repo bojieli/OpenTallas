@@ -109,7 +109,9 @@ proc ot_anchor_pack::repair {block names} {
     if {$best eq ""} {error "OT_ANCHOR_PACK: no legal free row site for [$inst getName]"}
     lassign $best ri x y orient
     $inst setPlacementStatus PLACED
-    $inst setOrient $orient;$inst setLocation $x $y
+    $inst setOrient $orient
+    if {[[$inst getMaster] isBlock]} {error {standard cell placement refuses BLOCK}}
+    $inst setLocation $x $y
     $inst setPlacementStatus FIRM
     dict set free $ri [ot_anchor_pack::cut [dict get $free $ri] $x [expr {$x+$width}]]
     set maximum [expr {max($maximum,$score)}];incr count
