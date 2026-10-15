@@ -248,7 +248,11 @@ module ot_hgi_dma_back_static_vp4_controller #(
     reg [31:0] ack_base_q;
     wire observed_pending_zero=pending_sectors==32'(wa_q);
     wire issue_slot=busy&&!cv&&issue_index<chunks&&cycle==next_issue;
-    wire drain_slot=busy&&!cv&&drain_index<chunks&&cycle==next_drain;
+    // next_drain_pre is already a registered modulo-2^32 copy of
+    // next_drain-1 (loaded cd-1 and incremented on the exact same enable).
+    // Compare the captured cycle directly: this removes the serial 32-bit
+    // cycle increment before the deadline comparator without a new stage.
+    wire drain_slot=busy&&!cv&&drain_index<chunks&&cycle_q==next_drain_pre;
     reg [7:0] issue_mask;
     reg [15:0] issue_sec;
     always @* begin
