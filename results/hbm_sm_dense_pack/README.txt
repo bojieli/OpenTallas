@@ -1,6 +1,6 @@
 Source-based feasibility plan, NOT accepted tile implementation.
 
-Ten immutable compute children pack at693.44x501.92=348054.2848um2,
+Ten immutable compute children pack at693.44x501.92=348051.4048um2,
 allR0, >=20um pairwise separation. Actual fullLEF pin records and
 SHA256 included. Registered transport is logically unchanged:1636row,
 2069beat,96slices,4transit+1landingcycles.32SM replicas retained.
@@ -34,3 +34,9 @@ area, PG-friendly strip outlines, outputduplicate proof, coordinate-based
 registered seam netlengths<=500um, and tile placement/CTS/route. Geometry
 cannot be accepted by citing leafsum, sourceexactness, or current gate
 on the oversized centralband. No timing/DRC/native claims are made here.
+
+Concrete sixgroup re-cut origins are in JSON. They consume79550.4um2
+priced from current79501.8um2 outlines. Transportgroups have10um gaps
+and abutcompute in two pockets.20um universal macro clearance is NOT
+met. This is an explicit design option requiring fresh actual pin-aware
+hardening, PG, CTS, TT/FF, and DRC evidence.
