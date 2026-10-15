@@ -1,0 +1,30 @@
+{
+  "status": "NATIVE_VM_HC_ARITHMETIC_NATIVE_VM_WRITEBACK_COMPONENT_PASS",
+  "actual_SRAMs": 178,
+  "static_LG_taps": 12,
+  "npos6": {
+    "projection_words_exact": 144,
+    "tail_words_exact": 144,
+    "actual_native_VM_result_words_exact": 144,
+    "row_period": 1080,
+    "totalcycles": 37363
+  },
+  "npos8": {
+    "projection_words_exact": 192,
+    "tail_words_exact": 192,
+    "actual_native_VM_result_words_exact": 192,
+    "row_period": 1400,
+    "totalcycles": 48668
+  },
+  "negative": "VMinputpayloadcorruption fails firstactualHCprojectionrow0pos0age269",
+  "input": "externalfullshapevectorpayload fillsactualVM32banks;actualLG18-edge readand4beatassembly intoHC",
+  "output": "actualHCresult768bits\u2192fixedcompilerstore493\u2192farLGwrite15\u2192actualVMwritecommit\u219218-edgeactualreadback; no expectedvalue injection",
+  "weight_boundary": "externalaperturewrites only; newactual20GiBprefetch childstillrequiresjoin",
+  "clock": "testSinkhornratio7mechanismonly; physicalassignedclockphase mustreplace beforeperformancequalification",
+  "remaining": [
+    "actualreleasedcheckpoint20GiBprefetch joined toengineweightstore",
+    "canonicalwholelayercontroller/hardwareinstalledprogramme/base/phase timestamps",
+    "physicalclockroots/slots/routing/timing andimmutablemodeldataflowprice"
+  ],
+  "full_native_qualified": false
+}
