@@ -20,7 +20,7 @@ def fixture(consumer='gather_vm',count=1,raw=False):
     final_commit=issue_edges[-1]+11
     final_write=final_commit+19
     final_emit=final_write+1
-    done_edge={'gather_vm':final_commit+2,'reduce_vm':final_write+2,'reduce_vm_hc':final_emit+2}[consumer]
+    done_edge={'gather_vm':final_commit+4,'reduce_vm':final_write+3,'reduce_vm_hc':final_emit+3}[consumer]
     blank=lambda:dict.fromkeys([n for n,_ in FIELDS],0)
     cycles=[dict(edge=e,cmd_valid=0,cmd84=0,transport_tag=0,done_valid=0,done_tag=0,controls=blank()) for e in range(done_edge+1)]
     mode=int(consumer=='gather_vm');cmd=(1<<83)|(((mode<<16)|count)<<7)|5
@@ -70,9 +70,23 @@ def fixture_page():
     return request
 
 class Check(unittest.TestCase):
+    def test_l16_source_profile_and_stale_l12_calendar(self):
+        r=fixture(raw=True)
+        r['vm_profile']=dict(READ_PIPE=4,CAP_PIPE=2,source_sha256=hashlib.sha256((ROOT/'rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv').read_bytes()).hexdigest())
+        r['latencies']=L16_LATENCIES
+        self.assertEqual(physical_profile(r,ROOT)['vm_request_to_issue_edges'],18)
+        with self.assertRaisesRegex(ValueError,'unconsumed VM source read'):
+            compile_image(r,ROOT)  # the original L12 read edge cannot serve L16
+        bad=copy.deepcopy(r);bad['vm_profile']['source_sha256']='0'*64
+        with self.assertRaisesRegex(ValueError,'stale VM profile source'):compile_image(bad,ROOT)
+        bad=copy.deepcopy(r);bad['vm_profile']['READ_PIPE']=2
+        with self.assertRaisesRegex(ValueError,'unsupported VM pipeline profile'):compile_image(bad,ROOT)
+        bad=copy.deepcopy(r);bad.pop('vm_profile')
+        with self.assertRaisesRegex(ValueError,'unbound physical latency profile'):compile_image(bad,ROOT)
     def test_image_and_rejections(self):
-        request=fixture(raw=True);self.assertEqual(len(compile_image(request,ROOT)),28)
-        mutations=[lambda r:r['cycles'][14]['controls'].update(seq=1024),
+        request=fixture(raw=True);self.assertEqual(len(compile_image(request,ROOT)),30)
+        mutations=[lambda r:r['cycles'][0]['controls'].update(tx_beat_slot=1),
+                   lambda r:r['cycles'][14]['controls'].update(seq=1024),
                    lambda r:r['cycles'][0].update(cmd84=(1<<83)|(1025<<7)|5),
                    lambda r:r['cycles'][0]['controls'].update(read_slot=0),
                    lambda r:r['cycles'][25]['controls'].update(commit_seq=1),
@@ -93,8 +107,21 @@ class Check(unittest.TestCase):
             r=copy.deepcopy(request);mutate(r)
             with self.assertRaises((ValueError,KeyError)):compile_image(r,ROOT)
 
+    def test_pincap_visible_completion_and_profile(self):
+        request=fixture()
+        old=copy.deepcopy(request)
+        old['latencies']['gather_to_vm_source_edges']=1
+        with self.assertRaisesRegex(ValueError,'latency profile'):
+            compile_image(old,ROOT)
+        early=copy.deepcopy(request)
+        early['cycles'][-1].update(done_valid=0,done_tag=0)
+        early['cycles'][-2].update(done_valid=1,done_tag=133)
+        with self.assertRaisesRegex(ValueError,'final scheduled output'):
+            compile_image(early,ROOT)
+        compile_image(request,ROOT)
+
     def test_reduced_word_consumers(self):
-        reduced=fixture('reduce_vm');self.assertEqual(len(compile_image(reduced,ROOT)),47)
+        reduced=fixture('reduce_vm');self.assertEqual(len(compile_image(reduced,ROOT)),48)
         # A single reduced word needs no16wordHCassembly consumer.
         self.assertFalse(any(c['controls']['hc_assemble_slot'] for c in reduced['cycles']))
         early=copy.deepcopy(reduced);early['cycles'][30].update(done_valid=1,done_tag=133)
@@ -108,7 +135,8 @@ class Check(unittest.TestCase):
         wrong=copy.deepcopy(assembled);wrong['cycles'][44]['controls']['hc_word_index']=1
         with self.assertRaises(ValueError):compile_image(wrong,ROOT)
 
-    def run_rtl(self,request,name,mutate=False):
+    def run_rtl(self,request,name,mutate=False,partitioned=False,clock_mutant=False):
+        selected_rtl=RTL.with_name("s81_static_calendar_controller7.sv") if partitioned else RTL
         with tempfile.TemporaryDirectory() as scratch:
             p=Path(scratch);emit(request,ROOT,p/'calendar.mem');n=len(request['cycles'])
             # Icarus11 cannot parse typed string parameters. Remove only that
@@ -129,7 +157,7 @@ module tb;
  CONNECTIONS,.busy(busy));
  s81_static_calendar_controller blank(.clk(clk),.rst_n(rst_n),.c_cmd(c_cmd),.c_done(blank_done),.c_st(blank_st),.datapath_fault(1'b0));
  s81_static_calendar_controller #(.ROM_FILE("CALENDAR"),.CYCLES(4097)) oversize(.clk(clk),.rst_n(rst_n),.c_cmd(c_cmd),.c_done(oversize_done),.c_st(oversize_st),.datapath_fault(1'b0));
- task reset;begin @(negedge clk);rst_n=0;c_cmd=0;@(negedge clk);rst_n=1;end endtask
+ task reset;begin @(negedge clk);rst_n=0;c_cmd=0;@(negedge clk);rst_n=1;@(negedge clk);end endtask
  integer e;reg[84:0]word;
  initial begin
  $readmemh("CALENDAR",plan);word=plan[0][CB+:85];reset();
@@ -146,33 +174,75 @@ module tb;
   @(negedge clk);
  end
  reset();c_cmd=word^85'd1;@(posedge clk);#1;@(negedge clk);c_cmd=0;@(posedge clk);#1;
- if(!st[0] || observed || done)$fatal(1,"bad descriptor not refused");
- reset();c_cmd=word;@(posedge clk);#1;@(negedge clk);c_cmd=word;@(posedge clk);#1;@(negedge clk);c_cmd=0;@(posedge clk);#1;
- if(!st[0] || done)$fatal(1,"unexpected pulse not refused");
- $display("PASS v2 controller all468registered controls actual3ROM twopage-replays fixededge done descriptor/calendar/missingimage/oversize fault");$finish;
+ if(st[0])$fatal(1,"command compare bypassed its fault-diagnosis register");
+ if(observed!==plan[0][0+:CB])$fatal(1,"start row controls differ under late detection");
+ @(posedge clk);#1;
+ if(!st[0] || observed || done)$fatal(1,"bad descriptor not refused on the next edge");
+ reset();c_cmd=word;@(posedge clk);#1;@(negedge clk);c_cmd=word;@(posedge clk);#1;@(negedge clk);c_cmd=0;@(posedge clk);#1;@(posedge clk);#1;
+ if(!st[0] || done || observed)$fatal(1,"unexpected pulse not refused");
+ $display("PASS v3 controller all468registered controls actual3ROM twopage-replays fixededge done descriptor/calendar/missingimage/oversize fault");$finish;
  end
 endmodule
 '''.replace('CONNECTIONS',','.join(connections)).replace('CALENDAR',str(p/'calendar.mem')).replace('CB',str(CONTROL_BITS)).replace('RW',str(ROM_BITS)).replace('N',str(n))
             # N replacement is only the standalone placeholder above; source
             # text contains no other uppercase N after CONNECTIONS substitution.
+            if partitioned:
+                tb=tb.replace('s81_static_calendar_controller #','s81_static_calendar_controller7 #').replace('s81_static_calendar_controller blank','s81_static_calendar_controller7 blank')
+                romclocks=outclocks='{3{clk}}'
+                if clock_mutant:
+                    family,index=clock_mutant
+                    vector=['clk','clk','clk'];vector[2-index]="1'b0"
+                    stopped='{'+','.join(vector)+'}'
+                    if family=='rom':romclocks=stopped
+                    else:outclocks=stopped
+                tb=tb.replace('.clk(clk),','.clk(clk),.clk_rom('+romclocks+'),.clk_outputs('+outclocks+'),')
+                tb=tb.replace('rst_n=1;@(negedge clk);end endtask','rst_n=1;repeat(4)@(negedge clk);end endtask')
+                tb=tb.replace("reg rst_n=0;", "reg fault_input=0;reg rst_n=0;")
+                tb=tb.replace(".datapath_fault(1'b0)",".datapath_fault(fault_input)")
+                fault_check="""reset();c_cmd=word;@(posedge clk);#1;@(negedge clk);c_cmd=0;fault_input=1;
+ @(posedge clk);#1;if(st[0])$fatal(1,"fault input bypassed its capture stage");
+ @(negedge clk);fault_input=0;@(posedge clk);#1;
+ if(!st[0] || observed || done)$fatal(1,"captured external fault not applied on exact next edge");
+ """
+                tb=tb.replace('$display("PASS v3 controller',fault_check+'$display("PASS v3 controller')
             (p/'tb.sv').write_text(tb)
-            subprocess.run(['iverilog','-g2012','-s','tb','-o',str(p/'sim'),str(RTL),str(macro),str(p/'tb.sv')],check=True,capture_output=False)
+            subprocess.run(['iverilog','-g2012','-s','tb','-o',str(p/'sim'),str(selected_rtl),*([str(ROOT/'rtl/lib/ot_rst_relay.sv')] if partitioned else []),str(macro),str(p/'tb.sv')],check=True,capture_output=False)
+            if clock_mutant:
+                negative=subprocess.run(['vvp',str(p/'sim')],capture_output=True,text=True)
+                self.assertNotEqual(negative.returncode,0)
+                self.assertRegex(negative.stdout,'control slot mismatch|unexpected configured fault')
+                print('PASS calendar7 stopped-clock mutant rejected',clock_mutant)
+                return
             output=subprocess.run(['vvp',str(p/'sim')],check=True,capture_output=True,text=True).stdout
-            self.assertIn('PASS v2 controller',output)
+            self.assertIn('PASS v3 controller',output)
             mutant_output=None;macro_mutant_output=None
             if mutate:
-                mutant=RTL.read_text().replace('raw_rx_tag<=enabled ?', 'raw_rx_tag<=1\'b0 ?')
-                self.assertNotEqual(mutant,RTL.read_text());(p/'mut.sv').write_text(mutant)
+                mutant=selected_rtl.read_text().replace('raw_rx_tag<=enabled ?', 'raw_rx_tag<=1\'b0 ?')
+                self.assertNotEqual(mutant,selected_rtl.read_text());(p/'mut.sv').write_text(mutant)
                 subprocess.run(['iverilog','-g2012','-s','tb','-o',str(p/'mut'),str(p/'mut.sv'),str(macro),str(p/'tb.sv')],check=True,capture_output=False)
                 result=subprocess.run(['vvp',str(p/'mut')],capture_output=True,text=True)
                 self.assertNotEqual(result.returncode,0);self.assertIn('control slot mismatch 22',result.stdout)
                 mutant_output=result.stdout+result.stderr
-                wrong_address=RTL.read_text().replace('.addr_in(macro_addr)',".addr_in(macro_addr ^ 12'd1)")
-                self.assertNotEqual(wrong_address,RTL.read_text());(p/'macro_mut.sv').write_text(wrong_address)
+                wrong_address=selected_rtl.read_text().replace('.addr_in(macro_addr)',".addr_in(macro_addr ^ 12'd1)")
+                self.assertNotEqual(wrong_address,selected_rtl.read_text());(p/'macro_mut.sv').write_text(wrong_address)
                 subprocess.run(['iverilog','-g2012','-s','tb','-o',str(p/'macro_mut'),str(p/'macro_mut.sv'),str(macro),str(p/'tb.sv')],check=True,capture_output=False)
                 result=subprocess.run(['vvp',str(p/'macro_mut')],capture_output=True,text=True)
                 self.assertNotEqual(result.returncode,0);self.assertIn('control slot mismatch 1',result.stdout)
                 macro_mutant_output=result.stdout+result.stderr
+                # v3 lookahead negative control. With CYCLES equal to the image length the overrun guard alone wraps the
+                # address, so this check uses a page longer than the image (rows past the end carry marker0): the base
+                # must still pass and ignoring L(r)=final(next(r)) must fail.
+                marker='.CYCLES('+str(n)+')) dut('
+                self.assertEqual(tb.count(marker),1)
+                (p/'tb_long.sv').write_text(tb.replace(marker,'.CYCLES('+str(n+8)+')) dut('))
+                subprocess.run(['iverilog','-g2012','-s','tb','-o',str(p/'long'),str(selected_rtl),str(macro),str(p/'tb_long.sv')],check=True,capture_output=False)
+                self.assertIn('PASS v3 controller',subprocess.run(['vvp',str(p/'long')],check=True,capture_output=True,text=True).stdout)
+                no_lookahead=selected_rtl.read_text().replace("(entry[RW-3] ||","(1'b0 ||")
+                self.assertNotEqual(no_lookahead,selected_rtl.read_text());(p/'look_mut.sv').write_text(no_lookahead)
+                subprocess.run(['iverilog','-g2012','-s','tb','-o',str(p/'look_mut'),str(p/'look_mut.sv'),str(macro),str(p/'tb_long.sv')],check=True,capture_output=False)
+                result=subprocess.run(['vvp',str(p/'look_mut')],capture_output=True,text=True)
+                self.assertNotEqual(result.returncode,0);self.assertRegex(result.stdout,'control slot mismatch|unexpected configured fault|done timing')
+                print('PASS long-page base; lookahead mutant rejected:',result.stdout.strip().splitlines()[0])
             if os.environ.get('S81_CONTROLLER_EVIDENCE'):
                 dest=Path(os.environ['S81_CONTROLLER_EVIDENCE']);dest.mkdir(parents=True,exist_ok=True)
                 (dest/(name+'.mem')).write_bytes((p/'calendar.mem').read_bytes())
@@ -183,6 +253,14 @@ endmodule
                 if mutate:
                     (dest/'mutant_suppressed_raw_tag.log').write_text(mutant_output)
                     (dest/'mutant_actual_macro_address.log').write_text(macro_mutant_output)
+
+    def test_rtl_calendar7_exact_and_clock_mutant(self):
+        request=fixture(raw=True)
+        self.run_rtl(request,'calendar7_exact',partitioned=True)
+        for family in ('rom','output'):
+            for index in range(3):
+                self.run_rtl(fixture(raw=True),'calendar7_clock_mutant',partitioned=True,clock_mutant=(family,index))
+        print('PASS calendar7 actual3ROM controls=%d replay_edges=%d clock_mutants=6'%(CONTROL_BITS,2*len(request['cycles'])))
 
     def test_rtl_gather_and_raw_fields(self):self.run_rtl(fixture(raw=True),'gather_raw',True)
     def test_rtl_actual_2400cycle_page(self):self.run_rtl(fixture_page(),'page2400_twojobs')

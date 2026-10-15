@@ -1,0 +1,62 @@
+{
+  "schema": "s81.collective.actual_join.v1",
+  "source_commit": "025900635",
+  "archive": "/tmp/s81-collective-calendar7-l16-warm-1103.tgz",
+  "archive_sha256": "1a842b4702ae0bfe69ec01c72b9f90a8cb0d1262b0a5156622a1b9e8f2d9689f",
+  "remote": "ot-epyc1tb:/srv/opentallas-scratch/codex/s81-collective-calendar7-l16-warm-1103",
+  "source_manifest": {
+    "source_sha256": {
+      "rtl/dsrom_sys/s81_static_collective/s81_static_collective_slab.sv": "9bd6854bd9ae2134abf6aeb6912732e0eced4c05dcd513360ffab42a662d07c9",
+      "rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv": "9b2178bd28ba81f3875dcf65980e18b93e4f891ab3cb6370138dca61f5404fc3",
+      "tools/s81_static_collective/tb_s81_static_collective_slab.sv": "e048d9f1ffac19ff15c2c4649f466c0984569829d0488d94cfc7ff386d5462a9"
+    },
+    "added_delivered_clock_pins": [
+      "ck_calendar_rom[0..2]",
+      "ck_calendar_outputs[0..2]"
+    ],
+    "normal_edges_added": 0,
+    "initialization_extra_rom_edges": 1,
+    "reset_epoch": "explicit warm pulse3337..13244ps; first common 3:4 rising13344ps",
+    "vm_parameters": {
+      "READ_PIPE": 4,
+      "CAP_PIPE": 2
+    },
+    "qualification": "component candidate; die ABI, phi-R, placement and native route remain open"
+  },
+  "parameters": {
+    "READ_PIPE": 4,
+    "CAP_PIPE": 2,
+    "WSCATTER": 0
+  },
+  "positive": {
+    "unit": "oth-ubuntu-1109438-1792089669",
+    "exit": 0,
+    "actual_srams": 128,
+    "rows": 498,
+    "fp32_bits_checked": 7968,
+    "hc_rows": 20,
+    "done": 2,
+    "wfc": 1,
+    "host": 1
+  },
+  "negative": [
+    {
+      "unit": "oth-ubuntu-1109469-1792089670",
+      "fault": "payload MUT1",
+      "detected_edge": 433,
+      "exit": 1
+    },
+    {
+      "unit": "oth-ubuntu-1109527-1792089671",
+      "fault": "stop real ROM0 clock",
+      "detected_edge": 48,
+      "exit": 1
+    }
+  ],
+  "scope": "Calendar7 distinct parent ABI, actual current source READ4/CAP2/WSCATTER0 only. No WSCATTER1, earliest raw memory write visibility, compiler done visibility, native timing or whole-die placement qualification.",
+  "logs_sha256": {
+    "payload_mutant.log": "ebb9e4e7ff63645e55c0998aa8a351af878ecf685bd1bafcd77177fbfc79856d",
+    "romclock_mutant.log": "ba31a97602eddc27b65e96d2def50133a1406d94e7e8bf7f34081d0a7b741a2e",
+    "base.log": "805755b873d3701a25cdd2ef1edbce30cbb0675a3091b4ca9e23a4b8a5e91a85"
+  }
+}

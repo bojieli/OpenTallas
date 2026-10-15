@@ -1,0 +1,269 @@
+{
+  "schema": "s81.collective.minimal_checkpoint.v1",
+  "base_main": "a7b762d8d",
+  "source_branch": "codex/s81-pq-collective-1103",
+  "evidence_head": "637ecd50a",
+  "mechanism_tests": "8PASS including actual3ROM468controls60edges and six stopped delivered-clock mutants; actual2400cyclepage and lookahead mutant",
+  "whole_join": "READ4/CAP2/WSCATTER0 actual128SRAM498rows/7968bits/20HCrows/2done plus payload edge433 and ROM0clock edge48 mutants detected; exact source manifest retained",
+  "physical_candidate_source": "05ed89a38",
+  "gate_binding": "both SB.validate True against05ed89a38 and current executed overlays",
+  "gates": {
+    "s81coll_calendar7": {
+      "raw_branch_path": "physical/ref_tile/s81coll_calendar7/gate_result.json",
+      "raw_sha256": "8b09acb966de0694ffaa578491e7be32a3078d59a70f54b13802ebabee142e34",
+      "verdict": "WARN",
+      "clock": {
+        "max_root_sinks": 369,
+        "root": "port:clk_outputs[0]",
+        "cts": true,
+        "tt_insertion_ps": 251.7,
+        "tt_spread_ps": 49.2,
+        "declared_clock": "hybrid_entries",
+        "limits": {
+          "sinks": 15000,
+          "insertion_ps": 300.0,
+          "spread_ps": 80.0
+        },
+        "clock_measurements": [
+          {
+            "source": "clk",
+            "clock": "ot_entry_0",
+            "tt": {
+              "boundary": {
+                "n": 101,
+                "mean": 179.1,
+                "min": 149.9,
+                "max": 206.3
+              },
+              "all": {
+                "n": 227,
+                "mean": 168.6,
+                "min": 148.2,
+                "max": 206.3
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_rom[0]",
+            "clock": "ot_entry_1",
+            "tt": {
+              "boundary": null,
+              "all": {
+                "n": 1,
+                "mean": 10.6,
+                "min": 10.6,
+                "max": 10.6
+              },
+              "errors": [],
+              "macros": {
+                "n": 1,
+                "nets": 1,
+                "max_per_net": 1,
+                "reg_mean": 10.6,
+                "max_slew": 33.5,
+                "max_late": -0.0,
+                "pins": [
+                  {
+                    "pin": "ROM_BANK[0].u_rom/clk",
+                    "arr": 10.6,
+                    "slew": 33.5,
+                    "late": -0.0,
+                    "net": "clk_rom[0]"
+                  }
+                ]
+              },
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_rom[1]",
+            "clock": "ot_entry_2",
+            "tt": {
+              "boundary": null,
+              "all": {
+                "n": 1,
+                "mean": 10.6,
+                "min": 10.6,
+                "max": 10.6
+              },
+              "errors": [],
+              "macros": {
+                "n": 1,
+                "nets": 1,
+                "max_per_net": 1,
+                "reg_mean": 10.6,
+                "max_slew": 33.5,
+                "max_late": -0.0,
+                "pins": [
+                  {
+                    "pin": "ROM_BANK[1].u_rom/clk",
+                    "arr": 10.6,
+                    "slew": 33.5,
+                    "late": -0.0,
+                    "net": "clk_rom[1]"
+                  }
+                ]
+              },
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_rom[2]",
+            "clock": "ot_entry_3",
+            "tt": {
+              "boundary": null,
+              "all": {
+                "n": 1,
+                "mean": 10.6,
+                "min": 10.6,
+                "max": 10.6
+              },
+              "errors": [],
+              "macros": {
+                "n": 1,
+                "nets": 1,
+                "max_per_net": 1,
+                "reg_mean": 10.6,
+                "max_slew": 33.5,
+                "max_late": -0.0,
+                "pins": [
+                  {
+                    "pin": "ROM_BANK[2].u_rom/clk",
+                    "arr": 10.6,
+                    "slew": 33.5,
+                    "late": -0.0,
+                    "net": "clk_rom[2]"
+                  }
+                ]
+              },
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_outputs[0]",
+            "clock": "ot_entry_4",
+            "tt": {
+              "boundary": {
+                "n": 186,
+                "mean": 241.4,
+                "min": 208.5,
+                "max": 251.6
+              },
+              "all": {
+                "n": 369,
+                "mean": 227.5,
+                "min": 202.5,
+                "max": 251.7
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_outputs[1]",
+            "clock": "ot_entry_5",
+            "tt": {
+              "boundary": {
+                "n": 146,
+                "mean": 203.4,
+                "min": 197.3,
+                "max": 210.2
+              },
+              "all": {
+                "n": 289,
+                "mean": 203.9,
+                "min": 183.2,
+                "max": 220.5
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 1
+            }
+          },
+          {
+            "source": "clk_outputs[2]",
+            "clock": "ot_entry_6",
+            "tt": {
+              "boundary": {
+                "n": 145,
+                "mean": 197.0,
+                "min": 193.1,
+                "max": 199.8
+              },
+              "all": {
+                "n": 287,
+                "mean": 184.4,
+                "min": 166.4,
+                "max": 199.8
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 1
+            }
+          }
+        ],
+        "measured_clock": "ot_entry_4",
+        "verdict": "PASS",
+        "text": "369 sinks on the largest root <= 15,000; measured TT insertion 251.7 ps, leaf spread 49.2 ps"
+      },
+      "raw_evidence_commit": "2bf2fd1a5"
+    },
+    "s81coll_vm_boundary": {
+      "raw_branch_path": "physical/ref_tile/s81coll_vm_boundary/gate_result.json",
+      "raw_sha256": "0fdf4a8150abcc7e917b53a6f3d0968dc8bd6ecb25f06c15237f188b88a1ed16",
+      "verdict": "WARN",
+      "clock": {
+        "max_root_sinks": 6290,
+        "root": "port:clk",
+        "cts": true,
+        "tt_insertion_ps": 269.9,
+        "tt_spread_ps": 43.0,
+        "declared_clock": null,
+        "limits": {
+          "sinks": 15000,
+          "insertion_ps": 300.0,
+          "spread_ps": 80.0
+        },
+        "clock_measurements": [
+          {
+            "source": "clk",
+            "clock": "core_clk",
+            "tt": {
+              "boundary": {
+                "n": 6037,
+                "mean": 244.4,
+                "min": 226.9,
+                "max": 269.9
+              },
+              "all": {
+                "n": 6291,
+                "mean": 244.9,
+                "min": 226.9,
+                "max": 269.9
+              },
+              "errors": [],
+              "macros": null,
+              "macro_libs": 0
+            }
+          }
+        ],
+        "measured_clock": "core_clk",
+        "verdict": "PASS",
+        "text": "6,290 sinks on the largest root <= 15,000; measured TT insertion 269.9 ps, leaf spread 43.0 ps"
+      },
+      "raw_evidence_commit": "2bf2fd1a5"
+    }
+  },
+  "compiler_obligations": [
+    "Distinct C7 parent adds six real delivered clock pins; generated candidate is not die ABI adoption.",
+    "Selected die READ4/CAP2/WSCATTER1 is not qualified by WSCATTER0 join.",
+    "Component done follows scheduled pin outputs; earliest raw VM write visibility / completion remains OPEN. WSCATTER1 raw write P+10 requires sameaddress next requestQ>=P+4 (raw readQ+7 must exceed write); no completionP+1 claim.",
+    "Calendar v3 extra initialization ROM edge, no normal production edge added.",
+    "PINCAP boundary +1 normal write edge, HC19/gather2 boundary prices explicit."
+  ],
+  "qualification": "Leaf candidate grants only. No current native exported timing, full parent packing, phi-R, FIELD or whole-die closure inheritance."
+}
