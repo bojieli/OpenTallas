@@ -1,0 +1,92 @@
+`timescale 1ns/1ps
+// Compiled capture slots, actual project FP pipelines, and a fixed output slot.
+// Independent clock entries require a separately qualified native phase profile.
+module ot_qwen_tp8_pv_join16_static #(
+ parameter integer P0_AGE=8,P1_AGE=20,R_AGE=48,ADD_LAT=7,MUL_LAT=6
+)(
+ input wire clk,rst_n,start,input wire[15:0] epoch,
+ input wire p0_valid,p1_valid,output wire p0_ready,p1_ready,
+ input wire[15:0] p0_epoch,p1_epoch,input wire[511:0] p0_data,p1_data,
+ input wire[31:0] reciprocal,input wire reciprocal_valid,
+ output wire reciprocal_ready,input wire[15:0] reciprocal_epoch,
+ output wire out_valid,input wire out_ready,output reg[15:0] out_epoch,
+ output reg[511:0] out_data,output reg fault
+);
+ localparam integer LAST_CAPTURE=(P0_AGE>P1_AGE)?((P0_AGE>R_AGE)?P0_AGE:R_AGE):((P1_AGE>R_AGE)?P1_AGE:R_AGE);
+ localparam integer ADD_AGE=LAST_CAPTURE+1,SUM_AGE=ADD_AGE+ADD_LAT;
+ localparam integer MUL_AGE=SUM_AGE+1,PRODUCT_AGE=MUL_AGE+MUL_LAT,OUT_AGE=PRODUCT_AGE+1;
+ reg active;reg[31:0] age;reg[15:0] ep;
+ reg[511:0] a,b,saved_sum;reg[31:0] rz;
+ wire[511:0] sum,product;wire[15:0] av,mv;wire[31:0] ae,me;
+ wire p0_slot=active&&age+1==P0_AGE;
+ wire p1_slot=active&&age+1==P1_AGE;
+ wire r_slot=active&&age+1==R_AGE;
+ wire sum_slot=active&&age+1==SUM_AGE;
+ wire product_slot=active&&age+1==PRODUCT_AGE;
+ assign p0_ready=p0_slot&&!fault;assign p1_ready=p1_slot&&!fault;
+ assign reciprocal_ready=r_slot&&!fault;
+ assign out_valid=active&&age+1==OUT_AGE&&!fault;
+ genvar lane;
+ generate for(lane=0;lane<16;lane=lane+1)begin:g_lane
+  ot_hdc_fp32_add_lat #(.LAT(ADD_LAT)) u_add(.clk(clk),.rst_n(rst_n),
+   .valid_in(active&&age+1==ADD_AGE&&!fault),.a(a[32*lane+:32]),.b(b[32*lane+:32]),
+   .y(sum[32*lane+:32]),.err(ae[2*lane+:2]),.valid_out(av[lane]));
+  ot_hdc_fp32_mul_lat #(.LAT(MUL_LAT)) u_mul(.clk(clk),.rst_n(rst_n),
+   .valid_in(active&&age+1==MUL_AGE&&!fault),.a(saved_sum[32*lane+:32]),.b(rz),
+   .y(product[32*lane+:32]),.err(me[2*lane+:2]),.valid_out(mv[lane]));
+ end endgenerate
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)begin active<=0;age<=0;ep<=0;fault<=0;out_epoch<=0;out_data<=0;a<=0;b<=0;rz<=0;saved_sum<=0;end
+  else if(start)begin
+   if(active||P0_AGE<1||P1_AGE<1||R_AGE<1)begin fault<=1;active<=0;end
+   else begin active<=1;age<=0;ep<=epoch;end
+  end else if(active&&!fault)begin
+   age<=age+1;
+   if(p0_valid!=p0_slot||p1_valid!=p1_slot||reciprocal_valid!=r_slot||
+      av!={16{sum_slot}}||mv!={16{product_slot}}||
+      (p0_slot&&p0_epoch!=ep)||(p1_slot&&p1_epoch!=ep)||
+      (r_slot&&reciprocal_epoch!=ep)||(sum_slot&&|ae)||(product_slot&&|me)||
+      (out_valid&&!out_ready))begin fault<=1;active<=0;end
+   else begin
+    if(p0_slot)a<=p0_data;if(p1_slot)b<=p1_data;if(r_slot)rz<=reciprocal;
+    if(sum_slot)saved_sum<=sum;
+    if(product_slot)begin out_data<=product;out_epoch<=ep;end
+    if(age+1==OUT_AGE)active<=0;
+   end
+  end
+ end
+endmodule
+
+module ot_qwen_tp8_pv256_finalize_static #(
+ parameter integer P0_AGE=8,P1_AGE=20,R_AGE=48,ADD_LAT=7,MUL_LAT=6
+)(
+ input wire[31:0] clk_join,input wire clk_control,rst_n,start,
+ input wire[15:0] epoch,input wire[127:0] reciprocal,
+ input wire reciprocal_valid,output wire reciprocal_ready,input wire[15:0] reciprocal_epoch,
+ input wire p0_valid,p1_valid,output wire p0_ready,p1_ready,
+ input wire[15:0] p0_epoch,p1_epoch,input wire[16383:0] p0_partial,p1_partial,
+ output wire out_valid,input wire out_ready,output wire[16383:0] out_data,
+ output wire[15:0] out_epoch,output wire fault
+);
+ wire[31:0] r0,r1,rr,ov,jf;wire[511:0] oe;
+ // Every slice checks its own compiled slots. No all-ready reduction schedules
+ // arithmetic or retention. The controller checks coincident publication only.
+ assign p0_ready=r0[0];assign p1_ready=r1[0];assign reciprocal_ready=rr[0];
+ assign out_valid=ov[0];assign out_epoch=oe[15:0];
+ reg control_fault;
+ assign fault=(|jf)||control_fault;
+ always @(posedge clk_control or negedge rst_n)begin
+  if(!rst_n)control_fault<=0;
+  else if(r0!={32{r0[0]}}||r1!={32{r1[0]}}||rr!={32{rr[0]}}||ov!={32{ov[0]}})control_fault<=1;
+ end
+ genvar block;
+ generate for(block=0;block<32;block=block+1)begin:g_block
+  ot_qwen_tp8_pv_join16_static #(.P0_AGE(P0_AGE),.P1_AGE(P1_AGE),.R_AGE(R_AGE),.ADD_LAT(ADD_LAT),.MUL_LAT(MUL_LAT)) u_join(
+   .clk(clk_join[block]),.rst_n(rst_n),.start(start),.epoch(epoch),
+   .p0_valid(p0_valid),.p1_valid(p1_valid),.p0_ready(r0[block]),.p1_ready(r1[block]),
+   .p0_epoch(p0_epoch),.p1_epoch(p1_epoch),.p0_data(p0_partial[512*block+:512]),.p1_data(p1_partial[512*block+:512]),
+   .reciprocal(reciprocal[32*(block/8)+:32]),.reciprocal_valid(reciprocal_valid),.reciprocal_ready(rr[block]),
+   .reciprocal_epoch(reciprocal_epoch),.out_valid(ov[block]),.out_ready(out_ready),
+   .out_epoch(oe[16*block+:16]),.out_data(out_data[512*block+:512]),.fault(jf[block]));
+ end endgenerate
+endmodule
