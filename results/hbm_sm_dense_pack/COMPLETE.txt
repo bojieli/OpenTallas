@@ -1,0 +1,46 @@
+Constructive positive geometry, 2026-10-15.
+
+complete16.json contains all10 actual compute and6 proposed source-preserving
+transport group origins:693.44x609.92 =422942.9248um2. All120 macro pairs
+have >=20um separation. No R90. Everynewtransport core is at least the
+corresponding current sourcegroup core area, under the same2.16um inset.
+The422.94k candidate repairs the failed348k gapless option. It is a
+constructive result, not a proof of globallyminimalarea or impossible350k.
+
+Sixgroup sizes needing freshhardening:
+ rowW0,rowW1:86.4x121 (firstN M5, lastE M4/M6 upper45um)
+ beatW:361x130
+ beatE:77.76x121
+ rowE0:400x20 (dS M5, lastN M5 atx391.5..469.932)
+ rowE1:140x30 (dS M5, lastN M5 atx591.5..669.932)
+Newroot counts remain below15k each; beatW must retain actual separate
+transit/N/S q1 copies, no synthesisduplicate-merging orclockmasking.
+96logical resetrelays/slices,1636rows/2069beat,4transit+1landing remain.
+
+Exactproposed externalpinpair geometry:
+ 818rowbits perrow, rowWlastE->rowEdS: max482.112/474.968um.
+ All3705outputbits getdistinctM8 Eboundary slots at0.16um pitch:
+ beat2069bottomslots, row1next818,row0top818. Maxexternal419.94um.
+ All3705inputreceiverQ->WgroupD pairs retained: max492.4um.
+ Source-derived actualXS/BDC/TCL pins and3152 existing XB/XF operand
+ relayregister stations: max305.230um firstleg/356.321um secondleg.
+ No newregistercycles. Every above boundary position is explicit JSON.
+M8 alone609.92um /0.08 *0.60=4574.4tracks >3705.
+ActualcomputeLEFs have noM8OBS. Allnewtransport hardening must keepM8
+free (maxM5route,M6PGstraps). TopPG/clockreservation stillneedsvalidation.
+M7/M9 escape/verticalovermacro routes are needed; cuts notrouteevidence.
+
+Complete35SM geometry is complete35.json: all16newtiles,11frontchildren,
+8backends. Front offsets retainedrigidly at+x292um; newtiles/backends
+explicitlyrepacked into8columnsx2rows. Nooverlaps; newtile boundaries20um.
+Sourcefront internalgaps arepreserved, notclaimed20um. Frame6609.6x1712.08
+=11.316163968mm2 perSM;32SM =362.117246976mm2, +60.933246976mm2 against
+32x9.412mm2 baseline. Front-to-tile actualnets neednewreach/cutpricing;
+nooldSM/globalroutequalification applies. A4x4tilefold couldbe smaller
+but is not claimed valid because sourceEWchain/cycle seams need redesign.
+
+Still OPEN before adoption: sixactualgroup synthesis/PG/CTS/routes and
+exactkeepq1 regression; allcontrol/reset/gather/clock pins; physicalDFF
+packing atproposed XREL/inputreceiver stations; tilefullnative placement,
+TTsetup FFhold DRC0; complete35SM actualnetcuts andregisteredseams;32SM
+placementinsideactualH-DIEwith165nonSMchildren. No heavyjobs launched.
