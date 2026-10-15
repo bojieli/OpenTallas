@@ -337,6 +337,6 @@
     "codec_TX_physical_qualification": "OPEN",
     "codec_RX_physical_qualification": "OPEN"
   },
-  "observed_valid_contract": "CDC i_valid and codec wr_observed_v carry the actual selected producer valid. They fault on missing/unknown actual publication at a reserved write and never gate calendar issue. Codec wr_observed_v interface patch pending peer publication.",
+  "observed_valid_contract": "CDC i_valid and codec wr_observed_v carry actual selected producer-valid, never the compiled wr_v/slot command. Missing/unknown actual publication at a reserved write causes a sticky fault and never reschedules normal issue. Board/UCIe ABI wired in b4fbf1031 to canonical peer99041b285; codec cause outputs are8bits, missing publication cause0x80.",
   "calendar": "Compiler reserves commands, phase, SRAM visibility, synchronization, native relays and licensed PHY capacity. No fullshape production calendar qualified."
 }

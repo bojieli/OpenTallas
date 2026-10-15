@@ -162,7 +162,7 @@ initial begin
  end
  if(MUT==5 && (a_p_cause!==8'h80 || a_r_cause!==8'h80)) $display("WRONG_MISSING_PRODUCER_CAUSE P%h R%h expected80",a_p_cause,a_r_cause);
  if(bad==0 && aborts==0)$display("STATIC_UCIE_PASS checks%0d words_per_channel512 TX3 RX1 PHY14 zero_simultaneous_subchannel_slots",checks);
- else $display("STATIC_UCIE_FAIL checks%0d errors%0d abort_cycles%0d MUT%0d",checks,bad,aborts,MUT);
+ else $display("STATIC_UCIE_FAIL checks%0d errors%0d abort_cycles%0d causesA%h/%h causesB%h/%h MUT%0d",checks,bad,aborts,a_p_cause,a_r_cause,b_p_cause,b_r_cause,MUT);
  $finish;
  end
 endmodule
