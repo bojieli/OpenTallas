@@ -1,0 +1,17 @@
+{
+  "unit": "oth-ubuntu-4120486-1792077143",
+  "host": "ot-epyc4",
+  "retained_job": "qkd_static_kv_return_slots_r1-r1-7489b1528",
+  "real_odb": true,
+  "positive": "core_clk34actualinputcapturepins median166.562454ps/min154.575638ps; correct domain ownership PASS",
+  "negative": "swapped hclk owner rejected actual core slot capture",
+  "native_qualification": false,
+  "reroute_required": true,
+  "files_sha256": {
+    "results/arch/qwen_split_1014/kvsys_native_audit_1015/qkv-return-domain-good.log": "4f08fa2445b36aa0e849c9a15c1a66d6a37151bd1f5f7d336c2b9c10b5af635b",
+    "results/arch/qwen_split_1014/kvsys_native_audit_1015/qkv-return-native-path.log": "84caa950d5621398dfbcecce114cf9aa82297811c9befbd576b555c74a0ef410",
+    "results/arch/qwen_split_1014/kvsys_native_audit_1015/qkv-return-domain-swapped.log": "01b4769ea75a366ef37bab94ff2f58f5fc5c61d752ca70e905b1bc76cb7c8e26",
+    "results/arch/qwen_split_1014/kvsys_native_audit_1015/return_domain_probe.tcl": "e1c6e30f0ea45881f776ad70fc5ae0a60bedec9b7cbe7a277edd013ee5d63aeb",
+    "physical/qwen_kv_die_native_static_pins/qkd_static_kv_return_slots_hbm.sdc": "a976e9263c9f67960589a8140af5f423373afe021aca21c526c188ab43d8eab0"
+  }
+}

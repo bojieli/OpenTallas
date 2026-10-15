@@ -1,0 +1,75 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_hclk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_hclk can not be propagated.
+QDM PINFLOP reference: 325 input pin flops, median arrival 379.475708 (range 161.240768 .. 385.555908)
+QDM reference pin hd[237]$_DFF_P_/CLK clock arrival max 379.475708 min 198.354111 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+QKD_RETURN_SLOTS hclk reference hd[227]$_DFF_P_/CLK of 291 pin flops: clock arrival max 379.949493 min 198.766891 skew 90 hold 50
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_hclk can not be propagated.
+QKD_RETURN_SLOTS hclk reference hd[227]$_DFF_P_/CLK of 291 pin flops: clock arrival max 379.949493 min 198.766891 skew 90 hold 50
+QKD_RETURN_DOMAIN core_clk n=34 max=166.562454 min=154.575638 reference=meta[25]$_DFF_P_/CLK
+QKD_OWNED_DOMAIN_PASS
+Startpoint: ot_prs_00201_ff
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: actual_data[50] (output port clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+Fanout       Cap      Slew     Delay      Time   Description
+-------------------------------------------------------------------------------------
+                              0.0000    0.0000   clock core_clk (rise edge)
+                              0.0000    0.0000   clock source latency
+     1    7.4525    0.0000    0.0000    0.0000 ^ ck (in)
+     1    8.6681   15.5550   28.1173   28.1173 ^ wire2221/Y (BUFx10_ASAP7_75t_R)
+     2   10.1969   12.7650   37.3986   65.5158 ^ clkbuf_0_ck/Y (BUFx24_ASAP7_75t_R)
+    14   48.4097   32.0585   34.0067   99.5225 ^ clkbuf_1_0_0_ck/Y (BUFx24_ASAP7_75t_R)
+    27   19.3099   18.5877   42.0762  141.5988 ^ clkbuf_leaf_16_ck/Y (BUFx24_ASAP7_75t_R)
+                   19.3848    1.9474  143.5462 ^ ot_prs_00201_ff/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    0.5616   15.9851   50.5856  194.1317 ^ ot_prs_00201_ff/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.5598    7.0357   18.9142  213.0459 ^ hold6438/Y (BUFx2_ASAP7_75t_R)
+     1    0.5722    6.9719   15.9001  228.9461 ^ hold2232/Y (BUFx2_ASAP7_75t_R)
+     1    0.6375    7.2251   16.0301  244.9762 ^ hold6439/Y (BUFx2_ASAP7_75t_R)
+     1    0.6751    6.9189    6.6378  251.6139 v ot_prs_00201_b0/Y (INVx1_ASAP7_75t_R)
+     1    0.5822    6.7743   17.3492  268.9631 v hold6440/Y (BUFx2_ASAP7_75t_R)
+     1    1.0379    8.2143   18.2382  287.2013 v hold2233/Y (BUFx2_ASAP7_75t_R)
+     1    0.5004    5.6180   16.3493  303.5506 v ot_ohdrv_00201_0/Y (BUFx4f_ASAP7_75t_R)
+     1    0.5820   13.4168   31.1100  334.6606 v ot_outhold_00201_1/Y (HB2xp67_ASAP7_75t_R)
+     1    1.0682    8.3564   20.6453  355.3059 v hold2234/Y (BUFx2_ASAP7_75t_R)
+     1    0.8291    6.1152   16.7404  372.0463 v ot_ohdrv_00201_2/Y (BUFx4f_ASAP7_75t_R)
+     1    0.7075    7.1524   17.3973  389.4436 v hold2235/Y (BUFx2_ASAP7_75t_R)
+     1    0.6024    6.8338   17.4775  406.9211 v output272/Y (BUFx2_ASAP7_75t_R)
+     1    0.2194    5.7176   16.5446  423.4657 v hold2236/Y (BUFx2_ASAP7_75t_R)
+                    5.7176    0.0155  423.4812 v actual_data[50] (out)
+                                      423.4812   data arrival time
+
+                            833.3330  833.3330   clock core_clk (rise edge)
+                              0.0000  833.3330   clock network delay (propagated)
+                            -60.0000  773.3330   clock uncertainty
+                              0.0000  773.3330   clock reconvergence pessimism
+                            -90.1041  683.2289   output external delay
+                                      683.2289   data required time
+-------------------------------------------------------------------------------------
+                                      683.2289   data required time
+                                     -423.4812   data arrival time
+-------------------------------------------------------------------------------------
+                                      259.7477   slack (MET)
+
+
