@@ -152,7 +152,7 @@ module ot_hgi_coll_record #(
         in_ready_p <= ep_start_ready_p; in_room <= pipe_room; in_idle <= pipe_idle;
         in_ep_fault <= ep_fault; in_ep_done <= ep_done_valid; in_ep_ready <= ep_start_ready;
         in_rf_start_r <= rf_start_r; in_rf_done <= rf_done_v; in_rf_fault <= rf_fault; in_rg_drained <= rg_drained;
-        g_q <= cfg_coll_group_size; die_q <= cfg_die_id; in_tk_fault <= tk_fault;
+        g_q <= cfg_coll_group_size; if (rec_v) die_q <= cfg_die_id; in_tk_fault <= tk_fault;
     end
     assign rec_rdy = (st == S_IDLE);
     wire [6:0] opnd = hdr_q[99:93];

@@ -29,34 +29,45 @@
   "cap_basis": "contract"
  },
  "pins": {
-  "N": [
-   "rvm",
-   "rdm",
-   "rq_q",
-   "hs_run",
-   "hs_c",
-   "hrq_n",
-   "yb_n",
-   "cs",
-   "nflt_n",
-   "hov_d",
-   "hnz_n",
-   "pflt_n"
-  ],
   "S": [
+   "fv",
+   "fdx",
    "rv_in",
    "rd_in",
    "hrq_s",
    "yb_s",
    "nflt_s",
    "hnz_s",
-   "pflt_s",
-   "fv",
-   "fdx"
+   "pflt_s"
+  ],
+  "N": [
+   "rvm",
+   "rdm",
+   "hrq_n",
+   "yb_n",
+   "nflt_n",
+   "hnz_n",
+   "pflt_n",
+   "rq_q",
+   "hs_run",
+   "hs_c",
+   "rq_q_c1",
+   "hs_run_c1",
+   "hs_c_c1",
+   "rq_q_c2",
+   "hs_run_c2",
+   "hs_c_c2",
+   "rq_q_c3",
+   "hs_run_c3",
+   "hs_c_c3",
+   "hov_d",
+   "rst_in"
+  ],
+  "E": [
+   "cs"
   ],
   "W": [
    "clk",
-   "rst_in",
    "tid",
    "last"
   ]
@@ -99,6 +110,11 @@
   "physical/ref_tile/s81hc_ctra_ref/signoff.sdc",
   "physical/ref_tile/s81hc_ctra_ref/pdn.tcl",
   "physical/ref_tile/s81hc_ctra_ref/pre_cts.tcl",
+  "physical/ref_tile/s81hc_ctra_ref/post_cts.tcl",
+  "physical/ref_tile/s81hc_ctra_ref/post_grt.tcl",
+  "physical/ref_tile/s81hc_ctra_ref/pre_drt.tcl",
+  "physical/ref_tile/s81hc_ctra_ref/pre_fill.tcl",
+  "physical/ref_tile/s81hc_ctra_ref/post_fill.tcl",
   "physical/ref_tile/s81hc_ctra_ref/pre_grt.tcl",
   "physical/ref_tile/s81hc_ctra_ref/post_drt.tcl",
   "tools/ref_tile/ref_route.sh",
@@ -108,6 +124,15 @@
   "physical/qwen_die_masters/pre_cts_skew.tcl",
   "physical/qwen_die_masters/pre_ref_skew.tcl",
   "physical/qwen_die_masters/post_plain.tcl",
-  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/s81_die_pins/v20_hc_return/ot_s81_hc_ctra.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/s81hc_ctra_ref/pre_gpl.tcl",
+  "physical/ref_tile/s81hc_ctra_ref/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
  ]
 }

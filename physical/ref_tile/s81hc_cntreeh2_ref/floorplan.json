@@ -15,7 +15,7 @@
   179.28,
   179.28
  ],
- "why": "util 0.52 of std 16000 + macros 0 um2",
+ "why": "spec outline",
  "std_area_um2": 16000,
  "layer_contract": {
   "children": {},
@@ -24,7 +24,9 @@
    "M2",
    "M6"
   ],
-  "strap_layer": "M7"
+  "strap_layer": "M7",
+  "layer_cap": "M6",
+  "cap_basis": "legacy kit (pre-2026-10-12 contract; re-route at M5 per m5_reroute_priority.json)"
  },
  "pins": {
   "W": [
@@ -89,6 +91,11 @@
   "physical/ref_tile/s81hc_cntreeh2_ref/signoff.sdc",
   "physical/ref_tile/s81hc_cntreeh2_ref/pdn.tcl",
   "physical/ref_tile/s81hc_cntreeh2_ref/pre_cts.tcl",
+  "physical/ref_tile/s81hc_cntreeh2_ref/post_cts.tcl",
+  "physical/ref_tile/s81hc_cntreeh2_ref/post_grt.tcl",
+  "physical/ref_tile/s81hc_cntreeh2_ref/pre_drt.tcl",
+  "physical/ref_tile/s81hc_cntreeh2_ref/pre_fill.tcl",
+  "physical/ref_tile/s81hc_cntreeh2_ref/post_fill.tcl",
   "physical/ref_tile/s81hc_cntreeh2_ref/pre_grt.tcl",
   "physical/ref_tile/s81hc_cntreeh2_ref/post_drt.tcl",
   "tools/ref_tile/ref_route.sh",
@@ -98,6 +105,15 @@
   "physical/qwen_die_masters/pre_cts_skew.tcl",
   "physical/qwen_die_masters/pre_ref_skew.tcl",
   "physical/qwen_die_masters/post_plain.tcl",
-  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/ref_tile/s81hc_cntreeh2_ref/frozen_closed_pins.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/s81hc_cntreeh2_ref/pre_gpl.tcl",
+  "physical/ref_tile/s81hc_cntreeh2_ref/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
  ]
 }
