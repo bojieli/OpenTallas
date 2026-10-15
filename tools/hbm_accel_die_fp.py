@@ -818,7 +818,7 @@ def build_r25gq(variant):
         y_ = s.y if q[0] == 'S' else s.y + s.h - h_
         if V.get('idx_score_box'):      # hbmdie 10-14 v13: native IDX leaf+macro area 38.169 mm2 vs 4 x 5.292 slots
             ib_ = V['idx_score_box']    # (lower bound, no glue): each scorer takes its corner band (bottom edge kept)
-            add(s.name, s.name, dn(ib_['x'][q[1]], GX), y_, w=up(ib_['w'], GX), h=up(ib_['h'], GY),
+            add(s.name, s.name, dn(ib_['x'].get(q, ib_['x'][q[1]]), GX), y_, w=up(ib_['w'], GX), h=up(ib_['h'], GY),
                 master=V['idx_score_slot'][0] if V.get('idx_score_slot') else None)
             rmap[s.name] = s.name
             continue
@@ -2853,7 +2853,9 @@ def build_r25gq_net(variant):
                           free=G.free, cell=RP.CELL),
                      open(os.environ.get('OT_HBMDIE_STOP_OUT', '/dev/null') + '.pkl', 'wb'))
             raise SystemExit('OT_HBMDIE_STOP=pin')
-    if V.get('phys_trees') or V.get('phys_relays'):
+    # OT_HBMDIE_NO_TREES=1: data-placement iterations only (window check of data hops, which never counts the clock /
+    # reset trees): skip the tree build (~70 of the ~75 generator minutes on v14).  Never for a case, GRT or netlist.
+    if (V.get('phys_trees') or V.get('phys_relays')) and not os.environ.get('OT_HBMDIE_NO_TREES'):
         phys_rec = phys_rec or {}
         # textbook audit rows 2 + 3: per clock domain ONE balanced H-tree from the PLL port on hb_coll to region leaves
         # (leaf cells <= 480 um, empty branches pruned).  Every tree node carries a clock buffer (hfd_ckb) and, beside
@@ -3008,8 +3010,8 @@ def build_r25gq_net(variant):
             def troute(a, b):
                 """route a -> b on the capacity-aware cost (rebuilt after a stall or every 12 placed pairs)"""
                 if tg_['A'] is None or tg_['dirty'] or tg_['n'] - tg_['n0'] >= 12:
-                    tg_.update(A=G.graph(tree_cap_cost(G.free, tocc_, tstall_, widef_, V['phys_block_cost'],
-                                                       V.get('phys_free_min', 0.2))),
+                    tg_.update(A=G.graph((tree_fp_cost if V.get('tree_fixed_path') else tree_cap_cost)(
+                                   G.free, tocc_, tstall_, widef_, V['phys_block_cost'], V.get('phys_free_min', 0.2))),
                                n0=tg_['n'], dirty=False, builds=tg_['builds'] + 1)
                     tspt_.clear()
                 ra = rings.setdefault(a, G.ring(a))
@@ -3212,6 +3214,60 @@ def build_r25gq_net(variant):
                     ch = node(x1_, y1_, branch=branch)
                 cur, n_, Lp, nst_, chain_ = par, 0, None, 0, [par]
                 ctr_ = lambda kk_: ((kk_ % G.nx + .5) * RP.CELL, (kk_ // G.nx + .5) * RP.CELL)
+                if V.get('tree_fixed_path') and not unit_:
+                    # v14 H-DIE 10-14: ONE capacity-aware route per edge, pairs placed in order ALONG it.  The chase
+                    # form below re-routes from wherever the last pair landed; with stall closures the route flips
+                    # between channels and the chain orbits a block (v14 SE: 42 edges hit the 150-pair cap, 0.2-3.3 mm
+                    # edges built from 45-56 mm of pairs, hbm tree 811 stages, 72k pairs).  Here progress along the
+                    # fixed route is monotone, so an edge costs ~L / step pairs; a pair that lands off its route
+                    # still charges the cells it could not enter (later edges avoid them) but does not re-route this one.
+                    G.inst.setdefault(cur[0], by[cur[0]])
+                    G.inst.setdefault(ch[0], by[ch[0]])
+                    pq_ = troute(cur[0], ch[0])
+                    Lp = (len(pq_) - 1) * RP.CELL
+                    stp_ = max(1, int(TREE_STEP_UM // RP.CELL))
+                    ix_, close_ = 0, 0
+                    while eseg(by[cur[0]], by[ch[0]]) > 400.0 and close_ < 3:
+                        tix_ = min(len(pq_) - 1, ix_ + stp_)
+                        close_ += tix_ >= len(pq_) - 1      # at most 3 closing pairs once the route is used up
+                        if tix_ >= len(pq_) - 1:
+                            want_, wx_, wy_ = None, by[ch[0]].x + by[ch[0]].w / 2, by[ch[0]].y + by[ch[0]].h / 2
+                        else:
+                            want_ = [pq_[tix_]] + [pq_[j_] for j_ in (tix_ - 1, tix_ + 1, tix_ - 2) if 0 <= j_ < len(pq_)]
+                            wx_, wy_ = ctr_(pq_[tix_])
+                        nd = node(wx_, wy_, want_, par=cur)
+                        nets_ck[cur[0]].append((nd[0], 'i'))
+                        nets_rs[cur[1]].append((nd[1], 'i'))
+                        n_ += 1
+                        chain_.append(nd)
+                        p_ = by[nd[0]]
+                        qx_, qy_ = p_.x + CKW + 2.16, p_.y + CKH / 2
+                        # the route index the pair actually serves: nearest route cell in a window ahead of the last
+                        lo_, hi_ = ix_ + 1, min(len(pq_), tix_ + 2 * stp_ + 1)
+                        off_, jx_ = min(((abs(qx_ - ctr_(pq_[j_])[0]) + abs(qy_ - ctr_(pq_[j_])[1]), j_)
+                                         for j_ in range(lo_, hi_)), default=(0.0, tix_))
+                        if off_ > TREE_STALL_UM:
+                            for kk_ in pq_[max(0, tix_ - 1):tix_ + 2]:
+                                tstall_[kk_ // G.nx, kk_ % G.nx] += 1.0
+                            tg_['dirty'] = True
+                            tcap_rec['stalls'] += 1
+                            nst_ += 1
+                            jx_ = tix_          # progress is along the route, not toward where the pair landed
+                        ix_ = max(ix_ + 1, jx_)
+                        cur = nd
+                    if eseg(by[cur[0]], by[ch[0]]) > 400.0:
+                        tcap_rec['reach_left'] = tcap_rec.get('reach_left', 0) + 1
+                    p0_, c0_ = by[par[0]], by[ch[0]]
+                    mh_ = abs(p0_.x - c0_.x) + abs(p0_.y - c0_.y)
+                    tcap_rec.setdefault('fp_edges', []).append(
+                        (d_, round(p0_.x), round(p0_.y), round(c0_.x), round(c0_.y), round(Lp), round(mh_), n_, nst_))
+                    if nst_:
+                        tcap_rec['fixed_path_stalled_edges'] = tcap_rec.get('fixed_path_stalled_edges', 0) + 1
+                    nets_ck[cur[0]].append((ch[0], 'i'))
+                    nets_rs[cur[1]].append((ch[1], 'i'))
+                    chain_.append(ch)
+                    edges_.append(dict(par=par, ch=ch, last=cur, d=n_ + 1, chain=chain_))
+                    return ch, Lp, n_ + 1
                 while eseg(by[cur[0]], by[ch[0]]) > 400.0:
                     if n_ >= 150:
                         tcap_rec['edges_capped'] += 1
@@ -3364,7 +3420,11 @@ def build_r25gq_net(variant):
                     # rf2: a leaf pair sits at its sinks' centroid (the cell centre can fall inside a block)
                     pts_ = [cen_[e] for e, _ in cell_of[(i0, j0)]]
                     cx, cy = sum(q[0] for q in pts_) / len(pts_), sum(q[1] for q in pts_) / len(pts_)
-                me, Le, De = edge(par, cx, cy, branch=not (i1 - i0 == 1 and j1 - j0 == 1))
+                lf1_ = i1 - i0 == 1 and j1 - j0 == 1
+                # tree_fixed_path: a LEAF also takes an open site within the stage of its sinks' centroid (v14: leaves of
+                # the S-centre serdes / link sinks sat in the 44 / 65-um slots between sd_S, lk_S* and the IDX band,
+                # and their edges detoured 20-24 mm out of the slot: stream tree 289 stages vs hbm 160)
+                me, Le, De = edge(par, cx, cy, branch=(not lf1_) or ('leaf' if V.get('tree_fixed_path') else False))
                 if i1 - i0 == 1 and j1 - j0 == 1:
                     rec_['leaves'] += 1
                     leaf_L.append(Lpar + Le)
@@ -3666,7 +3726,7 @@ def build_r25gq_net(variant):
         m['child_slots'] = child_slots_check(V['child_slots'], insts)
     if V.get('vm8_union'):
         m['group_slots'] = [vm8_union_group(insts)]
-    if V.get('phys_trees') or V.get('phys_relays'):
+    if (V.get('phys_trees') or V.get('phys_relays')) and not os.environ.get('OT_HBMDIE_NO_TREES'):
         m['pin_peer_hold'] = pin_hold
     if V.get('hc_ck_ew'):       # the die clock reaches both halves of every HC row root
         buses[:] = [(b_, c_, w_, [x for e in e_ for x in ([(e[0], e[1] + 'e'), (e[0], e[1] + 'w')]
@@ -6244,6 +6304,7 @@ TREE_FILL0, TREE_FILL1 = 0.15, 0.45     # the fill charge ramps from 0 at FILL0 
 TREE_NARROW_COST = 1.0      # extra route cost of a narrow-channel cell (trunks prefer open channels at equal length)
 TREE_FULL = 0.30            # a cell is full for pads / branch nodes at this waypoint fill of its free area
 TREE_STALL_UM = 150.0       # a chain pair landing farther than this from its route has stalled
+TREE_STEP_UM = 300.0        # tree_fixed_path: a pair every this much of the edge's route (reach 400 um box gap)
 TREE_STALL_COST = 0.1       # of the block cost, per stall recorded on a cell (10 stalls close it like a block)
 _PAD_RING = sorted(((ox, oy) for ox in range(-18, 19) for oy in range(-18, 19)), key=lambda o: (abs(o[0]) + abs(o[1]), o))
 
@@ -6274,6 +6335,26 @@ def tree_cap_cost(free, occ, stall, widef, block_cost, free_min=0.2):
     return (1.0 + block_cost * (free < free_min) + TREE_OCC_COST * fill
             + block_cost * np.minimum(TREE_STALL_COST * stall, 1.0)
             + TREE_NARROW_COST * ((widef < 0.3) & (free >= free_min)))
+def tree_fp_cost(free, occ, stall, widef, block_cost, free_min=0.2):
+    """tree_fixed_path (H-DIE 10-14 pm) route cost of a clock / reset tree edge.  The clock wire runs on M8 / M9 over
+    blocks; only its buffer / relay pairs need free sites (<= 400 um apart).  The tree_cap cost charged a full cell
+    20x and a blocked cell 400x, so v14 tree edges detoured 4-6x (stream root->leaf route up to 169 mm on a 33 x 26 mm
+    die, 575 stages).  Here: a cell whose free sites are full costs TREE_FP_FILL x, a blocked cell on the rim of a block
+    (a free cell beside it: blocks <= ~200 um wide, abutment gaps and block edges) TREE_FP_RIM x, a block interior the
+    full block cost, a stall TREE_FP_STALL x per stall."""
+    import numpy as np
+    from scipy import ndimage as ndi
+    fr = np.maximum(free, 0.05)
+    fill = np.clip((occ / fr - TREE_FILL0) / (TREE_FILL1 - TREE_FILL0), 0.0, 1.0)
+    blk = free < free_min
+    rim = blk & ndi.binary_dilation(~blk, structure=np.array([[0, 1, 0], [1, 1, 1], [0, 1, 0]], bool))
+    return (1.0 + TREE_FP_FILL * fill + TREE_FP_RIM * rim + block_cost * (blk & ~rim)
+            + TREE_FP_STALL * np.minimum(stall, 10.0))
+
+
+TREE_FP_FILL = float(os.environ.get('OT_HBMDIE_TREE_FP_FILL', '1.0'))
+TREE_FP_RIM = float(os.environ.get('OT_HBMDIE_TREE_FP_RIM', '4.0'))
+TREE_FP_STALL = float(os.environ.get('OT_HBMDIE_TREE_FP_STALL', '1.0'))
 _WIDE_RING = sorted(((ox, oy) for ox in range(-20, 21) for oy in range(-20, 21)), key=lambda o: (abs(o[0]) + abs(o[1]), o))
 _PAIR_RING = sorted(((ox, oy) for ox in range(-10, 11) for oy in range(-10, 11)), key=lambda o: (abs(o[0]) + abs(o[1]), o))
 
@@ -7913,6 +7994,26 @@ def r25gq_v14():
     # (tools/hbm_die_v14_att_relays.py; tr_SW0 +6 cycles, recorded)
     v['att_su_relays'] = 'physical/hbm_accel_die_views/att_su_relay/relays_r25gq_v14.json'
     v['ck_root'] = 'hb_ckgen'
+    # H-DIE 10-14 pm: clock / reset tree edges follow ONE capacity-aware route each (the chase form orbited blocks in the
+    # SE quadrant: 72k pairs, 811 stages, trunk CTS case 72k nets -> four 300-s timeouts)
+    v['tree_fixed_path'] = True
+    # H-DIE 10-14 pm (window c6 FAIL 42 / 13 / 3, worst H 1.463 at x 22.0-23.6 / y 1.5-2.2 mm; GRT c6 SE bins): the SE
+    # IDX band sat 43 um W of the sm8 / sm11 / sm14 column, so the SE key rows (ks0-3 from svc_SE_s0-s2 to the attention
+    # entries) and the band's ksg / wl_sm / lw hops all squeezed through the 455-um strip svc_SE | sm8 and the 43-um
+    # abutment gap, and the clock / reset tree could not enter the SE SM field (42 capped tree edges).  The band moves
+    # W against the serdes slab sd_S (as SW sits against it: pre-split x < 16,700, so col_split leaves it there),
+    # opening a ~1.3-mm channel between the band and the SE SM column.  NE is unchanged (not hot).
+    # H-DIE 10-14 pm (window SE-fixed: 5 windows, worst V 1.072, coll_rgx_c 86 %): the SW engine's 8,961-b TOPK_MERGE
+    # write lanes to the SW slice (t_rgx_c / f_rgx_c) left its E face into the 218-um COLL | SU_SW gap and ran down it;
+    # on the S face they drop into the open column E of ep_S1 and run E under SU_SW (window PathFinder round 2: PASS
+    # 0 / 0 / 0, worst 0.876).  Die-assigned pins (hfd_coll_q3 is a new master: top-down pin assignment).
+    v['face_force'] = {**(v.get('face_force') or {}), ('hfd_coll_q3', 't_rgx_c'): 'S', ('hfd_coll_q3', 'f_rgx_c'): 'S'}
+    for kv_ in filter(None, os.environ.get('OT_HBMDIE_FACE_FORCE', '').split(',')):    # iteration override: m|p=F
+        k_, f_ = kv_.split('=')
+        v['face_force'] = {**(v.get('face_force') or {}), tuple(k_.split('|')): f_}
+    if v.get('idx_score_box'):
+        v['idx_score_box'] = dict(v['idx_score_box'], x=dict(v['idx_score_box']['x'],
+                                                             SE=float(os.environ.get('OT_HBMDIE_IDX_SE_X', '16699.0'))))
     v['drop_blocks'] = tuple(v['drop_blocks']) + ('hb_coll',)
     v['drop_buses'] = v['drop_buses'] + (r'|lk_lk_[NS]\d\w*|hb_su_[NS][EW]_coll\w*|hb_coll_su_[NS][EW]\w*|hgi_vmaddr_[NS][EW]\w*'
                                          r'|hgi_coll_(cmd|ret)\w*|hgi_cfg_coll\w*|hgi_rgx[qrwa][01]\w*|hgi_vm[qr]_coll\w*'
