@@ -170,7 +170,8 @@ module tb_dsfd_sp_vm_static;
         if (mode == 5 && tk == 520) begin                                  // two units, same lane, same edge
             stream(0, 1100, 2);
         end
-        if (mode == 5 && tk == 521) stream(1, 1101, 2);
+        // READ_PIPE 2 blocks issue phase 0 instead of 1, which shifts Q's rows one edge: G then starts on Q's lane.
+        if (mode == 5 && tk == 521) stream(1, (READ_PIPE == 2) ? 1100 : 1101, 2);
         // gather go: the bench (gather) pulses xgo for each posted phase, in order, ~60 edges after the post
         if (tk >= 560 && tk < 564) begin xgo = {1'b1, gphase[tk - 560]}; if (mode == 2 && tk == 562) xgo[0] = ~xgo[0]; end
         // R: SU read-back of the collective landing rows (one a stream edge, port 4 + row[1:0])
