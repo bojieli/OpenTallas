@@ -20,7 +20,7 @@
 // A functional scalar tie is allowed for simulation only; native parent must deliver every leaf phi-R.
 // ---------------------------------------------------------------------------------------------------------------
 module dsfd_vm_static_wsched #(parameter integer NSRC = 48) (
-    input  wire                 ck_control, ck_header, rst_n,
+    input  wire                 ck_control, ck_header,
     input  wire [3:0]           ck_payload,
     input  wire [15:0]          ck_dispatch,
     input  wire [127:0]         ck_stage,

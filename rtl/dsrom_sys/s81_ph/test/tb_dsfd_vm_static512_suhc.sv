@@ -9,7 +9,7 @@ module tb_dsfd_vm_static512_suhc;
  reg [17:0] expected=0;reg [89:0] release_slot=0;
  wire [71:0] nv;wire [9215:0] nd;wire [15:0] fault;wire [127:0] gv;wire [11:0] gid;
  dsfd_vm_static512_suhc mem(.ck_rscatter({4{ck}}),.ck_wcapture({128{ck}}),.ck_wscatter({16{ck}}),.ck_return({4{ck}}),
- .ck_bank({128{ck}}),.ck_relay_req({48{ck}}),.ck_relay_rsp({48{ck}}),.rst_n(rn),
+ .ck_bank({128{ck}}),.ck_relay_req({48{ck}}),.ck_relay_rsp({48{ck}}),
  .rst_rscatter_n({4{rn}}),.rst_return_n({4{rn}}),.rst_wcapture_n({128{rn}}),.rst_wscatter_n({16{rn}}),.rst_bank_n({128{rn}}),.rst_relay_n({48{rn}}),
  .native_rq_v(iv),.native_rq_row(ir),.native_rq_slot(islot),.native_rq_group(ig),
  .aux_rq_v(12'd0),.aux_rq_row(168'd0),.wq_v(wv),.wq_row(wr),.wq_mask(wm),.wq_data(wd),.wq_tag(wt),

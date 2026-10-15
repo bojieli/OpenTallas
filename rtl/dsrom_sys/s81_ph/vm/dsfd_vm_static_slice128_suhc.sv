@@ -5,7 +5,7 @@
 // Compiler owns incoming32-record packet and bank reservations. Serial clients
 // need explicit fixed-ratio ingress, not a credit adapter hidden in this parent.
 module dsfd_vm_static_slice128_suhc(
- input wire ck_rscatter,input wire [31:0] ck_wcapture,input wire [3:0] ck_wscatter,input wire [31:0] ck_bank,input wire rst_n,
+ input wire ck_rscatter,input wire [31:0] ck_wcapture,input wire [3:0] ck_wscatter,input wire [31:0] ck_bank,
  input wire [11:0] ck_relay_req,ck_relay_rsp,
  input wire rst_rscatter_n,input wire [31:0] rst_wcapture_n,rst_bank_n,
  input wire [3:0] rst_wscatter_n,input wire [11:0] rst_relay_n,
