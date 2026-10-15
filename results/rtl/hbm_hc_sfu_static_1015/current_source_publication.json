@@ -1,0 +1,65 @@
+{
+  "schema": "opentallas.full_sfu_static_programme_source_publication.v1",
+  "source_bundle": "5f01667d6 including f9dec3807 scalar-side opcode refusal and9385d6302 protected programme host encoding",
+  "scope": "Elaboratable candidate actual16-lane static arithmetic+80 mapped operand SRAMs+16 protected programme SRAMs; component-only, no full native or physical qualification",
+  "native_qualified": false,
+  "physical_qualified": false,
+  "full_layer_qualified": false,
+  "receipts": {
+    "fixed_phase": "4/4 current source hashes match",
+    "operand_store": "10/10 current source hashes match;143360words on80 actual SRAMs",
+    "independent_lowering": "3/4 current source hashes match; source94fe68fe7 vector compiler predates86b52dab6 immediate-range refusal;47104 C12 words historical source-pinned component pass",
+    "paged_programme": "3/3 current source hashes match;3936 controls1742bits;16SRAM;crosspage1023to1024",
+    "programme": "2/2 current source hashes match",
+    "engine_join": "2/3 current source hashes match; source0d5c21443 static_engine predates f9dec3807 scalar-side refusal;7168pass-through words on80SRAM historical source-pinned component pass"
+  },
+  "remaining": [
+    "Full96SRAM programme composition run is source-pinned before f9; positive observed by owner, mutant remains owned by h_hc_sfu",
+    "Actual VM tap sector prefetch and index mapped-memory service",
+    "Full scalar-side dispatch and compiled native layer program",
+    "Physical timing/slot/clock closure and production calendar integration"
+  ],
+  "verification": {
+    "python_tests": 6,
+    "immutable_arithmetic_sources_current_main": 23,
+    "immutable_manifest": "results/arch/hbm_native_1013/sfu_native_quarter/closed_ae5899467.sha256",
+    "full_programmed_engine_lint": {
+      "tool": "Verilator5.050",
+      "exit": 0,
+      "scope": "Current96SRAM production candidate elaboration only; full simulation/timing unqualified"
+    },
+    "lint_log_sha256": "cccbf22c4a24518cfeaabe7d80a2b99d8433273ce61419cc381c180fce80a6dc",
+    "complete_source_manifest": "programmed_engine.manifest.json",
+    "source_manifest_entries": 36
+  },
+  "sources_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_calendar_paged_static.sv": "863b63106f0963a85365e4a26a31ca2c1bbcf22a6c6fe9088a5d067d139e1ce8",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_calendar_static.sv": "f9ec7be2c678094a5923fff6b341ba59a2ddf0892b9085502a70cf5bfee5acfd",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_program_stripe_static.sv": "cfc58626830f0e8fe6c66488b7768e48a6e38cc124983d0483ec1221aca6c6ee",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programmed_engine.sv": "772f73880697dddb6458f7d7c086402bb5ca7814758816176f8d7517f6dd47b4",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_engine.sv": "865d1e817bfe4e2c4128c2999c5ffe9784987c47defb41ec1b85db6f6e46c05e",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv": "e1a7d41038aa43e22a12886749f884a17900254f27fa5f4fe9efae84dfdcf524",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_quarter.sv": "3f995082745666a40a4585bbf8e916059d4b6b0a986fa96c1a830570e1fff633",
+    "rtl/test/hbm_accel/generic/tb_hgi_sfu_calendar_paged_static.sv": "1262dffd739ffe54498ff5410b87bed9dc85eaa55ae9dbbabd166cb2b9403bf3",
+    "rtl/test/hbm_accel/generic/tb_hgi_sfu_calendar_static.sv": "3870f029916d0e04dee5cd59732dd7c06b4130b7d61f86eaeb0f6dbc7ac949d6",
+    "rtl/test/hbm_accel/generic/tb_hgi_sfu_programmed_engine.sv": "c0c26f5200cfd16ffa47a63e936273fa2fcd268d361d36e540708dca2b981cbd",
+    "rtl/test/hbm_accel/generic/tb_hgi_sfu_static_calendar.sv": "0f3206948f3bc873ca69999d108bf0601116b3b02061353626e0fd9cdb59ddde",
+    "rtl/test/hbm_accel/generic/tb_hgi_sfu_static_engine.sv": "df6ecbe65125025de128e335088f476bf8d72772f627a2af1e23782e99c8b08a",
+    "rtl/test/hbm_accel/generic/tb_hgi_sfu_static_operand_store.sv": "f93e48ec5aa21d0b8838e5d1ee1c6518bf7506e910558510ab799e4c3b6685a5",
+    "rtl/test/hbm_accel/generic/tb_hgi_sfu_static_quarter.sv": "4e2767edc9053da8e9943e24c9f6ea04a46e4ebb490fd27b743f0dae2b3e97cc",
+    "tools/hbm_static/make_sfu_vector_gate_images.py": "e6dfe2a93dbc56ce639f93eed3d85249b29fc1e5775fdb8e1c385400b6fba79d",
+    "tools/hbm_static/sfu_control_image.py": "b9a1c3b0b4f378b6492b76752610b5986eafc2e4ac3e45ec33dffb60bab53984",
+    "tools/hbm_static/sfu_program_pages.py": "f60796250eb57c9f780bf8e4888c9cbc1ebfa9d1eca78e3978ec258a851e0ea4",
+    "tools/hbm_static/sfu_vector_calendar.py": "d9009b962fbb0e404cabefa17508417bc1d4666773956ca9de6ea187b37412d7",
+    "tools/hbm_static/test_sfu_control_image.py": "58fa2690ab1befd3860258ab219155c424366084a83c3cd23d6edb3cc18e1016",
+    "tools/hbm_static/test_sfu_program_pages.py": "6e916261277d4232c69497385a74d20ac6dc4e806ba0b74a9144a04e2d28ad7f",
+    "tools/hbm_static/test_sfu_vector_calendar.py": "7cd1f86a44e9fab6cb32866975782837631fe7357d490ba4d670839243a35e02",
+    "tools/hgi_unit_tput/run_sfu_calendar_paged_static.sh": "57cc7c4fd3d184162c08da585a11d9b02690fdb538e9f938de0a71a84cfdb89a",
+    "tools/hgi_unit_tput/run_sfu_calendar_static.sh": "1b9a33ce4ca10a3941fae02a1b81048072a56702109b5eb3ca1179784fecb774",
+    "tools/hgi_unit_tput/run_sfu_programmed_engine.sh": "e3afce264ae16519f079eb9f7432317faf4fb9c7e1b963d84ea1cc6bfd478039",
+    "tools/hgi_unit_tput/run_sfu_static_calendar.sh": "596f1ddc4ab2e4a40eac6d6ab7296b9ba7848e2aba4f85c96effb0602fb1b6f3",
+    "tools/hgi_unit_tput/run_sfu_static_engine.sh": "b888aace2cfa89e3ecd9cd329103569630309ca9f28b6891c8508c6f0bb617af",
+    "tools/hgi_unit_tput/run_sfu_static_operand_store.sh": "779803745a4a818b2ddcd440cccba61f64159c7adaca14a8e7672e4a258f31b1",
+    "tools/hgi_unit_tput/run_sfu_static_quarter.sh": "22fbeafcb7435a33f13cf6c95db10b661fd517404ae62d9c1a60fb787898ab87"
+  }
+}

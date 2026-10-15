@@ -1,0 +1,31 @@
+{
+  "gate": "PASS",
+  "source_commit": "bda2a23ae",
+  "native_qualified": false,
+  "physical_qualified": false,
+  "whole_layer_qualified": false,
+  "actual_SRAMs": 16,
+  "protected_PC_bits": 11,
+  "payload_widths": [
+    222,
+    222,
+    222,
+    222,
+    222,
+    222,
+    222,
+    188
+  ],
+  "programme_rows": 1968,
+  "checked_controls": 3936,
+  "control_bits": 1742,
+  "crosspage": "1023to1024 exact",
+  "loop_boundary": "exact",
+  "bubbles": 0,
+  "mutant": "global PC bit10 at page1 firstrow corrupted whilelow10PC stayscorrect; FAIL SFU_PROGRAM_IDENTITY",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_program_stripe_static.sv": "cfc58626830f0e8fe6c66488b7768e48a6e38cc124983d0483ec1221aca6c6ee",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_calendar_paged_static.sv": "863b63106f0963a85365e4a26a31ca2c1bbcf22a6c6fe9088a5d067d139e1ce8",
+    "rtl/test/hbm_accel/generic/tb_hgi_sfu_calendar_paged_static.sv": "1262dffd739ffe54498ff5410b87bed9dc85eaa55ae9dbbabd166cb2b9403bf3"
+  }
+}

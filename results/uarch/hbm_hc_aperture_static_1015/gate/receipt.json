@@ -1,0 +1,46 @@
+{
+  "scope": "actual staging producer and HC FP32 aperture SRAM consumer; separate from SYS1/whole-HC arithmetic integration",
+  "sources_sha256": {
+    "ot_hgi_hc_aperture_bridge_static.sv": "83854cc00c31a0db4477ef94ac62809b2d6fbf73703e35a7370598cec01c288b",
+    "ot_hgi_hc_aperture_static.sv": "7e14e88870dd131e8f558970dc7929175d1a76fd0317bfd24e0a71587d7419ae",
+    "tb_hgi_hc_aperture_static.sv": "887a90886fdb0bbbdd5529219833dc73294390da458375e7e548e26759f1b97e",
+    "ot_hbm_svc_static_vm_delivery.sv": "91b0265ba4c0ce452cffbfd7776d25922dc6747de8a0a34b28c7b2e54354f3f2",
+    "ot_hbm_svc_static_landing.sv": "0c3122d06032896c52c97a11c3e65bf041ae5f420259671868e1f2ef988fab25",
+    "ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
+  },
+  "positive": "PASS",
+  "wrong_quarter_mutant": "KILLED at actual SRAM readback",
+  "shape": {
+    "W": 32,
+    "RMAX": 128,
+    "PMAX": 8,
+    "HC_slots": 2,
+    "HC_banks": 8,
+    "weight_macros_128x256": 64,
+    "landing_macros_128x256": 32
+  },
+  "measured": {
+    "write_sectors": 8192,
+    "readback_sectors": 8192,
+    "wd_captured_sectors": 8192,
+    "source_blocks": 4,
+    "landing_slots_per_block": 256,
+    "fill_sectors_per_cycle": 8,
+    "macro_commit_after_ap_sample_edges": 1,
+    "HC_g_wq_ML": 2
+  },
+  "actual_ABI": {
+    "dq_bits": 2248,
+    "ap_bits": 2224,
+    "read_v_bits": 8,
+    "read_slot_bits": 8,
+    "read_row_bits": 56,
+    "raw_weight_bits": 8192,
+    "read_valid_bits": 8
+  },
+  "limitations": [
+    "no physical closure claim",
+    "SYS1 HCtile remains historical/no-aperture until separately migrated",
+    "full HC numeric consumption proved by dedicated engine owner, not claimed by this memory bench"
+  ]
+}

@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch2/claude/closure-loop/ot_hbm_idx_hslice_ready_native_c0-ready1pin-bfba4a98a/record/views/ot_hbm_idx_hslice_ready_native/ot_hbm_idx_hslice_ready_native.lef",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/ot_hbm_idx_hslice_ready_native_c0-ready3-2065d438f/record/views/ot_hbm_idx_hslice_ready_native/ot_hbm_idx_hslice_ready_native.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [
   "(f) face-pin access: 2304 of 2304 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. cf_in M5 (130.608,103.525), clk M5 (130.608,103.525), cs_in[0] M5 (130.608,103.525))"
  ],
- "summary": "ot_hbm_idx_hslice_ready_native 172.8 x 103.68: PG M5 VDD 32 stripes (97% spread, 100% cov) / VSS 32 stripes (97% spread, 100% cov); strap M6; face pins 2304 blocked-above 0 blocked-same 0; clock clk insertion 238 ps; pockets M5 0 (closed)",
+ "summary": "ot_hbm_idx_hslice_ready_native 172.8 x 103.68: PG M5 VDD 32 stripes (97% spread, 100% cov) / VSS 32 stripes (97% spread, 100% cov); strap M6; face pins 2304 blocked-above 0 blocked-same 0; clock clk insertion 255 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "ot_hbm_idx_hslice_ready_native",
   "W": 172.8,
@@ -40,7 +40,7 @@
   "face": {
    "face_pins": 2304,
    "blocked_above": 0,
-   "covered_below": 0,
+   "covered_below": 95,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
@@ -56,8 +56,8 @@
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 237.98,
-    "min_ps": 171.73
+    "max_ps": 255.23,
+    "min_ps": 174.86
    }
   },
   "pockets": {
@@ -66,7 +66,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 719
+    "added": 778
    },
    "count": 0,
    "area_um2": 0,

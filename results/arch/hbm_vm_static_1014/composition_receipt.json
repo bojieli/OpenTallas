@@ -1,0 +1,40 @@
+{
+  "schema": "opentallas.hbm.static-vm-composition.v1",
+  "admission": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-2600949-1792046345",
+    "exit": 0,
+    "memory_gb": 1,
+    "threads": 1
+  },
+  "source_sha256": {
+    "ot_vms_hub_static.sv": "364b6a3601b5042344513810a4fb6de6f25259c2de7d386d630b62fc807b5cf9",
+    "ot_vms_slice_static.sv": "876f0d732dec5a9d1edb5844d49f168cc9b744d6eadc7b943e62f7273bebb293",
+    "ot_vms_rstop_static.sv": "6320eb4fe8d7cd7a0caa7b22bfe818c11c05f9a45bc7ac6b114edd09e496b102",
+    "ot_vms_rcl_static.sv": "88f974c7bc36e635774ff2e9edc093f3c3a3963644f5e5141823c1ec07404991",
+    "ot_vms_bank_static.sv": "7828d619da2fd2462cf0253b78c074dad1171e6ca77799bfc21f22987ed72237",
+    "ot_vms_status_static.sv": "56537844cc350ec0bb3141fa2a7ae866fd9c8c5e8e4040830ae89a4d915679d4"
+  },
+  "final_memory": "PASS four actual representative banks/12 SRAMs/eight stops; four mirror sources,12 remote commits,12 WACK,32 readbacks; payload mutant failed actual memory",
+  "final_packet": "PASS four actual representative banks/12 SRAMs/eight stops/four hubs/four replay controllers;8 remote write/read transactions;8 exact tags;CW2hop30edges CCW1hop26edges;wrongreturn mutant failed",
+  "full_shape_evidence": "SU owner actual32banks/96SRAMs fourquadrant proof f545eb913; staging owner production8bank/24SRAM plus32landing SRAM proof5ad6b3f0e",
+  "fixed_latency": {
+    "bank_read_edges": 6,
+    "bank_write_commit_edges": 3,
+    "mirror_egress_edges": 1,
+    "ring_pin_to_output_edges": 1,
+    "wbc_eject_to_commit_observer_edges": 5,
+    "packet_local_cq_to_cr_edges": 10,
+    "packet_ring_CW2hop_edges": 30,
+    "packet_ring_CCW1hop_edges": 26
+  },
+  "scope_limits": [
+    "Full static slice packet+wide simultaneous eightbank calendar not yet run",
+    "All actual client producers/consumers beyond SU and service delivery still require static migration",
+    "HC aperture vmap real producer/consumer remains required",
+    "DMA-back move dispatch actual producer remains required",
+    "Compiler microprogram source/slot distribution and complete layer throughput not yet implemented",
+    "New physical bank/hub/ring views native closure required; no legacy CLOSED view alias"
+  ],
+  "historical_model_correction": "Pre-RTL ring budget assumed4 commit observation rungs; actual registered macro timing requires5 and actual ring4 SRAM gate proves5. Immutable preRTL assumption retained."
+}

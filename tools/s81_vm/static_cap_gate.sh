@@ -6,7 +6,7 @@
 set -u
 cd "$(dirname "$0")/../.."
 O=${1:?outdir}; mkdir -p "$O"; R=rtl/dsrom_sys/s81_ph; bad=0
-F="$R/vm/ot_s81_vm_x34.sv $R/vm/dsfd_vm_static_capl.sv $R/vm/dsfd_vm_static_cap.sv $R/test/tb_dsfd_vm_static_cap.sv"
+F="$R/vm/ot_s81_vm_x34.sv $R/vm/dsfd_vm_static_capl.sv $R/vm/dsfd_vm_static_cap_leaf.sv $R/vm/dsfd_vm_static_cap.sv $R/test/tb_dsfd_vm_static_cap.sv"
 iverilog -g2012 -o "$O/sim" -s tb_dsfd_vm_static_cap $F || exit 2
 iverilog -g2012 -DOT_VM_CAPL_MUT_WORD -o "$O/mut" -s tb_dsfd_vm_static_cap $F || exit 2
 for s in 1 2; do vvp -n "$O/sim" +mode=0 +seed=$s > "$O/base_s$s.log"; grep -q "TB_VMCAP PASS mode 0" "$O/base_s$s.log" || { echo "GATE FAIL base seed $s"; bad=1; }; done

@@ -4,7 +4,7 @@
 // dsfd_vm_static_cap (claude S81 VM owner r9, 2026-10-14): the STATIC capture face of the S81 layer-die VM.
 // f_capture 13,376 b = dsfd_sp_capture(_c) t_vm (serial 0.9 GHz, no ready): 128 roots x {row1 {data32, addr19}, v1,
 // row0 {data32, addr19}, v0} | status 64 ([0] phase live, [2] phase drained, [3] capture fault, [13:4] phase).
-//   pin register (serial) -> 16 static lanes dsfd_vm_static_capl (lane G = roots 8G .. 8G+7, one row write a cycle at
+//   16 pin-registered hard lanes dsfd_vm_static_cap_leaf over dsfd_vm_static_capl (lane G = roots 8G .. 8G+7, one row write a cycle at
 //   most) -> 16 fixed-phase 3:4 transfers ot_s81_vm_x34 (W 542 = {row 14, mask 16, data 512}) -> 16 stream-domain
 //   VM write sources (dsfd_vm_static_core sources 32..43, 48..51).
 // Rates: 128 elements a stream cycle at full field rate = 8 rows a stream cycle; a lane carries at most one row a
@@ -29,24 +29,25 @@ module dsfd_vm_static_cap #(parameter integer E = 8) (
     reg [1:0] rq;
     always @(posedge ck or negedge rst) if (!rst) rq <= 2'b00; else rq <= {rq[0], 1'b1};
     wire rn = rq[1];
-    // pin register (data without reset; valid bits are gated by rn in the lanes' reset)
-    reg [13375:0] fq;
-    always @(posedge ck) fq <= rn ? f_capture : 13376'd0;
-    wire [63:0] st = fq[13312 +: 64];
-    reg dr_q, armed, flush, s_flt;
+    // Status pin register; each hard lane owns its 832-bit data pin register.
+    reg [63:0] status_q;
+    always @(posedge ck) status_q <= rn ? f_capture[13312 +: 64] : 64'd0;
+    wire [63:0] st = status_q;
+    reg dr_q, armed, s_flt;
+    wire flush = st[2] && !dr_q && armed && !st[0];
     always @(posedge ck)
-        if (!rn) begin dr_q <= 1'b0; armed <= 1'b0; flush <= 1'b0; s_flt <= 1'b0; end
+        if (!rn) begin dr_q <= 1'b0; armed <= 1'b0; s_flt <= 1'b0; end
         else begin
-            dr_q <= st[2]; flush <= 1'b0;
+            dr_q <= st[2];
             if (st[3]) s_flt <= 1'b1;
             if (st[0]) armed <= 1'b1;
-            if (st[2] && !dr_q && armed && !st[0]) begin flush <= 1'b1; armed <= 1'b0; end
+            if (flush) armed <= 1'b0;
         end
     wire [15:0] lv; wire [16*542-1:0] ld; wire [79:0] lf; wire [15:0] xf;
     genvar g;
     generate for (g = 0; g < 16; g = g + 1) begin : lane
         wire ov; wire [13:0] orow; wire [15:0] om; wire [511:0] od;
-        dsfd_vm_static_capl #(.E(E)) u_l (.ck(ck), .rn(rn), .gid(g[3:0]), .f_c(fq[832*g +: 832]), .flush(flush),
+        dsfd_vm_static_cap_leaf #(.E(E)) u_l (.ck(ck), .rn(rn), .gid(g[3:0]), .f_c(f_capture[832*g +: 832]), .flush(flush),
             .o_v(ov), .o_row(orow), .o_m(om), .o_d(od), .flt(lf[5*g +: 5]));
         wire xv; wire [541:0] xd;
         ot_s81_vm_x34 #(.W(542)) u_x (.s_ck(ck), .s_rst_n(rst), .s_v(ov), .s_d({od, om, orow}),

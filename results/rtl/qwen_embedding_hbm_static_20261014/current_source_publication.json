@@ -1,0 +1,55 @@
+{
+  "schema": "opentallas.static_embedding_current_source_publication.v1",
+  "scope": "Additive source and component evidence closure; no full native token, full128PC calendar, physical phase, or timing qualification",
+  "controller_profile": "3221e4f5e with paced/synthesis profile05abb24df; exact16-source current embedding reproof3547a2cc4",
+  "return_calendar": "8539ea1ef: actual rawRL23+PO4+PI1+pcport1+ECC3=32 HBM edges; independent compiled_hbm_put with reserved_static_read direction; full production command/calendar/phase remains unbound",
+  "current_receipt": "controller_3221/receipt.json",
+  "historical_receipts": [
+    "contiguous_receipt.json controller bench/script hashes precede3547; joined contiguous consumer bench remains unchanged",
+    "controller_address_mutant logs precede3547; current four-mutant controller logs are controller_3221"
+  ],
+  "excluded": "3e07 controller overwrite and4d old asynchronous returnFIFO census; dense/HOST/program_commit source untouched",
+  "checks": {
+    "exact_current_embedding_source_hashes": 16,
+    "exact_return_calendar_source_hashes": 15,
+    "exact_return_hop_source_hashes": 2,
+    "rtl_lint_tops": [
+      "qkd_embedding_static_return_hop",
+      "qkd_embedding_static_pc",
+      "ot_qfd_su_embed_static",
+      "qkd_ctrl_pc_host_static"
+    ],
+    "python_syntax": [
+      "tools/qwen_embedding_static_vectors.py",
+      "tools/qwen_kv_die/embedding_return_geometry.py"
+    ],
+    "local_verilator_limit": "Installed4.x cannot run--timing benches; fresh RTL-only lint passed; preserved exact-source component runs not duplicated"
+  },
+  "sources_sha256": {
+    "rtl/qwen_sys/static_embedding_20261014/README.md": "1af806911894f574bddbed7f3860a38f370805307e86699afa2f97dd79942e25",
+    "rtl/qwen_sys/static_embedding_20261014/ot_qfd_su_embed_static.sv": "f25f5d92846ce96e7a29f6879febd10a244c30c72593978f73702a4881eb73be",
+    "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join.sv": "b4031ee0138af2cf4567626e185d81ded805bb1ba274ee03763a74232dc95a49",
+    "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_map.sv": "70cd3650131f6d57ad10f21b142208a2b976372ae19ca47755a9a34632e71c45",
+    "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_pc.sv": "b5e9111fc0fe07f580ba611c16ecdc53f603f524505930860d009414f77b5fee",
+    "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_preload_face.sv": "52afe2023dbe64dbfc331c222b4f16db1f4529d438ca1b0f61ba1a5210dd2b55",
+    "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_return_hop.sv": "c6031bb92dce5c170894b53f4933ff151f5b35c8b5c3fb880a10733c5425916c",
+    "rtl/qwen_sys/static_embedding_20261014/test/run_consumer_gate.sh": "fb60f4e443dcd4f7ee3c3557bdade9360e5fb3fd98cddff781491f6b019489f3",
+    "rtl/qwen_sys/static_embedding_20261014/test/run_controller_gate.sh": "fcf916675646f0b3ebeceed607bf9c3a162a236b1f2195e0910ecd7369f93f38",
+    "rtl/qwen_sys/static_embedding_20261014/test/run_join_consumer_gate.sh": "f189b726a4eb1f138ed37f6d12648f864c1c1802d56d1e11415baf1608fba77d",
+    "rtl/qwen_sys/static_embedding_20261014/test/tb_static_embed_consumer.sv": "b6f85bd593296801b3b0c5fe026f1b48d105200d53d4a7af8bad990730b27ad9",
+    "rtl/qwen_sys/static_embedding_20261014/test/tb_static_embed_controller.sv": "ed286b91d825b112ffa8cb33f4164b6a8ba6a736524f64a148dcd89dd29fc82c",
+    "rtl/qwen_sys/static_embedding_20261014/test/tb_static_embed_join_consumer.sv": "5bc3e83099042888950ea7e8ee45a31965ca3e1a29f348ee3d5f67507ee4bf39",
+    "rtl/qwen_sys/static_embedding_20261014/test/tb_static_embed_return_chain.sv": "63de7aaeb75584aa25d52f8e661f6d52e4797b46458fd6867a6d54942a299e34",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "cca8b078ac2da9c830090f72186eb6d0ae8f666b13f29ff4c30fec80ed98a368",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_emb_cdc.sv": "54e84274ca2b982444f2665c98cf01bd0842559c0a79f92e7543ba63ec8a76ad",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "79bcd9fb7a948c9cf00a17686ebca4868207eff066b1e44fd3190a031850e442",
+    "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static.sv": "7c3ac7da89a6112cab5ecd0d1da25eb1143591a34172422bf171eaf211c9abb8",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_write_observer.sv": "b86f14f5e7e007e5e07b3d80ebd3787f5cbae669e94b984f887d4bef29cd06ca",
+    "rtl/test/qwen_static_kv/tb_static_kv_timing.sv": "d903a559e3633dfb17752d496bf39b9e408f3014de9c22c713b9e2b9d32098b5",
+    "rtl/test/qwen_static_kv/tb_static_return_controller_calendar.sv": "2d70337edc3f940671989d3a316dbe93acab1e200bc2f3e06f4ea94c0e46acb6",
+    "tools/qwen_embedding_static_vectors.py": "800bd07579865ef72df5c4eea5d9d8d2e1c17ac53af4435c68dd84c2f8c60ea1",
+    "tools/qwen_kv_die/embedding_return_geometry.py": "3773338b107687bec68a84b923c22a82c7f56d409c647e4c14f39fe06aae9311",
+    "tools/qwen_static_kv/run_return_controller_calendar.sh": "4a0a9929317843996714e133b00b55990a01f7037791ea7dfd5bbd30f7f8a815"
+  }
+}

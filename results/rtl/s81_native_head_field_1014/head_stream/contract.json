@@ -1,0 +1,34 @@
+{
+  "native_full_token_qualified": false,
+  "mechanism": "Expose existing ot_dsrom_head_elem registered argmax k_v/k_bits/k_row as head_v/head_d/head_row. No added state/arithmetic/latency to existing datapaths.",
+  "new_ff": 0,
+  "root_clock": "existing clk",
+  "ports": {
+    "elem": "head_v1/head_d32/head_row17",
+    "bundle": "head_v4/head_d128/head_row68"
+  },
+  "fixed_calendar": {
+    "reference": "Original bench g0 at negedge preceding sampled go. CUT511 SPLIT9=1 IOREG1 SAFE1 BST2; entries G472/G474 are consumer edges relative to sampled-go R. See sampled_go_clock below.",
+    "q0_q1_q2": "G+472+256*k, k=0..31",
+    "q3": "G+474+256*k, k=0..31",
+    "row": "row0+32*q+k",
+    "argmax_done": "G+8414 unchanged"
+  },
+  "scope": "128-row actual HCxf and mappedROM component gate; every public row/data/valid checked one edge after actual internal arithmetic. Old full129280 proof remains unmodified arithmetic-source proof, separate from this new pin bench.",
+  "sampled_go_clock": {
+    "reference": "R = edge sampling go; public pins launch immediately after producer edge, downstream captures on following edge",
+    "q0_q1_q2_pin_launch": "R+471+256*k",
+    "q3_pin_launch": "R+473+256*k",
+    "q0_q1_q2_consumer_capture": "R+472+256*k",
+    "q3_consumer_capture": "R+474+256*k",
+    "k": "0..31",
+    "checked_by": "Public pin vs registered arithmetic stage bench, with direct Markov caller source-phase proof owned s_mtp"
+  },
+  "boundary_bandwidth": {
+    "bits_per_public_row": 50,
+    "burst_q0_q1_q2_bits": 150,
+    "burst_q3_bits": 50,
+    "rows_per_bundle": 128,
+    "steady_row_interval_per_A": 256
+  }
+}

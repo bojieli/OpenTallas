@@ -1,0 +1,19 @@
+{
+  "functional": "Actual ingress->fork2->egress RTL chain; three fixed edges; every full packet bit checked for two 2048-cycle windows with intervening async reset; width variants519/512/256/34/16",
+  "mutants": {
+    "bypass": "one fixed edge bypassed",
+    "corrupt": "one real branch data bit corrupted"
+  },
+  "synth_generic_root_FF": {
+    "clk0": 522,
+    "clk1": 522
+  },
+  "synth_generic_limit": "Local Yosys no ORFS keep hook: identical reset region copies merged. Actual gate must use standard keep_regs hook; source model reserves all region copies. Separate branch clock roots preserved by synthesis.",
+  "mapped_fit": null,
+  "physical_qualification": "OPEN",
+  "source_sha256": {
+    "rtl/qwen_sys/head_staging_20261015/ot_qkh_packet_stage.sv": "36c2283ba650704e94e7c17815f88d9c65b69e03f94d2803cffdb9ab55d8e8b1",
+    "rtl/test/qwen_head_staging/tb_packet_stage.sv": "d6b6f5de1bb37d2d3863e90ea912c7cf135b2fdcfc42485fdf1b31d69815dd23",
+    "physical/qwen_head_staging_1015/bench.sh": "bb2acfb453b419373a853b8c36b222ea517e877e11e5efea532ec958347c80d8"
+  }
+}
