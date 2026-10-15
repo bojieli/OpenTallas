@@ -82,3 +82,6 @@ words in two consecutive contexts through final RESULT548, including command
 bus changes after start. Its fixture P0/P1/R=8/20/48, capture63, stack windows
 80/88/96/104 exercise source wiring only. They are NOT the source-derived
 whole-service QK/PV/HBM or physical clock calendar.
+The unconfigured wrapper also drives result_v=0, result_record=0, fault=1 as
+constant hardware logic, so synthesis cannot silently discard the simulation
+configuration trap and publish an unconfigured record stream.

@@ -18,7 +18,10 @@ module qkd_result_finalize_collected #(
  // Collector age=0 on the first edge after the shared start/CMD event.
  localparam integer SOURCE_CAPTURE_AGE=LAST_CAPTURE+ADD_LAT+MUL_LAT+2;
  wire[31:0]nv;wire[511:0]ne;wire[191:0]nl;wire[16383:0]nd;
- wire arithmetic_fault,transport_fault;
+ wire arithmetic_fault,transport_fault,collected_v;
+ wire [547:0]collected_record;
+ assign result_v=(CONFIGURED==1)&&collected_v;
+ assign result_record=(CONFIGURED==1)?collected_record:548'd0;
  initial if(CONFIGURED!=1)$fatal(1,"unconfigured native result production calendar");
  genvar b;
  generate for(b=0;b<32;b=b+1)begin:source_age
@@ -34,6 +37,6 @@ module qkd_result_finalize_collected #(
  qkd_result_static #(.CAPTURE_AGES(CAPTURE_AGES),.STACK_FIRST(STACK_FIRST))collection(
  .clk_node(clk_join),.clk_merge(clk_merge),.rst_n(rst_n),.cmd_v({32{start}}),.cmd_epoch({32{epoch}}),.cmd_layer({32{layer}}),
  .merge_cmd_v(start),.producer_v(nv),.producer_epoch(ne),.producer_layer(nl),.producer_data(nd),
- .result_v(result_v),.result_record(result_record),.fault(transport_fault));
- assign fault=arithmetic_fault||transport_fault;
+ .result_v(collected_v),.result_record(collected_record),.fault(transport_fault));
+ assign fault=(CONFIGURED!=1)||arithmetic_fault||transport_fault;
 endmodule
