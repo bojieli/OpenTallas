@@ -1,5 +1,5 @@
 {
- "name": "hidx_meta_static_1015c-meta3-7d0e5af98",
+ "name": "hidx_meta_static_1015c-meta3-COMMIT",
  "block": "hidx_meta_w25_d123_r0",
  "ref_tile": true,
  "owner": "Claude:H-IDX",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 4,
  "source": {
   "branch": "claude/hidx-meta-rf-1015",
-  "commit": "7d0e5af98",
+  "commit": "COMMIT",
   "extra_paths": [
    "rtl/test/hbm_idx_static"
   ]
@@ -33,8 +33,7 @@
     "threads": 1,
     "peak_ram_gb": 2,
     "needs": [
-     "iverilog",
-     "vvp"
+     "iverilog"
     ]
    },
    {
@@ -45,8 +44,7 @@
     "threads": 1,
     "peak_ram_gb": 2,
     "needs": [
-     "iverilog",
-     "vvp"
+     "iverilog"
     ]
    }
   ],
@@ -98,7 +96,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hidx_meta_static_1015c/hidx_meta_static_1015c-meta3-7d0e5af98"
+   "to": "results/rtl/ref_tile/hidx_meta_static_1015c/hidx_meta_static_1015c-meta3-COMMIT"
   }
  ],
  "cycles_added": 0,
