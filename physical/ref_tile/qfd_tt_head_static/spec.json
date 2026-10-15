@@ -265,7 +265,7 @@
  "job": {
   "owner": "Claude:q15_compute_elem",
   "branch": "claude/q15-tt-static",
-  "tag": "h3",
+  "tag": "h4",
   "purpose": "Static TT head-side leaf, raw SRAM clock entries (h3) for the qfd_tt_ctlm_static_s cluster",
   "extra_paths": [
    "physical/qwen_tt_static_cluster_1015",
@@ -305,7 +305,9 @@
     ],
     "fail_regex": "REGROUP_FAIL"
    }
-  ]
+  ],
+  "structural_change": "h4 (Q-COMPUTE-ELEM r2, coordinator 12:50 10-15): h3 gate placement reg->out -633.9 ps (u_sd_me_i_wcs -> native route + resident relocation, 16 levels -> rom_cmd) and reg->reg -632.6 ps (u_ctrl_me st[1] -> hq_fill -> 2,048 hq/hq1 enables = ~1 ns buffer tree). Fixes: (1) rom_cmd leaves from a register (CMDREG=1, +1 edge on the ROM-tree command, ACCEPTED; measured 0 added cycles on the 8-run head_program_rank7 programme phase: all 8 m_fin on the same edges with and without the register); (2) FIFO-head fill as 32 kept slices (HFC=32: per-slice copies of run/fq_n!=0/hc/h_wr/fq_rd with the same next state, each writing 32 bits of hq/hq1; exact, 0 cycles, sim assertion vs the shared state). Regroup bench m0 PASS (ref parent carries the same command register; HFC checked against the ref's unsliced controller), m1/m2 FAIL.",
+  "cycles_added": 1
  },
  "children": [],
  "inter": [],

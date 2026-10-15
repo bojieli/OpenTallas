@@ -69,6 +69,11 @@ module ot_qwen_rom_core_ctrl_static #(
     parameter integer HRC = 0,        // el1011-q-seq SC (d): FIFO-head read select h_rd as HRC kept copies, each selecting INSTR_BITS / HRC
                                       //   bits of ir (was one flop driving 1,024 mux selects: -75 into kvd_* / me issue); 0 = one; exact
     parameter integer HRCM = 0,       // negative control: copy 0 does not toggle on a load
+    parameter integer HFC = 0,        // Q-COMPUTE-ELEM r2 10-15: FIFO-head FILL as HFC kept slices (exact, 0 cycles). Each slice
+                                      //   owns copies of the head-fill state (st==S_RUN, fq_n!=0, hc, h_wr, fq_rd) with the same
+                                      //   next state, and writes INSTR_BITS / HFC bits of hq / hq1 (h3 gate: st[1] -> hq_fill ->
+                                      //   2,048 enables = 1 ns of buffering, reg->reg -632.6 ps).  0 = one shared fill (as before)
+    parameter integer HFCM = 0,       // negative control: slice 0's h_wr copy does not toggle on a fill
     parameter integer EMB_CODE_LANES = 64,
     parameter integer EMB_ADDR_BASE = 0, // element address of embedding row 0 in the program
     parameter integer SMIN = 0,
@@ -649,6 +654,50 @@ localparam integer W_ME_AMC = 1;
                   (FQ_HEAD != 0) && (st == S_RUN) && (fq_n != 0) && (!hq_v || load);
     wire fq_pop = (FQ_HEAD != 0) ? hq_fill : load;
     wire push = (st == S_RUN) && ((PRL > 1) ? pend2 : pend1);
+    // FIFO-head fill slices (HFC).  The original single-fill writes are kept verbatim in g_hf1.
+    localparam integer HFN = (HFC > 1 && FQ_HEAD >= 2) ? HFC : 1;
+    generate if (HFC > 1 && FQ_HEAD >= 2) begin : g_hfc
+        // next state of the fill terms, exactly as the main sequencer block computes them
+        wire [1:0] st_nx = (st == S_IDLE) ? (start ? S_DYN : S_IDLE) : (st == S_DYN) ? S_RUN :
+                           (st == S_RUN) ? (fin ? S_IDLE : S_RUN) : S_IDLE;
+        wire [2:0] fqn_nx = (st == S_IDLE) ? (start ? 3'd0 : fq_n) :
+                            (st == S_RUN) ? (fq_n + (push ? 3'd1 : 3'd0) - (fq_pop ? 3'd1 : 3'd0)) : fq_n;
+        wire [1:0] hc_nx = (st == S_IDLE) ? (start ? 2'd0 : hc) :
+                           (st == S_RUN) ? (hc + (hq_fill ? 2'd1 : 2'd0) - (load ? 2'd1 : 2'd0)) : hc;
+        wire hwr_nx = (st == S_IDLE) ? (start ? 1'b0 : h_wr) : (st == S_RUN) ? (hq_fill ? !h_wr : h_wr) : h_wr;
+        wire [1:0] fqrd_nx = (st == S_IDLE) ? (start ? 2'd0 : fq_rd) : (st == S_RUN) ? (fq_rd + (fq_pop ? 2'd1 : 2'd0)) : fq_rd;
+        localparam [1:0] HCF = (FQ_HEAD == 3) ? 2'd3 : 2'd2;
+        genvar k, hb;
+        for (k = 0; k < HFC; k = k + 1) begin : g_k
+            (* keep *) reg run_c, fqnz_c, hcf_c, hwr_c;
+            (* keep *) reg [1:0] fqrd_c;
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) begin run_c <= 1'b0; fqnz_c <= 1'b0; hcf_c <= 1'b1; hwr_c <= 1'b0; fqrd_c <= 2'd0; end
+                else begin
+                    run_c <= (st_nx == S_RUN); fqnz_c <= (fqn_nx != 3'd0); hcf_c <= (hc_nx != HCF);
+                    hwr_c <= (HFCM != 0 && k == 0) ? h_wr : hwr_nx; fqrd_c <= fqrd_nx;
+                end
+            wire fill_c = run_c && fqnz_c && hcf_c;
+            for (hb = (k * INSTR_BITS) / HFC; hb < ((k + 1) * INSTR_BITS) / HFC; hb = hb + 1) begin : g_b
+                always @(posedge clk) begin
+                    if (fill_c && !hwr_c) hq[hb] <= fq[fqrd_c][hb];
+                    if (fill_c && hwr_c) hq1[hb] <= fq[fqrd_c][hb];
+                end
+            end
+`ifndef SYNTHESIS
+            always @(posedge clk) if (rst_n && HFCM == 0 &&
+                (fill_c !== hq_fill || hwr_c !== h_wr || fqrd_c !== fq_rd))
+                $fatal(1, "HFC slice %0d diverged from the head-fill state", k);
+`endif
+        end
+    end else begin : g_hf1
+        always @(posedge clk) begin
+            if (FQ_HEAD >= 2) begin
+                if (st == S_RUN && hq_fill && !h_wr) hq <= fq[fq_rd];
+                if (st == S_RUN && hq_fill && h_wr) hq1 <= fq[fq_rd];
+            end else if (st == S_RUN && hq_fill) hq <= fq[fq_rd];
+        end
+    end endgenerate
     // ICUT: the readiness of the op at NEXT after this edge, against the status predicted after this edge
     wire own_ready = (OWN == 1) ? me_ready : su_ready;
     wire own_idle_n = own_idle && !issue;
@@ -721,12 +770,11 @@ localparam integer W_ME_AMC = 1;
                     if (fq_pop) fq_rd <= fq_rd + 1'b1;
                     fq_n <= fq_n + (push ? 3'd1 : 3'd0) - (fq_pop ? 3'd1 : 3'd0);
                     if (FQ_HEAD >= 2) begin
-                        if (hq_fill && !h_wr) hq <= fq[fq_rd];
-                        if (hq_fill && h_wr) hq1 <= fq[fq_rd];
+                        // hq / hq1 data writes: g_hfc / g_hf1 below (unchanged condition when HFC <= 1)
                         if (hq_fill) h_wr <= !h_wr;
                         if (load) h_rd <= !h_rd;
                         hc <= hc + (hq_fill ? 2'd1 : 2'd0) - (load ? 2'd1 : 2'd0);
-                    end else if (hq_fill) begin hq <= fq[fq_rd]; hq_v <= 1'b1; end
+                    end else if (hq_fill) begin hq_v <= 1'b1; end
                     else if (load && FQ_HEAD != 0) hq_v <= 1'b0;
                     if (issue || skip) pc <= pc + 1'b1;
                     if (load) nx_v <= 1'b1;

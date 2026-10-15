@@ -186,4 +186,13 @@ module tb_tt_static_regroup;
     if(r_mx_mask!==d_mx_mask) begin errs=errs+1; if(errs<10) $display("MISMATCH cyc=%0d mx_mask",cyc); end
     if(r_mx_data!==d_mx_data) begin errs=errs+1; if(errs<10) $display("MISMATCH cyc=%0d mx_data",cyc); end
   end
+`ifdef COSTPROBE
+  // r2 cost probe (ref built with REF_NO_CMDREG): edge of every m_fin_o / done-return rise in ref vs dut
+  reg rf_q=0, df_q=0; integer nrf=0, ndf=0;
+  always @(posedge clk) if(rst_n) begin
+    rf_q<=r_m_fin_o; df_q<=d_m_fin_o;
+    if(r_m_fin_o && !rf_q) begin nrf=nrf+1; $display("COST_FIN ref n=%0d t=%0t", nrf, $time); end
+    if(d_m_fin_o && !df_q) begin ndf=ndf+1; $display("COST_FIN dut n=%0d t=%0t", ndf, $time); end
+  end
+`endif
 endmodule

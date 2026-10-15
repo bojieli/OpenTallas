@@ -5,7 +5,10 @@
 // r14 (2026-10-15): the two program SRAMs take explicit raw clock entries ck_pm0/ck_pm1 (qfd_tt_ctlm_head_static_rk).
 // Static successor parent: actual WSRC classification and real native status.
 // No native command reaches the ROM tree; native completion comes from endpoint.
-module ot_qfd_tt_ctlm_static_hr (
+// r2 (Q-COMPUTE-ELEM, 2026-10-15, coordinator 12:50 accepted +1 cycle): rom_cmd leaves the head from a register
+// (CMDREG=1): h3 gate reg->out -633.9 ps = u_sd_me_i_wcs -> native route + resident relocation (16 levels) -> pin.
+// The tree command is one edge later (compiler-visible +1 on every ROM-tree command; ledger row TT.ROMCMD).
+module ot_qfd_tt_ctlm_static_hr #(parameter integer CMDREG = 1) (
     input wire [94:0] rom_ret_i,
     input wire ck_me_sched,
     input wire cp_active,output wire [55:0] cp,
@@ -67,8 +70,17 @@ module ot_qfd_tt_ctlm_static_hr (
         if(relocation_fault)relocation_sticky<=1;
       end
     assign command_stage=loaded_stage;
+    wire [379:0] rom_cmd_c;
     ot_qwen_tp8_rom_relocate u_resident_relocation(
-      .in_cmd(local_rom_cmd),.in_stage(loaded_stage),.out_cmd(rom_cmd),.fault(relocation_fault));
+      .in_cmd(local_rom_cmd),.in_stage(loaded_stage),.out_cmd(rom_cmd_c),.fault(relocation_fault));
+    generate if (CMDREG != 0) begin : g_cmdreg
+      reg [379:0] rom_cmd_q;
+      always @(posedge ck_head or negedge rst_n)
+        if (!rst_n) rom_cmd_q <= 380'd0; else rom_cmd_q <= rom_cmd_c;
+      assign rom_cmd = rom_cmd_q;
+    end else begin : g_cmdwire
+      assign rom_cmd = rom_cmd_c;
+    end endgenerate
     assign c_fault=head_fault|relocation_sticky;
     ot_qfd_native_cmd_route u_native_route (
       .clk(ck_head),.rst_n(rst_n),.cmd(cmd),.rom_ret(rom_ret),.native_ret(native_ret),

@@ -81,8 +81,22 @@ module ot_qfd_tt_ctlm_static_parent_ref (
         if(relocation_fault)relocation_sticky<=1;
       end
     assign command_stage=loaded_stage;
+    wire [379:0] rom_cmd_c;
     ot_qwen_tp8_rom_relocate u_resident_relocation(
-      .in_cmd(local_rom_cmd),.in_stage(loaded_stage),.out_cmd(rom_cmd),.fault(relocation_fault));
+      .in_cmd(local_rom_cmd),.in_stage(loaded_stage),.out_cmd(rom_cmd_c),.fault(relocation_fault));
+`ifdef REF_NO_CMDREG
+    localparam integer REF_CMDREG = 0;   // cost probe only: the original (unregistered) command
+`else
+    localparam integer REF_CMDREG = 1;   // r2: the accepted +1 command edge, as the head leaf
+`endif
+    generate if (REF_CMDREG != 0) begin : g_cmdreg
+      reg [379:0] rom_cmd_q;
+      always @(posedge ck_head or negedge rst_n)
+        if (!rst_n) rom_cmd_q <= 380'd0; else rom_cmd_q <= rom_cmd_c;
+      assign rom_cmd = rom_cmd_q;
+    end else begin : g_cmdwire
+      assign rom_cmd = rom_cmd_c;
+    end endgenerate
     assign c_fault=head_fault|relocation_sticky;
     ot_qfd_native_cmd_route u_native_route (
       .clk(ck_head),.rst_n(rst_n),.cmd(cmd),.rom_ret(rom_ret),.native_ret(native_ret),
