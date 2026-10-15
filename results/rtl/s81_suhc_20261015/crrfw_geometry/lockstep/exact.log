@@ -1,0 +1,10 @@
+ot-run: ot-epyc1tb     admits   402 GB (avail 629, growth 64, headroom 64, waiters 0/0 GB) load 30/128 running 16 disk 727 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-550087-1792052929 after 0 s
+CRRF_PQ C=0: 0 mismatches / 60000 compared cycles; pushes 18285 POSTs 18273 (back to back 10682) full 9014; chain POST beats 18272 (y changed 18272) plain beats 35838; slices seen 11/11; request-skew cycles 7590; p_flt cycles 0
+CRRF_PQ PASS
+- /srv/opentallas-scratch/codex/s81-crrfw-local-16cf55afe/rtl/dsrom_sys/s81_suhc/test/tb_s81_hc_crrf_pq.sv:106: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 120us; walltime 0.236 s; speed 508.548 us/s
+- Verilator: cpu 0.236 s on 1 threads; allocated 8 MB
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-550087-1792052929): exit 0
