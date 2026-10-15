@@ -1,0 +1,46 @@
+{
+  "source": "ot_hbm_vm_lg_static_bank actual e7f8ef001",
+  "replicas": {
+    "banks_per_stage": 8,
+    "stages_per_quadrant": 3,
+    "quadrants": 4,
+    "total": 96
+  },
+  "pins_per_leaf": 1673,
+  "face_bits": {
+    "N": 5,
+    "S": 556,
+    "E": 556,
+    "W": 556
+  },
+  "physical_prototype_um": [
+    150.336,
+    151.2
+  ],
+  "area_um2": 22730.8032,
+  "signal_transport_edges_per_direction": 2,
+  "clock_sinks": "source estimate <1600, actual mapped census required",
+  "memory_macros": 0,
+  "physical_status": "provisional slot only; area/utilization, actual PG-clear ODB access and CTS unmeasured",
+  "bandwidth": {
+    "read_request_bits_per_edge": 17,
+    "read_response_bits_per_edge": 257,
+    "write_bits_per_edge": 281,
+    "one_sector_bytes": 32
+  },
+  "fixed_local_return": {
+    "SU": [
+      10,
+      7
+    ],
+    "SFU": [
+      14,
+      11
+    ],
+    "HC": [
+      18,
+      15
+    ]
+  },
+  "pricing": "identical to programmed gate phases; no additional cycles; full native engine lowering and system relay reach remain open"
+}
