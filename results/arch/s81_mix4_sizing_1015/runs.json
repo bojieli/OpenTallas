@@ -1,0 +1,27 @@
+{
+ "mapped_shells_and_census": {
+  "host": "ot-epyc1tb",
+  "unit": "oth-ubuntu-265718-1792046410",
+  "status": "terminal",
+  "exit": 0,
+  "directory": "/srv/opentallas-scratch/codex-mix4-sizing-1015",
+  "area_scope": "RVT TT abc -D833; standard-cell LEF area only"
+ },
+ "native_mul4_gate": {
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-968059-1792046579",
+  "pid": 968106,
+  "local_exec_session": 8114,
+  "directory": "/srv/opentallas-scratch/claude/ref_gate/s81engram_mul4_native_sizing_1015-20261014-234213",
+  "source_commit": "a32740ffc",
+  "status_at_observation": "LIVE Yosys ABC mapping",
+  "observed": "2026-10-14T23:45:34-07:00",
+  "admission_mem_gb": 16,
+  "outline_um": [
+   181.44,
+   129.6
+  ],
+  "scope": "Real root floorplan/placement/CTS with exact existing native leaf pins; no placement verdict yet.",
+  "instruction": "Collect existing gate; do not duplicate. Local pre_route_gate process runs in /home/ubuntu/wt/mix4-sizing-1015; retain worktree until terminal."
+ }
+}

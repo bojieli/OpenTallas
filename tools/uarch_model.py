@@ -60,6 +60,50 @@ def qwen_xpf_static_control_model(entries=4, program_words=64):
                 qualification='mechanism bench only; actual producer trace/calendar, native pin/reset/clock, area and measured layer cost remain unqualified')
 
 
+def qwen_compute_typed_record_model():
+    """Declared storage/ports for actual two-PW/single-SU-DW record consumer."""
+    return dict(schema='opentallas.qwen-compute-typed-record.v1',replicas=1,
+        strict_image_receipts=2,strict_receipt_ff_each=243,join_ff=169,
+        auth_rx_ff=114,context_rx_ff=144,witness_tx_ff=633,
+        TT_genuine_SU_descriptor_relay_ff=69,slot_fault_ff=1,declared_ff=1616,
+        SRAM_macros_added=0,descriptor_memories_added=0,existing_program_macros=4,
+        independent_program_observer_bits=152,genuine_SU_descriptor_observer_bits=69,
+        cfg_seal_bits=2,record_bits_per_cycle=548,observed_PW_bytes_per_cycle=16,
+        MACs_per_cycle=0,clock_roots=1,
+        latency='metadataRX1; each real consumed-macro observer register1; TT genuineSUdescriptor relay1; join/witness fixed slots require actual route/phase profile',
+        reset_contract='each actual seal loss revokes installed receipt, no automatic re-arm; newBEGIN/AUTH required',
+        slot_fit='physical observer homes and registered transport/clock phases not yet qualified',
+        price_policy='no repricing or native/fullstage qualification from component tests')
+
+
+def qwen_host_typed_record_model():
+    """Exact declared control-storage census before physical record leaf sizing."""
+    return dict(schema='opentallas.qwen-host-typed-record.v1',replicas=1,
+        context_tx_ff=630,auth_tx_ff=665,witness_rx_ff=84,shared_pin_ff=550,
+        declared_ff=1929,clock_roots_added=1,clock_period_fs=833334,
+        payload_bits_per_cycle=548,max_records_per_cycle=1,MACs_per_cycle=0,
+        SRAM_macros_added=0,added_boundary_bits=548*2+8,
+        removed_external_fabricated_commit_bits=1+1+16+64,
+        fixed_edges=dict(tx_codec=1,tx_shared_pin=1,rx_witness=1),
+        slot_fit='distributed HOST root/peer leaf, actual area/pins/CTS/native timing unmeasured',
+        latency='record send/receive slots must include actual digital link/relay phases; no ready-based issue',
+        price_policy='immutable model price unchanged; actual end-to-end token cost still unmeasured')
+
+
+def qwen_seq_collective_calendar_model():
+    """Production TP8 command source reservation; area/physical gates remain open."""
+    return dict(schema='opentallas.qwen-seq-collective-calendar.v1',replicas=1,
+        command_bits_per_cycle=50,command_fault_return_bits=1,
+        pw_config_words=17,pw_first=944,pw_last=960,max_program_instructions=59,
+        calendar_rows=8,command_rows_max=7,descriptor_state_bits=8*(32+16+1+1+32),
+        arithmetic_macs=0,memory_macros_added=0,pw_bytes_per_cycle=8,
+        latency='collective core command edge=start+row_cycle+1+D_seq+1pin; D_seq actual physical relay count required',
+        source='qfd_seq_su dh[42]/PW118/117:108/107:44; ot_coll_cmd_issue owns fixed issue',
+        track_bits=51,slot_fit='inside sequencer; source ABI changed, area/pin/CTS contract unmeasured',
+        replica_fanout='one issuer; one50bit destination command bus; no data mux/ready launch gate',
+        price_policy='no repricing; actual per-layer command times/shape and throughput still required')
+
+
 def qwen_static_native_parent_model():
     """Prephysical census for the actual fixed ME controller successor."""
     xpf = qwen_xpf_static_control_model()
@@ -16307,3 +16351,36 @@ def s81_static_vm_face_model(entries=8):
     """Static capture/WFC/outbound sizing; physical slots remain unqualified."""
     from s81_vm.static_face_model import model
     return model(entries)
+
+
+def s81_static_channels_1014_model():
+    from uarch_model_s81_static_channels import s81_static_channels_1014_model as model
+    return model()
+def hbm_vm_static_calendar_model():
+    """Programme-SRAM calendar issue, before source implementation."""
+    return dict(schema='opentallas.hbm.static-calendar.v1',macs_per_cycle=0,
+        replicas=4,macro='ot_sram_1r1w_1024x256_m2_r2c2',macros_per_quadrant=1,
+        storage_bytes=32768,memory_bytes_per_cycle=dict(read=32,configuration_write=32),
+        calendar_bits=dict(SW=202,SE=147,NW=187,NE=147),
+        datapath='input pin rung, one native macro read each compiler edge, dedicated capture rung, registered calendar outputs',
+        mux='PC increment/wrap of fixed compiler range, finite loop decrement; no data-dependent branches',
+        latency_edges=dict(start_to_first_calendar=4,fetch_to_calendar=2),
+        throughput='one compiler calendar per cycle after startup, no gaps at loop wrap',
+        boundaries='configuration266bits; start38bits; calendar147..202bits plus fixed-cycle ordinal32/valid/done/fault',
+        route='per-quadrant fixed producer; physical slot/pinface/reach/CTS unqualified',
+        floorplan='one actual macro174.744x70.47um plus PC/capture/output control, slot requested from H-DIE',
+        area='macro36942.62904um2 plus unmeasured control; no inherited closure',
+        qualification='actual macro programme bench+mutants required; layer compiler calendar/CP-loader join remain separate')
+
+
+def hbm_vm_static_calendar_host_model():
+    return dict(schema='opentallas.hbm.calendar-host.v1',replicas=1,macs_per_cycle=0,
+      storage='one256b assemblyword plus4x37b launchdescriptors; no additional SRAM',
+      input='existinghostAXIlite12baddress/32bdata; existingrealLCP419doorbellbit71',
+      output='fourprogrammeconfig256b+addr10+we and4launch(base10,limit11,loops16,v)',
+      configuration_rate='eight32bhostwrites per256bprogrammeword; hostboundaryonly, beforelaunch',
+      execution='oneglobalexistingCPdoorbell launchesallfourcalendars; nohostcallsinsideprogramme',
+      map='newF00-Fff window; existingC/D CP andE MTP windows pass unchanged',
+      clocks='hostconfigurationclock mustsharedefinedcompilerphase atlaunch or getexplicitstaticcrossing',
+      physical='newnativeproducer requiresdiepin/slot/clock qualification; no closedloaderalias',
+      qualification='realexistingloaderCP→LCPdoorbell→real4programmeSRAMs composition test required')

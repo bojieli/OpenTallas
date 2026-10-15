@@ -1,0 +1,25 @@
+{
+  "status": "REAL_SOURCE_PRESENT_DIE_BINDING_INCOMPLETE",
+  "host_source": "qkd_host_token_service",
+  "requirements": [
+    "One host-owned ot_qwen_sys_rst_seq; PLL clock model alone must not run independent reset sequencer.",
+    "Host reset releases interface/control before link; link_rst_n drives PHY/adapter; hbm_rst_n drives HBM controllers and selftest path; die_rst_n gates execution.",
+    "Expand actual PHY flit1043 + phy_up/rx_v/tx_v and real analog model ports; no width alias to die fdi1056.",
+    "Expand independently clocked host children and distributed128 ingest stations/static arbiters; no single-root parent view alias.",
+    "Bind land_es36864/land_er33408 and ctrl_es36864/ctrl_er33408 to actual perPC host static arbiters, completion_v/we128 from genuine controller completions.",
+    "Bind real allocator/cohort native execution tag59/cancel/retirement/service readiness endpoints; optional production profile must be explicit and exact-bench proven.",
+    "Embedding boot RAW o_addr31=1 and BOOT_ENDffffffff are currently routed directly through ingest_map to controllers. hb producer must preserve whole stream ordering and true completion fence.",
+    "If routing RAW embedding writes through gateway hb, add actual perwrite durability receipt: gateway hb_cr only acknowledges skid forwarding, est_ready only acknowledges whole image; neither can replace perdescriptor completion without checking producer waits.",
+    "Boot checker must be real write/read/compare behind real controller; existing ot_hdc_qwen_kv_hbm_boot loads K-tail and is not an HBM memory validation acknowledgment."
+  ],
+  "sources": {
+    "rtl/qwen_sys/host_20261013/qkd_host_token_service.sv": "0a367b5952659d49245f8ba9dcd8a240ccbffb215bd485cac59cc719f75bd56f",
+    "rtl/qwen_sys/host_20261013/qkd_host_control_packet_capture_token_service.sv": "8b5eb6a7b6565fff00e7952837f0a5f82a735c69858fa5c1d5bd8d0b767730f9",
+    "rtl/qwen_sys/host_20261013/qkd_host_native_qm.sv": "76cab365e4d14165bfe34b611d6931dea5c07e2e5b4d97cca4ae21a31e93bfa1",
+    "rtl/qwen_sys/host_20261013/qkd_host_ingest_chain.sv": "0b980ad46a1ad2869c331ed7afae0e83184bca8f5f6fd3104a8c4bdf1e3ab129",
+    "rtl/qwen_sys/host_20261013/qkd_host_ingest_map.sv": "7c24db9e118846fc5ac3a8b75a22e4fa74b82fc502d93db47d8298c7f0840419",
+    "rtl/qwen_sys/host_20261013/qkd_host_visibility_fence.sv": "dd41029c8ccf60bc8ead02389ab9cdae2bd6c359ebb18a983695863372c18491",
+    "rtl/qwen_sys/ot_qwen_sys_rst_seq.sv": "77582b3c1092c26bfc567ca4bf3cef8be2bb7ab627e9a8b1a79996f65f807246",
+    "rtl/physical/ot_qwen_kv_gwhost_slots.sv": "aec1eea5074ebc982ddb1a79e52dff043f8b4dc96764785383f6b1c4004f0fb1"
+  }
+}

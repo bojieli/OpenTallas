@@ -14,6 +14,7 @@ module qfd_tt_ctlm_head_static #(
     // HQ2 = 1: the controller's FIFO head as two words with a register-only fill enable (FQ_HEAD 2; seq_su fea/feb
     // f3e3d6b6f: feb TT +95.26 after fbb post-CTS -537 on st -> load -> hq_fill -> 1,024-b hq enable).
     // HQ2 = 2: bench negative control (FQ_HEAD 3: a third fill overwrites an unread head word).
+    parameter integer DENSE_IMAGE=1,
     parameter integer PSRAM = 1, parameter integer PMUT = 0, parameter integer HQ2 = 1,
     parameter integer MEREG = 3,  // el1011-q-seq: registered engine clock enable (ctlm_mereg)
     parameter integer RRG = 1,    // el1011-q-seq: replicated tile reset (ctlm_rrg)
@@ -33,6 +34,8 @@ module qfd_tt_ctlm_head_static #(
     output reg [55:0] cp,
     output reg layer_context_v,
     output reg [17:0] native_tok,native_pos,
+    output wire me_image_ready,
+    output reg [75:0] program_obs,
     input wire  rst_n,
     input wire  h_start,
     input wire [18-1:0] token,
@@ -128,12 +131,19 @@ module qfd_tt_ctlm_head_static #(
         for (s = 0; s < 8; s = s + 1) begin : g_s
             assign w_mask[64*s +: 64] = {64{pw_sl2[s]}};
         end
+        wire [1:0] program_raw_ce;wire [11:0] program_raw_row;wire [1023:0]program_raw_data,program_raw_mask;
         for (m = 0; m < 2; m = m + 1) begin : g_m
             wire w_ce = pw_v2 && (pw_b2 == ((m != 0) ? 1'b1 : 1'b0));
+            assign program_raw_ce[m]=w_ce;assign program_raw_row[6*m+:6]=pw_row2;
+            assign program_raw_data[512*m+:512]={8{pw_d2}};assign program_raw_mask[512*m+:512]=w_mask;
             ot_sram_1r1w_64x512_m1_r2c2 u_pm (.clk(clk), .r_ce_in(p_rce), .r_addr_in(p_ra), .rd_out(p_rd[512*m +: 512]),
-                .w_ce_in(w_ce), .w_addr_in(pw_row2), .wd_in({8{pw_d2}}), .w_mask_in(w_mask),
+                .w_ce_in(program_raw_ce[m]), .w_addr_in(program_raw_row[6*m+:6]), .wd_in(program_raw_data[512*m+:512]), .w_mask_in(program_raw_mask[512*m+:512]),
                 .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
         end
+        wire observed_v,observed_full;wire [9:0]observed_addr;wire [63:0]observed_data;
+        qkd_program_pw_observer u_program_observer(.macro_ce(program_raw_ce),.macro_row(program_raw_row),.macro_data(program_raw_data),.macro_mask(program_raw_mask),.consumed_v(observed_v),.consumed_addr(observed_addr),.consumed_data(observed_data),.full_word(observed_full));
+        always @(posedge clk or negedge rst_n)
+          if(!rst_n)program_obs<=0;else program_obs<={observed_v,observed_full,observed_addr,observed_data};
         if (PMUT != 0) begin : g_pmut
             reg pre_rr;
             always @(posedge clk or negedge rsv[7]) if (!rsv[7]) pre_rr <= 1'b0; else pre_rr <= prog_re_r;
@@ -142,6 +152,10 @@ module qfd_tt_ctlm_head_static #(
             always @(posedge clk) if (prog_re_r) prog_q <= rng_r ? p_rd : 1024'd0;
         end
     end else begin : g_pflop
+        reg [9:0]observed_ff_addr;
+        always @(posedge clk)observed_ff_addr<=q_pw_addr;
+        always @(posedge clk or negedge rst_n)
+          if(!rst_n)program_obs<=0;else program_obs<={|pw_row2,((pw_row2&(pw_row2-1))==0)&&((pw_word2&(pw_word2-1))==0),observed_ff_addr,pw_d2};
         reg [1023:0] prog_mem [0:63];
         reg [63:0] pw_row2; reg [15:0] pw_word2; reg [63:0] pw_d2; integer pw_r, pw_w;
         always @(posedge clk) begin
@@ -217,13 +231,13 @@ module qfd_tt_ctlm_head_static #(
       else if(q_pw_v && q_pw_addr==1017) schedule_stage<=q_pw_data[17:12];
     // ck_sched and clk are independently entered, compiler phase-matched roots.
     // Candidate is sampled at the real decoder issue phase; there is no wait.
-    ot_qwen_fixed_issue_pw #(.OWN(1)) u_fixed_issue (
+    ot_qwen_fixed_issue_pw #(.DENSE_IMAGE(DENSE_IMAGE),.OWN(1)) u_fixed_issue (
       .clk(ck_sched),.rst_n(rsv[1]),.pw_v(q_pw_v),.pw_addr(q_pw_addr),.pw_data(q_pw_data),
       .start(q_h_start && q_prog_base==0),.stage(schedule_stage),
       .candidate_v(candidate_v),.candidate_pc(q_prog_base+candidate_pc),.candidate_unit(candidate_unit),
       .available(candidate_available),.end_ok(candidate_end_ok),.cp_available(!cp_active_q),
       .issue_v(fixed_issue),.end_v(fixed_end),.cp_cmd(cp_cmd),.cp_v(cp_v),.issue_pc(fixed_pc),.issue_unit(fixed_unit),
-      .active(schedule_active),.done(),.cycle(),.fault(schedule_fault));
+      .active(schedule_active),.done(),.cycle(),.image_ready(me_image_ready),.fault(schedule_fault));
     wire s_me_ready, s_me_idle; wire [15:0] s_me_progress; wire m_fin; wire [18-1:0] m_fidx; wire [31:0] m_fval;
     ot_qwen_rom_core_ctrl_static #(.OWN(1), .XW(XW), .XMUT(0), .XREG(1), .ICUT(1), .PRL(2), .W(16), .G((TPMUT == 2) ? 6144 : G), .DG((TPMUT != 0) ? 6144 : G), .AW(24), .NW(18), .PAW(12), .SU_VEC(1), .SW(64), .LV(7), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(((AUD & 64) != 0) ? 0 : 1), .MEREG(MEREG), .PCUT(PCUT), .FKS(((AUD & 512) != 0) ? 2 : ((AUD & 128) != 0) ? 1 : 0), .HRC(((AUD & 1024) != 0) ? 32 : 0), .HRCM(((AUD & 16384) != 0) ? 1 : 0), .SMIN(7), .SMAX(11), .TCUT(7), .FQ_HEAD((HQ2 >= 2) ? 3 : (HQ2 != 0) ? 2 : 1)) u_ctrl_me (
         .clk(clk),
