@@ -1464,9 +1464,17 @@ def lint_cmd(s: dict) -> str:
                      *defs, *inc, "--top-module", "ot_lint_top", "{RUN}/ot_lint_top.sv", *s["sources"]]) + " && echo lint-ok"
 
 
+def route_hold_context(s: dict, kd: str) -> dict:
+    """Execution settings shared by route generation and the pre-route CTS gate."""
+    return {"HM": str(float(s["route"].get("hold_margin_ns", 0.010))),
+            "OT_ROUTE_HOLD_CORNERS": "mm",
+            "OT_MM_FF_SDC": f"{kd}/{'signoff_ffrepair.sdc' if io_hold_relief_ps(s) else 'signoff.sdc'}"}
+
+
 def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
     r, j = s["route"], s.get("job", {})
-    hm = float(r.get("hold_margin_ns", 0.010))
+    hold = route_hold_context(s, kd)
+    hm = float(hold["HM"])
     tag = j.get("tag", "ref")
     name = f"{s['name']}-{tag}-{(commit or 'COMMIT')[:9]}"
     lint = lint_cmd(s)
@@ -1494,7 +1502,7 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
             "calibrate": {"enabled": False, "reason": "ref_tile: boundary referenced in-run to the propagated tree "
                                                       "(io_ref_skew.sdc), as the Qwen die masters"},
             "route": {
-                "cmd": route_prefix(s) + f"HM={hm} OT_MM_FF_SDC='{kd}/{'signoff_ffrepair.sdc' if io_hold_relief_ps(s) else 'signoff.sdc'}' SRC={{SRC}} OT_PIN_GROUP_MAX={pin_group_max(s)} "
+                "cmd": route_prefix(s) + f"HM={hm} OT_MM_FF_SDC='{hold['OT_MM_FF_SDC']}' SRC={{SRC}} OT_PIN_GROUP_MAX={pin_group_max(s)} "
                        f"bash tools/ref_tile/ref_route.sh {kd}/kit.env {{LABEL}} {{RUN}}/routes",
                 "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
                 "logs": ["{RUN}/routes/{LABEL}/flow.log"],
