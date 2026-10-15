@@ -15,7 +15,7 @@ import xml.etree.ElementTree as ET
 def census(top, sources, defines=(), includes=()):
     with tempfile.TemporaryDirectory(prefix='s81-port-census-') as tmp:
         xml = Path(tmp) / 'top.xml'
-        cmd = ['verilator', '--xml-only', '-Wno-fatal', '--xml-output', str(xml),
+        cmd = ['verilator', '--xml-only', '-Wno-fatal', '--timescale', '1ns/1ps', '--xml-output', str(xml),
                '--Mdir', str(Path(tmp) / 'obj'), '--top-module', top]
         cmd += ['-D' + d for d in defines] + ['-I' + str(p) for p in includes]
         cmd += [str(p) for p in sources]
