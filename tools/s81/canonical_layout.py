@@ -13,7 +13,12 @@ def load(path,root):
  stage=json.loads(stagepath.read_text());bf=set(stage['BF_site_IDs']);bounds=stage['region_bounds']
  assert len(bf)==519 and bounds==[r*2417//128 for r in range(129)]
  assert stage['PHW_required_by_stage'][:74]==[10]*74
- for r,f in fs.items():assert f['pairs']==bounds[r:r+2]
+ for r,f in fs.items():
+  assert f['pairs']==bounds[r:r+2]
+  assert sorted(e[0] for e in f['packed_elements'])==list(range(*f['pairs']))
+  assert all((e[1]=='BF')==(e[0] in bf) for e in f['packed_elements'])
+ stagehash=hashlib.sha256(stagepath.read_bytes()).hexdigest()
+ assert d['source_pins'][str(stagepath.relative_to(root))]==stagehash
  d.update(path=str(p),sha256=hashlib.sha256(p.read_bytes()).hexdigest(),frames=fs,bf_ids=bf,stage_map_sha256=hashlib.sha256(stagepath.read_bytes()).hexdigest())
  return d
 
@@ -25,6 +30,7 @@ def geometry(G,d,legacy_order):
   previous=c['y0_um']
   for ordinal,f in enumerate(fs):
    r=f['root'];x,y=f['origin_um'];lh,lt,lc=legacy_order[r]
+   assert abs(f['outline_um'][0]-G.COL_W8)<.025,('canonical frame width/source mismatch',r)
    out[r]=dict(half='W' if x<mid else 'E',tier=ordinal,col=10-ci if ci<11 else ci-11,x=x,y=y,h=f['height_um'],
     logical_half=lh,logical_tier=lt,logical_col=lc,street=[x,previous,x+G.COL_W8,y],column_index=ci,
     cfifo_y=y-(G.PQ_ROOT_ROW if G.PQ_ROOTS else 0)-4.32-G.CF_WH[1])
