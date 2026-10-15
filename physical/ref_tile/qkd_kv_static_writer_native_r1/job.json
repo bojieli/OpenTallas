@@ -1,5 +1,5 @@
 {
- "name": "qkd_kv_static_writer_native_r1-r4-COMMIT",
+ "name": "qkd_kv_static_writer_native_r1-r4-3b9e625b5",
  "block": "qkd_kv_static_writer_native",
  "ref_tile": true,
  "owner": "Codex:takeover_qwen_elements_0757",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "codex/takeover-qvm-bank-0808",
-  "commit": "COMMIT",
+  "commit": "3b9e625b5adbe8c25da2eea2459dc593761f1e23",
   "extra_paths": [
    "rtl/test/qwen_static_kv",
    "tools/qwen_static_kv",
@@ -108,7 +108,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_kv_static_writer_native_r1/qkd_kv_static_writer_native_r1-r4-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_kv_static_writer_native_r1/qkd_kv_static_writer_native_r1-r4-3b9e625b5"
   }
  ],
  "cycles_added": 0,
