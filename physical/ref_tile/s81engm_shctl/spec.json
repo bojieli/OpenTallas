@@ -89,9 +89,9 @@
  "why_floorplan": "shell control leaf (419 ports, ~0.4k FF), mid-row between payload columns 1 and 2; one clock root per leaf (<=11,519 sinks); 1 per cluster x 4 clusters",
  "structural_change": "Source-current bank-striped descriptor payload bit18 preserves HC H rows and fixes actual VM slot/bank conflicts; explicit149-clock top exposes all five shell roots per cluster. shctl start pin no longer enables descriptor FF; bank map adds no scheduled edges.",
  "job": {
-  "owner": "Codex:s81-engram-1103",
+  "owner": "Claude:s81-surx-engram-1015",
   "branch": "codex/s81-engram-takeover-1103",
-  "tag": "bankv1-1133",
+  "tag": "bankv1-1215",
   "purpose": "S81 Engram MIX4 split-shell leaf ot_s81_engram_mixq_shctl (control + 4 payload columns)",
   "benches": [
    {
