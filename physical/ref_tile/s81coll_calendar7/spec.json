@@ -101,7 +101,12 @@
     43.2,
     24.84
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "clock_entry": {
+    "port": "clk_rom[0]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
   },
   {
    "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
@@ -111,7 +116,12 @@
     43.2,
     111.24000000000001
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "clock_entry": {
+    "port": "clk_rom[1]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
   },
   {
    "view": "physical/asap7_memory_macros/ot_rom_4096x266_m8",
@@ -121,7 +131,12 @@
     43.2,
     197.64000000000001
    ],
-   "orient": "R0"
+   "orient": "R0",
+   "clock_entry": {
+    "port": "clk_rom[2]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
   }
  ],
  "io_flop_at_pins": {
@@ -135,7 +150,7 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "Measured predecessor single tree118.4ps spread with three ROMs spanning291.6um. Seven real clock entries own state/command,3ROM,3output groups183/143/142bits; immutable568 data/reset/originalclock pins plus6 new top-downpins, each phi-R separately measured. Four real local reset relays add3 initialization-only edges. External fault pin capture adds1 fault diagnosis edge. No normal data/compute stages, source program rows, macro capacity or workload changed. Exact actual3ROM component and six stopped-clock mutants pass; no die/native qualification inherited.",
+ "structural_change": "Measured predecessor single tree118.4ps spread with three ROMs spanning291.6um. Seven real clock entries own state/command,3ROM,3output groups183/143/142bits; immutable568 data/reset/originalclock pins plus6 new top-downpins, each phi-R separately measured. Four real local reset relays add3 initialization-only edges. External fault pin capture adds1 fault diagnosis edge. No normal data/compute stages, source program rows, macro capacity or workload changed. Exact actual3ROM component and six stopped-clock mutants pass; no die/native qualification inherited. | First gate refused because multiple_cts_roots correctly forbids CTS on direct hard-macro pins. Use existing hybrid_entries: four real standard-cell CTS roots plus three explicitly bound raw Liberty macro clock entries; no clock delay inferred, all3 corners checked against actual linked cells/wire. Same seven source clockpins and sourceRTL, no relaxation.",
  "slot_change_request": {
   "name": "s81coll-calendar7-v22-candidate",
   "outline": [
@@ -181,7 +196,7 @@
    "physical/s81_die_pins/v22_calendar7_candidate"
   ]
  },
- "clock": "multiple_cts_roots",
+ "clock": "hybrid_entries",
  "clock_ports": [
   "clk",
   "clk_rom[0]",
@@ -339,6 +354,12 @@
   }
  },
  "io_tcl": "physical/s81_die_pins/v22_calendar7_candidate/s81_static_calendar_controller7.tcl",
+ "clock_cts_roots": [
+  "clk",
+  "clk_outputs[0]",
+  "clk_outputs[1]",
+  "clk_outputs[2]"
+ ],
  "children": [],
  "inter": []
 }

@@ -103,6 +103,12 @@
   "clk_outputs[1]",
   "clk_outputs[2]"
  ],
+ "clock_cts_roots": [
+  "clk",
+  "clk_outputs[0]",
+  "clk_outputs[1]",
+  "clk_outputs[2]"
+ ],
  "blocks": [
   {
    "kind": "macro",
