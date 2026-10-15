@@ -432,6 +432,19 @@
      ],
      "by": "ot_hgi_sfu_scheduled_engine",
      "evidence": "HBM v15.1 source contract"
+    },
+    {
+     "elements": [
+      "ot_hbm_attn_pv_native_output_quad_local",
+      "ot_hbm_attn_pv_cohort_select_registered",
+      "ot_hbm_attn_pv_quad_store_registered",
+      "ot_hbm_attn_pv_serializer_quad_local",
+      "hfd_attn_half_hi",
+      "hfd_attn_half_lo"
+     ],
+     "by": "attention on the SM engines (H-SM-ATT: ot_hbm_sm_kv_line + SM tcpv_col/native column PV, el1015-hbm-sm-attention.log)",
+     "reason": "dedicated HBM ATT tiles DROPPED: owner-adopted option B 2026-10-15 (H-ATTQ verdict, HANDOFF 0bc/0bf); compact660_v5 die plan (main bfc93b180, results/arch/hbm_die_v15/compact660_v5/compact.P.json) and grants hier_contract_1015/hbm_v15.json v4 have no ATT/PV block",
+     "evidence": "HANDOFF 0bc+0bf; STREAM_CHARTERS_1014 'HBM ATTENTION DECIDED'; compact660_v5 compact.P.json (195 blocks, no attn); FILL-H el1015-fill-hbm.log 2026-10-15"
     }
    ],
    "streams": [
