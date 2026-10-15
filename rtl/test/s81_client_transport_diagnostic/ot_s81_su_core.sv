@@ -251,7 +251,8 @@ module diag_ot_s81_su_core #(
     wire [S_WR-1:0] wavail = wtok & ~wq_v;
     reg [S_RD-1:0] need;
     reg [15:0] committed, reserved;
-    wire [15:0] reserve_beat = is_rx(kind) ? rows_out(kind, cnt, fp4) : rows_out(kind, 1, fp4);
+    wire [15:0] reserve_beat = is_rx(kind) ? rows_out(kind, cnt, fp4) :
+        kind == K_SO ? SMW / 32 : kind == K_QN ? QN_N / 64 + 1 : rows_out(kind, 1, fp4);
     wire room = reserved + reserve_beat <= OQ;
     always @* begin
         need = 0;
