@@ -1,14 +1,14 @@
 {
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "qfd_tile_nk_banked_v1",
- "verdict": "FAIL",
- "generated": "2026-10-15T04:57:21-0700",
+ "verdict": "WARN",
+ "generated": "2026-10-15T06:35:38-0700",
  "host": "ot-epyc1tb",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "fcc8afd416589aab08dba661953561ee820cb99a",
+  "start_commit": "aebb9326e49728223cd22ef13286826b6171fe68",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "3513d72970be0586eaec737dacf92028bb809376a5f73708e571d06510f65cf4",
-  "manifest_sha256": "f8eacf099e48c96a531669ed758b74040e85792eb57d4f870e5f5a0ce842e887",
+  "archive_sha256": "7edceb46d9a97700cd08e6f7001d1edf2d24a2958438fb71dbfd1a62e771e5c4",
+  "manifest_sha256": "fd480b9fd83ceb7701f055559bf7cd20134bcc798be0110836208c43de051a15",
   "files": [
    {
     "path": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.json",
@@ -265,6 +265,14 @@
     "matches_provenance_commit": true
    },
    {
+    "path": "physical/common_flow/macro_channel_block.tcl",
+    "kind": "file",
+    "sha256": "d41e07993760d1e85bbd7d0b50f2183c6078bb24b64dfa371f448103bac7386c",
+    "git_blob": "b64f54dd2c5186fa728b53c34077ca5716d4041e",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
     "path": "physical/common_flow/macro_cts_cluster.tcl",
     "kind": "file",
     "sha256": "a7af2ec6314ea96d71c966704e0ecae1f9dc3715a6519063fe151c0d1ebac798",
@@ -317,6 +325,14 @@
     "kind": "file",
     "sha256": "e7a78e58d9cc0fc6baca366f525a7b706f8f01bcced8d5721defdadeab290ea5",
     "git_blob": "2caf356dcae8a3ad0d6fe2d333d4b4fbd322df60",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "physical/common_flow/post_resize_relocate.tcl",
+    "kind": "file",
+    "sha256": "d68c871cfddfa32f37eb1b60b4700f8f777a9b879bc825796d7fc480e893a218",
+    "git_blob": "b1a8902ff6e5c70146e081c9e37f75a3ad6060e9",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -18523,24 +18539,24 @@
    {
     "path": "physical/ref_tile/qfd_tile_nk_banked_v1/floorplan.json",
     "kind": "file",
-    "sha256": "a6a3403baab10c4f2802cf5378ee9d5da4bfd17b78b6b1f06845f947b0dfb1ab",
-    "git_blob": "39a0815d257b1b9521c245d0b5c188c57cc75100",
+    "sha256": "ea163cf762fc200f08f92399829067e4563ea174f02a19f87f89c98c71191510",
+    "git_blob": "7ac843ffa9ce43b0cb5506a25b23e3971b2c58b8",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/qfd_tile_nk_banked_v1/job.json",
     "kind": "file",
-    "sha256": "583a7b0f62e8c9223c622dedf0cb79f5909aef615fb1adf8a149bfa3709987ae",
-    "git_blob": "8f0db52b868c4275129fcef1b04cfe5e9b33aac8",
+    "sha256": "ca44ae1867c16127597cca2a298a4f77fd047c4ea160f3a16cdb6f701cea9b85",
+    "git_blob": "4fb10344739cb8e6e94aa3bb343dae57da2e675b",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/qfd_tile_nk_banked_v1/kit.env",
     "kind": "file",
-    "sha256": "306a3310f1bad51eaaef2ac1b37a2ecaaf9e198b126314ef56d1f3286945feeb",
-    "git_blob": "354805e08b94e10d7fb93e3a0da169b222681bc0",
+    "sha256": "b243c69fa7bcd722395ba37e0aabb0305ea1b8aace2dadb7a6da49e00a6919dd",
+    "git_blob": "e93cf9a25f0a1257f1600d4d6a98cb42f28500db",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -18651,8 +18667,8 @@
    {
     "path": "physical/ref_tile/qfd_tile_nk_banked_v1/spec.json",
     "kind": "file",
-    "sha256": "a44370b8c9a10af52b1f8af02966c9e73d8fc527e6715d8810bb9f9da9387100",
-    "git_blob": "6eb2ecabe13b300dd67355c7ffb6187fe104972f",
+    "sha256": "4c0768a1cf7565d7311336ed9cb2976fe813ae8e0faec2069b29fe8d6732f531",
+    "git_blob": "fc4abd89199403711034bdb4289ac9a6ab4cbcb0",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -46445,6 +46461,14 @@
     "kind": "file",
     "sha256": "d475c46074e41d6736932644708b61d507593e16438542656e80a60fba618bfe",
     "git_blob": "f4ddc0d5575fef6356ddc5650e082432f679e9b7",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/qwen_sys/band_fault_tree_20261015/ot_qfd_band_fault_tree3.sv",
+    "kind": "file",
+    "sha256": "0919ad3df47c20a7a15c0d56f7e5ac70378e85c27c4950b543b430a820e960af",
+    "git_blob": "249d8b05d370c81643e91fb9524c88460607713a",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -126995,7 +127019,7 @@
   ],
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "fc29b45a36050e35ced846e581272f7bebe7972a",
+   "origin_main": "7acc8b3f4680102fbbb6461c04586ad553161509",
    "content_sha256": "567a16331b2484008d9edf879c76eca8fdca169e287379c494e5d703bde9192e",
    "files": [
     {
@@ -127371,7 +127395,7 @@
   "consumed": {
    "schema": "opentallas.ref_tile.gate_consumed.v1",
    "basis": "staged archive closure at gate time",
-   "count": 246,
+   "count": 248,
    "paths": [
     "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v",
     "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
@@ -127380,10 +127404,12 @@
     "physical/common_flow/grt_macro_top_layer.tcl",
     "physical/common_flow/io_flop_at_pins.tcl",
     "physical/common_flow/io_flop_release.tcl",
+    "physical/common_flow/macro_channel_block.tcl",
     "physical/common_flow/macro_cts_cluster.tcl",
     "physical/common_flow/macro_sliver_block.tcl",
     "physical/common_flow/ot_keep_regs.tcl",
     "physical/common_flow/pin_reg_split.tcl",
+    "physical/common_flow/post_resize_relocate.tcl",
     "physical/dsrom_window_source/leaf_inhold.tcl",
     "physical/dsrom_window_source/leaf_inhold_release.tcl",
     "physical/dsrom_window_source/leaf_iohold.tcl",
@@ -127628,10 +127654,12 @@
     "physical/common_flow/grt_macro_top_layer.tcl": "dfd76e540035bce859d8f2f303996390abe276f20bc1057c28d5781a87982389",
     "physical/common_flow/io_flop_at_pins.tcl": "38d19f49e53ed005811b99a6c511934af2a91c49685e746e880f5d0a849f026d",
     "physical/common_flow/io_flop_release.tcl": "93aae4e7f0f69f09b0c4b401ffe2792c30fd0a09e40cd170a98e1f99b1ffdd04",
+    "physical/common_flow/macro_channel_block.tcl": "d41e07993760d1e85bbd7d0b50f2183c6078bb24b64dfa371f448103bac7386c",
     "physical/common_flow/macro_cts_cluster.tcl": "a7af2ec6314ea96d71c966704e0ecae1f9dc3715a6519063fe151c0d1ebac798",
     "physical/common_flow/macro_sliver_block.tcl": "837dd48a48603ea95ddaa12ba5e6a66e80d9fe2976908c8734889540231c10a2",
     "physical/common_flow/ot_keep_regs.tcl": "8f7eeac51016d80235e13be461339c7ce4b5028e6873d231ab0aab9e6563deca",
     "physical/common_flow/pin_reg_split.tcl": "e7a78e58d9cc0fc6baca366f525a7b706f8f01bcced8d5721defdadeab290ea5",
+    "physical/common_flow/post_resize_relocate.tcl": "d68c871cfddfa32f37eb1b60b4700f8f777a9b879bc825796d7fc480e893a218",
     "physical/dsrom_window_source/leaf_inhold.tcl": "1034efaba4514c78f2e6d3abd33d10acc7e6f634fc03028932161fe2bdf1e8eb",
     "physical/dsrom_window_source/leaf_inhold_release.tcl": "b23f84f7837858dec963dab8f2e3d88074946f2d9e007319c1c302c5a36fb3a0",
     "physical/dsrom_window_source/leaf_iohold.tcl": "91d9ed8ee1ee48b2cafad800f76fc44920324656ff362a948313cfc0bbb10dab",
@@ -127722,8 +127750,8 @@
     "physical/ref_tile/qfd_tile_nk_banked_v1/assigned_pins.tcl": "a0825e0a8d681df1f2c618b4f6264e96b57c12092f96faa2e7c5af5ed41f99e4",
     "physical/ref_tile/qfd_tile_nk_banked_v1/clock.sdc": "08a8302c2ebe2dd755706ae47314bf1acde93088a650e800a24105f60ad13526",
     "physical/ref_tile/qfd_tile_nk_banked_v1/clock_entry.sdc": "b231aa8be35cb49bd25553af46c4864af4af1340eaac951856bfe86b0ee33a0b",
-    "physical/ref_tile/qfd_tile_nk_banked_v1/floorplan.json": "a6a3403baab10c4f2802cf5378ee9d5da4bfd17b78b6b1f06845f947b0dfb1ab",
-    "physical/ref_tile/qfd_tile_nk_banked_v1/kit.env": "306a3310f1bad51eaaef2ac1b37a2ecaaf9e198b126314ef56d1f3286945feeb",
+    "physical/ref_tile/qfd_tile_nk_banked_v1/floorplan.json": "ea163cf762fc200f08f92399829067e4563ea174f02a19f87f89c98c71191510",
+    "physical/ref_tile/qfd_tile_nk_banked_v1/kit.env": "b243c69fa7bcd722395ba37e0aabb0305ea1b8aace2dadb7a6da49e00a6919dd",
     "physical/ref_tile/qfd_tile_nk_banked_v1/pdn.tcl": "76b627144eed9d2b6a0dad6b2451566add2c510a6f7ca7271cc50752d6ec7635",
     "physical/ref_tile/qfd_tile_nk_banked_v1/place.tcl": "d698dcfd87907a3838bdff381de9c1c5707e9da559533f905d6395e6de1ec96e",
     "physical/ref_tile/qfd_tile_nk_banked_v1/post_cts.tcl": "27bc4e038162fdce49c085080784324694cd512e987cdc85b33e208734e4ebb6",
@@ -127737,7 +127765,7 @@
     "physical/ref_tile/qfd_tile_nk_banked_v1/pre_gpl.tcl": "868665071710eb4ce5d4af172b346032f605b49500c67093b5f6f3229928b739",
     "physical/ref_tile/qfd_tile_nk_banked_v1/pre_grt.tcl": "8bf6db5651c8988e247739a303302abe9edf12184021e21303a534290964d71e",
     "physical/ref_tile/qfd_tile_nk_banked_v1/signoff.sdc": "5f114cffd7661c57f922808991b4f4cc991904abcf2790864040f4a5c830bcf0",
-    "physical/ref_tile/qfd_tile_nk_banked_v1/spec.json": "a44370b8c9a10af52b1f8af02966c9e73d8fc527e6715d8810bb9f9da9387100",
+    "physical/ref_tile/qfd_tile_nk_banked_v1/spec.json": "4c0768a1cf7565d7311336ed9cb2976fe813ae8e0faec2069b29fe8d6732f531",
     "physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256/abstract.json": "59b64994cf8b5f8c755db061146439c0618404ed5c26057815d775085b986e6d",
     "physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256/child_lint.json": "f2031eb032564545597117193f384aed8da612bfb121a5871b8ff15230cc4386",
     "physical/ref_tile/qkh_packet_h256/views/qkh_packet_h256/export_ff.log": "bb3dc941e57adca519e358628490acc8ffe60768136d064f108314f84b01550e",
@@ -127868,13 +127896,13 @@
     "tools/w18/corner_sta.py": "7801f467617d68c7e8a3f906e5415c8913de77188a6af30dbfe835fc28b05fd1",
     "tools/w18/corner_sta_ref.py": "bd70080bbbd23db830914e4b52682c086b4de5cc9adc6873a026c260099419fa"
    },
-   "digest": "89e984c84970f0080acf756197ff9b28e3aefe4ed94cb914a9a0a647f934da5d"
+   "digest": "6fdbc619d39b172b2f6e54d836c98c64e305b66a743f36c438e111180707ac67"
   },
-  "captured": "2026-10-15T04:26:50-0700",
-  "remote_script_sha256": "b0e3a855217282e7f3f6f0d615470b9dbd504fc6649c611dea7bfde7b762a894",
+  "captured": "2026-10-15T05:26:36-0700",
+  "remote_script_sha256": "a4b412fe33c264118dc979234a782c4b34fa37e219b7402ec6096f6bdb9798d5",
   "tool_image_requested": "openroad/orfs:latest",
   "remote_host": "ot-epyc1tb",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_tile_nk_banked_v1-20261015-042621",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_tile_nk_banked_v1-20261015-052559",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -127885,16 +127913,2721 @@
   "max_root_sinks": 2308,
   "root": "port:ck",
   "cts": true,
-  "tt_insertion_ps": null,
-  "tt_spread_ps": null,
+  "tt_insertion_ps": 800.1,
+  "tt_spread_ps": 181.7,
   "declared_clock": "hybrid_entries",
   "limits": {
    "sinks": 15000,
    "insertion_ps": 300.0,
    "spread_ps": 80.0
   },
+  "clock_measurements": [
+   {
+    "source": "ck",
+    "clock": "ot_entry_0",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 954,
+      "mean": 639.1,
+      "min": 618.4,
+      "max": 800.1
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[0]",
+    "clock": "ot_entry_1",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.2,
+      "max_late": -0.0,
+      "pins": [
+       {
+        "pin": "strap/clk",
+        "arr": 0.1,
+        "slew": 0.2,
+        "late": -0.0,
+        "net": "ck_bank[0]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[1]",
+    "clock": "ot_entry_2",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "rqr_south_0/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_bank[1]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[2]",
+    "clock": "ot_entry_3",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "rqr_south_1/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_bank[2]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[3]",
+    "clock": "ot_entry_4",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "rqr_south_2/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_bank[3]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[4]",
+    "clock": "ot_entry_5",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "rqr_south_3/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_bank[4]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[5]",
+    "clock": "ot_entry_6",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "rqr_north_0/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_bank[5]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[6]",
+    "clock": "ot_entry_7",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "rqr_north_1/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_bank[6]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[7]",
+    "clock": "ot_entry_8",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "rqr_north_2/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_bank[7]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[8]",
+    "clock": "ot_entry_9",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "rqr_north_3/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_bank[8]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[9]",
+    "clock": "ot_entry_10",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "mq_wrom_0/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_bank[9]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[10]",
+    "clock": "ot_entry_11",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "mq_wrom_1/clk",
+        "arr": 0.1,
+        "slew": 0.3,
+        "late": 0.0,
+        "net": "ck_bank[10]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[11]",
+    "clock": "ot_entry_12",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "mq_wrom_2/clk",
+        "arr": 0.1,
+        "slew": 0.3,
+        "late": 0.0,
+        "net": "ck_bank[11]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[12]",
+    "clock": "ot_entry_13",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "mq_wrom_3/clk",
+        "arr": 0.1,
+        "slew": 0.3,
+        "late": 0.0,
+        "net": "ck_bank[12]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[13]",
+    "clock": "ot_entry_14",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "xdelay_0/clk",
+        "arr": 0.1,
+        "slew": 0.3,
+        "late": 0.0,
+        "net": "ck_bank[13]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[14]",
+    "clock": "ot_entry_15",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "xdelay_1/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_bank[14]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[15]",
+    "clock": "ot_entry_16",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "xdelay_2/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_bank[15]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[16]",
+    "clock": "ot_entry_17",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "xdelay_3/clk",
+        "arr": 0.1,
+        "slew": 0.3,
+        "late": 0.0,
+        "net": "ck_bank[16]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[17]",
+    "clock": "ot_entry_18",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "xdelay_4/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_bank[17]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[18]",
+    "clock": "ot_entry_19",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "xdelay_5/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_bank[18]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[19]",
+    "clock": "ot_entry_20",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "xdelay_6/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_bank[19]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[20]",
+    "clock": "ot_entry_21",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "xdelay_7/clk",
+        "arr": 0.1,
+        "slew": 0.3,
+        "late": 0.0,
+        "net": "ck_bank[20]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[21]",
+    "clock": "ot_entry_22",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "tx0_r0_lo/clk",
+        "arr": 0.1,
+        "slew": 0.3,
+        "late": 0.0,
+        "net": "ck_bank[21]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[22]",
+    "clock": "ot_entry_23",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "tx0_r1_lo/clk",
+        "arr": 0.1,
+        "slew": 0.3,
+        "late": 0.0,
+        "net": "ck_bank[22]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[23]",
+    "clock": "ot_entry_24",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "tx1_r0_lo/clk",
+        "arr": 0.1,
+        "slew": 0.3,
+        "late": 0.0,
+        "net": "ck_bank[23]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[24]",
+    "clock": "ot_entry_25",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "tx1_r1_lo/clk",
+        "arr": 0.1,
+        "slew": 0.3,
+        "late": 0.0,
+        "net": "ck_bank[24]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[25]",
+    "clock": "ot_entry_26",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "tx2_r0_lo/clk",
+        "arr": 0.1,
+        "slew": 0.3,
+        "late": 0.0,
+        "net": "ck_bank[25]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[26]",
+    "clock": "ot_entry_27",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "tx2_r1_lo/clk",
+        "arr": 0.1,
+        "slew": 0.3,
+        "late": 0.0,
+        "net": "ck_bank[26]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[27]",
+    "clock": "ot_entry_28",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "tx3_r0_lo/clk",
+        "arr": 0.1,
+        "slew": 0.3,
+        "late": 0.0,
+        "net": "ck_bank[27]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[28]",
+    "clock": "ot_entry_29",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "tx3_r1_lo/clk",
+        "arr": 0.1,
+        "slew": 0.3,
+        "late": 0.0,
+        "net": "ck_bank[28]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[29]",
+    "clock": "ot_entry_30",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "tx4_r0_lo/clk",
+        "arr": 0.1,
+        "slew": 0.3,
+        "late": 0.0,
+        "net": "ck_bank[29]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[30]",
+    "clock": "ot_entry_31",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "tx4_r1_lo/clk",
+        "arr": 0.1,
+        "slew": 0.3,
+        "late": 0.0,
+        "net": "ck_bank[30]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[31]",
+    "clock": "ot_entry_32",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "tx5_r0_lo/clk",
+        "arr": 0.1,
+        "slew": 0.3,
+        "late": 0.0,
+        "net": "ck_bank[31]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[32]",
+    "clock": "ot_entry_33",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "tx5_r1_lo/clk",
+        "arr": 0.1,
+        "slew": 0.3,
+        "late": 0.0,
+        "net": "ck_bank[32]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[33]",
+    "clock": "ot_entry_34",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "tx6_r0_lo/clk",
+        "arr": 0.1,
+        "slew": 0.3,
+        "late": 0.0,
+        "net": "ck_bank[33]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[34]",
+    "clock": "ot_entry_35",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "tx6_r1_lo/clk",
+        "arr": 0.1,
+        "slew": 0.3,
+        "late": 0.0,
+        "net": "ck_bank[34]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[35]",
+    "clock": "ot_entry_36",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "tx7_r0_lo/clk",
+        "arr": 0.1,
+        "slew": 0.3,
+        "late": 0.0,
+        "net": "ck_bank[35]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[36]",
+    "clock": "ot_entry_37",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "tx7_r1_lo/clk",
+        "arr": 0.1,
+        "slew": 0.3,
+        "late": 0.0,
+        "net": "ck_bank[36]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[37]",
+    "clock": "ot_entry_38",
+    "tt": {
+     "boundary": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "face_n_a/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_bank[37]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[38]",
+    "clock": "ot_entry_39",
+    "tt": {
+     "boundary": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "face_n_b/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_bank[38]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[39]",
+    "clock": "ot_entry_40",
+    "tt": {
+     "boundary": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "face_n_y/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_bank[39]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[40]",
+    "clock": "ot_entry_41",
+    "tt": {
+     "boundary": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "face_t_out/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_bank[40]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[41]",
+    "clock": "ot_entry_42",
+    "tt": {
+     "boundary": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "face_tap/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_bank[41]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[42]",
+    "clock": "ot_entry_43",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "s2_word_0/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_bank[42]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[43]",
+    "clock": "ot_entry_44",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "s2_word_1/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_bank[43]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[44]",
+    "clock": "ot_entry_45",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "node_stage_n_a/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_bank[44]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[45]",
+    "clock": "ot_entry_46",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "node_stage_n_b/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_bank[45]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[46]",
+    "clock": "ot_entry_47",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "node_stage_n_y/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_bank[46]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[47]",
+    "clock": "ot_entry_48",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "node_stage_t_out/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_bank[47]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[48]",
+    "clock": "ot_entry_49",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "return_south_0/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_bank[48]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[49]",
+    "clock": "ot_entry_50",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "return_south_1/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_bank[49]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[50]",
+    "clock": "ot_entry_51",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "return_south_2/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_bank[50]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[51]",
+    "clock": "ot_entry_52",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "return_south_3/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_bank[51]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[52]",
+    "clock": "ot_entry_53",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "return_north_0/clk",
+        "arr": 0.1,
+        "slew": 0.3,
+        "late": 0.0,
+        "net": "ck_bank[52]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[53]",
+    "clock": "ot_entry_54",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "return_north_1/clk",
+        "arr": 0.1,
+        "slew": 0.3,
+        "late": 0.0,
+        "net": "ck_bank[53]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[54]",
+    "clock": "ot_entry_55",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "return_north_2/clk",
+        "arr": 0.1,
+        "slew": 0.3,
+        "late": 0.0,
+        "net": "ck_bank[54]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[55]",
+    "clock": "ot_entry_56",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "return_north_3/clk",
+        "arr": 0.1,
+        "slew": 0.3,
+        "late": 0.0,
+        "net": "ck_bank[55]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[56]",
+    "clock": "ot_entry_57",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "xdelay_extra/clk",
+        "arr": 0.1,
+        "slew": 0.3,
+        "late": 0.0,
+        "net": "ck_bank[56]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_bank[57]",
+    "clock": "ot_entry_58",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.3,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "s2_x_full/clk",
+        "arr": 0.1,
+        "slew": 0.3,
+        "late": 0.0,
+        "net": "ck_bank[57]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_reset[0]",
+    "clock": "ot_entry_59",
+    "tt": {
+     "boundary": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.2,
+      "max_late": -0.0,
+      "pins": [
+       {
+        "pin": "reset_root/clk",
+        "arr": 0.1,
+        "slew": 0.2,
+        "late": -0.0,
+        "net": "ck_reset[0]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_reset[1]",
+    "clock": "ot_entry_60",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.2,
+      "max_late": -0.0,
+      "pins": [
+       {
+        "pin": "reset_mid_w/clk",
+        "arr": 0.1,
+        "slew": 0.2,
+        "late": -0.0,
+        "net": "ck_reset[1]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_reset[2]",
+    "clock": "ot_entry_61",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.2,
+      "max_late": -0.0,
+      "pins": [
+       {
+        "pin": "reset_mid_e/clk",
+        "arr": 0.1,
+        "slew": 0.2,
+        "late": -0.0,
+        "net": "ck_reset[2]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_reset[3]",
+    "clock": "ot_entry_62",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.2,
+      "max_late": -0.0,
+      "pins": [
+       {
+        "pin": "reset_mid_high/clk",
+        "arr": 0.1,
+        "slew": 0.2,
+        "late": -0.0,
+        "net": "ck_reset[3]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_reset[4]",
+    "clock": "ot_entry_63",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.2,
+      "max_late": -0.0,
+      "pins": [
+       {
+        "pin": "reset_branch_w_low/clk",
+        "arr": 0.1,
+        "slew": 0.2,
+        "late": -0.0,
+        "net": "ck_reset[4]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_reset[5]",
+    "clock": "ot_entry_64",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.2,
+      "max_late": -0.0,
+      "pins": [
+       {
+        "pin": "reset_branch_w_mid/clk",
+        "arr": 0.1,
+        "slew": 0.2,
+        "late": -0.0,
+        "net": "ck_reset[5]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_reset[6]",
+    "clock": "ot_entry_65",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.2,
+      "max_late": -0.0,
+      "pins": [
+       {
+        "pin": "reset_branch_w_high0/clk",
+        "arr": 0.1,
+        "slew": 0.2,
+        "late": -0.0,
+        "net": "ck_reset[6]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_reset[7]",
+    "clock": "ot_entry_66",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.2,
+      "max_late": -0.0,
+      "pins": [
+       {
+        "pin": "reset_branch_w_high1/clk",
+        "arr": 0.1,
+        "slew": 0.2,
+        "late": -0.0,
+        "net": "ck_reset[7]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_reset[8]",
+    "clock": "ot_entry_67",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.2,
+      "max_late": -0.0,
+      "pins": [
+       {
+        "pin": "reset_branch_e_low/clk",
+        "arr": 0.1,
+        "slew": 0.2,
+        "late": -0.0,
+        "net": "ck_reset[8]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_reset[9]",
+    "clock": "ot_entry_68",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.2,
+      "max_late": -0.0,
+      "pins": [
+       {
+        "pin": "reset_branch_e_mid/clk",
+        "arr": 0.1,
+        "slew": 0.2,
+        "late": -0.0,
+        "net": "ck_reset[9]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_reset[10]",
+    "clock": "ot_entry_69",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.2,
+      "max_late": -0.0,
+      "pins": [
+       {
+        "pin": "reset_branch_e_high/clk",
+        "arr": 0.1,
+        "slew": 0.2,
+        "late": -0.0,
+        "net": "ck_reset[10]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_child[0]",
+    "clock": "ot_entry_70",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "u_logic.g_rom_pipe.g_rph.g_rb[0].g_hd.u_rp/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_child[0]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_child[1]",
+    "clock": "ot_entry_71",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "u_logic.g_rom_pipe.g_rph.g_rb[1].g_hd.u_rp/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_child[1]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_child[2]",
+    "clock": "ot_entry_72",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "u_logic.g_rom_pipe.g_rph.g_rb[2].g_hd.u_rp/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_child[2]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_child[3]",
+    "clock": "ot_entry_73",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "u_logic.g_rom_pipe.g_rph.g_rb[3].g_hd.u_rp/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_child[3]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_child[4]",
+    "clock": "ot_entry_74",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.1,
+      "max_slew": 0.4,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "u_logic.g_rom_pipe.g_rph.g_rb[4].g_hd.u_rp/clk",
+        "arr": 0.1,
+        "slew": 0.4,
+        "late": 0.0,
+        "net": "ck_child[4]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_child[5]",
+    "clock": "ot_entry_75",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.2,
+      "min": 0.2,
+      "max": 0.2
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.2,
+      "max_slew": 0.6,
+      "max_late": -0.0,
+      "pins": [
+       {
+        "pin": "u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh/clk",
+        "arr": 0.2,
+        "slew": 0.6,
+        "late": -0.0,
+        "net": "ck_child[5]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_child[6]",
+    "clock": "ot_entry_76",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.2,
+      "min": 0.2,
+      "max": 0.2
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.2,
+      "max_slew": 0.6,
+      "max_late": -0.0,
+      "pins": [
+       {
+        "pin": "u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh/clk",
+        "arr": 0.2,
+        "slew": 0.6,
+        "late": -0.0,
+        "net": "ck_child[6]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_child[7]",
+    "clock": "ot_entry_77",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.2,
+      "min": 0.2,
+      "max": 0.2
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.2,
+      "max_slew": 0.6,
+      "max_late": -0.0,
+      "pins": [
+       {
+        "pin": "u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh/clk",
+        "arr": 0.2,
+        "slew": 0.6,
+        "late": -0.0,
+        "net": "ck_child[7]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_child[8]",
+    "clock": "ot_entry_78",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.2,
+      "min": 0.2,
+      "max": 0.2
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.2,
+      "max_slew": 0.6,
+      "max_late": -0.0,
+      "pins": [
+       {
+        "pin": "u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh/clk",
+        "arr": 0.2,
+        "slew": 0.6,
+        "late": -0.0,
+        "net": "ck_child[8]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_child[9]",
+    "clock": "ot_entry_79",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.2,
+      "min": 0.2,
+      "max": 0.2
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.2,
+      "max_slew": 0.6,
+      "max_late": -0.0,
+      "pins": [
+       {
+        "pin": "u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh/clk",
+        "arr": 0.2,
+        "slew": 0.6,
+        "late": -0.0,
+        "net": "ck_child[9]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_child[10]",
+    "clock": "ot_entry_80",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.2,
+      "min": 0.2,
+      "max": 0.2
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.2,
+      "max_slew": 0.6,
+      "max_late": -0.0,
+      "pins": [
+       {
+        "pin": "u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh/clk",
+        "arr": 0.2,
+        "slew": 0.6,
+        "late": -0.0,
+        "net": "ck_child[10]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_child[11]",
+    "clock": "ot_entry_81",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.2,
+      "min": 0.2,
+      "max": 0.2
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.2,
+      "max_slew": 0.6,
+      "max_late": -0.0,
+      "pins": [
+       {
+        "pin": "u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh/clk",
+        "arr": 0.2,
+        "slew": 0.6,
+        "late": -0.0,
+        "net": "ck_child[11]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_child[12]",
+    "clock": "ot_entry_82",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.2,
+      "min": 0.2,
+      "max": 0.2
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.2,
+      "max_slew": 0.6,
+      "max_late": -0.0,
+      "pins": [
+       {
+        "pin": "u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh/clk",
+        "arr": 0.2,
+        "slew": 0.6,
+        "late": -0.0,
+        "net": "ck_child[12]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   },
+   {
+    "source": "ck_child[13]",
+    "clock": "ot_entry_83",
+    "tt": {
+     "boundary": null,
+     "all": {
+      "n": 1,
+      "mean": 0.3,
+      "min": 0.3,
+      "max": 0.3
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 0.3,
+      "max_slew": 1.1,
+      "max_late": 0.0,
+      "pins": [
+       {
+        "pin": "u_logic.genblk4.g_ndh.u_node/clk",
+        "arr": 0.3,
+        "slew": 1.1,
+        "late": 0.0,
+        "net": "ck_child[13]"
+       }
+      ]
+     },
+     "macro_libs": 8
+    }
+   }
+  ],
+  "measured_clock": "ot_entry_0",
   "verdict": "PASS",
-  "text": "2,308 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)"
+  "text": "2,308 sinks on the largest root <= 15,000; measured TT insertion 800.1 ps, leaf spread 181.7 ps"
  },
  "items": [
   {
