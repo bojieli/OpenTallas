@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.smh.workstream_state.v1",
-  "collected_at": "2026-10-15T07:28:51.100849+00:00",
+  "collected_at": "2026-10-15T07:34:48.748221+00:00",
   "coordinator": "codex",
   "jobs": [
     {
@@ -79,5 +79,19 @@
     "row_w": "05ec0d136"
   },
   "native_group_pin_audit": "all three closed group views PASS; west beat pending actual closure",
-  "scope": "CDC historical diagnostic components; static native producer/consumer contract remains separate"
+  "scope": "CDC historical diagnostic components; static native producer/consumer contract remains separate",
+  "actual_static_int8": {
+    "source": "1ce966147",
+    "evidence": "c454d62cd",
+    "status": "componentPASS3723packed7446full1099outputs; actualsignandcalendar mutantsFAIL; defaultoff;notintegrated/physical"
+  },
+  "production_programme_owner": "H-ELEM-A/static_sm_feed: actual83bit immutable operation/prefetch compiler and image binding across4PC; pending",
+  "dense_packing": {
+    "stage_walk_partial_source": "7c17a3940",
+    "stage_walk_partial_mm2": 9.9612888704,
+    "complete_4x4_before_retimes_source": "7fd711e0a",
+    "complete_4x4_with_external_retimes_source": "3300aa373",
+    "complete_4x4_with_external_retimes_mm2": 11.1634862976,
+    "adoption": "NONE; complete staticfront joint placement and native fullshape fit remain open"
+  }
 }
