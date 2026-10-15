@@ -1,0 +1,129 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "hbm_sfu_side_native6r2",
+ "top": "ot_hbm_su_static_side_native6r2",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  864.0,
+  648.0
+ ],
+ "core": [
+  2.16,
+  2.16,
+  861.84,
+  645.84
+ ],
+ "why": "spec outline",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "W": [
+   "v",
+   "fn",
+   "x",
+   "fn_out"
+  ],
+  "E": [
+   "y",
+   "fault"
+  ],
+  "S": [
+   "ck0",
+   "ck1",
+   "ck2",
+   "ck3",
+   "ck4",
+   "ck5",
+   "rst_n"
+  ],
+  "N": []
+ },
+ "clock_port": "ck0",
+ "clock_ports": [
+  "ck0",
+  "ck1",
+  "ck2",
+  "ck3",
+  "ck4",
+  "ck5"
+ ],
+ "blocks": [],
+ "findings": [
+  [
+   "WARN",
+   "clock_span",
+   "864.0 x 648.0 um: one clock root over > 600 um",
+   "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
+  ]
+ ],
+ "referenced": [
+  "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv",
+  "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv",
+  "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv",
+  "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_delay.sv",
+  "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fpu.sv",
+  "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_sfu.sv",
+  "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_softplus.sv",
+  "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fastfp.sv",
+  "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fastfp_lat_c12.sv",
+  "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_f12.sv",
+  "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+  "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt_c12.sv",
+  "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_prefix.sv",
+  "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_delay_ring.sv",
+  "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side.sv",
+  "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side_native6r2.sv",
+  "physical/ref_tile/hbm_sfu_side_native6r2/kit.env",
+  "physical/ref_tile/hbm_sfu_side_native6r2/clock.sdc",
+  "physical/ref_tile/hbm_sfu_side_native6r2/signoff.sdc",
+  "physical/ref_tile/hbm_sfu_side_native6r2/pdn.tcl",
+  "physical/ref_tile/hbm_sfu_side_native6r2/pre_cts.tcl",
+  "physical/ref_tile/hbm_sfu_side_native6r2/post_cts.tcl",
+  "physical/ref_tile/hbm_sfu_side_native6r2/post_grt.tcl",
+  "physical/ref_tile/hbm_sfu_side_native6r2/pre_drt.tcl",
+  "physical/ref_tile/hbm_sfu_side_native6r2/pre_fill.tcl",
+  "physical/ref_tile/hbm_sfu_side_native6r2/post_fill.tcl",
+  "physical/ref_tile/hbm_sfu_side_native6r2/pre_grt.tcl",
+  "physical/ref_tile/hbm_sfu_side_native6r2/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/hbm_sfu_side_native6r2/pre_gpl.tcl",
+  "physical/ref_tile/hbm_sfu_side_native6r2/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl",
+  "physical/common_flow/clock_entries.tcl",
+  "physical/ref_tile/hbm_sfu_side_native6r2/clock_entry.sdc"
+ ]
+}
