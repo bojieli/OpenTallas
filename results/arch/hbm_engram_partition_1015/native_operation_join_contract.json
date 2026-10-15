@@ -83,7 +83,7 @@
     "sample_fetch_core_edges": 8228,
     "universally_admitted_fetch_core_edges": null,
     "original_performance_contract_waived": false,
-    "known_common_source_gap": "Original c664/r14 PRE/RD defect is repaired by guarded common cbd92c1cc and strict L1/L14 numerical memory reproving passes. Latest shared owner a7b86347d additionally repairs packed completion register ownership; new client-mux integration is in progress.",
+    "known_common_source_gap": "Historical c664/r14 PRE/RD defect repaired by guardedcbd92; owned5377 repairs completion ownership. Actual target124/released8home leg through3client mux and owned master passed strict23 samples. Source reservation/drain guard component is now proven; universal arbitrary-state timing remains open.",
     "staging_SRAMs_per_home": 2,
     "staging_macro_bits": 32768,
     "epoch_banks": 1,
@@ -95,7 +95,8 @@
     "real_Kport_frontend_exposed": true,
     "shared_client_ownership_mux_component_qualified": true,
     "shared_client_ownership_mux": "ot_hbm_native_client_mux: 3 clients, original17-bit tags and beats, atomic len1..4 read ownership, true posted WR ACK routing; no bank/REF state",
-    "shared_client_timing_reservation": "Exclusive Engram request window plus prior-client drain is required; whole-kernel reservation/arbiter control remains unbound."
+    "shared_client_timing_reservation": "Actual engram_reservation input masks other admissions; entry requires owner_idle32, which accounts for every accepted read beat/true WR completion and held request. Illegal entry/release faults. Actual fixed whole-kernel control and universal inherited bank/REF timing remain unbound.",
+    "reservation_guard_component_qualified": true
   },
   "source_read": {
     "input": [
@@ -142,7 +143,24 @@
     "numerical_component_qualified": true,
     "architectural_WKV_consumer_module": null,
     "architectural_consumer_join_qualified": false,
-    "released_WKV_source_contract": "results/arch/hbm_engram_partition_1015/wkv_source_contract.json"
+    "released_WKV_source_contract": "results/arch/hbm_engram_partition_1015/wkv_source_contract.json",
+    "native_WKV_row_shard_source": {
+      "matrix_indices": {
+        "1": 12,
+        "14": 175
+      },
+      "K": 6144,
+      "total_output_rows": 25600,
+      "rank0_row_interval": [
+        0,
+        266
+      ],
+      "rank_local_SM_assignment": "local row ordinal modulo32; source rows start rank.lo+SM,stride32",
+      "source_book_sha256": "980899638942747e8a87131e24f6824346c7027a3b4c20b6c962f967ccc11895",
+      "actual_rank0_SM0_weight_export_commit": "169b2888d",
+      "all96_shards_need_full_decoded_input": true,
+      "native_all96_input_distribution_qualified": false
+    }
   },
   "hardware": {
     "frontend_logical_FF_by_clock_per_home": {
@@ -160,7 +178,17 @@
     "protected_state_qualified": false,
     "shared_client_mux_logical_FF_per_PC_root": 233,
     "shared_client_mux_logical_FF_per_stack": 7456,
-    "hash_clock_root_gap": "Current full48-column shipped hash is excluded from frontend counts. S81 separate six-group 1:1 related-clock successor4f047d49c is being proved by its owner, not yet adopted or qualified here."
+    "hash_clock_root_gap": "Original default shared hash remains frozen. Opt-in source-owned seven-root HBM wrapper reuses S81 six-group hash49edac68;64token/3072descriptor exact proof and full generic seven-root census pass. Related-clock min/max STA,CTS,route and adoption into full kernel remain open.",
+    "opt_in_complete_hash_dispatch_logical_FF_by_root": {
+      "clk": 5032,
+      "clk_columns[0]": 3016,
+      "clk_columns[1]": 3021,
+      "clk_columns[2]": 3021,
+      "clk_columns[3]": 3016,
+      "clk_columns[4]": 3021,
+      "clk_columns[5]": 3021
+    },
+    "reservation_guard_FF_on_hbm_clk": 2
   },
   "qualification": {
     "exact_released_numerical_memory_histories": true,
@@ -172,7 +200,9 @@
     "whole_layer": false,
     "released_throughput": false,
     "physical": false,
-    "actual_programme_to_L14_guarded_Kport_memory": true
+    "actual_programme_to_L14_guarded_Kport_memory": true,
+    "actual_programme_to_three_client_owned_memory": true,
+    "actual_reserved_seven_root_hash_memory_join": false
   },
   "source_sha256": {
     "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_fetch_program.sv": "b6492ec5c60a92098ce5448e41da1ef86b77295fc67bb4c05ebd5e17c7715031",
@@ -185,6 +215,8 @@
     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_guarded_stack.sv": "a38dae243ea6cb4167b1a75e484c37237819c15624c9fbb09aba6d6933be0992",
     "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_stream_pc.sv": "f18b70157a6502526b56227ebba05d252897cce1d09a80cc08f7fc67bb713bde",
     "tools/hbm_engram_grouped_address_bound.py": "b1b76d8a86f5d8368b641d9bdcba6e3a4e423e99da68d7bd5757a26fa0162617",
-    "rtl/hbm_accel/engram_static_20261015/ot_hbm_native_client_mux.sv": "6ae7f6f612d239ac41f7be5e6196ccdbef76fce0cca73d459b9909224f20116b"
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_native_client_mux.sv": "506cab52f8a800393910c54886ff0f20a8cd11d3593d8a5b6ec6e2b07c105101",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_home_shared_stack.sv": "502a7b161f5f1c4af2e3d9d7b9f23f28838089e988ff99f965731efd8de98e0f",
+    "rtl/hbm_accel/engram_static_20261015/ot_hbm_engram_hash_home_clock_roots.sv": "4717c84d8b910f853b3d5f24901cf3977b703eb313a13950b01cc39fbf3831b9"
   }
 }
