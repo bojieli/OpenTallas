@@ -212,13 +212,35 @@ def generate(out):
             evidence_scope='actual dual-clock sector-mapped components; not instantiated by this die inventory',
             modules=component_contract['modules'],clocks=component_contract['clocks'],
             qualified=False,remaining=component_contract['fail_closed_requirements'])
+    placement_groups=[]
+    for q in ('SW','SE','NW','NE'):
+        chain=['hb_vms_'+q]+[f'lg_{q}_{stage}' for stage in range(3)]
+        if not all(n in modules for n in chain):continue
+        links=[]
+        for near,far in zip(chain,chain[1:]):
+            pair=[e for e in edges if {e['source'][0],e['sink'][0]}=={near,far}]
+            assert len(pair)==4 and sum(e['bits'] for e in pair)==4448,(q,near,far)
+            links.append(dict(near=near,far=far,signal_bits=4448,
+                edges=[e['name'] for e in pair],
+                fixed_tap_pipeline_edges_per_direction=2,
+                max_actual_port_manhattan_um=500,
+                actual_pin_geometry_qualified=False))
+        placement_groups.append(dict(name='vm_lg_local_'+q,members=chain,
+            ordered_links=links,reservation_policy='coherent connected group; reserve all three taps with actual VM bank/hub/ring children',
+            actual_slot_rectangles=None,slot_status='MISSING_NATIVE_CHILD_SHAPES_AND_PIN_EXPORTS',
+            required_before_absolute_coordinates=['actual eight-bank VM child placement',
+                'actual LG child root/pin partition and measured outline',
+                'PG-aware escape and all4448 signal-bit cuts',
+                'keep existing two-edge tap schedule; any new station needs explicit compiler price'],
+            local_client_roles=['SU near','SFU middle','HC far'],
+            calendar_read_return_edges=[10,14,18],calendar_write_return_edges=[7,11,15]))
     report=dict(schema='opentallas.hbm.actual-v15-source-contract.v1',status='FAIL_UNBOUND_NATIVE_PORTS',
                 source_sha256=sources,dependency_inventory_sha256=dependency_hashes,
                 dependency_inventory_scope='all static VM/service RTL including benches; not a substitute for hierarchy elaboration',
                 hierarchy_elaboration_required=True,
                 service_qualification_rejections=service['qualification_rejections'] if service else [],
                 abi_sha256=hashlib.sha256(abi_path.read_bytes()).hexdigest(),
-                instances=modules,known_actual_edges=edges,clock_roots=roots,
+                instances=modules,known_actual_edges=edges,clock_roots=roots,placement_groups=placement_groups,
                 registered_station_masters=generated,logical_constant_requests=logical_constants,unbound_ports=unresolved,
                 tested_boundary_components=component_contract,
                 boundary_gaps=['actual dual-clock components exist; full die band/PHY/client composition is absent',

@@ -9,7 +9,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SOURCES = ['tools/w19_hbm_token_compose.py', 'tools/hgi_sim/calibration.json',
            'tools/hgi_sim/ds_native.py', 'rtl/gpu/ot_gpu_payload_assemble.sv',
-           'rtl/chip/ot_chip_v41x_hbm3e_phy.sv']
+           'rtl/chip/ot_chip_v41x_hbm3e_phy.sv',
+           'tools/hgi_adapters/att_tput_vectors.py',
+           'rtl/hbm_accel/generic/adapters/tb/tb_hgi_att_tput.sv']
 
 def run():
     wanted = {'F_FAST', 'N_SM', 'HBM_STACKS', 'HBM_STACK_BYTES_PER_S',
@@ -43,6 +45,28 @@ def run():
                               ideal_95pct_stream_edges=cycles,
                               ratio_to_frozen_line_floor=cycles/(lines*price),
                               max_extra_setup_edges_at_110pct=1.1*lines*price-cycles))
+    att_prices={}
+    for node in ast.parse((ROOT/'tools/hgi_adapters/att_tput_vectors.py').read_text()).body:
+        if isinstance(node,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='DS_PRICE' for t in node.targets):
+            att_prices=ast.literal_eval(node.value)
+    assert set(att_prices)=={128,640}
+    att=[]
+    for rows,att_price in att_prices.items():
+        raw=rows*544
+        cases_att=[]
+        for stacks in (1,2,4):
+            raw_bandwidth=32*32*stream_ps/1024*values['HBM_SUSTAINED']*stacks
+            floor=raw/raw_bandwidth
+            cases_att.append(dict(allocated_stacks=stacks,raw_bytes_per_stream_edge_95pct=raw_bandwidth,
+                ideal_physical_stream_edges=floor,ratio_to_historical_unit_price=floor/att_price,
+                residual_setup_edges_at_110pct=1.1*att_price-floor,
+                actual_allocation_proved=False))
+        att.append(dict(rows=rows,source_row_bytes=544,code_bytes=512,scale_sector_bytes=32,
+            source_bytes=raw,internal_packed_bytes=rows*528,
+            old_eight_sector_port_copy_edges=raw/256,
+            candidate_32_sector_port_copy_edges=raw/1024,
+            frozen_historical_unit_price=att_price,gate_110pct=att_price*1.1,
+            ideal_physical_cases=cases_att))
     return dict(schema='opentallas.hbm.bandwidth_audit.v1',
         status='STRUCTURAL_REPAIR_REQUIRED_NO_PERFORMANCE_QUALIFICATION',
         source_sha256={p: hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in SOURCES},
@@ -64,6 +88,14 @@ def run():
             bytes_per_four_lines=544,
             existing_reference='rtl/gpu/ot_gpu_payload_assemble.sv is opt-in and handshaken; static production migration required',
             blocks=cases),
+        attention_service=dict(cases=att,
+            price_scope='Historical H4/D512/TD64/NL4 first-excluded throughput intervals; not inherited by new H16 physical engine',
+            counting_scope='one stream of T source rows only; multiply by actual per-operation streams and physical allocation before qualification',
+            actual_physical_profile='32 half-pairs require source-exact H16/TD32/NL2 mapping; new H16/TD64/NL4 diagnostic is incompatible',
+            required=['actual allocated stack/PC/landing-bank mapping',
+                'source-exact number of independent row streams per physical array operation',
+                'first-use fill plus steady-state double-buffer overlap including all setup/drain',
+                'compiler calendar at actual stream/HBM clocks and exact native array profile']),
         scope_notes=[
             '99 B/cycle is rounded sustained RAW physical bandwidth per SM per streaming edge; the frozen W19 136-byte line includes 8 scale bytes.',
             'Qwen fmt3_transport=1.25 already charges its 160-byte stride per128 INT8 codes. That separate calibration does not charge DS W19 160 bytes.',

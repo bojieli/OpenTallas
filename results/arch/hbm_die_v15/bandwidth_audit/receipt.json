@@ -6,7 +6,9 @@
     "tools/hgi_sim/calibration.json": "de95d20c8489d93f840c5988844989b9d81379a2ae164bec5b2d264180114076",
     "tools/hgi_sim/ds_native.py": "127598c96f67e21e3de6a176d4749bc30b2a45ba17675c7ee5a1b91ff57558ad",
     "rtl/gpu/ot_gpu_payload_assemble.sv": "355f01e90ccba32fca58339ea65d0b0bc87b906b7fe9b59d57eb6fc04636baa4",
-    "rtl/chip/ot_chip_v41x_hbm3e_phy.sv": "257547b1b904af203a2b0d70e5414d8b49de7c5c941a1966325d7ed1172afd36"
+    "rtl/chip/ot_chip_v41x_hbm3e_phy.sv": "257547b1b904af203a2b0d70e5414d8b49de7c5c941a1966325d7ed1172afd36",
+    "tools/hgi_adapters/att_tput_vectors.py": "4558f20d5959c91d4e2d7fb8313baa870a2b6377f40cdda1018bc8668e1eb1cd",
+    "rtl/hbm_accel/generic/adapters/tb/tb_hgi_att_tput.sv": "1c17bab3a2fe76fae711627e0c1374c5160a1f2e7d39b054566c0915494660f2"
   },
   "frozen_constants": {
     "F_FAST": 1200000000.0,
@@ -196,6 +198,95 @@
         "ratio_to_frozen_line_floor": 1.0,
         "max_extra_setup_edges_at_110pct": 562.9197473684217
       }
+    ]
+  },
+  "attention_service": {
+    "cases": [
+      {
+        "rows": 128,
+        "source_row_bytes": 544,
+        "code_bytes": 512,
+        "scale_sector_bytes": 32,
+        "source_bytes": 69632,
+        "internal_packed_bytes": 67584,
+        "old_eight_sector_port_copy_edges": 272.0,
+        "candidate_32_sector_port_copy_edges": 68.0,
+        "frozen_historical_unit_price": 147.144,
+        "gate_110pct": 161.85840000000002,
+        "ideal_physical_cases": [
+          {
+            "allocated_stacks": 1,
+            "raw_bytes_per_stream_edge_95pct": 791.6666666666666,
+            "ideal_physical_stream_edges": 87.9562105263158,
+            "ratio_to_historical_unit_price": 0.5977560112972041,
+            "residual_setup_edges_at_110pct": 73.90218947368422,
+            "actual_allocation_proved": false
+          },
+          {
+            "allocated_stacks": 2,
+            "raw_bytes_per_stream_edge_95pct": 1583.3333333333333,
+            "ideal_physical_stream_edges": 43.9781052631579,
+            "ratio_to_historical_unit_price": 0.29887800564860206,
+            "residual_setup_edges_at_110pct": 117.88029473684212,
+            "actual_allocation_proved": false
+          },
+          {
+            "allocated_stacks": 4,
+            "raw_bytes_per_stream_edge_95pct": 3166.6666666666665,
+            "ideal_physical_stream_edges": 21.98905263157895,
+            "ratio_to_historical_unit_price": 0.14943900282430103,
+            "residual_setup_edges_at_110pct": 139.86934736842107,
+            "actual_allocation_proved": false
+          }
+        ]
+      },
+      {
+        "rows": 640,
+        "source_row_bytes": 544,
+        "code_bytes": 512,
+        "scale_sector_bytes": 32,
+        "source_bytes": 348160,
+        "internal_packed_bytes": 337920,
+        "old_eight_sector_port_copy_edges": 1360.0,
+        "candidate_32_sector_port_copy_edges": 340.0,
+        "frozen_historical_unit_price": 339.144,
+        "gate_110pct": 373.05840000000006,
+        "ideal_physical_cases": [
+          {
+            "allocated_stacks": 1,
+            "raw_bytes_per_stream_edge_95pct": 791.6666666666666,
+            "ideal_physical_stream_edges": 439.781052631579,
+            "ratio_to_historical_unit_price": 1.2967384138642553,
+            "residual_setup_edges_at_110pct": -66.72265263157891,
+            "actual_allocation_proved": false
+          },
+          {
+            "allocated_stacks": 2,
+            "raw_bytes_per_stream_edge_95pct": 1583.3333333333333,
+            "ideal_physical_stream_edges": 219.8905263157895,
+            "ratio_to_historical_unit_price": 0.6483692069321276,
+            "residual_setup_edges_at_110pct": 153.16787368421058,
+            "actual_allocation_proved": false
+          },
+          {
+            "allocated_stacks": 4,
+            "raw_bytes_per_stream_edge_95pct": 3166.6666666666665,
+            "ideal_physical_stream_edges": 109.94526315789474,
+            "ratio_to_historical_unit_price": 0.3241846034660638,
+            "residual_setup_edges_at_110pct": 263.1131368421053,
+            "actual_allocation_proved": false
+          }
+        ]
+      }
+    ],
+    "price_scope": "Historical H4/D512/TD64/NL4 first-excluded throughput intervals; not inherited by new H16 physical engine",
+    "counting_scope": "one stream of T source rows only; multiply by actual per-operation streams and physical allocation before qualification",
+    "actual_physical_profile": "32 half-pairs require source-exact H16/TD32/NL2 mapping; new H16/TD64/NL4 diagnostic is incompatible",
+    "required": [
+      "actual allocated stack/PC/landing-bank mapping",
+      "source-exact number of independent row streams per physical array operation",
+      "first-use fill plus steady-state double-buffer overlap including all setup/drain",
+      "compiler calendar at actual stream/HBM clocks and exact native array profile"
     ]
   },
   "scope_notes": [

@@ -24098,6 +24098,316 @@
    "status": "NEEDS_REAL_CTS_VIEW"
   }
  ],
+ "placement_groups": [
+  {
+   "name": "vm_lg_local_SW",
+   "members": [
+    "hb_vms_SW",
+    "lg_SW_0",
+    "lg_SW_1",
+    "lg_SW_2"
+   ],
+   "ordered_links": [
+    {
+     "near": "hb_vms_SW",
+     "far": "lg_SW_0",
+     "signal_bits": 4448,
+     "edges": [
+      "lg_SW_0_rq",
+      "lg_SW_0_wq",
+      "lg_SW_0_rr",
+      "lg_SW_0_w_done"
+     ],
+     "fixed_tap_pipeline_edges_per_direction": 2,
+     "max_actual_port_manhattan_um": 500,
+     "actual_pin_geometry_qualified": false
+    },
+    {
+     "near": "lg_SW_0",
+     "far": "lg_SW_1",
+     "signal_bits": 4448,
+     "edges": [
+      "lg_SW_1_rq",
+      "lg_SW_1_wq",
+      "lg_SW_1_rr",
+      "lg_SW_1_wdone"
+     ],
+     "fixed_tap_pipeline_edges_per_direction": 2,
+     "max_actual_port_manhattan_um": 500,
+     "actual_pin_geometry_qualified": false
+    },
+    {
+     "near": "lg_SW_1",
+     "far": "lg_SW_2",
+     "signal_bits": 4448,
+     "edges": [
+      "lg_SW_2_rq",
+      "lg_SW_2_wq",
+      "lg_SW_2_rr",
+      "lg_SW_2_wdone"
+     ],
+     "fixed_tap_pipeline_edges_per_direction": 2,
+     "max_actual_port_manhattan_um": 500,
+     "actual_pin_geometry_qualified": false
+    }
+   ],
+   "reservation_policy": "coherent connected group; reserve all three taps with actual VM bank/hub/ring children",
+   "actual_slot_rectangles": null,
+   "slot_status": "MISSING_NATIVE_CHILD_SHAPES_AND_PIN_EXPORTS",
+   "required_before_absolute_coordinates": [
+    "actual eight-bank VM child placement",
+    "actual LG child root/pin partition and measured outline",
+    "PG-aware escape and all4448 signal-bit cuts",
+    "keep existing two-edge tap schedule; any new station needs explicit compiler price"
+   ],
+   "local_client_roles": [
+    "SU near",
+    "SFU middle",
+    "HC far"
+   ],
+   "calendar_read_return_edges": [
+    10,
+    14,
+    18
+   ],
+   "calendar_write_return_edges": [
+    7,
+    11,
+    15
+   ]
+  },
+  {
+   "name": "vm_lg_local_SE",
+   "members": [
+    "hb_vms_SE",
+    "lg_SE_0",
+    "lg_SE_1",
+    "lg_SE_2"
+   ],
+   "ordered_links": [
+    {
+     "near": "hb_vms_SE",
+     "far": "lg_SE_0",
+     "signal_bits": 4448,
+     "edges": [
+      "lg_SE_0_rq",
+      "lg_SE_0_wq",
+      "lg_SE_0_rr",
+      "lg_SE_0_w_done"
+     ],
+     "fixed_tap_pipeline_edges_per_direction": 2,
+     "max_actual_port_manhattan_um": 500,
+     "actual_pin_geometry_qualified": false
+    },
+    {
+     "near": "lg_SE_0",
+     "far": "lg_SE_1",
+     "signal_bits": 4448,
+     "edges": [
+      "lg_SE_1_rq",
+      "lg_SE_1_wq",
+      "lg_SE_1_rr",
+      "lg_SE_1_wdone"
+     ],
+     "fixed_tap_pipeline_edges_per_direction": 2,
+     "max_actual_port_manhattan_um": 500,
+     "actual_pin_geometry_qualified": false
+    },
+    {
+     "near": "lg_SE_1",
+     "far": "lg_SE_2",
+     "signal_bits": 4448,
+     "edges": [
+      "lg_SE_2_rq",
+      "lg_SE_2_wq",
+      "lg_SE_2_rr",
+      "lg_SE_2_wdone"
+     ],
+     "fixed_tap_pipeline_edges_per_direction": 2,
+     "max_actual_port_manhattan_um": 500,
+     "actual_pin_geometry_qualified": false
+    }
+   ],
+   "reservation_policy": "coherent connected group; reserve all three taps with actual VM bank/hub/ring children",
+   "actual_slot_rectangles": null,
+   "slot_status": "MISSING_NATIVE_CHILD_SHAPES_AND_PIN_EXPORTS",
+   "required_before_absolute_coordinates": [
+    "actual eight-bank VM child placement",
+    "actual LG child root/pin partition and measured outline",
+    "PG-aware escape and all4448 signal-bit cuts",
+    "keep existing two-edge tap schedule; any new station needs explicit compiler price"
+   ],
+   "local_client_roles": [
+    "SU near",
+    "SFU middle",
+    "HC far"
+   ],
+   "calendar_read_return_edges": [
+    10,
+    14,
+    18
+   ],
+   "calendar_write_return_edges": [
+    7,
+    11,
+    15
+   ]
+  },
+  {
+   "name": "vm_lg_local_NW",
+   "members": [
+    "hb_vms_NW",
+    "lg_NW_0",
+    "lg_NW_1",
+    "lg_NW_2"
+   ],
+   "ordered_links": [
+    {
+     "near": "hb_vms_NW",
+     "far": "lg_NW_0",
+     "signal_bits": 4448,
+     "edges": [
+      "lg_NW_0_rq",
+      "lg_NW_0_wq",
+      "lg_NW_0_rr",
+      "lg_NW_0_w_done"
+     ],
+     "fixed_tap_pipeline_edges_per_direction": 2,
+     "max_actual_port_manhattan_um": 500,
+     "actual_pin_geometry_qualified": false
+    },
+    {
+     "near": "lg_NW_0",
+     "far": "lg_NW_1",
+     "signal_bits": 4448,
+     "edges": [
+      "lg_NW_1_rq",
+      "lg_NW_1_wq",
+      "lg_NW_1_rr",
+      "lg_NW_1_wdone"
+     ],
+     "fixed_tap_pipeline_edges_per_direction": 2,
+     "max_actual_port_manhattan_um": 500,
+     "actual_pin_geometry_qualified": false
+    },
+    {
+     "near": "lg_NW_1",
+     "far": "lg_NW_2",
+     "signal_bits": 4448,
+     "edges": [
+      "lg_NW_2_rq",
+      "lg_NW_2_wq",
+      "lg_NW_2_rr",
+      "lg_NW_2_wdone"
+     ],
+     "fixed_tap_pipeline_edges_per_direction": 2,
+     "max_actual_port_manhattan_um": 500,
+     "actual_pin_geometry_qualified": false
+    }
+   ],
+   "reservation_policy": "coherent connected group; reserve all three taps with actual VM bank/hub/ring children",
+   "actual_slot_rectangles": null,
+   "slot_status": "MISSING_NATIVE_CHILD_SHAPES_AND_PIN_EXPORTS",
+   "required_before_absolute_coordinates": [
+    "actual eight-bank VM child placement",
+    "actual LG child root/pin partition and measured outline",
+    "PG-aware escape and all4448 signal-bit cuts",
+    "keep existing two-edge tap schedule; any new station needs explicit compiler price"
+   ],
+   "local_client_roles": [
+    "SU near",
+    "SFU middle",
+    "HC far"
+   ],
+   "calendar_read_return_edges": [
+    10,
+    14,
+    18
+   ],
+   "calendar_write_return_edges": [
+    7,
+    11,
+    15
+   ]
+  },
+  {
+   "name": "vm_lg_local_NE",
+   "members": [
+    "hb_vms_NE",
+    "lg_NE_0",
+    "lg_NE_1",
+    "lg_NE_2"
+   ],
+   "ordered_links": [
+    {
+     "near": "hb_vms_NE",
+     "far": "lg_NE_0",
+     "signal_bits": 4448,
+     "edges": [
+      "lg_NE_0_rq",
+      "lg_NE_0_wq",
+      "lg_NE_0_rr",
+      "lg_NE_0_w_done"
+     ],
+     "fixed_tap_pipeline_edges_per_direction": 2,
+     "max_actual_port_manhattan_um": 500,
+     "actual_pin_geometry_qualified": false
+    },
+    {
+     "near": "lg_NE_0",
+     "far": "lg_NE_1",
+     "signal_bits": 4448,
+     "edges": [
+      "lg_NE_1_rq",
+      "lg_NE_1_wq",
+      "lg_NE_1_rr",
+      "lg_NE_1_wdone"
+     ],
+     "fixed_tap_pipeline_edges_per_direction": 2,
+     "max_actual_port_manhattan_um": 500,
+     "actual_pin_geometry_qualified": false
+    },
+    {
+     "near": "lg_NE_1",
+     "far": "lg_NE_2",
+     "signal_bits": 4448,
+     "edges": [
+      "lg_NE_2_rq",
+      "lg_NE_2_wq",
+      "lg_NE_2_rr",
+      "lg_NE_2_wdone"
+     ],
+     "fixed_tap_pipeline_edges_per_direction": 2,
+     "max_actual_port_manhattan_um": 500,
+     "actual_pin_geometry_qualified": false
+    }
+   ],
+   "reservation_policy": "coherent connected group; reserve all three taps with actual VM bank/hub/ring children",
+   "actual_slot_rectangles": null,
+   "slot_status": "MISSING_NATIVE_CHILD_SHAPES_AND_PIN_EXPORTS",
+   "required_before_absolute_coordinates": [
+    "actual eight-bank VM child placement",
+    "actual LG child root/pin partition and measured outline",
+    "PG-aware escape and all4448 signal-bit cuts",
+    "keep existing two-edge tap schedule; any new station needs explicit compiler price"
+   ],
+   "local_client_roles": [
+    "SU near",
+    "SFU middle",
+    "HC far"
+   ],
+   "calendar_read_return_edges": [
+    10,
+    14,
+    18
+   ],
+   "calendar_write_return_edges": [
+    7,
+    11,
+    15
+   ]
+  }
+ ],
  "registered_station_masters": [
   {
    "master": "hfd_stn_v15_cc2224",
