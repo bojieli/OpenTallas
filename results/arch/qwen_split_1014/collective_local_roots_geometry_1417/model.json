@@ -2,7 +2,7 @@
   "schema": "opentallas.qcoll.physical_partition_model.v1",
   "qualified": false,
   "adopted": false,
-  "scope": "Planning budget only; no route and no RTL edits",
+  "scope": "Planning budget only;35root inventory per sourceowner newot_coll_tp8_local_roots candidate, not final pinABI; no route and no RTL edits",
   "outer_frame": {
     "n": "io_collective",
     "m": "qfd_collective_static_io_production",
@@ -182,20 +182,20 @@
       "h": 21.6,
       "data_face": "SN",
       "conservative_two_track_pin_cut": 0.44202020202020204,
-      "root": "input_ck",
+      "root": "clk_local[0]",
       "extra_data_edges": 0,
       "abi": "candidate_only_source_logic_partition_required"
     },
     {
       "name": "out",
-      "ff": 518,
+      "ff": 527,
       "x": 561.6,
       "y": 907.2,
       "w": 129.6,
       "h": 21.6,
       "data_face": "SN",
-      "conservative_two_track_pin_cut": 0.4185858585858586,
-      "root": "out_ck",
+      "conservative_two_track_pin_cut": 0.4258585858585859,
+      "root": "clk_local[12]",
       "extra_data_edges": 0,
       "abi": "candidate_only_source_logic_partition_required"
     },
@@ -208,7 +208,7 @@
       "h": 129.6,
       "data_face": "WE",
       "conservative_two_track_pin_cut": 0.44202020202020204,
-      "root": "srr0_ck",
+      "root": "clk_local[6]",
       "extra_data_edges": 0,
       "abi": "candidate_only_source_logic_partition_required"
     },
@@ -221,7 +221,7 @@
       "h": 129.6,
       "data_face": "WE",
       "conservative_two_track_pin_cut": 0.44202020202020204,
-      "root": "sx0_ck",
+      "root": "clk_local[3]",
       "extra_data_edges": 0,
       "abi": "candidate_only_source_logic_partition_required"
     },
@@ -234,7 +234,7 @@
       "h": 129.6,
       "data_face": "WE",
       "conservative_two_track_pin_cut": 0.4161616161616162,
-      "root": "drr_ck",
+      "root": "clk_local[11]",
       "extra_data_edges": 0,
       "abi": "candidate_only_source_logic_partition_required"
     },
@@ -247,7 +247,7 @@
       "h": 129.6,
       "data_face": "WE",
       "conservative_two_track_pin_cut": 0.4161616161616162,
-      "root": "ur_ck",
+      "root": "clk_local[10]",
       "extra_data_edges": 0,
       "abi": "candidate_only_source_logic_partition_required"
     },
@@ -260,7 +260,7 @@
       "h": 129.6,
       "data_face": "WE",
       "conservative_two_track_pin_cut": 0.44202020202020204,
-      "root": "dpr_ck",
+      "root": "clk_local[2]",
       "extra_data_edges": 0,
       "abi": "candidate_only_source_logic_partition_required"
     },
@@ -273,7 +273,7 @@
       "h": 129.6,
       "data_face": "WE",
       "conservative_two_track_pin_cut": 0.44202020202020204,
-      "root": "up_ck",
+      "root": "clk_local[1]",
       "extra_data_edges": 0,
       "abi": "candidate_only_source_logic_partition_required"
     },
@@ -286,7 +286,7 @@
       "h": 129.6,
       "data_face": "WE",
       "conservative_two_track_pin_cut": 0.44202020202020204,
-      "root": "srr2_ck",
+      "root": "clk_local[8]",
       "extra_data_edges": 0,
       "abi": "candidate_only_source_logic_partition_required"
     },
@@ -299,7 +299,7 @@
       "h": 129.6,
       "data_face": "WE",
       "conservative_two_track_pin_cut": 0.44202020202020204,
-      "root": "sx2_ck",
+      "root": "clk_local[5]",
       "extra_data_edges": 0,
       "abi": "candidate_only_source_logic_partition_required"
     },
@@ -312,7 +312,7 @@
       "h": 129.6,
       "data_face": "WE",
       "conservative_two_track_pin_cut": 0.44202020202020204,
-      "root": "srr1_ck",
+      "root": "clk_local[7]",
       "extra_data_edges": 0,
       "abi": "candidate_only_source_logic_partition_required"
     },
@@ -325,111 +325,111 @@
       "h": 129.6,
       "data_face": "WE",
       "conservative_two_track_pin_cut": 0.44202020202020204,
-      "root": "sx1_ck",
+      "root": "clk_local[4]",
       "extra_data_edges": 0,
       "abi": "candidate_only_source_logic_partition_required"
     },
     {
       "name": "lohi0",
-      "ff": 256,
+      "ff": 258,
       "x": 540,
       "y": 75.6,
       "w": 43.2,
       "h": 64.8,
       "data_face": "WE",
-      "conservative_two_track_pin_cut": 0.45511111111111113,
-      "root": "lohi0_ck",
+      "conservative_two_track_pin_cut": 0.45866666666666667,
+      "root": "clk_local[13]",
       "extra_data_edges": 0,
       "abi": "candidate_only_source_logic_partition_required"
     },
     {
       "name": "lohi1",
-      "ff": 256,
+      "ff": 258,
       "x": 540,
       "y": 291.6,
       "w": 43.2,
       "h": 64.8,
       "data_face": "WE",
-      "conservative_two_track_pin_cut": 0.45511111111111113,
-      "root": "lohi1_ck",
+      "conservative_two_track_pin_cut": 0.45866666666666667,
+      "root": "clk_local[14]",
       "extra_data_edges": 0,
       "abi": "candidate_only_source_logic_partition_required"
     },
     {
       "name": "lohi2",
-      "ff": 256,
+      "ff": 258,
       "x": 540,
       "y": 507.6,
       "w": 43.2,
       "h": 64.8,
       "data_face": "WE",
-      "conservative_two_track_pin_cut": 0.45511111111111113,
-      "root": "lohi2_ck",
+      "conservative_two_track_pin_cut": 0.45866666666666667,
+      "root": "clk_local[15]",
       "extra_data_edges": 0,
       "abi": "candidate_only_source_logic_partition_required"
     },
     {
       "name": "lohi3",
-      "ff": 256,
+      "ff": 258,
       "x": 540,
       "y": 723.6,
       "w": 43.2,
       "h": 64.8,
       "data_face": "WE",
-      "conservative_two_track_pin_cut": 0.45511111111111113,
-      "root": "lohi3_ck",
+      "conservative_two_track_pin_cut": 0.45866666666666667,
+      "root": "clk_local[16]",
       "extra_data_edges": 0,
       "abi": "candidate_only_source_logic_partition_required"
     },
     {
       "name": "pf0",
-      "ff": 128,
+      "ff": 130,
       "x": 540,
       "y": 151.2,
       "w": 32.4,
       "h": 43.2,
       "data_face": "WE",
-      "conservative_two_track_pin_cut": 0.3792592592592592,
-      "root": "pf0_ck",
+      "conservative_two_track_pin_cut": 0.38518518518518513,
+      "root": "clk_local[17]",
       "extra_data_edges": 0,
       "abi": "candidate_only_source_logic_partition_required"
     },
     {
       "name": "pf1",
-      "ff": 128,
+      "ff": 130,
       "x": 540,
       "y": 367.2,
       "w": 32.4,
       "h": 43.2,
       "data_face": "WE",
-      "conservative_two_track_pin_cut": 0.3792592592592592,
-      "root": "pf1_ck",
+      "conservative_two_track_pin_cut": 0.38518518518518513,
+      "root": "clk_local[18]",
       "extra_data_edges": 0,
       "abi": "candidate_only_source_logic_partition_required"
     },
     {
       "name": "pf2",
-      "ff": 128,
+      "ff": 130,
       "x": 540,
       "y": 583.2,
       "w": 32.4,
       "h": 43.2,
       "data_face": "WE",
-      "conservative_two_track_pin_cut": 0.3792592592592592,
-      "root": "pf2_ck",
+      "conservative_two_track_pin_cut": 0.38518518518518513,
+      "root": "clk_local[19]",
       "extra_data_edges": 0,
       "abi": "candidate_only_source_logic_partition_required"
     },
     {
       "name": "pf3",
-      "ff": 128,
+      "ff": 130,
       "x": 540,
       "y": 799.2,
       "w": 32.4,
       "h": 43.2,
       "data_face": "WE",
-      "conservative_two_track_pin_cut": 0.3792592592592592,
-      "root": "pf3_ck",
+      "conservative_two_track_pin_cut": 0.38518518518518513,
+      "root": "clk_local[20]",
       "extra_data_edges": 0,
       "abi": "candidate_only_source_logic_partition_required"
     },
@@ -442,7 +442,7 @@
       "h": 129.6,
       "data_face": "WE",
       "conservative_two_track_pin_cut": 0.41373737373737374,
-      "root": "xr_ck",
+      "root": "clk_local[9]",
       "extra_data_edges": 0,
       "abi": "candidate_only_source_logic_partition_required"
     },
@@ -455,7 +455,7 @@
       "h": 64.8,
       "data_face": "WE",
       "conservative_two_track_pin_cut": 0.38933333333333336,
-      "root": "tbc0_ck",
+      "root": "clk_local[21]",
       "extra_data_edges": 0,
       "abi": "candidate_only_source_logic_partition_required"
     },
@@ -468,7 +468,7 @@
       "h": 64.8,
       "data_face": "WE",
       "conservative_two_track_pin_cut": 0.38933333333333336,
-      "root": "tbc1_ck",
+      "root": "clk_local[22]",
       "extra_data_edges": 0,
       "abi": "candidate_only_source_logic_partition_required"
     },
@@ -481,7 +481,7 @@
       "h": 64.8,
       "data_face": "WE",
       "conservative_two_track_pin_cut": 0.38933333333333336,
-      "root": "tbc2_ck",
+      "root": "clk_local[23]",
       "extra_data_edges": 0,
       "abi": "candidate_only_source_logic_partition_required"
     },
@@ -494,7 +494,7 @@
       "h": 64.8,
       "data_face": "WE",
       "conservative_two_track_pin_cut": 0.3875555555555556,
-      "root": "tbc3_ck",
+      "root": "clk_local[24]",
       "extra_data_edges": 0,
       "abi": "candidate_only_source_logic_partition_required"
     },
@@ -507,7 +507,7 @@
       "h": 64.8,
       "data_face": "WE",
       "conservative_two_track_pin_cut": 0.39111111111111113,
-      "root": "tab_ck",
+      "root": "clk_local[25]",
       "extra_data_edges": 0,
       "abi": "candidate_only_source_logic_partition_required"
     },
@@ -520,7 +520,7 @@
       "h": 54,
       "data_face": "WE",
       "conservative_two_track_pin_cut": 0.36666666666666664,
-      "root": "tef_ck",
+      "root": "clk_local[27]",
       "extra_data_edges": 0,
       "abi": "candidate_only_source_logic_partition_required"
     },
@@ -533,7 +533,7 @@
       "h": 32.4,
       "data_face": "WE",
       "conservative_two_track_pin_cut": 0.32,
-      "root": "tde_ck",
+      "root": "clk_local[26]",
       "extra_data_edges": 0,
       "abi": "candidate_only_source_logic_partition_required"
     },
@@ -546,17 +546,95 @@
       "h": 54,
       "data_face": "WE",
       "conservative_two_track_pin_cut": 0.4444444444444444,
-      "root": "controller_ck",
+      "root": "clk",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "xfselect0",
+      "ff": 16,
+      "x": 54,
+      "y": 43.2,
+      "w": 21.6,
+      "h": 21.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.14222222222222222,
+      "root": "clk_local[28]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "xfselect1",
+      "ff": 16,
+      "x": 54,
+      "y": 259.2,
+      "w": 21.6,
+      "h": 21.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.14222222222222222,
+      "root": "clk_local[29]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "xfselect2",
+      "ff": 16,
+      "x": 54,
+      "y": 475.2,
+      "w": 21.6,
+      "h": 21.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.14222222222222222,
+      "root": "clk_local[30]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "xfselect3",
+      "ff": 16,
+      "x": 54,
+      "y": 691.2,
+      "w": 21.6,
+      "h": 21.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.14222222222222222,
+      "root": "clk_local[31]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "pringselector",
+      "ff": 20,
+      "x": 540,
+      "y": 199.8,
+      "w": 21.6,
+      "h": 21.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.17777777777777776,
+      "root": "clk_local[32]",
+      "extra_data_edges": 0,
+      "abi": "candidate_only_source_logic_partition_required"
+    },
+    {
+      "name": "rringselector",
+      "ff": 20,
+      "x": 540,
+      "y": 702,
+      "w": 21.6,
+      "h": 21.6,
+      "data_face": "WE",
+      "conservative_two_track_pin_cut": 0.17777777777777776,
+      "root": "clk_local[33]",
       "extra_data_edges": 0,
       "abi": "candidate_only_source_logic_partition_required"
     }
   ],
-  "leaf_count": 29,
-  "leaf_FF_total": 10051,
-  "candidate_leaf_area_um2": 72900.0,
+  "leaf_count": 35,
+  "leaf_FF_total": 10180,
+  "candidate_leaf_area_um2": 75699.35999999999,
   "existing_block_area_um2": 346813.8768,
   "overlaps": [],
-  "leaf_pin_budget_max": 0.45511111111111113,
+  "leaf_pin_budget_max": 0.45866666666666667,
   "baseline_coarse_cuts": [
     {
       "axis": "vertical",
@@ -867,6 +945,1247 @@
     "capacity": 7712.639999999998,
     "ratio": 0.5492282798108042
   },
+  "local_clock_entry_requests": [
+    {
+      "root": "clk_local[0]",
+      "inst": "input",
+      "xy_um": [
+        280.896,
+        918.012
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[12]",
+      "inst": "out",
+      "xy_um": [
+        561.696,
+        918.012
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[6]",
+      "inst": "srr0",
+      "xy_um": [
+        820.896,
+        108.012
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[3]",
+      "inst": "sx0",
+      "xy_um": [
+        820.896,
+        248.412
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[11]",
+      "inst": "drr",
+      "xy_um": [
+        820.896,
+        388.812
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[10]",
+      "inst": "ur",
+      "xy_um": [
+        820.896,
+        529.212
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[2]",
+      "inst": "dpr",
+      "xy_um": [
+        820.896,
+        669.6119999999999
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[1]",
+      "inst": "up",
+      "xy_um": [
+        820.896,
+        810.012
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[8]",
+      "inst": "srr2",
+      "xy_um": [
+        21.696,
+        259.212
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[5]",
+      "inst": "sx2",
+      "xy_um": [
+        21.696,
+        399.612
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[7]",
+      "inst": "srr1",
+      "xy_um": [
+        21.696,
+        540.012
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[4]",
+      "inst": "sx1",
+      "xy_um": [
+        21.696,
+        680.412
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[13]",
+      "inst": "lohi0",
+      "xy_um": [
+        540.096,
+        108.012
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[14]",
+      "inst": "lohi1",
+      "xy_um": [
+        540.096,
+        324.01200000000006
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[15]",
+      "inst": "lohi2",
+      "xy_um": [
+        540.096,
+        540.0120000000001
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[16]",
+      "inst": "lohi3",
+      "xy_um": [
+        540.096,
+        756.012
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[17]",
+      "inst": "pf0",
+      "xy_um": [
+        540.096,
+        172.81199999999998
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[18]",
+      "inst": "pf1",
+      "xy_um": [
+        540.096,
+        388.812
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[19]",
+      "inst": "pf2",
+      "xy_um": [
+        540.096,
+        604.812
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[20]",
+      "inst": "pf3",
+      "xy_um": [
+        540.096,
+        820.812
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[9]",
+      "inst": "xr",
+      "xy_um": [
+        291.696,
+        464.41200000000003
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[21]",
+      "inst": "tbc0",
+      "xy_um": [
+        291.696,
+        108.012
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[22]",
+      "inst": "tbc1",
+      "xy_um": [
+        291.696,
+        324.01200000000006
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[23]",
+      "inst": "tbc2",
+      "xy_um": [
+        291.696,
+        648.012
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[24]",
+      "inst": "tbc3",
+      "xy_um": [
+        291.696,
+        788.4119999999999
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[25]",
+      "inst": "tab",
+      "xy_um": [
+        540.096,
+        253.812
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[27]",
+      "inst": "tef",
+      "xy_um": [
+        540.096,
+        464.388
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[26]",
+      "inst": "tde",
+      "xy_um": [
+        540.096,
+        669.588
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk",
+      "inst": "controller",
+      "xy_um": [
+        291.696,
+        577.7879999999999
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[28]",
+      "inst": "xfselect0",
+      "xy_um": [
+        54.096,
+        54.012
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[29]",
+      "inst": "xfselect1",
+      "xy_um": [
+        54.096,
+        270.012
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[30]",
+      "inst": "xfselect2",
+      "xy_um": [
+        54.096,
+        486.012
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[31]",
+      "inst": "xfselect3",
+      "xy_um": [
+        54.096,
+        702.012
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[32]",
+      "inst": "pringselector",
+      "xy_um": [
+        540.096,
+        210.61200000000002
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "clk_local[33]",
+      "inst": "rringselector",
+      "xy_um": [
+        540.096,
+        712.8119999999999
+      ],
+      "face": "W",
+      "status": "newmasterclockfaceREQUEST_only",
+      "measured_insertion_ps": null
+    },
+    {
+      "root": "*g_xf?0?*u_fs_ck",
+      "inst": "*g_xf?0?*u_fs",
+      "xy_um": [
+        185.14800000000002,
+        224.598
+      ],
+      "face": "N",
+      "status": "existingclosedLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "existingviewinsertion_tobind"
+    },
+    {
+      "root": "*g_xf?1?*u_fs_ck",
+      "inst": "*g_xf?1?*u_fs",
+      "xy_um": [
+        185.14800000000002,
+        440.59799999999996
+      ],
+      "face": "N",
+      "status": "existingclosedLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "existingviewinsertion_tobind"
+    },
+    {
+      "root": "*g_xf?2?*u_fs_ck",
+      "inst": "*g_xf?2?*u_fs",
+      "xy_um": [
+        185.14800000000002,
+        656.598
+      ],
+      "face": "N",
+      "status": "existingclosedLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "existingviewinsertion_tobind"
+    },
+    {
+      "root": "*g_xf?3?*u_fs_ck",
+      "inst": "*g_xf?3?*u_fs",
+      "xy_um": [
+        185.14800000000002,
+        872.5980000000001
+      ],
+      "face": "N",
+      "status": "existingclosedLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "existingviewinsertion_tobind"
+    },
+    {
+      "root": "*g_pf?0?*u_fs_ck",
+      "inst": "*g_pf?0?*u_fs",
+      "xy_um": [
+        683.148,
+        224.598
+      ],
+      "face": "N",
+      "status": "existingclosedLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "existingviewinsertion_tobind"
+    },
+    {
+      "root": "*g_pf?1?*u_fs_ck",
+      "inst": "*g_pf?1?*u_fs",
+      "xy_um": [
+        683.148,
+        440.59799999999996
+      ],
+      "face": "N",
+      "status": "existingclosedLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "existingviewinsertion_tobind"
+    },
+    {
+      "root": "*g_pf?2?*u_fs_ck",
+      "inst": "*g_pf?2?*u_fs",
+      "xy_um": [
+        683.148,
+        656.598
+      ],
+      "face": "N",
+      "status": "existingclosedLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "existingviewinsertion_tobind"
+    },
+    {
+      "root": "*g_pf?3?*u_fs_ck",
+      "inst": "*g_pf?3?*u_fs",
+      "xy_um": [
+        683.148,
+        872.5980000000001
+      ],
+      "face": "N",
+      "status": "existingclosedLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "existingviewinsertion_tobind"
+    },
+    {
+      "root": "*g_sring?0?*u_m_ck",
+      "inst": "*g_sring?0?*u_m",
+      "xy_um": [
+        345.612,
+        65.58
+      ],
+      "face": "W",
+      "status": "actualSRAMLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "rawLibertyreference"
+    },
+    {
+      "root": "*g_sring?1?*u_m_ck",
+      "inst": "*g_sring?1?*u_m",
+      "xy_um": [
+        345.612,
+        238.38
+      ],
+      "face": "W",
+      "status": "actualSRAMLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "rawLibertyreference"
+    },
+    {
+      "root": "*g_sring?2?*u_m_ck",
+      "inst": "*g_sring?2?*u_m",
+      "xy_um": [
+        345.612,
+        454.38
+      ],
+      "face": "W",
+      "status": "actualSRAMLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "rawLibertyreference"
+    },
+    {
+      "root": "*g_sring?3?*u_m_ck",
+      "inst": "*g_sring?3?*u_m",
+      "xy_um": [
+        345.612,
+        691.98
+      ],
+      "face": "W",
+      "status": "actualSRAMLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "rawLibertyreference"
+    },
+    {
+      "root": "*g_sring?4?*u_m_ck",
+      "inst": "*g_sring?4?*u_m",
+      "xy_um": [
+        345.612,
+        864.78
+      ],
+      "face": "W",
+      "status": "actualSRAMLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "rawLibertyreference"
+    },
+    {
+      "root": "*u_pring*g_b?0?*u_m_ck",
+      "inst": "*u_pring*g_b?0?*u_m",
+      "xy_um": [
+        345.612,
+        121.74
+      ],
+      "face": "W",
+      "status": "actualSRAMLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "rawLibertyreference"
+    },
+    {
+      "root": "*u_pring*g_b?1?*u_m_ck",
+      "inst": "*u_pring*g_b?1?*u_m",
+      "xy_um": [
+        345.612,
+        303.17999999999995
+      ],
+      "face": "W",
+      "status": "actualSRAMLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "rawLibertyreference"
+    },
+    {
+      "root": "*u_rring*g_b?0?*u_m_ck",
+      "inst": "*u_rring*g_b?0?*u_m",
+      "xy_um": [
+        345.612,
+        519.18
+      ],
+      "face": "W",
+      "status": "actualSRAMLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "rawLibertyreference"
+    },
+    {
+      "root": "*u_rring*g_b?1?*u_m_ck",
+      "inst": "*u_rring*g_b?1?*u_m",
+      "xy_um": [
+        345.612,
+        756.78
+      ],
+      "face": "W",
+      "status": "actualSRAMLEFclockpin_localentryREQUEST",
+      "measured_insertion_ps": "rawLibertyreference"
+    }
+  ],
+  "proposed_obstacle_coarse_worst_cut": {
+    "axis": "x",
+    "pos": 645.828,
+    "bits": 4236,
+    "capacity": 7262.639999999998,
+    "ratio": 0.5832589802055452
+  },
+  "proposed_obstacle_cuts": [
+    {
+      "axis": "x",
+      "pos": 32.400000000000006,
+      "bits": 2184,
+      "capacity": 21830.4,
+      "ratio": 0.10004397537379067
+    },
+    {
+      "axis": "x",
+      "pos": 48.6,
+      "bits": 2184,
+      "capacity": 32630.4,
+      "ratio": 0.06693145042659605
+    },
+    {
+      "axis": "x",
+      "pos": 64.8,
+      "bits": 2184,
+      "capacity": 30830.399999999994,
+      "ratio": 0.07083917172660752
+    },
+    {
+      "axis": "x",
+      "pos": 81.0,
+      "bits": 2184,
+      "capacity": 32630.4,
+      "ratio": 0.06693145042659605
+    },
+    {
+      "axis": "x",
+      "pos": 177.12,
+      "bits": 2790,
+      "capacity": 7712.639999999998,
+      "ratio": 0.36174383868558635
+    },
+    {
+      "axis": "x",
+      "pos": 274.32000000000005,
+      "bits": 3352,
+      "capacity": 32630.4,
+      "ratio": 0.10272629204668039
+    },
+    {
+      "axis": "x",
+      "pos": 286.20000000000005,
+      "bits": 3352,
+      "capacity": 32180.399999999994,
+      "ratio": 0.10416278231470089
+    },
+    {
+      "axis": "x",
+      "pos": 302.40000000000003,
+      "bits": 3352,
+      "capacity": 22955.4,
+      "ratio": 0.14602228669506956
+    },
+    {
+      "axis": "x",
+      "pos": 324.0,
+      "bits": 4020,
+      "capacity": 25655.4,
+      "ratio": 0.15669215837601438
+    },
+    {
+      "axis": "x",
+      "pos": 340.20000000000005,
+      "bits": 5062,
+      "capacity": 32180.399999999994,
+      "ratio": 0.157300717206747
+    },
+    {
+      "axis": "x",
+      "pos": 378.0,
+      "bits": 5062,
+      "capacity": 22336.649999999994,
+      "ratio": 0.22662306120210512
+    },
+    {
+      "axis": "x",
+      "pos": 465.048,
+      "bits": 5030,
+      "capacity": 22786.649999999994,
+      "ratio": 0.22074328609075933
+    },
+    {
+      "axis": "x",
+      "pos": 521.532,
+      "bits": 5030,
+      "capacity": 25880.399999999998,
+      "ratio": 0.19435557410240956
+    },
+    {
+      "axis": "x",
+      "pos": 531.684,
+      "bits": 5030,
+      "capacity": 32630.4,
+      "ratio": 0.1541507306070413
+    },
+    {
+      "axis": "x",
+      "pos": 550.8,
+      "bits": 5030,
+      "capacity": 19580.4,
+      "ratio": 0.2568895426038283
+    },
+    {
+      "axis": "x",
+      "pos": 567.0,
+      "bits": 5260,
+      "capacity": 20030.4,
+      "ratio": 0.2626008467129962
+    },
+    {
+      "axis": "x",
+      "pos": 577.8,
+      "bits": 5260,
+      "capacity": 24305.4,
+      "ratio": 0.21641281361343567
+    },
+    {
+      "axis": "x",
+      "pos": 591.828,
+      "bits": 5260,
+      "capacity": 32180.399999999994,
+      "ratio": 0.16345353072056285
+    },
+    {
+      "axis": "x",
+      "pos": 645.828,
+      "bits": 4236,
+      "capacity": 7262.639999999998,
+      "ratio": 0.5832589802055452
+    },
+    {
+      "axis": "x",
+      "pos": 736.548,
+      "bits": 4236,
+      "capacity": 7712.639999999998,
+      "ratio": 0.5492282798108042
+    },
+    {
+      "axis": "x",
+      "pos": 801.348,
+      "bits": 3212,
+      "capacity": 32630.4,
+      "ratio": 0.09843581445523193
+    },
+    {
+      "axis": "x",
+      "pos": 831.5999999999999,
+      "bits": 3212,
+      "capacity": 16430.399999999998,
+      "ratio": 0.19549128444833969
+    },
+    {
+      "axis": "y",
+      "pos": 54.0,
+      "bits": 0,
+      "capacity": 15900.0,
+      "ratio": 0.0
+    },
+    {
+      "axis": "y",
+      "pos": 64.80000000000001,
+      "bits": 0,
+      "capacity": 13482.0,
+      "ratio": 0.0
+    },
+    {
+      "axis": "y",
+      "pos": 70.2,
+      "bits": 0,
+      "capacity": 14231.999999999998,
+      "ratio": 0.0
+    },
+    {
+      "axis": "y",
+      "pos": 85.05,
+      "bits": 0,
+      "capacity": 11232.0,
+      "ratio": 0.0
+    },
+    {
+      "axis": "y",
+      "pos": 107.72999999999999,
+      "bits": 546,
+      "capacity": 13650.0,
+      "ratio": 0.04
+    },
+    {
+      "axis": "y",
+      "pos": 130.67999999999998,
+      "bits": 546,
+      "capacity": 11181.0,
+      "ratio": 0.04883284142742152
+    },
+    {
+      "axis": "y",
+      "pos": 145.79999999999998,
+      "bits": 546,
+      "capacity": 14180.999999999996,
+      "ratio": 0.03850222128199705
+    },
+    {
+      "axis": "y",
+      "pos": 162.0,
+      "bits": 546,
+      "capacity": 13056.0,
+      "ratio": 0.04181985294117647
+    },
+    {
+      "axis": "y",
+      "pos": 178.2,
+      "bits": 546,
+      "capacity": 13806.0,
+      "ratio": 0.03954802259887006
+    },
+    {
+      "axis": "y",
+      "pos": 189.0,
+      "bits": 546,
+      "capacity": 13056.0,
+      "ratio": 0.04181985294117647
+    },
+    {
+      "axis": "y",
+      "pos": 194.39999999999998,
+      "bits": 546,
+      "capacity": 13056.0,
+      "ratio": 0.04181985294117647
+    },
+    {
+      "axis": "y",
+      "pos": 197.10000000000002,
+      "bits": 546,
+      "capacity": 13431.0,
+      "ratio": 0.04065222247040429
+    },
+    {
+      "axis": "y",
+      "pos": 200.88,
+      "bits": 546,
+      "capacity": 12681.0,
+      "ratio": 0.04305654128223326
+    },
+    {
+      "axis": "y",
+      "pos": 211.68,
+      "bits": 546,
+      "capacity": 15150.0,
+      "ratio": 0.03603960396039604
+    },
+    {
+      "axis": "y",
+      "pos": 223.01999999999998,
+      "bits": 546,
+      "capacity": 14399.999999999998,
+      "ratio": 0.037916666666666675
+    },
+    {
+      "axis": "y",
+      "pos": 231.12,
+      "bits": 546,
+      "capacity": 26999.999999999993,
+      "ratio": 0.020222222222222228
+    },
+    {
+      "axis": "y",
+      "pos": 248.39999999999998,
+      "bits": 546,
+      "capacity": 24581.999999999996,
+      "ratio": 0.02221137417622651
+    },
+    {
+      "axis": "y",
+      "pos": 263.25,
+      "bits": 1638,
+      "capacity": 11231.999999999998,
+      "ratio": 0.14583333333333337
+    },
+    {
+      "axis": "y",
+      "pos": 274.05,
+      "bits": 2730,
+      "capacity": 13649.999999999996,
+      "ratio": 0.20000000000000007
+    },
+    {
+      "axis": "y",
+      "pos": 283.5,
+      "bits": 2730,
+      "capacity": 14399.999999999998,
+      "ratio": 0.18958333333333335
+    },
+    {
+      "axis": "y",
+      "pos": 288.9,
+      "bits": 2730,
+      "capacity": 15900.0,
+      "ratio": 0.17169811320754716
+    },
+    {
+      "axis": "y",
+      "pos": 297.0,
+      "bits": 2730,
+      "capacity": 12900.0,
+      "ratio": 0.2116279069767442
+    },
+    {
+      "axis": "y",
+      "pos": 307.79999999999995,
+      "bits": 2730,
+      "capacity": 10430.999999999998,
+      "ratio": 0.26171987345412717
+    },
+    {
+      "axis": "y",
+      "pos": 318.6,
+      "bits": 2730,
+      "capacity": 11181.0,
+      "ratio": 0.2441642071371076
+    },
+    {
+      "axis": "y",
+      "pos": 329.4,
+      "bits": 2730,
+      "capacity": 11181.0,
+      "ratio": 0.2441642071371076
+    },
+    {
+      "axis": "y",
+      "pos": 345.6,
+      "bits": 2730,
+      "capacity": 10430.999999999998,
+      "ratio": 0.26171987345412717
+    },
+    {
+      "axis": "y",
+      "pos": 361.8,
+      "bits": 3790,
+      "capacity": 13431.0,
+      "ratio": 0.2821830094557367
+    },
+    {
+      "axis": "y",
+      "pos": 375.29999999999995,
+      "bits": 3790,
+      "capacity": 12306.0,
+      "ratio": 0.30797984722899396
+    },
+    {
+      "axis": "y",
+      "pos": 391.5,
+      "bits": 3790,
+      "capacity": 14775.0,
+      "ratio": 0.2565143824027073
+    },
+    {
+      "axis": "y",
+      "pos": 405.0,
+      "bits": 3790,
+      "capacity": 14025.0,
+      "ratio": 0.27023172905525844
+    },
+    {
+      "axis": "y",
+      "pos": 423.9,
+      "bits": 3790,
+      "capacity": 15150.0,
+      "ratio": 0.2501650165016502
+    },
+    {
+      "axis": "y",
+      "pos": 439.02,
+      "bits": 3790,
+      "capacity": 13649.999999999996,
+      "ratio": 0.2776556776556777
+    },
+    {
+      "axis": "y",
+      "pos": 447.12,
+      "bits": 3790,
+      "capacity": 26249.999999999993,
+      "ratio": 0.14438095238095242
+    },
+    {
+      "axis": "y",
+      "pos": 459.0,
+      "bits": 3790,
+      "capacity": 24581.999999999993,
+      "ratio": 0.15417785371409978
+    },
+    {
+      "axis": "y",
+      "pos": 469.79999999999995,
+      "bits": 3790,
+      "capacity": 24581.999999999993,
+      "ratio": 0.15417785371409978
+    },
+    {
+      "axis": "y",
+      "pos": 479.25,
+      "bits": 4270,
+      "capacity": 10481.999999999998,
+      "ratio": 0.4073650066781149
+    },
+    {
+      "axis": "y",
+      "pos": 487.35,
+      "bits": 3210,
+      "capacity": 12900.0,
+      "ratio": 0.24883720930232558
+    },
+    {
+      "axis": "y",
+      "pos": 494.1,
+      "bits": 3210,
+      "capacity": 14400.0,
+      "ratio": 0.22291666666666668
+    },
+    {
+      "axis": "y",
+      "pos": 502.20000000000005,
+      "bits": 3210,
+      "capacity": 15150.0,
+      "ratio": 0.21188118811881188
+    },
+    {
+      "axis": "y",
+      "pos": 513.0,
+      "bits": 3210,
+      "capacity": 13649.999999999996,
+      "ratio": 0.23516483516483522
+    },
+    {
+      "axis": "y",
+      "pos": 523.8,
+      "bits": 3210,
+      "capacity": 11180.999999999996,
+      "ratio": 0.28709417762275297
+    },
+    {
+      "axis": "y",
+      "pos": 540.0,
+      "bits": 3210,
+      "capacity": 11930.999999999996,
+      "ratio": 0.269047020367111
+    },
+    {
+      "axis": "y",
+      "pos": 561.5999999999999,
+      "bits": 3210,
+      "capacity": 10430.999999999998,
+      "ratio": 0.3077365545010067
+    },
+    {
+      "axis": "y",
+      "pos": 577.8,
+      "bits": 2118,
+      "capacity": 11931.0,
+      "ratio": 0.17752074427960773
+    },
+    {
+      "axis": "y",
+      "pos": 588.6,
+      "bits": 2118,
+      "capacity": 10806.000000000002,
+      "ratio": 0.19600222098833978
+    },
+    {
+      "axis": "y",
+      "pos": 596.7,
+      "bits": 2118,
+      "capacity": 11556.000000000004,
+      "ratio": 0.18328141225337483
+    },
+    {
+      "axis": "y",
+      "pos": 602.0999999999999,
+      "bits": 2118,
+      "capacity": 14025.000000000004,
+      "ratio": 0.15101604278074862
+    },
+    {
+      "axis": "y",
+      "pos": 610.2,
+      "bits": 2118,
+      "capacity": 15525.0,
+      "ratio": 0.13642512077294686
+    },
+    {
+      "axis": "y",
+      "pos": 621.0,
+      "bits": 2118,
+      "capacity": 13275.000000000002,
+      "ratio": 0.15954802259887005
+    },
+    {
+      "axis": "y",
+      "pos": 639.9000000000001,
+      "bits": 2118,
+      "capacity": 14400.0,
+      "ratio": 0.14708333333333334
+    },
+    {
+      "axis": "y",
+      "pos": 655.02,
+      "bits": 2118,
+      "capacity": 13275.000000000002,
+      "ratio": 0.15954802259887005
+    },
+    {
+      "axis": "y",
+      "pos": 668.52,
+      "bits": 2118,
+      "capacity": 25875.0,
+      "ratio": 0.08185507246376812
+    },
+    {
+      "axis": "y",
+      "pos": 683.0999999999999,
+      "bits": 2118,
+      "capacity": 27375.0,
+      "ratio": 0.07736986301369864
+    },
+    {
+      "axis": "y",
+      "pos": 688.5,
+      "bits": 2118,
+      "capacity": 28499.999999999996,
+      "ratio": 0.07431578947368422
+    },
+    {
+      "axis": "y",
+      "pos": 696.6,
+      "bits": 2118,
+      "capacity": 12732.0,
+      "ratio": 0.16635249764373233
+    },
+    {
+      "axis": "y",
+      "pos": 707.4000000000001,
+      "bits": 2664,
+      "capacity": 11981.999999999998,
+      "ratio": 0.2223335002503756
+    },
+    {
+      "axis": "y",
+      "pos": 716.8500000000001,
+      "bits": 2664,
+      "capacity": 12732.0,
+      "ratio": 0.20923656927426956
+    },
+    {
+      "axis": "y",
+      "pos": 722.25,
+      "bits": 2664,
+      "capacity": 15150.0,
+      "ratio": 0.17584158415841583
+    },
+    {
+      "axis": "y",
+      "pos": 729.0,
+      "bits": 2664,
+      "capacity": 14399.999999999998,
+      "ratio": 0.18500000000000003
+    },
+    {
+      "axis": "y",
+      "pos": 739.8,
+      "bits": 2632,
+      "capacity": 15150.0,
+      "ratio": 0.17372937293729374
+    },
+    {
+      "axis": "y",
+      "pos": 750.6,
+      "bits": 2632,
+      "capacity": 15149.999999999996,
+      "ratio": 0.17372937293729376
+    },
+    {
+      "axis": "y",
+      "pos": 772.2,
+      "bits": 2632,
+      "capacity": 11181.0,
+      "ratio": 0.23539933816295502
+    },
+    {
+      "axis": "y",
+      "pos": 793.8,
+      "bits": 2632,
+      "capacity": 12681.0,
+      "ratio": 0.20755460925794494
+    },
+    {
+      "axis": "y",
+      "pos": 810.0,
+      "bits": 2632,
+      "capacity": 11556.000000000002,
+      "ratio": 0.22776047075112493
+    },
+    {
+      "axis": "y",
+      "pos": 828.9,
+      "bits": 2632,
+      "capacity": 13056.0,
+      "ratio": 0.20159313725490197
+    },
+    {
+      "axis": "y",
+      "pos": 839.7,
+      "bits": 2632,
+      "capacity": 15525.0,
+      "ratio": 0.1695330112721417
+    },
+    {
+      "axis": "y",
+      "pos": 853.2,
+      "bits": 2632,
+      "capacity": 16650.0,
+      "ratio": 0.15807807807807808
+    },
+    {
+      "axis": "y",
+      "pos": 868.32,
+      "bits": 2632,
+      "capacity": 14231.999999999998,
+      "ratio": 0.18493535694210234
+    },
+    {
+      "axis": "y",
+      "pos": 873.72,
+      "bits": 2632,
+      "capacity": 26832.0,
+      "ratio": 0.09809183064997018
+    },
+    {
+      "axis": "y",
+      "pos": 884.25,
+      "bits": 2632,
+      "capacity": 27582.0,
+      "ratio": 0.09542455224421724
+    },
+    {
+      "axis": "y",
+      "pos": 900.45,
+      "bits": 2632,
+      "capacity": 30000.0,
+      "ratio": 0.08773333333333333
+    },
+    {
+      "axis": "y",
+      "pos": 918.0,
+      "bits": 1115,
+      "capacity": 21000.0,
+      "ratio": 0.0530952380952381
+    }
+  ],
   "external_incidents": [
     {
       "name": "rst_io",
