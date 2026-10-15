@@ -214,6 +214,18 @@ module ot_s81_engram_mixq_shell #(parameter integer MUT=0, VM_LAT=3, WRITE_COMMI
  reg [4:0] rvq;reg [2559:0] rdq;
  always @(posedge ck or negedge rn)if(!rn)rvq<=0;else rvq<=rs_v;
  always @(posedge ck)rdq<=rs_d;
+ // Real scalar/result ingress boundary. Capture output-valid together with
+ // every consumed BF16 result; register gate/status before shell control cones.
+ // This adds one edge at the REDUCE->ADD handoff and one at write retirement.
+ // MUT21 deliberately bypasses only valid alignment and must corrupt the test.
+ reg gv_q,ov_q,mf_q;reg [1:0] gc_q,oc_q;
+ reg [511:0] result_q;integer cap_lane;
+ wire ov_use=(MUT==21)?ov:ov_q;
+ always @(posedge ck or negedge rn)if(!rn)begin
+  gv_q<=0;ov_q<=0;mf_q<=0;gc_q<=0;oc_q<=0;
+ end else begin gv_q<=gv;ov_q<=ov;mf_q<=mf;gc_q<=gc;oc_q<=oc;end
+ always @(posedge ck)for(cap_lane=0;cap_lane<32;cap_lane=cap_lane+1)
+  result_q[16*cap_lane+:16]<=result[32*cap_lane+16+:16];
  reg [2:0] state;localparam IDLE=0,BEGIN=1,REDUCE=2,GATE=3,ADD=4,DRAIN=5,FINISH=6;
  reg [8:0] req,received,written;reg [15:0] commit_left;integer lane;
  always @(posedge ck or negedge rn)if(!rn)begin
@@ -221,7 +233,7 @@ module ot_s81_engram_mixq_shell #(parameter integer MUT=0, VM_LAT=3, WRITE_COMMI
   req<=0;received<=0;written<=0;commit_left<=0;dsc<=0;
  end else begin
   rq_v<=0;vtag<=0;wq_v<=0;done<=0;go<=0;iv<=0;
-  if(mf||rvq!=expected[VM_LAT])fault<=1;
+  if(mf_q||rvq!=expected[VM_LAT])fault<=1;
   case(state)
   IDLE:if(start)begin dsc<=desc;state<=BEGIN;end
   BEGIN:begin go<=1;phase<=0;req<=0;received<=0;written<=0;state<=REDUCE;end
@@ -239,7 +251,7 @@ module ot_s81_engram_mixq_shell #(parameter integer MUT=0, VM_LAT=3, WRITE_COMMI
     else begin for(lane=0;lane<32;lane=lane+1)h[32*lane+:32]<={rdq[16*lane+:16],16'd0};kv<=rdq[512+:1024];w<=rdq[1536+:1024];iv<=1;received<=received+1;if(received==159)state<=GATE;end
    end
   end
-  GATE:if(gv)begin if(gc!=COPY)fault<=1;phase<=1;req<=0;received<=0;state<=ADD;end
+  GATE:if(gv_q)begin if(gc_q!=COPY)fault<=1;phase<=1;req<=0;received<=0;state<=ADD;end
   ADD:begin
    if(req<160)begin
     rq_v<=5'b00111;vtag<=1'b1;rq_row[0+:14]<=hrow_base+req;
@@ -254,15 +266,15 @@ module ot_s81_engram_mixq_shell #(parameter integer MUT=0, VM_LAT=3, WRITE_COMMI
   DRAIN:;
   FINISH:begin
    if(commit_left!=0)commit_left<=commit_left-1;
-   else begin done<=!fault&&!mf;state<=IDLE;end
+   else begin done<=!fault&&!mf_q;state<=IDLE;end
   end
   default:fault<=1;
   endcase
   if(start&&state!=IDLE)fault<=1;
-  if(ov)begin
-   if((state!=ADD&&state!=DRAIN)||oc!=COPY||written>=160)fault<=1;
+  if(ov_use)begin
+   if((state!=ADD&&state!=DRAIN)||oc_q!=COPY||written>=160)fault<=1;
    wq_v<=1'b1;wq_mask<=16'hffff;
-   for(lane=0;lane<32;lane=lane+1)wq_d[16*lane+:16]<=result[32*lane+16+:16];
+   for(lane=0;lane<32;lane=lane+1)wq_d[16*lane+:16]<=result_q[16*lane+:16];
    wq_row<=ob+written;
    written<=written+1;
    if(written==159)begin state<=FINISH;commit_left<=WRITE_COMMIT_LAT;end

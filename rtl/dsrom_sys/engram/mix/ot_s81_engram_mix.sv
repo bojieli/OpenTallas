@@ -116,7 +116,7 @@ module ot_s81_engram_mix_control_core #(parameter integer N=32, D=5120, LM=5, LA
 
  wire rst_n;
  ot_s81_engram_reset root_reset(clk,arst_n,rst_n);
- localparam integer NV=D/N, GD=1+31+1+(7*LM+8*LA+4)+LA+19;
+ localparam integer NV=D/N, GD=1+31+1+(7*LM+8*LA+4)+LA+19+1; // +1 real registered eg_valid/gy feedback ingress
  initial begin
   if(N!=32 || D!=5120 || D%N || N<8 || (N&(N-1))) $fatal(1,"Engram shape must use whole power-of-two chunk8 beats");
  end
