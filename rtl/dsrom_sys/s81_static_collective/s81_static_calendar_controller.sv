@@ -1,4 +1,5 @@
 `timescale 1ns/1ps
+// ROM ABI opentallas.s81.collective-fixed-edge-rom.v2: CB468/RW564.
 // Fixed compiler calendar engine3 endpoint, single stream clock domain.
 // ROM consumes one row per edge, never waits for data, credits or completion.
 // c_cmd is pin-registered (+1 edge). First matching captured command starts row0; each later pulse must match its named edge.
@@ -53,9 +54,17 @@ module s81_static_calendar_controller #(
  output reg hc_expect_last,
  output reg hc_emit_slot,
  output reg [31:0] hc_emit_tag,
+ output reg commit_gather,
+ output reg raw_capture_payload_slot,
+ output reg raw_capture_meta_slot,
+ output reg raw_rx_write_slot,
+ output reg [13:0] raw_rx_payload_row,
+ output reg [13:0] raw_rx_meta_row,
+ output reg [7:0] raw_rx_tag,
+ output reg hc_assemble_slot,
  output wire busy
 );
- localparam integer CB=427,RW=523;
+ localparam integer CB=468,RW=564;
  reg [RW-1:0] rom[0:CYCLES-1];
  integer k;
  initial begin
@@ -79,7 +88,7 @@ module s81_static_calendar_controller #(
  assign busy=active;
  assign c_st={online,fault};
  always @(posedge clk or negedge rst_n) begin
-  if(!rst_n)begin read_slot<=0;read_row<=0;issue_slot<=0;tag<=0;seq<=0;last<=0;rankmask<=0;commit_slot<=0;commit_tag<=0;commit_seq<=0;commit_last<=0;commit_rankmask<=0;commit_rows<=0;tx_beat_slot<=0;tx_phase<=0;tx_frame_slot<=0;rx_beat_slot<=0;rx_phase<=0;rx_frame_slot<=0;channel_tx_slot<=0;channel_tx_kind<=0;channel_tx_seq<=0;channel_tx_last<=0;channel_rx_slot<=0;channel_rx_kind<=0;channel_rx_seq<=0;channel_rx_last<=0;channel_tx_beat_slot<=0;channel_tx_frame_slot<=0;channel_tx_phase<=0;channel_rx_beat_slot<=0;channel_rx_frame_slot<=0;channel_rx_phase<=0;hc_reduce_slot<=0;hc_write_slot<=0;hc_word_index<=0;hc_expect_seq<=0;hc_expect_last<=0;hc_emit_slot<=0;hc_emit_tag<=0;active<=0;fault<=0;online<=0;cursor<=0;c_done<=0;end
+  if(!rst_n)begin read_slot<=0;read_row<=0;issue_slot<=0;tag<=0;seq<=0;last<=0;rankmask<=0;commit_slot<=0;commit_tag<=0;commit_seq<=0;commit_last<=0;commit_rankmask<=0;commit_rows<=0;tx_beat_slot<=0;tx_phase<=0;tx_frame_slot<=0;rx_beat_slot<=0;rx_phase<=0;rx_frame_slot<=0;channel_tx_slot<=0;channel_tx_kind<=0;channel_tx_seq<=0;channel_tx_last<=0;channel_rx_slot<=0;channel_rx_kind<=0;channel_rx_seq<=0;channel_rx_last<=0;channel_tx_beat_slot<=0;channel_tx_frame_slot<=0;channel_tx_phase<=0;channel_rx_beat_slot<=0;channel_rx_frame_slot<=0;channel_rx_phase<=0;hc_reduce_slot<=0;hc_write_slot<=0;hc_word_index<=0;hc_expect_seq<=0;hc_expect_last<=0;hc_emit_slot<=0;hc_emit_tag<=0;commit_gather<=0;raw_capture_payload_slot<=0;raw_capture_meta_slot<=0;raw_rx_write_slot<=0;raw_rx_payload_row<=0;raw_rx_meta_row<=0;raw_rx_tag<=0;hc_assemble_slot<=0;active<=0;fault<=0;online<=0;cursor<=0;c_done<=0;end
   else begin
    read_slot<=enabled ? entry[0 +: 1] : 1'd0;
    read_row<=enabled ? entry[1 +: 14] : 14'd0;
@@ -121,6 +130,14 @@ module s81_static_calendar_controller #(
    hc_expect_last<=enabled ? entry[393 +: 1] : 1'd0;
    hc_emit_slot<=enabled ? entry[394 +: 1] : 1'd0;
    hc_emit_tag<=enabled ? entry[395 +: 32] : 32'd0;
+   commit_gather<=enabled ? entry[427 +: 1] : 1'd0;
+   raw_capture_payload_slot<=enabled ? entry[428 +: 1] : 1'd0;
+   raw_capture_meta_slot<=enabled ? entry[429 +: 1] : 1'd0;
+   raw_rx_write_slot<=enabled ? entry[430 +: 1] : 1'd0;
+   raw_rx_payload_row<=enabled ? entry[431 +: 14] : 14'd0;
+   raw_rx_meta_row<=enabled ? entry[445 +: 14] : 14'd0;
+   raw_rx_tag<=enabled ? entry[459 +: 8] : 8'd0;
+   hc_assemble_slot<=enabled ? entry[467 +: 1] : 1'd0;
    online<=(ROM_FILE!="") && rom[0][RW-1];
    c_done<=0;
    if(datapath_fault)fault<=1;
