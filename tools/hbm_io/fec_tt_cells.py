@@ -21,8 +21,9 @@ def library_cells(paths):
  return cells
 
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--map',type=pathlib.Path,required=True);ap.add_argument('--libs',type=pathlib.Path,required=True);ap.add_argument('--out',type=pathlib.Path,required=True);a=ap.parse_args()
+ ap=argparse.ArgumentParser();ap.add_argument('--map',type=pathlib.Path,required=True);ap.add_argument('--libs',type=pathlib.Path,required=True);ap.add_argument('--graph',type=pathlib.Path,required=True);ap.add_argument('--out',type=pathlib.Path,required=True);a=ap.parse_args()
  r=json.loads((a.map/'receipt.json').read_text());assert r['yosys_exit']==0
+ assert sha(a.graph)==r['bit_graph_sha256'];graph=json.loads(a.graph.read_text())
  p=a.map/'mapped.json';assert sha(p)==r['mapped_json_sha256']
  libs=sorted(a.libs.glob('*.lib'));assert {p.name:sha(p) for p in libs}==r['libraries_sha256'];library=library_cells(libs)
  m=json.loads(p.read_text())['modules'][r['top']];clocks={m['ports'][c]['bits'][0]:c for c in CLOCKS};counts=collections.Counter();roots=collections.Counter();area=seqarea=0.
@@ -35,6 +36,7 @@ def main():
    clk=c['connections']['CLK'];assert len(clk)==1 and clk[0] in clocks,(name,clk)
    roots[clocks[clk[0]]]+=1;seqarea+=spec['area']
  assert set(roots)==set(CLOCKS),'A clock root lost all sequential cells'
- res={'scope':'ACTUAL_STANDALONE_RVT_TT_CELL_MEMBERSHIP_AREA_UNITS_AND_DIRECT_CLOCK_AUDIT','mapped_json_sha256':r['mapped_json_sha256'],'mapping_receipt_sha256':sha(a.map/'receipt.json'),'tool_sha256':sha(pathlib.Path(__file__)),'libraries_sha256':r['libraries_sha256'],'all_cells_library_mapped':True,'library_cells_by_type':dict(counts),'total_library_cells':sum(counts.values()),'sequential_cells':sum(roots.values()),'sequential_cells_by_root':dict(roots),'total_area_library_units':area,'sequential_area_library_units':seqarea,'area_to_physical_um2_scale':None,'physical_qualified':False,'limits':['Area is exact sum of declared library cell areas; physical unit scale needs LEF crosscheck','No placement density, clock tree, buffering, wire or pin capacity included','Standalone scope excludes actual outer PMA, CDC and endpoints']}
+ assert dict(roots)=={c:v['flop_bits'] for c,v in graph['clock_roots'].items()},'Sequential state inventory changed during library mapping'
+ res={'scope':'ACTUAL_STANDALONE_RVT_TT_CELL_MEMBERSHIP_AREA_UNITS_AND_DIRECT_CLOCK_AUDIT','mapped_json_sha256':r['mapped_json_sha256'],'mapping_receipt_sha256':sha(a.map/'receipt.json'),'bit_graph_sha256':r['bit_graph_sha256'],'exact_source_scalar_state_inventory_preserved':True,'tool_sha256':sha(pathlib.Path(__file__)),'libraries_sha256':r['libraries_sha256'],'all_cells_library_mapped':True,'library_cells_by_type':dict(counts),'total_library_cells':sum(counts.values()),'sequential_cells':sum(roots.values()),'sequential_cells_by_root':dict(roots),'total_area_library_units':area,'sequential_area_library_units':seqarea,'area_to_physical_um2_scale':None,'physical_qualified':False,'limits':['Area is exact sum of declared library cell areas; physical unit scale needs LEF crosscheck','No placement density, clock tree, buffering, wire or pin capacity included','Standalone scope excludes actual outer PMA, CDC and endpoints']}
  a.out.write_text(json.dumps(res,indent=2)+'\n');print(json.dumps({k:v for k,v in res.items() if k!='library_cells_by_type'}))
 if __name__=='__main__':main()
