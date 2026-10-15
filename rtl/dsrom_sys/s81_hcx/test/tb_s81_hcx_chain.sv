@@ -110,6 +110,10 @@ module tb_s81_hcx_chain #(parameter integer HLAYOUT=1,MUT_POST=0,CAL=0,FAST=0,
    $display("CAL controller_return ctick=%0d -> FAST_CYC=%0d",g_rank[0].u.controller.ctick,g_rank[0].u.controller.ctick+2);
  end
  always @(posedge ckv)if(s_start)ss_age=cyc-cmd_cyc;
+ // post restart bound: the reused HC unit's record-ready (rec_rdy) after a block; a start while it is low faults the post
+ reg prdy_q=1;always @(posedge ckv)begin prdy_q<=post.post.ready;
+  if(post.post.ready&&!prdy_q)$display("CAL post_ready_rise age(ck)=%0d after cmd %0d",cyc-cmd_cyc,ncmd);
+  if(!post.post.ready&&prdy_q)$display("CAL post_ready_fall age(ck)=%0d after cmd %0d",cyc-cmd_cyc,ncmd);end
  reg[511:0]hm[0:1279],want[0:3];
  initial begin
   if(!$value$plusargs("DIR=%s",dir))$fatal(1,"DIR");

@@ -7,6 +7,8 @@
 set -u
 SRC=$1; OUT=$2; VEC=$3; IMG=$4; PIMG=$5; LAYER=${6:-1}; MODES=${7:-"base canon mut_layout mut_post"}
 VL=${VL:-verilator}; GP=${GP:-}
+# HLAYOUT 0 has no transpose stage: its projection return is measured 5 edges earlier (cal: ctick 476 -> FAST 478)
+HL0=${HL0:-"-GFAST=478 -GPROJ_DONE=479"}
 mkdir -p $OUT/rom; ln -sf $IMG/hcx_r*_p*_b*.viamap.hex $OUT/rom/ 2>/dev/null; ln -sf $PIMG/hcx_post_p*.viamap.hex $OUT/rom/
 LD=$(printf L%02d $LAYER)
 python3 $SRC/tools/s81_ftok/hcx_chain_vectors.py --src $VEC/vec/$LD --out $OUT/vec_h || exit 1
@@ -49,7 +51,7 @@ FILES="rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pip
  $POSTF rtl/dsrom_sys/s81_hcx/test/tb_s81_hcx_chain.sv"
 ( cd $SRC && sha256sum $FILES tools/s81_ftok/hcx_chain_vectors.py tools/s81_ftok/hcx_chain_gate.sh tools/s81_static_control/program.py ) > $OUT/sources.sha256
 for m in $MODES; do
-  case $m in cal) X="-GCAL=1";; base) X="";; canon) X="-GHLAYOUT=0";; mut_layout) X="-GHLAYOUT=0";; mut_post) X="-GMUT_POST=1";; esac
+  case $m in cal) X="-GCAL=1";; base) X="";; canon) X="-GHLAYOUT=0 $HL0";; mut_layout) X="-GHLAYOUT=0 $HL0";; mut_post) X="-GMUT_POST=1";; esac
   V=vec_h; [ $m = canon ] && V=vec_c
   ( cd $SRC && $VL --binary --timing -O3 +define+OT_HCX_ROM_HIERLOAD -CFLAGS -O1 -Wno-fatal -Wno-WIDTH -Wno-UNOPTFLAT -Wno-MULTIDRIVEN -Wno-PINMISSING \
       --top-module tb_s81_hcx_chain -GLAYER=$LAYER $GP $X --Mdir $OUT/obj_$m -j ${J:-8} $FILES > $OUT/build_$m.log 2>&1 ) \
