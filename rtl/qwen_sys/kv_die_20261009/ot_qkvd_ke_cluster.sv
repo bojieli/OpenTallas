@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
-// q13-kvleaves 2026-10-13: the KV end of the die link as a THIN cluster (ot_qkvd_kv_end SPL=1): hard children only
-// (ot_qkvd_ke_tiles.sv + the pin-registered link buffers ot_qkvd_sbufp / ot_qkvd_fbuf8p), no register and no logic of
-// its own (three tied strap buses).  Every seam is flop -> wire -> flop except the TX head mux in ot_qkvd_ke_tm (buffer dout flop ->
+// q13-kvleaves 2026-10-13: the KV end of the die link as a THIN cluster (ot_qkvd_kv_end SPL=1): hard children
+// (ot_qkvd_ke_tiles.sv + the pin-registered link buffers ot_qkvd_sbufp / ot_qkvd_fbuf8p), three tied strap buses and
+// ten W-face flops of its own (reset synchroniser + fault face flops: the block's clock reference, see below).  Every seam is flop -> wire -> flop except the TX head mux in ot_qkvd_ke_tm (buffer dout flop ->
 // wire -> 2 gate levels -> tf0) and the per-slice head-capture enable in ot_qkvd_ke_ro.  See ot_qkvd_ke_tiles.sv.
 // Buffers: TX class 4 / 5 (UCX deep) sbufp, class 6 fbuf8p; RX class 0 fbuf8p, 1 sbufp, 2 fbuf8p, 3 sbufp.
 module ot_qkvd_ke_cluster #(
@@ -41,7 +41,27 @@ module ot_qkvd_ke_cluster #(
     wire [7:0]  cfg_qd   = 8'(QD);
     wire [7:0]  cfg_fcr0 = 8'(FCR_RES + (MUT == 1 ? 1 : 0));
 
-    ot_qkvd_ke_wf u_wf (.clk(clk), .rst_n(rst_n), .rsw(rsw), .flt_i(flt), .fault(fault), .fault_cause(fault_cause));
+    // W face: the cluster's only registers -- the reset synchroniser (rst_n pin -> rsw, synchronous release) and the fault
+    // face flops (10 flops, the logic of ot_qkvd_ke_wf).  They stay in the cluster on purpose: the flow takes the die-context
+    // IO clock reference (link budget, io_ref, the view's insertion.json) from the block's OWN boundary registers; the
+    // spine clocks these with the registers inside the children (child pin arrival + child insertion), so they are that
+    // reference.  A cluster with no register at all leaves the reference on the children's early clock pins (~250 ps off).
+    (* keep *) reg r0, r1;
+    (* keep *) reg f0, f1;
+    reg        fault_r;
+    reg  [4:0] cause_r;
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin r0 <= 1'b0; r1 <= 1'b0; end else begin r0 <= 1'b1; r1 <= r0; end
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin f0 <= 1'b0; f1 <= 1'b0; end else begin f0 <= 1'b1; f1 <= f0; end
+    assign rsw = r1;
+    always @(posedge clk or negedge f1)
+        if (!f1) begin fault_r <= 1'b0; cause_r <= 5'd0; end
+`ifdef KVD_KE_MUT_WF
+        else begin fault_r <= flt[0]; cause_r <= {flt[1], flt[5:2]}; end      // mutant: cause bits rotated
+`else
+        else begin fault_r <= flt[0]; cause_r <= flt[5:1]; end
+`endif
+    assign fault = fault_r;
+    assign fault_cause = cause_r;
     ot_qkvd_ke_ctl u_ctl (.clk(clk), .rst_n(rsw), .cfg_ucx(cfg_ucx), .cfg_qd(cfg_qd), .cfg_fcr0(cfg_fcr0),
         .civ(civ), .rqv(rqv), .rqh(rqh), .crq(crq), .upq(upq), .pp_t(pp_t), .pp_r(pp_r), .gq_o(gq), .gq2_o(gq2),
         .rqq_o(rqq), .tf0h(tf0h), .tv0(tv0), .flt(flt), .rs_s(rs_s), .rs_n(rs_n), .rs_ta(rs_ta), .rs_tb(rs_tb));

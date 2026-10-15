@@ -60,12 +60,13 @@
   "macro_halo_um": 5.4,
   "pin_balance": {
    "v": "M5"
-  }
+  },
+  "io_hold_margin_ns": 0.005
  },
  "job": {
-  "owner": "Claude:q13-cromcbuf/cbuf",
-  "branch": "claude/q13-cbuf",
-  "tag": "q13b",
+  "owner": "Claude:q14-compute-elements r9",
+  "branch": "main",
+  "tag": "nl2",
   "hosts": [
    "ot-epyc1tb"
   ],
@@ -95,23 +96,43 @@
     "note": "MUT 1, MUT 2, NOWAIT, LATERR (strap one edge off the far ROM latency) each FAIL"
    }
   ],
-  "purpose": "Qwen ROM TP8 slot cbuf_g_* (8 instances): M5-capped tile at the contract outline, far-ROM side S / SU side N (faces swapped versus the legacy kit qfd_su_cbuf_g_a/b, cap M8), pins and clock on M5 N/S only, pin flops firm at the pins, three 128x256 SRAMs with 20 um channels (the 1024x256 macro does not leave routable pin-edge channels in the slot), macro halo 5.4 um + pin-edge M5 guard, far-ROM latency as the static strap f_lat."
+  "purpose": "native launch re-kit of CLOSED qfd_su_cbuf_g_m5-q13b-b9eec9a3e (ot_qfd_su_cbuf_g: TT launch 251.5 ps > 220 on 188 outputs at phi - R, results/arch/native_pin_audit_1014/qwen.json); same RTL, outline and pin faces; recipe-2 output stage"
  },
  "orfs_vars": {
   "DETAILED_ROUTE_ARGS": "-clean_patches",
   "OT_MEG_MASTER": "ot_sram_1r1w_128x256_m1_r2c2",
   "OT_MEG_EXPECT": 3,
   "OT_MEG_BAND": "2.16",
-  "OT_MEG_EDGES": "EW"
+  "OT_MEG_EDGES": "EW",
+  "OT_SPINE_PORT": "clk",
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_TREE_PAD": "1",
+  "OT_SPINE_MACRO_LEAF": "1",
+  "OT_SPINE_SAFE_BALANCE": "1"
  },
  "boundary_tcl": [
   "physical/qwen_coll_cx/macro_edge_m5_guard.tcl"
  ],
- "structural_change": "storage re-partitioned: the one ot_sram_1r1w_1024x256 (174.7 um wide: 7.6 um pin-edge channels in the 194.4 um slot) -> THREE ot_sram_1r1w_128x256 (94.8 x 41.0 um, one column, >= 20 um channels on all sides, bank 0 / bank 1 / overflow+HEAD) at the ORIGINAL slot outline; RTL: f_q / f_fault / grp get pin registers (every face pin is a flop), the far-ROM latency constant FLP 11 becomes the static strap f_lat[4:0] (tag-line tap select, 0..31 edges); physical: faces swapped (far ROM S, SU N), all pins + clock on M5 N/S, routing and PG capped at M5 (legacy M8), pin flops firm at the pins, macro halo 2.16 -> 5.4 um, macro pin-edge M5 guard E+W, hold margin 30 ps; r2 (gate 17da18560: rs_q 2 x 512 loads, rst_n 316 loads, TT clock 280.6-384.3 ps): the macro-select register is one copy per lane (8 x 2 b, 64 loads each, gated with the lane's own decode), the rst_n port drives only a 2-sync + 3 kept-copy reset relay (answer side / prefetcher / tag line; release 3 edges after the port), kit recipe 2 (pin hold stages + pin flops)",
+ "structural_change": "closed nl1 (recipe-2 output stage, io hold margin 5) audits TT capture 191.9 ps on crom_addr[144] (> 190) and boundary clock spread 90.8 ps (293.6..384.4 > 80) after TritonCTS: nl2 replaces TritonCTS by the pre-placed symmetric spine with tree-shared pads (OT_SPINE_SYM + TREE_PAD, SRAM macros as leaves, do-not-touch through route) so the boundary flops share one balanced tree; same RTL, outline, pin faces, output stage",
  "slot_change_request": "qfd_su_cbuf_g: NO outline change (contract 194.376 x 215.976 kept). Pin delta versus contract v3 wrapper: NEW static strap f_lat[4:0] on S (tie to the die's crom_g strobe->q edges + relays both ways; r22k value 11); grp[2:0] strap on S and rst_n on N (in the RTL, absent from the wrapper pin list); wrapper buses map to real ports fa={f_re,f_addr,f_stage} fq={f_q,f_fault} ctl={stage,tok_start,tpos} rdy={st_rdy,st_rdy_stage,fault,fault_code} sa={crom_re,crom_addr,crom_stage} sq=crom_q ck=clk; pins spread uniformly on M5 along S / N (2-track pitch) instead of the wrapper spans: re-plan the slot pin spans from the exported LEF; reset: release is 3 clk edges after the rst_n pin (relay), inputs ignored until then; crom_q latency unchanged (5 edges)",
  "recipe": 2,
  "children": [],
  "inter": [],
  "inhold": true,
- "outhold": true
+ "outhold": true,
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/rtl/qwen_r9_pin_audit_1014/su_cbuf_g_nl1_d10a72896.json",
+  "cell": "ot_qfd_su_cbuf_g",
+  "launch_ps": 196.5,
+  "capture_ps": 191.9,
+  "closed_job": "qfd_su_cbuf_g_m5-nl1-d10a72896",
+  "fix": "closed nl1 (recipe-2 output stage, io hold margin 5) audits TT capture 191.9 ps on crom_addr[144] (> 190) and boundary clock spread 90.8 ps (293.6..384.4 > 80) after TritonCTS: nl2 replaces TritonCTS by the pre-placed symmetric spine with tree-shared pads (OT_SPINE_SYM + TREE_PAD, SRAM macros as leaves, do-not-touch through route) so the boundary flops share one balanced tree; same RTL, outline, pin faces, output stage"
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "clock": "spine"
 }

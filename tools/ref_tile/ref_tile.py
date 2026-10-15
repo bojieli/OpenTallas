@@ -266,17 +266,25 @@ def load_spec(path: str) -> dict:
     # child gets its clock from its OWN port on the cluster face ("clock_ports": one scalar port per child clock pin, the
     # RTL wires port -> child clock pin).  The die delivers phi - R_i at each entry (R_i = entry wire + the child's routed
     # boundary insertion).  "clock_port" stays the first entry (kit CLKPORT, legacy readers).
-    if s.get("clock") == "entries":
+    if s.get("clock") in ("entries", "hybrid_entries"):
         cps = s.get("clock_ports")
         if s["kind"] != "cluster" or not isinstance(cps, list) or not cps or s["clock_port"] != cps[0]:
             raise SpecError('spec: "clock": "entries" needs kind cluster and "clock_ports" [one port per child clock pin] '
                             'with clock_port == clock_ports[0]')
         if len(set(cps)) != len(cps) or not all(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*(?:\[\d+\])?", c) for c in cps):
             raise SpecError("spec: clock_ports must be distinct scalar names or literal bus bits")
+        if s.get("clock") == "hybrid_entries":
+            roots = s.get("clock_cts_roots")
+            if not isinstance(roots, list) or not roots or not all(isinstance(p, str) for p in roots) or len(set(roots)) != len(roots) or not set(roots) < set(cps):
+                raise SpecError("hybrid_entries needs distinct clock_cts_roots, a nonempty proper subset of clock_ports")
+        elif s.get("clock_cts_roots") is not None:
+            raise SpecError("clock_cts_roots requires hybrid_entries")
         if s.get("clock_entry_domains") is not None:
             clock_entry_constraints.domains(s)
+    elif s.get("clock_cts_roots") is not None:
+        raise SpecError("clock_cts_roots requires hybrid_entries")
     elif s.get("clock_ports"):
-        raise SpecError('spec: "clock_ports" is only read with "clock": "entries"')
+        raise SpecError('spec: "clock_ports" requires entries or hybrid_entries')
     if s["pins"] == "auto":   # inputs S, outputs N, clock + resets W (a starting plan; set real faces per the die contract)
         import textbook_lint as TL  # noqa: E402
         mods = TL.rtl_modules([(ROOT / f).read_text(errors="replace") for f in s["sources"] if (ROOT / f).exists()])
@@ -434,6 +442,17 @@ def layer_contract(s: dict, slot: dict | None) -> dict:
             if out["pg_layer"] not in ok:
                 raise SpecError(f"layer contract: tile cap/PG {out['pg_layer']} != contract slot layer_cap "
                                 f"{slot.get('layer_cap') or slot.get('pg_layer')}")
+        # An explicit lower signal ceiling does not move the PG mesh or its
+        # parent strap. Never use this field to widen an existing route cap.
+        sig = s.get("signal_max_layer")
+        if sig is not None:
+            limit = metal(out["rlayers"][1])
+            slot_sig = metal((slot or {}).get("signal_max_layer"))
+            if slot_sig is not None:
+                limit = min(limit, slot_sig)
+            if metal(sig) is None or not 2 <= metal(sig) <= limit:
+                raise SpecError(f"tile signal_max_layer {sig!r} must be M2..M{limit}; it cannot loosen the layer contract")
+            out.update(rlayers=("M2", sig), signal_max_layer=sig)
         return out
     for ch in s["children"]:
         m = read_view_lef(ch["view"])
@@ -457,16 +476,23 @@ def layer_contract(s: dict, slot: dict | None) -> dict:
 def pin_layers(s: dict, lc: dict) -> tuple[str, str]:
     """(IO_PLACER_H, IO_PLACER_V) for the kit; every pin layer must be <= the tile's cap (no pin on the parent strap)."""
     r = s["route"]
-    cap = lc.get("layer_cap")
+    cap = lc["rlayers"][1]
     dh, dv = PIN_LAYERS.get(cap if cap in PIN_LAYERS else "M6")
     if lc.get("cap_basis", "").startswith("legacy"):
         dh, dv = PIN_LAYERS["M6"]
+    if s.get("signal_max_layer"):
+        if metal(cap) == 4:
+            dh, dv = "M4", "M3"
+        elif metal(cap) == 3:
+            dh, dv = "M2", "M3"
+        elif metal(cap) < 3:
+            dh, dv = cap, cap
     h, v = r.get("pin_h", dh), r.get("pin_v", dv)
     if s["kind"] == "tile":
         pb = r.get("pin_balance") or {}
         used = (h + " " + v + " " + pb.get("h", "") + " " + pb.get("v", "")).split()
         over = sorted({x for x in used if (metal(x) or 0) > metal(lc["rlayers"][1])})
-        if over and not (over == ["M6"] and lc.get("m6_pin_grant")):
+        if over and not (over == ["M6"] and lc.get("m6_pin_grant") and cap == "M5"):
             raise SpecError(f"layer contract: pin layers {over} above the tile's signal cap {lc['rlayers'][1]} "
                             f"(pins on M4/M5 under the M5 cap; the parent reaches them from M6)")
     return h, v
@@ -703,16 +729,16 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
     if "ANY" in pin_faces:
         pin_faces = set(FACES)
     x0c, y0c, x1c, y1c = CORE_MARGIN, CORE_MARGIN, W - CORE_MARGIN, H - CORE_MARGIN
-    # abut_plan (2026-10-13, Qwen VM lane bays): a PROBE cluster of wires + hard tiles placed at a planned channel narrower
+    # abut_plan: a held diagnostic tile/cluster at a planned channel narrower
     # than CHANNEL_UM, routed to MEASURE that channel.  {"channel_um": c, "edge_um": e, "why": "..."}: tile-tile gaps >= c
     # and tile-edge distances >= e pass as WARN "abut_plan"; only on a cluster whose job carries "hold_merge" (a probe is
     # never a closure candidate), so the 20-um rule still judges every block that can merge.
     ab = s.get("abut_plan") or None
     ab_n = {"channel": 0, "macro_edge": 0}
     if ab is not None:
-        if s.get("kind") != "cluster" or not (s.get("job") or {}).get("hold_merge") or not ab.get("why"):
-            out.append(("FAIL", "abut_plan", "abut_plan is for a probe cluster only: kind cluster, job.hold_merge and a 'why'",
-                        "drop abut_plan, or make the job a probe (job.hold_merge)"))
+        if s.get("kind") not in ("tile", "cluster") or not (s.get("job") or {}).get("hold_merge") or not ab.get("why"):
+            out.append(("FAIL", "abut_plan", "abut_plan requires a held diagnostic tile/cluster and a 'why'",
+                        "drop abut_plan, or make the job a probe (job.hold_merge); production keeps the20um rule"))
             ab = None
     ch_min = float(ab["channel_um"]) if ab else CHANNEL_UM
     edge_min = float(ab.get("edge_um", ab["channel_um"])) if ab else None
@@ -772,7 +798,7 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
 # --------------------------------------------------------------------------------------------- generation
 def clock_ports(s: dict) -> list:
     """the clock source ports: every entry of a "clock": "entries" cluster, else the one clock_port"""
-    return list(s["clock_ports"]) if s.get("clock") == "entries" else [s["clock_port"]]
+    return list(s["clock_ports"]) if s.get("clock") in ("entries", "hybrid_entries") else [s["clock_port"]]
 
 
 def clock_ports_sdc(s: dict) -> str:
@@ -850,14 +876,14 @@ def sdc_extra(s: dict) -> str:
     out = ""
     for f in s.get("sdc_extra", []):
         body = (ROOT / f).read_text()
-        if s.get("clock") == "entries" and "set ::ot_wc_entry_mode 1" in body:
+        if s.get("clock") in ("entries", "hybrid_entries") and "set ::ot_wc_entry_mode 1" in body:
             continue
         out += f"# ---- sdc_extra {f}\n" + body
     return out
 
 
 def gen_signoff(s: dict, refglob: str, inter: str) -> str:
-    io = "" if s.get("clock") == "entries" else (ROOT / QDM / "io_ref_skew.sdc").read_text()
+    io = "" if s.get("clock") in ("entries", "hybrid_entries") else (ROOT / QDM / "io_ref_skew.sdc").read_text()
     return (f"# {s['name']}: sign-off at 833.333 ps (generated by tools/ref_tile/ref_tile.py; same form as\n"
             f"# {QDM}/jobs/signoff_sdc.py): clock re-created at the real period, propagated, 60 / 25 ps uncertainty,\n"
             f"# die-context boundary io_ref_skew.sdc with this block's REFGLOB / INTER bound.\n"
@@ -866,7 +892,7 @@ def gen_signoff(s: dict, refglob: str, inter: str) -> str:
             "set_clock_uncertainty -hold 25 [all_clocks]\nset ::env(OT_IO_SKEW) 90\nset ::env(OT_IO_HOLD_SKEW) 50\n"
             f"set ::env(OT_REF_GLOB) {{{refglob}}}\nset ::env(OT_IO_INTER) {{{inter}}}\nset ::env(OT_IO_SKEW_INTER) 150\n"
             + io + sdc_extra(s)
-            + ("set ::ot_ce_require_wire 1\n" if s.get("clock") == "entries" else "")
+            + ("set ::ot_ce_require_wire 1\n" if s.get("clock") in ("entries", "hybrid_entries") else "")
             + clock_entry_constraints.generate(s, ROOT) + "\nset_propagated_clock [all_clocks]\n")
 
 
@@ -882,7 +908,7 @@ def io_hold_relief_ps(s: dict) -> int:
     only the route-time FF repair scene reads signoff_ffrepair.sdc, whose boundary min delays are relaxed by d, so a
     repaired IO path lands at sign-off FF slack >= io_hold_margin instead of >= hold_margin."""
     r = s.get("route", {})
-    if r.get("io_hold_margin_ns") is None or s.get("clock") == "entries":
+    if r.get("io_hold_margin_ns") is None or s.get("clock") in ("entries", "hybrid_entries"):
         return 0
     d = round((float(r.get("hold_margin_ns", 0.010)) - float(r["io_hold_margin_ns"])) * 1000)
     if d < 0:
@@ -967,8 +993,10 @@ def gen_hooks(s: dict, kd: str) -> dict:
                + ("; cluster: balanced clock spine with child-insertion leaf targets (sourced FIRST, so the io_ref wrapper"
                   " below wraps it)" if spine else "")]
     files = {}
-    if s.get("clock") == "entries":
+    if s.get("clock") in ("entries", "hybrid_entries"):
         pre_cts[0] += "; clock entries: no tree, one port per child clock pin (sourced FIRST)"
+        if s.get("clock") == "hybrid_entries":
+            pre_cts.append("set ::ot_ce_cts_roots {" + " ".join(s["clock_cts_roots"]) + "}")
         pre_cts.append("source /src/physical/common_flow/clock_entries.tcl")
     if spine:
         pre_cts += ["source /src/physical/common_flow/clock_spine.tcl", f"source /src/{kd}/spine_ins.tcl"]
@@ -981,8 +1009,8 @@ def gen_hooks(s: dict, kd: str) -> dict:
     # spec "boundary_tcl": repo Tcl files that re-apply a second-domain boundary after every io_ref switch (post-CTS
     # wrapper, pre-GRT, post-DRT), so the route times those ports against their own propagated clock, not only sign-off
     btcl = [f"source /src/{f}" for f in s.get("boundary_tcl", [])
-            if not (s.get("clock") == "entries" and "set ::ot_wc_entry_mode 1" in (ROOT / f).read_text())]
-    if s.get("clock") == "entries":
+            if not (s.get("clock") in ("entries", "hybrid_entries") and "set ::ot_wc_entry_mode 1" in (ROOT / f).read_text())]
+    if s.get("clock") in ("entries", "hybrid_entries"):
         files["clock_entry.sdc"] = "set ::ot_ce_require_wire 1\n" + clock_entry_constraints.generate(s, ROOT)
         btcl.append(f"source /src/{kd}/clock_entry.sdc")
     if btcl:
@@ -1008,6 +1036,10 @@ def gen_hooks(s: dict, kd: str) -> dict:
         # add before GRT, remove after DRT (the wrapper picks the mode from its caller); the hold ECO re-applies it
         pre_grt.append(f"source /src/{MACRO_EDGE_GUARD_TCL}")
         post_drt.append(f"source /src/{MACRO_EDGE_GUARD_TCL}")
+    if s["kind"] == "tile" and s.get("signal_max_layer"):
+        lc = layer_contract(s, contract_slot(s))
+        post_drt += ["source /src/tools/ref_tile/signal_layer_audit.tcl",
+                     f"ot_ref_audit_signal_layers {lc['rlayers'][1]} {lc['pg_layer']} [file join $::env(RESULTS_DIR) signal_layer_audit.json]"]
     corridor = s.get("pin_access", {}).get("corridor")
     if corridor:
         for post, hook in ((0, pre_grt), (1, post_drt)):
@@ -1234,7 +1266,15 @@ def cts_sink_env(r: dict) -> list:
     extra = str(cs.get("extra", "")).strip()
     if extra and not re.fullmatch(r"(-[a-z_]+( [0-9.]+)?)( -[a-z_]+( [0-9.]+)?)*", extra):
         raise SpecError(f"spec: route.cts_sink.extra {extra!r}: '-option [number]' items only")
-    return [f"CTSA={shq('-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75 -sink_clustering_size ' + str(int(cs['size'])) + ' -sink_clustering_max_diameter ' + str(int(cs['diameter_um'])) + (' ' + extra if extra else ''))}"]
+    # size / diameter_um are optional (s81 gather leaf 10-14: {"extra": "-no_obstruction_aware"} alone keeps the tool's
+    # max-cap register clustering and only drops the H-tree detour around the abutted SRAM stacks)
+    if ("size" in cs) != ("diameter_um" in cs):
+        raise SpecError("spec: route.cts_sink: give both size and diameter_um, or neither (extra only)")
+    sz = (f" -sink_clustering_size {int(cs['size'])} -sink_clustering_max_diameter {int(cs['diameter_um'])}"
+          if "size" in cs else "")
+    if not sz and not extra:
+        raise SpecError("spec: route.cts_sink: empty (no size / diameter_um and no extra)")
+    return [f"CTSA={shq('-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75' + sz + (' ' + extra if extra else ''))}"]
 
 
 def pin_balance_env(r: dict, lc: dict | None = None) -> list:
@@ -1258,6 +1298,8 @@ def referenced_paths(s: dict, kd: str) -> list:
            "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl", "physical/common_flow/grt_macro_top_layer.tcl"]
     if macro_edge_guard(s):
         out += [MACRO_EDGE_GUARD_TCL, "physical/common_flow/macro_edge_via_guard.tcl"]
+    if s["kind"] == "tile" and s.get("signal_max_layer"):
+        out.append("tools/ref_tile/signal_layer_audit.tcl")
     if s.get("forwarded_clock"):
         out.append("physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
     if s.get("io_tcl"):
@@ -1281,7 +1323,7 @@ def referenced_paths(s: dict, kd: str) -> list:
         out.append(HDLY_TCL)
     if s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine":
         out += ["physical/common_flow/clock_spine.tcl", f"{kd}/spine_ins.tcl"]
-    if s.get("clock") == "entries":
+    if s.get("clock") in ("entries", "hybrid_entries"):
         out += ["physical/common_flow/clock_entries.tcl", f"{kd}/clock_entry.sdc"]
         out += [f"{ch['view']}/insertion.json" for ch in s["children"]]
     for it in s["macros"] + s["children"]:
@@ -1432,7 +1474,8 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
           "die": [0, 0, W, H], "core": [CORE_MARGIN, CORE_MARGIN, W - CORE_MARGIN, H - CORE_MARGIN], "why": why,
           "std_area_um2": std, "layer_contract": {k: (list(v) if isinstance(v, tuple) else v) for k, v in lc.items()},
           "pins": s["pins"], "clock_port": s["clock_port"],
-          **({"clock_ports": clock_ports(s)} if s.get("clock") == "entries" else {}),
+          **({"clock_ports": clock_ports(s)} if s.get("clock") in ("entries", "hybrid_entries") else {}),
+          **({"clock_cts_roots": list(s["clock_cts_roots"])} if s.get("clock") == "hybrid_entries" else {}),
           "blocks": [{k: b[k] for k in ("kind", "view", "master", "inst", "idx", "x", "y", "w", "h", "orient", "offtrack")}
                      for b in blocks],
           "findings": [list(f) for f in findings], "referenced": referenced_paths(s, kd)}
@@ -1499,6 +1542,10 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
     o.mkdir(parents=True, exist_ok=True)
     cmd = [sys.executable, str(ROOT / "tools/tt_views/view_export.py"), "--orfs-dir", orfs_dir, "--name", top,
            "--out", str(o), "--interface-sdc", str(ROOT / kit / "signoff.sdc"), "--corners", "ss,ff,tt"]
+    lc = fp.get("layer_contract", {})
+    if lc.get("signal_max_layer"):
+        cmd += ["--signal-max-layer", lc["signal_max_layer"], "--pg-max-layer", lc["pg_layer"],
+                "--signal-audit-tcl", str(ROOT / "tools/ref_tile/signal_layer_audit.tcl")]
     # EXPORT-SDC (2026-10-13): view_export replays the route's VERDICT constraint sequence (closure-loop run: routed
     # 6_final.sdc, SPEF, post-SDCs, io_ref_routed.sdc last) and fails when its TT / FF slack differs from the verdict.
     # Outside a loop run there is no verdict to replay: the same order from the kit (never signoff.sdc INSTEAD of the

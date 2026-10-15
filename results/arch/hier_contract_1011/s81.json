@@ -1,9 +1,9 @@
 {
  "schema": "opentallas.hier_contract.v1",
  "die": "ds_rom_s81_layer1",
- "version": 18,
+ "version": 19,
  "owner": "s81die-1011",
- "updated": "2026-10-14 PT (s81_die_v18, Claude die lead)",
+ "updated": "2026-10-14 PM PT (s81 die lead r6, Claude)",
  "clock_period_ps": 833.333,
  "layer_defaults": {
   "rule": "m5_tile_cap_20261012",
@@ -152,7 +152,8 @@
    "when": "2026-10-13 PT",
    "change": "s81-die: (1) sp_capture slot = its cluster kit: 1728 x 561.6, + ckv / rsv (S, M5), cluster layers (PG M7, strap M8, signals <= M6), clock entry N / M5, clock level early_tap owed with spread <= 80 ps. (2) field plan v17: q-bank pins on the q element pins, node pins in fixed slots, x relay site beside the slot station, station xai / xbi at the E end, falling-edge capture at the forwarded-lane ends. (3) relay masters dsfd_rly_283_EW / 266_EW (kits submitted). (4) SU does not fit (fill 1.117): the column gives at most +2.45 mm2 below the slab (v18 trial), wings beyond; bgq28 height not taken (column full); capture per-child clock pins, hub cluster rule, crooty_y 11 slices, ce_s clusters taken. (5) c6p pathfinding STA read by path class: real to real TT +169.3 / FF +131.1; every violator is a placeholder lib. NEIGHBOUR COST: none (no slab moved; the capture slot is 0.024 um wider inside the 1,728-um hub column). No price changed; cfifo: -1 cycle on the field round trip."
   },
-  "v18 (2026-10-14): base = v18 geometry trial (SU S growth 686.88 um, VM +609.12, HC comb 840.24); Q element per-mac re-partition; dsfd_rly_283_EW v3 kit; SU region decision; master list + assigned pin files; sign-off TT setup / FF hold / DRC 0 with SS as a sensitivity column (owner 10-07, restated 10-14 06:35)."
+  "v18 (2026-10-14): base = v18 geometry trial (SU S growth 686.88 um, VM +609.12, HC comb 840.24); Q element per-mac re-partition; dsfd_rly_283_EW v3 kit; SU region decision; master list + assigned pin files; sign-off TT setup / FF hold / DRC 0 with SS as a sensitivity column (owner 10-07, restated 10-14 06:35).",
+  "v19 (2026-10-14 PM): PQ return topology G (frame pq_root row off the layer die; 12 count-only RWB slots in a 43.2-um gather|capture seam); Engram hl / Markov K256 / gather v4 / NORM-variant pin files + subslots; cfifo falling-edge station launch; crootr_f target insertion = measured R; IR gate recipe --pdn-field-cov 0.09; recipe s81_layer1_v19c (c9p)."
  ],
  "slots": [
   {
@@ -2594,8 +2595,8 @@
     "face": "N",
     "layer": "M4"
    },
-   "target_insertion_ps": 250.0,
-   "version": 13,
+   "target_insertion_ps": 711.2,
+   "version": 19,
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
@@ -2610,7 +2611,8 @@
    "layer_cap": "M6",
    "notes": "v11 crootr sub-tile (frame = crootr_c0 region); faces: N p_y/p_req -> crooty; S ch_fd/ch_fv/ch_rst -> chain; comb-side f_fd/f_fv from T_tree; interim view = ref_tile kit s81hc_crrfw_ref until closed",
    "kit": "s81hc_crrfw_ref",
-   "layer_cap_grant": "coordinator 2026-10-12 11:40 (el1012-hbm-verdicts.log): child of hardened cluster sp_hc_s/crootr_c0; the M5 cap protects die tracks over DIE-placed tiles only, children follow the cluster's plan (PG on M6, cluster M7)"
+   "layer_cap_grant": "coordinator 2026-10-12 11:40 (el1012-hbm-verdicts.log): child of hardened cluster sp_hc_s/crootr_c0; the M5 cap protects die tracks over DIE-placed tiles only, children follow the cluster's plan (PG on M6, cluster M7)",
+   "clock_tap": "earlier trunk tap (R > 300 ps), hops SKEW 150 ps (die clock delivery rule, owner 10-13 09:25); measured TT boundary mean of kit crrfw, leaf spread <= 33.2 ps, 11,430 sinks"
   },
   {
    "name": "sp_hc_s/crootr_c0/r",
@@ -3370,8 +3372,8 @@
     "face": "N",
     "layer": "M4"
    },
-   "target_insertion_ps": 250.0,
-   "version": 13,
+   "target_insertion_ps": 862.2,
+   "version": 19,
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
@@ -3386,7 +3388,8 @@
    "layer_cap": "M6",
    "notes": "v11 crootr sub-tile (frame = crootr_c2 region); faces: N p_y/p_req -> crooty; S ch_fd/ch_fv/ch_rst -> chain; comb-side f_fd/f_fv from T_tree; interim view = ref_tile kit s81hc_crrfe_ref until closed",
    "kit": "s81hc_crrfe_ref",
-   "layer_cap_grant": "coordinator 2026-10-12 11:40 (el1012-hbm-verdicts.log): child of hardened cluster sp_hc_s/crootr_c2; the M5 cap protects die tracks over DIE-placed tiles only, children follow the cluster's plan (PG on M6, cluster M7)"
+   "layer_cap_grant": "coordinator 2026-10-12 11:40 (el1012-hbm-verdicts.log): child of hardened cluster sp_hc_s/crootr_c2; the M5 cap protects die tracks over DIE-placed tiles only, children follow the cluster's plan (PG on M6, cluster M7)",
+   "clock_tap": "earlier trunk tap (R > 300 ps), hops SKEW 150 ps (die clock delivery rule, owner 10-13 09:25); measured TT boundary mean of kit crrfe, leaf spread <= 33.2 ps, 11,430 sinks"
   },
   {
    "name": "sp_hc_s/crootr_c2/r",
@@ -8846,7 +8849,8 @@
     "N": "tree word in: i_v, i_t[32], i_d[32], i_e, i_p, up_fault = 68 b (M5)",
     "S": "root word out: r_v, r_row[16], r_pos[3], r_fp32[32], r_bf16[16], r_e, r_p, fault = 71 b (M5)",
     "W": "clk, rst_n (M4)"
-   }
+   },
+   "v19_state": "REMOVED from the layer die by PQ topology G (--pq-g); slot kept for the record only"
   },
   {
    "name": "rep/pqc/dsfd_rstg_pq66",
@@ -8885,7 +8889,8 @@
     "placement": "die plan floorplan.def (generator); no single origin"
    },
    "notes": "v15 per-master row (PQ return stage 66 b); replaces the 0 x 0 descriptor row rep/pqc; outline = die case c5 master v16: stays 132.168 wide (0.408 um overhang past the 131.76 root on E, inside the frame); width follows the pq_root port decision (68 / 71).",
-   "parent_master": "dsfd_sp_pq"
+   "parent_master": "dsfd_sp_pq",
+   "v19_state": "REMOVED from the layer die by PQ topology G (--pq-g); slot kept for the record only"
   },
   {
    "name": "rep/pqc/dsfd_rstg_pq68",
@@ -8924,7 +8929,8 @@
     "placement": "die plan floorplan.def (generator); no single origin"
    },
    "notes": "v15 per-master row (PQ return stage 68 b); replaces the 0 x 0 descriptor row rep/pqc; outline = die case c5 master v16: stays 132.168 wide (0.408 um overhang past the 131.76 root on E, inside the frame); width follows the pq_root port decision (68 / 71).",
-   "parent_master": "dsfd_sp_pq"
+   "parent_master": "dsfd_sp_pq",
+   "v19_state": "REMOVED from the layer die by PQ topology G (--pq-g); slot kept for the record only"
   },
   {
    "name": "rep/hrow",
@@ -15028,6 +15034,10 @@
    "parent_source_sha256": "6a0c1133557d594905354f24a1905c26417ad6ef272507de17a58400d41ae22c",
    "open_seams_source": "results/rtl/s81_suhc_20261013/native_comb_seam_screen_1013.json",
    "status": "CANDIDATE CHILD ROWS ONLY; closed reference rows retained, new CCF and pad require routed successor views; 23 old failing seams remain open"
+  },
+  "dsfd_svc_c_native_ingress": {
+   "source": "physical/s81_die_pins/v20_svc_native/ingress_layout.json",
+   "qualification": "OPEN native full parent, slots reserved for actual masters"
   }
  },
  "layer_cap_grants": {
@@ -17923,5 +17933,38 @@
    "structural_fix": "split into hardened leaves per clock (vmx_w / hep_t on ck, vmx_r ratio FIFO the only two-clock leaf, small) so the die delivers each clock pin at phi - R; macro inputs launched from a flop on the macro's leaf",
    "owed_by": "B"
   }
+ },
+ "v19_decisions": {
+  "pq_topology": {
+   "decision": "G: the gather root leaves are THE roots; frame pq_root / rstg_pq66 / rstg_pq68 off the layer die; column return = raw tree words (cfifo ri 68)",
+   "closed_views_not_bound": [
+    "ot_s81_pq_rwb11_native (s81pq_rwb11_native-g1-71a9de5c6)",
+    "ot_s81_pq_rwb10_native (s81pq_rwb10_native-g1-71a9de5c6)"
+   ],
+   "count_slots": "physical/s81_die_pins/v19/pq_count_slots.json (12 x 142.56 x 38.88 in the gather|capture seam widened 21.6 -> 43.2 um; x-tiling 15/2/15)",
+   "owed": [
+    "PQ owner: count-only RTL ot_s81_pq_rwbc<N> + bench + mutant",
+    "PQ owner + S-FUNC: gather root capacity (S = 8 open rows) vs the PQ phase programs",
+    "die: exact count-leaf pins by --rtl-bind once the RTL exists; seam 43.2 in GEN"
+   ],
+   "generator": "--pq-g (claude/el1011-s81dieit 1d1428aa4)"
+  },
+  "pin_files": {
+   "engram_hl": "physical/s81_die_pins/v19_engram_hl/ (rr256 seam, NEW rr256w, rr64 with leaf-local reset, ctl split ot_engc_ctl_x + ot_engc_ctl_s + one closed dsfd_rly_1_EW on the ACK; worst hop 474.5 um)",
+   "markov_k256": "physical/s81_die_pins/v19_markov/ (13 closed leaves adopted; cluster 453.6 x 436.32 ring layout, worst hop 429.6 um; HEAD die slot S of the mtp sequencer)",
+   "gather_v4": "physical/s81_die_pins/v19/ (slot v18 data pins + ck_q[47:0]; leaves li at the closed 276 relay o pattern from leaf y + 40.32, co at the mean t_capture pattern; closed relays / strip / ctl adopted)",
+   "norm_tree_variant": "physical/s81_die_pins/v19_ntree/ (default-off; serial NORM stays bound)"
+  },
+  "cfifo_edge": {
+   "decision": "(i) station launches xd on the FALLING xf edge (fn0 non-inverted clock copy), the closed colck cfifo keeps its rising capture: half-cycle source-synchronous hop",
+   "generator": "--cfifo-fall-launch",
+   "owed": "grpA: colck view recipe-2 pin-register re-route for 252 xb launch pins (263.3 > 220)"
+  },
+  "hcol_hsel": "CLOSED -wall-3e33b86ec-g4 views bind; 14 o pins 220.1-239.6 ps launch accepted while their hop L <= 333 um (o + 0.76 L + s <= 683.3); re-route only if the classified table names a hop",
+  "vm_fe": "(a) capture-slice locality (no 4 x 4 crossbar); gate: slice write-port balance measured in tb_dsfd_sp_vm at production shape before any parent spec; fallback (b) corner turn",
+  "ir_gate": "combined per-instance loss (tools/s81/ir_combined.py) <= 35 mV: field 27.13 / spine 18.28 mV at --pdn-field-cov 0.09 + measured BF power (irv19_c090, EPYC4)",
+  "hc_widths": "hc_s <-> hc_t at the RTL widths 3,056 / 2,164 per column (15,660 b): cut 0.24 of M5+M7 over the 1,816.5-um slab width; reach needs --hop-spread",
+  "recipe": "results/physical/die_iter_1012/s81/s81_layer1_v19c.opts (c9p)",
+  "source": "el1011-s81die.log 2026-10-14 (s81-die lead r6)"
  }
 }

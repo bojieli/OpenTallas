@@ -23,7 +23,8 @@
 // Quadrant od / a0 links keep the composition's station chains (u_stn_q0/1/2, latency-insensitive, generated with the
 // slab floorplan; not instantiated here).  SVC FRAME PROTOCOL v1.1 unchanged: one result source (id 0) on a0 / od.
 // ---------------------------------------------------------------------------------------------------------------
-module dsfd_svc_c #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0) (
+module dsfd_svc_c #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
+                    parameter bit SRAM_MACRO = 0, parameter bit NATIVE_FP32_PV = 0) (
     input  wire [0:0]     ck,
     input  wire [0:0]     rst,
     input  wire [32:0]    j,
@@ -41,7 +42,12 @@ module dsfd_svc_c #(parameter integer MUT = 0, parameter integer DIE_ID = 0, par
     input  wire [32*4-1:0]   r_beat,
     // per-stack host write face (dsfd_host_sd hw<s> / hc<s>): {cls 2, we, addr 32, d 256, v} in, {ack 8, cr} out
     input  wire [291:0]   hw,
-    output wire [8:0]     hc
+    output wire [8:0]     hc,
+    // s81-die-rtl-bind 2026-10-14 (die bus st_<st>, composition.json nets.status): the stack's HBM controller status
+    // hs = {fault, live} of dsfd_ctrl.st.  A controller fault, or the controller dropping live after it came up, fails
+    // the svc closed: sticky, folded into the job-done fault jd[1] (-> dsfd_svc_join c_st -> sequencer s4) and into
+    // fault.  Issue needs no live gate: the controller returns no PC credit (rk) before it is live.
+    input  wire [1:0]     hs
 );
     localparam integer NRH0 = 9, NRH1 = 5, NRH3 = 5, NRS = 5, NRQ = 6, NRX = 6;
     localparam integer NRI0 = 7, NRI1 = 3, NRI2 = 3, NRI3 = 8;
@@ -50,12 +56,20 @@ module dsfd_svc_c #(parameter integer MUT = 0, parameter integer DIE_ID = 0, par
     function automatic integer rq_(input integer d); rq_ = (d < 2) ? d : 2; endfunction   // remote-quadrant index (0, 1, 3)
     function automatic integer nri(input integer d); nri = (d == 0) ? NRI0 : (d == 1) ? NRI1 : (d == 2) ? NRI2 : NRI3; endfunction
 
-    wire [514:0] qg; wire [2059:0] q_q;
+    wire [514:0] qg, q_native; wire [2059:0] q_q;
+    wire probability_fault;
+    generate if (NATIVE_FP32_PV) begin : g_native_pv
+        ot_s81_svc_probability_frame u_pv_pack (.clk(ck[0]), .rst_n(rst[0]), .q(q), .q_o(q_native), .fault(probability_fault));
+    end else begin : g_legacy_pv
+        assign q_native = q; assign probability_fault = 1'b0;
+    end endgenerate
     wire [3:0] od_v, od_r, a0_v, a0_r; wire [2047:0] od_d, a0_d; wire a1_v, a1_r, x_v, x_r; wire [511:0] a1_d, x_d;
-    dsfd_svcio_job #(.MUT(MUT)) u_job (.ck(ck), .rst(rst), .j(j), .jd(jd), .q(q), .q_o(qg),
+    wire [1:0] jd_j; wire fault_io;
+    dsfd_svc_hs #(.MUT(MUT)) u_hs (.ck(ck[0]), .rst(rst[0]), .hs(hs), .jd_i(jd_j | {probability_fault,1'b0}), .flt_i(fault_io | probability_fault), .jd_o(jd), .flt_o(fault[0]));
+    dsfd_svcio_job #(.MUT(MUT)) u_job (.ck(ck), .rst(rst), .j(j), .jd(jd_j), .q(q_native), .q_o(qg),
         .t_a0({ad[492:481], ad[508:496], ad[0]}), .t_a1({ad[1005:994], ad[1021:1009], ad[513]}),
         .t_x({xd[493:482], xd[509:497], xd[1]}), .t_od({od[493:482], od[509:497], od[1]}));
-    ot_s81ph_svc_io_t u_io (.ck(ck[0]), .rst(rst[0]), .q(qg), .od(od), .xd(xd), .ad(ad), .fault(fault[0]), .q_q(q_q),
+    ot_s81ph_svc_io_t u_io (.ck(ck[0]), .rst(rst[0]), .q(qg), .od(od), .xd(xd), .ad(ad), .fault(fault_io), .q_q(q_q),
         .od_v(od_v), .od_d(od_d), .od_r(od_r), .a0_v(a0_v), .a0_d(a0_d), .a0_r(a0_r), .a1_v(a1_v), .a1_d(a1_d), .a1_r(a1_r),
         .x_v(x_v), .x_d(x_d), .x_r(x_r), .of(of[0]), .xf(xf[0]), .af(af[0]));
     wire [32*341-1:0] qrq; wire [31:0] qrk, qwd, qrv; wire [32*256-1:0] qr_data; wire [32*17-1:0] qr_tag; wire [32*4-1:0] qr_beat;
@@ -89,7 +103,7 @@ module dsfd_svc_c #(parameter integer MUT = 0, parameter integer DIE_ID = 0, par
 
     generate for (g = 0; g < 4; g = g + 1) begin : g_q
         // non-home quadrants have 1-bit h_* / unused score ports (tied off inside); quadrant 2 has the full bundles
-        dsfd_svc_quad #(.QID(g), .DIE_ID(DIE_ID), .ST(ST), .NRH0(NRH0), .NRH1(NRH1), .NRH3(NRH3), .NRI(nri(g)), .NRS(NRS),
+        dsfd_svc_quad #(.QID(g), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .NRH0(NRH0), .NRH1(NRH1), .NRH3(NRH3), .NRI(nri(g)), .NRS(NRS),
                         .NG(NG)) u_q (
             .ck(ck), .rst(rst), .q(q_q[515*g +: 515]),
             .od_v(od_v[g]), .od_d(od_d[512*g +: 512]), .od_r(od_r[g]), .a0_v(a0_v[g]), .a0_d(a0_d[512*g +: 512]), .a0_r(a0_r[g]),
@@ -185,4 +199,32 @@ module dsfd_svc_c #(parameter integer MUT = 0, parameter integer DIE_ID = 0, par
             .o_v(xs_v[g+1]), .o_d(xs_d[512*(g+1) +: 512]), .o_r(xs_r[g+1]));
     end endgenerate
     assign x_v = xs_v[NRX]; assign x_d = xs_d[512*NRX +: 512]; assign xs_r[NRX] = x_r;
+endmodule
+
+// dsfd_svc_hs (s81-die-rtl-bind 2026-10-14): the HBM controller status face of the svc slab.  hs = {fault, live} from
+// dsfd_ctrl (its own flops, stream domain, 2-flop synchronised here all the same: the slab's ck root is not the
+// controller's).  hf (sticky until reset): the controller's fault, or live falling after it was seen high.
+// jd_o = jd_i with the fault bit ORed with hf, flt_o = flt_i | hf: both launched from flops (+1 cycle on the svc job
+// done / fault, priced 0 against the 2,951-cycle idx.score op).  MUT bit 3 (negative control): hf never reaches jd / fault.
+module dsfd_svc_hs #(parameter integer MUT = 0) (
+    input  wire       ck, rst,
+    input  wire [1:0] hs, jd_i,
+    input  wire       flt_i,
+    output reg  [1:0] jd_o,
+    output reg        flt_o
+);
+    reg [1:0] rs_q;
+    always @(posedge ck or negedge rst) if (!rst) rs_q <= 2'b00; else rs_q <= {rs_q[0], 1'b1};
+    wire rn = rs_q[1];
+    (* async_reg = "true" *) reg [1:0] s0, s1;
+    reg up, hf;
+    always @(posedge ck or negedge rn)
+        if (!rn) begin s0 <= 2'b00; s1 <= 2'b00; up <= 1'b0; hf <= 1'b0; jd_o <= 2'b00; flt_o <= 1'b0; end
+        else begin
+            s0 <= hs; s1 <= s0;
+            if (s1[0]) up <= 1'b1;
+            if (s1[1] || (up && !s1[0])) hf <= 1'b1;
+            jd_o  <= {jd_i[1] | (hf & !MUT[3]), jd_i[0]};
+            flt_o <= flt_i | (hf & !MUT[3]);
+        end
 endmodule

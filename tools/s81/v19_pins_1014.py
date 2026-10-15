@@ -377,6 +377,93 @@ def markov(out):
     print('markov', len(files), 'files; outline', outline, 'worst hop', worst)
 
 
+# ------------------------------------------------------------------------------------------------------------ gather v4
+def gather(out):
+    import importlib.util
+    case = 'v19_gather_v4'
+    v18 = json.loads((ROOT / 'physical/s81_die_pins/v18/dsfd_sp_gather_c.json').read_text())
+    # relay placement = the gather owner's v4 parent plan (claude/s81-gather-1014 04320da21 tools/s81_ph/gather_parent_spec.py)
+    spec = importlib.util.spec_from_file_location('gps', sys.argv[3] if len(sys.argv) > 3 else '/tmp/gps/tools/s81_ph/gather_parent_spec.py')
+    gps = importlib.util.module_from_spec(spec); spec.loader.exec_module(gps)
+    relays = gps.relay_children()
+    ROW_Y, LEAF_X = gps.ROW_Y, gps.LEAF_X
+    files = []
+    RV = {m: lef_bits(f'physical/ref_tile/s81_rly_{m[9:].lower()}/views/{m}/{m}.lef') for m in
+          ('dsfd_rly_276_WE', 'dsfd_rly_276_EW', 'dsfd_rly_214_NS')}
+    for m in RV:
+        fn, _, _ = adopt(out, m, f'physical/ref_tile/s81_rly_{m[9:].lower()}/views/{m}/{m}.lef', case, 'gather v4 relay, CLOSED')
+        files.append(fn)
+    for m, kit in (('dsfd_rly_9_WE', 's81_rly_9_we'), ('dsfd_rly_12_EN', 's81_rly_12_en'), ('dsfd_gth_ctl', 'dsfd_gth_ctl')):
+        fn, _, _ = adopt(out, m, f'physical/ref_tile/{kit}/views/{m}/{m}.lef', case, 'gather v4 strip child, CLOSED (g4 / gth4)')
+        files.append(fn)
+    # ---- leaves (190.08 x 164.16, both halves one pin set each; 16 instances a master)
+    LW, LH = 190.08, 164.16
+    tc = v18['ports']['t_capture']['per_bit']
+    co_x = []
+    for j in range(212):                     # co[j]: the mean over the 4 rows (and 4 columns of the half) of the slot pin x
+        xs = [tc[848 * g + 212 * k + j][2] - LEAF_X[g] for g in range(8) for k in range(4)]
+        co_x.append(sum(xs) / len(xs))
+    order = sorted(range(212), key=lambda j: co_x[j])
+    co = [None] * 212
+    x = max(30.0, co_x[order[0]])
+    for j in order:                          # monotone, >= 0.096 apart, around the mean pattern
+        x = max(x + P if co[order[0]] is not None else x, co_x[j]); co[j] = round(x, 3)
+    jog = max(abs(tc[848 * g + 212 * k + j][2] - LEAF_X[g] - co[j]) for g in range(8) for k in range(4) for j in range(212))
+    for half, m, face, rly, opin in (('W', 'dsfd_gth_rw', 'W', 'dsfd_rly_276_WE', 'o'), ('E', 'dsfd_gth_re', 'E', 'dsfd_rly_276_EW', 'o')):
+        (_, _), rp = RV[rly]
+        oy = [rp[opin][i][3] for i in range(276)]
+        y0 = 40.32 + oy[0]                    # lane relay at leaf y + 40.32 (the c2 stage-0 offset of the plan) drives straight
+        li = at(face, [y0 + (oy[i] - oy[0]) for i in range(276)])
+        ports = dict(li=li, co=at('S', co), st=run('S', 20.016, 2), rso=at('S', [20.304]), ck=at('N', [95.04]), rs=at('N', [95.136]))
+        files.append(write(out, m, [LW, LH], ports, 'ck', f'die lead r6: li on {face} at the closed {rly}.o y-pattern from leaf y '
+                           f'{y0:.3f} (a lane relay placed at leaf y + 40.32 abuts straight; c3 relays move to that offset in '
+                           f'their channel), co on S at the mean slot t_capture pattern of the 32 (g, k) slices (each row '
+                           f'jogs <= {jog:.1f} um in the row channel / S strip to its own slot pins), st / rso S W of co, ck / rs N',
+                           case, dict(lane_relay_offset_um=40.32, co_max_jog_um=round(jog, 1))))
+    # ---- slot: v18 data ports unchanged + 48 compensated relay clock entries ck_q at the face nearest each relay ck pin
+    W, H = v18['outline_um']
+    occ = {(b[0], b[1]): set() for v in v18['ports'].values() for b in v['per_bit']}
+    for v in v18['ports'].values():
+        for b in v['per_bit']:
+            occ[(b[0], b[1])].add(round(b[2] / P))
+    ckq, ent = [], []
+    for r in relays:
+        (_, _), rp = RV[r['master']]
+        f, ly, cx, cy = rp['ck'][0]
+        px, py = r['at'][0] + cx, r['at'][1] + cy
+        d = {'W': px, 'E': W - px, 'S': py, 'N': H - py}
+        face = min(d, key=d.get)
+        c = py if face in 'WE' else px
+        lay = 'M4' if face in 'WE' else 'M5'
+        s = occ.setdefault((face, lay), set())
+        k = round(c / P)
+        while any(abs(k - o) < 2 for o in s):
+            k += 1
+        s.add(k)
+        ckq.append([face, lay, round(k * P, 3), 0.192])
+        ent.append(dict(port=r['clock'], child=f"{r['inst']} ({r['master']}).ck", parent_face=face, entry_wire_manhattan_um=round(d[face] + abs(k * P - c), 1)))
+    slot = {p: [list(b) for b in v['per_bit']] for p, v in v18['ports'].items()}
+    slot['ck_q'] = ckq
+    rec_extra = dict(clock_entries={'stream': v18['clock_entries']['stream'] + [f'ck_q[{i}]' for i in range(48)], 'serial': ['ckv', 'ck_r[132]']},
+                     ck_q_entries=ent, relay_plan='claude/s81-gather-1014 04320da21 gather_parent_spec.relay_children()',
+                     unchanged_from_v18=sorted(v18['ports']), removed=['f_pq', 't_pq (PQ RWB interface, not gather ports)'])
+    fn = write(out, 'dsfd_sp_gather_c', [W, H], slot, 'ck', 'die lead r6: v18 slot pins unchanged + ck_q[47:0] (one compensated '
+               'entry per lane / result relay at the slot face nearest its ck pin)', case, rec_extra)
+    files.append(fn)
+    lay = dict(schema='opentallas.s81.subslots.v1', parent='dsfd_sp_gather_c (gather v4 direct, slot outline unchanged)', case=case,
+               owner='S81 die lead r6', request='el1011-s81die.log 2026-10-14 11:36 (s81-gather r2)',
+               relays={r['inst']: dict(master=r['master'], at=r['at'], clock=r['clock']) for r in relays},
+               leaf_origins={f'g{g}k{k}': [LEAF_X[g], ROW_Y[k]] for g in range(8) for k in range(4)},
+               decisions=['leaf li window fixed by the closed lane relay o pattern at leaf y + 40.32: the c3 stage-1 relays '
+                          '(channel g1|g2 / g6|g5) move from +66.96 to +40.32; c3 stage 0 keeps +93.6 (relay -> relay jog in '
+                          'its channel)', f'co pin x = mean slot pattern; worst row jog {jog:.1f} um',
+                          'ck_q entries: nearest slot face; entry wire lengths in the slot file (ck_q_entries)',
+                          'strip relays 9_WE / 12_EN and ctl g4 CLOSED: adopted'],
+               pin_files=[str(f.relative_to(ROOT)) for f in files])
+    (out / 'layout_gather.json').write_text(json.dumps(lay, indent=1) + '\n')
+    print('gather', len(files), 'files; co jog', round(jog, 1), 'max ck_q entry', max(e['entry_wire_manhattan_um'] for e in ent))
+
+
 if __name__ == '__main__':
     what, out = sys.argv[1], Path(sys.argv[2])
     out = out if out.is_absolute() else ROOT / out
