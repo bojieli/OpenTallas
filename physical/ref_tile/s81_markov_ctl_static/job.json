@@ -1,5 +1,5 @@
 {
- "name": "s81_markov_ctl_static-st1-COMMIT",
+ "name": "s81_markov_ctl_static-st1-b314866a0",
  "block": "ot_s81_markov_ctl_static",
  "ref_tile": true,
  "owner": "Codex:s81-markov-native-1014",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 12,
  "source": {
   "branch": "codex/s81-markov-native-1014",
-  "commit": "COMMIT",
+  "commit": "b314866a0",
   "extra_paths": [
    "rtl/experimental/dsrom_markov_20261008",
    "rtl/test/dsrom_markov_20261008",
@@ -102,7 +102,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81_markov_ctl_static/s81_markov_ctl_static-st1-COMMIT"
+   "to": "results/rtl/ref_tile/s81_markov_ctl_static/s81_markov_ctl_static-st1-b314866a0"
   }
  ],
  "cycles_added": 0,
