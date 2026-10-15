@@ -20,10 +20,10 @@ module ot_s81_pq_ctl_static_native (
  output wire [457:0] mdr_o,
  input wire [11:0] q2f_i,
  input wire [191:0] ga_i,
- output wire [608:0] bc_hr_o,
- input wire calendar_v,input wire[71:0] calendar_action,
+ output wire [609:0] bc_hr_o,
+ input wire calendar_v,input wire[74:0] calendar_action,
  input wire go,
- input wire [8:0] i_ph,
+ input wire [9:0] i_ph,
  input wire [2:0] i_np,
  input wire [18:0] i_xbase,
  input wire [18:0] i_xps,
@@ -42,30 +42,30 @@ module ot_s81_pq_ctl_static_native (
  output reg ev_end,
  output reg stream_end_v,output reg[1:0] stream_end_tag,
  output reg [1:0] ev_tag,
- output wire [9:0] rom_pa0,
- output wire [9:0] rom_pa1,
+ output wire [10:0] rom_pa0,
+ output wire [10:0] rom_pa1,
  input wire [63:0] rom_pq0,
  input wire [63:0] rom_pq1,
- output wire [10:0] rom_sa,
+ output wire [13:0] rom_sa,
  input wire [47:0] rom_sq
 );
- localparam integer PHW=9,SAW=11,R=128,VAW=19,VRD=64,KMAX=6144,RG=11;
- localparam integer NBLK=192,BAW=8,NGR=12,NWB=192,WBW=8,BW=1633;
+ localparam integer PHW=10,SAW=14,R=128,VAW=19,VRD=64,KMAX=6144,RG=11;
+ localparam integer NBLK=192,BAW=8,NGR=12,NWB=192,WBW=8,BW=1634;
  wire[0:0] rst_cv;
  ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rr
  (.clk(clk),.rst_n_in(rst_n),.rst_n(rst_cv));
  wire rst_c=rst_cv[0];
- wire[71:0] action=calendar_v ? calendar_action : 72'd0;
+ wire[74:0] action=calendar_v ? calendar_action : 75'd0;
  wire[1:0] accept_tag=action[1:0];
  wire rq_v=action[22];wire[13:0] rq_k=action[36:23];
  wire rq_par=action[37],rq_fam=action[38];
  `ifdef OT_S81_PQ_STATIC_MUT_TAG
- wire[1:0] config_tag=action[61:60]^2'd1,launch_tag=action[64:63];
+ wire[1:0] config_tag=action[64:63]^2'd1,launch_tag=action[67:66];
 `else
- wire[1:0] config_tag=action[61:60],launch_tag=action[64:63];
+ wire[1:0] config_tag=action[64:63],launch_tag=action[67:66];
 `endif
  reg sv[0:3],sr[0:3],si[0:3];
- reg[8:0] s_ph[0:3];reg[18:0] s_xb[0:3],s_ob[0:3],s_xps[0:3],s_ops[0:3];
+ reg[9:0] s_ph[0:3];reg[18:0] s_xb[0:3],s_ob[0:3],s_xps[0:3],s_ops[0:3];
  reg[1:0] s_fm[0:3];reg[63:0] s_pw[0:3];reg[15:0] s_rs[0:3];
  reg[2:0] s_np[0:3];reg[3:0] s_np1[0:3];
  reg[18:0] s_tot[0:3],s_tm0[0:3],s_tm1[0:3],s_tq[0:3][0:3];
@@ -104,7 +104,11 @@ module ot_s81_pq_ctl_static_native (
     wire [63:0] ph_q0, ph_q1;
 
     // macro ports: the NEXT address (a_ph registers it at accept); the macro registers it itself
+    `ifdef OT_S81_PQ_STATIC_MUT_PHW
+    wire [PHW-1:0] a_ph_n = (go ? i_ph : a_ph)&10'h1ff;
+`else
     wire [PHW-1:0] a_ph_n = go ? i_ph : a_ph;
+`endif
     assign rom_pa0 = {a_ph_n, 1'b0}; assign rom_pa1 = {a_ph_n, 1'b1};
     assign ph_q0 = rom_pq0; assign ph_q1 = rom_pq1;           // two-cycle synchronous macro: valid with a_v2
 
@@ -149,7 +153,12 @@ module ot_s81_pq_ctl_static_native (
 
     // macro port: the NEXT address (rd_a, which r0_a registers every cycle); the macro is a two-cycle synchronous ROM
     // (address register, internal pipeline register) and returns the word of r0_a two cycles later, as below
-    assign rom_sa = action[50:40]; assign st_q = rom_sq;
+`ifdef OT_S81_PQ_STATIC_MUT_SAW
+    assign rom_sa = {3'b000,action[50:40]};
+`else
+    assign rom_sa = action[53:40];
+`endif
+    assign st_q = rom_sq;
 
     reg           r1_v, r1_lp, r1_lo, r1_fam;
     reg [1:0]     r1_tag;
@@ -350,14 +359,14 @@ module ot_s81_pq_ctl_static_native (
    for(ks=0;ks<4;ks=ks+1) begin sv[ks]<=0;sr[ks]<=0;si[ks]<=0;rows_seen[ks]<=0;end
   end else begin
    cyc<=any_v ? cyc+1'b1 : 0;
-   ev_go<=action[62];ev_end<=|action[68:65];
+   ev_go<=action[65];ev_end<=|action[71:68];
    stream_end_v<=hv&&h_lastop;
    if(hv&&h_lastop)stream_end_tag<=h_tag;
-   if(action[62])ev_tag<=launch_tag;
-   if(|action[68:65])ev_tag<={action[68]|action[67],action[68]|action[66]};
-   if((action[68:65]&(action[68:65]-4'd1))!=0)fault<=1;
+   if(action[65])ev_tag<=launch_tag;
+   if(|action[71:68])ev_tag<={action[71]|action[70],action[71]|action[69]};
+   if((action[71:68]&(action[71:68]-4'd1))!=0)fault<=1;
    // Faults diagnose violated compiler contracts; they never gate events.
-   if(f_fault||(|aqf)||(|q2f_i)||x_rv!=rq_v||(|action[71:70]))fault<=1;
+   if(f_fault||(|aqf)||(|q2f_i)||x_rv!=rq_v||(|action[74:73]))fault<=1;
    if(go&&sv[accept_tag])fault<=1;
    if(go&&!calendar_v)fault<=1;
    a_v<=go;a_tag<=accept_tag;a_v2<=a_v;a_tag2<=a_tag;
@@ -370,28 +379,28 @@ module ot_s81_pq_ctl_static_native (
     s_tq[ks][3]<={s_pw[ks][61:46],3'b0}&{19{s_np1[ks][3]}};
     s_tm0[ks]<=s_tm0n[ks];s_tm1[ks]<=s_tm1n[ks];s_tot[ks]<=s_totn[ks];
     rows_seen[ks]<=rows_seen[ks]+19'(rc[ks]);
-    if(action[65+ks])begin
+    if(action[68+ks])begin
      // Retirement is fixed even on a count mismatch. No runtime drain wait.
      sv[ks]<=0;sr[ks]<=0;si[ks]<=0;rows_seen[ks]<=0;
      if(!sv[ks]||rows_seen[ks]+19'(rc[ks])!=s_tot[ks])fault<=1;
     end
    end
-   if(action[69])phase_cycles<=cyc+1'b1;
+   if(action[72])phase_cycles<=cyc+1'b1;
    // All three issue strobes and their tags come only from the calendar.
-   p1_cfg<=action[59];p1_go<=action[62];
-   if(action[59])begin
+   p1_cfg<=action[62];p1_go<=action[65];
+   if(action[62])begin
     p1_ph<=s_ph[config_tag];p1_np<=s_np[config_tag];si[config_tag]<=1;iss_tag<=config_tag;
     if(!sv[config_tag]||!sr[config_tag])fault<=1;
    end
-   if(action[62])begin
+   if(action[65])begin
     p1_gobf<=s_pw[launch_tag][0];p1_tag<=launch_tag;
     if(!sv[launch_tag]||!sr[launch_tag]||!si[launch_tag])fault<=1;
    end
    x_re<=action[2];x_addr<=action[21:3];
    ba_v<=rq_v&&rq_fam;ba_par<=rq_par;ba_k<=rq_k;
    ba_wv_o<={2{rq_v&&rq_fam}}&{bw_blk_n[0],~bw_blk_n[0]};
-   r0_v<=action[39];r0_a<=action[50:40];r0_tag<=action[52:51];r0_pos<=action[55:53];
-   r0_fam<=action[56];r0_lp<=action[57];r0_lo<=action[58];
+   r0_v<=action[39];r0_a<=action[53:40];r0_tag<=action[55:54];r0_pos<=action[58:56];
+   r0_fam<=action[59];r0_lp<=action[60];r0_lo<=action[61];
    ra_v<=r0_v;ra_tag<=r0_tag;ra_pos<=r0_pos;ra_fam<=r0_fam;ra_lp<=r0_lp;ra_lo<=r0_lo;
    r1_v<=ra_v;r1_w<=st_q;r1_tag<=ra_tag;r1_pos<=ra_pos;r1_fam<=ra_fam;r1_lp<=ra_lp;r1_lo<=ra_lo;
    r2_v<=r1_v;r2_w<=r1_w;r2_tag<=r1_tag;r2_pos<=r1_pos;r2_fam<=r1_fam;r2_lp<=r1_lp;r2_lo<=r1_lo;

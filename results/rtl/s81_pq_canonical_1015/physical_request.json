@@ -1,0 +1,100 @@
+{
+  "canonical_shape": {
+    "pair_count": 2417,
+    "BF_count": 519,
+    "roots": 128,
+    "PHW": 10,
+    "SAW": 14,
+    "max_phases": 642,
+    "KMAX": 6144
+  },
+  "changed_physical_masters": {
+    "ot_s81_pq_ctl_static_native": {
+      "source": "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_static_native.sv",
+      "sha256": "a4f01d78af4489951ff372235899b05a41ec5e012efe01326d1f5f877c1979ab",
+      "verbatim_native_ports": "module ot_s81_pq_ctl_static_native (\n input wire clk,\n input wire rst_n,\n output wire q_consume,\n output wire b_consume,\n output wire aq_vin,\n input wire [1:0] aqf,\n output wire [9:0] aqi_o,\n output wire ba_v_o,\n output reg [1:0] ba_wv_o,\n output wire [7:0] ba_blk_o,\n output wire [47:0] hw_o,\n output wire [35:0] h_hi_o,\n output wire [15:0] h_b0_o,\n output wire [15:0] h_b1_o,\n output wire [457:0] mdr_o,\n input wire [11:0] q2f_i,\n input wire [191:0] ga_i,\n output wire [609:0] bc_hr_o,\n input wire calendar_v,input wire[74:0] calendar_action,\n input wire go,\n input wire [9:0] i_ph,\n input wire [2:0] i_np,\n input wire [18:0] i_xbase,\n input wire [18:0] i_xps,\n input wire [18:0] i_obase,\n input wire [18:0] i_ops,\n input wire [1:0] i_fmt,\n output wire ready,\n output wire idle,\n output reg x_re,\n output reg [18:0] x_addr,\n input wire x_rv,\n input wire f_fault,\n output reg fault,\n output reg [31:0] phase_cycles,\n output reg ev_go,\n output reg ev_end,\n output reg stream_end_v,output reg[1:0] stream_end_tag,\n output reg [1:0] ev_tag,\n output wire [10:0] rom_pa0,\n output wire [10:0] rom_pa1,\n input wire [63:0] rom_pq0,\n input wire [63:0] rom_pq1,\n output wire [13:0] rom_sa,\n input wire [47:0] rom_sq\n);",
+      "required_action": "generate source-consistent kit and assigned top-down pins; stale legacy kits cannot qualify these ports"
+    },
+    "ot_s81_pq_qb_align_native": {
+      "source": "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pipe_native.sv",
+      "sha256": "d66d84cb3f678ee768693471be7485e620e870ae0020815970a3a365a8ac2751",
+      "verbatim_native_ports": "module ot_s81_pq_qb_align_native (\n input wire clk,rst_n,input wire[609:0] bc_hr,input wire[1023:0] bt_d,\n output wire[609:0] bc_hr_q,output wire[1023:0] bt_d_q\n);",
+      "required_action": "generate source-consistent kit and assigned top-down pins; stale legacy kits cannot qualify these ports"
+    },
+    "ot_s81_pq_qb_headp_native": {
+      "source": "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pipe_native.sv",
+      "sha256": "d66d84cb3f678ee768693471be7485e620e870ae0020815970a3a365a8ac2751",
+      "verbatim_native_ports": "module ot_s81_pq_qb_headp_native (\n input wire clk,rst_n,consume,input wire[9:0] aqi_d,\n input wire[15:0] h_b0,h_b1,input wire[1:0] hw_sv,\n input wire[1023:0] rd_data,input wire[19:0] aq_e,input wire[9:0] aq_p,\n // Registered per-bank write enables (wq*[k] = wv && bank(w*) == k) and write rows, same edge as\n // the former w0/w1/wv: no bank compares a bank-index constant, so ONE bank master serves all four.\n output reg[6:0] wr0,wr1,output reg[3:0] wq0,wq1,\n output reg[15:0] i0,i1,\n // Per-bank read enables share the registered index edge.\n output reg[3:0] rq0,rq1,\n output reg[255:0] hq0,hq1,output reg[9:0] he0,he1,output wire fault\n);",
+      "required_action": "generate source-consistent kit and assigned top-down pins; stale legacy kits cannot qualify these ports"
+    },
+    "ot_s81_pq_qb_bankp_native": {
+      "source": "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pipe_native.sv",
+      "sha256": "d66d84cb3f678ee768693471be7485e620e870ae0020815970a3a365a8ac2751",
+      "verbatim_native_ports": "module ot_s81_pq_qb_bankp_native (\n input wire clk,rst_n,input wire[6:0] wr0,wr1,input wire wq0,wq1,\n input wire[511:0] aq_q,input wire[15:0] i0,i1,input wire rq0,rq1,\n output reg[255:0] rd\n);",
+      "required_action": "generate source-consistent kit and assigned top-down pins; stale legacy kits cannot qualify these ports"
+    },
+    "ot_s81_pq_bc_slice0": {
+      "source": "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_core_native.sv",
+      "sha256": "d7854cf8e094464828261567d3da8e82ebf1edda74eca3aea613274fa3fb38cf",
+      "verbatim_native_ports": "module ot_s81_pq_bc_slice0 (input wire clk, rst_n, input wire [409:0] d, output wire [409:0] q);",
+      "required_action": "generate source-consistent kit and assigned top-down pins; stale legacy kits cannot qualify these ports"
+    }
+  },
+  "wire_only_core_ports": {
+    "f_bus": 1634,
+    "bc_hr": 610,
+    "i_ph": 10,
+    "rom_pa0_pa1": 11,
+    "rom_sa": 14,
+    "calendar_action": 75
+  },
+  "wire_only_die_ports": {
+    "f_iss": 93,
+    "t_iss": 39,
+    "ra0_ra1": 12,
+    "ra2": 14,
+    "xw_xe_static": 1101
+  },
+  "slot_requests": [
+    {
+      "master": "ot_s81_pq_ctl_static_native",
+      "legacy_slot_um": [
+        108,
+        77.76
+      ],
+      "reuse_unproven": true,
+      "reason": "static replacement with action75 input; must size/map new source before gate"
+    },
+    {
+      "master": "ot_s81_pq_qb_headp_native",
+      "legacy_slot_um": [
+        73.44,
+        34.56
+      ],
+      "reuse_unproven": true,
+      "reason": "moves6144 mutable metadata bits from banks into head; likely enlargement required"
+    },
+    {
+      "master": "ot_s81_pq_qb_align_native",
+      "used_bits_per_stage": 1102,
+      "stages": 2,
+      "legacy_slot": null,
+      "reason": "new fixed two-cycle alignment leaf"
+    },
+    {
+      "master": "ot_s81_pq_bc_slice0",
+      "old_width": 409,
+      "new_width": 410,
+      "reason": "one new registered/reset cfg bit; oldbit1632 now phasebit9"
+    },
+    {
+      "master": "banked_stream_program_ROM",
+      "macro": "ot_rom_4096x72_m8",
+      "count": 4,
+      "required_selection_leaf": "registered2bitbank index with response mux aligned actualmacro edge",
+      "reason": "14bit native stream address requires16384rows; cannot reuse single4096 macro"
+    }
+  ],
+  "unchanged_masters": "AQ/IX/BCslice1..3/QBbankp arithmetic/ports unchanged by canonical widening; old master physical evidence only applies byte-identical source and actual native pin assignments",
+  "qualification": "NO physical closure, resized slot approval, full native2417 execution, or end-to-end token price established here"
+}
