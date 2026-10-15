@@ -42,7 +42,7 @@ OPEN_JOINS = [
     "Bind cfg_stack to the actual two-bit package stack strap; retain the physical PC strap and logical landing PC mapping.",
     "Compile actual per-PC RD/WR/refresh reservations and independent identity from the production programme; do not schedule from valid/ready.",
     "Export controller tag/class/command/write ingress occupancy idle. Current controller has completion outputs but no drain output; front idle alone cannot prove KV drained.",
-    "Expose ring publication/consumption occupancy idle across its real clock domains; ring currently exports only data and two faults.",
+    "Synchronize actual registered ring idle_hbm and idle_core together with upstream quiet; local exports alone cannot prove KV drained.",
     "Join front hold to an actual exceptional sequencer block pause; current qkd_seq has no hold input. Preserve block credit blk_freed at HBM reservation issuer.",
     "Distribute writer four 288-bit es lanes and identity/context by dest_stack/dest_pc; preserve the actual asynchronous write ingress and expected-address checks.",
     "Join controller completion_v/we to each HOST slice and typed completion_fault to root; reduce actual front/ring/writer/controller faults with domain-safe registered exports.",
