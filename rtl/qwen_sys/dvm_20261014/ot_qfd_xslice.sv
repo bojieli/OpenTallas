@@ -750,9 +750,13 @@ module ot_qfd_xhead #(
             else row_edge = NE - 1 - (rw - NH);
         end
     endfunction
+    reg [NR*4-1:0] pos_bad_bits;
+    reg [NR*4-1:0] pos_bad_q;
+    always @(posedge ck or negedge rst_n)
+        if(!rst_n)pos_bad_q<=0;else pos_bad_q<=pos_bad_bits;
     reg  [AW:0]   rel_i [0:3];
     always @* begin
-        rp = {(NH*28){1'b0}}; rv = {NH{1'b0}}; rt = {NH{1'b0}}; f_pos = 1'b0;
+        rp = {(NH*28){1'b0}}; rv = {NH{1'b0}}; rt = {NH{1'b0}}; f_pos = 1'b0; pos_bad_bits=0;
         for (i = 0; i < 4; i = i + 1) rel_i[i] = i * xcs_now + kx_now;
         // every index below is static (row r, element i): no runtime part-select
         for (r = 0; r < NR; r = r + 1)
@@ -763,7 +767,7 @@ module ot_qfd_xhead #(
                     if(NATIVE_AFFINE!=0)begin
                         ab=first_abs[rep_now][r][i]+(g_q ? 6'd0 : k_i[5:0]);
                         if(pool_now)begin
-                            if(ab[7])f_pos=1'b1;
+                            pos_bad_bits[4*r+i]=ab[7];
                             rp[28*lf(r)+7*i+:7]={(r<NH)?!ab[6]:ab[6],ab[5:0]};
                         end else rp[28*lf(r)+7*i+:7]={1'b1,ab[5:0]};
                     end else begin
@@ -854,7 +858,7 @@ module ot_qfd_xhead #(
                 if (d_sp < SMIN || d_sp > SMAX) flt <= 1'b1;
             end
             if (dp_v && pfault_n) flt <= 1'b1;
-            if (f_pos || (NATIVE_AFFINE!=0 && |go_bad_bits)) flt <= 1'b1;
+            if ((NATIVE_AFFINE!=0 ? (|pos_bad_q) : f_pos) || (NATIVE_AFFINE!=0 && |go_bad_bits)) flt <= 1'b1;
             if (|lqbp) flt <= 1'b1;
             if (miss) flt <= 1'b1;                                          // a leaf did not answer its read
             // the go: consume the oldest filled epoch
