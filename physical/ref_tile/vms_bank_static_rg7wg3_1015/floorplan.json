@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  410.4,
-  410.4
+  393.12,
+  339.12
  ],
  "core": [
   2.16,
   2.16,
-  408.23999999999995,
-  408.23999999999995
+  390.96,
+  336.96
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
  "std_area_um2": null,
@@ -38,7 +38,15 @@
    "dq_done",
    "wq2",
    "wq_done2",
-   "wslot"
+   "clk",
+   "rst_n",
+   "bid",
+   "sid",
+   "rslot_v",
+   "rslot",
+   "wslot_v",
+   "wslot",
+   "status"
   ],
   "S": [
    "rq1",
@@ -59,10 +67,7 @@
    "wq0",
    "wq_done0",
    "xq2",
-   "xq2_done",
-   "clk",
-   "bid",
-   "rslot"
+   "xq2_done"
   ],
   "W": [
    "rq3",
@@ -70,12 +75,7 @@
    "pq",
    "pr",
    "wq1",
-   "wq_done1",
-   "rst_n",
-   "sid",
-   "rslot_v",
-   "wslot_v",
-   "status"
+   "wq_done1"
   ]
  },
  "clock_port": "clk",
@@ -86,8 +86,8 @@
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": null,
    "idx": 0,
-   "x": 117.936,
-   "y": 79.92,
+   "x": 109.296,
+   "y": 43.2,
    "w": 174.744,
    "h": 70.488,
    "orient": "R0",
@@ -99,8 +99,8 @@
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": null,
    "idx": 1,
-   "x": 117.936,
-   "y": 170.64,
+   "x": 109.296,
+   "y": 133.92,
    "w": 174.744,
    "h": 70.488,
    "orient": "R0",
@@ -112,8 +112,8 @@
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": null,
    "idx": 2,
-   "x": 117.936,
-   "y": 261.36,
+   "x": 109.296,
+   "y": 224.64,
    "w": 174.744,
    "h": 70.488,
    "orient": "R0",
@@ -148,6 +148,7 @@
   "physical/common_flow/grt_macro_top_layer.tcl",
   "physical/qwen_die_masters/sram_edge_guard.tcl",
   "physical/common_flow/macro_edge_via_guard.tcl",
+  "rtl/hbm_accel/generic/vm/static/physical/native_bank_pin_audit.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/dsrom_window_source/leaf_iohold.tcl",

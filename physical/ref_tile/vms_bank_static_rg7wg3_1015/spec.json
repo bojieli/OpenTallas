@@ -21,7 +21,15 @@
    "dq_done",
    "wq2",
    "wq_done2",
-   "wslot"
+   "clk",
+   "rst_n",
+   "bid",
+   "sid",
+   "rslot_v",
+   "rslot",
+   "wslot_v",
+   "wslot",
+   "status"
   ],
   "S": [
    "rq1",
@@ -42,10 +50,7 @@
    "wq0",
    "wq_done0",
    "xq2",
-   "xq2_done",
-   "clk",
-   "bid",
-   "rslot"
+   "xq2_done"
   ],
   "W": [
    "rq3",
@@ -53,179 +58,174 @@
    "pq",
    "pr",
    "wq1",
-   "wq_done1",
-   "rst_n",
-   "sid",
-   "rslot_v",
-   "wslot_v",
-   "status"
+   "wq_done1"
   ]
  },
  "pin_ranges": {
   "rq0": [
    5.4,
-   11.493
+   11.163
   ],
   "rr0": [
-   11.493,
-   103.598
+   11.163,
+   98.28
   ],
   "rq4": [
-   103.598,
-   109.69
+   98.28,
+   104.043
   ],
   "rr4": [
-   109.69,
-   201.795
+   104.043,
+   191.16
   ],
   "dq": [
-   201.795,
-   302.502
+   201.96,
+   294.511
   ],
   "dq_done": [
-   302.502,
-   302.86
+   294.511,
+   294.84
   ],
   "wq2": [
-   302.86,
-   403.566
+   294.84,
+   387.391
   ],
   "wq_done2": [
-   403.566,
-   403.925
-  ],
-  "wslot": [
-   403.925,
-   405.0
+   387.391,
+   387.72
   ],
   "rq1": [
    5.4,
-   10.312
+   10.1
   ],
   "rr1": [
-   10.312,
-   84.569
+   10.1,
+   81.145
   ],
   "rq5": [
-   84.569,
-   89.481
+   81.145,
+   85.845
   ],
   "rr5": [
-   89.481,
-   163.738
+   85.845,
+   156.89
   ],
   "kq": [
-   163.738,
-   244.929
+   156.89,
+   234.571
   ],
   "kq_done": [
-   244.929,
-   245.218
+   234.571,
+   234.847
   ],
   "xq": [
-   245.218,
-   324.964
+   234.847,
+   311.145
   ],
   "xq_done": [
-   324.964,
-   325.253
+   311.145,
+   311.422
   ],
   "eg": [
-   325.253,
-   405.0
+   311.422,
+   387.72
   ],
   "rq2": [
    5.4,
-   11.498
+   10.442
   ],
   "rr2": [
-   11.498,
-   103.686
+   10.442,
+   86.664
   ],
   "rq6": [
-   103.686,
-   109.784
+   86.664,
+   91.706
   ],
   "rr6": [
-   109.784,
-   201.972
+   91.706,
+   167.929
   ],
   "wq0": [
-   201.972,
-   302.768
+   167.929,
+   251.269
   ],
   "wq_done0": [
-   302.768,
-   303.127
+   251.269,
+   251.566
   ],
   "xq2": [
-   303.127,
-   402.13
+   251.566,
+   333.423
   ],
   "xq2_done": [
-   402.13,
-   402.489
-  ],
-  "clk": [
-   402.489,
-   402.848
-  ],
-  "bid": [
-   402.848,
-   403.924
-  ],
-  "rslot": [
-   403.924,
-   405.0
+   333.423,
+   333.72
   ],
   "rq3": [
    5.4,
-   11.412
+   10.442
   ],
   "rr3": [
-   11.412,
-   102.294
+   10.442,
+   86.664
   ],
   "pq": [
-   102.294,
-   203.078
+   86.664,
+   171.191
   ],
   "pr": [
-   203.078,
-   297.143
+   171.191,
+   250.083
   ],
   "wq1": [
-   297.143,
-   396.513
+   250.083,
+   333.423
   ],
   "wq_done1": [
-   396.513,
-   396.867
+   333.423,
+   333.72
+  ],
+  "clk": [
+   191.16,
+   191.487
   ],
   "rst_n": [
-   396.867,
-   397.22
+   191.487,
+   191.815
+  ],
+  "bid": [
+   191.815,
+   192.796
   ],
   "sid": [
-   397.22,
-   397.927
+   192.796,
+   193.451
   ],
   "rslot_v": [
-   397.927,
-   398.281
+   193.451,
+   193.778
+  ],
+  "rslot": [
+   193.778,
+   194.76
   ],
   "wslot_v": [
-   398.281,
-   398.635
+   194.76,
+   195.087
+  ],
+  "wslot": [
+   195.087,
+   196.069
   ],
   "status": [
-   398.635,
-   405.0
+   196.069,
+   201.96
   ]
  },
  "outline": {
-  "w": 410.4,
-  "h": 410.4,
+  "w": 393.12,
+  "h": 339.12,
   "exact": true
  },
  "layer_cap": "M5",
@@ -245,7 +245,7 @@
   "pin_balance": {
    "group_max": 32,
    "h": "M4",
-   "v": "M3 M5"
+   "v": "M5"
   },
   "macro_halo_um": 5.4
  },
@@ -253,7 +253,7 @@
   "owner": "Codex:H-VM static bank native physical",
   "branch": "codex/hbm-vm-static-hub-1014",
   "tag": "static1015",
-  "purpose": "Native static bank RG7WG3; unchanged real3SRAM core, dedicated COLL+IDX readgroups; pre-route synthesis/CTS first, no route until die cuts approved",
+  "purpose": "Native static bank RG7WG3; unchanged real3SRAM core, dedicated COLL+IDX readgroups; pre-route synthesis/CTS first, no route until die cuts approved; structural successor: qualified independent face payloads, bounded CE prefix,393.12x339.12 body,midfaceN clock/reset; actual-track and actual-PG contact audit before placement",
   "extra_paths": [
    "rtl/hbm_accel/generic/vm/static"
   ],
@@ -269,6 +269,9 @@
     "min_count_regex": "eachgroup_reads=(\\d+)"
    }
   ]
+ },
+ "orfs_vars": {
+  "POST_IO_PLACEMENT_TCL": "rtl/hbm_accel/generic/vm/static/physical/native_bank_pin_audit.tcl"
  },
  "params": {},
  "children": [],
