@@ -19,7 +19,10 @@ def main():
   (w/(name+'_legality.json')).write_text(json.dumps(G.legality(m),indent=1))
  G.buses_r8=capture
  try:
-  m=G.build();G.finalize_r8(m);export(m,'canonical_plan',True)
+  m=G.build();G.finalize_r8(m)
+  from s81.canonical_layout import trace_calendar
+  (w/'actual_flight_calendar.json').write_text(json.dumps(trace_calendar(G,m),indent=1))
+  export(m,'canonical_plan',True)
   G.write_lefs(m,1,w/'elements.lef');texts=G.die_lef_texts(m)
   with gzip.open(w/'exact_pins.lef.gz','wt') as f:f.write('\n'.join(texts))
   (w/'pin_align.json').write_text(json.dumps(G.pin_align_gate(m,texts,raise_on_fail=False),indent=1,default=list))

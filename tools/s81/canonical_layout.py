@@ -197,3 +197,34 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
     m.setdefault('r_stages',{})[r]=len(sts);calendar[r].update(return_stations=len(sts),return_path_um=G._poly_len(path),gather_input_lane=lane)
    G._local_chain(m,CH,[cor['s14W'] if half=='W' else cor['vch']],endb,'o',ga,f'r{half}{t}',n*(G.CRET+1)+2,f'hr_{half}{t}_o','stream_1p2')
  m['canonical_calendar']=[calendar[r] for r in sorted(calendar)]
+
+def trace_calendar(G,m):
+ """Count actual emitted transport registers after hop fixes, by immutable root.
+ Counts preserve separate forwarded half-edge and common-clock stages. Physical
+ clock phases and endpoint FIFO latency remain unqualified, never inferred.
+ """
+ by={i.name:i for i in m['insts']};incoming={}
+ for bid,cls,bits,eps in m['buses']:
+  if not eps or cls in ('fclk','clock','col_clock','clock_trunk'):continue
+  for name,port in eps[1:]:
+   incoming.setdefault((name,G.pslice(port)[0]),[]).append((eps[0],bid))
+ def trace(name,port,source):
+  stages=[];seen=set()
+  while name!=source:
+   key=(name,G.pslice(port)[0]);choices=incoming.get(key,[])
+   if key in seen or len(choices)!=1:return dict(status='UNRESOLVED',endpoint=key,drivers=len(choices),stages=stages)
+   seen.add(key);(name,port),bid=choices[0]
+   if name==source:break
+   obj=by.get(name);base=G.pslice(port)[0]
+   if obj is None:return dict(status='UNRESOLVED',endpoint=[name,port],stages=stages)
+   if obj.kind=='stn' and base.startswith('do'):
+    stages.append(dict(instance=name,master=obj.master,clock='forwarded',nominal_half_edges=1,bus=bid));port='di'+base[2:]
+   elif obj.kind in ('rly','hstn') and base in ('o','dq'):
+    stages.append(dict(instance=name,master=obj.master,clock='common',nominal_cycles=1,bus=bid));port='i' if base=='o' else 'di'
+   else:return dict(status='UNRESOLVED',endpoint=[name,port],kind=obj.kind,stages=stages)
+  return dict(status='COUNTED_NOT_PHASE_QUALIFIED',forwarded_stages=sum(x['clock']=='forwarded' for x in stages),common_stages=sum(x['clock']=='common' for x in stages),stages=stages)
+ out=[]
+ for row in m.get('canonical_calendar',[]):
+  r=row['root'];f=m['frames'][r];half,t,_c=row['logical_gather'];lane=row['gather_input_lane']
+  out.append(dict(root=r,x=trace(f'cf{r}','xd',f'hx_{row["physical_half"]}'),return_path=trace(f'hr_{half}{t}',f'di{lane}',f'cf{r}'),column=dict(slot_stations=f['last_slot']+1,bank_stages=f.get('bank_stages',0),return_tree_stages=f.get('ret_stages',0),x_relays=f.get('relay_x',0),return_relays=f.get('relay_ret',0)),fixed_phase_qualified=False))
+ return dict(scope='Actual emitted register inventory after hop fixes; no ideal global-tier flight estimate. Clock phase, crossings and pin timing remain separate required gates.',roots=out)
