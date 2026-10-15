@@ -12,24 +12,26 @@ module tb_xload_static_lock;
     localparam integer MS = 1;
 `elsif MUT2
     localparam integer MS = 2;
+`elsif MUT3
+    localparam integer MS = 3;
 `else
     localparam integer MS = 0;
 `endif
     reg clk = 0; always #1 clk = ~clk;
     reg rst_n = 0; integer seed = 3, errors = 0, cyc = 0; always @(posedge clk) cyc <= cyc + 1;
     initial begin if (!$value$plusargs("SEED=%d", seed)) seed = 3; $display("SEED=%0d", seed); end
-    reg xa_v = 0, xs_v = 0; reg [39:0] x_base = 0; reg [20:0] x_n = 0; reg [3:0] x_p = 0; reg [31:0] x_stride = 0; reg [6:0] x_xb = 0;
+    reg xa_v = 0, xs_v = 0; reg [39:0] x_base = 0; reg [20:0] x_n = 0; reg [3:0] x_p = 0; reg [31:0] x_stride = 0; reg [6:0] x_xb = 0; reg [1:0] x_fmt = 0;
     wire rdy_a, done_a, f_a, en_a; wire [6:0] ad_a, gr_a; wire [2047:0] d_a;
     wire busy_b, done_b, f_b, en_b, last_b; wire [6:0] ad_b, gr_b; wire [2047:0] d_b;
     wire [4*338-1:0] qa; wire [4*274-1:0] ra; wire [273:0] tra; reg [337:0] tq = 0;
-    ot_hgi_sm_xload ua (.clk(clk), .rst_n(rst_n), .x_xb(x_xb), .x_v(xa_v), .x_rdy(rdy_a), .x_base(x_base), .x_n(x_n), .x_p(x_p),
-        .x_stride(x_stride), .x_space(2'd1), .x_fmt(2'd0), .xw_ready(1'b1), .xw_last(), .x_done(done_a), .x_fault(f_a),
+    ot_hgi_sm_xload #(.BD(1)) ua (.clk(clk), .rst_n(rst_n), .x_xb(x_xb), .x_v(xa_v), .x_rdy(rdy_a), .x_base(x_base), .x_n(x_n), .x_p(x_p),
+        .x_stride(x_stride), .x_space(2'd1), .x_fmt(x_fmt), .xw_ready(1'b1), .xw_last(), .x_done(done_a), .x_fault(f_a),
         .xw_en(en_a), .xw_addr(ad_a), .xw_grp(gr_a), .xw_data(d_a), .vmq(qa), .vmr(ra),
         .rg_req(), .rg_gnt(1'b0), .wrq(), .wrq_cr(32'd0), .wrr({32*257{1'b0}}));
     ot_hgi_vm_unit #(.NC(5)) va (.clk(clk), .rst_n(rst_n), .cq({tq, qa}), .cr({tra, ra}), .status());
     wire [8*17-1:0] rq; reg [8*257-1:0] rr;
     ot_hgi_sm_xload_static #(.RD_LAT(RD_LAT), .MUT(MS)) ub (.clk(clk), .rst_n(rst_n), .x_v(xs_v), .x_base(x_base), .x_n(x_n),
-        .x_p(x_p), .x_stride(x_stride), .x_space(2'd1), .x_fmt(2'd0), .x_xb(x_xb), .x_busy(busy_b), .x_done(done_b),
+        .x_p(x_p), .x_stride(x_stride), .x_space(2'd1), .x_fmt(x_fmt), .x_xb(x_xb), .x_busy(busy_b), .x_done(done_b),
         .x_fault(f_b), .xw_en(en_b), .xw_last(last_b), .xw_addr(ad_b), .xw_grp(gr_b), .xw_data(d_b), .rq(rq), .rr(rr));
     // ---- static VM read group model (declared boundary): word memory mirrored from the VM unit writes
     reg [31:0] mem [0:32767];
@@ -65,32 +67,35 @@ module tb_xload_static_lock;
             @(negedge clk); tq[337] = 1'b0; repeat (6) @(negedge clk);
         end
     endtask
-    integer c, i, k, nda, ndb, t, t0, nb_e, gn_e, exp_first, exp_beats;
+    integer c, i, k, nda, ndb, t, t0, nb_e, gn_e, exp_first, exp_beats; reg [31:0] rd;
     always @(posedge clk) begin if (done_a) nda = nda + 1; if (done_b) ndb = ndb + 1; end
     initial begin
         repeat (3) @(posedge clk); rst_n = 1; repeat (6) @(posedge clk);
-        for (i = 0; i < 20000; i = i + 1) vm_w(i, $random(seed));
-        for (c = 0; c < 12; c = c + 1) begin
+        for (i = 0; i < 20000; i = i + 1) begin rd = $random(seed); rd[30:23] = 8'd100 + ($unsigned($random(seed)) % 50); if (($unsigned($random(seed)) % 97) == 0) rd = 32'h0; vm_w(i, rd); end
+        for (c = 0; c < 24; c = c + 1) begin
             wa = 0; wb = 0; nda = 0; ndb = 0; first_b = -1; nbeats_b = 0;
             x_p = 1 + ($unsigned($random(seed)) % 8); x_n = 1 + ($unsigned($random(seed)) % 1500);
             if (c == 0) begin x_p = 2; x_n = 9000; end            // > 16 groups: x-store word wrap
             x_base = 8 * ($unsigned($random(seed)) % 20); x_stride = 8 * (((x_n + 7) / 8) + ($unsigned($random(seed)) % 3));
             if (c == 0) x_stride = 8 * 1130;
             x_xb = $unsigned($random(seed)) % 128;
+            x_fmt = (c < 12) ? 2'd0 : (c % 2 == 0) ? 2'd1 : 2'd2;
+            if (x_fmt != 0) begin x_n = 32 * (1 + ($unsigned($random(seed)) % 180)); if (c == 12) begin x_p = 1; x_n = 18432; end
+                x_stride = 8 * (((x_n + 7) / 8) + ($unsigned($random(seed)) % 3)); if (c == 12) x_stride = 8 * 2310; end
             @(negedge clk); xa_v = 1; xs_v = 1; t0 = cyc; @(negedge clk); xa_v = 0; xs_v = 0;
             t = 0; while ((nda == 0 || ndb == 0) && t < 400000) begin @(posedge clk); t = t + 1; end
             repeat (4) @(posedge clk);
             // the static load's schedule is a function of the command alone
-            nb_e = (x_p * 3152 + 2047) / 2048; gn_e = (x_n - 1) / 512 + 1; exp_beats = gn_e * 8 * nb_e;
+            nb_e = (x_p * 3152 + 2047) / 2048; gn_e = (x_fmt == 0) ? (x_n - 1) / 512 + 1 : (x_fmt == 1) ? (x_n - 1) / 1024 + 1 : (x_n - 1) / 2048 + 1; exp_beats = gn_e * 8 * nb_e;
             exp_first = 8 * x_p + RD_LAT + 3 + 1 + 1 + 1 + 1 + 7;  // cmd, start, I0, em_off, em_on, E0 -> pins
-            if (nbeats_b != exp_beats || last_bc - first_b + 1 != exp_beats) begin
+            if (nbeats_b != exp_beats || (x_fmt == 0 && last_bc - first_b + 1 != exp_beats)) begin
                 $display("ERR cmd %0d static beats %0d span %0d expected %0d contiguous", c, nbeats_b, last_bc - first_b + 1, exp_beats);
                 errors = errors + 1; end
             if (c == 0) $display("static first beat at command + %0d edges (model %0d)", first_b - t0, exp_first);
             for (k = 0; k < 16384; k = k + 1) if (wa[k] || wb[k]) if (wa[k] !== wb[k] || ma[k] !== mb[k]) begin
                 if (errors < 5) $display("ERR cmd %0d P %0d K %0d write %0d differs (%b %b)", c, x_p, x_n, k, wa[k], wb[k]);
                 errors = errors + 1; end
-            $display("cmd %0d P %0d K %0d xb %0d done %0d/%0d beats %0d", c, x_p, x_n, x_xb, nda, ndb, nbeats_b);
+            $display("cmd %0d fmt %0d P %0d K %0d xb %0d done %0d/%0d beats %0d span %0d", c, x_fmt, x_p, x_n, x_xb, nda, ndb, nbeats_b, last_bc - first_b + 1);
         end
         if (f_b || lanefault) begin $display("static fault %b lanefault %0d", f_b, lanefault); errors = errors + 1; end
         if (errors == 0) $display("XLOAD_STATIC_LOCK PASS"); else $display("XLOAD_STATIC_LOCK FAIL %0d", errors);
