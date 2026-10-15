@@ -1,0 +1,129 @@
+{
+  "schema": "hbm.physical_owner_status.v1",
+  "scope": "owner-reported actual progress, independent prototypes only; not whole-die closure",
+  "records": [
+    {
+      "owner": "h_attention_quant",
+      "profile": "full registered gather onehot+PG-setback",
+      "PG_access": "actual W46.12%, E57.68%; zeroM4 PG shapes in3um escape band",
+      "native_timing": "FAIL TT insertion514..721ps/spread207ps, FF421..602/spread181ps, TTsetup-24ps",
+      "successor": "eight bank-width registered gathers2386FF/2383ports each, same+2edges, sourceSHA44202cac...; actual componentPASS, native384commit/mutants live; PG/CTS pending"
+    },
+    {
+      "owner": "h_hc_physical",
+      "source": "5b0730d17",
+      "profile": "combined memory/stage shell",
+      "root_sinks": 4853,
+      "gate": "E1unit1293263",
+      "status": "PG+IO PASS, global placement live; overflow0.64 near1300 iterations; not terminal",
+      "risk": "actual output FF bands may collide with macro halo despite24% utilization",
+      "action": "contingent identical-source macro placement adds41.04um east FF-band room; preserve live run"
+    },
+    {
+      "owner": "h_die/service_native/service_band_inventory",
+      "source_profile": "340cfd747",
+      "kit": "702ba8131",
+      "job": "9fd231ffb",
+      "preflight": "3952057 terminal WARN, zeroFAIL sevenWARN",
+      "mapped_ff": 13617,
+      "macro_clocks": 1,
+      "mapped_std_um2": 9601.367,
+      "macro_um2": 3893.853,
+      "estimated_reach_um": 213.2,
+      "warning_examples": [
+        "resetfanout1706",
+        "deep combinational boundary",
+        "estimated713.5ps path"
+      ],
+      "CTS": "awaiting exact admitted run; not qualified"
+    },
+    {
+      "owner": "h_elements_b/su_static_arithmetic",
+      "K0kit": "27a5a5406",
+      "K0gate": "r1session82810, unsupported extraSDC command corrected; original failure retained",
+      "bank_kit": "fd6fc0b26",
+      "bank_actual_outline_um": [
+        369.36,
+        151.2
+      ],
+      "bank_core_clearance_um": 20.304,
+      "bank_min_macro_gaps_um": [
+        20.088,
+        21.6
+      ],
+      "bank_gate": "session79628 PG/IO/CTS live",
+      "K1_K2": "distinct302.4square kits preflightPASS, CTS not claimed"
+    },
+    {
+      "owner": "h_hc_sfu/hc_static_engine/hc_weight_prefetch/prefetch_physical",
+      "baseline_actual_roots": "21136HBM FF,4690streamFF+32SRAMpins/helper",
+      "status": "baseline source proof census terminal; do NOT harden obsolete functional calendar",
+      "successor": "8regions\u00d7512sector4row-lookahead changes source; await actual freeze/proof; physical128prefetch SRAM retained",
+      "overlap": "HCstore64 are same64weight SRAM insideHC80; no double count"
+    },
+    {
+      "owner": "h_hc_sfu/native_p_producer_join",
+      "normalization": "T128H16 actual DEN/divB/rnd1 canonical+directedPASS,10752VMchecks8192OUTwords; T640live",
+      "source": "b244ead98/07f6eb52b frozenac98f015f",
+      "epochs": "e9f935636",
+      "physical_binding": "canonicalSID/global physical unbound; no added SRAM or head0 earlyPV credit"
+    },
+    {
+      "owner": "h_collective_physical",
+      "source": "79037c152",
+      "kit_commit": "ee1d9a146",
+      "leaf": "ot_hgi_coll_control256_capture",
+      "outline_um": [
+        43.2,
+        129.6
+      ],
+      "mapped_FF": 512,
+      "mapped_cells": 1024,
+      "std_area_um2": 172,
+      "TT_insertion_max_ps": 104.4,
+      "TT_spread_ps": 4.2,
+      "FF_insertion_ps": [
+        81.2,
+        85.8
+      ],
+      "status": "floorplan/PDN/pin placement and nativeCTS PASS; pre-routePASS, detailed routeQUEUED",
+      "actual_pin_readback": "still needed before replication; requested coordinates were not forced",
+      "full_parent": "current21/43 unqualified"
+    },
+    {
+      "owner": "h_elements_a/static_sm_feed",
+      "leaf": "ot_smh_static_stage256",
+      "unit": "oth-ubuntu-3985196-1792063232",
+      "clock_sinks": 256,
+      "TT_insertion_ps": [
+        79.3,
+        80.8
+      ],
+      "actual_native_launch_ps": 255.59,
+      "launch_limit_ps": 220,
+      "actual_capture_ps": 110.95,
+      "capture_limit_ps": 190,
+      "status": "NATIVE_LAUNCH_FAIL; no route launched",
+      "phase_normalization": "actual launch already compensated, canonical raw_source=True/clock_refs boundaryRmean80.1ps",
+      "next_action": "preservedCTSODB FFclockQ/wire/load path decomposition; source-preserving structural repair, no guessed shape or unpriced edge"
+    },
+    {
+      "owner": "h_engram_partition",
+      "hash_profile": "complete48column7root hash/dispatch",
+      "source": "1d6bed3ce",
+      "census": "6ddc845dd",
+      "logical_FF_per_root": [
+        5032,
+        3016,
+        3021,
+        3021,
+        3016,
+        3021,
+        3021
+      ],
+      "logical_FF_total": 23148,
+      "status": "functional64token3072descriptor and missing-clock mutantPASS; logical censusPASS",
+      "physical": "CTS/root insertion/minmax crossings/route/outline unknown, no inherited S81 count"
+    }
+  ]
+}
