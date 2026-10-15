@@ -3,7 +3,7 @@
   "verdict": "FAIL",
   "release_qualified": false,
   "scope": "Full canonical layer die; source candidates do not substitute for emitted netlist connections or native views.",
-  "requirements_sha256": "b65c35f9ce895b7580f3fbf2ac601f8deb37e462e82ef8a4fc5700684b4e3a47",
+  "requirements_sha256": "e775f56a10f92917df026588dede9388ebdd9b85fa864c7d04745b20c11a47e0",
   "manifest_sha256": "27293f4b64a4231e641e177c47977e7d87651becac22e455a67936b1d9142eec",
   "die_sha256": null,
   "canonical_required": {
@@ -879,6 +879,8 @@
         "f_mx_rqv": 20,
         "t_mx_rs": 10240
       },
+      "native_clock_delivery_evidence": null,
+      "clock_boundary_contract": "results/arch/s81_vm_native_clock_abi_1015/contract.json",
       "source_sha256": "09122b0ecf087ec719ca698c1349a2b79d4181bca8f551b9411a9867390e9eb3",
       "ports": {
         "ck": {
@@ -1077,7 +1079,8 @@
       "emitted_die_instances": 0,
       "native_qualified": false,
       "binding_findings": [
-        "required_master_not_in_emitted_die"
+        "required_master_not_in_emitted_die",
+        "native_clock_delivery_evidence_missing"
       ],
       "verdict": "FAIL"
     },

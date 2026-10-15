@@ -64,6 +64,9 @@ def audit(requirements, manifest, die=None, bind_record=None, shape=None):
         if 'static_semantics_evidence' in item:
             p=ROOT/(item.get('static_semantics_evidence') or '__missing__')
             if not p.is_file():fail.append('static_semantics_evidence_missing')
+        if 'native_clock_delivery_evidence' in item:
+            p=ROOT/(item.get('native_clock_delivery_evidence') or '__missing__')
+            if not p.is_file():fail.append('native_clock_delivery_evidence_missing')
         # Source-level evidence may never automatically qualify a native implementation.
         row['native_qualified']=False
         row['binding_findings']=fail
