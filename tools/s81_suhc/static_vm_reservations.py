@@ -53,6 +53,10 @@ def check(schedule: dict, contract: dict) -> dict:
         bank_of(0, contract)
     except (ValueError, TypeError, ZeroDivisionError):
         invalid.append('bank_mapping')
+    ingress_caps = contract.get('ingress_capacities')
+    if ingress_caps is not None and (not isinstance(ingress_caps, dict) or
+            any(type(k) is not str or type(v) is not int or v <= 0 for k, v in ingress_caps.items())):
+        invalid.append('ingress_capacities')
     if invalid:
         return dict(status='fail', violations=[dict(kind='invalid_contract', fields=invalid)], qualified=False, events=0)
     def when(cycle, domain):
@@ -112,7 +116,16 @@ def check(schedule: dict, contract: dict) -> dict:
                 error('bank_enqueue_outside_path', event=eid)
             elif enqueue < service:
                 bank_queues[bank].append((enqueue, service, eid))
-        ingress_use[(event['ingress_cycle'], kind)].append(eid)
+        if ingress_caps is None:
+            ingress_use[(event['ingress_cycle'], kind)].append(eid)
+        else:
+            resource = event.get('ingress_resource')
+            if resource is None:
+                error('missing_ingress_resource', event=eid)
+            elif resource not in ingress_caps:
+                error('unknown_ingress_resource', event=eid, resource=resource)
+            else:
+                ingress_use[(event['ingress_cycle'], resource)].append(eid)
         slot = (event['client'], kind, event['slot'])
         queues[slot].append((issue, retire, eid))
         rows[event['row']].append((kind, issue, retire, eid))
@@ -120,9 +133,10 @@ def check(schedule: dict, contract: dict) -> dict:
     for (cycle, bank), ids in bank_use.items():
         if len(ids) > contract['bank_ops_per_cycle']:
             error('bank_collision', vm_cycle=cycle, bank=bank, events=ids)
-    for (cycle, kind), ids in ingress_use.items():
-        if len(ids) > contract[f'{kind}_ingress_per_cycle']:
-            error('ingress_collision', vm_cycle=cycle, operation=kind, events=ids)
+    for (cycle, resource), ids in ingress_use.items():
+        capacity = ingress_caps[resource] if ingress_caps is not None else contract[f'{resource}_ingress_per_cycle']
+        if len(ids) > capacity:
+            error('ingress_collision', vm_cycle=cycle, resource=resource, events=ids)
     bank_peaks = {}
     bank_capacity = contract.get('bank_queue_capacity')
     if type(bank_capacity) is not int or bank_capacity <= 0:
@@ -218,7 +232,8 @@ def check(schedule: dict, contract: dict) -> dict:
     coverage = all(schedule.get(x) for x in ('events', 'jobs')) and (schedule.get('trace_complete') is True or schedule.get('complete_actual_trace') is True)
     gaps = {'missing_reservation', 'missing_slot_capacity', 'missing_client_capacity',
             'missing_job_boundary', 'missing_producer_done', 'missing_dependency_retirement',
-            'missing_response_group_timing', 'missing_bank_enqueue', 'missing_bank_queue_capacity'}
+            'missing_response_group_timing', 'missing_bank_enqueue', 'missing_bank_queue_capacity',
+            'missing_ingress_resource'}
     contradictory = any(x['kind'] not in gaps for x in errors)
     status = 'fail' if contradictory else 'pass' if not errors and measured and coverage else 'incomplete'
     return dict(status=status, qualified=False, events=len(schedule.get('events', [])), violations=errors,

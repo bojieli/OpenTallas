@@ -65,6 +65,19 @@ class FixedScheduleTests(unittest.TestCase):
         self.assertEqual(len({m.bank_of(row,contract) for row in qr}),16)
         for base in range(0,16384,16):
             self.assertEqual(len({m.bank_of(base+i,contract) for i in range(16)}),16)
+    def test_independent_capture_and_control_ingress_ports(self):
+        self.contract['ingress_capacities']={'ctrl_p3':1,'ctrl_p4':1,'capture0':1}
+        self.schedule['events'][0]['ingress_resource']='ctrl_p4'
+        self.schedule['events'][1]['ingress_resource']='ctrl_p3'
+        extra=copy.deepcopy(self.schedule['events'][0]);extra.update(id='w2',slot=1,row=65,ingress_resource='capture0')
+        self.contract['slot_capacity']['su/write/1']=1
+        self.schedule['events'].append(extra)
+        self.assertEqual(m.check(self.schedule,self.contract)['status'],'pass')
+        extra['ingress_resource']='ctrl_p4'
+        self.assertIn('ingress_collision',self.kinds())
+    def test_missing_physical_ingress_resource_incomplete(self):
+        self.contract['ingress_capacities']={'ctrl_p3':1,'ctrl_p4':1}
+        self.assertEqual(m.check(self.schedule,self.contract)['status'],'incomplete')
     def test_bank_queue_bound_is_not_endpoint_bound(self):
         self.contract['bank_queue_capacity']=1
         first=self.schedule['events'][1]
