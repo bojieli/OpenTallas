@@ -574,16 +574,18 @@ module tb_qwen_seq_nox_composed;
     integer run_cycle=0;
     always @(posedge clk)if(start)run_cycle<=1;else if(run_cycle!=0)run_cycle<=run_cycle+1;
     integer t0;
-    initial begin
+    integer completed=0;
+    initial begin : test_main
         repeat(3)@(negedge clk);rst_n=1;repeat(8)@(negedge clk);
         for(integer row=VW0;row<VW0+NWORDS;row=row+1)begin
             init_v=1;init_row=20'(row);init_data=expected(row);@(negedge clk);
         end
         init_v=0;repeat(16)@(negedge clk);initialized=1;@(negedge clk);start=1; @(negedge clk); start = 0; t0 = $time;
-        repeat (2000) begin @(posedge clk); if (done) begin
+        for (integer timeout_cycle=0; timeout_cycle<2000 && !completed; timeout_cycle=timeout_cycle+1) begin @(posedge clk); if (done) begin
             if (FENCE ? (fault && read_count == 0 && write_count == 0) : (bad == 0 && sent == NWORDS && !fault && !memory_fault && ovf == 0 && write_count == NWORDS)) $display("PASS seq_nox_composed variable=%0d VRL=%0d OS=%0d IS=%0d RLY=%0d words=%0d coll_cycles=%0d", VARIABLE, VRL, OS, IS, RLY, sent, $time - t0);
             else $fatal(1, "FAIL tp_seq_vrl VRL=%0d OS=%0d IS=%0d RLY=%0d bad=%0d sent=%0d fault=%0d ovf=%0d", VRL, OS, IS, RLY, bad, sent, fault, ovf);
-            $finish; end end
-        $fatal(1, "FAIL tp_seq_vrl timeout sent=%0d bad=%0d", sent, bad); $finish;
+            completed=1; end end
+        if (!completed) $fatal(1, "FAIL tp_seq_vrl timeout sent=%0d bad=%0d", sent, bad);
+        $finish;
     end
 endmodule

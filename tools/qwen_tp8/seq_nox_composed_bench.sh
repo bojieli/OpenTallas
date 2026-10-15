@@ -11,4 +11,4 @@ mkdir -p "$out"
 $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -j 8 -O1 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTH +define+OT_QFD_VM_NOX --top-module tb_qwen_seq_nox_composed --Mdir "$out/obj" "$@" $F > "$out/build.log" 2>&1
 "$out/obj/Vtb_qwen_seq_nox_composed" > "$out/run.log" 2>&1
 cat "$out/run.log"
-grep -q '^PASS' "$out/run.log"
+grep -q '^PASS' "$out/run.log" && ! grep -Eq '^FAIL|%Fatal|Assertion failed' "$out/run.log"
