@@ -7,6 +7,7 @@
         "NC": 3,
         "RG": 5,
         "WG": 1,
+        "BANK_FT": 1,
         "CW": 2,
         "RB": 3,
         "WB": 3
@@ -216,6 +217,7 @@
         "NC": 0,
         "RG": 4,
         "WG": 1,
+        "BANK_FT": 1,
         "CW": 1,
         "RB": 3,
         "WB": 3
@@ -415,6 +417,7 @@
         "NC": 4,
         "RG": 6,
         "WG": 3,
+        "BANK_FT": 1,
         "CW": 3,
         "RB": 3,
         "WB": 3
@@ -624,6 +627,7 @@
         "NC": 0,
         "RG": 5,
         "WG": 2,
+        "BANK_FT": 1,
         "CW": 1,
         "RB": 3,
         "WB": 3
@@ -818,6 +822,7 @@
       ]
     }
   },
+  "bank_implementation": "Explicit BANK_FT=1 opt-in to ot_vms_bank_static_wdecode_ft; original module remains distinct. Three-edge initialization reset release; compiler starts >=4 edges after release. No physical closure inherited.",
   "historical_views": "No closed bank/hub/ring view is aliased to these successors.",
   "clocks": "Twelve separate physical roots; same compiler edge and phase; no asynchronous crossings.",
   "status": "vmstat is a real three-edge bank/hub/ring aggregate; four quadrant outputs require a real die aggregator.",
