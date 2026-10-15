@@ -1,0 +1,4 @@
+{
+  "initial_gate_failure": "MUT2 initially changed stored t0 to t0+1, colliding with t1. Boot validity correctly rejected that image, so it could not exercise a runtime shifted-slot mutant. Preserved initial_mutant_configuration.log. MUT2 now shifts its first runtime comparator one edge early without corrupting configuration.",
+  "model_import_failure": "An intermediate gate imported all uarch_model dependencies in a sparse worktree and failed on missing pre-existing sinkhorn physical.json. Gate now records the model function/source pin without importing unrelated physical artifacts. Standalone model.json was evaluated from that exact function using Python AST."
+}

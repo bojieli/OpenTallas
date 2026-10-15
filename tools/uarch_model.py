@@ -35,6 +35,33 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 
 
+def qwen_native_kv_programme_candidate_model(replicas=1):
+    """Writer-only fixed roots; no measured route or token-rate credit."""
+    if type(replicas) is not int or replicas < 1:
+        raise ValueError('actual positive writer replica count required')
+    state = dict(cycle_roots=160, stage_and_loader=9, transaction_roots=61,
+                 run_flags=4, elapsed_cycle=32, expectation_pipeline=2,
+                 expected_descriptor=116)
+    return dict(schema='opentallas.qwen-native-kv-programme-candidate.v1',
+        opt_in_default=False, scope='one native writer per supplied replica',
+        replicas=replicas, macs_per_cycle=0, memory_macros=0,
+        memory_read_bytes_per_cycle=0, memory_write_bytes_per_cycle=0,
+        boot_writes=6, boot_bytes_per_write=8, boot_total_bytes=48,
+        logical_state_bits=state, logical_state_bits_total=sum(state.values()),
+        total_logical_state_bits=replicas*sum(state.values()),
+        writer_expectation_bits_per_cycle=64, kvn_slot_bits_per_cycle=1,
+        independent_descriptor_bits_per_cycle=116,
+        root_input_bits_per_start=49,
+        maximum_word_slots_per_cycle=1, word_slots_per_cohort=4,
+        high_half_sectors_per_slot=4, sectors_per_cohort=8,
+        added_writer_capture_edges=0, independent_descriptor_edges=2,
+        mux_demux_cost='four cycle32 equality terms; index4to1; group3to3 lookup; address wiring and layer6 increment',
+        routing_tracks_required=181, routing_channel_capacity=None,
+        area_um2=None, floorplan_slot_um=None,
+        token_latency_credit_cycles=0, rate_credit=0,
+        qualification='component candidate only; actual replica inventory, area/slot/channel, routed SS/FF clock and source-profiled whole-stage timing remain open')
+
+
 def qwen_central_vm_native_bank_model():
     """Preserve four bank edges, isolate actual input/capture/output clock roots."""
     return dict(schema='opentallas.qwen-central-vm-native-bank.v1', opt_in_default=False,
