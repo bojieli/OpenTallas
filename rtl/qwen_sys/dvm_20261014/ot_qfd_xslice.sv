@@ -55,6 +55,8 @@ module ot_qfd_xs_tap #(
     parameter integer AW  = 24,
     parameter integer NW  = 18,
     parameter integer XCW = 12,
+    parameter integer STATIC_SCHEDULE = 0,
+    parameter integer NATIVE_AFFINE = 0,
     parameter integer MUT = 0            // 1: no rounding (truncation) -- bench mutant, must FAIL
 ) (
     input  wire              clk,
@@ -128,8 +130,13 @@ module ot_qfd_xs_tap #(
         if (!rst_n) q_v <= 1'b0; else q_v <= p_v;
     always @(posedge clk) begin
         q_xb <= p_xb; q_xcs <= p_xcs; q_xks <= p_xks; q_sp <= p_sp; q_k <= p_k; q_rnd <= p_rnd;
-        q_s1 <= ({{(AW-XCW){1'b0}}, p_xcs} << p_sp) - {{(AW-XCW){1'b0}}, p_xcs};
-        q_s2 <= (p_k - 1'b1) * p_xks;
+        if(NATIVE_AFFINE!=0)begin
+            // Actual weight programs: xcs=k,xks=1. Total producer range is S*k,not two general products.
+            q_s1 <= {{(AW-XCW){1'b0}},p_xcs} << p_sp;q_s2<=0;
+        end else begin
+            q_s1 <= ({{(AW-XCW){1'b0}}, p_xcs} << p_sp) - {{(AW-XCW){1'b0}}, p_xcs};
+            q_s2 <= (p_k - 1'b1) * p_xks;
+        end
     end
     // ---- E3: arm (epochs alternate) + descriptor out ----
     reg              ep_nx;
@@ -154,7 +161,7 @@ module ot_qfd_xs_tap #(
                 lo[ep_nx] <= q_xb;
                 lo_minus64[ep_nx] <= q_xb - 64;
                 lo_below64[ep_nx] <= (q_xb < 64);
-                hi[ep_nx] <= {1'b0, q_xb} + q_s1 + q_s2 + 1'b1;
+                hi[ep_nx] <= (NATIVE_AFFINE!=0) ? ({1'b0,q_xb}+q_s1) : ({1'b0,q_xb}+q_s1+q_s2+1'b1);
                 rnd[ep_nx] <= q_rnd;
                 ep_nx <= ~ep_nx;
                 d_o[0] <= {q_rnd, q_k, q_sp, q_xks, q_xcs, q_xb, ep_nx, 1'b1};
@@ -167,13 +174,18 @@ module ot_qfd_xs_tap #(
     reg  [15:0]      kq_m [0:1];
     reg  [16*32-1:0] kq_d [0:1];
     reg              q_ovf;
-    wire             use_q = !s1_v && (kq_n != 0);
+    wire             use_q = STATIC_SCHEDULE==0 && !s1_v && (kq_n != 0);
     wire             use_a = !s1_v && (kq_n == 0) && a1_v;
     wire             push  = a1_v && !use_a;
     wire             w_v   = s1_v | use_q | use_a;
-    wire [AW-1:0]    w_a   = s1_v ? s1_a : use_q ? kq_a[0] : a1_a;
-    wire [63:0]      w_m   = s1_v ? s1_m : use_q ? {48'd0, kq_m[0]} : {48'd0, a1_m};
-    wire [64*32-1:0] w_d   = s1_v ? s1_d : use_q ? {1536'd0, kq_d[0]} : {1536'd0, a1_d};
+    wire [AW-1:0]    w_a   = STATIC_SCHEDULE ? ((s1_a&{AW{s1_v}})|(a1_a&{AW{a1_v}})) : s1_v ? s1_a : use_q ? kq_a[0] : a1_a;
+    wire [63:0]      w_m   = STATIC_SCHEDULE ? ((s1_m&{64{s1_v}})|({48'd0,a1_m}&{64{a1_v}})) : s1_v ? s1_m : use_q ? {48'd0, kq_m[0]} : {48'd0, a1_m};
+    wire [64*32-1:0] w_d   = STATIC_SCHEDULE ? ((s1_d&{2048{s1_v}})|({1536'd0,a1_d}&{2048{a1_v}})) : s1_v ? s1_d : use_q ? {1536'd0, kq_d[0]} : {1536'd0, a1_d};
+    generate if(STATIC_SCHEDULE!=0)begin : g_fixed_fill
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)begin kq_n<=0;q_ovf<=0;end
+            else begin kq_n<=0;q_ovf<=s1_v && a1_v;end
+    end else begin : g_legacy_fill
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin kq_n <= 2'd0; q_ovf <= 1'b0; end
         else begin
@@ -188,6 +200,7 @@ module ot_qfd_xs_tap #(
             kq_a[kq_n] <= a1_a; kq_m[kq_n] <= a1_m; kq_d[kq_n] <= a1_d;
         end
     end
+    end endgenerate
     wire [AW:0] wa_lo = {1'b0, w_a};
 // Range overlap: w_a+64>lo iff lo<64 or w_a>lo-64. Precompute the immutable lower threshold
     // at descriptor claim; remove the addition before the fill-stage comparator without changing any edge.
@@ -222,7 +235,9 @@ module ot_qfd_xs_tap #(
         else begin
             e4_v <= w_v && (hit != 2'b00);
             fwq <= fw_i; feq <= fe_i;
-            if (q_ovf || (w_v && hit == 2'b11) || fwq || feq) fault <= 1'b1;
+            if (q_ovf || (w_v && hit == 2'b11) || fwq || feq ||
+                (NATIVE_AFFINE!=0 && p_v && (p_xks!=1 || p_xcs!=p_k ||
+                 !(p_k==2 || p_k==6 || p_k==8 || p_k==24 || p_k==32)))) fault <= 1'b1;
         end
     always @(posedge clk) begin
         e4_ep <= hep; e4_rnd <= hrd && (MUT != 1); e4_b <= w_a[AW-1:6]; e4_off <= off; e4_m <= w_m; e4_cy <= c_y; e4_h <= h_d;
@@ -474,6 +489,7 @@ module ot_qfd_xhead #(
     parameter integer NH   = 8,          // tiles per corridor (half column)
     parameter integer SMIN = 7,
     parameter integer SMAX = 11,
+    parameter integer NATIVE_AFFINE = 0,
     parameter integer DX   = 10,         // FILL_LEAD + 8 (lr register 1, leaf 5, answer pin register 1, launch 1)
     parameter integer FILL_LEAD = 2,     // the tap's two-entry attention-write queue (a queued beat can trail a go by 2)
     parameter integer MUT  = 0           // 3: the TDM sends each line to the wrong station (wrong line);
@@ -600,19 +616,31 @@ module ot_qfd_xhead #(
     reg  [NW-1:0]     da_km1;
     reg  [SMAX:0]     da_q [0:NR-1];
     reg  [AW-1:0]     dp_pr [0:NR-1];
+    reg [NW-1:0] da_k;reg [5:0] dp_k;
+    reg [7:0] first_abs [0:1][0:NR-1][0:3];
+    reg [12:0] go_bad_bits;
     reg  [AW-1:0]     dp_fm;                        // footprint - 1
     integer r, e, i;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin da_v <= 1'b0; dp_v <= 1'b0; end else begin da_v <= d_v; dp_v <= da_v; end
     always @(posedge ck) begin
-        da_ep <= d_ep; da_xb <= d_xb; da_xcs <= d_xcs; da_xks <= d_xks; da_km1 <= d_k - 1'b1;
+        da_ep <= d_ep; da_xb <= d_xb; da_xcs <= d_xcs; da_xks <= d_xks; da_km1 <= d_k - 1'b1; da_k<=d_k;
         // quad q = (tile id) mod (S / TG)
         for (r = 0; r < NR; r = r + 1)
             da_q[r] <= tid_q[16*r +: 16] & ((({{SMAX{1'b0}}, 1'b1}) << (d_sp - $clog2(TG))) - 1'b1);
         dp_ep <= da_ep; dp_xb <= da_xb;
-        dp_fm <= (TG - 1) * {{(AW-XCW){1'b0}}, da_xcs} + {{(AW-NW){1'b0}}, da_km1} * {{(AW-XCW){1'b0}}, da_xks};
+        dp_k<=da_k[5:0];
+        dp_fm <= (NATIVE_AFFINE!=0) ? (TG*da_k-1) : (TG - 1) * {{(AW-XCW){1'b0}}, da_xcs} + {{(AW-NW){1'b0}}, da_km1} * {{(AW-XCW){1'b0}}, da_xks};
         // first chunk TG * q; product TG * q * xcs
-        for (r = 0; r < NR; r = r + 1) dp_pr[r] <= (da_q[r] * TG) * da_xcs;
+        for (r = 0; r < NR; r = r + 1)
+            if(NATIVE_AFFINE!=0)case(da_k)
+                2:dp_pr[r]<=da_q[r]<<(1+$clog2(TG));
+                6:dp_pr[r]<=(da_q[r]<<(2+$clog2(TG)))+(da_q[r]<<(1+$clog2(TG)));
+                8:dp_pr[r]<=da_q[r]<<(3+$clog2(TG));
+                24:dp_pr[r]<=(da_q[r]<<(4+$clog2(TG)))+(da_q[r]<<(3+$clog2(TG)));
+                32:dp_pr[r]<=da_q[r]<<(5+$clog2(TG));
+                default:dp_pr[r]<=0;
+            endcase else dp_pr[r] <= (da_q[r] * TG) * da_xcs;
     end
     reg [AW-1:0] emin [0:NR-1];
     reg          pool_n, pfault_n;
@@ -633,6 +661,7 @@ module ot_qfd_xhead #(
                 wb[dp_ep][r] <= emin[r][AW-1:6] + ((pool_n && r >= NH) ? 1'b1 : 1'b0);
                 wo[dp_ep][r] <= pool_n ? 6'd0 : emin[r][5:0];
                 ro[dp_ep][r] <= emin[r][5:0];
+                for(i=0;i<4;i=i+1) first_abs[dp_ep][r][i]<={2'b0,emin[r][5:0]}+i*dp_k;
             end
         end
 
@@ -699,7 +728,8 @@ module ot_qfd_xhead #(
     reg           f_pos;
     reg  [AW:0]   rel;
     reg  [5:0]    pos;
-    reg  [AW:0]   ab;
+    localparam integer ABSW=NATIVE_AFFINE!=0 ? 8 : AW+1;
+    reg [ABSW-1:0] ab;
     reg  [NH*28-1:0] rp;
     reg  [NH-1:0] rv;
     reg  [NH-1:0] rt;
@@ -730,6 +760,13 @@ module ot_qfd_xhead #(
                 rv[lf(r)] = 1'b1;
                 rt[lf(r)] = tb(r);
                 for (i = 0; i < 4; i = i + 1) begin
+                    if(NATIVE_AFFINE!=0)begin
+                        ab=first_abs[rep_now][r][i]+(g_q ? 6'd0 : k_i[5:0]);
+                        if(pool_now)begin
+                            if(ab[7])f_pos=1'b1;
+                            rp[28*lf(r)+7*i+:7]={(r<NH)?!ab[6]:ab[6],ab[5:0]};
+                        end else rp[28*lf(r)+7*i+:7]={1'b1,ab[5:0]};
+                    end else begin
                     if (!pool_now) begin
                         // own slot: position (wo + rel) mod 64; a footprint <= 64 keeps rel < 64
                         if (rel_i[i] >= 64) f_pos = 1'b1;
@@ -741,7 +778,8 @@ module ot_qfd_xhead #(
                         ab = {{(AW-5){1'b0}}, ro[rep_now][r]} + rel_i[i];
                         if (ab >= 128) f_pos = 1'b1;
                         rp[28*lf(r) + 7*i +: 7] = {(r < NH) ? !ab[6] : ab[6], ab[5:0]};
-                    end
+                    end                    end
+
                 end
             end
     end
@@ -791,6 +829,13 @@ module ot_qfd_xhead #(
             ts = {1'b1, sb, 1'b1, sa};
         end else miss = 1'b0;
     end
+    always @(posedge ck or negedge rst_n)
+        if(!rst_n)go_bad_bits<=0;
+        else go_bad_bits<=g_q ? {
+            busy && !last,b_k==0,b_tiles==0,b_round!=e_rnd[ep_rd],b_k!=e_k[ep_rd],
+            b_split!=e_sp[ep_rd],b_xks!={{(AW-XCW){1'b0}},e_xks[ep_rd]},
+            b_xcs!={{(AW-XCW){1'b0}},e_xcs[ep_rd]},b_xbase!=e_xb[ep_rd],
+            b_xjs!=0,b_wsrc,st[ep_rd]!=1,1'b0} : 13'd0;
     reg flt;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin
@@ -801,6 +846,7 @@ module ot_qfd_xhead #(
             fault <= flt | fi_q;
             // descriptor: claim the epoch
             if (d_v) begin
+                if(NATIVE_AFFINE!=0 && (d_xks!=1 || d_xcs!=d_k || !(d_k==2 || d_k==6 || d_k==8 || d_k==24 || d_k==32)))flt<=1;
                 if (st[d_ep] != 2'd0) flt <= 1'b1;
                 st[d_ep] <= 2'd1;
                 e_xb[d_ep] <= d_xb; e_xcs[d_ep] <= d_xcs; e_xks[d_ep] <= d_xks; e_sp[d_ep] <= d_sp; e_k[d_ep] <= d_k;
@@ -808,13 +854,13 @@ module ot_qfd_xhead #(
                 if (d_sp < SMIN || d_sp > SMAX) flt <= 1'b1;
             end
             if (dp_v && pfault_n) flt <= 1'b1;
-            if (f_pos) flt <= 1'b1;
+            if (f_pos || (NATIVE_AFFINE!=0 && |go_bad_bits)) flt <= 1'b1;
             if (|lqbp) flt <= 1'b1;
             if (miss) flt <= 1'b1;                                          // a leaf did not answer its read
             // the go: consume the oldest filled epoch
             if (g_q) begin
                 if (busy && last) st[(MUT == 4) ? ~rep : rep] <= 2'd0;     // back to back: the previous op's last edge
-                if (!go_ok || (busy && !last)) flt <= 1'b1;
+                if (NATIVE_AFFINE==0 && (!go_ok || (busy && !last))) flt <= 1'b1;
                 else begin
                     st[ep_rd] <= 2'd2;
                     rep <= (MUT == 4) ? ~ep_rd : ep_rd;

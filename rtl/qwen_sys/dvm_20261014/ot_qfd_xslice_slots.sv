@@ -76,7 +76,7 @@ module qfd_xs_tap #(parameter integer NW = 18, parameter integer AW = 24, parame
         if (!rst_n) begin hr_q <= 1'b0; hr_seen <= 1'b0; end
         else begin hr_q <= hw_r & he_r; if (hr_q) hr_seen <= 1'b1; end
     wire tf;
-    ot_qfd_xs_tap #(.AW(AW), .NW(NW), .XCW(XCW)) u_tap (.clk(ck), .rst_n(rst_n),
+    ot_qfd_xs_tap #(.AW(AW), .NW(NW), .XCW(XCW),.STATIC_SCHEDULE(1),.NATIVE_AFFINE(1)) u_tap (.clk(ck), .rst_n(rst_n),
         .xpf_v(xpf[0]), .xpf_xbase(xpf[1 +: AW]), .xpf_xcs(xpf[1+AW +: XCW]), .xpf_xks(xpf[1+AW+XCW +: XCW]),
         .xpf_split(xpf[1+AW+2*XCW +: 4]), .xpf_k(xpf[1+AW+2*XCW+4 +: NW]), .xpf_round(xpf[1+AW+2*XCW+4+NW]),
         .sw_v(sw[0]), .sw_a(sw[1 +: AW]), .sw_m(sw[1+AW +: 64]), .sw_d(sw[1+AW+64 +: 2048]),
@@ -125,7 +125,7 @@ module ot_qfd_xhead_m #(parameter integer NW = 18, parameter integer AW = 24, pa
     wire [127:0] lw_m;
     wire [2047:0] lw_d;
     wire [143:0] lw_ctl;
-    ot_qfd_xhead #(.AW(AW), .NW(NW), .XCW(XCW), .NH(8)) u_head (.ck(ck), .rst_n(rst_n), .tids(tids), .fault_i(fault_i),
+    ot_qfd_xhead #(.AW(AW), .NW(NW), .XCW(XCW), .NH(8),.NATIVE_AFFINE(1)) u_head (.ck(ck), .rst_n(rst_n), .tids(tids), .fault_i(fault_i),
         .a_d(h_in), .a_r(h_in_r), .b_d(h_out), .b_r(h_out_r), .n_d(n_d), .n_r(n_r), .s_d(s_d), .s_r(s_r),
         .lw_v(lw_v), .lw_ep(lw_ep), .lw_off(lw_off), .lw_m(lw_m), .lw_d(lw_d), .lw_ctl(lw_ctl),
         .lc_v(lc_v), .lc_ep(lc_ep),

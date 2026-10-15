@@ -43,6 +43,8 @@ module ot_qwen_me_array_dvm_w12 #(
     parameter integer FAST_ISSUE = 0,
     parameter integer MUL_LAT = 5,
     parameter integer TREE_LAT = 3,
+    parameter integer NATIVE_AFFINE=0,
+    parameter integer STATIC_SCHEDULE=0,
     parameter integer TAP_MUT = 0,
     parameter integer LEAF_MUT = 0,
     parameter integer HEAD_MUT = 0
@@ -165,7 +167,7 @@ module ot_qwen_me_array_dvm_w12 #(
     wire [NT-1:0]   go_t;
     wire [NT*IBW-1:0] ib_t;
     ot_qfd_xdvm_fabric #(.AW(AW), .NW(NW), .XCW(XCW), .IL(IL), .NCOL(NCOL), .NH(NH), .TG(TG), .SMIN(SMIN), .SMAX(SMAX),
-        .HB(HB), .DX(DX), .FILL_LEAD(FILL_LEAD), .TIDM(TIDM), .XOFF(XOFF), .TAP_MUT(TAP_MUT), .LEAF_MUT(LEAF_MUT),
+        .HB(HB), .DX(DX), .FILL_LEAD(FILL_LEAD), .TIDM(TIDM), .XOFF(XOFF), .NATIVE_AFFINE(NATIVE_AFFINE),.STATIC_SCHEDULE(STATIC_SCHEDULE),.TAP_MUT(TAP_MUT), .LEAF_MUT(LEAF_MUT),
         .HEAD_MUT(HEAD_MUT)) u_fab (
         .clk(clk), .rst_n(rst_n), .go_acc(go && ready), .ib(ib),
         .xpf_v(xpf_v), .xpf_xbase(xpf_xbase), .xpf_xcs(xpf_xcs), .xpf_xks(xpf_xks), .xpf_split(xpf_split),
@@ -241,6 +243,8 @@ module ot_qfd_xdvm_fabric #(
     parameter integer FILL_LEAD = 2,
     parameter integer TIDM = 1,
     parameter integer XOFF = 3,
+    parameter integer NATIVE_AFFINE=0,
+    parameter integer STATIC_SCHEDULE=0,
     parameter integer TAP_MUT = 0,
     parameter integer LEAF_MUT = 0,
     parameter integer HEAD_MUT = 0
@@ -279,7 +283,7 @@ module ot_qfd_xdvm_fabric #(
     wire [HW-1:0]  hw0, he0;
     wire           tap_fault;
     wire [NCOL:0]  fch;                         // fault chain, outermost column first (fch[NCOL] = 0: no outer column)
-    ot_qfd_xs_tap #(.AW(AW), .NW(NW), .XCW(XCW), .MUT(TAP_MUT)) u_tap (.clk(clk), .rst_n(rst_n),
+    ot_qfd_xs_tap #(.AW(AW), .NW(NW), .XCW(XCW),.NATIVE_AFFINE(NATIVE_AFFINE),.STATIC_SCHEDULE(STATIC_SCHEDULE), .MUT(TAP_MUT)) u_tap (.clk(clk), .rst_n(rst_n),
         .xpf_v(xpf_v), .xpf_xbase(xpf_xbase), .xpf_xcs(xpf_xcs), .xpf_xks(xpf_xks), .xpf_split(xpf_split),
         .xpf_k(xpf_k), .xpf_round(xpf_round), .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d),
         .aw_v(aw_v), .aw_a(aw_a), .aw_m(aw_m), .aw_d(aw_d), .gi({ib, go_acc}), .hw(hw0), .he(he0),
@@ -332,7 +336,7 @@ module ot_qfd_xdvm_fabric #(
             assign tids[16*j +: 16] = TJ;
         end
         ot_qfd_xhead #(.AW(AW), .NW(NW), .XCW(XCW), .TG(TG), .IL(IL), .NH(NH), .SMIN(SMIN), .SMAX(SMAX), .DX(DX),
-            .FILL_LEAD(FILL_LEAD), .MUT(HEAD_MUT)) u_head (.ck(clk), .rst_n(rst_n), .tids(tids), .fault_i(fch[c+1]),
+            .FILL_LEAD(FILL_LEAD),.NATIVE_AFFINE(NATIVE_AFFINE), .MUT(HEAD_MUT)) u_head (.ck(clk), .rst_n(rst_n), .tids(tids), .fault_i(fch[c+1]),
             .a_d(hw), .a_r(), .b_d(), .b_r(1'b1),
             .n_d(cn), .n_r(1'b1), .s_d(cs), .s_r(1'b1),
             .lw_v(lw_v), .lw_ep(lw_ep), .lw_off(lw_off), .lw_m(lw_m), .lw_d(lw_d), .lw_ctl(lw_ctl),

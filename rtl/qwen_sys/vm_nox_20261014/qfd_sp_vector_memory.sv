@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
 // Native STATIC compute-die VM binding (HANDOFF0ah). No credit ports,queues or runtime scheduling. This wrapper requires OT_QFD_VM_NOX and binds the real tiled VM.
-// Bit packing is LSB-first within bundles; seq row addresses are full20-bit ROW addresses (no implicit base).
+// SA uses qfd_su_vm_pack. Row/ar/ME bundles are MSB-valid; payload data occupies the low bits.
+// Sequencer addresses are full20-bit ROW addresses (no implicit base).
 module qfd_sp_vector_memory #(
     parameter integer USE_MACRO=1, USE_LEAF_CLOCKS=1, OBS_MUT=0, MUT=0
 )(
