@@ -1,5 +1,5 @@
 {
- "name": "s81hc_ctfsnt_ref-v3-ck4-23a84471d",
+ "name": "s81hc_ctfsnt_ref-v3-ck4-cbddac3f6",
  "block": "ot_s81_hc_ctfs_nt",
  "ref_tile": true,
  "owner": "Claude:el1014-s81-norm-tree",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/s81-norm-tree-1014",
-  "commit": "23a84471decb4beb32f37a07b940cb14fc176627"
+  "commit": "cbddac3f618b48a0514fc250c7133be214b644d3"
  },
  "stages": {
   "bench": [
@@ -104,7 +104,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_ctfsnt_ref/s81hc_ctfsnt_ref-v3-ck4-23a84471d"
+   "to": "results/rtl/ref_tile/s81hc_ctfsnt_ref/s81hc_ctfsnt_ref-v3-ck4-cbddac3f6"
   }
  ],
  "cycles_added": 0,
