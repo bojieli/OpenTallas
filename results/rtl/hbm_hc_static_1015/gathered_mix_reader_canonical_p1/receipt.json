@@ -1,0 +1,78 @@
+{
+  "scope": "actual fixed-slot768b register landing/serializer\u21923LG\u21928SID2nativebanks/24realSRAM; component only",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_static.sv": "345e8db865751a19491a08145ea081883cd104669ab830e1dacbf0e062ccffa7",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_tap.sv": "cc7c0d00ead994fb66360a00da7acd4b70e8a2f9f6e2a3b8013a9672d1ab29de",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv": "7b2e2fbafead30cbabc427303bb339da070645637af9d1a69f0dbdaa0a88ee53",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "rtl/test/tb_hgi_hc_gathered_mix_reader_static.sv": "1abef3a334539b3148435245758939e833a02a8294a83d85fccd05bd3188ed43",
+    "tools/hbm_hc_gathered_mix_reader_model.py": "c35afa26cca9b2c5b520942ba2b400da6aeb6ed5b297a820b5bc20d4fa31262f",
+    "tools/rtl_hgi_hc_gathered_mix_reader_gate.sh": "35b9b7eb2bae48bf55da5ea25331dedab1c0f5df84ed65d12c0ceadfbb5e427a"
+  },
+  "positive": "PASS",
+  "actual_SRAM_payload_mutant": "KILLED",
+  "shape": {
+    "canonical_case": {
+      "npos": 1,
+      "stride": 0,
+      "words": 24,
+      "MDESC_record_SHA_prefix": "43c1652f"
+    },
+    "component_cases": {
+      "npos": [
+        6,
+        8,
+        6,
+        8
+      ],
+      "strides": [
+        3,
+        3,
+        5,
+        5
+      ],
+      "words": 672
+    },
+    "exact_words": 696,
+    "canonical_base_sector": 18136,
+    "SID": 2,
+    "banks": 8,
+    "actual_SRAMs": 24,
+    "neighbor_readbacks": 4
+  },
+  "timing": {
+    "request_sample": 1,
+    "registered_output_word0": 20,
+    "engine_capture_word0": 21,
+    "request_period": 24,
+    "words_per_cycle": 1
+  },
+  "faults_proved": [
+    "overlap",
+    "npos0",
+    "SIDbounds",
+    "unsolicited",
+    "missingresponse_withoutstall"
+  ],
+  "logs_sha256": {
+    "compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mutant.log": "87529de54dd4a34e2f503fc2fc27906742da3eb3d5067cfed0647d81e094faeb",
+    "positive.log": "7259f7200aff123f2c94a9bcc2cc533eefd54c654b908a74508c02586e350ffa"
+  },
+  "physical_qualified": false,
+  "full_native_qualified": false,
+  "all_compiled_hashes_verified": true,
+  "reader_RTL_source_commit": "a7d0acfd5",
+  "canonical_MD_descriptor_source_sha256": "43c1652f3c2348fd711c770c4769e041caa51a63209c34670c9993ccbbbe4d1d",
+  "canonical_allocation_sha256": "67f58b28f661689a2b3111bf4acca17e64be3594f97ec136cfa9abf942048afd",
+  "P1_finish": {
+    "registered_word0": 20,
+    "registered_last_word_and_done": 43,
+    "engine_first_capture": 21,
+    "engine_last_capture": 44,
+    "issued": 1,
+    "returned": 1,
+    "requests": 3,
+    "late_stream": false
+  }
+}
