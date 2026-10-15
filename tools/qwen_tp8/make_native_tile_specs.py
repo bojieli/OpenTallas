@@ -10,6 +10,8 @@ for master,data in manifest['masters'].items():
  pins=json.loads((a.pins/(master+'.json')).read_text())
  assert pins['overlapping_pin_pairs']==0
  assert [pins['outline']['w'],pins['outline']['h']]==data['outline'], 'physical outline and die pin assignment differ'
+ for port,rec in pins['ports'].items():
+  if not any(port in v for v in pins['pins'].values()): pins['pins'].setdefault(rec['face'],[]).append(port)
  name=master+'_native';dest=r/'physical/ref_tile'/name;dest.mkdir(parents=True,exist_ok=True)
  children=[];hard={}
  for port,ch in data['children'].items():
