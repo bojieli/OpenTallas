@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+ulimit -c 0
 out=$1;mut=${2:-0};rows=${3:-1024};mkdir -p "$out"
 b=rtl/hbm_accel/tu/lk_ep_20261010
 verilator --binary --timing -O2 -j 8 -Wno-fatal -Wno-lint -Wno-style -Irtl/common -Irtl/dsrom_sys/s81_link -DOT_MEM_NO_INIT --top-module tb_hbm_host_static_native_qdq -GMUT="$mut" --Mdir "$out/obj" -o sim \
