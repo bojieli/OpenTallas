@@ -1,0 +1,160 @@
+%Warning-WIDTHTRUNC: /tmp/codex-s81-returnmerge-0757/proof_localrequests/reference.sv:209:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'READ_STAGE' generates 32 bits.
+                                                                                            : ... note: In instance 'check_a.dut.g_column[3].u.u.u'
+  209 |     generate if (READ_STAGE) begin : g_read_relay
+      |              ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.032
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /tmp/codex-s81-returnmerge-0757/proof_localrequests/reference.sv:99:39: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'sc' generates 3 bits.
+                                                                                            : ... note: In instance 'check_a.dut.g_column[3].u.u.u.u_q'
+   99 |         else if (sc_run) begin if (sc == NV - 1) sc_run <= 1'b0; sc <= sc + 1'b1; end
+      |                                       ^~
+%Warning-WIDTHTRUNC: /tmp/codex-s81-returnmerge-0757/proof_localrequests/reference.sv:161:42: Bit extraction of array[4:0] requires 3 bit index, not 8 bits.
+                                                                                            : ... note: In instance 'check_a.dut.g_column[3].u.u.u'
+  161 |     always @(posedge clk) if (vs[DS]) psb[si] <= cs;
+      |                                          ^
+%Warning-WIDTHTRUNC: /tmp/codex-s81-returnmerge-0757/proof_localrequests/reference.sv:163:43: Bit extraction of array[4:0] requires 3 bit index, not 8 bits.
+                                                                                            : ... note: In instance 'check_a.dut.g_column[3].u.u.u'
+  163 |     always @(posedge clk) if (vy[DY]) ybuf[yi] <= yb;
+      |                                           ^
+%Warning-WIDTHEXPAND: /tmp/codex-s81-returnmerge-0757/proof_localrequests/reference.sv:181:104: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'hs_c' generates 16 bits.
+                                                                                              : ... note: In instance 'check_a.dut.g_column[3].u.u.u'
+  181 |                     if (hs_c + s < HROWS) begin g_v[s] = 1'b1; g_t[s] = 1'b1; g_q[16 * s +: 16] = hs_c + s; end
+      |                                                                                                        ^
+%Warning-WIDTHTRUNC: /tmp/codex-s81-returnmerge-0757/proof_localrequests/reference.sv:181:97: Operator ASSIGN expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                            : ... note: In instance 'check_a.dut.g_column[3].u.u.u'
+  181 |                     if (hs_c + s < HROWS) begin g_v[s] = 1'b1; g_t[s] = 1'b1; g_q[16 * s +: 16] = hs_c + s; end
+      |                                                                                                 ^
+%Warning-WIDTHEXPAND: /tmp/codex-s81-returnmerge-0757/proof_localrequests/reference.sv:181:30: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'hs_c' generates 16 bits.
+                                                                                             : ... note: In instance 'check_a.dut.g_column[3].u.u.u'
+  181 |                     if (hs_c + s < HROWS) begin g_v[s] = 1'b1; g_t[s] = 1'b1; g_q[16 * s +: 16] = hs_c + s; end
+      |                              ^
+%Warning-WIDTHEXPAND: /tmp/codex-s81-returnmerge-0757/proof_localrequests/reference.sv:184:110: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'o_r' generates 16 bits.
+                                                                                              : ... note: In instance 'check_a.dut.g_column[3].u.u.u'
+  184 |                     if (o_r + s < YROWS) begin g_v[s] = 1'b1; g_i[8 * s +: 8] = o_v; g_q[16 * s +: 16] = o_r + s; end
+      |                                                                                                              ^
+%Warning-WIDTHTRUNC: /tmp/codex-s81-returnmerge-0757/proof_localrequests/reference.sv:184:104: Operator ASSIGN expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                             : ... note: In instance 'check_a.dut.g_column[3].u.u.u'
+  184 |                     if (o_r + s < YROWS) begin g_v[s] = 1'b1; g_i[8 * s +: 8] = o_v; g_q[16 * s +: 16] = o_r + s; end
+      |                                                                                                        ^
+%Warning-WIDTHEXPAND: /tmp/codex-s81-returnmerge-0757/proof_localrequests/reference.sv:184:29: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'o_r' generates 16 bits.
+                                                                                             : ... note: In instance 'check_a.dut.g_column[3].u.u.u'
+  184 |                     if (o_r + s < YROWS) begin g_v[s] = 1'b1; g_i[8 * s +: 8] = o_v; g_q[16 * s +: 16] = o_r + s; end
+      |                             ^
+%Warning-WIDTHEXPAND: /tmp/codex-s81-returnmerge-0757/proof_localrequests/reference.sv:196:37: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'o_r' generates 16 bits.
+                                                                                             : ... note: In instance 'check_a.dut.g_column[3].u.u.u'
+  196 |                     else o_r <= o_r + S_RT;
+      |                                     ^
+%Warning-WIDTHTRUNC: /tmp/codex-s81-returnmerge-0757/proof_localrequests/reference.sv:196:30: Operator ASSIGNDLY expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                            : ... note: In instance 'check_a.dut.g_column[3].u.u.u'
+  196 |                     else o_r <= o_r + S_RT;
+      |                              ^~
+%Warning-WIDTHEXPAND: /tmp/codex-s81-returnmerge-0757/proof_localrequests/reference.sv:195:29: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'o_r' generates 16 bits.
+                                                                                             : ... note: In instance 'check_a.dut.g_column[3].u.u.u'
+  195 |                     if (o_r + S_RT >= YROWS) begin o_r <= 0; o_v <= o_v + 8'd1; end
+      |                             ^
+%Warning-WIDTHEXPAND: /tmp/codex-s81-returnmerge-0757/proof_localrequests/reference.sv:200:49: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'hs_c' generates 16 bits.
+                                                                                             : ... note: In instance 'check_a.dut.g_column[3].u.u.u'
+  200 |             else if (hs_run) begin hs_c <= hs_c + S_RT; if (hs_c + S_RT >= HROWS) hs_run <= 1'b0; end
+      |                                                 ^
+%Warning-WIDTHTRUNC: /tmp/codex-s81-returnmerge-0757/proof_localrequests/reference.sv:200:41: Operator ASSIGNDLY expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                            : ... note: In instance 'check_a.dut.g_column[3].u.u.u'
+  200 |             else if (hs_run) begin hs_c <= hs_c + S_RT; if (hs_c + S_RT >= HROWS) hs_run <= 1'b0; end
+      |                                         ^~
+%Warning-WIDTHEXPAND: /tmp/codex-s81-returnmerge-0757/proof_localrequests/reference.sv:200:66: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'hs_c' generates 16 bits.
+                                                                                             : ... note: In instance 'check_a.dut.g_column[3].u.u.u'
+  200 |             else if (hs_run) begin hs_c <= hs_c + S_RT; if (hs_c + S_RT >= HROWS) hs_run <= 1'b0; end
+      |                                                                  ^
+%Warning-WIDTHTRUNC: /tmp/codex-s81-returnmerge-0757/proof_localrequests/reference.sv:252:32: Bit extraction of array[4:0] requires 3 bit index, not 8 bits.
+                                                                                            : ... note: In instance 'check_a.dut.g_column[3].u.u.u'
+  252 |             o[P_D +: 128] = psb[o[P_PI +: 8]];
+      |                                ^
+%Warning-WIDTHTRUNC: /tmp/codex-s81-returnmerge-0757/proof_localrequests/reference.sv:262:30: Bit extraction of array[4:0] requires 3 bit index, not 8 bits.
+                                                                                            : ... note: In instance 'check_a.dut.g_column[3].u.u.u'
+  262 |                     yr = ybuf[vi];
+      |                              ^
+%Warning-WIDTHTRUNC: /tmp/codex-s81-returnmerge-0757/proof_localrequests/reference.sv:263:23: Operator ASSIGN expects 16 bits on the Assign RHS, but Assign RHS's DIV generates 32 bits.
+                                                                                            : ... note: In instance 'check_a.dut.g_column[3].u.u.u'
+  263 |                     g = ((32 * qx) % NG) / GT; b = (32 * qx) / NG;
+      |                       ^
+%Warning-WIDTHTRUNC: /tmp/codex-s81-returnmerge-0757/proof_localrequests/reference.sv:263:50: Operator ASSIGN expects 16 bits on the Assign RHS, but Assign RHS's DIV generates 32 bits.
+                                                                                            : ... note: In instance 'check_a.dut.g_column[3].u.u.u'
+  263 |                     g = ((32 * qx) % NG) / GT; b = (32 * qx) / NG;
+      |                                                  ^
+%Warning-WIDTHEXPAND: /tmp/codex-s81-returnmerge-0757/proof_localrequests/reference.sv:266:47: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'g' generates 16 bits.
+                                                                                             : ... note: In instance 'check_a.dut.g_column[3].u.u.u'
+  266 |                             if ((NG >= 32 ? g + k / GT : (k % NG) / GT) == tq && (NG >= 32 ? b : b + k / NG) == qd)
+      |                                               ^
+%Warning-WIDTHEXPAND: /tmp/codex-s81-returnmerge-0757/proof_localrequests/reference.sv:266:73: Operator EQ expects 32 bits on the RHS, but RHS's VARREF 'tq' generates 8 bits.
+                                                                                             : ... note: In instance 'check_a.dut.g_column[3].u.u.u'
+  266 |                             if ((NG >= 32 ? g + k / GT : (k % NG) / GT) == tq && (NG >= 32 ? b : b + k / NG) == qd)
+      |                                                                         ^~
+%Warning-WIDTHEXPAND: /tmp/codex-s81-returnmerge-0757/proof_localrequests/reference.sv:266:92: Operator COND expects 32 bits on the Conditional True, but Conditional True's VARREF 'b' generates 16 bits.
+                                                                                             : ... note: In instance 'check_a.dut.g_column[3].u.u.u'
+  266 |                             if ((NG >= 32 ? g + k / GT : (k % NG) / GT) == tq && (NG >= 32 ? b : b + k / NG) == qd)
+      |                                                                                            ^
+%Warning-WIDTHEXPAND: /tmp/codex-s81-returnmerge-0757/proof_localrequests/reference.sv:266:100: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'b' generates 16 bits.
+                                                                                              : ... note: In instance 'check_a.dut.g_column[3].u.u.u'
+  266 |                             if ((NG >= 32 ? g + k / GT : (k % NG) / GT) == tq && (NG >= 32 ? b : b + k / NG) == qd)
+      |                                                                                                    ^
+%Warning-WIDTHTRUNC: /tmp/codex-s81-returnmerge-0757/proof_localrequests/reference.sv:269:24: Operator ASSIGN expects 16 bits on the Assign RHS, but Assign RHS's DIV generates 32 bits.
+                                                                                            : ... note: In instance 'check_a.dut.g_column[3].u.u.u'
+  269 |                     g0 = ((8 * qx) % NG) / 8;
+      |                        ^
+%Warning-WIDTHEXPAND: /tmp/codex-s81-returnmerge-0757/proof_localrequests/reference.sv:272:52: Operator EQ expects 32 bits on the RHS, but RHS's VARREF 'tq' generates 8 bits.
+                                                                                             : ... note: In instance 'check_a.dut.g_column[3].u.u.u'
+  272 |                         if (g0 * (8 / GT) + k / GT == tq)
+      |                                                    ^~
+%Warning-WIDTHTRUNC: /tmp/codex-s81-returnmerge-0757/proof_localrequests/check_a.sv:96:4: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's MODDIVS generates 32 bits.
+                                                                                        : ... note: In instance 'check_a'
+   96 | tid=cycle%64; last=(cycle%31==0);
+      |    ^
+%Warning-WIDTHTRUNC: /tmp/codex-s81-returnmerge-0757/proof_localrequests/check_a.sv:98:115: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's MODDIVS generates 32 bits.
+                                                                                          : ... note: In instance 'check_a'
+   98 | fv[S_RD+1]=(cycle%97==0); fv[S_RD+4]=(cycle%83==0); fv[S_RD+2]=(cycle%7==0); fv[S_RD+3]=(cycle%41==0); fdx[63 +:8]=cycle%5;
+      |                                                                                                                   ^
+%Warning-WIDTHTRUNC: /tmp/codex-s81-returnmerge-0757/proof_localrequests/check_a.sv:99:48: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's MODDIVS generates 32 bits.
+                                                                                         : ... note: In instance 'check_a'
+   99 | for(j=0;j<S_RT;j=j+1) begin rd_in[S_RT+8*j +:8]=(cycle+j)%5;rd_in[S_RT+8*S_RT+16*j +:16]=(cycle+j)%640;end
+      |                                                ^
+%Warning-WIDTHTRUNC: /tmp/codex-s81-returnmerge-0757/proof_localrequests/check_a.sv:99:89: Operator ASSIGN expects 16 bits on the Assign RHS, but Assign RHS's MODDIVS generates 32 bits.
+                                                                                         : ... note: In instance 'check_a'
+   99 | for(j=0;j<S_RT;j=j+1) begin rd_in[S_RT+8*j +:8]=(cycle+j)%5;rd_in[S_RT+8*S_RT+16*j +:16]=(cycle+j)%640;end
+      |                                                                                         ^
+%Warning-WIDTHTRUNC: /tmp/codex-s81-returnmerge-0757/proof_localrequests/check_a.sv:100:24: Operator ASSIGN expects 8 bits on the Assign RHS, but Assign RHS's MODDIVS generates 32 bits.
+                                                                                          : ... note: In instance 'check_a'
+  100 | rd_in[S_RT+24*S_RT +:8]=cycle%5;
+      |                        ^
+make: Entering directory '/tmp/codex-s81-returnmerge-0757/proof_localrequests/obj_positive_a'
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /usr/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /usr/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /usr/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vcheck_a__pch.h -o Vcheck_a__pch.h.fast.gch
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vcheck_a__pch.h -o Vcheck_a__pch.h.slow.gch
+echo "" > Vcheck_a__ALL.verilator_deplist.tmp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck_a__pch.h.fast -c -o Vcheck_a.o Vcheck_a.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck_a__pch.h.fast -c -o Vcheck_a___024root__DepSet_hdac6c735__0.o Vcheck_a___024root__DepSet_hdac6c735__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck_a__pch.h.fast -c -o Vcheck_a___024root__DepSet_h241b0b33__0.o Vcheck_a___024root__DepSet_h241b0b33__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck_a__pch.h.fast -c -o Vcheck_a_ot_s81_hc_ctra__C6_R1__DepSet_he5c59fce__0.o Vcheck_a_ot_s81_hc_ctra__C6_R1__DepSet_he5c59fce__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck_a__pch.h.fast -c -o Vcheck_a_ot_s81_hc_ctra__C6_R1__DepSet_he5c59fce__1.o Vcheck_a_ot_s81_hc_ctra__C6_R1__DepSet_he5c59fce__1.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck_a__pch.h.fast -c -o Vcheck_a_ot_s81_hc_ctra__C6_R1__DepSet_he5c59fce__2.o Vcheck_a_ot_s81_hc_ctra__C6_R1__DepSet_he5c59fce__2.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck_a__pch.h.fast -c -o Vcheck_a_ot_s81_hc_ctra__C6_R1__DepSet_h4d1a442e__0.o Vcheck_a_ot_s81_hc_ctra__C6_R1__DepSet_h4d1a442e__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck_a__pch.h.fast -c -o Vcheck_a__main.o Vcheck_a__main.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck_a__pch.h.slow -c -o Vcheck_a__ConstPool_0.o Vcheck_a__ConstPool_0.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck_a__pch.h.slow -c -o Vcheck_a___024root__Slow.o Vcheck_a___024root__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck_a__pch.h.slow -c -o Vcheck_a___024root__DepSet_hdac6c735__0__Slow.o Vcheck_a___024root__DepSet_hdac6c735__0__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck_a__pch.h.slow -c -o Vcheck_a___024root__DepSet_h241b0b33__0__Slow.o Vcheck_a___024root__DepSet_h241b0b33__0__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck_a__pch.h.slow -c -o Vcheck_a_ot_s81_hc_ctra__C6_R1__Slow.o Vcheck_a_ot_s81_hc_ctra__C6_R1__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck_a__pch.h.slow -c -o Vcheck_a_ot_s81_hc_ctra__C6_R1__DepSet_he5c59fce__0__Slow.o Vcheck_a_ot_s81_hc_ctra__C6_R1__DepSet_he5c59fce__0__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck_a__pch.h.slow -c -o Vcheck_a_ot_s81_hc_ctra__C6_R1__DepSet_h4d1a442e__0__Slow.o Vcheck_a_ot_s81_hc_ctra__C6_R1__DepSet_h4d1a442e__0__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vcheck_a__pch.h.slow -c -o Vcheck_a__Syms.o Vcheck_a__Syms.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vcheck_a__ALL.a    -pthread -lpthread -latomic   -o Vcheck_a
+rm Vcheck_a__ALL.verilator_deplist.tmp
+make: Leaving directory '/tmp/codex-s81-returnmerge-0757/proof_localrequests/obj_positive_a'
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 0.127 MB sources in 12 modules, into 1.957 MB in 16 C++ files needing 0.027 MB
+- Verilator: Walltime 5.081 s (elab=0.028, cvt=0.275, bld=4.732); cpu 0.397 s on 4 threads; alloced 47.309 MB
+PASS a 2500 cycles exact delayed return and unchanged requests
+- /tmp/codex-s81-returnmerge-0757/proof_localrequests/check_a.sv:133: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 8us; walltime 0.038 s; speed 182.153 us/s
+- Verilator: cpu 0.041 s on 1 threads; alloced 505 MB

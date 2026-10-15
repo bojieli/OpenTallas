@@ -1,0 +1,58 @@
+{
+  "status": "PASS",
+  "scope": "component delayed equivalence; not canonical programme or physical closure",
+  "cycles_per_positive": 2500,
+  "added_return_cycles": 1,
+  "source_sha256": "f58ce1247a32d0b67af33465930ce4ee14f88e5b3f92ae28b5b781d9f6139f01",
+  "results": [
+    {
+      "variant": "positive",
+      "half": "a",
+      "returncode": 0,
+      "expected_verdict": true,
+      "log": "/tmp/codex-s81-returnmerge-0757/proof_localrequests/positive_a.log"
+    },
+    {
+      "variant": "positive",
+      "half": "b",
+      "returncode": 0,
+      "expected_verdict": true,
+      "log": "/tmp/codex-s81-returnmerge-0757/proof_localrequests/positive_b.log"
+    },
+    {
+      "variant": "bad_lane",
+      "half": "a",
+      "returncode": -6,
+      "expected_verdict": true,
+      "log": "/tmp/codex-s81-returnmerge-0757/proof_localrequests/bad_lane_a.log"
+    },
+    {
+      "variant": "bad_lane",
+      "half": "b",
+      "returncode": -6,
+      "expected_verdict": true,
+      "log": "/tmp/codex-s81-returnmerge-0757/proof_localrequests/bad_lane_b.log"
+    },
+    {
+      "variant": "drop_fault",
+      "half": "a",
+      "returncode": -6,
+      "expected_verdict": true,
+      "log": "/tmp/codex-s81-returnmerge-0757/proof_localrequests/drop_fault_a.log"
+    },
+    {
+      "variant": "missing_column_clock",
+      "half": "a",
+      "returncode": -6,
+      "expected_verdict": true,
+      "log": "/tmp/codex-s81-returnmerge-0757/proof_localrequests/missing_column_clock_a.log"
+    },
+    {
+      "variant": "missing_column_clock",
+      "half": "b",
+      "returncode": -6,
+      "expected_verdict": true,
+      "log": "/tmp/codex-s81-returnmerge-0757/proof_localrequests/missing_column_clock_b.log"
+    }
+  ]
+}

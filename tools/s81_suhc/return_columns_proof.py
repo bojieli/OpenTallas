@@ -50,9 +50,10 @@ for half in ('a','b'):
  lines += ['end','end',f'$display("PASS {half} 2500 cycles exact delayed return and unchanged requests");$finish;end','endmodule']
  (out/f'check_{half}.sv').write_text('\n'.join(lines));tops.append(half)
 results=[]
-for variant in ('positive','bad_lane','drop_fault'):
+for variant in ('positive','bad_lane','drop_fault','missing_column_clock'):
  x=dut
  if variant=='bad_lane':x=x.replace('hrq_n[64*SH*(c+4*bank) +:64*SH]', 'hrq_n[64*SH*((c+1)%4+4*bank) +:64*SH]')
+ if variant=='missing_column_clock':x=x.replace('.clk(clk_col[c])',".clk(c==2 ? 1'b0 : clk_col[c])")
  if variant=='drop_fault':x=x.replace('flag_fault <= (|nflt_n) | (|nflt_s) | pflt_n | pflt_s;', "flag_fault <= 1'b0;")
  file=out/f'{variant}.sv';file.write_text(x)
  for half in tops if variant!='drop_fault' else ('a',):
