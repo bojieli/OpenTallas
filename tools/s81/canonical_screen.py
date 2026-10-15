@@ -23,6 +23,10 @@ def main():
   from s81.canonical_layout import trace_calendar
   (w/'actual_flight_calendar.json').write_text(json.dumps(trace_calendar(G,m),indent=1))
   export(m,'canonical_plan',True)
+  # Export the actual complete structural graph for source-port binding.
+  G.write_netlist(m,1,w/'die.v')
+  (w/'die_glue.sv').write_text(G.glue_rtl(m))
+  G.write_def_floorplan(m,w/'floorplan.def')
   G.write_lefs(m,1,w/'elements.lef');texts=G.die_lef_texts(m)
   with gzip.open(w/'exact_pins.lef.gz','wt') as f:f.write('\n'.join(texts))
   (w/'pin_align.json').write_text(json.dumps(G.pin_align_gate(m,texts,raise_on_fail=False),indent=1,default=list))
