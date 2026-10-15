@@ -8538,14 +8538,17 @@ def align_station_jogs(m, rounds=2):
                 # occupied by other chains. Split only across actual gaps in
                 # the hard port's pins; all slices keep the SAME capture edge.
                 # Every bit still uses the real hstn register primitive.
-                if horiz and it.orient == 'R0' and fa == 'E':
+                # S-DIE r2 2026-10-15: and the mirror (MY station east of a hard E input, GEN19b hr_E2_o_d4)
+                side_ = 'W' if (it.orient == 'R0' and fa == 'E') else 'E' if (it.orient == 'MY' and fa == 'W') else ''
+                if horiz and side_:
                     from s81 import banded_terminal as BT
                     ins_ = [b_ for b_ in m['buses'] if len(b_[3]) == 2 and b_[3][1] == (it.name, 'di')]
                     outs_ = [b_ for b_ in m['buses'] if len(b_[3]) == 2 and b_[3][0] == (it.name, 'dq')]
                     if len(ins_) == len(outs_) == 1:
                         obs_ = [(o.name,o.x,o.y,o.w,o.h) for o in m['insts']]
                         split_ = BT.propose(A,B,pts(it,'dq',bits),obs_,it.name,it.w,PA,
-                                            gx=GX,gy=GY,inset=FACE_PIN_INSET,reach=ALIGN_STN_REACH_UM)
+                                            gx=GX,gy=GY,inset=FACE_PIN_INSET,reach=ALIGN_STN_REACH_UM,side=side_,
+                                            hard_short=ALIGN_HARD_SHORT_UM if side_ == 'E' else 0.0)
                         if split_:
                             ch_ = BT.apply(sys.modules[__name__],m,it,split_,ins_[0],outs_[0])
                             moved[it.name] = ('band_split',[c_.name for c_ in ch_],r['bus'])
