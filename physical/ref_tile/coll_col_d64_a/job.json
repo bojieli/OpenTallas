@@ -1,5 +1,5 @@
 {
- "name": "coll_col_d64_a-d2-f8ab98504",
+ "name": "coll_col_d64_a-d2-e18711936",
  "block": "ot_coll_col_tile_d64",
  "ref_tile": true,
  "owner": "Claude:qwen-coll-io-1014",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 40,
  "source": {
   "branch": "claude/qwen-coll-io-1014",
-  "commit": "f8ab98504252c290739e15c58444b5e3fbc5e7d2",
+  "commit": "e18711936b793e702d784161939272e0691f50f3",
   "extra_paths": [
    "physical/asap7_memory_macros",
    "physical/qwen_coll_cx"
@@ -121,7 +121,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/coll_col_d64/coll_col_d64_a-d2-f8ab98504"
+   "to": "results/rtl/ref_tile/coll_col_d64/coll_col_d64_a-d2-e18711936"
   }
  ],
  "cycles_added": 0,

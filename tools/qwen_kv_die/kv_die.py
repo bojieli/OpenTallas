@@ -70,6 +70,7 @@ FRAMES = dict(qkd_ckbump=(43.2, 43.2), qkd_d2d=(777.6, 518.4), qkd_seq=(777.6, 5
 RELAY_PITCH = 430.56
 PIN_REACH = 450.0               # qwen-1010/b: pin-to-pin register hop target (SS reach 504 um)
 REACH_TARGET = 470.0            # every register-to-register segment (nearest frame points) <= this (SS reach 504 um)
+FIRST_REACH = dict(wencoded=300.0)   # v1.3: first relay of the write-queue controller's group words (ctl_bin f<g>, late launch)
 RELAY_TARGET = 320.0            # placement pitch: keeps every segment (nearest frame points) under the 504 um SS reach
 GRID = 43.2                     # relay routing grid (um)
 CHAN = 129.6                    # routing / relay channel beside every column (um)
@@ -281,7 +282,7 @@ SPLIT_BINDINGS = dict(
 # rtl/qwen_sys/split_20261014/qkd_strips_s.sv), each leaf its own clock entry
 SPLIT_ONLY_BINDINGS = ('qkd_land', 'qkd_land_n', 'qkd_astk', 'qkd_astk_n', 'qkd_embgw', 'qkd_ctrl', 'qkd_ctrl_n')
 SPLIT_PHY = 'qkd_hbm3e_phy_pc'
-SPLIT_BINDINGS.update(qkd_ctrl=KS.ctrl_binding(), qkd_ctrl_n=KS.ctrl_binding())
+SPLIT_BINDINGS.update(qkd_ctrl=KS.ctrl_binding(rev=True), qkd_ctrl_n=KS.ctrl_binding())   # v1.3: S stacks = reversed chains (kc at the S = outer end)
 SPLIT_BINDINGS.update(qkd_land=KS.land_binding(), qkd_land_n=KS.land_binding(), qkd_astk=KS.astk_binding(),
                       qkd_astk_n=KS.astk_binding())
 # v1.2: the embedding gateway binds its CLOSED view's RTL (qkd_embgw sl2): the link words gq / gr and the host words hb / est
@@ -818,7 +819,7 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
     add('host', 'qkd_host', xc - tw / 2, MARGIN + SERDES[2] + GY, tw - SHAVE, th - SHAVE, 'R0', 'host', 'io')
     # v1.2 candidate lanes are OFF by default (kvs2 T2 try: window fine H 1.37 -> 1.25, coarse 1.32 -> 1.17 H but 0.80 -> 1.10 V,
     # lx 1 -> 2 stages, one re-plan reach miss): OT_KV_LANES=1 turns them on for the next revision's work
-    m['geo'] = dict(grp_y=grp_y, split=split, lanes=bool(split and __import__('os').environ.get('OT_KV_LANES') in ('1', '2')), stack_pitch=sp, band_shift=band_shift, x_land=x_land, x_grp=x_grp, grp_w=grp_w, centre_w=centre_w, stack_h=stack_h, band_dy=band_dy,
+    m['geo'] = dict(grp_y=grp_y, split=split, lanes=bool(split and __import__('os').environ.get('OT_KV_LANES', '2') in ('1', '2')), stack_pitch=sp, band_shift=band_shift, x_land=x_land, x_grp=x_grp, grp_w=grp_w, centre_w=centre_w, stack_h=stack_h, band_dy=band_dy,
                     ystack=ystack, r=r, kv_wq_leaves=kv_wq_leaves, kv_wq_binary=kv_wq_binary, kv_wq_leaf_s=kv_wq_leaf_s, leaf_shift=leaf_shift, edge_channel=edge_chan, kv_wq_head=kv_wq_head, kv_wq_wide=kv_wq_wide, kv_wq_mirror=kv_wq_mirror)
     if kv_wq_leaves:
         _write_tiles(m, add)
@@ -912,7 +913,10 @@ def _buses(m, T, r):
             for k_ in range(32):
                 add((f'les_{st}_{k_}', 'stack_local', 288, [(f'land_{st}', f'es{k_}'), (f'ctrl_{st}', f'es{k_}')]))
                 add((f'ler_{st}_{k_}', 'stack_local', 261, [(f'ctrl_{st}', f'er{k_}'), (f'land_{st}', f'er{k_}')]))
-            add((f'lkf_{st}', 'stack_local', 1, [(f'ctrl_{st}', 'kf'), (f'land_{st}', 'kf')]))
+            # v1.3: S stacks abut at the S ends (kc leaf <-> land pc0); N stacks run the kc leaf's fault (strip N end) to
+            # the landing's pc0 (S end) on relays (a fault level: latency is not a protocol term)
+            add((f'lkf_{st}', 'stack_local' if st.endswith('S') else 'kv_oneway', 1,
+                 [(f'ctrl_{st}', 'kf'), (f'land_{st}', 'kf')]))
     add(('ares', 'spine_local', 1 + 1 + 6 + 512, [('ahub', 'ao'), ('seq', 'ar')]))
     add(('hs', 'spine_local', 1, [('seq', 'hs'), ('ahub', 'hs')]))                  # layer start to the hub
     add(('d2df', 'spine_local', 6, [('d2d_kv', 'flt'), (lend, 'd2df')]))            # link-end fault + cause
@@ -1160,19 +1164,27 @@ def _relays(m):
                 return near_d(rect(by[a]), rect(by[b]))
             return d_ep(st_['prev_pt'], b, pb)
 
+        def reach_():
+            # v1.3 (kvs5L TT -17.19: CLOSED ctl_bin launches f<g> late, 413 um to its first relay): a bus whose driver is a
+            # closed view with a late launch takes its FIRST relay within FIRST_REACH of that pin; later hops keep PIN_REACH
+            if st_['prev_pt'] is None:
+                return FIRST_REACH.get(bid.rsplit('_', 2)[0], PIN_REACH)
+            return PIN_REACH
+
         def chain_():
             path_ = st_['path']
-            while remaining_() > PIN_REACH:
+            while remaining_() > reach_():
                 got = None
                 prev_pt_, idx0_ = st_['prev_pt'], st_['idx0']
+                rch = reach_()
                 # the farthest path point (from the previous chain point) with a free spot within reach
-                for idx in range(min(len(path_) - 1, idx0_ + int(PIN_REACH // G) + 2), idx0_, -1):
+                for idx in range(min(len(path_) - 1, idx0_ + int(rch // G) + 2), idx0_, -1):
                     px, py = path_[idx]
                     for dx_, dy_ in (offs_wide if st_.get('wide') else offs):
                         qx, qy = up(px + dx_ - fw / 2, GX), up(py + dy_ - fh / 2, GY)
                         pin_a = (qx, qy + fh / 2)
                         dd = d_ep(pin_a, a, pa) if prev_pt_ is None else abs(pin_a[0] - prev_pt_[0]) + abs(pin_a[1] - prev_pt_[1])
-                        if dd <= PIN_REACH and free(qx, qy, fw, fh):
+                        if dd <= rch and free(qx, qy, fw, fh):
                             got = (qx, qy, idx)
                             break
                     if got:
@@ -1253,7 +1265,8 @@ def _kv_lane(m, bid):
     # v1.2: OT_KV_LANES=2 lanes only the sequencer-centred chains (kvn / kc / emf / emr): kvs3L's krq / krs lanes cost up to
     # +18 / +16 relay stages on the engine <-> landing KV rows (relay_depth_changes.json), which are local words
     import os as _os
-    rx_ = r'(kvn|kc|emf|emr)_(WN|EN)(?:_|$)' if _os.environ.get('OT_KV_LANES') == '2' else \
+    # v1.2 DEFAULT (kvs5L vs kvs5: TT relay->relay 0 violators / +14.8 vs 59 / -66.7, no depth change): '2'; '0' = off
+    rx_ = r'(kvn|kc|emf|emr)_(WN|EN)(?:_|$)' if _os.environ.get('OT_KV_LANES', '2') == '2' else \
         r'(kvn|krs|krq|kc|emf|emr|ing)_(WN|EN)(?:_|$)'
     mt = re.match(rx_, bid)
     g = m['geo'].get('grp_y', {})
@@ -1683,7 +1696,7 @@ LEVEL_PIN_MASTERS = ('qkd_land', 'qkd_land_n', 'qkd_astk', 'qkd_astk_n', 'qkd_se
                      'qkd_d2d')
 
 
-STRIP_ES_Y, STRIP_ER_Y, STRIP_KF_Y, STRIP_PC_PITCH = 60.0, 240.0, 6150.0, 378.0
+STRIP_ES_Y, STRIP_ER_Y, STRIP_KF_Y, STRIP_PC_PITCH = 60.0, 240.0, 21.6, 378.0
 PHY_STRIP_DY = 71.28           # the PHY band starts 71.28 um above its controller strip's end (r21c band)
 
 
@@ -1710,6 +1723,12 @@ def _strip_face_pins(mst, mm):
         if mt:
             y = STRIP_PC_PITCH * int(mt.group(2)) + (STRIP_ES_Y if mt.group(1) == 'es' else STRIP_ER_Y)
         elif p == 'kf':
+            # v1.3 (die-placed controller leaves): kf leaves the controller strip at its kc leaf = the strip's OUTER end
+            # (S stacks: qkd_ctrl_strip_sr, kc leaf at the S end; N stacks: kc leaf at the N end) and enters the landing
+            # strip's PC fault chain at pc0 = its S end; a mid-strip pin (v1.2 y 6,150) became a 6-mm unrelayed wire
+            if mst == 'qkd_ctrl_n':
+                mm.ports[p] = ('face', sp[1], 'N', 'M5', round(mm.w / 2 + 21.6, 4), 1)
+                continue
             y = STRIP_KF_Y
         else:
             continue

@@ -28,7 +28,14 @@ python3 tools/qwen_kv_die/bind_views.py --split --case $O/case_kv --libs $O/libs
   --view qkd_kvwq_leaf_s_w129_m=physical/ref_tile/qkd_kvwq_leaf_s_w129_m/views/qkd_kvwq_leaf_s_w129_m \
   --view qkd_kvwq_ctl_bin=physical/ref_tile/qkd_kvwq_ctl_bin/views/qkd_kvwq_ctl_bin \
   --out $O/libs/views.json > $O/bind.log
+# v1.3: DIE-PLACED LEAVES: wires-only parent frames -> their CLOSED leaves at the planned sub-slots, each on its own view
+# (OT_KV_EXPAND = comma list of frame masters, default all that kv_expand.py knows; 'none' keeps the frames)
+EXP=
+if [ "${OT_KV_EXPAND:-all}" != none ]; then
+  python3 tools/qwen_kv_die/kv_expand.py --run $O $( [ "${OT_KV_EXPAND:-all}" = all ] || echo --only ${OT_KV_EXPAND} ) > $O/expand.log
+  EXP="--expanded $O/expand.json"
+fi
 python3 tools/qwen_kv_die/kvsys_clocks.py --case $O/case_kv --views $O/libs/views.json --out $O/libs > $O/clocks.log
-python3 tools/qwen_kv_die/die_port_bind_kv.py $O/case_kv/die.v --split --relay-rtl $O/case_kv/qkd_kv_relays.sv --out $O/port_bind.json > $O/port_bind.log
+python3 tools/qwen_kv_die/die_port_bind_kv.py $O/case_kv/die.v --split --relay-rtl $O/case_kv/qkd_kv_relays.sv $EXP --out $O/port_bind.json > $O/port_bind.log
 python3 tools/qwen_kv_die/kvsys_window.py --split --out $O/window.json > $O/window.log
 echo "prep done: $(cat $O/case_kv/SOURCE_COMMIT) $(tail -1 $O/bind.log | head -c 300)"
