@@ -25,7 +25,7 @@ s.append('<text x="605" y="113" font-size="18">Per-bit distance screen</text>')
 y=143
 for k,v in r['stats'].items():
  s.append(f'<rect x="605" y="{y-9}" width="12" height="12" fill="{colors[k]}"/><text x="628" y="{y}" font-size="13">{k.replace("_"," ")}</text><text x="628" y="{y+20}" font-size="13">{v["bits"]:,} endpoints; worst {v["max_manhattan_um"]:.3f} µm; over 500: {v["over500"]}</text>');y+=64
-for line in ['7,464 writer endpoint bits per microcluster.','16 microclusters per VM512 (four per slice).','Source bank ownership eliminates pooled scatter traffic.','SOUTH drain pins remove storage-output U-turns.','All local banks, q4 and b8 keep proven relative geometry.']:
+for line in ['7,464 writer endpoint bits per microcluster.','16 microclusters per VM512 (four per slice).','Source bank ownership eliminates pooled scatter traffic.','SOUTH drain pins remove storage-output U-turns.','Local banks, q4 and b8 keep source layout vectors.']:
  s.append(f'<text x="605" y="{y}" font-size="13">{html.escape(line)}</text>');y+=23
 s.append('<text x="605" y="600" font-size="16">Still open at the system boundary</text>')
 for i,line in enumerate(['W0 payload/header/control distribution and ages','Read issue, return repair and global fault trees','Additional VM cap16 / CDC16 / x34 hardware','Native pin IO, clock / phi-R, PG and route closure','Full traffic cuts and all 81-stage activity binding']):s.append(f'<text x="605" y="{627+i*23}" font-size="13">{html.escape(line)}</text>')
