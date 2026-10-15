@@ -87,9 +87,36 @@ proc ot_ce_leaf_ownership {inputs outputs} {
       }
     }
   }
+  # A cell is a constant source when it is a library TIEHI/TIELO, or a
+  # combinational cell (synthesis output buffer) whose every input is driven
+  # only by constant sources. Registers, ports and unknown drivers are never.
+  set ::ot_mr_regs {}
+  foreach r [all_registers -cells] { dict set ::ot_mr_regs [get_full_name $r] 1 }
+  proc ot_mr_constant {cell depth} {
+    if {[regexp {^TIE(HI|LO)} [get_property $cell ref_name]]} { return 1 }
+    if {$depth <= 0} { return 0 }
+    if {![llength [get_lib_cells -quiet -of_objects $cell]] || [dict exists $::ot_mr_regs [get_full_name $cell]]} { return 0 }
+    set ins [get_pins -quiet -of_objects $cell -filter "direction==input"]
+    if {![llength $ins]} { return 0 }
+    foreach pin $ins {
+      set net [get_nets -quiet -of_objects $pin]
+      if {![llength $net]} { return 0 }
+      set drivers [get_pins -quiet -of_objects $net -filter "direction==output"]
+      if {[llength [get_ports -quiet -of_objects $net]] || [llength $drivers] != 1} { return 0 }
+      if {![ot_mr_constant [get_cells -of_objects $drivers] [expr {$depth - 1}]]} { return 0 }
+    }
+    return 1
+  }
   dict for {name domain} $outputs {
     foreach start [get_fanin -flat -startpoints_only -to [get_ports $name]] {
       set source [get_full_name [get_cells -quiet -of_objects $start]]
+      # A die strap tie output (contract v1.2 tie_hi/tie_lo) is a library
+      # TIEHI/TIELO constant: it has no clock and no data domain to own.
+      set source_cell [get_cells -quiet -of_objects $start]
+      if {(![dict exists $cells $source] || [dict get $cells $source] ne $domain) && [llength $source_cell] == 1 && [ot_mr_constant $source_cell 4]} {
+        puts "OT_MULTI_ROOT constant output $name <- [get_property $source_cell ref_name] $source"
+        continue
+      }
       if {![dict exists $cells $source] || [dict get $cells $source] ne $domain} {
         error "OT_MULTI_ROOT: output $name has wrong or unregistered source domain $source"
       }
@@ -371,6 +398,9 @@ proc ot_ce_apply {} {
     set dlmax [lindex [lsort -real [dict get $domain_high $domain]] end]
     set vc [get_clocks [dict get $info clock]]
     set budget [dict get $info io_budget_ps]
+    # Optional composition-derived output budget (domain "io_budget": {"out": f}, f >= 0.2): the outside share of the
+    # cycle on this domain's outputs; larger = a TIGHTER launch (flop -> pin) inside the child, never a relaxation.
+    set budget_out [expr {[dict exists $info io_budget_out_ps] ? [dict get $info io_budget_out_ps] : $budget}]
     set inputs {}; set outputs {}
     foreach pattern [dict get $info inputs] {
       set match [get_ports -quiet $pattern -filter "direction == input"]
@@ -398,7 +428,7 @@ proc ot_ce_apply {} {
       set_input_delay [expr {$dlmin-$hki}] -min -clock $vc $inputs
     }
     if {[llength $outputs]} {
-      set_output_delay [expr {$budget-$dlmax+$sk}] -max -clock $vc $outputs
+      set_output_delay [expr {$budget_out-$dlmax+$sk}] -max -clock $vc $outputs
       set_output_delay [expr {-$dlmin-$hk}] -min -clock $vc $outputs
     }
     if {[info exists ::env(OT_IO_INTER)] && $::env(OT_IO_INTER) ne ""} {
@@ -409,7 +439,7 @@ proc ot_ce_apply {} {
             set_input_delay [expr {$budget+$dlmax+150}] -max -clock $vc $p
           }
           if {[dict exists $covered_out $n] && [dict get $covered_out $n] eq $domain} {
-            set_output_delay [expr {$budget-$dlmax+150}] -max -clock $vc $p
+            set_output_delay [expr {$budget_out-$dlmax+150}] -max -clock $vc $p
           }
         }
       }

@@ -101,8 +101,8 @@
   }
  },
  "outline": {
-  "w": 129.6,
-  "h": 216.0
+  "w": 86.4,
+  "h": 172.8
  },
  "recipe": 2,
  "io_flop_at_pins": false,
@@ -140,9 +140,9 @@
   "macro_halo_um": 5.4
  },
  "conservative_timing_envelope": "All five roots are signed off as related same-PLL phase-0 roots at the common 833.333 ps leaf period. True periods: core 833.333, fdi/fdi_rx 1000, blk_tx/blk_rx 5000 (one PLL, aligned 5 ns frame). The r10 RTL has no core<->FDI path; every true cross-root setup relation is >= 833.333 ps (results/rtl/qwen_coll_io_1014/block_stage_sta_r10_1015/r10/record.json, ordinary STA from one 200 MHz reference, no exceptions) and every true hold relation is >= the modelled coincident-edge 0, so the common-period sign-off is strictly tighter than the true relation for every path. Die STA applies the true generated clocks.",
- "why_floorplan": "W face = core side (597+1 in, 597+1 out, fault); E face = UCIe FDI side (1043+1 TX, 1043+1 RX, fault) to abut the PHY W-face pin block; S = five roots + reset. Block registers (txblk/rxblk) between the two faces.",
+ "why_floorplan": "W face = core side (597+1 in, 597+1 out, fault); E face = UCIe FDI side (1043+1 TX, 1043+1 RX, fault; 2,089 pins over 172.8 um, 1.7 M4 tracks per pin) to abut the PHY W-face pin block; S = five roots + reset. Outline from gate 1e991bc08: std area 7,662 um2 -> util ~0.52-0.54 with the +586 FF beat-3/pad registers.",
  "slot_change_request": "NEW leaf inside the compute-die IO collective band next to ot_qfd_ucie_x64_phy W face (pin block y 600..700.4). Outline provisional, sized by this gate; compute lead / geometry must grant the slot before routing.",
- "structural_change": "r10 replaces the r9 direct 1.2 GHz core <-> 1 GHz FDI gearbox (ordinary STA relation 166.7 ps, slack -48..-633 ps pre-placement) with a 200 MHz block stage: 4x3588 payload FF (r9: 5x3588), constant 19 core edges (r9: 24), same 1043-bit 4-of-5 FDI beat calendar.",
+ "structural_change": "r10 replaces the r9 direct 1.2 GHz core <-> 1 GHz FDI gearbox (ordinary STA relation 166.7 ps, slack -48..-633 ps pre-placement) with a 200 MHz block stage: 4x3588 payload FF (r9: 5x3588), constant 19 core edges (r9: 24), same 1043-bit 4-of-5 FDI beat calendar. Gate 1e991bc08 WARNs fixed structurally: every boundary input registered before check logic (beat 3 captured full width, padding OR on registered bits; PHY valid pin flop), registered one-hot stage/beat enables replace binary decodes (2,088-load decode nets), outline shrunk 129.6x216 -> 86.4x172.8 (util 0.28 -> ~0.53).",
  "job": {
   "owner": "Claude:Q-COLL",
   "branch": "claude/qwen-coll-io-1014",
