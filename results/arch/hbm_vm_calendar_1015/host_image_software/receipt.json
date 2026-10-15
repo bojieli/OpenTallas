@@ -1,0 +1,31 @@
+{
+  "scope": "Nativehostserializer resource/format coverage fixture only, no production programme assertion",
+  "targets": [
+    0,
+    1,
+    2,
+    3,
+    48,
+    80,
+    112
+  ],
+  "axi_writes": 190,
+  "negative_cases": [
+    {
+      "case": "missing_required",
+      "rejected": "Required target/image mismatch: missing=[112], extra=[]"
+    },
+    {
+      "case": "PC_identity",
+      "rejected": "Programme magic/global-PC identity mismatch"
+    },
+    {
+      "case": "narrow_page",
+      "rejected": "Programme range/loop count exceeds actual target capacity"
+    },
+    {
+      "case": "missing_word",
+      "rejected": "Programme contains a hole in its executing range"
+    }
+  ]
+}

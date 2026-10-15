@@ -1,0 +1,864 @@
+{
+  "schema": "opentallas.hbm.actual-host-program-image.v1",
+  "kernel": "serializer-source-contract-fixture-not-production",
+  "required_targets": [
+    0,
+    1,
+    2,
+    3,
+    48,
+    80,
+    112
+  ],
+  "targets": [
+    {
+      "target": 0,
+      "PCW": 10,
+      "payload_bits": 202,
+      "words": 3,
+      "start": {
+        "base": 7,
+        "limit": 10,
+        "loops": 3
+      },
+      "first_programme_after_LCP71": 6
+    },
+    {
+      "target": 1,
+      "PCW": 10,
+      "payload_bits": 147,
+      "words": 3,
+      "start": {
+        "base": 7,
+        "limit": 10,
+        "loops": 3
+      },
+      "first_programme_after_LCP71": 6
+    },
+    {
+      "target": 2,
+      "PCW": 10,
+      "payload_bits": 187,
+      "words": 3,
+      "start": {
+        "base": 7,
+        "limit": 10,
+        "loops": 3
+      },
+      "first_programme_after_LCP71": 6
+    },
+    {
+      "target": 3,
+      "PCW": 10,
+      "payload_bits": 147,
+      "words": 3,
+      "start": {
+        "base": 7,
+        "limit": 10,
+        "loops": 3
+      },
+      "first_programme_after_LCP71": 6
+    },
+    {
+      "target": 48,
+      "PCW": 10,
+      "payload_bits": 48,
+      "words": 3,
+      "start": {
+        "base": 7,
+        "limit": 10,
+        "loops": 2
+      },
+      "first_programme_after_LCP71": 8
+    },
+    {
+      "target": 80,
+      "PCW": 11,
+      "payload_bits": 222,
+      "words": 3,
+      "start": {
+        "base": 1023,
+        "limit": 1026,
+        "loops": 2
+      },
+      "first_programme_after_LCP71": 8
+    },
+    {
+      "target": 112,
+      "PCW": 11,
+      "payload_bits": 51,
+      "words": 3,
+      "start": {
+        "base": 1420,
+        "limit": 1423,
+        "loops": 2
+      },
+      "first_programme_after_LCP71": 8
+    }
+  ],
+  "axi_writes": [
+    {
+      "address": 3840,
+      "data": 28
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 16711680
+    },
+    {
+      "address": 3844,
+      "data": 7190235
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 3349217287
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 16711680
+    },
+    {
+      "address": 3844,
+      "data": 9586980
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 3349217288
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 3349217289
+    },
+    {
+      "address": 3848,
+      "data": 10247
+    },
+    {
+      "address": 3852,
+      "data": 3
+    },
+    {
+      "address": 3840,
+      "data": 29
+    },
+    {
+      "address": 3844,
+      "data": 4261412864
+    },
+    {
+      "address": 3844,
+      "data": 3681400321
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 3349217287
+    },
+    {
+      "address": 3844,
+      "data": 4261412864
+    },
+    {
+      "address": 3844,
+      "data": 613566465
+    },
+    {
+      "address": 3844,
+      "data": 1
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 3349217288
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 3349217289
+    },
+    {
+      "address": 3848,
+      "data": 10247
+    },
+    {
+      "address": 3852,
+      "data": 3
+    },
+    {
+      "address": 3840,
+      "data": 30
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 3067740670
+    },
+    {
+      "address": 3844,
+      "data": 365
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 3349217287
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 3681288702
+    },
+    {
+      "address": 3844,
+      "data": 438
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 3349217288
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 3349217289
+    },
+    {
+      "address": 3848,
+      "data": 10247
+    },
+    {
+      "address": 3852,
+      "data": 3
+    },
+    {
+      "address": 3840,
+      "data": 31
+    },
+    {
+      "address": 3844,
+      "data": 4261412864
+    },
+    {
+      "address": 3844,
+      "data": 1840699905
+    },
+    {
+      "address": 3844,
+      "data": 1
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 3349217287
+    },
+    {
+      "address": 3844,
+      "data": 4261412864
+    },
+    {
+      "address": 3844,
+      "data": 3067833345
+    },
+    {
+      "address": 3844,
+      "data": 1
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 3349217288
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 0
+    },
+    {
+      "address": 3844,
+      "data": 3349217289
+    },
+    {
+      "address": 3848,
+      "data": 10247
+    },
+    {
+      "address": 3852,
+      "data": 3
+    },
+    {
+      "address": 3872,
+      "data": 1840
+    },
+    {
+      "address": 3876,
+      "data": 7
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 3349217287
+    },
+    {
+      "address": 3876,
+      "data": 8
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 3349217288
+    },
+    {
+      "address": 3876,
+      "data": 9
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 3349217289
+    },
+    {
+      "address": 3880,
+      "data": 40967
+    },
+    {
+      "address": 3884,
+      "data": 2
+    },
+    {
+      "address": 3872,
+      "data": 261968
+    },
+    {
+      "address": 3876,
+      "data": 1023
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 2147483648
+    },
+    {
+      "address": 3876,
+      "data": 3349217791
+    },
+    {
+      "address": 3876,
+      "data": 1024
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 3349217792
+    },
+    {
+      "address": 3876,
+      "data": 1025
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 2147483648
+    },
+    {
+      "address": 3876,
+      "data": 3349217792
+    },
+    {
+      "address": 3880,
+      "data": 4203519
+    },
+    {
+      "address": 3884,
+      "data": 2
+    },
+    {
+      "address": 3872,
+      "data": 363632
+    },
+    {
+      "address": 3876,
+      "data": 1420
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 3349217990
+    },
+    {
+      "address": 3876,
+      "data": 1421
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 2147483648
+    },
+    {
+      "address": 3876,
+      "data": 3349217990
+    },
+    {
+      "address": 3876,
+      "data": 1422
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 0
+    },
+    {
+      "address": 3876,
+      "data": 3349217991
+    },
+    {
+      "address": 3880,
+      "data": 5830028
+    },
+    {
+      "address": 3884,
+      "data": 2
+    },
+    {
+      "address": 3088,
+      "data": 1
+    }
+  ],
+  "write_strobes": 15,
+  "qualification": "Configuration sequence only; actual source/engine/transport/physical/layer gates remain required.",
+  "unsupported": "Wide raw COLL/DMA controllers need their own proven 256b frame assembler; protected payloads are never silently truncated."
+}
