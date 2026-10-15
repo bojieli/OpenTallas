@@ -252,7 +252,7 @@
  "job": {
   "owner": "Claude:H-ELEM-A (VM bank, from stopped Codex H-VM)",
   "branch": "codex/hbm-vm-static-hub-1014",
-  "tag": "ft1",
+  "tag": "ft2",
   "purpose": "Static VM bank (RG7/WG3, NW/NE) for the 833.333 ps a1 engine clock: wdecode+CE successor plus (1) sticky fault as a registered 2-level tree (gate reg->reg -71 ps ended at flt), (2) local reset relay (async assert, 3-edge sync release; port drives 3 flops only; gate in->reg -54.2 ps rq_v reset recovery). Same 3 actual SRAMs, slots, read n+6 / commit n+3 / egress n+1, pin ABI. Status fault visibility +2 edges; reset release is initialization mode (+3 edges before the first compiler slot).",
   "extra_paths": [
    "rtl/hbm_accel/generic/vm/static"
@@ -268,7 +268,7 @@
     "min_count_regex": "eachgroup_reads=(\\d+)"
    }
   ],
-  "structural_change": "Static VM bank (RG7/WG3, NW/NE) for the 833.333 ps a1 engine clock: wdecode+CE successor plus (1) sticky fault as a registered 2-level tree (gate reg->reg -71 ps ended at flt), (2) local reset relay (async assert, 3-edge sync release; port drives 3 flops only; gate in->reg -54.2 ps rq_v reset recovery). Same 3 actual SRAMs, slots, read n+6 / commit n+3 / egress n+1, pin ABI. Status fault visibility +2 edges; reset release is initialization mode (+3 edges before the first compiler slot).",
+  "structural_change": "Static VM bank (RG7/WG3, NW/NE) for the 833.333 ps a1 engine clock: wdecode+CE successor plus (1) sticky fault as a registered 2-level tree (gate reg->reg -71 ps ended at flt), (2) local reset relay (async assert, 3-edge sync release; port drives 3 flops only; gate in->reg -54.2 ps rq_v reset recovery). Same 3 actual SRAMs, slots, read n+6 / commit n+3 / egress n+1, pin ABI. Status fault visibility +2 edges; reset release is initialization mode (+3 edges before the first compiler slot). | ft2: TritonCTS on the 3-SRAM bank measured TT insertion 473-593 / spread 119 (rg5wg1) and 379-488 / 110 (rg7wg3) > 80 even with explicit sink clustering: the pre-placed balanced clock spine (physical/common_flow/clock_spine.tcl) replaces it, each SRAM clock pin its own spine leaf (spine_macro_leaf), registers on balanced spine bins -- the per-SRAM clock root structure without a second clock port.",
   "views_to": "physical/ref_tile/vms_bank_ft_rg7wg3_1015/views"
  },
  "orfs_vars": {
@@ -287,5 +287,6 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
- }
+ },
+ "clock": "spine"
 }

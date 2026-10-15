@@ -207,17 +207,12 @@
    "h": "M4",
    "v": "M3 M5"
   },
-  "macro_halo_um": 5.4,
-  "cts_sink": {
-   "size": 24,
-   "diameter_um": 40,
-   "extra": "-no_obstruction_aware"
-  }
+  "macro_halo_um": 5.4
  },
  "job": {
   "owner": "Claude:H-ELEM-A (VM bank, from stopped Codex H-VM)",
   "branch": "codex/hbm-vm-static-hub-1014",
-  "tag": "ft2",
+  "tag": "ft3",
   "purpose": "Static VM bank (RG5/WG1, SW/SE) for the 833.333 ps a1 engine clock: wdecode+CE successor plus (1) sticky fault as a registered 2-level tree (gate reg->reg -71 ps ended at flt), (2) local reset relay (async assert, 3-edge sync release; port drives 3 flops only; gate in->reg -54.2 ps rq_v reset recovery). Same 3 actual SRAMs, slots, read n+6 / commit n+3 / egress n+1, pin ABI. Status fault visibility +2 edges; reset release is initialization mode (+3 edges before the first compiler slot).",
   "extra_paths": [
    "rtl/hbm_accel/generic/vm/static"
@@ -233,7 +228,7 @@
     "min_count_regex": "eachgroup_reads=(\\d+)"
    }
   ],
-  "structural_change": "Static VM bank (RG5/WG1, SW/SE) for the 833.333 ps a1 engine clock: wdecode+CE successor plus (1) sticky fault as a registered 2-level tree (gate reg->reg -71 ps ended at flt), (2) local reset relay (async assert, 3-edge sync release; port drives 3 flops only; gate in->reg -54.2 ps rq_v reset recovery). Same 3 actual SRAMs, slots, read n+6 / commit n+3 / egress n+1, pin ABI. Status fault visibility +2 edges; reset release is initialization mode (+3 edges before the first compiler slot). | ft2: ft1 gate TT insertion 466.5..589.7 (spread 123.2) with the 3 SRAM clock pins on the register tree: explicit register sink clustering (24 sinks / 40 um) and no H-tree detour around the SRAM stack (-no_obstruction_aware, as the S81 gather leaf).",
+  "structural_change": "Static VM bank (RG5/WG1, SW/SE) for the 833.333 ps a1 engine clock: wdecode+CE successor plus (1) sticky fault as a registered 2-level tree (gate reg->reg -71 ps ended at flt), (2) local reset relay (async assert, 3-edge sync release; port drives 3 flops only; gate in->reg -54.2 ps rq_v reset recovery). Same 3 actual SRAMs, slots, read n+6 / commit n+3 / egress n+1, pin ABI. Status fault visibility +2 edges; reset release is initialization mode (+3 edges before the first compiler slot). | ft2: ft1 gate TT insertion 466.5..589.7 (spread 123.2) with the 3 SRAM clock pins on the register tree: explicit register sink clustering (24 sinks / 40 um) and no H-tree detour around the SRAM stack (-no_obstruction_aware, as the S81 gather leaf). | ft3: TritonCTS on the 3-SRAM bank measured TT insertion 473-593 / spread 119 (rg5wg1) and 379-488 / 110 (rg7wg3) > 80 even with explicit sink clustering: the pre-placed balanced clock spine (physical/common_flow/clock_spine.tcl) replaces it, each SRAM clock pin its own spine leaf (spine_macro_leaf), registers on balanced spine bins -- the per-SRAM clock root structure without a second clock port.",
   "views_to": "physical/ref_tile/vms_bank_ft_rg5wg1_1015/views"
  },
  "params": {},
@@ -249,5 +244,6 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
- }
+ },
+ "clock": "spine"
 }
