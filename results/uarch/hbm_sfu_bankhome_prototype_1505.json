@@ -1,0 +1,143 @@
+{
+  "schema": "opentallas.uarch.hbm.sfu.bankhome.prototype.v1",
+  "status": "COMPONENT PROTOTYPE ONLY; production join and physical fit OPEN",
+  "source_commit": "980860264",
+  "memory": {
+    "homes": 4,
+    "bank_ids_per_home": [
+      [
+        0,
+        1,
+        2,
+        3
+      ],
+      [
+        4,
+        5,
+        6,
+        7
+      ],
+      [
+        8,
+        9,
+        10,
+        11
+      ],
+      [
+        12,
+        13,
+        14,
+        15
+      ]
+    ],
+    "groups": 5,
+    "banks_per_group": 16,
+    "actual_macro_instances": 80,
+    "actual_macros_per_home": 20,
+    "macro": "ot_sram_1r1w_256x256_m2_r2c2",
+    "macro_size_um": [
+      172.8,
+      41.04
+    ],
+    "macro_area_um2": 7091.712,
+    "macro_area_per_home_um2": 141834.24,
+    "LWB": 15,
+    "semantic_words_per_group": 32768,
+    "physical_bits_total": 5242880,
+    "programme_macros_in_existing_scheduledengine": 22,
+    "programme_macro": "ot_sram_1r1w_1024x256_m2_r2c2",
+    "programme_in_this_component": false
+  },
+  "dataflow": {
+    "read_words_per_edge": 64,
+    "operand_read_bytes_per_edge": 256,
+    "stage_sectors_per_edge": 8,
+    "stage_bytes_per_edge": 256,
+    "output_write_words_per_edge": 16,
+    "output_write_bytes_per_edge": 64,
+    "drain_sectors_per_edge": 2,
+    "drain_bytes_per_edge": 64,
+    "read_latency_original_edges": 1,
+    "read_latency_component_edges": 4,
+    "read_latency_added_edges": 3,
+    "arithmetic_and_mapper": "Unchanged original KIND1/BTREE0 outside component; FETCH lifetime and dependent write/drain schedule must consume +3edges",
+    "II1_evidence": "Sustained64word/edge component campaign only; no production SFU throughput claim",
+    "copies": "No operand SRAM replication; scalar cache and full bank arbitration/control replicated in each home."
+  },
+  "interfaces": {
+    "request_payload_per_home_bits": 5160,
+    "request_fields": {
+      "scalar_load": 4,
+      "scalar_enable": 4,
+      "scalar_addr": 96,
+      "scalar_data": 128,
+      "rd_re": 64,
+      "rd_addr": 1536,
+      "rd_src": 128,
+      "vm_we": 16,
+      "vm_waddr": 384,
+      "vm_wdata": 512,
+      "stage_v": 8,
+      "stage_group": 16,
+      "stage_addr": 120,
+      "stage_mask": 64,
+      "stage_data": 2048,
+      "drain_v": 2,
+      "drain_addr": 30
+    },
+    "request_root_fanout": 4,
+    "summed_request_payload_cuts_bits_per_edge": 20640,
+    "control_per_home": "own clk_home[h] and common rst_n: two extra input pins",
+    "partial_return_per_peer_bits": 2563,
+    "partial_return_fields": {
+      "operand_words": 2048,
+      "drain_words": 512,
+      "drain_valid": 2,
+      "sticky_fault": 1
+    },
+    "peer_return_count": 3,
+    "HOME0_consumed_peer_return_bits": 7689,
+    "HOME0_final_return_bits": 2563,
+    "HOME0_partial_return_port": "Declared2563bits but own join uses local register directly; no external dependency",
+    "nonHOME0_peer_input_ports": "Uniform leaf declares7689peer input bits, unconsumed by generate elaboration for HOME1..3",
+    "nonHOME0_final_output_ports": "Uniform leaf declares2563constant outputs, unconsumed at parent",
+    "logical_parent": "Only port fans, concatenations and wires; actual OR gates and finalFFs owned by HOME0"
+  },
+  "registers": {
+    "request_boundary_bits_per_home": 5160,
+    "partial_return_boundary_bits_per_home": 2563,
+    "HOME0_final_join_register_bits": 2563,
+    "HOME0_join_bitwise_operation": "Four-way OR per bit: local partial and3peers",
+    "HOME0_join_OR4_bit_slices": 2563,
+    "HOME0_join_unoptimized_OR2_equivalents": 7689,
+    "HOME0_join_asyncreset_bits": 3,
+    "HOME0_join_unreset_data_bits": 2560,
+    "boundary_FFs_total_excludes_core_control": 33455
+  },
+  "physical": {
+    "granted_candidate_homes": null,
+    "target_request_homes_um": [
+      500,
+      800
+    ],
+    "area_fit_qualified": false,
+    "mapped_logic_area": null,
+    "actual_pin_placement": null,
+    "clock_phase_qualification": null,
+    "route_submitted": false,
+    "slot_obligation": "HOME0 additionally owns join2563FFs/7689peer input bits; replicated arbitration, boundaryFFs, memory halos/power and22programme SRAMs require actual area/pin/clock accounting. No fifth root."
+  },
+  "semantics": [
+    "Global lowest-lane arbitration and same-bank row/conflict checks preserved in each home.",
+    "Stage masks/alignment/priority, scalar identity and invalid-source/range checks preserved.",
+    "Clock roots require related production phases; independent clock gate proves ownership only.",
+    "Sticky fault phase compared separately at old+3edges."
+  ],
+  "open": [
+    "Production programme22SRAM partition and descriptor bridge",
+    "Actual lane FETCH/cache/control liveness+3edge implementation",
+    "Production compiler dependency/drain calendars and sustained arithmetic throughput",
+    "Actual area/clock/pin/cut/floorplan fit and H-DIE grant",
+    "SS/FF physical qualification"
+  ]
+}

@@ -1,0 +1,10 @@
+RD_MISMATCH cycle=534 port=0 got=00000000 exp=3e000000
+RD_MISMATCH cycle=534 port=1 got=00000000 exp=3e0186a0
+RD_MISMATCH cycle=534 port=2 got=00000000 exp=3e030d40
+RD_MISMATCH cycle=534 port=3 got=00000000 exp=3e0493e0
+RD_MISMATCH cycle=534 port=32 got=00000000 exp=3e000038
+RD_MISMATCH cycle=534 port=33 got=00000000 exp=3e0186d8
+RD_MISMATCH cycle=534 port=34 got=00000000 exp=3e030d78
+SFU_BANKHOME checks=74360 oracle=65536 errors=5644 macros_perDUT=80 roots=4 latency=4 delta=3 MUT=3
+FATAL: rtl/test/hbm_accel/generic/tb_hgi_sfu_bankhome_store.sv:158: SFU_BANKHOME FAIL
+       Time: 20080000  Scope: tb_hgi_sfu_bankhome_store

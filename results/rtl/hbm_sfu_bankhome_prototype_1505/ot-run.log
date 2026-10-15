@@ -1,0 +1,21 @@
+ot-run: ot-epyc1tb     admits   503 GB (avail 729, growth 63, headroom 64, waiters 0/0 GB) load 33/128 running 15 disk 219 GB 
+ot-run: ot-epyc4       admits    -1 GB (avail 226, growth 165, headroom 48, waiters 0/0 GB) load 150/128 running 35 disk 316 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-2809865-1792102120 after 0 s
+SFU_BANKHOME checks=74360 oracle=65536 errors=0 macros_perDUT=80 roots=4 latency=4 delta=3 MUT=0
+SFU_BANKHOME PASS
+rtl/test/hbm_accel/generic/tb_hgi_sfu_bankhome_store.sv:159: $finish called at 20080000 (1ps)
+RD_MISMATCH cycle=534 port=6 got=3e030d4e exp=3e030d47
+SFU_BANKHOME checks=74360 oracle=65536 errors=65604 macros_perDUT=80 roots=4 latency=4 delta=3 MUT=1
+FATAL: rtl/test/hbm_accel/generic/tb_hgi_sfu_bankhome_store.sv:158: SFU_BANKHOME FAIL
+       Time: 20080000  Scope: tb_hgi_sfu_bankhome_store
+RD_MISMATCH cycle=534 port=6 got=3e030db7 exp=3e030d47
+SFU_BANKHOME checks=74360 oracle=65536 errors=14602 macros_perDUT=80 roots=4 latency=4 delta=3 MUT=2
+FATAL: rtl/test/hbm_accel/generic/tb_hgi_sfu_bankhome_store.sv:158: SFU_BANKHOME FAIL
+       Time: 20080000  Scope: tb_hgi_sfu_bankhome_store
+RD_MISMATCH cycle=534 port=34 got=00000000 exp=3e030d78
+SFU_BANKHOME checks=74360 oracle=65536 errors=5644 macros_perDUT=80 roots=4 latency=4 delta=3 MUT=3
+FATAL: rtl/test/hbm_accel/generic/tb_hgi_sfu_bankhome_store.sv:158: SFU_BANKHOME FAIL
+       Time: 20080000  Scope: tb_hgi_sfu_bankhome_store
+SFU_BANKHOME_ALL_GATES_PASS
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-2809865-1792102120): exit 0

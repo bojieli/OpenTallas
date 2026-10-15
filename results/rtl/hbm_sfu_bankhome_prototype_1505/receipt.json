@@ -1,0 +1,46 @@
+{
+  "schema": "opentallas.hbm.sfu.bankhome.component.proof.v1",
+  "verdict": "PASS component only",
+  "source_commit": "980860264",
+  "clock_bench_commit": "8d6435a36",
+  "source_binding_all_manifest_bytes_match_commits": true,
+  "independent_original_memory_lockstep_checks": 74360,
+  "independent_initial_word_oracle_checks": 65536,
+  "errors": 0,
+  "actual_SRAMs_per_DUT": 80,
+  "actual_SRAMs_per_home": 20,
+  "read_latency_original_edges": 1,
+  "read_latency_component_edges": 4,
+  "added_edges": 3,
+  "malformed_command_cases": 6,
+  "fault_phase": "Checked separately at exactly original+3edges",
+  "semantic_mutants": {
+    "wrong_bank_address": 65604,
+    "HOME0_missing_return_rung": 14602,
+    "lost_stage_mask_bit": 5644
+  },
+  "clock_checks": 80,
+  "clock_mutants": {
+    "collapsed_roots": 60,
+    "swapped_roots": 80
+  },
+  "execution": {
+    "host": "ot-epyc1tb",
+    "functional_unit": "oth-ubuntu-2809865-1792102120",
+    "functional_guard_GB": 8,
+    "functional_ot_run_exit": 0,
+    "clock_unit": "oth-ubuntu-2818312-1792102264",
+    "clock_guard_GB": 2,
+    "clock_ot_run_exit": 0
+  },
+  "no_existing_source_modified": true,
+  "physical_submitted": false,
+  "production_adoption": false,
+  "open": [
+    "Actual production arithmetic FETCH/cache/lifetime +3edges",
+    "Compiler calendar/drain/dependency integration and e2e throughput",
+    "22 real programme SRAMs/control bridge partition",
+    "Mapped area/clockphase/pins/homegrant/SSFF closure"
+  ],
+  "model": "results/uarch/hbm_sfu_bankhome_prototype_1505.json"
+}

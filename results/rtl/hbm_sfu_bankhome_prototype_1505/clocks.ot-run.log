@@ -1,0 +1,14 @@
+ot-run: ot-epyc1tb     admits   392 GB (avail 619, growth 108, headroom 64, waiters 0/0 GB) load 37/128 running 15 disk 222 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-2818312-1792102264 after 0 s
+SFU_HOME_CLOCKS checks=80 errors=0 macros=80 roots=4 MUT=0
+SFU_HOME_CLOCKS_PASS
+rtl/test/hbm_accel/generic/tb_hgi_sfu_bankhome_clocks.sv:27: $finish called at 1002000 (1ps)
+SFU_HOME_CLOCKS checks=80 errors=60 macros=80 roots=4 MUT=1
+FATAL: rtl/test/hbm_accel/generic/tb_hgi_sfu_bankhome_clocks.sv:27: CLOCKS_FAIL
+       Time: 1002000  Scope: tb_hgi_sfu_bankhome_clocks
+SFU_HOME_CLOCKS checks=80 errors=80 macros=80 roots=4 MUT=2
+FATAL: rtl/test/hbm_accel/generic/tb_hgi_sfu_bankhome_clocks.sv:27: CLOCKS_FAIL
+       Time: 1002000  Scope: tb_hgi_sfu_bankhome_clocks
+SFU_HOME_CLOCK_GATES_PASS
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-2818312-1792102264): exit 0
