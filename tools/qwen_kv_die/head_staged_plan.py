@@ -61,22 +61,28 @@ def xf(points, xy=(0., 0.), size=(0., 0.), orient='R0'):
 
 
 def coefficients(pairs):
+    shifts=np.array([LIMIT-p[3]if len(p)>3 else 0. for p in pairs])
+    pairs=[p[:3]for p in pairs]
     # For translation t of source, worst Manhattan = max_s(s.t + k_s).
     if len({len(p[1])for p in pairs})==1 and len({len(p[2])for p in pairs})==1:
         a=np.array([p[1]for p in pairs]);b=np.array([p[2]for p in pairs])
-        return np.max(np.max(a@SIGNS.T,axis=1)-np.min(b@SIGNS.T,axis=1),axis=0)
+        return np.max(np.max(a@SIGNS.T,axis=1)-np.min(b@SIGNS.T,axis=1)+shifts[:,None],axis=0)
     return np.array([max(max(sx*x+sy*y for x, y in a)
                          - min(sx*x+sy*y for x, y in b)
-                         for _, a, b in pairs) for sx, sy in SIGNS])
+                         + shifts[i] for i, (_, a, b) in enumerate(pairs)) for sx, sy in SIGNS])
 
 
 def witness(pairs, xy):
     worst = None
-    for name, aa, bb in pairs:
+    score=-math.inf
+    for pair in pairs:
+        name,aa,bb=pair[:3];cap=pair[3]if len(pair)>3 else LIMIT
         for a, b in itertools.product(aa, bb):
             d = abs(a[0]+xy[0]-b[0])+abs(a[1]+xy[1]-b[1])
-            if worst is None or d > worst['um']:
-                worst = dict(bit=name, um=round(d, 6),
+            metric=d+LIMIT-cap
+            if metric>score:
+                score=metric
+                worst = dict(bit=name, um=round(d, 6),effective_um=round(metric,6),reach_um=round(cap,6),setup_margin_ps=round((cap-d)*.76,6),
                              source_corner=[a[0]+xy[0], a[1]+xy[1]], destination_corner=b)
     return worst
 
@@ -210,13 +216,14 @@ def repack_fronts(plan,leafs,inside_stage=False,widen=False):
     if inside_stage:children['u_t2']=[529.2,0.,21.6,259.2]
     keepouts={}
     if widen:
-        proposed['slot_outline_um'][0]+=54.
+        extra=54. if widen is True else float(widen)
+        proposed['slot_outline_um'][0]+=extra
         for n,r in children.items():
-            if r[0]>=550.8:r[0]+=54.
+            if r[0]>=550.8:r[0]+=extra
         children['front1'][1],children['front3'][1]=children['front3'][1],children['front1'][1]
         children['score'][1]=102.6
         children['ktree'][0]=372.6
-        keepouts=dict(two_T1_channel=[556.2,0.,48.6,492.456])
+        keepouts=dict(two_T1_channel=[556.2,0.,extra-5.4,492.456])
     def kind(n):
         if n.startswith('front'):return 'front'
         if n.startswith('lane'):return 'lane'
@@ -296,9 +303,14 @@ def repack_fronts(plan,leafs,inside_stage=False,widen=False):
     return result
 
 
-def global_stages(insts,repacked,leafs,ectl_leafs,channel_lanes=False):
+def global_stages(insts,repacked,leafs,ectl_leafs,channel_lanes=False,timing=None,n3=False,head_limit=None):
     """Actual A/B/C->per-head T1->T2 and score->S1->C; conservative other frames."""
     index={i['name']:i for i in insts};obstacles=[];byname={}
+    def reach(src,sp,dst,dp):
+        if timing is None:return LIMIT
+        a,b=timing[src],timing[dst]
+        skew=90. if (a['R']<=300)==(b['R']<=300) else 150.
+        return min(LIMIT,(833.334-60.-skew-a['pins'][sp]['out']-b['pins'][dp]['inp'])/.76)
     def child_world(parent,box,orient='R0'):
         fx,fy=FLIPS[parent['orient']];lx,ly=FLIPS[orient]
         x=parent['x']+(parent['w']-box[0]-box[2]if fx else box[0])
@@ -318,8 +330,8 @@ def global_stages(insts,repacked,leafs,ectl_leafs,channel_lanes=False):
         else:obstacles.append((n,[instance[k]for k in ('x','y','w','h')]))
     def points(n,leaf,pin):
         box,o=byname[n];return xf(leaf[1][pin],box[:2],box[2:],o)
-    def solve_site(pairs_for_orient,size,margin=0.,fixed_xs=None,y_phase=0.):
-        best=None;blocked_best=None;counts=dict(reach_origins=0,free_origins=0);lower=[]
+    def solve_site(pairs_for_orient,size,margin=0.,fixed_xs=None,y_phase=0.,collect=0):
+        best=None;blocked_best=None;counts=dict(reach_origins=0,free_origins=0);lower=[];candidate_sites=[]
         for orient in FLIPS:
             pairs=pairs_for_orient(orient);k=coefficients(pairs);cap=LIMIT-margin
             lp=linprog([0,0,1],A_ub=np.column_stack((SIGNS,-np.ones(4))),b_ub=-k,
@@ -348,8 +360,11 @@ def global_stages(insts,repacked,leafs,ectl_leafs,channel_lanes=False):
                 penalty+=np.where(clean,0.,weight);local_obstacles.append((oname,r))
             good=np.flatnonzero(free);counts['free_origins']+=len(good)
             if len(good):
+                if collect:
+                    for j in good[np.argsort(distance[good])[:collect]]:
+                        candidate_sites.append(dict(xy=xy[j].tolist(),orient=orient,size_um=size,score=float(distance[j])))
                 i=good[np.argmin(distance[good])]
-                if best is None or distance[i]<best['worst']['um']:
+                if best is None or distance[i]<best['worst']['effective_um']:
                     best=dict(xy=xy[i].tolist(),size_um=size,orient=orient,worst=witness(pairs,xy[i]))
             if len(xy):
                 i=int(np.argmin(penalty+distance*.01))
@@ -357,10 +372,10 @@ def global_stages(insts,repacked,leafs,ectl_leafs,channel_lanes=False):
                     blocked_best=dict(xy=xy[i].tolist(),orient=orient,size_um=size,
                                       worst=witness(pairs,xy[i]),blocked_area_cost_um2=float(penalty[i]),
                                       blockers=[dict(name=n,box=r)for n,r in local_obstacles if overlap((*xy[i],w,h),r)])
-        return dict(site=best,counts=counts,unobstructed_continuous_best=min(lower,key=lambda r:r['um']),
+        return dict(site=best,counts=counts,candidate_sites=candidate_sites,metric='effective_um=actual_um+500-reach_um; admit at<=500; geometric distances only when reach=500',unobstructed_continuous_best=min(lower,key=lambda r:r['um']),
                     minimally_blocked_actual_site=blocked_best)
     results=[]
-    for head in (i for i in insts if i['master']=='qkd_rhead'):
+    for head in itertools.islice((i for i in insts if i['master']=='qkd_rhead'),head_limit):
         hname=head['name'];parts=hname.split('_');h=int(parts[-1]);group='ectl_'+'_'.join(parts[1:-1]);pair=h//2
         origins=[]
         for bit in range(1559):
@@ -371,13 +386,13 @@ def global_stages(insts,repacked,leafs,ectl_leafs,channel_lanes=False):
             elif bit<1043:c,p='a',f't{pair}_row[{bit-531}]'
             elif bit<1555:c,p='b',f't{pair}_row[{bit-1043}]'
             else:c,p='b',f't{pair}_cl[{bit-1555}]'
-            origins.append((f'ti_a[{bit}]',points(group+'/'+c,ectl_leafs[c],p)))
-        origins +=[(f'e_a[{bit}]',points(group+'/c',ectl_leafs['c'],f'e{h}[{bit}]'))for bit in range(16)]
+            origins.append((f'ti_a[{bit}]',points(group+'/'+c,ectl_leafs[c],p),reach(c,p,'tstage',f'ti_a[{bit}]')))
+        origins +=[(f'e_a[{bit}]',points(group+'/c',ectl_leafs['c'],f'e{h}[{bit}]'),reach('c',f'e{h}[{bit}]','tstage',f'e_a[{bit}]'))for bit in range(16)]
         targets=[(p,points(hname+'/u_t2',leafs['tstage'],p.replace('_b[','_a[')))
                  for p in leafs['tstage'][1]if p.startswith(('ti_b[','e_b['))]
         def t_pairs(o):
-            return [(f'ECTL->{pin}',xf(leafs['tstage'][1][pin],size=leafs['tstage'][0],orient=o),pts)for pin,pts in origins]+[
-                (f'{pin}->T2',xf(leafs['tstage'][1][pin],size=leafs['tstage'][0],orient=o),pts)for pin,pts in targets]
+            return [(f'ECTL->{pin}',xf(leafs['tstage'][1][pin],size=leafs['tstage'][0],orient=o),pts,cap)for pin,pts,cap in origins]+[
+                (f'{pin}->T2',xf(leafs['tstage'][1][pin],size=leafs['tstage'][0],orient=o),pts,reach('tstage',pin,'tstage',pin.replace('_b[','_a[')))for pin,pts in targets]
         kwargs={}
         if channel_lanes:
             inner=index['head_'+'_'.join(parts[1:-1])+('_1'if h<2 else'_2')]
@@ -386,7 +401,39 @@ def global_stages(insts,repacked,leafs,ectl_leafs,channel_lanes=False):
             xx=inner['x']+(inner['w']-local_x-21.6 if fx else local_x)
             phase=(inner['y']+(inner['h']-259.2 if fy else 0))%PITCH
             kwargs=dict(fixed_xs=[xx],y_phase=phase)
-        t=solve_site(t_pairs,leafs['tstage'][0],**kwargs)
+        t0=None
+        if n3:
+            # T0 receives the real A/B/C pins. T1 receives T0, never an ideal
+            # fanout or transparent copy. Try actual free T0 lattice sites and
+            # solve every T1 bit against both actual neighboring stage views.
+            def t0_pairs(o):
+                return [(f'ECTL->{pin}',xf(leafs['tstage'][1][pin],size=leafs['tstage'][0],orient=o),pts,cap)for pin,pts,cap in origins]
+            first=solve_site(t0_pairs,leafs['tstage'][0],margin=20.,collect=32)
+            candidates=sorted(first.pop('candidate_sites'),key=lambda c:c['score'])
+            t=dict(site=None,counts=dict(reach_origins=0,free_origins=0),search='bounded_constructive_N3',t0_candidates=len(candidates))
+            t0=dict(site=None,source_admission=first,attempts=[])
+            for candidate in candidates:
+                st0=[*candidate['xy'],*candidate['size_um']]
+                obstacles.append((hname+'/u_t0',st0))
+                def t1_pairs(o):
+                    pairs=[]
+                    for pin,_,_ in origins:
+                        source=pin.replace('_a[','_b[')
+                        pts=xf(leafs['tstage'][1][source],candidate['xy'],leafs['tstage'][0],candidate['orient'])
+                        pairs.append((f'T0.{source}->{pin}',xf(leafs['tstage'][1][pin],size=leafs['tstage'][0],orient=o),pts,reach('tstage',source,'tstage',pin)))
+                    pairs +=[(f'{pin}->T2',xf(leafs['tstage'][1][pin],size=leafs['tstage'][0],orient=o),pts,reach('tstage',pin,'tstage',pin.replace('_b[','_a[')))for pin,pts in targets]
+                    return pairs
+                trial=solve_site(t1_pairs,leafs['tstage'][0],margin=20.)
+                t0['attempts'].append(dict(xy=candidate['xy'],orient=candidate['orient'],t1_reach_origins=trial['counts']['reach_origins'],t1_free_origins=trial['counts']['free_origins']))
+                obstacles.pop()
+                if trial['site']:
+                    t=trial;t0['site']=dict(candidate,worst=witness(t0_pairs(candidate['orient']),candidate['xy']))
+                    obstacles.append((hname+'/u_t0',st0))
+                    break
+            if t0['site']:
+                st=t0['site'];st['clock_pin_corners_um']=xf(leafs['tstage'][1]['ck'],st['xy'],st['size_um'],st['orient'])
+                st['clock_insertion_source']='physical/ref_tile/qkh_head_tstage/views/qkh_head_tstage/insertion.json'
+        else:t=solve_site(t_pairs,leafs['tstage'][0],**kwargs)
         if t['site']:
             st=t['site'];st['clock_pin_corners_um']=xf(leafs['tstage'][1]['ck'],st['xy'],st['size_um'],st['orient'])
             st['clock_insertion_source']='physical/ref_tile/qkh_head_tstage/views/qkh_head_tstage/insertion.json'
@@ -394,14 +441,14 @@ def global_stages(insts,repacked,leafs,ectl_leafs,channel_lanes=False):
         score_inputs=[('s_a[0]','gf_o'),('s_a[1]','sf_o')]+[(f's_a[{i+2}]',f'sc_o[{i}]')for i in range(32)]
         score_outputs=[('s_b[0]',33),('s_b[1]',32)]+[(f's_b[{i+2}]',i)for i in range(32)]
         def s_pairs(o):
-            return [(f'score.{p}->S1.{s}',xf(leafs['sstage'][1][s],size=leafs['sstage'][0],orient=o),points(hname+'/score',leafs['score'],p))for s,p in score_inputs]+[
-                (f'S1.{s}->C.s{h}[{i}]',xf(leafs['sstage'][1][s],size=leafs['sstage'][0],orient=o),points(group+'/c',ectl_leafs['c'],f's{h}[{i}]'))for s,i in score_outputs]
+            return [(f'score.{p}->S1.{s}',xf(leafs['sstage'][1][s],size=leafs['sstage'][0],orient=o),points(hname+'/score',leafs['score'],p),reach('score',p,'sstage',s))for s,p in score_inputs]+[
+                (f'S1.{s}->C.s{h}[{i}]',xf(leafs['sstage'][1][s],size=leafs['sstage'][0],orient=o),points(group+'/c',ectl_leafs['c'],f's{h}[{i}]'),reach('sstage',s,'c',f's{h}[{i}]'))for s,i in score_outputs]
         s=solve_site(s_pairs,leafs['sstage'][0])
         if s['site']:
             ss=s['site'];ss['clock_pin_corners_um']=xf(leafs['sstage'][1]['ck'],ss['xy'],ss['size_um'],ss['orient'])
             ss['clock_insertion_source']='physical/ref_tile/qkh_head_sstage/views/qkh_head_sstage/insertion.json'
             obstacles.append((hname+'/u_s1',[*ss['xy'],*ss['size_um']]))
-        results.append(dict(head=hname,ectl=group,tstage1=t,sstage1=s))
+        results.append(dict(head=hname,ectl=group,tstage0=t0,tstage1=t,sstage1=s))
     t2sites=[]
     for n,(box,o)in byname.items():
         if n.endswith('/u_t2'):
@@ -409,16 +456,16 @@ def global_stages(insts,repacked,leafs,ectl_leafs,channel_lanes=False):
                                 clock_pin_corners_um=xf(leafs['tstage'][1]['ck'],box[:2],box[2:],o),
                                 clock_insertion_source='physical/ref_tile/qkh_head_tstage/views/qkh_head_tstage/insertion.json'))
     return dict(qualified=False,scope='All128 actual87-child head repacks and all32 actualECTLA/B/C leaves; other current die instances retained as conservative solid obstacles. Full pin rectangles and source-exact field permutations, no transparent fanout copies.',
-                placement_origin_pitch_um=PITCH,clearance_um=CLEAR,results=results,
+                placement_origin_pitch_um=PITCH,clearance_um=CLEAR,results=results,evaluated_heads=len(results),required_heads=128,diagnostic_partial=head_limit is not None,
                 witness_coordinate_convention='For movable leaf pins the witness source_corner is that leaf, destination_corner is the fixed peer; logical signal direction is specified in bit label and may be the reverse.',
                 stage2_world_placements=t2sites,
-                clock_counts=dict(head_parent_entries=87,explicit_die_stages_per_head=2,total_for128heads=128*89),
-                latency_cycles=dict(ectl_to_head=2,head_to_ectl=1,layer_added=3),
-                placed_tstage1=sum(bool(r['tstage1']['site'])for r in results),placed_sstage1=sum(bool(r['sstage1']['site'])for r in results),
+                clock_counts=dict(head_parent_entries=87,explicit_die_stages_per_head=3 if n3 else 2,total_for128heads=128*(90 if n3 else 89)),
+                latency_cycles=dict(ectl_to_head=3 if n3 else 2,head_to_ectl=1,layer_added=4 if n3 else 3),
+                placed_tstage0=sum(bool(r['tstage0']and r['tstage0']['site'])for r in results),placed_tstage1=sum(bool(r['tstage1']['site'])for r in results),placed_sstage1=sum(bool(r['sstage1']['site'])for r in results),
                 next='If a leaf has zero reach origins, change source/target geometry. If reach origins exist but none free, grant/rehome the connected cluster. Do not admit missing leaf placements.')
 
 
-def widen_world_proposal(insts):
+def widen_world_proposal(insts,extra=54.):
     """Open four54um die columns. A geometry proposal, never an actual grant."""
     heads=[i for i in insts if i['master']=='qkd_rhead']
     columns={}
@@ -430,19 +477,19 @@ def widen_world_proposal(insts):
     for i in insts:
         q=dict(i)
         if i['master']=='qkd_rhead':
-            q['x']+=54*sum(c<i['x']for c in cuts);q['w']+=54
+            q['x']+=extra*sum(c<i['x']for c in cuts);q['w']+=extra
         elif i['master']=='qkd_ectl':
             group='head_'+'_'.join(i['name'].split('_')[1:])+'_0'
             head=next(h for h in heads if h['name']==group)
-            q['x']+=54*sum(c<head['x']for c in cuts)+(54 if FLIPS[i['orient']][0]else 0)
+            q['x']+=extra*sum(c<head['x']for c in cuts)+(extra if FLIPS[i['orient']][0]else 0)
         else:
             touched=[c for c in cuts if i['x']<c<i['x']+i['w']]
             if touched:crossing.append(dict(name=i['name'],master=i['master'],cut_x=touched))
-            q['x']+=54*sum(c<i['x']+i['w']/2 for c in cuts)
+            q['x']+=extra*sum(c<i['x']+i['w']/2 for c in cuts)
         proposal.append(q)
     return proposal,dict(qualified=False,kind='Connectedcolumnwidthproposal; actual generator admission required',
-                         columns=columns,die_width_added_um=216,head_width_added_um=54,
-                         ectl_rule='Preserve canonical216um offset; R0 no own-column shift, MY+54. Do not recenter+27.',
+                         columns=columns,die_width_added_um=4*extra,head_width_added_um=extra,
+                         ectl_rule='Preserve canonical216um offset; R0 no own-column shift, MY+extra. Do not recenter+27.',
                          unrelated_frames_crossing_cut=crossing,
                          physical_limits='Other cut-crossing instances require real generator relocation and all changed paths/cuts/clocks remeasurement. This proposal is not a floorplan grant.')
 
@@ -452,8 +499,18 @@ def main():
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--insts', type=Path, help='Actual unexpanded current die insts.json for128-copy projection')
     ap.add_argument('--global-stages',action='store_true',help='Solve actual T1/S1 in the current whole-die grant; requires --insts')
+    ap.add_argument('--head-limit',type=int,help='Diagnostic constructive search only: evaluate firstNheads while retaining all128heads as obstacles; never a complete die grant')
+    ap.add_argument('--n3',action='store_true',help='Structural candidate: three real input stages,20um budget margin; bounded constructive T0/T1 search, +1 compiler-visible cycle versusN2')
+    ap.add_argument('--native-timing',action='store_true',help='Constrain every matched bit by actual TT ETM launch/capture and compensated clock-level reach, capped at500um')
+    ap.add_argument('--widen108',action='store_true',help='Structural108um/head growth, four real input-stage lanes per inner head, actual generator admission still required')
     ap.add_argument('--widen54',action='store_true',help='Propose54um/head growth with real incident-pin audit; never an actual die grant')
     args = ap.parse_args()
+    if args.widen108:
+        args.widen54=True
+    if args.n3 and not args.native_timing:
+        ap.error('--n3 requires --native-timing')
+    if args.native_timing and not args.global_stages:
+        ap.error('--native-timing requires --global-stages and --insts')
     prefix = ROOT/'physical/ref_tile'
     paths = dict(plan=ROOT/'results/arch/qwen_split_1014/head_native_r4_codex_1014/plan.json',
                  staged_rtl=ROOT/'rtl/qwen_sys/split_20261014/qkh_head_stages.sv',
@@ -492,7 +549,7 @@ def main():
     repack_lb=continuous_bound(repack,tstage,front,dict(below=(-129.6,w+108,-280.8,-264.6)))
     repacked=repack_fronts(plan,{k:lef(paths[k])for k in ('front','score','stin','stk','nb','lane','ktree')})
     repacked_inside=repack_fronts(plan,{k:lef(paths[k])for k in ('front','score','stin','stk','nb','lane','ktree','tstage')},True)
-    widened=repack_fronts(plan,{k:lef(paths[k])for k in ('front','score','stin','stk','nb','lane','ktree','tstage')},True,True)if args.widen54 else None
+    widened=repack_fronts(plan,{k:lef(paths[k])for k in ('front','score','stin','stk','nb','lane','ktree','tstage')},True,108. if args.widen108 else True)if args.widen54 else None
     if 'children'in repacked:
         repacked['stage2_continuous_lower_bound']=continuous_bound(
             dict(plan,children=repacked['children']),tstage,front,dict(below=(-129.6,w+108,-280.8,-264.6)))
@@ -576,11 +633,54 @@ def main():
         ectl_leafs={c:lef(p)for c,p in ectl_paths.items()}
         if args.widen54:
             assert widened['admitted'],widened
-            insts,proposal=widen_world_proposal(insts)
+            insts,proposal=widen_world_proposal(insts,108. if args.widen108 else 54.)
             (args.out/'proposed_insts_widen54.json').write_text(json.dumps(insts,indent=2)+'\n')
             chosen=widened
         else:chosen=repacked_inside;proposal=None
-        global_result=global_stages(insts,chosen,{k:lef(paths[k])for k in ('tstage','sstage','score')},ectl_leafs,args.widen54)
+        timing=None
+        if args.native_timing:
+            import sys
+            sys.path.insert(0,str(ROOT/'tools/hier_contract'))
+            import pinreg_audit as PA
+            timing={}
+            for key,path in {**{k:paths[k]for k in ('tstage','sstage','score','front')},**ectl_paths}.items():
+                libpath=path.with_name(path.stem+'_tt.lib')
+                if not libpath.exists():libpath=Path(str(libpath)+'.gz')
+                lib=PA.parse_lib(libpath);ins=json.loads(path.with_name('insertion.json').read_text())
+                refs=PA.clock_refs(lib,ins,'tt')
+                assert refs,'Missing native compensated clock reference: '+key
+                timing[key]=dict(pins=PA.pin_metrics(lib,refs),R=max(v['rise']for v in refs.values()),spread=max(v['bmax']-v['bmin']for v in refs.values()))
+        global_result=global_stages(insts,chosen,{k:lef(paths[k])for k in ('tstage','sstage','score')},ectl_leafs,args.widen54,timing,args.n3,args.head_limit)
+        global_result['stage2_native_timing']=None
+        if timing:
+            pairs=front_connections(lef(paths['front'])[1],tstage[1],chosen,'MX')
+            stage2_pairs=[]
+            for label,a,b in pairs:
+                source,target=label.split('->');target=target.split('.',1)[1]
+                skew=90. if (timing['tstage']['R']<=300)==(timing['front']['R']<=300) else 150.
+                cap=min(LIMIT,(833.334-60.-skew-timing['tstage']['pins'][source]['out']-timing['front']['pins'][target]['inp'])/.76)
+                stage2_pairs.append((label,a,b,cap))
+            w2=witness(stage2_pairs,chosen['children']['u_t2'][:2])
+            global_result['stage2_native_timing']=dict(admitted=w2['effective_um']<=LIMIT,worst=w2,applies_to_all128_mirrors=True)
+        global_result['native_view_defects']={}
+        if timing:
+            for key,profile in timing.items():
+                defects=[]
+                for pin,metrics in profile['pins'].items():
+                    if metrics['out']is not None and metrics['out']>220: defects.append(dict(pin=pin,kind='launch',ps=metrics['out']))
+                    if metrics['inp']is not None and metrics['inp']>190: defects.append(dict(pin=pin,kind='capture',ps=metrics['inp']))
+                    if metrics['comb']: defects.append(dict(pin=pin,kind='combinational'))
+                if profile['spread']>80: defects.append(dict(kind='clock_spread',ps=profile['spread']))
+                if defects:global_result['native_view_defects'][key]=defects
+        global_result['native_per_bit_timing']=bool(timing)
+        global_result['composition_obligation']='N3requires actual flat90-child RTL integration, full-shape bitexact bench plus failing latency/lt/score mutants, static compiler+1cycle and measured layerprice; these are NOT established by necessary geometry/timing' if args.n3 else 'Existing N2staged RTL and component proof; die placement/clock/allincident proof remains separate'
+        global_result['timing_rule']='min(500um,(833.334ps-60ps-skew-launch-capture)/0.76ps_per_um), skew90samelevel/150crosslevel, actual TT pin metrics at phi-R' if timing else 'GEOMETRY_ONLY_500UM'
+        global_result['native_timing_source_sha256']={}
+        if timing:
+            for key,path in {**{k:paths[k]for k in ('tstage','sstage','score','front')},**ectl_paths}.items():
+                for source in (path.with_name('insertion.json'),path.with_name(path.stem+'_tt.lib')):
+                    if not source.exists():source=Path(str(source)+'.gz')
+                    global_result['native_timing_source_sha256'][str(source.relative_to(ROOT))]=hashlib.sha256(source.read_bytes()).hexdigest()
         global_result['world_proposal']=proposal
         global_result['necessary_routing_capacity']=capacity_cuts()if args.widen54 else None
         global_result['die_grant_source']=str(args.insts)
