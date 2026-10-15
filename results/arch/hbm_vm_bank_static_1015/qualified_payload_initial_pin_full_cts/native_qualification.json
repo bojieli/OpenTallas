@@ -1,0 +1,29 @@
+{
+  "unit": "oth-ubuntu-1382759-1792053923",
+  "host": "ot-epyc4",
+  "gate": "TERMINAL WARN, no toolfail",
+  "source_commit": "5581e2e16",
+  "actual_mapped_DFFs": 6409,
+  "actual_rr_payload_DFFs": 1792,
+  "actual_eg_payload_DFFs": 275,
+  "TT_clock_ps": {
+    "min": 382.9,
+    "max": 506.5,
+    "spread": 123.6
+  },
+  "FF_clock_ps": {
+    "min": 309.5,
+    "max": 425.8,
+    "spread": 116.3
+  },
+  "TT_setup_slack_ps": -35.5,
+  "TT_input_reset_slack_ps": 55.5,
+  "TT_hold_slack_ps": 27.6,
+  "native_qualified": false,
+  "defects": [
+    "TTclockspread>80ps",
+    "write-selectionS1payloadsetup\u221235.5ps",
+    "originalhookactualpinreadback24PGclearanceand34spacingviolations; correctedhookseparatelydiagnosedPASSbutrequiresfullgate"
+  ],
+  "next": "onefreshfullgateusingcorrectedc41pinshook,samesourcebankandbody; nostaticfunctionalreruns needed"
+}
