@@ -1,0 +1,22 @@
+setup_ss -386.07 classes:
+    -386.07 ps  n= 146 lv= 12  u_q.r_v[*]$_DFF_PN0_/QN -> u_q.g_q.g_b[*].u_f.g_esl.g_s[*].b1[*]$_DFFE_PP_/D
+    -384.69 ps  n= 145 lv= 12  u_q.r_v[*]$_DFF_PN0_/QN -> u_q.g_q.g_b[*].u_f.g_esl.g_s[*].b0[*]$_DFFE_PP_/D
+    -350.51 ps  n=  84 lv= 11  u_q.r_v[*]$_DFF_PN0_/QN -> u_q.g_q.g_b[*].u_f.g_tile[*].genblk1.genblk1.g_m2.u_m/wd_in[*]
+    -341.88 ps  n=   7 lv= 12  u_q.r_s[*][*]$_DFF_P_/QN -> u_q.g_q.g_b[*].u_f.g_esl.g_s[*].b1[*]$_DFFE_PP_/D
+    -336.65 ps  n=   5 lv= 11  u_q.r_s[*][*]$_DFF_P_/QN -> u_q.g_q.g_b[*].u_f.g_esl.g_s[*].b0[*]$_DFFE_PP_/D
+    -329.96 ps  n=   6 lv= 12  u_q.g_q.g_b[*].u_f.oc[*]$_DFF_PN0_/QN -> ot_prs_*_ff/D
+    -324.50 ps  n=   6 lv= 12  u_q.g_q.g_b[*].u_f.oc[*]$_DFF_PN0_/QN -> u_q.hd[*]$_DFFE_PP_/D
+    -306.98 ps  n=   1 lv= 11  u_q.r_s[*][*]$_DFF_P_/QN -> u_q.g_q.g_b[*].u_f.g_tile[*].genblk1.genblk1.g_m2.u_m/w_ce_in
+     -12.02 ps  n= 400 lv=  7  ot_prs_*_ff/QN -> hd[*]
+     187.44 ps  n=  72 lv=  7  u_q.u_rst.rst_n[*]$_DFF_PN0_/QN -> u_q.g_q.g_b[*].u_f.g_esl.g_s[*].oh_c$_DFF_PN0_/RESETN
+hold_ff -32.75 classes:
+     -32.75 ps  n= 400 lv=  5  pd[*] -> u_q.r_d[*][*]$_DFF_P_/D
+      21.36 ps  n=   2 lv=  4  rst_n -> u_q.u_rst.sync_q[*]$_DFF_PN0_/RESETN
+      21.53 ps  n=   2 lv=  4  rst_n -> u_q.u_rst.rst_n[*]$_DFF_PN0_/RESETN
+      42.61 ps  n=  28 lv=  7  u_q.u_rst.rst_n[*]$_DFF_PN0_/QN -> u_q.g_q.g_b[*].u_f.wp[*]$_DFFE_PN0P_/RESETN
+      45.71 ps  n=  72 lv=  7  u_q.u_rst.rst_n[*]$_DFF_PN0_/QN -> u_q.g_q.g_b[*].u_f.g_esl.g_s[*].oh_c$_DFF_PN0_/RESETN
+      47.73 ps  n=  32 lv=  6  u_q.u_rst.rst_n[*]$_DFF_PN0_/QN -> u_q.g_q.g_b[*].u_f.in_arr[*]$_DFFE_PN0P_/RESETN
+      49.35 ps  n=  72 lv=  7  u_q.u_rst.rst_n[*]$_DFF_PN0_/QN -> u_q.g_q.g_b[*].u_f.g_esl.g_s[*].oc0_c$_DFF_PN0_/RESETN
+      51.33 ps  n=  72 lv=  7  u_q.u_rst.rst_n[*]$_DFF_PN0_/QN -> u_q.g_q.g_b[*].u_f.g_esl.g_s[*].inf_c$_DFF_PN0_/RESETN
+      57.87 ps  n=   4 lv=  3  u_q.u_rst.rst_n[*]$_DFF_PN0_/QN -> u_q.r_v[*]$_DFF_PN0_/RESETN
+      76.74 ps  n=   4 lv=  6  u_q.u_rst.rst_n[*]$_DFF_PN0_/QN -> u_q.g_q.g_b[*].u_f.oc[*]$_DFF_PN0_/RESETN
