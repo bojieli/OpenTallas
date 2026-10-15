@@ -92,7 +92,7 @@ def main():
             assert 0 <= token < 129280, "head token out of range"
             from s81_embedding.publish import publish_mtp0
             publish_mtp0(a.native_embedding_dir, Path(a.out), Path(a.mtp), [token] + [128799] * 4)
-            print("MTP0_NATIVE_HANDOFF PASS: actual RTL head token -> static RTL embedding -> actual HIDDEN packets")
+            print("MTP0_NATIVE_HANDOFF PASS: token file -> static RTL embedding -> actual HIDDEN packets (qualify head producer separately)")
             return
         print("HISTORICAL_REFERENCE_GLUE: embedding expansion supplied by Python; not native qualification")
         ck = LC.Checkpoint(); m, _ = LC.build_model(ck, engram=False)

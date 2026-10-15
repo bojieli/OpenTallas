@@ -20,3 +20,11 @@ python3 tools/s81_ftok/chain_glue.py head --hout hin_L40.mem --native-prep W
 This is a native **HC arithmetic component** bridge, not an all-native token. The VM pin boundary remains modeled here; actual VM service, native coefficient production, native head field roots and the digital collective/hop composition must still be connected and cycle-qualified. The initial real-token fixture takes the actual continuous hop output but historical reference pre coefficients; that fixture tests the component and cannot prove hardware coefficient provenance. The initial expected vector agrees bit-for-bit with the released 1M head `xf` (5120/5120), before simulation.
 
 No timing/physical closure claim is made. Existing HC physical owners must qualify any production gain reload and stage-boundary command changes. The implementation introduces no new tile or clocks.
+
+## Native embedding handoff integration
+
+`chain_glue.py mtp0 --native-embedding-dir <embedding gate records> --main-token-file <one hex token>` calls the native embedding publisher, verifies the source-pinned passing gate and failing mutant records, checks every output lane against the MTP oracle, and copies the actual RTL HIDDEN bytes into all five stage-0 input packets. It does not construct an embedding in Python. The main-token file must come from the actual native head in the full system; the integration component test used token 21946 as a declared boundary stimulus.
+
+Integration check: all five M0 row handoffs passed against the real MTP `h_in` fixtures using native bankgate21946 and bankgate128799 outputs. A mutated payload was rejected with `native embedding dump hash mismatch`. This closes the Python expansion/framing substitution at this handoff, subject to integration with the actual head token producer and real die transport. Embedding tiles' physical qualification is tracked separately by their owner.
+
+The initial flat real-FP head-prep builds exceeded their 96 GB / 64 GB memory caps and terminated with systemd `Result=oom-kill`, before any numerical verdict. The replacement `head_prep.vlt` preserves actual HC/FP module boundaries during Verilation; it substitutes no behavior. Baseline and mutant are being verified using that hierarchy.
