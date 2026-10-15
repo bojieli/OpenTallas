@@ -1,0 +1,31 @@
+{
+  "status": "REQUEST independent new functional leaf only; not inherited grouped grant",
+  "flow_API_commit": "02f125a16",
+  "flow_API_in_ancestry": true,
+  "leaf": {
+    "master": "ot_s81_r2l_epoch_slice64",
+    "instances": 8,
+    "width_um": 43.2,
+    "height_um": 38.88,
+    "pins": 139,
+    "clock_ports": [
+      "clk_source",
+      "clk_epoch",
+      "clk_serial"
+    ],
+    "resets": [
+      "rst_source_n",
+      "rst_epoch_n",
+      "rst_serial_n"
+    ]
+  },
+  "clock_entries_parent": 25,
+  "added_latency": "Exactlyone12VCOtick frame at selectedproductionphase0/0; unchanged3words/frame",
+  "parent_outline": "OPEN; no grantrequested",
+  "files": {
+    "tools/ref_tile/specs_s81_r2l_groups_1417/epoch64.json": "3ac7b85c43910573b91f7bd98975e69dd6bca465356291daa7985e2b372abd08",
+    "physical/ref_tile/s81_r2l_epoch64_1417/spec.json": "13366f8f3c86c0d80e770586de1cea18f8a624fcc73c940fc60aff6aa8d931ae",
+    "physical/s81_r2l_groups_1417/epoch64_pins.tcl": "c5fb33961856d230be8986dfa1ec6b93130ccebbe8102a5cec8ae77e82fcb8cb",
+    "rtl/dsrom_sys/s81_static_net/ot_s81_r2l_epoch64.sv": "c099069a6df28ecbbf311e90bf36501aed8f915e3b340a96230a92dc4386b2af"
+  }
+}

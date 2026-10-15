@@ -1,0 +1,144 @@
+{
+ "name": "s81_r2l_epoch64_1417",
+ "top": "ot_s81_r2l_epoch_slice64",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_static_net/ot_s81_r2l_epoch64.sv"
+ ],
+ "clock_port": "clk_source",
+ "reset_ports": [
+  "rst_source_n",
+  "rst_epoch_n",
+  "rst_serial_n"
+ ],
+ "outline": {
+  "w": 43.2,
+  "h": 38.88,
+  "exact": true
+ },
+ "pins": {
+  "E": [
+   "clk_source",
+   "di"
+  ],
+  "S": [
+   "clk_epoch",
+   "clk_serial",
+   "rst_source_n",
+   "rst_epoch_n",
+   "rst_serial_n"
+  ],
+  "W": [
+   "data",
+   "raw_valid",
+   "raw_live",
+   "raw_fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "period_ps": 833.333
+ },
+ "job": {
+  "owner": "Codex:S81-R2L-GROUPS1417",
+  "branch": "codex/s81-r2l-groups-1417",
+  "tag": "epoch1",
+  "hold_merge": "New epoch functional master no parent fit or native TT/FF/DRC adoption; every source/epoch/serial root and seam must qualify",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_static_net",
+   "tools/s81_static_net",
+   "physical/s81_r2l_groups_1417"
+  ],
+  "benches": [
+   {
+    "name": "full512_epoch_phase_and_actual_mutants",
+    "cmd": "python3 tools/s81_static_net/run_r2l_epoch64_gate.py",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "lost_epoch_group7 PASS"
+   }
+  ]
+ },
+ "structural_change": "Actual epochbank3words/frame eliminates source-to-serial3:4 mux crossing; rising ingress repairs falling seam. +1frame fixed latency at phase0, unchanged throughput;25actual parent entries. Every related setup/hold path including sameedge remains checked; no exceptions.",
+ "clock_ports": [
+  "clk_source",
+  "clk_epoch",
+  "clk_serial"
+ ],
+ "clock_data_paths": "related_pll_dividers",
+ "io_tcl": "physical/s81_r2l_groups_1417/epoch64_pins.tcl",
+ "clock": "multiple_cts_roots",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "phase_ps": 0,
+  "vco_dividers": {
+   "core": 3,
+   "epoch": 12,
+   "serial": 4
+  }
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_source"
+   ],
+   "inputs": [
+    "di",
+    "rst_source_n"
+   ],
+   "outputs": []
+  },
+  "epoch": {
+   "ratio": [
+    4,
+    1
+   ],
+   "ports": [
+    "clk_epoch"
+   ],
+   "inputs": [
+    "rst_epoch_n"
+   ],
+   "outputs": []
+  },
+  "serial": {
+   "ratio": [
+    4,
+    3
+   ],
+   "ports": [
+    "clk_serial"
+   ],
+   "inputs": [
+    "rst_serial_n"
+   ],
+   "outputs": [
+    "data",
+    "raw_valid",
+    "raw_live",
+    "raw_fault"
+   ]
+  }
+ }
+}
