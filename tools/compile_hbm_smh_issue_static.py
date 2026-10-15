@@ -55,10 +55,20 @@ def issue_slots(raw):
     r, g, c = o['rows'], o['groups'], o['c']
     cy = ((o['launch_cycle'] + 2 + IL - 1) // IL) * IL
     waves = (r*g+IL-1)//IL if o['gs'] else (r+IL-1)//IL
+    pauses = {}
+    total = waves * c * IL * (1 if o['gs'] else g)
+    for pause in o.get('issue_pauses', []):
+        before, cycles = pause['before_advance'], pause['cycles']
+        if (type(before) is not int or type(cycles) is not int or
+                not 0 < before < total or before % IL or cycles <= 0 or cycles % IL or before in pauses):
+            raise ValueError('static pauses require unique interior IL-aligned advances and positive IL-multiple cycles')
+        pauses[before] = cycles
+    advance = 0
     for wave in range(waves):
         for group_step in range(1 if o['gs'] else g):
             for t in range(c):
                 for si in range(IL):
+                    cy += pauses.get(advance, 0)
                     item = wave*IL+si
                     row, group = divmod(item, g) if o['gs'] else (item, group_step)
                     yield dict(cycle=cy,row=row,group=group,t=t,si=si,
@@ -66,6 +76,7 @@ def issue_slots(raw):
                                first=t == 0,last=t == c-1,glast=group == g-1,
                                slot=row%IL,xa=(group*c+t+o['x_base'])%XD)
                     cy += 1
+                    advance += 1
 
 
 def control(s):

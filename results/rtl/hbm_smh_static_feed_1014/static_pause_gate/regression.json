@@ -1,0 +1,14 @@
+{
+  "pass_": true,
+  "cases": 236,
+  "hazard_pairs": 19,
+  "mutant_rejected": true,
+  "mutant_source_sha256": "c5d9b5123554d2495287ed752b6edecb48cb3457eb5e90407b84b1603a5676a6",
+  "sources": {
+    "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv": "f9a025c3609612505c937b61ace0b5836c3fb65871df16a4978021f635743845",
+    "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv": "c3d574486f1c55032a11f1e3415e1c81d72526db012347bae87243be3137c233",
+    "tools/dshbm_matched_sm_seq.py": "403529a5b3b412ea60beb13a5faf4c4803ccff1009c3c0eddaf9eb7792948ed6",
+    "tools/uarch_model.py": "0b4cc9f98b955f4eca1debde0794dff370634d84adfb3c1cdea34a3fbccb100f"
+  },
+  "scope": "actual issue_pq control only; no arithmetic or released checkpoint qualification"
+}

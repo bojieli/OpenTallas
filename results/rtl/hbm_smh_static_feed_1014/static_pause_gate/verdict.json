@@ -1,0 +1,119 @@
+{
+  "status": "PASS",
+  "cases": [
+    {
+      "rows": 9,
+      "groups": 6,
+      "gap": 8,
+      "advances": 448,
+      "cycles": 503
+    },
+    {
+      "rows": 9,
+      "groups": 6,
+      "gap": 16,
+      "advances": 448,
+      "cycles": 551
+    },
+    {
+      "rows": 9,
+      "groups": 6,
+      "gap": 24,
+      "advances": 448,
+      "cycles": 599
+    },
+    {
+      "rows": 9,
+      "groups": 6,
+      "gap": 32,
+      "advances": 448,
+      "cycles": 647
+    },
+    {
+      "rows": 8,
+      "groups": 6,
+      "gap": 8,
+      "advances": 384,
+      "cycles": 431
+    },
+    {
+      "rows": 8,
+      "groups": 6,
+      "gap": 16,
+      "advances": 384,
+      "cycles": 471
+    },
+    {
+      "rows": 8,
+      "groups": 6,
+      "gap": 24,
+      "advances": 384,
+      "cycles": 511
+    },
+    {
+      "rows": 8,
+      "groups": 6,
+      "gap": 32,
+      "advances": 384,
+      "cycles": 551
+    },
+    {
+      "rows": 17,
+      "groups": 3,
+      "gap": 8,
+      "advances": 448,
+      "cycles": 503
+    },
+    {
+      "rows": 17,
+      "groups": 3,
+      "gap": 16,
+      "advances": 448,
+      "cycles": 551
+    },
+    {
+      "rows": 17,
+      "groups": 3,
+      "gap": 24,
+      "advances": 448,
+      "cycles": 599
+    },
+    {
+      "rows": 17,
+      "groups": 3,
+      "gap": 32,
+      "advances": 448,
+      "cycles": 647
+    },
+    {
+      "rows": 1,
+      "groups": 16,
+      "gap": 8,
+      "advances": 128,
+      "cycles": 143
+    },
+    {
+      "rows": 1,
+      "groups": 16,
+      "gap": 16,
+      "advances": 128,
+      "cycles": 151
+    },
+    {
+      "rows": 1,
+      "groups": 16,
+      "gap": 24,
+      "advances": 128,
+      "cycles": 159
+    },
+    {
+      "rows": 1,
+      "groups": 16,
+      "gap": 32,
+      "advances": 128,
+      "cycles": 167
+    }
+  ],
+  "actual_RTL_address_mutant_rejected": true,
+  "scope": "original issue_pq control only, no cache/refill/controller/arith throughput qualification"
+}
