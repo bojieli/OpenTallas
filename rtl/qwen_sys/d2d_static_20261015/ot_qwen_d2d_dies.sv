@@ -8,9 +8,11 @@
 //               1 program record kind 14 witness (qfd_program_record_port, codec 2 edges)
 //               2 compute STATUS/RESULT kind 15 (ot_qwen_d2d_status_tx in this wrapper, 1 edge)
 //               3 KVN kind 5 (qfd_kvn_static_transport slot -> x3 1 edge -> ot_qwen_d2d_kvn_tx 1 edge = 2 edges)
-//   compute RX: 0 native59 RESULT/STATUS (kinds 3/4), 1 program record (kinds 12 context / 13 BEGIN+AUTH)
+//   compute RX: 0 native59 RESULT/STATUS (kinds 3/4), 1 program record (kinds 12 context / 13 BEGIN+AUTH),
+//               2 embedding row (kinds 6/7, 64 words per token, token run)
 //   KV TX:      0 attention record RESULT/STATUS (qkd_native_attention_record KV_SIDE 1, 1 edge)
 //               1 HOST record port kinds 12/13 (qkd_host_record_port, 2 edges)
+//               2 embedding row kinds 6/7 (KV die embedding provider, 1 edge; token run)
 //   KV RX:      0 attention CMD/Q, 1 HOST record kind 14 witness, 2 compute STATUS kind 15, 3 KVN kind 5
 // =====================================================================================================================
 
@@ -78,21 +80,25 @@ endmodule
 // COMPUTE die end (die name qfd_d2d_static; replaces qfd_d2d_rom = credit romlink + LLR, historical)
 // ---------------------------------------------------------------------------------------------------------------------
 module qfd_d2d_static #(parameter integer MUT = 0) (
-    input  wire [4:0]   ck,
+    input  wire         ck,                              // core D2D clock (PLL core trunk, 1.2 GHz; one CTS root incl. the slot-store SRAMs)
     input  wire         por_n, rst_n,
-    input  wire         cfg_tx_we, cfg_rx_we, input wire [6:0] cfg_addr, input wire [31:0] cfg_data,
-    input  wire         cal_start,                       // compiled layer start (compute ROM sequencer)
+    input  wire         cfg_tx_we, cfg_rx_we, input wire [5:0] cfg_addr, input wire [31:0] cfg_data,
+    input  wire         cal_start,                       // compiled run start (compute ROM sequencer)
+    input  wire         cal_seg,                         // 0 layer run, 1 token run (terminal RESULT / embedding row)
     input  wire         fwd_epoch,                       // forwarded epoch strobe bump (KV die)
     input  wire         fwd_link_rst_n,                  // forwarded link reset bump (KV die)
     // native59 typed548
     output wire         native_tx_slot, output wire [3:0] native_tx_slot_kind, output wire [4:0] native_tx_slot_beat,
     input  wire         native_tx_v, input wire [547:0] native_tx_payload,
-    output wire         native_rx_v, output wire [547:0] native_rx_payload,
+    output wire [547:0] rx_payload,                      // checked RX word, shared by every RX port (valid per port)
+    output wire         native_rx_v,
     output wire         native_rx_slot, output wire [3:0] native_rx_slot_kind, output wire [4:0] native_rx_slot_beat,
     // program record port
     output wire         prog_witness_slot, output wire prog_auth_slot, output wire prog_context_slot,
     input  wire         prog_tx_observed_v, input wire [547:0] prog_tx_record,
-    output wire         prog_rx_v, output wire [547:0] prog_rx_record,
+    output wire         prog_rx_v,
+    // embedding row (RX port 2; kinds 6/7 = row words 0..31/32..63 from the KV die embedding provider)
+    output wire         emb_rx_v, output wire emb_rx_slot,
     // KVN
     output wire         kv_x3_slot,
     input  wire [523:0] x3, input wire [58:0] x3_identity, input wire [1:0] x3_generation,
@@ -113,15 +119,15 @@ module qfd_d2d_static #(parameter integer MUT = 0) (
     wire [3:0] tv; wire [4*FW-1:0] tp;
     wire eb, ab, endf, own_rst_n, rec; wire [7:0] ep, fc;
     wire st_f, kvn_f;
-    ot_qwen_d2d_recovery #(.MASTER(0)) u_rec (.ck(ck[0]), .por_n(por_n), .rst_n(rst_n), .abort(ab | endf),
+    ot_qwen_d2d_recovery #(.MASTER(0)) u_rec (.ck(ck), .por_n(por_n), .rst_n(rst_n), .abort(ab | endf),
         .fault_cause(fc), .end_fault(endf), .p_tx_up(fdi_tx_up), .p_tx_v(fdi_tx_v), .p_rx_v(fdi_rx_v),
         .reset_req(1'b0), .recovery_clear(1'b0), .boot_begin(1'b0), .fwd_epoch_i(fwd_epoch), .fwd_epoch_o(),
         .fwd_link_rst_n(), .phy_rst_n(own_rst_n), .epoch_begin(eb), .epoch(ep), .link_up(), .links_drained(),
         .link_reset_seen(), .retrained(), .transport_fault(transport_fault), .recovering(rec), .recovery_cycles());
     assign phy_rst_n = own_rst_n & fwd_link_rst_n;
     ot_qwen_d2d_static_end #(.NT(4), .NR(4), .TXD({8'd2, 8'd1, 8'd2, 8'd1}), .MUT(MUT)) u_end (
-        .ck(ck), .rst_n(rst_n), .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
-        .epoch_begin(eb), .epoch(ep), .cal_start(cal_start),
+        .ck({5{ck}}), .rst_n(rst_n), .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
+        .epoch_begin(eb), .epoch(ep), .cal_start(cal_start), .cal_seg(cal_seg),
         .tx_slot(txs), .tx_kind(tk), .tx_beat(tb), .tx_valid(tv), .tx_payload(tp),
         .rx_event(rxe), .rx_slot(rxs), .rx_kind(rk), .rx_beat(rb), .rx_payload(rxp),
         .p_tx_up(fdi_tx_up), .p_tx_v(fdi_tx_v), .p_tx_flit(fdi_tx_flit), .p_rx_v(fdi_rx_v), .p_rx_flit(fdi_rx_flit),
@@ -130,16 +136,19 @@ module qfd_d2d_static #(parameter integer MUT = 0) (
     // port 0 native59
     assign native_tx_slot = txs[0]; assign native_tx_slot_kind = tk; assign native_tx_slot_beat = tb;
     assign tv[0] = native_tx_v; assign tp[0 +: FW] = native_tx_payload;
-    assign native_rx_v = rxe[0]; assign native_rx_payload = rxp;
+    assign rx_payload = rxp;
+    assign native_rx_v = rxe[0];
     assign native_rx_slot = rxs[0]; assign native_rx_slot_kind = rk; assign native_rx_slot_beat = rb;
     // port 1 program record
     assign prog_witness_slot = txs[1];
     assign tv[1] = prog_tx_observed_v; assign tp[FW +: FW] = prog_tx_record;
-    assign prog_rx_v = rxe[1]; assign prog_rx_record = rxp;
+    assign prog_rx_v = rxe[1];
+    // port 2 embedding row (consumer: compute SU embedding face, owner q_native_embedding / Q-COMPUTE)
+    assign emb_rx_v = rxe[2]; assign emb_rx_slot = rxs[2];
     assign prog_auth_slot = rxs[1] && rk == 4'd13;
     assign prog_context_slot = rxs[1] && rk == 4'd12;
     // port 2 status/result
-    ot_qwen_d2d_status_tx u_st (.ck(ck[0]), .rst_n(rst_n & ~eb), .epoch16(status_epoch16),
+    ot_qwen_d2d_status_tx u_st (.ck(ck), .rst_n(rst_n & ~eb), .epoch16(status_epoch16),
         .vm_drained(vm_drained), .collective_drained(collective_drained), .collective_busy(collective_busy),
         .crom_fault(crom_fault), .execution_active(execution_active), .admit_ready(admit_ready),
         .result_v(result_v), .result_done(result_done), .result_fault(result_fault), .result_cause(result_cause),
@@ -148,7 +157,7 @@ module qfd_d2d_static #(parameter integer MUT = 0) (
         .fault(st_f));
     // port 3 KVN
     assign kv_x3_slot = txs[3];
-    ot_qwen_d2d_kvn_tx u_kvn (.ck(ck[0]), .rst_n(rst_n & ~eb), .x3(x3), .x3_identity(x3_identity),
+    ot_qwen_d2d_kvn_tx u_kvn (.ck(ck), .rst_n(rst_n & ~eb), .x3(x3), .x3_identity(x3_identity),
         .x3_generation(x3_generation), .tx_valid(tv[3]), .tx_payload(tp[3*FW +: FW]), .fault(kvn_f));
     assign fault = endf | st_f | kvn_f;
 endmodule
@@ -157,10 +166,11 @@ endmodule
 // KV/system die end (die name qkd_d2d_static; replaces qkd_d2d = ot_qkvd_kv_end + LLR, historical) + HOST services
 // ---------------------------------------------------------------------------------------------------------------------
 module qkd_d2d_static #(parameter integer MUT = 0, parameter integer NL = 2) (
-    input  wire [4:0]   ck,
+    input  wire         ck,                              // core D2D clock (PLL core trunk, 1.2 GHz; one CTS root incl. the slot-store SRAMs)
     input  wire         por_n, rst_n,
-    input  wire         cfg_tx_we, cfg_rx_we, input wire [6:0] cfg_addr, input wire [31:0] cfg_data,
-    input  wire         cal_start,                       // compiled layer start (KV sequencer)
+    input  wire         cfg_tx_we, cfg_rx_we, input wire [5:0] cfg_addr, input wire [31:0] cfg_data,
+    input  wire         cal_start,                       // compiled run start (KV sequencer)
+    input  wire         cal_seg,                         // 0 layer run, 1 token run (terminal RESULT / embedding row)
     // HOST (qkd_host_root_pt) control of the exceptional mode
     input  wire         host_link_reset_req, host_recovery_clear, host_boot_begin,
     output wire         fwd_epoch, fwd_link_rst_n,       // bumps to the compute die
@@ -169,6 +179,9 @@ module qkd_d2d_static #(parameter integer MUT = 0, parameter integer NL = 2) (
     input  wire         att_tx_v, input wire [547:0] att_tx_payload,
     output wire         att_rx_v, output wire att_rx_slot, output wire [3:0] att_rx_kind, output wire [4:0] att_rx_beat,
     output wire [547:0] rx_payload,
+    // embedding row (TX port 2; producer: KV die embedding provider, row staged before its compiled token run)
+    output wire         emb_tx_slot,
+    input  wire         emb_tx_v, input wire [547:0] emb_tx_payload,
     // HOST record port (to qkd_host_root_pt record_* ports)
     input  wire         record_tx_observed_v, input wire [547:0] record_tx,
     output wire [1:0]   record_send_kind, output wire record_witness_slot, record_rx_v, output wire [547:0] record_rx,
@@ -199,15 +212,15 @@ module qkd_d2d_static #(parameter integer MUT = 0, parameter integer NL = 2) (
     wire [3:0] tv; wire [4*FW-1:0] tp;
     wire eb, ab, endf, lu, dr, seen, rt, rec; wire [7:0] ep, fc, tf;
     wire s_vm, s_co, s_cb, s_cf, s_ea, s_ar, s_fr, s_f, kvn_f;
-    ot_qwen_d2d_recovery #(.MASTER(1)) u_rec (.ck(ck[0]), .por_n(por_n), .rst_n(rst_n), .abort(ab | endf),
+    ot_qwen_d2d_recovery #(.MASTER(1)) u_rec (.ck(ck), .por_n(por_n), .rst_n(rst_n), .abort(ab | endf),
         .fault_cause(fc), .end_fault(endf), .p_tx_up(fdi_tx_up), .p_tx_v(fdi_tx_v), .p_rx_v(fdi_rx_v),
         .reset_req(host_link_reset_req), .recovery_clear(host_recovery_clear), .boot_begin(host_boot_begin),
         .fwd_epoch_i(1'b0), .fwd_epoch_o(fwd_epoch), .fwd_link_rst_n(fwd_link_rst_n), .phy_rst_n(phy_rst_n),
         .epoch_begin(eb), .epoch(ep), .link_up(lu), .links_drained(dr), .link_reset_seen(seen), .retrained(rt),
         .transport_fault(tf), .recovering(rec), .recovery_cycles(recovery_cycles));
     ot_qwen_d2d_static_end #(.NT(4), .NR(4), .TXD({8'd1, 8'd1, 8'd2, 8'd1}), .MUT(MUT)) u_end (
-        .ck(ck), .rst_n(rst_n), .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
-        .epoch_begin(eb), .epoch(ep), .cal_start(cal_start),
+        .ck({5{ck}}), .rst_n(rst_n), .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
+        .epoch_begin(eb), .epoch(ep), .cal_start(cal_start), .cal_seg(cal_seg),
         .tx_slot(txs), .tx_kind(tk), .tx_beat(tb), .tx_valid(tv), .tx_payload(tp),
         .rx_event(rxe), .rx_slot(rxs), .rx_kind(rk), .rx_beat(rb), .rx_payload(rxp),
         .p_tx_up(fdi_tx_up), .p_tx_v(fdi_tx_v), .p_tx_flit(fdi_tx_flit), .p_rx_v(fdi_rx_v), .p_rx_flit(fdi_rx_flit),
@@ -218,20 +231,23 @@ module qkd_d2d_static #(parameter integer MUT = 0, parameter integer NL = 2) (
     assign tv[0] = att_tx_v; assign tp[0 +: FW] = att_tx_payload;
     assign att_rx_v = rxe[0]; assign att_rx_slot = rxs[0]; assign att_rx_kind = rk; assign att_rx_beat = rb;
     assign tv[1] = record_tx_observed_v; assign tp[FW +: FW] = record_tx;
-    // ports 2, 3 carry no KV-die TX traffic in this calendar: no producer, the end faults any stray valid
-    assign tv[3:2] = 2'b00; assign tp[4*FW-1:2*FW] = {2*FW{1'b0}};
-    ot_qwen_d2d_status_rx u_st (.ck(ck[0]), .rst_n(rst_n), .epoch16(status_epoch16), .rx_event(rxe[2]), .rx_slot(rxs[2]),
+    // port 2 embedding row (codec latency 1: the provider's registered word one edge after emb_tx_slot)
+    assign emb_tx_slot = txs[2];
+    assign tv[2] = emb_tx_v; assign tp[2*FW +: FW] = emb_tx_payload;
+    // port 3 carries no KV-die TX traffic in the compiled program: no producer, the end faults any stray valid
+    assign tv[3] = 1'b0; assign tp[4*FW-1:3*FW] = {FW{1'b0}};
+    ot_qwen_d2d_status_rx u_st (.ck(ck), .rst_n(rst_n), .epoch16(status_epoch16), .rx_event(rxe[2]), .rx_slot(rxs[2]),
         .rx_payload(rxp), .vm_drained(s_vm), .collective_drained(s_co), .collective_busy(s_cb), .crom_fault(s_cf),
         .execution_active(s_ea), .admit_ready(s_ar), .status_fresh(s_fr), .result_v(engine_result_v),
         .result_done(engine_result_done), .result_fault(engine_result_fault), .result_cause(engine_result_cause),
         .result_tag(engine_result_tag), .result_gen(engine_result_gen), .result_token(engine_result_token),
         .result_value(engine_result_value), .result_cycles(engine_result_cycles), .epoch_begin(eb), .fault(s_f));
-    ot_qwen_d2d_kvn_rx u_kvn (.ck(ck[0]), .rst_n(rst_n & ~eb), .rx_event(rxe[3]), .rx_slot(rxs[3]), .rx_beat(rb),
+    ot_qwen_d2d_kvn_rx u_kvn (.ck(ck), .rst_n(rst_n & ~eb), .rx_event(rxe[3]), .rx_slot(rxs[3]), .rx_beat(rb),
         .rx_payload(rxp), .compiled_identity(kvn_compiled_identity), .compiled_generation(kvn_compiled_generation),
         .word_valid(kvn_word_valid), .word_tag(kvn_word_tag), .word_data(kvn_word_data),
         .word_identity(kvn_word_identity), .word_generation(kvn_word_generation), .word_slot(kvn_word_slot),
         .word_index(kvn_word_index), .fault(kvn_f));
-    qkd_host_link_services #(.NL(NL)) u_hls (.ck(ck[0]), .rst_n(rst_n),
+    qkd_host_link_services #(.NL(NL)) u_hls (.ck(ck), .rst_n(rst_n),
         .d2d_link_up(lu), .serdes_up(serdes_up), .d2d_transport_fault(tf), .d2d_links_drained(dr),
         .d2d_link_reset_seen(seen), .d2d_retrained(rt),
         .rec_tx_slot(txs[1]), .rec_tx_kind(tk), .rec_tx_beat(tb), .rec_rx_event(rxe[1]), .rec_rx_slot(rxs[1]),

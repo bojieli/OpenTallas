@@ -21,7 +21,7 @@
 // multiple_cts_roots leaf admits only same-frequency roots, and the 3:4 related arcs (bank / parity / marker flops ->
 // stream capture, >= 1.111 ns by construction) are parent-level related-clock paths.  ot_s81_vm_x34 is the wrapper
 // of the two: the same flops, the same logic, bit-identical behaviour (tb_ot_s81_vm_x34 unchanged).
-module ot_s81_vm_x34 #(parameter integer W = 512) (
+module ot_s81_vm_x34 #(parameter integer W = 512, parameter integer NAT = 0) (
     input  wire         s_ck, s_rst_n,
     input  wire         s_v, input wire [W-1:0] s_d,
     input  wire         t_ck, t_rst_n,
@@ -29,14 +29,17 @@ module ot_s81_vm_x34 #(parameter integer W = 512) (
     output wire         fault
 );
     wire [W:0] b0, b1, b2; wire [2:0] bp; wire mark;
-    ot_s81_vm_x34_s #(.W(W)) u_s (.s_ck(s_ck), .s_rst_n(s_rst_n), .s_v(s_v), .s_d(s_d), .b0(b0), .b1(b1), .b2(b2),
+    ot_s81_vm_x34_s #(.W(W), .NAT(NAT)) u_s (.s_ck(s_ck), .s_rst_n(s_rst_n), .s_v(s_v), .s_d(s_d), .b0(b0), .b1(b1), .b2(b2),
         .bpar(bp), .s_mark(mark));
-    ot_s81_vm_x34_t #(.W(W)) u_t (.t_ck(t_ck), .t_rst_n(t_rst_n), .b0(b0), .b1(b1), .b2(b2), .bpar(bp), .s_mark(mark),
+    ot_s81_vm_x34_t #(.W(W), .NAT(NAT)) u_t (.t_ck(t_ck), .t_rst_n(t_rst_n), .b0(b0), .b1(b1), .b2(b2), .bpar(bp), .s_mark(mark),
         .o_v(o_v), .o_d(o_d), .fault(fault));
 endmodule
 
 // serial side: phase counter, epoch parity, phase marker and the three banks (every output a flop)
-module ot_s81_vm_x34_s #(parameter integer W = 512) (
+// NAT=1 (claude S81 VM F2 2026-10-15, native capture audit): each bank is a plain register on its own ICG-gated
+// clock (enable = the bank's write phase, from the sp flop), so s_v / s_d reach the bank D pins through buffers only
+// (the NAT=0 write-enable mux in front of every bank flop measured capture 194..206 ps > 190).  Same edges, zero age.
+module ot_s81_vm_x34_s #(parameter integer W = 512, parameter integer NAT = 0) (
     input  wire         s_ck, s_rst_n,
     input  wire         s_v, input wire [W-1:0] s_d,
     output reg  [W:0]   b0, b1, b2,
@@ -57,6 +60,7 @@ module ot_s81_vm_x34_s #(parameter integer W = 512) (
             if (sp == 2'd2) begin sp <= 2'd0; se <= ~se; end else sp <= sp + 2'd1;
         end
     // data banks (no reset: the parity and v bit gate their use)
+    generate if (NAT == 0) begin : mux_wr
     always @(posedge s_ck) begin
         case (sp)
             2'd2: b0 <= {s_v, s_d};
@@ -68,10 +72,34 @@ module ot_s81_vm_x34_s #(parameter integer W = 512) (
             default: b2 <= {s_v, s_d};
         endcase
     end
+    end else begin : gated_wr
+        wire e0 = sp == 2'd2;
+`ifdef OT_VM_X34_MUT_SBANK
+        wire e1 = 1'b0, e2 = sp == 2'd1 || sp == 2'd3 || sp == 2'd0;   // MUTANT: phase-1 word written into bank 2
+`else
+        wire e1 = sp == 2'd0, e2 = !(sp == 2'd2 || sp == 2'd0);
+`endif
+        wire g0, g1, g2;
+`ifdef SYNTHESIS
+        ICGx2_ASAP7_75t_R u_g0 (.CLK(s_ck), .ENA(e0), .SE(1'b0), .GCLK(g0));
+        ICGx2_ASAP7_75t_R u_g1 (.CLK(s_ck), .ENA(e1), .SE(1'b0), .GCLK(g1));
+        ICGx2_ASAP7_75t_R u_g2 (.CLK(s_ck), .ENA(e2), .SE(1'b0), .GCLK(g2));
+        always @(posedge g0) b0 <= {s_v, s_d};
+        always @(posedge g1) b1 <= {s_v, s_d};
+        always @(posedge g2) b2 <= {s_v, s_d};
+`else
+        assign g0 = s_ck; assign g1 = s_ck; assign g2 = s_ck;
+        always @(posedge s_ck) begin
+            if (e0) b0 <= {s_v, s_d};
+            if (e1) b1 <= {s_v, s_d};
+            if (e2) b2 <= {s_v, s_d};
+        end
+`endif
+    end endgenerate
 endmodule
 
-// stream side: fixed-edge bank reads, epoch-parity and phase-marker assertions
-module ot_s81_vm_x34_t #(parameter integer W = 512) (
+// stream side core: fixed-edge bank reads, epoch-parity and phase-marker assertions (the NAT=0 stream side)
+module ot_s81_vm_x34_tc #(parameter integer W = 512) (
     input  wire         t_ck, t_rst_n,
     input  wire [W:0]   b0, b1, b2,
     input  wire [2:0]   bpar,
@@ -111,5 +139,51 @@ module ot_s81_vm_x34_t #(parameter integer W = 512) (
             2'd3: o_d <= b2[W-1:0];
             default: ;
         endcase
+endmodule
+
+// stream side.  NAT=0: the core reads the banks directly (3:1 read mux in front of o_d).  NAT=1 (claude S81 VM F2
+// 2026-10-15, native capture audit: that mux measured capture up to 219 ps > 190 on 149 bank pins): bank k is captured
+// unmuxed into c_k on an ICG-gated clock enabled only at its own fixed read edge (tp == 1 / 2 / 3), bpar[k] with it, the
+// phase marker in a pin flop every edge (as the core always sampled it), and the core runs ONE stream edge later on the
+// captured words (its reset release one edge later).  Every o_v / o_d / fault is NAT=0's one stream edge later.
+module ot_s81_vm_x34_t #(parameter integer W = 512, parameter integer NAT = 0) (
+    input  wire         t_ck, t_rst_n,
+    input  wire [W:0]   b0, b1, b2,
+    input  wire [2:0]   bpar,
+    input  wire         s_mark,
+    output wire         o_v, output wire [W-1:0] o_d,
+    output wire         fault
+);
+    generate if (NAT == 0) begin : direct
+        ot_s81_vm_x34_tc #(.W(W)) u_c (.t_ck(t_ck), .t_rst_n(t_rst_n), .b0(b0), .b1(b1), .b2(b2), .bpar(bpar),
+            .s_mark(s_mark), .o_v(o_v), .o_d(o_d), .fault(fault));
+    end else begin : captured
+        reg [1:0] tp;
+        always @(posedge t_ck or negedge t_rst_n) if (!t_rst_n) tp <= 2'd3; else tp <= tp + 2'd1;
+        reg r1;
+        always @(posedge t_ck or negedge t_rst_n) if (!t_rst_n) r1 <= 1'b0; else r1 <= 1'b1;
+        reg mk_q;
+        always @(posedge t_ck) mk_q <= s_mark;
+        reg [W+1:0] c0, c1, c2;          // {bpar[k], b_k}
+        wire e0 = tp == 2'd1, e1 = tp == 2'd2, e2 = tp == 2'd3;
+`ifdef SYNTHESIS
+        wire g0, g1, g2;
+        ICGx2_ASAP7_75t_R u_g0 (.CLK(t_ck), .ENA(e0), .SE(1'b0), .GCLK(g0));
+        ICGx2_ASAP7_75t_R u_g1 (.CLK(t_ck), .ENA(e1), .SE(1'b0), .GCLK(g1));
+        ICGx2_ASAP7_75t_R u_g2 (.CLK(t_ck), .ENA(e2), .SE(1'b0), .GCLK(g2));
+        always @(posedge g0) c0 <= {bpar[0], b0};
+        always @(posedge g1) c1 <= {bpar[1], b1};
+        always @(posedge g2) c2 <= {bpar[2], b2};
+`else
+        always @(posedge t_ck) begin
+            if (e0) c0 <= {bpar[0], b0};
+            if (e1) c1 <= {bpar[1], b1};
+            if (e2) c2 <= {bpar[2], b2};
+        end
+`endif
+        // the core's reset releases one stream edge after t_rst_n (assertion stays immediate)
+        ot_s81_vm_x34_tc #(.W(W)) u_c (.t_ck(t_ck), .t_rst_n(r1), .b0(c0[W:0]), .b1(c1[W:0]), .b2(c2[W:0]),
+            .bpar({c2[W+1], c1[W+1], c0[W+1]}), .s_mark(mk_q), .o_v(o_v), .o_d(o_d), .fault(fault));
+    end endgenerate
 endmodule
 `default_nettype wire

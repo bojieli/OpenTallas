@@ -6,9 +6,9 @@ mkdir -p "$dst" "$HOME/.config/systemd/user"
 cp "$src"/{server.py,agent.py,recorder.py,elements.py,die_contracts.py,flow_state.py,export_replay.py,index.html,fv_stale.js,fleet_hosts.json} "$dst"/
 cp "$src"/{landing.py,coverage.py,native_provenance.py,elem_shell.py,elem_desc.py,explorer.py,explorer_geom.py,explorer.html,explorer.js,explorer_story.js,explorer_dies.json,explorer_names.json,explorer_compose.json,stories_import.py} "$dst"/
 mkdir -p "$dst/stories" "$dst/explorer"
-cp "$src/explorer_chip_dataflow.js" "$dst/"
-cp "$src/explorer_dataflow.py" "$dst/"
-cp "$src/explorer/dataflow.js" "$src/explorer/flow_layout.js" "$dst/explorer/"
+# data-flow views + link records (explorer/dataflow/data/*.links.json.gz from dataflow_links.py)
+rm -rf "$dst/explorer/dataflow"; cp -r "$src/explorer/dataflow" "$dst/explorer/dataflow"
+rm -f "$dst/explorer_chip_dataflow.js" "$dst/explorer_dataflow.py" "$dst/explorer/dataflow.js" "$dst/explorer/flow_layout.js"
 cp "$src"/stories/*.json "$dst/stories/"
 rm -rf "$dst/explorer/token"; cp -r "$src/explorer/token" "$dst/explorer/token"
 rm -rf "$dst/explorer/coverage"; cp -r "$src/explorer/coverage" "$dst/explorer/coverage"
