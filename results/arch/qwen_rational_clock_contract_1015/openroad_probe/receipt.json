@@ -1,0 +1,177 @@
+{
+  "image": "openroad/orfs:latest",
+  "cases": [
+    {
+      "phase_tick": -5,
+      "phase_ps": "-2500/3",
+      "returncode": 0,
+      "engine_probe_pass": true,
+      "physical_qualification": false
+    },
+    {
+      "phase_tick": -4,
+      "phase_ps": "-2000/3",
+      "returncode": 0,
+      "engine_probe_pass": true,
+      "physical_qualification": false
+    },
+    {
+      "phase_tick": -3,
+      "phase_ps": "-500",
+      "returncode": 0,
+      "engine_probe_pass": true,
+      "physical_qualification": false
+    },
+    {
+      "phase_tick": -2,
+      "phase_ps": "-1000/3",
+      "returncode": 0,
+      "engine_probe_pass": true,
+      "physical_qualification": false
+    },
+    {
+      "phase_tick": -1,
+      "phase_ps": "-500/3",
+      "returncode": 0,
+      "engine_probe_pass": true,
+      "physical_qualification": false
+    },
+    {
+      "phase_tick": 0,
+      "phase_ps": "0",
+      "returncode": 0,
+      "engine_probe_pass": true,
+      "physical_qualification": false
+    },
+    {
+      "phase_tick": 1,
+      "phase_ps": "500/3",
+      "returncode": 0,
+      "engine_probe_pass": true,
+      "physical_qualification": false
+    },
+    {
+      "phase_tick": 2,
+      "phase_ps": "1000/3",
+      "returncode": 0,
+      "engine_probe_pass": true,
+      "physical_qualification": false
+    },
+    {
+      "phase_tick": 3,
+      "phase_ps": "500",
+      "returncode": 0,
+      "engine_probe_pass": true,
+      "physical_qualification": false
+    },
+    {
+      "phase_tick": 4,
+      "phase_ps": "2000/3",
+      "returncode": 0,
+      "engine_probe_pass": true,
+      "physical_qualification": false
+    },
+    {
+      "phase_tick": 5,
+      "phase_ps": "2500/3",
+      "returncode": 0,
+      "engine_probe_pass": true,
+      "physical_qualification": false
+    }
+  ],
+  "scope": "actual TT/FF Liberty ordinary max/min edge visibility; no physical/PLL/enable exception qualification",
+  "image_id": "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34",
+  "archived_cases": [
+    {
+      "phase": "phase_-1",
+      "ordinary_paths": 12,
+      "shared_input_paths": 16,
+      "log_sha256": "975a822edc64f5fedec1b213f9879e50cd3ab0cae21cd70b8b45d36bf31e6a0b",
+      "log_gzip_sha256": "4d06874fd0487613a595ec65690cd9b849eac8024b298ad20a2072cc5ad11f87"
+    },
+    {
+      "phase": "phase_-2",
+      "ordinary_paths": 12,
+      "shared_input_paths": 16,
+      "log_sha256": "66c35c2793ce7121716da5a067b71de76e38c75d61065db32ab65b89700ff45f",
+      "log_gzip_sha256": "d44ec147ba472083be33c8af7957606ddfb4301e7c96ec193493aff6fdd2c101"
+    },
+    {
+      "phase": "phase_-3",
+      "ordinary_paths": 12,
+      "shared_input_paths": 16,
+      "log_sha256": "e0425ae20f16c83460ef0b475c739b2fa06a07a9d8eb3384e2fb8a2a0b01ffe8",
+      "log_gzip_sha256": "5579146576aa749b016e7835d059b1a2de5a755c21122dbc9799f61595a70291"
+    },
+    {
+      "phase": "phase_-4",
+      "ordinary_paths": 12,
+      "shared_input_paths": 16,
+      "log_sha256": "28533549afdbf5e30f21a19b94feb0b90b52198c21004b98913d9c17c6099cd2",
+      "log_gzip_sha256": "cf4b20421b645eeb7319b17f96c085f7f03983a71ae46e826d82c319c0d90cb2"
+    },
+    {
+      "phase": "phase_-5",
+      "ordinary_paths": 12,
+      "shared_input_paths": 16,
+      "log_sha256": "34be245aefbbf873b14d05cba2fcf5376da47b03cb84065e74d5df8c72bb8811",
+      "log_gzip_sha256": "4afe91713a2e9c2214bcfd661a17901966303aba047f542d4c4f0ca748ed29a5"
+    },
+    {
+      "phase": "phase_0",
+      "ordinary_paths": 12,
+      "shared_input_paths": 16,
+      "log_sha256": "0d0cca551b802c864fba3f97b1f9c6fff478b90b656497e11c580037644ed825",
+      "log_gzip_sha256": "4d9f0505678dd5217d2ae4a65f0ff201dcb9f065338dfd75a85e81d213d850f3"
+    },
+    {
+      "phase": "phase_1",
+      "ordinary_paths": 12,
+      "shared_input_paths": 16,
+      "log_sha256": "9d5a81009d0479e307ee90b932b53fc0e1b0c069f590614572b931be19994979",
+      "log_gzip_sha256": "a9a342248440839e410a236eba8642220e08a24e70c408ee3fee712c85d87ca2"
+    },
+    {
+      "phase": "phase_2",
+      "ordinary_paths": 12,
+      "shared_input_paths": 16,
+      "log_sha256": "4321dc3be6e944da5ef0ea9a8525f62f256b6721ee9cccc750178445e5c592f9",
+      "log_gzip_sha256": "a696a21fc2b08c6532e05c00d3f7c9c9b61eb63a7413298aa0b5b218bd85c250"
+    },
+    {
+      "phase": "phase_3",
+      "ordinary_paths": 12,
+      "shared_input_paths": 16,
+      "log_sha256": "7e1038a065c9ccd013958a6510ff0ff556d42d6f60eb480d353e7e716cf5fa4e",
+      "log_gzip_sha256": "70bf93a03d51bcaa73a41430636ad9f741df55329742142efe29ebeeee25a14a"
+    },
+    {
+      "phase": "phase_4",
+      "ordinary_paths": 12,
+      "shared_input_paths": 16,
+      "log_sha256": "1afd14749d8a4aea2fd8f37e372ac6020fe7f8cff148ff2ae09203a90e98ae7f",
+      "log_gzip_sha256": "93f15497259d5b1a2fa49b0937a113697af38f78b65325f9cd6c054974a9b33c"
+    },
+    {
+      "phase": "phase_5",
+      "ordinary_paths": 12,
+      "shared_input_paths": 16,
+      "log_sha256": "e3672f4bdd74792dc7ffc597b367fcb77a1a91f382bae0507af0cb8348572f27",
+      "log_gzip_sha256": "36e04493877245116abccb8e559c374ade1006f281cfa519910c265e85a720ad"
+    }
+  ],
+  "ordinary_path_count": 132,
+  "shared_input_path_count": 176,
+  "corner_mode": "TC/ss actual TT Liberty; BC/ff actual FF Liberty",
+  "tools_sha256": {
+    "model.py": "d27543e2787199159c8fb20dd09b4de9fca5a4f9dbc8246e28753194a0c4af8d",
+    "probe.py": "01b254e863b9ce49ad27a1a8a29bba943f4cafea301f1510d05dfbae29097a78",
+    "test_model.py": "5e552648af818d9ce8447422fc64fe47a02027432d512969e0b8147e2c84cc7f"
+  },
+  "forbidden_exceptions": [
+    "set_false_path",
+    "set_multicycle_path",
+    "set_clock_groups"
+  ],
+  "release_verdict": "UNQUALIFIED"
+}

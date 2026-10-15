@@ -1,0 +1,39 @@
+{
+  "schema": "qcoll-rational-clock-v1",
+  "source_sha256": {
+    "rtl/physical/ot_qfd_ucie_six_five.sv": "9a478c048fc7b838f0945545a9e7f08ce4bc38e3388abd9b04501c2537ec521c",
+    "rtl/physical/ot_qfd_collective_static_io.sv": "52900a6d139bdb68d3bcfd0ed27fa3b235214e93d81d36a02e4c3581706a0ca0",
+    "rtl/physical/ot_qfd_collective_static_io_production.sv": "e454695b2e10bf176ce1705dd3d571e2939242857aa10f9453418956405e391b"
+  },
+  "parent_period_ps": 5000,
+  "ratios": {
+    "core": 6,
+    "fdi": 5
+  },
+  "reset_first_edge_delta_ps": [
+    "-2500/3",
+    "2500/3"
+  ],
+  "roots": {
+    "gearbox_core_ck": "core",
+    "fdi_ck": "fdi",
+    "fdi_rx_ck[0]": "fdi",
+    "fdi_rx_ck[1]": "fdi",
+    "fdi_rx_ck[2]": "fdi"
+  },
+  "timing_policy": "ordinary_related_max_and_min_no_exceptions",
+  "shared_input_roots": {
+    "shared_rx": [
+      "fdi_ck",
+      "fdi_rx_ck[0]",
+      "fdi_rx_ck[1]",
+      "fdi_rx_ck[2]"
+    ],
+    "shared_rx_valid": [
+      "fdi_ck"
+    ]
+  },
+  "physical_phase_evidence": null,
+  "per_root_phi_minus_R_evidence": null,
+  "release_verdict": "UNQUALIFIED"
+}

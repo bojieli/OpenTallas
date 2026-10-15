@@ -1,0 +1,118 @@
+{
+  "minimum_guards_ps": {
+    "tx_setup_ps": "2000",
+    "tx_hold_ps": "4000",
+    "rx_setup_ps": "9000",
+    "rx_hold_ps": "2000"
+  },
+  "fragments": [
+    {
+      "bit_lo": 0,
+      "bit_hi": 597,
+      "word": 0,
+      "beat": 0,
+      "tx_setup_ps": "12500/3",
+      "tx_hold_ps": "12500/3",
+      "rx_setup_ps": "27500/3",
+      "rx_hold_ps": "12500/3"
+    },
+    {
+      "bit_lo": 598,
+      "bit_hi": 1042,
+      "word": 1,
+      "beat": 0,
+      "tx_setup_ps": "10000/3",
+      "tx_hold_ps": "5000",
+      "rx_setup_ps": "10000",
+      "rx_hold_ps": "10000/3"
+    },
+    {
+      "bit_lo": 1043,
+      "bit_hi": 1195,
+      "word": 1,
+      "beat": 1,
+      "tx_setup_ps": "13000/3",
+      "tx_hold_ps": "4000",
+      "rx_setup_ps": "9000",
+      "rx_hold_ps": "13000/3"
+    },
+    {
+      "bit_lo": 1196,
+      "bit_hi": 1793,
+      "word": 2,
+      "beat": 1,
+      "tx_setup_ps": "3500",
+      "tx_hold_ps": "14500/3",
+      "rx_setup_ps": "29500/3",
+      "rx_hold_ps": "3500"
+    },
+    {
+      "bit_lo": 1794,
+      "bit_hi": 2085,
+      "word": 3,
+      "beat": 1,
+      "tx_setup_ps": "8000/3",
+      "tx_hold_ps": "17000/3",
+      "rx_setup_ps": "32000/3",
+      "rx_hold_ps": "8000/3"
+    },
+    {
+      "bit_lo": 2086,
+      "bit_hi": 2391,
+      "word": 3,
+      "beat": 2,
+      "tx_setup_ps": "11000/3",
+      "tx_hold_ps": "14000/3",
+      "rx_setup_ps": "29000/3",
+      "rx_hold_ps": "11000/3"
+    },
+    {
+      "bit_lo": 2392,
+      "bit_hi": 2989,
+      "word": 4,
+      "beat": 2,
+      "tx_setup_ps": "8500/3",
+      "tx_hold_ps": "5500",
+      "rx_setup_ps": "10500",
+      "rx_hold_ps": "8500/3"
+    },
+    {
+      "bit_lo": 2990,
+      "bit_hi": 3128,
+      "word": 5,
+      "beat": 2,
+      "tx_setup_ps": "2000",
+      "tx_hold_ps": "19000/3",
+      "rx_setup_ps": "34000/3",
+      "rx_hold_ps": "2000"
+    },
+    {
+      "bit_lo": 3129,
+      "bit_hi": 3587,
+      "word": 5,
+      "beat": 3,
+      "tx_setup_ps": "3000",
+      "tx_hold_ps": "16000/3",
+      "rx_setup_ps": "31000/3",
+      "rx_hold_ps": "3000"
+    }
+  ],
+  "tx_flop_bits": 7176,
+  "rx_flop_bits": 10764,
+  "bank_payload_flop_bits": 17940,
+  "declared_root_flop_bits": {
+    "gearbox_core_ck": 7789,
+    "fdi_ck": 1058,
+    "rx_roots": [
+      3588,
+      3588,
+      3588
+    ]
+  },
+  "declared_total_flop_bits_before_synthesis": 19611,
+  "core_payload_bits_per_5ns": 3588,
+  "physical_FDI_bits_per_5ns": 5215,
+  "active_FDI_bits_per_5ns": 4172,
+  "payload_Gbps": 717.6,
+  "enabled_window_proof": "exact affine endpoint bounds; NOT STA exceptions"
+}
