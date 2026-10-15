@@ -1,0 +1,95 @@
+{
+ "verdict": "PASS",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc4 for 24 GB; inputs ship there before admission",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_hgi_qdq_program_sw125_r3_20261015-051234.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_hgi_qdq_program_sw125_r3_20261015-051234.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/hgi_qdq_program_sw125_r3-20261015-051234",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc4 in 20 s (gate total 87 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 761 um2 + macros 12314 in core 27060: util 48%",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "PASS ot_hgi_qdq_sw_program_leaf cells 4,910 flops 1,521 depth 453.4 ps util 0.4839 reach 0.0 um (0.1 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 274.0..400.7 ps (spread 126.7), boundary mean 323.3; tt insertion all 211.5..328.8 ps (spread 117.3), boundary mean 257.3; ff insertion all 173.6..284.9 ps (spread 111.3), boundary mean 217.2; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/hgi_qdq_program_sw125_r3/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      456 paths, worst slack 64.4 ps (e.g. record_programme.calendar.done$_DFF_PN0_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->macro      1 paths, worst slack 134.1 ps (e.g. record_programme.calendar.u_program/r_ce_in)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg         4 paths, worst slack 357.8 ps (e.g. physical_boundary.reset_collar.sync_q[0]$_DFF_PN0_/RESETN)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 6.443323652405297e-11 hold WNS 1.2357448397892767e-11",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:clk: 1,522 sinks on the largest root <= 15,000; measured TT insertion 328.8 ps, leaf spread 117.3 ps",
+   "fix": ""
+  }
+ ]
+}

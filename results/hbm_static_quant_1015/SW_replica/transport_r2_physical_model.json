@@ -1,0 +1,45 @@
+{
+  "schema": "opentallas.quant.registered_transport_physical_model.v1",
+  "before_build": true,
+  "source": "3e0c10191",
+  "component_proof": "77441601e",
+  "operation_cycles": 183,
+  "immutable_price": 192,
+  "root": "one actual clk_transport pin; programme/dxl/dbq/daq roots independent",
+  "baseline_ff_actual": 4181,
+  "extra_ff_preopt_bound": 2755,
+  "new_ff_preopt_bound": 6936,
+  "new_clock_roots": 0,
+  "extra_SRAM": 0,
+  "outline_um": [
+    270,
+    237.6
+  ],
+  "outline_area_mm2": 0.064152,
+  "face_pin_bits": {
+    "N": 2192,
+    "S": 2248,
+    "E": 1668,
+    "W": 53
+  },
+  "pin_model": {
+    "M4_M5_track_pitch_um": 0.048,
+    "min_tracks": 2,
+    "reserve_edge_um": 8,
+    "N_density_b_um": 8.62992125984252,
+    "S_density_b_um": 8.850393700787402,
+    "E_density_b_um": 7.527075812274369,
+    "track_capacity_b_um": 10.416666666666666,
+    "max_demand_fraction": 0.8496377952755906
+  },
+  "clock_model": {
+    "actual_cluster_max_sinks": 16,
+    "cluster_max_diameter_um": 30,
+    "balance_levels": true,
+    "max_insertion_ps_gate": 300,
+    "max_spread_ps_gate": 80,
+    "actual_results_pending": true
+  },
+  "parent_area_and_PG": "standalonemeasurement only; fullSW125parent/root/stationage authority open",
+  "throughput": "sourceproven +2edges constantVMwriteoffset; no pricechange"
+}
