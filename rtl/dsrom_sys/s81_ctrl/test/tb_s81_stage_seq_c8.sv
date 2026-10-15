@@ -12,7 +12,7 @@
 //   job completes -- the fail-closed check of a program that is wrong for this die.
 module tb_s81_stage_seq_c8;
     parameter integer NOPS = 128, NJOB = 2;
-    localparam integer OPW = 7, NE = 8, CMDW = 84;
+    localparam integer OPW = 7, NE = 13, CMDW = 84;
     reg ck = 0, ckv = 0, rst = 0, rsv = 0;
     always #0.41667 ck = ~ck;
     always #0.55556 ckv = ~ckv;
@@ -22,9 +22,10 @@ module tb_s81_stage_seq_c8;
     generate for (g = 0; g < NE; g = g + 1) begin : g_s assign s[g] = 2'b10; end endgenerate
     dsfd_stage_seq_c8 #(.NOPS(NOPS)) dut (.ckv(ckv), .rsv(rsv), .ck(ck), .rst(rst), .f_ks(f_ks), .t_kd(t_kd), .f_pw(f_pw),
         .f_plen(f_plen), .t_st(t_st),
-        .c0(c[0]), .c1(c[1]), .c2(c[2]), .c3(c[3]), .c4(c[4]), .c5(c[5]), .c6(c[6]), .c7(c[7]),
-        .d0(d[0]), .d1(d[1]), .d2(d[2]), .d3(d[3]), .d4(d[4]), .d5(d[5]), .d6(d[6]), .d7(d[7]),
-        .s0(s[0]), .s1(s[1]), .s2(s[2]), .s3(s[3]), .s4(s[4]), .s5(s[5]), .s6(s[6]), .s7(s[7]));
+        .c0(c[0]), .c1(c[1]), .c2(c[2]), .c3(c[3]), .c4(c[4]), .c5(c[5]), .c6(c[6]), .c7(c[7]), .c12(c[12]),
+        .d0(d[0]), .d1(d[1]), .d2(d[2]), .d3(d[3]), .d4(d[4]), .d5(d[5]), .d6(d[6]), .d7(d[7]), .d12(d[12]),
+        .s0(s[0]), .s1(s[1]), .s2(s[2]), .s3(s[3]), .s4(s[4]), .s5(s[5]), .s6(s[6]), .s7(s[7]), .s12(s[12]));
+    assign c[8] = 0; assign c[9] = 0; assign c[10] = 0; assign c[11] = 0;
 
     reg [159:0] img [0:NOPS-1];
     integer n, port [0:NOPS-1], dur [0:NOPS-1], np [0:NOPS-1], pr [0:NOPS-1][0:7];
