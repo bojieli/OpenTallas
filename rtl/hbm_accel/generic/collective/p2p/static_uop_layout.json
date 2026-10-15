@@ -169,9 +169,13 @@
     "vm_pair_select": {
       "lsb": 1383,
       "width": 24
+    },
+    "iter_link_slot_step": {
+      "lsb": 1407,
+      "width": 8
     }
   },
-  "reserved_lsb": 1407,
+  "reserved_lsb": 1415,
   "ring_fields": {
     "lp_we": {
       "lsb": 0,
@@ -292,6 +296,7 @@
     "RGX and delivery address offsets add iteration*their respective steps; injection idx and low16 metadata bits add iteration*injidxstep; each40b injection address adds iteration*injaddrstep.",
     "Source metadata33 bits opaque flit header matching endpoint ABI; compiler must set real source/index/mode.",
     "Program is actual static lowered ISA; full normative record compiler/entry producer join remains required.",
-    "vm_pair_select four6b entries {high_bank3,low_bank3}, explicit input sector assembly. Parent raw input capture then assembly output register adds2edges; registered VMrequest P gives qslots VMcapture P+10."
+    "vm_pair_select four6b entries {high_bank3,low_bank3}, explicit input sector assembly. Parent raw input capture then assembly output register adds2edges; registered VMrequest P gives qslots VMcapture P+10.",
+    "Each link wr/rd/rx slot6 adds iteration*iter_link_slot_step; compiler rejects range>=64 and uses explicit next epoch, no modulo wrap."
   ]
 }
