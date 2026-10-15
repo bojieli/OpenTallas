@@ -50,4 +50,11 @@ for stage,widths,nout in [('r0',[('x',128),('wupper',128),('ctrl',6),('gm',4),('
  spec=R/'tools/ref_tile/specs_q_compute_native'/(name+'.json');spec.write_text(json.dumps(s,indent=2)+'\n')
  m=model(nout,1,'V');m.update(name=name,input_bits_per_cycle=ni,output_bits_per_cycle=nout,arithmetic='4 exact low16carry predicates'if stage=='r0'else'4 modulo16 conditionalincrements and4masks',role='existing TX'+stage[-1]+' capture',extra_compiler_edges=0,native_mapped_area_um2=None,physical_qualification='OPEN; no route submitted',model_source_sha256=hashlib.sha256(u.read_bytes()).hexdigest());models.append(m)
  subprocess.run(['python3','tools/ref_tile/ref_tile.py','gen',str(spec.relative_to(R))],cwd=R,check=True)
-(R/'physical/qwen_tx_rne_retime_1015/native_model.json').write_text(json.dumps(dict(schema='opentallas.tx-rne-two-existing-edge.v1',masters=models,data_capture_edges=2,extra_compiler_edges=0,packets_per_cycle=1,total_register_bits=sum(m['register_bits']for m in models),memory_macros=0,macs_per_cycle=0,adoption='standalone only; wholeparent proof and actual perbit native composition pending'),indent=2)+'\n')
+measured_path=R/'results/rtl/qwen_compute_native_glue_1014/tx_rne207_1015/native_smoke/receipt.json'
+if measured_path.exists():
+ measured=json.loads(measured_path.read_text())
+ if measured['rtl_sha256']==hashlib.sha256((R/'rtl/qwen_sys/tx_rne_retime_20261015/qwen_tx_rne.sv').read_bytes()).hexdigest():
+  for m,item in zip(models,measured['masters']):
+   assert m['name']==item['name']
+   m.update(native_mapped_area_um2=item['mapped_synth_area_um2'],native_mapped_area_scope='synth only before full recipe2 boundary hooks',mapped_ff_count=item['data_and_reset_ff'],full_boundary_hook_area_um2=None)
+(R/'physical/qwen_tx_rne_retime_1015/native_model.json').write_text(json.dumps(dict(schema='opentallas.tx-rne-two-existing-edge.v1',masters=models,data_capture_edges=2,extra_compiler_edges=0,packets_per_cycle=1,total_register_bits=sum(m['register_bits']for m in models),memory_macros=0,macs_per_cycle=0,adoption='standalone only; wholeparent proof and actual perbit native composition pending',**({'measured_receipt':str(measured_path.relative_to(R))}if measured_path.exists()else{})),indent=2)+'\n')
