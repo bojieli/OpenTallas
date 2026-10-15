@@ -1,0 +1,126 @@
+{
+ "name": "s81engm_chunk8",
+ "kind": "tile",
+ "top": "ot_s81_engram_chunk8",
+ "sources": [
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "rtl/hdc/v41/ot_hdc_softplus.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/hdc/v41/ot_hdc_actquant.sv",
+  "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv",
+  "rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "arst_n"
+ ],
+ "outline": {
+  "w": 90.72,
+  "h": 77.76,
+  "exact": true
+ },
+ "util": 0.5,
+ "layer_cap": "M5",
+ "recipe": 2,
+ "pins": {
+  "N": [
+   "vo",
+   "sum",
+   "fault"
+  ],
+  "S": [
+   "v",
+   "x"
+  ],
+  "W": [
+   "clk",
+   "arst_n"
+  ],
+  "E": []
+ },
+ "io_tcl": "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_chunk8.tcl",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "pin_v": "M3 M5",
+  "pin_h": "M4",
+  "pin_min_tracks": 1,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "why_floorplan": "v21 die-tool outline right-sized from mapped cells 3391 um2 (util 0.481); one clock root per leaf (<=11,519 sinks); 12 copies per cluster x 4 clusters",
+ "structural_change": "Engram MIX4 physical hierarchy (S-ELEM-C 2026-10-15): every arithmetic root of ot_s81_engram_mix is a hardened leaf master, hardened once and replicated; inputs registered at the S pins, outputs launched from registers at the N pins (no added cycle: the leaves are the unchanged exact arithmetic RTL).",
+ "job": {
+  "owner": "Claude:s81-surx-engram-1015",
+  "branch": "claude/s81-mix4-phys-1015",
+  "tag": "v21",
+  "purpose": "S81 Engram MIX4 arithmetic leaf ot_s81_engram_chunk8 on v21 die-tool pins",
+  "benches": [
+   {
+    "name": "mix4_exact_L01",
+    "cmd": "python3 tools/s81_engram_mix/gate.py --mix4 --fp rtl --snap results/rtl/s81_engram_mix_1014/fixtures/engram_L01.pkl --out {RUN}/mix4_m0",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "PASS native Engram MIX4"
+   },
+   {
+    "name": "mix4_mut1_key",
+    "cmd": "python3 tools/s81_engram_mix/gate.py --mix4 --fp rtl --snap results/rtl/s81_engram_mix_1014/fixtures/engram_L01.pkl --mut 1 --out {RUN}/mix4_m1",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL [0-9]+ words"
+   }
+  ],
+  "views_to": "physical/ref_tile/s81engm_chunk8/views",
+  "record_to": "results/rtl/ref_tile/s81engm_chunk8",
+  "extra_paths": [
+   "physical/s81_die_pins/v21_engram_arithmetic",
+   "rtl/dsrom_sys",
+   "rtl/hdc",
+   "rtl/lib",
+   "tools/s81_engram_mix",
+   "tools/s81_suhc",
+   "results/rtl/s81_engram_mix_1014/fixtures"
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
