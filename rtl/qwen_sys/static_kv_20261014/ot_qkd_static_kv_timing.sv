@@ -285,7 +285,21 @@ module ot_qkd_static_kv_timing #(
                     (swe ? (W && |(sb_oh & rcdw_z) && rtw_c == 0) : (|(sb_oh & rcd_z) && wtr_c == 0));
     assign s_go = s_col_ok && (sprio || (!rd_ok_base && !(W && wr_ok0)));
     wire legal_rd = rd_ok0 && !s_go && !(|(rd_oh & s_pblk));
-    assign rd_ok = legal_rd && (PROFILE != 0 || reserved_rd);
+    // PROFILE2 is compiler calibration only: derive a slower V calendar from
+    // actual JEDEC legality. Its resulting reservations must be frozen and
+    // replayed by PROFILE0; no pacing counter exists in the production mode.
+    wire discovery_v_allow;
+    if (PROFILE == 2) begin:g_v_calendar_calibration
+      reg [3:0] gap;
+      always @(posedge clk or negedge rst_n)
+        if (!rst_n) gap <= 0;
+        else if (rd_ok && j[9]) gap <= 4'd6;
+        else if (gap != 0) gap <= gap - 1'b1;
+      assign discovery_v_allow = !j[9] || gap == 0;
+    end else begin:g_no_v_calendar_calibration
+      assign discovery_v_allow = 1'b1;
+    end
+    assign rd_ok = legal_rd && (PROFILE != 0 || reserved_rd) && discovery_v_allow;
     reg fault_schedule;
     assign schedule_fault = fault_schedule;
     always @(posedge clk or negedge rst_n)
