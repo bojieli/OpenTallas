@@ -1,0 +1,8 @@
+%Error: rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_p_h16_loop_static.sv:26:32: Mixing X/Z/? with digits not legal in decimal constant: 128?
+   26 |  wire[15:0]head_offset=rows_q==10'd128?(16'(active_head)<<4):((16'(active_head)<<6)+(16'(active_head)<<4));
+      |                                ^~~~~~~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_p_h16_loop_static.sv:26:40: syntax error, unexpected '(', expecting ',' or ';'
+   26 |  wire[15:0]head_offset=rows_q==10'd128?(16'(active_head)<<4):((16'(active_head)<<6)+(16'(active_head)<<4));
+      |                                        ^
+%Error: Exiting due to 2 error(s)
