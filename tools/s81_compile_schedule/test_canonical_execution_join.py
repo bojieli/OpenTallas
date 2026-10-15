@@ -42,6 +42,10 @@ class CanonicalJoinTests(unittest.TestCase):
                     self.catalogue['source_SU_nodes'].append(dict(node=name,scope=s,template_sha256='1'*64)) if r==0 else None
                     record['source_operations']['native_job'][0]['node']=name
                 self.manifest['rank_programmes'].append(record)
+        self.inventory['source_operation_homes']=[dict(node=('mtp.I0' if s==0 else f'stage{s}.I0'),
+            stage=s,rank=r,die_id=4*s+r,template_sha256='1'*64,physical_instance=f'su{4*s+r}')
+            for s in range(81) for r in range(4)]
+        self.manifest['native_instance_inventory']=self.pin('inventory.json',self.inventory)
     def pin(self,name,value):
         path=self.root/name;path.write_text(json.dumps(value,sort_keys=True))
         return dict(path=name,sha256=hashlib.sha256(path.read_bytes()).hexdigest())
@@ -86,7 +90,11 @@ class CanonicalJoinTests(unittest.TestCase):
         self.assertFalse(self.run_join()['local_programmes_ready'])
     def test_duplicate_source_execution_rejected(self):
         self.manifest['rank_programmes'][4]['source_operations']['native_job'][0]['node']='mtp.I0'
-        r=self.run_join();self.assertIn('multiply_executed_literal_source_operations',self.reasons(r))
+        r=self.run_join();self.assertIn('invalid_native_rank_programme',self.reasons(r))
+    def test_fabricated_operation_stage_is_rejected(self):
+        self.inventory['source_operation_homes'][0]['stage']=1
+        self.manifest['native_instance_inventory']=self.pin('inventory.json',self.inventory)
+        self.assertFalse(self.run_join()['local_programmes_ready'])
     def test_mutated_elaboration_source_rejected(self):
         (self.root/'native.sv').write_text('// changed source\n')
         self.assertFalse(self.run_join()['local_programmes_ready'])

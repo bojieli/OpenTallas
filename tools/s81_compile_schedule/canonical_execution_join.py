@@ -65,11 +65,14 @@ def join(canonical, catalogue, manifest, root):
             path = (root / evidence['path']).resolve()
             if not path.is_relative_to(root) or hashlib.sha256(path.read_bytes()).hexdigest() != evidence['sha256']:
                 raise ValueError('stale actual elaboration source closure')
+        homes = {(h['node'], h['rank']): h for h in inventory['source_operation_homes']}
+        if len(homes) != len(inventory['source_operation_homes']):
+            raise ValueError('duplicate independently emitted source operation home')
         instances = {i['instance']: i for i in inventory['instances']}
         if len(instances) != len(inventory['instances']):
             raise ValueError('duplicate elaborated native instance')
     except (ValueError, KeyError, TypeError, OSError) as exc:
-        instances = {}
+        instances, homes = {}, {}
         reject('missing_or_invalid_native_instance_inventory', reason=str(exc))
     seen = set()
     for record in manifest.get('rank_programmes', []):
@@ -109,6 +112,13 @@ def join(canonical, catalogue, manifest, root):
                 for member in members:
                     if member['node'] not in nodes or member['template_sha256'] != nodes[member['node']]['template_sha256']:
                         raise ValueError('invented/stale literal source operation')
+                    home = homes.get((member['node'], key[1]))
+                    if not home or home.get('stage') != key[0] or home.get('die_id') != ranks[key]:
+                        raise ValueError('source operation home disagrees with independent actual compiler assignment')
+                    if home.get('template_sha256') != member['template_sha256']:
+                        raise ValueError('stale independently emitted source operation home')
+                    if home.get('physical_instance') != binding['jobs'][op['id']].get('physical_instance'):
+                        raise ValueError('source operation native instance disagrees with actual compiler assignment')
                     local_covered.append((member['node'], key[1]))
                 native = binding['jobs'][op['id']]
                 home = instances.get(native.get('physical_instance'))
