@@ -58,7 +58,8 @@ TAP_SW, TAP_AW, TAP_PF, TAP_GI = 1 + 24 + 64 + 2048, 1 + 24 + 16 + 512, 72, 380
 # qfd_xcol_e/w: 9 = xhead + 8 leaves, ot_qfd_xslice_slots.sv)
 CHILD_CK = {'qfd_tt_up4': ['ck_pin', 'ck_l0', 'ck_l1', 'ck_l2', 'ck_l3'],     # rtl/physical/ot_qwen_tt_up4_cluster.sv (+define OT_QFD_UP4_CK_ENTRIES)
             'qfd_xcol_e': [f'ck{k}' for k in range(9)], 'qfd_xcol_w': [f'ck{k}' for k in range(9)],
-            'qfd_sp_vector_memory': ['ck'] + [f'ck_r{r}_{k}' for r in range(8) for k in range(56)],
+            'qfd_sp_vector_memory': ['ck'] + [f'ck_r{r}_{k}' for r in range(8) for k in range(56)]
+                                     + [f'ck_r{r}_{k}' for r in (3, 4, 5, 6) for k in range(56, 64)],
             'qfd_io_collective': ['clk'] + [f'clk_colr{k}' for k in range(4)] + [f'clk_ecol{k}' for k in range(5)]
                                 + [f'clk_pfold{k}' for k in range(4)] + [f'clk_efold{k}' for k in range(4)],
             'qfd_d2d_rom': ['ck', 'mux_ck'] + [f'llr_ck{k}' for k in range(5)]}
@@ -432,6 +433,9 @@ def place(v, m, G):
     rec['outside_spine'] = bad
     if bad:
         raise SystemExit(f'split compute spine: slots outside the spine: {bad[:8]}')
+    if os.environ.get('OT_SPLIT_TREE_HOSTS', 'baseline') == 'dp':
+        from qwen_split.tree_hosts import apply as tree_hosts_apply
+        rec['tree_hosts'] = tree_hosts_apply(v, m, pitch=490.0)
     _child_clocks(m, rec)
     _link_words(m, rec)
     if os.environ.get('OT_SPLIT_TREE_VF', '1') != '0':
