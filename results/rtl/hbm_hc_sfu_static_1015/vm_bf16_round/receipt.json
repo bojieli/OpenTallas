@@ -1,0 +1,20 @@
+{
+  "source_commit": "4284801d7",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv": "ff19a1b829c0e0ac7a40a46c5131462ddb2dfb56c512ebce673a8b30a1be42ed",
+    "rtl/test/hbm_accel/generic/tb_hgi_sfu_vm_round_static.sv": "84d93e0db829faefa9a65a7a76521fab1c19ae9da092dde741bc9e08bf6790a4",
+    "tools/hgi_unit_tput/run_sfu_vm_round_static.sh": "93efad5fed2702550263ae74610b948f0f83bf0d1294f1d53192d9eefb17777c",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv": "04c4f92245f4a8384e10e11826b93eb0952fb27fda56d42f043f0f97b4832cdf"
+  },
+  "gate": "PASS",
+  "actual_VM_SRAMs": 24,
+  "actual_local_SRAMs": 80,
+  "checked_words": 1280,
+  "actual_BF16_VMcommit_readbacks": 256,
+  "rounding": "exact add0x7fff+oldbit16 then high16",
+  "tie_witnesses": "halfway words with both even/odd upper16",
+  "mutant": "remove oldbit16 rounding increment in actual RTL before VM write; FAIL BRIDGE_COMMITTED_VM_WORD",
+  "attention_P_producer_complete": false,
+  "whole_layer_native_qualified": false,
+  "physical_qualified": false
+}
