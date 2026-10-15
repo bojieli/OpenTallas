@@ -1,0 +1,180 @@
+`timescale 1ns/1ps
+// Production actual collective plus five per-face static digital transports.
+// Caller supplies real compiler command and payload and all physical roots.
+// No sequencer/CQ channels or invented idle ties are instantiated. Only the
+// PHY frame boundary is external. Normal operation is fixed-cycle; abort is
+// exceptional and requires explicit reset/drain before reuse.
+module qfd_collective_static_io #(
+ parameter integer PU=14,PS=339,LU=37,LS=376,RU=0,RS0=0,RS1=0,RS2=0
+)(
+ input wire  clk,
+ input wire  clk_pfold0,
+ input wire  clk_pfold1,
+ input wire  clk_pfold2,
+ input wire  clk_pfold3,
+ input wire  clk_xfold0,
+ input wire  clk_xfold1,
+ input wire  clk_xfold2,
+ input wire  clk_xfold3,
+ input wire  clk_pring0,
+ input wire  clk_pring1,
+ input wire  clk_sring0,
+ input wire  clk_sring1,
+ input wire  clk_sring2,
+ input wire  clk_sring3,
+ input wire  clk_sring4,
+ input wire  clk_rring0,
+ input wire  clk_rring1,
+ input wire  rst_n,
+ input wire [1:0] pkg_s,
+ input wire  die_ps,
+ input wire  cmd_v,
+ input wire  cmd_mode,
+ input wire [15:0] cmd_words,
+ input wire [31:0] cmd_tag,
+ input wire  in_valid,
+ input wire [511:0] in_data,
+ input wire  in_last,
+ input wire  in_mode,
+ input wire [31:0] in_tag,
+ output wire  out_valid,
+ output wire [511:0] out_data,
+ output wire  out_last,
+ output wire [2:0] out_rank,
+ output wire  out_err,
+ output wire  fault,
+ output wire [4:0] fault_code,
+ output wire  cmd_free,
+ // Eleven physical roots per face: cal core/link, TXw/TXr,RXw/RXr,
+ // codec control and four SRAM banks. Index0=P,1=R,2..4=SerDes0..2.
+ input wire[54:0]face_ck,
+ input wire[4:0]phy_up,phy_rx_valid,input wire[5*597-1:0]phy_rx,
+ output wire[4:0]phy_tx_valid,output wire[5*597-1:0]phy_tx,
+ output wire[19:0]transport_cdc_fault,output wire[4:0]transport_abort,
+ output wire[39:0]transport_fault_cause
+);
+ wire  up_valid;
+ wire [545:0] up_rec;
+ wire  dp_valid;
+ wire [545:0] dp_rec;
+ wire  ur_valid;
+ wire [513:0] ur_rec;
+ wire  dr_valid;
+ wire [513:0] dr_rec;
+ wire  sx0_valid;
+ wire  sx1_valid;
+ wire  sx2_valid;
+ wire [545:0] sx0_rec;
+ wire [545:0] sx1_rec;
+ wire [545:0] sx2_rec;
+ wire  sr0_valid;
+ wire  sr1_valid;
+ wire  sr2_valid;
+ wire [545:0] sr0_rec;
+ wire [545:0] sr1_rec;
+ wire [545:0] sr2_rec;
+ wire  up_slot;
+ wire  ur_peer_slot;
+ wire  sx0_peer_slot;
+ wire  sx1_peer_slot;
+ wire  sx2_peer_slot;
+ qfd_io_collective_static u_collective(
+ .clk(clk),
+ .clk_pfold0(clk_pfold0),
+ .clk_pfold1(clk_pfold1),
+ .clk_pfold2(clk_pfold2),
+ .clk_pfold3(clk_pfold3),
+ .clk_xfold0(clk_xfold0),
+ .clk_xfold1(clk_xfold1),
+ .clk_xfold2(clk_xfold2),
+ .clk_xfold3(clk_xfold3),
+ .clk_pring0(clk_pring0),
+ .clk_pring1(clk_pring1),
+ .clk_sring0(clk_sring0),
+ .clk_sring1(clk_sring1),
+ .clk_sring2(clk_sring2),
+ .clk_sring3(clk_sring3),
+ .clk_sring4(clk_sring4),
+ .clk_rring0(clk_rring0),
+ .clk_rring1(clk_rring1),
+ .rst_n(rst_n),
+ .pkg_s(pkg_s),
+ .die_ps(die_ps),
+ .cmd_v(cmd_v),
+ .cmd_mode(cmd_mode),
+ .cmd_words(cmd_words),
+ .cmd_tag(cmd_tag),
+ .in_valid(in_valid),
+ .in_data(in_data),
+ .in_last(in_last),
+ .in_mode(in_mode),
+ .in_tag(in_tag),
+ .up_valid(up_valid),
+ .up_rec(up_rec),
+ .dp_valid(dp_valid),
+ .dp_rec(dp_rec),
+ .ur_valid(ur_valid),
+ .ur_rec(ur_rec),
+ .dr_valid(dr_valid),
+ .dr_rec(dr_rec),
+ .sx0_valid(sx0_valid),
+ .sx1_valid(sx1_valid),
+ .sx2_valid(sx2_valid),
+ .sx0_rec(sx0_rec),
+ .sx1_rec(sx1_rec),
+ .sx2_rec(sx2_rec),
+ .sr0_valid(sr0_valid),
+ .sr1_valid(sr1_valid),
+ .sr2_valid(sr2_valid),
+ .sr0_rec(sr0_rec),
+ .sr1_rec(sr1_rec),
+ .sr2_rec(sr2_rec),
+ .out_valid(out_valid),
+ .out_data(out_data),
+ .out_last(out_last),
+ .out_rank(out_rank),
+ .out_err(out_err),
+ .fault(fault),
+ .fault_code(fault_code),
+ .up_slot(up_slot),
+ .ur_peer_slot(ur_peer_slot),
+ .sx0_peer_slot(sx0_peer_slot),
+ .sx1_peer_slot(sx1_peer_slot),
+ .sx2_peer_slot(sx2_peer_slot),
+ .cmd_free(cmd_free));
+ genvar f;
+ generate for(f=0;f<5;f=f+1)begin:g_face
+ localparam integer W=f==1?514:546;
+ localparam integer PW=W+51;
+ localparam integer R=f<2?RU:f==2?RS0:f==3?RS1:RS2;
+ wire[W-1:0]td,rd;wire tv,ts,ps,rv;
+ if(f==0)begin
+ assign td=up_rec;assign tv=up_valid;assign ts=up_slot;assign ps=up_slot;
+ assign dp_valid=rv;assign dp_rec=rd;
+ end else if(f==1)begin
+ assign td=ur_rec;assign tv=ur_valid;assign ts=ur_valid;assign ps=ur_peer_slot;
+ assign dr_valid=rv;assign dr_rec=rd;
+ end else if(f==2)begin
+ assign td=sx0_rec;assign tv=sx0_valid;assign ts=sx0_valid;assign ps=sx0_peer_slot;
+ assign sr0_valid=rv;assign sr0_rec=rd;
+ end else if(f==3)begin
+ assign td=sx1_rec;assign tv=sx1_valid;assign ts=sx0_valid;assign ps=sx1_peer_slot;
+ assign sr1_valid=rv;assign sr1_rec=rd;
+ end else begin
+ assign td=sx2_rec;assign tv=sx2_valid;assign ts=sx0_valid;assign ps=sx2_peer_slot;
+ assign sr2_valid=rv;assign sr2_rec=rd;
+ end
+ wire[PW-1:0]pt;
+ assign phy_tx[f*597+:PW]=pt;
+ if(PW<597)assign phy_tx[f*597+PW+:(597-PW)]=0; // declared frame padding only
+ qfd_coll_static_face #(.FW(W),.PHY(f<2?PU:PS),.L(f<2?LU:LS),.R(R))u_face(
+ .cal_ck(face_ck[f*11]),.cal_lck(face_ck[f*11+1]),
+ .tx_wck(face_ck[f*11+2]),.tx_rck(face_ck[f*11+3]),.rx_wck(face_ck[f*11+4]),.rx_rck(face_ck[f*11+5]),
+ .codec_ck(face_ck[f*11+6+:5]),.rst_n(rst_n),.tx_slot(ts),.peer_slot(ps),.tx_valid(tv),.tx_data(td),
+ .rx_valid(rv),.rx_data(rd),.phy_up(phy_up[f]),.phy_rx_valid(phy_rx_valid[f]),.phy_rx(phy_rx[f*597+:PW]),
+ .phy_tx_valid(phy_tx_valid[f]),.phy_tx(pt),.cdc_fault(transport_cdc_fault[f*4+:4]),
+ .epoch_abort(transport_abort[f]),.fault_cause(transport_fault_cause[f*8+:8]));
+ end endgenerate
+ // The fixed die-name collective LU/LS defines and this parent must agree.
+ initial if(LU!=`OT_QFDS_LU || LS!=`OT_QFDS_LS)$error("collective/link calendar latency profile mismatch");
+endmodule
