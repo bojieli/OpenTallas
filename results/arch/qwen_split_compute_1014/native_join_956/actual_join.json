@@ -56,7 +56,31 @@
         "ref": "79cf22d0b"
       }
     ],
-    "physical_status": "All real clock roots exposed independently. Core1.2GHz and FDI1GHz commonPLL/rationalphase requirements unqualified physically; no same-phase ties. Gateway not included."
+    "physical_status": "All real clock roots exposed independently. Core1.2GHz and FDI1GHz commonPLL/rationalphase requirements unqualified physically; no same-phase ties. Gateway not included.",
+    "clock_requirements": [
+      {
+        "node": "io",
+        "port": "gearbox_core_ck",
+        "bits": 1,
+        "frequency_hz": 1200000000,
+        "physical_phase_binding": null
+      },
+      {
+        "node": "io",
+        "port": "fdi_ck",
+        "bits": 1,
+        "frequency_hz": 1000000000,
+        "physical_phase_binding": null
+      },
+      {
+        "node": "io",
+        "port": "fdi_rx_ck",
+        "bits": 3,
+        "frequency_hz": 1000000000,
+        "physical_phase_binding": null
+      }
+    ],
+    "rational_clock_requirement": "6 core edges per5 FDI edges from a commonPLL with source-defined reset/start phase contract; actual PLL/CTS/phase views OPEN."
   },
   "nodes": {
     "tt": {
