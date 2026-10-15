@@ -62,10 +62,11 @@
   "routing_tracks_capacity": "OPEN actual pin/reach/cut grant; no prior500x1020slot timinggrant",
   "area_fit": "OPEN nativeCTS/hardenedmaster dimensions+census required",
   "qualification": {
-    "functional": false,
+    "functional": true,
     "physical": false,
     "native_whole_kernel": false,
-    "leaf_functional": true
+    "leaf_functional": true,
+    "functional_scope": "actual80SRAM+32MAC P6/P8 full24row+tail equal-phase component only"
   },
   "clock_phases": "all roots synchronous, independent physical insertion/reach SS/FF proofrequired; functionalbench equalphase only",
   "leaf_source": "473756fb3",
@@ -83,5 +84,13 @@
       "partition": 894
     }
   },
-  "leaf_functional_proof": "all32 bank/quarter combinations 512reads each+masks/wrongslot/wrongIDmutants; residual1280reads/640 measured+1writecommits+bypassmutant; controller1027cycle/tapmutant PASS"
+  "leaf_functional_proof": "all32 bank/quarter combinations 512reads each+masks/wrongslot/wrongIDmutants; residual1280reads/640 measured+1writecommits+bypassmutant; controller1027cycle/tapmutant PASS",
+  "functional_receipt": "results/rtl/hbm_hc_static_1015/sys1_split92_ee1/receipt.json",
+  "SYS_LAT_verified": 86,
+  "row_periods_verified": {
+    "nominal6": 1153,
+    "nominal8": 1473,
+    "early6": 1133,
+    "early8": 1453
+  }
 }
