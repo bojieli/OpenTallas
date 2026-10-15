@@ -27,6 +27,17 @@ coverage from actual native writes. Overlapping live allocations are rejected.
 A C++ snapshot allocator is not a production allocation contract. Internal
 reference/fixture tensors are rejected, even if their numerical results match.
 
+For an explicitly selected native VM pipeline, a source-pinned
+`vm_service_profile` contract enforces exact raw SRAM and returned response or
+commit edges. Access templates provide `raw_cycle` relative to the job start in
+the stream domain and the fixed write capture `lane` ordinal. Lowering preserves
+both; bank `service_cycle` in the VM domain must identify the same physical time
+as `raw_cycle`. For profile `s81_vm_r4_c2_w1`, reads access SRAM at P+7 and return
+at P+16; lane n writes access SRAM at P+10+n and return commit at P+12+n.
+A dependent read Q requires Q+7 > P+10+n. The returned commit remains the
+producer completion fence. Absent profiles retain the historical contract
+checks; these mechanisms do not adopt a pipeline for the die.
+
 The generated schedule is checked using
 `tools/s81_suhc/static_vm_reservations.py`. Any missing binding, stale evidence,
 unsupported native operation, latency mismatch, timing conflict, or unproduced

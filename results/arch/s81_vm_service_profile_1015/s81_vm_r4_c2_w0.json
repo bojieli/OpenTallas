@@ -49,5 +49,8 @@
   "max_lane": 2
  },
  "rule": "exact stream edges from the VM pin edge P (equality); dependent read Q needs raw read Q+read_raw > raw write P+write_raw+lane; producer done fence = returned commit",
- "use": "merge into a static_vm_reservations contract; checker validates evidence hashes (stale source = invalid)"
+ "use": "Merge into a static_vm_reservations contract; exact raw_cycle uses stream edges, service_cycle uses VM edges at identical physical time. Shared-port bank_ops_per_cycle=1 is conservative; actual independent 1R1W requires bank_port_capacities and pinned bank_port_evidence.",
+ "banks": 32,
+ "bank_mapping": "xor_row7_5_shift2",
+ "bank_ops_per_cycle": 1
 }

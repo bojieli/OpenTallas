@@ -133,6 +133,13 @@ def check(schedule: dict, contract: dict, source_root: Path | None = None) -> di
             error('missed_fixed_deadline', event=eid, actual=retire_cycle, deadline=event['deadline_cycle'])
         if profile is not None:
             errors.extend(VSP.check_event(profile, dict(event, id=eid)))
+            # Port occupancy and visibility must name the SAME physical macro
+            # edge. Otherwise a caller can hide a real bank collision by moving
+            # service_cycle while leaving a correct raw_cycle on the event.
+            raw_cycle = event.get('raw_cycle')
+            if type(raw_cycle) is int and raw_cycle >= 0 and service != when(raw_cycle, 'stream'):
+                error('profile_service_raw_edge_mismatch', event=eid,
+                      service_cycle=event['service_cycle'], raw_cycle=raw_cycle)
         bank = bank_of(event['row'], contract)
         bank_use[(event['service_cycle'], bank)].append(eid)
         if 'bank_enqueue_cycle' not in event:
