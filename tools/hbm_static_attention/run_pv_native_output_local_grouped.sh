@@ -3,7 +3,7 @@ set -euo pipefail
 out=$1;mkdir -p "$out"
 vl=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 "$vl" --binary --timing -O1 -j 4 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --top-module tb_hbm_attn_pv_native_output_local_grouped --Mdir "$out/obj" -o sim \
- rtl/hdc/v41x/static/ot_hbm_attn_pv_serializer_local.sv rtl/hdc/v41x/static/ot_hbm_attn_pv_native_output_local_grouped.sv \
+ rtl/hdc/v41x/static/ot_hbm_attn_pv_serializer_local.sv rtl/hdc/v41x/static/ot_hbm_attn_pv_group_mux.sv rtl/hdc/v41x/static/ot_hbm_attn_pv_serializer_local_grouped.sv rtl/hdc/v41x/static/ot_hbm_attn_pv_native_output_local_grouped.sv \
  rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv \
  physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v \
  physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v \

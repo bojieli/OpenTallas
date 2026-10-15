@@ -3,7 +3,7 @@
 import argparse,hashlib,json,subprocess,re
 from collections import Counter,defaultdict
 from pathlib import Path
-p=argparse.ArgumentParser();p.add_argument('--profile',choices=['baseline','D','group_mux','tile'],required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--profile',choices=['baseline','D','group_mux','tile','registered_gather'],required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args()
 r=Path.cwd();out=a.out;out.mkdir(parents=True,exist_ok=False)
 libs=sorted((Path.home()/'.local/opentallas-pdk-asap7/lib/NLDM').glob('*_RVT_TT_*.lib'))
 assert len(libs)==5,'five pinned RVT TT library groups required'
@@ -11,7 +11,7 @@ body=[]
 for f in libs:
  s=f.read_text();body.append(s[s.index('{')+1:s.rindex('}')])
 lib=out/'combined.lib';lib.write_text('library (attn_pv_native_tt) {\n'+'\n'.join(body)+'\n}\n')
-top={'baseline':'ot_hbm_attn_pv_serializer','D':'ot_hbm_attn_pv_serializer_local','tile':'ot_hbm_attn_pv_serializer_local_tile','group_mux':'ot_hbm_attn_pv_group_mux'}[a.profile]
+top={'baseline':'ot_hbm_attn_pv_serializer','D':'ot_hbm_attn_pv_serializer_local','tile':'ot_hbm_attn_pv_serializer_local_tile','group_mux':'ot_hbm_attn_pv_group_mux','registered_gather':'ot_hbm_attn_pv_group_gather_registered'}[a.profile]
 src=['physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v','rtl/hdc/v41x/static/'+('ot_hbm_attn_pv_serializer_local' if a.profile=='tile' else top)+'.sv']
 rec=dict(profile=a.profile,qualification=False,physical_qualified=False,
  scope='Mapped actual TT standardcells plus native macro count; excludes CTS, clock buffers, physical wires, timing/cut/routing and throughput qualification',
@@ -47,7 +47,7 @@ if cp.returncode==0:
  rec['mapped_standardcell_area_um2']=float(area[-1]) if area else None
  rec['mapped_clock_endpoints']={name:[dict(bit=b,sinks=clock[b]) for b in port['bits']] for name,port in m['ports'].items() if name in ('clk','bank_clk')}
  rec['highest_input_fanout']=dict(fan.most_common(20))
- assert macro_count=={'D':2048,'baseline':128,'tile':64,'group_mux':0}[a.profile]
+ assert macro_count=={'D':2048,'baseline':128,'tile':64,'group_mux':0,'registered_gather':0}[a.profile]
  rec['status']='PASS mapped TT inventory; physical clock qualification OPEN'
 else:rec['status']='FAIL synth; inspect exact log'
 (out/'record.json').write_text(json.dumps(rec,indent=2)+'\n');raise SystemExit(cp.returncode)
