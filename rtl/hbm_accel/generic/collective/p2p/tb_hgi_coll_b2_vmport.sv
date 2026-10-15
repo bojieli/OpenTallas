@@ -1,7 +1,13 @@
 `timescale 1ns/1ps
 `default_nettype none
 module tb_hgi_coll_b2_vmport;
-    parameter integer RLY=8, MUT=0, N=128, KLINES=256;
+    parameter integer RLY=8, MUT=0, N=128, KLINES=256, PHYSICAL_RING=1;
+    function automatic integer next_sid(input integer s);
+        if(!PHYSICAL_RING)next_sid=(s+1)%4;else case(s)0:next_sid=1;1:next_sid=3;3:next_sid=2;default:next_sid=0;endcase
+    endfunction
+    function automatic integer prev_sid(input integer s);
+        if(!PHYSICAL_RING)prev_sid=(s+3)%4;else case(s)0:prev_sid=2;2:prev_sid=3;3:prev_sid=1;default:prev_sid=0;endcase
+    endfunction
     reg clk=0, rst_n=0; always #1 clk=~clk;
     reg [3:0] iv=0; wire [3:0] ir; reg [159:0] ia=0; reg [2047:0] id=0;
     wire [3:0] tv, fc; wire [159:0] ta; wire [2047:0] td; wire tvm, ff, xf, ridle;
@@ -38,8 +44,8 @@ module tb_hgi_coll_b2_vmport;
         end
         assign readr[s]=rsp[273:0];
         wire [2223:0] cf[0:RLY],nf[0:RLY];wire[1:0] cb[0:RLY],nb[0:RLY];
-        assign cf[0]=co[s];assign ci[(s+1)%4]=cf[RLY];assign cb[RLY]=cic[(s+1)%4];assign coc[s]=cb[0];
-        assign nf[0]=no[s];assign ni[(s+3)%4]=nf[RLY];assign nb[RLY]=nic[(s+3)%4];assign noc[s]=nb[0];
+        assign cf[0]=co[s];assign ci[next_sid(s)]=cf[RLY];assign cb[RLY]=cic[next_sid(s)];assign coc[s]=cb[0];
+        assign nf[0]=no[s];assign ni[prev_sid(s)]=nf[RLY];assign nb[RLY]=nic[prev_sid(s)];assign noc[s]=nb[0];
         for(genvar j=0;j<RLY;j=j+1)begin:g_relay
             ot_vms_relay #(.W(2224),.C(2)) rc(.clk(clk),.rst_n(rst_n),.f_in(cf[j]),.f_out(cf[j+1]),.cr_in(cb[j+1]),.cr_out(cb[j]));
             ot_vms_relay #(.W(2224),.C(2)) rn(.clk(clk),.rst_n(rst_n),.f_in(nf[j]),.f_out(nf[j+1]),.cr_in(nb[j+1]),.cr_out(nb[j]));

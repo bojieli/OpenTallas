@@ -168,24 +168,24 @@
   "assigned_pin_commit": "e079fc550 (published locally at 314205dde)",
   "route_candidates": {
     "rgx_rx": {
-      "spec": "results/arch/hbm_p2p_1014/hgi_coll_rgx_rx_r1.json",
-      "kit": "physical/ref_tile/hgi_coll_rgx_rx_r1",
-      "gate": "running; no routed view yet"
+      "spec": "results/arch/hbm_p2p_1014/hgi_coll_rgx_rx_r2.json",
+      "kit": "physical/ref_tile/hgi_coll_rgx_rx_r2",
+      "gate": "running per-64-bit retained pointer revision"
     },
     "tkw_rx": {
-      "spec": "results/arch/hbm_p2p_1014/hgi_coll_tkw_rx_r1.json",
-      "kit": "physical/ref_tile/hgi_coll_tkw_rx_r1",
-      "gate": "running; no routed view yet"
+      "spec": "results/arch/hbm_p2p_1014/hgi_coll_tkw_rx_r2.json",
+      "kit": "physical/ref_tile/hgi_coll_tkw_rx_r2",
+      "gate": "PASS no warnings, 5743 clock sinks, exact assigned pins; physical-order native VM bench pending"
     },
     "ring_state": {
       "spec": "results/arch/hbm_p2p_1014/hgi_coll_ring_state_r1.json",
       "kit": "physical/ref_tile/hgi_coll_ring_state_r1",
-      "gate": "running; no routed view yet"
+      "gate": "TT +227.2ps setup / +37.1ps hold, 2600 sinks; route job hgi_coll_ring_state_r1-r1-d5597fc42 running benches"
     },
     "ring_add": {
       "spec": "results/arch/hbm_p2p_1014/hgi_coll_ring_add_r1.json",
       "kit": "physical/ref_tile/hgi_coll_ring_add_r1",
-      "gate": "running; no routed view yet"
+      "gate": "TT +270.0ps setup / +25.6ps hold,655 sinks; route job hgi_coll_ring_add_r1-r1-d5597fc42 running benches"
     }
   },
   "vm_parent": {
@@ -297,6 +297,15 @@
       "4": "RGX write3",
       "5": "TOPK write",
       "6": "hub ring replay (not part of NC)"
+    },
+    "functional_evidence": {
+      "source": "9ed17dd34",
+      "RLY": 20,
+      "positive": "PASS 768 flits / 2442 wide native readbacks, every target seeded nonzero via SW single CQ, all three peers no CQ",
+      "mutant": "FAIL premature credit drain lane4",
+      "write_cycles_excluding_seed": 35743,
+      "performance_qualified": false,
+      "ring_order": "0,1,2,3 (arithmetic SID isolation); physical SW0,SE1,NE3,NW2 test pending"
     }
   },
   "ring_parent": {
@@ -305,5 +314,271 @@
     "state_sinks_each": 2600,
     "fp_sinks_each": 655,
     "qualification": "Own parent clock sink count and native parent timing remain to be measured."
-  }
+  },
+  "production_quadrants": {
+    "SW": {
+      "top": "ot_vms_slice_coll_sw",
+      "source": "rtl/hbm_accel/generic/collective/p2p/ot_vms_slice_coll_sw.sv",
+      "params": {
+        "NC": 1,
+        "RG": 2,
+        "WG": 2,
+        "RRS": [
+          3,
+          3
+        ],
+        "WRS": [
+          3,
+          3
+        ]
+      },
+      "clocks": [
+        "clk",
+        "clk_coll_rx[4:0]",
+        "clk_vm_child[12:0]"
+      ],
+      "packed_widths": {
+        "cq": 338,
+        "cr": 274,
+        "rq": 272,
+        "rq_cr": 16,
+        "rr": 4112,
+        "wq": 4496,
+        "wq_cr": 16,
+        "wq_done": 16,
+        "dq": 2248,
+        "dq_done": 8,
+        "vcb": 2130,
+        "vcb_cr": 1,
+        "kq_done": 8,
+        "cw_in": 2224,
+        "cw_in_cr": 2,
+        "cw_out": 2224,
+        "cw_out_cr": 2,
+        "ccw_in": 2224,
+        "ccw_in_cr": 2,
+        "ccw_out": 2224,
+        "ccw_out_cr": 2,
+        "bank_status": 144,
+        "hub_status": 3,
+        "mirror_busy": 2,
+        "rgx_t_v": 4,
+        "rgx_t_addr": 160,
+        "rgx_t_data": 2048,
+        "rgx_t_vm": 1,
+        "rgx_f_cr": 4,
+        "tkw_t_v": 1,
+        "tkw_t_d": 568,
+        "tkw_f_cr": 1,
+        "coll_fault": 1,
+        "coll_xw": 652,
+        "coll_xwa": 2
+      },
+      "hub_params": {
+        "NC": 6,
+        "total_clients_including_ring": 7
+      },
+      "bank_params": {
+        "RG": 2,
+        "WG": 3,
+        "RRS": [
+          3,
+          3
+        ],
+        "WRS": [
+          3,
+          3,
+          3
+        ]
+      },
+      "hard_views": "Required new hub specializations and SW WG3 bank; H-ELEM-A owns hardening. Do not alias closed default parameter views."
+    },
+    "NW": {
+      "top": "ot_vms_slice_clocked",
+      "source": "rtl/hbm_accel/generic/collective/p2p/ot_vms_slice_clocked.sv",
+      "params": {
+        "NC": 2,
+        "RG": 2,
+        "WG": 2,
+        "RRS": [
+          3,
+          3
+        ],
+        "WRS": [
+          3,
+          3
+        ]
+      },
+      "clocks": [
+        "child_clk[12:0]"
+      ],
+      "packed_widths": {
+        "rq": 272,
+        "rq_cr": 16,
+        "rr": 4112,
+        "wq": 4496,
+        "wq_cr": 16,
+        "wq_done": 16,
+        "dq": 2248,
+        "dq_done": 8,
+        "vcb": 2130,
+        "vcb_cr": 1,
+        "kq_done": 8,
+        "cw_in": 2224,
+        "cw_in_cr": 2,
+        "cw_out": 2224,
+        "cw_out_cr": 2,
+        "ccw_in": 2224,
+        "ccw_in_cr": 2,
+        "ccw_out": 2224,
+        "ccw_out_cr": 2,
+        "bank_status": 144,
+        "hub_status": 3,
+        "mirror_busy": 2,
+        "cq": 676,
+        "cr": 548
+      },
+      "hub_params": {
+        "NC": 2,
+        "total_clients_including_ring": 3
+      },
+      "bank_params": {
+        "RG": 2,
+        "WG": 2,
+        "RRS": [
+          3,
+          3
+        ],
+        "WRS": [
+          3,
+          3
+        ]
+      },
+      "hard_views": "Required new hub specializations and SW WG3 bank; H-ELEM-A owns hardening. Do not alias closed default parameter views."
+    },
+    "NE": {
+      "top": "ot_vms_slice_clocked",
+      "source": "rtl/hbm_accel/generic/collective/p2p/ot_vms_slice_clocked.sv",
+      "params": {
+        "NC": 2,
+        "RG": 2,
+        "WG": 2,
+        "RRS": [
+          3,
+          3
+        ],
+        "WRS": [
+          3,
+          3
+        ]
+      },
+      "clocks": [
+        "child_clk[12:0]"
+      ],
+      "packed_widths": {
+        "rq": 272,
+        "rq_cr": 16,
+        "rr": 4112,
+        "wq": 4496,
+        "wq_cr": 16,
+        "wq_done": 16,
+        "dq": 2248,
+        "dq_done": 8,
+        "vcb": 2130,
+        "vcb_cr": 1,
+        "kq_done": 8,
+        "cw_in": 2224,
+        "cw_in_cr": 2,
+        "cw_out": 2224,
+        "cw_out_cr": 2,
+        "ccw_in": 2224,
+        "ccw_in_cr": 2,
+        "ccw_out": 2224,
+        "ccw_out_cr": 2,
+        "bank_status": 144,
+        "hub_status": 3,
+        "mirror_busy": 2,
+        "cq": 676,
+        "cr": 548
+      },
+      "hub_params": {
+        "NC": 2,
+        "total_clients_including_ring": 3
+      },
+      "bank_params": {
+        "RG": 2,
+        "WG": 2,
+        "RRS": [
+          3,
+          3
+        ],
+        "WRS": [
+          3,
+          3
+        ]
+      },
+      "hard_views": "Required new hub specializations and SW WG3 bank; H-ELEM-A owns hardening. Do not alias closed default parameter views."
+    },
+    "SE": {
+      "top": "ot_vms_slice_no_cq",
+      "source": "rtl/hbm_accel/generic/collective/p2p/ot_vms_slice_no_cq.sv",
+      "params": {
+        "RG": 2,
+        "WG": 2,
+        "RRS": [
+          3,
+          3
+        ],
+        "WRS": [
+          3,
+          3
+        ]
+      },
+      "clocks": [
+        "child_clk[12:0]"
+      ],
+      "packed_widths": {
+        "rq": 272,
+        "rq_cr": 16,
+        "rr": 4112,
+        "wq": 4496,
+        "wq_cr": 16,
+        "wq_done": 16,
+        "dq": 2248,
+        "dq_done": 8,
+        "vcb": 2130,
+        "vcb_cr": 1,
+        "kq_done": 8,
+        "cw_in": 2224,
+        "cw_in_cr": 2,
+        "cw_out": 2224,
+        "cw_out_cr": 2,
+        "ccw_in": 2224,
+        "ccw_in_cr": 2,
+        "ccw_out": 2224,
+        "ccw_out_cr": 2,
+        "bank_status": 144,
+        "hub_status": 3,
+        "mirror_busy": 2
+      },
+      "hub_params": {
+        "NC": 0,
+        "total_clients_including_ring": 1
+      },
+      "bank_params": {
+        "RG": 2,
+        "WG": 2,
+        "RRS": [
+          3,
+          3
+        ],
+        "WRS": [
+          3,
+          3
+        ]
+      },
+      "hard_views": "Required new hub specializations and SW WG3 bank; H-ELEM-A owns hardening. Do not alias closed default parameter views."
+    }
+  },
+  "production_quadrant_note": "NW/NE NC2 are real production producers, SE NC0. Bench with three no-CQ peers is adapter/ring isolation; it does not replace the production client map. Wide RG/WG allocations remain subject to H-ELEM owner confirmation."
 }

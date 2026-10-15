@@ -1,5 +1,5 @@
 {
-  "source": "34905694c (FIFO), 390d43641 (ring state); reset-enable cleanup pending latest gates",
+  "source": "9ed17dd34",
   "clock_roots": {
     "ring_state": {
       "count": 8,
@@ -30,7 +30,7 @@
   },
   "global_vm_composition": {
     "top": "ot_vms_slice_coll_sw",
-    "NC": 9,
+    "NC": 6,
     "RG": 2,
     "WG": 3,
     "WRS": [
@@ -42,13 +42,16 @@
     "dedicated_write_credit_each": 10,
     "route": "local SW main on8 bank wide lanes; nonlocal main/mirror via real native packet hub/ring",
     "posted_completion": "COLL credit only after2 committed sector acknowledgements",
-    "measured_write_cycles": 18707,
+    "measured_write_cycles": 35743,
     "measured_flits": 768,
     "measured_readbacks": 2442,
     "performance_qualified": false,
     "child_clock_entries": 13,
     "coll_receiver_clock_entries": 5,
-    "seeded_nonzero_readbacks": 2442
+    "seeded_nonzero_readbacks": 2442,
+    "external_NC": 1,
+    "measured_RLY": 20,
+    "measurement": "seed excluded; three zero-CQ peers isolation bench"
   },
   "physical_qualification": false
 }
