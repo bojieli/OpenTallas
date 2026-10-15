@@ -147,7 +147,7 @@
   "peak_ram_gb": 32,
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4,
-  "io_hold_margin_ns": 0.005
+  "io_hold_margin_ns": 1e-05
  },
  "orfs_vars": {
   "OT_INHOLD_MASTER": "HB2xp67_ASAP7_75t_R",
@@ -158,7 +158,7 @@
  "job": {
   "owner": "Claude:q14-r8-compute",
   "branch": "claude/q14-r6-compute",
-  "tag": "i2",
+  "tag": "i3",
   "purpose": "SU lane cluster (64 per qfd_sp_su64_sfu), r8 successor of CLOSED qfd_su_lane_t_io-io1-60bc0119d (TT +89.97 / FF +25.72 / DRC 0) whose native pin audit FAILS: TT R 920.9, capture 555 inputs > 190 (max crom_q[2] 298.6), launch vc_addr[21] 223.4, boundary clock 817.8..965.7 (148 ps). Same RTL (IREG=1 OREG=1). Cause measured on the routed io1 netlist/STA: (1) the clock port sat at W y 66.5, the four child clock pins sit on the middle channel y 155.5..190.1, so the spine reached u_rcp through 12 BUFx24 (~545 ps) and every parent pin flop was padded by ~600 ps of HB4/BUF chains to match (R 921), whose post-route variation spread the boundary to 148 ps; (2) the 30-ps route hold margin applied to IO added 3 BUFx2 per input on top of the HB2 pad (wrom_q[100] FF hold slack +40, crom_q[2] +103 at sign-off).",
   "benches": [
    {
@@ -235,7 +235,7 @@
   "record_to": "results/rtl/ref_tile/qfd_su_lane_t_i2"
  },
  "hard_define": "OT_SU_LANE_HARD",
- "structural_change": "r8: clock port moved onto the middle channel (W y 167-177, beside the four child clock pins) + symmetric insertion-aware spine (OT_SPINE_SYM=1: the children tap the tree early by their own insertion instead of a count-bisection tree rooted at the S-face centroid that reached u_rcp through 16 stages and padded every pin flop by ~600 ps) + boundary FF hold-repair margin 5 ps (route.io_hold_margin_ns, signoff_ffrepair.sdc; reg->reg keeps 30 ps; sign-off unchanged). Same RTL, outline and pin faces as io1.",
+ "structural_change": "r8: clock port moved onto the middle channel (W y 167-177, beside the four child clock pins) + symmetric insertion-aware spine (OT_SPINE_SYM=1: the children tap the tree early by their own insertion instead of a count-bisection tree rooted at the S-face centroid that reached u_rcp through 16 stages and padded every pin flop by ~600 ps) + boundary FF hold-repair margin 5 ps (route.io_hold_margin_ns, signoff_ffrepair.sdc; reg->reg keeps 30 ps; sign-off unchanged). Same RTL, outline and pin faces as io1. i3: measured i2 CLOSED has 3 TT capture pins 193-194 ps with FF +18.05; reduce ONLY boundary repair margin 5 to 0.01 ps, true sign-off remains unchanged.",
  "macros": [],
  "inter": [],
  "inhold": true,
@@ -244,11 +244,11 @@
  "pin_reg_split": true,
  "reroute_reason": {
   "kind": "pin_register",
-  "source": "results/rtl/qwen_r7_pin_audit_1014/su_lane_t_io_60bc0119d.json",
+  "source": "results/rtl/qwen_codex_pin_audit_1014/su_i2.json",
   "cell": "ot_hdc_vstream_lane_t",
-  "launch_ps": 223.4,
-  "capture_ps": 298.6,
-  "fix": "clock port beside the child clock pins + symmetric insertion-aware spine (OT_SPINE_SYM=1; pads ~600 ps -> true imbalance) and the boundary hold-repair margin 30 -> 5 ps (route-time FF repair SDC only): removes the 3 route hold BUFx2 per input / output that put capture at 190-299 ps"
+  "launch_ps": 202.04,
+  "capture_ps": 194.02,
+  "fix": "retain balanced spine; reduce boundary FF repair overpadding 5 to 0.01 ps, reg-reg unchanged"
  },
  "pin_ranges": {
   "clk": [

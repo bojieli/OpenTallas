@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch2/claude/closure-loop/qfd_su_lane_t_i2-i2-e3269fa2b/record/views/ot_hdc_vstream_lane_t/ot_hdc_vstream_lane_t.lef",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/qfd_su_lane_t_i2-i3-f2c5ac85b/record/views/ot_hdc_vstream_lane_t/ot_hdc_vstream_lane_t.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [
   "(f) face-pin access: 1063 of 1064 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. accept M4 (0.060,29.040), ad[0] M4 (0.060,29.040), ad[1] M4 (0.060,29.040))"
  ],
- "summary": "ot_hdc_vstream_lane_t 362.88 x 371.52: PG M7 VDD 33 stripes (95% spread, 100% cov) / VSS 34 stripes (98% spread, 100% cov); strap M8; face pins 1064 blocked-above 0 blocked-same 0; clock clk insertion 349 ps; pockets M7 0 (closed)",
+ "summary": "ot_hdc_vstream_lane_t 362.88 x 371.52: PG M7 VDD 33 stripes (95% spread, 100% cov) / VSS 34 stripes (98% spread, 100% cov); strap M8; face pins 1064 blocked-above 0 blocked-same 0; clock clk insertion 350 ps; pockets M7 0 (closed)",
  "info": {
   "cell": "ot_hdc_vstream_lane_t",
   "W": 362.88,
@@ -56,7 +56,7 @@
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 349.39,
+    "max_ps": 349.8,
     "min_ps": 212.87
    }
   },
@@ -66,7 +66,7 @@
    "marker": {
     "layer": "M7",
     "d_um": 2.048,
-    "added": 103
+    "added": 83
    },
    "count": 0,
    "area_um2": 0,

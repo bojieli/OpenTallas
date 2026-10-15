@@ -1,0 +1,30 @@
+{
+ "status": "BEHAVIORAL_PASS_NOT_ROUTED_QUALIFICATION",
+ "source_generator_commit": "d90cc17dd",
+ "actual_map": "EPYC1 hbmdie-v13/glue25f/forwarded_map.json from corrected full63400-instance model",
+ "input_master_pins": "preserved glue23_p2/pins (same existing q2*F pin templates)",
+ "positive_checks": 16384,
+ "positive_errors": 0,
+ "mutants_expected_fail": 4,
+ "observed_errors_per_mutant": 8191,
+ "scope": "actual ot_hbm_stn_fwd primitive + real ot_fwd_link_stage; verifies falling capture, held data and inverted clock on each cardinal master",
+ "limits": "no physical closure, no whole-die binding claim; full station regeneration remains live",
+ "hashes": {
+  "results/arch/hbm_die_v14/forwarded_credit_regression_1014/hfd_stn_q2EF_mutant/dut.sv": "90404adce1874773b0fbcad27b28aa05ac3d09476f2684c1b2ff5d7089cc9fcb",
+  "results/arch/hbm_die_v14/forwarded_credit_regression_1014/hfd_stn_q2EF_mutant/tb.sv": "572d1315fd09f46a10e38a9e60ad5f770d40ab09ddd5c1915db0b7be63b95b7d",
+  "results/arch/hbm_die_v14/forwarded_credit_regression_1014/hfd_stn_q2EF_positive/dut.sv": "457fdf3c0441ea226101364e9c92d89358253a111e6625f979055572924bcf19",
+  "results/arch/hbm_die_v14/forwarded_credit_regression_1014/hfd_stn_q2EF_positive/tb.sv": "572d1315fd09f46a10e38a9e60ad5f770d40ab09ddd5c1915db0b7be63b95b7d",
+  "results/arch/hbm_die_v14/forwarded_credit_regression_1014/hfd_stn_q2NF_mutant/dut.sv": "88abe42396bdf081d53e2dc9d0d28454ba11bbafa8644f88d6c8a03bd5f1b941",
+  "results/arch/hbm_die_v14/forwarded_credit_regression_1014/hfd_stn_q2NF_mutant/tb.sv": "5ffbad8fa8c47f9311c3028df542dede24641e60f18b043934e406174f5b0f16",
+  "results/arch/hbm_die_v14/forwarded_credit_regression_1014/hfd_stn_q2NF_positive/dut.sv": "2b1a0f3e98d3f65ee8a89478fff9575d966968edfc560eb5147acaefab378a45",
+  "results/arch/hbm_die_v14/forwarded_credit_regression_1014/hfd_stn_q2NF_positive/tb.sv": "5ffbad8fa8c47f9311c3028df542dede24641e60f18b043934e406174f5b0f16",
+  "results/arch/hbm_die_v14/forwarded_credit_regression_1014/hfd_stn_q2SF_mutant/dut.sv": "6ab5c71a8658aae11a67c86266b8e3dc781e8a74b741732c09f15665fa9991f9",
+  "results/arch/hbm_die_v14/forwarded_credit_regression_1014/hfd_stn_q2SF_mutant/tb.sv": "6ac8104638f37da62e729b49e3889ce39a25c8ee74c6e3f5db21170f60ea9504",
+  "results/arch/hbm_die_v14/forwarded_credit_regression_1014/hfd_stn_q2SF_positive/dut.sv": "a32e029c725ef42f38e1753206f0f971f6b5faba63b7903c7075e383f876b2c1",
+  "results/arch/hbm_die_v14/forwarded_credit_regression_1014/hfd_stn_q2SF_positive/tb.sv": "6ac8104638f37da62e729b49e3889ce39a25c8ee74c6e3f5db21170f60ea9504",
+  "results/arch/hbm_die_v14/forwarded_credit_regression_1014/hfd_stn_q2WF_mutant/dut.sv": "de4e8552405dc8218372c2230aa97d2f28c626ac6be6e5f04f2d239c1144dd29",
+  "results/arch/hbm_die_v14/forwarded_credit_regression_1014/hfd_stn_q2WF_mutant/tb.sv": "9b5a97948fd0595bd2d12cd40f6f2b9567e3a3e043c0f2c5403d8d8584ee68fa",
+  "results/arch/hbm_die_v14/forwarded_credit_regression_1014/hfd_stn_q2WF_positive/dut.sv": "15a4584749b298f14283f064dd2a4ad80e5a85acafd2765779cbb7988bf0b395",
+  "results/arch/hbm_die_v14/forwarded_credit_regression_1014/hfd_stn_q2WF_positive/tb.sv": "9b5a97948fd0595bd2d12cd40f6f2b9567e3a3e043c0f2c5403d8d8584ee68fa"
+ }
+}
