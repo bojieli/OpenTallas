@@ -133,12 +133,13 @@
     "fault"
    ]
   },
-  "reason": "vm_boundary_slot_request.json proposal 248.4x216 narrowed to 151.2 (E->W register reach); area/roots measured by this kit's --cts gate"
+  "reason": "vm_boundary_slot_request.json proposal 248.4x216 narrowed to 151.2 (E->W register reach); area/roots measured by this kit's --cts gate",
+  "grant_1103": "S-DIE candidate leaf 151.2x237.6 exact6614pins b47229479; JSONsha e5fbe96910268130ba8e022dbb11dd620c97e0586ae817026054fcd1ec6f903f / Tclsha e313afa4188188ee34196abd213e17efd1dd0942edc11d1373e56de219f37d97; parent packing remains OPEN"
  },
  "job": {
-  "owner": "Claude:s81-elemB-1015",
-  "branch": "claude/s81-elemB-coll-1015",
-  "tag": "b7",
+  "owner": "Codex:s81-pq-norm-1103",
+  "branch": "codex/s81-pq-collective-1103",
+  "tag": "b7-granted-1103",
   "purpose": "S81 static collective -> VM boundary leaf (registered t_vm 2204 / t_crq 15)",
   "benches": [
    {
@@ -177,10 +178,11 @@
    "physical/s81_static_collective_proposal_1014",
    "tools/s81_vm",
    "tools/s81_static_control",
-   "physical/ref_tile_specs/s81coll_static"
+   "physical/ref_tile_specs/s81coll_static",
+   "physical/s81_die_pins/v24_static_vm_boundary_candidate"
   ]
  },
- "io_tcl": "physical/ref_tile_specs/s81coll_static/s81coll_vm_boundary_spread_pins.tcl",
+ "io_tcl": "physical/s81_die_pins/v24_static_vm_boundary_candidate/s81_static_vm_boundary.tcl",
  "reroute_reason": {
   "kind": "rtl_change",
   "why": "native audit of CLOSED b6 view FAILS: rst_n capture 271.3 > 190 and 10 launches t_crq/t_vm up to 249.4 > 220 (results/rtl/s81_pq_native_audit_1015/coll_vm_boundary_b6.json); b7 RTL adds a registered reset relay and plain t_crq row registers",

@@ -1,13 +1,13 @@
 {
- "name": "s81coll_calendar7-c2-COMMIT",
+ "name": "s81coll_calendar7-c3-v3capture-1103-COMMIT",
  "block": "s81_static_calendar_controller7",
  "ref_tile": true,
- "owner": "Claude:s81-elemB-1015",
+ "owner": "Codex:s81-pq-norm-1103",
  "purpose": "S81 static collective calendar controller leaf",
  "threads": 16,
  "peak_ram_gb": 32,
  "source": {
-  "branch": "claude/s81-elemB-coll-1015",
+  "branch": "codex/s81-pq-collective-1103",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/dsrom_sys",
@@ -112,7 +112,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81coll_calendar7/s81coll_calendar7-c2-COMMIT"
+   "to": "results/rtl/ref_tile/s81coll_calendar7/s81coll_calendar7-c3-v3capture-1103-COMMIT"
   }
  ],
  "cycles_added": 0,

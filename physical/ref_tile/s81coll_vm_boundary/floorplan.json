@@ -98,7 +98,7 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
-  "physical/ref_tile_specs/s81coll_static/s81coll_vm_boundary_spread_pins.tcl",
+  "physical/s81_die_pins/v24_static_vm_boundary_candidate/s81_static_vm_boundary.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/dsrom_window_source/leaf_inhold.tcl",

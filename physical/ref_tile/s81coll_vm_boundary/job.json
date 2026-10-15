@@ -1,13 +1,13 @@
 {
- "name": "s81coll_vm_boundary-b7-COMMIT",
+ "name": "s81coll_vm_boundary-b7-granted-1103-COMMIT",
  "block": "s81_static_vm_boundary",
  "ref_tile": true,
- "owner": "Claude:s81-elemB-1015",
+ "owner": "Codex:s81-pq-norm-1103",
  "purpose": "S81 static collective -> VM boundary leaf (registered t_vm 2204 / t_crq 15)",
  "threads": 16,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "claude/s81-elemB-coll-1015",
+  "branch": "codex/s81-pq-collective-1103",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/dsrom_sys",
@@ -19,7 +19,8 @@
    "physical/s81_static_collective_proposal_1014",
    "tools/s81_vm",
    "tools/s81_static_control",
-   "physical/ref_tile_specs/s81coll_static"
+   "physical/ref_tile_specs/s81coll_static",
+   "physical/s81_die_pins/v24_static_vm_boundary_candidate"
   ]
  },
  "stages": {
@@ -106,7 +107,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81coll_vm_boundary/s81coll_vm_boundary-b7-COMMIT"
+   "to": "results/rtl/ref_tile/s81coll_vm_boundary/s81coll_vm_boundary-b7-granted-1103-COMMIT"
   }
  ],
  "cycles_added": 0,
