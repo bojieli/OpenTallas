@@ -76,7 +76,7 @@ def run(a):
     w=Path(a.work).resolve(); meta=json.loads((w/'meta.json').read_text())
     if meta['schedule_kind'] != 'fixed compiler slots; completion never gates issue':
         raise ValueError('unsupported schedule')
-    obj=w/f'obj_m{a.mut}'; obj.mkdir(exist_ok=True)
+    obj=(Path(a.build_work).resolve() if a.build_work else w)/f'obj_m{a.mut}'; obj.mkdir(exist_ok=True)
     exe=obj/'Vtb_s81_head_prep'
     sources=[ROOT/s for s in HG.FP['rtl']+HG.RTL+[TB]]
     # Immutable source manifest is checked before reusing a binary.
@@ -100,7 +100,12 @@ def run(a):
     (w/f'run_m{a.mut}.log').write_text(p.stdout+p.stderr)
     good=p.returncode==0 and 'HCG PASS' in p.stdout
     if a.mut:
-        if good or 'HCG FAIL' not in p.stdout: raise RuntimeError('mutant did not produce an observed FAIL')
+        m=HG.HCG.search(p.stdout)
+        if good or 'HCG FAIL' not in p.stdout or not m:
+            raise RuntimeError('mutant did not produce an observed FAIL')
+        jobs,done,errs,rows,fault,code,cyc,bad_tag=map(int,m.groups())
+        if jobs!=4 or done!=4 or errs==0 or fault or bad_tag:
+            raise RuntimeError('mutant failed for an unexpected reason')
         print('S81_HEAD_PREP mutant detected'); return
     if not good: raise RuntimeError('head prep failed: '+p.stdout[-2000:])
     got=[int(x,16) for x in (w/'got.mem').read_text().split()]
@@ -122,6 +127,6 @@ def main():
     q=sub.add_parser('prep'); q.add_argument('--work',required=True)
     for name in ('hout','pre','gain'): q.add_argument('--'+name,required=True)
     q.add_argument('--eps',default='358637bd')
-    q=sub.add_parser('run');q.add_argument('--work',required=True);q.add_argument('--mut',type=int,choices=[0,3],default=0)
+    q=sub.add_parser('run');q.add_argument('--work',required=True);q.add_argument('--build-work',help='reuse source-checked build directory across hardware handoffs');q.add_argument('--mut',type=int,choices=[0,3],default=0)
     a=p.parse_args(); return dict(prep=prep,run=run)[a.step](a)
 if __name__=='__main__': main()
