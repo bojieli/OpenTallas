@@ -1,0 +1,261 @@
+{
+ "name": "vms_bank_static_rg6wg2_swquant_1015",
+ "top": "hfd_vms_bank_static_rg6wg2",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_static_rg6wg2.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "rq0",
+   "rr0",
+   "rq4",
+   "rr4",
+   "clk",
+   "rst_n",
+   "bid",
+   "sid",
+   "rslot_v",
+   "rslot",
+   "wslot_v",
+   "wslot",
+   "status",
+   "dq",
+   "dq_done"
+  ],
+  "S": [
+   "rq1",
+   "rr1",
+   "kq",
+   "kq_done",
+   "xq",
+   "xq_done",
+   "eg"
+  ],
+  "E": [
+   "rq2",
+   "rr2",
+   "wq0",
+   "wq_done0",
+   "xq2",
+   "xq2_done"
+  ],
+  "W": [
+   "rq3",
+   "rr3",
+   "pq",
+   "pr",
+   "rq5",
+   "rr5",
+   "wq1",
+   "wq_done1"
+  ]
+ },
+ "pin_ranges": {
+  "rq1": [
+   5.4,
+   11.260631
+  ],
+  "rr1": [
+   11.260631,
+   99.859585
+  ],
+  "kq": [
+   99.859585,
+   196.732372
+  ],
+  "kq_done": [
+   196.732372,
+   197.077115
+  ],
+  "xq": [
+   197.077115,
+   292.226186
+  ],
+  "xq_done": [
+   292.226186,
+   292.570929
+  ],
+  "eg": [
+   292.570929,
+   387.72
+  ],
+  "rq2": [
+   5.4,
+   12.100408
+  ],
+  "rr2": [
+   12.100408,
+   113.394814
+  ],
+  "wq0": [
+   113.394814,
+   224.148619
+  ],
+  "wq_done0": [
+   224.148619,
+   224.542761
+  ],
+  "xq2": [
+   224.542761,
+   333.325858
+  ],
+  "xq2_done": [
+   333.325858,
+   333.72
+  ],
+  "rq3": [
+   5.4,
+   9.441593
+  ],
+  "rr3": [
+   9.441593,
+   70.54097
+  ],
+  "pq": [
+   70.54097,
+   138.297089
+  ],
+  "pr": [
+   138.297089,
+   201.536133
+  ],
+  "rq5": [
+   201.536133,
+   205.577726
+  ],
+  "rr5": [
+   205.577726,
+   266.677104
+  ],
+  "wq1": [
+   266.677104,
+   333.482259
+  ],
+  "wq_done1": [
+   333.482259,
+   333.72
+  ],
+  "rq0": [
+   5.4,
+   11.162628
+  ],
+  "rr0": [
+   11.162628,
+   98.28
+  ],
+  "rq4": [
+   98.28,
+   104.042628
+  ],
+  "rr4": [
+   104.042628,
+   191.16
+  ],
+  "clk": [
+   191.16,
+   191.487273
+  ],
+  "rst_n": [
+   191.487273,
+   191.814545
+  ],
+  "bid": [
+   191.814545,
+   192.796364
+  ],
+  "sid": [
+   192.796364,
+   193.450909
+  ],
+  "rslot_v": [
+   193.450909,
+   193.778182
+  ],
+  "rslot": [
+   193.778182,
+   194.76
+  ],
+  "wslot_v": [
+   194.76,
+   195.087273
+  ],
+  "wslot": [
+   195.087273,
+   196.069091
+  ],
+  "status": [
+   196.069091,
+   201.96
+  ],
+  "dq": [
+   201.96,
+   387.061277
+  ],
+  "dq_done": [
+   387.061277,
+   387.72
+  ]
+ },
+ "outline": {
+  "w": 393.12,
+  "h": 339.12,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 3
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 32,
+   "h": "M4",
+   "v": "M5"
+  },
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:H-VM static bank native physical",
+  "branch": "codex/hbm-vm-static-1014",
+  "tag": "static1015",
+  "purpose": "VersionedSW QuantSID0 RG6WG2 actual bank source; onephysicalR/W retained, dedicatedread5/write1 real mux/capture cost;4186literalpins withQuantread/writeWface. Prototype393.12x339.12 only, fullpin/PG+CTS measured beforephysicaladoption; nooldRG7qualificationinheritance",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/vm/static"
+  ],
+  "benched_by": "results/arch/hbm_vm_sw_quant_1015/literal_bank_gate/receipt.json",
+  "record_to": "results/rtl/ref_tile/vms_bank_static_rg6wg2_swquant_1015"
+ },
+ "orfs_vars": {
+  "POST_IO_PLACEMENT_TCL": "rtl/hbm_accel/generic/vm/static/physical/native_bank_pin_audit.tcl"
+ },
+ "structural_change": "ActualadditionalSWQuantread5/write1 compilerowner, onephysicalSRAMport. DistinctRG6WG2source/prototypepreservesoldRG5WG1andNW48profiles. IncludesnativepinODBconstructionrepair7eb.",
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
