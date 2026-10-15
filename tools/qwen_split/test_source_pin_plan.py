@@ -28,6 +28,16 @@ class RealSourcePinPlan(unittest.TestCase):
                     self.assertEqual(a['ports']['tile_id']['bits'],16)
                     self.assertTrue(all(not a['ports'][p].get('interior') for p in ('t_out','tap','tile_id')))
 
+    def test_mirrored_children_retain_actual_clock_centres(self):
+        M={'qfd_tile_nk':Master('qfd_tile_nk',449.28,1442.88,7,'')}
+        P.apply(M)
+        q=M['qfd_tile_nk']
+        self.assertEqual(q.ports['ck_lsl0'][2], 'M5')
+        self.assertEqual(q.ports['ck_lsl0'][3], [(103.722,391.308)])
+        self.assertEqual(q.ports['ck_rp0'][3], [(22.506,1082.796)])
+        self.assertEqual(q.ports['ck_rp1'][3], [(22.506,1233.996)])
+        self.assertEqual(q.ports['ck_rp2'][3], [(22.506,1385.196)])
+
     def test_historical_overlapping_tree_mutant_is_refused(self):
         M={'qfd_tile_nk':Master('qfd_tile_nk',449.256,1442.856,7,'')}
         P.apply(M)
