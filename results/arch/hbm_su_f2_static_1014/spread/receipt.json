@@ -335,9 +335,6 @@
   "canonical whole-kernel VM allocator (h_vm) owns final addresses; this pass supplies the SU map"
  ],
  "open": [
-  "whole-SU arithmetic join at full512 LAT4: relaunched 160 GB ot-epyc1tb unit oth-ubuntu-2152482-1792069222 (same immutable source /tmp/hbm-su-arithmetic-lat4-leaf1-1015/source, run160)",
-  "Qwen SFU lane count vs price (64 SFU lanes/quarter or ledger) -- coordinator",
-  "N512 bench of exp / SiLU / divider in the 32 SFU lanes (calendar uses RTL depths)",
   "producer-side layout adoption by h_vm allocator + SM/ATT/COLL/DMA/FUSED/HC/IDX",
   "5th port group on SW/SE: bit definition from H-DIE",
   "physical: static bank route at 833 (H-VM)"
@@ -610,5 +607,19 @@
    }
   },
   "vehicle": "PASS Qwen 24,560 / DS 11,544 events; PG, LG, CAL mutants FAIL"
+ },
+ "rev_1015_sfu_ledger": {
+  "date": "2026-10-15T09:20-07:00",
+  "sfu_bench": "full512 SFU-lane bench (arithmetic/sfu_lanes_lat4, sfu_lanes_m3): measured EXP/SIGM/SILU/DIV depths equal the calendar depths() at MLAT 3 and 4 -> the calendar SFU/divider terms are now MEASURED, not RTL-read",
+  "arithmetic_join": "run160 full512 LAT4 (MLAT4/ALAT3/LEAF1) PASS: 31 cases 1,015,808 outputs, issue->output 28 = calendar ARITH at LAT4, II 1, mutants FAIL",
+  "qwen_lat4": {
+   "priced": 1668.0,
+   "edges": 1858,
+   "ratio": 1.114,
+   "e2e_loss_pct": 0.543,
+   "model": "tools/throughput/accepted_cost.py compute r25gq --op SU.VOP --price 1668 --measured 1858 --workload qwen_ar (S2 schedule base 1,113,294 -> 1,119,374.8 cycles)"
+  },
+  "decision": "coordinator: keep 32 SFU lanes/quarter; 0.543 % <= 1.5 % threshold -> ledger row proposed (r25gq SU.VOP group), no 64-lane build",
+  "still_model": "reduction tail (softmax.max 88 edges) and ARITH applied to not-yet-lowered op classes (pv_normalize); producer-side layout adoption open"
  }
 }

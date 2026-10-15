@@ -1,173 +1,225 @@
 {
-  "qualified": false,
-  "native_exact_pass": false,
-  "physical_pass": false,
-  "production_price_pass": false,
-  "source": "Full4xN128/M32 realnativearithmetic candidate; not historical16 frozenlaneSFU grid",
-  "actual_shape": {
-    "lanes": 512,
-    "FULL": 1,
-    "SFU": 127,
-    "LIGHT": 384,
-    "scalar_SIDE_external": true,
-    "readers": 6,
-    "SRAM_macros": 3072
+ "qualified": false,
+ "native_exact_pass": false,
+ "physical_pass": false,
+ "production_price_pass": false,
+ "source": "Full4xN128/M32 realnativearithmetic candidate; not historical16 frozenlaneSFU grid",
+ "actual_shape": {
+  "lanes": 512,
+  "FULL": 1,
+  "SFU": 127,
+  "LIGHT": 384,
+  "scalar_SIDE_external": true,
+  "readers": 6,
+  "SRAM_macros": 3072
+ },
+ "controls": {
+  "bits_per_quarter": 1742,
+  "quarter_images": 4,
+  "local_lane_id": "0..127; compilerquarterbases explicit",
+  "affine_lowering": "84/104 fixture records including repeatedprofiles; 20 unsupported records explicit",
+  "canonical_profile_counts": "actual coverage_ds33 + coverage_qwen12 =45 requiredVMcomponentrecords;28lowered,17explicitunsupported",
+  "fixed_issue": "64issues/op,32768words/op,31arithmeticcases,1015808outputs; nodynamicissue",
+  "canonical_report": "arithmetic/canonical/canonical_lowering.json",
+  "canonical_indexed_policy": "MDESCindexed scalar flags unresolved actualTOPK nativecalendar; never copy pre-resolvedfixturebase as finaladdress",
+  "side_function_ports": "Actual global lane0 ci_sfu/cs_sfu. Separate true native scalar head proof1a291c29e/42a5cc2ed passed with actualSIDE; fullgrid canonicalSIDEprogramme join remainsopen"
+ },
+ "stage_clocks": {
+  "entries_per_lane": 8,
+  "insertion_clock_entries_per_lane": 4,
+  "insertion_stage_max": 48,
+  "insertion_max_register_bits_per_root": 5808,
+  "broadcast_roots": 64,
+  "broadcast_bits_per_root": 13936,
+  "related": "1:1 logicalphase0; actual Yosys sinkcensus PASS; routedCTS/insertion pending",
+  "sink_census": "PASS actual Yosys all3KINDs <=11532,zero unknownclocks; noCTS"
+ },
+ "SRAM_contract": {
+  "request_sample": "n",
+  "macro": "n+1",
+  "read_data": "n+2 NBA",
+  "nativecapture": "n+3",
+  "fetch_extra_edges": 2,
+  "gather_extra_edges": 4,
+  "write_commit_extra_edges": 1
+ },
+ "live": [
+  {
+   "host": "ot-epyc4",
+   "unit": "oth-ubuntu-1597217-1792057372",
+   "session": 7067,
+   "source": "/tmp/hbm-su-arithmetic-1015/source",
+   "result": "/tmp/hbm-su-arithmetic-1015/run",
+   "status": "terminalFAIL preserved predecessor_failure/base.log: compiler advancedi_v butkeptvbstatic, framealias alsofixedsuccessor"
   },
-  "controls": {
-    "bits_per_quarter": 1742,
-    "quarter_images": 4,
-    "local_lane_id": "0..127; compilerquarterbases explicit",
-    "affine_lowering": "84/104 fixture records including repeatedprofiles; 20 unsupported records explicit",
-    "canonical_profile_counts": "actual coverage_ds33 + coverage_qwen12 =45 requiredVMcomponentrecords;28lowered,17explicitunsupported",
-    "fixed_issue": "64issues/op,32768words/op,31arithmeticcases,1015808outputs; nodynamicissue",
-    "canonical_report": "arithmetic/canonical/canonical_lowering.json",
-    "canonical_indexed_policy": "MDESCindexed scalar flags unresolved actualTOPK nativecalendar; never copy pre-resolvedfixturebase as finaladdress",
-    "side_function_ports": "Actual global lane0 ci_sfu/cs_sfu. Separate true native scalar head proof1a291c29e/42a5cc2ed passed with actualSIDE; fullgrid canonicalSIDEprogramme join remainsopen"
+  {
+   "host": "ot-epyc1tb",
+   "unit": "oth-ubuntu-790210-1792057796",
+   "session": 89793,
+   "source": "/tmp/hbm-su-arithmetic-stageclk-1015/source",
+   "result": "/tmp/hbm-su-arithmetic-stageclk-1015/run",
+   "status": "terminalFAIL originalbadfixture; builtbinarypreserved and reused"
   },
-  "stage_clocks": {
-    "entries_per_lane": 8,
-    "insertion_clock_entries_per_lane": 4,
-    "insertion_stage_max": 48,
-    "insertion_max_register_bits_per_root": 5808,
-    "broadcast_roots": 64,
-    "broadcast_bits_per_root": 13936,
-    "related": "1:1 logicalphase0; actual Yosys sinkcensus PASS; routedCTS/insertion pending",
-    "sink_census": "PASS actual Yosys all3KINDs <=11532,zero unknownclocks; noCTS"
+  {
+   "host": "ot-epyc1tb",
+   "unit": "oth-ubuntu-814300-1792058116",
+   "session": 20602,
+   "result": "/tmp/hbm-su-arithmetic-stageclk-1015/census_v2",
+   "status": "terminalPASS nativeclockregistercensus; oldextractorsupersededactualsourceinventorybug"
   },
-  "SRAM_contract": {
-    "request_sample": "n",
-    "macro": "n+1",
-    "read_data": "n+2 NBA",
-    "nativecapture": "n+3",
-    "fetch_extra_edges": 2,
-    "gather_extra_edges": 4,
-    "write_commit_extra_edges": 1
+  {
+   "host": "ot-epyc1tb",
+   "unit": "oth-ubuntu-842157-1792058620",
+   "session": 39088,
+   "result": "/tmp/hbm-su-arithmetic-stageclk-1015/validate_v2",
+   "status": "terminalFAIL base1360 errors: 680 negativezero golden expectations countedonoutputandreadback"
   },
-  "live": [
-    {
-      "host": "ot-epyc4",
-      "unit": "oth-ubuntu-1597217-1792057372",
-      "session": 7067,
-      "source": "/tmp/hbm-su-arithmetic-1015/source",
-      "result": "/tmp/hbm-su-arithmetic-1015/run",
-      "status": "terminalFAIL preserved predecessor_failure/base.log: compiler advancedi_v butkeptvbstatic, framealias alsofixedsuccessor"
-    },
-    {
-      "host": "ot-epyc1tb",
-      "unit": "oth-ubuntu-790210-1792057796",
-      "session": 89793,
-      "source": "/tmp/hbm-su-arithmetic-stageclk-1015/source",
-      "result": "/tmp/hbm-su-arithmetic-stageclk-1015/run",
-      "status": "terminalFAIL originalbadfixture; builtbinarypreserved and reused"
-    },
-    {
-      "host": "ot-epyc1tb",
-      "unit": "oth-ubuntu-814300-1792058116",
-      "session": 20602,
-      "result": "/tmp/hbm-su-arithmetic-stageclk-1015/census_v2",
-      "status": "terminalPASS nativeclockregistercensus; oldextractorsupersededactualsourceinventorybug"
-    },
-    {
-      "host": "ot-epyc1tb",
-      "unit": "oth-ubuntu-842157-1792058620",
-      "session": 39088,
-      "result": "/tmp/hbm-su-arithmetic-stageclk-1015/validate_v2",
-      "status": "terminalFAIL base1360 errors: 680 negativezero golden expectations countedonoutputandreadback"
-    },
-    {
-      "host": "ot-epyc1tb",
-      "session": 17500,
-      "result": "/tmp/hbm-su-arithmetic-stageclk-1015/validate_v3",
-      "status": "terminalPASS base+3failingmutants unit868419"
-    },
-    {
-      "host": "ot-epyc4",
-      "unit": "oth-ubuntu-1795385-1792060675",
-      "session": 79737,
-      "status": "TERMINAL PASS native31cases+3expectedfailmutants",
-      "result": "/tmp/hbm-su-arithmetic-all-affine-1015/run",
-      "exit": 0
-    }
-  ],
-  "open": [
-    "actualfullgridbaseandthreefailingmutants",
-    "actualperrootclockcensus/CTS",
-    "nativecanonicalfullprogramme",
-    "M128SFU/divider/scalarcalendars",
-    "sixindexedcalendarjoins",
-    "nativebankaddressnetwork/RFjoins",
-    "goldenorderedreducerjoin",
-    "kv_norm.rs actualscalarSIDE thenkv_norm.y/kv_rope.tail sourceandVMcommitepochs",
-    "productionendtoendprice",
-    "TTsetup/FFhold/DRC0"
-  ],
-  "baseline_native_exact_pass": true,
-  "baseline_scope": "12 classes, realN512/3072pinnedSRAM,393216words,786432strictchecks includingrealcommitreadback; source before additiveSIDEfn wires",
-  "native_exact_pass_scope": "full canonical programme remains unqualified",
-  "baseline_exact_calendar_pass": true,
-  "baseline_calendar_scope": "12 arithmetic/BF16 classes; all393216 outputs at cycles31..94, issue-to-receiving-pin23edges, II1; one-edge shift retainsallwords butfailsallphaseassertions",
-  "calendar_gate": {
-    "host": "ot-epyc1tb",
-    "unit": "oth-ubuntu-891929-1792059625",
-    "session": 1419,
-    "status": "terminalPASS",
-    "result": "/tmp/hbm-su-arithmetic-calendar-1015/run/validation"
+  {
+   "host": "ot-epyc1tb",
+   "session": 17500,
+   "result": "/tmp/hbm-su-arithmetic-stageclk-1015/validate_v3",
+   "status": "terminalPASS base+3failingmutants unit868419"
   },
-  "actual_scalar_component": {
-    "owner": "/root/h_hc_sfu/sfu_fused_latency",
-    "source": "1a291c29e",
-    "clock_proof": "42a5cc2ed",
-    "status": "owner-reported terminalPASS; full head1slot with6actualSRAMs and6rootSIDE",
-    "transactions": 320,
-    "output_readback_neighbor_checks": 650,
-    "raw_emit_to_output_preNBA": {
-      "RSQRT": 60,
-      "SQRT": 54,
-      "SPSQRT": 185,
-      "EGATE": 127,
-      "DIVIMM_EPS_RSQRT": 76
-    },
-    "max_clock_sinks": 13902,
-    "physical": false
-  },
-  "memory_demand_model": "canonical_memory_demand.json:16/28loweredrecords need>1 narrowwordrow perbank;7need>1physicalmacroline; wideinterfaceUNIMPLEMENTED",
-  "baseline_expanded_native_exact_pass": true,
-  "baseline_expanded_cases": 31,
-  "baseline_expanded_outputs": 1015808,
-  "baseline_expanded_strict_output_readback_checks": 2031616,
-  "baseline_expanded_exact_calendar_pass": true,
-  "baseline_expanded_mutants": {
-    "ADDR": "FAIL expected",
-    "DATA": "FAIL expected",
-    "PHASE": "FAIL expected; all1015808 outputs retained and1015808 timingerrors"
-  },
-  "baseline_expanded_job": {
-    "host": "ot-epyc4",
-    "unit": "oth-ubuntu-1795385-1792060675",
-    "session": 79737,
-    "exit": 0,
-    "source": "/tmp/hbm-su-arithmetic-all-affine-1015/source",
-    "receipts": "full_affine_gate",
-    "wall_s": 524.519
-  },
-  "physical_mapping": {
-    "kind0": {
-      "area_um2": 5539.457,
-      "cells": 42400,
-      "mappedFF": 5823,
-      "status": "sourcequalified mapping only; noCTS"
-    },
-    "kind1": {
-      "area_um2": 18429.8,
-      "cells": 132865,
-      "mappedFF": 27959,
-      "status": "sourcequalified mapping only; noCTS"
-    },
-    "kind2": {
-      "area_um2": 22171.489,
-      "cells": 155237,
-      "mappedFF": 38970,
-      "status": "sourcequalified mapping only; noCTS"
-    }
+  {
+   "host": "ot-epyc4",
+   "unit": "oth-ubuntu-1795385-1792060675",
+   "session": 79737,
+   "status": "TERMINAL PASS native31cases+3expectedfailmutants",
+   "result": "/tmp/hbm-su-arithmetic-all-affine-1015/run",
+   "exit": 0
   }
+ ],
+ "open": [
+  "actualperrootclockcensus/CTS",
+  "nativecanonicalfullprogramme",
+  "M128SFU/divider/scalarcalendars",
+  "sixindexedcalendarjoins",
+  "nativebankaddressnetwork/RFjoins",
+  "goldenorderedreducerjoin",
+  "kv_norm.rs actualscalarSIDE thenkv_norm.y/kv_rope.tail sourceandVMcommitepochs",
+  "productionendtoendprice",
+  "TTsetup/FFhold/DRC0"
+ ],
+ "baseline_native_exact_pass": true,
+ "baseline_scope": "12 classes, realN512/3072pinnedSRAM,393216words,786432strictchecks includingrealcommitreadback; source before additiveSIDEfn wires",
+ "native_exact_pass_scope": "full canonical programme remains unqualified",
+ "baseline_exact_calendar_pass": true,
+ "baseline_calendar_scope": "12 arithmetic/BF16 classes; all393216 outputs at cycles31..94, issue-to-receiving-pin23edges, II1; one-edge shift retainsallwords butfailsallphaseassertions",
+ "calendar_gate": {
+  "host": "ot-epyc1tb",
+  "unit": "oth-ubuntu-891929-1792059625",
+  "session": 1419,
+  "status": "terminalPASS",
+  "result": "/tmp/hbm-su-arithmetic-calendar-1015/run/validation"
+ },
+ "actual_scalar_component": {
+  "owner": "/root/h_hc_sfu/sfu_fused_latency",
+  "source": "1a291c29e",
+  "clock_proof": "42a5cc2ed",
+  "status": "owner-reported terminalPASS; full head1slot with6actualSRAMs and6rootSIDE",
+  "transactions": 320,
+  "output_readback_neighbor_checks": 650,
+  "raw_emit_to_output_preNBA": {
+   "RSQRT": 60,
+   "SQRT": 54,
+   "SPSQRT": 185,
+   "EGATE": 127,
+   "DIVIMM_EPS_RSQRT": 76
+  },
+  "max_clock_sinks": 13902,
+  "physical": false
+ },
+ "memory_demand_model": "canonical_memory_demand.json:16/28loweredrecords need>1 narrowwordrow perbank;7need>1physicalmacroline; wideinterfaceUNIMPLEMENTED",
+ "baseline_expanded_native_exact_pass": true,
+ "baseline_expanded_cases": 31,
+ "baseline_expanded_outputs": 1015808,
+ "baseline_expanded_strict_output_readback_checks": 2031616,
+ "baseline_expanded_exact_calendar_pass": true,
+ "baseline_expanded_mutants": {
+  "ADDR": "FAIL expected",
+  "DATA": "FAIL expected",
+  "PHASE": "FAIL expected; all1015808 outputs retained and1015808 timingerrors"
+ },
+ "baseline_expanded_job": {
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-1795385-1792060675",
+  "session": 79737,
+  "exit": 0,
+  "source": "/tmp/hbm-su-arithmetic-all-affine-1015/source",
+  "receipts": "full_affine_gate",
+  "wall_s": 524.519
+ },
+ "physical_mapping": {
+  "kind0": {
+   "area_um2": 5539.457,
+   "cells": 42400,
+   "mappedFF": 5823,
+   "status": "sourcequalified mapping only; noCTS"
+  },
+  "kind1": {
+   "area_um2": 18429.8,
+   "cells": 132865,
+   "mappedFF": 27959,
+   "status": "sourcequalified mapping only; noCTS"
+  },
+  "kind2": {
+   "area_um2": 22171.489,
+   "cells": 155237,
+   "mappedFF": 38970,
+   "status": "sourcequalified mapping only; noCTS"
+  }
+ },
+ "lat4_leaf1": {
+  "full512_numeric": {
+   "status": "terminalPASS base + ADDR/DATA/PHASE mutants FAIL",
+   "host": "ot-epyc1tb",
+   "unit": "oth-ubuntu-2152482-1792069222",
+   "source": "/tmp/hbm-su-arithmetic-lat4-leaf1-1015/source (immutable, same as run/)",
+   "result": "/tmp/hbm-su-arithmetic-lat4-leaf1-1015/run160",
+   "receipts": "arithmetic/full512_lat4_leaf1",
+   "cases": 31,
+   "outputs": 1015808,
+   "checks": 2031616,
+   "issue_to_output": 28,
+   "II": 1,
+   "MLAT": 4,
+   "ALAT": 3,
+   "LEAF": 1,
+   "wall": "2:18:31",
+   "peak_rss_kb": 123582800,
+   "note": "96 GB admission OOMd; 160 GB run passed"
+  },
+  "sfu_lanes": {
+   "status": "terminalPASS base + ADDR/DATA/PHASE mutants FAIL (both builds)",
+   "lat4": {
+    "unit": "oth-ubuntu-2396823-1792070092",
+    "result": "/srv/opentallas-scratch/claude/hbm-su-sfu-bench-1015/lat4",
+    "receipts": "arithmetic/sfu_lanes_lat4",
+    "issue_to_output": {
+     "EXP": 84,
+     "EXP_SCALE_SUBB": 84,
+     "SIGM": 106,
+     "SILU": 106,
+     "SILU_E1C_E2B": 106,
+     "DIVB": 43,
+     "DIVIMM": 43,
+     "BYP_LIGHT": 28
+    }
+   },
+   "m3": {
+    "unit": "oth-ubuntu-2397301-1792070095",
+    "result": "/srv/opentallas-scratch/claude/hbm-su-sfu-bench-1015/m3",
+    "receipts": "arithmetic/sfu_lanes_m3",
+    "issue_to_output": {
+     "EXP": 72,
+     "SIGM": 94,
+     "SILU": 94,
+     "DIVB": 39,
+     "BYP_LIGHT": 23
+    }
+   },
+   "shape": "real N512/M128, 128 SFU lanes (32/quarter), 3072 pinned SRAMs, 8 ops x 64 fixed issues, II 1, independent hdc_golden exp + NumPy float32 div",
+   "matches_calendar_model": "exact: su_f2_spread.depths() exp 7M+8A+4 (49/56), sig exp+A+19 (71/78), div 19-M (16/15), arith 23+5(M-3) (23/28) == measured extra_vs_light at M3 and LAT4"
+  }
+ }
 }
