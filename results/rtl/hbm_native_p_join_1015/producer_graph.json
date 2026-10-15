@@ -1,0 +1,304 @@
+{
+  "scope": "Source-connected actual P producer component; diagnostic allocation only; physical/native-whole/production false",
+  "source_commit": "b63651aa6",
+  "runner_commit": "2c82e3237",
+  "source_pack": "/tmp/p-native-producer-src-b636",
+  "source_manifest": "/tmp/p-native-producer-src-b636/source_manifest.json",
+  "remote_build": "ot-agidock128:/tmp/p-native-producer-build-b636",
+  "unit": "oth-ubuntu-3881884-1792058486",
+  "sources": {
+    "SFU": "c72a3325a",
+    "reducer": "c3973bd5a",
+    "VM": "fd7cfb0d72913de1fbf824265ed086bc5350a3a1"
+  },
+  "clock_inputs": {
+    "ports": 33,
+    "names": [
+      "clk",
+      "clk_lane[15:0]",
+      "clk_map[15:0]"
+    ],
+    "current_bench_connection": "all same1.2GHz clock; no unrelated CDC claim",
+    "shared_clk_loads": [
+      "80 operand SRAMs",
+      "32 arithmetic programme SRAMs",
+      "12 IO programme SRAMs",
+      "4 auxiliary programme SRAMs",
+      "10 source/scratch SRAMs",
+      "24 diagnostic VM SRAMs",
+      "scalar registers",
+      "reducer LAT6",
+      "VM taps"
+    ],
+    "physical_clock_partition_qualified": false
+  },
+  "SRAM_inventory": [
+    {
+      "kind": "operand_A/B/C/D/output",
+      "count": 80,
+      "macro": "ot_sram_1r1w_256x256_m2_r2c2",
+      "ports": "oneR/oneW each",
+      "derivation": "5groups*16banks; LWB15-clog2(16)=RB11"
+    },
+    {
+      "kind": "arithmetic_programme",
+      "count": 32,
+      "macro": "ot_sram_1r1w_1024x256_m2_r2c2"
+    },
+    {
+      "kind": "IO_programme",
+      "count": 12,
+      "macro": "ot_sram_1r1w_1024x256_m2_r2c2"
+    },
+    {
+      "kind": "aux_programme",
+      "count": 4,
+      "macro": "ot_sram_1r1w_1024x256_m2_r2c2"
+    },
+    {
+      "kind": "source",
+      "count": 8,
+      "macro": "ot_sram_1r1w_128x256_m1_r2c2"
+    },
+    {
+      "kind": "scratch",
+      "count": 2,
+      "macro": "ot_sram_1r1w_128x256_m1_r2c2"
+    },
+    {
+      "kind": "diagnostic_VM",
+      "count": 24,
+      "macro": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "derivation": "8banks*3protectedData/ECC SRAM"
+    }
+  ],
+  "FF_count": null,
+  "FF_count_reason": "RTL elaboration in progress; actual count not yet measured",
+  "pin_faces": null,
+  "pin_faces_reason": "No physical view/slot assigned for combined producer; source-port graph only",
+  "VM_interface": {
+    "RQ_bits": 136,
+    "RR_bits": 2056,
+    "WQ_bits": 2248,
+    "DONE_bits": 8,
+    "banks": 8,
+    "RQ_lane": "{valid1,sector16}",
+    "RR_lane": "{valid1,payload256}",
+    "WQ_lane": "{valid1,sector16,payload256,wordmask8}",
+    "capacity": "oneR+oneW perbank peredge",
+    "SID": 0,
+    "RG": 3,
+    "WG": 1,
+    "read_slot": 0,
+    "write_slot": 0,
+    "canonical_allocation": false,
+    "tap_read_return": 14,
+    "source_store_consumes_return": 15,
+    "write_update": 11
+  },
+  "nodes": [
+    "actual_SC_VM",
+    "actual_SFU_A_operand_SRAM",
+    "actual_SFU16_M1scale",
+    "actual_scaled_SC_VM",
+    "actual_source_8SRAM",
+    "actual_reducer_2scratch_LAT6",
+    "actual_masked_scalar_publisher",
+    "actual_MB_SE_VM",
+    "actual_SFU_scalar_B_register",
+    "actual_SFU16_scale_sub_EXP",
+    "actual_SFU_output16SRAM",
+    "actual_rawE_VM",
+    "actual_BF16_RNE_drain",
+    "actual_EB_VM"
+  ],
+  "edges": [
+    {
+      "from": "actual_SC_VM",
+      "to": "actual_SFU_A_operand_SRAM",
+      "payload_bits": 512,
+      "active_edges": "T/16",
+      "bytes_per_head": "4*T",
+      "source": "SFU IO programme two sectors/edge"
+    },
+    {
+      "from": "actual_SFU16_M1scale",
+      "to": "actual_SFU_output16SRAM",
+      "payload_bits": 512,
+      "active_edges": "T/16",
+      "rounding": "FP32 scale, co_rnd0"
+    },
+    {
+      "from": "actual_SFU_output16SRAM",
+      "to": "actual_scaled_SC_VM",
+      "payload_bits": 512,
+      "active_edges": "T/16"
+    },
+    {
+      "from": "actual_scaled_SC_VM",
+      "to": "actual_source_8SRAM",
+      "payload_bits": 2048,
+      "active_edges": "T/64"
+    },
+    {
+      "from": "actual_source_8SRAM",
+      "to": "actual_reducer_2scratch_LAT6",
+      "payload_bits": 32,
+      "active_edges": "T MAX + T SUM",
+      "order": "MAX contiguous; SUM offset-major chunks8; golden global padded tree"
+    },
+    {
+      "from": "actual_reducer_2scratch_LAT6",
+      "to": "actual_masked_scalar_publisher",
+      "payload_bits": 32,
+      "tag_bits": 32,
+      "active_edges": 2,
+      "latency": "precommand+1 then actualreducer+7"
+    },
+    {
+      "from": "actual_masked_scalar_publisher",
+      "to": "actual_MB_SE_VM",
+      "payload_bits": 32,
+      "physical_packet_bits": 281,
+      "active_edges": 2,
+      "mask": "oneFP32word; sevenneighbors preserved"
+    },
+    {
+      "from": "actual_MB_SE_VM",
+      "to": "actual_SFU_scalar_B_register",
+      "payload_bits": 32,
+      "physical_read_payload_bits": 256,
+      "active_edges": 1,
+      "address_tag_bits": 24,
+      "fanout": "same scalar to16lanes"
+    },
+    {
+      "from": "actual_SFU16_scale_sub_EXP",
+      "to": "actual_SFU_output16SRAM",
+      "payload_bits": 512,
+      "active_edges": "T/16",
+      "formula": "exp(FP32(SC*0x3d3504f3-MB))",
+      "rounding": "co_rnd0 unroundedE"
+    },
+    {
+      "from": "actual_SFU_output16SRAM",
+      "to": "actual_rawE_VM",
+      "payload_bits": 512,
+      "active_edges": "T/16"
+    },
+    {
+      "from": "actual_rawE_VM",
+      "to": "actual_source_8SRAM",
+      "payload_bits": 2048,
+      "active_edges": "T/64"
+    },
+    {
+      "from": "actual_SFU_output16SRAM",
+      "to": "actual_BF16_RNE_drain",
+      "payload_bits": 512,
+      "active_edges": "T/16"
+    },
+    {
+      "from": "actual_BF16_RNE_drain",
+      "to": "actual_EB_VM",
+      "payload_bits": 512,
+      "active_edges": "T/16",
+      "format": "expandedBF16 FP32 low16zero; unnormalizedP"
+    }
+  ],
+  "external_not_joined": [
+    "actualQK arithmetic/SCserializer upstream",
+    "actualATT Pprefetch/PV downstream",
+    "Vbank placement",
+    "normalization",
+    "canonical global allocator/calendar"
+  ],
+  "per_head_calendars": {
+    "128": {
+      "rows": 128,
+      "head": 0,
+      "scale_bits": "3d3504f3",
+      "arithmetic_rows": 486,
+      "io_aux_rows": 795,
+      "events": {
+        "arithmetic_start": 28,
+        "scaled_last_drain": 113,
+        "max_start": 148,
+        "max_scalar": 323,
+        "mb_prefetch": 338,
+        "exp_start": 358,
+        "raw_e_last_drain": 537,
+        "eb_last_drain": 546,
+        "sum_start": 572,
+        "sum_scalar": 763
+      },
+      "diagnostic_VM_sectors": {
+        "SC": 0,
+        "scaled_SC": 2048,
+        "E": 4096,
+        "EB": 6000,
+        "MB": 7800,
+        "SE": 7808,
+        "scalar_word": 0
+      },
+      "macro_inventory": {
+        "operand": 80,
+        "arithmetic_programme": 32,
+        "io_programme": 12,
+        "aux_programme": 4,
+        "source_scratch": 10,
+        "VM": 24
+      },
+      "extra_scalar_configuration_bits": 228,
+      "head_reconfiguration_setup_not_priced": true,
+      "production_qualified": false,
+      "physical_qualified": false,
+      "native_whole_kernel_qualified": false
+    },
+    "640": {
+      "rows": 640,
+      "head": 0,
+      "scale_bits": "3d3504f3",
+      "arithmetic_rows": 1102,
+      "io_aux_rows": 2219,
+      "events": {
+        "arithmetic_start": 60,
+        "scaled_last_drain": 209,
+        "max_start": 252,
+        "max_scalar": 939,
+        "mb_prefetch": 954,
+        "exp_start": 974,
+        "raw_e_last_drain": 1217,
+        "eb_last_drain": 1258,
+        "sum_start": 1260,
+        "sum_scalar": 2187
+      },
+      "diagnostic_VM_sectors": {
+        "SC": 0,
+        "scaled_SC": 2048,
+        "E": 4096,
+        "EB": 6000,
+        "MB": 7800,
+        "SE": 7808,
+        "scalar_word": 0
+      },
+      "macro_inventory": {
+        "operand": 80,
+        "arithmetic_programme": 32,
+        "io_programme": 12,
+        "aux_programme": 4,
+        "source_scratch": 10,
+        "VM": 24
+      },
+      "extra_scalar_configuration_bits": 228,
+      "head_reconfiguration_setup_not_priced": true,
+      "production_qualified": false,
+      "physical_qualified": false,
+      "native_whole_kernel_qualified": false
+    }
+  },
+  "performance": "Component programme execution only; perhead reconfiguration/setup not priced; no production rate claim",
+  "physical_qualified": false,
+  "production_qualified": false,
+  "native_whole_kernel_qualified": false
+}
